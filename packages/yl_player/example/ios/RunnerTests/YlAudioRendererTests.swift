@@ -76,6 +76,7 @@ final class YlAudioRendererTests: XCTestCase {
 
     XCTAssertThrowsError(try renderer.configure(stream: stream())) { error in
       XCTAssertEqual((error as? NativePlayerError)?.code, "decoder.audio_aac_unsupported")
+      XCTAssertEqual((error as? NativePlayerError)?.category, "decoderUnsupported")
     }
   }
 

@@ -632,7 +632,7 @@ git commit -m "feat: complete iOS MKV fallback lifecycle"
   state, and metrics.
 - Test media remains excluded from the published Dart archive.
 
-- [ ] **Step 1: Write the failing public integration tests**
+- [x] **Step 1: Write the failing public integration tests**
 
 Copy bundled fixture bytes to `Directory.systemTemp`, open with
 `YlMediaSource.file(..., formatHint: YlFormatHint.matroska)`, and assert fallback
@@ -641,7 +641,7 @@ seek near one second, volume/speed, two audio tracks and selection, then
 idempotent dispose. Add a malformed/unsupported fixture case proving the prior
 HLS source remains active.
 
-- [ ] **Step 2: Run on Simulator to verify RED**
+- [x] **Step 2: Run on Simulator to verify RED**
 
 ```bash
 flutter test integration_test/ios_mkv_playback_test.dart \
@@ -650,21 +650,21 @@ flutter test integration_test/ios_mkv_playback_test.dart \
 
 Expected: failure at fallback routing/first frame before final wiring.
 
-- [ ] **Step 3: Complete only the wiring needed for GREEN**
+- [x] **Step 3: Complete only the wiring needed for GREEN**
 
 Add fixture assets to the example bundle, copy them to a real file URL in test
 setup, fix state/event serialization gaps exposed by the test, and add an
 explicit `tool/check_native_ios.sh` for XCTest + HLS + MKV integration. Keep
 network integration out of the offline foundation gate.
 
-- [ ] **Step 4: Add publication exclusions and verify archives**
+- [x] **Step 4: Add publication exclusions and verify archives**
 
 Exclude test media, FFmpeg build intermediates, native test products, and source
 archives while retaining the checked-in XCFramework, notices, licenses, and
 rebuild scripts. Run all four `dart pub publish --dry-run`; each must report zero
 warnings and the iOS archive must contain every XCFramework slice.
 
-- [ ] **Step 5: Run GREEN integration and commit**
+- [x] **Step 5: Run GREEN integration and commit**
 
 ```bash
 sh tool/check_native_ios.sh

@@ -132,7 +132,7 @@ final class YlAudioRenderer: YlAudioRendering {
       )
     } catch {
       throw NativePlayerError(
-        category: "decoder",
+        category: "decoderUnsupported",
         code: "decoder.audio_aac_unsupported",
         message: "The AAC audio configuration is unsupported.",
         diagnostic: String(describing: error)
@@ -163,7 +163,7 @@ final class YlAudioRenderer: YlAudioRendering {
       buffer = try converter.convert(packet: packet)
     } catch {
       throw NativePlayerError(
-        category: "decoder",
+        category: "decoderFailure",
         code: "decoder.audio_failed",
         message: "AAC audio conversion failed.",
         diagnostic: String(describing: error)

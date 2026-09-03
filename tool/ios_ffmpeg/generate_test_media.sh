@@ -4,6 +4,7 @@ set -eu
 script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 repo_root=$(CDPATH= cd -- "$script_dir/../.." && pwd)
 fixture_dir="$repo_root/packages/yl_player/example/ios/RunnerTests/Fixtures"
+asset_dir="$repo_root/packages/yl_player/example/assets/test_media"
 
 if ! command -v ffmpeg >/dev/null 2>&1; then
   echo "ffmpeg is required to generate test fixtures" >&2
@@ -11,6 +12,7 @@ if ! command -v ffmpeg >/dev/null 2>&1; then
 fi
 
 mkdir -p "$fixture_dir"
+mkdir -p "$asset_dir"
 
 common_video_flags="-c:v libx264 -pix_fmt yuv420p -g 24 -keyint_min 24 -sc_threshold 0 -threads 1"
 common_output_flags="-t 2 -fflags +bitexact -map_metadata -1"
@@ -46,5 +48,8 @@ ffmpeg -hide_banner -loglevel error -y \
   -c:a aac -b:a 96k \
   $common_output_flags \
   "$fixture_dir/hevc_aac.mkv"
+
+cp "$fixture_dir/h264_aac.mkv" "$asset_dir/h264_aac.mkv"
+cp "$fixture_dir/two_audio_tracks.mkv" "$asset_dir/two_audio_tracks.mkv"
 
 echo "generated deterministic MKV fixtures in $fixture_dir"

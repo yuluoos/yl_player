@@ -12,11 +12,13 @@ void main() {
   late StreamController<Object?> nativeEvents;
   late List<MethodCall> calls;
   late bool failDispose;
+  late bool failOpenUnsupported;
 
   setUp(() {
     nativeEvents = StreamController<Object?>.broadcast(sync: true);
     calls = <MethodCall>[];
     failDispose = false;
+    failOpenUnsupported = false;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(methods, (call) async {
           calls.add(call);
@@ -25,6 +27,16 @@ void main() {
           }
           if (call.method == 'dispose' && failDispose) {
             throw PlatformException(code: 'dispose.failed');
+          }
+          if (call.method == 'command' && failOpenUnsupported) {
+            throw PlatformException(
+              code: 'decoder.video_hardware_unavailable',
+              details: <String, Object?>{
+                'category': 'decoderUnsupported',
+                'code': 'decoder.video_hardware_unavailable',
+                'message': 'Hardware decoder unavailable.',
+              },
+            );
           }
           return null;
         });
@@ -139,4 +151,34 @@ void main() {
     expect(player.state.status, YlPlaybackStatus.disposed);
     expect(player.textureId.value, isNull);
   });
+
+  test(
+    'preserves decoderUnsupported errors across the method channel',
+    () async {
+      final platform = YlPlayerIos(
+        methodChannel: methods,
+        nativeEvents: nativeEvents.stream,
+      );
+      final player = await platform.createPlayer(const YlPlayerConfiguration());
+      failOpenUnsupported = true;
+
+      await expectLater(
+        player.open(YlMediaSource.file('/tmp/movie.mkv')),
+        throwsA(
+          isA<YlPlayerError>()
+              .having(
+                (error) => error.category,
+                'category',
+                YlPlayerErrorCategory.decoderUnsupported,
+              )
+              .having(
+                (error) => error.code,
+                'code',
+                'decoder.video_hardware_unavailable',
+              ),
+        ),
+      );
+      await player.dispose();
+    },
+  );
 }

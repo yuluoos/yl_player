@@ -31,3 +31,7 @@ device and Simulator slices, then replaces
 lock file, license, and notices with every binary distribution so recipients
 can replace the LGPL component. Distribution still requires project-specific
 legal review.
+
+The same rebuild inputs are included inside the published `yl_player_ios`
+package at `tool/ios_ffmpeg`; repository-root copies are retained for the
+monorepo development workflow.

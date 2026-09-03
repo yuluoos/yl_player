@@ -126,6 +126,7 @@ final class YlVideoToolboxDecoderTests: XCTestCase {
       try YlVideoToolboxDecoder.makeFormatDescription(context: nil, streamIndex: 0)
     ) { error in
       XCTAssertEqual((error as? NativePlayerError)?.code, "decoder.video_configuration_invalid")
+      XCTAssertEqual((error as? NativePlayerError)?.category, "decoderFailure")
     }
   }
 
@@ -138,6 +139,7 @@ final class YlVideoToolboxDecoderTests: XCTestCase {
       )
     ) { error in
       XCTAssertEqual((error as? NativePlayerError)?.code, "decoder.video_configuration_invalid")
+      XCTAssertEqual((error as? NativePlayerError)?.category, "decoderFailure")
     }
   }
 
@@ -147,6 +149,7 @@ final class YlVideoToolboxDecoderTests: XCTestCase {
       try factory.makeSession(formatDescription: formatDescription(codec: kCMVideoCodecType_JPEG)) { _ in }
     ) { error in
       XCTAssertEqual((error as? NativePlayerError)?.code, "decoder.video_hardware_unavailable")
+      XCTAssertEqual((error as? NativePlayerError)?.category, "decoderUnsupported")
     }
   }
 
@@ -266,6 +269,10 @@ final class YlVideoToolboxDecoderTests: XCTestCase {
       XCTAssertEqual(
         (error as? NativePlayerError)?.code,
         "decoder.video_hardware_unavailable"
+      )
+      XCTAssertEqual(
+        (error as? NativePlayerError)?.category,
+        "decoderUnsupported"
       )
       return
     }

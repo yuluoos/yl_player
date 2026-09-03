@@ -642,7 +642,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         self.pendingAudioPacket = nil
         stateLock.withLock { pumping = false }
         fail(NativePlayerError(
-          category: "decoder",
+          category: "decoderFailure",
           code: "decoder.audio_failed",
           message: "AAC audio conversion failed.",
           diagnostic: String(describing: error)
@@ -721,7 +721,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         fail(error)
       } catch {
         fail(NativePlayerError(
-          category: "decoder",
+          category: "decoderFailure",
           code: "decoder.audio_failed",
           message: "AAC audio conversion failed.",
           diagnostic: String(describing: error)

@@ -81,7 +81,7 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
     )
     guard result == YLFResultOK, let unmanagedDescription else {
       throw NativePlayerError(
-        category: "decoder",
+        category: "decoderFailure",
         code: "decoder.video_configuration_invalid",
         message: "The video codec configuration is invalid."
       )
@@ -104,7 +104,7 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
     }
     guard result == YLFResultOK, let unmanagedDescription else {
       throw NativePlayerError(
-        category: "decoder",
+        category: "decoderFailure",
         code: "decoder.video_configuration_invalid",
         message: "The video codec configuration is invalid."
       )
@@ -124,7 +124,7 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
     let status = session.decode(sample, generation: generation)
     if status != noErr {
       onError(NativePlayerError(
-        category: "decoder",
+        category: "decoderFailure",
         code: "decoder.video_decode_failed",
         message: "VideoToolbox rejected a compressed video sample.",
         diagnostic: "OSStatus \(status)"
@@ -166,7 +166,7 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
 
     guard image.status == noErr, let pixelBuffer = image.pixelBuffer else {
       onError(NativePlayerError(
-        category: "decoder",
+        category: "decoderFailure",
         code: "decoder.video_decode_failed",
         message: "VideoToolbox failed to decode a video frame.",
         diagnostic: "OSStatus \(image.status)"
@@ -305,7 +305,7 @@ final class YlHardwareVTSessionFactory: YlVTSessionFactory {
 
   private static func hardwareUnavailable(status: OSStatus?) -> NativePlayerError {
     NativePlayerError(
-      category: "decoder",
+      category: "decoderUnsupported",
       code: "decoder.video_hardware_unavailable",
       message: "A hardware H.264/HEVC decoder is unavailable.",
       diagnostic: status.map { "OSStatus \($0)" }
