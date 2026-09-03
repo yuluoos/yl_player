@@ -1,5 +1,6 @@
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+/// Hardware-first Flutter playback kernel.
+library;
+
+export 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
+
+export 'src/player_controller.dart';
