@@ -331,6 +331,30 @@ int32_t ylf_copy_stream_info(YLFMediaContextRef context,
   return YLFResultOK;
 }
 
+size_t ylf_stream_codec_config_size(YLFMediaContextRef context,
+                                    int32_t stream_index) {
+  if (context == NULL || stream_index < 0 ||
+      (unsigned int)stream_index >= context->format->nb_streams) {
+    return 0;
+  }
+  int size = context->format->streams[stream_index]->codecpar->extradata_size;
+  return size > 0 ? (size_t)size : 0;
+}
+
+int32_t ylf_copy_stream_codec_config(YLFMediaContextRef context,
+                                     int32_t stream_index,
+                                     uint8_t *destination,
+                                     size_t capacity) {
+  size_t size = ylf_stream_codec_config_size(context, stream_index);
+  if (size == 0 || destination == NULL || capacity < size) {
+    return YLFResultInvalidArgument;
+  }
+  memcpy(destination,
+         context->format->streams[stream_index]->codecpar->extradata,
+         size);
+  return YLFResultOK;
+}
+
 int32_t ylf_read_packet(YLFMediaContextRef context, YLFPacketRef *out_packet) {
   if (context == NULL || out_packet == NULL) {
     return YLFResultInvalidArgument;

@@ -76,6 +76,12 @@ YLF_EXPORT int32_t ylf_open_local(const char *url_or_path,
 YLF_EXPORT int32_t ylf_copy_stream_info(YLFMediaContextRef context,
                                         int32_t stream_index,
                                         YLFStreamInfo *out_info);
+YLF_EXPORT size_t ylf_stream_codec_config_size(YLFMediaContextRef context,
+                                               int32_t stream_index);
+YLF_EXPORT int32_t ylf_copy_stream_codec_config(YLFMediaContextRef context,
+                                                int32_t stream_index,
+                                                uint8_t *destination,
+                                                size_t capacity);
 YLF_EXPORT int32_t ylf_read_packet(YLFMediaContextRef context,
                                    YLFPacketRef *out_packet);
 YLF_EXPORT int32_t ylf_seek(YLFMediaContextRef context, int64_t position_us);

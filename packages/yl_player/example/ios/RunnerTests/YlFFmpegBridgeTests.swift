@@ -104,6 +104,26 @@ final class YlFFmpegBridgeTests: XCTestCase {
         XCTAssertEqual(audioCount, 2)
     }
 
+    func testCopiesAACCodecConfiguration() throws {
+        var (context, mediaInfo) = try open("h264_aac")
+        defer { ylf_close(&context) }
+        var audioIndex: Int32?
+        for index in 0..<mediaInfo.stream_count {
+            var stream = YLFStreamInfo()
+            XCTAssertEqual(ylf_copy_stream_info(context, index, &stream), 0)
+            if Int(stream.kind) == YLFStreamAudio { audioIndex = stream.index }
+        }
+        let streamIndex = try XCTUnwrap(audioIndex)
+        let size = ylf_stream_codec_config_size(context, streamIndex)
+        XCTAssertEqual(size, 5)
+        var bytes = [UInt8](repeating: 0, count: size)
+        XCTAssertEqual(
+            ylf_copy_stream_codec_config(context, streamIndex, &bytes, bytes.count),
+            0
+        )
+        XCTAssertEqual(bytes, [0x11, 0x88, 0x56, 0xe5, 0x00])
+    }
+
     func testCreatesH264FormatAndZeroCopySampleBuffer() throws {
         var (context, mediaInfo) = try open("h264_aac")
         defer { ylf_close(&context) }
