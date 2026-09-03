@@ -61,7 +61,7 @@ libavformat + VideoToolbox fallback is built.
 
 - [x] Update the main example and READMEs to distinguish verified main-path
   support from planned fallback formats.
-- [ ] Run analyze, all Dart tests, Android debug build, iOS Simulator build,
+- [x] Run analyze, all Dart tests, Android debug build, iOS Simulator build,
   format verification, and four pub dry-runs.
 - [x] Do not claim low-end-device smoothness until physical-device soak and
   memory/performance measurements have been recorded.
