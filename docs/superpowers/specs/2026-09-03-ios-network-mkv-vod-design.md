@@ -103,6 +103,11 @@ throws for cancellation or terminal transport failures. `seek` returns the new
 absolute byte offset. The source must never invoke URLSession completion work on
 the FFmpeg worker that is blocked in `read`.
 
+Both range-capable and sequential sources may reposition within bytes still
+retained by the ring buffer so FFmpeg can probe safely. `supportsRandomAccess`
+means the source can move outside that retained window through a new HTTP Range
+request; only that capability makes the public player state seekable.
+
 The C bridge receives an opaque source pointer and C callbacks rather than a URL:
 
 ```c
