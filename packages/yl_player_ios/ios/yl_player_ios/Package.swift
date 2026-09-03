@@ -6,7 +6,9 @@ import PackageDescription
 let package = Package(
     name: "yl_player_ios",
     platforms: [
-        .iOS("15.0")
+        // Flutter's generated Swift-package aggregator currently declares iOS 13.
+        // The app and podspec remain the authoritative iOS 15 runtime floor.
+        .iOS("13.0")
     ],
     products: [
         .library(name: "yl-player-ios", targets: ["yl_player_ios"])

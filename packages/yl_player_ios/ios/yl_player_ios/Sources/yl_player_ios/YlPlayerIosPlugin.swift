@@ -224,7 +224,15 @@ private final class YlAvPlayer: NSObject, FlutterTexture {
       self?.emitState()
     }
     let link = CADisplayLink(target: self, selector: #selector(displayLinkTick))
-    link.preferredFrameRateRange = CAFrameRateRange(minimum: 15, maximum: 60, preferred: 30)
+    if #available(iOS 15.0, *) {
+      link.preferredFrameRateRange = CAFrameRateRange(
+        minimum: 15,
+        maximum: 60,
+        preferred: 30
+      )
+    } else {
+      link.preferredFramesPerSecond = 30
+    }
     link.add(to: .main, forMode: .common)
     link.isPaused = true
     displayLink = link
@@ -287,34 +295,28 @@ private final class YlAvPlayer: NSObject, FlutterTexture {
   }
 
   func validateOpen(_ source: [String: Any?]) throws {
-    let formatHint = source["formatHint"] as? String ?? "automatic"
-    guard let uri = source["uri"] as? String, !uri.isEmpty, let url = URL(string: uri) else {
-      throw NativePlayerError(
-        category: "source",
-        code: "source.invalid_uri",
-        message: "A valid media URI is required."
-      )
-    }
-    let fallbackHints: Set<String> = [
-      "httpFlv", "flv", "matroska", "webm", "mpegTs", "mpegPs", "avi",
-    ]
-    let fallbackExtensions: Set<String> = [
-      "flv", "mkv", "webm", "ts", "m2ts", "mpg", "mpeg", "ps", "avi",
-    ]
-    if fallbackHints.contains(formatHint)
-        || (formatHint == "automatic" && fallbackExtensions.contains(url.pathExtension.lowercased())) {
+    let headers = stringMap(source["headers"]).compactMapValues { $0 as? String }
+    let descriptor = YlIosSourceDescriptor(
+      uri: source["uri"] as? String ?? "",
+      kind: source["kind"] as? String ?? "",
+      formatHint: source["formatHint"] as? String ?? "automatic",
+      isLive: source["isLive"] as? Bool ?? false,
+      hasHeaders: !headers.isEmpty
+    )
+    switch YlSourceRouter.route(descriptor) {
+    case .avPlayer:
+      return
+    case .localMatroska:
       throw NativePlayerError(
         category: "container",
         code: "container.native_fallback_required",
         message: "This source requires the iOS native fallback, which is not bundled yet."
       )
-    }
-    let headers = stringMap(source["headers"]).compactMapValues { $0 as? String }
-    if !headers.isEmpty {
+    case let .reject(category, code, message):
       throw NativePlayerError(
-        category: "container",
-        code: "container.headers_require_fallback",
-        message: "Custom iOS HTTP headers require the native fallback, which is not bundled yet."
+        category: category,
+        code: code,
+        message: message
       )
     }
   }

@@ -47,6 +47,7 @@ AudioToolbox, AVFAudio, XCTest, CocoaPods, Swift Package Manager.
 - Create: `packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlSourceRouter.swift`
 - Create: `packages/yl_player/example/ios/RunnerTests/YlSourceRouterTests.swift`
 - Modify: `packages/yl_player/example/ios/Runner.xcodeproj/project.pbxproj`
+- Modify: `packages/yl_player_ios/ios/yl_player_ios/Package.swift`
 - Modify: `packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlPlayerIosPlugin.swift`
 
 **Interfaces:**
@@ -61,7 +62,7 @@ AudioToolbox, AVFAudio, XCTest, CocoaPods, Swift Package Manager.
   `container.native_fallback_required` result for that route at the command
   boundary.
 
-- [ ] **Step 1: Add the failing router tests**
+- [x] **Step 1: Add the failing router tests**
 
 ```swift
 @testable import yl_player_ios
@@ -97,21 +98,23 @@ final class YlSourceRouterTests: XCTestCase {
 }
 ```
 
-- [ ] **Step 2: Add the test file to RunnerTests and verify RED**
+- [x] **Step 2: Add the test file to RunnerTests and verify RED**
 
 Add the Swift file to the existing `RunnerTests` target's Sources build phase
-and run:
+and keep the plugin Swift package compatible with Flutter's generated iOS 13
+aggregator while the application and podspec enforce the real iOS 15 runtime
+floor. Then run:
 
 ```bash
 xcodebuild test \
   -workspace packages/yl_player/example/ios/Runner.xcworkspace \
   -scheme Runner \
-  -destination 'platform=iOS Simulator,id=BE1D20AE-8A22-4279-ADF8-9056CFA55371'
+  -destination 'platform=iOS Simulator,id=431A3ACD-A229-4F82-AC46-9B9481AC0ADE'
 ```
 
 Expected: compile failure because the descriptor/router types do not exist.
 
-- [ ] **Step 3: Implement the value-only router**
+- [x] **Step 3: Implement the value-only router**
 
 Implement the exact extension precedence: explicit `matroska` + local kind, or
 automatic + local `.mkv`, yields `.localMatroska`; known fallback formats over
@@ -119,24 +122,26 @@ network yield the fallback-required error; custom headers yield
 `container.headers_require_fallback`; HLS/MP4/MOV yield `.avPlayer`; malformed
 URI yields `source.invalid_uri`.
 
-- [ ] **Step 4: Replace duplicated format checks in `validateOpen`**
+- [x] **Step 4: Replace duplicated format checks in `validateOpen`**
 
 Build `YlIosSourceDescriptor` from the channel map, call the router before any
 deactivation, and translate `.localMatroska` to the existing fallback-required
 error until Task 7 supplies the backend.
 
-- [ ] **Step 5: Run the router tests and existing HLS integration**
+- [x] **Step 5: Run the router tests and existing HLS integration**
 
-Run the XCTest command above, then:
+Run the XCTest command above, then run this command from
+`packages/yl_player/example` so Flutter selects the example app's plugin
+registrant:
 
 ```bash
-flutter test packages/yl_player/example/integration_test/hls_playback_test.dart \
-  -d BE1D20AE-8A22-4279-ADF8-9056CFA55371
+flutter test integration_test/hls_playback_test.dart \
+  -d 431A3ACD-A229-4F82-AC46-9B9481AC0ADE
 ```
 
 Expected: router tests pass and Flutter reports `+2: All tests passed!`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add packages/yl_player_ios/ios/yl_player_ios packages/yl_player/example/ios
@@ -634,7 +639,7 @@ HLS source remains active.
 
 ```bash
 flutter test integration_test/ios_mkv_playback_test.dart \
-  -d BE1D20AE-8A22-4279-ADF8-9056CFA55371
+  -d 431A3ACD-A229-4F82-AC46-9B9481AC0ADE
 ```
 
 Expected: failure at fallback routing/first frame before final wiring.
