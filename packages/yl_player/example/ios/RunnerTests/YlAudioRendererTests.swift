@@ -10,6 +10,7 @@ final class YlAudioRendererTests: XCTestCase {
     var configurationError: Error?
     var outputDurationUs: Int64 = 250_000
     var outputBytes = 1_000
+    private(set) var convertCount = 0
 
     func configure(stream: YlAudioStreamConfiguration) throws {
       if let configurationError { throw configurationError }
@@ -20,7 +21,8 @@ final class YlAudioRendererTests: XCTestCase {
     }
 
     func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer {
-      YlScheduledAudioBuffer(
+      convertCount += 1
+      return YlScheduledAudioBuffer(
         payload: Token(),
         ptsUs: packet.ptsUs,
         durationUs: outputDurationUs,
@@ -115,6 +117,26 @@ final class YlAudioRendererTests: XCTestCase {
     try renderer.configure(stream: stream())
     XCTAssertEqual(try renderer.enqueue(packet: packet()), .wouldExceedBytes)
     XCTAssertEqual(renderer.scheduledBytes, 0)
+    XCTAssertEqual(converter.convertCount, 0)
+  }
+
+  func testScheduledPCMByteLimitComesFromFallbackBudget() throws {
+    let budget = try YlFallbackBufferBudget.make(configuration: PlayerConfiguration(map: [
+      "bufferMode": "lowLatency",
+    ]))
+    let converter = FakeConverter()
+    let output = FakeOutput()
+    converter.outputBytes = budget.scheduledAudioBytes + 1
+    let renderer = YlAudioRenderer(
+      bufferBudget: budget,
+      converter: converter,
+      output: output
+    )
+    try renderer.configure(stream: stream())
+
+    XCTAssertEqual(try renderer.enqueue(packet: packet()), .wouldExceedBytes)
+    XCTAssertEqual(converter.convertCount, 0)
+    XCTAssertTrue(output.completions.isEmpty)
   }
 
   func testUnderrunClampAndStaleCompletionSuppression() throws {

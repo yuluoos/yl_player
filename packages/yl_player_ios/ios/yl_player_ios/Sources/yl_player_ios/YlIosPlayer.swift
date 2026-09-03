@@ -64,7 +64,10 @@ final class YlIosPlayer: NSObject, FlutterTexture {
       try avBackend.validateOpen(source)
       pendingOpen = .avPlayer(source)
     case .localMatroska:
-      pendingOpen = .fallback(source, try YlPreparedFallback(source: source))
+      pendingOpen = .fallback(
+        source,
+        try YlPreparedFallback(source: source, configuration: configuration)
+      )
     case .networkMatroska:
       throw NativePlayerError(
         category: "container",

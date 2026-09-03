@@ -98,8 +98,26 @@ final class YlFallbackBackendTests: XCTestCase {
     }
     if let prepared {
       XCTAssertGreaterThan(prepared.videoStream.width, 0)
+      guard case let .local(path) = prepared.sourceRecipe else {
+        return XCTFail("Expected local source recipe")
+      }
+      XCTAssertEqual(path, fixture.path)
     }
     prepared = nil
     XCTAssertEqual(ylf_debug_outstanding_packet_count(), 0)
+  }
+
+  func testInFlightPacketBudgetRejectsOversizedCompressedPacket() throws {
+    let budget = try YlFallbackBufferBudget.make(configuration: PlayerConfiguration(map: [
+      "bufferMode": "lowLatency",
+    ]))
+
+    XCTAssertNoThrow(try budget.validateInFlightPacket(size: budget.inFlightPacketBytes))
+    XCTAssertThrowsError(
+      try budget.validateInFlightPacket(size: budget.inFlightPacketBytes + 1)
+    ) { error in
+      XCTAssertEqual((error as? NativePlayerError)?.category, "resource")
+      XCTAssertEqual((error as? NativePlayerError)?.code, "resource.network_buffer_limit")
+    }
   }
 }

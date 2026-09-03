@@ -62,48 +62,69 @@ final class YlPostSeekGate {
 }
 
 final class YlPreparedFallback {
-  let sourcePath: String
+  let sourceRecipe: YlFallbackSourceRecipe
   let mediaInfo: YLFMediaInfo
   let videoStream: YLFStreamInfo
   let audioStreams: [YLFStreamInfo]
   let videoFormat: CMVideoFormatDescription
   let audioCookies: [Int32: Data]
-  private var context: YLFMediaContextRef?
+  private var openedMedia: YlOpenedMedia?
 
-  init(source: [String: Any?], requireHardwareProbe: Bool = true) throws {
+  init(
+    source: [String: Any?],
+    requireHardwareProbe: Bool = true,
+    configuration: PlayerConfiguration = PlayerConfiguration(map: [:]),
+    sessionConfiguration: URLSessionConfiguration = .ephemeral
+  ) throws {
     guard let uri = source["uri"] as? String,
-          let url = URL(string: uri),
-          url.isFileURL else {
+          let url = URL(string: uri) else {
       throw NativePlayerError(
         category: "source",
         code: "source.invalid_uri",
-        message: "A valid local file URI is required."
+        message: "A valid Matroska URI is required."
       )
     }
-    sourcePath = url.path
-    var openedContext: YLFMediaContextRef?
-    var openedInfo = YLFMediaInfo()
-    let openResult = url.path.withCString {
-      ylf_open_local($0, &openedContext, &openedInfo)
-    }
-    guard openResult == 0, let validContext = openedContext else {
+    if url.isFileURL {
+      sourceRecipe = .local(path: url.path)
+    } else if let scheme = url.scheme?.lowercased(),
+              scheme == "http" || scheme == "https" {
+      let headers = stringMap(source["headers"]).compactMapValues { $0 as? String }
+      sourceRecipe = .network(request: YlNetworkRequestRecipe(
+        url: url,
+        headers: headers,
+        configuration: configuration.network
+      ))
+    } else {
       throw NativePlayerError(
-        category: "container",
-        code: openResult == -3 ? "container.mkv_malformed" : "container.mkv_open_failed",
-        message: "The local Matroska file could not be opened.",
-        diagnostic: "YlFFmpegBridge result \(openResult)"
+        category: "source",
+        code: "source.invalid_uri",
+        message: "Only file, HTTP, and HTTPS Matroska URIs are supported."
       )
     }
-    mediaInfo = openedInfo
-    var contextNeedsClose = true
+    let budget = try YlFallbackBufferBudget.make(configuration: configuration)
+    let opened = try YlOpenedMedia(
+      recipe: sourceRecipe,
+      networkBufferBytes: budget.networkBytes,
+      sessionConfiguration: sessionConfiguration
+    )
+    mediaInfo = opened.info
+    guard let validContext = opened.context else {
+      opened.close()
+      throw NativePlayerError(
+        category: "internal",
+        code: "internal.fallback_invariant",
+        message: "The opened Matroska context was unavailable."
+      )
+    }
+    var mediaNeedsClose = true
     defer {
-      if contextNeedsClose { ylf_close(&openedContext) }
+      if mediaNeedsClose { opened.close() }
     }
 
     var selectedVideo: YLFStreamInfo?
     var selectedAudio: [YLFStreamInfo] = []
     var sawUnsupportedAudio = false
-    for index in 0..<openedInfo.stream_count {
+    for index in 0..<mediaInfo.stream_count {
       var stream = YLFStreamInfo()
       guard ylf_copy_stream_info(validContext, index, &stream) == 0 else { continue }
       if Int(stream.kind) == YLFStreamVideo,
@@ -174,24 +195,24 @@ final class YlPreparedFallback {
       )
       probe.dispose()
     }
-    context = validContext
-    contextNeedsClose = false
+    openedMedia = opened
+    mediaNeedsClose = false
   }
 
-  func takeContext() throws -> YLFMediaContextRef {
-    guard let context else {
+  func takeMedia() throws -> YlOpenedMedia {
+    guard let openedMedia else {
       throw NativePlayerError(
         category: "internal",
         code: "internal.fallback_invariant",
         message: "The prepared Matroska context was already consumed."
       )
     }
-    self.context = nil
-    return context
+    self.openedMedia = nil
+    return openedMedia
   }
 
   deinit {
-    ylf_close(&context)
+    openedMedia?.close()
   }
 }
 
@@ -209,7 +230,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private let textures: FlutterTextureRegistry
   private let configuration: PlayerConfiguration
   private let emit: ([String: Any?]) -> Void
-  private let sourcePath: String
+  private let sourceRecipe: YlFallbackSourceRecipe
+  private let bufferBudget: YlFallbackBufferBudget
   private let mediaInfo: YLFMediaInfo
   private let videoStream: YLFStreamInfo
   private let audioStreams: [YLFStreamInfo]
@@ -223,7 +245,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private let outputRelay = YlFallbackOutputRelay()
   private var mediaClock: YlMediaClock!
   private var decoder: YlVideoToolboxDecoder?
-  private var context: YLFMediaContextRef?
+  private var openedMedia: YlOpenedMedia?
+  private var context: YLFMediaContextRef? { openedMedia?.context }
   private var displayLink: CADisplayLink?
   private var currentPixelBuffer: CVPixelBuffer?
   private var active = false
@@ -263,7 +286,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     self.textureId = textureId
     self.textures = textures
     self.configuration = configuration
-    self.sourcePath = prepared.sourcePath
+    self.sourceRecipe = prepared.sourceRecipe
+    self.bufferBudget = try YlFallbackBufferBudget.make(configuration: configuration)
     self.mediaInfo = prepared.mediaInfo
     self.videoStream = prepared.videoStream
     self.audioStreams = prepared.audioStreams
@@ -273,11 +297,10 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     self.generation = generation
     self.audioGeneration = generation
     self.emit = emit
-    var ownedContext: YLFMediaContextRef? = try prepared.takeContext()
-    self.context = ownedContext
+    self.openedMedia = try prepared.takeMedia()
     super.init()
 
-    audioRenderer = YlAudioRenderer()
+    audioRenderer = YlAudioRenderer(bufferBudget: bufferBudget)
     mediaClock = YlMediaClock(audioTime: { [weak self] in
       self?.audioRenderer?.renderedAudioTime
     })
@@ -303,8 +326,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       decoder = nil
       audioRenderer?.dispose()
       audioRenderer = nil
-      self.context = nil
-      ylf_close(&ownedContext)
+      openedMedia?.close()
+      openedMedia = nil
       throw error
     }
     frameScheduler.flush(generation: generation)
@@ -377,7 +400,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       decoder = nil
       audioRenderer?.dispose()
       audioRenderer = nil
-      ylf_close(&context)
+      openedMedia?.close()
+      openedMedia = nil
     }
     frameScheduler.flush(generation: currentGeneration)
     stateLock.withLock {
@@ -533,7 +557,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       audioRenderer?.dispose()
       audioRenderer = nil
       frameScheduler.dispose()
-      ylf_close(&context)
+      openedMedia?.close()
+      openedMedia = nil
     }
     stateLock.withLock { currentPixelBuffer = nil }
   }
@@ -673,6 +698,19 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       return
     }
 
+    do {
+      try bufferBudget.validateInFlightPacket(size: ylf_packet_size(ownedPacket))
+    } catch let error as NativePlayerError {
+      ylf_packet_release(&packet)
+      stateLock.withLock { pumping = false }
+      fail(error)
+      return
+    } catch {
+      ylf_packet_release(&packet)
+      stateLock.withLock { pumping = false }
+      return
+    }
+
     let streamIndex = ylf_packet_stream_index(ownedPacket)
     var retryDelay = TimeInterval(0)
     if streamIndex == videoStream.index {
@@ -772,15 +810,14 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         stateLock.withLock { currentPixelBuffer = nil }
       },
       seekDemux: { [self] targetUs in
-        let seekResult = ylf_seek(context, targetUs)
-        guard seekResult == 0 else {
+        guard let openedMedia else {
           throw NativePlayerError(
-            category: "container",
-            code: "container.mkv_seek_failed",
-            message: "The Matroska file could not be seeked.",
-            diagnostic: "YlFFmpegBridge result \(seekResult)"
+            category: "internal",
+            code: "internal.fallback_invariant",
+            message: "The Matroska media input is unavailable."
           )
         }
+        try openedMedia.seek(toMediaTimeUs: targetUs)
       },
       resetAudio: { [self] nextGeneration in
         audioRenderer?.reset(generation: nextGeneration)
@@ -829,28 +866,27 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   }
 
   private func rebuildPipeline(positionUs: Int64) throws {
-    var reopenedContext: YLFMediaContextRef?
-    var reopenedInfo = YLFMediaInfo()
-    let openResult = sourcePath.withCString {
-      ylf_open_local($0, &reopenedContext, &reopenedInfo)
-    }
-    guard openResult == 0, let validContext = reopenedContext else {
+    let reopenedMedia = try YlOpenedMedia(
+      recipe: sourceRecipe,
+      networkBufferBytes: bufferBudget.networkBytes
+    )
+    guard let validContext = reopenedMedia.context else {
+      reopenedMedia.close()
       throw NativePlayerError(
-        category: "container",
-        code: "container.mkv_open_failed",
-        message: "The local Matroska file could not be reopened.",
-        diagnostic: "YlFFmpegBridge result \(openResult)"
+        category: "internal",
+        code: "internal.fallback_invariant",
+        message: "The reopened Matroska context was unavailable."
       )
     }
 
-    var contextNeedsClose = true
+    var mediaNeedsClose = true
     var candidateDecoder: YlVideoToolboxDecoder?
     var candidateAudio: YlAudioRenderer?
     defer {
-      if contextNeedsClose {
+      if mediaNeedsClose {
         candidateDecoder?.dispose()
         candidateAudio?.dispose()
-        ylf_close(&reopenedContext)
+        reopenedMedia.close()
       }
     }
 
@@ -863,7 +899,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       onFrame: { [outputRelay] frame in outputRelay.frame(frame) },
       onError: { [outputRelay] error in outputRelay.error(error) }
     )
-    let renderer = YlAudioRenderer()
+    let renderer = YlAudioRenderer(bufferBudget: bufferBudget)
     candidateAudio = renderer
     if let selectedAudioStream,
        let cookie = audioCookies[selectedAudioStream.index] {
@@ -878,21 +914,12 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       renderer.setRate(desiredRate)
     }
     if positionUs > 0 {
-      let seekResult = ylf_seek(validContext, positionUs)
-      guard seekResult == 0 else {
-        throw NativePlayerError(
-          category: "container",
-          code: "container.mkv_seek_failed",
-          message: "The Matroska file could not be restored at its saved position.",
-          diagnostic: "YlFFmpegBridge result \(seekResult)"
-        )
-      }
+      try reopenedMedia.seek(toMediaTimeUs: positionUs)
       postSeekGate.reset(targetUs: positionUs)
     }
 
     videoFormat = candidateFormat
-    context = validContext
-    reopenedContext = nil
+    openedMedia = reopenedMedia
     decoder = candidateDecoder
     candidateDecoder = nil
     audioRenderer = renderer
@@ -904,7 +931,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     audioAnchored = false
     frameScheduler.flush(generation: generation)
     mediaClock.seek(to: positionUs)
-    contextNeedsClose = false
+    mediaNeedsClose = false
   }
 
   private func installDisplayLink(paused: Bool) {
@@ -986,7 +1013,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     }
 
     let nextAudioGeneration = stateLock.withLock { audioGeneration &+ 1 }
-    let candidate = YlAudioRenderer()
+    let candidate = YlAudioRenderer(bufferBudget: bufferBudget)
     do {
       try candidate.configure(stream: YlAudioStreamConfiguration(
         codec: .aac,

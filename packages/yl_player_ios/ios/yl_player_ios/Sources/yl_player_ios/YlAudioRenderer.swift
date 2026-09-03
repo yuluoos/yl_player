@@ -100,6 +100,19 @@ final class YlAudioRenderer: YlAudioRendering {
     self.output = output
   }
 
+  convenience init(
+    bufferBudget: YlFallbackBufferBudget,
+    converter: YlAudioPacketConverting = YlAppleAACConverter(),
+    output: YlAudioOutputDriving = YlSystemAudioOutput()
+  ) {
+    self.init(
+      maxScheduledDurationUs: 500_000,
+      maxScheduledBytes: bufferBudget.scheduledAudioBytes,
+      converter: converter,
+      output: output
+    )
+  }
+
   var scheduledDurationUs: Int64 {
     lock.withLock { scheduledDuration }
   }

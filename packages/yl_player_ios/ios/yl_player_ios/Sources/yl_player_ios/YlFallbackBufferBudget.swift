@@ -5,6 +5,16 @@ struct YlFallbackBufferBudget: Equatable {
   let scheduledAudioBytes: Int
   let inFlightPacketBytes: Int
 
+  func validateInFlightPacket(size: Int) throws {
+    guard size >= 0, size <= inFlightPacketBytes else {
+      throw NativePlayerError(
+        category: "resource",
+        code: "resource.network_buffer_limit",
+        message: "A compressed media packet exceeded its memory budget."
+      )
+    }
+  }
+
   static func make(configuration: PlayerConfiguration) throws -> Self {
     let mebibyte = 1024 * 1024
     switch configuration.bufferMode {

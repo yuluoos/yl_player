@@ -443,27 +443,27 @@ git commit -m "feat: stream bounded network MKV bytes"
 - Produces: `YlOpenedMedia` that owns `YLFMediaContextRef` plus optional `YlByteSource`, closes the context before releasing the source, and exposes `seek(toMediaTimeUs:)`.
 - Changes: `YlPreparedFallback` owns/takes `YlOpenedMedia` and retains its source recipe for lifecycle rebuild.
 
-- [ ] **Step 1: Write failing ownership and budget tests**
+- [x] **Step 1: Write failing ownership and budget tests**
 
 Use a callback fixture byte source to assert network open returns the same stream metadata as local open, callback source outlives the C context, close cancels exactly once, and 100 open/read/close cycles leave the bridge packet counter at zero. Add audio tests proving `maxScheduledBytes` comes from `YlFallbackBufferBudget` and oversized PCM returns `.wouldExceedBytes` before scheduling.
 
-- [ ] **Step 2: Run targeted tests and verify RED**
+- [x] **Step 2: Run targeted tests and verify RED**
 
 Run `YlOpenedMediaTests`, `YlFallbackBackendTests`, and `YlAudioRendererTests`.
 
 Expected: compile failures for the recipe/opened-media APIs and failed budget injection assertion.
 
-- [ ] **Step 3: Implement Swift callback thunks and opened-media lifetime**
+- [x] **Step 3: Implement Swift callback thunks and opened-media lifetime**
 
 Use a retained Swift box owned by `YlOpenedMedia`; pass it unretained to noncapturing C-compatible thunks. The read thunk maps `YlByteSourceError.cancelled` distinctly and never lets Swift errors cross C. The seek thunk handles `AVSEEK_SIZE`, cached-window seeks, and range seeks. `close()` first calls `ylf_close`, which invokes the source cancellation callback while the box is alive, then releases the box.
 
 Refactor local open through the same `YlOpenedMedia` owner without changing local behavior. Inject budget ceilings into `YlAudioRenderer`; reject an in-flight compressed packet larger than `inFlightPacketBytes` before video/audio conversion.
 
-- [ ] **Step 4: Run targeted tests and all fallback XCTest**
+- [x] **Step 4: Run targeted tests and all fallback XCTest**
 
 Expected: ownership, 100-cycle, audio budget, local fallback, seek, and lifecycle tests pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios \
