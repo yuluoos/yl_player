@@ -35,4 +35,16 @@ ffmpeg -hide_banner -loglevel error -y \
   $common_output_flags \
   "$fixture_dir/two_audio_tracks.mkv"
 
+# Keep HEVC output deterministic and small. Limit x265 to one frame thread so
+# fixture generation does not depend on host core count.
+ffmpeg -hide_banner -loglevel error -y \
+  -f lavfi -i testsrc2=size=320x180:rate=24 \
+  -f lavfi -i sine=frequency=660:sample_rate=48000 \
+  -map 0:v -map 1:a \
+  -c:v libx265 -pix_fmt yuv420p -g 24 -keyint_min 24 \
+  -x265-params "log-level=error:pools=1:frame-threads=1:scenecut=0" \
+  -c:a aac -b:a 96k \
+  $common_output_flags \
+  "$fixture_dir/hevc_aac.mkv"
+
 echo "generated deterministic MKV fixtures in $fixture_dir"

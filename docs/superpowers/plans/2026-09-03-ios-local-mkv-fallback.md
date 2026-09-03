@@ -577,39 +577,39 @@ git commit -m "feat: route local MKV to iOS native fallback"
 - Internal `pipelineGeneration` increments on seek, deactivate, open, and
   dispose independently of the player source generation.
 
-- [ ] **Step 1: Add HEVC fixture generation and failing lifecycle tests**
+- [x] **Step 1: Add HEVC fixture generation and failing lifecycle tests**
 
 Generate a 2-second 320×180 HEVC/AAC MKV with `libx265`, then test seek flush
 order, suppression before target PTS, audio-only flush on track switch,
 background release, resume reconstruction, memory-warning release, repeated
 deactivate/activate, and H.265 configuration/hardware-unavailable mapping.
 
-- [ ] **Step 2: Run XCTest to verify RED**
+- [x] **Step 2: Run XCTest to verify RED**
 
 Expected: behavior assertions fail because seek/reconstruction and HEVC format
 creation are not complete.
 
-- [ ] **Step 3: Implement seek as an ordered transaction**
+- [x] **Step 3: Implement seek as an ordered transaction**
 
 Pause clocks, increment generation, cancel demux waiters, clear queues/frame
 store/PCM, call bridge seek to the preceding video keyframe, flush audio,
 invalidate/recreate VT, restart demux, suppress decoded frames before target,
 and anchor clocks from the first accepted post-seek sample.
 
-- [ ] **Step 4: Implement track switching and lifecycle reconstruction**
+- [x] **Step 4: Implement track switching and lifecycle reconstruction**
 
 Persist selected audio stream ID, quality/rate/volume, position, and live intent.
 Track switch replaces only audio converter/queue state. Deactivate closes demux,
 VT, audio engine buffers, display link, and all queues; activate reopens the file
 and seeks before honoring a pending play.
 
-- [ ] **Step 5: Implement HEVC configuration and run GREEN tests**
+- [x] **Step 5: Implement HEVC configuration and run GREEN tests**
 
 Create the HEVC format description from hvcC parameter sets and require hardware
 exactly as H.264. Tests accept decoded output only when hardware is reported;
 otherwise they require `decoder.video_hardware_unavailable`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add packages/yl_player_ios tool/ios_ffmpeg packages/yl_player/example/ios

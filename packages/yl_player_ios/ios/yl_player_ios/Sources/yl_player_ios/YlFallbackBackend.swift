@@ -6,15 +6,71 @@ import QuartzCore
 import UIKit
 import YlFFmpegBridge
 
+struct YlFallbackLifecycleTransaction {
+  let pauseClock: () -> Void
+  let advanceGeneration: () -> UInt64
+  let stopDemux: () -> Void
+  let clearBuffers: (UInt64) -> Void
+  let seekDemux: (Int64) throws -> Void
+  let resetAudio: (UInt64) throws -> Void
+  let recreateVideo: (UInt64) throws -> Void
+  let suppressFramesBefore: (Int64) -> Void
+  let restartDemux: () throws -> Void
+
+  func seek(toUs targetUs: Int64) throws {
+    pauseClock()
+    let generation = advanceGeneration()
+    stopDemux()
+    clearBuffers(generation)
+    try seekDemux(targetUs)
+    try resetAudio(generation)
+    try recreateVideo(generation)
+    suppressFramesBefore(targetUs)
+    try restartDemux()
+  }
+}
+
+final class YlPostSeekGate {
+  private let lock = NSLock()
+  private var minimumVideoPtsUs: Int64?
+  private var minimumAudioPtsUs: Int64?
+
+  func reset(targetUs: Int64?) {
+    lock.withLock {
+      minimumVideoPtsUs = targetUs
+      minimumAudioPtsUs = targetUs
+    }
+  }
+
+  func acceptsVideo(ptsUs: Int64) -> Bool {
+    lock.withLock {
+      guard let minimumVideoPtsUs else { return true }
+      guard ptsUs >= minimumVideoPtsUs else { return false }
+      self.minimumVideoPtsUs = nil
+      return true
+    }
+  }
+
+  func acceptsAudio(ptsUs: Int64) -> Bool {
+    lock.withLock {
+      guard let minimumAudioPtsUs else { return true }
+      guard ptsUs >= minimumAudioPtsUs else { return false }
+      self.minimumAudioPtsUs = nil
+      return true
+    }
+  }
+}
+
 final class YlPreparedFallback {
+  let sourcePath: String
   let mediaInfo: YLFMediaInfo
   let videoStream: YLFStreamInfo
-  let audioStream: YLFStreamInfo?
+  let audioStreams: [YLFStreamInfo]
   let videoFormat: CMVideoFormatDescription
-  let audioCookie: Data?
+  let audioCookies: [Int32: Data]
   private var context: YLFMediaContextRef?
 
-  init(source: [String: Any?]) throws {
+  init(source: [String: Any?], requireHardwareProbe: Bool = true) throws {
     guard let uri = source["uri"] as? String,
           let url = URL(string: uri),
           url.isFileURL else {
@@ -24,6 +80,7 @@ final class YlPreparedFallback {
         message: "A valid local file URI is required."
       )
     }
+    sourcePath = url.path
     var openedContext: YLFMediaContextRef?
     var openedInfo = YLFMediaInfo()
     let openResult = url.path.withCString {
@@ -44,7 +101,7 @@ final class YlPreparedFallback {
     }
 
     var selectedVideo: YLFStreamInfo?
-    var selectedAudio: YLFStreamInfo?
+    var selectedAudio: [YLFStreamInfo] = []
     var sawUnsupportedAudio = false
     for index in 0..<openedInfo.stream_count {
       var stream = YLFStreamInfo()
@@ -54,8 +111,8 @@ final class YlPreparedFallback {
          selectedVideo == nil {
         selectedVideo = stream
       } else if Int(stream.kind) == YLFStreamAudio {
-        if Int(stream.codec) == YLFCodecAAC, selectedAudio == nil {
-          selectedAudio = stream
+        if Int(stream.codec) == YLFCodecAAC {
+          selectedAudio.append(stream)
         } else if Int(stream.codec) != YLFCodecAAC {
           sawUnsupportedAudio = true
         }
@@ -68,7 +125,7 @@ final class YlPreparedFallback {
         message: "The file does not contain supported H.264 or H.265 video."
       )
     }
-    if selectedAudio == nil && sawUnsupportedAudio {
+    if selectedAudio.isEmpty && sawUnsupportedAudio {
       throw NativePlayerError(
         category: "decoderUnsupported",
         code: "decoder.audio_aac_unsupported",
@@ -76,14 +133,15 @@ final class YlPreparedFallback {
       )
     }
     videoStream = selectedVideo
-    audioStream = selectedAudio
+    audioStreams = selectedAudio
     videoFormat = try YlVideoToolboxDecoder.makeFormatDescription(
       context: validContext,
       streamIndex: selectedVideo.index
     )
 
-    if let selectedAudio {
-      let size = ylf_stream_codec_config_size(validContext, selectedAudio.index)
+    var copiedAudioCookies: [Int32: Data] = [:]
+    for audioStream in selectedAudio {
+      let size = ylf_stream_codec_config_size(validContext, audioStream.index)
       guard size > 0 else {
         throw NativePlayerError(
           category: "decoderUnsupported",
@@ -94,7 +152,7 @@ final class YlPreparedFallback {
       var bytes = [UInt8](repeating: 0, count: size)
       guard ylf_copy_stream_codec_config(
         validContext,
-        selectedAudio.index,
+        audioStream.index,
         &bytes,
         bytes.count
       ) == 0 else {
@@ -104,17 +162,18 @@ final class YlPreparedFallback {
           message: "The AAC codec configuration is invalid."
         )
       }
-      audioCookie = Data(bytes)
-    } else {
-      audioCookie = nil
+      copiedAudioCookies[audioStream.index] = Data(bytes)
     }
+    audioCookies = copiedAudioCookies
 
-    let probe = try YlVideoToolboxDecoder(
-      formatDescription: videoFormat,
-      onFrame: { _ in },
-      onError: { _ in }
-    )
-    probe.dispose()
+    if requireHardwareProbe {
+      let probe = try YlVideoToolboxDecoder(
+        formatDescription: videoFormat,
+        onFrame: { _ in },
+        onError: { _ in }
+      )
+      probe.dispose()
+    }
     context = validContext
     contextNeedsClose = false
   }
@@ -150,17 +209,20 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private let textures: FlutterTextureRegistry
   private let configuration: PlayerConfiguration
   private let emit: ([String: Any?]) -> Void
+  private let sourcePath: String
   private let mediaInfo: YLFMediaInfo
   private let videoStream: YLFStreamInfo
-  private let audioStream: YLFStreamInfo?
-  private let videoFormat: CMVideoFormatDescription
+  private let audioStreams: [YLFStreamInfo]
+  private let audioCookies: [Int32: Data]
+  private var videoFormat: CMVideoFormatDescription
   private let worker = DispatchQueue(label: "dev.ylplayer.ios.fallback.demux")
   private let stateLock = NSLock()
   private let frameScheduler = YlFrameScheduler()
-  private let audioRenderer = YlAudioRenderer()
+  private let postSeekGate = YlPostSeekGate()
+  private var audioRenderer: YlAudioRenderer!
   private let outputRelay = YlFallbackOutputRelay()
   private var mediaClock: YlMediaClock!
-  private var decoder: YlVideoToolboxDecoder!
+  private var decoder: YlVideoToolboxDecoder?
   private var context: YLFMediaContextRef?
   private var displayLink: CADisplayLink?
   private var currentPixelBuffer: CVPixelBuffer?
@@ -168,11 +230,18 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private var playing = false
   private var disposed = false
   private var pumping = false
+  private var reconfiguring = false
   private var generation: UInt64
+  private var audioGeneration: UInt64
+  private var selectedAudioStream: YLFStreamInfo?
+  private var desiredVolume: Float = 1
+  private var desiredRate: Float = 1
+  private var savedPositionUs: Int64 = 0
   private var status = "ready"
   private var firstFrameSent = false
   private var prebufferedVideoSample = false
   private var demuxEOF = false
+  private var completionSent = false
   private var audioAnchored = false
   private var pendingAudioPacket: YlCompressedAudioPacket?
   private var openStartedAt = CACurrentMediaTime()
@@ -194,18 +263,23 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     self.textureId = textureId
     self.textures = textures
     self.configuration = configuration
+    self.sourcePath = prepared.sourcePath
     self.mediaInfo = prepared.mediaInfo
     self.videoStream = prepared.videoStream
-    self.audioStream = prepared.audioStream
+    self.audioStreams = prepared.audioStreams
+    self.audioCookies = prepared.audioCookies
+    self.selectedAudioStream = prepared.audioStreams.first
     self.videoFormat = prepared.videoFormat
     self.generation = generation
+    self.audioGeneration = generation
     self.emit = emit
     var ownedContext: YLFMediaContextRef? = try prepared.takeContext()
     self.context = ownedContext
     super.init()
 
-    mediaClock = YlMediaClock(audioTime: { [weak audioRenderer] in
-      audioRenderer?.renderedAudioTime
+    audioRenderer = YlAudioRenderer()
+    mediaClock = YlMediaClock(audioTime: { [weak self] in
+      self?.audioRenderer?.renderedAudioTime
     })
     outputRelay.backend = self
     do {
@@ -214,35 +288,28 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         onFrame: { [outputRelay] frame in outputRelay.frame(frame) },
         onError: { [outputRelay] error in outputRelay.error(error) }
       )
-      if let audioStream, let cookie = prepared.audioCookie {
+      if let audioStream = selectedAudioStream,
+         let cookie = audioCookies[audioStream.index] {
         try audioRenderer.configure(stream: YlAudioStreamConfiguration(
           codec: .aac,
           sampleRate: Double(audioStream.sample_rate),
           channelCount: Int(audioStream.channel_count),
           magicCookie: cookie,
-          generation: generation
+          generation: audioGeneration
         ))
       }
     } catch {
+      decoder?.dispose()
+      decoder = nil
+      audioRenderer?.dispose()
+      audioRenderer = nil
       self.context = nil
       ylf_close(&ownedContext)
       throw error
     }
     frameScheduler.flush(generation: generation)
     openDurationMs = Int64((CACurrentMediaTime() - openStartedAt) * 1_000)
-    let link = CADisplayLink(target: self, selector: #selector(displayLinkTick))
-    if #available(iOS 15.0, *) {
-      link.preferredFrameRateRange = CAFrameRateRange(
-        minimum: 15,
-        maximum: 60,
-        preferred: 30
-      )
-    } else {
-      link.preferredFramesPerSecond = 30
-    }
-    link.add(to: .main, forMode: .common)
-    link.isPaused = true
-    displayLink = link
+    installDisplayLink(paused: true)
   }
 
   func activate() throws {
@@ -264,8 +331,20 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         diagnostic: String(describing: error)
       )
     }
-    stateLock.withLock { active = true }
+    if context == nil || decoder == nil || audioRenderer == nil {
+      try rebuildPipeline(positionUs: savedPositionUs)
+    }
+    if displayLink == nil { installDisplayLink(paused: false) }
+    stateLock.withLock {
+      active = true
+      reconfiguring = false
+    }
     displayLink?.isPaused = false
+    if playing {
+      if selectedAudioStream != nil { try audioRenderer.play() }
+      mediaClock.play(atHostTimeUs: Self.hostTimeUs())
+      status = "playing"
+    }
     emit([
       "playerId": playerId,
       "type": "fallbackActivated",
@@ -281,16 +360,37 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       stateLock.unlock()
       return
     }
+    savedPositionUs = mediaClock.position(atHostTimeUs: Self.hostTimeUs())
     active = false
-    playing = false
+    reconfiguring = true
+    generation &+= 1
+    audioGeneration &+= 1
     let currentGeneration = generation
     stateLock.unlock()
-    displayLink?.isPaused = true
-    audioRenderer.pause()
-    audioRenderer.flush()
-    decoder.flush()
-    frameScheduler.flush(generation: currentGeneration)
+    displayLink?.invalidate()
+    displayLink = nil
+    audioRenderer?.pause()
     mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
+    worker.sync {
+      pendingAudioPacket = nil
+      decoder?.dispose()
+      decoder = nil
+      audioRenderer?.dispose()
+      audioRenderer = nil
+      ylf_close(&context)
+    }
+    frameScheduler.flush(generation: currentGeneration)
+    stateLock.withLock {
+      currentPixelBuffer = nil
+      pumping = false
+      demuxEOF = false
+      completionSent = false
+      prebufferedVideoSample = false
+      audioAnchored = false
+      reconfiguring = false
+    }
+    postSeekGate.reset(targetUs: nil)
+    mediaClock.seek(to: savedPositionUs)
     status = "paused"
     emitState()
   }
@@ -300,15 +400,21 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     case "open":
       emitState()
     case "play":
-      stateLock.withLock { playing = true }
-      if audioStream != nil { try audioRenderer.play() }
-      mediaClock.play(atHostTimeUs: Self.hostTimeUs())
+      let wasPlaying = stateLock.withLock { () -> Bool in
+        let previous = playing
+        playing = true
+        return previous
+      }
+      if !wasPlaying {
+        if selectedAudioStream != nil { try audioRenderer?.play() }
+        mediaClock.play(atHostTimeUs: Self.hostTimeUs())
+      }
       status = "playing"
       emitState()
       requestPump()
     case "pause":
       stateLock.withLock { playing = false }
-      if audioStream != nil { audioRenderer.pause() }
+      if selectedAudioStream != nil { audioRenderer?.pause() }
       mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
       status = "paused"
       emitState()
@@ -329,21 +435,16 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
           message: "Playback speed must be between 0.25 and 4.0."
         )
       }
-      if audioStream != nil { audioRenderer.setRate(rate) }
+      desiredRate = rate
+      if selectedAudioStream != nil { audioRenderer?.setRate(rate) }
       mediaClock.setRate(Double(rate), atHostTimeUs: Self.hostTimeUs())
     case "setVolume":
-      if audioStream != nil {
-        audioRenderer.setVolume(float(arguments["volume"]) ?? 1)
+      desiredVolume = float(arguments["volume"]) ?? 1
+      if selectedAudioStream != nil {
+        audioRenderer?.setVolume(desiredVolume)
       }
     case "selectAudioTrack":
-      let requested = arguments["trackId"] as? String
-      guard requested == audioTrackId else {
-        throw NativePlayerError(
-          category: "source",
-          code: "track.not_found",
-          message: "The requested audio track is unavailable."
-        )
-      }
+      try selectAudioTrack(arguments["trackId"] as? String)
     case "setQualityConstraint":
       return
     default:
@@ -359,6 +460,9 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     guard !stateLock.withLock({ disposed }) else { return }
     let positionUs = mediaClock.position(atHostTimeUs: Self.hostTimeUs())
     let durationMs = mediaInfo.duration_us > 0 ? mediaInfo.duration_us / 1_000 : nil
+    let scheduledAudioDurationUs = audioRenderer?.scheduledDurationUs ?? 0
+    let scheduledAudioBytes = audioRenderer?.scheduledBytes ?? 0
+    let audioUnderruns = audioRenderer?.underrunCount ?? 0
     emit([
       "playerId": playerId,
       "type": "state",
@@ -366,7 +470,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         "status": status,
         "positionMs": positionUs / 1_000,
         "durationMs": durationMs,
-        "bufferedPositionMs": (positionUs + audioRenderer.scheduledDurationUs) / 1_000,
+        "bufferedPositionMs": (positionUs + scheduledAudioDurationUs) / 1_000,
         "isLive": false,
         "isSeekable": true,
         "isAtLiveEdge": false,
@@ -390,10 +494,10 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
           "firstFrameDurationMs": firstFrameDurationMs,
           "rebufferCount": 0,
           "rebufferDurationMs": 0,
-          "bufferedDurationMs": audioRenderer.scheduledDurationUs / 1_000,
-          "bufferedBytes": audioRenderer.scheduledBytes,
+          "bufferedDurationMs": scheduledAudioDurationUs / 1_000,
+          "bufferedBytes": scheduledAudioBytes,
           "droppedFrames": frameScheduler.lateFrameDropCount,
-          "audioUnderruns": audioRenderer.underrunCount,
+          "audioUnderruns": audioUnderruns,
         ],
         "error": currentError,
       ],
@@ -416,13 +520,18 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     disposed = true
     active = false
     playing = false
+    reconfiguring = true
     generation &+= 1
+    audioGeneration &+= 1
     stateLock.unlock()
     displayLink?.invalidate()
     displayLink = nil
     worker.sync {
-      decoder.dispose()
-      audioRenderer.dispose()
+      pendingAudioPacket = nil
+      decoder?.dispose()
+      decoder = nil
+      audioRenderer?.dispose()
+      audioRenderer = nil
       frameScheduler.dispose()
       ylf_close(&context)
     }
@@ -430,6 +539,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   }
 
   fileprivate func receive(_ frame: YlVideoFrame) {
+    guard stateLock.withLock({ active && generation == frame.generation }),
+          postSeekGate.acceptsVideo(ptsUs: frame.ptsUs) else { return }
     let accepted = frameScheduler.enqueue(YlFrameEnvelope(
       payload: frame.pixelBuffer,
       ptsUs: frame.ptsUs == .min ? 0 : frame.ptsUs,
@@ -439,7 +550,9 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     ))
     guard accepted else { return }
     DispatchQueue.main.async { [weak self] in
-      guard let self, !self.firstFrameSent else { return }
+      guard let self, !self.firstFrameSent,
+            self.stateLock.withLock({ self.active && self.generation == frame.generation })
+      else { return }
       self.present(frame.pixelBuffer)
       self.firstFrameSent = true
       self.firstFrameDurationMs = Int64(
@@ -467,6 +580,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       let pixelBuffer = unsafeBitCast(frame.payload, to: CVPixelBuffer.self)
       present(pixelBuffer)
     }
+    completeIfDrained(atHostTimeUs: now)
     let wallNow = CACurrentMediaTime()
     if wallNow - lastStateEmitAt >= Double(configuration.positionEventIntervalMs) / 1_000 {
       lastStateEmitAt = wallNow
@@ -481,7 +595,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
 
   private func requestPump(after delay: TimeInterval = 0) {
     stateLock.lock()
-    guard !disposed, active, !pumping, !demuxEOF else {
+    guard !disposed, active, !reconfiguring, !pumping, !demuxEOF else {
       stateLock.unlock()
       return
     }
@@ -503,6 +617,10 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
 
     if let pendingAudioPacket {
       do {
+        guard let audioRenderer else {
+          stateLock.withLock { pumping = false }
+          return
+        }
         let enqueueResult = try audioRenderer.enqueue(packet: pendingAudioPacket)
         if enqueueResult == .scheduled {
           self.pendingAudioPacket = nil
@@ -540,13 +658,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         pumping = false
         demuxEOF = true
       }
-      decoder.flush()
-      if stateLock.withLock({ playing }) {
-        DispatchQueue.main.async { [weak self] in
-          self?.status = "completed"
-          self?.emitState()
-        }
-      }
+      decoder?.flush()
       return
     }
     guard result == 0, let ownedPacket = packet else {
@@ -572,23 +684,32 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       )
       if sampleResult == 0, let unmanagedSample {
         stateLock.withLock { prebufferedVideoSample = true }
-        decoder.decode(
+        decoder?.decode(
           sample: unmanagedSample.takeRetainedValue(),
           generation: packetGeneration
         )
       } else {
         ylf_packet_release(&packet)
       }
-    } else if streamIndex == audioStream?.index,
+    } else if streamIndex == selectedAudioStream?.index,
               let bytes = ylf_packet_data(ownedPacket) {
       let audioPacket = YlCompressedAudioPacket(
         data: Data(bytes: bytes, count: ylf_packet_size(ownedPacket)),
         ptsUs: ylf_packet_pts_us(ownedPacket),
         durationUs: ylf_packet_duration_us(ownedPacket),
-        generation: packetGeneration
+        generation: stateLock.withLock { audioGeneration }
       )
       ylf_packet_release(&packet)
+      if !postSeekGate.acceptsAudio(ptsUs: audioPacket.ptsUs) {
+        stateLock.withLock { pumping = false }
+        requestPump()
+        return
+      }
       do {
+        guard let audioRenderer else {
+          stateLock.withLock { pumping = false }
+          return
+        }
         let enqueueResult = try audioRenderer.enqueue(packet: audioPacket)
         if enqueueResult == .wouldExceedBytes || enqueueResult == .wouldExceedDuration {
           pendingAudioPacket = audioPacket
@@ -616,26 +737,211 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
 
   private func seek(toMs positionMs: Int64) throws {
     let targetUs = max(0, positionMs) * 1_000
-    stateLock.withLock { generation &+= 1 }
-    let nextGeneration = stateLock.withLock { generation }
-    let seekResult = worker.sync { ylf_seek(context, targetUs) }
-    guard seekResult == 0 else {
+    guard stateLock.withLock({ active }) else {
+      savedPositionUs = targetUs
+      mediaClock.seek(to: targetUs)
+      emitState()
+      return
+    }
+    let wasPlaying = stateLock.withLock { () -> Bool in
+      reconfiguring = true
+      pumping = false
+      return playing
+    }
+    status = "buffering"
+    emitState()
+    let transaction = YlFallbackLifecycleTransaction(
+      pauseClock: { [self] in
+        audioRenderer?.pause()
+        mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
+      },
+      advanceGeneration: { [self] in
+        stateLock.withLock {
+          generation &+= 1
+          return generation
+        }
+      },
+      stopDemux: { [self] in worker.sync {} },
+      clearBuffers: { [self] nextGeneration in
+        pendingAudioPacket = nil
+        prebufferedVideoSample = false
+        demuxEOF = false
+        completionSent = false
+        audioAnchored = false
+        frameScheduler.flush(generation: nextGeneration)
+        stateLock.withLock { currentPixelBuffer = nil }
+      },
+      seekDemux: { [self] targetUs in
+        let seekResult = ylf_seek(context, targetUs)
+        guard seekResult == 0 else {
+          throw NativePlayerError(
+            category: "container",
+            code: "container.mkv_seek_failed",
+            message: "The Matroska file could not be seeked.",
+            diagnostic: "YlFFmpegBridge result \(seekResult)"
+          )
+        }
+      },
+      resetAudio: { [self] nextGeneration in
+        audioRenderer?.reset(generation: nextGeneration)
+        stateLock.withLock { audioGeneration = nextGeneration }
+      },
+      recreateVideo: { [self] _ in
+        let candidate = try makeDecoder()
+        let previous = decoder
+        decoder = candidate
+        previous?.dispose()
+      },
+      suppressFramesBefore: { [self] targetUs in
+        postSeekGate.reset(targetUs: targetUs)
+        mediaClock.seek(to: targetUs)
+      },
+      restartDemux: { [self] in
+        stateLock.withLock {
+          reconfiguring = false
+          playing = wasPlaying
+        }
+        if wasPlaying {
+          if selectedAudioStream != nil { try audioRenderer?.play() }
+          mediaClock.play(atHostTimeUs: Self.hostTimeUs())
+          status = "playing"
+        } else {
+          status = "paused"
+        }
+        requestPump()
+      }
+    )
+    do {
+      try transaction.seek(toUs: targetUs)
+    } catch {
+      stateLock.withLock { reconfiguring = false }
+      throw error
+    }
+    emitState()
+  }
+
+  private func makeDecoder() throws -> YlVideoToolboxDecoder {
+    try YlVideoToolboxDecoder(
+      formatDescription: videoFormat,
+      onFrame: { [outputRelay] frame in outputRelay.frame(frame) },
+      onError: { [outputRelay] error in outputRelay.error(error) }
+    )
+  }
+
+  private func rebuildPipeline(positionUs: Int64) throws {
+    var reopenedContext: YLFMediaContextRef?
+    var reopenedInfo = YLFMediaInfo()
+    let openResult = sourcePath.withCString {
+      ylf_open_local($0, &reopenedContext, &reopenedInfo)
+    }
+    guard openResult == 0, let validContext = reopenedContext else {
       throw NativePlayerError(
         category: "container",
-        code: "container.mkv_seek_failed",
-        message: "The Matroska file could not be seeked.",
-        diagnostic: "YlFFmpegBridge result \(seekResult)"
+        code: "container.mkv_open_failed",
+        message: "The local Matroska file could not be reopened.",
+        diagnostic: "YlFFmpegBridge result \(openResult)"
       )
     }
-    decoder.flush()
-    audioRenderer.reset(generation: nextGeneration)
-    frameScheduler.flush(generation: nextGeneration)
-    mediaClock.seek(to: targetUs)
-    audioAnchored = false
+
+    var contextNeedsClose = true
+    var candidateDecoder: YlVideoToolboxDecoder?
+    var candidateAudio: YlAudioRenderer?
+    defer {
+      if contextNeedsClose {
+        candidateDecoder?.dispose()
+        candidateAudio?.dispose()
+        ylf_close(&reopenedContext)
+      }
+    }
+
+    let candidateFormat = try YlVideoToolboxDecoder.makeFormatDescription(
+      context: validContext,
+      streamIndex: videoStream.index
+    )
+    candidateDecoder = try YlVideoToolboxDecoder(
+      formatDescription: candidateFormat,
+      onFrame: { [outputRelay] frame in outputRelay.frame(frame) },
+      onError: { [outputRelay] error in outputRelay.error(error) }
+    )
+    let renderer = YlAudioRenderer()
+    candidateAudio = renderer
+    if let selectedAudioStream,
+       let cookie = audioCookies[selectedAudioStream.index] {
+      try renderer.configure(stream: YlAudioStreamConfiguration(
+        codec: .aac,
+        sampleRate: Double(selectedAudioStream.sample_rate),
+        channelCount: Int(selectedAudioStream.channel_count),
+        magicCookie: cookie,
+        generation: audioGeneration
+      ))
+      renderer.setVolume(desiredVolume)
+      renderer.setRate(desiredRate)
+    }
+    if positionUs > 0 {
+      let seekResult = ylf_seek(validContext, positionUs)
+      guard seekResult == 0 else {
+        throw NativePlayerError(
+          category: "container",
+          code: "container.mkv_seek_failed",
+          message: "The Matroska file could not be restored at its saved position.",
+          diagnostic: "YlFFmpegBridge result \(seekResult)"
+        )
+      }
+      postSeekGate.reset(targetUs: positionUs)
+    }
+
+    videoFormat = candidateFormat
+    context = validContext
+    reopenedContext = nil
+    decoder = candidateDecoder
+    candidateDecoder = nil
+    audioRenderer = renderer
+    candidateAudio = nil
     pendingAudioPacket = nil
     prebufferedVideoSample = false
     demuxEOF = false
-    requestPump()
+    completionSent = false
+    audioAnchored = false
+    frameScheduler.flush(generation: generation)
+    mediaClock.seek(to: positionUs)
+    contextNeedsClose = false
+  }
+
+  private func installDisplayLink(paused: Bool) {
+    guard displayLink == nil else {
+      displayLink?.isPaused = paused
+      return
+    }
+    let link = CADisplayLink(target: self, selector: #selector(displayLinkTick))
+    if #available(iOS 15.0, *) {
+      link.preferredFrameRateRange = CAFrameRateRange(
+        minimum: 15,
+        maximum: 60,
+        preferred: 30
+      )
+    } else {
+      link.preferredFramesPerSecond = 30
+    }
+    link.add(to: .main, forMode: .common)
+    link.isPaused = paused
+    displayLink = link
+  }
+
+  private func completeIfDrained(atHostTimeUs hostTimeUs: Int64) {
+    let shouldComplete = stateLock.withLock {
+      active && playing && demuxEOF && !completionSent && pendingAudioPacket == nil
+    }
+    guard shouldComplete,
+          frameScheduler.pendingPTS.isEmpty,
+          (audioRenderer?.scheduledDurationUs ?? 0) == 0 else { return }
+    stateLock.withLock {
+      guard !completionSent else { return }
+      completionSent = true
+      playing = false
+    }
+    mediaClock.pause(atHostTimeUs: hostTimeUs)
+    displayLink?.isPaused = true
+    status = "completed"
     emitState()
   }
 
@@ -653,28 +959,103 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     emitState()
   }
 
+  private func selectAudioTrack(_ trackId: String?) throws {
+    guard let trackId, trackId.hasPrefix("audio-"),
+          let requestedIndex = Int32(trackId.dropFirst("audio-".count)),
+          let requestedStream = audioStreams.first(where: { $0.index == requestedIndex }),
+          let cookie = audioCookies[requestedIndex] else {
+      throw NativePlayerError(
+        category: "source",
+        code: "track.not_found",
+        message: "The requested audio track is unavailable."
+      )
+    }
+    guard requestedStream.index != selectedAudioStream?.index else { return }
+
+    guard stateLock.withLock({ active }) else {
+      selectedAudioStream = requestedStream
+      stateLock.withLock { audioGeneration &+= 1 }
+      emit([
+        "playerId": playerId,
+        "type": "tracksChanged",
+        "audioTracks": audioTracks,
+        "videoTracks": videoTracks,
+      ])
+      emitState()
+      return
+    }
+
+    let nextAudioGeneration = stateLock.withLock { audioGeneration &+ 1 }
+    let candidate = YlAudioRenderer()
+    do {
+      try candidate.configure(stream: YlAudioStreamConfiguration(
+        codec: .aac,
+        sampleRate: Double(requestedStream.sample_rate),
+        channelCount: Int(requestedStream.channel_count),
+        magicCookie: cookie,
+        generation: nextAudioGeneration
+      ))
+      candidate.setVolume(desiredVolume)
+      candidate.setRate(desiredRate)
+    } catch {
+      candidate.dispose()
+      throw error
+    }
+
+    let now = Self.hostTimeUs()
+    let positionUs = mediaClock.position(atHostTimeUs: now)
+    let wasPlaying = stateLock.withLock { () -> Bool in
+      reconfiguring = true
+      pumping = false
+      return playing
+    }
+    mediaClock.pause(atHostTimeUs: now)
+    worker.sync {}
+
+    let previous = audioRenderer
+    audioRenderer = candidate
+    selectedAudioStream = requestedStream
+    pendingAudioPacket = nil
+    audioAnchored = false
+    stateLock.withLock {
+      audioGeneration = nextAudioGeneration
+      reconfiguring = false
+    }
+    previous?.dispose()
+    mediaClock.seek(to: positionUs)
+    if wasPlaying {
+      try candidate.play()
+      mediaClock.play(atHostTimeUs: Self.hostTimeUs())
+    }
+    emit([
+      "playerId": playerId,
+      "type": "tracksChanged",
+      "audioTracks": audioTracks,
+      "videoTracks": videoTracks,
+    ])
+    requestPump()
+    emitState()
+  }
+
   private func anchorAudioIfNeeded(_ packet: YlCompressedAudioPacket) {
     guard !audioAnchored else { return }
     audioAnchored = true
     mediaClock.anchorAudio(
       ptsUs: max(0, packet.ptsUs),
-      sampleTime: audioRenderer.renderedAudioTime?.sampleTime ?? 0
+      sampleTime: audioRenderer?.renderedAudioTime?.sampleTime ?? 0
     )
   }
 
-  private var audioTrackId: String? {
-    audioStream.map { "audio-\($0.index)" }
-  }
-
   private var audioTracks: [[String: Any?]] {
-    guard let audioStream else { return [] }
-    return [[
-      "id": "audio-\(audioStream.index)",
-      "kind": "audio",
-      "label": "AAC",
-      "language": nil,
-      "isSelected": true,
-    ]]
+    audioStreams.map { audioStream in
+      [
+        "id": "audio-\(audioStream.index)",
+        "kind": "audio",
+        "label": "AAC \(audioStream.index)",
+        "language": nil,
+        "isSelected": audioStream.index == selectedAudioStream?.index,
+      ]
+    }
   }
 
   private var videoTracks: [[String: Any?]] {

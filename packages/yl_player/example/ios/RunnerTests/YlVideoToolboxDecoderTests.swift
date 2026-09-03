@@ -199,6 +199,31 @@ final class YlVideoToolboxDecoderTests: XCTestCase {
     XCTAssertEqual(factory.session?.invalidateCount, 1)
   }
 
+  func testOldGenerationDecoderFailureIsSuppressed() throws {
+    let factory = FakeFactory()
+    var errors: [NativePlayerError] = []
+    let decoder = try YlVideoToolboxDecoder(
+      formatDescription: formatDescription(),
+      factory: factory,
+      onFrame: { _ in XCTFail("Unexpected stale frame") },
+      onError: { errors.append($0) }
+    )
+    decoder.decode(sample: try sampleBuffer(), generation: 2)
+
+    factory.session?.output(YlVTDecodedImage(
+      status: -1,
+      pixelBuffer: nil,
+      pts: .zero,
+      duration: .invalid,
+      keyframe: false,
+      generation: 1,
+      ownershipToken: nil
+    ))
+
+    XCTAssertTrue(errors.isEmpty)
+    decoder.dispose()
+  }
+
   func testFixtureDecodesFirstFrameOrReportsHardwareUnavailable() throws {
     let fixture = try XCTUnwrap(
       Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv")

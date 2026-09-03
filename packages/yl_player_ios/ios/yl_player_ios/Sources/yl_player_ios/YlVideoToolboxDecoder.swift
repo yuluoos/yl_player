@@ -159,6 +159,11 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
   }
 
   fileprivate func handle(_ image: YlVTDecodedImage) {
+    lock.lock()
+    let acceptsOutput = !disposed && activeGeneration == image.generation
+    lock.unlock()
+    guard acceptsOutput else { return }
+
     guard image.status == noErr, let pixelBuffer = image.pixelBuffer else {
       onError(NativePlayerError(
         category: "decoder",
@@ -168,11 +173,6 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
       ))
       return
     }
-
-    lock.lock()
-    let acceptsFrame = !disposed && activeGeneration == image.generation
-    lock.unlock()
-    guard acceptsFrame else { return }
 
     onFrame(YlVideoFrame(
       pixelBuffer: pixelBuffer,

@@ -480,7 +480,7 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
       completion()
       return
     }
-    player.scheduleBuffer(pcm, completionCallbackType: .dataConsumed) { _ in
+    player.scheduleBuffer(pcm, completionCallbackType: .dataPlayedBack) { _ in
       completion()
     }
   }
