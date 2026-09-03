@@ -353,28 +353,28 @@ git commit -m "feat: add bounded local Matroska demux bridge"
 - `YlFrameScheduler.enqueue(_:)`, `frame(at:generation:)`, `flush(generation:)`,
   and `dispose()` own at most three retained pixel buffers.
 
-- [ ] **Step 1: Write failing queue and scheduler tests**
+- [x] **Step 1: Write failing queue and scheduler tests**
 
 Cover exact-boundary acceptance, one-byte rejection, one-microsecond rejection,
 producer wake after pop, cancellation wake, generation flush releasing all
 objects, PTS ordering, newest-due-frame selection, and late-frame drop count.
 Use deinit counters around fake packet/frame owners to assert ownership.
 
-- [ ] **Step 2: Run XCTest to verify RED**
+- [x] **Step 2: Run XCTest to verify RED**
 
 Expected: compile failure because queue/scheduler types are absent.
 
-- [ ] **Step 3: Implement the minimal synchronized primitives**
+- [x] **Step 3: Implement the minimal synchronized primitives**
 
 Use `NSCondition` for packet queues and `os_unfair_lock` or `NSLock` for the
 three-frame store. Never execute release callbacks while holding a lock. Byte
 and duration checks are performed before ownership transfers.
 
-- [ ] **Step 4: Run focused and complete XCTest suites**
+- [x] **Step 4: Run focused and complete XCTest suites**
 
 Expected: all boundary, wakeup, ordering, drop, and deinit-count assertions pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add packages/yl_player_ios/ios/yl_player_ios packages/yl_player/example/ios
