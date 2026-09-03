@@ -161,10 +161,10 @@ git commit -m "feat: route iOS network MKV VOD"
 
 **Interfaces:**
 - Produces: `YlByteSource` and `YlByteSourceError`.
-- Produces: `YlByteRingBuffer(capacity:)`, nonblocking `append(_:at:)`, blocking `write(_:at:)`, `read(into:)`, `seekWithinBuffer(to:)`, `finish()`, `fail(_:)`, `cancel()`, and `shrink(to:)`.
+- Produces: `YlByteRingBuffer(capacity:)`, nonblocking `append(_:at:)`, blocking `write(_:at:)`, `read(into:)`, `seekWithinBuffer(to:)`, `reset(at:)`, `finish()`, `fail(_:)`, `cancel()`, and `shrink(to:)`.
 - The buffer stores one contiguous absolute byte interval and never exceeds `capacity`.
 
-- [ ] **Step 1: Write failing ring-buffer tests**
+- [x] **Step 1: Write failing ring-buffer tests**
 
 Cover exact capacity, partial reads, retained-window rewind, producer blocking, consumer blocking, EOF, failure, cancellation, and shrink:
 
@@ -206,21 +206,21 @@ func testCancelWakesBlockedReader() {
 }
 ```
 
-- [ ] **Step 2: Run the test and verify RED**
+- [x] **Step 2: Run the test and verify RED**
 
 Run the Task 1 XCTest command with `-only-testing:RunnerTests/YlByteRingBufferTests`.
 
 Expected: compile failure because the buffer and protocol do not exist.
 
-- [ ] **Step 3: Implement the buffer with one NSCondition**
+- [x] **Step 3: Implement the buffer with one NSCondition**
 
 Use one `NSCondition` to guard capacity, absolute `startOffset`, `readOffset`, byte storage, terminal error, EOF, and cancellation. `append` accepts only the current contiguous end offset and returns zero when full. `write` copies a large input incrementally and waits for consumer capacity instead of retaining a second full copy. `read` waits while empty and nonterminal, evicts bytes strictly before the retained rewind window when needed, and returns zero only after `finish` and drain. `seekWithinBuffer` succeeds only for `startOffset...endOffset`. Every terminal operation broadcasts exactly once and is idempotent.
 
-- [ ] **Step 4: Run targeted tests and a 1,000-operation concurrency loop**
+- [x] **Step 4: Run targeted tests and a 1,000-operation concurrency loop**
 
 Add a deterministic test that alternates 1,000 producer chunks and consumer reads, then asserts byte equality, `bufferedBytes <= capacity` at every observation, and completion under five seconds. Run the targeted XCTest command.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlByteSource.swift \
