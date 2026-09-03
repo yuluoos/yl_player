@@ -4,10 +4,10 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'yl_player_ios'
-  s.version          = '0.0.1'
-  s.summary          = 'A new Flutter plugin project.'
+  s.version          = '0.1.0-dev.1'
+  s.summary          = 'iOS implementation for the yl_player playback kernel.'
   s.description      = <<-DESC
-A new Flutter plugin project.
+Hardware-first iOS implementation for the yl_player Flutter playback kernel.
                        DESC
   s.homepage         = 'http://example.com'
   s.license          = { :file => '../LICENSE' }
@@ -15,7 +15,7 @@ A new Flutter plugin project.
   s.source           = { :path => '.' }
   s.source_files = 'yl_player_ios/Sources/yl_player_ios/**/*'
   s.dependency 'Flutter'
-  s.platform = :ios, '13.0'
+  s.platform = :ios, '15.0'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }

@@ -1,28 +1,34 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player_ios/yl_player_ios.dart';
-import 'package:yl_player_ios/yl_player_ios_platform_interface.dart';
-import 'package:yl_player_ios/yl_player_ios_method_channel.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-
-class MockYlPlayerIosPlatform
-    with MockPlatformInterfaceMixin
-    implements YlPlayerIosPlatform {
-  @override
-  Future<String?> getPlatformVersion() => Future.value('42');
-}
+import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 void main() {
-  final YlPlayerIosPlatform initialPlatform = YlPlayerIosPlatform.instance;
+  test('registerWith installs the iOS implementation', () {
+    YlPlayerIos.registerWith();
 
-  test('$MethodChannelYlPlayerIos is the default instance', () {
-    expect(initialPlatform, isInstanceOf<MethodChannelYlPlayerIos>());
+    expect(YlPlayerPlatform.instance, isA<YlPlayerIos>());
   });
 
-  test('getPlatformVersion', () async {
-    YlPlayerIos ylPlayerIosPlugin = YlPlayerIos();
-    MockYlPlayerIosPlatform fakePlatform = MockYlPlayerIosPlatform();
-    YlPlayerIosPlatform.instance = fakePlatform;
+  test(
+    'placeholder backend fails honestly and disposes idempotently',
+    () async {
+      final platform = YlPlayerIos();
+      final player = await platform.createPlayer(const YlPlayerConfiguration());
 
-    expect(await ylPlayerIosPlugin.getPlatformVersion(), '42');
-  });
+      await expectLater(
+        player.open(YlMediaSource.file('/video.mp4')),
+        throwsA(
+          isA<YlPlayerError>().having(
+            (error) => error.code,
+            'code',
+            'ios.not_implemented',
+          ),
+        ),
+      );
+      await player.dispose();
+      await player.dispose();
+
+      expect(player.state.status, YlPlaybackStatus.disposed);
+    },
+  );
 }
