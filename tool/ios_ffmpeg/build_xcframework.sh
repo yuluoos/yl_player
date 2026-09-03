@@ -173,6 +173,9 @@ build_slice() {
     _ylf_packet_is_keyframe \
     _ylf_packet_release \
     _ylf_debug_outstanding_packet_count \
+    _ylf_copy_video_format_description \
+    _ylf_copy_video_format_description_from_codec_config \
+    _ylf_create_video_sample_buffer \
     >"$exports_file"
   "$clang" -fobjc-arc -fvisibility=hidden -arch "$apple_arch" -isysroot "$sdk_root" \
     "$minimum_flag" -I"$install_root/include" -I"$bridge_root/include" \
@@ -184,7 +187,7 @@ build_slice() {
     -Wl,-force_load,"$install_root/lib/libavformat.a" \
     -Wl,-force_load,"$install_root/lib/libavcodec.a" \
     -Wl,-force_load,"$install_root/lib/libavutil.a" \
-    -framework CoreFoundation -framework Foundation -framework Security \
+    -framework CoreFoundation -framework CoreMedia -framework Foundation -framework Security \
     -o "$framework/YlFFmpegBridge"
   cp "$bridge_root/include/YlFFmpegBridge.h" "$framework/Headers/"
   cp "$bridge_root/module.modulemap" "$framework/Modules/"

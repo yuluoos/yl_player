@@ -1,5 +1,6 @@
 import XCTest
 import YlFFmpegBridge
+import CoreMedia
 
 final class YlFFmpegBridgeTests: XCTestCase {
     private let unknownTimestamp = Int64.min
@@ -101,6 +102,53 @@ final class YlFFmpegBridgeTests: XCTestCase {
             }
         }
         XCTAssertEqual(audioCount, 2)
+    }
+
+    func testCreatesH264FormatAndZeroCopySampleBuffer() throws {
+        var (context, mediaInfo) = try open("h264_aac")
+        defer { ylf_close(&context) }
+
+        var videoIndex: Int32?
+        for index in 0..<mediaInfo.stream_count {
+            var stream = YLFStreamInfo()
+            XCTAssertEqual(ylf_copy_stream_info(context, index, &stream), 0)
+            if stream.kind == 1 {
+                videoIndex = stream.index
+            }
+        }
+        let streamIndex = try XCTUnwrap(videoIndex)
+        var unmanagedFormat: Unmanaged<CMVideoFormatDescription>?
+        XCTAssertEqual(
+            ylf_copy_video_format_description(context, streamIndex, &unmanagedFormat),
+            0
+        )
+        let format = try XCTUnwrap(unmanagedFormat).takeRetainedValue()
+        XCTAssertEqual(CMFormatDescriptionGetMediaSubType(format), kCMVideoCodecType_H264)
+        XCTAssertEqual(CMVideoFormatDescriptionGetDimensions(format).width, 320)
+        XCTAssertEqual(CMVideoFormatDescriptionGetDimensions(format).height, 180)
+
+        var videoPacket: YLFPacketRef?
+        while videoPacket == nil {
+            var packet: YLFPacketRef?
+            XCTAssertEqual(ylf_read_packet(context, &packet), 0)
+            if let packet, ylf_packet_stream_index(packet) == streamIndex {
+                videoPacket = packet
+            } else {
+                ylf_packet_release(&packet)
+            }
+        }
+
+        var unmanagedSample: Unmanaged<CMSampleBuffer>?
+        XCTAssertEqual(
+            ylf_create_video_sample_buffer(&videoPacket, format, &unmanagedSample),
+            0
+        )
+        XCTAssertNil(videoPacket)
+        var sample: CMSampleBuffer? = try XCTUnwrap(unmanagedSample).takeRetainedValue()
+        XCTAssertEqual(CMSampleBufferGetNumSamples(sample!), 1)
+        XCTAssertEqual(ylf_debug_outstanding_packet_count(), 1)
+        sample = nil
+        XCTAssertEqual(ylf_debug_outstanding_packet_count(), 0)
     }
 
     func testCloseReleasesPacketsStillOwnedByContext() throws {

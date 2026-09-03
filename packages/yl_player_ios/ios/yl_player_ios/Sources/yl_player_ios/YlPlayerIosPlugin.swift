@@ -751,7 +751,7 @@ private struct PlayerConfiguration {
   }
 }
 
-private struct NativePlayerError: Error {
+struct NativePlayerError: Error {
   let category: String
   let code: String
   let message: String

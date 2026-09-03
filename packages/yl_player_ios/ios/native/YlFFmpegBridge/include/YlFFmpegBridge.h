@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <CoreMedia/CoreMedia.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,6 +32,8 @@ enum {
   YLFResultCancelled = -5,
   YLFResultIndexOutOfRange = -6,
   YLFResultSeekFailed = -7,
+  YLFResultVideoConfigurationInvalid = -8,
+  YLFResultSampleBufferFailed = -9,
 };
 
 enum {
@@ -90,6 +93,23 @@ YLF_EXPORT void ylf_packet_release(YLFPacketRef *packet);
 // Test/diagnostic counter for FFmpeg packets currently owned by bridge
 // contexts. It must return to zero after release or context close.
 YLF_EXPORT int32_t ylf_debug_outstanding_packet_count(void);
+
+// Create Rule: the caller owns returned Core Foundation objects. A successful
+// sample-buffer creation consumes *packet and sets it to NULL. The packet bytes
+// remain zero-copy and are released by CMBlockBuffer's destruction callback.
+YLF_EXPORT int32_t ylf_copy_video_format_description(
+    YLFMediaContextRef context,
+    int32_t stream_index,
+    CMVideoFormatDescriptionRef *out_description);
+YLF_EXPORT int32_t ylf_copy_video_format_description_from_codec_config(
+    int32_t codec,
+    const uint8_t *configuration,
+    size_t configuration_size,
+    CMVideoFormatDescriptionRef *out_description);
+YLF_EXPORT int32_t ylf_create_video_sample_buffer(
+    YLFPacketRef *packet,
+    CMVideoFormatDescriptionRef format_description,
+    CMSampleBufferRef *out_sample_buffer);
 
 #ifdef __cplusplus
 }

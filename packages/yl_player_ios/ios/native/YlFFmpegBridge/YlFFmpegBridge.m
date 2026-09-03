@@ -1,6 +1,7 @@
 #import "YlFFmpegBridge.h"
 
 #import <Foundation/Foundation.h>
+#import <CoreMedia/CoreMedia.h>
 
 #include <pthread.h>
 #include <stdatomic.h>
@@ -103,6 +104,137 @@ static void ylf_destroy_packet(struct YLFPacket *packet) {
   free(packet);
   atomic_fetch_sub_explicit(&g_outstanding_packet_count, 1,
                             memory_order_relaxed);
+}
+
+static uint16_t ylf_read_be16(const uint8_t *bytes) {
+  return (uint16_t)(((uint16_t)bytes[0] << 8) | bytes[1]);
+}
+
+static OSStatus ylf_h264_format_description(
+    const uint8_t *data,
+    size_t size,
+    CMVideoFormatDescriptionRef *out_description) {
+  if (data == NULL || size < 7 || data[0] != 1) {
+    return kCMFormatDescriptionError_InvalidParameter;
+  }
+
+  int nal_length_size = (data[4] & 0x03) + 1;
+  const uint8_t *parameter_sets[512];
+  size_t parameter_set_sizes[512];
+  size_t parameter_set_count = 0;
+  size_t offset = 6;
+  uint8_t sps_count = data[5] & 0x1f;
+  if (sps_count == 0) {
+    return kCMFormatDescriptionError_InvalidParameter;
+  }
+  for (uint8_t index = 0; index < sps_count; index++) {
+    if (offset + 2 > size) {
+      return kCMFormatDescriptionError_InvalidParameter;
+    }
+    size_t length = ylf_read_be16(data + offset);
+    offset += 2;
+    if (length == 0 || offset + length > size) {
+      return kCMFormatDescriptionError_InvalidParameter;
+    }
+    parameter_sets[parameter_set_count] = data + offset;
+    parameter_set_sizes[parameter_set_count++] = length;
+    offset += length;
+  }
+  if (offset >= size) {
+    return kCMFormatDescriptionError_InvalidParameter;
+  }
+  uint8_t pps_count = data[offset++];
+  if (pps_count == 0 || parameter_set_count + pps_count > 512) {
+    return kCMFormatDescriptionError_InvalidParameter;
+  }
+  for (uint8_t index = 0; index < pps_count; index++) {
+    if (offset + 2 > size) {
+      return kCMFormatDescriptionError_InvalidParameter;
+    }
+    size_t length = ylf_read_be16(data + offset);
+    offset += 2;
+    if (length == 0 || offset + length > size) {
+      return kCMFormatDescriptionError_InvalidParameter;
+    }
+    parameter_sets[parameter_set_count] = data + offset;
+    parameter_set_sizes[parameter_set_count++] = length;
+    offset += length;
+  }
+  return CMVideoFormatDescriptionCreateFromH264ParameterSets(
+      kCFAllocatorDefault,
+      parameter_set_count,
+      parameter_sets,
+      parameter_set_sizes,
+      nal_length_size,
+      out_description);
+}
+
+static OSStatus ylf_hevc_format_description(
+    const uint8_t *data,
+    size_t size,
+    CMVideoFormatDescriptionRef *out_description) {
+  if (data == NULL || size < 23 || data[0] != 1) {
+    return kCMFormatDescriptionError_InvalidParameter;
+  }
+
+  int nal_length_size = (data[21] & 0x03) + 1;
+  uint8_t array_count = data[22];
+  const uint8_t *parameter_sets[512];
+  size_t parameter_set_sizes[512];
+  size_t parameter_set_count = 0;
+  bool saw_vps = false;
+  bool saw_sps = false;
+  bool saw_pps = false;
+  size_t offset = 23;
+
+  for (uint8_t array_index = 0; array_index < array_count; array_index++) {
+    if (offset + 3 > size) {
+      return kCMFormatDescriptionError_InvalidParameter;
+    }
+    uint8_t nal_type = data[offset++] & 0x3f;
+    uint16_t nal_count = ylf_read_be16(data + offset);
+    offset += 2;
+    for (uint16_t nal_index = 0; nal_index < nal_count; nal_index++) {
+      if (offset + 2 > size) {
+        return kCMFormatDescriptionError_InvalidParameter;
+      }
+      size_t length = ylf_read_be16(data + offset);
+      offset += 2;
+      if (length == 0 || offset + length > size) {
+        return kCMFormatDescriptionError_InvalidParameter;
+      }
+      if (nal_type == 32 || nal_type == 33 || nal_type == 34) {
+        if (parameter_set_count >= 512) {
+          return kCMFormatDescriptionError_InvalidParameter;
+        }
+        parameter_sets[parameter_set_count] = data + offset;
+        parameter_set_sizes[parameter_set_count++] = length;
+        saw_vps |= nal_type == 32;
+        saw_sps |= nal_type == 33;
+        saw_pps |= nal_type == 34;
+      }
+      offset += length;
+    }
+  }
+  if (!saw_vps || !saw_sps || !saw_pps) {
+    return kCMFormatDescriptionError_InvalidParameter;
+  }
+  return CMVideoFormatDescriptionCreateFromHEVCParameterSets(
+      kCFAllocatorDefault,
+      parameter_set_count,
+      parameter_sets,
+      parameter_set_sizes,
+      nal_length_size,
+      NULL,
+      out_description);
+}
+
+static void ylf_free_packet_block(void *ref_con,
+                                  void *doomed_memory_block,
+                                  size_t size_in_bytes) {
+  (void)doomed_memory_block;
+  (void)size_in_bytes;
+  ylf_destroy_packet((struct YLFPacket *)ref_con);
 }
 
 const char *ylf_build_configuration(void) {
@@ -349,4 +481,154 @@ void ylf_packet_release(YLFPacketRef *packet_pointer) {
 
 int32_t ylf_debug_outstanding_packet_count(void) {
   return atomic_load_explicit(&g_outstanding_packet_count, memory_order_relaxed);
+}
+
+int32_t ylf_copy_video_format_description(
+    YLFMediaContextRef context,
+    int32_t stream_index,
+    CMVideoFormatDescriptionRef *out_description) {
+  if (context == NULL || out_description == NULL) {
+    return YLFResultVideoConfigurationInvalid;
+  }
+  *out_description = NULL;
+  if (stream_index < 0 ||
+      (unsigned int)stream_index >= context->format->nb_streams) {
+    return YLFResultVideoConfigurationInvalid;
+  }
+  AVCodecParameters *parameters =
+      context->format->streams[stream_index]->codecpar;
+  OSStatus status;
+  switch (parameters->codec_id) {
+  case AV_CODEC_ID_H264:
+    status = ylf_h264_format_description(parameters->extradata,
+                                         (size_t)parameters->extradata_size,
+                                         out_description);
+    break;
+  case AV_CODEC_ID_HEVC:
+    status = ylf_hevc_format_description(parameters->extradata,
+                                         (size_t)parameters->extradata_size,
+                                         out_description);
+    break;
+  default:
+    return YLFResultVideoConfigurationInvalid;
+  }
+  return status == noErr ? YLFResultOK : YLFResultVideoConfigurationInvalid;
+}
+
+int32_t ylf_copy_video_format_description_from_codec_config(
+    int32_t codec,
+    const uint8_t *configuration,
+    size_t configuration_size,
+    CMVideoFormatDescriptionRef *out_description) {
+  if (out_description == NULL) {
+    return YLFResultVideoConfigurationInvalid;
+  }
+  *out_description = NULL;
+  OSStatus status;
+  switch (codec) {
+  case YLFCodecH264:
+    status = ylf_h264_format_description(configuration,
+                                         configuration_size,
+                                         out_description);
+    break;
+  case YLFCodecHEVC:
+    status = ylf_hevc_format_description(configuration,
+                                         configuration_size,
+                                         out_description);
+    break;
+  default:
+    return YLFResultVideoConfigurationInvalid;
+  }
+  return status == noErr ? YLFResultOK : YLFResultVideoConfigurationInvalid;
+}
+
+int32_t ylf_create_video_sample_buffer(
+    YLFPacketRef *packet_pointer,
+    CMVideoFormatDescriptionRef format_description,
+    CMSampleBufferRef *out_sample_buffer) {
+  if (packet_pointer == NULL || *packet_pointer == NULL ||
+      format_description == NULL || out_sample_buffer == NULL) {
+    return YLFResultInvalidArgument;
+  }
+  *out_sample_buffer = NULL;
+  struct YLFPacket *packet = *packet_pointer;
+  if (packet->value == NULL || packet->owner == NULL ||
+      packet->value->size <= 0) {
+    return YLFResultSampleBufferFailed;
+  }
+
+  AVStream *stream = packet->owner->format->streams[packet->value->stream_index];
+  bool is_keyframe = (packet->value->flags & AV_PKT_FLAG_KEY) != 0;
+  CMSampleTimingInfo timing = {
+      .duration = packet->value->duration > 0
+                      ? CMTimeMake(ylf_timestamp_us(packet->value->duration,
+                                                    stream->time_base),
+                                   AV_TIME_BASE)
+                      : kCMTimeInvalid,
+      .presentationTimeStamp = packet->value->pts == AV_NOPTS_VALUE
+                                   ? kCMTimeInvalid
+                                   : CMTimeMake(ylf_timestamp_us(packet->value->pts,
+                                                                 stream->time_base),
+                                                AV_TIME_BASE),
+      .decodeTimeStamp = packet->value->dts == AV_NOPTS_VALUE
+                             ? kCMTimeInvalid
+                             : CMTimeMake(ylf_timestamp_us(packet->value->dts,
+                                                           stream->time_base),
+                                          AV_TIME_BASE),
+  };
+  size_t sample_size = (size_t)packet->value->size;
+  CMBlockBufferCustomBlockSource source = {
+      .version = kCMBlockBufferCustomBlockSourceVersion,
+      .AllocateBlock = NULL,
+      .FreeBlock = ylf_free_packet_block,
+      .refCon = packet,
+  };
+  CMBlockBufferRef block_buffer = NULL;
+  OSStatus status = CMBlockBufferCreateWithMemoryBlock(
+      kCFAllocatorDefault,
+      packet->value->data,
+      sample_size,
+      kCFAllocatorNull,
+      &source,
+      0,
+      sample_size,
+      0,
+      &block_buffer);
+  if (status != noErr || block_buffer == NULL) {
+    return YLFResultSampleBufferFailed;
+  }
+
+  struct YLFMediaContext *owner = packet->owner;
+  pthread_mutex_lock(&owner->mutex);
+  ylf_unlink_packet(packet);
+  pthread_mutex_unlock(&owner->mutex);
+  *packet_pointer = NULL;
+
+  status = CMSampleBufferCreateReady(
+      kCFAllocatorDefault,
+      block_buffer,
+      format_description,
+      1,
+      1,
+      &timing,
+      1,
+      &sample_size,
+      out_sample_buffer);
+  CFRelease(block_buffer);
+  if (status != noErr || *out_sample_buffer == NULL) {
+    return YLFResultSampleBufferFailed;
+  }
+
+  if (!is_keyframe) {
+    CFArrayRef attachments =
+        CMSampleBufferGetSampleAttachmentsArray(*out_sample_buffer, true);
+    if (attachments != NULL && CFArrayGetCount(attachments) > 0) {
+      CFMutableDictionaryRef attachment =
+          (CFMutableDictionaryRef)CFArrayGetValueAtIndex(attachments, 0);
+      CFDictionarySetValue(attachment,
+                           kCMSampleAttachmentKey_NotSync,
+                           kCFBooleanTrue);
+    }
+  }
+  return YLFResultOK;
 }

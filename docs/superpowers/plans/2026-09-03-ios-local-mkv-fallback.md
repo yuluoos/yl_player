@@ -399,7 +399,7 @@ git commit -m "feat: add bounded fallback media queues"
 - `YlVideoFrame` contains retained `CVPixelBuffer`, PTS, duration, keyframe, and
   generation.
 
-- [ ] **Step 1: Write failing format and decoder tests**
+- [x] **Step 1: Write failing format and decoder tests**
 
 Assert H.264 extradata creates a format description, malformed extradata maps to
 `decoder.video_configuration_invalid`, unsupported codec maps to
@@ -407,19 +407,19 @@ Assert H.264 extradata creates a format description, malformed extradata maps to
 dispose is idempotent. Inject a `YlVTSessionFactory` fake for deterministic error
 and callback tests.
 
-- [ ] **Step 2: Run XCTest to verify RED**
+- [x] **Step 2: Run XCTest to verify RED**
 
 Expected: compile failure because the bridge exports, factory, and decoder are
 absent.
 
-- [ ] **Step 3: Implement CoreMedia packet wrapping**
+- [x] **Step 3: Implement CoreMedia packet wrapping**
 
 Parse AVCDecoderConfigurationRecord/HEVCDecoderConfigurationRecord parameter
 sets, create the matching video format description, and build timed compressed
 sample buffers. The CMBlockBuffer release callback releases the owning opaque
 packet exactly once.
 
-- [ ] **Step 4: Implement required-hardware decoding**
+- [x] **Step 4: Implement required-hardware decoding**
 
 Create `VTDecompressionSession` with BGRA IOSurface-compatible output and
 `kVTVideoDecoderSpecification_RequireHardwareAcceleratedVideoDecoder: true`.
@@ -427,13 +427,13 @@ Translate creation/decode OSStatus failures to stable errors and query
 `kVTDecompressionPropertyKey_UsingHardwareAcceleratedVideoDecoder` before
 reporting hardware decode.
 
-- [ ] **Step 5: Run unit and fixture decode tests**
+- [x] **Step 5: Run unit and fixture decode tests**
 
 Decode through the first frame of `h264_aac.mkv` on Simulator when available;
 otherwise assert the exact hardware-unavailable error. Packet/frame ownership
 must return to zero in either branch.
 
-- [ ] **Step 6: Rebuild and commit**
+- [x] **Step 6: Rebuild and commit**
 
 ```bash
 sh tool/ios_ffmpeg/build_xcframework.sh
