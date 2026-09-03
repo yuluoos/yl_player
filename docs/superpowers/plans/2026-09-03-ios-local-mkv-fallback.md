@@ -459,18 +459,18 @@ git commit -m "feat: add iOS hardware video fallback decoder"
 - Scheduled PCM is capped by both duration and bytes before conversion accepts
   another packet.
 
-- [ ] **Step 1: Write failing converter/clock tests**
+- [x] **Step 1: Write failing converter/clock tests**
 
 With injected audio-engine/player-node clocks, assert AAC configuration failure,
 500 ms balanced scheduling cap, underrun count, pause stability, seek re-anchor,
 0.25/1/4× position progression, volume clamp, and stale-generation completion
 suppression.
 
-- [ ] **Step 2: Run XCTest to verify RED**
+- [x] **Step 2: Run XCTest to verify RED**
 
 Expected: compile failure because renderer and clock types are absent.
 
-- [ ] **Step 3: Implement AAC conversion and AVAudioEngine graph**
+- [x] **Step 3: Implement AAC conversion and AVAudioEngine graph**
 
 Build `AVAudioCompressedBuffer` from the opaque AAC packet and codec cookie,
 convert to interleaved Float32 `AVAudioPCMBuffer`, and schedule it through:
@@ -483,13 +483,13 @@ Configure the existing playback `AVAudioSession`, apply volume on the player
 node and rate on the time-pitch node, and count an underrun whenever playback is
 requested with no scheduled buffer.
 
-- [ ] **Step 4: Implement the media clock and verify GREEN**
+- [x] **Step 4: Implement the media clock and verify GREEN**
 
 Anchor media PTS to `playerTime(forNodeTime:)` rendered sample time. On pause,
 freeze the last position; on seek/flush, invalidate completion generations and
 establish a new anchor from the first scheduled post-seek sample.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add packages/yl_player_ios/ios/yl_player_ios packages/yl_player/example/ios
