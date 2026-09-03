@@ -24,6 +24,30 @@ final class YlFallbackBackendTests: XCTestCase {
 
   private struct ExpectedFailure: Error {}
 
+  private final class IrreversibleBackend: YlPlaybackBackend {
+    private(set) var active = true
+    private(set) var permanentlyClosed = false
+    private(set) var quiesceCount = 0
+    var isActive: Bool { active }
+
+    func activate() throws {
+      if permanentlyClosed { throw ExpectedFailure() }
+      active = true
+    }
+    func deactivate() {
+      active = false
+      permanentlyClosed = true
+    }
+    func quiesceForReplacement() {
+      active = false
+      quiesceCount += 1
+    }
+    func command(name: String, arguments: [String: Any?]) throws {}
+    func emitState() {}
+    func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? { nil }
+    func dispose() { permanentlyClosed = true }
+  }
+
   func testPreparationFailurePreservesCurrentBackend() throws {
     let original = FakeBackend()
     let slot = YlBackendSlot(initial: original)
@@ -60,6 +84,20 @@ final class YlFallbackBackendTests: XCTestCase {
     XCTAssertEqual(original.activateCount, 2)
     XCTAssertEqual(candidate.activateCount, 1)
     XCTAssertEqual(candidate.disposeCount, 1)
+  }
+
+  func testActivationFailureRestoresBackendWithoutPermanentTeardown() {
+    let original = IrreversibleBackend()
+    let candidate = FakeBackend()
+    candidate.activationError = ExpectedFailure()
+    let slot = YlBackendSlot(initial: original)
+
+    XCTAssertThrowsError(try slot.replace { candidate })
+
+    XCTAssertTrue(slot.current === original)
+    XCTAssertTrue(original.isActive)
+    XCTAssertFalse(original.permanentlyClosed)
+    XCTAssertEqual(original.quiesceCount, 1)
   }
 
   func testGenerationRejectsCallbacksFromReplacedBackend() throws {
@@ -125,7 +163,10 @@ final class YlFallbackBackendTests: XCTestCase {
     prepared.discard()
 
     XCTAssertThrowsError(try prepared.takeMedia()) { error in
-      XCTAssertEqual((error as? NativePlayerError)?.code, "internal.fallback_invariant")
+      XCTAssertEqual(
+        (error as? NativePlayerError)?.code,
+        "internal.fallback_invariant"
+      )
     }
   }
 

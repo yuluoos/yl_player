@@ -7,9 +7,9 @@ import UIKit
 import YlFFmpegBridge
 
 struct YlFallbackLifecycleTransaction {
-  let pauseClock: () -> Void
-  let advanceGeneration: () -> UInt64
-  let stopDemux: () -> Void
+  let pauseClock: () throws -> Void
+  let advanceGeneration: () throws -> UInt64
+  let stopDemux: () throws -> Void
   let clearBuffers: (UInt64) -> Void
   let seekDemux: (Int64) throws -> Void
   let resetAudio: (UInt64) throws -> Void
@@ -18,9 +18,9 @@ struct YlFallbackLifecycleTransaction {
   let restartDemux: () throws -> Void
 
   func seek(toUs targetUs: Int64) throws {
-    pauseClock()
-    let generation = advanceGeneration()
-    stopDemux()
+    try pauseClock()
+    let generation = try advanceGeneration()
+    try stopDemux()
     clearBuffers(generation)
     try seekDemux(targetUs)
     try resetAudio(generation)
@@ -37,6 +37,95 @@ struct YlFallbackTeardownTransaction {
   func run() {
     cancelInput()
     joinAndRelease()
+  }
+}
+
+struct YlFallbackSeekPolicy {
+  let isSeekable: Bool
+  let perform: (Int64) throws -> Void
+
+  func seek(toUs targetUs: Int64) throws {
+    guard isSeekable else {
+      throw NativePlayerError(
+        category: "network",
+        code: "network.range_not_supported",
+        message: "This network source does not support random access."
+      )
+    }
+    try perform(targetUs)
+  }
+}
+
+enum YlFallbackCommandPolicy {
+  static func requiresBackgroundExecution(
+    isNetwork: Bool,
+    isActive: Bool,
+    name: String
+  ) -> Bool {
+    isNetwork && isActive && (name == "seekTo" || name == "selectAudioTrack")
+  }
+}
+
+enum YlFallbackRetryEvent {
+  static func envelope(
+    playerId: Int64,
+    attempt: Int,
+    delayMs: Int64,
+    error: NativePlayerError
+  ) -> [String: Any?] {
+    [
+      "playerId": playerId,
+      "type": "retry",
+      "attempt": attempt,
+      "delayMs": delayMs,
+      "error": errorMap(
+        category: error.category,
+        code: error.code,
+        message: error.message,
+        diagnostic: error.diagnostic
+      ),
+    ]
+  }
+}
+
+struct YlFallbackResumeState: Equatable {
+  let positionUs: Int64
+  let selectedAudioStreamIndex: Int32?
+  let shouldPlay: Bool
+}
+
+enum YlFallbackReactivationPolicy {
+  static func resolve(
+    isSeekable: Bool,
+    savedPositionUs: Int64,
+    selectedAudioStreamIndex: Int32?,
+    shouldPlay: Bool
+  ) -> YlFallbackResumeState {
+    YlFallbackResumeState(
+      positionUs: isSeekable ? max(0, savedPositionUs) : 0,
+      selectedAudioStreamIndex: selectedAudioStreamIndex,
+      shouldPlay: isSeekable && shouldPlay
+    )
+  }
+}
+
+struct YlFallbackReplacementGenerations: Equatable {
+  let videoGeneration: UInt64
+  let audioGeneration: UInt64
+}
+
+enum YlFallbackReplacementGenerationPolicy {
+  static func quiesce(
+    videoGeneration: UInt64,
+    audioGeneration: UInt64
+  ) -> YlFallbackReplacementGenerations {
+    // Decoded video callbacks can still arrive after VideoToolbox is paused, so
+    // invalidate them. The retained audio renderer, however, remains configured
+    // for its current generation and must accept the first packet after rollback.
+    YlFallbackReplacementGenerations(
+      videoGeneration: videoGeneration &+ 1,
+      audioGeneration: audioGeneration
+    )
   }
 }
 
@@ -78,14 +167,18 @@ final class YlPreparedFallback {
   let audioStreams: [YLFStreamInfo]
   let videoFormat: CMVideoFormatDescription
   let audioCookies: [Int32: Data]
+  let isSeekable: Bool
+  private(set) var resumeState: YlFallbackResumeState?
   private var openedMedia: YlOpenedMedia?
+  private var cancellationToken: YlOpenCancellationToken?
 
   init(
     source: [String: Any?],
     requireHardwareProbe: Bool = true,
     configuration: PlayerConfiguration = PlayerConfiguration(map: [:]),
     sessionConfiguration: URLSessionConfiguration = .ephemeral,
-    cancellationToken: YlOpenCancellationToken? = nil
+    cancellationToken: YlOpenCancellationToken? = nil,
+    onRetry: YlNetworkByteSource.RetryCallback? = nil
   ) throws {
     try cancellationToken?.throwIfCancelled()
     guard let uri = source["uri"] as? String,
@@ -118,12 +211,14 @@ final class YlPreparedFallback {
       recipe: sourceRecipe,
       networkBufferBytes: budget.networkBytes,
       sessionConfiguration: sessionConfiguration,
+      onRetry: onRetry,
       onSourceCreated: { source in
         cancellationToken?.onCancel { source.cancel() }
       }
     )
     try cancellationToken?.throwIfCancelled()
     mediaInfo = opened.info
+    isSeekable = opened.supportsRandomAccess
     guard let validContext = opened.context else {
       opened.close()
       throw NativePlayerError(
@@ -212,6 +307,7 @@ final class YlPreparedFallback {
       probe.dispose()
     }
     openedMedia = opened
+    self.cancellationToken = cancellationToken
     mediaNeedsClose = false
   }
 
@@ -227,7 +323,34 @@ final class YlPreparedFallback {
     return openedMedia
   }
 
+  func prepareForReactivation(_ requested: YlFallbackResumeState) throws {
+    guard let openedMedia else {
+      throw NativePlayerError(
+        category: "internal",
+        code: "internal.fallback_invariant",
+        message: "The prepared Matroska context was already consumed."
+      )
+    }
+    let resolved = YlFallbackReactivationPolicy.resolve(
+      isSeekable: isSeekable,
+      savedPositionUs: requested.positionUs,
+      selectedAudioStreamIndex: requested.selectedAudioStreamIndex,
+      shouldPlay: requested.shouldPlay
+    )
+    if resolved.positionUs > 0 {
+      try openedMedia.seek(toMediaTimeUs: resolved.positionUs)
+    }
+    resumeState = resolved
+  }
+
+  func takeCancellationToken() -> YlOpenCancellationToken? {
+    defer { cancellationToken = nil }
+    return cancellationToken
+  }
+
   func discard() {
+    cancellationToken?.cancel()
+    cancellationToken = nil
     openedMedia?.close()
     openedMedia = nil
   }
@@ -247,6 +370,29 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   let playerId: Int64
   var textureId: Int64 = -1
   var isActive: Bool { stateLock.withLock { active } }
+  var requiresAsyncActivation: Bool {
+    guard context == nil else { return false }
+    if case .network = sourceRecipe { return true }
+    return false
+  }
+
+  func requiresAsyncCommand(_ name: String) -> Bool {
+    let isNetwork: Bool
+    if case .network = sourceRecipe { isNetwork = true } else { isNetwork = false }
+    return YlFallbackCommandPolicy.requiresBackgroundExecution(
+      isNetwork: isNetwork,
+      isActive: isActive,
+      name: name
+    )
+  }
+
+  func interruptControlOperation() {
+    stateLock.withLock { openedMedia }?.interruptRead()
+  }
+
+  func resumeControlOperation() {
+    stateLock.withLock { openedMedia }?.resumeReads()
+  }
 
   private let textures: FlutterTextureRegistry
   private let configuration: PlayerConfiguration
@@ -257,6 +403,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private let videoStream: YLFStreamInfo
   private let audioStreams: [YLFStreamInfo]
   private let audioCookies: [Int32: Data]
+  private let isSeekable: Bool
   private var videoFormat: CMVideoFormatDescription
   private let worker = DispatchQueue(label: "dev.ylplayer.ios.fallback.demux")
   private let stateLock = NSLock()
@@ -267,7 +414,10 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private var mediaClock: YlMediaClock!
   private var decoder: YlVideoToolboxDecoder?
   private var openedMedia: YlOpenedMedia?
-  private var context: YLFMediaContextRef? { openedMedia?.context }
+  private var sourceCancellationToken: YlOpenCancellationToken?
+  private var context: YLFMediaContextRef? {
+    stateLock.withLock { openedMedia }?.context
+  }
   private var displayLink: CADisplayLink?
   private var currentPixelBuffer: CVPixelBuffer?
   private var active = false
@@ -313,18 +463,26 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     self.videoStream = prepared.videoStream
     self.audioStreams = prepared.audioStreams
     self.audioCookies = prepared.audioCookies
-    self.selectedAudioStream = prepared.audioStreams.first
+    self.isSeekable = prepared.isSeekable
+    let resumeState = prepared.resumeState
+    self.selectedAudioStream = resumeState?.selectedAudioStreamIndex.flatMap { index in
+      prepared.audioStreams.first { $0.index == index }
+    } ?? prepared.audioStreams.first
     self.videoFormat = prepared.videoFormat
     self.generation = generation
     self.audioGeneration = generation
     self.emit = emit
     self.openedMedia = try prepared.takeMedia()
+    self.sourceCancellationToken = prepared.takeCancellationToken()
+    self.playing = resumeState?.shouldPlay ?? false
+    self.savedPositionUs = resumeState?.positionUs ?? 0
     super.init()
 
     audioRenderer = YlAudioRenderer(bufferBudget: bufferBudget)
     mediaClock = YlMediaClock(audioTime: { [weak self] in
       self?.audioRenderer?.renderedAudioTime
     })
+    mediaClock.seek(to: savedPositionUs)
     outputRelay.backend = self
     do {
       decoder = try YlVideoToolboxDecoder(
@@ -375,6 +533,13 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         diagnostic: String(describing: error)
       )
     }
+    if requiresAsyncActivation {
+      throw NativePlayerError(
+        category: "internal",
+        code: "ios.async_activation_required",
+        message: "Network Matroska reactivation requires background preparation."
+      )
+    }
     if context == nil || decoder == nil || audioRenderer == nil {
       try rebuildPipeline(positionUs: savedPositionUs)
     }
@@ -410,13 +575,20 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     generation &+= 1
     audioGeneration &+= 1
     let currentGeneration = generation
+    let mediaToClose = openedMedia
+    openedMedia = nil
+    let tokenToCancel = sourceCancellationToken
+    sourceCancellationToken = nil
     stateLock.unlock()
     displayLink?.invalidate()
     displayLink = nil
     audioRenderer?.pause()
     mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
     YlFallbackTeardownTransaction(
-      cancelInput: { [self] in openedMedia?.cancelInput() },
+      cancelInput: { [self] in
+        tokenToCancel?.cancel()
+        mediaToClose?.cancelInput()
+      },
       joinAndRelease: { [self] in
         worker.sync {
           pendingAudioPacket = nil
@@ -424,9 +596,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
           decoder = nil
           audioRenderer?.dispose()
           audioRenderer = nil
-          openedMedia?.close()
-          openedMedia = nil
         }
+        mediaToClose?.close()
       }
     ).run()
     frameScheduler.flush(generation: currentGeneration)
@@ -445,7 +616,72 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     emitState()
   }
 
+  func quiesceForReplacement() {
+    stateLock.lock()
+    guard !disposed, active else {
+      stateLock.unlock()
+      return
+    }
+    savedPositionUs = mediaClock.position(atHostTimeUs: Self.hostTimeUs())
+    active = false
+    reconfiguring = true
+    let generations = YlFallbackReplacementGenerationPolicy.quiesce(
+      videoGeneration: generation,
+      audioGeneration: audioGeneration
+    )
+    generation = generations.videoGeneration
+    audioGeneration = generations.audioGeneration
+    let currentGeneration = generation
+    let media = openedMedia
+    stateLock.unlock()
+
+    displayLink?.invalidate()
+    displayLink = nil
+    audioRenderer?.pause()
+    mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
+    media?.interruptRead()
+    worker.sync { pendingAudioPacket = nil }
+    media?.resumeReads()
+    frameScheduler.flush(generation: currentGeneration)
+    stateLock.withLock {
+      currentPixelBuffer = nil
+      pumping = false
+      demuxEOF = false
+      completionSent = false
+      prebufferedVideoSample = false
+      audioAnchored = false
+      reconfiguring = false
+    }
+    postSeekGate.reset(targetUs: nil)
+    mediaClock.seek(to: savedPositionUs)
+    status = "paused"
+    emitState()
+  }
+
+  func reactivationState(forcePlay: Bool) -> YlFallbackResumeState {
+    stateLock.withLock {
+      YlFallbackResumeState(
+        positionUs: savedPositionUs,
+        selectedAudioStreamIndex: selectedAudioStream?.index,
+        shouldPlay: forcePlay || playing
+      )
+    }
+  }
+
+  func handleMemoryWarning() {
+    stateLock.withLock { openedMedia }?.handleMemoryWarning()
+    deactivate()
+  }
+
   func command(name: String, arguments: [String: Any?]) throws {
+    try command(name: name, arguments: arguments, cancellationToken: nil)
+  }
+
+  func command(
+    name: String,
+    arguments: [String: Any?],
+    cancellationToken: YlOpenCancellationToken?
+  ) throws {
     switch name {
     case "open":
       emitState()
@@ -469,7 +705,10 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       status = "paused"
       emitState()
     case "seekTo":
-      try seek(toMs: int64(arguments["positionMs"]) ?? 0)
+      try seek(
+        toMs: int64(arguments["positionMs"]) ?? 0,
+        cancellationToken: cancellationToken
+      )
     case "seekToLiveEdge":
       throw NativePlayerError(
         category: "source",
@@ -494,7 +733,10 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         audioRenderer?.setVolume(desiredVolume)
       }
     case "selectAudioTrack":
-      try selectAudioTrack(arguments["trackId"] as? String)
+      try selectAudioTrack(
+        arguments["trackId"] as? String,
+        cancellationToken: cancellationToken
+      )
     case "setQualityConstraint":
       return
     default:
@@ -522,7 +764,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         "durationMs": durationMs,
         "bufferedPositionMs": (positionUs + scheduledAudioDurationUs) / 1_000,
         "isLive": false,
-        "isSeekable": true,
+        "isSeekable": isSeekable,
         "isAtLiveEdge": false,
         "liveOffsetMs": nil,
         "dvrStartMs": nil,
@@ -573,11 +815,18 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     reconfiguring = true
     generation &+= 1
     audioGeneration &+= 1
+    let mediaToClose = openedMedia
+    openedMedia = nil
+    let tokenToCancel = sourceCancellationToken
+    sourceCancellationToken = nil
     stateLock.unlock()
     displayLink?.invalidate()
     displayLink = nil
     YlFallbackTeardownTransaction(
-      cancelInput: { [self] in openedMedia?.cancelInput() },
+      cancelInput: { [self] in
+        tokenToCancel?.cancel()
+        mediaToClose?.cancelInput()
+      },
       joinAndRelease: { [self] in
         worker.sync {
           pendingAudioPacket = nil
@@ -586,9 +835,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
           audioRenderer?.dispose()
           audioRenderer = nil
           frameScheduler.dispose()
-          openedMedia?.close()
-          openedMedia = nil
         }
+        mediaToClose?.close()
       }
     ).run()
     stateLock.withLock { currentPixelBuffer = nil }
@@ -662,7 +910,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
 
   private func pumpOne() {
     stateLock.lock()
-    let shouldContinue = !disposed && active && (playing || !prebufferedVideoSample)
+    let shouldContinue = !disposed && active && !reconfiguring
+      && (playing || !prebufferedVideoSample)
     let packetGeneration = generation
     if !shouldContinue {
       pumping = false
@@ -720,7 +969,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     guard result == 0, let ownedPacket = packet else {
       let shouldReport = stateLock.withLock { () -> Bool in
         pumping = false
-        return !disposed && active && generation == packetGeneration
+        return !disposed && active && !reconfiguring && generation == packetGeneration
       }
       ylf_packet_release(&packet)
       if shouldReport {
@@ -809,33 +1058,74 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     requestPump(after: retryDelay)
   }
 
-  private func seek(toMs positionMs: Int64) throws {
+  private func seek(
+    toMs positionMs: Int64,
+    cancellationToken: YlOpenCancellationToken?
+  ) throws {
     let targetUs = max(0, positionMs) * 1_000
-    guard stateLock.withLock({ active }) else {
-      savedPositionUs = targetUs
-      mediaClock.seek(to: targetUs)
-      emitState()
+    try YlFallbackSeekPolicy(isSeekable: isSeekable) { _ in }.seek(toUs: targetUs)
+    try cancellationToken?.throwIfCancelled()
+    if cancellationToken == nil, !stateLock.withLock({ active }) {
+      onMainSync {
+        savedPositionUs = targetUs
+        mediaClock.seek(to: targetUs)
+        emitState()
+      }
       return
     }
-    let wasPlaying = stateLock.withLock { () -> Bool in
-      reconfiguring = true
-      pumping = false
-      return playing
+    let entry = try onMainSync {
+      try cancellationToken?.throwIfCancelled()
+      let value = try stateLock.withLock {
+        guard !disposed, active, !reconfiguring, let media = openedMedia else {
+          throw YlOpenCancellationToken.cancellationError()
+        }
+        let entryGeneration = generation
+        reconfiguring = true
+        pumping = false
+        return (media: media, wasPlaying: playing, generation: entryGeneration)
+      }
+      status = "buffering"
+      emitState()
+      return value
     }
-    status = "buffering"
-    emitState()
+    let media = entry.media
+    let wasPlaying = entry.wasPlaying
+    media.beginControlOperation(cancellationToken)
+    var controlOperationEnded = false
+    func endControlOperation() {
+      guard !controlOperationEnded else { return }
+      controlOperationEnded = true
+      media.endControlOperation()
+      media.resumeReads()
+    }
+    defer { endControlOperation() }
+    var operationGeneration = UInt64(0)
     let transaction = YlFallbackLifecycleTransaction(
       pauseClock: { [self] in
-        audioRenderer?.pause()
-        mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
-      },
-      advanceGeneration: { [self] in
-        stateLock.withLock {
-          generation &+= 1
-          return generation
+        try onMainSync {
+          try cancellationToken?.throwIfCancelled()
+          audioRenderer?.pause()
+          mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
         }
       },
-      stopDemux: { [self] in worker.sync {} },
+      advanceGeneration: { [self] in
+        try cancellationToken?.throwIfCancelled()
+        return try stateLock.withLock {
+          guard !disposed, active, generation == entry.generation,
+                openedMedia === media else {
+            throw YlOpenCancellationToken.cancellationError()
+          }
+          generation &+= 1
+          operationGeneration = generation
+          return operationGeneration
+        }
+      },
+      stopDemux: { [self] in
+        media.interruptRead()
+        worker.sync {}
+        media.resumeReads()
+        try cancellationToken?.throwIfCancelled()
+      },
       clearBuffers: { [self] nextGeneration in
         pendingAudioPacket = nil
         prebufferedVideoSample = false
@@ -846,14 +1136,9 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         stateLock.withLock { currentPixelBuffer = nil }
       },
       seekDemux: { [self] targetUs in
-        guard let openedMedia else {
-          throw NativePlayerError(
-            category: "internal",
-            code: "internal.fallback_invariant",
-            message: "The Matroska media input is unavailable."
-          )
-        }
-        try openedMedia.seek(toMediaTimeUs: targetUs)
+        try cancellationToken?.throwIfCancelled()
+        try media.seek(toMediaTimeUs: targetUs)
+        try cancellationToken?.throwIfCancelled()
       },
       resetAudio: { [self] nextGeneration in
         audioRenderer?.reset(generation: nextGeneration)
@@ -866,31 +1151,132 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         previous?.dispose()
       },
       suppressFramesBefore: { [self] targetUs in
-        postSeekGate.reset(targetUs: targetUs)
-        mediaClock.seek(to: targetUs)
+        onMainSync {
+          postSeekGate.reset(targetUs: targetUs)
+          mediaClock.seek(to: targetUs)
+        }
       },
       restartDemux: { [self] in
-        stateLock.withLock {
-          reconfiguring = false
-          playing = wasPlaying
+        try onMainSync {
+          try cancellationToken?.throwIfCancelled()
+          guard stateLock.withLock({ active && generation == operationGeneration }) else {
+            throw YlOpenCancellationToken.cancellationError()
+          }
+          stateLock.withLock {
+            reconfiguring = false
+            playing = wasPlaying
+          }
+          if wasPlaying {
+            if selectedAudioStream != nil { try audioRenderer?.play() }
+            mediaClock.play(atHostTimeUs: Self.hostTimeUs())
+            status = "playing"
+          } else {
+            status = "paused"
+          }
         }
-        if wasPlaying {
-          if selectedAudioStream != nil { try audioRenderer?.play() }
-          mediaClock.play(atHostTimeUs: Self.hostTimeUs())
-          status = "playing"
-        } else {
-          status = "paused"
-        }
-        requestPump()
       }
     )
     do {
       try transaction.seek(toUs: targetUs)
-    } catch {
-      stateLock.withLock { reconfiguring = false }
+      try cancellationToken?.throwIfCancelled()
+      endControlOperation()
+      try onMainSync {
+        try cancellationToken?.throwIfCancelled()
+        guard stateLock.withLock({
+          active && generation == operationGeneration && openedMedia === media
+        }) else {
+          throw YlOpenCancellationToken.cancellationError()
+        }
+        requestPump()
+        emitState()
+      }
+    } catch let error as NativePlayerError {
+      endControlOperation()
+      if cancellationToken?.isCancelled == true || error.code == "network.cancelled" {
+        transitionToCancelledSeek(
+          wasPlaying: wasPlaying,
+          operationGeneration: operationGeneration
+        )
+        throw YlOpenCancellationToken.cancellationError()
+      } else {
+        transitionToTerminalSeekFailure(
+          error,
+          operationGeneration: operationGeneration
+        )
+      }
       throw error
+    } catch {
+      let nativeError = NativePlayerError(
+        category: "container",
+        code: "container.mkv_seek_failed",
+        message: "The Matroska media could not be seeked.",
+        diagnostic: String(describing: error)
+      )
+      endControlOperation()
+      if cancellationToken?.isCancelled == true {
+        transitionToCancelledSeek(
+          wasPlaying: wasPlaying,
+          operationGeneration: operationGeneration
+        )
+        throw YlOpenCancellationToken.cancellationError()
+      }
+      transitionToTerminalSeekFailure(
+        nativeError,
+        operationGeneration: operationGeneration
+      )
+      throw nativeError
     }
-    emitState()
+  }
+
+  private func transitionToCancelledSeek(
+    wasPlaying: Bool,
+    operationGeneration: UInt64
+  ) {
+    guard stateLock.withLock({ active && generation == operationGeneration }) else {
+      return
+    }
+    onMainSync {
+      let shouldRestore = stateLock.withLock { () -> Bool in
+        guard active && generation == operationGeneration else { return false }
+        reconfiguring = false
+        pumping = false
+        playing = wasPlaying
+        return true
+      }
+      guard shouldRestore else { return }
+      if wasPlaying {
+        try? audioRenderer?.play()
+        mediaClock.play(atHostTimeUs: Self.hostTimeUs())
+        status = "playing"
+      } else {
+        status = "paused"
+      }
+      requestPump()
+      emitState()
+    }
+  }
+
+  private func transitionToTerminalSeekFailure(
+    _ error: NativePlayerError,
+    operationGeneration: UInt64
+  ) {
+    guard stateLock.withLock({ active && generation == operationGeneration }) else {
+      return
+    }
+    onMainSync {
+      let shouldFail = stateLock.withLock { () -> Bool in
+        guard active && generation == operationGeneration else { return false }
+        reconfiguring = false
+        pumping = false
+        playing = false
+        return true
+      }
+      guard shouldFail else { return }
+      audioRenderer?.pause()
+      mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
+      displayLink?.isPaused = true
+      setFailure(error)
+    }
   }
 
   private func makeDecoder() throws -> YlVideoToolboxDecoder {
@@ -1022,7 +1408,11 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     emitState()
   }
 
-  private func selectAudioTrack(_ trackId: String?) throws {
+  private func selectAudioTrack(
+    _ trackId: String?,
+    cancellationToken: YlOpenCancellationToken?
+  ) throws {
+    try cancellationToken?.throwIfCancelled()
     guard let trackId, trackId.hasPrefix("audio-"),
           let requestedIndex = Int32(trackId.dropFirst("audio-".count)),
           let requestedStream = audioStreams.first(where: { $0.index == requestedIndex }),
@@ -1035,16 +1425,18 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     }
     guard requestedStream.index != selectedAudioStream?.index else { return }
 
-    guard stateLock.withLock({ active }) else {
-      selectedAudioStream = requestedStream
-      stateLock.withLock { audioGeneration &+= 1 }
-      emit([
-        "playerId": playerId,
-        "type": "tracksChanged",
-        "audioTracks": audioTracks,
-        "videoTracks": videoTracks,
-      ])
-      emitState()
+    if cancellationToken == nil, !stateLock.withLock({ active }) {
+      onMainSync {
+        selectedAudioStream = requestedStream
+        stateLock.withLock { audioGeneration &+= 1 }
+        emit([
+          "playerId": playerId,
+          "type": "tracksChanged",
+          "audioTracks": audioTracks,
+          "videoTracks": videoTracks,
+        ])
+        emitState()
+      }
       return
     }
 
@@ -1064,40 +1456,156 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       candidate.dispose()
       throw error
     }
-
-    let now = Self.hostTimeUs()
-    let positionUs = mediaClock.position(atHostTimeUs: now)
-    let wasPlaying = stateLock.withLock { () -> Bool in
-      reconfiguring = true
-      pumping = false
-      return playing
+    var candidateOwnedByBackend = false
+    defer {
+      if !candidateOwnedByBackend { candidate.dispose() }
     }
-    mediaClock.pause(atHostTimeUs: now)
+
+    let state = try onMainSync {
+      try cancellationToken?.throwIfCancelled()
+      let now = Self.hostTimeUs()
+      let positionUs = mediaClock.position(atHostTimeUs: now)
+      let value = try stateLock.withLock {
+        guard !disposed, active, !reconfiguring, let media = openedMedia else {
+          throw YlOpenCancellationToken.cancellationError()
+        }
+        let entryGeneration = generation
+        reconfiguring = true
+        pumping = false
+        return (
+          media: media,
+          positionUs: positionUs,
+          wasPlaying: playing,
+          generation: entryGeneration
+        )
+      }
+      mediaClock.pause(atHostTimeUs: now)
+      return value
+    }
+    let media = state.media
+    media.beginControlOperation(cancellationToken)
+    var controlOperationEnded = false
+    func endControlOperation() {
+      guard !controlOperationEnded else { return }
+      controlOperationEnded = true
+      media.endControlOperation()
+      media.resumeReads()
+    }
+    defer { endControlOperation() }
+    media.interruptRead()
     worker.sync {}
+    media.resumeReads()
+    try cancellationToken?.throwIfCancelled()
+    do {
+      try onMainSync {
+        try cancellationToken?.throwIfCancelled()
+        guard stateLock.withLock({
+          active && generation == state.generation && openedMedia === media
+        }) else {
+          throw YlOpenCancellationToken.cancellationError()
+        }
+        let previous = audioRenderer
+        audioRenderer = candidate
+        candidateOwnedByBackend = true
+        selectedAudioStream = requestedStream
+        pendingAudioPacket = nil
+        audioAnchored = false
+        stateLock.withLock {
+          audioGeneration = nextAudioGeneration
+          reconfiguring = false
+        }
+        previous?.dispose()
+        mediaClock.seek(to: state.positionUs)
+        if state.wasPlaying {
+          try candidate.play()
+          mediaClock.play(atHostTimeUs: Self.hostTimeUs())
+        }
+        emit([
+          "playerId": playerId,
+          "type": "tracksChanged",
+          "audioTracks": audioTracks,
+          "videoTracks": videoTracks,
+        ])
+      }
+      try cancellationToken?.throwIfCancelled()
+      endControlOperation()
+      try onMainSync {
+        try cancellationToken?.throwIfCancelled()
+        guard stateLock.withLock({
+          active && generation == state.generation && openedMedia === media
+        }) else {
+          throw YlOpenCancellationToken.cancellationError()
+        }
+        requestPump()
+        emitState()
+      }
+    } catch let error as NativePlayerError {
+      endControlOperation()
+      if cancellationToken?.isCancelled == true || error.code == "network.cancelled" {
+        transitionToCancelledAudioSwitch(state)
+        throw YlOpenCancellationToken.cancellationError()
+      }
+      transitionToTerminalSeekFailure(
+        error,
+        operationGeneration: state.generation
+      )
+      throw error
+    } catch {
+      let nativeError = NativePlayerError(
+        category: "decoderFailure",
+        code: "decoder.audio_failed",
+        message: "The selected AAC track could not be started.",
+        diagnostic: String(describing: error)
+      )
+      endControlOperation()
+      if cancellationToken?.isCancelled == true {
+        transitionToCancelledAudioSwitch(state)
+        throw YlOpenCancellationToken.cancellationError()
+      }
+      transitionToTerminalSeekFailure(
+        nativeError,
+        operationGeneration: state.generation
+      )
+      throw nativeError
+    }
+  }
 
-    let previous = audioRenderer
-    audioRenderer = candidate
-    selectedAudioStream = requestedStream
-    pendingAudioPacket = nil
-    audioAnchored = false
-    stateLock.withLock {
-      audioGeneration = nextAudioGeneration
-      reconfiguring = false
+  private func transitionToCancelledAudioSwitch(
+    _ state: (
+      media: YlOpenedMedia,
+      positionUs: Int64,
+      wasPlaying: Bool,
+      generation: UInt64
+    )
+  ) {
+    guard stateLock.withLock({ active && generation == state.generation }) else {
+      return
     }
-    previous?.dispose()
-    mediaClock.seek(to: positionUs)
-    if wasPlaying {
-      try candidate.play()
-      mediaClock.play(atHostTimeUs: Self.hostTimeUs())
+    onMainSync {
+      let shouldRestore = stateLock.withLock { () -> Bool in
+        guard active && generation == state.generation else { return false }
+        reconfiguring = false
+        pumping = false
+        playing = state.wasPlaying
+        return true
+      }
+      guard shouldRestore else { return }
+      mediaClock.seek(to: state.positionUs)
+      if state.wasPlaying {
+        try? audioRenderer?.play()
+        mediaClock.play(atHostTimeUs: Self.hostTimeUs())
+        status = "playing"
+      } else {
+        status = "paused"
+      }
+      requestPump()
+      emitState()
     }
-    emit([
-      "playerId": playerId,
-      "type": "tracksChanged",
-      "audioTracks": audioTracks,
-      "videoTracks": videoTracks,
-    ])
-    requestPump()
-    emitState()
+  }
+
+  private func onMainSync<T>(_ body: () throws -> T) rethrows -> T {
+    if Thread.isMainThread { return try body() }
+    return try DispatchQueue.main.sync(execute: body)
   }
 
   private func anchorAudioIfNeeded(_ packet: YlCompressedAudioPacket) {

@@ -267,6 +267,43 @@ final class YlNetworkByteSourceTests: XCTestCase {
     XCTAssertEqual(ScriptedURLProtocol.recordedRequests.count, 1)
   }
 
+  func testSeekOutsideRetainedWindowStartsExactRangeRequest() throws {
+    let source = makeSource(
+      scripts: [
+        .response(
+          status: 206,
+          headers: ["Content-Range": "bytes 0-11/12", "ETag": "\"v1\""],
+          chunks: [(0, Data(0...11))]
+        ),
+        .response(
+          status: 206,
+          headers: ["Content-Range": "bytes 6-11/12", "ETag": "\"v1\""],
+          chunks: [(0, Data(6...11))]
+        ),
+      ],
+      capacity: 4
+    )
+    defer { source.cancel() }
+
+    XCTAssertEqual(try readToEnd(source, chunkSize: 4), Array(0...11))
+    XCTAssertEqual(try source.seek(to: 6), 6)
+    XCTAssertEqual(try readToEnd(source, chunkSize: 4), Array(6...11))
+
+    let requests = ScriptedURLProtocol.recordedRequests
+    XCTAssertEqual(requests.count, 2)
+    XCTAssertEqual(requests[1].value(forHTTPHeaderField: "Range"), "bytes=6-")
+    XCTAssertEqual(requests[1].value(forHTTPHeaderField: "If-Range"), "\"v1\"")
+  }
+
+  func testMemoryWarningShrinksLargeCacheToTwoMiB() {
+    let source = makeSource(scripts: [.stall()], capacity: 8 * 1024 * 1024)
+    defer { source.cancel() }
+
+    source.handleMemoryWarning()
+
+    XCTAssertEqual(source.bufferCapacity, 2 * 1024 * 1024)
+  }
+
   func testPartialSequentialFailureDoesNotRetry() throws {
     let source = makeSource(scripts: [
       .stall(),

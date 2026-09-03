@@ -132,8 +132,16 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
     ring.cancel()
   }
 
+  func interruptRead() {
+    ring.interruptRead()
+  }
+
+  func resumeReads() {
+    ring.resumeReads()
+  }
+
   func handleMemoryWarning() {
-    ring.shrink(to: max(1, ring.capacity / 2))
+    ring.shrink(to: min(ring.capacity, 2 * 1024 * 1024))
   }
 
   private func startRequest(

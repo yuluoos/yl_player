@@ -83,6 +83,133 @@ final class YlFallbackLifecycleTests: XCTestCase {
     XCTAssertTrue(gate.acceptsAudio(ptsUs: 500))
   }
 
+  func testSequentialSeekIsRejectedBeforeLifecycleMutation() {
+    var mutationCount = 0
+    let policy = YlFallbackSeekPolicy(
+      isSeekable: false,
+      perform: { _ in mutationCount += 1 }
+    )
+
+    XCTAssertThrowsError(try policy.seek(toUs: 900_000)) { error in
+      XCTAssertEqual((error as? NativePlayerError)?.code, "network.range_not_supported")
+    }
+    XCTAssertEqual(mutationCount, 0)
+  }
+
+  func testActiveNetworkBlockingCommandsRunOffMain() {
+    XCTAssertTrue(YlFallbackCommandPolicy.requiresBackgroundExecution(
+      isNetwork: true,
+      isActive: true,
+      name: "seekTo"
+    ))
+    XCTAssertTrue(YlFallbackCommandPolicy.requiresBackgroundExecution(
+      isNetwork: true,
+      isActive: true,
+      name: "selectAudioTrack"
+    ))
+    XCTAssertFalse(YlFallbackCommandPolicy.requiresBackgroundExecution(
+      isNetwork: false,
+      isActive: true,
+      name: "seekTo"
+    ))
+    XCTAssertFalse(YlFallbackCommandPolicy.requiresBackgroundExecution(
+      isNetwork: true,
+      isActive: false,
+      name: "seekTo"
+    ))
+  }
+
+  func testRetryEnvelopeContainsNoSourceOrHeaders() {
+    let envelope = YlFallbackRetryEvent.envelope(
+      playerId: 9,
+      attempt: 2,
+      delayMs: 400,
+      error: NativePlayerError(
+        category: "network",
+        code: "network.read_timeout",
+        message: "Read timed out",
+        diagnostic: "NSURLErrorDomain -1001"
+      )
+    )
+
+    XCTAssertEqual(envelope["playerId"] as? Int64, 9)
+    XCTAssertEqual(envelope["type"] as? String, "retry")
+    XCTAssertEqual(envelope["attempt"] as? Int, 2)
+    XCTAssertEqual(envelope["delayMs"] as? Int64, 400)
+    XCTAssertNil(envelope["uri"] ?? nil)
+    XCTAssertNil(envelope["headers"] ?? nil)
+    let error = envelope["error"] as? [String: Any?]
+    XCTAssertEqual(error?["code"] as? String, "network.read_timeout")
+  }
+
+  func testRangeReactivationPreservesPositionTrackAndPlaybackIntent() {
+    let state = YlFallbackReactivationPolicy.resolve(
+      isSeekable: true,
+      savedPositionUs: 1_250_000,
+      selectedAudioStreamIndex: 3,
+      shouldPlay: true
+    )
+
+    XCTAssertEqual(state.positionUs, 1_250_000)
+    XCTAssertEqual(state.selectedAudioStreamIndex, 3)
+    XCTAssertTrue(state.shouldPlay)
+  }
+
+  func testSequentialReactivationRestartsAtZeroPaused() {
+    let state = YlFallbackReactivationPolicy.resolve(
+      isSeekable: false,
+      savedPositionUs: 1_250_000,
+      selectedAudioStreamIndex: 3,
+      shouldPlay: true
+    )
+
+    XCTAssertEqual(state.positionUs, 0)
+    XCTAssertEqual(state.selectedAudioStreamIndex, 3)
+    XCTAssertFalse(state.shouldPlay)
+  }
+
+  func testReplacementQuiesceKeepsAudioPacketsCompatibleWithRetainedRenderer() {
+    let configuredAudioGeneration = UInt64(11)
+
+    let transition = YlFallbackReplacementGenerationPolicy.quiesce(
+      videoGeneration: 11,
+      audioGeneration: configuredAudioGeneration
+    )
+
+    XCTAssertEqual(transition.videoGeneration, 12)
+    XCTAssertEqual(transition.audioGeneration, configuredAudioGeneration)
+    XCTAssertEqual(
+      transition.audioGeneration,
+      configuredAudioGeneration,
+      "The next demuxed packet must match the retained renderer generation after rollback."
+    )
+  }
+
+  func testPreparedReactivationPositionsSeekableMediaBeforeCommit() throws {
+    let fixture = try XCTUnwrap(
+      Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv")
+    )
+    let prepared = try YlPreparedFallback(
+      source: [
+        "uri": fixture.absoluteString,
+        "kind": "file",
+        "formatHint": "matroska",
+        "isLive": false,
+      ],
+      requireHardwareProbe: false
+    )
+    let requested = YlFallbackResumeState(
+      positionUs: 900_000,
+      selectedAudioStreamIndex: prepared.audioStreams.first?.index,
+      shouldPlay: true
+    )
+
+    try prepared.prepareForReactivation(requested)
+
+    XCTAssertEqual(prepared.resumeState?.positionUs, 900_000)
+    XCTAssertTrue(prepared.resumeState?.shouldPlay == true)
+  }
+
   func testHEVCFixtureBuildsFormatAndRequiresHardware() throws {
     let fixture = try XCTUnwrap(
       Bundle(for: Self.self).url(forResource: "hevc_aac", withExtension: "mkv")

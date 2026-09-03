@@ -11,6 +11,7 @@ private final class YlByteSourceCallbackBox {
   let source: YlByteSource
   private let lock = NSLock()
   private var storedError: NativePlayerError?
+  private var operationToken: YlOpenCancellationToken?
 
   init(source: YlByteSource) {
     self.source = source
@@ -26,6 +27,24 @@ private final class YlByteSourceCallbackBox {
 
   func remember(_ error: NativePlayerError) {
     lock.withLock { storedError = error }
+  }
+
+  var isOperationCancelled: Bool {
+    lock.withLock { operationToken?.isCancelled ?? false }
+  }
+
+  func beginOperation(_ token: YlOpenCancellationToken?) {
+    lock.withLock {
+      operationToken = token
+      storedError = nil
+    }
+  }
+
+  func endOperation() {
+    lock.withLock {
+      operationToken = nil
+      if storedError?.code == "network.cancelled" { storedError = nil }
+    }
   }
 }
 
@@ -44,6 +63,7 @@ private func ylByteSourceRead(
   guard let box = ylByteSourceBox(opaque),
         let buffer,
         capacity > 0 else { return Int32(YLFCallbackError) }
+  if box.isOperationCancelled { return Int32(YLFCallbackCancelled) }
   do {
     let count = try box.source.read(into: UnsafeMutableRawBufferPointer(
       start: buffer,
@@ -77,6 +97,7 @@ private func ylByteSourceSeek(
   guard let box = ylByteSourceBox(opaque) else {
     return Int64(YLFCallbackError)
   }
+  if box.isOperationCancelled { return Int64(YLFCallbackCancelled) }
   let avSeekSize: Int32 = 0x10000
   let avSeekForce: Int32 = 0x20000
   let origin = whence & ~avSeekForce
@@ -124,11 +145,20 @@ final class YlOpenedMedia {
   let recipe: YlFallbackSourceRecipe?
   let info: YLFMediaInfo
   private let lock = NSLock()
+  private let contextOperationLock = NSLock()
   private var callbackBox: YlByteSourceCallbackBox?
   private var ownedContext: YLFMediaContextRef?
 
   var context: YLFMediaContextRef? {
     lock.withLock { ownedContext }
+  }
+
+  var supportsRandomAccess: Bool {
+    lock.withLock {
+      if let source = callbackBox?.source { return source.supportsRandomAccess }
+      if case .network = recipe { return false }
+      return true
+    }
   }
 
   convenience init(
@@ -203,32 +233,40 @@ final class YlOpenedMedia {
 
   @discardableResult
   func seek(toMediaTimeUs positionUs: Int64) throws -> Int64 {
-    let (context, box) = lock.withLock { (ownedContext, callbackBox) }
-    guard let context else {
-      throw NativePlayerError(
-        category: "internal",
-        code: "internal.fallback_invariant",
-        message: "The Matroska media input is closed."
-      )
-    }
-    let result = ylf_seek(context, positionUs)
-    guard result == Int32(YLFResultOK) else {
-      if let error = box?.lastError { throw error }
-      if result == Int32(YLFResultCallbackSeekUnsupported) {
+    try contextOperationLock.withLock {
+      let (context, box) = lock.withLock { (ownedContext, callbackBox) }
+      guard let context else {
         throw NativePlayerError(
-          category: "network",
-          code: "network.range_not_supported",
-          message: "This network source does not support random access."
+          category: "internal",
+          code: "internal.fallback_invariant",
+          message: "The Matroska media input is closed."
         )
       }
-      throw NativePlayerError(
-        category: "container",
-        code: "container.mkv_seek_failed",
-        message: "The Matroska media could not be seeked.",
-        diagnostic: "YlFFmpegBridge result \(result)"
-      )
+      if box?.isOperationCancelled == true {
+        throw YlOpenCancellationToken.cancellationError()
+      }
+      let result = ylf_seek(context, positionUs)
+      guard result == Int32(YLFResultOK) else {
+        if let error = box?.lastError { throw error }
+        if result == Int32(YLFResultCallbackCancelled) {
+          throw YlOpenCancellationToken.cancellationError()
+        }
+        if result == Int32(YLFResultCallbackSeekUnsupported) {
+          throw NativePlayerError(
+            category: "network",
+            code: "network.range_not_supported",
+            message: "This network source does not support random access."
+          )
+        }
+        throw NativePlayerError(
+          category: "container",
+          code: "container.mkv_seek_failed",
+          message: "The Matroska media could not be seeked.",
+          diagnostic: "YlFFmpegBridge result \(result)"
+        )
+      }
+      return positionUs
     }
-    return positionUs
   }
 
   func cancelInput() {
@@ -236,19 +274,44 @@ final class YlOpenedMedia {
     source?.cancel()
   }
 
+  func interruptRead() {
+    let source = lock.withLock { callbackBox?.source }
+    source?.interruptRead()
+  }
+
+  func beginControlOperation(_ token: YlOpenCancellationToken?) {
+    lock.withLock { callbackBox }?.beginOperation(token)
+  }
+
+  func endControlOperation() {
+    lock.withLock { callbackBox }?.endOperation()
+  }
+
+  func resumeReads() {
+    let source = lock.withLock { callbackBox?.source }
+    source?.resumeReads()
+  }
+
+  func handleMemoryWarning() {
+    let source = lock.withLock { callbackBox?.source }
+    source?.handleMemoryWarning()
+  }
+
   func close() {
-    let values: (YLFMediaContextRef?, YlByteSourceCallbackBox?)? = lock.withLock {
-      guard ownedContext != nil else { return nil }
-      let values = (ownedContext, callbackBox)
-      ownedContext = nil
-      return values
+    contextOperationLock.withLock {
+      let values: (YLFMediaContextRef?, YlByteSourceCallbackBox?)? = lock.withLock {
+        guard ownedContext != nil else { return nil }
+        let values = (ownedContext, callbackBox)
+        ownedContext = nil
+        return values
+      }
+      guard let rawContext = values?.0 else { return }
+      var context: YLFMediaContextRef? = rawContext
+      let retainedBox = values?.1
+      ylf_close(&context)
+      withExtendedLifetime(retainedBox) {}
+      lock.withLock { callbackBox = nil }
     }
-    guard let rawContext = values?.0 else { return }
-    var context: YLFMediaContextRef? = rawContext
-    let retainedBox = values?.1
-    ylf_close(&context)
-    withExtendedLifetime(retainedBox) {}
-    lock.withLock { callbackBox = nil }
   }
 
   deinit {

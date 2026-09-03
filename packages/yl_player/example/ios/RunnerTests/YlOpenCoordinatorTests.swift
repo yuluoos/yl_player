@@ -233,6 +233,30 @@ final class YlOpenCoordinatorTests: XCTestCase {
     XCTAssertEqual(completionCount, 1)
   }
 
+  func testPreparationFailureCancelsLifetimeTokenBeforeCompletion() {
+    let coordinator = YlOpenCoordinator(label: "test.open.failure-token")
+    let completed = expectation(description: "completed")
+    var cancelCount = 0
+
+    _ = coordinator.begin(
+      prepare: { token in
+        token.onCancel { cancelCount += 1 }
+        throw NativePlayerError(
+          category: "network",
+          code: "network.http_status",
+          message: "Rejected"
+        )
+      },
+      commit: { _ in XCTFail("Failed preparation must not commit") },
+      completion: { _ in
+        XCTAssertEqual(cancelCount, 1)
+        completed.fulfill()
+      }
+    )
+
+    wait(for: [completed], timeout: 2)
+  }
+
   func testCancellationTokenInvokesLateAndEarlyHandlersOnce() {
     let token = YlOpenCancellationToken()
     var early = 0
@@ -248,5 +272,150 @@ final class YlOpenCoordinatorTests: XCTestCase {
     XCTAssertThrowsError(try token.throwIfCancelled()) { error in
       XCTAssertEqual((error as? NativePlayerError)?.code, "network.cancelled")
     }
+  }
+}
+
+final class YlAsyncCommandCoordinatorTests: XCTestCase {
+  func testCommandsRunInSubmissionOrderWithoutSupersedingEachOther() {
+    let coordinator = YlAsyncCommandCoordinator(label: "test.command.fifo")
+    let firstStarted = expectation(description: "first started")
+    let bothCompleted = expectation(description: "both completed")
+    bothCompleted.expectedFulfillmentCount = 2
+    let releaseFirst = DispatchSemaphore(value: 0)
+    let lock = NSLock()
+    var events = [Int]()
+
+    coordinator.begin(
+      operation: { token in
+        firstStarted.fulfill()
+        releaseFirst.wait()
+        try token.throwIfCancelled()
+        lock.lock()
+        events.append(1)
+        lock.unlock()
+      },
+      completion: { _ in bothCompleted.fulfill() }
+    )
+    wait(for: [firstStarted], timeout: 1)
+    coordinator.begin(
+      operation: { token in
+        try token.throwIfCancelled()
+        lock.lock()
+        events.append(2)
+        lock.unlock()
+      },
+      completion: { _ in bothCompleted.fulfill() }
+    )
+
+    releaseFirst.signal()
+    wait(for: [bothCompleted], timeout: 2)
+    XCTAssertEqual(events, [1, 2])
+  }
+
+  func testCommandRunsOffMainAndCompletesOnMain() {
+    let coordinator = YlAsyncCommandCoordinator(label: "test.command.queue")
+    let completed = expectation(description: "completed")
+
+    coordinator.begin(
+      operation: { token in
+        XCTAssertFalse(Thread.isMainThread)
+        try token.throwIfCancelled()
+      },
+      completion: { result in
+        XCTAssertTrue(Thread.isMainThread)
+        if case let .failure(error) = result {
+          XCTFail("Unexpected failure: \(error.code)")
+        }
+        completed.fulfill()
+      }
+    )
+
+    wait(for: [completed], timeout: 2)
+  }
+
+  func testCancelledCommandCompletesExactlyOnce() {
+    let coordinator = YlAsyncCommandCoordinator(label: "test.command.cancel")
+    let started = expectation(description: "started")
+    let completed = expectation(description: "completed")
+    var completionCount = 0
+
+    coordinator.begin(
+      operation: { token in
+        started.fulfill()
+        while !token.isCancelled { Thread.sleep(forTimeInterval: 0.001) }
+        try token.throwIfCancelled()
+      },
+      completion: { result in
+        completionCount += 1
+        guard case let .failure(error) = result else {
+          XCTFail("Expected cancellation")
+          completed.fulfill()
+          return
+        }
+        XCTAssertEqual(error.code, "network.cancelled")
+        completed.fulfill()
+      }
+    )
+    wait(for: [started], timeout: 1)
+
+    coordinator.cancelCurrent()
+
+    wait(for: [completed], timeout: 2)
+    XCTAssertEqual(completionCount, 1)
+  }
+
+  func testCancellationWinsWhileSuccessCompletionIsQueuedForMain() {
+    let coordinator = YlAsyncCommandCoordinator(label: "test.command.queued")
+    let bodyFinished = DispatchSemaphore(value: 0)
+    let completed = expectation(description: "completed")
+
+    coordinator.begin(
+      operation: { _ in bodyFinished.signal() },
+      completion: { result in
+        guard case let .failure(error) = result else {
+          XCTFail("A cancelled command must not report stale success")
+          completed.fulfill()
+          return
+        }
+        XCTAssertEqual(error.code, "network.cancelled")
+        completed.fulfill()
+      }
+    )
+    XCTAssertEqual(bodyFinished.wait(timeout: .now() + 1), .success)
+
+    coordinator.cancelCurrent()
+
+    wait(for: [completed], timeout: 2)
+  }
+
+  func testCancelledCoordinatorStaysAliveUntilCompletionIsDelivered() {
+    var coordinator: YlAsyncCommandCoordinator? = YlAsyncCommandCoordinator(
+      label: "test.command.lifetime"
+    )
+    weak var weakCoordinator = coordinator
+    let started = expectation(description: "started")
+    let completed = expectation(description: "completed")
+
+    coordinator?.begin(
+      operation: { token in
+        started.fulfill()
+        while !token.isCancelled { Thread.sleep(forTimeInterval: 0.001) }
+        try token.throwIfCancelled()
+      },
+      completion: { result in
+        if case let .failure(error) = result {
+          XCTAssertEqual(error.code, "network.cancelled")
+        } else {
+          XCTFail("Expected cancellation")
+        }
+        completed.fulfill()
+      }
+    )
+    wait(for: [started], timeout: 1)
+    coordinator?.cancelCurrent()
+    coordinator = nil
+
+    XCTAssertNotNil(weakCoordinator)
+    wait(for: [completed], timeout: 2)
   }
 }

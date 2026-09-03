@@ -2,6 +2,58 @@
 import XCTest
 
 final class YlByteRingBufferTests: XCTestCase {
+  func testInterruptWakesCurrentReaderWithoutCancellingFutureReads() throws {
+    let ring = YlByteRingBuffer(capacity: 8)
+    let interrupted = expectation(description: "interrupted")
+    var interruptionError: YlByteSourceError?
+    DispatchQueue.global(qos: .userInitiated).async {
+      var byte: UInt8 = 0
+      do {
+        _ = try withUnsafeMutableBytes(of: &byte) { try ring.read(into: $0) }
+      } catch let error as YlByteSourceError {
+        interruptionError = error
+      } catch {}
+      interrupted.fulfill()
+    }
+
+    XCTAssertTrue(ring.waitUntilReaderIsBlocked(timeout: 1))
+    ring.interruptRead()
+    wait(for: [interrupted], timeout: 1)
+    if case .cancelled = interruptionError {} else {
+      XCTFail("Expected one interrupted read")
+    }
+
+    ring.resumeReads()
+    XCTAssertEqual(try ring.append(Data([7]), at: 0), 1)
+    var value: UInt8 = 0
+    XCTAssertEqual(try withUnsafeMutableBytes(of: &value) { try ring.read(into: $0) }, 1)
+    XCTAssertEqual(value, 7)
+  }
+
+  func testInterruptWithoutReaderDoesNotLeakPastResume() throws {
+    let ring = YlByteRingBuffer(capacity: 8)
+
+    ring.interruptRead()
+    ring.resumeReads()
+    XCTAssertEqual(try ring.append(Data([9]), at: 0), 1)
+
+    var value: UInt8 = 0
+    XCTAssertEqual(try withUnsafeMutableBytes(of: &value) { try ring.read(into: $0) }, 1)
+    XCTAssertEqual(value, 9)
+  }
+
+  func testBufferedSeekClearsPendingReadInterrupt() throws {
+    let ring = YlByteRingBuffer(capacity: 8)
+    XCTAssertEqual(try ring.append(Data([1, 2]), at: 0), 2)
+
+    ring.interruptRead()
+    XCTAssertTrue(ring.seekWithinBuffer(to: 1))
+
+    var value: UInt8 = 0
+    XCTAssertEqual(try withUnsafeMutableBytes(of: &value) { try ring.read(into: $0) }, 1)
+    XCTAssertEqual(value, 2)
+  }
+
   func testAppendNeverExceedsExactCapacity() throws {
     let buffer = YlByteRingBuffer(capacity: 4)
 

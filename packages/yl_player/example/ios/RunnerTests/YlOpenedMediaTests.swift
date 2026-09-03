@@ -14,6 +14,7 @@ final class YlOpenedMediaTests: XCTestCase {
     let probe: CancellationProbe
     private var offset = 0
     private var cancelled = false
+    private(set) var seekCount = 0
 
     init(bytes: Data, probe: CancellationProbe = CancellationProbe()) {
       self.bytes = bytes
@@ -33,6 +34,7 @@ final class YlOpenedMediaTests: XCTestCase {
     }
 
     func seek(to offset: Int64) throws -> Int64 {
+      seekCount += 1
       guard offset >= 0, offset <= Int64(bytes.count) else {
         throw YlByteSourceError.invalidOffset(
           expected: Int64(self.offset),
@@ -116,6 +118,22 @@ final class YlOpenedMediaTests: XCTestCase {
     media.close()
     XCTAssertEqual(probe.count, 1)
     XCTAssertNil(media.context)
+  }
+
+  func testCancelledControlOperationCannotReachFFmpegOrByteSourceSeek() throws {
+    let source = MemoryByteSource(bytes: try Data(contentsOf: fixture()))
+    let media = try YlOpenedMedia(byteSource: source)
+    defer { media.close() }
+    let seekCountBeforeCommand = source.seekCount
+    let token = YlOpenCancellationToken()
+    token.cancel()
+    media.beginControlOperation(token)
+    defer { media.endControlOperation() }
+
+    XCTAssertThrowsError(try media.seek(toMediaTimeUs: 500_000)) { error in
+      XCTAssertEqual((error as? NativePlayerError)?.code, "network.cancelled")
+    }
+    XCTAssertEqual(source.seekCount, seekCountBeforeCommand)
   }
 
   func testHundredOpenReadCloseCyclesReleaseEveryPacket() throws {

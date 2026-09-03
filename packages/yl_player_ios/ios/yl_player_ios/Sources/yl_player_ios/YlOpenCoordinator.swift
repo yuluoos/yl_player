@@ -125,6 +125,7 @@ final class YlOpenCoordinator {
           self.commit(candidate, for: operation, using: commit)
         }
       } catch {
+        operation.token.cancel()
         self.finish(operation, result: .failure(Self.nativeError(error)))
       }
     }
@@ -153,6 +154,7 @@ final class YlOpenCoordinator {
       try commit(candidate)
       finish(operation, result: .success(()))
     } catch {
+      operation.token.cancel()
       candidate.discard()
       finish(operation, result: .failure(Self.nativeError(error)))
     }
@@ -173,7 +175,7 @@ final class YlOpenCoordinator {
     else { DispatchQueue.main.async(execute: finalize) }
   }
 
-  private static func nativeError(_ error: Error) -> NativePlayerError {
+  fileprivate static func nativeError(_ error: Error) -> NativePlayerError {
     if let error = error as? NativePlayerError { return error }
     return NativePlayerError(
       category: "internal",
@@ -181,6 +183,84 @@ final class YlOpenCoordinator {
       message: "iOS player command failed.",
       diagnostic: String(describing: error)
     )
+  }
+}
+
+final class YlAsyncCommandCoordinator {
+  typealias OperationBody = (YlOpenCancellationToken) throws -> Void
+  typealias Completion = (Result<Void, NativePlayerError>) -> Void
+
+  private final class Operation {
+    let token = YlOpenCancellationToken()
+    let completion: Completion
+    private let lock = NSLock()
+    private var completed = false
+
+    init(completion: @escaping Completion) {
+      self.completion = completion
+    }
+
+    func claimCompletion() -> Bool {
+      lock.withLock {
+        guard !completed else { return false }
+        completed = true
+        return true
+      }
+    }
+  }
+
+  private let queue: DispatchQueue
+  private let lock = NSLock()
+  private var operations: [Operation] = []
+
+  var hasCurrent: Bool {
+    lock.withLock { !operations.isEmpty }
+  }
+
+  init(label: String = "dev.ylplayer.ios.command") {
+    queue = DispatchQueue(label: label, qos: .userInitiated)
+  }
+
+  func begin(
+    operation body: @escaping OperationBody,
+    completion: @escaping Completion
+  ) {
+    let operation = Operation(completion: completion)
+    lock.withLock { operations.append(operation) }
+
+    queue.async {
+      let result: Result<Void, NativePlayerError>
+      do {
+        try operation.token.throwIfCancelled()
+        try body(operation.token)
+        try operation.token.throwIfCancelled()
+        result = .success(())
+      } catch {
+        result = .failure(YlOpenCoordinator.nativeError(error))
+      }
+      self.finish(operation, result: result)
+    }
+  }
+
+  func cancelCurrent() {
+    let pending = lock.withLock { operations }
+    pending.forEach { $0.token.cancel() }
+  }
+
+  private func finish(
+    _ operation: Operation,
+    result: Result<Void, NativePlayerError>
+  ) {
+    DispatchQueue.main.async {
+      guard operation.claimCompletion() else { return }
+      self.lock.withLock {
+        self.operations.removeAll { $0 === operation }
+      }
+      let deliveredResult = operation.token.isCancelled
+        ? Result.failure(YlOpenCancellationToken.cancellationError())
+        : result
+      operation.completion(deliveredResult)
+    }
   }
 }
 

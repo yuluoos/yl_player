@@ -15,6 +15,8 @@ final class YlIosPlayer: NSObject, FlutterTexture {
   private let avBackend: YlAvPlayerBackend
   private let slot: YlBackendSlot
   private let openCoordinator = YlOpenCoordinator()
+  private let commandCoordinator = YlAsyncCommandCoordinator()
+  private var lastCommittedSource: [String: Any?]?
   private var disposed = false
 
   init(
@@ -23,15 +25,22 @@ final class YlIosPlayer: NSObject, FlutterTexture {
     configuration: PlayerConfiguration,
     emit: @escaping ([String: Any?]) -> Void
   ) {
+    let mainEmit: ([String: Any?]) -> Void = { event in
+      if Thread.isMainThread {
+        emit(event)
+      } else {
+        DispatchQueue.main.async { emit(event) }
+      }
+    }
     self.playerId = playerId
     self.textures = textures
     self.configuration = configuration
-    self.emit = emit
+    self.emit = mainEmit
     let avBackend = YlAvPlayerBackend(
       playerId: playerId,
       textures: textures,
       configuration: configuration,
-      emit: emit
+      emit: mainEmit
     )
     self.avBackend = avBackend
     self.slot = YlBackendSlot(initial: avBackend)
@@ -70,11 +79,7 @@ final class YlIosPlayer: NSObject, FlutterTexture {
         case .localMatroska, .networkMatroska:
           return .fallback(
             source: source,
-            prepared: try YlPreparedFallback(
-              source: source,
-              configuration: self.configuration,
-              cancellationToken: token
-            )
+            prepared: try self.prepareFallback(source: source, token: token)
           )
         case let .reject(category, code, message):
           throw NativePlayerError(category: category, code: code, message: message)
@@ -95,26 +100,148 @@ final class YlIosPlayer: NSObject, FlutterTexture {
     )
   }
 
+  func beginActivation(
+    forcePlay: Bool,
+    didCommit: @escaping () -> Void,
+    completion: @escaping (Result<Void, NativePlayerError>) -> Void
+  ) {
+    guard !disposed else {
+      completion(.failure(NativePlayerError(
+        category: "resource",
+        code: "ios.player_disposed",
+        message: "The iOS player has been disposed."
+      )))
+      return
+    }
+    guard let fallback = slot.current as? YlFallbackBackend,
+          fallback.requiresAsyncActivation,
+          let source = lastCommittedSource else {
+      do {
+        try slot.current.activate()
+        didCommit()
+        completion(.success(()))
+      } catch let error as NativePlayerError {
+        completion(.failure(error))
+      } catch {
+        completion(.failure(Self.commandError(error)))
+      }
+      return
+    }
+
+    let resumeState = fallback.reactivationState(forcePlay: forcePlay)
+    openCoordinator.begin(
+      prepare: { [weak self] token in
+        guard let self else { throw YlOpenCancellationToken.cancellationError() }
+        let prepared = try self.prepareFallback(source: source, token: token)
+        try prepared.prepareForReactivation(resumeState)
+        try token.throwIfCancelled()
+        return .fallback(source: source, prepared: prepared)
+      },
+      commit: { [weak self, weak fallback] candidate in
+        guard let self, let fallback, !self.disposed,
+              self.slot.current === fallback else {
+          throw YlOpenCancellationToken.cancellationError()
+        }
+        try self.commit(candidate)
+        didCommit()
+      },
+      completion: completion
+    )
+  }
+
   func activate() throws {
     try slot.current.activate()
   }
 
   func deactivate() {
+    commandCoordinator.cancelCurrent()
+    openCoordinator.cancelCurrent()
     slot.current.deactivate()
   }
 
-  func command(name: String, arguments: [String: Any?]) throws {
+  func handleMemoryWarning() {
+    commandCoordinator.cancelCurrent()
+    openCoordinator.cancelCurrent()
+    if let fallback = slot.current as? YlFallbackBackend {
+      fallback.handleMemoryWarning()
+    } else {
+      slot.current.deactivate()
+    }
+  }
+
+  func beginCommand(
+    name: String,
+    arguments: [String: Any?],
+    completion: @escaping (Result<Void, NativePlayerError>) -> Void
+  ) {
     guard name != "open" else {
-      throw NativePlayerError(
+      completion(.failure(NativePlayerError(
         category: "internal",
         code: "internal.fallback_invariant",
         message: "Open commands must use asynchronous preparation."
-      )
+      )))
+      return
     }
-    try slot.current.command(name: name, arguments: arguments)
+    let backend = slot.current
+    if let fallback = backend as? YlFallbackBackend {
+      let runsInBackground = fallback.requiresAsyncCommand(name)
+      guard runsInBackground || commandCoordinator.hasCurrent else {
+        completeCommandSynchronously(
+          backend: backend,
+          name: name,
+          arguments: arguments,
+          completion: completion
+        )
+        return
+      }
+      commandCoordinator.begin(
+        operation: { token in
+          token.onCancel { [weak fallback] in fallback?.interruptControlOperation() }
+          defer { fallback.resumeControlOperation() }
+          try token.throwIfCancelled()
+          if runsInBackground {
+            try fallback.command(
+              name: name,
+              arguments: arguments,
+              cancellationToken: token
+            )
+          } else {
+            try DispatchQueue.main.sync {
+              try token.throwIfCancelled()
+              try backend.command(name: name, arguments: arguments)
+            }
+          }
+        },
+        completion: completion
+      )
+      return
+    }
+    completeCommandSynchronously(
+      backend: backend,
+      name: name,
+      arguments: arguments,
+      completion: completion
+    )
+  }
+
+  private func completeCommandSynchronously(
+    backend: YlPlaybackBackend,
+    name: String,
+    arguments: [String: Any?],
+    completion: (Result<Void, NativePlayerError>) -> Void
+  ) {
+    do {
+      try backend.command(name: name, arguments: arguments)
+      completion(.success(()))
+    } catch let error as NativePlayerError {
+      completion(.failure(error))
+    } catch {
+      completion(.failure(Self.commandError(error)))
+    }
   }
 
   private func commit(_ candidate: YlPreparedOpen) throws {
+    commandCoordinator.cancelCurrent()
     switch candidate {
     case let .avPlayer(source):
       if slot.current !== avBackend {
@@ -124,6 +251,7 @@ final class YlIosPlayer: NSObject, FlutterTexture {
         try avBackend.activate()
       }
       try avBackend.command(name: "open", arguments: ["source": source])
+      lastCommittedSource = source
     case let .fallback(source, prepared):
       let backend = try YlFallbackBackend(
         playerId: playerId,
@@ -137,11 +265,56 @@ final class YlIosPlayer: NSObject, FlutterTexture {
       let previous = try slot.replace { backend }
       if previous !== avBackend { previous.dispose() }
       try backend.command(name: "open", arguments: ["source": source])
+      lastCommittedSource = source
     }
+  }
+
+  private func prepareFallback(
+    source: [String: Any?],
+    token: YlOpenCancellationToken
+  ) throws -> YlPreparedFallback {
+    try YlPreparedFallback(
+      source: source,
+      configuration: configuration,
+      cancellationToken: token,
+      onRetry: { [weak self] attempt, delayMs, error in
+        DispatchQueue.main.async {
+          guard let self, !self.disposed, !token.isCancelled else { return }
+          self.emit(YlFallbackRetryEvent.envelope(
+            playerId: self.playerId,
+            attempt: attempt,
+            delayMs: delayMs,
+            error: error
+          ))
+        }
+      }
+    )
+  }
+
+  private static func commandError(_ error: Error) -> NativePlayerError {
+    NativePlayerError(
+      category: "internal",
+      code: "ios.command_failed",
+      message: "iOS player command failed.",
+      diagnostic: String(describing: error)
+    )
   }
 
   func emitState() {
     slot.current.emitState()
+  }
+
+  func emitError(_ error: NativePlayerError) {
+    emit([
+      "playerId": playerId,
+      "type": "error",
+      "error": errorMap(
+        category: error.category,
+        code: error.code,
+        message: error.message,
+        diagnostic: error.diagnostic
+      ),
+    ])
   }
 
   func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? {
@@ -151,6 +324,7 @@ final class YlIosPlayer: NSObject, FlutterTexture {
   func dispose() {
     guard !disposed else { return }
     disposed = true
+    commandCoordinator.cancelCurrent()
     openCoordinator.cancelCurrent()
     avBackend.textureId = -1
     let current = slot.current

@@ -14,6 +14,13 @@ protocol YlByteSource: AnyObject {
 
   func read(into buffer: UnsafeMutableRawBufferPointer) throws -> Int
   func seek(to offset: Int64) throws -> Int64
+  func interruptRead()
+  func resumeReads()
   func cancel()
   func handleMemoryWarning()
+}
+
+extension YlByteSource {
+  func interruptRead() {}
+  func resumeReads() {}
 }

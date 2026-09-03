@@ -8,6 +8,7 @@ public final class YlPlayerIosPlugin: NSObject, FlutterPlugin, FlutterStreamHand
   private var nextPlayerId: Int64 = 1
   private var eventSink: FlutterEventSink?
   private var lifecycleObservers: [NSObjectProtocol] = []
+  private var suspendedPlayerIds = Set<Int64>()
 
   init(textures: FlutterTextureRegistry) {
     self.textures = textures
@@ -17,12 +18,17 @@ public final class YlPlayerIosPlugin: NSObject, FlutterPlugin, FlutterStreamHand
         forName: UIApplication.didEnterBackgroundNotification,
         object: nil,
         queue: .main
-      ) { [weak self] _ in self?.deactivateAllPlayers() },
+      ) { [weak self] _ in self?.suspendActivePlayers() },
       NotificationCenter.default.addObserver(
         forName: UIApplication.didReceiveMemoryWarningNotification,
         object: nil,
         queue: .main
-      ) { [weak self] _ in self?.deactivateAllPlayers() },
+      ) { [weak self] _ in self?.handleMemoryWarning() },
+      NotificationCenter.default.addObserver(
+        forName: UIApplication.willEnterForegroundNotification,
+        object: nil,
+        queue: .main
+      ) { [weak self] _ in self?.reactivateSuspendedPlayers() },
     ]
   }
 
@@ -106,6 +112,7 @@ public final class YlPlayerIosPlugin: NSObject, FlutterPlugin, FlutterStreamHand
         stringMap(commandArguments["source"]),
         didCommit: { [weak self, weak player] in
           guard let self, let player else { return }
+          self.suspendedPlayerIds.remove(playerId)
           self.players.values.filter { $0 !== player }.forEach { $0.deactivate() }
         },
         completion: { openResult in
@@ -119,28 +126,44 @@ public final class YlPlayerIosPlugin: NSObject, FlutterPlugin, FlutterStreamHand
       )
       return
     }
-    do {
-      if commandName == "play" {
-        players.values.filter { $0 !== player }.forEach { $0.deactivate() }
-        try player.activate()
+    if commandName == "play" {
+      player.beginActivation(
+        forcePlay: true,
+        didCommit: { [weak self, weak player] in
+          guard let self, let player else { return }
+          self.suspendedPlayerIds.remove(playerId)
+          self.players.values.filter { $0 !== player }.forEach { $0.deactivate() }
+        },
+        completion: { activationResult in
+          switch activationResult {
+          case .success:
+            player.beginCommand(name: commandName, arguments: commandArguments) {
+              commandResult in
+              switch commandResult {
+              case .success: result(nil)
+              case let .failure(error): result(flutterError(error))
+              }
+            }
+          case let .failure(error):
+            result(flutterError(error))
+          }
+        }
+      )
+      return
+    }
+    player.beginCommand(name: commandName, arguments: commandArguments) {
+      commandResult in
+      switch commandResult {
+      case .success: result(nil)
+      case let .failure(error): result(flutterError(error))
       }
-      try player.command(name: commandName, arguments: commandArguments)
-      result(nil)
-    } catch let error as NativePlayerError {
-      result(flutterError(error))
-    } catch {
-      result(flutterError(NativePlayerError(
-        category: "internal",
-        code: "ios.command_failed",
-        message: "iOS player command failed.",
-        diagnostic: String(describing: error)
-      )))
     }
   }
 
   private func dispose(_ arguments: Any?, result: @escaping FlutterResult) {
     let root = stringMap(arguments)
     if let playerId = int64(root["playerId"]), let player = players.removeValue(forKey: playerId) {
+      suspendedPlayerIds.remove(playerId)
       player.dispose()
       if !players.values.contains(where: { $0.isActive }) {
         deactivateAudioSession()
@@ -152,6 +175,47 @@ public final class YlPlayerIosPlugin: NSObject, FlutterPlugin, FlutterStreamHand
   private func deactivateAllPlayers() {
     players.values.forEach { $0.deactivate() }
     deactivateAudioSession()
+  }
+
+  private func suspendActivePlayers() {
+    suspendedPlayerIds.formUnion(
+      players.compactMap { playerId, player in player.isActive ? playerId : nil }
+    )
+    deactivateAllPlayers()
+  }
+
+  private func handleMemoryWarning() {
+    players.values.forEach { $0.handleMemoryWarning() }
+    deactivateAudioSession()
+  }
+
+  private func reactivateSuspendedPlayers() {
+    let playerIds = suspendedPlayerIds
+    for playerId in playerIds {
+      guard let player = players[playerId] else {
+        suspendedPlayerIds.remove(playerId)
+        continue
+      }
+      player.beginActivation(
+        forcePlay: false,
+        didCommit: { [weak self, weak player] in
+          guard let self, let player else { return }
+          self.players.values.filter { $0 !== player }.forEach { $0.deactivate() }
+        },
+        completion: { [weak self, weak player] result in
+          guard let self else { return }
+          switch result {
+          case .success:
+            self.suspendedPlayerIds.remove(playerId)
+          case let .failure(error) where error.code == "network.cancelled":
+            break
+          case let .failure(error):
+            self.suspendedPlayerIds.remove(playerId)
+            player?.emitError(error)
+          }
+        }
+      )
+    }
   }
 
   private func deactivateAudioSession() {

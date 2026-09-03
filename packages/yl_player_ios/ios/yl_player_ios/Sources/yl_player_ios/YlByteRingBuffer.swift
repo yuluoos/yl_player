@@ -10,6 +10,8 @@ final class YlByteRingBuffer {
   private var readOffset: Int64 = 0
   private var hasEstablishedOffset = false
   private var finished = false
+  private var interrupted = false
+  private var waitingReaderCount = 0
   private var cancelled = false
   private var failure: NativePlayerError?
 
@@ -71,6 +73,9 @@ final class YlByteRingBuffer {
     condition.lock()
     defer { condition.unlock() }
     while true {
+      if interrupted {
+        throw YlByteSourceError.cancelled
+      }
       if cancelled { throw YlByteSourceError.cancelled }
       let unread = unreadCount
       if unread > 0 {
@@ -86,7 +91,10 @@ final class YlByteRingBuffer {
       }
       if let failure { throw YlByteSourceError.failed(failure) }
       if finished { return 0 }
+      waitingReaderCount += 1
+      condition.broadcast()
       condition.wait()
+      waitingReaderCount -= 1
     }
   }
 
@@ -96,6 +104,7 @@ final class YlByteRingBuffer {
         return false
       }
       readOffset = offset
+      interrupted = false
       condition.broadcast()
       return true
     }
@@ -109,6 +118,7 @@ final class YlByteRingBuffer {
       readOffset = offset
       hasEstablishedOffset = true
       finished = false
+      interrupted = false
       failure = nil
       resizeStorageIfPossibleLocked()
       condition.broadcast()
@@ -137,6 +147,32 @@ final class YlByteRingBuffer {
       cancelled = true
       condition.broadcast()
     }
+  }
+
+  func interruptRead() {
+    condition.withLock {
+      guard !cancelled else { return }
+      interrupted = true
+      condition.broadcast()
+    }
+  }
+
+  func resumeReads() {
+    condition.withLock {
+      guard !cancelled else { return }
+      interrupted = false
+      condition.broadcast()
+    }
+  }
+
+  func waitUntilReaderIsBlocked(timeout: TimeInterval) -> Bool {
+    condition.lock()
+    defer { condition.unlock() }
+    let deadline = Date(timeIntervalSinceNow: timeout)
+    while waitingReaderCount == 0, !cancelled, !finished, failure == nil {
+      guard condition.wait(until: deadline) else { break }
+    }
+    return waitingReaderCount > 0
   }
 
   func shrink(to newCapacity: Int) {
