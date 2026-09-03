@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player/yl_player.dart';
-import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 import 'support/fake_player_platform.dart';
 

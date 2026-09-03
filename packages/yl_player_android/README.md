@@ -1,15 +1,11 @@
 # yl_player_android
 
-A new Flutter plugin project.
+Endorsed Android implementation package for `yl_player`.
 
-## Getting Started
+Version `0.1.0-dev.1` provides federated Dart/native registration and an
+idempotent compile-safe placeholder player. It targets Android 7.0 (API 24) or
+later, but Media3 playback is **not implemented in this milestone**. Every
+playback command fails with the structured code `android.not_implemented`.
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/to/develop-plugins),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
+Applications should depend on `yl_player`; Flutter selects this package on
+Android automatically.

@@ -1,39 +1,16 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# yl_player_platform_interface
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+Shared contracts and immutable value types for the federated `yl_player`
+plugin. Application code should normally import `package:yl_player/yl_player.dart`
+instead of depending on this package directly.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+This development release defines configuration, source, track, capability,
+metrics, state, event, error, platform, and per-player backend contracts. It
+does not contain a decoder or renderer.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Platform implementations extend `YlPlayerPlatform`, register an instance, and
+return one `YlPlatformPlayer` for each requested controller. Implementations
+must keep encoded packets, decoded frames, and PCM data on the native side.
 
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
-```
-
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+Minimum target versions for endorsed implementations are Android API 24 and
+iOS 15. Subtitles and DRM are not part of the current contract.

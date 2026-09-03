@@ -1,3 +1,5 @@
-## 0.0.1
+## 0.1.0-dev.1
 
-* TODO: Describe initial release.
+- Add immutable player configuration, media-source, track, state, capability,
+  metric, event, and error models.
+- Add federated platform and per-player backend contracts.

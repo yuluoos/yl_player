@@ -2,6 +2,12 @@ name: yl_player
 description: Hardware-first Flutter playback kernel with federated Android and iOS implementations for TVBox-style applications.
 version: 0.1.0-dev.1
 resolution: workspace
+homepage: https://pub.dev/packages/yl_player
+topics:
+  - video
+  - player
+  - media
+  - tv
 
 environment:
   sdk: ^3.12.0
@@ -26,4 +32,3 @@ flutter:
         default_package: yl_player_android
       ios:
         default_package: yl_player_ios
-

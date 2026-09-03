@@ -59,7 +59,7 @@ packages/
   yl_player_ios/
     lib/yl_player_ios.dart                 # endorsed Dart registration
     lib/src/unsupported_ios_player.dart
-    ios/Classes/YlPlayerIosPlugin.swift
+    ios/yl_player_ios/Sources/yl_player_ios/YlPlayerIosPlugin.swift
     test/yl_player_ios_test.dart
 ```
 
@@ -476,7 +476,7 @@ git commit -m "feat: add texture-only yl_player view"
 **Files:**
 - Modify: `packages/yl_player_android/lib/yl_player_android.dart`
 - Create: `packages/yl_player_android/lib/src/unsupported_android_player.dart`
-- Modify: `packages/yl_player_android/android/build.gradle`
+- Modify: `packages/yl_player_android/android/build.gradle.kts`
 - Modify: `packages/yl_player_android/android/src/main/AndroidManifest.xml`
 - Modify: `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/android/YlPlayerAndroidPlugin.kt`
 - Replace: generated test with `packages/yl_player_android/test/yl_player_android_test.dart`
@@ -531,7 +531,7 @@ git commit -m "feat: register yl_player Android platform shell"
 - Modify: `packages/yl_player_ios/lib/yl_player_ios.dart`
 - Create: `packages/yl_player_ios/lib/src/unsupported_ios_player.dart`
 - Modify: `packages/yl_player_ios/ios/yl_player_ios.podspec`
-- Modify: `packages/yl_player_ios/ios/Classes/YlPlayerIosPlugin.swift`
+- Modify: `packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlPlayerIosPlugin.swift`
 - Replace: generated test with `packages/yl_player_ios/test/yl_player_ios_test.dart`
 
 **Interfaces:**

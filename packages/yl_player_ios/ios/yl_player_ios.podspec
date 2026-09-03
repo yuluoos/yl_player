@@ -9,9 +9,9 @@ Pod::Spec.new do |s|
   s.description      = <<-DESC
 Hardware-first iOS implementation for the yl_player Flutter playback kernel.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://pub.dev/packages/yl_player'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = 'yl_player contributors'
   s.source           = { :path => '.' }
   s.source_files = 'yl_player_ios/Sources/yl_player_ios/**/*'
   s.dependency 'Flutter'
