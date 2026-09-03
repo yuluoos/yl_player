@@ -37,7 +37,12 @@ final class YlPlayerController {
   Stream<YlPlayerEvent> get events => _eventController.stream;
 
   /// Native texture ID used by the texture-only player view.
-  ValueListenable<int?> get textureId => _textureId;
+  ValueListenable<int?> get textureId {
+    if (!_isDisposed) {
+      unawaited(_connectForTexture());
+    }
+    return _textureId;
+  }
 
   List<YlMediaTrack> get audioTracks => _state.audioTracks;
 
@@ -94,6 +99,23 @@ final class YlPlayerController {
     _stateSubscription = backend.states.listen(_handleState);
     _eventSubscription = backend.events.listen(_handleEvent);
     return backend;
+  }
+
+  Future<void> _connectForTexture() async {
+    try {
+      await _getBackend();
+    } on YlPlayerError catch (error) {
+      _reportError(error);
+    } on Object catch (error) {
+      _reportError(
+        YlPlayerError(
+          category: YlPlayerErrorCategory.internal,
+          code: 'platform.create_failed',
+          message: 'The platform player could not be created.',
+          platformDiagnostic: error.toString(),
+        ),
+      );
+    }
   }
 
   Future<YlPlatformPlayer> _getBackend() => _connectedBackend ??= _connect();
