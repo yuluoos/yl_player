@@ -515,7 +515,7 @@ git commit -m "feat: add native AAC fallback rendering"
 - `YlFallbackBackend` composes bridge context, packet queues, VT decoder, audio
   renderer, media clock, frame scheduler, demux queue, and display link.
 
-- [ ] **Step 1: Write failing orchestration tests**
+- [x] **Step 1: Write failing orchestration tests**
 
 Inject fake demux/video/audio components and assert local MKV selects fallback,
 state engine is `nativeFallback`, first frame is emitted once, rejected open
@@ -523,11 +523,11 @@ preserves the prior backend, a second open cancels old callbacks, only one
 backend is active, and dispose releases every component once from opening,
 playing, paused, error, and partial-construction states.
 
-- [ ] **Step 2: Run XCTest to verify RED**
+- [x] **Step 2: Run XCTest to verify RED**
 
 Expected: compile failure because backend/router session protocols are absent.
 
-- [ ] **Step 3: Extract the current AVPlayer code without behavior changes**
+- [x] **Step 3: Extract the current AVPlayer code without behavior changes**
 
 Move current AVPlayer ownership from the plugin file into
 `YlAvPlayerBackend.swift`. Keep existing HLS behavior, KVO generation checks,
@@ -535,7 +535,7 @@ header rejection, quality/audio selection, display link, and lifecycle logic
 byte-for-byte where practical. `YlPlayerIosPlugin` retains registry/channel and
 application notification responsibilities only.
 
-- [ ] **Step 4: Implement fallback orchestration**
+- [x] **Step 4: Implement fallback orchestration**
 
 Open and validate bridge metadata before replacing the active backend. Start the
 demux worker only after queues/decoder/audio are configured. Backpressure waits
@@ -543,19 +543,19 @@ on the bounded queue conditions. Display-link ticks ask the media clock for a
 position, select the due frame, store it for Flutter, and call
 `textureFrameAvailable` without transferring pixels through Dart.
 
-- [ ] **Step 5: Map state, tracks, errors, and metrics**
+- [x] **Step 5: Map state, tracks, errors, and metrics**
 
 Publish duration, position, buffered duration/bytes, dimensions, AAC tracks,
 open/first-frame durations, dropped frames, audio underruns, decoder name
 `VideoToolbox`, hardware flag, and engine. Emit one fallback-routing event and
 stable error codes from the spec.
 
-- [ ] **Step 6: Run native tests and existing Flutter suites**
+- [x] **Step 6: Run native tests and existing Flutter suites**
 
 Run XCTest, `sh tool/check_foundation.sh`, iOS Simulator build, and the existing
 HLS integration. Expected: all prior AVPlayer and Dart behavior remains green.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add packages/yl_player_ios packages/yl_player tool

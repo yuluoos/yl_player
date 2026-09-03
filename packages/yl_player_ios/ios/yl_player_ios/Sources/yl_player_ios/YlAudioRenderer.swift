@@ -250,6 +250,13 @@ final class YlAudioRenderer: YlAudioRendering {
     output.reset()
   }
 
+  func reset(generation: UInt64) {
+    flush()
+    lock.withLock {
+      if !disposed { configuredGeneration = generation }
+    }
+  }
+
   func dispose() {
     lock.lock()
     guard !disposed else {
