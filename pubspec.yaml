@@ -1,0 +1,18 @@
+name: yl_player_workspace
+publish_to: none
+environment:
+  sdk: ^3.12.0
+workspace:
+  - packages/yl_player
+  - packages/yl_player_platform_interface
+  - packages/yl_player_android
+  - packages/yl_player_android/example
+  - packages/yl_player_ios
+  - packages/yl_player_ios/example
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_lints: ^6.0.0

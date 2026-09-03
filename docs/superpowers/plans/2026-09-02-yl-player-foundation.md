@@ -4,7 +4,7 @@
 
 **Goal:** Build the publishable federated-plugin workspace and tested public Dart foundation that later Android and iOS playback backends implement.
 
-**Architecture:** The app-facing `yl_player` package owns the controller and texture widget; `yl_player_platform_interface` owns every cross-platform value type and backend contract; endorsed Android and iOS packages register compile-safe placeholder backends until their native playback milestones are implemented. A Dart workspace resolves all four packages locally while preserving hosted semantic-version dependencies for eventual pub.dev publication.
+**Architecture:** The app-facing `yl_player` package owns the controller and texture widget; `yl_player_platform_interface` owns every cross-platform value type and backend contract; endorsed Android and iOS packages register compile-safe placeholder backends until their native playback milestones are implemented. A Dart workspace resolves all four publishable packages and two private platform example apps locally while preserving hosted semantic-version dependencies for eventual pub.dev publication.
 
 **Tech Stack:** Flutter 3.44.0, Dart 3.12.0, Dart pub workspaces, Kotlin, Swift, `plugin_platform_interface`, `flutter_test`.
 
@@ -115,7 +115,9 @@ workspace:
   - packages/yl_player
   - packages/yl_player_platform_interface
   - packages/yl_player_android
+  - packages/yl_player_android/example
   - packages/yl_player_ios
+  - packages/yl_player_ios/example
 ```
 
 Set every member to `version: 0.1.0-dev.1`, `resolution: workspace`, `sdk: ^3.12.0`, and `flutter: '>=3.44.0'`. Configure hosted inter-package constraints as `^0.1.0-dev.1`; do not use path dependencies.
@@ -142,7 +144,7 @@ Expected: PASS with one root lockfile and package configuration.
 
 Run: `dart pub workspace list`
 
-Expected: PASS and list the root plus all four packages.
+Expected: PASS and list the root, all four publishable packages, and both private platform example apps.
 
 - [ ] **Step 5: Commit the workspace skeleton**
 

@@ -1,0 +1,14 @@
+.dart_tool/
+.idea/
+.packages
+build/
+coverage/
+*.iml
+*.log
+**/android/local.properties
+**/android/.gradle/
+**/ios/.symlinks/
+**/ios/Pods/
+**/ios/Flutter/ephemeral/
+**/DerivedData/
+
