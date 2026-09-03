@@ -34,6 +34,15 @@ enum {
   YLFResultSeekFailed = -7,
   YLFResultVideoConfigurationInvalid = -8,
   YLFResultSampleBufferFailed = -9,
+  YLFResultCallbackFailed = -10,
+  YLFResultCallbackSeekUnsupported = -11,
+  YLFResultCallbackCancelled = -12,
+};
+
+enum {
+  YLFCallbackError = -1,
+  YLFCallbackCancelled = -2,
+  YLFCallbackSeekUnsupported = -3,
 };
 
 enum {
@@ -67,12 +76,29 @@ typedef struct {
   int32_t time_base_den;
 } YLFStreamInfo;
 
+typedef int32_t (*YLFReadCallback)(void *opaque,
+                                   uint8_t *buffer,
+                                   int32_t capacity);
+typedef int64_t (*YLFSeekCallback)(void *opaque,
+                                   int64_t offset,
+                                   int32_t whence);
+typedef void (*YLFCancelCallback)(void *opaque);
+
 // Accepts an absolute filesystem path or file:// URL. Returned contexts and
 // packets are caller-owned. Closing a context invalidates and releases every
 // packet that has not already been released.
 YLF_EXPORT int32_t ylf_open_local(const char *url_or_path,
                                   YLFMediaContextRef *out_context,
                                   YLFMediaInfo *out_info);
+// Opens a caller-owned synchronous byte source through FFmpeg custom AVIO.
+// The opaque pointer and callbacks must remain valid until ylf_close returns.
+// Read returns a positive byte count, zero for EOF, or a YLFCallback value.
+YLF_EXPORT int32_t ylf_open_callbacks(void *opaque,
+                                      YLFReadCallback read_callback,
+                                      YLFSeekCallback seek_callback,
+                                      YLFCancelCallback cancel_callback,
+                                      YLFMediaContextRef *out_context,
+                                      YLFMediaInfo *out_info);
 YLF_EXPORT int32_t ylf_copy_stream_info(YLFMediaContextRef context,
                                         int32_t stream_index,
                                         YLFStreamInfo *out_info);

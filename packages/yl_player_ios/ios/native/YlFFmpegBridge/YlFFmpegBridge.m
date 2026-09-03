@@ -5,6 +5,7 @@
 
 #include <pthread.h>
 #include <stdatomic.h>
+#include <errno.h>
 #include <string.h>
 
 #include <libavcodec/codec_par.h>
@@ -22,8 +23,16 @@ struct YLFPacket {
 
 struct YLFMediaContext {
   AVFormatContext *format;
+  AVIOContext *avio;
   pthread_mutex_t mutex;
   atomic_bool cancelled;
+  bool custom_io;
+  bool cancel_sent;
+  void *callback_opaque;
+  YLFReadCallback read_callback;
+  YLFSeekCallback seek_callback;
+  YLFCancelCallback cancel_callback;
+  int32_t callback_result;
   struct YLFPacket *packets;
 };
 
@@ -33,6 +42,111 @@ static int ylf_interrupt_callback(void *opaque) {
   struct YLFMediaContext *context = opaque;
   return context != NULL && atomic_load_explicit(&context->cancelled,
                                                   memory_order_relaxed);
+}
+
+static int ylf_avio_read(void *opaque, uint8_t *buffer, int capacity) {
+  struct YLFMediaContext *context = opaque;
+  if (context == NULL || context->read_callback == NULL || capacity <= 0) {
+    return AVERROR(EINVAL);
+  }
+  if (atomic_load_explicit(&context->cancelled, memory_order_relaxed)) {
+    context->callback_result = YLFCallbackCancelled;
+    return AVERROR_EXIT;
+  }
+  context->callback_result = 0;
+  int32_t result = context->read_callback(context->callback_opaque,
+                                          buffer,
+                                          (int32_t)capacity);
+  if (result > 0) {
+    return result <= capacity ? result : AVERROR(EIO);
+  }
+  if (result == 0) {
+    return AVERROR_EOF;
+  }
+  context->callback_result = result;
+  return result == YLFCallbackCancelled ? AVERROR_EXIT : AVERROR(EIO);
+}
+
+static int64_t ylf_avio_seek(void *opaque, int64_t offset, int whence) {
+  struct YLFMediaContext *context = opaque;
+  if (context == NULL || context->seek_callback == NULL) {
+    return AVERROR(ENOSYS);
+  }
+  if (atomic_load_explicit(&context->cancelled, memory_order_relaxed)) {
+    context->callback_result = YLFCallbackCancelled;
+    return AVERROR_EXIT;
+  }
+  context->callback_result = 0;
+  int64_t result = context->seek_callback(context->callback_opaque,
+                                          offset,
+                                          (int32_t)whence);
+  if (result >= 0) {
+    return result;
+  }
+  context->callback_result = (int32_t)result;
+  if (result == YLFCallbackCancelled) {
+    return AVERROR_EXIT;
+  }
+  return result == YLFCallbackSeekUnsupported ? AVERROR(ENOSYS) : AVERROR(EIO);
+}
+
+static void ylf_cancel_callbacks(struct YLFMediaContext *context) {
+  if (context == NULL || !context->custom_io || context->cancel_sent) {
+    return;
+  }
+  context->cancel_sent = true;
+  if (context->cancel_callback != NULL) {
+    context->cancel_callback(context->callback_opaque);
+  }
+}
+
+static int32_t ylf_callback_failure(struct YLFMediaContext *context,
+                                    int32_t fallback) {
+  if (context == NULL) {
+    return fallback;
+  }
+  switch (context->callback_result) {
+  case YLFCallbackCancelled:
+    return YLFResultCallbackCancelled;
+  case YLFCallbackSeekUnsupported:
+    return YLFResultCallbackSeekUnsupported;
+  case YLFCallbackError:
+    return YLFResultCallbackFailed;
+  default:
+    return fallback;
+  }
+}
+
+static int32_t ylf_discover_streams(struct YLFMediaContext *context,
+                                    YLFMediaInfo *out_info) {
+  const char *format_name = context->format->iformat->name;
+  if (format_name == NULL || strstr(format_name, "matroska") == NULL) {
+    return YLFResultUnsupportedContainer;
+  }
+  if (avformat_find_stream_info(context->format, NULL) < 0) {
+    return ylf_callback_failure(context, YLFResultOpenFailed);
+  }
+  out_info->stream_count = (int32_t)context->format->nb_streams;
+  out_info->duration_us = context->format->duration == AV_NOPTS_VALUE
+                              ? INT64_MIN
+                              : context->format->duration;
+  return YLFResultOK;
+}
+
+static void ylf_destroy_context(struct YLFMediaContext *context) {
+  if (context == NULL) {
+    return;
+  }
+  atomic_store_explicit(&context->cancelled, true, memory_order_relaxed);
+  ylf_cancel_callbacks(context);
+  if (context->format != NULL) {
+    avformat_close_input(&context->format);
+  }
+  if (context->avio != NULL) {
+    avio_context_free(&context->avio);
+  }
+  pthread_mutex_destroy(&context->mutex);
+  free(context);
 }
 
 static NSString *ylf_local_path(const char *url_or_path) {
@@ -284,24 +398,98 @@ int32_t ylf_open_local(const char *url_or_path,
     free(context);
     return YLFResultOpenFailed;
   }
-  const char *format_name = context->format->iformat->name;
-  if (format_name == NULL || strstr(format_name, "matroska") == NULL) {
-    avformat_close_input(&context->format);
-    pthread_mutex_destroy(&context->mutex);
-    free(context);
-    return YLFResultUnsupportedContainer;
+  int32_t discovery_result = ylf_discover_streams(context, out_info);
+  if (discovery_result != YLFResultOK) {
+    ylf_destroy_context(context);
+    return discovery_result;
   }
-  if (avformat_find_stream_info(context->format, NULL) < 0) {
-    avformat_close_input(&context->format);
-    pthread_mutex_destroy(&context->mutex);
+  *out_context = context;
+  return YLFResultOK;
+}
+
+int32_t ylf_open_callbacks(void *opaque,
+                           YLFReadCallback read_callback,
+                           YLFSeekCallback seek_callback,
+                           YLFCancelCallback cancel_callback,
+                           YLFMediaContextRef *out_context,
+                           YLFMediaInfo *out_info) {
+  if (opaque == NULL || read_callback == NULL || out_context == NULL ||
+      out_info == NULL) {
+    return YLFResultInvalidArgument;
+  }
+  *out_context = NULL;
+  memset(out_info, 0, sizeof(*out_info));
+
+  struct YLFMediaContext *context = calloc(1, sizeof(*context));
+  if (context == NULL || pthread_mutex_init(&context->mutex, NULL) != 0) {
     free(context);
     return YLFResultOpenFailed;
   }
+  atomic_init(&context->cancelled, false);
+  context->custom_io = true;
+  context->callback_opaque = opaque;
+  context->read_callback = read_callback;
+  context->seek_callback = seek_callback;
+  context->cancel_callback = cancel_callback;
 
-  out_info->stream_count = (int32_t)context->format->nb_streams;
-  out_info->duration_us = context->format->duration == AV_NOPTS_VALUE
-                              ? INT64_MIN
-                              : context->format->duration;
+  const int avio_buffer_size = 64 * 1024;
+  uint8_t *avio_buffer = av_malloc((size_t)avio_buffer_size);
+  if (avio_buffer == NULL) {
+    ylf_destroy_context(context);
+    return YLFResultOpenFailed;
+  }
+  context->avio = avio_alloc_context(avio_buffer,
+                                     avio_buffer_size,
+                                     0,
+                                     context,
+                                     ylf_avio_read,
+                                     NULL,
+                                     seek_callback == NULL ? NULL : ylf_avio_seek);
+  if (context->avio == NULL) {
+    av_free(avio_buffer);
+    ylf_destroy_context(context);
+    return YLFResultOpenFailed;
+  }
+
+  const AVInputFormat *input_format = NULL;
+  int probe_result = av_probe_input_buffer2(context->avio,
+                                            &input_format,
+                                            NULL,
+                                            NULL,
+                                            0,
+                                            1024 * 1024);
+  if (probe_result < 0 || input_format == NULL || input_format->name == NULL ||
+      strstr(input_format->name, "matroska") == NULL) {
+    int32_t result = ylf_callback_failure(context,
+                                          YLFResultUnsupportedContainer);
+    ylf_destroy_context(context);
+    return result;
+  }
+
+  context->format = avformat_alloc_context();
+  if (context->format == NULL) {
+    ylf_destroy_context(context);
+    return YLFResultOpenFailed;
+  }
+  context->format->pb = context->avio;
+  context->format->flags |= AVFMT_FLAG_CUSTOM_IO;
+  context->format->interrupt_callback.callback = ylf_interrupt_callback;
+  context->format->interrupt_callback.opaque = context;
+  int open_result = avformat_open_input(&context->format,
+                                        NULL,
+                                        input_format,
+                                        NULL);
+  if (open_result < 0) {
+    int32_t result = ylf_callback_failure(context, YLFResultOpenFailed);
+    ylf_destroy_context(context);
+    return result;
+  }
+
+  int32_t discovery_result = ylf_discover_streams(context, out_info);
+  if (discovery_result != YLFResultOK) {
+    ylf_destroy_context(context);
+    return discovery_result;
+  }
   *out_context = context;
   return YLFResultOK;
 }
@@ -389,9 +577,11 @@ int32_t ylf_read_packet(YLFMediaContextRef context, YLFPacketRef *out_packet) {
     if (result == AVERROR_EOF) {
       return YLFResultEOF;
     }
-    return atomic_load_explicit(&context->cancelled, memory_order_relaxed)
-               ? YLFResultCancelled
-               : YLFResultReadFailed;
+    if (atomic_load_explicit(&context->cancelled, memory_order_relaxed)) {
+      return context->custom_io ? YLFResultCallbackCancelled
+                                : YLFResultCancelled;
+    }
+    return ylf_callback_failure(context, YLFResultReadFailed);
   }
 
   packet->owner = context;
@@ -422,7 +612,8 @@ int32_t ylf_seek(YLFMediaContextRef context, int64_t position_us) {
     avformat_flush(context->format);
   }
   pthread_mutex_unlock(&context->mutex);
-  return result >= 0 ? YLFResultOK : YLFResultSeekFailed;
+  return result >= 0 ? YLFResultOK
+                     : ylf_callback_failure(context, YLFResultSeekFailed);
 }
 
 void ylf_close(YLFMediaContextRef *context_pointer) {
@@ -432,6 +623,7 @@ void ylf_close(YLFMediaContextRef *context_pointer) {
   struct YLFMediaContext *context = *context_pointer;
   *context_pointer = NULL;
   atomic_store_explicit(&context->cancelled, true, memory_order_relaxed);
+  ylf_cancel_callbacks(context);
   pthread_mutex_lock(&context->mutex);
   struct YLFPacket *packet = context->packets;
   context->packets = NULL;
@@ -442,6 +634,9 @@ void ylf_close(YLFMediaContextRef *context_pointer) {
     packet = next;
   }
   avformat_close_input(&context->format);
+  if (context->avio != NULL) {
+    avio_context_free(&context->avio);
+  }
   pthread_mutex_unlock(&context->mutex);
   pthread_mutex_destroy(&context->mutex);
   free(context);

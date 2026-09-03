@@ -158,6 +158,7 @@ build_slice() {
     _ylf_build_configuration \
     _ylf_ffmpeg_version \
     _ylf_open_local \
+    _ylf_open_callbacks \
     _ylf_copy_stream_info \
     _ylf_stream_codec_config_size \
     _ylf_copy_stream_codec_config \

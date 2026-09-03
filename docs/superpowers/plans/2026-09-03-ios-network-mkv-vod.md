@@ -244,7 +244,7 @@ git commit -m "feat: add bounded iOS network byte buffer"
 - Adds bridge results `YLFResultCallbackFailed`, `YLFResultCallbackSeekUnsupported`, and `YLFResultCallbackCancelled`.
 - Existing local open and packet interfaces remain source-compatible.
 
-- [ ] **Step 1: Write failing callback-open tests**
+- [x] **Step 1: Write failing callback-open tests**
 
 In `YlFFmpegBridgeTests`, retain fixture bytes in a test box passed through `Unmanaged`, implement noncapturing read/seek/cancel thunks, and add:
 
@@ -269,13 +269,13 @@ func testCallbackInputReadsAndSeeksRealMkv() throws {
 
 Also assert that close invokes cancel, a callback error maps distinctly, non-Matroska bytes return `YLFResultUnsupportedContainer`, and retained packets return the outstanding counter to zero.
 
-- [ ] **Step 2: Run targeted XCTest and verify RED**
+- [x] **Step 2: Run targeted XCTest and verify RED**
 
 Run only `RunnerTests/YlFFmpegBridgeTests`.
 
 Expected: compile failure because callback types and `ylf_open_callbacks` are absent.
 
-- [ ] **Step 3: Implement shared open finalization and AVIO ownership**
+- [x] **Step 3: Implement shared open finalization and AVIO ownership**
 
 Refactor common stream discovery into a private helper used by local and callback input. For callback input:
 
@@ -288,7 +288,7 @@ Refactor common stream discovery into a private helper used by local and callbac
 
 Do not add FFmpeg network protocols or decoders.
 
-- [ ] **Step 4: Rebuild the XCFramework and update the contract test**
+- [x] **Step 4: Rebuild the XCFramework and update the contract test**
 
 Run:
 
@@ -299,13 +299,13 @@ sh tool/ios_ffmpeg/test_build_contract.sh
 
 Extend the contract test to assert the callback symbols in both device and Simulator slices and to continue rejecting network/GPL/nonfree/decoder flags.
 
-- [ ] **Step 5: Run bridge tests and full XCTest**
+- [x] **Step 5: Run bridge tests and full XCTest**
 
 Run the targeted bridge test, then `sh tool/check_native_ios.sh`.
 
 Expected: all callback/local bridge tests pass and outstanding packets return to zero.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add packages/yl_player_ios/ios/native/YlFFmpegBridge \

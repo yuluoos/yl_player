@@ -1,6 +1,81 @@
 import XCTest
 import YlFFmpegBridge
 import CoreMedia
+import Darwin
+
+private final class CallbackFixture {
+    let bytes: Data
+    var offset = 0
+    var cancelCount = 0
+    var failReads = false
+
+    init(bytes: Data) {
+        self.bytes = bytes
+    }
+
+    var opaque: UnsafeMutableRawPointer {
+        Unmanaged.passUnretained(self).toOpaque()
+    }
+}
+
+private func callbackFixture(
+    _ opaque: UnsafeMutableRawPointer?
+) -> CallbackFixture? {
+    guard let opaque else { return nil }
+    return Unmanaged<CallbackFixture>.fromOpaque(opaque).takeUnretainedValue()
+}
+
+private func fixtureRead(
+    _ opaque: UnsafeMutableRawPointer?,
+    _ buffer: UnsafeMutablePointer<UInt8>?,
+    _ capacity: Int32
+) -> Int32 {
+    guard let fixture = callbackFixture(opaque),
+          let buffer,
+          capacity > 0 else { return -1 }
+    if fixture.failReads { return -1 }
+    guard fixture.offset < fixture.bytes.count else { return 0 }
+    let count = min(Int(capacity), fixture.bytes.count - fixture.offset)
+    fixture.bytes.copyBytes(
+        to: buffer,
+        from: fixture.offset..<(fixture.offset + count)
+    )
+    fixture.offset += count
+    return Int32(count)
+}
+
+private func fixtureSeek(
+    _ opaque: UnsafeMutableRawPointer?,
+    _ offset: Int64,
+    _ whence: Int32
+) -> Int64 {
+    guard let fixture = callbackFixture(opaque) else { return -1 }
+    let avSeekSize: Int32 = 0x10000
+    let avSeekForce: Int32 = 0x20000
+    if whence == avSeekSize { return Int64(fixture.bytes.count) }
+    let origin = whence & ~avSeekForce
+    let base: Int64
+    switch origin {
+    case SEEK_SET:
+        base = 0
+    case SEEK_CUR:
+        base = Int64(fixture.offset)
+    case SEEK_END:
+        base = Int64(fixture.bytes.count)
+    default:
+        return -1
+    }
+    let target = base.addingReportingOverflow(offset)
+    guard !target.overflow,
+          target.partialValue >= 0,
+          target.partialValue <= Int64(fixture.bytes.count) else { return -1 }
+    fixture.offset = Int(target.partialValue)
+    return target.partialValue
+}
+
+private func fixtureCancel(_ opaque: UnsafeMutableRawPointer?) {
+    callbackFixture(opaque)?.cancelCount += 1
+}
 
 final class YlFFmpegBridgeTests: XCTestCase {
     private let unknownTimestamp = Int64.min
@@ -183,5 +258,100 @@ final class YlFFmpegBridgeTests: XCTestCase {
         XCTAssertEqual(ylf_debug_outstanding_packet_count(), 0)
         // Closing a null handle is intentionally idempotent.
         ylf_close(&context)
+    }
+
+    func testCallbackInputReadsAndSeeksRealMkv() throws {
+        let box = CallbackFixture(bytes: try Data(contentsOf: fixture("h264_aac")))
+        var context: YLFMediaContextRef?
+        var info = YLFMediaInfo()
+        XCTAssertEqual(
+            ylf_open_callbacks(
+                box.opaque,
+                fixtureRead,
+                fixtureSeek,
+                fixtureCancel,
+                &context,
+                &info
+            ),
+            Int32(YLFResultOK)
+        )
+        defer { ylf_close(&context) }
+        XCTAssertEqual(info.stream_count, 2)
+        XCTAssertGreaterThan(info.duration_us, 1_900_000)
+
+        var packet: YLFPacketRef?
+        XCTAssertEqual(ylf_read_packet(context, &packet), Int32(YLFResultOK))
+        XCTAssertNotNil(packet)
+        ylf_packet_release(&packet)
+        XCTAssertEqual(ylf_seek(context, 900_000), Int32(YLFResultOK))
+        XCTAssertEqual(ylf_read_packet(context, &packet), Int32(YLFResultOK))
+        ylf_packet_release(&packet)
+        XCTAssertEqual(ylf_debug_outstanding_packet_count(), 0)
+    }
+
+    func testCallbackCloseCancelsSourceAndReleasesPackets() throws {
+        let box = CallbackFixture(bytes: try Data(contentsOf: fixture("h264_aac")))
+        var context: YLFMediaContextRef?
+        var info = YLFMediaInfo()
+        XCTAssertEqual(
+            ylf_open_callbacks(
+                box.opaque,
+                fixtureRead,
+                fixtureSeek,
+                fixtureCancel,
+                &context,
+                &info
+            ),
+            Int32(YLFResultOK)
+        )
+        var packet: YLFPacketRef?
+        XCTAssertEqual(ylf_read_packet(context, &packet), Int32(YLFResultOK))
+        XCTAssertEqual(ylf_debug_outstanding_packet_count(), 1)
+
+        ylf_close(&context)
+
+        XCTAssertEqual(box.cancelCount, 1)
+        XCTAssertEqual(ylf_debug_outstanding_packet_count(), 0)
+    }
+
+    func testCallbackReadFailureMapsDistinctly() {
+        let box = CallbackFixture(bytes: Data([0x1a, 0x45, 0xdf, 0xa3]))
+        box.failReads = true
+        var context: YLFMediaContextRef?
+        var info = YLFMediaInfo()
+
+        XCTAssertEqual(
+            ylf_open_callbacks(
+                box.opaque,
+                fixtureRead,
+                fixtureSeek,
+                fixtureCancel,
+                &context,
+                &info
+            ),
+            Int32(YLFResultCallbackFailed)
+        )
+        XCTAssertNil(context)
+        XCTAssertEqual(box.cancelCount, 1)
+    }
+
+    func testCallbackRejectsNonMatroskaBytes() {
+        let box = CallbackFixture(bytes: Data(repeating: 0x41, count: 128 * 1024))
+        var context: YLFMediaContextRef?
+        var info = YLFMediaInfo()
+
+        XCTAssertEqual(
+            ylf_open_callbacks(
+                box.opaque,
+                fixtureRead,
+                fixtureSeek,
+                fixtureCancel,
+                &context,
+                &info
+            ),
+            Int32(YLFResultUnsupportedContainer)
+        )
+        XCTAssertNil(context)
+        XCTAssertEqual(box.cancelCount, 1)
     }
 }

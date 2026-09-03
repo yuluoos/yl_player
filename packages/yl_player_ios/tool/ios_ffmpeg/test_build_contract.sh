@@ -3,6 +3,8 @@ set -eu
 
 script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 build_script="$script_dir/build_xcframework.sh"
+package_root=$(CDPATH= cd -- "$script_dir/../.." && pwd)
+framework_root="$package_root/ios/yl_player_ios/Frameworks/YlFFmpegBridge.xcframework"
 contract=$(bash "$build_script" --print-contract)
 
 require_line() {
@@ -43,5 +45,19 @@ reject_text "--enable-gpl"
 reject_text "--enable-nonfree"
 reject_text "--enable-decoder=h264"
 reject_text "--enable-decoder=hevc"
+
+require_symbol() {
+  binary=$1
+  symbol=$2
+  if ! nm -gU "$binary" | grep -Fq -- "$symbol"; then
+    echo "missing exported framework symbol: $symbol in $binary" >&2
+    exit 1
+  fi
+}
+
+require_symbol "$framework_root/ios-arm64/YlFFmpegBridge.framework/YlFFmpegBridge" \
+  "_ylf_open_callbacks"
+require_symbol "$framework_root/ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/YlFFmpegBridge" \
+  "_ylf_open_callbacks"
 
 printf '%s\n' "iOS FFmpeg build contract passed."
