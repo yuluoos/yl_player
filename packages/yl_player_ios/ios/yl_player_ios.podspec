@@ -14,6 +14,8 @@ Hardware-first iOS implementation for the yl_player Flutter playback kernel.
   s.author           = 'yl_player contributors'
   s.source           = { :path => '.' }
   s.source_files = 'yl_player_ios/Sources/yl_player_ios/**/*'
+  s.vendored_frameworks = 'yl_player_ios/Frameworks/YlFFmpegBridge.xcframework'
+  s.frameworks = 'AVFoundation', 'AudioToolbox', 'CoreMedia', 'VideoToolbox', 'AVFAudio'
   s.dependency 'Flutter'
   s.platform = :ios, '15.0'
 

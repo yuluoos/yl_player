@@ -171,7 +171,7 @@ git commit -m "refactor: add deterministic iOS source routing"
 - The bridge exports `ylf_build_configuration()` so tests can prove the shipped
   artifact and lock manifest agree.
 
-- [ ] **Step 1: Write the failing build-contract test**
+- [x] **Step 1: Write the failing build-contract test**
 
 The shell test sources this exact lock data and rejects forbidden flags:
 
@@ -182,14 +182,15 @@ FFMPEG_SHA256=cf38e0e28c7e5605942c4a77755349b0145804a397af37eb1fb4c77cb237f635
 IOS_DEPLOYMENT_TARGET=15.0
 ```
 
-It asserts the official signing-key fingerprint is
-`DD1EC9E8DE085C629B3E1846B18E8928B3948D64`, and that the build script contains `--disable-network`,
+It asserts the official release-tarball signing-key fingerprint is
+`FCF986EA15E6E293A5644F10B4322F04D67658D8`, and that the build script contains `--disable-network`,
 `--disable-programs`, `--disable-avdevice`, `--disable-avfilter`,
+`--disable-swscale`, `--disable-swresample`,
 `--enable-demuxer=matroska`, and `--enable-protocol=file`; and fails if it finds
 `--enable-gpl`, `--enable-nonfree`, `--enable-decoder=h264`, or
 `--enable-decoder=hevc`.
 
-- [ ] **Step 2: Run the contract test to verify RED**
+- [x] **Step 2: Run the contract test to verify RED**
 
 ```bash
 sh tool/ios_ffmpeg/test_build_contract.sh
@@ -197,7 +198,7 @@ sh tool/ios_ffmpeg/test_build_contract.sh
 
 Expected: failure because the lock/build script and artifact are absent.
 
-- [ ] **Step 3: Implement the pinned build script**
+- [x] **Step 3: Implement the pinned build script**
 
 Use `set -euo pipefail`, an explicit temporary/build root, detached-signature
 verification with the pinned official key, SHA-256 validation, and these core
@@ -206,6 +207,7 @@ configure flags for each SDK/architecture:
 ```bash
 --disable-everything --disable-autodetect --disable-network
 --disable-programs --disable-doc --disable-avdevice --disable-avfilter
+--disable-swscale --disable-swresample
 --disable-encoders --disable-decoders --disable-muxers
 --enable-avutil --enable-avcodec --enable-avformat
 --enable-demuxer=matroska --enable-protocol=file
@@ -219,21 +221,25 @@ Objective-C bridge into a dynamic framework with hidden FFmpeg symbols, merge
 Simulator architectures with `lipo`, and assemble the final artifact with
 `xcodebuild -create-xcframework`.
 
-- [ ] **Step 4: Add the binary to both package managers**
+Use `--disable-x86asm` only for the Intel Simulator slice so the reproducible
+build does not depend on a host-installed NASM. Device arm64 keeps FFmpeg's ARM
+assembly and NEON optimizations.
+
+- [x] **Step 4: Add the binary to both package managers**
 
 Add a local `.binaryTarget(name: "YlFFmpegBridge", path:
 "Frameworks/YlFFmpegBridge.xcframework")` and make `yl_player_ios` depend on it.
 Set CocoaPods `vendored_frameworks` to the same path and link AVFoundation,
 AudioToolbox, CoreMedia, VideoToolbox, and AVFAudio.
 
-- [ ] **Step 5: Add notices and replacement instructions**
+- [x] **Step 5: Add notices and replacement instructions**
 
 Record the official source URL/checksum, full configure line, archive signature
 URL, rebuild command, and dynamic-framework replacement procedure in
 `THIRD_PARTY_NOTICES.md`. Include the unmodified LGPL text and state that a
 distribution legal review remains required.
 
-- [ ] **Step 6: Build and verify GREEN**
+- [x] **Step 6: Build and verify GREEN**
 
 ```bash
 sh tool/ios_ffmpeg/build_xcframework.sh
@@ -244,7 +250,7 @@ flutter build ios --simulator --debug
 Expected: the contract test passes and the example links the same bridge through
 SPM/CocoaPods metadata without undefined FFmpeg symbols.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add tool/ios_ffmpeg packages/yl_player_ios

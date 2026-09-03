@@ -17,10 +17,15 @@ let package = Package(
         .package(name: "FlutterFramework", path: "../FlutterFramework")
     ],
     targets: [
+        .binaryTarget(
+            name: "YlFFmpegBridge",
+            path: "Frameworks/YlFFmpegBridge.xcframework"
+        ),
         .target(
             name: "yl_player_ios",
             dependencies: [
-                .product(name: "FlutterFramework", package: "FlutterFramework")
+                .product(name: "FlutterFramework", package: "FlutterFramework"),
+                "YlFFmpegBridge"
             ],
             resources: [
                 // If your plugin requires a privacy manifest, for example if it uses any required
