@@ -1,28 +1,34 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player_android/yl_player_android.dart';
-import 'package:yl_player_android/yl_player_android_platform_interface.dart';
-import 'package:yl_player_android/yl_player_android_method_channel.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-
-class MockYlPlayerAndroidPlatform
-    with MockPlatformInterfaceMixin
-    implements YlPlayerAndroidPlatform {
-  @override
-  Future<String?> getPlatformVersion() => Future.value('42');
-}
+import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 void main() {
-  final YlPlayerAndroidPlatform initialPlatform = YlPlayerAndroidPlatform.instance;
+  test('registerWith installs the Android implementation', () {
+    YlPlayerAndroid.registerWith();
 
-  test('$MethodChannelYlPlayerAndroid is the default instance', () {
-    expect(initialPlatform, isInstanceOf<MethodChannelYlPlayerAndroid>());
+    expect(YlPlayerPlatform.instance, isA<YlPlayerAndroid>());
   });
 
-  test('getPlatformVersion', () async {
-    YlPlayerAndroid ylPlayerAndroidPlugin = YlPlayerAndroid();
-    MockYlPlayerAndroidPlatform fakePlatform = MockYlPlayerAndroidPlatform();
-    YlPlayerAndroidPlatform.instance = fakePlatform;
+  test(
+    'placeholder backend fails honestly and disposes idempotently',
+    () async {
+      final platform = YlPlayerAndroid();
+      final player = await platform.createPlayer(const YlPlayerConfiguration());
 
-    expect(await ylPlayerAndroidPlugin.getPlatformVersion(), '42');
-  });
+      await expectLater(
+        player.open(YlMediaSource.file('/video.mp4')),
+        throwsA(
+          isA<YlPlayerError>().having(
+            (error) => error.code,
+            'code',
+            'android.not_implemented',
+          ),
+        ),
+      );
+      await player.dispose();
+      await player.dispose();
+
+      expect(player.state.status, YlPlaybackStatus.disposed);
+    },
+  );
 }

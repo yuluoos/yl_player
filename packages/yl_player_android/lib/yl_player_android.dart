@@ -1,8 +1,15 @@
+import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
-import 'yl_player_android_platform_interface.dart';
+import 'src/unsupported_android_player.dart';
 
-class YlPlayerAndroid {
-  Future<String?> getPlatformVersion() {
-    return YlPlayerAndroidPlatform.instance.getPlatformVersion();
+/// Endorsed Android platform registration for `yl_player`.
+final class YlPlayerAndroid extends YlPlayerPlatform {
+  static void registerWith() {
+    YlPlayerPlatform.instance = YlPlayerAndroid();
   }
+
+  @override
+  Future<YlPlatformPlayer> createPlayer(
+    YlPlayerConfiguration configuration,
+  ) async => UnsupportedAndroidPlayer();
 }
