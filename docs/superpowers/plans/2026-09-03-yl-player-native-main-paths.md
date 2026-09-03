@@ -16,27 +16,27 @@ VideoToolbox fallback is built.
 
 ## Task 1: Native channel protocol
 
-- [ ] Define stable create/command/dispose method payloads and multiplexed
+- [x] Define stable create/command/dispose method payloads and multiplexed
   state/event payloads.
-- [ ] Add shared serialization fixtures to platform tests.
-- [ ] Ensure no packet, frame, PCM, subtitle, or DRM payload is representable.
+- [x] Add shared serialization fixtures to platform tests.
+- [x] Ensure no packet, frame, PCM, subtitle, or DRM payload is representable.
 
 ## Task 2: Android Dart adapter
 
-- [ ] Replace the placeholder with a method/event-channel player.
-- [ ] Decode state, metrics, tracks, first-frame, and structured-error events.
-- [ ] Test create, command delegation, native state mirroring, and idempotent
+- [x] Replace the placeholder with a method/event-channel player.
+- [x] Decode state, metrics, tracks, first-frame, and structured-error events.
+- [x] Test create, command delegation, native state mirroring, and idempotent
   disposal with mocked channels.
 
 ## Task 3: Android Media3 backend
 
-- [ ] Add stable Media3 ExoPlayer, HLS, and extractor dependencies.
-- [ ] Build bounded buffer/load-error policies from configuration.
-- [ ] Render directly to a SurfaceTexture and publish throttled state.
-- [ ] Support headers, local/content/network sources, HLS, HTTP-FLV, common
+- [x] Add stable Media3 ExoPlayer, HLS, and extractor dependencies.
+- [x] Build bounded buffer/load-error policies from configuration.
+- [x] Render directly to a SurfaceTexture and publish throttled state.
+- [x] Support headers, local/content/network sources, HLS, HTTP-FLV, common
   progressive containers, live-edge seek, quality limits, and audio selection.
-- [ ] Release player, Surface, texture, callbacks, and timers idempotently.
-- [ ] Compile the API-24 example APK.
+- [x] Release player, Surface, texture, callbacks, and timers idempotently.
+- [x] Compile the API-24 example APK.
 
 ## Task 4: iOS Dart adapter
 
