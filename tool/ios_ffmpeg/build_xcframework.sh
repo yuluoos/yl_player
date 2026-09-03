@@ -156,7 +156,24 @@ build_slice() {
   local object_file="$slice_root/YlFFmpegBridge.o"
   local exports_file="$slice_root/exports.txt"
   mkdir -p "$framework/Headers" "$framework/Modules"
-  printf '%s\n' _ylf_build_configuration _ylf_ffmpeg_version >"$exports_file"
+  printf '%s\n' \
+    _ylf_build_configuration \
+    _ylf_ffmpeg_version \
+    _ylf_open_local \
+    _ylf_copy_stream_info \
+    _ylf_read_packet \
+    _ylf_seek \
+    _ylf_close \
+    _ylf_packet_stream_index \
+    _ylf_packet_pts_us \
+    _ylf_packet_dts_us \
+    _ylf_packet_duration_us \
+    _ylf_packet_size \
+    _ylf_packet_data \
+    _ylf_packet_is_keyframe \
+    _ylf_packet_release \
+    _ylf_debug_outstanding_packet_count \
+    >"$exports_file"
   "$clang" -fobjc-arc -fvisibility=hidden -arch "$apple_arch" -isysroot "$sdk_root" \
     "$minimum_flag" -I"$install_root/include" -I"$bridge_root/include" \
     -c "$bridge_root/YlFFmpegBridge.m" -o "$object_file"
@@ -167,7 +184,7 @@ build_slice() {
     -Wl,-force_load,"$install_root/lib/libavformat.a" \
     -Wl,-force_load,"$install_root/lib/libavcodec.a" \
     -Wl,-force_load,"$install_root/lib/libavutil.a" \
-    -framework CoreFoundation -framework Security \
+    -framework CoreFoundation -framework Foundation -framework Security \
     -o "$framework/YlFFmpegBridge"
   cp "$bridge_root/include/YlFFmpegBridge.h" "$framework/Headers/"
   cp "$bridge_root/module.modulemap" "$framework/Modules/"

@@ -275,7 +275,7 @@ git commit -m "build: add reproducible iOS FFmpeg bridge"
   `ylf_seek`, `ylf_packet_release`, and `ylf_close`.
 - All timestamps are signed microseconds; unknown is `INT64_MIN`.
 
-- [ ] **Step 1: Generate deterministic redistribution-safe fixtures**
+- [x] **Step 1: Generate deterministic redistribution-safe fixtures**
 
 Use the installed host FFmpeg with generated color bars/sine audio:
 
@@ -289,19 +289,19 @@ ffmpeg -y -f lavfi -i testsrc2=size=320x180:rate=24 \
 The script also generates a two-AAC-track variant with 440 Hz and 880 Hz inputs,
 explicit `-map 0:v -map 1:a -map 2:a`, and language metadata `eng`/`zho`.
 
-- [ ] **Step 2: Write failing bridge tests**
+- [x] **Step 2: Write failing bridge tests**
 
-Tests assert: one H.264 video + one AAC stream, 320×180 dimensions, monotonically
-read packets with stream indices and keyframe flags, EOF, seek back to zero, two
+Tests assert: one H.264 video + one AAC stream, 320×180 dimensions, sequential
+packet reads covering the fixture duration with stream indices and keyframe flags, EOF, seek back to zero, two
 audio tracks in the second fixture, and outstanding packet count returns to zero
 after every release/close path.
 
-- [ ] **Step 3: Run XCTest to verify RED**
+- [x] **Step 3: Run XCTest to verify RED**
 
 Run the Task 1 XCTest command. Expected: linker/compile failure because demux
 exports do not exist.
 
-- [ ] **Step 4: Implement open, metadata, read, seek, and close**
+- [x] **Step 4: Implement open, metadata, read, seek, and close**
 
 Open file URLs only, allocate one `AVFormatContext`, call stream discovery,
 allow only Matroska, translate codec IDs to `YLFCodecH264`, `YLFCodecHEVC`,
@@ -309,7 +309,7 @@ allow only Matroska, translate codec IDs to `YLFCodecH264`, `YLFCodecHEVC`,
 `av_rescale_q`, and refcount every packet returned to Swift. `ylf_close` cancels
 reads, frees retained packets, and closes the format context exactly once.
 
-- [ ] **Step 5: Run tests and leak counters to verify GREEN**
+- [x] **Step 5: Run tests and leak counters to verify GREEN**
 
 Run XCTest normally, then repeat with Address Sanitizer:
 
@@ -317,18 +317,18 @@ Run XCTest normally, then repeat with Address Sanitizer:
 xcodebuild test \
   -workspace packages/yl_player/example/ios/Runner.xcworkspace \
   -scheme Runner \
-  -destination 'platform=iOS Simulator,id=BE1D20AE-8A22-4279-ADF8-9056CFA55371'
+  -destination 'platform=iOS Simulator,id=431A3ACD-A229-4F82-AC46-9B9481AC0ADE'
 xcodebuild test \
   -workspace packages/yl_player/example/ios/Runner.xcworkspace \
   -scheme Runner \
-  -destination 'platform=iOS Simulator,id=BE1D20AE-8A22-4279-ADF8-9056CFA55371' \
+  -destination 'platform=iOS Simulator,id=431A3ACD-A229-4F82-AC46-9B9481AC0ADE' \
   -enableAddressSanitizer YES
 ```
 
 Expected: all metadata, seek, EOF, and packet-balance assertions pass with zero
 sanitizer findings.
 
-- [ ] **Step 6: Rebuild the XCFramework and commit**
+- [x] **Step 6: Rebuild the XCFramework and commit**
 
 ```bash
 sh tool/ios_ffmpeg/build_xcframework.sh
