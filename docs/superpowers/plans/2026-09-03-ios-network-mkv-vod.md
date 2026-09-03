@@ -327,7 +327,7 @@ git commit -m "feat: add FFmpeg callback media input"
 - Produces: `YlNetworkRequestPolicy.request(offset:validator:)`, `redirectRequest(from:response:to:)`, and `validate(response:requestedOffset:)`.
 - Produces: `YlNetworkResponseMetadata` containing `responseStart`, `resourceLength`, `supportsRandomAccess`, `etag`, and `lastModified`.
 
-- [ ] **Step 1: Write failing policy tests**
+- [x] **Step 1: Write failing policy tests**
 
 Assert generated `Range: bytes=0-`, caller Range override, 206 Content-Range validation, offset-zero 200 sequential mode, nonzero 200 rejection, exact-length 416 EOF, redirect count, scheme validation, and header security:
 
@@ -349,19 +349,19 @@ func testCrossOriginRedirectStripsCredentials() throws {
 }
 ```
 
-- [ ] **Step 2: Run targeted XCTest and verify RED**
+- [x] **Step 2: Run targeted XCTest and verify RED**
 
 Expected: compile failure for the policy types.
 
-- [ ] **Step 3: Implement pure request/response policy**
+- [x] **Step 3: Implement pure request/response policy**
 
 Keep this file free of URLSession task ownership so every security rule is pure-testable. Normalize header comparisons case-insensitively, remove URL query/fragment from diagnostics, allow only HTTP/HTTPS redirects, enforce `maxRedirects`, construct `If-Range`, parse Content-Range without integer overflow, and map errors to the exact stable codes in the spec.
 
-- [ ] **Step 4: Run policy and router tests**
+- [x] **Step 4: Run policy and router tests**
 
 Run only `YlNetworkRequestPolicyTests` and `YlSourceRouterTests`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlNetworkRequestPolicy.swift \
