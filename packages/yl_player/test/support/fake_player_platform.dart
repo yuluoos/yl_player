@@ -36,6 +36,8 @@ final class FakePlatformPlayer implements YlPlatformPlayer {
   String? audioTrackId;
   YlQualityConstraint? qualityConstraint;
   YlPlayerError? playError;
+  bool emitPlayErrorBeforeThrow = false;
+  Object? disposeError;
   int disposeCount = 0;
   bool _disposed = false;
 
@@ -77,6 +79,11 @@ final class FakePlatformPlayer implements YlPlatformPlayer {
     }
     _disposed = true;
     disposeCount += 1;
+    final error = disposeError;
+    if (error != null) {
+      _disposed = false;
+      throw error;
+    }
     await stateController.close();
     await eventController.close();
     textureIdNotifier.dispose();
@@ -98,6 +105,12 @@ final class FakePlatformPlayer implements YlPlatformPlayer {
     calls.add('play');
     final error = playError;
     if (error != null) {
+      if (emitPlayErrorBeforeThrow) {
+        emitState(
+          currentState.copyWith(status: YlPlaybackStatus.error, error: error),
+        );
+        emitEvent(YlErrorEvent(error));
+      }
       throw error;
     }
   }

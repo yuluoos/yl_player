@@ -151,7 +151,12 @@ final class YlPlayerController {
     backend?.textureId.removeListener(_handleTextureChanged);
     await _stateSubscription?.cancel();
     await _eventSubscription?.cancel();
-    await backend?.dispose();
+    try {
+      await backend?.dispose();
+    } on Object {
+      // Disposal is terminal and best-effort. Keep closing the controller's
+      // streams and notifier even if a platform teardown reports failure.
+    }
 
     _state = _state.copyWith(status: YlPlaybackStatus.disposed, error: null);
     if (!_stateController.isClosed) {
@@ -185,7 +190,9 @@ final class YlPlayerController {
       }
       await command(backend);
     } on YlPlayerError catch (error) {
-      _reportError(error);
+      if (!identical(_state.error, error)) {
+        _reportError(error);
+      }
       rethrow;
     }
   }

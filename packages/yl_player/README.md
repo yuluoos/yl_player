@@ -3,9 +3,10 @@
 `yl_player` is the app-facing package for a hardware-first Flutter playback
 kernel aimed at TVBox-style Android and iOS applications.
 
-> Development status: `0.1.0-dev.1` is the public API foundation. The Android
-> Media3 and iOS AVPlayer backends are registration shells and do not play media
-> yet. Do not ship this development release as a working player.
+> Development status: `0.1.0-dev.1` contains functional Android Media3 and iOS
+> AVPlayer main paths. It has not completed the physical-device performance
+> matrix, and the iOS libavformat fallback is not bundled. Treat it as a
+> development release.
 
 ## Scope
 
@@ -18,6 +19,11 @@ kernel aimed at TVBox-style Android and iOS applications.
   the Dart boundary.
 - Playback state, audio/video track metadata, capability reports, structured
   errors, and local performance metrics.
+
+Android currently handles HLS, HTTP-FLV, and Media3 progressive containers.
+iOS currently handles HLS and AVFoundation-compatible progressive/local media;
+HTTP-FLV and sources requiring custom HTTP headers return structured
+fallback-required errors.
 
 Subtitles, DRM, downloads, source-site parsing, playlists, UI controls, and
 telemetry upload are intentionally outside this package.
@@ -43,7 +49,6 @@ await controller.open(
     Uri.parse('https://media.example/live.m3u8'),
     isLive: true,
     formatHint: YlFormatHint.hls,
-    headers: const {'Referer': 'https://media.example/'},
   ),
 );
 await controller.play();
@@ -58,6 +63,12 @@ await controller.dispose();
 
 Create one controller per native player instance and always dispose it. The
 complete compile-time example is in [`example/lib/main.dart`](example/lib/main.dart).
+
+On Android, all `YlNetworkPolicy` fields and request headers are applied. The
+iOS AVPlayer main path delegates timeout/retry policy to AVFoundation and cannot
+enforce `minBufferDuration`, `maxBufferDuration`, or `maxBufferBytes`; it uses a
+bounded forward-buffer duration selected by `bufferMode`. iOS custom-header
+sources are rejected until the documented native fallback is bundled.
 
 ## Publication
 

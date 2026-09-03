@@ -10,7 +10,7 @@ void main() {
     await tester.pump();
 
     expect(find.text('yl_player API example'), findsOneWidget);
-    expect(find.textContaining('native playback backends'), findsOneWidget);
+    expect(find.textContaining('Android Media3'), findsOneWidget);
     await tester.drag(find.byType(ListView), const Offset(0, -400));
     await tester.pump();
     expect(find.text('Open source'), findsOneWidget);

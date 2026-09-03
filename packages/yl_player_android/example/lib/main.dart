@@ -8,7 +8,7 @@ final class ExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => const MaterialApp(
     home: Scaffold(
-      body: Center(child: Text('yl_player Android registration shell')),
+      body: Center(child: Text('yl_player Android Media3 backend')),
     ),
   );
 }

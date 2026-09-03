@@ -11,14 +11,15 @@ Dart receives only commands and low-rate state/events. Android uses Media3
 ExoPlayer 1.11.0 for HLS, HTTP-FLV, progressive network media, content URIs, and
 local files. iOS uses AVPlayer plus AVPlayerItemVideoOutput for HLS, supported
 progressive media, and local files. iOS HTTP-FLV remains an explicit
-`container.unsupported` result until the separately vendored libavformat +
-VideoToolbox fallback is built.
+`container.native_fallback_required` result until the separately vendored
+libavformat + VideoToolbox fallback is built.
 
 ## Task 1: Native channel protocol
 
 - [x] Define stable create/command/dispose method payloads and multiplexed
   state/event payloads.
-- [x] Add shared serialization fixtures to platform tests.
+- [x] Exercise equivalent serialization payloads in both platform adapter test
+  suites.
 - [x] Ensure no packet, frame, PCM, subtitle, or DRM payload is representable.
 
 ## Task 2: Android Dart adapter
@@ -36,6 +37,7 @@ VideoToolbox fallback is built.
 - [x] Support headers, local/content/network sources, HLS, HTTP-FLV, common
   progressive containers, live-edge seek, quality limits, and audio selection.
 - [x] Release player, Surface, texture, callbacks, and timers idempotently.
+- [x] Isolate async retry and analytics callbacks by source generation.
 - [x] Compile the API-24 example APK.
 
 ## Task 4: iOS Dart adapter
@@ -46,8 +48,10 @@ VideoToolbox fallback is built.
 ## Task 5: iOS AVPlayer backend
 
 - [x] Register AVPlayerItemVideoOutput as a FlutterTexture without Dart frames.
-- [x] Support HTTP headers, HLS, supported progressive media, and local files.
+- [x] Support HLS, supported progressive media, and local files; explicitly
+  reject custom-header requests that require the fallback path.
 - [x] Publish status, timing, live/DVR, dimensions, tracks, and errors.
+- [x] Configure a playback AVAudioSession and preserve live-edge resume intent.
 - [x] Reject HTTP-FLV explicitly for fallback routing.
 - [x] Tear down KVO, notifications, periodic observers, display link, player,
   output, and texture idempotently.
@@ -55,11 +59,11 @@ VideoToolbox fallback is built.
 
 ## Task 6: Integration and release truth
 
-- [ ] Update the main example and READMEs to distinguish verified main-path
+- [x] Update the main example and READMEs to distinguish verified main-path
   support from planned fallback formats.
 - [ ] Run analyze, all Dart tests, Android debug build, iOS Simulator build,
   format verification, and four pub dry-runs.
-- [ ] Do not claim low-end-device smoothness until physical-device soak and
+- [x] Do not claim low-end-device smoothness until physical-device soak and
   memory/performance measurements have been recorded.
 
 ## Deferred acceptance boundary

@@ -91,6 +91,27 @@ void main() {
     await controller.dispose();
   });
 
+  test('does not duplicate an error already emitted by the backend', () async {
+    const error = YlPlayerError(
+      category: YlPlayerErrorCategory.network,
+      code: 'network.timeout',
+      message: 'Timed out.',
+    );
+    backend
+      ..playError = error
+      ..emitPlayErrorBeforeThrow = true;
+    final controller = YlPlayerController();
+    final emittedEvents = <YlPlayerEvent>[];
+    final subscription = controller.events.listen(emittedEvents.add);
+
+    await expectLater(controller.play(), throwsA(same(error)));
+
+    expect(emittedEvents, hasLength(1));
+
+    await subscription.cancel();
+    await controller.dispose();
+  });
+
   test('does not mirror stale backend callbacks after dispose', () async {
     final controller = YlPlayerController();
     final emittedStates = <YlPlayerState>[];
@@ -100,6 +121,25 @@ void main() {
     backend.emitState(YlPlayerState(status: YlPlaybackStatus.playing));
     await Future<void>.delayed(Duration.zero);
 
+    expect(
+      emittedStates.where((state) => state.status == YlPlaybackStatus.playing),
+      isEmpty,
+    );
+    await subscription.cancel();
+  });
+
+  test('cleans up Dart resources when backend disposal fails', () async {
+    final controller = YlPlayerController();
+    final emittedStates = <YlPlayerState>[];
+    final subscription = controller.states.listen(emittedStates.add);
+    backend.disposeError = StateError('native dispose failed');
+
+    await controller.dispose();
+    backend.emitState(YlPlayerState(status: YlPlaybackStatus.playing));
+    await Future<void>.delayed(Duration.zero);
+
+    expect(controller.state.status, YlPlaybackStatus.disposed);
+    expect(backend.disposeCount, 1);
     expect(
       emittedStates.where((state) => state.status == YlPlaybackStatus.playing),
       isEmpty,

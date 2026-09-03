@@ -9,10 +9,28 @@ public final class YlPlayerIosPlugin: NSObject, FlutterPlugin, FlutterStreamHand
   private var players: [Int64: YlAvPlayer] = [:]
   private var nextPlayerId: Int64 = 1
   private var eventSink: FlutterEventSink?
+  private var lifecycleObservers: [NSObjectProtocol] = []
 
   init(textures: FlutterTextureRegistry) {
     self.textures = textures
     super.init()
+    lifecycleObservers = [
+      NotificationCenter.default.addObserver(
+        forName: UIApplication.didEnterBackgroundNotification,
+        object: nil,
+        queue: .main
+      ) { [weak self] _ in self?.deactivateAllPlayers() },
+      NotificationCenter.default.addObserver(
+        forName: UIApplication.didReceiveMemoryWarningNotification,
+        object: nil,
+        queue: .main
+      ) { [weak self] _ in self?.deactivateAllPlayers() },
+    ]
+  }
+
+  deinit {
+    lifecycleObservers.forEach(NotificationCenter.default.removeObserver)
+    players.values.forEach { $0.dispose() }
   }
 
   public static func register(with registrar: FlutterPluginRegistrar) {
@@ -84,9 +102,18 @@ public final class YlPlayerIosPlugin: NSObject, FlutterPlugin, FlutterStreamHand
       return
     }
     do {
+      let commandName = root["name"] as? String ?? ""
+      let commandArguments = stringMap(root["arguments"])
+      if commandName == "open" {
+        try player.validateOpen(stringMap(commandArguments["source"]))
+      }
+      if commandName == "open" || commandName == "play" {
+        players.values.filter { $0 !== player }.forEach { $0.deactivate() }
+        try player.activate()
+      }
       try player.command(
-        name: root["name"] as? String ?? "",
-        arguments: stringMap(root["arguments"])
+        name: commandName,
+        arguments: commandArguments
       )
       result(nil)
     } catch let error as NativePlayerError {
@@ -105,14 +132,30 @@ public final class YlPlayerIosPlugin: NSObject, FlutterPlugin, FlutterStreamHand
     let root = stringMap(arguments)
     if let playerId = int64(root["playerId"]), let player = players.removeValue(forKey: playerId) {
       player.dispose()
+      if !players.values.contains(where: { $0.isActive }) {
+        deactivateAudioSession()
+      }
     }
     result(nil)
+  }
+
+  private func deactivateAllPlayers() {
+    players.values.forEach { $0.deactivate() }
+    deactivateAudioSession()
+  }
+
+  private func deactivateAudioSession() {
+    try? AVAudioSession.sharedInstance().setActive(
+      false,
+      options: .notifyOthersOnDeactivation
+    )
   }
 }
 
 private final class YlAvPlayer: NSObject, FlutterTexture {
   let playerId: Int64
   var textureId: Int64 = -1
+  var isActive: Bool { active }
 
   private let textures: FlutterTextureRegistry
   private let configuration: PlayerConfiguration
@@ -145,6 +188,14 @@ private final class YlAvPlayer: NSObject, FlutterTexture {
   private var bufferingStartedAt: CFTimeInterval?
   private var rebufferDurationMs: Int64 = 0
   private var hasBeenReady = false
+  private var currentError: [String: Any?]?
+  private var active = false
+  private var lastSource: [String: Any?]?
+  private var savedPositionMs: Int64 = 0
+  private var itemGeneration: UInt64 = 0
+  private var qualityConstraint: [String: Any?] = [:]
+  private var selectedAudioTrackId: String?
+  private var resumeAtLiveEdge = false
 
   init(
     playerId: Int64,
@@ -160,7 +211,8 @@ private final class YlAvPlayer: NSObject, FlutterTexture {
 
     player.automaticallyWaitsToMinimizeStalling = configuration.bufferMode != "lowLatency"
     timeControlObservation = player.observe(\.timeControlStatus, options: [.new]) {
-      [weak self] _, _ in self?.handleTimeControlChange()
+      [weak self] _, _ in
+      DispatchQueue.main.async { self?.handleTimeControlChange() }
     }
     periodicObserver = player.addPeriodicTimeObserver(
       forInterval: CMTime(
@@ -174,6 +226,7 @@ private final class YlAvPlayer: NSObject, FlutterTexture {
     let link = CADisplayLink(target: self, selector: #selector(displayLinkTick))
     link.preferredFrameRateRange = CAFrameRateRange(minimum: 15, maximum: 60, preferred: 30)
     link.add(to: .main, forMode: .common)
+    link.isPaused = true
     displayLink = link
   }
 
@@ -194,11 +247,17 @@ private final class YlAvPlayer: NSObject, FlutterTexture {
       player.pause()
     case "seekTo":
       let milliseconds = int64(arguments["positionMs"]) ?? 0
-      player.seek(
-        to: CMTime(milliseconds: milliseconds, preferredTimescale: 1_000),
-        toleranceBefore: .zero,
-        toleranceAfter: .zero
-      )
+      resumeAtLiveEdge = false
+      if active {
+        player.seek(
+          to: CMTime(milliseconds: milliseconds, preferredTimescale: 1_000),
+          toleranceBefore: .zero,
+          toleranceAfter: .zero
+        )
+      } else {
+        savedPositionMs = max(0, milliseconds)
+        emitState()
+      }
     case "seekToLiveEdge":
       try seekToLiveEdge()
     case "setPlaybackSpeed":
@@ -227,34 +286,90 @@ private final class YlAvPlayer: NSObject, FlutterTexture {
     }
   }
 
-  private func open(_ source: [String: Any?]) throws {
+  func validateOpen(_ source: [String: Any?]) throws {
     let formatHint = source["formatHint"] as? String ?? "automatic"
-    if formatHint == "httpFlv" || formatHint == "flv" {
-      throw NativePlayerError(
-        category: "container",
-        code: "container.http_flv_requires_fallback",
-        message: "HTTP-FLV requires the iOS native fallback, which is not bundled yet."
-      )
-    }
-    guard let uri = source["uri"] as? String, let url = URL(string: uri) else {
+    guard let uri = source["uri"] as? String, !uri.isEmpty, let url = URL(string: uri) else {
       throw NativePlayerError(
         category: "source",
         code: "source.invalid_uri",
         message: "A valid media URI is required."
       )
     }
-
-    removeItemObservers()
-    player.pause()
-    player.currentItem?.remove(videoOutput)
+    let fallbackHints: Set<String> = [
+      "httpFlv", "flv", "matroska", "webm", "mpegTs", "mpegPs", "avi",
+    ]
+    let fallbackExtensions: Set<String> = [
+      "flv", "mkv", "webm", "ts", "m2ts", "mpg", "mpeg", "ps", "avi",
+    ]
+    if fallbackHints.contains(formatHint)
+        || (formatHint == "automatic" && fallbackExtensions.contains(url.pathExtension.lowercased())) {
+      throw NativePlayerError(
+        category: "container",
+        code: "container.native_fallback_required",
+        message: "This source requires the iOS native fallback, which is not bundled yet."
+      )
+    }
     let headers = stringMap(source["headers"]).compactMapValues { $0 as? String }
-    let asset = AVURLAsset(
-      url: url,
-      options: headers.isEmpty ? nil : ["AVURLAssetHTTPHeaderFieldsKey": headers]
-    )
-    let item = AVPlayerItem(asset: asset)
-    item.preferredForwardBufferDuration = configuration.preferredForwardBufferDuration
-    item.add(videoOutput)
+    if !headers.isEmpty {
+      throw NativePlayerError(
+        category: "container",
+        code: "container.headers_require_fallback",
+        message: "Custom iOS HTTP headers require the native fallback, which is not bundled yet."
+      )
+    }
+  }
+
+  func activate() throws {
+    guard !disposed, !active else { return }
+    do {
+      let session = AVAudioSession.sharedInstance()
+      try session.setCategory(.playback, mode: .moviePlayback)
+      try session.setActive(true)
+    } catch {
+      throw NativePlayerError(
+        category: "resource",
+        code: "ios.audio_session_failed",
+        message: "The playback audio session could not be activated.",
+        diagnostic: String(describing: error)
+      )
+    }
+    active = true
+    guard let source = lastSource else {
+      emitState()
+      return
+    }
+    try installItem(source, positionMs: savedPositionMs)
+    status = "opening"
+    emitState()
+  }
+
+  func deactivate() {
+    guard !disposed, active else { return }
+    savedPositionMs = milliseconds(player.currentTime()) ?? savedPositionMs
+    if let range = player.currentItem?.seekableTimeRanges.last?.timeRangeValue,
+       let position = milliseconds(player.currentTime()),
+       let end = milliseconds(CMTimeRangeGetEnd(range)),
+       end - position <= 2_000 {
+      resumeAtLiveEdge = true
+    }
+    finishBuffering()
+    active = false
+    player.pause()
+    removeCurrentItem()
+    if status != "error" && status != "completed" && status != "idle" {
+      status = "paused"
+    }
+    emitState()
+  }
+
+  private func open(_ source: [String: Any?]) throws {
+    try validateOpen(source)
+    removeCurrentItem()
+    lastSource = source
+    savedPositionMs = 0
+    resumeAtLiveEdge = false
+    selectedAudioTrackId = nil
+    active = true
     sourceIsLive = source["isLive"] as? Bool ?? false
     status = "opening"
     firstFrameSent = false
@@ -264,20 +379,49 @@ private final class YlAvPlayer: NSObject, FlutterTexture {
     firstFrameDurationMs = nil
     rebufferCount = 0
     rebufferDurationMs = 0
-    player.replaceCurrentItem(with: item)
-    observe(item)
+    bufferingStartedAt = nil
+    currentError = nil
+    try installItem(source, positionMs: 0)
     emitState()
   }
 
-  private func observe(_ item: AVPlayerItem) {
+  private func installItem(_ source: [String: Any?], positionMs: Int64) throws {
+    guard let uri = source["uri"] as? String, let url = URL(string: uri) else {
+      throw NativePlayerError(
+        category: "source",
+        code: "source.invalid_uri",
+        message: "A valid media URI is required."
+      )
+    }
+    itemGeneration &+= 1
+    let generation = itemGeneration
+    let item = AVPlayerItem(asset: AVURLAsset(url: url))
+    item.preferredForwardBufferDuration = configuration.preferredForwardBufferDuration
+    applyQualityConstraint(qualityConstraint, to: item)
+    item.add(videoOutput)
+    player.replaceCurrentItem(with: item)
+    displayLink?.isPaused = false
+    observe(item, generation: generation)
+    if positionMs > 0 && !resumeAtLiveEdge {
+      player.seek(
+        to: CMTime(milliseconds: positionMs, preferredTimescale: 1_000),
+        toleranceBefore: .zero,
+        toleranceAfter: .zero
+      )
+    }
+  }
+
+  private func observe(_ item: AVPlayerItem, generation: UInt64) {
     itemStatusObservation = item.observe(\.status, options: [.initial, .new]) {
-      [weak self] item, _ in self?.handleItemStatus(item)
+      [weak self] item, _ in
+      DispatchQueue.main.async { self?.handleItemStatus(item, generation: generation) }
     }
     endObserver = NotificationCenter.default.addObserver(
       forName: .AVPlayerItemDidPlayToEndTime,
       object: item,
       queue: .main
     ) { [weak self] _ in
+      guard self?.isCurrent(item, generation: generation) == true else { return }
       self?.status = "completed"
       self?.emitState()
     }
@@ -286,12 +430,14 @@ private final class YlAvPlayer: NSObject, FlutterTexture {
       object: item,
       queue: .main
     ) { [weak self] notification in
+      guard self?.isCurrent(item, generation: generation) == true else { return }
       let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error
       self?.handleFailure(error)
     }
   }
 
-  private func handleItemStatus(_ item: AVPlayerItem) {
+  private func handleItemStatus(_ item: AVPlayerItem, generation: UInt64) {
+    guard isCurrent(item, generation: generation) else { return }
     switch item.status {
     case .readyToPlay:
       if !hasBeenReady {
@@ -299,6 +445,9 @@ private final class YlAvPlayer: NSObject, FlutterTexture {
         openDurationMs = elapsedMilliseconds(since: openStartedAt)
       }
       status = player.rate == 0 ? "ready" : "playing"
+      if resumeAtLiveEdge {
+        try? seekToLiveEdge()
+      }
       rebuildTracks(item)
       emitState()
     case .failed:
@@ -341,13 +490,14 @@ private final class YlAvPlayer: NSObject, FlutterTexture {
   private func handleFailure(_ error: Error?) {
     status = "error"
     let nsError = error as NSError?
-    let category = nsError?.domain == NSURLErrorDomain ? "network" : "source"
+    let category = errorCategory(nsError)
     let details = errorMap(
       category: category,
       code: nsError.map { "avplayer.\($0.code)" } ?? "avplayer.failed",
       message: nsError?.localizedDescription ?? "AVPlayer playback failed.",
       diagnostic: nsError.map(String.init(describing:))
     )
+    currentError = details
     emit(["playerId": playerId, "type": "error", "error": details])
     emitState(error: details)
   }
@@ -389,23 +539,34 @@ private final class YlAvPlayer: NSObject, FlutterTexture {
         message: "The current source is not live."
       )
     }
+    if !active {
+      resumeAtLiveEdge = true
+      emitState()
+      return
+    }
     guard let range = player.currentItem?.seekableTimeRanges.last?.timeRangeValue else {
+      resumeAtLiveEdge = true
       player.seek(to: .positiveInfinity)
       return
     }
     player.seek(to: CMTimeRangeGetEnd(range), toleranceBefore: .zero, toleranceAfter: .zero)
+    resumeAtLiveEdge = false
   }
 
   private func selectAudioTrack(_ trackId: String) throws {
-    guard let item = player.currentItem,
-          let group = item.asset.mediaSelectionGroup(forMediaCharacteristic: .audible),
-          let option = audioOptions[trackId]
-    else {
+    guard let option = audioOptions[trackId] else {
       throw NativePlayerError(
         category: "source",
         code: "track.not_found",
         message: "The requested audio track is unavailable."
       )
+    }
+    selectedAudioTrackId = trackId
+    guard let item = player.currentItem,
+          let group = item.asset.mediaSelectionGroup(forMediaCharacteristic: .audible)
+    else {
+      emitState()
+      return
     }
     item.select(option, in: group)
     rebuildTracks(item)
@@ -413,21 +574,36 @@ private final class YlAvPlayer: NSObject, FlutterTexture {
   }
 
   private func setQualityConstraint(_ constraint: [String: Any?]) {
+    qualityConstraint = constraint
     guard let item = player.currentItem else { return }
+    applyQualityConstraint(constraint, to: item)
+  }
+
+  private func applyQualityConstraint(_ constraint: [String: Any?], to item: AVPlayerItem) {
     item.preferredPeakBitRate = double(constraint["maxBitrate"]) ?? 0
-    let width = double(constraint["maxWidth"]) ?? 0
-    let height = double(constraint["maxHeight"]) ?? 0
-    item.preferredMaximumResolution = width > 0 && height > 0
-      ? CGSize(width: width, height: height)
-      : .zero
+    let width = double(constraint["maxWidth"])
+    let height = double(constraint["maxHeight"])
+    guard width != nil || height != nil else {
+      item.preferredMaximumResolution = .zero
+      return
+    }
+    let resolvedWidth = CGFloat(width ?? 100_000)
+    let resolvedHeight = CGFloat(height ?? 100_000)
+    item.preferredMaximumResolution = CGSize(width: resolvedWidth, height: resolvedHeight)
   }
 
   private func rebuildTracks(_ item: AVPlayerItem) {
     audioOptions.removeAll()
     if let group = item.asset.mediaSelectionGroup(forMediaCharacteristic: .audible) {
-      audioTracks = group.options.enumerated().map { index, option in
+      group.options.enumerated().forEach { index, option in
         let id = "audio-\(index)"
         audioOptions[id] = option
+      }
+      if let selectedAudioTrackId, let option = audioOptions[selectedAudioTrackId] {
+        item.select(option, in: group)
+      }
+      audioTracks = group.options.enumerated().map { index, option in
+        let id = "audio-\(index)"
         return [
           "id": id,
           "kind": "audio",
@@ -462,7 +638,7 @@ private final class YlAvPlayer: NSObject, FlutterTexture {
   func emitState(error: [String: Any?]? = nil) {
     guard !disposed else { return }
     let item = player.currentItem
-    let positionMs = milliseconds(player.currentTime()) ?? 0
+    let positionMs = active ? (milliseconds(player.currentTime()) ?? savedPositionMs) : savedPositionMs
     let durationMs = milliseconds(item?.duration)
     let loadedEndMs = item?.loadedTimeRanges.last
       .map { milliseconds(CMTimeRangeGetEnd($0.timeRangeValue)) ?? 0 } ?? 0
@@ -506,7 +682,7 @@ private final class YlAvPlayer: NSObject, FlutterTexture {
           "bufferedDurationMs": max(0, loadedEndMs - positionMs),
           "liveOffsetMs": liveOffsetMs,
         ],
-        "error": error,
+        "error": error ?? currentError,
       ],
     ])
   }
@@ -524,8 +700,8 @@ private final class YlAvPlayer: NSObject, FlutterTexture {
       periodicObserver = nil
     }
     player.pause()
-    player.currentItem?.remove(videoOutput)
-    player.replaceCurrentItem(with: nil)
+    removeCurrentItem()
+    lastSource = nil
     if textureId >= 0 {
       textures.unregisterTexture(textureId)
       textureId = -1
@@ -539,6 +715,18 @@ private final class YlAvPlayer: NSObject, FlutterTexture {
     if let observer = failedObserver { NotificationCenter.default.removeObserver(observer) }
     endObserver = nil
     failedObserver = nil
+  }
+
+  private func removeCurrentItem() {
+    itemGeneration &+= 1
+    removeItemObservers()
+    displayLink?.isPaused = true
+    player.currentItem?.remove(videoOutput)
+    player.replaceCurrentItem(with: nil)
+  }
+
+  private func isCurrent(_ item: AVPlayerItem, generation: UInt64) -> Bool {
+    !disposed && active && generation == itemGeneration && item === player.currentItem
   }
 }
 
@@ -600,6 +788,28 @@ private func errorMap(
     "message": message,
     "platformDiagnostic": diagnostic,
   ]
+}
+
+private func errorCategory(_ error: NSError?) -> String {
+  guard let error else { return "source" }
+  if error.domain == NSURLErrorDomain {
+    return "network"
+  }
+  if let underlying = error.userInfo[NSUnderlyingErrorKey] as? NSError,
+     underlying.domain == NSURLErrorDomain {
+    return "network"
+  }
+  guard error.domain == AVFoundationErrorDomain else { return "source" }
+  switch AVError.Code(rawValue: error.code) {
+  case .decoderNotFound, .decoderTemporarilyUnavailable:
+    return "decoderUnsupported"
+  case .decodeFailed:
+    return "decoderFailure"
+  case .fileFormatNotRecognized, .invalidSourceMedia, .operationNotSupportedForAsset:
+    return "container"
+  default:
+    return "source"
+  }
 }
 
 private func stringMap(_ value: Any?) -> [String: Any?] {

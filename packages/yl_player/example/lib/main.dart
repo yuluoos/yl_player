@@ -60,8 +60,9 @@ class _PlayerExamplePageState extends State<PlayerExamplePage> {
       padding: const EdgeInsets.all(16),
       children: [
         const Text(
-          'Milestone 1 exposes the public API only; native playback backends '
-          'are not included yet.',
+          'Development build: Android Media3 and iOS AVPlayer main paths are '
+          'available, but iOS HTTP-FLV fallback and physical-device release '
+          'validation are not complete.',
         ),
         const SizedBox(height: 12),
         AspectRatio(

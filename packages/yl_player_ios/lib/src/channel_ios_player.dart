@@ -138,8 +138,9 @@ final class ChannelIosPlayer implements YlPlatformPlayer {
       await methods.invokeMethod<void>('dispose', <String, Object?>{
         'playerId': playerId,
       });
-    } on MissingPluginException {
-      // The engine may already be detached during application shutdown.
+    } on PlatformException {
+      // Local resources must still close if the engine detached or native
+      // teardown reported a best-effort failure.
     }
     await _nativeSubscription.cancel();
     _state = _state.copyWith(status: YlPlaybackStatus.disposed, error: null);

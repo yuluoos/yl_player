@@ -11,15 +11,20 @@ void main() {
   const methods = MethodChannel('yl_player_ios_test/methods');
   late StreamController<Object?> nativeEvents;
   late List<MethodCall> calls;
+  late bool failDispose;
 
   setUp(() {
     nativeEvents = StreamController<Object?>.broadcast(sync: true);
     calls = <MethodCall>[];
+    failDispose = false;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(methods, (call) async {
           calls.add(call);
           if (call.method == 'create') {
             return <String, Object?>{'playerId': 7, 'textureId': 42};
+          }
+          if (call.method == 'dispose' && failDispose) {
+            throw PlatformException(code: 'dispose.failed');
           }
           return null;
         });
@@ -119,5 +124,19 @@ void main() {
     await stateSubscription.cancel();
     await eventSubscription.cancel();
     await player.dispose();
+  });
+
+  test('cleans up locally when native disposal reports an error', () async {
+    final platform = YlPlayerIos(
+      methodChannel: methods,
+      nativeEvents: nativeEvents.stream,
+    );
+    final player = await platform.createPlayer(const YlPlayerConfiguration());
+    failDispose = true;
+
+    await player.dispose();
+
+    expect(player.state.status, YlPlaybackStatus.disposed);
+    expect(player.textureId.value, isNull);
   });
 }

@@ -6,3 +6,5 @@
   content, and progressive sources.
 - Add bounded buffer policies, HTTP headers, live-edge seek, audio selection,
   adaptive quality limits, state/events, capabilities, and structured errors.
+- Add finite jittered retries, strict redirect limits, source-generation event
+  isolation, one-active-decoder arbitration, and background/memory cleanup.

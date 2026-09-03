@@ -1,10 +1,15 @@
 package dev.ylplayer.yl_player_android
 
+import android.app.Activity
+import android.app.Application
+import android.content.ComponentCallbacks2
 import android.content.Context
+import android.content.res.Configuration
 import android.media.MediaCodecInfo
 import android.media.MediaCodecList
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
@@ -17,13 +22,15 @@ import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.TrackSelectionOverride
 import androidx.media3.common.Tracks
+import androidx.media3.common.Timeline
 import androidx.media3.common.VideoSize
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
-import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.analytics.AnalyticsListener
 import androidx.media3.exoplayer.mediacodec.MediaCodecSelector
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
@@ -33,13 +40,21 @@ import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.view.TextureRegistry
+import java.net.ProtocolException
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.TimeUnit
 import kotlin.math.max
+import kotlin.random.Random
+import okhttp3.OkHttpClient
 
 @OptIn(UnstableApi::class)
 class YlPlayerAndroidPlugin :
     FlutterPlugin,
     MethodChannel.MethodCallHandler,
-    EventChannel.StreamHandler {
+    EventChannel.StreamHandler,
+    ComponentCallbacks2,
+    Application.ActivityLifecycleCallbacks {
+    private lateinit var application: Application
     private lateinit var applicationContext: Context
     private lateinit var textures: TextureRegistry
     private lateinit var methodChannel: MethodChannel
@@ -47,9 +62,13 @@ class YlPlayerAndroidPlugin :
     private val players = mutableMapOf<Long, Media3Player>()
     private var nextPlayerId = 1L
     private var eventSink: EventChannel.EventSink? = null
+    private var startedActivities = 0
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         applicationContext = binding.applicationContext
+        application = applicationContext as Application
+        application.registerComponentCallbacks(this)
+        application.registerActivityLifecycleCallbacks(this)
         textures = binding.textureRegistry
         methodChannel = MethodChannel(
             binding.binaryMessenger,
@@ -67,6 +86,8 @@ class YlPlayerAndroidPlugin :
         methodChannel.setMethodCallHandler(null)
         eventChannel.setStreamHandler(null)
         eventSink = null
+        application.unregisterComponentCallbacks(this)
+        application.unregisterActivityLifecycleCallbacks(this)
         players.values.toList().forEach(Media3Player::dispose)
         players.clear()
     }
@@ -90,11 +111,12 @@ class YlPlayerAndroidPlugin :
     }
 
     private fun createPlayer(call: MethodCall, result: MethodChannel.Result) {
+        var texture: TextureRegistry.SurfaceTextureEntry? = null
         try {
             val arguments = call.arguments.asStringMap()
             val configuration = PlayerConfiguration.from(arguments["configuration"].asStringMap())
             val playerId = nextPlayerId++
-            val texture = textures.createSurfaceTexture()
+            texture = textures.createSurfaceTexture()
             val player = Media3Player(
                 context = applicationContext,
                 playerId = playerId,
@@ -105,6 +127,7 @@ class YlPlayerAndroidPlugin :
             players[playerId] = player
             result.success(mapOf("playerId" to playerId, "textureId" to texture.id()))
         } catch (error: Throwable) {
+            texture?.release()
             result.playerError("android.create_failed", "Could not create Media3 player.", error)
         }
     }
@@ -122,7 +145,15 @@ class YlPlayerAndroidPlugin :
             return
         }
         try {
-            player.command(root["name"] as? String ?: "", root["arguments"].asStringMap())
+            val commandName = root["name"] as? String ?: ""
+            if (commandName == "open") {
+                player.validateOpen(root["arguments"].asStringMap()["source"].asStringMap())
+            }
+            if (commandName == "open" || commandName == "play") {
+                players.values.filter { it !== player }.forEach(Media3Player::deactivate)
+                player.activate()
+            }
+            player.command(commandName, root["arguments"].asStringMap())
             result.success(null)
         } catch (error: PlayerCommandException) {
             result.error(error.code, error.message, error.details)
@@ -146,6 +177,35 @@ class YlPlayerAndroidPlugin :
             Handler(Looper.getMainLooper()).post { eventSink?.success(event) }
         }
     }
+
+    override fun onTrimMemory(level: Int) {
+        if (level >= ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW) {
+            players.values.forEach(Media3Player::deactivate)
+        }
+    }
+
+    override fun onLowMemory() {
+        players.values.forEach(Media3Player::deactivate)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) = Unit
+
+    override fun onActivityStarted(activity: Activity) {
+        startedActivities += 1
+    }
+
+    override fun onActivityStopped(activity: Activity) {
+        startedActivities = (startedActivities - 1).coerceAtLeast(0)
+        if (startedActivities == 0 && !activity.isChangingConfigurations) {
+            players.values.forEach(Media3Player::deactivate)
+        }
+    }
+
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit
+    override fun onActivityResumed(activity: Activity) = Unit
+    override fun onActivityPaused(activity: Activity) = Unit
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
+    override fun onActivityDestroyed(activity: Activity) = Unit
 }
 
 @OptIn(UnstableApi::class)
@@ -155,10 +215,11 @@ private class Media3Player(
     private val texture: TextureRegistry.SurfaceTextureEntry,
     private val configuration: PlayerConfiguration,
     private val emit: (Map<String, Any?>) -> Unit,
-) : Player.Listener {
+) : Player.Listener, AnalyticsListener {
     private val handler = Handler(Looper.getMainLooper())
     private val surface = Surface(texture.surfaceTexture())
     private val trackSelector = DefaultTrackSelector(context)
+    private val httpClient = configuration.network.createHttpClient()
     private val exoPlayer: ExoPlayer
     private val audioSelections = mutableMapOf<String, AudioSelection>()
     private var sourceIsLive = false
@@ -171,12 +232,31 @@ private class Media3Player(
     private var rebufferCount = 0
     private var bufferingStartedAtMs: Long? = null
     private var rebufferDurationMs = 0L
+    private var reconnectCount = 0
+    private var droppedVideoFrames = 0
+    private var audioUnderruns = 0
+    private var decoderName: String? = null
+    private var isHardwareDecoding = false
+    private var currentError: Map<String, Any?>? = null
+    private var active = false
+    private var savedPositionMs = 0L
+    private var resumeAtLiveEdge = false
+    private var sourceGeneration = 0L
     private var lastVideoSize = VideoSize.UNKNOWN
     private var audioTracks: List<Map<String, Any?>> = emptyList()
     private var videoTracks: List<Map<String, Any?>> = emptyList()
+    private val capabilitySnapshot by lazy {
+        mapOf(
+            "hardwareVideoCodecs" to hardwareVideoCodecs(),
+            "supportedFormats" to listOf(
+                "automatic", "hls", "httpFlv", "mp4", "matroska", "webm", "mpegTs", "mpegPs", "flv",
+            ),
+            "maxConcurrentVideoDecoders" to 1,
+        )
+    }
     private val positionTicker = object : Runnable {
         override fun run() {
-            if (!disposed) {
+            if (!disposed && active) {
                 emitState()
                 handler.postDelayed(this, configuration.positionEventIntervalMs)
             }
@@ -196,9 +276,8 @@ private class Media3Player(
         trackSelector.parameters = trackSelector.buildUponParameters()
             .setTrackTypeDisabled(C.TRACK_TYPE_TEXT, true)
             .build()
-        exoPlayer.setVideoSurface(surface)
         exoPlayer.addListener(this)
-        handler.post(positionTicker)
+        exoPlayer.addAnalyticsListener(this)
     }
 
     fun command(name: String, arguments: Map<String, Any?>) {
@@ -207,16 +286,31 @@ private class Media3Player(
             "open" -> open(arguments["source"].asStringMap())
             "play" -> exoPlayer.play()
             "pause" -> exoPlayer.pause()
-            "seekTo" -> exoPlayer.seekTo((arguments["positionMs"] as? Number)?.toLong() ?: 0L)
+            "seekTo" -> {
+                val positionMs = max(0L, (arguments["positionMs"] as? Number)?.toLong() ?: 0L)
+                resumeAtLiveEdge = false
+                if (active) {
+                    exoPlayer.seekTo(positionMs)
+                } else {
+                    savedPositionMs = positionMs
+                    emitState()
+                }
+            }
             "seekToLiveEdge" -> {
-                if (!exoPlayer.isCurrentMediaItemLive) {
+                if (!sourceIsLive && !exoPlayer.isCurrentMediaItemLive) {
                     throw PlayerCommandException(
                         "source.not_live",
                         "The current source is not live.",
                         errorMap("source", "source.not_live", "The current source is not live."),
                     )
                 }
-                exoPlayer.seekToDefaultPosition()
+                if (active) {
+                    resumeAtLiveEdge = false
+                    exoPlayer.seekToDefaultPosition()
+                } else {
+                    resumeAtLiveEdge = true
+                    emitState()
+                }
             }
             "setPlaybackSpeed" -> {
                 val speed = (arguments["speed"] as? Number)?.toFloat() ?: 1f
@@ -237,25 +331,81 @@ private class Media3Player(
         }
     }
 
-    private fun open(source: Map<String, Any?>) {
-        val uriString = source["uri"] as? String
-            ?: throw PlayerCommandException(
+    fun validateOpen(source: Map<String, Any?>) {
+        val uri = source["uri"] as? String
+        if (uri.isNullOrBlank()) {
+            throw PlayerCommandException(
                 "source.invalid_uri",
                 "A media URI is required.",
                 errorMap("source", "source.invalid_uri", "A media URI is required."),
             )
+        }
+    }
+
+    fun activate() {
+        if (disposed || active) return
+        active = true
+        exoPlayer.setVideoSurface(surface)
+        if (exoPlayer.currentMediaItem != null && exoPlayer.playbackState == Player.STATE_IDLE) {
+            status = "opening"
+            exoPlayer.prepare()
+            if (resumeAtLiveEdge) {
+                exoPlayer.seekToDefaultPosition()
+                resumeAtLiveEdge = false
+            } else {
+                exoPlayer.seekTo(savedPositionMs)
+            }
+        }
+        handler.removeCallbacks(positionTicker)
+        handler.post(positionTicker)
+        emitState()
+    }
+
+    fun deactivate() {
+        if (disposed || !active) return
+        savedPositionMs = max(0L, exoPlayer.currentPosition)
+        if (exoPlayer.currentLiveOffset in 0..2_000L) {
+            resumeAtLiveEdge = true
+        }
+        bufferingStartedAtMs?.let { rebufferDurationMs += SystemClock.elapsedRealtime() - it }
+        bufferingStartedAtMs = null
+        active = false
+        handler.removeCallbacks(positionTicker)
+        exoPlayer.pause()
+        exoPlayer.stop()
+        exoPlayer.clearVideoSurface(surface)
+        if (status != "error" && status != "completed" && status != "idle") {
+            status = "paused"
+        }
+        emitState()
+    }
+
+    private fun open(source: Map<String, Any?>) {
+        validateOpen(source)
+        val uriString = source["uri"] as String
         sourceIsLive = source["isLive"] == true
+        active = true
+        savedPositionMs = 0
+        resumeAtLiveEdge = false
         val headers = source["headers"].asStringMap().mapValues { it.value.toString() }
         val network = configuration.network
-        val httpFactory = DefaultHttpDataSource.Factory()
-            .setConnectTimeoutMs(network.connectTimeoutMs)
-            .setReadTimeoutMs(network.readTimeoutMs)
-            .setAllowCrossProtocolRedirects(true)
+        sourceGeneration += 1
+        val generation = sourceGeneration
+        val httpFactory = OkHttpDataSource.Factory(httpClient)
             .setDefaultRequestProperties(headers)
         val dataSourceFactory = DefaultDataSource.Factory(context, httpFactory)
         val mediaSourceFactory = DefaultMediaSourceFactory(dataSourceFactory)
-            .setLoadErrorHandlingPolicy(DefaultLoadErrorHandlingPolicy(network.maxRetries))
+            .setLoadErrorHandlingPolicy(
+                YlLoadErrorHandlingPolicy(network) { attempt, delayMs, exception ->
+                    handler.post {
+                        if (generation == sourceGeneration) {
+                            recordRetry(attempt, delayMs, exception)
+                        }
+                    }
+                },
+            )
         val mediaItem = MediaItem.Builder()
+            .setMediaId(generation.toString())
             .setUri(Uri.parse(uriString))
             .setMimeType(mimeType(source["formatHint"] as? String))
             .build()
@@ -266,6 +416,17 @@ private class Media3Player(
         hasBeenReady = false
         rebufferCount = 0
         rebufferDurationMs = 0L
+        bufferingStartedAtMs = null
+        reconnectCount = 0
+        droppedVideoFrames = 0
+        audioUnderruns = 0
+        decoderName = null
+        isHardwareDecoding = false
+        currentError = null
+        audioSelections.clear()
+        audioTracks = emptyList()
+        videoTracks = emptyList()
+        lastVideoSize = VideoSize.UNKNOWN
         status = "opening"
         exoPlayer.stop()
         exoPlayer.clearMediaItems()
@@ -298,6 +459,10 @@ private class Media3Player(
     }
 
     override fun onPlaybackStateChanged(playbackState: Int) {
+        if (!active) {
+            emitState()
+            return
+        }
         status = when (playbackState) {
             Player.STATE_BUFFERING -> "buffering"
             Player.STATE_READY -> if (exoPlayer.isPlaying) "playing" else "ready"
@@ -319,13 +484,18 @@ private class Media3Player(
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
+        if (!active) return
         if (exoPlayer.playbackState == Player.STATE_READY) {
             status = if (isPlaying) "playing" else "paused"
             emitState()
         }
     }
 
-    override fun onVideoSizeChanged(videoSize: VideoSize) {
+    override fun onVideoSizeChanged(
+        eventTime: AnalyticsListener.EventTime,
+        videoSize: VideoSize,
+    ) {
+        if (!isCurrentEvent(eventTime)) return
         lastVideoSize = videoSize
         if (videoSize.width > 0 && videoSize.height > 0) {
             texture.surfaceTexture().setDefaultBufferSize(videoSize.width, videoSize.height)
@@ -333,7 +503,12 @@ private class Media3Player(
         emitState()
     }
 
-    override fun onRenderedFirstFrame() {
+    override fun onRenderedFirstFrame(
+        eventTime: AnalyticsListener.EventTime,
+        output: Any,
+        renderTimeMs: Long,
+    ) {
+        if (!isCurrentEvent(eventTime)) return
         firstFrameDurationMs = openStartedAtMs?.let { SystemClock.elapsedRealtime() - it }
         emit(
             mapOf(
@@ -389,27 +564,85 @@ private class Media3Player(
         emitState()
     }
 
-    override fun onPlayerError(error: PlaybackException) {
+    override fun onPlayerError(
+        eventTime: AnalyticsListener.EventTime,
+        error: PlaybackException,
+    ) {
+        if (!isCurrentEvent(eventTime)) return
         status = "error"
         val details = playbackErrorMap(error)
+        currentError = details
         emit(mapOf("playerId" to playerId, "type" to "error", "error" to details))
         emitState(details)
     }
 
+    override fun onVideoDecoderInitialized(
+        eventTime: AnalyticsListener.EventTime,
+        decoderName: String,
+        initializedTimestampMs: Long,
+        initializationDurationMs: Long,
+    ) {
+        if (!isCurrentEvent(eventTime)) return
+        this.decoderName = decoderName
+        isHardwareDecoding = isHardwareCodecName(decoderName)
+        emitState()
+    }
+
+    override fun onDroppedVideoFrames(
+        eventTime: AnalyticsListener.EventTime,
+        droppedFrames: Int,
+        elapsedMs: Long,
+    ) {
+        if (!isCurrentEvent(eventTime)) return
+        droppedVideoFrames += droppedFrames
+    }
+
+    override fun onAudioUnderrun(
+        eventTime: AnalyticsListener.EventTime,
+        bufferSize: Int,
+        bufferSizeMs: Long,
+        elapsedSinceLastFeedMs: Long,
+    ) {
+        if (!isCurrentEvent(eventTime)) return
+        audioUnderruns += 1
+    }
+
+    private fun recordRetry(attempt: Int, delayMs: Long, exception: Exception) {
+        if (disposed) return
+        reconnectCount += 1
+        emit(
+            mapOf(
+                "playerId" to playerId,
+                "type" to "retry",
+                "attempt" to attempt,
+                "delayMs" to delayMs,
+                "error" to errorMap(
+                    "network",
+                    "network.retry",
+                    "Retrying media request.",
+                    exception.toString(),
+                ),
+            ),
+        )
+        emitState()
+    }
+
     fun emitState(error: Map<String, Any?>? = null) {
         if (disposed) return
+        val position = if (active) max(0L, exoPlayer.currentPosition) else savedPositionMs
         val duration = exoPlayer.duration.takeUnless { it == C.TIME_UNSET || it < 0 }
         val liveOffset = exoPlayer.currentLiveOffset.takeUnless { it == C.TIME_UNSET || it < 0 }
-        val bufferedDuration = max(0L, exoPlayer.bufferedPosition - exoPlayer.currentPosition)
+        val bufferedPosition = if (active) max(0L, exoPlayer.bufferedPosition) else position
+        val bufferedDuration = max(0L, bufferedPosition - position)
         emit(
             mapOf(
                 "playerId" to playerId,
                 "type" to "state",
                 "state" to mapOf(
                     "status" to status,
-                    "positionMs" to max(0L, exoPlayer.currentPosition),
+                    "positionMs" to position,
                     "durationMs" to duration,
-                    "bufferedPositionMs" to max(0L, exoPlayer.bufferedPosition),
+                    "bufferedPositionMs" to bufferedPosition,
                     "isLive" to (sourceIsLive || exoPlayer.isCurrentMediaItemLive),
                     "isSeekable" to exoPlayer.isCurrentMediaItemSeekable,
                     "isAtLiveEdge" to (liveOffset != null && liveOffset <= 2_000L),
@@ -419,20 +652,23 @@ private class Media3Player(
                     "videoWidth" to lastVideoSize.width.takeIf { it > 0 },
                     "videoHeight" to lastVideoSize.height.takeIf { it > 0 },
                     "engine" to "media3",
-                    "isHardwareDecoding" to false,
-                    "decoderName" to null,
+                    "isHardwareDecoding" to isHardwareDecoding,
+                    "decoderName" to decoderName,
                     "audioTracks" to audioTracks,
                     "videoTracks" to videoTracks,
-                    "capabilities" to capabilities(),
+                    "capabilities" to capabilitySnapshot,
                     "metrics" to mapOf(
                         "openDurationMs" to openDurationMs,
                         "firstFrameDurationMs" to firstFrameDurationMs,
                         "rebufferCount" to rebufferCount,
                         "rebufferDurationMs" to rebufferDurationMs,
+                        "droppedVideoFrames" to droppedVideoFrames,
+                        "audioUnderruns" to audioUnderruns,
                         "bufferedDurationMs" to bufferedDuration,
                         "liveOffsetMs" to liveOffset,
+                        "reconnectCount" to reconnectCount,
                     ),
-                    "error" to error,
+                    "error" to (error ?: currentError),
                 ),
             ),
         )
@@ -441,21 +677,30 @@ private class Media3Player(
     fun dispose() {
         if (disposed) return
         disposed = true
+        sourceGeneration += 1
         handler.removeCallbacksAndMessages(null)
         exoPlayer.removeListener(this)
+        exoPlayer.removeAnalyticsListener(this)
         exoPlayer.clearVideoSurface(surface)
         exoPlayer.release()
+        httpClient.dispatcher.cancelAll()
+        httpClient.connectionPool.evictAll()
+        httpClient.dispatcher.executorService.shutdown()
         surface.release()
         texture.release()
     }
 
-    private fun capabilities(): Map<String, Any?> = mapOf(
-        "hardwareVideoCodecs" to hardwareVideoCodecs(),
-        "supportedFormats" to listOf(
-            "automatic", "hls", "httpFlv", "mp4", "matroska", "webm", "mpegTs", "mpegPs", "flv",
-        ),
-        "maxConcurrentVideoDecoders" to 1,
-    )
+    private fun isCurrentEvent(eventTime: AnalyticsListener.EventTime): Boolean {
+        if (eventTime.timeline.isEmpty || eventTime.windowIndex == C.INDEX_UNSET) {
+            return exoPlayer.currentMediaItem?.mediaId == sourceGeneration.toString()
+        }
+        return runCatching {
+            val item = eventTime.timeline
+                .getWindow(eventTime.windowIndex, Timeline.Window())
+                .mediaItem
+            item.mediaId == sourceGeneration.toString()
+        }.getOrDefault(false)
+    }
 }
 
 private data class AudioSelection(val group: Tracks.Group, val trackIndex: Int)
@@ -464,7 +709,41 @@ private data class NetworkConfiguration(
     val connectTimeoutMs: Int,
     val readTimeoutMs: Int,
     val maxRetries: Int,
-)
+    val baseRetryDelayMs: Long,
+    val maxRetryDelayMs: Long,
+    val maxRedirects: Int,
+) {
+    fun createHttpClient(): OkHttpClient {
+        val redirectCounts = ConcurrentHashMap<okhttp3.Call, Int>()
+        return OkHttpClient.Builder()
+            .connectTimeout(connectTimeoutMs.toLong(), TimeUnit.MILLISECONDS)
+            .readTimeout(readTimeoutMs.toLong(), TimeUnit.MILLISECONDS)
+            .addNetworkInterceptor { chain ->
+                val call = chain.call()
+                val response = try {
+                    chain.proceed(chain.request())
+                } catch (error: Throwable) {
+                    redirectCounts.remove(call)
+                    throw error
+                }
+                val isFollowableRedirect = response.code in setOf(300, 301, 302, 303, 307, 308) &&
+                    response.header("Location") != null
+                if (!isFollowableRedirect) {
+                    redirectCounts.remove(call)
+                    return@addNetworkInterceptor response
+                }
+                val followedRedirects = redirectCounts[call] ?: 0
+                if (followedRedirects >= maxRedirects) {
+                    redirectCounts.remove(call)
+                    response.close()
+                    throw ProtocolException("Redirect limit exceeded: $maxRedirects")
+                }
+                redirectCounts[call] = followedRedirects + 1
+                response
+            }
+            .build()
+    }
+}
 
 private data class PlayerConfiguration(
     val bufferMode: String,
@@ -497,7 +776,7 @@ private data class PlayerConfiguration(
                 defaults[3].coerceAtMost(minBuffer),
             )
             .setTargetBufferBytes(targetBufferBytes)
-            .setPrioritizeTimeOverSizeThresholds(true)
+            .setPrioritizeTimeOverSizeThresholds(false)
             .build()
     }
 
@@ -516,9 +795,34 @@ private data class PlayerConfiguration(
                     connectTimeoutMs = (network["connectTimeoutMs"] as? Number)?.toInt() ?: 10_000,
                     readTimeoutMs = (network["readTimeoutMs"] as? Number)?.toInt() ?: 15_000,
                     maxRetries = (network["maxRetries"] as? Number)?.toInt() ?: 3,
+                    baseRetryDelayMs = (network["baseRetryDelayMs"] as? Number)?.toLong() ?: 500L,
+                    maxRetryDelayMs = (network["maxRetryDelayMs"] as? Number)?.toLong() ?: 8_000L,
+                    maxRedirects = (network["maxRedirects"] as? Number)?.toInt() ?: 5,
                 ),
             )
         }
+    }
+}
+
+@OptIn(UnstableApi::class)
+private class YlLoadErrorHandlingPolicy(
+    private val network: NetworkConfiguration,
+    private val onRetry: (Int, Long, Exception) -> Unit,
+) : DefaultLoadErrorHandlingPolicy(network.maxRetries) {
+    override fun getRetryDelayMsFor(loadErrorInfo: androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy.LoadErrorInfo): Long {
+        val attempt = loadErrorInfo.errorCount
+        if (attempt > network.maxRetries) return C.TIME_UNSET
+        val shift = (attempt - 1).coerceIn(0, 16)
+        val exponential = network.baseRetryDelayMs.coerceAtLeast(0) * (1L shl shift)
+        val capped = minOf(network.maxRetryDelayMs.coerceAtLeast(0), exponential)
+        val jitterRange = capped / 4
+        val delayMs = if (jitterRange > 0) {
+            capped - jitterRange + Random.nextLong(jitterRange * 2 + 1)
+        } else {
+            capped
+        }
+        onRetry(attempt, delayMs, loadErrorInfo.exception)
+        return delayMs
     }
 }
 
@@ -544,9 +848,11 @@ private fun playbackErrorMap(error: PlaybackException): Map<String, Any?> {
         PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT,
         PlaybackException.ERROR_CODE_IO_UNSPECIFIED,
         -> "network"
+        PlaybackException.ERROR_CODE_DECODING_FORMAT_UNSUPPORTED,
+        PlaybackException.ERROR_CODE_DECODING_FORMAT_EXCEEDS_CAPABILITIES,
+        -> "decoderUnsupported"
         PlaybackException.ERROR_CODE_DECODER_INIT_FAILED,
         PlaybackException.ERROR_CODE_DECODING_FAILED,
-        PlaybackException.ERROR_CODE_DECODING_FORMAT_UNSUPPORTED,
         -> "decoderFailure"
         PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED,
         PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED,
@@ -613,6 +919,17 @@ private fun isHardwareCodec(info: MediaCodecInfo): Boolean {
         !name.contains("software") &&
         !name.contains("sw.")
 }
+
+private fun isHardwareCodecName(decoderName: String): Boolean = runCatching {
+    val codec = MediaCodecList(MediaCodecList.ALL_CODECS).codecInfos
+        .firstOrNull { it.name.equals(decoderName, ignoreCase = true) }
+    codec?.let(::isHardwareCodec) ?: !decoderName.lowercase().let {
+        it.startsWith("omx.google.") ||
+            it.startsWith("c2.android.") ||
+            it.contains("software") ||
+            it.contains("sw.")
+    }
+}.getOrDefault(false)
 
 @OptIn(UnstableApi::class)
 private fun hardwareOnlyCodecSelector(): MediaCodecSelector = MediaCodecSelector {
