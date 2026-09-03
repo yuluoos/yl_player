@@ -26,18 +26,42 @@ final class YlSourceRouterTests: XCTestCase {
     XCTAssertEqual(YlSourceRouter.route(source), .localMatroska)
   }
 
-  func testRemoteMkvStaysRejected() {
+  func testRemoteMkvVodRoutesToNetworkFallback() {
     let source = YlIosSourceDescriptor(
       uri: "https://media.test/movie.mkv",
       kind: "network",
       formatHint: "matroska",
       isLive: false,
+      hasHeaders: true
+    )
+
+    XCTAssertEqual(YlSourceRouter.route(source), .networkMatroska)
+  }
+
+  func testAutomaticRemoteMkvRoutesToNetworkFallback() {
+    let source = YlIosSourceDescriptor(
+      uri: "https://media.test/movie.mkv?token=secret",
+      kind: "network",
+      formatHint: "automatic",
+      isLive: false,
+      hasHeaders: false
+    )
+
+    XCTAssertEqual(YlSourceRouter.route(source), .networkMatroska)
+  }
+
+  func testRemoteMkvLiveIsRejected() {
+    let source = YlIosSourceDescriptor(
+      uri: "https://media.test/live.mkv",
+      kind: "network",
+      formatHint: "matroska",
+      isLive: true,
       hasHeaders: false
     )
 
     XCTAssertEqual(
       YlSourceRouter.route(source).rejectionCode,
-      "container.native_fallback_required"
+      "container.network_mkv_live_unsupported"
     )
   }
 

@@ -30,6 +30,7 @@
 - Modify: `packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackModels.swift`
 - Modify: `packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlSourceRouter.swift`
 - Modify: `packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlAvPlayerBackend.swift`
+- Modify: `packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlIosPlayer.swift`
 - Create: `packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackBufferBudget.swift`
 - Modify: `packages/yl_player/example/ios/RunnerTests/YlSourceRouterTests.swift`
 - Create: `packages/yl_player/example/ios/RunnerTests/YlFallbackBufferBudgetTests.swift`
@@ -40,7 +41,7 @@
 - Produces: `YlNetworkConfiguration` parsed from the existing channel map.
 - Produces: `YlFallbackBufferBudget.make(configuration:) throws` with `networkBytes`, `scheduledAudioBytes`, and `inFlightPacketBytes`.
 
-- [ ] **Step 1: Write failing route tests**
+- [x] **Step 1: Write failing route tests**
 
 Replace the old remote-MKV rejection assertion and add live/header cases:
 
@@ -73,7 +74,7 @@ func testRemoteMkvLiveIsRejected() {
 }
 ```
 
-- [ ] **Step 2: Write failing budget tests**
+- [x] **Step 2: Write failing budget tests**
 
 Add `YlFallbackBufferBudgetTests` to RunnerTests and assert exact values:
 
@@ -108,7 +109,7 @@ func testCustomBudgetBelowThreeMiBFails() {
 }
 ```
 
-- [ ] **Step 3: Run targeted XCTest and verify RED**
+- [x] **Step 3: Run targeted XCTest and verify RED**
 
 Run:
 
@@ -123,9 +124,9 @@ xcodebuild test -quiet \
 
 Expected: compile failures for `networkMatroska`, `maxBufferBytes`, and `YlFallbackBufferBudget`.
 
-- [ ] **Step 4: Implement route, configuration, and budgets**
+- [x] **Step 4: Implement route, configuration, and budgets**
 
-Add `.networkMatroska`. Route network Matroska before the generic fallback rejection, allow its headers, reject `isLive`, and leave HLS custom-header rejection unchanged. Extend `PlayerConfiguration` with:
+Add `.networkMatroska`. Route network Matroska before the generic fallback rejection, allow its headers, reject `isLive`, and leave HLS custom-header rejection unchanged. Until Task 7 connects asynchronous preparation, translate `.networkMatroska` to the existing fallback-required command error so the staged tree remains exhaustive and buildable. Extend `PlayerConfiguration` with:
 
 ```swift
 let decoderPolicy: String
@@ -135,13 +136,13 @@ let network: YlNetworkConfiguration
 
 Parse and clamp all duration values to nonnegative `Int64`, retry counts to `0...20`, redirects to `0...20`, and delays to `0...60_000` milliseconds. Implement the exact default table and 3 MiB custom floor from the spec. For custom allocation, subtract three 1 MiB floors, use integer `70/100` and `20/100` shares, and give the remainder to `inFlightPacketBytes` so the exact sum is preserved.
 
-- [ ] **Step 5: Run targeted and complete native tests**
+- [x] **Step 5: Run targeted and complete native tests**
 
 Run the targeted command from Step 3, then `sh tool/check_native_ios.sh`.
 
 Expected: all route/budget tests and existing XCTest/HLS/local-MKV integration pass.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios \

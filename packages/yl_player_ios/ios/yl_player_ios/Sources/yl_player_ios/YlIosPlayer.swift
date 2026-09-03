@@ -65,6 +65,12 @@ final class YlIosPlayer: NSObject, FlutterTexture {
       pendingOpen = .avPlayer(source)
     case .localMatroska:
       pendingOpen = .fallback(source, try YlPreparedFallback(source: source))
+    case .networkMatroska:
+      throw NativePlayerError(
+        category: "container",
+        code: "container.native_fallback_required",
+        message: "Network Matroska preparation is not connected yet."
+      )
     case let .reject(category, code, message):
       throw NativePlayerError(category: category, code: code, message: message)
     }

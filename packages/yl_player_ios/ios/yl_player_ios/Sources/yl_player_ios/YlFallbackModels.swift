@@ -11,6 +11,7 @@ struct YlIosSourceDescriptor: Equatable {
 enum YlIosSourceRoute: Equatable {
   case avPlayer
   case localMatroska
+  case networkMatroska
   case reject(category: String, code: String, message: String)
 
   var rejectionCode: String? {

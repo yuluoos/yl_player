@@ -18,19 +18,33 @@ enum YlSourceRouter {
       )
     }
 
-    if source.hasHeaders {
-      return .reject(
-        category: "container",
-        code: "container.headers_require_fallback",
-        message: "Custom iOS HTTP headers require the native fallback, which is not bundled yet."
-      )
-    }
-
     let isLocalMatroska = source.kind == "file"
       && (source.formatHint == "matroska"
         || (source.formatHint == "automatic" && url.pathExtension.lowercased() == "mkv"))
     if isLocalMatroska {
       return .localMatroska
+    }
+
+    let isNetworkMatroska = source.kind == "network"
+      && (source.formatHint == "matroska"
+        || (source.formatHint == "automatic" && url.pathExtension.lowercased() == "mkv"))
+    if isNetworkMatroska {
+      if source.isLive {
+        return .reject(
+          category: "container",
+          code: "container.network_mkv_live_unsupported",
+          message: "Network Matroska live playback is not supported."
+        )
+      }
+      return .networkMatroska
+    }
+
+    if source.hasHeaders {
+      return .reject(
+        category: "container",
+        code: "container.headers_require_fallback",
+        message: "Custom iOS HTTP headers require a compatible native fallback route."
+      )
     }
 
     if fallbackHints.contains(source.formatHint)
@@ -39,7 +53,7 @@ enum YlSourceRouter {
       return .reject(
         category: "container",
         code: "container.native_fallback_required",
-        message: "This source requires the iOS native fallback, which is not bundled yet."
+        message: "This source requires an iOS native fallback that is not implemented."
       )
     }
 

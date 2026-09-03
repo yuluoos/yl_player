@@ -158,11 +158,11 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     switch YlSourceRouter.route(descriptor) {
     case .avPlayer:
       return
-    case .localMatroska:
+    case .localMatroska, .networkMatroska:
       throw NativePlayerError(
         category: "container",
         code: "container.native_fallback_required",
-        message: "This source requires the iOS native fallback, which is not bundled yet."
+        message: "This source requires a compatible iOS native fallback."
       )
     case let .reject(category, code, message):
       throw NativePlayerError(
@@ -590,11 +590,17 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
 
 struct PlayerConfiguration {
   let bufferMode: String
+  let decoderPolicy: String
+  let maxBufferBytes: Int?
+  let network: YlNetworkConfiguration
   let positionEventIntervalMs: Int64
   let preferredForwardBufferDuration: TimeInterval
 
   init(map: [String: Any?]) {
     bufferMode = map["bufferMode"] as? String ?? "automatic"
+    decoderPolicy = map["decoderPolicy"] as? String ?? "preferHardware"
+    maxBufferBytes = int64(map["maxBufferBytes"]).map { Int(clamping: max(0, $0)) }
+    network = YlNetworkConfiguration(map: stringMap(map["network"]))
     positionEventIntervalMs = min(
       max(int64(map["positionEventIntervalMs"]) ?? 250, 100),
       2_000
@@ -604,6 +610,40 @@ struct PlayerConfiguration {
     case "stable": 30
     default: 10
     }
+  }
+}
+
+struct YlNetworkConfiguration: Equatable {
+  let connectTimeoutMs: Int64
+  let readTimeoutMs: Int64
+  let maxRetries: Int
+  let baseRetryDelayMs: Int64
+  let maxRetryDelayMs: Int64
+  let maxRedirects: Int
+
+  init(map: [String: Any?]) {
+    connectTimeoutMs = Self.clampedMilliseconds(
+      int64(map["connectTimeoutMs"]) ?? 10_000
+    )
+    readTimeoutMs = Self.clampedMilliseconds(
+      int64(map["readTimeoutMs"]) ?? 15_000
+    )
+    maxRetries = Self.clampedCount(int64(map["maxRetries"]) ?? 3)
+    baseRetryDelayMs = Self.clampedMilliseconds(
+      int64(map["baseRetryDelayMs"]) ?? 500
+    )
+    maxRetryDelayMs = Self.clampedMilliseconds(
+      int64(map["maxRetryDelayMs"]) ?? 8_000
+    )
+    maxRedirects = Self.clampedCount(int64(map["maxRedirects"]) ?? 5)
+  }
+
+  private static func clampedMilliseconds(_ value: Int64) -> Int64 {
+    min(max(value, 0), 60_000)
+  }
+
+  private static func clampedCount(_ value: Int64) -> Int {
+    Int(min(max(value, 0), 20))
   }
 }
 
