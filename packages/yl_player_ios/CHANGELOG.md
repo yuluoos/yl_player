@@ -6,7 +6,9 @@
   HLS, supported progressive media, and local files.
 - Add live/DVR state, audio selection, quality limits, metrics, and structured
   errors.
-- Reject HTTP-FLV explicitly until the native fallback is bundled.
+- Add a bounded, experimental local Matroska fallback using FFmpeg demux,
+  required-hardware VideoToolbox decode, and native AAC rendering.
+- Keep HTTP-FLV and remote fallback containers explicitly unsupported.
 - Reject custom-header sources rather than relying on undocumented AVFoundation
   request options.
 - Add source-generation isolation, one-active-decoder arbitration, playback

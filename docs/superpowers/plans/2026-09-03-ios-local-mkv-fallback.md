@@ -686,7 +686,7 @@ git commit -m "test: cover iOS local MKV playback"
 - Produces the evidence required to change documentation from
   fallback-required to local-MKV development support.
 
-- [ ] **Step 1: Run the complete automated gate on the final tree**
+- [x] **Step 1: Run the complete automated gate on the final tree**
 
 ```bash
 sh tool/check_foundation.sh
@@ -705,6 +705,11 @@ OS, codec/profile/resolution, decoder property, first-frame time, average/max
 memory, seek result, audio sync, background/resume, and 30-minute playback. H.264
 1080p30 must play with hardware reported; H.265 must either play with hardware
 reported or return the exact hardware-unavailable code.
+
+Current status (2026-09-03): the attached iOS 26.6 iPhone was discovered and
+the device build was attempted. Xcode stopped before installation because this
+Mac has no signed-in Apple Developer account or provisioning profile for the
+example bundle identifier. See `docs/verification/ios-mkv-device-matrix.md`.
 
 - [ ] **Step 3: Run repeated lifecycle and memory evidence**
 

@@ -4,6 +4,9 @@
 - Endorse the Android and iOS implementation packages.
 - Add a runnable public API example.
 - Add functional Android Media3 and iOS AVPlayer endorsed main paths.
-- Document the unbundled iOS HTTP-FLV/libavformat fallback boundary.
+- Bundle an experimental local-only iOS H.264/H.265 + AAC Matroska fallback;
+  physical-device and memory acceptance remain release gates.
+- Keep iOS HTTP-FLV, remote fallback containers, subtitles, and custom-header
+  sources outside the implemented fallback boundary.
 - Keep Dart resource teardown idempotent even when native disposal reports an
   error.

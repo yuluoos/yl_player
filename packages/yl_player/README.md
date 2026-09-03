@@ -4,9 +4,9 @@
 kernel aimed at TVBox-style Android and iOS applications.
 
 > Development status: `0.1.0-dev.1` contains functional Android Media3 and iOS
-> AVPlayer main paths. It has not completed the physical-device performance
-> matrix, and the iOS libavformat fallback is not bundled. Treat it as a
-> development release.
+> AVPlayer main paths. The tree also contains an experimental, local-only MKV
+> fallback, but its physical-device and memory acceptance matrix is incomplete.
+> Treat it as a development release, not an iOS MKV support guarantee.
 
 ## Scope
 
@@ -23,7 +23,10 @@ kernel aimed at TVBox-style Android and iOS applications.
 Android currently handles HLS, HTTP-FLV, and Media3 progressive containers.
 iOS currently handles HLS and AVFoundation-compatible progressive/local media;
 HTTP-FLV and sources requiring custom HTTP headers return structured
-fallback-required errors.
+fallback-required errors. A bundled FFmpeg-demux/VideoToolbox fallback is under
+physical-device acceptance for local H.264/H.265 + AAC MKV files. Its current
+verification status is recorded in
+the [iOS MKV verification matrix](https://github.com/yuluoos/yl_player/blob/main/docs/verification/ios-mkv-device-matrix.md).
 
 Subtitles, DRM, downloads, source-site parsing, playlists, UI controls, and
 telemetry upload are intentionally outside this package.

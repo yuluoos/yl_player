@@ -10,9 +10,9 @@ player IDs. Native players own decoder, network, surface, timers, and teardown;
 Dart receives only commands and low-rate state/events. Android uses Media3
 ExoPlayer 1.11.0 for HLS, HTTP-FLV, progressive network media, content URIs, and
 local files. iOS uses AVPlayer plus AVPlayerItemVideoOutput for HLS, supported
-progressive media, and local files. iOS HTTP-FLV remains an explicit
-`container.native_fallback_required` result until the separately vendored
-libavformat + VideoToolbox fallback is built.
+progressive media, and local files. The separate fallback milestone now vendors
+a minimized FFmpeg bridge for local Matroska; iOS HTTP-FLV and remote fallback
+containers remain explicit `container.native_fallback_required` results.
 
 ## Task 1: Native channel protocol
 
@@ -68,8 +68,10 @@ libavformat + VideoToolbox fallback is built.
 
 ## Deferred acceptance boundary
 
-The native main-path milestone does not vendor FFmpeg. iOS HTTP-FLV and
-containers outside AVFoundation remain unsupported until a reproducible XCFramework
-build, licenses, ABI slices, VideoToolbox decode, audio decode/render, A/V sync,
-and stress tests exist. Android and iOS physical-device matrices are also a
-release gate for the eventual stable `1.0.0`, not for this development release.
+The later local-MKV milestone added a reproducible XCFramework, licenses, ABI
+slices, VideoToolbox decode, native AAC render, A/V sync, and automated stress
+coverage. Physical-device playback and Instruments/memgraph evidence are still
+release gates, so the fallback remains experimental. iOS HTTP-FLV, remote
+fallback containers, and custom-header playback remain unsupported. Android and
+iOS physical-device matrices are also a release gate for the eventual stable
+`1.0.0`, not for this development release.
