@@ -9,9 +9,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player_ios_example/main.dart';
 
 void main() {
-  testWidgets('shows the iOS registration shell', (WidgetTester tester) async {
+  testWidgets('shows the iOS AVPlayer backend', (WidgetTester tester) async {
     await tester.pumpWidget(const ExampleApp());
 
-    expect(find.text('yl_player iOS registration shell'), findsOneWidget);
+    expect(find.text('yl_player iOS AVPlayer backend'), findsOneWidget);
   });
 }

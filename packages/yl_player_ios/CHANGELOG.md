@@ -2,4 +2,8 @@
 
 - Add endorsed iOS federated registration.
 - Set the minimum iOS version to 15.0 for CocoaPods and Swift Package Manager.
-- Add an honest placeholder backend pending the AVPlayer milestone.
+- Add AVPlayer playback over AVPlayerItemVideoOutput and Flutter Texture for
+  HLS, supported progressive media, and local files.
+- Add HTTP headers, live/DVR state, audio selection, quality limits, metrics,
+  and structured errors.
+- Reject HTTP-FLV explicitly until the native fallback is bundled.

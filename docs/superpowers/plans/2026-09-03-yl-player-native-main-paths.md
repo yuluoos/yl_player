@@ -40,18 +40,18 @@ VideoToolbox fallback is built.
 
 ## Task 4: iOS Dart adapter
 
-- [ ] Replace the placeholder with an equivalent typed channel player.
-- [ ] Reuse the protocol semantics and test the complete command surface.
+- [x] Replace the placeholder with an equivalent typed channel player.
+- [x] Reuse the protocol semantics and test the complete command surface.
 
 ## Task 5: iOS AVPlayer backend
 
-- [ ] Register AVPlayerItemVideoOutput as a FlutterTexture without Dart frames.
-- [ ] Support HTTP headers, HLS, supported progressive media, and local files.
-- [ ] Publish status, timing, live/DVR, dimensions, tracks, and errors.
-- [ ] Reject HTTP-FLV explicitly for fallback routing.
-- [ ] Tear down KVO, notifications, periodic observers, display link, player,
+- [x] Register AVPlayerItemVideoOutput as a FlutterTexture without Dart frames.
+- [x] Support HTTP headers, HLS, supported progressive media, and local files.
+- [x] Publish status, timing, live/DVR, dimensions, tracks, and errors.
+- [x] Reject HTTP-FLV explicitly for fallback routing.
+- [x] Tear down KVO, notifications, periodic observers, display link, player,
   output, and texture idempotently.
-- [ ] Compile the iOS 15 Simulator example.
+- [x] Compile the iOS 15 Simulator example.
 
 ## Task 6: Integration and release truth
 

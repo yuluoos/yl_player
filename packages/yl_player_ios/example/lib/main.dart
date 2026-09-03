@@ -9,7 +9,7 @@ class ExampleApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       home: Scaffold(
-        body: Center(child: Text('yl_player iOS registration shell')),
+        body: Center(child: Text('yl_player iOS AVPlayer backend')),
       ),
     );
   }
