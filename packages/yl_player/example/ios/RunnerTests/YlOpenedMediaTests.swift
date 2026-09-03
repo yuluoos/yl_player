@@ -13,6 +13,7 @@ final class YlOpenedMediaTests: XCTestCase {
     let bytes: Data
     let probe: CancellationProbe
     private var offset = 0
+    private var cancelled = false
 
     init(bytes: Data, probe: CancellationProbe = CancellationProbe()) {
       self.bytes = bytes
@@ -42,7 +43,11 @@ final class YlOpenedMediaTests: XCTestCase {
       return offset
     }
 
-    func cancel() { probe.count += 1 }
+    func cancel() {
+      guard !cancelled else { return }
+      cancelled = true
+      probe.count += 1
+    }
     func handleMemoryWarning() {}
   }
 
@@ -94,6 +99,23 @@ final class YlOpenedMediaTests: XCTestCase {
 
     XCTAssertEqual(probe.count, 1)
     XCTAssertNil(weakSource)
+  }
+
+  func testCancelInputWakesSourceBeforeContextIsClosed() throws {
+    let probe = CancellationProbe()
+    let source = MemoryByteSource(
+      bytes: try Data(contentsOf: fixture()),
+      probe: probe
+    )
+    let media = try YlOpenedMedia(byteSource: source)
+
+    media.cancelInput()
+    XCTAssertEqual(probe.count, 1)
+    XCTAssertNotNil(media.context)
+
+    media.close()
+    XCTAssertEqual(probe.count, 1)
+    XCTAssertNil(media.context)
   }
 
   func testHundredOpenReadCloseCyclesReleaseEveryPacket() throws {

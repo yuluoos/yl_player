@@ -6,6 +6,18 @@ import YlFFmpegBridge
 final class YlFallbackLifecycleTests: XCTestCase {
   private struct ExpectedFailure: Error {}
 
+  func testTeardownCancelsInputBeforeJoiningWorker() {
+    var events = [String]()
+    let transaction = YlFallbackTeardownTransaction(
+      cancelInput: { events.append("cancelInput") },
+      joinAndRelease: { events.append("joinAndRelease") }
+    )
+
+    transaction.run()
+
+    XCTAssertEqual(events, ["cancelInput", "joinAndRelease"])
+  }
+
   func testSeekRunsTheOrderedPipelineTransaction() throws {
     var events: [String] = []
     var generation = UInt64(7)

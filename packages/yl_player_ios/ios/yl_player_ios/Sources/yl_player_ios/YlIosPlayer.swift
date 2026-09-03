@@ -9,17 +9,12 @@ final class YlIosPlayer: NSObject, FlutterTexture {
   }
   var isActive: Bool { slot.current.isActive }
 
-  private enum PendingOpen {
-    case avPlayer([String: Any?])
-    case fallback([String: Any?], YlPreparedFallback)
-  }
-
   private let textures: FlutterTextureRegistry
   private let configuration: PlayerConfiguration
   private let emit: ([String: Any?]) -> Void
   private let avBackend: YlAvPlayerBackend
   private let slot: YlBackendSlot
-  private var pendingOpen: PendingOpen?
+  private let openCoordinator = YlOpenCoordinator()
   private var disposed = false
 
   init(
@@ -43,46 +38,65 @@ final class YlIosPlayer: NSObject, FlutterTexture {
     super.init()
   }
 
-  func validateOpen(_ source: [String: Any?]) throws {
+  func beginOpen(
+    _ source: [String: Any?],
+    didCommit: @escaping () -> Void,
+    completion: @escaping (Result<Void, NativePlayerError>) -> Void
+  ) {
     guard !disposed else {
-      throw NativePlayerError(
+      completion(.failure(NativePlayerError(
         category: "resource",
         code: "ios.player_disposed",
         message: "The iOS player has been disposed."
-      )
+      )))
+      return
     }
-    let headers = stringMap(source["headers"]).compactMapValues { $0 as? String }
-    let descriptor = YlIosSourceDescriptor(
-      uri: source["uri"] as? String ?? "",
-      kind: source["kind"] as? String ?? "",
-      formatHint: source["formatHint"] as? String ?? "automatic",
-      isLive: source["isLive"] as? Bool ?? false,
-      hasHeaders: !headers.isEmpty
+    openCoordinator.begin(
+      prepare: { [weak self] token in
+        guard let self else { throw YlOpenCancellationToken.cancellationError() }
+        try token.throwIfCancelled()
+        let headers = stringMap(source["headers"]).compactMapValues { $0 as? String }
+        let descriptor = YlIosSourceDescriptor(
+          uri: source["uri"] as? String ?? "",
+          kind: source["kind"] as? String ?? "",
+          formatHint: source["formatHint"] as? String ?? "automatic",
+          isLive: source["isLive"] as? Bool ?? false,
+          hasHeaders: !headers.isEmpty
+        )
+        switch YlSourceRouter.route(descriptor) {
+        case .avPlayer:
+          try self.avBackend.validateOpen(source)
+          return .avPlayer(source: source)
+        case .localMatroska, .networkMatroska:
+          return .fallback(
+            source: source,
+            prepared: try YlPreparedFallback(
+              source: source,
+              configuration: self.configuration,
+              cancellationToken: token
+            )
+          )
+        case let .reject(category, code, message):
+          throw NativePlayerError(category: category, code: code, message: message)
+        }
+      },
+      commit: { [weak self] candidate in
+        guard let self, !self.disposed else {
+          throw NativePlayerError(
+            category: "resource",
+            code: "ios.player_disposed",
+            message: "The iOS player has been disposed."
+          )
+        }
+        try self.commit(candidate)
+        didCommit()
+      },
+      completion: completion
     )
-    switch YlSourceRouter.route(descriptor) {
-    case .avPlayer:
-      try avBackend.validateOpen(source)
-      pendingOpen = .avPlayer(source)
-    case .localMatroska:
-      pendingOpen = .fallback(
-        source,
-        try YlPreparedFallback(source: source, configuration: configuration)
-      )
-    case .networkMatroska:
-      throw NativePlayerError(
-        category: "container",
-        code: "container.native_fallback_required",
-        message: "Network Matroska preparation is not connected yet."
-      )
-    case let .reject(category, code, message):
-      throw NativePlayerError(category: category, code: code, message: message)
-    }
   }
 
   func activate() throws {
-    if pendingOpen == nil {
-      try slot.current.activate()
-    }
+    try slot.current.activate()
   }
 
   func deactivate() {
@@ -90,19 +104,18 @@ final class YlIosPlayer: NSObject, FlutterTexture {
   }
 
   func command(name: String, arguments: [String: Any?]) throws {
-    guard name == "open" else {
-      try slot.current.command(name: name, arguments: arguments)
-      return
-    }
-    guard let pendingOpen else {
+    guard name != "open" else {
       throw NativePlayerError(
         category: "internal",
         code: "internal.fallback_invariant",
-        message: "Open was not validated before execution."
+        message: "Open commands must use asynchronous preparation."
       )
     }
-    self.pendingOpen = nil
-    switch pendingOpen {
+    try slot.current.command(name: name, arguments: arguments)
+  }
+
+  private func commit(_ candidate: YlPreparedOpen) throws {
+    switch candidate {
     case let .avPlayer(source):
       if slot.current !== avBackend {
         let previous = try slot.replace { avBackend }
@@ -138,7 +151,7 @@ final class YlIosPlayer: NSObject, FlutterTexture {
   func dispose() {
     guard !disposed else { return }
     disposed = true
-    pendingOpen = nil
+    openCoordinator.cancelCurrent()
     avBackend.textureId = -1
     let current = slot.current
     slot.dispose()

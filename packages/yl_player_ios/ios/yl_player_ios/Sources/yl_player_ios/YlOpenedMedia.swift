@@ -135,7 +135,8 @@ final class YlOpenedMedia {
     recipe: YlFallbackSourceRecipe,
     networkBufferBytes: Int = 8 * 1024 * 1024,
     sessionConfiguration: URLSessionConfiguration = .ephemeral,
-    onRetry: YlNetworkByteSource.RetryCallback? = nil
+    onRetry: YlNetworkByteSource.RetryCallback? = nil,
+    onSourceCreated: ((YlByteSource) -> Void)? = nil
   ) throws {
     switch recipe {
     case let .local(path):
@@ -154,6 +155,7 @@ final class YlOpenedMedia {
         sessionConfiguration: sessionConfiguration,
         onRetry: onRetry
       )
+      onSourceCreated?(source)
       try self.init(byteSource: source, recipe: recipe)
     }
   }
@@ -227,6 +229,11 @@ final class YlOpenedMedia {
       )
     }
     return positionUs
+  }
+
+  func cancelInput() {
+    let source = lock.withLock { callbackBox?.source }
+    source?.cancel()
   }
 
   func close() {

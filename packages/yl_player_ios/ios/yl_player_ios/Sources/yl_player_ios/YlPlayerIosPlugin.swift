@@ -99,13 +99,28 @@ public final class YlPlayerIosPlugin: NSObject, FlutterPlugin, FlutterStreamHand
       )))
       return
     }
+    let commandName = root["name"] as? String ?? ""
+    let commandArguments = stringMap(root["arguments"])
+    if commandName == "open" {
+      player.beginOpen(
+        stringMap(commandArguments["source"]),
+        didCommit: { [weak self, weak player] in
+          guard let self, let player else { return }
+          self.players.values.filter { $0 !== player }.forEach { $0.deactivate() }
+        },
+        completion: { openResult in
+          switch openResult {
+          case .success:
+            result(nil)
+          case let .failure(error):
+            result(flutterError(error))
+          }
+        }
+      )
+      return
+    }
     do {
-      let commandName = root["name"] as? String ?? ""
-      let commandArguments = stringMap(root["arguments"])
-      if commandName == "open" {
-        try player.validateOpen(stringMap(commandArguments["source"]))
-      }
-      if commandName == "open" || commandName == "play" {
+      if commandName == "play" {
         players.values.filter { $0 !== player }.forEach { $0.deactivate() }
         try player.activate()
       }

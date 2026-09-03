@@ -107,6 +107,28 @@ final class YlFallbackBackendTests: XCTestCase {
     XCTAssertEqual(ylf_debug_outstanding_packet_count(), 0)
   }
 
+  func testDiscardedPreparedFallbackCannotTransferItsMedia() throws {
+    let fixture = try XCTUnwrap(
+      Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv")
+    )
+    let prepared = try YlPreparedFallback(
+      source: [
+        "uri": fixture.absoluteString,
+        "kind": "file",
+        "formatHint": "matroska",
+        "isLive": false,
+      ],
+      requireHardwareProbe: false
+    )
+
+    prepared.discard()
+    prepared.discard()
+
+    XCTAssertThrowsError(try prepared.takeMedia()) { error in
+      XCTAssertEqual((error as? NativePlayerError)?.code, "internal.fallback_invariant")
+    }
+  }
+
   func testInFlightPacketBudgetRejectsOversizedCompressedPacket() throws {
     let budget = try YlFallbackBufferBudget.make(configuration: PlayerConfiguration(map: [
       "bufferMode": "lowLatency",

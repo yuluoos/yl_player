@@ -30,6 +30,16 @@ struct YlFallbackLifecycleTransaction {
   }
 }
 
+struct YlFallbackTeardownTransaction {
+  let cancelInput: () -> Void
+  let joinAndRelease: () -> Void
+
+  func run() {
+    cancelInput()
+    joinAndRelease()
+  }
+}
+
 final class YlPostSeekGate {
   private let lock = NSLock()
   private var minimumVideoPtsUs: Int64?
@@ -74,8 +84,10 @@ final class YlPreparedFallback {
     source: [String: Any?],
     requireHardwareProbe: Bool = true,
     configuration: PlayerConfiguration = PlayerConfiguration(map: [:]),
-    sessionConfiguration: URLSessionConfiguration = .ephemeral
+    sessionConfiguration: URLSessionConfiguration = .ephemeral,
+    cancellationToken: YlOpenCancellationToken? = nil
   ) throws {
+    try cancellationToken?.throwIfCancelled()
     guard let uri = source["uri"] as? String,
           let url = URL(string: uri) else {
       throw NativePlayerError(
@@ -105,8 +117,12 @@ final class YlPreparedFallback {
     let opened = try YlOpenedMedia(
       recipe: sourceRecipe,
       networkBufferBytes: budget.networkBytes,
-      sessionConfiguration: sessionConfiguration
+      sessionConfiguration: sessionConfiguration,
+      onSourceCreated: { source in
+        cancellationToken?.onCancel { source.cancel() }
+      }
     )
+    try cancellationToken?.throwIfCancelled()
     mediaInfo = opened.info
     guard let validContext = opened.context else {
       opened.close()
@@ -211,8 +227,13 @@ final class YlPreparedFallback {
     return openedMedia
   }
 
-  deinit {
+  func discard() {
     openedMedia?.close()
+    openedMedia = nil
+  }
+
+  deinit {
+    discard()
   }
 }
 
@@ -394,15 +415,20 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     displayLink = nil
     audioRenderer?.pause()
     mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
-    worker.sync {
-      pendingAudioPacket = nil
-      decoder?.dispose()
-      decoder = nil
-      audioRenderer?.dispose()
-      audioRenderer = nil
-      openedMedia?.close()
-      openedMedia = nil
-    }
+    YlFallbackTeardownTransaction(
+      cancelInput: { [self] in openedMedia?.cancelInput() },
+      joinAndRelease: { [self] in
+        worker.sync {
+          pendingAudioPacket = nil
+          decoder?.dispose()
+          decoder = nil
+          audioRenderer?.dispose()
+          audioRenderer = nil
+          openedMedia?.close()
+          openedMedia = nil
+        }
+      }
+    ).run()
     frameScheduler.flush(generation: currentGeneration)
     stateLock.withLock {
       currentPixelBuffer = nil
@@ -550,16 +576,21 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     stateLock.unlock()
     displayLink?.invalidate()
     displayLink = nil
-    worker.sync {
-      pendingAudioPacket = nil
-      decoder?.dispose()
-      decoder = nil
-      audioRenderer?.dispose()
-      audioRenderer = nil
-      frameScheduler.dispose()
-      openedMedia?.close()
-      openedMedia = nil
-    }
+    YlFallbackTeardownTransaction(
+      cancelInput: { [self] in openedMedia?.cancelInput() },
+      joinAndRelease: { [self] in
+        worker.sync {
+          pendingAudioPacket = nil
+          decoder?.dispose()
+          decoder = nil
+          audioRenderer?.dispose()
+          audioRenderer = nil
+          frameScheduler.dispose()
+          openedMedia?.close()
+          openedMedia = nil
+        }
+      }
+    ).run()
     stateLock.withLock { currentPixelBuffer = nil }
   }
 
@@ -687,14 +718,19 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       return
     }
     guard result == 0, let ownedPacket = packet else {
-      stateLock.withLock { pumping = false }
+      let shouldReport = stateLock.withLock { () -> Bool in
+        pumping = false
+        return !disposed && active && generation == packetGeneration
+      }
       ylf_packet_release(&packet)
-      fail(NativePlayerError(
-        category: "container",
-        code: "container.mkv_malformed",
-        message: "The Matroska packet stream is malformed.",
-        diagnostic: "YlFFmpegBridge result \(result)"
-      ))
+      if shouldReport {
+        fail(NativePlayerError(
+          category: "container",
+          code: "container.mkv_malformed",
+          message: "The Matroska packet stream is malformed.",
+          diagnostic: "YlFFmpegBridge result \(result)"
+        ))
+      }
       return
     }
 
