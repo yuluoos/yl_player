@@ -24,6 +24,7 @@
 		A7000001294A63AB00263BE5 /* YlFallbackBufferBudgetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7000011294A618700263BE5 /* YlFallbackBufferBudgetTests.swift */; };
 		A7100001294A63AB00263BE5 /* YlByteRingBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7100011294A618700263BE5 /* YlByteRingBufferTests.swift */; };
 		A7200001294A63AB00263BE5 /* YlNetworkRequestPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7200011294A618700263BE5 /* YlNetworkRequestPolicyTests.swift */; };
+		A7300001294A63AB00263BE5 /* YlNetworkByteSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7300011294A618700263BE5 /* YlNetworkByteSourceTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		7884E8682EC3CC0700C636F2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */; };
@@ -75,6 +76,7 @@
 		A7000011294A618700263BE5 /* YlFallbackBufferBudgetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlFallbackBufferBudgetTests.swift; sourceTree = "<group>"; };
 		A7100011294A618700263BE5 /* YlByteRingBufferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlByteRingBufferTests.swift; sourceTree = "<group>"; };
 		A7200011294A618700263BE5 /* YlNetworkRequestPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlNetworkRequestPolicyTests.swift; sourceTree = "<group>"; };
+		A7300011294A618700263BE5 /* YlNetworkByteSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlNetworkByteSourceTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				A7000011294A618700263BE5 /* YlFallbackBufferBudgetTests.swift */,
 				A7100011294A618700263BE5 /* YlByteRingBufferTests.swift */,
 				A7200011294A618700263BE5 /* YlNetworkRequestPolicyTests.swift */,
+				A7300011294A618700263BE5 /* YlNetworkByteSourceTests.swift */,
 				B20C0020294A618700263BE5 /* Fixtures */,
 			);
 			path = RunnerTests;
@@ -342,6 +345,7 @@
 				A7000001294A63AB00263BE5 /* YlFallbackBufferBudgetTests.swift in Sources */,
 				A7100001294A63AB00263BE5 /* YlByteRingBufferTests.swift in Sources */,
 				A7200001294A63AB00263BE5 /* YlNetworkRequestPolicyTests.swift in Sources */,
+				A7300001294A63AB00263BE5 /* YlNetworkByteSourceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

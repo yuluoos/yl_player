@@ -382,7 +382,7 @@ git commit -m "feat: define secure iOS MKV HTTP policy"
 - Consumes: `YlByteRingBuffer`, `YlNetworkRequestPolicy`, and `YlNetworkConfiguration`.
 - Produces retry callback `(attempt: Int, delayMs: Int64, error: NativePlayerError) -> Void`.
 
-- [ ] **Step 1: Write a deterministic URLProtocol harness and failing tests**
+- [x] **Step 1: Write a deterministic URLProtocol harness and failing tests**
 
 The harness records requests and scripts response headers, chunks, delays, and failures. Tests must cover:
 
@@ -404,21 +404,21 @@ func testPartialFailureResumesAtExactOffsetWhenRangeWasConfirmed() throws {
 
 Also test sequential 200 EOF, no retry after partial sequential failure, read timeout reset after each chunk, retry exhaustion, 408/429/5xx eligibility, cancellation waking a blocked read, validator change rejection, capacity never exceeded, and sensitive-data-free diagnostics.
 
-- [ ] **Step 2: Run targeted XCTest and verify RED**
+- [x] **Step 2: Run targeted XCTest and verify RED**
 
 Expected: compile failure because `YlNetworkByteSource` is absent.
 
-- [ ] **Step 3: Implement the URLSession state machine**
+- [x] **Step 3: Implement the URLSession state machine**
 
 Use a private serial delegate queue distinct from the FFmpeg worker. Guard active task, attempt, requested offset, response metadata, validator, terminal state, and timer generation with one lock. Feed chunks through blocking `YlByteRingBuffer.write`, which copies each callback chunk incrementally without exceeding the ring ceiling; the serial delegate queue naturally applies backpressure while full. Use generation-tagged `DispatchSourceTimer` instances for connect/read deadlines and retry delay. Every callback verifies source generation before mutation.
 
 On transient failure, reconnect only at the exact contiguous end offset and only after a 206 established random access. Emit retry before scheduling. On cancel, cancel task/timers/session, broadcast the ring, and prevent future retries. Make `cancel` idempotent.
 
-- [ ] **Step 4: Run targeted tests under Thread Sanitizer configuration**
+- [x] **Step 4: Run targeted tests under Thread Sanitizer configuration**
 
 Run the normal targeted XCTest command. Then run the same test class with `-enableThreadSanitizer YES` and assert zero races, hangs, or timeout failures.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlNetworkByteSource.swift \
