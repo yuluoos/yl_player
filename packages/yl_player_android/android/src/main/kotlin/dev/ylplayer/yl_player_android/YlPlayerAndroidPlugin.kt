@@ -27,7 +27,6 @@ import androidx.media3.common.VideoSize
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.okhttp.OkHttpDataSource
-import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
@@ -217,8 +216,16 @@ private class Media3Player(
 ) : Player.Listener, AnalyticsListener {
     private val handler = Handler(Looper.getMainLooper())
     private val surface = Surface(texture.surfaceTexture())
+    private val deviceProfile = YlAndroidDeviceProfile.collect(context)
     private val trackSelector = DefaultTrackSelector(context)
     private val httpClient = configuration.network.createHttpClient()
+    private val loadControl = YlAdaptiveLoadControl(
+        YlPlaybackPolicy.effectiveBufferProfile(
+            deviceProfile.tier,
+            YlSourceClass.NETWORK_VOD,
+            configuration.bufferRequest(),
+        ),
+    )
     private val exoPlayer: ExoPlayer
     private val audioSelections = mutableMapOf<String, AudioSelection>()
     private var sourceIsLive = false
@@ -268,7 +275,7 @@ private class Media3Player(
             .setMediaCodecSelector(YlHardwareCodecSelector())
         exoPlayer = ExoPlayer.Builder(context, renderersFactory)
             .setTrackSelector(trackSelector)
-            .setLoadControl(configuration.createLoadControl())
+            .setLoadControl(loadControl)
             .build()
         trackSelector.parameters = trackSelector.buildUponParameters()
             .setTrackTypeDisabled(C.TRACK_TYPE_TEXT, true)
@@ -381,6 +388,19 @@ private class Media3Player(
         validateOpen(source)
         val uriString = source["uri"] as String
         sourceIsLive = source["isLive"] == true
+        val sourceClass = YlPlaybackPolicy.classifySource(
+            kind = source["kind"] as? String ?: "network",
+            isLive = sourceIsLive,
+            formatHint = source["formatHint"] as? String ?: "automatic",
+            uri = uriString,
+        )
+        loadControl.updateProfile(
+            YlPlaybackPolicy.effectiveBufferProfile(
+                deviceProfile.tier,
+                sourceClass,
+                configuration.bufferRequest(),
+            ),
+        )
         active = true
         savedPositionMs = 0
         resumeAtLiveEdge = false
@@ -751,31 +771,12 @@ private data class PlayerConfiguration(
     val positionEventIntervalMs: Long,
     val network: NetworkConfiguration,
 ) {
-    @OptIn(UnstableApi::class)
-    fun createLoadControl(): DefaultLoadControl {
-        val defaults = when (bufferMode) {
-            "lowLatency" -> intArrayOf(1_000, 5_000, 300, 800)
-            "stable" -> intArrayOf(15_000, 50_000, 2_500, 5_000)
-            else -> intArrayOf(5_000, 20_000, 1_000, 2_000)
-        }
-        val minBuffer = minBufferMs ?: defaults[0]
-        val maxBuffer = max(maxBufferMs ?: defaults[1], minBuffer)
-        val targetBufferBytes = maxBufferBytes ?: when (bufferMode) {
-            "lowLatency" -> 24 * 1024 * 1024
-            "stable" -> 96 * 1024 * 1024
-            else -> 48 * 1024 * 1024
-        }
-        return DefaultLoadControl.Builder()
-            .setBufferDurationsMs(
-                minBuffer,
-                maxBuffer,
-                defaults[2].coerceAtMost(minBuffer),
-                defaults[3].coerceAtMost(minBuffer),
-            )
-            .setTargetBufferBytes(targetBufferBytes)
-            .setPrioritizeTimeOverSizeThresholds(false)
-            .build()
-    }
+    fun bufferRequest() = YlBufferRequest(
+        mode = bufferMode,
+        minBufferMs = minBufferMs,
+        maxBufferMs = maxBufferMs,
+        maxBufferBytes = maxBufferBytes,
+    )
 
     companion object {
         fun from(map: Map<String, Any?>): PlayerConfiguration {

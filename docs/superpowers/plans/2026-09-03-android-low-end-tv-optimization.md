@@ -370,7 +370,7 @@ git commit -m "feat: require Android hardware video decoding"
 - Produces: `YlAdaptiveLoadControl(profile)`, `updateProfile(profile)`, `shrinkForMemoryPressure()`, `restoreProfile()`, and `targetBufferBytes`.
 - Consumes: `YlBufferProfile` from Task 2.
 
-- [ ] **Step 1: Write failing load-decision tests**
+- [x] **Step 1: Write failing load-decision tests**
 
 Test the pure decision boundary used by LoadControl:
 
@@ -383,13 +383,13 @@ assertFalse(shouldContinueLoading(bufferedMs = 8_000, allocatedBytes = profile.t
 Also test playback-start thresholds, 25% shrink, restore, and repeated shrink
 idempotence within one pressure episode.
 
-- [ ] **Step 2: Run the focused test and verify failure**
+- [x] **Step 2: Run the focused test and verify failure**
 
 ```bash
 ./gradlew :yl_player_android:testDebugUnitTest --tests '*YlAdaptiveLoadControlTest'
 ```
 
-- [ ] **Step 3: Implement LoadControl with one allocator**
+- [x] **Step 3: Implement LoadControl with one allocator**
 
 Implement `LoadControl` with a stable `DefaultAllocator(true,
 C.DEFAULT_BUFFER_SEGMENT_SIZE)`. `updateProfile` updates the volatile profile and
@@ -412,14 +412,14 @@ Start thresholds are `min(1_000, minBufferMs)` initially and
 `min(2_000, minBufferMs)` after rebuffer. Scale buffered duration by playback
 speed. Return a zero back buffer and never retain from keyframes.
 
-- [ ] **Step 4: Wire one LoadControl instance into Media3**
+- [x] **Step 4: Wire one LoadControl instance into Media3**
 
 Replace `PlayerConfiguration.createLoadControl()` with a player-owned
 `YlAdaptiveLoadControl`. On every `open`, classify the source, derive the
 effective profile, call `updateProfile` before `prepare`, and emit the effective
 target in metrics.
 
-- [ ] **Step 5: Run tests and compile**
+- [x] **Step 5: Run tests and compile**
 
 ```bash
 ./gradlew :yl_player_android:testDebugUnitTest --tests '*YlAdaptiveLoadControlTest' --tests '*YlPlaybackPolicyTest'
@@ -428,7 +428,7 @@ target in metrics.
 
 Expected: pass.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add packages/yl_player_android/android/src
