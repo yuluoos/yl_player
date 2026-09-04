@@ -686,7 +686,7 @@ git add packages/yl_player packages/yl_player_ios docs
 git commit -m "docs: describe experimental iOS network MKV VOD"
 ```
 
-- [ ] **Step 4: Run clean publication checks**
+- [x] **Step 4: Run clean publication checks**
 
 Run:
 
