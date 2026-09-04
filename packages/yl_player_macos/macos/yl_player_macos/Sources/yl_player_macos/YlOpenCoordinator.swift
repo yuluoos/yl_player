@@ -128,6 +128,12 @@ final class YlOpenCoordinator {
     finish(operation, result: .failure(YlOpenCancellationToken.cancellationError()))
   }
 
+  func canBeginRecovery(after operationGeneration: UInt64) -> Bool {
+    lock.withLock {
+      generation == operationGeneration && current == nil
+    }
+  }
+
   private func commit(
     _ candidate: YlPreparedOpen,
     for operation: Operation,

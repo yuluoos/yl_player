@@ -3,6 +3,7 @@ import Foundation
 
 protocol YlPlaybackBackend: AnyObject {
   var isActive: Bool { get }
+  var requiresExternalRollbackActivation: Bool { get }
   func activate() throws
   func quiesceForReplacement()
   func deactivate()
@@ -13,6 +14,7 @@ protocol YlPlaybackBackend: AnyObject {
 }
 
 extension YlPlaybackBackend {
+  var requiresExternalRollbackActivation: Bool { false }
   func quiesceForReplacement() { deactivate() }
 }
 
@@ -20,6 +22,7 @@ final class YlBackendSlot {
   private(set) var current: YlPlaybackBackend
   private(set) var generation: UInt64 = 1
   private var disposed = false
+  private var rollbackRequiresExternalActivation = false
 
   init(initial: YlPlaybackBackend) {
     current = initial
@@ -34,8 +37,10 @@ final class YlBackendSlot {
         message: "The macOS player has been disposed."
       )
     }
+    rollbackRequiresExternalActivation = false
     let previous = current
-    previous.quiesceForReplacement()
+    let previousWasActive = previous.isActive
+    if previousWasActive { previous.quiesceForReplacement() }
     do {
       let candidate = try prepare()
       do {
@@ -48,9 +53,24 @@ final class YlBackendSlot {
       generation &+= 1
       return previous
     } catch {
-      try? previous.activate()
+      if previousWasActive {
+        if previous.requiresExternalRollbackActivation {
+          rollbackRequiresExternalActivation = true
+        } else {
+          do {
+            try previous.activate()
+          } catch {
+            rollbackRequiresExternalActivation = true
+          }
+        }
+      }
       throw error
     }
+  }
+
+  func takeRollbackRequiresExternalActivation() -> Bool {
+    defer { rollbackRequiresExternalActivation = false }
+    return rollbackRequiresExternalActivation
   }
 
   func accepts(generation: UInt64) -> Bool {

@@ -138,8 +138,37 @@ enum YlFallbackReactivationPolicy {
     YlFallbackResumeState(
       positionUs: isSeekable ? max(0, savedPositionUs) : 0,
       selectedAudioStreamIndex: selectedAudioStreamIndex,
-      shouldPlay: isSeekable && shouldPlay
+      shouldPlay: shouldPlay
     )
+  }
+}
+
+enum YlFallbackRestorationPolicy {
+  static func shouldReport(
+    error: NativePlayerError,
+    isCurrentBackend: Bool
+  ) -> Bool {
+    isCurrentBackend && error.category != "cancelled"
+  }
+}
+
+enum YlRestorationCommandPolicy {
+  static func supersedesRestoration(_ name: String) -> Bool {
+    switch name {
+    case "play", "pause":
+      return true
+    default:
+      return false
+    }
+  }
+
+  static func defersUntilRestored(_ name: String) -> Bool {
+    switch name {
+    case "seekTo", "seekToLiveEdge", "selectAudioTrack":
+      return true
+    default:
+      return false
+    }
   }
 }
 

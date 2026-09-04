@@ -3,6 +3,12 @@ import FlutterMacOS
 import Foundation
 
 final class YlMacosPlayer: NSObject, FlutterTexture {
+  private struct DeferredRestorationCommand {
+    let name: String
+    let arguments: [String: Any?]
+    let completion: (Result<Void, NativePlayerError>) -> Void
+  }
+
   let playerId: Int64
   var textureId: Int64 = -1 {
     didSet { avBackend.textureId = textureId }
@@ -18,7 +24,13 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
   private let commandCoordinator = YlAsyncCommandCoordinator()
   private var lastCommittedSource: [String: Any?]?
   private(set) var lastQualityConstraint: [String: Any?] = [:]
+  private var lastVolume: Float = 1
+  private var lastPlaybackSpeed: Float = 1
   private var disposed = false
+  private var hardwareRollbackPlaybackIntent: Bool?
+  private var restorationGeneration: UInt64 = 0
+  private var activeRestorationGeneration: UInt64?
+  private var deferredRestorationCommands = [DeferredRestorationCommand]()
 
   init(
     playerId: Int64,
@@ -63,7 +75,11 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
       )))
       return
     }
-    openCoordinator.begin(
+    restorationGeneration &+= 1
+    activeRestorationGeneration = nil
+    cancelDeferredRestorationCommands()
+    var openGeneration: UInt64 = 0
+    openGeneration = openCoordinator.begin(
       prepare: { [weak self] token in
         guard let self else { throw YlOpenCancellationToken.cancellationError() }
         try token.throwIfCancelled()
@@ -93,12 +109,31 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
             message: "The macOS player has been disposed."
           )
         }
+        let rollbackPlaybackIntent = self.currentPlaybackIntent
         willCommit(candidate.requiresHardwareDecoderLease)
         do {
           try self.commit(candidate, reactivating: false)
           didCommit()
         } catch {
+          let requiresExternalRollback = self.slot
+            .takeRollbackRequiresExternalActivation()
           didRollback()
+          if requiresExternalRollback {
+            let failedOpenGeneration = openGeneration
+            let scheduledRestorationGeneration = self.restorationGeneration
+            DispatchQueue.main.async { [weak self] in
+              guard let self,
+                    self.restorationGeneration == scheduledRestorationGeneration,
+                    self.openCoordinator.canBeginRecovery(
+                      after: failedOpenGeneration
+                    ) else { return }
+              self.restoreAfterHardwareDecoderRollback(
+                forcePlay: rollbackPlaybackIntent
+              )
+            }
+          } else if rollbackPlaybackIntent, self.slot.current.isActive {
+            try? self.slot.current.command(name: "play", arguments: [:])
+          }
           throw error
         }
       },
@@ -200,12 +235,18 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
   }
 
   func deactivate() {
+    restorationGeneration &+= 1
+    activeRestorationGeneration = nil
+    cancelDeferredRestorationCommands()
     commandCoordinator.cancelCurrent()
     openCoordinator.cancelCurrent()
     slot.current.deactivate()
   }
 
   func handleMemoryWarning() {
+    restorationGeneration &+= 1
+    activeRestorationGeneration = nil
+    cancelDeferredRestorationCommands()
     commandCoordinator.cancelCurrent()
     openCoordinator.cancelCurrent()
     if let fallback = slot.current as? YlFallbackBackend {
@@ -220,6 +261,24 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
     arguments: [String: Any?],
     completion: @escaping (Result<Void, NativePlayerError>) -> Void
   ) {
+    if activeRestorationGeneration != nil,
+       YlRestorationCommandPolicy.defersUntilRestored(name) {
+      deferredRestorationCommands.append(DeferredRestorationCommand(
+        name: name,
+        arguments: arguments,
+        completion: completion
+      ))
+      return
+    }
+    if YlRestorationCommandPolicy.supersedesRestoration(name) {
+      let hadActiveRestoration = activeRestorationGeneration != nil
+      restorationGeneration &+= 1
+      activeRestorationGeneration = nil
+      if hadActiveRestoration {
+        cancelDeferredRestorationCommands()
+        openCoordinator.cancelCurrent()
+      }
+    }
     guard name != "open" else {
       completion(.failure(NativePlayerError(
         category: "internal",
@@ -244,8 +303,15 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
     }
     let commandCompletion: (Result<Void, NativePlayerError>) -> Void = {
       [weak self] result in
-      if case .success = result, let qualityConstraint {
-        self?.lastQualityConstraint = qualityConstraint
+      if case .success = result {
+        if let qualityConstraint {
+          self?.lastQualityConstraint = qualityConstraint
+        }
+        if name == "setVolume" {
+          self?.lastVolume = float(arguments["volume"]) ?? 1
+        } else if name == "setPlaybackSpeed" {
+          self?.lastPlaybackSpeed = float(arguments["speed"]) ?? 1
+        }
       }
       completion(result)
     }
@@ -320,6 +386,7 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
           arguments: ["constraint": lastQualityConstraint]
         )
       }
+      applyPersistentPlaybackControls(to: avBackend)
       if slot.current !== avBackend {
         let previous = try slot.replace { avBackend }
         previous.dispose()
@@ -335,6 +402,7 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
           arguments: ["constraint": lastQualityConstraint]
         )
       }
+      applyPersistentPlaybackControls(to: avBackend)
       try avBackend.stagePreparedHls(
         source: source,
         prepared: prepared,
@@ -354,7 +422,7 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
         validating: lastQualityConstraint
       )
       let previous = try slot.replace {
-        try YlFallbackBackend(
+        let backend = try YlFallbackBackend(
           playerId: playerId,
           textureId: textureId,
           textures: textures,
@@ -364,6 +432,8 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
           generation: slot.generation &+ 1,
           emit: emit
         )
+        applyPersistentPlaybackControls(to: backend)
+        return backend
       }
       guard let backend = slot.current as? YlFallbackBackend else {
         throw NativePlayerError(
@@ -376,6 +446,17 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
       try backend.command(name: "open", arguments: ["source": source])
       lastCommittedSource = source
     }
+  }
+
+  private func applyPersistentPlaybackControls(to backend: YlPlaybackBackend) {
+    try? backend.command(
+      name: "setVolume",
+      arguments: ["volume": lastVolume]
+    )
+    try? backend.command(
+      name: "setPlaybackSpeed",
+      arguments: ["speed": lastPlaybackSpeed]
+    )
   }
 
   private func prepareFallback(
@@ -447,30 +528,92 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
   }
 
   func quiesceForHardwareDecoderLease() {
+    hardwareRollbackPlaybackIntent = currentPlaybackIntent
     slot.current.quiesceForReplacement()
   }
 
-  func restoreAfterHardwareDecoderRollback() {
-    if let fallback = slot.current as? YlFallbackBackend,
-       fallback.requiresAsyncActivation {
-      beginActivation(
-        forcePlay: false,
-        willCommit: { _ in },
-        didCommit: {},
-        didRollback: {},
-        completion: { [weak self] result in
-          if case let .failure(error) = result { self?.emitError(error) }
+  func restoreAfterHardwareDecoderRollback(forcePlay: Bool? = nil) {
+    let shouldResumePlayback = forcePlay
+      ?? hardwareRollbackPlaybackIntent
+      ?? currentPlaybackIntent
+    hardwareRollbackPlaybackIntent = nil
+    restorationGeneration &+= 1
+    let recoveryGeneration = restorationGeneration
+    activeRestorationGeneration = recoveryGeneration
+    beginActivation(
+      forcePlay: shouldResumePlayback,
+      willCommit: { _ in },
+      didCommit: {},
+      didRollback: {},
+      completion: { [weak self] result in
+        guard let self, !self.disposed,
+              self.restorationGeneration == recoveryGeneration,
+              self.activeRestorationGeneration == recoveryGeneration else { return }
+        self.activeRestorationGeneration = nil
+        switch result {
+        case .success:
+          if shouldResumePlayback {
+            do {
+              try self.slot.current.command(name: "play", arguments: [:])
+            } catch let error as NativePlayerError {
+              self.failDeferredRestorationCommands(error)
+              self.reportRestorationFailure(error)
+              return
+            } catch {
+              let error = Self.commandError(error)
+              self.failDeferredRestorationCommands(error)
+              self.reportRestorationFailure(error)
+              return
+            }
+          }
+          self.runDeferredRestorationCommands()
+        case let .failure(error):
+          self.failDeferredRestorationCommands(error)
+          guard YlFallbackRestorationPolicy.shouldReport(
+            error: error,
+            isCurrentBackend: true
+          ) else { return }
+          self.reportRestorationFailure(error)
         }
+      }
+    )
+  }
+
+  private var currentPlaybackIntent: Bool {
+    if let fallback = slot.current as? YlFallbackBackend {
+      return fallback.playbackIntent
+    }
+    return slot.current === avBackend && avBackend.playbackIntent
+  }
+
+  private func reportRestorationFailure(_ error: NativePlayerError) {
+    if let fallback = slot.current as? YlFallbackBackend {
+      fallback.reportRestorationFailure(error)
+    } else {
+      avBackend.reportRestorationFailure(error)
+    }
+  }
+
+  private func runDeferredRestorationCommands() {
+    let commands = deferredRestorationCommands
+    deferredRestorationCommands.removeAll()
+    commands.forEach { command in
+      beginCommand(
+        name: command.name,
+        arguments: command.arguments,
+        completion: command.completion
       )
-      return
     }
-    do {
-      try slot.current.activate()
-    } catch let error as NativePlayerError {
-      emitError(error)
-    } catch {
-      emitError(Self.commandError(error))
-    }
+  }
+
+  private func failDeferredRestorationCommands(_ error: NativePlayerError) {
+    let commands = deferredRestorationCommands
+    deferredRestorationCommands.removeAll()
+    commands.forEach { $0.completion(.failure(error)) }
+  }
+
+  private func cancelDeferredRestorationCommands() {
+    failDeferredRestorationCommands(YlOpenCancellationToken.cancellationError())
   }
 
   func emitError(_ error: NativePlayerError) {
@@ -493,6 +636,9 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
   func dispose() {
     guard !disposed else { return }
     disposed = true
+    restorationGeneration &+= 1
+    activeRestorationGeneration = nil
+    cancelDeferredRestorationCommands()
     commandCoordinator.cancelCurrent()
     openCoordinator.cancelCurrent()
     avBackend.textureId = -1

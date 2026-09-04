@@ -65,6 +65,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   let playerId: Int64
   var textureId: Int64 = -1
   var isActive: Bool { stateLock.withLock { active } }
+  var playbackIntent: Bool { stateLock.withLock { playing } }
   var requiresAsyncActivation: Bool {
     guard context == nil else { return false }
     if case .network = sourceRecipe { return true }
@@ -393,6 +394,29 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         shouldPlay: forcePlay || playing
       )
     }
+  }
+
+  func reportRestorationFailure(_ error: NativePlayerError) {
+    deactivate()
+    let details = errorMap(
+      category: error.category,
+      code: error.code,
+      message: error.message,
+      diagnostic: error.diagnostic
+    )
+    let shouldEmit = stateLock.withLock { () -> Bool in
+      guard !disposed, currentError == nil else { return false }
+      active = false
+      playing = false
+      reconfiguring = false
+      pumping = false
+      status = "error"
+      currentError = details
+      return true
+    }
+    guard shouldEmit else { return }
+    emit(YlFallbackErrorEvent(playerId: playerId, error: details).eventMap)
+    emitState()
   }
 
   func handleMemoryWarning() {
@@ -762,7 +786,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         pumping = false
         demuxEOF = true
       }
-      decoder?.flush()
+      decoder?.drain()
       return
     }
     guard result == Int32(YLFResultOK), let ownedPacket = packet else {
@@ -830,37 +854,63 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     }
     var retryDelay = TimeInterval(0)
     if streamIndex == videoStream.index {
-      var unmanagedSample: Unmanaged<CMSampleBuffer>?
-      let sampleResult = ylf_create_video_sample_buffer(
-        &packet,
-        videoFormat,
-        &unmanagedSample
-      )
-      if sampleResult == 0, let unmanagedSample {
-        stateLock.withLock { prebufferedVideoSample = true }
-        let sample = unmanagedSample.takeRetainedValue()
-        if let decoder {
-          if decoder.decode(sample: sample, generation: packetGeneration)
-            == .wouldExceedBudget {
-            decoder.flush()
-            if decoder.decode(sample: sample, generation: packetGeneration)
-              == .wouldExceedBudget {
-              fail(NativePlayerError(
-                category: "resource",
-                code: "resource.network_buffer_limit",
-                message: "A compressed video sample exceeded its memory budget."
-              ))
+      guard let decoder else {
+        ylf_packet_release(&packet)
+        stateLock.withLock { pumping = false }
+        fail(NativePlayerError(
+          category: "internal",
+          code: "internal.fallback_invariant",
+          message: "The video decoder became unavailable."
+        ))
+        return
+      }
+      do {
+        let byteCount = ylf_packet_size(ownedPacket)
+        guard let reservation = try decoder.reserve(
+          byteCount: byteCount,
+          shouldCancel: { [weak self] in
+            guard let self else { return true }
+            return self.stateLock.withLock {
+              self.disposed || !self.active || self.reconfiguring
+                || self.generation != packetGeneration
             }
           }
-        } else {
-          fail(NativePlayerError(
-            category: "internal",
-            code: "internal.fallback_invariant",
-            message: "The video decoder became unavailable."
-          ))
+        ) else {
+          ylf_packet_release(&packet)
+          stateLock.withLock { pumping = false }
+          return
         }
-      } else {
+        var unmanagedSample: Unmanaged<CMSampleBuffer>?
+        let sampleResult = ylf_create_video_sample_buffer(
+          &packet,
+          videoFormat,
+          &unmanagedSample
+        )
+        if sampleResult == 0, let unmanagedSample {
+          stateLock.withLock { prebufferedVideoSample = true }
+          decoder.decode(
+            sample: unmanagedSample.takeRetainedValue(),
+            generation: packetGeneration,
+            reservation: reservation
+          )
+        } else {
+          ylf_packet_release(&packet)
+        }
+      } catch let error as NativePlayerError {
         ylf_packet_release(&packet)
+        stateLock.withLock { pumping = false }
+        fail(error)
+        return
+      } catch {
+        ylf_packet_release(&packet)
+        stateLock.withLock { pumping = false }
+        fail(NativePlayerError(
+          category: "internal",
+          code: "internal.fallback_invariant",
+          message: "The video decoder buffer reservation failed.",
+          diagnostic: String(describing: error)
+        ))
+        return
       }
     } else if streamIndex == selectedAudioStream?.index,
               let bytes = ylf_packet_data(ownedPacket) {

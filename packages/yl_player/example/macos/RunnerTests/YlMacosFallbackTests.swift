@@ -46,19 +46,113 @@ final class YlMacosFallbackTests: XCTestCase {
     }
   }
 
-  func testVideoDecodeBudgetBoundsBytesAndFrameCount() {
+  func testVideoDecodeBudgetReservationsBoundBytesAndFrameCount() throws {
     let budget = YlVideoDecodeBudget(maxBytes: 100, maxFrames: 2)
 
-    XCTAssertTrue(budget.admit(byteCount: 60))
-    XCTAssertFalse(budget.admit(byteCount: 50))
-    XCTAssertTrue(budget.admit(byteCount: 40))
-    XCTAssertFalse(budget.admit(byteCount: 1))
+    var first = try XCTUnwrap(budget.reserve(byteCount: 60, timeout: 0))
+    XCTAssertThrowsError(try budget.reserve(byteCount: 50, timeout: 0)) {
+      XCTAssertEqual(
+        ($0 as? NativePlayerError)?.code,
+        "resource.video_decoder_backpressure_timeout"
+      )
+    }
+    let second = try XCTUnwrap(budget.reserve(byteCount: 40, timeout: 0))
+    XCTAssertThrowsError(try budget.reserve(byteCount: 1, timeout: 0))
 
-    budget.complete(byteCount: 60)
-    XCTAssertTrue(budget.admit(byteCount: 50))
+    first.release()
+    first = try XCTUnwrap(budget.reserve(byteCount: 50, timeout: 0))
     budget.reset()
     XCTAssertEqual(budget.inFlightBytes, 0)
     XCTAssertEqual(budget.inFlightFrames, 0)
+    let replacement = try XCTUnwrap(budget.reserve(byteCount: 100, timeout: 0))
+    first.release()
+    second.release()
+    XCTAssertEqual(budget.inFlightBytes, 100)
+    XCTAssertEqual(budget.inFlightFrames, 1)
+    replacement.release()
+  }
+
+  func testLiveReactivationPreservesPlaybackIntentAndResetsPosition() {
+    XCTAssertEqual(
+      YlFallbackReactivationPolicy.resolve(
+        isSeekable: false,
+        savedPositionUs: 8_000_000,
+        selectedAudioStreamIndex: 3,
+        shouldPlay: true
+      ),
+      YlFallbackResumeState(
+        positionUs: 0,
+        selectedAudioStreamIndex: 3,
+        shouldPlay: true
+      )
+    )
+  }
+
+  func testRestorationCancellationIsNotReportedAsTerminalFailure() {
+    let cancelled = YlOpenCancellationToken.cancellationError()
+    XCTAssertFalse(YlFallbackRestorationPolicy.shouldReport(
+      error: cancelled,
+      isCurrentBackend: true
+    ))
+    XCTAssertFalse(YlFallbackRestorationPolicy.shouldReport(
+      error: NativePlayerError(
+        category: "network",
+        code: "network.http_status",
+        message: "failed"
+      ),
+      isCurrentBackend: false
+    ))
+    XCTAssertTrue(YlFallbackRestorationPolicy.shouldReport(
+      error: NativePlayerError(
+        category: "network",
+        code: "network.http_status",
+        message: "failed"
+      ),
+      isCurrentBackend: true
+    ))
+  }
+
+  func testOnlyStateReplacingCommandsCancelRestoration() {
+    for name in ["play", "pause"] {
+      XCTAssertTrue(YlRestorationCommandPolicy.supersedesRestoration(name))
+    }
+    for name in [
+      "seekTo", "seekToLiveEdge", "selectAudioTrack",
+      "setVolume", "setPlaybackSpeed", "setQualityConstraint",
+    ] {
+      XCTAssertFalse(YlRestorationCommandPolicy.supersedesRestoration(name))
+    }
+    for name in ["seekTo", "seekToLiveEdge", "selectAudioTrack"] {
+      XCTAssertTrue(YlRestorationCommandPolicy.defersUntilRestored(name))
+    }
+  }
+
+  func testVideoDecodeBudgetWaiterUnblocksWhenReservationReleases() throws {
+    let budget = YlVideoDecodeBudget(maxBytes: 100, maxFrames: 1)
+    let first = try XCTUnwrap(budget.reserve(byteCount: 100, timeout: 0))
+    let started = DispatchSemaphore(value: 0)
+    let completed = DispatchSemaphore(value: 0)
+    let resultLock = NSLock()
+    var didReserve = false
+
+    DispatchQueue.global().async {
+      started.signal()
+      let second = try? budget.reserve(byteCount: 1, timeout: 1)
+      resultLock.withLock { didReserve = second != nil }
+      second?.release()
+      completed.signal()
+    }
+
+    XCTAssertEqual(started.wait(timeout: .now() + 1), .success)
+    XCTAssertEqual(completed.wait(timeout: .now() + 0.05), .timedOut)
+    first.release()
+    XCTAssertEqual(completed.wait(timeout: .now() + 1), .success)
+    XCTAssertTrue(resultLock.withLock { didReserve })
+    XCTAssertNil(try budget.reserve(
+      byteCount: 1,
+      timeout: 1,
+      shouldCancel: { true }
+    ))
   }
 
   func testHardwareDecoderLeaseEnforcesAdvertisedConcurrency() throws {

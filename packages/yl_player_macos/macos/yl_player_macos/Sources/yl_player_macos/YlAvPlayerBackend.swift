@@ -51,6 +51,18 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   private var disposed = false
   private var firstFrameSent = false
   private var playRequested = false
+  var playbackIntent: Bool { playRequested || player.rate > 0 }
+  var requiresExternalRollbackActivation: Bool {
+    guard let source = lastSource else { return false }
+    let headers = stringMap(source["headers"])
+    return YlSourceRouter.route(YlMacosSourceDescriptor(
+      uri: source["uri"] as? String ?? "",
+      kind: source["kind"] as? String ?? "",
+      formatHint: source["formatHint"] as? String ?? "automatic",
+      isLive: source["isLive"] as? Bool ?? false,
+      hasHeaders: !headers.isEmpty
+    )) == .headeredHls
+  }
   private var desiredRate: Float = 1
   private var openStartedAt: CFTimeInterval?
   private var openDurationMs: Int64?
@@ -250,6 +262,23 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
       status = "paused"
     }
     emitState()
+  }
+
+  func reportRestorationFailure(_ error: NativePlayerError) {
+    guard !disposed else { return }
+    if active { deactivate() }
+    active = false
+    playRequested = false
+    status = "error"
+    let details = errorMap(
+      category: error.category,
+      code: error.code,
+      message: error.message,
+      diagnostic: error.diagnostic
+    )
+    currentError = details
+    emit(["playerId": playerId, "type": "error", "error": details])
+    emitState(error: details)
   }
 
   private func open(_ source: [String: Any?]) throws {
