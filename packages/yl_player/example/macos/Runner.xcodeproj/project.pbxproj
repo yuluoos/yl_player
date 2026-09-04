@@ -22,6 +22,11 @@
 
 /* Begin PBXBuildFile section */
 		331C80D8294CF71000263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C80D7294CF71000263BE5 /* RunnerTests.swift */; };
+		7A4A00010000000000000001 /* YlMacosAvPlayerStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4A00020000000000000002 /* YlMacosAvPlayerStateTests.swift */; };
+		7A4A00030000000000000003 /* YlMacosOpenCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4A00040000000000000004 /* YlMacosOpenCoordinatorTests.swift */; };
+		7A5A00010000000000000001 /* YlMacosNetworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5A00020000000000000002 /* YlMacosNetworkTests.swift */; };
+		7A5A00030000000000000003 /* YlMacosHlsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5A00040000000000000004 /* YlMacosHlsTests.swift */; };
+		7A5A00050000000000000005 /* YlMacosFallbackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5A00060000000000000006 /* YlMacosFallbackTests.swift */; };
 		335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335BBD1A22A9A15E00E9071D /* GeneratedPluginRegistrant.swift */; };
 		33CC10F12044A3C60003C045 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC10F02044A3C60003C045 /* AppDelegate.swift */; };
 		33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F22044A3C60003C045 /* Assets.xcassets */; };
@@ -67,6 +72,11 @@
 		1D3F70440357CA5E69E00CB9 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		331C80D5294CF71000263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		331C80D7294CF71000263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
+		7A4A00020000000000000002 /* YlMacosAvPlayerStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlMacosAvPlayerStateTests.swift; sourceTree = "<group>"; };
+		7A4A00040000000000000004 /* YlMacosOpenCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlMacosOpenCoordinatorTests.swift; sourceTree = "<group>"; };
+		7A5A00020000000000000002 /* YlMacosNetworkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlMacosNetworkTests.swift; sourceTree = "<group>"; };
+		7A5A00040000000000000004 /* YlMacosHlsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlMacosHlsTests.swift; sourceTree = "<group>"; };
+		7A5A00060000000000000006 /* YlMacosFallbackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlMacosFallbackTests.swift; sourceTree = "<group>"; };
 		333000ED22D3DE5D00554162 /* Warnings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Warnings.xcconfig; sourceTree = "<group>"; };
 		335BBD1A22A9A15E00E9071D /* GeneratedPluginRegistrant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneratedPluginRegistrant.swift; sourceTree = "<group>"; };
 		33CC10ED2044A3C60003C045 /* yl_player_example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = yl_player_example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,6 +127,11 @@
 			isa = PBXGroup;
 			children = (
 				331C80D7294CF71000263BE5 /* RunnerTests.swift */,
+				7A4A00020000000000000002 /* YlMacosAvPlayerStateTests.swift */,
+				7A4A00040000000000000004 /* YlMacosOpenCoordinatorTests.swift */,
+				7A5A00020000000000000002 /* YlMacosNetworkTests.swift */,
+				7A5A00040000000000000004 /* YlMacosHlsTests.swift */,
+				7A5A00060000000000000006 /* YlMacosFallbackTests.swift */,
 			);
 			path = RunnerTests;
 			sourceTree = "<group>";
@@ -422,6 +437,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				331C80D8294CF71000263BE5 /* RunnerTests.swift in Sources */,
+				7A4A00010000000000000001 /* YlMacosAvPlayerStateTests.swift in Sources */,
+				7A4A00030000000000000003 /* YlMacosOpenCoordinatorTests.swift in Sources */,
+				7A5A00010000000000000001 /* YlMacosNetworkTests.swift in Sources */,
+				7A5A00030000000000000003 /* YlMacosHlsTests.swift in Sources */,
+				7A5A00050000000000000005 /* YlMacosFallbackTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
