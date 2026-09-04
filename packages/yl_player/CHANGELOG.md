@@ -18,6 +18,14 @@
   proxy that avoids undocumented AVFoundation header options.
 - Add bounded iOS AVPlayer reconnects for direct live HLS and sanitized
   HLS error-log diagnostics for terminal failures.
+- Add the endorsed macOS 12+ implementation with AVPlayer HLS/progressive
+  playback and hardware-only VideoToolbox fallbacks for local/network MKV and
+  HTTP/HTTPS-FLV live playback.
+- Add macOS AAC/MP3 fallback audio, bounded network buffering and reconnects,
+  authenticated HLS origin protection, lifecycle cleanup, universal
+  `arm64`/`x86_64` artifacts, and native/integration CI gates.
+- Verify macOS runtime on Apple Silicon and compile/link plus Rosetta smoke for
+  Intel; physical Intel hardware runtime remains unverified.
 - Treat custom `maxBufferBytes` as the total managed-media budget for network
   bytes, scheduled PCM, and one in-flight encoded packet; do not persist media.
 - Keep iOS network MKV live and other remote fallback containers,

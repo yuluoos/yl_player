@@ -1,18 +1,20 @@
 # yl_player
 
 `yl_player` is the app-facing package for a hardware-first Flutter playback
-kernel aimed at TVBox-style Android and iOS applications.
+kernel for Android, iOS, and macOS applications.
 
-> Development status: `0.1.0-dev.1` contains functional Android Media3 and iOS
-> AVPlayer main paths. The tree also contains experimental iOS native fallbacks
-> for local/HTTP(S) MKV VOD and HTTP(S)-FLV live playback. Their physical-device
-> and endurance acceptance matrices are incomplete. Treat this as a development
-> release, not an iOS fallback smoothness or stable-support guarantee.
+> Development status: `0.1.0-dev.1` contains functional Android Media3, Apple
+> AVPlayer, and first-party macOS paths. The tree also contains native MKV and
+> HTTP-FLV fallbacks. iOS physical-device and endurance acceptance remain
+> incomplete; Intel macOS compiles and links but has not been run on physical
+> Intel hardware. Treat this as a development release, not a cross-device
+> smoothness guarantee.
 
 ## Scope
 
 - Android 7.0 (API 24) or later.
 - iOS 15.0 or later.
+- macOS 12.0 or later, with Apple Silicon and Intel slices.
 - Local files, live streams, and video on demand in the public source model.
 - HLS and HTTP-FLV hints, plus common local-container hints.
 - Hardware-first decoder policy and bounded buffering configuration.
@@ -22,8 +24,8 @@ kernel aimed at TVBox-style Android and iOS applications.
   errors, and local performance metrics.
 
 Android currently handles HLS, HTTP-FLV, and Media3 progressive containers.
-iOS handles HLS (including caller-supplied request headers), HTTP-FLV, and
-AVFoundation-compatible progressive/local media. On
+iOS and macOS handle HLS (including caller-supplied request headers), HTTP-FLV,
+MKV fallback, and AVFoundation-compatible progressive/local media. On
 Android, devices are automatically classified as `constrained`, `standard`, or
 `capable`; video decoding is hardware-only, only one decoder is active, and
 source-specific byte/time ceilings protect low-memory TV boxes. The constrained
@@ -74,6 +76,9 @@ the package does not claim which decoder AVPlayer selected. Reported
 
 The reviewed architecture is recorded in
 [`docs/superpowers/specs/2026-09-02-yl-player-design.md`](../../docs/superpowers/specs/2026-09-02-yl-player-design.md).
+The macOS implementation and its current hardware evidence are detailed in the
+[macOS package README](../yl_player_macos/README.md) and
+[macOS verification matrix](../../docs/verification/macos-device-matrix.md).
 
 ## Usage
 
@@ -138,6 +143,14 @@ forward-buffer duration is selected by `bufferMode`. iOS custom headers are
 supported for HLS and the package-owned MKV/FLV network paths. Header-bearing
 non-HLS AVPlayer progressive sources remain unsupported.
 
+macOS follows the same header boundary: caller headers are supported for HLS
+and package-owned MKV/FLV network paths, sensitive credentials are stripped
+across origins, and header-bearing non-HLS AVPlayer progressive sources are
+rejected. Sandboxed macOS hosts need the network client entitlement; the
+loopback proxy used by header-bearing HLS additionally needs the network server
+entitlement. The plugin does not disable App Transport Security or accept
+invalid TLS certificates.
+
 For authenticated HLS, `Authorization`, `Cookie`, and `Proxy-Authorization`
 are sent only to resources with the same scheme, normalized host, and effective
 port as the top-level manifest. Automatic URLSession cookie storage is disabled,
@@ -192,11 +205,28 @@ minimal host-scoped ATS exception.
   physical-device playback, memory profiling, and long-run smoothness remain
   deferred.
 
+## macOS support boundary
+
+- The endorsed `yl_player_macos` package is selected automatically and keeps
+  the existing Dart controller, state, event, error, and texture contracts.
+- AVPlayer handles HLS and compatible local/progressive media. FFmpeg performs
+  only MKV/FLV demuxing and parsing; VideoToolbox provides hardware-only
+  H.264/H.265 decode, while Apple APIs decode AAC/MP3 and output audio.
+- Local and HTTP/HTTPS MKV VOD support seekable Range servers and sequential
+  HTTP 200 playback. Network-live MKV is unsupported. HTTP/HTTPS-FLV is live,
+  non-seekable, and uses bounded reconnect.
+- Apple Silicon runtime: verified. Intel build and link: verified. Intel
+  physical-device runtime: not verified; no Intel Mac was available.
+- Subtitles, DRM, downloads, persistent cache, background audio, picture in
+  picture, casting, playlists, software video decoding, and application player
+  controls remain outside the package.
+
 ## Publication
 
-The four packages are intended to be published together in dependency order:
-`yl_player_platform_interface`, `yl_player_android`, `yl_player_ios`, then
-`yl_player`. Consumers in China can configure the Flutter China package mirror;
-publication itself remains a pub.dev release workflow.
+The five packages are intended to be published together in dependency order:
+`yl_player_platform_interface`, `yl_player_android`, `yl_player_ios`,
+`yl_player_macos`, then `yl_player`. Consumers in China can configure the
+Flutter China package mirror; publication itself remains a pub.dev release
+workflow.
 
 This project uses the BSD 3-Clause license.
