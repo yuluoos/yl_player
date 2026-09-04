@@ -2,7 +2,13 @@
 enum YlBufferMode { automatic, lowLatency, balanced, stable, custom }
 
 /// Controls whether a backend may choose a non-hardware video decoder.
-enum YlDecoderPolicy { preferHardware, hardwareOnly }
+enum YlDecoderPolicy {
+  @Deprecated(
+    'preferHardware currently resolves to hardwareOnly; use hardwareOnly.',
+  )
+  preferHardware,
+  hardwareOnly,
+}
 
 /// Immutable network retry and timeout policy.
 final class YlNetworkPolicy {
@@ -13,8 +19,7 @@ final class YlNetworkPolicy {
     this.baseRetryDelay = const Duration(milliseconds: 500),
     this.maxRetryDelay = const Duration(seconds: 8),
     this.maxRedirects = 5,
-  }) : assert(maxRetries >= 0),
-       assert(maxRedirects >= 0);
+  });
 
   final Duration connectTimeout;
   final Duration readTimeout;
@@ -26,10 +31,7 @@ final class YlNetworkPolicy {
 
 /// Optional adaptive-track limits supplied by the host application.
 final class YlQualityConstraint {
-  const YlQualityConstraint({this.maxWidth, this.maxHeight, this.maxBitrate})
-    : assert(maxWidth == null || maxWidth > 0),
-      assert(maxHeight == null || maxHeight > 0),
-      assert(maxBitrate == null || maxBitrate > 0);
+  const YlQualityConstraint({this.maxWidth, this.maxHeight, this.maxBitrate});
 
   final int? maxWidth;
   final int? maxHeight;
@@ -40,13 +42,13 @@ final class YlQualityConstraint {
 final class YlPlayerConfiguration {
   const YlPlayerConfiguration({
     this.bufferMode = YlBufferMode.automatic,
-    this.decoderPolicy = YlDecoderPolicy.preferHardware,
+    this.decoderPolicy = YlDecoderPolicy.hardwareOnly,
     this.networkPolicy = const YlNetworkPolicy(),
     this.minBufferDuration,
     this.maxBufferDuration,
     this.maxBufferBytes,
     this.positionEventInterval = const Duration(milliseconds: 250),
-  }) : assert(maxBufferBytes == null || maxBufferBytes > 0);
+  });
 
   final YlBufferMode bufferMode;
   final YlDecoderPolicy decoderPolicy;

@@ -138,7 +138,7 @@ void main() {
     const configuration = YlPlayerConfiguration();
 
     expect(configuration.bufferMode, YlBufferMode.automatic);
-    expect(configuration.decoderPolicy, YlDecoderPolicy.preferHardware);
+    expect(configuration.decoderPolicy, YlDecoderPolicy.hardwareOnly);
     expect(configuration.networkPolicy.maxRetries, 3);
     expect(
       configuration.positionEventInterval,

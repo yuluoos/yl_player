@@ -11,3 +11,4 @@ export 'src/player_error.dart';
 export 'src/player_event.dart';
 export 'src/player_platform.dart';
 export 'src/player_state.dart';
+export 'src/validation.dart';
