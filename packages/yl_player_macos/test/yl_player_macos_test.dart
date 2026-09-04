@@ -1,0 +1,219 @@
+import 'dart:async';
+
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:yl_player_macos/yl_player_macos.dart';
+import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  const methods = MethodChannel('yl_player_macos_test/methods');
+  late StreamController<Object?> nativeEvents;
+  late List<MethodCall> calls;
+  late bool failDispose;
+  PlatformException? commandError;
+
+  setUp(() {
+    nativeEvents = StreamController<Object?>.broadcast(sync: true);
+    calls = <MethodCall>[];
+    failDispose = false;
+    commandError = null;
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(methods, (call) async {
+          calls.add(call);
+          if (call.method == 'create') {
+            return <String, Object?>{'playerId': 7, 'textureId': 42};
+          }
+          if (call.method == 'dispose' && failDispose) {
+            throw PlatformException(code: 'dispose.failed');
+          }
+          if (call.method == 'command' && commandError != null) {
+            throw commandError!;
+          }
+          return null;
+        });
+  });
+
+  tearDown(() async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(methods, null);
+    await nativeEvents.close();
+  });
+
+  test('registerWith installs the macOS implementation', () {
+    YlPlayerMacos.registerWith();
+    expect(YlPlayerPlatform.instance, isA<YlPlayerMacos>());
+  });
+
+  test('creates a texture player and delegates the command surface', () async {
+    final platform = YlPlayerMacos(
+      methodChannel: methods,
+      nativeEvents: nativeEvents.stream,
+    );
+    final player = await platform.createPlayer(const YlPlayerConfiguration());
+
+    expect(player.textureId.value, 42);
+    await player.open(
+      YlMediaSource.network(
+        Uri.parse('https://media.test/live.m3u8'),
+        isLive: true,
+        formatHint: YlFormatHint.hls,
+        headers: const {'Referer': 'https://media.test/'},
+      ),
+    );
+    await player.play();
+    await player.pause();
+    await player.seekTo(const Duration(seconds: 3));
+    await player.seekToLiveEdge();
+    await player.setPlaybackSpeed(1.25);
+    await player.setVolume(0.5);
+    await player.selectAudioTrack('audio-1');
+    await player.setQualityConstraint(
+      const YlQualityConstraint(maxWidth: 1280, maxBitrate: 2500000),
+    );
+    await player.dispose();
+    await player.dispose();
+
+    expect(calls.first.method, 'create');
+    expect(
+      ((calls.first.arguments as Map)['configuration'] as Map)['decoderPolicy'],
+      'hardwareOnly',
+    );
+    expect(calls.where((call) => call.method == 'command').length, 9);
+    expect(calls.where((call) => call.method == 'dispose'), hasLength(1));
+  });
+
+  test('mirrors multiplexed native state and errors', () async {
+    final platform = YlPlayerMacos(
+      methodChannel: methods,
+      nativeEvents: nativeEvents.stream,
+    );
+    final player = await platform.createPlayer(const YlPlayerConfiguration());
+    final states = <YlPlayerState>[];
+    final events = <YlPlayerEvent>[];
+    final stateSubscription = player.states.listen(states.add);
+    final eventSubscription = player.events.listen(events.add);
+
+    nativeEvents.add(<String, Object?>{
+      'playerId': 7,
+      'type': 'state',
+      'protocolVersion': 1,
+      'generation': 2,
+      'state': <String, Object?>{
+        'status': 'playing',
+        'positionMs': 1500,
+        'durationMs': 10000,
+        'bufferedPositionMs': 4000,
+        'isLive': true,
+        'isSeekable': true,
+        'isAtLiveEdge': false,
+        'liveOffsetMs': 3000,
+        'videoWidth': 1920,
+        'videoHeight': 1080,
+        'engine': 'avPlayer',
+        'isHardwareDecoding': true,
+        'decoderName': 'com.apple.videotoolbox.avc',
+        'capabilities': <String, Object?>{
+          'hardwareVideoCodecs': <String>['h264', 'hevc'],
+          'supportedFormats': <String>['hls', 'httpFlv', 'flv', 'matroska'],
+          'maxConcurrentVideoDecoders': 1,
+        },
+      },
+    });
+    nativeEvents.add(<String, Object?>{
+      'playerId': 7,
+      'type': 'stateDelta',
+      'protocolVersion': 1,
+      'generation': 2,
+      'delta': <String, Object?>{'positionMs': 1700},
+    });
+    nativeEvents.add(<String, Object?>{
+      'playerId': 7,
+      'type': 'error',
+      'error': <String, Object?>{
+        'category': 'network',
+        'code': 'network.io',
+        'message': 'Connection failed.',
+        'platformDiagnostic': 'timeout',
+      },
+    });
+
+    expect(states, hasLength(2));
+    expect(states.last.position, const Duration(milliseconds: 1700));
+    expect(states.last.engine, YlPlaybackEngine.avPlayer);
+    expect(
+      states.last.capabilities?.supportedFormats,
+      containsAll(<YlFormatHint>[
+        YlFormatHint.hls,
+        YlFormatHint.httpFlv,
+        YlFormatHint.matroska,
+      ]),
+    );
+    expect(events.single, isA<YlErrorEvent>());
+
+    await stateSubscription.cancel();
+    await eventSubscription.cancel();
+    await player.dispose();
+  });
+
+  test('command rejection preserves native state and emits no event', () async {
+    final platform = YlPlayerMacos(
+      methodChannel: methods,
+      nativeEvents: nativeEvents.stream,
+    );
+    final player = await platform.createPlayer(const YlPlayerConfiguration());
+    final states = <YlPlayerState>[];
+    final events = <YlPlayerEvent>[];
+    final stateSubscription = player.states.listen(states.add);
+    final eventSubscription = player.events.listen(events.add);
+    nativeEvents.add(<String, Object?>{
+      'playerId': 7,
+      'type': 'state',
+      'state': <String, Object?>{'status': 'playing', 'engine': 'avPlayer'},
+    });
+    states.clear();
+    commandError = PlatformException(
+      code: 'network.cancelled',
+      details: const <String, Object?>{
+        'category': 'cancelled',
+        'code': 'network.cancelled',
+        'message': 'The superseded command was cancelled.',
+      },
+    );
+
+    await expectLater(
+      player.open(YlMediaSource.file('/tmp/next.mkv')),
+      throwsA(
+        isA<YlPlayerError>()
+            .having(
+              (error) => error.category,
+              'category',
+              YlPlayerErrorCategory.cancelled,
+            )
+            .having((error) => error.code, 'code', 'network.cancelled'),
+      ),
+    );
+    expect(player.state.status, YlPlaybackStatus.playing);
+    expect(states, isEmpty);
+    expect(events, isEmpty);
+
+    await stateSubscription.cancel();
+    await eventSubscription.cancel();
+    await player.dispose();
+  });
+
+  test('cleans up locally when native disposal reports an error', () async {
+    final platform = YlPlayerMacos(
+      methodChannel: methods,
+      nativeEvents: nativeEvents.stream,
+    );
+    final player = await platform.createPlayer(const YlPlayerConfiguration());
+    failDispose = true;
+
+    await player.dispose();
+
+    expect(player.state.status, YlPlaybackStatus.disposed);
+    expect(player.textureId.value, isNull);
+  });
+}

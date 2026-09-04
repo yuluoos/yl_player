@@ -1,5 +1,5 @@
 name: yl_player
-description: Hardware-first Flutter playback kernel with federated Android and iOS implementations for TVBox-style applications.
+description: Hardware-first Flutter playback kernel with federated Android, iOS, and macOS implementations for TVBox-style applications.
 version: 0.1.0-dev.1
 resolution: workspace
 homepage: https://pub.dev/packages/yl_player
@@ -18,6 +18,7 @@ dependencies:
     sdk: flutter
   yl_player_android: ^0.1.0-dev.1
   yl_player_ios: ^0.1.0-dev.1
+  yl_player_macos: ^0.1.0-dev.1
   yl_player_platform_interface: ^0.1.0-dev.1
 
 dev_dependencies:
@@ -32,3 +33,5 @@ flutter:
         default_package: yl_player_android
       ios:
         default_package: yl_player_ios
+      macos:
+        default_package: yl_player_macos
