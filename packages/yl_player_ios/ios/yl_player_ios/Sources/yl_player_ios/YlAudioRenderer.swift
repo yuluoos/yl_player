@@ -4,6 +4,7 @@ import Foundation
 
 enum YlAudioCodec: Equatable {
   case aac
+  case mp3
   case unsupported
 }
 
@@ -79,6 +80,7 @@ final class YlAudioRenderer: YlAudioRendering {
   private let converter: YlAudioPacketConverting
   private let output: YlAudioOutputDriving
   private var configuredGeneration: UInt64?
+  private var configuredCodec: YlAudioCodec?
   private var completionGeneration: UInt64 = 0
   private var scheduledBufferCount = 0
   private var disposed = false
@@ -89,7 +91,7 @@ final class YlAudioRenderer: YlAudioRendering {
   init(
     maxScheduledDurationUs: Int64 = 500_000,
     maxScheduledBytes: Int = 2 * 1024 * 1024,
-    converter: YlAudioPacketConverting = YlAppleAACConverter(),
+    converter: YlAudioPacketConverting = YlAppleCompressedAudioConverter(),
     output: YlAudioOutputDriving = YlSystemAudioOutput()
   ) {
     precondition(maxScheduledDurationUs >= 0)
@@ -102,7 +104,7 @@ final class YlAudioRenderer: YlAudioRendering {
 
   convenience init(
     bufferBudget: YlFallbackBufferBudget,
-    converter: YlAudioPacketConverting = YlAppleAACConverter(),
+    converter: YlAudioPacketConverting = YlAppleCompressedAudioConverter(),
     output: YlAudioOutputDriving = YlSystemAudioOutput()
   ) {
     self.init(
@@ -146,14 +148,15 @@ final class YlAudioRenderer: YlAudioRendering {
     } catch {
       throw NativePlayerError(
         category: "decoderUnsupported",
-        code: "decoder.audio_aac_unsupported",
-        message: "The AAC audio configuration is unsupported.",
+        code: Self.unsupportedCode(stream.codec),
+        message: "The \(Self.codecName(stream.codec)) audio configuration is unsupported.",
         diagnostic: String(describing: error)
       )
     }
     flush()
     lock.lock()
     configuredGeneration = stream.generation
+    configuredCodec = stream.codec
     lock.unlock()
   }
 
@@ -175,10 +178,13 @@ final class YlAudioRenderer: YlAudioRendering {
     do {
       buffer = try converter.convert(packet: packet)
     } catch {
+      let codecName = lock.withLock {
+        Self.codecName(configuredCodec ?? .unsupported)
+      }
       throw NativePlayerError(
         category: "decoderFailure",
         code: "decoder.audio_failed",
-        message: "AAC audio conversion failed.",
+        message: "\(codecName) audio conversion failed.",
         diagnostic: String(describing: error)
       )
     }
@@ -278,6 +284,7 @@ final class YlAudioRenderer: YlAudioRendering {
     }
     disposed = true
     configuredGeneration = nil
+    configuredCodec = nil
     completionGeneration &+= 1
     scheduledDuration = 0
     scheduledByteCount = 0
@@ -301,6 +308,20 @@ final class YlAudioRenderer: YlAudioRendering {
     return .scheduled
   }
 
+  private static func codecName(_ codec: YlAudioCodec) -> String {
+    switch codec {
+    case .aac: return "AAC"
+    case .mp3: return "MP3"
+    case .unsupported: return "Compressed"
+    }
+  }
+
+  private static func unsupportedCode(_ codec: YlAudioCodec) -> String {
+    codec == .mp3
+      ? "decoder.audio_mp3_unsupported"
+      : "decoder.audio_aac_unsupported"
+  }
+
   private func complete(
     durationUs: Int64,
     byteCount: Int,
@@ -322,24 +343,32 @@ final class YlAudioRenderer: YlAudioRendering {
   }
 }
 
-final class YlAppleAACConverter: YlAudioPacketConverting {
+final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   private var converter: AVAudioConverter?
   private var inputFormat: AVAudioFormat?
   private var outputFormat: AVAudioFormat?
+  private var framesPerPacket: UInt32 = 0
 
   func configure(stream: YlAudioStreamConfiguration) throws {
-    guard stream.codec == .aac,
+    guard stream.codec == .aac || stream.codec == .mp3,
           stream.sampleRate > 0,
           (1...8).contains(stream.channelCount),
-          !stream.magicCookie.isEmpty else {
+          stream.codec != .aac || !stream.magicCookie.isEmpty else {
       throw YlAudioImplementationError.invalidConfiguration
     }
+    let formatID: AudioFormatID = stream.codec == .aac
+      ? kAudioFormatMPEG4AAC
+      : kAudioFormatMPEGLayer3
+    let formatFlags: AudioFormatFlags = stream.codec == .aac
+      ? AudioFormatFlags(MPEG4ObjectID.AAC_LC.rawValue)
+      : 0
+    let inputFramesPerPacket: UInt32 = stream.codec == .aac ? 1024 : 1152
     var description = AudioStreamBasicDescription(
       mSampleRate: stream.sampleRate,
-      mFormatID: kAudioFormatMPEG4AAC,
-      mFormatFlags: AudioFormatFlags(MPEG4ObjectID.AAC_LC.rawValue),
+      mFormatID: formatID,
+      mFormatFlags: formatFlags,
       mBytesPerPacket: 0,
-      mFramesPerPacket: 1024,
+      mFramesPerPacket: inputFramesPerPacket,
       mBytesPerFrame: 0,
       mChannelsPerFrame: UInt32(stream.channelCount),
       mBitsPerChannel: 0,
@@ -355,10 +384,13 @@ final class YlAppleAACConverter: YlAudioPacketConverting {
           let converter = AVAudioConverter(from: input, to: output) else {
       throw YlAudioImplementationError.invalidConfiguration
     }
-    converter.magicCookie = stream.magicCookie
+    if stream.codec == .aac {
+      converter.magicCookie = stream.magicCookie
+    }
     self.inputFormat = input
     self.outputFormat = output
     self.converter = converter
+    framesPerPacket = inputFramesPerPacket
   }
 
   func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate {
@@ -367,7 +399,9 @@ final class YlAppleAACConverter: YlAudioPacketConverting {
     }
     let durationUs = packet.durationUs > 0
       ? packet.durationUs
-      : Int64((1024 * 1_000_000 / outputFormat.sampleRate).rounded(.up))
+      : Int64(
+        (Double(framesPerPacket) * 1_000_000 / outputFormat.sampleRate).rounded(.up)
+      )
     let frameCount = max(1, Int((Double(durationUs) * outputFormat.sampleRate / 1_000_000).rounded(.up)))
     return YlAudioBufferEstimate(
       durationUs: durationUs,
@@ -394,13 +428,16 @@ final class YlAppleAACConverter: YlAudioPacketConverting {
     compressed.packetCount = 1
     compressed.packetDescriptions?.pointee = AudioStreamPacketDescription(
       mStartOffset: 0,
-      mVariableFramesInPacket: 0,
+      mVariableFramesInPacket: framesPerPacket,
       mDataByteSize: maximumPacketSize
     )
 
     let estimate = estimateOutput(for: packet)
     let bytesPerFrame = max(1, Int(outputFormat.streamDescription.pointee.mBytesPerFrame))
-    let frameCapacity = AVAudioFrameCount(max(1024, estimate.byteCount / bytesPerFrame + 1024))
+    let frameCapacity = AVAudioFrameCount(max(
+      Int(framesPerPacket),
+      estimate.byteCount / bytesPerFrame + Int(framesPerPacket)
+    ))
     guard let pcm = AVAudioPCMBuffer(pcmFormat: outputFormat, frameCapacity: frameCapacity) else {
       throw YlAudioImplementationError.allocationFailed
     }
