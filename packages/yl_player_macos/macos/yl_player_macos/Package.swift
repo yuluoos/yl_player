@@ -16,10 +16,15 @@ let package = Package(
         .package(name: "FlutterFramework", path: "../FlutterFramework")
     ],
     targets: [
+        .binaryTarget(
+            name: "YlFFmpegBridge",
+            path: "Frameworks/YlFFmpegBridge.xcframework"
+        ),
         .target(
             name: "yl_player_macos",
             dependencies: [
-                .product(name: "FlutterFramework", package: "FlutterFramework")
+                .product(name: "FlutterFramework", package: "FlutterFramework"),
+                "YlFFmpegBridge"
             ]
         )
     ]

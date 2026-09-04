@@ -10,6 +10,8 @@ Hardware-first macOS implementation for the yl_player Flutter playback kernel.
   s.author           = 'yl_player contributors'
   s.source           = { :path => '.' }
   s.source_files     = 'yl_player_macos/Sources/yl_player_macos/**/*'
+  s.vendored_frameworks = 'yl_player_macos/Frameworks/YlFFmpegBridge.xcframework'
+  s.frameworks = 'AVFoundation', 'AudioToolbox', 'CoreMedia', 'VideoToolbox', 'AVFAudio', 'Network'
   s.dependency 'FlutterMacOS'
   s.platform         = :osx, '12.0'
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
