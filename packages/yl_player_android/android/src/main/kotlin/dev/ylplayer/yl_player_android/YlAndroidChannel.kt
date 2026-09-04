@@ -4,6 +4,8 @@ import androidx.media3.common.MimeTypes
 import androidx.media3.common.Tracks
 
 internal object YlAndroidChannel {
+    private const val protocolVersion = 1
+
     val supportedFormats = listOf(
         "automatic",
         "hls",
@@ -45,6 +47,30 @@ internal object YlAndroidChannel {
         "maxConcurrentVideoDecoders" to 1,
         "maxWidth" to maxWidth,
         "maxHeight" to maxHeight,
+    )
+
+    fun fullStateEnvelope(
+        playerId: Long,
+        generation: Long,
+        state: Map<String, Any?>,
+    ): Map<String, Any?> = mapOf(
+        "playerId" to playerId,
+        "protocolVersion" to protocolVersion,
+        "generation" to generation,
+        "type" to "state",
+        "state" to state,
+    )
+
+    fun stateDeltaEnvelope(
+        playerId: Long,
+        generation: Long,
+        delta: Map<String, Any?>,
+    ): Map<String, Any?> = mapOf(
+        "playerId" to playerId,
+        "protocolVersion" to protocolVersion,
+        "generation" to generation,
+        "type" to "stateDelta",
+        "delta" to delta,
     )
 }
 

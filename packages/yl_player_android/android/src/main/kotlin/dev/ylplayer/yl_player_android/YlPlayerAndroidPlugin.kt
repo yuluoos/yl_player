@@ -293,7 +293,7 @@ private class Media3Player(
         override fun run() {
             if (!disposed && active) {
                 maybeEvaluateHealth()
-                emitState()
+                emitPositionDelta()
                 handler.postDelayed(this, configuration.positionEventIntervalMs)
             }
         }
@@ -948,10 +948,10 @@ private class Media3Player(
         val bufferedPosition = if (active) max(0L, exoPlayer.bufferedPosition) else position
         val bufferedDuration = max(0L, bufferedPosition - position)
         emit(
-            mapOf(
-                "playerId" to playerId,
-                "type" to "state",
-                "state" to mapOf(
+            YlAndroidChannel.fullStateEnvelope(
+                playerId = playerId,
+                generation = sourceGeneration,
+                state = mapOf(
                     "status" to status,
                     "positionMs" to position,
                     "durationMs" to duration,
@@ -970,30 +970,56 @@ private class Media3Player(
                     "audioTracks" to audioTracks,
                     "videoTracks" to videoTracks,
                     "capabilities" to capabilitySnapshot,
-                    "metrics" to mapOf(
-                        "openDurationMs" to openDurationMs,
-                        "firstFrameDurationMs" to firstFrameDurationMs,
-                        "rebufferCount" to rebufferCount,
-                        "rebufferDurationMs" to rebufferDurationMs,
-                        "droppedVideoFrames" to droppedVideoFrames,
-                        "audioUnderruns" to audioUnderruns,
-                        "estimatedBitrate" to selectedVideoBitrate,
-                        "bufferedDurationMs" to bufferedDuration,
-                        "bufferedBytes" to loadControl.allocatedBytes,
-                        "liveOffsetMs" to liveOffset,
-                        "reconnectCount" to reconnectCount,
-                        "androidDeviceTier" to deviceProfile.tier.wireName,
-                        "targetBufferBytes" to loadControl.targetBufferBytes,
-                        "adaptiveDowngradeCount" to adaptiveDowngradeCount,
-                        "surfaceRebuildCount" to
-                            (videoOutput.surfaceRebuildCount - surfaceRebuildBaseline).coerceAtLeast(0),
-                        "selectedVideoBitrate" to selectedVideoBitrate,
-                    ),
+                    "metrics" to dynamicMetricsMap(bufferedDuration, liveOffset),
                     "error" to (error ?: currentError),
                 ),
             ),
         )
     }
+
+    private fun emitPositionDelta() {
+        if (disposed) return
+        val position = if (active) max(0L, exoPlayer.currentPosition) else savedPositionMs
+        val bufferedPosition = if (active) max(0L, exoPlayer.bufferedPosition) else position
+        val bufferedDuration = max(0L, bufferedPosition - position)
+        val liveOffset = exoPlayer.currentLiveOffset.takeUnless { it == C.TIME_UNSET || it < 0 }
+        emit(
+            YlAndroidChannel.stateDeltaEnvelope(
+                playerId = playerId,
+                generation = sourceGeneration,
+                delta = mapOf(
+                    "positionMs" to position,
+                    "bufferedPositionMs" to bufferedPosition,
+                    "isAtLiveEdge" to (liveOffset != null && liveOffset <= 2_000L),
+                    "liveOffsetMs" to liveOffset,
+                    "metrics" to dynamicMetricsMap(bufferedDuration, liveOffset),
+                ),
+            ),
+        )
+    }
+
+    private fun dynamicMetricsMap(
+        bufferedDuration: Long,
+        liveOffset: Long?,
+    ): Map<String, Any?> = mapOf(
+        "openDurationMs" to openDurationMs,
+        "firstFrameDurationMs" to firstFrameDurationMs,
+        "rebufferCount" to rebufferCount,
+        "rebufferDurationMs" to rebufferDurationMs,
+        "droppedVideoFrames" to droppedVideoFrames,
+        "audioUnderruns" to audioUnderruns,
+        "estimatedBitrate" to selectedVideoBitrate,
+        "bufferedDurationMs" to bufferedDuration,
+        "bufferedBytes" to loadControl.allocatedBytes,
+        "liveOffsetMs" to liveOffset,
+        "reconnectCount" to reconnectCount,
+        "androidDeviceTier" to deviceProfile.tier.wireName,
+        "targetBufferBytes" to loadControl.targetBufferBytes,
+        "adaptiveDowngradeCount" to adaptiveDowngradeCount,
+        "surfaceRebuildCount" to
+            (videoOutput.surfaceRebuildCount - surfaceRebuildBaseline).coerceAtLeast(0),
+        "selectedVideoBitrate" to selectedVideoBitrate,
+    )
 
     fun dispose() {
         if (disposed) return
