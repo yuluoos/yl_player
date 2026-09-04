@@ -507,6 +507,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private var reconnectWorkItem: DispatchWorkItem?
   private var awaitingReconnectFirstFrame = false
   private var generation: UInt64
+  private let channelGeneration = YlIosChannelGeneration.next()
   private var audioGeneration: UInt64
   private var selectedAudioStream: YLFStreamInfo?
   private var desiredVolume: Float = 1
@@ -866,10 +867,10 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     let scheduledAudioDurationUs = audioRenderer?.scheduledDurationUs ?? 0
     let scheduledAudioBytes = audioRenderer?.scheduledBytes ?? 0
     let audioUnderruns = audioRenderer?.underrunCount ?? 0
-    emit([
-      "playerId": playerId,
-      "type": "state",
-      "state": [
+    emit(YlIosChannel.fullState(
+      playerId: playerId,
+      generation: channelGeneration,
+      state: [
         "status": status,
         "positionMs": positionUs / 1_000,
         "durationMs": durationMs,
@@ -898,8 +899,35 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
           reconnectCount: reconnectCount
         ),
         "error": currentError,
-      ],
-    ])
+      ]
+    ))
+  }
+
+  private func emitStateDelta() {
+    guard !stateLock.withLock({ disposed }) else { return }
+    let positionUs = mediaClock.position(atHostTimeUs: Self.hostTimeUs())
+    let scheduledAudioDurationUs = audioRenderer?.scheduledDurationUs ?? 0
+    let scheduledAudioBytes = audioRenderer?.scheduledBytes ?? 0
+    let audioUnderruns = audioRenderer?.underrunCount ?? 0
+    emit(YlIosChannel.stateDelta(
+      playerId: playerId,
+      generation: channelGeneration,
+      delta: [
+        "positionMs": positionUs / 1_000,
+        "bufferedPositionMs": (positionUs + scheduledAudioDurationUs) / 1_000,
+        "isAtLiveEdge": mediaPolicy.isLive,
+        "liveOffsetMs": nil,
+        "metrics": YlIosChannel.fallbackMetrics(
+          openDurationMs: openDurationMs,
+          firstFrameDurationMs: firstFrameDurationMs,
+          bufferedDurationMs: scheduledAudioDurationUs / 1_000,
+          bufferedBytes: scheduledAudioBytes,
+          droppedVideoFrames: frameScheduler.lateFrameDropCount,
+          audioUnderruns: audioUnderruns,
+          reconnectCount: reconnectCount
+        ),
+      ]
+    ))
   }
 
   func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? {
@@ -1010,7 +1038,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     let wallNow = CACurrentMediaTime()
     if wallNow - lastStateEmitAt >= Double(configuration.positionEventIntervalMs) / 1_000 {
       lastStateEmitAt = wallNow
-      emitState()
+      emitStateDelta()
     }
   }
 

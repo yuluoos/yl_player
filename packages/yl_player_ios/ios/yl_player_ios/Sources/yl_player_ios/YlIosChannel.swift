@@ -2,6 +2,18 @@ import CoreMedia
 import Foundation
 import VideoToolbox
 
+enum YlIosChannelGeneration {
+  private static let lock = NSLock()
+  nonisolated(unsafe) private static var value: UInt64 = 0
+
+  static func next() -> UInt64 {
+    lock.lock()
+    defer { lock.unlock() }
+    value &+= 1
+    return value
+  }
+}
+
 enum YlIosChannel {
   static let deviceCapabilities = capabilities(
     hardwareH264: VTIsHardwareDecodeSupported(kCMVideoCodecType_H264),
@@ -50,6 +62,34 @@ enum YlIosChannel {
       "droppedVideoFrames": droppedVideoFrames,
       "audioUnderruns": audioUnderruns,
       "reconnectCount": reconnectCount,
+    ]
+  }
+
+  static func fullState(
+    playerId: Int64,
+    generation: UInt64,
+    state: [String: Any?]
+  ) -> [String: Any?] {
+    [
+      "playerId": playerId,
+      "protocolVersion": 1,
+      "generation": generation,
+      "type": "state",
+      "state": state,
+    ]
+  }
+
+  static func stateDelta(
+    playerId: Int64,
+    generation: UInt64,
+    delta: [String: Any?]
+  ) -> [String: Any?] {
+    [
+      "playerId": playerId,
+      "protocolVersion": 1,
+      "generation": generation,
+      "type": "stateDelta",
+      "delta": delta,
     ]
   }
 }

@@ -50,4 +50,47 @@ final class YlIosChannelTests: XCTestCase {
       "preferHardware"
     )
   }
+
+  func testChannelGenerationsAreStrictlyIncreasing() {
+    let first = YlIosChannelGeneration.next()
+    let second = YlIosChannelGeneration.next()
+
+    XCTAssertGreaterThan(second, first)
+  }
+
+  func testFullStateEnvelopeUsesVersionedGeneration() {
+    let envelope = YlIosChannel.fullState(
+      playerId: 7,
+      generation: 9,
+      state: ["status": "ready"]
+    )
+
+    XCTAssertEqual(envelope["playerId"] as? Int64, 7)
+    XCTAssertEqual(envelope["protocolVersion"] as? Int, 1)
+    XCTAssertEqual(envelope["generation"] as? UInt64, 9)
+    XCTAssertEqual(envelope["type"] as? String, "state")
+    XCTAssertEqual(
+      (envelope["state"] as? [String: Any?])?["status"] as? String,
+      "ready"
+    )
+  }
+
+  func testDeltaEnvelopeContainsOnlyDynamicPayload() {
+    let envelope = YlIosChannel.stateDelta(
+      playerId: 7,
+      generation: 9,
+      delta: [
+        "positionMs": 1_000,
+        "bufferedPositionMs": 3_000,
+        "isAtLiveEdge": false,
+        "liveOffsetMs": 2_000,
+        "metrics": ["droppedVideoFrames": 2],
+      ]
+    )
+
+    XCTAssertEqual(envelope["protocolVersion"] as? Int, 1)
+    XCTAssertEqual(envelope["generation"] as? UInt64, 9)
+    XCTAssertEqual(envelope["type"] as? String, "stateDelta")
+    XCTAssertNil((envelope["delta"] as? [String: Any?])?["capabilities"] ?? nil)
+  }
 }

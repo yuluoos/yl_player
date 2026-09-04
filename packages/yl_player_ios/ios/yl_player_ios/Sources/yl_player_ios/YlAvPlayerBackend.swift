@@ -51,6 +51,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   private var lastSource: [String: Any?]?
   private var savedPositionMs: Int64 = 0
   private var itemGeneration: UInt64 = 0
+  private var channelGeneration = YlIosChannelGeneration.next()
   private var qualityConstraint: [String: Any?] = [:]
   private var selectedAudioTrackId: String?
   private var resumeAtLiveEdge = false
@@ -81,7 +82,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
       ),
       queue: .main
     ) { [weak self] _ in
-      self?.emitState()
+      self?.emitStateDelta()
     }
     let link = CADisplayLink(target: self, selector: #selector(displayLinkTick))
     if #available(iOS 15.0, *) {
@@ -251,6 +252,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
 
   private func open(_ source: [String: Any?]) throws {
     try validateOpen(source)
+    channelGeneration = YlIosChannelGeneration.next()
     resetOpenState(source, resume: false)
     try installItem(source, positionMs: 0)
     emitState()
@@ -287,6 +289,9 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
       )
     }
     self.stagedHls = nil
+    if !stagedHls.resume {
+      channelGeneration = YlIosChannelGeneration.next()
+    }
     let positionMs = stagedHls.resume ? savedPositionMs : 0
     resetOpenState(stagedHls.source, resume: stagedHls.resume)
     let loader = try stagedHls.prepared.takeLoader()
@@ -566,10 +571,10 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     let live = sourceIsLive || isIndefinite(item?.duration)
     let liveOffsetMs = live ? dvrEndMs.map { max(0, $0 - positionMs) } : nil
     let size = item?.presentationSize ?? .zero
-    emit([
-      "playerId": playerId,
-      "type": "state",
-      "state": [
+    emit(YlIosChannel.fullState(
+      playerId: playerId,
+      generation: channelGeneration,
+      state: [
         "status": status,
         "positionMs": positionMs,
         "durationMs": durationMs,
@@ -597,8 +602,38 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
           "liveOffsetMs": liveOffsetMs,
         ],
         "error": error ?? currentError,
-      ],
-    ])
+      ]
+    ))
+  }
+
+  private func emitStateDelta() {
+    guard !disposed else { return }
+    let item = player.currentItem
+    let positionMs = active ? (milliseconds(player.currentTime()) ?? savedPositionMs) : savedPositionMs
+    let loadedEndMs = item?.loadedTimeRanges.last
+      .map { milliseconds(CMTimeRangeGetEnd($0.timeRangeValue)) ?? 0 } ?? 0
+    let seekableRange = item?.seekableTimeRanges.last?.timeRangeValue
+    let live = sourceIsLive || isIndefinite(item?.duration)
+    let dvrEndMs = seekableRange.flatMap { milliseconds(CMTimeRangeGetEnd($0)) }
+    let liveOffsetMs = live ? dvrEndMs.map { max(0, $0 - positionMs) } : nil
+    emit(YlIosChannel.stateDelta(
+      playerId: playerId,
+      generation: channelGeneration,
+      delta: [
+        "positionMs": positionMs,
+        "bufferedPositionMs": loadedEndMs,
+        "isAtLiveEdge": liveOffsetMs.map { $0 <= 2_000 } ?? false,
+        "liveOffsetMs": liveOffsetMs,
+        "metrics": [
+          "openDurationMs": openDurationMs,
+          "firstFrameDurationMs": firstFrameDurationMs,
+          "rebufferCount": rebufferCount,
+          "rebufferDurationMs": rebufferDurationMs,
+          "bufferedDurationMs": max(0, loadedEndMs - positionMs),
+          "liveOffsetMs": liveOffsetMs,
+        ],
+      ]
+    ))
   }
 
   func dispose() {
