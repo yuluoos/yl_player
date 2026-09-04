@@ -56,6 +56,46 @@ struct YlFallbackSeekPolicy {
   }
 }
 
+struct YlFallbackMediaPolicy: Equatable {
+  let container: YlFallbackContainer
+  let isLive: Bool
+  let isSeekable: Bool
+  let requiresInitialVideoKeyframe: Bool
+
+  init(container: YlFallbackContainer, sourceSupportsRandomAccess: Bool) {
+    self.container = container
+    switch container {
+    case .matroska:
+      isLive = false
+      isSeekable = sourceSupportsRandomAccess
+      requiresInitialVideoKeyframe = false
+    case .flv:
+      isLive = true
+      isSeekable = false
+      requiresInitialVideoKeyframe = true
+    }
+  }
+
+  func durationMs(mediaDurationUs: Int64) -> Int64? {
+    guard !isLive, mediaDurationUs > 0 else { return nil }
+    return mediaDurationUs / 1_000
+  }
+}
+
+struct YlInitialKeyframeGate {
+  private(set) var isOpen = false
+
+  mutating func accepts(isVideo: Bool, isKeyframe: Bool) -> Bool {
+    if isOpen || !isVideo { return isOpen }
+    if isKeyframe { isOpen = true }
+    return isOpen
+  }
+
+  mutating func reset() {
+    isOpen = false
+  }
+}
+
 enum YlFallbackCommandPolicy {
   static func requiresBackgroundExecution(
     isNetwork: Bool,
@@ -162,12 +202,14 @@ final class YlPostSeekGate {
 
 final class YlPreparedFallback {
   let sourceRecipe: YlFallbackSourceRecipe
+  let policy: YlFallbackMediaPolicy
   let mediaInfo: YLFMediaInfo
   let videoStream: YLFStreamInfo
   let audioStreams: [YLFStreamInfo]
   let videoFormat: CMVideoFormatDescription
   let audioCookies: [Int32: Data]
-  let isSeekable: Bool
+  var container: YlFallbackContainer { policy.container }
+  var isSeekable: Bool { policy.isSeekable }
   private(set) var resumeState: YlFallbackResumeState?
   private var openedMedia: YlOpenedMedia?
   private var cancellationToken: YlOpenCancellationToken?
@@ -186,7 +228,7 @@ final class YlPreparedFallback {
       throw NativePlayerError(
         category: "source",
         code: "source.invalid_uri",
-        message: "A valid Matroska URI is required."
+        message: "A valid fallback media URI is required."
       )
     }
     let formatHint = source["formatHint"] as? String ?? "automatic"
@@ -202,13 +244,14 @@ final class YlPreparedFallback {
       sourceRecipe = .network(request: YlNetworkRequestRecipe(
         url: url,
         headers: headers,
-        configuration: configuration.network
+        configuration: configuration.network,
+        mode: container == .flv ? .sequentialLive : .randomAccessVOD
       ), container: container)
     } else {
       throw NativePlayerError(
         category: "source",
         code: "source.invalid_uri",
-        message: "Only file, HTTP, and HTTPS Matroska URIs are supported."
+        message: "Only file, HTTP, and HTTPS fallback media URIs are supported."
       )
     }
     let budget = try YlFallbackBufferBudget.make(configuration: configuration)
@@ -223,13 +266,16 @@ final class YlPreparedFallback {
     )
     try cancellationToken?.throwIfCancelled()
     mediaInfo = opened.info
-    isSeekable = opened.supportsRandomAccess
+    policy = YlFallbackMediaPolicy(
+      container: container,
+      sourceSupportsRandomAccess: opened.supportsRandomAccess
+    )
     guard let validContext = opened.context else {
       opened.close()
       throw NativePlayerError(
         category: "internal",
         code: "internal.fallback_invariant",
-        message: "The opened Matroska context was unavailable."
+        message: "The opened fallback media context was unavailable."
       )
     }
     var mediaNeedsClose = true
@@ -248,9 +294,9 @@ final class YlPreparedFallback {
          selectedVideo == nil {
         selectedVideo = stream
       } else if Int(stream.kind) == YLFStreamAudio {
-        if Int(stream.codec) == YLFCodecAAC {
+        if Int(stream.codec) == YLFCodecAAC || Int(stream.codec) == YLFCodecMP3 {
           selectedAudio.append(stream)
-        } else if Int(stream.codec) != YLFCodecAAC {
+        } else {
           sawUnsupportedAudio = true
         }
       }
@@ -266,7 +312,9 @@ final class YlPreparedFallback {
       throw NativePlayerError(
         category: "decoderUnsupported",
         code: "decoder.audio_aac_unsupported",
-        message: "The selected Matroska audio track is not AAC."
+        message: container == .flv
+          ? "The selected FLV audio track is not AAC or MP3."
+          : "The selected Matroska audio track is not AAC."
       )
     }
     videoStream = selectedVideo
@@ -277,7 +325,7 @@ final class YlPreparedFallback {
     )
 
     var copiedAudioCookies: [Int32: Data] = [:]
-    for audioStream in selectedAudio {
+    for audioStream in selectedAudio where Int(audioStream.codec) == YLFCodecAAC {
       let size = ylf_stream_codec_config_size(validContext, audioStream.index)
       guard size > 0 else {
         throw NativePlayerError(
@@ -403,6 +451,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private let configuration: PlayerConfiguration
   private let emit: ([String: Any?]) -> Void
   private let sourceRecipe: YlFallbackSourceRecipe
+  private let mediaPolicy: YlFallbackMediaPolicy
   private let bufferBudget: YlFallbackBufferBudget
   private let mediaInfo: YLFMediaInfo
   private let videoStream: YLFStreamInfo
@@ -414,6 +463,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private let stateLock = NSLock()
   private let frameScheduler = YlFrameScheduler()
   private let postSeekGate = YlPostSeekGate()
+  private var initialKeyframeGate = YlInitialKeyframeGate()
   private var audioRenderer: YlAudioRenderer!
   private let outputRelay = YlFallbackOutputRelay()
   private var mediaClock: YlMediaClock!
@@ -463,6 +513,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     self.textures = textures
     self.configuration = configuration
     self.sourceRecipe = prepared.sourceRecipe
+    self.mediaPolicy = prepared.policy
     self.bufferBudget = try YlFallbackBufferBudget.make(configuration: configuration)
     self.mediaInfo = prepared.mediaInfo
     self.videoStream = prepared.videoStream
@@ -495,13 +546,9 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         onFrame: { [outputRelay] frame in outputRelay.frame(frame) },
         onError: { [outputRelay] error in outputRelay.error(error) }
       )
-      if let audioStream = selectedAudioStream,
-         let cookie = audioCookies[audioStream.index] {
-        try audioRenderer.configure(stream: YlAudioStreamConfiguration(
-          codec: .aac,
-          sampleRate: Double(audioStream.sample_rate),
-          channelCount: Int(audioStream.channel_count),
-          magicCookie: cookie,
+      if let audioStream = selectedAudioStream {
+        try audioRenderer.configure(stream: audioConfiguration(
+          for: audioStream,
           generation: audioGeneration
         ))
       }
@@ -715,10 +762,17 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         cancellationToken: cancellationToken
       )
     case "seekToLiveEdge":
+      if mediaPolicy.isLive {
+        throw NativePlayerError(
+          category: "network",
+          code: "network.range_not_supported",
+          message: "HTTP-FLV does not expose a seekable live window."
+        )
+      }
       throw NativePlayerError(
         category: "source",
         code: "source.not_live",
-        message: "Local Matroska playback is not live."
+        message: "Matroska playback is not live."
       )
     case "setPlaybackSpeed":
       let rate = float(arguments["speed"]) ?? 1
@@ -756,7 +810,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   func emitState() {
     guard !stateLock.withLock({ disposed }) else { return }
     let positionUs = mediaClock.position(atHostTimeUs: Self.hostTimeUs())
-    let durationMs = mediaInfo.duration_us > 0 ? mediaInfo.duration_us / 1_000 : nil
+    let durationMs = mediaPolicy.durationMs(mediaDurationUs: mediaInfo.duration_us)
     let scheduledAudioDurationUs = audioRenderer?.scheduledDurationUs ?? 0
     let scheduledAudioBytes = audioRenderer?.scheduledBytes ?? 0
     let audioUnderruns = audioRenderer?.underrunCount ?? 0
@@ -768,9 +822,9 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         "positionMs": positionUs / 1_000,
         "durationMs": durationMs,
         "bufferedPositionMs": (positionUs + scheduledAudioDurationUs) / 1_000,
-        "isLive": false,
+        "isLive": mediaPolicy.isLive,
         "isSeekable": isSeekable,
-        "isAtLiveEdge": false,
+        "isAtLiveEdge": mediaPolicy.isLive,
         "liveOffsetMs": nil,
         "dvrStartMs": nil,
         "dvrEndMs": nil,
@@ -783,7 +837,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         "videoTracks": videoTracks,
         "capabilities": [
           "hardwareVideoCodecs": ["h264", "hevc"],
-          "supportedFormats": ["matroska"],
+          "supportedFormats": ["matroska", "httpFlv", "flv"],
           "maxConcurrentVideoDecoders": 1,
         ],
         "metrics": [
@@ -954,7 +1008,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         fail(NativePlayerError(
           category: "decoderFailure",
           code: "decoder.audio_failed",
-          message: "AAC audio conversion failed.",
+          message: "\(selectedAudioCodecName) audio conversion failed.",
           diagnostic: String(describing: error)
         ))
       }
@@ -980,8 +1034,11 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       if shouldReport {
         fail(NativePlayerError(
           category: "container",
-          code: "container.mkv_malformed",
-          message: "The Matroska packet stream is malformed.",
+          code: mediaPolicy.container == .flv
+            ? "container.flv_malformed" : "container.mkv_malformed",
+          message: mediaPolicy.container == .flv
+            ? "The FLV packet stream is malformed."
+            : "The Matroska packet stream is malformed.",
           diagnostic: "YlFFmpegBridge result \(result)"
         ))
       }
@@ -1002,6 +1059,21 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     }
 
     let streamIndex = ylf_packet_stream_index(ownedPacket)
+    if mediaPolicy.requiresInitialVideoKeyframe {
+      let isVideo = streamIndex == videoStream.index
+      let accepted = stateLock.withLock {
+        initialKeyframeGate.accepts(
+          isVideo: isVideo,
+          isKeyframe: isVideo && ylf_packet_is_keyframe(ownedPacket)
+        )
+      }
+      if !accepted {
+        ylf_packet_release(&packet)
+        stateLock.withLock { pumping = false }
+        requestPump()
+        return
+      }
+    }
     var retryDelay = TimeInterval(0)
     if streamIndex == videoStream.index {
       var unmanagedSample: Unmanaged<CMSampleBuffer>?
@@ -1051,7 +1123,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         fail(NativePlayerError(
           category: "decoderFailure",
           code: "decoder.audio_failed",
-          message: "AAC audio conversion failed.",
+          message: "\(selectedAudioCodecName) audio conversion failed.",
           diagnostic: String(describing: error)
         ))
       }
@@ -1328,13 +1400,9 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     )
     let renderer = YlAudioRenderer(bufferBudget: bufferBudget)
     candidateAudio = renderer
-    if let selectedAudioStream,
-       let cookie = audioCookies[selectedAudioStream.index] {
-      try renderer.configure(stream: YlAudioStreamConfiguration(
-        codec: .aac,
-        sampleRate: Double(selectedAudioStream.sample_rate),
-        channelCount: Int(selectedAudioStream.channel_count),
-        magicCookie: cookie,
+    if let selectedAudioStream {
+      try renderer.configure(stream: audioConfiguration(
+        for: selectedAudioStream,
         generation: audioGeneration
       ))
       renderer.setVolume(desiredVolume)
@@ -1353,6 +1421,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     candidateAudio = nil
     pendingAudioPacket = nil
     prebufferedVideoSample = false
+    stateLock.withLock { initialKeyframeGate.reset() }
     demuxEOF = false
     completionSent = false
     audioAnchored = false
@@ -1420,8 +1489,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     try cancellationToken?.throwIfCancelled()
     guard let trackId, trackId.hasPrefix("audio-"),
           let requestedIndex = Int32(trackId.dropFirst("audio-".count)),
-          let requestedStream = audioStreams.first(where: { $0.index == requestedIndex }),
-          let cookie = audioCookies[requestedIndex] else {
+          let requestedStream = audioStreams.first(where: { $0.index == requestedIndex }) else {
       throw NativePlayerError(
         category: "source",
         code: "track.not_found",
@@ -1448,11 +1516,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     let nextAudioGeneration = stateLock.withLock { audioGeneration &+ 1 }
     let candidate = YlAudioRenderer(bufferBudget: bufferBudget)
     do {
-      try candidate.configure(stream: YlAudioStreamConfiguration(
-        codec: .aac,
-        sampleRate: Double(requestedStream.sample_rate),
-        channelCount: Int(requestedStream.channel_count),
-        magicCookie: cookie,
+      try candidate.configure(stream: audioConfiguration(
+        for: requestedStream,
         generation: nextAudioGeneration
       ))
       candidate.setVolume(desiredVolume)
@@ -1559,7 +1624,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       let nativeError = NativePlayerError(
         category: "decoderFailure",
         code: "decoder.audio_failed",
-        message: "The selected AAC track could not be started.",
+        message: "The selected \(audioCodecName(requestedStream)) track could not be started.",
         diagnostic: String(describing: error)
       )
       endControlOperation()
@@ -1622,12 +1687,34 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     )
   }
 
+  private func audioConfiguration(
+    for stream: YLFStreamInfo,
+    generation: UInt64
+  ) -> YlAudioStreamConfiguration {
+    YlAudioStreamConfiguration(
+      codec: Int(stream.codec) == YLFCodecAAC
+        ? .aac : (Int(stream.codec) == YLFCodecMP3 ? .mp3 : .unsupported),
+      sampleRate: Double(stream.sample_rate),
+      channelCount: Int(stream.channel_count),
+      magicCookie: audioCookies[stream.index] ?? Data(),
+      generation: generation
+    )
+  }
+
+  private func audioCodecName(_ stream: YLFStreamInfo) -> String {
+    Int(stream.codec) == YLFCodecMP3 ? "MP3" : "AAC"
+  }
+
+  private var selectedAudioCodecName: String {
+    selectedAudioStream.map(audioCodecName) ?? "Compressed"
+  }
+
   private var audioTracks: [[String: Any?]] {
     audioStreams.map { audioStream in
       [
         "id": "audio-\(audioStream.index)",
         "kind": "audio",
-        "label": "AAC \(audioStream.index)",
+        "label": "\(audioCodecName(audioStream)) \(audioStream.index)",
         "language": nil,
         "isSelected": audioStream.index == selectedAudioStream?.index,
       ]

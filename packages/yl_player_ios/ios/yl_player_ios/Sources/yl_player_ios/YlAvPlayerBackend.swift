@@ -529,7 +529,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
         "videoTracks": videoTracks,
         "capabilities": [
           "hardwareVideoCodecs": [],
-          "supportedFormats": ["automatic", "hls", "mp4", "mov"],
+          "supportedFormats": ["automatic", "hls", "mp4", "mov", "httpFlv", "flv"],
           "maxConcurrentVideoDecoders": 1,
         ],
         "metrics": [

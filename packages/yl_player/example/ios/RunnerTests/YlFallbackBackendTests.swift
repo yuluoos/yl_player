@@ -3,6 +3,49 @@ import CoreVideo
 import XCTest
 import YlFFmpegBridge
 
+private final class FallbackFixtureURLProtocol: URLProtocol {
+  private static let lock = NSLock()
+  private static var fixtureData = Data()
+  private static var capturedRequest: URLRequest?
+
+  static func configure(data: Data) -> URLSessionConfiguration {
+    lock.lock()
+    fixtureData = data
+    capturedRequest = nil
+    lock.unlock()
+    let configuration = URLSessionConfiguration.ephemeral
+    configuration.protocolClasses = [FallbackFixtureURLProtocol.self]
+    return configuration
+  }
+
+  static var request: URLRequest? {
+    lock.lock()
+    defer { lock.unlock() }
+    return capturedRequest
+  }
+
+  override class func canInit(with request: URLRequest) -> Bool { true }
+  override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+
+  override func startLoading() {
+    Self.lock.lock()
+    Self.capturedRequest = request
+    let data = Self.fixtureData
+    Self.lock.unlock()
+    let response = HTTPURLResponse(
+      url: request.url!,
+      statusCode: 200,
+      httpVersion: "HTTP/1.1",
+      headerFields: ["Content-Type": "video/x-flv"]
+    )!
+    client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+    client?.urlProtocol(self, didLoad: data)
+    client?.urlProtocolDidFinishLoading(self)
+  }
+
+  override func stopLoading() {}
+}
+
 final class YlFallbackBackendTests: XCTestCase {
   private final class FakeBackend: YlPlaybackBackend {
     private(set) var activateCount = 0
@@ -144,6 +187,42 @@ final class YlFallbackBackendTests: XCTestCase {
     }
     prepared = nil
     XCTAssertEqual(ylf_debug_outstanding_packet_count(), 0)
+  }
+
+  func testNetworkFlvPreparesSequentialMP3Fallback() throws {
+    let fixture = try XCTUnwrap(
+      Bundle(for: Self.self).url(forResource: "h264_mp3", withExtension: "flv")
+    )
+    let session = FallbackFixtureURLProtocol.configure(
+      data: try Data(contentsOf: fixture)
+    )
+    let prepared = try YlPreparedFallback(
+      source: [
+        "uri": "https://media.test/live.flv",
+        "kind": "network",
+        "formatHint": "httpFlv",
+        "isLive": true,
+        "headers": ["Authorization": "Bearer test"],
+      ],
+      requireHardwareProbe: false,
+      sessionConfiguration: session
+    )
+    defer { prepared.discard() }
+
+    XCTAssertEqual(prepared.container, .flv)
+    XCTAssertTrue(prepared.policy.isLive)
+    XCTAssertFalse(prepared.isSeekable)
+    XCTAssertTrue(prepared.policy.requiresInitialVideoKeyframe)
+    XCTAssertNil(prepared.policy.durationMs(mediaDurationUs: prepared.mediaInfo.duration_us))
+    XCTAssertEqual(prepared.audioStreams.first?.codec, Int32(YLFCodecMP3))
+    XCTAssertTrue(prepared.audioCookies.isEmpty)
+    guard case let .network(request, container) = prepared.sourceRecipe else {
+      return XCTFail("Expected network FLV recipe")
+    }
+    XCTAssertEqual(container, .flv)
+    XCTAssertEqual(request.mode, .sequentialLive)
+    XCTAssertNil(FallbackFixtureURLProtocol.request?
+      .value(forHTTPHeaderField: "Range"))
   }
 
   func testDiscardedPreparedFallbackCannotTransferItsMedia() throws {

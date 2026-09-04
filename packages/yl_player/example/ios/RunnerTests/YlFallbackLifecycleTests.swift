@@ -83,6 +83,21 @@ final class YlFallbackLifecycleTests: XCTestCase {
     XCTAssertTrue(gate.acceptsAudio(ptsUs: 500))
   }
 
+  func testInitialKeyframeGateDropsEverythingUntilVideoKeyframeAndRearms() {
+    var gate = YlInitialKeyframeGate()
+
+    XCTAssertFalse(gate.accepts(isVideo: false, isKeyframe: false))
+    XCTAssertFalse(gate.accepts(isVideo: true, isKeyframe: false))
+    XCTAssertTrue(gate.accepts(isVideo: true, isKeyframe: true))
+    XCTAssertTrue(gate.accepts(isVideo: false, isKeyframe: false))
+    XCTAssertTrue(gate.accepts(isVideo: true, isKeyframe: false))
+
+    gate.reset()
+    XCTAssertFalse(gate.accepts(isVideo: false, isKeyframe: false))
+    XCTAssertFalse(gate.accepts(isVideo: true, isKeyframe: false))
+    XCTAssertTrue(gate.accepts(isVideo: true, isKeyframe: true))
+  }
+
   func testSequentialSeekIsRejectedBeforeLifecycleMutation() {
     var mutationCount = 0
     let policy = YlFallbackSeekPolicy(
