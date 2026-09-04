@@ -4,6 +4,7 @@ set -eu
 script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 build_script="$script_dir/build_xcframework.sh"
 package_root=$(CDPATH= cd -- "$script_dir/../.." && pwd)
+repo_root=$(CDPATH= cd -- "$package_root/../.." && pwd)
 framework_root="$package_root/macos/yl_player_macos/Frameworks/YlFFmpegBridge.xcframework"
 framework="$framework_root/macos-arm64_x86_64/YlFFmpegBridge.framework"
 binary="$framework/YlFFmpegBridge"
@@ -101,6 +102,68 @@ clang -fobjc-arc -mmacosx-version-min=12.0 \
 
 DYLD_FRAMEWORK_PATH="$(dirname "$framework")" "$test_root/contract-smoke" \
   | grep -Fq "9.0.1"
+
+cat >"$test_root/live_probe.m" <<'EOF'
+#import <Foundation/Foundation.h>
+#import <YlFFmpegBridge/YlFFmpegBridge.h>
+#include <signal.h>
+#include <string.h>
+#include <unistd.h>
+
+typedef struct {
+  const uint8_t *bytes;
+  size_t size;
+  size_t offset;
+} LoopSource;
+
+static int32_t read_loop(void *opaque, uint8_t *buffer, int32_t capacity) {
+  LoopSource *source = opaque;
+  if (source->offset >= source->size) source->offset = 13;
+  size_t available = source->size - source->offset;
+  size_t count = MIN((size_t)capacity, available);
+  memcpy(buffer, source->bytes + source->offset, count);
+  source->offset += count;
+  return (int32_t)count;
+}
+
+static int64_t reject_seek(void *opaque, int64_t offset, int32_t whence) {
+  (void)opaque;
+  (void)offset;
+  (void)whence;
+  return YLFCallbackSeekUnsupported;
+}
+
+static void cancel_loop(void *opaque) { (void)opaque; }
+
+int main(int argc, const char *argv[]) {
+  @autoreleasepool {
+    if (argc != 2) return 2;
+    NSData *data = [NSData dataWithContentsOfFile:@(argv[1])];
+    if (data.length <= 13) return 3;
+    LoopSource source = { data.bytes, data.length, 0 };
+    YLFMediaContextRef context = NULL;
+    YLFMediaInfo info = {0};
+    alarm(3);
+    int32_t result = ylf_open_callbacks(
+        &source, read_loop, reject_seek, cancel_loop, &context, &info);
+    alarm(0);
+    if (result != YLFResultOK || context == NULL || info.stream_count < 1) {
+      ylf_close(&context);
+      return 4;
+    }
+    ylf_close(&context);
+    return 0;
+  }
+}
+EOF
+
+clang -fobjc-arc -mmacosx-version-min=12.0 \
+  -F"$(dirname "$framework")" \
+  -framework Foundation -framework YlFFmpegBridge \
+  "$test_root/live_probe.m" -o "$test_root/live-probe"
+
+DYLD_FRAMEWORK_PATH="$(dirname "$framework")" "$test_root/live-probe" \
+  "$repo_root/packages/yl_player/example/assets/test_media/h264_aac.flv"
 
 test -f "$package_root/LICENSES/FFmpeg-LGPL-2.1-or-later.txt"
 test -f "$package_root/THIRD_PARTY_NOTICES.md"
