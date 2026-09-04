@@ -135,7 +135,7 @@ git commit -m "feat: expose Android playback diagnostics"
 - Produces: `YlDeviceTier`, `YlDeviceSignals`, `YlSourceClass`, `YlBufferProfile`, `YlMemoryAction`, `YlPlaybackPolicy.classifyDevice`, `classifySource`, `effectiveBufferProfile`, and `memoryAction`.
 - Consumes later: parsed `PlayerConfiguration` values and the source method-channel map.
 
-- [ ] **Step 1: Write failing tier and source-classification tests**
+- [x] **Step 1: Write failing tier and source-classification tests**
 
 Cover each boundary explicitly:
 
@@ -163,7 +163,7 @@ fun `explicit hint wins and query is ignored`() {
 Also test 2 GB exactly, API 27, unknown signals, standard, capable, file,
 content, `.m3u8`, `.flv`, generic VOD, and unknown live.
 
-- [ ] **Step 2: Run the Kotlin test and verify failure**
+- [x] **Step 2: Run the Kotlin test and verify failure**
 
 Run from `packages/yl_player_android/example/android`:
 
@@ -173,7 +173,7 @@ Run from `packages/yl_player_android/example/android`:
 
 Expected: compilation fails because the policy types do not exist.
 
-- [ ] **Step 3: Implement pure tier and source classification**
+- [x] **Step 3: Implement pure tier and source classification**
 
 Create stable enums and values:
 
@@ -196,7 +196,7 @@ Parse URL paths with `java.net.URI(uri).path.lowercase()` inside `runCatching`;
 never inspect the query. Evaluate constrained before capable, and treat unknown
 RAM/bitness as incapable of producing `CAPABLE`.
 
-- [ ] **Step 4: Add failing exact-buffer and memory-action tests**
+- [x] **Step 4: Add failing exact-buffer and memory-action tests**
 
 Assert constrained automatic values exactly:
 
@@ -215,7 +215,7 @@ Cover all four source profiles, constrained clamping, standard 64 MiB and
 capable 96 MiB caps, custom smaller values, min-above-max normalization, 25%
 running-low shrink, critical release, UI-hidden release, and foreground restore.
 
-- [ ] **Step 5: Implement buffer and memory decisions**
+- [x] **Step 5: Implement buffer and memory decisions**
 
 Use immutable values:
 
@@ -243,7 +243,7 @@ internal enum class YlMemoryAction { NONE, SHRINK, RELEASE, RESTORE }
 Keep Android callback constants out of the pure policy; the plugin will map
 framework levels to `YlMemoryAction`.
 
-- [ ] **Step 6: Run the policy suite and commit**
+- [x] **Step 6: Run the policy suite and commit**
 
 ```bash
 ./gradlew :yl_player_android:testDebugUnitTest --tests '*YlPlaybackPolicyTest'
