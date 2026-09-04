@@ -56,6 +56,7 @@ enum {
   YLFCodecH264 = 1,
   YLFCodecHEVC = 2,
   YLFCodecAAC = 3,
+  YLFCodecMP3 = 4,
 };
 
 typedef struct {

@@ -13,6 +13,9 @@
 		B20C0001294A63AB00263BE5 /* YlFFmpegBridgeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20C0011294A618700263BE5 /* YlFFmpegBridgeTests.swift */; };
 		B20C0002294A63AB00263BE5 /* h264_aac.mkv in Resources */ = {isa = PBXBuildFile; fileRef = B20C0012294A618700263BE5 /* h264_aac.mkv */; };
 		B20C0003294A63AB00263BE5 /* two_audio_tracks.mkv in Resources */ = {isa = PBXBuildFile; fileRef = B20C0013294A618700263BE5 /* two_audio_tracks.mkv */; };
+		B20C0031294A63AB00263BE5 /* h264_aac.flv in Resources */ = {isa = PBXBuildFile; fileRef = B20C0041294A618700263BE5 /* h264_aac.flv */; };
+		B20C0032294A63AB00263BE5 /* h264_mp3.flv in Resources */ = {isa = PBXBuildFile; fileRef = B20C0042294A618700263BE5 /* h264_mp3.flv */; };
+		B20C0033294A63AB00263BE5 /* hevc_aac.flv in Resources */ = {isa = PBXBuildFile; fileRef = B20C0043294A618700263BE5 /* hevc_aac.flv */; };
 		C30D0001294A63AB00263BE5 /* YlBoundedPacketQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30D0011294A618700263BE5 /* YlBoundedPacketQueueTests.swift */; };
 		C30D0002294A63AB00263BE5 /* YlFrameSchedulerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30D0012294A618700263BE5 /* YlFrameSchedulerTests.swift */; };
 		D40E0001294A63AB00263BE5 /* YlVideoToolboxDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40E0011294A618700263BE5 /* YlVideoToolboxDecoderTests.swift */; };
@@ -67,6 +70,9 @@
 		B20C0011294A618700263BE5 /* YlFFmpegBridgeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlFFmpegBridgeTests.swift; sourceTree = "<group>"; };
 		B20C0012294A618700263BE5 /* h264_aac.mkv */ = {isa = PBXFileReference; lastKnownFileType = file; path = h264_aac.mkv; sourceTree = "<group>"; };
 		B20C0013294A618700263BE5 /* two_audio_tracks.mkv */ = {isa = PBXFileReference; lastKnownFileType = file; path = two_audio_tracks.mkv; sourceTree = "<group>"; };
+		B20C0041294A618700263BE5 /* h264_aac.flv */ = {isa = PBXFileReference; lastKnownFileType = file; path = h264_aac.flv; sourceTree = "<group>"; };
+		B20C0042294A618700263BE5 /* h264_mp3.flv */ = {isa = PBXFileReference; lastKnownFileType = file; path = h264_mp3.flv; sourceTree = "<group>"; };
+		B20C0043294A618700263BE5 /* hevc_aac.flv */ = {isa = PBXFileReference; lastKnownFileType = file; path = hevc_aac.flv; sourceTree = "<group>"; };
 		C30D0011294A618700263BE5 /* YlBoundedPacketQueueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlBoundedPacketQueueTests.swift; sourceTree = "<group>"; };
 		C30D0012294A618700263BE5 /* YlFrameSchedulerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlFrameSchedulerTests.swift; sourceTree = "<group>"; };
 		D40E0011294A618700263BE5 /* YlVideoToolboxDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlVideoToolboxDecoderTests.swift; sourceTree = "<group>"; };
@@ -139,6 +145,9 @@
 				B20C0012294A618700263BE5 /* h264_aac.mkv */,
 				B20C0013294A618700263BE5 /* two_audio_tracks.mkv */,
 				F6200012294A618700263BE5 /* hevc_aac.mkv */,
+				B20C0041294A618700263BE5 /* h264_aac.flv */,
+				B20C0042294A618700263BE5 /* h264_mp3.flv */,
+				B20C0043294A618700263BE5 /* hevc_aac.flv */,
 			);
 			path = Fixtures;
 			sourceTree = "<group>";
@@ -283,6 +292,9 @@
 				B20C0002294A63AB00263BE5 /* h264_aac.mkv in Resources */,
 				B20C0003294A63AB00263BE5 /* two_audio_tracks.mkv in Resources */,
 				F6200002294A63AB00263BE5 /* hevc_aac.mkv in Resources */,
+				B20C0031294A63AB00263BE5 /* h264_aac.flv in Resources */,
+				B20C0032294A63AB00263BE5 /* h264_mp3.flv in Resources */,
+				B20C0033294A63AB00263BE5 /* hevc_aac.flv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -49,7 +49,40 @@ ffmpeg -hide_banner -loglevel error -y \
   $common_output_flags \
   "$fixture_dir/hevc_aac.mkv"
 
+# shellcheck disable=SC2086
+ffmpeg -hide_banner -loglevel error -y \
+  -f lavfi -i testsrc2=size=320x180:rate=24 \
+  -f lavfi -i sine=frequency=440:sample_rate=48000 \
+  -map 0:v -map 1:a \
+  $common_video_flags -c:a aac -b:a 96k \
+  $common_output_flags -f flv \
+  "$fixture_dir/h264_aac.flv"
+
+# shellcheck disable=SC2086
+ffmpeg -hide_banner -loglevel error -y \
+  -f lavfi -i testsrc2=size=320x180:rate=24 \
+  -f lavfi -i sine=frequency=550:sample_rate=48000 \
+  -map 0:v -map 1:a \
+  $common_video_flags -c:a libmp3lame -b:a 96k \
+  $common_output_flags -f flv \
+  "$fixture_dir/h264_mp3.flv"
+
+# Enhanced FLV signals HEVC through its fourcc when the codec is selected; an
+# explicit legacy FLV codec tag would make the muxer reject this stream.
+ffmpeg -hide_banner -loglevel error -y \
+  -f lavfi -i testsrc2=size=320x180:rate=24 \
+  -f lavfi -i sine=frequency=660:sample_rate=48000 \
+  -map 0:v -map 1:a \
+  -c:v libx265 -pix_fmt yuv420p -g 24 -keyint_min 24 \
+  -x265-params "log-level=error:pools=1:frame-threads=1:scenecut=0" \
+  -c:a aac -b:a 96k \
+  $common_output_flags -f flv \
+  "$fixture_dir/hevc_aac.flv"
+
 cp "$fixture_dir/h264_aac.mkv" "$asset_dir/h264_aac.mkv"
 cp "$fixture_dir/two_audio_tracks.mkv" "$asset_dir/two_audio_tracks.mkv"
+cp "$fixture_dir/h264_aac.flv" "$asset_dir/h264_aac.flv"
+cp "$fixture_dir/h264_mp3.flv" "$asset_dir/h264_mp3.flv"
+cp "$fixture_dir/hevc_aac.flv" "$asset_dir/hevc_aac.flv"
 
-echo "generated deterministic MKV fixtures in $fixture_dir"
+echo "generated deterministic MKV and FLV fixtures in $fixture_dir"

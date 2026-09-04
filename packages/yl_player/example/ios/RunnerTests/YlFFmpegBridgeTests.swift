@@ -80,21 +80,60 @@ private func fixtureCancel(_ opaque: UnsafeMutableRawPointer?) {
 final class YlFFmpegBridgeTests: XCTestCase {
     private let unknownTimestamp = Int64.min
 
-    private func fixture(_ name: String) throws -> URL {
+    private func fixture(_ name: String, extension fileExtension: String = "mkv") throws -> URL {
         try XCTUnwrap(
-            Bundle(for: Self.self).url(forResource: name, withExtension: "mkv"),
-            "Missing bundled fixture \(name).mkv"
+            Bundle(for: Self.self).url(forResource: name, withExtension: fileExtension),
+            "Missing bundled fixture \(name).\(fileExtension)"
         )
     }
 
-    private func open(_ name: String) throws -> (YLFMediaContextRef?, YLFMediaInfo) {
+    private func open(
+        _ name: String,
+        extension fileExtension: String = "mkv"
+    ) throws -> (YLFMediaContextRef?, YLFMediaInfo) {
         var context: YLFMediaContextRef?
         var info = YLFMediaInfo()
-        let path = try fixture(name).path
+        let path = try fixture(name, extension: fileExtension).path
         let result = path.withCString { ylf_open_local($0, &context, &info) }
         XCTAssertEqual(result, 0)
         XCTAssertNotNil(context)
         return (context, info)
+    }
+
+    func testReadsSupportedFlvCodecMetadataAndKeyframes() throws {
+        let cases: [(String, Int32, Int32)] = [
+            ("h264_aac", Int32(YLFCodecH264), Int32(YLFCodecAAC)),
+            ("h264_mp3", Int32(YLFCodecH264), Int32(YLFCodecMP3)),
+            ("hevc_aac", Int32(YLFCodecHEVC), Int32(YLFCodecAAC)),
+        ]
+
+        for (name, expectedVideoCodec, expectedAudioCodec) in cases {
+            var (context, mediaInfo) = try open(name, extension: "flv")
+            defer { ylf_close(&context) }
+
+            var video: YLFStreamInfo?
+            var audio: YLFStreamInfo?
+            for index in 0..<mediaInfo.stream_count {
+                var stream = YLFStreamInfo()
+                XCTAssertEqual(ylf_copy_stream_info(context, index, &stream), 0)
+                if Int(stream.kind) == YLFStreamVideo { video = stream }
+                if Int(stream.kind) == YLFStreamAudio { audio = stream }
+            }
+            XCTAssertEqual(try XCTUnwrap(video).codec, expectedVideoCodec)
+            XCTAssertEqual(try XCTUnwrap(audio).codec, expectedAudioCodec)
+
+            var sawVideoKeyframe = false
+            while !sawVideoKeyframe {
+                var packet: YLFPacketRef?
+                let result = ylf_read_packet(context, &packet)
+                XCTAssertEqual(result, Int32(YLFResultOK))
+                let owned = try XCTUnwrap(packet)
+                sawVideoKeyframe = ylf_packet_stream_index(owned) == video?.index
+                    && ylf_packet_is_keyframe(owned)
+                ylf_packet_release(&packet)
+            }
+            XCTAssertEqual(ylf_debug_outstanding_packet_count(), 0)
+        }
     }
 
     func testReadsH264AACMetadataPacketsEOFAndSeek() throws {

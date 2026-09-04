@@ -27,9 +27,9 @@ common_flags=(
   --enable-avutil
   --enable-avcodec
   --enable-avformat
-  --enable-demuxer=matroska
+  --enable-demuxer=matroska,flv
   --enable-protocol=file
-  --enable-parser=aac,h264,hevc
+  --enable-parser=aac,h264,hevc,mpegaudio
   --enable-pic
   --enable-static
   --disable-shared

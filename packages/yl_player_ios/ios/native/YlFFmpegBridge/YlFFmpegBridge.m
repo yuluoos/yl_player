@@ -117,10 +117,17 @@ static int32_t ylf_callback_failure(struct YLFMediaContext *context,
   }
 }
 
+static bool ylf_is_supported_input_format(const AVInputFormat *input_format) {
+  if (input_format == NULL || input_format->name == NULL) {
+    return false;
+  }
+  return strstr(input_format->name, "matroska") != NULL ||
+         strstr(input_format->name, "flv") != NULL;
+}
+
 static int32_t ylf_discover_streams(struct YLFMediaContext *context,
                                     YLFMediaInfo *out_info) {
-  const char *format_name = context->format->iformat->name;
-  if (format_name == NULL || strstr(format_name, "matroska") == NULL) {
+  if (!ylf_is_supported_input_format(context->format->iformat)) {
     return YLFResultUnsupportedContainer;
   }
   if (avformat_find_stream_info(context->format, NULL) < 0) {
@@ -190,6 +197,8 @@ static int32_t ylf_codec(enum AVCodecID codec_id) {
     return YLFCodecHEVC;
   case AV_CODEC_ID_AAC:
     return YLFCodecAAC;
+  case AV_CODEC_ID_MP3:
+    return YLFCodecMP3;
   default:
     return YLFCodecUnsupported;
   }
@@ -458,8 +467,7 @@ int32_t ylf_open_callbacks(void *opaque,
                                             NULL,
                                             0,
                                             1024 * 1024);
-  if (probe_result < 0 || input_format == NULL || input_format->name == NULL ||
-      strstr(input_format->name, "matroska") == NULL) {
+  if (probe_result < 0 || !ylf_is_supported_input_format(input_format)) {
     int32_t result = ylf_callback_failure(context,
                                           YLFResultUnsupportedContainer);
     ylf_destroy_context(context);

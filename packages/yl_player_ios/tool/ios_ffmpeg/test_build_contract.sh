@@ -36,8 +36,9 @@ require_line "--disable-avdevice"
 require_line "--disable-avfilter"
 require_line "--disable-swscale"
 require_line "--disable-swresample"
-require_line "--enable-demuxer=matroska"
+require_line "--enable-demuxer=matroska,flv"
 require_line "--enable-protocol=file"
+require_line "--enable-parser=aac,h264,hevc,mpegaudio"
 require_line "--disable-gpl"
 require_line "--disable-nonfree"
 
@@ -45,6 +46,9 @@ reject_text "--enable-gpl"
 reject_text "--enable-nonfree"
 reject_text "--enable-decoder=h264"
 reject_text "--enable-decoder=hevc"
+reject_text "--enable-decoder=mp3"
+reject_text "--enable-protocol=http"
+reject_text "--enable-protocol=https"
 
 require_symbol() {
   binary=$1
