@@ -103,6 +103,13 @@ void main() {
         'engine': 'media3',
         'isHardwareDecoding': true,
         'decoderName': 'c2.android.avc.decoder',
+        'metrics': <String, Object?>{
+          'androidDeviceTier': 'constrained',
+          'targetBufferBytes': 24 * 1024 * 1024,
+          'adaptiveDowngradeCount': 1,
+          'surfaceRebuildCount': 2,
+          'selectedVideoBitrate': 2500000,
+        },
       },
     });
     nativeEvents.add(<String, Object?>{
@@ -119,6 +126,11 @@ void main() {
     expect(states.single.status, YlPlaybackStatus.playing);
     expect(states.single.videoSize?.width, 1920);
     expect(states.single.engine, YlPlaybackEngine.media3);
+    expect(states.single.metrics.androidDeviceTier, 'constrained');
+    expect(states.single.metrics.targetBufferBytes, 24 * 1024 * 1024);
+    expect(states.single.metrics.adaptiveDowngradeCount, 1);
+    expect(states.single.metrics.surfaceRebuildCount, 2);
+    expect(states.single.metrics.selectedVideoBitrate, 2500000);
     expect(events.single, isA<YlErrorEvent>());
 
     await stateSubscription.cancel();

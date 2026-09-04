@@ -131,6 +131,11 @@ void main() {
     expect(states.single.status, YlPlaybackStatus.playing);
     expect(states.single.videoSize?.width, 1920);
     expect(states.single.engine, YlPlaybackEngine.avPlayer);
+    expect(states.single.metrics.androidDeviceTier, isNull);
+    expect(states.single.metrics.targetBufferBytes, isNull);
+    expect(states.single.metrics.adaptiveDowngradeCount, isNull);
+    expect(states.single.metrics.surfaceRebuildCount, isNull);
+    expect(states.single.metrics.selectedVideoBitrate, isNull);
     expect(events.single, isA<YlErrorEvent>());
 
     await stateSubscription.cancel();

@@ -12,6 +12,11 @@ final class YlPlaybackMetrics {
     this.bufferedBytes = 0,
     this.liveOffset,
     this.reconnectCount = 0,
+    this.androidDeviceTier,
+    this.targetBufferBytes,
+    this.adaptiveDowngradeCount,
+    this.surfaceRebuildCount,
+    this.selectedVideoBitrate,
   });
 
   final Duration? openDuration;
@@ -25,4 +30,9 @@ final class YlPlaybackMetrics {
   final int bufferedBytes;
   final Duration? liveOffset;
   final int reconnectCount;
+  final String? androidDeviceTier;
+  final int? targetBufferBytes;
+  final int? adaptiveDowngradeCount;
+  final int? surfaceRebuildCount;
+  final int? selectedVideoBitrate;
 }

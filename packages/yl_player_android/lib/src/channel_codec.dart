@@ -247,5 +247,10 @@ YlPlaybackMetrics _decodeMetrics(Object? value) {
     bufferedBytes: _int(map['bufferedBytes']) ?? 0,
     liveOffset: nullableDuration('liveOffsetMs'),
     reconnectCount: _int(map['reconnectCount']) ?? 0,
+    androidDeviceTier: map['androidDeviceTier'] as String?,
+    targetBufferBytes: _int(map['targetBufferBytes']),
+    adaptiveDowngradeCount: _int(map['adaptiveDowngradeCount']),
+    surfaceRebuildCount: _int(map['surfaceRebuildCount']),
+    selectedVideoBitrate: _int(map['selectedVideoBitrate']),
   );
 }

@@ -118,6 +118,22 @@ void main() {
     expect(capabilities.supportedFormats, {YlFormatHint.hls});
   });
 
+  test('playback metrics expose optional Android diagnostics', () {
+    const metrics = YlPlaybackMetrics(
+      androidDeviceTier: 'constrained',
+      targetBufferBytes: 24 * 1024 * 1024,
+      adaptiveDowngradeCount: 1,
+      surfaceRebuildCount: 2,
+      selectedVideoBitrate: 2500000,
+    );
+
+    expect(metrics.androidDeviceTier, 'constrained');
+    expect(metrics.targetBufferBytes, 24 * 1024 * 1024);
+    expect(metrics.adaptiveDowngradeCount, 1);
+    expect(metrics.surfaceRebuildCount, 2);
+    expect(metrics.selectedVideoBitrate, 2500000);
+  });
+
   test('configuration exposes safe TVBox defaults', () {
     const configuration = YlPlayerConfiguration();
 

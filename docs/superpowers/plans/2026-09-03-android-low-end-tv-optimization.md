@@ -51,7 +51,7 @@
 - Produces: nullable `androidDeviceTier`, `targetBufferBytes`, `adaptiveDowngradeCount`, `surfaceRebuildCount`, and `selectedVideoBitrate` fields on `YlPlaybackMetrics`.
 - Compatibility: missing native map keys decode to `null`; existing constructor calls remain valid.
 
-- [ ] **Step 1: Write failing Dart model and channel tests**
+- [x] **Step 1: Write failing Dart model and channel tests**
 
 Add a platform-interface assertion:
 
@@ -71,7 +71,7 @@ Extend the Android native-state fixture with all five map keys and assert every
 decoded value. Add an iOS fixture without those keys and assert all five fields
 are null.
 
-- [ ] **Step 2: Run the focused tests and verify failure**
+- [x] **Step 2: Run the focused tests and verify failure**
 
 Run:
 
@@ -83,7 +83,7 @@ flutter test packages/yl_player_ios/test/yl_player_ios_test.dart
 
 Expected: compilation fails because the five members do not exist.
 
-- [ ] **Step 3: Add the nullable fields and decode them**
+- [x] **Step 3: Add the nullable fields and decode them**
 
 Extend the constructor and class with:
 
@@ -105,7 +105,7 @@ In both Android and iOS `_decodeMetrics`, pass `_int(...)` for numeric fields an
 `map['androidDeviceTier'] as String?` for the tier. Do not synthesize Android
 defaults in Dart.
 
-- [ ] **Step 4: Format and rerun the focused tests**
+- [x] **Step 4: Format and rerun the focused tests**
 
 Run:
 
@@ -118,7 +118,7 @@ flutter test packages/yl_player_ios/test/yl_player_ios_test.dart
 
 Expected: all pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add packages/yl_player_platform_interface packages/yl_player_android/lib packages/yl_player_android/test packages/yl_player_ios/lib packages/yl_player_ios/test
@@ -714,7 +714,7 @@ guard late analytics events and that each resource release is idempotent.
 ./gradlew :yl_player_android:testDebugUnitTest
 ./gradlew :yl_player_android:compileDebugKotlin
 flutter test packages/yl_player_android
-flutter test packages/yl_player
+flutter test packages/yl_player/test
 ```
 
 Expected: pass.
@@ -768,7 +768,7 @@ Expected: all exit zero.
 flutter test packages/yl_player_platform_interface
 flutter test packages/yl_player_android
 flutter test packages/yl_player_ios
-flutter test packages/yl_player
+flutter test packages/yl_player/test
 cd packages/yl_player_android/example/android
 ./gradlew :yl_player_android:testDebugUnitTest
 ```
