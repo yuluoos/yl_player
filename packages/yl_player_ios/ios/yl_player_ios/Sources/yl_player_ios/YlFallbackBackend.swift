@@ -872,22 +872,16 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         "decoderName": "VideoToolbox",
         "audioTracks": audioTracks,
         "videoTracks": videoTracks,
-        "capabilities": [
-          "hardwareVideoCodecs": ["h264", "hevc"],
-          "supportedFormats": ["matroska", "httpFlv", "flv"],
-          "maxConcurrentVideoDecoders": 1,
-        ],
-        "metrics": [
-          "openDurationMs": openDurationMs,
-          "firstFrameDurationMs": firstFrameDurationMs,
-          "rebufferCount": 0,
-          "rebufferDurationMs": 0,
-          "bufferedDurationMs": scheduledAudioDurationUs / 1_000,
-          "bufferedBytes": scheduledAudioBytes,
-          "droppedFrames": frameScheduler.lateFrameDropCount,
-          "audioUnderruns": audioUnderruns,
-          "reconnectCount": reconnectCount,
-        ],
+        "capabilities": YlIosChannel.deviceCapabilities,
+        "metrics": YlIosChannel.fallbackMetrics(
+          openDurationMs: openDurationMs,
+          firstFrameDurationMs: firstFrameDurationMs,
+          bufferedDurationMs: scheduledAudioDurationUs / 1_000,
+          bufferedBytes: scheduledAudioBytes,
+          droppedVideoFrames: frameScheduler.lateFrameDropCount,
+          audioUnderruns: audioUnderruns,
+          reconnectCount: reconnectCount
+        ),
         "error": currentError,
       ],
     ])

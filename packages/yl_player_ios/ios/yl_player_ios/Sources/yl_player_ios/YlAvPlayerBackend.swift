@@ -587,11 +587,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
         "decoderName": nil,
         "audioTracks": audioTracks,
         "videoTracks": videoTracks,
-        "capabilities": [
-          "hardwareVideoCodecs": [],
-          "supportedFormats": ["automatic", "hls", "mp4", "mov", "httpFlv", "flv"],
-          "maxConcurrentVideoDecoders": 1,
-        ],
+        "capabilities": YlIosChannel.deviceCapabilities,
         "metrics": [
           "openDurationMs": openDurationMs,
           "firstFrameDurationMs": firstFrameDurationMs,
@@ -662,7 +658,7 @@ struct PlayerConfiguration {
 
   init(map: [String: Any?]) {
     bufferMode = map["bufferMode"] as? String ?? "automatic"
-    decoderPolicy = map["decoderPolicy"] as? String ?? "preferHardware"
+    decoderPolicy = map["decoderPolicy"] as? String ?? "hardwareOnly"
     maxBufferBytes = int64(map["maxBufferBytes"]).map { Int(clamping: max(0, $0)) }
     network = YlNetworkConfiguration(map: stringMap(map["network"]))
     positionEventIntervalMs = min(
