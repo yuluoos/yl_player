@@ -65,7 +65,8 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
   }
 
   var supportsRandomAccess: Bool {
-    stateLock.withLock { metadata?.supportsRandomAccess ?? false }
+    guard recipe.mode == .randomAccessVOD else { return false }
+    return stateLock.withLock { metadata?.supportsRandomAccess ?? false }
   }
 
   var currentOffset: Int64 { ring.currentOffset }
@@ -88,6 +89,13 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
         category: "network",
         code: "network.range_invalid",
         message: "A negative network byte offset is invalid."
+      ))
+    }
+    if recipe.mode == .sequentialLive, offset != 0 {
+      throw YlByteSourceError.failed(NativePlayerError(
+        category: "network",
+        code: "network.range_not_supported",
+        message: "This live network source does not support random access."
       ))
     }
     if ring.seekWithinBuffer(to: offset) { return offset }
@@ -196,12 +204,13 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
     activeTask = nil
     cancelTimersLocked()
 
-    let canResume = bytesThisAttempt == 0 || (metadata?.supportsRandomAccess == true)
+    let canResume = recipe.mode == .randomAccessVOD
+      && (bytesThisAttempt == 0 || metadata?.supportsRandomAccess == true)
     if transient && canResume && retryCount < recipe.configuration.maxRetries {
       retryCount += 1
       let delay = retryDelay(millisecondsForAttempt: retryCount)
       retry = (retryCount, delay, writeOffset, metadata)
-    } else if transient {
+    } else if transient && recipe.mode == .randomAccessVOD {
       terminalError = NativePlayerError(
         category: "network",
         code: "network.retry_exhausted",

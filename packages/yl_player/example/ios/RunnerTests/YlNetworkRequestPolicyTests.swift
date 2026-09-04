@@ -6,7 +6,8 @@ final class YlNetworkRequestPolicyTests: XCTestCase {
   private func makePolicy(
     url: String = "https://media.test/movie.mkv?token=secret#fragment",
     headers: [String: String] = [:],
-    maxRedirects: Int = 5
+    maxRedirects: Int = 5,
+    mode: YlNetworkInputMode = .randomAccessVOD
   ) -> YlNetworkRequestPolicy {
     YlNetworkRequestPolicy(
       recipe: YlNetworkRequestRecipe(
@@ -14,7 +15,8 @@ final class YlNetworkRequestPolicyTests: XCTestCase {
         headers: headers,
         configuration: YlNetworkConfiguration(map: [
           "maxRedirects": maxRedirects,
-        ])
+        ]),
+        mode: mode
       )
     )
   }
@@ -69,6 +71,18 @@ final class YlNetworkRequestPolicyTests: XCTestCase {
     let resumed = try policy.request(offset: 41, validator: validator)
     XCTAssertEqual(resumed.value(forHTTPHeaderField: "Range"), "bytes=41-")
     XCTAssertEqual(resumed.value(forHTTPHeaderField: "If-Range"), "\"version-1\"")
+  }
+
+  func testSequentialLiveRequestNeverUsesRangeHeaders() throws {
+    let policy = makePolicy(
+      headers: ["Range": "bytes=99-", "If-Range": "secret"],
+      mode: .sequentialLive
+    )
+
+    let request = try policy.request(offset: 0, validator: nil)
+
+    XCTAssertNil(request.value(forHTTPHeaderField: "Range"))
+    XCTAssertNil(request.value(forHTTPHeaderField: "If-Range"))
   }
 
   func testWeakETagFallsBackToLastModifiedWhenLengthKnown() throws {

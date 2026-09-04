@@ -1,9 +1,27 @@
 import Foundation
 
+enum YlNetworkInputMode: Equatable {
+  case randomAccessVOD
+  case sequentialLive
+}
+
 struct YlNetworkRequestRecipe {
   let url: URL
   let headers: [String: String]
   let configuration: YlNetworkConfiguration
+  let mode: YlNetworkInputMode
+
+  init(
+    url: URL,
+    headers: [String: String],
+    configuration: YlNetworkConfiguration,
+    mode: YlNetworkInputMode = .randomAccessVOD
+  ) {
+    self.url = url
+    self.headers = headers
+    self.configuration = configuration
+    self.mode = mode
+  }
 }
 
 struct YlNetworkResponseMetadata: Equatable {
@@ -32,6 +50,9 @@ final class YlNetworkRequestPolicy {
   ) throws -> URLRequest {
     guard offset >= 0 else {
       throw rangeInvalid("Negative byte offset")
+    }
+    guard recipe.mode == .randomAccessVOD || offset == 0 else {
+      throw rangeNotSupported()
     }
     try Self.validateHTTPURL(recipe.url)
     lock.lock()
@@ -111,7 +132,7 @@ final class YlNetworkRequestPolicy {
         response: response,
         start: range.start,
         length: range.total,
-        randomAccess: true,
+        randomAccess: recipe.mode == .randomAccessVOD,
         isEOF: false
       )
       try validateRepresentation(metadata)
@@ -181,9 +202,11 @@ final class YlNetworkRequestPolicy {
     for (name, value) in headers where !Self.ownedHeaderNames.contains(name.lowercased()) {
       request.setValue(value, forHTTPHeaderField: name)
     }
-    request.setValue("bytes=\(offset)-", forHTTPHeaderField: "Range")
-    if let validator = Self.ifRangeValue(validator) {
-      request.setValue(validator, forHTTPHeaderField: "If-Range")
+    if recipe.mode == .randomAccessVOD {
+      request.setValue("bytes=\(offset)-", forHTTPHeaderField: "Range")
+      if let validator = Self.ifRangeValue(validator) {
+        request.setValue(validator, forHTTPHeaderField: "If-Range")
+      }
     }
     return request
   }
@@ -297,6 +320,14 @@ final class YlNetworkRequestPolicy {
       code: "network.range_invalid",
       message: "The server returned an invalid byte range.",
       diagnostic: detail
+    )
+  }
+
+  private func rangeNotSupported() -> NativePlayerError {
+    NativePlayerError(
+      category: "network",
+      code: "network.range_not_supported",
+      message: "This network source does not support random access."
     )
   }
 

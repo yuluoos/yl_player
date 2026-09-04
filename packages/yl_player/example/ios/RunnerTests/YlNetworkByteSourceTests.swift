@@ -136,6 +136,7 @@ final class YlNetworkByteSourceTests: XCTestCase {
     capacity: Int = 32,
     configuration: [String: Any?] = [:],
     headers: [String: String] = [:],
+    mode: YlNetworkInputMode = .randomAccessVOD,
     retries: ((Int, Int64, NativePlayerError) -> Void)? = nil
   ) -> YlNetworkByteSource {
     let url = ScriptedURLProtocol.configure(scripts)
@@ -145,7 +146,8 @@ final class YlNetworkByteSourceTests: XCTestCase {
       recipe: YlNetworkRequestRecipe(
         url: url,
         headers: headers,
-        configuration: YlNetworkConfiguration(map: configuration)
+        configuration: YlNetworkConfiguration(map: configuration),
+        mode: mode
       ),
       capacity: capacity,
       sessionConfiguration: sessionConfiguration,
@@ -264,6 +266,75 @@ final class YlNetworkByteSourceTests: XCTestCase {
     XCTAssertEqual(try readToEnd(source, chunkSize: 2), [1, 2, 3, 4])
     XCTAssertEqual(source.length, 4)
     XCTAssertFalse(source.supportsRandomAccess)
+    XCTAssertEqual(ScriptedURLProtocol.recordedRequests.count, 1)
+  }
+
+  func testSequentialLiveChunkedResponseWaitsForTaskCompletion() throws {
+    let source = makeSource(
+      scripts: [
+        .response(
+          status: 200,
+          chunks: [(0, Data([1, 2])), (0.02, Data([3, 4]))]
+        ),
+      ],
+      mode: .sequentialLive
+    )
+    defer { source.cancel() }
+
+    XCTAssertEqual(try readToEnd(source, chunkSize: 2), [1, 2, 3, 4])
+    XCTAssertNil(source.length)
+    XCTAssertFalse(source.supportsRandomAccess)
+    XCTAssertNil(ScriptedURLProtocol.recordedRequests[0]
+      .value(forHTTPHeaderField: "Range"))
+  }
+
+  func testSequentialLiveRejectsNonzeroSeek() {
+    let source = makeSource(
+      scripts: [.stall()],
+      mode: .sequentialLive
+    )
+    defer { source.cancel() }
+
+    let received = nativeError { try source.seek(to: 1) }
+    XCTAssertEqual(received.code, "network.range_not_supported")
+  }
+
+  func testPartialSequentialLiveFailureSurfacesWithoutInContextRetry() throws {
+    let source = makeSource(
+      scripts: [
+        .stall(),
+        .response(status: 200, chunks: [(0, Data([3, 4]))]),
+      ],
+      configuration: ["readTimeoutMs": 5_000, "baseRetryDelayMs": 0],
+      mode: .sequentialLive
+    )
+    defer { source.cancel() }
+
+    let task = try activeTask(source)
+    deliver(
+      to: source,
+      task: task,
+      status: 200,
+      headers: [:],
+      data: Data([1, 2])
+    )
+    source.urlSession(
+      URLSession.shared,
+      task: task,
+      didCompleteWithError: URLError(.networkConnectionLost)
+    )
+
+    var first = [UInt8](repeating: 0, count: 2)
+    XCTAssertEqual(
+      try first.withUnsafeMutableBytes { try source.read(into: $0) },
+      2
+    )
+    XCTAssertEqual(first, [1, 2])
+    let received = nativeError {
+      var next = [UInt8](repeating: 0, count: 1)
+      return try next.withUnsafeMutableBytes { try source.read(into: $0) }
+    }
+    XCTAssertEqual(received.code, "network.http_status")
     XCTAssertEqual(ScriptedURLProtocol.recordedRequests.count, 1)
   }
 
