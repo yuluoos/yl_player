@@ -445,7 +445,7 @@ git commit -m "feat: bound Android media buffers"
 - Consumes: device profile, source policy, hardware selector, and adaptive LoadControl.
 - Produces: Media3 track constraints, selected bitrate metrics, single decoder retry, and stable error mapping.
 
-- [ ] **Step 1: Write failing error and recovery-decision tests**
+- [x] **Step 1: Write failing error and recovery-decision tests**
 
 Extract a pure mapper and assert exact results:
 
@@ -473,13 +473,13 @@ assertEquals(
 Cover capability exceeded, fixed-stream failure, decoder busy, memory-pressure
 rebuild failure, and exhausted live retry.
 
-- [ ] **Step 2: Run and verify failure**
+- [x] **Step 2: Run and verify failure**
 
 ```bash
 ./gradlew :yl_player_android:testDebugUnitTest --tests '*YlPlayerErrorPolicyTest'
 ```
 
-- [ ] **Step 3: Apply effective quality constraints at open**
+- [x] **Step 3: Apply effective quality constraints at open**
 
 Store the host constraint separately. Rebuild track-selector parameters at each
 source generation and apply the minimum width, height, and bitrate ceiling. Set
@@ -491,7 +491,7 @@ Record the selected video track's declared bitrate in `selectedVideoBitrate` on
 `onTracksChanged`, or null when unknown. Reset all five new per-open diagnostics
 as defined by the spec.
 
-- [ ] **Step 4: Add the one permitted adaptive decoder retry**
+- [x] **Step 4: Add the one permitted adaptive decoder retry**
 
 On `ERROR_CODE_DECODER_INIT_FAILED`, inspect the current selected adaptive video
 group. If no retry has occurred and a lower supported track exists, exclude the
@@ -500,7 +500,7 @@ the downgrade counter, and prepare once. Otherwise emit
 `decoder.initialization_failed`. Fixed sources emit
 `decoder.hardware_required` or `decoder.capability_exceeded` without retry.
 
-- [ ] **Step 5: Emit stable errors and metrics**
+- [x] **Step 5: Emit stable errors and metrics**
 
 Add these keys to the native metrics map:
 
@@ -515,7 +515,7 @@ Add these keys to the native metrics map:
 Use only sanitized codec name, dimensions, frame rate, and API level in error
 diagnostics. Never include URL or headers.
 
-- [ ] **Step 6: Run Android and Flutter tests**
+- [x] **Step 6: Run Android and Flutter tests**
 
 ```bash
 ./gradlew :yl_player_android:testDebugUnitTest
@@ -525,7 +525,7 @@ flutter test packages/yl_player_android
 
 Expected: pass.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add packages/yl_player_android/android/src packages/yl_player_android/test

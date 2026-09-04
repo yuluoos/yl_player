@@ -42,6 +42,7 @@ import java.net.ProtocolException
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
+import kotlin.math.roundToInt
 import kotlin.random.Random
 import okhttp3.OkHttpClient
 
@@ -229,6 +230,7 @@ private class Media3Player(
     private val exoPlayer: ExoPlayer
     private val audioSelections = mutableMapOf<String, AudioSelection>()
     private var sourceIsLive = false
+    private var sourceClass = YlSourceClass.NETWORK_VOD
     private var disposed = false
     private var status = "idle"
     private var openStartedAtMs: Long? = null
@@ -243,6 +245,12 @@ private class Media3Player(
     private var audioUnderruns = 0
     private var decoderName: String? = null
     private var isHardwareDecoding = false
+    private var hostQualityConstraint = AndroidQualityConstraint()
+    private var adaptiveBitrateCeiling: Int? = null
+    private var decoderRetryCount = 0
+    private var adaptiveDowngradeCount = 0
+    private var selectedVideoBitrate: Int? = null
+    private var availableVideoBitrates: List<Int> = emptyList()
     private var currentError: Map<String, Any?>? = null
     private var active = false
     private var savedPositionMs = 0L
@@ -258,6 +266,8 @@ private class Media3Player(
                 "automatic", "hls", "httpFlv", "mp4", "matroska", "webm", "mpegTs", "mpegPs", "flv",
             ),
             "maxConcurrentVideoDecoders" to 1,
+            "maxWidth" to deviceProfile.videoEnvelope.maxWidth,
+            "maxHeight" to deviceProfile.videoEnvelope.maxHeight,
         )
     }
     private val positionTicker = object : Runnable {
@@ -277,9 +287,7 @@ private class Media3Player(
             .setTrackSelector(trackSelector)
             .setLoadControl(loadControl)
             .build()
-        trackSelector.parameters = trackSelector.buildUponParameters()
-            .setTrackTypeDisabled(C.TRACK_TYPE_TEXT, true)
-            .build()
+        applyTrackConstraints()
         exoPlayer.addListener(this)
         exoPlayer.addAnalyticsListener(this)
     }
@@ -388,7 +396,7 @@ private class Media3Player(
         validateOpen(source)
         val uriString = source["uri"] as String
         sourceIsLive = source["isLive"] == true
-        val sourceClass = YlPlaybackPolicy.classifySource(
+        sourceClass = YlPlaybackPolicy.classifySource(
             kind = source["kind"] as? String ?: "network",
             isLive = sourceIsLive,
             formatHint = source["formatHint"] as? String ?: "automatic",
@@ -439,11 +447,17 @@ private class Media3Player(
         audioUnderruns = 0
         decoderName = null
         isHardwareDecoding = false
+        decoderRetryCount = 0
+        adaptiveDowngradeCount = 0
+        adaptiveBitrateCeiling = null
+        selectedVideoBitrate = null
+        availableVideoBitrates = emptyList()
         currentError = null
         audioSelections.clear()
         audioTracks = emptyList()
         videoTracks = emptyList()
         lastVideoSize = VideoSize.UNKNOWN
+        applyTrackConstraints()
         status = "opening"
         exoPlayer.stop()
         exoPlayer.clearMediaItems()
@@ -466,12 +480,30 @@ private class Media3Player(
     }
 
     private fun setQualityConstraint(constraint: Map<String, Any?>) {
-        val width = (constraint["maxWidth"] as? Number)?.toInt() ?: Int.MAX_VALUE
-        val height = (constraint["maxHeight"] as? Number)?.toInt() ?: Int.MAX_VALUE
-        val bitrate = (constraint["maxBitrate"] as? Number)?.toInt() ?: Int.MAX_VALUE
+        hostQualityConstraint = AndroidQualityConstraint(
+            maxWidth = (constraint["maxWidth"] as? Number)?.toInt(),
+            maxHeight = (constraint["maxHeight"] as? Number)?.toInt(),
+            maxBitrate = (constraint["maxBitrate"] as? Number)?.toInt(),
+        )
+        applyTrackConstraints()
+    }
+
+    private fun applyTrackConstraints() {
+        val envelope = deviceProfile.videoEnvelope.intersect(
+            hostQualityConstraint.maxWidth,
+            hostQualityConstraint.maxHeight,
+        )
+        val bitrate = listOfNotNull(
+            hostQualityConstraint.maxBitrate,
+            adaptiveBitrateCeiling,
+        ).minOrNull() ?: Int.MAX_VALUE
         trackSelector.parameters = trackSelector.buildUponParameters()
-            .setMaxVideoSize(width, height)
+            .setTrackTypeDisabled(C.TRACK_TYPE_TEXT, true)
+            .setMaxVideoSize(envelope.maxWidth ?: Int.MAX_VALUE, envelope.maxHeight ?: Int.MAX_VALUE)
+            .setMaxVideoFrameRate(envelope.maxFrameRate?.roundToInt() ?: Int.MAX_VALUE)
             .setMaxVideoBitrate(bitrate)
+            .setExceedVideoConstraintsIfNecessary(false)
+            .setExceedRendererCapabilitiesIfNecessary(false)
             .build()
     }
 
@@ -570,6 +602,11 @@ private class Media3Player(
         }
         audioTracks = audio
         videoTracks = video
+        availableVideoBitrates = video.mapNotNull { it["bitrate"] as? Int }
+            .distinct()
+            .sortedDescending()
+        selectedVideoBitrate = video.firstOrNull { it["isSelected"] == true }
+            ?.get("bitrate") as? Int
         emit(
             mapOf(
                 "playerId" to playerId,
@@ -586,11 +623,44 @@ private class Media3Player(
         error: PlaybackException,
     ) {
         if (!isCurrentEvent(eventTime)) return
+        if (tryDecoderRecovery(error)) return
         status = "error"
-        val details = playbackErrorMap(error)
+        val details = playbackErrorMap(
+            error,
+            codecDiagnostic(
+                decoderName,
+                lastVideoSize.width.takeIf { it > 0 },
+                lastVideoSize.height.takeIf { it > 0 },
+                null,
+                deviceProfile.signals.apiLevel,
+            ),
+        )
         currentError = details
         emit(mapOf("playerId" to playerId, "type" to "error", "error" to details))
         emitState(details)
+    }
+
+    private fun tryDecoderRecovery(error: PlaybackException): Boolean {
+        if (error.errorCode != PlaybackException.ERROR_CODE_DECODER_INIT_FAILED) return false
+        val selected = selectedVideoBitrate ?: return false
+        val lowerBitrate = availableVideoBitrates.firstOrNull { it < selected } ?: return false
+        if (
+            decoderRecovery(
+                isAdaptive = availableVideoBitrates.size > 1,
+                previousRetries = decoderRetryCount,
+            ) != YlDecoderRecovery.DOWNGRADE_ONCE
+        ) {
+            return false
+        }
+        decoderRetryCount += 1
+        adaptiveDowngradeCount += 1
+        adaptiveBitrateCeiling = lowerBitrate
+        applyTrackConstraints()
+        status = "opening"
+        currentError = null
+        exoPlayer.prepare()
+        emitState()
+        return true
     }
 
     override fun onVideoDecoderInitialized(
@@ -681,9 +751,16 @@ private class Media3Player(
                         "rebufferDurationMs" to rebufferDurationMs,
                         "droppedVideoFrames" to droppedVideoFrames,
                         "audioUnderruns" to audioUnderruns,
+                        "estimatedBitrate" to selectedVideoBitrate,
                         "bufferedDurationMs" to bufferedDuration,
+                        "bufferedBytes" to loadControl.allocatedBytes,
                         "liveOffsetMs" to liveOffset,
                         "reconnectCount" to reconnectCount,
+                        "androidDeviceTier" to deviceProfile.tier.wireName,
+                        "targetBufferBytes" to loadControl.targetBufferBytes,
+                        "adaptiveDowngradeCount" to adaptiveDowngradeCount,
+                        "surfaceRebuildCount" to 0,
+                        "selectedVideoBitrate" to selectedVideoBitrate,
                     ),
                     "error" to (error ?: currentError),
                 ),
@@ -721,6 +798,12 @@ private class Media3Player(
 }
 
 private data class AudioSelection(val group: Tracks.Group, val trackIndex: Int)
+
+private data class AndroidQualityConstraint(
+    val maxWidth: Int? = null,
+    val maxHeight: Int? = null,
+    val maxBitrate: Int? = null,
+)
 
 private data class NetworkConfiguration(
     val connectTimeoutMs: Int,
@@ -838,7 +921,20 @@ private fun MethodChannel.Result.playerError(code: String, message: String, erro
     )
 }
 
-private fun playbackErrorMap(error: PlaybackException): Map<String, Any?> {
+private fun playbackErrorMap(error: PlaybackException, diagnostic: String?): Map<String, Any?> {
+    val stableFailure = when (error.errorCode) {
+        PlaybackException.ERROR_CODE_DECODING_FORMAT_UNSUPPORTED ->
+            YlPlaybackFailure.NO_HARDWARE_DECODER
+        PlaybackException.ERROR_CODE_DECODING_FORMAT_EXCEEDS_CAPABILITIES ->
+            YlPlaybackFailure.CAPABILITY_EXCEEDED
+        PlaybackException.ERROR_CODE_DECODER_INIT_FAILED ->
+            YlPlaybackFailure.DECODER_INITIALIZATION
+        else -> null
+    }
+    if (stableFailure != null) {
+        val stable = stableError(stableFailure)
+        return errorMap(stable.category, stable.code, stable.message, diagnostic)
+    }
     val category = when (error.errorCode) {
         PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS,
         PlaybackException.ERROR_CODE_IO_CLEARTEXT_NOT_PERMITTED,
@@ -861,7 +957,7 @@ private fun playbackErrorMap(error: PlaybackException): Map<String, Any?> {
         category,
         "media3.${error.errorCodeName.lowercase()}",
         error.message ?: "Media3 playback failed.",
-        error.stackTraceToString(),
+        diagnostic,
     )
 }
 

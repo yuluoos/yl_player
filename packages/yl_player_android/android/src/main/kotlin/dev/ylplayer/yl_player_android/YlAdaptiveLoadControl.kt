@@ -49,6 +49,9 @@ internal class YlAdaptiveLoadControl(initialProfile: YlBufferProfile) : LoadCont
     val targetBufferBytes: Int
         get() = currentProfile.targetBufferBytes
 
+    val allocatedBytes: Int
+        get() = allocator.totalBytesAllocated
+
     init {
         allocator.setTargetBufferSize(initialProfile.targetBufferBytes)
     }
