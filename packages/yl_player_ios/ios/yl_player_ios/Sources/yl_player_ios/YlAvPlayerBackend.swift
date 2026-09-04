@@ -38,6 +38,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   private var status = "idle"
   private var disposed = false
   private var firstFrameSent = false
+  private var playRequested = false
   private var desiredRate: Float = 1
   private var openStartedAt: CFTimeInterval?
   private var openDurationMs: Int64?
@@ -111,8 +112,12 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     case "open":
       try open(stringMap(arguments["source"]))
     case "play":
+      playRequested = true
       player.playImmediately(atRate: desiredRate)
+      status = player.timeControlStatus == .playing ? "playing" : "buffering"
+      emitState()
     case "pause":
+      playRequested = false
       player.pause()
     case "seekTo":
       let milliseconds = int64(arguments["positionMs"]) ?? 0
@@ -242,6 +247,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     }
     finishBuffering()
     active = false
+    playRequested = false
     player.pause()
     removeCurrentItem()
     if status != "error" && status != "completed" && status != "idle" {
@@ -269,6 +275,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     active = true
     sourceIsLive = source["isLive"] as? Bool ?? false
     status = "opening"
+    playRequested = false
     firstFrameSent = false
     hasBeenReady = false
     openStartedAt = CACurrentMediaTime()
@@ -363,7 +370,16 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
         hasBeenReady = true
         openDurationMs = elapsedMilliseconds(since: openStartedAt)
       }
-      status = player.rate == 0 ? "ready" : "playing"
+      switch player.timeControlStatus {
+      case .playing:
+        status = "playing"
+      case .waitingToPlayAtSpecifiedRate:
+        status = "buffering"
+      case .paused:
+        status = playRequested ? "buffering" : "ready"
+      @unknown default:
+        status = playRequested ? "buffering" : "ready"
+      }
       if resumeAtLiveEdge {
         try? seekToLiveEdge()
       }
@@ -391,7 +407,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     case .paused:
       finishBuffering()
       if status != "opening" && status != "completed" && status != "error" {
-        status = hasBeenReady ? "paused" : status
+        status = playRequested ? "buffering" : (hasBeenReady ? "paused" : status)
       }
     @unknown default:
       break
