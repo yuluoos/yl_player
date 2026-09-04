@@ -27,7 +27,11 @@
 - Verify macOS runtime on Apple Silicon and compile/link plus Rosetta smoke for
   Intel; physical Intel hardware runtime remains unverified.
 - Treat custom `maxBufferBytes` as the total managed-media budget for network
-  bytes, scheduled PCM, and one in-flight encoded packet; do not persist media.
+  bytes, scheduled PCM, and bounded in-flight encoded video; do not persist
+  media.
+- Enforce one macOS VideoToolbox fallback decoder at a time with quiesce/rollback
+  replacement, one-shot terminal teardown, origin-bound redirect credentials,
+  and sanitized AVPlayer errors.
 - Keep iOS network MKV live and other remote fallback containers,
   non-AAC MKV audio, subtitles, and DRM unsupported.
 - Keep Dart resource teardown idempotent even when native disposal reports an

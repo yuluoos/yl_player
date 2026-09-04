@@ -34,19 +34,23 @@ final class YlBackendSlot {
         message: "The macOS player has been disposed."
       )
     }
-    let candidate = try prepare()
     let previous = current
     previous.quiesceForReplacement()
     do {
-      try candidate.activate()
+      let candidate = try prepare()
+      do {
+        try candidate.activate()
+      } catch {
+        candidate.dispose()
+        throw error
+      }
+      current = candidate
+      generation &+= 1
+      return previous
     } catch {
-      candidate.dispose()
       try? previous.activate()
       throw error
     }
-    current = candidate
-    generation &+= 1
-    return previous
   }
 
   func accepts(generation: UInt64) -> Bool {

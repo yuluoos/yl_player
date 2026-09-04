@@ -4,6 +4,56 @@ import XCTest
 import YlFFmpegBridge
 
 final class YlMacosFallbackTests: XCTestCase {
+  func testTerminalFailureTransitionIsOneShotAndInvalidatesWork() {
+    let first = YlFallbackTerminalFailurePolicy.begin(
+      disposed: false,
+      active: true,
+      hasError: false,
+      videoGeneration: 7,
+      audioGeneration: 11
+    )
+
+    XCTAssertEqual(first?.videoGeneration, 8)
+    XCTAssertEqual(first?.audioGeneration, 12)
+    XCTAssertNil(YlFallbackTerminalFailurePolicy.begin(
+      disposed: false,
+      active: false,
+      hasError: true,
+      videoGeneration: 8,
+      audioGeneration: 12
+    ))
+  }
+
+  func testVideoDecodeBudgetBoundsBytesAndFrameCount() {
+    let budget = YlVideoDecodeBudget(maxBytes: 100, maxFrames: 2)
+
+    XCTAssertTrue(budget.admit(byteCount: 60))
+    XCTAssertFalse(budget.admit(byteCount: 50))
+    XCTAssertTrue(budget.admit(byteCount: 40))
+    XCTAssertFalse(budget.admit(byteCount: 1))
+
+    budget.complete(byteCount: 60)
+    XCTAssertTrue(budget.admit(byteCount: 50))
+    budget.reset()
+    XCTAssertEqual(budget.inFlightBytes, 0)
+    XCTAssertEqual(budget.inFlightFrames, 0)
+  }
+
+  func testHardwareDecoderLeaseEnforcesAdvertisedConcurrency() throws {
+    let pool = YlHardwareDecoderLeasePool(maxConcurrentLeases: 1)
+    var first: YlHardwareDecoderLease? = try pool.acquire()
+    XCTAssertNotNil(first)
+
+    XCTAssertThrowsError(try pool.acquire()) {
+      XCTAssertEqual(
+        ($0 as? NativePlayerError)?.code,
+        "resource.video_decoder_limit"
+      )
+    }
+    first = nil
+    XCTAssertNoThrow(try pool.acquire())
+  }
+
   func testMediaClockQueriesExternalAudioTimeWithoutHoldingItsLock() {
     let completed = expectation(description: "media clock play completed")
     var clock: YlMediaClock!

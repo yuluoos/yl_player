@@ -50,7 +50,9 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
 
   func beginOpen(
     _ source: [String: Any?],
+    willCommit: @escaping (Bool) -> Void,
     didCommit: @escaping () -> Void,
+    didRollback: @escaping () -> Void,
     completion: @escaping (Result<Void, NativePlayerError>) -> Void
   ) {
     guard !disposed else {
@@ -91,8 +93,14 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
             message: "The macOS player has been disposed."
           )
         }
-        try self.commit(candidate, reactivating: false)
-        didCommit()
+        willCommit(candidate.requiresHardwareDecoderLease)
+        do {
+          try self.commit(candidate, reactivating: false)
+          didCommit()
+        } catch {
+          didRollback()
+          throw error
+        }
       },
       completion: completion
     )
@@ -100,7 +108,9 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
 
   func beginActivation(
     forcePlay: Bool,
+    willCommit: @escaping (Bool) -> Void,
     didCommit: @escaping () -> Void,
+    didRollback: @escaping () -> Void,
     completion: @escaping (Result<Void, NativePlayerError>) -> Void
   ) {
     guard !disposed else {
@@ -126,8 +136,14 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
           guard let self, !self.disposed, self.slot.current === self.avBackend else {
             throw YlOpenCancellationToken.cancellationError()
           }
-          try self.commit(candidate, reactivating: true)
-          didCommit()
+          willCommit(candidate.requiresHardwareDecoderLease)
+          do {
+            try self.commit(candidate, reactivating: true)
+            didCommit()
+          } catch {
+            didRollback()
+            throw error
+          }
         },
         completion: completion
       )
@@ -138,12 +154,15 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
           fallback.requiresAsyncActivation,
           let source = lastCommittedSource else {
       do {
+        willCommit(self.slot.current is YlFallbackBackend)
         try slot.current.activate()
         didCommit()
         completion(.success(()))
       } catch let error as NativePlayerError {
+        didRollback()
         completion(.failure(error))
       } catch {
+        didRollback()
         completion(.failure(Self.commandError(error)))
       }
       return
@@ -163,8 +182,14 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
               self.slot.current === fallback else {
           throw YlOpenCancellationToken.cancellationError()
         }
-        try self.commit(candidate, reactivating: true)
-        didCommit()
+        willCommit(candidate.requiresHardwareDecoderLease)
+        do {
+          try self.commit(candidate, reactivating: true)
+          didCommit()
+        } catch {
+          didRollback()
+          throw error
+        }
       },
       completion: completion
     )
@@ -328,17 +353,25 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
       let qualityConstraint = try YlFallbackQualityConstraint(
         validating: lastQualityConstraint
       )
-      let backend = try YlFallbackBackend(
-        playerId: playerId,
-        textureId: textureId,
-        textures: textures,
-        configuration: configuration,
-        prepared: prepared,
-        qualityConstraint: qualityConstraint,
-        generation: slot.generation &+ 1,
-        emit: emit
-      )
-      let previous = try slot.replace { backend }
+      let previous = try slot.replace {
+        try YlFallbackBackend(
+          playerId: playerId,
+          textureId: textureId,
+          textures: textures,
+          configuration: configuration,
+          prepared: prepared,
+          qualityConstraint: qualityConstraint,
+          generation: slot.generation &+ 1,
+          emit: emit
+        )
+      }
+      guard let backend = slot.current as? YlFallbackBackend else {
+        throw NativePlayerError(
+          category: "internal",
+          code: "internal.fallback_invariant",
+          message: "The prepared fallback backend was not installed."
+        )
+      }
       if previous !== avBackend { previous.dispose() }
       try backend.command(name: "open", arguments: ["source": source])
       lastCommittedSource = source
@@ -351,6 +384,7 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
   ) throws -> YlPreparedFallback {
     try YlPreparedFallback(
       source: source,
+      requireHardwareProbe: false,
       configuration: configuration,
       cancellationToken: token,
       onRetry: { [weak self] attempt, delayMs, error in
@@ -410,6 +444,14 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
 
   func emitState() {
     slot.current.emitState()
+  }
+
+  func quiesceForHardwareDecoderLease() {
+    slot.current.quiesceForReplacement()
+  }
+
+  func restoreAfterHardwareDecoderRollback() {
+    try? slot.current.activate()
   }
 
   func emitError(_ error: NativePlayerError) {

@@ -82,6 +82,13 @@ run_rosetta_smoke() {
 
 run_universal_build() {
   cd "$example_root"
+  server_entitlement=$(/usr/libexec/PlistBuddy \
+    -c 'Print :com.apple.security.network.server' \
+    macos/Runner/Release.entitlements)
+  if [ "$server_entitlement" != "true" ]; then
+    echo "Release.entitlements must allow the authenticated-HLS loopback server" >&2
+    exit 1
+  fi
   sh "$repo_root/packages/yl_player_macos/tool/macos_ffmpeg/test_build_contract.sh"
   flutter build macos --release
 
@@ -121,6 +128,13 @@ run_universal_build() {
     exit 1
   fi
   echo "minimum macOS version: $minimum_system_version"
+
+  if ! codesign -d --entitlements :- "$app" 2>&1 \
+    | grep -Fq '<key>com.apple.security.network.server</key>'; then
+    echo "release app is missing the authenticated-HLS network server entitlement" >&2
+    exit 1
+  fi
+  echo "release network server entitlement: verified"
 
   run_rosetta_smoke "$executable"
 }

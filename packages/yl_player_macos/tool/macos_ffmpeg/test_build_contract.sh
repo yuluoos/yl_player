@@ -3,12 +3,35 @@ set -eu
 
 script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 build_script="$script_dir/build_xcframework.sh"
+artifact_lock="$script_dir/bridge-artifact.lock"
 package_root=$(CDPATH= cd -- "$script_dir/../.." && pwd)
 repo_root=$(CDPATH= cd -- "$package_root/../.." && pwd)
 framework_root="$package_root/macos/yl_player_macos/Frameworks/YlFFmpegBridge.xcframework"
 framework="$framework_root/macos-arm64_x86_64/YlFFmpegBridge.framework"
 binary="$framework/YlFFmpegBridge"
+source_root="$package_root/macos/native/YlFFmpegBridge"
 contract=$(bash "$build_script" --print-contract)
+
+# shellcheck source=bridge-artifact.lock
+. "$artifact_lock"
+
+require_sha256() {
+  file=$1
+  expected=$2
+  label=$3
+  actual=$(shasum -a 256 "$file" | awk '{print $1}')
+  if [ "$actual" != "$expected" ]; then
+    echo "$label checksum does not match bridge-artifact.lock" >&2
+    exit 1
+  fi
+}
+
+require_sha256 "$source_root/YlFFmpegBridge.m" "$BRIDGE_SOURCE_SHA256" "bridge source"
+require_sha256 "$source_root/include/YlFFmpegBridge.h" "$BRIDGE_HEADER_SHA256" "bridge header"
+require_sha256 "$source_root/module.modulemap" "$BRIDGE_MODULEMAP_SHA256" "module map"
+require_sha256 "$binary" "$BRIDGE_BINARY_SHA256" "vendored framework binary"
+cmp "$source_root/include/YlFFmpegBridge.h" "$framework/Headers/YlFFmpegBridge.h"
+cmp "$source_root/module.modulemap" "$framework/Modules/module.modulemap"
 
 require_line() {
   expected=$1

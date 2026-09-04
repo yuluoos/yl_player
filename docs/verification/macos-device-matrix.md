@@ -21,7 +21,7 @@ sh tool/check_native_macos.sh
 | Gate | Result | Evidence |
 | --- | --- | --- |
 | Dart adapter | Pass | Endorsed registration, shared channel protocol, state/delta handling, errors, and idempotent disposal. |
-| Native tests | Pass | Source routing, lifecycle, AVPlayer state, HLS origin policy, bounded networking, FFmpeg metadata, AAC conversion, clock/scheduling, quality constraints, and source-generation ownership. |
+| Native tests | Pass | 34 focused tests cover routing, lifecycle, AVPlayer state/error policy, HLS origin policy, bounded networking/video admission, decoder leasing and rollback, AAC fixture conversion, clock/scheduling, and quality constraints. |
 | Universal release build | Pass | The application executable, FlutterMacOS, Dart App, and YlFFmpegBridge each contain `arm64` and `x86_64`; the plugin compiles and links for both. |
 | Deployment target | Pass | The built application and FFmpeg bridge declare macOS 12.0. |
 | Intel smoke | Pass with caveat | The final `x86_64` executable launches through Rosetta on Apple Silicon; this is not Intel physical-device evidence. |
@@ -29,7 +29,7 @@ sh tool/check_native_macos.sh
 | Local MKV | Pass | H.264/AAC renders through the native fallback; multiple AAC tracks are exposed and switchable. |
 | Network MKV | Pass | Loopback HTTP Range seek and sequential HTTP 200 behavior pass with bounded package-owned networking. |
 | HTTP-FLV | Pass | H.264/AAC live playback survives a deliberately truncated first connection and resumes after native reconnect. |
-| Authenticated HLS | Pass | Same-origin credentials and cross-origin non-sensitive headers follow the package policy. |
+| Authenticated HLS | Pass | Header-bearing playback succeeds through the package loopback path; origin filtering is covered separately by focused policy tests. |
 
 ## Architecture status
 

@@ -67,7 +67,8 @@ sh tool/check_native_macos.sh
 The native gate runs Swift tests, the binary contract, a universal release
 build, architecture/link inspection, an optional Rosetta smoke launch, and five
 integration suites covering HLS, local MKV, network MKV, HTTP-FLV reconnect,
-and authenticated HLS.
+and authenticated HLS. It also verifies the Release network-server entitlement
+required by the authenticated-HLS loopback transport.
 
 ## FFmpeg bridge and LGPL replacement
 
@@ -76,6 +77,9 @@ build under LGPL-2.1-or-later. FFmpeg performs Matroska/FLV demuxing and packet
 parsing only; FFmpeg networking and all FFmpeg decoders are disabled. The exact
 version, checksum, signing-key fingerprint, flags, architectures, and macOS 12
 deployment target are pinned in `tool/macos_ffmpeg`.
+`bridge-artifact.lock` binds the reviewed Objective-C source, public header,
+module map, and vendored universal binary by SHA-256; the contract gate also
+requires the packaged header and module map to be byte-for-byte copies.
 
 From this package directory, inspect and verify the committed binary with:
 

@@ -18,6 +18,11 @@ enum YlPreparedOpen {
       prepared.discard()
     }
   }
+
+  var requiresHardwareDecoderLease: Bool {
+    if case .fallback = self { return true }
+    return false
+  }
 }
 
 final class YlPreparedFallback {

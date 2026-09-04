@@ -60,6 +60,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   private var rebufferDurationMs: Int64 = 0
   private var hasBeenReady = false
   private var currentError: [String: Any?]?
+  private let failureGate = YlAvPlayerFailureGate()
   private var active = false
   private var lastSource: [String: Any?]?
   private var savedPositionMs: Int64 = 0
@@ -353,7 +354,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     ) { [weak self] notification in
       guard self?.isCurrent(item, generation: generation) == true else { return }
       let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error
-      self?.handleFailure(error)
+      self?.handleFailure(error, generation: generation)
     }
   }
 
@@ -384,7 +385,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
       rebuildTracks(item)
       emitState()
     case .failed:
-      handleFailure(item.error)
+      handleFailure(item.error, generation: generation)
     default:
       break
     }
@@ -420,15 +421,23 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     }
   }
 
-  private func handleFailure(_ error: Error?) {
+  private func handleFailure(_ error: Error?, generation: UInt64) {
+    guard failureGate.begin(generation: generation),
+          failureGate.finish(
+            generation: generation,
+            currentGeneration: itemGeneration
+          ), !disposed, active else {
+      return
+    }
+    failureGate.markTerminal(generation: generation)
     status = "error"
     let nsError = error as NSError?
     let category = errorCategory(nsError)
     let details = errorMap(
       category: category,
       code: nsError.map { "avplayer.\($0.code)" } ?? "avplayer.failed",
-      message: nsError?.localizedDescription ?? "AVPlayer playback failed.",
-      diagnostic: nsError.map(String.init(describing:))
+      message: "AVPlayer playback failed.",
+      diagnostic: YlAvPlayerFailurePolicy.diagnostic(nsError)
     )
     currentError = details
     emit(["playerId": playerId, "type": "error", "error": details])
@@ -684,6 +693,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
 
   private func removeCurrentItem() {
     itemGeneration &+= 1
+    failureGate.reset()
     removeItemObservers()
     displayLink?.isPaused = true
     player.currentItem?.remove(videoOutput)

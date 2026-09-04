@@ -162,3 +162,24 @@ enum YlFallbackReplacementGenerationPolicy {
     )
   }
 }
+
+struct YlFallbackTerminalFailureGenerations: Equatable {
+  let videoGeneration: UInt64
+  let audioGeneration: UInt64
+}
+
+enum YlFallbackTerminalFailurePolicy {
+  static func begin(
+    disposed: Bool,
+    active: Bool,
+    hasError: Bool,
+    videoGeneration: UInt64,
+    audioGeneration: UInt64
+  ) -> YlFallbackTerminalFailureGenerations? {
+    guard !disposed, active, !hasError else { return nil }
+    return YlFallbackTerminalFailureGenerations(
+      videoGeneration: videoGeneration &+ 1,
+      audioGeneration: audioGeneration &+ 1
+    )
+  }
+}

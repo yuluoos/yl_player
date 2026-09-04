@@ -11,7 +11,111 @@ struct YlVTDecodedImage {
   let duration: CMTime
   let keyframe: Bool
   let generation: UInt64
+  let compressedByteCount: Int
   let ownershipToken: AnyObject?
+}
+
+enum YlVideoDecodeResult: Equatable {
+  case submitted
+  case wouldExceedBudget
+}
+
+final class YlVideoDecodeBudget {
+  private let lock = NSLock()
+  private let maxBytes: Int
+  private let maxFrames: Int
+  private var bytes = 0
+  private var frames = 0
+
+  init(maxBytes: Int, maxFrames: Int = 16) {
+    precondition(maxBytes > 0)
+    precondition(maxFrames > 0)
+    self.maxBytes = maxBytes
+    self.maxFrames = maxFrames
+  }
+
+  var inFlightBytes: Int { lock.withLock { bytes } }
+  var inFlightFrames: Int { lock.withLock { frames } }
+
+  func admit(byteCount: Int) -> Bool {
+    let charge = max(1, byteCount)
+    return lock.withLock {
+      let (nextBytes, overflow) = bytes.addingReportingOverflow(charge)
+      guard !overflow, nextBytes <= maxBytes, frames < maxFrames else {
+        return false
+      }
+      bytes = nextBytes
+      frames += 1
+      return true
+    }
+  }
+
+  func complete(byteCount: Int) {
+    let charge = max(1, byteCount)
+    lock.withLock {
+      bytes = max(0, bytes - charge)
+      frames = max(0, frames - 1)
+    }
+  }
+
+  func reset() {
+    lock.withLock {
+      bytes = 0
+      frames = 0
+    }
+  }
+}
+
+final class YlHardwareDecoderLease {
+  private weak var pool: YlHardwareDecoderLeasePool?
+  private let lock = NSLock()
+  private var released = false
+
+  fileprivate init(pool: YlHardwareDecoderLeasePool) {
+    self.pool = pool
+  }
+
+  func release() {
+    let shouldRelease = lock.withLock { () -> Bool in
+      guard !released else { return false }
+      released = true
+      return true
+    }
+    if shouldRelease { pool?.release() }
+  }
+
+  deinit { release() }
+}
+
+final class YlHardwareDecoderLeasePool {
+  static let shared = YlHardwareDecoderLeasePool(maxConcurrentLeases: 1)
+
+  private let lock = NSLock()
+  private let maxConcurrentLeases: Int
+  private var activeLeases = 0
+
+  init(maxConcurrentLeases: Int) {
+    precondition(maxConcurrentLeases > 0)
+    self.maxConcurrentLeases = maxConcurrentLeases
+  }
+
+  func acquire() throws -> YlHardwareDecoderLease {
+    try lock.withLock {
+      guard activeLeases < maxConcurrentLeases else {
+        throw NativePlayerError(
+          category: "resource",
+          code: "resource.video_decoder_limit",
+          message: "The hardware video decoder is already in use."
+        )
+      }
+      activeLeases += 1
+      return YlHardwareDecoderLease(pool: self)
+    }
+  }
+
+  fileprivate func release() {
+    lock.withLock { activeLeases = max(0, activeLeases - 1) }
+  }
 }
 
 protocol YlVTSession: AnyObject {
@@ -38,7 +142,7 @@ struct YlVideoFrame {
 }
 
 protocol YlVideoToolboxDecoding: AnyObject {
-  func decode(sample: CMSampleBuffer, generation: UInt64)
+  func decode(sample: CMSampleBuffer, generation: UInt64) -> YlVideoDecodeResult
   func flush()
   func dispose()
 }
@@ -48,18 +152,23 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
   private let onFrame: (YlVideoFrame) -> Void
   private let onError: (NativePlayerError) -> Void
   private let outputRelay: YlVTOutputRelay
+  private let budget: YlVideoDecodeBudget
+  private var lease: YlHardwareDecoderLease?
   private var session: YlVTSession?
   private var activeGeneration: UInt64?
   private var disposed = false
 
   init(
     formatDescription: CMVideoFormatDescription,
+    maxInFlightBytes: Int = 4 * 1024 * 1024,
     factory: YlVTSessionFactory = YlHardwareVTSessionFactory(),
     onFrame: @escaping (YlVideoFrame) -> Void,
     onError: @escaping (NativePlayerError) -> Void
   ) throws {
     self.onFrame = onFrame
     self.onError = onError
+    self.budget = YlVideoDecodeBudget(maxBytes: maxInFlightBytes)
+    self.lease = try YlHardwareDecoderLeasePool.shared.acquire()
     let outputRelay = YlVTOutputRelay()
     self.outputRelay = outputRelay
     session = try factory.makeSession(
@@ -112,17 +221,21 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
     return unmanagedDescription.takeRetainedValue()
   }
 
-  func decode(sample: CMSampleBuffer, generation: UInt64) {
+  func decode(sample: CMSampleBuffer, generation: UInt64) -> YlVideoDecodeResult {
+    let byteCount = CMSampleBufferGetTotalSampleSize(sample)
+    guard budget.admit(byteCount: byteCount) else { return .wouldExceedBudget }
     lock.lock()
     guard !disposed, let session else {
       lock.unlock()
-      return
+      budget.complete(byteCount: byteCount)
+      return .submitted
     }
     activeGeneration = generation
     lock.unlock()
 
     let status = session.decode(sample, generation: generation)
     if status != noErr {
+      budget.complete(byteCount: byteCount)
       onError(NativePlayerError(
         category: "decoderFailure",
         code: "decoder.video_decode_failed",
@@ -130,6 +243,7 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
         diagnostic: "OSStatus \(status)"
       ))
     }
+    return .submitted
   }
 
   func flush() {
@@ -142,6 +256,7 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
     let session = session
     lock.unlock()
     session?.flush()
+    budget.reset()
   }
 
   func dispose() {
@@ -154,11 +269,16 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
     activeGeneration = nil
     let session = session
     self.session = nil
+    let lease = lease
+    self.lease = nil
     lock.unlock()
     session?.invalidate()
+    budget.reset()
+    lease?.release()
   }
 
   fileprivate func handle(_ image: YlVTDecodedImage) {
+    budget.complete(byteCount: image.compressedByteCount)
     lock.lock()
     let acceptsOutput = !disposed && activeGeneration == image.generation
     lock.unlock()
@@ -205,10 +325,12 @@ private final class YlVTOutputRelay {
 private final class YlVTFrameContext {
   let generation: UInt64
   let keyframe: Bool
+  let compressedByteCount: Int
 
-  init(generation: UInt64, keyframe: Bool) {
+  init(generation: UInt64, keyframe: Bool, compressedByteCount: Int) {
     self.generation = generation
     self.keyframe = keyframe
+    self.compressedByteCount = compressedByteCount
   }
 }
 
@@ -242,6 +364,7 @@ private let ylVTOutputCallback: VTDecompressionOutputCallback = {
     duration: presentationDuration,
     keyframe: frame.keyframe,
     generation: frame.generation,
+    compressedByteCount: frame.compressedByteCount,
     ownershipToken: nil
   ))
 }
@@ -337,7 +460,11 @@ private final class YlHardwareVTSession: YlVTSession {
     }
     let keyframe = Self.isKeyframe(sample)
     let frameReference = Unmanaged.passRetained(
-      YlVTFrameContext(generation: generation, keyframe: keyframe)
+      YlVTFrameContext(
+        generation: generation,
+        keyframe: keyframe,
+        compressedByteCount: CMSampleBufferGetTotalSampleSize(sample)
+      )
     )
     var infoFlags = VTDecodeInfoFlags()
     let status = VTDecompressionSessionDecodeFrame(

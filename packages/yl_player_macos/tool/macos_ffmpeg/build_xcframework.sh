@@ -7,6 +7,7 @@ lock_file="$script_dir/ffmpeg-9.0.1.lock"
 key_file="$script_dir/FFMPEG_RELEASE_KEY.asc"
 bridge_root="$package_root/macos/native/YlFFmpegBridge"
 output="$package_root/macos/yl_player_macos/Frameworks/YlFFmpegBridge.xcframework"
+artifact_lock="$script_dir/bridge-artifact.lock"
 
 # shellcheck source=ffmpeg-9.0.1.lock
 source "$lock_file"
@@ -227,4 +228,16 @@ mkdir -p "$(dirname "$output")"
 xcodebuild -create-xcframework \
   -framework "$universal_framework" \
   -output "$output"
+source_sha=$(shasum -a 256 "$bridge_root/YlFFmpegBridge.m" | awk '{print $1}')
+header_sha=$(shasum -a 256 "$bridge_root/include/YlFFmpegBridge.h" | awk '{print $1}')
+modulemap_sha=$(shasum -a 256 "$bridge_root/module.modulemap" | awk '{print $1}')
+binary_sha=$(shasum -a 256 \
+  "$output/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge" \
+  | awk '{print $1}')
+printf '%s\n' \
+  "BRIDGE_SOURCE_SHA256=$source_sha" \
+  "BRIDGE_HEADER_SHA256=$header_sha" \
+  "BRIDGE_MODULEMAP_SHA256=$modulemap_sha" \
+  "BRIDGE_BINARY_SHA256=$binary_sha" \
+  >"$artifact_lock"
 echo "created $output"

@@ -141,12 +141,17 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private var completionSent = false
   private var audioAnchored = false
   private var pendingAudioPacket: YlCompressedAudioPacket?
+  private var pendingVideoSample: (sample: CMSampleBuffer, generation: UInt64)?
   private var openStartedAt = CACurrentMediaTime()
   private var openDurationMs: Int64?
   private var firstFrameDurationMs: Int64?
   private var reconnectCount = 0
   private var currentError: [String: Any?]?
   private var lastStateEmitAt = CFTimeInterval(0)
+
+  private var currentAudioRenderer: YlAudioRenderer? {
+    stateLock.withLock { audioRenderer }
+  }
 
   init(
     playerId: Int64,
@@ -195,13 +200,16 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
 
     audioRenderer = YlAudioRenderer(bufferBudget: bufferBudget)
     mediaClock = YlMediaClock(audioTime: { [weak self] in
-      self?.audioRenderer?.renderedAudioTime
+      guard let self else { return nil }
+      let renderer = self.stateLock.withLock { self.audioRenderer }
+      return renderer?.renderedAudioTime
     })
     mediaClock.seek(to: savedPositionUs)
     outputRelay.backend = self
     do {
       decoder = try YlVideoToolboxDecoder(
         formatDescription: videoFormat,
+        maxInFlightBytes: bufferBudget.inFlightPacketBytes,
         onFrame: { [outputRelay] frame in outputRelay.frame(frame) },
         onError: { [outputRelay] error in outputRelay.error(error) }
       )
@@ -227,7 +235,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
 
   func activate() throws {
     stateLock.lock()
-    guard !disposed, !active else {
+    guard !disposed, !active, currentError == nil else {
       stateLock.unlock()
       return
     }
@@ -239,8 +247,10 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         message: "Network Matroska reactivation requires background preparation."
       )
     }
-    if context == nil || decoder == nil || audioRenderer == nil {
+    if context == nil || audioRenderer == nil {
       try rebuildPipeline(positionUs: savedPositionUs)
+    } else if decoder == nil {
+      decoder = try makeDecoder()
     }
     if displayLink == nil { installDisplayLink(paused: false) }
     stateLock.withLock {
@@ -264,11 +274,14 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
 
   func deactivate() {
     stateLock.lock()
-    guard !disposed, active else {
+    guard !disposed,
+          active || openedMedia != nil || decoder != nil || audioRenderer != nil else {
       stateLock.unlock()
       return
     }
-    savedPositionUs = mediaClock.position(atHostTimeUs: Self.hostTimeUs())
+    if active {
+      savedPositionUs = mediaClock.position(atHostTimeUs: Self.hostTimeUs())
+    }
     active = false
     reconfiguring = true
     generation &+= 1
@@ -284,7 +297,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     reconnectToCancel?.cancel()
     displayLink?.invalidate()
     displayLink = nil
-    audioRenderer?.pause()
+    currentAudioRenderer?.pause()
     mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
     YlFallbackTeardownTransaction(
       cancelInput: { [self] in
@@ -294,6 +307,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       joinAndRelease: { [self] in
         worker.sync {
           pendingAudioPacket = nil
+          pendingVideoSample = nil
           decoder?.dispose()
           decoder = nil
           audioRenderer?.dispose()
@@ -343,10 +357,15 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
 
     displayLink?.invalidate()
     displayLink = nil
-    audioRenderer?.pause()
+    currentAudioRenderer?.pause()
     mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
     media?.interruptRead()
-    worker.sync { pendingAudioPacket = nil }
+    worker.sync {
+      pendingAudioPacket = nil
+      pendingVideoSample = nil
+      decoder?.dispose()
+      decoder = nil
+    }
     media?.resumeReads()
     frameScheduler.flush(generation: currentGeneration)
     stateLock.withLock {
@@ -398,7 +417,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         return previous
       }
       if !wasPlaying {
-        if selectedAudioStream != nil { try audioRenderer?.play() }
+        if selectedAudioStream != nil { try currentAudioRenderer?.play() }
         mediaClock.play(atHostTimeUs: Self.hostTimeUs())
       }
       status = "playing"
@@ -406,7 +425,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       requestPump()
     case "pause":
       stateLock.withLock { playing = false }
-      if selectedAudioStream != nil { audioRenderer?.pause() }
+      if selectedAudioStream != nil { currentAudioRenderer?.pause() }
       mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
       status = "paused"
       emitState()
@@ -438,12 +457,12 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         )
       }
       desiredRate = rate
-      if selectedAudioStream != nil { audioRenderer?.setRate(rate) }
+      if selectedAudioStream != nil { currentAudioRenderer?.setRate(rate) }
       mediaClock.setRate(Double(rate), atHostTimeUs: Self.hostTimeUs())
     case "setVolume":
       desiredVolume = float(arguments["volume"]) ?? 1
       if selectedAudioStream != nil {
-        audioRenderer?.setVolume(desiredVolume)
+        currentAudioRenderer?.setVolume(desiredVolume)
       }
     case "selectAudioTrack":
       try selectAudioTrack(
@@ -473,9 +492,10 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     guard !stateLock.withLock({ disposed }) else { return }
     let positionUs = mediaClock.position(atHostTimeUs: Self.hostTimeUs())
     let durationMs = mediaPolicy.durationMs(mediaDurationUs: mediaInfo.duration_us)
-    let scheduledAudioDurationUs = audioRenderer?.scheduledDurationUs ?? 0
-    let scheduledAudioBytes = audioRenderer?.scheduledBytes ?? 0
-    let audioUnderruns = audioRenderer?.underrunCount ?? 0
+    let renderer = currentAudioRenderer
+    let scheduledAudioDurationUs = renderer?.scheduledDurationUs ?? 0
+    let scheduledAudioBytes = renderer?.scheduledBytes ?? 0
+    let audioUnderruns = renderer?.underrunCount ?? 0
     let metrics = YlMacosChannel.fallbackMetrics(
       openDurationMs: openDurationMs,
       firstFrameDurationMs: firstFrameDurationMs,
@@ -516,9 +536,10 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private func emitStateDelta() {
     guard !stateLock.withLock({ disposed }) else { return }
     let positionUs = mediaClock.position(atHostTimeUs: Self.hostTimeUs())
-    let scheduledAudioDurationUs = audioRenderer?.scheduledDurationUs ?? 0
-    let scheduledAudioBytes = audioRenderer?.scheduledBytes ?? 0
-    let audioUnderruns = audioRenderer?.underrunCount ?? 0
+    let renderer = currentAudioRenderer
+    let scheduledAudioDurationUs = renderer?.scheduledDurationUs ?? 0
+    let scheduledAudioBytes = renderer?.scheduledBytes ?? 0
+    let audioUnderruns = renderer?.underrunCount ?? 0
     let metrics = YlMacosChannel.fallbackMetrics(
       openDurationMs: openDurationMs,
       firstFrameDurationMs: firstFrameDurationMs,
@@ -579,6 +600,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       joinAndRelease: { [self] in
         worker.sync {
           pendingAudioPacket = nil
+          pendingVideoSample = nil
           decoder?.dispose()
           decoder = nil
           audioRenderer?.dispose()
@@ -634,7 +656,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   }
 
   fileprivate func fail(_ error: NativePlayerError) {
-    DispatchQueue.main.async { [weak self] in self?.setFailure(error) }
+    setFailure(error)
   }
 
   @objc private func displayLinkTick() {
@@ -717,6 +739,25 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
           message: "\(selectedAudioCodecName) audio conversion failed.",
           diagnostic: String(describing: error)
         ))
+      }
+      return
+    }
+
+    if let pendingVideoSample {
+      guard let decoder else {
+        stateLock.withLock { pumping = false }
+        return
+      }
+      if decoder.decode(
+        sample: pendingVideoSample.sample,
+        generation: pendingVideoSample.generation
+      ) == .submitted {
+        self.pendingVideoSample = nil
+        stateLock.withLock { pumping = false }
+        requestPump()
+      } else {
+        stateLock.withLock { pumping = false }
+        requestPump(after: 0.005)
       }
       return
     }
@@ -815,10 +856,12 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       )
       if sampleResult == 0, let unmanagedSample {
         stateLock.withLock { prebufferedVideoSample = true }
-        decoder?.decode(
-          sample: unmanagedSample.takeRetainedValue(),
-          generation: packetGeneration
-        )
+        let sample = unmanagedSample.takeRetainedValue()
+        if decoder?.decode(sample: sample, generation: packetGeneration)
+          == .wouldExceedBudget {
+          pendingVideoSample = (sample, packetGeneration)
+          retryDelay = 0.005
+        }
       } else {
         ylf_packet_release(&packet)
       }
@@ -873,7 +916,9 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     let transition = stateLock.withLock { () -> (
       generation: UInt64,
       media: YlOpenedMedia?,
-      token: YlOpenCancellationToken?
+      token: YlOpenCancellationToken?,
+      decoder: YlVideoToolboxDecoder?,
+      audio: YlAudioRenderer?
     )? in
       guard mediaPolicy.isLive, !disposed, active, !reconfiguring,
             generation == packetGeneration else { return nil }
@@ -888,19 +933,24 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       openedMedia = nil
       let detachedToken = sourceCancellationToken
       sourceCancellationToken = nil
-      return (generation, detachedMedia, detachedToken)
+      let detachedDecoder = decoder
+      decoder = nil
+      let detachedAudio = audioRenderer
+      audioRenderer = nil
+      return (
+        generation,
+        detachedMedia,
+        detachedToken,
+        detachedDecoder,
+        detachedAudio
+      )
     }
     guard let transition else { return }
 
     transition.token?.cancel()
     transition.media?.cancelInput()
     pendingAudioPacket = nil
-    decoder?.dispose()
-    decoder = nil
-    audioRenderer?.pause()
-    audioRenderer?.dispose()
-    audioRenderer = nil
-    transition.media?.close()
+    pendingVideoSample = nil
     prebufferedVideoSample = false
     audioAnchored = false
     frameScheduler.flush(generation: transition.generation)
@@ -908,17 +958,38 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     stateLock.withLock { currentPixelBuffer = nil }
 
     DispatchQueue.main.async { [weak self] in
-      guard let self,
-            self.stateLock.withLock({
-              self.active && self.reconfiguring
-                && self.generation == transition.generation
-            }) else { return }
-      self.mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
-      self.mediaClock.seek(to: 0)
-      self.status = "buffering"
-      self.emitState()
+      transition.audio?.pause()
+      if let self {
+        let isCurrent = self.stateLock.withLock {
+          self.active && self.reconfiguring
+            && self.generation == transition.generation
+        }
+        if isCurrent {
+          self.mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
+          self.mediaClock.seek(to: 0)
+          self.status = "buffering"
+          self.emitState()
+        }
+        self.worker.async { [weak self] in
+          transition.decoder?.dispose()
+          transition.audio?.dispose()
+          transition.media?.close()
+          guard let self,
+                self.stateLock.withLock({
+                  !self.disposed && self.active && self.reconfiguring
+                    && self.generation == transition.generation
+                }) else { return }
+          self.scheduleLiveReconnect(
+            after: error,
+            generation: transition.generation
+          )
+        }
+      } else {
+        transition.decoder?.dispose()
+        transition.audio?.dispose()
+        transition.media?.close()
+      }
     }
-    scheduleLiveReconnect(after: error, generation: transition.generation)
   }
 
   private func scheduleLiveReconnect(
@@ -1005,6 +1076,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         decoder = candidate.decoder
         audioRenderer = candidate.audioRenderer
         pendingAudioPacket = nil
+        pendingVideoSample = nil
         prebufferedVideoSample = false
         demuxEOF = false
         completionSent = false
@@ -1032,7 +1104,9 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         self.mediaClock.seek(to: 0)
         if self.playing {
           do {
-            if self.selectedAudioStream != nil { try self.audioRenderer?.play() }
+            if self.selectedAudioStream != nil {
+              try self.currentAudioRenderer?.play()
+            }
             self.mediaClock.play(atHostTimeUs: Self.hostTimeUs())
             self.status = "playing"
           } catch {
@@ -1153,7 +1227,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       pauseClock: { [self] in
         try onMainSync {
           try cancellationToken?.throwIfCancelled()
-          audioRenderer?.pause()
+          currentAudioRenderer?.pause()
           mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
         }
       },
@@ -1177,6 +1251,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       },
       clearBuffers: { [self] nextGeneration in
         pendingAudioPacket = nil
+        pendingVideoSample = nil
         prebufferedVideoSample = false
         demuxEOF = false
         completionSent = false
@@ -1194,10 +1269,10 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         stateLock.withLock { audioGeneration = nextGeneration }
       },
       recreateVideo: { [self] _ in
-        let candidate = try makeDecoder()
         let previous = decoder
-        decoder = candidate
+        decoder = nil
         previous?.dispose()
+        decoder = try makeDecoder()
       },
       suppressFramesBefore: { [self] targetUs in
         onMainSync {
@@ -1216,7 +1291,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
             playing = wasPlaying
           }
           if wasPlaying {
-            if selectedAudioStream != nil { try audioRenderer?.play() }
+            if selectedAudioStream != nil { try currentAudioRenderer?.play() }
             mediaClock.play(atHostTimeUs: Self.hostTimeUs())
             status = "playing"
           } else {
@@ -1294,7 +1369,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       }
       guard shouldRestore else { return }
       if wasPlaying {
-        try? audioRenderer?.play()
+        try? currentAudioRenderer?.play()
         mediaClock.play(atHostTimeUs: Self.hostTimeUs())
         status = "playing"
       } else {
@@ -1321,7 +1396,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         return true
       }
       guard shouldFail else { return }
-      audioRenderer?.pause()
+      currentAudioRenderer?.pause()
       mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
       displayLink?.isPaused = true
       setFailure(error)
@@ -1331,6 +1406,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private func makeDecoder() throws -> YlVideoToolboxDecoder {
     try YlVideoToolboxDecoder(
       formatDescription: videoFormat,
+      maxInFlightBytes: bufferBudget.inFlightPacketBytes,
       onFrame: { [outputRelay] frame in outputRelay.frame(frame) },
       onError: { [outputRelay] error in outputRelay.error(error) }
     )
@@ -1441,6 +1517,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     )
     let newDecoder = try YlVideoToolboxDecoder(
       formatDescription: candidateFormat,
+      maxInFlightBytes: bufferBudget.inFlightPacketBytes,
       onFrame: { [outputRelay] frame in outputRelay.frame(frame) },
       onError: { [outputRelay] error in outputRelay.error(error) }
     )
@@ -1513,6 +1590,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     )
     candidateDecoder = try YlVideoToolboxDecoder(
       formatDescription: candidateFormat,
+      maxInFlightBytes: bufferBudget.inFlightPacketBytes,
       onFrame: { [outputRelay] frame in outputRelay.frame(frame) },
       onError: { [outputRelay] error in outputRelay.error(error) }
     )
@@ -1538,6 +1616,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     audioRenderer = renderer
     candidateAudio = nil
     pendingAudioPacket = nil
+    pendingVideoSample = nil
     prebufferedVideoSample = false
     stateLock.withLock { initialKeyframeGate.reset() }
     demuxEOF = false
@@ -1564,7 +1643,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     }
     guard shouldComplete,
           frameScheduler.pendingPTS.isEmpty,
-          (audioRenderer?.scheduledDurationUs ?? 0) == 0 else { return }
+          (currentAudioRenderer?.scheduledDurationUs ?? 0) == 0 else { return }
     stateLock.withLock {
       guard !completionSent else { return }
       completionSent = true
@@ -1577,17 +1656,99 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   }
 
   private func setFailure(_ error: NativePlayerError) {
-    guard !stateLock.withLock({ disposed }) else { return }
-    status = "error"
     let details = errorMap(
       category: error.category,
       code: error.code,
       message: error.message,
       diagnostic: error.diagnostic
     )
-    currentError = details
-    emit(YlFallbackErrorEvent(playerId: playerId, error: details).eventMap)
-    emitState()
+    let transition = stateLock.withLock { () -> (
+      generation: UInt64,
+      media: YlOpenedMedia?,
+      token: YlOpenCancellationToken?,
+      reconnect: DispatchWorkItem?
+    )? in
+      guard let generations = YlFallbackTerminalFailurePolicy.begin(
+        disposed: disposed,
+        active: active,
+        hasError: currentError != nil,
+        videoGeneration: generation,
+        audioGeneration: audioGeneration
+      ) else { return nil }
+      generation = generations.videoGeneration
+      audioGeneration = generations.audioGeneration
+      active = false
+      playing = false
+      reconfiguring = true
+      pumping = false
+      demuxEOF = false
+      completionSent = false
+      awaitingReconnectFirstFrame = false
+      status = "error"
+      currentError = details
+      let detachedMedia = openedMedia
+      openedMedia = nil
+      let detachedToken = sourceCancellationToken
+      sourceCancellationToken = nil
+      let detachedReconnect = reconnectWorkItem
+      reconnectWorkItem = nil
+      return (generation, detachedMedia, detachedToken, detachedReconnect)
+    }
+    guard let transition else { return }
+
+    liveReconnectController.cancel()
+    transition.reconnect?.cancel()
+    transition.token?.cancel()
+    transition.media?.cancelInput()
+
+    let finishOnMain = { [weak self] in
+      guard let self else {
+        transition.media?.close()
+        return
+      }
+      self.displayLink?.invalidate()
+      self.displayLink = nil
+      let renderer = self.stateLock.withLock { self.audioRenderer }
+      renderer?.pause()
+      self.mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
+      self.frameScheduler.flush(generation: transition.generation)
+      self.postSeekGate.reset(targetUs: nil)
+      self.stateLock.withLock { self.currentPixelBuffer = nil }
+      self.emit(YlFallbackErrorEvent(playerId: self.playerId, error: details).eventMap)
+      self.emitState()
+
+      self.worker.async { [weak self] in
+        guard let self else {
+          transition.media?.close()
+          return
+        }
+        let resources = self.stateLock.withLock { () -> (
+          decoder: YlVideoToolboxDecoder?,
+          audio: YlAudioRenderer?
+        ) in
+          guard self.generation == transition.generation, !self.active else {
+            return (nil, nil)
+          }
+          let detachedDecoder = self.decoder
+          self.decoder = nil
+          let detachedAudio = self.audioRenderer
+          self.audioRenderer = nil
+          self.pendingAudioPacket = nil
+          self.pendingVideoSample = nil
+          self.prebufferedVideoSample = false
+          self.audioAnchored = false
+          return (detachedDecoder, detachedAudio)
+        }
+        resources.decoder?.dispose()
+        resources.audio?.dispose()
+        transition.media?.close()
+      }
+    }
+    if Thread.isMainThread {
+      finishOnMain()
+    } else {
+      DispatchQueue.main.async(execute: finishOnMain)
+    }
   }
 
   private func selectAudioTrack(
@@ -1687,6 +1848,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         candidateOwnedByBackend = true
         selectedAudioStream = requestedStream
         pendingAudioPacket = nil
+        pendingVideoSample = nil
         audioAnchored = false
         stateLock.withLock {
           audioGeneration = nextAudioGeneration
@@ -1770,7 +1932,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       guard shouldRestore else { return }
       mediaClock.seek(to: state.positionUs)
       if state.wasPlaying {
-        try? audioRenderer?.play()
+        try? currentAudioRenderer?.play()
         mediaClock.play(atHostTimeUs: Self.hostTimeUs())
         status = "playing"
       } else {
@@ -1791,7 +1953,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     audioAnchored = true
     mediaClock.anchorAudio(
       ptsUs: max(0, packet.ptsUs),
-      sampleTime: audioRenderer?.renderedAudioTime?.sampleTime ?? 0
+      sampleTime: currentAudioRenderer?.renderedAudioTime?.sampleTime ?? 0
     )
   }
 

@@ -2,6 +2,64 @@
 import XCTest
 
 final class YlMacosOpenCoordinatorTests: XCTestCase {
+  private final class BackendSpy: YlPlaybackBackend {
+    var isActive: Bool
+    var activationError: NativePlayerError?
+    private(set) var disposed = false
+
+    init(active: Bool, activationError: NativePlayerError? = nil) {
+      isActive = active
+      self.activationError = activationError
+    }
+
+    func activate() throws {
+      if let activationError { throw activationError }
+      isActive = true
+    }
+
+    func quiesceForReplacement() { isActive = false }
+    func deactivate() { isActive = false }
+    func command(name: String, arguments: [String: Any?]) throws {}
+    func emitState() {}
+    func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? { nil }
+    func dispose() { disposed = true; isActive = false }
+  }
+
+  func testBackendSlotQuiescesBeforePreparingAndRollsBackOnFailure() {
+    let previous = BackendSpy(active: true)
+    let slot = YlBackendSlot(initial: previous)
+    let expected = NativePlayerError(
+      category: "resource",
+      code: "resource.video_decoder_limit",
+      message: "decoder busy"
+    )
+
+    XCTAssertThrowsError(try slot.replace {
+      XCTAssertFalse(previous.isActive)
+      throw expected
+    })
+    XCTAssertTrue(previous.isActive)
+    XCTAssertTrue(slot.current === previous)
+  }
+
+  func testBackendSlotDisposesCandidateWhenActivationFails() {
+    let previous = BackendSpy(active: true)
+    let candidate = BackendSpy(
+      active: false,
+      activationError: NativePlayerError(
+        category: "decoderUnsupported",
+        code: "decoder.video_hardware_unavailable",
+        message: "unavailable"
+      )
+    )
+    let slot = YlBackendSlot(initial: previous)
+
+    XCTAssertThrowsError(try slot.replace { candidate })
+    XCTAssertTrue(candidate.disposed)
+    XCTAssertTrue(previous.isActive)
+    XCTAssertTrue(slot.current === previous)
+  }
+
   private func candidate(_ id: Int) -> YlPreparedOpen {
     .avPlayer(source: ["id": id])
   }

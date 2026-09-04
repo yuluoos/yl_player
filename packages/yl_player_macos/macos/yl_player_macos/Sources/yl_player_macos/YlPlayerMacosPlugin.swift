@@ -106,11 +106,21 @@ public final class YlPlayerMacosPlugin: NSObject, FlutterPlugin, FlutterStreamHa
     let commandArguments = stringMap(root["arguments"])
 
     if name == "open" {
+      var quiescedPlayers = [YlMacosPlayer]()
       player.beginOpen(
         stringMap(commandArguments["source"]),
+        willCommit: { [weak self, weak player] requiresLease in
+          guard requiresLease, let self, let player else { return }
+          quiescedPlayers = self.quiesceOtherPlayers(for: player)
+        },
         didCommit: { [weak self, weak player] in
           guard let self, let player else { return }
           self.players.values.filter { $0 !== player }.forEach { $0.deactivate() }
+          quiescedPlayers.removeAll()
+        },
+        didRollback: {
+          quiescedPlayers.forEach { $0.restoreAfterHardwareDecoderRollback() }
+          quiescedPlayers.removeAll()
         },
         completion: { commandResult in
           switch commandResult {
@@ -134,11 +144,21 @@ public final class YlPlayerMacosPlugin: NSObject, FlutterPlugin, FlutterStreamHa
       runCommand()
       return
     }
+    var quiescedPlayers = [YlMacosPlayer]()
     player.beginActivation(
       forcePlay: true,
+      willCommit: { [weak self, weak player] requiresLease in
+        guard requiresLease, let self, let player else { return }
+        quiescedPlayers = self.quiesceOtherPlayers(for: player)
+      },
       didCommit: { [weak self, weak player] in
         guard let self, let player else { return }
         self.players.values.filter { $0 !== player }.forEach { $0.deactivate() }
+        quiescedPlayers.removeAll()
+      },
+      didRollback: {
+        quiescedPlayers.forEach { $0.restoreAfterHardwareDecoderRollback() }
+        quiescedPlayers.removeAll()
       },
       completion: { activationResult in
         switch activationResult {
@@ -173,5 +193,11 @@ public final class YlPlayerMacosPlugin: NSObject, FlutterPlugin, FlutterStreamHa
     let activePlayers = players.values
     players.removeAll()
     activePlayers.forEach { $0.dispose() }
+  }
+
+  private func quiesceOtherPlayers(for player: YlMacosPlayer) -> [YlMacosPlayer] {
+    let activePlayers = players.values.filter { $0 !== player && $0.isActive }
+    activePlayers.forEach { $0.quiesceForHardwareDecoderLease() }
+    return activePlayers
   }
 }
