@@ -489,7 +489,7 @@ git commit -m "feat: unify local and network MKV media ownership"
 - Changes: plugin `open` keeps `FlutterResult` pending and performs peer deactivation/backend commit only after candidate success.
 - All non-open commands retain the current synchronous channel behavior.
 
-- [ ] **Step 1: Write failing coordinator tests**
+- [x] **Step 1: Write failing coordinator tests**
 
 Assert preparation is not on main, successful candidates commit on main, second open cancels first, dispose completes a pending open with `network.cancelled`, late completions cannot replace a backend, candidate failure preserves the active backend, and every Flutter-style completion is called once.
 
@@ -508,19 +508,19 @@ func testSecondOpenCancelsFirstAndOnlyNewestCommits() {
 }
 ```
 
-- [ ] **Step 2: Run targeted tests and verify RED**
+- [x] **Step 2: Run targeted tests and verify RED**
 
 Expected: compile failure for `YlOpenCoordinator` and old synchronous open behavior.
 
-- [ ] **Step 3: Implement coordinator and asynchronous plugin flow**
+- [x] **Step 3: Implement coordinator and asynchronous plugin flow**
 
 Move preparation off the main thread for network fallback. Return to main to revalidate player/generation, deactivate peers, activate/replace the candidate, and resolve the method result. Cancellation caused by replacement/dispose returns `network.cancelled` to that invocation but does not emit persistent error state. Keep AVPlayer and local-MKV opens behavior-compatible; they may use immediate candidates on the same commit path.
 
-- [ ] **Step 4: Run coordinator, backend, and Dart adapter tests**
+- [x] **Step 4: Run coordinator, backend, and Dart adapter tests**
 
 Run targeted XCTest plus `flutter test packages/yl_player_ios` from repository root.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios \
@@ -543,23 +543,23 @@ git commit -m "feat: prepare iOS network MKV asynchronously"
 - Emits existing state/event schema with `isSeekable`, `bufferedPositionMs`, `retry`, and stable network errors.
 - Preserves ordered seek transaction and independent video/audio post-seek gates.
 
-- [ ] **Step 1: Write failing lifecycle tests**
+- [x] **Step 1: Write failing lifecycle tests**
 
 Assert Range-capable network seek issues a new request and follows the existing transaction order; sequential source publishes `isSeekable=false` and rejected seek preserves position/backend; background cancels the active task and drops buffers; foreground Range rebuild starts at saved media time; sequential rebuild starts at byte zero paused; memory warning shrinks the cache to 2 MiB; retry event payload contains attempt/delay but no sensitive URL/header data.
 
-- [ ] **Step 2: Run targeted tests and verify RED**
+- [x] **Step 2: Run targeted tests and verify RED**
 
 Expected: state/sequence assertions fail because backend rebuild is local-only and network retry events are not connected.
 
-- [ ] **Step 3: Generalize backend rebuild and seek**
+- [x] **Step 3: Generalize backend rebuild and seek**
 
 Replace `sourcePath` reopening with `sourceRecipe.open`. Use the opened media's random-access property for state. Map public sequential seek to `network.range_not_supported` before pausing or clearing anything. On Range seek, keep the exact existing transaction and make the AVIO byte seek occur inside `ylf_seek`. Connect retry callback to a generation-checked event envelope. On background/memory warning, cancel network work before releasing context/decoder/audio; restore normal budget only on foreground reconstruction.
 
-- [ ] **Step 4: Run all network/fallback XCTest and native gate**
+- [x] **Step 4: Run all network/fallback XCTest and native gate**
 
 Run targeted classes, then `sh tool/check_native_ios.sh`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios \
@@ -580,7 +580,7 @@ git commit -m "feat: complete iOS network MKV lifecycle"
 - Produces a loopback HTTP fixture server supporting scripted 206, 200, redirects, statuses, disconnects, and request recording.
 - Adds the network-MKV suite to the one-command native gate.
 
-- [ ] **Step 1: Write the failing integration tests**
+- [x] **Step 1: Write the failing integration tests**
 
 Create tests that copy existing bundled MKV bytes into the server and assert:
 
@@ -614,7 +614,7 @@ testWidgets('HTTP range MKV uses the native fallback', (tester) async {
 
 On a Simulator runtime that provides hardware decode, continue with seek and two-track selection. Otherwise require the exact hardware-unavailable category/code. Add sequential-server state/seek and failed-candidate-preserves-HLS tests.
 
-- [ ] **Step 2: Run integration and verify RED**
+- [x] **Step 2: Run integration and verify RED**
 
 Run:
 
@@ -626,15 +626,15 @@ flutter test integration_test/ios_network_mkv_playback_test.dart \
 
 Expected: network Matroska open fails because the route/backend is not yet connected, or ATS rejects loopback before the scoped exception is added.
 
-- [ ] **Step 3: Implement the deterministic loopback server and scoped ATS rule**
+- [x] **Step 3: Implement the deterministic loopback server and scoped ATS rule**
 
 Implement byte-range parsing and exact `Content-Range` responses in Dart. Bind only to loopback and add only `NSAllowsLocalNetworking=true` for integration use; do not add arbitrary-load exceptions. Exclude fixture/test-server material from publication archives.
 
-- [ ] **Step 4: Add the test to the native gate and run GREEN**
+- [x] **Step 4: Add the test to the native gate and run GREEN**
 
 Append the network suite to `tool/check_native_ios.sh`, run it, and require XCTest plus HLS/local-MKV/network-MKV suites to pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add packages/yl_player/example/integration_test \
@@ -657,7 +657,7 @@ git commit -m "test: cover iOS network MKV VOD"
 - Documents experimental automated support without claiming deferred device performance.
 - Produces a clean, publishable four-package tree; no real publication occurs.
 
-- [ ] **Step 1: Run the final automated gate**
+- [x] **Step 1: Run the final automated gate**
 
 Run:
 
@@ -671,7 +671,7 @@ flutter build ios --simulator --debug
 
 Expected: all commands exit zero; HLS, local MKV, and network MKV integrations pass without routing network MKV to AVPlayer.
 
-- [ ] **Step 2: Add measured automated truth to documentation**
+- [x] **Step 2: Add measured automated truth to documentation**
 
 Document only these claims: experimental HTTP/HTTPS MKV VOD, local/remote
 H.264/H.265 + AAC codec boundary, required hardware decode, 4/8/16 MiB network
@@ -679,7 +679,7 @@ cache profiles, custom managed-media budget, Range-dependent seek, credential
 redirect policy, no persistent cache, and deferred physical-device evidence.
 Keep live MKV, HTTP-FLV fallback, subtitles, DRM, and non-AAC audio unsupported.
 
-- [ ] **Step 3: Commit documentation**
+- [x] **Step 3: Commit documentation**
 
 ```bash
 git add packages/yl_player packages/yl_player_ios docs

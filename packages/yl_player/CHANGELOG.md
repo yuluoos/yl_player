@@ -4,9 +4,15 @@
 - Endorse the Android and iOS implementation packages.
 - Add a runnable public API example.
 - Add functional Android Media3 and iOS AVPlayer endorsed main paths.
-- Bundle an experimental local-only iOS H.264/H.265 + AAC Matroska fallback;
-  physical-device and memory acceptance remain release gates.
-- Keep iOS HTTP-FLV, remote fallback containers, subtitles, and custom-header
-  sources outside the implemented fallback boundary.
+- Bundle an experimental iOS H.264/H.265 + AAC Matroska fallback for local files
+  and HTTP/HTTPS VOD; hardware decode, physical-device playback, and endurance
+  acceptance remain release gates.
+- Add URLSession-backed custom AVIO streaming with bounded 4/8/16 MiB network
+  cache profiles, Range seek, sequential HTTP 200 playback, retry, redirects,
+  request headers, cancellation, and foreground reconstruction.
+- Treat custom `maxBufferBytes` as the total managed-media budget for network
+  bytes, scheduled PCM, and one in-flight encoded packet; do not persist media.
+- Keep iOS network MKV live, HTTP-FLV and other remote fallback containers,
+  non-AAC MKV audio, subtitles, and DRM unsupported.
 - Keep Dart resource teardown idempotent even when native disposal reports an
   error.

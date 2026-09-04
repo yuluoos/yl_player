@@ -4,9 +4,10 @@
 kernel aimed at TVBox-style Android and iOS applications.
 
 > Development status: `0.1.0-dev.1` contains functional Android Media3 and iOS
-> AVPlayer main paths. The tree also contains an experimental, local-only MKV
-> fallback, but its physical-device and memory acceptance matrix is incomplete.
-> Treat it as a development release, not an iOS MKV support guarantee.
+> AVPlayer main paths. The tree also contains an experimental iOS fallback for
+> local and HTTP/HTTPS MKV VOD, but its physical-device and endurance acceptance
+> matrix is incomplete. Treat it as a development release, not an iOS MKV
+> smoothness or stable-support guarantee.
 
 ## Scope
 
@@ -21,15 +22,18 @@ kernel aimed at TVBox-style Android and iOS applications.
   errors, and local performance metrics.
 
 Android currently handles HLS, HTTP-FLV, and Media3 progressive containers.
-iOS currently handles HLS and AVFoundation-compatible progressive/local media;
-HTTP-FLV and sources requiring custom HTTP headers return structured
-fallback-required errors. A bundled FFmpeg-demux/VideoToolbox fallback is under
-physical-device acceptance for local H.264/H.265 + AAC MKV files. Its current
-verification status is recorded in
+iOS handles HLS and AVFoundation-compatible progressive/local media. A bundled
+FFmpeg-demux/VideoToolbox fallback experimentally handles local and HTTP/HTTPS
+MKV VOD with H.264/H.265 video and zero or more AAC-LC tracks. MKV video decode
+is hardware-required; unsupported devices return
+`decoder.video_hardware_unavailable`. Its current verification status is
+recorded in
 the [iOS MKV verification matrix](https://github.com/yuluoos/yl_player/blob/main/docs/verification/ios-mkv-device-matrix.md).
 
-Subtitles, DRM, downloads, source-site parsing, playlists, UI controls, and
-telemetry upload are intentionally outside this package.
+Network MKV live, HTTP-FLV fallback on iOS, non-AAC MKV audio, WebM/AVI/MPEG
+fallback, non-HTTP transports, subtitles, DRM, downloads, persistent cache,
+source-site parsing, playlists, UI controls, and telemetry upload are outside
+this milestone.
 
 The reviewed architecture is recorded in
 [`docs/superpowers/specs/2026-09-02-yl-player-design.md`](../../docs/superpowers/specs/2026-09-02-yl-player-design.md).
@@ -70,8 +74,31 @@ complete compile-time example is in [`example/lib/main.dart`](example/lib/main.d
 On Android, all `YlNetworkPolicy` fields and request headers are applied. The
 iOS AVPlayer main path delegates timeout/retry policy to AVFoundation and cannot
 enforce `minBufferDuration`, `maxBufferDuration`, or `maxBufferBytes`; it uses a
-bounded forward-buffer duration selected by `bufferMode`. iOS custom-header
-sources are rejected until the documented native fallback is bundled.
+bounded forward-buffer duration selected by `bufferMode`. Custom headers remain
+unsupported on that AVPlayer path, but are supported for the experimental
+HTTP/HTTPS MKV fallback.
+
+## Experimental iOS network MKV boundary
+
+- VOD only; `isLive: true` is rejected.
+- `lowLatency`, `automatic`/`balanced`, and `stable` use 4, 8, and 16 MiB
+  network byte-cache ceilings. `custom` treats `maxBufferBytes` as the total
+  managed-media budget and requires at least 3 MiB.
+- HTTP Range servers support random seek. A server returning only HTTP 200 can
+  play sequentially from byte zero and reports `isSeekable: false`.
+- Same-origin redirects retain application headers. Cross-origin redirects
+  strip `Authorization`, `Cookie`, and `Proxy-Authorization`.
+- Networking is owned by `URLSession`; FFmpeg networking stays disabled. Bytes
+  are streamed through bounded package-managed buffers and are not persisted to
+  disk; URLSession/TLS, FFmpeg metadata, and VideoToolbox allocations are outside
+  those byte ceilings.
+- HTTPS needs no plugin-specific transport exception. Remote cleartext HTTP works
+  only when the host application permits the destination with a minimal,
+  preferably domain-scoped ATS policy; the plugin does not relax application ATS.
+- Simulator gates cover routing, Range behavior, cancellation, lifecycle, and
+  exact hardware-unavailable errors over loopback HTTP. Production HTTPS/TLS,
+  physical-device playback, memory profiling, and long-run smoothness remain
+  deferred.
 
 ## Publication
 

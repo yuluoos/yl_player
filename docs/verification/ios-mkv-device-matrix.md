@@ -1,26 +1,31 @@
-# iOS local MKV verification matrix
+# iOS local and network MKV verification matrix
 
 Last updated: 2026-09-03
 
 This document separates implemented behavior from physical-device acceptance.
-The local Matroska fallback is present in the development tree, but it is not a
-release support claim until the physical-device and memory rows below pass.
+The local and HTTP/HTTPS VOD Matroska fallback is present in the development
+tree, but it is not a release support claim until the physical-device and memory
+rows below pass.
 
 ## Automated evidence
 
 | Gate | Result | Notes |
 | --- | --- | --- |
 | Foundation checks | Pass | Dart formatting, analysis, unit tests, and the pinned FFmpeg build contract pass. |
-| Native iOS checks | Pass | Full XCTest plus AVPlayer HLS and local-MKV Flutter integration pass on Simulator. |
+| Native iOS checks | Pass | Full XCTest plus AVPlayer HLS, local-MKV, and loopback HTTP Range/sequential-MKV Flutter integration pass on Simulator. |
 | Android debug build | Pass | The example debug APK builds. |
 | iOS Simulator debug build | Pass | The example links the packaged FFmpeg bridge and builds. |
 | Package dry runs | Pass | All four packages complete `dart pub publish --dry-run` with zero warnings. |
 
-The Simulator does not prove VideoToolbox hardware decode. The MKV integration
-test therefore accepts only the stable
+The Simulator does not prove VideoToolbox hardware decode. Local and network MKV
+integration tests therefore accept only the stable
 `decoder.video_hardware_unavailable`/`decoderUnsupported` result when a required
 hardware session cannot be created; a physical device must instead render the
-first frame and report `VideoToolbox` hardware decoding.
+first frame and report `VideoToolbox` hardware decoding. The network suite also
+verifies initial 206/header handling, sequential HTTP 200 behavior, and failed
+candidate preservation on Simulator. Its successful hardware branch uses a
+10 MiB, 20-second fixture with a 4 MiB cache and requires a new nonzero Range
+request after a paused 16-second seek.
 
 ## Physical-device matrix
 
@@ -28,6 +33,7 @@ first frame and report `VideoToolbox` hardware decoding.
 | --- | --- | --- | --- | --- |
 | iPhone (`00008140-000C49CC3493001C`, wireless) | iOS 26.6 (23G71) | Generated 320x180 H.264/AAC MKV and two-AAC-track MKV | Blocked before installation | Xcode on this Mac has no signed-in Apple Developer account and no development profile for `dev.ylplayer.ylPlayerExample`. No playback result was recorded. |
 | iOS 15 physical device | iOS 15.x | H.264/AAC and HEVC/AAC MKV | Not run | Device/runtime, decoder, first-frame latency, seek, audio sync, background/resume, and 30-minute playback. |
+| Target iPhone/iPad | iOS 15+ | HTTP/HTTPS H.264/AAC and HEVC/AAC MKV VOD | Deferred | Range and sequential servers, request headers, redirects, retry, seek, track switching, background/resume, memory warning, and long-run playback. |
 
 The current-device attempt used:
 
@@ -58,9 +64,14 @@ These release gates remain open:
   memory, seek behavior, audio sync, and background/resume recorded.
 - HEVC playback with hardware reported, or the exact
   `decoder.video_hardware_unavailable` error on unsupported hardware.
+- HTTP Range VOD seeking beyond the 4 MiB cache and HTTP 200 sequential playback
+  against representative production servers, including redirect/header policy.
 
 ## Release decision
 
-Status: **not yet accepted for a supported iOS MKV release**. Automated and
-Simulator gates are green; code signing, physical playback, iOS 15 coverage,
-and measured endurance/memory evidence remain outstanding.
+Status: **experimental automated support; not yet accepted as stable iOS MKV
+support**. Automated and Simulator integration gates are green for local files
+and loopback HTTP Range/sequential VOD. HTTPS uses the same URLSession byte-source
+path, but production TLS/server interoperability, code signing, physical
+playback, iOS 15 device coverage, and measured endurance/memory evidence remain
+outstanding.
