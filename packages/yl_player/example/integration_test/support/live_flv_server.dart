@@ -30,7 +30,16 @@ final class LiveFlvServer {
       chunkSize: chunkSize,
       chunkDelay: chunkDelay,
     );
-    server.listen((request) => unawaited(result._handle(request)));
+    server.listen(
+      (request) => unawaited(result._handle(request)),
+      onError: (Object error, StackTrace stackTrace) {
+        // Cancelling an infinite live response can reset the loopback socket
+        // after the test has already disposed its player. That is an expected
+        // transport teardown, not a server or playback failure.
+        if (error is SocketException) return;
+        Error.throwWithStackTrace(error, stackTrace);
+      },
+    );
     return result;
   }
 
@@ -74,8 +83,9 @@ final class LiveFlvServer {
 
     final response = request.response;
     if (disconnectFirstConnection && connection == 1) {
-      final socket = await response.detachSocket(writeHeaders: false);
+      Socket? socket;
       try {
+        socket = await response.detachSocket(writeHeaders: false);
         socket.add(
           ascii.encode(
             'HTTP/1.1 200 OK\r\n'
@@ -93,10 +103,13 @@ final class LiveFlvServer {
           await socket.flush();
           await Future<void>.delayed(chunkDelay);
         }
+      } on SocketException {
+        // The player may close the deliberately broken first response as soon
+        // as it recognizes the transport failure.
       } finally {
         // The declared body is intentionally longer than the bytes sent. The
         // abrupt close therefore produces a deterministic transport failure.
-        socket.destroy();
+        socket?.destroy();
       }
       return;
     }

@@ -9,7 +9,7 @@ flutter pub get
 flutter analyze
 flutter test packages/yl_player_platform_interface/test
 flutter test packages/yl_player/test
-flutter test packages/yl_player/example/test
+(cd packages/yl_player/example && flutter test test)
 flutter test packages/yl_player_android/test
 flutter test packages/yl_player_android/example/test
 flutter test packages/yl_player_ios/test
