@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  foundation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: true
+      - run: sh tool/check_foundation.sh
+
+  android-native:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: packages/yl_player_android/example/android
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+        working-directory: ${{ github.workspace }}
+      - run: ./gradlew testDebugUnitTest --stacktrace
