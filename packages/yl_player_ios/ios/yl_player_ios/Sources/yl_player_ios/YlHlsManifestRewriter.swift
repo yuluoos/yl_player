@@ -10,6 +10,13 @@ enum YlHlsManifestRewriter {
     guard let manifest = String(data: data, encoding: .utf8) else {
       throw invalidManifest("The HLS manifest is not valid UTF-8.")
     }
+    let hasMarker = manifest == "#EXTM3U"
+      || manifest.hasPrefix("#EXTM3U\r\n")
+      || manifest.hasPrefix("#EXTM3U\n")
+      || manifest.hasPrefix("#EXTM3U\r")
+    guard hasMarker else {
+      throw invalidManifest("The HLS manifest is missing the EXTM3U marker.")
+    }
 
     var output = ""
     var lineStart = manifest.startIndex

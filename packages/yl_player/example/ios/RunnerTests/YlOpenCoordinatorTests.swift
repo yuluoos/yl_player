@@ -233,6 +233,41 @@ final class YlOpenCoordinatorTests: XCTestCase {
     XCTAssertEqual(completionCount, 1)
   }
 
+  func testHeaderedHlsPreflightFailureDoesNotReplaceActiveCandidate() {
+    let coordinator = YlOpenCoordinator(label: "test.open.hls-preflight")
+    let completed = expectation(description: "completed")
+    let session = HlsLoaderURLProtocol.configuration { _, source in
+      source.respond(status: 401, data: Data())
+    }
+    var activeID = 7
+
+    _ = coordinator.begin(
+      prepare: { token in
+        let prepared = try YlPreparedHlsAsset(
+          originURL: URL(string: "https://media.test/master.m3u8")!,
+          headers: ["Authorization": "Bearer expired"],
+          configuration: .init(map: [:]),
+          cancellationToken: token,
+          sessionConfiguration: session
+        )
+        return .headeredHls(source: ["id": 8], prepared: prepared)
+      },
+      commit: { candidate in activeID = self.candidateID(candidate) ?? 8 },
+      completion: { result in
+        guard case let .failure(error) = result else {
+          XCTFail("Expected HLS preflight failure")
+          completed.fulfill()
+          return
+        }
+        XCTAssertEqual(error.code, "network.http_status")
+        completed.fulfill()
+      }
+    )
+
+    wait(for: [completed], timeout: 2)
+    XCTAssertEqual(activeID, 7)
+  }
+
   func testPreparationFailureCancelsLifetimeTokenBeforeCompletion() {
     let coordinator = YlOpenCoordinator(label: "test.open.failure-token")
     let completed = expectation(description: "completed")

@@ -64,15 +64,7 @@ final class YlIosPlayer: NSObject, FlutterTexture {
       prepare: { [weak self] token in
         guard let self else { throw YlOpenCancellationToken.cancellationError() }
         try token.throwIfCancelled()
-        let headers = stringMap(source["headers"]).compactMapValues { $0 as? String }
-        let descriptor = YlIosSourceDescriptor(
-          uri: source["uri"] as? String ?? "",
-          kind: source["kind"] as? String ?? "",
-          formatHint: source["formatHint"] as? String ?? "automatic",
-          isLive: source["isLive"] as? Bool ?? false,
-          hasHeaders: !headers.isEmpty
-        )
-        switch YlSourceRouter.route(descriptor) {
+        switch self.route(for: source) {
         case .avPlayer:
           try self.avBackend.validateOpen(source)
           return .avPlayer(source: source)
@@ -82,10 +74,9 @@ final class YlIosPlayer: NSObject, FlutterTexture {
             prepared: try self.prepareFallback(source: source, token: token)
           )
         case .headeredHls:
-          throw NativePlayerError(
-            category: "container",
-            code: "container.native_fallback_required",
-            message: "Header-bearing HLS requires the iOS resource-loader backend."
+          return .headeredHls(
+            source: source,
+            prepared: try self.prepareHeaderedHls(source: source, token: token)
           )
         case let .reject(category, code, message):
           throw NativePlayerError(category: category, code: code, message: message)
@@ -99,7 +90,7 @@ final class YlIosPlayer: NSObject, FlutterTexture {
             message: "The iOS player has been disposed."
           )
         }
-        try self.commit(candidate)
+        try self.commit(candidate, reactivating: false)
         didCommit()
       },
       completion: completion
@@ -119,6 +110,29 @@ final class YlIosPlayer: NSObject, FlutterTexture {
       )))
       return
     }
+    if slot.current === avBackend,
+       let source = lastCommittedSource,
+       route(for: source) == .headeredHls {
+      openCoordinator.begin(
+        prepare: { [weak self] token in
+          guard let self else { throw YlOpenCancellationToken.cancellationError() }
+          return .headeredHls(
+            source: source,
+            prepared: try self.prepareHeaderedHls(source: source, token: token)
+          )
+        },
+        commit: { [weak self] candidate in
+          guard let self, !self.disposed, self.slot.current === self.avBackend else {
+            throw YlOpenCancellationToken.cancellationError()
+          }
+          try self.commit(candidate, reactivating: true)
+          didCommit()
+        },
+        completion: completion
+      )
+      return
+    }
+
     guard let fallback = slot.current as? YlFallbackBackend,
           fallback.requiresAsyncActivation,
           let source = lastCommittedSource else {
@@ -148,7 +162,7 @@ final class YlIosPlayer: NSObject, FlutterTexture {
               self.slot.current === fallback else {
           throw YlOpenCancellationToken.cancellationError()
         }
-        try self.commit(candidate)
+        try self.commit(candidate, reactivating: true)
         didCommit()
       },
       completion: completion
@@ -246,7 +260,10 @@ final class YlIosPlayer: NSObject, FlutterTexture {
     }
   }
 
-  private func commit(_ candidate: YlPreparedOpen) throws {
+  private func commit(
+    _ candidate: YlPreparedOpen,
+    reactivating: Bool
+  ) throws {
     commandCoordinator.cancelCurrent()
     switch candidate {
     case let .avPlayer(source):
@@ -257,6 +274,21 @@ final class YlIosPlayer: NSObject, FlutterTexture {
         try avBackend.activate()
       }
       try avBackend.command(name: "open", arguments: ["source": source])
+      lastCommittedSource = source
+    case let .headeredHls(source, prepared):
+      try avBackend.stagePreparedHls(
+        source: source,
+        prepared: prepared,
+        resume: reactivating
+      )
+      if slot.current !== avBackend {
+        let previous = try slot.replace { avBackend }
+        if previous !== avBackend { previous.dispose() }
+      } else if avBackend.isActive {
+        try avBackend.commitStagedHlsIfActive()
+      } else {
+        try avBackend.activate()
+      }
       lastCommittedSource = source
     case let .fallback(source, prepared):
       let backend = try YlFallbackBackend(
@@ -295,6 +327,38 @@ final class YlIosPlayer: NSObject, FlutterTexture {
         }
       }
     )
+  }
+
+  private func prepareHeaderedHls(
+    source: [String: Any?],
+    token: YlOpenCancellationToken
+  ) throws -> YlPreparedHlsAsset {
+    try token.throwIfCancelled()
+    guard let uri = source["uri"] as? String,
+          let url = URL(string: uri) else {
+      throw NativePlayerError(
+        category: "source",
+        code: "source.invalid_uri",
+        message: "A valid HLS URI is required."
+      )
+    }
+    return try YlPreparedHlsAsset(
+      originURL: url,
+      headers: stringMap(source["headers"]).compactMapValues { $0 as? String },
+      configuration: configuration.network,
+      cancellationToken: token
+    )
+  }
+
+  private func route(for source: [String: Any?]) -> YlIosSourceRoute {
+    let headers = stringMap(source["headers"]).compactMapValues { $0 as? String }
+    return YlSourceRouter.route(YlIosSourceDescriptor(
+      uri: source["uri"] as? String ?? "",
+      kind: source["kind"] as? String ?? "",
+      formatHint: source["formatHint"] as? String ?? "automatic",
+      isLive: source["isLive"] as? Bool ?? false,
+      hasHeaders: !headers.isEmpty
+    ))
   }
 
   private static func commandError(_ error: Error) -> NativePlayerError {

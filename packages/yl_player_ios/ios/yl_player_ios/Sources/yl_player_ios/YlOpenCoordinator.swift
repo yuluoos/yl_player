@@ -2,10 +2,16 @@ import Foundation
 
 enum YlPreparedOpen {
   case avPlayer(source: [String: Any?])
+  case headeredHls(source: [String: Any?], prepared: YlPreparedHlsAsset)
   case fallback(source: [String: Any?], prepared: YlPreparedFallback)
 
   func discard() {
-    if case let .fallback(_, prepared) = self {
+    switch self {
+    case .avPlayer:
+      break
+    case let .headeredHls(_, prepared):
+      prepared.discard()
+    case let .fallback(_, prepared):
       prepared.discard()
     }
   }

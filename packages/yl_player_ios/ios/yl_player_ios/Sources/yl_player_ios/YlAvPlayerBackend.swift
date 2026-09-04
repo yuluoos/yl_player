@@ -5,6 +5,12 @@ import QuartzCore
 import UIKit
 
 final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
+  private struct StagedHls {
+    let source: [String: Any?]
+    let prepared: YlPreparedHlsAsset
+    let resume: Bool
+  }
+
   let playerId: Int64
   var textureId: Int64 = -1
   var isActive: Bool { active }
@@ -48,6 +54,8 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   private var qualityConstraint: [String: Any?] = [:]
   private var selectedAudioTrackId: String?
   private var resumeAtLiveEdge = false
+  private var hlsResourceLoader: YlHlsResourceLoader?
+  private var stagedHls: StagedHls?
 
   init(
     playerId: Int64,
@@ -173,6 +181,27 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     }
   }
 
+  func stagePreparedHls(
+    source: [String: Any?],
+    prepared: YlPreparedHlsAsset,
+    resume: Bool
+  ) throws {
+    guard !disposed else {
+      throw NativePlayerError(
+        category: "resource",
+        code: "ios.player_disposed",
+        message: "The iOS player has been disposed."
+      )
+    }
+    stagedHls?.prepared.discard()
+    stagedHls = StagedHls(source: source, prepared: prepared, resume: resume)
+  }
+
+  func commitStagedHlsIfActive() throws {
+    guard active else { return }
+    try installStagedHls()
+  }
+
   func activate() throws {
     guard !disposed, !active else { return }
     do {
@@ -188,6 +217,10 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
       )
     }
     active = true
+    if stagedHls != nil {
+      try installStagedHls()
+      return
+    }
     guard let source = lastSource else {
       emitState()
       return
@@ -218,11 +251,19 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
 
   private func open(_ source: [String: Any?]) throws {
     try validateOpen(source)
+    resetOpenState(source, resume: false)
+    try installItem(source, positionMs: 0)
+    emitState()
+  }
+
+  private func resetOpenState(_ source: [String: Any?], resume: Bool) {
     removeCurrentItem()
     lastSource = source
-    savedPositionMs = 0
-    resumeAtLiveEdge = false
-    selectedAudioTrackId = nil
+    if !resume {
+      savedPositionMs = 0
+      resumeAtLiveEdge = false
+      selectedAudioTrackId = nil
+    }
     active = true
     sourceIsLive = source["isLive"] as? Bool ?? false
     status = "opening"
@@ -235,7 +276,22 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     rebufferDurationMs = 0
     bufferingStartedAt = nil
     currentError = nil
-    try installItem(source, positionMs: 0)
+  }
+
+  private func installStagedHls() throws {
+    guard let stagedHls else {
+      throw NativePlayerError(
+        category: "internal",
+        code: "internal.fallback_invariant",
+        message: "No prepared HLS asset is staged."
+      )
+    }
+    self.stagedHls = nil
+    let positionMs = stagedHls.resume ? savedPositionMs : 0
+    resetOpenState(stagedHls.source, resume: stagedHls.resume)
+    let loader = try stagedHls.prepared.takeLoader()
+    hlsResourceLoader = loader
+    installItem(asset: stagedHls.prepared.asset, positionMs: positionMs)
     emitState()
   }
 
@@ -247,9 +303,13 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
         message: "A valid media URI is required."
       )
     }
+    installItem(asset: AVURLAsset(url: url), positionMs: positionMs)
+  }
+
+  private func installItem(asset: AVURLAsset, positionMs: Int64) {
     itemGeneration &+= 1
     let generation = itemGeneration
-    let item = AVPlayerItem(asset: AVURLAsset(url: url))
+    let item = AVPlayerItem(asset: asset)
     item.preferredForwardBufferDuration = configuration.preferredForwardBufferDuration
     applyQualityConstraint(qualityConstraint, to: item)
     item.add(videoOutput)
@@ -559,6 +619,8 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     }
     player.pause()
     removeCurrentItem()
+    stagedHls?.prepared.discard()
+    stagedHls = nil
     lastSource = nil
     if textureId >= 0 {
       textures.unregisterTexture(textureId)
@@ -581,6 +643,8 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     displayLink?.isPaused = true
     player.currentItem?.remove(videoOutput)
     player.replaceCurrentItem(with: nil)
+    hlsResourceLoader?.cancelAll()
+    hlsResourceLoader = nil
   }
 
   private func isCurrent(_ item: AVPlayerItem, generation: UInt64) -> Bool {

@@ -99,6 +99,15 @@ final class YlHlsManifestRewriterTests: XCTestCase {
     }
   }
 
+  func testMissingExtM3UMarkerReturnsStableManifestError() {
+    XCTAssertThrowsError(try YlHlsManifestRewriter.rewrite(
+      data: Data("segment.ts\n".utf8),
+      baseURL: URL(string: "https://media.test/master.m3u8")!
+    )) { error in
+      XCTAssertEqual((error as? NativePlayerError)?.code, "container.hls_manifest_invalid")
+    }
+  }
+
   private func internalURLs(in manifest: String) throws -> [URL] {
     let expression = try NSRegularExpression(pattern: "ylhls://[^\\\"\\s,]+")
     let range = NSRange(manifest.startIndex..., in: manifest)
