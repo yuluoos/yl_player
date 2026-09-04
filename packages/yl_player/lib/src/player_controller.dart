@@ -8,8 +8,9 @@ final class YlPlayerController {
   YlPlayerController({
     YlPlayerConfiguration configuration = const YlPlayerConfiguration(),
     YlPlayerPlatform? platform,
-  }) : _backendCreation = (platform ?? YlPlayerPlatform.instance).createPlayer(
+  }) : _backendCreation = _createBackend(
          configuration,
+         platform ?? YlPlayerPlatform.instance,
        );
 
   final Future<YlPlatformPlayer> _backendCreation;
@@ -24,6 +25,7 @@ final class YlPlayerController {
   StreamSubscription<YlPlayerState>? _stateSubscription;
   StreamSubscription<YlPlayerEvent>? _eventSubscription;
   YlPlatformPlayer? _backend;
+  YlPlayerError? _creationError;
   Future<void>? _disposeFuture;
   bool _isDisposed = false;
 
@@ -59,22 +61,30 @@ final class YlPlayerController {
 
   Future<void> pause() => _run((backend) => backend.pause());
 
-  Future<void> seekTo(Duration position) =>
-      _run((backend) => backend.seekTo(position));
+  Future<void> seekTo(Duration position) {
+    validateYlSeekPosition(position);
+    return _run((backend) => backend.seekTo(position));
+  }
 
   Future<void> seekToLiveEdge() => _run((backend) => backend.seekToLiveEdge());
 
-  Future<void> setPlaybackSpeed(double speed) =>
-      _run((backend) => backend.setPlaybackSpeed(speed));
+  Future<void> setPlaybackSpeed(double speed) {
+    validateYlPlaybackSpeed(speed);
+    return _run((backend) => backend.setPlaybackSpeed(speed));
+  }
 
-  Future<void> setVolume(double volume) =>
-      _run((backend) => backend.setVolume(volume));
+  Future<void> setVolume(double volume) {
+    validateYlVolume(volume);
+    return _run((backend) => backend.setVolume(volume));
+  }
 
   Future<void> selectAudioTrack(String trackId) =>
       _run((backend) => backend.selectAudioTrack(trackId));
 
-  Future<void> setQualityConstraint(YlQualityConstraint constraint) =>
-      _run((backend) => backend.setQualityConstraint(constraint));
+  Future<void> setQualityConstraint(YlQualityConstraint constraint) {
+    validateYlQualityConstraint(constraint);
+    return _run((backend) => backend.setQualityConstraint(constraint));
+  }
 
   /// Releases native and Dart resources. Repeated calls share one completion.
   Future<void> dispose() {
@@ -104,21 +114,20 @@ final class YlPlayerController {
   Future<void> _connectForTexture() async {
     try {
       await _getBackend();
-    } on YlPlayerError catch (error) {
-      _reportError(error);
     } on Object catch (error) {
-      _reportError(
-        YlPlayerError(
-          category: YlPlayerErrorCategory.internal,
-          code: 'platform.create_failed',
-          message: 'The platform player could not be created.',
-          platformDiagnostic: error.toString(),
-        ),
-      );
+      _reportCreationError(error);
     }
   }
 
   Future<YlPlatformPlayer> _getBackend() => _connectedBackend ??= _connect();
+
+  Future<YlPlatformPlayer> _getBackendForCommand() async {
+    try {
+      return await _getBackend();
+    } on Object catch (error) {
+      throw _reportCreationError(error);
+    }
+  }
 
   void _handleEvent(YlPlayerEvent event) {
     if (!_isDisposed && !_eventController.isClosed) {
@@ -176,6 +185,24 @@ final class YlPlayerController {
     _eventController.add(YlErrorEvent(error));
   }
 
+  YlPlayerError _reportCreationError(Object error) {
+    final existing = _creationError;
+    if (existing != null) {
+      return existing;
+    }
+    final playerError = error is YlPlayerError
+        ? error
+        : YlPlayerError(
+            category: YlPlayerErrorCategory.internal,
+            code: 'platform.create_failed',
+            message: 'The platform player could not be created.',
+            platformDiagnostic: error.toString(),
+          );
+    _creationError = playerError;
+    _reportError(playerError);
+    return playerError;
+  }
+
   Future<void> _run(
     Future<void> Function(YlPlatformPlayer backend) command,
   ) async {
@@ -183,17 +210,18 @@ final class YlPlayerController {
       throw StateError('YlPlayerController has been disposed.');
     }
 
-    try {
-      final backend = await _getBackend();
-      if (_isDisposed) {
-        throw StateError('YlPlayerController has been disposed.');
-      }
-      await command(backend);
-    } on YlPlayerError catch (error) {
-      if (!identical(_state.error, error)) {
-        _reportError(error);
-      }
-      rethrow;
+    final backend = await _getBackendForCommand();
+    if (_isDisposed) {
+      throw StateError('YlPlayerController has been disposed.');
     }
+    await command(backend);
+  }
+
+  static Future<YlPlatformPlayer> _createBackend(
+    YlPlayerConfiguration configuration,
+    YlPlayerPlatform platform,
+  ) {
+    validateYlPlayerConfiguration(configuration);
+    return platform.createPlayer(configuration);
   }
 }

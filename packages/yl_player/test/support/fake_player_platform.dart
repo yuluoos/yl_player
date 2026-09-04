@@ -9,6 +9,7 @@ final class FakePlayerPlatform extends YlPlayerPlatform {
   final FakePlatformPlayer player;
   int createCount = 0;
   YlPlayerConfiguration? configuration;
+  Object? createError;
 
   @override
   Future<YlPlatformPlayer> createPlayer(
@@ -16,6 +17,10 @@ final class FakePlayerPlatform extends YlPlayerPlatform {
   ) async {
     createCount += 1;
     this.configuration = configuration;
+    final error = createError;
+    if (error != null) {
+      throw error;
+    }
     return player;
   }
 }
