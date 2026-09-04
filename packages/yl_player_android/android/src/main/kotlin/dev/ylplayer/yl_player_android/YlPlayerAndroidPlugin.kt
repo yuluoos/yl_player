@@ -251,6 +251,14 @@ private class Media3Player(
     private var adaptiveDowngradeCount = 0
     private var selectedVideoBitrate: Int? = null
     private var availableVideoBitrates: List<Int> = emptyList()
+    private var selectedVideoFrameRate = 30f
+    private var requestedPlaybackSpeed = 1f
+    private val healthMonitor = YlPlaybackHealthMonitor()
+    private var healthWindowStartedAtMs: Long? = null
+    private var healthWindowDroppedFrames = 0
+    private var healthWindowRebufferCount = 0
+    private var healthWindowRebufferDurationMs = 0L
+    private var lastHealthEvaluationMs = 0L
     private var currentError: Map<String, Any?>? = null
     private var active = false
     private var savedPositionMs = 0L
@@ -273,6 +281,7 @@ private class Media3Player(
     private val positionTicker = object : Runnable {
         override fun run() {
             if (!disposed && active) {
+                maybeEvaluateHealth()
                 emitState()
                 handler.postDelayed(this, configuration.positionEventIntervalMs)
             }
@@ -327,6 +336,7 @@ private class Media3Player(
             "setPlaybackSpeed" -> {
                 val speed = (arguments["speed"] as? Number)?.toFloat() ?: 1f
                 require(speed in 0.25f..4f) { "Playback speed must be between 0.25 and 4.0." }
+                requestedPlaybackSpeed = speed
                 exoPlayer.setPlaybackSpeed(speed)
             }
             "setVolume" -> {
@@ -452,6 +462,10 @@ private class Media3Player(
         adaptiveBitrateCeiling = null
         selectedVideoBitrate = null
         availableVideoBitrates = emptyList()
+        selectedVideoFrameRate = 30f
+        healthMonitor.reset()
+        healthWindowStartedAtMs = null
+        lastHealthEvaluationMs = 0L
         currentError = null
         audioSelections.clear()
         audioTracks = emptyList()
@@ -559,6 +573,7 @@ private class Media3Player(
     ) {
         if (!isCurrentEvent(eventTime)) return
         firstFrameDurationMs = openStartedAtMs?.let { SystemClock.elapsedRealtime() - it }
+        resetHealthWindow(SystemClock.elapsedRealtime())
         emit(
             mapOf(
                 "playerId" to playerId,
@@ -602,11 +617,30 @@ private class Media3Player(
         }
         audioTracks = audio
         videoTracks = video
-        availableVideoBitrates = video.mapNotNull { it["bitrate"] as? Int }
+        availableVideoBitrates = tracks.groups.asSequence()
+            .filter { it.type == C.TRACK_TYPE_VIDEO }
+            .flatMap { group ->
+                (0 until group.length).asSequence()
+                    .filter(group::isTrackSupported)
+                    .map(group::getTrackFormat)
+            }
+            .mapNotNull { it.bitrate.valueOrNull() }
             .distinct()
             .sortedDescending()
+            .toList()
         selectedVideoBitrate = video.firstOrNull { it["isSelected"] == true }
             ?.get("bitrate") as? Int
+        tracks.groups.asSequence()
+            .filter { it.type == C.TRACK_TYPE_VIDEO }
+            .flatMap { group ->
+                (0 until group.length).asSequence()
+                    .filter(group::isTrackSelected)
+                    .map(group::getTrackFormat)
+            }
+            .firstOrNull()
+            ?.frameRate
+            ?.takeIf { it > 0f }
+            ?.let { selectedVideoFrameRate = it }
         emit(
             mapOf(
                 "playerId" to playerId,
@@ -661,6 +695,98 @@ private class Media3Player(
         exoPlayer.prepare()
         emitState()
         return true
+    }
+
+    private fun maybeEvaluateHealth(memoryPressure: Boolean = false) {
+        if (!hasBeenReady || status == "error") return
+        val nowMs = SystemClock.elapsedRealtime()
+        val startedAtMs = healthWindowStartedAtMs ?: nowMs.also(::resetHealthWindow)
+        if (!memoryPressure && nowMs - lastHealthEvaluationMs < 1_000L) return
+        lastHealthEvaluationMs = nowMs
+        val elapsedMs = max(0L, nowMs - startedAtMs)
+        val currentRebufferDuration = rebufferDurationMs +
+            (bufferingStartedAtMs?.let { nowMs - it } ?: 0L)
+        val bufferedDuration = max(0L, exoPlayer.bufferedPosition - exoPlayer.currentPosition)
+        val canDowngrade = nextLowerBitrate() != null
+        val profile = loadControl.currentProfile
+        val action = healthMonitor.record(
+            YlHealthSample(
+                nowMs = nowMs,
+                elapsedMs = elapsedMs,
+                droppedFrames = droppedVideoFrames - healthWindowDroppedFrames,
+                estimatedRenderedFrames = ((elapsedMs / 1_000.0) * selectedVideoFrameRate).toInt(),
+                rebufferCount = rebufferCount - healthWindowRebufferCount,
+                rebufferDurationMs = currentRebufferDuration - healthWindowRebufferDurationMs,
+                memoryPressure = memoryPressure,
+                canDowngrade = canDowngrade,
+                sourceClass = sourceClass,
+                liveOffsetMs = exoPlayer.currentLiveOffset.takeUnless { it == C.TIME_UNSET || it < 0 },
+                bufferedDurationMs = bufferedDuration,
+                targetLiveOffsetMs = (profile.minBufferMs + profile.maxBufferMs) / 2L,
+                maxBufferMs = profile.maxBufferMs,
+                reconnectCount = reconnectCount,
+                maxRetries = configuration.network.maxRetries,
+            ),
+        )
+        applyRecoveryAction(action)
+        if (elapsedMs >= 30_000L) resetHealthWindow(nowMs)
+    }
+
+    private fun resetHealthWindow(nowMs: Long) {
+        healthWindowStartedAtMs = nowMs
+        healthWindowDroppedFrames = droppedVideoFrames
+        healthWindowRebufferCount = rebufferCount
+        healthWindowRebufferDurationMs = rebufferDurationMs
+    }
+
+    private fun nextLowerBitrate(): Int? {
+        val selected = selectedVideoBitrate ?: adaptiveBitrateCeiling ?: return null
+        return availableVideoBitrates.firstOrNull { it < selected }
+    }
+
+    private fun applyRecoveryAction(action: YlRecoveryAction) {
+        when (action) {
+            YlRecoveryAction.None -> Unit
+            YlRecoveryAction.DowngradeOneStep -> {
+                val lowerBitrate = nextLowerBitrate()
+                if (lowerBitrate == null) {
+                    failWith(stableError(YlPlaybackFailure.CAPABILITY_EXCEEDED))
+                } else {
+                    adaptiveBitrateCeiling = lowerBitrate
+                    adaptiveDowngradeCount += 1
+                    applyTrackConstraints()
+                }
+            }
+            YlRecoveryAction.SeekLiveEdge -> {
+                exoPlayer.setPlaybackSpeed(requestedPlaybackSpeed)
+                exoPlayer.seekToDefaultPosition()
+            }
+            YlRecoveryAction.ReconnectLiveHead -> {
+                reconnectCount += 1
+                exoPlayer.stop()
+                exoPlayer.prepare()
+            }
+            is YlRecoveryAction.SetCatchUpSpeed -> {
+                if (requestedPlaybackSpeed == 1f) exoPlayer.setPlaybackSpeed(action.speed.coerceAtMost(1.03f))
+            }
+            is YlRecoveryAction.Fail -> failWith(action.error)
+        }
+    }
+
+    private fun failWith(error: YlStableError) {
+        val details = errorMap(error.category, error.code, error.message)
+        status = "error"
+        currentError = details
+        exoPlayer.pause()
+        emit(mapOf("playerId" to playerId, "type" to "error", "error" to details))
+        emitState(details)
+    }
+
+    fun handleRunningLowMemory() {
+        if (disposed || !active) return
+        loadControl.shrinkForMemoryPressure()
+        maybeEvaluateHealth(memoryPressure = true)
+        emitState()
     }
 
     override fun onVideoDecoderInitialized(

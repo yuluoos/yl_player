@@ -543,7 +543,7 @@ git commit -m "feat: apply Android TV decode policy"
 - Produces: `YlHealthSample`, `YlRecoveryAction`, and `YlPlaybackHealthMonitor.record(...)`.
 - Consumes: 30-second window deltas, source class, live offset, available adaptive tracks, and monotonic time.
 
-- [ ] **Step 1: Write failing hysteresis and live-action tests**
+- [x] **Step 1: Write failing hysteresis and live-action tests**
 
 Use an injected monotonic clock and cover:
 
@@ -558,13 +558,13 @@ memory downgrade, no upgrade, cooldown expiry, HLS 1.03x catch-up, 30-second
 forced-live-edge rate limit, HTTP-FLV severe backlog reconnect, and retry
 exhaustion.
 
-- [ ] **Step 2: Run and verify failure**
+- [x] **Step 2: Run and verify failure**
 
 ```bash
 ./gradlew :yl_player_android:testDebugUnitTest --tests '*YlPlaybackHealthMonitorTest'
 ```
 
-- [ ] **Step 3: Implement the pure monitor**
+- [x] **Step 3: Implement the pure monitor**
 
 Make the monitor return commands rather than touching ExoPlayer:
 
@@ -594,7 +594,7 @@ internal sealed interface YlRecoveryAction {
 
 Reset window counters after evaluation. Never return an upgrade command.
 
-- [ ] **Step 4: Connect analytics and a lightweight health ticker**
+- [x] **Step 4: Connect analytics and a lightweight health ticker**
 
 Accumulate dropped frames and rebuffer duration from existing callbacks. After
 the first frame, post a 30-second handler tick scoped to the source generation.
@@ -602,7 +602,7 @@ Translate monitor actions to one track-selector downgrade, playback speed no
 higher than 1.03, a rate-limited `seekToDefaultPosition`, or HTTP-FLV stop/
 prepare at live head. Reset speed to 1.0 when HLS is back within target.
 
-- [ ] **Step 5: Run tests and compile**
+- [x] **Step 5: Run tests and compile**
 
 ```bash
 ./gradlew :yl_player_android:testDebugUnitTest --tests '*YlPlaybackHealthMonitorTest'
@@ -612,7 +612,7 @@ prepare at live head. Reset speed to 1.0 when HLS is back within target.
 
 Expected: pass.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add packages/yl_player_android/android/src
