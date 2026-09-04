@@ -31,6 +31,16 @@ selection envelope is at most 1080p30, subject to the display and hardware codec
 capability—it is not a universal smoothness guarantee. HEVC requires a compatible
 hardware decoder.
 
+Android retains Flutter's `SurfaceTextureEntry` contract on the current Flutter
+3.44 / Android API 24 compatibility floor. Video output restoration is handled
+by the tested `YlVideoOutput` source/surface-generation lifecycle; this release
+does not claim equivalent `SurfaceProducer` restoration behavior.
+
+The Android examples retain Flutter 3.44's generated AGP 9 compatibility
+switches for the legacy Android DSL and external Kotlin plugin. Flutter 3.44's
+Gradle plugin and bundled `integration_test` package still require those paths;
+removing them makes project configuration fail before compilation.
+
 A bundled FFmpeg-demux/VideoToolbox fallback experimentally handles local and HTTP/HTTPS
 MKV VOD with H.264/H.265 video and zero or more AAC-LC tracks. MKV video decode
 is hardware-required; unsupported devices return
@@ -66,7 +76,7 @@ import 'package:yl_player/yl_player.dart';
 
 final controller = YlPlayerController(
   configuration: const YlPlayerConfiguration(
-    decoderPolicy: YlDecoderPolicy.preferHardware,
+    decoderPolicy: YlDecoderPolicy.hardwareOnly,
     bufferMode: YlBufferMode.balanced,
   ),
 );
