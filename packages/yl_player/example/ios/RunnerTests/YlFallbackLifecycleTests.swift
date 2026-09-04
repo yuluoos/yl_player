@@ -18,6 +18,31 @@ final class YlFallbackLifecycleTests: XCTestCase {
     XCTAssertEqual(events, ["cancelInput", "joinAndRelease"])
   }
 
+  func testDisposedLiveReconnectCannotRunPendingRetry() {
+    let controller = YlLiveReconnectController(configuration: .init(map: [
+      "maxRetries": 2,
+      "baseRetryDelayMs": 50,
+    ]))
+    XCTAssertEqual(controller.nextDelayMs(), 50)
+
+    controller.cancel()
+
+    XCTAssertNil(controller.nextDelayMs())
+    XCTAssertFalse(controller.shouldInstall(
+      reconnectGeneration: 8,
+      currentGeneration: 8
+    ))
+  }
+
+  func testLiveReconnectCannotInstallAfterLifecycleGenerationAdvances() {
+    let controller = YlLiveReconnectController(configuration: .init(map: [:]))
+
+    XCTAssertFalse(controller.shouldInstall(
+      reconnectGeneration: 12,
+      currentGeneration: 13
+    ))
+  }
+
   func testSeekRunsTheOrderedPipelineTransaction() throws {
     var events: [String] = []
     var generation = UInt64(7)

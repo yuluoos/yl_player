@@ -208,6 +208,7 @@ final class YlPreparedFallback {
   let audioStreams: [YLFStreamInfo]
   let videoFormat: CMVideoFormatDescription
   let audioCookies: [Int32: Data]
+  let sessionConfiguration: URLSessionConfiguration
   var container: YlFallbackContainer { policy.container }
   var isSeekable: Bool { policy.isSeekable }
   private(set) var resumeState: YlFallbackResumeState?
@@ -222,6 +223,7 @@ final class YlPreparedFallback {
     cancellationToken: YlOpenCancellationToken? = nil,
     onRetry: YlNetworkByteSource.RetryCallback? = nil
   ) throws {
+    self.sessionConfiguration = sessionConfiguration
     try cancellationToken?.throwIfCancelled()
     guard let uri = source["uri"] as? String,
           let url = URL(string: uri) else {
@@ -419,6 +421,25 @@ private final class YlFallbackOutputRelay {
   func error(_ error: NativePlayerError) { backend?.fail(error) }
 }
 
+private struct YlFallbackReconnectPipeline {
+  let media: YlOpenedMedia
+  let info: YLFMediaInfo
+  let videoStream: YLFStreamInfo
+  let audioStreams: [YLFStreamInfo]
+  let audioCookies: [Int32: Data]
+  let videoFormat: CMVideoFormatDescription
+  let selectedAudioStream: YLFStreamInfo?
+  let decoder: YlVideoToolboxDecoder
+  let audioRenderer: YlAudioRenderer
+
+  func discard() {
+    decoder.dispose()
+    audioRenderer.dispose()
+    media.cancelInput()
+    media.close()
+  }
+}
+
 final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   let playerId: Int64
   var textureId: Int64 = -1
@@ -451,18 +472,20 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private let configuration: PlayerConfiguration
   private let emit: ([String: Any?]) -> Void
   private let sourceRecipe: YlFallbackSourceRecipe
+  private let sessionConfiguration: URLSessionConfiguration
   private let mediaPolicy: YlFallbackMediaPolicy
   private let bufferBudget: YlFallbackBufferBudget
-  private let mediaInfo: YLFMediaInfo
-  private let videoStream: YLFStreamInfo
-  private let audioStreams: [YLFStreamInfo]
-  private let audioCookies: [Int32: Data]
-  private let isSeekable: Bool
+  private var mediaInfo: YLFMediaInfo
+  private var videoStream: YLFStreamInfo
+  private var audioStreams: [YLFStreamInfo]
+  private var audioCookies: [Int32: Data]
+  private var isSeekable: Bool
   private var videoFormat: CMVideoFormatDescription
   private let worker = DispatchQueue(label: "dev.ylplayer.ios.fallback.demux")
   private let stateLock = NSLock()
   private let frameScheduler = YlFrameScheduler()
   private let postSeekGate = YlPostSeekGate()
+  private let liveReconnectController: YlLiveReconnectController
   private var initialKeyframeGate = YlInitialKeyframeGate()
   private var audioRenderer: YlAudioRenderer!
   private let outputRelay = YlFallbackOutputRelay()
@@ -480,6 +503,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private var disposed = false
   private var pumping = false
   private var reconfiguring = false
+  private var reconnectWorkItem: DispatchWorkItem?
+  private var awaitingReconnectFirstFrame = false
   private var generation: UInt64
   private var audioGeneration: UInt64
   private var selectedAudioStream: YLFStreamInfo?
@@ -513,8 +538,12 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     self.textures = textures
     self.configuration = configuration
     self.sourceRecipe = prepared.sourceRecipe
+    self.sessionConfiguration = prepared.sessionConfiguration
     self.mediaPolicy = prepared.policy
     self.bufferBudget = try YlFallbackBufferBudget.make(configuration: configuration)
+    self.liveReconnectController = YlLiveReconnectController(
+      configuration: configuration.network
+    )
     self.mediaInfo = prepared.mediaInfo
     self.videoStream = prepared.videoStream
     self.audioStreams = prepared.audioStreams
@@ -627,11 +656,14 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     generation &+= 1
     audioGeneration &+= 1
     let currentGeneration = generation
+    let reconnectToCancel = reconnectWorkItem
+    reconnectWorkItem = nil
     let mediaToClose = openedMedia
     openedMedia = nil
     let tokenToCancel = sourceCancellationToken
     sourceCancellationToken = nil
     stateLock.unlock()
+    reconnectToCancel?.cancel()
     displayLink?.invalidate()
     displayLink = nil
     audioRenderer?.pause()
@@ -684,8 +716,12 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     generation = generations.videoGeneration
     audioGeneration = generations.audioGeneration
     let currentGeneration = generation
+    let reconnectToCancel = reconnectWorkItem
+    reconnectWorkItem = nil
     let media = openedMedia
     stateLock.unlock()
+
+    reconnectToCancel?.cancel()
 
     displayLink?.invalidate()
     displayLink = nil
@@ -874,11 +910,15 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     reconfiguring = true
     generation &+= 1
     audioGeneration &+= 1
+    let reconnectToCancel = reconnectWorkItem
+    reconnectWorkItem = nil
     let mediaToClose = openedMedia
     openedMedia = nil
     let tokenToCancel = sourceCancellationToken
     sourceCancellationToken = nil
     stateLock.unlock()
+    liveReconnectController.cancel()
+    reconnectToCancel?.cancel()
     displayLink?.invalidate()
     displayLink = nil
     YlFallbackTeardownTransaction(
@@ -912,6 +952,14 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       generation: frame.generation
     ))
     guard accepted else { return }
+    let completedReconnect = stateLock.withLock { () -> Bool in
+      guard awaitingReconnectFirstFrame, generation == frame.generation else {
+        return false
+      }
+      awaitingReconnectFirstFrame = false
+      return true
+    }
+    if completedReconnect { liveReconnectController.markFirstFrame() }
     DispatchQueue.main.async { [weak self] in
       guard let self, !self.firstFrameSent,
             self.stateLock.withLock({ self.active && self.generation == frame.generation })
@@ -1017,7 +1065,18 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
 
     var packet: YLFPacketRef?
     let result = ylf_read_packet(context, &packet)
-    if result == 1 {
+    if result == Int32(YLFResultEOF) {
+      if mediaPolicy.isLive {
+        beginLiveReconnect(
+          after: NativePlayerError(
+            category: "network",
+            code: "network.http_status",
+            message: "The HTTP-FLV connection ended."
+          ),
+          packetGeneration: packetGeneration
+        )
+        return
+      }
       stateLock.withLock {
         pumping = false
         demuxEOF = true
@@ -1025,7 +1084,21 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       decoder?.flush()
       return
     }
-    guard result == 0, let ownedPacket = packet else {
+    guard result == Int32(YLFResultOK), let ownedPacket = packet else {
+      let inputError = stateLock.withLock { openedMedia?.lastInputError }
+      if mediaPolicy.isLive, result == Int32(YLFResultCallbackFailed) {
+        ylf_packet_release(&packet)
+        beginLiveReconnect(
+          after: inputError ?? NativePlayerError(
+            category: "network",
+            code: "network.http_status",
+            message: "The HTTP-FLV network input failed.",
+            diagnostic: "YlFFmpegBridge result \(result)"
+          ),
+          packetGeneration: packetGeneration
+        )
+        return
+      }
       let shouldReport = stateLock.withLock { () -> Bool in
         pumping = false
         return !disposed && active && !reconfiguring && generation == packetGeneration
@@ -1133,6 +1206,247 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
 
     stateLock.withLock { pumping = false }
     requestPump(after: retryDelay)
+  }
+
+  private func beginLiveReconnect(
+    after error: NativePlayerError,
+    packetGeneration: UInt64
+  ) {
+    let transition = stateLock.withLock { () -> (
+      generation: UInt64,
+      media: YlOpenedMedia?,
+      token: YlOpenCancellationToken?
+    )? in
+      guard mediaPolicy.isLive, !disposed, active, !reconfiguring,
+            generation == packetGeneration else { return nil }
+      generation &+= 1
+      audioGeneration &+= 1
+      reconfiguring = true
+      pumping = false
+      demuxEOF = false
+      completionSent = false
+      awaitingReconnectFirstFrame = false
+      let detachedMedia = openedMedia
+      openedMedia = nil
+      let detachedToken = sourceCancellationToken
+      sourceCancellationToken = nil
+      return (generation, detachedMedia, detachedToken)
+    }
+    guard let transition else { return }
+
+    transition.token?.cancel()
+    transition.media?.cancelInput()
+    pendingAudioPacket = nil
+    decoder?.dispose()
+    decoder = nil
+    audioRenderer?.pause()
+    audioRenderer?.dispose()
+    audioRenderer = nil
+    transition.media?.close()
+    prebufferedVideoSample = false
+    audioAnchored = false
+    frameScheduler.flush(generation: transition.generation)
+    postSeekGate.reset(targetUs: nil)
+    stateLock.withLock { currentPixelBuffer = nil }
+
+    DispatchQueue.main.async { [weak self] in
+      guard let self,
+            self.stateLock.withLock({
+              self.active && self.reconfiguring
+                && self.generation == transition.generation
+            }) else { return }
+      self.mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
+      self.mediaClock.seek(to: 0)
+      self.status = "buffering"
+      self.emitState()
+    }
+    scheduleLiveReconnect(after: error, generation: transition.generation)
+  }
+
+  private func scheduleLiveReconnect(
+    after error: NativePlayerError,
+    generation reconnectGeneration: UInt64
+  ) {
+    guard stateLock.withLock({
+      !disposed && active && reconfiguring && generation == reconnectGeneration
+    }) else { return }
+    guard let delayMs = liveReconnectController.nextDelayMs() else {
+      finishLiveReconnectExhausted(error, generation: reconnectGeneration)
+      return
+    }
+
+    let attempt = liveReconnectController.attempt
+    DispatchQueue.main.async { [weak self] in
+      guard let self,
+            self.stateLock.withLock({
+              self.active && self.reconfiguring
+                && self.generation == reconnectGeneration
+            }) else { return }
+      self.emit(YlFallbackRetryEvent.envelope(
+        playerId: self.playerId,
+        attempt: attempt,
+        delayMs: delayMs,
+        error: error
+      ))
+    }
+
+    let workItem = DispatchWorkItem { [weak self] in
+      self?.performLiveReconnect(generation: reconnectGeneration)
+    }
+    let installed = stateLock.withLock { () -> Bool in
+      guard !disposed, active, reconfiguring, generation == reconnectGeneration
+      else { return false }
+      reconnectWorkItem?.cancel()
+      reconnectWorkItem = workItem
+      return true
+    }
+    guard installed else { return }
+    worker.asyncAfter(
+      deadline: .now() + .milliseconds(Int(delayMs)),
+      execute: workItem
+    )
+  }
+
+  private func performLiveReconnect(generation reconnectGeneration: UInt64) {
+    guard liveReconnectController.shouldInstall(
+      reconnectGeneration: reconnectGeneration,
+      currentGeneration: stateLock.withLock { generation }
+    ) else { return }
+
+    let token = YlOpenCancellationToken()
+    let mayOpen = stateLock.withLock { () -> Bool in
+      guard !disposed, active, reconfiguring, generation == reconnectGeneration
+      else { return false }
+      reconnectWorkItem = nil
+      sourceCancellationToken = token
+      return true
+    }
+    guard mayOpen else { return }
+
+    do {
+      let candidate = try makeLiveReconnectPipeline(
+        generation: reconnectGeneration,
+        cancellationToken: token
+      )
+      try token.throwIfCancelled()
+      let installed = stateLock.withLock { () -> Bool in
+        guard !disposed, active, reconfiguring,
+              generation == reconnectGeneration,
+              sourceCancellationToken === token,
+              liveReconnectController.shouldInstall(
+                reconnectGeneration: reconnectGeneration,
+                currentGeneration: generation
+              ) else { return false }
+        mediaInfo = candidate.info
+        videoStream = candidate.videoStream
+        audioStreams = candidate.audioStreams
+        audioCookies = candidate.audioCookies
+        videoFormat = candidate.videoFormat
+        selectedAudioStream = candidate.selectedAudioStream
+        openedMedia = candidate.media
+        decoder = candidate.decoder
+        audioRenderer = candidate.audioRenderer
+        pendingAudioPacket = nil
+        prebufferedVideoSample = false
+        demuxEOF = false
+        completionSent = false
+        audioAnchored = false
+        awaitingReconnectFirstFrame = true
+        currentError = nil
+        return true
+      }
+      guard installed else {
+        candidate.discard()
+        return
+      }
+
+      stateLock.withLock { initialKeyframeGate.reset() }
+      frameScheduler.flush(generation: reconnectGeneration)
+      DispatchQueue.main.async { [weak self] in
+        guard let self else { return }
+        let shouldResume = self.stateLock.withLock { () -> Bool in
+          guard !self.disposed, self.active, self.reconfiguring,
+                self.generation == reconnectGeneration else { return false }
+          self.reconfiguring = false
+          return true
+        }
+        guard shouldResume else { return }
+        self.mediaClock.seek(to: 0)
+        if self.playing {
+          do {
+            if self.selectedAudioStream != nil { try self.audioRenderer?.play() }
+            self.mediaClock.play(atHostTimeUs: Self.hostTimeUs())
+            self.status = "playing"
+          } catch {
+            self.setFailure(NativePlayerError(
+              category: "decoderFailure",
+              code: "decoder.audio_failed",
+              message: "The reconnected audio renderer could not start.",
+              diagnostic: String(describing: error)
+            ))
+            return
+          }
+        } else {
+          self.status = "paused"
+        }
+        self.emit([
+          "playerId": self.playerId,
+          "type": "tracksChanged",
+          "audioTracks": self.audioTracks,
+          "videoTracks": self.videoTracks,
+        ])
+        self.emitState()
+        self.requestPump()
+      }
+    } catch let error as NativePlayerError {
+      let shouldRetry = stateLock.withLock { () -> Bool in
+        if sourceCancellationToken === token { sourceCancellationToken = nil }
+        return !disposed && active && reconfiguring
+          && generation == reconnectGeneration && !token.isCancelled
+      }
+      if shouldRetry { scheduleLiveReconnect(after: error, generation: reconnectGeneration) }
+    } catch {
+      let shouldRetry = stateLock.withLock { () -> Bool in
+        if sourceCancellationToken === token { sourceCancellationToken = nil }
+        return !disposed && active && reconfiguring
+          && generation == reconnectGeneration && !token.isCancelled
+      }
+      if shouldRetry {
+        scheduleLiveReconnect(
+          after: NativePlayerError(
+            category: "network",
+            code: "network.http_status",
+            message: "The HTTP-FLV reconnect failed.",
+            diagnostic: String(describing: error)
+          ),
+          generation: reconnectGeneration
+        )
+      }
+    }
+  }
+
+  private func finishLiveReconnectExhausted(
+    _ lastError: NativePlayerError,
+    generation reconnectGeneration: UInt64
+  ) {
+    DispatchQueue.main.async { [weak self] in
+      guard let self else { return }
+      let shouldFail = self.stateLock.withLock { () -> Bool in
+        guard !self.disposed, self.active, self.reconfiguring,
+              self.generation == reconnectGeneration else { return false }
+        self.reconfiguring = false
+        self.playing = false
+        return true
+      }
+      guard shouldFail else { return }
+      self.displayLink?.isPaused = true
+      self.setFailure(NativePlayerError(
+        category: "network",
+        code: "network.retry_exhausted",
+        message: "HTTP-FLV reconnect attempts were exhausted.",
+        diagnostic: lastError.code
+      ))
+    }
   }
 
   private func seek(
@@ -1364,10 +1678,150 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     )
   }
 
+  private func makeLiveReconnectPipeline(
+    generation reconnectGeneration: UInt64,
+    cancellationToken: YlOpenCancellationToken
+  ) throws -> YlFallbackReconnectPipeline {
+    try cancellationToken.throwIfCancelled()
+    let reopenedMedia = try YlOpenedMedia(
+      recipe: sourceRecipe,
+      networkBufferBytes: bufferBudget.networkBytes,
+      sessionConfiguration: sessionConfiguration,
+      onSourceCreated: { source in
+        cancellationToken.onCancel { source.cancel() }
+      }
+    )
+    var keepMedia = false
+    var candidateDecoder: YlVideoToolboxDecoder?
+    var candidateAudio: YlAudioRenderer?
+    defer {
+      if !keepMedia {
+        candidateDecoder?.dispose()
+        candidateAudio?.dispose()
+        reopenedMedia.cancelInput()
+        reopenedMedia.close()
+      }
+    }
+    try cancellationToken.throwIfCancelled()
+    guard let validContext = reopenedMedia.context else {
+      throw NativePlayerError(
+        category: "internal",
+        code: "internal.fallback_invariant",
+        message: "The reconnected FLV context was unavailable."
+      )
+    }
+
+    let info = reopenedMedia.info
+    var selectedVideo: YLFStreamInfo?
+    var supportedAudio: [YLFStreamInfo] = []
+    var sawUnsupportedAudio = false
+    for index in 0..<info.stream_count {
+      var stream = YLFStreamInfo()
+      guard ylf_copy_stream_info(validContext, index, &stream) == 0 else { continue }
+      if Int(stream.kind) == YLFStreamVideo,
+         (Int(stream.codec) == YLFCodecH264 || Int(stream.codec) == YLFCodecHEVC),
+         selectedVideo == nil {
+        selectedVideo = stream
+      } else if Int(stream.kind) == YLFStreamAudio {
+        if Int(stream.codec) == YLFCodecAAC || Int(stream.codec) == YLFCodecMP3 {
+          supportedAudio.append(stream)
+        } else {
+          sawUnsupportedAudio = true
+        }
+      }
+    }
+    guard let selectedVideo else {
+      throw NativePlayerError(
+        category: "decoderUnsupported",
+        code: "decoder.video_hardware_unavailable",
+        message: "The reconnected FLV stream has no supported H.264 or H.265 video."
+      )
+    }
+    if supportedAudio.isEmpty && sawUnsupportedAudio {
+      throw NativePlayerError(
+        category: "decoderUnsupported",
+        code: "decoder.audio_aac_unsupported",
+        message: "The reconnected FLV audio track is not AAC or MP3."
+      )
+    }
+
+    var copiedAudioCookies: [Int32: Data] = [:]
+    for audioStream in supportedAudio where Int(audioStream.codec) == YLFCodecAAC {
+      let size = ylf_stream_codec_config_size(validContext, audioStream.index)
+      guard size > 0 else {
+        throw NativePlayerError(
+          category: "decoderUnsupported",
+          code: "decoder.audio_aac_unsupported",
+          message: "The reconnected AAC codec configuration is missing."
+        )
+      }
+      var bytes = [UInt8](repeating: 0, count: size)
+      guard ylf_copy_stream_codec_config(
+        validContext,
+        audioStream.index,
+        &bytes,
+        bytes.count
+      ) == 0 else {
+        throw NativePlayerError(
+          category: "decoderUnsupported",
+          code: "decoder.audio_aac_unsupported",
+          message: "The reconnected AAC codec configuration is invalid."
+        )
+      }
+      copiedAudioCookies[audioStream.index] = Data(bytes)
+    }
+
+    let candidateFormat = try YlVideoToolboxDecoder.makeFormatDescription(
+      context: validContext,
+      streamIndex: selectedVideo.index
+    )
+    let newDecoder = try YlVideoToolboxDecoder(
+      formatDescription: candidateFormat,
+      onFrame: { [outputRelay] frame in outputRelay.frame(frame) },
+      onError: { [outputRelay] error in outputRelay.error(error) }
+    )
+    candidateDecoder = newDecoder
+
+    let preferredAudioIndex = selectedAudioStream?.index
+    let reselectedAudio = preferredAudioIndex.flatMap { preferredIndex in
+      supportedAudio.first { $0.index == preferredIndex }
+    } ?? supportedAudio.first
+    let newAudioRenderer = YlAudioRenderer(bufferBudget: bufferBudget)
+    candidateAudio = newAudioRenderer
+    if let reselectedAudio {
+      try newAudioRenderer.configure(stream: YlAudioStreamConfiguration(
+        codec: Int(reselectedAudio.codec) == YLFCodecAAC ? .aac : .mp3,
+        sampleRate: Double(reselectedAudio.sample_rate),
+        channelCount: Int(reselectedAudio.channel_count),
+        magicCookie: copiedAudioCookies[reselectedAudio.index] ?? Data(),
+        generation: reconnectGeneration
+      ))
+      newAudioRenderer.setVolume(desiredVolume)
+      newAudioRenderer.setRate(desiredRate)
+    }
+    try cancellationToken.throwIfCancelled()
+
+    keepMedia = true
+    candidateDecoder = nil
+    candidateAudio = nil
+    return YlFallbackReconnectPipeline(
+      media: reopenedMedia,
+      info: info,
+      videoStream: selectedVideo,
+      audioStreams: supportedAudio,
+      audioCookies: copiedAudioCookies,
+      videoFormat: candidateFormat,
+      selectedAudioStream: reselectedAudio,
+      decoder: newDecoder,
+      audioRenderer: newAudioRenderer
+    )
+  }
+
   private func rebuildPipeline(positionUs: Int64) throws {
     let reopenedMedia = try YlOpenedMedia(
       recipe: sourceRecipe,
-      networkBufferBytes: bufferBudget.networkBytes
+      networkBufferBytes: bufferBudget.networkBytes,
+      sessionConfiguration: sessionConfiguration
     )
     guard let validContext = reopenedMedia.context else {
       reopenedMedia.close()

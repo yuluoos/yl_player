@@ -1,5 +1,6 @@
 @testable import yl_player_ios
 import CoreVideo
+import Flutter
 import XCTest
 import YlFFmpegBridge
 
@@ -7,11 +8,18 @@ private final class FallbackFixtureURLProtocol: URLProtocol {
   private static let lock = NSLock()
   private static var fixtureData = Data()
   private static var capturedRequest: URLRequest?
+  private static var capturedRequestCount = 0
+  private static var requestObserver: ((Int) -> Void)?
 
-  static func configure(data: Data) -> URLSessionConfiguration {
+  static func configure(
+    data: Data,
+    onRequest: ((Int) -> Void)? = nil
+  ) -> URLSessionConfiguration {
     lock.lock()
     fixtureData = data
     capturedRequest = nil
+    capturedRequestCount = 0
+    requestObserver = onRequest
     lock.unlock()
     let configuration = URLSessionConfiguration.ephemeral
     configuration.protocolClasses = [FallbackFixtureURLProtocol.self]
@@ -24,14 +32,24 @@ private final class FallbackFixtureURLProtocol: URLProtocol {
     return capturedRequest
   }
 
+  static var requestCount: Int {
+    lock.lock()
+    defer { lock.unlock() }
+    return capturedRequestCount
+  }
+
   override class func canInit(with request: URLRequest) -> Bool { true }
   override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
 
   override func startLoading() {
     Self.lock.lock()
     Self.capturedRequest = request
+    Self.capturedRequestCount += 1
+    let count = Self.capturedRequestCount
+    let observer = Self.requestObserver
     let data = Self.fixtureData
     Self.lock.unlock()
+    observer?(count)
     let response = HTTPURLResponse(
       url: request.url!,
       statusCode: 200,
@@ -47,6 +65,12 @@ private final class FallbackFixtureURLProtocol: URLProtocol {
 }
 
 final class YlFallbackBackendTests: XCTestCase {
+  private final class FakeTextureRegistry: NSObject, FlutterTextureRegistry {
+    func register(_ texture: FlutterTexture) -> Int64 { 1 }
+    func textureFrameAvailable(_ textureId: Int64) {}
+    func unregisterTexture(_ textureId: Int64) {}
+  }
+
   private final class FakeBackend: YlPlaybackBackend {
     private(set) var activateCount = 0
     private(set) var deactivateCount = 0
@@ -223,6 +247,75 @@ final class YlFallbackBackendTests: XCTestCase {
     XCTAssertEqual(request.mode, .sequentialLive)
     XCTAssertNil(FallbackFixtureURLProtocol.request?
       .value(forHTTPHeaderField: "Range"))
+  }
+
+  func testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF() throws {
+    let fixture = try XCTUnwrap(
+      Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "flv")
+    )
+    let secondRequest = expectation(description: "second FLV connection")
+    secondRequest.assertForOverFulfill = false
+    let session = FallbackFixtureURLProtocol.configure(
+      data: try Data(contentsOf: fixture),
+      onRequest: { count in
+        if count >= 2 { secondRequest.fulfill() }
+      }
+    )
+    let configuration = PlayerConfiguration(map: [
+      "bufferMode": "lowLatency",
+      "network": [
+        "maxRetries": 1,
+        "baseRetryDelayMs": 0,
+        "maxRetryDelayMs": 0,
+      ],
+    ])
+    let prepared = try YlPreparedFallback(
+      source: [
+        "uri": "https://media.test/reconnecting.flv",
+        "kind": "network",
+        "formatHint": "httpFlv",
+        "isLive": true,
+      ],
+      requireHardwareProbe: false,
+      configuration: configuration,
+      sessionConfiguration: session
+    )
+    var events = [[String: Any?]]()
+    let eventsLock = NSLock()
+    let backend: YlFallbackBackend
+    do {
+      backend = try YlFallbackBackend(
+        playerId: 41,
+        textureId: -1,
+        textures: FakeTextureRegistry(),
+        configuration: configuration,
+        prepared: prepared,
+        generation: 1,
+        emit: { event in
+          eventsLock.lock()
+          events.append(event)
+          eventsLock.unlock()
+        }
+      )
+    } catch let error as NativePlayerError
+      where error.code == "decoder.video_hardware_unavailable" {
+      throw XCTSkip("This simulator runtime does not expose hardware H.264 decoding.")
+    }
+    defer { backend.dispose() }
+
+    try backend.activate()
+    try backend.command(name: "play", arguments: [:])
+    wait(for: [secondRequest], timeout: 5)
+
+    XCTAssertGreaterThanOrEqual(FallbackFixtureURLProtocol.requestCount, 2)
+    eventsLock.lock()
+    let eventSnapshot = events
+    eventsLock.unlock()
+    XCTAssertTrue(eventSnapshot.contains { $0["type"] as? String == "retry" })
+    XCTAssertFalse(eventSnapshot.contains {
+      ($0["error"] as? [String: Any?])?["code"] as? String
+        == "network.retry_exhausted"
+    })
   }
 
   func testDiscardedPreparedFallbackCannotTransferItsMedia() throws {

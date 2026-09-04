@@ -168,6 +168,10 @@ final class YlOpenedMedia {
     }
   }
 
+  var lastInputError: NativePlayerError? {
+    lock.withLock { callbackBox?.lastError }
+  }
+
   convenience init(
     recipe: YlFallbackSourceRecipe,
     networkBufferBytes: Int = 8 * 1024 * 1024,
