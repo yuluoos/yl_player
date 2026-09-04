@@ -39,7 +39,9 @@ internal class YlPlaybackHealthMonitor {
     }
 
     fun record(sample: YlHealthSample): YlRecoveryAction {
-        if (sample.memoryPressure) return downgradeOrFail(sample)
+        if (sample.memoryPressure) {
+            return if (sample.canDowngrade) downgradeOrFail(sample) else YlRecoveryAction.None
+        }
 
         if (
             sample.sourceClass == YlSourceClass.HTTP_FLV_LIVE &&

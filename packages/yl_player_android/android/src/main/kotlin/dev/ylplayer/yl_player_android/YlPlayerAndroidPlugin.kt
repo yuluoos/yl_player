@@ -13,8 +13,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import android.view.Surface
 import androidx.annotation.OptIn
+import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MimeTypes
@@ -62,6 +62,7 @@ class YlPlayerAndroidPlugin :
     private var nextPlayerId = 1L
     private var eventSink: EventChannel.EventSink? = null
     private var startedActivities = 0
+    private var activePlayerId: Long? = null
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         applicationContext = binding.applicationContext
@@ -89,6 +90,7 @@ class YlPlayerAndroidPlugin :
         application.unregisterActivityLifecycleCallbacks(this)
         players.values.toList().forEach(Media3Player::dispose)
         players.clear()
+        activePlayerId = null
     }
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink) {
@@ -150,6 +152,7 @@ class YlPlayerAndroidPlugin :
             }
             if (commandName == "open" || commandName == "play") {
                 players.values.filter { it !== player }.forEach(Media3Player::deactivate)
+                activePlayerId = playerId
                 player.activate()
             }
             player.command(commandName, root["arguments"].asStringMap())
@@ -165,6 +168,7 @@ class YlPlayerAndroidPlugin :
         val playerId = (call.arguments.asStringMap()["playerId"] as? Number)?.toLong()
         if (playerId != null) {
             players.remove(playerId)?.dispose()
+            if (activePlayerId == playerId) activePlayerId = null
         }
         result.success(null)
     }
@@ -177,26 +181,36 @@ class YlPlayerAndroidPlugin :
         }
     }
 
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onTrimMemory(level: Int) {
-        if (level >= ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW) {
-            players.values.forEach(Media3Player::deactivate)
+        val activePlayer = activePlayerId?.let(players::get)
+        when {
+            level >= ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL ->
+                activePlayer?.releaseForLifecycle()
+            level >= ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE ->
+                activePlayer?.handleRunningLowMemory()
         }
     }
 
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onLowMemory() {
-        players.values.forEach(Media3Player::deactivate)
+        activePlayerId?.let(players::get)?.releaseForLifecycle()
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) = Unit
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        activePlayerId?.let(players::get)?.rebuildVideoOutput()
+    }
 
     override fun onActivityStarted(activity: Activity) {
+        val wasInBackground = startedActivities == 0
         startedActivities += 1
+        if (wasInBackground) activePlayerId?.let(players::get)?.restoreAfterForeground()
     }
 
     override fun onActivityStopped(activity: Activity) {
         startedActivities = (startedActivities - 1).coerceAtLeast(0)
         if (startedActivities == 0 && !activity.isChangingConfigurations) {
-            players.values.forEach(Media3Player::deactivate)
+            activePlayerId?.let(players::get)?.releaseForLifecycle()
         }
     }
 
@@ -216,7 +230,8 @@ private class Media3Player(
     private val emit: (Map<String, Any?>) -> Unit,
 ) : Player.Listener, AnalyticsListener {
     private val handler = Handler(Looper.getMainLooper())
-    private val surface = Surface(texture.surfaceTexture())
+    private val videoOutput = YlVideoOutput(texture)
+    private val lifecycle = YlLifecycleCoordinator()
     private val deviceProfile = YlAndroidDeviceProfile.collect(context)
     private val trackSelector = DefaultTrackSelector(context)
     private val httpClient = configuration.network.createHttpClient()
@@ -252,6 +267,7 @@ private class Media3Player(
     private var selectedVideoBitrate: Int? = null
     private var availableVideoBitrates: List<Int> = emptyList()
     private var selectedVideoFrameRate = 30f
+    private var surfaceRebuildBaseline = 0
     private var requestedPlaybackSpeed = 1f
     private val healthMonitor = YlPlaybackHealthMonitor()
     private var healthWindowStartedAtMs: Long? = null
@@ -259,6 +275,11 @@ private class Media3Player(
     private var healthWindowRebufferCount = 0
     private var healthWindowRebufferDurationMs = 0L
     private var lastHealthEvaluationMs = 0L
+    private val focusGraceRunnable = Runnable {
+        if (lifecycle.reduce(YlLifecycleEvent.FOCUS_GRACE_EXPIRED) == YlLifecycleAction.RELEASE_AND_SAVE) {
+            releasePlaybackResources()
+        }
+    }
     private var currentError: Map<String, Any?>? = null
     private var active = false
     private var savedPositionMs = 0L
@@ -296,17 +317,35 @@ private class Media3Player(
             .setTrackSelector(trackSelector)
             .setLoadControl(loadControl)
             .build()
+        exoPlayer.setAudioAttributes(
+            AudioAttributes.Builder()
+                .setUsage(C.USAGE_MEDIA)
+                .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
+                .build(),
+            true,
+        )
+        exoPlayer.setHandleAudioBecomingNoisy(true)
+        exoPlayer.setWakeMode(C.WAKE_MODE_NETWORK)
         applyTrackConstraints()
         exoPlayer.addListener(this)
         exoPlayer.addAnalyticsListener(this)
+        videoOutput.attach(sourceGeneration, sourceGeneration, exoPlayer::setVideoSurface)
     }
 
     fun command(name: String, arguments: Map<String, Any?>) {
         check(!disposed) { "Player is disposed." }
         when (name) {
             "open" -> open(arguments["source"].asStringMap())
-            "play" -> exoPlayer.play()
-            "pause" -> exoPlayer.pause()
+            "play" -> {
+                cancelFocusGrace()
+                lifecycle.reduce(YlLifecycleEvent.USER_PLAY)
+                exoPlayer.play()
+            }
+            "pause" -> {
+                cancelFocusGrace()
+                lifecycle.reduce(YlLifecycleEvent.USER_PAUSE)
+                exoPlayer.pause()
+            }
             "seekTo" -> {
                 val positionMs = max(0L, (arguments["positionMs"] as? Number)?.toLong() ?: 0L)
                 resumeAtLiveEdge = false
@@ -367,7 +406,8 @@ private class Media3Player(
     fun activate() {
         if (disposed || active) return
         active = true
-        exoPlayer.setVideoSurface(surface)
+        loadControl.restoreProfile()
+        videoOutput.attach(sourceGeneration, sourceGeneration, exoPlayer::setVideoSurface)
         if (exoPlayer.currentMediaItem != null && exoPlayer.playbackState == Player.STATE_IDLE) {
             status = "opening"
             exoPlayer.prepare()
@@ -378,6 +418,7 @@ private class Media3Player(
                 exoPlayer.seekTo(savedPositionMs)
             }
         }
+        if (lifecycle.state.playbackIntended) exoPlayer.play() else exoPlayer.pause()
         handler.removeCallbacks(positionTicker)
         handler.post(positionTicker)
         emitState()
@@ -385,6 +426,39 @@ private class Media3Player(
 
     fun deactivate() {
         if (disposed || !active) return
+        releasePlaybackResources()
+    }
+
+    fun releaseForLifecycle() {
+        if (disposed) return
+        lifecycle.reduce(YlLifecycleEvent.UI_HIDDEN)
+        releasePlaybackResources()
+    }
+
+    fun restoreAfterForeground() {
+        if (disposed) return
+        lifecycle.reduce(YlLifecycleEvent.FOREGROUND)
+        loadControl.restoreProfile()
+        activate()
+    }
+
+    fun rebuildVideoOutput() {
+        if (disposed || !active) return
+        videoOutput.rebuild(
+            expectedSourceGeneration = sourceGeneration,
+            currentSourceGeneration = sourceGeneration,
+            clear = exoPlayer::clearVideoSurface,
+            consumer = exoPlayer::setVideoSurface,
+        )
+        if (lastVideoSize.width > 0 && lastVideoSize.height > 0) {
+            videoOutput.resize(lastVideoSize.width, lastVideoSize.height)
+        }
+        emitState()
+    }
+
+    private fun releasePlaybackResources() {
+        cancelFocusGrace()
+        if (!active) return
         savedPositionMs = max(0L, exoPlayer.currentPosition)
         if (exoPlayer.currentLiveOffset in 0..2_000L) {
             resumeAtLiveEdge = true
@@ -395,7 +469,7 @@ private class Media3Player(
         handler.removeCallbacks(positionTicker)
         exoPlayer.pause()
         exoPlayer.stop()
-        exoPlayer.clearVideoSurface(surface)
+        videoOutput.detach(exoPlayer::clearVideoSurface)
         if (status != "error" && status != "completed" && status != "idle") {
             status = "paused"
         }
@@ -403,6 +477,7 @@ private class Media3Player(
     }
 
     private fun open(source: Map<String, Any?>) {
+        cancelFocusGrace()
         validateOpen(source)
         val uriString = source["uri"] as String
         sourceIsLive = source["isLive"] == true
@@ -463,6 +538,7 @@ private class Media3Player(
         selectedVideoBitrate = null
         availableVideoBitrates = emptyList()
         selectedVideoFrameRate = 30f
+        surfaceRebuildBaseline = videoOutput.surfaceRebuildCount
         healthMonitor.reset()
         healthWindowStartedAtMs = null
         lastHealthEvaluationMs = 0L
@@ -548,9 +624,40 @@ private class Media3Player(
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         if (!active) return
+        if (isPlaying && lifecycle.state.focusPaused) {
+            cancelFocusGrace()
+            lifecycle.reduce(YlLifecycleEvent.FOCUS_GAIN)
+        }
         if (exoPlayer.playbackState == Player.STATE_READY) {
             status = if (isPlaying) "playing" else "paused"
             emitState()
+        }
+    }
+
+    override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+        when {
+            !playWhenReady && reason == Player.PLAY_WHEN_READY_CHANGE_REASON_AUDIO_FOCUS_LOSS -> {
+                if (
+                    lifecycle.reduce(YlLifecycleEvent.FOCUS_TRANSIENT_LOSS) ==
+                    YlLifecycleAction.PAUSE_KEEP_RESOURCES
+                ) {
+                    cancelFocusGrace()
+                    handler.postDelayed(focusGraceRunnable, 3_000L)
+                }
+            }
+            !playWhenReady && reason == Player.PLAY_WHEN_READY_CHANGE_REASON_AUDIO_BECOMING_NOISY -> {
+                cancelFocusGrace()
+                lifecycle.reduce(YlLifecycleEvent.USER_PAUSE)
+            }
+            playWhenReady && lifecycle.state.focusPaused -> {
+                cancelFocusGrace()
+                if (
+                    lifecycle.reduce(YlLifecycleEvent.FOCUS_GAIN) ==
+                    YlLifecycleAction.REBUILD_IF_INTENDED
+                ) {
+                    activate()
+                }
+            }
         }
     }
 
@@ -561,7 +668,7 @@ private class Media3Player(
         if (!isCurrentEvent(eventTime)) return
         lastVideoSize = videoSize
         if (videoSize.width > 0 && videoSize.height > 0) {
-            texture.surfaceTexture().setDefaultBufferSize(videoSize.width, videoSize.height)
+            videoOutput.resize(videoSize.width, videoSize.height)
         }
         emitState()
     }
@@ -885,7 +992,8 @@ private class Media3Player(
                         "androidDeviceTier" to deviceProfile.tier.wireName,
                         "targetBufferBytes" to loadControl.targetBufferBytes,
                         "adaptiveDowngradeCount" to adaptiveDowngradeCount,
-                        "surfaceRebuildCount" to 0,
+                        "surfaceRebuildCount" to
+                            (videoOutput.surfaceRebuildCount - surfaceRebuildBaseline).coerceAtLeast(0),
                         "selectedVideoBitrate" to selectedVideoBitrate,
                     ),
                     "error" to (error ?: currentError),
@@ -896,18 +1004,22 @@ private class Media3Player(
 
     fun dispose() {
         if (disposed) return
+        lifecycle.reduce(YlLifecycleEvent.DISPOSE)
         disposed = true
         sourceGeneration += 1
+        cancelFocusGrace()
         handler.removeCallbacksAndMessages(null)
         exoPlayer.removeListener(this)
         exoPlayer.removeAnalyticsListener(this)
-        exoPlayer.clearVideoSurface(surface)
+        videoOutput.dispose(exoPlayer::clearVideoSurface)
         exoPlayer.release()
         httpClient.dispatcher.cancelAll()
         httpClient.connectionPool.evictAll()
         httpClient.dispatcher.executorService.shutdown()
-        surface.release()
-        texture.release()
+    }
+
+    private fun cancelFocusGrace() {
+        handler.removeCallbacks(focusGraceRunnable)
     }
 
     private fun isCurrentEvent(eventTime: AnalyticsListener.EventTime): Boolean {

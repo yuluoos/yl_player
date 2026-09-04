@@ -47,7 +47,7 @@ class YlPlaybackHealthMonitorTest {
     }
 
     @Test
-    fun `memory pressure requests immediate downgrade or fixed-stream failure`() {
+    fun `running low memory downgrades adaptive streams but keeps fixed streams alive`() {
         val adaptive = YlPlaybackHealthMonitor()
         assertEquals(
             YlRecoveryAction.DowngradeOneStep,
@@ -56,7 +56,7 @@ class YlPlaybackHealthMonitorTest {
 
         val fixed = YlPlaybackHealthMonitor()
         assertEquals(
-            YlRecoveryAction.Fail(stableError(YlPlaybackFailure.CAPABILITY_EXCEEDED)),
+            YlRecoveryAction.None,
             fixed.record(sample(1_000, memoryPressure = true, canDowngrade = false)),
         )
     }

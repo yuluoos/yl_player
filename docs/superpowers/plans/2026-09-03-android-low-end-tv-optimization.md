@@ -632,7 +632,7 @@ git commit -m "feat: adapt Android playback health"
 - Produces: pure lifecycle transition decisions tested without an Activity.
 - Consumes: player source generation and `YlMemoryAction`.
 
-- [ ] **Step 1: Write failing lifecycle transition tests**
+- [x] **Step 1: Write failing lifecycle transition tests**
 
 Test an extracted state reducer:
 
@@ -655,13 +655,13 @@ Also cover repeated callbacks, explicit pause not being undone, focus-paused
 resume within three seconds, focus grace expiry, stale surface generation, and
 dispose exactly once.
 
-- [ ] **Step 2: Run and verify failure**
+- [x] **Step 2: Run and verify failure**
 
 ```bash
 ./gradlew :yl_player_android:testDebugUnitTest --tests '*YlLifecyclePolicyTest'
 ```
 
-- [ ] **Step 3: Implement `YlVideoOutput`**
+- [x] **Step 3: Implement `YlVideoOutput`**
 
 Keep the Flutter `SurfaceTextureEntry` for one player lifetime, but create and
 release native `Surface` objects per output generation. `attach` succeeds only
@@ -669,7 +669,7 @@ when both expected source and surface generations still match. `resize` calls
 `setDefaultBufferSize` only for positive dimensions. `dispose` releases the
 current Surface and texture once.
 
-- [ ] **Step 4: Configure Media3 audio and wake behavior**
+- [x] **Step 4: Configure Media3 audio and wake behavior**
 
 During player construction:
 
@@ -691,7 +691,7 @@ Add only:
 <uses-permission android:name="android.permission.WAKE_LOCK" />
 ```
 
-- [ ] **Step 5: Replace lifecycle and trim behavior**
+- [x] **Step 5: Replace lifecycle and trim behavior**
 
 Map running-low/moderate to `loadControl.shrinkForMemoryPressure()` and an
 immediate health sample; do not stop the player. Map critical, low-memory,
@@ -702,13 +702,13 @@ On configuration/HDMI changes call the generation-safe Surface rebuild. Use a
 three-second handler grace for Media3 audio-focus loss. Cancel it on focus
 recovery, explicit pause, background release, new open, or dispose.
 
-- [ ] **Step 6: Verify single decoder ownership and stale-event isolation**
+- [x] **Step 6: Verify single decoder ownership and stale-event isolation**
 
 Keep transfer in the plugin: before `open` or `play` activates a player,
 deactivate every other video owner. Ensure source/surface generation checks
 guard late analytics events and that each resource release is idempotent.
 
-- [ ] **Step 7: Run native and Dart regression tests**
+- [x] **Step 7: Run native and Dart regression tests**
 
 ```bash
 ./gradlew :yl_player_android:testDebugUnitTest
@@ -719,7 +719,7 @@ flutter test packages/yl_player/test
 
 Expected: pass.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add packages/yl_player_android/android/src
