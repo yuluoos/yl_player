@@ -17,7 +17,6 @@ import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
-import androidx.media3.common.MimeTypes
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.TrackSelectionOverride
@@ -284,14 +283,10 @@ private class Media3Player(
     private var audioTracks: List<Map<String, Any?>> = emptyList()
     private var videoTracks: List<Map<String, Any?>> = emptyList()
     private val capabilitySnapshot by lazy {
-        mapOf(
-            "hardwareVideoCodecs" to hardwareVideoCodecs(),
-            "supportedFormats" to listOf(
-                "automatic", "hls", "httpFlv", "mp4", "matroska", "webm", "mpegTs", "mpegPs", "flv",
-            ),
-            "maxConcurrentVideoDecoders" to 1,
-            "maxWidth" to deviceProfile.videoEnvelope.maxWidth,
-            "maxHeight" to deviceProfile.videoEnvelope.maxHeight,
+        YlAndroidChannel.capabilities(
+            hardwareVideoCodecs = hardwareVideoCodecs(),
+            maxWidth = deviceProfile.videoEnvelope.maxWidth,
+            maxHeight = deviceProfile.videoEnvelope.maxHeight,
         )
     }
     private val positionTicker = object : Runnable {
@@ -513,7 +508,7 @@ private class Media3Player(
         val mediaItem = MediaItem.Builder()
             .setMediaId(generation.toString())
             .setUri(Uri.parse(uriString))
-            .setMimeType(mimeType(source["formatHint"] as? String))
+            .setMimeType(YlAndroidChannel.mimeType(source["formatHint"] as? String))
             .build()
 
         openStartedAtMs = SystemClock.elapsedRealtime()
@@ -1033,54 +1028,6 @@ private class Media3Player(
     }
 }
 
-private data class AudioSelection(val group: Tracks.Group, val trackIndex: Int)
-
-private data class AndroidQualityConstraint(
-    val maxWidth: Int? = null,
-    val maxHeight: Int? = null,
-    val maxBitrate: Int? = null,
-)
-
-private data class PlayerConfiguration(
-    val bufferMode: String,
-    val decoderPolicy: String,
-    val minBufferMs: Int?,
-    val maxBufferMs: Int?,
-    val maxBufferBytes: Int?,
-    val positionEventIntervalMs: Long,
-    val network: NetworkConfiguration,
-) {
-    fun bufferRequest() = YlBufferRequest(
-        mode = bufferMode,
-        minBufferMs = minBufferMs,
-        maxBufferMs = maxBufferMs,
-        maxBufferBytes = maxBufferBytes,
-    )
-
-    companion object {
-        fun from(map: Map<String, Any?>): PlayerConfiguration {
-            val network = map["network"].asStringMap()
-            return PlayerConfiguration(
-                bufferMode = map["bufferMode"] as? String ?: "automatic",
-                decoderPolicy = map["decoderPolicy"] as? String ?: "preferHardware",
-                minBufferMs = (map["minBufferMs"] as? Number)?.toInt(),
-                maxBufferMs = (map["maxBufferMs"] as? Number)?.toInt(),
-                maxBufferBytes = (map["maxBufferBytes"] as? Number)?.toInt(),
-                positionEventIntervalMs = ((map["positionEventIntervalMs"] as? Number)?.toLong() ?: 250L)
-                    .coerceIn(100L, 2_000L),
-                network = NetworkConfiguration(
-                    connectTimeoutMs = (network["connectTimeoutMs"] as? Number)?.toInt() ?: 10_000,
-                    readTimeoutMs = (network["readTimeoutMs"] as? Number)?.toInt() ?: 15_000,
-                    maxRetries = (network["maxRetries"] as? Number)?.toInt() ?: 3,
-                    baseRetryDelayMs = (network["baseRetryDelayMs"] as? Number)?.toLong() ?: 500L,
-                    maxRetryDelayMs = (network["maxRetryDelayMs"] as? Number)?.toLong() ?: 8_000L,
-                    maxRedirects = (network["maxRedirects"] as? Number)?.toInt() ?: 5,
-                ),
-            )
-        }
-    }
-}
-
 private class PlayerCommandException(
     val code: String,
     override val message: String,
@@ -1135,37 +1082,7 @@ private fun playbackErrorMap(error: PlaybackException, diagnostic: String?): Map
     )
 }
 
-private fun errorMap(
-    category: String,
-    code: String,
-    message: String,
-    diagnostic: String? = null,
-): Map<String, Any?> = mapOf(
-    "category" to category,
-    "code" to code,
-    "message" to message,
-    "platformDiagnostic" to diagnostic,
-)
-
-private fun Any?.asStringMap(): Map<String, Any?> {
-    val source = this as? Map<*, *> ?: return emptyMap()
-    return source.entries.associate { it.key.toString() to it.value }
-}
-
 private fun Int.valueOrNull(): Int? = takeUnless { it == C.LENGTH_UNSET }
-
-private fun mimeType(formatHint: String?): String? = when (formatHint) {
-    "hls" -> MimeTypes.APPLICATION_M3U8
-    "httpFlv", "flv" -> MimeTypes.VIDEO_FLV
-    "mp4" -> MimeTypes.VIDEO_MP4
-    "mov" -> "video/quicktime"
-    "matroska" -> MimeTypes.VIDEO_MATROSKA
-    "webm" -> MimeTypes.VIDEO_WEBM
-    "mpegTs" -> MimeTypes.VIDEO_MP2T
-    "mpegPs" -> MimeTypes.VIDEO_MPEG2
-    "avi" -> "video/x-msvideo"
-    else -> null
-}
 
 private fun hardwareVideoCodecs(): List<String> = runCatching {
     MediaCodecList(MediaCodecList.REGULAR_CODECS).codecInfos
