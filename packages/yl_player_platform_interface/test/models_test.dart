@@ -134,6 +134,30 @@ void main() {
     expect(metrics.selectedVideoBitrate, 2500000);
   });
 
+  test(
+    'playback metrics copyWith preserves omitted and clears nullable data',
+    () {
+      const metrics = YlPlaybackMetrics(
+        firstFrameDuration: Duration(milliseconds: 40),
+        rebufferCount: 2,
+        droppedVideoFrames: 3,
+        estimatedBitrate: 2500000,
+        androidDeviceTier: 'constrained',
+      );
+
+      final changed = metrics.copyWith(
+        droppedVideoFrames: 4,
+        estimatedBitrate: null,
+      );
+
+      expect(changed.firstFrameDuration, metrics.firstFrameDuration);
+      expect(changed.rebufferCount, 2);
+      expect(changed.droppedVideoFrames, 4);
+      expect(changed.estimatedBitrate, isNull);
+      expect(changed.androidDeviceTier, 'constrained');
+    },
+  );
+
   test('configuration exposes safe TVBox defaults', () {
     const configuration = YlPlayerConfiguration();
 

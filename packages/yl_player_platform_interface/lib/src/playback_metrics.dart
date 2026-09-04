@@ -1,3 +1,5 @@
+const Object _notProvided = Object();
+
 /// Locally observable playback quality metrics.
 final class YlPlaybackMetrics {
   const YlPlaybackMetrics({
@@ -35,4 +37,58 @@ final class YlPlaybackMetrics {
   final int? adaptiveDowngradeCount;
   final int? surfaceRebuildCount;
   final int? selectedVideoBitrate;
+
+  YlPlaybackMetrics copyWith({
+    Object? openDuration = _notProvided,
+    Object? firstFrameDuration = _notProvided,
+    int? rebufferCount,
+    Duration? rebufferDuration,
+    int? droppedVideoFrames,
+    int? audioUnderruns,
+    Object? estimatedBitrate = _notProvided,
+    Duration? bufferedDuration,
+    int? bufferedBytes,
+    Object? liveOffset = _notProvided,
+    int? reconnectCount,
+    Object? androidDeviceTier = _notProvided,
+    Object? targetBufferBytes = _notProvided,
+    Object? adaptiveDowngradeCount = _notProvided,
+    Object? surfaceRebuildCount = _notProvided,
+    Object? selectedVideoBitrate = _notProvided,
+  }) => YlPlaybackMetrics(
+    openDuration: identical(openDuration, _notProvided)
+        ? this.openDuration
+        : openDuration as Duration?,
+    firstFrameDuration: identical(firstFrameDuration, _notProvided)
+        ? this.firstFrameDuration
+        : firstFrameDuration as Duration?,
+    rebufferCount: rebufferCount ?? this.rebufferCount,
+    rebufferDuration: rebufferDuration ?? this.rebufferDuration,
+    droppedVideoFrames: droppedVideoFrames ?? this.droppedVideoFrames,
+    audioUnderruns: audioUnderruns ?? this.audioUnderruns,
+    estimatedBitrate: identical(estimatedBitrate, _notProvided)
+        ? this.estimatedBitrate
+        : estimatedBitrate as int?,
+    bufferedDuration: bufferedDuration ?? this.bufferedDuration,
+    bufferedBytes: bufferedBytes ?? this.bufferedBytes,
+    liveOffset: identical(liveOffset, _notProvided)
+        ? this.liveOffset
+        : liveOffset as Duration?,
+    reconnectCount: reconnectCount ?? this.reconnectCount,
+    androidDeviceTier: identical(androidDeviceTier, _notProvided)
+        ? this.androidDeviceTier
+        : androidDeviceTier as String?,
+    targetBufferBytes: identical(targetBufferBytes, _notProvided)
+        ? this.targetBufferBytes
+        : targetBufferBytes as int?,
+    adaptiveDowngradeCount: identical(adaptiveDowngradeCount, _notProvided)
+        ? this.adaptiveDowngradeCount
+        : adaptiveDowngradeCount as int?,
+    surfaceRebuildCount: identical(surfaceRebuildCount, _notProvided)
+        ? this.surfaceRebuildCount
+        : surfaceRebuildCount as int?,
+    selectedVideoBitrate: identical(selectedVideoBitrate, _notProvided)
+        ? this.selectedVideoBitrate
+        : selectedVideoBitrate as int?,
+  );
 }
