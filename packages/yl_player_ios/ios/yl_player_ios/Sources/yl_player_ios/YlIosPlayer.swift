@@ -17,6 +17,7 @@ final class YlIosPlayer: NSObject, FlutterTexture {
   private let openCoordinator = YlOpenCoordinator()
   private let commandCoordinator = YlAsyncCommandCoordinator()
   private var lastCommittedSource: [String: Any?]?
+  private(set) var lastQualityConstraint: [String: Any?] = [:]
   private var disposed = false
 
   init(
@@ -202,6 +203,27 @@ final class YlIosPlayer: NSObject, FlutterTexture {
       )))
       return
     }
+    let qualityConstraint = name == "setQualityConstraint"
+      ? stringMap(arguments["constraint"])
+      : nil
+    if let qualityConstraint {
+      do {
+        _ = try YlFallbackQualityConstraint(validating: qualityConstraint)
+      } catch let error as NativePlayerError {
+        completion(.failure(error))
+        return
+      } catch {
+        completion(.failure(Self.commandError(error)))
+        return
+      }
+    }
+    let commandCompletion: (Result<Void, NativePlayerError>) -> Void = {
+      [weak self] result in
+      if case .success = result, let qualityConstraint {
+        self?.lastQualityConstraint = qualityConstraint
+      }
+      completion(result)
+    }
     let backend = slot.current
     if let fallback = backend as? YlFallbackBackend {
       let runsInBackground = fallback.requiresAsyncCommand(name)
@@ -210,7 +232,7 @@ final class YlIosPlayer: NSObject, FlutterTexture {
           backend: backend,
           name: name,
           arguments: arguments,
-          completion: completion
+          completion: commandCompletion
         )
         return
       }
@@ -232,7 +254,7 @@ final class YlIosPlayer: NSObject, FlutterTexture {
             }
           }
         },
-        completion: completion
+        completion: commandCompletion
       )
       return
     }
@@ -240,7 +262,7 @@ final class YlIosPlayer: NSObject, FlutterTexture {
       backend: backend,
       name: name,
       arguments: arguments,
-      completion: completion
+      completion: commandCompletion
     )
   }
 
@@ -267,6 +289,12 @@ final class YlIosPlayer: NSObject, FlutterTexture {
     commandCoordinator.cancelCurrent()
     switch candidate {
     case let .avPlayer(source):
+      if !lastQualityConstraint.isEmpty {
+        try avBackend.command(
+          name: "setQualityConstraint",
+          arguments: ["constraint": lastQualityConstraint]
+        )
+      }
       if slot.current !== avBackend {
         let previous = try slot.replace { avBackend }
         previous.dispose()
@@ -276,6 +304,12 @@ final class YlIosPlayer: NSObject, FlutterTexture {
       try avBackend.command(name: "open", arguments: ["source": source])
       lastCommittedSource = source
     case let .headeredHls(source, prepared):
+      if !lastQualityConstraint.isEmpty {
+        try avBackend.command(
+          name: "setQualityConstraint",
+          arguments: ["constraint": lastQualityConstraint]
+        )
+      }
       try avBackend.stagePreparedHls(
         source: source,
         prepared: prepared,
@@ -291,12 +325,16 @@ final class YlIosPlayer: NSObject, FlutterTexture {
       }
       lastCommittedSource = source
     case let .fallback(source, prepared):
+      let qualityConstraint = try YlFallbackQualityConstraint(
+        validating: lastQualityConstraint
+      )
       let backend = try YlFallbackBackend(
         playerId: playerId,
         textureId: textureId,
         textures: textures,
         configuration: configuration,
         prepared: prepared,
+        qualityConstraint: qualityConstraint,
         generation: slot.generation &+ 1,
         emit: emit
       )

@@ -481,6 +481,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private var audioCookies: [Int32: Data]
   private var isSeekable: Bool
   private var videoFormat: CMVideoFormatDescription
+  private var qualityConstraint: YlFallbackQualityConstraint
   private let worker = DispatchQueue(label: "dev.ylplayer.ios.fallback.demux")
   private let stateLock = NSLock()
   private let frameScheduler = YlFrameScheduler()
@@ -531,9 +532,14 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     textures: FlutterTextureRegistry,
     configuration: PlayerConfiguration,
     prepared: YlPreparedFallback,
+    qualityConstraint: YlFallbackQualityConstraint = .unconstrained,
     generation: UInt64,
     emit: @escaping ([String: Any?]) -> Void
   ) throws {
+    try YlFallbackQualityPolicy.validate(
+      constraint: qualityConstraint,
+      stream: Self.videoDescriptor(prepared.videoStream)
+    )
     self.playerId = playerId
     self.textureId = textureId
     self.textures = textures
@@ -555,6 +561,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       prepared.audioStreams.first { $0.index == index }
     } ?? prepared.audioStreams.first
     self.videoFormat = prepared.videoFormat
+    self.qualityConstraint = qualityConstraint
     self.generation = generation
     self.audioGeneration = generation
     self.emit = emit
@@ -834,7 +841,15 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         cancellationToken: cancellationToken
       )
     case "setQualityConstraint":
-      return
+      let constraint = try YlFallbackQualityConstraint(
+        validating: stringMap(arguments["constraint"])
+      )
+      let currentStream = stateLock.withLock { videoStream }
+      try YlFallbackQualityPolicy.validate(
+        constraint: constraint,
+        stream: Self.videoDescriptor(currentStream)
+      )
+      stateLock.withLock { qualityConstraint = constraint }
     default:
       throw NativePlayerError(
         category: "internal",
@@ -1745,6 +1760,12 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       )
     }
 
+    let activeQualityConstraint = stateLock.withLock { qualityConstraint }
+    try YlFallbackQualityPolicy.validate(
+      constraint: activeQualityConstraint,
+      stream: Self.videoDescriptor(selectedVideo)
+    )
+
     var copiedAudioCookies: [Int32: Data] = [:]
     for audioStream in supportedAudio where Int(audioStream.codec) == YLFCodecAAC {
       let size = ylf_stream_codec_config_size(validContext, audioStream.index)
@@ -2188,6 +2209,16 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
 
   private static func hostTimeUs() -> Int64 {
     Int64(CACurrentMediaTime() * 1_000_000)
+  }
+
+  private static func videoDescriptor(
+    _ stream: YLFStreamInfo
+  ) -> YlFallbackVideoDescriptor {
+    YlFallbackVideoDescriptor(
+      width: Int(stream.width),
+      height: Int(stream.height),
+      bitrate: nil
+    )
   }
 
   deinit {

@@ -356,4 +356,109 @@ final class YlFallbackBackendTests: XCTestCase {
       XCTAssertEqual((error as? NativePlayerError)?.code, "resource.network_buffer_limit")
     }
   }
+
+  func testRejectedQualityConstraintKeepsActiveFallbackUsable() throws {
+    let fixture = try XCTUnwrap(
+      Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv")
+    )
+    let prepared = try YlPreparedFallback(
+      source: [
+        "uri": fixture.absoluteString,
+        "kind": "file",
+        "formatHint": "matroska",
+        "isLive": false,
+      ],
+      requireHardwareProbe: false
+    )
+    let backend: YlFallbackBackend
+    do {
+      backend = try YlFallbackBackend(
+        playerId: 52,
+        textureId: -1,
+        textures: FakeTextureRegistry(),
+        configuration: PlayerConfiguration(map: [:]),
+        prepared: prepared,
+        generation: 1,
+        emit: { _ in }
+      )
+    } catch let error as NativePlayerError
+      where error.code == "decoder.video_hardware_unavailable" {
+      throw XCTSkip("This simulator runtime does not expose hardware H.264 decoding.")
+    }
+    defer { backend.dispose() }
+
+    try backend.activate()
+    XCTAssertThrowsError(try backend.command(
+      name: "setQualityConstraint",
+      arguments: ["constraint": ["maxHeight": 1]]
+    )) { error in
+      XCTAssertEqual(
+        (error as? NativePlayerError)?.code,
+        "decoder.quality_constraint_unsupported"
+      )
+    }
+
+    XCTAssertTrue(backend.isActive)
+    XCTAssertNoThrow(try backend.command(name: "pause", arguments: [:]))
+    XCTAssertNoThrow(try backend.command(name: "play", arguments: [:]))
+    XCTAssertTrue(backend.isActive)
+  }
+
+  func testRejectedInitialConstraintDoesNotConsumePreparedMedia() throws {
+    let fixture = try XCTUnwrap(
+      Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv")
+    )
+    let prepared = try YlPreparedFallback(
+      source: [
+        "uri": fixture.absoluteString,
+        "kind": "file",
+        "formatHint": "matroska",
+        "isLive": false,
+      ],
+      requireHardwareProbe: false
+    )
+
+    XCTAssertThrowsError(try YlFallbackBackend(
+      playerId: 53,
+      textureId: -1,
+      textures: FakeTextureRegistry(),
+      configuration: PlayerConfiguration(map: [:]),
+      prepared: prepared,
+      qualityConstraint: try YlFallbackQualityConstraint(
+        validating: ["maxWidth": 1]
+      ),
+      generation: 1,
+      emit: { _ in }
+    )) { error in
+      XCTAssertEqual(
+        (error as? NativePlayerError)?.code,
+        "decoder.quality_constraint_unsupported"
+      )
+    }
+
+    let media = try prepared.takeMedia()
+    media.close()
+  }
+
+  func testPlayerPersistsSuccessfulQualityConstraint() {
+    let player = YlIosPlayer(
+      playerId: 54,
+      textures: FakeTextureRegistry(),
+      configuration: PlayerConfiguration(map: [:]),
+      emit: { _ in }
+    )
+    defer { player.dispose() }
+    var commandResult: Result<Void, NativePlayerError>?
+
+    player.beginCommand(
+      name: "setQualityConstraint",
+      arguments: ["constraint": ["maxHeight": 720]],
+      completion: { commandResult = $0 }
+    )
+
+    guard case .success? = commandResult else {
+      return XCTFail("Expected quality constraint command to succeed")
+    }
+    XCTAssertEqual(player.lastQualityConstraint["maxHeight"] as? Int, 720)
+  }
 }
