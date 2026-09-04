@@ -693,6 +693,10 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
           anchorAudioIfNeeded(pendingAudioPacket)
           stateLock.withLock { pumping = false }
           requestPump()
+        } else if enqueueResult == .buffered {
+          self.pendingAudioPacket = nil
+          stateLock.withLock { pumping = false }
+          requestPump()
         } else if enqueueResult == .wouldExceedBytes || enqueueResult == .wouldExceedDuration {
           stateLock.withLock { pumping = false }
           requestPump(after: 0.02)

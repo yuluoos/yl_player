@@ -1,8 +1,94 @@
 @testable import yl_player_macos
+import Foundation
 import XCTest
 import YlFFmpegBridge
 
 final class YlMacosFallbackTests: XCTestCase {
+  func testAACPacketFromFallbackFixtureConvertsToPCM() throws {
+    let exampleRoot = URL(fileURLWithPath: #filePath)
+      .deletingLastPathComponent()
+      .deletingLastPathComponent()
+      .deletingLastPathComponent()
+    let fixture = exampleRoot.appendingPathComponent(
+      "assets/test_media/h264_aac.flv"
+    )
+    var context: YLFMediaContextRef?
+    var mediaInfo = YLFMediaInfo()
+    let openResult = fixture.withUnsafeFileSystemRepresentation { path in
+      ylf_open_local(path, &context, &mediaInfo)
+    }
+    XCTAssertEqual(openResult, Int32(YLFResultOK))
+    guard let context else {
+      XCTFail("The FLV fixture did not open.")
+      return
+    }
+    var ownedContext: YLFMediaContextRef? = context
+    defer { ylf_close(&ownedContext) }
+
+    var audioStream: YLFStreamInfo?
+    for index in 0..<mediaInfo.stream_count {
+      var stream = YLFStreamInfo()
+      if ylf_copy_stream_info(context, index, &stream) == 0,
+         Int(stream.kind) == YLFStreamAudio,
+         Int(stream.codec) == YLFCodecAAC {
+        audioStream = stream
+        break
+      }
+    }
+    guard let audioStream else {
+      XCTFail("The FLV fixture has no AAC stream.")
+      return
+    }
+
+    let cookieSize = ylf_stream_codec_config_size(context, audioStream.index)
+    var cookie = [UInt8](repeating: 0, count: cookieSize)
+    XCTAssertEqual(
+      ylf_copy_stream_codec_config(
+        context,
+        audioStream.index,
+        &cookie,
+        cookie.count
+      ),
+      0
+    )
+    let converter = YlAppleCompressedAudioConverter()
+    try converter.configure(stream: YlAudioStreamConfiguration(
+      codec: .aac,
+      sampleRate: Double(audioStream.sample_rate),
+      channelCount: Int(audioStream.channel_count),
+      magicCookie: Data(cookie),
+      generation: 1
+    ))
+
+    for _ in 0..<256 {
+      var packetRef: YLFPacketRef?
+      let readResult = ylf_read_packet(context, &packetRef)
+      guard readResult == Int32(YLFResultOK), let packet = packetRef else { break }
+      let streamIndex = ylf_packet_stream_index(packet)
+      guard streamIndex == audioStream.index,
+            let bytes = ylf_packet_data(packet) else {
+        ylf_packet_release(&packetRef)
+        continue
+      }
+      let compressed = YlCompressedAudioPacket(
+        data: Data(bytes: bytes, count: ylf_packet_size(packet)),
+        ptsUs: ylf_packet_pts_us(packet),
+        durationUs: ylf_packet_duration_us(packet),
+        generation: 1
+      )
+      ylf_packet_release(&packetRef)
+
+      if let decoded = try converter.convert(packet: compressed) {
+        XCTAssertGreaterThan(decoded.durationUs, 0)
+        XCTAssertGreaterThan(decoded.byteCount, 0)
+        XCTAssertEqual(decoded.ptsUs, 62_000)
+        return
+      }
+    }
+
+    XCTFail("The FLV fixture produced no AAC packet.")
+  }
+
   func testMacOSAudioUsesNonInterleavedPCMAndCountsEveryChannel() {
     XCTAssertFalse(YlAudioFormatPolicy.usesInterleavedPCM)
     XCTAssertEqual(

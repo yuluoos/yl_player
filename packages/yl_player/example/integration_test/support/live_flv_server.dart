@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
 
@@ -72,26 +73,57 @@ final class LiveFlvServer {
     requestHeaders.add(Map<String, List<String>>.unmodifiable(headers));
 
     final response = request.response;
+    if (disconnectFirstConnection && connection == 1) {
+      final socket = await response.detachSocket(writeHeaders: false);
+      try {
+        socket.add(
+          ascii.encode(
+            'HTTP/1.1 200 OK\r\n'
+            'Content-Type: video/x-flv\r\n'
+            'Cache-Control: no-store\r\n'
+            'Content-Length: ${_bytes.length + 1024}\r\n'
+            'Connection: close\r\n'
+            '\r\n',
+          ),
+        );
+        for (var offset = 0; offset < _bytes.length; offset += chunkSize) {
+          if (_closing.isCompleted) return;
+          final end = (offset + chunkSize).clamp(0, _bytes.length);
+          socket.add(Uint8List.sublistView(_bytes, offset, end));
+          await socket.flush();
+          await Future<void>.delayed(chunkDelay);
+        }
+      } finally {
+        // The declared body is intentionally longer than the bytes sent. The
+        // abrupt close therefore produces a deterministic transport failure.
+        socket.destroy();
+      }
+      return;
+    }
+
     response.statusCode = HttpStatus.ok;
     response.headers.contentType = ContentType('video', 'x-flv');
     response.headers.set(HttpHeaders.cacheControlHeader, 'no-store');
 
     try {
-      for (var offset = 0; offset < _bytes.length; offset += chunkSize) {
-        if (_closing.isCompleted) return;
-        final end = (offset + chunkSize).clamp(0, _bytes.length);
-        response.add(Uint8List.sublistView(_bytes, offset, end));
-        await response.flush();
-        await Future<void>.delayed(chunkDelay);
-      }
-
-      if (disconnectFirstConnection && connection == 1) {
-        // The entire short fixture (and therefore its complete FLV header) has
-        // been delivered. Destroy the socket to force the native live-retry
-        // path instead of producing a normal VOD completion.
-        final socket = await response.detachSocket();
-        socket.destroy();
-        return;
+      var firstPass = true;
+      while (!_closing.isCompleted) {
+        // Only the first pass includes the FLV header and PreviousTagSize0.
+        // Subsequent passes repeat media tags so the deterministic fixture
+        // behaves like a continuous live stream instead of going idle.
+        final passStart = firstPass ? 0 : 13;
+        for (
+          var offset = passStart;
+          offset < _bytes.length;
+          offset += chunkSize
+        ) {
+          if (_closing.isCompleted) return;
+          final end = (offset + chunkSize).clamp(0, _bytes.length);
+          response.add(Uint8List.sublistView(_bytes, offset, end));
+          await response.flush();
+          await Future<void>.delayed(chunkDelay);
+        }
+        firstPass = false;
       }
 
       // A live response has no terminal content length. Leave the successful

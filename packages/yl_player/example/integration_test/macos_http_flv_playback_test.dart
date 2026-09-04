@@ -52,21 +52,22 @@ void main() {
     });
     addTearDown(eventSubscription.cancel);
 
-    await controller.open(
-      YlMediaSource.network(
-        server.streamUri,
-        isLive: true,
-        formatHint: YlFormatHint.httpFlv,
-        headers: const <String, String>{'X-Client': 'yl-player-test'},
-      ),
-    );
-
+    await controller
+        .open(
+          YlMediaSource.network(
+            server.streamUri,
+            isLive: true,
+            formatHint: YlFormatHint.httpFlv,
+            headers: const <String, String>{'X-Client': 'yl-player-test'},
+          ),
+        )
+        .timeout(const Duration(seconds: 15));
     expect(controller.state.engine, YlPlaybackEngine.nativeFallback);
     expect(controller.state.isLive, isTrue);
     expect(controller.state.isSeekable, isFalse);
     expect(controller.state.isHardwareDecoding, isTrue);
 
-    await controller.play();
+    await controller.play().timeout(const Duration(seconds: 5));
     await firstFrame.future.timeout(const Duration(seconds: 15));
     final retryEvent = await retry.future.timeout(const Duration(seconds: 15));
     expect(retryEvent.attempt, 1);

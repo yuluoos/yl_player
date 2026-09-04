@@ -50,6 +50,7 @@ struct YlScheduledAudioBuffer {
 
 enum YlAudioEnqueueResult: Equatable {
   case scheduled
+  case buffered
   case wouldExceedDuration
   case wouldExceedBytes
   case staleGeneration
@@ -58,7 +59,12 @@ enum YlAudioEnqueueResult: Equatable {
 protocol YlAudioPacketConverting: AnyObject {
   func configure(stream: YlAudioStreamConfiguration) throws
   func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate
-  func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer
+  func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer?
+  func reset()
+}
+
+extension YlAudioPacketConverting {
+  func reset() {}
 }
 
 protocol YlAudioOutputDriving: AnyObject {
@@ -188,7 +194,10 @@ final class YlAudioRenderer: YlAudioRendering {
 
     let buffer: YlScheduledAudioBuffer
     do {
-      buffer = try converter.convert(packet: packet)
+      guard let converted = try converter.convert(packet: packet) else {
+        return .buffered
+      }
+      buffer = converted
     } catch {
       let codecName = lock.withLock {
         Self.codecName(configuredCodec ?? .unsupported)
@@ -278,6 +287,7 @@ final class YlAudioRenderer: YlAudioRendering {
     scheduledByteCount = 0
     scheduledBufferCount = 0
     lock.unlock()
+    converter.reset()
     output.reset()
   }
 
@@ -360,6 +370,8 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   private var inputFormat: AVAudioFormat?
   private var outputFormat: AVAudioFormat?
   private var framesPerPacket: UInt32 = 0
+  private var pendingPackets: [YlCompressedAudioPacket] = []
+  private var pendingOutputPackets: [YlCompressedAudioPacket] = []
 
   func configure(stream: YlAudioStreamConfiguration) throws {
     guard stream.codec == .aac || stream.codec == .mp3,
@@ -371,10 +383,11 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     let formatID: AudioFormatID = stream.codec == .aac
       ? kAudioFormatMPEG4AAC
       : kAudioFormatMPEGLayer3
-    let formatFlags: AudioFormatFlags = stream.codec == .aac
-      ? AudioFormatFlags(MPEG4ObjectID.AAC_LC.rawValue)
-      : 0
+    let formatFlags: AudioFormatFlags = 0
     let inputFramesPerPacket: UInt32 = stream.codec == .aac ? 1024 : 1152
+    let magicCookie = stream.codec == .aac
+      ? Self.aacMagicCookie(audioSpecificConfig: stream.magicCookie)
+      : stream.magicCookie
     var description = AudioStreamBasicDescription(
       mSampleRate: stream.sampleRate,
       mFormatID: formatID,
@@ -386,6 +399,21 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
       mBitsPerChannel: 0,
       mReserved: 0
     )
+    if stream.codec == .aac {
+      var descriptionSize = UInt32(MemoryLayout<AudioStreamBasicDescription>.size)
+      let formatResult = magicCookie.withUnsafeBytes { cookie in
+        AudioFormatGetProperty(
+          kAudioFormatProperty_FormatInfo,
+          UInt32(clamping: cookie.count),
+          cookie.baseAddress,
+          &descriptionSize,
+          &description
+        )
+      }
+      guard formatResult == noErr else {
+        throw YlAudioImplementationError.invalidConfiguration
+      }
+    }
     guard let input = AVAudioFormat(streamDescription: &description),
           let output = AVAudioFormat(
             commonFormat: .pcmFormatFloat32,
@@ -397,12 +425,14 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
       throw YlAudioImplementationError.invalidConfiguration
     }
     if stream.codec == .aac {
-      converter.magicCookie = stream.magicCookie
+      converter.magicCookie = magicCookie
     }
     self.inputFormat = input
     self.outputFormat = output
     self.converter = converter
     framesPerPacket = inputFramesPerPacket
+    pendingPackets.removeAll(keepingCapacity: true)
+    pendingOutputPackets.removeAll(keepingCapacity: true)
   }
 
   func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate {
@@ -425,70 +455,114 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     )
   }
 
-  func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer {
+  func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
     guard let converter, let inputFormat, let outputFormat, !packet.data.isEmpty else {
       throw YlAudioImplementationError.notConfigured
     }
-    let maximumPacketSize = UInt32(clamping: packet.data.count)
-    let compressed = AVAudioCompressedBuffer(
-      format: inputFormat,
-      packetCapacity: 1,
-      maximumPacketSize: Int(maximumPacketSize)
-    )
-    packet.data.withUnsafeBytes { bytes in
-      if let source = bytes.baseAddress {
-        memcpy(compressed.data, source, packet.data.count)
+    pendingPackets.append(packet)
+    let packetBatch = Array(pendingPackets.prefix(2))
+    let compressedBuffers = packetBatch.map { queuedPacket in
+      let packetSize = UInt32(clamping: queuedPacket.data.count)
+      let compressed = AVAudioCompressedBuffer(
+        format: inputFormat,
+        packetCapacity: 1,
+        maximumPacketSize: Int(packetSize)
+      )
+      queuedPacket.data.withUnsafeBytes { bytes in
+        if let source = bytes.baseAddress {
+          memcpy(compressed.data, source, queuedPacket.data.count)
+        }
       }
+      compressed.packetDescriptions?.pointee = AudioStreamPacketDescription(
+        mStartOffset: 0,
+        mVariableFramesInPacket: 0,
+        mDataByteSize: packetSize
+      )
+      compressed.byteLength = packetSize
+      compressed.packetCount = 1
+      return compressed
     }
-    compressed.byteLength = maximumPacketSize
-    compressed.packetCount = 1
-    compressed.packetDescriptions?.pointee = AudioStreamPacketDescription(
-      mStartOffset: 0,
-      mVariableFramesInPacket: framesPerPacket,
-      mDataByteSize: maximumPacketSize
-    )
 
-    let estimate = estimateOutput(for: packet)
     let bytesPerFrame = max(1, Int(outputFormat.streamDescription.pointee.mBytesPerFrame))
-    let frameCapacity = AVAudioFrameCount(max(
-      Int(framesPerPacket),
-      estimate.byteCount / bytesPerFrame + Int(framesPerPacket)
-    ))
+    let frameCapacity = AVAudioFrameCount(framesPerPacket)
     guard let pcm = AVAudioPCMBuffer(pcmFormat: outputFormat, frameCapacity: frameCapacity) else {
       throw YlAudioImplementationError.allocationFailed
     }
-    var suppliedInput = false
+    var nextInputIndex = 0
     var conversionError: NSError?
     let status: AVAudioConverterOutputStatus = converter.convert(
       to: pcm,
       error: &conversionError
     ) { _, inputStatus in
-      if suppliedInput {
+      guard nextInputIndex < compressedBuffers.count else {
         inputStatus.pointee = .noDataNow
         return nil
       }
-      suppliedInput = true
+      let input = compressedBuffers[nextInputIndex]
+      nextInputIndex += 1
       inputStatus.pointee = .haveData
-      return compressed
+      return input
+    }
+    pendingOutputPackets.append(contentsOf: packetBatch.prefix(nextInputIndex))
+    pendingPackets.removeFirst(nextInputIndex)
+    if status == .inputRanDry, pcm.frameLength == 0 {
+      return nil
     }
     guard status != AVAudioConverterOutputStatus.error, pcm.frameLength > 0 else {
       if let conversionError { throw conversionError }
       throw YlAudioImplementationError.conversionFailed
     }
+    guard !pendingOutputPackets.isEmpty else {
+      throw YlAudioImplementationError.conversionFailed
+    }
+    let outputPacket = pendingOutputPackets.removeFirst()
     let durationUs = Int64(
       (Double(pcm.frameLength) * 1_000_000 / pcm.format.sampleRate).rounded(.towardZero)
     )
     return YlScheduledAudioBuffer(
       payload: pcm,
-      ptsUs: packet.ptsUs,
+      ptsUs: outputPacket.ptsUs,
       durationUs: durationUs,
       byteCount: YlAudioFormatPolicy.byteCount(
         frameCount: Int(pcm.frameLength),
         bytesPerFrame: bytesPerFrame,
         channelCount: Int(pcm.format.channelCount)
       ),
-      generation: packet.generation
+      generation: outputPacket.generation
     )
+  }
+
+  func reset() {
+    converter?.reset()
+    pendingPackets.removeAll(keepingCapacity: true)
+    pendingOutputPackets.removeAll(keepingCapacity: true)
+  }
+
+  private static func aacMagicCookie(audioSpecificConfig: Data) -> Data {
+    var cookie = Data()
+    func appendDescriptor(tag: UInt8, payloadSize: Int) {
+      cookie.append(tag)
+      for shift in stride(from: 21, through: 7, by: -7) {
+        cookie.append(UInt8((payloadSize >> shift) & 0x7F) | 0x80)
+      }
+      cookie.append(UInt8(payloadSize & 0x7F))
+    }
+
+    appendDescriptor(
+      tag: 0x03,
+      payloadSize: 3 + 5 + 13 + 5 + audioSpecificConfig.count
+    )
+    cookie.append(contentsOf: [0x00, 0x00, 0x00])
+    appendDescriptor(tag: 0x04, payloadSize: 13 + 5 + audioSpecificConfig.count)
+    cookie.append(contentsOf: [
+      0x40, 0x15,
+      0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,
+    ])
+    appendDescriptor(tag: 0x05, payloadSize: audioSpecificConfig.count)
+    cookie.append(audioSpecificConfig)
+    return cookie
   }
 }
 
