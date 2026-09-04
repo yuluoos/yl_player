@@ -4,6 +4,22 @@ import XCTest
 import YlFFmpegBridge
 
 final class YlMacosFallbackTests: XCTestCase {
+  func testMediaClockQueriesExternalAudioTimeWithoutHoldingItsLock() {
+    let completed = expectation(description: "media clock play completed")
+    var clock: YlMediaClock!
+    clock = YlMediaClock(audioTime: {
+      clock.anchorAudio(ptsUs: 0, sampleTime: 0)
+      return YlRenderedAudioTime(sampleTime: 0, sampleRate: 48_000)
+    })
+
+    DispatchQueue.global().async {
+      clock.play(atHostTimeUs: 0)
+      completed.fulfill()
+    }
+
+    wait(for: [completed], timeout: 1)
+  }
+
   func testAACPacketFromFallbackFixtureConvertsToPCM() throws {
     let exampleRoot = URL(fileURLWithPath: #filePath)
       .deletingLastPathComponent()

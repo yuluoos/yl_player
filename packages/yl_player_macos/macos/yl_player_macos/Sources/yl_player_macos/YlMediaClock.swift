@@ -26,13 +26,14 @@ final class YlMediaClock {
   }
 
   func play(atHostTimeUs hostTimeUs: Int64) {
+    let renderedAudioTime = audioTime?()
     lock.lock()
     guard !playing else {
       lock.unlock()
       return
     }
     hostAnchorUs = hostTimeUs
-    if let rendered = audioTime?() {
+    if let rendered = renderedAudioTime {
       audioSampleAnchor = rendered.sampleTime
     }
     playing = true
@@ -40,14 +41,18 @@ final class YlMediaClock {
   }
 
   func pause(atHostTimeUs hostTimeUs: Int64) {
+    let renderedAudioTime = audioTime?()
     lock.lock()
     guard playing else {
       lock.unlock()
       return
     }
-    mediaAnchorUs = positionLocked(atHostTimeUs: hostTimeUs)
+    mediaAnchorUs = positionLocked(
+      atHostTimeUs: hostTimeUs,
+      renderedAudioTime: renderedAudioTime
+    )
     hostAnchorUs = hostTimeUs
-    if let rendered = audioTime?() {
+    if let rendered = renderedAudioTime {
       audioSampleAnchor = rendered.sampleTime
     }
     playing = false
@@ -62,11 +67,15 @@ final class YlMediaClock {
   }
 
   func setRate(_ value: Double, atHostTimeUs hostTimeUs: Int64) {
+    let renderedAudioTime = audioTime?()
     lock.lock()
-    let position = positionLocked(atHostTimeUs: hostTimeUs)
+    let position = positionLocked(
+      atHostTimeUs: hostTimeUs,
+      renderedAudioTime: renderedAudioTime
+    )
     mediaAnchorUs = position
     hostAnchorUs = hostTimeUs
-    if let rendered = audioTime?() {
+    if let rendered = renderedAudioTime {
       audioSampleAnchor = rendered.sampleTime
     }
     rate = min(max(value, 0.25), 4)
@@ -74,15 +83,22 @@ final class YlMediaClock {
   }
 
   func position(atHostTimeUs hostTimeUs: Int64) -> Int64 {
+    let renderedAudioTime = audioTime?()
     lock.lock()
     defer { lock.unlock() }
-    return positionLocked(atHostTimeUs: hostTimeUs)
+    return positionLocked(
+      atHostTimeUs: hostTimeUs,
+      renderedAudioTime: renderedAudioTime
+    )
   }
 
-  private func positionLocked(atHostTimeUs hostTimeUs: Int64) -> Int64 {
+  private func positionLocked(
+    atHostTimeUs hostTimeUs: Int64,
+    renderedAudioTime: YlRenderedAudioTime?
+  ) -> Int64 {
     guard playing else { return mediaAnchorUs }
     if let audioSampleAnchor,
-       let rendered = audioTime?(),
+       let rendered = renderedAudioTime,
        rendered.sampleRate > 0 {
       let elapsedSamples = max(0, rendered.sampleTime - audioSampleAnchor)
       let elapsedUs = Double(elapsedSamples) * 1_000_000 / rendered.sampleRate
