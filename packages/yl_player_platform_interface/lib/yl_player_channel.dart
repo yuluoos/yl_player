@@ -2,3 +2,4 @@
 library;
 
 export 'src/channel/channel_codec.dart';
+export 'src/channel/channel_player.dart';
