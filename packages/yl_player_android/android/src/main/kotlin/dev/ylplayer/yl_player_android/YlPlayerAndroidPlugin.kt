@@ -32,19 +32,13 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
-import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.view.TextureRegistry
-import java.net.ProtocolException
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.TimeUnit
 import kotlin.math.max
 import kotlin.math.roundToInt
-import kotlin.random.Random
-import okhttp3.OkHttpClient
 
 @OptIn(UnstableApi::class)
 class YlPlayerAndroidPlugin :
@@ -1043,46 +1037,6 @@ private data class AndroidQualityConstraint(
     val maxBitrate: Int? = null,
 )
 
-private data class NetworkConfiguration(
-    val connectTimeoutMs: Int,
-    val readTimeoutMs: Int,
-    val maxRetries: Int,
-    val baseRetryDelayMs: Long,
-    val maxRetryDelayMs: Long,
-    val maxRedirects: Int,
-) {
-    fun createHttpClient(): OkHttpClient {
-        val redirectCounts = ConcurrentHashMap<okhttp3.Call, Int>()
-        return OkHttpClient.Builder()
-            .connectTimeout(connectTimeoutMs.toLong(), TimeUnit.MILLISECONDS)
-            .readTimeout(readTimeoutMs.toLong(), TimeUnit.MILLISECONDS)
-            .addNetworkInterceptor { chain ->
-                val call = chain.call()
-                val response = try {
-                    chain.proceed(chain.request())
-                } catch (error: Throwable) {
-                    redirectCounts.remove(call)
-                    throw error
-                }
-                val isFollowableRedirect = response.code in setOf(300, 301, 302, 303, 307, 308) &&
-                    response.header("Location") != null
-                if (!isFollowableRedirect) {
-                    redirectCounts.remove(call)
-                    return@addNetworkInterceptor response
-                }
-                val followedRedirects = redirectCounts[call] ?: 0
-                if (followedRedirects >= maxRedirects) {
-                    redirectCounts.remove(call)
-                    response.close()
-                    throw ProtocolException("Redirect limit exceeded: $maxRedirects")
-                }
-                redirectCounts[call] = followedRedirects + 1
-                response
-            }
-            .build()
-    }
-}
-
 private data class PlayerConfiguration(
     val bufferMode: String,
     val decoderPolicy: String,
@@ -1120,28 +1074,6 @@ private data class PlayerConfiguration(
                 ),
             )
         }
-    }
-}
-
-@OptIn(UnstableApi::class)
-private class YlLoadErrorHandlingPolicy(
-    private val network: NetworkConfiguration,
-    private val onRetry: (Int, Long, Exception) -> Unit,
-) : DefaultLoadErrorHandlingPolicy(network.maxRetries) {
-    override fun getRetryDelayMsFor(loadErrorInfo: androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy.LoadErrorInfo): Long {
-        val attempt = loadErrorInfo.errorCount
-        if (attempt > network.maxRetries) return C.TIME_UNSET
-        val shift = (attempt - 1).coerceIn(0, 16)
-        val exponential = network.baseRetryDelayMs.coerceAtLeast(0) * (1L shl shift)
-        val capped = minOf(network.maxRetryDelayMs.coerceAtLeast(0), exponential)
-        val jitterRange = capped / 4
-        val delayMs = if (jitterRange > 0) {
-            capped - jitterRange + Random.nextLong(jitterRange * 2 + 1)
-        } else {
-            capped
-        }
-        onRetry(attempt, delayMs, loadErrorInfo.exception)
-        return delayMs
     }
 }
 
