@@ -12,11 +12,13 @@ void main() {
   late StreamController<Object?> nativeEvents;
   late List<MethodCall> calls;
   late bool failDispose;
+  PlatformException? commandError;
 
   setUp(() {
     nativeEvents = StreamController<Object?>.broadcast(sync: true);
     calls = <MethodCall>[];
     failDispose = false;
+    commandError = null;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(methods, (call) async {
           calls.add(call);
@@ -25,6 +27,9 @@ void main() {
           }
           if (call.method == 'dispose' && failDispose) {
             throw PlatformException(code: 'dispose.failed');
+          }
+          if (call.method == 'command' && commandError != null) {
+            throw commandError!;
           }
           return null;
         });
@@ -71,8 +76,57 @@ void main() {
     await player.dispose();
 
     expect(calls.first.method, 'create');
+    expect(
+      ((calls.first.arguments as Map)['configuration'] as Map)['decoderPolicy'],
+      'hardwareOnly',
+    );
     expect(calls.where((call) => call.method == 'command').length, 9);
     expect(calls.where((call) => call.method == 'dispose'), hasLength(1));
+  });
+
+  test('command rejection preserves native state and emits no event', () async {
+    final platform = YlPlayerAndroid(
+      methodChannel: methods,
+      nativeEvents: nativeEvents.stream,
+    );
+    final player = await platform.createPlayer(const YlPlayerConfiguration());
+    final states = <YlPlayerState>[];
+    final events = <YlPlayerEvent>[];
+    final stateSubscription = player.states.listen(states.add);
+    final eventSubscription = player.events.listen(events.add);
+    nativeEvents.add(<String, Object?>{
+      'playerId': 7,
+      'type': 'state',
+      'state': <String, Object?>{'status': 'playing', 'engine': 'media3'},
+    });
+    states.clear();
+    commandError = PlatformException(
+      code: 'decoder.unsupported',
+      details: const <String, Object?>{
+        'category': 'decoderUnsupported',
+        'code': 'decoder.unsupported',
+        'message': 'Unsupported stream.',
+      },
+    );
+
+    await expectLater(
+      player.play(),
+      throwsA(
+        isA<YlPlayerError>().having(
+          (error) => error.code,
+          'code',
+          'decoder.unsupported',
+        ),
+      ),
+    );
+    expect(player.state.status, YlPlaybackStatus.playing);
+    expect(player.state.error, isNull);
+    expect(states, isEmpty);
+    expect(events, isEmpty);
+
+    await stateSubscription.cancel();
+    await eventSubscription.cancel();
+    await player.dispose();
   });
 
   test('mirrors multiplexed native state and errors', () async {

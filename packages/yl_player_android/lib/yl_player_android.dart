@@ -1,8 +1,6 @@
 import 'package:flutter/services.dart';
+import 'package:yl_player_platform_interface/yl_player_channel.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
-
-import 'src/channel_android_player.dart';
-import 'src/channel_codec.dart';
 
 /// Endorsed Android platform registration for `yl_player`.
 final class YlPlayerAndroid extends YlPlayerPlatform {
@@ -29,38 +27,12 @@ final class YlPlayerAndroid extends YlPlayerPlatform {
   }
 
   @override
-  Future<YlPlatformPlayer> createPlayer(
-    YlPlayerConfiguration configuration,
-  ) async {
-    try {
-      final response = await _methodChannel.invokeMapMethod<String, Object?>(
-        'create',
-        <String, Object?>{'configuration': encodeConfiguration(configuration)},
-      );
-      if (response == null ||
-          response['playerId'] is! num ||
-          response['textureId'] is! num) {
-        throw const YlPlayerError(
-          category: YlPlayerErrorCategory.internal,
-          code: 'android.invalid_create_response',
-          message: 'The Android backend returned an invalid create response.',
-        );
-      }
-      return ChannelAndroidPlayer(
-        playerId: (response['playerId']! as num).toInt(),
-        initialTextureId: (response['textureId']! as num).toInt(),
+  Future<YlPlatformPlayer> createPlayer(YlPlayerConfiguration configuration) =>
+      createYlChannelPlayer(
+        configuration: configuration,
         methods: _methodChannel,
         nativeEvents: _nativeEvents,
+        platform: 'android',
+        initialEngine: YlPlaybackEngine.media3,
       );
-    } on PlatformException catch (error) {
-      throw decodePlatformException(error, platform: 'android');
-    } on MissingPluginException catch (error) {
-      throw YlPlayerError(
-        category: YlPlayerErrorCategory.internal,
-        code: 'android.plugin_unavailable',
-        message: 'The Android yl_player plugin is not registered.',
-        platformDiagnostic: error.message,
-      );
-    }
-  }
 }

@@ -12,13 +12,13 @@ void main() {
   late StreamController<Object?> nativeEvents;
   late List<MethodCall> calls;
   late bool failDispose;
-  late bool failOpenUnsupported;
+  PlatformException? commandError;
 
   setUp(() {
     nativeEvents = StreamController<Object?>.broadcast(sync: true);
     calls = <MethodCall>[];
     failDispose = false;
-    failOpenUnsupported = false;
+    commandError = null;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(methods, (call) async {
           calls.add(call);
@@ -28,15 +28,8 @@ void main() {
           if (call.method == 'dispose' && failDispose) {
             throw PlatformException(code: 'dispose.failed');
           }
-          if (call.method == 'command' && failOpenUnsupported) {
-            throw PlatformException(
-              code: 'decoder.video_hardware_unavailable',
-              details: <String, Object?>{
-                'category': 'decoderUnsupported',
-                'code': 'decoder.video_hardware_unavailable',
-                'message': 'Hardware decoder unavailable.',
-              },
-            );
+          if (call.method == 'command' && commandError != null) {
+            throw commandError!;
           }
           return null;
         });
@@ -83,6 +76,10 @@ void main() {
     await player.dispose();
 
     expect(calls.first.method, 'create');
+    expect(
+      ((calls.first.arguments as Map)['configuration'] as Map)['decoderPolicy'],
+      'hardwareOnly',
+    );
     expect(calls.where((call) => call.method == 'command').length, 9);
     expect(calls.where((call) => call.method == 'dispose'), hasLength(1));
   });
@@ -166,33 +163,50 @@ void main() {
     expect(player.textureId.value, isNull);
   });
 
-  test(
-    'preserves decoderUnsupported errors across the method channel',
-    () async {
-      final platform = YlPlayerIos(
-        methodChannel: methods,
-        nativeEvents: nativeEvents.stream,
-      );
-      final player = await platform.createPlayer(const YlPlayerConfiguration());
-      failOpenUnsupported = true;
+  test('cancelled open preserves the active native state', () async {
+    final platform = YlPlayerIos(
+      methodChannel: methods,
+      nativeEvents: nativeEvents.stream,
+    );
+    final player = await platform.createPlayer(const YlPlayerConfiguration());
+    final states = <YlPlayerState>[];
+    final events = <YlPlayerEvent>[];
+    final stateSubscription = player.states.listen(states.add);
+    final eventSubscription = player.events.listen(events.add);
+    nativeEvents.add(<String, Object?>{
+      'playerId': 7,
+      'type': 'state',
+      'state': <String, Object?>{'status': 'playing', 'engine': 'avPlayer'},
+    });
+    states.clear();
+    commandError = PlatformException(
+      code: 'network.cancelled',
+      details: const <String, Object?>{
+        'category': 'cancelled',
+        'code': 'network.cancelled',
+        'message': 'The superseded open was cancelled.',
+      },
+    );
 
-      await expectLater(
-        player.open(YlMediaSource.file('/tmp/movie.mkv')),
-        throwsA(
-          isA<YlPlayerError>()
-              .having(
-                (error) => error.category,
-                'category',
-                YlPlayerErrorCategory.decoderUnsupported,
-              )
-              .having(
-                (error) => error.code,
-                'code',
-                'decoder.video_hardware_unavailable',
-              ),
-        ),
-      );
-      await player.dispose();
-    },
-  );
+    await expectLater(
+      player.open(YlMediaSource.file('/tmp/next.mkv')),
+      throwsA(
+        isA<YlPlayerError>()
+            .having(
+              (error) => error.category,
+              'category',
+              YlPlayerErrorCategory.cancelled,
+            )
+            .having((error) => error.code, 'code', 'network.cancelled'),
+      ),
+    );
+    expect(player.state.status, YlPlaybackStatus.playing);
+    expect(player.state.error, isNull);
+    expect(states, isEmpty);
+    expect(events, isEmpty);
+
+    await stateSubscription.cancel();
+    await eventSubscription.cancel();
+    await player.dispose();
+  });
 }
