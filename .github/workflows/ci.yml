@@ -46,3 +46,20 @@ jobs:
       - run: flutter pub get
         working-directory: ${{ github.workspace }}
       - run: ./gradlew testDebugUnitTest --stacktrace
+
+  ios-native-integration:
+    runs-on: macos-15
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Boot iOS Simulator
+        run: echo "YL_IOS_SIMULATOR_ID=$(sh tool/boot_ci_ios_simulator.sh)" >> "$GITHUB_ENV"
+      - run: sh tool/check_native_ios.sh
