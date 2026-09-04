@@ -74,6 +74,7 @@ final class YlNetworkRequestPolicy {
     to destinationURL: URL
   ) throws -> URLRequest {
     _ = response
+    _ = sourceURL
     do {
       try Self.validateHTTPURL(destinationURL)
     } catch let error as NativePlayerError {
@@ -96,9 +97,10 @@ final class YlNetworkRequestPolicy {
       )
     }
 
-    let crossOrigin = !Self.sameOrigin(sourceURL, destinationURL)
+    let destinationIsOriginalOrigin = Self.sameOrigin(recipe.url, destinationURL)
     let headers = recipe.headers.filter { name, _ in
-      !crossOrigin || !Self.credentialHeaderNames.contains(name.lowercased())
+      destinationIsOriginalOrigin
+        || !Self.credentialHeaderNames.contains(name.lowercased())
     }
     return makeRequest(
       url: destinationURL,

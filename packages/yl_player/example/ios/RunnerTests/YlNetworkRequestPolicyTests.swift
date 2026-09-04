@@ -225,6 +225,33 @@ final class YlNetworkRequestPolicyTests: XCTestCase {
     XCTAssertEqual(redirected.value(forHTTPHeaderField: "User-Agent"), "TVBox")
   }
 
+  func testCredentialsStayStrippedAfterCrossOriginRedirectChain() throws {
+    let policy = makePolicy(headers: [
+      "Authorization": "Bearer secret",
+      "Cookie": "sid=secret",
+      "Proxy-Authorization": "Basic secret",
+      "User-Agent": "TVBox",
+    ])
+    _ = try policy.request(offset: 0, validator: nil)
+    let redirectResponse = response(status: 302)
+    _ = try policy.redirectRequest(
+      from: URL(string: "https://media.test/movie.mkv")!,
+      response: redirectResponse,
+      to: URL(string: "https://cdn.test/movie.mkv")!
+    )
+
+    let secondRedirect = try policy.redirectRequest(
+      from: URL(string: "https://cdn.test/movie.mkv")!,
+      response: redirectResponse,
+      to: URL(string: "https://cdn.test/final.mkv")!
+    )
+
+    XCTAssertNil(secondRedirect.value(forHTTPHeaderField: "Authorization"))
+    XCTAssertNil(secondRedirect.value(forHTTPHeaderField: "Cookie"))
+    XCTAssertNil(secondRedirect.value(forHTTPHeaderField: "Proxy-Authorization"))
+    XCTAssertEqual(secondRedirect.value(forHTTPHeaderField: "User-Agent"), "TVBox")
+  }
+
   func testRedirectLimitAndSchemeValidationUseSanitizedDiagnostics() throws {
     let policy = makePolicy(maxRedirects: 1)
     _ = try policy.request(offset: 0, validator: nil)

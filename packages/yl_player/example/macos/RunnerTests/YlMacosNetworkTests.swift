@@ -85,6 +85,43 @@ final class YlMacosNetworkTests: XCTestCase {
     XCTAssertEqual(redirected.value(forHTTPHeaderField: "User-Agent"), "yl-test")
   }
 
+  func testCredentialsStayStrippedAfterCrossOriginRedirectChain() throws {
+    let policy = YlNetworkRequestPolicy(recipe: YlNetworkRequestRecipe(
+      url: URL(string: "https://a.test/live")!,
+      headers: [
+        "Authorization": "Bearer secret",
+        "Cookie": "sid=secret",
+        "Proxy-Authorization": "Basic secret",
+        "User-Agent": "yl-test",
+      ],
+      configuration: YlNetworkConfiguration(map: [:]),
+      mode: .randomAccessVOD
+    ))
+    _ = try policy.request(offset: 0, validator: nil)
+    let response = HTTPURLResponse(
+      url: URL(string: "https://a.test/live")!,
+      statusCode: 302,
+      httpVersion: "HTTP/1.1",
+      headerFields: nil
+    )!
+    _ = try policy.redirectRequest(
+      from: URL(string: "https://a.test/live")!,
+      response: response,
+      to: URL(string: "https://b.test/live")!
+    )
+
+    let secondRedirect = try policy.redirectRequest(
+      from: URL(string: "https://b.test/live")!,
+      response: response,
+      to: URL(string: "https://b.test/final")!
+    )
+
+    XCTAssertNil(secondRedirect.value(forHTTPHeaderField: "Authorization"))
+    XCTAssertNil(secondRedirect.value(forHTTPHeaderField: "Cookie"))
+    XCTAssertNil(secondRedirect.value(forHTTPHeaderField: "Proxy-Authorization"))
+    XCTAssertEqual(secondRedirect.value(forHTTPHeaderField: "User-Agent"), "yl-test")
+  }
+
   func testRangeValidationRejectsNonzeroHTTP200() throws {
     let policy = YlNetworkRequestPolicy(recipe: YlNetworkRequestRecipe(
       url: URL(string: "https://media.test/movie.mkv")!,
