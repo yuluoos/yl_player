@@ -1,0 +1,49 @@
+import Foundation
+import YlFFmpegBridge
+
+enum YlFallbackTrackCatalog {
+  static func audioTracks(
+    streams: [YLFStreamInfo],
+    selectedIndex: Int32?,
+    codecName: (YLFStreamInfo) -> String
+  ) -> [[String: Any?]] {
+    streams.map { stream in
+      let codec = codecName(stream)
+      return [
+        "id": "audio-\(stream.index)",
+        "kind": "audio",
+        "label": "\(codec) \(stream.index)",
+        "language": nil,
+        "codec": codec,
+        "isSelected": stream.index == selectedIndex,
+      ]
+    }
+  }
+
+  static func videoTrack(
+    stream: YLFStreamInfo,
+    codecName: String,
+    bitrate: Int?
+  ) -> [String: Any?] {
+    [
+      "id": "video-\(stream.index)",
+      "kind": "video",
+      "codec": canonicalVideoCodec(codecName),
+      "width": Int(stream.width),
+      "height": Int(stream.height),
+      "bitrate": bitrate,
+      "isSelected": true,
+    ]
+  }
+
+  private static func canonicalVideoCodec(_ codecName: String) -> String {
+    switch codecName.lowercased() {
+    case "h264", "avc", "video/avc":
+      return "video/avc"
+    case "h265", "hevc", "video/hevc":
+      return "video/hevc"
+    default:
+      return codecName
+    }
+  }
+}
