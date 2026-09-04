@@ -10,9 +10,15 @@
 - Add URLSession-backed custom AVIO streaming with bounded 4/8/16 MiB network
   cache profiles, Range seek, sequential HTTP 200 playback, retry, redirects,
   request headers, cancellation, and foreground reconstruction.
+- Add experimental iOS HTTP/HTTPS-FLV live playback for hardware H.264/H.265
+  with AAC-LC or MP3, non-seekable state, keyframe-gated bounded reconnects, and
+  caller request headers.
+- Add iOS HLS custom headers across manifests, AES keys, initialization/media
+  resources, with same-origin-only credentials and a cancellable loopback media
+  proxy that avoids undocumented AVFoundation header options.
 - Treat custom `maxBufferBytes` as the total managed-media budget for network
   bytes, scheduled PCM, and one in-flight encoded packet; do not persist media.
-- Keep iOS network MKV live, HTTP-FLV and other remote fallback containers,
+- Keep iOS network MKV live and other remote fallback containers,
   non-AAC MKV audio, subtitles, and DRM unsupported.
 - Keep Dart resource teardown idempotent even when native disposal reports an
   error.

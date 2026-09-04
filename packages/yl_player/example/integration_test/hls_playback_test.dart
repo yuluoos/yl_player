@@ -3,20 +3,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:yl_player/yl_player.dart';
 
+import 'support/authenticated_hls_server.dart';
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  final hlsSource = YlMediaSource.network(
-    Uri.parse(
-      'https://devstreaming-cdn.apple.com/videos/streaming/examples/'
-      'img_bipbop_adv_example_ts/master.m3u8',
-    ),
-    formatHint: YlFormatHint.hls,
-  );
-
-  testWidgets('opens Apple HLS and produces a native texture first frame', (
+  testWidgets('opens HLS and produces a native texture first frame', (
     WidgetTester tester,
   ) async {
+    final server = await AuthenticatedHlsServer.start();
+    addTearDown(server.close);
+    final hlsSource = YlMediaSource.network(
+      server.masterUri,
+      formatHint: YlFormatHint.hls,
+    );
     final controller = YlPlayerController(
       configuration: const YlPlayerConfiguration(
         bufferMode: YlBufferMode.lowLatency,
@@ -51,6 +51,12 @@ void main() {
   testWidgets('rejecting a fallback source does not tear down current HLS', (
     WidgetTester tester,
   ) async {
+    final server = await AuthenticatedHlsServer.start();
+    addTearDown(server.close);
+    final hlsSource = YlMediaSource.network(
+      server.masterUri,
+      formatHint: YlFormatHint.hls,
+    );
     final controller = YlPlayerController();
     addTearDown(controller.dispose);
     await tester.pumpWidget(
@@ -67,8 +73,8 @@ void main() {
     await expectLater(
       controller.open(
         YlMediaSource.network(
-          Uri.parse('https://example.invalid/live.flv'),
-          formatHint: YlFormatHint.httpFlv,
+          Uri.parse('https://example.invalid/live.mkv'),
+          formatHint: YlFormatHint.matroska,
           isLive: true,
         ),
       ),
@@ -76,19 +82,20 @@ void main() {
         isA<YlPlayerError>().having(
           (error) => error.code,
           'code',
-          'container.native_fallback_required',
+          'container.network_mkv_live_unsupported',
         ),
       ),
     );
 
-    final recoveredState = await controller.states
+    expect(controller.state.engine, YlPlaybackEngine.avPlayer);
+    final recoveredState = controller.states
         .firstWhere(
           (state) =>
-              state.status == YlPlaybackStatus.playing ||
-              state.status == YlPlaybackStatus.buffering ||
-              state.status == YlPlaybackStatus.ready,
+              state.engine == YlPlaybackEngine.avPlayer &&
+              state.status != YlPlaybackStatus.error,
         )
         .timeout(const Duration(seconds: 5));
-    expect(recoveredState.engine, YlPlaybackEngine.avPlayer);
+    await controller.play();
+    await recoveredState;
   });
 }

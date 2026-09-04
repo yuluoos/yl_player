@@ -23,6 +23,11 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/test_media/h264_aac.flv
+    - assets/test_media/h264_mp3.flv
+    - assets/test_media/hevc_aac.flv
     - assets/test_media/h264_aac.mkv
+    - assets/test_media/hls_encrypted_segment0.ts
+    - assets/test_media/hls_key.bin
     - assets/test_media/network_seek_h264_aac.mkv
     - assets/test_media/two_audio_tracks.mkv

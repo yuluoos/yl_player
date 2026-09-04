@@ -521,6 +521,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private var openStartedAt = CACurrentMediaTime()
   private var openDurationMs: Int64?
   private var firstFrameDurationMs: Int64?
+  private var reconnectCount = 0
   private var currentError: [String: Any?]?
   private var lastStateEmitAt = CFTimeInterval(0)
 
@@ -885,6 +886,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
           "bufferedBytes": scheduledAudioBytes,
           "droppedFrames": frameScheduler.lateFrameDropCount,
           "audioUnderruns": audioUnderruns,
+          "reconnectCount": reconnectCount,
         ],
         "error": currentError,
       ],
@@ -957,9 +959,13 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         return false
       }
       awaitingReconnectFirstFrame = false
+      reconnectCount += 1
       return true
     }
-    if completedReconnect { liveReconnectController.markFirstFrame() }
+    if completedReconnect {
+      liveReconnectController.markFirstFrame()
+      DispatchQueue.main.async { [weak self] in self?.emitState() }
+    }
     DispatchQueue.main.async { [weak self] in
       guard let self, !self.firstFrameSent,
             self.stateLock.withLock({ self.active && self.generation == frame.generation })

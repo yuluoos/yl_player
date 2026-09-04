@@ -78,6 +78,7 @@ private final class TestHlsLoadingRequest: YlHlsLoadingRequest {
   private(set) var received = Data()
   private(set) var finishCount = 0
   private(set) var error: NativePlayerError?
+  private(set) var redirectRequest: URLRequest?
 
   init(
     url: URL,
@@ -113,6 +114,12 @@ private final class TestHlsLoadingRequest: YlHlsLoadingRequest {
     lock.unlock()
   }
 
+  func redirect(to request: URLRequest) {
+    lock.lock()
+    redirectRequest = request
+    lock.unlock()
+  }
+
   func finishLoading() { complete(error: nil) }
   func finishLoading(with error: NativePlayerError) { complete(error: error) }
 
@@ -127,6 +134,67 @@ private final class TestHlsLoadingRequest: YlHlsLoadingRequest {
 }
 
 final class YlHlsResourceLoaderTests: XCTestCase {
+  func testEncodedAssetURLMarksExtensionlessExplicitHlsAsManifest() throws {
+    let configuration = HlsLoaderURLProtocol.configuration { _, _ in }
+    let loader = try makeLoader(
+      session: configuration,
+      originURL: URL(string: "https://media.test/play?id=42")!
+    )
+
+    XCTAssertEqual(
+      try YlHlsURLCodec.resourceKind(loader.encodedAssetURL()),
+      .manifest
+    )
+  }
+
+  func testMediaProxyURLsRemainValidForLargeVodManifest() throws {
+    let proxy = try YlHlsMediaProxy(
+      originURL: URL(string: "https://media.test/master.m3u8")!,
+      headers: [:],
+      configuration: .init(map: [
+        "connectTimeoutMs": 100,
+        "readTimeoutMs": 100,
+      ])
+    )
+    defer { proxy.cancelAll() }
+    let first = try proxy.proxyURL(
+      for: URL(string: "http://127.0.0.1:1/segment-0.ts")!
+    )
+    for index in 1...2_100 {
+      _ = try proxy.proxyURL(
+        for: URL(string: "http://127.0.0.1:1/segment-\(index).ts")!
+      )
+    }
+
+    let completed = expectation(description: "proxy request completed")
+    URLSession.shared.dataTask(with: first) { _, response, _ in
+      XCTAssertEqual((response as? HTTPURLResponse)?.statusCode, 502)
+      completed.fulfill()
+    }.resume()
+    wait(for: [completed], timeout: 3)
+  }
+
+  func testChunkedTransportErrorIsNotReportedAsCleanCompletion() {
+    XCTAssertEqual(
+      YlHlsMediaProxy.completionAction(
+        responseStarted: true,
+        usesChunkedTransfer: true,
+        method: "GET",
+        error: URLError(.networkConnectionLost)
+      ),
+      .close
+    )
+    XCTAssertEqual(
+      YlHlsMediaProxy.completionAction(
+        responseStarted: true,
+        usesChunkedTransfer: true,
+        method: "GET",
+        error: nil
+      ),
+      .finishChunked
+    )
+  }
+
   func testManifestUsesHeadersAndRewritesChildURL() throws {
     let configuration = HlsLoaderURLProtocol.configuration { request, source in
       XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer test")
@@ -135,7 +203,7 @@ final class YlHlsResourceLoaderTests: XCTestCase {
         data: Data("#EXTM3U\nchild.m3u8\n".utf8)
       )
     }
-    let loader = makeLoader(session: configuration)
+    let loader = try makeLoader(session: configuration)
     let finished = expectation(description: "manifest loaded")
     let request = TestHlsLoadingRequest(
       url: try loader.encodedAssetURL(),
@@ -155,23 +223,11 @@ final class YlHlsResourceLoaderTests: XCTestCase {
     XCTAssertGreaterThan(request.contentLength, 0)
   }
 
-  func testMediaRangeOwnsRangeHeaderAndStripsCrossOriginCredential() throws {
-    let configuration = HlsLoaderURLProtocol.configuration { request, source in
-      XCTAssertEqual(request.value(forHTTPHeaderField: "Range"), "bytes=2-4")
-      XCTAssertNil(request.value(forHTTPHeaderField: "Authorization"))
-      XCTAssertEqual(request.value(forHTTPHeaderField: "X-Client"), "ios")
-      source.respond(
-        status: 206,
-        headers: [
-          "Content-Type": "video/mp2t",
-          "Content-Range": "bytes 2-4/8",
-          "Content-Length": "3",
-          "Accept-Ranges": "bytes",
-        ],
-        data: Data("XYZ".utf8)
-      )
+  func testMediaRangeRedirectOwnsRangeAndStripsCrossOriginCredential() throws {
+    let configuration = HlsLoaderURLProtocol.configuration { _, _ in
+      XCTFail("Media redirects must not start a package URLSession task.")
     }
-    let loader = makeLoader(session: configuration)
+    let loader = try makeLoader(session: configuration)
     let finished = expectation(description: "media loaded")
     let request = TestHlsLoadingRequest(
       url: try YlHlsURLCodec.encode(URL(string: "https://cdn.test/seg.ts")!),
@@ -184,23 +240,24 @@ final class YlHlsResourceLoaderTests: XCTestCase {
     XCTAssertTrue(loader.startLoading(request))
     wait(for: [finished], timeout: 2)
 
-    XCTAssertEqual(request.received, Data("XYZ".utf8))
-    XCTAssertEqual(request.contentLength, 8)
-    XCTAssertTrue(request.byteRangeAccessSupported)
+    XCTAssertEqual(request.redirectRequest?.url, URL(string: "https://cdn.test/seg.ts"))
+    XCTAssertEqual(
+      request.redirectRequest?.value(forHTTPHeaderField: "Range"),
+      "bytes=2-4"
+    )
+    XCTAssertNil(request.redirectRequest?.value(forHTTPHeaderField: "Authorization"))
+    XCTAssertEqual(
+      request.redirectRequest?.value(forHTTPHeaderField: "X-Client"),
+      "ios"
+    )
+    XCTAssertTrue(request.received.isEmpty)
   }
 
-  func testRangeRequestSafelySlicesAFull200Response() throws {
-    let configuration = HlsLoaderURLProtocol.configuration { request, source in
-      XCTAssertEqual(request.value(forHTTPHeaderField: "Range"), "bytes=2-3")
-      source.respond(
-        headers: [
-          "Content-Type": "video/mp2t",
-          "Content-Length": "5",
-        ],
-        data: Data("ABCDE".utf8)
-      )
+  func testSameOriginMediaRedirectRetainsCredentials() throws {
+    let configuration = HlsLoaderURLProtocol.configuration { _, _ in
+      XCTFail("Media redirects must not start a package URLSession task.")
     }
-    let loader = makeLoader(session: configuration)
+    let loader = try makeLoader(session: configuration)
     let finished = expectation(description: "full response sliced")
     let request = TestHlsLoadingRequest(
       url: try YlHlsURLCodec.encode(URL(string: "https://media.test/seg.ts")!),
@@ -213,9 +270,43 @@ final class YlHlsResourceLoaderTests: XCTestCase {
     XCTAssertTrue(loader.startLoading(request))
     wait(for: [finished], timeout: 2)
 
-    XCTAssertEqual(request.received, Data("CD".utf8))
-    XCTAssertEqual(request.contentLength, 5)
-    XCTAssertFalse(request.byteRangeAccessSupported)
+    XCTAssertEqual(
+      request.redirectRequest?.value(forHTTPHeaderField: "Range"),
+      "bytes=2-3"
+    )
+    XCTAssertEqual(
+      request.redirectRequest?.value(forHTTPHeaderField: "Authorization"),
+      "Bearer test"
+    )
+  }
+
+  func testKeyUsesDirectLoaderDataAndRetainsCredentials() throws {
+    let configuration = HlsLoaderURLProtocol.configuration { request, source in
+      XCTAssertEqual(
+        request.value(forHTTPHeaderField: "Authorization"),
+        "Bearer test"
+      )
+      source.respond(
+        headers: ["Content-Type": "application/octet-stream"],
+        data: Data(repeating: 7, count: 16)
+      )
+    }
+    let loader = try makeLoader(session: configuration)
+    let finished = expectation(description: "key loaded")
+    let request = TestHlsLoadingRequest(
+      url: try YlHlsURLCodec.encode(
+        URL(string: "https://media.test/key-without-extension")!,
+        kind: .key
+      ),
+      finished: finished
+    )
+
+    XCTAssertTrue(loader.startLoading(request))
+    wait(for: [finished], timeout: 2)
+
+    XCTAssertNil(request.redirectRequest)
+    XCTAssertEqual(request.received, Data(repeating: 7, count: 16))
+    XCTAssertNil(request.error)
   }
 
   func testHTTPAndMalformedManifestFailuresAreStable() throws {
@@ -230,7 +321,7 @@ final class YlHlsResourceLoaderTests: XCTestCase {
           )
         }
       }
-      let loader = makeLoader(session: configuration)
+      let loader = try makeLoader(session: configuration)
       let finished = expectation(description: scenario)
       let request = TestHlsLoadingRequest(
         url: try loader.encodedAssetURL(),
@@ -266,7 +357,7 @@ final class YlHlsResourceLoaderTests: XCTestCase {
           )
         }
       }
-      let loader = makeLoader(session: configuration)
+      let loader = try makeLoader(session: configuration)
       let finished = expectation(description: scenario)
       let request = TestHlsLoadingRequest(
         url: try loader.encodedAssetURL(),
@@ -288,7 +379,7 @@ final class YlHlsResourceLoaderTests: XCTestCase {
         data: Data("#EXTM3U\nsegment.ts\n".utf8)
       )
     }
-    let loader = makeLoader(session: configuration)
+    let loader = try makeLoader(session: configuration)
     try loader.preflight(cancellationToken: YlOpenCancellationToken())
     XCTAssertEqual(HlsLoaderURLProtocol.capturedRequests.count, 1)
 
@@ -301,12 +392,15 @@ final class YlHlsResourceLoaderTests: XCTestCase {
     wait(for: [finished], timeout: 1)
 
     XCTAssertEqual(HlsLoaderURLProtocol.capturedRequests.count, 1)
-    XCTAssertTrue(String(data: request.received, encoding: .utf8)?.contains("ylhls://") == true)
+    XCTAssertTrue(
+      String(data: request.received, encoding: .utf8)?
+        .contains("http://127.0.0.1:") == true
+    )
   }
 
   func testCancelAllFinishesOnceAndIgnoresLateCompletion() throws {
     let configuration = HlsLoaderURLProtocol.configuration { _, _ in }
-    let loader = makeLoader(session: configuration)
+    let loader = try makeLoader(session: configuration)
     let finished = expectation(description: "cancelled")
     let request = TestHlsLoadingRequest(
       url: try loader.encodedAssetURL(),
@@ -322,9 +416,12 @@ final class YlHlsResourceLoaderTests: XCTestCase {
     XCTAssertEqual(request.finishCount, 1)
   }
 
-  private func makeLoader(session: URLSessionConfiguration) -> YlHlsResourceLoader {
-    YlHlsResourceLoader(
-      originURL: URL(string: "https://media.test/live/master.m3u8")!,
+  private func makeLoader(
+    session: URLSessionConfiguration,
+    originURL: URL = URL(string: "https://media.test/live/master.m3u8")!
+  ) throws -> YlHlsResourceLoader {
+    try YlHlsResourceLoader(
+      originURL: originURL,
       headers: [
         "Authorization": "Bearer test",
         "X-Client": "ios",

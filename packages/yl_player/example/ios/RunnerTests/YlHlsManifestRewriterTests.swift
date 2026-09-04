@@ -11,6 +11,12 @@ final class YlHlsManifestRewriterTests: XCTestCase {
       let encoded = try YlHlsURLCodec.encode(original)
 
       XCTAssertEqual(encoded.scheme, "ylhls")
+      XCTAssertEqual(encoded.lastPathComponent, original.lastPathComponent)
+      XCTAssertEqual(encoded.pathExtension, original.pathExtension)
+      XCTAssertEqual(
+        try YlHlsURLCodec.resourceKind(encoded),
+        original.pathExtension == "m3u8" ? .manifest : .media
+      )
       XCTAssertEqual(try YlHlsURLCodec.decode(encoded), original)
     }
   }
@@ -74,6 +80,10 @@ final class YlHlsManifestRewriterTests: XCTestCase {
       "https://media.test/live/variant/main.m3u8",
       "https://cdn.test/video/segment.ts?x=1",
     ]))
+    let keyKinds = try encodedURLs.filter {
+      try YlHlsURLCodec.resourceKind($0) == .key
+    }
+    XCTAssertEqual(keyKinds.count, 2)
   }
 
   func testPreservesCRLFAndTrailingNewline() throws {
@@ -87,6 +97,33 @@ final class YlHlsManifestRewriterTests: XCTestCase {
 
     XCTAssertTrue(text.hasSuffix("\r\n"))
     XCTAssertFalse(text.replacingOccurrences(of: "\r\n", with: "").contains("\n"))
+  }
+
+  func testTagSemanticsClassifyExtensionlessAndQueryOnlyResources() throws {
+    let manifest = """
+    #EXTM3U
+    #EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio",URI="audio-playlist"
+    #EXT-X-PRELOAD-HINT:TYPE=PART,URI="?next=part1"
+    #EXT-X-STREAM-INF:BANDWIDTH=1280000
+    video-playlist
+    #EXTINF:4,
+    segment-without-extension
+    """
+    let baseURL = URL(string: "https://media.test/live/master.m3u8")!
+    let rewritten = try YlHlsManifestRewriter.rewrite(
+      data: Data(manifest.utf8),
+      baseURL: baseURL,
+      mediaURL: { url in
+        URL(string: "http://127.0.0.1:9999/\(url.lastPathComponent)")!
+      }
+    )
+    let text = try XCTUnwrap(String(data: rewritten, encoding: .utf8))
+
+    XCTAssertTrue(text.contains("URI=\"ylhls://"))
+    XCTAssertTrue(text.contains("URI=\"http://127.0.0.1:9999/master.m3u8\""))
+    XCTAssertTrue(text.contains("ylhls://resource/"))
+    XCTAssertTrue(text.contains("/manifest/video-playlist"))
+    XCTAssertTrue(text.contains("http://127.0.0.1:9999/segment-without-extension"))
   }
 
   func testMalformedUTF8ReturnsStableManifestError() {

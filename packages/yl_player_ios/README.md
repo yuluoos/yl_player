@@ -8,20 +8,33 @@ later and supports HLS, AVFoundation-compatible progressive network media, and
 local files, including live-edge seeking, audio selection,
 quality ceilings, structured state/errors, and idempotent resource release.
 
-HTTP-FLV and remote containers outside the implemented boundary are deliberately
-rejected with structured fallback errors. This development tree bundles an
-experimental Matroska fallback for local files and HTTP/HTTPS VOD using minimized
-FFmpeg demux, required-hardware VideoToolbox decode, and native AAC-LC rendering.
-It is limited to H.264/H.265 video plus zero or more AAC tracks and is not a
-stable support claim until physical-device and memory acceptance is complete.
+This development tree bundles experimental native fallbacks using minimized
+FFmpeg demux, required-hardware VideoToolbox decode, and Apple audio rendering:
+Matroska supports local and HTTP/HTTPS VOD with H.264/H.265 plus AAC-LC;
+HTTP/HTTPS FLV supports non-seekable live H.264/H.265 plus AAC-LC, MP3, or no
+audio. Neither fallback is a stable support claim until physical-device, memory,
+and endurance acceptance is complete.
 
-Custom HTTP headers are accepted only by the network Matroska fallback. Other
-AVPlayer-routed sources requiring headers are rejected with
+Custom HTTP headers are accepted by HLS and the package-owned MKV/FLV paths.
+Header-bearing progressive AVPlayer sources are rejected with
 `container.headers_require_fallback`; the package does not rely on undocumented
-AVFoundation header keys.
+AVFoundation header keys. HLS manifests and AES keys use a resource loader.
+Media/init resources use a short-lived proxy bound to `127.0.0.1`, since
+AVFoundation rejects HLS media delivered directly from a custom scheme. The
+proxy applies headers through URLSession and is cancelled with the asset.
 
-AVPlayer owns connection timeout and retry behavior, so `YlNetworkPolicy` is not
-enforced on this main path. `bufferMode` selects a finite forward-buffer duration;
+For HLS, `Authorization`, `Cookie`, and `Proxy-Authorization` are retained only
+for the top-level manifest's exact origin (scheme, normalized host, and effective
+port). Automatic URLSession cookie storage is disabled, so only the caller's
+explicit `Cookie` is eligible under that policy. Other headers reach same- and
+cross-origin resources. Caller `Range`, `Host`, and content-length headers cannot
+override package-owned transport fields. Manifests are capped at 2 MiB and
+rewritten URLs are restricted to HTTP or HTTPS.
+
+AVPlayer owns connection timeout and retry behavior for unheadered sources, so
+`YlNetworkPolicy` is not enforced on that path. Header-bearing HLS applies
+connect/read timeouts and `maxRedirects` in its loader/proxy; AVPlayer still owns
+adaptive retry behavior. `bufferMode` selects a finite forward-buffer duration;
 custom min/max duration and byte ceilings are not enforceable through AVPlayer.
 `decoderPolicy` remains hardware-first under AVFoundation but cannot force or
 identify a concrete decoder. Both local and network Matroska require VideoToolbox
@@ -35,21 +48,30 @@ one in-flight encoded packet and must be at least 3 MiB. Memory warnings shrink
 the network cache to 2 MiB until foreground reconstruction. No persistent cache
 is created.
 
-Valid HTTP 206 responses enable seeking. HTTP 200 from byte zero is accepted as
+Valid HTTP 206 responses enable MKV seeking. HTTP 200 from byte zero is accepted as
 sequential playback with `isSeekable=false`. Same-origin redirects retain caller
 headers; cross-origin redirects strip `Authorization`, `Cookie`, and
-`Proxy-Authorization`. Network MKV live, HTTP-FLV fallback, non-AAC audio,
-subtitles, DRM, and non-HTTP transports remain unsupported.
+`Proxy-Authorization`. Network MKV live, non-AAC MKV audio, subtitles, DRM, and
+non-HTTP transports remain unsupported.
 
-HTTPS uses the host application's normal ATS trust policy. Remote cleartext HTTP
-requires the host to allow the destination with its own minimal, preferably
-domain-scoped ATS exception; this plugin does not add a global ATS relaxation.
+HTTP-FLV always starts at byte zero, never sends Range, reports live and
+non-seekable state, and reconstructs demux, hardware decode, audio, queues, and
+clocks after a disconnect. Retries use the configured bounded count/base/max
+delay and emit `YlRetryEvent`; exhaustion is `network.retry_exhausted`. Sorenson
+H.263, VP6, AV1, VP9, Nellymoser, Speex, audio-only FLV, and DVR are unsupported.
+
+HTTPS uses the host application's normal ATS trust policy. Header-bearing HLS
+also requires the host to permit local networking (for example with
+`NSAllowsLocalNetworking`) for the loopback media proxy. Remote cleartext HTTP
+requires a minimal, preferably domain-scoped ATS exception; this plugin does not
+add a global ATS relaxation.
 
 Applications should depend on `yl_player`; Flutter selects this package on iOS
 automatically. Both CocoaPods and Swift Package Manager metadata declare iOS 15.
 
-Automated Simulator gates cover routing, HTTP policy, bounded memory,
-cancellation, lifecycle, and loopback HTTP integration behavior. Production
-HTTPS/TLS, decoder behavior, memory, and smoothness must still be verified
-against the target iPhone/iPad and production stream matrix before a stable
-release.
+Automated Simulator gates cover routing, HTTP policy, HLS header-origin behavior,
+AES-128 playback, bounded memory, cancellation, lifecycle, and loopback HTTP
+integration. Simulator FLV may return the exact hardware-unavailable error.
+Production HTTPS/TLS and target-device H.264/AAC, H.264/MP3, H.265/AAC,
+reconnect, memory-warning, and 30-minute evidence remain required before a stable
+HTTP-FLV claim.

@@ -115,6 +115,11 @@ void main() {
         'engine': 'avPlayer',
         'isHardwareDecoding': true,
         'decoderName': 'com.apple.videotoolbox.avc',
+        'capabilities': <String, Object?>{
+          'hardwareVideoCodecs': <String>['h264', 'hevc'],
+          'supportedFormats': <String>['hls', 'httpFlv', 'flv'],
+          'maxConcurrentVideoDecoders': 1,
+        },
       },
     });
     nativeEvents.add(<String, Object?>{
@@ -131,6 +136,10 @@ void main() {
     expect(states.single.status, YlPlaybackStatus.playing);
     expect(states.single.videoSize?.width, 1920);
     expect(states.single.engine, YlPlaybackEngine.avPlayer);
+    expect(
+      states.single.capabilities?.supportedFormats,
+      containsAll(<YlFormatHint>[YlFormatHint.httpFlv, YlFormatHint.flv]),
+    );
     expect(states.single.metrics.androidDeviceTier, isNull);
     expect(states.single.metrics.targetBufferBytes, isNull);
     expect(states.single.metrics.adaptiveDowngradeCount, isNull);

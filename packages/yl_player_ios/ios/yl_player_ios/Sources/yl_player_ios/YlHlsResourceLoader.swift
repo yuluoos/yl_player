@@ -15,6 +15,7 @@ protocol YlHlsLoadingRequest: AnyObject {
     contentLength: Int64,
     byteRangeAccessSupported: Bool
   )
+  func redirect(to request: URLRequest)
   func respond(with data: Data)
   func finishLoading()
   func finishLoading(with error: NativePlayerError)
@@ -59,6 +60,16 @@ private final class YlAVAssetLoadingRequestAdapter: YlHlsLoadingRequest {
 
   func respond(with data: Data) {
     loadingRequest.dataRequest?.respond(with: data)
+  }
+
+  func redirect(to request: URLRequest) {
+    loadingRequest.redirect = request
+    loadingRequest.response = HTTPURLResponse(
+      url: request.url ?? url,
+      statusCode: 302,
+      httpVersion: "HTTP/1.1",
+      headerFields: ["Location": request.url?.absoluteString ?? ""]
+    )
   }
 
   func finishLoading() {
@@ -139,6 +150,14 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
       lock.withLock { self.data.append(data) }
     }
 
+    func redirect(to request: URLRequest) {
+      finish(error: NativePlayerError(
+        category: "internal",
+        code: "ios.hls_loader_failed",
+        message: "A manifest preflight unexpectedly requested a redirect."
+      ))
+    }
+
     func finishLoading() { finish(error: nil) }
     func finishLoading(with error: NativePlayerError) { finish(error: error) }
 
@@ -161,6 +180,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   private let originURL: URL
   private let headerPolicy: YlHlsHeaderPolicy
   private let configuration: YlNetworkConfiguration
+  private let mediaProxy: YlHlsMediaProxy
   private let stateLock = NSLock()
   private var records: [Int: TaskRecord] = [:]
   private var cachedResponses: [String: CachedResponse] = [:]
@@ -172,14 +192,21 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     headers: [String: String],
     configuration: YlNetworkConfiguration,
     sessionConfiguration: URLSessionConfiguration = .ephemeral
-  ) {
+  ) throws {
     self.originURL = originURL
     self.headerPolicy = YlHlsHeaderPolicy(originURL: originURL, headers: headers)
     self.configuration = configuration
+    self.mediaProxy = try YlHlsMediaProxy(
+      originURL: originURL,
+      headers: headers,
+      configuration: configuration
+    )
     super.init()
 
     let sessionConfiguration = sessionConfiguration.copy()
       as? URLSessionConfiguration ?? sessionConfiguration
+    sessionConfiguration.httpShouldSetCookies = false
+    sessionConfiguration.httpCookieStorage = nil
     sessionConfiguration.timeoutIntervalForRequest = TimeInterval(
       max(1, configuration.readTimeoutMs)
     ) / 1_000
@@ -198,14 +225,16 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   }
 
   func encodedAssetURL() throws -> URL {
-    try YlHlsURLCodec.encode(originURL)
+    try YlHlsURLCodec.encode(originURL, kind: .manifest)
   }
 
   @discardableResult
   func startLoading(_ loadingRequest: YlHlsLoadingRequest) -> Bool {
     let destination: URL
+    let resourceKind: YlHlsResourceKind
     do {
       destination = try YlHlsURLCodec.decode(loadingRequest.url)
+      resourceKind = try YlHlsURLCodec.resourceKind(loadingRequest.url)
     } catch let error as NativePlayerError {
       loadingRequest.finishLoading(with: error)
       return true
@@ -227,8 +256,16 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
       return true
     }
 
-    let isManifest = Self.isManifestURL(destination)
+    let isManifest = resourceKind == .manifest
     let rangeHeader = isManifest ? nil : Self.rangeHeader(for: loadingRequest)
+    if resourceKind == .media {
+      loadingRequest.redirect(to: makeRequest(
+        url: destination,
+        rangeHeader: rangeHeader
+      ))
+      loadingRequest.finishLoading()
+      return true
+    }
     let request = makeRequest(url: destination, rangeHeader: rangeHeader)
     let record = TaskRecord(
       request: loadingRequest,
@@ -288,6 +325,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
       record.request.finishLoading(with: Self.cancelledError())
     }
     session.invalidateAndCancel()
+    mediaProxy.cancelAll()
   }
 
   func resourceLoader(
@@ -413,10 +451,6 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     let end = offset.addingReportingOverflow(addition)
     guard !end.overflow else { return "bytes=\(offset)-" }
     return "bytes=\(offset)-\(end.partialValue)"
-  }
-
-  private static func isManifestURL(_ url: URL) -> Bool {
-    url.pathExtension.lowercased() == "m3u8"
   }
 
   private static func isManifestResponse(_ response: HTTPURLResponse) -> Bool {
@@ -617,7 +651,8 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
     do {
       let rewritten = try YlHlsManifestRewriter.rewrite(
         data: record.manifestData,
-        baseURL: record.destinationURL
+        baseURL: record.destinationURL,
+        mediaURL: { [mediaProxy] in try mediaProxy.proxyURL(for: $0) }
       )
       let response = record.response
       finish(task: task, result: .success(CachedResponse(
@@ -683,7 +718,7 @@ final class YlPreparedHlsAsset {
     cancellationToken: YlOpenCancellationToken,
     sessionConfiguration: URLSessionConfiguration = .ephemeral
   ) throws {
-    let loader = YlHlsResourceLoader(
+    let loader = try YlHlsResourceLoader(
       originURL: originURL,
       headers: headers,
       configuration: configuration,

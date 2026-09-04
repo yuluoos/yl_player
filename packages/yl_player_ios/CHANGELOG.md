@@ -14,7 +14,13 @@
   redirect credential stripping, cancellation, and lifecycle reconstruction.
 - Accept custom headers on the network Matroska fallback while continuing to
   reject them on AVPlayer routes rather than using undocumented request keys.
-- Keep network MKV live, HTTP-FLV and other remote fallback containers,
+- Add HTTP/HTTPS-FLV live playback for hardware H.264/H.265 plus AAC-LC or MP3,
+  including sequential input, non-seekable semantics, keyframe-gated pipeline
+  reconstruction, bounded retry events, and cancellation.
+- Add HLS custom headers for manifests, AES keys, and media/init resources with
+  same-origin credential filtering, manifest rewriting, and a lifecycle-owned
+  loopback media proxy.
+- Keep network MKV live and other remote fallback containers,
   non-AAC audio, subtitles, DRM, and persistent cache explicitly unsupported.
 - Add source-generation isolation, one-active-decoder arbitration, playback
   audio-session setup, and background/memory-pressure decoder release.

@@ -29,20 +29,26 @@ HTTP-FLV reuses the owned fallback pipeline: URLSession byte input, minimized
 FFmpeg demux, VideoToolbox video decode, native Apple audio conversion and
 rendering, bounded queues, and Flutter Texture output.
 
-Header-bearing HLS remains an AVPlayer source, but an `AVAssetResourceLoader`
-owns its requests. The loader maps an internal URL scheme back to the original
-HTTP/HTTPS URL, loads it with URLSession, rewrites child resource URLs in HLS
-manifests to the internal scheme, and supplies bytes to AVFoundation.
+Header-bearing HLS remains an AVPlayer source. An `AVAssetResourceLoader` maps
+an internal URL scheme back to HTTP/HTTPS, loads and rewrites manifests, and
+supplies AES key bytes. AVFoundation rejects TS/fMP4 HLS media delivered as
+custom-scheme bytes (`CoreMediaErrorDomain -12881`), so media and initialization
+resources are rewritten to a lifecycle-owned HTTP proxy bound to `127.0.0.1`.
+That proxy forwards through URLSession with the same header-origin policy.
 
-This approach retains AVPlayer's HLS adaptation and media behavior, avoids an
-in-process listening socket, and keeps FFmpeg networking and software video
-decode disabled.
+This approach retains AVPlayer's HLS adaptation and media behavior and keeps
+FFmpeg networking and software video decode disabled. The loopback listener is
+random-port, token-addressed, non-persistent, and cancelled with the asset.
 
-### Rejected: loopback HTTP reverse proxy
+### Required compatibility bridge: loopback HTTP media proxy
 
-A loopback proxy could inject headers before forwarding requests to origin.
-It was rejected because it introduces a listening socket, port ownership,
-request forwarding, background lifecycle, and additional security concerns.
+An initial resource-loader-only implementation passed manifests but failed when
+AVFoundation consumed media from the custom scheme. Redirecting media to HTTP
+restored playback but AVFoundation removed custom headers from the redirected
+request. A loopback media proxy is therefore required for full-resource header
+coverage. It never binds a public address or outlives its HLS asset, and it
+streams without fully buffering or persisting media. Host applications must
+permit local networking in ATS.
 
 ### Rejected: route both formats through FFmpeg
 
@@ -160,18 +166,21 @@ For HLS manifests, the loader resolves and rewrites:
   preload/rendition reports;
 - relative, absolute, query-only, and parent-relative URLs.
 
-Non-manifest resources are streamed without content transformation. MIME type,
-content length, byte-range response metadata, and HTTP status are reported to
-the `AVAssetResourceLoadingRequest`. Cancellation from AVFoundation cancels the
-matching URLSession task and releases buffered data.
+AES key resources are streamed without content transformation through the
+resource loader. Media and initialization resources are fetched by the loopback
+proxy, which forwards status, MIME type, content length, and byte-range metadata.
+Cancellation tears down resource-loader tasks, proxy tasks/connections, and the
+listener.
 
 The caller's non-sensitive headers are applied to the top-level manifest and
 all rewritten child resources. `Authorization`, `Cookie`, and
 `Proxy-Authorization` are applied only when the requested resource has the same
 scheme, normalized host, and effective port as the original top-level HLS URL.
 They are stripped from cross-origin children and cross-origin redirects.
-Same-origin redirects retain all headers. Package-managed Range headers may
-override a caller-supplied Range header for an AVFoundation byte-range request.
+Same-origin redirects retain all headers. URLSession's automatic cookie store is
+disabled so response cookies cannot bypass exact-origin filtering.
+Package-managed Range headers may override a caller-supplied Range header for an
+AVFoundation byte-range request.
 
 Unheadered HLS continues to construct a normal `AVURLAsset` and never creates a
 resource loader.
