@@ -65,6 +65,13 @@ The nullable Android diagnostics on `YlPlaybackMetrics` are
 `surfaceRebuildCount`, and `selectedVideoBitrate`; other backends may leave them
 `null`.
 
+`hardwareOnly` is the default decoder policy. The deprecated
+`preferHardware` value is accepted for source compatibility but resolves to the
+same hardware-only behavior. AVPlayer's decoder choice remains system-managed;
+the package does not claim which decoder AVPlayer selected. Reported
+`hardwareVideoCodecs` use canonical MIME identifiers such as `video/avc` and
+`video/hevc`.
+
 The reviewed architecture is recorded in
 [`docs/superpowers/specs/2026-09-02-yl-player-design.md`](../../docs/superpowers/specs/2026-09-02-yl-player-design.md).
 
@@ -100,6 +107,27 @@ await controller.dispose();
 
 Create one controller per native player instance and always dispose it. The
 complete compile-time example is in [`example/lib/main.dart`](example/lib/main.dart).
+
+## Validation and state guarantees
+
+Public configuration and command inputs are validated before native player
+creation or command dispatch in both debug and release builds. Seek positions
+must be nonnegative. Playback speed must be finite and within `0.25`–`4.0`, and
+volume must be finite and within `0.0`–`1.0`. Present quality constraint fields
+must be positive native integers. Retry and redirect counts must be within
+`0`–`20`; timeout, retry-delay, position-interval, and buffer-budget values must
+also satisfy their documented positive and ordering constraints.
+
+A rejected command completes with `YlPlayerError`, but it does not mutate the
+current player `state` and does not emit `YlErrorEvent`. A terminal playback
+failure reported by the native backend both moves state to `error` and emits the
+error event. This keeps native playback state authoritative.
+
+The public position-update interval remains 250 ms by default. Internally, each
+source generation starts with a complete versioned state snapshot; subsequent
+periodic position updates use a compact state delta containing only continuous
+position, buffer, live-edge, and metric fields. This transport optimization does
+not change the public state or event API.
 
 On Android, all `YlNetworkPolicy` fields and request headers are applied. The
 iOS unheadered AVPlayer path delegates timeout/retry policy to AVFoundation.

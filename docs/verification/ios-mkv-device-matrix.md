@@ -1,18 +1,29 @@
 # iOS local and network MKV verification matrix
 
-Last updated: 2026-09-03
+Last updated: 2026-09-04
 
 This document separates implemented behavior from physical-device acceptance.
 The local and HTTP/HTTPS VOD Matroska fallback is present in the development
 tree, but it is not a release support claim until the physical-device and memory
 rows below pass.
 
+Current automated runs used an iPhone 17e Simulator on iOS 26.5:
+
+```bash
+simulator_id=$(sh tool/boot_ci_ios_simulator.sh)
+YL_IOS_SIMULATOR_ID="$simulator_id" sh tool/check_native_ios.sh
+```
+
+The gate includes full XCTest and all five iOS Flutter integration suites. It
+does not convert a Simulator hardware-unavailable branch or explicit skip into
+physical VideoToolbox evidence.
+
 ## Automated evidence
 
 | Gate | Result | Notes |
 | --- | --- | --- |
 | Foundation checks | Pass | Dart formatting, analysis, unit tests, and the pinned FFmpeg build contract pass. |
-| Native iOS checks | Pass | Full XCTest plus AVPlayer HLS, local-MKV, and loopback HTTP Range/sequential-MKV Flutter integration pass on Simulator. |
+| Native iOS checks | Pass | Full XCTest plus AVPlayer HLS, local-MKV, loopback HTTP Range/sequential-MKV, HTTP-FLV, and authenticated-HLS Flutter integration pass on the iPhone 17e Simulator with iOS 26.5. |
 | Android debug build | Pass | The example debug APK builds. |
 | iOS Simulator debug build | Pass | The example links the packaged FFmpeg bridge and builds. |
 | Package dry runs | Pass | All four packages complete `dart pub publish --dry-run` with zero warnings. |
