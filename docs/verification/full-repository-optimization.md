@@ -28,7 +28,7 @@ Date: 2026-09-04
   local MKV, network Range/sequential MKV, HTTP-FLV reconnect, and
   authenticated-HLS suites.
 - macOS native: **PASS** — `sh tool/check_native_macos.sh` produced an Xcode
-  result with 34 tests passed, zero skipped, and zero failed. Its FFmpeg build,
+  result with 35 tests passed, zero skipped, and zero failed. Its FFmpeg build,
   source/artifact checksum, and live-callback contracts also passed.
 - macOS universal build: **PASS** — the release application executable,
   FlutterMacOS framework, Dart App framework, and YlFFmpegBridge framework all
@@ -67,7 +67,7 @@ Date: 2026-09-04
   build-time warning rather than an unreviewed project rewrite.
 - CocoaPods reports `DART_DEFINES` parsing and custom base-configuration
   warnings during direct macOS XCTest setup. The workspace still compiles,
-  links, and passes all 34 tests. Flutter integration tests can also print
+  links, and passes all 35 tests. Flutter integration tests can also print
   `Failed to foreground app; open returned 1` while the launched test process
   continues and every assertion passes.
 

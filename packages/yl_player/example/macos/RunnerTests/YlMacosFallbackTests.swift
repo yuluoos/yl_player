@@ -24,6 +24,28 @@ final class YlMacosFallbackTests: XCTestCase {
     ))
   }
 
+  func testActivationPolicyRejectsTerminalAndDisposedBackends() throws {
+    XCTAssertFalse(try YlFallbackActivationPolicy.shouldActivate(
+      disposed: false,
+      active: true,
+      hasTerminalError: false
+    ))
+    XCTAssertThrowsError(try YlFallbackActivationPolicy.shouldActivate(
+      disposed: false,
+      active: false,
+      hasTerminalError: true
+    )) {
+      XCTAssertEqual(($0 as? NativePlayerError)?.code, "resource.player_failed")
+    }
+    XCTAssertThrowsError(try YlFallbackActivationPolicy.shouldActivate(
+      disposed: true,
+      active: false,
+      hasTerminalError: false
+    )) {
+      XCTAssertEqual(($0 as? NativePlayerError)?.code, "macos.player_disposed")
+    }
+  }
+
   func testVideoDecodeBudgetBoundsBytesAndFrameCount() {
     let budget = YlVideoDecodeBudget(maxBytes: 100, maxFrames: 2)
 

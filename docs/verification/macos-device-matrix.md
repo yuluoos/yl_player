@@ -21,7 +21,7 @@ sh tool/check_native_macos.sh
 | Gate | Result | Evidence |
 | --- | --- | --- |
 | Dart adapter | Pass | Endorsed registration, shared channel protocol, state/delta handling, errors, and idempotent disposal. |
-| Native tests | Pass | 34 focused tests cover routing, lifecycle, AVPlayer state/error policy, HLS origin policy, bounded networking/video admission, decoder leasing and rollback, AAC fixture conversion, clock/scheduling, and quality constraints. |
+| Native tests | Pass | Focused tests cover routing, lifecycle, AVPlayer state/error policy, HLS origin policy, bounded networking/video admission, lease-pool and slot-rollback policies, AAC fixture conversion, clock/scheduling, and quality constraints. |
 | Universal release build | Pass | The application executable, FlutterMacOS, Dart App, and YlFFmpegBridge each contain `arm64` and `x86_64`; the plugin compiles and links for both. |
 | Deployment target | Pass | The built application and FFmpeg bridge declare macOS 12.0. |
 | Intel smoke | Pass with caveat | The final `x86_64` executable launches through Rosetta on Apple Silicon; this is not Intel physical-device evidence. |

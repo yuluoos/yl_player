@@ -141,7 +141,6 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private var completionSent = false
   private var audioAnchored = false
   private var pendingAudioPacket: YlCompressedAudioPacket?
-  private var pendingVideoSample: (sample: CMSampleBuffer, generation: UInt64)?
   private var openStartedAt = CACurrentMediaTime()
   private var openDurationMs: Int64?
   private var firstFrameDurationMs: Int64?
@@ -234,12 +233,14 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   }
 
   func activate() throws {
-    stateLock.lock()
-    guard !disposed, !active, currentError == nil else {
-      stateLock.unlock()
-      return
+    let shouldActivate = try stateLock.withLock {
+      try YlFallbackActivationPolicy.shouldActivate(
+        disposed: disposed,
+        active: active,
+        hasTerminalError: currentError != nil
+      )
     }
-    stateLock.unlock()
+    guard shouldActivate else { return }
     if requiresAsyncActivation {
       throw NativePlayerError(
         category: "internal",
@@ -307,7 +308,6 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       joinAndRelease: { [self] in
         worker.sync {
           pendingAudioPacket = nil
-          pendingVideoSample = nil
           decoder?.dispose()
           decoder = nil
           audioRenderer?.dispose()
@@ -351,9 +351,12 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     let reconnectToCancel = reconnectWorkItem
     reconnectWorkItem = nil
     let media = openedMedia
+    let reconnectTokenToCancel = media == nil ? sourceCancellationToken : nil
+    if reconnectTokenToCancel != nil { sourceCancellationToken = nil }
     stateLock.unlock()
 
     reconnectToCancel?.cancel()
+    reconnectTokenToCancel?.cancel()
 
     displayLink?.invalidate()
     displayLink = nil
@@ -362,7 +365,6 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     media?.interruptRead()
     worker.sync {
       pendingAudioPacket = nil
-      pendingVideoSample = nil
       decoder?.dispose()
       decoder = nil
     }
@@ -600,7 +602,6 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       joinAndRelease: { [self] in
         worker.sync {
           pendingAudioPacket = nil
-          pendingVideoSample = nil
           decoder?.dispose()
           decoder = nil
           audioRenderer?.dispose()
@@ -743,25 +744,6 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       return
     }
 
-    if let pendingVideoSample {
-      guard let decoder else {
-        stateLock.withLock { pumping = false }
-        return
-      }
-      if decoder.decode(
-        sample: pendingVideoSample.sample,
-        generation: pendingVideoSample.generation
-      ) == .submitted {
-        self.pendingVideoSample = nil
-        stateLock.withLock { pumping = false }
-        requestPump()
-      } else {
-        stateLock.withLock { pumping = false }
-        requestPump(after: 0.005)
-      }
-      return
-    }
-
     var packet: YLFPacketRef?
     let result = ylf_read_packet(context, &packet)
     if result == Int32(YLFResultEOF) {
@@ -857,10 +839,25 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       if sampleResult == 0, let unmanagedSample {
         stateLock.withLock { prebufferedVideoSample = true }
         let sample = unmanagedSample.takeRetainedValue()
-        if decoder?.decode(sample: sample, generation: packetGeneration)
-          == .wouldExceedBudget {
-          pendingVideoSample = (sample, packetGeneration)
-          retryDelay = 0.005
+        if let decoder {
+          if decoder.decode(sample: sample, generation: packetGeneration)
+            == .wouldExceedBudget {
+            decoder.flush()
+            if decoder.decode(sample: sample, generation: packetGeneration)
+              == .wouldExceedBudget {
+              fail(NativePlayerError(
+                category: "resource",
+                code: "resource.network_buffer_limit",
+                message: "A compressed video sample exceeded its memory budget."
+              ))
+            }
+          }
+        } else {
+          fail(NativePlayerError(
+            category: "internal",
+            code: "internal.fallback_invariant",
+            message: "The video decoder became unavailable."
+          ))
         }
       } else {
         ylf_packet_release(&packet)
@@ -950,7 +947,6 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     transition.token?.cancel()
     transition.media?.cancelInput()
     pendingAudioPacket = nil
-    pendingVideoSample = nil
     prebufferedVideoSample = false
     audioAnchored = false
     frameScheduler.flush(generation: transition.generation)
@@ -1076,7 +1072,6 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         decoder = candidate.decoder
         audioRenderer = candidate.audioRenderer
         pendingAudioPacket = nil
-        pendingVideoSample = nil
         prebufferedVideoSample = false
         demuxEOF = false
         completionSent = false
@@ -1251,7 +1246,6 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       },
       clearBuffers: { [self] nextGeneration in
         pendingAudioPacket = nil
-        pendingVideoSample = nil
         prebufferedVideoSample = false
         demuxEOF = false
         completionSent = false
@@ -1616,7 +1610,6 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     audioRenderer = renderer
     candidateAudio = nil
     pendingAudioPacket = nil
-    pendingVideoSample = nil
     prebufferedVideoSample = false
     stateLock.withLock { initialKeyframeGate.reset() }
     demuxEOF = false
@@ -1734,7 +1727,6 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
           let detachedAudio = self.audioRenderer
           self.audioRenderer = nil
           self.pendingAudioPacket = nil
-          self.pendingVideoSample = nil
           self.prebufferedVideoSample = false
           self.audioAnchored = false
           return (detachedDecoder, detachedAudio)
@@ -1848,7 +1840,6 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         candidateOwnedByBackend = true
         selectedAudioStream = requestedStream
         pendingAudioPacket = nil
-        pendingVideoSample = nil
         audioAnchored = false
         stateLock.withLock {
           audioGeneration = nextAudioGeneration

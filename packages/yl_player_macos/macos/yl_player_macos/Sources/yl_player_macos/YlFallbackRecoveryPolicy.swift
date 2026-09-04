@@ -183,3 +183,27 @@ enum YlFallbackTerminalFailurePolicy {
     )
   }
 }
+
+enum YlFallbackActivationPolicy {
+  static func shouldActivate(
+    disposed: Bool,
+    active: Bool,
+    hasTerminalError: Bool
+  ) throws -> Bool {
+    if disposed {
+      throw NativePlayerError(
+        category: "resource",
+        code: "macos.player_disposed",
+        message: "The macOS player has been disposed."
+      )
+    }
+    if hasTerminalError {
+      throw NativePlayerError(
+        category: "resource",
+        code: "resource.player_failed",
+        message: "The failed player must be opened again before playback."
+      )
+    }
+    return !active
+  }
+}

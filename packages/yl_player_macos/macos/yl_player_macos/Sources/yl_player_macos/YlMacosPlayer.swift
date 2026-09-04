@@ -451,7 +451,26 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
   }
 
   func restoreAfterHardwareDecoderRollback() {
-    try? slot.current.activate()
+    if let fallback = slot.current as? YlFallbackBackend,
+       fallback.requiresAsyncActivation {
+      beginActivation(
+        forcePlay: false,
+        willCommit: { _ in },
+        didCommit: {},
+        didRollback: {},
+        completion: { [weak self] result in
+          if case let .failure(error) = result { self?.emitError(error) }
+        }
+      )
+      return
+    }
+    do {
+      try slot.current.activate()
+    } catch let error as NativePlayerError {
+      emitError(error)
+    } catch {
+      emitError(Self.commandError(error))
+    }
   }
 
   func emitError(_ error: NativePlayerError) {
