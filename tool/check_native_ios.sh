@@ -41,3 +41,4 @@ xcrun simctl bootstatus "$simulator_id" -b
 cd "$repo_root/packages/yl_player/example"
 flutter test integration_test/hls_playback_test.dart -d "$simulator_id"
 flutter test integration_test/ios_mkv_playback_test.dart -d "$simulator_id"
+flutter test integration_test/ios_network_mkv_playback_test.dart -d "$simulator_id"
