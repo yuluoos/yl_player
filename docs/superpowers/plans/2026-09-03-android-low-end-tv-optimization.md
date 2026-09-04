@@ -265,7 +265,7 @@ Expected: tests pass.
 - Produces: `YlAndroidDeviceProfile.collect(Context)`, `YlHardwareCodecSelector`, `YlVideoEnvelope`, `videoEnvelope(tier, displayWidth, displayHeight, displayRate)`, and `isHardwareCodecName`.
 - Consumes: `YlDeviceSignals` and `YlDeviceTier` from Task 2.
 
-- [ ] **Step 1: Write failing pure codec-classification tests**
+- [x] **Step 1: Write failing pure codec-classification tests**
 
 ```kotlin
 @Test
@@ -283,7 +283,7 @@ fun `constrained envelope is 1080p30`() {
 Also cover vendor hardware names, uncertain names, HEVC capability absent,
 profile/level rejection, display intersection, and host quality limits.
 
-- [ ] **Step 2: Run the focused test and verify failure**
+- [x] **Step 2: Run the focused test and verify failure**
 
 ```bash
 ./gradlew :yl_player_android:testDebugUnitTest --tests '*YlHardwareCodecSelectorTest'
@@ -291,7 +291,7 @@ profile/level rejection, display intersection, and host quality limits.
 
 Expected: compilation fails for missing codec policy.
 
-- [ ] **Step 3: Implement the Android signal collector**
+- [x] **Step 3: Implement the Android signal collector**
 
 Collect only local capabilities:
 
@@ -320,7 +320,7 @@ val signals = YlDeviceSignals(
 Read active display size/refresh conservatively and return null limits when the
 window service cannot supply them. Do not persist identifiers.
 
-- [ ] **Step 4: Implement the selector and envelope**
+- [x] **Step 4: Implement the selector and envelope**
 
 Wrap `MediaCodecSelector.DEFAULT`. For video MIME types, retain only entries
 where `hardwareAccelerated && !softwareOnly`; on legacy/uncertain entries apply
@@ -337,7 +337,7 @@ YlVideoEnvelope(maxWidth = 1920, maxHeight = 1080, maxFrameRate = 30.0)
 Intersect it with display and host constraints. HEVC is eligible only when the
 filtered selector returns an explicitly supported hardware decoder.
 
-- [ ] **Step 5: Replace the old inline codec helpers and rerun tests**
+- [x] **Step 5: Replace the old inline codec helpers and rerun tests**
 
 Delete `hardwareOnlyCodecSelector`, `isHardwareCodec`, and duplicate name logic
 from `YlPlayerAndroidPlugin.kt`. Construct `DefaultRenderersFactory` with the new
@@ -352,7 +352,7 @@ Run:
 
 Expected: tests and Kotlin compilation pass.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add packages/yl_player_android/android/src

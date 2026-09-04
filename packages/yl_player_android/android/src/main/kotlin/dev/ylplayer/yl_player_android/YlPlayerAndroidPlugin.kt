@@ -31,7 +31,6 @@ import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
-import androidx.media3.exoplayer.mediacodec.MediaCodecSelector
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy
@@ -265,10 +264,8 @@ private class Media3Player(
 
     init {
         val renderersFactory = DefaultRenderersFactory(context)
-            .setEnableDecoderFallback(configuration.decoderPolicy != "hardwareOnly")
-        if (configuration.decoderPolicy == "hardwareOnly") {
-            renderersFactory.setMediaCodecSelector(hardwareOnlyCodecSelector())
-        }
+            .setEnableDecoderFallback(true)
+            .setMediaCodecSelector(YlHardwareCodecSelector())
         exoPlayer = ExoPlayer.Builder(context, renderersFactory)
             .setTrackSelector(trackSelector)
             .setLoadControl(configuration.createLoadControl())
@@ -903,7 +900,7 @@ private fun hardwareVideoCodecs(): List<String> = runCatching {
     MediaCodecList(MediaCodecList.REGULAR_CODECS).codecInfos
         .asSequence()
         .filter { !it.isEncoder }
-        .filter(::isHardwareCodec)
+        .filter(::isPlatformHardwareCodec)
         .flatMap { it.supportedTypes.asSequence() }
         .filter { it.startsWith("video/") }
         .distinct()
@@ -911,36 +908,11 @@ private fun hardwareVideoCodecs(): List<String> = runCatching {
         .toList()
 }.getOrDefault(emptyList())
 
-private fun isHardwareCodec(info: MediaCodecInfo): Boolean {
+private fun isPlatformHardwareCodec(info: MediaCodecInfo): Boolean {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) return info.isHardwareAccelerated
     val name = info.name.lowercase()
     return !name.startsWith("omx.google.") &&
         !name.startsWith("c2.android.") &&
         !name.contains("software") &&
         !name.contains("sw.")
-}
-
-private fun isHardwareCodecName(decoderName: String): Boolean = runCatching {
-    val codec = MediaCodecList(MediaCodecList.ALL_CODECS).codecInfos
-        .firstOrNull { it.name.equals(decoderName, ignoreCase = true) }
-    codec?.let(::isHardwareCodec) ?: !decoderName.lowercase().let {
-        it.startsWith("omx.google.") ||
-            it.startsWith("c2.android.") ||
-            it.contains("software") ||
-            it.contains("sw.")
-    }
-}.getOrDefault(false)
-
-@OptIn(UnstableApi::class)
-private fun hardwareOnlyCodecSelector(): MediaCodecSelector = MediaCodecSelector {
-        mimeType,
-        requiresSecureDecoder,
-        requiresTunnelingDecoder,
-    ->
-    val decoders = MediaCodecSelector.DEFAULT.getDecoderInfos(
-        mimeType,
-        requiresSecureDecoder,
-        requiresTunnelingDecoder,
-    )
-    if (MimeTypes.isVideo(mimeType)) decoders.filter { it.hardwareAccelerated } else decoders
 }
