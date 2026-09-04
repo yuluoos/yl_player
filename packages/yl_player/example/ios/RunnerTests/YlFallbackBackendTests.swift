@@ -136,10 +136,11 @@ final class YlFallbackBackendTests: XCTestCase {
     }
     if let prepared {
       XCTAssertGreaterThan(prepared.videoStream.width, 0)
-      guard case let .local(path) = prepared.sourceRecipe else {
+      guard case let .local(path, container) = prepared.sourceRecipe else {
         return XCTFail("Expected local source recipe")
       }
       XCTAssertEqual(path, fixture.path)
+      XCTAssertEqual(container, .matroska)
     }
     prepared = nil
     XCTAssertEqual(ylf_debug_outstanding_packet_count(), 0)

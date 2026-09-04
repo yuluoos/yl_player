@@ -39,6 +39,21 @@ enum YlSourceRouter {
       return .networkMatroska
     }
 
+    let isNetworkFlv = source.kind == "network"
+      && (source.formatHint == "httpFlv"
+        || source.formatHint == "flv"
+        || (source.formatHint == "automatic" && url.pathExtension.lowercased() == "flv"))
+    if isNetworkFlv {
+      return .networkFlv
+    }
+
+    let isHls = source.kind == "network"
+      && (source.formatHint == "hls"
+        || (source.formatHint == "automatic" && url.pathExtension.lowercased() == "m3u8"))
+    if isHls && source.hasHeaders {
+      return .headeredHls
+    }
+
     if source.hasHeaders {
       return .reject(
         category: "container",

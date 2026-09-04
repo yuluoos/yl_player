@@ -76,10 +76,16 @@ final class YlIosPlayer: NSObject, FlutterTexture {
         case .avPlayer:
           try self.avBackend.validateOpen(source)
           return .avPlayer(source: source)
-        case .localMatroska, .networkMatroska:
+        case .localMatroska, .networkMatroska, .networkFlv:
           return .fallback(
             source: source,
             prepared: try self.prepareFallback(source: source, token: token)
+          )
+        case .headeredHls:
+          throw NativePlayerError(
+            category: "container",
+            code: "container.native_fallback_required",
+            message: "Header-bearing HLS requires the iOS resource-loader backend."
           )
         case let .reject(category, code, message):
           throw NativePlayerError(category: category, code: code, message: message)

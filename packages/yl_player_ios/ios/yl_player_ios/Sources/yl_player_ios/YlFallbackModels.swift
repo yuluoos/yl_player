@@ -8,10 +8,17 @@ struct YlIosSourceDescriptor: Equatable {
   let hasHeaders: Bool
 }
 
+enum YlFallbackContainer: Equatable {
+  case matroska
+  case flv
+}
+
 enum YlIosSourceRoute: Equatable {
   case avPlayer
+  case headeredHls
   case localMatroska
   case networkMatroska
+  case networkFlv
   case reject(category: String, code: String, message: String)
 
   var rejectionCode: String? {

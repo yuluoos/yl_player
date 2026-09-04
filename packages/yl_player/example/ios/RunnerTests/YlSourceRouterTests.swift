@@ -65,7 +65,7 @@ final class YlSourceRouterTests: XCTestCase {
     )
   }
 
-  func testCustomHeadersStayRejected() {
+  func testHeaderedHlsRoutesToResourceLoader() {
     let source = YlIosSourceDescriptor(
       uri: "https://media.test/movie.m3u8",
       kind: "network",
@@ -74,10 +74,46 @@ final class YlSourceRouterTests: XCTestCase {
       hasHeaders: true
     )
 
+    XCTAssertEqual(YlSourceRouter.route(source), .headeredHls)
+  }
+
+  func testHeaderedProgressiveMp4StaysRejected() {
+    let source = YlIosSourceDescriptor(
+      uri: "https://media.test/movie.mp4",
+      kind: "network",
+      formatHint: "automatic",
+      isLive: false,
+      hasHeaders: true
+    )
+
     XCTAssertEqual(
       YlSourceRouter.route(source).rejectionCode,
       "container.headers_require_fallback"
     )
+  }
+
+  func testHttpFlvRoutesToSequentialFallback() {
+    let source = YlIosSourceDescriptor(
+      uri: "https://media.test/live.flv?token=secret",
+      kind: "network",
+      formatHint: "automatic",
+      isLive: true,
+      hasHeaders: true
+    )
+
+    XCTAssertEqual(YlSourceRouter.route(source), .networkFlv)
+  }
+
+  func testExplicitHttpFlvHintRoutesWithoutFlvExtension() {
+    let source = YlIosSourceDescriptor(
+      uri: "https://media.test/live?id=42",
+      kind: "network",
+      formatHint: "httpFlv",
+      isLive: true,
+      hasHeaders: false
+    )
+
+    XCTAssertEqual(YlSourceRouter.route(source), .networkFlv)
   }
 
   func testHlsRemainsOnAvPlayer() {

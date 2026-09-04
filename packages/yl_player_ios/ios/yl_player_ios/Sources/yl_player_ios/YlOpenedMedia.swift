@@ -3,8 +3,15 @@ import Foundation
 import YlFFmpegBridge
 
 enum YlFallbackSourceRecipe {
-  case local(path: String)
-  case network(request: YlNetworkRequestRecipe)
+  case local(path: String, container: YlFallbackContainer)
+  case network(request: YlNetworkRequestRecipe, container: YlFallbackContainer)
+
+  var container: YlFallbackContainer {
+    switch self {
+    case let .local(_, container), let .network(_, container):
+      return container
+    }
+  }
 }
 
 private final class YlByteSourceCallbackBox {
@@ -169,16 +176,21 @@ final class YlOpenedMedia {
     onSourceCreated: ((YlByteSource) -> Void)? = nil
   ) throws {
     switch recipe {
-    case let .local(path):
+    case let .local(path, container):
       var context: YLFMediaContextRef?
       var info = YLFMediaInfo()
       let result = path.withCString { ylf_open_local($0, &context, &info) }
       guard result == Int32(YLFResultOK), context != nil else {
-        throw Self.openError(result: result, callbackError: nil, network: false)
+        throw Self.openError(
+          result: result,
+          callbackError: nil,
+          network: false,
+          container: container
+        )
       }
       self.init(context: context, info: info, box: nil, recipe: recipe)
 
-    case let .network(request):
+    case let .network(request, _):
       let source = YlNetworkByteSource(
         recipe: request,
         capacity: networkBufferBytes,
@@ -191,12 +203,13 @@ final class YlOpenedMedia {
   }
 
   convenience init(byteSource: YlByteSource) throws {
-    try self.init(byteSource: byteSource, recipe: nil)
+    try self.init(byteSource: byteSource, recipe: nil, container: .matroska)
   }
 
   private convenience init(
     byteSource: YlByteSource,
-    recipe: YlFallbackSourceRecipe?
+    recipe: YlFallbackSourceRecipe?,
+    container: YlFallbackContainer? = nil
   ) throws {
     let box = YlByteSourceCallbackBox(source: byteSource)
     var context: YLFMediaContextRef?
@@ -213,7 +226,8 @@ final class YlOpenedMedia {
       throw Self.openError(
         result: result,
         callbackError: box.lastError,
-        network: true
+        network: true,
+        container: container ?? recipe?.container ?? .matroska
       )
     }
     self.init(context: context, info: info, box: box, recipe: recipe)
@@ -321,7 +335,8 @@ final class YlOpenedMedia {
   private static func openError(
     result: Int32,
     callbackError: NativePlayerError?,
-    network: Bool
+    network: Bool,
+    container: YlFallbackContainer
   ) -> NativePlayerError {
     if let callbackError { return callbackError }
     if result == Int32(YLFResultCallbackCancelled) {
@@ -331,17 +346,28 @@ final class YlOpenedMedia {
         message: "The network media open was cancelled."
       )
     }
-    return NativePlayerError(
-      category: result == Int32(YLFResultUnsupportedContainer)
-        ? "container" : (network ? "network" : "container"),
-      code: result == Int32(YLFResultUnsupportedContainer)
-        ? "container.mkv_malformed"
-        : (network ? "network.http_status" : "container.mkv_open_failed"),
-      message: network
-        ? "The network Matroska media could not be opened."
-        : "The local Matroska file could not be opened.",
-      diagnostic: "YlFFmpegBridge result \(result)"
-    )
+    switch container {
+    case .flv:
+      return NativePlayerError(
+        category: "container",
+        code: result == Int32(YLFResultUnsupportedContainer)
+          ? "container.flv_malformed" : "container.flv_open_failed",
+        message: "The FLV media could not be opened.",
+        diagnostic: "YlFFmpegBridge result \(result)"
+      )
+    case .matroska:
+      return NativePlayerError(
+        category: result == Int32(YLFResultUnsupportedContainer)
+          ? "container" : (network ? "network" : "container"),
+        code: result == Int32(YLFResultUnsupportedContainer)
+          ? "container.mkv_malformed"
+          : (network ? "network.http_status" : "container.mkv_open_failed"),
+        message: network
+          ? "The network Matroska media could not be opened."
+          : "The local Matroska file could not be opened.",
+        diagnostic: "YlFFmpegBridge result \(result)"
+      )
+    }
   }
 }
 

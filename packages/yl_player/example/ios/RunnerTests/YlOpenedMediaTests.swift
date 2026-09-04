@@ -62,7 +62,7 @@ final class YlOpenedMediaTests: XCTestCase {
   func testNetworkOpenMatchesLocalStreamMetadata() throws {
     let url = try fixture()
     let bytes = try Data(contentsOf: url)
-    let local = try YlOpenedMedia(recipe: .local(path: url.path))
+    let local = try YlOpenedMedia(recipe: .local(path: url.path, container: .matroska))
     let network = try YlOpenedMedia(byteSource: MemoryByteSource(bytes: bytes))
     defer {
       local.close()
@@ -159,5 +159,13 @@ final class YlOpenedMediaTests: XCTestCase {
     XCTAssertEqual(ylf_read_packet(media.context, &packet), 0)
     XCTAssertNotNil(packet)
     ylf_packet_release(&packet)
+  }
+
+  func testFlvOpenFailureUsesFormatSpecificError() {
+    XCTAssertThrowsError(try YlOpenedMedia(
+      recipe: .local(path: "/dev/null", container: .flv)
+    )) { error in
+      XCTAssertEqual((error as? NativePlayerError)?.code, "container.flv_open_failed")
+    }
   }
 }

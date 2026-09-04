@@ -158,7 +158,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     switch YlSourceRouter.route(descriptor) {
     case .avPlayer:
       return
-    case .localMatroska, .networkMatroska:
+    case .localMatroska, .networkMatroska, .networkFlv, .headeredHls:
       throw NativePlayerError(
         category: "container",
         code: "container.native_fallback_required",

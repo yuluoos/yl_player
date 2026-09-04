@@ -189,8 +189,13 @@ final class YlPreparedFallback {
         message: "A valid Matroska URI is required."
       )
     }
+    let formatHint = source["formatHint"] as? String ?? "automatic"
+    let container: YlFallbackContainer = formatHint == "httpFlv"
+      || formatHint == "flv"
+      || (formatHint == "automatic" && url.pathExtension.lowercased() == "flv")
+      ? .flv : .matroska
     if url.isFileURL {
-      sourceRecipe = .local(path: url.path)
+      sourceRecipe = .local(path: url.path, container: container)
     } else if let scheme = url.scheme?.lowercased(),
               scheme == "http" || scheme == "https" {
       let headers = stringMap(source["headers"]).compactMapValues { $0 as? String }
@@ -198,7 +203,7 @@ final class YlPreparedFallback {
         url: url,
         headers: headers,
         configuration: configuration.network
-      ))
+      ), container: container)
     } else {
       throw NativePlayerError(
         category: "source",
