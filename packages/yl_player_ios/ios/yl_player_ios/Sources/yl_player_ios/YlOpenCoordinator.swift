@@ -1,22 +1,5 @@
 import Foundation
 
-enum YlPreparedOpen {
-  case avPlayer(source: [String: Any?])
-  case headeredHls(source: [String: Any?], prepared: YlPreparedHlsAsset)
-  case fallback(source: [String: Any?], prepared: YlPreparedFallback)
-
-  func discard() {
-    switch self {
-    case .avPlayer:
-      break
-    case let .headeredHls(_, prepared):
-      prepared.discard()
-    case let .fallback(_, prepared):
-      prepared.discard()
-    }
-  }
-}
-
 final class YlOpenCancellationToken {
   private let lock = NSLock()
   private var cancelled = false
