@@ -16,6 +16,8 @@
 - Add iOS HLS custom headers across manifests, AES keys, initialization/media
   resources, with same-origin-only credentials and a cancellable loopback media
   proxy that avoids undocumented AVFoundation header options.
+- Add bounded iOS AVPlayer reconnects for direct live HLS and sanitized
+  HLS error-log diagnostics for terminal failures.
 - Treat custom `maxBufferBytes` as the total managed-media budget for network
   bytes, scheduled PCM, and one in-flight encoded packet; do not persist media.
 - Keep iOS network MKV live and other remote fallback containers,

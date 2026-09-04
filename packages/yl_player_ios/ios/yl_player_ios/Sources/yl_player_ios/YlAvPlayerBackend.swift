@@ -18,6 +18,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   private let textures: FlutterTextureRegistry
   private let configuration: PlayerConfiguration
   private let emit: ([String: Any?]) -> Void
+  private let errorLogCollector = YlAvPlayerErrorLogCollector()
   private let player = AVPlayer()
   private let videoOutput = AVPlayerItemVideoOutput(
     pixelBufferAttributes: [
@@ -58,6 +59,9 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   private var resumeAtLiveEdge = false
   private var hlsResourceLoader: YlHlsResourceLoader?
   private var stagedHls: StagedHls?
+  private var liveReconnectController: YlLiveReconnectController
+  private var pendingLiveReconnect: DispatchWorkItem?
+  private let failureGate = YlAvPlayerFailureGate()
 
   init(
     playerId: Int64,
@@ -69,6 +73,9 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     self.textures = textures
     self.configuration = configuration
     self.emit = emit
+    self.liveReconnectController = YlLiveReconnectController(
+      configuration: configuration.network
+    )
     super.init()
 
     player.automaticallyWaitsToMinimizeStalling = configuration.bufferMode != "lowLatency"
@@ -223,6 +230,9 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
       )
     }
     active = true
+    liveReconnectController = YlLiveReconnectController(
+      configuration: configuration.network
+    )
     if stagedHls != nil {
       try installStagedHls()
       return
@@ -238,6 +248,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
 
   func deactivate() {
     guard !disposed, active else { return }
+    cancelLiveReconnect()
     savedPositionMs = milliseconds(player.currentTime()) ?? savedPositionMs
     if let range = player.currentItem?.seekableTimeRanges.last?.timeRangeValue,
        let position = milliseconds(player.currentTime()),
@@ -265,6 +276,10 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   }
 
   private func resetOpenState(_ source: [String: Any?], resume: Bool) {
+    cancelLiveReconnect()
+    liveReconnectController = YlLiveReconnectController(
+      configuration: configuration.network
+    )
     removeCurrentItem()
     lastSource = source
     if !resume {
@@ -358,7 +373,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     ) { [weak self] notification in
       guard self?.isCurrent(item, generation: generation) == true else { return }
       let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error
-      self?.handleFailure(error)
+      self?.handleFailure(error, item: item, generation: generation)
     }
   }
 
@@ -386,7 +401,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
       rebuildTracks(item)
       emitState()
     case .failed:
-      handleFailure(item.error)
+      handleFailure(item.error, item: item, generation: generation)
     default:
       break
     }
@@ -422,15 +437,82 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     }
   }
 
-  private func handleFailure(_ error: Error?) {
-    status = "error"
+  private func handleFailure(
+    _ error: Error?,
+    item: AVPlayerItem? = nil,
+    generation: UInt64? = nil
+  ) {
+    let failureGeneration = generation ?? itemGeneration
+    guard failureGate.begin(generation: failureGeneration) else { return }
     let nsError = error as NSError?
-    let category = errorCategory(nsError)
+    if let source = lastSource,
+       YlAvPlayerRecoveryPolicy.shouldReconnect(
+         source: source,
+         usesResourceLoader: hlsResourceLoader != nil,
+         hasBeenReady: hasBeenReady,
+         playRequested: playRequested,
+         error: nsError,
+         errorLogDomain: nil,
+         errorLogStatusCode: nil
+       ), liveReconnectController.canRetry {
+      finishFailure(nsError, log: nil, generation: failureGeneration)
+      return
+    }
+    guard let item else {
+      finishFailure(nsError, log: nil, generation: failureGeneration)
+      return
+    }
+
+    errorLogCollector.collect(timeoutMs: 500, read: { [item] in
+      let event = item.errorLog()?.events.last
+      return YlAvPlayerErrorLogSnapshot(
+        domain: event?.errorDomain,
+        statusCode: event?.errorStatusCode,
+        uri: event?.uri
+      )
+    }) { [weak self] snapshot in
+      self?.finishFailure(nsError, log: snapshot, generation: failureGeneration)
+    }
+  }
+
+  private func finishFailure(
+    _ error: NSError?,
+    log: YlAvPlayerErrorLogSnapshot?,
+    generation: UInt64
+  ) {
+    guard failureGate.finish(
+      generation: generation,
+      currentGeneration: itemGeneration
+    ), !disposed, active else {
+      return
+    }
+    if let source = lastSource,
+       YlAvPlayerRecoveryPolicy.shouldReconnect(
+         source: source,
+         usesResourceLoader: hlsResourceLoader != nil,
+         hasBeenReady: hasBeenReady,
+         playRequested: playRequested,
+         error: error,
+         errorLogDomain: log?.domain,
+         errorLogStatusCode: log?.statusCode
+       ), scheduleLiveReconnect(source: source) {
+      return
+    }
+
+    failureGate.markTerminal(generation: generation)
+    status = "error"
+    let category = errorCategory(error)
+    let diagnostic = YlAvPlayerRecoveryPolicy.diagnostic(
+      error: error,
+      errorDomain: log?.domain,
+      statusCode: log?.statusCode,
+      uri: log?.uri
+    )
     let details = errorMap(
       category: category,
-      code: nsError.map { "avplayer.\($0.code)" } ?? "avplayer.failed",
-      message: nsError?.localizedDescription ?? "AVPlayer playback failed.",
-      diagnostic: nsError.map(String.init(describing:))
+      code: error.map { "avplayer.\($0.code)" } ?? "avplayer.failed",
+      message: "AVPlayer playback failed.",
+      diagnostic: diagnostic
     )
     currentError = details
     emit(["playerId": playerId, "type": "error", "error": details])
@@ -441,6 +523,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     guard !disposed, textureId >= 0, player.currentItem != nil else { return }
     let itemTime = videoOutput.itemTime(forHostTime: CACurrentMediaTime())
     guard videoOutput.hasNewPixelBuffer(forItemTime: itemTime) else { return }
+    liveReconnectController.markFirstFrame()
     textures.textureFrameAvailable(textureId)
     if !firstFrameSent {
       firstFrameSent = true
@@ -655,6 +738,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   func dispose() {
     guard !disposed else { return }
     disposed = true
+    cancelLiveReconnect()
     displayLink?.invalidate()
     displayLink = nil
     removeItemObservers()
@@ -692,6 +776,52 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     player.replaceCurrentItem(with: nil)
     hlsResourceLoader?.cancelAll()
     hlsResourceLoader = nil
+  }
+
+  private func scheduleLiveReconnect(source: [String: Any?]) -> Bool {
+    guard active,
+          let delayMs = liveReconnectController.nextDelayMs() else {
+      return false
+    }
+
+    status = "buffering"
+    currentError = nil
+    removeCurrentItem()
+    let expectedGeneration = itemGeneration
+    let reconnect = DispatchWorkItem { [weak self] in
+      guard let self, !self.disposed, self.active,
+            self.itemGeneration == expectedGeneration,
+            self.liveReconnectController.shouldInstall(
+              reconnectGeneration: expectedGeneration,
+              currentGeneration: self.itemGeneration
+            ) else {
+        return
+      }
+      self.pendingLiveReconnect = nil
+      do {
+        try self.installItem(source, positionMs: 0)
+        if self.playRequested {
+          self.player.playImmediately(atRate: self.desiredRate)
+        }
+        self.emitState()
+      } catch {
+        self.handleFailure(error)
+      }
+    }
+    pendingLiveReconnect = reconnect
+    DispatchQueue.main.asyncAfter(
+      deadline: .now() + .milliseconds(Int(delayMs)),
+      execute: reconnect
+    )
+    emitState()
+    return true
+  }
+
+  private func cancelLiveReconnect() {
+    pendingLiveReconnect?.cancel()
+    pendingLiveReconnect = nil
+    liveReconnectController.cancel()
+    failureGate.reset()
   }
 
   private func isCurrent(_ item: AVPlayerItem, generation: UInt64) -> Bool {

@@ -20,6 +20,9 @@
 - Add HLS custom headers for manifests, AES keys, and media/init resources with
   same-origin credential filtering, manifest rewriting, and a lifecycle-owned
   loopback media proxy.
+- Recover direct live HLS from transient AVPlayer termination with the bounded
+  network retry policy, and include sanitized HLS error-log details when retry
+  is exhausted.
 - Keep network MKV live and other remote fallback containers,
   non-AAC audio, subtitles, DRM, and persistent cache explicitly unsupported.
 - Add source-generation isolation, one-active-decoder arbitration, playback

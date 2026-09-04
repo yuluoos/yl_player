@@ -22,6 +22,10 @@ final class YlLiveReconnectController {
     lock.withLock { retryAttempt }
   }
 
+  var canRetry: Bool {
+    lock.withLock { !isCancelled && retryAttempt < maxRetries }
+  }
+
   func nextDelayMs() -> Int64? {
     lock.withLock {
       guard !isCancelled, retryAttempt < maxRetries else { return nil }

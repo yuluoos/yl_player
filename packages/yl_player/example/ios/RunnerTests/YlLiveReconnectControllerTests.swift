@@ -1,4 +1,5 @@
 @testable import yl_player_ios
+import AVFoundation
 import XCTest
 
 final class YlLiveReconnectControllerTests: XCTestCase {
@@ -9,8 +10,11 @@ final class YlLiveReconnectControllerTests: XCTestCase {
       "maxRetryDelayMs": 15,
     ]))
 
+    XCTAssertTrue(controller.canRetry)
     XCTAssertEqual(controller.nextDelayMs(), 10)
+    XCTAssertTrue(controller.canRetry)
     XCTAssertEqual(controller.nextDelayMs(), 15)
+    XCTAssertFalse(controller.canRetry)
     XCTAssertNil(controller.nextDelayMs())
     XCTAssertEqual(controller.attempt, 2)
   }
@@ -53,5 +57,236 @@ final class YlLiveReconnectControllerTests: XCTestCase {
       reconnectGeneration: 5,
       currentGeneration: 5
     ))
+  }
+
+  func testAvPlayerRecoveryRetriesObservedTransientLiveHlsFailure() {
+    XCTAssertTrue(YlAvPlayerRecoveryPolicy.shouldReconnect(
+      source: source(
+        uri: "http://127.0.0.1:8080/m3u8?url=live",
+        formatHint: "hls",
+        isLive: true
+      ),
+      usesResourceLoader: false,
+      hasBeenReady: true,
+      playRequested: true,
+      error: NSError(domain: AVFoundationErrorDomain, code: AVError.unknown.rawValue),
+      errorLogDomain: "CoreMediaErrorDomain",
+      errorLogStatusCode: -12312
+    ))
+    XCTAssertTrue(YlAvPlayerRecoveryPolicy.shouldReconnect(
+      source: source(
+        uri: "https://media.test/live.m3u8",
+        formatHint: "automatic",
+        isLive: true
+      ),
+      usesResourceLoader: false,
+      hasBeenReady: true,
+      playRequested: true,
+      error: NSError(domain: NSURLErrorDomain, code: NSURLErrorNetworkConnectionLost),
+      errorLogDomain: nil,
+      errorLogStatusCode: nil
+    ))
+    XCTAssertTrue(YlAvPlayerRecoveryPolicy.shouldReconnect(
+      source: source(
+        uri: "https://media.test/live.m3u8",
+        formatHint: "hls",
+        isLive: true
+      ),
+      usesResourceLoader: false,
+      hasBeenReady: true,
+      playRequested: true,
+      error: NSError(domain: "CoreMediaErrorDomain", code: -12312),
+      errorLogDomain: nil,
+      errorLogStatusCode: nil
+    ))
+  }
+
+  func testAvPlayerRecoveryRejectsPermanentAndUnsupportedFailures() {
+    XCTAssertFalse(YlAvPlayerRecoveryPolicy.shouldReconnect(
+      source: source(
+        uri: "https://media.test/live.m3u8",
+        formatHint: "hls",
+        isLive: true
+      ),
+      usesResourceLoader: false,
+      hasBeenReady: true,
+      playRequested: true,
+      error: NSError(domain: AVFoundationErrorDomain, code: AVError.unknown.rawValue),
+      errorLogDomain: "CoreMediaErrorDomain",
+      errorLogStatusCode: 403
+    ))
+    XCTAssertFalse(YlAvPlayerRecoveryPolicy.shouldReconnect(
+      source: source(
+        uri: "https://media.test/live.m3u8",
+        formatHint: "hls",
+        isLive: true
+      ),
+      usesResourceLoader: false,
+      hasBeenReady: true,
+      playRequested: true,
+      error: NSError(domain: AVFoundationErrorDomain, code: AVError.unknown.rawValue),
+      errorLogDomain: "UnknownDomain",
+      errorLogStatusCode: 503
+    ))
+    XCTAssertFalse(YlAvPlayerRecoveryPolicy.shouldReconnect(
+      source: source(
+        uri: "https://media.test/vod.m3u8",
+        formatHint: "hls",
+        isLive: false
+      ),
+      usesResourceLoader: false,
+      hasBeenReady: true,
+      playRequested: true,
+      error: NSError(domain: NSURLErrorDomain, code: NSURLErrorTimedOut),
+      errorLogDomain: nil,
+      errorLogStatusCode: nil
+    ))
+    XCTAssertFalse(YlAvPlayerRecoveryPolicy.shouldReconnect(
+      source: source(
+        uri: "https://media.test/live.flv",
+        formatHint: "httpFlv",
+        isLive: true
+      ),
+      usesResourceLoader: false,
+      hasBeenReady: true,
+      playRequested: true,
+      error: NSError(domain: NSURLErrorDomain, code: NSURLErrorTimedOut),
+      errorLogDomain: nil,
+      errorLogStatusCode: nil
+    ))
+    XCTAssertFalse(YlAvPlayerRecoveryPolicy.shouldReconnect(
+      source: source(
+        uri: "https://media.test/live.m3u8",
+        formatHint: "hls",
+        isLive: true
+      ),
+      usesResourceLoader: true,
+      hasBeenReady: true,
+      playRequested: true,
+      error: NSError(domain: NSURLErrorDomain, code: NSURLErrorTimedOut),
+      errorLogDomain: nil,
+      errorLogStatusCode: nil
+    ))
+  }
+
+  func testAvPlayerRecoveryCoversPreplayFailureButNotPausedPlayback() {
+    let transient = NSError(domain: NSURLErrorDomain, code: NSURLErrorTimedOut)
+    let liveHls = source(
+      uri: "https://media.test/live.m3u8",
+      formatHint: "hls",
+      isLive: true
+    )
+
+    XCTAssertTrue(YlAvPlayerRecoveryPolicy.shouldReconnect(
+      source: liveHls,
+      usesResourceLoader: false,
+      hasBeenReady: false,
+      playRequested: false,
+      error: transient,
+      errorLogDomain: nil,
+      errorLogStatusCode: nil
+    ))
+    XCTAssertFalse(YlAvPlayerRecoveryPolicy.shouldReconnect(
+      source: liveHls,
+      usesResourceLoader: false,
+      hasBeenReady: true,
+      playRequested: false,
+      error: transient,
+      errorLogDomain: nil,
+      errorLogStatusCode: nil
+    ))
+  }
+
+  func testAvPlayerFailureGateCoalescesDuplicateAndStaleCallbacks() {
+    let gate = YlAvPlayerFailureGate()
+
+    XCTAssertTrue(gate.begin(generation: 4))
+    XCTAssertFalse(gate.begin(generation: 4))
+    XCTAssertFalse(gate.finish(generation: 4, currentGeneration: 5))
+    XCTAssertTrue(gate.begin(generation: 5))
+    XCTAssertTrue(gate.finish(generation: 5, currentGeneration: 5))
+    gate.markTerminal(generation: 5)
+    XCTAssertFalse(gate.begin(generation: 5))
+
+    gate.reset()
+    XCTAssertTrue(gate.begin(generation: 5))
+  }
+
+  func testAvPlayerErrorLogCollectorDoesNotHeadOfLineBlockNewFailures() {
+    let collector = YlAvPlayerErrorLogCollector()
+    let firstStarted = expectation(description: "first read started")
+    let secondCompleted = expectation(description: "second read completed")
+    let releaseFirst = DispatchSemaphore(value: 0)
+
+    collector.collect(timeoutMs: 5_000, read: {
+      firstStarted.fulfill()
+      releaseFirst.wait()
+      return YlAvPlayerErrorLogSnapshot(domain: "CoreMediaErrorDomain", statusCode: 500, uri: nil)
+    }) { _ in }
+    wait(for: [firstStarted], timeout: 1)
+
+    collector.collect(timeoutMs: 5_000, read: {
+      YlAvPlayerErrorLogSnapshot(domain: "CoreMediaErrorDomain", statusCode: 503, uri: nil)
+    }) { snapshot in
+      XCTAssertEqual(snapshot?.statusCode, 503)
+      secondCompleted.fulfill()
+    }
+    wait(for: [secondCompleted], timeout: 1)
+    releaseFirst.signal()
+  }
+
+  func testAvPlayerErrorLogCollectorBoundsBlockedLogReads() {
+    let collector = YlAvPlayerErrorLogCollector()
+    let completed = expectation(description: "bounded completion")
+    let releaseRead = DispatchSemaphore(value: 0)
+
+    collector.collect(timeoutMs: 25, read: {
+      releaseRead.wait()
+      return YlAvPlayerErrorLogSnapshot(domain: "CoreMediaErrorDomain", statusCode: 500, uri: nil)
+    }) { snapshot in
+      XCTAssertNil(snapshot)
+      completed.fulfill()
+    }
+
+    wait(for: [completed], timeout: 1)
+    releaseRead.signal()
+  }
+
+  func testAvPlayerDiagnosticExcludesUntrustedDescriptionsCommentsAndCredentials() {
+    let diagnostic = YlAvPlayerRecoveryPolicy.diagnostic(
+      error: NSError(
+        domain: "https://attacker.test/error?token=outer-secret",
+        code: -11800,
+        userInfo: [NSLocalizedDescriptionKey: "Cookie: inner-secret"]
+      ),
+      errorDomain: "CoreMediaErrorDomain",
+      statusCode: -12312,
+      uri: "https://user:pass@media.test/live.m3u8?token=secret#part"
+    )
+
+    XCTAssertEqual(
+      diagnostic,
+      "NSError(domain=other, code=-11800); "
+        + "HLS(domain=CoreMediaErrorDomain, status=-12312, "
+        + "uri=https://media.test/live.m3u8)"
+    )
+    XCTAssertFalse(diagnostic.contains("secret"))
+    XCTAssertFalse(diagnostic.contains("user"))
+    XCTAssertFalse(diagnostic.contains("pass"))
+    XCTAssertFalse(diagnostic.contains("Cookie"))
+  }
+
+  private func source(
+    uri: String,
+    formatHint: String,
+    isLive: Bool
+  ) -> [String: Any?] {
+    [
+      "uri": uri,
+      "kind": "network",
+      "formatHint": formatHint,
+      "isLive": isLive,
+      "headers": [:],
+    ]
   }
 }
