@@ -22,8 +22,15 @@ kernel aimed at TVBox-style Android and iOS applications.
   errors, and local performance metrics.
 
 Android currently handles HLS, HTTP-FLV, and Media3 progressive containers.
-iOS handles HLS and AVFoundation-compatible progressive/local media. A bundled
-FFmpeg-demux/VideoToolbox fallback experimentally handles local and HTTP/HTTPS
+iOS handles HLS and AVFoundation-compatible progressive/local media. On
+Android, devices are automatically classified as `constrained`, `standard`, or
+`capable`; video decoding is hardware-only, only one decoder is active, and
+source-specific byte/time ceilings protect low-memory TV boxes. The constrained
+selection envelope is at most 1080p30, subject to the display and hardware codec
+capability—it is not a universal smoothness guarantee. HEVC requires a compatible
+hardware decoder.
+
+A bundled FFmpeg-demux/VideoToolbox fallback experimentally handles local and HTTP/HTTPS
 MKV VOD with H.264/H.265 video and zero or more AAC-LC tracks. MKV video decode
 is hardware-required; unsupported devices return
 `decoder.video_hardware_unavailable`. Its current verification status is
@@ -34,6 +41,18 @@ Network MKV live, HTTP-FLV fallback on iOS, non-AAC MKV audio, WebM/AVI/MPEG
 fallback, non-HTTP transports, subtitles, DRM, downloads, persistent cache,
 source-site parsing, playlists, UI controls, and telemetry upload are outside
 this milestone.
+
+Android automatic constrained-mode limits are 2–10 seconds / 16 MiB for local
+media, 4–15 seconds / 24 MiB for network VOD, 6–12 seconds / 20 MiB for HLS
+live, and 2–5 seconds / 12 MiB for HTTP-FLV live. Runtime adaptation only
+downgrades. Subtitles, background audio, software video decode, and persistent
+media cache are not provided. Android 7.0 / 1.5 GB / 32-bit ARM physical-device
+endurance testing remains deferred.
+
+The nullable Android diagnostics on `YlPlaybackMetrics` are
+`androidDeviceTier`, `targetBufferBytes`, `adaptiveDowngradeCount`,
+`surfaceRebuildCount`, and `selectedVideoBitrate`; other backends may leave them
+`null`.
 
 The reviewed architecture is recorded in
 [`docs/superpowers/specs/2026-09-02-yl-player-design.md`](../../docs/superpowers/specs/2026-09-02-yl-player-design.md).

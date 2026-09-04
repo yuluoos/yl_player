@@ -18,3 +18,5 @@
   non-AAC audio, subtitles, DRM, and persistent cache explicitly unsupported.
 - Add source-generation isolation, one-active-decoder arbitration, playback
   audio-session setup, and background/memory-pressure decoder release.
+- Decode the cross-platform Android diagnostic fields as nullable values while
+  leaving iOS behavior unchanged.

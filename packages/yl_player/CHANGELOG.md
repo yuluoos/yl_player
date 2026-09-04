@@ -16,3 +16,10 @@
   non-AAC MKV audio, subtitles, and DRM unsupported.
 - Keep Dart resource teardown idempotent even when native disposal reports an
   error.
+- Add Android automatic device tiers, hardware-only video selection,
+  source-specific bounded buffers, downgrade-only health adaptation, and
+  low-memory TV lifecycle recovery.
+- Expose nullable Android device-tier, target-buffer, adaptive-downgrade,
+  Surface-rebuild, and selected-video-bitrate metrics.
+- Keep Android physical-device endurance validation deferred for the Android
+  7.0 / 1.5 GB RAM / 32-bit ARM reference TVBox.

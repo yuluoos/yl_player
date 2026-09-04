@@ -739,7 +739,7 @@ git commit -m "feat: harden Android TV lifecycle"
 - Produces: accurate package claims and recorded automated evidence.
 - Consumes: all previous tasks.
 
-- [ ] **Step 1: Update documentation without overstating validation**
+- [x] **Step 1: Update documentation without overstating validation**
 
 Document:
 
@@ -752,7 +752,7 @@ Document:
 
 Do not say 1080p or HEVC is universally smooth.
 
-- [ ] **Step 2: Run formatting and static checks**
+- [x] **Step 2: Run formatting and static checks**
 
 ```bash
 dart format --output=none --set-exit-if-changed packages
@@ -762,7 +762,7 @@ git diff --check
 
 Expected: all exit zero.
 
-- [ ] **Step 3: Run the complete automated test suite**
+- [x] **Step 3: Run the complete automated test suite**
 
 ```bash
 flutter test packages/yl_player_platform_interface
@@ -775,7 +775,7 @@ cd packages/yl_player_android/example/android
 
 Expected: every test passes.
 
-- [ ] **Step 4: Build the Android 32-bit target**
+- [x] **Step 4: Build the Android 32-bit target**
 
 Run from `packages/yl_player_android/example`:
 
@@ -790,7 +790,7 @@ Confirm with:
 unzip -l build/app/outputs/flutter-apk/app-debug.apk | rg 'lib/armeabi-v7a/libflutter.so'
 ```
 
-- [ ] **Step 5: Run publication dry runs**
+- [x] **Step 5: Run publication dry runs**
 
 Run in each publishable package:
 
@@ -802,20 +802,20 @@ Execute for `yl_player_platform_interface`, `yl_player_android`, `yl_player_ios`
 and `yl_player`. Expected: no blocking validation error. Existing non-blocking
 repository warnings must be reported exactly rather than hidden.
 
-- [ ] **Step 6: Record completion evidence in this plan**
+- [x] **Step 6: Record completion evidence in this plan**
 
 Append a `## Verification record` containing the executed command, date, and
 result for each gate. Mark only completed checkboxes. Keep the physical-device
 gate explicitly deferred.
 
-- [ ] **Step 7: Commit documentation and verification record**
+- [x] **Step 7: Commit documentation and verification record**
 
 ```bash
 git add packages/yl_player_android/README.md packages/yl_player_android/CHANGELOG.md packages/yl_player/README.md packages/yl_player/CHANGELOG.md docs/superpowers/plans/2026-09-03-android-low-end-tv-optimization.md
 git commit -m "docs: describe Android TV optimization"
 ```
 
-- [ ] **Step 8: Inspect final history and worktree**
+- [x] **Step 8: Inspect final history and worktree**
 
 ```bash
 git status --short
@@ -825,3 +825,29 @@ git log --oneline -10
 Expected: clean worktree and the eight independently reviewable feature/docs
 commits following the design and plan commits. Do not push or publish without a
 separate explicit user request.
+
+## Verification record
+
+Automated gates executed on 2026-09-03:
+
+| Gate | Command | Result |
+| --- | --- | --- |
+| Formatting | `dart format --output=none --set-exit-if-changed packages` | Passed; 38 files checked, 0 changed. |
+| Static analysis | `flutter analyze` | Passed; no issues found. |
+| Diff hygiene | `git diff --check` | Passed. |
+| Platform interface tests | `flutter test packages/yl_player_platform_interface` | Passed; 12 tests. |
+| Android Dart tests | `flutter test packages/yl_player_android` | Passed; 5 tests. |
+| iOS Dart tests | `flutter test packages/yl_player_ios` | Passed; 6 tests. |
+| App-facing Dart tests | `flutter test packages/yl_player/test` | Passed; 9 tests. |
+| Android native tests and compile | `./gradlew :yl_player_android:testDebugUnitTest :yl_player_android:compileDebugKotlin` | Passed; all 47 Kotlin tests and compilation succeeded. Gradle reported existing AGP built-in-Kotlin migration notices, but no task failure. |
+| 32-bit Android build | `flutter build apk --debug --target-platform android-arm` | Passed; generated `app-debug.apk`. |
+| 32-bit APK inspection | `unzip -l build/app/outputs/flutter-apk/app-debug.apk \| rg 'lib/armeabi-v7a/libflutter.so'` | Passed; `lib/armeabi-v7a/libflutter.so` is present. |
+| Platform interface publication | `dart pub publish --dry-run` in `packages/yl_player_platform_interface` | Passed with 0 warnings. |
+| Android publication | `dart pub publish --dry-run` in `packages/yl_player_android` | Passed with 0 warnings. |
+| iOS publication | `dart pub publish --dry-run` in `packages/yl_player_ios` | Passed with 0 warnings. |
+| App-facing publication | `dart pub publish --dry-run` in `packages/yl_player` | Passed with 0 warnings. |
+| Git inspection | `git status --short` and `git log --oneline -12` | Android implementation history is present and its tracked files are clean. An unrelated untracked iOS HTTP-FLV/HLS plan was preserved and not included. |
+
+Physical Android 7.0 / 1.5 GB RAM / 32-bit ARM playback, thermal, memory,
+long-run, and production-stream smoothness validation remains explicitly
+deferred at the user's request. No package was pushed or published.

@@ -8,3 +8,19 @@
   adaptive quality limits, state/events, capabilities, and structured errors.
 - Add finite jittered retries, strict redirect limits, source-generation event
   isolation, one-active-decoder arbitration, and background/memory cleanup.
+- Add automatic constrained/standard/capable device tiers. Android 7/API 24–27,
+  32-bit, or at-most-2-GB devices select the constrained tier.
+- Require hardware video decoding on Android, cap constrained selection at
+  1080p30, and report stable capability/decoder errors when no compatible
+  hardware path is available.
+- Add source-specific constrained buffer ceilings for local, VOD, HLS live, and
+  HTTP-FLV live playback, including a 25% running-low-memory shrink.
+- Add downgrade-only runtime health adaptation, bounded HLS catch-up/live-edge
+  recovery, and HTTP-FLV backlog reconnect handling.
+- Add generation-safe Surface rebuild, three-second transient audio-focus grace,
+  network wake mode, and intent-preserving foreground reconstruction.
+- Expose Android tier, target bytes, downgrade count, Surface rebuild count, and
+  selected video bitrate as nullable playback diagnostics.
+- Keep subtitles, background audio, software video decoding, and persistent
+  media cache unsupported. Physical Android 7/1.5-GB/32-bit endurance validation
+  remains deferred.
