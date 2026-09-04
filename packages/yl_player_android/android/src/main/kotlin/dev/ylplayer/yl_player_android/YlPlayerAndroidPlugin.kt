@@ -279,6 +279,7 @@ private class Media3Player(
     private var savedPositionMs = 0L
     private var resumeAtLiveEdge = false
     private var sourceGeneration = 0L
+    private val firstFrameGate = YlFirstFrameGate()
     private var lastVideoSize = VideoSize.UNKNOWN
     private var audioTracks: List<Map<String, Any?>> = emptyList()
     private var videoTracks: List<Map<String, Any?>> = emptyList()
@@ -495,6 +496,7 @@ private class Media3Player(
         val network = configuration.network
         sourceGeneration += 1
         val generation = sourceGeneration
+        firstFrameGate.reset(generation)
         val httpFactory = OkHttpDataSource.Factory(httpClient)
             .setDefaultRequestProperties(headers)
         val dataSourceFactory = DefaultDataSource.Factory(context, httpFactory)
@@ -672,7 +674,9 @@ private class Media3Player(
         output: Any,
         renderTimeMs: Long,
     ) {
+        val generation = sourceGeneration
         if (!isCurrentEvent(eventTime)) return
+        if (!firstFrameGate.markRendered(generation)) return
         firstFrameDurationMs = openStartedAtMs?.let { SystemClock.elapsedRealtime() - it }
         resetHealthWindow(SystemClock.elapsedRealtime())
         emit(
