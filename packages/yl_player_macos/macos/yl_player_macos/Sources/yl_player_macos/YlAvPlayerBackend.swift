@@ -19,8 +19,14 @@ enum YlAvPlayerStatePolicy {
 final class YlAvPlayerStallWatchdog {
   typealias Scheduler = (TimeInterval, @escaping () -> Void) -> Void
 
+  private enum Phase: String {
+    case firstFrame
+    case rebuffer
+  }
+
   private let schedule: Scheduler
   private var generation: UInt64 = 0
+  private var armedPhase: Phase?
 
   init(_ schedule: @escaping Scheduler = { delay, action in
     DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: action)
@@ -38,24 +44,31 @@ final class YlAvPlayerStallWatchdog {
     waitingReason: String?,
     onTimeout: @escaping (NativePlayerError) -> Void
   ) {
-    generation &+= 1
-    let scheduledGeneration = generation
-    guard active, wantsToPlay, hasCurrentItem else { return }
+    guard active, wantsToPlay, hasCurrentItem else {
+      cancel()
+      return
+    }
 
-    let phase: String
+    let phase: Phase
     let code: String
     let message: String
     if !firstFrameSent {
-      phase = "firstFrame"
+      phase = .firstFrame
       code = "avplayer.first_frame_timeout"
       message = "AVPlayer did not render the first frame before the read timeout."
     } else if isWaiting {
-      phase = "rebuffer"
+      phase = .rebuffer
       code = "avplayer.stall_timeout"
       message = "AVPlayer remained stalled beyond the read timeout."
     } else {
+      cancel()
       return
     }
+    guard armedPhase != phase else { return }
+
+    generation &+= 1
+    let scheduledGeneration = generation
+    armedPhase = phase
 
     let timeout = max(0, timeoutMs)
     let reason = waitingReason?.isEmpty == false ? waitingReason ?? "none" : "none"
@@ -63,16 +76,18 @@ final class YlAvPlayerStallWatchdog {
       category: "network",
       code: code,
       message: message,
-      diagnostic: "AVPlayer(phase=\(phase), timeoutMs=\(timeout), waitingReason=\(reason))"
+      diagnostic: "AVPlayer(phase=\(phase.rawValue), timeoutMs=\(timeout), waitingReason=\(reason))"
     )
     schedule(TimeInterval(timeout) / 1_000) { [weak self] in
-      guard self?.generation == scheduledGeneration else { return }
+      guard let self, self.generation == scheduledGeneration else { return }
+      self.armedPhase = nil
       onTimeout(error)
     }
   }
 
   func cancel() {
     generation &+= 1
+    armedPhase = nil
   }
 }
 

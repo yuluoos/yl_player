@@ -153,4 +153,28 @@ final class YlMacosAvPlayerStateTests: XCTestCase {
     scheduledAction?()
     XCTAssertTrue(failures.isEmpty)
   }
+
+  func testStallWatchdogKeepsOriginalFirstFrameDeadlineAcrossRefreshes() {
+    var scheduledActions = [() -> Void]()
+    let watchdog = YlAvPlayerStallWatchdog { _, action in
+      scheduledActions.append(action)
+    }
+    var failures = [NativePlayerError]()
+
+    for _ in 0..<2 {
+      watchdog.update(
+        active: true,
+        wantsToPlay: true,
+        hasCurrentItem: true,
+        isWaiting: false,
+        firstFrameSent: false,
+        timeoutMs: 15_000,
+        waitingReason: nil
+      ) { failures.append($0) }
+    }
+
+    XCTAssertEqual(scheduledActions.count, 1)
+    scheduledActions.first?()
+    XCTAssertEqual(failures.map(\.code), ["avplayer.first_frame_timeout"])
+  }
 }

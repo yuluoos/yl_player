@@ -95,6 +95,10 @@ internal class YlMedia3Player(
     private var resumeAtLiveEdge = false
     private var sourceGeneration = 0L
     private val firstFrameGate = YlFirstFrameGate()
+    private var firstFrameRendered = false
+    private val stallWatchdog = YlPlaybackStallWatchdog { delayMs, action ->
+        handler.postDelayed(action, delayMs)
+    }
     private var lastVideoSize = VideoSize.UNKNOWN
     private var audioTracks: List<Map<String, Any?>> = emptyList()
     private var videoTracks: List<Map<String, Any?>> = emptyList()
@@ -146,10 +150,12 @@ internal class YlMedia3Player(
                 cancelFocusGrace()
                 lifecycle.reduce(YlLifecycleEvent.USER_PLAY)
                 exoPlayer.play()
+                refreshStallWatchdog()
             }
             "pause" -> {
                 cancelFocusGrace()
                 lifecycle.reduce(YlLifecycleEvent.USER_PAUSE)
+                stallWatchdog.cancel()
                 exoPlayer.pause()
             }
             "seekTo" -> {
@@ -228,6 +234,7 @@ internal class YlMedia3Player(
         handler.removeCallbacks(positionTicker)
         handler.post(positionTicker)
         emitState()
+        refreshStallWatchdog()
     }
 
     fun deactivate() {
@@ -265,6 +272,7 @@ internal class YlMedia3Player(
     private fun releasePlaybackResources() {
         cancelFocusGrace()
         if (!active) return
+        stallWatchdog.cancel()
         savedPositionMs = max(0L, exoPlayer.currentPosition)
         if (exoPlayer.currentLiveOffset in 0..2_000L) {
             resumeAtLiveEdge = true
@@ -284,6 +292,7 @@ internal class YlMedia3Player(
 
     private fun open(source: Map<String, Any?>) {
         cancelFocusGrace()
+        stallWatchdog.cancel()
         validateOpen(source)
         val uriString = source["uri"] as String
         sourceIsLive = source["isLive"] == true
@@ -308,6 +317,7 @@ internal class YlMedia3Player(
         sourceGeneration += 1
         val generation = sourceGeneration
         firstFrameGate.reset(generation)
+        firstFrameRendered = false
         val httpFactory = OkHttpDataSource.Factory(httpClient)
             .setDefaultRequestProperties(headers)
         val dataSourceFactory = DefaultDataSource.Factory(context, httpFactory)
@@ -361,6 +371,7 @@ internal class YlMedia3Player(
         exoPlayer.setMediaSource(mediaSourceFactory.createMediaSource(mediaItem))
         exoPlayer.prepare()
         emitState()
+        refreshStallWatchdog()
     }
 
     private fun selectAudioTrack(trackId: String) {
@@ -409,12 +420,7 @@ internal class YlMedia3Player(
             emitState()
             return
         }
-        status = when (playbackState) {
-            Player.STATE_BUFFERING -> "buffering"
-            Player.STATE_READY -> if (exoPlayer.isPlaying) "playing" else "ready"
-            Player.STATE_ENDED -> "completed"
-            else -> if (status == "opening") "opening" else "idle"
-        }
+        status = YlMedia3StatePolicy.status(status, playbackState, exoPlayer.isPlaying)
         if (playbackState == Player.STATE_READY && !hasBeenReady) {
             hasBeenReady = true
             openDurationMs = openStartedAtMs?.let { SystemClock.elapsedRealtime() - it }
@@ -427,6 +433,7 @@ internal class YlMedia3Player(
             bufferingStartedAtMs = null
         }
         emitState()
+        refreshStallWatchdog()
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -436,9 +443,10 @@ internal class YlMedia3Player(
             lifecycle.reduce(YlLifecycleEvent.FOCUS_GAIN)
         }
         if (exoPlayer.playbackState == Player.STATE_READY) {
-            status = if (isPlaying) "playing" else "paused"
+            status = YlMedia3StatePolicy.readyStatus(status, isPlaying)
             emitState()
         }
+        refreshStallWatchdog()
     }
 
     override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
@@ -466,6 +474,7 @@ internal class YlMedia3Player(
                 }
             }
         }
+        refreshStallWatchdog()
     }
 
     override fun onVideoSizeChanged(
@@ -488,6 +497,7 @@ internal class YlMedia3Player(
         val generation = sourceGeneration
         if (!isCurrentEvent(eventTime)) return
         if (!firstFrameGate.markRendered(generation)) return
+        firstFrameRendered = true
         firstFrameDurationMs = openStartedAtMs?.let { SystemClock.elapsedRealtime() - it }
         resetHealthWindow(SystemClock.elapsedRealtime())
         emit(
@@ -499,6 +509,7 @@ internal class YlMedia3Player(
             ),
         )
         emitState()
+        refreshStallWatchdog()
     }
 
     override fun onTracksChanged(tracks: Tracks) {
@@ -573,6 +584,7 @@ internal class YlMedia3Player(
         error: PlaybackException,
     ) {
         if (!isCurrentEvent(eventTime)) return
+        stallWatchdog.cancel()
         if (tryDecoderRecovery(error)) return
         status = "error"
         val details = playbackErrorMap(
@@ -610,6 +622,7 @@ internal class YlMedia3Player(
         currentError = null
         exoPlayer.prepare()
         emitState()
+        refreshStallWatchdog()
         return true
     }
 
@@ -681,6 +694,7 @@ internal class YlMedia3Player(
                 reconnectCount += 1
                 exoPlayer.stop()
                 exoPlayer.prepare()
+                refreshStallWatchdog()
             }
             is YlRecoveryAction.SetCatchUpSpeed -> {
                 if (requestedPlaybackSpeed == 1f) exoPlayer.setPlaybackSpeed(action.speed.coerceAtMost(1.03f))
@@ -689,13 +703,31 @@ internal class YlMedia3Player(
         }
     }
 
-    private fun failWith(error: YlStableError) {
-        val details = errorMap(error.category, error.code, error.message)
+    private fun failWith(error: YlStableError, diagnostic: String? = null) {
+        stallWatchdog.cancel()
+        val details = errorMap(error.category, error.code, error.message, diagnostic)
         status = "error"
         currentError = details
         exoPlayer.pause()
         emit(mapOf("playerId" to playerId, "type" to "error", "error" to details))
         emitState(details)
+    }
+
+    private fun refreshStallWatchdog() {
+        val generation = sourceGeneration
+        stallWatchdog.update(
+            active = active,
+            wantsToPlay = exoPlayer.playWhenReady,
+            hasCurrentItem = exoPlayer.currentMediaItem != null,
+            isBuffering = exoPlayer.playbackState == Player.STATE_BUFFERING,
+            firstFrameRendered = firstFrameRendered,
+            timeoutMs = configuration.network.readTimeoutMs.toLong(),
+            playbackState = status,
+        ) { error, diagnostic ->
+            if (generation == sourceGeneration && active && status != "error") {
+                failWith(error, diagnostic)
+            }
+        }
     }
 
     fun handleRunningLowMemory() {
@@ -840,6 +872,7 @@ internal class YlMedia3Player(
     fun dispose() {
         if (disposed) return
         lifecycle.reduce(YlLifecycleEvent.DISPOSE)
+        stallWatchdog.cancel()
         disposed = true
         sourceGeneration += 1
         cancelFocusGrace()

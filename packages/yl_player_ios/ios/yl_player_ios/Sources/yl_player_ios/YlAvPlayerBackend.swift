@@ -4,6 +4,81 @@ import Flutter
 import QuartzCore
 import UIKit
 
+final class YlAvPlayerStallWatchdog {
+  typealias Scheduler = (TimeInterval, @escaping () -> Void) -> Void
+
+  private enum Phase: String {
+    case firstFrame
+    case rebuffer
+  }
+
+  private let schedule: Scheduler
+  private var generation: UInt64 = 0
+  private var armedPhase: Phase?
+
+  init(_ schedule: @escaping Scheduler = { delay, action in
+    DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: action)
+  }) {
+    self.schedule = schedule
+  }
+
+  func update(
+    active: Bool,
+    wantsToPlay: Bool,
+    hasCurrentItem: Bool,
+    isWaiting: Bool,
+    firstFrameSent: Bool,
+    timeoutMs: Int64,
+    waitingReason: String?,
+    onTimeout: @escaping (NativePlayerError) -> Void
+  ) {
+    guard active, wantsToPlay, hasCurrentItem else {
+      cancel()
+      return
+    }
+
+    let phase: Phase
+    let code: String
+    let message: String
+    if !firstFrameSent {
+      phase = .firstFrame
+      code = "avplayer.first_frame_timeout"
+      message = "AVPlayer did not render the first frame before the read timeout."
+    } else if isWaiting {
+      phase = .rebuffer
+      code = "avplayer.stall_timeout"
+      message = "AVPlayer remained stalled beyond the read timeout."
+    } else {
+      cancel()
+      return
+    }
+    guard armedPhase != phase else { return }
+
+    generation &+= 1
+    let scheduledGeneration = generation
+    armedPhase = phase
+
+    let timeout = max(0, timeoutMs)
+    let reason = waitingReason?.isEmpty == false ? waitingReason ?? "none" : "none"
+    let error = NativePlayerError(
+      category: "network",
+      code: code,
+      message: message,
+      diagnostic: "AVPlayer(phase=\(phase.rawValue), timeoutMs=\(timeout), waitingReason=\(reason))"
+    )
+    schedule(TimeInterval(timeout) / 1_000) { [weak self] in
+      guard let self, self.generation == scheduledGeneration else { return }
+      self.armedPhase = nil
+      onTimeout(error)
+    }
+  }
+
+  func cancel() {
+    generation &+= 1
+    armedPhase = nil
+  }
+}
+
 final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   private struct StagedHls {
     let source: [String: Any?]
@@ -62,6 +137,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   private var liveReconnectController: YlLiveReconnectController
   private var pendingLiveReconnect: DispatchWorkItem?
   private let failureGate = YlAvPlayerFailureGate()
+  private let stallWatchdog = YlAvPlayerStallWatchdog()
 
   init(
     playerId: Int64,
@@ -123,8 +199,10 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
       player.playImmediately(atRate: desiredRate)
       status = player.timeControlStatus == .playing ? "playing" : "buffering"
       emitState()
+      refreshStallWatchdog()
     case "pause":
       playRequested = false
+      stallWatchdog.cancel()
       player.pause()
     case "seekTo":
       let milliseconds = int64(arguments["positionMs"]) ?? 0
@@ -363,6 +441,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
       queue: .main
     ) { [weak self] _ in
       guard self?.isCurrent(item, generation: generation) == true else { return }
+      self?.stallWatchdog.cancel()
       self?.status = "completed"
       self?.emitState()
     }
@@ -400,6 +479,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
       }
       rebuildTracks(item)
       emitState()
+      refreshStallWatchdog()
     case .failed:
       handleFailure(item.error, item: item, generation: generation)
     default:
@@ -428,6 +508,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
       break
     }
     emitState()
+    refreshStallWatchdog()
   }
 
   private func finishBuffering() {
@@ -444,6 +525,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   ) {
     let failureGeneration = generation ?? itemGeneration
     guard failureGate.begin(generation: failureGeneration) else { return }
+    stallWatchdog.cancel()
     let nsError = error as NSError?
     if let source = lastSource,
        YlAvPlayerRecoveryPolicy.shouldReconnect(
@@ -536,7 +618,50 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
         "height": size.height > 0 ? Int(size.height) : nil,
       ])
       emitState()
+      refreshStallWatchdog()
     }
+  }
+
+  private func refreshStallWatchdog() {
+    let generation = itemGeneration
+    stallWatchdog.update(
+      active: active,
+      wantsToPlay: playRequested,
+      hasCurrentItem: player.currentItem != nil,
+      isWaiting: player.timeControlStatus == .waitingToPlayAtSpecifiedRate,
+      firstFrameSent: firstFrameSent,
+      timeoutMs: configuration.network.readTimeoutMs,
+      waitingReason: player.reasonForWaitingToPlay?.rawValue
+    ) { [weak self] error in
+      self?.handleStallTimeout(error, generation: generation)
+    }
+  }
+
+  private func handleStallTimeout(
+    _ error: NativePlayerError,
+    generation: UInt64
+  ) {
+    guard failureGate.begin(generation: generation),
+          failureGate.finish(
+            generation: generation,
+            currentGeneration: itemGeneration
+          ), !disposed, active else {
+      return
+    }
+    failureGate.markTerminal(generation: generation)
+    stallWatchdog.cancel()
+    playRequested = false
+    player.pause()
+    status = "error"
+    let details = errorMap(
+      category: error.category,
+      code: error.code,
+      message: error.message,
+      diagnostic: error.diagnostic
+    )
+    currentError = details
+    emit(["playerId": playerId, "type": "error", "error": details])
+    emitState(error: details)
   }
 
   func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? {
@@ -770,6 +895,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
 
   private func removeCurrentItem() {
     itemGeneration &+= 1
+    stallWatchdog.cancel()
     removeItemObservers()
     displayLink?.isPaused = true
     player.currentItem?.remove(videoOutput)
@@ -804,6 +930,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
           self.player.playImmediately(atRate: self.desiredRate)
         }
         self.emitState()
+        self.refreshStallWatchdog()
       } catch {
         self.handleFailure(error)
       }

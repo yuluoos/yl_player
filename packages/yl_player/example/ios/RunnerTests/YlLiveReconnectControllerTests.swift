@@ -212,6 +212,116 @@ final class YlLiveReconnectControllerTests: XCTestCase {
     XCTAssertTrue(gate.begin(generation: 5))
   }
 
+  func testAvPlayerStallWatchdogReportsFirstFrameTimeoutBeforeAnyFrameRenders() {
+    var scheduledDelay: TimeInterval?
+    var scheduledAction: (() -> Void)?
+    let watchdog = YlAvPlayerStallWatchdog { delay, action in
+      scheduledDelay = delay
+      scheduledAction = action
+    }
+    var failure: NativePlayerError?
+
+    watchdog.update(
+      active: true,
+      wantsToPlay: true,
+      hasCurrentItem: true,
+      isWaiting: false,
+      firstFrameSent: false,
+      timeoutMs: 12_000,
+      waitingReason: nil
+    ) { failure = $0 }
+
+    XCTAssertEqual(scheduledDelay, 12)
+    scheduledAction?()
+    XCTAssertEqual(failure?.category, "network")
+    XCTAssertEqual(failure?.code, "avplayer.first_frame_timeout")
+    XCTAssertEqual(
+      failure?.diagnostic,
+      "AVPlayer(phase=firstFrame, timeoutMs=12000, waitingReason=none)"
+    )
+  }
+
+  func testAvPlayerStallWatchdogReportsRebufferTimeoutAfterFirstFrame() {
+    var scheduledAction: (() -> Void)?
+    let watchdog = YlAvPlayerStallWatchdog { _, action in
+      scheduledAction = action
+    }
+    var failure: NativePlayerError?
+
+    watchdog.update(
+      active: true,
+      wantsToPlay: true,
+      hasCurrentItem: true,
+      isWaiting: true,
+      firstFrameSent: true,
+      timeoutMs: 15_000,
+      waitingReason: "AVPlayerWaitingToMinimizeStallsReason"
+    ) { failure = $0 }
+
+    scheduledAction?()
+    XCTAssertEqual(failure?.category, "network")
+    XCTAssertEqual(failure?.code, "avplayer.stall_timeout")
+    XCTAssertEqual(
+      failure?.diagnostic,
+      "AVPlayer(phase=rebuffer, timeoutMs=15000, "
+        + "waitingReason=AVPlayerWaitingToMinimizeStallsReason)"
+    )
+  }
+
+  func testAvPlayerStallWatchdogCancelsPendingFailureWhenPlaybackRecovers() {
+    var scheduledAction: (() -> Void)?
+    let watchdog = YlAvPlayerStallWatchdog { _, action in
+      scheduledAction = action
+    }
+    var failures = [NativePlayerError]()
+
+    watchdog.update(
+      active: true,
+      wantsToPlay: true,
+      hasCurrentItem: true,
+      isWaiting: true,
+      firstFrameSent: true,
+      timeoutMs: 15_000,
+      waitingReason: nil
+    ) { failures.append($0) }
+    watchdog.update(
+      active: true,
+      wantsToPlay: true,
+      hasCurrentItem: true,
+      isWaiting: false,
+      firstFrameSent: true,
+      timeoutMs: 15_000,
+      waitingReason: nil
+    ) { failures.append($0) }
+
+    scheduledAction?()
+    XCTAssertTrue(failures.isEmpty)
+  }
+
+  func testAvPlayerStallWatchdogKeepsOriginalFirstFrameDeadlineAcrossRefreshes() {
+    var scheduledActions = [() -> Void]()
+    let watchdog = YlAvPlayerStallWatchdog { _, action in
+      scheduledActions.append(action)
+    }
+    var failures = [NativePlayerError]()
+
+    for _ in 0..<2 {
+      watchdog.update(
+        active: true,
+        wantsToPlay: true,
+        hasCurrentItem: true,
+        isWaiting: false,
+        firstFrameSent: false,
+        timeoutMs: 15_000,
+        waitingReason: nil
+      ) { failures.append($0) }
+    }
+
+    XCTAssertEqual(scheduledActions.count, 1)
+    scheduledActions.first?()
+    XCTAssertEqual(failures.map(\.code), ["avplayer.first_frame_timeout"])
+  }
+
   func testAvPlayerErrorLogCollectorDoesNotHeadOfLineBlockNewFailures() {
     let collector = YlAvPlayerErrorLogCollector()
     let firstStarted = expectation(description: "first read started")
