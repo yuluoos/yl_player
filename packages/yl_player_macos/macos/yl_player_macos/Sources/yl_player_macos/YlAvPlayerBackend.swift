@@ -186,7 +186,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     ) { [weak self] _ in
       self?.emitStateDelta()
     }
-    let link = YlDisplayTimer(target: self, selector: #selector(displayLinkTick))
+    let link = YlDisplayTimer { [weak self] in self?.displayLinkTick() }
     link.isPaused = true
     displayLink = link
   }

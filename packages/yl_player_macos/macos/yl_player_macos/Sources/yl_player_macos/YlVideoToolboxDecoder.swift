@@ -15,6 +15,13 @@ struct YlVTDecodedImage {
   let ownershipToken: AnyObject?
 }
 
+enum YlVideoToolboxDecodePolicy {
+  static let frameFlags: VTDecodeFrameFlags = [
+    ._EnableAsynchronousDecompression,
+    ._EnableTemporalProcessing,
+  ]
+}
+
 final class YlVideoDecodeBudget {
   private let condition = NSCondition()
   private let maxBytes: Int
@@ -379,7 +386,7 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
   }
 
   fileprivate func handle(_ image: YlVTDecodedImage) {
-    image.reservation.release()
+    defer { image.reservation.release() }
     lock.lock()
     let acceptsOutput = !disposed && activeGeneration == image.generation
     lock.unlock()
@@ -496,8 +503,10 @@ final class YlHardwareVTSessionFactory: YlVTSessionFactory {
       "RequireHardwareAcceleratedVideoDecoder" as CFString: kCFBooleanTrue as Any,
     ] as CFDictionary
     let imageAttributes = [
-      kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+      kCVPixelBufferPixelFormatTypeKey as String:
+        kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange,
       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
+      kCVPixelBufferMetalCompatibilityKey as String: true,
     ] as CFDictionary
     var rawSession: VTDecompressionSession?
     let status = VTDecompressionSessionCreate(
@@ -579,7 +588,7 @@ private final class YlHardwareVTSession: YlVTSession {
     let status = VTDecompressionSessionDecodeFrame(
       session,
       sampleBuffer: sample,
-      flags: [._EnableAsynchronousDecompression, ._1xRealTimePlayback],
+      flags: YlVideoToolboxDecodePolicy.frameFlags,
       frameRefcon: frameReference.toOpaque(),
       infoFlagsOut: &infoFlags
     )

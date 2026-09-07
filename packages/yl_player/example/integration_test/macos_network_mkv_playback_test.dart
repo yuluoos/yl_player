@@ -49,6 +49,26 @@ void main() {
     expect(controller.state.isHardwareDecoding, isTrue);
     expect(controller.state.isSeekable, isTrue);
 
+    final positionBeforeRateChange = controller.state.position;
+    await controller.setPlaybackSpeed(3);
+    final accelerated = await controller.states
+        .firstWhere(
+          (state) =>
+              state.position >=
+              positionBeforeRateChange + const Duration(milliseconds: 500),
+        )
+        .timeout(const Duration(seconds: 5));
+    await controller.setPlaybackSpeed(1);
+    final restored = await controller.states
+        .firstWhere(
+          (state) =>
+              state.position >=
+              accelerated.position + const Duration(milliseconds: 250),
+        )
+        .timeout(const Duration(seconds: 5));
+    expect(restored.status, YlPlaybackStatus.playing);
+    expect(restored.error, isNull);
+
     await controller.pause();
     final requestCountBeforeSeek = server.requests.length;
     await controller.seekTo(const Duration(seconds: 16));
@@ -73,6 +93,54 @@ void main() {
     expect(controller.audioTracks, hasLength(2));
     await controller.selectAudioTrack(controller.audioTracks[1].id);
     expect(controller.audioTracks[1].isSelected, isTrue);
+  });
+
+  testWidgets('HTTP range MKV repeatedly applies and restores playback speed', (
+    WidgetTester tester,
+  ) async {
+    final server = await RangeMediaServer.start(
+      asset: 'assets/test_media/network_seek_h264_aac.mkv',
+    );
+    addTearDown(server.close);
+    final controller = YlPlayerController(
+      configuration: const YlPlayerConfiguration(
+        positionEventInterval: Duration(milliseconds: 100),
+      ),
+    );
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      MaterialApp(home: YlPlayerView(controller: controller)),
+    );
+
+    await openNetworkMkv(controller, server);
+    await controller.play();
+    await controller.states
+        .firstWhere(
+          (state) => state.position >= const Duration(milliseconds: 500),
+        )
+        .timeout(const Duration(seconds: 10));
+
+    final underrunsBeforeTransitions = controller.state.metrics.audioUnderruns;
+    for (var cycle = 0; cycle < 2; cycle += 1) {
+      await controller.setPlaybackSpeed(3);
+      final acceleratedStart = controller.state.position;
+      await Future<void>.delayed(const Duration(milliseconds: 900));
+      final acceleratedDelta = controller.state.position - acceleratedStart;
+      expect(acceleratedDelta, greaterThan(const Duration(milliseconds: 1800)));
+      expect(acceleratedDelta, lessThan(const Duration(milliseconds: 3800)));
+
+      await controller.setPlaybackSpeed(1);
+      final restoredStart = controller.state.position;
+      await Future<void>.delayed(const Duration(milliseconds: 900));
+      final restoredDelta = controller.state.position - restoredStart;
+      expect(restoredDelta, greaterThan(const Duration(milliseconds: 500)));
+      expect(restoredDelta, lessThan(const Duration(milliseconds: 1500)));
+      expect(controller.state.status, YlPlaybackStatus.playing);
+      expect(controller.state.error, isNull);
+    }
+    expect(controller.state.metrics.audioUnderruns, underrunsBeforeTransitions);
+    expect(controller.state.status, YlPlaybackStatus.playing);
+    expect(controller.state.error, isNull);
   });
 
   testWidgets('HTTP 200 sequential MKV rejects seek without losing playback', (

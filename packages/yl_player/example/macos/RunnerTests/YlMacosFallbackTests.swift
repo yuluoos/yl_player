@@ -1,9 +1,95 @@
 @testable import yl_player_macos
+import AppKit
+import AVFAudio
 import Foundation
+import VideoToolbox
 import XCTest
 import YlFFmpegBridge
 
 final class YlMacosFallbackTests: XCTestCase {
+  func testSystemAudioKeepsNeutralPitchAndRealtimeSmoothnessAcrossRateChanges() throws {
+    let output = YlSystemAudioOutput()
+    defer { output.dispose() }
+
+    output.rate = 3
+
+    let timePitch = try XCTUnwrap(
+      Mirror(reflecting: output).children.first {
+        $0.label == "timePitch"
+      }?.value as? AVAudioUnitTimePitch
+    )
+    XCTAssertEqual(timePitch.rate, 3)
+    XCTAssertEqual(timePitch.pitch, 0)
+    XCTAssertEqual(timePitch.overlap, 8)
+
+    output.rate = 1
+    XCTAssertEqual(timePitch.rate, 1)
+    XCTAssertEqual(timePitch.pitch, 0)
+    XCTAssertEqual(timePitch.overlap, 8)
+  }
+
+  private final class TestAudioConverter: YlAudioPacketConverting {
+    func configure(stream: YlAudioStreamConfiguration) throws {}
+
+    func estimateOutput(
+      for packet: YlCompressedAudioPacket
+    ) -> YlAudioBufferEstimate {
+      YlAudioBufferEstimate(durationUs: 250_000, byteCount: 1_000)
+    }
+
+    func convert(
+      packet: YlCompressedAudioPacket
+    ) throws -> YlScheduledAudioBuffer? {
+      YlScheduledAudioBuffer(
+        payload: NSObject(),
+        ptsUs: packet.ptsUs,
+        durationUs: 250_000,
+        byteCount: 1_000,
+        generation: packet.generation
+      )
+    }
+  }
+
+  private final class TestAudioOutput: YlAudioOutputDriving {
+    var volume: Float = 1
+    var rate: Float = 1
+    let renderedAudioTime: YlRenderedAudioTime? = nil
+    private(set) var playCount = 0
+    private var completions: [() -> Void] = []
+
+    func configure(sampleRate: Double, channelCount: Int) throws {}
+    func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void) {
+      completions.append(completion)
+    }
+    func play() throws { playCount += 1 }
+    func pause() {}
+    func reset() {}
+    func dispose() {}
+
+    func completeNextBuffer() {
+      guard !completions.isEmpty else { return }
+      completions.removeFirst()()
+    }
+  }
+
+  func testDisplayTimerFollowsTheActiveScreenRefreshRate() throws {
+    guard let screen = NSScreen.main, screen.maximumFramesPerSecond > 30 else {
+      throw XCTSkip("An active display faster than 30 Hz is required.")
+    }
+    let probe = YlDisplayTickProbe()
+    let timer = YlDisplayTimer { probe.tick() }
+    defer { timer.invalidate() }
+
+    timer.isPaused = false
+    let sampleDuration = 0.5
+    RunLoop.main.run(until: Date(timeIntervalSinceNow: sampleDuration))
+
+    let minimumTicks = Int(
+      Double(screen.maximumFramesPerSecond) * sampleDuration * 0.75
+    )
+    XCTAssertGreaterThanOrEqual(probe.tickCount, minimumTicks)
+  }
+
   func testTerminalFailureTransitionIsOneShotAndInvalidatesWork() {
     let first = YlFallbackTerminalFailurePolicy.begin(
       disposed: false,
@@ -70,6 +156,120 @@ final class YlMacosFallbackTests: XCTestCase {
     XCTAssertEqual(budget.inFlightBytes, 100)
     XCTAssertEqual(budget.inFlightFrames, 1)
     replacement.release()
+  }
+
+  func testVideoToolboxRequestsDisplayOrderForAsynchronousFrames() {
+    XCTAssertTrue(
+      YlVideoToolboxDecodePolicy.frameFlags.contains(._EnableTemporalProcessing)
+    )
+  }
+
+  func testVideoToolboxDoesNotRestrictDecodeThroughputToOneTimesRealtime() {
+    XCTAssertFalse(
+      YlVideoToolboxDecodePolicy.frameFlags.contains(._1xRealTimePlayback)
+    )
+  }
+
+  func testVideoToolboxOutputsFlutterNativeBiPlanarPixelBuffers() throws {
+    let exampleRoot = URL(fileURLWithPath: #filePath)
+      .deletingLastPathComponent()
+      .deletingLastPathComponent()
+      .deletingLastPathComponent()
+    let fixture = exampleRoot.appendingPathComponent(
+      "assets/test_media/h264_aac.mkv"
+    )
+    var context: YLFMediaContextRef?
+    var mediaInfo = YLFMediaInfo()
+    let openResult = fixture.withUnsafeFileSystemRepresentation { path in
+      ylf_open_local(path, &context, &mediaInfo)
+    }
+    XCTAssertEqual(openResult, Int32(YLFResultOK))
+    guard let context else {
+      XCTFail("The Matroska fixture did not open.")
+      return
+    }
+    var ownedContext: YLFMediaContextRef? = context
+    defer { ylf_close(&ownedContext) }
+
+    var videoStreamIndex: Int32?
+    for index in 0..<mediaInfo.stream_count {
+      var stream = YLFStreamInfo()
+      if ylf_copy_stream_info(context, index, &stream) == 0,
+         Int(stream.kind) == YLFStreamVideo {
+        videoStreamIndex = stream.index
+        break
+      }
+    }
+    let streamIndex = try XCTUnwrap(videoStreamIndex)
+    let format = try YlVideoToolboxDecoder.makeFormatDescription(
+      context: context,
+      streamIndex: streamIndex
+    )
+    let frameExpectation = expectation(
+      description: "VideoToolbox outputs a Flutter-compatible YUV frame"
+    )
+    frameExpectation.assertForOverFulfill = false
+    let outputLock = NSLock()
+    var outputPixelFormat: OSType?
+    let decoder: YlVideoToolboxDecoder
+    do {
+      decoder = try YlVideoToolboxDecoder(
+        formatDescription: format,
+        onFrame: { frame in
+          outputLock.withLock {
+            outputPixelFormat = CVPixelBufferGetPixelFormatType(frame.pixelBuffer)
+          }
+          frameExpectation.fulfill()
+        },
+        onError: { error in
+          XCTFail("Unexpected decoder error: \(error)")
+        }
+      )
+    } catch let error as NativePlayerError
+      where error.code == "decoder.video_hardware_unavailable" {
+      throw XCTSkip("VideoToolbox hardware decoding is unavailable on this host.")
+    }
+    defer { decoder.dispose() }
+
+    for _ in 0..<120 {
+      var packet: YLFPacketRef?
+      let readResult = ylf_read_packet(context, &packet)
+      if readResult == Int32(YLFResultEOF) { break }
+      XCTAssertEqual(readResult, Int32(YLFResultOK))
+      guard let ownedPacket = packet else { continue }
+      guard ylf_packet_stream_index(ownedPacket) == streamIndex else {
+        ylf_packet_release(&packet)
+        continue
+      }
+      let reservation = try XCTUnwrap(decoder.reserve(
+        byteCount: ylf_packet_size(ownedPacket),
+        shouldCancel: { false }
+      ))
+      var unmanagedSample: Unmanaged<CMSampleBuffer>?
+      let sampleResult = ylf_create_video_sample_buffer(
+        &packet,
+        format,
+        &unmanagedSample
+      )
+      guard sampleResult == Int32(YLFResultOK), let unmanagedSample else {
+        reservation.release()
+        ylf_packet_release(&packet)
+        XCTFail("The fixture packet could not become a video sample.")
+        break
+      }
+      decoder.decode(
+        sample: unmanagedSample.takeRetainedValue(),
+        generation: 1,
+        reservation: reservation
+      )
+    }
+    decoder.drain()
+    wait(for: [frameExpectation], timeout: 2)
+
+    XCTAssertEqual(
+      outputLock.withLock { outputPixelFormat },
+      kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
+    )
   }
 
   func testLiveReactivationPreservesPlaybackIntentAndResetsPosition() {
@@ -186,6 +386,66 @@ final class YlMacosFallbackTests: XCTestCase {
     wait(for: [completed], timeout: 1)
   }
 
+  func testMediaClockDoesNotReuseStaleAudioAnchorAcrossRateChanges() {
+    var rendered: YlRenderedAudioTime? = YlRenderedAudioTime(
+      sampleTime: 48_000,
+      sampleRate: 48_000
+    )
+    let clock = YlMediaClock(audioTime: { rendered })
+    clock.anchorAudio(ptsUs: 5_000_000, sampleTime: 48_000)
+    clock.play(atHostTimeUs: 0)
+
+    rendered = YlRenderedAudioTime(sampleTime: 96_000, sampleRate: 48_000)
+    XCTAssertEqual(clock.position(atHostTimeUs: 1_000_000), 6_000_000)
+
+    rendered = nil
+    clock.setRate(2, atHostTimeUs: 1_000_000)
+    rendered = YlRenderedAudioTime(sampleTime: 144_000, sampleRate: 48_000)
+    XCTAssertEqual(clock.position(atHostTimeUs: 1_500_000), 7_000_000)
+
+    rendered = YlRenderedAudioTime(sampleTime: 192_000, sampleRate: 48_000)
+    XCTAssertEqual(clock.position(atHostTimeUs: 2_000_000), 8_000_000)
+
+    rendered = nil
+    clock.setRate(1, atHostTimeUs: 2_000_000)
+    rendered = YlRenderedAudioTime(sampleTime: 216_000, sampleRate: 48_000)
+    XCTAssertEqual(clock.position(atHostTimeUs: 2_500_000), 8_500_000)
+  }
+
+  func testMediaClockDoesNotScaleTheTimePitchPlayerTimelineTwice() {
+    var rendered = YlRenderedAudioTime(sampleTime: 0, sampleRate: 48_000)
+    let clock = YlMediaClock(audioTime: { rendered })
+    clock.anchorAudio(ptsUs: 0, sampleTime: 0)
+    clock.play(atHostTimeUs: 0)
+
+    clock.setRate(3, atHostTimeUs: 0)
+    rendered = YlRenderedAudioTime(sampleTime: 144_000, sampleRate: 48_000)
+    XCTAssertEqual(clock.position(atHostTimeUs: 1_000_000), 3_000_000)
+
+    clock.setRate(1, atHostTimeUs: 1_000_000)
+    rendered = YlRenderedAudioTime(sampleTime: 192_000, sampleRate: 48_000)
+    XCTAssertEqual(clock.position(atHostTimeUs: 2_000_000), 4_000_000)
+  }
+
+  func testMediaClockDoesNotReuseStaleAudioAnchorAcrossPauseAndResume() {
+    var rendered: YlRenderedAudioTime? = YlRenderedAudioTime(
+      sampleTime: 48_000,
+      sampleRate: 48_000
+    )
+    let clock = YlMediaClock(audioTime: { rendered })
+    clock.anchorAudio(ptsUs: 5_000_000, sampleTime: 48_000)
+    clock.play(atHostTimeUs: 0)
+
+    rendered = YlRenderedAudioTime(sampleTime: 96_000, sampleRate: 48_000)
+    XCTAssertEqual(clock.position(atHostTimeUs: 1_000_000), 6_000_000)
+
+    rendered = nil
+    clock.pause(atHostTimeUs: 1_000_000)
+    clock.play(atHostTimeUs: 2_000_000)
+    rendered = YlRenderedAudioTime(sampleTime: 120_000, sampleRate: 48_000)
+    XCTAssertEqual(clock.position(atHostTimeUs: 2_500_000), 6_500_000)
+  }
+
   func testAACPacketFromFallbackFixtureConvertsToPCM() throws {
     let exampleRoot = URL(fileURLWithPath: #filePath)
       .deletingLastPathComponent()
@@ -271,6 +531,89 @@ final class YlMacosFallbackTests: XCTestCase {
     XCTFail("The FLV fixture produced no AAC packet.")
   }
 
+  func testAACConverterDoesNotConsumeCompressedPacketsWithoutPCMOutput() throws {
+    let exampleRoot = URL(fileURLWithPath: #filePath)
+      .deletingLastPathComponent()
+      .deletingLastPathComponent()
+      .deletingLastPathComponent()
+    let fixture = exampleRoot.appendingPathComponent(
+      "assets/test_media/h264_aac.flv"
+    )
+    var context: YLFMediaContextRef?
+    var mediaInfo = YLFMediaInfo()
+    XCTAssertEqual(
+      fixture.withUnsafeFileSystemRepresentation { path in
+        ylf_open_local(path, &context, &mediaInfo)
+      },
+      Int32(YLFResultOK)
+    )
+    let openedContext = try XCTUnwrap(context)
+    var ownedContext: YLFMediaContextRef? = openedContext
+    defer { ylf_close(&ownedContext) }
+
+    var audioStream: YLFStreamInfo?
+    for index in 0..<mediaInfo.stream_count {
+      var stream = YLFStreamInfo()
+      if ylf_copy_stream_info(openedContext, index, &stream) == 0,
+         Int(stream.kind) == YLFStreamAudio,
+         Int(stream.codec) == YLFCodecAAC {
+        audioStream = stream
+        break
+      }
+    }
+    let stream = try XCTUnwrap(audioStream)
+    let cookieSize = ylf_stream_codec_config_size(openedContext, stream.index)
+    var cookie = [UInt8](repeating: 0, count: cookieSize)
+    XCTAssertEqual(
+      ylf_copy_stream_codec_config(
+        openedContext,
+        stream.index,
+        &cookie,
+        cookie.count
+      ),
+      0
+    )
+    let converter = YlAppleCompressedAudioConverter()
+    try converter.configure(stream: YlAudioStreamConfiguration(
+      codec: .aac,
+      sampleRate: Double(stream.sample_rate),
+      channelCount: Int(stream.channel_count),
+      magicCookie: Data(cookie),
+      generation: 1
+    ))
+
+    var compressedPacketCount = 0
+    var pcmBufferCount = 0
+    while compressedPacketCount < 120 {
+      var packetRef: YLFPacketRef?
+      guard ylf_read_packet(openedContext, &packetRef) == Int32(YLFResultOK),
+            let packet = packetRef else { break }
+      guard ylf_packet_stream_index(packet) == stream.index,
+            let bytes = ylf_packet_data(packet) else {
+        ylf_packet_release(&packetRef)
+        continue
+      }
+      let compressed = YlCompressedAudioPacket(
+        data: Data(bytes: bytes, count: ylf_packet_size(packet)),
+        ptsUs: ylf_packet_pts_us(packet),
+        durationUs: ylf_packet_duration_us(packet),
+        generation: 1
+      )
+      ylf_packet_release(&packetRef)
+      compressedPacketCount += 1
+      if try converter.convert(packet: compressed) != nil {
+        pcmBufferCount += 1
+      }
+    }
+
+    XCTAssertGreaterThan(compressedPacketCount, 50)
+    XCTAssertGreaterThanOrEqual(
+      pcmBufferCount,
+      compressedPacketCount - 1,
+      "compressed=\(compressedPacketCount), pcm=\(pcmBufferCount)"
+    )
+  }
+
   func testMacOSAudioUsesNonInterleavedPCMAndCountsEveryChannel() {
     XCTAssertFalse(YlAudioFormatPolicy.usesInterleavedPCM)
     XCTAssertEqual(
@@ -281,6 +624,105 @@ final class YlMacosFallbackTests: XCTestCase {
       ),
       800
     )
+  }
+
+  func testAudioRendererPreservesWallClockBufferAtThreeTimesSpeed() throws {
+    let renderer = YlAudioRenderer(
+      maxScheduledDurationUs: 500_000,
+      maxScheduledBytes: 10_000,
+      converter: TestAudioConverter(),
+      output: TestAudioOutput()
+    )
+    try renderer.configure(stream: YlAudioStreamConfiguration(
+      codec: .aac,
+      sampleRate: 48_000,
+      channelCount: 2,
+      magicCookie: Data([0x12, 0x10]),
+      generation: 1
+    ))
+    renderer.setRate(3)
+    let packet = YlCompressedAudioPacket(
+      data: Data([1]),
+      ptsUs: 0,
+      durationUs: 250_000,
+      generation: 1
+    )
+
+    for _ in 0..<6 {
+      XCTAssertEqual(try renderer.enqueue(packet: packet), .scheduled)
+    }
+    XCTAssertEqual(renderer.scheduledDurationUs, 1_500_000)
+    XCTAssertEqual(
+      try renderer.enqueue(packet: packet),
+      .wouldExceedDuration
+    )
+  }
+
+  func testFallbackAudioBufferKeepsOneSecondOfHeadroomAtThreeTimesSpeed() throws {
+    let renderer = YlAudioRenderer(
+      bufferBudget: YlFallbackBufferBudget(
+        networkBytes: 1_000,
+        scheduledAudioBytes: 100_000,
+        inFlightPacketBytes: 1_000
+      ),
+      converter: TestAudioConverter(),
+      output: TestAudioOutput()
+    )
+    try renderer.configure(stream: YlAudioStreamConfiguration(
+      codec: .aac,
+      sampleRate: 48_000,
+      channelCount: 2,
+      magicCookie: Data([0x12, 0x10]),
+      generation: 1
+    ))
+    renderer.setRate(3)
+    let packet = YlCompressedAudioPacket(
+      data: Data([1]),
+      ptsUs: 0,
+      durationUs: 250_000,
+      generation: 1
+    )
+
+    for _ in 0..<12 {
+      XCTAssertEqual(try renderer.enqueue(packet: packet), .scheduled)
+    }
+    XCTAssertEqual(renderer.scheduledDurationUs, 3_000_000)
+    XCTAssertEqual(
+      try renderer.enqueue(packet: packet),
+      .wouldExceedDuration
+    )
+  }
+
+  func testAudioRendererRestartsOutputAfterTheRunningQueueDrains() throws {
+    let output = TestAudioOutput()
+    let renderer = YlAudioRenderer(
+      maxScheduledDurationUs: 500_000,
+      maxScheduledBytes: 10_000,
+      converter: TestAudioConverter(),
+      output: output
+    )
+    try renderer.configure(stream: YlAudioStreamConfiguration(
+      codec: .aac,
+      sampleRate: 48_000,
+      channelCount: 2,
+      magicCookie: Data([0x12, 0x10]),
+      generation: 1
+    ))
+    let packet = YlCompressedAudioPacket(
+      data: Data([1]),
+      ptsUs: 0,
+      durationUs: 250_000,
+      generation: 1
+    )
+
+    XCTAssertEqual(try renderer.enqueue(packet: packet), .scheduled)
+    try renderer.play()
+    XCTAssertEqual(output.playCount, 1)
+
+    output.completeNextBuffer()
+    XCTAssertEqual(renderer.underrunCount, 1)
+    XCTAssertEqual(try renderer.enqueue(packet: packet), .scheduled)
+    XCTAssertEqual(output.playCount, 2)
   }
 
   func testBufferBudgetsStayWithinDocumentedCeilings() throws {
@@ -314,7 +756,7 @@ final class YlMacosFallbackTests: XCTestCase {
     }
   }
 
-  func testFrameSchedulerDropsLateFramesAndRejectsOldGeneration() {
+  func testFrameSchedulerPresentsOverdueFramesInOrderAndRejectsOldGeneration() {
     let scheduler = YlFrameScheduler()
     scheduler.enqueue(YlFrameEnvelope(
       payload: NSObject(),
@@ -331,10 +773,102 @@ final class YlMacosFallbackTests: XCTestCase {
       generation: 1
     ))
 
+    XCTAssertEqual(scheduler.frame(at: 15_000, generation: 1)?.ptsUs, 10_000)
     XCTAssertEqual(scheduler.frame(at: 25_000, generation: 1)?.ptsUs, 20_000)
-    XCTAssertEqual(scheduler.lateFrameDropCount, 1)
+    XCTAssertEqual(scheduler.lateFrameDropCount, 0)
     scheduler.flush(generation: 2)
     XCTAssertNil(scheduler.frame(at: 30_000, generation: 1))
+  }
+
+  func testFrameSchedulerPresentsTheNewestFrameDueOnEachDisplayTick() {
+    let scheduler = YlFrameScheduler()
+    for ptsUs in [10_000, 20_000, 30_000] {
+      XCTAssertTrue(scheduler.enqueue(YlFrameEnvelope(
+        payload: NSObject(),
+        ptsUs: Int64(ptsUs),
+        durationUs: 10_000,
+        keyframe: false,
+        generation: 1
+      )))
+    }
+
+    XCTAssertEqual(scheduler.frame(at: 35_000, generation: 1)?.ptsUs, 30_000)
+    XCTAssertEqual(scheduler.pendingPTS, [])
+    XCTAssertEqual(scheduler.lateFrameDropCount, 2)
+  }
+
+  func testFrameSchedulerRejectsAFrameOlderThanTheLastPresentedPTS() {
+    let scheduler = YlFrameScheduler()
+    XCTAssertTrue(scheduler.enqueue(YlFrameEnvelope(
+      payload: NSObject(),
+      ptsUs: 20_000,
+      durationUs: 10_000,
+      keyframe: false,
+      generation: 1
+    )))
+    XCTAssertEqual(scheduler.frame(at: 20_000, generation: 1)?.ptsUs, 20_000)
+
+    XCTAssertFalse(scheduler.enqueue(YlFrameEnvelope(
+      payload: NSObject(),
+      ptsUs: 10_000,
+      durationUs: 10_000,
+      keyframe: false,
+      generation: 1
+    )))
+    XCTAssertNil(scheduler.frame(at: 30_000, generation: 1))
+    XCTAssertEqual(scheduler.lateFrameDropCount, 1)
+  }
+
+  func testFrameSchedulerBackpressuresUntilPresentationFreesCapacity() {
+    let scheduler = YlFrameScheduler()
+    for ptsUs in [10_000, 20_000, 30_000] {
+      XCTAssertTrue(scheduler.enqueue(YlFrameEnvelope(
+        payload: NSObject(),
+        ptsUs: Int64(ptsUs),
+        durationUs: 10_000,
+        keyframe: false,
+        generation: 1
+      )))
+    }
+    let started = DispatchSemaphore(value: 0)
+    let completed = DispatchSemaphore(value: 0)
+    DispatchQueue.global().async {
+      started.signal()
+      _ = scheduler.enqueue(YlFrameEnvelope(
+        payload: NSObject(),
+        ptsUs: 40_000,
+        durationUs: 10_000,
+        keyframe: false,
+        generation: 1
+      ))
+      completed.signal()
+    }
+
+    XCTAssertEqual(started.wait(timeout: .now() + 1), .success)
+    XCTAssertEqual(completed.wait(timeout: .now() + 0.05), .timedOut)
+    XCTAssertEqual(scheduler.pendingPTS, [10_000, 20_000, 30_000])
+    XCTAssertEqual(scheduler.frame(at: 10_000, generation: 1)?.ptsUs, 10_000)
+    XCTAssertEqual(completed.wait(timeout: .now() + 1), .success)
+    XCTAssertEqual(scheduler.pendingPTS, [20_000, 30_000, 40_000])
+  }
+
+  func testPacketCallbackFailurePreservesTheNetworkCause() {
+    let networkError = NativePlayerError(
+      category: "network",
+      code: "network.retry_exhausted",
+      message: "Network media retries were exhausted.",
+      diagnostic: "networkConnectionLost"
+    )
+
+    let error = ylFallbackPacketReadError(
+      result: Int32(YLFResultCallbackFailed),
+      inputError: networkError,
+      container: .matroska
+    )
+
+    XCTAssertEqual(error.category, "network")
+    XCTAssertEqual(error.code, "network.retry_exhausted")
+    XCTAssertEqual(error.diagnostic, "networkConnectionLost")
   }
 
   func testAudioCatalogExposesAACAndMP3Selection() {
@@ -368,5 +902,18 @@ final class YlMacosFallbackTests: XCTestCase {
     XCTAssertEqual(envelope["protocolVersion"] as? Int, 1)
     XCTAssertEqual(envelope["generation"] as? UInt64, 42)
     XCTAssertEqual(envelope["type"] as? String, "stateDelta")
+  }
+}
+
+private final class YlDisplayTickProbe {
+  private let lock = NSLock()
+  private var count = 0
+
+  var tickCount: Int {
+    lock.withLock { count }
+  }
+
+  func tick() {
+    lock.withLock { count += 1 }
   }
 }

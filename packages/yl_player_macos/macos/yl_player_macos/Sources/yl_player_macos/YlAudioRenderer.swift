@@ -92,6 +92,7 @@ protocol YlAudioRendering: AnyObject {
 }
 
 final class YlAudioRenderer: YlAudioRendering {
+  private static let targetScheduledWallClockDurationUs: Int64 = 1_000_000
   private let lock = NSLock()
   private let maxScheduledDurationUs: Int64
   private let maxScheduledBytes: Int
@@ -105,6 +106,9 @@ final class YlAudioRenderer: YlAudioRendering {
   private var scheduledDuration = Int64(0)
   private var scheduledByteCount = 0
   private var underruns = 0
+  private var playbackRate: Float = 1
+  private var playbackRequested = false
+  private var waitingForAudio = false
 
   init(
     maxScheduledDurationUs: Int64 = 500_000,
@@ -126,7 +130,7 @@ final class YlAudioRenderer: YlAudioRendering {
     output: YlAudioOutputDriving = YlSystemAudioOutput()
   ) {
     self.init(
-      maxScheduledDurationUs: 500_000,
+      maxScheduledDurationUs: Self.targetScheduledWallClockDurationUs,
       maxScheduledBytes: bufferBudget.scheduledAudioBytes,
       converter: converter,
       output: output
@@ -224,9 +228,11 @@ final class YlAudioRenderer: YlAudioRendering {
       return exactCapacity
     }
     let token = completionGeneration
+    let shouldRestartOutput = playbackRequested && scheduledBufferCount == 0
     scheduledDuration += max(0, buffer.durationUs)
     scheduledByteCount += max(0, buffer.byteCount)
     scheduledBufferCount += 1
+    if shouldRestartOutput { waitingForAudio = false }
     lock.unlock()
 
     output.schedule(buffer) { [weak self] in
@@ -236,6 +242,7 @@ final class YlAudioRenderer: YlAudioRendering {
         completionGeneration: token
       )
     }
+    if shouldRestartOutput { try startOutput() }
     return .scheduled
   }
 
@@ -245,8 +252,16 @@ final class YlAudioRenderer: YlAudioRendering {
       lock.unlock()
       return
     }
-    if scheduledBufferCount == 0 { underruns += 1 }
+    playbackRequested = true
+    if scheduledBufferCount == 0, !waitingForAudio {
+      underruns += 1
+      waitingForAudio = true
+    }
     lock.unlock()
+    try startOutput()
+  }
+
+  private func startOutput() throws {
     do {
       try output.play()
     } catch {
@@ -260,6 +275,10 @@ final class YlAudioRenderer: YlAudioRendering {
   }
 
   func pause() {
+    lock.withLock {
+      playbackRequested = false
+      waitingForAudio = false
+    }
     output.pause()
   }
 
@@ -273,7 +292,9 @@ final class YlAudioRenderer: YlAudioRendering {
   }
 
   func setRate(_ rate: Float) {
-    output.rate = min(max(rate, 0.25), 4)
+    let clampedRate = min(max(rate, 0.25), 4)
+    lock.withLock { playbackRate = clampedRate }
+    output.rate = clampedRate
   }
 
   func flush() {
@@ -286,6 +307,7 @@ final class YlAudioRenderer: YlAudioRendering {
     scheduledDuration = 0
     scheduledByteCount = 0
     scheduledBufferCount = 0
+    waitingForAudio = playbackRequested
     lock.unlock()
     converter.reset()
     output.reset()
@@ -311,6 +333,8 @@ final class YlAudioRenderer: YlAudioRendering {
     scheduledDuration = 0
     scheduledByteCount = 0
     scheduledBufferCount = 0
+    playbackRequested = false
+    waitingForAudio = false
     lock.unlock()
     output.dispose()
   }
@@ -324,7 +348,10 @@ final class YlAudioRenderer: YlAudioRendering {
       return .wouldExceedBytes
     }
     let nextDuration = scheduledDuration.addingReportingOverflow(max(0, durationUs))
-    if nextDuration.overflow || nextDuration.partialValue > maxScheduledDurationUs {
+    let rateAdjustedDurationLimit = Int64(
+      (Double(maxScheduledDurationUs) * Double(playbackRate)).rounded(.up)
+    )
+    if nextDuration.overflow || nextDuration.partialValue > rateAdjustedDurationLimit {
       return .wouldExceedDuration
     }
     return .scheduled
@@ -357,6 +384,10 @@ final class YlAudioRenderer: YlAudioRendering {
     scheduledDuration = max(0, scheduledDuration - max(0, durationUs))
     scheduledByteCount = max(0, scheduledByteCount - max(0, byteCount))
     scheduledBufferCount = max(0, scheduledBufferCount - 1)
+    if scheduledBufferCount == 0, playbackRequested, !waitingForAudio {
+      underruns += 1
+      waitingForAudio = true
+    }
     lock.unlock()
   }
 
@@ -576,6 +607,8 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
   init() {
     engine.attach(player)
     engine.attach(timePitch)
+    timePitch.pitch = 0
+    timePitch.overlap = 8
   }
 
   var volume: Float {
@@ -590,7 +623,8 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
 
   var renderedAudioTime: YlRenderedAudioTime? {
     guard let nodeTime = player.lastRenderTime,
-          let playerTime = player.playerTime(forNodeTime: nodeTime) else {
+          let playerTime = player.playerTime(forNodeTime: nodeTime),
+          playerTime.sampleRate > 0 else {
       return nil
     }
     return YlRenderedAudioTime(

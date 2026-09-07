@@ -33,9 +33,7 @@ final class YlMediaClock {
       return
     }
     hostAnchorUs = hostTimeUs
-    if let rendered = renderedAudioTime {
-      audioSampleAnchor = rendered.sampleTime
-    }
+    audioSampleAnchor = renderedAudioTime?.sampleTime
     playing = true
     lock.unlock()
   }
@@ -52,9 +50,7 @@ final class YlMediaClock {
       renderedAudioTime: renderedAudioTime
     )
     hostAnchorUs = hostTimeUs
-    if let rendered = renderedAudioTime {
-      audioSampleAnchor = rendered.sampleTime
-    }
+    audioSampleAnchor = renderedAudioTime?.sampleTime
     playing = false
     lock.unlock()
   }
@@ -75,9 +71,7 @@ final class YlMediaClock {
     )
     mediaAnchorUs = position
     hostAnchorUs = hostTimeUs
-    if let rendered = renderedAudioTime {
-      audioSampleAnchor = rendered.sampleTime
-    }
+    audioSampleAnchor = renderedAudioTime?.sampleTime
     rate = min(max(value, 0.25), 4)
     lock.unlock()
   }
@@ -97,13 +91,23 @@ final class YlMediaClock {
     renderedAudioTime: YlRenderedAudioTime?
   ) -> Int64 {
     guard playing else { return mediaAnchorUs }
-    if let audioSampleAnchor,
-       let rendered = renderedAudioTime,
-       rendered.sampleRate > 0 {
-      let elapsedSamples = max(0, rendered.sampleTime - audioSampleAnchor)
-      let elapsedUs = Double(elapsedSamples) * 1_000_000 / rendered.sampleRate
-      return mediaAnchorUs + Int64(elapsedUs.rounded(.towardZero))
+    if let rendered = renderedAudioTime, rendered.sampleRate > 0 {
+      if let audioSampleAnchor {
+        let elapsedSamples = max(0, rendered.sampleTime - audioSampleAnchor)
+        let elapsedUs = Double(elapsedSamples) * 1_000_000
+          / rendered.sampleRate
+        return mediaAnchorUs + Int64(elapsedUs.rounded(.towardZero))
+      }
+      let recoveredPosition = hostPosition(atHostTimeUs: hostTimeUs)
+      mediaAnchorUs = recoveredPosition
+      hostAnchorUs = hostTimeUs
+      audioSampleAnchor = rendered.sampleTime
+      return recoveredPosition
     }
+    return hostPosition(atHostTimeUs: hostTimeUs)
+  }
+
+  private func hostPosition(atHostTimeUs hostTimeUs: Int64) -> Int64 {
     let elapsedHostUs = max(0, hostTimeUs - hostAnchorUs)
     return mediaAnchorUs + Int64((Double(elapsedHostUs) * rate).rounded(.towardZero))
   }
