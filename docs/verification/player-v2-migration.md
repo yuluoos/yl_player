@@ -90,3 +90,32 @@ claim is implied by the Dart checks above.
 
 Environment preflight found a booted iPhone 17 on the iOS 26.5 Simulator runtime
 and Android SDK API 36. Availability is not a passing native test result.
+
+## Native baseline in the migration worktree
+
+These checks ran before native v2 changes, to establish a reproducible starting
+point for the native migration. They are not final v2 platform acceptance.
+
+| Command | Result |
+| --- | --- |
+| Android example: `./gradlew testDebugUnitTest --stacktrace` | Passed; XML reports 69 tests, zero failures/errors/skips. |
+| `sh tool/check_native_macos.sh --unit-only` | Passed; XCTest result bundle reports 71 passed, zero failed/skipped. |
+| `sh tool/check_native_ios.sh` | Passed; XCTest reports 199 passed, zero failed, two skipped; five integration suites pass with 9 cases. |
+
+The fresh worktree needed ignored Gradle wrapper script/JAR files, copied from
+the original checkout. No Gradle version, native source or tracked build setting
+was changed. Existing AGP/Kotlin, CocoaPods and Swift compiler advisory output
+remains recorded in the command logs.
+
+The two iOS XCTest skips are
+`YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF`
+and `YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable`:
+the Simulator runtime does not expose hardware H.264 decoding. MKV/FLV integration
+cases explicitly accept `decoder.video_hardware_unavailable`; those passing
+results do not prove fallback playback or throughput on physical iOS hardware.
+
+Logs are `/private/tmp/yl-player-v2-android-baseline.log`,
+`/private/tmp/yl-player-v2-macos-baseline.log` and
+`/private/tmp/yl-player-v2-ios-baseline.log`. Exact native test counts were read
+from Gradle XML and XCTest result bundles, rather than inferred from truncated
+quiet-build text output.
