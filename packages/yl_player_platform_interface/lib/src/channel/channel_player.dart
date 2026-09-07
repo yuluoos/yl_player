@@ -142,6 +142,11 @@ final class YlChannelPlayer implements YlPlatformPlayer {
       case 'firstFrame':
       case 'tracksChanged':
         _emitDecodedEvent(envelope);
+      case 'fallbackActivated':
+        // Native fallback activation is followed by an authoritative state
+        // snapshot whose engine is nativeFallback. This marker is informational
+        // and is not part of the public YlPlayerEvent wire contract.
+        return;
       case 'error':
       case 'retry':
       case 'fallback':

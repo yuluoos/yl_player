@@ -158,6 +158,34 @@ void main() {
     await player.dispose();
   });
 
+  test(
+    'native fallback activation marker does not terminate the channel',
+    () async {
+      final player = createPlayer();
+      final states = <YlPlayerState>[];
+      final events = <YlPlayerEvent>[];
+      final stateSubscription = player.states.listen(states.add);
+      final eventSubscription = player.events.listen(events.add);
+      nativeEvents.add(_stateEnvelope(generation: 8));
+      states.clear();
+
+      nativeEvents.add(<String, Object?>{
+        'playerId': 7,
+        'type': 'fallbackActivated',
+        'engine': 'nativeFallback',
+      });
+
+      expect(player.state.status, YlPlaybackStatus.playing);
+      expect(player.state.error, isNull);
+      expect(states, isEmpty);
+      expect(events, isEmpty);
+
+      await stateSubscription.cancel();
+      await eventSubscription.cancel();
+      await player.dispose();
+    },
+  );
+
   test('stream error reports one terminal channel error', () async {
     final player = createPlayer();
     final states = <YlPlayerState>[];
