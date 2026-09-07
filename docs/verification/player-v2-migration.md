@@ -26,7 +26,7 @@ The baseline includes the original channel/macOS changes in `1b239e0` and
 | 2 — sources and policies | Complete, independently reviewed | `b12d727`; additive internal models and validation. |
 | 3 — state and events | Complete, independently reviewed | `e561f41`; 17 focused tests and 94 platform-interface tests passed. |
 | 4 — SPI and conformance | Complete, independently reviewed | `cca816c` plus `477b2b0`; 36 focused tests and analysis pass after fixes. |
-| 5 — native Stop | In progress | Native cancellation, reset and texture-identity checks required. |
+| 5 — native Stop | Complete, independently reviewed | `6fb48ad` plus `807669e`; real resource/clock race regressions and native gates pass. |
 | 6–8 — atomic API cutover | Pending | Adapter, controller, view, registrations, examples and tests must pass together. |
 | 9 — phase acceptance | Pending | Full foundation and native gates have not been run against the completed v2 phase. |
 
@@ -162,3 +162,47 @@ managed native routes must separately prove their known strict-success cases.
 Secrecy checks use distinctive metadata canaries of at least 16 characters plus
 unsafe-shape checks; they are finite fixture evidence, not universal data-flow
 proof. Native transport ordering and controller milestone tests remain required.
+
+## Task 5 validation
+
+`6fb48ad` implements native Stop with cancellation and generation guards, idle
+reset, preserved player/texture identity and fresh reload. iOS fresh-open audio
+reactivation is tested separately from inert lifecycle activation after Stop.
+
+Initial implementation gates: Android 70 JVM tests; macOS 75 XCTest tests; iOS 203 XCTest passes,
+zero failures and two existing hardware skips, plus nine integration cases
+(2 HLS, 2 local MKV, 3 network MKV, 1 HTTP-FLV, 1 authenticated HLS). Android JVM
+evidence does not prove device playback. Simulator fallback limitations recorded
+in the baseline still apply.
+
+An unchanged macOS display-timer assertion failed on an earlier run and passed
+two subsequent combined serial runs; it was not weakened. Earlier overlapping
+Apple builds also encountered dependency/install errors, including a missing
+Runner.app. Shared build contention is a hypothesis rather than a confirmed root
+cause. Final Apple scripts ran serially and exited successfully. Final result
+summaries are `/private/tmp/yl-player-v2-stop-macos-final-summary.json` and
+`/private/tmp/yl-player-v2-stop-ios-final-summary.json`.
+
+Independent Task 5 review identified two gaps despite the passing gates:
+Stop could race with an already-running fallback seek and allow late decoder/
+clock mutation, and AV seek after Stop could repopulate idle position.
+`807669e` reproduces both problems, including a real clock advancing after Stop,
+then serializes resource commits with teardown and validates generation/token
+inside executing main-thread clock closures. Late decoder candidates are disposed.
+Stopped AV source commands leave idle unchanged.
+
+The deterministic construction barrier covers both generation invalidation alone
+and explicit command cancellation. The worker queue can be drained by main-thread
+Stop without a new synchronous worker-to-main dependency; clock/restart/event
+main closures are invoked outside worker serialization. External synchronous
+VideoToolbox construction cannot be preempted, but its late result cannot commit.
+
+Fix-round gates ran serially: `sh tool/check_native_macos.sh --unit-only` passed
+77 XCTest cases; `sh tool/check_native_ios.sh` passed 205 XCTest cases, with zero
+failures and the same two hardware skips, plus all nine integration cases. Both
+scripts exited zero. Result summaries are
+`/private/tmp/yl-player-stop-r1-macos-final-summary.json` and
+`/private/tmp/yl-player-stop-r1-ios-final-summary.json`. Android source did not
+change in this round, so its passing 70-test gate was not repeated. Scoped
+independent re-review approved both fixes and the queue ordering, with no new
+Important/Critical findings. Root `flutter analyze` also passed after the fix.
