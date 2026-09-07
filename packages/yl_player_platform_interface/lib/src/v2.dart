@@ -1,3 +1,10 @@
 export 'diagnostics/safe_diagnostics.dart';
 export 'model/failure.dart';
 export 'model/identifiers.dart';
+export 'options/load_options.dart';
+export 'options/player_options.dart';
+export 'options/policies.dart';
+export 'options/video_constraints.dart';
+export 'source/http_request.dart';
+export 'source/media_source.dart';
+export 'validation/v2_validation.dart';
