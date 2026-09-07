@@ -266,6 +266,21 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
     arguments: [String: Any?],
     completion: @escaping (Result<Void, NativePlayerError>) -> Void
   ) {
+    if name == "stop" {
+      commandCoordinator.cancelCurrent()
+      openCoordinator.cancelCurrent()
+      restorationGeneration &+= 1
+      activeRestorationGeneration = nil
+      hardwareRollbackPlaybackIntent = nil
+      cancelDeferredRestorationCommands()
+      lastCommittedSource = nil
+      // The persistent AV backend may hold an older source while fallback is current.
+      if slot.current !== avBackend { avBackend.clearMediaForStop() }
+      slot.stop()
+      completion(.success(()))
+      return
+    }
+
     if activeRestorationGeneration != nil,
        YlRestorationCommandPolicy.defersUntilRestored(name) {
       deferredRestorationCommands.append(DeferredRestorationCommand(

@@ -107,6 +107,7 @@ public final class YlPlayerIosPlugin: NSObject, FlutterPlugin, FlutterStreamHand
     }
     let commandName = root["name"] as? String ?? ""
     let commandArguments = stringMap(root["arguments"])
+    if commandName == "stop" { suspendedPlayerIds.remove(playerId) }
     if commandName == "open" {
       player.beginOpen(
         stringMap(commandArguments["source"]),

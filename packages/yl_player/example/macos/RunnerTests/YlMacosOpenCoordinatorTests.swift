@@ -21,11 +21,27 @@ final class YlMacosOpenCoordinatorTests: XCTestCase {
     }
 
     func quiesceForReplacement() { isActive = false }
+    private(set) var stopCount = 0
+    func stop() { stopCount += 1 }
     func deactivate() { isActive = false }
     func command(name: String, arguments: [String: Any?]) throws {}
     func emitState() {}
     func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? { nil }
     func dispose() { disposed = true; isActive = false }
+  }
+
+  func testSlotStopInvalidatesGenerationAndRemainsReplaceable() throws {
+    let original = BackendSpy(active: true)
+    let slot = YlBackendSlot(initial: original)
+    let generation = slot.generation
+    slot.stop()
+    XCTAssertFalse(slot.accepts(generation: generation))
+    XCTAssertTrue(slot.current === original)
+    XCTAssertEqual(original.stopCount, 1)
+    XCTAssertFalse(original.disposed)
+    let replacement = BackendSpy(active: true)
+    _ = try slot.replace { replacement }
+    XCTAssertTrue(slot.current === replacement)
   }
 
   func testBackendSlotQuiescesBeforePreparingAndRollsBackOnFailure() {

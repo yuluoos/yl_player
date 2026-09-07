@@ -6,6 +6,7 @@ protocol YlPlaybackBackend: AnyObject {
   var requiresExternalRollbackActivation: Bool { get }
   func activate() throws
   func quiesceForReplacement()
+  func stop()
   func deactivate()
   func command(name: String, arguments: [String: Any?]) throws
   func emitState()
@@ -75,6 +76,13 @@ final class YlBackendSlot {
 
   func accepts(generation: UInt64) -> Bool {
     !disposed && self.generation == generation
+  }
+
+  func stop() {
+    guard !disposed else { return }
+    generation &+= 1
+    rollbackRequiresExternalActivation = false
+    current.stop()
   }
 
   func dispose() {

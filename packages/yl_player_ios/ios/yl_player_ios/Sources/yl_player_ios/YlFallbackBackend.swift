@@ -123,13 +123,15 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private var currentPixelBuffer: CVPixelBuffer?
   private var active = false
   private var playing = false
+  private var stopped = false
+  private var resetting = false
   private var disposed = false
   private var pumping = false
   private var reconfiguring = false
   private var reconnectWorkItem: DispatchWorkItem?
   private var awaitingReconnectFirstFrame = false
   private var generation: UInt64
-  private let channelGeneration = YlIosChannelGeneration.next()
+  private var channelGeneration = YlIosChannelGeneration.next()
   private var audioGeneration: UInt64
   private var selectedAudioStream: YLFStreamInfo?
   private var desiredVolume: Float = 1
@@ -228,7 +230,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
 
   func activate() throws {
     stateLock.lock()
-    guard !disposed, !active else {
+    guard !disposed, !stopped, !active else {
       stateLock.unlock()
       return
     }
@@ -276,12 +278,22 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   }
 
   func deactivate() {
+    releaseMediaForStopOrDeactivation(stopping: false)
+  }
+
+  func stop() {
+    releaseMediaForStopOrDeactivation(stopping: true)
+  }
+
+  private func releaseMediaForStopOrDeactivation(stopping: Bool) {
     stateLock.lock()
-    guard !disposed, active else {
+    guard !disposed, stopping || active else {
       stateLock.unlock()
       return
     }
     savedPositionUs = mediaClock.position(atHostTimeUs: Self.hostTimeUs())
+    resetting = stopping
+    if stopping { stopped = true; playing = false }
     active = false
     reconfiguring = true
     generation &+= 1
@@ -294,6 +306,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     let tokenToCancel = sourceCancellationToken
     sourceCancellationToken = nil
     stateLock.unlock()
+    if stopping { liveReconnectController.cancel() }
     reconnectToCancel?.cancel()
     displayLink?.invalidate()
     displayLink = nil
@@ -326,8 +339,23 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       reconfiguring = false
     }
     postSeekGate.reset(targetUs: nil)
+    if stopping {
+      channelGeneration = YlIosChannelGeneration.next()
+      savedPositionUs = 0
+      openDurationMs = nil
+      firstFrameDurationMs = nil
+      firstFrameSent = false
+      reconnectCount = 0
+      awaitingReconnectFirstFrame = false
+      currentError = nil
+      selectedAudioStream = nil
+      audioStreams.removeAll()
+      audioCookies.removeAll()
+      isSeekable = false
+    }
     mediaClock.seek(to: savedPositionUs)
-    status = "paused"
+    status = stopping ? "idle" : "paused"
+    resetting = false
     emitState()
   }
 
@@ -401,7 +429,11 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     arguments: [String: Any?],
     cancellationToken: YlOpenCancellationToken?
   ) throws {
+    if stateLock.withLock({ stopped }),
+       !["setVolume", "setPlaybackSpeed", "stop"].contains(name) { return }
     switch name {
+    case "stop":
+      stop()
     case "open":
       emitState()
     case "play":
@@ -483,7 +515,26 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   }
 
   func emitState() {
-    guard !stateLock.withLock({ disposed }) else { return }
+    guard !stateLock.withLock({ disposed || resetting }) else { return }
+    if stateLock.withLock({ stopped }) {
+      emit(YlIosChannel.fullState(
+        playerId: playerId, generation: channelGeneration,
+        state: [
+          "status": "idle", "positionMs": Int64(0), "durationMs": nil,
+          "bufferedPositionMs": Int64(0), "isLive": false, "isSeekable": false,
+          "isAtLiveEdge": false, "liveOffsetMs": nil, "dvrStartMs": nil, "dvrEndMs": nil,
+          "videoWidth": nil, "videoHeight": nil, "engine": "nativeFallback",
+          "isHardwareDecoding": false, "decoderName": nil,
+          "audioTracks": [], "videoTracks": [], "error": nil,
+          "capabilities": YlIosChannel.deviceCapabilities,
+          "metrics": YlIosChannel.fallbackMetrics(
+            openDurationMs: nil, firstFrameDurationMs: nil, bufferedDurationMs: 0,
+            bufferedBytes: 0, droppedVideoFrames: 0, audioUnderruns: 0, reconnectCount: 0
+          ),
+        ]
+      ))
+      return
+    }
     let positionUs = mediaClock.position(atHostTimeUs: Self.hostTimeUs())
     let durationMs = mediaPolicy.durationMs(mediaDurationUs: mediaInfo.duration_us)
     let scheduledAudioDurationUs = audioRenderer?.scheduledDurationUs ?? 0
@@ -527,7 +578,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   }
 
   private func emitStateDelta() {
-    guard !stateLock.withLock({ disposed }) else { return }
+    guard !stateLock.withLock({ disposed || stopped || resetting }) else { return }
     let positionUs = mediaClock.position(atHostTimeUs: Self.hostTimeUs())
     let scheduledAudioDurationUs = audioRenderer?.scheduledDurationUs ?? 0
     let scheduledAudioBytes = audioRenderer?.scheduledBytes ?? 0
@@ -625,7 +676,10 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     }
     if completedReconnect {
       liveReconnectController.markFirstFrame()
-      DispatchQueue.main.async { [weak self] in self?.emitState() }
+      DispatchQueue.main.async { [weak self] in
+        guard let self, self.stateLock.withLock({ self.active && self.generation == frame.generation }) else { return }
+        self.emitState()
+      }
     }
     DispatchQueue.main.async { [weak self] in
       guard let self, !self.firstFrameSent,
@@ -1596,7 +1650,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   }
 
   private func setFailure(_ error: NativePlayerError) {
-    guard !stateLock.withLock({ disposed }) else { return }
+    guard !stateLock.withLock({ disposed || stopped || resetting }) else { return }
     status = "error"
     let details = errorMap(
       category: error.category,

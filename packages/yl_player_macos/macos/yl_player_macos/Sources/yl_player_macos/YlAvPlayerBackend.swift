@@ -125,6 +125,8 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   private var videoTracks: [[String: Any?]] = []
   private var sourceIsLive = false
   private var status = "idle"
+  private var stopped = false
+  private var resetting = false
   private var disposed = false
   private var firstFrameSent = false
   private var playRequested = false
@@ -179,7 +181,12 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     player.automaticallyWaitsToMinimizeStalling = configuration.bufferMode != "lowLatency"
     timeControlObservation = player.observe(\.timeControlStatus, options: [.new]) {
       [weak self] _, _ in
-      DispatchQueue.main.async { self?.handleTimeControlChange() }
+      guard let self else { return }
+      let generation = self.itemGeneration
+      DispatchQueue.main.async { [weak self] in
+        guard let self, self.itemGeneration == generation, !self.stopped else { return }
+        self.handleTimeControlChange()
+      }
     }
     periodicObserver = player.addPeriodicTimeObserver(
       forInterval: CMTime(
@@ -204,9 +211,12 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
       )
     }
     switch name {
+    case "stop":
+      stop()
     case "open":
       try open(stringMap(arguments["source"]))
     case "play":
+      guard !stopped else { return }
       playRequested = true
       player.playImmediately(atRate: desiredRate)
       status = YlAvPlayerStatePolicy.status(
@@ -311,7 +321,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   }
 
   func activate() throws {
-    guard !disposed, !active else { return }
+    guard !disposed, !active, !stopped || stagedHls != nil else { return }
     active = true
     if stagedHls != nil {
       try installStagedHls()
@@ -324,6 +334,47 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     try installItem(source, positionMs: savedPositionMs)
     status = "opening"
     emitState()
+  }
+
+  func stop() {
+    clearMediaForStop()
+    emitState()
+  }
+
+  // Used by the slot owner to clear an inactive AV source without a second event.
+  func clearMediaForStop() {
+    guard !disposed else { return }
+    resetting = true
+    stopped = true
+    active = false
+    playRequested = false
+    stallWatchdog.cancel()
+    player.currentItem?.cancelPendingSeeks()
+    player.currentItem?.asset.cancelLoading()
+    removeCurrentItem()
+    player.pause()
+    stagedHls?.prepared.discard()
+    stagedHls = nil
+    lastSource = nil
+    channelGeneration = YlMacosChannelGeneration.next()
+    savedPositionMs = 0
+    resumeAtLiveEdge = false
+    sourceIsLive = false
+    selectedAudioTrackId = nil
+    audioOptions.removeAll()
+    audioTracks.removeAll()
+    videoTracks.removeAll()
+    firstFrameSent = false
+    hasBeenReady = false
+    openStartedAt = nil
+    openDurationMs = nil
+    firstFrameDurationMs = nil
+    bufferingStartedAt = nil
+    rebufferCount = 0
+    rebufferDurationMs = 0
+    currentError = nil
+    status = "idle"
+    resetting = false
   }
 
   func deactivate() {
@@ -374,6 +425,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   }
 
   private func resetOpenState(_ source: [String: Any?], resume: Bool) {
+    stopped = false
     stallWatchdog.cancel()
     removeCurrentItem()
     lastSource = source
@@ -742,7 +794,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   }
 
   private func emitState(error: [String: Any?]?) {
-    guard !disposed else { return }
+    guard !disposed, !resetting else { return }
     let item = player.currentItem
     let positionMs = active ? (milliseconds(player.currentTime()) ?? savedPositionMs) : savedPositionMs
     let durationMs = milliseconds(item?.duration)
@@ -790,7 +842,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   }
 
   private func emitStateDelta() {
-    guard !disposed else { return }
+    guard !disposed, !stopped, !resetting else { return }
     let item = player.currentItem
     let positionMs = active ? (milliseconds(player.currentTime()) ?? savedPositionMs) : savedPositionMs
     let loadedEndMs = item?.loadedTimeRanges.last

@@ -4,6 +4,145 @@ import XCTest
 @testable import yl_player_macos
 
 class RunnerTests: XCTestCase {
+  private final class StopTextureRegistry: NSObject, FlutterTextureRegistry {
+    var unregistered = [Int64]()
+    func register(_ texture: FlutterTexture) -> Int64 { 71 }
+    func textureFrameAvailable(_ textureId: Int64) {}
+    func unregisterTexture(_ textureId: Int64) { unregistered.append(textureId) }
+  }
+
+  func testStopOfFallbackSlotClearsStaticMetadataAndCannotReactivate() throws {
+    for startsActive in [false, true] {
+      let fixture = URL(fileURLWithPath: #filePath)
+        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        .appendingPathComponent("assets/test_media/h264_aac.mkv")
+      let prepared = try YlPreparedFallback(source: [
+        "uri": fixture.absoluteString, "kind": "file", "formatHint": "matroska",
+      ], requireHardwareProbe: false)
+      let textures = StopTextureRegistry()
+      var events = [[String: Any?]]()
+      let backend = try YlFallbackBackend(
+        playerId: 9, textureId: 71, textures: textures,
+        configuration: PlayerConfiguration(map: [:]), prepared: prepared,
+        generation: 1, emit: { events.append($0) }
+      )
+      let slot = YlBackendSlot(initial: backend)
+      defer { slot.dispose() }
+      if startsActive { try backend.activate() }
+      backend.emitState()
+      let previousGeneration = try XCTUnwrap(events.last?["generation"] as? UInt64)
+      events.removeAll()
+      slot.stop()
+      XCTAssertEqual(events.count, 1)
+      let state = try XCTUnwrap(events.last?["state"] as? [String: Any?])
+      XCTAssertGreaterThan(try XCTUnwrap(events.last?["generation"] as? UInt64), previousGeneration)
+      XCTAssertEqual(state["status"] as? String, "idle")
+      XCTAssertNil(state["videoWidth"] as? Int)
+      XCTAssertNil(state["durationMs"] as? Int64)
+      XCTAssertEqual((state["audioTracks"] as? [Any])?.count, 0)
+      XCTAssertEqual((state["videoTracks"] as? [Any])?.count, 0)
+      XCTAssertEqual(state["isHardwareDecoding"] as? Bool, false)
+      XCTAssertNil(backend.copyPixelBuffer())
+      XCTAssertEqual(backend.textureId, 71)
+      try backend.activate()
+      XCTAssertFalse(backend.isActive)
+      XCTAssertEqual(events.count, 1, "Activation must not reopen stopped fallback media")
+      XCTAssertTrue(textures.unregistered.isEmpty)
+    }
+  }
+
+  func testStopClearsRetainedAVSourceAndFencesQueuedCallbacks() throws {
+    let textures = StopTextureRegistry()
+    var events = [[String: Any?]]()
+    let backend = YlAvPlayerBackend(
+      playerId: 8, textures: textures, configuration: PlayerConfiguration(map: [:]),
+      emit: { events.append($0) }
+    )
+    backend.textureId = 71
+    defer { backend.dispose() }
+    try backend.command(name: "open", arguments: ["source": [
+      "uri": "https://example.test/live.m3u8", "kind": "network", "isLive": true,
+    ]])
+    let oldGeneration = try XCTUnwrap(events.last?["generation"] as? UInt64)
+    backend.deactivate()
+    try backend.command(name: "seekTo", arguments: ["positionMs": 12345])
+    events.removeAll()
+    backend.stop()
+    XCTAssertEqual(events.count, 1)
+    XCTAssertGreaterThan(try XCTUnwrap(events.last?["generation"] as? UInt64), oldGeneration)
+    let state = try XCTUnwrap(events.last?["state"] as? [String: Any?])
+    XCTAssertEqual(state["status"] as? String, "idle")
+    XCTAssertEqual(state["positionMs"] as? Int64, 0)
+    XCTAssertEqual(state["isLive"] as? Bool, false)
+    XCTAssertNil(state["videoWidth"] as? Int)
+    XCTAssertNil(state["durationMs"] as? Int64)
+    XCTAssertEqual((state["videoTracks"] as? [Any])?.count, 0)
+    XCTAssertNil((state["metrics"] as? [String: Any?])?["openDurationMs"] as? Int64)
+    try backend.activate()
+    try backend.command(name: "play", arguments: [:])
+    let drained = expectation(description: "queued AV callbacks drained")
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { drained.fulfill() }
+    wait(for: [drained], timeout: 2)
+    XCTAssertEqual(events.count, 1, "Stop must publish one idle state and reject queued callbacks")
+    XCTAssertNil(backend.copyPixelBuffer())
+    XCTAssertTrue(textures.unregistered.isEmpty)
+    events.removeAll()
+    backend.clearMediaForStop()
+    XCTAssertTrue(events.isEmpty, "Clearing the inactive AV backend must be silent")
+    XCTAssertEqual(backend.textureId, 71)
+  }
+
+  func testStopCancelsPendingOpenRetainsTextureAndAllowsFreshOpen() throws {
+    let textures = StopTextureRegistry()
+    var events = [[String: Any?]]()
+    let player = YlMacosPlayer(
+      playerId: 7, textures: textures,
+      configuration: PlayerConfiguration(map: [:]), emit: { events.append($0) }
+    )
+    player.textureId = 71
+    defer { player.dispose() }
+    let cancelled = expectation(description: "pending open cancelled")
+    player.beginOpen(
+      ["uri": "https://example.test/video.mp4", "kind": "network", "formatHint": "mp4"],
+      willCommit: { _ in XCTFail("stopped open committed") }, didCommit: {}, didRollback: {},
+      completion: { result in
+        guard case .failure = result else { return XCTFail("open was not cancelled") }
+        cancelled.fulfill()
+      }
+    )
+    events.removeAll()
+    var stopped = false
+    player.beginCommand(name: "stop", arguments: [:]) { result in
+      if case .success = result { stopped = true }
+    }
+    XCTAssertTrue(stopped)
+    XCTAssertEqual(events.count, 1)
+    let state = try XCTUnwrap(events.last?["state"] as? [String: Any?])
+    XCTAssertEqual(state["status"] as? String, "idle")
+    XCTAssertEqual(state["positionMs"] as? Int64, 0)
+    XCTAssertEqual((state["audioTracks"] as? [Any])?.count, 0)
+    XCTAssertNil(state["error"] as? [String: Any?])
+    XCTAssertNil(player.copyPixelBuffer())
+    XCTAssertEqual(player.textureId, 71)
+    XCTAssertTrue(textures.unregistered.isEmpty)
+    wait(for: [cancelled], timeout: 3)
+    try player.activate()
+    player.emitState()
+    XCTAssertEqual((events.last?["state"] as? [String: Any?])?["status"] as? String, "idle")
+    let opened = expectation(description: "fresh open")
+    player.beginOpen(
+      ["uri": "https://example.test/fresh.mp4", "kind": "network", "formatHint": "mp4"],
+      willCommit: { _ in }, didCommit: {}, didRollback: {},
+      completion: { result in
+        if case .failure(let error) = result { XCTFail("fresh open failed: \(error)") }
+        opened.fulfill()
+      }
+    )
+    wait(for: [opened], timeout: 3)
+    XCTAssertEqual(player.textureId, 71)
+    XCTAssertTrue(textures.unregistered.isEmpty)
+  }
+
 
   func testConfigurationDefaultsToHardwareOnly() {
     let configuration = PlayerConfiguration(map: [:])

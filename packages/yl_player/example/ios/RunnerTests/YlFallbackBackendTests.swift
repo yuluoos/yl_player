@@ -82,6 +82,8 @@ final class YlFallbackBackendTests: XCTestCase {
       activateCount += 1
       if let activationError { throw activationError }
     }
+    private(set) var stopCount = 0
+    func stop() { stopCount += 1 }
     func deactivate() { deactivateCount += 1 }
     func command(name: String, arguments: [String: Any?]) throws {}
     func emitState() {}
@@ -112,7 +114,23 @@ final class YlFallbackBackendTests: XCTestCase {
     func command(name: String, arguments: [String: Any?]) throws {}
     func emitState() {}
     func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? { nil }
+    func stop() { active = false }
     func dispose() { permanentlyClosed = true }
+  }
+
+  func testSlotStopInvalidatesGenerationAndRemainsReplaceable() throws {
+    let original = FakeBackend()
+    let slot = YlBackendSlot(initial: original)
+    let generation = slot.generation
+    slot.stop()
+    XCTAssertFalse(slot.accepts(generation: generation))
+    XCTAssertTrue(slot.current === original)
+    XCTAssertEqual(original.stopCount, 1)
+    XCTAssertEqual(original.deactivateCount, 0)
+    XCTAssertEqual(original.disposeCount, 0)
+    let replacement = FakeBackend()
+    _ = try slot.replace { replacement }
+    XCTAssertTrue(slot.current === replacement)
   }
 
   func testPreparationFailurePreservesCurrentBackend() throws {

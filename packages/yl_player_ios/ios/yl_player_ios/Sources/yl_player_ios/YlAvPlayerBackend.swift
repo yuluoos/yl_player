@@ -93,6 +93,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   private let textures: FlutterTextureRegistry
   private let configuration: PlayerConfiguration
   private let emit: ([String: Any?]) -> Void
+  private let activateAudioSession: () throws -> Void
   private let errorLogCollector = YlAvPlayerErrorLogCollector()
   private let player = AVPlayer()
   private let videoOutput = AVPlayerItemVideoOutput(
@@ -112,6 +113,8 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   private var videoTracks: [[String: Any?]] = []
   private var sourceIsLive = false
   private var status = "idle"
+  private var stopped = false
+  private var resetting = false
   private var disposed = false
   private var firstFrameSent = false
   private var playRequested = false
@@ -143,12 +146,18 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     playerId: Int64,
     textures: FlutterTextureRegistry,
     configuration: PlayerConfiguration,
+    activateAudioSession: (() throws -> Void)? = nil,
     emit: @escaping ([String: Any?]) -> Void
   ) {
     self.playerId = playerId
     self.textures = textures
     self.configuration = configuration
     self.emit = emit
+    self.activateAudioSession = activateAudioSession ?? {
+      let session = AVAudioSession.sharedInstance()
+      try session.setCategory(.playback, mode: .moviePlayback)
+      try session.setActive(true)
+    }
     self.liveReconnectController = YlLiveReconnectController(
       configuration: configuration.network
     )
@@ -157,7 +166,12 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     player.automaticallyWaitsToMinimizeStalling = configuration.bufferMode != "lowLatency"
     timeControlObservation = player.observe(\.timeControlStatus, options: [.new]) {
       [weak self] _, _ in
-      DispatchQueue.main.async { self?.handleTimeControlChange() }
+      guard let self else { return }
+      let generation = self.itemGeneration
+      DispatchQueue.main.async { [weak self] in
+        guard let self, self.itemGeneration == generation, !self.stopped else { return }
+        self.handleTimeControlChange()
+      }
     }
     periodicObserver = player.addPeriodicTimeObserver(
       forInterval: CMTime(
@@ -192,9 +206,12 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
       )
     }
     switch name {
+    case "stop":
+      stop()
     case "open":
       try open(stringMap(arguments["source"]))
     case "play":
+      guard !stopped else { return }
       playRequested = true
       player.playImmediately(atRate: desiredRate)
       status = player.timeControlStatus == .playing ? "playing" : "buffering"
@@ -293,12 +310,9 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     try installStagedHls()
   }
 
-  func activate() throws {
-    guard !disposed, !active else { return }
+  private func configureAudioSession() throws {
     do {
-      let session = AVAudioSession.sharedInstance()
-      try session.setCategory(.playback, mode: .moviePlayback)
-      try session.setActive(true)
+      try activateAudioSession()
     } catch {
       throw NativePlayerError(
         category: "resource",
@@ -307,6 +321,11 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
         diagnostic: String(describing: error)
       )
     }
+  }
+
+  func activate() throws {
+    guard !disposed, !active, !stopped || stagedHls != nil else { return }
+    try configureAudioSession()
     active = true
     liveReconnectController = YlLiveReconnectController(
       configuration: configuration.network
@@ -322,6 +341,48 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     try installItem(source, positionMs: savedPositionMs)
     status = "opening"
     emitState()
+  }
+
+  func stop() {
+    clearMediaForStop()
+    emitState()
+  }
+
+  // Used by the slot owner to clear an inactive AV source without a second event.
+  func clearMediaForStop() {
+    guard !disposed else { return }
+    resetting = true
+    stopped = true
+    active = false
+    playRequested = false
+    cancelLiveReconnect()
+    stallWatchdog.cancel()
+    player.currentItem?.cancelPendingSeeks()
+    player.currentItem?.asset.cancelLoading()
+    removeCurrentItem()
+    player.pause()
+    stagedHls?.prepared.discard()
+    stagedHls = nil
+    lastSource = nil
+    channelGeneration = YlIosChannelGeneration.next()
+    savedPositionMs = 0
+    resumeAtLiveEdge = false
+    sourceIsLive = false
+    selectedAudioTrackId = nil
+    audioOptions.removeAll()
+    audioTracks.removeAll()
+    videoTracks.removeAll()
+    firstFrameSent = false
+    hasBeenReady = false
+    openStartedAt = nil
+    openDurationMs = nil
+    firstFrameDurationMs = nil
+    bufferingStartedAt = nil
+    rebufferCount = 0
+    rebufferDurationMs = 0
+    currentError = nil
+    status = "idle"
+    resetting = false
   }
 
   func deactivate() {
@@ -347,6 +408,8 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
 
   private func open(_ source: [String: Any?]) throws {
     try validateOpen(source)
+    // Lifecycle activation stays inert after Stop; a fresh load activates audio.
+    if stopped { try configureAudioSession() }
     channelGeneration = YlIosChannelGeneration.next()
     resetOpenState(source, resume: false)
     try installItem(source, positionMs: 0)
@@ -354,6 +417,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   }
 
   private func resetOpenState(_ source: [String: Any?], resume: Bool) {
+    stopped = false
     cancelLiveReconnect()
     liveReconnectController = YlLiveReconnectController(
       configuration: configuration.network
@@ -783,7 +847,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   }
 
   private func emitState(error: [String: Any?]?) {
-    guard !disposed else { return }
+    guard !disposed, !resetting else { return }
     let item = player.currentItem
     let positionMs = active ? (milliseconds(player.currentTime()) ?? savedPositionMs) : savedPositionMs
     let durationMs = milliseconds(item?.duration)
@@ -831,7 +895,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   }
 
   private func emitStateDelta() {
-    guard !disposed else { return }
+    guard !disposed, !stopped, !resetting else { return }
     let item = player.currentItem
     let positionMs = active ? (milliseconds(player.currentTime()) ?? savedPositionMs) : savedPositionMs
     let loadedEndMs = item?.loadedTimeRanges.last
