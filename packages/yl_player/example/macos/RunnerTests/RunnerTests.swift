@@ -1,3 +1,4 @@
+import CoreMedia
 import Cocoa
 import FlutterMacOS
 import XCTest
@@ -9,6 +10,120 @@ class RunnerTests: XCTestCase {
     func register(_ texture: FlutterTexture) -> Int64 { 71 }
     func textureFrameAvailable(_ textureId: Int64) {}
     func unregisterTexture(_ textureId: Int64) { unregistered.append(textureId) }
+  }
+
+  private final class StopBarrierSession: YlVTSession {
+    let usesHardwareDecoder = true
+    private let lock = NSLock()
+    private var invalidated = false
+    var isInvalidated: Bool { lock.lock(); defer { lock.unlock() }; return invalidated }
+    func decode(_ sample: CMSampleBuffer, generation: UInt64, reservation: YlVideoDecodeReservation) -> OSStatus {
+      reservation.release()
+      return noErr
+    }
+    func flush() {}
+    func invalidate() { lock.lock(); invalidated = true; lock.unlock() }
+  }
+
+  private final class StopBarrierFactory: YlVTSessionFactory {
+    let entered: XCTestExpectation
+    let release = DispatchSemaphore(value: 0)
+    private let lock = NSLock()
+    private var values = [StopBarrierSession]()
+    var sessions: [StopBarrierSession] { lock.lock(); defer { lock.unlock() }; return values }
+    init(entered: XCTestExpectation) { self.entered = entered }
+    func makeSession(
+      formatDescription: CMVideoFormatDescription,
+      output: @escaping (YlVTDecodedImage) -> Void
+    ) throws -> YlVTSession {
+      let session = StopBarrierSession()
+      lock.lock()
+      values.append(session)
+      let isRecreation = values.count == 2
+      lock.unlock()
+      if isRecreation {
+        entered.fulfill()
+        guard release.wait(timeout: .now() + 10) == .success else {
+          throw YlOpenCancellationToken.cancellationError()
+        }
+      }
+      return session
+    }
+  }
+
+  func testStopRejectsDecoderCreatedAfterTeardown() throws {
+    for cancelCommand in [false, true] {
+      let fixture = URL(fileURLWithPath: #filePath)
+        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        .appendingPathComponent("assets/test_media/h264_aac.mkv")
+      let prepared = try YlPreparedFallback(source: [
+        "uri": fixture.absoluteString, "kind": "file", "formatHint": "matroska",
+      ], requireHardwareProbe: false)
+      let entered = expectation(description: "decoder recreation entered")
+      let factory = StopBarrierFactory(entered: entered)
+      let clock = YlMediaClock()
+      var events = [[String: Any?]]()
+      let backend = try YlFallbackBackend(
+        playerId: 20, textureId: 71, textures: StopTextureRegistry(),
+        configuration: PlayerConfiguration(map: [:]), prepared: prepared,
+        generation: 1, videoSessionFactory: factory, mediaClock: clock,
+        emit: { events.append($0) }
+      )
+      defer { factory.release.signal(); backend.dispose() }
+      try backend.activate()
+      let coordinator = YlAsyncCommandCoordinator()
+      let completed = expectation(description: "cancelled seek completed")
+      coordinator.begin(operation: { token in
+        try backend.command(name: "seekTo", arguments: ["positionMs": 1000], cancellationToken: token)
+      }, completion: { result in
+        guard case .failure(let error) = result else { return XCTFail("Seek survived Stop") }
+        XCTAssertEqual(error.code, "network.cancelled")
+        completed.fulfill()
+      })
+      wait(for: [entered], timeout: 5)
+      events.removeAll()
+      if cancelCommand { coordinator.cancelCurrent() }
+      backend.stop()
+      XCTAssertEqual(events.count, 1)
+      factory.release.signal()
+      wait(for: [completed], timeout: 5)
+      XCTAssertEqual(clock.position(atHostTimeUs: 0), 0, "Cancelled seek must not move the stopped media clock")
+      XCTAssertEqual(factory.sessions.count, 2)
+      XCTAssertTrue(factory.sessions.allSatisfy { $0.isInvalidated }, "Stop must dispose a decoder candidate completed after teardown")
+      XCTAssertEqual(events.count, 1, "Cancelled seek must not publish after the idle snapshot")
+      backend.emitState()
+      let state = try XCTUnwrap(events.last?["state"] as? [String: Any?])
+      XCTAssertEqual(state["status"] as? String, "idle")
+      XCTAssertEqual(state["positionMs"] as? Int64, 0)
+      XCTAssertFalse(backend.isActive)
+    }
+  }
+
+  func testStoppedAVRejectsSourceCommandsButAllowsControlsAndFreshOpen() throws {
+    var events = [[String: Any?]]()
+    let backend = YlAvPlayerBackend(
+      playerId: 21, textures: StopTextureRegistry(), configuration: PlayerConfiguration(map: [:]),
+      emit: { events.append($0) }
+    )
+    defer { backend.dispose() }
+    backend.stop()
+    let stopCount = events.count
+    for (name, arguments) in [
+      ("seekTo", ["positionMs": 12345] as [String: Any?]),
+      ("seekToLiveEdge", [:]), ("selectAudioTrack", ["trackId": "old"]),
+      ("play", [:]), ("pause", [:]),
+    ] {
+      XCTAssertNoThrow(try backend.command(name: name, arguments: arguments))
+    }
+    XCTAssertEqual(events.count, stopCount)
+    backend.emitState()
+    XCTAssertEqual((events.last?["state"] as? [String: Any?])?["positionMs"] as? Int64, 0)
+    XCTAssertNoThrow(try backend.command(name: "setVolume", arguments: ["volume": 0.25]))
+    XCTAssertNoThrow(try backend.command(name: "setPlaybackSpeed", arguments: ["speed": 1.5]))
+    try backend.command(name: "open", arguments: ["source": [
+      "uri": "https://example.test/fresh.mp4", "kind": "network",
+    ]])
+    XCTAssertTrue(backend.isActive)
   }
 
   func testStopOfFallbackSlotClearsStaticMetadataAndCannotReactivate() throws {

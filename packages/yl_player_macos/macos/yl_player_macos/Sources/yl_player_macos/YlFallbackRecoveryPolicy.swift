@@ -4,22 +4,22 @@ struct YlFallbackLifecycleTransaction {
   let pauseClock: () throws -> Void
   let advanceGeneration: () throws -> UInt64
   let stopDemux: () throws -> Void
-  let clearBuffers: (UInt64) -> Void
+  let clearBuffers: (UInt64) throws -> Void
   let seekDemux: (Int64) throws -> Void
   let resetAudio: (UInt64) throws -> Void
   let recreateVideo: (UInt64) throws -> Void
-  let suppressFramesBefore: (Int64) -> Void
+  let suppressFramesBefore: (Int64) throws -> Void
   let restartDemux: () throws -> Void
 
   func seek(toUs targetUs: Int64) throws {
     try pauseClock()
     let generation = try advanceGeneration()
     try stopDemux()
-    clearBuffers(generation)
+    try clearBuffers(generation)
     try seekDemux(targetUs)
     try resetAudio(generation)
     try recreateVideo(generation)
-    suppressFramesBefore(targetUs)
+    try suppressFramesBefore(targetUs)
     try restartDemux()
   }
 }

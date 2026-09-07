@@ -205,13 +205,15 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
         message: "The iOS player has been disposed."
       )
     }
+    if stopped && ["play", "pause", "seekTo", "seekToLiveEdge", "selectAudioTrack"].contains(name) {
+      return
+    }
     switch name {
     case "stop":
       stop()
     case "open":
       try open(stringMap(arguments["source"]))
     case "play":
-      guard !stopped else { return }
       playRequested = true
       player.playImmediately(atRate: desiredRate)
       status = player.timeControlStatus == .playing ? "playing" : "buffering"
