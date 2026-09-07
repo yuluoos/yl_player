@@ -35,6 +35,9 @@
 		3715C81ACB2358DB2928B9DB /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A211740DD9C25615F49813E6 /* Pods_Runner.framework */; };
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
 		A643CC937C14D2A3D8766502 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F9645960A2FC8869FE4E674 /* Pods_RunnerTests.framework */; };
+		13F166BF1D4140F0A9DFF240 /* YlMacosAudioTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC997E553AD1442390F136ED /* YlMacosAudioTests.swift */; };
+		3632DE4F087D4D03ABAE6D1E /* YlMacosVideoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80CE5C3951444350A429A038 /* YlMacosVideoTests.swift */; };
+		437FE3014A224C89B362F267 /* YlMacosPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC98481A26544CC081FE9046 /* YlMacosPresentationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +103,9 @@
 		B6FBB4B98E0FE7E5627D613D /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		CB582FEB03DF6D2F0385A33C /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
 		E36B41E2C43EA3201334FA12 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+		BC997E553AD1442390F136ED /* YlMacosAudioTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlMacosAudioTests.swift; sourceTree = "<group>"; };
+		80CE5C3951444350A429A038 /* YlMacosVideoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlMacosVideoTests.swift; sourceTree = "<group>"; };
+		DC98481A26544CC081FE9046 /* YlMacosPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlMacosPresentationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +138,9 @@
 				7A5A00020000000000000002 /* YlMacosNetworkTests.swift */,
 				7A5A00040000000000000004 /* YlMacosHlsTests.swift */,
 				7A5A00060000000000000006 /* YlMacosFallbackTests.swift */,
+				DC98481A26544CC081FE9046 /* YlMacosPresentationTests.swift */,
+				80CE5C3951444350A429A038 /* YlMacosVideoTests.swift */,
+				BC997E553AD1442390F136ED /* YlMacosAudioTests.swift */,
 			);
 			path = RunnerTests;
 			sourceTree = "<group>";
@@ -442,6 +451,9 @@
 				7A5A00010000000000000001 /* YlMacosNetworkTests.swift in Sources */,
 				7A5A00030000000000000003 /* YlMacosHlsTests.swift in Sources */,
 				7A5A00050000000000000005 /* YlMacosFallbackTests.swift in Sources */,
+				437FE3014A224C89B362F267 /* YlMacosPresentationTests.swift in Sources */,
+				3632DE4F087D4D03ABAE6D1E /* YlMacosVideoTests.swift in Sources */,
+				13F166BF1D4140F0A9DFF240 /* YlMacosAudioTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

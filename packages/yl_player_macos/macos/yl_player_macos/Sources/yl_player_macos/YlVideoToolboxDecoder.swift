@@ -26,13 +26,17 @@ final class YlVideoDecodeBudget {
   private let condition = NSCondition()
   private let maxBytes: Int
   private let maxFrames: Int
+  private let maxPendingFrames: Int
+  private var reservations = 0
   private var bytes = 0
   private var frames = 0
   private var generation: UInt64 = 1
 
-  init(maxBytes: Int, maxFrames: Int = 16) {
+  init(maxBytes: Int, maxFrames: Int = 16, maxPendingFrames: Int = 256) {
     precondition(maxBytes > 0)
     precondition(maxFrames > 0)
+    precondition(maxPendingFrames > 0)
+    self.maxPendingFrames = maxPendingFrames
     self.maxBytes = maxBytes
     self.maxFrames = maxFrames
   }
@@ -54,6 +58,20 @@ final class YlVideoDecodeBudget {
     timeout: TimeInterval = 2,
     shouldCancel: () -> Bool = { false }
   ) throws -> YlVideoDecodeReservation? {
+    try reserve(byteCount: byteCount, timeout: timeout, pending: false, shouldCancel: shouldCancel)
+  }
+
+  func reservePending(
+    byteCount: Int,
+    timeout: TimeInterval = 2,
+    shouldCancel: () -> Bool = { false }
+  ) throws -> YlVideoDecodeReservation? {
+    try reserve(byteCount: byteCount, timeout: timeout, pending: true, shouldCancel: shouldCancel)
+  }
+
+  private func reserve(
+    byteCount: Int, timeout: TimeInterval, pending: Bool, shouldCancel: () -> Bool
+  ) throws -> YlVideoDecodeReservation? {
     let charge = max(1, byteCount)
     guard charge <= maxBytes else {
       throw NativePlayerError(
@@ -68,13 +86,16 @@ final class YlVideoDecodeBudget {
     while true {
       if shouldCancel() { return nil }
       let (nextBytes, overflow) = bytes.addingReportingOverflow(charge)
-      if !overflow, nextBytes <= maxBytes, frames < maxFrames {
+      if !overflow, nextBytes <= maxBytes,
+         reservations < maxPendingFrames, pending || frames < maxFrames {
         bytes = nextBytes
-        frames += 1
+        reservations += 1
+        if !pending { frames += 1 }
         return YlVideoDecodeReservation(
           budget: self,
           byteCount: charge,
-          generation: generation
+          generation: generation,
+          occupiesFrame: !pending
         )
       }
       guard deadline.timeIntervalSinceNow > 0 else {
@@ -91,11 +112,32 @@ final class YlVideoDecodeBudget {
     }
   }
 
-  fileprivate func complete(byteCount: Int, generation: UInt64) {
+  fileprivate func beginDecoding(generation: UInt64, shouldCancel: () -> Bool) throws -> Bool {
+    let deadline = Date(timeIntervalSinceNow: 2)
+    condition.lock()
+    defer { condition.unlock() }
+    while self.generation == generation, !shouldCancel() {
+      if frames < maxFrames {
+        frames += 1
+        return true
+      }
+      guard deadline.timeIntervalSinceNow > 0 else {
+        throw NativePlayerError(
+          category: "resource", code: "resource.video_decoder_backpressure_timeout",
+          message: "The hardware video decoder did not release buffer capacity in time."
+        )
+      }
+      _ = condition.wait(until: min(deadline, Date(timeIntervalSinceNow: 0.02)))
+    }
+    return false
+  }
+
+  fileprivate func complete(byteCount: Int, generation: UInt64, occupiesFrame: Bool) {
     condition.lock()
     if self.generation == generation {
       bytes = max(0, bytes - max(1, byteCount))
-      frames = max(0, frames - 1)
+      reservations = max(0, reservations - 1)
+      if occupiesFrame { frames = max(0, frames - 1) }
     }
     condition.broadcast()
     condition.unlock()
@@ -105,6 +147,7 @@ final class YlVideoDecodeBudget {
     condition.lock()
     bytes = 0
     frames = 0
+    reservations = 0
     generation &+= 1
     condition.broadcast()
     condition.unlock()
@@ -116,23 +159,36 @@ final class YlVideoDecodeReservation {
   private let generation: UInt64
   private let lock = NSLock()
   private var budget: YlVideoDecodeBudget?
+  private var occupiesFrame: Bool
 
   fileprivate init(
     budget: YlVideoDecodeBudget,
     byteCount: Int,
-    generation: UInt64
+    generation: UInt64,
+    occupiesFrame: Bool
   ) {
+    self.occupiesFrame = occupiesFrame
     self.budget = budget
     self.byteCount = byteCount
     self.generation = generation
   }
 
+  func beginDecoding(shouldCancel: () -> Bool) throws -> Bool {
+    lock.lock()
+    defer { lock.unlock() }
+    guard let budget, !shouldCancel() else { return false }
+    if occupiesFrame { return true }
+    occupiesFrame = try budget.beginDecoding(generation: generation, shouldCancel: shouldCancel)
+    return occupiesFrame
+  }
+
   func release() {
-    let budget = lock.withLock { () -> YlVideoDecodeBudget? in
-      defer { self.budget = nil }
-      return self.budget
-    }
-    budget?.complete(byteCount: byteCount, generation: generation)
+    lock.lock()
+    let budget = self.budget
+    self.budget = nil
+    let occupiesFrame = self.occupiesFrame
+    lock.unlock()
+    budget?.complete(byteCount: byteCount, generation: generation, occupiesFrame: occupiesFrame)
   }
 
   deinit { release() }
@@ -311,6 +367,13 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
     shouldCancel: () -> Bool
   ) throws -> YlVideoDecodeReservation? {
     try budget.reserve(byteCount: byteCount, shouldCancel: shouldCancel)
+  }
+
+  func reserveSubmission(
+    byteCount: Int,
+    shouldCancel: () -> Bool
+  ) throws -> YlVideoDecodeReservation? {
+    try budget.reservePending(byteCount: byteCount, shouldCancel: shouldCancel)
   }
 
   func decode(

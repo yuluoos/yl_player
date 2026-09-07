@@ -12,20 +12,8 @@
 
 ## Global Constraints
 
-- Run every command from /Users/yy2021_8689/Desktop/Flutter/yl_player unless a step changes directory explicitly.
-- Before Task 1, resolve the existing 11-file dirty baseline with the user. Never stash, reset, overwrite, or silently include it. The protected files are:
-  - packages/yl_player/example/integration_test/macos_network_mkv_playback_test.dart
-  - packages/yl_player/example/macos/RunnerTests/YlMacosFallbackTests.swift
-  - packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlAudioRenderer.swift
-  - packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlAvPlayerBackend.swift
-  - packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlDisplayTimer.swift
-  - packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFallbackBackend.swift
-  - packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFrameScheduler.swift
-  - packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlMediaClock.swift
-  - packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlVideoToolboxDecoder.swift
-  - packages/yl_player_platform_interface/lib/src/channel/channel_player.dart
-  - packages/yl_player_platform_interface/test/channel_player_test.dart
-- If those files remain dirty, stop before editing any of them and request an explicit checkpoint decision. A commit is preferred because all baseline gates already passed, but this plan does not authorize committing user-owned work.
+- Initialize the current checkout/worktree once per shell with `YL_REPO_ROOT=$(git rev-parse --show-toplevel)` and `cd "$YL_REPO_ROOT"`. Every command block starts at that root unless an explicit relative directory change is shown. Never rediscover the root after leaving this checkout or return to a machine-specific original path.
+- The former 11-file dirty baseline is preserved by commits 1b239e0 and 49f59cf. Before migration, inspect current status and preserve the authorized review-fix checkpoint (bounded submissions, audio serialization, display binding, and regression tests). Do not stash/reset or absorb unrelated edits; ask only when an actual ownership conflict remains unresolved by the user's instructions.
 - Minimum versions remain Dart 3.12 and Flutter 3.44.
 - No generated transport type, MethodChannel, EventChannel, wire map, validation helper, or platform registration class may be exported by package:yl_player/yl_player.dart.
 - Every public value implements structural equality, hashCode, and a safe toString. A toString must never include a URI, path, header value, credential name/value, query, user-info, or native stack.
@@ -33,7 +21,9 @@
 - Load completes after session commit, not Ready or First Frame. Ready and First Frame remain separate correlated futures.
 - A stale or stopped session must fail before a native command is sent.
 - A rejected command must not mutate healthy state or synthesize a failure event.
-- Each behavioral change follows red-green-refactor and ends in the focused commit shown below.
+- Each behavioral change follows red-green-refactor. Tasks 1–4 add v2 definitions behind `lib/src/v2.dart` while the v1 production barrels, tests, model files, validators, and SPI remain intact. New model/SPI tests import only that internal barrel. No public compatibility aliases are introduced.
+- Task 5 adds native Stop while the existing Dart API remains usable. Tasks 6–8 are one atomic API cutover: finish adapter, controller, registrations, view compatibility, examples, and old-test migration before the cutover commit. Intermediate focused red/green cycles are work in progress, not advertised green commits.
+- Each commit passes `flutter analyze`, relevant Dart/native tests, and `git diff --check`; run the complete foundation/native gate at the phase checkpoint, not after every small edit. Existing tests must continue passing during additive Tasks 0–5.
 
 ---
 
@@ -70,6 +60,15 @@
 
 ---
 
+### Task 0: Bootstrap a coherent migration version checkpoint
+
+**Files:** Modify root pubspec.lock and every workspace pubspec whose version or local package constraint changes; do not add yl_player_apple until the Apple consolidation plan.
+
+- [ ] Inspect `git status --short`, the baseline commits, and all workspace versions.
+- [ ] Set all five existing publishable packages (including the temporarily retained yl_player_ios and yl_player_macos) to 0.2.0-dev.1 and every workspace dependency on those packages to ^0.2.0-dev.1 in one change. Keep all examples publish_to: none. This is a local migration version checkpoint, not permission to publish the transitional API.
+- [ ] Run `flutter pub get`, `flutter analyze`, the existing Dart tests, and `git diff --check`; version resolution must remain local to the selected workspace without dependency_overrides that hide mismatches.
+- [ ] Commit only the synchronized version/dependency changes after they pass. The final release plan verifies these versions; it does not introduce them for the first time.
+
 ### Task 1: Add equality, identifiers, safe failures, and redaction
 
 **Files:**
@@ -78,7 +77,7 @@
 - Create: packages/yl_player_platform_interface/lib/src/model/failure.dart
 - Create: packages/yl_player_platform_interface/lib/src/diagnostics/safe_diagnostics.dart
 - Create: packages/yl_player_platform_interface/test/failure_test.dart
-- Modify: packages/yl_player_platform_interface/lib/yl_player_platform_interface.dart
+- Create/update: packages/yl_player_platform_interface/lib/src/v2.dart
 
 **Interfaces:**
 - Produces YlPlaybackSessionId, YlFailure, YlPlayerException, YlFailureCategory, YlFailureScope, YlFailureCodes, and YlSafeDiagnostics.
@@ -215,7 +214,7 @@ Expected: all tests pass.
 - [ ] **Step 5: Commit**
 
 ~~~bash
-git add packages/yl_player_platform_interface/lib/src/model packages/yl_player_platform_interface/lib/src/diagnostics packages/yl_player_platform_interface/lib/yl_player_platform_interface.dart packages/yl_player_platform_interface/test/failure_test.dart
+git add packages/yl_player_platform_interface/lib/src/model packages/yl_player_platform_interface/lib/src/diagnostics packages/yl_player_platform_interface/lib/src/v2.dart packages/yl_player_platform_interface/test/failure_test.dart
 git commit -m "feat: add safe player failure values"
 ~~~
 
@@ -228,9 +227,9 @@ git commit -m "feat: add safe player failure values"
 - Create: packages/yl_player_platform_interface/lib/src/options/video_constraints.dart
 - Create: packages/yl_player_platform_interface/lib/src/options/player_options.dart
 - Create: packages/yl_player_platform_interface/lib/src/options/load_options.dart
-- Rewrite: packages/yl_player_platform_interface/lib/src/validation.dart
+- Create: packages/yl_player_platform_interface/lib/src/validation/v2_validation.dart
 - Create: packages/yl_player_platform_interface/test/source_and_policy_test.dart
-- Modify: packages/yl_player_platform_interface/lib/yl_player_platform_interface.dart
+- Create/update: packages/yl_player_platform_interface/lib/src/v2.dart
 
 **Interfaces:**
 - Produces sealed YlMediaSource with YlFileSource, YlNetworkSource, and YlAndroidContentSource.
@@ -295,7 +294,7 @@ test('bounded buffers require a coherent exact budget', () {
 });
 ~~~
 
-Also test absolute non-empty file paths, content scheme, CR/LF in header names or values, forbidden Host/Content-Length/Connection/Transfer-Encoding/Range headers, Authorization/Cookie in ordinary headers, duplicate names across headers and credentials ignoring case, start position >= zero, volume 0...1, speed 0.25...4, and every duration/int fitting signed 32-bit native milliseconds/bytes.
+Also test absolute non-empty file paths, content scheme, CR/LF in header names or values, forbidden Host/Content-Length/Connection/Transfer-Encoding/Range headers, Authorization/Cookie in ordinary headers, duplicate names across headers and credentials ignoring case, start position >= zero, volume 0...1, speed 0.25...4, and policy durations/counts/budgets fitting signed 32-bit native milliseconds/bytes. Timeline positions, event timestamps, revisions and sequences use nonnegative signed 64-bit transport integers; do not truncate long media positions to 32 bits. Sensitive URI/path/header validation throws fixed-message ArgumentError, never ArgumentError.value containing the rejected input.
 
 - [ ] **Step 2: Prove the focused suite fails**
 
@@ -335,15 +334,19 @@ enum YlBufferStrategyKind { automatic, lowLatency, smoothPlayback, bounded }
 
 YlNetworkPolicy has const constructors platformDefault() and managed(...) with managed fields connectTimeout, readTimeout, maxRetries, baseRetryDelay, maxRetryDelay, and maxRedirects. YlBufferStrategy has const constructors automatic(), lowLatency(), smoothPlayback(), and bounded(...) with minDuration, maxDuration, and maxManagedBytes. Fields not used by the selected kind are null.
 
+YlVideoConstraints has const YlVideoConstraints({int? maxWidth, int? maxHeight, int? maxBitrate}); null means unconstrained, supplied values must be positive signed 32-bit integers. It supports structural equality, safe toString and copyWith that can explicitly clear limits. Both initial load and runtime constraint commands validate it before platform calls.
+
 YlPlayerOptions fields are decoderPolicy, audioPolicy, and positionUpdateInterval. Defaults are hardwarePreferred, appManaged, and 250 ms. YlLoadOptions fields are autoplay, startPosition, bufferStrategy, videoConstraints, and decoderPolicyOverride. Defaults are false, null, automatic, unconstrained, and null.
+
+Managed policy semantics are shared across platforms: connectTimeout is the deadline from starting each initial/retry/redirect HTTP hop until response headers, including DNS, connection, TLS and server wait; readTimeout measures body inactivity after headers and resets only on progress; there is no overall/call-timeout field or exact total-time promise. maxRetries excludes the initial attempt. Retry only idempotent GET/HEAD on transient transport errors or HTTP 408/429/500/502/503/504, never cancellation, certificate/validation errors, or other terminal status codes. Retry n (starting at 1) waits min(maxRetryDelay, baseRetryDelay * 2^(n-1)) using saturating arithmetic and no jitter. A valid nonnegative Retry-After seconds/date takes precedence when it fits maxRetryDelay; otherwise do not retry rather than violate it. Malformed Retry-After uses the formula. Inject time for deterministic date tests. Redirects have a separate maxRedirects counter across all attempts of the original resource request chain and do not consume retries; once an attempt crosses origin, its credential stripping survives retries of that redirected request. HLS child resources also inherit stripped credential context. platformDefault still enforces credential origin rules or rejects the source route; it relaxes exact scheduling/timeout/retry promises only.
 
 YlNetworkSource owns its YlNetworkPolicy because fetch guarantees are source-specific. YlFileSource accepts a String absolute path. YlAndroidContentSource accepts a content URI. Every source carries intent and format, except file intent is fixed to onDemand.
 
 Copy input maps into UnmodifiableMapView. Implement structural map equality by sorted lower-case keys without changing the caller-visible spelling. Forbid case-insensitive header collisions and the exact reserved set host, content-length, connection, transfer-encoding, and range. Require Authorization, Proxy-Authorization, Cookie, and custom credential-bearing values to be placed in credentials.
 
-- [ ] **Step 4: Delete the superseded v0.1 model files and update exports**
+- [ ] **Step 4: Keep the additive model boundary buildable**
 
-Delete configuration.dart and media_source.dart only after all imports use the new files. Do not add deprecated typedefs or runtime compatibility constructors. Export domain types and validators from yl_player_platform_interface.dart; validators will be hidden by the app-facing barrel in Task 8.
+Keep configuration.dart, media_source.dart, validation.dart and the v1 public barrel unchanged. Export the new files only from lib/src/v2.dart, including validation/v2_validation.dart. New tests import that internal barrel; existing tests retain their existing imports. Task 8 switches the public barrel and deletes superseded files only after all consumers and tests have migrated. Do not add compatibility typedefs or forwarding constructors.
 
 - [ ] **Step 5: Format, test, and commit**
 
@@ -481,15 +484,15 @@ enum YlPlayerOperation {
 }
 ~~~
 
-YlPlayerCapabilities fields are implementationName, implementationVersion, deviceProfile, availableEngines, supportedOperations, decoderEvidence, hardwareVideoCodecs, maxConcurrentVideoDecoders, maxWidth, and maxHeight. Keep every collection immutable. decoderEvidence describes whether the implementation can positively distinguish no mode, hardware only, or both hardware and software.
+YlPlayerCapabilities fields are String deviceProfile, immutable List<YlPlaybackEngine> availableEngines, immutable List<YlPlayerOperation> supportedOperations, YlDecoderEvidence decoderEvidence, immutable List<String> hardwareVideoCodecs, and nullable positive int maxConcurrentVideoDecoders/maxWidth/maxHeight. Null limits mean unknown; empty codec/operation lists make no support claim. Device and codec identifiers are normalized safe metadata, never arbitrary native diagnostic strings. Implementation name/version exist only in YlPlatformImplementationInfo; controller implementationName/implementationVersion getters derive from that single immutable value without exposing the SPI type. Keep every collection immutable. decoderEvidence describes whether the implementation can positively distinguish no mode, hardware only, or both hardware and software.
 
-YlSourceAssessment fields are outcome, candidateEngine, satisfiedRequirements, limitations, and rejection. satisfiedRequirements and limitations are immutable List<String>; rejection is a nullable YlFailure and is required only for incompatible.
+YlSourceAssessment fields are outcome, candidateEngine, satisfiedRequirements, limitations, and rejection. satisfiedRequirements is immutable List<YlRequirementId> and limitations is immutable List<YlLimitationId>; rejection is nullable YlFailure and required for incompatible. Define both extensible value types in model/source_assessment.dart with structural equality and a validated String value matching `^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)+$`, at most 128 characters. Provide named core constants for the policy/limitation IDs listed in the Apple hardening plan; preserve unknown well-formed extension IDs. Their toString is redacted rather than echoing arbitrary IDs. Do not use a closed enum that prevents third-party policy/limitation IDs. Invalid IDs throw a fixed-message ArgumentError without including the input.
 
-YlTimeline fields are position, duration, bufferedPosition, isSeekable, isLive, isAtLiveEdge, liveOffset, and dvrWindow. YlDvrWindow contains start and end. YlVideoGeometry contains encodedSize, displaySize, pixelAspectRatio, and rotationDegrees. displaySize is the clean-aperture size before unapplied rotation; rotationDegrees is the clockwise rotation still required at the Flutter view. Native code reports zero after it has already oriented the pixels. displayAspectRatio applies pixelAspectRatio and then inverts for 90/270-degree rotation.
+YlTimeline fields are non-null Duration position and bufferedPosition, nullable Duration duration and liveOffset, non-null bool isSeekable and isLive, nullable bool isAtLiveEdge (null when not observed/applicable), and nullable YlDvrWindow dvrWindow. YlDvrWindow contains non-null Duration start and end. Time values are nonnegative, except a native raw negative live offset is normalized to zero before publication; reject an end before start. Define and app-export YlPixelSize in model/video_geometry.dart with const YlPixelSize(this.width, this.height), final double width/height, structural equality/hashCode, and safe toString. Both dimensions must be finite and positive; release-mode geometry validation runs before every native-to-domain decode/controller state acceptance, including the finite PAR-adjusted size product. YlVideoGeometry contains non-null YlPixelSize encodedSize/displaySize, positive finite double pixelAspectRatio, and int rotationDegrees restricted to 0/90/180/270. displaySize is the clean-aperture size before unapplied rotation; rotationDegrees is the clockwise rotation still required at the Flutter view. Native code reports zero after it has already oriented the pixels. displayAspectRatio applies pixelAspectRatio and then inverts for 90/270-degree rotation.
 
 YlPlaybackMetrics has nullable loadToReady, loadToFirstFrame, rebufferCount, rebufferDuration, droppedVideoFrames, audioUnderruns, estimatedBitrate, managedBufferedDuration, managedBufferedBytes, liveOffset, and reconnectCount.
 
-YlMediaTrack retains id, kind, label, language, codec, bitrate, width, height, and isSelected. Selected bitrate stays on the selected video track.
+YlMediaTrack retains non-null String id, YlTrackKind kind and bool isSelected; label/language/codec are nullable String, and bitrate/width/height are nullable positive int. Unknown values remain null rather than empty strings or zero. Selected bitrate stays on the selected video track.
 
 YlPlayerState fields are revision, sessionId, status, timeline, videoGeometry, audioTracks, videoTracks, engine, decoderMode, decoderIdentity, metrics, and failure.
 
@@ -497,7 +500,7 @@ Use Duration since an implementation-local monotonic epoch for event occurredAt;
 
 - [ ] **Step 4: Implement only the approved event set**
 
-Define sealed YlPlayerEvent plus YlFirstFrameEvent, YlRetryScheduledEvent, YlPlaybackEngineChangedEvent, and YlPlaybackFailedEvent. All subclasses require sessionId, revision, and occurredAt. Delete YlTracksChangedEvent and YlFallbackEvent; engine transitions become YlPlaybackEngineChangedEvent and tracks remain state.
+Define sealed YlPlayerEvent plus YlFirstFrameEvent, YlRetryScheduledEvent, YlPlaybackEngineChangedEvent, and YlPlaybackFailedEvent. All subclasses require sessionId, revision, and occurredAt. FirstFrame has no extra payload; RetryScheduled adds retryIndex (1-based), delay (Duration), and failure; PlaybackEngineChanged adds previousEngine and engine; PlaybackFailed adds failure. Delete YlTracksChangedEvent and YlFallbackEvent at the Task 8 cutover; new v2 engine transitions become YlPlaybackEngineChangedEvent and tracks remain state.
 
 - [ ] **Step 5: Format, pass, and commit**
 
@@ -526,9 +529,9 @@ git commit -m "feat: add correlated player state models"
 - Create: packages/yl_player_platform_interface/lib/src/testing/platform_conformance.dart
 - Create: packages/yl_player_platform_interface/lib/testing.dart
 - Create: packages/yl_player_platform_interface/test/platform_conformance_test.dart
-- Rewrite: packages/yl_player_platform_interface/test/player_platform_test.dart
-- Delete: packages/yl_player_platform_interface/lib/src/platform_player.dart
-- Delete: packages/yl_player_platform_interface/lib/src/player_platform.dart
+- Create: packages/yl_player_platform_interface/test/v2_player_platform_test.dart
+- Retain until Task 8: packages/yl_player_platform_interface/lib/src/platform_player.dart
+- Retain until Task 8: packages/yl_player_platform_interface/lib/src/player_platform.dart
 
 **Interfaces:**
 - Produces ylPlayerSpiMajor = 2 and YlPlatformImplementationInfo.
@@ -575,7 +578,7 @@ abstract interface class YlPlatformPlayer {
 }
 ~~~
 
-YlPlatformLoadResult has one required sessionId. The player state/event routes are authoritative for all other load progress.
+YlPlatformLoadResult has one required sessionId. Its Future completes only after native commit has succeeded AND the adapter has accepted the matching authoritative full state, regardless of reply/callback arrival order. `player.state.sessionId` must equal the returned ID before a caller can immediately invoke play; no extra pump/event wait is required. Do not wait for Ready or First Frame. If a newer load/stop/dispose invalidates the candidate before this barrier, fail the pending load instead of returning a stale handle. Bound the wait by a private transport deadline and clean up failed creation/loads. State/event routes remain authoritative; the result does not carry another state snapshot.
 
 Test that assigning a class with the proper PlatformInterface token succeeds, mocking with MockPlatformInterfaceMixin succeeds, a foreign implementation fails token verification, and the unsupported default throws YlPlayerException with platform.unavailable.
 
@@ -584,7 +587,7 @@ Test that assigning a class with the proper PlatformInterface token succeeds, mo
 Run:
 
 ~~~bash
-flutter test packages/yl_player_platform_interface/test/player_platform_test.dart
+flutter test packages/yl_player_platform_interface/test/v2_player_platform_test.dart
 ~~~
 
 Expected: compilation fails because createPlayer still accepts YlPlayerConfiguration and session-scoped methods have no session ID.
@@ -614,6 +617,8 @@ Define:
 abstract interface class YlPlatformConformanceFixture {
   YlMediaSource get source;
   Future<YlPlatformPlayer> createPlayer();
+  Future<void> holdNextLoad(YlPlatformPlayer player);
+  Future<void> releaseHeldLoad(YlPlatformPlayer player);
   Future<void> emitReady(
     YlPlatformPlayer player,
     YlPlaybackSessionId sessionId,
@@ -629,26 +634,34 @@ abstract interface class YlPlatformConformanceFixture {
 }
 
 final class YlConformanceFailure {
-  const YlConformanceFailure(this.caseName, this.error);
+  const YlConformanceFailure(this.caseName, this.failure);
   final String caseName;
-  final Object error;
+  final YlFailure failure;
 }
 
 final class YlPlatformConformance {
-  const YlPlatformConformance(this.fixture);
+  const YlPlatformConformance(
+    this.fixture, {
+    this.caseTimeout = const Duration(seconds: 10),
+    this.cleanupTimeout = const Duration(seconds: 2),
+  });
   final YlPlatformConformanceFixture fixture;
+  final Duration caseTimeout;
+  final Duration cleanupTimeout;
   Future<List<YlConformanceFailure>> run();
 }
 ~~~
 
-run executes isolated players for lifecycle, load identity, newer-load cancellation, stale-session rejection, stop, revision monotonicity, first-frame correlation, one terminal failure event, safe public strings, unsupported strict policy rejection, and double disposal. Each case catches its own error and returns a named failure; an empty result means conformant. It must never depend on package:test or flutter_test.
+run executes isolated players for lifecycle, load identity, newer-load cancellation, stale-session rejection, stop, revision monotonicity, first-frame correlation, one terminal failure event, safe public strings, unsupported strict policy rejection, and double disposal. Each case has a configurable positive deadline and its own player/subscriptions. Catch and safely map errors to a named failure, always cancel subscriptions and best-effort dispose in finally with a separate cleanup deadline, then continue remaining cases. A hung create must also time out; register a bounded cleanup continuation for any player it returns late and consume late errors. A Future.timeout does not cancel native work: release fixture holds and invalidate the case before moving on. Do not transport raw caught objects in failures. An empty result means conformant. It must never depend on package:test or flutter_test.
+
+The fixture's hold/release hooks deterministically delay a candidate before commit; they do not depend on timers to win a race. Add cases for load followed immediately by play without pumping, reply/state in both orders, initial buffering without Ready, late same-session First Frame after a newer timeline state, ignored milestone Futures on failure (no unhandled Zone error), stop/dispose during a held load, create/command/dispose never completing, and a later case still running after a timeout. Distinguish implementations' declared unsupported-policy cases from known supported source/policy success cases; an adapter returning unsupported for every supported fixture must fail conformance.
 
 - [ ] **Step 5: Test the runner against a conformant and deliberately broken fake**
 
 Run:
 
 ~~~bash
-flutter test packages/yl_player_platform_interface/test/platform_conformance_test.dart packages/yl_player_platform_interface/test/player_platform_test.dart
+flutter test packages/yl_player_platform_interface/test/platform_conformance_test.dart packages/yl_player_platform_interface/test/v2_player_platform_test.dart
 ~~~
 
 Expected: the conformant fake returns an empty failure list; the broken fake reports at least stale-session and revision-order cases.
@@ -660,7 +673,153 @@ git add packages/yl_player_platform_interface
 git commit -m "feat: publish player v2 platform spi"
 ~~~
 
-### Task 5: Implement explicit controller creation and Playback Session handles
+### Task 5: Add real Stop behavior to the temporary native implementations
+
+**Files:**
+- Modify: packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Player.kt
+- Create: packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlStopPolicy.kt
+- Create: packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlStopPolicyTest.kt
+- Modify: packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlPlaybackBackend.swift
+- Modify: packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlIosPlayer.swift
+- Modify: packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlAvPlayerBackend.swift
+- Modify: packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackBackend.swift
+- Modify: packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlPlaybackBackend.swift
+- Modify: packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlMacosPlayer.swift
+- Modify: packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlAvPlayerBackend.swift
+- Modify: packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFallbackBackend.swift
+- Modify: packages/yl_player/example/ios/RunnerTests/RunnerTests.swift
+- Modify: packages/yl_player/example/macos/RunnerTests/RunnerTests.swift
+
+**Interfaces:**
+- Existing legacy command name stop becomes supported.
+- Stop cancels pending open/retry/recovery, clears the current media, resets metrics/tracks/geometry/failure, emits one idle full state, and retains texture/native player identity.
+
+- [ ] **Step 1: Write failing native policy tests**
+
+Extract a pure YlStopPolicy on Android returning an idle state-reset decision and add a test that it clears session data without disposing texture identity. On Apple, add fake YlPlaybackBackend tests proving stop is distinct from deactivate and dispose.
+
+- [ ] **Step 2: Run and observe failure**
+
+Run:
+
+~~~bash
+cd packages/yl_player_android/example/android
+./gradlew testDebugUnitTest --tests '*YlStopPolicyTest' --stacktrace
+cd "$YL_REPO_ROOT"
+sh tool/check_native_ios.sh
+~~~
+
+Expected: Android cannot resolve YlStopPolicy and the Apple fake backend does not implement stop.
+
+- [ ] **Step 3: Implement Android stop**
+
+Add the stop branch to YlMedia3Player.command. It must cancel callbacks/watchdogs, increment sourceGeneration to invalidate old callbacks, pause, stop, clearMediaItems, detach or clear the video surface without releasing the texture, clear track selections and metrics, set status to idle, and emit one full state. Do not deactivate peers or change activePlayerId for stop; the typed coordinator replaces that policy in the Android plan.
+
+- [ ] **Step 4: Implement Apple stop**
+
+Add func stop() to YlPlaybackBackend. Both AVPlayer and fallback implementations cancel pending async work, invalidate their generation, clear media/pixel buffers, and emit idle without unregistering the Flutter texture. YlIosPlayer and YlMacosPlayer cancel their open coordinator then call the current backend stop; a stopped candidate cannot later commit.
+
+- [ ] **Step 5: Run native gates and commit**
+
+Run:
+
+~~~bash
+cd packages/yl_player_android/example/android
+./gradlew testDebugUnitTest --stacktrace
+cd "$YL_REPO_ROOT"
+sh tool/check_native_ios.sh
+sh tool/check_native_macos.sh --unit-only
+~~~
+
+Expected: Android JVM tests and Apple native/unit integration gates pass.
+
+~~~bash
+git add packages/yl_player_android/android packages/yl_player_ios/ios packages/yl_player_macos/macos packages/yl_player/example/ios/RunnerTests packages/yl_player/example/macos/RunnerTests
+git commit -m "feat: add non-destructive player stop"
+~~~
+
+### Task 6: Adapt the existing native wire without claiming strict-policy support
+
+**Files:**
+- Rewrite: packages/yl_player_platform_interface/lib/src/channel/channel_codec.dart
+- Rewrite: packages/yl_player_platform_interface/lib/src/channel/channel_player.dart
+- Replace: packages/yl_player_platform_interface/lib/yl_player_channel.dart
+- Create: packages/yl_player_platform_interface/lib/yl_player_legacy_transport.dart
+- Rewrite: packages/yl_player_platform_interface/test/channel_codec_test.dart
+- Rewrite: packages/yl_player_platform_interface/test/channel_player_test.dart
+- Modify: packages/yl_player_android/lib/yl_player_android.dart
+- Modify: packages/yl_player_ios/lib/yl_player_ios.dart
+- Modify: packages/yl_player_macos/lib/yl_player_macos.dart
+- Modify: packages/yl_player_android/test/yl_player_android_test.dart
+- Modify: packages/yl_player_ios/test/yl_player_ios_test.dart
+- Modify: packages/yl_player_macos/test/yl_player_macos_test.dart
+
+**Interfaces:**
+- Produces createYlLegacyChannelPlayer for endorsed packages only.
+- Maps legacy source generation to deterministic YlPlaybackSessionId values of legacy:<platform>:<playerId>:<generation>.
+- Discards legacy platformDiagnostic values and generates a safe diagnostic ID.
+- Rejects strict managed-network, bounded-buffer, and hardware-required requests with policy.unsupported before invoking open.
+
+- [ ] **Step 1: Preserve and port the checkpointed fallback-marker regression**
+
+The checkpointed test named native fallback activation marker does not terminate the channel must remain present and passing after the rewrite, including a following full state and delta proving the route remains live. Port it to expect no public event and to rely on the following authoritative engine-changed state/event only.
+
+- [ ] **Step 2: Write failing adapter semantics tests**
+
+Add tests for:
+
+- create waits for the first full state/capability snapshot and times out as protocol.mismatch;
+- protocol version other than 1 rejects creation;
+- generation 3 maps to legacy:android:7:3;
+- load returns only after both open reply and the correlated newer-generation full state are observed; immediate session.play succeeds in either arrival order;
+- first-frame, retry, and error legacy events are correlated to the current session;
+- stale generation deltas and events are ignored;
+- managed, bounded, and hardwareRequired assessment is incompatible and load sends no method call;
+- a PlatformException detail containing a secret URL produces a safe YlPlayerException;
+- stop emits the command but clears the adapter session only after the authoritative idle state;
+- dispose remains idempotent.
+
+- [ ] **Step 3: Prove failures**
+
+Run:
+
+~~~bash
+flutter test packages/yl_player_platform_interface/test/channel_codec_test.dart packages/yl_player_platform_interface/test/channel_player_test.dart
+~~~
+
+Expected: old decoded types and methods do not satisfy the v0.2 SPI, and strict requirements currently pass through.
+
+- [ ] **Step 4: Implement the temporary bridge**
+
+Keep protocolVersion = 1. Decode capabilities out of the first full state but never repeat them in public playback state. Convert AVPlayer legacy isHardwareDecoding false to YlDecoderMode.unknown. Treat both legacy Media3 boolean values as unknown unless the wire carries independently verified evidence tied to the initialized decoder; a codec-name heuristic is not proof. Software is asserted only from explicit trustworthy software evidence.
+
+Track the latest accepted generation and revision. The legacy wire has no revision, so increment one for every accepted full snapshot or delta. Never increment for ignored envelopes. Correlate unversioned first-frame/retry/failure events to the current generation only; this limitation is temporary and must be removed by the Android and Apple typed-transport plans.
+
+For default-policy source assessment, return requiresInspection unless the route can be determined from source kind and format without inspecting content. For every explicit strict requirement, return incompatible with policy.unsupported. load always runs assess first.
+
+Rename the explicit entrypoint to yl_player_legacy_transport.dart and add a deprecation comment stating it is removed before v0.2 publication. Do not export it from yl_player_platform_interface.dart or yl_player.dart.
+
+- [ ] **Step 5: Update all three Dart registrations**
+
+Each registerWith assigns the new YlPlayerPlatform singleton. createPlayer accepts YlPlayerOptions and delegates to createYlLegacyChannelPlayer with its existing channel names and initial engine. Keep dependency injection of MethodChannel, EventChannel, and nativeEvents for tests.
+
+- [ ] **Step 6: Test and commit**
+
+Run:
+
+~~~bash
+dart format packages/yl_player_platform_interface packages/yl_player_android/lib packages/yl_player_android/test packages/yl_player_ios/lib packages/yl_player_ios/test packages/yl_player_macos/lib packages/yl_player_macos/test
+flutter test packages/yl_player_platform_interface/test
+flutter test packages/yl_player_android/test
+flutter test packages/yl_player_ios/test
+flutter test packages/yl_player_macos/test
+~~~
+
+Expected after completing the Tasks 6–8 cutover: all tests pass.
+
+Do not create an intermediate commit: keep this work in the atomic Tasks 6–8 cutover and run the combined gate in Task 8 before committing.
+
+### Task 7: Implement explicit controller creation and Playback Session handles
 
 **Files:**
 - Rewrite: packages/yl_player/lib/src/player_controller.dart
@@ -671,7 +830,7 @@ git commit -m "feat: publish player v2 platform spi"
 
 **Interfaces:**
 - Produces await YlPlayerController.create(...).
-- YlPlayerController implements Listenable without extending ChangeNotifier, because its public dispose returns Future<void>.
+- YlPlayerController implements Listenable without extending ChangeNotifier, because its public dispose returns Future<void>. It exposes implementationName and implementationVersion as read-only getters derived from backend.implementation.
 - Produces YlPlaybackSession.id, ready, firstFrame, and session-scoped commands.
 - Controller owns assess, load, volume, stop, and dispose.
 
@@ -723,7 +882,7 @@ await expectLater(first.pause(), throwsA(
 expect(second.id, const YlPlaybackSessionId('s2'));
 ~~~
 
-Also cover a newer Load cancelling an older uncommitted Load, pre-commit failure retaining the old session, post-commit failure completing pending milestones with the new failure, stop invalidating the current session, player volume remaining usable without a session, double dispose sharing one Future, and post-dispose commands throwing player.disposed.
+Also cover initial buffering leaving ready pending, Ready/First Frame arriving before the load Future, unused milestone failures producing no unhandled error, and a newer Load cancelling an older uncommitted Load, pre-commit failure retaining the old session, post-commit failure completing pending milestones with the new failure, stop invalidating the current session, player volume remaining usable without a session, double dispose sharing one Future, and post-dispose commands throwing player.disposed.
 
 - [ ] **Step 3: Prove the controller suite fails**
 
@@ -739,14 +898,14 @@ Expected: compilation fails because create is not static/async and YlPlaybackSes
 
 Use an internal ChangeNotifier for addListener/removeListener delegation. Subscribe to platform state and events before the private constructor is returned. On every accepted state:
 
-1. reject a lower revision;
+1. reject an equal or lower revision, and ignore every callback after disposal;
 2. replace state;
-3. complete ready for a matching session when status is ready, playing, paused, buffering, or completed;
+3. record Ready only from ready/playing state or measured non-null metrics.loadToReady for that session; paused/buffering/completed alone are not Ready evidence;
 4. complete pending session futures with YlPlayerException when matching status is failed;
 5. notify Listenable listeners once;
 6. add the snapshot once to states.
 
-Cache first-frame session IDs so an event arriving between native commit and Dart load completion still completes the returned session.
+Cache both Ready evidence and First Frame per committed session so transitions arriving between native commit and Dart load completion are retained. First Frame is emitted only for the committed public output, never a private candidate surface. A same-session one-shot milestone remains valid after newer timeline revisions; state revision comparison is not an event deduplication rule. Adapters own callback sequence/event deduplication; the controller rejects events for replaced/stopped sessions. Retain only current and bounded in-flight load records, clearing all others on replacement/stop/failure/dispose. Attach an internal error observer to each milestone Future while preserving the error for callers who await it, so unused ready/firstFrame Futures do not emit uncaught asynchronous errors. Already completed milestones remain completed.
 
 Before every session command, compare the handle ID to state.sessionId and ensure state is not idle/failed. On mismatch throw session.stale locally and do not call the backend.
 
@@ -768,161 +927,9 @@ flutter test packages/yl_player/test/player_controller_test.dart packages/yl_pla
 flutter analyze packages/yl_player
 ~~~
 
-Expected: all commands pass.
+Expected after completing the Tasks 6–8 cutover: all commands pass.
 
-~~~bash
-git add packages/yl_player/lib packages/yl_player/test
-git commit -m "feat: add explicit player sessions"
-~~~
-
-### Task 6: Adapt the existing native wire without claiming strict-policy support
-
-**Files:**
-- Rewrite: packages/yl_player_platform_interface/lib/src/channel/channel_codec.dart
-- Rewrite: packages/yl_player_platform_interface/lib/src/channel/channel_player.dart
-- Replace: packages/yl_player_platform_interface/lib/yl_player_channel.dart
-- Create: packages/yl_player_platform_interface/lib/yl_player_legacy_transport.dart
-- Rewrite: packages/yl_player_platform_interface/test/channel_codec_test.dart
-- Rewrite: packages/yl_player_platform_interface/test/channel_player_test.dart
-- Modify: packages/yl_player_android/lib/yl_player_android.dart
-- Modify: packages/yl_player_ios/lib/yl_player_ios.dart
-- Modify: packages/yl_player_macos/lib/yl_player_macos.dart
-- Modify: packages/yl_player_android/test/yl_player_android_test.dart
-- Modify: packages/yl_player_ios/test/yl_player_ios_test.dart
-- Modify: packages/yl_player_macos/test/yl_player_macos_test.dart
-
-**Interfaces:**
-- Produces createYlLegacyChannelPlayer for endorsed packages only.
-- Maps legacy source generation to deterministic YlPlaybackSessionId values of legacy:<platform>:<playerId>:<generation>.
-- Discards legacy platformDiagnostic values and generates a safe diagnostic ID.
-- Rejects strict managed-network, bounded-buffer, and hardware-required requests with policy.unsupported before invoking open.
-
-- [ ] **Step 1: Preserve and port the dirty fallback-marker regression**
-
-The current uncommitted test named native fallback activation marker does not terminate the channel must remain present and passing after the rewrite. Port it to expect no public event and to rely on the following authoritative engine-changed state/event only.
-
-- [ ] **Step 2: Write failing adapter semantics tests**
-
-Add tests for:
-
-- create waits for the first full state/capability snapshot and times out as protocol.mismatch;
-- protocol version other than 1 rejects creation;
-- generation 3 maps to legacy:android:7:3;
-- load returns only after a full state for a newer generation is observed;
-- first-frame, retry, and error legacy events are correlated to the current session;
-- stale generation deltas and events are ignored;
-- managed, bounded, and hardwareRequired assessment is incompatible and load sends no method call;
-- a PlatformException detail containing a secret URL produces a safe YlPlayerException;
-- stop emits the command but clears the adapter session only after the authoritative idle state;
-- dispose remains idempotent.
-
-- [ ] **Step 3: Prove failures**
-
-Run:
-
-~~~bash
-flutter test packages/yl_player_platform_interface/test/channel_codec_test.dart packages/yl_player_platform_interface/test/channel_player_test.dart
-~~~
-
-Expected: old decoded types and methods do not satisfy the v0.2 SPI, and strict requirements currently pass through.
-
-- [ ] **Step 4: Implement the temporary bridge**
-
-Keep protocolVersion = 1. Decode capabilities out of the first full state but never repeat them in public playback state. Convert AVPlayer legacy isHardwareDecoding false to YlDecoderMode.unknown. Convert Media3 true to hardware and false to unknown; software is asserted only when native provides an explicit software decoder marker.
-
-Track the latest accepted generation and revision. The legacy wire has no revision, so increment one for every accepted full snapshot or delta. Never increment for ignored envelopes. Correlate unversioned first-frame/retry/failure events to the current generation only; this limitation is temporary and must be removed by the Android and Apple typed-transport plans.
-
-For default-policy source assessment, return requiresInspection unless the route can be determined from source kind and format without inspecting content. For every explicit strict requirement, return incompatible with policy.unsupported. load always runs assess first.
-
-Rename the explicit entrypoint to yl_player_legacy_transport.dart and add a deprecation comment stating it is removed before v0.2 publication. Do not export it from yl_player_platform_interface.dart or yl_player.dart.
-
-- [ ] **Step 5: Update all three Dart registrations**
-
-Each registerWith assigns the new YlPlayerPlatform singleton. createPlayer accepts YlPlayerOptions and delegates to createYlLegacyChannelPlayer with its existing channel names and initial engine. Keep dependency injection of MethodChannel, EventChannel, and nativeEvents for tests.
-
-- [ ] **Step 6: Test and commit**
-
-Run:
-
-~~~bash
-dart format packages/yl_player_platform_interface packages/yl_player_android/lib packages/yl_player_android/test packages/yl_player_ios/lib packages/yl_player_ios/test packages/yl_player_macos/lib packages/yl_player_macos/test
-flutter test packages/yl_player_platform_interface/test
-flutter test packages/yl_player_android/test
-flutter test packages/yl_player_ios/test
-flutter test packages/yl_player_macos/test
-~~~
-
-Expected: all tests pass.
-
-~~~bash
-git add packages/yl_player_platform_interface packages/yl_player_android/lib packages/yl_player_android/test packages/yl_player_ios/lib packages/yl_player_ios/test packages/yl_player_macos/lib packages/yl_player_macos/test
-git commit -m "refactor: bridge native v1 transport to player v2"
-~~~
-
-### Task 7: Add real Stop behavior to the temporary native implementations
-
-**Files:**
-- Modify: packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Player.kt
-- Create: packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlStopPolicy.kt
-- Create: packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlStopPolicyTest.kt
-- Modify: packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlPlaybackBackend.swift
-- Modify: packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlIosPlayer.swift
-- Modify: packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlAvPlayerBackend.swift
-- Modify: packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackBackend.swift
-- Modify: packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlPlaybackBackend.swift
-- Modify: packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlMacosPlayer.swift
-- Modify: packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlAvPlayerBackend.swift
-- Modify: packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFallbackBackend.swift
-- Modify: packages/yl_player/example/ios/RunnerTests/RunnerTests.swift
-- Modify: packages/yl_player/example/macos/RunnerTests/RunnerTests.swift
-
-**Interfaces:**
-- Existing legacy command name stop becomes supported.
-- Stop cancels pending open/retry/recovery, clears the current media, resets metrics/tracks/geometry/failure, emits one idle full state, and retains texture/native player identity.
-
-- [ ] **Step 1: Write failing native policy tests**
-
-Extract a pure YlStopPolicy on Android returning an idle state-reset decision and add a test that it clears session data without disposing texture identity. On Apple, add fake YlPlaybackBackend tests proving stop is distinct from deactivate and dispose.
-
-- [ ] **Step 2: Run and observe failure**
-
-Run:
-
-~~~bash
-cd packages/yl_player_android/example/android
-./gradlew testDebugUnitTest --tests '*YlStopPolicyTest' --stacktrace
-cd /Users/yy2021_8689/Desktop/Flutter/yl_player
-sh tool/check_native_ios.sh
-~~~
-
-Expected: Android cannot resolve YlStopPolicy and the Apple fake backend does not implement stop.
-
-- [ ] **Step 3: Implement Android stop**
-
-Add the stop branch to YlMedia3Player.command. It must cancel callbacks/watchdogs, increment sourceGeneration to invalidate old callbacks, pause, stop, clearMediaItems, detach or clear the video surface without releasing the texture, clear track selections and metrics, set status to idle, and emit one full state. Do not deactivate peers or change activePlayerId for stop; the typed coordinator replaces that policy in the Android plan.
-
-- [ ] **Step 4: Implement Apple stop**
-
-Add func stop() to YlPlaybackBackend. Both AVPlayer and fallback implementations cancel pending async work, invalidate their generation, clear media/pixel buffers, and emit idle without unregistering the Flutter texture. YlIosPlayer and YlMacosPlayer cancel their open coordinator then call the current backend stop; a stopped candidate cannot later commit.
-
-- [ ] **Step 5: Run native gates and commit**
-
-Run:
-
-~~~bash
-cd packages/yl_player_android/example/android
-./gradlew testDebugUnitTest --stacktrace
-cd /Users/yy2021_8689/Desktop/Flutter/yl_player
-sh tool/check_native_ios.sh
-sh tool/check_native_macos.sh --unit-only
-~~~
-
-Expected: Android JVM tests and Apple native/unit integration gates pass.
-
-~~~bash
-git add packages/yl_player_android/android packages/yl_player_ios/ios packages/yl_player_macos/macos packages/yl_player/example/ios/RunnerTests packages/yl_player/example/macos/RunnerTests
-git commit -m "feat: add non-destructive player stop"
-~~~
+Do not create an intermediate commit: keep this work in the atomic Tasks 6–8 cutover and run the combined gate in Task 8 before committing.
 
 ### Task 8: Switch the app barrel and examples to the breaking v0.2 API
 
@@ -943,7 +950,7 @@ git commit -m "feat: add non-destructive player stop"
 
 - [ ] **Step 1: Write the failing export-boundary test**
 
-Create packages/yl_player/test/public_api_test.dart. Import only package:yl_player/yl_player.dart and instantiate every documented app-facing type. Add packages/yl_player/test/fixtures/platform_api_must_not_compile.dart importing the app barrel and referring to YlPlayerPlatform. Invoke dart analyze on that fixture from a test process and assert a non-zero exit containing undefined_identifier.
+Create packages/yl_player/test/public_api_test.dart. Import only package:yl_player/yl_player.dart and instantiate every documented app-facing type. Store the negative source as packages/yl_player/test/fixtures/platform_api_must_not_compile.dart.txt so normal analysis ignores it. At test time copy it to a unique temporary .dart file, write a temporary pubspec and package configuration using the workspace's resolved packages (resolve every relative rootUri to an absolute file URI before copying), invoke dart analyze --suppress-analytics, and require undefined_identifier specifically for YlPlayerPlatform (not missing-package/config errors). Clean up the temporary directory in finally. Do not place intentionally invalid .dart sources under the analyzed repository or exclude ordinary test directories from analysis.
 
 - [ ] **Step 2: Update the example to explicit async ownership**
 
@@ -968,7 +975,7 @@ Replace constructor/open with awaited create/load. Keep Ready and First Frame as
 
 - [ ] **Step 4: Restrict exports**
 
-Use an explicit show list when re-exporting platform-interface domain types. Do not export YlPlayerPlatform, YlPlatformPlayer, YlPlatformLoadResult, YlPlatformImplementationInfo, validators, testing helpers, or legacy transport.
+Switch the platform-interface public barrel to v2 domain/SPI definitions, remove lib/src/v2.dart after changing all new tests to the public barrel, and delete old model/SPI/validation files only after migrating every import and test. Add a compatibility update to player_view.dart in this atomic cutover so it compiles with the new controller/state; the final view plan supplies geometry and presentation behavior. Use an explicit show list when re-exporting platform-interface domain types. Do not export YlPlayerPlatform, YlPlatformPlayer, YlPlatformLoadResult, YlPlatformImplementationInfo, validators, testing helpers, or legacy transport.
 
 - [ ] **Step 5: Run the complete phase gate**
 
@@ -978,7 +985,7 @@ Run:
 sh tool/check_foundation.sh
 cd packages/yl_player_android/example/android
 ./gradlew testDebugUnitTest --stacktrace
-cd /Users/yy2021_8689/Desktop/Flutter/yl_player
+cd "$YL_REPO_ROOT"
 sh tool/check_native_ios.sh
 sh tool/check_native_macos.sh
 git diff --check
@@ -989,7 +996,7 @@ Expected: all automated Dart, Android, iOS Simulator, macOS unit/universal/Roset
 - [ ] **Step 6: Commit**
 
 ~~~bash
-git add packages/yl_player packages/yl_player_platform_interface
+git add packages/yl_player packages/yl_player_platform_interface packages/yl_player_android/lib packages/yl_player_android/test packages/yl_player_ios/lib packages/yl_player_ios/test packages/yl_player_macos/lib packages/yl_player_macos/test
 git commit -m "feat!: expose player v0.2 api"
 ~~~
 

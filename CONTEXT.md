@@ -28,6 +28,8 @@ _Avoid_: Custom headers, best-effort networking
 **Bounded Buffer**:
 A buffering requirement that places explicit limits on Player-managed media
 queues and caches. It does not describe system, decoder, or GPU allocations.
+The managed payload includes media waiting for submission as well as media
+already admitted to playback queues.
 _Avoid_: Memory limit, buffer hint
 
 **Hardware Required**:
@@ -47,7 +49,8 @@ _Avoid_: App-managed audio, background audio
 
 **Load**:
 The operation that validates a Media Source and commits a new Playback Session
-to a Player.
+to a Player, making that session observable and immediately addressable by
+session commands.
 _Avoid_: Open, initialize
 
 **Playback Session**:
@@ -62,11 +65,13 @@ _Avoid_: Generation, player ID
 
 **Ready**:
 The point at which a Playback Session can begin or resume playback. Ready does
-not imply that a video frame has been presented.
+not imply that a video frame has been presented; initial buffering alone does
+not establish Ready.
 _Avoid_: Loaded, opened
 
 **First Frame**:
-The first video frame presented for a Playback Session.
+The first video frame presented on the public video output for a Playback
+Session. A frame rendered only while preparing a candidate is not First Frame.
 _Avoid_: Ready, decoded frame
 
 **Stop**:

@@ -1,3 +1,4 @@
+import AppKit
 import CoreVideo
 import FlutterMacOS
 import Foundation
@@ -15,6 +16,7 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
   }
   var isActive: Bool { slot.current.isActive }
 
+  private weak var displayView: NSView?
   private let textures: FlutterTextureRegistry
   private let configuration: PlayerConfiguration
   private let emit: ([String: Any?]) -> Void
@@ -36,6 +38,7 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
     playerId: Int64,
     textures: FlutterTextureRegistry,
     configuration: PlayerConfiguration,
+    displayView: NSView? = nil,
     emit: @escaping ([String: Any?]) -> Void
   ) {
     let mainEmit: ([String: Any?]) -> Void = { event in
@@ -46,6 +49,7 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
       }
     }
     self.playerId = playerId
+    self.displayView = displayView
     self.textures = textures
     self.configuration = configuration
     self.emit = mainEmit
@@ -53,6 +57,7 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
       playerId: playerId,
       textures: textures,
       configuration: configuration,
+      displayView: displayView,
       emit: mainEmit
     )
     self.avBackend = avBackend
@@ -430,6 +435,7 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
           prepared: prepared,
           qualityConstraint: qualityConstraint,
           generation: slot.generation &+ 1,
+          displayView: displayView,
           emit: emit
         )
         applyPersistentPlaybackControls(to: backend)

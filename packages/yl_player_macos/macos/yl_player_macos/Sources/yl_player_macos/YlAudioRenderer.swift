@@ -94,6 +94,8 @@ protocol YlAudioRendering: AnyObject {
 final class YlAudioRenderer: YlAudioRendering {
   private static let targetScheduledWallClockDurationUs: Int64 = 1_000_000
   private let lock = NSLock()
+  // Converter and output controls share an order across demux and UI threads.
+  private let operations = NSRecursiveLock()
   private let maxScheduledDurationUs: Int64
   private let maxScheduledBytes: Int
   private let converter: YlAudioPacketConverting
@@ -150,10 +152,14 @@ final class YlAudioRenderer: YlAudioRendering {
   }
 
   var renderedAudioTime: YlRenderedAudioTime? {
-    output.renderedAudioTime
+    operations.lock()
+    defer { operations.unlock() }
+    return output.renderedAudioTime
   }
 
   func configure(stream: YlAudioStreamConfiguration) throws {
+    operations.lock()
+    defer { operations.unlock() }
     guard lock.withLock({ !disposed }) else {
       throw NativePlayerError(
         category: "internal",
@@ -183,6 +189,8 @@ final class YlAudioRenderer: YlAudioRendering {
   }
 
   func enqueue(packet: YlCompressedAudioPacket) throws -> YlAudioEnqueueResult {
+    operations.lock()
+    defer { operations.unlock() }
     let estimate = converter.estimateOutput(for: packet)
     lock.lock()
     guard !disposed, configuredGeneration == packet.generation else {
@@ -242,11 +250,17 @@ final class YlAudioRenderer: YlAudioRendering {
         completionGeneration: token
       )
     }
-    if shouldRestartOutput { try startOutput() }
+    if shouldRestartOutput, lock.withLock({
+      !disposed && playbackRequested && completionGeneration == token
+    }) {
+      try startOutput()
+    }
     return .scheduled
   }
 
   func play() throws {
+    operations.lock()
+    defer { operations.unlock() }
     lock.lock()
     guard !disposed else {
       lock.unlock()
@@ -275,6 +289,8 @@ final class YlAudioRenderer: YlAudioRendering {
   }
 
   func pause() {
+    operations.lock()
+    defer { operations.unlock() }
     lock.withLock {
       playbackRequested = false
       waitingForAudio = false
@@ -283,21 +299,29 @@ final class YlAudioRenderer: YlAudioRendering {
   }
 
   func seek(to positionUs: Int64) {
+    operations.lock()
+    defer { operations.unlock() }
     _ = positionUs
     flush()
   }
 
   func setVolume(_ volume: Float) {
+    operations.lock()
+    defer { operations.unlock() }
     output.volume = min(max(volume, 0), 1)
   }
 
   func setRate(_ rate: Float) {
+    operations.lock()
+    defer { operations.unlock() }
     let clampedRate = min(max(rate, 0.25), 4)
     lock.withLock { playbackRate = clampedRate }
     output.rate = clampedRate
   }
 
   func flush() {
+    operations.lock()
+    defer { operations.unlock() }
     lock.lock()
     guard !disposed else {
       lock.unlock()
@@ -314,6 +338,8 @@ final class YlAudioRenderer: YlAudioRendering {
   }
 
   func reset(generation: UInt64) {
+    operations.lock()
+    defer { operations.unlock() }
     flush()
     lock.withLock {
       if !disposed { configuredGeneration = generation }
@@ -321,6 +347,8 @@ final class YlAudioRenderer: YlAudioRendering {
   }
 
   func dispose() {
+    operations.lock()
+    defer { operations.unlock() }
     lock.lock()
     guard !disposed else {
       lock.unlock()

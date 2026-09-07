@@ -1,3 +1,4 @@
+import AppKit
 import AVFoundation
 import CoreVideo
 import FlutterMacOS
@@ -102,6 +103,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   var textureId: Int64 = -1
   var isActive: Bool { active }
 
+  private weak var displayView: NSView?
   private let textures: FlutterTextureRegistry
   private let configuration: PlayerConfiguration
   private let emit: ([String: Any?]) -> Void
@@ -164,9 +166,11 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     playerId: Int64,
     textures: FlutterTextureRegistry,
     configuration: PlayerConfiguration,
+    displayView: NSView? = nil,
     emit: @escaping ([String: Any?]) -> Void
   ) {
     self.playerId = playerId
+    self.displayView = displayView
     self.textures = textures
     self.configuration = configuration
     self.emit = emit
@@ -186,7 +190,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     ) { [weak self] _ in
       self?.emitStateDelta()
     }
-    let link = YlDisplayTimer { [weak self] in self?.displayLinkTick() }
+    let link = YlDisplayTimer(view: displayView) { [weak self] in self?.displayLinkTick() }
     link.isPaused = true
     displayLink = link
   }

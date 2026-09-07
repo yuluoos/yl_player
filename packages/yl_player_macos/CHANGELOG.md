@@ -1,3 +1,12 @@
+## Unreleased
+
+- Charge queued compressed video before submission, bound outstanding work, and
+  release cancelled samples before decoder teardown.
+- Serialize audio scheduling and controls so an automatic restart cannot
+  override pause or disposal.
+- Follow the owning Flutter window's display cadence and screen changes while
+  preserving playback pause state.
+
 ## 0.1.0-dev.1
 
 - Add endorsed macOS federated registration.

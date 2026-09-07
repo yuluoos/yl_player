@@ -6,12 +6,14 @@ public final class YlPlayerMacosPlugin: NSObject, FlutterPlugin, FlutterStreamHa
   static let eventChannelName = "dev.ylplayer.yl_player_macos/events"
 
   private let textures: FlutterTextureRegistry
+  private weak var displayView: NSView?
   private var players: [Int64: YlMacosPlayer] = [:]
   private var nextPlayerId: Int64 = 1
   private var eventSink: FlutterEventSink?
   private var lifecycleObservers: [NSObjectProtocol] = []
 
-  init(textures: FlutterTextureRegistry) {
+  init(textures: FlutterTextureRegistry, displayView: NSView? = nil) {
+    self.displayView = displayView
     self.textures = textures
     super.init()
     lifecycleObservers = [
@@ -39,7 +41,7 @@ public final class YlPlayerMacosPlugin: NSObject, FlutterPlugin, FlutterStreamHa
   }
 
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let instance = YlPlayerMacosPlugin(textures: registrar.textures)
+    let instance = YlPlayerMacosPlugin(textures: registrar.textures, displayView: registrar.view)
     let methods = FlutterMethodChannel(
       name: methodChannelName,
       binaryMessenger: registrar.messenger
@@ -84,6 +86,7 @@ public final class YlPlayerMacosPlugin: NSObject, FlutterPlugin, FlutterStreamHa
       playerId: playerId,
       textures: textures,
       configuration: configuration,
+      displayView: displayView,
       emit: { [weak self] event in self?.eventSink?(event) }
     )
     let textureId = textures.register(nativePlayer)

@@ -2,7 +2,7 @@
 
 Date: 2026-09-06
 
-Status: Approved in design review
+Status: Approved in design review; review corrections authorized on 2026-09-07
 
 ## 1. Purpose
 
@@ -61,8 +61,10 @@ central distinction is between a long-lived **Player** and one committed
 identity correlates every command, state snapshot, state delta, and event.
 
 Ready and First Frame remain distinct. Ready means that a Playback Session can
-begin or resume playback; First Frame means that the first video frame has
-actually been presented. Stop ends the current Playback Session without
+begin or resume playback; initial buffering alone does not prove Ready. Ready
+requires an actual ready/playing transition or a measured load-to-ready result.
+First Frame means that the first video frame has actually been presented on the
+committed public output, not a private surface used to prepare a candidate. Stop ends the current Playback Session without
 destroying its Player.
 
 ## 4. Package Architecture
@@ -140,6 +142,11 @@ await session.firstFrame;
 Load completion means that validation and routing succeeded and the native
 implementation committed the session. It does not mean Ready or First Frame.
 The session exposes separately correlated futures for those milestones.
+The platform adapter completes Load only after receiving both its commit reply
+and the corresponding authoritative full state, regardless of delivery order.
+A returned handle can issue play immediately without an extra event-loop pump.
+A replacement, Stop, or disposal during this barrier invalidates the pending
+Load instead of returning a handle to a session that is already stale.
 
 Before commit, the previous session remains authoritative. A pre-commit failure
 leaves it unchanged. After commit, network, container, or decoder failure
@@ -165,6 +172,14 @@ Calling a command through a replaced or stopped session fails with a stable
 `session.stale` failure. It can never control whichever source became current
 later. Stop ends the current session and returns the Player to idle while
 retaining its native instance and video output.
+
+Ready and First Frame are historical milestones cached per session. A same-
+session First Frame is not discarded merely because a newer timeline revision
+arrived first. Replaced/stopped sessions cannot reveal the current output.
+Pending milestone failures have internal error observers so applications that
+do not await every milestone receive no unhandled asynchronous error; awaiting
+the same Future still reports its failure. Keep current and bounded in-flight
+records only, and release invalidated session records.
 
 Controller disposal is idempotent. Commands after disposal fail with a stable
 player-lifecycle failure rather than a generic `StateError`.
@@ -215,7 +230,26 @@ behavior to the selected platform engine and promises no exact values.
 `YlNetworkPolicy.managed` requires the implementation to enforce every supplied
 timeout, retry, redirect, and credential rule. A route whose native network
 stack is opaque or only partially controllable is incompatible with the
-requested policy.
+requested policy. Credential origin protection applies to platformDefault as
+well: an opaque route must reject credential-bearing sources when it cannot
+prove safe forwarding; it must not silently omit credentials or weaken scope.
+
+Managed connectTimeout is the deadline from starting each initial/retry/redirect
+HTTP hop until response headers (including DNS, connection, TLS and server wait).
+readTimeout measures body inactivity after headers and resets on progress. There
+is no overall/call-timeout field or total-time promise; native socket-connect
+timeout settings alone do not implement this header deadline. maxRetries excludes the initial attempt. Retry only
+idempotent GET/HEAD after transient transport failures or HTTP
+408/429/500/502/503/504; validation, cancellation, certificate/trust failures and
+other terminal responses are not retried. Retry n starts at 1 and waits
+min(maxRetryDelay, baseRetryDelay * 2^(n-1)), with saturating arithmetic and no
+jitter. A valid Retry-After seconds/date replaces this delay when within
+maxRetryDelay; an excessive value ends retries rather than retrying too early.
+Absent/malformed Retry-After uses the formula. Date parsing uses an injected wall
+clock, while scheduling and timeouts use a monotonic clock. Redirect count is
+separate from retry count and spans the original resource request's attempts;
+retrying never restores stripped credentials. Engine/watchdog recovery must not
+bypass this request budget by independently restarting the same request.
 
 ### 7.2 Buffer strategy
 
@@ -226,7 +260,15 @@ are optimization goals rather than exact memory guarantees.
 durations plus a maximum managed byte count. All fields are required and
 validated together. The byte boundary covers package-managed media caches,
 compressed-packet queues, and frame or audio queues explicitly assigned to the
-budget. It does not claim to bound OS, TLS, decoder, or GPU allocations.
+budget. Admission includes retained compressed samples waiting for submission,
+not only samples already executing in a decoder. Reserve before retaining or
+copying payload, carry the reservation for its full retained lifetime, and
+release queued payload on cancellation. State explicitly which payload queues
+are charged, including decoded frames/PCM assigned to the budget; collection
+metadata and spare capacity are not a process RSS guarantee. It does not claim
+to bound OS, TLS, decoder, or GPU allocations. Active/prepared/recovery generations
+share the appropriate Player-owned budget rather than each receiving a fresh
+full allowance.
 
 A system engine such as AVPlayer that cannot enforce this budget rejects the
 requirement rather than silently ignoring its fields.
@@ -240,7 +282,12 @@ Hardware preferred chooses a proven hardware path where available but permits a
 system-managed engine whose actual decoder mode is unknown. Hardware required
 accepts a video session only after hardware decode can be positively
 established. An AVPlayer route cannot claim to satisfy hardware required because
-AVPlayer does not expose that evidence.
+AVPlayer does not expose that evidence. Android codec-name heuristics, including
+API 24–28, are not positive hardware proof; without independently verified
+evidence a strict video request is rejected. Audio-only sources have no video
+hardware requirement. Decoder recreation must re-establish the requirement.
+On iOS 15/16 retain the verified VideoToolbox string-key compatibility path;
+newer SDK constant availability must not raise the declared deployment floor.
 
 `YlDecoderMode` is `unknown`, `hardware`, or `software`; it replaces the
 non-null boolean that currently conflates unknown and software.
@@ -271,6 +318,20 @@ The assessment includes a candidate engine, satisfied requirements,
 limitations, and a structured rejection where applicable. Compatible means the
 descriptor can be routed and the requested policies can be honored. It does not
 guarantee network reachability or that uninspected media codecs will initialize.
+Requirement and limitation identifiers are extensible typed values with stable,
+validated wire strings rather than a closed enum or arbitrary diagnostic text.
+Implementation identity has a single immutable authority in the SPI handshake;
+controller read-only name/version getters expose it to apps without duplicating
+it in capabilities or exporting the SPI metadata type.
+
+Apple v0.2 managed fallback support is constrained by the shipped bridge:
+Matroska and FLV (WebM only to the extent of actual codec support) are the managed
+success routes. Managed HLS, MP4/MOV, AVI, and MPEG routes remain explicitly
+unsupported until the required demuxers and controlled child-resource I/O exist.
+AVPlayer remains the default compatible route where its guarantees are adequate.
+Known supported strict-policy fixtures must succeed; a suite in which every
+explicit requirement is rejected does not prove implementation of supported
+managed playback.
 
 Load performs the same assessment automatically, so calling assess first is
 optional.
@@ -312,7 +373,12 @@ rejected command throws but does not mutate healthy playback state.
 
 Native implementations send full snapshots for semantic changes and narrowly
 defined deltas for periodic timeline and metric updates. Deltas are applied only
-when their session identity and revision are current.
+when their session identity and revision are current. Native typed callbacks
+use one per-player FIFO dispatcher, awaiting each Dart acknowledgement before
+sending the next callback across Pigeon's method-specific channels. Callback
+sequence and state revision are distinct: event deduplication must not discard a
+valid historical milestone solely because a newer state revision exists.
+Callback timeout/disposal invalidates the route; it must not hang teardown.
 
 ## 10. Failure and Diagnostic Contract
 
@@ -378,6 +444,11 @@ authoritative geometry available from Media3, AVPlayer, or the managed fallback.
 - the supplied placeholder until the current session presents its first frame;
 - texture rendering with configurable filter quality.
 
+The view first computes logical width = displaySize.width * pixelAspectRatio
+and logical height = displaySize.height, then applies unapplied rotation, and
+finally BoxFit. Rotation participates inside the fit calculation. Display-size
+fields must not already bake in PAR and then multiply it a second time.
+
 Applications may opt into another fit or placeholder policy. The view continues
 to contain no controls, gestures, playlist behavior, or application state.
 
@@ -396,7 +467,11 @@ integration.
 `yl_player_platform_interface/testing.dart` publishes a conformance harness for
 third-party implementations. It verifies lifecycle, Load commit semantics,
 stale session rejection, Stop, revision ordering, event correlation, failure
-safety, policy rejection, and idempotent disposal.
+safety, policy rejection, and idempotent disposal. Every case has a configurable
+deadline, isolated resources, and bounded finally cleanup, including late create
+completion. Deterministic fixture hooks hold/release pre-commit loads to exercise
+cancellation; no timing race substitutes for control. Known supported policy
+cases have explicit success expectations alongside unsupported-policy cases.
 
 ## 14. Private Typed Transport
 
@@ -419,6 +494,12 @@ The typed transport contains:
 - typed events and failures;
 - session ID, revision, and sequence validation.
 
+Schemas specify every field's type, nullability, unit and range. Idle full state
+has null sessionId; session events require non-empty IDs. Policy timeouts and
+managed byte budgets fit signed 32-bit values; timeline positions, monotonic
+timestamps, revisions and sequences use nonnegative signed 64-bit integers.
+Nullable delta updates distinguish absent from explicit clearing.
+
 Generated sources are committed. CI regenerates them and fails when the schema
 or generated files drift.
 
@@ -439,7 +520,10 @@ The Android implementation is decomposed into:
 The decoder-lease coordinator validates and prepares a candidate session before
 committing it. When a hardware resource must change owners, it quiesces the
 previous owner, activates the candidate, commits on success, and restores the
-previous owner on failure. The plugin no longer marks a Player active or
+previous owner on failure. Activation and restoration are cancellable async
+stages so the main looper remains free for decoder callbacks, Stop and lifecycle
+events. If restoration itself fails, publish its actual terminal failure rather
+than claiming the previous session is still playing. The plugin no longer marks a Player active or
 deactivates peers before the target command has a viable commit path.
 
 The existing hardware-only MediaCodec selector, bounded Media3 load-control
@@ -500,6 +584,11 @@ change or deactivate audio state it does not own.
 that mode, the plugin manages media playback audio focus, noisy-output handling,
 and Apple playback-session activation. It records ownership and deactivates only
 state it activated, and only after the last plugin-managed Player releases it.
+Apple audio leases are process-wide across Flutter engine/plugin registrations.
+Android uses one focus/noisy owner; when the shared coordinator owns focus,
+individual ExoPlayer instances do not also enable automatic focus management.
+Lifecycle suspension covers all active and pending sessions, including audio-only
+sessions without a video-decoder lease.
 
 Background audio remains unsupported. Existing lifecycle suspension and
 resource-release behavior is preserved and made explicit in state.
@@ -510,13 +599,22 @@ resource-release behavior is preserved and made explicit in state.
 
 Record the current full gate results and preserve the existing uncommitted
 macOS and channel changes independently. Architecture work must not overwrite,
-silently absorb, or revert those changes.
+silently absorb, or revert those changes. Those original changes are now
+checkpointed by 1b239e0 and 49f59cf; include the separately reviewed submission,
+audio, display and test fixes in the migration baseline. Command roots are
+resolved once from the selected checkout/worktree, never a machine-specific
+original checkout path.
 
 ### Phase 1: public v0.2 domain and SPI
 
 Add the new domain models, Player/Session API, platform SPI, fake implementation,
 and conformance tests. Use a temporary adapter over the existing native
 transport so the repository remains testable while native migration begins.
+First synchronize migration package versions and workspace constraints. Introduce
+v2 definitions behind an internal barrel while v1 remains buildable; add native
+Stop before switching the API. Adapter/controller/registration/example migration
+and removal of superseded v1 exports form one atomic green cutover, not separate
+broken commits. Do not publish transitional packages.
 
 ### Phase 2: Android typed transport and coordination
 
@@ -528,7 +626,12 @@ transactional decoder-lease coordination.
 
 Create `yl_player_apple`, merge the bridge XCFramework, move common sources into
 the Darwin layout without algorithm changes, add the private Pigeon pair, and
-prove iOS/macOS behavior parity before changing package endorsement.
+prove iOS/macOS behavior parity before changing package endorsement. Bootstrap
+independent Flutter consumers early so CocoaPods and SwiftPM checks have genuine
+Flutter/FlutterMacOS engine linkage. A bare swift build with an unresolved
+relative FlutterFramework dependency is not a consumer gate. Artifact provenance
+requires clean source/toolchain rebuild evidence, not simply replacing a binary
+and updating its checksum.
 
 ### Phase 4: Apple decomposition and policy enforcement
 
@@ -547,7 +650,13 @@ guide must map every removed public symbol to the new contract.
 
 ## 19. Test and Verification Strategy
 
-All behavioral work follows red-green-refactor. Required coverage includes:
+All behavioral work follows red-green-refactor. Each commit passes analysis and
+affected tests; complete foundation/native/consumer gates run at phase boundaries.
+PR quick gates cover analysis, Dart/conformance, generated transport drift,
+artifact manifests and affected native tests. Nightly/release gates supply all
+automated devices, independent consumers, architecture and reproducibility
+checks. Android emulator CI covers API 24 and 36, with API 35 only an optional
+extra. Skipped checks are not recorded as passing. Required coverage includes:
 
 ### Dart and SPI
 

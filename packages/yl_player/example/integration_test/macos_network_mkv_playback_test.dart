@@ -19,6 +19,30 @@ void main() {
     ),
   );
 
+  Future<double> measurePlaybackRate(
+    YlPlayerController controller,
+    double speed,
+  ) async {
+    await controller.setPlaybackSpeed(speed);
+    final positionBeforeChange = controller.state.position;
+    final first = await controller.states
+        .firstWhere((state) => state.position > positionBeforeChange)
+        .timeout(const Duration(seconds: 5));
+    final elapsed = Stopwatch()..start();
+    final last = await controller.states
+        .firstWhere(
+          (state) =>
+              state.position > first.position &&
+              elapsed.elapsed >= const Duration(milliseconds: 900),
+        )
+        .timeout(const Duration(seconds: 5));
+    elapsed.stop();
+    expect(last.status, YlPlaybackStatus.playing);
+    expect(last.error, isNull);
+    return (last.position - first.position).inMicroseconds /
+        elapsed.elapsedMicroseconds;
+  }
+
   testWidgets('HTTP range MKV uses the native fallback', (
     WidgetTester tester,
   ) async {
@@ -122,19 +146,13 @@ void main() {
 
     final underrunsBeforeTransitions = controller.state.metrics.audioUnderruns;
     for (var cycle = 0; cycle < 2; cycle += 1) {
-      await controller.setPlaybackSpeed(3);
-      final acceleratedStart = controller.state.position;
-      await Future<void>.delayed(const Duration(milliseconds: 900));
-      final acceleratedDelta = controller.state.position - acceleratedStart;
-      expect(acceleratedDelta, greaterThan(const Duration(milliseconds: 1800)));
-      expect(acceleratedDelta, lessThan(const Duration(milliseconds: 3800)));
+      final acceleratedRate = await measurePlaybackRate(controller, 3);
+      expect(acceleratedRate, greaterThan(2));
+      expect(acceleratedRate, lessThan(4.25));
 
-      await controller.setPlaybackSpeed(1);
-      final restoredStart = controller.state.position;
-      await Future<void>.delayed(const Duration(milliseconds: 900));
-      final restoredDelta = controller.state.position - restoredStart;
-      expect(restoredDelta, greaterThan(const Duration(milliseconds: 500)));
-      expect(restoredDelta, lessThan(const Duration(milliseconds: 1500)));
+      final restoredRate = await measurePlaybackRate(controller, 1);
+      expect(restoredRate, greaterThan(0.55));
+      expect(restoredRate, lessThan(1.7));
       expect(controller.state.status, YlPlaybackStatus.playing);
       expect(controller.state.error, isNull);
     }

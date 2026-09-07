@@ -180,6 +180,14 @@ void main() {
       expect(states, isEmpty);
       expect(events, isEmpty);
 
+      nativeEvents.add(_stateEnvelope(generation: 9, status: 'paused'));
+      nativeEvents.add(_deltaEnvelope(generation: 9, positionMs: 2500));
+      expect(states, hasLength(2));
+      expect(player.state.status, YlPlaybackStatus.paused);
+      expect(player.state.position, const Duration(milliseconds: 2500));
+      expect(player.state.error, isNull);
+      expect(events, isEmpty);
+
       await stateSubscription.cancel();
       await eventSubscription.cancel();
       await player.dispose();
