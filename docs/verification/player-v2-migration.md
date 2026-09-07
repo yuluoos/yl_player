@@ -25,8 +25,8 @@ The baseline includes the original channel/macOS changes in `1b239e0` and
 | 1 — safe values | Complete, independently reviewed | `eeb6011` plus `aec1f01`; all review findings resolved. |
 | 2 — sources and policies | Complete, independently reviewed | `b12d727`; additive internal models and validation. |
 | 3 — state and events | Complete, independently reviewed | `e561f41`; 17 focused tests and 94 platform-interface tests passed. |
-| 4 — SPI and conformance | In progress | Additive SPI/testing entry; existing production SPI remains in use. |
-| 5 — native Stop | Pending | Native cancellation, reset and texture-identity checks required. |
+| 4 — SPI and conformance | Complete, independently reviewed | `cca816c` plus `477b2b0`; 36 focused tests and analysis pass after fixes. |
+| 5 — native Stop | In progress | Native cancellation, reset and texture-identity checks required. |
 | 6–8 — atomic API cutover | Pending | Adapter, controller, view, registrations, examples and tests must pass together. |
 | 9 — phase acceptance | Pending | Full foundation and native gates have not been run against the completed v2 phase. |
 
@@ -144,3 +144,21 @@ Const values require explicit release validation at controller/native publicatio
 boundaries. Controller revision chronology, native duration overflow checks and
 negative live-offset normalization remain requirements of the upcoming adapters
 and controller; these value-model tests do not claim those integrations exist.
+
+## Task 4 validation
+
+`cca816c` adds the v2 handwritten SPI, token-verified registration and the public
+`testing.dart` conformance entry. Initial focused tests: 31 passed; full platform-
+interface suite: 125 passed; root analysis passed. Review found three runner gaps
+covering current-source seekability, omitted credentials and short-header false
+positives. `477b2b0` adds failing regressions and fixes; all 36 focused tests and
+root analysis pass. The full package suite was not repeated for this scoped fix. Scoped independent
+re-review approved all three fixes with no new findings.
+
+Each conformance case has isolated resources, a deadline and bounded cleanup,
+including late creation/errors. Generic conformance requires declared successful
+source/policy evidence but permits honest unsupported strict policies; advertised
+managed native routes must separately prove their known strict-success cases.
+Secrecy checks use distinctive metadata canaries of at least 16 characters plus
+unsafe-shape checks; they are finite fixture evidence, not universal data-flow
+proof. Native transport ordering and controller milestone tests remain required.
