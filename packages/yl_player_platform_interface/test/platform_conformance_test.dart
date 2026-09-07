@@ -17,6 +17,80 @@ void main() {
     );
   });
 
+  test(
+    'non-seekable live source uses a valid first-frame progress command',
+    () async {
+      final failures = await _run(
+        _Fixture(timeline: const YlTimeline(isLive: true, isSeekable: false)),
+      );
+      expect(failures, isEmpty);
+    },
+  );
+  test(
+    'DVR first-frame progress stays inside a window starting after zero',
+    () async {
+      final failures = await _run(
+        _Fixture(
+          timeline: const YlTimeline(
+            isLive: true,
+            isSeekable: true,
+            position: Duration(seconds: 150),
+            dvrWindow: YlDvrWindow(
+              start: Duration(seconds: 100),
+              end: Duration(seconds: 200),
+            ),
+          ),
+        ),
+      );
+      expect(failures, isEmpty);
+    },
+  );
+  test(
+    'network source with ordinary short header values is conformant',
+    () async {
+      final failures = await _run(
+        _Fixture(
+          source: YlNetworkSource(
+            Uri.parse('https://media.example/movie.mp4'),
+            request: YlHttpRequest(
+              headers: {'X-Version': '2', 'X-Mode': 'idle'},
+            ),
+          ),
+        ),
+      );
+      expect(failures, isEmpty);
+    },
+  );
+  test(
+    'bare distinctive credential value fails public string conformance',
+    () async {
+      const credential = 'canary7e21f349acdeCredential';
+      final failures = await _run(
+        _Fixture(
+          source: YlNetworkSource(
+            Uri.parse('https://media.example/movie.mp4'),
+            request: YlHttpRequest(credentials: {'X-Session': credential}),
+          ),
+          publicFailureMessage: credential,
+        ),
+      );
+      expect(failures.map((f) => f.caseName), contains('safe-public-strings'));
+    },
+  );
+  test('bare distinctive ordinary header value remains detectable', () async {
+    const marker = 'canaryOrdinaryHeader219ca731';
+    final failures = await _run(
+      _Fixture(
+        source: YlNetworkSource(
+          Uri.parse('https://media.example/movie.mp4'),
+          request: YlHttpRequest(headers: {'X-Custom': marker}),
+        ),
+        publicFailureMessage: marker,
+      ),
+    );
+    expect(failures.map((f) => f.caseName), contains('safe-public-strings'));
+  });
+
   for (final entry in <_Break, String>{
     _Break.stale: 'stale-session',
     _Break.revision: 'revision-order',
@@ -229,6 +303,12 @@ class _Fixture implements YlPlatformConformanceFixture {
     this.firstDisposeHangs = false,
     this.onlyUnsupported = false,
     this.defaultSuccess = false,
+    this.source = const YlFileSource('/private-secret/movie.mp4'),
+    this.timeline = const YlTimeline(
+      isSeekable: true,
+      duration: Duration(seconds: 10),
+    ),
+    this.publicFailureMessage,
   });
   final _Break? broken;
   final Future<YlPlatformPlayer>? firstCreate;
@@ -242,7 +322,9 @@ class _Fixture implements YlPlatformConformanceFixture {
   final players = <_FakePlayer>[];
   var creates = 0;
   @override
-  YlMediaSource get source => const YlFileSource('/private-secret/movie.mp4');
+  final YlMediaSource source;
+  final YlTimeline timeline;
+  final String? publicFailureMessage;
   @override
   List<YlConformancePolicyCase> get policyCases => [
     if (!onlyUnsupported)
@@ -263,6 +345,8 @@ class _Fixture implements YlPlatformConformanceFixture {
     if (first && firstCreate != null) return firstCreate!;
     final player = _FakePlayer(
       broken: broken,
+      timeline: timeline,
+      publicFailureMessage: publicFailureMessage,
       volumeFuture: first ? firstVolume : null,
       releaseFuture: first ? firstRelease : null,
       disposeFuture: first ? firstDispose : null,
@@ -342,6 +426,11 @@ class _FakePlayer implements YlPlatformPlayer {
     this.disposeFuture,
     this.cleanupHangs = false,
     this.disposeHangs = false,
+    this.timeline = const YlTimeline(
+      isSeekable: true,
+      duration: Duration(seconds: 10),
+    ),
+    this.publicFailureMessage,
   });
   final _Break? broken;
   final Future<void>? volumeFuture;
@@ -349,6 +438,8 @@ class _FakePlayer implements YlPlatformPlayer {
   final Future<void>? disposeFuture;
   final bool cleanupHangs;
   final bool disposeHangs;
+  final YlTimeline timeline;
+  final String? publicFailureMessage;
   final didDispose = Completer<void>();
   final stateController = StreamController<YlPlayerState>.broadcast();
   final eventController = StreamController<YlPlayerEvent>.broadcast();
@@ -443,13 +534,19 @@ class _FakePlayer implements YlPlatformPlayer {
         YlPlayerState(
           sessionId: id,
           status: YlPlaybackStatus.buffering,
-          failure: broken == _Break.unsafe || broken == _Break.unsafeMessage
+          timeline: timeline,
+          failure:
+              broken == _Break.unsafe ||
+                  broken == _Break.unsafeMessage ||
+                  publicFailureMessage != null
               ? YlFailure(
                   category: YlFailureCategory.internal,
                   code: YlFailureCodes.internal,
-                  message: broken == _Break.unsafe
-                      ? '/private-secret/movie.mp4'
-                      : 'Authorization: private-secret',
+                  message:
+                      publicFailureMessage ??
+                      (broken == _Break.unsafe
+                          ? '/private-secret/movie.mp4'
+                          : 'Authorization: private-secret'),
                   retryable: false,
                   scope: YlFailureScope.session,
                   diagnosticId: 'fake',
@@ -500,6 +597,16 @@ class _FakePlayer implements YlPlatformPlayer {
   @override
   Future<void> seekTo(YlPlaybackSessionId id, Duration position) async {
     check(id);
+    if (!state.timeline.isSeekable) _throw(YlFailureCodes.policyUnsupported);
+    final window = state.timeline.dvrWindow;
+    if (window != null && (position < window.start || position > window.end)) {
+      throw RangeError('Seek outside the DVR window.');
+    }
+    if (window == null &&
+        state.timeline.duration != null &&
+        position > state.timeline.duration!) {
+      throw RangeError('Seek outside the source duration.');
+    }
     publish(
       state.copyWith(timeline: state.timeline.copyWith(position: position)),
     );

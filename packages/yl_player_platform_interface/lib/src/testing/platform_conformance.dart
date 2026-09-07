@@ -37,6 +37,12 @@ final class YlConformancePolicyCase {
 /// observable state/events are published, including ignored/duplicate inputs.
 /// Private transport reply ordering and controller milestone futures belong in
 /// adapter/controller suites, not this SPI-only harness.
+///
+/// For metadata secrecy checks, use distinctive canary values of at least 16
+/// characters in request headers/credentials, URI user info and queries. Short
+/// values such as `2` can occur innocently in diagnostics and are not substring
+/// secrecy markers. Even long values must be chosen to avoid ordinary output:
+/// these finite checks cannot establish information flow from coincident text.
 abstract interface class YlPlatformConformanceFixture {
   YlMediaSource get source;
   List<YlConformancePolicyCase> get policyCases;
@@ -184,15 +190,16 @@ final class YlPlatformConformance {
         final old = await _load(c);
         final current = await _load(c);
         await c.step(() => fixture.emitReady(c.player, current.sessionId));
-        if (c.player.capabilities.supportedOperations.contains(
-          YlPlayerOperation.seek,
-        )) {
-          await c.step(
-            () => c.player.seekTo(
-              current.sessionId,
-              const Duration(milliseconds: 1),
-            ),
-          );
+        final timeline = c.player.state.timeline;
+        if (timeline.isSeekable &&
+            c.player.capabilities.supportedOperations.contains(
+              YlPlayerOperation.seek,
+            )) {
+          final window = timeline.dvrWindow;
+          final position = window == null
+              ? Duration.zero
+              : window.start + (window.end - window.start) ~/ 2;
+          await c.step(() => c.player.seekTo(current.sessionId, position));
         } else {
           await c.step(() => c.player.play(current.sessionId));
         }
@@ -375,7 +382,7 @@ final class YlPlatformConformance {
       for (final event in c.events.whereType<YlPlaybackFailedEvent>())
         event.failure.message,
     ];
-    for (final secret in _sourceSecrets(fixture.source)) {
+    for (final secret in _sourceSecrecyMarkers(fixture.source)) {
       if (secret.isNotEmpty) {
         _require(strings.every((s) => !s.contains(secret)));
       }
@@ -383,15 +390,20 @@ final class YlPlatformConformance {
   }
 }
 
-Iterable<String> _sourceSecrets(YlMediaSource source) sync* {
+// Full source identities are checked directly. Metadata uses fixture canaries;
+// a short scalar could otherwise match unrelated state/version/revision text.
+Iterable<String> _sourceSecrecyMarkers(YlMediaSource source) sync* {
   switch (source) {
     case YlFileSource():
       yield source.path;
     case YlNetworkSource():
       yield source.uri.toString();
-      yield source.uri.userInfo;
-      yield source.uri.query;
-      yield* source.request.headers.values;
+      yield* [
+        source.uri.userInfo,
+        source.uri.query,
+        ...source.request.headers.values,
+        ...source.request.credentials.values,
+      ].where((value) => value.length >= 16);
     case YlAndroidContentSource():
       yield source.uri.toString();
   }
