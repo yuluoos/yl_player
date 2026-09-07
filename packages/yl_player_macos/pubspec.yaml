@@ -1,6 +1,6 @@
 name: yl_player_macos
 description: Endorsed macOS implementation package for the hardware-first yl_player Flutter playback kernel.
-version: 0.1.0-dev.1
+version: 0.2.0-dev.1
 resolution: workspace
 homepage: https://pub.dev/packages/yl_player
 topics:
@@ -15,7 +15,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  yl_player_platform_interface: ^0.1.0-dev.1
+  yl_player_platform_interface: ^0.2.0-dev.1
 
 dev_dependencies:
   flutter_lints: ^6.0.0
