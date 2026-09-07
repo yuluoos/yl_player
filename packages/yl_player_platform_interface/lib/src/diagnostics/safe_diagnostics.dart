@@ -7,15 +7,25 @@ abstract final class YlSafeDiagnostics {
   static const _redactedQuery = '<redacted-query>';
   static const _redactedUri = '<redacted-uri>';
   static const _maximumLength = 512;
+  static const _httpTokenCharacters = r"A-Za-z0-9!#$%&'*+\-.^_`|~";
+  static const _sensitiveNameTerm = r'(?:token|key|secret|credential|auth)';
+
+  static const _sensitiveHeaderNamePattern =
+      '(?:authorization|proxy-authorization|cookie|set-cookie|'
+      '[$_httpTokenCharacters]*$_sensitiveNameTerm'
+      '[$_httpTokenCharacters]*)';
 
   static final RegExp _credentialPattern = RegExp(
     r'\b(?:bearer|basic)\s+\S+|'
-    r'\b(?:password|passwd|credential|secret|token|api[_-]?key)\s*[=:]\s*\S+|'
+    '(?<![$_httpTokenCharacters])[$_httpTokenCharacters]*'
+    r'(?:password|passwd|credential|secret|token|key|auth)'
+    '[$_httpTokenCharacters]*\\s*[=:]\\s*\\S+|'
     r'\b[^\s:@/]+:[^\s@/]+@',
     caseSensitive: false,
   );
   static final RegExp _genericHeaderPattern = RegExp(
-    r'\b[A-Za-z][A-Za-z0-9-]*\s*:\s*\S+',
+    '(?<![$_httpTokenCharacters])'
+    '[$_httpTokenCharacters]+\\s*:\\s*\\S+',
   );
   static final RegExp _lineBreakPattern = RegExp(r'[\r\n]+');
   static final RegExp _pathPattern = RegExp(
@@ -24,9 +34,8 @@ abstract final class YlSafeDiagnostics {
   );
   static final RegExp _queryPattern = RegExp(r'\?[^\s#]*');
   static final RegExp _sensitiveHeaderPattern = RegExp(
-    r'\b(?:authorization|proxy-authorization|cookie|set-cookie|'
-    r'[A-Za-z0-9_-]*(?:token|key|secret|credential|auth)[A-Za-z0-9_-]*)'
-    r'\s*:\s*[^\r\n]*',
+    '(?<![$_httpTokenCharacters])'
+    '$_sensitiveHeaderNamePattern\\s*:\\s*[^\\r\\n]*',
     caseSensitive: false,
   );
   static final RegExp _stackFramePattern = RegExp(
@@ -36,8 +45,9 @@ abstract final class YlSafeDiagnostics {
     multiLine: true,
   );
   static final RegExp _uriPattern = RegExp(
-    r'\b(?:[A-Za-z][A-Za-z0-9+.-]*://|(?:package|dart):)'
-    r'[^\s<>()\[\]{}]+',
+    r'(?<![A-Za-z0-9+.-])'
+    '(?!$_sensitiveHeaderNamePattern\\s*:)'
+    r'[A-Za-z][A-Za-z0-9+.-]*:[^\s<>()\[\]{}]+',
     caseSensitive: false,
   );
 

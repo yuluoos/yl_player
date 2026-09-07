@@ -1,5 +1,11 @@
-import '../diagnostics/safe_diagnostics.dart';
 import 'value_helpers.dart';
+
+final RegExp _safeFailureMetadata = RegExp(
+  r'^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$',
+);
+
+String _displayFailureMetadata(String value) =>
+    _safeFailureMetadata.hasMatch(value) ? value : '<redacted-metadata>';
 
 enum YlFailureCategory {
   cancelled,
@@ -75,10 +81,10 @@ final class YlFailure {
   String toString() =>
       'YlFailure('
       'category: ${category.name}, '
-      'code: ${YlSafeDiagnostics.redact(code)}, '
+      'code: ${_displayFailureMetadata(code)}, '
       'retryable: $retryable, '
       'scope: ${scope.name}, '
-      'diagnosticId: ${YlSafeDiagnostics.redact(diagnosticId)}'
+      'diagnosticId: ${_displayFailureMetadata(diagnosticId)}'
       ')';
 }
 

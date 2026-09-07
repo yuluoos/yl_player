@@ -185,6 +185,59 @@ void main() {
     }
   });
 
+  test('credential assignments never reach diagnostics or failure strings', () {
+    const assignments =
+        'client_secret=private access_token=abc private_key=value';
+    const failure = YlFailure(
+      category: YlFailureCategory.internal,
+      code: 'client_secret=private',
+      message: 'Playback request failed.',
+      retryable: false,
+      scope: YlFailureScope.player,
+      diagnosticId: 'access_token=abc private_key=value',
+    );
+    final text = <String>[
+      YlSafeDiagnostics.redact(assignments),
+      failure.toString(),
+      YlPlayerException(failure).toString(),
+    ].join(' ');
+
+    for (final sensitive in <String>[
+      'client_secret',
+      'private',
+      'access_token',
+      'abc',
+      'private_key',
+      'value',
+    ]) {
+      expect(text, isNot(contains(sensitive)), reason: sensitive);
+    }
+  });
+
+  test('failure strings hide ordinary structured metadata fields', () {
+    const failure = YlFailure(
+      category: YlFailureCategory.internal,
+      code: 'X_Custom: private-code',
+      message: 'Playback request failed.',
+      retryable: false,
+      scope: YlFailureScope.player,
+      diagnosticId: 'X-Trace: private-diagnostic',
+    );
+    final text = <String>[
+      failure.toString(),
+      YlPlayerException(failure).toString(),
+    ].join(' ');
+
+    for (final sensitive in <String>[
+      'X_Custom',
+      'private-code',
+      'X-Trace',
+      'private-diagnostic',
+    ]) {
+      expect(text, isNot(contains(sensitive)), reason: sensitive);
+    }
+  });
+
   test('redaction removes URL, query, header, and bearer shapes', () {
     final redacted = YlSafeDiagnostics.redact(
       'GET https://media.test/a?token=abc '
@@ -227,12 +280,40 @@ void main() {
     }
   });
 
+  test('redaction handles sensitive headers without optional whitespace', () {
+    final redacted = YlSafeDiagnostics.redact(
+      'Authorization:Bearer xyz\nCookie:sid=123 other=456',
+    );
+
+    expect(redacted, '<redacted-header> <redacted-header>');
+  });
+
+  test('HTTP token header names share detection and redaction grammar', () {
+    expect(
+      YlSafeDiagnostics.publicMessage('X_Custom: private-value'),
+      'Playback operation failed.',
+    );
+    final redacted = YlSafeDiagnostics.redact('X.Auth.Value: private-value');
+    expect(redacted, isNot(contains('X.Auth.Value')));
+    expect(redacted, isNot(contains('private-value')));
+  });
+
   test('generic URI schemes are replaced before path redaction', () {
     expect(
       YlSafeDiagnostics.redact(
         'custom-media://user:pass@host.test/a?token=secret',
       ),
       '<redacted-uri>',
+    );
+  });
+
+  test('generic URI schemes without authority are fully replaced', () {
+    expect(
+      YlSafeDiagnostics.redact(
+        'mailto:alice@example.test urn:credential:private '
+        'data:text/plain,private',
+      ),
+      '<redacted-uri> <redacted-uri> <redacted-uri>',
     );
   });
 
