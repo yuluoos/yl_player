@@ -614,8 +614,23 @@ YlPlayerException(const YlFailure(
 Define:
 
 ~~~dart
+enum YlConformancePolicyOutcome { success, unsupported }
+
+final class YlConformancePolicyCase {
+  const YlConformancePolicyCase({
+    required this.source,
+    required this.options,
+    required this.expected,
+  });
+  final YlMediaSource source;
+  final YlLoadOptions options;
+  final YlConformancePolicyOutcome expected;
+  // Structural equality/hash and safe toString, like all public values.
+}
+
 abstract interface class YlPlatformConformanceFixture {
   YlMediaSource get source;
+  List<YlConformancePolicyCase> get policyCases;
   Future<YlPlatformPlayer> createPlayer();
   Future<void> holdNextLoad(YlPlatformPlayer player);
   Future<void> releaseHeldLoad(YlPlatformPlayer player);
@@ -654,7 +669,11 @@ final class YlPlatformConformance {
 
 run executes isolated players for lifecycle, load identity, newer-load cancellation, stale-session rejection, stop, revision monotonicity, first-frame correlation, one terminal failure event, safe public strings, unsupported strict policy rejection, and double disposal. Each case has a configurable positive deadline and its own player/subscriptions. Catch and safely map errors to a named failure, always cancel subscriptions and best-effort dispose in finally with a separate cleanup deadline, then continue remaining cases. A hung create must also time out; register a bounded cleanup continuation for any player it returns late and consume late errors. A Future.timeout does not cancel native work: release fixture holds and invalidate the case before moving on. Do not transport raw caught objects in failures. An empty result means conformant. It must never depend on package:test or flutter_test.
 
-The fixture's hold/release hooks deterministically delay a candidate before commit; they do not depend on timers to win a race. Add cases for load followed immediately by play without pumping, reply/state in both orders, initial buffering without Ready, late same-session First Frame after a newer timeline state, ignored milestone Futures on failure (no unhandled Zone error), stop/dispose during a held load, create/command/dispose never completing, and a later case still running after a timeout. Distinguish implementations' declared unsupported-policy cases from known supported source/policy success cases; an adapter returning unsupported for every supported fixture must fail conformance.
+The fixture's hold/release hooks deterministically delay a candidate before commit; they do not depend on timers to win a race. Its source is known supported with default options and commits initially in buffering, with Ready/First Frame controlled by the fixture. Injection hooks complete after processing and publishing the observable output (including ignored/duplicate inputs); release is idempotent even after stop/dispose. Add SPI cases for load followed immediately by play without pumping, initial buffering without Ready, late same-session First Frame after a newer timeline state, stop/dispose during a held load, create/command/dispose never completing, and a later case still running after a timeout. Private native reply/state ordering belongs in Task 6 adapter tests; ignored controller milestone Futures on failure and early milestone ordering belong in Task 7 tests. The runner checks the observable commit/state barrier and event correlation, without inventing private transport/controller fixture hooks.
+
+`policyCases` explicitly supplies each source, load options, and expected success or unsupported outcome independently of the adapter assessment. Require at least one known successful case (defaults/preferences are allowed), execute every declared strict success case, and verify each declared unsupported strict policy rejects with `policy.unsupported`. An adapter rejecting a declared successful case must fail. Honest rejection of all strict policies can still conform to the generic SPI when supported default cases succeed; claims of managed-route support require strict success evidence in native platform suites (spec §8). Do not infer expectations from the adapter's assessment. Public policy cases and conformance failures have immutable fields, structural equality/hash and safe strings; the returned failure list is unmodifiable.
+
+The overall case deadline includes creation and every operation. Invalidate timed-out cases before cleanup, consume all eventual create/operation errors, and clean up any player returned late. Split the separate cleanup budget between hold release, subscription cancellation, and disposal so failure or hanging in one phase cannot skip the others. Run later cases after failures/timeouts.
 
 - [ ] **Step 5: Test the runner against a conformant and deliberately broken fake**
 
