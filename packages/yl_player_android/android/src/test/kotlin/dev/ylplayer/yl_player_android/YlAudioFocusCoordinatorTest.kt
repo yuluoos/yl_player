@@ -3,6 +3,25 @@ package dev.ylplayer.yl_player_android
 import kotlin.test.*
 
 class YlAudioFocusCoordinatorTest {
+    @Test fun `permanent loss retires its request immediately and stale gain cannot authorize a denied new request`() {
+        val driver = RecordingAudioDriver(); val coordinator = YlAudioFocusCoordinator(driver)
+        val events = mutableListOf<YlAudioFocusChange>()
+        val participant = YlAudioFocusParticipant(events::add)
+        assertTrue(coordinator.acquire(participant))
+        val stale = assertNotNull(driver.listener)
+        stale(YlAudioFocusChange.LOSS)
+        assertEquals(listOf(YlAudioFocusChange.LOSS), events)
+        assertEquals(listOf("request", "register", "unregister", "abandon"), driver.calls)
+        driver.granted = false
+        stale(YlAudioFocusChange.GAIN)
+        assertFalse(coordinator.acquire(participant))
+        assertEquals(2, driver.calls.count { it == "request" })
+        assertEquals(listOf(YlAudioFocusChange.LOSS), events)
+        driver.granted = true
+        assertTrue(coordinator.acquire(participant))
+        coordinator.release(participant)
+        assertEquals(2, driver.calls.count { it == "abandon" })
+    }
     @Test fun `framework cleanup failure cannot throw across irrevocable session handoff and still abandons owned focus`() {
         val calls = mutableListOf<String>(); val failures = mutableListOf<Throwable>()
         val driver = object : YlAudioFocusDriver {

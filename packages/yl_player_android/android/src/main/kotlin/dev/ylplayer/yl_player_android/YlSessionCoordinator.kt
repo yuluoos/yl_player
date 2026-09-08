@@ -56,6 +56,7 @@ internal class YlSessionCoordinator(
         val owner = audioOwner ?: checkNotNull(audioFocus).invoke()
         if (!owner.acquire(audioParticipant)) throw YlBoundaryException(YlFailureKind.RESOURCE_EXHAUSTED)
         audioOwner = owner
+        duckMultiplier = owner.volumeMultiplier
     }
     private fun releaseAudio() {
         audioOwner?.release(audioParticipant)

@@ -22,6 +22,9 @@ internal class YlAudioFocusCoordinator(
     private val participants = java.util.Collections.newSetFromMap(java.util.IdentityHashMap<YlAudioFocusParticipant, Boolean>())
     private var generation = 0L
     private var focusGranted = false
+    // Joining playback inherits the current request's policy before its first volume/play call.
+    var volumeMultiplier = 1.0
+        private set
     fun acquire(participant: YlAudioFocusParticipant): Boolean {
         if (participants.isNotEmpty() && !focusGranted) return false
         if (participant in participants) return true
@@ -37,17 +40,31 @@ internal class YlAudioFocusCoordinator(
     }
     fun release(participant: YlAudioFocusParticipant) {
         if (!participants.remove(participant) || participants.isNotEmpty()) return
+        retireRequest()
+    }
+    private fun retireRequest() {
         generation++
         focusGranted = false
+        volumeMultiplier = 1.0
         // Cleanup must not make a committed session handoff fallible or strand other resources.
         runCatching { driver.unregisterNoisy() }.exceptionOrNull()?.let(::report)
         runCatching { driver.abandon() }.exceptionOrNull()?.let(::report)
     }
     private fun report(error: Throwable) { runCatching { onFailure(error) } }
     private fun dispatch(change: YlAudioFocusChange) {
+        if (change == YlAudioFocusChange.LOSS) {
+            val lost = participants.toList()
+            participants.clear()
+            // Permanent loss ends ownership irrevocably, independent of queued pause/Play intent.
+            // Invalidate this request's listener before any participant can reacquire.
+            retireRequest()
+            lost.forEach { it.onAudioFocus(change) }
+            return
+        }
         when (change) {
-            YlAudioFocusChange.GAIN -> focusGranted = true
-            YlAudioFocusChange.LOSS, YlAudioFocusChange.LOSS_TRANSIENT -> focusGranted = false
+            YlAudioFocusChange.GAIN -> { focusGranted = true; volumeMultiplier = 1.0 }
+            YlAudioFocusChange.LOSS_TRANSIENT -> { focusGranted = false; volumeMultiplier = 1.0 }
+            YlAudioFocusChange.DUCK -> volumeMultiplier = 0.2
             else -> Unit
         }
         participants.toList().forEach { if (it in participants) it.onAudioFocus(change) }

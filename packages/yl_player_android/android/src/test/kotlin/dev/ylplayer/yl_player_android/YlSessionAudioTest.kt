@@ -8,6 +8,83 @@ import kotlin.test.*
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlSessionAudioTest {
     private val managed = sessionOptions.copy(audioPolicy = AndroidAudioPolicy.PLUGIN_MANAGED_MEDIA_PLAYBACK)
+    @Test fun `last participant release resets shared duck policy without waiting for gain`() = runTest {
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        val driver = RecordingAudioDriver(); val audio = YlAudioFocusCoordinator(driver)
+        val a = SessionFixture(dispatcher, 1, managed, { audio })
+        a.coordinator.load(request("a").withAutoplay(true)); runCurrent()
+        val stale = assertNotNull(driver.listener)
+        stale(YlAudioFocusChange.DUCK); runCurrent()
+        assertEquals(0.2, a.engines.single().currentVolume)
+        a.finish()
+        val b = SessionFixture(dispatcher, 2, managed, { audio })
+        b.coordinator.load(request("b").withAutoplay(true)); runCurrent()
+        assertTrue(b.engines.single().playing)
+        assertEquals(1.0, b.engines.single().currentVolume)
+        stale(YlAudioFocusChange.DUCK); runCurrent()
+        assertEquals(1.0, b.engines.single().currentVolume)
+        assertEquals(2, driver.calls.count { it == "request" })
+        b.finish()
+    }
+    @Test fun `participant joining an already ducked request inherits multiplier before play and volume edits`() = runTest {
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        val driver = RecordingAudioDriver(); val audio = YlAudioFocusCoordinator(driver)
+        val a = SessionFixture(dispatcher, 1, managed, { audio })
+        val b = SessionFixture(dispatcher, 2, managed, { audio })
+        a.next = FakeSessionEngine().apply { needsExclusiveLease = false }
+        b.next = FakeSessionEngine().apply { needsExclusiveLease = false }
+        val first = a.coordinator.load(request("a")).sessionId
+        val second = b.coordinator.load(request("b")).sessionId
+        a.coordinator.play(AndroidSessionCommand(first)); runCurrent()
+        assertNotNull(driver.listener)(YlAudioFocusChange.DUCK); runCurrent()
+        assertEquals(0.2, a.engines.single().currentVolume)
+        b.coordinator.play(AndroidSessionCommand(second))
+        // Assert before queued callbacks can repair a wrong initial playback volume.
+        assertTrue(b.engines.single().playing)
+        assertEquals(0.2, b.engines.single().currentVolume)
+        b.coordinator.setVolume(0.4); runCurrent()
+        assertEquals(0.08, b.engines.single().currentVolume, 0.000001)
+        assertEquals(0.2, a.engines.single().currentVolume)
+        assertNotNull(driver.listener)(YlAudioFocusChange.GAIN); runCurrent()
+        assertEquals(1.0, a.engines.single().currentVolume)
+        assertEquals(0.4, b.engines.single().currentVolume)
+        assertEquals(listOf("request", "register"), driver.calls)
+        a.finish(); b.finish()
+    }
+    @Test fun `permanent loss then play before queued pause acquires a fresh request without stale gain`() = runTest {
+        val driver = RecordingAudioDriver(); val audio = YlAudioFocusCoordinator(driver)
+        val f = SessionFixture(StandardTestDispatcher(testScheduler), options = managed, audioFocus = { audio })
+        val id = f.coordinator.load(request("one").withAutoplay(true)).sessionId; runCurrent()
+        val stale = assertNotNull(driver.listener)
+        stale(YlAudioFocusChange.LOSS)
+        // The newer explicit intent supersedes the queued pause, never ownership retirement.
+        f.coordinator.play(AndroidSessionCommand(id)); runCurrent()
+        assertTrue(f.engines.single().playing)
+        assertEquals(2, f.engines.single().playCalls)
+        assertEquals(listOf("request", "register", "unregister", "abandon", "request", "register"), driver.calls)
+        stale(YlAudioFocusChange.GAIN); runCurrent()
+        assertEquals(2, f.engines.single().playCalls)
+        f.finish()
+        assertEquals(2, driver.calls.count { it == "abandon" })
+    }
+    @Test fun `permanent loss across volume acknowledgement retains newer play and retires old request`() = runTest {
+        val driver = RecordingAudioDriver(); val audio = YlAudioFocusCoordinator(driver)
+        val f = SessionFixture(StandardTestDispatcher(testScheduler), options = managed, audioFocus = { audio })
+        val id = f.coordinator.load(request("one").withAutoplay(true)).sessionId; runCurrent()
+        val engine = f.engines.single(); engine.volumeAcknowledgement = CompletableDeferred()
+        val stale = assertNotNull(driver.listener)
+        stale(YlAudioFocusChange.LOSS); runCurrent()
+        val play = async { runCatching { f.coordinator.play(AndroidSessionCommand(id)) } }; runCurrent()
+        assertFalse(play.isCompleted)
+        engine.volumeAcknowledgement!!.complete(Unit); runCurrent()
+        assertTrue(play.await().isSuccess)
+        assertTrue(engine.playing); assertEquals(2, engine.playCalls)
+        assertEquals(listOf("request", "register", "unregister", "abandon", "request", "register"), driver.calls)
+        stale(YlAudioFocusChange.GAIN); runCurrent()
+        assertEquals(2, engine.playCalls)
+        f.finish()
+        assertEquals(2, driver.calls.count { it == "abandon" })
+    }
     @Test fun `noisy and permanent loss pause all participants and late gain cannot restart them`() = runTest {
         for (change in listOf(YlAudioFocusChange.NOISY, YlAudioFocusChange.LOSS)) {
             val driver = RecordingAudioDriver(); val audio = YlAudioFocusCoordinator(driver)
