@@ -55,7 +55,7 @@ internal class YlMedia3Engine(
         val owner = worker.await()
         onWorker {
             val candidate = YlCandidateVideoOutput(context).also { privateOutput = it }
-            core = YlMedia3Core(context, identity, source, options, configuration(),
+            core = YlMedia3Core(context, identity, source, options, createMedia3Configuration(source, options, playerOptions),
                 owner.handler, YlEngineVideoOutput(candidate), ::receive)
             requireCore().initialize()
             requireCore().prepare()
@@ -148,22 +148,27 @@ internal class YlMedia3Engine(
         return result
     }
     private fun requireCore() = checkNotNull(core)
-    private fun configuration(): PlayerConfiguration {
-        val policy = source.networkPolicy
-        return PlayerConfiguration(
-            bufferMode = when (options.bufferStrategy.kind) {
-                AndroidBufferKind.LOW_LATENCY -> "lowLatency"
-                AndroidBufferKind.SMOOTH_PLAYBACK -> "stable"
-                else -> "automatic"
-            }, decoderPolicy = (options.decoderPolicyOverride ?: playerOptions.decoderPolicy).name,
-            minBufferMs = null, maxBufferMs = null, maxBufferBytes = null,
-            positionEventIntervalMs = playerOptions.positionUpdateIntervalMs.coerceIn(100, 2000),
-            network = NetworkConfiguration(policy?.connectTimeoutMs?.toInt() ?: 10_000,
-                policy?.readTimeoutMs?.toInt() ?: 15_000, policy?.maxRetries?.toInt() ?: 3,
-                policy?.baseRetryDelayMs ?: 500, policy?.maxRetryDelayMs ?: 8_000, policy?.maxRedirects?.toInt() ?: 5),
-            managesAudioSession = playerOptions.audioPolicy == AndroidAudioPolicy.PLUGIN_MANAGED_MEDIA_PLAYBACK)
-    }
     private data class Worker(val thread: HandlerThread, val handler: Handler, val dispatcher: CoroutineDispatcher)
+}
+
+internal fun createMedia3Configuration(
+    source: AndroidSourceMessage,
+    options: AndroidLoadOptionsMessage,
+    playerOptions: AndroidPlayerOptionsMessage,
+): PlayerConfiguration {
+    val policy = source.networkPolicy
+    return PlayerConfiguration(
+        bufferMode = when (options.bufferStrategy.kind) {
+            AndroidBufferKind.LOW_LATENCY -> "lowLatency"
+            AndroidBufferKind.SMOOTH_PLAYBACK -> "stable"
+            else -> "automatic"
+        }, decoderPolicy = (options.decoderPolicyOverride ?: playerOptions.decoderPolicy).name,
+        minBufferMs = null, maxBufferMs = null, maxBufferBytes = null,
+        positionEventIntervalMs = playerOptions.positionUpdateIntervalMs.coerceIn(100, 2000),
+        network = NetworkConfiguration(policy?.connectTimeoutMs?.toInt() ?: 10_000,
+            policy?.readTimeoutMs?.toInt() ?: 15_000, policy?.maxRetries?.toInt() ?: 3,
+            policy?.baseRetryDelayMs ?: 500, policy?.maxRetryDelayMs ?: 8_000, policy?.maxRedirects?.toInt() ?: 5),
+        managesAudioSession = playerOptions.audioPolicy == AndroidAudioPolicy.PLUGIN_MANAGED_MEDIA_PLAYBACK)
 }
 
 /** Real create binding. Idle creation allocates no Media3 player or private decoder output. */
@@ -173,6 +178,11 @@ internal class YlMedia3SessionFactory(
 ) : YlPlayerSessionFactory {
     private var nextPlayerId = 0L
     override fun prepare(options: AndroidPlayerOptionsMessage): (TextureRegistry.SurfaceTextureEntry) -> YlPlayerSession {
+        // Task 7 removes this guard only when shared, reference-counted audio ownership exists.
+        // Per-engine Media3 focus/noisy handling is insufficient for this explicit policy.
+        if (options.audioPolicy == AndroidAudioPolicy.PLUGIN_MANAGED_MEDIA_PLAYBACK) {
+            throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
+        }
         val playerId = ++nextPlayerId
         return { texture ->
             YlSessionCoordinator(playerId, options, YlVideoOutput(texture, ownsTexture = false),

@@ -27,6 +27,14 @@ class YlPlayerRegistryTest {
         mockStatic(Looper::class.java).use {
             plugin.onAttachedToEngine(binding)
             assertEquals(setOf("dev.flutter.pigeon.yl_player_android.AndroidPlayerFactoryHostApi.create"), fixture.handlers.keys)
+            val managed = createRequest().let { it.copy(options = it.options.copy(audioPolicy = AndroidAudioPolicy.PLUGIN_MANAGED_MEDIA_PLAYBACK)) }
+            val rejection = fixture.invoke(fixture.handlers.values.single(), listOf(managed))()
+            assertEquals("policy.unsupported", rejection[0])
+            val failure = assertIs<AndroidFailureMessage>(rejection[2])
+            assertEquals(AndroidFailureCategory.UNSUPPORTED, failure.category)
+            assertEquals(AndroidFailureScope.PLAYER, failure.scope)
+            verify(fixture.textures, never()).createSurfaceTexture()
+            assertEquals(1, fixture.handlers.size)
             val response = fixture.invoke(fixture.handlers.values.single(), listOf(createRequest()))()
             assertIs<AndroidCreateReply>(response.single())
             verify(fixture.textures).createSurfaceTexture()
@@ -40,6 +48,16 @@ class YlPlayerRegistryTest {
             runCurrent()
             Dispatchers.resetMain()
         }
+    }
+
+    @Test
+    fun `real factory rejects explicit plugin audio before returning an allocation closure`() {
+        val context = mock(Application::class.java)
+        val factory = YlMedia3SessionFactory(context)
+        val options = createRequest().options.copy(audioPolicy = AndroidAudioPolicy.PLUGIN_MANAGED_MEDIA_PLAYBACK)
+        val failure = assertFailsWith<YlBoundaryException> { factory.prepare(options) }
+        assertEquals(YlFailureKind.POLICY_UNSUPPORTED, failure.kind)
+        verifyNoInteractions(context)
     }
 
     @Test
