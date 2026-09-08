@@ -42,6 +42,13 @@ internal class YlSessionCoordinator(
     private var closeResult: Deferred<Unit>? = null
     private var volume = 1.0
     private var backgrounded = false
+    private var lifecycleGeneration = 0L
+    private data class BackgroundRelease(
+        val identity: YlSessionIdentity,
+        val lease: SessionLease,
+        val completion: Deferred<Unit>,
+    )
+    private var backgroundRelease: BackgroundRelease? = null
     private var foreground = CompletableDeferred(Unit)
     private var backgroundPlayIntent: Pair<YlSessionIdentity, Boolean>? = null
     override val initialState get() = reducer.state
@@ -85,6 +92,8 @@ internal class YlSessionCoordinator(
                 checkGeneration(token)
                 // A Load requested while hidden remains cancellable without allocating a decoder.
                 foreground.await()
+                checkGeneration(token)
+                active?.let { session -> activeLease?.let { awaitBackgroundRelease(session.identity, it) } }
                 checkGeneration(token)
                 val former = active
                 var candidate: YlPreparedSession? = null
@@ -158,6 +167,9 @@ internal class YlSessionCoordinator(
         override val needsExclusiveLease get() = session.engine.needsExclusiveLease
         override val canRestore get() = !resourcesFailed && !closed && !stopping && !backgrounded && active?.identity == session.identity
         var suspended: YlLeaseSnapshot? = null
+        var quiescing = false
+            private set
+        private var quiesceOperation: Deferred<YlLeaseSnapshot>? = null
         private var committedOnce = false
         override var leaseCommitVersion = 0L
             private set
@@ -191,28 +203,48 @@ internal class YlSessionCoordinator(
             val job = cleanup.launch { complete(runCatching { action() }) }
             return YlCancelHandle { if (!retain) job.cancel() }
         }
-        override fun quiesceForLease(attempt: YlLeaseAttempt, complete: (Result<YlLeaseSnapshot>) -> Unit) = operation(complete, retain = true) {
+        override fun quiesceForLease(attempt: YlLeaseAttempt, complete: (Result<YlLeaseSnapshot>) -> Unit): YlCancelHandle {
+            val lifecycleRelease = backgroundRelease?.takeIf { it.identity == session.identity && it.lease === this }
+            if (lifecycleRelease != null) return operation(complete, retain = true) {
+                lifecycleRelease.completion.await()
+                beginQuiesce().await()
+            }
+            // Install the fence synchronously, before returning the cancellable stage handle.
+            val pending = beginQuiesce()
+            return operation(complete, retain = true) { pending.await() }
+        }
+        fun beginQuiesce(): Deferred<YlLeaseSnapshot> {
             ensureResourcesUsable()
+            quiesceOperation?.takeUnless { it.isCompleted }?.let { return it }
+            suspended?.let { return CompletableDeferred(it) }
+            quiescing = true
             transacting = true
             resetRuntimeEdits()
-            try {
-                YlLeaseSnapshot(session.identity, session.source, session.options, session.engine.quiesce(), output.identity)
-                    .also { suspended = it }
-            } catch (error: Throwable) {
-                restorationFailed()
-                // A partial native quiesce may have no safe acknowledgement. Retain ownership
-                // until independent disposal confirms release; failed metadata stays authoritative.
-                cleanup.launch {
-                    runCatching { disposeForLease().await() }
-                    leases.relinquish(this@SessionLease)
+            return cleanup.async(start = CoroutineStart.LAZY) {
+                try {
+                    YlLeaseSnapshot(session.identity, session.source, session.options, session.engine.quiesce(), output.identity)
+                        .also { suspended = it }
+                } catch (error: Throwable) {
+                    restorationFailed()
+                    // A partial native quiesce may have no safe acknowledgement. Retain ownership
+                    // until independent disposal confirms release; failed metadata stays authoritative.
+                    cleanup.launch {
+                        runCatching { disposeForLease().await() }
+                        leases.relinquish(this@SessionLease)
+                    }
+                    throw error
+                } finally {
+                    // Failure has a resource fence; success has its acknowledged snapshot. Clearing
+                    // this pending flag alone is never evidence that a decoder can be reacquired.
+                    quiescing = false
                 }
-                throw error
-            }
+            }.also { quiesceOperation = it; it.start() }
         }
         fun ensureResourcesUsable() {
             if (resourcesFailed) throw YlBoundaryException(YlFailureKind.RESOURCE_EXHAUSTED)
         }
         override fun activateForLease(attempt: YlLeaseAttempt, complete: (Result<Unit>) -> Unit) = operation(complete) {
+            ensureResourcesUsable()
             val restore = suspended
             if (restore == null) session.engine.activate(output) else session.engine.restore(
                 restorePoint(restore.runtime), output)
@@ -295,8 +327,12 @@ internal class YlSessionCoordinator(
         if (backgrounded) { backgroundPlayIntent = session.identity to true; return }
         transaction.withLock {
             val current = current(command.sessionId)
+            val lease = activeLease
+            if (lease != null) awaitBackgroundRelease(current.identity, lease)
+            current(command.sessionId)
             if (backgrounded) backgroundPlayIntent = current.identity to true else {
-                activeLease?.takeIf { it.suspended != null }?.let { leases.acquire(it) {} }
+                lease?.takeIf { it.quiescing || it.suspended != null }?.let { leases.acquire(it) {} }
+                lease?.ensureResourcesUsable()
                 current.engine.play()
             }
         }
@@ -344,12 +380,14 @@ internal class YlSessionCoordinator(
         checkOpen(); stopping = true; ++operation; pending?.cancel(); leases.cancel(playerId.toString())
         val previous = active
         val previousLease = activeLease
+        val pendingBackground = backgroundRelease?.takeIf { it.lease === previousLease }
         // Stop is a presentation/session fence now, independent of native safe-release latency.
         active = null; activeLease = null
         backgroundPlayIntent = null; autoplayPending = null
         reducer.idle()
         val released = cleanup.async {
             transaction.withLock {
+                pendingBackground?.let { runCatching { it.completion.await() } }
                 previous?.engine?.let { engine ->
                     runCatching { engine.stop() }.exceptionOrNull()?.let { YlFailureMapper().record(it) }
                     releaseEngine(engine).await()
@@ -369,8 +407,10 @@ internal class YlSessionCoordinator(
         closeResult?.let { return it }
         closed = true; ++operation; pending?.cancel(); scope.cancel(); leases.cancel(playerId.toString())
         val previousLease = activeLease
+        val pendingBackground = backgroundRelease
         return cleanup.async {
             transaction.withLock {
+                pendingBackground?.let { runCatching { it.completion.await() } }
                 // Safe exceptional completion still requires *every* borrower to finish.
                 val failures = owned.toList().map { engine -> async { runCatching { engine.dispose().await() }.exceptionOrNull() } }.awaitAll()
                 owned.clear(); active = null
@@ -382,21 +422,31 @@ internal class YlSessionCoordinator(
             }
         }.also { result -> closeResult = result; previousLease?.let { leases.retire(it, result) } }
     }
+    private suspend fun awaitBackgroundRelease(identity: YlSessionIdentity, lease: SessionLease) {
+        backgroundRelease?.takeIf { it.identity == identity && it.lease === lease }?.completion?.await()
+    }
     override fun onForeground() {
         if (closed || !backgrounded) return
         backgrounded = false
+        val generation = ++lifecycleGeneration
         foreground.complete(Unit)
         scope.launch {
             transaction.withLock {
-                if (backgrounded) return@withLock
+                if (backgrounded || generation != lifecycleGeneration) return@withLock
                 val session = active ?: return@withLock
-                val intent = backgroundPlayIntent?.takeIf { it.first == session.identity }
+                val lease = activeLease ?: return@withLock
                 var applied = false
+                var intent: Pair<YlSessionIdentity, Boolean>? = null
                 runEngine(session.identity) {
+                    awaitBackgroundRelease(session.identity, lease)
+                    if (backgrounded || generation != lifecycleGeneration || activeLease !== lease) return@runEngine
+                    lease.ensureResourcesUsable()
+                    intent = backgroundPlayIntent?.takeIf { it.first == session.identity }
                     if (intent?.second == false) pause()
-                    activeLease?.takeIf { it.suspended != null }?.let { leases.acquire(it) {} }
+                    if (lease.quiescing || lease.suspended != null) leases.acquire(lease) {}
+                    if (backgrounded || generation != lifecycleGeneration || activeLease !== lease) return@runEngine
                     onForeground()
-                    if (!backgrounded && backgroundPlayIntent == intent) {
+                    if (!backgrounded && generation == lifecycleGeneration && activeLease === lease && backgroundPlayIntent == intent) {
                         if (intent?.second == true) play()
                         applied = true
                     }
@@ -409,6 +459,7 @@ internal class YlSessionCoordinator(
     override fun onBackground() {
         if (closed || backgrounded) return
         backgrounded = true
+        ++lifecycleGeneration
         foreground = CompletableDeferred()
         // A bounce must not erase an explicit command whose foreground application is queued or
         // still suspended. Autoplay is only a fallback when no current-session intent is pending.
@@ -418,19 +469,25 @@ internal class YlSessionCoordinator(
         // A committed state already owns its reply. Only an uncommitted candidate is cancelled.
         if (!pendingCommitted) pending?.cancel()
         if (!inCommit) leases.cancel(playerId.toString())
-        // Background only relinquishes resources, so it need not wait behind a candidate's safe
-        // cleanup. The immutable former identity prevents it from affecting a later session.
         val session = active ?: return
-        scope.launch {
-            runEngine(session.identity) {
-                activeLease?.resetRuntimeEdits()
-                val point = quiesce()
-                activeLease?.suspended = YlLeaseSnapshot(session.identity, session.source, session.options, point, output.identity)
-                onBackground()
-                activeLease?.let(leases::relinquish)
-            }
-            if (backgrounded && active?.identity == session.identity) reducer.pauseForLifecycle()
+        val lease = activeLease?.takeIf { it.session.identity == session.identity } ?: return
+        // A foreground waiting for this release cannot have resumed playback yet, so another
+        // background entry shares the same owned release rather than racing a second producer.
+        backgroundRelease?.takeIf { it.identity == session.identity && it.lease === lease && !it.completion.isCompleted }
+            ?.let { return }
+        val quiescence = lease.beginQuiesce()
+        // Cleanup ownership survives Load/Stop/close cancellation. It does not wait behind a
+        // candidate's disposal or the local command mutex; only resource-acquiring work awaits it.
+        val completion = cleanup.async(start = CoroutineStart.LAZY) {
+            quiescence.await()
+            session.engine.onBackground()
+            leases.relinquish(lease)
+            if (!closed && backgrounded && active?.identity == session.identity && activeLease === lease) reducer.pauseForLifecycle()
         }
+        val pending = BackgroundRelease(session.identity, lease, completion)
+        backgroundRelease = pending
+        completion.invokeOnCompletion { if (backgroundRelease === pending) backgroundRelease = null }
+        completion.start()
     }
     override fun onTrimMemory(level: Int) {
         if (level >= android.content.ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) onBackground()
