@@ -15,6 +15,7 @@ internal class YlSessionCoordinator(
     dispatcher: CoroutineDispatcher = Dispatchers.Main,
     clockMs: () -> Long = SystemClock::elapsedRealtime,
     private val decoderEvidence: YlDecoderEvidenceProvider = YlDecoderEvidenceProvider.collect(),
+    private val audioFocus: (() -> YlAudioFocusCoordinator)? = null,
 ) : YlPlayerSession {
     private val scope = CoroutineScope(SupervisorJob() + dispatcher)
     private val cleanup = CoroutineScope(SupervisorJob() + dispatcher)
@@ -42,6 +43,78 @@ internal class YlSessionCoordinator(
     private var inCommit = false
     private var closeResult: Deferred<Unit>? = null
     private var volume = 1.0
+    private val managedAudio = options.audioPolicy == AndroidAudioPolicy.PLUGIN_MANAGED_MEDIA_PLAYBACK
+    private var audioOwner: YlAudioFocusCoordinator? = null
+    private var audioIntended = false
+    private var focusPaused = false
+    private var duckMultiplier = 1.0
+    private var audioGeneration = 0L
+    private val audioParticipant = YlAudioFocusParticipant(::onAudioFocus)
+    private fun effectiveVolume() = volume * duckMultiplier
+    private fun acquireAudio() {
+        if (!managedAudio) return
+        val owner = audioOwner ?: checkNotNull(audioFocus).invoke()
+        if (!owner.acquire(audioParticipant)) throw YlBoundaryException(YlFailureKind.RESOURCE_EXHAUSTED)
+        audioOwner = owner
+    }
+    private fun releaseAudio() {
+        audioOwner?.release(audioParticipant)
+        audioOwner = null
+        focusPaused = false
+        duckMultiplier = 1.0
+        audioGeneration++
+    }
+    private fun onAudioFocus(change: YlAudioFocusChange) {
+        if (closed || !managedAudio) return
+        val identity = active?.identity ?: return
+        val wasPaused = focusPaused
+        when (change) {
+            YlAudioFocusChange.DUCK -> duckMultiplier = 0.2
+            YlAudioFocusChange.GAIN -> { duckMultiplier = 1.0; focusPaused = false }
+            YlAudioFocusChange.LOSS_TRANSIENT -> { focusPaused = true; duckMultiplier = 1.0 }
+            YlAudioFocusChange.LOSS, YlAudioFocusChange.NOISY -> {
+                focusPaused = false; duckMultiplier = 1.0; audioIntended = false
+                activeLease?.desiredPlay = false
+                if (autoplayPending == identity) autoplayPending = null
+                if (backgrounded) backgroundPlayIntent = identity to false
+            }
+        }
+        val generation = ++audioGeneration
+        scope.launch { transaction.withLock {
+            if (closed || active?.identity != identity || generation != audioGeneration) return@withLock
+            val lease = activeLease ?: return@withLock
+            if (!backgrounded && !lease.quiescing && lease.suspended == null) runEngine(identity) {
+                setVolume(effectiveVolume())
+                if (closed || backgrounded || active?.identity != identity || generation != audioGeneration ||
+                    activeLease !== lease || lease.quiescing || lease.suspended != null) return@runEngine
+                when {
+                    focusPaused -> pauseForAudioFocus()
+                    !audioIntended -> pause()
+                    change == YlAudioFocusChange.GAIN && wasPaused -> { acquireAudio(); play() }
+                }
+            }
+            if (!audioIntended) releaseAudio()
+        } }
+    }
+    private suspend fun playWithAudio(engine: YlPlaybackEngineAdapter) {
+        val identity = active?.takeIf { it.engine === engine }?.identity ?: return
+        val generation = audioGeneration
+        acquireAudio()
+        try {
+            engine.setVolume(effectiveVolume())
+            val lease = activeLease
+            if (closed || active?.identity != identity) return
+            if (backgrounded || generation != audioGeneration || lease?.quiescing == true || lease?.suspended != null || focusPaused) {
+                // Preserve a current explicit/autoplay intention across the volume worker await.
+                if (audioIntended) {
+                    lease?.desiredPlay = true
+                    if (backgrounded) backgroundPlayIntent = identity to true
+                }
+                return
+            }
+            engine.play()
+        } catch (error: Throwable) { releaseAudio(); throw error }
+    }
     private var backgrounded = false
     private var lifecycleGeneration = 0L
     private data class BackgroundRelease(
@@ -109,6 +182,10 @@ internal class YlSessionCoordinator(
                     engine.registerCallback(::onEngineEvent)
                     val participant = SessionLease(candidate) {
                         active = candidate
+                        audioIntended = request.options.autoplay
+                        audioGeneration++
+                        // Same-player replacement keeps its shared lease through successful handoff.
+                        if (!audioIntended) releaseAudio()
                         backgroundPlayIntent = null
                         autoplayPending = identity.takeIf { request.options.autoplay }
                         pendingCommitted = true
@@ -131,7 +208,7 @@ internal class YlSessionCoordinator(
                                 snapshot?.let(reducer::snapshot)
                                 frame?.let { reducer.firstFrame(it.output, it.occurredAtMs) }
                                 if (autoplayPending == identity && !backgrounded) {
-                                    runEngine(identity) { play() }
+                                    runEngine(identity) { playWithAudio(this) }
                                     if (autoplayPending == identity) autoplayPending = null
                                 }
                             }
@@ -190,18 +267,23 @@ internal class YlSessionCoordinator(
             desiredSpeed = null; desiredTrack = null; desiredPosition = null
             desiredLiveEdge = null; desiredPlay = null; desiredConstraints = null
         }
-        private fun restorePoint(point: YlEngineRestorePoint) = point.copy(
-            speed = desiredSpeed ?: point.speed,
-            selectedAudioTrack = desiredTrack ?: point.selectedAudioTrack,
-            positionMs = desiredPosition ?: point.positionMs,
-            liveEdge = desiredLiveEdge ?: point.liveEdge,
-            playbackIntended = backgroundPlayIntent?.takeIf { it.first == session.identity }?.second
-                ?: desiredPlay ?: point.playbackIntended,
-            volume = volume,
-            maxWidth = if (desiredConstraints != null) desiredConstraints?.maxWidth else point.maxWidth,
-            maxHeight = if (desiredConstraints != null) desiredConstraints?.maxHeight else point.maxHeight,
-            maxBitrate = if (desiredConstraints != null) desiredConstraints?.maxBitrate else point.maxBitrate,
-        )
+        private fun restorePoint(point: YlEngineRestorePoint): YlEngineRestorePoint {
+            val intended = backgroundPlayIntent?.takeIf { it.first == session.identity }?.second
+                ?: desiredPlay ?: if (managedAudio) audioIntended else point.playbackIntended
+            val permitted = intended && (!managedAudio || !focusPaused)
+            if (permitted) acquireAudio()
+            return point.copy(
+                speed = desiredSpeed ?: point.speed,
+                selectedAudioTrack = desiredTrack ?: point.selectedAudioTrack,
+                positionMs = desiredPosition ?: point.positionMs,
+                liveEdge = desiredLiveEdge ?: point.liveEdge,
+                playbackIntended = permitted,
+                volume = effectiveVolume(),
+                maxWidth = if (desiredConstraints != null) desiredConstraints?.maxWidth else point.maxWidth,
+                maxHeight = if (desiredConstraints != null) desiredConstraints?.maxHeight else point.maxHeight,
+                maxBitrate = if (desiredConstraints != null) desiredConstraints?.maxBitrate else point.maxBitrate,
+            )
+        }
         private fun <T> operation(complete: (Result<T>) -> Unit, retain: Boolean = false, action: suspend () -> T): YlCancelHandle {
             val job = cleanup.launch { complete(runCatching { action() }) }
             return YlCancelHandle { if (!retain) job.cancel() }
@@ -253,7 +335,7 @@ internal class YlSessionCoordinator(
             if (restore == null) session.engine.activate(output) else session.engine.restore(
                 restorePoint(restore.runtime), output)
             // Player volume can change while codec initialization is suspended.
-            session.engine.setVolume(volume)
+            session.engine.setVolume(effectiveVolume())
             candidateFailure?.takeIf { pendingIdentity == session.identity }?.let { throw YlBoundaryException(it) }
             if (closed || backgrounded || stopping) throw CancellationException()
         }
@@ -273,15 +355,18 @@ internal class YlSessionCoordinator(
         }
         override fun rollbackLease(snapshot: YlLeaseSnapshot, attempt: YlLeaseAttempt, complete: (Result<Unit>) -> Unit) = operation(complete) {
             session.engine.restore(restorePoint(snapshot.runtime), output)
-            session.engine.setVolume(volume)
+            session.engine.setVolume(effectiveVolume())
             if (canRestore) { suspended = null; transacting = false }
         }
         override fun deactivateAfterLeaseTransfer() {
             transacting = false
-            if (active?.identity == session.identity) reducer.pauseForLifecycle()
+            if (active?.identity == session.identity) {
+                releaseAudio()
+                reducer.pauseForLifecycle()
+            }
         }
         override fun disposeForLease() = releaseEngine(session.engine)
-        override fun restorationFailed() { resourcesFailed = true; transacting = false; reducer.fail(YlFailureKind.RESOURCE_EXHAUSTED) }
+        override fun restorationFailed() { releaseAudio(); resourcesFailed = true; transacting = false; reducer.fail(YlFailureKind.RESOURCE_EXHAUSTED) }
     }
 
     private fun onEngineEvent(identity: YlSessionIdentity, event: YlEngineEvent) {
@@ -298,13 +383,16 @@ internal class YlSessionCoordinator(
         }
         if (active?.identity != identity || transacting || activeLease?.suspended != null) return
         when (event) {
-            is YlEngineEvent.Snapshot -> reducer.snapshot(event.value)
+            is YlEngineEvent.Snapshot -> {
+                reducer.snapshot(event.value)
+                if (event.value.status == AndroidPlaybackStatus.COMPLETED) { audioIntended = false; releaseAudio() }
+            }
             is YlEngineEvent.Tick -> reducer.tick(event.timeline, event.metrics)
             is YlEngineEvent.FirstFrame -> if (!backgrounded && event.output == output.identity) {
                 reducer.updateOutput(output.identity)
                 reducer.firstFrame(event.output, event.occurredAtMs)
             }
-            is YlEngineEvent.Failed -> reducer.fail(event.kind)
+            is YlEngineEvent.Failed -> { releaseAudio(); reducer.fail(event.kind) }
             is YlEngineEvent.Retry -> reducer.retry(event)
         }
     }
@@ -328,6 +416,7 @@ internal class YlSessionCoordinator(
         val session = current(command.sessionId)
         activeLease?.ensureResourcesUsable()
         activeLease?.desiredPlay = true
+        audioIntended = true; audioGeneration++
         if (autoplayPending == session.identity) autoplayPending = null
         if (backgrounded) { backgroundPlayIntent = session.identity to true; return }
         transaction.withLock {
@@ -338,16 +427,17 @@ internal class YlSessionCoordinator(
             if (backgrounded) backgroundPlayIntent = current.identity to true else {
                 lease?.takeIf { it.quiescing || it.suspended != null }?.let { leases.acquire(it) {} }
                 lease?.ensureResourcesUsable()
-                current.engine.play()
+                playWithAudio(current.engine)
             }
         }
     }
     override fun pause(command: AndroidSessionCommand) {
         val session = current(command.sessionId)
         activeLease?.desiredPlay = false
+        audioIntended = false; audioGeneration++
         if (autoplayPending == session.identity) autoplayPending = null
         if (backgrounded) backgroundPlayIntent = session.identity to false
-        enqueue(command.sessionId) { pause() }
+        enqueue(command.sessionId) { pause(); releaseAudio() }
     }
     override fun seekTo(command: AndroidSeekCommand) {
         current(command.sessionId)
@@ -378,11 +468,11 @@ internal class YlSessionCoordinator(
         this.volume = volume.coerceIn(0.0, 1.0)
         // This command is player-scoped: resolve the committed engine after any transfer.
         scope.launch { transaction.withLock {
-            active?.let { runEngine(it.identity) { setVolume(this@YlSessionCoordinator.volume) } }
+            active?.let { runEngine(it.identity) { setVolume(effectiveVolume()) } }
         } }
     }
     override suspend fun stop() {
-        checkOpen(); stopping = true; ++operation; pending?.cancel(); leases.cancel(playerId.toString())
+        checkOpen(); audioIntended = false; audioGeneration++; stopping = true; ++operation; pending?.cancel(); leases.cancel(playerId.toString())
         val previous = active
         val previousLease = activeLease
         val pendingBackground = backgroundRelease?.takeIf { it.lease === previousLease }
@@ -397,6 +487,7 @@ internal class YlSessionCoordinator(
                     runCatching { engine.stop() }.exceptionOrNull()?.let { YlFailureMapper().record(it) }
                     releaseEngine(engine).await()
                 }
+                releaseAudio()
             }
             Unit
         }
@@ -410,7 +501,7 @@ internal class YlSessionCoordinator(
     }
     override fun close(): Deferred<Unit> {
         closeResult?.let { return it }
-        closed = true; ++operation; pending?.cancel(); scope.cancel(); leases.cancel(playerId.toString())
+        closed = true; audioIntended = false; audioGeneration++; ++operation; pending?.cancel(); scope.cancel(); leases.cancel(playerId.toString())
         val previousLease = activeLease
         val pendingBackground = backgroundRelease
         return cleanup.async {
@@ -418,6 +509,7 @@ internal class YlSessionCoordinator(
                 pendingBackground?.let { runCatching { it.completion.await() } }
                 // Safe exceptional completion still requires *every* borrower to finish.
                 val failures = owned.toList().map { engine -> async { runCatching { engine.dispose().await() }.exceptionOrNull() } }.awaitAll()
+                releaseAudio()
                 owned.clear(); active = null
                 backgroundPlayIntent = null
                 autoplayPending = null
@@ -452,7 +544,7 @@ internal class YlSessionCoordinator(
                     if (backgrounded || generation != lifecycleGeneration || activeLease !== lease) return@runEngine
                     onForeground()
                     if (!backgrounded && generation == lifecycleGeneration && activeLease === lease && backgroundPlayIntent == intent) {
-                        if (intent?.second == true) play()
+                        if (intent?.second == true) playWithAudio(this)
                         applied = true
                     }
                 }
@@ -486,6 +578,7 @@ internal class YlSessionCoordinator(
         val completion = cleanup.async(start = CoroutineStart.LAZY) {
             quiescence.await()
             session.engine.onBackground()
+            releaseAudio()
             leases.relinquish(lease)
             if (!closed && backgrounded && active?.identity == session.identity && activeLease === lease) reducer.pauseForLifecycle()
         }

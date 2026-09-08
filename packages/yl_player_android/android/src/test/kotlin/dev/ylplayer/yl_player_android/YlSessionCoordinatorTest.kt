@@ -755,14 +755,14 @@ internal class SessionEvents : YlPlayerEventSink {
     override fun onRetryScheduled(event: AndroidRetryScheduledMessage) { retries += event }
     override fun onEngineChanged(event: AndroidEngineChangedMessage) = Unit
 }
-internal class SessionFixture(dispatcher: CoroutineDispatcher, playerId: Long = 7) {
+internal class SessionFixture(dispatcher: CoroutineDispatcher, playerId: Long = 7, options: AndroidPlayerOptionsMessage = sessionOptions, audioFocus: (() -> YlAudioFocusCoordinator)? = null) {
     val output = FakeSessionOutput()
     val engines = mutableListOf<FakeSessionEngine>()
     var next: FakeSessionEngine? = null
     val events = SessionEvents()
-    val coordinator = YlSessionCoordinator(playerId, sessionOptions, output, YlPlaybackEngineFactory { identity, _, _ ->
+    val coordinator = YlSessionCoordinator(playerId, options, output, YlPlaybackEngineFactory { identity, _, _ ->
         (next ?: FakeSessionEngine()).also { next = null; it.identity = identity; engines += it }
-    }, dispatcher, clockMs = { 123L }).also { it.bindLeases(YlDecoderLeaseCoordinator(dispatcher) { 123L }); it.attach(events) }
+    }, dispatcher, clockMs = { 123L }, audioFocus = audioFocus).also { it.bindLeases(YlDecoderLeaseCoordinator(dispatcher) { 123L }); it.attach(events) }
     suspend fun finish() { coordinator.close().await() }
 }
 internal class FakeSessionEngine : YlPlaybackEngineAdapter {

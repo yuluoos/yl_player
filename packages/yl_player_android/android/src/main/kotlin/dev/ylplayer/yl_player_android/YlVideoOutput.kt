@@ -14,6 +14,11 @@ internal class YlVideoOutput(
 
     override val identity: YlOutputIdentity get() = YlOutputIdentity(tracker.generation, true)
 
+    /** The Surface receives Media3's rendered dimensions, before logical PAR/View transforms. */
+    fun updateGeometry(geometry: dev.ylplayer.yl_player_android.pigeon.AndroidVideoGeometryMessage?) {
+        geometry?.displaySize?.let { resize(it.width.toInt(), it.height.toInt()) }
+    }
+
     // Main looper only. SurfaceTextureEntry remains registry-owned in the v2 path.
     fun borrowSurface(): Surface = surface ?: Surface(texture.surfaceTexture()).also { surface = it }
     // A foreground callback may reattach the retained old output before worker installation.

@@ -72,9 +72,7 @@ internal class YlMedia3Engine(
         }
         main.launch {
             if (!closed) {
-                if (event is YlEngineEvent.Snapshot) event.value.geometry?.encodedSize?.let {
-                    publicOutput?.resize(it.width.toInt(), it.height.toInt())
-                }
+                if (event is YlEngineEvent.Snapshot) publicOutput?.updateGeometry(event.value.geometry)
                 callback?.invoke(identity, event)
             }
         }
@@ -109,6 +107,7 @@ internal class YlMedia3Engine(
     }
     override suspend fun play() = onWorker { requireCore().play() }
     override suspend fun pause() = onWorker { requireCore().pause() }
+    override suspend fun pauseForAudioFocus() = onWorker { requireCore().pauseForAudioFocus() }
     override suspend fun seekTo(positionMs: Long) = onWorker { requireCore().seekTo(positionMs) }
     override suspend fun seekToLiveEdge() = onWorker { requireCore().seekToLiveEdge() }
     override suspend fun setPlaybackSpeed(speed: Double) = onWorker { requireCore().setPlaybackSpeed(speed) }
@@ -178,27 +177,24 @@ internal fun createMedia3Configuration(
         network = NetworkConfiguration(policy?.connectTimeoutMs?.toInt() ?: 10_000,
             policy?.readTimeoutMs?.toInt() ?: 15_000, policy?.maxRetries?.toInt() ?: 3,
             policy?.baseRetryDelayMs ?: 500, policy?.maxRetryDelayMs ?: 8_000, policy?.maxRedirects?.toInt() ?: 5),
-        managesAudioSession = playerOptions.audioPolicy == AndroidAudioPolicy.PLUGIN_MANAGED_MEDIA_PLAYBACK)
+        managesAudioSession = false)
 }
 
 /** Real create binding. Idle creation allocates no Media3 player or private decoder output. */
 internal class YlMedia3SessionFactory(
     private val context: Context,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main,
+    private val createEngine: (YlSessionIdentity, AndroidSourceMessage, AndroidLoadOptionsMessage, AndroidPlayerOptionsMessage) -> YlPlaybackEngineAdapter =
+        { identity, source, load, player -> YlMedia3Engine(context, identity, source, load, player, dispatcher) },
 ) : YlPlayerSessionFactory {
     private var nextPlayerId = 0L
     override fun prepare(options: AndroidPlayerOptionsMessage): (TextureRegistry.SurfaceTextureEntry) -> YlPlayerSession {
-        // Task 7 removes this guard only when shared, reference-counted audio ownership exists.
-        // Per-engine Media3 focus/noisy handling is insufficient for this explicit policy.
-        if (options.audioPolicy == AndroidAudioPolicy.PLUGIN_MANAGED_MEDIA_PLAYBACK) {
-            throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
-        }
         val playerId = ++nextPlayerId
         return { texture ->
             YlSessionCoordinator(playerId, options, YlVideoOutput(texture, ownsTexture = false),
                 YlPlaybackEngineFactory { identity, source, loadOptions ->
-                    YlMedia3Engine(context, identity, source, loadOptions, options, dispatcher)
-                }, dispatcher)
+                    createEngine(identity, source, loadOptions, options)
+                }, dispatcher, audioFocus = { YlSharedAudioFocus.get(context) })
         }
     }
 }

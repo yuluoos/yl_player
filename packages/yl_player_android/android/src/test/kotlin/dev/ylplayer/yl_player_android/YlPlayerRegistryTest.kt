@@ -14,6 +14,49 @@ import kotlin.test.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlPlayerRegistryTest {
+    @Test fun `real factories across registries retain one application focus owner until final registry detaches`() = runTest {
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        val app = mock(Application::class.java)
+        val manager = mock(android.media.AudioManager::class.java)
+        `when`(app.applicationContext).thenReturn(app)
+        `when`(app.getSystemService(android.content.Context.AUDIO_SERVICE)).thenReturn(manager)
+        `when`(manager.requestAudioFocus(any(), eq(android.media.AudioManager.STREAM_MUSIC), eq(android.media.AudioManager.AUDIOFOCUS_GAIN)))
+            .thenReturn(android.media.AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
+        Dispatchers.setMain(dispatcher)
+        try { mockStatic(android.os.SystemClock::class.java).use {
+        mockStatic(Looper::class.java).use {
+            mockConstruction(android.os.Handler::class.java).use {
+                mockConstruction(android.content.IntentFilter::class.java).use {
+                    val engines = mutableListOf<FakeSessionEngine>()
+                    fun factory() = YlMedia3SessionFactory(app, dispatcher) { identity, _, _, _ ->
+                        FakeSessionEngine().also { it.identity = identity; engines += it }
+                    }
+                    val first = RegistryFixture(dispatcher, factory())
+                    val second = RegistryFixture(dispatcher, factory())
+                    val options = createRequest().copy(options = sessionOptions.copy(audioPolicy = AndroidAudioPolicy.PLUGIN_MANAGED_MEDIA_PLAYBACK))
+                    val a = first.registry.create(options); val b = second.registry.create(options)
+                    first.call(a.channelSuffix, "attach"); second.call(b.channelSuffix, "attach")
+                    verify(manager, never()).requestAudioFocus(any(), anyInt(), anyInt())
+                    val loadA = first.load(a.channelSuffix, request("a").withAutoplay(true))
+                    val loadB = second.load(b.channelSuffix, request("b").withAutoplay(true))
+                    loadA.first(); loadB.first(); runCurrent()
+                    assertIs<AndroidLoadReply>(loadA.second().single())
+                    assertIs<AndroidLoadReply>(loadB.second().single())
+                    assertTrue(engines.all { it.playing })
+                    verify(manager).requestAudioFocus(any(), eq(android.media.AudioManager.STREAM_MUSIC), eq(android.media.AudioManager.AUDIOFOCUS_GAIN))
+                    verify(app).registerReceiver(any(), any(android.content.IntentFilter::class.java), isNull(), any(android.os.Handler::class.java))
+                    first.registry.detach(); runCurrent()
+                    verify(manager, never()).abandonAudioFocus(any())
+                    assertTrue(engines.last().playing)
+                    second.registry.detach(); runCurrent()
+                    verify(manager).abandonAudioFocus(any())
+                    verify(app).unregisterReceiver(any())
+                }
+            }
+        }
+            } } finally { Dispatchers.resetMain() }
+    }
+
     @Test fun `new player inherits registry background state`() = runTest {
         val fixture = RegistryFixture(StandardTestDispatcher(testScheduler))
         fixture.registry.onBackground()
@@ -37,16 +80,11 @@ class YlPlayerRegistryTest {
             plugin.onAttachedToEngine(binding)
             assertEquals(setOf("dev.flutter.pigeon.yl_player_android.AndroidPlayerFactoryHostApi.create"), fixture.handlers.keys)
             val managed = createRequest().let { it.copy(options = it.options.copy(audioPolicy = AndroidAudioPolicy.PLUGIN_MANAGED_MEDIA_PLAYBACK)) }
-            val rejection = fixture.invoke(fixture.handlers.values.single(), listOf(managed))()
-            assertEquals("policy.unsupported", rejection[0])
-            val failure = assertIs<AndroidFailureMessage>(rejection[2])
-            assertEquals(AndroidFailureCategory.UNSUPPORTED, failure.category)
-            assertEquals(AndroidFailureScope.PLAYER, failure.scope)
-            verify(fixture.textures, never()).createSurfaceTexture()
-            assertEquals(1, fixture.handlers.size)
-            val response = fixture.invoke(fixture.handlers.values.single(), listOf(createRequest()))()
+            val managedResponse = fixture.invoke(fixture.handlers.values.single(), listOf(managed))()
+            assertIs<AndroidCreateReply>(managedResponse.single())
+            val response = fixture.invoke(fixture.handlers.getValue("dev.flutter.pigeon.yl_player_android.AndroidPlayerFactoryHostApi.create"), listOf(createRequest()))()
             assertIs<AndroidCreateReply>(response.single())
-            verify(fixture.textures).createSurfaceTexture()
+            verify(fixture.textures, times(2)).createSurfaceTexture()
             plugin.onDetachedFromEngine(binding)
             plugin.onDetachedFromEngine(binding)
             assertTrue(fixture.handlers.isEmpty())
@@ -60,12 +98,11 @@ class YlPlayerRegistryTest {
     }
 
     @Test
-    fun `real factory rejects explicit plugin audio before returning an allocation closure`() {
+    fun `real factory accepts explicit managed audio without idle ownership or allocation`() {
         val context = mock(Application::class.java)
         val factory = YlMedia3SessionFactory(context)
         val options = createRequest().options.copy(audioPolicy = AndroidAudioPolicy.PLUGIN_MANAGED_MEDIA_PLAYBACK)
-        val failure = assertFailsWith<YlBoundaryException> { factory.prepare(options) }
-        assertEquals(YlFailureKind.POLICY_UNSUPPORTED, failure.kind)
+        factory.prepare(options)
         verifyNoInteractions(context)
     }
 

@@ -1,16 +1,29 @@
 package dev.ylplayer.yl_player_android
 
+import androidx.media3.common.AudioAttributes
 import dev.ylplayer.yl_player_android.pigeon.*
-import kotlin.test.Test
-import kotlin.test.assertFalse
+import org.mockito.Mockito.*
+import kotlin.test.*
 
 class YlMedia3ConfigurationTest {
-    @Test
-    fun `app managed worker configuration disables both focus and noisy handling`() {
-        val source = AndroidSourceMessage(AndroidSourceKind.FILE, "/movie.mp4", AndroidStreamIntent.ON_DEMAND, AndroidMediaFormat.MP4)
-        val load = AndroidLoadOptionsMessage(false, bufferStrategy = AndroidBufferStrategyMessage(AndroidBufferKind.AUTOMATIC), videoConstraints = AndroidVideoConstraintsMessage())
-        val player = AndroidPlayerOptionsMessage(AndroidDecoderPolicy.SYSTEM_DEFAULT, AndroidAudioPolicy.APP_MANAGED, 250)
-        // YlMedia3Core passes this same flag to Media3's handleAudioFocus and noisy handling.
-        assertFalse(createMedia3Configuration(source, load, player).managesAudioSession)
+    @Test fun `shared transient pause keeps play intent and existing three second resource grace`() = withCore { core, player, _ ->
+        core.play()
+        core.pauseForAudioFocus()
+        val lifecycle = core.javaClass.getDeclaredField("lifecycle").apply { isAccessible = true }.get(core) as YlLifecycleCoordinator
+        assertTrue(lifecycle.state.playbackIntended)
+        assertTrue(lifecycle.state.focusPaused)
+        val handler = core.javaClass.getDeclaredField("handler").apply { isAccessible = true }.get(core) as android.os.Handler
+        val runnable = org.mockito.ArgumentCaptor.forClass(Runnable::class.java)
+        verify(handler).postDelayed(runnable.capture(), eq(3000L))
+        runnable.value.run()
+        assertTrue(lifecycle.state.resourcesReleased)
+        verify(player).stop()
+        assertTrue(core.snapshotRestorePoint().playbackIntended)
+    }
+    @Test fun `both actual ExoPlayer audio ownership flags are disabled for both policies`() {
+        for (policy in AndroidAudioPolicy.entries) withCore(policy) { _, player, _ ->
+            verify(player).setAudioAttributes(any(AudioAttributes::class.java), eq(false))
+            verify(player).setHandleAudioBecomingNoisy(false)
+        }
     }
 }

@@ -34,6 +34,7 @@ internal interface YlPlaybackEngineAdapter {
     suspend fun restore(point: YlEngineRestorePoint, output: YlSessionVideoOutput)
     suspend fun play()
     suspend fun pause()
+    suspend fun pauseForAudioFocus() = pause()
     suspend fun seekTo(positionMs: Long)
     suspend fun seekToLiveEdge()
     suspend fun setPlaybackSpeed(speed: Double)

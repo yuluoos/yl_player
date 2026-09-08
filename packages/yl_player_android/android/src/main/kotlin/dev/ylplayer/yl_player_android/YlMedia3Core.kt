@@ -65,9 +65,7 @@ internal class YlMedia3Core(
     private var resetting = false
     private var disposed = false
     private var status = "idle"
-    private var openStartedAtMs: Long? = null
-    private var openDurationMs: Long? = null
-    private var firstFrameDurationMs: Long? = null
+    private var metricsCollector = YlMetricsCollector()
     private var hasBeenReady = false
     private var rebufferCount = 0
     private var bufferingStartedAtMs: Long? = null
@@ -137,9 +135,9 @@ internal class YlMedia3Core(
                 .setUsage(C.USAGE_MEDIA)
                 .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
                 .build(),
-            configuration.managesAudioSession,
+            false,
         )
-        exoPlayer.setHandleAudioBecomingNoisy(configuration.managesAudioSession)
+        exoPlayer.setHandleAudioBecomingNoisy(false)
         exoPlayer.setWakeMode(C.WAKE_MODE_NETWORK)
         applyTrackConstraints()
         videoOutput.attach(sourceGeneration, sourceGeneration, ::attachSurface)
@@ -153,6 +151,13 @@ internal class YlMedia3Core(
     fun pause() {
         cancelFocusGrace(); lifecycle.reduce(YlLifecycleEvent.USER_PAUSE)
         stallWatchdog.cancel(); exoPlayer.pause()
+    }
+    fun pauseForAudioFocus() {
+        if (lifecycle.reduce(YlLifecycleEvent.FOCUS_TRANSIENT_LOSS) != YlLifecycleAction.PAUSE_KEEP_RESOURCES) return
+        cancelFocusGrace()
+        stallWatchdog.cancel()
+        exoPlayer.pause()
+        handler.postDelayed(focusGraceRunnable, 3_000L)
     }
     fun seekTo(positionMs: Long) {
         resumeAtLiveEdge = false
@@ -243,6 +248,7 @@ internal class YlMedia3Core(
     }
 
     private fun releasePlaybackResources() {
+        metricsCollector.endBuffering(SystemClock.elapsedRealtime())
         cancelFocusGrace()
         if (!active) return
         stallWatchdog.cancel()
@@ -286,9 +292,7 @@ internal class YlMedia3Core(
         exoPlayer.clearMediaItems()
         videoOutput.detach(::clearSurface)
         trackSelector.parameters = trackSelector.buildUponParameters().clearOverrides().build()
-        openStartedAtMs = null
-        openDurationMs = null
-        firstFrameDurationMs = null
+        metricsCollector = YlMetricsCollector()
         hasBeenReady = false
         rebufferCount = 0
         rebufferDurationMs = 0L
@@ -351,9 +355,7 @@ internal class YlMedia3Core(
         savedPositionMs = 0
         resumeAtLiveEdge = false
 
-        openStartedAtMs = SystemClock.elapsedRealtime()
-        openDurationMs = null
-        firstFrameDurationMs = null
+        metricsCollector.start(SystemClock.elapsedRealtime(), managedNetwork)
         hasBeenReady = false
         rebufferCount = 0
         rebufferDurationMs = 0L
@@ -459,11 +461,15 @@ internal class YlMedia3Core(
             emitState()
             return
         }
+        when (playbackState) {
+            Player.STATE_READY -> metricsCollector.ready(eventTime.realtimeMs)
+            Player.STATE_BUFFERING -> metricsCollector.buffering(eventTime.realtimeMs)
+            else -> metricsCollector.endBuffering(eventTime.realtimeMs)
+        }
         status = YlMedia3StatePolicy.status(status, playbackState, exoPlayer.isPlaying, hasBeenReady)
         if (playbackState == Player.STATE_READY && videoTracks.isEmpty() && audioTracks.isNotEmpty()) finishDecoderInspection()
         if (playbackState == Player.STATE_READY && !hasBeenReady) {
             hasBeenReady = true
-            openDurationMs = openStartedAtMs?.let { SystemClock.elapsedRealtime() - it }
         }
         if (playbackState == Player.STATE_BUFFERING && bufferingStartedAtMs == null) {
             if (hasBeenReady) rebufferCount += 1
@@ -538,7 +544,7 @@ internal class YlMedia3Core(
         // This flag feeds worker health metrics only; it never suppresses public observations.
         if (!firstFrameRendered) {
             firstFrameRendered = true
-            firstFrameDurationMs = openStartedAtMs?.let { SystemClock.elapsedRealtime() - it }
+            metricsCollector.firstFrame(renderTimeMs)
             resetHealthWindow(SystemClock.elapsedRealtime())
         }
         emit(frame)
@@ -783,6 +789,7 @@ internal class YlMedia3Core(
     ) {
         if (!isCurrentEvent(eventTime)) return
         droppedVideoFrames += droppedFrames
+        metricsCollector.dropped(droppedFrames)
     }
 
     override fun onAudioUnderrun(
@@ -793,11 +800,13 @@ internal class YlMedia3Core(
     ) {
         if (!isCurrentEvent(eventTime)) return
         audioUnderruns += 1
+        metricsCollector.underrun()
     }
 
     private fun recordRetry(attempt: Int, delayMs: Long, occurredAtMs: Long) {
         if (disposed) return
         reconnectCount += 1
+        metricsCollector.retry()
         emit(YlEngineEvent.Retry(attempt.toLong(), delayMs, occurredAtMs))
         emitState()
     }
@@ -816,11 +825,7 @@ internal class YlMedia3Core(
     fun emitState() {
         if (disposed || resetting) return
         val timeline = timeline()
-        val geometry = lastVideoSize.takeIf { it.width > 0 && it.height > 0 }?.let {
-            AndroidVideoGeometryMessage(AndroidSizeMessage(it.width.toDouble(), it.height.toDouble()),
-                AndroidSizeMessage(it.width * it.pixelWidthHeightRatio.toDouble(), it.height.toDouble()),
-                it.pixelWidthHeightRatio.toDouble(), 0)
-        }
+        val geometry = media3VideoGeometry(lastVideoSize, exoPlayer.videoFormat)
         emit(YlEngineEvent.Snapshot(YlEngineSnapshot(
             when (status) {
                 "idle" -> AndroidPlaybackStatus.IDLE
@@ -839,11 +844,19 @@ internal class YlMedia3Core(
         val timeline = timeline()
         emit(YlEngineEvent.Tick(timeline, metrics(timeline)))
     }
-    private fun metrics(timeline: AndroidTimelineMessage) = AndroidMetricsMessage(
-        openDurationMs, firstFrameDurationMs, rebufferCount.toLong(), rebufferDurationMs,
-        droppedVideoFrames.toLong(), audioUnderruns.toLong(), selectedVideoBitrate?.toLong(),
-        (timeline.bufferedPositionMs - timeline.positionMs).coerceAtLeast(0),
-        loadControl.allocatedBytes.toLong(), timeline.liveOffsetMs, reconnectCount.toLong())
+    private fun metrics(timeline: AndroidTimelineMessage) = metricsCollector.snapshot(SystemClock.elapsedRealtime(),
+        if (active && hasBeenReady) (timeline.bufferedPositionMs - timeline.positionMs).coerceAtLeast(0) else null,
+        timeline.liveOffsetMs)
+
+    override fun onVideoEnabled(eventTime: AnalyticsListener.EventTime, decoderCounters: androidx.media3.exoplayer.DecoderCounters) {
+        if (isCurrentEvent(eventTime)) metricsCollector.videoEnabled()
+    }
+    override fun onAudioEnabled(eventTime: AnalyticsListener.EventTime, decoderCounters: androidx.media3.exoplayer.DecoderCounters) {
+        if (isCurrentEvent(eventTime)) metricsCollector.audioEnabled()
+    }
+    override fun onBandwidthEstimate(eventTime: AnalyticsListener.EventTime, totalLoadTimeMs: Int, totalBytesLoaded: Long, bitrateEstimate: Long) {
+        if (isCurrentEvent(eventTime)) metricsCollector.bandwidth(bitrateEstimate)
+    }
 
     /** false quarantines the worker and outputs: release timeout does not prove relinquishment. */
     fun dispose(): Boolean {
@@ -912,4 +925,16 @@ private fun mediaMimeType(format: AndroidMediaFormat): String? = when (format) {
     AndroidMediaFormat.FLV -> "video/x-flv"
     AndroidMediaFormat.AVI -> "video/x-msvideo"
     else -> null
+}
+
+/** Media3 1.11 applies rotation itself. Format is coded geometry; VideoSize is renderer output.
+ * Preserve VideoSize's unapplied rotation (always zero in this pinned version), never Format rotation. */
+@Suppress("DEPRECATION")
+internal fun media3VideoGeometry(size: VideoSize, format: androidx.media3.common.Format?): AndroidVideoGeometryMessage? {
+    if (size.width <= 0 || size.height <= 0) return null
+    val rendered = AndroidSizeMessage(size.width.toDouble(), size.height.toDouble())
+    val coded = format?.takeIf { it.width > 0 && it.height > 0 }?.let { AndroidSizeMessage(it.width.toDouble(), it.height.toDouble()) } ?: rendered
+    return AndroidVideoGeometryMessage(coded, rendered,
+        size.pixelWidthHeightRatio.toDouble().takeIf { it.isFinite() && it > 0 } ?: 1.0,
+        size.unappliedRotationDegrees.toLong())
 }
