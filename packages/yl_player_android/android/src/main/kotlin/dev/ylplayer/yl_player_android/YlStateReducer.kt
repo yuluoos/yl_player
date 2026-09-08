@@ -1,9 +1,13 @@
 package dev.ylplayer.yl_player_android
 
 import dev.ylplayer.yl_player_android.pigeon.*
+import android.os.SystemClock
 
 /** Main-owned sole author of revisions and the overall callback sequence. */
-internal class YlStateReducer(private var events: YlPlayerEventSink? = null) {
+internal class YlStateReducer(
+    private var events: YlPlayerEventSink? = null,
+    private val clockMs: () -> Long = SystemClock::elapsedRealtime,
+) {
     private var revision = 0L
     private var sequence = 0L
     private var reachedReady = false
@@ -57,6 +61,11 @@ internal class YlStateReducer(private var events: YlPlayerEventSink? = null) {
         timeline.copy(positionMs = state.timeline.positionMs,
             bufferedPositionMs = state.timeline.bufferedPositionMs,
             isAtLiveEdge = state.timeline.isAtLiveEdge, liveOffsetMs = state.timeline.liveOffsetMs) != state.timeline
+    fun pauseForLifecycle() {
+        if (state.sessionId != null && !terminal && state.status !in listOf(AndroidPlaybackStatus.PAUSED, AndroidPlaybackStatus.COMPLETED)) {
+            publish(state.copy(status = AndroidPlaybackStatus.PAUSED))
+        }
+    }
     fun updateOutput(output: YlOutputIdentity) { this.output = output }
     fun firstFrame(output: YlOutputIdentity, occurredAtMs: Long) {
         val id = state.sessionId ?: return
@@ -70,7 +79,7 @@ internal class YlStateReducer(private var events: YlPlayerEventSink? = null) {
         terminal = true
         val failure = failures.toMessage(YlBoundaryException(kind), AndroidFailureScope.SESSION)
         publish(state.copy(status = AndroidPlaybackStatus.FAILED, failure = failure))
-        events?.onPlaybackFailed(AndroidPlaybackFailedMessage(id, revision, ++sequence, System.currentTimeMillis(), failure))
+        events?.onPlaybackFailed(AndroidPlaybackFailedMessage(id, revision, ++sequence, clockMs(), failure))
     }
     fun retry(event: YlEngineEvent.Retry) {
         val id = state.sessionId ?: return

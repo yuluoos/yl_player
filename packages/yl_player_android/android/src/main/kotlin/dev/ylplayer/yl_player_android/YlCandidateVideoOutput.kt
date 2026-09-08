@@ -32,29 +32,41 @@ internal class YlCandidateVideoOutput(context: Context) : YlPrivateVideoOutput {
 internal class YlEngineVideoOutput(private val candidate: YlPrivateVideoOutput) {
     private var surface: Surface? = candidate.surface
     private var identity = candidate.identity
+    private var renderSurface: Surface? = candidate.surface
     private var candidateAttached = true
     var surfaceRebuildCount = 0
         private set
     fun attach(expected: Long, current: Long, consumer: (Surface) -> Unit): Boolean {
         if (expected != current) return false
-        surface?.let(consumer)
+        surface?.let { consumer(it); renderSurface = it }
         return surface != null
     }
     fun switchTo(output: Surface, identity: YlOutputIdentity, acknowledgedAttach: (Surface) -> Unit) {
         acknowledgedAttach(output)
         surface = output
+        renderSurface = output
         this.identity = identity
         if (candidateAttached) {
             candidateAttached = false
             candidate.releaseAfterAcknowledgedDetach()
         }
     }
-    fun detach(clear: (Surface) -> Unit) { surface?.let(clear) }
+    fun detach(clear: (Surface) -> Unit) {
+        surface?.let { clear(it); renderSurface = null }
+    }
     fun recordRebuild() { surfaceRebuildCount++ }
-    fun renderedIdentity(output: Any): YlOutputIdentity? = identity.takeIf { output === surface }
+    fun renderedIdentity(output: Any): YlOutputIdentity? = identity.takeIf { output === renderSurface }
+    fun firstFrameEvent(output: Any, occurredAtMs: Long): YlEngineEvent.FirstFrame? {
+        val outputIdentity = renderedIdentity(output) ?: return null
+        // This is eligibility only. Main may reject this observation after a generation change;
+        // only the authoritative reducer may consume the once-per-session milestone.
+        if (!outputIdentity.isPublic) return null
+        return YlEngineEvent.FirstFrame(outputIdentity, occurredAtMs)
+    }
     fun dispose(clear: (Surface) -> Unit) {
         surface?.let(clear)
         surface = null
+        renderSurface = null
         if (candidateAttached) { candidateAttached = false; candidate.releaseAfterAcknowledgedDetach() }
     }
 }

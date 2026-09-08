@@ -2,6 +2,7 @@ package dev.ylplayer.yl_player_android
 
 import dev.ylplayer.yl_player_android.pigeon.*
 import java.net.URI
+import android.os.SystemClock
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -13,14 +14,17 @@ internal class YlSessionCoordinator(
     private val output: YlSessionVideoOutput,
     private val engines: YlPlaybackEngineFactory,
     dispatcher: CoroutineDispatcher = Dispatchers.Main,
+    clockMs: () -> Long = SystemClock::elapsedRealtime,
 ) : YlPlayerSession {
     private val scope = CoroutineScope(SupervisorJob() + dispatcher)
     private val cleanup = CoroutineScope(SupervisorJob() + dispatcher)
-    private val reducer = YlStateReducer()
+    private val reducer = YlStateReducer(clockMs = clockMs)
     private val transaction = Mutex()
     private val owned = mutableSetOf<YlPlaybackEngineAdapter>()
     private var active: YlPreparedSession? = null
     private var pending: Deferred<AndroidLoadReply>? = null
+    private var pendingCommitted = false
+    private var autoplayPending: YlSessionIdentity? = null
     private var pendingIdentity: YlSessionIdentity? = null
     private var candidateSnapshot: YlEngineSnapshot? = null
     private var candidateFailure: YlFailureKind? = null
@@ -32,6 +36,9 @@ internal class YlSessionCoordinator(
     private var transacting = false
     private var closeResult: Deferred<Unit>? = null
     private var volume = 1.0
+    private var backgrounded = false
+    private var foreground = CompletableDeferred(Unit)
+    private var backgroundPlayIntent: Pair<YlSessionIdentity, Boolean>? = null
     override val initialState get() = reducer.state
     override val capabilities = AndroidCapabilitiesMessage("android", listOf(AndroidEngine.MEDIA3),
         AndroidDecoderEvidence.NONE, hardwareVideoCodecs = emptyList(), supportedOperations = AndroidPlayerOperation.entries)
@@ -62,11 +69,15 @@ internal class YlSessionCoordinator(
         checkOpen()
         validate(request.source, request.options)
         stopping = false
+        pendingCommitted = false
         val identity = YlSessionIdentity("a$playerId-s${++loadSequence}", request.loadRequestId)
         val token = ++operation
         pending?.cancel()
         val task = scope.async {
             transaction.withLock {
+                checkGeneration(token)
+                // A Load requested while hidden remains cancellable without allocating a decoder.
+                foreground.await()
                 checkGeneration(token)
                 val former = active
                 var restore: YlEngineRestorePoint? = null
@@ -104,6 +115,9 @@ internal class YlSessionCoordinator(
                     candidateFailure?.let { throw YlBoundaryException(it) }
                     checkGeneration(token)
                     active = candidate
+                    backgroundPlayIntent = null
+                    autoplayPending = identity.takeIf { request.options.autoplay }
+                    pendingCommitted = true
                     committed = true
                     transacting = false
                     pendingIdentity = null
@@ -115,7 +129,10 @@ internal class YlSessionCoordinator(
                         if (active?.identity == identity && token == operation) {
                             snapshot?.let(reducer::snapshot)
                             frame?.let { reducer.firstFrame(it.output, it.occurredAtMs) }
-                            if (request.options.autoplay) runEngine(identity) { play() }
+                            if (autoplayPending == identity && !backgrounded) {
+                                runEngine(identity) { play() }
+                                if (autoplayPending == identity) autoplayPending = null
+                            }
                         }
                     }
                     former?.engine?.let(::releaseEngine)
@@ -123,7 +140,7 @@ internal class YlSessionCoordinator(
                 } catch (error: Throwable) {
                     if (!committed) withContext(NonCancellable) {
                         candidate?.engine?.let { runCatching { releaseEngine(it).await() } }
-                        if (!closed && !stopping && restore != null && former != null) {
+                        if (!closed && !stopping && !backgrounded && restore != null && former != null) {
                             try { former.engine.restore(restore, output) }
                             catch (restoreError: Throwable) { reducer.fail(YlFailureKind.DECODER_UNAVAILABLE) }
                         }
@@ -155,7 +172,7 @@ internal class YlSessionCoordinator(
         when (event) {
             is YlEngineEvent.Snapshot -> reducer.snapshot(event.value)
             is YlEngineEvent.Tick -> reducer.tick(event.timeline, event.metrics)
-            is YlEngineEvent.FirstFrame -> if (event.output == output.identity) {
+            is YlEngineEvent.FirstFrame -> if (!backgrounded && event.output == output.identity) {
                 reducer.updateOutput(output.identity)
                 reducer.firstFrame(event.output, event.occurredAtMs)
             }
@@ -179,8 +196,21 @@ internal class YlSessionCoordinator(
         val identity = current(id).identity
         scope.launch { transaction.withLock { runEngine(identity, action) } }
     }
-    override suspend fun play(command: AndroidSessionCommand) { current(command.sessionId); transaction.withLock { current(command.sessionId).engine.play() } }
-    override fun pause(command: AndroidSessionCommand) = enqueue(command.sessionId) { pause() }
+    override suspend fun play(command: AndroidSessionCommand) {
+        val session = current(command.sessionId)
+        if (autoplayPending == session.identity) autoplayPending = null
+        if (backgrounded) { backgroundPlayIntent = session.identity to true; return }
+        transaction.withLock {
+            val current = current(command.sessionId)
+            if (backgrounded) backgroundPlayIntent = current.identity to true else current.engine.play()
+        }
+    }
+    override fun pause(command: AndroidSessionCommand) {
+        val session = current(command.sessionId)
+        if (autoplayPending == session.identity) autoplayPending = null
+        if (backgrounded) backgroundPlayIntent = session.identity to false
+        enqueue(command.sessionId) { pause() }
+    }
     override fun seekTo(command: AndroidSeekCommand) = enqueue(command.sessionId) { seekTo(command.positionMs.coerceAtLeast(0)) }
     override fun seekToLiveEdge(command: AndroidSessionCommand) = enqueue(command.sessionId) { seekToLiveEdge() }
     override fun setPlaybackSpeed(command: AndroidSpeedCommand) {
@@ -219,8 +249,41 @@ internal class YlSessionCoordinator(
             }
         }.also { closeResult = it }
     }
-    override fun onForeground() { active?.let { enqueue(it.sessionId) { onForeground() } } }
-    override fun onBackground() { active?.let { enqueue(it.sessionId) { onBackground() } } }
+    override fun onForeground() {
+        if (closed || !backgrounded) return
+        backgrounded = false
+        foreground.complete(Unit)
+        scope.launch {
+            transaction.withLock {
+                if (backgrounded) return@withLock
+                val session = active ?: return@withLock
+                val intent = backgroundPlayIntent?.takeIf { it.first == session.identity }
+                runEngine(session.identity) {
+                    if (intent?.second == false) pause()
+                    onForeground()
+                    if (!backgrounded && intent?.second == true) play()
+                }
+                if (backgroundPlayIntent == intent) backgroundPlayIntent = null
+                if (intent != null && autoplayPending == session.identity) autoplayPending = null
+            }
+        }
+    }
+    override fun onBackground() {
+        if (closed || backgrounded) return
+        backgrounded = true
+        foreground = CompletableDeferred()
+        backgroundPlayIntent = autoplayPending?.takeIf { it == active?.identity }?.let { it to true }
+        ++operation
+        // A committed state already owns its reply. Only an uncommitted candidate is cancelled.
+        if (!pendingCommitted) pending?.cancel()
+        // Background only relinquishes resources, so it need not wait behind a candidate's safe
+        // cleanup. The immutable former identity prevents it from affecting a later session.
+        val session = active ?: return
+        scope.launch {
+            runEngine(session.identity) { onBackground() }
+            if (backgrounded && active?.identity == session.identity) reducer.pauseForLifecycle()
+        }
+    }
     override fun onTrimMemory(level: Int) { active?.let { enqueue(it.sessionId) { onTrimMemory(level) } } }
     override fun onConfigurationChanged() { active?.let { enqueue(it.sessionId) { onConfigurationChanged() } } }
 }

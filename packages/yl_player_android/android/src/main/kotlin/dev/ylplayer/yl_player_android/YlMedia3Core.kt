@@ -98,7 +98,6 @@ internal class YlMedia3Core(
     private var savedPositionMs = 0L
     private var resumeAtLiveEdge = false
     private var sourceGeneration = 0L
-    private val firstFrameGate = YlFirstFrameGate()
     private var firstFrameRendered = false
     private val stallWatchdog = YlPlaybackStallWatchdog { delayMs, action ->
         handler.postDelayed(action, delayMs)
@@ -265,7 +264,6 @@ internal class YlMedia3Core(
         stallWatchdog.cancel()
         handler.removeCallbacksAndMessages(null)
         httpClient.dispatcher.cancelAll()
-        firstFrameGate.reset(sourceGeneration)
         firstFrameRendered = false
         sourceIsLive = false
         savedPositionMs = 0L
@@ -343,7 +341,6 @@ internal class YlMedia3Core(
         videoOutput.attach(generation, generation, ::attachSurface)
         handler.removeCallbacks(positionTicker)
         handler.post(positionTicker)
-        firstFrameGate.reset(generation)
         firstFrameRendered = false
         sourceIsLive = source.intent == AndroidStreamIntent.LIVE
         sourceClass = YlPlaybackPolicy.classifySource(
@@ -519,15 +516,15 @@ internal class YlMedia3Core(
         output: Any,
         renderTimeMs: Long,
     ) {
-        val generation = sourceGeneration
         if (!isCurrentEvent(eventTime)) return
-        val outputIdentity = videoOutput.renderedIdentity(output) ?: return
-        // Private rendering neither emits nor consumes the public first-frame milestone.
-        if (!outputIdentity.isPublic || !firstFrameGate.markRendered(generation)) return
-        firstFrameRendered = true
-        firstFrameDurationMs = openStartedAtMs?.let { SystemClock.elapsedRealtime() - it }
-        resetHealthWindow(SystemClock.elapsedRealtime())
-        emit(YlEngineEvent.FirstFrame(outputIdentity, renderTimeMs))
+        val frame = videoOutput.firstFrameEvent(output, renderTimeMs) ?: return
+        // This flag feeds worker health metrics only; it never suppresses public observations.
+        if (!firstFrameRendered) {
+            firstFrameRendered = true
+            firstFrameDurationMs = openStartedAtMs?.let { SystemClock.elapsedRealtime() - it }
+            resetHealthWindow(SystemClock.elapsedRealtime())
+        }
+        emit(frame)
         emitState()
         refreshStallWatchdog()
     }

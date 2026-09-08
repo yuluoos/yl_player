@@ -2,11 +2,27 @@ package dev.ylplayer.yl_player_android
 
 import dev.ylplayer.yl_player_android.pigeon.*
 import kotlin.test.*
+import android.os.SystemClock
+import org.mockito.Mockito.*
 
 class YlStateReducerTest {
+    @Test fun `failure shares the monotonic epoch of rendered frame and retry`() {
+        val events = SessionEvents()
+        val output = YlOutputIdentity(1, true)
+        mockStatic(SystemClock::class.java).use { clock ->
+            clock.`when`<Long> { SystemClock.elapsedRealtime() }.thenReturn(120L)
+            val reducer = YlStateReducer(events)
+            reducer.commit(YlSessionIdentity("a1-s1", "r1"), output)
+            reducer.firstFrame(output, 100)
+            reducer.retry(YlEngineEvent.Retry(1, 5, 110))
+            reducer.fail(YlFailureKind.NETWORK_FAILED)
+            assertEquals(listOf(100L, 110L, 120L), listOf(events.frames.single().occurredAtMs,
+                events.retries.single().occurredAtMs, events.failures.single().occurredAtMs))
+        }
+    }
     @Test fun `output replacement rejects old public output without consuming the milestone`() {
         val events = SessionEvents()
-        val reducer = YlStateReducer(events)
+        val reducer = YlStateReducer(events, clockMs = { 123L })
         reducer.commit(YlSessionIdentity("a1-s1", "r1"), YlOutputIdentity(1, true))
         reducer.updateOutput(YlOutputIdentity(2, true))
         reducer.firstFrame(YlOutputIdentity(1, true), 1)
@@ -15,7 +31,7 @@ class YlStateReducerTest {
     }
     @Test fun `timeline metadata changes publish full state and metrics only snapshots use delta`() {
         val events = SessionEvents()
-        val reducer = YlStateReducer(events)
+        val reducer = YlStateReducer(events, clockMs = { 123L })
         reducer.commit(YlSessionIdentity("a1-s1", "r1"), YlOutputIdentity(1, true))
         val initial = YlEngineSnapshot(status = AndroidPlaybackStatus.READY)
         reducer.snapshot(initial)
@@ -28,7 +44,7 @@ class YlStateReducerTest {
     }
     @Test fun `semantic changes and timeline deltas each own consecutive revisions and sequences`() {
         val events = SessionEvents()
-        val reducer = YlStateReducer(events)
+        val reducer = YlStateReducer(events, clockMs = { 123L })
         assertEquals(0, reducer.state.revision)
         assertEquals(0, reducer.state.sequence)
         reducer.commit(YlSessionIdentity("a1-s1", "r1"), YlOutputIdentity(1, true))
@@ -45,7 +61,7 @@ class YlStateReducerTest {
         assertEquals(4L, events.states.last().sequence)
     }
     @Test fun `initial buffering remains loading and later buffering retains reached Ready`() {
-        val reducer = YlStateReducer(SessionEvents())
+        val reducer = YlStateReducer(SessionEvents(), clockMs = { 123L })
         reducer.commit(YlSessionIdentity("a1-s1", "r1"), YlOutputIdentity(1, true))
         reducer.snapshot(YlEngineSnapshot(status = AndroidPlaybackStatus.BUFFERING))
         assertEquals(AndroidPlaybackStatus.LOADING, reducer.state.status)
@@ -58,7 +74,7 @@ class YlStateReducerTest {
     }
     @Test fun `failures and public frame milestones deduplicate independently of state revisions`() {
         val events = SessionEvents()
-        val reducer = YlStateReducer(events)
+        val reducer = YlStateReducer(events, clockMs = { 123L })
         val output = YlOutputIdentity(1, true)
         reducer.commit(YlSessionIdentity("a1-s1", "r1"), output)
         reducer.firstFrame(YlOutputIdentity(2, false), 1)
