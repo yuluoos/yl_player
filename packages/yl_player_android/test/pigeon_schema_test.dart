@@ -181,10 +181,9 @@ void main() {
     'generated Android types remain private to implementation libraries',
     () async {
       final workspaceRoot = Directory.current;
-      final scratch = Directory(
-        '${workspaceRoot.path}/.dart_tool/pigeon_privacy_test',
-      );
-      await scratch.create(recursive: true);
+      final scratchRoot = Directory('${workspaceRoot.path}/.dart_tool');
+      await scratchRoot.create(recursive: true);
+      final scratch = await scratchRoot.createTemp('pigeon_privacy_test_');
       addTearDown(() => scratch.delete(recursive: true));
 
       final probe = File('${scratch.path}/public_barrels.dart');
