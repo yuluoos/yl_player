@@ -66,6 +66,7 @@ internal class YlManagedHttpClient(
     private val retries = network?.let { YlManagedRetryPolicy(it, clock::wallTimeMs) }
     private val redirects = YlManagedRedirectInterceptor(network?.maxRedirects ?: 20, credentials)
     private class HopStatus { var code: Int? = null }
+    private class InvalidBodySpan : ProtocolException("Body exceeds validated byte span")
     private val calls = java.util.concurrent.ConcurrentHashMap.newKeySet<ResourceCall>()
     override fun newCall(request: Request): Call = ResourceCall(request).also { calls.add(it) }
     fun cancelAll() { calls.toList().forEach { it.cancel() }; calls.clear() }
@@ -199,16 +200,35 @@ internal class YlManagedHttpClient(
             var input = body.source()
             var delivered = 0L
             val length = body.contentLength()
+            val expectedLength = initialRange?.let { it.second - it.first + 1 } ?: length
+            var spanRemaining = expectedLength
             val source = object : Source {
                 override fun timeout() = input.timeout()
                 override fun close() { cancel(); response.close(); calls.remove(this@ResourceCall) }
                 override fun read(sink: Buffer, byteCount: Long): Long {
+                    require(byteCount >= 0)
+                    if (byteCount == 0L) return 0
                     while (true) {
                         checkCancelled()
                         try {
-                            val count = input.read(sink, byteCount)
-                            if (count == -1L && length >= 0 && delivered < length) throw EOFException("Incomplete body")
-                            if (count > 0) delivered += count
+                            if (spanRemaining == 0L) {
+                                if (expectedLength >= 0 && delivered < expectedLength) throw EOFException("Incomplete body")
+                                return -1
+                            }
+                            // Keep only one bounded chunk private. A caller may stop exactly at
+                            // the original length, so validate a range's EOF before releasing its
+                            // final chunk; an overall byte cap cannot validate resumed framing.
+                            val chunk = Buffer()
+                            val count = input.read(chunk, minOf(byteCount, 8192L, spanRemaining.takeIf { it >= 0 } ?: Long.MAX_VALUE))
+                            if (count == -1L && spanRemaining > 0) throw EOFException("Incomplete body")
+                            if (count > 0) {
+                                if (spanRemaining >= 0) {
+                                    spanRemaining -= count
+                                    if (spanRemaining == 0L && !input.exhausted()) throw InvalidBodySpan()
+                                }
+                                sink.write(chunk, count)
+                                delivered += count
+                            }
                             return count
                         } catch (error: IOException) {
                             checkCancelled()
@@ -219,7 +239,7 @@ internal class YlManagedHttpClient(
                             // OkHttp reports premature fixed-length EOF as ProtocolException.
                             // Only this body/framing context is transient; source/range validation
                             // and malformed chunk framing remain terminal ProtocolExceptions.
-                            val transportError = if (error is ProtocolException && length >= 0 && delivered < length && response.header("Transfer-Encoding") == null)
+                            val transportError = if (error is ProtocolException && error !is InvalidBodySpan && expectedLength >= 0 && delivered < expectedLength && response.header("Transfer-Encoding") == null)
                                 EOFException("Incomplete body").apply { initCause(error) } else error
                             scheduleRetry(lastRequest.method, transportError) ?: throw error
                             response.close()
@@ -242,6 +262,7 @@ internal class YlManagedHttpClient(
                                 response.close(); throw ProtocolException("Body retry representation changed")
                             }
                             input = response.body?.source() ?: throw ProtocolException("Missing response body")
+                            spanRemaining = contentRange(response)?.let { it.second - it.first + 1 } ?: response.body!!.contentLength()
                         }
                     }
                 }

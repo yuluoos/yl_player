@@ -6,6 +6,7 @@ import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.mockwebserver.*
 import kotlin.test.*
+import okio.buffer
 
 class YlManagedRedirectInterceptorTest {
     private fun MockWebServer.address(path: String) = url(path).newBuilder().host("127.0.0.1").build()
@@ -199,6 +200,105 @@ class YlManagedRedirectInterceptorTest {
             client(server, config = network(1)).newCall(Request.Builder().url(server.address("/")).build()).execute().use { assertEquals("abcdefgh", it.body!!.string()) }
             server.takeRequest(); val resumed = server.takeRequest()
             assertEquals("bytes=4-", resumed.getHeader("Range")); assertEquals("\"v1\"", resumed.getHeader("If-Range")); assertEquals(2, server.requestCount)
+        }
+    }
+    @Test fun `chunked shortened range cannot leak wrong bytes inside the original resource length`() {
+        for (chunkSize in listOf(1, 9)) MockWebServer().use { server ->
+            server.enqueue(MockResponse().setBody("abcdefgh").setHeader("ETag", "\"v1\"").setSocketPolicy(SocketPolicy.DISCONNECT_DURING_RESPONSE_BODY))
+            server.enqueue(MockResponse().setResponseCode(206).setHeader("ETag", "\"v1\"").setHeader("Content-Range", "bytes 4-5/8").setChunkedBody("efXY", chunkSize))
+            val transport = client(server, config = network(2))
+            try {
+                transport.newCall(Request.Builder().url(server.address("/")).build()).execute().use { response ->
+                    val observed = StringBuilder()
+                    assertFailsWith<IOException> {
+                        val stream = response.body!!.byteStream()
+                        repeat(8) { val byte = stream.read(); if (byte >= 0) observed.append(byte.toChar()) }
+                    }
+                    assertTrue("abcdef".startsWith(observed.toString()), "Invalid bytes escaped: $observed")
+                }
+                assertEquals(2, server.requestCount)
+            } finally { transport.close() }
+        }
+    }
+    @Test fun `chunked full remaining range overrun fails before completing a capped caller read`() {
+        MockWebServer().use { server ->
+            server.enqueue(MockResponse().setBody("abcdefgh").setHeader("ETag", "\"v1\"").setSocketPolicy(SocketPolicy.DISCONNECT_DURING_RESPONSE_BODY))
+            server.enqueue(MockResponse().setResponseCode(206).setHeader("ETag", "\"v1\"").setHeader("Content-Range", "bytes 4-7/8").setChunkedBody("efghEXTRA", 2))
+            val transport = client(server, config = network(2))
+            try {
+                assertFailsWith<IOException> { transport.newCall(Request.Builder().url(server.address("/")).build()).execute().use { it.body!!.byteStream().readNBytes(8) } }
+                assertEquals(2, server.requestCount)
+            } finally { transport.close() }
+        }
+    }
+    @Test fun `chunked short EOF and valid shortened spans resume inside the original retry budget`() {
+        for (rangeEnd in listOf(5, 7)) MockWebServer().use { server ->
+            server.enqueue(MockResponse().setBody("abcdefgh").setHeader("ETag", "\"v1\"").setSocketPolicy(SocketPolicy.DISCONNECT_DURING_RESPONSE_BODY))
+            server.enqueue(MockResponse().setResponseCode(206).setHeader("ETag", "\"v1\"").setHeader("Content-Range", "bytes 4-$rangeEnd/8").setChunkedBody("ef", 1))
+            server.enqueue(MockResponse().setResponseCode(206).setHeader("ETag", "\"v1\"").setHeader("Content-Range", "bytes 6-7/8").setChunkedBody("gh", 1))
+            val retries = mutableListOf<Int>()
+            val transport = client(server, config = network(2), retries = { index, _ -> retries += index })
+            try {
+                transport.newCall(Request.Builder().url(server.address("/")).build()).execute().use { assertEquals("abcdefgh", it.body!!.string()) }
+                assertEquals(listOf(1, 2), retries)
+                server.takeRequest(); assertEquals("bytes=4-", server.takeRequest().getHeader("Range")); assertEquals("bytes=6-", server.takeRequest().getHeader("Range"))
+                assertEquals(3, server.requestCount)
+            } finally { transport.close() }
+        }
+    }
+    @Test fun `chunked premature EOF cannot reset an exhausted retry budget`() {
+        MockWebServer().use { server ->
+            server.enqueue(MockResponse().setBody("abcdefgh").setHeader("ETag", "\"v1\"").setSocketPolicy(SocketPolicy.DISCONNECT_DURING_RESPONSE_BODY))
+            server.enqueue(MockResponse().setResponseCode(206).setHeader("ETag", "\"v1\"").setHeader("Content-Range", "bytes 4-7/8").setChunkedBody("ef", 1))
+            val transport = client(server, config = network(1))
+            try {
+                assertFailsWith<IOException> { transport.newCall(Request.Builder().url(server.address("/")).build()).execute().use { it.body!!.string() } }
+                assertEquals(2, server.requestCount)
+            } finally { transport.close() }
+        }
+    }
+    @Test fun `chunked final span EOF probe preserves inactivity retry and cancellation`() {
+        for (cancel in listOf(false, true)) MockWebServer().use { server ->
+            server.enqueue(MockResponse().setBody("abcdefgh").setHeader("ETag", "\"v1\"").setSocketPolicy(SocketPolicy.DISCONNECT_DURING_RESPONSE_BODY))
+            // Deliver the four payload bytes, then stall before the chunk terminator.
+            server.enqueue(MockResponse().setResponseCode(206).setHeader("ETag", "\"v1\"").setHeader("Content-Range", "bytes 4-7/8")
+                .setChunkedBody("efgh", 4).throttleBody(7, 1, TimeUnit.SECONDS))
+            server.enqueue(MockResponse().setResponseCode(206).setHeader("ETag", "\"v1\"").setHeader("Content-Range", "bytes 4-7/8").setChunkedBody("efgh", 4))
+            val retries = CopyOnWriteArrayList<Int>()
+            val spanRead = CountDownLatch(1)
+            val delegate = OkHttpClient.Builder().addNetworkInterceptor { chain ->
+                val response = chain.proceed(chain.request())
+                if (response.code != 206) response else {
+                    val body = response.body!!
+                    val watched = object : okio.ForwardingSource(body.source()) {
+                        override fun read(sink: okio.Buffer, byteCount: Long): Long = super.read(sink, byteCount).also { if (it > 0) spanRead.countDown() }
+                    }
+                    response.newBuilder().body(object : ResponseBody() {
+                        private val buffered = watched.buffer()
+                        override fun contentType() = body.contentType()
+                        override fun contentLength() = body.contentLength()
+                        override fun source() = buffered
+                    }).build()
+                }
+            }.build()
+            val transport = YlManagedHttpClient(YlOriginCredentialPolicy(server.address("/"), emptyMap(), emptyMap()), network(2, body = if (cancel) 2000 else 150),
+                onRetry = { index, _ -> retries += index }, transport = delegate)
+            val call = transport.newCall(Request.Builder().url(server.address("/")).build())
+            val executor = Executors.newSingleThreadExecutor()
+            try {
+                val result = executor.submit<String> { call.execute().use { it.body!!.string() } }
+                assertTrue(spanRead.await(2, TimeUnit.SECONDS))
+                if (cancel) {
+                    assertFailsWith<TimeoutException> { result.get(50, TimeUnit.MILLISECONDS) }
+                    call.cancel()
+                    assertIs<IOException>(assertFailsWith<ExecutionException> { result.get(1, TimeUnit.SECONDS) }.cause)
+                    assertEquals(listOf(1), retries.toList()); assertEquals(2, server.requestCount)
+                } else {
+                    assertEquals("abcdefgh", result.get(2, TimeUnit.SECONDS))
+                    assertEquals(listOf(1, 2), retries.toList()); assertEquals(3, server.requestCount)
+                    server.takeRequest(); server.takeRequest(); assertEquals("bytes=4-", server.takeRequest().getHeader("Range"))
+                }
+            } finally { transport.close(); executor.shutdownNow() }
         }
     }
     @Test fun `resumed framing mismatch fails before delivering bytes beyond the validated range`() {
