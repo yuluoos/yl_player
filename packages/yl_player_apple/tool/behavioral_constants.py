@@ -14,8 +14,10 @@ def extract(source):
     # Keep numeric literals out of comments and string messages. Match strings
     # before comments so URL text cannot consume real code after a string.
     source = re.sub(r'"(?:\\.|[^"\\])*"|/\*.*?\*/|//[^\n]*', ' ', source, flags=re.S)
+    # Range operators delimit literals; their dots are not decimal points.
+    numeric_source = re.sub(r'\.\.(?:\.|<)', ' ', source)
     values = collections.Counter('number:' + token for token in re.findall(
-        r'(?<![\w.])-?(?:0x[0-9A-Fa-f_]+|\d[\d_]*(?:\.\d[\d_]*)?)(?![\w.])', source))
+        r'(?<![\w.])-?(?:0x[0-9A-Fa-f_]+|\d[\d_]*(?:\.\d[\d_]*)?)(?![\w.])', numeric_source))
     values.update('symbol:' + token for token in re.findall(
         r'\b(?:true|false|kCVPixelFormatType_\w+|kCVPixelBuffer\w+|kAudio\w+)\b|\._(?:Enable\w+|1xRealTimePlayback)', source))
     for case in re.findall(r'\bcase\s+([^\n:;{}]+)', source):

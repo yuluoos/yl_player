@@ -37,7 +37,7 @@ archive coverage. `--platform` and `--manager` can limit bootstrap to one host.
 An interrupted bootstrap can resume only when its ownership marker identifies
 the same checkout. Choose a new consumer root after changing fixture templates.
 
-The engine matrices contain 217 iOS cases and 166 macOS cases. They exercise
+The engine matrices contain 216 iOS cases and 166 macOS cases. They exercise
 all migrated shared engine algorithms and platform compatibility branches,
 including the original 81 neutral cases. `tests-manifest.json` records those
 neutral suites; `engine-tests-manifest.json` maps the remaining original suites,
@@ -51,8 +51,10 @@ Only the two existing iOS hardware skips named in `allowed-hardware-skips.json`
 are allowed. The gate checks every native class/method identity and skip name,
 in addition to counts. Exactly 20 legacy host methods (11 iOS, 9 macOS) require
 the Task 7 typed player host; `task7-host-cases.json` preserves each original
-body and maps its assertions to the required typed-host counterpart. No other
-methods from mixed suites are deferred. These are complete engine matrices;
+body and maps its assertions to the required typed-host counterpart. The inherited
+comments-only iOS `testExample` is explicitly retired under Ruling13, with source/body hashes and reason in `engine-tests-manifest.json`; it
+has no behavior assertions and is not a Task7 transfer. No other methods from
+mixed suites are deferred. These are complete engine matrices;
 complete player parity additionally requires those host cases and four complete
 consumer matrices before endorsement.
 

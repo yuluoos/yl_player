@@ -14,8 +14,7 @@
       "testStopRejectsDecoderCreatedAfterTeardown",
       "testStoppedAVRejectsSourceCommandsButAllowsControlsAndFreshOpen",
       "testFreshOpenAfterStopReactivatesAudioWithoutLifecycleRevival",
-      "testStopClearsRetainedAVSourceAndFencesQueuedCallbacks",
-      "testExample"
+      "testStopClearsRetainedAVSourceAndFencesQueuedCallbacks"
     ],
     "transferred_methods": [
       "testCancelOpenMatchesOnlyThePreparingCandidate",
@@ -26,9 +25,20 @@
       "Shared module import and neutral source model/AV policy names",
       "Only Ruling10 exact host methods transferred",
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
-      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity",
+      "Ruling13 explicitly retires only the inherited comments-only testExample; original body and source hashes recorded in retired_methods."
     ],
-    "destination_sha256": "fb34de1ba022836328263d6093e8e42ba6fabd58364047ab6f2b5d7e4ded99ba"
+    "destination_sha256": "62ae3fa5cd399d4ac73612cf075c10311add501d7739b4530faf3f2ca70d58b3",
+    "retired_methods": [
+      {
+        "method": "testExample",
+        "original_source": "packages/yl_player/example/ios/RunnerTests/RunnerTests.swift",
+        "original_source_sha256": "f40751d359122821e292012f400f212571320baad5914757dfdd784faf75ad63",
+        "original_body": "  func testExample() {\n    // If you add code to the Runner application, consider adding tests here.\n    // See https://developer.apple.com/documentation/xctest for more information about using XCTest.\n  }",
+        "original_body_sha256": "a2e20b22f9479ca48fb0f0bb52510e235b45e3af2ed519ce6b7faf141cdbe9ad",
+        "reason": "Binding Ruling13: inherited comments-only Flutter template with no actions or assertions; retired only from the shared iOS fixture, not a Task7 host transfer."
+      }
+    ]
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlAudioRendererTests.swift",
