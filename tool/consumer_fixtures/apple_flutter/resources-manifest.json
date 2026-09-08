@@ -1,8 +1,56 @@
 [
   {
-    "source": "packages/yl_player/example/ios/RunnerTests/Fixtures/h264_aac.mkv",
+    "source": "packages/yl_player/example/assets/test_media/h264_aac.flv",
+    "destination": "tool/consumer_fixtures/apple_flutter/Resources/h264_aac.flv",
+    "sha256": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+    "adaptations": []
+  },
+  {
+    "source": "packages/yl_player/example/assets/test_media/h264_aac.mkv",
     "destination": "tool/consumer_fixtures/apple_flutter/Resources/h264_aac.mkv",
     "sha256": "0998ccdd25d75b238a2a4bc9283f6c794e432b1983d13276716345d31cdb0288",
+    "adaptations": []
+  },
+  {
+    "source": "packages/yl_player/example/assets/test_media/h264_mp3.flv",
+    "destination": "tool/consumer_fixtures/apple_flutter/Resources/h264_mp3.flv",
+    "sha256": "d4adf13085ffa29f7a467f7924b204a97af11970a3eea7e2ea6bafaa959e40fb",
+    "adaptations": []
+  },
+  {
+    "source": "packages/yl_player/example/assets/test_media/hevc_aac.flv",
+    "destination": "tool/consumer_fixtures/apple_flutter/Resources/hevc_aac.flv",
+    "sha256": "375e3f8c4b93efb619b276d9b88e6189029a48e2e0a0c15b334f86d2ad4a1170",
+    "adaptations": []
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/Fixtures/hevc_aac.mkv",
+    "destination": "tool/consumer_fixtures/apple_flutter/Resources/hevc_aac.mkv",
+    "sha256": "814cd9be895a12f038e621c43825f35f3fb4f19de383bd9408503de6817a0c92",
+    "adaptations": []
+  },
+  {
+    "source": "packages/yl_player/example/assets/test_media/hls_encrypted_segment0.ts",
+    "destination": "tool/consumer_fixtures/apple_flutter/Resources/hls_encrypted_segment0.ts",
+    "sha256": "aa751babcc34a57b8b23d25db870f7b504c59deeefe29f882ae29406dbd40f9e",
+    "adaptations": []
+  },
+  {
+    "source": "packages/yl_player/example/assets/test_media/hls_key.bin",
+    "destination": "tool/consumer_fixtures/apple_flutter/Resources/hls_key.bin",
+    "sha256": "2ed66c3abfb584a7b5f04fb633e54509576fb5137fa67207dcc6cf92570f983d",
+    "adaptations": []
+  },
+  {
+    "source": "packages/yl_player/example/assets/test_media/network_seek_h264_aac.mkv",
+    "destination": "tool/consumer_fixtures/apple_flutter/Resources/network_seek_h264_aac.mkv",
+    "sha256": "fec8a915e965408012ed5148d36b69a64ec38300d707abf0c728148812c5e12b",
+    "adaptations": []
+  },
+  {
+    "source": "packages/yl_player/example/assets/test_media/two_audio_tracks.mkv",
+    "destination": "tool/consumer_fixtures/apple_flutter/Resources/two_audio_tracks.mkv",
+    "sha256": "406efbb93546b6d48d1fa447a6733d4f163b67f064a4279fa4caca5263f23474",
     "adaptations": []
   }
 ]

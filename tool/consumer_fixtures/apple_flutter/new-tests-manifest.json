@@ -1,0 +1,38 @@
+[
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleCompatibilityTests.swift",
+    "sha256": "7b90e16c05496577773b3b82b21ee0556e15c5907af1f93f91e0072561671e9f",
+    "methods": [
+      "testIosOverflowKeepsNewestThreeFrames",
+      "testMacosOverflowRejectsNewestAndPreservesQueuedOrder"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlPlatformServicesTests.swift",
+    "sha256": "14fd68ad5292c7581b6f19f3be09195587baae050dd0aafd7d45af8e5c14d9cc",
+    "methods": [
+      "testTexturePublicationClearAndDisposalRetainOneIdentity",
+      "testStopClearsPixelBufferInPlatformOutput",
+      "testRetiredBackendCannotDisposeOrClearCandidateTexture",
+      "testRetiredFallbackCannotClearCandidateTexture",
+      "testLifecycleStartIsIdempotentAndStopRemovesObservers"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/NativeBackendFixtures.swift",
+    "sha256": "f7baafcbe436fe52bfbb9c14837f0ae027b5577b99b20be99e1f6810278ba938",
+    "methods": []
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/NativeBackendFixtures.swift",
+    "sha256": "ada5e7ac48f67da66a05ec2002f4e06a17c7e4568c61479dc6dac7953b991a79",
+    "methods": []
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlMacosPlatformAdapterTests.swift",
+    "sha256": "8adb1529697bd202ef053f9fd76186bd69643c1750faa2dbf46038b35598366b",
+    "methods": [
+      "testDisplayFactoryDoesNotRetainTheFlutterView"
+    ]
+  }
+]

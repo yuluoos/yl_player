@@ -37,13 +37,30 @@ archive coverage. `--platform` and `--manager` can limit bootstrap to one host.
 An interrupted bootstrap can resume only when its ownership marker identifies
 the same checkout. Choose a new consumer root after changing fixture templates.
 
-The current 81 cases characterize the 12 byte-identical source files, the
-iOS-only packet queue and their exact production declaration dependencies.
-`tests-manifest.json` records the copied iOS suites and the sole module-import
-adaptation. The MKV resource is the existing iOS fixture, copied unchanged.
-Source routing, prepared fallback, HLS resource-loader/proxy, open coordinator
-and reconnect implementations are divergent at this checkpoint; their complete
-characterization belongs to Task 4. These subset gates are not full-core parity.
+The engine matrices contain 217 iOS cases and 166 macOS cases. They exercise
+all migrated shared engine algorithms and platform compatibility branches,
+including the original 81 neutral cases. `tests-manifest.json` records those
+neutral suites; `engine-tests-manifest.json` maps the remaining original suites,
+method identities, fixture hashes and narrowly transferred host cases.
+`new-tests-manifest.json` records boundary regressions and constructor-only native
+fixture glue. The nine media resources retain their original bytes and provenance
+in `resources-manifest.json`. Production code is built through the plugin; tests
+never embed copied playback implementations or a substitute Flutter framework.
+
+Only the two existing iOS hardware skips named in `allowed-hardware-skips.json`
+are allowed. The gate checks every native class/method identity and skip name,
+in addition to counts. Exactly 20 legacy host methods (11 iOS, 9 macOS) require
+the Task 7 typed player host; `task7-host-cases.json` preserves each original
+body and maps its assertions to the required typed-host counterpart. No other
+methods from mixed suites are deferred. These are complete engine matrices;
+complete player parity additionally requires those host cases and four complete
+consumer matrices before endorsement.
+
+Platform services own SDK bindings. The player host owns texture registration
+and final disposal; engines borrow the output across sessions. Boundary tests
+cover Stop cache clearing, retired backend output authority, lifecycle observer
+removal and weak macOS display-view binding. Platform policy tests preserve the
+existing scheduler, audio, recovery and VideoToolbox differences.
 
 The project requires Python 3.9+, Ruby with `xcodeproj`, CocoaPods, Flutter and
 Xcode for native gates. Normal Dart tests do not invoke these Apple tools. The

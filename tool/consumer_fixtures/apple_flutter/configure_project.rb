@@ -18,8 +18,10 @@ tests.source_build_phase.files.to_a.each(&:remove_from_project)
 Dir[File.join(host, platform, 'RunnerTests', '*.swift')].sort.each do |path|
   tests.source_build_phase.add_file_reference(group.new_file(File.basename(path)))
 end
-resource = group.new_file('h264_aac.mkv')
-tests.resources_build_phase.add_file_reference(resource)
+tests.resources_build_phase.files.to_a.each(&:remove_from_project)
+Dir[File.join(host, platform, 'RunnerTests', '*')].sort.reject { |path| File.extname(path) == '.swift' || File.directory?(path) }.each do |path|
+  tests.resources_build_phase.add_file_reference(group.new_file(File.basename(path)))
+end
 if manager == 'cocoapods'
   project.targets.each do |target|
     target.frameworks_build_phase.files.to_a.select { |file| file.product_ref }.each(&:remove_from_project) if target.respond_to?(:frameworks_build_phase)

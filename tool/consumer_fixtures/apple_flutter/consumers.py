@@ -80,6 +80,43 @@ flutter:
 """
 
 
+def verify_fixtures():
+    for name in ["tests-manifest.json", "resources-manifest.json", "engine-tests-manifest.json"]:
+        rows = json.loads((FIXTURES / name).read_text())
+        for row in rows:
+            source, destination = ROOT / row["source"], ROOT / row["destination"]
+            expected_source = row.get("source_sha256", row.get("original_sha256", row.get("sha256")))
+            expected_destination = row.get("destination_sha256", row.get("sha256"))
+            require(hashlib.sha256(source.read_bytes()).hexdigest() == expected_source,
+                    f"Original fixture changed: {source}")
+            if expected_destination is not None:
+                require(hashlib.sha256(destination.read_bytes()).hexdigest() == expected_destination,
+                        f"Migrated fixture changed: {destination}")
+    for row in json.loads((FIXTURES / "new-tests-manifest.json").read_text()):
+        require(hashlib.sha256((ROOT / row["destination"]).read_bytes()).hexdigest() == row["sha256"],
+                "New characterization fixture changed without an updated manifest")
+
+
+def fixture_tests(platform):
+    return list((FIXTURES / "RunnerTests").glob("*.swift")) + list((FIXTURES / ("RunnerTests-" + platform)).glob("*.swift"))
+
+
+def sync_fixtures(host, platform, manager):
+    verify_fixtures()
+    tests = host / platform / "RunnerTests"
+    for existing in tests.glob("*.swift"):
+        if existing.name not in {p.name for p in fixture_tests(platform)}:
+            existing.unlink()
+    for source in fixture_tests(platform):
+        shutil.copyfile(source, tests / source.name)
+    # Existing tests use both bundle resources and paths relative to #filePath.
+    shutil.copytree(FIXTURES / "Resources", host / "assets/test_media", dirs_exist_ok=True)
+    for resource in (FIXTURES / "Resources").iterdir():
+        if resource.is_file():
+            shutil.copyfile(resource, tests / resource.name)
+    run(["ruby", str(FIXTURES / "configure_project.rb"), str(host), platform, manager, str(FIXTURES)], ROOT, f"{platform}-{manager}-fixtures")
+
+
 def bootstrap(platform, manager):
     host = OUTPUT / f"{platform}-{manager}"
     marker = host / "consumer.json"
@@ -87,6 +124,9 @@ def bootstrap(platform, manager):
     if marker.is_file():
         saved = json.loads(marker.read_text())
         require(saved["repo_root"] == str(ROOT), "Consumer belongs to another checkout")
+        sync_fixtures(host, platform, manager)
+        if manager == "cocoapods":
+            run(["pod", "install"], host / platform, f"{platform}-{manager}-refresh-pods")
         verify_graph(host, platform, manager)
         return host
     require(not host.exists() or (pending.is_file() and json.loads(pending.read_text())["repo_root"] == str(ROOT)), f"Unowned host exists at {host}; choose a fresh YL_APPLE_CONSUMERS directory")
@@ -99,7 +139,7 @@ def bootstrap(platform, manager):
     tests = host / platform / "RunnerTests"
     for generated in tests.glob("*.swift"):
         generated.unlink()
-    for source in (FIXTURES / "RunnerTests").glob("*.swift"):
+    for source in fixture_tests(platform):
         shutil.copyfile(source, tests / source.name)
     shutil.copyfile(FIXTURES / "Resources/h264_aac.mkv", tests / "h264_aac.mkv")
     if manager == "cocoapods":
@@ -127,6 +167,7 @@ def bootstrap(platform, manager):
         text = re.sub(r'\.iOS\([^)]*\)', '.iOS("15.0")', text)
         text = re.sub(r'\.macOS\([^)]*\)', '.macOS("12.0")', text)
         manifest.write_text(text)
+    sync_fixtures(host, platform, manager)
     verify_graph(host, platform, manager)
     marker.write_text(json.dumps({"repo_root": str(ROOT), "platform": platform, "manager": manager}, indent=2) + "\n")
     return host
@@ -134,11 +175,13 @@ def bootstrap(platform, manager):
 
 def verify_graph(host, platform, manager):
     native = host / platform
-    fixture_tests = {path.name: path.read_bytes() for path in (FIXTURES / "RunnerTests").glob("*.swift")}
+    expected_tests = {path.name: path.read_bytes() for path in fixture_tests(platform)}
     host_tests = {path.name: path.read_bytes() for path in (native / "RunnerTests").glob("*.swift")}
-    require(fixture_tests == host_tests, "Consumer characterization suites differ from current fixtures; choose a fresh consumer root")
+    require(expected_tests == host_tests, "Consumer characterization suites differ from current fixtures; choose a fresh consumer root")
     require((host / "lib/main.dart").read_bytes() == (FIXTURES / "main.dart").read_bytes(), "Consumer application differs from its fixture")
-    require((native / "RunnerTests/h264_aac.mkv").read_bytes() == (FIXTURES / "Resources/h264_aac.mkv").read_bytes(), "Consumer media fixture changed")
+    for resource in (FIXTURES / "Resources").iterdir():
+        require((native / "RunnerTests" / resource.name).read_bytes() == resource.read_bytes(), "Bundled consumer resource changed")
+        require((host / "assets/test_media" / resource.name).read_bytes() == resource.read_bytes(), "Source-relative consumer resource changed")
     project = (native / "Runner.xcodeproj/project.pbxproj").read_text()
     plugins = json.loads((host / ".flutter-plugins-dependencies").read_text())
     names = {item["name"] for item in plugins["plugins"][platform]}
@@ -195,11 +238,37 @@ def check(platform, manager, link):
         print(json.dumps({"platform": platform, "manager": manager, "link": "passed", "result": str(result)}), flush=True)
         return
     summary = json.loads(run(["xcrun", "xcresulttool", "get", "test-results", "summary", "--path", str(result)], ROOT, f"{platform}-{manager}-summary", capture=True))
-    expected_count = sum(len(re.findall(r"\bfunc test\w+\(", path.read_text())) for path in (FIXTURES / "RunnerTests").glob("*.swift"))
-    require(expected_count > 0 and summary.get("failedTests") == 0 and summary.get("passedTests") == expected_count and summary.get("totalTestCount") == expected_count, "Native result does not cover the complete fixture suite")
-    require(summary.get("skippedTests", 0) == 0, "Characterization tests were skipped")
+    expected_count = sum(len(re.findall(r"\bfunc test\w+\(", path.read_text())) for path in fixture_tests(platform))
+    require(expected_count > 0 and summary.get("failedTests") == 0 and summary.get("passedTests", 0) + summary.get("skippedTests", 0) == expected_count and summary.get("totalTestCount") == expected_count, "Native result does not cover the complete fixture suite")
+    require(summary.get("skippedTests", 0) <= (2 if platform == "ios" else 0), "Unexpected characterization skips")
+    verify_cases(result, platform, manager)
     (LOGS / f"{platform}-{manager}-result.json").write_text(json.dumps({"result_bundle": str(result), "summary": summary}, indent=2) + "\n")
     print(json.dumps({"platform": platform, "manager": manager, "passed": summary["passedTests"], "result": str(result)}), flush=True)
+
+
+def verify_cases(result, platform, manager):
+    tree = json.loads(run(["xcrun", "xcresulttool", "get", "test-results", "tests", "--path", str(result)], ROOT, f"{platform}-{manager}-cases", capture=True))
+    def leaves(nodes):
+        for node in nodes:
+            if node.get("nodeType") == "Test Case":
+                yield node
+            yield from leaves(node.get("children", []))
+    nodes = list(leaves(tree["testNodes"]))
+    expected = set()
+    for path in fixture_tests(platform):
+        text = path.read_text()
+        classes = list(re.finditer(r"class (\w+): XCTestCase", text))
+        for method in re.finditer(r"\bfunc (test\w+)\(", text):
+            owners = [owner for owner in classes if owner.start() < method.start()]
+            require(owners, "Fixture method has no XCTest class")
+            expected.add(owners[-1].group(1) + "/" + method.group(1) + "()")
+    actual = {node["nodeIdentifier"] for node in nodes}
+    require(actual == expected, f"Native case identities differ: missing={expected - actual}, extra={actual - expected}")
+    allowed_skips = set(json.loads((FIXTURES / "allowed-hardware-skips.json").read_text())[platform])
+    skipped = {node["nodeIdentifier"] for node in nodes if node["result"] == "Skipped"}
+    require(skipped <= allowed_skips, f"Unexpected skipped test cases: {skipped - allowed_skips}")
+    require(all(node["result"] in {"Passed", "Skipped"} for node in nodes), "Native characterization contains nonpassing cases")
+    (LOGS / f"{platform}-{manager}-case-identities.json").write_text(json.dumps({"expected": sorted(expected), "observed": sorted(actual), "skipped": sorted(skipped)}, indent=2) + "\n")
 
 
 def verify_product(host, platform, manager, derived=None, expect_tests=True):

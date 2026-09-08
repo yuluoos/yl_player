@@ -1,0 +1,140 @@
+{
+  "checkpoint": "b36da296f260bca3535ed345c2eff21f39155f09",
+  "sources": [
+    {
+      "name": "YlAudioRenderer.swift",
+      "declared_base": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlAudioRenderer.swift",
+      "base_sha256": "f46010d4e48d1604c5c6c130aa2c80dd9d84eac406a454678dfaaf638ece8a5a",
+      "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlAudioRenderer.swift",
+      "ios_sha256": "26b2efdf52aaaabe959ed54fca849bcfc0843f43030141665a7541e68f689175",
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioRenderer.swift",
+      "branches": "Reviewed macOS serialization base; preserve iOS single packet/raw cookie/interleaved format and fixed 500000us budget vs macOS batched cookie/noninterleaved,1000000us/rate-scaled budget."
+    },
+    {
+      "name": "YlAvPlayerBackend.swift",
+      "declared_base": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlAvPlayerBackend.swift",
+      "base_sha256": "d904c895544c087e1945635ecc30c408366b25e94fdb1e995c578a9eb4d2527c",
+      "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlAvPlayerBackend.swift",
+      "ios_sha256": "a69f6df31fdfbf3ac9d995219dcd02c07e0c7ab1b5f6e5379ae33efb03dc0637",
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift",
+      "branches": "Reviewed macOS base plus iOS audio activation, direct live reconnect/error collector, retained actual HLS replacement ownership/finishReplacement; SDK/display/Flutter ownership in services."
+    },
+    {
+      "name": "YlFallbackBackend.swift",
+      "declared_base": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFallbackBackend.swift",
+      "base_sha256": "9b2e5b14ddad76b2f6de4d98a656b5b65755d0f3e8bb0614b7b1bbea0560216b",
+      "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackBackend.swift",
+      "ios_sha256": "b97ed544b0c6d600251c43be42f379395a4b67faf9033deeb6475524cd2e8fd4",
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/ManagedFallback/YlFallbackBackend.swift",
+      "branches": "Reviewed macOS clock-lock/audio/submission/Stop/terminal fencing base; iOS audio lifecycle, no added reservations/leases/submission resource policy; platform texture/display service."
+    },
+    {
+      "name": "YlFallbackModels.swift",
+      "declared_base": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFallbackModels.swift",
+      "base_sha256": "419e780f39b7bd7936b40350da7eecb92d9c536eec52022cb9b92f592b493987",
+      "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackModels.swift",
+      "ios_sha256": "43698e1cfb2166b7847c8671c8554bfd860da1fbf68f53a632cf0faa6e31057e",
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlFallbackModels.swift",
+      "branches": "Neutral descriptor/route names; exact container declaration remains in Shared/Dependencies."
+    },
+    {
+      "name": "YlFallbackRecoveryPolicy.swift",
+      "declared_base": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFallbackRecoveryPolicy.swift",
+      "base_sha256": "9e3917ab022651d22d61394fae0876a27cdc05d1a719031457ff9ae10d85a019",
+      "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackRecoveryPolicy.swift",
+      "ios_sha256": "914f68f9b272e724e1bf1dfa790f9f745d8164dc788b8674e2af7900210331f3",
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlFallbackRecoveryPolicy.swift",
+      "branches": "macOS restoration/terminal/activation policies retained; per-platform iOS seekability-gated vs macOS unmodified resume intent."
+    },
+    {
+      "name": "YlFrameScheduler.swift",
+      "declared_base": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFrameScheduler.swift",
+      "base_sha256": "acae927eb60ff3f357b077dc9f4f48136c95c595b41444158067a8825fecb3ba",
+      "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFrameScheduler.swift",
+      "ios_sha256": "bee2a6837b38e3cad42410e04561287aae5eb9f4de628ff831ef0c6a2f12304f",
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlFrameScheduler.swift",
+      "branches": "Reviewed macOS bounded wait/PTS base; immutable iOS drop-oldest branch retains its original 3-frame behavior."
+    },
+    {
+      "name": "YlHlsMediaProxy.swift",
+      "declared_base": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlHlsMediaProxy.swift",
+      "base_sha256": "f6d0258d1be277bf48d759264d13f83e1ad697644c68040e5802720a7c0f7eaf",
+      "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlHlsMediaProxy.swift",
+      "ios_sha256": "de82a1643c705765b5830c59cadd8a5a5003b0766ae335fbf4120e19b38e2b1b",
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift",
+      "branches": "Byte-identical algorithm except platform error prefix."
+    },
+    {
+      "name": "YlHlsResourceLoader.swift",
+      "declared_base": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlHlsResourceLoader.swift",
+      "base_sha256": "4abe48b2b93b2699dd8452198b3c363027751e509023cee72ae675e5db697919",
+      "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlHlsResourceLoader.swift",
+      "ios_sha256": "2390a2578eda5e999340e0a28d8decea0ad951f4286db264fe0d73a74645aa31",
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift",
+      "branches": "Byte-identical algorithm except SDK import/availability and platform error prefix."
+    },
+    {
+      "name": "YlLiveReconnectController.swift",
+      "declared_base": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlLiveReconnectController.swift",
+      "base_sha256": "4a72a73bcaea64f77adf4e0ce14e2f16012e4462d91dced4b43c6bec5c5aae3c",
+      "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlLiveReconnectController.swift",
+      "ios_sha256": "52f97537261fce5f8416f6aa20f77596393f8df84d70e465268eaf1374717ac7",
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Network/YlLiveReconnectController.swift",
+      "branches": "macOS base with iOS canRetry accessor restored; all retry constants unchanged."
+    },
+    {
+      "name": "YlMediaClock.swift",
+      "declared_base": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlMediaClock.swift",
+      "base_sha256": "c90e4fb576c8df1cf6a2b0512ae4f5baa0b6de22b5a8acadfe8203caaca57039",
+      "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlMediaClock.swift",
+      "ios_sha256": "4d7def6401ea33937f148bb9b5871a8648bd4af5796d7b42f80b43b314b7d2ab",
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlMediaClock.swift",
+      "branches": "Reviewed macOS clock lock ordering and recovered audio anchors retained."
+    },
+    {
+      "name": "YlOpenCoordinator.swift",
+      "declared_base": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlOpenCoordinator.swift",
+      "base_sha256": "837566737c79d321c637ffc8c025a49a32180c644b7b5eaef0ea6f9dc16d5a89",
+      "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlOpenCoordinator.swift",
+      "ios_sha256": "fc756717a8eba4cbd046e9a3af75e2236523364d39ca304ce11d699a00158d8e",
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlOpenCoordinator.swift",
+      "branches": "Reviewed macOS canBeginRecovery retained; identical token already in Shared/Dependencies; platform error/queue names."
+    },
+    {
+      "name": "YlPlaybackBackend.swift",
+      "declared_base": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlPlaybackBackend.swift",
+      "base_sha256": "cbd1135090b5e24b10125f2fe06f984a358dd94e36d926b7a4f3093c7231f597",
+      "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlPlaybackBackend.swift",
+      "ios_sha256": "b6b898a6e606d4512078b9c64334044626cf04908648f8b7a852873c6e318d6b",
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlPlaybackBackend.swift",
+      "branches": "Reviewed macOS external recovery base; iOS prepare-before-quiesce, synchronous rollback and finishReplacement retained in one transaction."
+    },
+    {
+      "name": "YlPreparedFallback.swift",
+      "declared_base": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlPreparedFallback.swift",
+      "base_sha256": "0ec0e2224bb94ed934b267c92549c2c48dff146d3d459ba88f221cd646b80d7d",
+      "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlPreparedFallback.swift",
+      "ios_sha256": "5ad5914903228f628769e16fca7dd50c736faa2484cdc6cff6c3c3cf67d0d2c5",
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift",
+      "branches": "macOS hardware-lease query retained; shared preparation/discard behavior unchanged."
+    },
+    {
+      "name": "YlSourceRouter.swift",
+      "declared_base": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlSourceRouter.swift",
+      "base_sha256": "03c6224360cbde1c69572975e4a27d0f2917b5b8bffd127f3b9d16d0549481c7",
+      "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlSourceRouter.swift",
+      "ios_sha256": "a72cbe391254a65d73db02337b0edaac1480ab133a0d3cfa95d3c4047b2f1130",
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlSourceRouter.swift",
+      "branches": "Reviewed macOS credentials-aware dictionary route retained; identical descriptor algorithm with neutral model name and native diagnostic labels."
+    },
+    {
+      "name": "YlVideoToolboxDecoder.swift",
+      "declared_base": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlVideoToolboxDecoder.swift",
+      "base_sha256": "7089cb91ca42ce6841f2452dc91398cf50f833c346082fa9016ee33f26daff77",
+      "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlVideoToolboxDecoder.swift",
+      "ios_sha256": "7edebca068c8ddad162d73642a5ce5e8fd111389493c2dd863f79d701700f837",
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlVideoToolboxDecoder.swift",
+      "branches": "Reviewed macOS reservation/submission base; optional nil ownership on iOS preserves no resource lease/budget, BGRA/realtime vs macOS NV12/Metal/temporal flags."
+    }
+  ]
+}

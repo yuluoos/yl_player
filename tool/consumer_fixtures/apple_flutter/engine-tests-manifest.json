@@ -1,0 +1,595 @@
+[
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/RunnerTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/RunnerTests.swift",
+    "original_sha256": "f40751d359122821e292012f400f212571320baad5914757dfdd784faf75ad63",
+    "engine_methods": [
+      "testMediaProxyParsesOnlyExactInheritedCredentialQueryItem",
+      "testPerLoadBufferStrategyUsesExistingGoalsWithoutChangingLegacyConfiguration",
+      "testPreparingRetriesDoNotPolluteOldSessionAndCommittedRetriesRetainIdentity",
+      "testPrivateCandidateEventsPublishOnlyAfterCommit",
+      "testExplicitCredentialScopeAndInheritedManifestStripping",
+      "testAppManagedAVNeverActivatesAudioSession",
+      "testLoadTokenBelongsToCommittedAVSourceAndRequestStateDoesNotActivate",
+      "testStopRejectsDecoderCreatedAfterTeardown",
+      "testStoppedAVRejectsSourceCommandsButAllowsControlsAndFreshOpen",
+      "testFreshOpenAfterStopReactivatesAudioWithoutLifecycleRevival",
+      "testStopClearsRetainedAVSourceAndFencesQueuedCallbacks",
+      "testExample"
+    ],
+    "transferred_methods": [
+      "testCancelOpenMatchesOnlyThePreparingCandidate",
+      "testPlayerVolumeAndCandidateOptionsSurviveFailedReplacementAndStop",
+      "testStopCancelsPendingOpenRetainsTextureAndAllowsFreshOpen"
+    ],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "fb34de1ba022836328263d6093e8e42ba6fabd58364047ab6f2b5d7e4ded99ba"
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlAudioRendererTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAudioRendererTests.swift",
+    "original_sha256": "5f4458c01319c2b1dea8640fdfd79948955b65d98490354918d488f2b1ae4ca0",
+    "engine_methods": [
+      "testConfigurationFailureMapsToStableAACError",
+      "testConfigurationFailureMapsToStableMP3Error",
+      "testConversionFailureUsesCodecSpecificMessage",
+      "testBalancedDurationAndByteCapsAreHardLimits",
+      "testByteLimitWinsBeforeConversion",
+      "testScheduledPCMByteLimitComesFromFallbackBudget",
+      "testUnderrunClampAndStaleCompletionSuppression",
+      "testAppleConverterDecodesFixtureAACPacket",
+      "testAppleConverterDecodesFixtureMP3Packet"
+    ],
+    "transferred_methods": [],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "c59b5b92fb9edc12f6109ac63f196e80a4d9ff9ee45266447bdd31103e78cfa0"
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlFFmpegBridgeTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlFFmpegBridgeTests.swift",
+    "original_sha256": "54538c3b2f103e73f050559f98d1242d2f1f678b8b4f83ad1056ff29f868cdac",
+    "engine_methods": [
+      "testReadsSupportedFlvCodecMetadataAndKeyframes",
+      "testReadsH264AACMetadataPacketsEOFAndSeek",
+      "testReportsBothAudioTracks",
+      "testCopiesAACCodecConfiguration",
+      "testCreatesH264FormatAndZeroCopySampleBuffer",
+      "testCloseReleasesPacketsStillOwnedByContext",
+      "testCallbackInputReadsAndSeeksRealMkv",
+      "testCallbackCloseCancelsSourceAndReleasesPackets",
+      "testCallbackReadFailureMapsDistinctly",
+      "testCallbackRejectsNonMatroskaBytes"
+    ],
+    "transferred_methods": [],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "54538c3b2f103e73f050559f98d1242d2f1f678b8b4f83ad1056ff29f868cdac"
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlFallbackBackendTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlFallbackBackendTests.swift",
+    "original_sha256": "4691ce812194d6d9f479ef034124a7178d39ef8c94c8b66d5f30b7fa9ec3a8d0",
+    "engine_methods": [
+      "testSlotStopInvalidatesGenerationAndRemainsReplaceable",
+      "testPreparationFailurePreservesCurrentBackend",
+      "testReplacementKeepsOnlyOneBackendActive",
+      "testFailedRollbackStillFinalizesReplacementResources",
+      "testActivationFailureRestoresPreviousBackendAndDisposesCandidate",
+      "testActivationFailureRestoresBackendWithoutPermanentTeardown",
+      "testGenerationRejectsCallbacksFromReplacedBackend",
+      "testDisposeIsIdempotentFromPartialState",
+      "testRealMkvPreflightEitherPreparesOrReturnsStableHardwareError",
+      "testNetworkFlvPreparesSequentialMP3Fallback",
+      "testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF",
+      "testDiscardedPreparedFallbackCannotTransferItsMedia",
+      "testInFlightPacketBudgetRejectsOversizedCompressedPacket",
+      "testRejectedQualityConstraintKeepsActiveFallbackUsable",
+      "testRejectedInitialConstraintDoesNotConsumePreparedMedia"
+    ],
+    "transferred_methods": [
+      "testPlayerPersistsSuccessfulQualityConstraint"
+    ],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "dbd4a3a1e9aa548805b2ec487a73f6358a70ed27e0f60c31afb8304dc5f100d0"
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlFallbackLifecycleTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlFallbackLifecycleTests.swift",
+    "original_sha256": "60b8723b8219a061ed9a240989c18186ac419bd2eae4d5a4903fab1e9fbbcc6f",
+    "engine_methods": [
+      "testTeardownCancelsInputBeforeJoiningWorker",
+      "testDisposedLiveReconnectCannotRunPendingRetry",
+      "testLiveReconnectCannotInstallAfterLifecycleGenerationAdvances",
+      "testSeekRunsTheOrderedPipelineTransaction",
+      "testFailedSeekDoesNotRestartDemux",
+      "testPostSeekVideoAndAudioGatesAdvanceIndependently",
+      "testInitialKeyframeGateDropsEverythingUntilVideoKeyframeAndRearms",
+      "testSequentialSeekIsRejectedBeforeLifecycleMutation",
+      "testActiveNetworkBlockingCommandsRunOffMain",
+      "testRetryEnvelopeContainsNoSourceOrHeaders",
+      "testRangeReactivationPreservesPositionTrackAndPlaybackIntent",
+      "testSequentialReactivationRestartsAtZeroPaused",
+      "testReplacementQuiesceKeepsAudioPacketsCompatibleWithRetainedRenderer",
+      "testPreparedReactivationPositionsSeekableMediaBeforeCommit",
+      "testHEVCFixtureBuildsFormatAndRequiresHardware",
+      "testPreparedFallbackRetainsEveryAACTrackForSwitching"
+    ],
+    "transferred_methods": [],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "a6b7dc5a7bf4c34ee3d0b4233ca1c5fa156dccd171f947c58fc5957b980cff88"
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlFrameSchedulerTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlFrameSchedulerTests.swift",
+    "original_sha256": "ee98e6b878e9b9ef54453b2854c62bfaa4817a6d96a8d8e5dad6fcba3e7b575e",
+    "engine_methods": [
+      "testOrdersFramesAndSelectsNewestDueFrame",
+      "testOwnsAtMostThreeFramesAndDropsOldest",
+      "testGenerationFlushAndDisposeReleaseAllFrames"
+    ],
+    "transferred_methods": [],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "611548dfa2518e379bd6140a625cde5f21b9ecf49d6ea7b68ac4c92eddc9389f"
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlHlsResourceLoaderTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlHlsResourceLoaderTests.swift",
+    "original_sha256": "4f050716b0e62bf13e5e48c387e7c31adecde1ce3d93f44b4db5765d9cbfd670",
+    "engine_methods": [
+      "testEncodedAssetURLMarksExtensionlessExplicitHlsAsManifest",
+      "testMediaProxyURLsRemainValidForLargeVodManifest",
+      "testChunkedTransportErrorIsNotReportedAsCleanCompletion",
+      "testManifestUsesHeadersAndRewritesChildURL",
+      "testMediaRangeRedirectOwnsRangeAndStripsCrossOriginCredential",
+      "testSameOriginMediaRedirectRetainsCredentials",
+      "testKeyUsesDirectLoaderDataAndRetainsCredentials",
+      "testHTTPAndMalformedManifestFailuresAreStable",
+      "testTimeoutAndManifestLimitFailuresAreStable",
+      "testCachedManifestDoesNotRestoreCredentialsAfterInheritedStripping",
+      "testPreflightCachesRewrittenTopLevelManifest",
+      "testCancelAllFinishesOnceAndIgnoresLateCompletion"
+    ],
+    "transferred_methods": [],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "898c17c6cf39c6bd080b0eba5de04d0b14c1e7cf33f8bee7da0901227c5e22f7"
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlIosChannelTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlIosChannelTests.swift",
+    "original_sha256": "c14997b0a860faf0ce62bc18c0d7df878e69c258a507ff5e954db1cb9e43d018",
+    "engine_methods": [
+      "testDecoderPolicyDefaultsToHardwareOnlyAndAcceptsLegacyInput"
+    ],
+    "transferred_methods": [
+      "testCapabilitiesDescribeCompletePlayerWithCanonicalMimeCodecs",
+      "testCapabilitiesOmitUnsupportedHardwareCodecs",
+      "testFallbackMetricsUseDartContractDroppedFrameKey",
+      "testChannelGenerationsAreStrictlyIncreasing",
+      "testFullStateEnvelopeUsesVersionedGeneration",
+      "testDeltaEnvelopeContainsOnlyDynamicPayload"
+    ],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "52c8cc5144a7019af5ee849e12b26ba8d305e7f75581e1a6e81e3219eadd162e"
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlLiveReconnectControllerTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlLiveReconnectControllerTests.swift",
+    "original_sha256": "ebf64ef5ac92393dfc335673c2d48651115f83910a9984a00dad7e07078ea95b",
+    "engine_methods": [
+      "testRetriesAreBoundedAndExponentiallyCapped",
+      "testFirstFrameResetsRetryBudget",
+      "testCancellationPreventsFutureRetriesAndInstallation",
+      "testStaleGenerationCannotInstallReconnectedPipeline",
+      "testAvPlayerRecoveryRetriesObservedTransientLiveHlsFailure",
+      "testAvPlayerRecoveryRejectsPermanentAndUnsupportedFailures",
+      "testAvPlayerRecoveryCoversPreplayFailureButNotPausedPlayback",
+      "testAvPlayerFailureGateCoalescesDuplicateAndStaleCallbacks",
+      "testAvPlayerStallWatchdogReportsFirstFrameTimeoutBeforeAnyFrameRenders",
+      "testAvPlayerStallWatchdogReportsRebufferTimeoutAfterFirstFrame",
+      "testAvPlayerStallWatchdogCancelsPendingFailureWhenPlaybackRecovers",
+      "testAvPlayerStallWatchdogKeepsOriginalFirstFrameDeadlineAcrossRefreshes",
+      "testAvPlayerErrorLogCollectorDoesNotHeadOfLineBlockNewFailures",
+      "testAvPlayerErrorLogCollectorBoundsBlockedLogReads",
+      "testAvPlayerDiagnosticExcludesUntrustedDescriptionsCommentsAndCredentials"
+    ],
+    "transferred_methods": [],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "ce5e651ae797678a91c813d3d04f317f3f44973f9fb316f9f372b621b8c82d35"
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlMediaClockTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlMediaClockTests.swift",
+    "original_sha256": "63532c4f726a85105b7ad5e2d79745aff8f8c776ab31577d3960233b01af3671",
+    "engine_methods": [
+      "testVideoOnlyClockTracksRatePauseAndSeek",
+      "testRenderedAudioSampleTimeIsMasterClock"
+    ],
+    "transferred_methods": [],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "030cf88447d1f197f60afc8493dc440f01e88bee7bd535e98e92436489128a0a"
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlOpenCoordinatorTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlOpenCoordinatorTests.swift",
+    "original_sha256": "1007f43b442a6879f8f5d0a2bf77f6810d0679a5d84bf3fe23756d4696f52cbd",
+    "engine_methods": [
+      "testPreparationRunsOffMainAndSuccessfulCommitRunsOnMain",
+      "testSecondOpenCancelsFirstAndOnlyNewestCommits",
+      "testCancelCurrentCompletesPendingOpenExactlyOnce",
+      "testCancelWinsWhileFailedPreparationCompletionIsQueuedForMain",
+      "testCandidateThatFinishesAfterNewGenerationCannotCommit",
+      "testPreparationFailureDoesNotCommitCandidate",
+      "testHeaderedHlsPreflightFailureDoesNotReplaceActiveCandidate",
+      "testPreparationFailureCancelsLifetimeTokenBeforeCompletion",
+      "testCancellationTokenInvokesLateAndEarlyHandlersOnce",
+      "testCommandsRunInSubmissionOrderWithoutSupersedingEachOther",
+      "testCommandRunsOffMainAndCompletesOnMain",
+      "testCancelledCommandCompletesExactlyOnce",
+      "testCancellationWinsWhileSuccessCompletionIsQueuedForMain",
+      "testCancelledCoordinatorStaysAliveUntilCompletionIsDelivered"
+    ],
+    "transferred_methods": [],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "365d706ce689c5913e5825303e39e132e6b73a24c6514831f6ef8f6cff4982d8"
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlSourceRouterTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlSourceRouterTests.swift",
+    "original_sha256": "23cdd378fc7c670ae69c8f28c54db1b3d2349f8484beeef10a12a6c76a4ee24b",
+    "engine_methods": [
+      "testLocalMkvRoutesToFallback",
+      "testExplicitLocalMatroskaRoutesToFallback",
+      "testRemoteMkvVodRoutesToNetworkFallback",
+      "testAutomaticRemoteMkvRoutesToNetworkFallback",
+      "testRemoteMkvLiveIsRejected",
+      "testHeaderedHlsRoutesToResourceLoader",
+      "testHeaderedProgressiveMp4StaysRejected",
+      "testHttpFlvRoutesToSequentialFallback",
+      "testExplicitHttpFlvHintRoutesWithoutFlvExtension",
+      "testHlsRemainsOnAvPlayer",
+      "testMalformedUriIsRejected"
+    ],
+    "transferred_methods": [],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "f3a30d50021d878ea5498c68cd2dc6c3fce2d6e930e09c7b2466421666017589"
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlV2ReactivationTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlV2ReactivationTests.swift",
+    "original_sha256": "06a40fd6f88d92c6f8f70a965a3d5507a84f6562b5768ec87474bb044e1a3e8b",
+    "engine_methods": [
+      "testCredentialsOnlyHlsRestoresAuthenticatedPlaybackAfterCandidateActivationFailure",
+      "testHeldHlsResourcesReleaseOnCommitStopDisposeAndDeactivation"
+    ],
+    "transferred_methods": [
+      "testFailedReplacementThenReactivationPreservesAcceptedSessionControls"
+    ],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "9051742a4e69b4dc89f72c5304c86ff22478bd0532c7f54894773f86ccd22473"
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlVideoToolboxDecoderTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlVideoToolboxDecoderTests.swift",
+    "original_sha256": "493a30c06dd143d43a17f467f469dac84b89b74dbe0eb987161d3cf80ae3f440",
+    "engine_methods": [
+      "testInvalidBridgeConfigurationMapsToStableError",
+      "testMalformedH264ExtradataMapsToStableError",
+      "testUnsupportedCodecMapsToHardwareUnavailable",
+      "testOldGenerationOutputIsDroppedAndReleased",
+      "testDisposeIsIdempotent",
+      "testOldGenerationDecoderFailureIsSuppressed",
+      "testFixtureDecodesFirstFrameOrReportsHardwareUnavailable"
+    ],
+    "transferred_methods": [],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "13ee7a8a533405f67d0be9d1cde29a9ca743bfc9b91aa0ae5cab15ff87d96361"
+  },
+  {
+    "source": "packages/yl_player/example/macos/RunnerTests/RunnerTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/RunnerTests.swift",
+    "original_sha256": "49b9f724610827e5d7ecb59d3afa263be99b2e9e514883c0b1714ee53f13f83c",
+    "engine_methods": [
+      "testMediaProxyParsesOnlyExactInheritedCredentialQueryItem",
+      "testPerLoadBufferStrategyUsesExistingGoalsWithoutChangingLegacyConfiguration",
+      "testPreparingRetriesDoNotPolluteOldSessionAndCommittedRetriesRetainIdentity",
+      "testPrivateCandidateEventsPublishOnlyAfterCommit",
+      "testExplicitCredentialScopeAndInheritedManifestStripping",
+      "testStopRejectsDecoderCreatedAfterTeardown",
+      "testStoppedAVRejectsSourceCommandsButAllowsControlsAndFreshOpen",
+      "testStopOfFallbackSlotClearsStaticMetadataAndCannotReactivate",
+      "testStopClearsRetainedAVSourceAndFencesQueuedCallbacks",
+      "testConfigurationDefaultsToHardwareOnly",
+      "testLifecycleTerminationDisposesAllPlayers",
+      "testLifecycleResignActivePreservesPlayback"
+    ],
+    "transferred_methods": [
+      "testCancelOpenMatchesOnlyThePreparingCandidate",
+      "testStopCancelsPendingOpenRetainsTextureAndAllowsFreshOpen",
+      "testCapabilitiesUseCanonicalCodecIdentifiers",
+      "testChannelGenerationsAreStrictlyIncreasing",
+      "testStateEnvelopeUsesVersionedGeneration",
+      "testPluginChannelNamesMatchTheDartAdapter"
+    ],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "42fceac43c2d155c760699fd289a15efb425cc13512baba82f68db09c8e13891"
+  },
+  {
+    "source": "packages/yl_player/example/macos/RunnerTests/YlMacosAudioTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlMacosAudioTests.swift",
+    "original_sha256": "cb414520a17d2651d831afde7dffbc70409252c4e21bd8de204cefe3a1d832f2",
+    "engine_methods": [
+      "testSystemAudioKeepsNeutralPitchAndRealtimeSmoothnessAcrossRateChanges",
+      "testPauseDuringAudioSchedulingCancelsPendingAutomaticRestart",
+      "testConcurrentPauseFinishesAfterAnInProgressAudioEnqueue",
+      "testAACPacketFromFallbackFixtureConvertsToPCM",
+      "testAACConverterDoesNotConsumeCompressedPacketsWithoutPCMOutput",
+      "testMacOSAudioUsesNonInterleavedPCMAndCountsEveryChannel",
+      "testAudioRendererPreservesWallClockBufferAtThreeTimesSpeed",
+      "testFallbackAudioBufferKeepsOneSecondOfHeadroomAtThreeTimesSpeed",
+      "testAudioRendererRestartsOutputAfterTheRunningQueueDrains",
+      "testAudioCatalogExposesAACAndMP3Selection"
+    ],
+    "transferred_methods": [],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "b783b104f46c181d5d955d46cf70f9c95c5a9e96001da2069818f59f3d8f39e7"
+  },
+  {
+    "source": "packages/yl_player/example/macos/RunnerTests/YlMacosAvPlayerStateTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlMacosAvPlayerStateTests.swift",
+    "original_sha256": "ffad1991258fd7de324528f6c66e8cc89c625c04f41b3f6b4d28b56a0dd5e176",
+    "engine_methods": [
+      "testFailureGateCoalescesCallbacksForOneItem",
+      "testFailureDiagnosticDoesNotExposeNSErrorUserInfo",
+      "testPlayIntentReportsBufferingUntilRateStarts",
+      "testStartedRateReportsPlaying",
+      "testReadyWithoutPlayIntentReportsPaused",
+      "testStallWatchdogReportsFirstFrameTimeoutBeforeAnyFrameRenders",
+      "testStallWatchdogReportsRebufferTimeoutAfterFirstFrame",
+      "testStallWatchdogCancelsPendingFailureWhenPlaybackRecovers",
+      "testStallWatchdogKeepsOriginalFirstFrameDeadlineAcrossRefreshes"
+    ],
+    "transferred_methods": [],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "ab412353a76a8eca582fadab9aafb1e2d992a77276fd8628617b53e066756043"
+  },
+  {
+    "source": "packages/yl_player/example/macos/RunnerTests/YlMacosFallbackTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlMacosFallbackTests.swift",
+    "original_sha256": "89a0bc72f575f40e74a8fac0976c2001ac68ffc35925ccac3c6a8de7471cc3cc",
+    "engine_methods": [
+      "testResetRejectsPendingReservationsFromTheOldDecoderGeneration",
+      "testTerminalFailureTransitionIsOneShotAndInvalidatesWork",
+      "testActivationPolicyRejectsTerminalAndDisposedBackends",
+      "testLiveReactivationPreservesPlaybackIntentAndResetsPosition",
+      "testRestorationCancellationIsNotReportedAsTerminalFailure",
+      "testOnlyStateReplacingCommandsCancelRestoration",
+      "testBufferBudgetsStayWithinDocumentedCeilings",
+      "testPacketCallbackFailurePreservesTheNetworkCause"
+    ],
+    "transferred_methods": [
+      "testFallbackStateDeltaRetainsGenerationEnvelope"
+    ],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "190acfdb23d9c643fcf5df2b4c27a7f3c2fe666b08d0ef8400aba216389a8025"
+  },
+  {
+    "source": "packages/yl_player/example/macos/RunnerTests/YlMacosHlsTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlMacosHlsTests.swift",
+    "original_sha256": "1a150c15e22582c1fe33f12844515762136b9aa37b63eb076919a28fa22230db",
+    "engine_methods": [
+      "testSensitiveHeadersRemainSameOriginAndAreRemovedCrossOrigin",
+      "testManifestRewriterResolvesPlaylistAndMediaURLs"
+    ],
+    "transferred_methods": [],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "28694c8f2e514a7a62763a060b045cb0e5c17f9492a850a655a8a88aadeba797"
+  },
+  {
+    "source": "packages/yl_player/example/macos/RunnerTests/YlMacosNetworkTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlMacosNetworkTests.swift",
+    "original_sha256": "22cea10e420c5a6d8e0613e61d1452ee042a58637ae1d21e0ce4061ca2e7719f",
+    "engine_methods": [
+      "testRoutesSupportedFallbackAndHeaderedSources",
+      "testRejectsHeadersForUnsupportedProgressiveMedia",
+      "testCrossOriginRedirectStripsCredentialHeaders",
+      "testCredentialsStayStrippedAfterCrossOriginRedirectChain",
+      "testRangeValidationRejectsNonzeroHTTP200",
+      "testRingBufferEnforcesCapacityAndCancellation"
+    ],
+    "transferred_methods": [],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "26e13835ab72dd0df9aa9f28915de315fdac9b13c0347e54178f89170b12ffd0"
+  },
+  {
+    "source": "packages/yl_player/example/macos/RunnerTests/YlMacosOpenCoordinatorTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlMacosOpenCoordinatorTests.swift",
+    "original_sha256": "a8ff65cda3dd103c427c0a377b20a3ee8815e1d1f3f8a9a3ec5380d97eb40eec",
+    "engine_methods": [
+      "testSlotStopInvalidatesGenerationAndRemainsReplaceable",
+      "testBackendSlotQuiescesBeforePreparingAndRollsBackOnFailure",
+      "testBackendSlotDisposesCandidateWhenActivationFails",
+      "testBackendSlotDoesNotActivateInactivePreviousOnPrepareFailure",
+      "testBackendSlotExposesActiveRollbackThatNeedsAsyncRecovery",
+      "testBackendSlotDoesNotSynchronouslyReactivateExternalOnlyBackend",
+      "testSecondOpenCancelsFirstCompletionAndOnlyNewestCommits",
+      "testRecoveryOnlyStartsAfterLatestOperationHasFinished"
+    ],
+    "transferred_methods": [],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "23db030635e76d797754ed37504c398afa9b9d570724dd80c8bea6dcc4436bce"
+  },
+  {
+    "source": "packages/yl_player/example/macos/RunnerTests/YlMacosPresentationTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlMacosPresentationTests.swift",
+    "original_sha256": "641c6b0462e639d96c3ceb4026f08b40a87de9ba9ec148bb6996fd9e7fa96bfc",
+    "engine_methods": [
+      "testDisplayTimerFollowsItsOwningWindowAndPreservesPauseWhenScreenChanges",
+      "testDisplayTimerFollowsTheActiveScreenRefreshRate",
+      "testMediaClockQueriesExternalAudioTimeWithoutHoldingItsLock",
+      "testMediaClockDoesNotReuseStaleAudioAnchorAcrossRateChanges",
+      "testMediaClockDoesNotScaleTheTimePitchPlayerTimelineTwice",
+      "testMediaClockDoesNotReuseStaleAudioAnchorAcrossPauseAndResume",
+      "testFrameSchedulerPresentsOverdueFramesInOrderAndRejectsOldGeneration",
+      "testFrameSchedulerPresentsTheNewestFrameDueOnEachDisplayTick",
+      "testFrameSchedulerRejectsAFrameOlderThanTheLastPresentedPTS",
+      "testFrameSchedulerBackpressuresUntilPresentationFreesCapacity"
+    ],
+    "transferred_methods": [],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "2149954c14c77ee75758fa95282d3434f4172adec67120d68f2f4b2e822874be"
+  },
+  {
+    "source": "packages/yl_player/example/macos/RunnerTests/YlMacosVideoTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlMacosVideoTests.swift",
+    "original_sha256": "74eac61f59060994da29c68667617b2a2f7b064cf954ea0d56fffbd1d6492efd",
+    "engine_methods": [
+      "testPendingVideoReservationCountIsBoundedEvenForEmptyPackets",
+      "testPendingVideoReservationsShareTheDecodeByteBudget",
+      "testCancellingVideoSubmissionsReleasesQueuedSamplesBeforeJoining",
+      "testVideoQueuePreservesSubmissionOrderAndAcceptsWorkAfterCancellation",
+      "testVideoDecodeBudgetReservationsBoundBytesAndFrameCount",
+      "testVideoToolboxRequestsDisplayOrderForAsynchronousFrames",
+      "testVideoToolboxDoesNotRestrictDecodeThroughputToOneTimesRealtime",
+      "testVideoToolboxOutputsFlutterNativeBiPlanarPixelBuffers",
+      "testVideoDecodeBudgetWaiterUnblocksWhenReservationReleases",
+      "testHardwareDecoderLeaseEnforcesAdvertisedConcurrency",
+      "testQualityConstraintRejectsOversizedFixedVideo"
+    ],
+    "transferred_methods": [],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "3d0d4c98aec34c55308e701905dcfcdd686f1f338c5aa9c844d8f6ba9612b3f7"
+  },
+  {
+    "source": "packages/yl_player/example/macos/RunnerTests/YlV2ReactivationTests.swift",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlV2ReactivationTests.swift",
+    "original_sha256": "e48f39e11f4b1b26254d8966a0dc82138d2fbfafd95cd62bb9c06f0b4eb9f4f8",
+    "engine_methods": [
+      "testCredentialsOnlyHlsRestoresAuthenticatedPlaybackAfterCandidateActivationFailure"
+    ],
+    "transferred_methods": [
+      "testActiveFallbackReplacementUsesDefaultAudioBackedClock",
+      "testFailedReplacementThenReactivationPreservesAcceptedSessionControls"
+    ],
+    "adaptations": [
+      "Shared module import and neutral source model/AV policy names",
+      "Only Ruling10 exact host methods transferred",
+      "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+    ],
+    "destination_sha256": "9d1e0a81deb322c241680165fc709057844cb1827b0efaabdf75e9b01538522b"
+  }
+]
