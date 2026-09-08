@@ -34,6 +34,7 @@ internal data class YlBufferRequest(
     }
 }
 
+/** Buffer targets are scheduling goals, never an enforced hard allocation ceiling. */
 internal data class YlBufferProfile(
     val minBufferMs: Int,
     val maxBufferMs: Int,

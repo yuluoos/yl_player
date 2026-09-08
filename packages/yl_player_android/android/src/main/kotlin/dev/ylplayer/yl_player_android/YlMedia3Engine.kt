@@ -41,7 +41,7 @@ internal class YlMedia3Engine(
     // These fields are exclusively accessed on the owned worker.
     private var core: YlMedia3Core? = null
     private var privateOutput: YlCandidateVideoOutput? = null
-    private var ready = CompletableDeferred<YlEngineSnapshot>()
+    private val decoderGate = YlInitializedDecoderGate(options.decoderPolicyOverride ?: playerOptions.decoderPolicy)
     private var exclusive = true // Main-owned; unknown is conservative until READY track evidence.
     override val needsExclusiveLease get() = exclusive
 
@@ -66,8 +66,8 @@ internal class YlMedia3Engine(
     private fun receive(event: YlEngineEvent) {
         // Immutable value is captured on the worker; no mutable latest session ID is consulted.
         when (event) {
-            is YlEngineEvent.Snapshot -> if (event.value.status in listOf(AndroidPlaybackStatus.READY, AndroidPlaybackStatus.PLAYING)) ready.complete(event.value)
-            is YlEngineEvent.Failed -> ready.completeExceptionally(YlBoundaryException(event.kind))
+            is YlEngineEvent.Snapshot -> decoderGate.accept(event.value)
+            is YlEngineEvent.Failed -> decoderGate.fail(event.kind)
             else -> Unit
         }
         main.launch {
@@ -80,8 +80,8 @@ internal class YlMedia3Engine(
         }
     }
     override suspend fun activate(output: YlSessionVideoOutput) {
-        onWorker { requireCore().initializeDecoder() }
-        val prepared = ready.await()
+        val readiness = onWorker { decoderGate.reset(); requireCore().initializeDecoder(); decoderGate.ready }
+        val prepared = readiness.await()
         exclusive = prepared.videoTracks.isNotEmpty() || prepared.audioTracks.isEmpty()
         attachPublicOutput(output)
     }
@@ -96,13 +96,13 @@ internal class YlMedia3Engine(
         requireCore().snapshotRestorePoint().also { requireCore().deactivate() }
     }
     override suspend fun restore(point: YlEngineRestorePoint, output: YlSessionVideoOutput) {
-        attachPublicOutput(output)
         val restored = onWorker {
-            ready = CompletableDeferred()
+            decoderGate.reset()
             requireCore().restore(point)
-            ready
+            decoderGate.ready
         }
         restored.await()
+        attachPublicOutput(output)
         // stop() can clear track groups. Reapply the captured selection only after the restored
         // source reports READY and its current groups exist, never against stale TrackGroups.
         point.selectedAudioTrack?.let { track -> onWorker { requireCore().selectAudioTrack(track) } }

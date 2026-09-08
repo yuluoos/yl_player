@@ -11,11 +11,17 @@ import '../model/video_geometry.dart';
 
 const _maxSigned64 = 0x7fffffffffffffff;
 final _safeMetadata = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$');
+final _safeVideoMime = RegExp(r'^video/[a-z0-9][a-z0-9._+-]{0,121}$');
 
 void validateYlPlayerCapabilities(YlPlayerCapabilities capabilities) {
   _metadata(capabilities.deviceProfile);
   for (final codec in capabilities.hardwareVideoCodecs) {
-    _metadata(codec);
+    final legacy = _safeMetadata.firstMatch(codec);
+    final mime = _safeVideoMime.firstMatch(codec);
+    if ((legacy == null || legacy.end != codec.length) &&
+        (mime == null || mime.end != codec.length)) {
+      throw ArgumentError('Capability codec metadata is invalid.');
+    }
   }
   for (final limit in [
     capabilities.maxConcurrentVideoDecoders,

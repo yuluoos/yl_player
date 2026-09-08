@@ -37,6 +37,7 @@ internal fun shouldStartPlayback(
 }
 
 @OptIn(UnstableApi::class)
+/** Buffer targets are scheduling goals, never an enforced hard allocation ceiling. */
 internal class YlAdaptiveLoadControl(initialProfile: YlBufferProfile) : LoadControl {
     private val allocator = DefaultAllocator(true, C.DEFAULT_BUFFER_SEGMENT_SIZE)
     private var normalProfile = initialProfile

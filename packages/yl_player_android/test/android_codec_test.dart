@@ -6,6 +6,38 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'support/android_fakes.dart';
 
 void main() {
+  test(
+    'actual Android capability and assessment decoding accepts native MIME and policy identifiers',
+    () {
+      final capabilities = AndroidCodec.capabilities(
+        AndroidCapabilitiesMessage(
+          deviceProfile: 'android',
+          availableEngines: [AndroidEngine.media3],
+          decoderEvidence: AndroidDecoderEvidence.hardwareAndSoftware,
+          hardwareVideoCodecs: ['video/avc', 'video/hevc'],
+          supportedOperations: [],
+        ),
+      );
+      expect(capabilities.hardwareVideoCodecs, ['video/avc', 'video/hevc']);
+      final assessment = AndroidCodec.assessment(
+        AndroidAssessmentReply(
+          outcome: AndroidAssessmentOutcome.requiresInspection,
+          candidateEngine: AndroidEngine.media3,
+          satisfiedRequirements: ['network.managed', 'buffer.automatic'],
+          limitations: ['codec.requiresInspection', 'decoder.modeUnknown'],
+        ),
+      );
+      expect(assessment.satisfiedRequirements, [
+        YlRequirementId.networkManaged,
+        YlRequirementId.bufferAutomatic,
+      ]);
+      expect(assessment.limitations, [
+        YlLimitationId.codecRequiresInspection,
+        YlLimitationId.decoderModeUnknown,
+      ]);
+    },
+  );
+
   test('all complete enum counterparts retain exact set parity', () {
     final counterparts = <(List<Enum>, List<Enum>)>[
       (AndroidDecoderPolicy.values, YlDecoderPolicy.values),

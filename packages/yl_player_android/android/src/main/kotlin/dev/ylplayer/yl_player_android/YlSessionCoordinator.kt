@@ -1,7 +1,6 @@
 package dev.ylplayer.yl_player_android
 
 import dev.ylplayer.yl_player_android.pigeon.*
-import java.net.URI
 import android.os.SystemClock
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
@@ -15,6 +14,7 @@ internal class YlSessionCoordinator(
     private val engines: YlPlaybackEngineFactory,
     dispatcher: CoroutineDispatcher = Dispatchers.Main,
     clockMs: () -> Long = SystemClock::elapsedRealtime,
+    private val decoderEvidence: YlDecoderEvidenceProvider = YlDecoderEvidenceProvider.collect(),
 ) : YlPlayerSession {
     private val scope = CoroutineScope(SupervisorJob() + dispatcher)
     private val cleanup = CoroutineScope(SupervisorJob() + dispatcher)
@@ -34,6 +34,7 @@ internal class YlSessionCoordinator(
     private var candidateFailure: YlFailureKind? = null
     private var stopping = false
     private var candidateFrame: YlEngineEvent.FirstFrame? = null
+    private val candidateRetries = mutableListOf<YlEngineEvent.Retry>()
     private var operation = 0L
     private var loadSequence = 0L
     private var closed = false
@@ -53,30 +54,21 @@ internal class YlSessionCoordinator(
     private var backgroundPlayIntent: Pair<YlSessionIdentity, Boolean>? = null
     override val initialState get() = reducer.state
     override val capabilities = AndroidCapabilitiesMessage("android", listOf(AndroidEngine.MEDIA3),
-        AndroidDecoderEvidence.NONE, hardwareVideoCodecs = emptyList(), supportedOperations = AndroidPlayerOperation.entries)
+        decoderEvidence.capability, hardwareVideoCodecs = decoderEvidence.hardwareCodecs, supportedOperations = AndroidPlayerOperation.entries)
     private var eventSink: YlPlayerEventSink? = null
     override fun attach(events: YlPlayerEventSink) { eventSink = events; reducer.attach(events) }
     override fun assess(request: AndroidAssessRequest): AndroidAssessmentReply {
         checkOpen()
-        val rejection = runCatching { validate(request.source, request.options) }.exceptionOrNull()
-        return if (rejection != null) AndroidAssessmentReply(AndroidAssessmentOutcome.INCOMPATIBLE,
-            AndroidEngine.MEDIA3, emptyList(), emptyList(), YlFailureMapper().toMessage(rejection))
-        else AndroidAssessmentReply(AndroidAssessmentOutcome.REQUIRES_INSPECTION, AndroidEngine.MEDIA3,
-            emptyList(), listOf("Media inspection is required."))
+        return assessment.assess(request.source, request.options, request.options.decoderPolicyOverride ?: options.decoderPolicy)
     }
+    private val assessment = YlSourceAssessment(decoderEvidence)
     private fun validate(source: AndroidSourceMessage, load: AndroidLoadOptionsMessage) {
-        val uri = runCatching { URI(source.locator) }.getOrNull()
-        val validScheme = when (source.kind) {
-            AndroidSourceKind.NETWORK -> uri?.scheme?.lowercase() in listOf("http", "https") && !uri?.host.isNullOrBlank()
-            AndroidSourceKind.FILE -> uri?.scheme == "file" || (uri?.scheme == null && source.locator.startsWith("/"))
-            AndroidSourceKind.CONTENT -> uri?.scheme == "content"
-        }
-        if (source.locator.isBlank() || !validScheme || (load.startPositionMs ?: 0) < 0) throw YlBoundaryException(YlFailureKind.SOURCE_INVALID)
-        // Strict managed-route proof and hardware-required acquisition are supplied in Task 6.
-        if (load.bufferStrategy.kind == AndroidBufferKind.BOUNDED ||
-            source.networkPolicy?.kind == AndroidNetworkPolicyKind.MANAGED ||
-            (load.decoderPolicyOverride ?: options.decoderPolicy) == AndroidDecoderPolicy.HARDWARE_REQUIRED ||
-            !source.request?.credentials.isNullOrEmpty()) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
+        val decision = assessment.assess(source, load, load.decoderPolicyOverride ?: options.decoderPolicy)
+        decision.rejection?.let { throw YlBoundaryException(when (it.code) {
+            "policy.unsupported" -> YlFailureKind.POLICY_UNSUPPORTED
+            "decoder.unavailable" -> YlFailureKind.DECODER_UNAVAILABLE
+            else -> YlFailureKind.SOURCE_INVALID
+        }) }
     }
     override suspend fun load(request: AndroidLoadRequest): AndroidLoadReply {
         checkOpen()
@@ -103,13 +95,17 @@ internal class YlSessionCoordinator(
                 candidateFailure = null
                 candidateSnapshot = null
                 candidateFrame = null
+                candidateRetries.clear()
                 try {
                     val engine = engines.create(identity, request.source, request.options)
                     owned += engine
                     candidateEngine = engine
                     candidate = YlPreparedSession(identity, request.source, request.options, engine,
-                        if ((request.options.decoderPolicyOverride ?: options.decoderPolicy) == AndroidDecoderPolicy.HARDWARE_PREFERRED)
-                            YlDecoderRequirement.PREFERRED else YlDecoderRequirement.DEFAULT)
+                        when (request.options.decoderPolicyOverride ?: options.decoderPolicy) {
+                            AndroidDecoderPolicy.HARDWARE_REQUIRED -> YlDecoderRequirement.HARDWARE_REQUIRED
+                            AndroidDecoderPolicy.HARDWARE_PREFERRED -> YlDecoderRequirement.PREFERRED
+                            AndroidDecoderPolicy.SYSTEM_DEFAULT -> YlDecoderRequirement.DEFAULT
+                        })
                     engine.registerCallback(::onEngineEvent)
                     val participant = SessionLease(candidate) {
                         active = candidate
@@ -120,6 +116,13 @@ internal class YlSessionCoordinator(
                         transacting = false
                         pendingIdentity = null
                         reducer.commit(identity, output.identity)
+                        // commitLease has crossed its final fallible check and installed activeLease.
+                        // Preserve occurrence time and retry order; the reducer only enqueues events.
+                        val retries = candidateRetries.toList()
+                        candidateRetries.clear()
+                        for (retry in retries) {
+                            if (!closed && active?.identity == identity && token == operation) reducer.retry(retry)
+                        }
                         val snapshot = candidateSnapshot
                         val frame = candidateFrame
                         // Loading is installed before any staged decoder/Ready callback is published.
@@ -148,7 +151,7 @@ internal class YlSessionCoordinator(
                     if (error is CancellationException) throw YlBoundaryException(YlFailureKind.LOAD_CANCELLED)
                     throw error
                 } finally {
-                    if (pendingIdentity == identity) pendingIdentity = null
+                    if (pendingIdentity == identity) { pendingIdentity = null; candidateRetries.clear() }
                     if (candidateEngine === candidate?.engine) candidateEngine = null
                     transacting = false
                 }
@@ -243,6 +246,7 @@ internal class YlSessionCoordinator(
         fun ensureResourcesUsable() {
             if (resourcesFailed) throw YlBoundaryException(YlFailureKind.RESOURCE_EXHAUSTED)
         }
+        override val activationTimeoutFailure get() = if (session.decoderRequirement == YlDecoderRequirement.HARDWARE_REQUIRED) YlFailureKind.DECODER_UNAVAILABLE else YlFailureKind.RESOURCE_EXHAUSTED
         override fun activateForLease(attempt: YlLeaseAttempt, complete: (Result<Unit>) -> Unit) = operation(complete) {
             ensureResourcesUsable()
             val restore = suspended
@@ -287,6 +291,7 @@ internal class YlSessionCoordinator(
                 is YlEngineEvent.Snapshot -> candidateSnapshot = event.value
                 is YlEngineEvent.FirstFrame -> if (event.output == output.identity) candidateFrame = event
                 is YlEngineEvent.Failed -> candidateFailure = event.kind
+                is YlEngineEvent.Retry -> candidateRetries += event
                 else -> Unit
             }
             return

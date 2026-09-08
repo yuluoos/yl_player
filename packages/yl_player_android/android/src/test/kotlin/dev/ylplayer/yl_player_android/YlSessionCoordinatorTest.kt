@@ -7,6 +7,63 @@ import kotlin.test.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlSessionCoordinatorTest {
+    @Test fun `pending retry events replay once after initial or replacement commit before live retries`() = runTest {
+        for (replacement in listOf(false, true)) {
+            val f = SessionFixture(StandardTestDispatcher(testScheduler))
+            if (replacement) f.coordinator.load(request("old"))
+            val gate = CompletableDeferred<Unit>()
+            val engine = FakeSessionEngine().apply { activationAcknowledgement = gate }
+            engine.onActivate = { engine.emit(YlEngineEvent.Retry(1, 100, 10)); engine.emit(YlEngineEvent.Retry(2, 200, 20)) }
+            f.next = engine
+            val load = async { f.coordinator.load(request("candidate")) }
+            runCurrent()
+            assertTrue(f.events.retries.isEmpty())
+            gate.complete(Unit); runCurrent()
+            val committed = load.await()
+            engine.emit(YlEngineEvent.Retry(3, 400, 30)); runCurrent()
+            assertEquals(listOf(1L, 2L, 3L), f.events.retries.map { it.retryIndex })
+            assertEquals(listOf(100L, 200L, 400L), f.events.retries.map { it.delayMs })
+            assertEquals(listOf(10L, 20L, 30L), f.events.retries.map { it.occurredAtMs })
+            assertTrue(f.events.retries.all { it.sessionId == committed.sessionId })
+            f.finish()
+        }
+    }
+    @Test fun `failed and stopped candidates discard provisional retries`() = runTest {
+        for (stop in listOf(false, true)) {
+            val f = SessionFixture(StandardTestDispatcher(testScheduler))
+            f.coordinator.load(request("old"))
+            val gate = CompletableDeferred<Unit>()
+            val engine = FakeSessionEngine().apply { activationAcknowledgement = gate }
+            engine.onActivate = { engine.emit(YlEngineEvent.Retry(1, 100, 10)) }
+            f.next = engine
+            val load = async { runCatching { f.coordinator.load(request("failed")) } }
+            runCurrent()
+            if (stop) f.coordinator.stop() else { engine.activationError = YlBoundaryException(YlFailureKind.NETWORK_FAILED); gate.complete(Unit) }
+            runCurrent(); assertTrue(load.await().isFailure)
+            f.coordinator.load(request("next")); runCurrent()
+            assertTrue(f.events.retries.isEmpty())
+            f.finish()
+        }
+    }
+    @Test fun `strict activation deadline reports decoder unavailable and restores former session`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        val old = f.coordinator.load(request("old"))
+        f.next = FakeSessionEngine().apply { activationAcknowledgement = CompletableDeferred() }
+        val result = async { runCatching { f.coordinator.load(request("strict").let { it.copy(options = it.options.copy(decoderPolicyOverride = AndroidDecoderPolicy.HARDWARE_REQUIRED)) }) } }
+        advanceUntilIdle()
+        assertEquals(YlFailureKind.DECODER_UNAVAILABLE, (result.await().exceptionOrNull() as YlBoundaryException).kind)
+        assertEquals(old.sessionId, f.events.states.last().sessionId)
+        assertTrue(f.engines.first().restores > 0)
+        f.finish()
+    }
+    @Test fun `managed credentials share assessment and load route without interim rejection`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        val value = request("managed").let { it.copy(source = it.source.copy(request = AndroidHttpRequestMessage(mapOf("X-Ordinary" to "ok"), mapOf("X-Api-Key" to "secret")), networkPolicy = AndroidNetworkPolicyMessage(AndroidNetworkPolicyKind.MANAGED, 1000, 1000, 0, 0, 1000, 2))) }
+        assertEquals(AndroidAssessmentOutcome.COMPATIBLE, f.coordinator.assess(AndroidAssessRequest(value.source, value.options)).outcome)
+        assertEquals("managed", f.coordinator.load(value).loadRequestId)
+        assertEquals(1, f.engines.size)
+        f.finish()
+    }
     @Test fun `background shares held peer quiesce and completes before candidate disposal`() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         val shared = YlDecoderLeaseCoordinator(dispatcher) { testScheduler.currentTime }

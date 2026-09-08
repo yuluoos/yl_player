@@ -28,6 +28,7 @@ internal interface YlDecoderLeaseParticipant {
     val needsExclusiveLease: Boolean
     val canRestore: Boolean
     val leaseCommitVersion: Long get() = 0
+    val activationTimeoutFailure: YlFailureKind get() = YlFailureKind.RESOURCE_EXHAUSTED
     fun publicationFailed(error: Throwable) {}
     fun quiesceForLease(attempt: YlLeaseAttempt, complete: (Result<YlLeaseSnapshot>) -> Unit): YlCancelHandle
     fun activateForLease(attempt: YlLeaseAttempt, complete: (Result<Unit>) -> Unit): YlCancelHandle
@@ -99,7 +100,8 @@ internal class YlDecoderLeaseCoordinator(
                         }
                         currentCoroutineContext().ensureActive()
                     }
-                    stage(15_000, operation = candidate::activateForLease)
+                    try { stage(15_000, operation = candidate::activateForLease) }
+                    catch (_: TimeoutCancellationException) { throw YlBoundaryException(candidate.activationTimeoutFailure) }
                     currentCoroutineContext().ensureActive()
                     if (!attached || (exclusive && request != requestGeneration)) throw CancellationException()
                     // READY can prove an unknown stream audio-only. Restore each peer before the

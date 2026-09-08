@@ -7,6 +7,20 @@ import okhttp3.Request
 import okhttp3.HttpUrl.Companion.toHttpUrl
 
 class YlRedirectCredentialPolicyTest {
+    @Test fun `HLS reload query and cached graph edges cannot restore stripped credentials`() {
+        val root = "https://origin.test/master.m3u8".toHttpUrl()
+        val outside = "https://cdn.test/media.m3u8".toHttpUrl()
+        val returning = "https://origin.test/media.m3u8".toHttpUrl()
+        val key = "https://origin.test/key".toHttpUrl()
+        val policy = YlOriginCredentialPolicy(root, mapOf("X-Ordinary" to "ok"), mapOf("X-Api-Key" to "secret"))
+        policy.inherit(root, returning)
+        policy.inherit(returning, key) // Cached trusted edges exist before a later tainted path.
+        policy.inherit(root, outside); policy.inherit(outside, returning)
+        for (url in listOf(returning.toString() + "?_HLS_msn=42&_HLS_part=2&_HLS_skip=YES#fragment", key.toString())) {
+            val safe = policy.apply(Request.Builder().url(url).build(), false)
+            assertNull(safe.header("X-Api-Key")); assertEquals("ok", safe.header("X-Ordinary"))
+        }
+    }
     @Test
     fun `same origin keeps caller credentials including implicit https port`() {
         val safe = YlRedirectCredentialPolicy.sanitize(

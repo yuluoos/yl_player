@@ -9,6 +9,37 @@ import io.flutter.view.TextureRegistry
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlCandidateVideoOutputTest {
+    @Test fun `configuration replacement during strict inspection cannot publish the new public surface`() {
+        val output = YlEngineVideoOutput(FakePrivateOutput())
+        val previous = mock(Surface::class.java)
+        val replacement = mock(Surface::class.java)
+        output.switchTo(previous, YlOutputIdentity(1, true)) { }
+        val inspection = FakePrivateOutput()
+        output.beginInspection(inspection) { }
+        output.detach { }
+        var attached: Surface? = null
+        output.installReplacement(replacement, YlOutputIdentity(2, true), true) { attached = it }
+        assertSame(inspection.surface, attached)
+        assertEquals(0, inspection.releases)
+        assertNull(output.firstFrameEvent(replacement, 10))
+        output.finishInspection { attached = it }
+        assertSame(replacement, attached)
+        assertEquals(1, inspection.releases)
+    }
+    @Test fun `strict reacquisition keeps public surface private until new evidence and acknowledged handoff`() {
+        val output = YlEngineVideoOutput(FakePrivateOutput())
+        val public = mock(Surface::class.java)
+        output.switchTo(public, YlOutputIdentity(1, true)) { }
+        val inspection = FakePrivateOutput()
+        output.beginInspection(inspection) { assertSame(inspection.surface, it) }
+        assertNull(output.firstFrameEvent(inspection.surface, 10))
+        assertNull(output.firstFrameEvent(public, 10))
+        assertFailsWith<IllegalStateException> { output.finishInspection { throw IllegalStateException() } }
+        assertEquals(0, inspection.releases)
+        output.finishInspection { assertSame(public, it) }
+        assertEquals(1, inspection.releases)
+        assertNotNull(output.firstFrameEvent(public, 20))
+    }
     @Test fun `foreground during recreate install gap never attaches a released wrapper`() = runTest {
         val main = StandardTestDispatcher(testScheduler, "main")
         val worker = StandardTestDispatcher(testScheduler, "worker")

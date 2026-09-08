@@ -7,6 +7,48 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class YlHardwareCodecSelectorTest {
+    @Test fun `production inventory reports deduplicated video MIME families excluding software audio and encoders`() {
+        fun codec(name: String, types: Array<String>, hardware: Boolean = true, encoder: Boolean = false): android.media.MediaCodecInfo = org.mockito.Mockito.mock(android.media.MediaCodecInfo::class.java).also {
+            org.mockito.Mockito.`when`(it.name).thenReturn(name)
+            org.mockito.Mockito.`when`(it.canonicalName).thenReturn(name)
+            org.mockito.Mockito.`when`(it.supportedTypes).thenReturn(types)
+            org.mockito.Mockito.`when`(it.isEncoder).thenReturn(encoder)
+            org.mockito.Mockito.`when`(it.isHardwareAccelerated).thenReturn(hardware)
+            org.mockito.Mockito.`when`(it.isSoftwareOnly).thenReturn(!hardware)
+        }
+        val inventory = arrayOf(codec("one", arrayOf("video/hevc", "video/avc", "audio/aac")), codec("alias", arrayOf("video/avc")), codec("audio", arrayOf("audio/aac")), codec("encoder", arrayOf("video/vp9"), encoder = true), codec("software", arrayOf("video/av01"), hardware = false))
+        assertEquals(listOf("video/avc", "video/hevc"), YlDecoderEvidenceProvider.collect(29) { inventory }.hardwareCodecs)
+        assertTrue(YlDecoderEvidenceProvider.collect(28) { inventory }.hardwareCodecs.isEmpty())
+        assertTrue(YlDecoderEvidenceProvider.collect(29) { throw IllegalStateException() }.hardwareCodecs.isEmpty())
+    }
+    @Test fun `canonical aliases prove only consistent exact initialized codec metadata`() {
+        val evidence = YlDecoderEvidenceProvider(29, listOf(YlCodecDescriptor("vendor.alias", true, false, "vendor.canonical")))
+        assertEquals(dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.HARDWARE, evidence.mode("vendor.canonical"))
+        assertEquals(dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.UNKNOWN, evidence.mode("vendor.unrelated"))
+        val conflict = YlDecoderEvidenceProvider(29, listOf(YlCodecDescriptor("alias1", true, false, "same"), YlCodecDescriptor("alias2", false, true, "same")))
+        assertEquals(dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.UNKNOWN, conflict.mode("same"))
+    }
+    @Test fun `strict selector accepts only API29 records and refuses name-only API28 candidates`() {
+        val named = androidx.media3.exoplayer.mediacodec.MediaCodecInfo.newInstance("OMX.vendor", "video/avc", "video/avc", null, true, false, true, false, false)
+        val delegate = androidx.media3.exoplayer.mediacodec.MediaCodecSelector { _, _, _ -> listOf(named) }
+        val records = listOf(YlCodecDescriptor("OMX.vendor", true, false))
+        val strict = dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy.HARDWARE_REQUIRED
+        assertTrue(YlPolicyCodecSelector(strict, delegate, YlDecoderEvidenceProvider(28, records)).getDecoderInfos("video/avc", false, false).isEmpty())
+        assertEquals(listOf(named), YlPolicyCodecSelector(strict, delegate, YlDecoderEvidenceProvider(29, records)).getDecoderInfos("video/avc", false, false))
+        assertEquals(listOf(named), YlPolicyCodecSelector(strict, delegate, YlDecoderEvidenceProvider(28, records)).getDecoderInfos("audio/aac", false, false))
+    }
+    @Test fun `positive evidence belongs to initialized codec and unavailable on API28 names`() {
+        val records = listOf(YlCodecDescriptor("OMX.vendor", true, false), YlCodecDescriptor("software", false, true))
+        assertEquals(dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.UNKNOWN, YlDecoderEvidenceProvider(28, records).mode("OMX.vendor"))
+        val provider = YlDecoderEvidenceProvider(29, records)
+        assertEquals(dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.HARDWARE, provider.mode("OMX.vendor"))
+        assertEquals(dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.SOFTWARE, provider.mode("software"))
+        assertEquals(dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.UNKNOWN, provider.mode("unrelated"))
+        assertTrue(provider.satisfiesRequired(hasVideo = false, initializedName = null))
+        assertFalse(provider.satisfiesRequired(hasVideo = true, initializedName = "software"))
+        assertFalse(provider.satisfiesRequired(hasVideo = true, initializedName = null))
+    }
+
     @Test
     fun `v2 selector preserves default order and preferred software fallback`() {
         val software = androidx.media3.exoplayer.mediacodec.MediaCodecInfo.newInstance(
@@ -19,6 +61,20 @@ class YlHardwareCodecSelectorTest {
         assertEquals(listOf(software, hardware), system.getDecoderInfos("video/avc", false, false))
         assertEquals(listOf(hardware, software), preferred.getDecoderInfos("video/avc", false, false))
         assertEquals(listOf(software, hardware), preferred.getDecoderInfos("audio/aac", false, false))
+    }
+
+    @Test fun `strict gate waits for initialized evidence and admits audio without video callback`() = kotlinx.coroutines.test.runTest {
+        val gate = YlInitializedDecoderGate(dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy.HARDWARE_REQUIRED)
+        val video = dev.ylplayer.yl_player_android.pigeon.AndroidTrackMessage("v", dev.ylplayer.yl_player_android.pigeon.AndroidTrackKind.VIDEO, isSelected = true)
+        gate.accept(YlEngineSnapshot(status = dev.ylplayer.yl_player_android.pigeon.AndroidPlaybackStatus.READY, videoTracks = listOf(video)))
+        assertFalse(gate.ready.isCompleted)
+        gate.accept(YlEngineSnapshot(status = dev.ylplayer.yl_player_android.pigeon.AndroidPlaybackStatus.READY, videoTracks = listOf(video), decoderIdentity = "real-hw", decoderMode = dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.HARDWARE))
+        assertTrue(gate.ready.isCompleted)
+        gate.reset()
+        assertFalse(gate.ready.isCompleted)
+        val audio = dev.ylplayer.yl_player_android.pigeon.AndroidTrackMessage("a", dev.ylplayer.yl_player_android.pigeon.AndroidTrackKind.AUDIO, isSelected = true)
+        gate.accept(YlEngineSnapshot(status = dev.ylplayer.yl_player_android.pigeon.AndroidPlaybackStatus.READY, audioTracks = listOf(audio)))
+        assertTrue(gate.ready.isCompleted)
     }
 
     @Test
@@ -75,7 +131,7 @@ class YlHardwareCodecSelectorTest {
         assertTrue(
             hasExplicitHardwareDecoder(
                 "video/hevc",
-                candidates + YlCodecDescriptor("OMX.amlogic.hevc.decoder", true, false),
+                candidates + YlCodecDescriptor("OMX.amlogic.hevc.decoder", true, false), apiLevel = 29,
             ),
         )
     }

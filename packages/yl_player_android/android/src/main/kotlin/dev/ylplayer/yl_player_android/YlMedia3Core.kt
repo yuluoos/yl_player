@@ -16,12 +16,9 @@ import androidx.media3.common.Tracks
 import androidx.media3.common.Timeline
 import androidx.media3.common.VideoSize
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.datasource.DefaultDataSource
-import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
-import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import dev.ylplayer.yl_player_android.pigeon.*
 import android.view.Surface
@@ -45,7 +42,14 @@ internal class YlMedia3Core(
     private val lifecycle = YlLifecycleCoordinator()
     private val deviceProfile = YlAndroidDeviceProfile.collect(context)
     private val trackSelector = DefaultTrackSelector(context)
-    private val httpClient = configuration.network.createHttpClient()
+    private val decoderPolicy = AndroidDecoderPolicy.valueOf(configuration.decoderPolicy)
+    private val decoderEvidence = YlDecoderEvidenceProvider.collect()
+    private val managedNetwork = source.networkPolicy?.kind == AndroidNetworkPolicyKind.MANAGED
+    private var inspectingDecoder = false
+    private val sourceFactory = YlMediaSourceFactory(source, configuration.network) { attempt, delayMs ->
+        val occurredAtMs = SystemClock.elapsedRealtime()
+        handler.post { if (!disposed && !stopped) recordRetry(attempt, delayMs, occurredAtMs) }
+    }
     private val loadControl = YlAdaptiveLoadControl(
         YlPlaybackPolicy.effectiveBufferProfile(
             deviceProfile.tier,
@@ -72,6 +76,7 @@ internal class YlMedia3Core(
     private var droppedVideoFrames = 0
     private var audioUnderruns = 0
     private var decoderName: String? = null
+    private var decoderAttemptStartedAtMs = Long.MAX_VALUE
     private var isHardwareDecoding = false
     private var hostQualityConstraint = AndroidQualityConstraint()
     private var adaptiveBitrateCeiling: Int? = null
@@ -118,7 +123,7 @@ internal class YlMedia3Core(
     fun initialize() {
         val renderersFactory = DefaultRenderersFactory(context)
             .setEnableDecoderFallback(true)
-            .setMediaCodecSelector(YlPolicyCodecSelector(AndroidDecoderPolicy.valueOf(configuration.decoderPolicy)))
+            .setMediaCodecSelector(YlPolicyCodecSelector(decoderPolicy, evidence = decoderEvidence))
         exoPlayer = ExoPlayer.Builder(context, renderersFactory)
             .setLooper(handler.looper)
             .setTrackSelector(trackSelector)
@@ -197,7 +202,7 @@ internal class YlMedia3Core(
         videoOutput.attach(sourceGeneration, sourceGeneration, ::attachSurface)
         if (exoPlayer.currentMediaItem != null && exoPlayer.playbackState == Player.STATE_IDLE) {
             status = "opening"
-            exoPlayer.prepare()
+            prepareDecoder()
             if (resumeAtLiveEdge) {
                 exoPlayer.seekToDefaultPosition()
                 resumeAtLiveEdge = false
@@ -248,6 +253,9 @@ internal class YlMedia3Core(
         bufferingStartedAtMs?.let { rebufferDurationMs += SystemClock.elapsedRealtime() - it }
         bufferingStartedAtMs = null
         active = false
+        decoderAttemptStartedAtMs = Long.MAX_VALUE
+        decoderName = null
+        isHardwareDecoding = false
         handler.removeCallbacks(positionTicker)
         exoPlayer.pause()
         exoPlayer.stop()
@@ -267,7 +275,7 @@ internal class YlMedia3Core(
         lifecycle.reduce(YlLifecycleEvent.USER_PAUSE)
         stallWatchdog.cancel()
         handler.removeCallbacksAndMessages(null)
-        httpClient.dispatcher.cancelAll()
+        sourceFactory.cancelAll()
         firstFrameRendered = false
         sourceIsLive = false
         savedPositionMs = 0L
@@ -315,29 +323,14 @@ internal class YlMedia3Core(
 
     fun prepare() {
         val uriString = source.locator
-        val headers = source.request?.headers.orEmpty()
-        val network = configuration.network
         val generation = sourceGeneration + 1
-        val httpFactory = OkHttpDataSource.Factory(httpClient)
-            .setDefaultRequestProperties(headers)
-        val dataSourceFactory = DefaultDataSource.Factory(context, httpFactory)
-        val mediaSourceFactory = DefaultMediaSourceFactory(dataSourceFactory)
-            .setLoadErrorHandlingPolicy(
-                YlLoadErrorHandlingPolicy(network) { attempt, delayMs, exception ->
-                    handler.post {
-                        if (generation == sourceGeneration) {
-                            recordRetry(attempt, delayMs, exception)
-                        }
-                    }
-                },
-            )
         val mediaItem = MediaItem.Builder()
             .setMediaId(identity.sessionId)
             .setUri(Uri.parse(uriString))
             .setMimeType(mediaMimeType(source.format))
             .build()
 
-        val mediaSource = mediaSourceFactory.createMediaSource(mediaItem)
+        val mediaSource = sourceFactory.create(context, mediaItem)
         cancelFocusGrace()
         stallWatchdog.cancel()
         stopped = false
@@ -407,8 +400,23 @@ internal class YlMedia3Core(
         emitState()
     }
 
-    fun initializeDecoder() {
+    private fun prepareDecoder() {
+        decoderAttemptStartedAtMs = SystemClock.elapsedRealtime()
+        decoderName = null
+        isHardwareDecoding = false
+        if (decoderPolicy == AndroidDecoderPolicy.HARDWARE_REQUIRED && !inspectingDecoder) {
+            inspectingDecoder = true
+            videoOutput.beginInspection(YlCandidateVideoOutput(context), ::attachSurface)
+        }
         exoPlayer.prepare()
+    }
+    private fun finishDecoderInspection() {
+        if (!inspectingDecoder) return
+        videoOutput.finishInspection(::attachSurface)
+        inspectingDecoder = false
+    }
+    fun initializeDecoder() {
+        prepareDecoder()
         refreshStallWatchdog()
     }
 
@@ -452,6 +460,7 @@ internal class YlMedia3Core(
             return
         }
         status = YlMedia3StatePolicy.status(status, playbackState, exoPlayer.isPlaying, hasBeenReady)
+        if (playbackState == Player.STATE_READY && videoTracks.isEmpty() && audioTracks.isNotEmpty()) finishDecoderInspection()
         if (playbackState == Player.STATE_READY && !hasBeenReady) {
             hasBeenReady = true
             openDurationMs = openStartedAtMs?.let { SystemClock.elapsedRealtime() - it }
@@ -598,14 +607,14 @@ internal class YlMedia3Core(
         stallWatchdog.cancel()
         if (tryDecoderRecovery(error)) return
         status = "error"
-        lastFailure = mediaFailure(error)
+        lastFailure = mediaFailure(error.errorCode, decoderPolicy)
         currentError = lastFailure
         emit(YlEngineEvent.Failed(lastFailure!!))
         emitState()
     }
 
     private fun tryDecoderRecovery(error: PlaybackException): Boolean {
-        if (error.errorCode != PlaybackException.ERROR_CODE_DECODER_INIT_FAILED) return false
+        if (!active || managedNetwork || error.errorCode != PlaybackException.ERROR_CODE_DECODER_INIT_FAILED) return false
         val selected = selectedVideoBitrate ?: return false
         val lowerBitrate = availableVideoBitrates.firstOrNull { it < selected } ?: return false
         if (
@@ -622,7 +631,7 @@ internal class YlMedia3Core(
         applyTrackConstraints()
         status = "opening"
         currentError = null
-        exoPlayer.prepare()
+        prepareDecoder()
         emitState()
         refreshStallWatchdog()
         return true
@@ -693,9 +702,12 @@ internal class YlMedia3Core(
                 exoPlayer.seekToDefaultPosition()
             }
             YlRecoveryAction.ReconnectLiveHead -> {
+                // The pending resource owns its retries. Do not restart it or invent a source
+                // timeout while its managed request budget still has scheduled work.
+                if (managedNetwork) return
                 reconnectCount += 1
                 exoPlayer.stop()
-                exoPlayer.prepare()
+                prepareDecoder()
                 refreshStallWatchdog()
             }
             is YlRecoveryAction.SetCatchUpSpeed -> {
@@ -719,6 +731,8 @@ internal class YlMedia3Core(
     }
 
     private fun refreshStallWatchdog() {
+        // Managed HTTP owns hop/header/body timing; a source watchdog is not a second request timer.
+        if (managedNetwork) { stallWatchdog.cancel(); return }
         val generation = sourceGeneration
         stallWatchdog.update(
             active = active,
@@ -749,9 +763,16 @@ internal class YlMedia3Core(
         initializationDurationMs: Long,
     ) {
         if (!isCurrentEvent(eventTime)) return
+        if (initializedTimestampMs < decoderAttemptStartedAtMs) return
         this.decoderName = decoderName
-        // Identity is observed; a codec-name heuristic is not decoder proof.
-        isHardwareDecoding = false
+        isHardwareDecoding = decoderEvidence.mode(decoderName) == AndroidDecoderMode.HARDWARE
+        if (decoderPolicy == AndroidDecoderPolicy.HARDWARE_REQUIRED) {
+            if (!isHardwareDecoding) {
+                status = "error"; lastFailure = YlFailureKind.DECODER_UNAVAILABLE; currentError = lastFailure
+                exoPlayer.pause()
+                emit(YlEngineEvent.Failed(YlFailureKind.DECODER_UNAVAILABLE))
+            } else finishDecoderInspection()
+        }
         emitState()
     }
 
@@ -774,10 +795,10 @@ internal class YlMedia3Core(
         audioUnderruns += 1
     }
 
-    private fun recordRetry(attempt: Int, delayMs: Long, exception: Exception) {
+    private fun recordRetry(attempt: Int, delayMs: Long, occurredAtMs: Long) {
         if (disposed) return
         reconnectCount += 1
-        emit(YlEngineEvent.Retry(attempt.toLong(), delayMs, SystemClock.elapsedRealtime()))
+        emit(YlEngineEvent.Retry(attempt.toLong(), delayMs, occurredAtMs))
         emitState()
     }
 
@@ -811,7 +832,7 @@ internal class YlMedia3Core(
                 "error" -> AndroidPlaybackStatus.FAILED
                 else -> AndroidPlaybackStatus.LOADING
             }, timeline, geometry, audioTracks.toList(), videoTracks.toList(),
-            AndroidDecoderMode.UNKNOWN, decoderName, metrics(timeline), hasBeenReady)))
+            decoderEvidence.mode(decoderName), decoderName, metrics(timeline), hasBeenReady)))
     }
     private fun emitPositionDelta() {
         if (disposed || stopped || resetting) return
@@ -838,9 +859,7 @@ internal class YlMedia3Core(
             acknowledgement.perform { videoOutput.detach(::clearSurface) }
             acknowledgement.perform { exoPlayer.release() }
         }
-        httpClient.dispatcher.cancelAll()
-        httpClient.connectionPool.evictAll()
-        httpClient.dispatcher.executorService.shutdown()
+        sourceFactory.close()
         if (!acknowledgement.isSafe) return false
         videoOutput.dispose { }
         return true
@@ -869,8 +888,8 @@ internal class YlMedia3Core(
 }
 
 private fun Int.valueOrNull(): Int? = takeUnless { it == C.LENGTH_UNSET }
-private fun mediaFailure(error: PlaybackException): YlFailureKind = when (error.errorCode) {
-    PlaybackException.ERROR_CODE_DECODING_FORMAT_UNSUPPORTED -> YlFailureKind.DECODER_UNSUPPORTED
+internal fun mediaFailure(errorCode: Int, decoderPolicy: AndroidDecoderPolicy): YlFailureKind = when (errorCode) {
+    PlaybackException.ERROR_CODE_DECODING_FORMAT_UNSUPPORTED -> if (decoderPolicy == AndroidDecoderPolicy.HARDWARE_REQUIRED) YlFailureKind.DECODER_UNAVAILABLE else YlFailureKind.DECODER_UNSUPPORTED
     PlaybackException.ERROR_CODE_DECODER_INIT_FAILED, PlaybackException.ERROR_CODE_DECODING_FAILED -> YlFailureKind.DECODER_UNAVAILABLE
     PlaybackException.ERROR_CODE_IO_FILE_NOT_FOUND -> YlFailureKind.SOURCE_MISSING
     in 2000..2999 -> YlFailureKind.NETWORK_FAILED

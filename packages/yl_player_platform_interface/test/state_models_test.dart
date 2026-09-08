@@ -37,6 +37,45 @@ YlPlayerState snapshot() => YlPlayerState(
 
 void main() {
   test(
+    'capability video MIME families remain safe and generic metadata stays strict',
+    () {
+      expect(
+        YlPlayerCapabilities(
+          deviceProfile: 'android',
+          hardwareVideoCodecs: ['video/avc', 'video/hevc', 'h264'],
+        ).hardwareVideoCodecs,
+        ['video/avc', 'video/hevc', 'h264'],
+      );
+      for (final invalid in [
+        'https://media.test/video/avc',
+        'video/user@host',
+        'video/avc/extra',
+        'video/avc?token=secret',
+        'video/avc#fragment',
+        'video/avc\n',
+        'video/avc ',
+        'audio/aac',
+        'Video/avc',
+        'video/AVC',
+        'video/',
+        'video/${'a' * 128}',
+      ]) {
+        expect(
+          () => YlPlayerCapabilities(
+            deviceProfile: 'android',
+            hardwareVideoCodecs: [invalid],
+          ),
+          throwsArgumentError,
+        );
+      }
+      expect(
+        () => YlPlayerCapabilities(deviceProfile: 'video/avc'),
+        throwsArgumentError,
+      );
+    },
+  );
+
+  test(
     'independently allocated snapshots use structural equality and hash',
     () {
       final left = snapshot();

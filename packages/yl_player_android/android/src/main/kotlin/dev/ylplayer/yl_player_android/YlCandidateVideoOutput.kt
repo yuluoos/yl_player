@@ -34,28 +34,51 @@ internal class YlEngineVideoOutput(private val candidate: YlPrivateVideoOutput) 
     private var identity = candidate.identity
     private var renderSurface: Surface? = candidate.surface
     private var candidateAttached = true
+    private var inspection: YlPrivateVideoOutput? = null
     var surfaceRebuildCount = 0
         private set
     fun attach(expected: Long, current: Long, consumer: (Surface) -> Unit): Boolean {
         if (expected != current) return false
-        surface?.let { consumer(it); renderSurface = it }
+        (inspection?.surface ?: surface)?.let { consumer(it); renderSurface = it }
         return surface != null
+    }
+    fun beginInspection(output: YlPrivateVideoOutput, acknowledgedAttach: (Surface) -> Unit) {
+        check(inspection == null)
+        // Retain the new output even on an unacknowledged attach; disposal owns safe cleanup.
+        inspection = output
+        acknowledgedAttach(output.surface)
+        renderSurface = output.surface
+    }
+    fun finishInspection(acknowledgedAttach: (Surface) -> Unit) {
+        val pending = inspection ?: return
+        surface?.let { acknowledgedAttach(it); renderSurface = it }
+        inspection = null
+        pending.releaseAfterAcknowledgedDetach()
     }
     fun switchTo(output: Surface, identity: YlOutputIdentity, acknowledgedAttach: (Surface) -> Unit) {
         acknowledgedAttach(output)
         surface = output
         renderSurface = output
         this.identity = identity
+        inspection?.releaseAfterAcknowledgedDetach()
+        inspection = null
         if (candidateAttached) {
             candidateAttached = false
             candidate.releaseAfterAcknowledgedDetach()
         }
     }
     fun detach(clear: (Surface) -> Unit) {
-        surface?.let { clear(it); renderSurface = null }
+        renderSurface?.let { clear(it); renderSurface = null }
     }
     fun installReplacement(output: Surface, identity: YlOutputIdentity, active: Boolean, acknowledgedAttach: (Surface) -> Unit): Boolean {
-        if (active) {
+        val pending = inspection
+        if (pending != null) {
+            // A main-owned public wrapper can change during an evidence wait. Keep rendering
+            // private, while retaining the replacement for the eventual proven handoff.
+            surface = output
+            this.identity = identity
+            if (active) { acknowledgedAttach(pending.surface); renderSurface = pending.surface }
+        } else if (active) {
             switchTo(output, identity, acknowledgedAttach)
         } else {
             // Background can run between main's detach/recreate and this worker install.
@@ -72,7 +95,7 @@ internal class YlEngineVideoOutput(private val candidate: YlPrivateVideoOutput) 
         return true
     }
     fun recordRebuild() { surfaceRebuildCount++ }
-    fun renderedIdentity(output: Any): YlOutputIdentity? = identity.takeIf { output === renderSurface }
+    fun renderedIdentity(output: Any): YlOutputIdentity? = if (output !== renderSurface) null else inspection?.identity ?: identity
     fun firstFrameEvent(output: Any, occurredAtMs: Long): YlEngineEvent.FirstFrame? {
         val outputIdentity = renderedIdentity(output) ?: return null
         // This is eligibility only. Main may reject this observation after a generation change;
@@ -81,7 +104,9 @@ internal class YlEngineVideoOutput(private val candidate: YlPrivateVideoOutput) 
         return YlEngineEvent.FirstFrame(outputIdentity, occurredAtMs)
     }
     fun dispose(clear: (Surface) -> Unit) {
-        surface?.let(clear)
+        renderSurface?.let(clear)
+        inspection?.releaseAfterAcknowledgedDetach()
+        inspection = null
         surface = null
         renderSurface = null
         if (candidateAttached) { candidateAttached = false; candidate.releaseAfterAcknowledgedDetach() }
