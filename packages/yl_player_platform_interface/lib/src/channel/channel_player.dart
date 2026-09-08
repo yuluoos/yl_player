@@ -17,12 +17,6 @@ final class _LegacyChannelPlayer implements YlPlatformPlayer {
     required this.options,
     required this.transportTimeout,
   }) : _texture = ValueNotifier(texture) {
-    unawaited(
-      _termination.future.then<void>(
-        (_) {},
-        onError: (Object _, StackTrace _) {},
-      ),
-    );
     _subscription = nativeEvents.listen(
       _accept,
       onError: (Object _) => _protocolFailure(),
@@ -40,7 +34,9 @@ final class _LegacyChannelPlayer implements YlPlatformPlayer {
   final Duration transportTimeout;
   final ValueNotifier<int?> _texture;
   StreamSubscription<Object?>? _subscription;
-  final _termination = Completer<Never>();
+  final _pendingCommands = <Completer<void>>{};
+  @visibleForTesting
+  int get debugPendingCommandCount => _pendingCommands.length;
   YlPlayerException? _terminalError;
   final _states = StreamController<YlPlayerState>.broadcast(sync: true);
   final _events = StreamController<YlPlayerEvent>.broadcast(sync: true);
@@ -309,19 +305,32 @@ final class _LegacyChannelPlayer implements YlPlatformPlayer {
     Map<String, Object?> args = const {},
   ]) async {
     _check();
+    final pending = Completer<void>();
+    _pendingCommands.add(pending);
     try {
-      await Future.any<void>([
-        methods.invokeMethod<void>('command', {
-          'playerId': playerId,
-          'name': name,
-          'arguments': args,
-        }),
-        _termination.future,
-      ]);
+      unawaited(
+        methods
+            .invokeMethod<void>('command', {
+              'playerId': playerId,
+              'name': name,
+              'arguments': args,
+            })
+            .then<void>(
+              (_) {
+                if (!pending.isCompleted) pending.complete();
+              },
+              onError: (Object error, StackTrace stack) {
+                if (!pending.isCompleted) pending.completeError(error, stack);
+              },
+            ),
+      );
+      await pending.future;
     } on PlatformException catch (e) {
       throw decodeYlPlatformException(e);
     } on MissingPluginException {
       throw legacyException(YlFailureCodes.platformUnavailable);
+    } finally {
+      _pendingCommands.remove(pending);
     }
   }
 
@@ -457,9 +466,12 @@ final class _LegacyChannelPlayer implements YlPlatformPlayer {
   Future<void> _dispose() async {
     _disposed = true;
     ++_serial;
-    _termination.completeError(
-      _terminalError ?? legacyException(YlFailureCodes.playerDisposed),
-    );
+    final error =
+        _terminalError ?? legacyException(YlFailureCodes.playerDisposed);
+    for (final pending in _pendingCommands) {
+      if (!pending.isCompleted) pending.completeError(error);
+    }
+    _pendingCommands.clear();
     _cancelLoad();
     _texture.value = null;
     try {

@@ -63,6 +63,34 @@ void main() {
   Matcher failure(String code) => throwsA(
     isA<YlPlayerException>().having((e) => e.failure.code, 'code', code),
   );
+  test('settled commands release their cancellation registrations', () async {
+    final player = await create();
+    for (var i = 0; i < 32; i++) {
+      await player.setVolume(i / 32);
+    }
+    expect((player as dynamic).debugPendingCommandCount, 0);
+    handler = (_) async => throw PlatformException(code: 'command.rejected');
+    await expectLater(player.setVolume(.5), throwsA(isA<YlPlayerException>()));
+    expect((player as dynamic).debugPendingCommandCount, 0);
+    await player.dispose();
+  });
+  test('termination removes only pending command registrations', () async {
+    final player = await create();
+    final reply = Completer<Object?>();
+    handler = (call) async => call.method == 'command' ? reply.future : null;
+    final pending = expectLater(
+      player.setVolume(.5).timeout(const Duration(milliseconds: 300)),
+      failure(YlFailureCodes.protocolMismatch),
+    );
+    await Future<void>.delayed(Duration.zero);
+    expect((player as dynamic).debugPendingCommandCount, 1);
+    wire.addError(StateError('transport lost'));
+    await pending;
+    expect((player as dynamic).debugPendingCommandCount, 0);
+    reply.completeError(PlatformException(code: 'late.native.error'));
+    await Future<void>.delayed(Duration.zero);
+    await player.dispose();
+  });
   test(
     'Stop cancels a Load still awaiting assessment without a microtask drain',
     () async {

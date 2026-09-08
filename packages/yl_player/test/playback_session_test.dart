@@ -51,6 +51,7 @@ void main() {
         const methods = MethodChannel('controller-transport-loss');
         final wire = StreamController<Object?>.broadcast(sync: true);
         var disposeCalls = 0;
+        final volumeReply = Completer<Object?>();
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMethodCallHandler(methods, (call) async {
               if (call.method == 'create') {
@@ -59,6 +60,9 @@ void main() {
               if (call.method == 'dispose') {
                 disposeCalls++;
                 return null;
+              }
+              if (call.arguments['name'] == 'setVolume') {
+                return volumeReply.future;
               }
               final open = call.arguments['name'] == 'open';
               wire.add({
@@ -104,12 +108,17 @@ void main() {
           session.firstFrame.timeout(const Duration(milliseconds: 300)),
           throwsA(isA<YlPlayerException>()),
         );
+        final pendingCommand = expectLater(
+          player.setVolume(.5).timeout(const Duration(milliseconds: 300)),
+          throwsA(isA<YlPlayerException>()),
+        );
         if (close) {
           await wire.close();
         } else {
           wire.addError(StateError('private wire details'));
         }
-        await Future.wait([ready, frame]);
+        await Future.wait([ready, frame, pendingCommand]);
+        volumeReply.completeError(PlatformException(code: 'late.native.error'));
         await player.dispose();
         expect(player.state, before);
         expect(observedStates, isEmpty);
