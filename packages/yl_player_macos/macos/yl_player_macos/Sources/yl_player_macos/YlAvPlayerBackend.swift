@@ -133,14 +133,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   var playbackIntent: Bool { playRequested || player.rate > 0 }
   var requiresExternalRollbackActivation: Bool {
     guard let source = lastSource else { return false }
-    let headers = stringMap(source["headers"])
-    return YlSourceRouter.route(YlMacosSourceDescriptor(
-      uri: source["uri"] as? String ?? "",
-      kind: source["kind"] as? String ?? "",
-      formatHint: source["formatHint"] as? String ?? "automatic",
-      isLive: source["isLive"] as? Bool ?? false,
-      hasHeaders: !headers.isEmpty
-    )) == .headeredHls
+    return YlSourceRouter.route(source) == .headeredHls
   }
   private var desiredRate: Float = 1
   private var openStartedAt: CFTimeInterval?
@@ -275,15 +268,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   }
 
   func validateOpen(_ source: [String: Any?]) throws {
-    let headers = stringMap(source["headers"]).compactMapValues { $0 as? String }
-    let descriptor = YlMacosSourceDescriptor(
-      uri: source["uri"] as? String ?? "",
-      kind: source["kind"] as? String ?? "",
-      formatHint: source["formatHint"] as? String ?? "automatic",
-      isLive: source["isLive"] as? Bool ?? false,
-      hasHeaders: !headers.isEmpty
-    )
-    switch YlSourceRouter.route(descriptor) {
+    switch YlSourceRouter.route(source) {
     case .avPlayer:
       return
     case .localMatroska, .networkMatroska, .networkFlv, .headeredHls:

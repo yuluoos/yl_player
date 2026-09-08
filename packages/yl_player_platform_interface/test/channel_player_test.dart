@@ -63,6 +63,128 @@ void main() {
   Matcher failure(String code) => throwsA(
     isA<YlPlayerException>().having((e) => e.failure.code, 'code', code),
   );
+  for (final lateError in [false, true]) {
+    test(
+      'timed out create consumes late ${lateError ? 'error' : 'identity'}',
+      () async {
+        final reply = Completer<Object?>();
+        createReply = reply.future;
+        final cleanup = Completer<Object?>();
+        handler = (_) => cleanup.future;
+        await expectLater(create(), failure(YlFailureCodes.protocolMismatch));
+        expect(calls.where((c) => c.method == 'dispose'), isEmpty);
+        if (lateError) {
+          reply.completeError(PlatformException(code: 'late.create.error'));
+        } else {
+          reply.complete({'playerId': 7, 'textureId': 42});
+        }
+        await Future<void>.delayed(const Duration(milliseconds: 150));
+        expect(
+          calls.where((c) => c.method == 'dispose').map((c) => c.arguments),
+          lateError
+              ? isEmpty
+              : [
+                  {'playerId': 7},
+                ],
+        );
+        expect(calls.where((c) => c.method == 'command'), isEmpty);
+        if (calls.any((c) => c.method == 'dispose')) {
+          cleanup.completeError(PlatformException(code: 'late.dispose.error'));
+        }
+        await Future<void>.delayed(Duration.zero);
+      },
+    );
+  }
+  test(
+    'malformed create cleanup nonreply cannot hide creation failure',
+    () async {
+      createReply = {'playerId': 7, 'textureId': null};
+      final cleanup = Completer<Object?>();
+      handler = (_) => cleanup.future;
+      await expectLater(
+        create().timeout(const Duration(milliseconds: 350)),
+        failure(YlFailureCodes.protocolMismatch),
+      );
+      expect(calls.where((c) => c.method == 'dispose'), hasLength(1));
+      cleanup.complete(null);
+    },
+  );
+  test(
+    'accepted Stop fences commands and late events before authoritative idle',
+    () async {
+      final player = await create();
+      wire.add(snapshot(3, status: 'playing'));
+      final before = player.state;
+      final events = <YlPlayerEvent>[];
+      player.events.listen(events.add);
+      await player.stop();
+      await expectLater(
+        player.play(before.sessionId!),
+        failure(YlFailureCodes.sessionStale),
+      );
+      expect(
+        calls.where(
+          (c) => c.method == 'command' && c.arguments['name'] == 'play',
+        ),
+        isEmpty,
+      );
+      for (final type in ['firstFrame', 'retry', 'error']) {
+        wire.add({'playerId': 7, 'type': type, 'generation': 3});
+      }
+      expect(events, isEmpty);
+      expect(player.state, before);
+      wire.add(snapshot(4));
+      expect(player.state.status, YlPlaybackStatus.idle);
+      await player.dispose();
+    },
+  );
+  test('rejected Stop retains healthy session and pending events', () async {
+    final player = await create();
+    wire.add(snapshot(3, status: 'playing'));
+    final before = player.state;
+    final events = <YlPlayerEvent>[];
+    player.events.listen(events.add);
+    handler = (call) async {
+      if (call.method == 'command' && call.arguments['name'] == 'stop') {
+        throw PlatformException(code: 'command.rejected');
+      }
+      return null;
+    };
+    await expectLater(player.stop(), throwsA(isA<YlPlayerException>()));
+    await player.play(before.sessionId!);
+    wire.add({'playerId': 7, 'type': 'firstFrame', 'generation': 3});
+    expect(events.whereType<YlFirstFrameEvent>(), hasLength(1));
+    expect(player.state, before);
+    await player.dispose();
+  });
+  test('older Stop reply does not fence newer committed Load', () async {
+    final player = await create();
+    wire.add(snapshot(3, status: 'playing'));
+    final stopReply = Completer<Object?>();
+    handler = (call) async {
+      if (call.method == 'command' && call.arguments['name'] == 'stop') {
+        return stopReply.future;
+      }
+      if (call.method == 'command' && call.arguments['name'] == 'open') {
+        final token = call.arguments['arguments']['source']['loadToken'];
+        wire.add(snapshot(4, status: 'loading', loadToken: token as int));
+        return {'loadToken': token};
+      }
+      return null;
+    };
+    final stopping = player.stop();
+    final newer = await player.load(
+      YlNetworkSource(Uri.parse('https://example.test/a')),
+    );
+    stopReply.complete(null);
+    await stopping;
+    await player.play(newer.sessionId);
+    final events = <YlPlayerEvent>[];
+    player.events.listen(events.add);
+    wire.add({'playerId': 7, 'type': 'firstFrame', 'generation': 4});
+    expect(events.whereType<YlFirstFrameEvent>(), hasLength(1));
+    await player.dispose();
+  });
   test('settled commands release their cancellation registrations', () async {
     final player = await create();
     for (var i = 0; i < 32; i++) {

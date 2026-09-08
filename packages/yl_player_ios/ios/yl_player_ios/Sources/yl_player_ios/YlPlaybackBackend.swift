@@ -5,6 +5,7 @@ protocol YlPlaybackBackend: AnyObject {
   var isActive: Bool { get }
   func activate() throws
   func quiesceForReplacement()
+  func finishReplacement()
   func stop()
   func deactivate()
   func command(name: String, arguments: [String: Any?]) throws
@@ -15,6 +16,7 @@ protocol YlPlaybackBackend: AnyObject {
 
 extension YlPlaybackBackend {
   func quiesceForReplacement() { deactivate() }
+  func finishReplacement() {}
 }
 
 final class YlBackendSlot {
@@ -42,11 +44,14 @@ final class YlBackendSlot {
       try candidate.activate()
     } catch {
       candidate.dispose()
+      // Always close the transaction, including a failed rollback activation.
+      defer { previous.finishReplacement() }
       try? previous.activate()
       throw error
     }
     current = candidate
     generation &+= 1
+    previous.finishReplacement()
     return previous
   }
 

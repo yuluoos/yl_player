@@ -5,6 +5,27 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player_platform_interface/testing.dart';
 
 void main() {
+  test(
+    'reply-before-idle adapter passes with immediate stopped identity fence',
+    () async {
+      expect(await _run(_Fixture(delayedIdle: true)), isEmpty);
+    },
+  );
+  test('missing idle fails even when stopped identity is fenced', () async {
+    final failures = await _run(
+      _Fixture(delayedIdle: true, broken: _Break.stop),
+    );
+    expect(failures.map((f) => f.caseName), contains('stop'));
+  });
+  test(
+    'delayed idle cannot mask missing immediate stopped identity fence',
+    () async {
+      final failures = await _run(
+        _Fixture(delayedIdle: true, broken: _Break.stopFence),
+      );
+      expect(failures.map((f) => f.caseName), contains('stop'));
+    },
+  );
   test('conformant buffering adapter passes all observable cases', () async {
     final fixture = _Fixture();
     final failures = await _run(fixture);
@@ -278,6 +299,7 @@ enum _Break {
   identity,
   cancellation,
   stop,
+  stopFence,
   stopHeld,
   disposeHeld,
   firstFrame,
@@ -295,6 +317,7 @@ enum _Break {
 class _Fixture implements YlPlatformConformanceFixture {
   _Fixture({
     this.broken,
+    this.delayedIdle = false,
     this.firstCreate,
     this.firstVolume,
     this.firstRelease,
@@ -311,6 +334,7 @@ class _Fixture implements YlPlatformConformanceFixture {
     this.publicFailureMessage,
   });
   final _Break? broken;
+  final bool delayedIdle;
   final Future<YlPlatformPlayer>? firstCreate;
   final Future<void>? firstVolume;
   final Future<void>? firstRelease;
@@ -345,6 +369,7 @@ class _Fixture implements YlPlatformConformanceFixture {
     if (first && firstCreate != null) return firstCreate!;
     final player = _FakePlayer(
       broken: broken,
+      delayedIdle: delayedIdle,
       timeline: timeline,
       publicFailureMessage: publicFailureMessage,
       volumeFuture: first ? firstVolume : null,
@@ -421,6 +446,7 @@ class _Fixture implements YlPlatformConformanceFixture {
 class _FakePlayer implements YlPlatformPlayer {
   _FakePlayer({
     this.broken,
+    this.delayedIdle = false,
     this.volumeFuture,
     this.releaseFuture,
     this.disposeFuture,
@@ -433,6 +459,7 @@ class _FakePlayer implements YlPlatformPlayer {
     this.publicFailureMessage,
   });
   final _Break? broken;
+  final bool delayedIdle;
   final Future<void>? volumeFuture;
   final Future<void>? releaseFuture;
   final Future<void>? disposeFuture;
@@ -481,7 +508,9 @@ class _FakePlayer implements YlPlatformPlayer {
     stateController.add(state);
   }
 
+  YlPlaybackSessionId? stopped;
   void check([YlPlaybackSessionId? id]) {
+    if (id != null && id == stopped) _throw(YlFailureCodes.sessionStale);
     if (disposed) _throw(YlFailureCodes.playerDisposed);
     if (id != null && id != state.sessionId && broken != _Break.stale) {
       _throw(YlFailureCodes.sessionStale);
@@ -645,7 +674,19 @@ class _FakePlayer implements YlPlatformPlayer {
   Future<void> stop() async {
     check();
     if (broken != _Break.stopHeld) cancelHeld();
-    if (broken != _Break.stop) publish(YlPlayerState());
+    final captured = state.sessionId;
+    if (delayedIdle && broken != _Break.stopFence) stopped = captured;
+    if (broken != _Break.stop) {
+      if (delayedIdle) {
+        Timer(const Duration(milliseconds: 10), () {
+          if (!disposed && state.sessionId == captured) {
+            publish(YlPlayerState());
+          }
+        });
+      } else {
+        publish(YlPlayerState());
+      }
+    }
   }
 
   @override

@@ -137,6 +137,9 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
   private var resumeAtLiveEdge = false
   private var hlsResourceLoader: YlHlsResourceLoader?
   private var stagedHls: StagedHls?
+  // Kept only across the slot's synchronous replacement transaction. Ordinary
+  // deactivation still tears down the loader; successful commit finalizes it.
+  private var replacementHls: (asset: AVURLAsset, loader: YlHlsResourceLoader, shouldPlay: Bool)?
   private var liveReconnectController: YlLiveReconnectController
   private var pendingLiveReconnect: DispatchWorkItem?
   private let failureGate = YlAvPlayerFailureGate()
@@ -330,6 +333,8 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
 
   func activate() throws {
     guard !disposed, !active, !stopped || stagedHls != nil else { return }
+    var activated = false
+    defer { if !activated { finishReplacement() } }
     try configureAudioSession()
     active = true
     liveReconnectController = YlLiveReconnectController(
@@ -337,13 +342,23 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     )
     if stagedHls != nil {
       try installStagedHls()
+      activated = true
       return
     }
-    guard let source = lastSource else {
+    if let retained = replacementHls {
+      replacementHls = nil
+      hlsResourceLoader = retained.loader
+      playRequested = retained.shouldPlay
+      installItem(asset: retained.asset, positionMs: savedPositionMs)
+      if retained.shouldPlay { player.playImmediately(atRate: desiredRate) }
+    } else if let source = lastSource {
+      try installItem(source, positionMs: savedPositionMs)
+    } else {
+      activated = true
       emitState()
       return
     }
-    try installItem(source, positionMs: savedPositionMs)
+    activated = true
     status = "opening"
     emitState()
   }
@@ -390,8 +405,29 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     resetting = false
   }
 
+  func quiesceForReplacement() {
+    deactivate(retainingHlsForReplacement: true)
+  }
+
+  func finishReplacement() {
+    guard let retained = replacementHls else { return }
+    replacementHls = nil
+    retained.asset.cancelLoading()
+    retained.loader.cancelAll()
+  }
+
   func deactivate() {
+    deactivate(retainingHlsForReplacement: false)
+  }
+
+  private func deactivate(retainingHlsForReplacement: Bool) {
+    if !retainingHlsForReplacement { finishReplacement() }
     guard !disposed, active else { return }
+    if retainingHlsForReplacement,
+       let loader = hlsResourceLoader, let asset = player.currentItem?.asset as? AVURLAsset {
+      replacementHls = (asset, loader, playRequested || player.rate > 0)
+      hlsResourceLoader = nil
+    }
     cancelLiveReconnect()
     savedPositionMs = milliseconds(player.currentTime()) ?? savedPositionMs
     if let range = player.currentItem?.seekableTimeRanges.last?.timeRangeValue,
@@ -404,7 +440,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     active = false
     playRequested = false
     player.pause()
-    removeCurrentItem()
+    removeCurrentItem(releaseReplacement: !retainingHlsForReplacement)
     if status != "error" && status != "completed" && status != "idle" {
       status = "paused"
     }
@@ -969,7 +1005,8 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     failedObserver = nil
   }
 
-  private func removeCurrentItem() {
+  private func removeCurrentItem(releaseReplacement: Bool = true) {
+    if releaseReplacement { finishReplacement() }
     itemGeneration &+= 1
     stallWatchdog.cancel()
     removeItemObservers()

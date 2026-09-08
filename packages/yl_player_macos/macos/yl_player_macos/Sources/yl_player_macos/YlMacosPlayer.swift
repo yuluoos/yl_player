@@ -561,14 +561,7 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
   }
 
   private func route(for source: [String: Any?]) -> YlMacosSourceRoute {
-    let headers = stringMap(source["headers"]).compactMapValues { $0 as? String }
-    return YlSourceRouter.route(YlMacosSourceDescriptor(
-      uri: source["uri"] as? String ?? "",
-      kind: source["kind"] as? String ?? "",
-      formatHint: source["formatHint"] as? String ?? "automatic",
-      isLive: source["isLive"] as? Bool ?? false,
-      hasHeaders: !headers.isEmpty || !stringMap(source["credentials"]).isEmpty
-    ))
+    YlSourceRouter.route(source)
   }
 
   private static func commandError(_ error: Error) -> NativePlayerError {

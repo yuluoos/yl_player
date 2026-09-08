@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D1900001294A63AB00263BE5 /* hls_encrypted_segment0.ts in Resources */ = {isa = PBXBuildFile; fileRef = D1900011294A618700263BE5; };
+		D1900000294A63AB00263BE5 /* hls_key.bin in Resources */ = {isa = PBXBuildFile; fileRef = D1900010294A618700263BE5; };
 		D6800001294A63AB00263BE5 /* YlV2ReactivationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6800011294A618700263BE5 /* YlV2ReactivationTests.swift */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
@@ -72,6 +74,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D1900011294A618700263BE5 /* hls_encrypted_segment0.ts */ = {isa = PBXFileReference; lastKnownFileType = file; path = ../assets/test_media/hls_encrypted_segment0.ts; sourceTree = SOURCE_ROOT; };
+		D1900010294A618700263BE5 /* hls_key.bin */ = {isa = PBXFileReference; lastKnownFileType = file; path = ../assets/test_media/hls_key.bin; sourceTree = SOURCE_ROOT; };
 		D6800011294A618700263BE5 /* YlV2ReactivationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlV2ReactivationTests.swift; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
@@ -169,6 +173,8 @@
 		B20C0020294A618700263BE5 /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				D1900010294A618700263BE5 /* hls_key.bin */,
+				D1900011294A618700263BE5 /* hls_encrypted_segment0.ts */,
 				B20C0012294A618700263BE5 /* h264_aac.mkv */,
 				B20C0013294A618700263BE5 /* two_audio_tracks.mkv */,
 				F6200012294A618700263BE5 /* hevc_aac.mkv */,
@@ -316,6 +322,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1900000294A63AB00263BE5 /* hls_key.bin in Resources */,
+				D1900001294A63AB00263BE5 /* hls_encrypted_segment0.ts in Resources */,
 				B20C0002294A63AB00263BE5 /* h264_aac.mkv in Resources */,
 				B20C0003294A63AB00263BE5 /* two_audio_tracks.mkv in Resources */,
 				F6200002294A63AB00263BE5 /* hevc_aac.mkv in Resources */,

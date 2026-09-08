@@ -9,6 +9,20 @@ enum YlSourceRouter {
     "flv", "mkv", "webm", "ts", "m2ts", "mpg", "mpeg", "ps", "avi",
   ]
 
+  // Initial activation, validation and rollback must use the same effective
+  // HTTP request context, including credentials kept separate from headers.
+  static func route(_ source: [String: Any?]) -> YlMacosSourceRoute {
+    let headers = stringMap(source["headers"]).compactMapValues { $0 as? String }
+    let credentials = stringMap(source["credentials"]).compactMapValues { $0 as? String }
+    return route(YlMacosSourceDescriptor(
+      uri: source["uri"] as? String ?? "",
+      kind: source["kind"] as? String ?? "",
+      formatHint: source["formatHint"] as? String ?? "automatic",
+      isLive: source["isLive"] as? Bool ?? false,
+      hasHeaders: !headers.isEmpty || !credentials.isEmpty
+    ))
+  }
+
   static func route(_ source: YlMacosSourceDescriptor) -> YlMacosSourceRoute {
     guard let url = validatedUrl(for: source) else {
       return .reject(

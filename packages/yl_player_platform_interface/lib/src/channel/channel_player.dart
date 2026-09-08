@@ -49,6 +49,7 @@ final class _LegacyChannelPlayer implements YlPlatformPlayer {
   _LoadBarrier? _load;
   bool _disposed = false;
   bool _firstFrame = false;
+  YlPlaybackSessionId? _stoppedSession;
   Future<void>? _disposeFuture;
   @override
   YlPlatformImplementationInfo get implementation =>
@@ -73,7 +74,8 @@ final class _LegacyChannelPlayer implements YlPlatformPlayer {
 
   void _checkSession(YlPlaybackSessionId id) {
     _check();
-    if (id != state.sessionId ||
+    if (id == _stoppedSession ||
+        id != state.sessionId ||
         state.status == YlPlaybackStatus.idle ||
         state.status == YlPlaybackStatus.failed) {
       throw legacyException(YlFailureCodes.sessionStale);
@@ -284,11 +286,17 @@ final class _LegacyChannelPlayer implements YlPlatformPlayer {
   }
 
   @override
-  Future<void> stop() {
+  Future<void> stop() async {
     _check();
+    final captured = state.sessionId;
     ++_serial;
     _cancelLoad();
-    return _command('stop');
+    await _command('stop');
+    // A reply fences the captured identity; only native idle changes state.
+    // An older Stop must not invalidate a subsequently committed Load.
+    if (captured != null && state.sessionId == captured) {
+      _stoppedSession = captured;
+    }
   }
 
   Future<void> _sessionCommand(
@@ -393,6 +401,7 @@ final class _LegacyChannelPlayer implements YlPlatformPlayer {
         _states.add(state);
         if (previous.sessionId == state.sessionId &&
             state.sessionId != null &&
+            state.sessionId != _stoppedSession &&
             previous.engine != state.engine) {
           _events.add(
             YlPlaybackEngineChangedEvent(
@@ -408,6 +417,7 @@ final class _LegacyChannelPlayer implements YlPlatformPlayer {
         return;
       }
       if (state.sessionId == null ||
+          state.sessionId == _stoppedSession ||
           map['generation'] != null && map['generation'] != _generation) {
         return;
       }
@@ -517,13 +527,35 @@ Future<YlPlatformPlayer> createYlLegacyChannelPlayer({
   }
   _LegacyChannelPlayer? player;
   int? allocatedId;
+  bool abandoned = false;
+  Future<void> release(int id) async {
+    try {
+      await methods
+          .invokeMethod<void>('dispose', {'playerId': id})
+          .timeout(transportTimeout);
+    } catch (_) {
+      /* bounded best effort; late errors are consumed by timeout */
+    }
+  }
+
   try {
-    final response = await methods
+    // Keep observing the original reply after the caller's deadline. Every
+    // returned identity belongs either to construction or to late cleanup.
+    final creation = methods
         .invokeMapMethod<String, Object?>('create', {
           'configuration': encodeYlOptions(options),
         })
-        .timeout(transportTimeout);
-    final id = allocatedId = ylWireInt(response?['playerId']);
+        .then((response) {
+          final id = ylWireInt(response?['playerId']);
+          if (abandoned) {
+            if (id != null) unawaited(release(id));
+          } else {
+            allocatedId = id;
+          }
+          return response;
+        });
+    final response = await creation.timeout(transportTimeout);
+    final id = allocatedId;
     final texture = ylWireInt(response?['textureId']);
     if (id == null || texture == null) {
       throw legacyException(
@@ -541,6 +573,7 @@ Future<YlPlatformPlayer> createYlLegacyChannelPlayer({
       options: options,
       transportTimeout: transportTimeout,
     );
+    allocatedId = null; // Ownership transferred to the adapter.
     // Observe first, because requestState may synchronously emit then fail.
     unawaited(
       player._initial.future.then<void>(
@@ -554,18 +587,15 @@ Future<YlPlatformPlayer> createYlLegacyChannelPlayer({
     ]).timeout(transportTimeout);
     return player;
   } catch (error) {
+    abandoned = true;
     if (player != null) {
       try {
-        await player.dispose();
+        await player.dispose().timeout(transportTimeout);
       } catch (_) {
         /* preserve creation error */
       }
     } else if (allocatedId != null) {
-      try {
-        await methods.invokeMethod<void>('dispose', {'playerId': allocatedId});
-      } catch (_) {
-        /* preserve creation error */
-      }
+      await release(allocatedId!);
     }
     if (error is YlPlayerException) rethrow;
     if (error is PlatformException) throw decodeYlPlatformException(error);

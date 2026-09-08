@@ -75,6 +75,8 @@ final class YlFallbackBackendTests: XCTestCase {
     private(set) var activateCount = 0
     private(set) var deactivateCount = 0
     private(set) var disposeCount = 0
+    private(set) var finishReplacementCount = 0
+    func finishReplacement() { finishReplacementCount += 1 }
     var activationError: Error?
     var isActive: Bool { activateCount > deactivateCount }
 
@@ -153,6 +155,19 @@ final class YlFallbackBackendTests: XCTestCase {
     XCTAssertEqual(original.deactivateCount, 1)
     XCTAssertEqual(replacement.activateCount, 1)
     XCTAssertTrue(slot.current === replacement)
+  }
+
+  func testFailedRollbackStillFinalizesReplacementResources() throws {
+    let original = FakeBackend()
+    let candidate = FakeBackend()
+    let slot = YlBackendSlot(initial: original)
+    try original.activate()
+    original.activationError = ExpectedFailure()
+    candidate.activationError = ExpectedFailure()
+    XCTAssertThrowsError(try slot.replace { candidate })
+    XCTAssertEqual(original.finishReplacementCount, 1)
+    XCTAssertEqual(candidate.disposeCount, 1)
+    XCTAssertTrue(slot.current === original)
   }
 
   func testActivationFailureRestoresPreviousBackendAndDisposesCandidate() throws {

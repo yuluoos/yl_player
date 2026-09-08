@@ -157,13 +157,16 @@ final class YlPlatformConformance {
       'stop': (c) async {
         final result = await _load(c);
         await c.step(c.player.stop);
-        _require(
-          c.player.state.sessionId == null &&
-              c.player.state.status == YlPlaybackStatus.idle,
-        );
+        // Rejection is immediate after acceptance; native idle may arrive
+        // independently of the reply, within this case's existing deadline.
         await c.rejected(
           c.observe(() => c.player.play(result.sessionId)),
           YlFailureCodes.sessionStale,
+        );
+        await c.waitFor(
+          () =>
+              c.player.state.sessionId == null &&
+              c.player.state.status == YlPlaybackStatus.idle,
         );
         await c.step(() => c.player.setVolume(0.5));
         final next = await _load(c);
@@ -316,7 +319,13 @@ final class YlPlatformConformance {
     // Cancellation must settle while the candidate is still held.
     await c.rejected(pending, YlFailureCodes.loadCancelled);
     await c.step(() => fixture.releaseHeldLoad(c.player));
-    if (!dispose) _require(c.player.state.sessionId == null);
+    if (!dispose) {
+      await c.waitFor(
+        () =>
+            c.player.state.sessionId == null &&
+            c.player.state.status == YlPlaybackStatus.idle,
+      );
+    }
   }
 
   Future<void> _policy(_Case c, YlConformancePolicyCase policy) async {

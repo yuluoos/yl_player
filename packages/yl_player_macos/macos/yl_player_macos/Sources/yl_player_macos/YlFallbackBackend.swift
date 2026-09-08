@@ -404,12 +404,17 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   }
 
   func quiesceForReplacement() {
+    // The default audio clock consults stateLock synchronously.
+    let positionGeneration = stateLock.withLock { generation }
+    let positionBeforeReplacement = mediaClock.position(atHostTimeUs: Self.hostTimeUs())
     stateLock.lock()
     guard !disposed, active else {
       stateLock.unlock()
       return
     }
-    savedPositionUs = mediaClock.position(atHostTimeUs: Self.hostTimeUs())
+    if generation == positionGeneration {
+      savedPositionUs = positionBeforeReplacement
+    }
     active = false
     reconfiguring = true
     let generations = YlFallbackReplacementGenerationPolicy.quiesce(
