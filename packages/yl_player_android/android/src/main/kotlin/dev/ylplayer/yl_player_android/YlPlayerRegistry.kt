@@ -35,6 +35,7 @@ internal class YlPlayerRegistry(
             checkMainThread()
             if (detached) throw YlBoundaryException(YlFailureKind.PLAYER_DISPOSED)
             if (request.schemaMajor != 2L) throw YlBoundaryException(YlFailureKind.PLATFORM_INCOMPATIBLE)
+            YlBoundaryValidation.player(request.options)
             val createSession = sessionFactory.prepare(request.options)
             val suffix = "p${nextId++}-${UUID.randomUUID()}"
             texture = textures.createSurfaceTexture()

@@ -20,6 +20,12 @@ void main() {
         ),
       );
       addTearDown(player.dispose);
+      final failures = <YlPlaybackFailedEvent>[];
+      final failureSubscription = player.events
+          .where((event) => event is YlPlaybackFailedEvent)
+          .cast<YlPlaybackFailedEvent>()
+          .listen(failures.add);
+      addTearDown(failureSubscription.cancel);
       expect(
         player.capabilities.availableEngines,
         contains(YlPlaybackEngine.media3),
@@ -40,6 +46,20 @@ void main() {
       expect(player.state.engine, YlPlaybackEngine.media3);
       expect(player.state.videoGeometry, isNotNull);
       expect(player.state.audioTracks, isNotEmpty);
+      final acceptedTrack = player.state.audioTracks.first.id;
+      await expectLater(
+        session.seekToLiveEdge(),
+        throwsA(failureCode(YlFailureCodes.policyUnsupported)),
+      );
+      await expectLater(
+        session.selectAudioTrack('missing-but-nonempty'),
+        throwsA(failureCode(YlFailureCodes.sourceMissing)),
+      );
+      expect(player.state.failure, isNull);
+      expect(player.state.sessionId, session.id);
+      expect(player.state.status, isNot(YlPlaybackStatus.failed));
+      expect(failures, isEmpty);
+      await session.selectAudioTrack(acceptedTrack);
       await session.pause();
       const seekTarget = Duration(seconds: 4);
       await session.seekTo(seekTarget);
@@ -69,6 +89,7 @@ void main() {
             state.timeline.position >
                 seekTarget + const Duration(milliseconds: 500),
       );
+      expect(failures, isEmpty);
       await player.stop();
       await expectLater(
         session.play(),

@@ -302,6 +302,8 @@ class YlSessionCoordinatorTest {
         val first = SessionFixture(dispatcher, 1).also { it.coordinator.bindLeases(shared) }
         val second = SessionFixture(dispatcher, 2).also { it.coordinator.bindLeases(shared) }
         val old = first.coordinator.load(request("old").withAutoplay(true)); runCurrent()
+        first.engines.single().emit(YlEngineEvent.Snapshot(YlEngineSnapshot(AndroidPlaybackStatus.PLAYING,
+            audioTracks = listOf(AndroidTrackMessage("french", AndroidTrackKind.AUDIO, isSelected = false)))))
         val hold = CompletableDeferred<Unit>()
         second.next = FakeSessionEngine().apply { activationAcknowledgement = hold; activationError = IllegalStateException() }
         val candidate = async { runCatching { second.coordinator.load(request("new")) } }
@@ -786,6 +788,10 @@ internal class FakeSessionEngine : YlPlaybackEngineAdapter {
     var currentVolume = 1.0
     var currentSpeed = 1.0
     var currentTrack: String? = null
+    var commandError: Throwable? = null
+    var commandAcknowledgement: CompletableDeferred<Unit>? = null
+    var restoredLiveEdge = false
+    var currentLiveEdge = false
     var position = 0L
     val memoryLevels = mutableListOf<Int>()
     var activationCalls = 0
@@ -820,13 +826,13 @@ internal class FakeSessionEngine : YlPlaybackEngineAdapter {
     override suspend fun prepare() { preparation?.await(); prepareError?.let { throw it } }
     override suspend fun activate(output: YlSessionVideoOutput) { activationCalls++; onActivate?.invoke(); activationAcknowledgement?.await(); activationError?.let { throw it } }
     override suspend fun quiesce(): YlEngineRestorePoint { quiesces++; quiesceAcknowledgement?.await(); quiesceError?.let { throw it }; playing = false; return YlEngineRestorePoint(position, false, playbackIntended, currentTrack, speed = currentSpeed, volume = currentVolume) }
-    override suspend fun restore(point: YlEngineRestorePoint, output: YlSessionVideoOutput) { lifecycleCalls += "restore"; restores++; playbackIntended = point.playbackIntended; playing = playbackIntended; currentSpeed = point.speed; currentTrack = point.selectedAudioTrack; currentVolume = point.volume; position = point.positionMs; onRestore?.invoke(); restoreAcknowledgement?.await() }
+    override suspend fun restore(point: YlEngineRestorePoint, output: YlSessionVideoOutput) { lifecycleCalls += "restore"; restoredLiveEdge = point.liveEdge; currentLiveEdge = point.liveEdge; restores++; playbackIntended = point.playbackIntended; playing = playbackIntended; currentSpeed = point.speed; currentTrack = point.selectedAudioTrack; currentVolume = point.volume; position = point.positionMs; onRestore?.invoke(); restoreAcknowledgement?.await() }
     override suspend fun play() { playCalls++; playbackIntended = true; playing = true }
     override suspend fun pause() { playbackIntended = false; playing = false }
-    override suspend fun seekTo(positionMs: Long) { position = positionMs }
-    override suspend fun seekToLiveEdge() = Unit
+    override suspend fun seekTo(positionMs: Long) { position = positionMs; currentLiveEdge = false }
+    override suspend fun seekToLiveEdge() { commandError?.let { throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED) }; currentLiveEdge = true }
     override suspend fun setPlaybackSpeed(speed: Double) { currentSpeed = speed }
-    override suspend fun selectAudioTrack(trackId: String) { currentTrack = trackId }
+    override suspend fun selectAudioTrack(trackId: String) { commandAcknowledgement?.await(); commandError?.let { throw it }; currentTrack = trackId }
     override suspend fun setVideoConstraints(constraints: AndroidVideoConstraintsMessage) = Unit
     override suspend fun setVolume(volume: Double) {
         currentVolume = volume

@@ -165,6 +165,8 @@ internal fun createMedia3Configuration(
     options: AndroidLoadOptionsMessage,
     playerOptions: AndroidPlayerOptionsMessage,
 ): PlayerConfiguration {
+    YlBoundaryValidation.player(playerOptions)
+    YlBoundaryValidation.load(source, options)
     val policy = source.networkPolicy
     return PlayerConfiguration(
         bufferMode = when (options.bufferStrategy.kind) {
@@ -173,7 +175,7 @@ internal fun createMedia3Configuration(
             else -> "automatic"
         }, decoderPolicy = (options.decoderPolicyOverride ?: playerOptions.decoderPolicy).name,
         minBufferMs = null, maxBufferMs = null, maxBufferBytes = null,
-        positionEventIntervalMs = playerOptions.positionUpdateIntervalMs.coerceIn(100, 2000),
+        positionEventIntervalMs = playerOptions.positionUpdateIntervalMs,
         network = NetworkConfiguration(policy?.connectTimeoutMs?.toInt() ?: 10_000,
             policy?.readTimeoutMs?.toInt() ?: 15_000, policy?.maxRetries?.toInt() ?: 3,
             policy?.baseRetryDelayMs ?: 500, policy?.maxRetryDelayMs ?: 8_000, policy?.maxRedirects?.toInt() ?: 5),
@@ -189,6 +191,7 @@ internal class YlMedia3SessionFactory(
 ) : YlPlayerSessionFactory {
     private var nextPlayerId = 0L
     override fun prepare(options: AndroidPlayerOptionsMessage): (TextureRegistry.SurfaceTextureEntry) -> YlPlayerSession {
+        YlBoundaryValidation.player(options)
         val playerId = ++nextPlayerId
         return { texture ->
             YlSessionCoordinator(playerId, options, YlVideoOutput(texture, ownsTexture = false),

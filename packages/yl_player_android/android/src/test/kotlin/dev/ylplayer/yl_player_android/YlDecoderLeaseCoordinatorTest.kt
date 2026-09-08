@@ -6,6 +6,90 @@ import kotlin.test.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlDecoderLeaseCoordinatorTest {
+    @Test fun `same player successors retain one gate through cancelled nonexclusive release`() = runTest {
+        val f = LeaseFixture(StandardTestDispatcher(testScheduler)) { testScheduler.currentTime }
+        val release = CompletableDeferred<Unit>()
+        val first = f.player("audio:first").apply { needsExclusiveLease = false; exclusiveAfterActivation = false; holdActivation = true; this.release = release }
+        val a = async { runCatching { f.leases.acquire(first) {} } }; runCurrent()
+        val second = f.player("audio:second").apply { needsExclusiveLease = false; exclusiveAfterActivation = false }
+        val b = async { runCatching { f.leases.acquire(second) {} } }; runCurrent()
+        val third = f.player("audio:third").apply { needsExclusiveLease = false; exclusiveAfterActivation = false }
+        val c = async { f.leases.acquire(third) {} }; runCurrent()
+        assertEquals(0, second.activations); assertEquals(0, third.activations)
+        assertFalse(a.isCompleted); assertTrue(b.await().isFailure)
+        release.complete(Unit); runCurrent(); c.await()
+        first.activationCallback!!(Result.success(Unit)); runCurrent()
+        assertTrue(a.await().isFailure); assertEquals(1, third.activations)
+        assertFalse("audio:first:commit" in f.calls)
+        // A completed player's bookkeeping must be released, rather than accumulating per ID.
+        for (field in listOf("playerGates", "jobs", "latestByPlayer")) {
+            val value = f.leases.javaClass.getDeclaredField(field).apply { isAccessible = true }.get(f.leases) as Map<*, *>
+            assertTrue(value.isEmpty(), field)
+        }
+    }
+
+    @Test fun `nonexclusive retirement blocks same player only and detach owns every pending participant`() = runTest {
+        val f = LeaseFixture(StandardTestDispatcher(testScheduler)) { testScheduler.currentTime }
+        val old = f.player("audio:old").apply { needsExclusiveLease = false; exclusiveAfterActivation = false }
+        f.leases.acquire(old) {}
+        val release = CompletableDeferred<Unit>()
+        f.leases.retire(old, release)
+        val next = f.player("audio:new").apply { needsExclusiveLease = false; exclusiveAfterActivation = false }
+        val pending = async { runCatching { f.leases.acquire(next) {} } }; runCurrent()
+        val peer = f.player("peer").apply { needsExclusiveLease = false; exclusiveAfterActivation = false; holdActivation = true }
+        val other = async { runCatching { f.leases.acquire(peer) {} } }; runCurrent()
+        assertEquals(0, next.activations); assertEquals(1, peer.activations)
+        f.leases.detach(); runCurrent()
+        assertTrue(next.disposals > 0); assertTrue(peer.disposals > 0); assertTrue(old.disposals > 0)
+        release.complete(Unit); runCurrent()
+        assertTrue(pending.await().isFailure); assertTrue(other.await().isFailure)
+        assertEquals(0, next.activations)
+    }
+
+    @Test fun `independent nonexclusive activation commits while first awaits acknowledgement`() = runTest {
+        val f = LeaseFixture(StandardTestDispatcher(testScheduler)) { testScheduler.currentTime }
+        val first = f.player("a").apply { needsExclusiveLease = false; exclusiveAfterActivation = false; holdActivation = true }
+        val a = async { runCatching { f.leases.acquire(first) {} } }
+        runCurrent()
+        val second = f.player("b").apply { needsExclusiveLease = false; exclusiveAfterActivation = false }
+        val b = async { f.leases.acquire(second) {} }
+        runCurrent()
+        try {
+            assertTrue(b.isCompleted)
+            assertTrue("b:commit" in f.calls)
+            assertFalse(a.isCompleted)
+        } finally { first.activationCallback!!(Result.success(Unit)); runCurrent() }
+        assertTrue(a.await().isSuccess) // B's stage must not invalidate A's local attempt.
+        b.await()
+        assertNull(f.leases.owner)
+    }
+
+    @Test fun `known audio progresses during exclusive quarantine and retiring video owner`() = runTest {
+        for (retirement in listOf(false, true)) {
+            val f = LeaseFixture(StandardTestDispatcher(testScheduler)) { testScheduler.currentTime }
+            val video = f.player("video")
+            f.leases.acquire(video) {}
+            val release = CompletableDeferred<Unit>()
+            val held = if (retirement) {
+                f.leases.retire(video, release)
+                null
+            } else {
+                val failed = f.player("failed").apply { activationError = true; this.release = release }
+                async { runCatching { f.leases.acquire(failed) {} } }
+            }
+            runCurrent()
+            val audio = f.player("audio").apply { needsExclusiveLease = false; exclusiveAfterActivation = false }
+            val result = async { f.leases.acquire(audio) {} }
+            runCurrent()
+            try {
+                assertTrue(result.isCompleted, "retirement=$retirement")
+                assertTrue("audio:commit" in f.calls)
+                assertEquals(video, f.leases.owner)
+            } finally { release.complete(Unit); runCurrent() }
+            result.await(); held?.await()
+        }
+    }
+
     @Test fun `quiesce failure disposes candidate without changing owner`() = runTest {
         val f = LeaseFixture(StandardTestDispatcher(testScheduler)) { testScheduler.currentTime }
         val old = f.player("old").apply { quiesceError = true }

@@ -379,8 +379,10 @@ abstract class AndroidPlayerHostApi {
   void play(AndroidSessionCommand command);
   void pause(AndroidSessionCommand command);
   void seekTo(AndroidSeekCommand command);
+  @async
   void seekToLiveEdge(AndroidSessionCommand command);
   void setPlaybackSpeed(AndroidSpeedCommand command);
+  @async
   void selectAudioTrack(AndroidTrackCommand command);
   void setVideoConstraints(AndroidVideoConstraintsCommand command);
   void setVolume(double volume);

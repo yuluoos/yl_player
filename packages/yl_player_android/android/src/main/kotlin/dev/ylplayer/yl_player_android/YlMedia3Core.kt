@@ -172,7 +172,7 @@ internal class YlMedia3Core(
     fun setVolume(volume: Double) { exoPlayer.volume = volume.toFloat() }
     fun switchOutput(surface: Surface, output: YlOutputIdentity) { videoOutput.switchTo(surface, output, ::attachSurface); ensureHealthy() }
     fun snapshotRestorePoint() = YlEngineRestorePoint(if (active) max(0L, exoPlayer.currentPosition) else savedPositionMs,
-        resumeAtLiveEdge || exoPlayer.currentLiveOffset in 0..2_000L, lifecycle.state.playbackIntended,
+        resumeAtLiveEdge || (normalizedLiveOffset()?.let { it <= 2_000L } == true), lifecycle.state.playbackIntended,
         audioTracks.firstOrNull { it.isSelected }?.id, videoTracks.filter { it.isSelected }.map { it.id },
         requestedPlaybackSpeed.toDouble(), exoPlayer.volume.toDouble(),
         hostQualityConstraint.maxWidth?.toLong(), hostQualityConstraint.maxHeight?.toLong(), hostQualityConstraint.maxBitrate?.toLong())
@@ -253,7 +253,7 @@ internal class YlMedia3Core(
         if (!active) return
         stallWatchdog.cancel()
         savedPositionMs = max(0L, exoPlayer.currentPosition)
-        if (exoPlayer.currentLiveOffset in 0..2_000L) {
+        if (normalizedLiveOffset()?.let { it <= 2_000L } == true) {
             resumeAtLiveEdge = true
         }
         bufferingStartedAtMs?.let { rebufferDurationMs += SystemClock.elapsedRealtime() - it }
@@ -432,6 +432,7 @@ internal class YlMedia3Core(
     }
 
     fun setVideoConstraints(constraint: AndroidVideoConstraintsMessage) {
+        YlBoundaryValidation.constraints(constraint)
         hostQualityConstraint = AndroidQualityConstraint(constraint.maxWidth?.toInt(), constraint.maxHeight?.toInt(), constraint.maxBitrate?.toInt())
         applyTrackConstraints()
     }
@@ -666,7 +667,7 @@ internal class YlMedia3Core(
                 memoryPressure = memoryPressure,
                 canDowngrade = canDowngrade,
                 sourceClass = sourceClass,
-                liveOffsetMs = exoPlayer.currentLiveOffset.takeUnless { it == C.TIME_UNSET || it < 0 },
+                liveOffsetMs = normalizedLiveOffset(),
                 bufferedDurationMs = bufferedDuration,
                 targetLiveOffsetMs = (profile.minBufferMs + profile.maxBufferMs) / 2L,
                 maxBufferMs = profile.maxBufferMs,
@@ -811,11 +812,14 @@ internal class YlMedia3Core(
         emitState()
     }
 
+    private fun normalizedLiveOffset(): Long? = exoPlayer.currentLiveOffset
+        .takeUnless { it == C.TIME_UNSET }?.coerceAtLeast(0)
+
     private fun timeline(): AndroidTimelineMessage {
         val position = if (active) max(0L, exoPlayer.currentPosition) else savedPositionMs
         val duration = exoPlayer.duration.takeUnless { it == C.TIME_UNSET || it < 0 }
         val live = sourceIsLive || exoPlayer.isCurrentMediaItemLive
-        val offset = exoPlayer.currentLiveOffset.takeUnless { it == C.TIME_UNSET || it < 0 }
+        val offset = normalizedLiveOffset()
         return AndroidTimelineMessage(position, duration,
             if (active) max(position, exoPlayer.bufferedPosition) else position,
             exoPlayer.isCurrentMediaItemSeekable, live,

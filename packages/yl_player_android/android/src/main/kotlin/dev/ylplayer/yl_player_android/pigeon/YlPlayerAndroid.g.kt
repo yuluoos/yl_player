@@ -2718,9 +2718,9 @@ interface AndroidPlayerHostApi {
   suspend fun play(command: AndroidSessionCommand)
   fun pause(command: AndroidSessionCommand)
   fun seekTo(command: AndroidSeekCommand)
-  fun seekToLiveEdge(command: AndroidSessionCommand)
+  suspend fun seekToLiveEdge(command: AndroidSessionCommand)
   fun setPlaybackSpeed(command: AndroidSpeedCommand)
-  fun selectAudioTrack(command: AndroidTrackCommand)
+  suspend fun selectAudioTrack(command: AndroidTrackCommand)
   fun setVideoConstraints(command: AndroidVideoConstraintsCommand)
   fun setVolume(volume: Double)
   suspend fun stop()
@@ -2849,13 +2849,15 @@ interface AndroidPlayerHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val commandArg = args[0] as AndroidSessionCommand
-            val wrapped: List<Any?> = try {
-              api.seekToLiveEdge(commandArg)
-              listOf(null)
-            } catch (exception: Throwable) {
-              YlPlayerAndroidPigeonUtils.wrapError(exception)
+            CoroutineScope(Dispatchers.Main).launch {
+              val wrapped: List<Any?> = try {
+                api.seekToLiveEdge(commandArg)
+                listOf(null)
+              } catch (exception: Throwable) {
+                YlPlayerAndroidPigeonUtils.wrapError(exception)
+              }
+              reply.reply(wrapped)
             }
-            reply.reply(wrapped)
           }
         } else {
           channel.setMessageHandler(null)
@@ -2885,13 +2887,15 @@ interface AndroidPlayerHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val commandArg = args[0] as AndroidTrackCommand
-            val wrapped: List<Any?> = try {
-              api.selectAudioTrack(commandArg)
-              listOf(null)
-            } catch (exception: Throwable) {
-              YlPlayerAndroidPigeonUtils.wrapError(exception)
+            CoroutineScope(Dispatchers.Main).launch {
+              val wrapped: List<Any?> = try {
+                api.selectAudioTrack(commandArg)
+                listOf(null)
+              } catch (exception: Throwable) {
+                YlPlayerAndroidPigeonUtils.wrapError(exception)
+              }
+              reply.reply(wrapped)
             }
-            reply.reply(wrapped)
           }
         } else {
           channel.setMessageHandler(null)

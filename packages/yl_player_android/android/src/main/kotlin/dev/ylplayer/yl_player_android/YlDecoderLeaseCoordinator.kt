@@ -39,8 +39,9 @@ internal interface YlDecoderLeaseParticipant {
     fun restorationFailed()
 }
 
-/** Single registry resource authority. The mutex gates resource transfer, never main execution.
- * Cancelled transfers retain the gate until safe release and observed rollback complete.
+/** Single registry resource authority. Scarce transfers retain the global mutex through safe
+ * release/rollback. Proven nonexclusive Players progress under independent per-player mutexes;
+ * stage generations and cancellation ownership belong to their own transaction.
  */
 internal class YlDecoderLeaseCoordinator(
     dispatcher: CoroutineDispatcher = Dispatchers.Main,
@@ -48,7 +49,10 @@ internal class YlDecoderLeaseCoordinator(
 ) {
     private val cleanup = CoroutineScope(SupervisorJob() + dispatcher)
     private val gate = Mutex()
-    private var generation = 0L
+    private class AttemptState(var generation: Long = 0)
+    private val playerGates = mutableMapOf<String, Mutex>()
+    private val jobs = mutableMapOf<Deferred<Unit>, YlDecoderLeaseParticipant>()
+    private val latestByPlayer = mutableMapOf<String, Deferred<Unit>>()
     private var requestGeneration = 0L
     private var current: Deferred<Unit>? = null
     private var currentParticipant: YlDecoderLeaseParticipant? = null
@@ -64,14 +68,21 @@ internal class YlDecoderLeaseCoordinator(
         prepare: suspend () -> Unit,
     ) {
         check(attached)
-        val exclusive = candidate.needsExclusiveLease
+        // A known nonexclusive restore has no scarce dependency. Replacing a same-player
+        // video engine still participates in the shared resource transaction.
+        val exclusive = candidate.needsExclusiveLease || former?.needsExclusiveLease == true
+        val playerGate = playerGates.getOrPut(candidate.playerLeaseId) { Mutex() }
+        latestByPlayer[candidate.playerLeaseId]?.cancel()
         val request = if (exclusive) ++requestGeneration else requestGeneration
         if (exclusive) current?.cancel()
         val job = cleanup.async(start = CoroutineStart.LAZY) {
-            gate.withLock {
+            val attempts = AttemptState()
+            suspend fun transfer() {
                 currentCoroutineContext().ensureActive()
                 if (!attached || (exclusive && request != requestGeneration)) throw CancellationException()
-                for (prior in listOfNotNull(owner, former).distinct()) retiring[prior]?.let { release ->
+                val retirementDependencies = (if (exclusive) listOfNotNull(owner, former) else listOfNotNull(former)) +
+                    retiring.keys.filter { it.playerLeaseId == candidate.playerLeaseId }
+                for (prior in retirementDependencies.distinct()) retiring[prior]?.let { release ->
                     // An accepted Stop/close fences presentation immediately, but is not proof
                     // its decoder is free. Exceptional safe-close completion is an acknowledgement.
                     withContext(NonCancellable) { runCatching { release.await() } }
@@ -92,7 +103,7 @@ internal class YlDecoderLeaseCoordinator(
                     for (prior in previous) {
                         // Acknowledgement must survive cancellation: it contains the real worker
                         // restore point, and establishes when another transfer is safe to start.
-                        stage<YlLeaseSnapshot>(5_000, retainAcknowledgement = true) { attempt, complete ->
+                        stage<YlLeaseSnapshot>(attempts, 5_000, retainAcknowledgement = true) { attempt, complete ->
                             prior.quiesceForLease(attempt) { result ->
                                 result.getOrNull()?.let { snapshots[prior] = it }
                                 complete(result)
@@ -100,7 +111,7 @@ internal class YlDecoderLeaseCoordinator(
                         }
                         currentCoroutineContext().ensureActive()
                     }
-                    try { stage(15_000, operation = candidate::activateForLease) }
+                    try { stage(attempts, 15_000, operation = candidate::activateForLease) }
                     catch (_: TimeoutCancellationException) { throw YlBoundaryException(candidate.activationTimeoutFailure) }
                     currentCoroutineContext().ensureActive()
                     if (!attached || (exclusive && request != requestGeneration)) throw CancellationException()
@@ -109,12 +120,12 @@ internal class YlDecoderLeaseCoordinator(
                     if (!candidate.needsExclusiveLease) {
                         for ((prior, snapshot) in snapshots) if (prior.playerLeaseId != candidate.playerLeaseId) {
                             restored += prior // An unsuccessful restore must not be attempted twice.
-                            restore(prior, snapshot)
+                            restore(prior, snapshot, attempts)
                         }
                     }
                     candidate.commitLease()
                     committed = true
-                    owner = if (candidate.needsExclusiveLease) candidate else originalOwner?.takeIf {
+                    if (exclusive) owner = if (candidate.needsExclusiveLease) candidate else originalOwner?.takeIf {
                         it !in snapshots || it in restored
                     }
                     snapshots.keys.filterNot { it in restored }.forEach { it.deactivateAfterLeaseTransfer() }
@@ -126,35 +137,44 @@ internal class YlDecoderLeaseCoordinator(
                         runCatching { candidate.publicationFailed(error) }.exceptionOrNull()?.let { YlFailureMapper().record(it) }
                         snapshots.keys.filterNot { it in restored }.forEach { it.deactivateAfterLeaseTransfer() }
                         withContext(NonCancellable) { runCatching { candidate.disposeForLease().await() } }
-                        if (owner === originalOwner) owner = originalOwner?.takeIf { it in restored }
+                        if (exclusive && owner === originalOwner) owner = originalOwner?.takeIf { it in restored }
                     }
                     if (!committed) withContext(NonCancellable) {
                         runCatching { candidate.disposeForLease().await() }.exceptionOrNull()?.let { YlFailureMapper().record(it) }
                         var restorationError: Throwable? = null
                         if (attached) for ((prior, snapshot) in snapshots.toList().asReversed()) if (prior !in restored) {
-                            try { restore(prior, snapshot) } catch (failure: Throwable) { restorationError = failure }
+                            try { restore(prior, snapshot, attempts) } catch (failure: Throwable) { restorationError = failure }
                         }
                         restorationError?.let { throw it }
                     }
                     if (error is TimeoutCancellationException) throw YlBoundaryException(YlFailureKind.RESOURCE_EXHAUSTED)
                     throw error
                 } finally {
+                    ++attempts.generation
                     inFlightParticipants.removeAll(previous + candidate)
                 }
             }
+            playerGate.withLock {
+                if (exclusive) gate.withLock { transfer() } else transfer()
+            }
         }
+        jobs[job] = candidate
+        latestByPlayer[candidate.playerLeaseId] = job
         if (exclusive) { currentParticipant = candidate; current = job }
         job.start()
         try { job.await() }
         finally {
             if (!job.isCompleted) { job.cancel(); withContext(NonCancellable) { job.join() } }
+            jobs.remove(job)
+            if (latestByPlayer[candidate.playerLeaseId] === job) latestByPlayer.remove(candidate.playerLeaseId)
+            if (jobs.values.none { it.playerLeaseId == candidate.playerLeaseId }) playerGates.remove(candidate.playerLeaseId)
             if (current === job) { current = null; currentParticipant = null }
         }
     }
 
-    private suspend fun restore(previous: YlDecoderLeaseParticipant, snapshot: YlLeaseSnapshot) {
+    private suspend fun restore(previous: YlDecoderLeaseParticipant, snapshot: YlLeaseSnapshot, attempts: AttemptState) {
         if (!attached || !previous.canRestore) return
-        try { stage<Unit>(15_000) { attempt, complete -> previous.rollbackLease(snapshot, attempt, complete) } }
+        try { stage<Unit>(attempts, 15_000) { attempt, complete -> previous.rollbackLease(snapshot, attempt, complete) } }
         catch (error: Throwable) {
             YlFailureMapper().record(error)
             if (attached) previous.restorationFailed()
@@ -167,11 +187,12 @@ internal class YlDecoderLeaseCoordinator(
     }
 
     private suspend fun <T> stage(
+        attempts: AttemptState,
         timeoutMs: Long,
         retainAcknowledgement: Boolean = false,
         operation: (YlLeaseAttempt, (Result<T>) -> Unit) -> YlCancelHandle,
     ): T {
-        val attempt = YlLeaseAttempt(++generation, clockMs() + timeoutMs)
+        val attempt = YlLeaseAttempt(++attempts.generation, clockMs() + timeoutMs)
         val result = CompletableDeferred<T>()
         val handle = operation(attempt) { value ->
             // Only the immutable result enters here. Ownership changes occur after await and
@@ -181,7 +202,7 @@ internal class YlDecoderLeaseCoordinator(
         try {
             return withTimeout(timeoutMs) {
                 val value = result.await()
-                if (!attached || attempt.generation != generation || clockMs() >= attempt.deadlineMs) {
+                if (!attached || attempt.generation != attempts.generation || clockMs() >= attempt.deadlineMs) {
                     throw YlBoundaryException(YlFailureKind.RESOURCE_EXHAUSTED)
                 }
                 value
@@ -206,6 +227,7 @@ internal class YlDecoderLeaseCoordinator(
         }
     }
     fun cancel(playerId: String) {
+        jobs.filterValues { it.playerLeaseId == playerId }.keys.toList().forEach { it.cancel() }
         if (currentParticipant?.playerLeaseId == playerId || owner?.playerLeaseId == playerId) current?.cancel()
     }
     fun relinquish(participant: YlDecoderLeaseParticipant) {
@@ -213,9 +235,9 @@ internal class YlDecoderLeaseCoordinator(
     }
     fun detach() {
         if (!attached) return
-        attached = false; ++generation; ++requestGeneration
-        current?.cancel()
-        val participants = (listOfNotNull(owner, currentParticipant) + inFlightParticipants + retiring.keys).distinct()
+        attached = false; ++requestGeneration
+        jobs.keys.toList().forEach { it.cancel() }
+        val participants = (listOfNotNull(owner, currentParticipant) + jobs.values + inFlightParticipants + retiring.keys).distinct()
         owner = null
         participants.forEach { participant -> cleanup.launch { runCatching { participant.disposeForLease().await() } } }
     }

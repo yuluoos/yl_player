@@ -146,6 +146,7 @@ internal class YlSessionCoordinator(
     }
     override suspend fun load(request: AndroidLoadRequest): AndroidLoadReply {
         checkOpen()
+        YlBoundaryValidation.identity(request.loadRequestId)
         validate(request.source, request.options)
         stopping = false
         pendingCommitted = false
@@ -276,6 +277,22 @@ internal class YlSessionCoordinator(
         var desiredLiveEdge: Boolean? = null
         var desiredPlay: Boolean? = null
         var desiredConstraints: AndroidVideoConstraintsMessage? = null
+        var selectionVersion = 0L
+        private suspend fun applyLateSelections(appliedVersion: Long) {
+            var applied = appliedVersion
+            while (applied != selectionVersion && canRestore) {
+                val version = selectionVersion
+                val track = desiredTrack
+                val liveEdge = desiredLiveEdge
+                val position = desiredPosition
+                track?.let { session.engine.selectAudioTrack(it) }
+                if (!canRestore) return
+                if (version != selectionVersion) continue
+                if (liveEdge == true) session.engine.seekToLiveEdge()
+                else if (liveEdge == false && position != null) session.engine.seekTo(position)
+                applied = version
+            }
+        }
         fun resetRuntimeEdits() {
             desiredSpeed = null; desiredTrack = null; desiredPosition = null
             desiredLiveEdge = null; desiredPlay = null; desiredConstraints = null
@@ -345,12 +362,14 @@ internal class YlSessionCoordinator(
         override fun activateForLease(attempt: YlLeaseAttempt, complete: (Result<Unit>) -> Unit) = operation(complete) {
             ensureResourcesUsable()
             val restore = suspended
+            val selectionAtRestore = selectionVersion
             if (restore == null) session.engine.activate(output) else {
                 beginRestore()
                 session.engine.restore(restorePoint(restore.runtime), output)
             }
             // Player volume can change while codec initialization is suspended.
             session.engine.setVolume(effectiveVolume())
+            if (restore != null) applyLateSelections(selectionAtRestore)
             candidateFailure?.takeIf { pendingIdentity == session.identity }?.let { throw YlBoundaryException(it) }
             if (closed || backgrounded || stopping) throw CancellationException()
         }
@@ -371,8 +390,10 @@ internal class YlSessionCoordinator(
         }
         override fun rollbackLease(snapshot: YlLeaseSnapshot, attempt: YlLeaseAttempt, complete: (Result<Unit>) -> Unit) = operation(complete) {
             beginRestore()
+            val selectionAtRestore = selectionVersion
             session.engine.restore(restorePoint(snapshot.runtime), output)
             session.engine.setVolume(effectiveVolume())
+            applyLateSelections(selectionAtRestore)
             if (canRestore) { suspended = null; transacting = false; publishRestoration() }
         }
         override fun deactivateAfterLeaseTransfer() {
@@ -421,6 +442,7 @@ internal class YlSessionCoordinator(
     private suspend fun checkGeneration(token: Long) { checkOpen(); currentCoroutineContext().ensureActive(); if (token != operation) throw YlBoundaryException(YlFailureKind.LOAD_CANCELLED) }
     private fun current(id: String): YlPreparedSession {
         checkOpen()
+        YlBoundaryValidation.identity(id)
         return active?.takeIf { it.sessionId == id } ?: throw YlBoundaryException(YlFailureKind.SESSION_STALE)
     }
     private suspend fun runEngine(identity: YlSessionIdentity, action: suspend YlPlaybackEngineAdapter.() -> Unit) {
@@ -462,31 +484,67 @@ internal class YlSessionCoordinator(
     }
     override fun seekTo(command: AndroidSeekCommand) {
         current(command.sessionId)
-        activeLease?.desiredPosition = command.positionMs.coerceAtLeast(0)
+        YlBoundaryValidation.position(command.positionMs)
+        activeLease?.desiredPosition = command.positionMs
         activeLease?.desiredLiveEdge = false
-        enqueue(command.sessionId) { seekTo(command.positionMs.coerceAtLeast(0)) }
+        activeLease?.let { it.selectionVersion++ }
+        enqueue(command.sessionId) { seekTo(command.positionMs) }
     }
-    override fun seekToLiveEdge(command: AndroidSessionCommand) {
-        current(command.sessionId); activeLease?.desiredLiveEdge = true
-        enqueue(command.sessionId) { seekToLiveEdge() }
+    override suspend fun seekToLiveEdge(command: AndroidSessionCommand) = acceptedCommand(command.sessionId,
+        validate = {
+            if (!reducer.state.timeline.isLive) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
+        }, apply = { seekToLiveEdge() }, remember = { desiredLiveEdge = true })
+
+    /** Command rejection returns through the owned host coroutine. A worker exception here is
+     * not a playback event. Retain intent only after eligibility/worker acknowledgement, and
+     * never write an old command into a replacement, stopped or newly suspended lease. */
+    private suspend fun acceptedCommand(
+        id: String,
+        validate: () -> Unit,
+        apply: suspend YlPlaybackEngineAdapter.() -> Unit,
+        remember: SessionLease.() -> Unit,
+    ) {
+        val session = current(id)
+        val lease = checkNotNull(activeLease)
+        validate()
+        lease.ensureResourcesUsable()
+        if (lease.quiescing || lease.suspended != null) { lease.remember(); lease.selectionVersion++; return }
+        val token = operation
+        transaction.withLock {
+            current(id)
+            currentCoroutineContext().ensureActive()
+            if (activeLease !== lease || operation != token) throw YlBoundaryException(YlFailureKind.SESSION_STALE)
+            validate()
+            lease.ensureResourcesUsable()
+            if (!lease.quiescing && lease.suspended == null) session.engine.apply()
+            currentCoroutineContext().ensureActive()
+            current(id)
+            if (activeLease !== lease || operation != token) throw YlBoundaryException(YlFailureKind.SESSION_STALE)
+            lease.remember()
+            lease.selectionVersion++
+        }
     }
     override fun setPlaybackSpeed(command: AndroidSpeedCommand) {
         current(command.sessionId)
-        if (!command.speed.isFinite() || command.speed !in 0.25..4.0) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
+        YlBoundaryValidation.speed(command.speed)
         activeLease?.desiredSpeed = command.speed
         enqueue(command.sessionId) { setPlaybackSpeed(command.speed) }
     }
-    override fun selectAudioTrack(command: AndroidTrackCommand) {
-        current(command.sessionId); activeLease?.desiredTrack = command.trackId
-        enqueue(command.sessionId) { selectAudioTrack(command.trackId) }
-    }
+    override suspend fun selectAudioTrack(command: AndroidTrackCommand) = acceptedCommand(command.sessionId,
+        validate = {
+            YlBoundaryValidation.identity(command.trackId)
+            if (reducer.state.audioTracks.none { it.id == command.trackId }) throw YlBoundaryException(YlFailureKind.SOURCE_MISSING)
+        }, apply = { selectAudioTrack(command.trackId) }, remember = { desiredTrack = command.trackId })
     override fun setVideoConstraints(command: AndroidVideoConstraintsCommand) {
-        current(command.sessionId); activeLease?.desiredConstraints = command.constraints
+        current(command.sessionId)
+        YlBoundaryValidation.constraints(command.constraints)
+        activeLease?.desiredConstraints = command.constraints
         enqueue(command.sessionId) { setVideoConstraints(command.constraints) }
     }
     override fun setVolume(volume: Double) {
         checkOpen()
-        this.volume = volume.coerceIn(0.0, 1.0)
+        YlBoundaryValidation.volume(volume)
+        this.volume = volume
         // This command is player-scoped: resolve the committed engine after any transfer.
         scope.launch { transaction.withLock {
             active?.let { runEngine(it.identity) { setVolume(effectiveVolume()) } }

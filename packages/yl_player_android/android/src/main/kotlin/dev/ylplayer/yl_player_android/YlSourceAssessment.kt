@@ -10,6 +10,8 @@ internal class YlSourceAssessment(private val evidence: YlDecoderEvidenceProvide
     fun assess(source: AndroidSourceMessage, options: AndroidLoadOptionsMessage, decoder: AndroidDecoderPolicy, hasVideo: Boolean? = null, initializedName: String? = null): AndroidAssessmentReply {
         fun reject(kind: YlFailureKind) = AndroidAssessmentReply(AndroidAssessmentOutcome.INCOMPATIBLE, AndroidEngine.MEDIA3,
             emptyList(), emptyList(), YlFailureMapper().toMessage(YlBoundaryException(kind)))
+        try { YlBoundaryValidation.load(source, options) }
+        catch (error: YlBoundaryException) { return reject(error.kind) }
         val uri = runCatching { URI(source.locator) }.getOrNull()
         val valid = when (source.kind) {
             AndroidSourceKind.NETWORK -> uri?.scheme?.lowercase() in listOf("http", "https") && !uri?.host.isNullOrBlank() && uri?.userInfo == null && source.locator.toHttpUrlOrNull() != null
@@ -25,12 +27,6 @@ internal class YlSourceAssessment(private val evidence: YlDecoderEvidenceProvide
             }.isFailure) return reject(YlFailureKind.SOURCE_INVALID)
         if (options.bufferStrategy.kind == AndroidBufferKind.BOUNDED) return reject(YlFailureKind.POLICY_UNSUPPORTED)
         val network = source.networkPolicy
-        if (network?.kind == AndroidNetworkPolicyKind.MANAGED) {
-            if (source.kind != AndroidSourceKind.NETWORK) return reject(YlFailureKind.POLICY_UNSUPPORTED)
-            if (listOf(network.connectTimeoutMs, network.readTimeoutMs).any { it == null || it !in 1..Int.MAX_VALUE.toLong() } ||
-                listOf(network.maxRetries, network.maxRedirects).any { it == null || it !in 0..Int.MAX_VALUE.toLong() } ||
-                listOf(network.baseRetryDelayMs, network.maxRetryDelayMs).any { it == null || it < 0 }) return reject(YlFailureKind.SOURCE_INVALID)
-        }
         if (decoder == AndroidDecoderPolicy.HARDWARE_REQUIRED && hasVideo == true && !evidence.hardwareAttainable) return reject(YlFailureKind.DECODER_UNAVAILABLE)
         if (decoder == AndroidDecoderPolicy.HARDWARE_REQUIRED && hasVideo == true && initializedName != null &&
             !evidence.satisfiesRequired(true, initializedName)) return reject(YlFailureKind.DECODER_UNAVAILABLE)
