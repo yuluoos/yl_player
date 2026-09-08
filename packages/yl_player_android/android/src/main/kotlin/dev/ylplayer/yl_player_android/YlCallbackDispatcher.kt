@@ -6,6 +6,8 @@ import kotlinx.coroutines.*
 /** Reducer ingress. Called on the main looper with the identity of the original event. */
 internal interface YlPlayerEventSink {
     fun onState(state: AndroidStateMessage)
+    /** Synchronous ingress failure is terminal; previously enqueued states are irrevocable. */
+    fun onBoundaryFailure(error: Throwable) {}
     fun onStateDelta(delta: AndroidStateDeltaMessage)
     fun onFirstFrame(event: AndroidFirstFrameMessage)
     fun onRetryScheduled(event: AndroidRetryScheduledMessage)
@@ -57,6 +59,12 @@ internal class YlCallbackDispatcher(
         generation++
         queue.clear()
         scope.cancel()
+    }
+
+    override fun onBoundaryFailure(error: Throwable) {
+        if (closed) return
+        close()
+        onFailure(error)
     }
 
     override fun onState(state: AndroidStateMessage) {

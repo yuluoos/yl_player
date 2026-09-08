@@ -24,6 +24,8 @@ internal class YlPlayerRegistry(
     private val closing = mutableMapOf<String, Deferred<Throwable?>>()
     private var nextId = 1L
     private var detached = false
+    private var backgrounded = false
+    private val leases = YlDecoderLeaseCoordinator(dispatcher)
 
     override fun create(request: AndroidCreateRequest): AndroidCreateReply {
         var texture: TextureRegistry.SurfaceTextureEntry? = null
@@ -37,6 +39,8 @@ internal class YlPlayerRegistry(
             val suffix = "p${nextId++}-${UUID.randomUUID()}"
             texture = textures.createSurfaceTexture()
             session = createSession(texture)
+            session.bindLeases(leases)
+            if (backgrounded) session.onBackground()
             host = YlPigeonPlayerHost(
                 suffix, texture, messenger, session, failures, dispatcher, checkMainThread,
                 remove = { beginDispose(suffix)?.await()?.let { throw it } },
@@ -91,13 +95,17 @@ internal class YlPlayerRegistry(
     fun detach() {
         if (detached) return
         detached = true
+        leases.detach()
         // Dispatchers.Main posts cleanup: every handler is invalidated before any await resumes.
         players.keys.toList().forEach { beginDispose(it, reportFailure = true) }
     }
 
-    fun onForeground() = forEachSession { onForeground() }
-    fun onBackground() = forEachSession { onBackground() }
-    fun onTrimMemory(level: Int) = forEachSession { onTrimMemory(level) }
+    fun onForeground() { backgrounded = false; forEachSession { onForeground() } }
+    fun onBackground() { backgrounded = true; forEachSession { onBackground() } }
+    fun onTrimMemory(level: Int) {
+        if (level >= android.content.ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) backgrounded = true
+        forEachSession { onTrimMemory(level) }
+    }
     fun onConfigurationChanged() = forEachSession { onConfigurationChanged() }
 
     private fun forEachSession(action: YlPlayerSession.() -> Unit) {

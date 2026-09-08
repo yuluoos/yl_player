@@ -10,7 +10,10 @@ internal interface YlSessionVideoOutput {
     val identity: YlOutputIdentity
     fun release()
 }
-internal data class YlEngineRestorePoint(val positionMs: Long, val liveEdge: Boolean, val playbackIntended: Boolean)
+internal data class YlEngineRestorePoint(val positionMs: Long, val liveEdge: Boolean, val playbackIntended: Boolean,
+    val selectedAudioTrack: String? = null, val selectedVideoTracks: List<String> = emptyList(),
+    val speed: Double = 1.0, val volume: Double = 1.0,
+    val maxWidth: Long? = null, val maxHeight: Long? = null, val maxBitrate: Long? = null)
 internal enum class YlDecoderRequirement { DEFAULT, PREFERRED, HARDWARE_REQUIRED }
 internal data class YlPreparedSession(
     val identity: YlSessionIdentity,
@@ -22,6 +25,8 @@ internal data class YlPreparedSession(
 
 /** All suspend operations acknowledge actual worker completion. No synchronous player access. */
 internal interface YlPlaybackEngineAdapter {
+    /** Unknown media is conservatively exclusive until READY proves audio-only. */
+    val needsExclusiveLease: Boolean get() = true
     fun registerCallback(callback: (YlSessionIdentity, YlEngineEvent) -> Unit)
     suspend fun prepare()
     suspend fun activate(output: YlSessionVideoOutput)

@@ -162,9 +162,15 @@ internal class YlMedia3Core(
     fun setVolume(volume: Double) { exoPlayer.volume = volume.toFloat() }
     fun switchOutput(surface: Surface, output: YlOutputIdentity) { videoOutput.switchTo(surface, output, ::attachSurface); ensureHealthy() }
     fun snapshotRestorePoint() = YlEngineRestorePoint(if (active) max(0L, exoPlayer.currentPosition) else savedPositionMs,
-        resumeAtLiveEdge || exoPlayer.currentLiveOffset in 0..2_000L, lifecycle.state.playbackIntended)
+        resumeAtLiveEdge || exoPlayer.currentLiveOffset in 0..2_000L, lifecycle.state.playbackIntended,
+        audioTracks.firstOrNull { it.isSelected }?.id, videoTracks.filter { it.isSelected }.map { it.id },
+        requestedPlaybackSpeed.toDouble(), exoPlayer.volume.toDouble(),
+        hostQualityConstraint.maxWidth?.toLong(), hostQualityConstraint.maxHeight?.toLong(), hostQualityConstraint.maxBitrate?.toLong())
     fun restore(point: YlEngineRestorePoint) {
         savedPositionMs = point.positionMs; resumeAtLiveEdge = point.liveEdge
+        setPlaybackSpeed(point.speed)
+        setVolume(point.volume)
+        setVideoConstraints(AndroidVideoConstraintsMessage(point.maxWidth, point.maxHeight, point.maxBitrate))
         lifecycle.reduce(if (point.playbackIntended) YlLifecycleEvent.USER_PLAY else YlLifecycleEvent.USER_PAUSE)
         activate()
     }
@@ -397,8 +403,12 @@ internal class YlMedia3Core(
         // Candidates initialize privately and silently. Coordinator applies autoplay after commit.
         lifecycle.reduce(YlLifecycleEvent.USER_PAUSE)
         exoPlayer.playWhenReady = false
-        exoPlayer.prepare()
+        // No decoder is acquired during candidate preparation. Lease activation starts it.
         emitState()
+    }
+
+    fun initializeDecoder() {
+        exoPlayer.prepare()
         refreshStallWatchdog()
     }
 

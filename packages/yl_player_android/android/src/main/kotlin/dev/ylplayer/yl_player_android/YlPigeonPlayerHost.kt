@@ -20,6 +20,7 @@ import kotlinx.coroutines.*
 internal interface YlPlayerSession {
     val initialState: AndroidStateMessage
     val capabilities: AndroidCapabilitiesMessage
+    fun bindLeases(leases: YlDecoderLeaseCoordinator) {}
     fun attach(events: YlPlayerEventSink)
     fun assess(request: AndroidAssessRequest): AndroidAssessmentReply
     suspend fun load(request: AndroidLoadRequest): AndroidLoadReply

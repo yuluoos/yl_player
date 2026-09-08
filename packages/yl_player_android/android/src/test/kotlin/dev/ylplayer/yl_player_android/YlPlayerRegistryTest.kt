@@ -14,6 +14,15 @@ import kotlin.test.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlPlayerRegistryTest {
+    @Test fun `new player inherits registry background state`() = runTest {
+        val fixture = RegistryFixture(StandardTestDispatcher(testScheduler))
+        fixture.registry.onBackground()
+        fixture.registry.create(createRequest())
+        assertEquals(listOf("background"), fixture.sessions.single().lifecycleCalls)
+        fixture.registry.detach()
+        runCurrent()
+    }
+
     @Test
     fun `plugin registers only the generated factory and removes its lifecycle registrations`() = runTest {
         val fixture = RegistryFixture(StandardTestDispatcher(testScheduler))

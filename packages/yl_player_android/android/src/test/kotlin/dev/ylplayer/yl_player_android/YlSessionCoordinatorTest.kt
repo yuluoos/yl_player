@@ -7,6 +7,167 @@ import kotlin.test.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlSessionCoordinatorTest {
+    @Test fun `synchronous publication failure closes accepted session without restoring former`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        f.coordinator.load(request("old"))
+        f.events.stateObserved = { if (it.loadRequestId == "new") error("sink") }
+        assertFails { f.coordinator.load(request("new")) }
+        runCurrent()
+        assertEquals("new", f.events.states.last().loadRequestId)
+        assertEquals(0, f.engines.first().restores)
+        assertTrue(f.engines.all { it.disposals > 0 })
+        assertEquals(1, f.output.releases)
+        f.finish()
+    }
+
+    @Test fun `stop and close retain lease until acknowledged disposal while stop fences presentation`() = runTest {
+        for (close in listOf(false, true)) {
+            val dispatcher = StandardTestDispatcher(testScheduler)
+            val shared = YlDecoderLeaseCoordinator(dispatcher) { testScheduler.currentTime }
+            val first = SessionFixture(dispatcher, 1).also { it.coordinator.bindLeases(shared) }
+            val second = SessionFixture(dispatcher, 2).also { it.coordinator.bindLeases(shared) }
+            first.coordinator.load(request("old"))
+            val release = CompletableDeferred<Unit>()
+            first.engines.single().release = release
+            val stopped = async { if (close) first.coordinator.close().await() else first.coordinator.stop() }
+            runCurrent()
+            if (!close) assertEquals(AndroidPlaybackStatus.IDLE, first.events.states.last().status)
+            assertFalse(stopped.isCompleted)
+            val next = FakeSessionEngine()
+            second.next = next
+            val load = async { second.coordinator.load(request("new")) }
+            runCurrent()
+            assertEquals(0, next.activationCalls)
+            assertFalse(load.isCompleted)
+            release.complete(Unit); runCurrent()
+            stopped.await(); load.await()
+            assertEquals(1, next.activationCalls)
+            first.finish(); second.finish()
+        }
+    }
+
+    @Test fun `rollback uses current position after earlier seek has advanced`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        val old = f.coordinator.load(request("old"))
+        f.coordinator.seekTo(AndroidSeekCommand(old.sessionId, 100)); runCurrent()
+        f.engines.single().position = 900
+        f.next = FakeSessionEngine().apply { activationError = IllegalStateException() }
+        assertFailsWith<IllegalStateException> { f.coordinator.load(request("new")) }
+        assertEquals(900L, f.engines.first().position)
+        f.finish()
+    }
+
+    @Test fun `controls changed while peer activation fails survive rollback`() = runTest {
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        val shared = YlDecoderLeaseCoordinator(dispatcher) { testScheduler.currentTime }
+        val first = SessionFixture(dispatcher, 1).also { it.coordinator.bindLeases(shared) }
+        val second = SessionFixture(dispatcher, 2).also { it.coordinator.bindLeases(shared) }
+        val old = first.coordinator.load(request("old").withAutoplay(true)); runCurrent()
+        val hold = CompletableDeferred<Unit>()
+        second.next = FakeSessionEngine().apply { activationAcknowledgement = hold; activationError = IllegalStateException() }
+        val candidate = async { runCatching { second.coordinator.load(request("new")) } }
+        runCurrent()
+        first.coordinator.setPlaybackSpeed(AndroidSpeedCommand(old.sessionId, 1.5))
+        first.coordinator.selectAudioTrack(AndroidTrackCommand(old.sessionId, "french"))
+        first.coordinator.seekTo(AndroidSeekCommand(old.sessionId, 456))
+        first.coordinator.pause(AndroidSessionCommand(old.sessionId))
+        runCurrent(); hold.complete(Unit); runCurrent()
+        assertTrue(candidate.await().isFailure)
+        val restored = first.engines.single()
+        assertEquals(1.5, restored.currentSpeed)
+        assertEquals("french", restored.currentTrack)
+        assertEquals(456L, restored.position)
+        assertFalse(restored.playing)
+        first.finish(); second.finish()
+    }
+    @Test fun `memory notification reaches candidate held in decoder activation`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        val held = FakeSessionEngine().apply { activationAcknowledgement = CompletableDeferred() }
+        f.next = held
+        val load = async { runCatching { f.coordinator.load(request("held")) } }
+        runCurrent(); f.coordinator.onTrimMemory(10); runCurrent()
+        assertEquals(listOf(10), held.memoryLevels)
+        f.coordinator.stop(); runCurrent()
+        assertTrue(load.await().isFailure)
+        held.activationAcknowledgement!!.complete(Unit)
+        f.finish()
+    }
+
+    @Test fun `volume changed after worker assignment follows committed player`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        f.coordinator.load(request("old"))
+        val assigned = CompletableDeferred<Unit>()
+        val resume = CompletableDeferred<Unit>()
+        val candidate = FakeSessionEngine().apply {
+            volumeAcknowledgement = resume
+            volumeAssigned = assigned
+        }
+        f.next = candidate
+        val load = async { f.coordinator.load(request("new")) }
+        runCurrent(); assigned.await()
+        f.coordinator.setVolume(0.3)
+        resume.complete(Unit)
+        runCurrent(); load.await(); runCurrent()
+        assertEquals(0.3, candidate.currentVolume)
+        f.finish()
+    }
+    @Test fun `pause of playing background session remains paused after lease restoration`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        val session = f.coordinator.load(request("playing").withAutoplay(true))
+        runCurrent()
+        f.coordinator.onBackground(); runCurrent()
+        f.coordinator.pause(AndroidSessionCommand(session.sessionId)); runCurrent()
+        f.coordinator.onForeground(); runCurrent()
+        assertFalse(f.engines.single().playing)
+        f.finish()
+    }
+    @Test fun `two nonexclusive sessions suspend on background and retain independent intent`() = runTest {
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        val shared = YlDecoderLeaseCoordinator(dispatcher) { testScheduler.currentTime }
+        val first = SessionFixture(dispatcher, 1).also { it.coordinator.bindLeases(shared) }
+        val second = SessionFixture(dispatcher, 2).also { it.coordinator.bindLeases(shared) }
+        first.next = FakeSessionEngine().apply { needsExclusiveLease = false }
+        second.next = FakeSessionEngine().apply { needsExclusiveLease = false }
+        first.coordinator.load(request("audio1").withAutoplay(true))
+        second.coordinator.load(request("audio2").withAutoplay(true)); runCurrent()
+        assertTrue(first.engines.single().playing && second.engines.single().playing)
+        assertNull(shared.owner)
+        first.coordinator.onBackground(); second.coordinator.onBackground(); runCurrent()
+        assertFalse(first.engines.single().playing || second.engines.single().playing)
+        first.coordinator.onForeground(); second.coordinator.onForeground(); runCurrent()
+        assertTrue(first.engines.single().playing && second.engines.single().playing)
+        first.finish(); second.finish()
+    }
+    @Test fun `peer retains metadata and reacquires lease on play`() = runTest {
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        val shared = YlDecoderLeaseCoordinator(dispatcher) { testScheduler.currentTime }
+        val first = SessionFixture(dispatcher, 1).also { it.coordinator.bindLeases(shared) }
+        val second = SessionFixture(dispatcher, 2).also { it.coordinator.bindLeases(shared) }
+        val prior = first.coordinator.load(request("old").withAutoplay(true)); runCurrent()
+        second.coordinator.load(request("new").withAutoplay(true)); runCurrent()
+        assertEquals(prior.sessionId, first.events.states.last().sessionId)
+        assertFalse(first.engines.single().playing)
+        assertEquals(0, first.engines.single().disposals)
+        first.coordinator.play(AndroidSessionCommand(prior.sessionId)); runCurrent()
+        assertTrue(first.engines.single().playing)
+        assertFalse(second.engines.single().playing)
+        first.finish(); second.finish()
+    }
+
+    @Test fun `candidate preparation failure leaves former decoder untouched`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        val old = f.coordinator.load(request("old").withAutoplay(true))
+        runCurrent()
+        val former = f.engines.single()
+        f.next = FakeSessionEngine().apply { prepareError = YlBoundaryException(YlFailureKind.SOURCE_MISSING) }
+        assertFailsWith<YlBoundaryException> { f.coordinator.load(request("candidate")) }
+        assertEquals(0, former.quiesces)
+        assertEquals(0, former.restores)
+        assertTrue(former.playing)
+        assertEquals(old.sessionId, f.events.states.last().sessionId)
+        f.finish()
+    }
+
     @Test fun `background release stays independent of unacknowledged candidate cleanup`() = runTest {
         val f = SessionFixture(StandardTestDispatcher(testScheduler))
         f.coordinator.load(request("old"))
@@ -178,7 +339,7 @@ class YlSessionCoordinatorTest {
         runCurrent()
         acknowledgement.complete(Unit)
         runCurrent()
-        assertEquals(1, f.engines.single().restores)
+        assertEquals(1, f.engines.first().restores)
         f.finish()
     }
     @Test fun `quiesce failure cannot retain a false playing state`() = runTest {
@@ -189,7 +350,7 @@ class YlSessionCoordinatorTest {
         assertEquals(AndroidPlaybackStatus.FAILED, f.events.states.last().status)
         f.finish()
     }
-    @Test fun `safe cleanup error does not skip restoration or replace original preparation failure`() = runTest {
+    @Test fun `safe cleanup error does not touch former or replace original preparation failure`() = runTest {
         val f = SessionFixture(StandardTestDispatcher(testScheduler))
         f.coordinator.load(request("one"))
         f.next = FakeSessionEngine().apply {
@@ -197,7 +358,8 @@ class YlSessionCoordinatorTest {
             release = CompletableDeferred<Unit>().apply { completeExceptionally(IllegalStateException()) }
         }
         assertEquals(YlFailureKind.SOURCE_MISSING, assertFailsWith<YlBoundaryException> { f.coordinator.load(request("two")) }.kind)
-        assertEquals(1, f.engines.first().restores)
+        assertEquals(0, f.engines.first().restores)
+        assertEquals(0, f.engines.first().quiesces)
         f.finish()
     }
     @Test fun `candidate failure callback before commit keeps former authoritative`() = runTest {
@@ -244,7 +406,7 @@ class YlSessionCoordinatorTest {
         assertFailsWith<YlBoundaryException> { f.coordinator.load(request("two")) }
         assertEquals(before, f.events.states)
         f.coordinator.play(AndroidSessionCommand(first.sessionId))
-        assertEquals(1, f.engines.first().restores)
+        assertEquals(0, f.engines.first().restores)
         f.finish()
     }
     @Test fun `commit publishes correlated loading and uses player local monotonic identity`() = runTest {
@@ -370,17 +532,27 @@ internal class SessionEvents : YlPlayerEventSink {
     override fun onRetryScheduled(event: AndroidRetryScheduledMessage) { retries += event }
     override fun onEngineChanged(event: AndroidEngineChangedMessage) = Unit
 }
-internal class SessionFixture(dispatcher: CoroutineDispatcher) {
+internal class SessionFixture(dispatcher: CoroutineDispatcher, playerId: Long = 7) {
     val output = FakeSessionOutput()
     val engines = mutableListOf<FakeSessionEngine>()
     var next: FakeSessionEngine? = null
     val events = SessionEvents()
-    val coordinator = YlSessionCoordinator(7, sessionOptions, output, YlPlaybackEngineFactory { identity, _, _ ->
+    val coordinator = YlSessionCoordinator(playerId, sessionOptions, output, YlPlaybackEngineFactory { identity, _, _ ->
         (next ?: FakeSessionEngine()).also { next = null; it.identity = identity; engines += it }
-    }, dispatcher, clockMs = { 123L }).also { it.attach(events) }
+    }, dispatcher, clockMs = { 123L }).also { it.bindLeases(YlDecoderLeaseCoordinator(dispatcher) { 123L }); it.attach(events) }
     suspend fun finish() { coordinator.close().await() }
 }
 internal class FakeSessionEngine : YlPlaybackEngineAdapter {
+    override var needsExclusiveLease = true
+    var currentVolume = 1.0
+    var currentSpeed = 1.0
+    var currentTrack: String? = null
+    var position = 0L
+    val memoryLevels = mutableListOf<Int>()
+    var activationCalls = 0
+    var activationAcknowledgement: CompletableDeferred<Unit>? = null
+    var volumeAcknowledgement: CompletableDeferred<Unit>? = null
+    var volumeAssigned: CompletableDeferred<Unit>? = null
     lateinit var identity: YlSessionIdentity
     private var callback: ((YlSessionIdentity, YlEngineEvent) -> Unit)? = null
     var preparation: CompletableDeferred<Unit>? = null
@@ -403,21 +575,25 @@ internal class FakeSessionEngine : YlPlaybackEngineAdapter {
     override fun registerCallback(callback: (YlSessionIdentity, YlEngineEvent) -> Unit) { this.callback = callback }
     fun emit(event: YlEngineEvent) { callback?.invoke(identity, event) }
     override suspend fun prepare() { preparation?.await(); prepareError?.let { throw it } }
-    override suspend fun activate(output: YlSessionVideoOutput) { onActivate?.invoke(); activationError?.let { throw it } }
-    override suspend fun quiesce(): YlEngineRestorePoint { quiesces++; quiesceAcknowledgement?.await(); quiesceError?.let { throw it }; playing = false; return YlEngineRestorePoint(0, false, playbackIntended) }
-    override suspend fun restore(point: YlEngineRestorePoint, output: YlSessionVideoOutput) { restores++; playbackIntended = point.playbackIntended; playing = playbackIntended }
+    override suspend fun activate(output: YlSessionVideoOutput) { activationCalls++; onActivate?.invoke(); activationAcknowledgement?.await(); activationError?.let { throw it } }
+    override suspend fun quiesce(): YlEngineRestorePoint { quiesces++; quiesceAcknowledgement?.await(); quiesceError?.let { throw it }; playing = false; return YlEngineRestorePoint(position, false, playbackIntended, currentTrack, speed = currentSpeed, volume = currentVolume) }
+    override suspend fun restore(point: YlEngineRestorePoint, output: YlSessionVideoOutput) { restores++; playbackIntended = point.playbackIntended; playing = playbackIntended; currentSpeed = point.speed; currentTrack = point.selectedAudioTrack; currentVolume = point.volume; position = point.positionMs }
     override suspend fun play() { playCalls++; playbackIntended = true; playing = true }
     override suspend fun pause() { playbackIntended = false; playing = false }
-    override suspend fun seekTo(positionMs: Long) = Unit
+    override suspend fun seekTo(positionMs: Long) { position = positionMs }
     override suspend fun seekToLiveEdge() = Unit
-    override suspend fun setPlaybackSpeed(speed: Double) = Unit
-    override suspend fun selectAudioTrack(trackId: String) = Unit
+    override suspend fun setPlaybackSpeed(speed: Double) { currentSpeed = speed }
+    override suspend fun selectAudioTrack(trackId: String) { currentTrack = trackId }
     override suspend fun setVideoConstraints(constraints: AndroidVideoConstraintsMessage) = Unit
-    override suspend fun setVolume(volume: Double) = Unit
+    override suspend fun setVolume(volume: Double) {
+        currentVolume = volume
+        volumeAssigned?.complete(Unit)
+        volumeAcknowledgement?.await()
+    }
     override suspend fun stop() { stops++ }
     override fun dispose(): Deferred<Unit> { disposals++; playing = false; return release ?: CompletableDeferred(Unit) }
     override suspend fun onForeground() { foregroundCalls++; foregroundAcknowledgement?.await(); backgrounded = false; playing = playbackIntended }
     override suspend fun onBackground() { backgrounded = true; playing = false }
-    override suspend fun onTrimMemory(level: Int) = Unit
+    override suspend fun onTrimMemory(level: Int) { memoryLevels += level }
     override suspend fun onConfigurationChanged() = Unit
 }

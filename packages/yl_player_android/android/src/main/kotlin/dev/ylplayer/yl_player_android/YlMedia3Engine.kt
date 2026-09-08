@@ -41,7 +41,9 @@ internal class YlMedia3Engine(
     // These fields are exclusively accessed on the owned worker.
     private var core: YlMedia3Core? = null
     private var privateOutput: YlCandidateVideoOutput? = null
-    private var ready = CompletableDeferred<Unit>()
+    private var ready = CompletableDeferred<YlEngineSnapshot>()
+    private var exclusive = true // Main-owned; unknown is conservative until READY track evidence.
+    override val needsExclusiveLease get() = exclusive
 
     override fun registerCallback(callback: (YlSessionIdentity, YlEngineEvent) -> Unit) { this.callback = callback }
     private suspend fun <T> onWorker(action: () -> T): T {
@@ -60,12 +62,11 @@ internal class YlMedia3Engine(
             requireCore().initialize()
             requireCore().prepare()
         }
-        ready.await()
     }
     private fun receive(event: YlEngineEvent) {
         // Immutable value is captured on the worker; no mutable latest session ID is consulted.
         when (event) {
-            is YlEngineEvent.Snapshot -> if (event.value.status in listOf(AndroidPlaybackStatus.READY, AndroidPlaybackStatus.PLAYING)) ready.complete(Unit)
+            is YlEngineEvent.Snapshot -> if (event.value.status in listOf(AndroidPlaybackStatus.READY, AndroidPlaybackStatus.PLAYING)) ready.complete(event.value)
             is YlEngineEvent.Failed -> ready.completeExceptionally(YlBoundaryException(event.kind))
             else -> Unit
         }
@@ -79,6 +80,12 @@ internal class YlMedia3Engine(
         }
     }
     override suspend fun activate(output: YlSessionVideoOutput) {
+        onWorker { requireCore().initializeDecoder() }
+        val prepared = ready.await()
+        exclusive = prepared.videoTracks.isNotEmpty() || prepared.audioTracks.isEmpty()
+        attachPublicOutput(output)
+    }
+    private suspend fun attachPublicOutput(output: YlSessionVideoOutput) {
         val video = output as YlVideoOutput
         val surface = video.borrowSurface() // Main-owned texture access.
         val outputIdentity = video.identity
@@ -89,13 +96,16 @@ internal class YlMedia3Engine(
         requireCore().snapshotRestorePoint().also { requireCore().deactivate() }
     }
     override suspend fun restore(point: YlEngineRestorePoint, output: YlSessionVideoOutput) {
-        activate(output)
+        attachPublicOutput(output)
         val restored = onWorker {
             ready = CompletableDeferred()
             requireCore().restore(point)
             ready
         }
         restored.await()
+        // stop() can clear track groups. Reapply the captured selection only after the restored
+        // source reports READY and its current groups exist, never against stale TrackGroups.
+        point.selectedAudioTrack?.let { track -> onWorker { requireCore().selectAudioTrack(track) } }
     }
     override suspend fun play() = onWorker { requireCore().play() }
     override suspend fun pause() = onWorker { requireCore().pause() }
@@ -110,8 +120,9 @@ internal class YlMedia3Engine(
     override suspend fun onBackground() = onWorker { requireCore().releaseForLifecycle() }
     @Suppress("DEPRECATION")
     override suspend fun onTrimMemory(level: Int) = onWorker {
-        if (level >= ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) requireCore().releaseForLifecycle()
-        else if (level >= ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW) requireCore().handleRunningLowMemory()
+        if (level >= ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) core?.releaseForLifecycle()
+        else if (level >= ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW) core?.handleRunningLowMemory()
+        Unit
     }
     override suspend fun onConfigurationChanged() {
         val output = publicOutput ?: return
