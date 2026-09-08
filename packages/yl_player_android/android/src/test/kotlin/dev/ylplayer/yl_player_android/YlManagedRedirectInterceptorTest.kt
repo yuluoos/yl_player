@@ -186,7 +186,7 @@ class YlManagedRedirectInterceptorTest {
     }
     @Test fun `connected server header stall expires and body timeout starts only after headers`() {
         MockWebServer().use { server ->
-            server.enqueue(MockResponse().setSocketPolicy(SocketPolicy.NO_RESPONSE)); server.enqueue(MockResponse().setHeadersDelay(200, TimeUnit.MILLISECONDS).setBody("ok"))
+            server.enqueue(MockResponse().setHeadersDelay(2, TimeUnit.SECONDS).setBody("late")); server.enqueue(MockResponse().setHeadersDelay(200, TimeUnit.MILLISECONDS).setBody("ok"))
             val started = System.nanoTime()
             client(server, config = network(1, headers = 350, body = 50)).newCall(Request.Builder().url(server.address("/")).build()).execute().use { assertEquals("ok", it.body!!.string()) }
             val elapsed = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - started)
@@ -317,7 +317,7 @@ class YlManagedRedirectInterceptorTest {
             assertEquals(2, server.requestCount)
         }
         MockWebServer().use { server ->
-            server.enqueue(MockResponse().setSocketPolicy(SocketPolicy.NO_RESPONSE))
+            server.enqueue(MockResponse().setHeadersDelay(2, TimeUnit.SECONDS).setBody("late"))
             val call = client(server, config = network(3, headers = 2000)).newCall(Request.Builder().url(server.address("/")).build())
             val executor = Executors.newSingleThreadExecutor()
             try {

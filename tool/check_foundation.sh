@@ -5,6 +5,7 @@ set -eu
 repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 cd "$repo_root"
 
+python3 tool/test_android_scripts.py
 flutter pub get
 flutter analyze
 flutter test packages/yl_player_platform_interface/test
@@ -21,4 +22,9 @@ if [ "$(uname -s)" = "Darwin" ]; then
 else
   echo "macOS FFmpeg ABI smoke: skipped (requires macOS)"
 fi
-dart format --output=none --set-exit-if-changed packages
+# Pinned Pigeon output is verified byte-for-byte by check_pigeon.sh.
+# Keep every handwritten schema, adapter and test in the formatting gate.
+find packages -name '*.dart' \
+  ! -path '*/.dart_tool/*' ! -path '*/build/*' \
+  ! -path 'packages/yl_player_android/lib/src/pigeon/yl_player_android.g.dart' \
+  -print0 | xargs -0 dart format --output=none --set-exit-if-changed

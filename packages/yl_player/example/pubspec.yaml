@@ -14,6 +14,7 @@ dependencies:
   yl_player: ^0.2.0-dev.1
 
 dev_dependencies:
+  yl_player_android: ^0.2.0-dev.1
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
@@ -23,6 +24,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/test_media/android_audio_only.m4a
     - assets/test_media/h264_aac.flv
     - assets/test_media/h264_mp3.flv
     - assets/test_media/hevc_aac.flv

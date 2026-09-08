@@ -13,6 +13,26 @@ class YlAdaptiveLoadControlTest {
     )
 
     @Test
+    fun `pinned Media3 prepare callback is implemented without changing adaptive profile`() {
+        val control = YlAdaptiveLoadControl(profile)
+        control.onPrepared(androidx.media3.exoplayer.analytics.PlayerId.UNSET)
+        assertEquals(profile, control.currentProfile)
+    }
+
+    @Test
+    fun `pinned Media3 selected tracks callback retains explicit buffer target`() {
+        val control = YlAdaptiveLoadControl(profile)
+        val parameters = androidx.media3.exoplayer.LoadControl.Parameters(
+            androidx.media3.exoplayer.analytics.PlayerId.UNSET,
+            androidx.media3.common.Timeline.EMPTY,
+            androidx.media3.exoplayer.LoadControl.EMPTY_MEDIA_PERIOD_ID,
+            0, 0, 1f, false, false, androidx.media3.common.C.TIME_UNSET,
+            androidx.media3.common.C.TIME_UNSET)
+        control.onTracksSelected(parameters, androidx.media3.exoplayer.source.TrackGroupArray.EMPTY, emptyArray())
+        assertEquals(profile.targetBufferBytes, control.targetBufferBytes)
+    }
+
+    @Test
     fun `loading continues below minimum while byte budget remains`() {
         assertTrue(shouldContinueLoading(1_000, 8 * MIB, profile))
     }

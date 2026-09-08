@@ -7,6 +7,22 @@ import kotlin.test.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlSessionCoordinatorTest {
+    @Test fun `foreground publishes snapshot observed during held restoration only after acknowledgement`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        f.coordinator.load(request("playing").withAutoplay(true)); runCurrent()
+        val engine = f.engines.single()
+        engine.emit(YlEngineEvent.Snapshot(YlEngineSnapshot(AndroidPlaybackStatus.PLAYING)))
+        f.coordinator.onBackground(); runCurrent()
+        val restored = CompletableDeferred<Unit>()
+        engine.restoreAcknowledgement = restored
+        engine.onRestore = { engine.emit(YlEngineEvent.Snapshot(YlEngineSnapshot(AndroidPlaybackStatus.PLAYING))) }
+        f.coordinator.onForeground(); runCurrent()
+        assertEquals(AndroidPlaybackStatus.PAUSED, f.coordinator.initialState.status)
+        restored.complete(Unit); runCurrent()
+        assertEquals(AndroidPlaybackStatus.PLAYING, f.coordinator.initialState.status)
+        f.finish()
+    }
+
     @Test fun `pending retry events replay once after initial or replacement commit before live retries`() = runTest {
         for (replacement in listOf(false, true)) {
             val f = SessionFixture(StandardTestDispatcher(testScheduler))
@@ -782,6 +798,8 @@ internal class FakeSessionEngine : YlPlaybackEngineAdapter {
     var prepareError: Throwable? = null
     var activationError: Throwable? = null
     var onActivate: (() -> Unit)? = null
+    var onRestore: (() -> Unit)? = null
+    var restoreAcknowledgement: CompletableDeferred<Unit>? = null
     var release: CompletableDeferred<Unit>? = null
     var quiesceAcknowledgement: CompletableDeferred<Unit>? = null
     var quiesceError: Throwable? = null
@@ -802,7 +820,7 @@ internal class FakeSessionEngine : YlPlaybackEngineAdapter {
     override suspend fun prepare() { preparation?.await(); prepareError?.let { throw it } }
     override suspend fun activate(output: YlSessionVideoOutput) { activationCalls++; onActivate?.invoke(); activationAcknowledgement?.await(); activationError?.let { throw it } }
     override suspend fun quiesce(): YlEngineRestorePoint { quiesces++; quiesceAcknowledgement?.await(); quiesceError?.let { throw it }; playing = false; return YlEngineRestorePoint(position, false, playbackIntended, currentTrack, speed = currentSpeed, volume = currentVolume) }
-    override suspend fun restore(point: YlEngineRestorePoint, output: YlSessionVideoOutput) { lifecycleCalls += "restore"; restores++; playbackIntended = point.playbackIntended; playing = playbackIntended; currentSpeed = point.speed; currentTrack = point.selectedAudioTrack; currentVolume = point.volume; position = point.positionMs }
+    override suspend fun restore(point: YlEngineRestorePoint, output: YlSessionVideoOutput) { lifecycleCalls += "restore"; restores++; playbackIntended = point.playbackIntended; playing = playbackIntended; currentSpeed = point.speed; currentTrack = point.selectedAudioTrack; currentVolume = point.volume; position = point.positionMs; onRestore?.invoke(); restoreAcknowledgement?.await() }
     override suspend fun play() { playCalls++; playbackIntended = true; playing = true }
     override suspend fun pause() { playbackIntended = false; playing = false }
     override suspend fun seekTo(positionMs: Long) { position = positionMs }

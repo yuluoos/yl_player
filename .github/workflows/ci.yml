@@ -45,7 +45,61 @@ jobs:
           cache: true
       - run: flutter pub get
         working-directory: ${{ github.workspace }}
-      - run: ./gradlew testDebugUnitTest --stacktrace
+      - run: sh packages/yl_player_android/tool/check_pigeon.sh
+        working-directory: ${{ github.workspace }}
+      - run: ./gradlew :yl_player_android:testDebugUnitTest --stacktrace
+
+  android-native-integration:
+    needs: android-native
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        api: [24, 36]
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: true
+      - uses: android-actions/setup-android@v3
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - run: flutter pub get
+      - name: Boot exact API emulator
+        env:
+          YL_ANDROID_API: ${{ matrix.api }}
+        run: |
+          YL_ANDROID_DEVICE_ID=$(sh tool/boot_ci_android_emulator.sh)
+          echo "YL_ANDROID_DEVICE_ID=$YL_ANDROID_DEVICE_ID" >> "$GITHUB_ENV"
+      - name: Android integration after shared JVM gate
+        env:
+          YL_ANDROID_SKIP_JVM: '1'
+        run: sh tool/check_native_android.sh
+      - name: Capture failure diagnostics
+        if: failure()
+        run: |
+          mkdir -p android-failure
+          adb devices -l > android-failure/devices.txt
+          if [ -n "$YL_ANDROID_DEVICE_ID" ]; then
+            adb -s "$YL_ANDROID_DEVICE_ID" logcat -d > android-failure/logcat.txt
+          fi
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: android-api-${{ matrix.api }}-failure
+          path: android-failure
 
   ios-native-integration:
     runs-on: macos-15

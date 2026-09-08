@@ -160,6 +160,13 @@ final class RangeMediaServer {
     HttpRequest request,
     RecordedMediaRequest recorded,
   ) async {
+    // A normal GET is valid even when this origin supports byte ranges.
+    // Media3 starts with GET and only adds Range when seeking/reopening.
+    if (request.headers.value(HttpHeaders.rangeHeader) == null) {
+      request.response.headers.set(HttpHeaders.acceptRangesHeader, 'bytes');
+      await _serveSequential(request.response, recorded);
+      return;
+    }
     final parsed = _parseRange(request.headers.value(HttpHeaders.rangeHeader));
     if (parsed == null) {
       recorded.statusCode = HttpStatus.requestedRangeNotSatisfiable;

@@ -252,6 +252,18 @@ internal class YlSessionCoordinator(
             private set
         private var quiesceOperation: Deferred<YlLeaseSnapshot>? = null
         private var committedOnce = false
+        private var restoring = false
+        private var restorationSnapshot: YlEngineSnapshot? = null
+        fun stageRestoration(event: YlEngineEvent) {
+            if (restoring && event is YlEngineEvent.Snapshot) restorationSnapshot = event.value
+        }
+        private fun beginRestore() { restoring = true; restorationSnapshot = null }
+        private fun publishRestoration() {
+            val snapshot = restorationSnapshot
+            restoring = false
+            restorationSnapshot = null
+            if (canRestore) snapshot?.let(reducer::snapshot)
+        }
         override var leaseCommitVersion = 0L
             private set
         override fun publicationFailed(error: Throwable) {
@@ -333,8 +345,10 @@ internal class YlSessionCoordinator(
         override fun activateForLease(attempt: YlLeaseAttempt, complete: (Result<Unit>) -> Unit) = operation(complete) {
             ensureResourcesUsable()
             val restore = suspended
-            if (restore == null) session.engine.activate(output) else session.engine.restore(
-                restorePoint(restore.runtime), output)
+            if (restore == null) session.engine.activate(output) else {
+                beginRestore()
+                session.engine.restore(restorePoint(restore.runtime), output)
+            }
             // Player volume can change while codec initialization is suspended.
             session.engine.setVolume(effectiveVolume())
             candidateFailure?.takeIf { pendingIdentity == session.identity }?.let { throw YlBoundaryException(it) }
@@ -353,11 +367,13 @@ internal class YlSessionCoordinator(
                 inCommit = true
                 try { commit(); committedOnce = true } finally { inCommit = false }
             }
+            publishRestoration()
         }
         override fun rollbackLease(snapshot: YlLeaseSnapshot, attempt: YlLeaseAttempt, complete: (Result<Unit>) -> Unit) = operation(complete) {
+            beginRestore()
             session.engine.restore(restorePoint(snapshot.runtime), output)
             session.engine.setVolume(effectiveVolume())
-            if (canRestore) { suspended = null; transacting = false }
+            if (canRestore) { suspended = null; transacting = false; publishRestoration() }
         }
         override fun deactivateAfterLeaseTransfer() {
             transacting = false
@@ -382,7 +398,11 @@ internal class YlSessionCoordinator(
             }
             return
         }
-        if (active?.identity != identity || transacting || activeLease?.suspended != null) return
+        if (active?.identity != identity) return
+        if (transacting || activeLease?.suspended != null) {
+            activeLease?.stageRestoration(event)
+            return
+        }
         when (event) {
             is YlEngineEvent.Snapshot -> {
                 reducer.snapshot(event.value)

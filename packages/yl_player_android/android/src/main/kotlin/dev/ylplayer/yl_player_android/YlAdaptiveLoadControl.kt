@@ -79,6 +79,16 @@ internal class YlAdaptiveLoadControl(initialProfile: YlBufferProfile) : LoadCont
         applyProfile(normalProfile)
     }
 
+    // Each engine owns this allocator; preparation does not reset the selected
+    // adaptive profile. Media3 1.11 defaults throw unless these callbacks exist.
+    override fun onPrepared(playerId: PlayerId) = Unit
+
+    override fun onTracksSelected(
+        parameters: LoadControl.Parameters,
+        trackGroups: androidx.media3.exoplayer.source.TrackGroupArray,
+        trackSelections: Array<out androidx.media3.exoplayer.trackselection.ExoTrackSelection?>,
+    ) = Unit
+
     override fun getAllocator(playerId: PlayerId): Allocator = allocator
 
     override fun shouldContinueLoading(parameters: LoadControl.Parameters): Boolean {

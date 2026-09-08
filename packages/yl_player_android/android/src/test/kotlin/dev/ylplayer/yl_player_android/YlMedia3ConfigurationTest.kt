@@ -6,6 +6,16 @@ import org.mockito.Mockito.*
 import kotlin.test.*
 
 class YlMedia3ConfigurationTest {
+    @Test fun `typed load strategies map to preserved adaptive profiles with automatic audio ownership disabled`() {
+        for ((kind, mode) in listOf(AndroidBufferKind.AUTOMATIC to "automatic",
+            AndroidBufferKind.LOW_LATENCY to "lowLatency", AndroidBufferKind.SMOOTH_PLAYBACK to "stable")) {
+            val load = request("config").options.copy(bufferStrategy = AndroidBufferStrategyMessage(kind))
+            val configuration = createMedia3Configuration(source(), load, sessionOptions)
+            assertEquals(mode, configuration.bufferRequest().mode)
+            assertFalse(configuration.managesAudioSession)
+        }
+    }
+
     @Test fun `shared transient pause keeps play intent and existing three second resource grace`() = withCore { core, player, _ ->
         core.play()
         core.pauseForAudioFocus()
