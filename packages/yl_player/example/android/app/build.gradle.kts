@@ -41,3 +41,9 @@ kotlin {
 flutter {
     source = "../.."
 }
+
+// The debug APK's test observer uses the same pinned Media3 as the plugin.
+dependencies {
+    debugImplementation("androidx.media3:media3-common:1.11.0")
+    debugImplementation("androidx.media3:media3-exoplayer:1.11.0")
+}

@@ -7,6 +7,8 @@ import 'package:integration_test/integration_test.dart';
 import 'package:yl_player/yl_player.dart';
 import 'support/android_test_support.dart';
 import 'support/range_media_server.dart';
+import 'support/gated_android_media_server.dart';
+import 'support/android_frame_observation.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -55,7 +57,7 @@ void main() {
       expect(
         events.whereType<YlFirstFrameEvent>(),
         isEmpty,
-        reason: 'Private candidate output cannot publish a frame',
+        reason: 'A candidate with held input cannot publish a frame',
       );
       final newer = await player.load(source);
       await cancelled;
@@ -65,6 +67,116 @@ void main() {
       await expectLater(
         old.seekTo(Duration.zero),
         throwsA(failureCode(YlFailureCodes.sessionStale)),
+      );
+    },
+  );
+  testWidgets(
+    'Decoded private candidate frame is suppressed until authoritative public output',
+    (tester) async {
+      final original = await RangeMediaServer.start(
+        asset: 'assets/test_media/network_seek_h264_aac.mkv',
+      );
+      final gated = await GatedAndroidMediaServer.start();
+      addTearDown(original.close);
+      addTearDown(gated.close);
+      final player = await YlPlayerController.create();
+      addTearDown(player.dispose);
+      await tester.pumpWidget(
+        MaterialApp(home: YlPlayerView(controller: player)),
+      );
+      final old = await player.load(
+        YlNetworkSource(original.mediaUri, format: YlMediaFormat.matroska),
+      );
+      await old.play();
+      await old.firstFrame.timeout(const Duration(seconds: 20));
+      final publicFrames = <(YlFirstFrameEvent, YlPlaybackSessionId?, int)>[];
+      final sub = player.events
+          .where((event) => event is YlFirstFrameEvent)
+          .cast<YlFirstFrameEvent>()
+          .listen((event) {
+            publicFrames.add((
+              event,
+              player.state.sessionId,
+              player.state.revision,
+            ));
+          });
+      addTearDown(sub.cancel);
+      final observer = AndroidFrameObservation();
+      addTearDown(observer.remove);
+      var settled = false;
+      final loading = player.load(
+        YlNetworkSource(gated.uri, format: YlMediaFormat.matroska),
+      );
+      // Observe rejection immediately too, so cleanup does not create an unhandled Future.
+      final observedLoad = loading.whenComplete(() => settled = true);
+      unawaited(observedLoad.then<void>((_) {}, onError: (Object _) {}));
+      await gated.requested.future.timeout(const Duration(seconds: 10));
+      final installed = await observer.install(old.id.value);
+      gated.prefix.complete();
+      await gated.deliveredPrefix.future.timeout(const Duration(seconds: 5));
+      Map<Object?, Object?>? privateFrame;
+      final deadline = DateTime.now().add(const Duration(seconds: 5));
+      while (privateFrame == null && DateTime.now().isBefore(deadline)) {
+        final records = await observer.read();
+        for (final record in records) {
+          if (record['kind'] == 'frame' && record['private'] == true) {
+            privateFrame = record;
+          }
+        }
+        if (privateFrame == null) {
+          await Future<void>.delayed(const Duration(milliseconds: 50));
+        }
+      }
+      expect(
+        privateFrame,
+        isNotNull,
+        reason:
+            'Real Media3 must have rendered the valid prefix to its actual private Surface',
+      );
+      expect(privateFrame!['decoderSeen'], isTrue);
+      expect(privateFrame['matchesCurrentSurface'], isTrue);
+      expect(privateFrame['public'], isFalse);
+      expect(privateFrame['surfaceId'], installed['privateSurfaceId']);
+      expect(privateFrame['sessionId'], installed['sessionId']);
+      expect(gated.bodyBytesSent, greaterThan(0));
+      expect(settled, isFalse);
+      expect(player.state.sessionId, old.id);
+      expect(publicFrames, isEmpty);
+      await Future<void>.delayed(const Duration(milliseconds: 250));
+      expect(settled, isFalse);
+      expect(publicFrames, isEmpty);
+      gated.remainder.complete();
+      final current = await observedLoad.timeout(const Duration(seconds: 20));
+      expect(current.id.value, installed['sessionId']);
+      await current.play();
+      await current.firstFrame.timeout(const Duration(seconds: 15));
+      final records = await observer.read();
+      final publicNativeFrames = records
+          .where(
+            (record) => record['kind'] == 'frame' && record['public'] == true,
+          )
+          .toList();
+      expect(publicNativeFrames, isNotEmpty);
+      final publicNative = publicNativeFrames.first;
+      expect(publicNative['private'], isFalse);
+      expect(publicNative['matchesCurrentSurface'], isTrue);
+      expect(publicNative['surfaceId'], isNot(privateFrame['surfaceId']));
+      expect(
+        publicNative['timeMs'] as int,
+        greaterThan(privateFrame['timeMs'] as int),
+      );
+      expect(publicFrames, hasLength(1));
+      final (event, stateAtEvent, revisionAtEvent) = publicFrames.single;
+      expect(event.sessionId, current.id);
+      expect(stateAtEvent, current.id);
+      expect(revisionAtEvent, greaterThanOrEqualTo(event.revision));
+      expect(event.occurredAt.inMilliseconds, publicNative['timeMs']);
+      await expectLater(
+        old.play(),
+        throwsA(failureCode(YlFailureCodes.sessionStale)),
+      );
+      debugPrint(
+        'YL_PRIVATE_FRAME_PROOF private=${privateFrame['surfaceId']} public=${publicNative['surfaceId']} privateMs=${privateFrame['timeMs']} publicMs=${publicNative['timeMs']}',
       );
     },
   );

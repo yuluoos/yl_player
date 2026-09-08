@@ -41,7 +41,34 @@ void main() {
       expect(player.state.videoGeometry, isNotNull);
       expect(player.state.audioTracks, isNotEmpty);
       await session.pause();
-      await session.seekTo(const Duration(seconds: 4));
+      const seekTarget = Duration(seconds: 4);
+      await session.seekTo(seekTarget);
+      await waitForState(
+        player,
+        (state) =>
+            (state.timeline.position - seekTarget).inMilliseconds.abs() <=
+                250 &&
+            (state.status == YlPlaybackStatus.paused ||
+                state.status == YlPlaybackStatus.ready),
+      );
+      final pausedSeekPosition = player.state.timeline.position;
+      await Future<void>.delayed(const Duration(milliseconds: 500));
+      expect(player.state.sessionId, session.id);
+      expect(player.state.status, isNot(YlPlaybackStatus.playing));
+      expect(
+        (player.state.timeline.position - pausedSeekPosition).inMilliseconds
+            .abs(),
+        lessThanOrEqualTo(100),
+        reason: 'The resulting seek position stays stable while paused',
+      );
+      await session.play();
+      await waitForState(
+        player,
+        (state) =>
+            state.status == YlPlaybackStatus.playing &&
+            state.timeline.position >
+                seekTarget + const Duration(milliseconds: 500),
+      );
       await player.stop();
       await expectLater(
         session.play(),
