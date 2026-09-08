@@ -101,6 +101,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     var response: HTTPURLResponse?
     var manifestData = Data()
     var redirectCount = 0
+    var credentialsStripped = false
     var bytesToSkip: Int64 = 0
     var bytesDelivered = 0
     var task: URLSessionDataTask?
@@ -177,6 +178,8 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   )
 
   private let originURL: URL
+  private var strippedResources = Set<String>()
+  private let hasExplicitCredentials: Bool
   private let headerPolicy: YlHlsHeaderPolicy
   private let configuration: YlNetworkConfiguration
   private let mediaProxy: YlHlsMediaProxy
@@ -189,15 +192,18 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   init(
     originURL: URL,
     headers: [String: String],
+    credentials: [String: String] = [:],
     configuration: YlNetworkConfiguration,
     sessionConfiguration: URLSessionConfiguration = .ephemeral
   ) throws {
     self.originURL = originURL
-    self.headerPolicy = YlHlsHeaderPolicy(originURL: originURL, headers: headers)
+    self.hasExplicitCredentials = !credentials.isEmpty
+    self.headerPolicy = YlHlsHeaderPolicy(originURL: originURL, headers: headers, credentials: credentials)
     self.configuration = configuration
     self.mediaProxy = try YlHlsMediaProxy(
       originURL: originURL,
       headers: headers,
+      credentials: credentials,
       configuration: configuration
     )
     super.init()
@@ -243,8 +249,9 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     }
 
     let cacheKey = destination.absoluteString
+    let credentialsStripped = YlHlsURLCodec.credentialsStripped(loadingRequest.url) || !headerPolicy.isSourceOrigin(destination) || stateLock.withLock { strippedResources.contains(cacheKey) }
     let loaderState = stateLock.withLock {
-      (cancelled: cancelled, cached: cachedResponses[cacheKey])
+      (cancelled: cancelled, cached: cachedResponses["\(credentialsStripped):\(cacheKey)"])
     }
     if loaderState.cancelled {
       loadingRequest.finishLoading(with: Self.cancelledError())
@@ -258,20 +265,31 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     let isManifest = resourceKind == .manifest
     let rangeHeader = isManifest ? nil : Self.rangeHeader(for: loadingRequest)
     if resourceKind == .media {
-      loadingRequest.redirect(to: makeRequest(
-        url: destination,
-        rangeHeader: rangeHeader
-      ))
+      do {
+        if hasExplicitCredentials {
+          var proxyRequest = URLRequest(url: try mediaProxy.proxyURL(for: destination, credentialsStripped: credentialsStripped))
+          if let rangeHeader { proxyRequest.setValue(rangeHeader, forHTTPHeaderField: "Range") }
+          loadingRequest.redirect(to: proxyRequest)
+        } else {
+          // Preserve the absent-metadata v1 route. V2 credential sources always
+          // use the controlled proxy so AVFoundation cannot restore credentials.
+          loadingRequest.redirect(to: makeRequest(url: destination, rangeHeader: rangeHeader, credentialsStripped: credentialsStripped))
+        }
+      } catch {
+        loadingRequest.finishLoading(with: Self.internalError(error))
+        return true
+      }
       loadingRequest.finishLoading()
       return true
     }
-    let request = makeRequest(url: destination, rangeHeader: rangeHeader)
+    let request = makeRequest(url: destination, rangeHeader: rangeHeader, credentialsStripped: credentialsStripped)
     let record = TaskRecord(
       request: loadingRequest,
       destinationURL: destination,
       rangeHeader: rangeHeader,
       isManifest: isManifest
     )
+    record.credentialsStripped = credentialsStripped
     let task = session.dataTask(with: request)
     record.task = task
     let accepted = stateLock.withLock { () -> Bool in
@@ -361,11 +379,11 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     cancelAll()
   }
 
-  private func makeRequest(url: URL, rangeHeader: String?) -> URLRequest {
+  private func makeRequest(url: URL, rangeHeader: String?, credentialsStripped: Bool = false) -> URLRequest {
     var request = URLRequest(url: url)
     request.timeoutInterval = TimeInterval(max(1, configuration.readTimeoutMs)) / 1_000
     let ownedHeaders = Set(["range", "if-range", "host", "content-length"])
-    for (name, value) in headerPolicy.headers(for: url)
+    for (name, value) in headerPolicy.headers(for: url, credentialsStripped: credentialsStripped)
       where !ownedHeaders.contains(name.lowercased()) {
       request.setValue(value, forHTTPHeaderField: name)
     }
@@ -396,7 +414,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
       if !cancelled,
          case let .success(cached?) = result,
          record.cacheKey == originURL.absoluteString {
-        cachedResponses[record.cacheKey] = cached
+        cachedResponses["\(record.credentialsStripped):\(record.cacheKey)"] = cached
       }
       return record
     }
@@ -651,7 +669,8 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
       let rewritten = try YlHlsManifestRewriter.rewrite(
         data: record.manifestData,
         baseURL: record.destinationURL,
-        mediaURL: { [mediaProxy] in try mediaProxy.proxyURL(for: $0) }
+        credentialsStripped: record.credentialsStripped,
+        mediaURL: { [mediaProxy] in try mediaProxy.proxyURL(for: $0, credentialsStripped: record.credentialsStripped) }
       )
       let response = record.response
       finish(task: task, result: .success(CachedResponse(
@@ -678,6 +697,8 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
       completionHandler(nil)
       return
     }
+    record.credentialsStripped = record.credentialsStripped || !headerPolicy.isSourceOrigin(destination)
+    if record.credentialsStripped { _ = stateLock.withLock { strippedResources.insert(record.cacheKey) } }
     record.redirectCount += 1
     guard record.redirectCount <= configuration.maxRedirects else {
       completionHandler(nil)
@@ -700,7 +721,7 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
       return
     }
     record.destinationURL = destination
-    completionHandler(makeRequest(url: destination, rangeHeader: record.rangeHeader))
+    completionHandler(makeRequest(url: destination, rangeHeader: record.rangeHeader, credentialsStripped: record.credentialsStripped))
   }
 }
 
@@ -713,6 +734,7 @@ final class YlPreparedHlsAsset {
   init(
     originURL: URL,
     headers: [String: String],
+    credentials: [String: String] = [:],
     configuration: YlNetworkConfiguration,
     cancellationToken: YlOpenCancellationToken,
     sessionConfiguration: URLSessionConfiguration = .ephemeral
@@ -720,6 +742,7 @@ final class YlPreparedHlsAsset {
     let loader = try YlHlsResourceLoader(
       originURL: originURL,
       headers: headers,
+      credentials: credentials,
       configuration: configuration,
       sessionConfiguration: sessionConfiguration
     )

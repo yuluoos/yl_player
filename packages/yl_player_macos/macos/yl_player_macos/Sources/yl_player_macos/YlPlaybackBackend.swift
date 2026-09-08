@@ -95,3 +95,57 @@ final class YlBackendSlot {
     dispose()
   }
 }
+
+/// A private candidate cannot publish state or milestones until slot commit.
+/// Its initialized full snapshot is retained; candidate first-frame markers are
+/// discarded because they do not establish committed public-output evidence.
+final class YlLegacyCommitEmitter {
+  private let emit: ([String: Any?]) -> Void
+  private let lock = NSRecursiveLock()
+  private var committed = false
+  private var invalidated = false
+  private var generation: UInt64?
+  private var initialState: [String: Any?]?
+
+  init(emit: @escaping ([String: Any?]) -> Void) { self.emit = emit }
+
+  func accept(_ event: [String: Any?]) {
+    lock.lock()
+    defer { lock.unlock() }
+    guard !invalidated else { return }
+    if committed { publish(event) }
+    else if event["type"] as? String == "state" { initialState = event }
+  }
+
+  func commit(generation: UInt64? = nil) {
+    lock.lock()
+    defer { lock.unlock() }
+    guard !invalidated else { return }
+    self.generation = generation
+    committed = true
+    if let initialState { publish(initialState) }
+    initialState = nil
+  }
+
+  func invalidate() {
+    lock.lock()
+    defer { lock.unlock() }
+    invalidated = true
+    initialState = nil
+  }
+
+  private func publish(_ event: [String: Any?]) {
+    // Decide candidate visibility when the callback occurs, then fence again
+    // when a background retry reaches the public main-thread channel.
+    guard Thread.isMainThread else {
+      DispatchQueue.main.async { [weak self] in self?.publish(event) }
+      return
+    }
+    lock.lock()
+    defer { lock.unlock() }
+    guard committed, !invalidated else { return }
+    var value = event
+    if value["generation"] == nil, let generation { value["generation"] = generation }
+    emit(value)
+  }
+}

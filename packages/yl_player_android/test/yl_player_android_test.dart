@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player_android/yl_player_android.dart';
@@ -7,202 +6,66 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-
-  const methods = MethodChannel('yl_player_android_test/methods');
-  late StreamController<Object?> nativeEvents;
-  late List<MethodCall> calls;
-  late bool failDispose;
-  PlatformException? commandError;
-
-  setUp(() {
-    nativeEvents = StreamController<Object?>.broadcast(sync: true);
-    calls = <MethodCall>[];
-    failDispose = false;
-    commandError = null;
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(methods, (call) async {
-          calls.add(call);
-          if (call.method == 'create') {
-            return <String, Object?>{'playerId': 7, 'textureId': 42};
-          }
-          if (call.method == 'dispose' && failDispose) {
-            throw PlatformException(code: 'dispose.failed');
-          }
-          if (call.method == 'command' && commandError != null) {
-            throw commandError!;
-          }
-          return null;
-        });
-  });
-
-  tearDown(() async {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(methods, null);
-    await nativeEvents.close();
-  });
-
-  test('registerWith installs the Android implementation', () {
+  test('registerWith installs v2 implementation', () {
     YlPlayerAndroid.registerWith();
     expect(YlPlayerPlatform.instance, isA<YlPlayerAndroid>());
   });
-
-  test('creates a texture player and delegates the command surface', () async {
-    final platform = YlPlayerAndroid(
+  test('injected channels create and load a session before commands', () async {
+    const methods = MethodChannel('registration-android');
+    final wire = StreamController<Object?>.broadcast(sync: true);
+    final calls = <MethodCall>[];
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(methods, (call) async {
+          calls.add(call);
+          if (call.method == 'create') return {'playerId': 7, 'textureId': 42};
+          if (call.method == 'command') {
+            final args = call.arguments as Map;
+            if (args['name'] == 'requestState' || args['name'] == 'open') {
+              final source = (args['arguments'] as Map)['source'] as Map?;
+              wire.add({
+                'playerId': 7,
+                'type': 'state',
+                'protocolVersion': 1,
+                'generation': source == null ? 0 : 3,
+                'loadToken': source?['loadToken'],
+                'state': {
+                  'status': source == null ? 'idle' : 'opening',
+                  'engine': 'media3',
+                  'capabilities': <String, Object?>{},
+                },
+              });
+              if (source != null) return {'loadToken': source['loadToken']};
+            }
+          }
+          return null;
+        });
+    final player = await YlPlayerAndroid(
       methodChannel: methods,
-      nativeEvents: nativeEvents.stream,
-    );
-    final player = await platform.createPlayer(const YlPlayerConfiguration());
-
+      nativeEvents: wire.stream,
+    ).createPlayer(const YlPlayerOptions());
     expect(player.textureId.value, 42);
-    await player.open(
-      YlMediaSource.network(
-        Uri.parse('https://media.test/live.flv'),
-        isLive: true,
-        formatHint: YlFormatHint.httpFlv,
-        headers: const {'Referer': 'https://media.test/'},
-      ),
+    expect(calls.first.arguments['configuration']['audioPolicy'], 'appManaged');
+    final load = await player.load(
+      YlNetworkSource(Uri.parse('https://example.test/a.mp4')),
     );
-    await player.play();
-    await player.pause();
-    await player.seekTo(const Duration(seconds: 3));
-    await player.seekToLiveEdge();
-    await player.setPlaybackSpeed(1.25);
-    await player.setVolume(0.5);
-    await player.selectAudioTrack('audio-1');
-    await player.setQualityConstraint(
-      const YlQualityConstraint(maxWidth: 1280, maxBitrate: 2500000),
+    await player.play(load.sessionId);
+    await player.pause(load.sessionId);
+    await player.seekTo(load.sessionId, const Duration(seconds: 1));
+    await player.seekToLiveEdge(load.sessionId);
+    await player.setPlaybackSpeed(load.sessionId, 1.25);
+    await player.selectAudioTrack(load.sessionId, 'a');
+    await player.setVideoConstraints(
+      load.sessionId,
+      const YlVideoConstraints(maxWidth: 1280),
     );
+    await player.setVolume(.5);
+    await player.stop();
     await player.dispose();
     await player.dispose();
-
-    expect(calls.first.method, 'create');
-    expect(
-      ((calls.first.arguments as Map)['configuration'] as Map)['decoderPolicy'],
-      'hardwareOnly',
-    );
-    expect(calls.where((call) => call.method == 'command').length, 9);
     expect(calls.where((call) => call.method == 'dispose'), hasLength(1));
-  });
-
-  test('command rejection preserves native state and emits no event', () async {
-    final platform = YlPlayerAndroid(
-      methodChannel: methods,
-      nativeEvents: nativeEvents.stream,
-    );
-    final player = await platform.createPlayer(const YlPlayerConfiguration());
-    final states = <YlPlayerState>[];
-    final events = <YlPlayerEvent>[];
-    final stateSubscription = player.states.listen(states.add);
-    final eventSubscription = player.events.listen(events.add);
-    nativeEvents.add(<String, Object?>{
-      'playerId': 7,
-      'type': 'state',
-      'state': <String, Object?>{'status': 'playing', 'engine': 'media3'},
-    });
-    states.clear();
-    commandError = PlatformException(
-      code: 'decoder.unsupported',
-      details: const <String, Object?>{
-        'category': 'decoderUnsupported',
-        'code': 'decoder.unsupported',
-        'message': 'Unsupported stream.',
-      },
-    );
-
-    await expectLater(
-      player.play(),
-      throwsA(
-        isA<YlPlayerError>().having(
-          (error) => error.code,
-          'code',
-          'decoder.unsupported',
-        ),
-      ),
-    );
-    expect(player.state.status, YlPlaybackStatus.playing);
-    expect(player.state.error, isNull);
-    expect(states, isEmpty);
-    expect(events, isEmpty);
-
-    await stateSubscription.cancel();
-    await eventSubscription.cancel();
-    await player.dispose();
-  });
-
-  test('mirrors multiplexed native state and errors', () async {
-    final platform = YlPlayerAndroid(
-      methodChannel: methods,
-      nativeEvents: nativeEvents.stream,
-    );
-    final player = await platform.createPlayer(const YlPlayerConfiguration());
-    final states = <YlPlayerState>[];
-    final events = <YlPlayerEvent>[];
-    final stateSubscription = player.states.listen(states.add);
-    final eventSubscription = player.events.listen(events.add);
-
-    nativeEvents.add(<String, Object?>{
-      'playerId': 7,
-      'type': 'state',
-      'state': <String, Object?>{
-        'status': 'playing',
-        'positionMs': 1500,
-        'durationMs': 10000,
-        'bufferedPositionMs': 4000,
-        'isLive': true,
-        'isSeekable': true,
-        'isAtLiveEdge': false,
-        'liveOffsetMs': 3000,
-        'videoWidth': 1920,
-        'videoHeight': 1080,
-        'engine': 'media3',
-        'isHardwareDecoding': true,
-        'decoderName': 'c2.android.avc.decoder',
-        'metrics': <String, Object?>{
-          'androidDeviceTier': 'constrained',
-          'targetBufferBytes': 24 * 1024 * 1024,
-          'adaptiveDowngradeCount': 1,
-          'surfaceRebuildCount': 2,
-          'selectedVideoBitrate': 2500000,
-        },
-      },
-    });
-    nativeEvents.add(<String, Object?>{
-      'playerId': 7,
-      'type': 'error',
-      'error': <String, Object?>{
-        'category': 'network',
-        'code': 'network.io',
-        'message': 'Connection failed.',
-        'platformDiagnostic': 'timeout',
-      },
-    });
-
-    expect(states.single.status, YlPlaybackStatus.playing);
-    expect(states.single.videoSize?.width, 1920);
-    expect(states.single.engine, YlPlaybackEngine.media3);
-    expect(states.single.metrics.androidDeviceTier, 'constrained');
-    expect(states.single.metrics.targetBufferBytes, 24 * 1024 * 1024);
-    expect(states.single.metrics.adaptiveDowngradeCount, 1);
-    expect(states.single.metrics.surfaceRebuildCount, 2);
-    expect(states.single.metrics.selectedVideoBitrate, 2500000);
-    expect(events.single, isA<YlErrorEvent>());
-
-    await stateSubscription.cancel();
-    await eventSubscription.cancel();
-    await player.dispose();
-  });
-
-  test('cleans up locally when native disposal reports an error', () async {
-    final platform = YlPlayerAndroid(
-      methodChannel: methods,
-      nativeEvents: nativeEvents.stream,
-    );
-    final player = await platform.createPlayer(const YlPlayerConfiguration());
-    failDispose = true;
-
-    await player.dispose();
-
-    expect(player.state.status, YlPlaybackStatus.disposed);
     expect(player.textureId.value, isNull);
+    await wire.close();
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(methods, null);
   });
 }

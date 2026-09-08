@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:yl_player/yl_player.dart';
+import 'support/playback_sessions.dart';
 
 import 'support/authenticated_hls_server.dart';
 
@@ -15,11 +16,7 @@ void main() {
   ) async {
     final server = await AuthenticatedHlsServer.start();
     addTearDown(server.close);
-    final controller = YlPlayerController(
-      configuration: const YlPlayerConfiguration(
-        bufferMode: YlBufferMode.lowLatency,
-      ),
-    );
+    final controller = await YlPlayerController.create();
 
     await tester.pumpWidget(
       MaterialApp(
@@ -34,14 +31,20 @@ void main() {
         .timeout(const Duration(seconds: 45));
     final positionAdvanced = controller.states
         .firstWhere(
-          (state) => state.position >= const Duration(milliseconds: 250),
+          (state) =>
+              state.timeline.position >= const Duration(milliseconds: 250),
         )
         .timeout(const Duration(seconds: 10));
 
-    await controller.open(
-      YlMediaSource.network(server.masterUri, formatHint: YlFormatHint.hls),
+    await loadSession(
+      controller,
+      YlNetworkSource(server.masterUri, format: YlMediaFormat.hls),
+      options: const YlLoadOptions(
+        bufferStrategy: YlBufferStrategy.lowLatency(),
+      ),
     );
-    await controller.play();
+    await sessionFor(controller).play();
+    await sessionFor(controller).ready.timeout(const Duration(seconds: 20));
     try {
       await Future.wait<void>(<Future<void>>[
         firstFrame.then((_) {}),
@@ -50,14 +53,14 @@ void main() {
     } on TimeoutException {
       debugPrint(
         'macOS HLS timeout: status=${controller.state.status}, '
-        'position=${controller.state.position}, '
-        'buffered=${controller.state.bufferedPosition}, '
-        'error=${controller.state.error}',
+        'position=${controller.state.timeline.position}, '
+        'buffered=${controller.state.timeline.bufferedPosition}, '
+        'error=${controller.state.failure}',
       );
       rethrow;
     }
 
-    await controller.pause();
+    await sessionFor(controller).pause();
     await controller.states
         .firstWhere((state) => state.status == YlPlaybackStatus.paused)
         .timeout(const Duration(seconds: 5));

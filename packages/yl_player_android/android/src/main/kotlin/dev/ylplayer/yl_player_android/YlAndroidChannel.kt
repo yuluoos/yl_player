@@ -53,11 +53,13 @@ internal object YlAndroidChannel {
         playerId: Long,
         generation: Long,
         state: Map<String, Any?>,
+        loadToken: Long? = null,
     ): Map<String, Any?> = mapOf(
         "playerId" to playerId,
         "protocolVersion" to protocolVersion,
         "generation" to generation,
         "type" to "state",
+        "loadToken" to loadToken,
         "state" to state,
     )
 
@@ -90,9 +92,14 @@ internal data class PlayerConfiguration(
     val maxBufferBytes: Int?,
     val positionEventIntervalMs: Long,
     val network: NetworkConfiguration,
+    val managesAudioSession: Boolean = true,
 ) {
-    fun bufferRequest() = YlBufferRequest(
-        mode = bufferMode,
+    fun bufferRequest(loadOptions: Map<String, Any?>? = null) = YlBufferRequest(
+        mode = if (loadOptions == null) bufferMode else when (loadOptions["bufferStrategy"]) {
+            "lowLatency" -> "lowLatency"
+            "smoothPlayback" -> "stable"
+            else -> "automatic"
+        },
         minBufferMs = minBufferMs,
         maxBufferMs = maxBufferMs,
         maxBufferBytes = maxBufferBytes,
@@ -102,6 +109,7 @@ internal data class PlayerConfiguration(
         fun from(map: Map<String, Any?>): PlayerConfiguration {
             val network = map["network"].asStringMap()
             return PlayerConfiguration(
+                managesAudioSession = map["audioPolicy"] != "appManaged",
                 bufferMode = map["bufferMode"] as? String ?: "automatic",
                 decoderPolicy = map["decoderPolicy"] as? String ?: "hardwareOnly",
                 minBufferMs = (map["minBufferMs"] as? Number)?.toInt(),

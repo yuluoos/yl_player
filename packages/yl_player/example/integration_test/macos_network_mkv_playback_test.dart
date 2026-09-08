@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:yl_player/yl_player.dart';
+import 'support/playback_sessions.dart';
 
 import 'support/range_media_server.dart';
 
@@ -10,36 +11,41 @@ void main() {
 
   Future<void> openNetworkMkv(
     YlPlayerController controller,
-    RangeMediaServer server,
-  ) => controller.open(
-    YlMediaSource.network(
+    RangeMediaServer server, {
+    YlLoadOptions options = const YlLoadOptions(),
+  }) => loadSession(
+    controller,
+    YlNetworkSource(
       server.mediaUri,
-      formatHint: YlFormatHint.matroska,
-      headers: const <String, String>{'X-Yl-Test': 'network-mkv'},
+      format: YlMediaFormat.matroska,
+      request: YlHttpRequest(
+        headers: const <String, String>{'X-Yl-Test': 'network-mkv'},
+      ),
     ),
+    options: options,
   );
 
   Future<double> measurePlaybackRate(
     YlPlayerController controller,
     double speed,
   ) async {
-    await controller.setPlaybackSpeed(speed);
-    final positionBeforeChange = controller.state.position;
+    await sessionFor(controller).setPlaybackSpeed(speed);
+    final positionBeforeChange = controller.state.timeline.position;
     final first = await controller.states
-        .firstWhere((state) => state.position > positionBeforeChange)
+        .firstWhere((state) => state.timeline.position > positionBeforeChange)
         .timeout(const Duration(seconds: 5));
     final elapsed = Stopwatch()..start();
     final last = await controller.states
         .firstWhere(
           (state) =>
-              state.position > first.position &&
+              state.timeline.position > first.timeline.position &&
               elapsed.elapsed >= const Duration(milliseconds: 900),
         )
         .timeout(const Duration(seconds: 5));
     elapsed.stop();
     expect(last.status, YlPlaybackStatus.playing);
-    expect(last.error, isNull);
-    return (last.position - first.position).inMicroseconds /
+    expect(last.failure, isNull);
+    return (last.timeline.position - first.timeline.position).inMicroseconds /
         elapsed.elapsedMicroseconds;
   }
 
@@ -50,58 +56,62 @@ void main() {
       asset: 'assets/test_media/network_seek_h264_aac.mkv',
     );
     addTearDown(server.close);
-    final controller = YlPlayerController(
-      configuration: const YlPlayerConfiguration(
-        bufferMode: YlBufferMode.lowLatency,
-      ),
-    );
+    final controller = await YlPlayerController.create();
     addTearDown(controller.dispose);
     await tester.pumpWidget(
       MaterialApp(home: YlPlayerView(controller: controller)),
     );
 
-    await openNetworkMkv(controller, server);
+    await openNetworkMkv(
+      controller,
+      server,
+      options: const YlLoadOptions(
+        bufferStrategy: YlBufferStrategy.lowLatency(),
+      ),
+    );
     expect(server.requests, isNotEmpty);
     expect(server.requests.first.header('x-yl-test'), 'network-mkv');
     expect(server.requests.first.statusCode, 206);
     final firstFrame = controller.events
         .firstWhere((event) => event is YlFirstFrameEvent)
         .timeout(const Duration(seconds: 15));
-    await controller.play();
+    await sessionFor(controller).play();
+    await sessionFor(controller).ready.timeout(const Duration(seconds: 20));
     await firstFrame;
-    expect(controller.state.engine, YlPlaybackEngine.nativeFallback);
-    expect(controller.state.isHardwareDecoding, isTrue);
-    expect(controller.state.isSeekable, isTrue);
+    expect(controller.state.engine, YlPlaybackEngine.managedFallback);
+    expect(controller.state.decoderMode, YlDecoderMode.unknown);
+    expect(controller.state.timeline.isSeekable, isTrue);
 
-    final positionBeforeRateChange = controller.state.position;
-    await controller.setPlaybackSpeed(3);
+    final positionBeforeRateChange = controller.state.timeline.position;
+    await sessionFor(controller).setPlaybackSpeed(3);
     final accelerated = await controller.states
         .firstWhere(
           (state) =>
-              state.position >=
+              state.timeline.position >=
               positionBeforeRateChange + const Duration(milliseconds: 500),
         )
         .timeout(const Duration(seconds: 5));
-    await controller.setPlaybackSpeed(1);
+    await sessionFor(controller).setPlaybackSpeed(1);
     final restored = await controller.states
         .firstWhere(
           (state) =>
-              state.position >=
-              accelerated.position + const Duration(milliseconds: 250),
+              state.timeline.position >=
+              accelerated.timeline.position + const Duration(milliseconds: 250),
         )
         .timeout(const Duration(seconds: 5));
     expect(restored.status, YlPlaybackStatus.playing);
-    expect(restored.error, isNull);
+    expect(restored.failure, isNull);
 
-    await controller.pause();
+    await sessionFor(controller).pause();
     final requestCountBeforeSeek = server.requests.length;
-    await controller.seekTo(const Duration(seconds: 16));
+    await sessionFor(controller).seekTo(const Duration(seconds: 16));
     final seeked = await controller.states
         .firstWhere(
-          (state) => state.position >= const Duration(milliseconds: 15500),
+          (state) =>
+              state.timeline.position >= const Duration(milliseconds: 15500),
         )
         .timeout(const Duration(seconds: 10));
-    expect(seeked.engine, YlPlaybackEngine.nativeFallback);
+    expect(seeked.engine, YlPlaybackEngine.managedFallback);
     final seekRequests = server.requests.skip(requestCountBeforeSeek).toList();
     expect(seekRequests, isNotEmpty);
     expect(
@@ -114,9 +124,11 @@ void main() {
     );
     expect(seekRequests.every((request) => request.statusCode == 206), isTrue);
 
-    expect(controller.audioTracks, hasLength(2));
-    await controller.selectAudioTrack(controller.audioTracks[1].id);
-    expect(controller.audioTracks[1].isSelected, isTrue);
+    expect(controller.state.audioTracks, hasLength(2));
+    await sessionFor(
+      controller,
+    ).selectAudioTrack(controller.state.audioTracks[1].id);
+    expect(controller.state.audioTracks[1].isSelected, isTrue);
   });
 
   testWidgets('HTTP range MKV repeatedly applies and restores playback speed', (
@@ -126,21 +138,19 @@ void main() {
       asset: 'assets/test_media/network_seek_h264_aac.mkv',
     );
     addTearDown(server.close);
-    final controller = YlPlayerController(
-      configuration: const YlPlayerConfiguration(
-        positionEventInterval: Duration(milliseconds: 100),
-      ),
-    );
+    final controller = await YlPlayerController.create();
     addTearDown(controller.dispose);
     await tester.pumpWidget(
       MaterialApp(home: YlPlayerView(controller: controller)),
     );
 
     await openNetworkMkv(controller, server);
-    await controller.play();
+    await sessionFor(controller).play();
+    await sessionFor(controller).ready.timeout(const Duration(seconds: 20));
     await controller.states
         .firstWhere(
-          (state) => state.position >= const Duration(milliseconds: 500),
+          (state) =>
+              state.timeline.position >= const Duration(milliseconds: 500),
         )
         .timeout(const Duration(seconds: 10));
 
@@ -154,11 +164,11 @@ void main() {
       expect(restoredRate, greaterThan(0.55));
       expect(restoredRate, lessThan(1.7));
       expect(controller.state.status, YlPlaybackStatus.playing);
-      expect(controller.state.error, isNull);
+      expect(controller.state.failure, isNull);
     }
     expect(controller.state.metrics.audioUnderruns, underrunsBeforeTransitions);
     expect(controller.state.status, YlPlaybackStatus.playing);
-    expect(controller.state.error, isNull);
+    expect(controller.state.failure, isNull);
   });
 
   testWidgets('HTTP 200 sequential MKV rejects seek without losing playback', (
@@ -169,27 +179,27 @@ void main() {
       supportsRanges: false,
     );
     addTearDown(server.close);
-    final controller = YlPlayerController();
+    final controller = await YlPlayerController.create();
     addTearDown(controller.dispose);
     await tester.pumpWidget(
       MaterialApp(home: YlPlayerView(controller: controller)),
     );
 
     await openNetworkMkv(controller, server);
-    expect(controller.state.isSeekable, isFalse);
-    final positionBeforeSeek = controller.state.position;
+    expect(controller.state.timeline.isSeekable, isFalse);
+    final positionBeforeSeek = controller.state.timeline.position;
 
     await expectLater(
-      controller.seekTo(const Duration(milliseconds: 900)),
+      sessionFor(controller).seekTo(const Duration(milliseconds: 900)),
       throwsA(
-        isA<YlPlayerError>().having(
-          (error) => error.code,
+        isA<YlPlayerException>().having(
+          (error) => error.failure.code,
           'code',
           'network.range_not_supported',
         ),
       ),
     );
-    expect(controller.state.position, positionBeforeSeek);
-    expect(controller.state.engine, YlPlaybackEngine.nativeFallback);
+    expect(controller.state.timeline.position, positionBeforeSeek);
+    expect(controller.state.engine, YlPlaybackEngine.managedFallback);
   });
 }

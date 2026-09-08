@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		D6800001294A63AB00263BE5 /* YlV2ReactivationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6800011294A618700263BE5 /* YlV2ReactivationTests.swift */; };
 		331C80D8294CF71000263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C80D7294CF71000263BE5 /* RunnerTests.swift */; };
 		7A4A00010000000000000001 /* YlMacosAvPlayerStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4A00020000000000000002 /* YlMacosAvPlayerStateTests.swift */; };
 		7A4A00030000000000000003 /* YlMacosOpenCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4A00040000000000000004 /* YlMacosOpenCoordinatorTests.swift */; };
@@ -71,6 +72,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D6800011294A618700263BE5 /* YlV2ReactivationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlV2ReactivationTests.swift; sourceTree = "<group>"; };
 		0F9645960A2FC8869FE4E674 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1D3F70440357CA5E69E00CB9 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		331C80D5294CF71000263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -133,6 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				331C80D7294CF71000263BE5 /* RunnerTests.swift */,
+				D6800011294A618700263BE5 /* YlV2ReactivationTests.swift */,
 				7A4A00020000000000000002 /* YlMacosAvPlayerStateTests.swift */,
 				7A4A00040000000000000004 /* YlMacosOpenCoordinatorTests.swift */,
 				7A5A00020000000000000002 /* YlMacosNetworkTests.swift */,
@@ -446,6 +449,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				331C80D8294CF71000263BE5 /* RunnerTests.swift in Sources */,
+				D6800001294A63AB00263BE5 /* YlV2ReactivationTests.swift in Sources */,
 				7A4A00010000000000000001 /* YlMacosAvPlayerStateTests.swift in Sources */,
 				7A4A00030000000000000003 /* YlMacosOpenCoordinatorTests.swift in Sources */,
 				7A5A00010000000000000001 /* YlMacosNetworkTests.swift in Sources */,

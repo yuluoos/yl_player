@@ -8,17 +8,21 @@ struct YlHlsHeaderPolicy {
   ])
 
   private let origin: Origin?
+  private let credentialNames: Set<String>
   private let configuredHeaders: [String: String]
 
-  init(originURL: URL, headers: [String: String]) {
+  init(originURL: URL, headers: [String: String], credentials: [String: String] = [:]) {
     origin = Origin(url: originURL)
-    configuredHeaders = headers
+    configuredHeaders = headers.merging(credentials) { _, credential in credential }
+    credentialNames = Self.sensitive.union(credentials.keys.map { $0.lowercased() })
   }
 
-  func headers(for destinationURL: URL) -> [String: String] {
-    let isSameOrigin = origin != nil && origin == Origin(url: destinationURL)
+  func isSourceOrigin(_ url: URL) -> Bool { origin != nil && origin == Origin(url: url) }
+
+  func headers(for destinationURL: URL, credentialsStripped: Bool = false) -> [String: String] {
+    let isSameOrigin = !credentialsStripped && isSourceOrigin(destinationURL)
     return configuredHeaders.filter { name, _ in
-      isSameOrigin || !Self.sensitive.contains(name.lowercased())
+      isSameOrigin || !credentialNames.contains(name.lowercased())
     }
   }
 

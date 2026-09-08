@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:yl_player/yl_player.dart';
 
@@ -7,187 +6,113 @@ void main() => runApp(const PlayerExampleApp());
 
 class PlayerExampleApp extends StatelessWidget {
   const PlayerExampleApp({super.key});
-
   @override
-  Widget build(BuildContext context) => MaterialApp(
-    debugShowCheckedModeBanner: false,
-    theme: ThemeData(colorSchemeSeed: Colors.indigo, useMaterial3: true),
-    home: const PlayerExamplePage(),
-  );
+  Widget build(BuildContext context) =>
+      MaterialApp(home: const PlayerExamplePage());
 }
 
 class PlayerExamplePage extends StatefulWidget {
   const PlayerExamplePage({super.key});
-
   @override
   State<PlayerExamplePage> createState() => _PlayerExamplePageState();
 }
 
 class _PlayerExamplePageState extends State<PlayerExamplePage> {
-  final TextEditingController _urlController = TextEditingController();
-  final TextEditingController _refererController = TextEditingController();
-  late final YlPlayerController _controller;
-  late final StreamSubscription<YlPlayerState> _stateSubscription;
-  YlPlayerState _state = YlPlayerState();
-  YlFormatHint _formatHint = YlFormatHint.automatic;
-  bool _isLive = false;
+  final _url = TextEditingController();
+  late final Future<YlPlayerController> _creation;
+  YlPlaybackSession? _session;
+  bool _live = false;
   String? _message;
-
   @override
   void initState() {
     super.initState();
-    _controller = YlPlayerController();
-    _stateSubscription = _controller.states.listen((state) {
-      if (mounted) {
-        setState(() => _state = state);
-      }
-    });
+    _creation = YlPlayerController.create();
   }
 
   @override
   void dispose() {
-    unawaited(_stateSubscription.cancel());
-    unawaited(_controller.dispose());
-    _urlController.dispose();
-    _refererController.dispose();
+    unawaited(
+      _creation.then(
+        (player) => player.dispose(),
+        onError: (Object _, StackTrace _) {},
+      ),
+    );
+    _url.dispose();
     super.dispose();
+  }
+
+  Future<void> _load(YlPlayerController player) async {
+    try {
+      final session = await player.load(
+        YlNetworkSource(
+          Uri.parse(_url.text),
+          intent: _live ? YlStreamIntent.live : YlStreamIntent.onDemand,
+        ),
+      );
+      _session = session;
+      await session.play();
+      await session.ready;
+      if (mounted) setState(() => _message = 'Ready');
+      await session.firstFrame;
+      if (mounted) setState(() => _message = 'First frame displayed');
+    } catch (error) {
+      if (mounted) {
+        setState(
+          () => _message = error is YlPlayerException
+              ? error.failure.message
+              : 'Could not load media.',
+        );
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(title: const Text('yl_player API example')),
-    body: ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        const Text(
-          'Development build: Android Media3 and iOS AVPlayer main paths are '
-          'available, but iOS HTTP-FLV fallback and physical-device release '
-          'validation are not complete.',
-        ),
-        const SizedBox(height: 12),
-        AspectRatio(
-          aspectRatio: 16 / 9,
-          child: ColoredBox(
-            color: Colors.black,
-            child: YlPlayerView(
-              controller: _controller,
-              placeholder: const Center(
-                child: Text(
-                  'Waiting for a native texture',
-                  style: TextStyle(color: Colors.white70),
-                ),
+    body: FutureBuilder<YlPlayerController>(
+      future: _creation,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Center(child: Text('Player unavailable'));
+        }
+        final player = snapshot.data;
+        if (player == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            AspectRatio(
+              aspectRatio: 16 / 9,
+              child: YlPlayerView(controller: player),
+            ),
+            TextField(
+              controller: _url,
+              decoration: const InputDecoration(
+                labelText: 'Resolved HTTP(S) media URL',
               ),
             ),
-          ),
-        ),
-        const SizedBox(height: 12),
-        Text('Status: ${_state.status.name}'),
-        if (_message != null) Text(_message!),
-        const SizedBox(height: 12),
-        TextField(
-          controller: _urlController,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'Resolved HTTP(S) media URL',
-          ),
-        ),
-        const SizedBox(height: 12),
-        TextField(
-          controller: _refererController,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'Referer header (optional)',
-          ),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: DropdownButtonFormField<YlFormatHint>(
-                initialValue: _formatHint,
-                decoration: const InputDecoration(labelText: 'Format'),
-                items: const [
-                  DropdownMenuItem(
-                    value: YlFormatHint.automatic,
-                    child: Text('Automatic'),
-                  ),
-                  DropdownMenuItem(value: YlFormatHint.hls, child: Text('HLS')),
-                  DropdownMenuItem(
-                    value: YlFormatHint.httpFlv,
-                    child: Text('HTTP-FLV'),
-                  ),
-                ],
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() => _formatHint = value);
-                  }
-                },
-              ),
+            SwitchListTile(
+              title: const Text('Live stream'),
+              value: _live,
+              onChanged: (value) => setState(() => _live = value),
             ),
-            const SizedBox(width: 12),
-            const Text('Live'),
-            Switch(
-              value: _isLive,
-              onChanged: (value) => setState(() => _isLive = value),
+            FilledButton(
+              onPressed: () => _load(player),
+              child: const Text('Load and play'),
             ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 8,
-          children: [
-            FilledButton(onPressed: _open, child: const Text('Open source')),
-            OutlinedButton(
-              onPressed: () => _runCommand(_controller.play),
-              child: const Text('Play'),
-            ),
-            OutlinedButton(
-              onPressed: () => _runCommand(_controller.pause),
+            TextButton(
+              onPressed: () => _session?.pause(),
               child: const Text('Pause'),
             ),
+            TextButton(
+              onPressed: () => player.stop(),
+              child: const Text('Stop'),
+            ),
+            if (_message != null) Text(_message!),
           ],
-        ),
-      ],
+        );
+      },
     ),
   );
-
-  Future<void> _open() async {
-    final uri = Uri.tryParse(_urlController.text.trim());
-    if (uri == null || (uri.scheme != 'http' && uri.scheme != 'https')) {
-      setState(() => _message = 'Enter a valid HTTP(S) URL.');
-      return;
-    }
-
-    final referer = _refererController.text.trim();
-    final headers = referer.isEmpty
-        ? const <String, String>{}
-        : {'Referer': referer};
-    await _runCommand(
-      () => _controller.open(
-        YlMediaSource.network(
-          uri,
-          isLive: _isLive,
-          formatHint: _formatHint,
-          headers: headers,
-        ),
-      ),
-    );
-  }
-
-  Future<void> _runCommand(Future<void> Function() command) async {
-    try {
-      await command();
-      if (mounted) {
-        setState(() => _message = null);
-      }
-    } on YlPlayerError catch (error) {
-      if (mounted) {
-        setState(() => _message = '${error.code}: ${error.message}');
-      }
-    } on Object catch (error) {
-      if (mounted) {
-        setState(() => _message = error.toString());
-      }
-    }
-  }
 }

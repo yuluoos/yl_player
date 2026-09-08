@@ -3,14 +3,14 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 final class TestPlayerPlatform extends YlPlayerPlatform {
   @override
-  Future<YlPlatformPlayer> createPlayer(YlPlayerConfiguration configuration) {
+  Future<YlPlatformPlayer> createPlayer(YlPlayerOptions options) {
     throw UnimplementedError();
   }
 }
 
 final class UnverifiedPlayerPlatform implements YlPlayerPlatform {
   @override
-  Future<YlPlatformPlayer> createPlayer(YlPlayerConfiguration configuration) {
+  Future<YlPlatformPlayer> createPlayer(YlPlayerOptions options) {
     throw UnimplementedError();
   }
 }

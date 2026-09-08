@@ -22,9 +22,10 @@ final class AuthenticatedHlsServer {
     required this._secondary,
     required this._key,
     required this._segment,
+    required this.sameOrigin,
   });
 
-  static Future<AuthenticatedHlsServer> start() async {
+  static Future<AuthenticatedHlsServer> start({bool sameOrigin = false}) async {
     final values = await Future.wait<ByteData>(<Future<ByteData>>[
       rootBundle.load('assets/test_media/hls_key.bin'),
       rootBundle.load('assets/test_media/hls_encrypted_segment0.ts'),
@@ -36,12 +37,14 @@ final class AuthenticatedHlsServer {
       secondary: secondary,
       key: _bytes(values[0]),
       segment: _bytes(values[1]),
+      sameOrigin: sameOrigin,
     );
     primary.listen((request) => unawaited(result._handlePrimary(request)));
     secondary.listen((request) => unawaited(result._handleSecondary(request)));
     return result;
   }
 
+  final bool sameOrigin;
   final HttpServer _primary;
   final HttpServer _secondary;
   final Uint8List _key;
@@ -64,7 +67,7 @@ final class AuthenticatedHlsServer {
     _record('primary', request);
     switch (request.uri.path) {
       case '/master.m3u8':
-        final child = _uri(_secondary, '/media.m3u8');
+        final child = _uri(sameOrigin ? _primary : _secondary, '/media.m3u8');
         request.response.headers.set(
           HttpHeaders.setCookieHeader,
           'origin-cookie=must-not-cross-port; Path=/',
@@ -77,6 +80,9 @@ final class AuthenticatedHlsServer {
           'CODECS="avc1.42c00d,mp4a.40.2",RESOLUTION=320x180\n'
           '$child\n',
         );
+      case '/media.m3u8':
+      case '/segment0.ts':
+        await _serveMedia(request);
       case '/key.bin':
         await _serveBytes(request.response, _key, ContentType.binary);
       default:
@@ -86,6 +92,10 @@ final class AuthenticatedHlsServer {
 
   Future<void> _handleSecondary(HttpRequest request) async {
     _record('secondary', request);
+    await _serveMedia(request);
+  }
+
+  Future<void> _serveMedia(HttpRequest request) async {
     switch (request.uri.path) {
       case '/media.m3u8':
         final key = _uri(_primary, '/key.bin');

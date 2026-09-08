@@ -12,7 +12,8 @@ enum YlHlsURLCodec {
 
   static func encode(
     _ destination: URL,
-    kind: YlHlsResourceKind? = nil
+    kind: YlHlsResourceKind? = nil,
+    credentialsStripped: Bool = false
   ) throws -> URL {
     try validateHTTPDestination(destination)
     let payload = Data(destination.absoluteString.utf8)
@@ -23,12 +24,17 @@ enum YlHlsURLCodec {
     var components = URLComponents()
     components.scheme = scheme
     components.host = host
+    if credentialsStripped { components.queryItems = [URLQueryItem(name: "credentialsStripped", value: "1")] }
     let resourceKind = kind ?? inferredKind(for: destination)
     components.path = "/\(payload)/\(resourceKind.rawValue)/\(resourceName(for: destination))"
     guard let encoded = components.url else {
       throw invalidURL("The internal HLS resource URL could not be encoded.")
     }
     return encoded
+  }
+
+  static func credentialsStripped(_ url: URL) -> Bool {
+    URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems?.contains(URLQueryItem(name: "credentialsStripped", value: "1")) == true
   }
 
   static func resourceKind(_ encoded: URL) throws -> YlHlsResourceKind {

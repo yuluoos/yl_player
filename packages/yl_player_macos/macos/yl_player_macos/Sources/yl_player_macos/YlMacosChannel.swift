@@ -69,6 +69,7 @@ enum YlMacosChannel {
   static func fullState(
     playerId: Int64,
     generation: UInt64,
+    loadToken: Any? = nil,
     state: [String: Any?]
   ) -> [String: Any?] {
     [
@@ -76,6 +77,7 @@ enum YlMacosChannel {
       "protocolVersion": 1,
       "generation": generation,
       "type": "state",
+      "loadToken": loadToken,
       "state": state,
     ]
   }

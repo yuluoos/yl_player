@@ -1,0 +1,2 @@
+import 'package:yl_player/yl_player.dart';
+void main() { print(YlPlayerPlatform.instance); }

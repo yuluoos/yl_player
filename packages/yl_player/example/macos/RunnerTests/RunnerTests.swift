@@ -5,6 +5,81 @@ import XCTest
 @testable import yl_player_macos
 
 class RunnerTests: XCTestCase {
+  func testPerLoadBufferStrategyUsesExistingGoalsWithoutChangingLegacyConfiguration() throws {
+    let legacy = PlayerConfiguration(map: ["bufferMode": "stable", "audioPolicy": "appManaged"])
+    let low = legacy.forLoad(["loadOptions": ["bufferStrategy": "lowLatency"]])
+    XCTAssertEqual(low.bufferMode, "lowLatency")
+    XCTAssertEqual(low.preferredForwardBufferDuration, 2)
+    XCTAssertFalse(low.managesAudioSession)
+    XCTAssertEqual(legacy.forLoad(["loadOptions": ["bufferStrategy": "smoothPlayback"]]).preferredForwardBufferDuration, 30)
+    XCTAssertEqual(legacy.forLoad(["loadOptions": [:]]).preferredForwardBufferDuration, 10)
+    XCTAssertEqual(legacy.forLoad([:]).preferredForwardBufferDuration, 30)
+    XCTAssertEqual(legacy.bufferMode, "stable")
+  }
+
+  func testCancelOpenMatchesOnlyThePreparingCandidate() {
+    let owner = YlMacosPlayer(playerId: 42, textures: StopTextureRegistry(), configuration: PlayerConfiguration(map: ["audioPolicy": "appManaged"]), displayView: nil, emit: { _ in })
+    defer { owner.dispose() }
+    let committed = expectation(description: "new token survives stale cancellation")
+    owner.beginOpen(["uri": "https://example.test/a.mp4", "kind": "network", "loadToken": 2], willCommit: { _ in }, didCommit: {}, didRollback: {}, completion: { result in
+      if case .failure = result { XCTFail("Stale cancellation rejected current candidate") }
+      committed.fulfill()
+    })
+    owner.beginCommand(name: "cancelOpen", arguments: ["loadToken": 1]) { _ in }
+    wait(for: [committed], timeout: 5)
+    let cancelled = expectation(description: "matching candidate cancelled")
+    owner.beginOpen(["uri": "https://example.test/b.mp4", "kind": "network", "loadToken": 3], willCommit: { _ in }, didCommit: {}, didRollback: {}, completion: { result in
+      if case .success = result { XCTFail("Cancelled candidate committed") }
+      cancelled.fulfill()
+    })
+    owner.beginCommand(name: "cancelOpen", arguments: ["loadToken": 3]) { _ in }
+    wait(for: [cancelled], timeout: 5)
+    XCTAssertTrue(owner.isActive)
+  }
+
+  func testPreparingRetriesDoNotPolluteOldSessionAndCommittedRetriesRetainIdentity() {
+    var publicEvents = [[String: Any?]]()
+    let old = YlLegacyCommitEmitter(emit: { publicEvents.append($0) })
+    old.commit(generation: 3)
+    old.accept(["type": "networkRetry"])
+    let candidate = YlLegacyCommitEmitter(emit: { publicEvents.append($0) })
+    candidate.accept(["type": "networkRetry"])
+    XCTAssertEqual(publicEvents.count, 1)
+    XCTAssertEqual(publicEvents.last?["generation"] as? UInt64, 3)
+    candidate.commit(generation: 4)
+    old.invalidate()
+    old.accept(["type": "networkRetry"])
+    candidate.accept(["type": "networkRetry"])
+    XCTAssertEqual(publicEvents.count, 2)
+    XCTAssertEqual(publicEvents.last?["generation"] as? UInt64, 4)
+  }
+
+  func testPrivateCandidateEventsPublishOnlyAfterCommit() {
+    var events = [[String: Any?]]()
+    let candidate = YlLegacyCommitEmitter(emit: { events.append($0) })
+    candidate.accept(["type": "state", "loadToken": 9])
+    candidate.accept(["type": "firstFrame"])
+    XCTAssertTrue(events.isEmpty)
+    candidate.commit()
+    XCTAssertEqual(events.count, 1)
+    XCTAssertEqual(events.first?["loadToken"] as? Int, 9)
+    candidate.accept(["type": "firstFrame"])
+    XCTAssertEqual(events.count, 2)
+  }
+
+  func testExplicitCredentialScopeAndInheritedManifestStripping() throws {
+    let origin = URL(string: "https://source.test/master.m3u8")!
+    let policy = YlHlsHeaderPolicy(originURL: origin, headers: ["X-Client": "ordinary"], credentials: ["X-Session": "secret"])
+    XCTAssertEqual(policy.headers(for: origin)["X-Session"], "secret")
+    XCTAssertNil(policy.headers(for: URL(string: "https://other.test/segment.ts")!)["X-Session"])
+    XCTAssertNil(policy.headers(for: origin, credentialsStripped: true)["X-Session"])
+    XCTAssertEqual(policy.headers(for: origin, credentialsStripped: true)["X-Client"], "ordinary")
+    let result = try YlHlsManifestRewriter.rewrite(data: Data("#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000\nchild.m3u8\n".utf8), baseURL: origin, credentialsStripped: true)
+    let child = try XCTUnwrap(String(data: result, encoding: .utf8)?.split(separator: "\n").last.flatMap { URL(string: String($0)) })
+    XCTAssertTrue(YlHlsURLCodec.credentialsStripped(child))
+    XCTAssertEqual(try YlHlsURLCodec.decode(child), URL(string: "https://source.test/child.m3u8"))
+  }
+
   private final class StopTextureRegistry: NSObject, FlutterTextureRegistry {
     var unregistered = [Int64]()
     func register(_ texture: FlutterTexture) -> Int64 { 71 }

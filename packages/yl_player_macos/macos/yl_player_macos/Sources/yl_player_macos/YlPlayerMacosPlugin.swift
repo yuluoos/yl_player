@@ -107,6 +107,7 @@ public final class YlPlayerMacosPlugin: NSObject, FlutterPlugin, FlutterStreamHa
     }
     let name = root["name"] as? String ?? ""
     let commandArguments = stringMap(root["arguments"])
+    if name == "requestState" { player.emitState(); result(nil); return }
 
     if name == "open" {
       var quiescedPlayers = [YlMacosPlayer]()
@@ -127,7 +128,9 @@ public final class YlPlayerMacosPlugin: NSObject, FlutterPlugin, FlutterStreamHa
         },
         completion: { commandResult in
           switch commandResult {
-          case .success: result(nil)
+          case .success:
+            let token = stringMap(commandArguments["source"])["loadToken"] ?? nil
+            result(token == nil ? nil : ["loadToken": token])
           case let .failure(error): result(flutterError(error))
           }
         }

@@ -1,3 +1,4 @@
+import AVFoundation
 import CoreMedia
 @testable import yl_player_ios
 import Flutter
@@ -5,6 +6,147 @@ import UIKit
 import XCTest
 
 class RunnerTests: XCTestCase {
+  func testPerLoadBufferStrategyUsesExistingGoalsWithoutChangingLegacyConfiguration() throws {
+    let legacy = PlayerConfiguration(map: ["bufferMode": "stable", "audioPolicy": "appManaged"])
+    let low = legacy.forLoad(["loadOptions": ["bufferStrategy": "lowLatency"]])
+    XCTAssertEqual(low.bufferMode, "lowLatency")
+    XCTAssertEqual(low.preferredForwardBufferDuration, 2)
+    XCTAssertFalse(low.managesAudioSession)
+    XCTAssertEqual(legacy.forLoad(["loadOptions": ["bufferStrategy": "smoothPlayback"]]).preferredForwardBufferDuration, 30)
+    XCTAssertEqual(legacy.forLoad(["loadOptions": [:]]).preferredForwardBufferDuration, 10)
+    XCTAssertEqual(legacy.forLoad([:]).preferredForwardBufferDuration, 30)
+    XCTAssertEqual(legacy.bufferMode, "stable")
+  }
+
+  func testCancelOpenMatchesOnlyThePreparingCandidate() {
+    let owner = YlIosPlayer(playerId: 42, textures: StopTextureRegistry(), configuration: PlayerConfiguration(map: ["audioPolicy": "appManaged"]), emit: { _ in })
+    defer { owner.dispose() }
+    let committed = expectation(description: "new token survives stale cancellation")
+    owner.beginOpen(["uri": "https://example.test/a.mp4", "kind": "network", "loadToken": 2], didCommit: {}, completion: { result in
+      if case .failure = result { XCTFail("Stale cancellation rejected current candidate") }
+      committed.fulfill()
+    })
+    owner.beginCommand(name: "cancelOpen", arguments: ["loadToken": 1]) { _ in }
+    wait(for: [committed], timeout: 5)
+    let cancelled = expectation(description: "matching candidate cancelled")
+    owner.beginOpen(["uri": "https://example.test/b.mp4", "kind": "network", "loadToken": 3], didCommit: {}, completion: { result in
+      if case .success = result { XCTFail("Cancelled candidate committed") }
+      cancelled.fulfill()
+    })
+    owner.beginCommand(name: "cancelOpen", arguments: ["loadToken": 3]) { _ in }
+    wait(for: [cancelled], timeout: 5)
+    XCTAssertTrue(owner.isActive)
+  }
+
+  func testPreparingRetriesDoNotPolluteOldSessionAndCommittedRetriesRetainIdentity() {
+    var publicEvents = [[String: Any?]]()
+    let old = YlLegacyCommitEmitter(emit: { publicEvents.append($0) })
+    old.commit(generation: 3)
+    old.accept(["type": "networkRetry"])
+    let candidate = YlLegacyCommitEmitter(emit: { publicEvents.append($0) })
+    candidate.accept(["type": "networkRetry"])
+    XCTAssertEqual(publicEvents.count, 1)
+    XCTAssertEqual(publicEvents.last?["generation"] as? UInt64, 3)
+    candidate.commit(generation: 4)
+    old.invalidate()
+    old.accept(["type": "networkRetry"])
+    candidate.accept(["type": "networkRetry"])
+    XCTAssertEqual(publicEvents.count, 2)
+    XCTAssertEqual(publicEvents.last?["generation"] as? UInt64, 4)
+  }
+
+  func testPrivateCandidateEventsPublishOnlyAfterCommit() {
+    var events = [[String: Any?]]()
+    let candidate = YlLegacyCommitEmitter(emit: { events.append($0) })
+    candidate.accept(["type": "state", "loadToken": 9])
+    candidate.accept(["type": "firstFrame"])
+    XCTAssertTrue(events.isEmpty)
+    candidate.commit()
+    XCTAssertEqual(events.count, 1)
+    XCTAssertEqual(events.first?["loadToken"] as? Int, 9)
+    candidate.accept(["type": "firstFrame"])
+    XCTAssertEqual(events.count, 2)
+  }
+
+  func testExplicitCredentialScopeAndInheritedManifestStripping() throws {
+    let origin = URL(string: "https://source.test/master.m3u8")!
+    let policy = YlHlsHeaderPolicy(originURL: origin, headers: ["X-Client": "ordinary"], credentials: ["X-Session": "secret"])
+    XCTAssertEqual(policy.headers(for: origin)["X-Session"], "secret")
+    XCTAssertNil(policy.headers(for: URL(string: "https://other.test/segment.ts")!)["X-Session"])
+    XCTAssertNil(policy.headers(for: origin, credentialsStripped: true)["X-Session"])
+    XCTAssertEqual(policy.headers(for: origin, credentialsStripped: true)["X-Client"], "ordinary")
+    let result = try YlHlsManifestRewriter.rewrite(data: Data("#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000\nchild.m3u8\n".utf8), baseURL: origin, credentialsStripped: true)
+    let child = try XCTUnwrap(String(data: result, encoding: .utf8)?.split(separator: "\n").last.flatMap { URL(string: String($0)) })
+    XCTAssertTrue(YlHlsURLCodec.credentialsStripped(child))
+    XCTAssertEqual(try YlHlsURLCodec.decode(child), URL(string: "https://source.test/child.m3u8"))
+  }
+
+  func testPlayerVolumeAndCandidateOptionsSurviveFailedReplacementAndStop() throws {
+    let av = AVPlayer()
+    let owner = YlIosPlayer(playerId: 40, textures: StopTextureRegistry(),
+      configuration: PlayerConfiguration(map: ["audioPolicy": "appManaged"]),
+      avPlayer: av, emit: { _ in })
+    defer { owner.dispose() }
+    owner.beginCommand(name: "setVolume", arguments: ["volume": 0.2]) { result in
+      if case .failure = result { XCTFail("Volume before Load failed") }
+    }
+    func load(_ source: [String: Any?], succeeds: Bool) {
+      let done = expectation(description: "candidate completed")
+      owner.beginOpen(source, didCommit: {}, completion: { result in
+        switch result {
+        case .success: XCTAssertTrue(succeeds)
+        case .failure: XCTAssertFalse(succeeds)
+        }
+        done.fulfill()
+      })
+      wait(for: [done], timeout: 5)
+    }
+    let options: [String: Any?] = ["bufferStrategy": "lowLatency", "autoplay": false, "startPositionMs": 1000, "videoConstraints": ["maxWidth": 640, "maxHeight": 360]]
+    load(["uri": "https://example.test/first.mp4", "kind": "network", "loadToken": 1, "loadOptions": options], succeeds: true)
+    let firstItem = try XCTUnwrap(av.currentItem)
+    XCTAssertEqual(av.volume, 0.2, accuracy: 0.001)
+    XCTAssertEqual(firstItem.preferredForwardBufferDuration, 2)
+    XCTAssertFalse(av.automaticallyWaitsToMinimizeStalling)
+    XCTAssertEqual(firstItem.preferredMaximumResolution.width, 640)
+    load(["uri": "", "loadToken": 2, "loadOptions": ["bufferStrategy": "smoothPlayback", "autoplay": true, "startPositionMs": 9000, "videoConstraints": ["maxWidth": 1280]]], succeeds: false)
+    XCTAssertTrue(av.currentItem === firstItem)
+    XCTAssertEqual(firstItem.preferredForwardBufferDuration, 2)
+    XCTAssertFalse(av.automaticallyWaitsToMinimizeStalling)
+    XCTAssertEqual(firstItem.preferredMaximumResolution.width, 640)
+    XCTAssertEqual(av.volume, 0.2, accuracy: 0.001)
+    owner.beginCommand(name: "stop", arguments: [:]) { _ in }
+    load(["uri": "https://example.test/next.mp4", "kind": "network", "loadToken": 3, "loadOptions": ["bufferStrategy": "smoothPlayback", "autoplay": false, "videoConstraints": [:]]], succeeds: true)
+    XCTAssertEqual(av.volume, 0.2, accuracy: 0.001)
+    XCTAssertEqual(av.currentItem?.preferredMaximumResolution, .zero)
+    XCTAssertEqual(av.currentItem?.preferredForwardBufferDuration, 30)
+    XCTAssertTrue(av.automaticallyWaitsToMinimizeStalling)
+  }
+
+  func testAppManagedAVNeverActivatesAudioSession() throws {
+    var calls = 0
+    let backend = YlAvPlayerBackend(playerId: 31, textures: StopTextureRegistry(),
+      configuration: PlayerConfiguration(map: ["audioPolicy": "appManaged"]),
+      activateAudioSession: { calls += 1 }, emit: { _ in })
+    defer { backend.dispose() }
+    try backend.activate()
+    backend.stop()
+    try backend.command(name: "open", arguments: ["source": ["uri": "https://example.test/a.mp4", "kind": "network"]])
+    XCTAssertEqual(calls, 0)
+  }
+  func testLoadTokenBelongsToCommittedAVSourceAndRequestStateDoesNotActivate() throws {
+    var events = [[String: Any?]]()
+    let backend = YlAvPlayerBackend(playerId: 32, textures: StopTextureRegistry(),
+      configuration: PlayerConfiguration(map: ["audioPolicy": "appManaged"]), emit: { events.append($0) })
+    defer { backend.dispose() }
+    backend.emitState()
+    XCTAssertFalse(backend.isActive)
+    try backend.command(name: "open", arguments: ["source": ["uri": "https://example.test/a.mp4", "kind": "network", "loadToken": 17]])
+    XCTAssertEqual(events.last?["loadToken"] as? Int, 17)
+    XCTAssertThrowsError(try backend.command(name: "open", arguments: ["source": ["uri": "", "loadToken": 18]]))
+    backend.emitState()
+    XCTAssertEqual(events.last?["loadToken"] as? Int, 17)
+  }
+
   private final class StopTextureRegistry: NSObject, FlutterTextureRegistry {
     var unregistered = [Int64]()
     func register(_ texture: FlutterTexture) -> Int64 { 71 }

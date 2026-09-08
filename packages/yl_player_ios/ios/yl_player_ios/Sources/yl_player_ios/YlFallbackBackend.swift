@@ -132,7 +132,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private var reconnectWorkItem: DispatchWorkItem?
   private var awaitingReconnectFirstFrame = false
   private var generation: UInt64
-  private var channelGeneration = YlIosChannelGeneration.next()
+  private(set) var channelGeneration = YlIosChannelGeneration.next()
+  private let legacyLoadToken: Any?
   private var audioGeneration: UInt64
   private var selectedAudioStream: YLFStreamInfo?
   private var desiredVolume: Float = 1
@@ -162,12 +163,16 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     generation: UInt64,
     videoSessionFactory: YlVTSessionFactory = YlHardwareVTSessionFactory(),
     mediaClock: YlMediaClock? = nil,
+    loadToken: Any? = nil,
+    channelIdentity: UInt64? = nil,
     emit: @escaping ([String: Any?]) -> Void
   ) throws {
     try YlFallbackQualityPolicy.validate(
       constraint: qualityConstraint,
       stream: Self.videoDescriptor(prepared.videoStream)
     )
+    self.legacyLoadToken = loadToken
+    if let channelIdentity { self.channelGeneration = channelIdentity }
     self.playerId = playerId
     self.textureId = textureId
     self.textures = textures
@@ -205,6 +210,9 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       self?.audioRenderer?.renderedAudioTime
     })
     self.mediaClock.seek(to: savedPositionUs)
+    // Demux seeks land on an earlier keyframe; suppress that preroll just as
+    // in-place pipeline restoration does before it can re-anchor the clock.
+    if savedPositionUs > 0 { postSeekGate.reset(targetUs: savedPositionUs) }
     outputRelay.backend = self
     do {
       decoder = try YlVideoToolboxDecoder(
@@ -240,17 +248,19 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       return
     }
     stateLock.unlock()
-    let session = AVAudioSession.sharedInstance()
-    do {
-      try session.setCategory(.playback, mode: .moviePlayback)
-      try session.setActive(true)
-    } catch {
-      throw NativePlayerError(
-        category: "resource",
-        code: "ios.audio_session_failed",
-        message: "The playback audio session could not be activated.",
-        diagnostic: String(describing: error)
-      )
+    if configuration.managesAudioSession {
+      let session = AVAudioSession.sharedInstance()
+      do {
+        try session.setCategory(.playback, mode: .moviePlayback)
+        try session.setActive(true)
+      } catch {
+        throw NativePlayerError(
+          category: "resource",
+          code: "ios.audio_session_failed",
+          message: "The playback audio session could not be activated.",
+          diagnostic: String(describing: error)
+        )
+      }
     }
     if requiresAsyncActivation {
       throw NativePlayerError(
@@ -524,6 +534,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     if stateLock.withLock({ stopped }) {
       emit(YlIosChannel.fullState(
         playerId: playerId, generation: channelGeneration,
+        loadToken: stopped ? nil : legacyLoadToken,
         state: [
           "status": "idle", "positionMs": Int64(0), "durationMs": nil,
           "bufferedPositionMs": Int64(0), "isLive": false, "isSeekable": false,
@@ -557,6 +568,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     emit(YlIosChannel.fullState(
       playerId: playerId,
       generation: channelGeneration,
+      loadToken: legacyLoadToken,
       state: YlFallbackStateSnapshot(
         status: status,
         positionMs: positionUs / 1_000,

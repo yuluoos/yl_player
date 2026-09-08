@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:yl_player/yl_player.dart';
+import 'support/playback_sessions.dart';
 
 import 'support/authenticated_hls_server.dart';
 
@@ -13,15 +14,11 @@ void main() {
   ) async {
     final server = await AuthenticatedHlsServer.start();
     addTearDown(server.close);
-    final hlsSource = YlMediaSource.network(
+    final hlsSource = YlNetworkSource(
       server.masterUri,
-      formatHint: YlFormatHint.hls,
+      format: YlMediaFormat.hls,
     );
-    final controller = YlPlayerController(
-      configuration: const YlPlayerConfiguration(
-        bufferMode: YlBufferMode.lowLatency,
-      ),
-    );
+    final controller = await YlPlayerController.create();
     addTearDown(controller.dispose);
     await tester.pumpWidget(
       MaterialApp(
@@ -35,8 +32,15 @@ void main() {
         .firstWhere((event) => event is YlFirstFrameEvent)
         .timeout(const Duration(seconds: 45));
 
-    await controller.open(hlsSource);
-    await controller.play();
+    await loadSession(
+      controller,
+      hlsSource,
+      options: const YlLoadOptions(
+        bufferStrategy: YlBufferStrategy.lowLatency(),
+      ),
+    );
+    await sessionFor(controller).play();
+    await sessionFor(controller).ready.timeout(const Duration(seconds: 20));
     await firstFrame;
     await tester.pump();
 
@@ -53,11 +57,11 @@ void main() {
   ) async {
     final server = await AuthenticatedHlsServer.start();
     addTearDown(server.close);
-    final hlsSource = YlMediaSource.network(
+    final hlsSource = YlNetworkSource(
       server.masterUri,
-      formatHint: YlFormatHint.hls,
+      format: YlMediaFormat.hls,
     );
-    final controller = YlPlayerController();
+    final controller = await YlPlayerController.create();
     addTearDown(controller.dispose);
     await tester.pumpWidget(
       MaterialApp(home: YlPlayerView(controller: controller)),
@@ -66,21 +70,23 @@ void main() {
         .firstWhere((event) => event is YlFirstFrameEvent)
         .timeout(const Duration(seconds: 45));
 
-    await controller.open(hlsSource);
-    await controller.play();
+    await loadSession(controller, hlsSource);
+    await sessionFor(controller).play();
+    await sessionFor(controller).ready.timeout(const Duration(seconds: 20));
     await firstFrame;
 
     await expectLater(
-      controller.open(
-        YlMediaSource.network(
+      loadSession(
+        controller,
+        YlNetworkSource(
           Uri.parse('https://example.invalid/live.mkv'),
-          formatHint: YlFormatHint.matroska,
-          isLive: true,
+          format: YlMediaFormat.matroska,
+          intent: YlStreamIntent.live,
         ),
       ),
       throwsA(
-        isA<YlPlayerError>().having(
-          (error) => error.code,
+        isA<YlPlayerException>().having(
+          (error) => error.failure.code,
           'code',
           'container.network_mkv_live_unsupported',
         ),
@@ -92,10 +98,11 @@ void main() {
         .firstWhere(
           (state) =>
               state.engine == YlPlaybackEngine.avPlayer &&
-              state.status != YlPlaybackStatus.error,
+              state.status != YlPlaybackStatus.failed,
         )
         .timeout(const Duration(seconds: 5));
-    await controller.play();
+    await sessionFor(controller).play();
+    await sessionFor(controller).ready.timeout(const Duration(seconds: 20));
     await recoveredState;
   });
 }

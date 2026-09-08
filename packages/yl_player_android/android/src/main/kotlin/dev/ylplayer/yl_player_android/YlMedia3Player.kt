@@ -43,6 +43,7 @@ internal class YlMedia3Player(
     private val lifecycle = YlLifecycleCoordinator()
     private val deviceProfile = YlAndroidDeviceProfile.collect(context)
     private val trackSelector = DefaultTrackSelector(context)
+    private var committedLoadToken: Long? = null
     private val httpClient = configuration.network.createHttpClient()
     private val loadControl = YlAdaptiveLoadControl(
         YlPlaybackPolicy.effectiveBufferProfile(
@@ -134,9 +135,9 @@ internal class YlMedia3Player(
                 .setUsage(C.USAGE_MEDIA)
                 .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
                 .build(),
-            true,
+            configuration.managesAudioSession,
         )
-        exoPlayer.setHandleAudioBecomingNoisy(true)
+        exoPlayer.setHandleAudioBecomingNoisy(configuration.managesAudioSession)
         exoPlayer.setWakeMode(C.WAKE_MODE_NETWORK)
         applyTrackConstraints()
         exoPlayer.addListener(this)
@@ -147,6 +148,9 @@ internal class YlMedia3Player(
     fun command(name: String, arguments: Map<String, Any?>) {
         check(!disposed) { "Player is disposed." }
         when (name) {
+            // Media3 open commits synchronously; there is no preparing candidate here.
+            "cancelOpen" -> Unit
+            "requestState" -> emitState()
             "stop" -> stop()
             "open" -> open(arguments["source"].asStringMap())
             "play" -> {
@@ -298,6 +302,7 @@ internal class YlMedia3Player(
         val reset = YlStopPolicy.reset(sourceGeneration)
         resetting = true
         stoppedState = reset.state
+        committedLoadToken = null
         sourceGeneration = reset.generation
         lifecycle.reduce(YlLifecycleEvent.USER_PAUSE)
         stallWatchdog.cancel()
@@ -350,37 +355,12 @@ internal class YlMedia3Player(
     }
 
     private fun open(source: Map<String, Any?>) {
-        cancelFocusGrace()
-        stallWatchdog.cancel()
         validateOpen(source)
-        stoppedState = null
         val uriString = source["uri"] as String
-        sourceIsLive = source["isLive"] == true
-        sourceClass = YlPlaybackPolicy.classifySource(
-            kind = source["kind"] as? String ?: "network",
-            isLive = sourceIsLive,
-            formatHint = source["formatHint"] as? String ?: "automatic",
-            uri = uriString,
-        )
-        loadControl.updateProfile(
-            YlPlaybackPolicy.effectiveBufferProfile(
-                deviceProfile.tier,
-                sourceClass,
-                configuration.bufferRequest(),
-            ),
-        )
-        active = true
-        savedPositionMs = 0
-        resumeAtLiveEdge = false
+        val loadOptions = source["loadOptions"].asStringMap()
         val headers = source["headers"].asStringMap().mapValues { it.value.toString() }
         val network = configuration.network
-        sourceGeneration += 1
-        val generation = sourceGeneration
-        videoOutput.attach(generation, generation, exoPlayer::setVideoSurface)
-        handler.removeCallbacks(positionTicker)
-        handler.post(positionTicker)
-        firstFrameGate.reset(generation)
-        firstFrameRendered = false
+        val generation = sourceGeneration + 1
         val httpFactory = OkHttpDataSource.Factory(httpClient)
             .setDefaultRequestProperties(headers)
         val dataSourceFactory = DefaultDataSource.Factory(context, httpFactory)
@@ -399,6 +379,29 @@ internal class YlMedia3Player(
             .setUri(Uri.parse(uriString))
             .setMimeType(YlAndroidChannel.mimeType(source["formatHint"] as? String))
             .build()
+
+        val mediaSource = mediaSourceFactory.createMediaSource(mediaItem)
+        cancelFocusGrace()
+        stallWatchdog.cancel()
+        stoppedState = null
+        sourceGeneration = generation
+        committedLoadToken = (source["loadToken"] as? Number)?.toLong()
+        videoOutput.attach(generation, generation, exoPlayer::setVideoSurface)
+        handler.removeCallbacks(positionTicker)
+        handler.post(positionTicker)
+        firstFrameGate.reset(generation)
+        firstFrameRendered = false
+        sourceIsLive = source["isLive"] == true
+        sourceClass = YlPlaybackPolicy.classifySource(
+            kind = source["kind"] as? String ?: "network",
+            isLive = sourceIsLive,
+            formatHint = source["formatHint"] as? String ?: "automatic",
+            uri = uriString,
+        )
+
+        active = true
+        savedPositionMs = 0
+        resumeAtLiveEdge = false
 
         openStartedAtMs = SystemClock.elapsedRealtime()
         openDurationMs = null
@@ -427,11 +430,32 @@ internal class YlMedia3Player(
         audioTracks = emptyList()
         videoTracks = emptyList()
         lastVideoSize = VideoSize.UNKNOWN
+        if (source.containsKey("loadOptions")) {
+            val constraint = loadOptions["videoConstraints"].asStringMap()
+            hostQualityConstraint = AndroidQualityConstraint(
+                maxWidth = (constraint["maxWidth"] as? Number)?.toInt(),
+                maxHeight = (constraint["maxHeight"] as? Number)?.toInt(),
+                maxBitrate = (constraint["maxBitrate"] as? Number)?.toInt(),
+            )
+        }
         applyTrackConstraints()
         status = "opening"
         exoPlayer.stop()
         exoPlayer.clearMediaItems()
-        exoPlayer.setMediaSource(mediaSourceFactory.createMediaSource(mediaItem))
+        val startPosition = (loadOptions["startPositionMs"] as? Number)?.toLong() ?: 0L
+        loadControl.updateProfile(
+            YlPlaybackPolicy.effectiveBufferProfile(
+                deviceProfile.tier,
+                sourceClass,
+                configuration.bufferRequest(if (source.containsKey("loadOptions")) loadOptions else null),
+            ),
+        )
+        exoPlayer.setMediaSource(mediaSource, startPosition)
+        if (source.containsKey("loadOptions")) {
+            val autoplay = loadOptions["autoplay"] == true
+            lifecycle.reduce(if (autoplay) YlLifecycleEvent.USER_PLAY else YlLifecycleEvent.USER_PAUSE)
+            exoPlayer.playWhenReady = autoplay
+        }
         exoPlayer.prepare()
         emitState()
         refreshStallWatchdog()
@@ -874,6 +898,7 @@ internal class YlMedia3Player(
             YlAndroidChannel.fullStateEnvelope(
                 playerId = playerId,
                 generation = sourceGeneration,
+                loadToken = committedLoadToken,
                 state = mapOf(
                     "status" to status,
                     "positionMs" to position,
@@ -950,6 +975,7 @@ internal class YlMedia3Player(
         stallWatchdog.cancel()
         disposed = true
         sourceGeneration += 1
+        committedLoadToken = null
         cancelFocusGrace()
         handler.removeCallbacksAndMessages(null)
         exoPlayer.removeListener(this)

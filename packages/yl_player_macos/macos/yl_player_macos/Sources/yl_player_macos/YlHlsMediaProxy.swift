@@ -13,6 +13,8 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     let method: String
     let range: String?
     var redirectCount = 0
+    var credentialsStripped = false
+    var resourceKey = ""
     var responseStarted = false
     var usesChunkedTransfer = false
     var pendingSends = 0
@@ -37,6 +39,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
   private let accessToken = UUID().uuidString.lowercased()
   private var session: URLSession!
   private var connections: [ObjectIdentifier: NWConnection] = [:]
+  private var strippedResources = Set<String>()
   private var taskRecords: [Int: TaskRecord] = [:]
   private var connectionTasks: [ObjectIdentifier: URLSessionDataTask] = [:]
   private var cancelled = false
@@ -45,9 +48,10 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
   init(
     originURL: URL,
     headers: [String: String],
+    credentials: [String: String] = [:],
     configuration: YlNetworkConfiguration
   ) throws {
-    headerPolicy = YlHlsHeaderPolicy(originURL: originURL, headers: headers)
+    headerPolicy = YlHlsHeaderPolicy(originURL: originURL, headers: headers, credentials: credentials)
     self.configuration = configuration
     let parameters = NWParameters.tcp
     parameters.requiredLocalEndpoint = .hostPort(
@@ -107,7 +111,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     }
   }
 
-  func proxyURL(for destination: URL) throws -> URL {
+  func proxyURL(for destination: URL, credentialsStripped: Bool = false) throws -> URL {
     guard let scheme = destination.scheme?.lowercased(),
           (scheme == "http" || scheme == "https"),
           destination.host?.isEmpty == false else {
@@ -131,6 +135,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     components.scheme = "http"
     components.host = "127.0.0.1"
     components.port = Int(port.rawValue)
+    if credentialsStripped { components.queryItems = [URLQueryItem(name: "credentialsStripped", value: "1")] }
     components.path = "/\(accessToken)/\(Self.encode(destination))/\(resourceName(for: destination))"
     guard let url = components.url else {
       throw NativePlayerError(
@@ -235,7 +240,9 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     let incomingHeaders = Self.headers(from: lines.dropFirst())
     let range = incomingHeaders["range"]
     let method = String(requestParts[0])
-    let request = makeRequest(destination: destination, range: range, method: method)
+    let resourceKey = destination.absoluteString
+    let stripped = String(path).contains("credentialsStripped=1") || !headerPolicy.isSourceOrigin(destination) || lock.withLock { strippedResources.contains(resourceKey) }
+    let request = makeRequest(destination: destination, range: range, method: method, credentialsStripped: stripped)
     let task = session.dataTask(with: request)
     lock.withLock {
       taskRecords[task.taskIdentifier] = TaskRecord(
@@ -243,6 +250,8 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
         method: method,
         range: range
       )
+      taskRecords[task.taskIdentifier]?.credentialsStripped = stripped
+      taskRecords[task.taskIdentifier]?.resourceKey = resourceKey
       connectionTasks[ObjectIdentifier(connection)] = task
     }
     task.resume()
@@ -264,12 +273,13 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
   private func makeRequest(
     destination: URL,
     range: String?,
-    method: String = "GET"
+    method: String = "GET",
+    credentialsStripped: Bool = false
   ) -> URLRequest {
     var request = URLRequest(url: destination)
     request.httpMethod = method
     let ownedHeaders = Set(["range", "if-range", "host", "content-length"])
-    for (name, value) in headerPolicy.headers(for: destination)
+    for (name, value) in headerPolicy.headers(for: destination, credentialsStripped: credentialsStripped)
       where !ownedHeaders.contains(name.lowercased()) {
       request.setValue(value, forHTTPHeaderField: name)
     }
@@ -400,6 +410,8 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       completionHandler(nil)
       return
     }
+    record.credentialsStripped = record.credentialsStripped || !headerPolicy.isSourceOrigin(destination)
+    if record.credentialsStripped { _ = lock.withLock { strippedResources.insert(record.resourceKey) } }
     record.redirectCount += 1
     guard record.redirectCount <= configuration.maxRedirects else {
       completionHandler(nil)
@@ -408,7 +420,8 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     completionHandler(makeRequest(
       destination: destination,
       range: record.range,
-      method: record.method
+      method: record.method,
+      credentialsStripped: record.credentialsStripped
     ))
   }
 

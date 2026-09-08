@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:yl_player/yl_player.dart';
+import 'support/playback_sessions.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -19,15 +20,16 @@ void main() {
   }
 
   Future<void> openLocalMkv(YlPlayerController controller, File file) =>
-      controller.open(
-        YlMediaSource.file(file.path, formatHint: YlFormatHint.matroska),
+      loadSession(
+        controller,
+        YlFileSource(file.path, format: YlMediaFormat.matroska),
       );
 
   testWidgets('local H264 AAC MKV uses native fallback and renders a frame', (
     WidgetTester tester,
   ) async {
     final file = await copyAssetToLocalFile('h264_aac.mkv');
-    final controller = YlPlayerController();
+    final controller = await YlPlayerController.create();
     addTearDown(controller.dispose);
     await tester.pumpWidget(
       MaterialApp(
@@ -42,40 +44,42 @@ void main() {
     final firstFrame = controller.events
         .firstWhere((event) => event is YlFirstFrameEvent)
         .timeout(const Duration(seconds: 15));
-    await controller.play();
+    await sessionFor(controller).play();
+    await sessionFor(controller).ready.timeout(const Duration(seconds: 20));
     await firstFrame;
     await tester.pump();
 
-    expect(controller.state.engine, YlPlaybackEngine.nativeFallback);
-    expect(controller.state.isHardwareDecoding, isTrue);
-    expect(controller.state.decoderName, 'VideoToolbox');
-    expect(controller.state.videoSize?.width, 320);
-    expect(controller.state.videoSize?.height, 180);
+    expect(controller.state.engine, YlPlaybackEngine.managedFallback);
+    expect(controller.state.decoderMode, YlDecoderMode.unknown);
+    expect(controller.state.decoderIdentity, 'VideoToolbox');
+    expect(controller.state.videoGeometry?.displaySize.width, 320);
+    expect(controller.state.videoGeometry?.displaySize.height, 180);
     expect(controller.textureId.value, isNotNull);
 
-    await controller.seekTo(const Duration(milliseconds: 900));
+    await sessionFor(controller).seekTo(const Duration(milliseconds: 900));
     final seeked = await controller.states
         .firstWhere(
-          (state) => state.position >= const Duration(milliseconds: 850),
+          (state) =>
+              state.timeline.position >= const Duration(milliseconds: 850),
         )
         .timeout(const Duration(seconds: 10));
-    expect(seeked.engine, YlPlaybackEngine.nativeFallback);
+    expect(seeked.engine, YlPlaybackEngine.managedFallback);
   });
 
   testWidgets('local MKV exposes and switches both AAC tracks', (
     WidgetTester tester,
   ) async {
     final file = await copyAssetToLocalFile('two_audio_tracks.mkv');
-    final controller = YlPlayerController();
+    final controller = await YlPlayerController.create();
     addTearDown(controller.dispose);
     await tester.pumpWidget(
       MaterialApp(home: YlPlayerView(controller: controller)),
     );
 
     await openLocalMkv(controller, file);
-    expect(controller.audioTracks, hasLength(2));
-    final secondTrack = controller.audioTracks[1];
-    await controller.selectAudioTrack(secondTrack.id);
+    expect(controller.state.audioTracks, hasLength(2));
+    final secondTrack = controller.state.audioTracks[1];
+    await sessionFor(controller).selectAudioTrack(secondTrack.id);
     final switched = await controller.states
         .firstWhere(
           (state) => state.audioTracks.any(
@@ -83,6 +87,6 @@ void main() {
           ),
         )
         .timeout(const Duration(seconds: 5));
-    expect(switched.engine, YlPlaybackEngine.nativeFallback);
+    expect(switched.engine, YlPlaybackEngine.managedFallback);
   });
 }

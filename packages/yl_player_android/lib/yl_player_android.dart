@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:yl_player_platform_interface/yl_player_channel.dart';
+import 'package:yl_player_platform_interface/yl_player_legacy_transport.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 /// Endorsed Android platform registration for `yl_player`.
@@ -27,9 +27,9 @@ final class YlPlayerAndroid extends YlPlayerPlatform {
   }
 
   @override
-  Future<YlPlatformPlayer> createPlayer(YlPlayerConfiguration configuration) =>
-      createYlChannelPlayer(
-        configuration: configuration,
+  Future<YlPlatformPlayer> createPlayer(YlPlayerOptions options) =>
+      createYlLegacyChannelPlayer(
+        options: options,
         methods: _methodChannel,
         nativeEvents: _nativeEvents,
         platform: 'android',

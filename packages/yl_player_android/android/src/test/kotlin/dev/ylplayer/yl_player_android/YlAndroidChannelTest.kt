@@ -8,6 +8,31 @@ import kotlin.test.assertTrue
 
 class YlAndroidChannelTest {
     @Test
+    fun `per load goals apply existing profiles without mutating previous source configuration`() {
+        val legacy = PlayerConfiguration.from(mapOf("bufferMode" to "stable"))
+        val low = legacy.bufferRequest(mapOf("bufferStrategy" to "lowLatency"))
+        val smooth = legacy.bufferRequest(mapOf("bufferStrategy" to "smoothPlayback"))
+        val automatic = legacy.bufferRequest(emptyMap())
+        assertEquals(5_000, YlPlaybackPolicy.effectiveBufferProfile(YlDeviceTier.STANDARD, YlSourceClass.NETWORK_VOD, low).maxBufferMs)
+        assertEquals(50_000, YlPlaybackPolicy.effectiveBufferProfile(YlDeviceTier.STANDARD, YlSourceClass.NETWORK_VOD, smooth).maxBufferMs)
+        assertEquals(20_000, YlPlaybackPolicy.effectiveBufferProfile(YlDeviceTier.STANDARD, YlSourceClass.NETWORK_VOD, automatic).maxBufferMs)
+        assertEquals("stable", legacy.bufferRequest().mode)
+        assertEquals("lowLatency", low.mode)
+    }
+
+    @Test
+    fun `explicit app managed disables automatic audio ownership with legacy defaults intact`() {
+        assertFalse(PlayerConfiguration.from(mapOf("audioPolicy" to "appManaged")).managesAudioSession)
+        assertTrue(PlayerConfiguration.from(emptyMap()).managesAudioSession)
+    }
+    @Test
+    fun `full state carries committed candidate token independently of generation`() {
+        val state = YlAndroidChannel.fullStateEnvelope(7, 3, emptyMap(), loadToken = 11)
+        assertEquals(11L, state["loadToken"])
+        assertEquals(3L, state["generation"])
+    }
+
+    @Test
     fun `every explicit supported format has a MIME route`() {
         val explicit = YlAndroidChannel.supportedFormats.filterNot { it == "automatic" }
 

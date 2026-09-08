@@ -3,12 +3,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player/yl_player.dart';
 
 import 'support/fake_player_platform.dart';
+import 'package:yl_player_platform_interface/yl_player_platform_interface.dart'
+    show YlPlayerPlatform;
 
 void main() {
   testWidgets('shows placeholder until a texture is available', (tester) async {
-    final backend = FakePlatformPlayer();
+    final backend = FakePlatformPlayer()..setTextureId(null);
     YlPlayerPlatform.instance = FakePlayerPlatform(backend);
-    final controller = YlPlayerController();
+    final controller = await YlPlayerController.create();
 
     await tester.pumpWidget(
       MaterialApp(
@@ -33,11 +35,11 @@ void main() {
   ) async {
     final firstBackend = FakePlatformPlayer();
     YlPlayerPlatform.instance = FakePlayerPlatform(firstBackend);
-    final firstController = YlPlayerController();
+    final firstController = await YlPlayerController.create();
 
     final secondBackend = FakePlatformPlayer();
     YlPlayerPlatform.instance = FakePlayerPlatform(secondBackend);
-    final secondController = YlPlayerController();
+    final secondController = await YlPlayerController.create();
 
     await tester.pumpWidget(
       MaterialApp(home: YlPlayerView(controller: firstController)),

@@ -21,6 +21,7 @@ enum YlPreparedOpen {
 }
 
 final class YlPreparedFallback {
+  let legacyEvents: YlLegacyCommitEmitter?
   let sourceRecipe: YlFallbackSourceRecipe
   let policy: YlFallbackMediaPolicy
   let mediaInfo: YLFMediaInfo
@@ -41,8 +42,10 @@ final class YlPreparedFallback {
     configuration: PlayerConfiguration = PlayerConfiguration(map: [:]),
     sessionConfiguration: URLSessionConfiguration = .ephemeral,
     cancellationToken: YlOpenCancellationToken? = nil,
+    legacyEvents: YlLegacyCommitEmitter? = nil,
     onRetry: YlNetworkByteSource.RetryCallback? = nil
   ) throws {
+    self.legacyEvents = legacyEvents
     self.sessionConfiguration = sessionConfiguration
     try cancellationToken?.throwIfCancelled()
     guard let uri = source["uri"] as? String,
@@ -196,6 +199,16 @@ final class YlPreparedFallback {
     }
     self.openedMedia = nil
     return openedMedia
+  }
+
+  func prepareForLoad(positionMs: Int64, autoplay: Bool) throws {
+    if positionMs > 0 {
+      guard isSeekable, let openedMedia else {
+        throw NativePlayerError(category: "source", code: "source.not_seekable", message: "The source cannot accept a start position.")
+      }
+      try openedMedia.seek(toMediaTimeUs: positionMs * 1_000)
+    }
+    resumeState = YlFallbackResumeState(positionUs: positionMs * 1_000, selectedAudioStreamIndex: nil, shouldPlay: autoplay)
   }
 
   func prepareForReactivation(_ requested: YlFallbackResumeState) throws {

@@ -1,365 +1,288 @@
 import 'package:flutter/services.dart';
-
-import '../capabilities.dart';
-import '../configuration.dart';
-import '../media_source.dart';
-import '../media_track.dart';
-import '../playback_metrics.dart';
-import '../player_error.dart';
-import '../player_event.dart';
-import '../player_state.dart';
+import '../../yl_player_platform_interface.dart';
 
 const int ylChannelProtocolVersion = 1;
 
-/// Stable wire keys used by both endorsed native implementations.
-abstract final class YlChannelWireKeys {
-  static const String protocolVersion = 'protocolVersion';
-  static const String generation = 'generation';
-  static const String type = 'type';
-  static const String state = 'state';
-  static const String delta = 'delta';
-  static const String stateDelta = 'stateDelta';
-  static const String droppedVideoFrames = 'droppedVideoFrames';
-}
-
-Map<String, Object?> encodeYlConfiguration(
-  YlPlayerConfiguration configuration,
-) => <String, Object?>{
-  'bufferMode': configuration.bufferMode.name,
-  'decoderPolicy': configuration.decoderPolicy.name,
-  'minBufferMs': configuration.minBufferDuration?.inMilliseconds,
-  'maxBufferMs': configuration.maxBufferDuration?.inMilliseconds,
-  'maxBufferBytes': configuration.maxBufferBytes,
-  'positionEventIntervalMs': configuration.positionEventInterval.inMilliseconds,
-  'network': <String, Object?>{
-    'connectTimeoutMs':
-        configuration.networkPolicy.connectTimeout.inMilliseconds,
-    'readTimeoutMs': configuration.networkPolicy.readTimeout.inMilliseconds,
-    'maxRetries': configuration.networkPolicy.maxRetries,
-    'baseRetryDelayMs':
-        configuration.networkPolicy.baseRetryDelay.inMilliseconds,
-    'maxRetryDelayMs': configuration.networkPolicy.maxRetryDelay.inMilliseconds,
-    'maxRedirects': configuration.networkPolicy.maxRedirects,
+Map<String, Object?> encodeYlOptions(YlPlayerOptions options) => {
+  'audioPolicy': options.audioPolicy.name,
+  'decoderPolicy': options.decoderPolicy.name,
+  'positionEventIntervalMs': options.positionUpdateInterval.inMilliseconds,
+};
+Map<String, Object?> encodeYlSource(YlMediaSource source) => {
+  'uri': switch (source) {
+    YlFileSource(:final path) => Uri.file(path).toString(),
+    YlNetworkSource(:final uri) ||
+    YlAndroidContentSource(:final uri) => uri.toString(),
   },
+  'kind': source is YlFileSource
+      ? 'file'
+      : source is YlAndroidContentSource
+      ? 'content'
+      : 'network',
+  'isLive': source.intent == YlStreamIntent.live,
+  'formatHint': source.format.name,
+  if (source is YlNetworkSource) 'headers': source.request.headers,
+  if (source is YlNetworkSource) 'credentials': source.request.credentials,
+};
+Map<String, Object?> encodeYlVideoConstraints(YlVideoConstraints value) => {
+  'maxWidth': ?value.maxWidth,
+  'maxHeight': ?value.maxHeight,
+  'maxBitrate': ?value.maxBitrate,
+};
+Map<String, Object?> encodeYlLoadOptions(YlLoadOptions value) => {
+  'autoplay': value.autoplay,
+  'startPositionMs': value.startPosition?.inMilliseconds,
+  'videoConstraints': encodeYlVideoConstraints(value.videoConstraints),
+  'bufferStrategy': value.bufferStrategy.kind.name,
+  'decoderPolicy': value.decoderPolicyOverride?.name,
 };
 
-Map<String, Object?> encodeYlSource(YlMediaSource source) => <String, Object?>{
-  'uri': source.uri.toString(),
-  'kind': source.kind.name,
-  'isLive': source.isLive,
-  'formatHint': source.formatHint.name,
-  'headers': source.headers,
-};
-
-Map<String, Object?> encodeYlQualityConstraint(
-  YlQualityConstraint constraint,
-) => <String, Object?>{
-  'maxWidth': constraint.maxWidth,
-  'maxHeight': constraint.maxHeight,
-  'maxBitrate': constraint.maxBitrate,
-};
-
-YlPlayerState decodeYlState(Object? value) {
+YlPlayerState decodeYlState(
+  Object? value, {
+  required YlPlaybackSessionId? sessionId,
+  required int revision,
+}) {
   final map = ylStringMap(value);
-  final width = _positiveInt(map['videoWidth']);
-  final height = _positiveInt(map['videoHeight']);
-  final durationMs = _nonnegativeInt(map['durationMs']);
-  final liveOffsetMs = _nonnegativeInt(map['liveOffsetMs']);
-  final dvrStartMs = _nonnegativeInt(map['dvrStartMs']);
-  final dvrEndMs = _nonnegativeInt(map['dvrEndMs']);
-  final hasValidDvr =
-      dvrStartMs != null && dvrEndMs != null && dvrEndMs >= dvrStartMs;
-  return YlPlayerState(
-    status: _enumByName(
-      YlPlaybackStatus.values,
-      map['status'],
-      YlPlaybackStatus.idle,
+  final status = map['status'] == 'opening'
+      ? YlPlaybackStatus.loading
+      : map['status'] == 'error'
+      ? YlPlaybackStatus.failed
+      : _enum(YlPlaybackStatus.values, map['status'], YlPlaybackStatus.idle);
+  final width = _positive(map['videoWidth']);
+  final height = _positive(map['videoHeight']);
+  final start = _duration(map['dvrStartMs']);
+  final end = _duration(map['dvrEndMs']);
+  final size = width != null && height != null
+      ? YlPixelSize(width.toDouble(), height.toDouble())
+      : null;
+  final result = YlPlayerState(
+    revision: revision,
+    sessionId: status == YlPlaybackStatus.idle ? null : sessionId,
+    status: status,
+    timeline: YlTimeline(
+      position: _duration(map['positionMs']) ?? Duration.zero,
+      bufferedPosition: _duration(map['bufferedPositionMs']) ?? Duration.zero,
+      duration: _duration(map['durationMs']),
+      liveOffset: _duration(map['liveOffsetMs'], clamp: true),
+      isLive: map['isLive'] == true,
+      isSeekable: map['isSeekable'] == true,
+      isAtLiveEdge: map['isAtLiveEdge'] as bool?,
+      dvrWindow: start != null && end != null && end >= start
+          ? YlDvrWindow(start: start, end: end)
+          : null,
     ),
-    position: Duration(milliseconds: _nonnegativeInt(map['positionMs']) ?? 0),
-    duration: durationMs == null ? null : Duration(milliseconds: durationMs),
-    bufferedPosition: Duration(
-      milliseconds: _nonnegativeInt(map['bufferedPositionMs']) ?? 0,
-    ),
-    isLive: map['isLive'] == true,
-    isSeekable: map['isSeekable'] == true,
-    isAtLiveEdge: map['isAtLiveEdge'] == true,
-    liveOffset: liveOffsetMs == null
+    videoGeometry: size == null
         ? null
-        : Duration(milliseconds: liveOffsetMs),
-    dvrWindow: hasValidDvr
-        ? YlDvrWindow(
-            start: Duration(milliseconds: dvrStartMs),
-            end: Duration(milliseconds: dvrEndMs),
+        : YlVideoGeometry(encodedSize: size, displaySize: size),
+    engine: map['engine'] == 'nativeFallback'
+        ? YlPlaybackEngine.managedFallback
+        : _enum(
+            YlPlaybackEngine.values,
+            map['engine'],
+            YlPlaybackEngine.unknown,
+          ),
+    // Legacy booleans/codec-name heuristics carry no initialized-decoder proof.
+    decoderMode: YlDecoderMode.unknown,
+    decoderIdentity: map['decoderName'] is String
+        ? YlSafeDiagnostics.publicMessage(map['decoderName'] as String)
+        : null,
+    audioTracks: _tracks(map['audioTracks'], YlTrackKind.audio),
+    videoTracks: _tracks(map['videoTracks'], YlTrackKind.video),
+    metrics: _metrics(map['metrics']),
+    failure: status == YlPlaybackStatus.failed
+        ? decodeYlFailure(
+            map['error'],
+            scope: sessionId == null
+                ? YlFailureScope.player
+                : YlFailureScope.session,
           )
         : null,
-    videoSize: width == null || height == null
-        ? null
-        : YlVideoSize(width, height),
-    engine: _enumByName(
-      YlPlaybackEngine.values,
-      map['engine'],
-      YlPlaybackEngine.unknown,
-    ),
-    isHardwareDecoding: map['isHardwareDecoding'] == true,
-    decoderName: _string(map['decoderName']),
-    audioTracks: _decodeTracks(map['audioTracks'], YlTrackKind.audio),
-    videoTracks: _decodeTracks(map['videoTracks'], YlTrackKind.video),
-    capabilities: _decodeCapabilities(map['capabilities']),
-    metrics: _decodeMetrics(map['metrics']),
-    error: map['error'] == null ? null : decodeYlError(map['error']),
   );
+  validateYlPlayerState(result);
+  return result;
 }
 
-YlPlayerState mergeYlStateDelta(YlPlayerState current, Object? value) {
-  final map = ylStringMap(value);
-  final positionMs = _nonnegativeInt(map['positionMs']);
-  final bufferedPositionMs = _nonnegativeInt(map['bufferedPositionMs']);
-  final hasLiveOffset = map.containsKey('liveOffsetMs');
-  final liveOffsetMs = _nonnegativeInt(map['liveOffsetMs']);
-  return current.copyWith(
-    position: positionMs == null
-        ? current.position
-        : Duration(milliseconds: positionMs),
-    bufferedPosition: bufferedPositionMs == null
-        ? current.bufferedPosition
-        : Duration(milliseconds: bufferedPositionMs),
-    isAtLiveEdge: map['isAtLiveEdge'] is bool
-        ? map['isAtLiveEdge']! as bool
-        : current.isAtLiveEdge,
-    liveOffset: hasLiveOffset
-        ? liveOffsetMs == null
-              ? null
-              : Duration(milliseconds: liveOffsetMs)
-        : current.liveOffset,
-    metrics: map['metrics'] is Map
-        ? _decodeMetrics(map['metrics'], base: current.metrics)
-        : current.metrics,
-  );
-}
-
-YlPlayerEvent? decodeYlEvent(Map<String, Object?> envelope) {
-  switch (envelope[YlChannelWireKeys.type]) {
-    case 'firstFrame':
-      return YlFirstFrameEvent(
-        width: _positiveInt(envelope['width']),
-        height: _positiveInt(envelope['height']),
-      );
-    case 'error':
-      return YlErrorEvent(decodeYlError(envelope['error']));
-    case 'tracksChanged':
-      return YlTracksChangedEvent(
-        audioTracks: _decodeTracks(envelope['audioTracks'], YlTrackKind.audio),
-        videoTracks: _decodeTracks(envelope['videoTracks'], YlTrackKind.video),
-      );
-    case 'retry':
-      return YlRetryEvent(
-        attempt: _nonnegativeInt(envelope['attempt']) ?? 0,
-        delay: Duration(
-          milliseconds: _nonnegativeInt(envelope['delayMs']) ?? 0,
-        ),
-        error: decodeYlError(envelope['error']),
-      );
-    case 'fallback':
-      return YlFallbackEvent(
-        from: _enumByName(
-          YlPlaybackEngine.values,
-          envelope['from'],
-          YlPlaybackEngine.unknown,
-        ),
-        to: _enumByName(
-          YlPlaybackEngine.values,
-          envelope['to'],
-          YlPlaybackEngine.nativeFallback,
-        ),
-        reason: decodeYlError(envelope['error']),
-      );
-  }
-  return null;
-}
-
-YlPlayerError decodeYlError(Object? value) {
-  final map = ylStringMap(value);
-  return YlPlayerError(
-    category: _enumByName(
-      YlPlayerErrorCategory.values,
-      map['category'],
-      YlPlayerErrorCategory.internal,
-    ),
-    code: _string(map['code']) ?? 'platform.unknown',
-    message: _string(map['message']) ?? 'Native playback failed.',
-    platformDiagnostic: _string(map['platformDiagnostic']),
-  );
-}
-
-YlPlayerError decodeYlPlatformException(
-  PlatformException exception, {
-  required String platform,
-}) {
-  if (exception.details is Map) {
-    return decodeYlError(exception.details);
-  }
-  return YlPlayerError(
-    category: YlPlayerErrorCategory.internal,
-    code: exception.code.isEmpty ? '$platform.platform_error' : exception.code,
-    message: exception.message ?? 'Native playback failed.',
-    platformDiagnostic: exception.details?.toString(),
-  );
-}
-
-Map<String, Object?> ylStringMap(Object? value) {
-  if (value is! Map) {
-    return const <String, Object?>{};
-  }
-  return value.map<String, Object?>((key, item) => MapEntry('$key', item));
-}
-
-int? _int(Object? value) {
-  if (value is int) {
-    return value;
-  }
-  if (value is double && value.isFinite) {
-    return value.toInt();
-  }
-  return null;
-}
-
-int? _nonnegativeInt(Object? value) {
-  final decoded = _int(value);
-  return decoded != null && decoded >= 0 ? decoded : null;
-}
-
-int? _positiveInt(Object? value) {
-  final decoded = _int(value);
-  return decoded != null && decoded > 0 ? decoded : null;
-}
-
-String? _string(Object? value) => value is String ? value : null;
-
-T _enumByName<T extends Enum>(List<T> values, Object? name, T fallback) {
-  for (final value in values) {
-    if (value.name == name) {
-      return value;
-    }
-  }
-  return fallback;
-}
-
-List<YlMediaTrack> _decodeTracks(Object? value, YlTrackKind fallbackKind) {
-  if (value is! List) {
-    return const <YlMediaTrack>[];
-  }
-  return value
-      .whereType<Map>()
-      .map((item) {
-        final map = ylStringMap(item);
-        return YlMediaTrack(
-          id: _string(map['id']) ?? '',
-          kind: _enumByName(YlTrackKind.values, map['kind'], fallbackKind),
-          label: _string(map['label']),
-          language: _string(map['language']),
-          codec: _string(map['codec']),
-          bitrate: _positiveInt(map['bitrate']),
-          width: _positiveInt(map['width']),
-          height: _positiveInt(map['height']),
-          isSelected: map['isSelected'] == true,
-        );
-      })
-      .toList(growable: false);
-}
-
-YlPlayerCapabilities? _decodeCapabilities(Object? value) {
-  if (value is! Map) {
-    return null;
-  }
-  final map = ylStringMap(value);
-  final codecs = map['hardwareVideoCodecs'];
-  final formats = map['supportedFormats'];
-  return YlPlayerCapabilities(
-    hardwareVideoCodecs: codecs is List
-        ? codecs.whereType<String>().toSet()
-        : const <String>{},
-    supportedFormats: formats is List
-        ? formats
-              .map(
-                (name) => _enumByName(
-                  YlFormatHint.values,
-                  name,
-                  YlFormatHint.automatic,
-                ),
-              )
-              .toSet()
-        : const <YlFormatHint>{},
-    maxConcurrentVideoDecoders:
-        _positiveInt(map['maxConcurrentVideoDecoders']) ?? 1,
-    maxWidth: _positiveInt(map['maxWidth']),
-    maxHeight: _positiveInt(map['maxHeight']),
-  );
-}
-
-YlPlaybackMetrics _decodeMetrics(
+YlPlayerState mergeYlStateDelta(
+  YlPlayerState state,
   Object? value, {
-  YlPlaybackMetrics base = const YlPlaybackMetrics(),
+  required int revision,
 }) {
   final map = ylStringMap(value);
-  Duration? nullableDuration(String key, Duration? current) {
-    if (!map.containsKey(key)) {
-      return current;
-    }
-    final milliseconds = _nonnegativeInt(map[key]);
-    return milliseconds == null ? null : Duration(milliseconds: milliseconds);
-  }
+  final result = state.copyWith(
+    revision: revision,
+    timeline: state.timeline.copyWith(
+      position: _duration(map['positionMs']),
+      bufferedPosition: _duration(map['bufferedPositionMs']),
+      liveOffset: map.containsKey('liveOffsetMs')
+          ? _duration(map['liveOffsetMs'], clamp: true)
+          : state.timeline.liveOffset,
+      isAtLiveEdge: map.containsKey('isAtLiveEdge')
+          ? map['isAtLiveEdge']
+          : state.timeline.isAtLiveEdge,
+    ),
+    metrics: _metrics(map['metrics'], state.metrics),
+  );
+  validateYlPlayerState(result);
+  return result;
+}
 
-  int? nullableInt(String key, int? current) {
-    if (!map.containsKey(key)) {
-      return current;
-    }
-    return _nonnegativeInt(map[key]);
+YlPlayerCapabilities decodeYlCapabilities(
+  Object? value, {
+  required String platform,
+  required YlPlaybackEngine initialEngine,
+}) {
+  if (value is! Map) {
+    throw legacyException(
+      YlFailureCodes.protocolMismatch,
+      scope: YlFailureScope.player,
+    );
   }
+  final map = ylStringMap(value);
+  return YlPlayerCapabilities(
+    deviceProfile: 'legacy.$platform',
+    availableEngines: [
+      initialEngine,
+      if (platform != 'android') YlPlaybackEngine.managedFallback,
+    ],
+    supportedOperations: YlPlayerOperation.values,
+    maxConcurrentVideoDecoders: _positive(map['maxConcurrentVideoDecoders']),
+    maxWidth: _positive(map['maxWidth']),
+    maxHeight: _positive(map['maxHeight']),
+  );
+}
 
-  String? nullableString(String key, String? current) {
-    if (!map.containsKey(key)) {
-      return current;
-    }
-    return _string(map[key]);
-  }
+int _diagnosticSerial = 0;
+YlPlayerException legacyException(
+  String code, {
+  YlFailureScope scope = YlFailureScope.command,
+}) => YlPlayerException(
+  YlFailure(
+    category: code.startsWith('decoder.')
+        ? YlFailureCategory.decoder
+        : code.startsWith('network.')
+        ? YlFailureCategory.network
+        : code.startsWith('container.')
+        ? YlFailureCategory.container
+        : code == YlFailureCodes.policyUnsupported
+        ? YlFailureCategory.unsupported
+        : code == YlFailureCodes.protocolMismatch
+        ? YlFailureCategory.protocol
+        : code == YlFailureCodes.loadCancelled
+        ? YlFailureCategory.cancelled
+        : YlFailureCategory.platform,
+    code: code,
+    message: 'Playback operation failed.',
+    retryable: false,
+    scope: scope,
+    diagnosticId: 'legacy-${++_diagnosticSerial}',
+  ),
+);
+YlFailure decodeYlFailure(
+  Object? value, {
+  YlFailureScope scope = YlFailureScope.session,
+}) {
+  final map = ylStringMap(value);
+  // Never copy native messages, arbitrary codes, diagnostics, paths or stacks.
+  final code = switch (map['code']) {
+    'decoder.video_hardware_unavailable' ||
+    'decoder.unavailable' => YlFailureCodes.decoderUnavailable,
+    'decoder.unsupported' => YlFailureCodes.decoderUnsupported,
+    'network.failed' => YlFailureCodes.networkFailed,
+    'network.range_not_supported' => 'network.range_not_supported',
+    'network.http_status' => 'network.http_status',
+    'container.network_mkv_live_unsupported' =>
+      'container.network_mkv_live_unsupported',
+    'source.missing' => YlFailureCodes.sourceMissing,
+    'source.invalid' => YlFailureCodes.sourceInvalid,
+    'container.unsupported' => YlFailureCodes.containerUnsupported,
+    'load.cancelled' => YlFailureCodes.loadCancelled,
+    _ => YlFailureCodes.platformFailure,
+  };
+  final base = legacyException(code, scope: scope).failure;
+  final category = switch (map['category']) {
+    'network' => YlFailureCategory.network,
+    'source' => YlFailureCategory.source,
+    'container' => YlFailureCategory.container,
+    'decoder' || 'decoderUnsupported' => YlFailureCategory.decoder,
+    'resource' => YlFailureCategory.resource,
+    _ => base.category,
+  };
+  return YlFailure(
+    category: category,
+    code: base.code,
+    message: base.message,
+    retryable: base.retryable,
+    scope: scope,
+    diagnosticId: base.diagnosticId,
+  );
+}
 
-  return base.copyWith(
-    openDuration: nullableDuration('openDurationMs', base.openDuration),
-    firstFrameDuration: nullableDuration(
-      'firstFrameDurationMs',
-      base.firstFrameDuration,
-    ),
-    rebufferCount: _nonnegativeInt(map['rebufferCount']),
-    rebufferDuration:
-        nullableDuration('rebufferDurationMs', base.rebufferDuration) ??
-        base.rebufferDuration,
-    droppedVideoFrames: _nonnegativeInt(
-      map[YlChannelWireKeys.droppedVideoFrames],
-    ),
-    audioUnderruns: _nonnegativeInt(map['audioUnderruns']),
-    estimatedBitrate: nullableInt('estimatedBitrate', base.estimatedBitrate),
-    bufferedDuration:
-        nullableDuration('bufferedDurationMs', base.bufferedDuration) ??
-        base.bufferedDuration,
-    bufferedBytes: _nonnegativeInt(map['bufferedBytes']),
-    liveOffset: nullableDuration('liveOffsetMs', base.liveOffset),
-    reconnectCount: _nonnegativeInt(map['reconnectCount']),
-    androidDeviceTier: nullableString(
-      'androidDeviceTier',
-      base.androidDeviceTier,
-    ),
-    targetBufferBytes: nullableInt('targetBufferBytes', base.targetBufferBytes),
-    adaptiveDowngradeCount: nullableInt(
-      'adaptiveDowngradeCount',
-      base.adaptiveDowngradeCount,
-    ),
-    surfaceRebuildCount: nullableInt(
-      'surfaceRebuildCount',
-      base.surfaceRebuildCount,
-    ),
-    selectedVideoBitrate: nullableInt(
-      'selectedVideoBitrate',
-      base.selectedVideoBitrate,
-    ),
+YlPlayerException decodeYlPlatformException(PlatformException error) =>
+    YlPlayerException(
+      decodeYlFailure(
+        error.details is Map ? error.details : {'code': error.code},
+        scope: YlFailureScope.command,
+      ),
+    );
+Map<String, Object?> ylStringMap(Object? value) => value is Map
+    ? Map.fromEntries(
+        value.entries
+            .where((entry) => entry.key is String)
+            .map((entry) => MapEntry(entry.key as String, entry.value)),
+      )
+    : {};
+int? ylWireInt(Object? value) =>
+    value is int && value >= 0 && value <= 0x7fffffffffffffff ? value : null;
+int? _positive(Object? value) {
+  final n = ylWireInt(value);
+  return n != null && n > 0 ? n : null;
+}
+
+Duration? _duration(Object? value, {bool clamp = false}) {
+  if (clamp && value is int && value < 0) return Duration.zero;
+  final n = ylWireInt(value);
+  if (n == null || n > 0x7fffffffffffffff ~/ 1000) return null;
+  return Duration(milliseconds: n);
+}
+
+T _enum<T extends Enum>(List<T> values, Object? name, T fallback) =>
+    values.where((v) => v.name == name).firstOrNull ?? fallback;
+List<YlMediaTrack> _tracks(Object? value, YlTrackKind kind) => value is List
+    ? value
+          .whereType<Map>()
+          .map(
+            (item) => YlMediaTrack(
+              id: item['id'] as String,
+              kind: kind,
+              label: item['label'] as String?,
+              language: item['language'] as String?,
+              codec: item['codec'] as String?,
+              isSelected: item['isSelected'] == true,
+              bitrate: _positive(item['bitrate']),
+              width: _positive(item['width']),
+              height: _positive(item['height']),
+            ),
+          )
+          .toList()
+    : [];
+YlPlaybackMetrics _metrics(
+  Object? value, [
+  YlPlaybackMetrics base = const YlPlaybackMetrics(),
+]) {
+  final map = ylStringMap(value);
+  Duration? time(String key, Duration? old) =>
+      map.containsKey(key) ? _duration(map[key]) : old;
+  int? count(String key, int? old) =>
+      map.containsKey(key) ? ylWireInt(map[key]) : old;
+  return YlPlaybackMetrics(
+    loadToReady: time('openDurationMs', base.loadToReady),
+    loadToFirstFrame: time('firstFrameDurationMs', base.loadToFirstFrame),
+    rebufferCount: count('rebufferCount', base.rebufferCount),
+    rebufferDuration: time('rebufferDurationMs', base.rebufferDuration),
+    droppedVideoFrames: count('droppedVideoFrames', base.droppedVideoFrames),
+    audioUnderruns: count('audioUnderruns', base.audioUnderruns),
+    estimatedBitrate: count('estimatedBitrate', base.estimatedBitrate),
+    liveOffset: time('liveOffsetMs', base.liveOffset),
+    reconnectCount: count('reconnectCount', base.reconnectCount),
   );
 }

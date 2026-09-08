@@ -28,6 +28,8 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
   private(set) var lastQualityConstraint: [String: Any?] = [:]
   private var lastVolume: Float = 1
   private var lastPlaybackSpeed: Float = 1
+  private var pendingLoadToken: Int64?
+  private var activeFallbackEvents: YlLegacyCommitEmitter?
   private var disposed = false
   private var hardwareRollbackPlaybackIntent: Bool?
   private var restorationGeneration: UInt64 = 0
@@ -83,6 +85,8 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
     restorationGeneration &+= 1
     activeRestorationGeneration = nil
     cancelDeferredRestorationCommands()
+    let requestedLoadToken = int64(source["loadToken"])
+    pendingLoadToken = requestedLoadToken
     var openGeneration: UInt64 = 0
     openGeneration = openCoordinator.begin(
       prepare: { [weak self] token in
@@ -142,7 +146,10 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
           throw error
         }
       },
-      completion: completion
+      completion: { [weak self] result in
+        if self?.pendingLoadToken == requestedLoadToken { self?.pendingLoadToken = nil }
+        completion(result)
+      }
     )
   }
 
@@ -212,7 +219,7 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
     openCoordinator.begin(
       prepare: { [weak self] token in
         guard let self else { throw YlOpenCancellationToken.cancellationError() }
-        let prepared = try self.prepareFallback(source: source, token: token)
+        let prepared = try self.prepareFallback(source: source, token: token, reactivating: true)
         try prepared.prepareForReactivation(resumeState)
         try token.throwIfCancelled()
         return .fallback(source: source, prepared: prepared)
@@ -266,6 +273,15 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
     arguments: [String: Any?],
     completion: @escaping (Result<Void, NativePlayerError>) -> Void
   ) {
+    if name == "cancelOpen" {
+      if let token = int64(arguments["loadToken"]), token == pendingLoadToken {
+        pendingLoadToken = nil
+        openCoordinator.cancelCurrent()
+      }
+      completion(.success(()))
+      return
+    }
+    if name == "requestState" { emitState(); completion(.success(())); return }
     if name == "stop" {
       commandCoordinator.cancelCurrent()
       openCoordinator.cancelCurrent()
@@ -277,6 +293,8 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
       // The persistent AV backend may hold an older source while fallback is current.
       if slot.current !== avBackend { avBackend.clearMediaForStop() }
       slot.stop()
+      activeFallbackEvents?.invalidate()
+      activeFallbackEvents = nil
       completion(.success(()))
       return
     }
@@ -398,9 +416,10 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
     reactivating: Bool
   ) throws {
     commandCoordinator.cancelCurrent()
+    let preservedIdentity = reactivating ? (slot.current as? YlFallbackBackend)?.channelGeneration : nil
     switch candidate {
     case let .avPlayer(source):
-      if !lastQualityConstraint.isEmpty {
+      if source["loadOptions"] == nil && !lastQualityConstraint.isEmpty {
         try avBackend.command(
           name: "setQualityConstraint",
           arguments: ["constraint": lastQualityConstraint]
@@ -414,9 +433,12 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
         try avBackend.activate()
       }
       try avBackend.command(name: "open", arguments: ["source": source])
+      activeFallbackEvents?.invalidate()
+      activeFallbackEvents = nil
       lastCommittedSource = source
+      if !reactivating, source["loadOptions"] != nil { lastQualityConstraint = stringMap(stringMap(source["loadOptions"])["videoConstraints"]) }
     case let .headeredHls(source, prepared):
-      if !lastQualityConstraint.isEmpty {
+      if source["loadOptions"] == nil && !lastQualityConstraint.isEmpty {
         try avBackend.command(
           name: "setQualityConstraint",
           arguments: ["constraint": lastQualityConstraint]
@@ -436,22 +458,28 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
       } else {
         try avBackend.activate()
       }
+      activeFallbackEvents?.invalidate()
+      activeFallbackEvents = nil
       lastCommittedSource = source
+      if !reactivating, source["loadOptions"] != nil { lastQualityConstraint = stringMap(stringMap(source["loadOptions"])["videoConstraints"]) }
     case let .fallback(source, prepared):
+      let candidateEmitter = prepared.legacyEvents ?? YlLegacyCommitEmitter(emit: emit)
       let qualityConstraint = try YlFallbackQualityConstraint(
-        validating: lastQualityConstraint
+        validating: reactivating || source["loadOptions"] == nil ? lastQualityConstraint : stringMap(stringMap(source["loadOptions"])["videoConstraints"])
       )
       let previous = try slot.replace {
         let backend = try YlFallbackBackend(
           playerId: playerId,
           textureId: textureId,
           textures: textures,
-          configuration: configuration,
+          configuration: configuration.forLoad(source),
           prepared: prepared,
           qualityConstraint: qualityConstraint,
           generation: slot.generation &+ 1,
           displayView: displayView,
-          emit: emit
+          loadToken: source["loadToken"] ?? nil,
+          channelIdentity: preservedIdentity,
+          emit: candidateEmitter.accept
         )
         applyPersistentPlaybackControls(to: backend)
         return backend
@@ -464,8 +492,12 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
         )
       }
       if previous !== avBackend { previous.dispose() }
+      activeFallbackEvents?.invalidate()
+      activeFallbackEvents = candidateEmitter
+      candidateEmitter.commit(generation: backend.channelGeneration)
       try backend.command(name: "open", arguments: ["source": source])
       lastCommittedSource = source
+      if !reactivating, source["loadOptions"] != nil { lastQualityConstraint = stringMap(stringMap(source["loadOptions"])["videoConstraints"]) }
     }
   }
 
@@ -482,25 +514,28 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
 
   private func prepareFallback(
     source: [String: Any?],
-    token: YlOpenCancellationToken
+    token: YlOpenCancellationToken,
+    reactivating: Bool = false
   ) throws -> YlPreparedFallback {
-    try YlPreparedFallback(
+    let candidateEvents = YlLegacyCommitEmitter(emit: emit)
+    let prepared = try YlPreparedFallback(
       source: source,
       requireHardwareProbe: false,
-      configuration: configuration,
+      configuration: configuration.forLoad(source),
       cancellationToken: token,
-      onRetry: { [weak self] attempt, delayMs, error in
-        DispatchQueue.main.async {
-          guard let self, !self.disposed, !token.isCancelled else { return }
-          self.emit(YlFallbackRetryEvent.envelope(
-            playerId: self.playerId,
-            attempt: attempt,
-            delayMs: delayMs,
-            error: error
-          ))
-        }
+      legacyEvents: candidateEvents,
+      onRetry: { [playerId] attempt, delayMs, error in
+        guard !token.isCancelled else { return }
+        candidateEvents.accept(YlFallbackRetryEvent.envelope(
+          playerId: playerId, attempt: attempt, delayMs: delayMs, error: error
+        ))
       }
     )
+    if !reactivating, source["loadOptions"] != nil {
+      let options = stringMap(source["loadOptions"])
+      try prepared.prepareForLoad(positionMs: int64(options["startPositionMs"]) ?? 0, autoplay: options["autoplay"] as? Bool ?? false)
+    }
+    return prepared
   }
 
   private func prepareHeaderedHls(
@@ -519,6 +554,7 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
     return try YlPreparedHlsAsset(
       originURL: url,
       headers: stringMap(source["headers"]).compactMapValues { $0 as? String },
+      credentials: stringMap(source["credentials"]).compactMapValues { $0 as? String },
       configuration: configuration.network,
       cancellationToken: token
     )
@@ -531,7 +567,7 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
       kind: source["kind"] as? String ?? "",
       formatHint: source["formatHint"] as? String ?? "automatic",
       isLive: source["isLive"] as? Bool ?? false,
-      hasHeaders: !headers.isEmpty
+      hasHeaders: !headers.isEmpty || !stringMap(source["credentials"]).isEmpty
     ))
   }
 
@@ -657,6 +693,8 @@ final class YlMacosPlayer: NSObject, FlutterTexture {
   func dispose() {
     guard !disposed else { return }
     disposed = true
+    activeFallbackEvents?.invalidate()
+    activeFallbackEvents = nil
     restorationGeneration &+= 1
     activeRestorationGeneration = nil
     cancelDeferredRestorationCommands()

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D6800001294A63AB00263BE5 /* YlV2ReactivationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6800011294A618700263BE5 /* YlV2ReactivationTests.swift */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		A10C0001294A63AB00263BE5 /* YlSourceRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10C0002294A618700263BE5 /* YlSourceRouterTests.swift */; };
@@ -71,6 +72,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D6800011294A618700263BE5 /* YlV2ReactivationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlV2ReactivationTests.swift; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				331C807B294A618700263BE5 /* RunnerTests.swift */,
+				D6800011294A618700263BE5 /* YlV2ReactivationTests.swift */,
 				A10C0002294A618700263BE5 /* YlSourceRouterTests.swift */,
 				B20C0011294A618700263BE5 /* YlFFmpegBridgeTests.swift */,
 				C30D0011294A618700263BE5 /* YlBoundedPacketQueueTests.swift */,
@@ -375,6 +378,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */,
+				D6800001294A63AB00263BE5 /* YlV2ReactivationTests.swift in Sources */,
 				A10C0001294A63AB00263BE5 /* YlSourceRouterTests.swift in Sources */,
 				B20C0001294A63AB00263BE5 /* YlFFmpegBridgeTests.swift in Sources */,
 				C30D0001294A63AB00263BE5 /* YlBoundedPacketQueueTests.swift in Sources */,

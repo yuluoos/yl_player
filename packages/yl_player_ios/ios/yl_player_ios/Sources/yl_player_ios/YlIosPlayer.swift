@@ -1,3 +1,4 @@
+import AVFoundation
 import CoreVideo
 import Flutter
 import Foundation
@@ -18,12 +19,18 @@ final class YlIosPlayer: NSObject, FlutterTexture {
   private let commandCoordinator = YlAsyncCommandCoordinator()
   private var lastCommittedSource: [String: Any?]?
   private(set) var lastQualityConstraint: [String: Any?] = [:]
+  private var lastVolume: Float = 1
+  private var lastPlaybackSpeed: Float = 1
+  var managesAudioSession: Bool { configuration.managesAudioSession }
+  private var pendingLoadToken: Int64?
+  private var activeFallbackEvents: YlLegacyCommitEmitter?
   private var disposed = false
 
   init(
     playerId: Int64,
     textures: FlutterTextureRegistry,
     configuration: PlayerConfiguration,
+    avPlayer: AVPlayer = AVPlayer(),
     emit: @escaping ([String: Any?]) -> Void
   ) {
     let mainEmit: ([String: Any?]) -> Void = { event in
@@ -41,6 +48,7 @@ final class YlIosPlayer: NSObject, FlutterTexture {
       playerId: playerId,
       textures: textures,
       configuration: configuration,
+      player: avPlayer,
       emit: mainEmit
     )
     self.avBackend = avBackend
@@ -61,6 +69,8 @@ final class YlIosPlayer: NSObject, FlutterTexture {
       )))
       return
     }
+    let requestedLoadToken = int64(source["loadToken"])
+    pendingLoadToken = requestedLoadToken
     openCoordinator.begin(
       prepare: { [weak self] token in
         guard let self else { throw YlOpenCancellationToken.cancellationError() }
@@ -94,7 +104,10 @@ final class YlIosPlayer: NSObject, FlutterTexture {
         try self.commit(candidate, reactivating: false)
         didCommit()
       },
-      completion: completion
+      completion: { [weak self] result in
+        if self?.pendingLoadToken == requestedLoadToken { self?.pendingLoadToken = nil }
+        completion(result)
+      }
     )
   }
 
@@ -153,7 +166,7 @@ final class YlIosPlayer: NSObject, FlutterTexture {
     openCoordinator.begin(
       prepare: { [weak self] token in
         guard let self else { throw YlOpenCancellationToken.cancellationError() }
-        let prepared = try self.prepareFallback(source: source, token: token)
+        let prepared = try self.prepareFallback(source: source, token: token, reactivating: true)
         try prepared.prepareForReactivation(resumeState)
         try token.throwIfCancelled()
         return .fallback(source: source, prepared: prepared)
@@ -195,6 +208,15 @@ final class YlIosPlayer: NSObject, FlutterTexture {
     arguments: [String: Any?],
     completion: @escaping (Result<Void, NativePlayerError>) -> Void
   ) {
+    if name == "cancelOpen" {
+      if let token = int64(arguments["loadToken"]), token == pendingLoadToken {
+        pendingLoadToken = nil
+        openCoordinator.cancelCurrent()
+      }
+      completion(.success(()))
+      return
+    }
+    if name == "requestState" { emitState(); completion(.success(())); return }
     if name == "stop" {
       commandCoordinator.cancelCurrent()
       openCoordinator.cancelCurrent()
@@ -202,6 +224,8 @@ final class YlIosPlayer: NSObject, FlutterTexture {
       // The persistent AV backend may hold an older source while fallback is current.
       if slot.current !== avBackend { avBackend.clearMediaForStop() }
       slot.stop()
+      activeFallbackEvents?.invalidate()
+      activeFallbackEvents = nil
       completion(.success(()))
       return
     }
@@ -233,6 +257,8 @@ final class YlIosPlayer: NSObject, FlutterTexture {
       if case .success = result, let qualityConstraint {
         self?.lastQualityConstraint = qualityConstraint
       }
+      if case .success = result, name == "setVolume" { self?.lastVolume = float(arguments["volume"]) ?? 1 }
+      if case .success = result, name == "setPlaybackSpeed" { self?.lastPlaybackSpeed = float(arguments["speed"]) ?? 1 }
       completion(result)
     }
     let backend = slot.current
@@ -298,14 +324,17 @@ final class YlIosPlayer: NSObject, FlutterTexture {
     reactivating: Bool
   ) throws {
     commandCoordinator.cancelCurrent()
+    let preservedIdentity = reactivating ? (slot.current as? YlFallbackBackend)?.channelGeneration : nil
     switch candidate {
     case let .avPlayer(source):
-      if !lastQualityConstraint.isEmpty {
+      if source["loadOptions"] == nil && !lastQualityConstraint.isEmpty {
         try avBackend.command(
           name: "setQualityConstraint",
           arguments: ["constraint": lastQualityConstraint]
         )
       }
+      try avBackend.command(name: "setVolume", arguments: ["volume": lastVolume])
+      try avBackend.command(name: "setPlaybackSpeed", arguments: ["speed": lastPlaybackSpeed])
       if slot.current !== avBackend {
         let previous = try slot.replace { avBackend }
         previous.dispose()
@@ -313,9 +342,12 @@ final class YlIosPlayer: NSObject, FlutterTexture {
         try avBackend.activate()
       }
       try avBackend.command(name: "open", arguments: ["source": source])
+      activeFallbackEvents?.invalidate()
+      activeFallbackEvents = nil
       lastCommittedSource = source
+      if !reactivating, source["loadOptions"] != nil { lastQualityConstraint = stringMap(stringMap(source["loadOptions"])["videoConstraints"]) }
     case let .headeredHls(source, prepared):
-      if !lastQualityConstraint.isEmpty {
+      if source["loadOptions"] == nil && !lastQualityConstraint.isEmpty {
         try avBackend.command(
           name: "setQualityConstraint",
           arguments: ["constraint": lastQualityConstraint]
@@ -326,6 +358,8 @@ final class YlIosPlayer: NSObject, FlutterTexture {
         prepared: prepared,
         resume: reactivating
       )
+      try avBackend.command(name: "setVolume", arguments: ["volume": lastVolume])
+      try avBackend.command(name: "setPlaybackSpeed", arguments: ["speed": lastPlaybackSpeed])
       if slot.current !== avBackend {
         let previous = try slot.replace { avBackend }
         if previous !== avBackend { previous.dispose() }
@@ -334,48 +368,63 @@ final class YlIosPlayer: NSObject, FlutterTexture {
       } else {
         try avBackend.activate()
       }
+      activeFallbackEvents?.invalidate()
+      activeFallbackEvents = nil
       lastCommittedSource = source
+      if !reactivating, source["loadOptions"] != nil { lastQualityConstraint = stringMap(stringMap(source["loadOptions"])["videoConstraints"]) }
     case let .fallback(source, prepared):
+      let candidateEmitter = prepared.legacyEvents ?? YlLegacyCommitEmitter(emit: emit)
       let qualityConstraint = try YlFallbackQualityConstraint(
-        validating: lastQualityConstraint
+        validating: reactivating || source["loadOptions"] == nil ? lastQualityConstraint : stringMap(stringMap(source["loadOptions"])["videoConstraints"])
       )
       let backend = try YlFallbackBackend(
         playerId: playerId,
         textureId: textureId,
         textures: textures,
-        configuration: configuration,
+        configuration: configuration.forLoad(source),
         prepared: prepared,
         qualityConstraint: qualityConstraint,
         generation: slot.generation &+ 1,
-        emit: emit
+        loadToken: source["loadToken"] ?? nil,
+        channelIdentity: preservedIdentity,
+        emit: candidateEmitter.accept
       )
+      try backend.command(name: "setVolume", arguments: ["volume": lastVolume])
+      try backend.command(name: "setPlaybackSpeed", arguments: ["speed": lastPlaybackSpeed])
       let previous = try slot.replace { backend }
       if previous !== avBackend { previous.dispose() }
+      activeFallbackEvents?.invalidate()
+      activeFallbackEvents = candidateEmitter
+      candidateEmitter.commit(generation: backend.channelGeneration)
       try backend.command(name: "open", arguments: ["source": source])
       lastCommittedSource = source
+      if !reactivating, source["loadOptions"] != nil { lastQualityConstraint = stringMap(stringMap(source["loadOptions"])["videoConstraints"]) }
     }
   }
 
   private func prepareFallback(
     source: [String: Any?],
-    token: YlOpenCancellationToken
+    token: YlOpenCancellationToken,
+    reactivating: Bool = false
   ) throws -> YlPreparedFallback {
-    try YlPreparedFallback(
+    let candidateEvents = YlLegacyCommitEmitter(emit: emit)
+    let prepared = try YlPreparedFallback(
       source: source,
-      configuration: configuration,
+      configuration: configuration.forLoad(source),
       cancellationToken: token,
-      onRetry: { [weak self] attempt, delayMs, error in
-        DispatchQueue.main.async {
-          guard let self, !self.disposed, !token.isCancelled else { return }
-          self.emit(YlFallbackRetryEvent.envelope(
-            playerId: self.playerId,
-            attempt: attempt,
-            delayMs: delayMs,
-            error: error
-          ))
-        }
+      legacyEvents: candidateEvents,
+      onRetry: { [playerId] attempt, delayMs, error in
+        guard !token.isCancelled else { return }
+        candidateEvents.accept(YlFallbackRetryEvent.envelope(
+          playerId: playerId, attempt: attempt, delayMs: delayMs, error: error
+        ))
       }
     )
+    if !reactivating, source["loadOptions"] != nil {
+      let options = stringMap(source["loadOptions"])
+      try prepared.prepareForLoad(positionMs: int64(options["startPositionMs"]) ?? 0, autoplay: options["autoplay"] as? Bool ?? false)
+    }
+    return prepared
   }
 
   private func prepareHeaderedHls(
@@ -394,6 +443,7 @@ final class YlIosPlayer: NSObject, FlutterTexture {
     return try YlPreparedHlsAsset(
       originURL: url,
       headers: stringMap(source["headers"]).compactMapValues { $0 as? String },
+      credentials: stringMap(source["credentials"]).compactMapValues { $0 as? String },
       configuration: configuration.network,
       cancellationToken: token
     )
@@ -406,7 +456,7 @@ final class YlIosPlayer: NSObject, FlutterTexture {
       kind: source["kind"] as? String ?? "",
       formatHint: source["formatHint"] as? String ?? "automatic",
       isLive: source["isLive"] as? Bool ?? false,
-      hasHeaders: !headers.isEmpty
+      hasHeaders: !headers.isEmpty || !stringMap(source["credentials"]).isEmpty
     ))
   }
 
@@ -443,6 +493,8 @@ final class YlIosPlayer: NSObject, FlutterTexture {
   func dispose() {
     guard !disposed else { return }
     disposed = true
+    activeFallbackEvents?.invalidate()
+    activeFallbackEvents = nil
     commandCoordinator.cancelCurrent()
     openCoordinator.cancelCurrent()
     avBackend.textureId = -1

@@ -1,409 +1,466 @@
 import 'dart:async';
-
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:yl_player_platform_interface/yl_player_channel.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
+import 'package:yl_player_platform_interface/yl_player_legacy_transport.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-
-  const methods = MethodChannel('yl_player_platform_interface_test/methods');
-  late StreamController<Object?> nativeEvents;
+  const methods = MethodChannel('legacy-test');
+  late StreamController<Object?> wire;
   late List<MethodCall> calls;
-  PlatformException? commandError;
-  bool failDispose = false;
-
+  Future<Object?> Function(MethodCall)? handler;
+  Map<String, Object?> snapshot(
+    int generation, {
+    String status = 'idle',
+    String engine = 'media3',
+    int? loadToken,
+  }) => {
+    'playerId': 7,
+    'type': 'state',
+    'protocolVersion': 1,
+    'generation': generation,
+    'loadToken': loadToken,
+    'state': {
+      'status': status,
+      'engine': engine,
+      'capabilities': <String, Object?>{},
+    },
+  };
+  Future<YlPlatformPlayer> create({
+    YlPlayerOptions options = const YlPlayerOptions(),
+  }) => createYlLegacyChannelPlayer(
+    options: options,
+    methods: methods,
+    nativeEvents: wire.stream,
+    platform: 'android',
+    initialEngine: YlPlaybackEngine.media3,
+    transportTimeout: const Duration(milliseconds: 100),
+  );
   setUp(() {
-    nativeEvents = StreamController<Object?>.broadcast(sync: true);
-    calls = <MethodCall>[];
-    commandError = null;
-    failDispose = false;
+    wire = StreamController<Object?>.broadcast(sync: true);
+    calls = [];
+    handler = null;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(methods, (call) async {
           calls.add(call);
-          if (call.method == 'create') {
-            return <String, Object?>{'playerId': 7, 'textureId': 42};
-          }
-          if (call.method == 'command' && commandError != null) {
-            throw commandError!;
-          }
-          if (call.method == 'dispose' && failDispose) {
-            throw PlatformException(code: 'dispose.failed');
+          if (call.method == 'create') return {'playerId': 7, 'textureId': 42};
+          if (handler != null) return handler!(call);
+          if (call.method == 'command' &&
+              (call.arguments as Map)['name'] == 'requestState') {
+            wire.add(snapshot(0));
           }
           return null;
         });
   });
-
   tearDown(() async {
+    await wire.close();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(methods, null);
-    if (!nativeEvents.isClosed) {
-      await nativeEvents.close();
-    }
   });
-
-  YlChannelPlayer createPlayer({Stream<Object?>? stream}) => YlChannelPlayer(
-    playerId: 7,
-    initialTextureId: 42,
-    methods: methods,
-    nativeEvents: stream ?? nativeEvents.stream,
-    platform: 'android',
-    initialEngine: YlPlaybackEngine.media3,
+  Matcher failure(String code) => throwsA(
+    isA<YlPlayerException>().having((e) => e.failure.code, 'code', code),
   );
-
-  test('command failure preserves native state and emits no event', () async {
-    final player = createPlayer();
-    final events = <YlPlayerEvent>[];
-    final subscription = player.events.listen(events.add);
-    nativeEvents.add(_stateEnvelope(generation: 8));
-    commandError = PlatformException(
-      code: 'decoder.unsupported',
-      details: const <String, Object?>{
-        'category': 'decoderUnsupported',
-        'code': 'decoder.unsupported',
-        'message': 'Unsupported stream.',
-      },
-    );
-
-    await expectLater(
-      player.play(),
-      throwsA(
-        isA<YlPlayerError>().having(
-          (error) => error.code,
-          'code',
-          'decoder.unsupported',
-        ),
-      ),
-    );
-
-    expect(player.state.status, YlPlaybackStatus.playing);
-    expect(player.state.error, isNull);
-    expect(events, isEmpty);
-    await subscription.cancel();
-    await player.dispose();
-  });
-
   test(
-    'merges only deltas matching the current versioned generation',
+    'create awaits a first full capability snapshot on shared stream',
     () async {
-      final player = createPlayer();
-      final states = <YlPlayerState>[];
-      final subscription = player.states.listen(states.add);
-
-      nativeEvents.add(_deltaEnvelope(generation: 8, positionMs: 100));
-      expect(states, isEmpty);
-
-      nativeEvents.add(_stateEnvelope(generation: 8));
-      nativeEvents.add(_deltaEnvelope(generation: 8, positionMs: 2000));
-      expect(player.state.position, const Duration(seconds: 2));
-      expect(states, hasLength(2));
-
-      nativeEvents.add(_deltaEnvelope(generation: 7, positionMs: 3000));
-      nativeEvents.add(_deltaEnvelope(generation: 9, positionMs: 4000));
-      expect(player.state.position, const Duration(seconds: 2));
-      expect(states, hasLength(2));
-
-      await subscription.cancel();
+      final peer = wire.stream.listen((_) {});
+      final player = await create();
+      expect(player.state.status, YlPlaybackStatus.idle);
+      expect(player.capabilities.deviceProfile, 'legacy.android');
+      expect(calls.last.arguments['name'], 'requestState');
+      await player.dispose();
+      await peer.cancel();
+    },
+  );
+  test('missing initial state times out and disposes', () async {
+    handler = (_) async => null;
+    await expectLater(create(), failure(YlFailureCodes.protocolMismatch));
+    expect(calls.last.method, 'dispose');
+  });
+  test('invalid protocol rejects and disposes', () async {
+    handler = (call) async {
+      wire.add({...snapshot(0), 'protocolVersion': 2});
+      return null;
+    };
+    await expectLater(create(), failure(YlFailureCodes.protocolMismatch));
+    expect(calls.last.method, 'dispose');
+  });
+  test('first full state must contain its capability snapshot', () async {
+    handler = (call) async {
+      if (call.method == 'command') {
+        wire.add({
+          ...snapshot(0),
+          'state': {'status': 'idle', 'engine': 'media3'},
+        });
+      }
+      return null;
+    };
+    await expectLater(create(), failure(YlFailureCodes.protocolMismatch));
+    expect(calls.last.method, 'dispose');
+  });
+  test(
+    'mismatched successful open reply terminates damaged transport',
+    () async {
+      final player = await create();
+      handler = (call) async {
+        if (call.method == 'command' && call.arguments['name'] == 'open') {
+          wire.add(snapshot(3, status: 'loading', loadToken: 1));
+          return {'loadToken': 999};
+        }
+        return null;
+      };
+      await expectLater(
+        player.load(YlNetworkSource(Uri.parse('https://example.test/a'))),
+        failure(YlFailureCodes.protocolMismatch),
+      );
+      await Future<void>.delayed(Duration.zero);
+      await expectLater(
+        player.setVolume(.5),
+        failure(YlFailureCodes.playerDisposed),
+      );
+      expect(calls.any((call) => call.method == 'dispose'), isTrue);
       await player.dispose();
     },
   );
-
-  test('supports legacy snapshots but never applies deltas to them', () async {
-    final player = createPlayer();
-    final states = <YlPlayerState>[];
-    final subscription = player.states.listen(states.add);
-
-    nativeEvents.add(_stateEnvelope(generation: null, protocolVersion: null));
-    nativeEvents.add(_deltaEnvelope(generation: 8, positionMs: 5000));
-
-    expect(states, hasLength(1));
-    expect(player.state.position, const Duration(milliseconds: 1500));
-    await subscription.cancel();
-    await player.dispose();
-  });
-
-  test('native error event does not perform the state transition', () async {
-    final player = createPlayer();
-    final states = <YlPlayerState>[];
-    final events = <YlPlayerEvent>[];
-    final stateSubscription = player.states.listen(states.add);
-    final eventSubscription = player.events.listen(events.add);
-    nativeEvents.add(_stateEnvelope(generation: 8));
-    states.clear();
-
-    nativeEvents.add(<String, Object?>{
-      'playerId': 7,
-      'type': 'error',
-      'error': _errorMap('network.io'),
-    });
-    expect(player.state.status, YlPlaybackStatus.playing);
-    expect(states, isEmpty);
-    expect(events, hasLength(1));
-
-    nativeEvents.add(
-      _stateEnvelope(
-        generation: 8,
-        status: 'error',
-        error: _errorMap('network.io'),
+  test(
+    'two player identities share events without consuming each other snapshots',
+    () async {
+      var nextId = 6;
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(methods, (call) async {
+            calls.add(call);
+            if (call.method == 'create') {
+              return {'playerId': ++nextId, 'textureId': nextId + 100};
+            }
+            if (call.method == 'command' &&
+                call.arguments['name'] == 'requestState') {
+              wire.add({
+                ...snapshot(0),
+                'playerId': call.arguments['playerId'],
+              });
+            }
+            return null;
+          });
+      final first = await create();
+      final second = await create();
+      wire.add({...snapshot(3, status: 'playing'), 'playerId': 8});
+      expect(first.state.status, YlPlaybackStatus.idle);
+      expect(
+        second.state.sessionId,
+        const YlPlaybackSessionId('legacy:android:8:3'),
+      );
+      await first.dispose();
+      wire.add({...snapshot(3, status: 'paused'), 'playerId': 8});
+      expect(second.state.status, YlPlaybackStatus.paused);
+      await second.dispose();
+    },
+  );
+  test('pluginManaged is rejected without native create', () async {
+    await expectLater(
+      create(
+        options: const YlPlayerOptions(
+          audioPolicy: YlAudioPolicy.pluginManagedMediaPlayback,
+        ),
       ),
+      failure(YlFailureCodes.policyUnsupported),
     );
-    expect(player.state.status, YlPlaybackStatus.error);
-    expect(player.state.error?.code, 'network.io');
-    expect(states, hasLength(1));
-    expect(events, hasLength(1));
-
-    await stateSubscription.cancel();
-    await eventSubscription.cancel();
+    expect(calls, isEmpty);
+  });
+  for (final stateFirst in [true, false]) {
+    test(
+      'load waits for reply and correlated state: stateFirst=$stateFirst',
+      () async {
+        final player = await create();
+        final reply = Completer<Object?>();
+        handler = (call) =>
+            call.method == 'command' && call.arguments['name'] == 'open'
+            ? reply.future
+            : Future.value();
+        final loading = player.load(
+          YlNetworkSource(Uri.parse('https://example.test/video.mp4')),
+        );
+        var completed = false;
+        loading.then((_) => completed = true);
+        await Future<void>.delayed(Duration.zero);
+        if (stateFirst) {
+          wire.add(snapshot(3, status: 'loading', loadToken: 1));
+        } else {
+          reply.complete({'loadToken': 1});
+        }
+        await Future<void>.delayed(Duration.zero);
+        expect(completed, isFalse);
+        if (stateFirst) {
+          reply.complete({'loadToken': 1});
+        } else {
+          wire.add(snapshot(3, status: 'loading', loadToken: 1));
+        }
+        final result = await loading;
+        expect(
+          result.sessionId,
+          const YlPlaybackSessionId('legacy:android:7:3'),
+        );
+        await player.play(result.sessionId);
+        await player.dispose();
+      },
+    );
+  }
+  test(
+    'older committed state and reply cannot satisfy newer load token',
+    () async {
+      final player = await create();
+      final replies = <int, Completer<Object?>>{};
+      handler = (call) async {
+        if (call.method == 'command' && call.arguments['name'] == 'open') {
+          final token =
+              call.arguments['arguments']['source']['loadToken'] as int;
+          final reply = Completer<Object?>();
+          replies[token] = reply;
+          return reply.future;
+        }
+        return null;
+      };
+      final first = player.load(
+        YlNetworkSource(Uri.parse('https://example.test/a')),
+      );
+      final cancelled = expectLater(
+        first,
+        failure(YlFailureCodes.loadCancelled),
+      );
+      await Future<void>.delayed(Duration.zero);
+      final next = player.load(
+        YlNetworkSource(Uri.parse('https://example.test/b')),
+      );
+      await Future<void>.delayed(Duration.zero);
+      await cancelled;
+      var completed = false;
+      next.then((_) => completed = true);
+      replies[2]!.complete({'loadToken': 2});
+      wire.add(snapshot(3, status: 'loading', loadToken: 1));
+      replies[1]!.complete({'loadToken': 1});
+      await Future<void>.delayed(Duration.zero);
+      expect(completed, isFalse);
+      wire.add(snapshot(4, status: 'loading', loadToken: 2));
+      expect(
+        (await next).sessionId,
+        const YlPlaybackSessionId('legacy:android:7:4'),
+      );
+      await player.dispose();
+    },
+  );
+  test('preparation does not inherit the transport pairing timeout', () async {
+    final player = await create();
+    final reply = Completer<Object?>();
+    handler = (call) =>
+        call.arguments['name'] == 'open' ? reply.future : Future.value();
+    var finished = false;
+    final load = player.load(
+      YlNetworkSource(Uri.parse('https://example.test/a')),
+    );
+    final observed = load.then<Object?>(
+      (value) {
+        finished = true;
+        return value;
+      },
+      onError: (Object error) {
+        finished = true;
+        return error;
+      },
+    );
+    await Future<void>.delayed(const Duration(milliseconds: 150));
+    expect(finished, isFalse);
+    wire.add(snapshot(3, status: 'loading', loadToken: 1));
+    reply.complete({'loadToken': 1});
+    expect(await observed, isA<YlPlatformLoadResult>());
     await player.dispose();
   });
-
+  test(
+    'missing state after successful reply terminates damaged transport',
+    () async {
+      final player = await create();
+      handler = (call) async =>
+          call.arguments['name'] == 'open' ? {'loadToken': 1} : null;
+      await expectLater(
+        player.load(YlNetworkSource(Uri.parse('https://example.test/a'))),
+        failure(YlFailureCodes.protocolMismatch),
+      );
+      await Future<void>.delayed(Duration.zero);
+      expect(calls.any((call) => call.method == 'dispose'), isTrue);
+      final before = player.state;
+      wire.add(snapshot(3, status: 'loading', loadToken: 1));
+      expect(player.state, before);
+      await player.dispose();
+    },
+  );
+  test(
+    'new strict-incompatible load still cancels the older native candidate',
+    () async {
+      final player = await create();
+      final reply = Completer<Object?>();
+      handler = (call) async =>
+          call.arguments['name'] == 'open' ? reply.future : null;
+      final first = player.load(
+        YlNetworkSource(Uri.parse('https://example.test/a')),
+      );
+      final cancelled = expectLater(
+        first,
+        failure(YlFailureCodes.loadCancelled),
+      );
+      await Future<void>.delayed(Duration.zero);
+      await expectLater(
+        player.load(
+          YlNetworkSource(Uri.parse('https://example.test/b')),
+          options: const YlLoadOptions(
+            decoderPolicyOverride: YlDecoderPolicy.hardwareRequired,
+          ),
+        ),
+        failure(YlFailureCodes.policyUnsupported),
+      );
+      await cancelled;
+      expect(
+        calls
+            .where(
+              (call) =>
+                  call.method == 'command' &&
+                  call.arguments['name'] == 'cancelOpen',
+            )
+            .single
+            .arguments['arguments']['loadToken'],
+        1,
+      );
+      reply.complete({'loadToken': 1});
+      await player.dispose();
+    },
+  );
+  test('strict policies assess incompatible and never open', () async {
+    final player = await create();
+    final source = YlNetworkSource(Uri.parse('https://example.test/a'));
+    for (final options in [
+      const YlLoadOptions(
+        decoderPolicyOverride: YlDecoderPolicy.hardwareRequired,
+      ),
+      const YlLoadOptions(
+        bufferStrategy: YlBufferStrategy.bounded(
+          minDuration: Duration.zero,
+          maxDuration: Duration(seconds: 1),
+          maxManagedBytes: 10,
+        ),
+      ),
+    ]) {
+      expect(
+        (await player.assess(source, options: options)).outcome,
+        YlSourceAssessmentOutcome.incompatible,
+      );
+      await expectLater(
+        player.load(source, options: options),
+        failure(YlFailureCodes.policyUnsupported),
+      );
+    }
+    final managed = YlNetworkSource(
+      source.uri,
+      networkPolicy: const YlNetworkPolicy.managed(),
+    );
+    await expectLater(
+      player.load(managed),
+      failure(YlFailureCodes.policyUnsupported),
+    );
+    expect(
+      calls.where(
+        (c) => c.method == 'command' && c.arguments['name'] == 'open',
+      ),
+      isEmpty,
+    );
+    await player.dispose();
+  });
   test(
     'native fallback activation marker does not terminate the channel',
     () async {
-      final player = createPlayer();
-      final states = <YlPlayerState>[];
+      final player = await create();
       final events = <YlPlayerEvent>[];
-      final stateSubscription = player.states.listen(states.add);
-      final eventSubscription = player.events.listen(events.add);
-      nativeEvents.add(_stateEnvelope(generation: 8));
-      states.clear();
-
-      nativeEvents.add(<String, Object?>{
-        'playerId': 7,
-        'type': 'fallbackActivated',
-        'engine': 'nativeFallback',
-      });
-
-      expect(player.state.status, YlPlaybackStatus.playing);
-      expect(player.state.error, isNull);
-      expect(states, isEmpty);
+      player.events.listen(events.add);
+      wire.add(snapshot(3, status: 'playing'));
+      wire.add({'playerId': 7, 'type': 'fallbackActivated'});
       expect(events, isEmpty);
-
-      nativeEvents.add(_stateEnvelope(generation: 9, status: 'paused'));
-      nativeEvents.add(_deltaEnvelope(generation: 9, positionMs: 2500));
-      expect(states, hasLength(2));
-      expect(player.state.status, YlPlaybackStatus.paused);
-      expect(player.state.position, const Duration(milliseconds: 2500));
-      expect(player.state.error, isNull);
-      expect(events, isEmpty);
-
-      await stateSubscription.cancel();
-      await eventSubscription.cancel();
-      await player.dispose();
-    },
-  );
-
-  test('stream error reports one terminal channel error', () async {
-    final player = createPlayer();
-    final states = <YlPlayerState>[];
-    final events = <YlPlayerEvent>[];
-    final stateSubscription = player.states.listen(states.add);
-    final eventSubscription = player.events.listen(events.add);
-
-    nativeEvents.addError(StateError('transport'));
-    nativeEvents.addError(StateError('again'));
-    await nativeEvents.close();
-
-    expect(states, hasLength(1));
-    expect(states.single.status, YlPlaybackStatus.error);
-    expect(states.single.error?.code, 'channel.event_stream_error');
-    expect(events, hasLength(1));
-    expect(
-      (events.single as YlErrorEvent).error.code,
-      'channel.event_stream_error',
-    );
-
-    await stateSubscription.cancel();
-    await eventSubscription.cancel();
-    await player.dispose();
-  });
-
-  test('normal stream close reports one terminal channel error', () async {
-    final player = createPlayer();
-    final states = <YlPlayerState>[];
-    final events = <YlPlayerEvent>[];
-    final stateSubscription = player.states.listen(states.add);
-    final eventSubscription = player.events.listen(events.add);
-
-    await nativeEvents.close();
-
-    expect(states, hasLength(1));
-    expect(states.single.error?.code, 'channel.event_stream_done');
-    expect(events, hasLength(1));
-    expect(
-      (events.single as YlErrorEvent).error.code,
-      'channel.event_stream_done',
-    );
-
-    await stateSubscription.cancel();
-    await eventSubscription.cancel();
-    await player.dispose();
-  });
-
-  test(
-    'malformed matching envelopes report once and other players are ignored',
-    () async {
-      final player = createPlayer();
-      final events = <YlPlayerEvent>[];
-      final subscription = player.events.listen(events.add);
-
-      nativeEvents.add(<String, Object?>{'playerId': 999, 'type': 'unknown'});
-      nativeEvents.add(<String, Object?>{
+      wire.add(snapshot(3, status: 'playing', engine: 'nativeFallback'));
+      wire.add({
         'playerId': 7,
-        'type': 'state',
-        'state': 'not-a-map',
+        'type': 'stateDelta',
+        'protocolVersion': 1,
+        'generation': 3,
+        'delta': {'positionMs': 20},
       });
-      nativeEvents.add(<String, Object?>{'playerId': 7, 'type': 'unknown'});
-
-      expect(events, hasLength(1));
-      expect(
-        (events.single as YlErrorEvent).error.code,
-        'channel.event_malformed',
-      );
-      expect(player.state.status, YlPlaybackStatus.error);
-
-      await subscription.cancel();
+      await Future<void>.delayed(Duration.zero);
+      expect(player.state.timeline.position, const Duration(milliseconds: 20));
+      expect(events.single, isA<YlPlaybackEngineChangedEvent>());
       await player.dispose();
     },
   );
-
-  test('validates direct commands before invoking the backend', () async {
-    final player = createPlayer();
-    final commandCount = calls.length;
-
-    expect(
-      () => player.seekTo(const Duration(milliseconds: -1)),
-      throwsArgumentError,
-    );
-    expect(() => player.setPlaybackSpeed(double.nan), throwsArgumentError);
-    expect(() => player.setVolume(2), throwsArgumentError);
-    expect(
-      () => player.setQualityConstraint(const YlQualityConstraint(maxWidth: 0)),
-      throwsArgumentError,
-    );
-    expect(calls, hasLength(commandCount));
+  test('stale state and events ignored; current events correlated', () async {
+    final player = await create();
+    wire.add(snapshot(3, status: 'playing'));
+    final events = <YlPlayerEvent>[];
+    player.events.listen(events.add);
+    final revision = player.state.revision;
+    wire.add(snapshot(2, status: 'playing'));
+    wire.add({'playerId': 7, 'type': 'firstFrame', 'generation': 2});
+    expect(player.state.revision, revision);
+    wire.add({'playerId': 7, 'type': 'firstFrame'});
+    wire.add({
+      'playerId': 7,
+      'type': 'retry',
+      'attempt': 1,
+      'delayMs': 10,
+      'error': {'code': 'network.failed'},
+    });
+    wire.add({
+      'playerId': 7,
+      'type': 'error',
+      'error': {'code': 'network.failed'},
+    });
+    await Future<void>.delayed(Duration.zero);
+    expect(events, hasLength(3));
+    expect(events.every((e) => e.sessionId == player.state.sessionId), isTrue);
     await player.dispose();
   });
-
   test(
-    'factory validates configuration and preserves platform error codes',
+    'command failure is safe and never changes authoritative state',
     () async {
-      await expectLater(
-        createYlChannelPlayer(
-          configuration: const YlPlayerConfiguration(
-            positionEventInterval: Duration.zero,
-          ),
-          methods: methods,
-          nativeEvents: nativeEvents.stream,
-          platform: 'android',
-          initialEngine: YlPlaybackEngine.media3,
-        ),
-        throwsArgumentError,
+      final player = await create();
+      wire.add(snapshot(3, status: 'playing'));
+      final before = player.state;
+      handler = (_) async => throw PlatformException(
+        code: 'broken',
+        message: 'https://secret.test/?token=supersecret',
+        details: {'platformDiagnostic': 'supersecret'},
       );
-      expect(calls, isEmpty);
-
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(
-            methods,
-            (call) async => <String, Object?>{},
-          );
       await expectLater(
-        createYlChannelPlayer(
-          configuration: const YlPlayerConfiguration(),
-          methods: methods,
-          nativeEvents: nativeEvents.stream,
-          platform: 'android',
-          initialEngine: YlPlaybackEngine.media3,
-        ),
+        player.play(before.sessionId!),
         throwsA(
-          isA<YlPlayerError>().having(
-            (error) => error.code,
-            'code',
-            'android.invalid_create_response',
+          isA<YlPlayerException>().having(
+            (e) => e.toString(),
+            'safe',
+            isNot(contains('supersecret')),
           ),
         ),
       );
-
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(methods, (call) async {
-            throw MissingPluginException('missing');
-          });
-      await expectLater(
-        createYlChannelPlayer(
-          configuration: const YlPlayerConfiguration(),
-          methods: methods,
-          nativeEvents: nativeEvents.stream,
-          platform: 'ios',
-          initialEngine: YlPlaybackEngine.avPlayer,
-        ),
-        throwsA(
-          isA<YlPlayerError>().having(
-            (error) => error.code,
-            'code',
-            'ios.plugin_unavailable',
-          ),
-        ),
-      );
+      expect(player.state, before);
+      await player.dispose();
     },
   );
-
   test(
-    'dispose is idempotent and closes locally after native failure',
+    'stop clears session only at authoritative idle; dispose is identical',
     () async {
-      final player = createPlayer();
-      failDispose = true;
-
-      await player.dispose();
-      await player.dispose();
-      nativeEvents.add(<String, Object?>{
-        'playerId': 7,
-        'type': 'error',
-        'error': _errorMap('late.error'),
-      });
-
-      expect(player.state.status, YlPlaybackStatus.disposed);
-      expect(player.textureId.value, isNull);
-      expect(calls.where((call) => call.method == 'dispose'), hasLength(1));
+      final player = await create();
+      wire.add(snapshot(3, status: 'playing'));
+      final id = player.state.sessionId;
+      await player.stop();
+      expect(player.state.sessionId, id);
+      wire.add(snapshot(4));
+      expect(player.state.sessionId, isNull);
+      await expectLater(player.play(id!), failure(YlFailureCodes.sessionStale));
+      final first = player.dispose();
+      expect(identical(first, player.dispose()), isTrue);
+      await first;
     },
   );
 }
-
-Map<String, Object?> _stateEnvelope({
-  required int? generation,
-  int? protocolVersion = 1,
-  String status = 'playing',
-  Object? error,
-}) => <String, Object?>{
-  'playerId': 7,
-  'protocolVersion': ?protocolVersion,
-  'generation': ?generation,
-  'type': 'state',
-  'state': <String, Object?>{
-    'status': status,
-    'positionMs': 1500,
-    'bufferedPositionMs': 4000,
-    'engine': 'media3',
-    'error': ?error,
-  },
-};
-
-Map<String, Object?> _deltaEnvelope({
-  required int generation,
-  required int positionMs,
-}) => <String, Object?>{
-  'playerId': 7,
-  'protocolVersion': 1,
-  'generation': generation,
-  'type': 'stateDelta',
-  'delta': <String, Object?>{
-    'positionMs': positionMs,
-    'bufferedPositionMs': positionMs + 1000,
-  },
-};
-
-Map<String, Object?> _errorMap(String code) => <String, Object?>{
-  'category': 'network',
-  'code': code,
-  'message': 'Playback failed.',
-};

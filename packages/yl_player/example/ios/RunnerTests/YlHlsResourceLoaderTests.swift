@@ -372,6 +372,28 @@ final class YlHlsResourceLoaderTests: XCTestCase {
     }
   }
 
+  func testCachedManifestDoesNotRestoreCredentialsAfterInheritedStripping() throws {
+    let origin = URL(string: "https://media.test/master.m3u8")!
+    let configuration = HlsLoaderURLProtocol.configuration { _, source in
+      source.respond(headers: ["Content-Type": "application/vnd.apple.mpegurl"],
+        data: Data("#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000\nchild.m3u8\n".utf8))
+    }
+    let loader = try YlHlsResourceLoader(originURL: origin, headers: ["X-Client": "ordinary"], credentials: ["X-Session": "secret"], configuration: .init(map: [:]), sessionConfiguration: configuration)
+    defer { loader.cancelAll() }
+    try loader.preflight(cancellationToken: YlOpenCancellationToken())
+    XCTAssertEqual(HlsLoaderURLProtocol.capturedRequests.first?.value(forHTTPHeaderField: "X-Session"), "secret")
+    let finished = expectation(description: "stripped root reload")
+    let request = TestHlsLoadingRequest(url: try YlHlsURLCodec.encode(origin, kind: .manifest, credentialsStripped: true), finished: finished)
+    XCTAssertTrue(loader.startLoading(request))
+    wait(for: [finished], timeout: 2)
+    XCTAssertNil(request.error)
+    XCTAssertEqual(HlsLoaderURLProtocol.capturedRequests.count, 2)
+    XCTAssertNil(HlsLoaderURLProtocol.capturedRequests.last?.value(forHTTPHeaderField: "X-Session"))
+    XCTAssertEqual(HlsLoaderURLProtocol.capturedRequests.last?.value(forHTTPHeaderField: "X-Client"), "ordinary")
+    let child = try XCTUnwrap(String(data: request.received, encoding: .utf8)?.split(separator: "\n").last.flatMap { URL(string: String($0)) })
+    XCTAssertTrue(YlHlsURLCodec.credentialsStripped(child))
+  }
+
   func testPreflightCachesRewrittenTopLevelManifest() throws {
     let configuration = HlsLoaderURLProtocol.configuration { _, source in
       source.respond(

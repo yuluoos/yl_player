@@ -9,6 +9,7 @@ enum YlHlsManifestRewriter {
   static func rewrite(
     data: Data,
     baseURL: URL,
+    credentialsStripped: Bool = false,
     mediaURL: ((URL) throws -> URL)? = nil
   ) throws -> Data {
     guard let manifest = String(data: data, encoding: .utf8) else {
@@ -31,6 +32,7 @@ enum YlHlsManifestRewriter {
         line: line,
         baseURL: baseURL,
         plainKind: pendingPlainKind,
+        credentialsStripped: credentialsStripped,
         mediaURL: mediaURL
       )
       let content = line.trimmingCharacters(in: .whitespaces)
@@ -74,6 +76,7 @@ enum YlHlsManifestRewriter {
     line: String,
     baseURL: URL,
     plainKind: YlHlsResourceKind?,
+    credentialsStripped: Bool = false,
     mediaURL: ((URL) throws -> URL)?
   ) throws -> String {
     let leading = line.prefix { $0.isWhitespace }
@@ -89,7 +92,8 @@ enum YlHlsManifestRewriter {
           uri: content,
           baseURL: baseURL,
           kind: plainKind,
-          mediaURL: mediaURL
+          credentialsStripped: credentialsStripped,
+        mediaURL: mediaURL
         ))
         + String(trailing)
     }
@@ -109,6 +113,7 @@ enum YlHlsManifestRewriter {
         uri: value,
         baseURL: baseURL,
         kind: explicitKind,
+        credentialsStripped: credentialsStripped,
         mediaURL: mediaURL
       )
       rewritten.replaceSubrange(valueRange, with: replacement)
@@ -138,6 +143,7 @@ enum YlHlsManifestRewriter {
     uri: String,
     baseURL: URL,
     kind: YlHlsResourceKind?,
+    credentialsStripped: Bool = false,
     mediaURL: ((URL) throws -> URL)?
   ) throws -> String {
     guard !uri.isEmpty,
@@ -155,7 +161,8 @@ enum YlHlsManifestRewriter {
       }
       return try YlHlsURLCodec.encode(
         resolved,
-        kind: resourceKind
+        kind: resourceKind,
+        credentialsStripped: credentialsStripped
       ).absoluteString
     } catch {
       throw invalidManifest("The HLS manifest contains an invalid HTTP resource URI.")

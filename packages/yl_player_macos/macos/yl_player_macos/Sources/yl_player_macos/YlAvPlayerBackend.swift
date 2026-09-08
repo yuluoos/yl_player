@@ -422,7 +422,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     try validateOpen(source)
     channelGeneration = YlMacosChannelGeneration.next()
     resetOpenState(source, resume: false)
-    try installItem(source, positionMs: 0)
+    try installItem(source, positionMs: int64(stringMap(source["loadOptions"])["startPositionMs"]) ?? 0)
     emitState()
   }
 
@@ -431,6 +431,10 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     stallWatchdog.cancel()
     removeCurrentItem()
     lastSource = source
+    let loadOptions = stringMap(source["loadOptions"])
+    if !resume, source["loadOptions"] != nil {
+      qualityConstraint = stringMap(loadOptions["videoConstraints"])
+    }
     if !resume {
       savedPositionMs = 0
       resumeAtLiveEdge = false
@@ -439,7 +443,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     active = true
     sourceIsLive = source["isLive"] as? Bool ?? false
     status = "opening"
-    playRequested = false
+    playRequested = !resume && (loadOptions["autoplay"] as? Bool ?? false)
     firstFrameSent = false
     hasBeenReady = false
     openStartedAt = CACurrentMediaTime()
@@ -463,7 +467,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     if !stagedHls.resume {
       channelGeneration = YlMacosChannelGeneration.next()
     }
-    let positionMs = stagedHls.resume ? savedPositionMs : 0
+    let positionMs = stagedHls.resume ? savedPositionMs : (int64(stringMap(stagedHls.source["loadOptions"])["startPositionMs"]) ?? 0)
     resetOpenState(stagedHls.source, resume: stagedHls.resume)
     let loader = try stagedHls.prepared.takeLoader()
     hlsResourceLoader = loader
@@ -486,7 +490,9 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     itemGeneration &+= 1
     let generation = itemGeneration
     let item = AVPlayerItem(asset: asset)
-    item.preferredForwardBufferDuration = configuration.preferredForwardBufferDuration
+    let effectiveConfiguration = configuration.forLoad(lastSource ?? [:])
+    item.preferredForwardBufferDuration = effectiveConfiguration.preferredForwardBufferDuration
+    player.automaticallyWaitsToMinimizeStalling = effectiveConfiguration.bufferMode != "lowLatency"
     applyQualityConstraint(qualityConstraint, to: item)
     item.add(videoOutput)
     player.replaceCurrentItem(with: item)
@@ -811,6 +817,7 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
     emit(YlMacosChannel.fullState(
       playerId: playerId,
       generation: channelGeneration,
+      loadToken: lastSource?["loadToken"] ?? nil,
       state: [
         "status": status,
         "positionMs": positionMs,
@@ -924,14 +931,26 @@ final class YlAvPlayerBackend: NSObject, FlutterTexture, YlPlaybackBackend {
 }
 
 struct PlayerConfiguration {
-  let bufferMode: String
+  let managesAudioSession: Bool
+  private(set) var bufferMode: String
   let decoderPolicy: String
   let maxBufferBytes: Int?
   let network: YlNetworkConfiguration
   let positionEventIntervalMs: Int64
-  let preferredForwardBufferDuration: TimeInterval
+  private(set) var preferredForwardBufferDuration: TimeInterval
+
+  /// v1 absent options keep the original player policy; v2 always supplies goals.
+  func forLoad(_ source: [String: Any?]) -> Self {
+    guard source["loadOptions"] != nil else { return self }
+    let goal = stringMap(source["loadOptions"])["bufferStrategy"] as? String
+    var result = self
+    result.bufferMode = goal == "smoothPlayback" ? "stable" : (goal == "lowLatency" ? "lowLatency" : "automatic")
+    result.preferredForwardBufferDuration = result.bufferMode == "stable" ? 30 : (result.bufferMode == "lowLatency" ? 2 : 10)
+    return result
+  }
 
   init(map: [String: Any?]) {
+    managesAudioSession = map["audioPolicy"] as? String != "appManaged"
     bufferMode = map["bufferMode"] as? String ?? "automatic"
     decoderPolicy = map["decoderPolicy"] as? String ?? "hardwareOnly"
     maxBufferBytes = int64(map["maxBufferBytes"]).map { Int(clamping: max(0, $0)) }

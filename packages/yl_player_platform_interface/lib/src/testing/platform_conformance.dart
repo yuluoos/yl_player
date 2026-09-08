@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../v2.dart';
+import '../../yl_player_platform_interface.dart';
 
 /// Expected behavior declared independently of the adapter's own assessment.
 enum YlConformancePolicyOutcome { success, unsupported }

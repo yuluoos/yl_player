@@ -1,334 +1,525 @@
 import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-
-import '../configuration.dart';
-import '../media_source.dart';
-import '../platform_player.dart';
-import '../player_error.dart';
-import '../player_event.dart';
-import '../player_state.dart';
-import '../validation.dart';
+import '../../yl_player_platform_interface.dart';
 import 'channel_codec.dart';
 
-/// Shared MethodChannel/EventChannel-backed player used by endorsed platforms.
-final class YlChannelPlayer implements YlPlatformPlayer {
-  YlChannelPlayer({
+/// Temporary bridge. Unversioned legacy events can only be associated with the
+/// currently accepted source; typed transports will replace this limitation.
+final class _LegacyChannelPlayer implements YlPlatformPlayer {
+  _LegacyChannelPlayer({
     required this.playerId,
-    required int initialTextureId,
+    required int texture,
     required this.methods,
     required Stream<Object?> nativeEvents,
     required this.platform,
-    required YlPlaybackEngine initialEngine,
-  }) : _textureId = ValueNotifier<int?>(initialTextureId),
-       _state = YlPlayerState(engine: initialEngine) {
-    _nativeSubscription = nativeEvents.listen(
-      _handleNativeEvent,
-      onError: _handleNativeStreamError,
-      onDone: _handleNativeStreamDone,
+    required this.initialEngine,
+    required this.options,
+    required this.transportTimeout,
+  }) : _texture = ValueNotifier(texture) {
+    _subscription = nativeEvents.listen(
+      _accept,
+      onError: (Object _) => _protocolFailure(),
+      onDone: _protocolFailure,
     );
   }
-
   final int playerId;
   final MethodChannel methods;
   final String platform;
-  final ValueNotifier<int?> _textureId;
-  final StreamController<YlPlayerState> _states =
-      StreamController<YlPlayerState>.broadcast(sync: true);
-  final StreamController<YlPlayerEvent> _events =
-      StreamController<YlPlayerEvent>.broadcast(sync: true);
-  late final StreamSubscription<Object?> _nativeSubscription;
-  YlPlayerState _state;
-  Future<void>? _disposeFuture;
-  int? _sourceGeneration;
-  bool _streamFailureReported = false;
-  bool _malformedEventReported = false;
+  final YlPlaybackEngine initialEngine;
+  final YlPlayerOptions options;
+  final Duration transportTimeout;
+  final ValueNotifier<int?> _texture;
+  late final StreamSubscription<Object?> _subscription;
+  final _states = StreamController<YlPlayerState>.broadcast(sync: true);
+  final _events = StreamController<YlPlayerEvent>.broadcast(sync: true);
+  final _initial = Completer<void>();
+  final _clock = Stopwatch()..start();
+  YlPlayerState _state = YlPlayerState();
+  late YlPlayerCapabilities _capabilities;
+  int? _generation;
+  int _serial = 0;
+  _LoadBarrier? _load;
   bool _disposed = false;
-
+  bool _firstFrame = false;
+  Future<void>? _disposeFuture;
   @override
-  Stream<YlPlayerEvent> get events => _events.stream;
-
+  YlPlatformImplementationInfo get implementation =>
+      YlPlatformImplementationInfo(
+        name: 'legacy.$platform',
+        version: '0.2.0-dev',
+        spiMajor: ylPlayerSpiMajor,
+      );
+  @override
+  YlPlayerCapabilities get capabilities => _capabilities;
+  @override
+  ValueListenable<int?> get textureId => _texture;
   @override
   YlPlayerState get state => _state;
-
   @override
   Stream<YlPlayerState> get states => _states.stream;
+  @override
+  Stream<YlPlayerEvent> get events => _events.stream;
+  void _check() {
+    if (_disposed) throw legacyException(YlFailureCodes.playerDisposed);
+  }
+
+  void _checkSession(YlPlaybackSessionId id) {
+    _check();
+    if (id != state.sessionId ||
+        state.status == YlPlaybackStatus.idle ||
+        state.status == YlPlaybackStatus.failed) {
+      throw legacyException(YlFailureCodes.sessionStale);
+    }
+  }
 
   @override
-  ValueListenable<int?> get textureId => _textureId;
+  Future<YlSourceAssessment> assess(
+    YlMediaSource source, {
+    YlLoadOptions options = const YlLoadOptions(),
+  }) async {
+    _check();
+    validateYlSource(source);
+    validateYlLoadOptions(options);
+    final strict =
+        options.bufferStrategy.kind == YlBufferStrategyKind.bounded ||
+        (options.decoderPolicyOverride ?? this.options.decoderPolicy) ==
+            YlDecoderPolicy.hardwareRequired ||
+        source is YlNetworkSource &&
+            source.networkPolicy.kind == YlNetworkPolicyKind.managed;
+    final credentialsUnsupported =
+        source is YlNetworkSource &&
+        source.request.credentials.isNotEmpty &&
+        (platform == 'android' || !_isHls(source));
+    if (strict ||
+        credentialsUnsupported ||
+        source is YlAndroidContentSource && platform != 'android') {
+      return YlSourceAssessment(
+        outcome: YlSourceAssessmentOutcome.incompatible,
+        rejection: legacyException(YlFailureCodes.policyUnsupported).failure,
+      );
+    }
+    return YlSourceAssessment(
+      outcome: YlSourceAssessmentOutcome.requiresInspection,
+      limitations: const [
+        YlLimitationId.sourceRequiresInspection,
+        YlLimitationId.decoderModeUnknown,
+        YlLimitationId.networkSystemStackOpaque,
+      ],
+    );
+  }
+
+  bool _isHls(YlNetworkSource source) =>
+      source.format == YlMediaFormat.hls ||
+      source.format == YlMediaFormat.automatic &&
+          source.uri.path.toLowerCase().endsWith('.m3u8');
+  @override
+  Future<YlPlatformLoadResult> load(
+    YlMediaSource source, {
+    YlLoadOptions options = const YlLoadOptions(),
+  }) async {
+    _check();
+    validateYlSource(source);
+    validateYlLoadOptions(options);
+    final serial = ++_serial;
+    _cancelLoad();
+    final assessment = await assess(source, options: options);
+    if (serial != _serial) throw legacyException(YlFailureCodes.loadCancelled);
+    if (assessment.rejection case final rejection?) {
+      throw YlPlayerException(rejection);
+    }
+    _check();
+    final barrier = _LoadBarrier(serial);
+    _load = barrier;
+    // Attach the observer before native callbacks can reject the barrier.
+    unawaited(
+      barrier.result.future.then<void>(
+        (_) {},
+        onError: (Object _, StackTrace _) {},
+      ),
+    );
+    unawaited(_open(barrier, source, options));
+    try {
+      return await barrier.result.future;
+    } finally {
+      barrier.pairingTimer?.cancel();
+      if (identical(_load, barrier)) _load = null;
+    }
+  }
+
+  Future<void> _open(
+    _LoadBarrier barrier,
+    YlMediaSource source,
+    YlLoadOptions options,
+  ) async {
+    try {
+      final reply = await methods.invokeMapMethod<String, Object?>('command', {
+        'playerId': playerId,
+        'name': 'open',
+        'arguments': {
+          'source': {
+            ...encodeYlSource(source),
+            'loadOptions': encodeYlLoadOptions(options),
+            'loadToken': barrier.serial,
+          },
+        },
+      });
+      if (!identical(_load, barrier) || _disposed) return;
+      if (reply?['loadToken'] != barrier.serial) {
+        _protocolFailure();
+        unawaited(dispose());
+        return;
+      }
+      barrier.replied = true;
+      _completeLoad();
+    } catch (error) {
+      if (!barrier.result.isCompleted) {
+        barrier.result.completeError(
+          error is PlatformException
+              ? decodeYlPlatformException(error)
+              : error is YlPlayerException
+              ? error
+              : legacyException(YlFailureCodes.platformFailure),
+        );
+      }
+    }
+  }
+
+  void _completeLoad() {
+    final load = _load;
+    if (load != null &&
+        !load.result.isCompleted &&
+        (load.replied || load.session != null)) {
+      load.pairingTimer ??= Timer(transportTimeout, () {
+        if (!identical(_load, load) || load.result.isCompleted || _disposed) {
+          return;
+        }
+        load.result.completeError(
+          legacyException(YlFailureCodes.protocolMismatch),
+        );
+        // One half proves a possible native commit. End the damaged transport,
+        // rather than pretending this was a pre-commit source rejection.
+        unawaited(dispose());
+      });
+    }
+    if (load != null &&
+        load.replied &&
+        load.session != null &&
+        !load.result.isCompleted) {
+      if (load.session != state.sessionId) {
+        load.result.completeError(
+          legacyException(YlFailureCodes.loadCancelled),
+        );
+      } else {
+        load.result.complete(YlPlatformLoadResult(sessionId: load.session!));
+      }
+    }
+  }
+
+  void _cancelLoad() {
+    final load = _load;
+    _load = null;
+    if (load != null && !load.result.isCompleted) {
+      load.pairingTimer?.cancel();
+      load.result.completeError(legacyException(YlFailureCodes.loadCancelled));
+      if (!_disposed) {
+        unawaited(
+          _command('cancelOpen', {
+            'loadToken': load.serial,
+          }).then<void>((_) {}, onError: (Object _, StackTrace _) {}),
+        );
+      }
+    }
+  }
 
   @override
-  Future<void> dispose() => _disposeFuture ??= _performDispose();
-
+  Future<void> play(YlPlaybackSessionId id) => _sessionCommand(id, 'play');
   @override
-  Future<void> open(YlMediaSource source) =>
-      _command('open', <String, Object?>{'source': encodeYlSource(source)});
-
+  Future<void> pause(YlPlaybackSessionId id) => _sessionCommand(id, 'pause');
   @override
-  Future<void> pause() => _command('pause');
-
-  @override
-  Future<void> play() => _command('play');
-
-  @override
-  Future<void> seekTo(Duration position) {
+  Future<void> seekTo(YlPlaybackSessionId id, Duration position) {
     validateYlSeekPosition(position);
-    return _command('seekTo', <String, Object?>{
+    return _sessionCommand(id, 'seekTo', {
       'positionMs': position.inMilliseconds,
     });
   }
 
   @override
-  Future<void> seekToLiveEdge() => _command('seekToLiveEdge');
-
+  Future<void> seekToLiveEdge(YlPlaybackSessionId id) =>
+      _sessionCommand(id, 'seekToLiveEdge');
   @override
-  Future<void> selectAudioTrack(String trackId) =>
-      _command('selectAudioTrack', <String, Object?>{'trackId': trackId});
-
-  @override
-  Future<void> setPlaybackSpeed(double speed) {
+  Future<void> setPlaybackSpeed(YlPlaybackSessionId id, double speed) {
     validateYlPlaybackSpeed(speed);
-    return _command('setPlaybackSpeed', <String, Object?>{'speed': speed});
+    return _sessionCommand(id, 'setPlaybackSpeed', {'speed': speed});
   }
 
   @override
-  Future<void> setQualityConstraint(YlQualityConstraint constraint) {
-    validateYlQualityConstraint(constraint);
-    return _command('setQualityConstraint', <String, Object?>{
-      'constraint': encodeYlQualityConstraint(constraint),
+  Future<void> selectAudioTrack(YlPlaybackSessionId id, String trackId) {
+    validateYlTrackId(trackId);
+    return _sessionCommand(id, 'selectAudioTrack', {'trackId': trackId});
+  }
+
+  @override
+  Future<void> setVideoConstraints(
+    YlPlaybackSessionId id,
+    YlVideoConstraints constraints,
+  ) {
+    validateYlVideoConstraints(constraints);
+    return _sessionCommand(id, 'setQualityConstraint', {
+      'constraint': encodeYlVideoConstraints(constraints),
     });
   }
 
   @override
   Future<void> setVolume(double volume) {
     validateYlVolume(volume);
-    return _command('setVolume', <String, Object?>{'volume': volume});
+    return _command('setVolume', {'volume': volume});
+  }
+
+  @override
+  Future<void> stop() {
+    _check();
+    _cancelLoad();
+    return _command('stop');
+  }
+
+  Future<void> _sessionCommand(
+    YlPlaybackSessionId id,
+    String name, [
+    Map<String, Object?> args = const {},
+  ]) async {
+    _checkSession(id);
+    await _command(name, args);
   }
 
   Future<void> _command(
     String name, [
-    Map<String, Object?> arguments = const <String, Object?>{},
+    Map<String, Object?> args = const {},
   ]) async {
-    if (_disposed) {
-      throw StateError('The $platform platform player has been disposed.');
-    }
+    _check();
     try {
-      await methods.invokeMethod<void>('command', <String, Object?>{
+      await methods.invokeMethod<void>('command', {
         'playerId': playerId,
         'name': name,
-        'arguments': arguments,
+        'arguments': args,
       });
-    } on PlatformException catch (error) {
-      throw decodeYlPlatformException(error, platform: platform);
+    } on PlatformException catch (e) {
+      throw decodeYlPlatformException(e);
+    } on MissingPluginException {
+      throw legacyException(YlFailureCodes.platformUnavailable);
     }
   }
 
-  void _handleNativeEvent(Object? value) {
-    if (_disposed || value is! Map) {
-      return;
-    }
-    final envelope = ylStringMap(value);
-    final eventPlayerId = _wireInt(envelope['playerId']);
-    if (eventPlayerId != playerId) {
-      return;
-    }
-
-    switch (envelope[YlChannelWireKeys.type]) {
-      case 'state':
-        _handleState(envelope);
-      case YlChannelWireKeys.stateDelta:
-        _handleStateDelta(envelope);
-      case 'firstFrame':
-      case 'tracksChanged':
-        _emitDecodedEvent(envelope);
-      case 'fallbackActivated':
-        // Native fallback activation is followed by an authoritative state
-        // snapshot whose engine is nativeFallback. This marker is informational
-        // and is not part of the public YlPlayerEvent wire contract.
-        return;
-      case 'error':
-      case 'retry':
-      case 'fallback':
-        if (envelope['error'] is! Map) {
-          _reportMalformedEvent();
-          return;
-        }
-        _emitDecodedEvent(envelope);
-      default:
-        _reportMalformedEvent();
-    }
-  }
-
-  void _handleState(Map<String, Object?> envelope) {
-    if (envelope[YlChannelWireKeys.state] is! Map) {
-      _reportMalformedEvent();
-      return;
-    }
-    final version = envelope[YlChannelWireKeys.protocolVersion];
-    if (version == null) {
-      _sourceGeneration = null;
-    } else {
-      final generation = _wireInt(envelope[YlChannelWireKeys.generation]);
-      if (_wireInt(version) != ylChannelProtocolVersion ||
-          generation == null ||
-          generation < 0) {
-        _reportMalformedEvent();
+  void _accept(Object? value) {
+    if (_disposed || value is! Map || value['playerId'] != playerId) return;
+    final map = ylStringMap(value);
+    try {
+      if (map['type'] == 'fallbackActivated' ||
+          map['type'] == 'tracksChanged' ||
+          map['type'] == 'fallback') {
         return;
       }
-      _sourceGeneration = generation;
+      if (map['type'] == 'state' || map['type'] == 'stateDelta') {
+        final generation = ylWireInt(map['generation']);
+        if (map['protocolVersion'] != 1 || generation == null) {
+          _protocolFailure();
+          return;
+        }
+        if (_generation != null && generation < _generation!) return;
+        final previous = _state;
+        if (map['type'] == 'stateDelta') {
+          if (generation != _generation) return;
+          if (map['delta'] is! Map) {
+            _protocolFailure();
+            return;
+          }
+          _state = mergeYlStateDelta(
+            _state,
+            map['delta'],
+            revision: _state.revision + 1,
+          );
+        } else {
+          if (map['state'] is! Map) {
+            _protocolFailure();
+            return;
+          }
+          final raw = ylStringMap(map['state']);
+          if (!_initial.isCompleted) {
+            _capabilities = decodeYlCapabilities(
+              raw['capabilities'],
+              platform: platform,
+              initialEngine: initialEngine,
+            );
+          }
+          _state = decodeYlState(
+            raw,
+            sessionId: YlPlaybackSessionId(
+              'legacy:$platform:$playerId:$generation',
+            ),
+            revision: _state.revision + 1,
+          );
+          _generation = generation;
+          if (previous.sessionId != state.sessionId) _firstFrame = false;
+          if (!_initial.isCompleted) _initial.complete();
+          if (_load case final load?
+              when map['loadToken'] == load.serial && state.sessionId != null) {
+            load.session = state.sessionId;
+          }
+        }
+        _states.add(state);
+        if (previous.sessionId == state.sessionId &&
+            state.sessionId != null &&
+            previous.engine != state.engine) {
+          _events.add(
+            YlPlaybackEngineChangedEvent(
+              sessionId: state.sessionId!,
+              revision: state.revision,
+              occurredAt: _clock.elapsed,
+              previousEngine: previous.engine,
+              engine: state.engine,
+            ),
+          );
+        }
+        _completeLoad();
+        return;
+      }
+      if (state.sessionId == null ||
+          map['generation'] != null && map['generation'] != _generation) {
+        return;
+      }
+      final id = state.sessionId!;
+      final event = switch (map['type']) {
+        'firstFrame' when !_firstFrame => YlFirstFrameEvent(
+          sessionId: id,
+          revision: state.revision,
+          occurredAt: _clock.elapsed,
+        ),
+        'error' => YlPlaybackFailedEvent(
+          sessionId: id,
+          revision: state.revision,
+          occurredAt: _clock.elapsed,
+          failure: decodeYlFailure(map['error']),
+        ),
+        'retry' => YlRetryScheduledEvent(
+          sessionId: id,
+          revision: state.revision,
+          occurredAt: _clock.elapsed,
+          retryIndex: ylWireInt(map['attempt']) ?? 1,
+          delay: Duration(milliseconds: ylWireInt(map['delayMs']) ?? 0),
+          failure: decodeYlFailure(map['error']),
+        ),
+        _ => null,
+      };
+      if (event != null) {
+        validateYlPlayerEvent(event);
+        if (event is YlFirstFrameEvent) _firstFrame = true;
+        _events.add(event);
+      }
+    } catch (_) {
+      _protocolFailure();
     }
-    _state = decodeYlState(envelope[YlChannelWireKeys.state]);
-    _states.add(_state);
   }
 
-  void _handleStateDelta(Map<String, Object?> envelope) {
-    final generation = _wireInt(envelope[YlChannelWireKeys.generation]);
-    if (_wireInt(envelope[YlChannelWireKeys.protocolVersion]) !=
-            ylChannelProtocolVersion ||
-        generation == null ||
-        generation < 0 ||
-        envelope[YlChannelWireKeys.delta] is! Map) {
-      _reportMalformedEvent();
-      return;
-    }
-    if (_sourceGeneration == null || generation != _sourceGeneration) {
-      return;
-    }
-    _state = mergeYlStateDelta(_state, envelope[YlChannelWireKeys.delta]);
-    _states.add(_state);
-  }
-
-  void _emitDecodedEvent(Map<String, Object?> envelope) {
-    final event = decodeYlEvent(envelope);
-    if (event == null) {
-      _reportMalformedEvent();
-      return;
-    }
-    _events.add(event);
-  }
-
-  void _handleNativeStreamError(Object error, [StackTrace? stackTrace]) {
-    _reportStreamFailure(
-      code: 'channel.event_stream_error',
-      message: 'The $platform player event stream failed.',
+  void _protocolFailure() {
+    if (_disposed) return;
+    final error = legacyException(
+      YlFailureCodes.protocolMismatch,
+      scope: YlFailureScope.player,
     );
-  }
-
-  void _handleNativeStreamDone() {
-    _reportStreamFailure(
-      code: 'channel.event_stream_done',
-      message: 'The $platform player event stream closed unexpectedly.',
-    );
-  }
-
-  void _reportMalformedEvent() {
-    if (_disposed || _malformedEventReported) {
-      return;
+    if (!_initial.isCompleted) _initial.completeError(error);
+    final load = _load;
+    if (load != null && !load.result.isCompleted) {
+      load.result.completeError(error);
     }
-    _malformedEventReported = true;
-    _emitTerminalError(
-      YlPlayerError(
-        category: YlPlayerErrorCategory.internal,
-        code: 'channel.event_malformed',
-        message: 'The $platform backend sent a malformed player event.',
-      ),
-    );
+    // Transport errors are not fabricated authoritative playback transitions.
   }
 
-  void _reportStreamFailure({required String code, required String message}) {
-    if (_disposed || _streamFailureReported) {
-      return;
-    }
-    _streamFailureReported = true;
-    _emitTerminalError(
-      YlPlayerError(
-        category: YlPlayerErrorCategory.internal,
-        code: code,
-        message: message,
-      ),
-    );
-  }
-
-  void _emitTerminalError(YlPlayerError error) {
-    _state = _state.copyWith(status: YlPlaybackStatus.error, error: error);
-    _states.add(_state);
-    _events.add(YlErrorEvent(error));
-  }
-
-  Future<void> _performDispose() async {
-    if (_disposed) {
-      return;
-    }
+  @override
+  Future<void> dispose() => _disposeFuture ??= _dispose();
+  Future<void> _dispose() async {
     _disposed = true;
+    _cancelLoad();
+    await _subscription.cancel();
     try {
-      await methods.invokeMethod<void>('dispose', <String, Object?>{
-        'playerId': playerId,
-      });
-    } on Object {
-      // Native teardown is best effort; local resources must always close.
+      await methods.invokeMethod<void>('dispose', {'playerId': playerId});
+    } catch (_) {
+      /* best effort */
     }
-    await _nativeSubscription.cancel();
-    _state = _state.copyWith(status: YlPlaybackStatus.disposed, error: null);
-    _textureId.value = null;
+    _texture.value = null;
     await _states.close();
     await _events.close();
-    _textureId.dispose();
+    _texture.dispose();
   }
 }
 
-/// Creates and wires a shared channel player for an endorsed platform package.
-Future<YlChannelPlayer> createYlChannelPlayer({
-  required YlPlayerConfiguration configuration,
+final class _LoadBarrier {
+  _LoadBarrier(this.serial);
+  final int serial;
+  final result = Completer<YlPlatformLoadResult>();
+  bool replied = false;
+  Timer? pairingTimer;
+  YlPlaybackSessionId? session;
+}
+
+Future<YlPlatformPlayer> createYlLegacyChannelPlayer({
+  required YlPlayerOptions options,
   required MethodChannel methods,
   required Stream<Object?> nativeEvents,
   required String platform,
   required YlPlaybackEngine initialEngine,
+  Duration transportTimeout = const Duration(seconds: 30),
 }) async {
-  validateYlPlayerConfiguration(configuration);
-  try {
-    final response = await methods.invokeMapMethod<String, Object?>(
-      'create',
-      <String, Object?>{'configuration': encodeYlConfiguration(configuration)},
+  validateYlPlayerOptions(options);
+  if (options.audioPolicy == YlAudioPolicy.pluginManagedMediaPlayback) {
+    throw legacyException(
+      YlFailureCodes.policyUnsupported,
+      scope: YlFailureScope.player,
     );
-    final playerId = _wireInt(response?['playerId']);
-    final textureId = _wireInt(response?['textureId']);
-    if (playerId == null ||
-        playerId < 0 ||
-        textureId == null ||
-        textureId < 0) {
-      throw YlPlayerError(
-        category: YlPlayerErrorCategory.internal,
-        code: '$platform.invalid_create_response',
-        message: 'The $platform backend returned an invalid create response.',
+  }
+  _LegacyChannelPlayer? player;
+  try {
+    final response = await methods
+        .invokeMapMethod<String, Object?>('create', {
+          'configuration': encodeYlOptions(options),
+        })
+        .timeout(transportTimeout);
+    final id = ylWireInt(response?['playerId']);
+    final texture = ylWireInt(response?['textureId']);
+    if (id == null || texture == null) {
+      throw legacyException(
+        YlFailureCodes.protocolMismatch,
+        scope: YlFailureScope.player,
       );
     }
-    return YlChannelPlayer(
-      playerId: playerId,
-      initialTextureId: textureId,
+    player = _LegacyChannelPlayer(
+      playerId: id,
+      texture: texture,
       methods: methods,
       nativeEvents: nativeEvents,
       platform: platform,
       initialEngine: initialEngine,
+      options: options,
+      transportTimeout: transportTimeout,
     );
-  } on PlatformException catch (error) {
-    throw decodeYlPlatformException(error, platform: platform);
-  } on MissingPluginException catch (error) {
-    throw YlPlayerError(
-      category: YlPlayerErrorCategory.internal,
-      code: '$platform.plugin_unavailable',
-      message: 'The $platform yl_player plugin is not registered.',
-      platformDiagnostic: error.message,
+    // Observe first, because requestState may synchronously emit then fail.
+    unawaited(
+      player._initial.future.then<void>(
+        (_) {},
+        onError: (Object _, StackTrace _) {},
+      ),
+    );
+    await Future.wait([
+      player._command('requestState'),
+      player._initial.future,
+    ]).timeout(transportTimeout);
+    return player;
+  } catch (error) {
+    await player?.dispose();
+    if (error is YlPlayerException) rethrow;
+    if (error is PlatformException) throw decodeYlPlatformException(error);
+    throw legacyException(
+      YlFailureCodes.protocolMismatch,
+      scope: YlFailureScope.player,
     );
   }
-}
-
-int? _wireInt(Object? value) {
-  if (value is int) {
-    return value;
-  }
-  if (value is double && value.isFinite) {
-    return value.toInt();
-  }
-  return null;
 }

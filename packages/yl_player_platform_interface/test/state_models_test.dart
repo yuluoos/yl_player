@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:yl_player_platform_interface/src/v2.dart';
+import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 const secret = 'https://private.example/movie?token=secret';
 const failure = YlFailure(

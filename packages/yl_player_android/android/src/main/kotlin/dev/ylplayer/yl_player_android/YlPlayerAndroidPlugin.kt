@@ -123,7 +123,9 @@ class YlPlayerAndroidPlugin :
                 player.activate()
             }
             player.command(commandName, root["arguments"].asStringMap())
-            result.success(null)
+            val source = root["arguments"].asStringMap()["source"].asStringMap()
+            val token = source["loadToken"]
+            result.success(if (commandName == "open" && token != null) mapOf("loadToken" to token) else null)
         } catch (error: PlayerCommandException) {
             result.error(error.code, error.message, error.details)
         } catch (error: Throwable) {

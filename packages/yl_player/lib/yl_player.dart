@@ -1,7 +1,52 @@
-/// Hardware-first Flutter playback kernel.
+/// Explicit player/session playback API.
 library;
 
-export 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
-
-export 'src/player_controller.dart';
-export 'src/player_view.dart';
+export 'src/player_controller.dart' show YlPlayerController, YlPlaybackSession;
+export 'src/player_view.dart' show YlPlayerView;
+export 'package:yl_player_platform_interface/yl_player_platform_interface.dart'
+    show
+        YlPlayerOptions,
+        YlLoadOptions,
+        YlDecoderPolicy,
+        YlAudioPolicy,
+        YlNetworkPolicy,
+        YlNetworkPolicyKind,
+        YlBufferStrategy,
+        YlBufferStrategyKind,
+        YlVideoConstraints,
+        YlMediaSource,
+        YlNetworkSource,
+        YlFileSource,
+        YlAndroidContentSource,
+        YlHttpRequest,
+        YlStreamIntent,
+        YlMediaFormat,
+        YlPlayerState,
+        YlPlaybackStatus,
+        YlPlaybackEngine,
+        YlDecoderMode,
+        YlPlayerCapabilities,
+        YlPlayerOperation,
+        YlDecoderEvidence,
+        YlTimeline,
+        YlDvrWindow,
+        YlVideoGeometry,
+        YlPixelSize,
+        YlMediaTrack,
+        YlTrackKind,
+        YlPlaybackMetrics,
+        YlPlaybackSessionId,
+        YlSourceAssessment,
+        YlSourceAssessmentOutcome,
+        YlRequirementId,
+        YlLimitationId,
+        YlFailure,
+        YlFailureCodes,
+        YlFailureCategory,
+        YlFailureScope,
+        YlPlayerException,
+        YlPlayerEvent,
+        YlFirstFrameEvent,
+        YlRetryScheduledEvent,
+        YlPlaybackEngineChangedEvent,
+        YlPlaybackFailedEvent;

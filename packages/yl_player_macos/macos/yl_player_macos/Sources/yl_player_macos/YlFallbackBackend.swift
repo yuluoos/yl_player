@@ -154,7 +154,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private var reconnectWorkItem: DispatchWorkItem?
   private var awaitingReconnectFirstFrame = false
   private var generation: UInt64
-  private var channelGeneration = YlMacosChannelGeneration.next()
+  private(set) var channelGeneration = YlMacosChannelGeneration.next()
+  private let legacyLoadToken: Any?
   private var audioGeneration: UInt64
   private var selectedAudioStream: YLFStreamInfo?
   private var desiredVolume: Float = 1
@@ -189,12 +190,16 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     videoSessionFactory: YlVTSessionFactory = YlHardwareVTSessionFactory(),
     mediaClock: YlMediaClock? = nil,
     displayView: NSView? = nil,
+    loadToken: Any? = nil,
+    channelIdentity: UInt64? = nil,
     emit: @escaping ([String: Any?]) -> Void
   ) throws {
     try YlFallbackQualityPolicy.validate(
       constraint: qualityConstraint,
       stream: Self.videoDescriptor(prepared.videoStream)
     )
+    self.legacyLoadToken = loadToken
+    if let channelIdentity { self.channelGeneration = channelIdentity }
     self.playerId = playerId
     self.textureId = textureId
     self.displayView = displayView
@@ -235,6 +240,9 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       return renderer?.renderedAudioTime
     })
     self.mediaClock.seek(to: savedPositionUs)
+    // Demux seeks land on an earlier keyframe; suppress that preroll just as
+    // in-place pipeline restoration does before it can re-anchor the clock.
+    if savedPositionUs > 0 { postSeekGate.reset(targetUs: savedPositionUs) }
     outputRelay.backend = self
     do {
       decoder = try YlVideoToolboxDecoder(
@@ -315,14 +323,17 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   }
 
   private func releaseMediaForStopOrDeactivation(stopping: Bool) {
+    // The audio-backed clock may consult stateLock; sample before owning it.
+    let positionGeneration = stateLock.withLock { generation }
+    let positionBeforeRelease = stopping ? nil : mediaClock.position(atHostTimeUs: Self.hostTimeUs())
     stateLock.lock()
     guard !disposed,
           stopping || active || openedMedia != nil || decoder != nil || audioRenderer != nil else {
       stateLock.unlock()
       return
     }
-    if active && !stopping {
-      savedPositionUs = mediaClock.position(atHostTimeUs: Self.hostTimeUs())
+    if active, generation == positionGeneration, let positionBeforeRelease {
+      savedPositionUs = positionBeforeRelease
     }
     resetting = stopping
     if stopping { stopped = true; playing = false }
@@ -583,6 +594,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     if stateLock.withLock({ stopped }) {
       emit(YlMacosChannel.fullState(
         playerId: playerId, generation: channelGeneration,
+        loadToken: stopped ? nil : legacyLoadToken,
         state: [
           "status": "idle", "positionMs": Int64(0), "durationMs": nil,
           "bufferedPositionMs": Int64(0), "isLive": false, "isSeekable": false,
@@ -617,6 +629,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     emit(YlMacosChannel.fullState(
       playerId: playerId,
       generation: channelGeneration,
+      loadToken: legacyLoadToken,
       state: YlFallbackStateSnapshot(
         status: status,
         positionMs: positionUs / 1_000,

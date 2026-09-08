@@ -2,4 +2,4 @@
 library;
 
 export 'src/testing/platform_conformance.dart';
-export 'src/v2.dart';
+export 'yl_player_platform_interface.dart';

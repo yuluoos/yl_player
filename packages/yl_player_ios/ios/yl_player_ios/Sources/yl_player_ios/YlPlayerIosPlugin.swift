@@ -107,6 +107,7 @@ public final class YlPlayerIosPlugin: NSObject, FlutterPlugin, FlutterStreamHand
     }
     let commandName = root["name"] as? String ?? ""
     let commandArguments = stringMap(root["arguments"])
+    if commandName == "requestState" { player.emitState(); result(nil); return }
     if commandName == "stop" { suspendedPlayerIds.remove(playerId) }
     if commandName == "open" {
       player.beginOpen(
@@ -119,7 +120,8 @@ public final class YlPlayerIosPlugin: NSObject, FlutterPlugin, FlutterStreamHand
         completion: { openResult in
           switch openResult {
           case .success:
-            result(nil)
+            let token = stringMap(commandArguments["source"])["loadToken"] ?? nil
+            result(token == nil ? nil : ["loadToken": token])
           case let .failure(error):
             result(flutterError(error))
           }
@@ -166,7 +168,7 @@ public final class YlPlayerIosPlugin: NSObject, FlutterPlugin, FlutterStreamHand
     if let playerId = int64(root["playerId"]), let player = players.removeValue(forKey: playerId) {
       suspendedPlayerIds.remove(playerId)
       player.dispose()
-      if !players.values.contains(where: { $0.isActive }) {
+      if player.managesAudioSession && !players.values.contains(where: { $0.isActive && $0.managesAudioSession }) {
         deactivateAudioSession()
       }
     }
@@ -175,7 +177,7 @@ public final class YlPlayerIosPlugin: NSObject, FlutterPlugin, FlutterStreamHand
 
   private func deactivateAllPlayers() {
     players.values.forEach { $0.deactivate() }
-    deactivateAudioSession()
+    if players.values.contains(where: { $0.managesAudioSession }) { deactivateAudioSession() }
   }
 
   private func suspendActivePlayers() {
@@ -187,7 +189,7 @@ public final class YlPlayerIosPlugin: NSObject, FlutterPlugin, FlutterStreamHand
 
   private func handleMemoryWarning() {
     players.values.forEach { $0.handleMemoryWarning() }
-    deactivateAudioSession()
+    if players.values.contains(where: { $0.managesAudioSession }) { deactivateAudioSession() }
   }
 
   private func reactivateSuspendedPlayers() {
