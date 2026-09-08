@@ -6,6 +6,63 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'support/android_fakes.dart';
 
 void main() {
+  test('all complete enum counterparts retain exact set parity', () {
+    final counterparts = <(List<Enum>, List<Enum>)>[
+      (AndroidDecoderPolicy.values, YlDecoderPolicy.values),
+      (AndroidAudioPolicy.values, YlAudioPolicy.values),
+      (AndroidStreamIntent.values, YlStreamIntent.values),
+      (AndroidMediaFormat.values, YlMediaFormat.values),
+      (AndroidNetworkPolicyKind.values, YlNetworkPolicyKind.values),
+      (AndroidBufferKind.values, YlBufferStrategyKind.values),
+      (AndroidPlaybackStatus.values, YlPlaybackStatus.values),
+      (AndroidTrackKind.values, YlTrackKind.values),
+      (AndroidPlayerOperation.values, YlPlayerOperation.values),
+      (AndroidDecoderMode.values, YlDecoderMode.values),
+      (AndroidDecoderEvidence.values, YlDecoderEvidence.values),
+      (AndroidFailureCategory.values, YlFailureCategory.values),
+      (AndroidFailureScope.values, YlFailureScope.values),
+      (AndroidAssessmentOutcome.values, YlSourceAssessmentOutcome.values),
+    ];
+    for (final (android, public) in counterparts) {
+      expect(
+        android.map((value) => value.name).toSet(),
+        public.map((value) => value.name).toSet(),
+        reason:
+            '${android.first.runtimeType} must match its entire public counterpart',
+      );
+    }
+  });
+  test(
+    'Android engines are the explicit public subset and source kinds cover all variants',
+    () {
+      const supported = {YlPlaybackEngine.unknown, YlPlaybackEngine.media3};
+      expect(AndroidEngine.values.map(AndroidCodec.engine).toSet(), supported);
+      expect(
+        AndroidEngine.values.map((value) => value.name).toSet(),
+        supported.map((value) => value.name).toSet(),
+      );
+      expect(YlPlaybackEngine.values.toSet(), containsAll(supported));
+      final variants = <(YlMediaSource, AndroidSourceKind)>[
+        (const YlFileSource('/a.mp4'), AndroidSourceKind.file),
+        (
+          YlNetworkSource(Uri.parse('https://media.test/a')),
+          AndroidSourceKind.network,
+        ),
+        (
+          YlAndroidContentSource(Uri.parse('content://media/a')),
+          AndroidSourceKind.content,
+        ),
+      ];
+      expect(
+        variants.map((pair) => pair.$2).toSet(),
+        AndroidSourceKind.values.toSet(),
+      );
+      for (final (source, kind) in variants) {
+        expect(AndroidCodec.source(source).kind, kind);
+      }
+    },
+  );
+
   test('metrics deltas distinguish every absent, set and cleared field', () {
     final state = AndroidCodec.state(wireState(session: 's1', revision: 4));
     final changes = AndroidMetricsDeltaMessage(

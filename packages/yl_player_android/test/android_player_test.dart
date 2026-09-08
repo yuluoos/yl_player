@@ -9,6 +9,165 @@ Matcher failsWith(String code) => throwsA(
   isA<YlPlayerException>().having((e) => e.failure.code, 'code', code),
 );
 void main() {
+  test('completion-window deltas use the latest authoritative state', () async {
+    final t = FakeTransport();
+    final p = await createFake(t);
+    addTearDown(p.dispose);
+    var injected = false, completed = false;
+    final revisions = <int>[];
+    final subscription = p.states.listen((state) {
+      revisions.add(state.revision);
+      if (injected) return;
+      injected = true;
+      expect(completed, isFalse);
+      t.callbacks!.onState(wireState(session: 's1', revision: 5, sequence: 11));
+      t.callbacks!.onStateDelta(
+        wireDelta(previous: 5, revision: 6, sequence: 12),
+      );
+      t.callbacks!.onStateDelta(
+        wireDelta(previous: 6, revision: 7, sequence: 13),
+      );
+    });
+    addTearDown(subscription.cancel);
+    final loading = p.load(source).then((result) {
+      completed = true;
+      return result;
+    });
+    await flush();
+    t.callbacks!.onState(wireState(session: 's1', revision: 4, sequence: 10));
+    t.loads.single.complete(
+      AndroidLoadReply(loadRequestId: 'load-1', sessionId: 's1'),
+    );
+    await loading;
+    expect(p.state.revision, 7);
+    expect(p.state.timeline.position.inMilliseconds, 50);
+    expect(revisions, [4, 5, 6, 7]);
+  });
+
+  for (final asEvent in [false, true]) {
+    for (final duringAssessment in [false, true]) {
+      test(
+        'former session failure notifies A without cancelling B: event=$asEvent assessment=$duringAssessment',
+        () async {
+          final t = FakeTransport();
+          final p = await createFake(t);
+          addTearDown(p.dispose);
+          await commit(t, p);
+          final states = <YlPlayerState>[], events = <YlPlayerEvent>[];
+          final stateSubscription = p.states.listen(states.add),
+              eventSubscription = p.events.listen(events.add);
+          addTearDown(stateSubscription.cancel);
+          addTearDown(eventSubscription.cancel);
+          final assessment = Completer<AndroidAssessmentReply>();
+          if (duringAssessment) t.assessment = () => assessment.future;
+          Object? failure;
+          final loading = p
+              .load(source)
+              .then<YlPlatformLoadResult?>(
+                (result) => result,
+                onError: (Object error) {
+                  failure = error;
+                  return null;
+                },
+              );
+          await flush();
+          if (!duringAssessment) {
+            t.callbacks!.onState(
+              wireState(session: 's2', revision: 6, sequence: 12),
+            );
+          }
+          if (asEvent) {
+            t.callbacks!.onPlaybackFailed(
+              AndroidPlaybackFailedMessage(
+                sessionId: 's1',
+                revision: 5,
+                sequence: 11,
+                occurredAtMs: 1,
+                failure: wireFailure(),
+              ),
+            );
+          } else {
+            t.callbacks!.onState(
+              wireState(
+                session: 's1',
+                revision: 5,
+                sequence: 11,
+                status: AndroidPlaybackStatus.failed,
+              )..failure = wireFailure(),
+            );
+          }
+          await flush();
+          if (asEvent) {
+            expect(
+              events.whereType<YlPlaybackFailedEvent>().single.sessionId.value,
+              's1',
+            );
+          } else {
+            expect(states.single.sessionId!.value, 's1');
+            expect(states.single.failure!.code, YlFailureCodes.networkFailed);
+          }
+          expect(failure, isNull);
+          if (duringAssessment) {
+            assessment.complete(
+              AndroidAssessmentReply(
+                outcome: AndroidAssessmentOutcome.compatible,
+                satisfiedRequirements: [],
+                limitations: [],
+              ),
+            );
+            await flush();
+            t.callbacks!.onState(
+              wireState(session: 's2', revision: 6, sequence: 12),
+            );
+          }
+          t.loads.last.complete(
+            AndroidLoadReply(loadRequestId: 'load-2', sessionId: 's2'),
+          );
+          expect((await loading)!.sessionId.value, 's2');
+          expect(p.state.sessionId!.value, 's2');
+        },
+      );
+    }
+    test(
+      'player-scoped retained-session failure still terminates B: event=$asEvent',
+      () async {
+        final t = FakeTransport();
+        final p = await createFake(t);
+        addTearDown(p.dispose);
+        await commit(t, p);
+        t.assessment = () => Completer<AndroidAssessmentReply>().future;
+        final loading = p.load(source);
+        final failure = expectLater(
+          loading,
+          failsWith(YlFailureCodes.networkFailed),
+        );
+        await flush();
+        if (asEvent) {
+          t.callbacks!.onPlaybackFailed(
+            AndroidPlaybackFailedMessage(
+              sessionId: 's1',
+              revision: 5,
+              sequence: 11,
+              occurredAtMs: 1,
+              failure: wireFailure(scope: AndroidFailureScope.player),
+            ),
+          );
+        } else {
+          t.callbacks!.onState(
+            wireState(
+              session: 's1',
+              revision: 5,
+              sequence: 11,
+              status: AndroidPlaybackStatus.failed,
+            )..failure = wireFailure(scope: AndroidFailureScope.player),
+          );
+        }
+        await failure;
+        expect(p.state.failure!.scope, YlFailureScope.player);
+      },
+    );
+  }
+
   test(
     'state-first Load preserves onState then first-frame then delta before reply',
     () async {
@@ -128,6 +287,8 @@ void main() {
       AndroidLoadReply(loadRequestId: 'load-2', sessionId: 's2'),
     );
     await tester.pump();
+    // Elapse the owned publication timer after reply microtasks have run.
+    await tester.pump(Duration.zero);
     expect((await next).sessionId.value, 's2');
     t.loads[0].complete(
       AndroidLoadReply(loadRequestId: 'load-1', sessionId: 's1'),

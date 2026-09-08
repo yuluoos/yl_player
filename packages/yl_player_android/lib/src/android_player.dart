@@ -340,8 +340,12 @@ final class AndroidPlayer implements YlPlatformPlayer {
         _currentRequestId = null;
       }
       _callbacks.acceptState(next, sequence);
+      // A retained session may fail while an unrelated candidate is assessed
+      // or paired. Only a failure attributed to this candidate cancels it.
       if (next.failure case final failure?) {
-        _cancelLoad(YlPlayerException(failure));
+        if (pending?.requestId == requestId) {
+          _cancelLoad(YlPlayerException(failure));
+        }
       }
       return;
     }
@@ -349,7 +353,14 @@ final class AndroidPlayer implements YlPlatformPlayer {
     if (AndroidCallbacks.hasReadyEvidence(next)) {
       pending.readySessions.add(session);
     }
-    pending.states[session] = (next, sequence);
+    final snapshot = (next, sequence);
+    pending.firstStates.putIfAbsent(session, () => snapshot);
+    if (next.status == YlPlaybackStatus.ready ||
+        next.status == YlPlaybackStatus.playing ||
+        next.metrics.loadToReady != null) {
+      pending.readyStates.putIfAbsent(session, () => snapshot);
+    }
+    pending.states[session] = snapshot;
     if (next.failure case final failure?) {
       _cancelLoad(YlPlayerException(failure));
       return;
@@ -360,7 +371,10 @@ final class AndroidPlayer implements YlPlatformPlayer {
 
   void _receiveDelta(AndroidStateDeltaMessage delta) {
     final session = YlPlaybackSessionId(delta.sessionId);
-    final buffered = _pending?.states[session];
+    final pending = _pending;
+    // Pairing installs authoritative state immediately; retained snapshots are
+    // only replay evidence during the cancellable completion turn.
+    final buffered = pending?.paired == true ? null : pending?.states[session];
     final base = buffered?.$1 ?? state;
     if (buffered == null &&
         !_callbacks.isNewer(delta.revision, delta.sequence)) {
@@ -379,6 +393,7 @@ final class AndroidPlayer implements YlPlatformPlayer {
   }
 
   void _completePair(_PendingLoad pending) {
+    if (pending.paired) return;
     final session = pending.reply;
     final match = pending.states[session];
     if (session == null || match == null) return;
@@ -394,17 +409,42 @@ final class AndroidPlayer implements YlPlatformPlayer {
     final previous = state.sessionId;
     if (previous != null) _retired.add(previous);
     _currentRequestId = pending.requestId;
-    _callbacks.acceptState(
-      match.$1,
-      match.$2,
-      readyObserved: pending.readySessions.contains(session),
-    );
-    _pending = null;
+    pending.paired = true;
     pending.deadline?.cancel();
+    // Retain only the first, first semantic READY and latest full snapshots.
+    // Replaying their real revisions lets the public controller observe Ready
+    // even when timing metrics are unknown and the final state is buffering.
+    final snapshots = <int, (YlPlayerState, int)>{};
+    for (final snapshot in [
+      pending.firstStates[session],
+      pending.readyStates[session],
+      match,
+    ]) {
+      if (snapshot != null) snapshots[snapshot.$1.revision] = snapshot;
+    }
+    final ordered = snapshots.values.toList()
+      ..sort((a, b) => a.$2.compareTo(b.$2));
+    for (final snapshot in ordered) {
+      _callbacks.acceptState(
+        snapshot.$1,
+        snapshot.$2,
+        readyObserved:
+            snapshot == match && pending.readySessions.contains(session),
+      );
+    }
+    // Events retain their own ingress order; no combined observer ordering
+    // across the two asynchronous public streams is promised.
     for (final event in pending.events) {
       _receiveEvent(event.$1, event.$2);
     }
-    pending.completion.complete(YlPlatformLoadResult(sessionId: session));
+    // Let the queued state chronology reach asynchronous stream consumers
+    // before their await-load continuation reads the final backend snapshot.
+    // This waits for no external observer and remains cancellable throughout.
+    pending.publication = Timer(Duration.zero, () {
+      if (_pending != pending) return;
+      _pending = null;
+      pending.completion.complete(YlPlatformLoadResult(sessionId: session));
+    });
   }
 
   void _receiveEvent(YlPlayerEvent event, int sequence) {
@@ -435,7 +475,7 @@ final class AndroidPlayer implements YlPlatformPlayer {
     if (event is YlPlaybackFailedEvent) {
       if (event.failure.scope == YlFailureScope.player) {
         _terminate(YlPlayerException(event.failure));
-      } else {
+      } else if (_pending?.reply == event.sessionId) {
         _cancelLoad(YlPlayerException(event.failure));
       }
     }
@@ -446,6 +486,7 @@ final class AndroidPlayer implements YlPlatformPlayer {
     if (pending == null) return;
     _pending = null;
     pending.deadline?.cancel();
+    pending.publication?.cancel();
     _retired.addAll(pending.states.keys);
     if (pending.reply case final reply?) _retired.add(reply);
     for (final cancel in pending.commands.toList()) {
@@ -629,9 +670,13 @@ final class _PendingLoad {
   final commands = <void Function(YlPlayerException)>{};
   final completion = Completer<YlPlatformLoadResult>();
   bool sent = false;
+  bool paired = false;
   YlPlaybackSessionId? reply;
   final states = <YlPlaybackSessionId, (YlPlayerState, int)>{};
+  final firstStates = <YlPlaybackSessionId, (YlPlayerState, int)>{};
+  final readyStates = <YlPlaybackSessionId, (YlPlayerState, int)>{};
   final events = <(YlPlayerEvent, int)>[];
   final readySessions = <YlPlaybackSessionId>{};
   Timer? deadline;
+  Timer? publication;
 }
