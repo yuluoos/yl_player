@@ -1,8 +1,10 @@
 # Player v0.2 Dart API and SPI migration evidence
 
-Status: the Dart API and SPI phase is accepted at implementation commit
-`fcd2056d3274afcd1cfe765fb5e1a260b64bf90b`. This document records the phase
-checkpoint, not full v0.2 release approval. The application API and handwritten
+Status: the prior Task 9 checkpoint was accepted at implementation commit
+`fcd2056d3274afcd1cfe765fb5e1a260b64bf90b`. The subsequent whole-phase review
+found four Important boundary defects; the final fix wave below is implemented
+and validated, awaiting the parent's scoped rereview. This is not full v0.2
+release approval. The application API and handwritten
 SPI now expose the v0.2 model. The temporary channel compatibility adapter is
 isolated behind `yl_player_legacy_transport.dart`, outside the application barrel.
 
@@ -10,7 +12,7 @@ isolated behind `yl_player_legacy_transport.dart`, outside the application barre
 
 Development branch: `codex/player-v0.2`, based on `5974434`.
 
-Current reviewed implementation: atomic cutover `72bc790`, boundary fixes
+Previously reviewed implementation: atomic cutover `72bc790`, boundary fixes
 `2a047d9`, and command-registration retention fix `fcd2056`. Independent review
 approved Tasks 6–8 after the final fix with no open Critical or Important finding.
 
@@ -36,7 +38,7 @@ The baseline includes the original channel/macOS changes in `1b239e0` and
 | 6–8 — atomic API cutover | Complete, independently reviewed | `72bc790` plus `2a047d9` and `fcd2056`; all original Important findings and the retention follow-up are resolved. |
 | 9 — phase acceptance | Complete in this checkpoint | Exact forbidden-surface scans, format, analysis, diff checks and the coverage inspection below pass at `fcd2056`. |
 
-## Current phase acceptance
+## Prior Task 9 acceptance
 
 ### Required behavior coverage
 
@@ -78,7 +80,7 @@ Commands ran from the worktree root with Flutter/Dart from
 | `git diff --check` | Exit 0 with no output. |
 | `git status --short` | Before the documentation commit, only `M docs/verification/player-v2-migration.md`, the transferred intentional Task 9 edit. No baseline change was lost and no package file changed during acceptance. |
 
-### Latest gate evidence retained from Tasks 6–8
+### Historical gate evidence retained from Tasks 6–8
 
 The final foundation command at `fcd2056`,
 `PATH=/Users/yy2021_8689/flutter/bin:$PATH sh tool/check_foundation.sh`, exited 0
@@ -112,6 +114,90 @@ does not establish physical iOS playback, Android device playback, Intel-native
 execution, endurance or profiling. The three iOS skips are hardware decoder
 limitations; integration cases that accept decoder-unavailable are not positive
 playback proof.
+
+## Final phase review fix wave
+
+Base: `42e45e150b28e1bd770847f84f1ce3c0ae5d3e8b`. Implementation commit:
+`f7c0f4412ef28cc04a1769894269f918393dfafd`. Parent rereview covers the entire
+wave together, including rulings 18 and 19.
+
+- macOS active fallback replacement samples the default audio-backed clock
+  outside `stateLock`, with a generation check before saving the position. The
+  real owner replacement regression reached the old lock cycle; its stack sample
+  is `/private/tmp/yl-v2-phase-replacement-deadlock-sample.txt`. The fixed test
+  commits a new generation/load token while keeping the texture and fallback active.
+- macOS initial routing, AV validation and rollback classification share one
+  source descriptor that includes separate credentials. A real slot, AV backend
+  and encrypted HLS server prove authenticated master/media/key/segment requests,
+  actual decoded video and unchanged public identity after candidate activation
+  fails following quiescence. The test follows production
+  `takeRollbackRequiresExternalActivation()` and the actual prepared-HLS methods;
+  it does not cover the owner's asynchronous recovery scheduling.
+- Late native Create replies retain an ownership continuation after the caller
+  times out. A returned identity receives one bounded best-effort disposal;
+  malformed creation and cleanup nonreply preserve the original failure. Late
+  native and cleanup errors are consumed. Cleanup cannot force an unresponsive
+  native process to release resources.
+- Direct SPI Stop fences the captured session after acceptance, before native
+  idle arrives, and suppresses stale milestone/retry/failure events. Rejected
+  Stop and an older reply after newer Load preserve the healthy identity.
+  Conformance checks rejection immediately and waits for real idle within its
+  existing deadline; it never invents an idle snapshot.
+- The confirmed analogous iOS HLS rollback defect is included under ruling 19.
+  iOS keeps preparation before quiescence and retains the real controlled asset,
+  loader and play intent only during synchronous replacement. Successful commit,
+  failed restoration, Stop, disposal and ordinary deactivation finalize retained
+  resources. The real slot regression restores video, speed, volume, playing and
+  paused intent, and unchanged generation. Real loader cancellation is checked at
+  every terminal boundary. iOS reuses the controlled loader/cache; unlike macOS,
+  this does not claim a new origin fetch for every resource after rollback. No
+  macOS lock or asynchronous recovery architecture was copied to iOS.
+
+### Final affected validation
+
+Commands start at the linked worktree root using
+`YL_REPO_ROOT=$(git rev-parse --show-toplevel)` and `cd "$YL_REPO_ROOT"`.
+Flutter/Dart use `/Users/yy2021_8689/flutter/bin`. Apple commands run serially
+from `packages/yl_player/example` after the platform's Flutter `--config-only`
+build. Actual playback is wrapped with
+`python3 /private/tmp/yl-v2-r1-run-awake.py <command>`; each temporary,
+process-bound display assertion was released. No global display settings changed.
+
+| Command / scope | Final result and evidence |
+| --- | --- |
+| `PATH=/Users/yy2021_8689/flutter/bin:$PATH sh tool/check_foundation.sh` | Exit 0; 178 Dart tests (144 SPI, 24 app, 10 package/example tests), clean analysis, 77 files with no formatting changes, both FFmpeg contracts. `/private/tmp/yl-v2-phase-foundation2.log`. The first invocation stopped at two test brace lints, then those were corrected. |
+| `xcodebuild test -quiet -workspace macos/Runner.xcworkspace -scheme Runner -destination platform=macOS -parallel-testing-enabled NO -only-testing:RunnerTests -resultBundlePath /private/tmp/yl-v2-phase-macos-final.xcresult` | Exit 0; 86 passed, zero failed/skipped. Matching `-summary.json` and `.log` retain results. |
+| `flutter test integration_test/macos_hls_headers_playback_test.dart integration_test/macos_mkv_playback_test.dart -d macos` | HLS 3 passed. Command exit 1 because the second app launch failed before any MKV case executed. `/private/tmp/yl-v2-phase-macos-playback-final.log`. This combined command is not reported as passing. |
+| `flutter test integration_test/macos_mkv_playback_test.dart -d macos` | Exit 0; 2 passed, actual First Frame/decoder/seek/geometry/track assertions. `/private/tmp/yl-v2-phase-macos-mkv-final.log`. Covers the unexecuted file; unchanged HLS was not repeated. |
+| `xcodebuild test -quiet -workspace ios/Runner.xcworkspace -scheme Runner -destination 'platform=iOS Simulator,id=431A3ACD-A229-4F82-AC46-9B9481AC0ADE' -parallel-testing-enabled NO -only-testing:RunnerTests -resultBundlePath /private/tmp/yl-v2-phase-ios-final2.xcresult` | Exit 0; 218 passed, 3 existing hardware skips, zero failed. `/private/tmp/yl-v2-phase-ios-final2-summary.json` and `.log`. Final run contains no temporary diagnostics. |
+| `flutter test integration_test/ios_hls_headers_playback_test.dart -d 431A3ACD-A229-4F82-AC46-9B9481AC0ADE` | Exit 0; 3 passed. `/private/tmp/yl-v2-phase-ios-hls-final.log`. Original standard/custom credential, ordinary-header and sticky cross-origin stripping assertions remain intact on both Apple platforms. |
+
+Test stability limitation: the first full iOS native command exited 65 with
+217 passes, 3 existing skips and one failure in the new HLS test's initial
+preflight, before quiescence/rollback. It returned HTTP 403 although the fixture
+only emits 200 or 401. Original evidence remains in
+`/private/tmp/yl-v2-phase-ios-final.xcresult`, its `.log`, and
+`/private/tmp/yl-v2-phase-ios-final-hls-activities.json`. Inspection found no
+registered global URLProtocol in the named tests. A full-order catch-only
+diagnostic rerun passed (218/3), so diagnostics never identified the response
+origin; they were removed before the final clean full rerun above. The cause
+remains unknown. Passing reruns are not a root-cause repair; no speculative
+production retry, global isolation change or weakened authentication was added.
+
+Corrected Dart RED was 70 passes/4 expected failures; final focused Dart was
+94 passes. Initial invalid cleanup-Future instrumentation is excluded from RED,
+as is the prior round-2 altered-observer experiment noted above. Native REDs
+include the sampled macOS lock cycle and real initial-success/restored-video
+failure on both platforms. iOS playing-intent verification additionally exposed
+and fixed missing playback restart after restored asset installation.
+
+Android JVM 73, prior release universal/link/minimum-macOS/entitlement checks,
+and Rosetta evidence above are historical and were not rerun for these changes.
+No new release-artifact validation, physical iOS/Android/Intel-native playback,
+endurance, profiling or universal native strict-policy support is claimed.
+The existing example Pause/Stop UI issue remains deferred. The local full
+command and coverage ledger is
+`.superpowers/sdd/2026-09-06-player-v2-dart-api-and-spi/phase-fix-report.md`.
 
 ### Task 0 validation
 
@@ -292,9 +378,9 @@ Important/Critical findings. Root `flutter analyze` also passed after the fix.
 
 ## Appendix: chronological phase rulings
 
-This is the durable extraction of every ruling in `progress.md` at Task 9. Ledger
-line references preserve chronology; each entry records its reason and the cost or
-risk accepted if the ruling is wrong.
+This is the durable extraction of the Task 9 rulings and the final phase review
+follow-ups: 19 rulings in total. Ledger line references preserve chronology; each
+entry records its reason and the cost or risk accepted if the ruling is wrong.
 
 1. **Ledger line 6 — local worktree ignore.** Use a self-ignoring
    `.worktrees/.gitignore` for the local worktree container. This avoids a
@@ -423,3 +509,22 @@ risk accepted if the ruling is wrong.
     broad test exception could hide a future surface regression, so only these hits
     are allowed and the application negative-export test plus no-production-hit
     requirement remain mandatory.
+
+18. **Final phase review — accepted Stop before native idle.** Conformance
+    requires immediate stopped-identity rejection after accepted Stop, but awaits
+    actual idle within the existing bounded case deadline. Independent native
+    reply/callback delivery permits reply-before-idle; fabricating a native
+    snapshot is forbidden. Missing idle must still fail, and rejection/newer
+    session protection remain required. Cost: bounded delivery delay is allowed;
+    a synchronous idle snapshot is not required.
+
+19. **Final phase fix — analogous iOS authenticated rollback.** Include the
+    confirmed iOS slot activation-failure path in this same fix wave: ordinary AV
+    reactivation would recreate a bare asset after destroying the old controlled
+    HLS loader. Preserve iOS preparation before quiescence; hold the controlled
+    asset/loader only across the synchronous replacement transaction, restore on
+    failure, and release after success, failed restoration, Stop or disposal.
+    Ordinary deactivation must keep its prior resource-release semantics. Cost:
+    iOS transaction lifetime differs from macOS asynchronous HLS re-preparation;
+    later Apple consolidation must preserve both platform behaviors and their
+    ownership, authentication, play-intent and session-identity tests.
