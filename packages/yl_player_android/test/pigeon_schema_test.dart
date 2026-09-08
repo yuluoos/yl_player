@@ -59,6 +59,7 @@ void main() {
       ),
     );
     final state = AndroidStateMessage(
+      loadRequestId: 'load-1',
       sessionId: 'session-1',
       revision: 7,
       sequence: 11,
@@ -160,6 +161,22 @@ void main() {
       ),
     );
 
+    final request = AndroidLoadRequest(
+      loadRequestId: 'load-1',
+      source: source,
+      options: loadOptions,
+    );
+    final reply = AndroidLoadReply(
+      loadRequestId: 'load-1',
+      sessionId: 'session-1',
+    );
+    const codec = AndroidPlayerHostApi.pigeonChannelCodec;
+    final decoded =
+        codec.decodeMessage(codec.encodeMessage([request, reply, state]))!
+            as List<Object?>;
+    expect((decoded[0]! as AndroidLoadRequest).loadRequestId, 'load-1');
+    expect((decoded[1]! as AndroidLoadReply).loadRequestId, 'load-1');
+    expect((decoded[2]! as AndroidStateMessage).loadRequestId, 'load-1');
     expect(create.schemaMajor, 2);
     expect(source.request!.headers['accept'], 'application/vnd.apple.mpegurl');
     expect(loadOptions.bufferStrategy.kind, AndroidBufferKind.bounded);

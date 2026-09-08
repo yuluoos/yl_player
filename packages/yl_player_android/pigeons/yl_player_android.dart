@@ -169,6 +169,7 @@ class AndroidAssessRequest {
 }
 
 class AndroidLoadRequest {
+  String loadRequestId;
   AndroidSourceMessage source;
   AndroidLoadOptionsMessage options;
 }
@@ -182,6 +183,7 @@ class AndroidAssessmentReply {
 }
 
 class AndroidLoadReply {
+  String loadRequestId;
   String sessionId;
 }
 
@@ -273,6 +275,7 @@ class AndroidFailureMessage {
 }
 
 class AndroidStateMessage {
+  String? loadRequestId;
   String? sessionId;
   int revision;
   int sequence;

@@ -979,19 +979,22 @@ data class AndroidAssessRequest (
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class AndroidLoadRequest (
+  val loadRequestId: String,
   val source: AndroidSourceMessage,
   val options: AndroidLoadOptionsMessage
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): AndroidLoadRequest {
-      val source = pigeonVar_list[0] as AndroidSourceMessage
-      val options = pigeonVar_list[1] as AndroidLoadOptionsMessage
-      return AndroidLoadRequest(source, options)
+      val loadRequestId = pigeonVar_list[0] as String
+      val source = pigeonVar_list[1] as AndroidSourceMessage
+      val options = pigeonVar_list[2] as AndroidLoadOptionsMessage
+      return AndroidLoadRequest(loadRequestId, source, options)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
+      loadRequestId,
       source,
       options,
     )
@@ -1004,17 +1007,18 @@ data class AndroidLoadRequest (
       return true
     }
     val other = other as AndroidLoadRequest
-    return YlPlayerAndroidPigeonUtils.deepEquals(this.source, other.source) && YlPlayerAndroidPigeonUtils.deepEquals(this.options, other.options)
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.loadRequestId, other.loadRequestId) && YlPlayerAndroidPigeonUtils.deepEquals(this.source, other.source) && YlPlayerAndroidPigeonUtils.deepEquals(this.options, other.options)
   }
 
   override fun hashCode(): Int {
     var result = javaClass.hashCode()
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.loadRequestId)
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.source)
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.options)
     return result
   }
   override fun toString(): String {
-    return "AndroidLoadRequest(source=$source, options=$options)"
+    return "AndroidLoadRequest(loadRequestId=$loadRequestId, source=$source, options=$options)"
   }
 }
 
@@ -1073,17 +1077,20 @@ data class AndroidAssessmentReply (
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class AndroidLoadReply (
+  val loadRequestId: String,
   val sessionId: String
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): AndroidLoadReply {
-      val sessionId = pigeonVar_list[0] as String
-      return AndroidLoadReply(sessionId)
+      val loadRequestId = pigeonVar_list[0] as String
+      val sessionId = pigeonVar_list[1] as String
+      return AndroidLoadReply(loadRequestId, sessionId)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
+      loadRequestId,
       sessionId,
     )
   }
@@ -1095,16 +1102,17 @@ data class AndroidLoadReply (
       return true
     }
     val other = other as AndroidLoadReply
-    return YlPlayerAndroidPigeonUtils.deepEquals(this.sessionId, other.sessionId)
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.loadRequestId, other.loadRequestId) && YlPlayerAndroidPigeonUtils.deepEquals(this.sessionId, other.sessionId)
   }
 
   override fun hashCode(): Int {
     var result = javaClass.hashCode()
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.loadRequestId)
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.sessionId)
     return result
   }
   override fun toString(): String {
-    return "AndroidLoadReply(sessionId=$sessionId)"
+    return "AndroidLoadReply(loadRequestId=$loadRequestId, sessionId=$sessionId)"
   }
 }
 
@@ -1710,6 +1718,7 @@ data class AndroidFailureMessage (
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class AndroidStateMessage (
+  val loadRequestId: String? = null,
   val sessionId: String? = null,
   val revision: Long,
   val sequence: Long,
@@ -1727,24 +1736,26 @@ data class AndroidStateMessage (
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): AndroidStateMessage {
-      val sessionId = pigeonVar_list[0] as String?
-      val revision = pigeonVar_list[1] as Long
-      val sequence = pigeonVar_list[2] as Long
-      val status = pigeonVar_list[3] as AndroidPlaybackStatus
-      val timeline = pigeonVar_list[4] as AndroidTimelineMessage
-      val geometry = pigeonVar_list[5] as AndroidVideoGeometryMessage?
-      val audioTracks = pigeonVar_list[6] as List<AndroidTrackMessage>
-      val videoTracks = pigeonVar_list[7] as List<AndroidTrackMessage>
-      val engine = pigeonVar_list[8] as AndroidEngine
-      val decoderMode = pigeonVar_list[9] as AndroidDecoderMode
-      val decoderIdentity = pigeonVar_list[10] as String?
-      val metrics = pigeonVar_list[11] as AndroidMetricsMessage
-      val failure = pigeonVar_list[12] as AndroidFailureMessage?
-      return AndroidStateMessage(sessionId, revision, sequence, status, timeline, geometry, audioTracks, videoTracks, engine, decoderMode, decoderIdentity, metrics, failure)
+      val loadRequestId = pigeonVar_list[0] as String?
+      val sessionId = pigeonVar_list[1] as String?
+      val revision = pigeonVar_list[2] as Long
+      val sequence = pigeonVar_list[3] as Long
+      val status = pigeonVar_list[4] as AndroidPlaybackStatus
+      val timeline = pigeonVar_list[5] as AndroidTimelineMessage
+      val geometry = pigeonVar_list[6] as AndroidVideoGeometryMessage?
+      val audioTracks = pigeonVar_list[7] as List<AndroidTrackMessage>
+      val videoTracks = pigeonVar_list[8] as List<AndroidTrackMessage>
+      val engine = pigeonVar_list[9] as AndroidEngine
+      val decoderMode = pigeonVar_list[10] as AndroidDecoderMode
+      val decoderIdentity = pigeonVar_list[11] as String?
+      val metrics = pigeonVar_list[12] as AndroidMetricsMessage
+      val failure = pigeonVar_list[13] as AndroidFailureMessage?
+      return AndroidStateMessage(loadRequestId, sessionId, revision, sequence, status, timeline, geometry, audioTracks, videoTracks, engine, decoderMode, decoderIdentity, metrics, failure)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
+      loadRequestId,
       sessionId,
       revision,
       sequence,
@@ -1768,11 +1779,12 @@ data class AndroidStateMessage (
       return true
     }
     val other = other as AndroidStateMessage
-    return YlPlayerAndroidPigeonUtils.deepEquals(this.sessionId, other.sessionId) && YlPlayerAndroidPigeonUtils.deepEquals(this.revision, other.revision) && YlPlayerAndroidPigeonUtils.deepEquals(this.sequence, other.sequence) && YlPlayerAndroidPigeonUtils.deepEquals(this.status, other.status) && YlPlayerAndroidPigeonUtils.deepEquals(this.timeline, other.timeline) && YlPlayerAndroidPigeonUtils.deepEquals(this.geometry, other.geometry) && YlPlayerAndroidPigeonUtils.deepEquals(this.audioTracks, other.audioTracks) && YlPlayerAndroidPigeonUtils.deepEquals(this.videoTracks, other.videoTracks) && YlPlayerAndroidPigeonUtils.deepEquals(this.engine, other.engine) && YlPlayerAndroidPigeonUtils.deepEquals(this.decoderMode, other.decoderMode) && YlPlayerAndroidPigeonUtils.deepEquals(this.decoderIdentity, other.decoderIdentity) && YlPlayerAndroidPigeonUtils.deepEquals(this.metrics, other.metrics) && YlPlayerAndroidPigeonUtils.deepEquals(this.failure, other.failure)
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.loadRequestId, other.loadRequestId) && YlPlayerAndroidPigeonUtils.deepEquals(this.sessionId, other.sessionId) && YlPlayerAndroidPigeonUtils.deepEquals(this.revision, other.revision) && YlPlayerAndroidPigeonUtils.deepEquals(this.sequence, other.sequence) && YlPlayerAndroidPigeonUtils.deepEquals(this.status, other.status) && YlPlayerAndroidPigeonUtils.deepEquals(this.timeline, other.timeline) && YlPlayerAndroidPigeonUtils.deepEquals(this.geometry, other.geometry) && YlPlayerAndroidPigeonUtils.deepEquals(this.audioTracks, other.audioTracks) && YlPlayerAndroidPigeonUtils.deepEquals(this.videoTracks, other.videoTracks) && YlPlayerAndroidPigeonUtils.deepEquals(this.engine, other.engine) && YlPlayerAndroidPigeonUtils.deepEquals(this.decoderMode, other.decoderMode) && YlPlayerAndroidPigeonUtils.deepEquals(this.decoderIdentity, other.decoderIdentity) && YlPlayerAndroidPigeonUtils.deepEquals(this.metrics, other.metrics) && YlPlayerAndroidPigeonUtils.deepEquals(this.failure, other.failure)
   }
 
   override fun hashCode(): Int {
     var result = javaClass.hashCode()
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.loadRequestId)
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.sessionId)
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.revision)
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.sequence)
@@ -1789,7 +1801,7 @@ data class AndroidStateMessage (
     return result
   }
   override fun toString(): String {
-    return "AndroidStateMessage(sessionId=$sessionId, revision=$revision, sequence=$sequence, status=$status, timeline=$timeline, geometry=$geometry, audioTracks=$audioTracks, videoTracks=$videoTracks, engine=$engine, decoderMode=$decoderMode, decoderIdentity=$decoderIdentity, metrics=$metrics, failure=$failure)"
+    return "AndroidStateMessage(loadRequestId=$loadRequestId, sessionId=$sessionId, revision=$revision, sequence=$sequence, status=$status, timeline=$timeline, geometry=$geometry, audioTracks=$audioTracks, videoTracks=$videoTracks, engine=$engine, decoderMode=$decoderMode, decoderIdentity=$decoderIdentity, metrics=$metrics, failure=$failure)"
   }
 }
 

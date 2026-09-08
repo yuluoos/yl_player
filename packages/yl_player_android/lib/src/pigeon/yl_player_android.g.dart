@@ -916,9 +916,12 @@ class AndroidAssessRequest {
 
 class AndroidLoadRequest {
   AndroidLoadRequest({
+    required this.loadRequestId,
     required this.source,
     required this.options,
   });
+
+  String loadRequestId;
 
   AndroidSourceMessage source;
 
@@ -926,6 +929,7 @@ class AndroidLoadRequest {
 
   List<Object?> _toList() {
     return <Object?>[
+      loadRequestId,
       source,
       options,
     ];
@@ -937,8 +941,9 @@ class AndroidLoadRequest {
   static AndroidLoadRequest decode(Object result) {
     result as List<Object?>;
     return AndroidLoadRequest(
-      source: result[0]! as AndroidSourceMessage,
-      options: result[1]! as AndroidLoadOptionsMessage,
+      loadRequestId: result[0]! as String,
+      source: result[1]! as AndroidSourceMessage,
+      options: result[2]! as AndroidLoadOptionsMessage,
     );
   }
 
@@ -951,7 +956,7 @@ class AndroidLoadRequest {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(source, other.source) && _deepEquals(options, other.options);
+    return _deepEquals(loadRequestId, other.loadRequestId) && _deepEquals(source, other.source) && _deepEquals(options, other.options);
   }
 
   @override
@@ -960,7 +965,7 @@ class AndroidLoadRequest {
 
   @override
   String toString() {
-    return 'AndroidLoadRequest(source: $source, options: $options)';
+    return 'AndroidLoadRequest(loadRequestId: $loadRequestId, source: $source, options: $options)';
   }
 }
 
@@ -1031,13 +1036,17 @@ class AndroidAssessmentReply {
 
 class AndroidLoadReply {
   AndroidLoadReply({
+    required this.loadRequestId,
     required this.sessionId,
   });
+
+  String loadRequestId;
 
   String sessionId;
 
   List<Object?> _toList() {
     return <Object?>[
+      loadRequestId,
       sessionId,
     ];
   }
@@ -1048,7 +1057,8 @@ class AndroidLoadReply {
   static AndroidLoadReply decode(Object result) {
     result as List<Object?>;
     return AndroidLoadReply(
-      sessionId: result[0]! as String,
+      loadRequestId: result[0]! as String,
+      sessionId: result[1]! as String,
     );
   }
 
@@ -1061,7 +1071,7 @@ class AndroidLoadReply {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(sessionId, other.sessionId);
+    return _deepEquals(loadRequestId, other.loadRequestId) && _deepEquals(sessionId, other.sessionId);
   }
 
   @override
@@ -1070,7 +1080,7 @@ class AndroidLoadReply {
 
   @override
   String toString() {
-    return 'AndroidLoadReply(sessionId: $sessionId)';
+    return 'AndroidLoadReply(loadRequestId: $loadRequestId, sessionId: $sessionId)';
   }
 }
 
@@ -1811,6 +1821,7 @@ class AndroidFailureMessage {
 
 class AndroidStateMessage {
   AndroidStateMessage({
+    this.loadRequestId,
     this.sessionId,
     required this.revision,
     required this.sequence,
@@ -1825,6 +1836,8 @@ class AndroidStateMessage {
     required this.metrics,
     this.failure,
   });
+
+  String? loadRequestId;
 
   String? sessionId;
 
@@ -1854,6 +1867,7 @@ class AndroidStateMessage {
 
   List<Object?> _toList() {
     return <Object?>[
+      loadRequestId,
       sessionId,
       revision,
       sequence,
@@ -1876,19 +1890,20 @@ class AndroidStateMessage {
   static AndroidStateMessage decode(Object result) {
     result as List<Object?>;
     return AndroidStateMessage(
-      sessionId: result[0] as String?,
-      revision: result[1]! as int,
-      sequence: result[2]! as int,
-      status: result[3]! as AndroidPlaybackStatus,
-      timeline: result[4]! as AndroidTimelineMessage,
-      geometry: result[5] as AndroidVideoGeometryMessage?,
-      audioTracks: (result[6]! as List<Object?>).cast<AndroidTrackMessage>(),
-      videoTracks: (result[7]! as List<Object?>).cast<AndroidTrackMessage>(),
-      engine: result[8]! as AndroidEngine,
-      decoderMode: result[9]! as AndroidDecoderMode,
-      decoderIdentity: result[10] as String?,
-      metrics: result[11]! as AndroidMetricsMessage,
-      failure: result[12] as AndroidFailureMessage?,
+      loadRequestId: result[0] as String?,
+      sessionId: result[1] as String?,
+      revision: result[2]! as int,
+      sequence: result[3]! as int,
+      status: result[4]! as AndroidPlaybackStatus,
+      timeline: result[5]! as AndroidTimelineMessage,
+      geometry: result[6] as AndroidVideoGeometryMessage?,
+      audioTracks: (result[7]! as List<Object?>).cast<AndroidTrackMessage>(),
+      videoTracks: (result[8]! as List<Object?>).cast<AndroidTrackMessage>(),
+      engine: result[9]! as AndroidEngine,
+      decoderMode: result[10]! as AndroidDecoderMode,
+      decoderIdentity: result[11] as String?,
+      metrics: result[12]! as AndroidMetricsMessage,
+      failure: result[13] as AndroidFailureMessage?,
     );
   }
 
@@ -1901,7 +1916,7 @@ class AndroidStateMessage {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(sessionId, other.sessionId) && _deepEquals(revision, other.revision) && _deepEquals(sequence, other.sequence) && _deepEquals(status, other.status) && _deepEquals(timeline, other.timeline) && _deepEquals(geometry, other.geometry) && _deepEquals(audioTracks, other.audioTracks) && _deepEquals(videoTracks, other.videoTracks) && _deepEquals(engine, other.engine) && _deepEquals(decoderMode, other.decoderMode) && _deepEquals(decoderIdentity, other.decoderIdentity) && _deepEquals(metrics, other.metrics) && _deepEquals(failure, other.failure);
+    return _deepEquals(loadRequestId, other.loadRequestId) && _deepEquals(sessionId, other.sessionId) && _deepEquals(revision, other.revision) && _deepEquals(sequence, other.sequence) && _deepEquals(status, other.status) && _deepEquals(timeline, other.timeline) && _deepEquals(geometry, other.geometry) && _deepEquals(audioTracks, other.audioTracks) && _deepEquals(videoTracks, other.videoTracks) && _deepEquals(engine, other.engine) && _deepEquals(decoderMode, other.decoderMode) && _deepEquals(decoderIdentity, other.decoderIdentity) && _deepEquals(metrics, other.metrics) && _deepEquals(failure, other.failure);
   }
 
   @override
@@ -1910,7 +1925,7 @@ class AndroidStateMessage {
 
   @override
   String toString() {
-    return 'AndroidStateMessage(sessionId: $sessionId, revision: $revision, sequence: $sequence, status: $status, timeline: $timeline, geometry: $geometry, audioTracks: $audioTracks, videoTracks: $videoTracks, engine: $engine, decoderMode: $decoderMode, decoderIdentity: $decoderIdentity, metrics: $metrics, failure: $failure)';
+    return 'AndroidStateMessage(loadRequestId: $loadRequestId, sessionId: $sessionId, revision: $revision, sequence: $sequence, status: $status, timeline: $timeline, geometry: $geometry, audioTracks: $audioTracks, videoTracks: $videoTracks, engine: $engine, decoderMode: $decoderMode, decoderIdentity: $decoderIdentity, metrics: $metrics, failure: $failure)';
   }
 }
 
