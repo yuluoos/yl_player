@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/services.dart';
+import 'package:yl_player_platform_interface/yl_player_legacy_transport.dart';
 import 'package:yl_player/src/player_controller.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'support/fake_player_platform.dart';
@@ -18,6 +20,7 @@ const failure = YlPlayerException(
   ),
 );
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   late FakePlatformPlayer backend;
   late YlPlayerController player;
   setUp(() async {
@@ -29,6 +32,131 @@ void main() {
   tearDown(() async {
     await player.dispose();
   });
+  test('paused app observer cannot delay public dispose completion', () async {
+    final observer = player.states.listen((_) {});
+    observer.pause();
+    try {
+      await player.dispose().timeout(const Duration(milliseconds: 100));
+      expect(backend.disposeCount, 1);
+    } finally {
+      await observer.cancel();
+      await player.dispose();
+    }
+  });
+  for (final close in [false, true]) {
+    test(
+      'native wire ${close ? 'close' : 'error'} propagates terminal lifecycle through the legacy SPI',
+      () async {
+        await player.dispose();
+        const methods = MethodChannel('controller-transport-loss');
+        final wire = StreamController<Object?>.broadcast(sync: true);
+        var disposeCalls = 0;
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(methods, (call) async {
+              if (call.method == 'create') {
+                return {'playerId': 7, 'textureId': 42};
+              }
+              if (call.method == 'dispose') {
+                disposeCalls++;
+                return null;
+              }
+              final open = call.arguments['name'] == 'open';
+              wire.add({
+                'playerId': 7,
+                'type': 'state',
+                'protocolVersion': 1,
+                'generation': open ? 1 : 0,
+                'loadToken': open ? 1 : null,
+                'state': {
+                  'status': open ? 'loading' : 'idle',
+                  'engine': 'media3',
+                  'capabilities': <String, Object?>{},
+                },
+              });
+              return open ? {'loadToken': 1} : null;
+            });
+        addTearDown(() async {
+          await wire.close();
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+              .setMockMethodCallHandler(methods, null);
+        });
+        final native = await createYlLegacyChannelPlayer(
+          options: const YlPlayerOptions(),
+          methods: methods,
+          nativeEvents: wire.stream,
+          platform: 'android',
+          initialEngine: YlPlaybackEngine.media3,
+        );
+        player = await YlPlayerController.create(
+          platform: _SinglePlayerPlatform(native),
+        );
+        final session = await player.load(source);
+        final before = player.state;
+        final observedStates = <YlPlayerState>[];
+        final observedEvents = <YlPlayerEvent>[];
+        player.states.listen(observedStates.add);
+        player.events.listen(observedEvents.add);
+        final ready = expectLater(
+          session.ready.timeout(const Duration(milliseconds: 300)),
+          throwsA(isA<YlPlayerException>()),
+        );
+        final frame = expectLater(
+          session.firstFrame.timeout(const Duration(milliseconds: 300)),
+          throwsA(isA<YlPlayerException>()),
+        );
+        if (close) {
+          await wire.close();
+        } else {
+          wire.addError(StateError('private wire details'));
+        }
+        await Future.wait([ready, frame]);
+        await player.dispose();
+        expect(player.state, before);
+        expect(observedStates, isEmpty);
+        expect(observedEvents, isEmpty);
+        expect(disposeCalls, 1);
+        expect(player.textureId.value, isNull);
+      },
+    );
+  }
+  for (final close in [false, true]) {
+    test(
+      'transport ${close ? 'close' : 'error'} settles committed loading milestones without playback failure',
+      () async {
+        final loading = player.load(source);
+        backend.commit(s1);
+        final session = await loading;
+        final before = player.state;
+        final states = <YlPlayerState>[];
+        final events = <YlPlayerEvent>[];
+        player.states.listen(states.add);
+        player.events.listen(events.add);
+        final ready = expectLater(
+          session.ready.timeout(const Duration(milliseconds: 300)),
+          throwsA(isA<YlPlayerException>()),
+        );
+        final frame = expectLater(
+          session.firstFrame.timeout(const Duration(milliseconds: 300)),
+          throwsA(isA<YlPlayerException>()),
+        );
+        if (close) {
+          await backend.stateController.close();
+        } else {
+          backend.eventController.addError(
+            StateError('private native details'),
+          );
+        }
+        await Future.wait([ready, frame]);
+        await player.dispose();
+        expect(player.state, before);
+        expect(states, isEmpty);
+        expect(events, isEmpty);
+        expect(player.textureId.value, isNull);
+        expect(backend.disposeCount, 1);
+        await expectLater(session.play(), throwsA(isA<YlPlayerException>()));
+      },
+    );
+  }
   test(
     'commit, Ready and First Frame are separate; replacement makes old commands stale',
     () async {
@@ -248,4 +376,12 @@ void main() {
     }, (error, _) => errors.add(error));
     expect(errors, isEmpty);
   });
+}
+
+final class _SinglePlayerPlatform extends YlPlayerPlatform {
+  _SinglePlayerPlatform(this.player);
+  final YlPlatformPlayer player;
+  @override
+  Future<YlPlatformPlayer> createPlayer(YlPlayerOptions options) async =>
+      player;
 }

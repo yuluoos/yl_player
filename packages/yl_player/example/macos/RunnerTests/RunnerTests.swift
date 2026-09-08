@@ -5,6 +5,14 @@ import XCTest
 @testable import yl_player_macos
 
 class RunnerTests: XCTestCase {
+  func testMediaProxyParsesOnlyExactInheritedCredentialQueryItem() {
+    XCTAssertTrue(YlHlsMediaProxy.inheritsCredentialStripping(fromRequestTarget: "/token/media.ts?credentialsStripped=1"))
+    XCTAssertTrue(YlHlsMediaProxy.inheritsCredentialStripping(fromRequestTarget: "/token/media.ts?other=2&credentialsStripped=1"))
+    for target in ["/credentialsStripped=1/media.ts", "/token/media.ts", "/token/media.ts?credentialsStripped=10", "/token/media.ts?other=credentialsStripped%3D1", "/token/media.ts?xcredentialsStripped=1", "/token/media.ts#credentialsStripped=1"] {
+      XCTAssertFalse(YlHlsMediaProxy.inheritsCredentialStripping(fromRequestTarget: target), target)
+    }
+  }
+
   func testPerLoadBufferStrategyUsesExistingGoalsWithoutChangingLegacyConfiguration() throws {
     let legacy = PlayerConfiguration(map: ["bufferMode": "stable", "audioPolicy": "appManaged"])
     let low = legacy.forLoad(["loadOptions": ["bufferStrategy": "lowLatency"]])

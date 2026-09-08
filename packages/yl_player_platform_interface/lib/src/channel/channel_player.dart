@@ -17,11 +17,20 @@ final class _LegacyChannelPlayer implements YlPlatformPlayer {
     required this.options,
     required this.transportTimeout,
   }) : _texture = ValueNotifier(texture) {
+    unawaited(
+      _termination.future.then<void>(
+        (_) {},
+        onError: (Object _, StackTrace _) {},
+      ),
+    );
     _subscription = nativeEvents.listen(
       _accept,
       onError: (Object _) => _protocolFailure(),
       onDone: _protocolFailure,
     );
+    if (_disposed) {
+      unawaited(_subscription!.cancel().catchError((Object _) {}));
+    }
   }
   final int playerId;
   final MethodChannel methods;
@@ -30,7 +39,9 @@ final class _LegacyChannelPlayer implements YlPlatformPlayer {
   final YlPlayerOptions options;
   final Duration transportTimeout;
   final ValueNotifier<int?> _texture;
-  late final StreamSubscription<Object?> _subscription;
+  StreamSubscription<Object?>? _subscription;
+  final _termination = Completer<Never>();
+  YlPlayerException? _terminalError;
   final _states = StreamController<YlPlayerState>.broadcast(sync: true);
   final _events = StreamController<YlPlayerEvent>.broadcast(sync: true);
   final _initial = Completer<void>();
@@ -279,6 +290,7 @@ final class _LegacyChannelPlayer implements YlPlatformPlayer {
   @override
   Future<void> stop() {
     _check();
+    ++_serial;
     _cancelLoad();
     return _command('stop');
   }
@@ -298,11 +310,14 @@ final class _LegacyChannelPlayer implements YlPlatformPlayer {
   ]) async {
     _check();
     try {
-      await methods.invokeMethod<void>('command', {
-        'playerId': playerId,
-        'name': name,
-        'arguments': args,
-      });
+      await Future.any<void>([
+        methods.invokeMethod<void>('command', {
+          'playerId': playerId,
+          'name': name,
+          'arguments': args,
+        }),
+        _termination.future,
+      ]);
     } on PlatformException catch (e) {
       throw decodeYlPlatformException(e);
     } on MissingPluginException {
@@ -431,23 +446,35 @@ final class _LegacyChannelPlayer implements YlPlatformPlayer {
     if (load != null && !load.result.isCompleted) {
       load.result.completeError(error);
     }
-    // Transport errors are not fabricated authoritative playback transitions.
+    // Closing the SPI streams signals terminal lifecycle loss to the owner;
+    // it does not fabricate an authoritative native failure snapshot/event.
+    _terminalError = error;
+    unawaited(dispose());
   }
 
   @override
   Future<void> dispose() => _disposeFuture ??= _dispose();
   Future<void> _dispose() async {
     _disposed = true;
+    ++_serial;
+    _termination.completeError(
+      _terminalError ?? legacyException(YlFailureCodes.playerDisposed),
+    );
     _cancelLoad();
-    await _subscription.cancel();
+    _texture.value = null;
+    try {
+      await _subscription?.cancel();
+    } catch (_) {
+      /* still release native ownership */
+    }
+    // External paused observers must not delay owned resource release.
+    unawaited(_states.close());
+    unawaited(_events.close());
     try {
       await methods.invokeMethod<void>('dispose', {'playerId': playerId});
     } catch (_) {
       /* best effort */
     }
-    _texture.value = null;
-    await _states.close();
-    await _events.close();
     _texture.dispose();
   }
 }
@@ -477,13 +504,14 @@ Future<YlPlatformPlayer> createYlLegacyChannelPlayer({
     );
   }
   _LegacyChannelPlayer? player;
+  int? allocatedId;
   try {
     final response = await methods
         .invokeMapMethod<String, Object?>('create', {
           'configuration': encodeYlOptions(options),
         })
         .timeout(transportTimeout);
-    final id = ylWireInt(response?['playerId']);
+    final id = allocatedId = ylWireInt(response?['playerId']);
     final texture = ylWireInt(response?['textureId']);
     if (id == null || texture == null) {
       throw legacyException(
@@ -514,7 +542,19 @@ Future<YlPlatformPlayer> createYlLegacyChannelPlayer({
     ]).timeout(transportTimeout);
     return player;
   } catch (error) {
-    await player?.dispose();
+    if (player != null) {
+      try {
+        await player.dispose();
+      } catch (_) {
+        /* preserve creation error */
+      }
+    } else if (allocatedId != null) {
+      try {
+        await methods.invokeMethod<void>('dispose', {'playerId': allocatedId});
+      } catch (_) {
+        /* preserve creation error */
+      }
+    }
     if (error is YlPlayerException) rethrow;
     if (error is PlatformException) throw decodeYlPlatformException(error);
     throw legacyException(

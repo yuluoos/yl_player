@@ -9,6 +9,7 @@ void main() {
   const methods = MethodChannel('legacy-test');
   late StreamController<Object?> wire;
   late List<MethodCall> calls;
+  Object? createReply;
   Future<Object?> Function(MethodCall)? handler;
   Map<String, Object?> snapshot(
     int generation, {
@@ -41,10 +42,11 @@ void main() {
     wire = StreamController<Object?>.broadcast(sync: true);
     calls = [];
     handler = null;
+    createReply = {'playerId': 7, 'textureId': 42};
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(methods, (call) async {
           calls.add(call);
-          if (call.method == 'create') return {'playerId': 7, 'textureId': 42};
+          if (call.method == 'create') return createReply;
           if (handler != null) return handler!(call);
           if (call.method == 'command' &&
               (call.arguments as Map)['name'] == 'requestState') {
@@ -60,6 +62,193 @@ void main() {
   });
   Matcher failure(String code) => throwsA(
     isA<YlPlayerException>().having((e) => e.failure.code, 'code', code),
+  );
+  test(
+    'Stop cancels a Load still awaiting assessment without a microtask drain',
+    () async {
+      final player = await create();
+      wire.add(snapshot(1, status: 'playing'));
+      handler = (call) async {
+        if (call.method == 'command' && call.arguments['name'] == 'stop') {
+          wire.add(snapshot(2));
+        }
+        if (call.method == 'command' && call.arguments['name'] == 'open') {
+          wire.add(snapshot(3, status: 'loading', loadToken: 1));
+          return {'loadToken': 1};
+        }
+        return null;
+      };
+      final loading = player.load(
+        YlNetworkSource(Uri.parse('https://example.test/a')),
+      );
+      final stopping = player.stop();
+      await expectLater(loading, failure(YlFailureCodes.loadCancelled));
+      await stopping;
+      expect(
+        calls.where(
+          (c) => c.method == 'command' && c.arguments['name'] == 'open',
+        ),
+        isEmpty,
+      );
+      expect(player.state.sessionId, isNull);
+      await player.dispose();
+    },
+  );
+  for (final texture in [null, 'invalid', -1]) {
+    test(
+      'allocated native ID is released for invalid texture $texture',
+      () async {
+        createReply = {'playerId': 7, 'textureId': texture};
+        handler = (_) async => throw PlatformException(code: 'dispose.failed');
+        await expectLater(create(), failure(YlFailureCodes.protocolMismatch));
+        expect(
+          calls.where((c) => c.method == 'dispose').map((c) => c.arguments),
+          [
+            {'playerId': 7},
+          ],
+        );
+      },
+    );
+  }
+  test(
+    'allocated native ID is released if subscription attachment throws',
+    () async {
+      await expectLater(
+        createYlLegacyChannelPlayer(
+          options: const YlPlayerOptions(),
+          methods: methods,
+          nativeEvents: _ThrowingListenStream(),
+          platform: 'android',
+          initialEngine: YlPlaybackEngine.media3,
+        ),
+        failure(YlFailureCodes.protocolMismatch),
+      );
+      expect(calls.where((c) => c.method == 'dispose'), hasLength(1));
+      expect(calls.last.arguments, {'playerId': 7});
+    },
+  );
+  test('paused SPI observer cannot prevent terminal native release', () async {
+    final player = await create();
+    final observer = player.states.listen((_) {});
+    observer.pause();
+    wire.add(snapshot(3, status: 'loading'));
+    wire.addError(StateError('transport gone'));
+    try {
+      await Future<void>.delayed(Duration.zero);
+      expect(calls.where((c) => c.method == 'dispose'), hasLength(1));
+      await player.dispose().timeout(const Duration(milliseconds: 100));
+    } finally {
+      await observer.cancel();
+      await player.dispose();
+    }
+  });
+  for (final close in [false, true]) {
+    test(
+      'established transport ${close ? 'close' : 'error'} releases ownership without invented state',
+      () async {
+        final player = await create();
+        final reply = Completer<Object?>();
+        handler = (call) async {
+          if (call.method == 'command' && call.arguments['name'] == 'open') {
+            wire.add(snapshot(3, status: 'loading', loadToken: 1));
+            return {'loadToken': 1};
+          }
+          if (call.method == 'command') return reply.future;
+          return null;
+        };
+        final loaded = await player.load(
+          YlNetworkSource(Uri.parse('https://example.test/a')),
+        );
+        final before = player.state;
+        final states = <YlPlayerState>[];
+        final events = <YlPlayerEvent>[];
+        player.states.listen(states.add);
+        player.events.listen(events.add);
+        final pending = expectLater(
+          player.setVolume(.5).timeout(const Duration(milliseconds: 300)),
+          failure(YlFailureCodes.protocolMismatch),
+        );
+        if (close) {
+          await wire.close();
+        } else {
+          wire.addError(StateError('secret native details'));
+        }
+        await pending;
+        await Future<void>.delayed(Duration.zero);
+        expect(player.state, before);
+        expect(states, isEmpty);
+        expect(events, isEmpty);
+        expect(player.textureId.value, isNull);
+        await expectLater(
+          player.play(loaded.sessionId),
+          failure(YlFailureCodes.playerDisposed),
+        );
+        expect(calls.where((c) => c.method == 'dispose'), hasLength(1));
+        reply.complete(null);
+        await player.dispose();
+      },
+    );
+    for (final stateFirst in [false, true]) {
+      test(
+        'transport ${close ? 'close' : 'error'} terminates ${stateFirst ? 'state' : 'reply'} pairing gap',
+        () async {
+          final player = await create();
+          final reply = Completer<Object?>();
+          handler = (call) async {
+            if (call.method == 'command' && call.arguments['name'] == 'open') {
+              if (stateFirst) {
+                wire.add(snapshot(3, status: 'loading', loadToken: 1));
+                return reply.future;
+              }
+              return {'loadToken': 1};
+            }
+            return null;
+          };
+          final loading = expectLater(
+            player.load(YlNetworkSource(Uri.parse('https://example.test/a'))),
+            failure(YlFailureCodes.protocolMismatch),
+          );
+          await Future<void>.delayed(Duration.zero);
+          if (close) {
+            await wire.close();
+          } else {
+            wire.addError(StateError('wire failed'));
+          }
+          await loading;
+          await Future<void>.delayed(Duration.zero);
+          expect(calls.where((c) => c.method == 'dispose'), hasLength(1));
+          expect(player.textureId.value, isNull);
+          await expectLater(
+            player.setVolume(.2),
+            failure(YlFailureCodes.playerDisposed),
+          );
+          reply.complete({'loadToken': 1});
+          await player.dispose();
+        },
+      );
+    }
+  }
+  test(
+    'committed state without open reply times out and terminates transport',
+    () async {
+      final player = await create();
+      final reply = Completer<Object?>();
+      handler = (call) async {
+        if (call.method == 'command' && call.arguments['name'] == 'open') {
+          wire.add(snapshot(3, status: 'loading', loadToken: 1));
+          return reply.future;
+        }
+        return null;
+      };
+      await expectLater(
+        player.load(YlNetworkSource(Uri.parse('https://example.test/a'))),
+        failure(YlFailureCodes.protocolMismatch),
+      );
+      await Future<void>.delayed(Duration.zero);
+      expect(calls.where((c) => c.method == 'dispose'), hasLength(1));
+      reply.complete({'loadToken': 1});
+      await player.dispose();
+    },
   );
   test(
     'create awaits a first full capability snapshot on shared stream',
@@ -463,4 +652,14 @@ void main() {
       await first;
     },
   );
+}
+
+final class _ThrowingListenStream extends Stream<Object?> {
+  @override
+  StreamSubscription<Object?> listen(
+    void Function(Object?)? onData, {
+    Function? onError,
+    void Function()? onDone,
+    bool? cancelOnError,
+  }) => throw StateError('listen failed');
 }

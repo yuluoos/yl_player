@@ -23,9 +23,13 @@ final class AuthenticatedHlsServer {
     required this._key,
     required this._segment,
     required this.sameOrigin,
+    required this.returnSegmentToPrimary,
   });
 
-  static Future<AuthenticatedHlsServer> start({bool sameOrigin = false}) async {
+  static Future<AuthenticatedHlsServer> start({
+    bool sameOrigin = false,
+    bool returnSegmentToPrimary = false,
+  }) async {
     final values = await Future.wait<ByteData>(<Future<ByteData>>[
       rootBundle.load('assets/test_media/hls_key.bin'),
       rootBundle.load('assets/test_media/hls_encrypted_segment0.ts'),
@@ -38,6 +42,7 @@ final class AuthenticatedHlsServer {
       key: _bytes(values[0]),
       segment: _bytes(values[1]),
       sameOrigin: sameOrigin,
+      returnSegmentToPrimary: returnSegmentToPrimary,
     );
     primary.listen((request) => unawaited(result._handlePrimary(request)));
     secondary.listen((request) => unawaited(result._handleSecondary(request)));
@@ -45,6 +50,7 @@ final class AuthenticatedHlsServer {
   }
 
   final bool sameOrigin;
+  final bool returnSegmentToPrimary;
   final HttpServer _primary;
   final HttpServer _secondary;
   final Uint8List _key;
@@ -99,6 +105,9 @@ final class AuthenticatedHlsServer {
     switch (request.uri.path) {
       case '/media.m3u8':
         final key = _uri(_primary, '/key.bin');
+        final segment = returnSegmentToPrimary
+            ? _uri(_primary, '/segment0.ts').toString()
+            : 'segment0.ts';
         await _serveText(
           request.response,
           '#EXTM3U\n'
@@ -108,7 +117,7 @@ final class AuthenticatedHlsServer {
           '#EXT-X-KEY:METHOD=AES-128,URI="$key",'
           'IV=0x00000000000000000000000000000000\n'
           '#EXTINF:1.968000,\n'
-          'segment0.ts\n'
+          '$segment\n'
           '#EXT-X-ENDLIST\n',
         );
       case '/segment0.ts':

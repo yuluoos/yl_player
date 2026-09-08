@@ -11,12 +11,21 @@ import 'support/authenticated_hls_server.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  for (final sameOrigin in [true, false]) {
+  for (final (sameOrigin, returnSegmentToPrimary) in [
+    (true, false),
+    (false, false),
+    (false, true),
+  ]) {
     testWidgets(
-      'HLS credentials ${sameOrigin ? 'reach same-origin children' : 'stay stripped after crossing origins'}',
+      'HLS credentials ${sameOrigin
+          ? 'reach same-origin children'
+          : returnSegmentToPrimary
+          ? 'stay stripped on returned-primary segment'
+          : 'stay stripped after crossing origins'}',
       (WidgetTester tester) async {
         final server = await AuthenticatedHlsServer.start(
           sameOrigin: sameOrigin,
+          returnSegmentToPrimary: returnSegmentToPrimary,
         );
         addTearDown(server.close);
         final controller = await YlPlayerController.create();
@@ -52,6 +61,16 @@ void main() {
         try {
           final event = await firstFrameOrError;
           if (event case YlPlaybackFailedEvent(:final failure)) {
+            if (returnSegmentToPrimary) {
+              for (final request in server.requestsFor('/segment0.ts')) {
+                expect(
+                  request.header('authorization'),
+                  isNull,
+                  reason:
+                      'Returned media request must retain inherited stripping even on playback failure',
+                );
+              }
+            }
             fail('HLS failed: $failure; requests: ${_requestSummary(server)}');
           }
         } on TimeoutException {
@@ -97,7 +116,10 @@ void main() {
           ]) {
             expect(
               request.origin,
-              request.path == '/key.bin' ? 'primary' : 'secondary',
+              request.path == '/key.bin' ||
+                      (returnSegmentToPrimary && request.path == '/segment0.ts')
+                  ? 'primary'
+                  : 'secondary',
             );
             expect(request.header('authorization'), isNull);
             expect(request.header('cookie'), isNull);

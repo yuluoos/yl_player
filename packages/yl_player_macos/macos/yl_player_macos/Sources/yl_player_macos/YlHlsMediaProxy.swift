@@ -232,7 +232,8 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       send(status: 405, body: Data(), headers: [:], to: connection)
       return false
     }
-    let path = String(requestParts[1]).split(separator: "?", maxSplits: 1).first ?? ""
+    let requestTarget = String(requestParts[1])
+    let path = requestTarget.split(separator: "?", maxSplits: 1).first ?? ""
     guard let destination = destination(forRequestPath: String(path)) else {
       send(status: 404, body: Data(), headers: [:], to: connection)
       return false
@@ -241,7 +242,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     let range = incomingHeaders["range"]
     let method = String(requestParts[0])
     let resourceKey = destination.absoluteString
-    let stripped = String(path).contains("credentialsStripped=1") || !headerPolicy.isSourceOrigin(destination) || lock.withLock { strippedResources.contains(resourceKey) }
+    let stripped = Self.inheritsCredentialStripping(fromRequestTarget: requestTarget) || !headerPolicy.isSourceOrigin(destination) || lock.withLock { strippedResources.contains(resourceKey) }
     let request = makeRequest(destination: destination, range: range, method: method, credentialsStripped: stripped)
     let task = session.dataTask(with: request)
     lock.withLock {
@@ -441,6 +442,12 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     }
     guard let (record, error) = outcome else { return }
     finishProxyResponse(record, error: error)
+  }
+
+  static func inheritsCredentialStripping(fromRequestTarget target: String) -> Bool {
+    URLComponents(string: target)?.queryItems?.contains {
+      $0.name == "credentialsStripped" && $0.value == "1"
+    } == true
   }
 
   static func completionAction(

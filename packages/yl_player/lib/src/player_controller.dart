@@ -24,12 +24,21 @@ final class YlPlayerController implements Listenable {
       validateYlPlayerCapabilities(backend.capabilities);
       validateYlPlayerState(backend.state);
       player = YlPlayerController._(backend);
-      player._stateSubscription = backend.states.listen(player._acceptState);
-      player._eventSubscription = backend.events.listen(player._acceptEvent);
+      player._stateSubscription = backend.states.listen(
+        player._acceptState,
+        onError: (Object _) => player!._transportLost(),
+        onDone: player._transportLost,
+      );
+      player._eventSubscription = backend.events.listen(
+        player._acceptEvent,
+        onError: (Object _) => player!._transportLost(),
+        onDone: player._transportLost,
+      );
       backend.textureId.addListener(player._updateTexture);
       // A synchronous backend may publish while subscriptions attach.
       player._acceptState(backend.state);
       player._record(player.state);
+      player._check();
       return player;
     } catch (_) {
       if (player != null) {
@@ -202,6 +211,13 @@ final class YlPlayerController implements Listenable {
     _events.add(event);
   }
 
+  void _transportLost() {
+    if (_disposed) return;
+    _cancelLoad(YlFailureCodes.protocolMismatch);
+    _milestones?.fail(_exception(YlFailureCodes.protocolMismatch));
+    unawaited(dispose());
+  }
+
   Future<void> setVolume(double volume) async {
     _check();
     validateYlVolume(volume);
@@ -235,8 +251,9 @@ final class YlPlayerController implements Listenable {
       /* Native cleanup is best effort. */
     }
     _texture.value = null;
-    await _states.close();
-    await _events.close();
+    // Closing still delivers Done when external observers resume.
+    unawaited(_states.close());
+    unawaited(_events.close());
     _notifier.dispose();
   }
 }
