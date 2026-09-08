@@ -552,16 +552,17 @@ server, user device, Apple implementation, or public API was changed for Task 9.
 Kotlin paths in this table are under
 `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/`;
 Dart paths are under `packages/yl_player_android/lib/`. Locations refer to the
-reviewed checkpoint. Tests named here belong to the retained 239-test JVM gate;
+Task9 reviewed checkpoint `ba1d2f4017cc2f4f1008791c32800d701c65d69a`,
+not line locations after the final repair below. Tests named here belong to the retained 239-test JVM gate;
 these are coverage references, not additional executions or additive test counts.
 
 | Boundary | Concrete implementation and supporting evidence |
 | --- | --- |
-| Registration/lifecycle forwarding | `YlPlayerAndroidPlugin.kt:18` creates the real `YlMedia3SessionFactory`/registry, installs only the generated factory API and forwards Activity/memory/configuration lifecycle. Detach unregisters handlers/callbacks and invokes registry cleanup. It owns no Media3 commands, active-player arbitration, source policy or reducer. `yl_player_android.dart:13` constructs `AndroidPlayer` with `PigeonAndroidFactoryTransport`, suffix-specific player transport and callback setup. `YlPlayerRegistryTest` covers actual plugin registration and teardown. |
-| Registry and borrowed outputs | `YlPlayerRegistry.kt:33` validates Create and invokes factory preparation before texture allocation; each entry has an opaque suffix and one host/session. `beginDispose` removes and invalidates transport immediately; `startCleanup` awaits session safe-close before releasing its borrowed texture. Detach keeps cleanup independent of cancelled hosts. `forEachSession` forwards lifecycle to every participant and isolates one host's failure. Registry suite: 20 tests, including held-close/rollback/lifecycle cases. |
+| Registration/lifecycle forwarding | `YlPlayerAndroidPlugin.kt:21` creates the real `YlMedia3SessionFactory`/registry, installs only the generated factory API and forwards Activity/memory/configuration lifecycle. Detach unregisters handlers/callbacks and invokes registry cleanup. It owns no Media3 commands, active-player arbitration, source policy or reducer. `yl_player_android.dart:13` constructs `AndroidPlayer` with `PigeonAndroidFactoryTransport`, suffix-specific player transport and callback setup. `YlPlayerRegistryTest` covers actual plugin registration and teardown. |
+| Registry and borrowed outputs | `YlPlayerRegistry.kt:35` / `:38` validates Create and invokes factory preparation before texture allocation; each entry has an opaque suffix and one host/session. `beginDispose` removes and invalidates transport immediately; `startCleanup` awaits session safe-close before releasing its borrowed texture. Detach keeps cleanup independent of cancelled hosts. `forEachSession` forwards lifecycle to every participant and isolates one host's failure. Registry suite: 20 tests, including held-close/rollback/lifecycle cases. |
 | Sessions and publication | `YlSessionCoordinator.kt:147` owns per-player operation/session/request identity, pending Load cancellation, former/candidate engines and transaction authority. `SessionLease.commitLease` completes fallible checks before its commit version/publication boundary; candidate snapshots/retries are staged until commitment. `onEngineEvent` checks immutable identity and private/public output before reducer ingress. Stop fences identity/idle before awaiting safe release. Background cancels uncommitted candidates, preserves current intent and stages restoration snapshots until acknowledgement. Session suite: 43; session/audio suite: 17. |
 | Cross-player decoder leases | `YlDecoderLeaseCoordinator.kt:45` owns registry-local scarce-resource transfer; its mutex and asynchronous stage callbacks await quiescence, activation and rollback off the main call stack. Newest scarce requests cancel competing transfers; retirement retains the lease until safe disposal. Audio-only READY evidence changes exclusivity and restores conservatively quiesced peers before commit. Nonexclusive participants are retained independently. Publication failure closes the boundary instead of retracting observed states; restoration failure reports `resource.exhausted`. Lease suite: 12. Unknown media inspection can temporarily interrupt the old scarce owner; this is a disclosed arbitration cost. |
-| Media3/thread and Surface ownership | `YlMedia3Engine.kt:33` starts a dedicated worker; even waiting for its Looper occurs on `Dispatchers.Default`. `onWorker` owns Media3 calls and hands immutable, session-tagged events to main. Flutter texture borrowing stays main-owned. `YlMedia3Core.kt:121` constructs ExoPlayer with the owned Looper, preserved selector/load-control/health/stall policies, actual media attributes and per-engine focus/noisy handling disabled. `prepare:328` sets a decoder-free candidate; `initializeDecoder:420` performs actual prepare under lease activation. Public output follows readiness/evidence. Safe disposal uses real Media3 acknowledgement; timeout leaves worker/outputs quarantined and the close future pending rather than freeing a borrowed Surface. Candidate-output 8, acknowledgement 3, load-control 10, selector 14 tests; Task 8 devices also exposed and covered real callback/lifecycle defects below. |
+| Media3/thread and Surface ownership | `YlMedia3Engine.kt:34` starts a dedicated worker; even waiting for its Looper occurs on `Dispatchers.Default`. `onWorker` owns Media3 calls and hands immutable, session-tagged events to main. Flutter texture borrowing stays main-owned. `YlMedia3Core.kt:121` constructs ExoPlayer with the owned Looper, preserved selector/load-control/health/stall policies, actual media attributes and per-engine focus/noisy handling disabled. `prepare:328` sets a decoder-free candidate; `initializeDecoder:420` performs actual prepare under lease activation. Public output follows readiness/evidence. Safe disposal uses real Media3 acknowledgement; timeout leaves worker/outputs quarantined and the close future pending rather than freeing a borrowed Surface. Candidate-output 8, acknowledgement 3, load-control 10, selector 14 tests; Task 8 devices also exposed and covered real callback/lifecycle defects below. |
 | Source and network policy | `YlMediaSourceFactory.kt:23` builds one source-lifetime provenance graph and OkHttp-backed HTTP/HLS data path. Managed mode disables independent Media3 retries/fallback. `YlManagedHttpClient.kt:41` owns per-resource retry/redirect budgets, cancellable header deadlines, body inactivity handling and validated partial-body continuation; waits belong to loader/network workers. `YlOriginCredentialPolicy.kt:8` copies request maps and propagates sticky stripped ancestry through parsed HLS children, redirects, retries and return-origin reuse. Credentials are applied to each request, never global defaults. Shared assessment rejects unsupported managed routes and bounded buffers; hardware-required applicability can need real media inspection. Managed-network/redirect 21, retry 3, source-assessment 4 tests, plus actual encrypted HLS device requests. |
 | Shared audio and lifecycle | `YlMedia3Engine.kt:184` injects `YlSharedAudioFocus.get(context)` through the real factory. `YlAudioFocusCoordinator.kt:18` ref-counts live participants, invalidates stale callbacks and retires one shared request/noisy receiver after the last participant. The actual two-registry factory test is `YlPlayerRegistryTest.kt:17`; all-session lifecycle forwarding already exists and requires no cosmetic registry/policy edit. App-managed playback never acquires shared ownership. API 26+ plugin-managed declares `setWillPauseWhenDucked(true)` and maps CAN_DUCK to transient pause/resume; API 24–25 uses a shared 0.2 volume multiplier. Resume still requires current session and current playback intent. This observable API-dependent behavior is intentional (Rulings 31/32). Driver 4, coordinator 6 and lifecycle-policy 8 tests support it. |
 | Revisions, callback order and Dart pairing | `YlStateReducer.kt:7` is the sole native revision/overall-sequence author; deltas include exact prior revision, and First Frame requires current public output and is emitted once per session. `YlCallbackDispatcher.kt:38` serializes every generated callback method in one acknowledged FIFO with a five-second ACK deadline. `YlPigeonPlayerHost.kt:62` binds both directions to the same suffix. Dart `src/android_player.dart:304` starts the five-second Load counterpart deadline only after a matching successful reply or committed state, validates `loadRequestId` and exact delta ancestry, and delays final Load completion by one cancellable event turn. Newer accepted state does not discard a still-valid older-revision event. Separate public state/event streams do not promise a total observer order. Reducer 6, callback 6; retained Dart adapter/controller tests and real delayed-ACK device case cover their respective boundaries. |
@@ -799,3 +800,78 @@ has been rewritten to conceal those transitions.
 35. Ruling: Task8 may satisfy already-completed registration/deletion targets through verified existing state and real integration evidence rather than cosmetic edits: yl_player_android.dart already constructs the private Pigeon transports and typed Player, and YlMedia3Player plus legacy Android Dart adapter/tests were removed in earlier reviewed tasks. The remaining YlAndroidChannel/config cleanup still must occur here — the spec requires a fully typed endorsed backend and absence of old dispatch, not repeated deletion or no-op source changes — cost if wrong: earlier-state assumptions could conceal a surviving path; the parent verified the registration source, and production absence scans plus actual endorsed API24/36 tests must support completion.
 
 36. Ruling: Task8 I2 may use an example-APK debug-source-set ContentProvider/test observation channel, locating the existing private instance through read-only reflection and adding a real Media3 AnalyticsListener on its owned worker. Record bounded decoder/frame observations with actual Surface identity, session and monotonic timestamps; use valid fixture byte gating for choreography. Exclude the observer from release source/manifest, add only the already pinned debug Media3 dependencies if needed, and bound installation/removal/Activity cleanup. Do not mutate plugin engine/lease state, delay native callbacks, synthesize frame evidence, or add a plugin/release/public API hook — device-level private rendering cannot be established by withholding every input byte or by public callbacks alone, while an isolated example test observer can observe the real existing boundary — cost if wrong: reflection couples tests to private implementation and buffered-media thresholds can be timing-sensitive; retain exact observation and dependency evidence, stale-instance checks and deterministic timeouts, and report if the real placeholder cannot render rather than silently substituting synthetic evidence.
+
+## Android whole-phase final repair — 2026-09-08
+
+Repair implementation checkpoint: `2c6e7f28bf12347c2c0905995a2bda942ebd8064`, based on
+`ba1d2f4017cc2f4f1008791c32800d701c65d69a`. This is one batched repair of the
+whole-phase review's I1–I3 and M1–M2; it does not supersede or relabel the historical
+Task8/Task9 gates above. All 36 original rulings and their costs remain unchanged.
+Apple implementation and remote publication remain outside this repair.
+
+| Finding | Final behavior and coverage |
+| --- | --- |
+| I1 command rejection | Missing nonempty audio-track IDs and VOD live-edge commands reject without changing healthy playback state or restoration intent. Private Pigeon `seekToLiveEdge`/`selectAudioTrack` are now asynchronous Kotlin host commands. Main-owned track/timeline eligibility precedes acceptance; active worker completion and cancellation/session/operation/lease checks precede saved intent. The actual generated host waits and replies exactly once, including worker rejection and detach; real terminal engine events still fail the session. Held restoration reapplies selections accepted after its restore point, with version checks so a newer position request wins over an older live-edge choice after a held track worker. Actual public device Futures reject both unsupported commands, then valid track selection, pause, seek, play and reload succeed without a failure event. |
+| I2 independent nonexclusive progress | Scarce transfers retain global serialization, newest-wins arbitration and safe-release quarantine. Proven nonexclusive activations/restores have Player-local mutex/job ownership and transaction-local stage generations, skip unrelated video retirement and never replace the scarce owner. Deterministic tests hold one audio restore while another actual coordinator resumes, and hold quarantined/retiring video ownership while audio commits. Same-Player old-engine cleanup, queued successor cancellation, late acknowledgement and detach remain owned. Player gate records disappear only after all that Player's queued jobs settle. |
+| I3 native request bounds | `YlBoundaryValidation` validates real factory/registry Create before allocation; shared Assess/Load before cancellation; and runtime inputs before intent mutation. Signed32 policy limits, finite volume/speed, nonempty identities, ordered delays and signed64 positions are checked before conversion. Tests cover all six managed policy fields at min/max/one-past, width/height/bitrate including 4294967296, NaN/infinities, invalid request/track/session IDs, and unchanged pending/healthy sessions. Accepted position intervals including 1ms, 5000ms and 2147483647ms are retained exactly. Explicit bounded buffering remains unsupported without a hard-ceiling claim. |
+| M1 measured live offset | The real core normalizes only TIME_UNSET to null; measured negative offsets become zero. Unknown, negative, zero and positive cases verify timeline, metrics, live-edge and lifecycle restoration consistency. |
+| M2 documentation | Corrected the three Task9 checkpoint anchors to plugin21, registry35/38 and worker34. That responsibility table is explicitly historical; added source lines in this repair do not turn its old references/counts into new verification. |
+
+The final native command, from the Android plugin example's `android` directory,
+was `JAVA_TOOL_OPTIONS=-Dnet.bytebuddy.experimental=true ./gradlew
+:yl_player_android:testDebugUnitTest --stacktrace`: **28 suites, 257 tests,
+0 failures/errors/skips**, exit0. This qualified plugin task exercises real
+production factory/coordinator/generated host/core boundaries with deterministic
+worker/framework doubles where needed; it is not an empty app test task.
+
+The earlier repair checkpoints of 255 and 256 native tests remain separately
+retained. The extra final test came from a concrete self-review RED: a newer seek
+during held rollback track application was overwritten by an older captured
+live-edge choice. The original native input/overlap/offset REDs, corrected host
+RED, held-restoration selection RED and final ordering RED are preserved; harness
+SystemClock setup failure and sandbox cache-lock denial are identified separately
+from product failures. Intermediate gates are not added to the final test total.
+
+Fresh affected Dart verification: repository `flutter analyze` reports no issues;
+Android adapter/schema/transport **52**, public controller **32**, main example
+unit **3** tests pass (**87** total). These analyzed Dart files were unchanged by
+the subsequent Kotlin-only rollback ordering fix. Pinned Pigeon generation and
+repeat/drift checks pass. Kotlin generated bytes changed to implement the two
+async methods; generated Dart bytes remain identical because they already expose
+Futures. No generated output was hand-edited or globally reformatted, and the
+six pre-existing generator-owned trailing-whitespace lines remain disclosed.
+
+Final-source owned-device results (the earlier first device pass is separate):
+
+| Runtime | Progressive/public rejection/lifecycle | Replacement/cancellation/private output/ACK |
+| --- | --- | --- |
+| API24, emulator-5580, codex_yl_v2_api24, arm64-v8a | 3 pass | 3 pass |
+| API36, emulator-5582, codex_yl_v2_api36, arm64-v8a | 2 pass | 3 pass |
+
+Each suite ran through the existing bounded `tool/run_android_integration.sh`
+with the explicit verified `YL_ANDROID_DEVICE_ID`; native builds were serial.
+The real API24 strict name-only decoder rejection remains API24-specific rather
+than a fabricated API36 test. Both APIs exercised actual public rejection followed
+by healthy playback and true Activity background/foreground delivery. Replacement
+again observed real decoder rendering to distinct private/public Surfaces before
+and after commitment. API24 display remains physical320x640/override640x720;
+API36 remains1920x1080. Both AVDs were identity-reverified and stopped using only
+their scoped `emu kill`; task-owned AVD data are preserved.
+
+Exact commands, original exits, retained XML, final source SHA256 manifest, local
+commit range, self-review and logs are in the ignored local execution report
+`.superpowers/sdd/2026-09-06-player-v2-android/final-fix-report.md` and its
+`final-fix-logs/` directory. Authored diff checks and the generated drift check
+pass. Existing unchanged full foundation/Apple contract/HLS/multi-player device
+evidence above remains historical under Ruling7; this repair does not claim those
+unmodified suites were rerun as a new combined phase gate.
+
+Limits remain: physical Android TV decoder pressure/capacity, independent
+hardware/silicon evidence, long soak, reconnect endurance and remote CI are
+unverified. Unknown media can temporarily interrupt a scarce owner; unacknowledged
+native release may retain resources indefinitely. This repair prevents those
+waits from spreading to unrelated proven nonexclusive Players. Inherited
+AGP/Kotlin/JDK/ByteBuddy, emulator/framework and CocoaPods notices are retained,
+not suppressed or relabeled warning-free. No shared SDK/cache/lock cleanup,
+adb-server kill, user AVD change, dependency upgrade, push, merge or publication
+was performed.
