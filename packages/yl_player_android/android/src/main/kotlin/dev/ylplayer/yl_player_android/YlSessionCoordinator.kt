@@ -6,6 +6,23 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
+/** Invocation order and successful acceptance are distinct: a rejected newer command does
+ * not displace an older success. Track and timeline each own one independent order. */
+private class YlIntentOrder {
+    private var issued = 0L
+    var accepted = 0L
+        private set
+    fun issue() = ++issued
+    fun supersedes(ticket: Long) = accepted > ticket
+    fun accept(ticket: Long, remember: () -> Unit) {
+        if (supersedes(ticket)) return
+        remember()
+        accepted = ticket
+    }
+}
+private data class YlSelectionVersions(val track: Long, val timeline: Long)
+private data class YlPendingSeek(val ticket: Long, val positionMs: Long)
+
 /** Main-owned transaction authority. Worker results enter only through immutable session identity. */
 internal class YlSessionCoordinator(
     private val playerId: Long,
@@ -277,25 +294,47 @@ internal class YlSessionCoordinator(
         var desiredLiveEdge: Boolean? = null
         var desiredPlay: Boolean? = null
         var desiredConstraints: AndroidVideoConstraintsMessage? = null
-        var selectionVersion = 0L
-        private suspend fun applyLateSelections(appliedVersion: Long) {
-            var applied = appliedVersion
-            while (applied != selectionVersion && canRestore) {
-                val version = selectionVersion
-                val track = desiredTrack
-                val liveEdge = desiredLiveEdge
-                val position = desiredPosition
-                track?.let { session.engine.selectAudioTrack(it) }
-                if (!canRestore) return
-                if (version != selectionVersion) continue
-                if (liveEdge == true) session.engine.seekToLiveEdge()
-                else if (liveEdge == false && position != null) session.engine.seekTo(position)
-                applied = version
+        val trackIntent = YlIntentOrder()
+        val timelineIntent = YlIntentOrder()
+        var pendingSeek: YlPendingSeek? = null
+        private fun selectionVersions() = YlSelectionVersions(trackIntent.accepted, timelineIntent.accepted)
+        private val commandWorkers = mutableSetOf<CompletableDeferred<Unit>>()
+        suspend fun commandWorker(action: suspend () -> Unit) {
+            val settled = CompletableDeferred<Unit>()
+            commandWorkers += settled
+            try { action() }
+            finally { commandWorkers -= settled; settled.complete(Unit) }
+        }
+        private suspend fun applyLateSelections(appliedVersions: YlSelectionVersions) {
+            var appliedTrack = appliedVersions.track
+            var appliedTimeline = appliedVersions.timeline
+            while (canRestore) {
+                val trackVersion = trackIntent.accepted
+                if (appliedTrack != trackVersion) {
+                    desiredTrack?.let { session.engine.selectAudioTrack(it) }
+                    appliedTrack = trackVersion
+                    if (!canRestore) return
+                }
+                // Read timeline intent after the track await; an unrelated track update must
+                // neither invalidate a valid seek nor replay a captured older live-edge choice.
+                val timelineVersion = timelineIntent.accepted
+                if (appliedTimeline != timelineVersion) {
+                    if (desiredLiveEdge == true) session.engine.seekToLiveEdge()
+                    else if (desiredLiveEdge == false) desiredPosition?.let { session.engine.seekTo(it) }
+                    appliedTimeline = timelineVersion
+                }
+                if (appliedTrack == trackIntent.accepted && appliedTimeline == timelineIntent.accepted) return
             }
         }
         fun resetRuntimeEdits() {
-            desiredSpeed = null; desiredTrack = null; desiredPosition = null
-            desiredLiveEdge = null; desiredPlay = null; desiredConstraints = null
+            desiredSpeed = null; desiredTrack = null
+            // The worker snapshot already incorporates applied commands, but a valid seek may
+            // still be queued behind a held command. Preserve only that unapplied winning seek;
+            // retaining every historical seek here would rewind later natural playback progress.
+            val pendingPosition = pendingSeek?.takeUnless { timelineIntent.supersedes(it.ticket) }
+            desiredPosition = pendingPosition?.positionMs
+            desiredLiveEdge = pendingPosition?.let { false }
+            desiredPlay = null; desiredConstraints = null
         }
         private fun restorePoint(point: YlEngineRestorePoint): YlEngineRestorePoint {
             val intended = backgroundPlayIntent?.takeIf { it.first == session.identity }?.second
@@ -334,10 +373,15 @@ internal class YlSessionCoordinator(
             suspended?.let { return CompletableDeferred(it) }
             quiescing = true
             transacting = true
+            // Only workers already entered before this fence can still change the old engine.
+            // Later suspended commands only save intent and must not join this wait set.
+            val priorCommands = commandWorkers.toList()
             resetRuntimeEdits()
             return cleanup.async(start = CoroutineStart.LAZY) {
                 try {
-                    YlLeaseSnapshot(session.identity, session.source, session.options, session.engine.quiesce(), output.identity)
+                    val runtime = session.engine.quiesce()
+                    priorCommands.forEach { it.await() }
+                    YlLeaseSnapshot(session.identity, session.source, session.options, runtime, output.identity)
                         .also { suspended = it }
                 } catch (error: Throwable) {
                     restorationFailed()
@@ -362,7 +406,7 @@ internal class YlSessionCoordinator(
         override fun activateForLease(attempt: YlLeaseAttempt, complete: (Result<Unit>) -> Unit) = operation(complete) {
             ensureResourcesUsable()
             val restore = suspended
-            val selectionAtRestore = selectionVersion
+            val selectionAtRestore = selectionVersions()
             if (restore == null) session.engine.activate(output) else {
                 beginRestore()
                 session.engine.restore(restorePoint(restore.runtime), output)
@@ -390,7 +434,7 @@ internal class YlSessionCoordinator(
         }
         override fun rollbackLease(snapshot: YlLeaseSnapshot, attempt: YlLeaseAttempt, complete: (Result<Unit>) -> Unit) = operation(complete) {
             beginRestore()
-            val selectionAtRestore = selectionVersion
+            val selectionAtRestore = selectionVersions()
             session.engine.restore(restorePoint(snapshot.runtime), output)
             session.engine.setVolume(effectiveVolume())
             applyLateSelections(selectionAtRestore)
@@ -483,14 +527,25 @@ internal class YlSessionCoordinator(
         enqueue(command.sessionId) { pause(); releaseAudio() }
     }
     override fun seekTo(command: AndroidSeekCommand) {
-        current(command.sessionId)
+        val session = current(command.sessionId)
         YlBoundaryValidation.position(command.positionMs)
-        activeLease?.desiredPosition = command.positionMs
-        activeLease?.desiredLiveEdge = false
-        activeLease?.let { it.selectionVersion++ }
-        enqueue(command.sessionId) { seekTo(command.positionMs) }
+        val lease = checkNotNull(activeLease)
+        val ticket = lease.timelineIntent.issue()
+        lease.timelineIntent.accept(ticket) {
+            lease.desiredPosition = command.positionMs
+            lease.desiredLiveEdge = false
+        }
+        val pending = YlPendingSeek(ticket, command.positionMs).also { lease.pendingSeek = it }
+        scope.launch {
+            try { transaction.withLock {
+                if (activeLease !== lease || lease.timelineIntent.supersedes(ticket) ||
+                    lease.quiescing || lease.suspended != null) return@withLock
+                lease.commandWorker { runEngine(session.identity) { seekTo(command.positionMs) } }
+            } } finally { if (lease.pendingSeek === pending) lease.pendingSeek = null }
+        }
     }
     override suspend fun seekToLiveEdge(command: AndroidSessionCommand) = acceptedCommand(command.sessionId,
+        intent = { timelineIntent },
         validate = {
             if (!reducer.state.timeline.isLive) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
         }, apply = { seekToLiveEdge() }, remember = { desiredLiveEdge = true })
@@ -500,6 +555,7 @@ internal class YlSessionCoordinator(
      * never write an old command into a replacement, stopped or newly suspended lease. */
     private suspend fun acceptedCommand(
         id: String,
+        intent: SessionLease.() -> YlIntentOrder,
         validate: () -> Unit,
         apply: suspend YlPlaybackEngineAdapter.() -> Unit,
         remember: SessionLease.() -> Unit,
@@ -508,7 +564,9 @@ internal class YlSessionCoordinator(
         val lease = checkNotNull(activeLease)
         validate()
         lease.ensureResourcesUsable()
-        if (lease.quiescing || lease.suspended != null) { lease.remember(); lease.selectionVersion++; return }
+        val order = lease.intent()
+        val ticket = order.issue()
+        if (lease.quiescing || lease.suspended != null) { order.accept(ticket) { lease.remember() }; return }
         val token = operation
         transaction.withLock {
             current(id)
@@ -516,12 +574,14 @@ internal class YlSessionCoordinator(
             if (activeLease !== lease || operation != token) throw YlBoundaryException(YlFailureKind.SESSION_STALE)
             validate()
             lease.ensureResourcesUsable()
-            if (!lease.quiescing && lease.suspended == null) session.engine.apply()
-            currentCoroutineContext().ensureActive()
-            current(id)
-            if (activeLease !== lease || operation != token) throw YlBoundaryException(YlFailureKind.SESSION_STALE)
-            lease.remember()
-            lease.selectionVersion++
+            if (order.supersedes(ticket)) return@withLock
+            lease.commandWorker {
+                if (!lease.quiescing && lease.suspended == null) session.engine.apply()
+                currentCoroutineContext().ensureActive()
+                current(id)
+                if (activeLease !== lease || operation != token) throw YlBoundaryException(YlFailureKind.SESSION_STALE)
+                order.accept(ticket) { lease.remember() }
+            }
         }
     }
     override fun setPlaybackSpeed(command: AndroidSpeedCommand) {
@@ -531,6 +591,7 @@ internal class YlSessionCoordinator(
         enqueue(command.sessionId) { setPlaybackSpeed(command.speed) }
     }
     override suspend fun selectAudioTrack(command: AndroidTrackCommand) = acceptedCommand(command.sessionId,
+        intent = { trackIntent },
         validate = {
             YlBoundaryValidation.identity(command.trackId)
             if (reducer.state.audioTracks.none { it.id == command.trackId }) throw YlBoundaryException(YlFailureKind.SOURCE_MISSING)

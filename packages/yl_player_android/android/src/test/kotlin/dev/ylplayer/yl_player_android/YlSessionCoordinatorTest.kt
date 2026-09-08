@@ -792,6 +792,9 @@ internal class FakeSessionEngine : YlPlaybackEngineAdapter {
     var commandAcknowledgement: CompletableDeferred<Unit>? = null
     var restoredLiveEdge = false
     var currentLiveEdge = false
+    var liveCommandAcknowledgement: CompletableDeferred<Unit>? = null
+    var seekCommandAcknowledgement: CompletableDeferred<Unit>? = null
+    val trackErrors = mutableMapOf<String, Throwable>()
     var position = 0L
     val memoryLevels = mutableListOf<Int>()
     var activationCalls = 0
@@ -829,10 +832,10 @@ internal class FakeSessionEngine : YlPlaybackEngineAdapter {
     override suspend fun restore(point: YlEngineRestorePoint, output: YlSessionVideoOutput) { lifecycleCalls += "restore"; restoredLiveEdge = point.liveEdge; currentLiveEdge = point.liveEdge; restores++; playbackIntended = point.playbackIntended; playing = playbackIntended; currentSpeed = point.speed; currentTrack = point.selectedAudioTrack; currentVolume = point.volume; position = point.positionMs; onRestore?.invoke(); restoreAcknowledgement?.await() }
     override suspend fun play() { playCalls++; playbackIntended = true; playing = true }
     override suspend fun pause() { playbackIntended = false; playing = false }
-    override suspend fun seekTo(positionMs: Long) { position = positionMs; currentLiveEdge = false }
-    override suspend fun seekToLiveEdge() { commandError?.let { throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED) }; currentLiveEdge = true }
+    override suspend fun seekTo(positionMs: Long) { seekCommandAcknowledgement?.await(); position = positionMs; currentLiveEdge = false }
+    override suspend fun seekToLiveEdge() { liveCommandAcknowledgement?.await(); commandError?.let { throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED) }; currentLiveEdge = true }
     override suspend fun setPlaybackSpeed(speed: Double) { currentSpeed = speed }
-    override suspend fun selectAudioTrack(trackId: String) { commandAcknowledgement?.await(); commandError?.let { throw it }; currentTrack = trackId }
+    override suspend fun selectAudioTrack(trackId: String) { commandAcknowledgement?.await(); commandError?.let { throw it }; trackErrors[trackId]?.let { throw it }; currentTrack = trackId }
     override suspend fun setVideoConstraints(constraints: AndroidVideoConstraintsMessage) = Unit
     override suspend fun setVolume(volume: Double) {
         currentVolume = volume

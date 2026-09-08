@@ -875,3 +875,62 @@ AGP/Kotlin/JDK/ByteBuddy, emulator/framework and CocoaPods notices are retained,
 not suppressed or relabeled warning-free. No shared SDK/cache/lock cleanup,
 adb-server kill, user AVD change, dependency upgrade, push, merge or publication
 was performed.
+
+
+## Android R1 acceptance correction — 2026-09-08
+
+The independent final re-review addressed the original five I1/I2/I3/M1/M2
+findings, but reproduced a new R1 regression at checkpoint
+`bba94a4b1a331d51dd422c03e1e86fb9539585c5`: an old active track worker awaited
+acknowledgement, peer quiescence allowed a newer suspended track to succeed, and
+the old acknowledgement then replaced that intent. Failed peer activation
+restored the engine to `older` instead of `newer`. This is a narrow additional
+acceptance correction authorized by Ruling37 below, beyond the normal one-wave
+cap; the earlier repair and its evidence remain historical.
+
+Track and timeline now own separate issued/successfully accepted ticket orders.
+Older completion cannot overwrite a newer successful command; rejected requests
+do not take accepted ownership. Quiescence captures only this lease's already
+entered command workers and awaits their settlement after engine quiescence,
+before activation/rollback can expose restoration. Later suspended commands do
+not enter that barrier. Worker success, rejection and cancellation settle it;
+existing deadline, quarantine, session/operation/lease and Stop/disposal fences
+remain in force. Independent Players retain their existing progress boundaries.
+
+Only a still-winning unapplied position request survives snapshot capture. This
+also handles a seek queued behind a held track worker. Once applied, historical
+seek intent is not retained across later suspensions: actual restoration tests
+verify initial position100 followed by natural playback800 through background
+restoration and900 through a later peer rollback, without rewinding.
+
+Permanent production-coordinator/shared-lease regressions preserve the reviewer's
+exact old-worker/new-suspended-success/old-ACK/failed-peer sequence and assert the
+actual restored engine. They additionally cover live/position replacement,
+independent track/timeline intent, rejected newer requests, early rollback
+publication, worker rejection/cancellation, generated-host single reply and Stop.
+The first behavioral RED was10 tests with3 failures; an additional pending-seek
+RED observed expected100/actual0. The initial harness compile error is recorded
+separately. The intermediate affected GREEN126 remains separate from the final
+**7 suites /127 tests, 0 failures/errors/skips**, exit0, using:
+
+```sh
+env JAVA_TOOL_OPTIONS=-Dnet.bytebuddy.experimental=true ./gradlew :yl_player_android:testDebugUnitTest --tests '*YlCommandAcceptanceOrderTest' --tests '*YlSessionCoordinatorTest' --tests '*YlDecoderLeaseCoordinatorTest' --tests '*YlSessionAudioTest' --tests '*YlAudioFocusCoordinatorTest' --tests '*YlFinalBoundaryTest' --tests '*YlPlayerRegistryTest' --stacktrace
+```
+
+The command ran from `packages/yl_player_android/example/android`. This correction
+changes only the native session coordinator, its test fixture and its focused
+regressions. Schema/generated transport, Media3 engine/core, Dart and device
+integration contracts are unchanged from the original repair checkpoint. Under
+Ruling7, the prior full native257, Dart87 and owned-device11 remain prior
+checkpoint evidence, not new R1 results; unrelated full/toolchain/device gates
+were not repeated. Physical capacity, soak and remote CI limits remain unchanged.
+
+The complete R1 probe, commands, original RED/GREEN outputs, source hashes,
+self-review and exact local commit are retained in
+`.superpowers/sdd/2026-09-06-player-v2-android/final-r1-report.md` and
+`final-r1-logs/`. Android phase acceptance still awaits the parent's independent
+R1 verification; this correction does not authorize or claim Apple-phase work.
+All earlier36 ruling texts and costs remain unchanged. The explicit exception
+and its cost are recorded verbatim:
+
+37. Ruling: repair the reproduced final residual R1 before beginning the dependent Apple phase, allowing a narrowly scoped acceptance correction and focused independent verification beyond the normal one-wave final-review cap. Preserve acceptance order across active worker completion and suspended immediate commands, with independent track and timeline intent ownership; an older completion cannot replace newer successfully accepted intent, and rejected commands still cannot poison healthy playback or saved intent — the final reviewer executed a concrete current-code probe showing rollback selects older instead of newer, so this is a real load-bearing regression rather than a speculative polish item. The user has authorized all optimization and continued implementation; knowingly parking this ordinary reversible correctness repair would leave that authorized work incomplete — cost if wrong: one additional focused repair/review and its affected tests beyond the planned cap, plus per-intent ordering bookkeeping. Do not reopen the broad phase review, expand to unrelated findings, or claim physical/remote evidence; record the extra scope and exact proof in the durable ledger.
