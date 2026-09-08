@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "checkpoint": "7ee4ebfa03c1a3e61521f94dea456a7051b47db2",
+  "extractions": [
+    {
+      "declaration": "enum YlFallbackContainer:",
+      "origins": [
+        {
+          "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackModels.swift",
+          "start_line": 11,
+          "end_line": 14,
+          "sha256": "81a842c37ef875397d5172b8b6924a6deba490baf06c38dcd23014f1cf66a41a"
+        },
+        {
+          "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFallbackModels.swift",
+          "start_line": 11,
+          "end_line": 14,
+          "sha256": "81a842c37ef875397d5172b8b6924a6deba490baf06c38dcd23014f1cf66a41a"
+        }
+      ],
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlFallbackContainer.swift",
+      "declaration_sha256": "81a842c37ef875397d5172b8b6924a6deba490baf06c38dcd23014f1cf66a41a",
+      "destination_sha256": "9b39cf6fd9b12f18d91f9aa5cc4adeb44b81d5e8bac95f93ee829f123cec4fab"
+    },
+    {
+      "declaration": "final class YlOpenCancellationToken {",
+      "origins": [
+        {
+          "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlOpenCoordinator.swift",
+          "start_line": 3,
+          "end_line": 42,
+          "sha256": "55e002d3e65d99130f34906fa3f8d4eed46bf73f24118400013c62dff3043aff"
+        },
+        {
+          "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlOpenCoordinator.swift",
+          "start_line": 3,
+          "end_line": 42,
+          "sha256": "55e002d3e65d99130f34906fa3f8d4eed46bf73f24118400013c62dff3043aff"
+        }
+      ],
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlOpenCancellationToken.swift",
+      "declaration_sha256": "55e002d3e65d99130f34906fa3f8d4eed46bf73f24118400013c62dff3043aff",
+      "destination_sha256": "87fe651c715ea9514bcacfc570f3467da2cdfb6b96a38974e75ac44615764d59"
+    },
+    {
+      "declaration": "private extension NSLock {",
+      "origins": [
+        {
+          "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlOpenCoordinator.swift",
+          "start_line": 256,
+          "end_line": 262,
+          "sha256": "cdfba390d89dd730c9363aa61ea5c3e8080d7d19da1d0e69b6a863ebd4fcdbe7"
+        },
+        {
+          "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlOpenCoordinator.swift",
+          "start_line": 262,
+          "end_line": 268,
+          "sha256": "cdfba390d89dd730c9363aa61ea5c3e8080d7d19da1d0e69b6a863ebd4fcdbe7"
+        }
+      ],
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlOpenCancellationToken.swift",
+      "declaration_sha256": "cdfba390d89dd730c9363aa61ea5c3e8080d7d19da1d0e69b6a863ebd4fcdbe7",
+      "destination_sha256": "87fe651c715ea9514bcacfc570f3467da2cdfb6b96a38974e75ac44615764d59"
+    },
+    {
+      "declaration": "struct PlayerConfiguration {",
+      "origins": [
+        {
+          "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlAvPlayerBackend.swift",
+          "start_line": 1072,
+          "end_line": 1107,
+          "sha256": "250a14141fcc0c594712c504f9e59d26c5203a8fe77bb62431fe6ffdaab48218"
+        },
+        {
+          "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlAvPlayerBackend.swift",
+          "start_line": 918,
+          "end_line": 953,
+          "sha256": "250a14141fcc0c594712c504f9e59d26c5203a8fe77bb62431fe6ffdaab48218"
+        }
+      ],
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/PlayerConfiguration.swift",
+      "declaration_sha256": "250a14141fcc0c594712c504f9e59d26c5203a8fe77bb62431fe6ffdaab48218",
+      "destination_sha256": "d4697affec056aa96900a301e3cd5271e96a065de7ddcb6fdc0d01d875b89cbf"
+    },
+    {
+      "declaration": "struct YlNetworkConfiguration:",
+      "origins": [
+        {
+          "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlAvPlayerBackend.swift",
+          "start_line": 1109,
+          "end_line": 1141,
+          "sha256": "3977d412ba56ed22b2465d8d13f6edf6a4602132dec62cceb8cb29513014f2a5"
+        },
+        {
+          "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlAvPlayerBackend.swift",
+          "start_line": 955,
+          "end_line": 987,
+          "sha256": "3977d412ba56ed22b2465d8d13f6edf6a4602132dec62cceb8cb29513014f2a5"
+        }
+      ],
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift",
+      "declaration_sha256": "3977d412ba56ed22b2465d8d13f6edf6a4602132dec62cceb8cb29513014f2a5",
+      "destination_sha256": "e99a963f20c97af964909390f67ca3b007da1eb41ab0cdea2fd838bd0852caee"
+    },
+    {
+      "declaration": "struct NativePlayerError:",
+      "origins": [
+        {
+          "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlAvPlayerBackend.swift",
+          "start_line": 1143,
+          "end_line": 1155,
+          "sha256": "2f95ae85fe6e6fd1f291e13a84194b5889bd818db8d1f65aef09eff60693cc4b"
+        },
+        {
+          "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlAvPlayerBackend.swift",
+          "start_line": 989,
+          "end_line": 1001,
+          "sha256": "2f95ae85fe6e6fd1f291e13a84194b5889bd818db8d1f65aef09eff60693cc4b"
+        }
+      ],
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/NativePlayerError.swift",
+      "declaration_sha256": "2f95ae85fe6e6fd1f291e13a84194b5889bd818db8d1f65aef09eff60693cc4b",
+      "destination_sha256": "688dc99ccb8a68c8ae3d092df57b18f348ed6d20bf559500eacffddd452437c7"
+    },
+    {
+      "declaration": "func stringMap(",
+      "origins": [
+        {
+          "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlAvPlayerBackend.swift",
+          "start_line": 1206,
+          "end_line": 1209,
+          "sha256": "64687efeb6b41e8f3d97dc968ac1363e94f7cf688744b132a469e1efd7d40686"
+        },
+        {
+          "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlAvPlayerBackend.swift",
+          "start_line": 1052,
+          "end_line": 1055,
+          "sha256": "64687efeb6b41e8f3d97dc968ac1363e94f7cf688744b132a469e1efd7d40686"
+        }
+      ],
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlStringMap.swift",
+      "declaration_sha256": "64687efeb6b41e8f3d97dc968ac1363e94f7cf688744b132a469e1efd7d40686",
+      "destination_sha256": "1f89dc94f7e13a8be137796e006a2cdb7c925d1b774dd4446f71402646b6d2d9"
+    },
+    {
+      "declaration": "func int64(",
+      "origins": [
+        {
+          "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlAvPlayerBackend.swift",
+          "start_line": 1211,
+          "end_line": 1214,
+          "sha256": "aea8dcb0ed86683b9d21a7de8fe390195af93d4dedb7b5db2537a2b4de04eed6"
+        },
+        {
+          "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlAvPlayerBackend.swift",
+          "start_line": 1057,
+          "end_line": 1060,
+          "sha256": "aea8dcb0ed86683b9d21a7de8fe390195af93d4dedb7b5db2537a2b4de04eed6"
+        }
+      ],
+      "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlInt64.swift",
+      "declaration_sha256": "aea8dcb0ed86683b9d21a7de8fe390195af93d4dedb7b5db2537a2b4de04eed6",
+      "destination_sha256": "d4cb123be741f48ad286c0f43fbe75a21c0f9d0a304527f35fc0ed53369c12af"
+    }
+  ]
+}

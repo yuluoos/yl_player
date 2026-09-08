@@ -1,0 +1,101 @@
+[
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlByteRingBufferTests.swift",
+    "source_sha256": "47cba9282f62680d02e2f478f623998be312d7675047b20d3fe9f866f5e15042",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlByteRingBufferTests.swift",
+    "destination_sha256": "5273d17d3464c0b8f50b080d6a556e947f2ef50aa19b5a2fdd3defbb62ab1aa2",
+    "adaptations": [
+      "@testable import yl_player_ios -> @testable import yl_player_apple"
+    ]
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlBoundedPacketQueueTests.swift",
+    "source_sha256": "c0e60988116a4e5996a8936d46ff8587e610422f777c25b28478ab6e2400675d",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlBoundedPacketQueueTests.swift",
+    "destination_sha256": "012d07aa28cd3d810e17f7c1a325b06ec24d857e58bcc61c32278d76e34dc609",
+    "adaptations": [
+      "@testable import yl_player_ios -> @testable import yl_player_apple"
+    ]
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlFallbackBufferBudgetTests.swift",
+    "source_sha256": "592290acf1332b3830d16afd72dd16dc61263ad7356158376af4195cdb6ea44e",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlFallbackBufferBudgetTests.swift",
+    "destination_sha256": "b7c9080b0f2cb2ae5bea100b06a052de5eb2f7899f5509cc315ca1844a9efc0a",
+    "adaptations": [
+      "@testable import yl_player_ios -> @testable import yl_player_apple"
+    ]
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlFallbackTrackCatalogTests.swift",
+    "source_sha256": "85d52d9c75208dc656a7a6e48225c843ff345dd657adffb6f3e5b20b9171efe6",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlFallbackTrackCatalogTests.swift",
+    "destination_sha256": "146f005414d9430484f5265d5c4a61f1eae90b36ecb66621e1526cb04eda3aae",
+    "adaptations": [
+      "@testable import yl_player_ios -> @testable import yl_player_apple"
+    ]
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlFallbackStateEncoderTests.swift",
+    "source_sha256": "579c8c9c92d5859fd9acf9a1859566c97da23c7c21c47ce9ad5163d34411bf35",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlFallbackStateEncoderTests.swift",
+    "destination_sha256": "74372c0edd4267fefd8683a1d9e12acf3d860f748d0575a08a81c83c64f33a2f",
+    "adaptations": [
+      "@testable import yl_player_ios -> @testable import yl_player_apple"
+    ]
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlNetworkByteSourceTests.swift",
+    "source_sha256": "f0513850df69b14e4563dc0c3098ac4f32a5fa3611bd676c7d54663bec96ae90",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlNetworkByteSourceTests.swift",
+    "destination_sha256": "90291ac428ea9e77b126e77799beb226397a9b369b5f2e242f037c5e9c74ae44",
+    "adaptations": [
+      "@testable import yl_player_ios -> @testable import yl_player_apple"
+    ]
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlNetworkRequestPolicyTests.swift",
+    "source_sha256": "f0205c7d190dde38b3ca29a3974be0c73c4c91efb167ca236c75957a908bea07",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlNetworkRequestPolicyTests.swift",
+    "destination_sha256": "ded88621c39ec7b49ff13e13d0334dd206399944ec25dbfbbe47d4393e70a101",
+    "adaptations": [
+      "@testable import yl_player_ios -> @testable import yl_player_apple"
+    ]
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlHlsHeaderPolicyTests.swift",
+    "source_sha256": "c39b52b68e8b84d856cfdbac32ca752490f36aea47c710352efd115388fbcaa8",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlHlsHeaderPolicyTests.swift",
+    "destination_sha256": "0f1093d05d240415e3025d4477b3019eca8673c09b4a270227e4c5f88c1d4073",
+    "adaptations": [
+      "@testable import yl_player_ios -> @testable import yl_player_apple"
+    ]
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlHlsManifestRewriterTests.swift",
+    "source_sha256": "3069df6c07a0ff94a34054ad18bb88d1c27f7b9375b568c13d0b3b60f8607382",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlHlsManifestRewriterTests.swift",
+    "destination_sha256": "edb40961f5db8ce5e8f44b461a2908cecd7cdac11af37be484fc9a8a6074b2d7",
+    "adaptations": [
+      "@testable import yl_player_ios -> @testable import yl_player_apple"
+    ]
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlFallbackQualityPolicyTests.swift",
+    "source_sha256": "e0c56f47db0b03021592b3b843a3ce1dc69b7ceddf65ebe20556d7372b56f442",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlFallbackQualityPolicyTests.swift",
+    "destination_sha256": "10affaeaf27882b32a1f8ec7ea7b50126ec5dcf14cc281d42d4b60d189b1ccc4",
+    "adaptations": [
+      "@testable import yl_player_ios -> @testable import yl_player_apple"
+    ]
+  },
+  {
+    "source": "packages/yl_player/example/ios/RunnerTests/YlOpenedMediaTests.swift",
+    "source_sha256": "534141c1235faa66dadb87ac80843cc05ff4ef38ba100026264c1f8ab1d41d39",
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlOpenedMediaTests.swift",
+    "destination_sha256": "3c00e3a2c6afa6413a199e3edaadf1dcd5218fed1a901adc6f9497a091264cf9",
+    "adaptations": [
+      "@testable import yl_player_ios -> @testable import yl_player_apple"
+    ]
+  }
+]
