@@ -1,48 +1,251 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'dart:async';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player_apple/yl_player_apple.dart';
+import 'package:yl_player_apple/src/pigeon/yl_player_apple.g.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
+import 'support/apple_fakes.dart';
 
 void main() {
   final repository = _findRepositoryRoot();
   final package = Directory('${repository.path}/packages/yl_player_apple');
+  TestWidgetsFlutterBinding.ensureInitialized();
+  final messenger =
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+  const prefix = 'dev.flutter.pigeon.yl_player_apple';
+  const codec = ApplePlayerHostApi.pigeonChannelCodec;
 
+  void host(
+    String method,
+    FutureOr<Object?> Function(Object?) handler, {
+    String suffix = '.instance-1',
+  }) {
+    final channel = BasicMessageChannel<Object?>(
+      '$prefix.ApplePlayerHostApi.$method$suffix',
+      codec,
+    );
+    messenger.setMockDecodedMessageHandler(
+      channel,
+      (message) async => handler(message),
+    );
+    addTearDown(() => messenger.setMockDecodedMessageHandler(channel, null));
+  }
+
+  void factory(FutureOr<Object?> Function(Object?) handler) {
+    final channel = BasicMessageChannel<Object?>(
+      '$prefix.ApplePlayerFactoryHostApi.create',
+      ApplePlayerFactoryHostApi.pigeonChannelCodec,
+    );
+    messenger.setMockDecodedMessageHandler(
+      channel,
+      (message) async => handler(message),
+    );
+    addTearDown(() => messenger.setMockDecodedMessageHandler(channel, null));
+  }
+
+  Future<Object?> callback(
+    String name,
+    Object value, {
+    String suffix = 'instance-1',
+  }) async {
+    final completion = Completer<Object?>();
+    await messenger.handlePlatformMessage(
+      '$prefix.ApplePlayerFlutterApi.$name.$suffix',
+      codec.encodeMessage([value]),
+      (data) {
+        completion.complete(codec.decodeMessage(data));
+      },
+    );
+    return completion.future;
+  }
+
+  test('registerWith installs v2 implementation', () {
+    final previous = YlPlayerPlatform.instance;
+    addTearDown(() => YlPlayerPlatform.instance = previous);
+    YlPlayerApple.registerWith();
+    expect(YlPlayerPlatform.instance, isA<YlPlayerApple>());
+  });
   test(
-    'registration installs an implementation that rejects player creation',
+    'production Pigeon wrappers create, route every command and remove suffix callbacks',
     () async {
-      final previous = YlPlayerPlatform.instance;
-      addTearDown(() => YlPlayerPlatform.instance = previous);
-
-      YlPlayerApple.registerWith();
-
-      expect(YlPlayerPlatform.instance, isA<YlPlayerApple>());
+      final calls = <String>[];
+      factory((message) {
+        final request = (message as List).single as AppleCreateRequest;
+        expect(request.schemaMajor, 2);
+        expect(request.options.audioPolicy, AppleAudioPolicy.appManaged);
+        return [wireCreate()];
+      });
+      host('attach', (_) async {
+        calls.add('attach');
+        // Receiving a callback from attach proves setup precedes the host call.
+        expect(
+          await callback('onState', wireState(revision: 1, sequence: 1)),
+          isEmpty,
+        );
+        return [];
+      });
+      host('assess', (message) {
+        final request = (message as List).single as AppleAssessRequest;
+        expect(request.source.kind, AppleSourceKind.network);
+        return [
+          AppleAssessmentReply(
+            outcome: AppleAssessmentOutcome.compatible,
+            satisfiedRequirements: [],
+            limitations: [],
+          ),
+        ];
+      });
+      host('load', (message) async {
+        final request = (message as List).single as AppleLoadRequest;
+        expect(request.source.locator, 'https://media.test/a?token=secret');
+        expect(request.options.videoConstraints.maxWidth, 1280);
+        await callback(
+          'onState',
+          wireState(session: 's1', revision: 2, sequence: 2),
+        );
+        return [AppleLoadReply(loadRequestId: 'load-1', sessionId: 's1')];
+      });
+      for (final method in ['play', 'pause', 'seekToLiveEdge']) {
+        host(method, (message) {
+          expect(
+            ((message as List).single as AppleSessionCommand).sessionId,
+            's1',
+          );
+          calls.add(method);
+          return [];
+        });
+      }
+      host('seekTo', (message) {
+        final command = (message as List).single as AppleSeekCommand;
+        expect(command.sessionId, 's1');
+        expect(command.positionMs, 3000);
+        calls.add('seekTo');
+        return [];
+      });
+      host('setPlaybackSpeed', (message) {
+        final command = (message as List).single as AppleSpeedCommand;
+        expect(command.sessionId, 's1');
+        expect(command.speed, 1.25);
+        calls.add('speed');
+        return [];
+      });
+      host('selectAudioTrack', (message) {
+        final command = (message as List).single as AppleTrackCommand;
+        expect(command.sessionId, 's1');
+        expect(command.trackId, 'audio-main');
+        calls.add('track');
+        return [];
+      });
+      host('setVideoConstraints', (message) {
+        final command =
+            (message as List).single as AppleVideoConstraintsCommand;
+        expect(command.sessionId, 's1');
+        expect(command.constraints.maxHeight, 720);
+        calls.add('constraints');
+        return [];
+      });
+      host('setVolume', (message) {
+        expect((message as List).single, .5);
+        calls.add('volume');
+        return [];
+      });
+      host('stop', (_) {
+        calls.add('stop');
+        return [];
+      });
+      host('dispose', (_) {
+        calls.add('dispose');
+        return [];
+      });
+      final player = await YlPlayerApple().createPlayer(
+        const YlPlayerOptions(),
+      );
+      final load = await player.load(
+        source,
+        options: const YlLoadOptions(
+          videoConstraints: YlVideoConstraints(maxWidth: 1280),
+        ),
+      );
+      await player.play(load.sessionId);
+      await player.pause(load.sessionId);
+      await player.seekTo(load.sessionId, const Duration(seconds: 3));
+      await player.seekToLiveEdge(load.sessionId);
+      await player.setPlaybackSpeed(load.sessionId, 1.25);
+      await player.selectAudioTrack(load.sessionId, 'audio-main');
+      await player.setVideoConstraints(
+        load.sessionId,
+        const YlVideoConstraints(maxHeight: 720),
+      );
+      await player.setVolume(.5);
+      await player.stop();
+      await player.dispose();
+      expect(calls, [
+        'attach',
+        'play',
+        'pause',
+        'seekTo',
+        'seekToLiveEdge',
+        'speed',
+        'track',
+        'constraints',
+        'volume',
+        'stop',
+        'dispose',
+      ]);
+      expect(await callback('onState', wireState()), isNull);
+      expect(player.textureId.value, isNull);
+    },
+  );
+  test(
+    'production typed native rejection is safe; missing host is terminal',
+    () async {
+      factory((_) => [wireCreate()]);
+      host('attach', (_) => []);
+      host('dispose', (_) => []);
+      host(
+        'assess',
+        (_) => [
+          'native-failure',
+          'secret',
+          wireFailure(scope: AppleFailureScope.command),
+        ],
+      );
+      final player = await YlPlayerApple().createPlayer(
+        const YlPlayerOptions(),
+      );
       await expectLater(
-        YlPlayerPlatform.instance.createPlayer(const YlPlayerOptions()),
+        player.assess(source),
         throwsA(
           isA<YlPlayerException>()
               .having(
-                (error) => error.failure.category,
-                'category',
-                YlFailureCategory.platform,
+                (e) => e.failure.message,
+                'message',
+                'Playback operation failed.',
               )
               .having(
-                (error) => error.failure.code,
-                'code',
-                YlFailureCodes.platformUnavailable,
-              )
-              .having((error) => error.failure.retryable, 'retryable', isFalse)
-              .having(
-                (error) => error.failure.scope,
-                'scope',
-                YlFailureScope.player,
+                (e) => e.failure.diagnosticId,
+                'diagnosticId',
+                'apple-network-1',
               ),
         ),
       );
+      // No setVolume host is registered: generated channel-error becomes terminal.
+      await expectLater(
+        player.setVolume(.5),
+        throwsA(
+          isA<YlPlayerException>().having(
+            (e) => e.failure.code,
+            'code',
+            YlFailureCodes.platformUnavailable,
+          ),
+        ),
+      );
+      expect(player.state.failure!.scope, YlFailureScope.player);
+      await player.dispose();
     },
   );
-
   test('pubspec registers one shared implementation for iOS and macOS', () {
     final pubspec = _parseNestedYaml(
       File('${package.path}/pubspec.yaml').readAsStringSync(),
@@ -185,7 +388,7 @@ Map<String, Object?> _mapAt(Map<String, Object?> map, String key) =>
 
 String _rubyStringAssignment(String source, String name) {
   final match = RegExp(
-    '^\\s*${RegExp.escape(name)}\\s*=\\s*[\\\'\"]([^\\\'\"]+)[\\\'\"]\\s*\$',
+    '^\\s*${RegExp.escape(name)}\\s*=\\s*[\\\'"]([^\\\'"]+)[\\\'"]\\s*\$',
     multiLine: true,
   ).firstMatch(source);
   if (match == null) {
@@ -203,12 +406,12 @@ List<String> _rubyStringListAssignment(String source, String name) {
     throw StateError('Missing string-list assignment for $name.');
   }
   return RegExp(
-    '[\\\'\"]([^\\\'\"]+)[\\\'\"]',
+    '[\\\'"]([^\\\'"]+)[\\\'"]',
   ).allMatches(match.group(1)!).map((item) => item.group(1)!).toList();
 }
 
 Set<String> _rubyDependencies(String source, String platform) => RegExp(
-  '^\\s*s\\.${RegExp.escape(platform)}\\.dependency\\s+[\\\'\"]([^\\\'\"]+)[\\\'\"]',
+  '^\\s*s\\.${RegExp.escape(platform)}\\.dependency\\s+[\\\'"]([^\\\'"]+)[\\\'"]',
   multiLine: true,
 ).allMatches(source).map((match) => match.group(1)!).toSet();
 
