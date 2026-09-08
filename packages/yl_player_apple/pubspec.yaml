@@ -1,0 +1,28 @@
+name: yl_player_apple
+description: Endorsed shared iOS and macOS implementation for yl_player.
+version: 0.2.0-dev.1
+resolution: workspace
+environment:
+  sdk: ^3.12.0
+  flutter: '>=3.44.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  yl_player_platform_interface: ^0.2.0-dev.1
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+  pigeon: 28.0.0
+flutter:
+  plugin:
+    implements: yl_player
+    platforms:
+      ios:
+        pluginClass: YlPlayerApplePlugin
+        dartPluginClass: YlPlayerApple
+        sharedDarwinSource: true
+      macos:
+        pluginClass: YlPlayerApplePlugin
+        dartPluginClass: YlPlayerApple
+        sharedDarwinSource: true
