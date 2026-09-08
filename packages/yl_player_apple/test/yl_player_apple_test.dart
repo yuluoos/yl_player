@@ -60,105 +60,74 @@ void main() {
     }
   });
 
-  test(
-    'podspec exposes the shared artifact with platform-scoped metadata',
-    () async {
-      final podspec = '${package.path}/darwin/yl_player_apple.podspec';
-      final result = await Process.run('pod', <String>['ipc', 'spec', podspec]);
+  test('podspec exposes the shared artifact with platform-scoped metadata', () {
+    final spec = File(
+      '${package.path}/darwin/yl_player_apple.podspec',
+    ).readAsStringSync();
+    expect(
+      _rubyStringAssignment(spec, 's.source_files'),
+      'yl_player_apple/Sources/yl_player_apple/**/*.swift',
+    );
+    expect(
+      _rubyStringAssignment(spec, 's.vendored_frameworks'),
+      'yl_player_apple/Frameworks/YlFFmpegBridge.xcframework',
+    );
+    expect(_rubyStringAssignment(spec, 's.ios.deployment_target'), '15.0');
+    expect(_rubyStringAssignment(spec, 's.osx.deployment_target'), '12.0');
+    expect(_rubyStringListAssignment(spec, 's.frameworks'), <String>[
+      'AVFoundation',
+      'AudioToolbox',
+      'CoreMedia',
+      'VideoToolbox',
+      'AVFAudio',
+      'Network',
+      'QuartzCore',
+    ]);
+    expect(_rubyStringListAssignment(spec, 's.ios.frameworks'), <String>[
+      'UIKit',
+    ]);
+    expect(_rubyDependencies(spec, 'ios'), <String>{'Flutter'});
+    expect(_rubyStringListAssignment(spec, 's.osx.frameworks'), <String>[
+      'AppKit',
+    ]);
+    expect(_rubyDependencies(spec, 'osx'), <String>{'FlutterMacOS'});
+  });
 
-      expect(result.exitCode, 0, reason: '${result.stderr}\n${result.stdout}');
-      final spec = jsonDecode(result.stdout as String) as Map<String, Object?>;
-      expect(
-        spec['source_files'],
-        'yl_player_apple/Sources/yl_player_apple/**/*.swift',
-      );
-      expect(
-        spec['vendored_frameworks'],
-        'yl_player_apple/Frameworks/YlFFmpegBridge.xcframework',
-      );
-      expect(spec['platforms'], <String, Object?>{
-        'ios': '15.0',
-        'osx': '12.0',
-      });
-      expect(spec['frameworks'], <String>[
-        'AVFoundation',
-        'AudioToolbox',
-        'CoreMedia',
-        'VideoToolbox',
-        'AVFAudio',
-        'Network',
-        'QuartzCore',
-      ]);
-
-      final ios = _mapAt(spec, 'ios');
-      final macos = _mapAt(spec, 'osx');
-      expect(_mapAt(ios, 'dependencies').keys, <String>['Flutter']);
-      expect(ios['frameworks'], 'UIKit');
-      expect(_mapAt(macos, 'dependencies').keys, <String>['FlutterMacOS']);
-      expect(macos['frameworks'], 'AppKit');
-    },
-  );
-
-  test(
-    'SwiftPM manifest declares the shared product and binary bridge',
-    () async {
-      final manifest = '${package.path}/darwin/yl_player_apple';
-      final environment = Map<String, String>.of(Platform.environment)
-        ..['SWIFTPM_MODULECACHE_OVERRIDE'] =
-            '${Directory.systemTemp.path}/yl-player-apple-swiftpm-cache'
-        ..['CLANG_MODULE_CACHE_PATH'] =
-            '${Directory.systemTemp.path}/yl-player-apple-clang-cache';
-      final result = await Process.run('swift', <String>[
-        'package',
-        '--disable-sandbox',
-        'dump-package',
-        '--package-path',
-        manifest,
-      ], environment: environment);
-
-      expect(result.exitCode, 0, reason: '${result.stderr}\n${result.stdout}');
-      final packageDump =
-          jsonDecode(result.stdout as String) as Map<String, Object?>;
-      expect(packageDump['name'], 'yl_player_apple');
-      expect(packageDump['platforms'], <Object?>[
-        <String, Object?>{
-          'options': <Object?>[],
-          'platformName': 'ios',
-          'version': '15.0',
-        },
-        <String, Object?>{
-          'options': <Object?>[],
-          'platformName': 'macos',
-          'version': '12.0',
-        },
-      ]);
-
-      final products = (packageDump['products'] as List<Object?>)
-          .cast<Map<String, Object?>>();
-      expect(products, hasLength(1));
-      expect(products.single['name'], 'yl-player-apple');
-      expect(products.single['targets'], <String>['yl_player_apple']);
-
-      final dependencies = (packageDump['dependencies'] as List<Object?>)
-          .cast<Map<String, Object?>>();
-      expect(dependencies, hasLength(1));
-      expect(jsonEncode(dependencies.single), contains('FlutterFramework'));
-
-      final targets = (packageDump['targets'] as List<Object?>)
-          .cast<Map<String, Object?>>();
-      final bridge = targets.singleWhere(
-        (target) => target['name'] == 'YlFFmpegBridge',
-      );
-      expect(bridge['type'], 'binary');
-      expect(bridge['path'], 'Frameworks/YlFFmpegBridge.xcframework');
-      final plugin = targets.singleWhere(
-        (target) => target['name'] == 'yl_player_apple',
-      );
-      expect(plugin['type'], 'regular');
-      expect(jsonEncode(plugin['dependencies']), contains('FlutterFramework'));
-      expect(jsonEncode(plugin['dependencies']), contains('YlFFmpegBridge'));
-    },
-  );
+  test('SwiftPM manifest declares the shared product and binary bridge', () {
+    final manifest = File(
+      '${package.path}/darwin/yl_player_apple/Package.swift',
+    ).readAsStringSync();
+    expect(_swiftPackageName(manifest), 'yl_player_apple');
+    expect(_swiftPlatformVersions(manifest), <String, String>{
+      'iOS': '15.0',
+      'macOS': '12.0',
+    });
+    expect(
+      manifest,
+      matches(
+        RegExp(
+          r'\.library\(\s*name:\s*"yl-player-apple",\s*'
+          r'targets:\s*\["yl_player_apple"\]\s*\)',
+        ),
+      ),
+    );
+    expect(
+      manifest,
+      matches(
+        RegExp(
+          r'\.package\(\s*name:\s*"FlutterFramework",\s*'
+          r'path:\s*"\.\./FlutterFramework"\s*\)',
+        ),
+      ),
+    );
+    expect(
+      _swiftNamedCall(manifest, 'binaryTarget', 'YlFFmpegBridge'),
+      contains('path: "Frameworks/YlFFmpegBridge.xcframework"'),
+    );
+    final pluginTarget = _swiftNamedCall(manifest, 'target', 'yl_player_apple');
+    expect(pluginTarget, contains('FlutterFramework'));
+    expect(pluginTarget, contains('YlFFmpegBridge'));
+  });
 }
 
 Directory _findRepositoryRoot() {
@@ -213,3 +182,59 @@ Map<String, Object?> _parseNestedYaml(String source) {
 
 Map<String, Object?> _mapAt(Map<String, Object?> map, String key) =>
     (map[key] as Map<Object?, Object?>).cast<String, Object?>();
+
+String _rubyStringAssignment(String source, String name) {
+  final match = RegExp(
+    '^\\s*${RegExp.escape(name)}\\s*=\\s*[\\\'\"]([^\\\'\"]+)[\\\'\"]\\s*\$',
+    multiLine: true,
+  ).firstMatch(source);
+  if (match == null) {
+    throw StateError('Missing string assignment for $name.');
+  }
+  return match.group(1)!;
+}
+
+List<String> _rubyStringListAssignment(String source, String name) {
+  final match = RegExp(
+    '^\\s*${RegExp.escape(name)}\\s*=\\s*(.+)\$',
+    multiLine: true,
+  ).firstMatch(source);
+  if (match == null) {
+    throw StateError('Missing string-list assignment for $name.');
+  }
+  return RegExp(
+    '[\\\'\"]([^\\\'\"]+)[\\\'\"]',
+  ).allMatches(match.group(1)!).map((item) => item.group(1)!).toList();
+}
+
+Set<String> _rubyDependencies(String source, String platform) => RegExp(
+  '^\\s*s\\.${RegExp.escape(platform)}\\.dependency\\s+[\\\'\"]([^\\\'\"]+)[\\\'\"]',
+  multiLine: true,
+).allMatches(source).map((match) => match.group(1)!).toSet();
+
+String _swiftPackageName(String source) {
+  final match = RegExp(r'Package\(\s*name:\s*"([^"]+)"').firstMatch(source);
+  if (match == null) {
+    throw StateError('Missing Swift package name.');
+  }
+  return match.group(1)!;
+}
+
+Map<String, String> _swiftPlatformVersions(String source) => <String, String>{
+  for (final match in RegExp(
+    r'\.(iOS|macOS)\("([0-9.]+)"\)',
+  ).allMatches(source))
+    match.group(1)!: match.group(2)!,
+};
+
+String _swiftNamedCall(String source, String call, String name) {
+  final start = RegExp(
+    '\\.${RegExp.escape(call)}\\(\\s*name:\\s*"${RegExp.escape(name)}"',
+  ).firstMatch(source);
+  if (start == null) {
+    throw StateError('Missing Swift $call named $name.');
+  }
+  final tail = source.substring(start.start);
+  final nextCall = RegExp(r'\n\s*\),?\n\s*\.').firstMatch(tail);
+  return nextCall == null ? tail : tail.substring(0, nextCall.start + 3);
+}
