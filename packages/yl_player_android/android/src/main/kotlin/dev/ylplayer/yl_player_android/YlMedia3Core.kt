@@ -1,10 +1,7 @@
 package dev.ylplayer.yl_player_android
 
 import android.content.Context
-import android.media.MediaCodecInfo
-import android.media.MediaCodecList
 import android.net.Uri
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
@@ -26,24 +23,28 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
-import io.flutter.view.TextureRegistry
+import dev.ylplayer.yl_player_android.pigeon.*
+import android.view.Surface
 import kotlin.math.max
 import kotlin.math.roundToInt
 
 @OptIn(UnstableApi::class)
-internal class YlMedia3Player(
+internal class YlMedia3Core(
     private val context: Context,
-    private val playerId: Long,
-    private val texture: TextureRegistry.SurfaceTextureEntry,
+    private val identity: YlSessionIdentity,
+    private val source: AndroidSourceMessage,
+    private val loadOptions: AndroidLoadOptionsMessage,
     private val configuration: PlayerConfiguration,
-    private val emit: (Map<String, Any?>) -> Unit,
+    private val handler: Handler,
+    private val videoOutput: YlEngineVideoOutput,
+    private val emit: (YlEngineEvent) -> Unit,
 ) : Player.Listener, AnalyticsListener {
-    private val handler = Handler(Looper.getMainLooper())
-    private val videoOutput = YlVideoOutput(texture)
+    // Entire class, including construction, lives on the owned engine application Looper.
+    private val acknowledgement = YlMedia3Acknowledgement()
+    private var lastFailure: YlFailureKind? = null
     private val lifecycle = YlLifecycleCoordinator()
     private val deviceProfile = YlAndroidDeviceProfile.collect(context)
     private val trackSelector = DefaultTrackSelector(context)
-    private var committedLoadToken: Long? = null
     private val httpClient = configuration.network.createHttpClient()
     private val loadControl = YlAdaptiveLoadControl(
         YlPlaybackPolicy.effectiveBufferProfile(
@@ -52,11 +53,11 @@ internal class YlMedia3Player(
             configuration.bufferRequest(),
         ),
     )
-    private val exoPlayer: ExoPlayer
+    private lateinit var exoPlayer: ExoPlayer
     private val audioSelections = mutableMapOf<String, AudioSelection>()
     private var sourceIsLive = false
     private var sourceClass = YlSourceClass.NETWORK_VOD
-    private var stoppedState: Map<String, Any?>? = null
+    private var stopped = false
     private var resetting = false
     private var disposed = false
     private var status = "idle"
@@ -92,7 +93,7 @@ internal class YlMedia3Player(
             releasePlaybackResources()
         }
     }
-    private var currentError: Map<String, Any?>? = null
+    private var currentError: YlFailureKind? = null
     private var active = false
     private var savedPositionMs = 0L
     private var resumeAtLiveEdge = false
@@ -103,18 +104,11 @@ internal class YlMedia3Player(
         handler.postDelayed(action, delayMs)
     }
     private var lastVideoSize = VideoSize.UNKNOWN
-    private var audioTracks: List<Map<String, Any?>> = emptyList()
-    private var videoTracks: List<Map<String, Any?>> = emptyList()
-    private val capabilitySnapshot by lazy {
-        YlAndroidChannel.capabilities(
-            hardwareVideoCodecs = hardwareVideoCodecs(),
-            maxWidth = deviceProfile.videoEnvelope.maxWidth,
-            maxHeight = deviceProfile.videoEnvelope.maxHeight,
-        )
-    }
+    private var audioTracks: List<AndroidTrackMessage> = emptyList()
+    private var videoTracks: List<AndroidTrackMessage> = emptyList()
     private val positionTicker = object : Runnable {
         override fun run() {
-            if (!disposed && active && stoppedState == null) {
+            if (!disposed && active && !stopped) {
                 maybeEvaluateHealth()
                 emitPositionDelta()
                 handler.postDelayed(this, configuration.positionEventIntervalMs)
@@ -122,14 +116,18 @@ internal class YlMedia3Player(
         }
     }
 
-    init {
+    fun initialize() {
         val renderersFactory = DefaultRenderersFactory(context)
             .setEnableDecoderFallback(true)
-            .setMediaCodecSelector(YlHardwareCodecSelector())
+            .setMediaCodecSelector(YlPolicyCodecSelector(AndroidDecoderPolicy.valueOf(configuration.decoderPolicy)))
         exoPlayer = ExoPlayer.Builder(context, renderersFactory)
+            .setLooper(handler.looper)
             .setTrackSelector(trackSelector)
             .setLoadControl(loadControl)
             .build()
+        exoPlayer.addListener(this)
+        exoPlayer.addAnalyticsListener(this)
+        exoPlayer.setForegroundMode(true)
         exoPlayer.setAudioAttributes(
             AudioAttributes.Builder()
                 .setUsage(C.USAGE_MEDIA)
@@ -140,94 +138,58 @@ internal class YlMedia3Player(
         exoPlayer.setHandleAudioBecomingNoisy(configuration.managesAudioSession)
         exoPlayer.setWakeMode(C.WAKE_MODE_NETWORK)
         applyTrackConstraints()
-        exoPlayer.addListener(this)
-        exoPlayer.addAnalyticsListener(this)
-        videoOutput.attach(sourceGeneration, sourceGeneration, exoPlayer::setVideoSurface)
+        videoOutput.attach(sourceGeneration, sourceGeneration, ::attachSurface)
     }
 
-    fun command(name: String, arguments: Map<String, Any?>) {
-        check(!disposed) { "Player is disposed." }
-        when (name) {
-            // Media3 open commits synchronously; there is no preparing candidate here.
-            "cancelOpen" -> Unit
-            "requestState" -> emitState()
-            "stop" -> stop()
-            "open" -> open(arguments["source"].asStringMap())
-            "play" -> {
-                if (stoppedState != null) return
-                cancelFocusGrace()
-                lifecycle.reduce(YlLifecycleEvent.USER_PLAY)
-                exoPlayer.play()
-                refreshStallWatchdog()
-            }
-            "pause" -> {
-                cancelFocusGrace()
-                lifecycle.reduce(YlLifecycleEvent.USER_PAUSE)
-                stallWatchdog.cancel()
-                exoPlayer.pause()
-            }
-            "seekTo" -> {
-                val positionMs = max(0L, (arguments["positionMs"] as? Number)?.toLong() ?: 0L)
-                resumeAtLiveEdge = false
-                if (active) {
-                    exoPlayer.seekTo(positionMs)
-                } else {
-                    savedPositionMs = positionMs
-                    emitState()
-                }
-            }
-            "seekToLiveEdge" -> {
-                if (!sourceIsLive && !exoPlayer.isCurrentMediaItemLive) {
-                    throw PlayerCommandException(
-                        "source.not_live",
-                        "The current source is not live.",
-                        errorMap("source", "source.not_live", "The current source is not live."),
-                    )
-                }
-                if (active) {
-                    resumeAtLiveEdge = false
-                    exoPlayer.seekToDefaultPosition()
-                } else {
-                    resumeAtLiveEdge = true
-                    emitState()
-                }
-            }
-            "setPlaybackSpeed" -> {
-                val speed = (arguments["speed"] as? Number)?.toFloat() ?: 1f
-                require(speed in 0.25f..4f) { "Playback speed must be between 0.25 and 4.0." }
-                requestedPlaybackSpeed = speed
-                exoPlayer.setPlaybackSpeed(speed)
-            }
-            "setVolume" -> {
-                val volume = (arguments["volume"] as? Number)?.toFloat() ?: 1f
-                exoPlayer.volume = volume.coerceIn(0f, 1f)
-            }
-            "selectAudioTrack" -> selectAudioTrack(arguments["trackId"] as? String ?: "")
-            "setQualityConstraint" -> setQualityConstraint(arguments["constraint"].asStringMap())
-            else -> throw PlayerCommandException(
-                "android.command_unknown",
-                "Unknown player command: $name",
-                errorMap("internal", "android.command_unknown", "Unknown player command: $name"),
-            )
-        }
+    fun play() {
+        cancelFocusGrace(); lifecycle.reduce(YlLifecycleEvent.USER_PLAY)
+        if (!active) activate()
+        exoPlayer.play(); refreshStallWatchdog()
     }
-
-    fun validateOpen(source: Map<String, Any?>) {
-        val uri = source["uri"] as? String
-        if (uri.isNullOrBlank()) {
-            throw PlayerCommandException(
-                "source.invalid_uri",
-                "A media URI is required.",
-                errorMap("source", "source.invalid_uri", "A media URI is required."),
-            )
+    fun pause() {
+        cancelFocusGrace(); lifecycle.reduce(YlLifecycleEvent.USER_PAUSE)
+        stallWatchdog.cancel(); exoPlayer.pause()
+    }
+    fun seekTo(positionMs: Long) {
+        resumeAtLiveEdge = false
+        if (active) exoPlayer.seekTo(positionMs) else { savedPositionMs = positionMs; emitState() }
+    }
+    fun seekToLiveEdge() {
+        if (!sourceIsLive && !exoPlayer.isCurrentMediaItemLive) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
+        if (active) { resumeAtLiveEdge = false; exoPlayer.seekToDefaultPosition() }
+        else { resumeAtLiveEdge = true; emitState() }
+    }
+    fun setPlaybackSpeed(speed: Double) { requestedPlaybackSpeed = speed.toFloat(); exoPlayer.setPlaybackSpeed(requestedPlaybackSpeed) }
+    fun setVolume(volume: Double) { exoPlayer.volume = volume.toFloat() }
+    fun switchOutput(surface: Surface, output: YlOutputIdentity) { videoOutput.switchTo(surface, output, ::attachSurface); ensureHealthy() }
+    fun snapshotRestorePoint() = YlEngineRestorePoint(if (active) max(0L, exoPlayer.currentPosition) else savedPositionMs,
+        resumeAtLiveEdge || exoPlayer.currentLiveOffset in 0..2_000L, lifecycle.state.playbackIntended)
+    fun restore(point: YlEngineRestorePoint) {
+        savedPositionMs = point.positionMs; resumeAtLiveEdge = point.liveEdge
+        lifecycle.reduce(if (point.playbackIntended) YlLifecycleEvent.USER_PLAY else YlLifecycleEvent.USER_PAUSE)
+        activate()
+    }
+    fun ensureHealthy() { lastFailure?.let { throw YlBoundaryException(it) } }
+    private fun attachSurface(surface: Surface) = outputOperation { exoPlayer.setVideoSurface(surface) }
+    private fun clearSurface(surface: Surface) = outputOperation { exoPlayer.clearVideoSurface(surface) }
+    private fun outputOperation(action: () -> Unit) {
+        val safe = acknowledgement.perform {
+            action()
+            if (exoPlayer.playerError?.errorCode == PlaybackException.ERROR_CODE_TIMEOUT) acknowledgement.onTimeout()
         }
+        if (!safe) throw YlBoundaryException(YlFailureKind.PLATFORM_FAILURE)
+    }
+    // Keep this observer installed through release; that timeout is a synchronous listener event.
+    override fun onPlayerError(error: PlaybackException) {
+        if (error.errorCode == PlaybackException.ERROR_CODE_TIMEOUT) acknowledgement.onTimeout()
     }
 
     fun activate() {
-        if (disposed || active || stoppedState != null) return
+        if (disposed || active || stopped) return
         active = true
+        exoPlayer.setForegroundMode(true)
         loadControl.restoreProfile()
-        videoOutput.attach(sourceGeneration, sourceGeneration, exoPlayer::setVideoSurface)
+        videoOutput.attach(sourceGeneration, sourceGeneration, ::attachSurface)
         if (exoPlayer.currentMediaItem != null && exoPlayer.playbackState == Player.STATE_IDLE) {
             status = "opening"
             exoPlayer.prepare()
@@ -246,7 +208,7 @@ internal class YlMedia3Player(
     }
 
     fun deactivate() {
-        if (disposed || !active || stoppedState != null) return
+        if (disposed || !active || stopped) return
         releasePlaybackResources()
     }
 
@@ -263,17 +225,12 @@ internal class YlMedia3Player(
         activate()
     }
 
-    fun rebuildVideoOutput() {
-        if (disposed || !active || stoppedState != null) return
-        videoOutput.rebuild(
-            expectedSourceGeneration = sourceGeneration,
-            currentSourceGeneration = sourceGeneration,
-            clear = exoPlayer::clearVideoSurface,
-            consumer = exoPlayer::setVideoSurface,
-        )
-        if (lastVideoSize.width > 0 && lastVideoSize.height > 0) {
-            videoOutput.resize(lastVideoSize.width, lastVideoSize.height)
-        }
+    fun canRebuildOutput() = !disposed && active && !stopped
+    fun detachOutput() { videoOutput.detach(::clearSurface) }
+    fun rebuildVideoOutput(surface: Surface, identity: YlOutputIdentity) {
+        if (disposed || !active || stopped) return
+        videoOutput.switchTo(surface, identity, ::attachSurface)
+        videoOutput.recordRebuild()
         emitState()
     }
 
@@ -291,19 +248,19 @@ internal class YlMedia3Player(
         handler.removeCallbacks(positionTicker)
         exoPlayer.pause()
         exoPlayer.stop()
-        videoOutput.detach(exoPlayer::clearVideoSurface)
+        outputOperation { exoPlayer.setForegroundMode(false) }
+        videoOutput.detach(::clearSurface)
         if (status != "error" && status != "completed" && status != "idle") {
             status = "paused"
         }
         emitState()
     }
 
-    private fun stop() {
-        val reset = YlStopPolicy.reset(sourceGeneration)
+    fun stop() {
+        val nextGeneration = sourceGeneration + 1
         resetting = true
-        stoppedState = reset.state
-        committedLoadToken = null
-        sourceGeneration = reset.generation
+        stopped = true
+        sourceGeneration = nextGeneration
         lifecycle.reduce(YlLifecycleEvent.USER_PAUSE)
         stallWatchdog.cancel()
         handler.removeCallbacksAndMessages(null)
@@ -317,7 +274,7 @@ internal class YlMedia3Player(
         exoPlayer.pause()
         exoPlayer.stop()
         exoPlayer.clearMediaItems()
-        videoOutput.detach(exoPlayer::clearVideoSurface)
+        videoOutput.detach(::clearSurface)
         trackSelector.parameters = trackSelector.buildUponParameters().clearOverrides().build()
         openStartedAtMs = null
         openDurationMs = null
@@ -349,16 +306,14 @@ internal class YlMedia3Player(
         healthWindowDroppedFrames = 0
         healthWindowRebufferCount = 0
         healthWindowRebufferDurationMs = 0L
-        status = reset.state["status"] as String
+        status = "idle"
         resetting = false
         emitState()
     }
 
-    private fun open(source: Map<String, Any?>) {
-        validateOpen(source)
-        val uriString = source["uri"] as String
-        val loadOptions = source["loadOptions"].asStringMap()
-        val headers = source["headers"].asStringMap().mapValues { it.value.toString() }
+    fun prepare() {
+        val uriString = source.locator
+        val headers = source.request?.headers.orEmpty()
         val network = configuration.network
         val generation = sourceGeneration + 1
         val httpFactory = OkHttpDataSource.Factory(httpClient)
@@ -375,27 +330,26 @@ internal class YlMedia3Player(
                 },
             )
         val mediaItem = MediaItem.Builder()
-            .setMediaId(generation.toString())
+            .setMediaId(identity.sessionId)
             .setUri(Uri.parse(uriString))
-            .setMimeType(YlAndroidChannel.mimeType(source["formatHint"] as? String))
+            .setMimeType(mediaMimeType(source.format))
             .build()
 
         val mediaSource = mediaSourceFactory.createMediaSource(mediaItem)
         cancelFocusGrace()
         stallWatchdog.cancel()
-        stoppedState = null
+        stopped = false
         sourceGeneration = generation
-        committedLoadToken = (source["loadToken"] as? Number)?.toLong()
-        videoOutput.attach(generation, generation, exoPlayer::setVideoSurface)
+        videoOutput.attach(generation, generation, ::attachSurface)
         handler.removeCallbacks(positionTicker)
         handler.post(positionTicker)
         firstFrameGate.reset(generation)
         firstFrameRendered = false
-        sourceIsLive = source["isLive"] == true
+        sourceIsLive = source.intent == AndroidStreamIntent.LIVE
         sourceClass = YlPlaybackPolicy.classifySource(
-            kind = source["kind"] as? String ?: "network",
+            kind = source.kind.name.lowercase(),
             isLive = sourceIsLive,
-            formatHint = source["formatHint"] as? String ?: "automatic",
+            formatHint = formatHint(source.format),
             uri = uriString,
         )
 
@@ -430,56 +384,40 @@ internal class YlMedia3Player(
         audioTracks = emptyList()
         videoTracks = emptyList()
         lastVideoSize = VideoSize.UNKNOWN
-        if (source.containsKey("loadOptions")) {
-            val constraint = loadOptions["videoConstraints"].asStringMap()
-            hostQualityConstraint = AndroidQualityConstraint(
-                maxWidth = (constraint["maxWidth"] as? Number)?.toInt(),
-                maxHeight = (constraint["maxHeight"] as? Number)?.toInt(),
-                maxBitrate = (constraint["maxBitrate"] as? Number)?.toInt(),
-            )
-        }
+        hostQualityConstraint = AndroidQualityConstraint(loadOptions.videoConstraints.maxWidth?.toInt(),
+            loadOptions.videoConstraints.maxHeight?.toInt(), loadOptions.videoConstraints.maxBitrate?.toInt())
         applyTrackConstraints()
         status = "opening"
         exoPlayer.stop()
         exoPlayer.clearMediaItems()
-        val startPosition = (loadOptions["startPositionMs"] as? Number)?.toLong() ?: 0L
+        val startPosition = loadOptions.startPositionMs ?: 0L
         loadControl.updateProfile(
             YlPlaybackPolicy.effectiveBufferProfile(
                 deviceProfile.tier,
                 sourceClass,
-                configuration.bufferRequest(if (source.containsKey("loadOptions")) loadOptions else null),
+                configuration.bufferRequest(),
             ),
         )
         exoPlayer.setMediaSource(mediaSource, startPosition)
-        if (source.containsKey("loadOptions")) {
-            val autoplay = loadOptions["autoplay"] == true
-            lifecycle.reduce(if (autoplay) YlLifecycleEvent.USER_PLAY else YlLifecycleEvent.USER_PAUSE)
-            exoPlayer.playWhenReady = autoplay
-        }
+        // Candidates initialize privately and silently. Coordinator applies autoplay after commit.
+        lifecycle.reduce(YlLifecycleEvent.USER_PAUSE)
+        exoPlayer.playWhenReady = false
         exoPlayer.prepare()
         emitState()
         refreshStallWatchdog()
     }
 
-    private fun selectAudioTrack(trackId: String) {
+    fun selectAudioTrack(trackId: String) {
         val selection = audioSelections[trackId]
-            ?: throw PlayerCommandException(
-                "track.not_found",
-                "The requested audio track is unavailable.",
-                errorMap("source", "track.not_found", "The requested audio track is unavailable."),
-            )
+            ?: throw YlBoundaryException(YlFailureKind.SOURCE_MISSING)
         trackSelector.parameters = trackSelector.buildUponParameters()
             .clearOverridesOfType(C.TRACK_TYPE_AUDIO)
             .addOverride(TrackSelectionOverride(selection.group.mediaTrackGroup, selection.trackIndex))
             .build()
     }
 
-    private fun setQualityConstraint(constraint: Map<String, Any?>) {
-        hostQualityConstraint = AndroidQualityConstraint(
-            maxWidth = (constraint["maxWidth"] as? Number)?.toInt(),
-            maxHeight = (constraint["maxHeight"] as? Number)?.toInt(),
-            maxBitrate = (constraint["maxBitrate"] as? Number)?.toInt(),
-        )
+    fun setVideoConstraints(constraint: AndroidVideoConstraintsMessage) {
+        hostQualityConstraint = AndroidQualityConstraint(constraint.maxWidth?.toInt(), constraint.maxHeight?.toInt(), constraint.maxBitrate?.toInt())
         applyTrackConstraints()
     }
 
@@ -508,7 +446,7 @@ internal class YlMedia3Player(
             emitState()
             return
         }
-        status = YlMedia3StatePolicy.status(status, playbackState, exoPlayer.isPlaying)
+        status = YlMedia3StatePolicy.status(status, playbackState, exoPlayer.isPlaying, hasBeenReady)
         if (playbackState == Player.STATE_READY && !hasBeenReady) {
             hasBeenReady = true
             openDurationMs = openStartedAtMs?.let { SystemClock.elapsedRealtime() - it }
@@ -573,9 +511,6 @@ internal class YlMedia3Player(
     ) {
         if (!isCurrentEvent(eventTime)) return
         lastVideoSize = videoSize
-        if (videoSize.width > 0 && videoSize.height > 0) {
-            videoOutput.resize(videoSize.width, videoSize.height)
-        }
         emitState()
     }
 
@@ -586,18 +521,13 @@ internal class YlMedia3Player(
     ) {
         val generation = sourceGeneration
         if (!isCurrentEvent(eventTime)) return
-        if (!firstFrameGate.markRendered(generation)) return
+        val outputIdentity = videoOutput.renderedIdentity(output) ?: return
+        // Private rendering neither emits nor consumes the public first-frame milestone.
+        if (!outputIdentity.isPublic || !firstFrameGate.markRendered(generation)) return
         firstFrameRendered = true
         firstFrameDurationMs = openStartedAtMs?.let { SystemClock.elapsedRealtime() - it }
         resetHealthWindow(SystemClock.elapsedRealtime())
-        emit(
-            mapOf(
-                "playerId" to playerId,
-                "type" to "firstFrame",
-                "width" to lastVideoSize.width.takeIf { it > 0 },
-                "height" to lastVideoSize.height.takeIf { it > 0 },
-            ),
-        )
+        emit(YlEngineEvent.FirstFrame(outputIdentity, renderTimeMs))
         emitState()
         refreshStallWatchdog()
     }
@@ -605,8 +535,8 @@ internal class YlMedia3Player(
     override fun onTracksChanged(eventTime: AnalyticsListener.EventTime, tracks: Tracks) {
         if (!isCurrentEvent(eventTime)) return
         audioSelections.clear()
-        val audio = mutableListOf<Map<String, Any?>>()
-        val video = mutableListOf<Map<String, Any?>>()
+        val audio = mutableListOf<AndroidTrackMessage>()
+        val video = mutableListOf<AndroidTrackMessage>()
         tracks.groups.forEachIndexed { groupIndex, group ->
             for (trackIndex in 0 until group.length) {
                 val format = group.getTrackFormat(trackIndex)
@@ -614,17 +544,11 @@ internal class YlMedia3Player(
                 if (type != C.TRACK_TYPE_AUDIO && type != C.TRACK_TYPE_VIDEO) continue
                 val kind = if (type == C.TRACK_TYPE_AUDIO) "audio" else "video"
                 val id = format.id?.takeIf(String::isNotBlank) ?: "$kind-$groupIndex-$trackIndex"
-                val mapped = mapOf(
-                    "id" to id,
-                    "kind" to kind,
-                    "label" to format.label,
-                    "language" to format.language,
-                    "codec" to (format.codecs ?: format.sampleMimeType),
-                    "bitrate" to format.bitrate.valueOrNull(),
-                    "width" to format.width.valueOrNull(),
-                    "height" to format.height.valueOrNull(),
-                    "isSelected" to group.isTrackSelected(trackIndex),
-                )
+                val mapped = AndroidTrackMessage(id,
+                    if (type == C.TRACK_TYPE_AUDIO) AndroidTrackKind.AUDIO else AndroidTrackKind.VIDEO,
+                    format.label, format.language, format.codecs ?: format.sampleMimeType,
+                    format.bitrate.valueOrNull()?.toLong(), format.width.valueOrNull()?.toLong(),
+                    format.height.valueOrNull()?.toLong(), group.isTrackSelected(trackIndex))
                 if (type == C.TRACK_TYPE_AUDIO) {
                     audio += mapped
                     audioSelections[id] = AudioSelection(group, trackIndex)
@@ -646,8 +570,7 @@ internal class YlMedia3Player(
             .distinct()
             .sortedDescending()
             .toList()
-        selectedVideoBitrate = video.firstOrNull { it["isSelected"] == true }
-            ?.get("bitrate") as? Int
+        selectedVideoBitrate = video.firstOrNull { it.isSelected }?.bitrate?.toInt()
         tracks.groups.asSequence()
             .filter { it.type == C.TRACK_TYPE_VIDEO }
             .flatMap { group ->
@@ -659,14 +582,6 @@ internal class YlMedia3Player(
             ?.frameRate
             ?.takeIf { it > 0f }
             ?.let { selectedVideoFrameRate = it }
-        emit(
-            mapOf(
-                "playerId" to playerId,
-                "type" to "tracksChanged",
-                "audioTracks" to audioTracks,
-                "videoTracks" to videoTracks,
-            ),
-        )
         emitState()
     }
 
@@ -678,19 +593,10 @@ internal class YlMedia3Player(
         stallWatchdog.cancel()
         if (tryDecoderRecovery(error)) return
         status = "error"
-        val details = playbackErrorMap(
-            error,
-            codecDiagnostic(
-                decoderName,
-                lastVideoSize.width.takeIf { it > 0 },
-                lastVideoSize.height.takeIf { it > 0 },
-                null,
-                deviceProfile.signals.apiLevel,
-            ),
-        )
-        currentError = details
-        emit(mapOf("playerId" to playerId, "type" to "error", "error" to details))
-        emitState(details)
+        lastFailure = mediaFailure(error)
+        currentError = lastFailure
+        emit(YlEngineEvent.Failed(lastFailure!!))
+        emitState()
     }
 
     private fun tryDecoderRecovery(error: PlaybackException): Boolean {
@@ -796,12 +702,15 @@ internal class YlMedia3Player(
 
     private fun failWith(error: YlStableError, diagnostic: String? = null) {
         stallWatchdog.cancel()
-        val details = errorMap(error.category, error.code, error.message, diagnostic)
-        status = "error"
-        currentError = details
+        val kind = when (error.category) {
+            "network" -> YlFailureKind.NETWORK_FAILED
+            "decoderUnsupported" -> YlFailureKind.DECODER_UNSUPPORTED
+            "decoderFailure" -> YlFailureKind.DECODER_UNAVAILABLE
+            else -> YlFailureKind.PLATFORM_FAILURE
+        }
+        status = "error"; currentError = kind; lastFailure = kind
         exoPlayer.pause()
-        emit(mapOf("playerId" to playerId, "type" to "error", "error" to details))
-        emitState(details)
+        emit(YlEngineEvent.Failed(kind)); emitState()
     }
 
     private fun refreshStallWatchdog() {
@@ -822,7 +731,7 @@ internal class YlMedia3Player(
     }
 
     fun handleRunningLowMemory() {
-        if (disposed || !active || stoppedState != null) return
+        if (disposed || !active || stopped) return
         loadControl.shrinkForMemoryPressure()
         maybeEvaluateHealth(memoryPressure = true)
         emitState()
@@ -836,7 +745,8 @@ internal class YlMedia3Player(
     ) {
         if (!isCurrentEvent(eventTime)) return
         this.decoderName = decoderName
-        isHardwareDecoding = isHardwareCodecName(decoderName)
+        // Identity is observed; a codec-name heuristic is not decoder proof.
+        isHardwareDecoding = false
         emitState()
     }
 
@@ -862,129 +772,73 @@ internal class YlMedia3Player(
     private fun recordRetry(attempt: Int, delayMs: Long, exception: Exception) {
         if (disposed) return
         reconnectCount += 1
-        emit(
-            mapOf(
-                "playerId" to playerId,
-                "type" to "retry",
-                "attempt" to attempt,
-                "delayMs" to delayMs,
-                "error" to errorMap(
-                    "network",
-                    "network.retry",
-                    "Retrying media request.",
-                    exception.toString(),
-                ),
-            ),
-        )
+        emit(YlEngineEvent.Retry(attempt.toLong(), delayMs, SystemClock.elapsedRealtime()))
         emitState()
     }
 
-    fun emitState(error: Map<String, Any?>? = null) {
-        if (disposed || resetting) return
-        stoppedState?.let { state ->
-            emit(YlAndroidChannel.fullStateEnvelope(
-                playerId = playerId,
-                generation = sourceGeneration,
-                state = state + ("capabilities" to capabilitySnapshot),
-            ))
-            return
-        }
+    private fun timeline(): AndroidTimelineMessage {
         val position = if (active) max(0L, exoPlayer.currentPosition) else savedPositionMs
         val duration = exoPlayer.duration.takeUnless { it == C.TIME_UNSET || it < 0 }
-        val liveOffset = exoPlayer.currentLiveOffset.takeUnless { it == C.TIME_UNSET || it < 0 }
-        val bufferedPosition = if (active) max(0L, exoPlayer.bufferedPosition) else position
-        val bufferedDuration = max(0L, bufferedPosition - position)
-        emit(
-            YlAndroidChannel.fullStateEnvelope(
-                playerId = playerId,
-                generation = sourceGeneration,
-                loadToken = committedLoadToken,
-                state = mapOf(
-                    "status" to status,
-                    "positionMs" to position,
-                    "durationMs" to duration,
-                    "bufferedPositionMs" to bufferedPosition,
-                    "isLive" to (sourceIsLive || exoPlayer.isCurrentMediaItemLive),
-                    "isSeekable" to exoPlayer.isCurrentMediaItemSeekable,
-                    "isAtLiveEdge" to (liveOffset != null && liveOffset <= 2_000L),
-                    "liveOffsetMs" to liveOffset,
-                    "dvrStartMs" to if (exoPlayer.isCurrentMediaItemSeekable) 0L else null,
-                    "dvrEndMs" to if (exoPlayer.isCurrentMediaItemSeekable) duration else null,
-                    "videoWidth" to lastVideoSize.width.takeIf { it > 0 },
-                    "videoHeight" to lastVideoSize.height.takeIf { it > 0 },
-                    "engine" to "media3",
-                    "isHardwareDecoding" to isHardwareDecoding,
-                    "decoderName" to decoderName,
-                    "audioTracks" to audioTracks,
-                    "videoTracks" to videoTracks,
-                    "capabilities" to capabilitySnapshot,
-                    "metrics" to dynamicMetricsMap(bufferedDuration, liveOffset),
-                    "error" to (error ?: currentError),
-                ),
-            ),
-        )
+        val live = sourceIsLive || exoPlayer.isCurrentMediaItemLive
+        val offset = exoPlayer.currentLiveOffset.takeUnless { it == C.TIME_UNSET || it < 0 }
+        return AndroidTimelineMessage(position, duration,
+            if (active) max(position, exoPlayer.bufferedPosition) else position,
+            exoPlayer.isCurrentMediaItemSeekable, live,
+            if (live && offset != null) offset <= 2_000L else null, offset,
+            if (live && exoPlayer.isCurrentMediaItemSeekable && duration != null) AndroidDvrWindowMessage(0, duration) else null)
     }
-
+    fun emitState() {
+        if (disposed || resetting) return
+        val timeline = timeline()
+        val geometry = lastVideoSize.takeIf { it.width > 0 && it.height > 0 }?.let {
+            AndroidVideoGeometryMessage(AndroidSizeMessage(it.width.toDouble(), it.height.toDouble()),
+                AndroidSizeMessage(it.width * it.pixelWidthHeightRatio.toDouble(), it.height.toDouble()),
+                it.pixelWidthHeightRatio.toDouble(), 0)
+        }
+        emit(YlEngineEvent.Snapshot(YlEngineSnapshot(
+            when (status) {
+                "idle" -> AndroidPlaybackStatus.IDLE
+                "ready" -> AndroidPlaybackStatus.READY
+                "playing" -> AndroidPlaybackStatus.PLAYING
+                "paused" -> AndroidPlaybackStatus.PAUSED
+                "buffering" -> AndroidPlaybackStatus.BUFFERING
+                "completed" -> AndroidPlaybackStatus.COMPLETED
+                "error" -> AndroidPlaybackStatus.FAILED
+                else -> AndroidPlaybackStatus.LOADING
+            }, timeline, geometry, audioTracks.toList(), videoTracks.toList(),
+            AndroidDecoderMode.UNKNOWN, decoderName, metrics(timeline), hasBeenReady)))
+    }
     private fun emitPositionDelta() {
-        if (disposed || stoppedState != null || resetting) return
-        val position = if (active) max(0L, exoPlayer.currentPosition) else savedPositionMs
-        val bufferedPosition = if (active) max(0L, exoPlayer.bufferedPosition) else position
-        val bufferedDuration = max(0L, bufferedPosition - position)
-        val liveOffset = exoPlayer.currentLiveOffset.takeUnless { it == C.TIME_UNSET || it < 0 }
-        emit(
-            YlAndroidChannel.stateDeltaEnvelope(
-                playerId = playerId,
-                generation = sourceGeneration,
-                delta = mapOf(
-                    "positionMs" to position,
-                    "bufferedPositionMs" to bufferedPosition,
-                    "isAtLiveEdge" to (liveOffset != null && liveOffset <= 2_000L),
-                    "liveOffsetMs" to liveOffset,
-                    "metrics" to dynamicMetricsMap(bufferedDuration, liveOffset),
-                ),
-            ),
-        )
+        if (disposed || stopped || resetting) return
+        val timeline = timeline()
+        emit(YlEngineEvent.Tick(timeline, metrics(timeline)))
     }
+    private fun metrics(timeline: AndroidTimelineMessage) = AndroidMetricsMessage(
+        openDurationMs, firstFrameDurationMs, rebufferCount.toLong(), rebufferDurationMs,
+        droppedVideoFrames.toLong(), audioUnderruns.toLong(), selectedVideoBitrate?.toLong(),
+        (timeline.bufferedPositionMs - timeline.positionMs).coerceAtLeast(0),
+        loadControl.allocatedBytes.toLong(), timeline.liveOffsetMs, reconnectCount.toLong())
 
-    private fun dynamicMetricsMap(
-        bufferedDuration: Long,
-        liveOffset: Long?,
-    ): Map<String, Any?> = mapOf(
-        "openDurationMs" to openDurationMs,
-        "firstFrameDurationMs" to firstFrameDurationMs,
-        "rebufferCount" to rebufferCount,
-        "rebufferDurationMs" to rebufferDurationMs,
-        "droppedVideoFrames" to droppedVideoFrames,
-        "audioUnderruns" to audioUnderruns,
-        "estimatedBitrate" to selectedVideoBitrate,
-        "bufferedDurationMs" to bufferedDuration,
-        "bufferedBytes" to loadControl.allocatedBytes,
-        "liveOffsetMs" to liveOffset,
-        "reconnectCount" to reconnectCount,
-        "androidDeviceTier" to deviceProfile.tier.wireName,
-        "targetBufferBytes" to loadControl.targetBufferBytes,
-        "adaptiveDowngradeCount" to adaptiveDowngradeCount,
-        "surfaceRebuildCount" to
-            (videoOutput.surfaceRebuildCount - surfaceRebuildBaseline).coerceAtLeast(0),
-        "selectedVideoBitrate" to selectedVideoBitrate,
-    )
-
-    fun dispose() {
-        if (disposed) return
+    /** false quarantines the worker and outputs: release timeout does not prove relinquishment. */
+    fun dispose(): Boolean {
+        if (disposed) return acknowledgement.isSafe
         lifecycle.reduce(YlLifecycleEvent.DISPOSE)
         stallWatchdog.cancel()
         disposed = true
         sourceGeneration += 1
-        committedLoadToken = null
         cancelFocusGrace()
         handler.removeCallbacksAndMessages(null)
-        exoPlayer.removeListener(this)
-        exoPlayer.removeAnalyticsListener(this)
-        videoOutput.dispose(exoPlayer::clearVideoSurface)
-        exoPlayer.release()
+        // Keep the Player.Listener installed until release returns: timeout is a listener event.
+        if (::exoPlayer.isInitialized) {
+            acknowledgement.perform { videoOutput.detach(::clearSurface) }
+            acknowledgement.perform { exoPlayer.release() }
+        }
         httpClient.dispatcher.cancelAll()
         httpClient.connectionPool.evictAll()
         httpClient.dispatcher.executorService.shutdown()
+        if (!acknowledgement.isSafe) return false
+        videoOutput.dispose { }
+        return true
     }
 
     private fun cancelFocusGrace() {
@@ -992,88 +846,46 @@ internal class YlMedia3Player(
     }
 
     private fun acceptsCurrentCallbacks(): Boolean =
-        !disposed && !resetting && stoppedState == null &&
-            exoPlayer.currentMediaItem?.mediaId == sourceGeneration.toString()
+        !disposed && !resetting && !stopped &&
+            exoPlayer.currentMediaItem?.mediaId == identity.sessionId
 
     private fun isCurrentEvent(eventTime: AnalyticsListener.EventTime): Boolean {
         if (!acceptsCurrentCallbacks()) return false
         if (eventTime.timeline.isEmpty || eventTime.windowIndex == C.INDEX_UNSET) {
-            return exoPlayer.currentMediaItem?.mediaId == sourceGeneration.toString()
+            return exoPlayer.currentMediaItem?.mediaId == identity.sessionId
         }
         return runCatching {
             val item = eventTime.timeline
                 .getWindow(eventTime.windowIndex, Timeline.Window())
                 .mediaItem
-            item.mediaId == sourceGeneration.toString()
+            item.mediaId == identity.sessionId
         }.getOrDefault(false)
     }
 }
 
-internal class PlayerCommandException(
-    val code: String,
-    override val message: String,
-    val details: Map<String, Any?>,
-) : RuntimeException(message)
-
-private fun playbackErrorMap(error: PlaybackException, diagnostic: String?): Map<String, Any?> {
-    val stableFailure = when (error.errorCode) {
-        PlaybackException.ERROR_CODE_DECODING_FORMAT_UNSUPPORTED ->
-            YlPlaybackFailure.NO_HARDWARE_DECODER
-        PlaybackException.ERROR_CODE_DECODING_FORMAT_EXCEEDS_CAPABILITIES ->
-            YlPlaybackFailure.CAPABILITY_EXCEEDED
-        PlaybackException.ERROR_CODE_DECODER_INIT_FAILED ->
-            YlPlaybackFailure.DECODER_INITIALIZATION
-        else -> null
-    }
-    if (stableFailure != null) {
-        val stable = stableError(stableFailure)
-        return errorMap(stable.category, stable.code, stable.message, diagnostic)
-    }
-    val category = when (error.errorCode) {
-        PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS,
-        PlaybackException.ERROR_CODE_IO_CLEARTEXT_NOT_PERMITTED,
-        PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED,
-        PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT,
-        PlaybackException.ERROR_CODE_IO_UNSPECIFIED,
-        -> "network"
-        PlaybackException.ERROR_CODE_DECODING_FORMAT_UNSUPPORTED,
-        PlaybackException.ERROR_CODE_DECODING_FORMAT_EXCEEDS_CAPABILITIES,
-        -> "decoderUnsupported"
-        PlaybackException.ERROR_CODE_DECODER_INIT_FAILED,
-        PlaybackException.ERROR_CODE_DECODING_FAILED,
-        -> "decoderFailure"
-        PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED,
-        PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED,
-        -> "container"
-        else -> "internal"
-    }
-    return errorMap(
-        category,
-        "media3.${error.errorCodeName.lowercase()}",
-        error.message ?: "Media3 playback failed.",
-        diagnostic,
-    )
-}
-
 private fun Int.valueOrNull(): Int? = takeUnless { it == C.LENGTH_UNSET }
-
-private fun hardwareVideoCodecs(): List<String> = runCatching {
-    MediaCodecList(MediaCodecList.REGULAR_CODECS).codecInfos
-        .asSequence()
-        .filter { !it.isEncoder }
-        .filter(::isPlatformHardwareCodec)
-        .flatMap { it.supportedTypes.asSequence() }
-        .filter { it.startsWith("video/") }
-        .distinct()
-        .sorted()
-        .toList()
-}.getOrDefault(emptyList())
-
-private fun isPlatformHardwareCodec(info: MediaCodecInfo): Boolean {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) return info.isHardwareAccelerated
-    val name = info.name.lowercase()
-    return !name.startsWith("omx.google.") &&
-        !name.startsWith("c2.android.") &&
-        !name.contains("software") &&
-        !name.contains("sw.")
+private fun mediaFailure(error: PlaybackException): YlFailureKind = when (error.errorCode) {
+    PlaybackException.ERROR_CODE_DECODING_FORMAT_UNSUPPORTED -> YlFailureKind.DECODER_UNSUPPORTED
+    PlaybackException.ERROR_CODE_DECODER_INIT_FAILED, PlaybackException.ERROR_CODE_DECODING_FAILED -> YlFailureKind.DECODER_UNAVAILABLE
+    PlaybackException.ERROR_CODE_IO_FILE_NOT_FOUND -> YlFailureKind.SOURCE_MISSING
+    in 2000..2999 -> YlFailureKind.NETWORK_FAILED
+    in 3000..3999 -> YlFailureKind.CONTAINER_UNSUPPORTED
+    else -> YlFailureKind.PLATFORM_FAILURE
+}
+private fun formatHint(format: AndroidMediaFormat): String = when (format) {
+    AndroidMediaFormat.MPEG_TS -> "mpegTs"
+    AndroidMediaFormat.MPEG_PS -> "mpegPs"
+    else -> format.name.lowercase()
+}
+private fun mediaMimeType(format: AndroidMediaFormat): String? = when (format) {
+    AndroidMediaFormat.HLS -> "application/x-mpegURL"
+    AndroidMediaFormat.MP4 -> "video/mp4"
+    AndroidMediaFormat.MOV -> "video/quicktime"
+    AndroidMediaFormat.MATROSKA -> "video/x-matroska"
+    AndroidMediaFormat.WEBM -> "video/webm"
+    AndroidMediaFormat.MPEG_TS -> "video/mp2t"
+    AndroidMediaFormat.MPEG_PS -> "video/mp2p"
+    AndroidMediaFormat.FLV -> "video/x-flv"
+    AndroidMediaFormat.AVI -> "video/x-msvideo"
+    else -> null
 }

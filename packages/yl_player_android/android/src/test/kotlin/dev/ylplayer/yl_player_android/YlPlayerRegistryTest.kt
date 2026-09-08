@@ -23,13 +23,13 @@ class YlPlayerRegistryTest {
         `when`(binding.binaryMessenger).thenReturn(fixture.messenger)
         `when`(binding.textureRegistry).thenReturn(fixture.textures)
         val plugin = YlPlayerAndroidPlugin()
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         mockStatic(Looper::class.java).use {
             plugin.onAttachedToEngine(binding)
             assertEquals(setOf("dev.flutter.pigeon.yl_player_android.AndroidPlayerFactoryHostApi.create"), fixture.handlers.keys)
             val response = fixture.invoke(fixture.handlers.values.single(), listOf(createRequest()))()
-            assertEquals("platform.unavailable", response[0])
-            assertIs<AndroidFailureMessage>(response[2])
-            verify(fixture.textures, never()).createSurfaceTexture()
+            assertIs<AndroidCreateReply>(response.single())
+            verify(fixture.textures).createSurfaceTexture()
             plugin.onDetachedFromEngine(binding)
             plugin.onDetachedFromEngine(binding)
             assertTrue(fixture.handlers.isEmpty())
@@ -37,6 +37,8 @@ class YlPlayerRegistryTest {
             verify(app).registerActivityLifecycleCallbacks(plugin)
             verify(app).unregisterComponentCallbacks(plugin)
             verify(app).unregisterActivityLifecycleCallbacks(plugin)
+            runCurrent()
+            Dispatchers.resetMain()
         }
     }
 
@@ -125,11 +127,15 @@ class YlPlayerRegistryTest {
     }
 
     @Test
-    fun `unavailable production binding and incompatible schema allocate nothing`() = runTest {
-        val fixture = RegistryFixture(StandardTestDispatcher(testScheduler), YlPendingMedia3SessionFactory)
-        assertEquals("platform.unavailable", assertFailsWith<FlutterError> { fixture.registry.create(createRequest()) }.code)
+    fun `real production binding creates idle session and incompatible schema allocates nothing`() = runTest {
+        val fixture = RegistryFixture(StandardTestDispatcher(testScheduler), YlMedia3SessionFactory(mock(Application::class.java), StandardTestDispatcher(testScheduler)))
+        val reply = fixture.registry.create(createRequest())
+        assertEquals(AndroidPlaybackStatus.IDLE, reply.initialState.status)
+        assertEquals(0L, reply.initialState.revision)
         assertEquals("platform.incompatible", assertFailsWith<FlutterError> { fixture.registry.create(createRequest().copy(schemaMajor = 1)) }.code)
-        verify(fixture.textures, never()).createSurfaceTexture()
+        verify(fixture.textures).createSurfaceTexture()
+        fixture.registry.detach()
+        runCurrent()
         assertTrue(fixture.handlers.isEmpty())
     }
 

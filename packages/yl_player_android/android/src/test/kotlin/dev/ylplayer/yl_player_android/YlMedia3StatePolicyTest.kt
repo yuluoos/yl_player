@@ -6,6 +6,12 @@ import kotlin.test.assertEquals
 
 class YlMedia3StatePolicyTest {
     @Test
+    fun `initial buffering does not establish readiness`() {
+        assertEquals("opening", YlMedia3StatePolicy.status("opening", Player.STATE_BUFFERING, false, false))
+        assertEquals("buffering", YlMedia3StatePolicy.status("ready", Player.STATE_BUFFERING, false, true))
+    }
+
+    @Test
     fun `terminal error survives later ready and idle callbacks`() {
         assertEquals(
             "error",

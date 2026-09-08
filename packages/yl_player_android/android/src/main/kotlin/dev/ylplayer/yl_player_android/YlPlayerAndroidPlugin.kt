@@ -18,7 +18,7 @@ class YlPlayerAndroidPlugin :
     private val failures = YlFailureMapper()
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        val owner = YlPlayerRegistry(binding.binaryMessenger, binding.textureRegistry, YlPendingMedia3SessionFactory, failures)
+        val owner = YlPlayerRegistry(binding.binaryMessenger, binding.textureRegistry, YlMedia3SessionFactory(binding.applicationContext), failures)
         registry = owner
         try {
             application = binding.applicationContext as Application

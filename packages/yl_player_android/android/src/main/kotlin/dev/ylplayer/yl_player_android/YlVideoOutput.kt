@@ -5,10 +5,24 @@ import io.flutter.view.TextureRegistry
 
 internal class YlVideoOutput(
     private val texture: TextureRegistry.SurfaceTextureEntry,
-) {
+    private val ownsTexture: Boolean = true,
+) : YlSessionVideoOutput {
     private val tracker = YlSurfaceGeneration()
-    private var surface: Surface? = Surface(texture.surfaceTexture())
+    private var surface: Surface? = null
     private var disposed = false
+
+    override val identity: YlOutputIdentity get() = YlOutputIdentity(tracker.generation, true)
+
+    // Main looper only. SurfaceTextureEntry remains registry-owned in the v2 path.
+    fun borrowSurface(): Surface = surface ?: Surface(texture.surfaceTexture()).also { surface = it }
+    // Caller has already awaited engine detachment before entering this main-only mutation.
+    fun recreateBorrowedSurface(): Surface {
+        surface?.release()
+        surface = null
+        tracker.rebuild()
+        return borrowSurface()
+    }
+    override fun release() { dispose {} }
 
     val surfaceRebuildCount: Int
         get() = tracker.rebuildCount
@@ -72,6 +86,6 @@ internal class YlVideoOutput(
             it.release()
         }
         surface = null
-        texture.release()
+        if (ownsTexture) texture.release()
     }
 }

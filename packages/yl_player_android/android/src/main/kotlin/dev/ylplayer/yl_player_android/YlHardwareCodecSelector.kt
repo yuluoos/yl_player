@@ -98,3 +98,17 @@ private fun minimum(first: Double?, second: Double?): Double? = when {
     second == null -> first
     else -> minOf(first, second)
 }
+
+/** v2 selection preference, deliberately separate from positive hardware evidence. */
+@OptIn(UnstableApi::class)
+internal class YlPolicyCodecSelector(
+    private val policy: dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy,
+    private val delegate: MediaCodecSelector = MediaCodecSelector.DEFAULT,
+) : MediaCodecSelector {
+    override fun getDecoderInfos(mimeType: String, requiresSecureDecoder: Boolean, requiresTunnelingDecoder: Boolean): List<MediaCodecInfo> {
+        val codecs = delegate.getDecoderInfos(mimeType, requiresSecureDecoder, requiresTunnelingDecoder)
+        if (policy != dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy.HARDWARE_PREFERRED || !MimeTypes.isVideo(mimeType)) return codecs
+        // Stable sorting retains Media3's order within each group and retains all fallback codecs.
+        return codecs.sortedBy { if (shouldAcceptCodec(mimeType, it.name, it.hardwareAccelerated, it.softwareOnly)) 0 else 1 }
+    }
+}

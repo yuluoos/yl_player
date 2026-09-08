@@ -44,12 +44,6 @@ internal fun interface YlPlayerSessionFactory {
     fun prepare(options: AndroidPlayerOptionsMessage): (TextureRegistry.SurfaceTextureEntry) -> YlPlayerSession
 }
 
-/** Explicit interim binding; Task 4 replaces this with the real Media3/session factory. */
-internal object YlPendingMedia3SessionFactory : YlPlayerSessionFactory {
-    override fun prepare(options: AndroidPlayerOptionsMessage): (TextureRegistry.SurfaceTextureEntry) -> YlPlayerSession =
-        throw YlBoundaryException(YlFailureKind.PLATFORM_UNAVAILABLE)
-}
-
 internal class YlPigeonPlayerHost(
     val suffix: String,
     val texture: TextureRegistry.SurfaceTextureEntry,

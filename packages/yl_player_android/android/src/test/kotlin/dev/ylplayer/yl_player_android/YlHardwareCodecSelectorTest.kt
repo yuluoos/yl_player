@@ -8,6 +8,20 @@ import kotlin.test.assertTrue
 
 class YlHardwareCodecSelectorTest {
     @Test
+    fun `v2 selector preserves default order and preferred software fallback`() {
+        val software = androidx.media3.exoplayer.mediacodec.MediaCodecInfo.newInstance(
+            "c2.android.avc.decoder", "video/avc", "video/avc", null, false, true, false, false, false)
+        val hardware = androidx.media3.exoplayer.mediacodec.MediaCodecInfo.newInstance(
+            "OMX.vendor.avc.decoder", "video/avc", "video/avc", null, true, false, true, false, false)
+        val delegate = androidx.media3.exoplayer.mediacodec.MediaCodecSelector { _, _, _ -> listOf(software, hardware) }
+        val system = YlPolicyCodecSelector(dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy.SYSTEM_DEFAULT, delegate)
+        val preferred = YlPolicyCodecSelector(dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy.HARDWARE_PREFERRED, delegate)
+        assertEquals(listOf(software, hardware), system.getDecoderInfos("video/avc", false, false))
+        assertEquals(listOf(hardware, software), preferred.getDecoderInfos("video/avc", false, false))
+        assertEquals(listOf(software, hardware), preferred.getDecoderInfos("audio/aac", false, false))
+    }
+
+    @Test
     fun `legacy software codec names are rejected`() {
         listOf(
             "OMX.google.h264.decoder",
