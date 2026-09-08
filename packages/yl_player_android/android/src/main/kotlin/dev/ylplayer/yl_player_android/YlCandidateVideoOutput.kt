@@ -54,6 +54,23 @@ internal class YlEngineVideoOutput(private val candidate: YlPrivateVideoOutput) 
     fun detach(clear: (Surface) -> Unit) {
         surface?.let { clear(it); renderSurface = null }
     }
+    fun installReplacement(output: Surface, identity: YlOutputIdentity, active: Boolean, acknowledgedAttach: (Surface) -> Unit): Boolean {
+        if (active) {
+            switchTo(output, identity, acknowledgedAttach)
+        } else {
+            // Background can run between main's detach/recreate and this worker install.
+            // Main retires the old wrapper after acknowledgement, so update retention even idle.
+            check(renderSurface == null) { "Replacement requires acknowledged detachment" }
+            surface = output
+            this.identity = identity
+            if (candidateAttached) {
+                candidateAttached = false
+                candidate.releaseAfterAcknowledgedDetach()
+            }
+        }
+        recordRebuild()
+        return true
+    }
     fun recordRebuild() { surfaceRebuildCount++ }
     fun renderedIdentity(output: Any): YlOutputIdentity? = identity.takeIf { output === renderSurface }
     fun firstFrameEvent(output: Any, occurredAtMs: Long): YlEngineEvent.FirstFrame? {

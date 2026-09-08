@@ -9,18 +9,25 @@ internal class YlVideoOutput(
 ) : YlSessionVideoOutput {
     private val tracker = YlSurfaceGeneration()
     private var surface: Surface? = null
+    private val replacedSurfaces = mutableMapOf<Surface, Surface>()
     private var disposed = false
 
     override val identity: YlOutputIdentity get() = YlOutputIdentity(tracker.generation, true)
 
     // Main looper only. SurfaceTextureEntry remains registry-owned in the v2 path.
     fun borrowSurface(): Surface = surface ?: Surface(texture.surfaceTexture()).also { surface = it }
-    // Caller has already awaited engine detachment before entering this main-only mutation.
+    // A foreground callback may reattach the retained old output before worker installation.
+    // Keep its wrapper alive until installation acknowledges the ownership handoff.
     fun recreateBorrowedSurface(): Surface {
-        surface?.release()
-        surface = null
+        val replacement = Surface(texture.surfaceTexture())
+        surface?.let { replacedSurfaces[replacement] = it }
+        surface = replacement
         tracker.rebuild()
-        return borrowSurface()
+        return replacement
+    }
+
+    fun acknowledgeReplacement(replacement: Surface) {
+        replacedSurfaces.remove(replacement)?.release()
     }
     override fun release() { dispose {} }
 
@@ -86,6 +93,23 @@ internal class YlVideoOutput(
             it.release()
         }
         surface = null
+        // Unacknowledged replacements remain retained until the session has safely closed.
+        replacedSurfaces.values.forEach { it.release() }
+        replacedSurfaces.clear()
         if (ownsTexture) texture.release()
     }
+}
+
+/** Main-owned detach/recreate/install orchestration; native steps acknowledge through suspend ports. */
+internal suspend fun replacePublicVideoOutput(
+    output: YlVideoOutput,
+    canRebuild: suspend () -> Boolean,
+    detach: suspend () -> Unit,
+    install: suspend (Surface, YlOutputIdentity) -> Unit,
+) {
+    if (!canRebuild()) return
+    detach()
+    val surface = output.recreateBorrowedSurface()
+    install(surface, output.identity)
+    output.acknowledgeReplacement(surface)
 }

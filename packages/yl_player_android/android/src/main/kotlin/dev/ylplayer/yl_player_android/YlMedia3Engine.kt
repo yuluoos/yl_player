@@ -115,11 +115,10 @@ internal class YlMedia3Engine(
     }
     override suspend fun onConfigurationChanged() {
         val output = publicOutput ?: return
-        if (!onWorker { requireCore().canRebuildOutput() }) return
-        onWorker { requireCore().detachOutput() }
-        val surface = output.recreateBorrowedSurface()
-        val identity = output.identity
-        onWorker { requireCore().rebuildVideoOutput(surface, identity) }
+        replacePublicVideoOutput(output,
+            canRebuild = { onWorker { requireCore().canRebuildOutput() } },
+            detach = { onWorker { requireCore().detachOutput() } },
+            install = { surface, identity -> onWorker { requireCore().rebuildVideoOutput(surface, identity) } })
     }
     override fun dispose(): Deferred<Unit> {
         closeResult?.let { return it }

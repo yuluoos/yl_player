@@ -227,10 +227,8 @@ internal class YlMedia3Core(
     fun canRebuildOutput() = !disposed && active && !stopped
     fun detachOutput() { videoOutput.detach(::clearSurface) }
     fun rebuildVideoOutput(surface: Surface, identity: YlOutputIdentity) {
-        if (disposed || !active || stopped) return
-        videoOutput.switchTo(surface, identity, ::attachSurface)
-        videoOutput.recordRebuild()
-        emitState()
+        if (disposed || stopped) return
+        if (videoOutput.installReplacement(surface, identity, active, ::attachSurface)) emitState()
     }
 
     private fun releasePlaybackResources() {

@@ -7,6 +7,68 @@ import kotlin.test.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlSessionCoordinatorTest {
+    @Test fun `background release stays independent of unacknowledged candidate cleanup`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        f.coordinator.load(request("old"))
+        val former = f.engines.single()
+        val released = CompletableDeferred<Unit>()
+        f.next = FakeSessionEngine().apply { preparation = CompletableDeferred(); release = released }
+        val load = async { runCatching { f.coordinator.load(request("candidate")) } }
+        runCurrent()
+        f.coordinator.onBackground()
+        runCurrent()
+        assertFalse(load.isCompleted)
+        assertTrue(former.backgrounded)
+        assertFalse(former.playing)
+        var responsive = false
+        launch { responsive = true }
+        runCurrent()
+        assertTrue(responsive)
+        released.complete(Unit)
+        runCurrent()
+        assertTrue(load.await().isFailure)
+        f.finish()
+    }
+    @Test fun `foreground background bounce preserves explicit play until applied`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        val reply = f.coordinator.load(request("paused"))
+        val engine = f.engines.single()
+        f.coordinator.onBackground()
+        runCurrent()
+        f.coordinator.play(AndroidSessionCommand(reply.sessionId))
+        f.coordinator.onForeground()
+        f.coordinator.onBackground()
+        runCurrent()
+        assertEquals(0, engine.playCalls)
+        f.coordinator.onForeground()
+        runCurrent()
+        assertTrue(engine.playing)
+        assertEquals(1, engine.playCalls)
+        f.finish()
+    }
+    @Test fun `background during held foreground restore retains unapplied explicit play`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        val reply = f.coordinator.load(request("paused"))
+        val engine = f.engines.single()
+        val restored = CompletableDeferred<Unit>()
+        engine.foregroundAcknowledgement = restored
+        f.coordinator.onBackground()
+        runCurrent()
+        f.coordinator.play(AndroidSessionCommand(reply.sessionId))
+        f.coordinator.onForeground()
+        runCurrent()
+        assertEquals(1, engine.foregroundCalls)
+        f.coordinator.onBackground()
+        runCurrent()
+        restored.complete(Unit)
+        runCurrent()
+        assertEquals(0, engine.playCalls)
+        f.coordinator.onForeground()
+        runCurrent()
+        assertTrue(engine.playing)
+        assertEquals(1, engine.playCalls)
+        f.finish()
+    }
     @Test fun `background at committed loading keeps reply and saves not yet dispatched autoplay`() = runTest {
         val f = SessionFixture(StandardTestDispatcher(testScheduler))
         f.events.stateObserved = { state ->
@@ -336,6 +398,8 @@ internal class FakeSessionEngine : YlPlaybackEngineAdapter {
     var backgrounded = false
     var playing = false
     var playbackIntended = false
+    var foregroundCalls = 0
+    var foregroundAcknowledgement: CompletableDeferred<Unit>? = null
     override fun registerCallback(callback: (YlSessionIdentity, YlEngineEvent) -> Unit) { this.callback = callback }
     fun emit(event: YlEngineEvent) { callback?.invoke(identity, event) }
     override suspend fun prepare() { preparation?.await(); prepareError?.let { throw it } }
@@ -352,7 +416,7 @@ internal class FakeSessionEngine : YlPlaybackEngineAdapter {
     override suspend fun setVolume(volume: Double) = Unit
     override suspend fun stop() { stops++ }
     override fun dispose(): Deferred<Unit> { disposals++; playing = false; return release ?: CompletableDeferred(Unit) }
-    override suspend fun onForeground() { backgrounded = false; playing = playbackIntended }
+    override suspend fun onForeground() { foregroundCalls++; foregroundAcknowledgement?.await(); backgrounded = false; playing = playbackIntended }
     override suspend fun onBackground() { backgrounded = true; playing = false }
     override suspend fun onTrimMemory(level: Int) = Unit
     override suspend fun onConfigurationChanged() = Unit

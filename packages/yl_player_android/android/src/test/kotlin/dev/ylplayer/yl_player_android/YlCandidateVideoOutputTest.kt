@@ -4,10 +4,118 @@ import android.view.Surface
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.*
 import kotlin.test.*
-import org.mockito.Mockito.mock
+import org.mockito.Mockito.*
+import io.flutter.view.TextureRegistry
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlCandidateVideoOutputTest {
+    @Test fun `foreground during recreate install gap never attaches a released wrapper`() = runTest {
+        val main = StandardTestDispatcher(testScheduler, "main")
+        val worker = StandardTestDispatcher(testScheduler, "worker")
+        val released = mutableSetOf<Surface>()
+        mockConstruction(Surface::class.java) { surface, _ ->
+            doAnswer { released += surface; null }.`when`(surface).release()
+        }.use {
+            val public = YlVideoOutput(mock(TextureRegistry.SurfaceTextureEntry::class.java), ownsTexture = false)
+            val output = YlEngineVideoOutput(FakePrivateOutput())
+            var active = true
+            val old = public.borrowSurface()
+            output.switchTo(old, public.identity) { }
+            val recreated = CompletableDeferred<Unit>()
+            val install = CompletableDeferred<Unit>()
+            val attached = mutableListOf<Surface>()
+            val replacement = launch(main) {
+                replacePublicVideoOutput(public,
+                    canRebuild = { withContext(worker) { active } },
+                    detach = { withContext(worker) { output.detach { } } },
+                    install = { surface, identity ->
+                        recreated.complete(Unit)
+                        install.await()
+                        withContext(worker) {
+                            output.installReplacement(surface, identity, active) {
+                                assertFalse(it in released)
+                                attached += it
+                            }
+                        }
+                    })
+            }
+            runCurrent()
+            recreated.await()
+            withContext(worker) {
+                active = false
+                output.detach { }
+                active = true
+                output.attach(1, 1) {
+                    assertFalse(it in released, "Foreground must not reattach a released wrapper before installation")
+                    attached += it
+                }
+            }
+            assertFalse(old in released)
+            install.complete(Unit)
+            runCurrent()
+            replacement.join()
+            val current = public.borrowSurface()
+            assertSame(current, attached.last())
+            assertFalse(current in released)
+            assertTrue(old in released)
+            public.release()
+        }
+    }
+    @Test fun `background during actual public replacement retains current unreleased output for foreground`() = runTest {
+        for (holdAfter in listOf("canRebuild", "detach")) {
+            val main = StandardTestDispatcher(testScheduler, "main")
+            val worker = StandardTestDispatcher(testScheduler, "worker")
+            val released = mutableSetOf<Surface>()
+            mockConstruction(Surface::class.java) { surface, _ ->
+                doAnswer { released += surface; null }.`when`(surface).release()
+            }.use {
+                val texture = mock(TextureRegistry.SurfaceTextureEntry::class.java)
+                val public = YlVideoOutput(texture, ownsTexture = false)
+                val output = YlEngineVideoOutput(FakePrivateOutput())
+                var active = true
+                val attached = mutableListOf<Surface>()
+                val old = public.borrowSurface()
+                output.switchTo(old, public.identity) { attached += it }
+                attached.clear()
+                val held = CompletableDeferred<Unit>()
+                val continueReplacement = CompletableDeferred<Unit>()
+                val replacement = launch(main) {
+                    replacePublicVideoOutput(public,
+                        canRebuild = {
+                            val allowed = withContext(worker) { active }
+                            if (holdAfter == "canRebuild") { held.complete(Unit); continueReplacement.await() }
+                            allowed
+                        },
+                        detach = {
+                            withContext(worker) { output.detach { } }
+                            if (holdAfter == "detach") { held.complete(Unit); continueReplacement.await() }
+                        },
+                        install = { surface, identity ->
+                            withContext(worker) { output.installReplacement(surface, identity, active) { attached += it } }
+                        })
+                }
+                runCurrent()
+                held.await()
+                withContext(worker) { active = false; output.detach { } }
+                continueReplacement.complete(Unit)
+                runCurrent()
+                replacement.join()
+                val current = public.borrowSurface()
+                assertTrue(old in released)
+                assertNotSame(old, current)
+                assertTrue(attached.isEmpty(), "Background install must retain output without attaching it")
+                assertNull(output.renderedIdentity(current))
+                withContext(worker) {
+                    active = true
+                    output.attach(1, 1) { attached += it }
+                }
+                assertSame(current, attached.single())
+                assertFalse(attached.single() in released)
+                assertEquals(public.identity, output.renderedIdentity(current))
+                public.release()
+            }
+        }
+    }
     @Test fun `acknowledged detach revokes render eligibility while retaining owned resources`() {
         val candidate = FakePrivateOutput()
         val output = YlEngineVideoOutput(candidate)

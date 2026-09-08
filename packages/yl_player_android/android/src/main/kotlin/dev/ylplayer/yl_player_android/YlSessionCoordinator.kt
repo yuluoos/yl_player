@@ -227,6 +227,8 @@ internal class YlSessionCoordinator(
             active?.engine?.stop()
             active?.engine?.let(::releaseEngine)
             active = null
+            backgroundPlayIntent = null
+            autoplayPending = null
             reducer.idle()
         }
     }
@@ -243,6 +245,8 @@ internal class YlSessionCoordinator(
                 // Safe exceptional completion still requires *every* borrower to finish.
                 val failures = owned.toList().map { engine -> async { runCatching { engine.dispose().await() }.exceptionOrNull() } }.awaitAll()
                 owned.clear(); active = null
+                backgroundPlayIntent = null
+                autoplayPending = null
                 output.release()
                 failures.filterNotNull().firstOrNull()?.let { throw it }
                 Unit
@@ -258,13 +262,17 @@ internal class YlSessionCoordinator(
                 if (backgrounded) return@withLock
                 val session = active ?: return@withLock
                 val intent = backgroundPlayIntent?.takeIf { it.first == session.identity }
+                var applied = false
                 runEngine(session.identity) {
                     if (intent?.second == false) pause()
                     onForeground()
-                    if (!backgrounded && intent?.second == true) play()
+                    if (!backgrounded && backgroundPlayIntent == intent) {
+                        if (intent?.second == true) play()
+                        applied = true
+                    }
                 }
-                if (backgroundPlayIntent == intent) backgroundPlayIntent = null
-                if (intent != null && autoplayPending == session.identity) autoplayPending = null
+                if (applied && backgroundPlayIntent == intent) backgroundPlayIntent = null
+                if (applied && intent != null && autoplayPending == session.identity) autoplayPending = null
             }
         }
     }
@@ -272,7 +280,10 @@ internal class YlSessionCoordinator(
         if (closed || backgrounded) return
         backgrounded = true
         foreground = CompletableDeferred()
-        backgroundPlayIntent = autoplayPending?.takeIf { it == active?.identity }?.let { it to true }
+        // A bounce must not erase an explicit command whose foreground application is queued or
+        // still suspended. Autoplay is only a fallback when no current-session intent is pending.
+        backgroundPlayIntent = backgroundPlayIntent?.takeIf { it.first == active?.identity }
+            ?: autoplayPending?.takeIf { it == active?.identity }?.let { it to true }
         ++operation
         // A committed state already owns its reply. Only an uncommitted candidate is cancelled.
         if (!pendingCommitted) pending?.cancel()
