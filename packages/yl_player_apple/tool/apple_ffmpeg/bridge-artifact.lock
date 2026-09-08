@@ -1,0 +1,163 @@
+{
+  "configure_contract": [
+    "FFMPEG_VERSION=9.0.1",
+    "FFMPEG_URL=https://ffmpeg.org/releases/ffmpeg-9.0.1.tar.xz",
+    "FFMPEG_SIGNATURE_URL=https://ffmpeg.org/releases/ffmpeg-9.0.1.tar.xz.asc",
+    "FFMPEG_SHA256=cf38e0e28c7e5605942c4a77755349b0145804a397af37eb1fb4c77cb237f635",
+    "FFMPEG_SIGNING_KEY_FINGERPRINT=FCF986EA15E6E293A5644F10B4322F04D67658D8",
+    "FFMPEG_SIGNING_KEY_SHA256=397b3becedcd5a98769967ff1ff8501ddc89f8368b8f766e4701377d7dbaabe5",
+    "IOS_DEPLOYMENT_TARGET=15.0",
+    "MACOS_DEPLOYMENT_TARGET=12.0",
+    "--disable-everything",
+    "--disable-autodetect",
+    "--disable-network",
+    "--disable-programs",
+    "--disable-doc",
+    "--disable-avdevice",
+    "--disable-avfilter",
+    "--disable-swscale",
+    "--disable-swresample",
+    "--disable-encoders",
+    "--disable-decoders",
+    "--disable-muxers",
+    "--enable-avutil",
+    "--enable-avcodec",
+    "--enable-avformat",
+    "--enable-demuxer=matroska,flv",
+    "--enable-protocol=file",
+    "--enable-parser=aac,h264,hevc,mpegaudio",
+    "--enable-pic",
+    "--enable-static",
+    "--disable-shared",
+    "--disable-symver",
+    "--disable-gpl",
+    "--disable-nonfree",
+    "FFMPEG_X86_64_FLAGS=--disable-x86asm",
+    "NORMALIZATION=relative-source,fixed-install-prefix,prefix-map,bridge-no-debug,zero-ar-date,linker-content-uuid,oso-prefix,sorted-plist-libraries",
+    "TARGETS=iphoneos-arm64,iphonesimulator-arm64,iphonesimulator-x86_64,macosx-arm64,macosx-x86_64"
+  ],
+  "files": {
+    "Info.plist": {
+      "sha256": "ca81b15b1b3a63e168749a4264517398d1a4e848d211dc5b9234fd269b52b552",
+      "size": 1656
+    },
+    "ios-arm64/YlFFmpegBridge.framework/Headers/YlFFmpegBridge.h": {
+      "sha256": "a6e962ac9cbe56216bbfaeb3eb3c54a845a6c933b025d10c97aab316b117ba5e",
+      "size": 5343
+    },
+    "ios-arm64/YlFFmpegBridge.framework/Info.plist": {
+      "sha256": "ab25c77849b32b60fd3747baab898a1cc4a65e9717f19f98080f74641610bb2f",
+      "size": 553
+    },
+    "ios-arm64/YlFFmpegBridge.framework/Modules/module.modulemap": {
+      "sha256": "07b626cfd01759b3d6586317975779dadc3afad2611abbdf92e03ca7db0bea40",
+      "size": 84
+    },
+    "ios-arm64/YlFFmpegBridge.framework/YlFFmpegBridge": {
+      "sha256": "612bc07579bf2f323e2d54cb8799b6e22455086bc21290040137bacc2dff116e",
+      "size": 1014344
+    },
+    "ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/Headers/YlFFmpegBridge.h": {
+      "sha256": "a6e962ac9cbe56216bbfaeb3eb3c54a845a6c933b025d10c97aab316b117ba5e",
+      "size": 5343
+    },
+    "ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/Info.plist": {
+      "sha256": "ab25c77849b32b60fd3747baab898a1cc4a65e9717f19f98080f74641610bb2f",
+      "size": 553
+    },
+    "ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/Modules/module.modulemap": {
+      "sha256": "07b626cfd01759b3d6586317975779dadc3afad2611abbdf92e03ca7db0bea40",
+      "size": 84
+    },
+    "ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/YlFFmpegBridge": {
+      "sha256": "4fa84d99d67afee3a96edb03ff5c80cc1b81efca7d59d1debbc0c9747ad49279",
+      "size": 1941824
+    },
+    "macos-arm64_x86_64/YlFFmpegBridge.framework/Headers": {
+      "symlink": "Versions/Current/Headers"
+    },
+    "macos-arm64_x86_64/YlFFmpegBridge.framework/Modules": {
+      "symlink": "Versions/Current/Modules"
+    },
+    "macos-arm64_x86_64/YlFFmpegBridge.framework/Resources": {
+      "symlink": "Versions/Current/Resources"
+    },
+    "macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/Headers/YlFFmpegBridge.h": {
+      "sha256": "a6e962ac9cbe56216bbfaeb3eb3c54a845a6c933b025d10c97aab316b117ba5e",
+      "size": 5343
+    },
+    "macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/Modules/module.modulemap": {
+      "sha256": "07b626cfd01759b3d6586317975779dadc3afad2611abbdf92e03ca7db0bea40",
+      "size": 84
+    },
+    "macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/Resources/Info.plist": {
+      "sha256": "097145d1489eacbd5520fe157c30d39807fce8830cafffc53b37077e6d270249",
+      "size": 617
+    },
+    "macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge": {
+      "sha256": "041d85d4a1e978aef5d188e54c266fd4cf7d2e9a6506bc18503635942caf0c72",
+      "size": 1955728
+    },
+    "macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/Current": {
+      "symlink": "A"
+    },
+    "macos-arm64_x86_64/YlFFmpegBridge.framework/YlFFmpegBridge": {
+      "symlink": "Versions/Current/YlFFmpegBridge"
+    }
+  },
+  "inputs": {
+    "darwin/native/YlFFmpegBridge/YlFFmpegBridge.m": "95ce0e27eff2d6f1a9f00aca2b676d68eddd06b3be39ccc75b2ddb7eabbfb455",
+    "darwin/native/YlFFmpegBridge/include/YlFFmpegBridge.h": "a6e962ac9cbe56216bbfaeb3eb3c54a845a6c933b025d10c97aab316b117ba5e",
+    "darwin/native/YlFFmpegBridge/module.modulemap": "07b626cfd01759b3d6586317975779dadc3afad2611abbdf92e03ca7db0bea40",
+    "tool/apple_ffmpeg/FFMPEG_RELEASE_KEY.asc": "397b3becedcd5a98769967ff1ff8501ddc89f8368b8f766e4701377d7dbaabe5",
+    "tool/apple_ffmpeg/build_xcframework.sh": "6d6db93bf7bc2344b4dcfad58ad4a6872e41b6b435a3ef33f275d7548da11fde",
+    "tool/apple_ffmpeg/ffmpeg-9.0.1.lock": "80af0e63635f1ee913cbb4aded6380d2d56f9eaa014d19e34f3ef16ddef38e30"
+  },
+  "schema": 1,
+  "signed_source": {
+    "archive_sha256": "cf38e0e28c7e5605942c4a77755349b0145804a397af37eb1fb4c77cb237f635",
+    "signature_sha256": "b613a00005232a1245ace7080088781ac23a916119d3e5b0d6c042368eee0177",
+    "validsig": [
+      "FCF986EA15E6E293A5644F10B4322F04D67658D8",
+      "2026-08-12",
+      "1786506163",
+      "0",
+      "4",
+      "0",
+      "1",
+      "10",
+      "00",
+      "FCF986EA15E6E293A5644F10B4322F04D67658D8"
+    ]
+  },
+  "toolchain": {
+    "ar_path": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar",
+    "ar_sha256": "e49ffad64ad1cee722540fc5ecb00a230fd8071680682c60d9c851029d20e814",
+    "clang": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+    "clang_path": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+    "clang_sha256": "7def90dd8829726686213a747fc5bff1583df933dae5edc55d755479e0bfe00a",
+    "iphoneos": {
+      "build": "23F81a",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk",
+      "settings_sha256": "6d01ffc01efe09ccb1bbaf5e90a96a34b07bfe049ee77e7352303984193f83f0",
+      "version": "26.5"
+    },
+    "iphonesimulator": {
+      "build": "23F81a",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk",
+      "settings_sha256": "038a8a5fb9ac4ba60db102748ed117bf674cf64545cce8092eec0c6c44048adc",
+      "version": "26.5"
+    },
+    "ld_path": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld",
+    "ld_sha256": "5897b275efd93b201b6df5832dd541262b3f20f290859ba78f2200a6a66ef38b",
+    "macosx": {
+      "build": "25F70",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+      "settings_sha256": "f8d005f09381389167f9e0aeaa169bc9e7dff162ef22ca2fd8e98df7ff1acafe",
+      "version": "26.5"
+    },
+    "ranlib_path": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib",
+    "ranlib_sha256": "229eb9d8027953d2aee0590f983eed587d52bdd1ebc21114a62ce693f77b03f1",
+    "xcode": "Xcode 26.6\nBuild version 17F113"
+  }
+}

@@ -18,12 +18,43 @@ muxers, filters, scaling/resampling, GPL, and nonfree components remain disabled
 - Release-key fingerprint: `FCF986EA15E6E293A5644F10B4322F04D67658D8`
 - License: LGPL-2.1-or-later; see `LICENSES/FFmpeg-LGPL-2.1-or-later.txt`.
 
-This packaging skeleton does not yet include the combined iOS and macOS
-`YlFFmpegBridge.xcframework` or its canonical package-local builder. Exact
-configure-contract and rebuild commands, slice descriptions, and artifact
-replacement paths will be documented when those files are added; the legacy
-platform-specific commands do not apply to this shared package.
+The combined `darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework`
+contains `ios-arm64` (iOS 15.0+), `ios-arm64_x86_64-simulator` (iOS 15.0+),
+and `macos-arm64_x86_64` (macOS 12.0+). The macOS framework retains its
+versioned `Versions/A` layout. The shared bridge source and public header are
+in `darwin/native/YlFFmpegBridge`.
 
-When the binary distribution is added, keep the scripts, lock file,
-license, and notices with every binary distribution so recipients can replace
-the LGPL component. Distribution still requires project-specific legal review.
+From the repository root, the canonical builder is:
+
+```sh
+sh packages/yl_player_apple/tool/apple_ffmpeg/build_xcframework.sh --print-contract
+sh packages/yl_player_apple/tool/apple_ffmpeg/build_xcframework.sh --verify
+sh packages/yl_player_apple/tool/apple_ffmpeg/build_xcframework.sh --rebuild-check
+```
+
+`--verify` checks the committed artifact, source/configuration/toolchain pins,
+and downloaded source signature without changing the artifact or lock.
+`--rebuild-check` also builds all five architecture targets in a fresh temporary
+directory and compares every file byte and symlink target with the accepted
+artifact. Both modes fail on drift and never refresh a lock.
+
+To rebuild or replace the LGPL component, use an absent output directory:
+
+```sh
+sh packages/yl_player_apple/tool/apple_ffmpeg/build_xcframework.sh --build-candidate /tmp/yl-ffmpeg-candidate
+sh packages/yl_player_apple/tool/apple_ffmpeg/build_xcframework.sh --rebuild-check /tmp/yl-ffmpeg-candidate
+```
+
+After reviewing the clean rebuild comparison and all provenance changes,
+replace `darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework` with the
+candidate XCFramework and `tool/apple_ffmpeg/bridge-artifact.lock` with its
+candidate lock. Candidate creation does not install or accept an artifact.
+`YL_FFMPEG_ARCHIVE` and `YL_FFMPEG_SIGNATURE` may point to local copies of the
+pinned release inputs; checksum and signature validation still run.
+`YL_KEEP_FFMPEG_BUILD=1` retains temporary build evidence. The lock records
+the required Xcode, SDK and compiler inputs; full binaries, including signing
+metadata, are compared without exclusions.
+
+Keep the scripts, lock files, license, and notices with every binary
+distribution so recipients can replace the LGPL component. Distribution
+still requires project-specific legal review.
