@@ -315,7 +315,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     let reconnectToCancel = recovery.reconnectWorkItem
     recovery.reconnectWorkItem = nil
     let media = demux.openedMedia
-    let reconnectTokenToCancel = media == nil ? sourceCancellationToken : nil
+    let reconnectTokenToCancel = media == nil ? demux.sourceCancellationToken : nil
     if reconnectTokenToCancel != nil { demux.sourceCancellationToken = nil }
     stateLock.unlock()
 
