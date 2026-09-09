@@ -14,6 +14,11 @@ SUPPORTED_SIGNALS = tuple(
     for name in ("SIGHUP", "SIGINT", "SIGTERM")
     if hasattr(signal, name)
 )
+UNCATCHABLE_SIGNALS = {
+    getattr(signal, name)
+    for name in ("SIGKILL", "SIGSTOP")
+    if hasattr(signal, name)
+}
 
 
 def _process_group_exists(process_group):
@@ -157,7 +162,8 @@ def _exit_with_status(status):
     if status >= 0:
         raise SystemExit(status)
     signum = -status
-    signal.signal(signum, signal.SIG_DFL)
+    if signum not in UNCATCHABLE_SIGNALS:
+        signal.signal(signum, signal.SIG_DFL)
     os.kill(os.getpid(), signum)
     raise SystemExit(128 + signum)
 

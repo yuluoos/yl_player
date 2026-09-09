@@ -118,6 +118,20 @@ class DisplayAwakeRunnerTest(unittest.TestCase):
         self._assert_pid_gone(awake_pid)
 
     @REQUIRES_CAFFEINATE
+    def test_real_child_sigkill_is_preserved_and_releases_actual_assertion(self):
+        result = self._run_wrapper(
+            sys.executable,
+            "-c",
+            "import os,signal,time; time.sleep(.1); os.kill(os.getpid(), signal.SIGKILL)",
+        )
+
+        self.assertEqual(result.returncode, -signal.SIGKILL, result.stdout)
+        command_pid, awake_pid = self._binding_pids(result.stdout)
+        self.assertIn("Temporary display assertion released", result.stdout)
+        self._assert_pid_gone(command_pid)
+        self._assert_pid_gone(awake_pid)
+
+    @REQUIRES_CAFFEINATE
     def test_wrapper_sigterm_escalates_and_reaps_its_owned_process_tree(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = pathlib.Path(temporary)
