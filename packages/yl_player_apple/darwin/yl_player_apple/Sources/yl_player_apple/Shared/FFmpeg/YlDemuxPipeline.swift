@@ -3,6 +3,16 @@ import CoreMedia
 import Foundation
 import YlFFmpegBridge
 
+protocol YlDemuxOutput: YlAudioPipelineOutput {
+  func demuxDidReachEOF(generation: UInt64)
+  func shouldReportDemuxFailure(generation: UInt64) -> Bool
+  func beginLiveReconnect(after error: NativePlayerError, packetGeneration: UInt64)
+  func consumeDemuxVideo(packet: inout YLFPacketRef?, ownedPacket: YLFPacketRef, generation: UInt64) -> Void?
+  var demuxAudioGeneration: UInt64 { get }
+  func acceptsDemuxAudio(ptsUs: Int64) -> Bool
+  func consumeDemuxAudio(_ packet: YlCompressedAudioPacket, onBackpressure: (TimeInterval) -> Void) -> Void?
+}
+
 protocol YlDemuxOpening {
   func open(recipe: YlFallbackSourceRecipe, networkBufferBytes: Int,
             sessionConfiguration: URLSessionConfiguration,
@@ -23,6 +33,8 @@ struct YlFFmpegDemuxOpener: YlDemuxOpening {
 final class YlDemuxPipeline {
   private let lock: NSLock
   private let opener: any YlDemuxOpening
+  private let bufferBudget: YlFallbackBufferBudget
+  weak var output: (any YlDemuxOutput)?
   let sourceRecipe: YlFallbackSourceRecipe
   let sessionConfiguration: URLSessionConfiguration
   let mediaPolicy: YlFallbackMediaPolicy
@@ -39,9 +51,10 @@ final class YlDemuxPipeline {
 
   var context: YLFMediaContextRef? { lock.withLock { openedMedia }?.context }
 
-  init(prepared: YlPreparedFallback, lock: NSLock,
+  init(prepared: YlPreparedFallback, lock: NSLock, bufferBudget: YlFallbackBufferBudget,
        opener: any YlDemuxOpening = YlFFmpegDemuxOpener()) throws {
     self.lock = lock
+    self.bufferBudget = bufferBudget
     self.opener = opener
     self.sourceRecipe = prepared.sourceRecipe
     self.sessionConfiguration = prepared.sessionConfiguration
@@ -58,6 +71,25 @@ final class YlDemuxPipeline {
     self.openedMedia = try prepared.takeMedia()
     self.sourceCancellationToken = prepared.takeCancellationToken()
   }
+
+  func audioTracks(codecName: (YLFStreamInfo) -> String) -> [YlNativeTrack] {
+    YlFallbackTrackCatalog.audioTracks(
+      streams: audioStreams,
+      selectedIndex: selectedAudioStream?.index,
+      codecName: codecName
+    )
+  }
+
+  var videoTracks: [YlNativeTrack] {
+    [YlFallbackTrackCatalog.videoTrack(
+      stream: videoStream,
+      codecName: Int(videoStream.codec) == YLFCodecHEVC ? "hevc" : "h264",
+      bitrate: nil
+    )]
+  }
+
+  func interruptControlOperation() { lock.withLock { openedMedia }?.interruptRead() }
+  func resumeControlOperation() { lock.withLock { openedMedia }?.resumeReads() }
 
   func inspectReopened(context validContext: YLFMediaContextRef, info: YLFMediaInfo,
                        validateVideo: (YLFStreamInfo) throws -> Void) throws -> (
@@ -143,6 +175,109 @@ final class YlDemuxPipeline {
   func seek(_ media: YlOpenedMedia, toMediaTimeUs position: Int64) throws {
     try media.seek(toMediaTimeUs: position)
   }
+
+  func pumpOne(generation packetGeneration: UInt64) {
+    guard let output else { return }
+    var packet: YLFPacketRef?
+    let result = readPacket(&packet)
+    if result == Int32(YLFResultEOF) {
+      if mediaPolicy.isLive {
+        output.beginLiveReconnect(
+          after: NativePlayerError(
+            category: "network",
+            code: "network.http_status",
+            message: "The HTTP-FLV connection ended."
+          ),
+          packetGeneration: packetGeneration
+        )
+        return
+      }
+      output.demuxDidReachEOF(generation: packetGeneration)
+      return
+    }
+    guard result == Int32(YLFResultOK), let ownedPacket = packet else {
+      let inputError = lock.withLock { openedMedia?.lastInputError }
+      if mediaPolicy.isLive, result == Int32(YLFResultCallbackFailed) {
+        ylf_packet_release(&packet)
+        output.beginLiveReconnect(
+          after: inputError ?? NativePlayerError(
+            category: "network",
+            code: "network.http_status",
+            message: "The HTTP-FLV network input failed.",
+            diagnostic: "YlFFmpegBridge result \(result)"
+          ),
+          packetGeneration: packetGeneration
+        )
+        return
+      }
+      let shouldReport = output.shouldReportDemuxFailure(generation: packetGeneration)
+      ylf_packet_release(&packet)
+      if shouldReport {
+        output.fail(ylFallbackPacketReadError(
+          result: result,
+          inputError: inputError,
+          container: mediaPolicy.container
+        ))
+      }
+      return
+    }
+
+    do {
+      try bufferBudget.validateInFlightPacket(size: ylf_packet_size(ownedPacket))
+    } catch let error as NativePlayerError {
+      ylf_packet_release(&packet)
+      output.setDemuxPumping(false)
+      output.fail(error)
+      return
+    } catch {
+      ylf_packet_release(&packet)
+      output.setDemuxPumping(false)
+      return
+    }
+
+    let streamIndex = ylf_packet_stream_index(ownedPacket)
+    if mediaPolicy.requiresInitialVideoKeyframe {
+      let isVideo = streamIndex == videoStream.index
+      let accepted = lock.withLock {
+        initialKeyframeGate.accepts(
+          isVideo: isVideo,
+          isKeyframe: isVideo && ylf_packet_is_keyframe(ownedPacket)
+        )
+      }
+      if !accepted {
+        ylf_packet_release(&packet)
+        output.setDemuxPumping(false)
+        output.requestAudioPump()
+        return
+      }
+    }
+    var retryDelay = TimeInterval(0)
+    if streamIndex == videoStream.index {
+      guard output.consumeDemuxVideo(packet: &packet, ownedPacket: ownedPacket, generation: packetGeneration) != nil else { return }
+    } else if streamIndex == selectedAudioStream?.index,
+              let bytes = ylf_packet_data(ownedPacket) {
+      let audioPacket = YlCompressedAudioPacket(
+        data: Data(bytes: bytes, count: ylf_packet_size(ownedPacket)),
+        ptsUs: ylf_packet_pts_us(ownedPacket),
+        durationUs: ylf_packet_duration_us(ownedPacket),
+        generation: output.demuxAudioGeneration
+      )
+      ylf_packet_release(&packet)
+      if !output.acceptsDemuxAudio(ptsUs: audioPacket.ptsUs) {
+        output.setDemuxPumping(false)
+        output.requestAudioPump()
+        return
+      }
+      guard output.consumeDemuxAudio(audioPacket, onBackpressure: { delay in retryDelay = delay }) != nil else { return }
+    } else {
+      ylf_packet_release(&packet)
+    }
+
+    output.setDemuxPumping(false)
+    output.requestAudioPump(after: retryDelay)
+  }
+
+  func releasePacket(_ packet: inout YLFPacketRef?) { ylf_packet_release(&packet) }
 
   func readPacket(_ packet: inout YLFPacketRef?) -> Int32 {
     ylf_read_packet(context, &packet)

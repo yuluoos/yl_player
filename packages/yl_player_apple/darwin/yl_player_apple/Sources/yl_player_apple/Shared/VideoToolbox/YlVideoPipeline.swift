@@ -3,6 +3,7 @@ import Foundation
 import YlFFmpegBridge
 
 protocol YlVideoPipelineOutput: AnyObject {
+  func setDemuxPumping(_ value: Bool)
   func receive(_ frame: YlVideoFrame)
   func fail(_ error: NativePlayerError)
   func shouldCancelVideoTask(generation: UInt64) -> Bool
@@ -33,6 +34,10 @@ final class YlVideoPipeline {
     self.factory = factory
   }
 
+  func makeFormatDescription(context: YLFMediaContextRef, streamIndex: Int32) throws -> CMVideoFormatDescription {
+    try YlVideoToolboxDecoder.makeFormatDescription(context: context, streamIndex: streamIndex)
+  }
+
   func makeDecoder(format: CMVideoFormatDescription) throws -> YlVideoToolboxDecoder {
     try YlVideoToolboxDecoder(formatDescription: format,
       maxInFlightBytes: bufferBudget.inFlightPacketBytes, factory: factory,
@@ -40,6 +45,48 @@ final class YlVideoPipeline {
       onError: { [outputRelay] error in outputRelay.error(error) })
   }
 
+  func consume(packet: inout YLFPacketRef?, ownedPacket: YLFPacketRef,
+                         generation packetGeneration: UInt64, hasAudio: Bool,
+                         compatibility: YlAppleCompatibility, shouldCancel: @escaping () -> Bool,
+                         onSubmitted: () -> Void, onCancelled: () -> Void) -> Void? {
+      guard let decoder = decoder else {
+        ylf_packet_release(&packet)
+        outputRelay.backend?.setDemuxPumping(false)
+        outputRelay.error(NativePlayerError(
+          category: "internal",
+          code: "internal.fallback_invariant",
+          message: "The video decoder became unavailable."
+        ))
+        return nil
+      }
+      do {
+        guard try submit(packet: &packet, ownedPacket: ownedPacket, decoder: decoder,
+          generation: packetGeneration, hasAudio: hasAudio,
+          compatibility: compatibility, shouldCancel: shouldCancel,
+          onSubmitted: onSubmitted,
+          onCancelled: onCancelled,
+          schedule: scheduleVideoDecode) != nil else { return nil }
+      } catch let error as NativePlayerError {
+        ylf_packet_release(&packet)
+        outputRelay.backend?.setDemuxPumping(false)
+        outputRelay.error(error)
+        return nil
+      } catch {
+        ylf_packet_release(&packet)
+        outputRelay.backend?.setDemuxPumping(false)
+        outputRelay.error(NativePlayerError(
+          category: "internal",
+          code: "internal.fallback_invariant",
+          message: "The video decoder buffer reservation failed.",
+          diagnostic: String(describing: error)
+        ))
+        return nil
+      }
+    return ()
+  }
+
+  /// Nil preserves the cancelled-reservation early return: the caller must not
+  /// schedule another demux turn. A non-nil Void means this packet turn completed.
   func submit(packet: inout YLFPacketRef?, ownedPacket: YLFPacketRef,
               decoder: YlVideoToolboxDecoder, generation packetGeneration: UInt64,
               hasAudio: Bool, compatibility: YlAppleCompatibility,

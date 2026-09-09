@@ -69,6 +69,8 @@ final class YlPresentationCoordinator {
     self.positionEventIntervalMs = positionEventIntervalMs
   }
 
+  func clearOutput() { services.textureOutput.clear() }
+
   func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? {
     stateLock.lock()
     let buffer = currentPixelBuffer

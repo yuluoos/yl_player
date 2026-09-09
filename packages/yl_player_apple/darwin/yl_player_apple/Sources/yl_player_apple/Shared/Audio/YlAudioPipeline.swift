@@ -47,6 +47,15 @@ final class YlAudioPipeline {
 
   func makeRenderer() -> YlAudioRenderer { factory.makeRenderer(bufferBudget: bufferBudget) }
 
+  func setVolume(_ volume: Float, hasAudio: Bool) {
+      desiredVolume = volume
+      if hasAudio {
+        currentAudioRenderer?.setVolume(desiredVolume)
+      }
+  }
+
+  func observeUnderruns(renderer: YlAudioRenderer?) -> Int? { renderer?.underrunCount }
+
   func retryPending(codecName: String) {
     if let pendingAudioPacket, let output {
       do {
@@ -90,6 +99,7 @@ final class YlAudioPipeline {
 
   }
 
+  /// Nil means the renderer is unavailable and the demux turn must stop.
   func enqueue(_ audioPacket: YlCompressedAudioPacket, codecName: String,
                onBackpressure: (TimeInterval) -> Void) -> Void? {
     guard let output else { return nil }
@@ -139,6 +149,17 @@ final class YlAudioPipeline {
       magicCookie: audioCookies[stream.index] ?? Data(),
       generation: generation
     )
+  }
+
+  func reconnectConfiguration(for stream: YLFStreamInfo, generation: UInt64,
+                              copiedAudioCookies: [Int32: Data]) -> YlAudioStreamConfiguration {
+    YlAudioStreamConfiguration(
+        codec: Int(stream.codec) == YLFCodecAAC ? .aac : .mp3,
+        sampleRate: Double(stream.sample_rate),
+        channelCount: Int(stream.channel_count),
+        magicCookie: copiedAudioCookies[stream.index] ?? Data(),
+        generation: generation
+      )
   }
 
   func codecName(_ stream: YLFStreamInfo) -> String {
