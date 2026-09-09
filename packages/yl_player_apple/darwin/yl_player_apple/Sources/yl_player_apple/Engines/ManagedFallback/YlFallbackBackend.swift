@@ -35,12 +35,6 @@ final class YlPostSeekGate {
   }
 }
 
-private final class YlFallbackOutputRelay {
-  weak var backend: YlFallbackBackend?
-  func frame(_ frame: YlVideoFrame) { backend?.receive(frame) }
-  func error(_ error: NativePlayerError) { backend?.fail(error) }
-}
-
 private struct YlFallbackReconnectPipeline {
   let media: YlOpenedMedia
   let info: YLFMediaInfo
@@ -60,7 +54,7 @@ private struct YlFallbackReconnectPipeline {
   }
 }
 
-final class YlFallbackBackend: NSObject, YlPlaybackBackend {
+final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutput {
   let playerId: Int64
   var textureId: Int64 { services.textureOutput.textureId }
   var isActive: Bool { stateLock.withLock { active } }
@@ -97,6 +91,17 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     stateLock.withLock { openedMedia }?.resumeReads()
   }
 
+  private let video: YlVideoPipeline
+  private var videoFormat: CMVideoFormatDescription {
+    get { video.format }
+    set { video.format = newValue }
+  }
+  private var decoder: YlVideoToolboxDecoder? {
+    get { video.decoder }
+    set { video.decoder = newValue }
+  }
+  private var videoSubmissions: YlVideoSubmissionQueue { video.submissions }
+  private var outputRelay: YlFallbackOutputRelay { video.outputRelay }
   private let demux: YlDemuxPipeline
   private var sourceRecipe: YlFallbackSourceRecipe {
     get { demux.sourceRecipe }
@@ -144,22 +149,17 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     set { demux.selectedAudioStream = newValue }
   }
   private let services: YlPlatformServices
-  private let videoSessionFactory: YlVTSessionFactory
   private let configuration: PlayerConfiguration
   private let onEvent: (YlNativeBackendCallback) -> Void
   private let bufferBudget: YlFallbackBufferBudget
-  private var videoFormat: CMVideoFormatDescription
   private var qualityConstraint: YlFallbackQualityConstraint
   private var worker: DispatchQueue { demux.worker }
-  private let videoSubmissions = YlVideoSubmissionQueue()
   private let stateLock = NSLock()
   private let frameScheduler = YlFrameScheduler()
   private let postSeekGate = YlPostSeekGate()
   private let liveReconnectController: YlLiveReconnectController
   private var audioRenderer: YlAudioRenderer!
-  private let outputRelay = YlFallbackOutputRelay()
   private var mediaClock: YlMediaClock!
-  private var decoder: YlVideoToolboxDecoder?
   private var context: YLFMediaContextRef? { demux.context }
   private var displayLink: (any YlDisplayDriving)?
   private var currentPixelBuffer: CVPixelBuffer?
@@ -219,18 +219,18 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     self.playerId = playerId
     self.services = services
     self.configuration = configuration
-    self.videoSessionFactory = videoSessionFactory
     self.bufferBudget = try YlFallbackBufferBudget.make(configuration: configuration)
     self.liveReconnectController = YlLiveReconnectController(
       configuration: configuration.network
     )
     let resumeState = prepared.resumeState
-    self.videoFormat = prepared.videoFormat
     self.qualityConstraint = qualityConstraint
     self.generation = generation
     self.audioGeneration = generation
     self.onEvent = emit
     self.demux = try YlDemuxPipeline(prepared: prepared, lock: stateLock)
+    self.video = YlVideoPipeline(format: prepared.videoFormat, bufferBudget: bufferBudget,
+      factory: videoSessionFactory)
     self.playing = resumeState?.shouldPlay ?? false
     self.savedPositionUs = resumeState?.positionUs ?? 0
     super.init()
@@ -247,13 +247,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     if savedPositionUs > 0 { postSeekGate.reset(targetUs: savedPositionUs) }
     outputRelay.backend = self
     do {
-      decoder = try YlVideoToolboxDecoder(
-        formatDescription: videoFormat,
-        maxInFlightBytes: bufferBudget.inFlightPacketBytes,
-        factory: videoSessionFactory,
-        onFrame: { [outputRelay] frame in outputRelay.frame(frame) },
-        onError: { [outputRelay] error in outputRelay.error(error) }
-      )
+      decoder = try video.makeDecoder(format: videoFormat)
       if let audioStream = selectedAudioStream {
         try audioRenderer.configure(stream: audioConfiguration(
           for: audioStream,
@@ -732,7 +726,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     if mayClearOutput { services.textureOutput.clear() }
   }
 
-  fileprivate func receive(_ frame: YlVideoFrame) {
+  func receive(_ frame: YlVideoFrame) {
     guard stateLock.withLock({ active && generation == frame.generation }),
           postSeekGate.acceptsVideo(ptsUs: frame.ptsUs) else { return }
     let accepted = frameScheduler.enqueue(YlFrameEnvelope(
@@ -772,7 +766,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     }
   }
 
-  fileprivate func fail(_ error: NativePlayerError) {
+  func fail(_ error: NativePlayerError) {
     setFailure(error)
   }
 
@@ -959,7 +953,6 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         return
       }
       do {
-        let byteCount = ylf_packet_size(ownedPacket)
         let shouldCancel = { [weak self] in
           guard let self else { return true }
           return self.stateLock.withLock {
@@ -967,42 +960,12 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
               || self.generation != packetGeneration
           }
         }
-        // Charge the sample before either the sample buffer or queue can own it.
-        let reservation: YlVideoDecodeReservation?
-        if services.compatibility.limitsVideoReservations {
-          reservation = try selectedAudioStream == nil
-            ? decoder.reserve(byteCount: byteCount, shouldCancel: shouldCancel)
-            : decoder.reserveSubmission(byteCount: byteCount, shouldCancel: shouldCancel)
-        } else { reservation = nil }
-        guard !services.compatibility.limitsVideoReservations || reservation != nil else {
-          ylf_packet_release(&packet)
-          stateLock.withLock { pumping = false }
-          return
-        }
-        var unmanagedSample: Unmanaged<CMSampleBuffer>?
-        let sampleResult = ylf_create_video_sample_buffer(
-          &packet,
-          videoFormat,
-          &unmanagedSample
-        )
-        if sampleResult == 0, let unmanagedSample {
-          stateLock.withLock { prebufferedVideoSample = true }
-          let sample = unmanagedSample.takeRetainedValue()
-          if !services.compatibility.limitsVideoReservations || selectedAudioStream == nil {
-            decoder.decode(
-              sample: sample, generation: packetGeneration, reservation: reservation
-            )
-          } else {
-            scheduleVideoDecode(
-              sample,
-              generation: packetGeneration,
-              decoder: decoder,
-              reservation: reservation!
-            )
-          }
-        } else {
-          ylf_packet_release(&packet)
-        }
+        guard try video.submit(packet: &packet, ownedPacket: ownedPacket, decoder: decoder,
+          generation: packetGeneration, hasAudio: selectedAudioStream != nil,
+          compatibility: services.compatibility, shouldCancel: shouldCancel,
+          onSubmitted: { [self] in stateLock.withLock { prebufferedVideoSample = true } },
+          onCancelled: { [self] in stateLock.withLock { pumping = false } },
+          schedule: scheduleVideoDecode) != nil else { return }
       } catch let error as NativePlayerError {
         ylf_packet_release(&packet)
         stateLock.withLock { pumping = false }
@@ -1064,52 +1027,28 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   }
 
   private func scheduleVideoDecode(
-    _ sample: CMSampleBuffer,
-    generation packetGeneration: UInt64,
-    decoder: YlVideoToolboxDecoder,
-    reservation: YlVideoDecodeReservation
+    _ sample: CMSampleBuffer, generation packetGeneration: UInt64,
+    decoder: YlVideoToolboxDecoder, reservation: YlVideoDecodeReservation
   ) {
-    videoSubmissions.submit { [weak self, decoder] in
-      guard let self else { return }
-      do {
-        guard try reservation.beginDecoding(shouldCancel: {
-          self.stateLock.withLock {
-            self.disposed || !self.active || self.generation != packetGeneration
-          }
-        }) else { return }
-        decoder.decode(sample: sample, generation: packetGeneration, reservation: reservation)
-      } catch let error as NativePlayerError {
-        if self.shouldReportVideoFailure(generation: packetGeneration) { self.fail(error) }
-      } catch {
-        if self.shouldReportVideoFailure(generation: packetGeneration) {
-          self.fail(NativePlayerError(
-            category: "internal", code: "internal.fallback_invariant",
-            message: "The video decoder buffer reservation failed.",
-            diagnostic: String(describing: error)
-          ))
-        }
-      }
-    }
+    video.scheduleVideoDecode(sample, generation: packetGeneration, decoder: decoder,
+      reservation: reservation)
   }
 
-  private func scheduleVideoDrain(
-    decoder: YlVideoToolboxDecoder,
-    generation packetGeneration: UInt64
-  ) {
-    videoSubmissions.submit { [weak self, decoder] in
-      guard let self, self.stateLock.withLock({
-        !self.disposed && self.active && self.generation == packetGeneration
-      }) else { return }
-      decoder.drain()
-    }
+  private func scheduleVideoDrain(decoder: YlVideoToolboxDecoder, generation packetGeneration: UInt64) {
+    video.scheduleVideoDrain(decoder: decoder, generation: packetGeneration)
   }
 
-  private func cancelVideoSubmissions() {
-    videoSubmissions.cancelPending()
-    videoSubmissions.waitUntilIdle()
+  func shouldCancelVideoTask(generation packetGeneration: UInt64) -> Bool {
+    stateLock.withLock { disposed || !active || generation != packetGeneration }
   }
 
-  private func shouldReportVideoFailure(generation taskGeneration: UInt64) -> Bool {
+  func isVideoDrainCurrent(generation packetGeneration: UInt64) -> Bool {
+    stateLock.withLock { !disposed && active && generation == packetGeneration }
+  }
+
+  private func cancelVideoSubmissions() { video.cancelVideoSubmissions() }
+
+  func shouldReportVideoFailure(generation taskGeneration: UInt64) -> Bool {
     stateLock.withLock {
       !disposed && active && !reconfiguring && generation == taskGeneration
     }
@@ -1643,13 +1582,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   }
 
   private func makeDecoder() throws -> YlVideoToolboxDecoder {
-    try YlVideoToolboxDecoder(
-      formatDescription: videoFormat,
-      maxInFlightBytes: bufferBudget.inFlightPacketBytes,
-      factory: videoSessionFactory,
-      onFrame: { [outputRelay] frame in outputRelay.frame(frame) },
-      onError: { [outputRelay] error in outputRelay.error(error) }
-    )
+    try video.makeDecoder(format: videoFormat)
   }
 
   private func makeLiveReconnectPipeline(
@@ -1701,13 +1634,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       context: validContext,
       streamIndex: selectedVideo.index
     )
-    let newDecoder = try YlVideoToolboxDecoder(
-      formatDescription: candidateFormat,
-      maxInFlightBytes: bufferBudget.inFlightPacketBytes,
-      factory: videoSessionFactory,
-      onFrame: { [outputRelay] frame in outputRelay.frame(frame) },
-      onError: { [outputRelay] error in outputRelay.error(error) }
-    )
+    let newDecoder = try video.makeDecoder(format: candidateFormat)
     candidateDecoder = newDecoder
 
     let preferredAudioIndex = selectedAudioStream?.index
@@ -1775,13 +1702,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       context: validContext,
       streamIndex: videoStream.index
     )
-    candidateDecoder = try YlVideoToolboxDecoder(
-      formatDescription: candidateFormat,
-      maxInFlightBytes: bufferBudget.inFlightPacketBytes,
-      factory: videoSessionFactory,
-      onFrame: { [outputRelay] frame in outputRelay.frame(frame) },
-      onError: { [outputRelay] error in outputRelay.error(error) }
-    )
+    candidateDecoder = try video.makeDecoder(format: candidateFormat)
     let renderer = YlAudioRenderer(bufferBudget: bufferBudget)
     candidateAudio = renderer
     if let selectedAudioStream {
