@@ -309,4 +309,3 @@ func ylFallbackPacketReadError(
     diagnostic: "YlFFmpegBridge result \(result)"
   )
 }
-
