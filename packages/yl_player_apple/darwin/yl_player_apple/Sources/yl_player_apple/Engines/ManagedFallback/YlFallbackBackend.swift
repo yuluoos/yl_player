@@ -4,25 +4,6 @@ import CoreVideo
 import QuartzCore
 import YlFFmpegBridge
 
-func ylFallbackPacketReadError(
-  result: Int32,
-  inputError: NativePlayerError?,
-  container: YlFallbackContainer
-) -> NativePlayerError {
-  if result == Int32(YLFResultCallbackFailed), let inputError {
-    return inputError
-  }
-  return NativePlayerError(
-    category: "container",
-    code: container == .flv
-      ? "container.flv_malformed" : "container.mkv_malformed",
-    message: container == .flv
-      ? "The FLV packet stream is malformed."
-      : "The Matroska packet stream is malformed.",
-    diagnostic: "YlFFmpegBridge result \(result)"
-  )
-}
-
 final class YlPostSeekGate {
   private let lock = NSLock()
   private var minimumVideoPtsUs: Int64?
@@ -116,37 +97,70 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     stateLock.withLock { openedMedia }?.resumeReads()
   }
 
+  private let demux: YlDemuxPipeline
+  private var sourceRecipe: YlFallbackSourceRecipe {
+    get { demux.sourceRecipe }
+  }
+  private var sessionConfiguration: URLSessionConfiguration {
+    get { demux.sessionConfiguration }
+  }
+  private var mediaPolicy: YlFallbackMediaPolicy {
+    get { demux.mediaPolicy }
+  }
+  private var mediaInfo: YLFMediaInfo {
+    get { demux.mediaInfo }
+    set { demux.mediaInfo = newValue }
+  }
+  private var videoStream: YLFStreamInfo {
+    get { demux.videoStream }
+    set { demux.videoStream = newValue }
+  }
+  private var audioStreams: [YLFStreamInfo] {
+    get { demux.audioStreams }
+    set { demux.audioStreams = newValue }
+  }
+  private var audioCookies: [Int32: Data] {
+    get { demux.audioCookies }
+    set { demux.audioCookies = newValue }
+  }
+  private var isSeekable: Bool {
+    get { demux.isSeekable }
+    set { demux.isSeekable = newValue }
+  }
+  private var initialKeyframeGate: YlInitialKeyframeGate {
+    get { demux.initialKeyframeGate }
+    set { demux.initialKeyframeGate = newValue }
+  }
+  private var openedMedia: YlOpenedMedia? {
+    get { demux.openedMedia }
+    set { demux.openedMedia = newValue }
+  }
+  private var sourceCancellationToken: YlOpenCancellationToken? {
+    get { demux.sourceCancellationToken }
+    set { demux.sourceCancellationToken = newValue }
+  }
+  private var selectedAudioStream: YLFStreamInfo? {
+    get { demux.selectedAudioStream }
+    set { demux.selectedAudioStream = newValue }
+  }
   private let services: YlPlatformServices
   private let videoSessionFactory: YlVTSessionFactory
   private let configuration: PlayerConfiguration
   private let onEvent: (YlNativeBackendCallback) -> Void
-  private let sourceRecipe: YlFallbackSourceRecipe
-  private let sessionConfiguration: URLSessionConfiguration
-  private let mediaPolicy: YlFallbackMediaPolicy
   private let bufferBudget: YlFallbackBufferBudget
-  private var mediaInfo: YLFMediaInfo
-  private var videoStream: YLFStreamInfo
-  private var audioStreams: [YLFStreamInfo]
-  private var audioCookies: [Int32: Data]
-  private var isSeekable: Bool
   private var videoFormat: CMVideoFormatDescription
   private var qualityConstraint: YlFallbackQualityConstraint
-  private let worker = DispatchQueue(label: "dev.ylplayer.\(YlApplePlatform.current.rawValue).fallback.demux")
+  private var worker: DispatchQueue { demux.worker }
   private let videoSubmissions = YlVideoSubmissionQueue()
   private let stateLock = NSLock()
   private let frameScheduler = YlFrameScheduler()
   private let postSeekGate = YlPostSeekGate()
   private let liveReconnectController: YlLiveReconnectController
-  private var initialKeyframeGate = YlInitialKeyframeGate()
   private var audioRenderer: YlAudioRenderer!
   private let outputRelay = YlFallbackOutputRelay()
   private var mediaClock: YlMediaClock!
   private var decoder: YlVideoToolboxDecoder?
-  private var openedMedia: YlOpenedMedia?
-  private var sourceCancellationToken: YlOpenCancellationToken?
-  private var context: YLFMediaContextRef? {
-    stateLock.withLock { openedMedia }?.context
-  }
+  private var context: YLFMediaContextRef? { demux.context }
   private var displayLink: (any YlDisplayDriving)?
   private var currentPixelBuffer: CVPixelBuffer?
   private var active = false
@@ -162,7 +176,6 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private(set) var channelGeneration = YlBackendGeneration.next()
   private let loadRequestId: String?
   private var audioGeneration: UInt64
-  private var selectedAudioStream: YLFStreamInfo?
   private var desiredVolume: Float = 1
   private var desiredRate: Float = 1
   private var savedPositionUs: Int64 = 0
@@ -207,29 +220,17 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     self.services = services
     self.configuration = configuration
     self.videoSessionFactory = videoSessionFactory
-    self.sourceRecipe = prepared.sourceRecipe
-    self.sessionConfiguration = prepared.sessionConfiguration
-    self.mediaPolicy = prepared.policy
     self.bufferBudget = try YlFallbackBufferBudget.make(configuration: configuration)
     self.liveReconnectController = YlLiveReconnectController(
       configuration: configuration.network
     )
-    self.mediaInfo = prepared.mediaInfo
-    self.videoStream = prepared.videoStream
-    self.audioStreams = prepared.audioStreams
-    self.audioCookies = prepared.audioCookies
-    self.isSeekable = prepared.isSeekable
     let resumeState = prepared.resumeState
-    self.selectedAudioStream = resumeState?.selectedAudioStreamIndex.flatMap { index in
-      prepared.audioStreams.first { $0.index == index }
-    } ?? prepared.audioStreams.first
     self.videoFormat = prepared.videoFormat
     self.qualityConstraint = qualityConstraint
     self.generation = generation
     self.audioGeneration = generation
     self.onEvent = emit
-    self.openedMedia = try prepared.takeMedia()
-    self.sourceCancellationToken = prepared.takeCancellationToken()
+    self.demux = try YlDemuxPipeline(prepared: prepared, lock: stateLock)
     self.playing = resumeState?.shouldPlay ?? false
     self.savedPositionUs = resumeState?.positionUs ?? 0
     super.init()
@@ -860,7 +861,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     }
 
     var packet: YLFPacketRef?
-    let result = ylf_read_packet(context, &packet)
+    let result = demux.readPacket(&packet)
     if result == Int32(YLFResultEOF) {
       if mediaPolicy.isLive {
         beginLiveReconnect(
@@ -1474,7 +1475,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       },
       seekDemux: { [self] targetUs in
         try cancellationToken?.throwIfCancelled()
-        try media.seek(toMediaTimeUs: targetUs)
+        try demux.seek(media, toMediaTimeUs: targetUs)
         try cancellationToken?.throwIfCancelled()
       },
       resetAudio: { [self] nextGeneration in
@@ -1656,7 +1657,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     cancellationToken: YlOpenCancellationToken
   ) throws -> YlFallbackReconnectPipeline {
     try cancellationToken.throwIfCancelled()
-    let reopenedMedia = try YlOpenedMedia(
+    let reopenedMedia = try demux.open(
       recipe: sourceRecipe,
       networkBufferBytes: bufferBudget.networkBytes,
       sessionConfiguration: sessionConfiguration,
@@ -1685,70 +1686,16 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     }
 
     let info = reopenedMedia.info
-    var selectedVideo: YLFStreamInfo?
-    var supportedAudio: [YLFStreamInfo] = []
-    var sawUnsupportedAudio = false
-    for index in 0..<info.stream_count {
-      var stream = YLFStreamInfo()
-      guard ylf_copy_stream_info(validContext, index, &stream) == 0 else { continue }
-      if Int(stream.kind) == YLFStreamVideo,
-         (Int(stream.codec) == YLFCodecH264 || Int(stream.codec) == YLFCodecHEVC),
-         selectedVideo == nil {
-        selectedVideo = stream
-      } else if Int(stream.kind) == YLFStreamAudio {
-        if Int(stream.codec) == YLFCodecAAC || Int(stream.codec) == YLFCodecMP3 {
-          supportedAudio.append(stream)
-        } else {
-          sawUnsupportedAudio = true
-        }
-      }
-    }
-    guard let selectedVideo else {
-      throw NativePlayerError(
-        category: "decoderUnsupported",
-        code: "decoder.video_hardware_unavailable",
-        message: "The reconnected FLV stream has no supported H.264 or H.265 video."
-      )
-    }
-    if supportedAudio.isEmpty && sawUnsupportedAudio {
-      throw NativePlayerError(
-        category: "decoderUnsupported",
-        code: "decoder.audio_aac_unsupported",
-        message: "The reconnected FLV audio track is not AAC or MP3."
-      )
-    }
-
     let activeQualityConstraint = stateLock.withLock { qualityConstraint }
-    try YlFallbackQualityPolicy.validate(
-      constraint: activeQualityConstraint,
-      stream: Self.videoDescriptor(selectedVideo)
-    )
-
-    var copiedAudioCookies: [Int32: Data] = [:]
-    for audioStream in supportedAudio where Int(audioStream.codec) == YLFCodecAAC {
-      let size = ylf_stream_codec_config_size(validContext, audioStream.index)
-      guard size > 0 else {
-        throw NativePlayerError(
-          category: "decoderUnsupported",
-          code: "decoder.audio_aac_unsupported",
-          message: "The reconnected AAC codec configuration is missing."
-        )
-      }
-      var bytes = [UInt8](repeating: 0, count: size)
-      guard ylf_copy_stream_codec_config(
-        validContext,
-        audioStream.index,
-        &bytes,
-        bytes.count
-      ) == 0 else {
-        throw NativePlayerError(
-          category: "decoderUnsupported",
-          code: "decoder.audio_aac_unsupported",
-          message: "The reconnected AAC codec configuration is invalid."
-        )
-      }
-      copiedAudioCookies[audioStream.index] = Data(bytes)
+    let catalog = try demux.inspectReopened(context: validContext, info: info) { selectedVideo in
+      try YlFallbackQualityPolicy.validate(
+        constraint: activeQualityConstraint,
+        stream: Self.videoDescriptor(selectedVideo)
+      )
     }
+    let selectedVideo = catalog.video
+    let supportedAudio = catalog.audio
+    let copiedAudioCookies = catalog.cookies
 
     let candidateFormat = try YlVideoToolboxDecoder.makeFormatDescription(
       context: validContext,
@@ -1799,7 +1746,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   }
 
   private func rebuildPipeline(positionUs: Int64) throws {
-    let reopenedMedia = try YlOpenedMedia(
+    let reopenedMedia = try demux.open(
       recipe: sourceRecipe,
       networkBufferBytes: bufferBudget.networkBytes,
       sessionConfiguration: sessionConfiguration
@@ -1846,7 +1793,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       renderer.setRate(desiredRate)
     }
     if positionUs > 0 {
-      try reopenedMedia.seek(toMediaTimeUs: positionUs)
+      try demux.seek(reopenedMedia, toMediaTimeUs: positionUs)
       postSeekGate.reset(targetUs: positionUs)
     }
 
@@ -2012,15 +1959,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     cancellationToken: YlOpenCancellationToken?
   ) throws {
     try cancellationToken?.throwIfCancelled()
-    guard let trackId, trackId.hasPrefix("audio-"),
-          let requestedIndex = Int32(trackId.dropFirst("audio-".count)),
-          let requestedStream = audioStreams.first(where: { $0.index == requestedIndex }) else {
-      throw NativePlayerError(
-        category: "source",
-        code: "track.not_found",
-        message: "The requested audio track is unavailable."
-      )
-    }
+    let requestedStream = try demux.audioStream(for: trackId)
     guard requestedStream.index != selectedAudioStream?.index else { return }
 
     let initialGeneration = stateLock.withLock { generation }

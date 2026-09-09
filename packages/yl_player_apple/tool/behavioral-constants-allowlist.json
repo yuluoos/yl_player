@@ -257,7 +257,6 @@
   },
   {
     "old_file": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFallbackBackend.swift",
-    "new_file": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/ManagedFallback/YlFallbackBackend.swift",
     "reason": "import/platform abstraction: Reviewed macOS clock-lock/audio/submission/Stop/terminal fencing base; iOS audio lifecycle, no added reservations/leases/submission resource policy; platform texture/display service.",
     "old_tokens": {
       "case:": 10,
@@ -281,11 +280,14 @@
       "reason": "Retired macOS decoder requires seeked pipeline reconstruction instead of arbitrary retained demux packets; network follows existing async path, local rebuild retires superseded resources. No numeric, enum, scheduling or retry constants changed.",
       "red": "decoder-restoration-red-1 (both actual local/network output failures); direct-quiesce-diagnostic-1 excludes new host",
       "tests": "YlAppleDecoderRestorationTests and YlAppleCommandOrderingTests"
-    }
+    },
+    "new_files": [
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/ManagedFallback/YlFallbackBackend.swift",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlDemuxPipeline.swift"
+    ]
   },
   {
     "old_file": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackBackend.swift",
-    "new_file": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/ManagedFallback/YlFallbackBackend.swift",
     "reason": "import/platform abstraction: Reviewed macOS clock-lock/audio/submission/Stop/terminal fencing base; iOS audio lifecycle, no added reservations/leases/submission resource policy; platform texture/display service.",
     "old_tokens": {
       "case:": 10,
@@ -319,7 +321,11 @@
       "reason": "Retired macOS decoder requires seeked pipeline reconstruction instead of arbitrary retained demux packets; network follows existing async path, local rebuild retires superseded resources. No numeric, enum, scheduling or retry constants changed.",
       "red": "decoder-restoration-red-1 (both actual local/network output failures); direct-quiesce-diagnostic-1 excludes new host",
       "tests": "YlAppleDecoderRestorationTests and YlAppleCommandOrderingTests"
-    }
+    },
+    "new_files": [
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/ManagedFallback/YlFallbackBackend.swift",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlDemuxPipeline.swift"
+    ]
   },
   {
     "old_file": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFallbackModels.swift",
