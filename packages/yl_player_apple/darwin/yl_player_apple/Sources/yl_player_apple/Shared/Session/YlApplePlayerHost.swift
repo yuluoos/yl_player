@@ -33,6 +33,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
        services: YlPlatformServices, callbacks: ApplePlayerFlutterApiProtocol,
        avPlayer: AVPlayer = AVPlayer(), commandCoordinator: YlAsyncCommandCoordinator = YlAsyncCommandCoordinator(),
        beforeFallbackConstruction: ((YlPlaybackBackend) throws -> Void)? = nil,
+       slotCompatibility: YlAppleCompatibility? = nil,
        clock: @escaping () -> Int64 = YlAppleSafeDiagnostics.nowMilliseconds) {
     self.playerId = playerId
     self.suffix = suffix
@@ -48,7 +49,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
     coordinator = YlAppleSessionCoordinator(playerId: playerId, services: services,
       configuration: PlayerConfiguration(positionEventIntervalMs: options.positionUpdateIntervalMs),
       textureOwner: textureOwner, avPlayer: avPlayer, commandCoordinator: commandCoordinator,
-      beforeFallbackConstruction: beforeFallbackConstruction) { [weak self] identity, callback in
+      beforeFallbackConstruction: beforeFallbackConstruction, slotCompatibility: slotCompatibility) { [weak self] identity, callback in
         self?.receive(callback, identity: identity)
       }
     reducer.onOutput = { [weak self] output in self?.send(output) }

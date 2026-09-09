@@ -50,6 +50,7 @@ final class YlAppleSessionCoordinator: NSObject {
        configuration: PlayerConfiguration, textureOwner: YlAppleTextureOwner, avPlayer: AVPlayer = AVPlayer(),
        commandCoordinator: YlAsyncCommandCoordinator = YlAsyncCommandCoordinator(),
        beforeFallbackConstruction: ((YlPlaybackBackend) throws -> Void)? = nil,
+       slotCompatibility: YlAppleCompatibility? = nil,
        emit: @escaping (YlAppleSessionIdentity, YlNativeBackendCallback) -> Void) {
     self.commandCoordinator = commandCoordinator
     self.beforeFallbackConstruction = beforeFallbackConstruction
@@ -63,7 +64,7 @@ final class YlAppleSessionCoordinator: NSObject {
     let avBackend = YlAvPlayerBackend(playerId: playerId, services: services.borrowing(avTexture),
       configuration: configuration, player: avPlayer, emit: { _ in })
     self.avBackend = avBackend
-    self.slot = YlBackendSlot(initial: avBackend, compatibility: services.compatibility)
+    self.slot = YlBackendSlot(initial: avBackend, compatibility: slotCompatibility ?? services.compatibility)
     super.init()
   }
 
@@ -218,8 +219,7 @@ final class YlAppleSessionCoordinator: NSObject {
               )
             }
           } else if self.slot.current.isActive {
-            self.pendingSeekIntent = nil
-            self.pendingPauseIntent = nil
+            self.reconcilePendingActiveIntents()
             if rollbackPlaybackIntent { try? self.slot.current.command(name: "play", arguments: [:]) }
           }
           throw error
@@ -620,6 +620,26 @@ final class YlAppleSessionCoordinator: NSObject {
     // Network recovery continues through its existing external async path.
     if let fallback = backend as? YlFallbackBackend, fallback.requiresAsyncActivation { return }
     try applyAcknowledgedControls(to: backend, forcePlay: false)
+    // The inactive backend now owns these values even if activation needs a
+    // later external recovery. An untouched active backend has not consumed them.
+    pendingSeekIntent = nil
+    pendingPauseIntent = nil
+  }
+
+  private func reconcilePendingActiveIntents() {
+    // A retained transaction can reject its candidate before ever quiescing the
+    // current backend. Replay through its existing command FIFO; an active
+    // network seek must still run on the command worker, never on this main turn.
+    if let revision = pendingPauseIntent {
+      execute(.pause) { [weak self] result in
+        if case .success = result, self?.pendingPauseIntent == revision { self?.pendingPauseIntent = nil }
+      }
+    }
+    if let seek = pendingSeekIntent {
+      execute(.seek(seek.positionMs)) { [weak self] result in
+        if case .success = result, self?.pendingSeekIntent?.revision == seek.revision { self?.pendingSeekIntent = nil }
+      }
+    }
   }
 
   private func applyAcknowledgedControls(to backend: YlPlaybackBackend, forcePlay: Bool) throws {

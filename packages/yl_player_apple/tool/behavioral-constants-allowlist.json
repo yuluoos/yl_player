@@ -1788,7 +1788,7 @@
   {
     "old_file": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlIosPlayer.swift",
     "new_file": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift",
-    "reason": "import/platform abstraction: Task7 shared typed session owner preserves the accepted macOS asynchronous owner algorithm and R11 iOS retained rollback. Texture -1 sentinels move to host-owned leases; new zero/boolean values and case matches stage typed identity/events and candidate commit. iOS additional increments are macOS recovery/activity fences, not timing/resource tuning. Closed typed constraint preflight preserves existing validator and NativePlayerError before enqueue. R1 I1/I2/R25: typed synchronous acceptance and independent session pending-intent revisions replace completion-time persistence; same-candidate precommit reconciliation and direct inactive control application preserve acknowledged state. Added revision zero/one, microsecond conversion1000, Boolean gates and typed case matches are control authority, not timer/budget/decoder tuning. R26 reuses pending controls before synchronous slot rollback activation and adds only the default-nil construction-phase failure seam.",
+    "reason": "import/platform abstraction: Task7 shared typed session owner preserves the accepted macOS asynchronous owner algorithm and R11 iOS retained rollback. Texture -1 sentinels move to host-owned leases; new zero/boolean values and case matches stage typed identity/events and candidate commit. iOS additional increments are macOS recovery/activity fences, not timing/resource tuning. Closed typed constraint preflight preserves existing validator and NativePlayerError before enqueue. R1 I1/I2/R25: typed synchronous acceptance and independent session pending-intent revisions replace completion-time persistence; same-candidate precommit reconciliation and direct inactive control application preserve acknowledged state. Added revision zero/one, microsecond conversion1000, Boolean gates and typed case matches are control authority, not timer/budget/decoder tuning. R26 reuses pending controls before synchronous slot rollback activation and adds only the default-nil construction-phase failure seam. R2 remaining I2/R27: two success-and-matching-intent case checks clear replayed Pause/seek only after actual consumption; an active old backend after early retained-transaction failure no longer implies consumption. Existing command FIFO/threading, numeric constants and platform policy remain unchanged.",
     "old_tokens": {
       "case:.avPlayer": 1,
       "case:.headeredHls": 1,
@@ -1813,6 +1813,8 @@
       "case:.success = result, let qualityConstraint": -1,
       "case:.success = result, let self else": 1,
       "case:.success = result, name ==": -2,
+      "case:.success = result, self?.pendingPauseIntent == revision": 1,
+      "case:.success = result, self?.pendingSeekIntent?.revision == seek.revision": 1,
       "case:let .constraints(constraints)": 1,
       "case:let .failure(error)": 1,
       "case:let .failure(error) = immediate": 1,
@@ -1848,12 +1850,20 @@
         "symbol:false": 3
       },
       "reason": "R1 I1/I2/R25: typed synchronous acceptance and independent session pending-intent revisions replace completion-time persistence; same-candidate precommit reconciliation and direct inactive control application preserve acknowledged state. Added revision zero/one, microsecond conversion1000, Boolean gates and typed case matches are control authority, not timer/budget/decoder tuning. R26 reuses pending controls before synchronous slot rollback activation and adds only the default-nil construction-phase failure seam."
+    },
+    "task7_r2": {
+      "fix_base": "3ce11f4c5a8557ed4da7280e4d6945f62ffc46cf",
+      "delta_from_fix_base": {
+        "case:.success = result, self?.pendingPauseIntent == revision": 1,
+        "case:.success = result, self?.pendingSeekIntent?.revision == seek.revision": 1
+      },
+      "reason": "R2 remaining I2/R27: two success-and-matching-intent case checks clear replayed Pause/seek only after actual consumption; an active old backend after early retained-transaction failure no longer implies consumption. Existing command FIFO/threading, numeric constants and platform policy remain unchanged."
     }
   },
   {
     "old_file": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlMacosPlayer.swift",
     "new_file": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift",
-    "reason": "import/platform abstraction: Task7 shared typed session owner preserves the accepted macOS asynchronous owner algorithm and R11 iOS retained rollback. Texture -1 sentinels move to host-owned leases; new zero/boolean values and case matches stage typed identity/events and candidate commit. iOS additional increments are macOS recovery/activity fences, not timing/resource tuning. Closed typed constraint preflight preserves existing validator and NativePlayerError before enqueue. R1 I1/I2/R25: typed synchronous acceptance and independent session pending-intent revisions replace completion-time persistence; same-candidate precommit reconciliation and direct inactive control application preserve acknowledged state. Added revision zero/one, microsecond conversion1000, Boolean gates and typed case matches are control authority, not timer/budget/decoder tuning. R26 reuses pending controls before synchronous slot rollback activation and adds only the default-nil construction-phase failure seam.",
+    "reason": "import/platform abstraction: Task7 shared typed session owner preserves the accepted macOS asynchronous owner algorithm and R11 iOS retained rollback. Texture -1 sentinels move to host-owned leases; new zero/boolean values and case matches stage typed identity/events and candidate commit. iOS additional increments are macOS recovery/activity fences, not timing/resource tuning. Closed typed constraint preflight preserves existing validator and NativePlayerError before enqueue. R1 I1/I2/R25: typed synchronous acceptance and independent session pending-intent revisions replace completion-time persistence; same-candidate precommit reconciliation and direct inactive control application preserve acknowledged state. Added revision zero/one, microsecond conversion1000, Boolean gates and typed case matches are control authority, not timer/budget/decoder tuning. R26 reuses pending controls before synchronous slot rollback activation and adds only the default-nil construction-phase failure seam. R2 remaining I2/R27: two success-and-matching-intent case checks clear replayed Pause/seek only after actual consumption; an active old backend after early retained-transaction failure no longer implies consumption. Existing command FIFO/threading, numeric constants and platform policy remain unchanged.",
     "old_tokens": {
       "case:.avPlayer": 1,
       "case:.headeredHls": 1,
@@ -1877,6 +1887,8 @@
       "case:.success = result": -1,
       "case:.success = result, case .track = command": 1,
       "case:.success = result, let self else": 1,
+      "case:.success = result, self?.pendingPauseIntent == revision": 1,
+      "case:.success = result, self?.pendingSeekIntent?.revision == seek.revision": 1,
       "case:let .constraints(constraints)": 1,
       "case:let .failure(error) = immediate": 1,
       "case:let .fallback(_, prepared) = candidate else": 1,
@@ -1911,6 +1923,14 @@
         "symbol:false": 3
       },
       "reason": "R1 I1/I2/R25: typed synchronous acceptance and independent session pending-intent revisions replace completion-time persistence; same-candidate precommit reconciliation and direct inactive control application preserve acknowledged state. Added revision zero/one, microsecond conversion1000, Boolean gates and typed case matches are control authority, not timer/budget/decoder tuning. R26 reuses pending controls before synchronous slot rollback activation and adds only the default-nil construction-phase failure seam."
+    },
+    "task7_r2": {
+      "fix_base": "3ce11f4c5a8557ed4da7280e4d6945f62ffc46cf",
+      "delta_from_fix_base": {
+        "case:.success = result, self?.pendingPauseIntent == revision": 1,
+        "case:.success = result, self?.pendingSeekIntent?.revision == seek.revision": 1
+      },
+      "reason": "R2 remaining I2/R27: two success-and-matching-intent case checks clear replayed Pause/seek only after actual consumption; an active old backend after early retained-transaction failure no longer implies consumption. Existing command FIFO/threading, numeric constants and platform policy remain unchanged."
     }
   }
 ]

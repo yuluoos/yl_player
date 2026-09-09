@@ -306,6 +306,65 @@ final class YlAppleAcceptedIntentTests: XCTestCase {
     XCTAssertEqual(f.av.rate, 1.5, accuracy: 0.001)
   }
 
+  /// R27: only the real slot runs the retained-iOS transaction branch. Native
+  /// services, decoder, audio and actual network media remain macOS objects.
+  func testRetainedTransactionEarlyQualityFailurePreservesAcknowledgedPauseAndSeek() async throws {
+    try await retainedTransactionEarlyFailure(newerSeek: false)
+  }
+
+  func testNewerSeekWinsReplayedIntentAfterRetainedTransactionFailure() async throws {
+    try await retainedTransactionEarlyFailure(newerSeek: true)
+  }
+
+  private func retainedTransactionEarlyFailure(newerSeek: Bool) async throws {
+    let server = try ReactivationMediaServer(data: AppleHostCharacterizations.fixtureMedia()); defer { server.close() }
+    let commands = YlAsyncCommandCoordinator()
+    var observingFailure = false
+    var former: YlPlaybackBackend?
+    let f = AppleHostFixture(commandCoordinator: commands, beforeFallbackConstruction: { backend in
+      if observingFailure {
+        XCTAssertTrue(backend.isActive, "The valid candidate reaches its factory before old-backend quiescence")
+        XCTAssertTrue(backend is YlFallbackBackend)
+        former = backend
+      }
+    }, slotCompatibility: .init(platform: .ios)); defer { f.host.close() }
+    let loaded = try await f.load(AppleHostFixture.request("retained-current", url: server.url.absoluteString, format: .matroska, autoplay: true))
+    try await AppleHostCharacterizations.waitFor({ f.host.initialState.timeline.positionMs > 50 })
+    let held = expectation(description: "old command worker held across retained-transaction early failure")
+    let release = DispatchSemaphore(value: 0); defer { release.signal() }
+    commands.begin(operation: { _ in held.fulfill(); _ = release.wait(timeout: .now() + 10) }, completion: { _ in })
+    await fulfillment(of: [held], timeout: 1)
+    try f.host.pause(command: .init(sessionId: loaded.sessionId))
+    try f.host.seekTo(command: .init(sessionId: loaded.sessionId, positionMs: 3_000))
+    let clears = f.output.clears
+    observingFailure = true
+    do {
+      _ = try await f.load(AppleHostFixture.request("valid-unplayable-width", url: server.url.absoluteString, format: .matroska, width: 1))
+      XCTFail("Media cannot satisfy the valid positive width constraint")
+    } catch { XCTAssertEqual((error as NSError).domain, "decoder.quality_constraint_unsupported") }
+    XCTAssertTrue(try XCTUnwrap(former).isActive)
+    XCTAssertEqual(f.output.clears, clears, "Former output was never quiesced or cleared")
+    XCTAssertEqual(f.host.sessionId, loaded.sessionId)
+    XCTAssertFalse(f.host.playbackIntent, "Acknowledged Pause survives even though rollback activation was never entered")
+    XCTAssertNil(f.host.initialState.failure)
+    XCTAssertTrue(commands.hasCurrent)
+    if newerSeek { try f.host.seekTo(command: .init(sessionId: loaded.sessionId, positionMs: 4_500)) }
+    let minimumPosition: Int64 = newerSeek ? 4_450 : 2_950
+    release.signal()
+    try await AppleHostCharacterizations.waitFor({ !commands.hasCurrent })
+    XCTAssertEqual(f.host.sessionId, loaded.sessionId)
+    XCTAssertFalse(f.host.playbackIntent)
+    XCTAssertTrue([.paused, .ready].contains(f.host.initialState.status))
+    XCTAssertGreaterThanOrEqual(f.host.initialState.timeline.positionMs, minimumPosition)
+    XCTAssertNil(f.host.initialState.failure)
+    let frames = f.output.frames.count
+    try await f.host.play(command: .init(sessionId: loaded.sessionId))
+    try await AppleHostCharacterizations.waitFor({ f.output.frames.count > frames || f.host.initialState.failure != nil })
+    XCTAssertGreaterThan(f.output.frames.count, frames)
+    XCTAssertGreaterThanOrEqual(f.host.initialState.timeline.positionMs, minimumPosition)
+    XCTAssertNil(f.host.initialState.failure)
+  }
+
   private func persistentSettersSurviveCancellation(stopFirst: Bool) async throws {
     let server = try ReactivationMediaServer(data: AppleHostCharacterizations.fixtureMedia()); defer { server.close() }
     let commands = YlAsyncCommandCoordinator()

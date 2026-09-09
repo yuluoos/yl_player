@@ -45,7 +45,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
-    "sha256": "e9b4b4716f43c6a58e626c92259417f4c35f585d922fc77653061ce39ece8cc5",
+    "sha256": "ddc76f4919e131f71df4af07ffe95bc5fc1ac5ed4c1b82c9f0373c183b3e1135",
     "methods": [
       "testInputValidationPrecedesReplacementAndRejectsUnrepresentableTimeline",
       "testSemanticCommandRejectionCompletesFutureWithoutFailingHealthySession"
@@ -55,6 +55,11 @@
       "fix_base": "81d261c445f70df09f18458707ba1e8eb1e2d71f",
       "from_sha256": "f178e5a0baacedabf37680a86a3a075d3e8e13be33798dcd4fd7833516ef3e4e",
       "reason": "R26 fixture constructor forwards only the default-nil actual fallback construction-phase failure seam; every existing shared assertion body is unchanged."
+    },
+    "task7_r2": {
+      "fix_base": "3ce11f4c5a8557ed4da7280e4d6945f62ffc46cf",
+      "from_sha256": "e9b4b4716f43c6a58e626c92259417f4c35f585d922fc77653061ce39ece8cc5",
+      "reason": "R27 constructor forwards only optional slot compatibility, default nil; all existing shared assertion bodies unchanged."
     }
   },
   {
@@ -137,7 +142,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleHostTests.swift",
-    "sha256": "db52200165bbca9b65c1f4f50b3d472e3b94aa61971eff105d96cdae709c932c",
+    "sha256": "55060f16677b4baf0bc144d8e9c06cf07231c4d715fb1c486c556bd1e1c081fe",
     "methods": [
       "testCancelOpenMatchesOnlyThePreparingCandidate",
       "testStopCancelsPendingOpenRetainsTextureAndAllowsFreshOpen",
@@ -156,7 +161,9 @@
       "testAcknowledgedVolumeAndSpeedSurviveReplacementBeforeQueuedEffectsRun",
       "testAcknowledgedPauseSeekAndConstraintsSurviveQueuedEffectCancellationOnPeerRestore",
       "testAcknowledgedSessionSettersSurviveLocalDirectRestoration",
-      "testFailedLocalCandidateAfterQuiescenceRestoresAcknowledgedControlsBeforeOldWorkerRelease"
+      "testFailedLocalCandidateAfterQuiescenceRestoresAcknowledgedControlsBeforeOldWorkerRelease",
+      "testRetainedTransactionEarlyQualityFailurePreservesAcknowledgedPauseAndSeek",
+      "testNewerSeekWinsReplayedIntentAfterRetainedTransactionFailure"
     ],
     "task7_provenance": "Task7 exact 20 host methods call explicit shared assertion bodies (task7-host-cases.json). Additional platform lifecycle/held-command regressions preserve actual native behavior; R21 only original initial-MKV hardware skip, R22 real decoded restoration.",
     "task7_typed_migration": {
@@ -167,6 +174,11 @@
       "fix_base": "81d261c445f70df09f18458707ba1e8eb1e2d71f",
       "from_sha256": "81da0dd06d8ce30da4a4722865e83aa7477381cc5f9d6d2dafeda0c427bd4dd4",
       "reason": "I1/I2 actual held foreground-reader/command-worker acceptance regressions: independent track/timeline, persistent volume/rate, session Pause/seek/constraints, rejection and reset, local/network restored decoded output. All existing wrapper/method/assertion identities remain. R26 real local post-quiescence candidate failure asserts same-session accepted controls before stale-worker release and real resumed output."
+    },
+    "task7_r2": {
+      "fix_base": "3ce11f4c5a8557ed4da7280e4d6945f62ffc46cf",
+      "from_sha256": "db52200165bbca9b65c1f4f50b3d472e3b94aa61971eff105d96cdae709c932c",
+      "reason": "Two remaining-I2 regressions execute the existing retained-iOS slot transaction using actual macOS media/decoder/audio/network, real positive-but-incompatible width rejection and held command FIFO. Assert no former quiescence/clear, same session, retained Pause/seek, newer seek fencing and real resumed frames. Not iOS hardware runtime proof; all existing cases retained."
     }
   },
   {

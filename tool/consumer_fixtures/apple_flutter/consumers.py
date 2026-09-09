@@ -208,6 +208,11 @@ def verify_graph(host, platform, manager):
 
 
 def check(platform, manager, link):
+    diagnostics = os.environ.get("YL_APPLE_TEST_DIAGNOSTICS")
+    require(diagnostics is None or diagnostics == "never",
+            "YL_APPLE_TEST_DIAGNOSTICS must be unset or exactly 'never'")
+    require(diagnostics is None or not link,
+            "YL_APPLE_TEST_DIAGNOSTICS applies only to unit-test gates")
     host = bootstrap(platform, manager)
     native = host / platform
     destination = "platform=macOS,arch=" + subprocess.check_output(["uname", "-m"], text=True).strip()
@@ -231,6 +236,8 @@ def check(platform, manager, link):
                "-parallel-testing-enabled", "NO",
                "-derivedDataPath", str(derived), "-clonedSourcePackagesDirPath", str(host / "source-packages"), "-packageCachePath", str(host / "package-cache"), "-disablePackageRepositoryCache",
                "-resultBundlePath", str(result), "CODE_SIGNING_ALLOWED=NO", "COMPILER_INDEX_STORE_ENABLE=NO", "build" if link else "test"]
+    if diagnostics == "never":
+        command.extend(["-collect-test-diagnostics", "never"])
     run(command, host, f"{platform}-{manager}-{'link' if link else 'unit'}")
     verify_graph(host, platform, manager)
     verify_product(host, platform, manager, derived=derived, expect_tests=not link)
