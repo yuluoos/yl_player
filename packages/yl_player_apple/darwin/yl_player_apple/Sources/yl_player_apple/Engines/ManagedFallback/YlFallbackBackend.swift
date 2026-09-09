@@ -4,37 +4,6 @@ import CoreVideo
 import QuartzCore
 import YlFFmpegBridge
 
-final class YlPostSeekGate {
-  private let lock = NSLock()
-  private var minimumVideoPtsUs: Int64?
-  private var minimumAudioPtsUs: Int64?
-
-  func reset(targetUs: Int64?) {
-    lock.withLock {
-      minimumVideoPtsUs = targetUs
-      minimumAudioPtsUs = targetUs
-    }
-  }
-
-  func acceptsVideo(ptsUs: Int64) -> Bool {
-    lock.withLock {
-      guard let minimumVideoPtsUs else { return true }
-      guard ptsUs >= minimumVideoPtsUs else { return false }
-      self.minimumVideoPtsUs = nil
-      return true
-    }
-  }
-
-  func acceptsAudio(ptsUs: Int64) -> Bool {
-    lock.withLock {
-      guard let minimumAudioPtsUs else { return true }
-      guard ptsUs >= minimumAudioPtsUs else { return false }
-      self.minimumAudioPtsUs = nil
-      return true
-    }
-  }
-}
-
 private struct YlFallbackReconnectPipeline {
   let media: YlOpenedMedia
   let info: YLFMediaInfo
@@ -54,7 +23,7 @@ private struct YlFallbackReconnectPipeline {
   }
 }
 
-final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutput, YlAudioPipelineOutput {
+final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutput, YlAudioPipelineOutput, YlPresentationOutput {
   let playerId: Int64
   var textureId: Int64 { services.textureOutput.textureId }
   var isActive: Bool { stateLock.withLock { active } }
@@ -91,6 +60,37 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
     stateLock.withLock { openedMedia }?.resumeReads()
   }
 
+  private let presentation: YlPresentationCoordinator
+  private var frameScheduler: YlFrameScheduler {
+    get { presentation.frameScheduler }
+  }
+  private var postSeekGate: YlPostSeekGate {
+    get { presentation.postSeekGate }
+  }
+  private var mediaClock: YlMediaClock! {
+    get { presentation.mediaClock }
+    set { presentation.mediaClock = newValue }
+  }
+  private var displayLink: (any YlDisplayDriving)? {
+    get { presentation.displayLink }
+    set { presentation.displayLink = newValue }
+  }
+  private var currentPixelBuffer: CVPixelBuffer? {
+    get { presentation.currentPixelBuffer }
+    set { presentation.currentPixelBuffer = newValue }
+  }
+  private var firstFrameSent: Bool {
+    get { presentation.firstFrameSent }
+    set { presentation.firstFrameSent = newValue }
+  }
+  private var firstFrameDurationMs: Int64? {
+    get { presentation.firstFrameDurationMs }
+    set { presentation.firstFrameDurationMs = newValue }
+  }
+  private var lastStateEmitAt: CFTimeInterval {
+    get { presentation.lastStateEmitAt }
+    set { presentation.lastStateEmitAt = newValue }
+  }
   private let audio: YlAudioPipeline
   private var audioRenderer: YlAudioRenderer! {
     get { audio.audioRenderer }
@@ -180,13 +180,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
   private var qualityConstraint: YlFallbackQualityConstraint
   private var worker: DispatchQueue { demux.worker }
   private let stateLock = NSLock()
-  private let frameScheduler = YlFrameScheduler()
-  private let postSeekGate = YlPostSeekGate()
   private let liveReconnectController: YlLiveReconnectController
-  private var mediaClock: YlMediaClock!
   private var context: YLFMediaContextRef? { demux.context }
-  private var displayLink: (any YlDisplayDriving)?
-  private var currentPixelBuffer: CVPixelBuffer?
   private var active = false
   private var playing = false
   private var stopped = false
@@ -201,16 +196,13 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
   private let loadRequestId: String?
   private var savedPositionUs: Int64 = 0
   private var status = "ready"
-  private var firstFrameSent = false
   private var prebufferedVideoSample = false
   private var demuxEOF = false
   private var completionSent = false
   private var openStartedAt = CACurrentMediaTime()
   private var openDurationMs: Int64?
-  private var firstFrameDurationMs: Int64?
   private var reconnectCount = 0
   private var currentError: NativePlayerError?
-  private var lastStateEmitAt = CFTimeInterval(0)
 
   private var currentAudioRenderer: YlAudioRenderer? {
     stateLock.withLock { audioRenderer }
@@ -250,6 +242,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
     self.video = YlVideoPipeline(format: prepared.videoFormat, bufferBudget: bufferBudget,
       factory: videoSessionFactory)
     self.audio = YlAudioPipeline(bufferBudget: bufferBudget, lock: stateLock, generation: generation)
+    self.presentation = YlPresentationCoordinator(services: services, lock: stateLock,
+      openedAt: openStartedAt, positionEventIntervalMs: configuration.positionEventIntervalMs)
     self.playing = resumeState?.shouldPlay ?? false
     self.savedPositionUs = resumeState?.positionUs ?? 0
     super.init()
@@ -260,6 +254,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
       let renderer = self.stateLock.withLock { self.audioRenderer }
       return renderer?.renderedAudioTime
     })
+    presentation.output = self
     audio.output = self
     audio.timeline = self.mediaClock
     self.mediaClock.seek(to: savedPositionUs)
@@ -694,12 +689,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
       )))
   }
 
-  func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? {
-    stateLock.lock()
-    let buffer = currentPixelBuffer
-    stateLock.unlock()
-    return buffer.map(Unmanaged.passRetained)
-  }
+  func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? { presentation.copyPixelBuffer() }
 
   func dispose() {
     stateLock.lock()
@@ -747,19 +737,17 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
     if mayClearOutput { services.textureOutput.clear() }
   }
 
-  func receive(_ frame: YlVideoFrame) {
-    guard stateLock.withLock({ active && generation == frame.generation }),
-          postSeekGate.acceptsVideo(ptsUs: frame.ptsUs) else { return }
-    let accepted = frameScheduler.enqueue(YlFrameEnvelope(
-      payload: frame.pixelBuffer,
-      ptsUs: frame.ptsUs == .min ? 0 : frame.ptsUs,
-      durationUs: frame.durationUs,
-      keyframe: frame.keyframe,
-      generation: frame.generation
-    ))
-    guard accepted else { return }
+  func receive(_ frame: YlVideoFrame) { presentation.receive(frame) }
+
+  func acceptsPresentationFrame(generation frameGeneration: UInt64) -> Bool {
+    stateLock.withLock { active && generation == frameGeneration }
+  }
+
+  var presentationGeneration: UInt64 { stateLock.withLock { generation } }
+
+  func didAcceptPresentationFrame(generation frameGeneration: UInt64) {
     let completedReconnect = stateLock.withLock { () -> Bool in
-      guard awaitingReconnectFirstFrame, generation == frame.generation else {
+      guard awaitingReconnectFirstFrame, generation == frameGeneration else {
         return false
       }
       awaitingReconnectFirstFrame = false
@@ -769,47 +757,22 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
     if completedReconnect {
       liveReconnectController.markFirstFrame()
       DispatchQueue.main.async { [weak self] in
-        guard let self, self.stateLock.withLock({ self.active && self.generation == frame.generation }) else { return }
+        guard let self, self.stateLock.withLock({ self.active && self.generation == frameGeneration }) else { return }
         self.emitState()
       }
     }
-    DispatchQueue.main.async { [weak self] in
-      guard let self, !self.firstFrameSent,
-            self.stateLock.withLock({ self.active && self.generation == frame.generation })
-      else { return }
-      self.present(frame.pixelBuffer)
-      self.firstFrameSent = true
-      self.firstFrameDurationMs = Int64(
-        (CACurrentMediaTime() - self.openStartedAt) * 1_000
-      )
-      self.emit(.firstFrame(width: Int(self.videoStream.width), height: Int(self.videoStream.height)))
-      self.emitState()
-    }
   }
+
+  func didPublishFirstPresentationFrame() {
+    emit(.firstFrame(width: Int(videoStream.width), height: Int(videoStream.height)))
+    emitState()
+  }
+
+  func presentationDidTick(atHostTimeUs value: Int64) { completeIfDrained(atHostTimeUs: value) }
+  func emitPresentationDelta() { emitStateDelta() }
 
   func fail(_ error: NativePlayerError) {
     setFailure(error)
-  }
-
-  @objc private func displayLinkTick() {
-    let now = Self.hostTimeUs()
-    let position = mediaClock.position(atHostTimeUs: now)
-    let currentGeneration = stateLock.withLock { generation }
-    if let frame = frameScheduler.frame(at: position, generation: currentGeneration) {
-      let pixelBuffer = unsafeBitCast(frame.payload, to: CVPixelBuffer.self)
-      present(pixelBuffer)
-    }
-    completeIfDrained(atHostTimeUs: now)
-    let wallNow = CACurrentMediaTime()
-    if wallNow - lastStateEmitAt >= Double(configuration.positionEventIntervalMs) / 1_000 {
-      lastStateEmitAt = wallNow
-      emitStateDelta()
-    }
-  }
-
-  private func present(_ pixelBuffer: CVPixelBuffer) {
-    stateLock.withLock { currentPixelBuffer = pixelBuffer }
-    if textureId >= 0 { services.textureOutput.publish(pixelBuffer) }
   }
 
   func setDemuxPumping(_ value: Bool) { stateLock.withLock { pumping = value } }
@@ -1714,15 +1677,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
     retiredMedia?.close()
   }
 
-  private func installDisplayLink(paused: Bool) {
-    guard displayLink == nil else {
-      displayLink?.isPaused = paused
-      return
-    }
-    let link = services.makeDisplayDriver { [weak self] in self?.displayLinkTick() }
-    link.isPaused = paused
-    displayLink = link
-  }
+  private func installDisplayLink(paused: Bool) { presentation.installDisplayLink(paused: paused) }
 
   private func completeIfDrained(atHostTimeUs hostTimeUs: Int64) {
     let shouldComplete = stateLock.withLock {
@@ -2057,9 +2012,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
     )]
   }
 
-  private static func hostTimeUs() -> Int64 {
-    Int64(CACurrentMediaTime() * 1_000_000)
-  }
+  private static func hostTimeUs() -> Int64 { YlPresentationCoordinator.hostTimeUs() }
 
   private static func videoDescriptor(
     _ stream: YLFStreamInfo
