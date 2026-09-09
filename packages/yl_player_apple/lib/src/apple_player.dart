@@ -131,7 +131,17 @@ final class ApplePlayer implements YlPlatformPlayer {
   Stream<YlPlayerEvent> get events => _events.stream;
 
   final _commands = <void Function(YlPlayerException)>{};
-  final _retired = <YlPlaybackSessionId>{};
+  // Only the current snapshot can need an additional Stop fence before idle.
+  // Other callbacks must prove current request/session authority at ingress.
+  YlPlaybackSessionId? _stoppedSession;
+
+  @visibleForTesting
+  int get retainedSessionAuthorityCount =>
+      (_currentRequestId == null ? 0 : 1) +
+      (_stoppedSession == null ? 0 : 1) +
+      (_pending?.states.length ?? 0) +
+      (_pending?.reply == null ? 0 : 1);
+
   _PendingLoad? _pending;
   int _requestCounter = 0;
   String? _currentRequestId;
@@ -289,26 +299,13 @@ final class ApplePlayer implements YlPlatformPlayer {
         throw YlPlayerException(rejection);
       }
       pending.sent = true;
-      final reply = await _run(
-        () => _transport.load(request),
-        owner: pending,
-        onLateValue: (reply) {
-          // An observed late reply only retires its identity, never revives it.
-          if (reply.loadRequestId == pending.requestId &&
-              reply.sessionId.isNotEmpty) {
-            _retired.add(YlPlaybackSessionId(reply.sessionId));
-          }
-        },
-      );
+      final reply = await _run(() => _transport.load(request), owner: pending);
       if (reply.loadRequestId != pending.requestId) {
         throw AppleCodec.problem(YlFailureCodes.protocolMismatch);
       }
       final session = AppleCodec.session(reply.sessionId);
-      if (_pending != pending) {
-        _retired.add(session);
-        return;
-      }
-      if (_retired.contains(session) || session == state.sessionId) {
+      if (_pending != pending) return;
+      if (session == state.sessionId) {
         throw AppleCodec.problem(YlFailureCodes.protocolMismatch);
       }
       pending.reply = session;
@@ -338,7 +335,7 @@ final class ApplePlayer implements YlPlatformPlayer {
   void _receiveState(YlPlayerState next, int sequence, String? requestId) {
     if (_disposed || _terminal != null) return;
     final session = next.sessionId;
-    if (session != null && _retired.contains(session)) return;
+    if (session != null && session == _stoppedSession) return;
     final pending = _pending;
     if (session != null) {
       if (session == state.sessionId) {
@@ -363,7 +360,7 @@ final class ApplePlayer implements YlPlatformPlayer {
     }
     if (session == null || session == state.sessionId) {
       if (session == null) {
-        if (state.sessionId case final previous?) _retired.add(previous);
+        _stoppedSession = null;
         _currentRequestId = null;
       }
       _callbacks.acceptState(next, sequence);
@@ -424,8 +421,7 @@ final class ApplePlayer implements YlPlatformPlayer {
     final session = pending.reply;
     final match = pending.states[session];
     if (session == null || match == null) return;
-    if (_retired.contains(session) ||
-        !_callbacks.canAccept(match.$1, match.$2)) {
+    if (!_callbacks.canAccept(match.$1, match.$2)) {
       _cancelLoad(_cancelled);
       return;
     }
@@ -433,8 +429,7 @@ final class ApplePlayer implements YlPlatformPlayer {
       _cancelLoad(YlPlayerException(failure));
       return;
     }
-    final previous = state.sessionId;
-    if (previous != null) _retired.add(previous);
+    _stoppedSession = null;
     _currentRequestId = pending.requestId;
     pending.paired = true;
     pending.deadline?.cancel();
@@ -475,7 +470,7 @@ final class ApplePlayer implements YlPlatformPlayer {
   }
 
   void _receiveEvent(YlPlayerEvent event, int sequence) {
-    if (_disposed || _terminal != null || _retired.contains(event.sessionId)) {
+    if (_disposed || _terminal != null || event.sessionId == _stoppedSession) {
       return;
     }
     if (event.sessionId != state.sessionId) {
@@ -485,7 +480,6 @@ final class ApplePlayer implements YlPlatformPlayer {
           (pending.reply == event.sessionId ||
               pending.states.containsKey(event.sessionId))) {
         if (event is YlPlaybackFailedEvent) {
-          _retired.add(event.sessionId);
           if (event.failure.scope == YlFailureScope.player) {
             _terminate(YlPlayerException(event.failure));
           } else {
@@ -514,11 +508,20 @@ final class ApplePlayer implements YlPlatformPlayer {
     _pending = null;
     pending.deadline?.cancel();
     pending.publication?.cancel();
-    _retired.addAll(pending.states.keys);
-    if (pending.reply case final reply?) _retired.add(reply);
+    if (pending.paired && pending.reply == state.sessionId) {
+      _stoppedSession = pending.reply;
+    }
     for (final cancel in pending.commands.toList()) {
       cancel(error);
     }
+    // A still-outstanding native Future may retain its cancelled owner. Release
+    // invalidated snapshots now instead of retaining them until its late reply.
+    pending.reply = null;
+    pending.states.clear();
+    pending.firstStates.clear();
+    pending.readyStates.clear();
+    pending.readySessions.clear();
+    pending.events.clear();
     pending.completion.completeError(error);
   }
 
@@ -528,7 +531,7 @@ final class ApplePlayer implements YlPlatformPlayer {
   ) async {
     _checkAlive();
     validateYlPlaybackSessionId(session);
-    if (state.sessionId != session || _retired.contains(session)) {
+    if (state.sessionId != session || session == _stoppedSession) {
       throw AppleCodec.problem(
         YlFailureCodes.sessionStale,
         category: YlFailureCategory.cancelled,
@@ -628,7 +631,9 @@ final class ApplePlayer implements YlPlatformPlayer {
     _cancelLoad(_cancelled);
     await _run(_transport.stop);
     // Only the accepted Stop's captured identity is fenced; idle is authoritative.
-    if (captured != null) _retired.add(captured);
+    if (captured != null && captured == state.sessionId) {
+      _stoppedSession = captured;
+    }
   }
 
   void _terminate(YlPlayerException error) {
@@ -664,7 +669,7 @@ final class ApplePlayer implements YlPlatformPlayer {
   Future<void> dispose() {
     if (_disposeFuture case final result?) return result;
     _disposed = true;
-    _callbacks.closed = true;
+    _callbacks.close();
     final error =
         _terminal ??
         AppleCodec.problem(
@@ -673,6 +678,8 @@ final class ApplePlayer implements YlPlatformPlayer {
         );
     _cancelLoad(error);
     _settleCommands(error);
+    _currentRequestId = null;
+    _stoppedSession = null;
     return _disposeFuture = _dispose();
   }
 

@@ -47,3 +47,22 @@ struct YlHlsHeaderPolicy {
     }
   }
 }
+
+/// Credential provenance belongs to a user Load, not to a loader or proxy.
+/// Retained only by its committed session and genuinely in-flight requests.
+final class YlHlsCredentialContext {
+  private let lock = NSLock()
+  private var strippedResources = Set<String>()
+
+  func isStripped(_ resource: String) -> Bool {
+    lock.lock()
+    defer { lock.unlock() }
+    return strippedResources.contains(resource)
+  }
+
+  func strip(_ resource: String) {
+    lock.lock()
+    defer { lock.unlock() }
+    strippedResources.insert(resource)
+  }
+}

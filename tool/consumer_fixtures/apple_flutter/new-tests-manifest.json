@@ -89,7 +89,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift",
-    "sha256": "83baa0168913c4c039bf74e48bfcd5a39117140a6cf2d1cf3d47119ad9e7aed7",
+    "sha256": "1d268f6979ce0ac8b1a1b1fc94b04ff5feb5db0a9758ef0d6406ac70943886bd",
     "methods": [
       "testImmutableRequestAndSessionIdentityStartsAtZero",
       "testNegativeMeasuredLiveOffsetIsZeroAndUnknownRemainsNil",
@@ -104,7 +104,8 @@
       "testAcknowledgementBlocksFollowingCallsAndFailureClosesQueue",
       "testHungAcknowledgementHasBoundedCleanup",
       "testSixGeneratedCallbackMethodsShareAcknowledgedHostFIFO",
-      "testFailedAcknowledgementDisposesHostAndUninstallsSuffixExactlyOnce"
+      "testFailedAcknowledgementDisposesHostAndUninstallsSuffixExactlyOnce",
+      "testRedirectHistorySurvivesRealSessionReconstructionAndFreshLoadResetsIntent"
     ],
     "task7_provenance": "Task7 native registry/reducer/identity, READY, private/public texture ownership and acknowledged callback boundary; R23 partial/absent geometry must remain unknown without changing actual internal dimensions.",
     "task7_typed_migration": {
@@ -114,6 +115,11 @@
     "task9_self_review": {
       "from_sha256": "cb2c41bcd3d1161d52eebcb69a23d27f461c714fe102e5685a035673e1c5bceb",
       "reason": "R42 proves the shared lifecycle protocol carries the existing memory-warning callback to an active registry host without changing session identity, texture ownership, or platform notification policy."
+    },
+    "phase_review_i1": {
+      "fix_base": "4fe58b4b9b2ad845057af0e6b48b49cb122b78bf",
+      "from_sha256": "83baa0168913c4c039bf74e48bfcd5a39117140a6cf2d1cf3d47119ad9e7aed7",
+      "reason": "One added shared real typed-host suspend/resume HLS redirect regression, with independent inherited child/media, unrelated child, redirected media-proxy resource, cancelled old loader and fresh user Load controls. All prior method bodies preserved."
     }
   },
   {

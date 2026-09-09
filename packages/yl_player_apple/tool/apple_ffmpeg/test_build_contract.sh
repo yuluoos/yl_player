@@ -79,7 +79,7 @@ check_configuration(lib.ylf_build_configuration().decode())
 lock = script/'bridge-artifact.lock'
 def digest(p): return hashlib.sha256(p.read_bytes()).hexdigest()
 before = digest(lock)
-subprocess.run(['sh',str(script/'build_xcframework.sh'),'--verify'],check=True)
+subprocess.run(['python3',str(script/'verify_artifact.py')],check=True)
 assert digest(lock) == before, 'verification rewrote lock'
 # Real copied package mutations exercise failure and preservation, never the working artifact.
 with tempfile.TemporaryDirectory(prefix='yl-apple-contract-') as root:
@@ -91,12 +91,14 @@ with tempfile.TemporaryDirectory(prefix='yl-apple-contract-') as root:
  for name,path,mutate in mutations:
   original=path.read_bytes(); changed=mutate(original); assert changed!=original
   path.write_bytes(changed)
-  for mode in ('--verify','--rebuild-check'):
-   result=subprocess.run(['sh',str(copied_script/'build_xcframework.sh'),mode],text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+  for mode in ('immutable-verify',):
+   command = ['python3',str(copied_script/'verify_artifact.py')] if mode == 'immutable-verify' else ['sh',str(copied_script/'build_xcframework.sh'),mode]
+   result=subprocess.run(command,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
    print(f'NEGATIVE {name} {mode} exit={result.returncode}\n{result.stdout}',flush=True)
-   assert result.returncode != 0 and 'mismatch' in result.stdout, name
+   reason = 'artifact mismatch' if name == 'slice' else 'input mismatch' if mode == 'immutable-verify' else 'inputs mismatch'
+   assert result.returncode != 0 and reason in result.stdout, (name, mode, reason)
    assert digest(copied_lock)==before, 'failed verification refreshed lock'
   path.write_bytes(original)
 assert digest(lock)==before
-print(f'Apple FFmpeg contract passed: 3 slices, 5 architectures, {len(symbols)} Swift symbols, 6 negative checks; lock unchanged.')
+print(f'Apple FFmpeg contract passed: 3 slices, 5 architectures, {len(symbols)} Swift symbols, 3 intended-reason negative checks; lock unchanged.')
 PY

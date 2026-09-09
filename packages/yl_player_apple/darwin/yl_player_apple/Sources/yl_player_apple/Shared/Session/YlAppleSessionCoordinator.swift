@@ -30,6 +30,7 @@ final class YlAppleSessionCoordinator: NSObject {
   private let commandCoordinator: YlAsyncCommandCoordinator
   private let beforeFallbackConstruction: ((YlPlaybackBackend) throws -> Void)?
   private var lastCommittedSource: [String: Any?]?
+  private var committedHlsCredentials: YlHlsCredentialContext?
   private(set) var lastQualityConstraint: [String: Any?] = [:]
   private var synchronousIntentRevision: UInt64 = 0
   private var restorationIntentRevision: UInt64 = 0
@@ -160,6 +161,9 @@ final class YlAppleSessionCoordinator: NSObject {
     restorationGeneration &+= 1
     activeRestorationGeneration = nil
     cancelDeferredRestorationCommands()
+    // A candidate owns fresh provenance; failed/cancelled work never writes the
+    // surviving session's context or a later user Load's context.
+    let hlsCredentials = YlHlsCredentialContext()
     let requestedLoadRequestId = identity.loadRequestId
     pendingLoadRequestId = requestedLoadRequestId
     var openGeneration: UInt64 = 0
@@ -179,7 +183,7 @@ final class YlAppleSessionCoordinator: NSObject {
         case .headeredHls:
           return .headeredHls(
             source: source,
-            prepared: try self.prepareHeaderedHls(source: source, token: token)
+            prepared: try self.prepareHeaderedHls(source: source, token: token, credentialContext: hlsCredentials)
           )
         case let .reject(category, code, message):
           throw NativePlayerError(category: category, code: code, message: message)
@@ -253,13 +257,14 @@ final class YlAppleSessionCoordinator: NSObject {
     }
     if slot.current === avBackend,
        let source = lastCommittedSource,
-       route(for: source) == .headeredHls {
+       route(for: source) == .headeredHls,
+       let hlsCredentials = committedHlsCredentials {
       openCoordinator.begin(
         prepare: { [weak self] token in
           guard let self else { throw YlOpenCancellationToken.cancellationError() }
           return .headeredHls(
             source: source,
-            prepared: try self.prepareHeaderedHls(source: source, token: token)
+            prepared: try self.prepareHeaderedHls(source: source, token: token, credentialContext: hlsCredentials)
           )
         },
         commit: { [weak self] candidate in
@@ -396,6 +401,7 @@ final class YlAppleSessionCoordinator: NSObject {
       activeEvents?.invalidate()
       activeEvents = nil
       lastCommittedSource = nil
+      committedHlsCredentials = nil
       pendingSeekIntent = nil
       pendingPauseIntent = nil
       lastQualityConstraint = [:]
@@ -551,6 +557,7 @@ final class YlAppleSessionCoordinator: NSObject {
       }
       try avBackend.command(name: "open", arguments: ["source": source])
       lastCommittedSource = source
+      committedHlsCredentials = nil
       if !reactivating, source["loadOptions"] != nil { lastQualityConstraint = stringMap(stringMap(source["loadOptions"])["videoConstraints"]) }
     case let .headeredHls(source, prepared):
       avTexture.lease = candidateTexture
@@ -576,6 +583,7 @@ final class YlAppleSessionCoordinator: NSObject {
         try avBackend.activate()
       }
       lastCommittedSource = source
+      committedHlsCredentials = prepared.loader.credentialContext
       if !reactivating, source["loadOptions"] != nil { lastQualityConstraint = stringMap(stringMap(source["loadOptions"])["videoConstraints"]) }
     case let .fallback(source, prepared):
       let qualityConstraint = try YlFallbackQualityConstraint(
@@ -607,6 +615,7 @@ final class YlAppleSessionCoordinator: NSObject {
       if previous !== avBackend { previous.dispose() }
       try backend.command(name: "open", arguments: ["source": source])
       lastCommittedSource = source
+      committedHlsCredentials = nil
       if !reactivating, source["loadOptions"] != nil { lastQualityConstraint = stringMap(stringMap(source["loadOptions"])["videoConstraints"]) }
     }
     // Successful replacement/restoration consumed these session intents. A
@@ -692,7 +701,8 @@ final class YlAppleSessionCoordinator: NSObject {
 
   private func prepareHeaderedHls(
     source: [String: Any?],
-    token: YlOpenCancellationToken
+    token: YlOpenCancellationToken,
+    credentialContext: YlHlsCredentialContext
   ) throws -> YlPreparedHlsAsset {
     try token.throwIfCancelled()
     guard let uri = source["uri"] as? String,
@@ -708,7 +718,8 @@ final class YlAppleSessionCoordinator: NSObject {
       headers: stringMap(source["headers"]).compactMapValues { $0 as? String },
       credentials: stringMap(source["credentials"]).compactMapValues { $0 as? String },
       configuration: configuration.network,
-      cancellationToken: token
+      cancellationToken: token,
+      credentialContext: credentialContext
     )
   }
 
@@ -831,6 +842,8 @@ final class YlAppleSessionCoordinator: NSObject {
   func dispose() {
     guard !disposed else { return }
     disposed = true
+    committedHlsCredentials = nil
+    lastCommittedSource = nil
     activeEvents?.invalidate()
     activeEvents = nil
     activeTexture?.dispose()

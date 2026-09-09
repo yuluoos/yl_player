@@ -1118,3 +1118,117 @@ cases; one native HLS rollback attempt and one unwrapped HLS First Frame attempt
 failed with no proved root cause; a narrowed-PATH product attempt masked an inner
 failure through `tee`, and the next immutable download ended with curl 18 before
 the final verified-input pass. None is promoted to accepted evidence.
+
+
+## Final broad-review correction checkpoint (2026-09-09)
+
+The broad review at `4fe58b4b9b2ad845057af0e6b48b49cb122b78bf` found no
+Critical items, three Important implementation gaps (I1–I3), and two Minor
+stale-documentation items (M1/M2). This single correction wave addresses all
+five. Controller acceptance remains subject to the one scoped fix-range review;
+this checkpoint does not establish v0.2 release readiness.
+
+The review covered 290 paths and 201 distinct contents: 187 package reads,
+65 equal placements, 27 media entries, six semantic JSON entries, three binary
+entries and two generated proofs. It literally read 38,792 package lines. It
+does **not** claim every one of the package's 55,863 lines was literally read.
+Under R43, byte-identical bodies received one complete canonical read plus every
+placement/membership/migration delta; accepted generated bodies received exact
+canonical-generation proof plus schema, transport and handwritten adapter review.
+The controller verified all 290 path/hash records against the reviewed HEAD,
+with no drift. New fix-range source and evidence require the separate scoped
+rereview; the earlier coverage is not relabeled as current fix-range coverage.
+
+### Corrections and fresh evidence
+
+| Finding | Final change and evidence |
+| --- | --- |
+| I1: same-session HLS stripping history | The committed session now owns credential provenance shared by its manifest loader and media proxy. Internal reconstruction reuses that context; each user Load prepares its own context and only successful commit installs it. Stop/disposal/replacement release the coordinator's old context. Per-resource history and rewritten ancestor stripping survive reconstruction without stripping unrelated children. A real typed-host suspend/resume test reproduced `[true, true]` authentication for both the original redirected manifest and the original redirected media resource before the fix, where `[true, false]` was required. It now proves original-resource retention, inherited child and media stripping, independently authenticated unrelated resources, cancelled-old-loader rejection and fresh-Load reset. The strengthened final case passed once on each platform, with no skip. |
+| I2: immutable verification tied to original builder | `verify_artifact.py` verifies the exact accepted lock digest, its recorded toolchain provenance, six exact recipe/bridge/source/key inputs, configure contract, all 18 canonical file/symlink entries, and the real signed-source receipt on a consumer host. `test_build_contract.sh` and CI use that path. The self-hashed original builder and artifact lock are byte-for-byte unchanged; its historical `--verify` and `--rebuild-check` retain exact-host requirements. A foreign verifier-host description passes both immutable verification and the entire consumer binary contract (three slices, five architectures, embedded configuration/export/load checks). The contract's three intended-reason consumer corruption negatives pass. A separate richer discriminator rejects nine source/recipe/config/key/artifact/symlink/archive/signature/provenance mutations and independently rejects the foreign reproduction host. This replaces no historical six-old-mode-check evidence and claims no remote CI run. |
+| I3: lifetime Dart tombstones and event sequence history | Request/session matching now provides authority for callbacks, with only a current-session Stop fence retained until idle/replacement. Late cancelled replies add no historical session record. Callback dedup retains a high-water mark per sealed event kind; First Frame and terminal failure remain one-shot, independent of newer timeline revisions. Cancelled candidate snapshots are released immediately even while a native Future retains its empty owner; disposal clears terminal bookkeeping. The affected player suite passed all 44 cases, including 150 replacement/cancel/late-reply cycles with both pairing orders and repeated Stop, plus 2,000 same-session retry events and older First Frame delivery. Fixed aggregate retention bounds execute in GREEN. Authority retention failed in RED; the event RED failed first on duplicate First Frame, before its retention assertion, so event-retention RED is not claimed. Existing symmetric five-second pair, stale callback and command tests remain included. |
+| M1/M2: documentation | Package README/changelog now describe the implemented endorsed typed Apple package and remaining Hardening/View limits. Fixture documentation distinguishes current declarations from historical full execution. R42 declared 252 iOS / 214 macOS; the new shared I1 case makes current declarations 253/215. The last complete executed main native inventories remain pre-R42 251/213. |
+
+Fresh native coverage at the changed production Swift source is **4 macOS and
+25 iOS cases, all passing with zero skips**. These selections include the new
+HLS reconstruction case and existing affected HLS/restoration cases. Strengthening
+the new case with nonempty child-request assertions and a cancelled inherited
+request control then received **one final case per platform**, both passing.
+These are overlapping focused checkpoints, not a fictional new full aggregate.
+The builds compile the current shared plugin for the actual endorsed iOS and
+macOS targets. Canonical fixtures were copied identically to both target placements;
+only the new manifest entry/hash and count declarations changed, with the prior
+fixture hash retained. All historical/new fixture manifests, exact main-target
+bytes/provenance and ten fixture-tool tests pass. Dart analysis reports no issues,
+changed handwritten Dart formatting is clean, and `git diff --check` is clean.
+
+Native tests used the existing serial XCTest workflow, worktree-owned DerivedData,
+the specified iPhone 17 simulator (iOS 26.5), and the bounded display-awake wrapper.
+They retain the known XCTest minimum-version, unused weak-variable, stale-product
+and always-run-phase notices; no warning-free assertion, global SDK/cache/power
+repair, user-process termination or broad cleanup occurred. No full FFmpeg source
+build, universal product rebuild, media integration rerun or remote CI run occurred:
+accepted artifact-producing recipe, canonical artifacts, media, generated Pigeon
+and untouched product evidence remain at their explicitly historical checkpoints.
+
+The supplied historical `/private/tmp/yl-task8-ffmpeg-9.0.1.tar.xz` and `.asc`
+paths were absent when verification ran. A bounded exact-name lookup found no
+replacement; one pinned public archive/signature download supplied
+`/private/tmp/yl-phase-fix-ffmpeg-9.0.1.tar.xz` and `.asc`. Their hashes are
+`cf38e0e28c7e5605942c4a77755349b0145804a397af37eb1fb4c77cb237f635` and
+`b613a00005232a1245ace7080088781ac23a916119d3e5b0d6c042368eee0177`.
+The verifier checked the exact accepted GPG signature/fingerprint/receipt.
+The builder hash remains
+`6d6db93bf7bc2344b4dcfad58ad4a6872e41b6b435a3ef33f275d7548da11fde`;
+the accepted artifact lock remains
+`b1c98d2de63a7feb29b87e05ee48969c922289e515705760f1b5ac1c4f19465d`.
+
+Failed setup attempts remain distinct from behavioral RED: Flutter's initial
+sandbox cache-write denial; a test fixture's wrong `source.http` member (corrected
+to `source.request`); a test listener started before installing its connection
+handler; the absent signed-source path; and an isolated verifier-copy layout that
+could not discover Swift consumers. Initial Dart analysis also found two missing
+braces, corrected without behavioral changes. The first standalone fixture-manifest
+helper invocation omitted exported `YL_REPO_ROOT`; exporting it allowed the
+complete manifest check to pass. The later actual HLS and verifier
+RED failures and successful affected checks are separately retained in
+`phase-fix-report.md` and `phase-fix-logs/` in the local phase scratch directory.
+No ignored scratch artifact is force-added to Git.
+
+### Deferred owners retained after the correction
+
+The following broad-review dispositions remain binding. I1–I3 are corrected in
+this wave and are not deferred to these later capability or release owners.
+
+| Item | Disposition, evidence and owner |
+| --- | --- |
+| Task 7 M3, new non-Sendable host Dispose capture | Retain as explicit deferred concurrency debt. It is new host code, not inherited noise. Current Swift 5 mode and accepted affected compilation do not prove Swift 6 readiness. Hardening concurrency/Swift 6 readiness owns an actor/Sendable-safe disposal boundary and affected concurrency tests. No demonstrated current-mode disposal race was found in the reviewed path. |
+| Task 7 M4, supposed second-Load constraint inheritance | **Closed.** The final `task7-host-cases.json` mapping now states same-session suspend/resume. The reviewed shared test performs one Load, sets height 720 and restores that session. No new-Load inheritance claim remains in that mapping. |
+| Task 8 M1, current-target source/count guard versus runtime inventory | Explicitly deferred to **Hardening Task 8 and final release gate**. `verify_current_targets` compares fixture bytes and method counts; it does not validate main-example PBX/xcresult case identities and exact skips. Independent consumer tooling does inspect case identities/skips. Earlier accepted full main-example xcresults establish their own pre-R42 inventory, and focused R42 results establish only the added path. Add the durable main-example runtime guard before final v0.2 acceptance; do not treat a source count as its substitute. |
+| Task 8 M2, obsolete iOS fixture navigation | **Closed.** Six stale MKV/FLV navigator references were removed. The two valid HLS references remain; the group is not empty or erroneously deleted. Reviewed PBX changes preserve the accepted 33 Swift source members and nine canonical resource members. |
+| Task 8 M3, three `Invalid key/value pair: DART_DEFINES=...` diagnostics | Retain as **unknown-origin build-tooling debt**, owned by build tooling/final release triage. Exact emitter/newness and operational consequence were not proved; neither inherited nor harmless is asserted. No global Flutter/CocoaPods repair or warning suppression is warranted merely to make output quiet. |
+| AnyHashable/Sendable, raw `Optional<AnyObject>` pointer, `Any??`, unused capture/weak-variable warnings | Retain source-specific compiler/test debt under Hardening concurrency/Swift 6 and test-maintenance ownership. The weak-variable test warnings are from copied behavioral bodies; they do not establish production failure. Keep these distinct from the new host capture above. No blanket warning-free or all-inherited claim. |
+| Legacy UTType and three retained Shared/Engine conditionals | Accept the recorded R11/R42 compatibility boundaries: platform identity, inherited iOS-only media-services reset, and legacy HLS UTI conversion. The actual SDK introduces neutral UTType on macOS 11; current code uses a conservative macOS 14 guard. Task 9 R1 correctly fixes the prose, without removing macOS 12/13 fallback behavior. No UIKit/AppKit leakage was found in Shared/Engines. |
+| XCTest support built for macOS 14 against declared macOS 12 target | Test-toolchain warning, owned by release OS/device matrix. Running on macOS 26.6.2 proves neither XCTest nor product operation on macOS 12. The package/product floor declarations remain 12. |
+| Ambient ffi/AppIntents metadata, Pod source/license/nonstandard CocoaPods, always-run phases and package notices | Retain packaging/toolchain follow-up under release/build hygiene. Accepted real link/product evidence is useful but does not erase warnings. No suppression or global dependency/SDK repair was made. |
+| Stale DerivedData/product-path notices | Build hygiene/release owner. Worktree-local DerivedData confines the accepted commands, but planning still mentions earlier products. These notices alone do not demonstrate artifact drift. Avoid global cache deletion; retain the existing receipts. |
+| FFmpeg `aac_ac3_parser.c:99 bit_rate` warnings | Retain the exact ten observations: five in each of the two accepted final full builds. Upstream FFmpeg/source and release provenance review own disposition. Disabled AC-3 decoding does not prove the branch harmless. No source patch, suppressed warning or new binary safety claim. |
+| Internal command/source maps, R16 | Allowed temporary closed implementation detail behind validated typed boundaries. **Hardening Tasks 1 and 2** own their removal. This exception does not cover I3 or authorize a public dynamic transport. |
+| Strict managed network, bounded buffer, effective hardware-required and plugin-managed audio | Allowed consolidation rejection, with the existing truthful unsupported guards. **Hardening Tasks 2–5** own completed guarantees/policy evidence; app-managed audio remains the usable default. Do not advertise full support now. The I1 credential-safety correction above is separate from this authorized capability deferral. |
+| Public geometry, R23/R29 | Explicit interim public metadata regression is accepted for consolidation only. **Hardening Task 7**, before View/release, must replace `videoGeometry == null` in both exact local-H264-AAC-MKV cases with authoritative encoded/clean-aperture/PAR/unapplied-rotation geometry and restore original display width 320 and height 180 assertions. A native buffer or First Frame does not discharge it. |
+| Task-owned cleanup, R20/R28/R31/R32 | Retain the documented bounded cleanup decisions and receipts. Rejected source/build/intermediate regeneration and missing bulk diagnostics are accepted forensic costs. No accepted output proof was declared deleted or regenerated by this review. |
+| Owned display-awake wrapper, R35/R36 and repairs | Accepted exact `caffeinate -d -i -u -t 240 -w PID`, owned process-group signal forwarding, two-second escalation/reaping and real seven-process regressions. The wrapper's own SIGKILL and uninterruptible OS-state limits remain explicit. This does not prove asleep/background playback or permit global power changes. |
+| Historic intermittent HLS/display/build failures | Preserve as failed attempts with unproved causes, alongside the later accepted results. One native HLS rollback timeout and one unwrapped First Frame failure are not explained away by speculation. No additional broad rerun was justified during this review. Later endurance/runtime owners must investigate recurrence. |
+| Physical iOS VideoToolbox, physical Intel playback, minimum OS, Instruments/memgraph, endurance/reconnect/replacement soak, remote CI | Still unproved; owned by the remaining Hardening/release validation matrix. Rosetta startup is not Intel decode proof; simulator decoder-unavailable branches are not positive hardware playback. I2 is a concrete CI invocation defect that must be fixed before calling this phase ready, while actual remote execution remains a distinct outstanding evidence item. |
+| Old Apple package deletion and final View cleanup | Remain later-plan work after historical verifiers are reconciled. Their current unendorsed presence is intentional; no cleanup/release permission follows from phase acceptance. |
+
+
+### Additional chronological rulings and accepted costs
+
+R43–R45 supplement the earlier 42-entry historical chronology above. The full
+decisions and costs are retained here before scratch cleanup.
+
+43. Ruling: the one broad phase review may collapse byte-identical duplicate bodies into one fully read canonical body plus every placement/membership/migration delta, and validate untouched generated transport bodies through exact accepted canonical-generation hashes plus their schema, transport structure and handwritten adapters. Every patch path and unread/truncated interval must still have an explicit coverage classification and concrete equivalence proof; no blanket fixture, copied-engine, generated-name or historical-manifest exemption. Current duplicate bodies must match current hashes; historical source hashes alone do not prove current equality. Unique handwritten production and behavioral test code remains fully reviewed, copied legacy production gets one complete canonical read, and all changed wiring/metadata/availability conditions remain reviewed. The reviewer requested this after output truncation on a55,863-line package containing50,417 additions with multiple fixture copies; repeated equal bytes add no independent architectural evidence — cost if wrong: an incorrect equality grouping or stale generation receipt could conceal a unique defect; a per-path coverage map with exact hash/source/checkpoint and complete delta reads makes that assumption explicit and auditable. This is a review-method ruling, not a code or capability exception; it must be retained in durable phase verification during the final batched fix/evidence update before scratch cleanup.
+
+44. Ruling: resolve broad I2 by adding a separate consumer immutable-artifact verifier (verify_artifact.py), updating contract/CI/documented consumer callers, and preserving build_xcframework.sh plus bridge-artifact.lock byte-for-byte. The consumer verifier validates the accepted lock/provenance, all six exact recipe/bridge/key/source inputs, configure contract, every canonical file/symlink entry and signed source/signature receipt without demanding that the verifier host equal the recorded builder. Keep existing --rebuild-check exact toolchain/build provenance requirements; document the original builder --verify as the historical exact-host interface, not portable consumer verification. No lock migration, binary rewrite, compiler-input change or full rebuild is required solely for this new verification entrypoint. Tests must demonstrate intact immutable verification on a different verifier-host description, reject each actual source/recipe/artifact mutation for its intended mismatch rather than an unrelated host mismatch, and separately reject an incompatible reproducibility host. Worker proposed this interface before any lock mutation, and parent inspected self-hashed recipe/contract behavior — cost if wrong: two verification entrypoints may confuse maintainers and the portable path trusts reviewed recorded build provenance rather than independently repeating the compiler; explicit caller/documentation separation, accepted-lock/source/signature/content validation and continued strict reproducibility checks constrain that risk. Any future artifact or recipe update still requires reviewed reproducibility/provenance acceptance, never automatic hash refresh.
+
+45. Ruling: permit two internal read-only @visibleForTesting aggregate retention-count accessors for I3 (player session-authority records and callback deduplication records), paired with real repeated Load/Stop/cancel/late-reply and same-session event behavior. Fixed retention is an explicit spec/finding requirement and cannot be observed through the public playback values alone; read-only counts provide a bounded discriminator without a separate VM heap/mirror harness. They must expose no identifiers or mutable cleanup/test bypass, add no public API/transport/diagnostic fields, and count the actual retained authority rather than a synthetic constant. Tests assert a fixed bound and stale-authority/milestone behavior, not exact private container implementation — cost if wrong: internal test observability can couple tests to bookkeeping representation and slightly expand internal surface; aggregate semantic counts, visibility annotation and behavior assertions constrain that cost. This narrow judgment overrides a skill preference against test-only accessors, not the requirement for meaningful behavioral tests.

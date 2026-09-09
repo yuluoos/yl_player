@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 import 'apple_codec.dart';
@@ -22,7 +23,12 @@ final class AppleCallbacks implements ApplePlayerFlutterApi {
   int _invalidCount = 0;
   bool _readyObserved = false;
   bool closed = false;
-  final _eventSequences = <int>{};
+  // Native acknowledges callbacks in FIFO order. Keep only each event kind's
+  // high-water mark; timeline revisions do not fence historical milestones.
+  final _eventSequences = <Type, int>{};
+  @visibleForTesting
+  int get retainedEventDeduplicationCount => _eventSequences.length;
+
   final void Function(YlPlayerState state, int sequence, String? loadRequestId)
   onFullState;
   final void Function(AppleStateDeltaMessage delta) onDelta;
@@ -77,10 +83,23 @@ final class AppleCallbacks implements ApplePlayerFlutterApi {
     return true;
   }
 
-  bool acceptEvent(YlPlayerEvent event, int sequence) =>
-      !closed &&
-      event.sessionId == state.sessionId &&
-      _eventSequences.add(sequence);
+  bool acceptEvent(YlPlayerEvent event, int sequence) {
+    if (closed || event.sessionId != state.sessionId) return false;
+    final previous = _eventSequences[event.runtimeType];
+    if (previous != null &&
+        (sequence <= previous ||
+            event is YlFirstFrameEvent ||
+            event is YlPlaybackFailedEvent)) {
+      return false;
+    }
+    _eventSequences[event.runtimeType] = sequence;
+    return true;
+  }
+
+  void close() {
+    closed = true;
+    _eventSequences.clear();
+  }
 
   @override
   void onState(AppleStateMessage value) => _decode(() {

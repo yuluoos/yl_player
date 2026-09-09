@@ -1,5 +1,7 @@
 import XCTest
 import CoreVideo
+import AVFoundation
+import Network
 @testable import yl_player_apple
 
 final class YlAppleSessionTests: XCTestCase {
@@ -371,4 +373,142 @@ final class YlAppleHostDeliveryTests: XCTestCase {
     XCTAssertEqual(textures.unregistered.count, 1)
     XCTAssertEqual(removed.count, 1)
   }
+}
+
+@MainActor
+final class YlAppleHlsIntentTests: XCTestCase {
+  func testRedirectHistorySurvivesRealSessionReconstructionAndFreshLoadResetsIntent() async throws {
+    let server = try HlsIntentServer()
+    defer { server.close() }
+    let f = AppleHostFixture()
+    defer { f.host.close() }
+    func request(_ id: String) -> AppleLoadRequest {
+      var value = AppleHostFixture.request(id, url: server.origin.appendingPathComponent("master.m3u8").absoluteString, format: .hls)
+      value.source.request = AppleHttpRequestMessage(headers: [:], credentials: ["X-Intent": "secret"])
+      return value
+    }
+    func loader() throws -> YlHlsResourceLoader {
+      let asset = try XCTUnwrap(f.av.currentItem?.asset as? AVURLAsset)
+      return try XCTUnwrap(asset.resourceLoader.delegate as? YlHlsResourceLoader)
+    }
+    func fetch(_ url: URL, using loader: YlHlsResourceLoader) async throws -> Data {
+      let request = HlsIntentRequest(url)
+      loader.startLoading(request)
+      try await AppleHostCharacterizations.waitFor { request.finished }
+      if let error = request.error { throw error }
+      if let redirect = request.redirect {
+        return try await URLSession.shared.data(for: redirect).0
+      }
+      return request.data
+    }
+    func inspectChildren(_ loader: YlHlsResourceLoader) async throws {
+      let root = try await fetch(loader.encodedAssetURL(), using: loader)
+      let childLine = try XCTUnwrap(String(decoding: root, as: UTF8.self).split(separator: "\n").first { !$0.hasPrefix("#") })
+      let child = try await fetch(XCTUnwrap(URL(string: String(childLine))), using: loader)
+      let mediaLine = try XCTUnwrap(String(decoding: child, as: UTF8.self).split(separator: "\n").first { !$0.hasPrefix("#") })
+      _ = try await URLSession.shared.data(from: XCTUnwrap(URL(string: String(mediaLine))))
+      // This resource has no stripped ancestor and must keep its independent intent.
+      _ = try await fetch(YlHlsURLCodec.encode(server.origin.appendingPathComponent("unrelated.key"), kind: .key), using: loader)
+      // The media proxy must remember its own redirect across reconstruction too.
+      _ = try await fetch(YlHlsURLCodec.encode(server.origin.appendingPathComponent("redirect.ts"), kind: .media), using: loader)
+    }
+    let first = try await f.load(request("first"))
+    let original = try loader()
+    try await inspectChildren(original)
+    f.host.suspend()
+    f.host.resume()
+    try await AppleHostCharacterizations.waitFor { f.host.isActive && f.av.currentItem != nil }
+    let restored = try loader()
+    XCTAssertFalse(original === restored)
+    XCTAssertEqual(f.host.sessionId, first.sessionId)
+    try await inspectChildren(restored)
+    XCTAssertEqual(server.credentials(path: "/master.m3u8"), [true, false], "Original resource must stay stripped on same-session reopen")
+    XCTAssertFalse(server.credentials(path: "/child.m3u8").isEmpty)
+    XCTAssertTrue(server.credentials(path: "/child.m3u8").allSatisfy { !$0 })
+    XCTAssertFalse(server.credentials(path: "/segment.ts").isEmpty)
+    XCTAssertTrue(server.credentials(path: "/segment.ts").allSatisfy { !$0 })
+    XCTAssertEqual(server.credentials(path: "/unrelated.key"), [true, true])
+    XCTAssertEqual(server.credentials(path: "/redirect.ts"), [true, false])
+    let fresh = try await f.load(request("fresh"))
+    XCTAssertNotEqual(fresh.sessionId, first.sessionId)
+    let freshLoader = try loader()
+    XCTAssertThrowsError(try original.preflight(cancellationToken: YlOpenCancellationToken()))
+    // Retired work cannot authorize or strip the new user Load's resource.
+    let lateURL = server.origin.appendingPathComponent("late.key")
+    let retired = HlsIntentRequest(try YlHlsURLCodec.encode(lateURL, kind: .key, credentialsStripped: true))
+    original.startLoading(retired)
+    XCTAssertTrue(retired.finished)
+    XCTAssertEqual(retired.error?.code, "network.cancelled")
+    _ = try await fetch(YlHlsURLCodec.encode(lateURL, kind: .key), using: freshLoader)
+    XCTAssertEqual(server.credentials(path: "/late.key"), [true])
+    _ = try await fetch(YlHlsURLCodec.encode(server.origin.appendingPathComponent("redirect.ts"), kind: .media), using: freshLoader)
+    XCTAssertEqual(server.credentials(path: "/master.m3u8"), [true, false, true])
+    XCTAssertEqual(server.credentials(path: "/redirect.ts"), [true, false, true])
+  }
+}
+
+private final class HlsIntentRequest: YlHlsLoadingRequest {
+  let url: URL
+  var requestedOffset: Int64 { 0 }
+  var currentOffset: Int64 { 0 }
+  var requestedLength: Int { 0 }
+  var requestsAllDataToEnd: Bool { true }
+  private let lock = NSLock()
+  private var complete = false
+  var finished: Bool { lock.lock(); defer { lock.unlock() }; return complete }
+  var data = Data()
+  var error: NativePlayerError?
+  var redirect: URLRequest?
+  init(_ url: URL) { self.url = url }
+  func setContentInformation(contentType: String?, contentLength: Int64, byteRangeAccessSupported: Bool) {}
+  func respond(with data: Data) { self.data.append(data) }
+  func redirect(to request: URLRequest) { redirect = request }
+  func finishLoading() { lock.lock(); complete = true; lock.unlock() }
+  func finishLoading(with error: NativePlayerError) { self.error = error; finishLoading() }
+}
+
+private final class HlsIntentServer {
+  private let source: NWListener
+  private let other: NWListener
+  private let queue = DispatchQueue(label: "yl.test.hls.intent")
+  private let lock = NSLock()
+  private var log = [(String, Bool)]()
+  let origin: URL
+  init() throws {
+    source = try NWListener(using: .tcp, on: .any)
+    other = try NWListener(using: .tcp, on: .any)
+    let ready = DispatchSemaphore(value: 0)
+    for listener in [source, other] {
+      listener.newConnectionHandler = { $0.cancel() }
+      listener.stateUpdateHandler = { if case .ready = $0 { ready.signal() } }
+      listener.start(queue: queue)
+    }
+    guard ready.wait(timeout: .now() + 5) == .success,
+          ready.wait(timeout: .now() + 5) == .success,
+          let port = source.port, let otherPort = other.port else { throw NSError(domain: "HlsIntentServer", code: 1) }
+    origin = URL(string: "http://127.0.0.1:\(port.rawValue)")!
+    let foreign = "http://127.0.0.1:\(otherPort.rawValue)"
+    for (listener, isSource) in [(source, true), (other, false)] {
+      listener.newConnectionHandler = { [weak self] connection in
+        connection.start(queue: DispatchQueue.global())
+        connection.receive(minimumIncompleteLength: 1, maximumLength: 16384) { [weak self] bytes, _, _, _ in
+          guard let self, let bytes, !bytes.isEmpty else { connection.cancel(); return }
+          let text = String(decoding: bytes, as: UTF8.self)
+          let path = text.split(separator: " ").dropFirst().first.map(String.init) ?? ""
+          let authorized = text.lowercased().contains("x-intent: secret")
+          if isSource { self.lock.lock(); self.log.append((path, authorized)); self.lock.unlock() }
+          let redirect = isSource && ["/master.m3u8", "/redirect.ts"].contains(path)
+          let body: String
+          if path == "/master.m3u8" { body = "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000\n\(self.origin)/child.m3u8\n" }
+          else if path == "/child.m3u8" { body = "#EXTM3U\n#EXT-X-TARGETDURATION:1\n#EXTINF:1,\n\(self.origin)/segment.ts\n#EXT-X-ENDLIST\n" }
+          else { body = "0123456789abcdef" }
+          let data = Data(body.utf8)
+          let headers = "HTTP/1.1 \(redirect ? "302 Found" : "200 OK")\r\n" + (redirect ? "Location: \(foreign)\(path)\r\n" : "") + "Content-Type: \(path.hasSuffix("m3u8") ? "application/vnd.apple.mpegurl" : "application/octet-stream")\r\nContent-Length: \(data.count)\r\nConnection: close\r\n\r\n"
+          connection.send(content: Data(headers.utf8) + data, completion: .contentProcessed { _ in connection.cancel() })
+        }
+      }
+    }
+  }
+  func credentials(path: String) -> [Bool] { lock.lock(); defer { lock.unlock() }; return log.filter { $0.0 == path }.map { $0.1 } }
+  func close() { source.cancel(); other.cancel() }
 }

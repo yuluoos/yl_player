@@ -28,15 +28,25 @@ From the repository root, the canonical builder is:
 
 ```sh
 sh packages/yl_player_apple/tool/apple_ffmpeg/build_xcframework.sh --print-contract
-sh packages/yl_player_apple/tool/apple_ffmpeg/build_xcframework.sh --verify
+python3 packages/yl_player_apple/tool/apple_ffmpeg/verify_artifact.py
 sh packages/yl_player_apple/tool/apple_ffmpeg/build_xcframework.sh --rebuild-check
 ```
 
-`--verify` checks the committed artifact, source/configuration/toolchain pins,
-and downloaded source signature without changing the artifact or lock.
-`--rebuild-check` also builds all five architecture targets in a fresh temporary
-directory and compares every file byte and symlink target with the accepted
-artifact. Both modes fail on drift and never refresh a lock.
+`verify_artifact.py` is the consumer verifier used by CI. It checks the exact
+accepted lock (including recorded builder provenance), all six recipe/source/key
+inputs, configuration, complete artifact bytes and symlink targets, and the
+signed source receipt without requiring the verifier machine to match the
+original builder. It never compiles, updates a lock, or changes artifact bytes.
+`YL_FFMPEG_ARCHIVE` and `YL_FFMPEG_SIGNATURE` accept existing local source inputs;
+otherwise the verifier obtains the exact pinned public archive and signature.
+
+`--rebuild-check` requires the exact toolchain recorded in the lock, builds all
+five targets in a fresh temporary directory, and compares every byte and
+symlink target. The original self-hashed builder's `--verify` remains a
+historical exact-host interface; use the separate consumer verifier above on
+other hosts. Neither interface refreshes the lock. An accepted replacement
+artifact requires reviewing and explicitly updating the consumer verifier's
+accepted-lock digest along with its new provenance.
 
 To rebuild or replace the LGPL component, use an absent output directory:
 

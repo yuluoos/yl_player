@@ -181,7 +181,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   )
 
   private let originURL: URL
-  private var strippedResources = Set<String>()
+  let credentialContext: YlHlsCredentialContext
   private let hasExplicitCredentials: Bool
   private let headerPolicy: YlHlsHeaderPolicy
   private let configuration: YlNetworkConfiguration
@@ -197,8 +197,10 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     headers: [String: String],
     credentials: [String: String] = [:],
     configuration: YlNetworkConfiguration,
+    credentialContext: YlHlsCredentialContext = YlHlsCredentialContext(),
     sessionConfiguration: URLSessionConfiguration = .ephemeral
   ) throws {
+    self.credentialContext = credentialContext
     self.originURL = originURL
     self.hasExplicitCredentials = !credentials.isEmpty
     self.headerPolicy = YlHlsHeaderPolicy(originURL: originURL, headers: headers, credentials: credentials)
@@ -207,7 +209,8 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
       originURL: originURL,
       headers: headers,
       credentials: credentials,
-      configuration: configuration
+      configuration: configuration,
+      credentialContext: credentialContext
     )
     super.init()
 
@@ -252,7 +255,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     }
 
     let cacheKey = destination.absoluteString
-    let credentialsStripped = YlHlsURLCodec.credentialsStripped(loadingRequest.url) || !headerPolicy.isSourceOrigin(destination) || stateLock.withLock { strippedResources.contains(cacheKey) }
+    let credentialsStripped = YlHlsURLCodec.credentialsStripped(loadingRequest.url) || !headerPolicy.isSourceOrigin(destination) || credentialContext.isStripped(cacheKey)
     let loaderState = stateLock.withLock {
       (cancelled: cancelled, cached: cachedResponses["\(credentialsStripped):\(cacheKey)"])
     }
@@ -260,6 +263,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
       loadingRequest.finishLoading(with: Self.cancelledError())
       return true
     }
+    if credentialsStripped { credentialContext.strip(cacheKey) }
     if let cached = loaderState.cached {
       respond(cached, to: loadingRequest)
       return true
@@ -701,7 +705,7 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
       return
     }
     record.credentialsStripped = record.credentialsStripped || !headerPolicy.isSourceOrigin(destination)
-    if record.credentialsStripped { _ = stateLock.withLock { strippedResources.insert(record.cacheKey) } }
+    if record.credentialsStripped { credentialContext.strip(record.cacheKey) }
     record.redirectCount += 1
     guard record.redirectCount <= configuration.maxRedirects else {
       completionHandler(nil)
@@ -740,6 +744,7 @@ final class YlPreparedHlsAsset {
     credentials: [String: String] = [:],
     configuration: YlNetworkConfiguration,
     cancellationToken: YlOpenCancellationToken,
+    credentialContext: YlHlsCredentialContext = YlHlsCredentialContext(),
     sessionConfiguration: URLSessionConfiguration = .ephemeral
   ) throws {
     let loader = try YlHlsResourceLoader(
@@ -747,6 +752,7 @@ final class YlPreparedHlsAsset {
       headers: headers,
       credentials: credentials,
       configuration: configuration,
+      credentialContext: credentialContext,
       sessionConfiguration: sessionConfiguration
     )
     self.loader = loader

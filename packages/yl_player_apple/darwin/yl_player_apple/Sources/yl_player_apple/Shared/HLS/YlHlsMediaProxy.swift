@@ -39,7 +39,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
   private let accessToken = UUID().uuidString.lowercased()
   private var session: URLSession!
   private var connections: [ObjectIdentifier: NWConnection] = [:]
-  private var strippedResources = Set<String>()
+  private let credentialContext: YlHlsCredentialContext
   private var taskRecords: [Int: TaskRecord] = [:]
   private var connectionTasks: [ObjectIdentifier: URLSessionDataTask] = [:]
   private var cancelled = false
@@ -49,8 +49,10 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     originURL: URL,
     headers: [String: String],
     credentials: [String: String] = [:],
-    configuration: YlNetworkConfiguration
+    configuration: YlNetworkConfiguration,
+    credentialContext: YlHlsCredentialContext = YlHlsCredentialContext()
   ) throws {
+    self.credentialContext = credentialContext
     headerPolicy = YlHlsHeaderPolicy(originURL: originURL, headers: headers, credentials: credentials)
     self.configuration = configuration
     let parameters = NWParameters.tcp
@@ -242,7 +244,8 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     let range = incomingHeaders["range"]
     let method = String(requestParts[0])
     let resourceKey = destination.absoluteString
-    let stripped = Self.inheritsCredentialStripping(fromRequestTarget: requestTarget) || !headerPolicy.isSourceOrigin(destination) || lock.withLock { strippedResources.contains(resourceKey) }
+    let stripped = Self.inheritsCredentialStripping(fromRequestTarget: requestTarget) || !headerPolicy.isSourceOrigin(destination) || credentialContext.isStripped(resourceKey)
+    if stripped { credentialContext.strip(resourceKey) }
     let request = makeRequest(destination: destination, range: range, method: method, credentialsStripped: stripped)
     let task = session.dataTask(with: request)
     lock.withLock {
@@ -412,7 +415,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       return
     }
     record.credentialsStripped = record.credentialsStripped || !headerPolicy.isSourceOrigin(destination)
-    if record.credentialsStripped { _ = lock.withLock { strippedResources.insert(record.resourceKey) } }
+    if record.credentialsStripped { credentialContext.strip(record.resourceKey) }
     record.redirectCount += 1
     guard record.redirectCount <= configuration.maxRedirects else {
       completionHandler(nil)

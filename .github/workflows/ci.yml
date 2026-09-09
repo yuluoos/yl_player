@@ -122,6 +122,7 @@ jobs:
         run: |
           sh packages/yl_player_apple/tool/check_pigeon.sh
           sh packages/yl_player_apple/tool/apple_ffmpeg/test_build_contract.sh
+          python3 packages/yl_player_apple/tool/apple_ffmpeg/test_verify_artifact.py
       - name: Boot iOS Simulator
         run: echo "YL_IOS_SIMULATOR_ID=$(sh tool/boot_ci_ios_simulator.sh)" >> "$GITHUB_ENV"
       - run: sh tool/check_native_ios.sh
@@ -143,4 +144,5 @@ jobs:
         run: |
           sh packages/yl_player_apple/tool/check_pigeon.sh
           sh packages/yl_player_apple/tool/apple_ffmpeg/test_build_contract.sh
+          python3 packages/yl_player_apple/tool/apple_ffmpeg/test_verify_artifact.py
       - run: sh tool/check_native_macos.sh

@@ -4,11 +4,131 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player_apple/src/pigeon/yl_player_apple.g.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'support/apple_fakes.dart';
+import 'package:yl_player_apple/src/apple_callbacks.dart';
 
 Matcher failsWith(String code) => throwsA(
   isA<YlPlayerException>().having((e) => e.failure.code, 'code', code),
 );
 void main() {
+  test(
+    'replacement Stop cancellation and late replies retain bounded authority',
+    () async {
+      final t = FakeTransport();
+      final p = await createFake(t);
+      final stale = <YlPlaybackSessionId>[];
+      var revision = 0;
+      for (var cycle = 0; cycle < 150; cycle++) {
+        final old = p.load(source);
+        final cancelled = expectLater(
+          old,
+          failsWith(YlFailureCodes.loadCancelled),
+        );
+        await flush();
+        final oldRequest = t.requests.last.loadRequestId;
+        final oldReply = t.loads.last;
+        final oldSession = 'cancelled-$cycle';
+        t.callbacks!.onState(
+          wireState(
+            requestId: oldRequest,
+            session: oldSession,
+            revision: ++revision,
+            sequence: revision,
+          ),
+        );
+        final loading = p.load(source);
+        await cancelled;
+        await flush();
+        final request = t.requests.last.loadRequestId;
+        final session = 'current-$cycle';
+        final snapshot = wireState(
+          requestId: request,
+          session: session,
+          revision: ++revision,
+          sequence: revision,
+        );
+        // Exercise both symmetric pairing orders on one long-lived player.
+        if (cycle.isEven) t.callbacks!.onState(snapshot);
+        t.loads.last.complete(
+          AppleLoadReply(loadRequestId: request, sessionId: session),
+        );
+        await flush();
+        if (cycle.isOdd) t.callbacks!.onState(snapshot);
+        final loaded = await loading;
+        oldReply.complete(
+          AppleLoadReply(loadRequestId: oldRequest, sessionId: oldSession),
+        );
+        await flush();
+        t.callbacks!.onState(
+          wireState(
+            requestId: oldRequest,
+            session: oldSession,
+            revision: revision + 1,
+            sequence: revision + 1,
+          ),
+        );
+        expect(p.state.sessionId, loaded.sessionId);
+        if (stale.isNotEmpty) {
+          await expectLater(
+            p.play(stale.first),
+            failsWith(YlFailureCodes.sessionStale),
+          );
+        }
+        await p.play(loaded.sessionId);
+        expect(p.retainedSessionAuthorityCount, lessThanOrEqualTo(2));
+        stale.add(loaded.sessionId);
+        if (cycle % 3 == 0) {
+          await p.stop();
+          await expectLater(
+            p.play(loaded.sessionId),
+            failsWith(YlFailureCodes.sessionStale),
+          );
+          t.callbacks!.onState(
+            wireState(revision: ++revision, sequence: revision),
+          );
+          expect(p.retainedSessionAuthorityCount, lessThanOrEqualTo(1));
+        }
+      }
+      await p.dispose();
+      expect(p.retainedSessionAuthorityCount, 0);
+    },
+  );
+
+  test(
+    'long lived retry dedup is bounded and older First Frame remains one shot',
+    () async {
+      final t = FakeTransport();
+      final p = await createFake(t);
+      final loaded = await commit(t, p);
+      final api = t.callbacks! as AppleCallbacks;
+      final events = <YlPlayerEvent>[];
+      final subscription = p.events.listen(events.add);
+      for (var i = 0; i < 2000; i++) {
+        final retry = AppleRetryScheduledMessage(
+          sessionId: loaded.sessionId.value,
+          revision: 5,
+          sequence: 30 + i,
+          occurredAtMs: i,
+          retryIndex: 1,
+          delayMs: 100,
+          failure: wireFailure(),
+        );
+        api.onRetryScheduled(retry);
+        api.onRetryScheduled(retry);
+      }
+      api.onState(wireState(session: 's1', revision: 8, sequence: 3000));
+      api.onFirstFrame(wireFrame(sequence: 12));
+      api.onFirstFrame(wireFrame(sequence: 12));
+      api.onFirstFrame(wireFrame(sequence: 3001));
+      await flush();
+      expect(events.whereType<YlRetryScheduledEvent>(), hasLength(2000));
+      expect(events.whereType<YlFirstFrameEvent>(), hasLength(1));
+      expect(api.retainedEventDeduplicationCount, lessThanOrEqualTo(4));
+      await subscription.cancel();
+      await p.dispose();
+      expect(api.retainedEventDeduplicationCount, 0);
+    },
+  );
+
   for (final platform in ApplePlatform.values) {
     test(
       'create exposes $platform capabilities without property-read calls',

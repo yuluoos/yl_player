@@ -58,8 +58,10 @@ mixed suites are deferred. These are complete engine matrices;
 complete player parity additionally requires those host cases and four complete
 consumer matrices before endorsement.
 
-The endorsed main example uses these same accepted fixtures: 251 iOS cases and
-213 macOS cases. `main_example_tests.py` checks the current example files and
+The endorsed main example currently declares 253 iOS and 215 macOS cases.
+The post-R42 inventory was 252/214; this phase correction adds one shared HLS
+intent case. The 251 iOS / 213 macOS counts describe the pre-R42 full execution
+checkpoint, not the current inventory or a newly executed full matrix. `main_example_tests.py` checks the current example files and
 resources byte-for-byte. The original main-example paths in the migration
 manifests remain historical provenance and are verified from pre-endorsement
 commit `ce368c55ad291b163b02157b487dbbf798a69892`; their hashes are not relabeled
