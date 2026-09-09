@@ -25,15 +25,14 @@ protocol YlRecoverySession: AnyObject {
 }
 
 struct YlFallbackReconnectPipeline {
-  let media: YlOpenedMedia
+  let media: YlDemuxPipeline.Resource
   let info: YLFMediaInfo
   let videoStream: YLFStreamInfo
   let audioStreams: [YLFStreamInfo]
   let audioCookies: [Int32: Data]
-  let videoFormat: CMVideoFormatDescription
   let selectedAudioStream: YLFStreamInfo?
-  let decoder: YlVideoToolboxDecoder
-  let audioRenderer: YlAudioRenderer
+  let decoder: YlVideoPipeline.Resource
+  let audioRenderer: YlAudioPipeline.Resource
 
   func discard() {
     decoder.dispose()
@@ -48,15 +47,45 @@ struct YlFallbackReconnectPipeline {
 final class YlRecoveryCoordinator {
   weak var session: (any YlRecoverySession)?
   private let scheduler: any YlRecoveryScheduling
-  let liveReconnectController: YlLiveReconnectController
-  var reconnectWorkItem: DispatchWorkItem?
-  var awaitingReconnectFirstFrame = false
-  var reconnectCount = 0
+  private let liveReconnectController: YlLiveReconnectController
+  private var reconnectWorkItem: DispatchWorkItem?
+  private var awaitingReconnectFirstFrame = false
+  private(set) var reconnectCount = 0
 
   init(configuration: YlNetworkConfiguration, scheduler: any YlRecoveryScheduling) {
     self.scheduler = scheduler
     self.liveReconnectController = YlLiveReconnectController(configuration: configuration)
   }
+
+  struct ScheduledWork {
+    private let item: DispatchWorkItem
+    fileprivate init(_ item: DispatchWorkItem) { self.item = item }
+    func cancel() { item.cancel() }
+  }
+  func detachScheduledWork() -> ScheduledWork? {
+    let work = reconnectWorkItem
+    reconnectWorkItem = nil
+    return work.map(ScheduledWork.init)
+  }
+  func replaceScheduledWork(_ work: DispatchWorkItem) {
+    reconnectWorkItem?.cancel()
+    reconnectWorkItem = work
+  }
+  func beginReopen() { reconnectWorkItem = nil }
+  func cancelBudget() { liveReconnectController.cancel() }
+  func mayInstall(generation: UInt64, currentGeneration: UInt64) -> Bool {
+    liveReconnectController.shouldInstall(reconnectGeneration: generation, currentGeneration: currentGeneration)
+  }
+  func resetAfterStop() { reconnectCount = 0; awaitingReconnectFirstFrame = false }
+  func clearFirstFrameExpectation() { awaitingReconnectFirstFrame = false }
+  func expectFirstFrame() { awaitingReconnectFirstFrame = true }
+  func acceptFirstFrame(isCurrent: Bool) -> Bool {
+    guard awaitingReconnectFirstFrame, isCurrent else { return false }
+    awaitingReconnectFirstFrame = false
+    reconnectCount += 1
+    return true
+  }
+  func markFirstFrame() { liveReconnectController.markFirstFrame() }
 
   func scheduleLiveReconnect(after error: NativePlayerError, generation reconnectGeneration: UInt64) {
     guard let session, session.mayScheduleRecovery(generation: reconnectGeneration) else { return }

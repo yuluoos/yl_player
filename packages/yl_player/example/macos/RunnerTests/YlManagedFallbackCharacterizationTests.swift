@@ -15,6 +15,7 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     let lock = NSLock()
     var submitted: [UInt64] = []
     var invalidations = 0
+    var onInvalidate: (() -> Void)?
     init(output: @escaping (YlVTDecodedImage) -> Void) { self.output = output }
     func decode(_ sample: CMSampleBuffer, generation: UInt64,
                 reservation: YlVideoDecodeReservation?) -> OSStatus {
@@ -23,31 +24,35 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
       return noErr
     }
     func flush() {}
-    func invalidate() { lock.withLock { invalidations += 1 } }
+    func invalidate() { lock.withLock { invalidations += 1 }; onInvalidate?() }
     var lastGeneration: UInt64? { lock.withLock { submitted.last } }
-    func send(generation: UInt64, status: OSStatus = noErr) throws {
+    func send(generation: UInt64, status: OSStatus = noErr, ptsUs: Int64 = 0) throws {
       var pixel: CVPixelBuffer?
       XCTAssertEqual(CVPixelBufferCreate(kCFAllocatorDefault, 16, 16,
         kCVPixelFormatType_32BGRA, nil, &pixel), kCVReturnSuccess)
       output(YlVTDecodedImage(status: status, pixelBuffer: pixel,
-        pts: .zero, duration: CMTime(value: 1, timescale: 25),
+        pts: CMTime(value: ptsUs, timescale: 1_000_000), duration: CMTime(value: 1, timescale: 25),
         keyframe: true, generation: generation, ownershipToken: nil))
     }
   }
   private final class Factory: YlVTSessionFactory {
     var sessions = [Session]()
+    var onCreate: (() -> Void)?
+    var onInvalidate: (() -> Void)?
     func makeSession(formatDescription: CMVideoFormatDescription,
                      output: @escaping (YlVTDecodedImage) -> Void) throws -> YlVTSession {
-      let session = Session(output: output); sessions.append(session); return session
+      let session = Session(output: output); session.onInvalidate = onInvalidate
+      sessions.append(session); onCreate?(); return session
     }
   }
   private final class Output: YlTextureOutput {
     let textureId: Int64 = 731
     var published = 0
     var pixel: CVPixelBuffer?
+    var onClear: (() -> Void)?
     func publish(_ pixelBuffer: CVPixelBuffer?) { pixel = pixelBuffer; published += 1 }
     func resize(width: Int, height: Int) {}
-    func clear() { pixel = nil }
+    func clear() { pixel = nil; onClear?() }
     func dispose() { clear() }
   }
   private final class Display: YlDisplayDriving {
@@ -55,6 +60,93 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     var invalidated = false
     func invalidate() { invalidated = true }
   }
+  private final class Trace {
+    private let lock = NSLock()
+    private var entries = [String]()
+    func add(_ value: String) { lock.withLock { entries.append(value) } }
+    var values: [String] { lock.withLock { entries } }
+    func clear() { lock.withLock { entries.removeAll() } }
+  }
+  private final class SeekControl: YlDemuxControlling {
+    let trace: Trace
+    let releaseJoin = DispatchSemaphore(value: 0)
+    let releaseSeek = DispatchSemaphore(value: 0)
+    init(_ trace: Trace) { self.trace = trace }
+    func interrupt(_ media: YlOpenedMedia) { trace.add("interrupt"); media.interruptRead() }
+    func resume(_ media: YlOpenedMedia) { media.resumeReads(); trace.add("read.resume") }
+    func join(_ worker: DispatchQueue, operation: () -> Void) {
+      // Real pending work on the exact demux queue must finish before buffers clear.
+      worker.async { [self] in
+        trace.add("worker.held")
+        _ = releaseJoin.wait(timeout: .now() + 10)
+        trace.add("worker.finished")
+      }
+      trace.add("join.begin")
+      worker.sync(execute: operation)
+      trace.add("join.end")
+    }
+    func seek(_ media: YlOpenedMedia, toMediaTimeUs target: Int64) throws {
+      trace.add("seek.held")
+      _ = releaseSeek.wait(timeout: .now() + 10)
+      try media.seek(toMediaTimeUs: target)
+      trace.add("seek.finished")
+    }
+  }
+  private final class Scheduler: YlPresentationScheduling {
+    let actual = YlFrameScheduler()
+    let trace: Trace
+    init(_ trace: Trace) { self.trace = trace }
+    var lateFrameDropCount: Int { actual.lateFrameDropCount }
+    var pendingPTS: [Int64] { actual.pendingPTS }
+    func enqueue(_ frame: YlFrameEnvelope) -> Bool { actual.enqueue(frame) }
+    func frame(at positionUs: Int64, generation: UInt64) -> YlFrameEnvelope? {
+      actual.frame(at: positionUs, generation: generation)
+    }
+    func flush(generation: UInt64) { actual.flush(generation: generation); trace.add("frames.flushed") }
+    func dispose() { actual.dispose() }
+  }
+  private final class Converter: YlAudioPacketConverting {
+    let trace: Trace
+    init(_ trace: Trace) { self.trace = trace }
+    func configure(stream: YlAudioStreamConfiguration) throws {}
+    func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate {
+      YlAudioBufferEstimate(durationUs: 20_000, byteCount: 64)
+    }
+    func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
+      YlScheduledAudioBuffer(payload: NSObject(), ptsUs: packet.ptsUs,
+        durationUs: 20_000, byteCount: 64, generation: packet.generation)
+    }
+    func reset() { trace.add("converter.reset") }
+  }
+  private final class AudioOutput: YlAudioOutputDriving {
+    let trace: Trace
+    let lock = NSLock()
+    var volume: Float = 1
+    var rate: Float = 1
+    var renderedAudioTime: YlRenderedAudioTime? { nil }
+    private var storedCompletions = [() -> Void]()
+    var completions: [() -> Void] { lock.withLock { storedCompletions } }
+    init(_ trace: Trace) { self.trace = trace }
+    func configure(sampleRate: Double, channelCount: Int) throws {}
+    func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void) {
+      lock.withLock { storedCompletions.append(completion) }
+    }
+    func play() throws { trace.add("audio.play") }
+    func pause() { trace.add("audio.pause") }
+    func reset() { trace.add("audio.reset") }
+    func dispose() {}
+  }
+  private final class AudioFactory: YlAudioRendererMaking {
+    let output: AudioOutput
+    let converter: Converter
+    private(set) var renderer: YlAudioRenderer?
+    init(_ trace: Trace) { output = AudioOutput(trace); converter = Converter(trace) }
+    func makeRenderer(bufferBudget: YlFallbackBufferBudget) -> YlAudioRenderer {
+      let value = YlAudioRenderer(bufferBudget: bufferBudget, converter: converter, output: output)
+      renderer = value; return value
+    }
+  }
+
   private func prepared(_ token: YlOpenCancellationToken? = nil) throws -> YlPreparedFallback {
     let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv"))
     return try YlPreparedFallback(source: ["uri": url.absoluteString, "formatHint": "matroska"],
@@ -110,6 +202,88 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     try current.send(generation: XCTUnwrap(current.lastGeneration))
     try await AppleHostCharacterizations.waitFor { output.published > 0 }
     XCTAssertNotNil(instance.copyPixelBuffer())
+  }
+
+  // R10: added in fix round1, not historical pre-extraction evidence. These are
+  // the actual backend's wired stages; observers forward to real queue/media,
+  // renderer and frame scheduler instead of constructing a transaction helper.
+  func testBackendSeekOrdersHeldStagesAndSuppressesOldAudioAndVideo() async throws {
+    let trace = Trace(), factory = Factory(), output = Output()
+    let audio = AudioFactory(trace), control = SeekControl(trace), scheduler = Scheduler(trace)
+    factory.onCreate = { trace.add("video.created") }
+    factory.onInvalidate = { trace.add("video.retired") }
+    output.onClear = { trace.add("texture.cleared") }
+    let instance = try YlFallbackBackend(playerId: 731,
+      services: YlPlatformServices(platform: .current, textureOutput: output,
+        makeDisplayDriver: { _ in Display() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared(),
+      generation: 17, videoSessionFactory: factory,
+      audioRendererFactory: audio, presentationScheduler: scheduler, demuxControl: control,
+      emit: { _ in })
+    defer { control.releaseJoin.signal(); control.releaseSeek.signal(); instance.dispose() }
+    try instance.activate()
+    try instance.command(name: "play", arguments: [:])
+    try await AppleHostCharacterizations.waitFor {
+      factory.sessions[0].lastGeneration != nil && !audio.output.completions.isEmpty
+    }
+    let oldVideo = factory.sessions[0], oldGeneration = try XCTUnwrap(oldVideo.lastGeneration)
+    let renderer = try XCTUnwrap(audio.renderer)
+    let oldCompletions = audio.output.completions
+    try oldVideo.send(generation: oldGeneration)
+    try oldVideo.send(generation: oldGeneration, ptsUs: 1_000_000)
+    try await AppleHostCharacterizations.waitFor { output.pixel != nil && !scheduler.pendingPTS.isEmpty }
+    trace.clear()
+    let completed = expectation(description: "actual backend seek completed")
+    DispatchQueue.global().async {
+      defer { completed.fulfill() }
+      do { try instance.command(name: "seekTo", arguments: ["positionMs": Int64(100)]) }
+      catch { XCTFail("Seek failed: \(error)") }
+    }
+    try await AppleHostCharacterizations.waitFor { trace.values.contains("worker.held") }
+    XCTAssertTrue(trace.values.contains("audio.pause"))
+    XCTAssertFalse(trace.values.contains("texture.cleared"))
+    XCTAssertFalse(trace.values.contains("seek.held"))
+    control.releaseJoin.signal()
+    try await AppleHostCharacterizations.waitFor { trace.values.contains("seek.held") }
+    XCTAssertTrue(scheduler.pendingPTS.isEmpty, "The real scheduler must flush before actual demux seek")
+    XCTAssertNil(instance.copyPixelBuffer())
+    XCTAssertNil(output.pixel)
+    XCTAssertFalse(trace.values.contains("audio.reset"), "Audio reset follows completed demux seek")
+    XCTAssertEqual(oldVideo.invalidations, 0)
+    let publishedBeforeStale = output.published
+    try oldVideo.send(generation: oldGeneration)
+    await Task.yield()
+    XCTAssertEqual(output.published, publishedBeforeStale)
+    control.releaseSeek.signal()
+    await fulfillment(of: [completed], timeout: 10)
+    let stages = trace.values
+    let required = ["audio.pause", "interrupt", "worker.finished", "join.end", "texture.cleared",
+                    "frames.flushed", "seek.held", "seek.finished", "converter.reset", "audio.reset",
+                    "video.retired", "video.created", "audio.play"]
+    var previous = -1
+    for stage in required {
+      let index = try XCTUnwrap(stages.firstIndex(of: stage), "Missing actual stage: \(stage); \(stages)")
+      XCTAssertGreaterThan(index, previous, "Wrong actual seek order: \(stages)")
+      previous = index
+    }
+    try instance.command(name: "pause", arguments: [:])
+    XCTAssertEqual(try renderer.enqueue(packet: YlCompressedAudioPacket(data: Data([1]),
+      ptsUs: 0, durationUs: 20_000, generation: oldGeneration)), .staleGeneration)
+    let scheduledAfterSeek = renderer.scheduledBytes
+    for completion in oldCompletions { completion() }
+    XCTAssertEqual(renderer.scheduledBytes, scheduledAfterSeek, "Pre-seek completions cannot consume new audio")
+    XCTAssertEqual(oldVideo.invalidations, 1)
+    let currentVideo = try XCTUnwrap(factory.sessions.last)
+    try await AppleHostCharacterizations.waitFor { currentVideo.lastGeneration != nil }
+    let currentGeneration = try XCTUnwrap(currentVideo.lastGeneration)
+    try oldVideo.send(generation: oldGeneration)
+    try currentVideo.send(generation: currentGeneration, ptsUs: 0)
+    await Task.yield()
+    XCTAssertEqual(output.published, publishedBeforeStale, "Stale generation and pre-target video stay suppressed")
+    try currentVideo.send(generation: currentGeneration, ptsUs: 100_000)
+    // Initial firstFrame was already sent: verify actual scheduler output at target.
+    XCTAssertEqual(scheduler.pendingPTS, [100_000])
+    XCTAssertNotNil(scheduler.frame(at: 100_000, generation: currentGeneration))
   }
 
   // Removing lifecycle generation invalidation would revive disposed output.

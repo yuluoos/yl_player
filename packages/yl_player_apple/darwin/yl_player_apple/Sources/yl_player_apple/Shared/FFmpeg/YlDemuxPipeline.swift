@@ -3,6 +3,21 @@ import CoreMedia
 import Foundation
 import YlFFmpegBridge
 
+protocol YlDemuxControlling {
+  func interrupt(_ media: YlOpenedMedia)
+  func join(_ worker: DispatchQueue, operation: () -> Void)
+  func resume(_ media: YlOpenedMedia)
+  func seek(_ media: YlOpenedMedia, toMediaTimeUs: Int64) throws
+}
+struct YlOpenedMediaControl: YlDemuxControlling {
+  func interrupt(_ media: YlOpenedMedia) { media.interruptRead() }
+  func join(_ worker: DispatchQueue, operation: () -> Void) { worker.sync(execute: operation) }
+  func resume(_ media: YlOpenedMedia) { media.resumeReads() }
+  func seek(_ media: YlOpenedMedia, toMediaTimeUs targetUs: Int64) throws {
+    try media.seek(toMediaTimeUs: targetUs)
+  }
+}
+
 protocol YlDemuxOutput: YlAudioPipelineOutput {
   func demuxDidReachEOF(generation: UInt64)
   func shouldReportDemuxFailure(generation: UInt64) -> Bool
@@ -31,28 +46,45 @@ struct YlFFmpegDemuxOpener: YlDemuxOpening {
 /// Owns the opened cursor, cancellation authority, track catalog and serial demux queue.
 /// The session lock keeps detach/install atomic with the lifecycle generation.
 final class YlDemuxPipeline {
+  final class Resource {
+    fileprivate let media: YlOpenedMedia
+    fileprivate init(_ media: YlOpenedMedia) { self.media = media }
+    var context: YLFMediaContextRef? { media.context }
+    var info: YLFMediaInfo { media.info }
+    var lastInputError: NativePlayerError? { media.lastInputError }
+    func close() { media.close() }
+    func cancelInput() { media.cancelInput() }
+    func interruptRead() { media.interruptRead() }
+    func resumeReads() { media.resumeReads() }
+    func beginControlOperation(_ token: YlOpenCancellationToken?) { media.beginControlOperation(token) }
+    func endControlOperation() { media.endControlOperation() }
+    func handleMemoryWarning() { media.handleMemoryWarning() }
+  }
   private let lock: NSLock
+  private let control: any YlDemuxControlling
   private let opener: any YlDemuxOpening
   private let bufferBudget: YlFallbackBufferBudget
   weak var output: (any YlDemuxOutput)?
   let sourceRecipe: YlFallbackSourceRecipe
   let sessionConfiguration: URLSessionConfiguration
   let mediaPolicy: YlFallbackMediaPolicy
-  var mediaInfo: YLFMediaInfo
-  var videoStream: YLFStreamInfo
-  var audioStreams: [YLFStreamInfo]
-  var audioCookies: [Int32: Data]
-  var isSeekable: Bool
-  var initialKeyframeGate = YlInitialKeyframeGate()
-  var openedMedia: YlOpenedMedia?
-  var sourceCancellationToken: YlOpenCancellationToken?
-  var selectedAudioStream: YLFStreamInfo?
-  let worker = DispatchQueue(label: "dev.ylplayer.\(YlApplePlatform.current.rawValue).fallback.demux")
+  private(set) var mediaInfo: YLFMediaInfo
+  private(set) var videoStream: YLFStreamInfo
+  private(set) var audioStreams: [YLFStreamInfo]
+  private(set) var audioCookies: [Int32: Data]
+  private(set) var isSeekable: Bool
+  private var initialKeyframeGate = YlInitialKeyframeGate()
+  private var openedMedia: Resource?
+  private var sourceCancellationToken: YlOpenCancellationToken?
+  private(set) var selectedAudioStream: YLFStreamInfo?
+  private let worker = DispatchQueue(label: "dev.ylplayer.\(YlApplePlatform.current.rawValue).fallback.demux")
 
   var context: YLFMediaContextRef? { lock.withLock { openedMedia }?.context }
 
   init(prepared: YlPreparedFallback, lock: NSLock, bufferBudget: YlFallbackBufferBudget,
-       opener: any YlDemuxOpening = YlFFmpegDemuxOpener()) throws {
+       opener: any YlDemuxOpening = YlFFmpegDemuxOpener(),
+       control: any YlDemuxControlling = YlOpenedMediaControl()) throws {
+    self.control = control
     self.lock = lock
     self.bufferBudget = bufferBudget
     self.opener = opener
@@ -68,8 +100,44 @@ final class YlDemuxPipeline {
     self.selectedAudioStream = resumeState?.selectedAudioStreamIndex.flatMap { index in
       prepared.audioStreams.first { $0.index == index }
     } ?? prepared.audioStreams.first
-    self.openedMedia = try prepared.takeMedia()
+    self.openedMedia = try Resource(prepared.takeMedia())
     self.sourceCancellationToken = prepared.takeCancellationToken()
+  }
+
+  var currentMedia: Resource? { openedMedia }
+  var recoveryScheduler: any YlRecoveryScheduling { YlDispatchRecoveryScheduler(queue: worker) }
+  func performSync<T>(_ operation: () throws -> T) rethrows -> T { try worker.sync(execute: operation) }
+  func performAsync(_ operation: @escaping () -> Void) { worker.async(execute: operation) }
+  func schedulePump(after delay: TimeInterval, operation: @escaping () -> Void) {
+    worker.asyncAfter(deadline: .now() + delay, execute: operation)
+  }
+  func joinForControl(_ operation: () -> Void) { control.join(worker, operation: operation) }
+  func detachMedia() -> Resource? { let old = openedMedia; openedMedia = nil; return old }
+  @discardableResult
+  func installMedia(_ media: Resource) -> Resource? { let old = openedMedia; openedMedia = media; return old }
+  func discardMedia() { openedMedia?.close(); openedMedia = nil }
+  func detachCancellationToken() -> YlOpenCancellationToken? {
+    let old = sourceCancellationToken; sourceCancellationToken = nil; return old
+  }
+  func detachOrphanedCancellation() -> YlOpenCancellationToken? {
+    let token = openedMedia == nil ? sourceCancellationToken : nil
+    if token != nil { sourceCancellationToken = nil }
+    return token
+  }
+  func installCancellation(_ token: YlOpenCancellationToken) { sourceCancellationToken = token }
+  func ownsCancellation(_ token: YlOpenCancellationToken) -> Bool { sourceCancellationToken === token }
+  func clearCancellation(ifOwned token: YlOpenCancellationToken) {
+    if sourceCancellationToken === token { sourceCancellationToken = nil }
+  }
+  func resetInitialKeyframeGate() { initialKeyframeGate.reset() }
+  func selectAudio(_ stream: YLFStreamInfo) { selectedAudioStream = stream }
+  func clearStoppedCatalog() {
+    selectedAudioStream = nil; audioStreams.removeAll(); audioCookies.removeAll(); isSeekable = false
+  }
+  func installReconnect(_ candidate: YlFallbackReconnectPipeline) {
+    mediaInfo = candidate.info; videoStream = candidate.videoStream
+    audioStreams = candidate.audioStreams; audioCookies = candidate.audioCookies
+    selectedAudioStream = candidate.selectedAudioStream; openedMedia = candidate.media
   }
 
   func audioTracks(codecName: (YLFStreamInfo) -> String) -> [YlNativeTrack] {
@@ -172,9 +240,12 @@ final class YlDemuxPipeline {
     return requestedStream
   }
 
-  func seek(_ media: YlOpenedMedia, toMediaTimeUs position: Int64) throws {
-    try media.seek(toMediaTimeUs: position)
+  func seek(_ media: Resource, toMediaTimeUs position: Int64) throws {
+    try control.seek(media.media, toMediaTimeUs: position)
   }
+
+  func interrupt(_ media: Resource) { control.interrupt(media.media) }
+  func resume(_ media: Resource) { control.resume(media.media) }
 
   func pumpOne(generation packetGeneration: UInt64) {
     guard let output else { return }
@@ -285,9 +356,9 @@ final class YlDemuxPipeline {
 
   func open(recipe: YlFallbackSourceRecipe, networkBufferBytes: Int,
             sessionConfiguration: URLSessionConfiguration,
-            onSourceCreated: ((YlByteSource) -> Void)? = nil) throws -> YlOpenedMedia {
-    try opener.open(recipe: recipe, networkBufferBytes: networkBufferBytes,
-      sessionConfiguration: sessionConfiguration, onSourceCreated: onSourceCreated)
+            onSourceCreated: ((YlByteSource) -> Void)? = nil) throws -> Resource {
+    try Resource(opener.open(recipe: recipe, networkBufferBytes: networkBufferBytes,
+      sessionConfiguration: sessionConfiguration, onSourceCreated: onSourceCreated))
   }
 }
 

@@ -20,10 +20,15 @@ final class YlFallbackOutputRelay {
 /// Owns format, decoder and serialized submissions. Session-generation predicates
 /// are captured per submission and never rebound to later session authority.
 final class YlVideoPipeline {
-  var format: CMVideoFormatDescription
-  var decoder: YlVideoToolboxDecoder?
-  let submissions = YlVideoSubmissionQueue()
-  let outputRelay = YlFallbackOutputRelay()
+  struct Resource {
+    fileprivate let decoder: YlVideoToolboxDecoder
+    fileprivate let format: CMVideoFormatDescription
+    func dispose() { decoder.dispose() }
+  }
+  private var format: CMVideoFormatDescription
+  private var decoder: YlVideoToolboxDecoder?
+  private let submissions = YlVideoSubmissionQueue()
+  private let outputRelay = YlFallbackOutputRelay()
   private let bufferBudget: YlFallbackBufferBudget
   private let factory: YlVTSessionFactory
 
@@ -34,15 +39,51 @@ final class YlVideoPipeline {
     self.factory = factory
   }
 
-  func makeFormatDescription(context: YLFMediaContextRef, streamIndex: Int32) throws -> CMVideoFormatDescription {
+  private func makeFormatDescription(context: YLFMediaContextRef, streamIndex: Int32) throws -> CMVideoFormatDescription {
     try YlVideoToolboxDecoder.makeFormatDescription(context: context, streamIndex: streamIndex)
   }
 
-  func makeDecoder(format: CMVideoFormatDescription) throws -> YlVideoToolboxDecoder {
+  private func makeDecoder(format: CMVideoFormatDescription) throws -> YlVideoToolboxDecoder {
     try YlVideoToolboxDecoder(formatDescription: format,
       maxInFlightBytes: bufferBudget.inFlightPacketBytes, factory: factory,
       onFrame: { [outputRelay] frame in outputRelay.frame(frame) },
       onError: { [outputRelay] error in outputRelay.error(error) })
+  }
+
+  var isDrained: Bool { submissions.isDrained }
+  var hasDecoder: Bool { decoder != nil }
+  var usesHardwareDecoder: Bool? { decoder?.usesHardwareDecoder }
+  func connect(_ output: any YlVideoPipelineOutput) { outputRelay.backend = output }
+  func initializeDecoder() throws { decoder = try makeDecoder(format: format) }
+  func discardDecoder() { decoder?.dispose(); decoder = nil }
+  func prepareCurrent() throws -> Resource {
+    Resource(decoder: try makeDecoder(format: format), format: format)
+  }
+  func prepare(context: YLFMediaContextRef, streamIndex: Int32) throws -> Resource {
+    let candidateFormat = try makeFormatDescription(context: context, streamIndex: streamIndex)
+    return Resource(decoder: try makeDecoder(format: candidateFormat), format: candidateFormat)
+  }
+  func detach() -> Resource? {
+    let old = decoder.map { value in Resource(decoder: value, format: format) }
+    decoder = nil
+    return old
+  }
+  @discardableResult
+  func install(_ candidate: Resource?) -> Resource? {
+    let old = decoder.map { value in Resource(decoder: value, format: format) }
+    if let candidate { format = candidate.format }
+    decoder = candidate?.decoder
+    return old
+  }
+  func finishInput(generation packetGeneration: UInt64, hasAudio: Bool,
+                   compatibility: YlAppleCompatibility) {
+    if !compatibility.limitsVideoReservations {
+      decoder?.flush()
+    } else if !hasAudio {
+      decoder?.drain()
+    } else if let drainingDecoder = decoder {
+      scheduleVideoDrain(decoder: drainingDecoder, generation: packetGeneration)
+    }
   }
 
   func consume(packet: inout YLFPacketRef?, ownedPacket: YLFPacketRef,

@@ -21,11 +21,15 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
        videoSessionFactory: YlVTSessionFactory = YlHardwareVTSessionFactory(),
        mediaClock: YlMediaClock? = nil, loadRequestId: String? = nil,
        channelIdentity: UInt64? = nil,
+       audioRendererFactory: any YlAudioRendererMaking = YlPlatformAudioRendererFactory(),
+       presentationScheduler: any YlPresentationScheduling = YlFrameScheduler(),
+       demuxControl: any YlDemuxControlling = YlOpenedMediaControl(),
        emit: @escaping (YlNativeBackendCallback) -> Void) throws {
     session = try YlManagedPlaybackSession(playerId: playerId, services: services,
       configuration: configuration, prepared: prepared, qualityConstraint: qualityConstraint,
       generation: generation, videoSessionFactory: videoSessionFactory, mediaClock: mediaClock,
-      loadRequestId: loadRequestId, channelIdentity: channelIdentity, emit: emit)
+      audioRendererFactory: audioRendererFactory, presentationScheduler: presentationScheduler,
+      demuxControl: demuxControl, loadRequestId: loadRequestId, channelIdentity: channelIdentity, emit: emit)
     super.init()
   }
 

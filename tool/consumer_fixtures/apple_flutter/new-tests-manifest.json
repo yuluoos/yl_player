@@ -212,15 +212,24 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlManagedFallbackCharacterizationTests.swift",
-    "sha256": "d4a8c6c8cd1f353b5761f6f0868ccbcff3f3c7f57432bf4b9541df460fb86b2b",
+    "sha256": "39c75b6ae576ab4060c5310c888de0eb735482bdc289ce4817c96f72a8d83145",
     "methods": [
       "testPreparedCandidateIsSilentAndDiscardPreventsTransfer",
       "testSeekRecreatesDecoderAndRejectsOldOutputBeforeNewFrame",
+      "testBackendSeekOrdersHeldStagesAndSuppressesOldAudioAndVideo",
       "testStopAndDisposeRejectHeldDecodeOutputAndReleasePackets",
       "testCurrentDecodeErrorFailsOnceAndSuppressesRetiredFailure",
       "testPresentationChoosesFramesAtQuarterNormalDoubleAndQuadrupleRate",
       "testDemuxEOFCancellationAndMalformedReadRemainDistinct"
     ],
-    "hardening_task1_provenance": "New characterization against accepted consolidation backend 98844babd865d3af7e9fe65ea90e619be9ace88c before extraction. Original test identities and pinned historical manifests untouched."
+    "hardening_task1_provenance": "New characterization against accepted consolidation backend 98844babd865d3af7e9fe65ea90e619be9ace88c before extraction. Original test identities and pinned historical manifests untouched.",
+    "hardening_task1_r1_provenance": {
+      "fix_base": "27398e7c30a802ba36d9959f37e392ff3c703136",
+      "from_sha256": "d4a8c6c8cd1f353b5761f6f0868ccbcff3f3c7f57432bf4b9541df460fb86b2b",
+      "new_methods": [
+        "testBackendSeekOrdersHeldStagesAndSuppressesOldAudioAndVideo"
+      ],
+      "reason": "R10 adds current actual-backend seek stage/effect/stale-audio-video proof and real wiring omission/reordering discriminators. The original six cases retain their pre-extraction baseline; this seventh case is not historical evidence."
+    }
   }
 ]

@@ -3,6 +3,16 @@ import CoreVideo
 import QuartzCore
 import Foundation
 
+protocol YlPresentationScheduling: AnyObject {
+  var lateFrameDropCount: Int { get }
+  var pendingPTS: [Int64] { get }
+  func enqueue(_ frame: YlFrameEnvelope) -> Bool
+  func frame(at positionUs: Int64, generation: UInt64) -> YlFrameEnvelope?
+  func flush(generation: UInt64)
+  func dispose()
+}
+extension YlFrameScheduler: YlPresentationScheduling {}
+
 protocol YlPresentationOutput: AnyObject {
   func acceptsPresentationFrame(generation: UInt64) -> Bool
   var presentationGeneration: UInt64 { get }
@@ -45,29 +55,53 @@ final class YlPostSeekGate {
 
 /// Owns scheduling, display pacing, clock and texture publication. The immutable
 /// frame generation is checked against the session both before enqueue and publish.
-final class YlPresentationCoordinator {
+final class YlPresentationCoordinator: YlAudioTimeline {
   private let services: YlPlatformServices
   private let stateLock: NSLock
   private let openStartedAt: CFTimeInterval
   private let positionEventIntervalMs: Int64
   weak var output: (any YlPresentationOutput)?
-  let frameScheduler = YlFrameScheduler()
-  let postSeekGate = YlPostSeekGate()
-  var mediaClock: YlMediaClock!
-  var displayLink: (any YlDisplayDriving)?
-  var currentPixelBuffer: CVPixelBuffer?
-  var firstFrameSent = false
-  var firstFrameDurationMs: Int64?
-  var lastStateEmitAt = CFTimeInterval(0)
+  private let frameScheduler: any YlPresentationScheduling
+  private let postSeekGate = YlPostSeekGate()
+  private var mediaClock: YlMediaClock!
+  private var displayLink: (any YlDisplayDriving)?
+  private var currentPixelBuffer: CVPixelBuffer?
+  private var firstFrameSent = false
+  private var firstFrameDurationMs: Int64?
+  private var lastStateEmitAt = CFTimeInterval(0)
 
   var textureId: Int64 { services.textureOutput.textureId }
   init(services: YlPlatformServices, lock: NSLock, openedAt: CFTimeInterval,
-       positionEventIntervalMs: Int64) {
+       positionEventIntervalMs: Int64, scheduler: any YlPresentationScheduling = YlFrameScheduler()) {
+    self.frameScheduler = scheduler
     self.services = services
     self.stateLock = lock
     self.openStartedAt = openedAt
     self.positionEventIntervalMs = positionEventIntervalMs
   }
+
+  var hasDisplay: Bool { displayLink != nil }
+  var firstFrameDuration: Int64? { firstFrameDurationMs }
+  var lateFrameDropCount: Int { frameScheduler.lateFrameDropCount }
+  var pendingFrames: [Int64] { frameScheduler.pendingPTS }
+  func configureClock(_ provided: YlMediaClock?, audioTime: @escaping () -> YlRenderedAudioTime?) {
+    mediaClock = provided ?? YlMediaClock(audioTime: audioTime)
+  }
+  func anchorAudio(ptsUs: Int64, sampleTime: Int64) { mediaClock.anchorAudio(ptsUs: ptsUs, sampleTime: sampleTime) }
+  func position(atHostTimeUs time: Int64) -> Int64 { mediaClock.position(atHostTimeUs: time) }
+  func play(atHostTimeUs time: Int64) { mediaClock.play(atHostTimeUs: time) }
+  func pause(atHostTimeUs time: Int64) { mediaClock.pause(atHostTimeUs: time) }
+  func seek(to time: Int64) { mediaClock.seek(to: time) }
+  func setRate(_ rate: Double, atHostTimeUs time: Int64) { mediaClock.setRate(rate, atHostTimeUs: time) }
+  func suppressFramesBefore(_ time: Int64?) { postSeekGate.reset(targetUs: time) }
+  func acceptsAudio(ptsUs: Int64) -> Bool { postSeekGate.acceptsAudio(ptsUs: ptsUs) }
+  func flushFrames(generation: UInt64) { frameScheduler.flush(generation: generation) }
+  func disposeFrames() { frameScheduler.dispose() }
+  func clearFrame() { currentPixelBuffer = nil }
+  func clearFrameAndTexture() { currentPixelBuffer = nil; clearOutput() }
+  func setDisplayPaused(_ paused: Bool) { displayLink?.isPaused = paused }
+  func retireDisplay() { displayLink?.invalidate(); displayLink = nil }
+  func resetMilestones() { firstFrameDurationMs = nil; firstFrameSent = false }
 
   func clearOutput() { services.textureOutput.clear() }
 

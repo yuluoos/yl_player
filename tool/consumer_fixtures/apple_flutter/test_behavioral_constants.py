@@ -87,5 +87,64 @@ class ExtractionConstantsTests(unittest.TestCase):
             self.assertTrue(module.verify(root, [dict(base, new_file='a.swift', new_files=['a.swift'])]))
             self.assertTrue(module.verify(root, [base]))
 
+class StructuralFoldTests(unittest.TestCase):
+    def module(self):
+        return ExtractionConstantsTests().module()
+
+    def fixture(self, root):
+        import hashlib
+        old = "final class Session {\n  func stop() { audio.anchor = false }\n  func seek() { audio.anchor = false }\n}\n"
+        caller = "final class Session {\n  let audio: Audio\n  func stop() { audio.resetAnchor() }\n  func seek() { audio.resetAnchor() }\n}\n"
+        owner = "final class Audio {\n  func resetAnchor() { anchor = false }\n}\n"
+        (root / 'session.swift').write_text(caller)
+        (root / 'audio.swift').write_text(owner)
+        fold = dict(id='anchor', ruling='R11', before_revision='pinned',
+                    before_file='session.swift', before_sha256=hashlib.sha256(old.encode()).hexdigest(),
+                    before_owner='Session', before_statement='audio.anchor = false',
+                    before_count=2, token='symbol:false', after_file='audio.swift',
+                    after_owner='Audio', after_method='resetAnchor', after_body='anchor = false',
+                    after_count=1, caller_file='session.swift', caller_owner='Session',
+                    call='audio.resetAnchor()', lifecycle_methods=['stop', 'seek'],
+                    current_scope=['session.swift', 'audio.swift'], legacy_files=['old.swift'])
+        row = dict(old_file='old.swift', new_files=fold['current_scope'], structural_folds=['anchor'])
+        return old, caller, owner, fold, row
+
+    def test_structural_fold_preserves_counts_and_rejects_literal_or_occurrence_drift(self):
+        module = self.module()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            old, caller, owner, fold, row = self.fixture(root)
+            normalized = module.normalize_structural_folds(root, row, [fold], lambda *_: old)
+            self.assertEqual(normalized, {'symbol:false': 2})
+            for mutation in ('anchor = true', 'anchor = false; anchor = false', ''):
+                (root / 'audio.swift').write_text(owner.replace('anchor = false', mutation))
+                with self.subTest(mutation=mutation), self.assertRaises(ValueError):
+                    module.normalize_structural_folds(root, row, [fold], lambda *_: old)
+            (root / 'audio.swift').write_text('final class Audio {}\n' + owner.replace('class Audio', 'class Other'))
+            with self.assertRaises(ValueError):
+                module.normalize_structural_folds(root, row, [fold], lambda *_: old)
+
+    def test_structural_fold_rejects_stale_missing_extra_and_invalid_mapping(self):
+        import copy
+        module = self.module()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            old, caller, owner, fold, row = self.fixture(root)
+            for mutation in (caller.replace('audio.resetAnchor()', '', 1),
+                             caller.replace('audio.resetAnchor()', 'audio.resetAnchor(); audio.resetAnchor()', 1)):
+                (root / 'session.swift').write_text(mutation)
+                with self.assertRaises(ValueError):
+                    module.normalize_structural_folds(root, row, [fold], lambda *_: old)
+            (root / 'session.swift').write_text(caller)
+            for change in ({'lifecycle_methods': ['stop', 'missing']}, {'before_count': 3},
+                           {'before_sha256': 'stale'}, {'after_file': '../audio.swift'},
+                           {'current_scope': ['session.swift']}, {'after_owner': 'Wrong'},
+                           {'token': 'symbol:true'}, {'call': 'audio.other()'}):
+                changed = copy.deepcopy(fold); changed.update(change)
+                with self.subTest(change=change), self.assertRaises(ValueError):
+                    module.normalize_structural_folds(root, row, [changed], lambda *_: old)
+            with self.assertRaises(ValueError):
+                module.normalize_structural_folds(root, row, [fold, fold], lambda *_: old)
+
 if __name__ == '__main__':
     unittest.main()

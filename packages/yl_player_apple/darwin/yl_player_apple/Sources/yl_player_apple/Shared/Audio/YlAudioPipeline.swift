@@ -23,19 +23,39 @@ protocol YlAudioPipelineOutput: AnyObject {
 /// Retains the configured renderer and any packet waiting for audio capacity.
 /// Converter/output behavior remains in the existing protocol-driven renderer.
 final class YlAudioPipeline {
+  /// Opaque ownership handle: disposal/play may intentionally occur after the
+  /// session releases its lifecycle lock. Configuration stays inside this owner.
+  struct Resource {
+    fileprivate let renderer: YlAudioRenderer
+    func dispose() { renderer.dispose() }
+    func pause() { renderer.pause() }
+    func play() throws { try renderer.play() }
+    var scheduledDurationUs: Int64 { renderer.scheduledDurationUs }
+    var scheduledBytes: Int { renderer.scheduledBytes }
+    var underrunCount: Int { renderer.underrunCount }
+    var renderedAudioTime: YlRenderedAudioTime? { renderer.renderedAudioTime }
+  }
+  struct Reset {
+    private let resource: Resource?
+    private let generation: UInt64
+    fileprivate init(resource: Resource?, generation: UInt64) {
+      self.resource = resource; self.generation = generation
+    }
+    func perform() { resource?.renderer.reset(generation: generation) }
+  }
   private let lock: NSLock
   private let bufferBudget: YlFallbackBufferBudget
   private let factory: any YlAudioRendererMaking
   weak var output: (any YlAudioPipelineOutput)?
   weak var timeline: (any YlAudioTimeline)?
-  var audioRenderer: YlAudioRenderer!
-  var audioGeneration: UInt64
-  var desiredVolume: Float = 1
-  var desiredRate: Float = 1
-  var audioAnchored = false
-  var pendingAudioPacket: YlCompressedAudioPacket?
+  private var audioRenderer: YlAudioRenderer!
+  private(set) var audioGeneration: UInt64
+  private var desiredVolume: Float = 1
+  private var desiredRate: Float = 1
+  private var audioAnchored = false
+  private var pendingAudioPacket: YlCompressedAudioPacket?
 
-  var currentAudioRenderer: YlAudioRenderer? { lock.withLock { audioRenderer } }
+  private var currentAudioRenderer: YlAudioRenderer? { lock.withLock { audioRenderer } }
 
   init(bufferBudget: YlFallbackBufferBudget, lock: NSLock, generation: UInt64,
        factory: any YlAudioRendererMaking = YlPlatformAudioRendererFactory()) {
@@ -45,7 +65,7 @@ final class YlAudioPipeline {
     self.audioGeneration = generation
   }
 
-  func makeRenderer() -> YlAudioRenderer { factory.makeRenderer(bufferBudget: bufferBudget) }
+  private func makeRenderer() -> YlAudioRenderer { factory.makeRenderer(bufferBudget: bufferBudget) }
 
   func setVolume(_ volume: Float, hasAudio: Bool) {
       desiredVolume = volume
@@ -54,7 +74,78 @@ final class YlAudioPipeline {
       }
   }
 
-  func observeUnderruns(renderer: YlAudioRenderer?) -> Int? { renderer?.underrunCount }
+  func observeUnderruns(renderer: Resource?) -> Int? { renderer?.underrunCount }
+
+  var hasRenderer: Bool { audioRenderer != nil }
+  var hasPendingPacket: Bool { pendingAudioPacket != nil }
+  var currentResource: Resource? { currentAudioRenderer.map(Resource.init) }
+  func initializeRenderer() { audioRenderer = makeRenderer() }
+  func configureInitial(stream: YLFStreamInfo, cookies: [Int32: Data]) throws {
+    try audioRenderer.configure(stream: configuration(for: stream, generation: audioGeneration, audioCookies: cookies))
+  }
+  func discardRenderer() { audioRenderer?.dispose(); audioRenderer = nil }
+  func advanceGeneration() { audioGeneration &+= 1 }
+  func adoptGeneration(_ generation: UInt64) { audioGeneration = generation }
+  func nextGeneration() -> UInt64 { audioGeneration &+ 1 }
+  func discardPendingPacket() { pendingAudioPacket = nil }
+  func resetAnchor() { audioAnchored = false }
+  func detach() -> Resource? {
+    let old = audioRenderer
+    audioRenderer = nil
+    return old.map(Resource.init)
+  }
+  @discardableResult
+  func install(_ resource: Resource?) -> Resource? {
+    let old = audioRenderer
+    audioRenderer = resource?.renderer
+    return old.map(Resource.init)
+  }
+  func prepareReset(generation: UInt64) -> Reset {
+    audioGeneration = generation
+    return Reset(resource: audioRenderer.map(Resource.init), generation: generation)
+  }
+  func playInstalled() throws { try audioRenderer.play() }
+  func setRate(_ rate: Float, hasAudio: Bool, updateTimeline: () -> Void) {
+    desiredRate = rate
+    updateTimeline()
+    if hasAudio { currentAudioRenderer?.setRate(rate) }
+  }
+  func prepareTrack(stream: YLFStreamInfo, generation: UInt64,
+                    cookies: [Int32: Data]) throws -> Resource {
+    let candidate = makeRenderer()
+    do {
+      try candidate.configure(stream: configuration(for: stream, generation: generation, audioCookies: cookies))
+      candidate.setVolume(desiredVolume)
+      candidate.setRate(desiredRate)
+    } catch { candidate.dispose(); throw error }
+    return Resource(renderer: candidate)
+  }
+  // Publish ownership before configuration so the session's cross-component
+  // failure cleanup can preserve decoder-before-audio disposal ordering.
+  func prepareRebuild(stream: YLFStreamInfo?, cookies: [Int32: Data],
+                      onCreated: (Resource) -> Void) throws -> Resource {
+    let renderer = makeRenderer()
+    let resource = Resource(renderer: renderer)
+    onCreated(resource)
+    if let stream {
+      try renderer.configure(stream: configuration(for: stream, generation: audioGeneration, audioCookies: cookies))
+      renderer.setVolume(desiredVolume)
+      renderer.setRate(desiredRate)
+    }
+    return resource
+  }
+  func prepareReconnect(stream: YLFStreamInfo?, generation: UInt64,
+                        cookies: [Int32: Data], onCreated: (Resource) -> Void) throws -> Resource {
+    let renderer = makeRenderer()
+    let resource = Resource(renderer: renderer)
+    onCreated(resource)
+    if let stream {
+      try renderer.configure(stream: reconnectConfiguration(for: stream, generation: generation, copiedAudioCookies: cookies))
+      renderer.setVolume(desiredVolume)
+      renderer.setRate(desiredRate)
+    }
+    return resource
+  }
 
   func retryPending(codecName: String) {
     if let pendingAudioPacket, let output {

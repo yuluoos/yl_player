@@ -5,6 +5,8 @@ This is a drift alarm, complementary to platform characterization, not a Swift p
 """
 import collections
 import json
+import hashlib
+import subprocess
 from pathlib import Path
 import re
 import sys
@@ -54,12 +56,129 @@ def current_tokens(root, row):
     return dict(sorted(tokens.items()))
 
 
-def verify(root, manifest):
+def swift_code(source):
+    # Preserve offsets/newlines so named method scopes remain auditable. This
+    # finite fold validator handles the simple reviewed assignment methods only.
+    return re.sub(r'"(?:\\.|[^"\\])*"|/\*.*?\*/|//[^\n]*',
+                  lambda match: re.sub(r'[^\n]', ' ', match.group()), source, flags=re.S)
+
+
+def brace_body(code, after):
+    start = code.find('{', after)
+    if start < 0:
+        raise ValueError('Structural fold scope has no body')
+    depth = 1
+    for end in range(start + 1, len(code)):
+        depth += (code[end] == '{') - (code[end] == '}')
+        if depth == 0:
+            return code[start + 1:end]
+    raise ValueError('Structural fold scope is unterminated')
+
+
+def method_body(source, owner, method):
+    code = swift_code(source)
+    owners = list(re.finditer(r'\bclass\s+' + re.escape(owner) + r'\b', code))
+    if len(owners) != 1:
+        raise ValueError('Structural fold owner is missing or ambiguous: ' + owner)
+    scope = brace_body(code, owners[0].end())
+    declarations = list(re.finditer(r'^  (?:private )?func\s+' + re.escape(method) + r'\b', scope, re.M))
+    if len(declarations) != 1:
+        raise ValueError('Structural fold method is missing or ambiguous: ' + method)
+    return brace_body(scope, declarations[0].end())
+
+
+def read_fold_before(root, revision, path):
+    if not re.fullmatch(r'[0-9a-f]{40}', revision):
+        raise ValueError('Structural fold requires an immutable full revision')
+    try:
+        return subprocess.check_output(['git', 'show', revision + ':' + path],
+                                       cwd=root, text=True, stderr=subprocess.PIPE)
+    except subprocess.CalledProcessError as error:
+        raise ValueError('Structural fold origin unavailable') from error
+
+
+def normalize_structural_folds(root, row, folds, read_before=None):
+    current = collections.Counter(current_tokens(root, row))
+    requested = row.get('structural_folds', [])
+    if not requested:
+        return dict(sorted(current.items()))
+    if not isinstance(requested, list) or len(set(requested)) != len(requested):
+        raise ValueError('Invalid structural fold selection')
+    ids = [fold['id'] for fold in folds]
+    if len(set(ids)) != len(ids):
+        raise ValueError('Duplicate structural fold record')
+    records = dict(zip(ids, folds))
+    read_before = read_before or (lambda revision, path: read_fold_before(root, revision, path))
+    for identifier in requested:
+        if identifier not in records:
+            raise ValueError('Unknown structural fold: ' + identifier)
+        fold = records[identifier]
+        if row.get('new_files') != fold['current_scope'] or row['old_file'] not in fold['legacy_files']:
+            raise ValueError('Structural fold applied outside its exact reviewed scope')
+        for name in ('after_file', 'caller_file'):
+            if fold[name] not in fold['current_scope']:
+                raise ValueError('Structural fold path outside current scope')
+        # Reuse canonical path/duplicate validation on the complete explicit scope.
+        current_tokens(root, {'new_files': fold['current_scope']})
+        origin_path = Path(fold['before_file'])
+        if origin_path.is_absolute() or '..' in origin_path.parts or origin_path.as_posix() != fold['before_file'] or fold['before_file'] != fold['caller_file']:
+            raise ValueError('Invalid structural fold origin path')
+        before = read_before(fold['before_revision'], fold['before_file'])
+        if hashlib.sha256(before.encode()).hexdigest() != fold['before_sha256']:
+            raise ValueError('Structural fold origin digest changed')
+        after = (root / fold['after_file']).read_text()
+        caller = (root / fold['caller_file']).read_text()
+        token = fold['token']
+        if extract(fold['before_statement']) != {token: 1} or extract(fold['after_body']) != {token: 1}:
+            raise ValueError('Structural fold literal changed')
+        body = method_body(after, fold['after_owner'], fold['after_method'])
+        compact = lambda value: re.sub(r'\s+', '', value)
+        if compact(body) != compact(fold['after_body']) or extract(body) != {token: fold['after_count']}:
+            raise ValueError('Structural fold implementation changed')
+        methods = fold['lifecycle_methods']
+        if not isinstance(methods, list) or not methods or len(set(methods)) != len(methods):
+            raise ValueError('Invalid structural lifecycle mapping')
+        if fold['after_count'] != 1 or fold['before_count'] != len(methods):
+            raise ValueError('Structural fold occurrence count changed')
+        call = fold['call']
+        if not re.fullmatch(r'[A-Za-z_]\w*\.' + re.escape(fold['after_method']) + r'\(\)', call):
+            raise ValueError('Invalid structural fold call')
+        binding = call.split('.')[0]
+        if not re.search(r'\blet\s+' + re.escape(binding) + r'\s*:\s*' + re.escape(fold['after_owner']) + r'\b', swift_code(caller)):
+            raise ValueError('Structural fold owner binding changed')
+        for method in methods:
+            old_body = method_body(before, fold['before_owner'], method)
+            new_body = method_body(caller, fold['caller_owner'], method)
+            if compact(old_body).count(compact(fold['before_statement'])) != 1 or compact(new_body).count(call) != 1:
+                raise ValueError('Stale structural lifecycle mapping: ' + method)
+        preserved = fold.get('preserved_assignments', [])
+        preserved_methods = [entry['before_method'] for entry in preserved]
+        if len(set(preserved_methods)) != len(preserved_methods) or set(preserved_methods) & set(methods):
+            raise ValueError('Ambiguous preserved structural mapping')
+        for entry in preserved:
+            old_body = method_body(before, fold['before_owner'], entry['before_method'])
+            if entry['after_file'] not in fold['current_scope']:
+                raise ValueError('Preserved structural path outside scope')
+            kept = method_body((root / entry['after_file']).read_text(), entry['after_owner'], entry['after_method'])
+            if compact(old_body).count(compact(fold['before_statement'])) != 1 or compact(kept).count(compact(entry['statement'])) != 1:
+                raise ValueError('Preserved structural assignment changed')
+            if extract(entry['statement']) != {token: 1}:
+                raise ValueError('Preserved structural literal changed')
+        if compact(swift_code(before)).count(compact(fold['before_statement'])) != fold['before_count'] + len(preserved):
+            raise ValueError('Structural fold old occurrences changed')
+        if compact(swift_code(caller)).count(call) != fold['before_count']:
+            raise ValueError('Structural fold current call occurrences changed')
+        # Reconstitute only the reviewed lexical multiplicity, never a new value.
+        current[token] += fold['before_count'] - fold['after_count']
+    return dict(sorted(current.items()))
+
+
+def verify(root, manifest, folds=()):
     failures = []
     for row in manifest:
         old = extract((root / row['old_file']).read_text())
         try:
-            new = current_tokens(root, row)
+            new = normalize_structural_folds(root, row, folds)
         except ValueError as error:
             failures.append({'reason': str(error), 'old_file': row['old_file']})
             continue
@@ -78,11 +197,13 @@ def main():
     tool = Path(__file__).resolve().parent
     root = tool.parents[2]
     manifest = json.loads((tool / 'behavioral-constants-allowlist.json').read_text())
-    failures = verify(root, manifest)
+    fold_path = tool / "behavioral-structural-folds.json"
+    folds = json.loads(fold_path.read_text()) if fold_path.is_file() else []
+    failures = verify(root, manifest, folds)
     if failures:
         print(json.dumps(failures, indent=2))
         return 1
-    print(f'Verified {len(manifest)} old/new constant comparisons; only exact allowlisted abstraction deltas remain.')
+    print(f'Verified {len(manifest)} old/new constant comparisons; exact abstraction deltas and validated structural folds only.')
     return 0
 
 

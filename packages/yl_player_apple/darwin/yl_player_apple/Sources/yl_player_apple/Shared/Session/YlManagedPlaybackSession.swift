@@ -16,7 +16,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   var requiresAsyncActivation: Bool {
     // A demux cursor alone cannot restore a retired VT session: its next packet
     // may depend on a keyframe consumed by the old video.decoder (R22).
-    let needsPipeline = demux.context == nil || (services.compatibility.limitsVideoReservations && video.decoder == nil)
+    let needsPipeline = demux.context == nil || (services.compatibility.limitsVideoReservations && !video.hasDecoder)
     guard needsPipeline else { return false }
     let sourceRecipe = demux.sourceRecipe
     if case .network = sourceRecipe { return true }
@@ -74,8 +74,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   private var openDurationMs: Int64?
   private var currentError: NativePlayerError?
 
-  private var currentAudioRenderer: YlAudioRenderer? {
-    stateLock.withLock { audio.audioRenderer }
+  private var currentAudioRenderer: YlAudioPipeline.Resource? {
+    audio.currentResource
   }
 
   init(
@@ -87,6 +87,9 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     generation: UInt64,
     videoSessionFactory: YlVTSessionFactory = YlHardwareVTSessionFactory(),
     mediaClock providedMediaClock: YlMediaClock? = nil,
+    audioRendererFactory: any YlAudioRendererMaking = YlPlatformAudioRendererFactory(),
+    presentationScheduler: any YlPresentationScheduling = YlFrameScheduler(),
+    demuxControl: any YlDemuxControlling = YlOpenedMediaControl(),
     loadRequestId: String? = nil,
     channelIdentity: UInt64? = nil,
     emit: @escaping (YlNativeBackendCallback) -> Void
@@ -105,52 +108,46 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     self.qualityConstraint = qualityConstraint
     self.generation = generation
     self.onEvent = emit
-    self.demux = try YlDemuxPipeline(prepared: prepared, lock: stateLock, bufferBudget: bufferBudget)
+    self.demux = try YlDemuxPipeline(prepared: prepared, lock: stateLock, bufferBudget: bufferBudget, control: demuxControl)
     self.video = YlVideoPipeline(format: prepared.videoFormat, bufferBudget: bufferBudget,
       factory: videoSessionFactory)
-    self.audio = YlAudioPipeline(bufferBudget: bufferBudget, lock: stateLock, generation: generation)
+    self.audio = YlAudioPipeline(bufferBudget: bufferBudget, lock: stateLock, generation: generation, factory: audioRendererFactory)
     self.presentation = YlPresentationCoordinator(services: services, lock: stateLock,
-      openedAt: openStartedAt, positionEventIntervalMs: configuration.positionEventIntervalMs)
+      openedAt: openStartedAt, positionEventIntervalMs: configuration.positionEventIntervalMs, scheduler: presentationScheduler)
     self.recovery = YlRecoveryCoordinator(configuration: configuration.network,
-      scheduler: YlDispatchRecoveryScheduler(queue: demux.worker))
+      scheduler: demux.recoveryScheduler)
     self.playing = resumeState?.shouldPlay ?? false
     self.savedPositionUs = resumeState?.positionUs ?? 0
     super.init()
 
-    audio.audioRenderer = audio.makeRenderer()
-    self.presentation.mediaClock = providedMediaClock ?? YlMediaClock(audioTime: { [weak self] in
+    audio.initializeRenderer()
+    self.presentation.configureClock(providedMediaClock, audioTime: { [weak self] in
       guard let self else { return nil }
-      let renderer = self.stateLock.withLock { self.audio.audioRenderer }
+      let renderer = self.audio.currentResource
       return renderer?.renderedAudioTime
     })
     demux.output = self
     recovery.session = self
     presentation.output = self
     audio.output = self
-    audio.timeline = self.presentation.mediaClock
-    self.presentation.mediaClock.seek(to: savedPositionUs)
+    audio.timeline = self.presentation
+    self.presentation.seek(to: savedPositionUs)
     // Demux seeks land on an earlier keyframe; suppress that preroll just as
     // in-place pipeline restoration does before it can re-anchor the clock.
-    if savedPositionUs > 0 { presentation.postSeekGate.reset(targetUs: savedPositionUs) }
-    video.outputRelay.backend = self
+    if savedPositionUs > 0 { presentation.suppressFramesBefore( savedPositionUs) }
+    video.connect(self)
     do {
-      video.decoder = try video.makeDecoder(format: video.format)
+      try video.initializeDecoder()
       if let audioStream = demux.selectedAudioStream {
-        try audio.audioRenderer.configure(stream: audioConfiguration(
-          for: audioStream,
-          generation: audio.audioGeneration
-        ))
+        try audio.configureInitial(stream: audioStream, cookies: demux.audioCookies)
       }
     } catch {
-      video.decoder?.dispose()
-      video.decoder = nil
-      audio.audioRenderer?.dispose()
-      audio.audioRenderer = nil
-      demux.openedMedia?.close()
-      demux.openedMedia = nil
+      video.discardDecoder()
+      audio.discardRenderer()
+      demux.discardMedia()
       throw error
     }
-    presentation.frameScheduler.flush(generation: generation)
+    presentation.flushFrames(generation: generation)
     openDurationMs = Int64((CACurrentMediaTime() - openStartedAt) * 1_000)
     installDisplayLink(paused: true)
   }
@@ -179,20 +176,20 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         message: "Network Matroska reactivation requires background preparation."
       )
     }
-    if demux.context == nil || audio.audioRenderer == nil || (services.compatibility.limitsVideoReservations && video.decoder == nil) {
+    if demux.context == nil || !audio.hasRenderer || (services.compatibility.limitsVideoReservations && !video.hasDecoder) {
       try rebuildPipeline(positionUs: savedPositionUs)
-    } else if video.decoder == nil {
-      video.decoder = try makeDecoder()
+    } else if !video.hasDecoder {
+      try video.initializeDecoder()
     }
-    if presentation.displayLink == nil { installDisplayLink(paused: false) }
+    if !presentation.hasDisplay { installDisplayLink(paused: false) }
     stateLock.withLock {
       active = true
       reconfiguring = false
     }
-    presentation.displayLink?.isPaused = false
+    presentation.setDisplayPaused(false)
     if playing {
-      if demux.selectedAudioStream != nil { try audio.audioRenderer.play() }
-      presentation.mediaClock.play(atHostTimeUs: Self.hostTimeUs())
+      if demux.selectedAudioStream != nil { try audio.playInstalled() }
+      presentation.play(atHostTimeUs: Self.hostTimeUs())
       status = "playing"
     }
     emit(.engineActivated(.managedFallback))
@@ -211,10 +208,10 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   private func releaseMediaForStopOrDeactivation(stopping: Bool) {
     // The audio-backed clock may consult stateLock; sample before owning it.
     let positionGeneration = stateLock.withLock { generation }
-    let positionBeforeRelease = stopping ? nil : presentation.mediaClock.position(atHostTimeUs: Self.hostTimeUs())
+    let positionBeforeRelease = stopping ? nil : presentation.position(atHostTimeUs: Self.hostTimeUs())
     stateLock.lock()
     guard !disposed,
-          stopping || active || demux.openedMedia != nil || video.decoder != nil || audio.audioRenderer != nil else {
+          stopping || active || demux.currentMedia != nil || video.hasDecoder || audio.hasRenderer else {
       stateLock.unlock()
       return
     }
@@ -227,65 +224,54 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     active = false
     reconfiguring = true
     generation &+= 1
-    audio.audioGeneration &+= 1
+    audio.advanceGeneration()
     let currentGeneration = generation
-    let reconnectToCancel = recovery.reconnectWorkItem
-    recovery.reconnectWorkItem = nil
-    let mediaToClose = demux.openedMedia
-    demux.openedMedia = nil
-    let tokenToCancel = demux.sourceCancellationToken
-    demux.sourceCancellationToken = nil
+    let reconnectToCancel = recovery.detachScheduledWork()
+    let mediaToClose = demux.detachMedia()
+    let tokenToCancel = demux.detachCancellationToken()
     stateLock.unlock()
-    if stopping { recovery.liveReconnectController.cancel() }
+    if stopping { recovery.cancelBudget() }
     reconnectToCancel?.cancel()
-    presentation.displayLink?.invalidate()
-    presentation.displayLink = nil
+    presentation.retireDisplay()
     currentAudioRenderer?.pause()
-    presentation.mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
+    presentation.pause(atHostTimeUs: Self.hostTimeUs())
     YlFallbackTeardownTransaction(
       cancelInput: { [self] in
         tokenToCancel?.cancel()
         mediaToClose?.cancelInput()
       },
       joinAndRelease: { [self] in
-        demux.worker.sync {
-          audio.pendingAudioPacket = nil
+        demux.performSync {
+          audio.discardPendingPacket()
           cancelVideoSubmissions()
-          video.decoder?.dispose()
-          video.decoder = nil
-          audio.audioRenderer?.dispose()
-          audio.audioRenderer = nil
+          video.discardDecoder()
+          audio.discardRenderer()
         }
         mediaToClose?.close()
       }
     ).run()
-    presentation.frameScheduler.flush(generation: currentGeneration)
+    presentation.flushFrames(generation: currentGeneration)
     stateLock.withLock {
-      presentation.currentPixelBuffer = nil
+      presentation.clearFrame()
       if mayClearOutput { presentation.clearOutput() }
       pumping = false
       demuxEOF = false
       completionSent = false
       prebufferedVideoSample = false
-      audio.audioAnchored = false
+      audio.resetAnchor()
       reconfiguring = false
     }
-    presentation.postSeekGate.reset(targetUs: nil)
+    presentation.suppressFramesBefore( nil)
     if stopping {
       channelGeneration = YlBackendGeneration.next()
       savedPositionUs = 0
       openDurationMs = nil
-      presentation.firstFrameDurationMs = nil
-      presentation.firstFrameSent = false
-      recovery.reconnectCount = 0
-      recovery.awaitingReconnectFirstFrame = false
+      presentation.resetMilestones()
+      recovery.resetAfterStop()
       currentError = nil
-      demux.selectedAudioStream = nil
-      demux.audioStreams.removeAll()
-      demux.audioCookies.removeAll()
-      demux.isSeekable = false
+      demux.clearStoppedCatalog()
     }
-    presentation.mediaClock.seek(to: savedPositionUs)
+    presentation.seek(to: savedPositionUs)
     status = stopping ? "idle" : "paused"
     resetting = false
     emitState()
@@ -294,7 +280,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   func quiesceForReplacement() {
     // The default audio clock consults stateLock synchronously.
     let positionGeneration = stateLock.withLock { generation }
-    let positionBeforeReplacement = presentation.mediaClock.position(atHostTimeUs: Self.hostTimeUs())
+    let positionBeforeReplacement = presentation.position(atHostTimeUs: Self.hostTimeUs())
     stateLock.lock()
     guard !disposed, active else {
       stateLock.unlock()
@@ -310,44 +296,40 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       audioGeneration: audio.audioGeneration
     )
     generation = generations.videoGeneration
-    audio.audioGeneration = generations.audioGeneration
+    audio.adoptGeneration(generations.audioGeneration)
     let currentGeneration = generation
-    let reconnectToCancel = recovery.reconnectWorkItem
-    recovery.reconnectWorkItem = nil
-    let media = demux.openedMedia
-    let reconnectTokenToCancel = media == nil ? demux.sourceCancellationToken : nil
-    if reconnectTokenToCancel != nil { demux.sourceCancellationToken = nil }
+    let reconnectToCancel = recovery.detachScheduledWork()
+    let media = demux.currentMedia
+    let reconnectTokenToCancel = demux.detachOrphanedCancellation()
     stateLock.unlock()
 
     reconnectToCancel?.cancel()
     reconnectTokenToCancel?.cancel()
 
-    presentation.displayLink?.invalidate()
-    presentation.displayLink = nil
+    presentation.retireDisplay()
     currentAudioRenderer?.pause()
-    presentation.mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
+    presentation.pause(atHostTimeUs: Self.hostTimeUs())
     media?.interruptRead()
-    demux.worker.sync {
-      audio.pendingAudioPacket = nil
+    demux.performSync {
+      audio.discardPendingPacket()
       if services.compatibility.limitsVideoReservations {
         cancelVideoSubmissions()
-        video.decoder?.dispose()
-        video.decoder = nil
+        video.discardDecoder()
       }
     }
     media?.resumeReads()
-    presentation.frameScheduler.flush(generation: currentGeneration)
+    presentation.flushFrames(generation: currentGeneration)
     stateLock.withLock {
-      presentation.currentPixelBuffer = nil; presentation.clearOutput()
+      presentation.clearFrameAndTexture()
       pumping = false
       demuxEOF = false
       completionSent = false
       prebufferedVideoSample = false
-      audio.audioAnchored = false
+      audio.resetAnchor()
       reconfiguring = false
     }
-    presentation.postSeekGate.reset(targetUs: nil)
-    presentation.mediaClock.seek(to: savedPositionUs)
+    presentation.suppressFramesBefore( nil)
+    presentation.seek(to: savedPositionUs)
     status = "paused"
     emitState()
   }
@@ -386,7 +368,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   }
 
   func handleMemoryWarning() {
-    stateLock.withLock { demux.openedMedia }?.handleMemoryWarning()
+    stateLock.withLock { demux.currentMedia }?.handleMemoryWarning()
     deactivate()
   }
 
@@ -398,7 +380,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       }
       if !wasPlaying {
         if demux.selectedAudioStream != nil { try currentAudioRenderer?.play() }
-        presentation.mediaClock.play(atHostTimeUs: Self.hostTimeUs())
+        presentation.play(atHostTimeUs: Self.hostTimeUs())
       }
       status = "playing"
       emitState()
@@ -408,7 +390,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   func pause() throws {
       stateLock.withLock { playing = false }
       if demux.selectedAudioStream != nil { currentAudioRenderer?.pause() }
-      presentation.mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
+      presentation.pause(atHostTimeUs: Self.hostTimeUs())
       status = "paused"
       emitState()
   }
@@ -436,9 +418,9 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
           message: "Playback speed must be between 0.25 and 4.0."
         )
       }
-      audio.desiredRate = rate
-      presentation.mediaClock.setRate(Double(rate), atHostTimeUs: Self.hostTimeUs())
-      if demux.selectedAudioStream != nil { currentAudioRenderer?.setRate(rate) }
+      audio.setRate(rate, hasAudio: demux.selectedAudioStream != nil) {
+        presentation.setRate(Double(rate), atHostTimeUs: Self.hostTimeUs())
+      }
   }
 
   func setVolume(_ volume: Float) { audio.setVolume(volume, hasAudio: demux.selectedAudioStream != nil) }
@@ -465,7 +447,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
           droppedVideoFrames: 0, audioUnderruns: 0, reconnectCount: 0), error: nil)))
       return
     }
-    let positionUs = presentation.mediaClock.position(atHostTimeUs: Self.hostTimeUs())
+    let positionUs = presentation.position(atHostTimeUs: Self.hostTimeUs())
     let durationMs = demux.mediaPolicy.durationMs(mediaDurationUs: demux.mediaInfo.duration_us)
     let renderer = currentAudioRenderer
     let scheduledAudioDurationUs = renderer?.scheduledDurationUs ?? 0
@@ -473,10 +455,10 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     let audioUnderruns = audio.observeUnderruns(renderer: renderer) ?? 0
     let metrics = YlBackendStateEncoder.fallbackMetrics(
       openDurationMs: openDurationMs,
-      firstFrameDurationMs: presentation.firstFrameDurationMs,
+      firstFrameDurationMs: presentation.firstFrameDuration,
       bufferedDurationMs: scheduledAudioDurationUs / 1_000,
       bufferedBytes: scheduledAudioBytes,
-      droppedVideoFrames: presentation.frameScheduler.lateFrameDropCount,
+      droppedVideoFrames: presentation.lateFrameDropCount,
       audioUnderruns: audioUnderruns,
       reconnectCount: recovery.reconnectCount
     )
@@ -494,7 +476,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         videoWidth: Int(demux.videoStream.width),
         videoHeight: Int(demux.videoStream.height),
         engine: .managedFallback,
-        isHardwareDecoding: video.decoder?.usesHardwareDecoder == true,
+        isHardwareDecoding: video.usesHardwareDecoder == true,
         decoderName: "VideoToolbox",
         audioTracks: audioTracks,
         videoTracks: videoTracks,
@@ -505,17 +487,17 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
 
   private func emitStateDelta() {
     guard !stateLock.withLock({ disposed || stopped || resetting }) else { return }
-    let positionUs = presentation.mediaClock.position(atHostTimeUs: Self.hostTimeUs())
+    let positionUs = presentation.position(atHostTimeUs: Self.hostTimeUs())
     let renderer = currentAudioRenderer
     let scheduledAudioDurationUs = renderer?.scheduledDurationUs ?? 0
     let scheduledAudioBytes = renderer?.scheduledBytes ?? 0
     let audioUnderruns = audio.observeUnderruns(renderer: renderer) ?? 0
     let metrics = YlBackendStateEncoder.fallbackMetrics(
       openDurationMs: openDurationMs,
-      firstFrameDurationMs: presentation.firstFrameDurationMs,
+      firstFrameDurationMs: presentation.firstFrameDuration,
       bufferedDurationMs: scheduledAudioDurationUs / 1_000,
       bufferedBytes: scheduledAudioBytes,
-      droppedVideoFrames: presentation.frameScheduler.lateFrameDropCount,
+      droppedVideoFrames: presentation.lateFrameDropCount,
       audioUnderruns: audioUnderruns,
       reconnectCount: recovery.reconnectCount
     )
@@ -542,37 +524,31 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     playing = false
     reconfiguring = true
     generation &+= 1
-    audio.audioGeneration &+= 1
-    let reconnectToCancel = recovery.reconnectWorkItem
-    recovery.reconnectWorkItem = nil
-    let mediaToClose = demux.openedMedia
-    demux.openedMedia = nil
-    let tokenToCancel = demux.sourceCancellationToken
-    demux.sourceCancellationToken = nil
+    audio.advanceGeneration()
+    let reconnectToCancel = recovery.detachScheduledWork()
+    let mediaToClose = demux.detachMedia()
+    let tokenToCancel = demux.detachCancellationToken()
     stateLock.unlock()
-    recovery.liveReconnectController.cancel()
+    recovery.cancelBudget()
     reconnectToCancel?.cancel()
-    presentation.displayLink?.invalidate()
-    presentation.displayLink = nil
+    presentation.retireDisplay()
     YlFallbackTeardownTransaction(
       cancelInput: { [self] in
         tokenToCancel?.cancel()
         mediaToClose?.cancelInput()
       },
       joinAndRelease: { [self] in
-        demux.worker.sync {
-          audio.pendingAudioPacket = nil
+        demux.performSync {
+          audio.discardPendingPacket()
           cancelVideoSubmissions()
-          video.decoder?.dispose()
-          video.decoder = nil
-          audio.audioRenderer?.dispose()
-          audio.audioRenderer = nil
-          presentation.frameScheduler.dispose()
+          video.discardDecoder()
+          audio.discardRenderer()
+          presentation.disposeFrames()
         }
         mediaToClose?.close()
       }
     ).run()
-    stateLock.withLock { presentation.currentPixelBuffer = nil }
+    stateLock.withLock { presentation.clearFrame() }
     if mayClearOutput { presentation.clearOutput() }
   }
 
@@ -586,15 +562,10 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
 
   func didAcceptPresentationFrame(generation frameGeneration: UInt64) {
     let completedReconnect = stateLock.withLock { () -> Bool in
-      guard recovery.awaitingReconnectFirstFrame, generation == frameGeneration else {
-        return false
-      }
-      recovery.awaitingReconnectFirstFrame = false
-      recovery.reconnectCount += 1
-      return true
+      recovery.acceptFirstFrame(isCurrent: generation == frameGeneration)
     }
     if completedReconnect {
-      recovery.liveReconnectController.markFirstFrame()
+      recovery.markFirstFrame()
       DispatchQueue.main.async { [weak self] in
         guard let self, self.stateLock.withLock({ self.active && self.generation == frameGeneration }) else { return }
         self.emitState()
@@ -626,7 +597,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     }
     pumping = true
     stateLock.unlock()
-    demux.worker.asyncAfter(deadline: .now() + delay) { [weak self] in self?.pumpOne() }
+    demux.schedulePump(after: delay) { [weak self] in self?.pumpOne() }
   }
 
   private func pumpOne() {
@@ -641,7 +612,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     }
     stateLock.unlock()
 
-    if audio.pendingAudioPacket != nil {
+    if audio.hasPendingPacket {
       audio.retryPending(codecName: selectedAudioCodecName)
       return
     }
@@ -654,13 +625,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         pumping = false
         demuxEOF = true
       }
-      if !services.compatibility.limitsVideoReservations {
-        video.decoder?.flush()
-      } else if demux.selectedAudioStream == nil {
-        video.decoder?.drain()
-      } else if let drainingDecoder = video.decoder {
-        video.scheduleVideoDrain(decoder: drainingDecoder, generation: packetGeneration)
-      }
+      video.finishInput(generation: packetGeneration, hasAudio: demux.selectedAudioStream != nil,
+                        compatibility: services.compatibility)
   }
 
   func shouldReportDemuxFailure(generation packetGeneration: UInt64) -> Bool {
@@ -671,7 +637,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   }
 
   var demuxAudioGeneration: UInt64 { stateLock.withLock { audio.audioGeneration } }
-  func acceptsDemuxAudio(ptsUs: Int64) -> Bool { presentation.postSeekGate.acceptsAudio(ptsUs: ptsUs) }
+  func acceptsDemuxAudio(ptsUs: Int64) -> Bool { presentation.acceptsAudio(ptsUs: ptsUs) }
   func consumeDemuxAudio(_ packet: YlCompressedAudioPacket, onBackpressure: (TimeInterval) -> Void) -> Void? {
     audio.enqueue(packet, codecName: selectedAudioCodecName, onBackpressure: onBackpressure)
   }
@@ -714,28 +680,24 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   ) {
     let transition = stateLock.withLock { () -> (
       generation: UInt64,
-      media: YlOpenedMedia?,
+      media: YlDemuxPipeline.Resource?,
       token: YlOpenCancellationToken?,
-      decoder: YlVideoToolboxDecoder?,
-      audio: YlAudioRenderer?
+      decoder: YlVideoPipeline.Resource?,
+      audio: YlAudioPipeline.Resource?
     )? in
       guard demux.mediaPolicy.isLive, !disposed, active, !reconfiguring,
             generation == packetGeneration else { return nil }
       generation &+= 1
-      audio.audioGeneration &+= 1
+      audio.advanceGeneration()
       reconfiguring = true
       pumping = false
       demuxEOF = false
       completionSent = false
-      recovery.awaitingReconnectFirstFrame = false
-      let detachedMedia = demux.openedMedia
-      demux.openedMedia = nil
-      let detachedToken = demux.sourceCancellationToken
-      demux.sourceCancellationToken = nil
-      let detachedDecoder = video.decoder
-      video.decoder = nil
-      let detachedAudio = audio.audioRenderer
-      audio.audioRenderer = nil
+      recovery.clearFirstFrameExpectation()
+      let detachedMedia = demux.detachMedia()
+      let detachedToken = demux.detachCancellationToken()
+      let detachedDecoder = video.detach()
+      let detachedAudio = audio.detach()
       return (
         generation,
         detachedMedia,
@@ -748,12 +710,12 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
 
     transition.token?.cancel()
     transition.media?.cancelInput()
-    audio.pendingAudioPacket = nil
+    audio.discardPendingPacket()
     prebufferedVideoSample = false
-    audio.audioAnchored = false
-    presentation.frameScheduler.flush(generation: transition.generation)
-    presentation.postSeekGate.reset(targetUs: nil)
-    stateLock.withLock { presentation.currentPixelBuffer = nil; presentation.clearOutput() }
+    audio.resetAnchor()
+    presentation.flushFrames(generation: transition.generation)
+    presentation.suppressFramesBefore( nil)
+    stateLock.withLock { presentation.clearFrameAndTexture() }
 
     DispatchQueue.main.async { [weak self] in
       transition.audio?.pause()
@@ -763,12 +725,12 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
             && self.generation == transition.generation
         }
         if isCurrent {
-          self.presentation.mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
-          self.presentation.mediaClock.seek(to: 0)
+          self.presentation.pause(atHostTimeUs: Self.hostTimeUs())
+          self.presentation.seek(to: 0)
           self.status = "buffering"
           self.emitState()
         }
-        self.demux.worker.async { [weak self] in
+        self.demux.performAsync { [weak self] in
           self?.cancelVideoSubmissions()
           transition.decoder?.dispose()
           transition.audio?.dispose()
@@ -804,8 +766,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     return stateLock.withLock { () -> Bool in
       guard !disposed, active, reconfiguring, generation == reconnectGeneration
       else { return false }
-      recovery.reconnectWorkItem?.cancel()
-      recovery.reconnectWorkItem = workItem
+      recovery.replaceScheduledWork(workItem)
       return true
     }
   }
@@ -813,8 +774,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     return stateLock.withLock { () -> Bool in
       guard !disposed, active, reconfiguring, generation == reconnectGeneration
       else { return false }
-      recovery.reconnectWorkItem = nil
-      demux.sourceCancellationToken = token
+      recovery.beginReopen()
+      demux.installCancellation(token)
       return true
     }
   }
@@ -823,33 +784,27 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     return stateLock.withLock { () -> Bool in
         guard !disposed, active, reconfiguring,
               generation == reconnectGeneration,
-              demux.sourceCancellationToken === token,
-              recovery.liveReconnectController.shouldInstall(
-                reconnectGeneration: reconnectGeneration,
+              demux.ownsCancellation(token),
+              recovery.mayInstall(
+                generation: reconnectGeneration,
                 currentGeneration: generation
               ) else { return false }
-        demux.mediaInfo = candidate.info
-        demux.videoStream = candidate.videoStream
-        demux.audioStreams = candidate.audioStreams
-        demux.audioCookies = candidate.audioCookies
-        video.format = candidate.videoFormat
-        demux.selectedAudioStream = candidate.selectedAudioStream
-        demux.openedMedia = candidate.media
-        video.decoder = candidate.decoder
-        audio.audioRenderer = candidate.audioRenderer
-        audio.pendingAudioPacket = nil
+        demux.installReconnect(candidate)
+        video.install(candidate.decoder)
+        audio.install(candidate.audioRenderer)
+        audio.discardPendingPacket()
         prebufferedVideoSample = false
         demuxEOF = false
         completionSent = false
-        audio.audioAnchored = false
-        recovery.awaitingReconnectFirstFrame = true
+        audio.resetAnchor()
+        recovery.expectFirstFrame()
         currentError = nil
         return true
       }
   }
   func resumeRecovery(generation reconnectGeneration: UInt64) {
-      stateLock.withLock { demux.initialKeyframeGate.reset() }
-      presentation.frameScheduler.flush(generation: reconnectGeneration)
+      stateLock.withLock { demux.resetInitialKeyframeGate() }
+      presentation.flushFrames(generation: reconnectGeneration)
       DispatchQueue.main.async { [weak self] in
         guard let self else { return }
         let shouldResume = self.stateLock.withLock { () -> Bool in
@@ -859,13 +814,13 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
           return true
         }
         guard shouldResume else { return }
-        self.presentation.mediaClock.seek(to: 0)
+        self.presentation.seek(to: 0)
         if self.playing {
           do {
             if self.demux.selectedAudioStream != nil {
               try self.currentAudioRenderer?.play()
             }
-            self.presentation.mediaClock.play(atHostTimeUs: Self.hostTimeUs())
+            self.presentation.play(atHostTimeUs: Self.hostTimeUs())
             self.status = "playing"
           } catch {
             self.setFailure(NativePlayerError(
@@ -886,7 +841,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   }
   func shouldRetryRecovery(token: YlOpenCancellationToken, generation reconnectGeneration: UInt64) -> Bool {
     return stateLock.withLock { () -> Bool in
-        if demux.sourceCancellationToken === token { demux.sourceCancellationToken = nil }
+        demux.clearCancellation(ifOwned: token)
         return !disposed && active && reconfiguring
           && generation == reconnectGeneration && !token.isCancelled
       }
@@ -900,7 +855,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         return true
       }
       guard shouldFail else { return }
-      presentation.displayLink?.isPaused = true
+      presentation.setDisplayPaused(true)
       setFailure(error)
   }
 
@@ -924,7 +879,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
           }
         }
         savedPositionUs = targetUs
-        presentation.mediaClock.seek(to: targetUs)
+        presentation.seek(to: targetUs)
         emitState()
       }
       return
@@ -932,7 +887,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     let entry = try onMainSync {
       try cancellationToken?.throwIfCancelled()
       let value = try stateLock.withLock {
-        guard !disposed, active, !reconfiguring, let media = demux.openedMedia else {
+        guard !disposed, active, !reconfiguring, let media = demux.currentMedia else {
           throw YlOpenCancellationToken.cancellationError()
         }
         let entryGeneration = generation
@@ -952,7 +907,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       guard !controlOperationEnded else { return }
       controlOperationEnded = true
       media.endControlOperation()
-      media.resumeReads()
+      demux.resume(media)
     }
     defer { endControlOperation() }
     // Every resource commit checks while holding stateLock. Resource mutation is
@@ -960,7 +915,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     func requireCurrentSeek(_ expectedGeneration: UInt64) throws {
       try cancellationToken?.throwIfCancelled()
       guard !disposed, !stopped, active, generation == expectedGeneration,
-            demux.openedMedia === media else {
+            demux.currentMedia === media else {
         throw YlOpenCancellationToken.cancellationError()
       }
     }
@@ -970,14 +925,14 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         try onMainSync {
           try stateLock.withLock { try requireCurrentSeek(entry.generation) }
           currentAudioRenderer?.pause()
-          presentation.mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
+          presentation.pause(atHostTimeUs: Self.hostTimeUs())
         }
       },
       advanceGeneration: { [self] in
         try cancellationToken?.throwIfCancelled()
         return try stateLock.withLock {
           guard !disposed, active, generation == entry.generation,
-                demux.openedMedia === media else {
+                demux.currentMedia === media else {
             throw YlOpenCancellationToken.cancellationError()
           }
           generation &+= 1
@@ -986,23 +941,23 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         }
       },
       stopDemux: { [self] in
-        media.interruptRead()
-        demux.worker.sync { cancelVideoSubmissions() }
-        media.resumeReads()
+        demux.interrupt(media)
+        demux.joinForControl { cancelVideoSubmissions() }
+        demux.resume(media)
         try cancellationToken?.throwIfCancelled()
       },
       clearBuffers: { [self] nextGeneration in
-        try demux.worker.sync {
+        try demux.performSync {
           try stateLock.withLock {
             try requireCurrentSeek(nextGeneration)
-            audio.pendingAudioPacket = nil
+            audio.discardPendingPacket()
             prebufferedVideoSample = false
             demuxEOF = false
             completionSent = false
-            audio.audioAnchored = false
-            presentation.currentPixelBuffer = nil; presentation.clearOutput()
+            audio.resetAnchor()
+            presentation.clearFrameAndTexture()
           }
-          presentation.frameScheduler.flush(generation: nextGeneration)
+          presentation.flushFrames(generation: nextGeneration)
         }
       },
       seekDemux: { [self] targetUs in
@@ -1011,33 +966,29 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         try cancellationToken?.throwIfCancelled()
       },
       resetAudio: { [self] nextGeneration in
-        try demux.worker.sync {
-          let renderer = try stateLock.withLock { () -> YlAudioRenderer? in
+        try demux.performSync {
+          let reset = try stateLock.withLock {
             try requireCurrentSeek(nextGeneration)
-            audio.audioGeneration = nextGeneration
-            return audio.audioRenderer
+            return audio.prepareReset(generation: nextGeneration)
           }
-          renderer?.reset(generation: nextGeneration)
+          reset.perform()
         }
       },
       recreateVideo: { [self] nextGeneration in
-        try demux.worker.sync {
-          let previous = try stateLock.withLock { () -> YlVideoToolboxDecoder? in
+        try demux.performSync {
+          let previous = try stateLock.withLock { () -> YlVideoPipeline.Resource? in
             try requireCurrentSeek(nextGeneration)
-            let previous = video.decoder
-            video.decoder = nil
-            return previous
+            return video.detach()
           }
           previous?.dispose()
         }
         let candidate = try makeDecoder()
         var installed = false
         defer { if !installed { candidate.dispose() } }
-        try demux.worker.sync {
-          let previous = try stateLock.withLock { () -> YlVideoToolboxDecoder? in
+        try demux.performSync {
+          let previous = try stateLock.withLock { () -> YlVideoPipeline.Resource? in
             try requireCurrentSeek(nextGeneration)
-            let previous = video.decoder
-            video.decoder = candidate
+            let previous = video.install(candidate)
             installed = true
             return previous
           }
@@ -1047,8 +998,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       suppressFramesBefore: { [self] targetUs in
         try onMainSync {
           try stateLock.withLock { try requireCurrentSeek(operationGeneration) }
-          presentation.postSeekGate.reset(targetUs: targetUs)
-          presentation.mediaClock.seek(to: targetUs)
+          presentation.suppressFramesBefore( targetUs)
+          presentation.seek(to: targetUs)
         }
       },
       restartDemux: { [self] in
@@ -1063,7 +1014,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
           }
           if wasPlaying {
             if demux.selectedAudioStream != nil { try currentAudioRenderer?.play() }
-            presentation.mediaClock.play(atHostTimeUs: Self.hostTimeUs())
+            presentation.play(atHostTimeUs: Self.hostTimeUs())
             status = "playing"
           } else {
             status = "paused"
@@ -1078,7 +1029,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       try onMainSync {
         try cancellationToken?.throwIfCancelled()
         guard stateLock.withLock({
-          active && generation == operationGeneration && demux.openedMedia === media
+          active && generation == operationGeneration && demux.currentMedia === media
         }) else {
           throw YlOpenCancellationToken.cancellationError()
         }
@@ -1141,7 +1092,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       guard shouldRestore else { return }
       if wasPlaying {
         try? currentAudioRenderer?.play()
-        presentation.mediaClock.play(atHostTimeUs: Self.hostTimeUs())
+        presentation.play(atHostTimeUs: Self.hostTimeUs())
         status = "playing"
       } else {
         status = "paused"
@@ -1168,14 +1119,14 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       }
       guard shouldFail else { return }
       currentAudioRenderer?.pause()
-      presentation.mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
-      presentation.displayLink?.isPaused = true
+      presentation.pause(atHostTimeUs: Self.hostTimeUs())
+      presentation.setDisplayPaused(true)
       setFailure(error)
     }
   }
 
-  private func makeDecoder() throws -> YlVideoToolboxDecoder {
-    try video.makeDecoder(format: video.format)
+  private func makeDecoder() throws -> YlVideoPipeline.Resource {
+    try video.prepareCurrent()
   }
 
   func makeLiveReconnectPipeline(
@@ -1192,8 +1143,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       }
     )
     var keepMedia = false
-    var candidateDecoder: YlVideoToolboxDecoder?
-    var candidateAudio: YlAudioRenderer?
+    var candidateDecoder: YlVideoPipeline.Resource?
+    var candidateAudio: YlAudioPipeline.Resource?
     defer {
       if !keepMedia {
         candidateDecoder?.dispose()
@@ -1223,25 +1174,16 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     let supportedAudio = catalog.audio
     let copiedAudioCookies = catalog.cookies
 
-    let candidateFormat = try video.makeFormatDescription(
-      context: validContext,
-      streamIndex: selectedVideo.index
-    )
-    let newDecoder = try video.makeDecoder(format: candidateFormat)
+    let newDecoder = try video.prepare(context: validContext, streamIndex: selectedVideo.index)
     candidateDecoder = newDecoder
 
     let preferredAudioIndex = demux.selectedAudioStream?.index
     let reselectedAudio = preferredAudioIndex.flatMap { preferredIndex in
       supportedAudio.first { $0.index == preferredIndex }
     } ?? supportedAudio.first
-    let newAudioRenderer = audio.makeRenderer()
-    candidateAudio = newAudioRenderer
-    if let reselectedAudio {
-      try newAudioRenderer.configure(stream: audio.reconnectConfiguration(
-        for: reselectedAudio, generation: reconnectGeneration, copiedAudioCookies: copiedAudioCookies))
-      newAudioRenderer.setVolume(audio.desiredVolume)
-      newAudioRenderer.setRate(audio.desiredRate)
-    }
+    let newAudioRenderer = try audio.prepareReconnect(stream: reselectedAudio,
+      generation: reconnectGeneration, cookies: copiedAudioCookies,
+      onCreated: { resource in candidateAudio = resource })
     try cancellationToken.throwIfCancelled()
 
     keepMedia = true
@@ -1253,7 +1195,6 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       videoStream: selectedVideo,
       audioStreams: supportedAudio,
       audioCookies: copiedAudioCookies,
-      videoFormat: candidateFormat,
       selectedAudioStream: reselectedAudio,
       decoder: newDecoder,
       audioRenderer: newAudioRenderer
@@ -1276,8 +1217,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     }
 
     var mediaNeedsClose = true
-    var candidateDecoder: YlVideoToolboxDecoder?
-    var candidateAudio: YlAudioRenderer?
+    var candidateDecoder: YlVideoPipeline.Resource?
+    var candidateAudio: YlAudioPipeline.Resource?
     defer {
       if mediaNeedsClose {
         candidateDecoder?.dispose()
@@ -1286,45 +1227,32 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       }
     }
 
-    let candidateFormat = try video.makeFormatDescription(
-      context: validContext,
-      streamIndex: demux.videoStream.index
-    )
-    candidateDecoder = try video.makeDecoder(format: candidateFormat)
-    let renderer = audio.makeRenderer()
-    candidateAudio = renderer
-    if let currentAudioStream = demux.selectedAudioStream {
-      try renderer.configure(stream: audioConfiguration(
-        for: currentAudioStream,
-        generation: audio.audioGeneration
-      ))
-      renderer.setVolume(audio.desiredVolume)
-      renderer.setRate(audio.desiredRate)
-    }
+    candidateDecoder = try video.prepare(context: validContext, streamIndex: demux.videoStream.index)
+    let renderer = try audio.prepareRebuild(stream: demux.selectedAudioStream, cookies: demux.audioCookies,
+      onCreated: { resource in candidateAudio = resource })
     if positionUs > 0 {
       try demux.seek(reopenedMedia, toMediaTimeUs: positionUs)
-      presentation.postSeekGate.reset(targetUs: positionUs)
+      presentation.suppressFramesBefore( positionUs)
     }
 
     // This path also restores a quiesced local pipeline whose demux/audio are
     // retained. Retire those resources only after the candidate seek succeeds.
-    let retiredMedia = demux.openedMedia
-    let retiredDecoder = video.decoder
-    let retiredAudio = audio.audioRenderer
-    video.format = candidateFormat
-    demux.openedMedia = reopenedMedia
-    video.decoder = candidateDecoder
+    let retiredMedia = demux.currentMedia
+    let retiredDecoder = video.detach()
+    let retiredAudio = audio.detach()
+    demux.installMedia(reopenedMedia)
+    video.install(candidateDecoder)
     candidateDecoder = nil
-    audio.audioRenderer = renderer
+    audio.install(renderer)
     candidateAudio = nil
-    audio.pendingAudioPacket = nil
+    audio.discardPendingPacket()
     prebufferedVideoSample = false
-    stateLock.withLock { demux.initialKeyframeGate.reset() }
+    stateLock.withLock { demux.resetInitialKeyframeGate() }
     demuxEOF = false
     completionSent = false
-    audio.audioAnchored = false
-    presentation.frameScheduler.flush(generation: generation)
-    presentation.mediaClock.seek(to: positionUs)
+    audio.resetAnchor()
+    presentation.flushFrames(generation: generation)
+    presentation.seek(to: positionUs)
     mediaNeedsClose = false
     retiredDecoder?.dispose()
     retiredAudio?.dispose()
@@ -1337,18 +1265,18 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   private func completeIfDrained(atHostTimeUs hostTimeUs: Int64) {
     let shouldComplete = stateLock.withLock {
       active && playing && demuxEOF && !completionSent
-        && audio.pendingAudioPacket == nil
+        && !audio.hasPendingPacket
     }
-    guard shouldComplete, video.submissions.isDrained,
-          presentation.frameScheduler.pendingPTS.isEmpty,
+    guard shouldComplete, video.isDrained,
+          presentation.pendingFrames.isEmpty,
           (currentAudioRenderer?.scheduledDurationUs ?? 0) == 0 else { return }
     stateLock.withLock {
       guard !completionSent else { return }
       completionSent = true
       playing = false
     }
-    presentation.mediaClock.pause(atHostTimeUs: hostTimeUs)
-    presentation.displayLink?.isPaused = true
+    presentation.pause(atHostTimeUs: hostTimeUs)
+    presentation.setDisplayPaused(true)
     status = "completed"
     emitState()
   }
@@ -1362,9 +1290,9 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     )
     let transition = stateLock.withLock { () -> (
       generation: UInt64,
-      media: YlOpenedMedia?,
+      media: YlDemuxPipeline.Resource?,
       token: YlOpenCancellationToken?,
-      reconnect: DispatchWorkItem?
+      reconnect: YlRecoveryCoordinator.ScheduledWork?
     )? in
       guard let generations = YlFallbackTerminalFailurePolicy.begin(
         disposed: disposed,
@@ -1374,27 +1302,24 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         audioGeneration: audio.audioGeneration
       ) else { return nil }
       generation = generations.videoGeneration
-      audio.audioGeneration = generations.audioGeneration
+      audio.adoptGeneration(generations.audioGeneration)
       active = false
       playing = false
       reconfiguring = true
       pumping = false
       demuxEOF = false
       completionSent = false
-      recovery.awaitingReconnectFirstFrame = false
+      recovery.clearFirstFrameExpectation()
       status = "error"
       currentError = details
-      let detachedMedia = demux.openedMedia
-      demux.openedMedia = nil
-      let detachedToken = demux.sourceCancellationToken
-      demux.sourceCancellationToken = nil
-      let detachedReconnect = recovery.reconnectWorkItem
-      recovery.reconnectWorkItem = nil
+      let detachedMedia = demux.detachMedia()
+      let detachedToken = demux.detachCancellationToken()
+      let detachedReconnect = recovery.detachScheduledWork()
       return (generation, detachedMedia, detachedToken, detachedReconnect)
     }
     guard let transition else { return }
 
-    recovery.liveReconnectController.cancel()
+    recovery.cancelBudget()
     transition.reconnect?.cancel()
     transition.token?.cancel()
     transition.media?.cancelInput()
@@ -1407,39 +1332,36 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       guard self.stateLock.withLock({
         !self.disposed && !self.stopped && self.generation == transition.generation
       }) else {
-        self.demux.worker.async { transition.media?.close() }
+        self.demux.performAsync { transition.media?.close() }
         return
       }
-      self.presentation.displayLink?.invalidate()
-      self.presentation.displayLink = nil
-      let renderer = self.stateLock.withLock { self.audio.audioRenderer }
+      self.presentation.retireDisplay()
+      let renderer = self.audio.currentResource
       renderer?.pause()
-      self.presentation.mediaClock.pause(atHostTimeUs: Self.hostTimeUs())
-      self.presentation.frameScheduler.flush(generation: transition.generation)
-      self.presentation.postSeekGate.reset(targetUs: nil)
-      self.stateLock.withLock { self.presentation.currentPixelBuffer = nil; self.presentation.clearOutput() }
+      self.presentation.pause(atHostTimeUs: Self.hostTimeUs())
+      self.presentation.flushFrames(generation: transition.generation)
+      self.presentation.suppressFramesBefore( nil)
+      self.stateLock.withLock { self.presentation.clearFrameAndTexture() }
       self.emit(.failure(details))
       self.emitState()
 
-      self.demux.worker.async { [weak self] in
+      self.demux.performAsync { [weak self] in
         guard let self else {
           transition.media?.close()
           return
         }
         let resources = self.stateLock.withLock { () -> (
-          decoder: YlVideoToolboxDecoder?,
-          audio: YlAudioRenderer?
+          decoder: YlVideoPipeline.Resource?,
+          audio: YlAudioPipeline.Resource?
         ) in
           guard self.generation == transition.generation, !self.active else {
             return (nil, nil)
           }
-          let detachedDecoder = self.video.decoder
-          self.video.decoder = nil
-          let detachedAudio = self.audio.audioRenderer
-          self.audio.audioRenderer = nil
-          self.audio.pendingAudioPacket = nil
+          let detachedDecoder = self.video.detach()
+          let detachedAudio = self.audio.detach()
+          self.audio.discardPendingPacket()
           self.prebufferedVideoSample = false
-          self.audio.audioAnchored = false
+          self.audio.resetAnchor()
           return (detachedDecoder, detachedAudio)
         }
         self.cancelVideoSubmissions()
@@ -1471,27 +1393,17 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
             throw YlOpenCancellationToken.cancellationError()
           }
         }
-        demux.selectedAudioStream = requestedStream
-        stateLock.withLock { audio.audioGeneration &+= 1 }
+        demux.selectAudio(requestedStream)
+        stateLock.withLock { audio.advanceGeneration() }
         emit(.tracksChanged(audio: audioTracks, video: videoTracks))
         emitState()
       }
       return
     }
 
-    let nextAudioGeneration = stateLock.withLock { audio.audioGeneration &+ 1 }
-    let candidate = audio.makeRenderer()
-    do {
-      try candidate.configure(stream: audioConfiguration(
-        for: requestedStream,
-        generation: nextAudioGeneration
-      ))
-      candidate.setVolume(audio.desiredVolume)
-      candidate.setRate(audio.desiredRate)
-    } catch {
-      candidate.dispose()
-      throw error
-    }
+    let nextAudioGeneration = stateLock.withLock { audio.nextGeneration() }
+    let candidate = try audio.prepareTrack(stream: requestedStream,
+      generation: nextAudioGeneration, cookies: demux.audioCookies)
     var candidateOwnedByBackend = false
     defer {
       if !candidateOwnedByBackend { candidate.dispose() }
@@ -1500,9 +1412,9 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     let state = try onMainSync {
       try cancellationToken?.throwIfCancelled()
       let now = Self.hostTimeUs()
-      let positionUs = presentation.mediaClock.position(atHostTimeUs: now)
+      let positionUs = presentation.position(atHostTimeUs: now)
       let value = try stateLock.withLock {
-        guard !disposed, active, !reconfiguring, let media = demux.openedMedia else {
+        guard !disposed, active, !reconfiguring, let media = demux.currentMedia else {
           throw YlOpenCancellationToken.cancellationError()
         }
         let entryGeneration = generation
@@ -1515,7 +1427,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
           generation: entryGeneration
         )
       }
-      presentation.mediaClock.pause(atHostTimeUs: now)
+      presentation.pause(atHostTimeUs: now)
       return value
     }
     let media = state.media
@@ -1525,36 +1437,35 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       guard !controlOperationEnded else { return }
       controlOperationEnded = true
       media.endControlOperation()
-      media.resumeReads()
+      demux.resume(media)
     }
     defer { endControlOperation() }
-    media.interruptRead()
-    demux.worker.sync {}
-    media.resumeReads()
+    demux.interrupt(media)
+    demux.performSync {}
+    demux.resume(media)
     try cancellationToken?.throwIfCancelled()
     do {
       try onMainSync {
         try cancellationToken?.throwIfCancelled()
         guard stateLock.withLock({
-          active && generation == state.generation && demux.openedMedia === media
+          active && generation == state.generation && demux.currentMedia === media
         }) else {
           throw YlOpenCancellationToken.cancellationError()
         }
-        let previous = audio.audioRenderer
-        audio.audioRenderer = candidate
+        let previous = audio.install(candidate)
         candidateOwnedByBackend = true
-        demux.selectedAudioStream = requestedStream
-        audio.pendingAudioPacket = nil
-        audio.audioAnchored = false
+        demux.selectAudio(requestedStream)
+        audio.discardPendingPacket()
+        audio.resetAnchor()
         stateLock.withLock {
-          audio.audioGeneration = nextAudioGeneration
+          audio.adoptGeneration(nextAudioGeneration)
           reconfiguring = false
         }
         previous?.dispose()
-        presentation.mediaClock.seek(to: state.positionUs)
+        presentation.seek(to: state.positionUs)
         if state.wasPlaying {
           try candidate.play()
-          presentation.mediaClock.play(atHostTimeUs: Self.hostTimeUs())
+          presentation.play(atHostTimeUs: Self.hostTimeUs())
         }
         emit(.tracksChanged(audio: audioTracks, video: videoTracks))
       }
@@ -1563,7 +1474,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       try onMainSync {
         try cancellationToken?.throwIfCancelled()
         guard stateLock.withLock({
-          active && generation == state.generation && demux.openedMedia === media
+          active && generation == state.generation && demux.currentMedia === media
         }) else {
           throw YlOpenCancellationToken.cancellationError()
         }
@@ -1603,7 +1514,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
 
   private func transitionToCancelledAudioSwitch(
     _ state: (
-      media: YlOpenedMedia,
+      media: YlDemuxPipeline.Resource,
       positionUs: Int64,
       wasPlaying: Bool,
       generation: UInt64
@@ -1621,10 +1532,10 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         return true
       }
       guard shouldRestore else { return }
-      presentation.mediaClock.seek(to: state.positionUs)
+      presentation.seek(to: state.positionUs)
       if state.wasPlaying {
         try? currentAudioRenderer?.play()
-        presentation.mediaClock.play(atHostTimeUs: Self.hostTimeUs())
+        presentation.play(atHostTimeUs: Self.hostTimeUs())
         status = "playing"
       } else {
         status = "paused"
