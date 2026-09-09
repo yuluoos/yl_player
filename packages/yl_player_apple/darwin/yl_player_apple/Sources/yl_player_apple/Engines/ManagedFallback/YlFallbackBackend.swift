@@ -4,26 +4,7 @@ import CoreVideo
 import QuartzCore
 import YlFFmpegBridge
 
-private struct YlFallbackReconnectPipeline {
-  let media: YlOpenedMedia
-  let info: YLFMediaInfo
-  let videoStream: YLFStreamInfo
-  let audioStreams: [YLFStreamInfo]
-  let audioCookies: [Int32: Data]
-  let videoFormat: CMVideoFormatDescription
-  let selectedAudioStream: YLFStreamInfo?
-  let decoder: YlVideoToolboxDecoder
-  let audioRenderer: YlAudioRenderer
-
-  func discard() {
-    decoder.dispose()
-    audioRenderer.dispose()
-    media.cancelInput()
-    media.close()
-  }
-}
-
-final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutput, YlAudioPipelineOutput, YlPresentationOutput {
+final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutput, YlAudioPipelineOutput, YlPresentationOutput, YlRecoverySession {
   let playerId: Int64
   var textureId: Int64 { services.textureOutput.textureId }
   var isActive: Bool { stateLock.withLock { active } }
@@ -60,6 +41,22 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
     stateLock.withLock { openedMedia }?.resumeReads()
   }
 
+  private let recovery: YlRecoveryCoordinator
+  private var liveReconnectController: YlLiveReconnectController {
+    get { recovery.liveReconnectController }
+  }
+  private var reconnectWorkItem: DispatchWorkItem? {
+    get { recovery.reconnectWorkItem }
+    set { recovery.reconnectWorkItem = newValue }
+  }
+  private var awaitingReconnectFirstFrame: Bool {
+    get { recovery.awaitingReconnectFirstFrame }
+    set { recovery.awaitingReconnectFirstFrame = newValue }
+  }
+  private var reconnectCount: Int {
+    get { recovery.reconnectCount }
+    set { recovery.reconnectCount = newValue }
+  }
   private let presentation: YlPresentationCoordinator
   private var frameScheduler: YlFrameScheduler {
     get { presentation.frameScheduler }
@@ -180,7 +177,6 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
   private var qualityConstraint: YlFallbackQualityConstraint
   private var worker: DispatchQueue { demux.worker }
   private let stateLock = NSLock()
-  private let liveReconnectController: YlLiveReconnectController
   private var context: YLFMediaContextRef? { demux.context }
   private var active = false
   private var playing = false
@@ -189,8 +185,6 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
   private var disposed = false
   private var pumping = false
   private var reconfiguring = false
-  private var reconnectWorkItem: DispatchWorkItem?
-  private var awaitingReconnectFirstFrame = false
   private var generation: UInt64
   private(set) var channelGeneration = YlBackendGeneration.next()
   private let loadRequestId: String?
@@ -201,7 +195,6 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
   private var completionSent = false
   private var openStartedAt = CACurrentMediaTime()
   private var openDurationMs: Int64?
-  private var reconnectCount = 0
   private var currentError: NativePlayerError?
 
   private var currentAudioRenderer: YlAudioRenderer? {
@@ -231,9 +224,6 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
     self.services = services
     self.configuration = configuration
     self.bufferBudget = try YlFallbackBufferBudget.make(configuration: configuration)
-    self.liveReconnectController = YlLiveReconnectController(
-      configuration: configuration.network
-    )
     let resumeState = prepared.resumeState
     self.qualityConstraint = qualityConstraint
     self.generation = generation
@@ -244,6 +234,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
     self.audio = YlAudioPipeline(bufferBudget: bufferBudget, lock: stateLock, generation: generation)
     self.presentation = YlPresentationCoordinator(services: services, lock: stateLock,
       openedAt: openStartedAt, positionEventIntervalMs: configuration.positionEventIntervalMs)
+    self.recovery = YlRecoveryCoordinator(configuration: configuration.network,
+      scheduler: YlDispatchRecoveryScheduler(queue: demux.worker))
     self.playing = resumeState?.shouldPlay ?? false
     self.savedPositionUs = resumeState?.positionUs ?? 0
     super.init()
@@ -254,6 +246,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
       let renderer = self.stateLock.withLock { self.audioRenderer }
       return renderer?.renderedAudioTime
     })
+    recovery.session = self
     presentation.output = self
     audio.output = self
     audio.timeline = self.mediaClock
@@ -1070,68 +1063,36 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
     }
   }
 
-  private func scheduleLiveReconnect(
-    after error: NativePlayerError,
-    generation reconnectGeneration: UInt64
-  ) {
-    guard stateLock.withLock({
-      !disposed && active && reconfiguring && generation == reconnectGeneration
-    }) else { return }
-    guard let delayMs = liveReconnectController.nextDelayMs() else {
-      finishLiveReconnectExhausted(error, generation: reconnectGeneration)
-      return
-    }
-
-    let attempt = liveReconnectController.attempt
-    DispatchQueue.main.async { [weak self] in
-      guard let self,
-            self.stateLock.withLock({
-              self.active && self.reconfiguring
-                && self.generation == reconnectGeneration
-            }) else { return }
-      self.emit(.retry(attempt: attempt, delayMs: delayMs, error: error))
-    }
-
-    let workItem = DispatchWorkItem { [weak self] in
-      self?.performLiveReconnect(generation: reconnectGeneration)
-    }
-    let installed = stateLock.withLock { () -> Bool in
+  var recoveryGeneration: UInt64 { stateLock.withLock { generation } }
+  func mayScheduleRecovery(generation reconnectGeneration: UInt64) -> Bool {
+    stateLock.withLock { !disposed && active && reconfiguring && generation == reconnectGeneration }
+  }
+  func emitRecoveryRetry(attempt: Int, delayMs: Int64, error: NativePlayerError,
+                         generation reconnectGeneration: UInt64) {
+    guard stateLock.withLock({ active && reconfiguring && generation == reconnectGeneration }) else { return }
+    emit(.retry(attempt: attempt, delayMs: delayMs, error: error))
+  }
+  func installRecoveryWorkItem(_ workItem: DispatchWorkItem, generation reconnectGeneration: UInt64) -> Bool {
+    return stateLock.withLock { () -> Bool in
       guard !disposed, active, reconfiguring, generation == reconnectGeneration
       else { return false }
       reconnectWorkItem?.cancel()
       reconnectWorkItem = workItem
       return true
     }
-    guard installed else { return }
-    worker.asyncAfter(
-      deadline: .now() + .milliseconds(Int(delayMs)),
-      execute: workItem
-    )
   }
-
-  private func performLiveReconnect(generation reconnectGeneration: UInt64) {
-    guard liveReconnectController.shouldInstall(
-      reconnectGeneration: reconnectGeneration,
-      currentGeneration: stateLock.withLock { generation }
-    ) else { return }
-
-    let token = YlOpenCancellationToken()
-    let mayOpen = stateLock.withLock { () -> Bool in
+  func beginRecoveryOpen(_ token: YlOpenCancellationToken, generation reconnectGeneration: UInt64) -> Bool {
+    return stateLock.withLock { () -> Bool in
       guard !disposed, active, reconfiguring, generation == reconnectGeneration
       else { return false }
       reconnectWorkItem = nil
       sourceCancellationToken = token
       return true
     }
-    guard mayOpen else { return }
-
-    do {
-      let candidate = try makeLiveReconnectPipeline(
-        generation: reconnectGeneration,
-        cancellationToken: token
-      )
-      try token.throwIfCancelled()
-      let installed = stateLock.withLock { () -> Bool in
+  }
+  func installRecoveryCandidate(_ candidate: YlFallbackReconnectPipeline,
+                                token: YlOpenCancellationToken, generation reconnectGeneration: UInt64) -> Bool {
+    return stateLock.withLock { () -> Bool in
         guard !disposed, active, reconfiguring,
               generation == reconnectGeneration,
               sourceCancellationToken === token,
@@ -1157,11 +1118,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
         currentError = nil
         return true
       }
-      guard installed else {
-        candidate.discard()
-        return
-      }
-
+  }
+  func resumeRecovery(generation reconnectGeneration: UInt64) {
       stateLock.withLock { initialKeyframeGate.reset() }
       frameScheduler.flush(generation: reconnectGeneration)
       DispatchQueue.main.async { [weak self] in
@@ -1197,55 +1155,29 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
         self.emitState()
         self.requestPump()
       }
-    } catch let error as NativePlayerError {
-      let shouldRetry = stateLock.withLock { () -> Bool in
-        if sourceCancellationToken === token { sourceCancellationToken = nil }
-        return !disposed && active && reconfiguring
-          && generation == reconnectGeneration && !token.isCancelled
-      }
-      if shouldRetry { scheduleLiveReconnect(after: error, generation: reconnectGeneration) }
-    } catch {
-      let shouldRetry = stateLock.withLock { () -> Bool in
-        if sourceCancellationToken === token { sourceCancellationToken = nil }
-        return !disposed && active && reconfiguring
-          && generation == reconnectGeneration && !token.isCancelled
-      }
-      if shouldRetry {
-        scheduleLiveReconnect(
-          after: NativePlayerError(
-            category: "network",
-            code: "network.http_status",
-            message: "The HTTP-FLV reconnect failed.",
-            diagnostic: String(describing: error)
-          ),
-          generation: reconnectGeneration
-        )
-      }
-    }
   }
-
-  private func finishLiveReconnectExhausted(
-    _ lastError: NativePlayerError,
-    generation reconnectGeneration: UInt64
-  ) {
-    DispatchQueue.main.async { [weak self] in
-      guard let self else { return }
-      let shouldFail = self.stateLock.withLock { () -> Bool in
-        guard !self.disposed, self.active, self.reconfiguring,
-              self.generation == reconnectGeneration else { return false }
-        self.reconfiguring = false
-        self.playing = false
+  func shouldRetryRecovery(token: YlOpenCancellationToken, generation reconnectGeneration: UInt64) -> Bool {
+    return stateLock.withLock { () -> Bool in
+        if sourceCancellationToken === token { sourceCancellationToken = nil }
+        return !disposed && active && reconfiguring
+          && generation == reconnectGeneration && !token.isCancelled
+      }
+  }
+  func reportRecoveryExhaustion(_ error: NativePlayerError, generation reconnectGeneration: UInt64) {
+      let shouldFail = stateLock.withLock { () -> Bool in
+        guard !disposed, active, reconfiguring,
+              generation == reconnectGeneration else { return false }
+        reconfiguring = false
+        playing = false
         return true
       }
       guard shouldFail else { return }
-      self.displayLink?.isPaused = true
-      self.setFailure(NativePlayerError(
-        category: "network",
-        code: "network.retry_exhausted",
-        message: "HTTP-FLV reconnect attempts were exhausted.",
-        diagnostic: lastError.code
-      ))
-    }
+      displayLink?.isPaused = true
+      setFailure(error)
+  }
+
+  private func scheduleLiveReconnect(after error: NativePlayerError, generation: UInt64) {
+    recovery.scheduleLiveReconnect(after: error, generation: generation)
   }
 
   private func seek(
@@ -1518,7 +1450,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
     try video.makeDecoder(format: videoFormat)
   }
 
-  private func makeLiveReconnectPipeline(
+  func makeLiveReconnectPipeline(
     generation reconnectGeneration: UInt64,
     cancellationToken: YlOpenCancellationToken
   ) throws -> YlFallbackReconnectPipeline {
