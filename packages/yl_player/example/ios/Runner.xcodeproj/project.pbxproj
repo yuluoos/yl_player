@@ -126,11 +126,6 @@
 		A6A513C8CB5AB83592903956 /* NativeBackendFixtures.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeBackendFixtures.swift; sourceTree = "<group>"; };
 		A961F88D1BD445BCAB359A39 /* YlPlatformServicesTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlPlatformServicesTests.swift; sourceTree = "<group>"; };
 		AD36E29154BDA690EA8EC35E /* hevc_aac.flv */ = {isa = PBXFileReference; includeInIndex = 1; path = hevc_aac.flv; sourceTree = "<group>"; };
-		B20C0012294A618700263BE5 /* h264_aac.mkv */ = {isa = PBXFileReference; lastKnownFileType = file; path = h264_aac.mkv; sourceTree = "<group>"; };
-		B20C0013294A618700263BE5 /* two_audio_tracks.mkv */ = {isa = PBXFileReference; lastKnownFileType = file; path = two_audio_tracks.mkv; sourceTree = "<group>"; };
-		B20C0041294A618700263BE5 /* h264_aac.flv */ = {isa = PBXFileReference; lastKnownFileType = file; path = h264_aac.flv; sourceTree = "<group>"; };
-		B20C0042294A618700263BE5 /* h264_mp3.flv */ = {isa = PBXFileReference; lastKnownFileType = file; path = h264_mp3.flv; sourceTree = "<group>"; };
-		B20C0043294A618700263BE5 /* hevc_aac.flv */ = {isa = PBXFileReference; lastKnownFileType = file; path = hevc_aac.flv; sourceTree = "<group>"; };
 		B70723F5407676A3C944FFE9 /* hls_encrypted_segment0.ts */ = {isa = PBXFileReference; includeInIndex = 1; path = hls_encrypted_segment0.ts; sourceTree = "<group>"; };
 		BF4ED9D4EBB695809F00AF55 /* YlLiveReconnectControllerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlLiveReconnectControllerTests.swift; sourceTree = "<group>"; };
 		C13A3D6B01A03392BD9CE3E7 /* YlBoundedPacketQueueTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlBoundedPacketQueueTests.swift; sourceTree = "<group>"; };
@@ -148,7 +143,6 @@
 		E9574A980A0BBF71BF4FD7F2 /* NativeCallbackCharacterization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeCallbackCharacterization.swift; sourceTree = "<group>"; };
 		EBD49FC1AE129A046B75B04C /* YlVideoToolboxDecoderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlVideoToolboxDecoderTests.swift; sourceTree = "<group>"; };
 		EFD3B5BAF89BE4B11BA58C0A /* hevc_aac.mkv */ = {isa = PBXFileReference; includeInIndex = 1; path = hevc_aac.mkv; sourceTree = "<group>"; };
-		F6200012294A618700263BE5 /* hevc_aac.mkv */ = {isa = PBXFileReference; lastKnownFileType = file; path = hevc_aac.mkv; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -265,12 +259,6 @@
 			children = (
 				D1900010294A618700263BE5 /* hls_key.bin */,
 				D1900011294A618700263BE5 /* hls_encrypted_segment0.ts */,
-				B20C0012294A618700263BE5 /* h264_aac.mkv */,
-				B20C0013294A618700263BE5 /* two_audio_tracks.mkv */,
-				F6200012294A618700263BE5 /* hevc_aac.mkv */,
-				B20C0041294A618700263BE5 /* h264_aac.flv */,
-				B20C0042294A618700263BE5 /* h264_mp3.flv */,
-				B20C0043294A618700263BE5 /* hevc_aac.flv */,
 			);
 			path = Fixtures;
 			sourceTree = "<group>";

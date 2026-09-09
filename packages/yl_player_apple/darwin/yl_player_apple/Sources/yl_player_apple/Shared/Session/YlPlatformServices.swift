@@ -46,6 +46,7 @@ protocol YlLifecycleDriving: AnyObject {
   var onSuspend: (() -> Void)? { get set }
   var onResume: (() -> Void)? { get set }
   var onTerminate: (() -> Void)? { get set }
+  var onMemoryWarning: (() -> Void)? { get set }
   func start()
   func stop()
 }

@@ -89,7 +89,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift",
-    "sha256": "cb2c41bcd3d1161d52eebcb69a23d27f461c714fe102e5685a035673e1c5bceb",
+    "sha256": "83baa0168913c4c039bf74e48bfcd5a39117140a6cf2d1cf3d47119ad9e7aed7",
     "methods": [
       "testImmutableRequestAndSessionIdentityStartsAtZero",
       "testNegativeMeasuredLiveOffsetIsZeroAndUnknownRemainsNil",
@@ -99,6 +99,7 @@
       "testPartialOrAbsentGeometryCannotInventPublicMeasurements",
       "testTypedStateRetainsMeasuredMetadataWithoutTransportEnvelope",
       "testInvalidCreateDoesNotAllocateTexture",
+      "testLifecycleMemoryWarningReachesActiveHostThroughSharedProtocol",
       "testPrivateFrameCommitAndRetiredClearRespectHostOwnership",
       "testAcknowledgementBlocksFollowingCallsAndFailureClosesQueue",
       "testHungAcknowledgementHasBoundedCleanup",
@@ -109,6 +110,10 @@
     "task7_typed_migration": {
       "from_sha256": "0e0b38cfd78d2481ae4f52409da15f2ebf0a7fff049852c8799f12e4fa3660ab",
       "reason": "Task7 shared reducer, native registry, immutable identity, private/public texture ownership, FIFO acknowledgements and host delivery assertions. R16 typed callback contract; READY and accepted timeline/metrics retention regressions."
+    },
+    "task9_self_review": {
+      "from_sha256": "cb2c41bcd3d1161d52eebcb69a23d27f461c714fe102e5685a035673e1c5bceb",
+      "reason": "R42 proves the shared lifecycle protocol carries the existing memory-warning callback to an active registry host without changing session identity, texture ownership, or platform notification policy."
     }
   },
   {

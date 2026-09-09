@@ -108,7 +108,7 @@
     "original_body_sha256": "ee3aa79d3cb866681aaf27f2c1d372a7bb1baaf53acec2ae7b59878088f23295",
     "task7_target": "YlAppleHostTests.testPlayerPersistsSuccessfulQualityConstraint",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Typed video-constraint setter changes accepted configuration only after success; a later Load inherits the successful constraint and rejects incompatible media while preserving the previous accepted session.",
+    "typed_host_assertion_mapping": "Typed video-constraint setter changes the accepted current item only after success; same-session suspend/resume preserves that accepted constraint. This case does not assert inheritance by a later Load, whose per-Load options remain authoritative.",
     "counterpart": {
       "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
       "method": "YlAppleHostTests.testPlayerPersistsSuccessfulQualityConstraint",
@@ -117,7 +117,7 @@
       "assertion_groups": [
         {
           "original": "successful quality command persists maxHeight720",
-          "typed_assertions": "Typed setVideoConstraints returns normally; actual AV item resolution height is720 and remains720 after a second accepted source."
+          "typed_assertions": "Typed setVideoConstraints returns normally; actual AV item resolution height is720 and remains720 after same-session suspend/resume."
         }
       ],
       "shared_body_sha256": "f20d8afc79709c58dbfdb0ab07397ebd20b5e042af6b49ef9e7f6ef4f326f0b3"

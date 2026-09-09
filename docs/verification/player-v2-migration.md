@@ -950,3 +950,171 @@ All earlier36 ruling texts and costs remain unchanged. The explicit exception
 and its cost are recorded verbatim:
 
 37. Ruling: repair the reproduced final residual R1 before beginning the dependent Apple phase, allowing a narrowly scoped acceptance correction and focused independent verification beyond the normal one-wave final-review cap. Preserve acceptance order across active worker completion and suspended immediate commands, with independent track and timeline intent ownership; an older completion cannot replace newer successfully accepted intent, and rejected commands still cannot poison healthy playback or saved intent — the final reviewer executed a concrete current-code probe showing rollback selects older instead of newer, so this is a real load-bearing regression rather than a speculative polish item. The user has authorized all optimization and continued implementation; knowingly parking this ordinary reversible correctness repair would leave that authorized work incomplete — cost if wrong: one additional focused repair/review and its affected tests beyond the planned cap, plus per-intent ordering bookkeeping. Do not reopen the broad phase review, expand to unrelated findings, or claim physical/remote evidence; record the extra scope and exact proof in the durable ledger.
+
+### Accepted R1 outcome
+
+The parent independently accepted the Android R1 correction at
+`f1a3fe4`. That acceptance closes the whole-phase review's original five findings
+and the residual command-ordering regression described above. The final R1
+checkpoint remains the focused seven-suite result: **127 JVM tests, zero
+failures/errors/skips**. Under Android Ruling 7, the prior full **257 JVM**, **87
+Dart**, and **11 owned-device** results remain their own earlier checkpoints; they
+were not rerun or combined into a fictional R1 aggregate. The physical-device,
+capacity, soak, reconnect-endurance and remote-CI limits remain open.
+
+## Apple consolidation self-review — 2026-09-08
+
+Apple Tasks 1–8 are accepted through `c37453f176ccf38a4f09b6f73f0b8ef14399181c`
+after two scoped Task 8 repair reviews. The implementation sequence is Task 1
+`cd828e6`, Task 2 `7ee4ebf`, Task 3 `b36da29`, Task 4 `04b89e0`, Task 5
+`102ef09`, Task 6 `13a254a`, Task 7 `ce368c5`, Task 8 `afe0eda6`, Task 8 R1
+`8074826`, and Task 8 R2 `c37453f`. This self-review changes no player algorithm,
+public API, generated transport, legacy native fixture body, media, dependency,
+deployment floor or artifact. It corrects one assertion-provenance description,
+removes six stale Xcode navigator file references, and closes one internal
+lifecycle-boundary defect found by the explicit platform-conditional audit.
+
+### Self-review audits and bounded cleanup
+
+| Audit | Result and interpretation |
+| --- | --- |
+| Swift source identity | `find ... -name '*.swift' -exec basename ... | sort | uniq -d` produced no names. Every production Swift basename has one owner in the combined package. |
+| Channel surface | The requested `rg` found only historical `YlIosChannel.swift` / `YlMacosChannel.swift` path strings in `source-parity.json` and `behavioral-constants-allowlist.json`. It found no channel class, `FlutterMethodChannel`, `FlutterEventChannel` or `FlutterMethodCall` in production source. Those manifest strings preserve migration provenance and do not provide a callable channel path. |
+| Plan gaps | The requested TODO/FIXME/TBD/XXX scan of the Apple consolidation plan had no matches. |
+| Shared/engine platform scan | No `UIKit` or `AppKit` import exists in Shared or Engines. The audit initially found four `#if os(iOS)` sites. Three remain as explicit non-UI boundaries: `YlPlatformServices.swift:7` selects the Task-4 R11 platform identity used by immutable compatibility policies; `YlAvPlayerRecoveryPolicy.swift:87` preserves the inherited iOS-only AV media-services-reset policy that the macOS legacy implementation did not have; and `YlHlsResourceLoader.swift:4` preserves the inherited iOS `MobileCoreServices` SDK fallback because neutral `UTType` is available only from macOS 14 while the package floor is macOS 12. The fourth, Task-7-new `YlApplePlayerRegistry.swift:24`, cast the shared lifecycle to `YlIosLifecycle` only to reach an existing callback. R42 moved that callback into `YlLifecycleDriving`, removed the cast and conditional, and retained both adapters' existing storage. iOS still emits the existing real notification; macOS emits no new signal or policy. |
+| Task 7 M4 provenance | `task7-host-cases.json` now says the 720-height constraint survives same-session suspend/resume. The shared body loads once, applies `setVideoConstraints`, suspends/resumes, and rechecks that same AV item. It does not load a second source or assert cross-Load constraint inheritance; each Load's options remain authoritative. Original source body, body hash, case identity and assertions are unchanged. |
+| Task 8 M2 project cleanup | Only six obsolete `.mkv`/`.flv` PBX file references and their `Fixtures` group children were removed. `plutil -lint` passes. Xcodeproj inspection before and after reports byte-identical RunnerTests membership: 33 unique Swift sources and the same nine unique canonical resources (`h264_aac.flv`, `h264_aac.mkv`, `h264_mp3.flv`, `hevc_aac.flv`, `hevc_aac.mkv`, `hls_encrypted_segment0.ts`, `hls_key.bin`, `network_seek_h264_aac.mkv`, `two_audio_tracks.mkv`). The two valid HLS entries remain in the navigator group. |
+
+### Artifact and provenance checkpoint
+
+| Item | Durable evidence |
+| --- | --- |
+| Signed FFmpeg source | FFmpeg 9.0.1 archive SHA-256 `cf38e0e28c7e5605942c4a77755349b0145804a397af37eb1fb4c77cb237f635`; detached signature SHA-256 `b613a00005232a1245ace7080088781ac23a916119d3e5b0d6c042368eee0177`; pinned valid signing fingerprint `FCF986EA15E6E293A5644F10B4322F04D67658D8`. The historical iOS package had no `bridge-artifact.lock`; that absence remains explicit rather than reconstructed. |
+| Canonical recipe | `build_xcframework.sh` SHA-256 `6d6db93bf7bc2344b4dcfad58ad4a6872e41b6b435a3ef33f275d7548da11fde`; deployment floors iOS 15.0/macOS 12.0; network/GPL/nonfree, encoders, decoders and muxers disabled; only file protocol, Matroska/FLV demuxers and AAC/H264/HEVC/MPEG-audio parsers enabled. Eight full reproducibility rounds built 40 targets. The accepted round rebuilt all five targets twice with byte-equal canonical output. |
+| Combined XCFramework | Three library entries and five architectures: iOS arm64 binary `612bc07579bf2f323e2d54cb8799b6e22455086bc21290040137bacc2dff116e`; iOS Simulator arm64+x86_64 binary `4fa84d99d67afee3a96edb03ff5c80cc1b81efca7d59d1debbc0c9747ad49279`; macOS arm64+x86_64 binary `041d85d4a1e978aef5d188e54c266fd4cf7d2e9a6506bc18503635942caf0c72`. The lock records 18 canonical file/symlink entries, UUID/signature checks, symbol allowlist and six negative mutation checks. |
+| Generated transport | Pigeon 28 generated Dart SHA-256 `e42f9f49bd938d7096bf16059b620a6f91689962259eb898f69a2119dd71ac66` and Swift SHA-256 `0eedaecd35bb238864bb3592f64dc3f861b5bfff7e60b1447ea8a05d414ab9a2`. Six native APIs are async, the host has 13 methods, and the private enum spellings `protocolFailure`/`internalFailure` retain public ordinals 8/10. Generated bytes are never postprocessed; the generated Dart file has the narrow R15 formatter exception and remains guarded by deterministic generation. |
+| Source/test provenance | Source classification uses the actual copy checkpoint. Divergent implementations and exact extracted declarations retain source ranges/hashes; 57 behavioral-token comparisons, eight paired declaration extractions and 13 origins passed at Task 7. The exact 20 legacy host cases retain old-to-typed mappings. Task 8 historical main-example provenance resolves immutable blobs at `ce368c55ad291b163b02157b487dbbf798a69892`; current destinations compare against current fixtures. Missing pinned history is a hard, documented prerequisite failure, never a silent skip or fetch. |
+
+The accepted artifact is the reproducible round with valid macOS load evidence.
+An earlier no-UUID intermediate was reproducible but failed the macOS load check;
+it remains a rejected attempt. Parser builds emitted five
+`aac_ac3_parser.c:99 bit_rate` warnings in each of the two accepted full builds
+(ten observations total). With the AC-3 decoder disabled, the non-AAC branch does
+not prove the warning harmless, and there is no source patch or suppression.
+
+### Verification checkpoints and R5 reuse
+
+| Checkpoint | Actual evidence and limit |
+| --- | --- |
+| Task 7 independent consumers | Four complete, valid bundles against the then-current shared host: macOS SwiftPM 213/213, macOS CocoaPods 213/213, iOS SwiftPM 251 total/248 pass/3 exact hardware skips, and iOS CocoaPods the same. Total 928 executions, 922 passes, 6 skips. This is pre-Task-8 historical consumer evidence and is not relabeled as final Task-8 consumer evidence. |
+| Task 8 main iOS | `check_native_ios.sh` passed at the final native/fixture checkpoint: 251 total, 248 pass, 3 exact hardware skips, 0 fail; 11 Flutter integration cases passed. Simulator: iPhone 17 `431A3ACD-A229-4F82-AC46-9B9481AC0ADE`, iOS 26.5 build 23F77, arm64. Positive AV/HLS publication ran; decoder-unavailable branches are not positive fallback-hardware proof. |
+| Task 8 main macOS | Native result bundle passed 213/213, zero skip/fail on macOS 26.6.2 build 25G83 arm64. Integration evidence is an explicit composite: HLS 1 + local MKV 2 + network MKV 3 + HTTP-FLV 1 + HLS headers 3 = 10 passes. An earlier complete native attempt had one authenticated-HLS rollback failure; its focused and later complete reruns passed, but the cause remains unproved. |
+| macOS release product | Final build-only gate proved the app executable, Flutter, Dart and FFmpeg are arm64+x86_64; the Apple plugin compiled/linked for both architectures; minimum macOS is 12; the Release app has network-server entitlement. A three-second owned Rosetta x86_64 app liveness smoke passed. This is architecture/link/startup evidence, not physical Intel decoded playback or endurance. |
+| Foundation | The final full foundation checkpoint before the last Task-8 provenance-only verifier correction passed 313 Dart tests (145 SPI + 47 player + 3 example + 52 Android + 1 Android example + 65 Apple), 18 Python guards (6+3+3+2+3+1), analysis with zero issues, and format on 108 files with zero changes. After the Python/JSON correction, only the affected migration verifier 4/4 and complete fixture verifier were rerun and passed. No single post-correction 313-test aggregate is claimed. |
+| Wrapper repairs | After the full Task-8 checkpoint, R1/R2 changed only the display-awake wrapper/tests and R29 documentation. The current real-process wrapper suite passed 7/7 in 3.039 seconds, including zero/nonzero exit, child SIGTERM/SIGKILL, wrapper SIGTERM/SIGINT/SIGHUP, descendant cleanup and exact caffeinate argv. No owned processes remained. Native/media/artifact/foundation results were not rerun because their inputs were unchanged. |
+| R42 focused native proof | The new shared-protocol memory-warning case failed before the fix because the active host stayed active/loading, then passed after the two-line internal boundary repair. Fresh worktree-local xcresults pass 1/1 on macOS 26.6.2 and 2/2 on the iPhone 17 iOS 26.5 simulator. The iOS pair includes the new protocol-generic case and the pre-existing actual `UIApplication.didReceiveMemoryWarningNotification` regression; both have zero fail/skip. These focused runs compile the affected native boundary. They do not turn the pre-R42 full 251/213 matrices into current full runs. |
+| This self-review | The source/channel/conditional/plan scans above are fresh. The changed project received fresh `plutil`, Xcodeproj target-membership and exact obsolete-ID checks; the changed fixture/verifier declarations received focused migration and complete fixture verification. Current declarations are 252 iOS and 214 macOS, with one new shared R42 case. The last full native inventories remain the pre-R42 251/213 checkpoints above. Media, Dart/foundation, Pigeon and binary-artifact inputs are unchanged, so their accepted checkpoints remain reused under R5 and are not presented as new runs. The release product/Rosetta checkpoint also remains explicitly pre-R42: the focused builds compile the current shared plugin on both platforms but do not constitute a fresh universal Release product or Rosetta run. |
+
+The first focused macOS command used stale ignored generated SwiftPM aggregator
+floors (`macos/Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage/Package.swift`
+at macOS 10.15 and its iOS counterpart at iOS 13) and stopped before the intended
+test. Task 9 aligned these ignored workspace outputs to the tracked package and
+example floors, macOS 12 and iOS 15. Later, the first iOS focused command stopped
+before XCTest because ignored `ios/Flutter/Generated.xcconfig` named a deleted
+temporary Flutter test listener. `flutter build ios --config-only --simulator
+--no-pub` regenerated that configuration; the generated aggregator still declared
+iOS 15. No canonical Pigeon output, package source, artifact lock or deployment
+declaration was hand-edited, and neither setup failure is accepted test evidence.
+
+The macOS native and integration commands use the repository-owned wrapper, which
+starts exactly `/usr/bin/caffeinate -d -i -u -t 240 -w <owned-command-pid>` and
+releases that owned assertion in handled completion/signal paths. It changes no
+global power setting. SIGKILL delivered to the wrapper itself cannot run cleanup,
+and a process stuck in an uninterruptible OS state can outlive bounded cleanup.
+The passing evidence does not prove playback while the display is asleep or the
+app is backgrounded.
+
+### Warning inventory and outstanding evidence
+
+The accepted output is not warning-free. Ownership is recorded so later work does
+not convert incremental absence into a false cleanup claim.
+
+| Warning or verification gap | Classification and owner |
+| --- | --- |
+| `YlApplePlayerHost` Dispose dispatch captures non-Sendable `self` in a Sendable closure | New Task 7 host debt, observed in initial host/iOS CocoaPods output, not inherited. Hardening concurrency/Swift 6 readiness owns a supported actor/Sendable isolation boundary. |
+| AnyHashable/Swift-6 incompatibility, raw-pointer `Optional<AnyObject>` conversion, `Any??` coercions, deprecated UTType calls, AppIntents metadata extraction, unused captures and weak variables | Mixed inherited/copied compiler and toolchain debt. Final broad review and hardening own source-by-source triage; no warning suppression or global SDK change occurred. Task 8 specifically observed never-mutated weak variables in `YlOpenCoordinatorTests` and `YlOpenedMediaTests`; their imports/copies changed, their behavior did not. |
+| macOS test-only XCTest support built for macOS 14 while the test target declares 12 | Test-toolchain warning. The release plugin still declares macOS 12, but execution on macOS 26.6.2 does not prove XCTest or product runtime on macOS 12. Release device/OS matrix owns closure. |
+| Flutter nonstandard CocoaPods notice and three `Invalid key/value pair: DART_DEFINES=...` diagnostics | The Podfile notice is inherited. The exact emitter and newness of the three DART_DEFINES diagnostics were not established by the focused inspection, so they remain unknown-origin build-tooling debt for final broad/release triage. They are not assumed harmless and no global CocoaPods/Flutter repair was attempted. |
+| Stale Debug products reported beneath worktree build output and old global DerivedData paths, plus always-run build-phase notes and package-update notices | Build-output/tooling notices. The accepted focused commands explicitly select worktree-local DerivedData, but Xcode still names stale external products while planning the build. These messages do not establish artifact hash drift or playback failure. Build hygiene/release review owns triage; no global cache deletion or repair was performed. |
+| Current-target inventory guard | `verify_current_targets` proves fixture bytes and counts current source declarations (252 iOS, 214 macOS); it does not prove each identity executed from PBX membership/xcresult or enforce the exact runtime skip allowlist. The pre-R42 accepted full xcresults prove their earlier 251/213 actual inventories, while the fresh R42 xcresults prove only the affected 2/1 cases. Hardening Task 8 and the final release gate own a durable case-identity/count/skip guard. This self-review does not overstate the file-count check or implement a new gate without concrete design. |
+| Internal typed boundary | Pigeon transport, state/events and host validation are typed, but the closed internal `YlPlaybackBackend.command(name:arguments:)` and source/preparation maps remain temporarily behind validated conversions. Hardening Tasks 1 and 2 own their removal; final v0.2 cannot claim all dynamic internals removed before closure. |
+| Strict policies | Managed network, bounded buffer and effective hardware-required remain strict `policy.unsupported` during consolidation. Hardening Tasks 2–5 own full support/evidence; app-managed audio remains the usable default. |
+| Public geometry | Both `local H264 AAC MKV uses native fallback and renders a frame` cases currently assert `videoGeometry == null`. Hardening Task 7 must restore the exact original positive `displaySize.width == 320` and `displaySize.height == 180` assertions and add authoritative clean-aperture/PAR/unapplied-rotation proof before View/release acceptance. Native dimensions/buffer publication do not close this public metadata regression. |
+
+Still unproved: physical iOS VideoToolbox fallback playback; runtime on the iOS
+15/macOS 12 deployment floors; physical Intel Mac decode/playback; Instruments and
+memgraph evidence; long endurance, reconnect and repeated replacement soak; and
+remote CI. The three iOS skips are exactly the transferred failed-replacement
+reactivation case, network-FLV reconnect case and rejected-quality-constraint
+case, each conditional only on unavailable hardware. Old Apple package deletion,
+historical-verifier reconciliation and final View cleanup remain later-plan work.
+
+### Apple chronological rulings and accepted costs
+
+These 42 entries preserve the phase order. Later entries refine earlier ones; an
+intermediate cost remains historical even when later work closed the immediate
+gap.
+
+| Ruling | Durable decision | Accepted cost or risk if wrong |
+| --- | --- | --- |
+| 1 | Classify identical/divergent Swift from a fresh copy-checkpoint manifest, never the plan's candidate list. | Extra reconciliation may be required; no reviewed fix may be lost or mislabeled identical. |
+| 2 | Before endorsement, run new-module native tests in four independent consumers; switch the main example only in Task 8. | Temporary duplicate fixture wiring requires maintenance and all four real linkages. |
+| 3 | Apple Load uses the symmetric five-second reply/matching-committed-state pair deadline; ordinary preparation has no overall deadline. | A missing counterpart after commitment terminates transport. |
+| 4 | First Pigeon verification includes staged bytes or independent repeat generation because Git ignores untracked output. | Hidden nondeterminism could appear only in a clean checkout. |
+| 5 | Reuse a passed gate only with unchanged relevant code/environment; refresh every affected/new-source gate. | A false equivalence can hide regression, so each reuse keeps its checkpoint and scope. |
+| 6 | Add private monotonic `loadRequestId` correlation to request/reply/state and accept only the matching pending pair. | Schema, Dart and native adapters/tests move together; public API remains unchanged. |
+| 7 | Record the missing legacy iOS artifact lock honestly; accept the final combined lock only after clean five-target reproducible builds. | Historical iOS binary provenance stays limited and requires extra measured verification. |
+| 8 | Copy licenses verbatim while adapting only shared-package packaging prose; Task 2 supplies the real combined rebuild path. | Incorrect prose can omit distribution/rebuild obligations. |
+| 9 | Task 3 extracts only byte-identical declarations; Task 4 migrates/tests all divergent engine suites. | Temporary dependency extraction and a named coverage gap persist until four complete Task-4 matrices. |
+| 10 | Transfer exactly 20 host/channel/plugin methods to genuine typed-host Task-7 counterparts with old-to-new assertion mapping. | Temporary host coverage needs explicit mapping; obsolete spelling cannot justify assertion loss. |
+| 11 | Preserve real iOS/macOS differences as immutable compatibility policies in one shared implementation. | Bounded policy branches and later hardening migration tests remain necessary. |
+| 12 | Match Android async semantics for seek-to-live-edge and audio-track selection as well as load/play/stop/dispose. | Two more completion/order paths require settlement tests without broadening unrelated commands. |
+| 13 | Retire only the comments-only iOS `testExample`, retaining source/body/hash/reason. | One fewer execution requires visible count reconciliation. |
+| 14 | Rename only private generated enum members to `protocolFailure`/`internalFailure`, preserving ordinals/public mappings. | Two explicit adapter mappings remain maintenance points. |
+| 15 | Exclude only generated Apple Pigeon Dart from formatter mutation; deterministic generation/drift remains authoritative. | Generic format gates need one narrow exception. |
+| 16 | Keep validated typed transport while temporarily retaining closed internal backend command/source maps; close them in hardening Tasks 1/2. | Final v0.2 cannot claim complete dynamic-internal removal yet. |
+| 17 | Keep persistent AVPlayer rollback and bind every async callback to immutable per-open activity/session authority. | Observer/token lifetime adds concurrency bookkeeping and focused stale-callback tests. |
+| 18 | Preserve credential names separately, apply at source origin, strip on origin change and never restore within that request intent. | Reader/retry/reopen provenance plumbing grows; Hardening Task 3 still owns the full managed guarantee. |
+| 19 | Replace legacy `cancelOpen` characterization with supported typed Load supersession, not Stop/new API, preserving both case identities and invariants. | No one-call syntax remains, so deterministic multi-step held-work tests are required. |
+| 20 | Delete only source/build directories in six superseded Task-2 roots and one failed diagnostics subtree after receipts/hashes. | Some rejected-build object forensics now requires rebuilding; retained raw/config/artifact evidence remains. |
+| 21 | Preserve the exact transferred iOS hardware skip only for initial `decoder.video_hardware_unavailable`; macOS runs it fully. | Simulator evidence cannot prove that real fallback restoration path. |
+| 22 | Rebuild/reprepare macOS fallback after decoder-disposing quiescence; retain iOS's decoder-retaining path. | macOS restoration can add I/O, latency and resource turnover. |
+| 23 | Emit nil public geometry when only width/height are known; Hardening Task 7 supplies authoritative geometry. | Consolidation temporarily loses public size/aspect metadata. |
+| 24 | Carry R13's sole empty-template retirement through Task 8 with provenance and all real tests intact. | The main iOS count is visibly one below the old no-behavior inventory. |
+| 25 | Allow a default-off precommit reconciliation hook to reapply only newer accepted independent intent before atomic commit. | Rapid intent changes can add same-candidate seeks and restore latency. |
+| 26 | Include failed post-quiescence local rollback in the accepted-intent repair, with only a narrow default-preserving seam if needed. | Additional seam/coverage and affected reruns are required. |
+| 27 | Test the retained-iOS transaction branch on actual macOS media with a narrow compatibility override while keeping production defaults. | Cross-policy proof cannot replace actual iOS hardware execution. |
+| 28 | Remove only one failed macOS diagnostics subtree and allow strict `YL_APPLE_TEST_DIAGNOSTICS=never` for owned complete gates. | Bulk system diagnostics are unavailable for those attempts; normal xcresult/raw/case/product proof remains. |
+| 29 | Keep both local-MKV tests but assert interim nil geometry and hardware decoder only where positive VT evidence exists; track the exact 320x180 closure. | Endorsement lacks old public size metadata until Hardening Task 7. |
+| 30 | Resolve historical main-example provenance from pinned `ce368c5`; CI fetches exactly that object only for the historical verifier. | Shallow/archive consumers must supply the object or fail explicitly. |
+| 31 | Recover iOS-gate space by deleting only ignored `build/app/intermediates` after retained-output hashes. | Future Android intermediate work must regenerate; APK/output proof stays retained. |
+| 32 | Recover macOS/foundation space by deleting only ignored `.dart_tool/flutter_build` after product hashes. | Flutter intermediates must regenerate; products/evidence remain. |
+| 33 | Put native DerivedData under the worktree and refresh affected xcodebuild gates; reuse unaffected integrations only by exact equivalence. | More worktree storage/build work; a bad reuse claim can hide regression. |
+| 34 | Disable parallel XCTest for main Apple native gates, preserving cases/timeouts. | Suites run longer and do not themselves stress multi-runner contention. |
+| 35 | Wrap macOS native tests in the owned 240-second display-awake process wrapper with exact signal/status cleanup. | Host stays awake during the bounded command; evidence remains display-state qualified. |
+| 36 | Apply the same wrapper to each owned macOS Flutter integration and report the gate as explicit checkpoint composite. | Same bounded awake cost; it proves neither asleep/background nor endurance behavior. |
+| 37 | Await Ready and exact same-session two-track state in paired local-MKV tests, preserving exact track assertions. | Valid metadata may arrive up to five seconds after commit; missing/wrong-session data still fails. |
+| 38 | Await the exact requested selected track in the same session after successful async selection. | The test permits documented callback projection delay, never wrong/unselected state. |
+| 39 | Reuse `YlFallbackSeekPolicy` in typed-host preflight to preserve exact `network.range_not_supported` before mutation. | A broad alias would corrupt other errors; the narrow host change requires fresh native proof. |
+| 40 | Await same-session Ready before sequential-HTTP-200 seekability/position/engine assertions and rejected seek. | The case no longer claims ready-only metadata at Load commit or pre-Ready command behavior. |
+| 41 | Move paired HTTP-FLV engine/live/seekable/hardware assertions after Play and same-session Ready. | Readiness-dependent properties are no longer asserted at commit; real playback/reconnect remains mandatory. |
+| 42 | Promote the existing memory-warning callback into `YlLifecycleDriving` and register it through that protocol, removing the shared registry's concrete iOS cast and platform conditional. Keep both adapters' existing callback storage, the real iOS notification, and macOS's absence of a memory-warning signal. | One internal protocol requirement and one shared regression case are added to both native targets. Focused macOS generic-lifecycle and iOS generic-plus-real-notification proof is required; it cannot replace the pre-R42 full inventories or prove a macOS notification policy that does not exist. |
+
+Rejected and failed evidence remains classified: the reproducible no-UUID artifact
+failed macOS load; Task 7's first macOS CocoaPods archive printed 213 passing
+tests but ended with archive exit -5 and was rerun to a valid bundle; Task 8's
+parallel/serial/unsigned/blank-host macOS attempts all failed the same four display
+cases; one native HLS rollback attempt and one unwrapped HLS First Frame attempt
+failed with no proved root cause; a narrowed-PATH product attempt masked an inner
+failure through `tee`, and the next immutable download ended with curl 18 before
+the final verified-input pass. None is promoted to accepted evidence.

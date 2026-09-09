@@ -133,6 +133,16 @@ final class YlAppleTypedBackendTests: XCTestCase {
 
 @MainActor
 final class YlAppleRegistryTests: XCTestCase {
+  private final class Lifecycle: YlLifecycleDriving {
+    var onSuspend: (() -> Void)?
+    var onResume: (() -> Void)?
+    var onTerminate: (() -> Void)?
+    var onMemoryWarning: (() -> Void)?
+    func start() {}
+    func stop() {}
+    func sendMemoryWarning() { onMemoryWarning?() }
+  }
+
   func testInvalidCreateDoesNotAllocateTexture() throws {
     var allocations = 0
     let registry = YlApplePlayerRegistry(makeServices: { _ in
@@ -153,6 +163,31 @@ final class YlAppleRegistryTests: XCTestCase {
     XCTAssertEqual(reply.initialState.sequence, 0)
     XCTAssertNotEqual(reply.channelSuffix, "")
     XCTAssertEqual(registry.host(for: reply.channelSuffix)?.positionUpdateIntervalMs, 5000)
+  }
+
+  func testLifecycleMemoryWarningReachesActiveHostThroughSharedProtocol() async throws {
+    let lifecycle = Lifecycle()
+    let output = AppleTestTexture()
+    let registry = YlApplePlayerRegistry(makeServices: { _ in
+      YlPlatformServices(platform: .current, textureOutput: output,
+        makeDisplayDriver: { _ in AppleTestDisplay() })
+    }, makeCallbacks: { _ in AppleRecordingCallbacks() }, installHost: { _, _ in },
+      lifecycle: lifecycle)
+    defer { registry.detach() }
+    let created = try registry.create(request: .init(schemaMajor: 2,
+      options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged,
+        positionUpdateIntervalMs: 500)))
+    let host = try XCTUnwrap(registry.host(for: created.channelSuffix))
+    let loaded = try await host.load(request: AppleHostFixture.request("memory"))
+    XCTAssertTrue(host.isActive)
+
+    lifecycle.sendMemoryWarning()
+
+    XCTAssertFalse(host.isActive)
+    XCTAssertEqual(host.sessionId, loaded.sessionId)
+    XCTAssertEqual(host.initialState.status, .paused)
+    XCTAssertNil(host.initialState.failure)
+    XCTAssertEqual(output.disposals, 0)
   }
 
   static func services() -> YlPlatformServices {

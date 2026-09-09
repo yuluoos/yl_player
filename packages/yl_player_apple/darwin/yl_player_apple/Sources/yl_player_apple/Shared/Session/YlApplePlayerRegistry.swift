@@ -21,11 +21,9 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
     lifecycle?.onSuspend = { [weak self] in self?.suspend() }
     lifecycle?.onResume = { [weak self] in self?.resume() }
     lifecycle?.onTerminate = { [weak self] in self?.detach() }
-    #if os(iOS)
-    (lifecycle as? YlIosLifecycle)?.onMemoryWarning = { [weak self] in
+    lifecycle?.onMemoryWarning = { [weak self] in
       self?.players.values.forEach { $0.handleMemoryWarning() }
     }
-    #endif
     lifecycle?.start()
   }
   func create(request: AppleCreateRequest) throws -> AppleCreateReply {
