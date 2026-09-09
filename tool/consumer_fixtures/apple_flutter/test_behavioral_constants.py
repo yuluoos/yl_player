@@ -98,7 +98,7 @@ class StructuralFoldTests(unittest.TestCase):
         owner = "final class Audio {\n  func resetAnchor() { anchor = false }\n}\n"
         (root / 'session.swift').write_text(caller)
         (root / 'audio.swift').write_text(owner)
-        fold = dict(id='anchor', ruling='R11', before_revision='pinned',
+        fold = dict(id='anchor', ruling='R11', before_revision='1' * 40,
                     before_file='session.swift', before_sha256=hashlib.sha256(old.encode()).hexdigest(),
                     before_owner='Session', before_statement='audio.anchor = false',
                     before_count=2, token='symbol:false', after_file='audio.swift',
@@ -108,6 +108,44 @@ class StructuralFoldTests(unittest.TestCase):
                     current_scope=['session.swift', 'audio.swift'], legacy_files=['old.swift'])
         row = dict(old_file='old.swift', new_files=fold['current_scope'], structural_folds=['anchor'])
         return old, caller, owner, fold, row
+
+    def test_snapshot_supports_checkout_without_git_and_is_cached(self):
+        import gzip
+        import os
+        from unittest.mock import patch
+        module = self.module()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            old, caller, owner, fold, row = self.fixture(root)
+            snapshot = root / (fold['before_sha256'] + '.swift.gz')
+            snapshot.write_bytes(gzip.compress(old.encode(), mtime=0))
+            fold.update(before_snapshot=snapshot.name, before_size=len(old.encode()))
+            cache = {}
+            with patch.dict(os.environ, {'PATH': ''}), patch('subprocess.check_output', side_effect=AssertionError('git must not run')):
+                self.assertEqual(module.normalize_structural_folds(root, row, [fold], snapshot_cache=cache), {'symbol:false': 2})
+                self.assertEqual(len(cache), 1)
+                with patch('gzip.decompress', side_effect=AssertionError('snapshot must be reused')):
+                    self.assertEqual(module.normalize_structural_folds(root, row, [fold], snapshot_cache=cache), {'symbol:false': 2})
+
+    def test_snapshot_rejects_missing_corrupt_wrong_content_and_invalid_paths(self):
+        import gzip
+        module = self.module()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            old, caller, owner, fold, row = self.fixture(root)
+            snapshot = root / (fold['before_sha256'] + '.swift.gz')
+            fold.update(before_snapshot=snapshot.name, before_size=len(old.encode()))
+            with self.assertRaises(ValueError):
+                module.normalize_structural_folds(root, row, [fold])
+            for data in (b'bad gzip', gzip.compress(b'wrong source', mtime=0)):
+                snapshot.write_bytes(data)
+                with self.assertRaises(ValueError):
+                    module.normalize_structural_folds(root, row, [fold])
+            snapshot.write_bytes(gzip.compress(old.encode(), mtime=0))
+            for name in ('../' + snapshot.name, '/' + snapshot.name, 'different.swift.gz', './' + snapshot.name):
+                changed = dict(fold, before_snapshot=name)
+                with self.subTest(name=name), self.assertRaises(ValueError):
+                    module.normalize_structural_folds(root, row, [changed])
 
     def test_structural_fold_preserves_counts_and_rejects_literal_or_occurrence_drift(self):
         module = self.module()

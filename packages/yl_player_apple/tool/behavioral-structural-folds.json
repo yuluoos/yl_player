@@ -39,7 +39,9 @@
     "legacy_files": [
       "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFallbackBackend.swift",
       "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackBackend.swift"
-    ]
+    ],
+    "before_snapshot": "packages/yl_player_apple/tool/evidence/e5d9244c6ddc0580656ed58d2604b452fda0efe24d152bca082e984c25358413.swift.gz",
+    "before_size": 60665
   },
   {
     "id": "audio-generation-increment",
@@ -77,7 +79,9 @@
     "legacy_files": [
       "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFallbackBackend.swift",
       "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackBackend.swift"
-    ]
+    ],
+    "before_snapshot": "packages/yl_player_apple/tool/evidence/e5d9244c6ddc0580656ed58d2604b452fda0efe24d152bca082e984c25358413.swift.gz",
+    "before_size": 60665
   },
   {
     "id": "recovery-first-frame-expectation",
@@ -129,6 +133,8 @@
         "after_method": "acceptFirstFrame",
         "statement": "awaitingReconnectFirstFrame = false"
       }
-    ]
+    ],
+    "before_snapshot": "packages/yl_player_apple/tool/evidence/e5d9244c6ddc0580656ed58d2604b452fda0efe24d152bca082e984c25358413.swift.gz",
+    "before_size": 60665
   }
 ]

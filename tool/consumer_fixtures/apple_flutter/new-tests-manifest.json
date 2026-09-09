@@ -222,7 +222,7 @@
       "testPresentationChoosesFramesAtQuarterNormalDoubleAndQuadrupleRate",
       "testDemuxEOFCancellationAndMalformedReadRemainDistinct"
     ],
-    "hardening_task1_provenance": "New characterization against accepted consolidation backend 98844babd865d3af7e9fe65ea90e619be9ace88c before extraction. Original test identities and pinned historical manifests untouched.",
+    "hardening_task1_provenance": "Original six methods at 5aaa33c characterized accepted consolidation backend 98844babd865d3af7e9fe65ea90e619be9ace88c before extraction. The seventh actual-backend seek-order method is R1/current evidence only, as separately recorded below; original identities and historical pins remain unchanged.",
     "hardening_task1_r1_provenance": {
       "fix_base": "27398e7c30a802ba36d9959f37e392ff3c703136",
       "from_sha256": "d4a8c6c8cd1f353b5761f6f0868ccbcff3f3c7f57432bf4b9541df460fb86b2b",

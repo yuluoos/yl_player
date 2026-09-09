@@ -6,7 +6,7 @@ This is a drift alarm, complementary to platform characterization, not a Swift p
 import collections
 import json
 import hashlib
-import subprocess
+import gzip
 from pathlib import Path
 import re
 import sys
@@ -87,17 +87,34 @@ def method_body(source, owner, method):
     return brace_body(scope, declarations[0].end())
 
 
-def read_fold_before(root, revision, path):
-    if not re.fullmatch(r'[0-9a-f]{40}', revision):
-        raise ValueError('Structural fold requires an immutable full revision')
+def read_fold_before(root, fold, cache):
+    name = fold['before_snapshot']
+    path = Path(name)
+    digest = fold['before_sha256']
+    if (not re.fullmatch(r'[0-9a-f]{64}', digest) or path.is_absolute()
+            or '..' in path.parts or path.as_posix() != name
+            or path.name != digest + '.swift.gz'):
+        raise ValueError('Invalid content-addressed structural snapshot path')
+    resolved = (root / path).resolve()
+    if not resolved.is_relative_to(root.resolve()) or not resolved.is_file():
+        raise ValueError('Missing or external structural snapshot')
+    if resolved in cache:
+        saved_digest, saved_size, source = cache[resolved]
+        if (saved_digest, saved_size) != (digest, fold['before_size']):
+            raise ValueError('Conflicting structural snapshot identity')
+        return source
     try:
-        return subprocess.check_output(['git', 'show', revision + ':' + path],
-                                       cwd=root, text=True, stderr=subprocess.PIPE)
-    except subprocess.CalledProcessError as error:
-        raise ValueError('Structural fold origin unavailable') from error
+        raw = gzip.decompress(resolved.read_bytes())
+        source = raw.decode('utf-8')
+    except (OSError, EOFError, UnicodeError) as error:
+        raise ValueError('Corrupt structural snapshot') from error
+    if len(raw) != fold['before_size'] or hashlib.sha256(raw).hexdigest() != digest:
+        raise ValueError('Structural snapshot source digest/size changed')
+    cache[resolved] = (digest, len(raw), source)
+    return source
 
 
-def normalize_structural_folds(root, row, folds, read_before=None):
+def normalize_structural_folds(root, row, folds, read_before=None, snapshot_cache=None):
     current = collections.Counter(current_tokens(root, row))
     requested = row.get('structural_folds', [])
     if not requested:
@@ -108,7 +125,7 @@ def normalize_structural_folds(root, row, folds, read_before=None):
     if len(set(ids)) != len(ids):
         raise ValueError('Duplicate structural fold record')
     records = dict(zip(ids, folds))
-    read_before = read_before or (lambda revision, path: read_fold_before(root, revision, path))
+    snapshot_cache = {} if snapshot_cache is None else snapshot_cache
     for identifier in requested:
         if identifier not in records:
             raise ValueError('Unknown structural fold: ' + identifier)
@@ -123,7 +140,10 @@ def normalize_structural_folds(root, row, folds, read_before=None):
         origin_path = Path(fold['before_file'])
         if origin_path.is_absolute() or '..' in origin_path.parts or origin_path.as_posix() != fold['before_file'] or fold['before_file'] != fold['caller_file']:
             raise ValueError('Invalid structural fold origin path')
-        before = read_before(fold['before_revision'], fold['before_file'])
+        if not re.fullmatch(r'[0-9a-f]{40}', fold['before_revision']):
+            raise ValueError('Structural fold origin must retain its full revision')
+        before = (read_before(fold['before_revision'], fold['before_file']) if read_before
+                  else read_fold_before(root, fold, snapshot_cache))
         if hashlib.sha256(before.encode()).hexdigest() != fold['before_sha256']:
             raise ValueError('Structural fold origin digest changed')
         after = (root / fold['after_file']).read_text()
@@ -175,10 +195,11 @@ def normalize_structural_folds(root, row, folds, read_before=None):
 
 def verify(root, manifest, folds=()):
     failures = []
+    snapshot_cache = {}
     for row in manifest:
         old = extract((root / row['old_file']).read_text())
         try:
-            new = normalize_structural_folds(root, row, folds)
+            new = normalize_structural_folds(root, row, folds, snapshot_cache=snapshot_cache)
         except ValueError as error:
             failures.append({'reason': str(error), 'old_file': row['old_file']})
             continue
