@@ -121,7 +121,14 @@
       "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlOpenCoordinator.swift",
       "ios_sha256": "fc756717a8eba4cbd046e9a3af75e2236523364d39ca304ce11d699a00158d8e",
       "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlOpenCoordinator.swift",
-      "branches": "Reviewed macOS canBeginRecovery retained; identical token already in Shared/Dependencies; platform error/queue names."
+      "branches": "Reviewed macOS canBeginRecovery retained; identical token already in Shared/Dependencies; platform error/queue names.",
+      "task7_r1": {
+        "ruling": "R25",
+        "fix_base": "81d261c445f70df09f18458707ba1e8eb1e2d71f",
+        "from_sha256": "86b43380c5612e694ad72d52f64919e13c454722711b0ea0577969ba68265c43",
+        "destination_sha256": "e76443b78cbbda682915fb7c5216670498816bce6507706ad4b4b51a0940d142",
+        "reason": "Optional same-operation candidate reconciliation before main commit, with unchanged default scheduling/token ownership and existing queue; cancellation/supersession discard the same prepared media."
+      }
     },
     {
       "name": "YlPlaybackBackend.swift",
@@ -137,6 +144,13 @@
         ],
         "destination_sha256": "16954147841ade10cbf47201b8a8427d4585fbd61bd917ce4f0674b70fa26a08",
         "reason": "R16 native state/events and commit callbacks are typed; original command/source algorithms remain behind closed conversion."
+      },
+      "task7_r1": {
+        "ruling": "R26",
+        "fix_base": "81d261c445f70df09f18458707ba1e8eb1e2d71f",
+        "from_sha256": "16954147841ade10cbf47201b8a8427d4585fbd61bd917ce4f0674b70fa26a08",
+        "destination_sha256": "4bee9b79fa453d27aae3bedc00df98b4469ae950d81469c9e6d2e35d04d66c4a",
+        "reason": "R26 optional default-nil callback reconciles pending controls before existing direct rollback activation; retains network external and iOS retained transaction policies."
       }
     },
     {
@@ -146,7 +160,14 @@
       "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlPreparedFallback.swift",
       "ios_sha256": "5ad5914903228f628769e16fca7dd50c736faa2484cdc6cff6c3c3cf67d0d2c5",
       "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift",
-      "branches": "macOS hardware-lease query retained; shared preparation/discard behavior unchanged."
+      "branches": "macOS hardware-lease query retained; shared preparation/discard behavior unchanged.",
+      "task7_r1": {
+        "ruling": "R25",
+        "fix_base": "81d261c445f70df09f18458707ba1e8eb1e2d71f",
+        "from_sha256": "99dd9a2690282975f0547a71f27af317e872d99768e789467bce990e0c4a3432",
+        "destination_sha256": "2f330c3a944f15868336d86a0143a3f199743d1c9a3544f63ab3a6e869c6ffa9",
+        "reason": "Repeated reactivation preparation rewinds real media for accepted zero after an earlier positive prepared seek; initial preparation and resource ownership remain unchanged."
+      }
     },
     {
       "name": "YlSourceRouter.swift",

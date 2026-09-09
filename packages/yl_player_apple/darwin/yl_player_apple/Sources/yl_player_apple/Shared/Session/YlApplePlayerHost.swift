@@ -32,6 +32,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
   init(playerId: Int64, suffix: String, options: ApplePlayerOptionsMessage,
        services: YlPlatformServices, callbacks: ApplePlayerFlutterApiProtocol,
        avPlayer: AVPlayer = AVPlayer(), commandCoordinator: YlAsyncCommandCoordinator = YlAsyncCommandCoordinator(),
+       beforeFallbackConstruction: ((YlPlaybackBackend) throws -> Void)? = nil,
        clock: @escaping () -> Int64 = YlAppleSafeDiagnostics.nowMilliseconds) {
     self.playerId = playerId
     self.suffix = suffix
@@ -46,7 +47,8 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
     }
     coordinator = YlAppleSessionCoordinator(playerId: playerId, services: services,
       configuration: PlayerConfiguration(positionEventIntervalMs: options.positionUpdateIntervalMs),
-      textureOwner: textureOwner, avPlayer: avPlayer, commandCoordinator: commandCoordinator) { [weak self] identity, callback in
+      textureOwner: textureOwner, avPlayer: avPlayer, commandCoordinator: commandCoordinator,
+      beforeFallbackConstruction: beforeFallbackConstruction) { [weak self] identity, callback in
         self?.receive(callback, identity: identity)
       }
     reducer.onOutput = { [weak self] output in self?.send(output) }
@@ -310,9 +312,8 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
     }
   }
   private func runSynchronous(_ command: YlApplePlaybackCommand) throws {
-    var immediate: Result<Void, NativePlayerError>?
-    coordinator.execute(command) { immediate = $0 }
-    if case .failure(let error) = immediate { throw YlAppleFailureMapper.command(error) }
+    do { try coordinator.executeSynchronous(command) }
+    catch { throw YlAppleFailureMapper.command(error) }
   }
   private func perform(sessionId: String, command: YlApplePlaybackCommand) async throws {
     try await onMain { completion in

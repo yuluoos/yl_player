@@ -5,6 +5,7 @@ import Foundation
 final class YlOpenCoordinator {
   typealias Preparation = (YlOpenCancellationToken) throws -> YlPreparedOpen
   typealias Commit = (YlPreparedOpen) throws -> Void
+  typealias Reconciliation = (YlPreparedOpen) throws -> ((YlOpenCancellationToken) throws -> Void)?
   typealias Completion = (Result<Void, NativePlayerError>) -> Void
 
   private final class Operation {
@@ -45,6 +46,7 @@ final class YlOpenCoordinator {
   func begin(
     prepare: @escaping Preparation,
     commit: @escaping Commit,
+    reconcile: Reconciliation? = nil,
     completion: @escaping Completion
   ) -> UInt64 {
     let values = lock.withLock { () -> (Operation?, Operation) in
@@ -72,7 +74,7 @@ final class YlOpenCoordinator {
             candidate.discard()
             return
           }
-          self.commit(candidate, for: operation, using: commit)
+          self.commit(candidate, for: operation, using: commit, reconcile: reconcile)
         }
       } catch {
         operation.token.cancel()
@@ -98,7 +100,8 @@ final class YlOpenCoordinator {
   private func commit(
     _ candidate: YlPreparedOpen,
     for operation: Operation,
-    using commit: Commit
+    using commit: @escaping Commit,
+    reconcile: Reconciliation?
   ) {
     let isCurrent = lock.withLock { current === operation }
     guard isCurrent, !operation.isCompleted, !operation.token.isCancelled else {
@@ -107,6 +110,26 @@ final class YlOpenCoordinator {
       return
     }
     do {
+      // The check and commit share the main turn. A stale candidate keeps its
+      // operation/token and ownership while only its preparation is reconciled.
+      if let update = try reconcile?(candidate) {
+        preparationQueue.async { [weak self] in
+          guard let self else { candidate.discard(); return }
+          do {
+            try operation.token.throwIfCancelled()
+            try update(operation.token)
+            try operation.token.throwIfCancelled()
+            DispatchQueue.main.async {
+              self.commit(candidate, for: operation, using: commit, reconcile: reconcile)
+            }
+          } catch {
+            candidate.discard()
+            operation.token.cancel()
+            self.finish(operation, result: .failure(Self.nativeError(error)))
+          }
+        }
+        return
+      }
       try commit(candidate)
       finish(operation, result: .success(()))
     } catch {

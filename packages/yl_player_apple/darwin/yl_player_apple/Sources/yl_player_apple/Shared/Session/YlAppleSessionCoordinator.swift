@@ -3,6 +3,11 @@ import CoreVideo
 import Foundation
 
 final class YlAppleSessionCoordinator: NSObject {
+  private final class PreparedRestorationRevision {
+    var value: UInt64
+    init(_ value: UInt64) { self.value = value }
+  }
+
   private struct DeferredRestorationCommand {
     let name: String
     let arguments: [String: Any?]
@@ -23,8 +28,13 @@ final class YlAppleSessionCoordinator: NSObject {
   private let slot: YlBackendSlot
   private let openCoordinator = YlOpenCoordinator()
   private let commandCoordinator: YlAsyncCommandCoordinator
+  private let beforeFallbackConstruction: ((YlPlaybackBackend) throws -> Void)?
   private var lastCommittedSource: [String: Any?]?
   private(set) var lastQualityConstraint: [String: Any?] = [:]
+  private var synchronousIntentRevision: UInt64 = 0
+  private var restorationIntentRevision: UInt64 = 0
+  private var pendingSeekIntent: (revision: UInt64, positionMs: Int64)?
+  private var pendingPauseIntent: UInt64?
   private var lastVolume: Float = 1
   private var lastPlaybackSpeed: Float = 1
   private var pendingLoadRequestId: String?
@@ -39,8 +49,10 @@ final class YlAppleSessionCoordinator: NSObject {
   init(playerId: Int64, services: YlPlatformServices,
        configuration: PlayerConfiguration, textureOwner: YlAppleTextureOwner, avPlayer: AVPlayer = AVPlayer(),
        commandCoordinator: YlAsyncCommandCoordinator = YlAsyncCommandCoordinator(),
+       beforeFallbackConstruction: ((YlPlaybackBackend) throws -> Void)? = nil,
        emit: @escaping (YlAppleSessionIdentity, YlNativeBackendCallback) -> Void) {
     self.commandCoordinator = commandCoordinator
+    self.beforeFallbackConstruction = beforeFallbackConstruction
     self.playerId = playerId
     self.services = services
     self.textureOwner = textureOwner
@@ -77,7 +89,47 @@ final class YlAppleSessionCoordinator: NSObject {
       catch { completion(.failure(Self.commandError(error))); return }
     }
     let native = command.native
-    beginCommand(name: native.name, arguments: native.arguments, completion: completion)
+    beginCommand(name: native.name, arguments: native.arguments) { [weak self] result in
+      if case .success = result, case .track = command { self?.restorationIntentRevision &+= 1 }
+      completion(result)
+    }
+  }
+
+  /// Synchronous transport methods acknowledge validated intent here. Queued
+  /// effects may be cancelled with their backend; acknowledged intent cannot be.
+  func executeSynchronous(_ command: YlApplePlaybackCommand) throws {
+    let revision = synchronousIntentRevision &+ 1
+    var immediate: Result<Void, NativePlayerError>?
+    execute(command) { [weak self] result in
+      immediate = result
+      guard case .success = result, let self else { return }
+      if self.pendingSeekIntent?.revision == revision { self.pendingSeekIntent = nil }
+      if self.pendingPauseIntent == revision { self.pendingPauseIntent = nil }
+    }
+    if case let .failure(error) = immediate { throw error }
+    synchronousIntentRevision = revision
+    switch command {
+    case let .volume(volume): lastVolume = Float(volume)
+    case let .speed(speed): lastPlaybackSpeed = Float(speed)
+    case let .constraints(constraints): lastQualityConstraint = constraints.native
+    case let .seek(position):
+      restorationIntentRevision &+= 1
+      pendingSeekIntent = immediate == nil ? (revision, position) : nil
+    case .pause:
+      restorationIntentRevision &+= 1
+      pendingPauseIntent = immediate == nil ? revision : nil
+      if hardwareRollbackPlaybackIntent != nil { hardwareRollbackPlaybackIntent = false }
+    default: break
+    }
+  }
+
+  private func reactivationState(_ fallback: YlFallbackBackend, forcePlay: Bool) -> YlFallbackResumeState {
+    let state = fallback.reactivationState(forcePlay: forcePlay)
+    return YlFallbackResumeState(
+      positionUs: pendingSeekIntent.map { $0.positionMs * 1_000 } ?? state.positionUs,
+      selectedAudioStreamIndex: state.selectedAudioStreamIndex,
+      shouldPlay: forcePlay || (pendingPauseIntent == nil && state.shouldPlay)
+    )
   }
 
   func stop() {
@@ -165,8 +217,10 @@ final class YlAppleSessionCoordinator: NSObject {
                 forcePlay: rollbackPlaybackIntent
               )
             }
-          } else if rollbackPlaybackIntent, self.slot.current.isActive {
-            try? self.slot.current.command(name: "play", arguments: [:])
+          } else if self.slot.current.isActive {
+            self.pendingSeekIntent = nil
+            self.pendingPauseIntent = nil
+            if rollbackPlaybackIntent { try? self.slot.current.command(name: "play", arguments: [:]) }
           }
           throw error
         }
@@ -233,7 +287,16 @@ final class YlAppleSessionCoordinator: NSObject {
           let source = lastCommittedSource else {
       do {
         willCommit(self.slot.current is YlFallbackBackend)
+        let restoringInactive = !slot.current.isActive
+        if restoringInactive {
+          commandCoordinator.cancelCurrent()
+          try applyAcknowledgedControls(to: slot.current, forcePlay: forcePlay)
+        }
         try slot.current.activate()
+        if restoringInactive {
+          pendingSeekIntent = nil
+          pendingPauseIntent = nil
+        }
         didCommit()
         completion(.success(()))
       } catch let error as NativePlayerError {
@@ -246,7 +309,8 @@ final class YlAppleSessionCoordinator: NSObject {
       return
     }
 
-    let resumeState = fallback.reactivationState(forcePlay: forcePlay)
+    let resumeState = reactivationState(fallback, forcePlay: forcePlay)
+    let preparedRevision = PreparedRestorationRevision(restorationIntentRevision)
     openCoordinator.begin(
       prepare: { [weak self] token in
         guard let self else { throw YlOpenCancellationToken.cancellationError() }
@@ -269,6 +333,21 @@ final class YlAppleSessionCoordinator: NSObject {
         } catch {
           didRollback()
           throw error
+        }
+      },
+      reconcile: { [weak self, weak fallback] candidate in
+        guard let self, let fallback, !self.disposed, self.slot.current === fallback else {
+          throw YlOpenCancellationToken.cancellationError()
+        }
+        guard preparedRevision.value != self.restorationIntentRevision else { return nil }
+        guard case let .fallback(_, prepared) = candidate else { return nil }
+        let latest = self.reactivationState(fallback, forcePlay: forcePlay)
+        let revision = self.restorationIntentRevision
+        return { token in
+          try token.throwIfCancelled()
+          try prepared.prepareForReactivation(latest)
+          try token.throwIfCancelled()
+          preparedRevision.value = revision
         }
       },
       completion: completion
@@ -317,6 +396,9 @@ final class YlAppleSessionCoordinator: NSObject {
       activeEvents?.invalidate()
       activeEvents = nil
       lastCommittedSource = nil
+      pendingSeekIntent = nil
+      pendingPauseIntent = nil
+      lastQualityConstraint = [:]
       // The persistent AV backend may hold an older source while fallback is current.
       if slot.current !== avBackend { avBackend.clearMediaForStop() }
       slot.stop()
@@ -364,20 +446,7 @@ final class YlAppleSessionCoordinator: NSObject {
         return
       }
     }
-    let commandCompletion: (Result<Void, NativePlayerError>) -> Void = {
-      [weak self] result in
-      if case .success = result {
-        if let qualityConstraint {
-          self?.lastQualityConstraint = qualityConstraint
-        }
-        if name == "setVolume" {
-          self?.lastVolume = float(arguments["volume"]) ?? 1
-        } else if name == "setPlaybackSpeed" {
-          self?.lastPlaybackSpeed = float(arguments["speed"]) ?? 1
-        }
-      }
-      completion(result)
-    }
+    let commandCompletion = completion
     let backend = slot.current
     if let fallback = backend as? YlFallbackBackend {
       let runsInBackground = fallback.requiresAsyncCommand(name)
@@ -475,7 +544,7 @@ final class YlAppleSessionCoordinator: NSObject {
       }
       applyPersistentPlaybackControls(to: avBackend)
       if slot.current !== avBackend {
-        let previous = try slot.replace { avBackend }
+        let previous = try slot.replace(beforeRollbackActivation: reconcileBeforeRollbackActivation) { avBackend }
         previous.dispose()
       } else {
         try avBackend.activate()
@@ -499,7 +568,7 @@ final class YlAppleSessionCoordinator: NSObject {
         resume: reactivating
       )
       if slot.current !== avBackend {
-        let previous = try slot.replace { avBackend }
+        let previous = try slot.replace(beforeRollbackActivation: reconcileBeforeRollbackActivation) { avBackend }
         if previous !== avBackend { previous.dispose() }
       } else if avBackend.isActive {
         try avBackend.commitStagedHlsIfActive()
@@ -512,7 +581,8 @@ final class YlAppleSessionCoordinator: NSObject {
       let qualityConstraint = try YlFallbackQualityConstraint(
         validating: reactivating || source["loadOptions"] == nil ? lastQualityConstraint : stringMap(stringMap(source["loadOptions"])["videoConstraints"])
       )
-      let previous = try slot.replace {
+      let previous = try slot.replace(beforeRollbackActivation: reconcileBeforeRollbackActivation) {
+        try beforeFallbackConstruction?(slot.current)
         let backend = try YlFallbackBackend(
           playerId: playerId,
           services: services.borrowing(candidateTexture),
@@ -539,7 +609,28 @@ final class YlAppleSessionCoordinator: NSObject {
       lastCommittedSource = source
       if !reactivating, source["loadOptions"] != nil { lastQualityConstraint = stringMap(stringMap(source["loadOptions"])["videoConstraints"]) }
     }
+    // Successful replacement/restoration consumed these session intents. A
+    // failed candidate leaves them available to the surviving current session.
+    pendingSeekIntent = nil
+    pendingPauseIntent = nil
     committed = true
+  }
+
+  private func reconcileBeforeRollbackActivation(_ backend: YlPlaybackBackend) throws {
+    // Network recovery continues through its existing external async path.
+    if let fallback = backend as? YlFallbackBackend, fallback.requiresAsyncActivation { return }
+    try applyAcknowledgedControls(to: backend, forcePlay: false)
+  }
+
+  private func applyAcknowledgedControls(to backend: YlPlaybackBackend, forcePlay: Bool) throws {
+    applyPersistentPlaybackControls(to: backend)
+    try backend.command(name: "setQualityConstraint", arguments: ["constraint": lastQualityConstraint])
+    if let seek = pendingSeekIntent {
+      try backend.command(name: "seekTo", arguments: ["positionMs": seek.positionMs])
+    }
+    if pendingPauseIntent != nil && !forcePlay {
+      try backend.command(name: "pause", arguments: [:])
+    }
   }
 
   private func applyPersistentPlaybackControls(to backend: YlPlaybackBackend) {
@@ -671,6 +762,7 @@ final class YlAppleSessionCoordinator: NSObject {
   }
 
   var currentPlaybackIntent: Bool {
+    if pendingPauseIntent != nil { return false }
     if let fallback = slot.current as? YlFallbackBackend {
       return fallback.playbackIntent
     }

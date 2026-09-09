@@ -34,7 +34,10 @@ final class YlBackendSlot {
   }
 
   @discardableResult
-  func replace(_ prepare: () throws -> YlPlaybackBackend) throws -> YlPlaybackBackend {
+  func replace(
+    beforeRollbackActivation: ((YlPlaybackBackend) throws -> Void)? = nil,
+    _ prepare: () throws -> YlPlaybackBackend
+  ) throws -> YlPlaybackBackend {
     guard !disposed else {
       throw NativePlayerError(
         category: "resource",
@@ -65,6 +68,7 @@ final class YlBackendSlot {
           rollbackRequiresExternalActivation = true
         } else {
           do {
+            try beforeRollbackActivation?(previous)
             try previous.activate()
           } catch {
             rollbackRequiresExternalActivation = true

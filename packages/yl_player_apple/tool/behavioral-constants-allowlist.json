@@ -711,7 +711,7 @@
   {
     "old_file": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlPreparedFallback.swift",
     "new_file": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift",
-    "reason": "import/platform abstraction: macOS hardware-lease query retained; shared preparation/discard behavior unchanged. Task7: R18 adds one Swift $0 credential projection closure token (not a timing/budget constant); classification and shared request context are the explicit narrow safety change.",
+    "reason": "import/platform abstraction: macOS hardware-lease query retained; shared preparation/discard behavior unchanged. Task7: R18 adds one Swift $0 credential projection closure token (not a timing/budget constant); classification and shared request context are the explicit narrow safety change. R1 R25: two extra zero literals compare prior prepared position so repeated positive-to-zero reconciliation performs the actual demux rewind; initial zero behavior and all timing/budget values remain unchanged.",
     "old_tokens": {
       "case:.avPlayer": 1,
       "case:.fallback = self": 1,
@@ -726,7 +726,7 @@
       "symbol:true": 4
     },
     "allowed_delta": {
-      "number:0": 1
+      "number:0": 3
     },
     "task7_migration": {
       "previous_new_file": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift",
@@ -735,12 +735,19 @@
         "number:0": 1
       },
       "reason": "R18 adds one Swift $0 credential projection closure token (not a timing/budget constant); classification and shared request context are the explicit narrow safety change."
+    },
+    "task7_r1": {
+      "fix_base": "81d261c445f70df09f18458707ba1e8eb1e2d71f",
+      "delta_from_fix_base": {
+        "number:0": 2
+      },
+      "reason": "R1 R25: two extra zero literals compare prior prepared position so repeated positive-to-zero reconciliation performs the actual demux rewind; initial zero behavior and all timing/budget values remain unchanged."
     }
   },
   {
     "old_file": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlPreparedFallback.swift",
     "new_file": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift",
-    "reason": "import/platform abstraction: macOS hardware-lease query retained; shared preparation/discard behavior unchanged. Task7: R18 adds one Swift $0 credential projection closure token (not a timing/budget constant); classification and shared request context are the explicit narrow safety change.",
+    "reason": "import/platform abstraction: macOS hardware-lease query retained; shared preparation/discard behavior unchanged. Task7: R18 adds one Swift $0 credential projection closure token (not a timing/budget constant); classification and shared request context are the explicit narrow safety change. R1 R25: two extra zero literals compare prior prepared position so repeated positive-to-zero reconciliation performs the actual demux rewind; initial zero behavior and all timing/budget values remain unchanged.",
     "old_tokens": {
       "case:.avPlayer": 1,
       "case:avPlayer(source": 1,
@@ -755,7 +762,7 @@
     },
     "allowed_delta": {
       "case:.fallback = self": 1,
-      "number:0": 1,
+      "number:0": 3,
       "symbol:false": 1,
       "symbol:true": 1
     },
@@ -770,6 +777,13 @@
         "number:0": 1
       },
       "reason": "R18 adds one Swift $0 credential projection closure token (not a timing/budget constant); classification and shared request context are the explicit narrow safety change."
+    },
+    "task7_r1": {
+      "fix_base": "81d261c445f70df09f18458707ba1e8eb1e2d71f",
+      "delta_from_fix_base": {
+        "number:0": 2
+      },
+      "reason": "R1 R25: two extra zero literals compare prior prepared position so repeated positive-to-zero reconciliation performs the actual demux rewind; initial zero behavior and all timing/budget values remain unchanged."
     }
   },
   {
@@ -1774,7 +1788,7 @@
   {
     "old_file": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlIosPlayer.swift",
     "new_file": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift",
-    "reason": "import/platform abstraction: Task7 shared typed session owner preserves the accepted macOS asynchronous owner algorithm and R11 iOS retained rollback. Texture -1 sentinels move to host-owned leases; new zero/boolean values and case matches stage typed identity/events and candidate commit. iOS additional increments are macOS recovery/activity fences, not timing/resource tuning. Closed typed constraint preflight preserves existing validator and NativePlayerError before enqueue.",
+    "reason": "import/platform abstraction: Task7 shared typed session owner preserves the accepted macOS asynchronous owner algorithm and R11 iOS retained rollback. Texture -1 sentinels move to host-owned leases; new zero/boolean values and case matches stage typed identity/events and candidate commit. iOS additional increments are macOS recovery/activity fences, not timing/resource tuning. Closed typed constraint preflight preserves existing validator and NativePlayerError before enqueue. R1 I1/I2/R25: typed synchronous acceptance and independent session pending-intent revisions replace completion-time persistence; same-candidate precommit reconciliation and direct inactive control application preserve acknowledged state. Added revision zero/one, microsecond conversion1000, Boolean gates and typed case matches are control authority, not timer/budget/decoder tuning. R26 reuses pending controls before synchronous slot rollback activation and adds only the default-nil construction-phase failure seam.",
     "old_tokens": {
       "case:.avPlayer": 1,
       "case:.headeredHls": 1,
@@ -1793,24 +1807,53 @@
     },
     "allowed_delta": {
       "case:.constraints(let constraints) = command, let fallback = slot.current as? YlFallbackBackend": 1,
+      "case:.pause": 1,
       "case:.success": 1,
-      "case:.success = result": 1,
+      "case:.success = result, case .track = command": 1,
       "case:.success = result, let qualityConstraint": -1,
+      "case:.success = result, let self else": 1,
       "case:.success = result, name ==": -2,
+      "case:let .constraints(constraints)": 1,
       "case:let .failure(error)": 1,
+      "case:let .failure(error) = immediate": 1,
+      "case:let .fallback(_, prepared) = candidate else": 1,
       "case:let .fallback(_, prepared) = candidate, let events = prepared.commitEvents": 1,
+      "case:let .seek(position)": 1,
+      "case:let .speed(speed)": 1,
+      "case:let .volume(volume)": 1,
       "number:-1": -3,
-      "number:0": 2,
-      "number:1": 7,
-      "symbol:false": 1,
+      "number:0": 4,
+      "number:1": 9,
+      "number:1_000": 1,
+      "symbol:false": 4,
       "symbol:true": 2
     },
-    "task7_new_origin": true
+    "task7_new_origin": true,
+    "task7_r1": {
+      "fix_base": "81d261c445f70df09f18458707ba1e8eb1e2d71f",
+      "delta_from_fix_base": {
+        "case:.pause": 1,
+        "case:.success = result": -1,
+        "case:.success = result, case .track = command": 1,
+        "case:.success = result, let self else": 1,
+        "case:let .constraints(constraints)": 1,
+        "case:let .failure(error) = immediate": 1,
+        "case:let .fallback(_, prepared) = candidate else": 1,
+        "case:let .seek(position)": 1,
+        "case:let .speed(speed)": 1,
+        "case:let .volume(volume)": 1,
+        "number:0": 2,
+        "number:1": 2,
+        "number:1_000": 1,
+        "symbol:false": 3
+      },
+      "reason": "R1 I1/I2/R25: typed synchronous acceptance and independent session pending-intent revisions replace completion-time persistence; same-candidate precommit reconciliation and direct inactive control application preserve acknowledged state. Added revision zero/one, microsecond conversion1000, Boolean gates and typed case matches are control authority, not timer/budget/decoder tuning. R26 reuses pending controls before synchronous slot rollback activation and adds only the default-nil construction-phase failure seam."
+    }
   },
   {
     "old_file": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlMacosPlayer.swift",
     "new_file": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift",
-    "reason": "import/platform abstraction: Task7 shared typed session owner preserves the accepted macOS asynchronous owner algorithm and R11 iOS retained rollback. Texture -1 sentinels move to host-owned leases; new zero/boolean values and case matches stage typed identity/events and candidate commit. iOS additional increments are macOS recovery/activity fences, not timing/resource tuning. Closed typed constraint preflight preserves existing validator and NativePlayerError before enqueue.",
+    "reason": "import/platform abstraction: Task7 shared typed session owner preserves the accepted macOS asynchronous owner algorithm and R11 iOS retained rollback. Texture -1 sentinels move to host-owned leases; new zero/boolean values and case matches stage typed identity/events and candidate commit. iOS additional increments are macOS recovery/activity fences, not timing/resource tuning. Closed typed constraint preflight preserves existing validator and NativePlayerError before enqueue. R1 I1/I2/R25: typed synchronous acceptance and independent session pending-intent revisions replace completion-time persistence; same-candidate precommit reconciliation and direct inactive control application preserve acknowledged state. Added revision zero/one, microsecond conversion1000, Boolean gates and typed case matches are control authority, not timer/budget/decoder tuning. R26 reuses pending controls before synchronous slot rollback activation and adds only the default-nil construction-phase failure seam.",
     "old_tokens": {
       "case:.avPlayer": 1,
       "case:.headeredHls": 1,
@@ -1830,12 +1873,44 @@
     },
     "allowed_delta": {
       "case:.constraints(let constraints) = command, let fallback = slot.current as? YlFallbackBackend": 1,
+      "case:.pause": 1,
+      "case:.success = result": -1,
+      "case:.success = result, case .track = command": 1,
+      "case:.success = result, let self else": 1,
+      "case:let .constraints(constraints)": 1,
+      "case:let .failure(error) = immediate": 1,
+      "case:let .fallback(_, prepared) = candidate else": 1,
       "case:let .fallback(_, prepared) = candidate, let events = prepared.commitEvents": 1,
+      "case:let .seek(position)": 1,
+      "case:let .speed(speed)": 1,
+      "case:let .volume(volume)": 1,
       "number:-1": -3,
-      "number:0": 1,
-      "symbol:false": 1,
+      "number:0": 3,
+      "number:1": 2,
+      "number:1_000": 1,
+      "symbol:false": 4,
       "symbol:true": 1
     },
-    "task7_new_origin": true
+    "task7_new_origin": true,
+    "task7_r1": {
+      "fix_base": "81d261c445f70df09f18458707ba1e8eb1e2d71f",
+      "delta_from_fix_base": {
+        "case:.pause": 1,
+        "case:.success = result": -1,
+        "case:.success = result, case .track = command": 1,
+        "case:.success = result, let self else": 1,
+        "case:let .constraints(constraints)": 1,
+        "case:let .failure(error) = immediate": 1,
+        "case:let .fallback(_, prepared) = candidate else": 1,
+        "case:let .seek(position)": 1,
+        "case:let .speed(speed)": 1,
+        "case:let .volume(volume)": 1,
+        "number:0": 2,
+        "number:1": 2,
+        "number:1_000": 1,
+        "symbol:false": 3
+      },
+      "reason": "R1 I1/I2/R25: typed synchronous acceptance and independent session pending-intent revisions replace completion-time persistence; same-candidate precommit reconciliation and direct inactive control application preserve acknowledged state. Added revision zero/one, microsecond conversion1000, Boolean gates and typed case matches are control authority, not timer/budget/decoder tuning. R26 reuses pending controls before synchronous slot rollback activation and adds only the default-nil construction-phase failure seam."
+    }
   }
 ]

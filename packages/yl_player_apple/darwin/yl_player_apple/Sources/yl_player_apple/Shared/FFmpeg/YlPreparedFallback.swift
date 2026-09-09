@@ -232,7 +232,7 @@ final class YlPreparedFallback {
       selectedAudioStreamIndex: requested.selectedAudioStreamIndex,
       shouldPlay: requested.shouldPlay
     )
-    if resolved.positionUs > 0 {
+    if resolved.positionUs > 0 || (resumeState?.positionUs ?? 0) > 0 {
       try openedMedia.seek(toMediaTimeUs: resolved.positionUs)
     }
     resumeState = resolved
