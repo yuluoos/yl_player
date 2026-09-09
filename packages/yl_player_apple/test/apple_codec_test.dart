@@ -488,6 +488,51 @@ void main() {
     },
   );
   test(
+    'assessment preserves all built-in and safe extension IDs distinctly',
+    () {
+      const requirements = [
+        'network.platformDefault',
+        'network.managed',
+        'buffer.automatic',
+        'buffer.lowLatency',
+        'buffer.smoothPlayback',
+        'buffer.bounded',
+        'decoder.systemDefault',
+        'decoder.hardwarePreferred',
+        'decoder.hardwareRequired',
+        'vendor.custom',
+      ];
+      const limitations = [
+        'source.requiresInspection',
+        'codec.requiresInspection',
+        'decoder.modeUnknown',
+        'buffer.osMemoryExcluded',
+        'network.systemStackOpaque',
+        'vendor.custom',
+      ];
+      final decoded = AppleCodec.assessment(
+        AppleAssessmentReply(
+          outcome: AppleAssessmentOutcome.requiresInspection,
+          satisfiedRequirements: requirements,
+          limitations: limitations,
+        ),
+      );
+      expect(
+        decoded.satisfiedRequirements,
+        requirements.map(YlRequirementId.new).toList(),
+      );
+      expect(decoded.limitations, limitations.map(YlLimitationId.new).toList());
+      expect(
+        decoded.satisfiedRequirements.last,
+        isNot(YlRequirementId.networkManaged),
+      );
+      expect(
+        decoded.limitations.last,
+        isNot(YlLimitationId.decoderModeUnknown),
+      );
+    },
+  );
+  test(
     'failure prose is fixed and transport errors never expose native details',
     () {
       final failure = AppleCodec.failure(wireFailure());

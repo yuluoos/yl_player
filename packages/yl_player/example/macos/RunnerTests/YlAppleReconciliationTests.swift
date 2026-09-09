@@ -8,7 +8,7 @@ final class YlAppleReconciliationTests: XCTestCase {
     let gate = AppleRequestGate()
     let server = try ReactivationMediaServer(data: AppleHostCharacterizations.fixtureMedia(), onRequest: gate.observe)
     defer { server.close() }
-    let source: [String: Any?] = ["uri": server.url.absoluteString, "kind": "network", "formatHint": "matroska"]
+    let source = YlAppleSourceDescriptor(uri: server.url.absoluteString, kind: .network, formatHint: .matroska)
     let coordinator = YlOpenCoordinator()
     let held = expectation(description: "same candidate's positive reconciliation seek finished, commit still withheld")
     let completed = expectation(description: "latest candidate committed")
@@ -80,7 +80,7 @@ final class YlAppleReconciliationTests: XCTestCase {
 
   private func discardReconciliation(supersede: Bool) async throws {
     let server = try ReactivationMediaServer(data: AppleHostCharacterizations.fixtureMedia()); defer { server.close() }
-    let source: [String: Any?] = ["uri": server.url.absoluteString, "kind": "network", "formatHint": "matroska"]
+    let source = YlAppleSourceDescriptor(uri: server.url.absoluteString, kind: .network, formatHint: .matroska)
     let coordinator = YlOpenCoordinator()
     let held = expectation(description: "real candidate reconciliation held")
     let completed = expectation(description: "cancellation settles before worker release")
@@ -108,7 +108,7 @@ final class YlAppleReconciliationTests: XCTestCase {
     let replacementCompleted = expectation(description: "replacement completion")
     var replacementCommits = 0
     if supersede {
-      coordinator.begin(prepare: { _ in .avPlayer(source: [:]) }, commit: { _ in replacementCommits += 1 },
+      coordinator.begin(prepare: { _ in .avPlayer(source: YlAppleSourceDescriptor(uri: "", kind: .file)) }, commit: { _ in replacementCommits += 1 },
         completion: { result in
           if case .failure = result { XCTFail("Current replacement rejected by stale reconciliation") }
           replacementCompleted.fulfill()

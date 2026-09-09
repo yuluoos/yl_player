@@ -24,7 +24,14 @@ final class YlMacosOpenCoordinatorTests: XCTestCase {
     private(set) var stopCount = 0
     func stop() { stopCount += 1 }
     func deactivate() { isActive = false }
-    func command(name: String, arguments: [String: Any?]) throws {}
+    func play() throws {}
+  func pause() throws {}
+  func seek(toMs: Int64, cancellationToken: YlOpenCancellationToken?) throws {}
+  func seekToLiveEdge() throws {}
+  func setPlaybackSpeed(_ speed: Float) throws {}
+  func setVolume(_ volume: Float) throws {}
+  func selectAudioTrack(_ trackId: String, cancellationToken: YlOpenCancellationToken?) throws {}
+  func setVideoConstraints(_ constraints: YlAppleVideoConstraints) throws {}
     func emitState() {}
     func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? { nil }
     func dispose() { disposed = true; isActive = false }
@@ -134,12 +141,12 @@ final class YlMacosOpenCoordinatorTests: XCTestCase {
   }
 
   private func candidate(_ id: Int) -> YlPreparedOpen {
-    .avPlayer(source: ["id": id])
+    .avPlayer(source: YlAppleSourceDescriptor(uri: String(id), kind: .file))
   }
 
   private func candidateID(_ candidate: YlPreparedOpen) -> Int? {
     guard case let .avPlayer(source) = candidate else { return nil }
-    return source["id"] as? Int
+    return Int(source.uri)
   }
 
   func testSecondOpenCancelsFirstCompletionAndOnlyNewestCommits() {

@@ -19,7 +19,7 @@ HISTORICAL_MANIFESTS = {
     "engine-tests-manifest.json": PINNED_REVISION,
     "resources-manifest.json": PINNED_REVISION,
 }
-EXPECTED_CASES = {"ios": 260, "macos": 222}
+EXPECTED_CASES = {"ios": 269, "macos": 231}
 
 
 def digest(data):
@@ -172,7 +172,7 @@ def main():
         print(f"Historical Apple test provenance: {PINNED_REVISION} verified")
     if not args.historical_only:
         verify_current_targets(root)
-        print("Current Apple example tests: iOS 260, macOS 222 verified")
+        print("Current Apple example tests: iOS 269, macOS 231 verified")
 
 
 if __name__ == "__main__":

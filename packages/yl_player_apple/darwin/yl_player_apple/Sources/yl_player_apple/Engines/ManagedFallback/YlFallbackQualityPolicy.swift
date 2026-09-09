@@ -11,29 +11,16 @@ struct YlFallbackQualityConstraint: Equatable {
   let maxHeight: Int?
   let maxBitrate: Int?
 
-  init(validating map: [String: Any?]) throws {
-    func positive(_ key: String) throws -> Int? {
-      guard let raw = map[key] else { return nil }
-      let number = raw as? NSNumber
-      let isNativeInteger = !(raw is Bool)
-        && number?.doubleValue.isFinite == true
-        && number?.doubleValue.rounded(.towardZero) == number?.doubleValue
-      guard isNativeInteger,
-            let value = int64(raw),
-            value > 0,
-            value <= Int64(Int32.max) else {
-        throw NativePlayerError(
-          category: "source",
-          code: "source.quality_constraint_invalid",
-          message: "Quality constraint values must be positive native integers."
-        )
+  init(validating constraints: YlAppleVideoConstraints) throws {
+    for value in [constraints.maxWidth, constraints.maxHeight, constraints.maxBitrate].compactMap({ $0 }) {
+      guard value > 0, value <= Int(Int32.max) else {
+        throw NativePlayerError(category: "source", code: "source.quality_constraint_invalid",
+          message: "Quality constraint values must be positive native integers.")
       }
-      return Int(value)
     }
-
-    maxWidth = try positive("maxWidth")
-    maxHeight = try positive("maxHeight")
-    maxBitrate = try positive("maxBitrate")
+    maxWidth = constraints.maxWidth
+    maxHeight = constraints.maxHeight
+    maxBitrate = constraints.maxBitrate
   }
 
   private init(maxWidth: Int?, maxHeight: Int?, maxBitrate: Int?) {

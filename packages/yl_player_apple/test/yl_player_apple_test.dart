@@ -61,6 +61,92 @@ void main() {
     return completion.future;
   }
 
+  for (final format in [YlMediaFormat.matroska, YlMediaFormat.flv]) {
+    for (final replyFirst in [true, false]) {
+      test(
+        'enforcing generated transport commits managed bounded $format replyFirst=$replyFirst',
+        () async {
+          final fixture = EnforcingPolicyFixture();
+          factory((_) => [wireCreate()]);
+          host('attach', (_) => []);
+          host('dispose', (_) => []);
+          host(
+            'assess',
+            (message) => [
+              fixture.assess((message as List).single as AppleAssessRequest),
+            ],
+          );
+          final entered = Completer<AppleLoadRequest>();
+          final reply = Completer<Object?>();
+          host('load', (message) {
+            final request = (message as List).single as AppleLoadRequest;
+            fixture.enforce(request.source, request.options);
+            entered.complete(request);
+            return reply.future;
+          });
+          final player = await YlPlayerApple().createPlayer(
+            const YlPlayerOptions(),
+          );
+          addTearDown(player.dispose);
+          var completed = false;
+          final loading = player
+              .load(
+                YlNetworkSource(
+                  Uri.parse('https://media.test/fixture'),
+                  format: format,
+                  networkPolicy: const YlNetworkPolicy.managed(),
+                ),
+                options: const YlLoadOptions(
+                  bufferStrategy: YlBufferStrategy.bounded(
+                    minDuration: Duration.zero,
+                    maxDuration: Duration(seconds: 1),
+                    maxManagedBytes: 1024,
+                  ),
+                ),
+              )
+              .then((result) {
+                completed = true;
+                return result;
+              });
+          final request = await entered.future;
+          final state = wireState(
+            requestId: request.loadRequestId,
+            session: 'enforced-session',
+            revision: 1,
+            sequence: 1,
+          )..engine = AppleEngine.managedFallback;
+          if (replyFirst) {
+            reply.complete([
+              AppleLoadReply(
+                loadRequestId: request.loadRequestId,
+                sessionId: 'enforced-session',
+              ),
+            ]);
+          } else {
+            await callback('onState', state);
+          }
+          await flush();
+          expect(completed, isFalse);
+          if (replyFirst) {
+            await callback('onState', state);
+          } else {
+            reply.complete([
+              AppleLoadReply(
+                loadRequestId: request.loadRequestId,
+                sessionId: 'enforced-session',
+              ),
+            ]);
+          }
+          final committed = await loading;
+          expect(player.state.sessionId, committed.sessionId);
+          expect(player.state.engine, YlPlaybackEngine.managedFallback);
+          expect(fixture.assessments, 1);
+          expect(fixture.enforcedLoads, 1);
+        },
+      );
+    }
+  }
+
   test('registerWith installs v2 implementation', () {
     final previous = YlPlayerPlatform.instance;
     addTearDown(() => YlPlayerPlatform.instance = previous);
@@ -440,4 +526,43 @@ String _swiftNamedCall(String source, String call, String name) {
   final tail = source.substring(start.start);
   final nextCall = RegExp(r'\n\s*\),?\n\s*\.').firstMatch(tail);
   return nextCall == null ? tail : tail.substring(0, nextCall.start + 3);
+}
+
+/// Explicit policy-enforcing native stand-in; production mechanisms land in Tasks 3/4.
+final class EnforcingPolicyFixture {
+  int assessments = 0;
+  int enforcedLoads = 0;
+  void _validate(AppleSourceMessage source, AppleLoadOptionsMessage options) {
+    if (![
+          AppleMediaFormat.matroska,
+          AppleMediaFormat.flv,
+        ].contains(source.format) ||
+        source.networkPolicy?.kind != AppleNetworkPolicyKind.managed ||
+        options.bufferStrategy.kind != AppleBufferKind.bounded ||
+        options.bufferStrategy.maxManagedBytes != 1024) {
+      throw StateError(
+        'The enforcing fixture only admits its proven managed bounded route.',
+      );
+    }
+  }
+
+  AppleAssessmentReply assess(AppleAssessRequest request) {
+    _validate(request.source, request.options);
+    assessments++;
+    return AppleAssessmentReply(
+      outcome: AppleAssessmentOutcome.requiresInspection,
+      candidateEngine: AppleEngine.managedFallback,
+      satisfiedRequirements: [
+        'network.managed',
+        'buffer.bounded',
+        'decoder.hardwarePreferred',
+      ],
+      limitations: ['codec.requiresInspection', 'buffer.osMemoryExcluded'],
+    );
+  }
+
+  void enforce(AppleSourceMessage source, AppleLoadOptionsMessage options) {
+    _validate(source, options);
+    enforcedLoads++;
+  }
 }

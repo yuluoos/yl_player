@@ -92,7 +92,7 @@ final class YlAvPlayerStallWatchdog {
 
 final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   private struct StagedHls {
-    let source: [String: Any?]
+    let source: YlAppleSourceDescriptor
     let prepared: YlPreparedHlsAsset
     let resume: Bool
   }
@@ -149,11 +149,11 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   private let failureGate = YlAvPlayerFailureGate()
   private let stallWatchdog = YlAvPlayerStallWatchdog()
   private var active = false
-  private var lastSource: [String: Any?]?
+  private var lastSource: YlAppleSourceDescriptor?
   private var savedPositionMs: Int64 = 0
   private var itemGeneration: UInt64 = 0
   private var channelGeneration = YlBackendGeneration.next()
-  private var qualityConstraint: [String: Any?] = [:]
+  private var qualityConstraint = YlAppleVideoConstraints.unconstrained
   private var selectedAudioTrackId: String?
   private var resumeAtLiveEdge = false
   private var hlsResourceLoader: YlHlsResourceLoader?
@@ -223,109 +223,61 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     displayLink = link
   }
 
-  func command(name: String, arguments: [String: Any?]) throws {
+  private func checkAlive() throws {
     guard !disposed else {
-      throw NativePlayerError(
-        category: "resource",
-        code: "\(YlApplePlatform.current.rawValue).player_disposed",
-        message: "The \(YlApplePlatform.current.displayName) player has been disposed."
-      )
-    }
-    if stopped && ["play", "pause", "seekTo", "seekToLiveEdge", "selectAudioTrack"].contains(name) {
-      return
-    }
-    switch name {
-    case "stop":
-      stop()
-    case "open":
-      try open(stringMap(arguments["source"]))
-    case "play":
-      playRequested = true
-      player.playImmediately(atRate: desiredRate)
-      status = services.platform == .ios
-        ? (player.timeControlStatus == .playing ? "playing" : "buffering")
-        : YlAvPlayerStatePolicy.status(
-        wantsToPlay: true,
-        itemReady: player.currentItem?.status == .readyToPlay,
-        rate: player.rate,
-        waiting: player.timeControlStatus == .waitingToPlayAtSpecifiedRate
-      )
-      emitState()
-      refreshStallWatchdog()
-    case "pause":
-      playRequested = false
-      stallWatchdog.cancel()
-      player.pause()
-    case "seekTo":
-      let milliseconds = int64(arguments["positionMs"]) ?? 0
-      resumeAtLiveEdge = false
-      if active {
-        player.seek(
-          to: CMTime(milliseconds: milliseconds, preferredTimescale: 1_000),
-          toleranceBefore: .zero,
-          toleranceAfter: .zero
-        )
-      } else {
-        savedPositionMs = max(0, milliseconds)
-        emitState()
-      }
-    case "seekToLiveEdge":
-      try seekToLiveEdge()
-    case "setPlaybackSpeed":
-      let speed = float(arguments["speed"]) ?? 1
-      guard speed >= 0.25, speed <= 4 else {
-        throw NativePlayerError(
-          category: "source",
-          code: "playback.speed_invalid",
-          message: "Playback speed must be between 0.25 and 4.0."
-        )
-      }
-      desiredRate = speed
-      if player.rate != 0 { player.rate = speed }
-    case "setVolume":
-      player.volume = min(max(float(arguments["volume"]) ?? 1, 0), 1)
-    case "selectAudioTrack":
-      try selectAudioTrack(arguments["trackId"] as? String ?? "")
-    case "setQualityConstraint":
-      setQualityConstraint(stringMap(arguments["constraint"]))
-    default:
-      throw NativePlayerError(
-        category: "internal",
-        code: "\(YlApplePlatform.current.rawValue).command_unknown",
-        message: "Unknown player command: \(name)"
-      )
+      throw NativePlayerError(category: "resource", code: "\(YlApplePlatform.current.rawValue).player_disposed",
+        message: "The Apple player has been disposed.")
     }
   }
+  func play() throws {
+    try checkAlive(); guard !stopped else { return }
+    playRequested = true
+    player.playImmediately(atRate: desiredRate)
+    status = services.platform == .ios
+      ? (player.timeControlStatus == .playing ? "playing" : "buffering")
+      : YlAvPlayerStatePolicy.status(wantsToPlay: true,
+        itemReady: player.currentItem?.status == .readyToPlay, rate: player.rate,
+        waiting: player.timeControlStatus == .waitingToPlayAtSpecifiedRate)
+    emitState()
+    refreshStallWatchdog()
+  }
+  func pause() throws {
+    try checkAlive(); guard !stopped else { return }
+    playRequested = false
+    stallWatchdog.cancel()
+    player.pause()
+  }
+  func seek(toMs milliseconds: Int64, cancellationToken: YlOpenCancellationToken? = nil) throws {
+    try checkAlive(); guard !stopped else { return }
+    try cancellationToken?.throwIfCancelled()
+    resumeAtLiveEdge = false
+    if active {
+      player.seek(to: CMTime(milliseconds: milliseconds, preferredTimescale: 1_000),
+        toleranceBefore: .zero, toleranceAfter: .zero)
+    } else { savedPositionMs = max(0, milliseconds); emitState() }
+  }
+  func setPlaybackSpeed(_ speed: Float) throws {
+    try checkAlive()
+    guard speed >= 0.25, speed <= 4 else {
+      throw NativePlayerError(category: "source", code: "playback.speed_invalid",
+        message: "Playback speed must be between 0.25 and 4.0.")
+    }
+    desiredRate = speed
+    if player.rate != 0 { player.rate = speed }
+  }
+  func setVolume(_ volume: Float) throws { try checkAlive(); player.volume = min(max(volume, 0), 1) }
 
-  func validateOpen(_ source: [String: Any?]) throws {
-    let route: YlAppleSourceRoute
-    if services.platform == .ios {
-      let headers = stringMap(source["headers"]).compactMapValues { $0 as? String }
-      route = YlSourceRouter.route(YlAppleSourceDescriptor(
-        uri: source["uri"] as? String ?? "", kind: source["kind"] as? String ?? "",
-        formatHint: source["formatHint"] as? String ?? "automatic",
-        isLive: source["isLive"] as? Bool ?? false, hasHeaders: !headers.isEmpty))
-    } else { route = YlSourceRouter.route(source) }
-    switch route {
-    case .avPlayer:
-      return
-    case .localMatroska, .networkMatroska, .networkFlv, .headeredHls:
-      throw NativePlayerError(
-        category: "container",
-        code: "container.native_fallback_required",
-        message: "This source requires a compatible \(YlApplePlatform.current.displayName) native fallback."
-      )
-    case let .reject(category, code, message):
-      throw NativePlayerError(
-        category: category,
-        code: code,
-        message: message
-      )
+  func validateOpen(_ source: YlAppleSourceDescriptor) throws {
+    let assessment = YlEngineRouter.assess(source)
+    if let rejection = assessment.rejection { throw rejection }
+    guard assessment.candidate == .avPlayer else {
+      throw NativePlayerError(category: "container", code: "container.native_fallback_required",
+        message: "This source requires a controlled preparation route.")
     }
   }
 
   func stagePreparedHls(
-    source: [String: Any?],
+    source: YlAppleSourceDescriptor,
     prepared: YlPreparedHlsAsset,
     resume: Bool
   ) throws {
@@ -493,24 +445,25 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     emitState(error: details)
   }
 
-  private func open(_ source: [String: Any?]) throws {
+  func open(_ source: YlAppleSourceDescriptor) throws {
+    try checkAlive()
     try validateOpen(source)
     if stopped && services.platform == .ios { try configureAudioSession() }
     channelGeneration = YlBackendGeneration.next()
     resetOpenState(source, resume: false)
-    try installItem(source, positionMs: int64(stringMap(source["loadOptions"])["startPositionMs"]) ?? 0)
+    try installItem(source, positionMs: source.loadOptions?.startPositionMs ?? 0)
     emitState()
   }
 
-  private func resetOpenState(_ source: [String: Any?], resume: Bool) {
+  private func resetOpenState(_ source: YlAppleSourceDescriptor, resume: Bool) {
     stopped = false
     cancelLiveReconnect()
     liveReconnectController = YlLiveReconnectController(configuration: configuration.network)
     removeCurrentItem()
     lastSource = source
-    let loadOptions = stringMap(source["loadOptions"])
-    if !resume, source["loadOptions"] != nil {
-      qualityConstraint = stringMap(loadOptions["videoConstraints"])
+    let loadOptions = source.loadOptions
+    if !resume, source.loadOptions != nil {
+      qualityConstraint = loadOptions?.videoConstraints ?? .unconstrained
     }
     if !resume {
       savedPositionMs = 0
@@ -518,9 +471,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       selectedAudioTrackId = nil
     }
     active = true
-    sourceIsLive = source["isLive"] as? Bool ?? false
+    sourceIsLive = source.isLive
     status = "opening"
-    playRequested = !resume && (loadOptions["autoplay"] as? Bool ?? false)
+    playRequested = !resume && (loadOptions?.autoplay ?? false)
     firstFrameSent = false
     hasBeenReady = false
     openStartedAt = CACurrentMediaTime()
@@ -544,7 +497,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     if !stagedHls.resume {
       channelGeneration = YlBackendGeneration.next()
     }
-    let positionMs = stagedHls.resume ? savedPositionMs : (int64(stringMap(stagedHls.source["loadOptions"])["startPositionMs"]) ?? 0)
+    let positionMs = stagedHls.resume ? savedPositionMs : (stagedHls.source.loadOptions?.startPositionMs ?? 0)
     resetOpenState(stagedHls.source, resume: stagedHls.resume)
     let loader = try stagedHls.prepared.takeLoader()
     hlsResourceLoader = loader
@@ -552,8 +505,8 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     emitState()
   }
 
-  private func installItem(_ source: [String: Any?], positionMs: Int64) throws {
-    guard let uri = source["uri"] as? String, let url = URL(string: uri) else {
+  private func installItem(_ source: YlAppleSourceDescriptor, positionMs: Int64) throws {
+    guard let url = source.url else {
       throw NativePlayerError(
         category: "source",
         code: "source.invalid_uri",
@@ -567,7 +520,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     itemGeneration &+= 1
     let generation = itemGeneration
     let item = AVPlayerItem(asset: asset)
-    let effectiveConfiguration = configuration.forLoad(lastSource ?? [:])
+    let effectiveConfiguration = configuration.forLoad(lastSource)
     item.preferredForwardBufferDuration = effectiveConfiguration.preferredForwardBufferDuration
     player.automaticallyWaitsToMinimizeStalling = effectiveConfiguration.bufferMode != "lowLatency"
     applyQualityConstraint(qualityConstraint, to: item)
@@ -830,7 +783,8 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     return Unmanaged.passRetained(buffer)
   }
 
-  private func seekToLiveEdge() throws {
+  func seekToLiveEdge() throws {
+    try checkAlive(); guard !stopped else { return }
     guard sourceIsLive || isIndefinite(player.currentItem?.duration) else {
       throw NativePlayerError(
         category: "source",
@@ -852,7 +806,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     resumeAtLiveEdge = false
   }
 
-  private func selectAudioTrack(_ trackId: String) throws {
+  func selectAudioTrack(_ trackId: String, cancellationToken: YlOpenCancellationToken? = nil) throws {
+    try checkAlive(); guard !stopped else { return }
+    try cancellationToken?.throwIfCancelled()
     guard let option = audioOptions[trackId] else {
       throw NativePlayerError(
         category: "source",
@@ -872,16 +828,18 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     emitState()
   }
 
-  private func setQualityConstraint(_ constraint: [String: Any?]) {
+  func setVideoConstraints(_ constraint: YlAppleVideoConstraints) throws {
+    try checkAlive()
+    _ = try YlFallbackQualityConstraint(validating: constraint)
     qualityConstraint = constraint
     guard let item = player.currentItem else { return }
     applyQualityConstraint(constraint, to: item)
   }
 
-  private func applyQualityConstraint(_ constraint: [String: Any?], to item: AVPlayerItem) {
-    item.preferredPeakBitRate = double(constraint["maxBitrate"]) ?? 0
-    let width = double(constraint["maxWidth"])
-    let height = double(constraint["maxHeight"])
+  private func applyQualityConstraint(_ constraint: YlAppleVideoConstraints, to item: AVPlayerItem) {
+    item.preferredPeakBitRate = constraint.maxBitrate.map(Double.init) ?? 0
+    let width = constraint.maxWidth.map(Double.init)
+    let height = constraint.maxHeight.map(Double.init)
     guard width != nil || height != nil else {
       item.preferredMaximumResolution = .zero
       return
@@ -921,7 +879,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   }
 
   private func emit(_ event: YlNativeBackendEvent) {
-    callbackBinding.emit(YlNativeBackendCallback(generation: channelGeneration, loadRequestId: lastSource?["loadRequestId"] as? String, event: event))
+    callbackBinding.emit(YlNativeBackendCallback(generation: channelGeneration, loadRequestId: lastSource?.loadRequestId, event: event))
   }
 
   func emitState() {
@@ -1023,7 +981,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     hlsResourceLoader = nil
   }
 
-  private func scheduleLiveReconnect(source: [String: Any?]) -> Bool {
+  private func scheduleLiveReconnect(source: YlAppleSourceDescriptor) -> Bool {
     guard active,
           let delayMs = liveReconnectController.nextDelayMs() else {
       return false

@@ -13,7 +13,7 @@ enum YlAvPlayerRecoveryPolicy {
   }
 
   static func shouldReconnect(
-    source: [String: Any?],
+    source: YlAppleSourceDescriptor,
     usesResourceLoader: Bool,
     hasBeenReady: Bool,
     playRequested: Bool,
@@ -57,19 +57,13 @@ enum YlAvPlayerRecoveryPolicy {
   }
 
   private static func isDirectLiveHls(
-    _ source: [String: Any?],
+    _ source: YlAppleSourceDescriptor,
     usesResourceLoader: Bool
   ) -> Bool {
-    guard source["kind"] as? String == "network",
-          source["isLive"] as? Bool == true,
-          !usesResourceLoader,
-          let uri = source["uri"] as? String,
-          let url = URL(string: uri) else {
-      return false
-    }
-    let formatHint = source["formatHint"] as? String ?? "automatic"
-    return formatHint == "hls"
-      || (formatHint == "automatic" && url.pathExtension.lowercased() == "m3u8")
+    guard source.kind == .network, source.isLive, !usesResourceLoader,
+      let url = source.url else { return false }
+    return source.formatHint == .hls
+      || (source.formatHint == .automatic && url.pathExtension.lowercased() == "m3u8")
   }
 
   private static func isTransient(

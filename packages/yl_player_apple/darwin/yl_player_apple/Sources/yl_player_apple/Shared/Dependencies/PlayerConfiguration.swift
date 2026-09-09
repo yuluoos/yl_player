@@ -10,11 +10,10 @@ struct PlayerConfiguration {
   private(set) var preferredForwardBufferDuration: TimeInterval
 
   /// v1 absent options keep the original player policy; v2 always supplies goals.
-  func forLoad(_ source: [String: Any?]) -> Self {
-    guard source["loadOptions"] != nil else { return self }
-    let goal = stringMap(source["loadOptions"])["bufferStrategy"] as? String
+  func forLoad(_ source: YlAppleSourceDescriptor?) -> Self {
+    guard let goal = source?.loadOptions?.bufferStrategy else { return self }
     var result = self
-    result.bufferMode = goal == "smoothPlayback" ? "stable" : (goal == "lowLatency" ? "lowLatency" : "automatic")
+    result.bufferMode = goal == .smoothPlayback ? "stable" : (goal == .lowLatency ? "lowLatency" : "automatic")
     result.preferredForwardBufferDuration = result.bufferMode == "stable" ? 30 : (result.bufferMode == "lowLatency" ? 2 : 10)
     return result
   }

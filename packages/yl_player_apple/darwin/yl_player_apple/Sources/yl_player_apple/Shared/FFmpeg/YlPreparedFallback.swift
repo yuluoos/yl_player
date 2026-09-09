@@ -4,9 +4,9 @@ import Foundation
 import YlFFmpegBridge
 
 enum YlPreparedOpen {
-  case avPlayer(source: [String: Any?])
-  case headeredHls(source: [String: Any?], prepared: YlPreparedHlsAsset)
-  case fallback(source: [String: Any?], prepared: YlPreparedFallback)
+  case avPlayer(source: YlAppleSourceDescriptor)
+  case headeredHls(source: YlAppleSourceDescriptor, prepared: YlPreparedHlsAsset)
+  case fallback(source: YlAppleSourceDescriptor, prepared: YlPreparedFallback)
 
   func discard() {
     switch self {
@@ -42,7 +42,7 @@ final class YlPreparedFallback {
   private var cancellationToken: YlOpenCancellationToken?
 
   init(
-    source: [String: Any?],
+    source: YlAppleSourceDescriptor,
     requireHardwareProbe: Bool = true,
     configuration: PlayerConfiguration = PlayerConfiguration(map: [:]),
     sessionConfiguration: URLSessionConfiguration = .ephemeral,
@@ -53,29 +53,27 @@ final class YlPreparedFallback {
     self.commitEvents = commitEvents
     self.sessionConfiguration = sessionConfiguration
     try cancellationToken?.throwIfCancelled()
-    guard let uri = source["uri"] as? String,
-          let url = URL(string: uri) else {
+    guard let url = source.url else {
       throw NativePlayerError(
         category: "source",
         code: "source.invalid_uri",
         message: "A valid fallback media URI is required."
       )
     }
-    let formatHint = source["formatHint"] as? String ?? "automatic"
-    let container: YlFallbackContainer = formatHint == "httpFlv"
-      || formatHint == "flv"
-      || (formatHint == "automatic" && url.pathExtension.lowercased() == "flv")
+    let formatHint = source.formatHint
+    let container: YlFallbackContainer = formatHint == .flv
+      || (formatHint == .automatic && url.pathExtension.lowercased() == "flv")
       ? .flv : .matroska
     if url.isFileURL {
       sourceRecipe = .local(path: url.path, container: container)
     } else if let scheme = url.scheme?.lowercased(),
               scheme == "http" || scheme == "https" {
-      let headers = stringMap(source["headers"]).compactMapValues { $0 as? String }
+      let headers = source.headers
       sourceRecipe = .network(request: YlNetworkRequestRecipe(
         url: url,
         headers: headers,
-        credentials: stringMap(source["credentials"]).compactMapValues { $0 as? String },
-        credentialContext: source["credentialContext"] as? YlNetworkCredentialContext ?? YlNetworkCredentialContext(),
+        credentials: source.credentials,
+        credentialContext: source.credentialContext,
         configuration: configuration.network,
         mode: container == .flv ? .sequentialLive : .randomAccessVOD
       ), container: container)

@@ -94,9 +94,13 @@ enum YlFallbackCommandPolicy {
   static func requiresBackgroundExecution(
     isNetwork: Bool,
     isActive: Bool,
-    name: String
+    command: YlApplePlaybackCommand
   ) -> Bool {
-    isNetwork && isActive && (name == "seekTo" || name == "selectAudioTrack")
+    guard isNetwork && isActive else { return false }
+    switch command {
+    case .seek, .track: return true
+    default: return false
+    }
   }
 }
 
@@ -131,18 +135,18 @@ enum YlFallbackRestorationPolicy {
 }
 
 enum YlRestorationCommandPolicy {
-  static func supersedesRestoration(_ name: String) -> Bool {
-    switch name {
-    case "play", "pause":
+  static func supersedesRestoration(_ command: YlApplePlaybackCommand) -> Bool {
+    switch command {
+    case .play, .pause:
       return true
     default:
       return false
     }
   }
 
-  static func defersUntilRestored(_ name: String) -> Bool {
-    switch name {
-    case "seekTo", "seekToLiveEdge", "selectAudioTrack":
+  static func defersUntilRestored(_ command: YlApplePlaybackCommand) -> Bool {
+    switch command {
+    case .seek, .liveEdge, .track:
       return true
     default:
       return false

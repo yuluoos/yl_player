@@ -87,7 +87,14 @@ final class YlFallbackBackendTests: XCTestCase {
     private(set) var stopCount = 0
     func stop() { stopCount += 1 }
     func deactivate() { deactivateCount += 1 }
-    func command(name: String, arguments: [String: Any?]) throws {}
+    func play() throws {}
+  func pause() throws {}
+  func seek(toMs: Int64, cancellationToken: YlOpenCancellationToken?) throws {}
+  func seekToLiveEdge() throws {}
+  func setPlaybackSpeed(_ speed: Float) throws {}
+  func setVolume(_ volume: Float) throws {}
+  func selectAudioTrack(_ trackId: String, cancellationToken: YlOpenCancellationToken?) throws {}
+  func setVideoConstraints(_ constraints: YlAppleVideoConstraints) throws {}
     func emitState() {}
     func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? { nil }
     func dispose() { disposeCount += 1 }
@@ -113,7 +120,14 @@ final class YlFallbackBackendTests: XCTestCase {
       active = false
       quiesceCount += 1
     }
-    func command(name: String, arguments: [String: Any?]) throws {}
+    func play() throws {}
+  func pause() throws {}
+  func seek(toMs: Int64, cancellationToken: YlOpenCancellationToken?) throws {}
+  func seekToLiveEdge() throws {}
+  func setPlaybackSpeed(_ speed: Float) throws {}
+  func setVolume(_ volume: Float) throws {}
+  func selectAudioTrack(_ trackId: String, cancellationToken: YlOpenCancellationToken?) throws {}
+  func setVideoConstraints(_ constraints: YlAppleVideoConstraints) throws {}
     func emitState() {}
     func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? { nil }
     func stop() { active = false }
@@ -222,12 +236,7 @@ final class YlFallbackBackendTests: XCTestCase {
     )
     var prepared: YlPreparedFallback?
     do {
-      prepared = try YlPreparedFallback(source: [
-        "uri": fixture.absoluteString,
-        "kind": "file",
-        "formatHint": "matroska",
-        "isLive": false,
-      ])
+      prepared = try YlPreparedFallback(source: YlAppleSourceDescriptor(uri: fixture.absoluteString, kind: .file, formatHint: .matroska, intent: .automatic))
     } catch {
       XCTAssertEqual(
         (error as? NativePlayerError)?.code,
@@ -254,13 +263,7 @@ final class YlFallbackBackendTests: XCTestCase {
       data: try Data(contentsOf: fixture)
     )
     let prepared = try YlPreparedFallback(
-      source: [
-        "uri": "https://media.test/live.flv",
-        "kind": "network",
-        "formatHint": "httpFlv",
-        "isLive": true,
-        "headers": ["Authorization": "Bearer test"],
-      ],
+      source: YlAppleSourceDescriptor(uri: "https://media.test/live.flv", kind: .network, formatHint: .flv, intent: .live, headers: ["Authorization": "Bearer test"]),
       requireHardwareProbe: false,
       sessionConfiguration: session
     )
@@ -303,12 +306,7 @@ final class YlFallbackBackendTests: XCTestCase {
       ],
     ])
     let prepared = try YlPreparedFallback(
-      source: [
-        "uri": "https://media.test/reconnecting.flv",
-        "kind": "network",
-        "formatHint": "httpFlv",
-        "isLive": true,
-      ],
+      source: YlAppleSourceDescriptor(uri: "https://media.test/reconnecting.flv", kind: .network, formatHint: .flv, intent: .live),
       requireHardwareProbe: false,
       configuration: configuration,
       sessionConfiguration: session
@@ -337,7 +335,7 @@ final class YlFallbackBackendTests: XCTestCase {
     defer { backend.dispose() }
 
     try backend.activate()
-    try backend.command(name: "play", arguments: [:])
+    try backend.play()
     wait(for: [secondRequest], timeout: 5)
 
     XCTAssertGreaterThanOrEqual(FallbackFixtureURLProtocol.requestCount, 2)
@@ -356,12 +354,7 @@ final class YlFallbackBackendTests: XCTestCase {
       Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv")
     )
     let prepared = try YlPreparedFallback(
-      source: [
-        "uri": fixture.absoluteString,
-        "kind": "file",
-        "formatHint": "matroska",
-        "isLive": false,
-      ],
+      source: YlAppleSourceDescriptor(uri: fixture.absoluteString, kind: .file, formatHint: .matroska, intent: .automatic),
       requireHardwareProbe: false
     )
 
@@ -395,12 +388,7 @@ final class YlFallbackBackendTests: XCTestCase {
       Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv")
     )
     let prepared = try YlPreparedFallback(
-      source: [
-        "uri": fixture.absoluteString,
-        "kind": "file",
-        "formatHint": "matroska",
-        "isLive": false,
-      ],
+      source: YlAppleSourceDescriptor(uri: fixture.absoluteString, kind: .file, formatHint: .matroska, intent: .automatic),
       requireHardwareProbe: false
     )
     let backend: YlFallbackBackend
@@ -421,10 +409,7 @@ final class YlFallbackBackendTests: XCTestCase {
     defer { backend.dispose() }
 
     try backend.activate()
-    XCTAssertThrowsError(try backend.command(
-      name: "setQualityConstraint",
-      arguments: ["constraint": ["maxHeight": 1]]
-    )) { error in
+    XCTAssertThrowsError(try backend.setVideoConstraints(YlAppleVideoConstraints(maxWidth: nil, maxHeight: 1, maxBitrate: nil))) { error in
       XCTAssertEqual(
         (error as? NativePlayerError)?.code,
         "decoder.quality_constraint_unsupported"
@@ -432,8 +417,8 @@ final class YlFallbackBackendTests: XCTestCase {
     }
 
     XCTAssertTrue(backend.isActive)
-    XCTAssertNoThrow(try backend.command(name: "pause", arguments: [:]))
-    XCTAssertNoThrow(try backend.command(name: "play", arguments: [:]))
+    XCTAssertNoThrow(try backend.pause())
+    XCTAssertNoThrow(try backend.play())
     XCTAssertTrue(backend.isActive)
   }
 
@@ -442,12 +427,7 @@ final class YlFallbackBackendTests: XCTestCase {
       Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv")
     )
     let prepared = try YlPreparedFallback(
-      source: [
-        "uri": fixture.absoluteString,
-        "kind": "file",
-        "formatHint": "matroska",
-        "isLive": false,
-      ],
+      source: YlAppleSourceDescriptor(uri: fixture.absoluteString, kind: .file, formatHint: .matroska, intent: .automatic),
       requireHardwareProbe: false
     )
 
@@ -458,7 +438,7 @@ final class YlFallbackBackendTests: XCTestCase {
       configuration: PlayerConfiguration(map: [:]),
       prepared: prepared,
       qualityConstraint: try YlFallbackQualityConstraint(
-        validating: ["maxWidth": 1]
+        validating: YlAppleVideoConstraints(maxWidth: 1, maxHeight: nil, maxBitrate: nil)
       ),
       generation: 1,
       emit: { _ in }

@@ -1,0 +1,451 @@
+{
+  "origin_revision": "81d261c445f70df09f18458707ba1e8eb1e2d71f",
+  "scope": "Historical consolidation source-copy and declaration origins; does not validate current playback semantics",
+  "archive": "86dd8fc749df40893cf8573b1ae99107375f1de724737a9afe89fafbe07de803.tar.gz",
+  "archive_sha256": "86dd8fc749df40893cf8573b1ae99107375f1de724737a9afe89fafbe07de803",
+  "archive_size": 161198,
+  "source_count": 86,
+  "source_bytes": 752725,
+  "entries": [
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/ManagedFallback/YlFallbackQualityPolicy.swift",
+      "size": 2143,
+      "sha256": "1cce55caef781c190e5a59b386a19800380e930bc93e9c74a43e8e9079db4e5b"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/NativePlayerError.swift",
+      "size": 345,
+      "sha256": "688dc99ccb8a68c8ae3d092df57b18f348ed6d20bf559500eacffddd452437c7"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/PlayerConfiguration.swift",
+      "size": 1834,
+      "sha256": "af4bde9d6a6cd01e70fa6d0937cab9cb54f08716994bda1d12bfb4e46da23c80"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlFallbackContainer.swift",
+      "size": 86,
+      "sha256": "9b39cf6fd9b12f18d91f9aa5cc4adeb44b81d5e8bac95f93ee829f123cec4fab"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlInt64.swift",
+      "size": 148,
+      "sha256": "d4cb123be741f48ad286c0f43fbe75a21c0f9d0a304527f35fc0ed53369c12af"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift",
+      "size": 995,
+      "sha256": "e99a963f20c97af964909390f67ca3b007da1eb41ab0cdea2fd838bd0852caee"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlOpenCancellationToken.swift",
+      "size": 1144,
+      "sha256": "87fe651c715ea9514bcacfc570f3467da2cdfb6b96a38974e75ac44615764d59"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlStringMap.swift",
+      "size": 239,
+      "sha256": "1f89dc94f7e13a8be137796e006a2cdb7c925d1b774dd4446f71402646b6d2d9"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlBoundedPacketQueue.swift",
+      "size": 3801,
+      "sha256": "a11afbf3591d8d0aecfeb263e5e3ae598bf3b896939755865192f811d3d28fb1"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlByteRingBuffer.swift",
+      "size": 9438,
+      "sha256": "03340420c75a3b4d7cbf530ed3137663ebb9ac7d16168a2e42fa54646fe46110"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlByteSource.swift",
+      "size": 597,
+      "sha256": "c91a274e862f5bd585ffe76465cabaf5a961d61f2abc1141c0cd65286997df39"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlFallbackBufferBudget.swift",
+      "size": 2170,
+      "sha256": "86370c413dbc73d6b0cb4d9d02e70f67e43c588b19a76b7ecf094797d963d375"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlOpenedMedia.swift",
+      "size": 11087,
+      "sha256": "a1deec61cfc5d92742b7408f4255848b7d05bc9c594b035da3ebbab7169947ee"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsHeaderPolicy.swift",
+      "size": 1492,
+      "sha256": "a721f7fac347badad67510a785af7c4e4982320a5a5e56e414459312ce1db1d0"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsManifestRewriter.swift",
+      "size": 5848,
+      "sha256": "f05d9d166fdd53d477034faab5546bfb412f8853e2af567c8eee6f69f5ebff58"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsURLCodec.swift",
+      "size": 3492,
+      "sha256": "322c24cca20e7d49859f1266c4777076009173e98a919e92d9175fbeb31a9393"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Metrics/YlFallbackTrackCatalog.swift",
+      "size": 1099,
+      "sha256": "17feb3b121f13c5247115faeaae36e082e6174e44ddcc851696e66b49476b8c1"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Network/YlNetworkByteSource.swift",
+      "size": 17404,
+      "sha256": "7203ac0436e4b158999b9fb87d429dec10f56e724281f3e7cee39684c36f215f"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Network/YlNetworkRequestPolicy.swift",
+      "size": 14088,
+      "sha256": "4adfa9a9efb6ed15a1d96392b6b5c40953626dd393be6ad1caea48948f3c300e"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionModels.swift",
+      "size": 3985,
+      "sha256": "ff3c4cfd2a2749303715031665d05b7b176708cf06eead723b282d4be543625d"
+    },
+    {
+      "path": "packages/yl_player_apple/tool/source-declarations.json",
+      "size": 8225,
+      "sha256": "276554c0775260fc0da04a884251011a436f594654f05ca91a4df2544a04a526"
+    },
+    {
+      "path": "packages/yl_player_apple/tool/source-parity.json",
+      "size": 25202,
+      "sha256": "da1a9778589c572895110e0c00203fc68cf3ac000b55a0a1eb78d136e4973df0"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlAudioRenderer.swift",
+      "size": 16444,
+      "sha256": "26b2efdf52aaaabe959ed54fca849bcfc0843f43030141665a7541e68f689175"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlAvPlayerBackend.swift",
+      "size": 40581,
+      "sha256": "a69f6df31fdfbf3ac9d995219dcd02c07e0c7ab1b5f6e5379ae33efb03dc0637"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlAvPlayerRecoveryPolicy.swift",
+      "size": 6131,
+      "sha256": "f7059352c40283c737d20f0bedd41f13588ead1b58363a37aef83ef3138cb6f8"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlBoundedPacketQueue.swift",
+      "size": 3801,
+      "sha256": "a11afbf3591d8d0aecfeb263e5e3ae598bf3b896939755865192f811d3d28fb1"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlByteRingBuffer.swift",
+      "size": 9438,
+      "sha256": "03340420c75a3b4d7cbf530ed3137663ebb9ac7d16168a2e42fa54646fe46110"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlByteSource.swift",
+      "size": 597,
+      "sha256": "c91a274e862f5bd585ffe76465cabaf5a961d61f2abc1141c0cd65286997df39"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackBackend.swift",
+      "size": 66269,
+      "sha256": "b97ed544b0c6d600251c43be42f379395a4b67faf9033deeb6475524cd2e8fd4"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackBufferBudget.swift",
+      "size": 2170,
+      "sha256": "86370c413dbc73d6b0cb4d9d02e70f67e43c588b19a76b7ecf094797d963d375"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackModels.swift",
+      "size": 551,
+      "sha256": "43698e1cfb2166b7847c8671c8554bfd860da1fbf68f53a632cf0faa6e31057e"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackQualityPolicy.swift",
+      "size": 2143,
+      "sha256": "1cce55caef781c190e5a59b386a19800380e930bc93e9c74a43e8e9079db4e5b"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackRecoveryPolicy.swift",
+      "size": 4161,
+      "sha256": "914f68f9b272e724e1bf1dfa790f9f745d8164dc788b8674e2af7900210331f3"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackStateEncoder.swift",
+      "size": 1894,
+      "sha256": "394cc8b56c73e80d17fd74e7beb21da4f751839a94df1b25994e4a4d7fdd5878"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackTrackCatalog.swift",
+      "size": 1181,
+      "sha256": "4f68a34f06f64b8506338f323cd68810b31298a44f1c29504c59ea7c99972f41"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFrameScheduler.swift",
+      "size": 2723,
+      "sha256": "bee2a6837b38e3cad42410e04561287aae5eb9f4de628ff831ef0c6a2f12304f"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlHlsHeaderPolicy.swift",
+      "size": 1492,
+      "sha256": "a721f7fac347badad67510a785af7c4e4982320a5a5e56e414459312ce1db1d0"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlHlsManifestRewriter.swift",
+      "size": 5848,
+      "sha256": "f05d9d166fdd53d477034faab5546bfb412f8853e2af567c8eee6f69f5ebff58"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlHlsMediaProxy.swift",
+      "size": 20247,
+      "sha256": "de82a1643c705765b5830c59cadd8a5a5003b0766ae335fbf4120e19b38e2b1b"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlHlsResourceLoader.swift",
+      "size": 26239,
+      "sha256": "2390a2578eda5e999340e0a28d8decea0ad951f4286db264fe0d73a74645aa31"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlHlsURLCodec.swift",
+      "size": 3492,
+      "sha256": "322c24cca20e7d49859f1266c4777076009173e98a919e92d9175fbeb31a9393"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlIosChannel.swift",
+      "size": 2289,
+      "sha256": "3f78f27e37811a7f7ba3b86be9f8343dfaa099d4a5db17be568a75ee67f467e1"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlIosPlayer.swift",
+      "size": 17483,
+      "sha256": "17344f113460af678c383fcc6c7beaa90d10ad674e0af571408f08271d5b43f0"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlLiveReconnectController.swift",
+      "size": 1637,
+      "sha256": "52f97537261fce5f8416f6aa20f77596393f8df84d70e465268eaf1374717ac7"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlMediaClock.swift",
+      "size": 2543,
+      "sha256": "4d7def6401ea33937f148bb9b5871a8648bd4af5796d7b42f80b43b314b7d2ab"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlNetworkByteSource.swift",
+      "size": 17404,
+      "sha256": "7203ac0436e4b158999b9fb87d429dec10f56e724281f3e7cee39684c36f215f"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlNetworkRequestPolicy.swift",
+      "size": 13013,
+      "sha256": "246a8b74b92928589a1fd30231bdaa9851d157d1c78c9816ddcc549c8290a9c2"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlOpenCoordinator.swift",
+      "size": 7168,
+      "sha256": "fc756717a8eba4cbd046e9a3af75e2236523364d39ca304ce11d699a00158d8e"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlOpenedMedia.swift",
+      "size": 11087,
+      "sha256": "a1deec61cfc5d92742b7408f4255848b7d05bc9c594b035da3ebbab7169947ee"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlPlaybackBackend.swift",
+      "size": 3527,
+      "sha256": "b6b898a6e606d4512078b9c64334044626cf04908648f8b7a852873c6e318d6b"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlPlayerIosPlugin.swift",
+      "size": 7791,
+      "sha256": "846b5cb43c509d2ffd94f78fd3215c18bfb42790adb701d9e5e4582d9eb5fe4b"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlPreparedFallback.swift",
+      "size": 8404,
+      "sha256": "5ad5914903228f628769e16fca7dd50c736faa2484cdc6cff6c3c3cf67d0d2c5"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlSourceRouter.swift",
+      "size": 2913,
+      "sha256": "a72cbe391254a65d73db02337b0edaac1480ab133a0d3cfa95d3c4047b2f1130"
+    },
+    {
+      "path": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlVideoToolboxDecoder.swift",
+      "size": 11477,
+      "sha256": "7edebca068c8ddad162d73642a5ce5e8fd111389493c2dd863f79d701700f837"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlAudioRenderer.swift",
+      "size": 21591,
+      "sha256": "f46010d4e48d1604c5c6c130aa2c80dd9d84eac406a454678dfaaf638ece8a5a"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlAvPlayerBackend.swift",
+      "size": 35226,
+      "sha256": "d904c895544c087e1945635ecc30c408366b25e94fdb1e995c578a9eb4d2527c"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlAvPlayerFailurePolicy.swift",
+      "size": 1386,
+      "sha256": "fc7073412bfec0cf38ae7f25eb14338cabb06d9350868fceefe19fe5a0150abb"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlByteRingBuffer.swift",
+      "size": 9438,
+      "sha256": "03340420c75a3b4d7cbf530ed3137663ebb9ac7d16168a2e42fa54646fe46110"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlByteSource.swift",
+      "size": 597,
+      "sha256": "c91a274e862f5bd585ffe76465cabaf5a961d61f2abc1141c0cd65286997df39"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlDisplayTimer.swift",
+      "size": 4638,
+      "sha256": "9042d3fae4991dc2eff935ec379ad4ee0384b34c3e0be4c390a69d334ad8ae49"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFallbackBackend.swift",
+      "size": 76681,
+      "sha256": "9b2e5b14ddad76b2f6de4d98a656b5b65755d0f3e8bb0614b7b1bbea0560216b"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFallbackBufferBudget.swift",
+      "size": 2170,
+      "sha256": "86370c413dbc73d6b0cb4d9d02e70f67e43c588b19a76b7ecf094797d963d375"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFallbackModels.swift",
+      "size": 555,
+      "sha256": "419e780f39b7bd7936b40350da7eecb92d9c536eec52022cb9b92f592b493987"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFallbackQualityPolicy.swift",
+      "size": 2143,
+      "sha256": "1cce55caef781c190e5a59b386a19800380e930bc93e9c74a43e8e9079db4e5b"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFallbackRecoveryPolicy.swift",
+      "size": 5872,
+      "sha256": "9e3917ab022651d22d61394fae0876a27cdc05d1a719031457ff9ae10d85a019"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFallbackStateEncoder.swift",
+      "size": 1894,
+      "sha256": "394cc8b56c73e80d17fd74e7beb21da4f751839a94df1b25994e4a4d7fdd5878"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFallbackTrackCatalog.swift",
+      "size": 1181,
+      "sha256": "4f68a34f06f64b8506338f323cd68810b31298a44f1c29504c59ea7c99972f41"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlFrameScheduler.swift",
+      "size": 3758,
+      "sha256": "acae927eb60ff3f357b077dc9f4f48136c95c595b41444158067a8825fecb3ba"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlHlsHeaderPolicy.swift",
+      "size": 1492,
+      "sha256": "a721f7fac347badad67510a785af7c4e4982320a5a5e56e414459312ce1db1d0"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlHlsManifestRewriter.swift",
+      "size": 5848,
+      "sha256": "f05d9d166fdd53d477034faab5546bfb412f8853e2af567c8eee6f69f5ebff58"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlHlsMediaProxy.swift",
+      "size": 20249,
+      "sha256": "f6d0258d1be277bf48d759264d13f83e1ad697644c68040e5802720a7c0f7eaf"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlHlsResourceLoader.swift",
+      "size": 26219,
+      "sha256": "4abe48b2b93b2699dd8452198b3c363027751e509023cee72ae675e5db697919"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlHlsURLCodec.swift",
+      "size": 3492,
+      "sha256": "322c24cca20e7d49859f1266c4777076009173e98a919e92d9175fbeb31a9393"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlLiveReconnectController.swift",
+      "size": 1545,
+      "sha256": "4a72a73bcaea64f77adf4e0ce14e2f16012e4462d91dced4b43c6bec5c5aae3c"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlMacosChannel.swift",
+      "size": 2313,
+      "sha256": "15c5fd7078b1f2d921a1097f3d71d0fe833437c49ba6ff9a67ceff36a2e156f8"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlMacosLifecyclePolicy.swift",
+      "size": 508,
+      "sha256": "75edf4ba158fa454c1fbdecb983798ea7d5363e126bbb73a31e031e10c917131"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlMacosPlayer.swift",
+      "size": 23785,
+      "sha256": "6d9e09cd0e5d3a631f3f2ac089853fb4a6eeb9f01c71d4db1065012b84139d34"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlMediaClock.swift",
+      "size": 3192,
+      "sha256": "c90e4fb576c8df1cf6a2b0512ae4f5baa0b6de22b5a8acadfe8203caaca57039"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlNetworkByteSource.swift",
+      "size": 17404,
+      "sha256": "7203ac0436e4b158999b9fb87d429dec10f56e724281f3e7cee39684c36f215f"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlNetworkRequestPolicy.swift",
+      "size": 13013,
+      "sha256": "246a8b74b92928589a1fd30231bdaa9851d157d1c78c9816ddcc549c8290a9c2"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlOpenCoordinator.swift",
+      "size": 7334,
+      "sha256": "837566737c79d321c637ffc8c025a49a32180c644b7b5eaef0ea6f9dc16d5a89"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlOpenedMedia.swift",
+      "size": 11087,
+      "sha256": "a1deec61cfc5d92742b7408f4255848b7d05bc9c594b035da3ebbab7169947ee"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlPlaybackBackend.swift",
+      "size": 4163,
+      "sha256": "cbd1135090b5e24b10125f2fe06f984a358dd94e36d926b7a4f3093c7231f597"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlPlayerMacosPlugin.swift",
+      "size": 7181,
+      "sha256": "3782ecee352e5a86a186bc3770961e7e79ccada1f02edeebe282fb94453aa62f"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlPreparedFallback.swift",
+      "size": 8514,
+      "sha256": "0ec0e2224bb94ed934b267c92549c2c48dff146d3d459ba88f221cd646b80d7d"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlSourceRouter.swift",
+      "size": 3635,
+      "sha256": "03c6224360cbde1c69572975e4a27d0f2917b5b8bffd127f3b9d16d0549481c7"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlVideoSubmissionQueue.swift",
+      "size": 1270,
+      "sha256": "8b24ce492b4559f61d989a9f1980337debea04bc5dd74267786d7dc8a9911833"
+    },
+    {
+      "path": "packages/yl_player_macos/macos/yl_player_macos/Sources/yl_player_macos/YlVideoToolboxDecoder.swift",
+      "size": 19778,
+      "sha256": "7089cb91ca42ce6841f2452dc91398cf50f833c346082fa9016ee33f26daff77"
+    }
+  ]
+}

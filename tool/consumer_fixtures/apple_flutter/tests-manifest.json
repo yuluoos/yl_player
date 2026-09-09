@@ -56,13 +56,17 @@
     "source": "packages/yl_player/example/ios/RunnerTests/YlNetworkByteSourceTests.swift",
     "source_sha256": "f0513850df69b14e4563dc0c3098ac4f32a5fa3611bd676c7d54663bec96ae90",
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlNetworkByteSourceTests.swift",
-    "destination_sha256": "f9557db702aa597928c79b2ec29ad8e354a9e1af8a4d19f246188572e6e30954",
+    "destination_sha256": "30b9fef1be2749445bdfafc943154a54e48b29a3c33f9675240bf3fbdaaf69cd",
     "adaptations": [
       "@testable import yl_player_ios -> @testable import yl_player_apple"
     ],
     "task7_typed_migration": {
       "from_sha256": "90291ac428ea9e77b126e77799beb226397a9b369b5f2e242f037c5e9c74ae44",
       "reason": "R18 adds actual URLSession request-path assertions for explicit credentials, sticky A-to-B-to-A stripping, retry/reopen continuity, fresh intent and ordinary headers; all original methods/assertions retained."
+    },
+    "hardening_task2_migration": {
+      "from_sha256": "f9557db702aa597928c79b2ec29ad8e354a9e1af8a4d19f246188572e6e30954",
+      "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
     }
   },
   {
@@ -100,10 +104,14 @@
     "source": "packages/yl_player/example/ios/RunnerTests/YlFallbackQualityPolicyTests.swift",
     "source_sha256": "e0c56f47db0b03021592b3b843a3ce1dc69b7ceddf65ebe20556d7372b56f442",
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlFallbackQualityPolicyTests.swift",
-    "destination_sha256": "10affaeaf27882b32a1f8ec7ea7b50126ec5dcf14cc281d42d4b60d189b1ccc4",
+    "destination_sha256": "fd2db8ac43c8b6ceca955be831447b735f460de2d8dd2cbc1e2ca1ed4415e88b",
     "adaptations": [
       "@testable import yl_player_ios -> @testable import yl_player_apple"
-    ]
+    ],
+    "hardening_task2_migration": {
+      "from_sha256": "10affaeaf27882b32a1f8ec7ea7b50126ec5dcf14cc281d42d4b60d189b1ccc4",
+      "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlOpenedMediaTests.swift",

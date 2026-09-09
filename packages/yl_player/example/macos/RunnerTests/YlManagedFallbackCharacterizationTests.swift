@@ -149,7 +149,7 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
 
   private func prepared(_ token: YlOpenCancellationToken? = nil) throws -> YlPreparedFallback {
     let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv"))
-    return try YlPreparedFallback(source: ["uri": url.absoluteString, "formatHint": "matroska"],
+    return try YlPreparedFallback(source: YlAppleSourceDescriptor(uri: url.absoluteString, kind: .file, formatHint: .matroska),
       requireHardwareProbe: false, cancellationToken: token)
   }
   private func backend(_ prepared: YlPreparedFallback, factory: Factory, output: Output,
@@ -190,7 +190,7 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     try await AppleHostCharacterizations.waitFor { factory.sessions[0].lastGeneration != nil }
     let old = factory.sessions[0]
     let generation = try XCTUnwrap(old.lastGeneration)
-    try instance.command(name: "seekTo", arguments: ["positionMs": Int64(0)])
+    try instance.seek(toMs: Int64(0), cancellationToken: nil)
     XCTAssertEqual(factory.sessions.count, 2)
     XCTAssertEqual(old.invalidations, 1)
     try await AppleHostCharacterizations.waitFor { factory.sessions[1].lastGeneration != nil }
@@ -222,7 +222,7 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
       emit: { _ in })
     defer { control.releaseJoin.signal(); control.releaseSeek.signal(); instance.dispose() }
     try instance.activate()
-    try instance.command(name: "play", arguments: [:])
+    try instance.play()
     try await AppleHostCharacterizations.waitFor {
       factory.sessions[0].lastGeneration != nil && !audio.output.completions.isEmpty
     }
@@ -236,7 +236,7 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     let completed = expectation(description: "actual backend seek completed")
     DispatchQueue.global().async {
       defer { completed.fulfill() }
-      do { try instance.command(name: "seekTo", arguments: ["positionMs": Int64(100)]) }
+      do { try instance.seek(toMs: Int64(100), cancellationToken: nil) }
       catch { XCTFail("Seek failed: \(error)") }
     }
     try await AppleHostCharacterizations.waitFor { trace.values.contains("worker.held") }
@@ -266,7 +266,7 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
       XCTAssertGreaterThan(index, previous, "Wrong actual seek order: \(stages)")
       previous = index
     }
-    try instance.command(name: "pause", arguments: [:])
+    try instance.pause()
     XCTAssertEqual(try renderer.enqueue(packet: YlCompressedAudioPacket(data: Data([1]),
       ptsUs: 0, durationUs: 20_000, generation: oldGeneration)), .staleGeneration)
     let scheduledAfterSeek = renderer.scheduledBytes

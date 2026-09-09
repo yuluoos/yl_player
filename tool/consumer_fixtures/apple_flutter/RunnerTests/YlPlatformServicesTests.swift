@@ -109,7 +109,7 @@ final class YlPlatformServicesTests: XCTestCase {
     #endif
     defer { services.textureOutput.dispose() }
     let fixture = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv"))
-    let prepared = try YlPreparedFallback(source: ["uri": fixture.absoluteString, "kind": "file", "formatHint": "matroska"], requireHardwareProbe: false)
+    let prepared = try YlPreparedFallback(source: YlAppleSourceDescriptor(uri: fixture.absoluteString, kind: .file, formatHint: .matroska), requireHardwareProbe: false)
     let old = try YlFallbackBackend(playerId: 92, services: services,
       configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared,
       generation: 1, videoSessionFactory: PassiveFactory(), emit: { _ in })

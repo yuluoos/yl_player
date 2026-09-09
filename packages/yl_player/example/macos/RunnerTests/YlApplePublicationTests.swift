@@ -86,9 +86,7 @@ final class YlApplePublicationTests: XCTestCase {
         events.accept(callback)
       })
     defer { backend.dispose(); owner.dispose() }
-    let source: [String: Any?] = ["uri": server.url.absoluteString, "kind": "network", "formatHint": "hls",
-      "credentials": ["Authorization": "Bearer rollback-test"], "loadRequestId": id.loadRequestId,
-      "loadOptions": ["autoplay": true]]
+    let source = YlAppleSourceDescriptor(uri: server.url.absoluteString, kind: .network, formatHint: .hls, credentials: ["Authorization": "Bearer rollback-test"], loadOptions: YlAppleLoadOptions(autoplay: true), loadRequestId: id.loadRequestId)
     let prepared = try YlPreparedHlsAsset(originURL: server.url, headers: [:],
       credentials: ["Authorization": "Bearer rollback-test"],
       configuration: PlayerConfiguration(map: [:]).network, cancellationToken: YlOpenCancellationToken())
@@ -208,9 +206,7 @@ final class YlApplePublicationTests: XCTestCase {
       configuration: PlayerConfiguration(map: ["audioPolicy": "appManaged"]), player: av,
       emit: { oldEvents.append($0) })
     defer { backend.dispose(); base.textureOutput.dispose() }
-    let source: [String: Any?] = ["uri": server.url.absoluteString, "kind": "network", "formatHint": "hls",
-      "credentials": ["Authorization": "Bearer rollback-test"], "loadRequestId": "captured",
-      "loadOptions": ["autoplay": true]]
+    let source = YlAppleSourceDescriptor(uri: server.url.absoluteString, kind: .network, formatHint: .hls, credentials: ["Authorization": "Bearer rollback-test"], loadOptions: YlAppleLoadOptions(autoplay: true), loadRequestId: "captured")
     let prepared = try YlPreparedHlsAsset(originURL: server.url, headers: [:],
       credentials: ["Authorization": "Bearer rollback-test"],
       configuration: PlayerConfiguration(map: [:]).network, cancellationToken: YlOpenCancellationToken())
@@ -227,7 +223,7 @@ final class YlApplePublicationTests: XCTestCase {
     newTick()
     XCTAssertGreaterThan(registry.positivePublicFrames, 0, "A real decoded frame must be available to the new binding")
     let oldCount = oldEvents.count
-    try backend.command(name: "stop", arguments: [:])
+    backend.stop()
     let count = currentEvents.count
     let published = registry.notifications
     oldTick(); newTick()

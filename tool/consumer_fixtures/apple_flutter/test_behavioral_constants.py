@@ -4,7 +4,7 @@ from pathlib import Path
 import unittest
 import tempfile
 
-GATE = Path(__file__).resolve().parents[3] / 'packages/yl_player_apple/tool/behavioral_constants.py'
+GATE = Path(__file__).resolve().with_name('behavioral_constants.py')
 
 class BehavioralConstantsTests(unittest.TestCase):
     def test_numeric_and_enum_mutations_are_observable_but_comments_are_not(self):
@@ -38,7 +38,10 @@ class BehavioralConstantsTests(unittest.TestCase):
         spec = importlib.util.spec_from_file_location('behavioral_constants', GATE)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
-        root = GATE.parents[3]
+        from historical_migration import frozen_tree
+        context = frozen_tree()
+        root = context.__enter__()
+        self.addCleanup(context.__exit__, None, None, None)
         sources = root / 'packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple'
         for path, original, mutations in (
             ('Engines/AvPlayer/YlAvPlayerRecoveryPolicy.swift', '500...599', ('400...599', '500...699')),

@@ -3,12 +3,12 @@ import XCTest
 
 final class YlOpenCoordinatorTests: XCTestCase {
   private func candidate(_ id: Int) -> YlPreparedOpen {
-    .avPlayer(source: ["id": id])
+    .avPlayer(source: YlAppleSourceDescriptor(uri: String(id), kind: .file))
   }
 
   private func candidateID(_ candidate: YlPreparedOpen) -> Int? {
     guard case let .avPlayer(source) = candidate else { return nil }
-    return source["id"] as? Int
+    return Int(source.uri)
   }
 
   func testPreparationRunsOffMainAndSuccessfulCommitRunsOnMain() {
@@ -250,7 +250,7 @@ final class YlOpenCoordinatorTests: XCTestCase {
           cancellationToken: token,
           sessionConfiguration: session
         )
-        return .headeredHls(source: ["id": 8], prepared: prepared)
+        return .headeredHls(source: YlAppleSourceDescriptor(uri: String(8), kind: .file), prepared: prepared)
       },
       commit: { candidate in activeID = self.candidateID(candidate) ?? 8 },
       completion: { result in

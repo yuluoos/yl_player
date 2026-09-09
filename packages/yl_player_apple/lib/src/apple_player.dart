@@ -14,7 +14,6 @@ final class ApplePlayer implements YlPlatformPlayer {
     this._transport,
     this._suffix,
     this._setupCallbacks,
-    this._defaultDecoderPolicy,
     this.implementation,
     this.capabilities,
     int texture,
@@ -69,7 +68,6 @@ final class ApplePlayer implements YlPlatformPlayer {
         transport,
         reply.channelSuffix,
         setupCallbacks,
-        encoded.decoderPolicy,
         YlPlatformImplementationInfo(
           name: reply.implementationName,
           version: reply.implementationVersion,
@@ -112,7 +110,6 @@ final class ApplePlayer implements YlPlatformPlayer {
   final ApplePlayerTransport _transport;
   final String _suffix;
   final AppleCallbackSetup _setupCallbacks;
-  final AppleDecoderPolicy _defaultDecoderPolicy;
   @override
   final YlPlatformImplementationInfo implementation;
   @override
@@ -231,8 +228,6 @@ final class ApplePlayer implements YlPlatformPlayer {
     AppleAssessRequest request, {
     _PendingLoad? owner,
   }) async {
-    final rejection = _consolidationOnlyPolicyGuard(request);
-    if (rejection != null) return rejection;
     final reply = await _run(() => _transport.assess(request), owner: owner);
     try {
       return AppleCodec.assessment(reply);
@@ -241,28 +236,6 @@ final class ApplePlayer implements YlPlatformPlayer {
       _terminate(error);
       throw error;
     }
-  }
-
-  /// Temporary truthful boundary during behavior-preserving consolidation.
-  /// Hardening Task 2 removes this guard and replaces its tests with native
-  /// routing evidence for managed network, bounded buffer and strict hardware.
-  YlSourceAssessment? _consolidationOnlyPolicyGuard(
-    AppleAssessRequest request,
-  ) {
-    final strict =
-        request.source.networkPolicy?.kind == AppleNetworkPolicyKind.managed ||
-        request.options.bufferStrategy.kind == AppleBufferKind.bounded ||
-        (request.options.decoderPolicyOverride ?? _defaultDecoderPolicy) ==
-            AppleDecoderPolicy.hardwareRequired;
-    if (!strict) return null;
-    return YlSourceAssessment(
-      outcome: YlSourceAssessmentOutcome.incompatible,
-      rejection: AppleCodec.problem(
-        YlFailureCodes.policyUnsupported,
-        category: YlFailureCategory.unsupported,
-        scope: YlFailureScope.command,
-      ).failure,
-    );
   }
 
   @override

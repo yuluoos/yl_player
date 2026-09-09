@@ -5,7 +5,7 @@ final class YlFallbackQualityPolicyTests: XCTestCase {
   func testAcceptsConstraintSatisfiedByFixedStream() throws {
     XCTAssertNoThrow(try YlFallbackQualityPolicy.validate(
       constraint: try YlFallbackQualityConstraint(
-        validating: ["maxWidth": 1_920, "maxHeight": 1_080]
+        validating: YlAppleVideoConstraints(maxWidth: 1_920, maxHeight: 1_080, maxBitrate: nil)
       ),
       stream: YlFallbackVideoDescriptor(width: 1_280, height: 720, bitrate: nil)
     ))
@@ -13,7 +13,7 @@ final class YlFallbackQualityPolicyTests: XCTestCase {
 
   func testRejectsDimensionsExceededByFixedStream() throws {
     XCTAssertThrowsError(try YlFallbackQualityPolicy.validate(
-      constraint: try YlFallbackQualityConstraint(validating: ["maxHeight": 480]),
+      constraint: try YlFallbackQualityConstraint(validating: YlAppleVideoConstraints(maxWidth: nil, maxHeight: 480, maxBitrate: nil)),
       stream: YlFallbackVideoDescriptor(
         width: 1_280,
         height: 720,
@@ -30,7 +30,7 @@ final class YlFallbackQualityPolicyTests: XCTestCase {
   func testRejectsBitrateCeilingWhenBitrateMetadataIsUnavailable() throws {
     XCTAssertThrowsError(try YlFallbackQualityPolicy.validate(
       constraint: try YlFallbackQualityConstraint(
-        validating: ["maxBitrate": 1_000_000]
+        validating: YlAppleVideoConstraints(maxWidth: nil, maxHeight: nil, maxBitrate: 1_000_000)
       ),
       stream: YlFallbackVideoDescriptor(width: 1_280, height: 720, bitrate: nil)
     )) { error in
@@ -50,28 +50,27 @@ final class YlFallbackQualityPolicyTests: XCTestCase {
 
     XCTAssertNoThrow(try YlFallbackQualityPolicy.validate(
       constraint: try YlFallbackQualityConstraint(
-        validating: ["maxBitrate": 2_000_000]
+        validating: YlAppleVideoConstraints(maxWidth: nil, maxHeight: nil, maxBitrate: 2_000_000)
       ),
       stream: stream
     ))
     XCTAssertThrowsError(try YlFallbackQualityPolicy.validate(
       constraint: try YlFallbackQualityConstraint(
-        validating: ["maxBitrate": 1_999_999]
+        validating: YlAppleVideoConstraints(maxWidth: nil, maxHeight: nil, maxBitrate: 1_999_999)
       ),
       stream: stream
     ))
   }
 
   func testInvalidConstraintValuesReturnStableSourceError() {
-    for map: [String: Any?] in [
-      ["maxWidth": 0],
-      ["maxHeight": -1],
-      ["maxBitrate": Int64(Int32.max) + 1],
-      ["maxWidth": "1280"],
-      ["maxWidth": 1.5],
-      ["maxWidth": true],
+    // String, fractional and Boolean payloads cannot enter this typed native
+    // contract. Transport validation owns those malformed wire values.
+    for constraints in [
+      YlAppleVideoConstraints(maxWidth: 0, maxHeight: nil, maxBitrate: nil),
+      YlAppleVideoConstraints(maxWidth: nil, maxHeight: -1, maxBitrate: nil),
+      YlAppleVideoConstraints(maxWidth: nil, maxHeight: nil, maxBitrate: Int(Int32.max) + 1),
     ] {
-      XCTAssertThrowsError(try YlFallbackQualityConstraint(validating: map)) { error in
+      XCTAssertThrowsError(try YlFallbackQualityConstraint(validating: constraints)) { error in
         XCTAssertEqual((error as? NativePlayerError)?.category, "source")
         XCTAssertEqual(
           (error as? NativePlayerError)?.code,

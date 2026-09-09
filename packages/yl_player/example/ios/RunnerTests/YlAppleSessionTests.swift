@@ -512,3 +512,176 @@ private final class HlsIntentServer {
   func credentials(path: String) -> [Bool] { lock.lock(); defer { lock.unlock() }; return log.filter { $0.0 == path }.map { $0.1 } }
   func close() { source.cancel(); other.cancel() }
 }
+
+@MainActor
+extension YlAppleSessionTests {
+  func testAssessmentDefaultRouteMatrixAndStableEvidence() throws {
+    let f = AppleHostFixture(); defer { f.host.close() }
+    for kind in [AppleSourceKind.file, .network] {
+      for format in [AppleMediaFormat.hls, .mp4, .mov] {
+        var request = AppleHostFixture.request("matrix")
+        request.source.kind = kind
+        request.source.locator = kind == .file ? "/tmp/unreachable.media" : "https://unreachable.invalid/media"
+        request.source.format = format
+        let assessment = try f.host.assess(request: .init(source: request.source, options: request.options))
+        XCTAssertEqual(assessment.outcome, .compatible)
+        XCTAssertEqual(assessment.candidateEngine, .avPlayer)
+        XCTAssertEqual(Set(assessment.satisfiedRequirements), ["network.platformDefault", "buffer.automatic", "decoder.systemDefault"])
+        XCTAssertTrue(assessment.limitations.contains("decoder.modeUnknown"))
+        XCTAssertEqual(assessment.limitations.contains("network.systemStackOpaque"), kind == .network)
+      }
+    }
+    var unknown = AppleHostFixture.request("unknown", url: "https://unreachable.invalid/media", format: .automatic)
+    XCTAssertEqual(try f.host.assess(request: .init(source: unknown.source, options: unknown.options)).outcome, .requiresInspection)
+    unknown.source.kind = .content
+    unknown.source.locator = "content://media/external/video/1"
+    XCTAssertEqual(try f.host.assess(request: .init(source: unknown.source, options: unknown.options)).rejection?.code, "source.invalid")
+  }
+
+  func testAssessmentRejectsUnsupportedContainerAndLoadKeepsCommittedSession() async throws {
+    let f = AppleHostFixture(); defer { f.host.close() }
+    let current = try await f.host.load(request: AppleHostFixture.request("current"))
+    for format in [AppleMediaFormat.avi, .mpegTs, .mpegPs] {
+      let request = AppleHostFixture.request("unsupported", format: format)
+      let assessment = try f.host.assess(request: .init(source: request.source, options: request.options))
+      XCTAssertEqual(assessment.outcome, .incompatible)
+      XCTAssertEqual(assessment.rejection?.code, "container.unsupported")
+      do { _ = try await f.host.load(request: request); XCTFail("Unsupported container committed") }
+      catch let error as PigeonError { XCTAssertEqual(error.code, assessment.rejection?.code) }
+      XCTAssertEqual(f.host.sessionId, current.sessionId)
+    }
+  }
+}
+
+@MainActor
+extension YlAppleSessionTests {
+  func testTypedInputPreservesRequestedNetworkBoundsWithoutEnablingGuarantee() throws {
+    var request = AppleHostFixture.request("network-policy", format: .matroska)
+    request.source.networkPolicy = AppleNetworkPolicyMessage(kind: .managed,
+      connectTimeoutMs: 70_000, readTimeoutMs: 80_000, maxRetries: 21,
+      baseRetryDelayMs: 90_000, maxRetryDelayMs: 100_000, maxRedirects: 22)
+    let recipe = try YlAppleNativeInput.load(source: request.source, options: request.options,
+      defaults: ApplePlayerOptionsMessage(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 250),
+      loadRequestId: request.loadRequestId)
+    let settings = try XCTUnwrap(recipe.source.networkConfiguration)
+    XCTAssertEqual(settings.connectTimeoutMs, 70_000)
+    XCTAssertEqual(settings.readTimeoutMs, 80_000)
+    XCTAssertEqual(settings.maxRetries, 21)
+    XCTAssertEqual(settings.baseRetryDelayMs, 90_000)
+    XCTAssertEqual(settings.maxRetryDelayMs, 100_000)
+    XCTAssertEqual(settings.maxRedirects, 22)
+    XCTAssertEqual(YlEngineRouter.assess(recipe.source).rejection?.code, "policy.unsupported")
+  }
+
+  func testUnknownLocalSourceLoadRefinesSameAssessmentBeforeCommit() async throws {
+    let file = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    defer { try? FileManager.default.removeItem(at: file) }
+    try Data("#EXTM3U\n#EXT-X-ENDLIST\n".utf8).write(to: file)
+    let fixture = AppleHostFixture(); defer { fixture.host.close() }
+    var request = AppleHostFixture.request("inspected", format: .automatic)
+    request.source.kind = .file; request.source.locator = file.path
+    XCTAssertEqual(try fixture.host.assess(request: .init(source: request.source, options: request.options)).outcome, .requiresInspection)
+    let committed = try await fixture.host.load(request: request)
+    XCTAssertEqual(fixture.host.sessionId, committed.sessionId)
+  }
+}
+
+final class YlEngineAssessmentTests: XCTestCase {
+  private let enforcing = YlRoutingAvailability(managedNetwork: true, boundedBuffer: true, hardwareEvidence: true)
+
+  func testCompletePolicyRouteMatrixKeepsProductionEnforcementStaged() {
+    for kind: YlSourceKind in [.file, .network] {
+      for format: YlSourceFormat in [.hls, .mp4, .mov, .matroska, .flv, .webm, .avi, .mpegTs, .mpegPs] {
+        for policy in 0..<4 {
+          var source = YlAppleSourceDescriptor(uri: kind == .file ? "file:///tmp/missing" : "https://unreachable.invalid/missing",
+            kind: kind, formatHint: format)
+          var options = YlAppleLoadOptions()
+          if policy == 1 { source.networkPolicy = .managed }
+          if policy == 2 { options.bufferStrategy = .bounded; options.maxManagedBytes = 1024 }
+          if policy == 3 { options.decoderPolicy = .hardwareRequired }
+          source.loadOptions = options
+          let production = YlEngineRouter.assess(source)
+          if policy > 0 {
+            XCTAssertEqual(production.rejection?.code, "policy.unsupported", "\(kind) \(format) \(policy)")
+          }
+          let assessed = YlEngineRouter.assess(source, availability: enforcing)
+          let fallback = format == .matroska || (format == .flv && kind == .network)
+          let av = [.hls, .mp4, .mov].contains(format)
+          if fallback {
+            XCTAssertEqual(assessed.outcome, .requiresInspection)
+            XCTAssertEqual(assessed.engine, .managedFallback)
+            XCTAssertTrue(assessed.limitations.contains(.codecRequiresInspection))
+            XCTAssertFalse(assessed.satisfiedRequirements.contains(.decoderHardwareRequired))
+          } else if av && policy == 0 {
+            XCTAssertEqual(assessed.outcome, .compatible)
+            XCTAssertEqual(assessed.engine, .avPlayer)
+            XCTAssertTrue(assessed.limitations.contains(.decoderModeUnknown))
+          } else {
+            XCTAssertEqual(assessed.outcome, .incompatible)
+            XCTAssertNil(assessed.candidate)
+          }
+        }
+      }
+    }
+  }
+
+  func testCustomCredentialsAndOrdinaryHeadersRequireControlledRoutes() {
+    for metadata in 0..<2 {
+      for format: YlSourceFormat in [.hls, .mp4, .mov, .matroska, .flv] {
+        var source = YlAppleSourceDescriptor(uri: "https://unreachable.invalid/media", kind: .network, formatHint: format)
+        if metadata == 0 { source.headers = ["X-Client": "ordinary"] }
+        else { source.credentials = ["X-Custom-Secret": "private"] }
+        let result = YlEngineRouter.assess(source)
+        if format == .hls { XCTAssertEqual(result.candidate, .headeredHls) }
+        else if [.mp4, .mov].contains(format) { XCTAssertEqual(result.rejection?.code, "container.headers_require_fallback") }
+        else { XCTAssertEqual(result.engine, .managedFallback) }
+      }
+    }
+    let live = YlAppleSourceDescriptor(uri: "https://example.test/live.mkv", kind: .network, intent: .live)
+    XCTAssertEqual(YlEngineRouter.assess(live).rejection?.code, "container.network_mkv_live_unsupported")
+  }
+
+  func testInspectedCodecAndHardwareEvidenceAreRequiredBeforeGuarantee() {
+    var source = YlAppleSourceDescriptor(uri: "file:///tmp/missing.mkv", kind: .file)
+    source.loadOptions = YlAppleLoadOptions(decoderPolicy: .hardwareRequired)
+    for hasVideo in [true, false] {
+      for hardware in [nil, false, true] as [Bool?] {
+        let evidence = YlSourceInspection(format: .matroska, demuxerSupported: true,
+          codecsSupported: true, hasVideo: hasVideo, hardwareAccelerated: hardware)
+        let result = YlEngineRouter.assess(source, availability: enforcing, inspection: evidence)
+        if hasVideo && hardware != true {
+          XCTAssertEqual(result.rejection?.code, "decoder.unavailable")
+        } else {
+          XCTAssertEqual(result.outcome, .compatible)
+          XCTAssertTrue(result.satisfiedRequirements.contains(.decoderHardwareRequired))
+        }
+      }
+    }
+    for supportedDemuxer in [true, false] {
+      let result = YlEngineRouter.assess(source, availability: enforcing,
+        inspection: .init(format: .matroska, demuxerSupported: supportedDemuxer,
+          codecsSupported: false, hasVideo: false, hardwareAccelerated: nil))
+      XCTAssertEqual(result.rejection?.code, supportedDemuxer ? "decoder.unsupported" : "container.unsupported")
+    }
+  }
+
+  func testUnknownFormatInspectionIsBoundedAndRefinedPolicyStillRejects() throws {
+    let file = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    defer { try? FileManager.default.removeItem(at: file) }
+    try Data("#EXTM3U\n#EXT-X-ENDLIST\n".utf8).write(to: file)
+    var source = YlAppleSourceDescriptor(uri: file.absoluteString, kind: .file)
+    XCTAssertEqual(YlEngineRouter.assess(source).candidate, .inspect)
+    let inspected = try YlSourceInspector.inspect(source, configuration: .init(map: [:]), token: .init())
+    XCTAssertEqual(inspected.formatHint, .hls)
+    XCTAssertEqual(YlEngineRouter.assess(inspected).candidate, .avPlayer)
+    source.loadOptions = YlAppleLoadOptions(bufferStrategy: .bounded, maxManagedBytes: 1024)
+    let strict = try YlSourceInspector.inspect(source, configuration: .init(map: [:]), token: .init())
+    XCTAssertEqual(YlEngineRouter.assess(strict, availability: enforcing).rejection?.code, "policy.unsupported")
+    var beyond = Data(repeating: 0, count: YlSourceInspector.maximumBytes)
+    beyond.append(Data("#EXTM3U".utf8)); try beyond.write(to: file)
+    XCTAssertThrowsError(try YlSourceInspector.inspect(source, configuration: .init(map: [:]), token: .init()))
+    let cancelled = YlOpenCancellationToken(); cancelled.cancel()
+    XCTAssertThrowsError(try YlSourceInspector.inspect(source, configuration: .init(map: [:]), token: cancelled))
+    XCTAssertEqual(YlSourceInspector.format(Data([0x1a, 0x45, 0xdf, 0xa3])), .automatic)
+  }
+}

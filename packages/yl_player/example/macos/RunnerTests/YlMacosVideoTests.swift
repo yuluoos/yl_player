@@ -266,11 +266,7 @@ final class YlMacosVideoTests: XCTestCase {
 
 
   func testQualityConstraintRejectsOversizedFixedVideo() throws {
-    let constraint = try YlFallbackQualityConstraint(validating: [
-      "maxWidth": 1_920,
-      "maxHeight": 1_080,
-      "maxBitrate": 8_000_000,
-    ])
+    let constraint = try YlFallbackQualityConstraint(validating: YlAppleVideoConstraints(maxWidth: 1_920, maxHeight: 1_080, maxBitrate: 8_000_000))
 
     XCTAssertThrowsError(try YlFallbackQualityPolicy.validate(
       constraint: constraint,

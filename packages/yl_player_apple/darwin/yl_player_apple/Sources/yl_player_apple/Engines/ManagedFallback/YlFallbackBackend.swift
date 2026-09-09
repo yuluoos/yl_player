@@ -48,51 +48,25 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   }
   func emitState() { session.emitState() }
   func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? { session.copyPixelBuffer() }
-  func requiresAsyncCommand(_ name: String) -> Bool {
+  func requiresAsyncCommand(_ command: YlApplePlaybackCommand) -> Bool {
     YlFallbackCommandPolicy.requiresBackgroundExecution(isNetwork: session.isNetworkSource,
-      isActive: session.isActive, name: name)
+      isActive: session.isActive, command: command)
   }
-
-  func command(name: String, arguments: [String: Any?]) throws {
-    try command(name: name, arguments: arguments, cancellationToken: nil)
+  func play() throws { guard !session.isStopped else { return }; try session.play() }
+  func pause() throws { guard !session.isStopped else { return }; try session.pause() }
+  func seek(toMs: Int64, cancellationToken: YlOpenCancellationToken? = nil) throws {
+    guard !session.isStopped else { return }
+    try session.seek(toMs: toMs, cancellationToken: cancellationToken)
   }
-
-  func command(
-    name: String,
-    arguments: [String: Any?],
-    cancellationToken: YlOpenCancellationToken?
-  ) throws {
-    if session.isStopped,
-       !["setVolume", "setPlaybackSpeed", "stop"].contains(name) { return }
-    switch name {
-    case "stop":
-      session.stop()
-    case "open":
-      session.emitState()
-    case "play":
-      try session.play()
-    case "pause":
-      try session.pause()
-    case "seekTo":
-      try session.seek(toMs: int64(arguments["positionMs"]) ?? 0, cancellationToken: cancellationToken)
-    case "seekToLiveEdge":
-      try session.seekToLiveEdge()
-    case "setPlaybackSpeed":
-      try session.setPlaybackSpeed(float(arguments["speed"]) ?? 1)
-    case "setVolume":
-      session.setVolume(float(arguments["volume"]) ?? 1)
-    case "selectAudioTrack":
-      try session.selectAudioTrack(arguments["trackId"] as? String, cancellationToken: cancellationToken)
-    case "setQualityConstraint":
-      let constraint = try YlFallbackQualityConstraint(validating: stringMap(arguments["constraint"]))
-      try session.setQualityConstraint(constraint)
-    default:
-      throw NativePlayerError(
-        category: "internal",
-        code: "\(YlApplePlatform.current.rawValue).command_unknown",
-        message: "Unknown player command: \(name)"
-      )
-    }
+  func seekToLiveEdge() throws { guard !session.isStopped else { return }; try session.seekToLiveEdge() }
+  func setPlaybackSpeed(_ speed: Float) throws { try session.setPlaybackSpeed(speed) }
+  func setVolume(_ volume: Float) { session.setVolume(volume) }
+  func selectAudioTrack(_ trackId: String, cancellationToken: YlOpenCancellationToken? = nil) throws {
+    guard !session.isStopped else { return }
+    try session.selectAudioTrack(trackId, cancellationToken: cancellationToken)
   }
-
+  func setVideoConstraints(_ constraints: YlAppleVideoConstraints) throws {
+    guard !session.isStopped else { return }
+    try session.setQualityConstraint(YlFallbackQualityConstraint(validating: constraints))
+  }
 }

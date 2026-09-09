@@ -186,11 +186,35 @@ abstract final class AppleCodec {
             ? null
             : engine(value.candidateEngine!),
         satisfiedRequirements: value.satisfiedRequirements
-            .map(YlRequirementId.new)
+            .map(_requirement)
             .toList(),
-        limitations: value.limitations.map(YlLimitationId.new).toList(),
+        limitations: value.limitations.map(_limitation).toList(),
         rejection: value.rejection == null ? null : failure(value.rejection!),
       );
+
+  // Built-in guarantees are mapped explicitly. Safe extension IDs retain their
+  // own identity and never alias a built-in requirement. Constructors validate them.
+  static YlRequirementId _requirement(String value) => switch (value) {
+    'network.platformDefault' => YlRequirementId.networkPlatformDefault,
+    'network.managed' => YlRequirementId.networkManaged,
+    'buffer.automatic' => YlRequirementId.bufferAutomatic,
+    'buffer.lowLatency' => YlRequirementId.bufferLowLatency,
+    'buffer.smoothPlayback' => YlRequirementId.bufferSmoothPlayback,
+    'buffer.bounded' => YlRequirementId.bufferBounded,
+    'decoder.systemDefault' => YlRequirementId.decoderSystemDefault,
+    'decoder.hardwarePreferred' => YlRequirementId.decoderHardwarePreferred,
+    'decoder.hardwareRequired' => YlRequirementId.decoderHardwareRequired,
+    _ => YlRequirementId(value),
+  };
+
+  static YlLimitationId _limitation(String value) => switch (value) {
+    'source.requiresInspection' => YlLimitationId.sourceRequiresInspection,
+    'codec.requiresInspection' => YlLimitationId.codecRequiresInspection,
+    'decoder.modeUnknown' => YlLimitationId.decoderModeUnknown,
+    'buffer.osMemoryExcluded' => YlLimitationId.bufferOsMemoryExcluded,
+    'network.systemStackOpaque' => YlLimitationId.networkSystemStackOpaque,
+    _ => YlLimitationId(value),
+  };
 
   static YlMediaTrack track(AppleTrackMessage value) {
     final result = YlMediaTrack(

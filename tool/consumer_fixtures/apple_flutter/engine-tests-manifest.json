@@ -28,7 +28,7 @@
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity",
       "Ruling13 explicitly retires only the inherited comments-only testExample; original body and source hashes recorded in retired_methods."
     ],
-    "destination_sha256": "86e699f85b45729403f3ce2caa06d1f231d0db4cb37e2ba064d9059705d2104f",
+    "destination_sha256": "a85052070b4e0be0836e88740dedbae3c84ed4c2413f84dd56e0c557a280d233",
     "retired_methods": [
       {
         "method": "testExample",
@@ -42,6 +42,10 @@
     "task7_typed_migration": {
       "from_sha256": "62ae3fa5cd399d4ac73612cf075c10311add501d7739b4530faf3f2ca70d58b3",
       "reason": "Commit gates now assert immutable session/loadRequestId correlation and identical event counts; AV accepted-source token checks use typed String request identity rather than legacy integer loadToken."
+    },
+    "hardening_task2_migration": {
+      "from_sha256": "86e699f85b45729403f3ce2caa06d1f231d0db4cb37e2ba064d9059705d2104f",
+      "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
     }
   },
   {
@@ -123,7 +127,11 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "dbd4a3a1e9aa548805b2ec487a73f6358a70ed27e0f60c31afb8304dc5f100d0"
+    "destination_sha256": "ec97d09a7e6bed716602b36f88626ce45188816c153c1b09cfd80469afa5c56e",
+    "hardening_task2_migration": {
+      "from_sha256": "dbd4a3a1e9aa548805b2ec487a73f6358a70ed27e0f60c31afb8304dc5f100d0",
+      "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlFallbackLifecycleTests.swift",
@@ -154,10 +162,14 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "28250d0da967ea4a99c32e243415a0195bce405bfd7596bf93d4248dea506ebf",
+    "destination_sha256": "ab37bb4b60f3e2e1fae58297cc1e5498412ffede1677902f71da5dcf00d6c5f9",
     "task7_typed_migration": {
       "from_sha256": "a6b7dc5a7bf4c34ee3d0b4233ca1c5fa156dccd171f947c58fc5957b980cff88",
       "reason": "Retry is a closed enum case with timing and NativePlayerError only; direct associated-value assertions supersede obsolete envelope keys and preserve privacy by type shape."
+    },
+    "hardening_task2_migration": {
+      "from_sha256": "28250d0da967ea4a99c32e243415a0195bce405bfd7596bf93d4248dea506ebf",
+      "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
     }
   },
   {
@@ -256,7 +268,11 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "ce5e651ae797678a91c813d3d04f317f3f44973f9fb316f9f372b621b8c82d35"
+    "destination_sha256": "72fccb1688074d3c55608dc45c59fc7869eaa8683dcc42ce94a632cbd8b42b83",
+    "hardening_task2_migration": {
+      "from_sha256": "ce5e651ae797678a91c813d3d04f317f3f44973f9fb316f9f372b621b8c82d35",
+      "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlMediaClockTests.swift",
@@ -302,7 +318,11 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "365d706ce689c5913e5825303e39e132e6b73a24c6514831f6ef8f6cff4982d8"
+    "destination_sha256": "2af7c219a8eae95b62f4cb893aa8012a4b150f9bb6cbe0e948f70cb710fbeb3b",
+    "hardening_task2_migration": {
+      "from_sha256": "365d706ce689c5913e5825303e39e132e6b73a24c6514831f6ef8f6cff4982d8",
+      "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlSourceRouterTests.swift",
@@ -328,7 +348,11 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "f3a30d50021d878ea5498c68cd2dc6c3fce2d6e930e09c7b2466421666017589"
+    "destination_sha256": "619e97dc6806d6e8a3c31dcf3e756ac55ad5ad3af2dd1ee1bb2ea1616ad3cfae",
+    "hardening_task2_migration": {
+      "from_sha256": "f3a30d50021d878ea5498c68cd2dc6c3fce2d6e930e09c7b2466421666017589",
+      "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlV2ReactivationTests.swift",
@@ -347,10 +371,14 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "2cc4b7c2c5a48e319e7b4dc76a94a5a8a38d4d0391de551a40bb578e94f597e2",
+    "destination_sha256": "5d0cf2fff5a5f048505f2f60a226ac9bb6ec185d0521b028552e3559c1ce8e6d",
     "task7_typed_migration": {
       "from_sha256": "9051742a4e69b4dc89f72c5304c86ff22478bd0532c7f54894773f86ccd22473",
       "reason": "R16 typed callback projection preserves original engine assertions; test-only existing HTTP/HLS server visibility and optional request observation enable actual host reprepare/publication evidence without copied production logic. The optional request observer ignores proven cancelled idle TCP EOF (not an HTTP request); all real nonempty request credential assertions and original engine bodies remain."
+    },
+    "hardening_task2_migration": {
+      "from_sha256": "2cc4b7c2c5a48e319e7b4dc76a94a5a8a38d4d0391de551a40bb578e94f597e2",
+      "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
     }
   },
   {
@@ -407,10 +435,14 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "b33bbbd9b8743e6cdf25f3f3a6f1d63a36f1de2b711f47da442936414fa266ac",
+    "destination_sha256": "ae811a99c7e33d9419d6f3833061a5b336566324406ac5f3a24190c71ec21a3d",
     "task7_typed_migration": {
       "from_sha256": "42fceac43c2d155c760699fd289a15efb425cc13512baba82f68db09c8e13891",
       "reason": "Commit gates now assert immutable session/loadRequestId correlation and identical event counts; AV accepted-source token checks use typed String request identity rather than legacy integer loadToken."
+    },
+    "hardening_task2_migration": {
+      "from_sha256": "b33bbbd9b8743e6cdf25f3f3a6f1d63a36f1de2b711f47da442936414fa266ac",
+      "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
     }
   },
   {
@@ -489,7 +521,11 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "190acfdb23d9c643fcf5df2b4c27a7f3c2fe666b08d0ef8400aba216389a8025"
+    "destination_sha256": "8092f09a1f358f86c87712d5734ffd7af3fb1f20c315655a7643e28cff0087f0",
+    "hardening_task2_migration": {
+      "from_sha256": "190acfdb23d9c643fcf5df2b4c27a7f3c2fe666b08d0ef8400aba216389a8025",
+      "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
+    }
   },
   {
     "source": "packages/yl_player/example/macos/RunnerTests/YlMacosHlsTests.swift",
@@ -527,7 +563,11 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "26e13835ab72dd0df9aa9f28915de315fdac9b13c0347e54178f89170b12ffd0"
+    "destination_sha256": "57e9675b03cc2327cc00d19ea577befd61e3a7ac87f2e83676a2451576cb903e",
+    "hardening_task2_migration": {
+      "from_sha256": "26e13835ab72dd0df9aa9f28915de315fdac9b13c0347e54178f89170b12ffd0",
+      "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
+    }
   },
   {
     "source": "packages/yl_player/example/macos/RunnerTests/YlMacosOpenCoordinatorTests.swift",
@@ -550,7 +590,11 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "23db030635e76d797754ed37504c398afa9b9d570724dd80c8bea6dcc4436bce"
+    "destination_sha256": "5b34cc1525e2515673e9573dfaeacf3c06c949d2d742982d7a047c13643f8817",
+    "hardening_task2_migration": {
+      "from_sha256": "23db030635e76d797754ed37504c398afa9b9d570724dd80c8bea6dcc4436bce",
+      "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
+    }
   },
   {
     "source": "packages/yl_player/example/macos/RunnerTests/YlMacosPresentationTests.swift",
@@ -601,7 +645,11 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "3d0d4c98aec34c55308e701905dcfcdd686f1f338c5aa9c844d8f6ba9612b3f7"
+    "destination_sha256": "836f1dd9181a95f5b9173c297e7165bbfeb71ac517b8151847f56185507f719a",
+    "hardening_task2_migration": {
+      "from_sha256": "3d0d4c98aec34c55308e701905dcfcdd686f1f338c5aa9c844d8f6ba9612b3f7",
+      "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
+    }
   },
   {
     "source": "packages/yl_player/example/macos/RunnerTests/YlV2ReactivationTests.swift",
@@ -620,7 +668,7 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "adb09e6d16a7b8004a66a8ff6370764f846e17c2e6a7ced67b3c0175c625f5b6",
+    "destination_sha256": "ee0e3e9139a0c303cf5e10064a2ba98f5eee188daba39750575fad0689da6ada",
     "task7_typed_migration": {
       "from_sha256": "9d1e0a81deb322c241680165fc709057844cb1827b0efaabdf75e9b01538522b",
       "reason": "R16 typed callback projection preserves original engine assertions; test-only existing HTTP/HLS server visibility and optional request observation enable actual host reprepare/publication evidence without copied production logic. The optional request observer ignores proven cancelled idle TCP EOF (not an HTTP request); all real nonempty request credential assertions and original engine bodies remain."
@@ -628,6 +676,10 @@
     "task8_r39": {
       "from_sha256": "c350d1cacdd7b0385f6c63925fbacbcedc60141b9e8e0d905ef0a68a806226f9",
       "reason": "The existing test-only media server can explicitly omit range support so the shared host regression exercises the real sequential HTTP 200 fallback policy; default behavior and every accepted Task 7 assertion remain unchanged."
+    },
+    "hardening_task2_migration": {
+      "from_sha256": "adb09e6d16a7b8004a66a8ff6370764f846e17c2e6a7ced67b3c0175c625f5b6",
+      "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
     }
   }
 ]

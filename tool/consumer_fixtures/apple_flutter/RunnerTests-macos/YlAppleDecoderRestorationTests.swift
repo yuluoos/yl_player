@@ -17,8 +17,7 @@ final class YlAppleDecoderRestorationTests: XCTestCase {
       .deletingLastPathComponent().appendingPathComponent("assets/test_media/network_seek_h264_aac.mkv")
     let server = network ? try ReactivationMediaServer(data: Data(contentsOf: path)) : nil
     defer { server?.close() }
-    let source: [String: Any?] = ["uri": (server?.url ?? path).absoluteString,
-      "kind": network ? "network" : "file", "formatHint": "matroska"]
+    let source = YlAppleSourceDescriptor(uri: (server?.url ?? path).absoluteString, kind: network ? .network : .file, formatHint: .matroska)
     let configuration = PlayerConfiguration(map: ["audioPolicy": "appManaged"])
     let prepared = try YlPreparedFallback(source: source, requireHardwareProbe: false, configuration: configuration)
     var errors = [NativePlayerError]()
@@ -36,14 +35,14 @@ final class YlAppleDecoderRestorationTests: XCTestCase {
     let original = try backend(prepared)
     defer { original.dispose() }
     try original.activate()
-    try original.command(name: "open", arguments: ["source": source])
-    try original.command(name: "play", arguments: [:])
+    original.emitState()
+    try original.play()
     try await AppleHostCharacterizations.waitFor({ !output.frames.isEmpty })
     XCTAssertTrue(errors.isEmpty)
     original.quiesceForReplacement()
     let track = try XCTUnwrap(states.last?.audioTracks.last?.id)
-    try original.command(name: "selectAudioTrack", arguments: ["trackId": track])
-    try original.command(name: "seekTo", arguments: ["positionMs": Int64(700)])
+    try original.selectAudioTrack(track, cancellationToken: nil)
+    try original.seek(toMs: Int64(700), cancellationToken: nil)
     XCTAssertEqual(original.requiresAsyncActivation, network)
     let frameCount = output.frames.count
     var replacement: YlFallbackBackend?

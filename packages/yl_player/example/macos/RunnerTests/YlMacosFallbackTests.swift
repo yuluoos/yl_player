@@ -107,16 +107,15 @@ final class YlMacosFallbackTests: XCTestCase {
 
 
   func testOnlyStateReplacingCommandsCancelRestoration() {
-    for name in ["play", "pause"] {
+    for name: YlApplePlaybackCommand in [.play, .pause] {
       XCTAssertTrue(YlRestorationCommandPolicy.supersedesRestoration(name))
     }
-    for name in [
-      "seekTo", "seekToLiveEdge", "selectAudioTrack",
-      "setVolume", "setPlaybackSpeed", "setQualityConstraint",
+    for name: YlApplePlaybackCommand in [
+      .seek(0), .liveEdge, .track("audio"), .volume(1), .speed(1), .constraints(.unconstrained),
     ] {
       XCTAssertFalse(YlRestorationCommandPolicy.supersedesRestoration(name))
     }
-    for name in ["seekTo", "seekToLiveEdge", "selectAudioTrack"] {
+    for name: YlApplePlaybackCommand in [.seek(0), .liveEdge, .track("audio")] {
       XCTAssertTrue(YlRestorationCommandPolicy.defersUntilRestored(name))
     }
   }

@@ -63,7 +63,7 @@ final class YlLiveReconnectControllerTests: XCTestCase {
     XCTAssertTrue(YlAvPlayerRecoveryPolicy.shouldReconnect(
       source: source(
         uri: "http://127.0.0.1:8080/m3u8?url=live",
-        formatHint: "hls",
+        formatHint: .hls,
         isLive: true
       ),
       usesResourceLoader: false,
@@ -76,7 +76,7 @@ final class YlLiveReconnectControllerTests: XCTestCase {
     XCTAssertTrue(YlAvPlayerRecoveryPolicy.shouldReconnect(
       source: source(
         uri: "https://media.test/live.m3u8",
-        formatHint: "automatic",
+        formatHint: .automatic,
         isLive: true
       ),
       usesResourceLoader: false,
@@ -89,7 +89,7 @@ final class YlLiveReconnectControllerTests: XCTestCase {
     XCTAssertTrue(YlAvPlayerRecoveryPolicy.shouldReconnect(
       source: source(
         uri: "https://media.test/live.m3u8",
-        formatHint: "hls",
+        formatHint: .hls,
         isLive: true
       ),
       usesResourceLoader: false,
@@ -105,7 +105,7 @@ final class YlLiveReconnectControllerTests: XCTestCase {
     XCTAssertFalse(YlAvPlayerRecoveryPolicy.shouldReconnect(
       source: source(
         uri: "https://media.test/live.m3u8",
-        formatHint: "hls",
+        formatHint: .hls,
         isLive: true
       ),
       usesResourceLoader: false,
@@ -118,7 +118,7 @@ final class YlLiveReconnectControllerTests: XCTestCase {
     XCTAssertFalse(YlAvPlayerRecoveryPolicy.shouldReconnect(
       source: source(
         uri: "https://media.test/live.m3u8",
-        formatHint: "hls",
+        formatHint: .hls,
         isLive: true
       ),
       usesResourceLoader: false,
@@ -131,7 +131,7 @@ final class YlLiveReconnectControllerTests: XCTestCase {
     XCTAssertFalse(YlAvPlayerRecoveryPolicy.shouldReconnect(
       source: source(
         uri: "https://media.test/vod.m3u8",
-        formatHint: "hls",
+        formatHint: .hls,
         isLive: false
       ),
       usesResourceLoader: false,
@@ -144,7 +144,7 @@ final class YlLiveReconnectControllerTests: XCTestCase {
     XCTAssertFalse(YlAvPlayerRecoveryPolicy.shouldReconnect(
       source: source(
         uri: "https://media.test/live.flv",
-        formatHint: "httpFlv",
+        formatHint: .flv,
         isLive: true
       ),
       usesResourceLoader: false,
@@ -157,7 +157,7 @@ final class YlLiveReconnectControllerTests: XCTestCase {
     XCTAssertFalse(YlAvPlayerRecoveryPolicy.shouldReconnect(
       source: source(
         uri: "https://media.test/live.m3u8",
-        formatHint: "hls",
+        formatHint: .hls,
         isLive: true
       ),
       usesResourceLoader: true,
@@ -173,7 +173,7 @@ final class YlLiveReconnectControllerTests: XCTestCase {
     let transient = NSError(domain: NSURLErrorDomain, code: NSURLErrorTimedOut)
     let liveHls = source(
       uri: "https://media.test/live.m3u8",
-      formatHint: "hls",
+      formatHint: .hls,
       isLive: true
     )
 
@@ -386,17 +386,8 @@ final class YlLiveReconnectControllerTests: XCTestCase {
     XCTAssertFalse(diagnostic.contains("Cookie"))
   }
 
-  private func source(
-    uri: String,
-    formatHint: String,
-    isLive: Bool
-  ) -> [String: Any?] {
-    [
-      "uri": uri,
-      "kind": "network",
-      "formatHint": formatHint,
-      "isLive": isLive,
-      "headers": [:],
-    ]
+  private func source(uri: String, formatHint: YlSourceFormat, isLive: Bool) -> YlAppleSourceDescriptor {
+    YlAppleSourceDescriptor(uri: uri, kind: .network, formatHint: formatHint,
+      intent: isLive ? .live : .automatic)
   }
 }

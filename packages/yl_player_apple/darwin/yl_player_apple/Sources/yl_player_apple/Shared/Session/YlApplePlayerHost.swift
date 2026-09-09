@@ -74,17 +74,18 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
     do {
       let recipe = try YlAppleNativeInput.load(source: request.source, options: request.options,
         defaults: options, loadRequestId: nil)
-      switch YlSourceRouter.route(recipe.source) {
-      case .avPlayer:
-        return AppleAssessmentReply(outcome: .compatible, candidateEngine: .avPlayer,
-          satisfiedRequirements: [], limitations: [], rejection: nil)
-      case .headeredHls, .localMatroska, .networkMatroska, .networkFlv:
-        return AppleAssessmentReply(outcome: .requiresInspection,
-          candidateEngine: YlSourceRouter.route(recipe.source) == .headeredHls ? .avPlayer : .managedFallback,
-          satisfiedRequirements: [], limitations: [], rejection: nil)
-      case let .reject(category, code, message):
-        throw NativePlayerError(category: category, code: code, message: message)
+      let assessment = YlEngineRouter.assess(recipe.source)
+      let outcome: AppleAssessmentOutcome
+      switch assessment.outcome {
+      case .compatible: outcome = .compatible
+      case .incompatible: outcome = .incompatible
+      case .requiresInspection: outcome = .requiresInspection
       }
+      return AppleAssessmentReply(outcome: outcome,
+        candidateEngine: assessment.engine.map(Self.engine),
+        satisfiedRequirements: assessment.satisfiedRequirements.map(\.rawValue),
+        limitations: assessment.limitations.map(\.rawValue),
+        rejection: assessment.rejection.map { YlAppleFailureMapper.message($0, scope: .command) })
     } catch {
       return AppleAssessmentReply(outcome: .incompatible, candidateEngine: nil,
         satisfiedRequirements: [], limitations: [], rejection: YlAppleFailureMapper.message(error, scope: .command))
@@ -345,7 +346,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
   }
 }
 
-private enum YlAppleNativeInput {
+enum YlAppleNativeInput {
   static func policyInt(_ value: Int64?, positive: Bool, required: Bool = false) throws {
     guard let value else {
       if required { throw YlAppleFailureMapper.invalid() }
@@ -395,7 +396,7 @@ private enum YlAppleNativeInput {
         !host.contains(" "), url.user == nil, url.password == nil,
         url.port == nil || (1...65535).contains(url.port!) else { throw YlAppleFailureMapper.invalid() }
       uri = source.locator
-    case .content: throw YlAppleFailureMapper.unsupported
+    case .content: throw YlAppleFailureMapper.invalid("source.invalid")
     }
     let request = source.request
     let headers = request?.headers ?? [:]
@@ -413,39 +414,54 @@ private enum YlAppleNativeInput {
         }
       }
     }
-    guard buffer.kind != .bounded, source.networkPolicy?.kind != .managed,
-      (options.decoderPolicyOverride ?? defaults.decoderPolicy) != .hardwareRequired,
-      defaults.audioPolicy == .appManaged else { throw YlAppleFailureMapper.unsupported }
-    let format: String
+    guard defaults.audioPolicy == .appManaged else { throw YlAppleFailureMapper.unsupported }
+    let format: YlSourceFormat
     switch source.format {
-    case .automatic: format = "automatic"
-    case .hls: format = "hls"
-    case .mp4: format = "mp4"
-    case .mov: format = "mov"
-    case .matroska: format = "matroska"
-    case .webm: format = "webm"
-    case .mpegTs: format = "mpegTs"
-    case .mpegPs: format = "mpegPs"
-    case .flv: format = "flv"
-    case .avi: format = "avi"
+    case .automatic: format = .automatic
+    case .hls: format = .hls
+    case .mp4: format = .mp4
+    case .mov: format = .mov
+    case .matroska: format = .matroska
+    case .webm: format = .webm
+    case .mpegTs: format = .mpegTs
+    case .mpegPs: format = .mpegPs
+    case .flv: format = .flv
+    case .avi: format = .avi
     }
-    let strategy: String
+    let strategy: YlBufferGoal
     switch buffer.kind {
-    case .automatic: strategy = "automatic"
-    case .lowLatency: strategy = "lowLatency"
-    case .smoothPlayback: strategy = "smoothPlayback"
-    case .bounded: throw YlAppleFailureMapper.unsupported
+    case .automatic: strategy = .automatic
+    case .lowLatency: strategy = .lowLatency
+    case .smoothPlayback: strategy = .smoothPlayback
+    case .bounded: strategy = .bounded
     }
-    let recipe = YlAppleLoadRecipe(source: ["uri": uri,
-      "kind": source.kind == .file ? "file" : "network", "formatHint": format,
-      "isLive": source.intent == .live, "headers": headers, "credentials": credentials,
-      "loadRequestId": loadRequestId, "credentialContext": YlNetworkCredentialContext(),
-      "loadOptions": ["autoplay": options.autoplay, "startPositionMs": options.startPositionMs,
-        "bufferStrategy": strategy, "videoConstraints": limits.native] as [String: Any?]])
-    if case let .reject(category, code, message) = YlSourceRouter.route(recipe.source) {
-      throw NativePlayerError(category: category, code: code, message: message)
+    let decoder: YlDecoderPolicy
+    switch options.decoderPolicyOverride ?? defaults.decoderPolicy {
+    case .systemDefault: decoder = .systemDefault
+    case .hardwarePreferred: decoder = .hardwarePreferred
+    case .hardwareRequired: decoder = .hardwareRequired
     }
-    return recipe
+    let intent: YlSourceIntent
+    switch source.intent {
+    case .automatic: intent = .automatic
+    case .onDemand: intent = .onDemand
+    case .live: intent = .live
+    }
+    return YlAppleLoadRecipe(source: YlAppleSourceDescriptor(uri: uri,
+      kind: source.kind == .file ? .file : .network, formatHint: format, intent: intent,
+      headers: headers, credentials: credentials,
+      networkPolicy: source.networkPolicy?.kind == .managed ? .managed : .platformDefault,
+      networkConfiguration: source.networkPolicy.map { network in
+        YlAppleNetworkOptions(connectTimeoutMs: network.connectTimeoutMs ?? 10_000,
+          readTimeoutMs: network.readTimeoutMs ?? 15_000, maxRetries: Int(network.maxRetries ?? 3),
+          baseRetryDelayMs: network.baseRetryDelayMs ?? 500,
+          maxRetryDelayMs: network.maxRetryDelayMs ?? 8_000, maxRedirects: Int(network.maxRedirects ?? 5))
+      },
+      loadOptions: YlAppleLoadOptions(autoplay: options.autoplay,
+        startPositionMs: options.startPositionMs, bufferStrategy: strategy,
+        minDurationMs: buffer.minDurationMs, maxDurationMs: buffer.maxDurationMs,
+        maxManagedBytes: buffer.maxManagedBytes.map(Int.init), videoConstraints: limits, decoderPolicy: decoder),
+      loadRequestId: loadRequestId))
   }
 }
 

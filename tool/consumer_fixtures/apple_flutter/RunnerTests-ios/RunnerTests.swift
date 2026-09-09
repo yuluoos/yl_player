@@ -16,13 +16,13 @@ class RunnerTests: XCTestCase {
 
   func testPerLoadBufferStrategyUsesExistingGoalsWithoutChangingLegacyConfiguration() throws {
     let legacy = PlayerConfiguration(map: ["bufferMode": "stable", "audioPolicy": "appManaged"])
-    let low = legacy.forLoad(["loadOptions": ["bufferStrategy": "lowLatency"]])
+    let low = legacy.forLoad(.init(uri: "file:///tmp/media", kind: .file, loadOptions: .init(bufferStrategy: .lowLatency)))
     XCTAssertEqual(low.bufferMode, "lowLatency")
     XCTAssertEqual(low.preferredForwardBufferDuration, 2)
     XCTAssertFalse(low.managesAudioSession)
-    XCTAssertEqual(legacy.forLoad(["loadOptions": ["bufferStrategy": "smoothPlayback"]]).preferredForwardBufferDuration, 30)
-    XCTAssertEqual(legacy.forLoad(["loadOptions": [:]]).preferredForwardBufferDuration, 10)
-    XCTAssertEqual(legacy.forLoad([:]).preferredForwardBufferDuration, 30)
+    XCTAssertEqual(legacy.forLoad(.init(uri: "file:///tmp/media", kind: .file, loadOptions: .init(bufferStrategy: .smoothPlayback))).preferredForwardBufferDuration, 30)
+    XCTAssertEqual(legacy.forLoad(.init(uri: "file:///tmp/media", kind: .file, loadOptions: .init())).preferredForwardBufferDuration, 10)
+    XCTAssertEqual(legacy.forLoad(.init(uri: "file:///tmp/media", kind: .file)).preferredForwardBufferDuration, 30)
     XCTAssertEqual(legacy.bufferMode, "stable")
   }
 
@@ -86,7 +86,7 @@ class RunnerTests: XCTestCase {
     defer { backend.dispose() }
     try backend.activate()
     backend.stop()
-    try backend.command(name: "open", arguments: ["source": ["uri": "https://example.test/a.mp4", "kind": "network"]])
+    try backend.open(YlAppleSourceDescriptor(uri: "https://example.test/a.mp4", kind: .network))
     XCTAssertEqual(calls, 0)
   }
   func testLoadTokenBelongsToCommittedAVSourceAndRequestStateDoesNotActivate() throws {
@@ -96,9 +96,9 @@ class RunnerTests: XCTestCase {
     defer { backend.dispose() }
     backend.emitState()
     XCTAssertFalse(backend.isActive)
-    try backend.command(name: "open", arguments: ["source": ["uri": "https://example.test/a.mp4", "kind": "network", "loadRequestId": "17"]])
+    try backend.open(YlAppleSourceDescriptor(uri: "https://example.test/a.mp4", kind: .network, loadRequestId: "17"))
     XCTAssertEqual(events.last?["loadRequestId"] as? String, "17")
-    XCTAssertThrowsError(try backend.command(name: "open", arguments: ["source": ["uri": "", "loadRequestId": "18"]]))
+    XCTAssertThrowsError(try backend.open(YlAppleSourceDescriptor(uri: "", kind: .file, loadRequestId: "18")))
     backend.emitState()
     XCTAssertEqual(events.last?["loadRequestId"] as? String, "17")
   }
@@ -149,9 +149,7 @@ class RunnerTests: XCTestCase {
   func testStopRejectsDecoderCreatedAfterTeardown() throws {
     for cancelCommand in [false, true] {
       let fixture = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv"))
-      let prepared = try YlPreparedFallback(source: [
-        "uri": fixture.absoluteString, "kind": "file", "formatHint": "matroska",
-      ], requireHardwareProbe: false)
+      let prepared = try YlPreparedFallback(source: YlAppleSourceDescriptor(uri: fixture.absoluteString, kind: .file, formatHint: .matroska), requireHardwareProbe: false)
       let entered = expectation(description: "decoder recreation entered")
       let factory = StopBarrierFactory(entered: entered)
       let clock = YlMediaClock()
@@ -167,7 +165,7 @@ class RunnerTests: XCTestCase {
       let coordinator = YlAsyncCommandCoordinator()
       let completed = expectation(description: "cancelled seek completed")
       coordinator.begin(operation: { token in
-        try backend.command(name: "seekTo", arguments: ["positionMs": 1000], cancellationToken: token)
+        try backend.seek(toMs: 1000, cancellationToken: token)
       }, completion: { result in
         guard case .failure(let error) = result else { return XCTFail("Seek survived Stop") }
         XCTAssertEqual(error.code, "network.cancelled")
@@ -201,21 +199,17 @@ class RunnerTests: XCTestCase {
     defer { backend.dispose() }
     backend.stop()
     let stopCount = events.count
-    for (name, arguments) in [
-      ("seekTo", ["positionMs": 12345] as [String: Any?]),
-      ("seekToLiveEdge", [:]), ("selectAudioTrack", ["trackId": "old"]),
-      ("play", [:]), ("pause", [:]),
+    for command: YlApplePlaybackCommand in [
+      .seek(12345), .liveEdge, .track("old"), .play, .pause,
     ] {
-      XCTAssertNoThrow(try backend.command(name: name, arguments: arguments))
+      XCTAssertNoThrow(try command.apply(to: backend))
     }
     XCTAssertEqual(events.count, stopCount)
     backend.emitState()
     XCTAssertEqual((events.last?["state"] as? [String: Any?])?["positionMs"] as? Int64, 0)
-    XCTAssertNoThrow(try backend.command(name: "setVolume", arguments: ["volume": 0.25]))
-    XCTAssertNoThrow(try backend.command(name: "setPlaybackSpeed", arguments: ["speed": 1.5]))
-    try backend.command(name: "open", arguments: ["source": [
-      "uri": "https://example.test/fresh.mp4", "kind": "network",
-    ]])
+    XCTAssertNoThrow(try backend.setVolume(0.25))
+    XCTAssertNoThrow(try backend.setPlaybackSpeed(1.5))
+    try backend.open(YlAppleSourceDescriptor(uri: "https://example.test/fresh.mp4", kind: .network))
     XCTAssertTrue(backend.isActive)
   }
 
@@ -229,16 +223,12 @@ class RunnerTests: XCTestCase {
     defer { backend.dispose() }
     try backend.activate()
     XCTAssertEqual(activationCount, 1)
-    try backend.command(name: "open", arguments: ["source": [
-      "uri": "https://example.test/first.mp4", "kind": "network",
-    ]])
+    try backend.open(YlAppleSourceDescriptor(uri: "https://example.test/first.mp4", kind: .network))
     backend.stop()
     try backend.activate()
     XCTAssertEqual(activationCount, 1, "Lifecycle activation must not reacquire audio after Stop")
     XCTAssertFalse(backend.isActive)
-    try backend.command(name: "open", arguments: ["source": [
-      "uri": "https://example.test/second.mp4", "kind": "network",
-    ]])
+    try backend.open(YlAppleSourceDescriptor(uri: "https://example.test/second.mp4", kind: .network))
     XCTAssertEqual(activationCount, 2, "A fresh open must establish audio activation again")
     XCTAssertTrue(backend.isActive)
   }
@@ -253,12 +243,10 @@ class RunnerTests: XCTestCase {
 
     // The platform output registers the same test texture identifier.
     defer { backend.dispose() }
-    try backend.command(name: "open", arguments: ["source": [
-      "uri": "https://example.test/live.m3u8", "kind": "network", "isLive": true,
-    ]])
+    try backend.open(YlAppleSourceDescriptor(uri: "https://example.test/live.m3u8", kind: .network, intent: .live))
     let oldGeneration = try XCTUnwrap(events.last?["generation"] as? UInt64)
     backend.deactivate()
-    try backend.command(name: "seekTo", arguments: ["positionMs": 12345])
+    try backend.seek(toMs: 12345, cancellationToken: nil)
     events.removeAll()
     backend.stop()
     XCTAssertEqual(events.count, 1)
@@ -272,7 +260,7 @@ class RunnerTests: XCTestCase {
     XCTAssertEqual((state["videoTracks"] as? [Any])?.count, 0)
     XCTAssertNil((state["metrics"] as? [String: Any?])?["openDurationMs"] as? Int64)
     try backend.activate()
-    try backend.command(name: "play", arguments: [:])
+    try backend.play()
     let drained = expectation(description: "queued AV callbacks drained")
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { drained.fulfill() }
     wait(for: [drained], timeout: 2)

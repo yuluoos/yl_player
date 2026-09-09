@@ -163,9 +163,23 @@ void main() {
     'hardwareDefault',
   ]) {
     test(
-      'consolidation-only guard rejects $strict assessment and Load before native routing',
+      'native enforcing authority rejects unsupported $strict assessment and Load',
       () async {
         final t = FakeTransport();
+        t.assessment = () async => AppleAssessmentReply(
+          outcome: AppleAssessmentOutcome.incompatible,
+          satisfiedRequirements: [],
+          limitations: [],
+          rejection: AppleFailureMessage(
+            category: AppleFailureCategory.unsupported,
+            code: 'policy.unsupported',
+            message: 'Unsupported policy',
+            retryable: false,
+            scope: AppleFailureScope.command,
+            diagnosticId: 'enforcing-fake',
+          ),
+        );
+
         final p = await createFake(
           t,
           options: YlPlayerOptions(
@@ -203,7 +217,7 @@ void main() {
           p.load(candidate, options: options),
           failsWith(YlFailureCodes.policyUnsupported),
         );
-        expect(t.calls, ['attach']);
+        expect(t.calls, ['attach', 'assess', 'assess']);
         expect(p.state.status, YlPlaybackStatus.idle);
         expect(p.textureId.value, 42);
       },

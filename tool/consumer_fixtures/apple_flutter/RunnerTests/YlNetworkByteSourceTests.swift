@@ -190,6 +190,25 @@ final class YlNetworkByteSourceTests: XCTestCase {
     XCTAssertEqual(ScriptedURLProtocol.recordedRequests(at: original).last?.value(forHTTPHeaderField: "X-Private-Identity"), "private")
   }
 
+  func testUnknownInspectionUsesOwnedRedirectCredentialRulesAndPreservesContext() throws {
+    let body = Data("#EXTM3U\n#EXT-X-ENDLIST\n".utf8)
+    let other = ScriptedURLProtocol.configure([.response(status: 200, chunks: [(0, body)])])
+    let original = ScriptedURLProtocol.configure([.redirect(to: other)])
+    let configuration = URLSessionConfiguration.ephemeral
+    configuration.protocolClasses = [ScriptedURLProtocol.self]
+    let source = YlAppleSourceDescriptor(uri: original.absoluteString, kind: .network,
+      headers: ["X-Display": "ordinary"], credentials: ["X-Private-Identity": "private"])
+    let inspected = try YlSourceInspector.inspect(source, configuration: .init(map: [:]),
+      token: .init(), sessionConfiguration: configuration)
+    XCTAssertEqual(inspected.formatHint, .hls)
+    XCTAssertTrue(inspected.credentialContext === source.credentialContext)
+    XCTAssertEqual(ScriptedURLProtocol.recordedRequests(at: original).first?.value(forHTTPHeaderField: "X-Private-Identity"), "private")
+    let redirected = try XCTUnwrap(ScriptedURLProtocol.recordedRequests(at: other).first)
+    XCTAssertNil(redirected.value(forHTTPHeaderField: "X-Private-Identity"))
+    XCTAssertEqual(redirected.value(forHTTPHeaderField: "X-Display"), "ordinary")
+    XCTAssertEqual(YlEngineRouter.assess(inspected).candidate, .headeredHls)
+  }
+
   private func makeSource(
     scripts: [ScriptedURLProtocol.ResponseScript],
     capacity: Int = 32,

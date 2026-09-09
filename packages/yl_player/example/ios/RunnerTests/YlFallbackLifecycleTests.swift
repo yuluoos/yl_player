@@ -140,22 +140,22 @@ final class YlFallbackLifecycleTests: XCTestCase {
     XCTAssertTrue(YlFallbackCommandPolicy.requiresBackgroundExecution(
       isNetwork: true,
       isActive: true,
-      name: "seekTo"
+      command: .seek(0)
     ))
     XCTAssertTrue(YlFallbackCommandPolicy.requiresBackgroundExecution(
       isNetwork: true,
       isActive: true,
-      name: "selectAudioTrack"
+      command: .track("audio")
     ))
     XCTAssertFalse(YlFallbackCommandPolicy.requiresBackgroundExecution(
       isNetwork: false,
       isActive: true,
-      name: "seekTo"
+      command: .seek(0)
     ))
     XCTAssertFalse(YlFallbackCommandPolicy.requiresBackgroundExecution(
       isNetwork: true,
       isActive: false,
-      name: "seekTo"
+      command: .seek(0)
     ))
   }
 
@@ -222,12 +222,7 @@ final class YlFallbackLifecycleTests: XCTestCase {
       Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv")
     )
     let prepared = try YlPreparedFallback(
-      source: [
-        "uri": fixture.absoluteString,
-        "kind": "file",
-        "formatHint": "matroska",
-        "isLive": false,
-      ],
+      source: YlAppleSourceDescriptor(uri: fixture.absoluteString, kind: .file, formatHint: .matroska, intent: .automatic),
       requireHardwareProbe: false
     )
     let requested = YlFallbackResumeState(
@@ -323,12 +318,7 @@ final class YlFallbackLifecycleTests: XCTestCase {
       )
     )
     let prepared = try YlPreparedFallback(
-      source: [
-        "uri": fixture.absoluteString,
-        "kind": "file",
-        "formatHint": "matroska",
-        "isLive": false,
-      ],
+      source: YlAppleSourceDescriptor(uri: fixture.absoluteString, kind: .file, formatHint: .matroska, intent: .automatic),
       requireHardwareProbe: false
     )
 

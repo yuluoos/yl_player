@@ -5,8 +5,8 @@ import XCTest
 final class YlMacosNetworkTests: XCTestCase {
   private func descriptor(
     _ uri: String,
-    kind: String = "network",
-    hint: String = "automatic",
+    kind: YlSourceKind = .network,
+    hint: YlSourceFormat = .automatic,
     live: Bool = false,
     headers: Bool = false
   ) -> YlAppleSourceDescriptor {
@@ -14,14 +14,14 @@ final class YlMacosNetworkTests: XCTestCase {
       uri: uri,
       kind: kind,
       formatHint: hint,
-      isLive: live,
-      hasHeaders: headers
+      intent: live ? .live : .automatic,
+      headers: headers ? ["X-Test": "test"] : [:]
     )
   }
 
   func testRoutesSupportedFallbackAndHeaderedSources() {
     XCTAssertEqual(
-      YlSourceRouter.route(descriptor("file:///tmp/movie.mkv", kind: "file")),
+      YlSourceRouter.route(descriptor("file:///tmp/movie.mkv", kind: .file)),
       .localMatroska
     )
     XCTAssertEqual(
@@ -35,7 +35,7 @@ final class YlMacosNetworkTests: XCTestCase {
     XCTAssertEqual(
       YlSourceRouter.route(descriptor(
         "https://media.test/live.m3u8",
-        hint: "hls",
+        hint: .hls,
         live: true,
         headers: true
       )),

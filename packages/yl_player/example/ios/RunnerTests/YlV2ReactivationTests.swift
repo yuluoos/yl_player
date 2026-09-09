@@ -1,6 +1,6 @@
 import Foundation
-import AVFoundation
 import CoreVideo
+import AVFoundation
 import Network
 import XCTest
 #if os(iOS)
@@ -21,26 +21,25 @@ final class YlV2ReactivationTests: XCTestCase {
     let configuration = PlayerConfiguration(map: ["audioPolicy": "appManaged"])
     var events = [[String: Any?]]()
     let avPlayer = AVPlayer()
-    let backend = YlAvPlayerBackend(playerId: 91, textures: ReactivationTextures(),
+    let textures = ReactivationTextures()
+    let backend = YlAvPlayerBackend(playerId: 91, textures: textures,
       configuration: configuration, player: avPlayer, emit: { events.append($0) })
     let slot = YlBackendSlot(initial: backend)
     defer { slot.dispose() }
-    let source: [String: Any?] = ["uri": server.url.absoluteString, "kind": "network",
-      "formatHint": "hls", "credentials": ["Authorization": "Bearer rollback-test"],
-      "loadRequestId": "1", "loadOptions": ["autoplay": false]]
+    let source = YlAppleSourceDescriptor(uri: server.url.absoluteString, kind: .network, formatHint: .hls, credentials: ["Authorization": "Bearer rollback-test"], loadOptions: YlAppleLoadOptions(autoplay: false), loadRequestId: "1")
     func prepare() throws -> YlPreparedHlsAsset {
       try YlPreparedHlsAsset(originURL: server.url, headers: [:],
         credentials: ["Authorization": "Bearer rollback-test"],
         configuration: configuration.network, cancellationToken: YlOpenCancellationToken())
     }
-    func requireVideo(_ description: String) {
+    func requireVideo(_ description: String, afterPublication baseline: Int = 0) {
       let done = expectation(description: description)
       let deadline = Date().addingTimeInterval(8)
       var sawVideo = false
       func poll() {
-        if let buffer = backend.copyPixelBuffer()?.takeRetainedValue() {
-          sawVideo = CVPixelBufferGetWidth(buffer) > 0
-        }
+        // Observe real production publication; reading AVPlayerItemVideoOutput
+        // here would compete with displayLinkTick for its one-shot new frame.
+        sawVideo = textures.videoPublicationCount > baseline
         if (sawVideo && avPlayer.rate > 0) || Date() >= deadline { done.fulfill() }
         else { DispatchQueue.main.asyncAfter(deadline: .now() + 0.02) { poll() } }
       }
@@ -51,13 +50,14 @@ final class YlV2ReactivationTests: XCTestCase {
     let prepared = try prepare()
     try backend.stagePreparedHls(source: source, prepared: prepared, resume: false)
     try backend.activate()
-    try backend.command(name: "setPlaybackSpeed", arguments: ["speed": 1.5])
-    try backend.command(name: "setVolume", arguments: ["volume": 0.2])
-    try backend.command(name: "play", arguments: [:])
+    try backend.setPlaybackSpeed(1.5)
+    try backend.setVolume(0.2)
+    try backend.play()
     requireVideo("Initial authenticated HLS must render real video")
     backend.emitState()
     let publicGeneration = try XCTUnwrap(events.last?["generation"] as? UInt64)
     let slotGeneration = slot.generation
+    let publicationsBeforeRollback = textures.videoPublicationCount
     let candidate = FailingActivationBackend {
       XCTAssertFalse(backend.isActive, "Candidate activation must follow old-backend quiescence")
     }
@@ -69,7 +69,7 @@ final class YlV2ReactivationTests: XCTestCase {
     XCTAssertEqual(slot.generation, slotGeneration)
     // iOS slot performs its actual synchronous rollback activation.
     // Do not manually stage a loader or issue Play to repair it in the test.
-    requireVideo("Rollback must restore authenticated HLS video")
+    requireVideo("Rollback must restore authenticated HLS video", afterPublication: publicationsBeforeRollback)
     backend.emitState()
     XCTAssertEqual(events.last?["generation"] as? UInt64, publicGeneration)
     XCTAssertEqual(events.last?["loadRequestId"] as? String, "1")
@@ -82,7 +82,7 @@ final class YlV2ReactivationTests: XCTestCase {
       XCTAssertTrue(requests.allSatisfy { $0.authorized }, "Restoration must authenticate \(path)")
     }
     // Paused intent also survives a second failure without a fabricated Play.
-    try backend.command(name: "pause", arguments: [:])
+    try backend.pause()
     XCTAssertThrowsError(try slot.replace { FailingActivationBackend {} })
     XCTAssertEqual(avPlayer.rate, 0)
     try prepared.loader.preflight(cancellationToken: YlOpenCancellationToken())
@@ -108,8 +108,7 @@ final class YlV2ReactivationTests: XCTestCase {
       let prepared = try YlPreparedHlsAsset(originURL: server.url, headers: [:],
         credentials: ["Authorization": "Bearer rollback-test"],
         configuration: configuration.network, cancellationToken: YlOpenCancellationToken())
-      try backend.stagePreparedHls(source: ["uri": server.url.absoluteString, "kind": "network",
-        "formatHint": "hls", "credentials": ["Authorization": "Bearer rollback-test"]],
+      try backend.stagePreparedHls(source: YlAppleSourceDescriptor(uri: server.url.absoluteString, kind: .network, formatHint: .hls, credentials: ["Authorization": "Bearer rollback-test"]),
         prepared: prepared, resume: false)
       try backend.activate()
       if boundary == "commit" {
@@ -136,9 +135,15 @@ final class YlV2ReactivationTests: XCTestCase {
 }
 
 private final class ReactivationTextures: NSObject, FlutterTextureRegistry {
-  func register(_ texture: FlutterTexture) -> Int64 { 92 }
-  func unregisterTexture(_ textureId: Int64) {}
-  func textureFrameAvailable(_ textureId: Int64) {}
+  private var texture: FlutterTexture?
+  private(set) var videoPublicationCount = 0
+  func register(_ texture: FlutterTexture) -> Int64 { self.texture = texture; return 92 }
+  func unregisterTexture(_ textureId: Int64) { texture = nil }
+  func textureFrameAvailable(_ textureId: Int64) {
+    guard let buffer = texture?.copyPixelBuffer()?.takeRetainedValue(),
+      CVPixelBufferGetWidth(buffer) > 0, CVPixelBufferGetHeight(buffer) > 0 else { return }
+    videoPublicationCount += 1
+  }
 }
 
 final class ReactivationMediaServer {
@@ -189,7 +194,14 @@ private final class FailingActivationBackend: YlPlaybackBackend {
   }
   func stop() {}
   func deactivate() {}
-  func command(name: String, arguments: [String: Any?]) throws {}
+  func play() throws {}
+  func pause() throws {}
+  func seek(toMs: Int64, cancellationToken: YlOpenCancellationToken?) throws {}
+  func seekToLiveEdge() throws {}
+  func setPlaybackSpeed(_ speed: Float) throws {}
+  func setVolume(_ volume: Float) throws {}
+  func selectAudioTrack(_ trackId: String, cancellationToken: YlOpenCancellationToken?) throws {}
+  func setVideoConstraints(_ constraints: YlAppleVideoConstraints) throws {}
   func emitState() {}
   func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? { nil }
   func dispose() { disposed = true }
@@ -252,7 +264,14 @@ private final class SuccessfulActivationBackend: YlPlaybackBackend {
   func activate() throws { isActive = true }
   func stop() { isActive = false }
   func deactivate() { isActive = false }
-  func command(name: String, arguments: [String: Any?]) throws {}
+  func play() throws {}
+  func pause() throws {}
+  func seek(toMs: Int64, cancellationToken: YlOpenCancellationToken?) throws {}
+  func seekToLiveEdge() throws {}
+  func setPlaybackSpeed(_ speed: Float) throws {}
+  func setVolume(_ volume: Float) throws {}
+  func selectAudioTrack(_ trackId: String, cancellationToken: YlOpenCancellationToken?) throws {}
+  func setVideoConstraints(_ constraints: YlAppleVideoConstraints) throws {}
   func emitState() {}
   func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? { nil }
   func dispose() { isActive = false }

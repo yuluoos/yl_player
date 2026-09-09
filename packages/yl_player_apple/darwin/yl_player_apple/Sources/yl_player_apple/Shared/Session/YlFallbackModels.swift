@@ -1,15 +1,7 @@
 import Foundation
 
-struct YlAppleSourceDescriptor: Equatable {
-  let uri: String
-  let kind: String
-  let formatHint: String
-  let isLive: Bool
-  let hasHeaders: Bool
-}
-
-
 enum YlAppleSourceRoute: Equatable {
+  case inspect
   case avPlayer
   case headeredHls
   case localMatroska

@@ -9,7 +9,14 @@ protocol YlPlaybackBackend: AnyObject {
   func quiesceForReplacement()
   func stop()
   func deactivate()
-  func command(name: String, arguments: [String: Any?]) throws
+  func play() throws
+  func pause() throws
+  func seek(toMs: Int64, cancellationToken: YlOpenCancellationToken?) throws
+  func seekToLiveEdge() throws
+  func setPlaybackSpeed(_ speed: Float) throws
+  func setVolume(_ volume: Float) throws
+  func selectAudioTrack(_ trackId: String, cancellationToken: YlOpenCancellationToken?) throws
+  func setVideoConstraints(_ constraints: YlAppleVideoConstraints) throws
   func emitState()
   func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>?
   func dispose()

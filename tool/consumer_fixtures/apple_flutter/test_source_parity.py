@@ -6,6 +6,8 @@ import shutil
 import subprocess
 import tempfile
 import unittest
+import sys
+from historical_origins import origin_tree
 
 
 REPO = Path(__file__).resolve().parents[3]
@@ -15,17 +17,18 @@ SCRIPT = Path("packages/yl_player_apple/tool/check_source_parity.sh")
 class SourceParityTest(unittest.TestCase):
     def test_copy_identity_and_drift(self):
         self.assertTrue((REPO / SCRIPT).is_file(), "source parity gate is missing")
-        with tempfile.TemporaryDirectory() as temporary:
+        with origin_tree() as historical, tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             for platform in ("ios", "macos"):
                 relative = Path(f"packages/yl_player_{platform}/{platform}/yl_player_{platform}/Sources")
-                shutil.copytree(REPO / relative, root / relative)
+                shutil.copytree(historical / relative, root / relative)
             (root / SCRIPT).parent.mkdir(parents=True)
             shutil.copyfile(REPO / SCRIPT, root / SCRIPT)
             subprocess.run(["git", "init", "-q", str(root)], check=True)
             def run(mode):
-                return subprocess.run(["sh", str(root / SCRIPT), mode], cwd=root,
-                                      capture_output=True, text=True)
+                live_mode = '--capture-live' if mode == '--capture' else '--verify-live'
+                return subprocess.run([sys.executable, str(Path(__file__).with_name('source_parity.py')),
+                                      live_mode, '--root', str(root)], cwd=root, capture_output=True, text=True)
             captured = run("--capture")
             self.assertEqual(captured.returncode, 0, captured.stderr)
             manifest = json.loads((root / SCRIPT.parent / "source-parity.json").read_text())
@@ -64,19 +67,19 @@ class SourceParityTest(unittest.TestCase):
             del migrated["task7_migration"]
             manifest_file.write_text(json.dumps(manifest))
             declarations_file = SCRIPT.parent / "source-declarations.json"
-            shutil.copyfile(REPO / declarations_file, root / declarations_file)
+            shutil.copyfile(historical / declarations_file, root / declarations_file)
             declarations = json.loads((root / declarations_file).read_text())["extractions"]
             for declaration in declarations:
                 destination = Path(declaration["destination"])
                 (root / destination).parent.mkdir(parents=True, exist_ok=True)
-                shutil.copyfile(REPO / destination, root / destination)
+                shutil.copyfile(historical / destination, root / destination)
             self.assertEqual(run("--verify-identical").returncode, 0)
             extracted = root / declarations[0]["destination"]
             extracted.write_bytes(extracted.read_bytes() + b"\n// declaration drift\n")
             drift = run("--verify-identical")
             self.assertNotEqual(drift.returncode, 0)
             self.assertIn("shared declaration file changed", drift.stderr)
-            shutil.copyfile(REPO / declarations[0]["destination"], extracted)
+            shutil.copyfile(historical / declarations[0]["destination"], extracted)
             target = root / rows[0]["destination"]
             target.write_bytes(target.read_bytes() + b"\n// drift\n")
             drift = run("--verify-identical")

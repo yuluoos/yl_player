@@ -97,20 +97,14 @@ struct YlNativeBackendCallback {
 
 /// Closed native compatibility projection. Only validated typed host inputs create it.
 struct YlAppleLoadRecipe {
-  let source: [String: Any?]
+  let source: YlAppleSourceDescriptor
 }
 
 struct YlAppleVideoConstraints {
   let maxWidth: Int?
   let maxHeight: Int?
   let maxBitrate: Int?
-  var native: [String: Any?] {
-    var result: [String: Any?] = [:]
-    if let maxWidth { result["maxWidth"] = maxWidth }
-    if let maxHeight { result["maxHeight"] = maxHeight }
-    if let maxBitrate { result["maxBitrate"] = maxBitrate }
-    return result
-  }
+  static let unconstrained = YlAppleVideoConstraints(maxWidth: nil, maxHeight: nil, maxBitrate: nil)
 }
 
 enum YlApplePlaybackCommand {
@@ -118,16 +112,16 @@ enum YlApplePlaybackCommand {
   case seek(Int64), speed(Double), volume(Double), track(String)
   case constraints(YlAppleVideoConstraints)
 
-  var native: (name: String, arguments: [String: Any?]) {
+  func apply(to backend: YlPlaybackBackend, cancellationToken: YlOpenCancellationToken? = nil) throws {
     switch self {
-    case .play: ("play", [:])
-    case .pause: ("pause", [:])
-    case .liveEdge: ("seekToLiveEdge", [:])
-    case .seek(let position): ("seekTo", ["positionMs": position])
-    case .speed(let rate): ("setPlaybackSpeed", ["speed": rate])
-    case .volume(let volume): ("setVolume", ["volume": volume])
-    case .track(let track): ("selectAudioTrack", ["trackId": track])
-    case .constraints(let constraints): ("setQualityConstraint", ["constraint": constraints.native])
+    case .play: try backend.play()
+    case .pause: try backend.pause()
+    case .liveEdge: try backend.seekToLiveEdge()
+    case .seek(let position): try backend.seek(toMs: position, cancellationToken: cancellationToken)
+    case .speed(let speed): try backend.setPlaybackSpeed(Float(speed))
+    case .volume(let volume): try backend.setVolume(Float(volume))
+    case .track(let track): try backend.selectAudioTrack(track, cancellationToken: cancellationToken)
+    case .constraints(let constraints): try backend.setVideoConstraints(constraints)
     }
   }
 }
