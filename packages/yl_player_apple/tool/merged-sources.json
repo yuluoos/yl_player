@@ -17,7 +17,15 @@
       "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlAvPlayerBackend.swift",
       "ios_sha256": "a69f6df31fdfbf3ac9d995219dcd02c07e0c7ab1b5f6e5379ae33efb03dc0637",
       "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift",
-      "branches": "Reviewed macOS base plus iOS audio activation, direct live reconnect/error collector, retained actual HLS replacement ownership/finishReplacement; SDK/display/Flutter ownership in services."
+      "branches": "Reviewed macOS base plus iOS audio activation, direct live reconnect/error collector, retained actual HLS replacement ownership/finishReplacement; SDK/display/Flutter ownership in services.",
+      "task7_migration": {
+        "rulings": [
+          "R16",
+          "R17"
+        ],
+        "destination_sha256": "ee3921f3d2fd41e5bef44c21b1d48ac74055b8043c9314053ab4ddbcc2cca760",
+        "reason": "R16 native state/events and commit callbacks are typed; original command/source algorithms remain behind closed conversion. R17 persistent AVPlayer and actual item rollback retained; observers/display capture immutable activity binding."
+      }
     },
     {
       "name": "YlFallbackBackend.swift",
@@ -26,7 +34,15 @@
       "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackBackend.swift",
       "ios_sha256": "b97ed544b0c6d600251c43be42f379395a4b67faf9033deeb6475524cd2e8fd4",
       "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/ManagedFallback/YlFallbackBackend.swift",
-      "branches": "Reviewed macOS clock-lock/audio/submission/Stop/terminal fencing base; iOS audio lifecycle, no added reservations/leases/submission resource policy; platform texture/display service."
+      "branches": "Reviewed macOS clock-lock/audio/submission/Stop/terminal fencing base; iOS audio lifecycle, no added reservations/leases/submission resource policy; platform texture/display service.",
+      "task7_migration": {
+        "rulings": [
+          "R16",
+          "R22"
+        ],
+        "destination_sha256": "2c7b65461a4b300b67699bd7974f39919cde9dee3bb7dcde672e7e8dce955def",
+        "reason": "R16 native state/events and commit callbacks are typed; original command/source algorithms remain behind closed conversion. R22 repairs proven macOS retired-decoder activation: network existing async reprepare, local existing rebuild/seek, old retained audio/media retired after successful candidate preparation. iOS retained-decoder behavior unchanged; no clock/queue/retry tuning."
+      }
     },
     {
       "name": "YlFallbackModels.swift",
@@ -44,7 +60,14 @@
       "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackRecoveryPolicy.swift",
       "ios_sha256": "914f68f9b272e724e1bf1dfa790f9f745d8164dc788b8674e2af7900210331f3",
       "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlFallbackRecoveryPolicy.swift",
-      "branches": "macOS restoration/terminal/activation policies retained; per-platform iOS seekability-gated vs macOS unmodified resume intent."
+      "branches": "macOS restoration/terminal/activation policies retained; per-platform iOS seekability-gated vs macOS unmodified resume intent.",
+      "task7_migration": {
+        "rulings": [
+          "R16"
+        ],
+        "destination_sha256": "31912d216e3c0309b970d40102cf1cbaf8a57f0e22e35b0910dfc57e03c369f8",
+        "reason": "R16 native state/events and commit callbacks are typed; original command/source algorithms remain behind closed conversion."
+      }
     },
     {
       "name": "YlFrameScheduler.swift",
@@ -107,7 +130,14 @@
       "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlPlaybackBackend.swift",
       "ios_sha256": "b6b898a6e606d4512078b9c64334044626cf04908648f8b7a852873c6e318d6b",
       "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlPlaybackBackend.swift",
-      "branches": "Reviewed macOS external recovery base; iOS prepare-before-quiesce, synchronous rollback and finishReplacement retained in one transaction."
+      "branches": "Reviewed macOS external recovery base; iOS prepare-before-quiesce, synchronous rollback and finishReplacement retained in one transaction.",
+      "task7_migration": {
+        "rulings": [
+          "R16"
+        ],
+        "destination_sha256": "16954147841ade10cbf47201b8a8427d4585fbd61bd917ce4f0674b70fa26a08",
+        "reason": "R16 native state/events and commit callbacks are typed; original command/source algorithms remain behind closed conversion."
+      }
     },
     {
       "name": "YlPreparedFallback.swift",
@@ -134,7 +164,14 @@
       "ios_origin": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlVideoToolboxDecoder.swift",
       "ios_sha256": "7edebca068c8ddad162d73642a5ce5e8fd111389493c2dd863f79d701700f837",
       "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlVideoToolboxDecoder.swift",
-      "branches": "Reviewed macOS reservation/submission base; optional nil ownership on iOS preserves no resource lease/budget, BGRA/realtime vs macOS NV12/Metal/temporal flags."
+      "branches": "Reviewed macOS reservation/submission base; optional nil ownership on iOS preserves no resource lease/budget, BGRA/realtime vs macOS NV12/Metal/temporal flags.",
+      "task7_migration": {
+        "rulings": [
+          "R16"
+        ],
+        "destination_sha256": "72c6e880ab1dd18bf9fb07fcd2ceef696e139352afe268a5cad2150fe3e50f06",
+        "reason": "R16 native state/events and commit callbacks are typed; original command/source algorithms remain behind closed conversion. Hardware evidence is captured from the actual created VT session, never invented from availability."
+      }
     }
   ]
 }

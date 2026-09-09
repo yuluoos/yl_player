@@ -7,7 +7,28 @@
     "original_body_sha256": "b69a2ecf480459ceb27ae3c48a92864eec69c8730b233845fc20785326267052",
     "task7_target": "YlAppleHostTests.testCancelOpenMatchesOnlyThePreparingCandidate",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Use distinct typed loadRequestId values for current and stale candidates. Stale cancellation must not fail or replace the current candidate; matching cancellation must prevent commitment and leave the prior committed session active."
+    "typed_host_assertion_mapping": "R19: actual held A/B/C Load supersession and controlled precommit failure; see explicit counterpart assertion_groups. No CancelOpen schema expansion or Stop substitution.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testCancelOpenMatchesOnlyThePreparingCandidate",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.cancelCandidate",
+      "assertion_groups": [
+        {
+          "original": "stale cancellation cannot reject current candidate",
+          "typed_assertions": "Held B is superseded by valid C that enters actual HTTP preparation; releasing stale B leaves C unsettled. A later valid AV candidate commits despite stale work."
+        },
+        {
+          "original": "matching pending candidate cannot commit",
+          "typed_assertions": "Awaiting superseded B and staleTask must throw; controlled C precommit failure must also throw."
+        },
+        {
+          "original": "owner remains active",
+          "typed_assertions": "After C fails, session remains A, actual AVPlayerItem identity remains A, and host.isActive is true. R19 maps removed CancelOpen to supported Load supersession without introducing a transport method."
+        }
+      ],
+      "shared_body_sha256": "845b4ff9c1586a74c31927d19194a93b6fb2bef268742e8b9494c1d4e942768b"
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/RunnerTests.swift",
@@ -17,7 +38,32 @@
     "original_body_sha256": "9fdaf2d190c807e59a4335527caae4833a4365903e1511c6f36586218b4c2f98",
     "task7_target": "YlAppleHostTests.testPlayerVolumeAndCandidateOptionsSurviveFailedReplacementAndStop",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Typed volume before Load survives candidate failure and Stop. Assert underlying accepted AV item identity, 0.2 volume, 2/30-second original buffer goals, 640-width vs unconstrained resolution, autoplay intent and committed-only configuration changes."
+    "typed_host_assertion_mapping": "Typed volume before Load survives candidate failure and Stop. Assert underlying accepted AV item identity, 0.2 volume, 2/30-second original buffer goals, 640-width vs unconstrained resolution, autoplay intent and committed-only configuration changes.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testPlayerVolumeAndCandidateOptionsSurviveFailedReplacementAndStop",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.volumeAndOptions",
+      "assertion_groups": [
+        {
+          "original": "every expected command/load result",
+          "typed_assertions": "Typed setVolume and accepted loads must return normally; invalid replacement must throw."
+        },
+        {
+          "original": "volume 0.2 before/after failed replacement and Stop",
+          "typed_assertions": "Actual AVPlayer.volume assertions preserve 0.2 with 0.001 accuracy at all three checkpoints."
+        },
+        {
+          "original": "accepted low-latency item and resolution",
+          "typed_assertions": "Actual AV item has 2-second preferredForwardBufferDuration, automaticallyWaits false, width 640; failed candidate retains exact item identity and values."
+        },
+        {
+          "original": "fresh source after Stop resets candidate options only",
+          "typed_assertions": "Fresh actual item has zero preferredMaximumResolution, 30-second buffer, automaticallyWaits true; volume remains 0.2."
+        }
+      ],
+      "shared_body_sha256": "3eb56551515d73df56b22b46120b4ef9a097e20c17a01a55fad46d4eb23fe81b"
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/RunnerTests.swift",
@@ -27,7 +73,32 @@
     "original_body_sha256": "1880fc2957ed7464db50effa08ec50f3c8fa55485b7a10e9abea4d16889e1ef6",
     "task7_target": "YlAppleHostTests.testStopCancelsPendingOpenRetainsTextureAndAllowsFreshOpen",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Typed Stop cancels pending Load exactly once, prevents all old candidate commitments/events, returns idle/null-session state with cleared metadata, retains playerId/textureId, and permits a fresh Load on the same texture."
+    "typed_host_assertion_mapping": "Typed Stop cancels pending Load exactly once, prevents all old candidate commitments/events, returns idle/null-session state with cleared metadata, retains playerId/textureId, and permits a fresh Load on the same texture.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testStopCancelsPendingOpenRetainsTextureAndAllowsFreshOpen",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.stopPending",
+      "assertion_groups": [
+        {
+          "original": "pending open cancelled and never commits; Stop succeeds",
+          "typed_assertions": "Held actual HTTP Load Future throws after awaited typed Stop; Stop returns normally."
+        },
+        {
+          "original": "one idle state, zero position, no tracks/error/pixel buffer",
+          "typed_assertions": "Exactly one callback state has idle/position0/empty tracks/nil failure/nil session; output has no frames."
+        },
+        {
+          "original": "texture identity retained and not unregistered",
+          "typed_assertions": "Fixture-owned texture 81 remains unchanged with zero disposals before and after fresh Load; old literal71 was only fixture identity."
+        },
+        {
+          "original": "activation after Stop remains idle; fresh load succeeds",
+          "typed_assertions": "resume/refresh leaves idle; fresh typed Load returns and owns current session on same output."
+        }
+      ],
+      "shared_body_sha256": "4b61e1f9f360960b36f5790c0f0333a2c8fda566d7987f003771d4d5c27b9869"
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlFallbackBackendTests.swift",
@@ -37,7 +108,20 @@
     "original_body_sha256": "ee3aa79d3cb866681aaf27f2c1d372a7bb1baaf53acec2ae7b59878088f23295",
     "task7_target": "YlAppleHostTests.testPlayerPersistsSuccessfulQualityConstraint",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Typed video-constraint setter changes accepted configuration only after success; a later Load inherits the successful constraint and rejects incompatible media while preserving the previous accepted session."
+    "typed_host_assertion_mapping": "Typed video-constraint setter changes accepted configuration only after success; a later Load inherits the successful constraint and rejects incompatible media while preserving the previous accepted session.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testPlayerPersistsSuccessfulQualityConstraint",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.persistedQuality",
+      "assertion_groups": [
+        {
+          "original": "successful quality command persists maxHeight720",
+          "typed_assertions": "Typed setVideoConstraints returns normally; actual AV item resolution height is720 and remains720 after a second accepted source."
+        }
+      ],
+      "shared_body_sha256": "f20d8afc79709c58dbfdb0ab07397ebd20b5e042af6b49ef9e7f6ef4f326f0b3"
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlIosChannelTests.swift",
@@ -47,7 +131,28 @@
     "original_body_sha256": "86d346c21ea40750618232214c7348ab27b3c74fc5a485dc8ebae92de1e0c80d",
     "task7_target": "YlAppleHostTests.testCapabilitiesDescribeCompletePlayerWithCanonicalMimeCodecs",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Typed capabilities retain canonical AVC/HEVC codec identifiers, the original supported-format set, and advertised max decoder concurrency; compare every original value."
+    "typed_host_assertion_mapping": "Typed capabilities retain canonical AVC/HEVC codec identifiers, the original supported-format set, and advertised max decoder concurrency; compare every original value.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testCapabilitiesDescribeCompletePlayerWithCanonicalMimeCodecs",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.capabilities",
+      "assertion_groups": [
+        {
+          "original": "canonical hardware H264/HEVC identifiers and omitted unsupported HEVC",
+          "typed_assertions": "Typed capabilities array equals video/avc, video/hevc, or only video/avc for hevc:false."
+        },
+        {
+          "original": "complete supported format list",
+          "typed_assertions": "Native typed formats preserve automatic,hls,httpFlv,mp4,mov,matroska,flv; actual host assessment routes each public format, with live FLV intent."
+        },
+        {
+          "original": "one concurrent decoder",
+          "typed_assertions": "Typed maxConcurrentVideoDecoders equals1."
+        }
+      ],
+      "shared_body_sha256": "f255a629af4344d9bf1213e3f0b98a6c32d0a3340e30dcdcb862372f65d9618e"
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlIosChannelTests.swift",
@@ -57,7 +162,28 @@
     "original_body_sha256": "30d6158ae716cc7b7b402312e4cc9b5a6f4a2e375d77e61aff95546a5dc3e514",
     "task7_target": "YlAppleHostTests.testCapabilitiesOmitUnsupportedHardwareCodecs",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Typed capabilities omit unsupported hardware codec identifiers rather than substituting software capability; retain all original set comparisons."
+    "typed_host_assertion_mapping": "Typed capabilities omit unsupported hardware codec identifiers rather than substituting software capability; retain all original set comparisons.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testCapabilitiesOmitUnsupportedHardwareCodecs",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.capabilities",
+      "assertion_groups": [
+        {
+          "original": "canonical hardware H264/HEVC identifiers and omitted unsupported HEVC",
+          "typed_assertions": "Typed capabilities array equals video/avc, video/hevc, or only video/avc for hevc:false."
+        },
+        {
+          "original": "complete supported format list",
+          "typed_assertions": "Native typed formats preserve automatic,hls,httpFlv,mp4,mov,matroska,flv; actual host assessment routes each public format, with live FLV intent."
+        },
+        {
+          "original": "one concurrent decoder",
+          "typed_assertions": "Typed maxConcurrentVideoDecoders equals1."
+        }
+      ],
+      "shared_body_sha256": "f255a629af4344d9bf1213e3f0b98a6c32d0a3340e30dcdcb862372f65d9618e"
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlIosChannelTests.swift",
@@ -67,7 +193,20 @@
     "original_body_sha256": "797736736a14612e1110df52ffc911cffa8d16e9a8cae5150ea11a6a12b9cba1",
     "task7_target": "YlAppleHostTests.testFallbackMetricsUseDartContractDroppedFrameKey",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Map the original droppedVideoFrames numeric value to the typed metrics/SPI dropped-frame field; retain every metric assertion without relying on legacy map-key spelling."
+    "typed_host_assertion_mapping": "Map the original droppedVideoFrames numeric value to the typed metrics/SPI dropped-frame field; retain every metric assertion without relying on legacy map-key spelling.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testFallbackMetricsUseDartContractDroppedFrameKey",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.metrics",
+      "assertion_groups": [
+        {
+          "original": "droppedVideoFrames7 and no droppedFrames key",
+          "typed_assertions": "Actual host typed metrics encoding equals droppedVideoFrames7; generated record has no droppedFrames field. Additional original metric values remain20/40/100/4096/1/2."
+        }
+      ],
+      "shared_body_sha256": "490d3bd77f42a8d1608d18c1918c383e1805b5915ba671be429aa0fb4f9c7522"
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlIosChannelTests.swift",
@@ -77,7 +216,24 @@
     "original_body_sha256": "15a3886424176c690e620acd1cd9f08e16a20947aa40149a8d99ae9e22e0ac1e",
     "task7_target": "YlAppleHostTests.testChannelGenerationsAreStrictlyIncreasing",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Map old mutable channel generation assertions to fresh typed session identities/current-session authority. Preserve strict non-reuse and stale-session rejection; document any intentionally opaque ID representation rather than comparing transport integers."
+    "typed_host_assertion_mapping": "Map old mutable channel generation assertions to fresh typed session identities/current-session authority. Preserve strict non-reuse and stale-session rejection; document any intentionally opaque ID representation rather than comparing transport integers.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testChannelGenerationsAreStrictlyIncreasing",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.generations",
+      "assertion_groups": [
+        {
+          "original": "strictly increasing native generations",
+          "typed_assertions": "Original YlBackendGeneration.next two-value greater-than assertion retained."
+        },
+        {
+          "original": "public replacement authority",
+          "typed_assertions": "Additional actual typed loads yield distinct session IDs and increasing revision/sequence; stale session Pause rejects."
+        }
+      ],
+      "shared_body_sha256": "3c9433046d260745d07b20d17933667549a9ed314510051c10fd2e42419879a2"
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlIosChannelTests.swift",
@@ -87,7 +243,28 @@
     "original_body_sha256": "2ad76be0c2f8ab587377bddb5674ce47bc1eebaa6813ade67a3ce62f50e994aa",
     "task7_target": "YlAppleHostTests.testFullStateEnvelopeUsesVersionedGeneration",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Map playerId/generation/type/state values to the typed full-state callback, committed session identity and immutable loadRequestId. Legacy protocolVersion/type map spellings are replaced only by generated Pigeon type invariants."
+    "typed_host_assertion_mapping": "Map playerId/generation/type/state values to the typed full-state callback, committed session identity and immutable loadRequestId. Legacy protocolVersion/type map spellings are replaced only by generated Pigeon type invariants.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testFullStateEnvelopeUsesVersionedGeneration",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.fullState",
+      "assertion_groups": [
+        {
+          "original": "playerId7 and protocolVersion1 envelope",
+          "typed_assertions": "Per-player generated channel suffix and installed host replace embedded numeric playerId; Create schemaMajor/spiMajor equal2. No legacy envelope is emitted."
+        },
+        {
+          "original": "generation9 and type-state",
+          "typed_assertions": "Actual host encoder yields immutable session apple-7-s9/loadRequestId request-9, revision9, sequence10 as AppleStateMessage."
+        },
+        {
+          "original": "state status ready (iOS original)",
+          "typed_assertions": "Typed state status remains ready; AV decoder evidence remains unknown."
+        }
+      ],
+      "shared_body_sha256": "83c722ed0c3e352a43c6fce69ef271de57dbca58a672dda138c82e5f26b4f445"
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlIosChannelTests.swift",
@@ -97,7 +274,24 @@
     "original_body_sha256": "f91b309900eb93ff64101dcc8812387941275e37403820eb11bf5291762fb56f",
     "task7_target": "YlAppleHostTests.testDeltaEnvelopeContainsOnlyDynamicPayload",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Typed dynamic update retains current player/session correlation and dynamic values while leaving static snapshot fields unchanged; enforce the original delta-only assertion without a legacy dictionary transport."
+    "typed_host_assertion_mapping": "Typed dynamic update retains current player/session correlation and dynamic values while leaving static snapshot fields unchanged; enforce the original delta-only assertion without a legacy dictionary transport.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testDeltaEnvelopeContainsOnlyDynamicPayload",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.delta",
+      "assertion_groups": [
+        {
+          "original": "protocolVersion1/generation9 or42/type-stateDelta",
+          "typed_assertions": "Generated AppleStateDeltaMessage replaces envelope; actual host callback has session apple-9-s42, previousRevision41/revision42/sequence43. Factory schema2 assertion is covered by fullState counterpart."
+        },
+        {
+          "original": "dynamic payload excludes capabilities",
+          "typed_assertions": "Mirror of generated delta has no capabilities field; actual callback additionally verifies position1000, buffered3000, liveOffset2000, droppedVideoFrames2."
+        }
+      ],
+      "shared_body_sha256": "8ae6bf0797b72f64ea20ff8f9207a37594586945822047ec1d4a83720145c28b"
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlV2ReactivationTests.swift",
@@ -107,7 +301,48 @@
     "original_body_sha256": "fd82f4e1be6c01e59116470bd6b9996f4f4716f573aacfda161ae628feccf9e0",
     "task7_target": "YlAppleHostTests.testFailedReplacementThenReactivationPreservesAcceptedSessionControls",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Typed Load replacement failure and subsequent activation preserve the accepted source and play intent, rate, volume, start position/constraints and emitted state; a rejected candidate must not leak configuration or events."
+    "typed_host_assertion_mapping": "Typed Load replacement failure and subsequent activation preserve the accepted source and play intent, rate, volume, start position/constraints and emitted state; a rejected candidate must not leak configuration or events.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testFailedReplacementThenReactivationPreservesAcceptedSessionControls",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.reactivation",
+      "assertion_groups": [
+        {
+          "original": "initial load and every control/reload completion",
+          "typed_assertions": "Actual typed Load/commands must return; invalid replacement must throw. Only initial iOS decoder.video_hardware_unavailable retains original conditional skip under R21."
+        },
+        {
+          "original": "initial start>=450 and accepted seek>=650",
+          "typed_assertions": "Original initial500ms/preroll450ms and seek700ms/tolerance650ms assertions retained before failed replacement and after restoration."
+        },
+        {
+          "original": "accepted quality800 survives candidate failure and reactivation",
+          "typed_assertions": "Native acceptedVideoConstraints.maxWidth equals800 at both checkpoints; invalid candidate width1 never replaces it."
+        },
+        {
+          "original": "same generation and paused/ready restoration",
+          "typed_assertions": "Public sessionId remains initialLoad session; wait requires actual active plus paused/ready, and original status assertion remains."
+        },
+        {
+          "original": "selected audio track and paused timeline stable within50ms",
+          "typed_assertions": "Restored selected track ID equals accepted final track; paused position unchanged within50ms and >=650ms."
+        },
+        {
+          "original": "play suppresses preroll rewind and retains accepted speed",
+          "typed_assertions": "Minimum restored position>=650, playback baseline exceeds paused+100, and later200ms sample advances>280ms at accepted2x. Volume0.2 is accepted before reactivation; original body had no separate restored-volume assertion."
+        }
+      ],
+      "shared_body_sha256": "eb2bb7e5bc74704fea02b77e6a26a92b0ff4f84f46cffe1a5601ec8ca470e2ac",
+      "conditional_skip": {
+        "ruling": "R21",
+        "error": "decoder.video_hardware_unavailable",
+        "stage": "initial real MKV Load only",
+        "original_source": "packages/yl_player/example/ios/RunnerTests/YlV2ReactivationTests.swift",
+        "original_line": 172,
+        "reason": "Original conditional simulator hardware skip preserved exactly; other errors fail. macOS runs full assertions; separate real AV publication tests cannot skip."
+      }
+    }
   },
   {
     "source": "packages/yl_player/example/macos/RunnerTests/RunnerTests.swift",
@@ -117,7 +352,28 @@
     "original_body_sha256": "a9a56b34fe2b118b5b33a68fb89e3ddf7b1e7ba7e2e16829f94322c07bd64b94",
     "task7_target": "YlAppleHostTests.testCancelOpenMatchesOnlyThePreparingCandidate",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Use distinct typed loadRequestId values for current and stale candidates. Stale cancellation must not fail or replace the current candidate; matching cancellation must prevent commitment and leave the prior committed session active."
+    "typed_host_assertion_mapping": "R19: actual held A/B/C Load supersession and controlled precommit failure; see explicit counterpart assertion_groups. No CancelOpen schema expansion or Stop substitution.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testCancelOpenMatchesOnlyThePreparingCandidate",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.cancelCandidate",
+      "assertion_groups": [
+        {
+          "original": "stale cancellation cannot reject current candidate",
+          "typed_assertions": "Held B is superseded by valid C that enters actual HTTP preparation; releasing stale B leaves C unsettled. A later valid AV candidate commits despite stale work."
+        },
+        {
+          "original": "matching pending candidate cannot commit",
+          "typed_assertions": "Awaiting superseded B and staleTask must throw; controlled C precommit failure must also throw."
+        },
+        {
+          "original": "owner remains active",
+          "typed_assertions": "After C fails, session remains A, actual AVPlayerItem identity remains A, and host.isActive is true. R19 maps removed CancelOpen to supported Load supersession without introducing a transport method."
+        }
+      ],
+      "shared_body_sha256": "845b4ff9c1586a74c31927d19194a93b6fb2bef268742e8b9494c1d4e942768b"
+    }
   },
   {
     "source": "packages/yl_player/example/macos/RunnerTests/RunnerTests.swift",
@@ -127,7 +383,32 @@
     "original_body_sha256": "9721685c5b2e20398d0a8d3a21c76694d3f399b0124ee9f25b4a20883386e060",
     "task7_target": "YlAppleHostTests.testStopCancelsPendingOpenRetainsTextureAndAllowsFreshOpen",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Typed Stop cancels pending Load exactly once, prevents all old candidate commitments/events, returns idle/null-session state with cleared metadata, retains playerId/textureId, and permits a fresh Load on the same texture."
+    "typed_host_assertion_mapping": "Typed Stop cancels pending Load exactly once, prevents all old candidate commitments/events, returns idle/null-session state with cleared metadata, retains playerId/textureId, and permits a fresh Load on the same texture.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testStopCancelsPendingOpenRetainsTextureAndAllowsFreshOpen",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.stopPending",
+      "assertion_groups": [
+        {
+          "original": "pending open cancelled and never commits; Stop succeeds",
+          "typed_assertions": "Held actual HTTP Load Future throws after awaited typed Stop; Stop returns normally."
+        },
+        {
+          "original": "one idle state, zero position, no tracks/error/pixel buffer",
+          "typed_assertions": "Exactly one callback state has idle/position0/empty tracks/nil failure/nil session; output has no frames."
+        },
+        {
+          "original": "texture identity retained and not unregistered",
+          "typed_assertions": "Fixture-owned texture 81 remains unchanged with zero disposals before and after fresh Load; old literal71 was only fixture identity."
+        },
+        {
+          "original": "activation after Stop remains idle; fresh load succeeds",
+          "typed_assertions": "resume/refresh leaves idle; fresh typed Load returns and owns current session on same output."
+        }
+      ],
+      "shared_body_sha256": "4b61e1f9f360960b36f5790c0f0333a2c8fda566d7987f003771d4d5c27b9869"
+    }
   },
   {
     "source": "packages/yl_player/example/macos/RunnerTests/RunnerTests.swift",
@@ -137,7 +418,28 @@
     "original_body_sha256": "02988b30461c092dd517316201fd97ec92b407bd03878e8921bcd79af3934bf2",
     "task7_target": "YlAppleHostTests.testCapabilitiesUseCanonicalCodecIdentifiers",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Typed capabilities equal the original canonical codec identifiers, format set, and advertised concurrency1; no inferred new codec/decoder-policy capabilities."
+    "typed_host_assertion_mapping": "Typed capabilities equal the original canonical codec identifiers, format set, and advertised concurrency1; no inferred new codec/decoder-policy capabilities.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testCapabilitiesUseCanonicalCodecIdentifiers",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.capabilities",
+      "assertion_groups": [
+        {
+          "original": "canonical hardware H264/HEVC identifiers and omitted unsupported HEVC",
+          "typed_assertions": "Typed capabilities array equals video/avc, video/hevc, or only video/avc for hevc:false."
+        },
+        {
+          "original": "complete supported format list",
+          "typed_assertions": "Native typed formats preserve automatic,hls,httpFlv,mp4,mov,matroska,flv; actual host assessment routes each public format, with live FLV intent."
+        },
+        {
+          "original": "one concurrent decoder",
+          "typed_assertions": "Typed maxConcurrentVideoDecoders equals1."
+        }
+      ],
+      "shared_body_sha256": "f255a629af4344d9bf1213e3f0b98a6c32d0a3340e30dcdcb862372f65d9618e"
+    }
   },
   {
     "source": "packages/yl_player/example/macos/RunnerTests/RunnerTests.swift",
@@ -147,7 +449,24 @@
     "original_body_sha256": "7c81e0c7f0e96c9cf1273391a46a4b4c2cea4d667ff82f80e5993b692d5c9244",
     "task7_target": "YlAppleHostTests.testChannelGenerationsAreStrictlyIncreasing",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Map old mutable channel generation assertions to fresh typed session identities/current-session authority. Preserve strict non-reuse and stale-session rejection; document any intentionally opaque ID representation rather than comparing transport integers."
+    "typed_host_assertion_mapping": "Map old mutable channel generation assertions to fresh typed session identities/current-session authority. Preserve strict non-reuse and stale-session rejection; document any intentionally opaque ID representation rather than comparing transport integers.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testChannelGenerationsAreStrictlyIncreasing",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.generations",
+      "assertion_groups": [
+        {
+          "original": "strictly increasing native generations",
+          "typed_assertions": "Original YlBackendGeneration.next two-value greater-than assertion retained."
+        },
+        {
+          "original": "public replacement authority",
+          "typed_assertions": "Additional actual typed loads yield distinct session IDs and increasing revision/sequence; stale session Pause rejects."
+        }
+      ],
+      "shared_body_sha256": "3c9433046d260745d07b20d17933667549a9ed314510051c10fd2e42419879a2"
+    }
   },
   {
     "source": "packages/yl_player/example/macos/RunnerTests/RunnerTests.swift",
@@ -157,7 +476,28 @@
     "original_body_sha256": "f30d81de04108bea27b529eca3c869540211571ada14bd2c660bc0cc1060e47a",
     "task7_target": "YlAppleHostTests.testStateEnvelopeUsesVersionedGeneration",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Typed full state carries the same player identity, committed-session authority and state values; generated callback type replaces legacy protocolVersion1/type-state spelling."
+    "typed_host_assertion_mapping": "Typed full state carries the same player identity, committed-session authority and state values; generated callback type replaces legacy protocolVersion1/type-state spelling.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testStateEnvelopeUsesVersionedGeneration",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.fullState",
+      "assertion_groups": [
+        {
+          "original": "playerId7 and protocolVersion1 envelope",
+          "typed_assertions": "Per-player generated channel suffix and installed host replace embedded numeric playerId; Create schemaMajor/spiMajor equal2. No legacy envelope is emitted."
+        },
+        {
+          "original": "generation9 and type-state",
+          "typed_assertions": "Actual host encoder yields immutable session apple-7-s9/loadRequestId request-9, revision9, sequence10 as AppleStateMessage."
+        },
+        {
+          "original": "state status ready (iOS original)",
+          "typed_assertions": "Typed state status remains ready; AV decoder evidence remains unknown."
+        }
+      ],
+      "shared_body_sha256": "83c722ed0c3e352a43c6fce69ef271de57dbca58a672dda138c82e5f26b4f445"
+    }
   },
   {
     "source": "packages/yl_player/example/macos/RunnerTests/RunnerTests.swift",
@@ -167,7 +507,20 @@
     "original_body_sha256": "5c9e410438865fe2580e94afafe69b1010e6793e3be8dca44fc7b1b7b44c7a1d",
     "task7_target": "YlAppleHostTests.testPluginChannelNamesMatchTheDartAdapter",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Replace only the two obsolete literal Method/EventChannel name assertions with generated Pigeon native-host/Dart-event registration parity and no legacy channel registration; production registration must match the generated schema."
+    "typed_host_assertion_mapping": "Replace only the two obsolete literal Method/EventChannel name assertions with generated Pigeon native-host/Dart-event registration parity and no legacy channel registration; production registration must match the generated schema.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testPluginChannelNamesMatchTheDartAdapter",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.channels",
+      "assertion_groups": [
+        {
+          "original": "two old platform method/event channel strings match Dart adapter",
+          "typed_assertions": "Generated factory creates two distinct suffixed ApplePlayerHostApi registrations and matching ApplePlayerFlutterApi callback suffixes, each resolving its own host. The generated API type boundary replaces obsolete platform channel literals under Task5/6 schema."
+        }
+      ],
+      "shared_body_sha256": "7ca6241d49048c26555ad78b172036bd5cd288bc7c5d9b0a815cbd3235e671cb"
+    }
   },
   {
     "source": "packages/yl_player/example/macos/RunnerTests/YlMacosFallbackTests.swift",
@@ -177,7 +530,24 @@
     "original_body_sha256": "614c812cbe01d374c0d6b01c784ee0341cc155e2c2900d4e9e82b2fcaac989e8",
     "task7_target": "YlAppleHostTests.testFallbackStateDeltaRetainsGenerationEnvelope",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Typed fallback dynamic callbacks preserve current session/load correlation and original dynamic metric values; old channel-generation/type envelope representation is explicitly superseded by typed callback identity."
+    "typed_host_assertion_mapping": "Typed fallback dynamic callbacks preserve current session/load correlation and original dynamic metric values; old channel-generation/type envelope representation is explicitly superseded by typed callback identity.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testFallbackStateDeltaRetainsGenerationEnvelope",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.delta",
+      "assertion_groups": [
+        {
+          "original": "protocolVersion1/generation9 or42/type-stateDelta",
+          "typed_assertions": "Generated AppleStateDeltaMessage replaces envelope; actual host callback has session apple-9-s42, previousRevision41/revision42/sequence43. Factory schema2 assertion is covered by fullState counterpart."
+        },
+        {
+          "original": "dynamic payload excludes capabilities",
+          "typed_assertions": "Mirror of generated delta has no capabilities field; actual callback additionally verifies position1000, buffered3000, liveOffset2000, droppedVideoFrames2."
+        }
+      ],
+      "shared_body_sha256": "8ae6bf0797b72f64ea20ff8f9207a37594586945822047ec1d4a83720145c28b"
+    }
   },
   {
     "source": "packages/yl_player/example/macos/RunnerTests/YlV2ReactivationTests.swift",
@@ -187,7 +557,24 @@
     "original_body_sha256": "cc21a99a79acf2aca43640969da482471200e6effd341e9c1c073ef62666864f",
     "task7_target": "YlAppleHostTests.testActiveFallbackReplacementUsesDefaultAudioBackedClock",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Exercise the real typed host with its default audio-backed clock during fallback replacement; completion must not deadlock and must retain the correct committed source/controls."
+    "typed_host_assertion_mapping": "Exercise the real typed host with its default audio-backed clock during fallback replacement; completion must not deadlock and must retain the correct committed source/controls.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testActiveFallbackReplacementUsesDefaultAudioBackedClock",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.activeReplacement",
+      "assertion_groups": [
+        {
+          "original": "both actual loads succeed without default audio-clock deadlock; active before/after",
+          "typed_assertions": "Real network Matroska loads a/b return under bounded XCTest runtime, use default audio-backed media clock, and assert active each time."
+        },
+        {
+          "original": "texture stable, generation changed, loadToken2 and nativeFallback",
+          "typed_assertions": "Texture81 and zero disposals retained; session differs; last callback loadRequestId b and managedFallback engine replace token2/nativeFallback strings."
+        }
+      ],
+      "shared_body_sha256": "4040aeffe9793fe6b399220772c30ea8aa17c731bb15148f7959c7a4941d5ccc"
+    }
   },
   {
     "source": "packages/yl_player/example/macos/RunnerTests/YlV2ReactivationTests.swift",
@@ -197,6 +584,39 @@
     "original_body_sha256": "fd82f4e1be6c01e59116470bd6b9996f4f4716f573aacfda161ae628feccf9e0",
     "task7_target": "YlAppleHostTests.testFailedReplacementThenReactivationPreservesAcceptedSessionControls",
     "invariant": "Preserve all assertions below against the typed host; map legacy generation/loadToken to session identity/loadRequestId, and old channel spellings to generated Pigeon API names where applicable.",
-    "typed_host_assertion_mapping": "Typed Load replacement failure and subsequent activation preserve the accepted source and play intent, rate, volume, start position/constraints and emitted state; a rejected candidate must not leak configuration or events."
+    "typed_host_assertion_mapping": "Typed Load replacement failure and subsequent activation preserve the accepted source and play intent, rate, volume, start position/constraints and emitted state; a rejected candidate must not leak configuration or events.",
+    "counterpart": {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleHostTests.swift",
+      "method": "YlAppleHostTests.testFailedReplacementThenReactivationPreservesAcceptedSessionControls",
+      "shared_path": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+      "shared_method": "AppleHostCharacterizations.reactivation",
+      "assertion_groups": [
+        {
+          "original": "initial load and every control/reload completion",
+          "typed_assertions": "Actual typed Load/commands must return; invalid replacement must throw. Only initial iOS decoder.video_hardware_unavailable retains original conditional skip under R21."
+        },
+        {
+          "original": "initial start>=450 and accepted seek>=650",
+          "typed_assertions": "Original initial500ms/preroll450ms and seek700ms/tolerance650ms assertions retained before failed replacement and after restoration."
+        },
+        {
+          "original": "accepted quality800 survives candidate failure and reactivation",
+          "typed_assertions": "Native acceptedVideoConstraints.maxWidth equals800 at both checkpoints; invalid candidate width1 never replaces it."
+        },
+        {
+          "original": "same generation and paused/ready restoration",
+          "typed_assertions": "Public sessionId remains initialLoad session; wait requires actual active plus paused/ready, and original status assertion remains."
+        },
+        {
+          "original": "selected audio track and paused timeline stable within50ms",
+          "typed_assertions": "Restored selected track ID equals accepted final track; paused position unchanged within50ms and >=650ms."
+        },
+        {
+          "original": "play suppresses preroll rewind and retains accepted speed",
+          "typed_assertions": "Minimum restored position>=650, playback baseline exceeds paused+100, and later200ms sample advances>280ms at accepted2x. Volume0.2 is accepted before reactivation; original body had no separate restored-volume assertion."
+        }
+      ],
+      "shared_body_sha256": "eb2bb7e5bc74704fea02b77e6a26a92b0ff4f84f46cffe1a5601ec8ca470e2ac"
+    }
   }
 ]

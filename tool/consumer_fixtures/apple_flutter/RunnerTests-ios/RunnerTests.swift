@@ -29,33 +29,38 @@ class RunnerTests: XCTestCase {
 
 
   func testPreparingRetriesDoNotPolluteOldSessionAndCommittedRetriesRetainIdentity() {
-    var publicEvents = [[String: Any?]]()
-    let old = YlLegacyCommitEmitter(emit: { publicEvents.append($0) })
-    old.commit(generation: 3)
-    old.accept(["type": "networkRetry"])
-    let candidate = YlLegacyCommitEmitter(emit: { publicEvents.append($0) })
-    candidate.accept(["type": "networkRetry"])
-    XCTAssertEqual(publicEvents.count, 1)
-    XCTAssertEqual(publicEvents.last?["generation"] as? UInt64, 3)
-    candidate.commit(generation: 4)
+    var identities = [YlAppleSessionIdentity]()
+    let oldId = YlAppleSessionIdentity(sessionId: "old", loadRequestId: "request-3")
+    let newId = YlAppleSessionIdentity(sessionId: "new", loadRequestId: "request-4")
+    let retry = YlNativeBackendCallback(generation: 1, event: .retry(attempt: 1,
+      delayMs: 400, error: NativePlayerError(category: "network", code: "network.retry", message: "Retry")))
+    let old = YlAppleCommitEmitter(identity: oldId, emit: { id, _ in identities.append(id) })
+    old.commit()
+    old.accept(retry)
+    let candidate = YlAppleCommitEmitter(identity: newId, emit: { id, _ in identities.append(id) })
+    candidate.accept(retry)
+    XCTAssertEqual(identities.count, 1)
+    XCTAssertEqual(identities.last, oldId)
+    candidate.commit()
     old.invalidate()
-    old.accept(["type": "networkRetry"])
-    candidate.accept(["type": "networkRetry"])
-    XCTAssertEqual(publicEvents.count, 2)
-    XCTAssertEqual(publicEvents.last?["generation"] as? UInt64, 4)
+    old.accept(retry)
+    candidate.accept(retry)
+    XCTAssertEqual(identities.count, 2)
+    XCTAssertEqual(identities.last, newId)
   }
 
   func testPrivateCandidateEventsPublishOnlyAfterCommit() {
-    var events = [[String: Any?]]()
-    let candidate = YlLegacyCommitEmitter(emit: { events.append($0) })
-    candidate.accept(["type": "state", "loadToken": 9])
-    candidate.accept(["type": "firstFrame"])
-    XCTAssertTrue(events.isEmpty)
+    var identities = [YlAppleSessionIdentity]()
+    let id = YlAppleSessionIdentity(sessionId: "candidate", loadRequestId: "request-9")
+    let candidate = YlAppleCommitEmitter(identity: id, emit: { identity, _ in identities.append(identity) })
+    candidate.accept(YlNativeBackendCallback(generation: 1, event: .state(.characterizationReady)))
+    candidate.accept(YlNativeBackendCallback(generation: 1, event: .firstFrame(width: 320, height: 180)))
+    XCTAssertTrue(identities.isEmpty)
     candidate.commit()
-    XCTAssertEqual(events.count, 1)
-    XCTAssertEqual(events.first?["loadToken"] as? Int, 9)
-    candidate.accept(["type": "firstFrame"])
-    XCTAssertEqual(events.count, 2)
+    XCTAssertEqual(identities.count, 1)
+    XCTAssertEqual(identities.first?.loadRequestId, "request-9")
+    candidate.accept(YlNativeBackendCallback(generation: 1, event: .firstFrame(width: 320, height: 180)))
+    XCTAssertEqual(identities.count, 2)
   }
 
   func testExplicitCredentialScopeAndInheritedManifestStripping() throws {
@@ -91,11 +96,11 @@ class RunnerTests: XCTestCase {
     defer { backend.dispose() }
     backend.emitState()
     XCTAssertFalse(backend.isActive)
-    try backend.command(name: "open", arguments: ["source": ["uri": "https://example.test/a.mp4", "kind": "network", "loadToken": 17]])
-    XCTAssertEqual(events.last?["loadToken"] as? Int, 17)
-    XCTAssertThrowsError(try backend.command(name: "open", arguments: ["source": ["uri": "", "loadToken": 18]]))
+    try backend.command(name: "open", arguments: ["source": ["uri": "https://example.test/a.mp4", "kind": "network", "loadRequestId": "17"]])
+    XCTAssertEqual(events.last?["loadRequestId"] as? String, "17")
+    XCTAssertThrowsError(try backend.command(name: "open", arguments: ["source": ["uri": "", "loadRequestId": "18"]]))
     backend.emitState()
-    XCTAssertEqual(events.last?["loadToken"] as? Int, 17)
+    XCTAssertEqual(events.last?["loadRequestId"] as? String, "17")
   }
 
   private final class StopTextureRegistry: NSObject, FlutterTextureRegistry {

@@ -28,7 +28,7 @@
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity",
       "Ruling13 explicitly retires only the inherited comments-only testExample; original body and source hashes recorded in retired_methods."
     ],
-    "destination_sha256": "62ae3fa5cd399d4ac73612cf075c10311add501d7739b4530faf3f2ca70d58b3",
+    "destination_sha256": "86e699f85b45729403f3ce2caa06d1f231d0db4cb37e2ba064d9059705d2104f",
     "retired_methods": [
       {
         "method": "testExample",
@@ -38,7 +38,11 @@
         "original_body_sha256": "a2e20b22f9479ca48fb0f0bb52510e235b45e3af2ed519ce6b7faf141cdbe9ad",
         "reason": "Binding Ruling13: inherited comments-only Flutter template with no actions or assertions; retired only from the shared iOS fixture, not a Task7 host transfer."
       }
-    ]
+    ],
+    "task7_typed_migration": {
+      "from_sha256": "62ae3fa5cd399d4ac73612cf075c10311add501d7739b4530faf3f2ca70d58b3",
+      "reason": "Commit gates now assert immutable session/loadRequestId correlation and identical event counts; AV accepted-source token checks use typed String request identity rather than legacy integer loadToken."
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlAudioRendererTests.swift",
@@ -150,7 +154,11 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "a6b7dc5a7bf4c34ee3d0b4233ca1c5fa156dccd171f947c58fc5957b980cff88"
+    "destination_sha256": "28250d0da967ea4a99c32e243415a0195bce405bfd7596bf93d4248dea506ebf",
+    "task7_typed_migration": {
+      "from_sha256": "a6b7dc5a7bf4c34ee3d0b4233ca1c5fa156dccd171f947c58fc5957b980cff88",
+      "reason": "Retry is a closed enum case with timing and NativePlayerError only; direct associated-value assertions supersede obsolete envelope keys and preserve privacy by type shape."
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlFrameSchedulerTests.swift",
@@ -339,7 +347,11 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "9051742a4e69b4dc89f72c5304c86ff22478bd0532c7f54894773f86ccd22473"
+    "destination_sha256": "2cc4b7c2c5a48e319e7b4dc76a94a5a8a38d4d0391de551a40bb578e94f597e2",
+    "task7_typed_migration": {
+      "from_sha256": "9051742a4e69b4dc89f72c5304c86ff22478bd0532c7f54894773f86ccd22473",
+      "reason": "R16 typed callback projection preserves original engine assertions; test-only existing HTTP/HLS server visibility and optional request observation enable actual host reprepare/publication evidence without copied production logic. The optional request observer ignores proven cancelled idle TCP EOF (not an HTTP request); all real nonempty request credential assertions and original engine bodies remain."
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlVideoToolboxDecoderTests.swift",
@@ -395,7 +407,11 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "42fceac43c2d155c760699fd289a15efb425cc13512baba82f68db09c8e13891"
+    "destination_sha256": "b33bbbd9b8743e6cdf25f3f3a6f1d63a36f1de2b711f47da442936414fa266ac",
+    "task7_typed_migration": {
+      "from_sha256": "42fceac43c2d155c760699fd289a15efb425cc13512baba82f68db09c8e13891",
+      "reason": "Commit gates now assert immutable session/loadRequestId correlation and identical event counts; AV accepted-source token checks use typed String request identity rather than legacy integer loadToken."
+    }
   },
   {
     "source": "packages/yl_player/example/macos/RunnerTests/YlMacosAudioTests.swift",
@@ -420,7 +436,11 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "b783b104f46c181d5d955d46cf70f9c95c5a9e96001da2069818f59f3d8f39e7"
+    "destination_sha256": "2f796da0e8cd243618c1317fafd8bd1f0fc86ba5424a9c698b83eaa29bf5e835",
+    "task7_typed_migration": {
+      "from_sha256": "b783b104f46c181d5d955d46cf70f9c95c5a9e96001da2069818f59f3d8f39e7",
+      "reason": "Three direct typed track property assertions replace dictionary subscripts; codec labels and selected stream unchanged."
+    }
   },
   {
     "source": "packages/yl_player/example/macos/RunnerTests/YlMacosAvPlayerStateTests.swift",
@@ -600,6 +620,10 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "9d1e0a81deb322c241680165fc709057844cb1827b0efaabdf75e9b01538522b"
+    "destination_sha256": "c350d1cacdd7b0385f6c63925fbacbcedc60141b9e8e0d905ef0a68a806226f9",
+    "task7_typed_migration": {
+      "from_sha256": "9d1e0a81deb322c241680165fc709057844cb1827b0efaabdf75e9b01538522b",
+      "reason": "R16 typed callback projection preserves original engine assertions; test-only existing HTTP/HLS server visibility and optional request observation enable actual host reprepare/publication evidence without copied production logic. The optional request observer ignores proven cancelled idle TCP EOF (not an HTTP request); all real nonempty request credential assertions and original engine bodies remain."
+    }
   }
 ]

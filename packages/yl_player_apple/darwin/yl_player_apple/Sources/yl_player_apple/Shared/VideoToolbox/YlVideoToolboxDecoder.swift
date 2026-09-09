@@ -308,6 +308,7 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
   private let budget: YlVideoDecodeBudget
   private var lease: YlHardwareDecoderLease?
   private var session: YlVTSession?
+  let usesHardwareDecoder: Bool
   private var activeGeneration: UInt64?
   private var disposed = false
 
@@ -326,10 +327,12 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
     }
     let outputRelay = YlVTOutputRelay()
     self.outputRelay = outputRelay
-    session = try factory.makeSession(
+    let createdSession = try factory.makeSession(
       formatDescription: formatDescription,
       output: { image in outputRelay.handle(image) }
     )
+    session = createdSession
+    usesHardwareDecoder = createdSession.usesHardwareDecoder
     outputRelay.decoder = self
   }
 

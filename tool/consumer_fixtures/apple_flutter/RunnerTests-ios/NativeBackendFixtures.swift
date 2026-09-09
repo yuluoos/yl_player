@@ -11,7 +11,7 @@ extension YlAvPlayerBackend {
     emit: @escaping ([String: Any?]) -> Void) {
     self.init(playerId: playerId,
       services: YlIosPlatformAdapter.makeServices(textures: textures, activateAudioSession: activateAudioSession),
-      configuration: configuration, player: player, emit: emit)
+      configuration: configuration, player: player, emit: { emit($0.characterizationMap(playerId: playerId)) })
   }
 }
 
@@ -25,8 +25,8 @@ extension YlFallbackBackend {
     try self.init(playerId: playerId,
       services: YlIosPlatformAdapter.makeServices(textures: textures, textureId: textureId),
       configuration: configuration, prepared: prepared, qualityConstraint: qualityConstraint, generation: generation,
-      videoSessionFactory: videoSessionFactory, mediaClock: mediaClock, loadToken: loadToken,
-      channelIdentity: channelIdentity, emit: emit)
+      videoSessionFactory: videoSessionFactory, mediaClock: mediaClock, loadRequestId: loadToken.map { String(describing: $0) },
+      channelIdentity: channelIdentity, emit: { emit($0.characterizationMap(playerId: playerId)) })
   }
 }
 

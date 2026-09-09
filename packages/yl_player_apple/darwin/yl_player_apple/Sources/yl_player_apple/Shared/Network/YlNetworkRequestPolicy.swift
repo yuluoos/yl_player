@@ -5,20 +5,44 @@ enum YlNetworkInputMode: Equatable {
   case sequentialLive
 }
 
+/// Shared by every reader belonging to one accepted source intent. Once an
+/// origin boundary strips credentials, retries and internal reopens stay stripped.
+final class YlNetworkCredentialContext {
+  private let lock = NSLock()
+  private var stripped = false
+
+  func strip() {
+    lock.lock()
+    stripped = true
+    lock.unlock()
+  }
+  var maySendCredentials: Bool {
+    lock.lock()
+    defer { lock.unlock() }
+    return !stripped
+  }
+}
+
 struct YlNetworkRequestRecipe {
   let url: URL
   let headers: [String: String]
+  let credentials: [String: String]
+  let credentialContext: YlNetworkCredentialContext
   let configuration: YlNetworkConfiguration
   let mode: YlNetworkInputMode
 
   init(
     url: URL,
     headers: [String: String],
+    credentials: [String: String] = [:],
+    credentialContext: YlNetworkCredentialContext = YlNetworkCredentialContext(),
     configuration: YlNetworkConfiguration,
     mode: YlNetworkInputMode = .randomAccessVOD
   ) {
     self.url = url
     self.headers = headers
+    self.credentials = credentials
+    self.credentialContext = credentialContext
     self.configuration = configuration
     self.mode = mode
   }
@@ -62,7 +86,7 @@ final class YlNetworkRequestPolicy {
     lock.unlock()
     return makeRequest(
       url: recipe.url,
-      headers: recipe.headers,
+      headers: permittedHeaders(),
       offset: offset,
       validator: validator
     )
@@ -74,7 +98,6 @@ final class YlNetworkRequestPolicy {
     to destinationURL: URL
   ) throws -> URLRequest {
     _ = response
-    _ = sourceURL
     do {
       try Self.validateHTTPURL(destinationURL)
     } catch let error as NativePlayerError {
@@ -97,14 +120,13 @@ final class YlNetworkRequestPolicy {
       )
     }
 
-    let destinationIsOriginalOrigin = Self.sameOrigin(recipe.url, destinationURL)
-    let headers = recipe.headers.filter { name, _ in
-      destinationIsOriginalOrigin
-        || !Self.credentialHeaderNames.contains(name.lowercased())
+    if !Self.sameOrigin(sourceURL, destinationURL)
+      || !Self.sameOrigin(recipe.url, destinationURL) {
+      recipe.credentialContext.strip()
     }
     return makeRequest(
       url: destinationURL,
-      headers: headers,
+      headers: permittedHeaders(),
       offset: offset,
       validator: validator
     )
@@ -190,6 +212,16 @@ final class YlNetworkRequestPolicy {
 
   static func isRetryableStatus(_ statusCode: Int) -> Bool {
     statusCode == 408 || statusCode == 429 || (500...599).contains(statusCode)
+  }
+
+  private func permittedHeaders() -> [String: String] {
+    let sensitive = Self.credentialHeaderNames.union(recipe.credentials.keys.map { $0.lowercased() })
+    let allowed = recipe.credentialContext.maySendCredentials
+    var result = recipe.headers.filter { allowed || !sensitive.contains($0.key.lowercased()) }
+    if allowed {
+      for (name, value) in recipe.credentials { result[name] = value }
+    }
+    return result
   }
 
   private func makeRequest(

@@ -85,7 +85,10 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   var isActive: Bool { stateLock.withLock { active } }
   var playbackIntent: Bool { stateLock.withLock { playing } }
   var requiresAsyncActivation: Bool {
-    guard context == nil else { return false }
+    // A demux cursor alone cannot restore a retired VT session: its next packet
+    // may depend on a keyframe consumed by the old decoder (R22).
+    let needsPipeline = context == nil || (services.compatibility.limitsVideoReservations && decoder == nil)
+    guard needsPipeline else { return false }
     if case .network = sourceRecipe { return true }
     return false
   }
@@ -100,6 +103,11 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     )
   }
 
+  func validateQualityConstraint(_ constraint: YlFallbackQualityConstraint) throws {
+    let currentStream = stateLock.withLock { videoStream }
+    try YlFallbackQualityPolicy.validate(constraint: constraint, stream: Self.videoDescriptor(currentStream))
+  }
+
   func interruptControlOperation() {
     stateLock.withLock { openedMedia }?.interruptRead()
   }
@@ -111,7 +119,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private let services: YlPlatformServices
   private let videoSessionFactory: YlVTSessionFactory
   private let configuration: PlayerConfiguration
-  private let emit: ([String: Any?]) -> Void
+  private let onEvent: (YlNativeBackendCallback) -> Void
   private let sourceRecipe: YlFallbackSourceRecipe
   private let sessionConfiguration: URLSessionConfiguration
   private let mediaPolicy: YlFallbackMediaPolicy
@@ -152,7 +160,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private var awaitingReconnectFirstFrame = false
   private var generation: UInt64
   private(set) var channelGeneration = YlBackendGeneration.next()
-  private let legacyLoadToken: Any?
+  private let loadRequestId: String?
   private var audioGeneration: UInt64
   private var selectedAudioStream: YLFStreamInfo?
   private var desiredVolume: Float = 1
@@ -169,7 +177,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   private var openDurationMs: Int64?
   private var firstFrameDurationMs: Int64?
   private var reconnectCount = 0
-  private var currentError: [String: Any?]?
+  private var currentError: NativePlayerError?
   private var lastStateEmitAt = CFTimeInterval(0)
 
   private var currentAudioRenderer: YlAudioRenderer? {
@@ -185,15 +193,15 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     generation: UInt64,
     videoSessionFactory: YlVTSessionFactory = YlHardwareVTSessionFactory(),
     mediaClock: YlMediaClock? = nil,
-    loadToken: Any? = nil,
+    loadRequestId: String? = nil,
     channelIdentity: UInt64? = nil,
-    emit: @escaping ([String: Any?]) -> Void
+    emit: @escaping (YlNativeBackendCallback) -> Void
   ) throws {
     try YlFallbackQualityPolicy.validate(
       constraint: qualityConstraint,
       stream: Self.videoDescriptor(prepared.videoStream)
     )
-    self.legacyLoadToken = loadToken
+    self.loadRequestId = loadRequestId
     if let channelIdentity { self.channelGeneration = channelIdentity }
     self.playerId = playerId
     self.services = services
@@ -219,7 +227,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     self.qualityConstraint = qualityConstraint
     self.generation = generation
     self.audioGeneration = generation
-    self.emit = emit
+    self.onEvent = emit
     self.openedMedia = try prepared.takeMedia()
     self.sourceCancellationToken = prepared.takeCancellationToken()
     self.playing = resumeState?.shouldPlay ?? false
@@ -289,7 +297,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         message: "Network Matroska reactivation requires background preparation."
       )
     }
-    if context == nil || audioRenderer == nil {
+    if context == nil || audioRenderer == nil || (services.compatibility.limitsVideoReservations && decoder == nil) {
       try rebuildPipeline(positionUs: savedPositionUs)
     } else if decoder == nil {
       decoder = try makeDecoder()
@@ -305,11 +313,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       mediaClock.play(atHostTimeUs: Self.hostTimeUs())
       status = "playing"
     }
-    emit([
-      "playerId": playerId,
-      "type": "fallbackActivated",
-      "engine": "nativeFallback",
-    ])
+    emit(.engineActivated(.managedFallback))
     emitState()
     requestPump()
   }
@@ -478,7 +482,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
 
   func reportRestorationFailure(_ error: NativePlayerError) {
     deactivate()
-    let details = errorMap(
+    let details = NativePlayerError(
       category: error.category,
       code: error.code,
       message: error.message,
@@ -495,7 +499,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       return true
     }
     guard shouldEmit else { return }
-    emit(YlFallbackErrorEvent(playerId: playerId, error: details).eventMap)
+    emit(.failure(details))
     emitState()
   }
 
@@ -583,11 +587,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       let constraint = try YlFallbackQualityConstraint(
         validating: stringMap(arguments["constraint"])
       )
-      let currentStream = stateLock.withLock { videoStream }
-      try YlFallbackQualityPolicy.validate(
-        constraint: constraint,
-        stream: Self.videoDescriptor(currentStream)
-      )
+      try validateQualityConstraint(constraint)
       stateLock.withLock { qualityConstraint = constraint }
     default:
       throw NativePlayerError(
@@ -598,26 +598,21 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     }
   }
 
+  private func emit(_ event: YlNativeBackendEvent) {
+    onEvent(YlNativeBackendCallback(generation: channelGeneration, loadRequestId: stopped ? nil : loadRequestId, event: event))
+  }
+
   func emitState() {
     guard !stateLock.withLock({ disposed || resetting }) else { return }
     if stateLock.withLock({ stopped }) {
-      emit(YlBackendStateEncoder.fullState(
-        playerId: playerId, generation: channelGeneration,
-        loadToken: stopped ? nil : legacyLoadToken,
-        state: [
-          "status": "idle", "positionMs": Int64(0), "durationMs": nil,
-          "bufferedPositionMs": Int64(0), "isLive": false, "isSeekable": false,
-          "isAtLiveEdge": false, "liveOffsetMs": nil, "dvrStartMs": nil, "dvrEndMs": nil,
-          "videoWidth": nil, "videoHeight": nil, "engine": "nativeFallback",
-          "isHardwareDecoding": false, "decoderName": nil,
-          "audioTracks": [], "videoTracks": [], "error": nil,
-          "capabilities": YlBackendStateEncoder.deviceCapabilities,
-          "metrics": YlBackendStateEncoder.fallbackMetrics(
-            openDurationMs: nil, firstFrameDurationMs: nil, bufferedDurationMs: 0,
-            bufferedBytes: 0, droppedVideoFrames: 0, audioUnderruns: 0, reconnectCount: 0
-          ),
-        ]
-      ))
+      emit(.state(YlNativeState(status: "idle", positionMs: 0, durationMs: nil,
+        bufferedPositionMs: 0, isLive: false, isSeekable: false, isAtLiveEdge: false,
+        liveOffsetMs: nil, dvrStartMs: nil, dvrEndMs: nil,
+        videoWidth: nil, videoHeight: nil, engine: .managedFallback,
+        isHardwareDecoding: false, decoderName: nil, audioTracks: [], videoTracks: [],
+        metrics: YlBackendStateEncoder.fallbackMetrics(openDurationMs: nil,
+          firstFrameDurationMs: nil, bufferedDurationMs: 0, bufferedBytes: 0,
+          droppedVideoFrames: 0, audioUnderruns: 0, reconnectCount: 0), error: nil)))
       return
     }
     let positionUs = mediaClock.position(atHostTimeUs: Self.hostTimeUs())
@@ -635,11 +630,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       audioUnderruns: audioUnderruns,
       reconnectCount: reconnectCount
     )
-    emit(YlBackendStateEncoder.fullState(
-      playerId: playerId,
-      generation: channelGeneration,
-      loadToken: legacyLoadToken,
-      state: YlFallbackStateSnapshot(
+    emit(.state(YlNativeState(
         status: status,
         positionMs: positionUs / 1_000,
         durationMs: durationMs,
@@ -652,16 +643,14 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         dvrEndMs: nil,
         videoWidth: Int(videoStream.width),
         videoHeight: Int(videoStream.height),
-        engine: "nativeFallback",
-        isHardwareDecoding: true,
+        engine: .managedFallback,
+        isHardwareDecoding: decoder?.usesHardwareDecoder == true,
         decoderName: "VideoToolbox",
         audioTracks: audioTracks,
         videoTracks: videoTracks,
-        capabilities: YlBackendStateEncoder.deviceCapabilities,
         metrics: metrics,
         error: currentError
-      ).fullMap
-    ))
+      )))
   }
 
   private func emitStateDelta() {
@@ -680,17 +669,13 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       audioUnderruns: audioUnderruns,
       reconnectCount: reconnectCount
     )
-    emit(YlBackendStateEncoder.stateDelta(
-      playerId: playerId,
-      generation: channelGeneration,
-      delta: YlFallbackDynamicSnapshot(
+    emit(.delta(YlNativeTimelineDelta(
         positionMs: positionUs / 1_000,
         bufferedPositionMs: (positionUs + scheduledAudioDurationUs) / 1_000,
         isAtLiveEdge: mediaPolicy.isLive,
         liveOffsetMs: nil,
         metrics: metrics
-      ).deltaMap
-    ))
+      )))
   }
 
   func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? {
@@ -781,12 +766,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       self.firstFrameDurationMs = Int64(
         (CACurrentMediaTime() - self.openStartedAt) * 1_000
       )
-      self.emit([
-        "playerId": self.playerId,
-        "type": "firstFrame",
-        "width": Int(self.videoStream.width),
-        "height": Int(self.videoStream.height),
-      ])
+      self.emit(.firstFrame(width: Int(self.videoStream.width), height: Int(self.videoStream.height)))
       self.emitState()
     }
   }
@@ -1236,12 +1216,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
               self.active && self.reconfiguring
                 && self.generation == reconnectGeneration
             }) else { return }
-      self.emit(YlFallbackRetryEvent.envelope(
-        playerId: self.playerId,
-        attempt: attempt,
-        delayMs: delayMs,
-        error: error
-      ))
+      self.emit(.retry(attempt: attempt, delayMs: delayMs, error: error))
     }
 
     let workItem = DispatchWorkItem { [weak self] in
@@ -1345,12 +1320,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         } else {
           self.status = "paused"
         }
-        self.emit([
-          "playerId": self.playerId,
-          "type": "tracksChanged",
-          "audioTracks": self.audioTracks,
-          "videoTracks": self.videoTracks,
-        ])
+        self.emit(.tracksChanged(audio: self.audioTracks, video: self.videoTracks))
         self.emitState()
         self.requestPump()
       }
@@ -1880,6 +1850,11 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       postSeekGate.reset(targetUs: positionUs)
     }
 
+    // This path also restores a quiesced local pipeline whose demux/audio are
+    // retained. Retire those resources only after the candidate seek succeeds.
+    let retiredMedia = openedMedia
+    let retiredDecoder = decoder
+    let retiredAudio = audioRenderer
     videoFormat = candidateFormat
     openedMedia = reopenedMedia
     decoder = candidateDecoder
@@ -1895,6 +1870,10 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     frameScheduler.flush(generation: generation)
     mediaClock.seek(to: positionUs)
     mediaNeedsClose = false
+    retiredDecoder?.dispose()
+    retiredAudio?.dispose()
+    retiredMedia?.cancelInput()
+    retiredMedia?.close()
   }
 
   private func installDisplayLink(paused: Bool) {
@@ -1927,7 +1906,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
   }
 
   private func setFailure(_ error: NativePlayerError) {
-    let details = errorMap(
+    let details = NativePlayerError(
       category: error.category,
       code: error.code,
       message: error.message,
@@ -1991,7 +1970,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
       self.frameScheduler.flush(generation: transition.generation)
       self.postSeekGate.reset(targetUs: nil)
       self.stateLock.withLock { self.currentPixelBuffer = nil; self.services.textureOutput.clear() }
-      self.emit(YlFallbackErrorEvent(playerId: self.playerId, error: details).eventMap)
+      self.emit(.failure(details))
       self.emitState()
 
       self.worker.async { [weak self] in
@@ -2054,12 +2033,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
         }
         selectedAudioStream = requestedStream
         stateLock.withLock { audioGeneration &+= 1 }
-        emit([
-          "playerId": playerId,
-          "type": "tracksChanged",
-          "audioTracks": audioTracks,
-          "videoTracks": videoTracks,
-        ])
+        emit(.tracksChanged(audio: audioTracks, video: videoTracks))
         emitState()
       }
       return
@@ -2142,12 +2116,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
           try candidate.play()
           mediaClock.play(atHostTimeUs: Self.hostTimeUs())
         }
-        emit([
-          "playerId": playerId,
-          "type": "tracksChanged",
-          "audioTracks": audioTracks,
-          "videoTracks": videoTracks,
-        ])
+        emit(.tracksChanged(audio: audioTracks, video: videoTracks))
       }
       try cancellationToken?.throwIfCancelled()
       endControlOperation()
@@ -2261,7 +2230,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     selectedAudioStream.map(audioCodecName) ?? "Compressed"
   }
 
-  private var audioTracks: [[String: Any?]] {
+  private var audioTracks: [YlNativeTrack] {
     YlFallbackTrackCatalog.audioTracks(
       streams: audioStreams,
       selectedIndex: selectedAudioStream?.index,
@@ -2269,7 +2238,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     )
   }
 
-  private var videoTracks: [[String: Any?]] {
+  private var videoTracks: [YlNativeTrack] {
     [YlFallbackTrackCatalog.videoTrack(
       stream: videoStream,
       codecName: Int(videoStream.codec) == YLFCodecHEVC ? "hevc" : "h264",

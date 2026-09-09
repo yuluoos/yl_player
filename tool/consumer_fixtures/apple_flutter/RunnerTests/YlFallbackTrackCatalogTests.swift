@@ -17,13 +17,13 @@ final class YlFallbackTrackCatalogTests: XCTestCase {
       bitrate: nil
     )
 
-    XCTAssertEqual(track["id"] as? String, "video-2")
-    XCTAssertEqual(track["kind"] as? String, "video")
-    XCTAssertEqual(track["codec"] as? String, "video/avc")
-    XCTAssertEqual(track["width"] as? Int, 1_280)
-    XCTAssertEqual(track["height"] as? Int, 720)
-    XCTAssertNil(track["bitrate"] ?? nil)
-    XCTAssertEqual(track["isSelected"] as? Bool, true)
+    XCTAssertEqual(track.id, "video-2")
+    XCTAssertEqual(track.kind, .video)
+    XCTAssertEqual(track.codec, "video/avc")
+    XCTAssertEqual(track.width, 1_280)
+    XCTAssertEqual(track.height, 720)
+    XCTAssertNil(track.bitrate)
+    XCTAssertEqual(track.isSelected, true)
   }
 
   func testAudioTracksExposeCodecLabelsAndSelection() {
@@ -44,14 +44,14 @@ final class YlFallbackTrackCatalogTests: XCTestCase {
       }
     )
 
-    XCTAssertEqual(tracks[0]["id"] as? String, "audio-3")
-    XCTAssertEqual(tracks[0]["codec"] as? String, "AAC")
-    XCTAssertEqual(tracks[0]["label"] as? String, "AAC 3")
-    XCTAssertEqual(tracks[0]["isSelected"] as? Bool, false)
-    XCTAssertEqual(tracks[1]["id"] as? String, "audio-4")
-    XCTAssertEqual(tracks[1]["codec"] as? String, "MP3")
-    XCTAssertEqual(tracks[1]["label"] as? String, "MP3 4")
-    XCTAssertEqual(tracks[1]["isSelected"] as? Bool, true)
+    XCTAssertEqual(tracks[0].id, "audio-3")
+    XCTAssertEqual(tracks[0].codec, "AAC")
+    XCTAssertEqual(tracks[0].label, "AAC 3")
+    XCTAssertEqual(tracks[0].isSelected, false)
+    XCTAssertEqual(tracks[1].id, "audio-4")
+    XCTAssertEqual(tracks[1].codec, "MP3")
+    XCTAssertEqual(tracks[1].label, "MP3 4")
+    XCTAssertEqual(tracks[1].isSelected, true)
   }
 
   func testVideoTrackMapsHevcAliasToCanonicalMimeCodec() {
@@ -64,7 +64,7 @@ final class YlFallbackTrackCatalogTests: XCTestCase {
         stream: stream,
         codecName: "hevc",
         bitrate: 4_000_000
-      )["codec"] as? String,
+      ).codec,
       "video/hevc"
     )
   }

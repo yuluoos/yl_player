@@ -30,37 +30,53 @@
     "source": "packages/yl_player/example/ios/RunnerTests/YlFallbackTrackCatalogTests.swift",
     "source_sha256": "85d52d9c75208dc656a7a6e48225c843ff345dd657adffb6f3e5b20b9171efe6",
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlFallbackTrackCatalogTests.swift",
-    "destination_sha256": "146f005414d9430484f5265d5c4a61f1eae90b36ecb66621e1526cb04eda3aae",
+    "destination_sha256": "03258cbcd442649abf21a2b801cf18eb0bdfbd731451bc785acfc639bf5c5f29",
     "adaptations": [
       "@testable import yl_player_ios -> @testable import yl_player_apple"
-    ]
+    ],
+    "task7_typed_migration": {
+      "from_sha256": "146f005414d9430484f5265d5c4a61f1eae90b36ecb66621e1526cb04eda3aae",
+      "reason": "Use typed track properties for identical ID, canonical codec, dimensions, optional bitrate, label and selection assertions."
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlFallbackStateEncoderTests.swift",
     "source_sha256": "579c8c9c92d5859fd9acf9a1859566c97da23c7c21c47ce9ad5163d34411bf35",
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlFallbackStateEncoderTests.swift",
-    "destination_sha256": "74372c0edd4267fefd8683a1d9e12acf3d860f748d0575a08a81c83c64f33a2f",
+    "destination_sha256": "bea2a1b12c6a01c995871b7bdd9551881ae699e8a211907d243d1526ebaf0a8b",
     "adaptations": [
       "@testable import yl_player_ios -> @testable import yl_player_apple"
-    ]
+    ],
+    "task7_typed_migration": {
+      "from_sha256": "74372c0edd4267fefd8683a1d9e12acf3d860f748d0575a08a81c83c64f33a2f",
+      "reason": "R16 migrates actual engine callback construction and native typed value assertions; existing assertion values and behavioral expectations retained with test-only projection."
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlNetworkByteSourceTests.swift",
     "source_sha256": "f0513850df69b14e4563dc0c3098ac4f32a5fa3611bd676c7d54663bec96ae90",
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlNetworkByteSourceTests.swift",
-    "destination_sha256": "90291ac428ea9e77b126e77799beb226397a9b369b5f2e242f037c5e9c74ae44",
+    "destination_sha256": "f9557db702aa597928c79b2ec29ad8e354a9e1af8a4d19f246188572e6e30954",
     "adaptations": [
       "@testable import yl_player_ios -> @testable import yl_player_apple"
-    ]
+    ],
+    "task7_typed_migration": {
+      "from_sha256": "90291ac428ea9e77b126e77799beb226397a9b369b5f2e242f037c5e9c74ae44",
+      "reason": "R18 adds actual URLSession request-path assertions for explicit credentials, sticky A-to-B-to-A stripping, retry/reopen continuity, fresh intent and ordinary headers; all original methods/assertions retained."
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlNetworkRequestPolicyTests.swift",
     "source_sha256": "f0205c7d190dde38b3ca29a3974be0c73c4c91efb167ca236c75957a908bea07",
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlNetworkRequestPolicyTests.swift",
-    "destination_sha256": "ded88621c39ec7b49ff13e13d0334dd206399944ec25dbfbbe47d4393e70a101",
+    "destination_sha256": "4a6031dc84b13d0ea2d3d967df119ed14cbdcb992094ebff4ff8d2114643254f",
     "adaptations": [
       "@testable import yl_player_ios -> @testable import yl_player_apple"
-    ]
+    ],
+    "task7_typed_migration": {
+      "from_sha256": "ded88621c39ec7b49ff13e13d0334dd206399944ec25dbfbbe47d4393e70a101",
+      "reason": "R18 adds case-insensitive explicit credential and sticky cross-origin safety tests; all original policy assertions and constants retained."
+    }
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlHlsHeaderPolicyTests.swift",

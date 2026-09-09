@@ -102,32 +102,34 @@ final class YlBackendSlot {
   }
 }
 
-/// A private candidate cannot publish state or milestones until slot commit.
-/// Its initialized full snapshot is retained; candidate first-frame markers are
-/// discarded because they do not establish committed public-output evidence.
-final class YlLegacyCommitEmitter {
-  private let emit: ([String: Any?]) -> Void
+/// A private candidate retains only its latest initialized typed snapshot.
+/// Its decoder markers never establish public texture publication.
+final class YlAppleCommitEmitter {
+  let identity: YlAppleSessionIdentity
+  private let emit: (YlAppleSessionIdentity, YlNativeBackendCallback) -> Void
   private let lock = NSRecursiveLock()
   private var committed = false
   private var invalidated = false
-  private var generation: UInt64?
-  private var initialState: [String: Any?]?
+  private var initialState: YlNativeBackendCallback?
 
-  init(emit: @escaping ([String: Any?]) -> Void) { self.emit = emit }
-
-  func accept(_ event: [String: Any?]) {
-    lock.lock()
-    defer { lock.unlock() }
-    guard !invalidated else { return }
-    if committed { publish(event) }
-    else if event["type"] as? String == "state" { initialState = event }
+  init(identity: YlAppleSessionIdentity,
+       emit: @escaping (YlAppleSessionIdentity, YlNativeBackendCallback) -> Void) {
+    self.identity = identity
+    self.emit = emit
   }
 
-  func commit(generation: UInt64? = nil) {
+  func accept(_ callback: YlNativeBackendCallback) {
     lock.lock()
     defer { lock.unlock() }
     guard !invalidated else { return }
-    self.generation = generation
+    if committed { publish(callback) }
+    else if case .state = callback.event { initialState = callback }
+  }
+
+  func commit() {
+    lock.lock()
+    defer { lock.unlock() }
+    guard !invalidated else { return }
     committed = true
     if let initialState { publish(initialState) }
     initialState = nil
@@ -140,18 +142,14 @@ final class YlLegacyCommitEmitter {
     initialState = nil
   }
 
-  private func publish(_ event: [String: Any?]) {
-    // Decide candidate visibility when the callback occurs, then fence again
-    // when a background retry reaches the public main-thread channel.
+  private func publish(_ callback: YlNativeBackendCallback) {
     guard Thread.isMainThread else {
-      DispatchQueue.main.async { [weak self] in self?.publish(event) }
+      DispatchQueue.main.async { [weak self] in self?.publish(callback) }
       return
     }
     lock.lock()
     defer { lock.unlock() }
     guard committed, !invalidated else { return }
-    var value = event
-    if value["generation"] == nil, let generation { value["generation"] = generation }
-    emit(value)
+    emit(identity, callback)
   }
 }

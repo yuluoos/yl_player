@@ -295,4 +295,38 @@ final class YlNetworkRequestPolicyTests: XCTestCase {
     XCTAssertEqual(received.code, "network.http_status")
     XCTAssertEqual(received.diagnostic, "HTTP 403 https://media.test/movie.mkv")
   }
+  func testReturnOriginAndRetryDoNotRestoreStrippedCredentials() throws {
+    let policy = makePolicy(headers: ["aUtHoRiZaTiOn": "private", "User-Agent": "visible"])
+    let original = URL(string: "https://media.test/movie.mkv")!
+    let other = URL(string: "https://cdn.test/movie.mkv")!
+    XCTAssertEqual(try policy.request(offset: 0, validator: nil).value(forHTTPHeaderField: "Authorization"), "private")
+    _ = try policy.redirectRequest(from: original, response: response(status: 302), to: other)
+    let returned = try policy.redirectRequest(from: other, response: response(status: 302), to: original)
+    XCTAssertNil(returned.value(forHTTPHeaderField: "Authorization"))
+    XCTAssertEqual(returned.value(forHTTPHeaderField: "User-Agent"), "visible")
+    let retry = try policy.request(offset: 0, validator: nil)
+    XCTAssertNil(retry.value(forHTTPHeaderField: "Authorization"))
+    XCTAssertEqual(retry.value(forHTTPHeaderField: "User-Agent"), "visible")
+  }
+
+  func testArbitraryCredentialNamesRemainClassifiedAcrossReaderReopen() throws {
+    let original = URL(string: "https://media.test/movie.mkv")!
+    let other = URL(string: "https://cdn.test/movie.mkv")!
+    let recipe = YlNetworkRequestRecipe(url: original, headers: ["X-Display": "visible"],
+      credentials: ["X-Custom-Identity": "private"], configuration: YlNetworkConfiguration(map: [:]))
+    let policy = YlNetworkRequestPolicy(recipe: recipe)
+    XCTAssertEqual(try policy.request(offset: 0, validator: nil).value(forHTTPHeaderField: "x-custom-identity"), "private")
+    let same = try policy.redirectRequest(from: original, response: response(status: 302), to: original.appendingPathComponent("next"))
+    XCTAssertEqual(same.value(forHTTPHeaderField: "X-Custom-Identity"), "private")
+    let cross = try policy.redirectRequest(from: original, response: response(status: 302), to: other)
+    XCTAssertNil(cross.value(forHTTPHeaderField: "X-Custom-Identity"))
+    let reopened = try YlNetworkRequestPolicy(recipe: recipe).request(offset: 12, validator: nil)
+    XCTAssertNil(reopened.value(forHTTPHeaderField: "X-Custom-Identity"))
+    XCTAssertEqual(reopened.value(forHTTPHeaderField: "X-Display"), "visible")
+    XCTAssertEqual(reopened.value(forHTTPHeaderField: "Range"), "bytes=12-")
+    let fresh = YlNetworkRequestRecipe(url: original, headers: [:], credentials: recipe.credentials,
+      configuration: recipe.configuration)
+    XCTAssertEqual(try YlNetworkRequestPolicy(recipe: fresh).request(offset: 0, validator: nil).value(forHTTPHeaderField: "X-Custom-Identity"), "private")
+  }
+
 }

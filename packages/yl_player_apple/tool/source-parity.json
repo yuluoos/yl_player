@@ -154,7 +154,18 @@
       "status": "identical",
       "chosen_source": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackStateEncoder.swift",
       "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Metrics/YlFallbackStateEncoder.swift",
-      "adaptations": []
+      "adaptations": [],
+      "task7_migration": {
+        "ruling": "R16",
+        "reason": "Replace legacy state/delta map records with typed native models; generated encoding belongs solely to typed host.",
+        "destination_removed": true,
+        "replacements": [
+          {
+            "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionModels.swift",
+            "sha256": "ff3c4cfd2a2749303715031665d05b7b176708cf06eead723b282d4be543625d"
+          }
+        ]
+      }
     },
     {
       "name": "YlFallbackTrackCatalog.swift",
@@ -165,7 +176,18 @@
       "status": "identical",
       "chosen_source": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlFallbackTrackCatalog.swift",
       "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Metrics/YlFallbackTrackCatalog.swift",
-      "adaptations": []
+      "adaptations": [],
+      "task7_migration": {
+        "ruling": "R16",
+        "reason": "Return typed native track records preserving all track IDs, metadata, selection and catalog algorithms.",
+        "destination_removed": false,
+        "replacements": [
+          {
+            "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Metrics/YlFallbackTrackCatalog.swift",
+            "sha256": "17feb3b121f13c5247115faeaae36e082e6174e44ddcc851696e66b49476b8c1"
+          }
+        ]
+      }
     },
     {
       "name": "YlFrameScheduler.swift",
@@ -330,7 +352,18 @@
       "status": "identical",
       "chosen_source": "packages/yl_player_ios/ios/yl_player_ios/Sources/yl_player_ios/YlNetworkRequestPolicy.swift",
       "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Network/YlNetworkRequestPolicy.swift",
-      "adaptations": []
+      "adaptations": [],
+      "task7_migration": {
+        "ruling": "R18",
+        "reason": "Explicit credentials and recipe-owned sticky origin safety; range/validator/retry/redirect-limit algorithms unchanged.",
+        "destination_removed": false,
+        "replacements": [
+          {
+            "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Network/YlNetworkRequestPolicy.swift",
+            "sha256": "4adfa9a9efb6ed15a1d96392b6b5c40953626dd393be6ad1caea48948f3c300e"
+          }
+        ]
+      }
     },
     {
       "name": "YlOpenCoordinator.swift",

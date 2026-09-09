@@ -81,7 +81,18 @@ else:
         if not row["destination"]:
             continue
         target = root / row["destination"]
-        if not target.is_file():
+        migration = row.get("task7_migration")
+        if migration:
+            if migration.get("ruling") not in {"R16", "R18"} or not migration.get("reason") or not migration.get("replacements"):
+                failures.append(f"invalid scoped Task7 migration: {row['name']}")
+            if migration.get("destination_removed") and target.exists():
+                failures.append(f"retired shared source still exists: {row['destination']}")
+            for replacement in migration.get("replacements", []):
+                relative = replacement["path"]
+                migrated = root / relative
+                if not migrated.is_file() or digest(migrated) != replacement["sha256"]:
+                    failures.append(f"migrated shared source changed: {relative}")
+        elif not target.is_file():
             failures.append(f"missing shared source: {row['destination']}")
         else:
             chosen_platform = "ios" if row["chosen_source"] == row["ios"] else "macos"
@@ -100,10 +111,11 @@ else:
                 if hashlib.sha256(extracted).hexdigest() != declaration["declaration_sha256"]:
                     failures.append(f"extracted declaration changed: {origin['path']}:{origin['start_line']}")
             target = root / declaration["destination"]
-            if not target.is_file() or digest(target) != declaration["destination_sha256"]:
+            expected = declaration.get("task7_migration", {}).get("destination_sha256", declaration["destination_sha256"])
+            if not target.is_file() or digest(target) != expected:
                 failures.append(f"shared declaration file changed: {declaration['destination']}")
         if failures:
             sys.exit("\n".join(failures))
         print(f"Verified {len(declarations)} exact paired production declaration extractions.")
-    print(f"Verified {count} byte-identical shared copies and all recorded baseline hashes.")
+    print(f"Verified {count} shared copy origins, exact destinations/scoped migrations, and all recorded baseline hashes.")
 PY

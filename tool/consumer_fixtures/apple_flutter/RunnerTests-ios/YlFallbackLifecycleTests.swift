@@ -160,26 +160,18 @@ final class YlFallbackLifecycleTests: XCTestCase {
   }
 
   func testRetryEnvelopeContainsNoSourceOrHeaders() {
-    let envelope = YlFallbackRetryEvent.envelope(
-      playerId: 9,
-      attempt: 2,
-      delayMs: 400,
-      error: NativePlayerError(
-        category: "network",
-        code: "network.read_timeout",
-        message: "Read timed out",
-        diagnostic: "NSURLErrorDomain -1001"
-      )
-    )
-
-    XCTAssertEqual(envelope["playerId"] as? Int64, 9)
-    XCTAssertEqual(envelope["type"] as? String, "retry")
-    XCTAssertEqual(envelope["attempt"] as? Int, 2)
-    XCTAssertEqual(envelope["delayMs"] as? Int64, 400)
-    XCTAssertNil(envelope["uri"] ?? nil)
-    XCTAssertNil(envelope["headers"] ?? nil)
-    let error = envelope["error"] as? [String: Any?]
-    XCTAssertEqual(error?["code"] as? String, "network.read_timeout")
+    let event = YlNativeBackendEvent.retry(attempt: 2, delayMs: 400,
+      error: NativePlayerError(category: "network", code: "network.read_timeout",
+        message: "Read timed out", diagnostic: "NSURLErrorDomain -1001"))
+    guard case let .retry(attempt, delayMs, error) = event else {
+      return XCTFail("Retry carries only typed timing and failure details")
+    }
+    XCTAssertEqual(attempt, 2)
+    XCTAssertEqual(delayMs, 400)
+    XCTAssertEqual(error.category, "network")
+    XCTAssertEqual(error.code, "network.read_timeout")
+    XCTAssertEqual(error.message, "Read timed out")
+    XCTAssertEqual(error.diagnostic, "NSURLErrorDomain -1001")
   }
 
   func testRangeReactivationPreservesPositionTrackAndPlaybackIntent() {

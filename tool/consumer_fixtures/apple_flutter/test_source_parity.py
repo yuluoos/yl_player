@@ -1,5 +1,6 @@
 """Portable checks that the migration gate detects missing or modified copies."""
 import json
+import hashlib
 from pathlib import Path
 import shutil
 import subprocess
@@ -39,6 +40,29 @@ class SourceParityTest(unittest.TestCase):
                 shutil.copyfile(root / row["chosen_source"], target)
             verified = run("--verify-identical")
             self.assertEqual(verified.returncode, 0, verified.stderr)
+            # A reviewed typed/safety migration keeps immutable legacy provenance,
+            # checks its new destination exactly, and cannot conceal later drift.
+            migrated = next(row for row in rows if row["name"] == "YlNetworkRequestPolicy.swift")
+            migrated_path = root / migrated["destination"]
+            original_bytes = migrated_path.read_bytes()
+            migrated_path.write_bytes(original_bytes + b"\n// scoped credential context migration\n")
+            migrated["task7_migration"] = {
+                "ruling": "R18", "reason": "Classified credentials retain sticky origin safety across reader reopen",
+                "destination_removed": False,
+                "replacements": [{"path": migrated["destination"],
+                                  "sha256": hashlib.sha256(migrated_path.read_bytes()).hexdigest()}],
+            }
+            manifest_file = root / SCRIPT.parent / "source-parity.json"
+            manifest_file.write_text(json.dumps(manifest))
+            migration = run("--verify-identical")
+            self.assertEqual(migration.returncode, 0, migration.stderr)
+            migrated_path.write_bytes(migrated_path.read_bytes() + b"// unreviewed drift\n")
+            drift = run("--verify-identical")
+            self.assertNotEqual(drift.returncode, 0)
+            self.assertIn("migrated shared source changed", drift.stderr)
+            migrated_path.write_bytes(original_bytes)
+            del migrated["task7_migration"]
+            manifest_file.write_text(json.dumps(manifest))
             declarations_file = SCRIPT.parent / "source-declarations.json"
             shutil.copyfile(REPO / declarations_file, root / declarations_file)
             declarations = json.loads((root / declarations_file).read_text())["extractions"]

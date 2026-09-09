@@ -80,7 +80,12 @@
       ],
       "destination": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/PlayerConfiguration.swift",
       "declaration_sha256": "250a14141fcc0c594712c504f9e59d26c5203a8fe77bb62431fe6ffdaab48218",
-      "destination_sha256": "d4697affec056aa96900a301e3cd5271e96a065de7ddcb6fdc0d01d875b89cbf"
+      "destination_sha256": "d4697affec056aa96900a301e3cd5271e96a065de7ddcb6fdc0d01d875b89cbf",
+      "task7_migration": {
+        "ruling": "R16",
+        "reason": "Add closed validated typed-host initializer preserving valid5000ms public interval; original legacy initializer/default constants remain unchanged.",
+        "destination_sha256": "af4bde9d6a6cd01e70fa6d0937cab9cb54f08716994bda1d12bfb4e46da23c80"
+      }
     },
     {
       "declaration": "struct YlNetworkConfiguration:",

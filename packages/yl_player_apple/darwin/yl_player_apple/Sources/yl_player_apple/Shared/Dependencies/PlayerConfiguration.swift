@@ -6,7 +6,7 @@ struct PlayerConfiguration {
   let decoderPolicy: String
   let maxBufferBytes: Int?
   let network: YlNetworkConfiguration
-  let positionEventIntervalMs: Int64
+  private(set) var positionEventIntervalMs: Int64
   private(set) var preferredForwardBufferDuration: TimeInterval
 
   /// v1 absent options keep the original player policy; v2 always supplies goals.
@@ -17,6 +17,13 @@ struct PlayerConfiguration {
     result.bufferMode = goal == "smoothPlayback" ? "stable" : (goal == "lowLatency" ? "lowLatency" : "automatic")
     result.preferredForwardBufferDuration = result.bufferMode == "stable" ? 30 : (result.bufferMode == "lowLatency" ? 2 : 10)
     return result
+  }
+
+  /// Typed creation has already validated the public positive signed32 interval.
+  /// Preserve it exactly rather than applying the retired channel's local clamp.
+  init(positionEventIntervalMs: Int64) {
+    self.init(map: ["audioPolicy": "appManaged"])
+    self.positionEventIntervalMs = positionEventIntervalMs
   }
 
   init(map: [String: Any?]) {

@@ -14,6 +14,12 @@ enum YlBackendGeneration {
   }
 }
 
+struct YlNativeCapabilities {
+  let hardwareVideoCodecs: [String]
+  let supportedFormats: [String]
+  let maxConcurrentVideoDecoders: Int
+}
+
 enum YlBackendStateEncoder {
   static let deviceCapabilities = capabilities(
     hardwareH264: VTIsHardwareDecodeSupported(kCMVideoCodecType_H264),
@@ -23,75 +29,25 @@ enum YlBackendStateEncoder {
   static func capabilities(
     hardwareH264: Bool,
     hardwareHevc: Bool
-  ) -> [String: Any] {
+  ) -> YlNativeCapabilities {
     var hardwareVideoCodecs: [String] = []
     if hardwareH264 { hardwareVideoCodecs.append("video/avc") }
     if hardwareHevc { hardwareVideoCodecs.append("video/hevc") }
 
-    return [
-      "hardwareVideoCodecs": hardwareVideoCodecs,
-      "supportedFormats": [
-        "automatic",
-        "hls",
-        "httpFlv",
-        "mp4",
-        "mov",
-        "matroska",
-        "flv",
-      ],
-      "maxConcurrentVideoDecoders": 1,
-    ]
+    return YlNativeCapabilities(hardwareVideoCodecs: hardwareVideoCodecs,
+      supportedFormats: ["automatic", "hls", "httpFlv", "mp4", "mov", "matroska", "flv"],
+      maxConcurrentVideoDecoders: 1)
   }
 
   static func fallbackMetrics(
-    openDurationMs: Int64?,
-    firstFrameDurationMs: Int64?,
-    bufferedDurationMs: Int64,
-    bufferedBytes: Int,
-    droppedVideoFrames: Int,
-    audioUnderruns: Int,
-    reconnectCount: Int
-  ) -> [String: Any?] {
-    [
-      "openDurationMs": openDurationMs,
-      "firstFrameDurationMs": firstFrameDurationMs,
-      "rebufferCount": 0,
-      "rebufferDurationMs": 0,
-      "bufferedDurationMs": bufferedDurationMs,
-      "bufferedBytes": bufferedBytes,
-      "droppedVideoFrames": droppedVideoFrames,
-      "audioUnderruns": audioUnderruns,
-      "reconnectCount": reconnectCount,
-    ]
-  }
-
-  static func fullState(
-    playerId: Int64,
-    generation: UInt64,
-    loadToken: Any? = nil,
-    state: [String: Any?]
-  ) -> [String: Any?] {
-    [
-      "playerId": playerId,
-      "protocolVersion": 1,
-      "generation": generation,
-      "type": "state",
-      "loadToken": loadToken,
-      "state": state,
-    ]
-  }
-
-  static func stateDelta(
-    playerId: Int64,
-    generation: UInt64,
-    delta: [String: Any?]
-  ) -> [String: Any?] {
-    [
-      "playerId": playerId,
-      "protocolVersion": 1,
-      "generation": generation,
-      "type": "stateDelta",
-      "delta": delta,
-    ]
+    openDurationMs: Int64?, firstFrameDurationMs: Int64?,
+    bufferedDurationMs: Int64, bufferedBytes: Int,
+    droppedVideoFrames: Int, audioUnderruns: Int, reconnectCount: Int
+  ) -> YlNativeMetrics {
+    YlNativeMetrics(openDurationMs: openDurationMs,
+      firstFrameDurationMs: firstFrameDurationMs, rebufferCount: 0,
+      rebufferDurationMs: 0, bufferedDurationMs: bufferedDurationMs,
+      bufferedBytes: bufferedBytes, droppedVideoFrames: droppedVideoFrames,
+      audioUnderruns: audioUnderruns, reconnectCount: reconnectCount)
   }
 }

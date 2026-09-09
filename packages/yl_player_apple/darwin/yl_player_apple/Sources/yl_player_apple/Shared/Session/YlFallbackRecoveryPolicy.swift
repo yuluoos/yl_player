@@ -100,28 +100,6 @@ enum YlFallbackCommandPolicy {
   }
 }
 
-enum YlFallbackRetryEvent {
-  static func envelope(
-    playerId: Int64,
-    attempt: Int,
-    delayMs: Int64,
-    error: NativePlayerError
-  ) -> [String: Any?] {
-    [
-      "playerId": playerId,
-      "type": "retry",
-      "attempt": attempt,
-      "delayMs": delayMs,
-      "error": errorMap(
-        category: error.category,
-        code: error.code,
-        message: error.message,
-        diagnostic: error.diagnostic
-      ),
-    ]
-  }
-}
-
 struct YlFallbackResumeState: Equatable {
   let positionUs: Int64
   let selectedAudioStreamIndex: Int32?

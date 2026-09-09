@@ -1,7 +1,16 @@
 {
   "ios": [
     "YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()",
-    "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()"
+    "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()",
+    "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()"
   ],
-  "macos": []
+  "macos": [],
+  "task7_provenance": {
+    "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()": {
+      "ruling": "R21",
+      "original_source": "packages/yl_player/example/ios/RunnerTests/YlV2ReactivationTests.swift",
+      "original_line": 172,
+      "condition": "Only initial real MKV Load returns decoder.video_hardware_unavailable; every other failure fails. No AV publication skip."
+    }
+  }
 }

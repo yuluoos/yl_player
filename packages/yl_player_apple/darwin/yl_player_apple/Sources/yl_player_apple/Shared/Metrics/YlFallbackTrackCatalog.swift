@@ -6,17 +6,12 @@ enum YlFallbackTrackCatalog {
     streams: [YLFStreamInfo],
     selectedIndex: Int32?,
     codecName: (YLFStreamInfo) -> String
-  ) -> [[String: Any?]] {
+  ) -> [YlNativeTrack] {
     streams.map { stream in
       let codec = codecName(stream)
-      return [
-        "id": "audio-\(stream.index)",
-        "kind": "audio",
-        "label": "\(codec) \(stream.index)",
-        "language": nil,
-        "codec": codec,
-        "isSelected": stream.index == selectedIndex,
-      ]
+      return YlNativeTrack(id: "audio-\(stream.index)", kind: .audio,
+        label: "\(codec) \(stream.index)", language: nil, codec: codec,
+        isSelected: stream.index == selectedIndex)
     }
   }
 
@@ -24,16 +19,10 @@ enum YlFallbackTrackCatalog {
     stream: YLFStreamInfo,
     codecName: String,
     bitrate: Int?
-  ) -> [String: Any?] {
-    [
-      "id": "video-\(stream.index)",
-      "kind": "video",
-      "codec": canonicalVideoCodec(codecName),
-      "width": Int(stream.width),
-      "height": Int(stream.height),
-      "bitrate": bitrate,
-      "isSelected": true,
-    ]
+  ) -> YlNativeTrack {
+    YlNativeTrack(id: "video-\(stream.index)", kind: .video,
+      codec: canonicalVideoCodec(codecName), bitrate: bitrate,
+      width: Int(stream.width), height: Int(stream.height), isSelected: true)
   }
 
   private static func canonicalVideoCodec(_ codecName: String) -> String {

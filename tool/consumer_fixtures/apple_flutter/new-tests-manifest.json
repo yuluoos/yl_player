@@ -20,13 +20,21 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/NativeBackendFixtures.swift",
-    "sha256": "f7baafcbe436fe52bfbb9c14837f0ae027b5577b99b20be99e1f6810278ba938",
-    "methods": []
+    "sha256": "b77a044a264f1133aa7c64e24d3fb6f162f3e7cb8c40a56ab045e0362dd8513d",
+    "methods": [],
+    "task7_typed_migration": {
+      "from_sha256": "f7baafcbe436fe52bfbb9c14837f0ae027b5577b99b20be99e1f6810278ba938",
+      "reason": "Fixture-only real constructor glue projects actual typed native events for unchanged engine value assertions; no legacy host or production encoder."
+    }
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/NativeBackendFixtures.swift",
-    "sha256": "ada5e7ac48f67da66a05ec2002f4e06a17c7e4568c61479dc6dac7953b991a79",
-    "methods": []
+    "sha256": "e55dfa8fe2b5e08d4c952bd25aa5feceb08f31ef42880b375e4b183f47f63b37",
+    "methods": [],
+    "task7_typed_migration": {
+      "from_sha256": "ada5e7ac48f67da66a05ec2002f4e06a17c7e4568c61479dc6dac7953b991a79",
+      "reason": "Fixture-only real constructor glue projects actual typed native events for unchanged engine value assertions; no legacy host or production encoder."
+    }
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlMacosPlatformAdapterTests.swift",
@@ -34,5 +42,115 @@
     "methods": [
       "testDisplayFactoryDoesNotRetainTheFlutterView"
     ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
+    "sha256": "f178e5a0baacedabf37680a86a3a075d3e8e13be33798dcd4fd7833516ef3e4e",
+    "methods": [
+      "testInputValidationPrecedesReplacementAndRejectsUnrepresentableTimeline",
+      "testSemanticCommandRejectionCompletesFutureWithoutFailingHealthySession"
+    ],
+    "task7_provenance": "Task7 explicit common assertion bodies for all20 transferred cases, real HTTP preparation/cancellation and real controls/restoration. R19 held Load supersession replaces removed CancelOpen; R21 preserves exact original conditional skip."
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/NativeCallbackCharacterization.swift",
+    "sha256": "75cb5947d4052bf10d70683b0f559ba459281d3f86eab6a7e6bce9c2284556c3",
+    "methods": [],
+    "task7_provenance": "R16 test-only typed event projection retains original engine assertion values; no production map envelope or legacy host."
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlApplePublicationTests.swift",
+    "sha256": "35dad548f8221add65b57cb2b22a445ac675c2f77e9b0c63c263c72d0ec3fcc4",
+    "methods": [
+      "testDecodedPrivateFrameDoesNotConsumeFirstCommittedPublication",
+      "testActualHostEmitsFirstFrameOnlyAfterPositivePublicTextureSubmission",
+      "testFailedCandidateRetainsActiveHlsSessionAndRestoresPublicProjection",
+      "testHeldDisplayCallbackCannotAcquireNewBindingOrReviveStoppedOutput"
+    ],
+    "task7_provenance": "Task7 actual AV decoded CVPixelBuffers at private candidate and real platform FlutterTexture adapter/publication boundary; actual retained HLS rollback and held callback fencing.",
+    "task7_typed_migration": {
+      "from_sha256": "27a96a1c6967941545776577a62c00457b086d7bfac6548312cc569848db6ecc",
+      "reason": "Task7 actual AV decoded CVPixelBuffers at private candidate and real platform FlutterTexture adapter/publication boundary; actual retained HLS rollback and held callback fencing."
+    }
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift",
+    "sha256": "cb2c41bcd3d1161d52eebcb69a23d27f461c714fe102e5685a035673e1c5bceb",
+    "methods": [
+      "testImmutableRequestAndSessionIdentityStartsAtZero",
+      "testNegativeMeasuredLiveOffsetIsZeroAndUnknownRemainsNil",
+      "testDeltaRetainsTimelineForLaterSemanticSnapshots",
+      "testReadyPrecedesFirstFrameAndEvidenceSurvivesRecovery",
+      "testPrivateReservedFailureCategoriesMapExplicitly",
+      "testPartialOrAbsentGeometryCannotInventPublicMeasurements",
+      "testTypedStateRetainsMeasuredMetadataWithoutTransportEnvelope",
+      "testInvalidCreateDoesNotAllocateTexture",
+      "testPrivateFrameCommitAndRetiredClearRespectHostOwnership",
+      "testAcknowledgementBlocksFollowingCallsAndFailureClosesQueue",
+      "testHungAcknowledgementHasBoundedCleanup",
+      "testSixGeneratedCallbackMethodsShareAcknowledgedHostFIFO",
+      "testFailedAcknowledgementDisposesHostAndUninstallsSuffixExactlyOnce"
+    ],
+    "task7_provenance": "Task7 native registry/reducer/identity, READY, private/public texture ownership and acknowledged callback boundary; R23 partial/absent geometry must remain unknown without changing actual internal dimensions.",
+    "task7_typed_migration": {
+      "from_sha256": "0e0b38cfd78d2481ae4f52409da15f2ebf0a7fff049852c8799f12e4fa3660ab",
+      "reason": "Task7 shared reducer, native registry, immutable identity, private/public texture ownership, FIFO acknowledgements and host delivery assertions. R16 typed callback contract; READY and accepted timeline/metrics retention regressions."
+    }
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
+    "sha256": "03ccb231afeeeb58bd00c852f3b3ae2bfca11331bab7194f1017bf7942ced85a",
+    "methods": [
+      "testCancelOpenMatchesOnlyThePreparingCandidate",
+      "testPlayerVolumeAndCandidateOptionsSurviveFailedReplacementAndStop",
+      "testStopCancelsPendingOpenRetainsTextureAndAllowsFreshOpen",
+      "testPlayerPersistsSuccessfulQualityConstraint",
+      "testCapabilitiesDescribeCompletePlayerWithCanonicalMimeCodecs",
+      "testCapabilitiesOmitUnsupportedHardwareCodecs",
+      "testFallbackMetricsUseDartContractDroppedFrameKey",
+      "testChannelGenerationsAreStrictlyIncreasing",
+      "testFullStateEnvelopeUsesVersionedGeneration",
+      "testDeltaEnvelopeContainsOnlyDynamicPayload",
+      "testFailedReplacementThenReactivationPreservesAcceptedSessionControls",
+      "testForegroundRestoresOnlyPreviouslyActivePlayer",
+      "testActualLifecycleMemoryWarningDeactivatesSessionAndPreservesTexture"
+    ],
+    "task7_provenance": "Task7 exact 20 host methods call explicit shared assertion bodies (task7-host-cases.json). Additional platform lifecycle/held-command regressions preserve actual native behavior; R21 only original initial-MKV hardware skip, R22 real decoded restoration.",
+    "task7_typed_migration": {
+      "from_sha256": "54f1d7609d75c0897cb4ab486aec2452675824b2f2ec7aecce26bcc50a5c8787",
+      "reason": "Task7 exact 20 host methods call explicit shared assertion bodies (task7-host-cases.json). Additional platform lifecycle/held-command regressions preserve actual native behavior; R21 only original initial-MKV hardware skip, R22 real decoded restoration."
+    }
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleDecoderRestorationTests.swift",
+    "sha256": "cf332e98ae294e3902405008cdc22635a1574acd0e171b9406145074451000a9",
+    "methods": [
+      "testLocalQuiescenceRebuildSeeksBeforePublishingDecodedOutput",
+      "testNetworkQuiescenceUsesReprepareBeforePublishingDecodedOutput"
+    ],
+    "task7_provenance": "R22 permanent actual local/network direct-engine decoded-output regressions after decoder retirement, retaining accepted track and seek; no host/fake decoder proof."
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleHostTests.swift",
+    "sha256": "81da0dd06d8ce30da4a4722865e83aa7477381cc5f9d6d2dafeda0c427bd4dd4",
+    "methods": [
+      "testCancelOpenMatchesOnlyThePreparingCandidate",
+      "testStopCancelsPendingOpenRetainsTextureAndAllowsFreshOpen",
+      "testCapabilitiesUseCanonicalCodecIdentifiers",
+      "testChannelGenerationsAreStrictlyIncreasing",
+      "testStateEnvelopeUsesVersionedGeneration",
+      "testPluginChannelNamesMatchTheDartAdapter",
+      "testFallbackStateDeltaRetainsGenerationEnvelope",
+      "testFailedReplacementThenReactivationPreservesAcceptedSessionControls",
+      "testActiveFallbackReplacementUsesDefaultAudioBackedClock",
+      "testRequestObserverDoesNotTreatCancelledEmptyConnectionAsHttpRequest",
+      "testAcceptedPauseWinsHeldForegroundReprepareAndCredentialsReachEveryReader",
+      "testActualQueuedTrackAndTimelineCommandsSettleInOrderAcrossQuiescence"
+    ],
+    "task7_provenance": "Task7 exact 20 host methods call explicit shared assertion bodies (task7-host-cases.json). Additional platform lifecycle/held-command regressions preserve actual native behavior; R21 only original initial-MKV hardware skip, R22 real decoded restoration.",
+    "task7_typed_migration": {
+      "from_sha256": "6bb4c0473731ab36ddb6c940f67e9fe1f24bc7a3ba49655bf29469fa9e6ca49b",
+      "reason": "Task7 exact 20 host methods call explicit shared assertion bodies (task7-host-cases.json). Additional platform lifecycle/held-command regressions preserve actual native behavior; R21 only original initial-MKV hardware skip, R22 real decoded restoration."
+    }
   }
 ]

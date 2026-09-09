@@ -27,7 +27,7 @@ final class YlV2ReactivationTests: XCTestCase {
     defer { slot.dispose() }
     let source: [String: Any?] = ["uri": server.url.absoluteString, "kind": "network",
       "formatHint": "hls", "credentials": ["Authorization": "Bearer rollback-test"],
-      "loadToken": 1, "loadOptions": ["autoplay": false]]
+      "loadRequestId": "1", "loadOptions": ["autoplay": false]]
     func prepare() throws -> YlPreparedHlsAsset {
       try YlPreparedHlsAsset(originURL: server.url, headers: [:],
         credentials: ["Authorization": "Bearer rollback-test"],
@@ -72,7 +72,7 @@ final class YlV2ReactivationTests: XCTestCase {
     requireVideo("Rollback must restore authenticated HLS video")
     backend.emitState()
     XCTAssertEqual(events.last?["generation"] as? UInt64, publicGeneration)
-    XCTAssertEqual(events.last?["loadToken"] as? Int, 1)
+    XCTAssertEqual(events.last?["loadRequestId"] as? String, "1")
     XCTAssertEqual(avPlayer.rate, 1.5, accuracy: 0.01, "Rollback must preserve playing intent and speed")
     XCTAssertEqual(avPlayer.volume, 0.2, accuracy: 0.01)
     let restoredRequests = server.requests
@@ -141,11 +141,11 @@ private final class ReactivationTextures: NSObject, FlutterTextureRegistry {
   func textureFrameAvailable(_ textureId: Int64) {}
 }
 
-private final class ReactivationMediaServer {
+final class ReactivationMediaServer {
   private let listener: NWListener
   private let queue = DispatchQueue(label: "yl.test.reactivation.http")
   let url: URL
-  init(data: Data) throws {
+  init(data: Data, onRequest: @escaping (String) -> Void = { _ in }) throws {
     let listener = try NWListener(using: .tcp, on: .any)
     self.listener = listener
     let ready = DispatchSemaphore(value: 0)
@@ -153,7 +153,10 @@ private final class ReactivationMediaServer {
     listener.newConnectionHandler = { connection in
       connection.start(queue: DispatchQueue.global())
       connection.receive(minimumIncompleteLength: 1, maximumLength: 16384) { bytes, _, _, _ in
-        let request = String(decoding: bytes ?? Data(), as: UTF8.self).lowercased()
+        // A cancelled idle connection reports EOF, not an HTTP request.
+        guard let bytes, !bytes.isEmpty else { connection.cancel(); return }
+        let request = String(decoding: bytes, as: UTF8.self).lowercased()
+        onRequest(request)
         let range = request.components(separatedBy: "\r\n").first { $0.hasPrefix("range: bytes=") }?.components(separatedBy: "=").last
         let bounds = range?.split(separator: "-", omittingEmptySubsequences: false)
         let start = bounds?.first.flatMap { Int($0) } ?? 0
@@ -192,7 +195,7 @@ private final class FailingActivationBackend: YlPlaybackBackend {
   func dispose() { disposed = true }
 }
 
-private final class RollbackHlsServer {
+final class RollbackHlsServer {
   struct Request { let path: String; let authorized: Bool }
   private final class Log {
     let lock = NSLock()

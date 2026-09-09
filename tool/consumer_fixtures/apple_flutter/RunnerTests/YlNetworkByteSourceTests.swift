@@ -9,6 +9,7 @@ private final class ScriptedURLProtocol: URLProtocol {
     let chunks: [(delay: TimeInterval, data: Data)]
     let failure: URLError.Code?
     let finishes: Bool
+    var redirect: URL? = nil
 
     static func response(
       status: Int,
@@ -28,6 +29,10 @@ private final class ScriptedURLProtocol: URLProtocol {
 
     static func failure(_ code: URLError.Code) -> Self {
       Self(status: nil, headers: [:], chunks: [], failure: code, finishes: false)
+    }
+
+    static func redirect(to url: URL) -> Self {
+      Self(status: nil, headers: [:], chunks: [], failure: nil, finishes: false, redirect: url)
     }
 
     static func stall() -> Self {
@@ -55,6 +60,17 @@ private final class ScriptedURLProtocol: URLProtocol {
     return URL(string: "https://\(host)/movie.mkv?token=secret")!
   }
 
+  static func append(_ scripts: [ResponseScript], to url: URL) {
+    stateLock.lock()
+    scriptsByHost[url.host!, default: []].append(contentsOf: scripts)
+    stateLock.unlock()
+  }
+  static func recordedRequests(at url: URL) -> [URLRequest] {
+    stateLock.lock()
+    defer { stateLock.unlock() }
+    return requestsByHost[url.host!] ?? []
+  }
+
   static var recordedRequests: [URLRequest] {
     stateLock.lock()
     defer { stateLock.unlock() }
@@ -80,6 +96,12 @@ private final class ScriptedURLProtocol: URLProtocol {
 
     DispatchQueue.global(qos: .userInitiated).async { [weak self] in
       guard let self, !self.isStopped else { return }
+      if let destination = script.redirect {
+        let response = HTTPURLResponse(url: self.request.url!, statusCode: 302,
+          httpVersion: "HTTP/1.1", headerFields: ["Location": destination.absoluteString])!
+        self.client?.urlProtocol(self, wasRedirectedTo: URLRequest(url: destination), redirectResponse: response)
+        return
+      }
       if let status = script.status {
         let response = HTTPURLResponse(
           url: self.request.url!,
@@ -131,6 +153,43 @@ private final class ScriptedURLProtocol: URLProtocol {
 }
 
 final class YlNetworkByteSourceTests: XCTestCase {
+  func testActualRequestsKeepExplicitCredentialsStrippedAcrossRedirectRetryAndReopen() throws {
+    let original = ScriptedURLProtocol.configure([])
+    let other = ScriptedURLProtocol.configure([.redirect(to: original)])
+    ScriptedURLProtocol.append([.redirect(to: other), .response(status: 503),
+      .response(status: 200, headers: ["Content-Length": "1"], chunks: [(0, Data([7]))]),
+      .response(status: 200, headers: ["Content-Length": "1"], chunks: [(0, Data([8]))]),
+      .response(status: 200, headers: ["Content-Length": "1"], chunks: [(0, Data([9]))])], to: original)
+    let configuration = YlNetworkConfiguration(map: ["maxRetries": 1, "baseRetryDelayMs": 0])
+    let recipe = YlNetworkRequestRecipe(url: original, headers: ["X-Display": "visible"],
+      credentials: ["X-Private-Identity": "private", "aUtHoRiZaTiOn": "secret"], configuration: configuration)
+    let session = URLSessionConfiguration.ephemeral
+    session.protocolClasses = [ScriptedURLProtocol.self]
+    func reader(_ request: YlNetworkRequestRecipe) -> YlNetworkByteSource {
+      YlNetworkByteSource(recipe: request, capacity: 32, sessionConfiguration: session)
+    }
+    let initial = reader(recipe)
+    defer { initial.cancel() }
+    XCTAssertEqual(try readToEnd(initial), [7])
+    let firstRequests = ScriptedURLProtocol.recordedRequests(at: original)
+    XCTAssertEqual(firstRequests.count, 3, "Initial, returned-origin and retry requests must all execute")
+    XCTAssertEqual(firstRequests.first?.value(forHTTPHeaderField: "X-Private-Identity"), "private")
+    for request in Array(firstRequests.dropFirst()) + ScriptedURLProtocol.recordedRequests(at: other) {
+      XCTAssertNil(request.value(forHTTPHeaderField: "X-Private-Identity"))
+      XCTAssertNil(request.value(forHTTPHeaderField: "Authorization"))
+      XCTAssertEqual(request.value(forHTTPHeaderField: "X-Display"), "visible")
+    }
+    let reopened = reader(recipe)
+    defer { reopened.cancel() }
+    XCTAssertEqual(try readToEnd(reopened), [8])
+    XCTAssertNil(ScriptedURLProtocol.recordedRequests(at: original).last?.value(forHTTPHeaderField: "X-Private-Identity"))
+    let newIntent = reader(YlNetworkRequestRecipe(url: original, headers: recipe.headers,
+      credentials: recipe.credentials, configuration: configuration))
+    defer { newIntent.cancel() }
+    XCTAssertEqual(try readToEnd(newIntent), [9])
+    XCTAssertEqual(ScriptedURLProtocol.recordedRequests(at: original).last?.value(forHTTPHeaderField: "X-Private-Identity"), "private")
+  }
+
   private func makeSource(
     scripts: [ScriptedURLProtocol.ResponseScript],
     capacity: Int = 32,

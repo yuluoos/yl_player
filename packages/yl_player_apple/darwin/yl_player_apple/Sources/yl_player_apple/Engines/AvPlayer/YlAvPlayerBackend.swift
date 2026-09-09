@@ -103,7 +103,11 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
 
   private let services: YlPlatformServices
   private let configuration: PlayerConfiguration
-  private let emit: ([String: Any?]) -> Void
+  private final class CallbackBinding {
+    let emit: (YlNativeBackendCallback) -> Void
+    init(_ emit: @escaping (YlNativeBackendCallback) -> Void) { self.emit = emit }
+  }
+  private var callbackBinding: CallbackBinding
   private let player: AVPlayer
   private let errorLogCollector = YlAvPlayerErrorLogCollector()
   private let videoOutput = AVPlayerItemVideoOutput(
@@ -119,8 +123,8 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   private var endObserver: NSObjectProtocol?
   private var failedObserver: NSObjectProtocol?
   private var audioOptions: [String: AVMediaSelectionOption] = [:]
-  private var audioTracks: [[String: Any?]] = []
-  private var videoTracks: [[String: Any?]] = []
+  private var audioTracks: [YlNativeTrack] = []
+  private var videoTracks: [YlNativeTrack] = []
   private var sourceIsLive = false
   private var status = "idle"
   private var stopped = false
@@ -141,7 +145,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   private var bufferingStartedAt: CFTimeInterval?
   private var rebufferDurationMs: Int64 = 0
   private var hasBeenReady = false
-  private var currentError: [String: Any?]?
+  private var currentError: NativePlayerError?
   private let failureGate = YlAvPlayerFailureGate()
   private let stallWatchdog = YlAvPlayerStallWatchdog()
   private var active = false
@@ -164,23 +168,40 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     services: YlPlatformServices,
     configuration: PlayerConfiguration,
     player: AVPlayer = AVPlayer(),
-    emit: @escaping ([String: Any?]) -> Void
+    emit: @escaping (YlNativeBackendCallback) -> Void
   ) {
     self.playerId = playerId
     self.services = services
     self.player = player
     self.liveReconnectController = YlLiveReconnectController(configuration: configuration.network)
     self.configuration = configuration
-    self.emit = emit
+    self.callbackBinding = CallbackBinding(emit)
     super.init()
 
     player.automaticallyWaitsToMinimizeStalling = configuration.bufferMode != "lowLatency"
+    installCallbackObservers()
+  }
+
+  /// Rebind permanent observers with an immutable authority captured before delivery.
+  /// Retired periodic/display/observation closures cannot relabel queued old work.
+  func bindCallbacks(_ emit: @escaping (YlNativeBackendCallback) -> Void) {
+    callbackBinding = CallbackBinding(emit)
+    timeControlObservation?.invalidate()
+    if let periodicObserver { player.removeTimeObserver(periodicObserver) }
+    periodicObserver = nil
+    displayLink?.invalidate()
+    installCallbackObservers()
+    displayLink?.isPaused = !active
+  }
+
+  private func installCallbackObservers() {
+    let binding = callbackBinding
     timeControlObservation = player.observe(\.timeControlStatus, options: [.new]) {
       [weak self] _, _ in
-      guard let self else { return }
+      guard let self, self.callbackBinding === binding else { return }
       let generation = self.itemGeneration
       DispatchQueue.main.async { [weak self] in
-        guard let self, self.itemGeneration == generation, !self.stopped else { return }
+        guard let self, self.callbackBinding === binding, self.itemGeneration == generation, !self.stopped else { return }
         self.handleTimeControlChange()
       }
     }
@@ -191,9 +212,13 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       ),
       queue: .main
     ) { [weak self] _ in
-      self?.emitStateDelta()
+      guard let self, self.callbackBinding === binding else { return }
+      self.emitStateDelta()
     }
-    let link = services.makeDisplayDriver { [weak self] in self?.displayLinkTick() }
+    let link = services.makeDisplayDriver { [weak self] in
+      guard let self, self.callbackBinding === binding else { return }
+      self.displayLinkTick()
+    }
     link.isPaused = true
     displayLink = link
   }
@@ -457,14 +482,14 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     active = false
     playRequested = false
     status = "error"
-    let details = errorMap(
+    let details = NativePlayerError(
       category: error.category,
       code: error.code,
       message: error.message,
       diagnostic: error.diagnostic
     )
     currentError = details
-    emit(["playerId": playerId, "type": "error", "error": details])
+    emit(.failure(details))
     emitState(error: details)
   }
 
@@ -726,14 +751,14 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       statusCode: log?.statusCode,
       uri: log?.uri
     )
-    let details = errorMap(
+    let details = NativePlayerError(
       category: category,
       code: error.map { "avplayer.\($0.code)" } ?? "avplayer.failed",
       message: "AVPlayer playback failed.",
       diagnostic: diagnostic
     )
     currentError = details
-    emit(["playerId": playerId, "type": "error", "error": details])
+    emit(.failure(details))
     emitState(error: details)
   }
 
@@ -747,12 +772,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       firstFrameSent = true
       firstFrameDurationMs = elapsedMilliseconds(since: openStartedAt)
       let size = player.currentItem?.presentationSize ?? .zero
-      emit([
-        "playerId": playerId,
-        "type": "firstFrame",
-        "width": size.width > 0 ? Int(size.width) : nil,
-        "height": size.height > 0 ? Int(size.height) : nil,
-      ])
+      emit(.firstFrame(width: size.width > 0 ? Int(size.width) : nil, height: size.height > 0 ? Int(size.height) : nil))
       emitState()
       refreshStallWatchdog()
     }
@@ -789,14 +809,14 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     playRequested = false
     player.pause()
     status = "error"
-    let details = errorMap(
+    let details = NativePlayerError(
       category: error.category,
       code: error.code,
       message: error.message,
       diagnostic: error.diagnostic
     )
     currentError = details
-    emit(["playerId": playerId, "type": "error", "error": details])
+    emit(.failure(details))
     emitState(error: details)
   }
 
@@ -883,13 +903,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       }
       audioTracks = group.options.enumerated().map { index, option in
         let id = "audio-\(index)"
-        return [
-          "id": id,
-          "kind": "audio",
-          "label": option.displayName,
-          "language": option.locale?.identifier,
-          "isSelected": item.currentMediaSelection.selectedMediaOption(in: group) == option,
-        ]
+        return YlNativeTrack(id: id, kind: .audio,
+          label: option.displayName, language: option.locale?.identifier,
+          isSelected: item.currentMediaSelection.selectedMediaOption(in: group) == option)
       }
     } else {
       audioTracks = []
@@ -897,28 +913,22 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
 
     videoTracks = item.asset.tracks(withMediaType: .video).enumerated().map { index, track in
       let size = track.naturalSize.applying(track.preferredTransform)
-      return [
-        "id": "video-\(index)",
-        "kind": "video",
-        "width": Int(abs(size.width)),
-        "height": Int(abs(size.height)),
-        "bitrate": Int(track.estimatedDataRate),
-        "isSelected": true,
-      ]
+      return YlNativeTrack(id: "video-\(index)", kind: .video,
+        bitrate: Int(track.estimatedDataRate), width: Int(abs(size.width)),
+        height: Int(abs(size.height)), isSelected: true)
     }
-    emit([
-      "playerId": playerId,
-      "type": "tracksChanged",
-      "audioTracks": audioTracks,
-      "videoTracks": videoTracks,
-    ])
+    emit(.tracksChanged(audio: audioTracks, video: videoTracks))
+  }
+
+  private func emit(_ event: YlNativeBackendEvent) {
+    callbackBinding.emit(YlNativeBackendCallback(generation: channelGeneration, loadRequestId: lastSource?["loadRequestId"] as? String, event: event))
   }
 
   func emitState() {
     emitState(error: nil)
   }
 
-  private func emitState(error: [String: Any?]?) {
+  private func emitState(error: NativePlayerError?) {
     guard !disposed, !resetting else { return }
     let item = player.currentItem
     let positionMs = active ? (milliseconds(player.currentTime()) ?? savedPositionMs) : savedPositionMs
@@ -931,40 +941,21 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     let live = sourceIsLive || isIndefinite(item?.duration)
     let liveOffsetMs = live ? dvrEndMs.map { max(0, $0 - positionMs) } : nil
     let size = item?.presentationSize ?? .zero
-    emit(YlBackendStateEncoder.fullState(
-      playerId: playerId,
-      generation: channelGeneration,
-      loadToken: lastSource?["loadToken"] ?? nil,
-      state: [
-        "status": status,
-        "positionMs": positionMs,
-        "durationMs": durationMs,
-        "bufferedPositionMs": loadedEndMs,
-        "isLive": live,
-        "isSeekable": seekableRange != nil,
-        "isAtLiveEdge": liveOffsetMs.map { $0 <= 2_000 } ?? false,
-        "liveOffsetMs": liveOffsetMs,
-        "dvrStartMs": dvrStartMs,
-        "dvrEndMs": dvrEndMs,
-        "videoWidth": size.width > 0 ? Int(size.width) : nil,
-        "videoHeight": size.height > 0 ? Int(size.height) : nil,
-        "engine": "avPlayer",
-        "isHardwareDecoding": false,
-        "decoderName": nil,
-        "audioTracks": audioTracks,
-        "videoTracks": videoTracks,
-        "capabilities": YlBackendStateEncoder.deviceCapabilities,
-        "metrics": [
-          "openDurationMs": openDurationMs,
-          "firstFrameDurationMs": firstFrameDurationMs,
-          "rebufferCount": rebufferCount,
-          "rebufferDurationMs": rebufferDurationMs,
-          "bufferedDurationMs": max(0, loadedEndMs - positionMs),
-          "liveOffsetMs": liveOffsetMs,
-        ],
-        "error": error ?? currentError,
-      ]
-    ))
+    emit(.state(YlNativeState(
+      status: status, positionMs: positionMs, durationMs: durationMs,
+      bufferedPositionMs: loadedEndMs, isLive: live,
+      isSeekable: seekableRange != nil,
+      isAtLiveEdge: liveOffsetMs.map { $0 <= 2_000 } ?? false,
+      liveOffsetMs: liveOffsetMs, dvrStartMs: dvrStartMs, dvrEndMs: dvrEndMs,
+      videoWidth: size.width > 0 ? Int(size.width) : nil,
+      videoHeight: size.height > 0 ? Int(size.height) : nil,
+      engine: .avPlayer, isHardwareDecoding: false, decoderName: nil,
+      audioTracks: audioTracks, videoTracks: videoTracks,
+      metrics: YlNativeMetrics(openDurationMs: openDurationMs,
+        firstFrameDurationMs: firstFrameDurationMs, rebufferCount: rebufferCount,
+        rebufferDurationMs: rebufferDurationMs,
+        bufferedDurationMs: max(0, loadedEndMs - positionMs), liveOffsetMs: liveOffsetMs),
+      error: error ?? currentError)))
   }
 
   private func emitStateDelta() {
@@ -977,24 +968,14 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     let live = sourceIsLive || isIndefinite(item?.duration)
     let dvrEndMs = seekableRange.flatMap { milliseconds(CMTimeRangeGetEnd($0)) }
     let liveOffsetMs = live ? dvrEndMs.map { max(0, $0 - positionMs) } : nil
-    emit(YlBackendStateEncoder.stateDelta(
-      playerId: playerId,
-      generation: channelGeneration,
-      delta: [
-        "positionMs": positionMs,
-        "bufferedPositionMs": loadedEndMs,
-        "isAtLiveEdge": liveOffsetMs.map { $0 <= 2_000 } ?? false,
-        "liveOffsetMs": liveOffsetMs,
-        "metrics": [
-          "openDurationMs": openDurationMs,
-          "firstFrameDurationMs": firstFrameDurationMs,
-          "rebufferCount": rebufferCount,
-          "rebufferDurationMs": rebufferDurationMs,
-          "bufferedDurationMs": max(0, loadedEndMs - positionMs),
-          "liveOffsetMs": liveOffsetMs,
-        ],
-      ]
-    ))
+    emit(.delta(YlNativeTimelineDelta(positionMs: positionMs,
+      bufferedPositionMs: loadedEndMs,
+      isAtLiveEdge: liveOffsetMs.map { $0 <= 2_000 } ?? false,
+      liveOffsetMs: liveOffsetMs,
+      metrics: YlNativeMetrics(openDurationMs: openDurationMs,
+        firstFrameDurationMs: firstFrameDurationMs, rebufferCount: rebufferCount,
+        rebufferDurationMs: rebufferDurationMs,
+        bufferedDurationMs: max(0, loadedEndMs - positionMs), liveOffsetMs: liveOffsetMs))))
   }
 
   func dispose() {
@@ -1101,20 +1082,6 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
 
 
 
-
-func errorMap(
-  category: String,
-  code: String,
-  message: String,
-  diagnostic: String? = nil
-) -> [String: Any?] {
-  [
-    "category": category,
-    "code": code,
-    "message": message,
-    "platformDiagnostic": diagnostic,
-  ]
-}
 
 private func errorCategory(_ error: NSError?) -> String {
   guard let error else { return "source" }

@@ -240,7 +240,10 @@ def check(platform, manager, link):
     summary = json.loads(run(["xcrun", "xcresulttool", "get", "test-results", "summary", "--path", str(result)], ROOT, f"{platform}-{manager}-summary", capture=True))
     expected_count = sum(len(re.findall(r"\bfunc test\w+\(", path.read_text())) for path in fixture_tests(platform))
     require(expected_count > 0 and summary.get("failedTests") == 0 and summary.get("passedTests", 0) + summary.get("skippedTests", 0) == expected_count and summary.get("totalTestCount") == expected_count, "Native result does not cover the complete fixture suite")
-    require(summary.get("skippedTests", 0) <= (2 if platform == "ios" else 0), "Unexpected characterization skips")
+    # R21 restores the original third iOS host-case hardware condition. Exact
+    # identities remain mandatory below; this count never grants another skip.
+    allowed_skip_count = len(json.loads((FIXTURES / "allowed-hardware-skips.json").read_text())[platform])
+    require(summary.get("skippedTests", 0) <= allowed_skip_count, "Unexpected characterization skips")
     verify_cases(result, platform, manager)
     (LOGS / f"{platform}-{manager}-result.json").write_text(json.dumps({"result_bundle": str(result), "summary": summary}, indent=2) + "\n")
     print(json.dumps({"platform": platform, "manager": manager, "passed": summary["passedTests"], "result": str(result)}), flush=True)

@@ -26,7 +26,7 @@ enum YlPreparedOpen {
 }
 
 final class YlPreparedFallback {
-  let legacyEvents: YlLegacyCommitEmitter?
+  let commitEvents: YlAppleCommitEmitter?
   let sourceRecipe: YlFallbackSourceRecipe
   let policy: YlFallbackMediaPolicy
   let mediaInfo: YLFMediaInfo
@@ -47,10 +47,10 @@ final class YlPreparedFallback {
     configuration: PlayerConfiguration = PlayerConfiguration(map: [:]),
     sessionConfiguration: URLSessionConfiguration = .ephemeral,
     cancellationToken: YlOpenCancellationToken? = nil,
-    legacyEvents: YlLegacyCommitEmitter? = nil,
+    commitEvents: YlAppleCommitEmitter? = nil,
     onRetry: YlNetworkByteSource.RetryCallback? = nil
   ) throws {
-    self.legacyEvents = legacyEvents
+    self.commitEvents = commitEvents
     self.sessionConfiguration = sessionConfiguration
     try cancellationToken?.throwIfCancelled()
     guard let uri = source["uri"] as? String,
@@ -74,6 +74,8 @@ final class YlPreparedFallback {
       sourceRecipe = .network(request: YlNetworkRequestRecipe(
         url: url,
         headers: headers,
+        credentials: stringMap(source["credentials"]).compactMapValues { $0 as? String },
+        credentialContext: source["credentialContext"] as? YlNetworkCredentialContext ?? YlNetworkCredentialContext(),
         configuration: configuration.network,
         mode: container == .flv ? .sequentialLive : .randomAccessVOD
       ), container: container)
