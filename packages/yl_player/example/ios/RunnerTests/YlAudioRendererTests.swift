@@ -1,4 +1,4 @@
-@testable import yl_player_ios
+@testable import yl_player_apple
 import AVFAudio
 import XCTest
 import YlFFmpegBridge
@@ -21,7 +21,7 @@ final class YlAudioRendererTests: XCTestCase {
       YlAudioBufferEstimate(durationUs: outputDurationUs, byteCount: outputBytes)
     }
 
-    func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer {
+    func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
       if let conversionError { throw conversionError }
       convertCount += 1
       return YlScheduledAudioBuffer(
@@ -246,7 +246,7 @@ final class YlAudioRendererTests: XCTestCase {
 
     let converter = YlAppleCompressedAudioConverter()
     try converter.configure(stream: stream())
-    let converted = try converter.convert(packet: try XCTUnwrap(compressedPacket))
+    let converted = try XCTUnwrap(converter.convert(packet: try XCTUnwrap(compressedPacket)))
     let pcm = try XCTUnwrap(converted.payload as? AVAudioPCMBuffer)
     XCTAssertGreaterThan(pcm.frameLength, 0)
     XCTAssertLessThanOrEqual(converted.durationUs, 30_000)
@@ -303,7 +303,7 @@ final class YlAudioRendererTests: XCTestCase {
       magicCookie: Data(),
       generation: 1
     ))
-    let converted = try converter.convert(packet: try XCTUnwrap(compressedPacket))
+    let converted = try XCTUnwrap(converter.convert(packet: try XCTUnwrap(compressedPacket)))
     let pcm = try XCTUnwrap(converted.payload as? AVAudioPCMBuffer)
     XCTAssertGreaterThan(pcm.frameLength, 0)
     XCTAssertGreaterThan(converted.byteCount, 0)

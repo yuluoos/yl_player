@@ -45,7 +45,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
-    "sha256": "ddc76f4919e131f71df4af07ffe95bc5fc1ac5ed4c1b82c9f0373c183b3e1135",
+    "sha256": "8c2aad6c5beeb5cade516d66891399d2c9e3fe59bedfb4c81abad37c40248a33",
     "methods": [
       "testInputValidationPrecedesReplacementAndRejectsUnrepresentableTimeline",
       "testSemanticCommandRejectionCompletesFutureWithoutFailingHealthySession"
@@ -60,6 +60,10 @@
       "fix_base": "3ce11f4c5a8557ed4da7280e4d6945f62ffc46cf",
       "from_sha256": "e9b4b4716f43c6a58e626c92259417f4c35f585d922fc77653061ce39ece8cc5",
       "reason": "R27 constructor forwards only optional slot compatibility, default nil; all existing shared assertion bodies unchanged."
+    },
+    "task8_r39": {
+      "from_sha256": "ddc76f4919e131f71df4af07ffe95bc5fc1ac5ed4c1b82c9f0373c183b3e1135",
+      "reason": "The existing semantic command rejection case now also proves the real sequential HTTP 200 fallback rejects seek with network.range_not_supported before mutation while retaining the healthy session snapshot."
     }
   },
   {

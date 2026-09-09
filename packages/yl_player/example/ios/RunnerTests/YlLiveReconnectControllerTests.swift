@@ -1,4 +1,4 @@
-@testable import yl_player_ios
+@testable import yl_player_apple
 import AVFoundation
 import XCTest
 

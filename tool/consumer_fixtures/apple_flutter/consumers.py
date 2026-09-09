@@ -12,6 +12,8 @@ import sys
 import tempfile
 import time
 
+from main_example_tests import source_bytes
+
 
 def require(condition, message):
     if not condition:
@@ -84,11 +86,11 @@ def verify_fixtures():
     for name in ["tests-manifest.json", "resources-manifest.json", "engine-tests-manifest.json"]:
         rows = json.loads((FIXTURES / name).read_text())
         for row in rows:
-            source, destination = ROOT / row["source"], ROOT / row["destination"]
+            destination = ROOT / row["destination"]
             expected_source = row.get("source_sha256", row.get("original_sha256", row.get("sha256")))
             expected_destination = row.get("destination_sha256", row.get("sha256"))
-            require(hashlib.sha256(source.read_bytes()).hexdigest() == expected_source,
-                    f"Original fixture changed: {source}")
+            require(hashlib.sha256(source_bytes(ROOT, name, row)).hexdigest() == expected_source,
+                    f"Original fixture changed: {row['source']}")
             if expected_destination is not None:
                 require(hashlib.sha256(destination.read_bytes()).hexdigest() == expected_destination,
                         f"Migrated fixture changed: {destination}")

@@ -137,8 +137,13 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
   func seekTo(command: AppleSeekCommand) throws {
     try session(command.sessionId)
     guard command.positionMs >= 0, command.positionMs <= Int64.max / 1000 else { throw YlAppleFailureMapper.command(YlAppleFailureMapper.invalid()) }
-    if let snapshot = reducer.state.snapshot, snapshot.engine == .managedFallback, !snapshot.isSeekable {
-      throw YlAppleFailureMapper.command(NativePlayerError(category: "source", code: "source.not_seekable", message: "The source cannot seek."))
+    if let snapshot = reducer.state.snapshot, snapshot.engine == .managedFallback {
+      do {
+        try YlFallbackSeekPolicy(isSeekable: snapshot.isSeekable) { _ in }
+          .seek(toUs: command.positionMs * 1_000)
+      } catch {
+        throw YlAppleFailureMapper.command(error)
+      }
     }
     try runSynchronous(.seek(command.positionMs))
   }

@@ -38,9 +38,14 @@ abstract final class AppleCodec {
     return match != null && match.end == value.length;
   }
 
+  static String _failureCode(String value) => switch (value) {
+    'decoder.video_hardware_unavailable' => YlFailureCodes.decoderUnavailable,
+    _ => _safe(value) ? value : YlFailureCodes.platformFailure,
+  };
+
   static YlFailure failure(AppleFailureMessage value) => YlFailure(
     category: _category(value.category),
-    code: _safe(value.code) ? value.code : YlFailureCodes.platformFailure,
+    code: _failureCode(value.code),
     message: 'Playback operation failed.',
     retryable: value.retryable,
     scope: _scope(value.scope),

@@ -100,7 +100,8 @@ final class ReactivationMediaServer {
   private let listener: NWListener
   private let queue = DispatchQueue(label: "yl.test.reactivation.http")
   let url: URL
-  init(data: Data, onRequest: @escaping (String) -> Void = { _ in }) throws {
+  init(data: Data, supportsRanges: Bool = true,
+       onRequest: @escaping (String) -> Void = { _ in }) throws {
     let listener = try NWListener(using: .tcp, on: .any)
     self.listener = listener
     let ready = DispatchSemaphore(value: 0)
@@ -112,13 +113,16 @@ final class ReactivationMediaServer {
         guard let bytes, !bytes.isEmpty else { connection.cancel(); return }
         let request = String(decoding: bytes, as: UTF8.self).lowercased()
         onRequest(request)
-        let range = request.components(separatedBy: "\r\n").first { $0.hasPrefix("range: bytes=") }?.components(separatedBy: "=").last
+        let range = supportsRanges
+          ? request.components(separatedBy: "\r\n").first { $0.hasPrefix("range: bytes=") }?.components(separatedBy: "=").last
+          : nil
         let bounds = range?.split(separator: "-", omittingEmptySubsequences: false)
         let start = bounds?.first.flatMap { Int($0) } ?? 0
         let end = min(bounds?.last.flatMap { Int($0) } ?? data.count - 1, data.count - 1)
         guard start >= 0, start <= end else { connection.cancel(); return }
         let body = data.subdata(in: start..<(end + 1))
-        var headers = "HTTP/1.1 \(range == nil ? "200 OK" : "206 Partial Content")\r\nContent-Type: video/x-matroska\r\nAccept-Ranges: bytes\r\nContent-Length: \(body.count)\r\nConnection: close\r\n"
+        var headers = "HTTP/1.1 \(range == nil ? "200 OK" : "206 Partial Content")\r\nContent-Type: video/x-matroska\r\nContent-Length: \(body.count)\r\nConnection: close\r\n"
+        if supportsRanges { headers += "Accept-Ranges: bytes\r\n" }
         if range != nil { headers += "Content-Range: bytes \(start)-\(end)/\(data.count)\r\n" }
         connection.send(content: Data((headers + "\r\n").utf8) + body, completion: .contentProcessed { _ in connection.cancel() })
       }

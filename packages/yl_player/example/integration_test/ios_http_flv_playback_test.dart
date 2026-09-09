@@ -65,13 +65,13 @@ void main() {
       return;
     }
 
+    await sessionFor(controller).play();
+    await sessionFor(controller).ready.timeout(const Duration(seconds: 20));
     expect(controller.state.engine, YlPlaybackEngine.managedFallback);
     expect(controller.state.timeline.isLive, isTrue);
     expect(controller.state.timeline.isSeekable, isFalse);
-    expect(controller.state.decoderMode, YlDecoderMode.unknown);
+    expect(controller.state.decoderMode, YlDecoderMode.hardware);
 
-    await sessionFor(controller).play();
-    await sessionFor(controller).ready.timeout(const Duration(seconds: 20));
     await firstFrame.future.timeout(const Duration(seconds: 15));
     final retryEvent = await retry.future.timeout(const Duration(seconds: 15));
     expect(retryEvent.retryIndex, 1);

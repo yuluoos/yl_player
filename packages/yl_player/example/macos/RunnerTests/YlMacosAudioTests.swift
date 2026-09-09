@@ -1,4 +1,4 @@
-@testable import yl_player_macos
+@testable import yl_player_apple
 import AppKit
 import AVFAudio
 import Foundation
@@ -432,9 +432,9 @@ final class YlMacosAudioTests: XCTestCase {
       codecName: { Int($0.codec) == YLFCodecMP3 ? "MP3" : "AAC" }
     )
 
-    XCTAssertEqual(tracks[0]["codec"] as? String, "AAC")
-    XCTAssertEqual(tracks[1]["codec"] as? String, "MP3")
-    XCTAssertEqual(tracks[1]["isSelected"] as? Bool, true)
+    XCTAssertEqual(tracks[0].codec, "AAC")
+    XCTAssertEqual(tracks[1].codec, "MP3")
+    XCTAssertEqual(tracks[1].isSelected, true)
   }
 
 }

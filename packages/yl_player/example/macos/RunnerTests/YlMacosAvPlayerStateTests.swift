@@ -1,4 +1,4 @@
-@testable import yl_player_macos
+@testable import yl_player_apple
 import XCTest
 
 final class YlMacosAvPlayerStateTests: XCTestCase {
@@ -23,7 +23,7 @@ final class YlMacosAvPlayerStateTests: XCTestCase {
       ]
     )
 
-    let diagnostic = YlAvPlayerFailurePolicy.diagnostic(error)
+    let diagnostic = YlAvPlayerRecoveryPolicy.diagnostic(error)
 
     XCTAssertEqual(
       diagnostic,

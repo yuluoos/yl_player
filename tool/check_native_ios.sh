@@ -5,6 +5,20 @@ set -eu
 repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 simulator_id=${YL_IOS_SIMULATOR_ID:-}
 
+verify_registrant() {
+  registrant="$repo_root/packages/yl_player/example/ios/Runner/GeneratedPluginRegistrant.m"
+  package_graph="$repo_root/packages/yl_player/example/ios/Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage/Package.swift"
+  if ! grep -Fq 'YlPlayerApplePlugin' "$registrant" || ! grep -Fq 'yl_player_apple' "$package_graph"; then
+    echo "iOS generated wiring omits yl_player_apple" >&2
+    exit 1
+  fi
+  if grep -Eq 'yl_player_(ios|macos)|YlPlayer(Ios|Macos)Plugin' "$registrant" "$package_graph"; then
+    echo "iOS registrant retains a legacy Apple plugin" >&2
+    exit 1
+  fi
+  echo "iOS generated wiring: YlPlayerApplePlugin only"
+}
+
 if [ -z "$simulator_id" ]; then
   simulator_id=$(
     xcrun simctl list devices booted |
@@ -25,10 +39,14 @@ fi
   cd "$repo_root/packages/yl_player/example"
   flutter build ios --simulator --debug --config-only
 )
+python3 -B "$repo_root/tool/consumer_fixtures/apple_flutter/main_example_tests.py" --current-only
+verify_registrant
 
 xcodebuild test -quiet \
   -workspace "$repo_root/packages/yl_player/example/ios/Runner.xcworkspace" \
   -scheme Runner \
+  -parallel-testing-enabled NO \
+  -derivedDataPath "$repo_root/packages/yl_player/example/build/native-ios-tests" \
   -destination "platform=iOS Simulator,id=$simulator_id"
 
 # xcodebuild can shut down the source simulator after running tests on a clone.

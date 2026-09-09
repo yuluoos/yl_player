@@ -1,4 +1,4 @@
-@testable import yl_player_macos
+@testable import yl_player_apple
 import AppKit
 import AVFAudio
 import Foundation
@@ -152,16 +152,6 @@ final class YlMacosFallbackTests: XCTestCase {
   }
 
 
-  func testFallbackStateDeltaRetainsGenerationEnvelope() {
-    let envelope = YlMacosChannel.stateDelta(
-      playerId: 9,
-      generation: 42,
-      delta: ["positionMs": Int64(250)]
-    )
 
-    XCTAssertEqual(envelope["protocolVersion"] as? Int, 1)
-    XCTAssertEqual(envelope["generation"] as? UInt64, 42)
-    XCTAssertEqual(envelope["type"] as? String, "stateDelta")
-  }
 
 }

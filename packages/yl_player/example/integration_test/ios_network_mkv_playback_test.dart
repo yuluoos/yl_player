@@ -78,7 +78,7 @@ void main() {
     await sessionFor(controller).ready.timeout(const Duration(seconds: 20));
     await firstFrame;
     expect(controller.state.engine, YlPlaybackEngine.managedFallback);
-    expect(controller.state.decoderMode, YlDecoderMode.unknown);
+    expect(controller.state.decoderMode, YlDecoderMode.hardware);
     expect(controller.state.timeline.isSeekable, isTrue);
 
     await sessionFor(controller).pause();
@@ -104,10 +104,32 @@ void main() {
     expect(seekRequests.every((request) => request.statusCode == 206), isTrue);
 
     expect(controller.state.audioTracks, hasLength(2));
-    await sessionFor(
-      controller,
-    ).selectAudioTrack(controller.state.audioTracks[1].id);
-    expect(controller.state.audioTracks[1].isSelected, isTrue);
+    final session = sessionFor(controller);
+    final secondTrack = controller.state.audioTracks[1];
+    await session.selectAudioTrack(secondTrack.id);
+    final selectedState =
+        controller.state.sessionId == session.id &&
+            controller.state.audioTracks.any(
+              (track) => track.id == secondTrack.id && track.isSelected,
+            )
+        ? controller.state
+        : await controller.states
+              .firstWhere(
+                (state) =>
+                    state.sessionId == session.id &&
+                    state.audioTracks.length == 2 &&
+                    state.audioTracks.any(
+                      (track) => track.id == secondTrack.id && track.isSelected,
+                    ),
+              )
+              .timeout(const Duration(seconds: 5));
+    expect(selectedState.audioTracks, hasLength(2));
+    expect(
+      selectedState.audioTracks
+          .singleWhere((track) => track.id == secondTrack.id)
+          .isSelected,
+      isTrue,
+    );
   });
 
   testWidgets('HTTP 200 sequential MKV rejects seek without losing playback', (
@@ -128,11 +150,14 @@ void main() {
       expect(server.requests.first.statusCode, 200);
       return;
     }
+    final session = sessionFor(controller);
+    await session.ready.timeout(const Duration(seconds: 20));
+    expect(controller.state.sessionId, session.id);
     expect(controller.state.timeline.isSeekable, isFalse);
     final positionBeforeSeek = controller.state.timeline.position;
 
     await expectLater(
-      sessionFor(controller).seekTo(const Duration(milliseconds: 900)),
+      session.seekTo(const Duration(milliseconds: 900)),
       throwsA(
         isA<YlPlayerException>().having(
           (error) => error.failure.code,

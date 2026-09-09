@@ -1,4 +1,4 @@
-@testable import yl_player_ios
+@testable import yl_player_apple
 import CoreVideo
 import Flutter
 import XCTest
@@ -473,25 +473,5 @@ final class YlFallbackBackendTests: XCTestCase {
     media.close()
   }
 
-  func testPlayerPersistsSuccessfulQualityConstraint() {
-    let player = YlIosPlayer(
-      playerId: 54,
-      textures: FakeTextureRegistry(),
-      configuration: PlayerConfiguration(map: [:]),
-      emit: { _ in }
-    )
-    defer { player.dispose() }
-    var commandResult: Result<Void, NativePlayerError>?
 
-    player.beginCommand(
-      name: "setQualityConstraint",
-      arguments: ["constraint": ["maxHeight": 720]],
-      completion: { commandResult = $0 }
-    )
-
-    guard case .success? = commandResult else {
-      return XCTFail("Expected quality constraint command to succeed")
-    }
-    XCTAssertEqual(player.lastQualityConstraint["maxHeight"] as? Int, 720)
-  }
 }

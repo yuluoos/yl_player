@@ -17,6 +17,10 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+      - name: Fetch pinned Apple migration provenance
+        run: git fetch --no-tags --depth=1 origin ce368c55ad291b163b02157b487dbbf798a69892
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.44.0'
@@ -114,6 +118,10 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
+      - name: Verify shared Apple schema and binary contract
+        run: |
+          sh packages/yl_player_apple/tool/check_pigeon.sh
+          sh packages/yl_player_apple/tool/apple_ffmpeg/test_build_contract.sh
       - name: Boot iOS Simulator
         run: echo "YL_IOS_SIMULATOR_ID=$(sh tool/boot_ci_ios_simulator.sh)" >> "$GITHUB_ENV"
       - run: sh tool/check_native_ios.sh
@@ -131,4 +139,8 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
+      - name: Verify shared Apple schema and binary contract
+        run: |
+          sh packages/yl_player_apple/tool/check_pigeon.sh
+          sh packages/yl_player_apple/tool/apple_ffmpeg/test_build_contract.sh
       - run: sh tool/check_native_macos.sh

@@ -17,12 +17,10 @@ dependencies:
   flutter:
     sdk: flutter
   yl_player_android: ^0.2.0-dev.1
-  yl_player_ios: ^0.2.0-dev.1
-  yl_player_macos: ^0.2.0-dev.1
+  yl_player_apple: ^0.2.0-dev.1
   yl_player_platform_interface: ^0.2.0-dev.1
 
 dev_dependencies:
-  yl_player_apple: ^0.2.0-dev.1
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
@@ -33,6 +31,6 @@ flutter:
       android:
         default_package: yl_player_android
       ios:
-        default_package: yl_player_ios
+        default_package: yl_player_apple
       macos:
-        default_package: yl_player_macos
+        default_package: yl_player_apple

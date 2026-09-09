@@ -5,8 +5,8 @@
 import FlutterMacOS
 import Foundation
 
-import yl_player_macos
+import yl_player_apple
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
-  YlPlayerMacosPlugin.register(with: registry.registrar(forPlugin: "YlPlayerMacosPlugin"))
+  YlPlayerApplePlugin.register(with: registry.registrar(forPlugin: "YlPlayerApplePlugin"))
 }

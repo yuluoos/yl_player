@@ -6,6 +6,20 @@ repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 mode=${1:-all}
 example_root="$repo_root/packages/yl_player/example"
 
+verify_registrant() {
+  registrant="$example_root/macos/Flutter/GeneratedPluginRegistrant.swift"
+  package_graph="$example_root/macos/Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage/Package.swift"
+  if ! grep -Fq 'YlPlayerApplePlugin' "$registrant" || ! grep -Fq 'yl_player_apple' "$package_graph"; then
+    echo "macOS generated wiring omits yl_player_apple" >&2
+    exit 1
+  fi
+  if grep -Eq 'yl_player_(ios|macos)|YlPlayer(Ios|Macos)Plugin' "$registrant" "$package_graph"; then
+    echo "macOS registrant retains a legacy Apple plugin" >&2
+    exit 1
+  fi
+  echo "macOS generated wiring: YlPlayerApplePlugin only"
+}
+
 case "$mode" in
   all|--unit-only|--build-only) ;;
   *)
@@ -42,10 +56,14 @@ run_unit_tests() {
   cd "$example_root"
   flutter build macos --debug --config-only
   (cd macos && pod install)
+  python3 -B "$repo_root/tool/consumer_fixtures/apple_flutter/main_example_tests.py" --current-only
+  verify_registrant
 
-  xcodebuild test -quiet \
+  python3 -B "$repo_root/tool/run_with_display_awake.py" xcodebuild test -quiet \
     -workspace "$example_root/macos/Runner.xcworkspace" \
     -scheme Runner \
+    -parallel-testing-enabled NO \
+    -derivedDataPath "$example_root/build/native-macos-tests" \
     -destination 'platform=macOS'
 }
 
@@ -89,7 +107,7 @@ run_universal_build() {
     echo "Release.entitlements must allow the authenticated-HLS loopback server" >&2
     exit 1
   fi
-  sh "$repo_root/packages/yl_player_macos/tool/macos_ffmpeg/test_build_contract.sh"
+  sh "$repo_root/packages/yl_player_apple/tool/apple_ffmpeg/test_build_contract.sh"
   flutter build macos --release
 
   products="$example_root/build/macos/Build/Products/Release"
@@ -98,7 +116,7 @@ run_universal_build() {
   flutter_binary="$app/Contents/Frameworks/FlutterMacOS.framework/Versions/A/FlutterMacOS"
   dart_binary="$app/Contents/Frameworks/App.framework/Versions/A/App"
   ffmpeg_binary="$app/Contents/Frameworks/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge"
-  plugin_intermediates="$example_root/build/macos/Build/Intermediates.noindex/yl_player_macos.build/Release/yl_player_macos.build/Objects-normal"
+  plugin_intermediates="$example_root/build/macos/Build/Intermediates.noindex/yl_player_apple.build/Release/yl_player_apple.build/Objects-normal"
 
   assert_architectures "$executable" "macOS example executable"
   assert_architectures "$flutter_binary" "FlutterMacOS framework"
@@ -106,20 +124,20 @@ run_universal_build() {
   assert_architectures "$ffmpeg_binary" "YlFFmpegBridge framework"
 
   for architecture in arm64 x86_64; do
-    plugin_object="$plugin_intermediates/$architecture/Binary/yl_player_macos.o"
+    plugin_object="$plugin_intermediates/$architecture/Binary/yl_player_apple.o"
     if [ ! -f "$plugin_object" ]; then
-      echo "yl_player_macos was not compiled for $architecture" >&2
+      echo "yl_player_apple was not compiled for $architecture" >&2
       exit 1
     fi
     if [ "$(lipo -archs "$plugin_object")" != "$architecture" ]; then
-      echo "yl_player_macos object has the wrong architecture for $architecture" >&2
+      echo "yl_player_apple object has the wrong architecture for $architecture" >&2
       exit 1
     fi
-    if ! nm -arch "$architecture" "$executable" | grep -q 'YlPlayerMacosPlugin'; then
-      echo "yl_player_macos was not linked into the $architecture executable" >&2
+    if ! nm -arch "$architecture" "$executable" | grep -q 'YlPlayerApplePlugin'; then
+      echo "yl_player_apple was not linked into the $architecture executable" >&2
       exit 1
     fi
-    echo "yl_player_macos $architecture compile/link: verified"
+    echo "yl_player_apple $architecture compile/link: verified"
   done
 
   minimum_system_version=$(plutil -extract LSMinimumSystemVersion raw "$app/Contents/Info.plist")
@@ -148,7 +166,7 @@ run_integration_tests() {
     integration_test/macos_http_flv_playback_test.dart \
     integration_test/macos_hls_headers_playback_test.dart
   do
-    flutter test "$test_file" -d macos
+    python3 -B "$repo_root/tool/run_with_display_awake.py" flutter test "$test_file" -d macos
   done
 }
 

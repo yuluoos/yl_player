@@ -41,6 +41,20 @@ void main() {
       }
     },
   );
+  test('native hardware decoder failure retains the public failure code', () {
+    final message = wireFailure(scope: AppleFailureScope.command)
+      ..category = AppleFailureCategory.decoder
+      ..code = 'decoder.video_hardware_unavailable'
+      ..retryable = false;
+
+    final failure = AppleCodec.failure(message);
+    expect(failure.code, YlFailureCodes.decoderUnavailable);
+    expect(failure.category, YlFailureCategory.decoder);
+    expect(failure.retryable, isFalse);
+    expect(failure.scope, YlFailureScope.command);
+    expect(failure.message, 'Playback operation failed.');
+    expect(failure.diagnosticId, 'apple-network-1');
+  });
   test(
     'actual Apple capability and assessment decoding accepts native MIME and policy identifiers',
     () {

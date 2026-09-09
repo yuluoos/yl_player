@@ -1,4 +1,4 @@
-@testable import yl_player_ios
+@testable import yl_player_apple
 import CoreMedia
 import CoreVideo
 import XCTest
@@ -16,7 +16,7 @@ final class YlVideoToolboxDecoderTests: XCTestCase {
       self.output = output
     }
 
-    func decode(_ sample: CMSampleBuffer, generation: UInt64) -> OSStatus {
+    func decode(_ sample: CMSampleBuffer, generation: UInt64, reservation: YlVideoDecodeReservation?) -> OSStatus {
       decodeStatus
     }
 

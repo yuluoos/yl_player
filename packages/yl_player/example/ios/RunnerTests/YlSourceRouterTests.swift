@@ -1,9 +1,9 @@
-@testable import yl_player_ios
+@testable import yl_player_apple
 import XCTest
 
 final class YlSourceRouterTests: XCTestCase {
   func testLocalMkvRoutesToFallback() {
-    let source = YlIosSourceDescriptor(
+    let source = YlAppleSourceDescriptor(
       uri: "file:///tmp/movie.mkv",
       kind: "file",
       formatHint: "automatic",
@@ -15,7 +15,7 @@ final class YlSourceRouterTests: XCTestCase {
   }
 
   func testExplicitLocalMatroskaRoutesToFallback() {
-    let source = YlIosSourceDescriptor(
+    let source = YlAppleSourceDescriptor(
       uri: "file:///tmp/movie.bin",
       kind: "file",
       formatHint: "matroska",
@@ -27,7 +27,7 @@ final class YlSourceRouterTests: XCTestCase {
   }
 
   func testRemoteMkvVodRoutesToNetworkFallback() {
-    let source = YlIosSourceDescriptor(
+    let source = YlAppleSourceDescriptor(
       uri: "https://media.test/movie.mkv",
       kind: "network",
       formatHint: "matroska",
@@ -39,7 +39,7 @@ final class YlSourceRouterTests: XCTestCase {
   }
 
   func testAutomaticRemoteMkvRoutesToNetworkFallback() {
-    let source = YlIosSourceDescriptor(
+    let source = YlAppleSourceDescriptor(
       uri: "https://media.test/movie.mkv?token=secret",
       kind: "network",
       formatHint: "automatic",
@@ -51,7 +51,7 @@ final class YlSourceRouterTests: XCTestCase {
   }
 
   func testRemoteMkvLiveIsRejected() {
-    let source = YlIosSourceDescriptor(
+    let source = YlAppleSourceDescriptor(
       uri: "https://media.test/live.mkv",
       kind: "network",
       formatHint: "matroska",
@@ -66,7 +66,7 @@ final class YlSourceRouterTests: XCTestCase {
   }
 
   func testHeaderedHlsRoutesToResourceLoader() {
-    let source = YlIosSourceDescriptor(
+    let source = YlAppleSourceDescriptor(
       uri: "https://media.test/movie.m3u8",
       kind: "network",
       formatHint: "hls",
@@ -78,7 +78,7 @@ final class YlSourceRouterTests: XCTestCase {
   }
 
   func testHeaderedProgressiveMp4StaysRejected() {
-    let source = YlIosSourceDescriptor(
+    let source = YlAppleSourceDescriptor(
       uri: "https://media.test/movie.mp4",
       kind: "network",
       formatHint: "automatic",
@@ -93,7 +93,7 @@ final class YlSourceRouterTests: XCTestCase {
   }
 
   func testHttpFlvRoutesToSequentialFallback() {
-    let source = YlIosSourceDescriptor(
+    let source = YlAppleSourceDescriptor(
       uri: "https://media.test/live.flv?token=secret",
       kind: "network",
       formatHint: "automatic",
@@ -105,7 +105,7 @@ final class YlSourceRouterTests: XCTestCase {
   }
 
   func testExplicitHttpFlvHintRoutesWithoutFlvExtension() {
-    let source = YlIosSourceDescriptor(
+    let source = YlAppleSourceDescriptor(
       uri: "https://media.test/live?id=42",
       kind: "network",
       formatHint: "httpFlv",
@@ -117,7 +117,7 @@ final class YlSourceRouterTests: XCTestCase {
   }
 
   func testHlsRemainsOnAvPlayer() {
-    let source = YlIosSourceDescriptor(
+    let source = YlAppleSourceDescriptor(
       uri: "https://media.test/live.m3u8",
       kind: "network",
       formatHint: "hls",
@@ -129,7 +129,7 @@ final class YlSourceRouterTests: XCTestCase {
   }
 
   func testMalformedUriIsRejected() {
-    let source = YlIosSourceDescriptor(
+    let source = YlAppleSourceDescriptor(
       uri: "not a uri",
       kind: "network",
       formatHint: "automatic",

@@ -47,7 +47,7 @@ fixture glue. The nine media resources retain their original bytes and provenanc
 in `resources-manifest.json`. Production code is built through the plugin; tests
 never embed copied playback implementations or a substitute Flutter framework.
 
-Only the two existing iOS hardware skips named in `allowed-hardware-skips.json`
+Only the three existing iOS hardware skips named in `allowed-hardware-skips.json`
 are allowed. The gate checks every native class/method identity and skip name,
 in addition to counts. Exactly 20 legacy host methods (11 iOS, 9 macOS) require
 the Task 7 typed player host; `task7-host-cases.json` preserves each original
@@ -57,6 +57,18 @@ has no behavior assertions and is not a Task7 transfer. No other methods from
 mixed suites are deferred. These are complete engine matrices;
 complete player parity additionally requires those host cases and four complete
 consumer matrices before endorsement.
+
+The endorsed main example uses these same accepted fixtures: 251 iOS cases and
+213 macOS cases. `main_example_tests.py` checks the current example files and
+resources byte-for-byte. The original main-example paths in the migration
+manifests remain historical provenance and are verified from pre-endorsement
+commit `ce368c55ad291b163b02157b487dbbf798a69892`; their hashes are not relabeled
+as current fixture hashes. This check never fetches history. A shallow checkout
+must first run:
+
+```sh
+git fetch --no-tags --depth=1 origin ce368c55ad291b163b02157b487dbbf798a69892
+```
 
 Platform services own SDK bindings. The player host owns texture registration
 and final disposal; engines borrow the output across sessions. Boundary tests

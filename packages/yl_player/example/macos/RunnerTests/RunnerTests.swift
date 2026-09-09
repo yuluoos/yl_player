@@ -2,7 +2,7 @@ import CoreMedia
 import Cocoa
 import FlutterMacOS
 import XCTest
-@testable import yl_player_macos
+@testable import yl_player_apple
 
 class RunnerTests: XCTestCase {
   func testMediaProxyParsesOnlyExactInheritedCredentialQueryItem() {
@@ -25,54 +25,41 @@ class RunnerTests: XCTestCase {
     XCTAssertEqual(legacy.bufferMode, "stable")
   }
 
-  func testCancelOpenMatchesOnlyThePreparingCandidate() {
-    let owner = YlMacosPlayer(playerId: 42, textures: StopTextureRegistry(), configuration: PlayerConfiguration(map: ["audioPolicy": "appManaged"]), displayView: nil, emit: { _ in })
-    defer { owner.dispose() }
-    let committed = expectation(description: "new token survives stale cancellation")
-    owner.beginOpen(["uri": "https://example.test/a.mp4", "kind": "network", "loadToken": 2], willCommit: { _ in }, didCommit: {}, didRollback: {}, completion: { result in
-      if case .failure = result { XCTFail("Stale cancellation rejected current candidate") }
-      committed.fulfill()
-    })
-    owner.beginCommand(name: "cancelOpen", arguments: ["loadToken": 1]) { _ in }
-    wait(for: [committed], timeout: 5)
-    let cancelled = expectation(description: "matching candidate cancelled")
-    owner.beginOpen(["uri": "https://example.test/b.mp4", "kind": "network", "loadToken": 3], willCommit: { _ in }, didCommit: {}, didRollback: {}, completion: { result in
-      if case .success = result { XCTFail("Cancelled candidate committed") }
-      cancelled.fulfill()
-    })
-    owner.beginCommand(name: "cancelOpen", arguments: ["loadToken": 3]) { _ in }
-    wait(for: [cancelled], timeout: 5)
-    XCTAssertTrue(owner.isActive)
-  }
+
 
   func testPreparingRetriesDoNotPolluteOldSessionAndCommittedRetriesRetainIdentity() {
-    var publicEvents = [[String: Any?]]()
-    let old = YlLegacyCommitEmitter(emit: { publicEvents.append($0) })
-    old.commit(generation: 3)
-    old.accept(["type": "networkRetry"])
-    let candidate = YlLegacyCommitEmitter(emit: { publicEvents.append($0) })
-    candidate.accept(["type": "networkRetry"])
-    XCTAssertEqual(publicEvents.count, 1)
-    XCTAssertEqual(publicEvents.last?["generation"] as? UInt64, 3)
-    candidate.commit(generation: 4)
+    var identities = [YlAppleSessionIdentity]()
+    let oldId = YlAppleSessionIdentity(sessionId: "old", loadRequestId: "request-3")
+    let newId = YlAppleSessionIdentity(sessionId: "new", loadRequestId: "request-4")
+    let retry = YlNativeBackendCallback(generation: 1, event: .retry(attempt: 1,
+      delayMs: 400, error: NativePlayerError(category: "network", code: "network.retry", message: "Retry")))
+    let old = YlAppleCommitEmitter(identity: oldId, emit: { id, _ in identities.append(id) })
+    old.commit()
+    old.accept(retry)
+    let candidate = YlAppleCommitEmitter(identity: newId, emit: { id, _ in identities.append(id) })
+    candidate.accept(retry)
+    XCTAssertEqual(identities.count, 1)
+    XCTAssertEqual(identities.last, oldId)
+    candidate.commit()
     old.invalidate()
-    old.accept(["type": "networkRetry"])
-    candidate.accept(["type": "networkRetry"])
-    XCTAssertEqual(publicEvents.count, 2)
-    XCTAssertEqual(publicEvents.last?["generation"] as? UInt64, 4)
+    old.accept(retry)
+    candidate.accept(retry)
+    XCTAssertEqual(identities.count, 2)
+    XCTAssertEqual(identities.last, newId)
   }
 
   func testPrivateCandidateEventsPublishOnlyAfterCommit() {
-    var events = [[String: Any?]]()
-    let candidate = YlLegacyCommitEmitter(emit: { events.append($0) })
-    candidate.accept(["type": "state", "loadToken": 9])
-    candidate.accept(["type": "firstFrame"])
-    XCTAssertTrue(events.isEmpty)
+    var identities = [YlAppleSessionIdentity]()
+    let id = YlAppleSessionIdentity(sessionId: "candidate", loadRequestId: "request-9")
+    let candidate = YlAppleCommitEmitter(identity: id, emit: { identity, _ in identities.append(identity) })
+    candidate.accept(YlNativeBackendCallback(generation: 1, event: .state(.characterizationReady)))
+    candidate.accept(YlNativeBackendCallback(generation: 1, event: .firstFrame(width: 320, height: 180)))
+    XCTAssertTrue(identities.isEmpty)
     candidate.commit()
-    XCTAssertEqual(events.count, 1)
-    XCTAssertEqual(events.first?["loadToken"] as? Int, 9)
-    candidate.accept(["type": "firstFrame"])
-    XCTAssertEqual(events.count, 2)
+    XCTAssertEqual(identities.count, 1)
+    XCTAssertEqual(identities.first?.loadRequestId, "request-9")
+    candidate.accept(YlNativeBackendCallback(generation: 1, event: .firstFrame(width: 320, height: 180)))
+    XCTAssertEqual(identities.count, 2)
   }
 
   func testExplicitCredentialScopeAndInheritedManifestStripping() throws {
@@ -100,8 +87,8 @@ class RunnerTests: XCTestCase {
     private let lock = NSLock()
     private var invalidated = false
     var isInvalidated: Bool { lock.lock(); defer { lock.unlock() }; return invalidated }
-    func decode(_ sample: CMSampleBuffer, generation: UInt64, reservation: YlVideoDecodeReservation) -> OSStatus {
-      reservation.release()
+    func decode(_ sample: CMSampleBuffer, generation: UInt64, reservation: YlVideoDecodeReservation?) -> OSStatus {
+      reservation?.release()
       return noErr
     }
     func flush() {}
@@ -256,7 +243,8 @@ class RunnerTests: XCTestCase {
       playerId: 8, textures: textures, configuration: PlayerConfiguration(map: [:]),
       emit: { events.append($0) }
     )
-    backend.textureId = 71
+
+    // The platform output registers the same test texture identifier.
     defer { backend.dispose() }
     try backend.command(name: "open", arguments: ["source": [
       "uri": "https://example.test/live.m3u8", "kind": "network", "isLive": true,
@@ -290,56 +278,7 @@ class RunnerTests: XCTestCase {
     XCTAssertEqual(backend.textureId, 71)
   }
 
-  func testStopCancelsPendingOpenRetainsTextureAndAllowsFreshOpen() throws {
-    let textures = StopTextureRegistry()
-    var events = [[String: Any?]]()
-    let player = YlMacosPlayer(
-      playerId: 7, textures: textures,
-      configuration: PlayerConfiguration(map: [:]), emit: { events.append($0) }
-    )
-    player.textureId = 71
-    defer { player.dispose() }
-    let cancelled = expectation(description: "pending open cancelled")
-    player.beginOpen(
-      ["uri": "https://example.test/video.mp4", "kind": "network", "formatHint": "mp4"],
-      willCommit: { _ in XCTFail("stopped open committed") }, didCommit: {}, didRollback: {},
-      completion: { result in
-        guard case .failure = result else { return XCTFail("open was not cancelled") }
-        cancelled.fulfill()
-      }
-    )
-    events.removeAll()
-    var stopped = false
-    player.beginCommand(name: "stop", arguments: [:]) { result in
-      if case .success = result { stopped = true }
-    }
-    XCTAssertTrue(stopped)
-    XCTAssertEqual(events.count, 1)
-    let state = try XCTUnwrap(events.last?["state"] as? [String: Any?])
-    XCTAssertEqual(state["status"] as? String, "idle")
-    XCTAssertEqual(state["positionMs"] as? Int64, 0)
-    XCTAssertEqual((state["audioTracks"] as? [Any])?.count, 0)
-    XCTAssertNil(state["error"] as? [String: Any?])
-    XCTAssertNil(player.copyPixelBuffer())
-    XCTAssertEqual(player.textureId, 71)
-    XCTAssertTrue(textures.unregistered.isEmpty)
-    wait(for: [cancelled], timeout: 3)
-    try player.activate()
-    player.emitState()
-    XCTAssertEqual((events.last?["state"] as? [String: Any?])?["status"] as? String, "idle")
-    let opened = expectation(description: "fresh open")
-    player.beginOpen(
-      ["uri": "https://example.test/fresh.mp4", "kind": "network", "formatHint": "mp4"],
-      willCommit: { _ in }, didCommit: {}, didRollback: {},
-      completion: { result in
-        if case .failure(let error) = result { XCTFail("fresh open failed: \(error)") }
-        opened.fulfill()
-      }
-    )
-    wait(for: [opened], timeout: 3)
-    XCTAssertEqual(player.textureId, 71)
-    XCTAssertTrue(textures.unregistered.isEmpty)
-  }
+
 
 
   func testConfigurationDefaultsToHardwareOnly() {
@@ -363,51 +302,11 @@ class RunnerTests: XCTestCase {
     )
   }
 
-  func testCapabilitiesUseCanonicalCodecIdentifiers() {
-    let capabilities = YlMacosChannel.capabilities(
-      hardwareH264: true,
-      hardwareHevc: true
-    )
 
-    XCTAssertEqual(
-      capabilities["hardwareVideoCodecs"] as? [String],
-      ["video/avc", "video/hevc"]
-    )
-    XCTAssertEqual(
-      Set(capabilities["supportedFormats"] as? [String] ?? []),
-      Set(["automatic", "hls", "httpFlv", "mp4", "mov", "matroska", "flv"])
-    )
-    XCTAssertEqual(capabilities["maxConcurrentVideoDecoders"] as? Int, 1)
-  }
 
-  func testChannelGenerationsAreStrictlyIncreasing() {
-    let first = YlMacosChannelGeneration.next()
-    let second = YlMacosChannelGeneration.next()
 
-    XCTAssertGreaterThan(second, first)
-  }
 
-  func testStateEnvelopeUsesVersionedGeneration() {
-    let envelope = YlMacosChannel.fullState(
-      playerId: 7,
-      generation: 9,
-      state: ["status": "ready"]
-    )
 
-    XCTAssertEqual(envelope["playerId"] as? Int64, 7)
-    XCTAssertEqual(envelope["protocolVersion"] as? Int, 1)
-    XCTAssertEqual(envelope["generation"] as? UInt64, 9)
-    XCTAssertEqual(envelope["type"] as? String, "state")
-  }
 
-  func testPluginChannelNamesMatchTheDartAdapter() {
-    XCTAssertEqual(
-      YlPlayerMacosPlugin.methodChannelName,
-      "dev.ylplayer.yl_player_macos/methods"
-    )
-    XCTAssertEqual(
-      YlPlayerMacosPlugin.eventChannelName,
-      "dev.ylplayer.yl_player_macos/events"
-    )
-  }
+
 }

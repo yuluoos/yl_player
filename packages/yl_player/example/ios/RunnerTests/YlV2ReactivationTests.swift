@@ -5,10 +5,10 @@ import Network
 import XCTest
 #if os(iOS)
 import Flutter
-@testable import yl_player_ios
+@testable import yl_player_apple
 #else
 import FlutterMacOS
-@testable import yl_player_macos
+@testable import yl_player_apple
 #endif
 
 final class YlV2ReactivationTests: XCTestCase {
@@ -27,7 +27,7 @@ final class YlV2ReactivationTests: XCTestCase {
     defer { slot.dispose() }
     let source: [String: Any?] = ["uri": server.url.absoluteString, "kind": "network",
       "formatHint": "hls", "credentials": ["Authorization": "Bearer rollback-test"],
-      "loadToken": 1, "loadOptions": ["autoplay": false]]
+      "loadRequestId": "1", "loadOptions": ["autoplay": false]]
     func prepare() throws -> YlPreparedHlsAsset {
       try YlPreparedHlsAsset(originURL: server.url, headers: [:],
         credentials: ["Authorization": "Bearer rollback-test"],
@@ -72,7 +72,7 @@ final class YlV2ReactivationTests: XCTestCase {
     requireVideo("Rollback must restore authenticated HLS video")
     backend.emitState()
     XCTAssertEqual(events.last?["generation"] as? UInt64, publicGeneration)
-    XCTAssertEqual(events.last?["loadToken"] as? Int, 1)
+    XCTAssertEqual(events.last?["loadRequestId"] as? String, "1")
     XCTAssertEqual(avPlayer.rate, 1.5, accuracy: 0.01, "Rollback must preserve playing intent and speed")
     XCTAssertEqual(avPlayer.volume, 0.2, accuracy: 0.01)
     let restoredRequests = server.requests
@@ -132,129 +132,7 @@ final class YlV2ReactivationTests: XCTestCase {
     }
   }
 
-  func testFailedReplacementThenReactivationPreservesAcceptedSessionControls() throws {
-    #if os(iOS)
-    let fixture = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv"))
-    #else
-    let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent("assets/test_media/network_seek_h264_aac.mkv")
-    #endif
-    let server = try ReactivationMediaServer(data: Data(contentsOf: fixture))
-    defer { server.close() }
-    var events = [[String: Any?]]()
-    #if os(iOS)
-    let owner = YlIosPlayer(playerId: 91, textures: ReactivationTextures(), configuration: .init(map: ["audioPolicy": "appManaged"]), emit: { events.append($0) })
-    #else
-    let owner = YlMacosPlayer(playerId: 91, textures: ReactivationTextures(), configuration: .init(map: ["audioPolicy": "appManaged"]), emit: { events.append($0) })
-    #endif
-    defer { owner.dispose() }
-    func open(_ source: [String: Any?]) -> Result<Void, NativePlayerError>? {
-      let done = expectation(description: "open completed")
-      var outcome: Result<Void, NativePlayerError>?
-      #if os(iOS)
-      owner.beginOpen(source, didCommit: {}, completion: { outcome = $0; done.fulfill() })
-      #else
-      owner.beginOpen(source, willCommit: { _ in }, didCommit: {}, didRollback: {}, completion: { outcome = $0; done.fulfill() })
-      #endif
-      wait(for: [done], timeout: 10)
-      return outcome
-    }
-    func command(_ name: String, _ args: [String: Any?] = [:]) {
-      let done = expectation(description: name)
-      owner.beginCommand(name: name, arguments: args) { result in
-        if case .failure(let error) = result { XCTFail("Command rejected: \(error.code)") }
-        done.fulfill()
-      }
-      wait(for: [done], timeout: 5)
-    }
-    let source: [String: Any?] = ["uri": server.url.absoluteString, "kind": "network", "formatHint": "matroska", "loadToken": 1, "loadOptions": ["startPositionMs": 500, "autoplay": true, "videoConstraints": ["maxWidth": 640]]]
-    if case .failure(let error)? = open(source) {
-      #if os(iOS)
-      if error.code == "decoder.video_hardware_unavailable" { throw XCTSkip("Simulator VideoToolbox unavailable; no hardware playback claim") }
-      #endif
-      return XCTFail("Initial load failed: \(error.code)")
-    }
-    let initiallyPlaying = expectation(description: "initial start position survives media preroll")
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { initiallyPlaying.fulfill() }
-    wait(for: [initiallyPlaying], timeout: 2)
-    command("pause")
-    owner.emitState()
-    let initialPosition = (events.last?["state"] as? [String: Any?])?["positionMs"] as? Int64 ?? 0
-    XCTAssertGreaterThanOrEqual(initialPosition, 450, "Initial Load start position must suppress preroll")
-    command("setQualityConstraint", ["constraint": ["maxWidth": 800]])
-    command("setVolume", ["volume": 0.2])
-    command("setPlaybackSpeed", ["speed": 2.0])
-    command("seekTo", ["positionMs": 700])
-    owner.emitState()
-    let initialState = try XCTUnwrap(events.last?["state"] as? [String: Any?])
-    XCTAssertGreaterThanOrEqual((initialState["positionMs"] as? Int64) ?? 0, 650, "Accepted seek must establish the resume position")
-    let tracks = initialState["audioTracks"] as? [[String: Any?]] ?? []
-    let trackId = tracks.last?["id"] as? String
-    if let trackId { command("selectAudioTrack", ["trackId": trackId]) }
-    let generation = events.last?["generation"] as? UInt64
-    if case .success? = open(["uri": "", "loadToken": 2, "loadOptions": ["startPositionMs": 9000, "autoplay": true, "videoConstraints": ["maxWidth": 1]]]) {
-      XCTFail("Invalid candidate committed")
-    }
-    XCTAssertEqual(owner.lastQualityConstraint["maxWidth"] as? Int, 800)
-    owner.emitState()
-    let beforeDeactivation = try XCTUnwrap(events.last?["state"] as? [String: Any?])
-    XCTAssertGreaterThanOrEqual((beforeDeactivation["positionMs"] as? Int64) ?? 0, 650, "Failed candidate must preserve the resume position")
-    owner.deactivate()
-    let resumed = expectation(description: "same session reactivated")
-    #if os(iOS)
-    owner.beginActivation(forcePlay: false, didCommit: {}, completion: { result in
-      if case .failure(let error) = result { XCTFail("Reactivation rejected: \(error.code)") }
-      resumed.fulfill()
-    })
-    #else
-    owner.beginActivation(forcePlay: false, willCommit: { _ in }, didCommit: {}, didRollback: {}, completion: { result in
-      if case .failure(let error) = result { XCTFail("Reactivation rejected: \(error.code)") }
-      resumed.fulfill()
-    })
-    #endif
-    wait(for: [resumed], timeout: 10)
-    owner.emitState()
-    let state = try XCTUnwrap(events.last?["state"] as? [String: Any?])
-    XCTAssertEqual(events.last?["generation"] as? UInt64, generation)
-    XCTAssertEqual(owner.lastQualityConstraint["maxWidth"] as? Int, 800)
-    XCTAssertTrue(["paused", "ready"].contains(state["status"] as? String ?? ""))
-    let stayedPaused = expectation(description: "restoration does not replay initial autoplay")
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { stayedPaused.fulfill() }
-    wait(for: [stayedPaused], timeout: 2)
-    owner.emitState()
-    let pausedPosition = (events.last?["state"] as? [String: Any?])?["positionMs"] as? Int64 ?? 0
-    XCTAssertEqual(pausedPosition, (state["positionMs"] as? Int64) ?? 0, accuracy: 50)
-    XCTAssertGreaterThanOrEqual((state["positionMs"] as? Int64) ?? 0, 650)
-    let selected = (state["audioTracks"] as? [[String: Any?]])?.first { $0["isSelected"] as? Bool == true }
-    XCTAssertEqual(selected?["id"] as? String, trackId)
-    command("play")
-    let started = expectation(description: "restored output is advancing")
-    var playbackStart: Int64?
-    var minimumResumedPosition = pausedPosition
-    let deadline = Date().addingTimeInterval(3)
-    func observeStart() {
-      owner.emitState()
-      let position = (events.last?["state"] as? [String: Any?])?["positionMs"] as? Int64 ?? 0
-      minimumResumedPosition = min(minimumResumedPosition, position)
-      if position > pausedPosition + 100 || Date() >= deadline {
-        playbackStart = position
-        started.fulfill()
-      } else {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.02) { observeStart() }
-      }
-    }
-    observeStart()
-    wait(for: [started], timeout: 4)
-    let baseline = try XCTUnwrap(playbackStart)
-    XCTAssertGreaterThanOrEqual(minimumResumedPosition, 650, "Audio preroll must not rewind the accepted resume target")
-    XCTAssertGreaterThan(baseline, pausedPosition + 100)
-    let advanced = expectation(description: "restored speed advances timeline")
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { advanced.fulfill() }
-    wait(for: [advanced], timeout: 2)
-    owner.emitState()
-    let later = (events.last?["state"] as? [String: Any?])?["positionMs"] as? Int64 ?? 0
-    XCTAssertGreaterThan(later - baseline, 280)
 
-  }
 }
 
 private final class ReactivationTextures: NSObject, FlutterTextureRegistry {
@@ -263,11 +141,11 @@ private final class ReactivationTextures: NSObject, FlutterTextureRegistry {
   func textureFrameAvailable(_ textureId: Int64) {}
 }
 
-private final class ReactivationMediaServer {
+final class ReactivationMediaServer {
   private let listener: NWListener
   private let queue = DispatchQueue(label: "yl.test.reactivation.http")
   let url: URL
-  init(data: Data) throws {
+  init(data: Data, onRequest: @escaping (String) -> Void = { _ in }) throws {
     let listener = try NWListener(using: .tcp, on: .any)
     self.listener = listener
     let ready = DispatchSemaphore(value: 0)
@@ -275,7 +153,10 @@ private final class ReactivationMediaServer {
     listener.newConnectionHandler = { connection in
       connection.start(queue: DispatchQueue.global())
       connection.receive(minimumIncompleteLength: 1, maximumLength: 16384) { bytes, _, _, _ in
-        let request = String(decoding: bytes ?? Data(), as: UTF8.self).lowercased()
+        // A cancelled idle connection reports EOF, not an HTTP request.
+        guard let bytes, !bytes.isEmpty else { connection.cancel(); return }
+        let request = String(decoding: bytes, as: UTF8.self).lowercased()
+        onRequest(request)
         let range = request.components(separatedBy: "\r\n").first { $0.hasPrefix("range: bytes=") }?.components(separatedBy: "=").last
         let bounds = range?.split(separator: "-", omittingEmptySubsequences: false)
         let start = bounds?.first.flatMap { Int($0) } ?? 0
@@ -314,7 +195,7 @@ private final class FailingActivationBackend: YlPlaybackBackend {
   func dispose() { disposed = true }
 }
 
-private final class RollbackHlsServer {
+final class RollbackHlsServer {
   struct Request { let path: String; let authorized: Bool }
   private final class Log {
     let lock = NSLock()

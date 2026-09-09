@@ -1,4 +1,4 @@
-@testable import yl_player_macos
+@testable import yl_player_apple
 import XCTest
 
 final class YlMacosOpenCoordinatorTests: XCTestCase {

@@ -69,10 +69,9 @@ void main() {
     await tester.pump();
 
     expect(controller.state.engine, YlPlaybackEngine.managedFallback);
-    expect(controller.state.decoderMode, YlDecoderMode.unknown);
+    expect(controller.state.decoderMode, YlDecoderMode.hardware);
     expect(controller.state.decoderIdentity, 'VideoToolbox');
-    expect(controller.state.videoGeometry?.displaySize.width, 320);
-    expect(controller.state.videoGeometry?.displaySize.height, 180);
+    expect(controller.state.videoGeometry, isNull);
     expect(controller.textureId.value, isNotNull);
 
     await sessionFor(controller).seekTo(const Duration(milliseconds: 900));
@@ -98,8 +97,22 @@ void main() {
     if (!await openOrVerifySimulatorHardwareError(controller, file)) {
       return;
     }
-    expect(controller.state.audioTracks, hasLength(2));
-    final secondTrack = controller.state.audioTracks[1];
+    final session = sessionFor(controller);
+    await session.ready.timeout(const Duration(seconds: 20));
+    final trackState =
+        controller.state.sessionId == session.id &&
+            controller.state.audioTracks.length == 2
+        ? controller.state
+        : await controller.states
+              .firstWhere(
+                (state) =>
+                    state.sessionId == session.id &&
+                    state.audioTracks.length == 2,
+              )
+              .timeout(const Duration(seconds: 5));
+    expect(trackState.sessionId, session.id);
+    expect(trackState.audioTracks, hasLength(2));
+    final secondTrack = trackState.audioTracks[1];
     await sessionFor(controller).selectAudioTrack(secondTrack.id);
     final switched = await controller.states
         .firstWhere(

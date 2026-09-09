@@ -1,4 +1,4 @@
-@testable import yl_player_macos
+@testable import yl_player_apple
 import Foundation
 import XCTest
 
@@ -9,8 +9,8 @@ final class YlMacosNetworkTests: XCTestCase {
     hint: String = "automatic",
     live: Bool = false,
     headers: Bool = false
-  ) -> YlMacosSourceDescriptor {
-    YlMacosSourceDescriptor(
+  ) -> YlAppleSourceDescriptor {
+    YlAppleSourceDescriptor(
       uri: uri,
       kind: kind,
       formatHint: hint,

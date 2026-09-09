@@ -1,4 +1,4 @@
-@testable import yl_player_macos
+@testable import yl_player_apple
 import AppKit
 import AVFAudio
 import Foundation
