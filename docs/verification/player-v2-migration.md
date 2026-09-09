@@ -529,6 +529,22 @@ entry records its reason and the cost or risk accepted if the ruling is wrong.
     later Apple consolidation must preserve both platform behaviors and their
     ownership, authentication, play-intent and session-identity tests.
 
+20. **Task 8 R29 — deferred Apple fallback geometry.** Hardening Task 7 owns
+    authoritative geometry/PAR/rotation closure before View/release acceptance.
+    The two exact cases are
+    `packages/yl_player/example/integration_test/ios_mkv_playback_test.dart` —
+    `local H264 AAC MKV uses native fallback and renders a frame` — and
+    `packages/yl_player/example/integration_test/macos_mkv_playback_test.dart` —
+    `local H264 AAC MKV uses native fallback and renders a frame`. Both originally
+    required `expect(controller.state.videoGeometry?.displaySize.width, 320)` and
+    `expect(controller.state.videoGeometry?.displaySize.height, 180)`. Task 8's
+    authorized interim expectation is
+    `expect(controller.state.videoGeometry, isNull)`. Hardening Task 7 must replace
+    that interim state with authoritative geometry, pixel-aspect-ratio and rotation
+    publication and restore the exact 320 by 180 display-size assertions on both
+    platforms before View/release; texture allocation or First Frame alone does not
+    discharge this obligation.
+
 ## Android v0.2 phase self-review — 2026-09-08
 
 This Android Task 9 record applies to reviewed implementation
