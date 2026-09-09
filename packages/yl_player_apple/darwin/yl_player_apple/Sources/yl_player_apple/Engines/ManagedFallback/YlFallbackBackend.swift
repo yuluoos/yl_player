@@ -54,7 +54,7 @@ private struct YlFallbackReconnectPipeline {
   }
 }
 
-final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutput {
+final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutput, YlAudioPipelineOutput {
   let playerId: Int64
   var textureId: Int64 { services.textureOutput.textureId }
   var isActive: Bool { stateLock.withLock { active } }
@@ -91,6 +91,31 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
     stateLock.withLock { openedMedia }?.resumeReads()
   }
 
+  private let audio: YlAudioPipeline
+  private var audioRenderer: YlAudioRenderer! {
+    get { audio.audioRenderer }
+    set { audio.audioRenderer = newValue }
+  }
+  private var audioGeneration: UInt64 {
+    get { audio.audioGeneration }
+    set { audio.audioGeneration = newValue }
+  }
+  private var desiredVolume: Float {
+    get { audio.desiredVolume }
+    set { audio.desiredVolume = newValue }
+  }
+  private var desiredRate: Float {
+    get { audio.desiredRate }
+    set { audio.desiredRate = newValue }
+  }
+  private var audioAnchored: Bool {
+    get { audio.audioAnchored }
+    set { audio.audioAnchored = newValue }
+  }
+  private var pendingAudioPacket: YlCompressedAudioPacket? {
+    get { audio.pendingAudioPacket }
+    set { audio.pendingAudioPacket = newValue }
+  }
   private let video: YlVideoPipeline
   private var videoFormat: CMVideoFormatDescription {
     get { video.format }
@@ -158,7 +183,6 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
   private let frameScheduler = YlFrameScheduler()
   private let postSeekGate = YlPostSeekGate()
   private let liveReconnectController: YlLiveReconnectController
-  private var audioRenderer: YlAudioRenderer!
   private var mediaClock: YlMediaClock!
   private var context: YLFMediaContextRef? { demux.context }
   private var displayLink: (any YlDisplayDriving)?
@@ -175,17 +199,12 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
   private var generation: UInt64
   private(set) var channelGeneration = YlBackendGeneration.next()
   private let loadRequestId: String?
-  private var audioGeneration: UInt64
-  private var desiredVolume: Float = 1
-  private var desiredRate: Float = 1
   private var savedPositionUs: Int64 = 0
   private var status = "ready"
   private var firstFrameSent = false
   private var prebufferedVideoSample = false
   private var demuxEOF = false
   private var completionSent = false
-  private var audioAnchored = false
-  private var pendingAudioPacket: YlCompressedAudioPacket?
   private var openStartedAt = CACurrentMediaTime()
   private var openDurationMs: Int64?
   private var firstFrameDurationMs: Int64?
@@ -226,21 +245,23 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
     let resumeState = prepared.resumeState
     self.qualityConstraint = qualityConstraint
     self.generation = generation
-    self.audioGeneration = generation
     self.onEvent = emit
     self.demux = try YlDemuxPipeline(prepared: prepared, lock: stateLock)
     self.video = YlVideoPipeline(format: prepared.videoFormat, bufferBudget: bufferBudget,
       factory: videoSessionFactory)
+    self.audio = YlAudioPipeline(bufferBudget: bufferBudget, lock: stateLock, generation: generation)
     self.playing = resumeState?.shouldPlay ?? false
     self.savedPositionUs = resumeState?.positionUs ?? 0
     super.init()
 
-    audioRenderer = YlAudioRenderer(bufferBudget: bufferBudget)
+    audioRenderer = audio.makeRenderer()
     self.mediaClock = mediaClock ?? YlMediaClock(audioTime: { [weak self] in
       guard let self else { return nil }
       let renderer = self.stateLock.withLock { self.audioRenderer }
       return renderer?.renderedAudioTime
     })
+    audio.output = self
+    audio.timeline = self.mediaClock
     self.mediaClock.seek(to: savedPositionUs)
     // Demux seeks land on an earlier keyframe; suppress that preroll just as
     // in-place pipeline restoration does before it can re-anchor the clock.
@@ -791,6 +812,10 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
     if textureId >= 0 { services.textureOutput.publish(pixelBuffer) }
   }
 
+  func setDemuxPumping(_ value: Bool) { stateLock.withLock { pumping = value } }
+  func requestAudioPump() { requestPump() }
+  func requestAudioPump(after delay: TimeInterval) { requestPump(after: delay) }
+
   private func requestPump(after delay: TimeInterval = 0) {
     stateLock.lock()
     guard !disposed, active, !reconfiguring, !pumping, !demuxEOF else {
@@ -814,43 +839,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
     }
     stateLock.unlock()
 
-    if let pendingAudioPacket {
-      do {
-        guard let audioRenderer else {
-          stateLock.withLock { pumping = false }
-          return
-        }
-        let enqueueResult = try audioRenderer.enqueue(packet: pendingAudioPacket)
-        if enqueueResult == .scheduled {
-          self.pendingAudioPacket = nil
-          anchorAudioIfNeeded(pendingAudioPacket)
-          stateLock.withLock { pumping = false }
-          requestPump()
-        } else if enqueueResult == .buffered {
-          self.pendingAudioPacket = nil
-          stateLock.withLock { pumping = false }
-          requestPump()
-        } else if enqueueResult == .wouldExceedBytes || enqueueResult == .wouldExceedDuration {
-          stateLock.withLock { pumping = false }
-          requestPump(after: 0.02)
-        } else {
-          self.pendingAudioPacket = nil
-          stateLock.withLock { pumping = false }
-        }
-      } catch let error as NativePlayerError {
-        self.pendingAudioPacket = nil
-        stateLock.withLock { pumping = false }
-        fail(error)
-      } catch {
-        self.pendingAudioPacket = nil
-        stateLock.withLock { pumping = false }
-        fail(NativePlayerError(
-          category: "decoderFailure",
-          code: "decoder.audio_failed",
-          message: "\(selectedAudioCodecName) audio conversion failed.",
-          diagnostic: String(describing: error)
-        ))
-      }
+    if pendingAudioPacket != nil {
+      audio.retryPending(codecName: selectedAudioCodecName)
       return
     }
 
@@ -996,28 +986,8 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
         requestPump()
         return
       }
-      do {
-        guard let audioRenderer else {
-          stateLock.withLock { pumping = false }
-          return
-        }
-        let enqueueResult = try audioRenderer.enqueue(packet: audioPacket)
-        if enqueueResult == .wouldExceedBytes || enqueueResult == .wouldExceedDuration {
-          pendingAudioPacket = audioPacket
-          retryDelay = 0.02
-        } else if enqueueResult == .scheduled {
-          anchorAudioIfNeeded(audioPacket)
-        }
-      } catch let error as NativePlayerError {
-        fail(error)
-      } catch {
-        fail(NativePlayerError(
-          category: "decoderFailure",
-          code: "decoder.audio_failed",
-          message: "\(selectedAudioCodecName) audio conversion failed.",
-          diagnostic: String(describing: error)
-        ))
-      }
+      guard audio.enqueue(audioPacket, codecName: selectedAudioCodecName,
+        onBackpressure: { delay in retryDelay = delay }) != nil else { return }
     } else {
       ylf_packet_release(&packet)
     }
@@ -1641,7 +1611,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
     let reselectedAudio = preferredAudioIndex.flatMap { preferredIndex in
       supportedAudio.first { $0.index == preferredIndex }
     } ?? supportedAudio.first
-    let newAudioRenderer = YlAudioRenderer(bufferBudget: bufferBudget)
+    let newAudioRenderer = audio.makeRenderer()
     candidateAudio = newAudioRenderer
     if let reselectedAudio {
       try newAudioRenderer.configure(stream: YlAudioStreamConfiguration(
@@ -1703,7 +1673,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
       streamIndex: videoStream.index
     )
     candidateDecoder = try video.makeDecoder(format: candidateFormat)
-    let renderer = YlAudioRenderer(bufferBudget: bufferBudget)
+    let renderer = audio.makeRenderer()
     candidateAudio = renderer
     if let selectedAudioStream {
       try renderer.configure(stream: audioConfiguration(
@@ -1900,7 +1870,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
     }
 
     let nextAudioGeneration = stateLock.withLock { audioGeneration &+ 1 }
-    let candidate = YlAudioRenderer(bufferBudget: bufferBudget)
+    let candidate = audio.makeRenderer()
     do {
       try candidate.configure(stream: audioConfiguration(
         for: requestedStream,
@@ -2059,32 +2029,13 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend, YlVideoPipelineOutpu
     return try DispatchQueue.main.sync(execute: body)
   }
 
-  private func anchorAudioIfNeeded(_ packet: YlCompressedAudioPacket) {
-    guard !audioAnchored else { return }
-    audioAnchored = true
-    mediaClock.anchorAudio(
-      ptsUs: max(0, packet.ptsUs),
-      sampleTime: currentAudioRenderer?.renderedAudioTime?.sampleTime ?? 0
-    )
+  private func anchorAudioIfNeeded(_ packet: YlCompressedAudioPacket) { audio.anchorAudioIfNeeded(packet) }
+
+  private func audioConfiguration(for stream: YLFStreamInfo, generation: UInt64) -> YlAudioStreamConfiguration {
+    audio.configuration(for: stream, generation: generation, audioCookies: audioCookies)
   }
 
-  private func audioConfiguration(
-    for stream: YLFStreamInfo,
-    generation: UInt64
-  ) -> YlAudioStreamConfiguration {
-    YlAudioStreamConfiguration(
-      codec: Int(stream.codec) == YLFCodecAAC
-        ? .aac : (Int(stream.codec) == YLFCodecMP3 ? .mp3 : .unsupported),
-      sampleRate: Double(stream.sample_rate),
-      channelCount: Int(stream.channel_count),
-      magicCookie: audioCookies[stream.index] ?? Data(),
-      generation: generation
-    )
-  }
-
-  private func audioCodecName(_ stream: YLFStreamInfo) -> String {
-    Int(stream.codec) == YLFCodecMP3 ? "MP3" : "AAC"
-  }
+  private func audioCodecName(_ stream: YLFStreamInfo) -> String { audio.codecName(stream) }
 
   private var selectedAudioCodecName: String {
     selectedAudioStream.map(audioCodecName) ?? "Compressed"
