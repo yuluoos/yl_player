@@ -209,5 +209,18 @@
       "from_sha256": null,
       "reason": "R25 actual same-network-candidate reconciliation: late positive-to-zero change verified by real demux packet PTS, same token/candidate/reader, cancellation/supersession single settlement and media relinquishment."
     }
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlManagedFallbackCharacterizationTests.swift",
+    "sha256": "d4a8c6c8cd1f353b5761f6f0868ccbcff3f3c7f57432bf4b9541df460fb86b2b",
+    "methods": [
+      "testPreparedCandidateIsSilentAndDiscardPreventsTransfer",
+      "testSeekRecreatesDecoderAndRejectsOldOutputBeforeNewFrame",
+      "testStopAndDisposeRejectHeldDecodeOutputAndReleasePackets",
+      "testCurrentDecodeErrorFailsOnceAndSuppressesRetiredFailure",
+      "testPresentationChoosesFramesAtQuarterNormalDoubleAndQuadrupleRate",
+      "testDemuxEOFCancellationAndMalformedReadRemainDistinct"
+    ],
+    "hardening_task1_provenance": "New characterization against accepted consolidation backend 98844babd865d3af7e9fe65ea90e619be9ace88c before extraction. Original test identities and pinned historical manifests untouched."
   }
 ]

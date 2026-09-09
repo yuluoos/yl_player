@@ -44,6 +44,7 @@
 		652C93A9363EA0F1BC1CD7F8 /* YlHlsManifestRewriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC924B1B78083E67EB2AE0A6 /* YlHlsManifestRewriterTests.swift */; };
 		6581B64707F7407C0873308A /* YlMacosAvPlayerStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CCB3C53A98E04364865410 /* YlMacosAvPlayerStateTests.swift */; };
 		6E254F8464BED359D59D6DA2 /* hevc_aac.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 9C4FFA18C36468580895FF07 /* hevc_aac.mkv */; };
+		77361B1156985F22DB05737C /* YlManagedFallbackCharacterizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E9683F561AC67CAE681D1C /* YlManagedFallbackCharacterizationTests.swift */; };
 		781F1C9D6E2F6455140DB053 /* YlPlatformServicesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259BBE58C534BE7C4EEAE8FB /* YlPlatformServicesTests.swift */; };
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
 		7EE6E9FB7B61694955645CE5 /* YlMacosPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2E66846088B64C685280EF /* YlMacosPresentationTests.swift */; };
@@ -168,6 +169,7 @@
 		EE9C53482676289E84337BBD /* YlAppleCompatibilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleCompatibilityTests.swift; sourceTree = "<group>"; };
 		EEF2A2862C2636E0EBEE15CE /* YlFallbackBufferBudgetTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFallbackBufferBudgetTests.swift; sourceTree = "<group>"; };
 		F86E30B31257D07B5657CC67 /* YlAppleDecoderRestorationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleDecoderRestorationTests.swift; sourceTree = "<group>"; };
+		F9E9683F561AC67CAE681D1C /* YlManagedFallbackCharacterizationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlManagedFallbackCharacterizationTests.swift; sourceTree = "<group>"; };
 		FA4FE72EA5EE191708834C71 /* NativeCallbackCharacterization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeCallbackCharacterization.swift; sourceTree = "<group>"; };
 		FCEE590BC8393392AEEF82DC /* YlAppleSessionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleSessionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -237,6 +239,7 @@
 				7DE17B23DC7094916B707171 /* hls_key.bin */,
 				D75128AAE8A9BB6E769A696C /* network_seek_h264_aac.mkv */,
 				43861863016C836339CF66DC /* two_audio_tracks.mkv */,
+				F9E9683F561AC67CAE681D1C /* YlManagedFallbackCharacterizationTests.swift */,
 			);
 			path = RunnerTests;
 			sourceTree = "<group>";
@@ -582,6 +585,7 @@
 				C3D64527DB616335EAAD938B /* YlOpenedMediaTests.swift in Sources */,
 				781F1C9D6E2F6455140DB053 /* YlPlatformServicesTests.swift in Sources */,
 				A52B4B776141C7449114EEE1 /* YlV2ReactivationTests.swift in Sources */,
+				77361B1156985F22DB05737C /* YlManagedFallbackCharacterizationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

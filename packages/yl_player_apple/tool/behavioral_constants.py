@@ -30,16 +30,44 @@ def difference(old, new):
             for key in sorted(old.keys() | new.keys()) if new.get(key, 0) != old.get(key, 0)}
 
 
+def current_tokens(root, row):
+    if ('new_file' in row) == ('new_files' in row):
+        raise ValueError('Declare exactly one of new_file or new_files')
+    paths = row.get('new_files', [row.get('new_file')])
+    if not isinstance(paths, list) or not paths:
+        raise ValueError('Current source paths must be a nonempty explicit list')
+    seen = set()
+    tokens = collections.Counter()
+    for name in paths:
+        if not isinstance(name, str) or not name or any(c in name for c in '*?[]'):
+            raise ValueError('Invalid current source path')
+        path = Path(name)
+        if path.is_absolute() or path.as_posix() != name or '..' in path.parts:
+            raise ValueError('Current source paths must be canonical repository-relative paths')
+        resolved = (root / path).resolve()
+        if not resolved.is_relative_to(root.resolve()) or not resolved.is_file():
+            raise ValueError('Missing or external current source path: ' + name)
+        if resolved in seen:
+            raise ValueError('Duplicate current source path: ' + name)
+        seen.add(resolved)
+        tokens.update(extract(resolved.read_text()))
+    return dict(sorted(tokens.items()))
+
+
 def verify(root, manifest):
     failures = []
     for row in manifest:
         old = extract((root / row['old_file']).read_text())
-        new = extract((root / row['new_file']).read_text())
+        try:
+            new = current_tokens(root, row)
+        except ValueError as error:
+            failures.append({'reason': str(error), 'old_file': row['old_file']})
+            continue
         if old != row['old_tokens']:
             failures.append({'reason': 'Legacy behavioral constants changed', 'old_file': row['old_file']})
         observed = difference(old, new)
         if observed != row['allowed_delta']:
-            failures.append({'old_file': row['old_file'], 'new_file': row['new_file'],
+            failures.append({'old_file': row['old_file'], 'new_files': row.get('new_files', [row.get('new_file')]),
                              'expected': row['allowed_delta'], 'observed': observed})
         if observed and not row['reason'].startswith('import/platform abstraction:'):
             failures.append({'reason': 'Missing explicit abstraction reason', 'row': row})

@@ -12,6 +12,7 @@
 		1278703D552CA909D2DE9434 /* YlOpenCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DB9C810C6AB43B1BFDD3E1D /* YlOpenCoordinatorTests.swift */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		205ED95EEB111A7EB3ED8E1A /* YlFallbackBackendTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002424C9591FDF20B53FC358 /* YlFallbackBackendTests.swift */; };
+		20962E2C4B474BB3727D1717 /* YlManagedFallbackCharacterizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FF793AD29FF2287251C0CA /* YlManagedFallbackCharacterizationTests.swift */; };
 		235DA2E9947F240D9C4EF0F7 /* YlVideoToolboxDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD49FC1AE129A046B75B04C /* YlVideoToolboxDecoderTests.swift */; };
 		25CA9B8EAE5D42F0AD4464D4 /* YlBoundedPacketQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13A3D6B01A03392BD9CE3E7 /* YlBoundedPacketQueueTests.swift */; };
 		284B95B246D290C1CEB72EE9 /* YlV2ReactivationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07E85F3A90B6EF680BCAC3B6 /* YlV2ReactivationTests.swift */; };
@@ -127,6 +128,7 @@
 		A961F88D1BD445BCAB359A39 /* YlPlatformServicesTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlPlatformServicesTests.swift; sourceTree = "<group>"; };
 		AD36E29154BDA690EA8EC35E /* hevc_aac.flv */ = {isa = PBXFileReference; includeInIndex = 1; path = hevc_aac.flv; sourceTree = "<group>"; };
 		B70723F5407676A3C944FFE9 /* hls_encrypted_segment0.ts */ = {isa = PBXFileReference; includeInIndex = 1; path = hls_encrypted_segment0.ts; sourceTree = "<group>"; };
+		B9FF793AD29FF2287251C0CA /* YlManagedFallbackCharacterizationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlManagedFallbackCharacterizationTests.swift; sourceTree = "<group>"; };
 		BF4ED9D4EBB695809F00AF55 /* YlLiveReconnectControllerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlLiveReconnectControllerTests.swift; sourceTree = "<group>"; };
 		C13A3D6B01A03392BD9CE3E7 /* YlBoundedPacketQueueTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlBoundedPacketQueueTests.swift; sourceTree = "<group>"; };
 		C659117285F409F43C371560 /* h264_aac.flv */ = {isa = PBXFileReference; includeInIndex = 1; path = h264_aac.flv; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 				174513D67DB1951A5E7189A9 /* hls_key.bin */,
 				77F4C6F088448FA9F3E0593F /* network_seek_h264_aac.mkv */,
 				CC9C0645E85B5C304253D6B4 /* two_audio_tracks.mkv */,
+				B9FF793AD29FF2287251C0CA /* YlManagedFallbackCharacterizationTests.swift */,
 			);
 			path = RunnerTests;
 			sourceTree = "<group>";
@@ -450,6 +453,7 @@
 				B16FF98D2315285DB34DFC65 /* YlSourceRouterTests.swift in Sources */,
 				284B95B246D290C1CEB72EE9 /* YlV2ReactivationTests.swift in Sources */,
 				235DA2E9947F240D9C4EF0F7 /* YlVideoToolboxDecoderTests.swift in Sources */,
+				20962E2C4B474BB3727D1717 /* YlManagedFallbackCharacterizationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

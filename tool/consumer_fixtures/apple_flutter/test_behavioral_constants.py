@@ -2,6 +2,7 @@
 import importlib.util
 from pathlib import Path
 import unittest
+import tempfile
 
 GATE = Path(__file__).resolve().parents[3] / 'packages/yl_player_apple/tool/behavioral_constants.py'
 
@@ -48,6 +49,43 @@ class BehavioralConstantsTests(unittest.TestCase):
             for mutation in mutations:
                 with self.subTest(path=path, mutation=mutation):
                     self.assertNotEqual(module.extract(text), module.extract(text.replace(original, mutation)))
+
+class ExtractionConstantsTests(unittest.TestCase):
+    def module(self):
+        spec = importlib.util.spec_from_file_location('behavioral_constants', GATE)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+
+    def test_extraction_preserves_multiplicity_and_rejects_literal_changes(self):
+        module = self.module()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'old.swift').write_text('let a = 2; let b = 2')
+            (root / 'a.swift').write_text('let a = 2')
+            (root / 'b.swift').write_text('let b = 2')
+            row = dict(old_file='old.swift', new_files=['a.swift', 'b.swift'],
+                       old_tokens=module.extract((root / 'old.swift').read_text()),
+                       allowed_delta={}, reason='import/platform abstraction: extraction')
+            self.assertEqual(module.verify(root, [row]), [])
+            for mutation in ('let b = 3', '', 'let b = 2; let c = 2'):
+                (root / 'b.swift').write_text(mutation)
+                self.assertTrue(module.verify(root, [row]), mutation)
+
+    def test_invalid_ambiguous_missing_and_duplicate_paths_fail_closed(self):
+        module = self.module()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'old.swift').write_text('let a = 2')
+            (root / 'a.swift').write_text('let a = 2')
+            base = dict(old_file='old.swift', old_tokens={'number:2': 1},
+                        allowed_delta={}, reason='import/platform abstraction: extraction')
+            for paths in ([], ['a.swift', 'a.swift'], ['missing.swift'], ['../a.swift'],
+                          ['/a.swift'], ['a.swift', './a.swift'], ['*.swift'], ['']):
+                with self.subTest(paths=paths):
+                    self.assertTrue(module.verify(root, [dict(base, new_files=paths)]))
+            self.assertTrue(module.verify(root, [dict(base, new_file='a.swift', new_files=['a.swift'])]))
+            self.assertTrue(module.verify(root, [base]))
 
 if __name__ == '__main__':
     unittest.main()
