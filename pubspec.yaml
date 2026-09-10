@@ -9,10 +9,6 @@ workspace:
   - packages/yl_player_android
   - packages/yl_player_android/example
   - packages/yl_player_apple
-  # Unendorsed Apple migration artifacts retained until final cleanup.
-  - packages/yl_player_ios
-  - packages/yl_player_ios/example
-  - packages/yl_player_macos
 
 dependencies:
   flutter:

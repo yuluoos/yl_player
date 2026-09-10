@@ -1344,3 +1344,10 @@ Main example gates now bind the actual RunnerTests PBX Sources phase/file refere
 Consolidation Task 8 M1's guard implementation is now present and exercised against actual selected runtime results. Complete current canonical runtime coverage, full matrices and coordinated independent review are still pending R15 final acceptance, together with physical iOS hardware, minimum OS, Intel-native decoding, endurance/profiling and remote CI. The new code does not close the earlier warning/source-provenance owners or retroactively turn historical focused receipts into complete runtime evidence. Task 8 is the stopping point requested by the user; no View or later implementation is included here.
 
 Task 8 focused checkpoint evidence (2026-09-10): **8 macOS native PASS; 9 iOS native PASS plus 1 exact R19 SKIP**, zero unresolved native failures. These are actual selected XCResult identities, with the iOS Simulator H264 capability attachment exported and validated. Public Dart: **16 strict cases PASS on macOS; 16 strict cases plus 6 affected default-policy cases PASS on iOS**. macOS strict hardware committed proven hardware; iOS Simulator returned decoder.unavailable without commit. The immediate after-Load macOS hardware assertion passed its exact rerun. The default iOS local/network/FLV cases logged actual unknown decoder mode while completing their positive frame/geometry/seek/track/reconnect assertions. Seventeen public-controller barrier/milestone tests, nine runtime-guard regressions, four current/historical fixture checks, scoped Dart analysis and script syntax/runner wiring checks passed. The local Task 8 report/logs and final source-hash map retain original failures and map final supplying results to the scoped commit. These counts do not claim a full canonical native run or final acceptance.
+
+## View cleanup Task 2 package consolidation
+
+The split `yl_player_ios` and `yl_player_macos` packages were removed from the
+v0.2 workspace. Applications use the endorsed `yl_player_apple` package for
+both iOS and macOS. The deleted tracked sources remain recoverable from Git
+history at the parent of the Task 2 cleanup commit.
