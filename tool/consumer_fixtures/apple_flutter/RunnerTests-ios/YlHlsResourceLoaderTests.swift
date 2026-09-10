@@ -223,6 +223,21 @@ final class YlHlsResourceLoaderTests: XCTestCase {
     XCTAssertGreaterThan(request.contentLength, 0)
   }
 
+  func testCredentialHeadersRequireControlledMediaProxy() throws {
+    for name in ["Authorization", "cOoKiE", "Proxy-Authorization"] {
+      let loader = try YlHlsResourceLoader(originURL: URL(string: "https://media.test/master.m3u8")!,
+        headers: [name: "private"], configuration: YlNetworkConfiguration(map: [:]))
+      defer { loader.cancelAll() }
+      let finished = expectation(description: name)
+      let request = TestHlsLoadingRequest(url: try YlHlsURLCodec.encode(URL(string: "https://media.test/seg.ts")!),
+        requestedOffset: 0, requestedLength: 1, requestsAllDataToEnd: false, finished: finished)
+      XCTAssertTrue(loader.startLoading(request))
+      wait(for: [finished], timeout: 2)
+      XCTAssertEqual(request.redirectRequest?.url?.host, "127.0.0.1")
+      XCTAssertNil(request.redirectRequest?.value(forHTTPHeaderField: name))
+    }
+  }
+
   func testMediaRangeRedirectOwnsRangeAndStripsCrossOriginCredential() throws {
     let configuration = HlsLoaderURLProtocol.configuration { _, _ in
       XCTFail("Media redirects must not start a package URLSession task.")
@@ -240,16 +255,13 @@ final class YlHlsResourceLoaderTests: XCTestCase {
     XCTAssertTrue(loader.startLoading(request))
     wait(for: [finished], timeout: 2)
 
-    XCTAssertEqual(request.redirectRequest?.url, URL(string: "https://cdn.test/seg.ts"))
+    XCTAssertEqual(request.redirectRequest?.url?.host, "127.0.0.1")
     XCTAssertEqual(
       request.redirectRequest?.value(forHTTPHeaderField: "Range"),
       "bytes=2-4"
     )
     XCTAssertNil(request.redirectRequest?.value(forHTTPHeaderField: "Authorization"))
-    XCTAssertEqual(
-      request.redirectRequest?.value(forHTTPHeaderField: "X-Client"),
-      "ios"
-    )
+    XCTAssertNil(request.redirectRequest?.value(forHTTPHeaderField: "X-Client"))
     XCTAssertTrue(request.received.isEmpty)
   }
 
@@ -274,10 +286,8 @@ final class YlHlsResourceLoaderTests: XCTestCase {
       request.redirectRequest?.value(forHTTPHeaderField: "Range"),
       "bytes=2-3"
     )
-    XCTAssertEqual(
-      request.redirectRequest?.value(forHTTPHeaderField: "Authorization"),
-      "Bearer test"
-    )
+    XCTAssertEqual(request.redirectRequest?.url?.host, "127.0.0.1")
+    XCTAssertNil(request.redirectRequest?.value(forHTTPHeaderField: "Authorization"))
   }
 
   func testKeyUsesDirectLoaderDataAndRetainsCredentials() throws {

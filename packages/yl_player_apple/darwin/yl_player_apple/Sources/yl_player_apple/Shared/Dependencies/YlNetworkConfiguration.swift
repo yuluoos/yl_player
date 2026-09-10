@@ -8,6 +8,15 @@ struct YlNetworkConfiguration: Equatable {
   let maxRetryDelayMs: Int64
   let maxRedirects: Int
 
+  init(options: YlAppleNetworkOptions) {
+    connectTimeoutMs = options.connectTimeoutMs
+    readTimeoutMs = options.readTimeoutMs
+    maxRetries = options.maxRetries
+    baseRetryDelayMs = options.baseRetryDelayMs
+    maxRetryDelayMs = options.maxRetryDelayMs
+    maxRedirects = options.maxRedirects
+  }
+
   init(map: [String: Any?]) {
     connectTimeoutMs = Self.clampedMilliseconds(
       int64(map["connectTimeoutMs"]) ?? 10_000

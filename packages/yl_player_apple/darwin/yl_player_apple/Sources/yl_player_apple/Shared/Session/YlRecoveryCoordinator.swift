@@ -13,6 +13,7 @@ struct YlDispatchRecoveryScheduler: YlRecoveryScheduling {
 }
 protocol YlRecoverySession: AnyObject {
   var recoveryGeneration: UInt64 { get }
+  var managedRequestFailure: NativePlayerError? { get }
   func mayScheduleRecovery(generation: UInt64) -> Bool
   func emitRecoveryRetry(attempt: Int, delayMs: Int64, error: NativePlayerError, generation: UInt64)
   func installRecoveryWorkItem(_ workItem: DispatchWorkItem, generation: UInt64) -> Bool
@@ -89,6 +90,10 @@ final class YlRecoveryCoordinator {
 
   func scheduleLiveReconnect(after error: NativePlayerError, generation reconnectGeneration: UInt64) {
     guard let session, session.mayScheduleRecovery(generation: reconnectGeneration) else { return }
+    if let terminal = session.managedRequestFailure {
+      session.reportRecoveryExhaustion(terminal, generation: reconnectGeneration)
+      return
+    }
     guard let delayMs = liveReconnectController.nextDelayMs() else {
       finishLiveReconnectExhausted(error, generation: reconnectGeneration)
       return

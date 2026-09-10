@@ -29,6 +29,7 @@ struct YlNetworkRequestRecipe {
   let credentials: [String: String]
   let credentialContext: YlNetworkCredentialContext
   let configuration: YlNetworkConfiguration
+  let managedIntent: YlManagedRequestIntent?
   let mode: YlNetworkInputMode
 
   init(
@@ -37,7 +38,8 @@ struct YlNetworkRequestRecipe {
     credentials: [String: String] = [:],
     credentialContext: YlNetworkCredentialContext = YlNetworkCredentialContext(),
     configuration: YlNetworkConfiguration,
-    mode: YlNetworkInputMode = .randomAccessVOD
+    mode: YlNetworkInputMode = .randomAccessVOD,
+    managedIntent: YlManagedRequestIntent? = nil
   ) {
     self.url = url
     self.headers = headers
@@ -45,6 +47,7 @@ struct YlNetworkRequestRecipe {
     self.credentialContext = credentialContext
     self.configuration = configuration
     self.mode = mode
+    self.managedIntent = managedIntent
   }
 }
 
@@ -63,9 +66,15 @@ final class YlNetworkRequestPolicy {
   private var currentOffset: Int64 = 0
   private var currentValidator: YlNetworkResponseMetadata?
   private var redirectCount = 0
+  private var context: YlManagedRequestContext?
 
   init(recipe: YlNetworkRequestRecipe) {
     self.recipe = recipe
+    context = YlRequestOrigin(url: recipe.url).map {
+      YlManagedRequestContext(sourceOrigin: $0, ordinaryHeaders: recipe.headers,
+        credentials: recipe.credentials, credentialsAllowed: recipe.credentialContext.maySendCredentials,
+        redirectsFollowed: 0)
+    }
   }
 
   func request(
@@ -82,7 +91,6 @@ final class YlNetworkRequestPolicy {
     lock.lock()
     currentOffset = offset
     currentValidator = validator
-    redirectCount = 0
     lock.unlock()
     return makeRequest(
       url: recipe.url,
@@ -111,7 +119,8 @@ final class YlNetworkRequestPolicy {
     let validator = currentValidator
     lock.unlock()
 
-    guard count <= recipe.configuration.maxRedirects else {
+    guard recipe.managedIntent?.followRedirect(maximum: recipe.configuration.maxRedirects)
+      ?? (count <= recipe.configuration.maxRedirects) else {
       throw NativePlayerError(
         category: "network",
         code: "network.redirect_limit",
@@ -120,10 +129,12 @@ final class YlNetworkRequestPolicy {
       )
     }
 
-    if !Self.sameOrigin(sourceURL, destinationURL)
-      || !Self.sameOrigin(recipe.url, destinationURL) {
-      recipe.credentialContext.strip()
-    }
+    lock.lock()
+    context = context?.child(at: destinationURL,
+      previouslyStripped: !recipe.credentialContext.maySendCredentials
+        || YlRequestOrigin(url: sourceURL) != YlRequestOrigin(url: destinationURL), redirect: true)
+    if context?.credentialsAllowed != true { recipe.credentialContext.strip() }
+    lock.unlock()
     return makeRequest(
       url: destinationURL,
       headers: permittedHeaders(),
@@ -211,17 +222,13 @@ final class YlNetworkRequestPolicy {
   }
 
   static func isRetryableStatus(_ statusCode: Int) -> Bool {
-    statusCode == 408 || statusCode == 429 || (500...599).contains(statusCode)
+    YlManagedRequestPolicy.isRetryableStatus(statusCode)
   }
 
   private func permittedHeaders() -> [String: String] {
-    let sensitive = Self.credentialHeaderNames.union(recipe.credentials.keys.map { $0.lowercased() })
-    let allowed = recipe.credentialContext.maySendCredentials
-    var result = recipe.headers.filter { allowed || !sensitive.contains($0.key.lowercased()) }
-    if allowed {
-      for (name, value) in recipe.credentials { result[name] = value }
-    }
-    return result
+    lock.lock(); defer { lock.unlock() }
+    return context?.child(at: recipe.url,
+      previouslyStripped: !recipe.credentialContext.maySendCredentials).headers ?? [:]
   }
 
   private func makeRequest(
@@ -232,7 +239,10 @@ final class YlNetworkRequestPolicy {
   ) -> URLRequest {
     var request = URLRequest(url: url)
     request.httpMethod = "GET"
-    request.timeoutInterval = TimeInterval(recipe.configuration.connectTimeoutMs) / 1_000
+    // Managed timers own connect/read independently; URLSession's request
+    // timeout is an inactivity timeout and must not preempt the read deadline.
+    request.timeoutInterval = recipe.managedIntent == nil
+      ? TimeInterval(recipe.configuration.connectTimeoutMs) / 1_000 : .greatestFiniteMagnitude
     for (name, value) in headers where !Self.ownedHeaderNames.contains(name.lowercased()) {
       request.setValue(value, forHTTPHeaderField: name)
     }
@@ -377,7 +387,7 @@ final class YlNetworkRequestPolicy {
   private static func validateHTTPURL(_ url: URL) throws {
     guard let scheme = url.scheme?.lowercased(),
           scheme == "http" || scheme == "https",
-          url.host != nil else {
+          url.host != nil, url.user == nil, url.password == nil else {
       throw NativePlayerError(
         category: "network",
         code: "network.invalid_redirect",
@@ -385,20 +395,6 @@ final class YlNetworkRequestPolicy {
         diagnostic: sanitized(url)
       )
     }
-  }
-
-  private static func sameOrigin(_ lhs: URL, _ rhs: URL) -> Bool {
-    guard let leftScheme = lhs.scheme?.lowercased(),
-          let rightScheme = rhs.scheme?.lowercased(),
-          let leftHost = lhs.host?.lowercased(),
-          let rightHost = rhs.host?.lowercased() else { return false }
-    return leftScheme == rightScheme &&
-      leftHost == rightHost &&
-      effectivePort(lhs, scheme: leftScheme) == effectivePort(rhs, scheme: rightScheme)
-  }
-
-  private static func effectivePort(_ url: URL, scheme: String) -> Int? {
-    url.port ?? (scheme == "https" ? 443 : scheme == "http" ? 80 : nil)
   }
 
   private static func ifRangeValue(_ metadata: YlNetworkResponseMetadata?) -> String? {
@@ -429,17 +425,10 @@ final class YlNetworkRequestPolicy {
   }
 
   private static func sanitized(_ url: URL?) -> String {
-    guard let url, var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
-    else { return "invalid-url" }
-    components.user = nil
-    components.password = nil
-    components.query = nil
-    components.fragment = nil
-    return components.url?.absoluteString ?? "invalid-url"
+    _ = url
+    return "network.request"
   }
 
   private static let ownedHeaderNames: Set<String> = ["range", "if-range"]
-  private static let credentialHeaderNames: Set<String> = [
-    "authorization", "cookie", "proxy-authorization",
-  ]
+
 }

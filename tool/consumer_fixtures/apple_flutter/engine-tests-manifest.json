@@ -215,7 +215,7 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "898c17c6cf39c6bd080b0eba5de04d0b14c1e7cf33f8bee7da0901227c5e22f7"
+    "destination_sha256": "a7e354d64226aacfe3ec3475a6dd7dbca4985bb923250ae4bb9160d9bf81c6ba"
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlIosChannelTests.swift",
@@ -371,7 +371,7 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "5d0cf2fff5a5f048505f2f60a226ac9bb6ec185d0521b028552e3559c1ce8e6d",
+    "destination_sha256": "cf1c6f7502b959cc6537831ef67c14c0e7af241f12271ae71ead9f22540019be",
     "task7_typed_migration": {
       "from_sha256": "9051742a4e69b4dc89f72c5304c86ff22478bd0532c7f54894773f86ccd22473",
       "reason": "R16 typed callback projection preserves original engine assertions; test-only existing HTTP/HLS server visibility and optional request observation enable actual host reprepare/publication evidence without copied production logic. The optional request observer ignores proven cancelled idle TCP EOF (not an HTTP request); all real nonempty request credential assertions and original engine bodies remain."
@@ -668,7 +668,7 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "ee0e3e9139a0c303cf5e10064a2ba98f5eee188daba39750575fad0689da6ada",
+    "destination_sha256": "2928fd4ebde590c5da1764b981beb3c11fcbef2e34b144f9ecf1bac958335866",
     "task7_typed_migration": {
       "from_sha256": "9d1e0a81deb322c241680165fc709057844cb1827b0efaabdf75e9b01538522b",
       "reason": "R16 typed callback projection preserves original engine assertions; test-only existing HTTP/HLS server visibility and optional request observation enable actual host reprepare/publication evidence without copied production logic. The optional request observer ignores proven cancelled idle TCP EOF (not an HTTP request); all real nonempty request credential assertions and original engine bodies remain."

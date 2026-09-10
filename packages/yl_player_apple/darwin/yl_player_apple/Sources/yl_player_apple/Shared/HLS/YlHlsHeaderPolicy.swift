@@ -1,50 +1,25 @@
 import Foundation
 
 struct YlHlsHeaderPolicy {
-  private static let sensitive = Set([
-    "authorization",
-    "cookie",
-    "proxy-authorization",
-  ])
-
-  private let origin: Origin?
-  private let credentialNames: Set<String>
-  private let configuredHeaders: [String: String]
+  private let context: YlManagedRequestContext?
 
   init(originURL: URL, headers: [String: String], credentials: [String: String] = [:]) {
-    origin = Origin(url: originURL)
-    configuredHeaders = headers.merging(credentials) { _, credential in credential }
-    credentialNames = Self.sensitive.union(credentials.keys.map { $0.lowercased() })
+    context = YlRequestOrigin(url: originURL).map {
+      YlManagedRequestContext(sourceOrigin: $0, ordinaryHeaders: headers,
+        credentials: credentials, credentialsAllowed: true, redirectsFollowed: 0)
+    }
   }
 
-  func isSourceOrigin(_ url: URL) -> Bool { origin != nil && origin == Origin(url: url) }
+  func isSourceOrigin(_ url: URL) -> Bool {
+    context != nil && context?.sourceOrigin == YlRequestOrigin(url: url)
+  }
+
+  func requestContext(for url: URL, credentialsStripped: Bool = false) -> YlManagedRequestContext? {
+    context?.child(at: url, previouslyStripped: credentialsStripped)
+  }
 
   func headers(for destinationURL: URL, credentialsStripped: Bool = false) -> [String: String] {
-    let isSameOrigin = !credentialsStripped && isSourceOrigin(destinationURL)
-    return configuredHeaders.filter { name, _ in
-      isSameOrigin || !credentialNames.contains(name.lowercased())
-    }
-  }
-
-  private struct Origin: Equatable {
-    let scheme: String
-    let host: String
-    let port: Int
-
-    init?(url: URL) {
-      guard let scheme = url.scheme?.lowercased(),
-            let host = url.host?.lowercased(),
-            !host.isEmpty else { return nil }
-      let defaultPort: Int
-      switch scheme {
-      case "http": defaultPort = 80
-      case "https": defaultPort = 443
-      default: return nil
-      }
-      self.scheme = scheme
-      self.host = host
-      port = url.port ?? defaultPort
-    }
+    requestContext(for: destinationURL, credentialsStripped: credentialsStripped)?.headers ?? [:]
   }
 }
 

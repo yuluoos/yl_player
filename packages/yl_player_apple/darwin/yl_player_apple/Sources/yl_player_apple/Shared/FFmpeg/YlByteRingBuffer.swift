@@ -14,6 +14,9 @@ final class YlByteRingBuffer {
   private var waitingReaderCount = 0
   private var cancelled = false
   private var failure: NativePlayerError?
+  private var producerGeneration: UInt64 = 0
+
+  var writeGeneration: UInt64 { condition.withLock { producerGeneration } }
 
   init(capacity: Int) {
     precondition(capacity > 0)
@@ -49,12 +52,13 @@ final class YlByteRingBuffer {
     }
   }
 
-  func write(_ data: Data, at offset: Int64) throws {
+  func write(_ data: Data, at offset: Int64, generation: UInt64? = nil) throws {
     try data.withUnsafeBytes { bytes in
       var written = 0
       while written < bytes.count {
         let appended = try condition.withLock {
-          try appendLocked(
+          guard generation == nil || generation == producerGeneration else { throw YlByteSourceError.cancelled }
+          return try appendLocked(
             UnsafeRawBufferPointer(rebasing: bytes[written...]),
             at: offset + Int64(written)
           )
@@ -63,7 +67,7 @@ final class YlByteRingBuffer {
           written += appended
           continue
         }
-        try waitForWritableCapacity()
+        try waitForWritableCapacity(generation: generation)
       }
     }
   }
@@ -112,6 +116,7 @@ final class YlByteRingBuffer {
 
   func reset(at offset: Int64) {
     condition.withLock {
+      producerGeneration &+= 1
       head = 0
       storedCount = 0
       startOffset = offset
@@ -226,10 +231,11 @@ final class YlByteRingBuffer {
     return writable
   }
 
-  private func waitForWritableCapacity() throws {
+  private func waitForWritableCapacity(generation: UInt64?) throws {
     condition.lock()
     defer { condition.unlock() }
     while true {
+      guard generation == nil || generation == producerGeneration else { throw YlByteSourceError.cancelled }
       try throwIfNotWritableLocked()
       if capacityLimit - storedCount + consumedCount > 0 { return }
       condition.wait()

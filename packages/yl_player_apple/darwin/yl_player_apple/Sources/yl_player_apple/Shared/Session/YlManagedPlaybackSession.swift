@@ -754,6 +754,11 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   }
 
   var recoveryGeneration: UInt64 { stateLock.withLock { generation } }
+  var managedRequestFailure: NativePlayerError? {
+    guard case let .network(request, _) = demux.sourceRecipe else { return nil }
+    return request.managedIntent?.terminalFailure
+  }
+
   func mayScheduleRecovery(generation reconnectGeneration: UInt64) -> Bool {
     stateLock.withLock { !disposed && active && reconfiguring && generation == reconnectGeneration }
   }

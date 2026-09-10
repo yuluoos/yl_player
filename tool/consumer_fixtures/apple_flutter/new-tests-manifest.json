@@ -97,7 +97,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift",
-    "sha256": "9cdaf7ef8b982fed25b8effbe1b9f1e75ad1a8e7c04fc5fb12fed4df4ef2e88e",
+    "sha256": "38b56c818bdcf7e84eee321bfc81b2518d6db9245ad974d2b24613ac9bf8305e",
     "methods": [
       "testImmutableRequestAndSessionIdentityStartsAtZero",
       "testNegativeMeasuredLiveOffsetIsZeroAndUnknownRemainsNil",
@@ -116,9 +116,9 @@
       "testRedirectHistorySurvivesRealSessionReconstructionAndFreshLoadResetsIntent",
       "testAssessmentDefaultRouteMatrixAndStableEvidence",
       "testAssessmentRejectsUnsupportedContainerAndLoadKeepsCommittedSession",
-      "testTypedInputPreservesRequestedNetworkBoundsWithoutEnablingGuarantee",
+      "testTypedInputPreservesRequestedNetworkBoundsForEnforcedManagedRoute",
       "testUnknownLocalSourceLoadRefinesSameAssessmentBeforeCommit",
-      "testCompletePolicyRouteMatrixKeepsProductionEnforcementStaged",
+      "testCompletePolicyRouteMatrixEnablesManagedAndKeepsBufferHardwareStaged",
       "testCustomCredentialsAndOrdinaryHeadersRequireControlledRoutes",
       "testInspectedCodecAndHardwareEvidenceAreRequiredBeforeGuarantee",
       "testUnknownFormatInspectionIsBoundedAndRefinedPolicyStillRejects"

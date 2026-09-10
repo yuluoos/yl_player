@@ -206,6 +206,15 @@ final class YlByteRingBufferTests: XCTestCase {
     wait(for: [finished], timeout: 1)
   }
 
+  func testResetRetiresAnOldProducerEvenWhenOffsetsCoincide() throws {
+    let buffer = YlByteRingBuffer(capacity: 4)
+    let old = buffer.writeGeneration
+    buffer.reset(at: 0)
+    XCTAssertThrowsError(try buffer.write(Data([9]), at: 0, generation: old))
+    try buffer.write(Data([1]), at: 0, generation: buffer.writeGeneration)
+    XCTAssertEqual(buffer.bufferedBytes, 1)
+  }
+
   func testResetDropsBytesAndChangesAbsoluteOffset() throws {
     let buffer = YlByteRingBuffer(capacity: 8)
     XCTAssertEqual(try buffer.append(Data([1, 2, 3]), at: 0), 3)

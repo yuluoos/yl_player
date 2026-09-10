@@ -3,7 +3,7 @@
     "source": "packages/yl_player/example/ios/RunnerTests/YlByteRingBufferTests.swift",
     "source_sha256": "47cba9282f62680d02e2f478f623998be312d7675047b20d3fe9f866f5e15042",
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlByteRingBufferTests.swift",
-    "destination_sha256": "5273d17d3464c0b8f50b080d6a556e947f2ef50aa19b5a2fdd3defbb62ab1aa2",
+    "destination_sha256": "543ff92f737b03291a79ec6a33183fd8b9b63e8686f26357df39b3d09d4c83fd",
     "adaptations": [
       "@testable import yl_player_ios -> @testable import yl_player_apple"
     ]
@@ -56,7 +56,7 @@
     "source": "packages/yl_player/example/ios/RunnerTests/YlNetworkByteSourceTests.swift",
     "source_sha256": "f0513850df69b14e4563dc0c3098ac4f32a5fa3611bd676c7d54663bec96ae90",
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlNetworkByteSourceTests.swift",
-    "destination_sha256": "30b9fef1be2749445bdfafc943154a54e48b29a3c33f9675240bf3fbdaaf69cd",
+    "destination_sha256": "51d6fa63d1cc73a6dc87638cf8f07527f95ea18fc349d521fa232c457e1c0977",
     "adaptations": [
       "@testable import yl_player_ios -> @testable import yl_player_apple"
     ],
@@ -73,7 +73,7 @@
     "source": "packages/yl_player/example/ios/RunnerTests/YlNetworkRequestPolicyTests.swift",
     "source_sha256": "f0205c7d190dde38b3ca29a3974be0c73c4c91efb167ca236c75957a908bea07",
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlNetworkRequestPolicyTests.swift",
-    "destination_sha256": "4a6031dc84b13d0ea2d3d967df119ed14cbdcb992094ebff4ff8d2114643254f",
+    "destination_sha256": "e6a982e146357145efd0c6ef4977eeb46c44e59691d4c7ac8857863d94906c60",
     "adaptations": [
       "@testable import yl_player_ios -> @testable import yl_player_apple"
     ],

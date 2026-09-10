@@ -43,6 +43,7 @@ struct YlAppleSourceDescriptor {
   var loadOptions: YlAppleLoadOptions? = nil
   var loadRequestId: String? = nil
   var credentialContext = YlNetworkCredentialContext()
+  var managedRequestIntent = YlManagedRequestIntent()
   var isLive: Bool { intent == .live }
   var hasHeaders: Bool { !headers.isEmpty || !credentials.isEmpty }
   var url: URL? { URL(string: uri) }
@@ -86,7 +87,7 @@ struct YlRoutingAvailability {
   var hardwareEvidence = false
   var inspectedWebM = false
   var inspectedLocalFlv = false
-  static let production = YlRoutingAvailability()
+  static let production = YlRoutingAvailability(managedNetwork: true)
 }
 
 struct YlSourceInspection {

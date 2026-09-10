@@ -377,6 +377,16 @@ final class YlAppleHostDeliveryTests: XCTestCase {
 
 @MainActor
 final class YlAppleHlsIntentTests: XCTestCase {
+  func testUnknownInspectionStrippingSurvivesHlsRefinement() async throws {
+    let server = try HlsIntentServer(); defer { server.close() }
+    let fixture = AppleHostFixture(); defer { fixture.host.close() }
+    var request = AppleHostFixture.request("unknown", url: server.origin.appendingPathComponent("unknown").absoluteString, format: .automatic)
+    request.source.request = .init(headers: [:], credentials: ["X-Intent": "secret"])
+    _ = try await fixture.load(request)
+    XCTAssertEqual(server.credentials(path: "/unknown"), [true, false],
+      "HLS root refinement must inherit stripping from the owned inspection request")
+  }
+
   func testRedirectHistorySurvivesRealSessionReconstructionAndFreshLoadResetsIntent() async throws {
     let server = try HlsIntentServer()
     defer { server.close() }
@@ -497,9 +507,9 @@ private final class HlsIntentServer {
           let path = text.split(separator: " ").dropFirst().first.map(String.init) ?? ""
           let authorized = text.lowercased().contains("x-intent: secret")
           if isSource { self.lock.lock(); self.log.append((path, authorized)); self.lock.unlock() }
-          let redirect = isSource && ["/master.m3u8", "/redirect.ts"].contains(path)
+          let redirect = isSource && ["/master.m3u8", "/unknown", "/redirect.ts"].contains(path)
           let body: String
-          if path == "/master.m3u8" { body = "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000\n\(self.origin)/child.m3u8\n" }
+          if path == "/master.m3u8" || path == "/unknown" { body = "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000\n\(self.origin)/child.m3u8\n" }
           else if path == "/child.m3u8" { body = "#EXTM3U\n#EXT-X-TARGETDURATION:1\n#EXTINF:1,\n\(self.origin)/segment.ts\n#EXT-X-ENDLIST\n" }
           else { body = "0123456789abcdef" }
           let data = Data(body.utf8)
@@ -555,7 +565,27 @@ extension YlAppleSessionTests {
 
 @MainActor
 extension YlAppleSessionTests {
-  func testTypedInputPreservesRequestedNetworkBoundsWithoutEnablingGuarantee() throws {
+  func testManagedUnsupportedLoadDoesNotOpenUpstreamOrReplaceSession() async throws {
+    let lock = NSLock()
+    var requests = 0
+    let server = try ReactivationMediaServer(data: Data([1]), onRequest: { _ in
+      lock.lock(); requests += 1; lock.unlock()
+    })
+    defer { server.close() }
+    let fixture = AppleHostFixture(); defer { fixture.host.close() }
+    let committed = try await fixture.host.load(request: AppleHostFixture.request("initial"))
+    for format in [AppleMediaFormat.hls, .mp4, .mov, .avi, .mpegTs, .mpegPs] {
+      var request = AppleHostFixture.request("strict", url: server.url.absoluteString, format: format)
+      request.source.networkPolicy = .init(kind: .managed, connectTimeoutMs: 1000, readTimeoutMs: 1000,
+        maxRetries: 1, baseRetryDelayMs: 1, maxRetryDelayMs: 2, maxRedirects: 2)
+      do { _ = try await fixture.host.load(request: request); XCTFail("Unsupported managed Load committed") }
+      catch let error as PigeonError { XCTAssertEqual(error.code, "policy.unsupported") }
+      XCTAssertEqual(fixture.host.sessionId, committed.sessionId)
+    }
+    XCTAssertEqual(lock.withLock { requests }, 0)
+  }
+
+  func testTypedInputPreservesRequestedNetworkBoundsForEnforcedManagedRoute() throws {
     var request = AppleHostFixture.request("network-policy", format: .matroska)
     request.source.networkPolicy = AppleNetworkPolicyMessage(kind: .managed,
       connectTimeoutMs: 70_000, readTimeoutMs: 80_000, maxRetries: 21,
@@ -570,7 +600,9 @@ extension YlAppleSessionTests {
     XCTAssertEqual(settings.baseRetryDelayMs, 90_000)
     XCTAssertEqual(settings.maxRetryDelayMs, 100_000)
     XCTAssertEqual(settings.maxRedirects, 22)
-    XCTAssertEqual(YlEngineRouter.assess(recipe.source).rejection?.code, "policy.unsupported")
+    let assessed = YlEngineRouter.assess(recipe.source)
+    XCTAssertEqual(assessed.outcome, .requiresInspection)
+    XCTAssertTrue(assessed.satisfiedRequirements.contains(.networkManaged))
   }
 
   func testUnknownLocalSourceLoadRefinesSameAssessmentBeforeCommit() async throws {
@@ -589,7 +621,7 @@ extension YlAppleSessionTests {
 final class YlEngineAssessmentTests: XCTestCase {
   private let enforcing = YlRoutingAvailability(managedNetwork: true, boundedBuffer: true, hardwareEvidence: true)
 
-  func testCompletePolicyRouteMatrixKeepsProductionEnforcementStaged() {
+  func testCompletePolicyRouteMatrixEnablesManagedAndKeepsBufferHardwareStaged() {
     for kind: YlSourceKind in [.file, .network] {
       for format: YlSourceFormat in [.hls, .mp4, .mov, .matroska, .flv, .webm, .avi, .mpegTs, .mpegPs] {
         for policy in 0..<4 {
@@ -601,7 +633,10 @@ final class YlEngineAssessmentTests: XCTestCase {
           if policy == 3 { options.decoderPolicy = .hardwareRequired }
           source.loadOptions = options
           let production = YlEngineRouter.assess(source)
-          if policy > 0 {
+          if policy == 1 && (format == .matroska || (format == .flv && kind == .network)) {
+            XCTAssertEqual(production.outcome, .requiresInspection)
+            XCTAssertTrue(production.satisfiedRequirements.contains(.networkManaged))
+          } else if policy > 0 {
             XCTAssertEqual(production.rejection?.code, "policy.unsupported", "\(kind) \(format) \(policy)")
           }
           let assessed = YlEngineRouter.assess(source, availability: enforcing)

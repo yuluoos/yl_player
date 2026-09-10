@@ -672,6 +672,12 @@ final class YlAppleSessionCoordinator: NSObject {
         message: "A valid HLS URI is required."
       )
     }
+    // Inspection and HLS are two readers of the same original root intent.
+    // Seed only that resource; descendant URLs inherit its marker while
+    // unrelated HLS resources retain their existing independent history.
+    if !source.credentialContext.maySendCredentials {
+      credentialContext.strip(url.absoluteString)
+    }
     return try YlPreparedHlsAsset(
       originURL: url,
       headers: source.headers,

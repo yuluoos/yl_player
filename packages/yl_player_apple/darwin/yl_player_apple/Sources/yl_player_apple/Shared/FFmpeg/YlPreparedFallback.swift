@@ -74,8 +74,9 @@ final class YlPreparedFallback {
         headers: headers,
         credentials: source.credentials,
         credentialContext: source.credentialContext,
-        configuration: configuration.network,
-        mode: container == .flv ? .sequentialLive : .randomAccessVOD
+        configuration: source.networkConfiguration.map(YlNetworkConfiguration.init(options:)) ?? configuration.network,
+        mode: container == .flv ? .sequentialLive : .randomAccessVOD,
+        managedIntent: source.networkPolicy == .managed ? source.managedRequestIntent : nil
       ), container: container)
     } else {
       throw NativePlayerError(

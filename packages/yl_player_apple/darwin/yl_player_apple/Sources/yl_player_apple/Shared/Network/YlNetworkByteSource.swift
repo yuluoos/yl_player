@@ -16,10 +16,12 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
   private let policy: YlNetworkRequestPolicy
   private let ring: YlByteRingBuffer
   private let stateLock = NSLock()
-  private let timerQueue = DispatchQueue(
-    label: "dev.ylplayer.network-byte-source.timers",
-    qos: .utility
-  )
+  private let managedTransportFactory: YlManagedHTTPTransport.Factory?
+  private var managedTransport: YlManagedHTTPTransport?
+  private var managedIdentifier: Int?
+  private var nextManagedIdentifier = -1
+  private var currentTaskIdentifier: Int? { managedIdentifier ?? activeTask?.taskIdentifier }
+  private let managedPolicy: YlManagedRequestPolicy
   private let onRetry: RetryCallback?
   private var session: URLSession!
   private var activeTask: URLSessionDataTask?
@@ -32,17 +34,18 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
   private var retryCount = 0
   private var metadata: YlNetworkResponseMetadata?
   private var timerGeneration: UInt64 = 0
-  private var connectTimer: DispatchSourceTimer?
-  private var readTimer: DispatchSourceTimer?
-  private var retryTimer: DispatchSourceTimer?
 
   init(
     recipe: YlNetworkRequestRecipe,
     capacity: Int,
     sessionConfiguration: URLSessionConfiguration = .ephemeral,
-    onRetry: RetryCallback? = nil
+    onRetry: RetryCallback? = nil,
+    managedPolicy: YlManagedRequestPolicy = YlManagedRequestPolicy(),
+    managedTransportFactory: YlManagedHTTPTransport.Factory? = YlManagedHTTPTransport.make
   ) {
     self.recipe = recipe
+    self.managedPolicy = managedPolicy
+    self.managedTransportFactory = managedTransportFactory
     policy = YlNetworkRequestPolicy(recipe: recipe)
     ring = YlByteRingBuffer(capacity: capacity)
     self.onRetry = onRetry
@@ -52,12 +55,24 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
     delegateQueue.name = "dev.ylplayer.network-byte-source.delegate"
     delegateQueue.maxConcurrentOperationCount = 1
     delegateQueue.qualityOfService = .userInitiated
+    let ownedConfiguration = sessionConfiguration.copy() as! URLSessionConfiguration
+    ownedConfiguration.httpShouldSetCookies = false
+    ownedConfiguration.httpCookieStorage = nil
+    ownedConfiguration.urlCredentialStorage = nil
+    if recipe.managedIntent != nil {
+      ownedConfiguration.timeoutIntervalForRequest = .greatestFiniteMagnitude
+      ownedConfiguration.timeoutIntervalForResource = .greatestFiniteMagnitude
+    }
     session = URLSession(
-      configuration: sessionConfiguration,
+      configuration: ownedConfiguration,
       delegate: self,
       delegateQueue: delegateQueue
     )
-    startRequest(offset: 0, validator: nil, resetRetryCount: true)
+    if recipe.managedIntent != nil, managedTransportFactory != nil,
+       let proxy = ownedConfiguration.connectionProxyDictionary, !proxy.isEmpty {
+      let error = YlManagedHTTPTransport.unsupported()
+      recipe.managedIntent?.fail(error); ring.fail(error)
+    } else { startRequest(offset: 0, validator: nil, resetRetryCount: true) }
   }
 
   var length: Int64? {
@@ -114,13 +129,14 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
         task.cancel()
       }
       activeTask = nil
+      managedTransport?.cancel(); managedTransport = nil; managedIdentifier = nil
       cancelTimersLocked()
+      ring.reset(at: offset)
       return metadata
     }
     guard !stateLock.withLock({ cancelled }) else {
       throw YlByteSourceError.cancelled
     }
-    ring.reset(at: offset)
     startRequest(offset: offset, validator: validator, resetRetryCount: true)
     return offset
   }
@@ -131,6 +147,7 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
       cancelled = true
       let values = (activeTask, session)
       activeTask = nil
+      managedTransport?.cancel(); managedTransport = nil; managedIdentifier = nil
       cancelTimersLocked()
       return values
     }
@@ -155,38 +172,85 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
   private func startRequest(
     offset: Int64,
     validator: YlNetworkResponseMetadata?,
-    resetRetryCount: Bool
+    resetRetryCount: Bool,
+    expectedGeneration: UInt64? = nil
   ) {
-    let request: URLRequest
-    do {
-      request = try policy.request(offset: offset, validator: validator)
-    } catch let error as NativePlayerError {
-      ring.fail(error)
-      return
-    } catch {
-      ring.fail(Self.transportError(error))
-      return
-    }
-
+    var failure: NativePlayerError?
+    var managedToStart: YlManagedHTTPTransport?
     let task: URLSessionDataTask? = stateLock.withLock {
-      guard !cancelled else { return nil }
-      if resetRetryCount { retryCount = 0 }
-      requestedOffset = offset
-      writeOffset = offset
-      bytesThisAttempt = 0
-      responseAccepted = false
-      let task = session.dataTask(with: request)
-      activeTask = task
-      armTimerLocked(.connect, milliseconds: recipe.configuration.connectTimeoutMs)
-      return task
+      guard !cancelled, expectedGeneration == nil || expectedGeneration == timerGeneration else { return nil }
+      if let terminal = recipe.managedIntent?.terminalFailure { failure = terminal; return nil }
+      do {
+        let request = try policy.request(offset: offset, validator: validator)
+        if resetRetryCount { retryCount = 0 }
+        requestedOffset = offset
+        writeOffset = offset
+        bytesThisAttempt = 0
+        responseAccepted = false
+        if recipe.managedIntent != nil, managedTransportFactory != nil {
+          managedToStart = try installManagedRequestLocked(request)
+          return nil
+        }
+        let task = session.dataTask(with: request)
+        activeTask = task
+        armTimerLocked(.connect, milliseconds: recipe.configuration.connectTimeoutMs)
+        return task
+      } catch let error as NativePlayerError { failure = error }
+      catch { failure = Self.transportError(error) }
+      return nil
     }
+    if let failure { recipe.managedIntent?.fail(failure); ring.fail(failure) }
+    managedToStart?.start()
     task?.resume()
+  }
+
+  private func installManagedRequestLocked(_ request: URLRequest) throws -> YlManagedHTTPTransport {
+    let identifier = nextManagedIdentifier
+    nextManagedIdentifier &-= 1
+    let transport = try managedTransportFactory!(request) { [weak self] event in
+      self?.receiveManaged(event, identifier: identifier, requestURL: request.url!)
+    }
+    managedTransport?.cancel()
+    managedTransport = transport
+    managedIdentifier = identifier
+    activeTask = nil
+    responseAccepted = false
+    cancelTimersLocked()
+    armTimerLocked(.connect, milliseconds: recipe.configuration.connectTimeoutMs)
+    return transport
+  }
+
+  private func receiveManaged(_ event: YlManagedHTTPTransport.Event, identifier: Int, requestURL: URL) {
+    guard isActive(identifier) else { return }
+    switch event {
+    case .headers(let response):
+      if [301, 302, 303, 307, 308].contains(response.statusCode) {
+        do {
+          guard let location = response.value(forHTTPHeaderField: "Location"),
+                let destination = URL(string: location, relativeTo: requestURL)?.absoluteURL else {
+            throw YlHTTPResponseParser.invalid("network.invalid_redirect")
+          }
+          let request = try policy.redirectRequest(from: requestURL, response: response, to: destination)
+          let next = try stateLock.withLock { () -> YlManagedHTTPTransport? in
+            guard !cancelled, currentTaskIdentifier == identifier else { return nil }
+            return try installManagedRequestLocked(request)
+          }
+          next?.start()
+        } catch {
+          handleAttemptFailure(error as? NativePlayerError ?? Self.transportError(error), transient: false, taskIdentifier: identifier)
+        }
+      } else { _ = receiveResponse(response, identifier: identifier) }
+    case .body(let data): receiveBody(data, identifier: identifier)
+    case .complete(let error): completeRequest(error, identifier: identifier)
+    }
   }
 
   private func handleAttemptFailure(
     _ error: NativePlayerError,
     transient: Bool,
-    taskIdentifier: Int
+    taskIdentifier: Int,
+    retryAfter: String? = nil,
+    expectedGeneration: UInt64? = nil
   ) {
     var retry: (attempt: Int, delay: Int64, offset: Int64,
                 validator: YlNetworkResponseMetadata?)?
@@ -195,31 +259,35 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
 
     stateLock.lock()
     guard !cancelled,
-          activeTask?.taskIdentifier == taskIdentifier else {
+          expectedGeneration == nil || expectedGeneration == timerGeneration,
+          currentTaskIdentifier == taskIdentifier else {
       stateLock.unlock()
       return
     }
     taskToCancel = activeTask
-    ignoredTaskIdentifiers.insert(taskIdentifier)
+    if activeTask != nil { ignoredTaskIdentifiers.insert(taskIdentifier) }
     activeTask = nil
+    managedTransport?.cancel(); managedTransport = nil; managedIdentifier = nil
     cancelTimersLocked()
 
-    let canResume = recipe.mode == .randomAccessVOD
-      && (bytesThisAttempt == 0 || metadata?.supportsRandomAccess == true)
-    if transient && canResume && retryCount < recipe.configuration.maxRetries {
-      retryCount += 1
-      let delay = retryDelay(millisecondsForAttempt: retryCount)
-      retry = (retryCount, delay, writeOffset, metadata)
-    } else if transient && recipe.mode == .randomAccessVOD {
+    let canResume = (recipe.mode == .randomAccessVOD
+      && (bytesThisAttempt == 0 || metadata?.supportsRandomAccess == true))
+      || (recipe.managedIntent != nil && bytesThisAttempt == 0)
+    let nextAttempt: Int?
+    if transient && canResume {
+      nextAttempt = recipe.managedIntent?.nextRetry(maximum: recipe.configuration.maxRetries)
+        ?? (recipe.managedIntent == nil && retryCount < recipe.configuration.maxRetries ? retryCount + 1 : nil)
+    } else { nextAttempt = nil }
+    if let attempt = nextAttempt,
+       let delay = managedPolicy.retryDelay(attempt: attempt, configuration: recipe.configuration, retryAfter: retryAfter) {
+      retryCount = attempt
+      retry = (attempt, delay, writeOffset, metadata)
+    } else if transient && (recipe.mode == .randomAccessVOD || recipe.managedIntent != nil) {
       terminalError = NativePlayerError(
-        category: "network",
-        code: "network.retry_exhausted",
-        message: "Network media retries were exhausted.",
-        diagnostic: error.code
-      )
-    } else {
-      terminalError = error
-    }
+        category: "network", code: "network.retry_exhausted",
+        message: "Network media retries were exhausted.", diagnostic: error.code)
+    } else { terminalError = error }
+    if let terminalError { recipe.managedIntent?.fail(terminalError) }
     stateLock.unlock()
 
     taskToCancel?.cancel()
@@ -247,71 +315,26 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
     }
     timerGeneration &+= 1
     let generation = timerGeneration
-    let timer = DispatchSource.makeTimerSource(queue: timerQueue)
-    retryTimer = timer
-    timer.setEventHandler { [weak self] in
+    managedPolicy.arm(after: delayMs) { [weak self] in
       guard let self else { return }
-      let shouldStart = self.stateLock.withLock {
-        guard !self.cancelled, self.timerGeneration == generation else {
-          return false
-        }
-        self.retryTimer = nil
-        return true
-      }
-      if shouldStart {
-        self.startRequest(
-          offset: offset,
-          validator: validator,
-          resetRetryCount: false
-        )
-      }
+      self.startRequest(offset: offset, validator: validator,
+        resetRetryCount: false, expectedGeneration: generation)
     }
-    timer.schedule(deadline: .now() + .milliseconds(Int(delayMs)))
-    timer.resume()
     stateLock.unlock()
-  }
-
-  private func retryDelay(millisecondsForAttempt attempt: Int) -> Int64 {
-    let base = recipe.configuration.baseRetryDelayMs
-    let cap = recipe.configuration.maxRetryDelayMs
-    guard base > 0, cap > 0 else { return 0 }
-    var delay = min(base, cap)
-    if attempt > 1 {
-      for _ in 1..<attempt {
-        if delay >= cap { break }
-        delay = min(cap, delay.multipliedReportingOverflow(by: 2).partialValue)
-      }
-    }
-    return max(0, delay)
   }
 
   private func armTimerLocked(_ deadline: Deadline, milliseconds: Int64) {
     timerGeneration &+= 1
     let generation = timerGeneration
-    switch deadline {
-    case .connect:
-      connectTimer?.cancel()
-    case .read:
-      readTimer?.cancel()
-    }
-    let timer = DispatchSource.makeTimerSource(queue: timerQueue)
-    timer.setEventHandler { [weak self] in
+    managedPolicy.arm(after: milliseconds) { [weak self] in
       self?.deadlineFired(deadline, generation: generation)
     }
-    timer.schedule(deadline: .now() + .milliseconds(Int(milliseconds)))
-    switch deadline {
-    case .connect:
-      connectTimer = timer
-    case .read:
-      readTimer = timer
-    }
-    timer.resume()
   }
 
   private func deadlineFired(_ deadline: Deadline, generation: UInt64) {
     let taskIdentifier: Int? = stateLock.withLock {
       guard !cancelled, timerGeneration == generation else { return nil }
-      return activeTask?.taskIdentifier
+      return currentTaskIdentifier
     }
     guard let taskIdentifier else { return }
     let error = NativePlayerError(
@@ -321,37 +344,28 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
         ? "The network connection timed out."
         : "The network media read timed out."
     )
-    handleAttemptFailure(error, transient: true, taskIdentifier: taskIdentifier)
+    handleAttemptFailure(error, transient: true, taskIdentifier: taskIdentifier, expectedGeneration: generation)
   }
 
   private func cancelTimersLocked() {
     timerGeneration &+= 1
-    connectTimer?.cancel()
-    readTimer?.cancel()
-    retryTimer?.cancel()
-    connectTimer = nil
-    readTimer = nil
-    retryTimer = nil
+    managedPolicy.cancel()
   }
 
   private func cancelConnectAndArmRead(taskIdentifier: Int) {
     stateLock.withLock {
-      guard activeTask?.taskIdentifier == taskIdentifier, !cancelled else { return }
-      timerGeneration &+= 1
-      connectTimer?.cancel()
-      connectTimer = nil
+      guard currentTaskIdentifier == taskIdentifier, !cancelled else { return }
       armTimerLocked(.read, milliseconds: recipe.configuration.readTimeoutMs)
     }
   }
 
   private func pauseReadDeadline(taskIdentifier: Int) -> Bool {
     stateLock.withLock {
-      guard activeTask?.taskIdentifier == taskIdentifier,
-            responseAccepted,
-            !cancelled else { return false }
-      timerGeneration &+= 1
-      readTimer?.cancel()
-      readTimer = nil
+      guard currentTaskIdentifier == taskIdentifier,
+            responseAccepted, !cancelled else { return false }
+      // Delegate backpressure blocks further body delivery. Exclude the time
+      // spent waiting for our consumer; resume when delivery can progress.
+      cancelTimersLocked()
       return true
     }
   }
@@ -361,7 +375,7 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
     byteCount: Int
   ) -> Int64? {
     stateLock.withLock {
-      guard activeTask?.taskIdentifier == taskIdentifier,
+      guard currentTaskIdentifier == taskIdentifier,
             responseAccepted,
             !cancelled else { return nil }
       let added = Int64(byteCount)
@@ -379,7 +393,7 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
     taskIdentifier: Int
   ) -> Bool {
     stateLock.withLock {
-      guard activeTask?.taskIdentifier == taskIdentifier, !cancelled else {
+      guard currentTaskIdentifier == taskIdentifier, !cancelled else {
         return false
       }
       metadata = received
@@ -390,7 +404,7 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
 
   private func isActive(_ taskIdentifier: Int) -> Bool {
     stateLock.withLock {
-      !cancelled && activeTask?.taskIdentifier == taskIdentifier
+      !cancelled && currentTaskIdentifier == taskIdentifier
     }
   }
 
@@ -400,28 +414,11 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
       category: "network",
       code: "network.http_status",
       message: "The network media request failed.",
-      diagnostic: "\(value.domain) \(value.code)"
+      diagnostic: "transport.\(value.code)"
     )
   }
 
-  private static func isTransient(_ error: Error) -> Bool {
-    guard let code = URLError.Code(rawValue: (error as NSError).code) as URLError.Code?,
-          (error as NSError).domain == NSURLErrorDomain else { return false }
-    return transientURLErrorCodes.contains(code)
-  }
 
-  private static let transientURLErrorCodes: Set<URLError.Code> = [
-    .timedOut,
-    .cannotFindHost,
-    .cannotConnectToHost,
-    .networkConnectionLost,
-    .dnsLookupFailed,
-    .resourceUnavailable,
-    .notConnectedToInternet,
-    .internationalRoamingOff,
-    .callIsActive,
-    .dataNotAllowed,
-  ]
 }
 
 extension YlNetworkByteSource: URLSessionDataDelegate, URLSessionTaskDelegate {
@@ -437,6 +434,10 @@ extension YlNetworkByteSource: URLSessionDataDelegate, URLSessionTaskDelegate {
       return
     }
 
+    completionHandler(receiveResponse(response, identifier: dataTask.taskIdentifier) ? .allow : .cancel)
+  }
+
+  private func receiveResponse(_ response: HTTPURLResponse, identifier: Int) -> Bool {
     if YlNetworkRequestPolicy.isRetryableStatus(response.statusCode) {
       let error = NativePlayerError(
         category: "network",
@@ -444,9 +445,9 @@ extension YlNetworkByteSource: URLSessionDataDelegate, URLSessionTaskDelegate {
         message: "The server returned a retryable HTTP status.",
         diagnostic: "HTTP \(response.statusCode)"
       )
-      handleAttemptFailure(error, transient: true, taskIdentifier: dataTask.taskIdentifier)
-      completionHandler(.cancel)
-      return
+      handleAttemptFailure(error, transient: true, taskIdentifier: identifier,
+        retryAfter: response.value(forHTTPHeaderField: "Retry-After"))
+      return false
     }
 
     do {
@@ -454,26 +455,26 @@ extension YlNetworkByteSource: URLSessionDataDelegate, URLSessionTaskDelegate {
         response: response,
         requestedOffset: stateLock.withLock { requestedOffset }
       )
-      guard accept(received, taskIdentifier: dataTask.taskIdentifier) else {
-        completionHandler(.cancel)
-        return
+      guard accept(received, taskIdentifier: identifier) else {
+        return false
       }
-      completionHandler(.allow)
       if received.isEOF {
-        ring.finish()
+        completeRequest(nil, identifier: identifier)
+        return false
       } else {
-        cancelConnectAndArmRead(taskIdentifier: dataTask.taskIdentifier)
+        cancelConnectAndArmRead(taskIdentifier: identifier)
       }
+      return true
     } catch let error as NativePlayerError {
-      handleAttemptFailure(error, transient: false, taskIdentifier: dataTask.taskIdentifier)
-      completionHandler(.cancel)
+      handleAttemptFailure(error, transient: false, taskIdentifier: identifier)
+      return false
     } catch {
       handleAttemptFailure(
         Self.transportError(error),
         transient: false,
-        taskIdentifier: dataTask.taskIdentifier
+        taskIdentifier: identifier
       )
-      completionHandler(.cancel)
+      return false
     }
   }
 
@@ -482,13 +483,20 @@ extension YlNetworkByteSource: URLSessionDataDelegate, URLSessionTaskDelegate {
     dataTask: URLSessionDataTask,
     didReceive data: Data
   ) {
+    receiveBody(data, identifier: dataTask.taskIdentifier)
+  }
+
+  private func receiveBody(_ data: Data, identifier: Int) {
     guard !data.isEmpty,
-          pauseReadDeadline(taskIdentifier: dataTask.taskIdentifier) else { return }
-    let offset = stateLock.withLock { writeOffset }
+          pauseReadDeadline(taskIdentifier: identifier) else { return }
+    guard let target = stateLock.withLock({ () -> (Int64, UInt64)? in
+      guard !cancelled, currentTaskIdentifier == identifier else { return nil }
+      return (writeOffset, ring.writeGeneration)
+    }) else { return }
     do {
-      try ring.write(data, at: offset)
+      try ring.write(data, at: target.0, generation: target.1)
       guard resumeReadDeadline(
-        taskIdentifier: dataTask.taskIdentifier,
+        taskIdentifier: identifier,
         byteCount: data.count
       ) != nil else {
         handleAttemptFailure(
@@ -498,19 +506,19 @@ extension YlNetworkByteSource: URLSessionDataDelegate, URLSessionTaskDelegate {
             message: "The network byte offset overflowed."
           ),
           transient: false,
-          taskIdentifier: dataTask.taskIdentifier
+          taskIdentifier: identifier
         )
         return
       }
     } catch YlByteSourceError.cancelled {
       return
     } catch let YlByteSourceError.failed(error) {
-      handleAttemptFailure(error, transient: false, taskIdentifier: dataTask.taskIdentifier)
+      handleAttemptFailure(error, transient: false, taskIdentifier: identifier)
     } catch {
       handleAttemptFailure(
         Self.transportError(error),
         transient: false,
-        taskIdentifier: dataTask.taskIdentifier
+        taskIdentifier: identifier
       )
     }
   }
@@ -524,21 +532,27 @@ extension YlNetworkByteSource: URLSessionDataDelegate, URLSessionTaskDelegate {
       ignoredTaskIdentifiers.remove(task.taskIdentifier) != nil
     }
     if ignored { return }
-    guard isActive(task.taskIdentifier) else { return }
+    completeRequest(error, identifier: task.taskIdentifier)
+  }
+
+  private func completeRequest(_ error: Error?, identifier: Int) {
+    guard isActive(identifier) else { return }
     if let error {
       handleAttemptFailure(
-        Self.transportError(error),
-        transient: Self.isTransient(error),
-        taskIdentifier: task.taskIdentifier
+        error as? NativePlayerError ?? Self.transportError(error),
+        transient: YlManagedRequestPolicy.isTransient(error),
+        taskIdentifier: identifier
       )
       return
     }
     stateLock.withLock {
-      guard activeTask?.taskIdentifier == task.taskIdentifier else { return }
+      guard currentTaskIdentifier == identifier else { return }
       activeTask = nil
+      managedTransport?.cancel(); managedTransport = nil; managedIdentifier = nil
       cancelTimersLocked()
+      recipe.managedIntent?.completed()
+      ring.finish()
     }
-    ring.finish()
   }
 
   func urlSession(
@@ -548,6 +562,7 @@ extension YlNetworkByteSource: URLSessionDataDelegate, URLSessionTaskDelegate {
     newRequest request: URLRequest,
     completionHandler: @escaping (URLRequest?) -> Void
   ) {
+    guard isActive(task.taskIdentifier) else { completionHandler(nil); return }
     guard let sourceURL = task.currentRequest?.url,
           let destinationURL = request.url else {
       completionHandler(nil)
@@ -563,11 +578,14 @@ extension YlNetworkByteSource: URLSessionDataDelegate, URLSessionTaskDelegate {
       return
     }
     do {
-      completionHandler(try policy.redirectRequest(
-        from: sourceURL,
-        response: response,
-        to: destinationURL
-      ))
+      let redirected = try policy.redirectRequest(from: sourceURL, response: response, to: destinationURL)
+      let accepted = stateLock.withLock { () -> Bool in
+        guard !cancelled, currentTaskIdentifier == task.taskIdentifier else { return false }
+        cancelTimersLocked()
+        armTimerLocked(.connect, milliseconds: recipe.configuration.connectTimeoutMs)
+        return true
+      }
+      completionHandler(accepted ? redirected : nil)
     } catch let error as NativePlayerError {
       completionHandler(nil)
       handleAttemptFailure(error, transient: false, taskIdentifier: task.taskIdentifier)

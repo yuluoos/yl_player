@@ -12,8 +12,9 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     let connection: NWConnection
     let method: String
     let range: String?
-    var redirectCount = 0
-    var credentialsStripped = false
+    var requestContext: YlManagedRequestContext?
+    var redirectCount: Int { requestContext?.redirectsFollowed ?? 0 }
+    var credentialsStripped: Bool { requestContext?.credentialsAllowed != true }
     var resourceKey = ""
     var responseStarted = false
     var usesChunkedTransfer = false
@@ -69,6 +70,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     let sessionConfiguration = URLSessionConfiguration.ephemeral
     sessionConfiguration.httpShouldSetCookies = false
     sessionConfiguration.httpCookieStorage = nil
+    sessionConfiguration.urlCredentialStorage = nil
     sessionConfiguration.timeoutIntervalForRequest = TimeInterval(
       max(1, configuration.readTimeoutMs)
     ) / 1_000
@@ -254,7 +256,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
         method: method,
         range: range
       )
-      taskRecords[task.taskIdentifier]?.credentialsStripped = stripped
+      taskRecords[task.taskIdentifier]?.requestContext = headerPolicy.requestContext(for: destination, credentialsStripped: stripped)
       taskRecords[task.taskIdentifier]?.resourceKey = resourceKey
       connectionTasks[ObjectIdentifier(connection)] = task
     }
@@ -414,9 +416,8 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       completionHandler(nil)
       return
     }
-    record.credentialsStripped = record.credentialsStripped || !headerPolicy.isSourceOrigin(destination)
+    record.requestContext = record.requestContext?.child(at: destination, redirect: true)
     if record.credentialsStripped { credentialContext.strip(record.resourceKey) }
-    record.redirectCount += 1
     guard record.redirectCount <= configuration.maxRedirects else {
       completionHandler(nil)
       return

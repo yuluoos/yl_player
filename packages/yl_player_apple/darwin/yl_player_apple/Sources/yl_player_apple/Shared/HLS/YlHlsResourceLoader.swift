@@ -103,8 +103,9 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     var isManifest: Bool
     var response: HTTPURLResponse?
     var manifestData = Data()
-    var redirectCount = 0
-    var credentialsStripped = false
+    var requestContext: YlManagedRequestContext?
+    var redirectCount: Int { requestContext?.redirectsFollowed ?? 0 }
+    var credentialsStripped: Bool { requestContext?.credentialsAllowed != true }
     var bytesToSkip: Int64 = 0
     var bytesDelivered = 0
     var task: URLSessionDataTask?
@@ -202,7 +203,9 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   ) throws {
     self.credentialContext = credentialContext
     self.originURL = originURL
-    self.hasExplicitCredentials = !credentials.isEmpty
+    self.hasExplicitCredentials = !credentials.isEmpty || headers.keys.contains {
+      ["authorization", "cookie", "proxy-authorization"].contains($0.lowercased())
+    }
     self.headerPolicy = YlHlsHeaderPolicy(originURL: originURL, headers: headers, credentials: credentials)
     self.configuration = configuration
     self.mediaProxy = try YlHlsMediaProxy(
@@ -218,6 +221,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
       as? URLSessionConfiguration ?? sessionConfiguration
     sessionConfiguration.httpShouldSetCookies = false
     sessionConfiguration.httpCookieStorage = nil
+    sessionConfiguration.urlCredentialStorage = nil
     sessionConfiguration.timeoutIntervalForRequest = TimeInterval(
       max(1, configuration.readTimeoutMs)
     ) / 1_000
@@ -296,7 +300,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
       rangeHeader: rangeHeader,
       isManifest: isManifest
     )
-    record.credentialsStripped = credentialsStripped
+    record.requestContext = headerPolicy.requestContext(for: destination, credentialsStripped: credentialsStripped)
     let task = session.dataTask(with: request)
     record.task = task
     let accepted = stateLock.withLock { () -> Bool in
@@ -704,9 +708,8 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
       completionHandler(nil)
       return
     }
-    record.credentialsStripped = record.credentialsStripped || !headerPolicy.isSourceOrigin(destination)
+    record.requestContext = record.requestContext?.child(at: destination, redirect: true)
     if record.credentialsStripped { credentialContext.strip(record.cacheKey) }
-    record.redirectCount += 1
     guard record.redirectCount <= configuration.maxRedirects else {
       completionHandler(nil)
       finish(task: task, result: .failure(NativePlayerError(

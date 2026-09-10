@@ -9,7 +9,8 @@ enum YlSourceInspector {
   static func inspect(_ source: YlAppleSourceDescriptor,
                       configuration: YlNetworkConfiguration,
                       token: YlOpenCancellationToken,
-                      sessionConfiguration: URLSessionConfiguration = .ephemeral) throws -> YlAppleSourceDescriptor {
+                      sessionConfiguration: URLSessionConfiguration = .ephemeral,
+                      managedTransportFactory: YlManagedHTTPTransport.Factory? = YlManagedHTTPTransport.make) throws -> YlAppleSourceDescriptor {
     try token.throwIfCancelled()
     guard let url = source.url else { throw unsupported() }
     var prefix = Data()
@@ -20,8 +21,10 @@ enum YlSourceInspector {
     } else {
       let bytes = YlNetworkByteSource(recipe: YlNetworkRequestRecipe(url: url,
         headers: source.headers, credentials: source.credentials,
-        credentialContext: source.credentialContext, configuration: configuration,
-        mode: .sequentialLive), capacity: maximumBytes, sessionConfiguration: sessionConfiguration)
+        credentialContext: source.credentialContext,
+        configuration: source.networkConfiguration.map(YlNetworkConfiguration.init(options:)) ?? configuration,
+        mode: .sequentialLive,
+        managedIntent: source.networkPolicy == .managed ? source.managedRequestIntent : nil), capacity: maximumBytes, sessionConfiguration: sessionConfiguration, managedTransportFactory: managedTransportFactory)
       token.onCancel { bytes.cancel() }
       defer { bytes.cancel() }
       var buffer = [UInt8](repeating: 0, count: maximumBytes)

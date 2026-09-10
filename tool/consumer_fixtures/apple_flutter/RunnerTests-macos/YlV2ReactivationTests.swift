@@ -106,7 +106,7 @@ final class ReactivationMediaServer {
   private let listener: NWListener
   private let queue = DispatchQueue(label: "yl.test.reactivation.http")
   let url: URL
-  init(data: Data, supportsRanges: Bool = true,
+  init(data: Data, supportsRanges: Bool = true, requiredHeaders: [String: String] = [:],
        onRequest: @escaping (String) -> Void = { _ in }) throws {
     let listener = try NWListener(using: .tcp, on: .any)
     self.listener = listener
@@ -119,6 +119,13 @@ final class ReactivationMediaServer {
         guard let bytes, !bytes.isEmpty else { connection.cancel(); return }
         let request = String(decoding: bytes, as: UTF8.self).lowercased()
         onRequest(request)
+        if !requiredHeaders.allSatisfy({ name, value in
+          request.contains("\(name.lowercased()): \(value.lowercased())\r\n")
+        }) {
+          connection.send(content: Data("HTTP/1.1 401 Unauthorized\r\nContent-Length: 0\r\nConnection: close\r\n\r\n".utf8),
+            completion: .contentProcessed { _ in connection.cancel() })
+          return
+        }
         let range = supportsRanges
           ? request.components(separatedBy: "\r\n").first { $0.hasPrefix("range: bytes=") }?.components(separatedBy: "=").last
           : nil
