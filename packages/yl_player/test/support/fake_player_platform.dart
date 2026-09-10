@@ -32,6 +32,7 @@ final class FakePlatformPlayer implements YlPlatformPlayer {
   YlPlayerState currentState = YlPlayerState();
   final loads = <Completer<YlPlatformLoadResult>>[];
   final calls = <String>[];
+  final delayedCommands = <(String, YlPlaybackSessionId), Completer<void>>{};
   (String, YlPlaybackSessionId)? lastCommand;
   Object? commandError;
   Object? disposeError;
@@ -102,6 +103,15 @@ final class FakePlatformPlayer implements YlPlatformPlayer {
     calls.add(name);
     lastCommand = (name, id);
     if (commandError case final error?) throw error;
+    await delayedCommands[(name, id)]?.future;
+  }
+
+  void delayCommand(String name, YlPlaybackSessionId id) {
+    delayedCommands[(name, id)] = Completer<void>();
+  }
+
+  void completeCommand(String name, YlPlaybackSessionId id) {
+    delayedCommands.remove((name, id))?.complete();
   }
 
   @override

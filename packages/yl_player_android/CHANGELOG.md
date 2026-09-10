@@ -1,3 +1,14 @@
+## 0.2.0-dev.1
+
+- Implement the typed SPI major 2 registry, per-player transport, source
+  assessment, commit/state barrier, session authority, and correlated callbacks.
+- Add platform-default and managed Media3 networking with same-origin credential,
+  per-attempt timeout, request-wide retry, and redirect policy enforcement.
+- Honor system-default, hardware-preferred, and positively verified
+  hardware-required decoder policies; reject exact bounded-buffer requests.
+- Add one-owner plugin-managed audio focus and generation-safe replacement,
+  lifecycle, output, Stop, and Dispose behavior.
+
 ## 0.1.0-dev.1
 
 - Add endorsed Android federated registration.

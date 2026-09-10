@@ -1,3 +1,16 @@
+## 0.2.0-dev.1
+
+- Replace implicit construction/open with asynchronous Player creation, source
+  assessment, committed Session handles, and separate Ready/First Frame futures.
+- Add stale-session fencing, reusable Stop, idempotent Dispose, correlated
+  state/events, safe structured failures, and authoritative video geometry.
+- Add explicit player/load options for network, buffer, decoder, audio ownership,
+  autoplay, start position, and video constraints.
+- Endorse the consolidated Android and Apple v0.2 implementations and remove the
+  legacy protocol bridge and split Apple packages.
+- Publish the v0.2 migration, support, policy, diagnostics, and runnable lifecycle
+  documentation. Final multi-platform acceptance remains pending.
+
 ## 0.1.0-dev.1
 
 - Define the app-facing controller and texture-only player view.

@@ -1,41 +1,135 @@
-# Apple playback policies
+# yl_player v0.2 policy semantics
 
-## Managed networking
+Policies are requirements at an enforcement boundary. `assess` reports whether
+a known route can enforce them, whether inspection is still needed, or why the
+combination is incompatible. A compatible assessment does not prove the source
+exists, its codecs initialize, or later media timing stays admissible.
 
-Apple managed networking is restricted to package-owned Matroska and HTTP-FLV byte routes, including the bounded 4096-byte signature inspection used for an unknown source. Validated `YlAppleNetworkOptions` reach the reader unchanged; compatibility configuration clamps do not change a requested guarantee. The router rejects managed HLS, MP4, MOV, AVI and MPEG requests before opening a known unsupported source. An unknown source must first be inspected through the owned reader, then rejected if its signature selects an unsupported route.
+## Networking and credentials
 
-A connect deadline starts with each HTTP attempt or redirect hop and ends at response headers, covering DNS, connection establishment, TLS and server wait. After headers, the read deadline measures body inactivity and restarts on body progress. Time spent applying package buffer backpressure is excluded while delivery is suspended. Redirect and retry transitions retire prior timers. Neither deadline is an overall load deadline. The request policy owns these timers; AVPlayer and controlled HLS remain `platformDefault` and promise no exact timing or retry behavior.
+`YlNetworkPolicy.platformDefault()` delegates scheduling, connection, retry,
+redirect, proxy, cookie, and transport behavior to the platform stack. It makes
+no exact timing or retry promise. `YlNetworkPolicy.managed(...)` requests the
+package-owned behavior described below. Android Media3 and Apple managed
+fallback have separate implementations and supported routes; Apple container
+rejections must not be applied to Android.
 
-`maxRetries` counts attempts after the initial request. Only idempotent GET/HEAD requests with transient transport failures or HTTP 408, 429, 500, 502, 503 or 504 are eligible. Authentication, certificate, validation, cancellation, unsupported-redirect and other permanent failures do not retry. Sequential FLV can retry before body consumption; an interrupted body cannot be appended to a restarted live stream. A VOD partial request resumes only after byte-range support was confirmed, retaining representation validators.
+`YlHttpRequest.headers` contains ordinary metadata that may follow a
+cross-origin resource. `credentials` contains Authorization, cookies, proxy
+authorization, API keys, tokens, secrets, and every custom credential-bearing
+value. Names are compared case-insensitively. Explicit credentials win a
+spelling collision with ordinary headers.
 
-Retry delay is `min(maxRetryDelay, baseRetryDelay * 2^(retryIndex - 1))`, computed without overflow or jitter. A valid nonnegative Retry-After seconds value or HTTP date replaces it; a past date gives zero delay. Malformed or absent values use exponential backoff. A value beyond the configured maximum terminates the request instead of retrying early.
+Credentials are source-origin-only. Origin is normalized scheme, host, and
+effective port. Same-origin descendants and redirects retain credentials. An
+origin change strips every credential permanently for that request lineage,
+including later redirects back, retries, HLS children, reconstruction, and
+recovery. Ambient cookie/credential stores cannot bypass owned requests.
+`platformDefault` credentials are supported only when the selected route proves
+this same-origin behavior. A route whose redirects remain opaque must reject a
+credential-bearing source rather than assume the platform protects it. Public
+failures never contain a URI, header name/value pair, cookie, token, or native
+stack.
 
-The original resource retains a separate redirect budget across retries and internal reopens. Credential stripping also survives those transitions. A terminal managed request retains its failure and cannot acquire a fresh budget through session recovery. Successful resource completion permits a distinct recovery intent under the existing bounded reconnect controller; request retry and session reconnect counters remain separate. Cancelling a reader fences its task, timers and retry work. A new user Load has new intent state.
+### Managed request budgets
 
-Managed requests use a bounded HTTP/1.1 parser over Network.framework TCP and system TLS. The transport exposes final headers before body delivery, including fragmented headers and responses without Content-Type. Informational headers remain within the connect phase. Aggregate response headers and trailers are limited to 64 KiB; each receive is at most 16 KiB. Fixed-length, chunked, and connection-close bodies are supported. Invalid or ambiguous framing, protocol upgrades, non-identity content encodings, unsupported schemes and conflicting request framing reject with safe typed failures. Host, Connection, Accept-Encoding, Range and If-Range are package-owned.
+The connect timeout applies to each attempt or redirect hop through final
+response headers, including DNS, connection, TLS, and server wait. The read
+timeout measures body inactivity after headers and restarts on progress. Time
+while package buffer backpressure intentionally suspends delivery is excluded.
+These are per-attempt deadlines; there is no overall request or Load timeout
+promise.
 
-Direct managed connections reject required HTTP proxy/PAC configuration and unsupported app transport restrictions, including pinning or certificate-transparency requirements. Explicit custom URLSession proxy configuration is rejected instead of silently bypassed. HTTP requires an applicable app transport security exception; local test applications declare NSAllowsLocalNetworking. HTTPS uses system certificate and hostname verification, TLS 1.2 or newer, and ATS cipher suites. There is no custom production trust evaluator, cookie store, proxy authentication or HTTP/2/3 fallback. These restrictions can reject a server or configuration that platformDefault supports.
+`maxRetries` excludes the initial attempt. Managed transport retries only
+idempotent GET/HEAD requests after transient transport failures or HTTP 408,
+429, 500, 502, 503, or 504. It does not retry validation, authentication,
+certificate, cancellation, unsupported redirect, or other permanent failures.
+Redirects use their own `maxRedirects` budget, which spans all attempts and
+internal reopens for the original resource. Recovery cannot reset a terminal
+request's budgets.
 
-## Credentials
+Retry `n`, starting at one, waits the smaller of `maxRetryDelay` and
+`baseRetryDelay * 2^(n-1)`, saturating without jitter. A valid nonnegative
+`Retry-After` delta or date takes precedence; a past date means zero delay. If
+the requested delay exceeds `maxRetryDelay`, the request terminates instead of
+retrying early. A malformed value falls back to exponential delay.
 
-Credentials are source-origin-only under both network policies. Origins compare case-normalized scheme and host plus effective port (80 for HTTP, 443 for HTTPS). Authorization, Cookie, Proxy-Authorization and every explicitly supplied credential key are compared case-insensitively. Explicit credentials take precedence over ordinary-header spelling collisions; outgoing header spelling is retained.
+Apple managed HTTP is a bounded HTTP/1.1 reader over Network.framework and
+system TLS. It supports fixed-length, chunked, and connection-close bodies,
+limits aggregate headers/trailers to 64 KiB and each receive to 16 KiB, and
+rejects invalid or ambiguous framing, upgrades, non-identity content encoding,
+unsupported schemes, required proxy/PAC behavior, proxy authentication, custom
+trust/pinning/CT requirements, and incompatible app transport restrictions. It
+has no HTTP/2 or HTTP/3 fallback. HTTPS requires system certificate/hostname
+verification, TLS 1.2 or newer, and ATS-compatible cipher suites.
 
-A request starts with ordinary headers and credentials. Same-origin children and redirects retain them. An origin change strips all credentials permanently for that request lineage, even if a later redirect returns to the original origin. Ordinary headers can follow cross-origin resources. Immutable child contexts carry the decision while the existing per-Load/per-resource history preserves it through HLS loader reconstruction, suspend/resume and rollback. Independent unrelated HLS children retain their own history.
+## Buffer strategies
 
-HLS manifests, variants, media playlists, keys, initialization segments and media segments share this filter. Explicit credentials and built-in credential headers require the package media proxy, so AVPlayer cannot follow an uncontrolled credential-bearing media redirect. Progressive AVPlayer sources with HTTP metadata reject when there is no supported controlled byte route. URLSession cookie and credential stores are disabled for owned requests; ambient credentials cannot bypass the filter. Public failures contain an opaque diagnostic ID and safe failure identity, never a source URL or header value.
+`automatic`, `lowLatency`, and `smoothPlayback` are tuning goals. Their actual
+retention varies by route, media, and platform. `bounded` requests exact
+package-owned minimum/maximum duration admission and a maximum assigned media
+budget. A platform or route that cannot enforce all requested bounds rejects
+with `policy.unsupported`; it does not silently downgrade.
 
-## Bounded media buffers
+Apple bounded fallback uses one Player-wide ledger shared by accepted playback,
+candidates, and recovery. The budget covers retained ring/rewind bytes, packet
+and conversion copies, submitted samples, queued and published frames,
+scheduled PCM, and conservative receive/parser workspaces. Reported
+`managedBufferedBytes` is the ledger's assigned reservations, including live
+I/O workspace admission. It excludes metadata, empty ring spare capacity,
+OS/TLS/decoder/GPU internals, and other process allocations. It is not a process
+RSS measurement. Routes without that ledger leave managed buffer metrics null.
 
-Apple package-owned fallback routes enforce bounded requests with one Player-wide byte budget shared by accepted playback, candidates and recovery. Already retained payload from an automatic load still counts when a bounded candidate is prepared. A request that cannot fit the overlapping working set rejects with `policy.unsupported` and preserves accepted playback. AVPlayer cannot satisfy bounded requests. Hardware-required video loads additionally need positive VideoToolbox evidence before commit.
+Minimum duration controls startup and rebuffering; EOF or actual producer
+capacity may start nonempty playback below it. Maximum duration and bytes remain
+enforced. Seek starts a new timing epoch without pretending old retained bytes
+were released. Admission reserves room for observed packet and timestamp
+advances. Unknown timing, arithmetic overflow, overlong packets, or an
+unsatisfiable reorder window rejects with `policy.unsupported`. AAC-LC packet
+duration is derived only from a complete matching AudioSpecificConfig; other
+unknown durations are not guessed.
 
-The assigned budget includes retained network/rewind data, compressed samples and copies, queued/published decoded frames, scheduled PCM and conservative transport/inspection workspaces. `managedBufferedBytes` reports these live assigned reservations, including workspace admission that may exceed the bytes currently occupied. It excludes empty ring spare capacity and does not measure or limit process RSS, collection metadata, OS, TLS, decoder or GPU internals. Other routes leave managed buffer metrics absent.
+Package-controlled Apple HLS and bounded fallback cannot overlap while an
+incompatible HLS owner, payload-send completion, bounded scope, or retained
+payload remains alive. Cancellation alone does not prove release. Preparation
+rejects with `policy.unsupported`, preserves accepted playback, and does not
+retry or downgrade automatically.
 
-Minimum and maximum durations govern startup/rebuffering and producer admission. Nonempty data may start below the minimum at EOF or actual producer capacity; the maximum is still enforced. Unknown timestamps or durations that cannot be derived from supported inspected media, arithmetic overflow, overlong packets and unsatisfiable timestamp/reorder windows reject with `policy.unsupported`. A compatible assessment therefore does not promise every uninspected source will meet its requested timing. The supported AAC-LC duration derivation requires a complete matching configuration; other unknown formats are not guessed.
+## Decoder policy
 
-Package-controlled HLS media and bounded fallback cannot overlap. Preparation rejects in either direction while the incompatible session, media callback, send completion or retained bounded payload remains alive. Cancellation and an intervening system route do not prove those owners released their payload. This temporary restriction preserves the current item; it does not silently retry or downgrade the requested policy.
+`systemDefault` lets the selected engine choose. `hardwarePreferred` ranks or
+requests hardware while allowing a truthful software or unknown result.
+`hardwareRequired` must reject video unless the committed decoder has positive
+hardware evidence.
 
-Apple VideoToolbox classifies decoder mode from the actual `UsingHardwareAcceleratedVideoDecoder` CFBoolean property. A numeric value, missing property or property error is unknown. Hardware-required video preparation rejects unknown/software with `decoder.unavailable`; hardware-preferred and system-default report the measured hardware/software/unknown mode. AVPlayer always reports unknown and cannot satisfy hardware-required video. Audio-only media has no video hardware requirement, but the owned Matroska/FLV route currently rejects audio-only playback with `policy.unsupported` because that route requires a supported video stream.
+Android classifies the initialized MediaCodec and filters software candidates
+for `hardwareRequired`; `hardwarePreferred` retains fallback candidates.
+Apple managed fallback reads the actual VideoToolbox
+`UsingHardwareAcceleratedVideoDecoder` CFBoolean. Missing, numeric, or errored
+properties are unknown. Its strict candidate retains the exact proven decoder
+through commit and must prove hardware again after recreation. AVPlayer reports
+unknown decoder mode and cannot satisfy `hardwareRequired` video. Audio-only
+media has no video hardware requirement, although the current Apple managed
+Matroska/FLV route itself requires a supported video stream.
 
-A hardware-required candidate retains the exact proven decoder before commit using the same Player buffer scope. Private preparation does not publish texture, loading or first-frame events and does not activate audio. Decoder recreation after seek, recovery or format change must prove hardware again before admitting frames. Failure preserves the accepted load when preparing a replacement; failed committed recreation stops safely.
+The Apple hardware-evidence stage has a five-second monotonic deadline covering
+queueing, decoder creation, and property acquisition. It is not an overall Load
+or network timeout. Late native completion cannot commit. Each Player permits
+one pending evidence probe, and macOS retains one fallback decoder permit, so a
+strict replacement can reject while the prior decoder remains retained.
 
-The private hardware-evidence stage has a five-second monotonic deadline, covering queueing, native decoder creation and property acquisition. This is not an overall Load or network timeout. A timed-out or cancelled native call can retain its real resources until it returns; late success cannot commit. Each Player permits only one pending evidence probe. macOS preserves its existing single-decoder permit, so a strict replacement can reject while the previous decoder is still retained. Stop/release the previous decoder before attempting a replacement that needs that permit. These boundaries do not silently downgrade decoder policy or promise that an uninterruptible native call finishes within five seconds.
+## Audio ownership
+
+`YlAudioPolicy.appManaged` leaves audio focus/session/category decisions to the
+application. Playback commands do not claim package ownership.
+
+`pluginManagedMediaPlayback` asks the package to coordinate media playback. On
+Apple platforms, process-wide leases serialize active plugin-managed playback;
+the committed owner applies the media playback session/category on iOS, while
+macOS retains its no-global-session behavior. Candidate preparation does not
+steal ownership, and rollback restores the accepted owner. On Android, one
+plugin-managed focus owner coordinates Media3 audio focus; replacement,
+backgrounding, transient loss, stop, failure, and disposal transfer or release
+that ownership without reviving stale playback intent. Multiple independent
+application audio policies or non-media mixing requirements should use
+`appManaged`.

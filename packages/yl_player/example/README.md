@@ -1,9 +1,11 @@
 # yl_player example
 
-Compile-time example of the `yl_player` public API. It accepts a resolved
-HTTP(S) media URL and optional Referer header, selects live/VOD and a format
-hint, renders `YlPlayerView`, and displays state or structured errors.
+Runnable v0.2 lifecycle example for the application package. Enter a resolved
+HTTP(S) media URL, choose live or on-demand intent, then Load and play. The page
+creates one Player outside `build`, renders `YlPlayerView`, observes every
+asynchronous command, ignores obsolete completions, preserves a session after a
+rejected Stop, clears it after an accepted Stop, and disposes safely.
 
-The `0.1.0-dev.1` Android Media3 and iOS AVPlayer main paths are functional.
-iOS HTTP-FLV still requires the deferred native fallback, and production use
-requires physical-device validation.
+The example is a small API demonstration, not a support claim for an arbitrary
+URL. Check the repository [support matrix](../../../docs/platform-support.md)
+and [policy semantics](../../../docs/policies.md) for platform-specific routes.

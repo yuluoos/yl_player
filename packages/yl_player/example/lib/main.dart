@@ -4,15 +4,26 @@ import 'package:yl_player/yl_player.dart';
 
 void main() => runApp(const PlayerExampleApp());
 
+typedef PlayerCreator = Future<YlPlayerController> Function();
+
 class PlayerExampleApp extends StatelessWidget {
-  const PlayerExampleApp({super.key});
+  const PlayerExampleApp({
+    this.createPlayer = YlPlayerController.create,
+    super.key,
+  });
+
+  final PlayerCreator createPlayer;
+
   @override
   Widget build(BuildContext context) =>
-      MaterialApp(home: const PlayerExamplePage());
+      MaterialApp(home: PlayerExamplePage(createPlayer: createPlayer));
 }
 
 class PlayerExamplePage extends StatefulWidget {
-  const PlayerExamplePage({super.key});
+  const PlayerExamplePage({required this.createPlayer, super.key});
+
+  final PlayerCreator createPlayer;
+
   @override
   State<PlayerExamplePage> createState() => _PlayerExamplePageState();
 }
@@ -23,25 +34,42 @@ class _PlayerExamplePageState extends State<PlayerExamplePage> {
   YlPlaybackSession? _session;
   bool _live = false;
   String? _message;
+  int _operationGeneration = 0;
   @override
   void initState() {
     super.initState();
-    _creation = YlPlayerController.create();
+    _creation = widget.createPlayer();
   }
 
   @override
   void dispose() {
-    unawaited(
-      _creation.then(
-        (player) => player.dispose(),
-        onError: (Object _, StackTrace _) {},
-      ),
-    );
+    _operationGeneration++;
+    _session = null;
+    unawaited(_disposePlayer());
     _url.dispose();
     super.dispose();
   }
 
+  Future<void> _disposePlayer() async {
+    try {
+      final player = await _creation;
+      await player.dispose();
+    } catch (_) {
+      // Creation and cleanup are already reflected by removing this widget.
+    }
+  }
+
+  bool _isCurrent(int generation, [YlPlaybackSession? session]) =>
+      mounted &&
+      generation == _operationGeneration &&
+      (session == null || identical(_session, session));
+
+  String _safeMessage(Object error, String fallback) =>
+      error is YlPlayerException ? error.failure.message : fallback;
+
   Future<void> _load(YlPlayerController player) async {
+    final generation = ++_operationGeneration;
+    setState(() => _message = 'Loading');
     try {
       final session = await player.load(
         YlNetworkSource(
@@ -49,18 +77,66 @@ class _PlayerExamplePageState extends State<PlayerExamplePage> {
           intent: _live ? YlStreamIntent.live : YlStreamIntent.onDemand,
         ),
       );
+      if (!_isCurrent(generation)) return;
       _session = session;
       await session.play();
+      if (!_isCurrent(generation, session)) return;
       await session.ready;
-      if (mounted) setState(() => _message = 'Ready');
-      await session.firstFrame;
-      if (mounted) setState(() => _message = 'First frame displayed');
+      if (!_isCurrent(generation, session)) return;
+      setState(() => _message = 'Ready');
+      unawaited(_observeFirstFrame(session, generation));
     } catch (error) {
-      if (mounted) {
+      if (_isCurrent(generation)) {
+        setState(() => _message = _safeMessage(error, 'Could not load media.'));
+      }
+    }
+  }
+
+  Future<void> _observeFirstFrame(
+    YlPlaybackSession session,
+    int generation,
+  ) async {
+    try {
+      await session.firstFrame;
+      if (_isCurrent(generation, session)) {
+        setState(() => _message = 'First frame displayed');
+      }
+    } catch (error) {
+      if (_isCurrent(generation, session)) {
         setState(
-          () => _message = error is YlPlayerException
-              ? error.failure.message
-              : 'Could not load media.',
+          () => _message = _safeMessage(error, 'Could not display video.'),
+        );
+      }
+    }
+  }
+
+  Future<void> _pause() async {
+    final session = _session;
+    if (session == null) return;
+    final generation = _operationGeneration;
+    try {
+      await session.pause();
+    } catch (error) {
+      if (_isCurrent(generation, session)) {
+        setState(
+          () => _message = _safeMessage(error, 'Could not pause playback.'),
+        );
+      }
+    }
+  }
+
+  Future<void> _stop(YlPlayerController player) async {
+    final generation = ++_operationGeneration;
+    final acceptedSession = _session;
+    try {
+      await player.stop();
+      if (!_isCurrent(generation)) return;
+      if (identical(_session, acceptedSession)) _session = null;
+      setState(() => _message = 'Stopped');
+    } catch (error) {
+      if (_isCurrent(generation)) {
+        setState(
+          () => _message = _safeMessage(error, 'Could not stop playback.'),
         );
       }
     }
@@ -98,15 +174,15 @@ class _PlayerExamplePageState extends State<PlayerExamplePage> {
               onChanged: (value) => setState(() => _live = value),
             ),
             FilledButton(
-              onPressed: () => _load(player),
+              onPressed: () => unawaited(_load(player)),
               child: const Text('Load and play'),
             ),
             TextButton(
-              onPressed: () => _session?.pause(),
+              onPressed: _session == null ? null : () => unawaited(_pause()),
               child: const Text('Pause'),
             ),
             TextButton(
-              onPressed: () => player.stop(),
+              onPressed: () => unawaited(_stop(player)),
               child: const Text('Stop'),
             ),
             if (_message != null) Text(_message!),

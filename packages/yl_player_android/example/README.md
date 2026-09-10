@@ -1,17 +1,7 @@
-# yl_player_android_example
+# yl_player_android example host
 
-Demonstrates how to use the yl_player_android plugin.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This generated Android host remains a minimal registration placeholder for the
+endorsed implementation package. Application lifecycle and controls are
+demonstrated by the sibling [`yl_player` example](../../yl_player/example/README.md).
+Applications should depend on `yl_player` rather than directly building a
+second Android-only UI around this package.

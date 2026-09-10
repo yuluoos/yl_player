@@ -7,5 +7,9 @@
 - Preserve HLS credential stripping across same-session reconstruction and
   bound Dart session authority and event deduplication bookkeeping.
 - Separate immutable artifact verification from exact-toolchain reproduction.
-- Remain a development checkpoint: Hardening policies, View work and final
-  release validation are still outstanding.
+- Enforce managed Matroska/FLV networking, Player-wide bounded fallback budgets,
+  positive VideoToolbox hardware requirements, and process-wide audio ownership.
+- Add transactional replacement/recovery, controlled HLS credential routing,
+  safe diagnostics, and authoritative geometry/first-frame publication.
+- Remain a development checkpoint: physical-device, minimum-OS, Intel-native,
+  profiling, consumer, and final release validation are still outstanding.
