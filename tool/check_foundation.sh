@@ -7,6 +7,8 @@ cd "$repo_root"
 
 python3 tool/test_android_scripts.py
 python3 -B -m unittest tool.test_native_apple_scripts
+python3 -B -m unittest tool.test_public_surface
+sh tool/check_public_surface.sh
 python3 -B tool/consumer_fixtures/apple_flutter/test_behavioral_constants.py
 python3 -B tool/consumer_fixtures/apple_flutter/test_historical_migration.py
 python3 -B tool/consumer_fixtures/apple_flutter/test_historical_origins.py
