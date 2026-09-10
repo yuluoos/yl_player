@@ -116,7 +116,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
           willCommit: { self.willCommit?($0) },
           didCommit: {
             self.committedStreamIntent = request.source.intent
-            self.reducer.commit(identity)
+            self.reducer.commit(identity, deferInitialPublication: recipe.source.loadOptions?.decoderPolicy == .hardwareRequired)
             self.resumePlayback = request.options.autoplay
             self.didCommit?()
           }, didRollback: { self.didRollback?() }, completion: { result in

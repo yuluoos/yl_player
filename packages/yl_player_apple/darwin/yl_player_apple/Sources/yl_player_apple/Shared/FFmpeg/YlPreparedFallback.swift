@@ -171,7 +171,6 @@ final class YlPreparedFallback {
     try boundedPlan?.validate(width: Int(selectedVideo.width), height: Int(selectedVideo.height))
     if boundedPlan != nil { bufferScope.protectFrame(bytes: Int(selectedVideo.width) * Int(selectedVideo.height) * 8) }
     videoStream = selectedVideo
-    audioStreams = selectedAudio
     videoFormat = try YlVideoToolboxDecoder.makeFormatDescription(
       context: validContext,
       streamIndex: selectedVideo.index
@@ -201,6 +200,17 @@ final class YlPreparedFallback {
         )
       }
       copiedAudioCookies[audioStream.index] = Data(bytes)
+    }
+    // FLV AAC SoundRate/SoundType are placeholders; the sequence header's
+    // AudioSpecificConfig is authoritative (FLV specification, AudioTagHeader).
+    // The minimal demux bridge has not run a decoder to normalize these fields.
+    audioStreams = selectedAudio.map { stream in
+      guard container == .flv, Int(stream.codec) == YLFCodecAAC,
+            let cookie = copiedAudioCookies[stream.index],
+            let config = ylInspectedAACLCConfiguration(cookie: cookie) else { return stream }
+      var normalized = stream
+      normalized.sample_rate = config.sampleRate; normalized.channel_count = config.channelCount
+      return normalized
     }
     audioCookies = copiedAudioCookies
 

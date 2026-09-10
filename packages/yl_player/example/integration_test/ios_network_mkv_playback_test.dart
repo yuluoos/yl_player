@@ -5,46 +5,24 @@ import 'package:yl_player/yl_player.dart';
 import 'support/playback_sessions.dart';
 
 import 'support/range_media_server.dart';
+import 'support/authenticated_hls_server.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  final hlsSource = YlNetworkSource(
-    Uri.parse(
-      'https://devstreaming-cdn.apple.com/videos/streaming/examples/'
-      'img_bipbop_adv_example_ts/master.m3u8',
-    ),
-    format: YlMediaFormat.hls,
-  );
-
-  Future<bool> openNetworkMkvOrVerifyHardwareError(
+  Future<void> openNetworkMkv(
     YlPlayerController controller,
     RangeMediaServer server, {
     YlLoadOptions options = const YlLoadOptions(),
-  }) async {
-    try {
-      await loadSession(
-        controller,
-        YlNetworkSource(
-          server.mediaUri,
-          format: YlMediaFormat.matroska,
-          request: YlHttpRequest(
-            headers: const <String, String>{'X-Yl-Test': 'network-mkv'},
-          ),
-        ),
-        options: options,
-      );
-      return true;
-    } on YlPlayerException catch (error) {
-      expect(
-        error.failure.code,
-        YlFailureCodes.decoderUnavailable,
-        reason: error.toString(),
-      );
-      expect(error.failure.category, YlFailureCategory.decoder);
-      return false;
-    }
-  }
+  }) => loadSession(
+    controller,
+    YlNetworkSource(
+      server.mediaUri,
+      format: YlMediaFormat.matroska,
+      request: YlHttpRequest(headers: const {'X-Yl-Test': 'network-mkv'}),
+    ),
+    options: options,
+  );
 
   testWidgets('HTTP range MKV uses the native fallback', (
     WidgetTester tester,
@@ -59,7 +37,7 @@ void main() {
       MaterialApp(home: YlPlayerView(controller: controller)),
     );
 
-    final opened = await openNetworkMkvOrVerifyHardwareError(
+    await openNetworkMkv(
       controller,
       server,
       options: const YlLoadOptions(
@@ -69,7 +47,6 @@ void main() {
     expect(server.requests, isNotEmpty);
     expect(server.requests.first.header('x-yl-test'), 'network-mkv');
     expect(server.requests.first.statusCode, 206);
-    if (!opened) return;
 
     final firstFrame = controller.events
         .firstWhere((event) => event is YlFirstFrameEvent)
@@ -78,7 +55,10 @@ void main() {
     await sessionFor(controller).ready.timeout(const Duration(seconds: 20));
     await firstFrame;
     expect(controller.state.engine, YlPlaybackEngine.managedFallback);
-    expect(controller.state.decoderMode, YlDecoderMode.hardware);
+    expect(controller.state.decoderIdentity, 'VideoToolbox');
+    debugPrint(
+      'TASK8_DEFAULT_NETWORK_MKV_DECODER=${controller.state.decoderMode.name}',
+    );
     expect(controller.state.timeline.isSeekable, isTrue);
 
     await sessionFor(controller).pause();
@@ -146,10 +126,8 @@ void main() {
       MaterialApp(home: YlPlayerView(controller: controller)),
     );
 
-    if (!await openNetworkMkvOrVerifyHardwareError(controller, server)) {
-      expect(server.requests.first.statusCode, 200);
-      return;
-    }
+    await openNetworkMkv(controller, server);
+    expect(server.requests.first.statusCode, 200);
     final session = sessionFor(controller);
     await session.ready.timeout(const Duration(seconds: 20));
     expect(controller.state.sessionId, session.id);
@@ -188,7 +166,12 @@ void main() {
     final firstFrame = controller.events
         .firstWhere((event) => event is YlFirstFrameEvent)
         .timeout(const Duration(seconds: 45));
-    await loadSession(controller, hlsSource);
+    final hlsServer = await AuthenticatedHlsServer.start(sameOrigin: true);
+    addTearDown(hlsServer.close);
+    await loadSession(
+      controller,
+      YlNetworkSource(hlsServer.masterUri, format: YlMediaFormat.hls),
+    );
     await sessionFor(controller).play();
     await sessionFor(controller).ready.timeout(const Duration(seconds: 20));
     await firstFrame;

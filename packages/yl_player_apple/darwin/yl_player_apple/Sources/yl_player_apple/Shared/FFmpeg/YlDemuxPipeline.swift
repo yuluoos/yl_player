@@ -228,7 +228,15 @@ final class YlDemuxPipeline {
       copiedAudioCookies[audioStream.index] = Data(bytes)
     }
 
-    return (selectedVideo, supportedAudio, copiedAudioCookies)
+    let normalizedAudio = supportedAudio.map { stream in
+      guard mediaPolicy.container == .flv, Int(stream.codec) == YLFCodecAAC,
+            let cookie = copiedAudioCookies[stream.index],
+            let config = ylInspectedAACLCConfiguration(cookie: cookie) else { return stream }
+      var normalized = stream
+      normalized.sample_rate = config.sampleRate; normalized.channel_count = config.channelCount
+      return normalized
+    }
+    return (selectedVideo, normalizedAudio, copiedAudioCookies)
   }
 
   func audioStream(for trackId: String?) throws -> YLFStreamInfo {

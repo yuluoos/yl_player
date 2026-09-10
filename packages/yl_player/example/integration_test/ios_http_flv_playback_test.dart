@@ -40,37 +40,29 @@ void main() {
     });
     addTearDown(eventSubscription.cancel);
 
-    try {
-      await loadSession(
-        controller,
-        YlNetworkSource(
-          server.streamUri,
-          intent: YlStreamIntent.live,
-          format: YlMediaFormat.flv,
-          request: YlHttpRequest(
-            headers: const <String, String>{'X-Client': 'yl-player-test'},
-          ),
+    await loadSession(
+      controller,
+      YlNetworkSource(
+        server.streamUri,
+        intent: YlStreamIntent.live,
+        format: YlMediaFormat.flv,
+        request: YlHttpRequest(
+          headers: const <String, String>{'X-Client': 'yl-player-test'},
         ),
-        options: const YlLoadOptions(
-          bufferStrategy: YlBufferStrategy.lowLatency(),
-        ),
-      );
-    } on YlPlayerException catch (error) {
-      // Simulator runtimes do not guarantee an available VideoToolbox H.264
-      // session. The exact hardware-only error remains a valid simulator gate;
-      // physical-device rows require playback and reconnect success.
-      expect(error.failure.code, YlFailureCodes.decoderUnavailable);
-      expect(error.failure.category, YlFailureCategory.decoder);
-      expect(server.connectionCount, greaterThanOrEqualTo(1));
-      return;
-    }
-
+      ),
+      options: const YlLoadOptions(
+        bufferStrategy: YlBufferStrategy.lowLatency(),
+      ),
+    );
     await sessionFor(controller).play();
     await sessionFor(controller).ready.timeout(const Duration(seconds: 20));
     expect(controller.state.engine, YlPlaybackEngine.managedFallback);
     expect(controller.state.timeline.isLive, isTrue);
     expect(controller.state.timeline.isSeekable, isFalse);
-    expect(controller.state.decoderMode, YlDecoderMode.hardware);
+    expect(controller.state.decoderIdentity, 'VideoToolbox');
+    debugPrint(
+      'TASK8_DEFAULT_HTTP_FLV_DECODER=${controller.state.decoderMode.name}',
+    );
 
     await firstFrame.future.timeout(const Duration(seconds: 15));
     final retryEvent = await retry.future.timeout(const Duration(seconds: 15));

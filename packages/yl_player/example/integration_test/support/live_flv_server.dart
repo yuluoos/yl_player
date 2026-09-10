@@ -10,11 +10,13 @@ final class LiveFlvServer {
     required this.disconnectFirstConnection,
     required this.chunkSize,
     required this.chunkDelay,
+    required this.repeat,
   });
 
   static Future<LiveFlvServer> start({
     required String asset,
     bool disconnectFirstConnection = false,
+    bool repeat = true,
     int chunkSize = 512,
     Duration chunkDelay = const Duration(milliseconds: 4),
   }) async {
@@ -27,6 +29,7 @@ final class LiveFlvServer {
         assetData.lengthInBytes,
       ),
       disconnectFirstConnection: disconnectFirstConnection,
+      repeat: repeat,
       chunkSize: chunkSize,
       chunkDelay: chunkDelay,
     );
@@ -47,6 +50,7 @@ final class LiveFlvServer {
   final Uint8List _bytes;
   final Completer<void> _closing = Completer<void>();
   final bool disconnectFirstConnection;
+  final bool repeat;
   final int chunkSize;
   final Duration chunkDelay;
 
@@ -137,6 +141,7 @@ final class LiveFlvServer {
           await Future<void>.delayed(chunkDelay);
         }
         firstPass = false;
+        if (!repeat) break;
       }
 
       // A live response has no terminal content length. Leave the successful

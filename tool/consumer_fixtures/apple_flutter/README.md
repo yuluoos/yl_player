@@ -47,7 +47,7 @@ fixture glue. The nine media resources retain their original bytes and provenanc
 in `resources-manifest.json`. Production code is built through the plugin; tests
 never embed copied playback implementations or a substitute Flutter framework.
 
-Only the three existing iOS hardware skips named in `allowed-hardware-skips.json`
+Only the three original iOS hardware skips plus the separately named Hardening R19 bounded-H264 Simulator skip in `allowed-hardware-skips.json`
 are allowed. The gate checks every native class/method identity and skip name,
 in addition to counts. Exactly 20 legacy host methods (11 iOS, 9 macOS) require
 the Task 7 typed player host; `task7-host-cases.json` preserves each original
@@ -85,3 +85,16 @@ source-parity negative tests are portable:
 ```sh
 python3 -B -m unittest discover -s tool/consumer_fixtures/apple_flutter -p 'test_*.py'
 ```
+
+
+The main example and independent consumer gates now share `verify_result_bundle`.
+They compare actual XCTest case identities after resolving platform compilation
+conditions, reject duplicate/nonpassing/omitted cases, reconcile summary counts,
+and check exact skip reasons and runtime devices. R19 additionally exports and
+validates the real inspected-H264 capability attachment. Main example checks bind
+the actual RunnerTests PBX Sources phase and file references to canonical fixtures.
+A full gate never uses `--selected-case`; that option creates explicitly focused
+implementation receipts. Source declarations are inventory, not execution proof.
+Native scripts retain unique XCResults and JSON receipts under example
+`build/apple-evidence`; CI uploads them even after failure. Full current runtime
+matrix remains final-acceptance work under R15.

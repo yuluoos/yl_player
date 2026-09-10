@@ -281,6 +281,19 @@ extension YlManagedBufferLedgerTests {
 
 
 extension YlManagedBufferLedgerTests {
+  func testFLVAACConfigurationRequiresCompleteInactiveSyncExtension() {
+    let fixture = Data([0x11, 0x88, 0x56, 0xe5, 0x00])
+    let parsed = ylInspectedAACLCConfiguration(cookie: fixture)
+    XCTAssertEqual(parsed?.sampleRate, 48000); XCTAssertEqual(parsed?.channelCount, 1)
+    XCTAssertEqual(parsed?.framesPerPacket, 1024)
+    XCTAssertEqual(ylBoundedAACPacketDurationUs(sampleRate: 48000, cookie: fixture), 21334)
+    XCTAssertNil(ylBoundedAACPacketDurationUs(sampleRate: 44100, cookie: fixture))
+    for bytes: [UInt8] in [[0x11, 0x88, 0x56, 0xe5], [0x11, 0x88, 0x56, 0xe5, 0x80],
+                          [0x11, 0x88, 0x56, 0xe4, 0], [0x11, 0x88, 0x56, 0xe5, 1],
+                          [0x11, 0x88, 0], [0x11, 0x80], [0x29, 0x88], [0x17, 0x88]] {
+      XCTAssertNil(ylInspectedAACLCConfiguration(cookie: Data(bytes)))
+    }
+  }
   func testMissingAACPacketDurationUsesInspectedLCFrameLengthWithoutGuessing() {
     XCTAssertEqual(ylBoundedAACPacketDurationUs(sampleRate: 48000, cookie: Data([0x11, 0x90])), 21334)
     XCTAssertEqual(ylBoundedAACPacketDurationUs(sampleRate: 48000, cookie: Data([0x11, 0x94])), 20000)

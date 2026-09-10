@@ -61,12 +61,16 @@ final class RangeMediaServer {
     required this._server,
     required this._bytes,
     required this.supportsRanges,
+    this.beforeResponse,
+    this.redirectUri,
     required Iterable<RangeMediaResponse> scriptedResponses,
   }) : _scriptedResponses = Queue<RangeMediaResponse>.of(scriptedResponses);
 
   static Future<RangeMediaServer> start({
     required String asset,
     bool supportsRanges = true,
+    Future<void> Function(RecordedMediaRequest)? beforeResponse,
+    Uri? redirectUri,
     Iterable<RangeMediaResponse> scriptedResponses =
         const <RangeMediaResponse>[],
   }) async {
@@ -79,6 +83,8 @@ final class RangeMediaServer {
         assetData.lengthInBytes,
       ),
       supportsRanges: supportsRanges,
+      beforeResponse: beforeResponse,
+      redirectUri: redirectUri,
       scriptedResponses: scriptedResponses,
     );
     server.listen((request) => unawaited(result._handle(request)));
@@ -89,6 +95,8 @@ final class RangeMediaServer {
   final Uint8List _bytes;
   final Queue<RangeMediaResponse> _scriptedResponses;
   final bool supportsRanges;
+  final Future<void> Function(RecordedMediaRequest)? beforeResponse;
+  final Uri? redirectUri;
   final List<RecordedMediaRequest> requests = <RecordedMediaRequest>[];
 
   Uri get mediaUri => Uri(
@@ -112,6 +120,7 @@ final class RangeMediaServer {
         : _scriptedResponses.removeFirst();
 
     try {
+      await beforeResponse?.call(recorded);
       switch (scripted.kind) {
         case RangeMediaResponseKind.disconnect:
           final socket = await request.response.detachSocket();
@@ -119,7 +128,10 @@ final class RangeMediaServer {
         case RangeMediaResponseKind.redirect:
           recorded.statusCode = HttpStatus.found;
           request.response.statusCode = HttpStatus.found;
-          request.response.headers.set(HttpHeaders.locationHeader, '/media');
+          request.response.headers.set(
+            HttpHeaders.locationHeader,
+            redirectUri?.toString() ?? '/media',
+          );
           await request.response.close();
         case RangeMediaResponseKind.status:
           recorded.statusCode = scripted.statusCode;

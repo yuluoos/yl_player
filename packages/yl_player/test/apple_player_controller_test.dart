@@ -13,6 +13,63 @@ import 'package:yl_player_apple/src/pigeon/yl_player_apple.g.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 void main() {
+  for (final stateFirst in [false, true]) {
+    test(
+      'public session pairs Load reply and READY in both orders: stateFirst=$stateFirst',
+      () async {
+        final native = _Native();
+        final controller = await _controller(native);
+        addTearDown(controller.dispose);
+        var committed = false;
+        final loading = controller.load(_source).then((session) {
+          committed = true;
+          return session;
+        });
+        await _flush();
+        void reply() => native.loadReply.complete(
+          AppleLoadReply(
+            loadRequestId: native.request!.loadRequestId,
+            sessionId: 's1',
+          ),
+        );
+        void ready() => native.callbacks!.onState(
+          _state(
+            session: 's1',
+            revision: 1,
+            sequence: 1,
+            status: ApplePlaybackStatus.ready,
+          ),
+        );
+        if (stateFirst) {
+          ready();
+        } else {
+          reply();
+        }
+        await _flush();
+        expect(committed, isFalse);
+        if (stateFirst) {
+          reply();
+        } else {
+          ready();
+        }
+        final session = await loading;
+        await session.ready;
+        native.callbacks!.onState(
+          _state(
+            session: 's1',
+            revision: 2,
+            sequence: 2,
+            status: ApplePlaybackStatus.buffering,
+          ),
+        );
+        await _flush();
+        await session
+            .ready; // A rebuffer cannot erase the already observed READY.
+        expect(controller.state.sessionId, session.id);
+        expect(controller.state.status, YlPlaybackStatus.buffering);
+      },
+    );
+  }
   test(
     'prepared state and geometry do not resolve firstFrame before its native publication callback',
     () async {

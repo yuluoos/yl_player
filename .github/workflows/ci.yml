@@ -125,7 +125,14 @@ jobs:
           python3 packages/yl_player_apple/tool/apple_ffmpeg/test_verify_artifact.py
       - name: Boot iOS Simulator
         run: echo "YL_IOS_SIMULATOR_ID=$(sh tool/boot_ci_ios_simulator.sh)" >> "$GITHUB_ENV"
+      - run: python3 -B tool/consumer_fixtures/apple_flutter/test_runtime_evidence.py
       - run: sh tool/check_native_ios.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios-exact-runtime-evidence
+          path: packages/yl_player/example/build/apple-evidence
+          if-no-files-found: error
 
   macos-native-integration:
     runs-on: macos-15
@@ -145,4 +152,11 @@ jobs:
           sh packages/yl_player_apple/tool/check_pigeon.sh
           sh packages/yl_player_apple/tool/apple_ffmpeg/test_build_contract.sh
           python3 packages/yl_player_apple/tool/apple_ffmpeg/test_verify_artifact.py
+      - run: python3 -B tool/consumer_fixtures/apple_flutter/test_runtime_evidence.py
       - run: sh tool/check_native_macos.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: macos-exact-runtime-evidence
+          path: packages/yl_player/example/build/apple-evidence
+          if-no-files-found: error

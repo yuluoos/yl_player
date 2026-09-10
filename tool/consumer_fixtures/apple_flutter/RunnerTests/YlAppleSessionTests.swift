@@ -962,6 +962,32 @@ final class YlAudioOwnershipTests: XCTestCase {
     XCTAssertTrue(driver.calls.isEmpty)
     XCTAssertEqual(shared.ownerCount, 0)
   }
+  #if os(iOS)
+  @MainActor
+  func testActualIosDriverConfiguresMediaSessionAcrossRegistryOwners() throws {
+    let session = AVAudioSession.sharedInstance()
+    let oldCategory = session.category, oldMode = session.mode, oldOptions = session.categoryOptions
+    let driver = YlIosAudioSession(session: session)
+    let shared = YlAudioOwnershipCoordinator(driver: driver)
+    let first = YlAudioOwnershipKey(registry: UUID(), player: "same-player-id")
+    let second = YlAudioOwnershipKey(registry: UUID(), player: "same-player-id")
+    defer {
+      shared.release(first); shared.release(second)
+      try? session.setCategory(oldCategory, mode: oldMode, options: oldOptions)
+    }
+    try shared.acquire(first)
+    XCTAssertEqual(session.category, .playback)
+    XCTAssertEqual(session.mode, .moviePlayback)
+    try shared.acquire(second)
+    XCTAssertEqual(shared.ownerCount, 2)
+    shared.release(first)
+    XCTAssertTrue(shared.contains(second)); XCTAssertEqual(shared.ownerCount, 1)
+    XCTAssertEqual(session.category, .playback)
+    shared.release(second); XCTAssertEqual(shared.ownerCount, 0)
+    let attachment = XCTAttachment(string: "Actual AVAudioSession driver accepted playback/moviePlayback activation and final release; two registry UUIDs. Global active state is intentionally not readable; exact deactivation calls are covered by injected-driver ownership tests. Physical interruption and multi-FlutterEngine evidence pending.")
+    attachment.name = "Task8-real-audio-session"; attachment.lifetime = .keepAlways; add(attachment)
+  }
+  #endif
   #if os(macOS)
   func testMacosDriverTracksOutputWithoutGlobalSession() throws {
     let driver = YlMacosAudioSession()

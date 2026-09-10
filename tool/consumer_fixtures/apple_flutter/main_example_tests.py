@@ -19,7 +19,7 @@ HISTORICAL_MANIFESTS = {
     "engine-tests-manifest.json": PINNED_REVISION,
     "resources-manifest.json": PINNED_REVISION,
 }
-EXPECTED_CASES = {"ios": 373, "macos": 334}
+EXPECTED_CASES = {"ios": 377, "macos": 338}
 
 
 def digest(data):
@@ -118,6 +118,10 @@ def accepted_tests(fixtures, platform):
 def verify_current_targets(root):
     root = Path(root).resolve()
     fixtures = root / "tool/consumer_fixtures/apple_flutter"
+    skip_contracts = json.loads((fixtures / 'allowed-hardware-skips.json').read_text())['conditions']
+    for identity, contract in skip_contracts.items():
+        if digest((fixtures / contract['source']).read_bytes()) != contract['source_sha256']:
+            raise RuntimeError(f'Historical skip source requires explicit condition reconciliation: {identity}')
     resources = {
         path.name: path.read_bytes()
         for path in (fixtures / "Resources").iterdir()
@@ -126,6 +130,7 @@ def verify_current_targets(root):
     for platform, expected_count in EXPECTED_CASES.items():
         target = root / f"packages/yl_player/example/{platform}/RunnerTests"
         accepted = accepted_tests(fixtures, platform)
+        verify_pbx_membership((target.parent / 'Runner.xcodeproj/project.pbxproj').read_text(), set(accepted))
         actual = {path.name: path.read_bytes() for path in target.glob("*.swift")}
         if actual != accepted:
             missing = sorted(set(accepted) - set(actual))
@@ -160,13 +165,173 @@ def verify_current_targets(root):
             raise RuntimeError(f"{platform} example does not test yl_player_apple")
 
 
+R19_CASE = 'YlManagedFallbackCharacterizationTests/testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF()'
+R19_REASON = 'Test skipped - Task4 actual H264 hardware fixture: simulator VTIsHardwareDecodeSupported=false; physical iOS evidence pending (R19).'
+
+
+def case_nodes(nodes):
+    for node in nodes:
+        if node.get('nodeType') == 'Test Case':
+            yield node
+        yield from case_nodes(node.get('children', []))
+
+
+def platform_source(text, platform):
+    # Resolve compilation conditions, including methods that exist on only one
+    # Apple platform. Unknown conditions fail closed rather than inventing cases.
+    active = [True]; conditions = []
+    output = []
+    for line in text.splitlines():
+        token = line.strip()
+        if token.startswith('#if '):
+            expression = token[4:]
+            values = {'os(iOS)': platform == 'ios', 'os(macOS)': platform == 'macos', 'targetEnvironment(simulator)': platform == 'ios'}
+            if expression not in values:
+                raise RuntimeError(f'Unresolved XCTest compilation condition: {expression}')
+            conditions.append(values[expression]); active.append(active[-1] and conditions[-1])
+        elif token == '#else':
+            active[-1] = active[-2] and not conditions[-1]
+        elif token == '#endif':
+            active.pop(); conditions.pop()
+        elif token.startswith('#elseif'):
+            raise RuntimeError('Unresolved XCTest elseif condition')
+        elif active[-1]:
+            output.append(line)
+    if len(active) != 1:
+        raise RuntimeError('Unbalanced XCTest compilation condition')
+    return '\n'.join(output)
+
+
+def expected_identities(fixtures, platform):
+    identities = []
+    for name, data in accepted_tests(fixtures, platform).items():
+        text = platform_source(data.decode(), platform)
+        classes = list(re.finditer(r'class (\w+)\s*:\s*XCTestCase', text))
+        for method in re.finditer(r'\bfunc (test\w+)\(', text):
+            owners = [owner for owner in classes if owner.start() < method.start()]
+            if not owners:
+                raise RuntimeError(f'XCTest method without class: {name}')
+            identities.append(owners[-1].group(1) + '/' + method.group(1) + '()')
+    if len(identities) != len(set(identities)):
+        raise RuntimeError('duplicate canonical XCTest identity')
+    return set(identities)
+
+
+def verify_pbx_membership(pbx, expected):
+    # Bind the actual RunnerTests target to its Sources phase, then to build-file
+    # references. Filenames mentioned in another target do not count as membership.
+    objects = dict(re.findall(r'^\t\t([A-F0-9]{24}) /\*[^\n]*?\*/ = \{(.*?)(?=^\t\t[A-F0-9]{24} /\*|^/\* End|\Z)', pbx, re.M | re.S))
+    targets = [body for body in objects.values() if 'isa = PBXNativeTarget;' in body and re.search(r'\bname = RunnerTests;', body)]
+    if len(targets) != 1:
+        raise RuntimeError('missing or ambiguous RunnerTests PBX target')
+    phases = re.search(r'buildPhases = \((.*?)\);', targets[0], re.S)
+    source_phases = [objects[key] for key in re.findall(r'\b[A-F0-9]{24}\b', phases.group(1)) if 'isa = PBXSourcesBuildPhase;' in objects[key]]
+    if len(source_phases) != 1:
+        raise RuntimeError('missing or ambiguous RunnerTests Sources phase')
+    names = re.findall(r'/\* ([^*]+\.swift) in Sources \*/', source_phases[0])
+    if len(names) != len(set(names)) or set(names) != expected:
+        raise RuntimeError(f'RunnerTests PBX membership differs: missing={expected-set(names)}, extra={set(names)-expected}')
+    groups = [body for body in objects.values() if 'isa = PBXGroup;' in body and re.search(r'\bpath = RunnerTests;', body)]
+    if len(groups) != 1:
+        raise RuntimeError('missing or ambiguous RunnerTests source group')
+    for key in re.findall(r'\b[A-F0-9]{24}\b', source_phases[0]):
+        build = objects.get(key, '')
+        match = re.search(r'fileRef = ([A-F0-9]{24}) /\* ([^*]+) \*/;', build)
+        if not match or match.group(1) not in groups[0] or match.group(2) not in expected or f'path = {match.group(2)};' not in objects.get(match.group(1), ''):
+            raise RuntimeError('RunnerTests Sources entry has invalid file reference')
+
+
+def verify_runtime(tree, summary, expected, platform, evidence=None):
+    nodes = list(case_nodes(tree['testNodes']))
+    ids = [node['nodeIdentifier'] for node in nodes]
+    if len(ids) != len(set(ids)):
+        raise RuntimeError('duplicate XCTest execution identity')
+    if set(ids) != expected:
+        raise RuntimeError(f'Native case identities differ: missing={expected-set(ids)}, extra={set(ids)-expected}')
+    counts = {result: sum(node['result'] == result for node in nodes) for result in ['Passed', 'Skipped', 'Failed']}
+    if any(node['result'] not in {'Passed', 'Skipped'} for node in nodes):
+        raise RuntimeError('Native XCTest contains nonpassing cases')
+    fixtures = Path(__file__).resolve().parent
+    allowed = set(json.loads((fixtures / 'allowed-hardware-skips.json').read_text())[platform])
+    for node in nodes:
+        if node['result'] != 'Skipped':
+            continue
+        identity = node['nodeIdentifier']
+        if identity not in allowed:
+            raise RuntimeError(f'Unexpected XCTest skip: {identity}')
+        reason = '\n'.join(child.get('name', '') for child in node.get('children', []))
+        proof = (evidence or {}).get(identity, {})
+        if identity == R19_CASE:
+            if reason != R19_REASON:
+                raise RuntimeError('R19 skip reason changed')
+            if proof.get('platform') != 'iOS Simulator' or proof.get('capability', '').strip() != 'fixture=h264_aac.mkv subtype=1635148593 h264=1635148593 hardwareAvailable=false controlledVideo=false':
+                raise RuntimeError('R19 skip lacks exact Simulator H264 runtime capability attachment')
+        else:
+            reasons = json.loads((fixtures / 'allowed-hardware-skips.json').read_text())['conditions']
+            if reason != 'Test skipped - ' + reasons[identity]['message'] or proof.get('platform') != 'iOS Simulator':
+                raise RuntimeError(f'Historical hardware skip condition changed: {identity}')
+    actual_summary = {'totalTestCount': len(nodes), 'passedTests': counts['Passed'], 'skippedTests': counts['Skipped'], 'failedTests': 0}
+    if any(summary.get(key) != value for key, value in actual_summary.items()):
+        raise RuntimeError(f'XCTest summary disagrees with executed identities: {actual_summary}')
+    return {'expected': sorted(expected), 'observed': sorted(ids), 'skipped': sorted(n['nodeIdentifier'] for n in nodes if n['result'] == 'Skipped'), 'summary': actual_summary}
+
+
+def verify_result_bundle(root, result, platform, output, selected=None):
+    output = Path(output); output.mkdir(parents=True, exist_ok=True)
+    def fetch(kind, *extra):
+        data = subprocess.check_output(['xcrun', 'xcresulttool', 'get', 'test-results', kind, '--path', str(result), *extra])
+        return json.loads(data)
+    tree = fetch('tests'); summary = fetch('summary')
+    (output / 'tests.json').write_text(json.dumps(tree, indent=2) + '\n')
+    (output / 'summary.json').write_text(json.dumps(summary, indent=2) + '\n')
+    expected = expected_identities(Path(root) / 'tool/consumer_fixtures/apple_flutter', platform)
+    if selected is not None:
+        if not set(selected) <= expected:
+            raise RuntimeError('selected runtime case is not canonical')
+        expected = set(selected)
+    evidence = {}
+    for node in case_nodes(tree['testNodes']):
+        if node['result'] != 'Skipped':
+            continue
+        identity = node['nodeIdentifier']; activities = fetch('activities', '--test-id', identity)
+        safe = re.sub(r'[^A-Za-z0-9_-]', '_', identity)
+        (output / f'{safe}-activities.json').write_text(json.dumps(activities, indent=2) + '\n')
+        runs = activities.get('testRuns', [])
+        if len(runs) != 1:
+            raise RuntimeError('skip must have exactly one observed runtime')
+        proof = {'platform': runs[0]['device']['platform']}
+        if identity == R19_CASE:
+            attachments = output / f'{safe}-attachments'
+            subprocess.run(['xcrun', 'xcresulttool', 'export', 'attachments', '--path', str(result), '--test-id', identity, '--output-path', str(attachments)], check=True)
+            manifest = json.loads((attachments / 'manifest.json').read_text())
+            payloads = [a for item in manifest if item['testIdentifier'] == identity for a in item['attachments'] if a['suggestedHumanReadableName'].startswith('Task4-video-capability_')]
+            if len(payloads) != 1:
+                raise RuntimeError('R19 capability attachment missing or ambiguous')
+            proof['capability'] = (attachments / payloads[0]['exportedFileName']).read_text()
+        evidence[identity] = proof
+    receipt = verify_runtime(tree, summary, expected, platform, evidence)
+    receipt.update(result_bundle=str(Path(result).resolve()), platform=platform, coverage='focused selection' if selected else 'complete canonical suite', skip_evidence=evidence)
+    (output / 'case-identities.json').write_text(json.dumps(receipt, indent=2) + '\n')
+    print(json.dumps(receipt['summary']))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--historical-only", action="store_true")
     group.add_argument("--current-only", action="store_true")
+    parser.add_argument('--result-bundle')
+    parser.add_argument('--platform', choices=['ios', 'macos'])
+    parser.add_argument('--output')
+    parser.add_argument('--selected-case', action='append', help='Focused evidence only; never used by a full gate')
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[3]
+    if args.result_bundle:
+        if not args.platform or not args.output:
+            parser.error('--result-bundle requires --platform and --output')
+        verify_current_targets(root)
+        verify_result_bundle(root, args.result_bundle, args.platform, args.output, args.selected_case)
+        return
     if not args.current_only:
         verify_historical_sources(root)
         print(f"Historical Apple test provenance: {PINNED_REVISION} verified")

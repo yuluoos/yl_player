@@ -12,6 +12,7 @@ python3 -B tool/consumer_fixtures/apple_flutter/test_historical_migration.py
 python3 -B tool/consumer_fixtures/apple_flutter/test_historical_origins.py
 python3 -B tool/consumer_fixtures/apple_flutter/test_consumer_root.py
 python3 -B tool/consumer_fixtures/apple_flutter/test_main_example_migration.py
+python3 -B tool/consumer_fixtures/apple_flutter/test_runtime_evidence.py
 python3 -B tool/consumer_fixtures/apple_flutter/test_source_parity.py
 flutter pub get
 flutter analyze

@@ -4,6 +4,7 @@ import CoreVideo
 import VideoToolbox
 import XCTest
 import YlFFmpegBridge
+import Network
 
 /// Characterizes the existing backend before its responsibilities move.
 /// The real demux, decoder wrapper, clocks and renderer remain in the path;
@@ -359,6 +360,10 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     let reply = try await f.load(hardwareRequest("positive"))
     XCTAssertEqual(publicCommitCount, 1)
     XCTAssertEqual(factory.sessions.count, 1, "Commit must adopt the exact proven decoder")
+    await f.settle()
+    let published = f.callbacks.states.filter { $0.sessionId == reply.sessionId }
+    XCTAssertFalse(published.isEmpty)
+    XCTAssertTrue(published.allSatisfy { $0.decoderMode == .hardware }, "Strict public commit must never expose an unknown placeholder")
     XCTAssertEqual(f.host.initialState.decoderMode, .hardware)
     XCTAssertEqual(f.host.initialState.geometry?.displaySize.width, 320)
     XCTAssertEqual(f.host.initialState.geometry?.displaySize.height, 180)
@@ -801,6 +806,35 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
 }
 
 extension YlManagedFallbackCharacterizationTests {
+  /// A finite repository FLV prefix on an intentionally still-open live body.
+  /// Immediate EOF means reconnect for FLV, unlike Matroska VOD completion.
+  private final class StreamingFLVServer {
+    private final class State { var connections = [NWConnection]() }
+    private let state = State()
+    private let queue = DispatchQueue(label: "yl.test.strict-flv-live-body")
+    private let listener: NWListener
+    let url: URL
+    init(data: Data) throws {
+      listener = try NWListener(using: .tcp, on: .any)
+      let ready = DispatchSemaphore(value: 0), queue = self.queue, state = self.state
+      listener.stateUpdateHandler = { if case .ready = $0 { ready.signal() } }
+      listener.newConnectionHandler = { connection in
+        // All connection collection accesses are serialized on this queue.
+        state.connections.append(connection); connection.start(queue: queue)
+        connection.receive(minimumIncompleteLength: 1, maximumLength: 16384) { bytes, _, _, _ in
+          guard let bytes, !bytes.isEmpty else { connection.cancel(); return }
+          let headers = "HTTP/1.1 200 OK\r\nContent-Type: video/x-flv\r\nContent-Length: \(data.count + 1)\r\nConnection: close\r\n\r\n"
+          connection.send(content: Data(headers.utf8) + data, completion: .contentProcessed { _ in })
+        }
+      }
+      listener.start(queue: queue)
+      guard ready.wait(timeout: .now() + 5) == .success, let port = listener.port else {
+        listener.cancel(); throw NSError(domain: "StrictFixtureServer", code: 1)
+      }
+      url = URL(string: "http://127.0.0.1:\(port.rawValue)/fixture.flv")!
+    }
+    func close() { listener.cancel(); queue.sync { state.connections.forEach { $0.cancel() }; state.connections.removeAll() } }
+  }
   private final class BoundedDisplay: YlDisplayDriving {
     var isPaused = true
     var tick: (() -> Void)?
@@ -819,28 +853,59 @@ extension YlManagedFallbackCharacterizationTests {
   func testBoundedEOFBelowMinimumStillProgressesWithRealManagedInput() async throws {
     try await runBoundedFixture(controlledVideo: true, minimumMs: 10000, maximumMs: 12000)
   }
-  private func runBoundedFixture(controlledVideo: Bool, minimumMs: Int64 = 100, maximumMs: Int64 = 2000) async throws {
-    let fixture = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv"))
-    let server = try ReactivationMediaServer(data: Data(contentsOf: fixture))
-    defer { server.close() }
+  func testFLVInitialAndReopenedInspectionUseAACSequenceHeaderMetadata() throws {
+    let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "flv"))
+    let source = YlAppleSourceDescriptor(uri: url.absoluteString, kind: .file, formatHint: .flv,
+      loadOptions: .init(decoderPolicy: .systemDefault))
+    let candidate = try YlPreparedFallback(source: source, requireHardwareProbe: false)
+    let first = try XCTUnwrap(candidate.audioStreams.first)
+    XCTAssertEqual(first.sample_rate, 48000); XCTAssertEqual(first.channel_count, 1)
+    let cookie = try XCTUnwrap(candidate.audioCookies[first.index])
+    XCTAssertEqual(cookie, Data([0x11, 0x88, 0x56, 0xe5, 0]))
+    let budget = try YlFallbackBufferBudget.make(configuration: .init(map: [:]), prepared: candidate)
+    let demux = try YlDemuxPipeline(prepared: candidate, lock: NSLock(), bufferBudget: budget)
+    defer { demux.discardMedia() }
+    let reopened = try demux.inspectReopened(context: XCTUnwrap(demux.context), info: demux.currentMedia!.info,
+      validateVideo: { XCTAssertEqual($0.width, 320) })
+    let audio = try XCTUnwrap(reopened.audio.first)
+    XCTAssertEqual(audio.sample_rate, 48000); XCTAssertEqual(audio.channel_count, 1)
+    XCTAssertEqual(reopened.cookies[audio.index], cookie)
+  }
+  func testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload() async throws {
+    try await runBoundedFixture(controlledVideo: false, fixtureExtension: "flv")
+  }
+  private func runBoundedFixture(controlledVideo: Bool, fixtureExtension: String = "mkv", minimumMs: Int64 = 100, maximumMs: Int64 = 2000) async throws {
+    let fixture = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: fixtureExtension))
+    let rangeServer = fixtureExtension == "mkv" ? try ReactivationMediaServer(data: Data(contentsOf: fixture)) : nil
+    let liveServer = fixtureExtension == "flv" ? try StreamingFLVServer(data: Data(contentsOf: fixture)) : nil
+    defer { rangeServer?.close(); liveServer?.close() }
+    let fixtureURL = rangeServer?.url ?? liveServer!.url
     let ledger = YlManagedBufferLedger()
     let scope = try ledger.makeScope(maxBytes: 16 * 1024 * 1024)
     let plan = try YlBoundedBufferPlan(minDurationMs: minimumMs, maxDurationMs: maximumMs, maxBytes: 16 * 1024 * 1024)
-    let source = YlAppleSourceDescriptor(uri: server.url.absoluteString, kind: .network, formatHint: .matroska,
-      networkPolicy: .managed, bufferScope: scope, boundedPlan: plan)
+    let source = YlAppleSourceDescriptor(uri: fixtureURL.absoluteString, kind: .network, formatHint: fixtureExtension == "flv" ? .flv : .matroska,
+      networkPolicy: .managed, loadOptions: fixtureExtension == "flv" ? .init(decoderPolicy: .systemDefault) : nil,
+      bufferScope: scope, boundedPlan: plan)
     var candidate: YlPreparedFallback? = try YlPreparedFallback(source: source, requireHardwareProbe: false)
+    if fixtureExtension == "flv" {
+      let audio = try XCTUnwrap(candidate!.audioStreams.first)
+      let cookie = try XCTUnwrap(candidate!.audioCookies[audio.index])
+      XCTAssertEqual(audio.sample_rate, 48000, "inspected FLV rate")
+      XCTAssertEqual(cookie, Data([0x11, 0x88, 0x56, 0xe5, 0x00]))
+      XCTAssertEqual(ylBoundedAACPacketDurationUs(sampleRate: Double(audio.sample_rate), cookie: cookie), 21334)
+    }
     let subtype = CMFormatDescriptionGetMediaSubType(candidate!.videoFormat)
     let hardwareAvailable = VTIsHardwareDecodeSupported(subtype)
-    let attachment = XCTAttachment(string: "fixture=h264_aac.mkv subtype=\(subtype) h264=\(kCMVideoCodecType_H264) hardwareAvailable=\(hardwareAvailable) controlledVideo=\(controlledVideo)")
-    attachment.name = "Task4-video-capability"; attachment.lifetime = .keepAlways; add(attachment)
+    let attachment = XCTAttachment(string: "fixture=h264_aac.\(fixtureExtension) subtype=\(subtype) h264=\(kCMVideoCodecType_H264) hardwareAvailable=\(hardwareAvailable) controlledVideo=\(controlledVideo)")
+    attachment.name = fixtureExtension == "mkv" ? "Task4-video-capability" : "Task8-FLV-video-capability"; attachment.lifetime = .keepAlways; add(attachment)
     XCTAssertEqual(subtype, kCMVideoCodecType_H264)
     #if targetEnvironment(simulator)
-    if !controlledVideo, subtype == kCMVideoCodecType_H264, !hardwareAvailable {
+    if fixtureExtension == "mkv", !controlledVideo, subtype == kCMVideoCodecType_H264, !hardwareAvailable {
       throw XCTSkip("Task4 actual H264 hardware fixture: simulator VTIsHardwareDecodeSupported=false; physical iOS evidence pending (R19).")
     }
     #endif
     let controlledFactory = Factory(); controlledFactory.automaticFrames = true
-    let selectedFactory: any YlVTSessionFactory = controlledVideo ? controlledFactory : YlHardwareVTSessionFactory()
+    let selectedFactory: any YlVTSessionFactory = controlledVideo ? controlledFactory : YlHardwareVTSessionFactory(policy: fixtureExtension == "flv" ? .systemDefault : .hardwareRequired)
     let output = Output(), display = BoundedDisplay()
     var failures = [String](), lastPosition: Int64 = 0, completed = false, metricSamples = 0
     let eventLock = NSLock()
@@ -852,7 +917,14 @@ extension YlManagedFallbackCharacterizationTests {
       emit: { callback in
         eventLock.withLock {
           switch callback.event {
-          case .failure(let error): failures.append(String(describing: error))
+          case .failure(let error): failures.append(error.code + ":" + (error.diagnostic ?? "none"))
+          case .delta(let delta):
+            lastPosition = max(lastPosition, delta.positionMs)
+            if let bytes = delta.metrics.bufferedBytes {
+              XCTAssertLessThanOrEqual(bytes, 16 * 1024 * 1024)
+              XCTAssertNotNil(delta.metrics.bufferedDurationMs)
+              XCTAssertLessThanOrEqual(delta.metrics.bufferedDurationMs ?? 0, maximumMs); metricSamples += 1
+            }
           case .state(let state):
             lastPosition = max(lastPosition, state.positionMs); completed = state.status == "completed"
             if let bytes = state.metrics.bufferedBytes {
@@ -870,13 +942,13 @@ extension YlManagedFallbackCharacterizationTests {
     for _ in 0..<1000 {
       try await Task.sleep(nanoseconds: 10_000_000)
       display.advance()
-      let done = eventLock.withLock { completed || !failures.isEmpty }
+      let done = eventLock.withLock { completed || !failures.isEmpty || (fixtureExtension == "flv" && lastPosition > 700) }
       if done { break }
     }
     eventLock.withLock {
       XCTAssertTrue(failures.isEmpty, "\(failures)")
-      XCTAssertTrue(completed, "position=\(lastPosition), ledger=\(ledger.snapshot.currentBytes)")
-      XCTAssertGreaterThan(lastPosition, 500)
+      if fixtureExtension == "mkv" { XCTAssertTrue(completed, "position=\(lastPosition), ledger=\(ledger.snapshot.currentBytes)") }
+      XCTAssertGreaterThan(lastPosition, 500, "published=\(output.published) timing=\(scope.timingDiagnostic)")
       XCTAssertGreaterThan(metricSamples, 1)
     }
     XCTAssertGreaterThan(output.published, 1)

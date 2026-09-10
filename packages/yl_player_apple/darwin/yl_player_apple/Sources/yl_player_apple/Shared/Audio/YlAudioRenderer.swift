@@ -23,8 +23,13 @@ enum YlAudioCodec: Equatable {
 /// Resolve missing packet duration only for the inspected AAC-LC configuration.
 /// AudioSpecificConfig's frameLengthFlag selects 1024 or 960 samples. Other
 /// objects, absent bits and rate mismatches are not guessed for bounded timing.
-func ylBoundedAACPacketDurationUs(sampleRate: Double, cookie: Data) -> Int64? {
-  guard sampleRate > 0, sampleRate.isFinite else { return nil }
+struct YlAACLCConfiguration {
+  let sampleRate: Int32
+  let channelCount: Int32
+  let framesPerPacket: Int
+}
+
+func ylInspectedAACLCConfiguration(cookie: Data) -> YlAACLCConfiguration? {
   var offset = 0
   func bits(_ count: Int) -> Int? {
     guard offset + count <= cookie.count * 8 else { return nil }
@@ -40,9 +45,24 @@ func ylBoundedAACPacketDurationUs(sampleRate: Double, cookie: Data) -> Int64? {
   let frequency: Int
   if frequencyIndex == 15 { guard let explicit = bits(24) else { return nil }; frequency = explicit }
   else { guard frequencyIndex < rates.count else { return nil }; frequency = rates[frequencyIndex] }
-  guard Double(frequency) == sampleRate, let channels = bits(4), (1...7).contains(channels),
+  guard frequency > 0, let channels = bits(4), (1...7).contains(channels),
         let shortFrame = bits(1), bits(1) == 0, bits(1) == 0 else { return nil }
-  return Int64((Double(shortFrame == 0 ? 1024 : 960) * 1_000_000 / sampleRate).rounded(.up))
+  // Ordinary LC may carry an explicit backwards-compatible SBR sync extension.
+  // Accept only a complete extension proving SBR absent; other objects, active
+  // SBR/PS, truncation and nonzero/oversized trailing data are not plain LC.
+  if cookie.count * 8 - offset > 7 {
+    guard bits(11) == 0x2b7, bits(5) == 5, bits(1) == 0 else { return nil }
+  }
+  guard cookie.count * 8 - offset <= 7 else { return nil }
+  while offset < cookie.count * 8 { guard bits(1) == 0 else { return nil } }
+  return YlAACLCConfiguration(sampleRate: Int32(frequency), channelCount: Int32(channels == 7 ? 8 : channels),
+    framesPerPacket: shortFrame == 0 ? 1024 : 960)
+}
+
+func ylBoundedAACPacketDurationUs(sampleRate: Double, cookie: Data) -> Int64? {
+  guard sampleRate > 0, sampleRate.isFinite, let inspected = ylInspectedAACLCConfiguration(cookie: cookie),
+        Double(inspected.sampleRate) == sampleRate else { return nil }
+  return Int64((Double(inspected.framesPerPacket) * 1_000_000 / sampleRate).rounded(.up))
 }
 
 struct YlAudioStreamConfiguration: Equatable {

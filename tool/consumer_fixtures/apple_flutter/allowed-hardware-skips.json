@@ -2,7 +2,8 @@
   "ios": [
     "YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()",
     "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()",
-    "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()"
+    "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()",
+    "YlManagedFallbackCharacterizationTests/testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF()"
   ],
   "macos": [],
   "task7_provenance": {
@@ -12,5 +13,29 @@
       "original_line": 172,
       "condition": "Only initial real MKV Load returns decoder.video_hardware_unavailable; every other failure fails. No AV publication skip."
     }
+  },
+  "conditions": {
+    "YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()": {
+      "message": "This simulator runtime does not expose hardware H.264 decoding.",
+      "condition": "Only initial real decoder.video_hardware_unavailable; other errors fail; Simulator only.",
+      "source": "RunnerTests-ios/YlFallbackBackendTests.swift",
+      "source_sha256": "ec97d09a7e6bed716602b36f88626ce45188816c153c1b09cfd80469afa5c56e"
+    },
+    "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()": {
+      "message": "This simulator runtime does not expose hardware H.264 decoding.",
+      "condition": "Only initial real decoder.video_hardware_unavailable; other errors fail; Simulator only.",
+      "source": "RunnerTests-ios/YlFallbackBackendTests.swift",
+      "source_sha256": "ec97d09a7e6bed716602b36f88626ce45188816c153c1b09cfd80469afa5c56e"
+    },
+    "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()": {
+      "message": "Simulator VideoToolbox unavailable; no hardware playback claim",
+      "condition": "Only initial real decoder.video_hardware_unavailable; other errors fail; Simulator only.",
+      "source": "RunnerTests/AppleHostCharacterizations.swift",
+      "source_sha256": "9a289c120c0b02af8be498a50ffa1e813fe150027b2d380efbca0d99deefead3"
+    }
+  },
+  "hardening_r19": {
+    "identity": "YlManagedFallbackCharacterizationTests/testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF()",
+    "condition": "Simulator + inspected H264 + VTIsHardwareDecodeSupported=false + retained Task4-video-capability attachment; controlled counterpart mandatory. Runtime declaration remains independent of the iOS-only actualdriver case; full guard requires controlled counterpart identity from canonical suite."
   }
 }

@@ -53,7 +53,7 @@ final class YlAppleStateReducer {
     return YlAppleSessionIdentity(sessionId: "apple-\(playerId)-s\(sessionSequence)",
       loadRequestId: loadRequestId, startedAtMs: clock())
   }
-  func commit(_ identity: YlAppleSessionIdentity) {
+  func commit(_ identity: YlAppleSessionIdentity, deferInitialPublication: Bool = false) {
     self.identity = identity
     snapshot = nil
     failure = nil
@@ -62,7 +62,9 @@ final class YlAppleStateReducer {
     publicFrameObserved = false
     firstFrameSent = false
     failed = false
-    publishState()
+    // A strict decoder has already been proven before commit. Do not publish an
+    // empty/unknown placeholder ahead of that prepared backend's first snapshot.
+    if !deferInitialPublication { publishState() }
   }
   func stop() {
     identity = nil

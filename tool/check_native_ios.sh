@@ -4,6 +4,10 @@ set -eu
 
 repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 simulator_id=${YL_IOS_SIMULATOR_ID:-}
+evidence_root=${YL_APPLE_EVIDENCE_DIR:-"$repo_root/packages/yl_player/example/build/apple-evidence"}
+mkdir -p "$evidence_root"
+evidence=$(mktemp -d "$evidence_root/ios.XXXXXX")
+
 
 verify_registrant() {
   registrant="$repo_root/packages/yl_player/example/ios/Runner/GeneratedPluginRegistrant.m"
@@ -42,12 +46,18 @@ fi
 python3 -B "$repo_root/tool/consumer_fixtures/apple_flutter/main_example_tests.py" --current-only
 verify_registrant
 
-xcodebuild test -quiet \
+native_status=0
+xcodebuild test -quiet -sdk iphonesimulator \
   -workspace "$repo_root/packages/yl_player/example/ios/Runner.xcworkspace" \
   -scheme Runner \
   -parallel-testing-enabled NO \
   -derivedDataPath "$repo_root/packages/yl_player/example/build/native-ios-tests" \
-  -destination "platform=iOS Simulator,id=$simulator_id"
+  -destination "platform=iOS Simulator,id=$simulator_id" \
+  -resultBundlePath "$evidence/native.xcresult" >"$evidence/native.log" 2>&1 || native_status=$?
+cat "$evidence/native.log"
+python3 -B "$repo_root/tool/consumer_fixtures/apple_flutter/main_example_tests.py" \
+  --result-bundle "$evidence/native.xcresult" --platform ios --output "$evidence/runtime"
+[ "$native_status" -eq 0 ]
 
 # xcodebuild can shut down the source simulator after running tests on a clone.
 # Restore it before Flutter tries to discover the requested device.
@@ -58,7 +68,13 @@ xcrun simctl bootstatus "$simulator_id" -b
 
 cd "$repo_root/packages/yl_player/example"
 flutter test integration_test/hls_playback_test.dart -d "$simulator_id"
-flutter test integration_test/ios_mkv_playback_test.dart -d "$simulator_id"
-flutter test integration_test/ios_network_mkv_playback_test.dart -d "$simulator_id"
-flutter test integration_test/ios_http_flv_playback_test.dart -d "$simulator_id"
-flutter test integration_test/ios_hls_headers_playback_test.dart -d "$simulator_id"
+flutter test integration_test/apple_default_positive_test.dart -d "$simulator_id"
+
+# The aggregator includes managed network, bounded buffers, hardwareRequired,
+# session replacement/ACK ordering and audio policy lifecycle on both platforms.
+if flutter test integration_test/apple_strict_policy_test.dart -d "$simulator_id" --reporter expanded >"$evidence/strict-integration.log" 2>&1; then
+  cat "$evidence/strict-integration.log"
+else
+  cat "$evidence/strict-integration.log"
+  exit 1
+fi

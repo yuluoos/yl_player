@@ -97,7 +97,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift",
-    "sha256": "383d85af5517c9ac6f33bf71c574bbaef3e1b2fa4511df9f8bc7bac03a4e0d48",
+    "sha256": "60d94f2ba04eb8697268d838d622808ffcc798e283fae6f4e68c8396235d58b8",
     "methods": [
       "testImmutableRequestAndSessionIdentityStartsAtZero",
       "testNegativeMeasuredLiveOffsetIsZeroAndUnknownRemainsNil",
@@ -136,6 +136,7 @@
       "testInterruptionResumesOnlyPriorIntentAndCannotReviveStoppedPlayer",
       "testInterruptionWithoutResumePermissionDoesNotAutoplay",
       "testUnownedReleaseDoesNotClaimAnExternalAppActivation",
+      "testActualIosDriverConfiguresMediaSessionAcrossRegistryOwners",
       "testMacosDriverTracksOutputWithoutGlobalSession",
       "testUnobservedFallbackRebufferCountersMustRemainAbsent",
       "testDiagnosticFuzzAcrossNativeFailureStateRetryAndDescriptions",
@@ -172,6 +173,10 @@
       "from_sha256": "d64e9270a0a327fc4782ea1e3a22c4ec5187fe4a5cdafa5c6faf3437330f00ef",
       "base": "91aaa3f3d9f5618a02ad8183b267a6eab4a9b7b6",
       "reason": "Restore authoritative geometry, Load-based clocks and nullable common metrics; central safe errors remove credential-free source URLs too. Current destination assertions changed; historical origins retained."
+    },
+    "hardening_task8_migration": {
+      "from_sha256": "383d85af5517c9ac6f33bf71c574bbaef3e1b2fa4511df9f8bc7bac03a4e0d48",
+      "reason": "Actual iOS driver activation/category/mode plus two registry owners; no active-state inference or physical-engine evidence claim."
     }
   },
   {
@@ -272,7 +277,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlManagedFallbackCharacterizationTests.swift",
-    "sha256": "ffa88b842ecdc0d55e68a4abb6307def111d1f4b8ac0fd05488cb64fe5c23899",
+    "sha256": "9c7ec0a3dd025922fd68221dff271c2963d1397406e5b4ef2108d19c8e27a01f",
     "methods": [
       "testHardwareEvidenceRequiresActualCFBooleanAndSafeIdentity",
       "testRequiredPipelineRejectsSoftwareBeforeDecoderInstallation",
@@ -305,6 +310,8 @@
       "testBoundedSixteenMiBManagedFixtureWithControlledVideoMustProgressAndReachEOF",
       "testBoundedFiveHundredMsControlledFixtureProgressesWithoutExceedingDuration",
       "testBoundedEOFBelowMinimumStillProgressesWithRealManagedInput",
+      "testFLVInitialAndReopenedInspectionUseAACSequenceHeaderMetadata",
+      "testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload",
       "testBoundedInspectedFrameRejectsTooSmallBudgetBeforeActivation",
       "testBoundedAudioHeldCompletionRemainsChargedAfterResetAndDisposal"
     ],
@@ -325,6 +332,10 @@
       "from_sha256": "2a39dfb4f17b6fd7f4170134b49e87036df7b4e26eff4b069fdf64441ec895e3",
       "base": "91aaa3f3d9f5618a02ad8183b267a6eab4a9b7b6",
       "reason": "Restore authoritative geometry, Load-based clocks and nullable common metrics; central safe errors remove credential-free source URLs too. Current destination assertions changed; historical origins retained."
+    },
+    "hardening_task8_migration": {
+      "from_sha256": "ffa88b842ecdc0d55e68a4abb6307def111d1f4b8ac0fd05488cb64fe5c23899",
+      "reason": "Task8 exact strict public commit envelopes, actual iOS audio driver, FLV AAC initial/reopen authority and bounded lifetime with complete LC sync-extension negatives. Original hardware skip identities unchanged; MKV R19 remains distinct."
     }
   }
 ]

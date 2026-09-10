@@ -5,6 +5,9 @@ set -eu
 repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 mode=${1:-all}
 example_root="$repo_root/packages/yl_player/example"
+evidence_root=${YL_APPLE_EVIDENCE_DIR:-"$example_root/build/apple-evidence"}
+mkdir -p "$evidence_root"
+evidence=$(mktemp -d "$evidence_root/macos.XXXXXX")
 
 verify_registrant() {
   registrant="$example_root/macos/Flutter/GeneratedPluginRegistrant.swift"
@@ -59,12 +62,18 @@ run_unit_tests() {
   python3 -B "$repo_root/tool/consumer_fixtures/apple_flutter/main_example_tests.py" --current-only
   verify_registrant
 
-  python3 -B "$repo_root/tool/run_with_display_awake.py" xcodebuild test -quiet \
+  native_status=0
+  python3 -B "$repo_root/tool/run_with_display_awake.py" xcodebuild test -quiet -sdk macosx \
     -workspace "$example_root/macos/Runner.xcworkspace" \
     -scheme Runner \
     -parallel-testing-enabled NO \
     -derivedDataPath "$example_root/build/native-macos-tests" \
-    -destination 'platform=macOS'
+    -destination 'platform=macOS' \
+    -resultBundlePath "$evidence/native.xcresult" >"$evidence/native.log" 2>&1 || native_status=$?
+  cat "$evidence/native.log"
+  python3 -B "$repo_root/tool/consumer_fixtures/apple_flutter/main_example_tests.py" \
+    --result-bundle "$evidence/native.xcresult" --platform macos --output "$evidence/runtime"
+  [ "$native_status" -eq 0 ]
 }
 
 run_rosetta_smoke() {
@@ -164,9 +173,15 @@ run_integration_tests() {
     integration_test/macos_mkv_playback_test.dart \
     integration_test/macos_network_mkv_playback_test.dart \
     integration_test/macos_http_flv_playback_test.dart \
-    integration_test/macos_hls_headers_playback_test.dart
+    integration_test/apple_strict_policy_test.dart
   do
-    python3 -B "$repo_root/tool/run_with_display_awake.py" flutter test "$test_file" -d macos
+    integration_log="$evidence/$(basename "$test_file").log"
+    if python3 -B "$repo_root/tool/run_with_display_awake.py" flutter test "$test_file" -d macos >"$integration_log" 2>&1; then
+      cat "$integration_log"
+    else
+      cat "$integration_log"
+      return 1
+    fi
   done
 }
 

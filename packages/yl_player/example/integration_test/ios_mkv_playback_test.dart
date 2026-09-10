@@ -19,29 +19,6 @@ void main() {
     return file;
   }
 
-  Future<bool> openOrVerifySimulatorHardwareError(
-    YlPlayerController controller,
-    File file,
-  ) async {
-    try {
-      await loadSession(
-        controller,
-        YlFileSource(file.path, format: YlMediaFormat.matroska),
-      );
-      return true;
-    } on YlPlayerException catch (error) {
-      // VideoToolbox's required-hardware session is unavailable on common iOS
-      // Simulator runtimes. A device must take the successful branch below.
-      expect(
-        error.failure.code,
-        YlFailureCodes.decoderUnavailable,
-        reason: error.toString(),
-      );
-      expect(error.failure.category, YlFailureCategory.decoder);
-      return false;
-    }
-  }
-
   testWidgets('local H264 AAC MKV uses native fallback and renders a frame', (
     WidgetTester tester,
   ) async {
@@ -107,9 +84,10 @@ void main() {
       MaterialApp(home: YlPlayerView(controller: controller)),
     );
 
-    if (!await openOrVerifySimulatorHardwareError(controller, file)) {
-      return;
-    }
+    await loadSession(
+      controller,
+      YlFileSource(file.path, format: YlMediaFormat.matroska),
+    );
     final session = sessionFor(controller);
     await session.ready.timeout(const Duration(seconds: 20));
     final trackState =

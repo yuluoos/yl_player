@@ -12,7 +12,7 @@ import sys
 import tempfile
 import time
 
-from main_example_tests import source_bytes
+from main_example_tests import source_bytes, expected_identities, verify_result_bundle
 
 
 def require(condition, message):
@@ -247,7 +247,7 @@ def check(platform, manager, link):
         print(json.dumps({"platform": platform, "manager": manager, "link": "passed", "result": str(result)}), flush=True)
         return
     summary = json.loads(run(["xcrun", "xcresulttool", "get", "test-results", "summary", "--path", str(result)], ROOT, f"{platform}-{manager}-summary", capture=True))
-    expected_count = sum(len(re.findall(r"\bfunc test\w+\(", path.read_text())) for path in fixture_tests(platform))
+    expected_count = len(expected_identities(FIXTURES, platform))
     require(expected_count > 0 and summary.get("failedTests") == 0 and summary.get("passedTests", 0) + summary.get("skippedTests", 0) == expected_count and summary.get("totalTestCount") == expected_count, "Native result does not cover the complete fixture suite")
     # R21 restores the original third iOS host-case hardware condition. Exact
     # identities remain mandatory below; this count never grants another skip.
@@ -259,28 +259,7 @@ def check(platform, manager, link):
 
 
 def verify_cases(result, platform, manager):
-    tree = json.loads(run(["xcrun", "xcresulttool", "get", "test-results", "tests", "--path", str(result)], ROOT, f"{platform}-{manager}-cases", capture=True))
-    def leaves(nodes):
-        for node in nodes:
-            if node.get("nodeType") == "Test Case":
-                yield node
-            yield from leaves(node.get("children", []))
-    nodes = list(leaves(tree["testNodes"]))
-    expected = set()
-    for path in fixture_tests(platform):
-        text = path.read_text()
-        classes = list(re.finditer(r"class (\w+): XCTestCase", text))
-        for method in re.finditer(r"\bfunc (test\w+)\(", text):
-            owners = [owner for owner in classes if owner.start() < method.start()]
-            require(owners, "Fixture method has no XCTest class")
-            expected.add(owners[-1].group(1) + "/" + method.group(1) + "()")
-    actual = {node["nodeIdentifier"] for node in nodes}
-    require(actual == expected, f"Native case identities differ: missing={expected - actual}, extra={actual - expected}")
-    allowed_skips = set(json.loads((FIXTURES / "allowed-hardware-skips.json").read_text())[platform])
-    skipped = {node["nodeIdentifier"] for node in nodes if node["result"] == "Skipped"}
-    require(skipped <= allowed_skips, f"Unexpected skipped test cases: {skipped - allowed_skips}")
-    require(all(node["result"] in {"Passed", "Skipped"} for node in nodes), "Native characterization contains nonpassing cases")
-    (LOGS / f"{platform}-{manager}-case-identities.json").write_text(json.dumps({"expected": sorted(expected), "observed": sorted(actual), "skipped": sorted(skipped)}, indent=2) + "\n")
+    verify_result_bundle(ROOT, result, platform, LOGS / f"{platform}-{manager}-runtime")
 
 
 def verify_product(host, platform, manager, derived=None, expect_tests=True):
