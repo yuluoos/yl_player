@@ -126,6 +126,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     self.video = prepared.takePreparedVideo() ?? YlVideoPipeline(format: prepared.videoFormat, bufferBudget: bufferBudget,
       factory: videoSessionFactory ?? YlHardwareVTSessionFactory(policy: prepared.decoderFactoryPolicy), policy: prepared.decoderPolicy)
     self.audio = YlAudioPipeline(bufferBudget: bufferBudget, lock: stateLock, generation: generation, factory: audioRendererFactory)
+    self.audio.beforeOutput = services.beforeAudioOutput
     self.presentation = YlPresentationCoordinator(services: services, lock: stateLock,
       openedAt: openStartedAt, positionEventIntervalMs: configuration.positionEventIntervalMs, scheduler: presentationScheduler)
     self.recovery = YlRecoveryCoordinator(configuration: configuration.network,
@@ -189,6 +190,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
           message: "The playback audio session could not be activated.", diagnostic: String(describing: error))
       }
     }
+    if playing { try audio.prepareForPlayback() }
     if requiresAsyncActivation {
       throw NativePlayerError(
         category: "internal",
@@ -397,6 +399,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   }
 
   func play() throws {
+      try audio.prepareForPlayback()
       let wasPlaying = stateLock.withLock { () -> Bool in
         let previous = playing
         playing = true

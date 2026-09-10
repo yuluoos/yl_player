@@ -151,7 +151,11 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void) {
       lock.withLock { storedCompletions.append(completion) }
     }
-    func play() throws { trace.add("audio.play") }
+    var failPlay = false
+    func play() throws {
+      if failPlay { failPlay = false; throw NSError(domain: "audio-output", code: 1) }
+      trace.add("audio.play")
+    }
     func pause() { trace.add("audio.pause") }
     func reset() { trace.add("audio.reset") }
     func dispose() {}
@@ -256,6 +260,89 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     request.source.kind = .file; request.source.locator = url.path
     request.options.decoderPolicyOverride = policy
     return request
+  }
+
+  func testManagedAudioAutoplayPreparationFailureAndRetiredBackendCleanup() async throws {
+    let driver = YlAudioOwnershipTests.Driver()
+    let shared = YlAudioOwnershipCoordinator(driver: driver)
+    let owner = YlPlayerAudioOwnership(coordinator: shared, key: .init(registry: UUID(), player: "managed"))
+    let factory = Factory()
+    let f = AppleHostFixture(videoSessionFactory: factory, audioOwnership: owner)
+    defer { f.host.close() }
+    factory.onCreate = { XCTAssertTrue(driver.calls.isEmpty, "Private VT evidence must not activate audio") }
+    var request = try hardwareRequest("owned"); request.options.autoplay = true
+    let accepted = try await f.load(request)
+    XCTAssertEqual(driver.calls, ["configure", "activate"])
+    XCTAssertEqual(shared.ownerCount, 1)
+    factory.onCreate = nil
+    factory.evidence = .unknown
+    do { _ = try await f.load(hardwareRequest("reject")); XCTFail("Strict replacement must reject") } catch {}
+    XCTAssertEqual(f.host.sessionId, accepted.sessionId)
+    XCTAssertEqual(shared.ownerCount, 1)
+    XCTAssertEqual(driver.calls, ["configure", "activate"])
+    let retired = factory.sessions[0]
+    _ = try await f.load(AppleHostFixture.request("av", autoplay: true))
+    try retired.send(generation: retired.lastGeneration ?? 1, status: -1)
+    await f.settle()
+    XCTAssertEqual(shared.ownerCount, 1, "Retiring the fallback or its delayed failure cannot release the AV session lease")
+    try await f.host.stop()
+    XCTAssertEqual(shared.ownerCount, 0)
+    XCTAssertEqual(driver.calls.last, "deactivate.notifyOthers")
+  }
+
+  func testManagedAudioActivationFailureBeforeReplacementPreservesAcceptedFallback() async throws {
+    let driver = YlAudioOwnershipTests.Driver()
+    let shared = YlAudioOwnershipCoordinator(driver: driver)
+    let owner = YlPlayerAudioOwnership(coordinator: shared, key: .init(registry: UUID(), player: "managed"))
+    let factory = Factory()
+    let f = AppleHostFixture(videoSessionFactory: factory, audioOwnership: owner)
+    defer { f.host.close() }
+    let accepted = try await f.load(hardwareRequest("paused"))
+    XCTAssertTrue(driver.calls.isEmpty)
+    driver.failActivation = true
+    do { _ = try await f.load(AppleHostFixture.request("rejected-av", autoplay: true)); XCTFail("Audio activation must reject") } catch {}
+    XCTAssertEqual(f.host.sessionId, accepted.sessionId)
+    XCTAssertEqual(factory.sessions.first?.invalidations, 0, "Reject before disposing accepted decoder")
+    XCTAssertEqual(shared.ownerCount, 0)
+    driver.failActivation = false
+    try await f.host.play(command: .init(sessionId: accepted.sessionId))
+    XCTAssertEqual(shared.ownerCount, 1)
+    XCTAssertEqual(f.host.initialState.engine, .managedFallback)
+  }
+
+  func testAudioOutputStartFailurePublishesTerminalFailure() async throws {
+    let audio = AudioFactory(Trace()), factory = Factory()
+    var failures = [NativePlayerError]()
+    let instance = try YlFallbackBackend(playerId: 732,
+      services: .init(platform: .current, textureOutput: Output(), makeDisplayDriver: { _ in Display() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared(),
+      generation: 1, videoSessionFactory: factory, audioRendererFactory: audio,
+      emit: { if case let .failure(error) = $0.event { failures.append(error) } })
+    defer { instance.dispose() }
+    try instance.activate()
+    audio.output.failPlay = true
+    XCTAssertThrowsError(try instance.play())
+    for _ in 0..<16 { await Task.yield() }
+    XCTAssertEqual(failures.map(\.code), ["render.audio_engine_failed"])
+    XCTAssertFalse(instance.playbackIntent)
+  }
+
+  func testManagedAudioTerminalOutputFailureReleasesCurrentLeaseExactlyOnce() async throws {
+    let driver = YlAudioOwnershipTests.Driver()
+    let shared = YlAudioOwnershipCoordinator(driver: driver)
+    let owner = YlPlayerAudioOwnership(coordinator: shared, key: .init(registry: UUID(), player: "failure"))
+    let factory = Factory()
+    let f = AppleHostFixture(videoSessionFactory: factory, audioOwnership: owner)
+    defer { f.host.close() }
+    var request = try hardwareRequest("fail"); request.options.autoplay = true
+    _ = try await f.load(request)
+    try await AppleHostCharacterizations.waitFor { factory.sessions[0].lastGeneration != nil }
+    let session = factory.sessions[0]
+    try session.send(generation: XCTUnwrap(session.lastGeneration), status: -1)
+    try await AppleHostCharacterizations.waitFor { f.host.initialState.failure != nil }
+    XCTAssertEqual(shared.ownerCount, 0)
+    try await f.host.stop(); f.host.close()
+    XCTAssertEqual(driver.calls, ["configure", "activate", "deactivate.notifyOthers"])
   }
 
   func testStrictHostTransfersExactProvenDecoderBeforeCommitAndFirstFrameOnce() async throws {

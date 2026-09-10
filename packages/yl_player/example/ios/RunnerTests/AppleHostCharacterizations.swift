@@ -14,13 +14,14 @@ final class AppleHostFixture {
        slotCompatibility: YlAppleCompatibility? = nil,
        bufferLedger: YlManagedBufferLedger = YlManagedBufferLedger(),
        videoSessionFactory: YlVTSessionFactory? = nil,
-       hardwareEvidenceStage: YlHardwareEvidencePreparation = .init()) {
+       hardwareEvidenceStage: YlHardwareEvidencePreparation = .init(),
+       audioOwnership: YlPlayerAudioOwnership? = nil) {
     host = YlApplePlayerHost(playerId: 91, suffix: "fixture-91",
-      options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 100),
+      options: .init(decoderPolicy: .systemDefault, audioPolicy: audioOwnership == nil ? .appManaged : .pluginManagedMediaPlayback, positionUpdateIntervalMs: 100),
       services: .init(platform: .current, textureOutput: output,
         makeDisplayDriver: { AppleClockDisplay(onTick: $0) }), callbacks: callbacks, avPlayer: av, commandCoordinator: commandCoordinator,
       beforeFallbackConstruction: beforeFallbackConstruction, slotCompatibility: slotCompatibility, bufferLedger: bufferLedger,
-      videoSessionFactory: videoSessionFactory, hardwareEvidenceStage: hardwareEvidenceStage)
+      videoSessionFactory: videoSessionFactory, hardwareEvidenceStage: hardwareEvidenceStage, audioOwnership: audioOwnership)
   }
   static func request(_ id: String, url: String = "https://example.test/media.mp4",
       format: AppleMediaFormat = .mp4, autoplay: Bool = false, start: Int64? = nil,

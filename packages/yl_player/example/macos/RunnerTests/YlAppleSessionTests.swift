@@ -782,3 +782,194 @@ extension YlEngineAssessmentTests {
     XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
   }
 }
+
+
+@MainActor
+final class YlAudioOwnershipTests: XCTestCase {
+  final class Driver: YlAudioSessionDriving {
+    var onInterruption: ((YlAudioInterruption) -> Void)?
+    var calls = [String]()
+    var failActivation = false
+    func configureMediaPlayback() throws { calls.append("configure") }
+    func activate() throws {
+      calls.append("activate")
+      if failActivation { throw NSError(domain: "activation", code: 1) }
+    }
+    func deactivateNotifyingOthers() throws { calls.append("deactivate.notifyOthers") }
+  }
+  private var server: RollbackHlsServer?
+  private func request(_ id: String) throws -> AppleLoadRequest {
+    if server == nil {
+      let bundle = Bundle(for: Self.self)
+      let instance = try RollbackHlsServer(
+        key: Data(contentsOf: XCTUnwrap(bundle.url(forResource: "hls_key", withExtension: "bin"))),
+        segment: Data(contentsOf: XCTUnwrap(bundle.url(forResource: "hls_encrypted_segment0", withExtension: "ts"))))
+      server = instance
+      addTeardownBlock { instance.close() }
+    }
+    return AppleHostFixture.request(id, url: server!.url.absoluteString, format: .hls)
+  }
+  func registry(_ coordinator: YlAudioOwnershipCoordinator) -> YlApplePlayerRegistry {
+    YlApplePlayerRegistry(makeServices: { _ in YlAppleRegistryTests.services() },
+      makeCallbacks: { _ in AppleRecordingCallbacks() }, installHost: { _, _ in }, audioOwnership: coordinator)
+  }
+  func create(_ registry: YlApplePlayerRegistry, managed: Bool = true) throws -> YlApplePlayerHost {
+    let reply = try registry.create(request: .init(schemaMajor: 2,
+      options: .init(decoderPolicy: .systemDefault, audioPolicy: managed ? .pluginManagedMediaPlayback : .appManaged, positionUpdateIntervalMs: 100)))
+    return try XCTUnwrap(registry.host(for: reply.channelSuffix))
+  }
+  func testPluginManagedPlayersInSeparateRegistriesAreSupported() async throws {
+    let driver = Driver()
+    let shared = YlAudioOwnershipCoordinator(driver: driver)
+    let first = registry(shared), second = registry(shared)
+    defer { first.detach(); second.detach() }
+    let a = try create(first), b = try create(second)
+    XCTAssertEqual(a.playerId, b.playerId, "Registry identity separates equal local Player IDs")
+    let loadedA = try await a.load(request: request("a"))
+    let loadedB = try await b.load(request: request("b"))
+    XCTAssertTrue(driver.calls.isEmpty, "Create/load do not acquire")
+    try await a.play(command: .init(sessionId: loadedA.sessionId))
+    XCTAssertEqual(driver.calls, ["configure", "activate"])
+    try await b.play(command: .init(sessionId: loadedB.sessionId))
+    XCTAssertEqual(shared.ownerCount, 2)
+    XCTAssertEqual(driver.calls, ["configure", "activate"])
+    let c = try create(first)
+    let loadedC = try await c.load(request: request("same-registry"))
+    try await c.play(command: .init(sessionId: loadedC.sessionId))
+    try a.pause(command: .init(sessionId: loadedA.sessionId))
+    XCTAssertEqual(shared.ownerCount, 3)
+    XCTAssertEqual(driver.calls, ["configure", "activate"])
+    first.detach(); first.detach()
+    XCTAssertEqual(shared.ownerCount, 1)
+    XCTAssertEqual(driver.calls, ["configure", "activate"])
+    try await b.stop()
+    XCTAssertEqual(shared.ownerCount, 0)
+    second.detach()
+    XCTAssertEqual(driver.calls, ["configure", "activate", "deactivate.notifyOthers"])
+  }
+  func testAppManagedCompleteLifecycleMakesZeroDriverCalls() async throws {
+    let driver = Driver()
+    let coordinator = YlAudioOwnershipCoordinator(driver: driver)
+    let r = registry(coordinator); defer { r.detach() }
+    let host = try create(r, managed: false)
+    let loaded = try await host.load(request: request("app"))
+    try await host.play(command: .init(sessionId: loaded.sessionId))
+    try host.pause(command: .init(sessionId: loaded.sessionId))
+    try await host.stop(); host.close(); r.detach()
+    XCTAssertTrue(driver.calls.isEmpty)
+    XCTAssertEqual(coordinator.ownerCount, 0)
+  }
+  func testFailedActivationRejectsPlayWithoutOwnershipOrPlaybackIntent() async throws {
+    let driver = Driver(); driver.failActivation = true
+    let coordinator = YlAudioOwnershipCoordinator(driver: driver), av = AVPlayer()
+    let owner = YlPlayerAudioOwnership(coordinator: coordinator, key: .init(registry: UUID(), player: "same"))
+    let host = YlApplePlayerHost(playerId: 1, suffix: "failure",
+      options: .init(decoderPolicy: .systemDefault, audioPolicy: .pluginManagedMediaPlayback, positionUpdateIntervalMs: 100),
+      services: YlAppleRegistryTests.services(), callbacks: AppleRecordingCallbacks(), avPlayer: av, audioOwnership: owner)
+    defer { host.close() }
+    let load = try await host.load(request: request("a"))
+    do { try await host.play(command: .init(sessionId: load.sessionId)); XCTFail("Activation must fail") } catch {}
+    XCTAssertEqual(coordinator.ownerCount, 0)
+    XCTAssertEqual(av.rate, 0)
+    XCTAssertFalse(host.playbackIntent)
+    XCTAssertEqual(driver.calls, ["configure", "activate"])
+    driver.failActivation = false
+    try await host.play(command: .init(sessionId: load.sessionId))
+    XCTAssertEqual(coordinator.ownerCount, 1)
+    host.close()
+    XCTAssertEqual(driver.calls.last, "deactivate.notifyOthers")
+  }
+  func testSamePlayerReplacementAndFailedPreparationKeepOwnedLease() async throws {
+    let driver = Driver()
+    let coordinator = YlAudioOwnershipCoordinator(driver: driver)
+    let r = registry(coordinator); defer { r.detach() }
+    let host = try create(r)
+    let a = try await host.load(request: request("a"))
+    try await host.play(command: .init(sessionId: a.sessionId))
+    var rejected = AppleHostFixture.request("unsupported", format: .mp4)
+    rejected.options.bufferStrategy = .init(kind: .bounded, minDurationMs: 100, maxDurationMs: 500, maxManagedBytes: 16 * 1024 * 1024)
+    do { _ = try await host.load(request: rejected); XCTFail("Unsupported preparation must fail") } catch {}
+    XCTAssertEqual(host.sessionId, a.sessionId)
+    XCTAssertTrue(host.playbackIntent)
+    _ = try await host.load(request: request("replacement"))
+    XCTAssertEqual(coordinator.ownerCount, 1)
+    XCTAssertEqual(driver.calls, ["configure", "activate"])
+  }
+  func testRetiredSessionPermitCannotAcquireOrReleaseNewSessionLease() throws {
+    let driver = Driver()
+    let shared = YlAudioOwnershipCoordinator(driver: driver)
+    let owner = YlPlayerAudioOwnership(coordinator: shared, key: .init(registry: UUID(), player: "one"))
+    let old = owner.beginSession(); try owner.acquire(old.token)
+    let replacement = owner.beginSession(); try owner.acquire(replacement.token)
+    XCTAssertThrowsError(try owner.acquire(old.token))
+    owner.release(ifCurrent: old.token)
+    XCTAssertEqual(shared.ownerCount, 1)
+    owner.release(ifCurrent: replacement.token)
+    owner.release(ifCurrent: replacement.token)
+    XCTAssertEqual(driver.calls, ["configure", "activate", "deactivate.notifyOthers"])
+  }
+  func testFailedCandidateRollsBackOnlyItsOwnNewAcquisition() throws {
+    let driver = Driver()
+    let coordinator = YlAudioOwnershipCoordinator(driver: driver)
+    let owner = YlPlayerAudioOwnership(coordinator: coordinator, key: .init(registry: UUID(), player: "one"))
+    let candidate = owner.beginSession(); try owner.acquire(candidate.token); owner.rollback(candidate)
+    XCTAssertEqual(coordinator.ownerCount, 0)
+    let old = owner.beginSession(); try owner.acquire(old.token)
+    let failed = owner.beginSession(); owner.rollback(failed)
+    try owner.acquire(old.token)
+    XCTAssertEqual(coordinator.ownerCount, 1)
+    XCTAssertEqual(driver.calls.filter { $0 == "deactivate.notifyOthers" }.count, 1)
+    owner.stop(); XCTAssertEqual(coordinator.ownerCount, 0)
+  }
+  func testInterruptionResumesOnlyPriorIntentAndCannotReviveStoppedPlayer() async throws {
+    let driver = Driver()
+    let shared = YlAudioOwnershipCoordinator(driver: driver)
+    let first = registry(shared), second = registry(shared)
+    defer { first.detach(); second.detach() }
+    let a = try create(first), b = try create(second)
+    let aLoad = try await a.load(request: request("playing"))
+    _ = try await b.load(request: request("paused"))
+    try await a.play(command: .init(sessionId: aLoad.sessionId))
+    driver.onInterruption?(.began)
+    XCTAssertFalse(a.isActive)
+    driver.onInterruption?(.ended(shouldResume: true))
+    try await AppleHostCharacterizations.waitFor({ a.isActive && a.playbackIntent })
+    XCTAssertFalse(b.playbackIntent)
+    XCTAssertEqual(driver.calls.filter { $0 == "activate" }.count, 2, "Interruption resume must reacquire native activation once")
+    driver.onInterruption?(.began)
+    try await a.stop()
+    driver.onInterruption?(.ended(shouldResume: true))
+    for _ in 0..<5 { await Task.yield() }
+    XCTAssertNil(a.sessionId)
+    XCTAssertEqual(shared.ownerCount, 0)
+  }
+  func testInterruptionWithoutResumePermissionDoesNotAutoplay() async throws {
+    let driver = Driver()
+    let coordinator = YlAudioOwnershipCoordinator(driver: driver)
+    let managed = registry(coordinator); defer { managed.detach() }
+    let host = try create(managed)
+    let load = try await host.load(request: request("play"))
+    try await host.play(command: .init(sessionId: load.sessionId))
+    driver.onInterruption?(.began); driver.onInterruption?(.ended(shouldResume: false))
+    for _ in 0..<8 { await Task.yield() }
+    XCTAssertFalse(host.playbackIntent)
+  }
+  func testUnownedReleaseDoesNotClaimAnExternalAppActivation() {
+    let driver = Driver()
+    let shared = YlAudioOwnershipCoordinator(driver: driver)
+    shared.release(.init(registry: UUID(), player: "external"))
+    shared.releaseRegistry(UUID())
+    XCTAssertTrue(driver.calls.isEmpty)
+    XCTAssertEqual(shared.ownerCount, 0)
+  }
+  #if os(macOS)
+  func testMacosDriverTracksOutputWithoutGlobalSession() throws {
+    let driver = YlMacosAudioSession()
+    let shared = YlAudioOwnershipCoordinator(driver: driver)
+    let key = YlAudioOwnershipKey(registry: UUID(), player: "one")
+    try shared.acquire(key); XCTAssertTrue(driver.outputActive)
+    shared.release(key); XCTAssertFalse(driver.outputActive)
+    XCTAssertEqual(shared.ownerCount, 0)
+  }
+  #endif
+}

@@ -49,7 +49,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
-    "sha256": "ccbcd79fb8f688bdf5f8368d81ea6b9f8c8bbe98eb41a76c6919486276cfe0f0",
+    "sha256": "9a289c120c0b02af8be498a50ffa1e813fe150027b2d380efbca0d99deefead3",
     "methods": [
       "testInputValidationPrecedesReplacementAndRejectsUnrepresentableTimeline",
       "testSemanticCommandRejectionCompletesFutureWithoutFailingHealthySession"
@@ -97,7 +97,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift",
-    "sha256": "d4eef1ae91602566889c7b1bb0bea9a9b6e522da7111ed46e5f542acf005b21b",
+    "sha256": "d64e9270a0a327fc4782ea1e3a22c4ec5187fe4a5cdafa5c6faf3437330f00ef",
     "methods": [
       "testImmutableRequestAndSessionIdentityStartsAtZero",
       "testNegativeMeasuredLiveOffsetIsZeroAndUnknownRemainsNil",
@@ -126,7 +126,17 @@
       "testUnknownFormatInspectionIsBoundedAndRefinedPolicyStillRejects",
       "testBoundedAndRetiredHlsHostRejectionsPreserveCommittedPlayback",
       "testBoundedScopeRejectsHlsBeforeNetworkPreparationAndKeepsCurrentItem",
-      "testBoundedPlanRequiresCompleteValidDurationsAndSoleByteBoundary"
+      "testBoundedPlanRequiresCompleteValidDurationsAndSoleByteBoundary",
+      "testPluginManagedPlayersInSeparateRegistriesAreSupported",
+      "testAppManagedCompleteLifecycleMakesZeroDriverCalls",
+      "testFailedActivationRejectsPlayWithoutOwnershipOrPlaybackIntent",
+      "testSamePlayerReplacementAndFailedPreparationKeepOwnedLease",
+      "testRetiredSessionPermitCannotAcquireOrReleaseNewSessionLease",
+      "testFailedCandidateRollsBackOnlyItsOwnNewAcquisition",
+      "testInterruptionResumesOnlyPriorIntentAndCannotReviveStoppedPlayer",
+      "testInterruptionWithoutResumePermissionDoesNotAutoplay",
+      "testUnownedReleaseDoesNotClaimAnExternalAppActivation",
+      "testMacosDriverTracksOutputWithoutGlobalSession"
     ],
     "task7_provenance": "Task7 native registry/reducer/identity, READY, private/public texture ownership and acknowledged callback boundary; R23 partial/absent geometry must remain unknown without changing actual internal dimensions.",
     "task7_typed_migration": {
@@ -245,13 +255,17 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlManagedFallbackCharacterizationTests.swift",
-    "sha256": "280438b92f6855d2a8ed2c2b9e3ba86de022faa66c9c70723894d445a0402b17",
+    "sha256": "2a39dfb4f17b6fd7f4170134b49e87036df7b4e26eff4b069fdf64441ec895e3",
     "methods": [
       "testHardwareEvidenceRequiresActualCFBooleanAndSafeIdentity",
       "testRequiredPipelineRejectsSoftwareBeforeDecoderInstallation",
       "testRequiredPipelineRecreationRejectsUnknownBeforeInstall",
       "testStrictInspectedFormatRecreationRejectsSoftware",
       "testPreferredPipelineAllowsUnknownWithoutClaimingHardware",
+      "testManagedAudioAutoplayPreparationFailureAndRetiredBackendCleanup",
+      "testManagedAudioActivationFailureBeforeReplacementPreservesAcceptedFallback",
+      "testAudioOutputStartFailurePublishesTerminalFailure",
+      "testManagedAudioTerminalOutputFailureReleasesCurrentLeaseExactlyOnce",
       "testStrictHostTransfersExactProvenDecoderBeforeCommitAndFirstFrameOnce",
       "testStrictSoftwareAndUnknownCandidatesPreserveAcceptedSession",
       "testPreferredHostCommitsUnknownAndSoftwareHonestly",

@@ -59,6 +59,7 @@ struct YlPlatformServices {
   let textureOutput: any YlTextureOutput
   let makeDisplayDriver: (@escaping () -> Void) -> any YlDisplayDriving
   let activateAudioSession: () throws -> Void
+  var beforeAudioOutput: () throws -> Void = {}
 
   init(platform: YlApplePlatform, textureOutput: any YlTextureOutput,
        makeDisplayDriver: @escaping (@escaping () -> Void) -> any YlDisplayDriving,
@@ -73,8 +74,10 @@ struct YlPlatformServices {
 
 extension YlPlatformServices {
   func borrowing(_ output: any YlTextureOutput) -> Self {
-    Self(platform: platform, textureOutput: output,
+    var result = Self(platform: platform, textureOutput: output,
       makeDisplayDriver: makeDisplayDriver, activateAudioSession: activateAudioSession)
+    result.beforeAudioOutput = beforeAudioOutput
+    return result
   }
 }
 

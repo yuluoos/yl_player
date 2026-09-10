@@ -9,11 +9,17 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
   private var nextPlayerId: Int64 = 0
   private var detached = false
   private var backgrounded = false
+  private var audioInterrupted = false
+  private var hasManagedPlayers = false
+  private let registryIdentity = UUID()
+  private let audioOwnership: YlAudioOwnershipCoordinator
 
   init(makeServices: @escaping (ApplePlayerOptionsMessage) throws -> YlPlatformServices,
        makeCallbacks: @escaping (String) -> ApplePlayerFlutterApiProtocol,
        installHost: @escaping (String, ApplePlayerHostApi?) -> Void,
-       lifecycle: YlLifecycleDriving? = nil) {
+       lifecycle: YlLifecycleDriving? = nil,
+       audioOwnership: YlAudioOwnershipCoordinator = .shared) {
+    self.audioOwnership = audioOwnership
     self.makeServices = makeServices
     self.makeCallbacks = makeCallbacks
     self.installHost = installHost
@@ -32,14 +38,20 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
       guard request.schemaMajor == 2 else { throw NativePlayerError(category: "protocol", code: "protocol.mismatch", message: "Protocol mismatch.") }
       guard request.options.positionUpdateIntervalMs > 0,
         request.options.positionUpdateIntervalMs <= Int64(Int32.max) else { throw YlAppleFailureMapper.invalid() }
-      guard request.options.audioPolicy == .appManaged else { throw YlAppleFailureMapper.unsupported }
       guard nextPlayerId < Int64.max else { throw NativePlayerError(category: "resource", code: "resource.exhausted", message: "Player identifiers exhausted.") }
       // No native allocation or registration occurs before the complete preflight.
       let services = try makeServices(request.options)
       nextPlayerId += 1
       let suffix = "p\(nextPlayerId)-" + UUID().uuidString.lowercased()
+      let managed = request.options.audioPolicy == .pluginManagedMediaPlayback
+      let audio = managed ? YlPlayerAudioOwnership(coordinator: audioOwnership,
+        key: .init(registry: registryIdentity, player: suffix)) : nil
+      if managed {
+        hasManagedPlayers = true
+        audioOwnership.observe(registryIdentity) { [weak self] in self?.interruption($0) }
+      }
       let host = YlApplePlayerHost(playerId: nextPlayerId, suffix: suffix,
-        options: request.options, services: services, callbacks: makeCallbacks(suffix))
+        options: request.options, services: services, callbacks: makeCallbacks(suffix), audioOwnership: audio)
       var quiesced = [YlApplePlayerHost]()
       host.willCommit = { [weak self, weak host] requiresLease in
         guard let self, let host, requiresLease, services.compatibility.limitsVideoReservations else { return }
@@ -63,7 +75,7 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
       }
       players[suffix] = host
       installHost(suffix, host)
-      if backgrounded { host.suspend() }
+      if backgrounded || (managed && audioInterrupted) { host.suspend() }
       return AppleCreateReply(schemaMajor: 2, spiMajor: 2, channelSuffix: suffix,
         textureId: services.textureOutput.textureId,
         platform: services.platform == .ios ? .ios : .macos,
@@ -88,6 +100,20 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
     let owned = Array(players.values)
     owned.forEach { $0.close() }
     players.removeAll()
+    if hasManagedPlayers { audioOwnership.releaseRegistry(registryIdentity) }
+  }
+  private func interruption(_ event: YlAudioInterruption) {
+    guard !detached else { return }
+    switch event {
+    case .began:
+      audioInterrupted = true
+      players.values.filter(\.managesAudio).forEach { $0.suspend() }
+    case let .ended(shouldResume):
+      audioInterrupted = false
+      let managed = players.values.filter(\.managesAudio)
+      if !shouldResume { managed.forEach { $0.cancelAutomaticResume() } }
+      if !backgrounded { managed.forEach { $0.resume() } }
+    }
   }
   private func suspend() {
     // macOS preserves playback when the app resigns active, as before consolidation.
@@ -98,7 +124,7 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
   private func resume() {
     if YlApplePlatform.current == .ios {
       backgrounded = false
-      players.values.forEach { $0.resume() }
+      players.values.filter { !audioInterrupted || !$0.managesAudio }.forEach { $0.resume() }
     } else { players.values.forEach { $0.refreshState() } }
   }
 }

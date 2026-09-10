@@ -53,6 +53,8 @@ final class YlAudioPipeline {
   private var desiredVolume: Float = 1
   private var desiredRate: Float = 1
   private var audioAnchored = false
+  var beforeOutput: () throws -> Void = {}
+  func prepareForPlayback() throws { try beforeOutput() }
   private var pendingAudioPacket: YlCompressedAudioPacket?
 
   private var currentAudioRenderer: YlAudioRenderer? { lock.withLock { audioRenderer } }
@@ -65,7 +67,18 @@ final class YlAudioPipeline {
     self.audioGeneration = generation
   }
 
-  private func makeRenderer() -> YlAudioRenderer { factory.makeRenderer(bufferBudget: bufferBudget) }
+  private func makeRenderer() -> YlAudioRenderer {
+    let renderer = factory.makeRenderer(bufferBudget: bufferBudget)
+    renderer.onOutputFailure = { [weak self, weak renderer] error in
+      // Output can fail while a renderer operation or session state lock is held.
+      // Publish later, only if this exact renderer still owns installed output.
+      DispatchQueue.main.async { [weak self, weak renderer] in
+        guard let self, let renderer, self.currentAudioRenderer === renderer else { return }
+        self.output?.fail(error)
+      }
+    }
+    return renderer
+  }
 
   func setVolume(_ volume: Float, hasAudio: Bool) {
       desiredVolume = volume

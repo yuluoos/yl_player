@@ -37,6 +37,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
        bufferLedger: YlManagedBufferLedger = YlManagedBufferLedger(),
        videoSessionFactory: YlVTSessionFactory? = nil,
        hardwareEvidenceStage: YlHardwareEvidencePreparation = .init(),
+       audioOwnership: YlPlayerAudioOwnership? = nil,
        clock: @escaping () -> Int64 = YlAppleSafeDiagnostics.nowMilliseconds) {
     self.playerId = playerId
     self.suffix = suffix
@@ -49,11 +50,13 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
       guard let self, !self.disposed, !self.suspended, !self.restoring else { return }
       self.reducer.publicFrame(identity: identity)
     }
+    let audio = audioOwnership ?? (options.audioPolicy == .pluginManagedMediaPlayback
+      ? YlPlayerAudioOwnership(coordinator: .shared, key: .init(registry: UUID(), player: suffix)) : nil)
     coordinator = YlAppleSessionCoordinator(playerId: playerId, services: services,
       configuration: PlayerConfiguration(positionEventIntervalMs: options.positionUpdateIntervalMs),
       textureOwner: textureOwner, avPlayer: avPlayer, commandCoordinator: commandCoordinator,
       beforeFallbackConstruction: beforeFallbackConstruction, slotCompatibility: slotCompatibility, bufferLedger: bufferLedger,
-      videoSessionFactory: videoSessionFactory, hardwareEvidenceStage: hardwareEvidenceStage) { [weak self] identity, callback in
+      videoSessionFactory: videoSessionFactory, hardwareEvidenceStage: hardwareEvidenceStage, audioOwnership: audio) { [weak self] identity, callback in
         self?.receive(callback, identity: identity)
       }
     reducer.onOutput = { [weak self] output in self?.send(output) }
@@ -62,6 +65,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
   }
 
   var initialState: AppleStateMessage { encode(reducer.state) }
+  var managesAudio: Bool { options.audioPolicy == .pluginManagedMediaPlayback }
   var isActive: Bool { coordinator.isActive }
   var playbackIntent: Bool { coordinator.currentPlaybackIntent }
   var acceptedVideoConstraints: YlAppleVideoConstraints { coordinator.acceptedVideoConstraints }
@@ -234,6 +238,10 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
     coordinator.handleMemoryWarning()
     reducer.projectPaused()
   }
+  func cancelAutomaticResume() {
+    resumePlayback = false
+    try? coordinator.executeSynchronous(.pause)
+  }
   func resume() {
     guard suspended, !disposed else { return }
     suspended = false
@@ -302,6 +310,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
   }
   private func receive(_ callback: YlNativeBackendCallback, identity: YlAppleSessionIdentity) {
     guard !disposed, reducer.identity == identity else { return }
+    if case .failure = callback.event { coordinator.releaseAudioAfterFailure(identity: identity) }
     if restoring || suspended {
       if case .state = callback.event { stagedSnapshot = (identity, callback) }
       return
@@ -418,7 +427,6 @@ enum YlAppleNativeInput {
         }
       }
     }
-    guard defaults.audioPolicy == .appManaged else { throw YlAppleFailureMapper.unsupported }
     let format: YlSourceFormat
     switch source.format {
     case .automatic: format = .automatic

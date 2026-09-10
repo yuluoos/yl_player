@@ -9,7 +9,7 @@ enum YlIosPlatformAdapter {
     YlPlatformServices(platform: .ios,
       textureOutput: YlIosTextureOutput(textures: textures, textureId: textureId),
       makeDisplayDriver: { tick in YlIosDisplayDriver(onTick: tick) },
-      activateAudioSession: activateAudioSession ?? { let session = AVAudioSession.sharedInstance(); try session.setCategory(.playback, mode: .moviePlayback); try session.setActive(true) })
+      activateAudioSession: activateAudioSession ?? {})
   }
 }
 

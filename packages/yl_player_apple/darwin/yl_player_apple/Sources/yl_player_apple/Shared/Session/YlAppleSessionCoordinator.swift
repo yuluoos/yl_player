@@ -18,6 +18,8 @@ final class YlAppleSessionCoordinator: NSObject {
   var isActive: Bool { slot.current.isActive }
 
   private let services: YlPlatformServices
+  private let audioOwnership: YlPlayerAudioOwnership?
+  private var audioToken: UUID?
   private let textureOwner: YlAppleTextureOwner
   private let avTexture: YlAppleAvTextureBinding
   private var activeTexture: YlAppleTextureLease?
@@ -57,7 +59,9 @@ final class YlAppleSessionCoordinator: NSObject {
        bufferLedger: YlManagedBufferLedger = YlManagedBufferLedger(),
        videoSessionFactory: YlVTSessionFactory? = nil,
        hardwareEvidenceStage: YlHardwareEvidencePreparation = .init(),
+       audioOwnership: YlPlayerAudioOwnership? = nil,
        emit: @escaping (YlAppleSessionIdentity, YlNativeBackendCallback) -> Void) {
+    self.audioOwnership = audioOwnership
     self.videoSessionFactory = videoSessionFactory
     self.hardwareEvidenceStage = hardwareEvidenceStage
     self.bufferLedger = bufferLedger
@@ -171,6 +175,8 @@ final class YlAppleSessionCoordinator: NSObject {
       if slot.current !== avBackend { avBackend.clearMediaForStop() }
       slot.stop()
 
+    audioOwnership?.stop()
+    audioToken = nil
     identity = nil
     activeTexture?.dispose()
     activeTexture = nil
@@ -518,19 +524,48 @@ final class YlAppleSessionCoordinator: NSObject {
     if case let .fallback(_, prepared) = candidate, let events = prepared.commitEvents {
       candidateEvents = events
     } else { candidateEvents = YlAppleCommitEmitter(identity: identity, emit: emit) }
+    let audioTransaction = audioOwnership?.beginSession()
+    let previousAudioToken = audioToken
+    var candidateServices = services.borrowing(candidateTexture)
+    if let audioOwnership, let audioTransaction {
+      candidateServices.beforeAudioOutput = { try audioOwnership.acquire(audioTransaction.token) }
+      avBackend.beforeAudioOutput = candidateServices.beforeAudioOutput
+    }
+    let restoreAudioAuthority = { [self] in
+      if let audioOwnership, let audioTransaction {
+        audioOwnership.rollback(audioTransaction)
+        avBackend.beforeAudioOutput = {
+          guard let previousAudioToken else { throw YlOpenCancellationToken.cancellationError() }
+          try audioOwnership.acquire(previousAudioToken)
+        }
+      }
+    }
+    let beforeRollbackActivation: (YlPlaybackBackend) throws -> Void = { [self] backend in
+      restoreAudioAuthority()
+      try reconcileBeforeRollbackActivation(backend)
+    }
     var committed = false
     defer {
       if committed {
+        audioToken = audioTransaction?.token
         priorEvents?.invalidate()
         activeEvents = candidateEvents
         activeTexture = candidateTexture
       } else {
+        restoreAudioAuthority()
         candidateEvents.invalidate()
         candidateTexture.dispose()
         avTexture.lease = priorTexture
         if let priorEvents { avBackend.bindCallbacks(priorEvents.accept) }
       }
     }
+    let wantsOutput: Bool
+    switch candidate {
+    case let .avPlayer(source): wantsOutput = source.loadOptions?.autoplay ?? false
+    case let .headeredHls(source, _): wantsOutput = reactivating ? currentPlaybackIntent : (source.loadOptions?.autoplay ?? false)
+    case let .fallback(_, prepared): wantsOutput = prepared.resumeState?.shouldPlay ?? false
+    }
+    if wantsOutput { try candidateServices.beforeAudioOutput() }
     switch candidate {
     case let .avPlayer(source):
       avTexture.lease = candidateTexture
@@ -540,7 +575,7 @@ final class YlAppleSessionCoordinator: NSObject {
       }
       applyPersistentPlaybackControls(to: avBackend)
       if slot.current !== avBackend {
-        let previous = try slot.replace(beforeRollbackActivation: reconcileBeforeRollbackActivation) { avBackend }
+        let previous = try slot.replace(beforeRollbackActivation: beforeRollbackActivation) { avBackend }
         previous.dispose()
       } else {
         try avBackend.activate()
@@ -562,7 +597,7 @@ final class YlAppleSessionCoordinator: NSObject {
         resume: reactivating
       )
       if slot.current !== avBackend {
-        let previous = try slot.replace(beforeRollbackActivation: reconcileBeforeRollbackActivation) { avBackend }
+        let previous = try slot.replace(beforeRollbackActivation: beforeRollbackActivation) { avBackend }
         if previous !== avBackend { previous.dispose() }
       } else if avBackend.isActive {
         try avBackend.commitStagedHlsIfActive()
@@ -576,11 +611,11 @@ final class YlAppleSessionCoordinator: NSObject {
       let qualityConstraint = try YlFallbackQualityConstraint(
         validating: reactivating || source.loadOptions == nil ? lastQualityConstraint : source.loadOptions?.videoConstraints ?? .unconstrained
       )
-      let previous = try slot.replace(beforeRollbackActivation: reconcileBeforeRollbackActivation) {
+      let previous = try slot.replace(beforeRollbackActivation: beforeRollbackActivation) {
         try beforeFallbackConstruction?(slot.current)
         let backend = try YlFallbackBackend(
           playerId: playerId,
-          services: services.borrowing(candidateTexture),
+          services: candidateServices,
           configuration: configuration.forLoad(source),
           prepared: prepared,
           qualityConstraint: qualityConstraint,
@@ -819,6 +854,11 @@ final class YlAppleSessionCoordinator: NSObject {
     failDeferredRestorationCommands(YlOpenCancellationToken.cancellationError())
   }
 
+  func releaseAudioAfterFailure(identity: YlAppleSessionIdentity) {
+    guard self.identity == identity, let audioToken else { return }
+    audioOwnership?.release(ifCurrent: audioToken)
+  }
+
   func emitError(_ error: NativePlayerError) {
     guard let identity else { return }
     emit(identity, YlNativeBackendCallback(generation: 0, event: .failure(error)))
@@ -845,6 +885,8 @@ final class YlAppleSessionCoordinator: NSObject {
     let current = slot.current
     slot.dispose()
     if current !== avBackend { avBackend.dispose() }
+    audioOwnership?.stop()
+    audioToken = nil
 
   }
 

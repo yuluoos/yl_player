@@ -119,6 +119,7 @@ protocol YlAudioRendering: AnyObject {
 }
 
 final class YlAudioRenderer: YlAudioRendering {
+  var onOutputFailure: ((NativePlayerError) -> Void)?
   private static let targetScheduledWallClockDurationUs: Int64 = 1_000_000
   private let lock = NSLock()
   // Converter and output controls share an order across demux and UI threads.
@@ -330,12 +331,14 @@ final class YlAudioRenderer: YlAudioRendering {
     do {
       try output.play()
     } catch {
-      throw NativePlayerError(
+      let failure = NativePlayerError(
         category: "render",
         code: "render.audio_engine_failed",
         message: "The native audio engine could not start.",
         diagnostic: String(describing: error)
       )
+      onOutputFailure?(failure)
+      throw failure
     }
   }
 

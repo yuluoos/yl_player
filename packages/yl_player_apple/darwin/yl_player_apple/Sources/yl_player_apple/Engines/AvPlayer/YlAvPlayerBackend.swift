@@ -229,10 +229,17 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
         message: "The Apple player has been disposed.")
     }
   }
+  var beforeAudioOutput: () throws -> Void = {}
+
+  private func startOutput() throws {
+    try beforeAudioOutput()
+    player.playImmediately(atRate: desiredRate)
+  }
+
   func play() throws {
     try checkAlive(); guard !stopped else { return }
+    try startOutput()
     playRequested = true
-    player.playImmediately(atRate: desiredRate)
     status = services.platform == .ios
       ? (player.timeControlStatus == .playing ? "playing" : "buffering")
       : YlAvPlayerStatePolicy.status(wantsToPlay: true,
@@ -288,6 +295,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
         message: "The \(YlApplePlatform.current.displayName) player has been disposed."
       )
     }
+    if source.loadOptions?.autoplay == true || (resume && playRequested) { try beforeAudioOutput() }
     stagedHls?.prepared.discard()
     stagedHls = StagedHls(source: source, prepared: prepared, resume: resume)
   }
@@ -330,7 +338,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       hlsResourceLoader = retained.loader
       playRequested = retained.shouldPlay
       installItem(asset: retained.asset, positionMs: savedPositionMs)
-      if retained.shouldPlay { player.playImmediately(atRate: desiredRate) }
+      if retained.shouldPlay { try startOutput() }
     } else if let source = lastSource {
       try installItem(source, positionMs: savedPositionMs)
     } else {
@@ -448,6 +456,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   func open(_ source: YlAppleSourceDescriptor) throws {
     try checkAlive()
     try validateOpen(source)
+    if source.loadOptions?.autoplay == true { try beforeAudioOutput() }
     if stopped && services.platform == .ios { try configureAudioSession() }
     channelGeneration = YlBackendGeneration.next()
     resetOpenState(source, resume: false)
@@ -572,7 +581,8 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
         openDurationMs = elapsedMilliseconds(since: openStartedAt)
       }
       if playRequested && player.rate == 0 {
-        player.playImmediately(atRate: desiredRate)
+        do { try startOutput() }
+        catch { handleFailure(error, item: item, generation: generation); return }
       }
       switch player.timeControlStatus {
       case .playing:
@@ -1004,7 +1014,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       do {
         try self.installItem(source, positionMs: 0)
         if self.playRequested {
-          self.player.playImmediately(atRate: self.desiredRate)
+          try self.startOutput()
         }
         self.emitState()
         self.refreshStallWatchdog()
