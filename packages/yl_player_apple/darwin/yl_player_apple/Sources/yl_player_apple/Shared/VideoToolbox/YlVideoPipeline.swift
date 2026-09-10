@@ -76,6 +76,7 @@ final class YlVideoPipeline {
     return created
   }
 
+  var geometry: YlVideoGeometry? { YlVideoGeometryResolver.managed(format: format) }
   var isDrained: Bool { submissions.isDrained }
   var hasDecoder: Bool { decoder != nil }
   var hardwareEvidence: YlHardwareDecoderEvidence { decoder?.hardwareEvidence ?? .unknown }
@@ -146,7 +147,7 @@ final class YlVideoPipeline {
           category: "internal",
           code: "internal.fallback_invariant",
           message: "The video decoder buffer reservation failed.",
-          diagnostic: String(describing: error)
+          diagnostic: YlAppleSafeDiagnostics.diagnostic(error)
         ))
         return nil
       }
@@ -225,7 +226,7 @@ final class YlVideoPipeline {
           self.outputRelay.error(NativePlayerError(
             category: "internal", code: "internal.fallback_invariant",
             message: "The video decoder buffer reservation failed.",
-            diagnostic: String(describing: error)
+            diagnostic: YlAppleSafeDiagnostics.diagnostic(error)
           ))
         }
       }

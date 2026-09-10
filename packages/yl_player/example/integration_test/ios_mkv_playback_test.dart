@@ -57,9 +57,12 @@ void main() {
       ),
     );
 
-    if (!await openOrVerifySimulatorHardwareError(controller, file)) {
-      return;
-    }
+    // R21: this default-policy geometry case requires successful real playback.
+    // Hardware-required rejection is covered separately by native policy tests.
+    await loadSession(
+      controller,
+      YlFileSource(file.path, format: YlMediaFormat.matroska),
+    );
     final firstFrame = controller.events
         .firstWhere((event) => event is YlFirstFrameEvent)
         .timeout(const Duration(seconds: 15));
@@ -69,9 +72,19 @@ void main() {
     await tester.pump();
 
     expect(controller.state.engine, YlPlaybackEngine.managedFallback);
-    expect(controller.state.decoderMode, YlDecoderMode.hardware);
+    debugPrint(
+      'TASK7_LOCAL_MKV_DECODER_MODE=${controller.state.decoderMode.name}',
+    );
     expect(controller.state.decoderIdentity, 'VideoToolbox');
-    expect(controller.state.videoGeometry, isNull);
+    expect(controller.state.videoGeometry?.displaySize.width, 320);
+    expect(controller.state.videoGeometry?.displaySize.height, 180);
+    expect(controller.state.videoGeometry?.encodedSize.width, 320);
+    expect(controller.state.videoGeometry?.encodedSize.height, 180);
+    expect(controller.state.videoGeometry?.pixelAspectRatio, 1);
+    expect(controller.state.videoGeometry?.rotationDegrees, 0);
+    debugPrint(
+      'TASK7_LOCAL_MKV_GEOMETRY_PASS: encoded=320x180 display=320x180 PAR=1 rotation=0',
+    );
     expect(controller.textureId.value, isNotNull);
 
     await sessionFor(controller).seekTo(const Duration(milliseconds: 900));

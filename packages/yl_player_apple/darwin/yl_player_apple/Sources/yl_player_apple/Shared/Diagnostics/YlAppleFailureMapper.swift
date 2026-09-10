@@ -22,16 +22,9 @@ enum YlAppleFailureMapper {
 
 extension YlAppleFailureMapper {
   static func message(_ error: Error, scope: AppleFailureScope) -> AppleFailureMessage {
-    let native = error as? NativePlayerError
-    let code = native?.code ?? "platform.failure"
-    let safeCode = code.range(of: "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$", options: .regularExpression) != nil
-      ? code : "platform.failure"
-    return AppleFailureMessage(category: category(native?.category ?? "internal"),
-      code: safeCode, message: "Playback operation failed.", retryable: false,
-      scope: scope, diagnosticId: YlAppleSafeDiagnostics.identifier())
+    YlAppleSafeDiagnostics.failure(error, scope: scope)
   }
   static func command(_ error: Error) -> PigeonError {
-    if let failure = error as? PigeonError { return failure }
     let failure = message(error, scope: .command)
     return PigeonError(code: failure.code, message: failure.message, details: failure)
   }

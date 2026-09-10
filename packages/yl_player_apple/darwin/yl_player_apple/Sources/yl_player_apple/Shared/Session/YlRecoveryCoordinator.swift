@@ -131,7 +131,7 @@ final class YlRecoveryCoordinator {
       let shouldRetry = session.shouldRetryRecovery(token: token, generation: reconnectGeneration)
       if shouldRetry {
         scheduleLiveReconnect(after: NativePlayerError(category: "network", code: "network.http_status",
-          message: "The HTTP-FLV reconnect failed.", diagnostic: String(describing: error)),
+          message: "The HTTP-FLV reconnect failed.", diagnostic: YlAppleSafeDiagnostics.diagnostic(error)),
           generation: reconnectGeneration)
       }
     }

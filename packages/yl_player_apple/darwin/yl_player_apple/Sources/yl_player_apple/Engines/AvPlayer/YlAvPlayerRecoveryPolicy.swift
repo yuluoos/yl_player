@@ -38,22 +38,7 @@ enum YlAvPlayerRecoveryPolicy {
     statusCode: Int?,
     uri: String?
   ) -> String {
-    let outerDomain = safeDomain(error?.domain) ?? "unknown"
-    let outerCode = error.map { String($0.code) } ?? "unknown"
-    let base = "NSError(domain=\(outerDomain), code=\(outerCode))"
-    guard errorDomain != nil || statusCode != nil || uri != nil else { return base }
-
-    var fields: [String] = []
-    if let errorDomain {
-      fields.append("domain=\(safeDomain(errorDomain) ?? "unknown")")
-    }
-    if let statusCode {
-      fields.append("status=\(statusCode)")
-    }
-    if let uri, let sanitizedURI = sanitized(uri) {
-      fields.append("uri=\(sanitizedURI)")
-    }
-    return "\(base); HLS(\(fields.joined(separator: ", ")))"
+    YlAppleSafeDiagnostics.diagnostic(error ?? NSError(domain: "AVFoundationErrorDomain", code: 0))
   }
 
   private static func isDirectLiveHls(
@@ -98,25 +83,6 @@ enum YlAvPlayerRecoveryPolicy {
     return errorLogStatusCode == 408
       || errorLogStatusCode == 429
       || (500...599).contains(errorLogStatusCode)
-  }
-
-  private static func safeDomain(_ domain: String?) -> String? {
-    guard let domain else { return nil }
-    switch domain {
-    case NSURLErrorDomain, AVFoundationErrorDomain, "CoreMediaErrorDomain":
-      return domain
-    default:
-      return "other"
-    }
-  }
-
-  private static func sanitized(_ uri: String) -> String? {
-    guard var components = URLComponents(string: uri) else { return nil }
-    components.user = nil
-    components.password = nil
-    components.query = nil
-    components.fragment = nil
-    return components.string
   }
 
   private static let transientURLErrorCodes: Set<Int> = [

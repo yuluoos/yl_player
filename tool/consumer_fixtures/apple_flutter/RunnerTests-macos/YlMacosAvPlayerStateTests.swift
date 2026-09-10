@@ -27,7 +27,7 @@ final class YlMacosAvPlayerStateTests: XCTestCase {
 
     XCTAssertEqual(
       diagnostic,
-      "NSError(domain=NSURLErrorDomain, code=\(NSURLErrorTimedOut))"
+      "Playback operation failed."
     )
     XCTAssertFalse(diagnostic.contains("secret"))
   }

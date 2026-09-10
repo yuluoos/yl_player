@@ -77,7 +77,9 @@ final class YlAppleStateReducer {
     case .state(var value):
       let previousEngine = snapshot?.engine
       if readyAt == nil, value.status == "ready" || value.metrics.openDurationMs != nil {
-        readyAt = max(0, value.metrics.openDurationMs ?? clock() - identity.startedAtMs)
+        // Backend duration establishes READY, but excludes private preparation.
+        // The Load identity clock measures the entire public operation.
+        readyAt = max(0, clock() - identity.startedAtMs)
         var ready = value
         ready.status = "ready"
         ready.metrics.openDurationMs = readyAt

@@ -757,7 +757,7 @@ final class YlAppleSessionCoordinator: NSObject {
       category: "internal",
       code: "\(YlApplePlatform.current.rawValue).command_failed",
       message: "Apple player command failed.",
-      diagnostic: String(describing: error)
+      diagnostic: YlAppleSafeDiagnostics.diagnostic(error)
     )
   }
 

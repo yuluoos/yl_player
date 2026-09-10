@@ -115,7 +115,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
         category: "network",
         code: "network.local_proxy_unavailable",
         message: "The local HLS media proxy could not start.",
-        diagnostic: startupError.map(String.init(describing:))
+        diagnostic: startupError.map(YlAppleSafeDiagnostics.diagnostic)
       )
     }
   }
@@ -478,6 +478,10 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     return usesChunkedTransfer && method != "HEAD" ? .finishChunked : .close
   }
 
+  static func badGatewayBody(_ error: Error?) -> Data {
+    error.map { Data(YlAppleSafeDiagnostics.diagnostic($0).utf8) } ?? Data()
+  }
+
   private func finishProxyResponse(_ record: TaskRecord, error: Error?) {
     switch Self.completionAction(
       responseStarted: record.responseStarted,
@@ -488,7 +492,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     case .badGateway:
       send(
         status: 502,
-        body: error.map { Data(String(describing: $0).utf8) } ?? Data(),
+        body: Self.badGatewayBody(error),
         headers: ["Content-Type": "text/plain; charset=utf-8"],
         to: record.connection
       )

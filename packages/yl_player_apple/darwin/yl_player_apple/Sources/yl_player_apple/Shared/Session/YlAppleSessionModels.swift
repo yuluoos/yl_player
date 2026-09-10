@@ -69,6 +69,7 @@ struct YlNativeState {
   var metrics: YlNativeMetrics
   let error: NativePlayerError?
   var decoderEvidence: YlHardwareDecoderEvidence? = nil
+  var geometry: YlVideoGeometry? = nil
 }
 
 struct YlNativeTimelineDelta {

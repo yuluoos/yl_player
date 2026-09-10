@@ -82,8 +82,7 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
         implementationName: "yl_player_apple", implementationVersion: "0.2.0-dev.1",
         capabilities: Self.capabilities(YlBackendStateEncoder.deviceCapabilities, platform: services.platform),
         initialState: host.initialState)
-    } catch let error as PigeonError { throw error }
-    catch { throw YlAppleFailureMapper.command(error) }
+    } catch { throw YlAppleFailureMapper.command(error) }
   }
   static func capabilities(_ native: YlNativeCapabilities, platform: YlApplePlatform) -> AppleCapabilitiesMessage {
     AppleCapabilitiesMessage(deviceProfile: "apple-" + platform.rawValue,

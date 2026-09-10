@@ -268,10 +268,15 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "72fccb1688074d3c55608dc45c59fc7869eaa8683dcc42ce94a632cbd8b42b83",
+    "destination_sha256": "bf7ea1f8ee49adbf41b5b9a58535cef208147769003940582683045b3241b6b5",
     "hardening_task2_migration": {
       "from_sha256": "ce5e651ae797678a91c813d3d04f317f3f44973f9fb316f9f372b621b8c82d35",
       "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
+    },
+    "hardening_task7_observability": {
+      "from_sha256": "72fccb1688074d3c55608dc45c59fc7869eaa8683dcc42ce94a632cbd8b42b83",
+      "base": "91aaa3f3d9f5618a02ad8183b267a6eab4a9b7b6",
+      "reason": "Restore authoritative geometry, Load-based clocks and nullable common metrics; central safe errors remove credential-free source URLs too. Current destination assertions changed; historical origins retained."
     }
   },
   {
@@ -496,7 +501,12 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "ab412353a76a8eca582fadab9aafb1e2d992a77276fd8628617b53e066756043"
+    "destination_sha256": "dc5980c94fde7a211ee0a87ecef4772fd3614cd48768d528cec67059f3d79bc7",
+    "hardening_task7_observability": {
+      "from_sha256": "ab412353a76a8eca582fadab9aafb1e2d992a77276fd8628617b53e066756043",
+      "base": "91aaa3f3d9f5618a02ad8183b267a6eab4a9b7b6",
+      "reason": "Restore authoritative geometry, Load-based clocks and nullable common metrics; central safe errors remove credential-free source URLs too. Current destination assertions changed; historical origins retained."
+    }
   },
   {
     "source": "packages/yl_player/example/macos/RunnerTests/YlMacosFallbackTests.swift",

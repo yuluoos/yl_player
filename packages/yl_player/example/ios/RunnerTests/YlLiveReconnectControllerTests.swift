@@ -374,12 +374,8 @@ final class YlLiveReconnectControllerTests: XCTestCase {
       uri: "https://user:pass@media.test/live.m3u8?token=secret#part"
     )
 
-    XCTAssertEqual(
-      diagnostic,
-      "NSError(domain=other, code=-11800); "
-        + "HLS(domain=CoreMediaErrorDomain, status=-12312, "
-        + "uri=https://media.test/live.m3u8)"
-    )
+    XCTAssertEqual(diagnostic, "Playback operation failed.")
+    XCTAssertFalse(diagnostic.contains("media.test"))
     XCTAssertFalse(diagnostic.contains("secret"))
     XCTAssertFalse(diagnostic.contains("user"))
     XCTAssertFalse(diagnostic.contains("pass"))

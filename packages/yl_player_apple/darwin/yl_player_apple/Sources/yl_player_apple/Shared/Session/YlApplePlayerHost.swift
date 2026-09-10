@@ -354,8 +354,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
       return try await withCheckedThrowingContinuation { continuation in
         DispatchQueue.main.async { operation { continuation.resume(with: $0) } }
       }
-    } catch let error as PigeonError { throw error }
-    catch { throw YlAppleFailureMapper.command(error) }
+    } catch { throw YlAppleFailureMapper.command(error) }
   }
 }
 
@@ -505,8 +504,6 @@ extension YlApplePlayerHost {
     if let start = value?.dvrStartMs, let end = value?.dvrEndMs, start >= 0, end >= start {
       window = AppleDvrWindowMessage(startMs: start, endMs: end)
     }
-    // R23: legacy width/height are partial measurements. The hardening geometry
-    // resolver owns encoded/display sizes, clean aperture, PAR and rotation.
     return AppleStateMessage(loadRequestId: state.identity?.loadRequestId,
       sessionId: state.identity?.sessionId, revision: state.revision, sequence: state.sequence,
       status: status, timeline: AppleTimelineMessage(positionMs: max(0, value?.positionMs ?? 0),
@@ -515,7 +512,7 @@ extension YlApplePlayerHost {
         isSeekable: value?.isSeekable ?? false, isLive: value?.isLive ?? false,
         isAtLiveEdge: value?.isLive == true ? value?.isAtLiveEdge : nil,
         liveOffsetMs: YlAppleTimeline.liveOffset(value?.liveOffsetMs), dvrWindow: window),
-      geometry: nil, audioTracks: value?.audioTracks.map(Self.track) ?? [],
+      geometry: value?.geometry?.message, audioTracks: value?.audioTracks.map(Self.track) ?? [],
       videoTracks: value?.videoTracks.map(Self.track) ?? [], engine: Self.engine(value?.engine),
       decoderMode: YlMetricsCollector.decoderMode(state: value),
       decoderIdentity: value?.decoderName, metrics: Self.metrics(value?.metrics ?? .init()),

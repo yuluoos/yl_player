@@ -73,7 +73,7 @@ final class YlAppleSessionTests: XCTestCase {
     reducer.accept(.init(generation: 2, event: .state(snapshot)), identity: id)
     reducer.publicFrame(identity: id)
     XCTAssertEqual(frames.count, 1)
-    XCTAssertEqual(reducer.state.snapshot?.metrics.openDurationMs, 15)
+    XCTAssertEqual(reducer.state.snapshot?.metrics.openDurationMs, 20)
     XCTAssertEqual(reducer.state.snapshot?.metrics.firstFrameDurationMs, 20)
     let error = NativePlayerError(category: "decoder", code: "decoder.failed", message: "failure")
     reducer.accept(.init(generation: 2, event: .failure(error)), identity: id)
@@ -972,4 +972,246 @@ final class YlAudioOwnershipTests: XCTestCase {
     XCTAssertEqual(shared.ownerCount, 0)
   }
   #endif
+}
+
+final class YlObservabilityBoundaryTests: XCTestCase {
+  func testUnobservedFallbackRebufferCountersMustRemainAbsent() {
+    let m = YlBackendStateEncoder.fallbackMetrics(openDurationMs: nil, firstFrameDurationMs: nil,
+      bufferedDurationMs: nil, bufferedBytes: nil, droppedVideoFrames: 0, audioUnderruns: 0, reconnectCount: 0)
+    XCTAssertNil(m.rebufferCount)
+    XCTAssertNil(m.rebufferDurationMs)
+  }
+  @MainActor
+  func testDiagnosticFuzzAcrossNativeFailureStateRetryAndDescriptions() {
+    let payloads = ["https://user:password@[2001:db8::1]/private?token=SECRET", "network.SECRET",
+      "%53%45%43%52%45%54", "aUtHoRiZaTiOn: Bearer SECRET", "Cookie: auth=SECRET", "Basic c2VjcmV0",
+      "/Users/private/secret.mov", "0 Module 0x1234 closure #1 in secret()"]
+    let fixture = AppleHostFixture(); defer { fixture.host.close() }
+    for index in 0..<100 {
+      let secret = payloads[index % payloads.count] + String(repeating: "SECRET", count: index)
+      let error = NativePlayerError(category: secret, code: secret, message: secret, diagnostic: secret)
+      let reducer = YlAppleStateReducer(playerId: 1, clock: { 0 })
+      let id = reducer.makeIdentity(loadRequestId: "safe")
+      reducer.commit(id)
+      var failures = [AppleFailureMessage]()
+      reducer.onOutput = { event in
+        switch event {
+        case .retry(_, _, _, let error), .failed(_, let error):
+          failures.append(YlAppleFailureMapper.message(error, scope: .session))
+        default: break
+        }
+      }
+      reducer.accept(.init(generation: 1, event: .retry(attempt: 1, delayMs: 1, error: error)), identity: id)
+      reducer.fail(error)
+      failures.append(fixture.host.encode(reducer.state).failure!)
+      XCTAssertEqual(failures.count, 3)
+      let strings = failures.map { String(describing: $0) } + [String(describing: error), String(reflecting: error)]
+      for value in strings {
+        XCTAssertFalse(value.contains(secret)); XCTAssertFalse(value.contains("SECRET"))
+        XCTAssertLessThanOrEqual(value.count, 512)
+      }
+    }
+  }
+  func testDiagnosticMustNotPublishEvenCredentialFreeURLs() {
+    let value = YlAvPlayerRecoveryPolicy.diagnostic(error: nil, errorDomain: nil, statusCode: nil,
+      uri: "https://media.test/private/user/movie.m3u8")
+    XCTAssertFalse(value.contains("media.test"))
+    XCTAssertFalse(value.contains("movie.m3u8"))
+    let proxyBody = String(data: YlHlsMediaProxy.badGatewayBody(
+      NSError(domain: "https://media.test/private?token=SECRET", code: 7,
+        userInfo: [NSLocalizedDescriptionKey: "Authorization: Bearer SECRET"])), encoding: .utf8)
+    XCTAssertEqual(proxyBody, "Playback operation failed.")
+  }
+  func testRepeatedSafeCommandMappingPreservesClassificationWithoutRawForwarding() {
+    let error = NativePlayerError(category: "cancelled", code: "session.stale", message: "SECRET")
+    let first = YlAppleFailureMapper.command(error)
+    let next = YlAppleFailureMapper.command(first)
+    XCTAssertFalse(first === next)
+    XCTAssertEqual(next.code, "session.stale")
+    XCTAssertEqual((next.details as? AppleFailureMessage)?.category, .cancelled)
+    XCTAssertFalse(next.localizedDescription.contains("SECRET"))
+  }
+  func testUntrustedPigeonFailureCannotBypassSafeBoundary() {
+    let secrets = ["https://user:password@[2001:db8::1]/private?token=SECRET", "%53%45%43%52%45%54", "aUtHoRiZaTiOn: Bearer SECRET", "Cookie: auth=SECRET", "Basic c2VjcmV0", "/Users/private/secret.mov", "0 Module 0x1234 closure #1 in secret()"]
+    for secret in secrets {
+      let result = YlAppleFailureMapper.command(PigeonError(code: secret, message: secret, details: secret))
+      for value in [result.code, result.message ?? "", String(describing: result.details)] {
+        XCTAssertFalse(value.contains(secret))
+        XCTAssertLessThanOrEqual(value.count, 512)
+      }
+    }
+  }
+}
+
+final class YlGeometryAndMetricTests: XCTestCase {
+  func testManagedMetricsReadSingleLedgerIncludingRetiredGenerationUntilRelease() throws {
+    let ledger = YlManagedBufferLedger(maxBytes: 4096)
+    let scope = try ledger.makeScope(maxBytes: 4096)
+    let bounded = YlMetricsCollector(scope: scope, bounded: true)
+    let unbounded = YlMetricsCollector(scope: scope, bounded: false)
+    XCTAssertEqual(bounded.snapshot.bufferedBytes, 0)
+    XCTAssertNil(unbounded.snapshot.bufferedBytes)
+    XCTAssertNil(unbounded.snapshot.bufferedDurationMs)
+    var retained = ledger.reserve(category: .queuedVideoFrames, bytes: 1024, generation: 1)
+    XCTAssertNotNil(retained)
+    ledger.invalidate(generation: 1)
+    XCTAssertEqual(bounded.snapshot.bufferedBytes, 1024)
+    retained = nil
+    XCTAssertEqual(bounded.snapshot.bufferedBytes, 0)
+  }
+  func testAVAssetTrackPreferredTransformFlowsIntoPublicGeometry() async throws {
+    let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString).appendingPathExtension("mov")
+    defer { try? FileManager.default.removeItem(at: url) }
+    let writer = try AVAssetWriter(outputURL: url, fileType: .mov)
+    let input = AVAssetWriterInput(mediaType: .video, outputSettings: [AVVideoCodecKey: AVVideoCodecType.h264,
+      AVVideoWidthKey: 320, AVVideoHeightKey: 180])
+    input.transform = CGAffineTransform(a: 0, b: 1, c: -1, d: 0, tx: 180, ty: 0)
+    let adaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: input, sourcePixelBufferAttributes: nil)
+    writer.add(input); XCTAssertTrue(writer.startWriting()); writer.startSession(atSourceTime: .zero)
+    var pixel: CVPixelBuffer?
+    XCTAssertEqual(CVPixelBufferCreate(kCFAllocatorDefault, 320, 180, kCVPixelFormatType_32BGRA, nil, &pixel), kCVReturnSuccess)
+    let buffer = try XCTUnwrap(pixel)
+    CVPixelBufferLockBaseAddress(buffer, [])
+    if let address = CVPixelBufferGetBaseAddress(buffer) { memset(address, 0, CVPixelBufferGetDataSize(buffer)) }
+    CVPixelBufferUnlockBaseAddress(buffer, [])
+    for index in 0..<3 {
+      for _ in 0..<100 where !input.isReadyForMoreMediaData { try await Task.sleep(nanoseconds: 10_000_000) }
+      XCTAssertTrue(adaptor.append(buffer, withPresentationTime: CMTime(value: Int64(index), timescale: 30)))
+    }
+    input.markAsFinished(); await writer.finishWriting()
+    XCTAssertEqual(writer.status, .completed)
+    let asset = AVURLAsset(url: url)
+    let tracks = try await asset.loadTracks(withMediaType: .video)
+    XCTAssertEqual(tracks.count, 1)
+    let track = try XCTUnwrap(tracks.first)
+    let transform = try await track.load(.preferredTransform)
+    XCTAssertEqual(transform.b, 1, accuracy: 0.001)
+    let geometry = try XCTUnwrap(YlVideoGeometryResolver.avPlayer(item: AVPlayerItem(asset: asset)))
+    XCTAssertEqual(geometry.encodedSize, CGSize(width: 320, height: 180))
+    XCTAssertEqual(geometry.displaySize, CGSize(width: 320, height: 180))
+    XCTAssertEqual(geometry.finalDisplaySize, CGSize(width: 180, height: 320))
+    XCTAssertEqual(geometry.message.rotationDegrees, 90)
+  }
+
+  func testLoadToReadyIncludesPreparationUsingSessionMonotonicClock() {
+    var now: Int64 = 100
+    let reducer = YlAppleStateReducer(playerId: 1, clock: { now })
+    let id = reducer.makeIdentity(loadRequestId: "load")
+    now = 200; reducer.commit(id)
+    var state = YlNativeState.characterizationReady
+    state.metrics.openDurationMs = 5 // engine construction is later than Load
+    reducer.accept(.init(generation: 1, event: .state(state)), identity: id)
+    XCTAssertEqual(reducer.state.snapshot?.metrics.openDurationMs, 100)
+    now = 225; reducer.publicFrame(identity: id)
+    XCTAssertEqual(reducer.state.snapshot?.metrics.firstFrameDurationMs, 125)
+    now = 400; reducer.accept(.init(generation: 2, event: .state(state)), identity: id)
+    XCTAssertEqual(reducer.state.snapshot?.metrics.openDurationMs, 100)
+  }
+  private func format(_ extensions: [String: Any] = [:]) throws -> CMVideoFormatDescription {
+    var result: CMVideoFormatDescription?
+    XCTAssertEqual(CMVideoFormatDescriptionCreate(allocator: kCFAllocatorDefault, codecType: kCMVideoCodecType_H264,
+      width: 720, height: 480, extensions: extensions as CFDictionary, formatDescriptionOut: &result), noErr)
+    return try XCTUnwrap(result)
+  }
+  func testCleanApertureAndPARApplyExactlyOnceWithUnappliedQuarterTurns() throws {
+    let f = try format([
+      kCMFormatDescriptionExtension_CleanAperture as String: [
+        kCMFormatDescriptionKey_CleanApertureWidth as String: 704,
+        kCMFormatDescriptionKey_CleanApertureHeight as String: 460,
+        kCMFormatDescriptionKey_CleanApertureHorizontalOffset as String: 0,
+        kCMFormatDescriptionKey_CleanApertureVerticalOffset as String: 0],
+      kCMFormatDescriptionExtension_PixelAspectRatio as String: [
+        kCMFormatDescriptionKey_PixelAspectRatioHorizontalSpacing as String: 10,
+        kCMFormatDescriptionKey_PixelAspectRatioVerticalSpacing as String: 11]])
+    for rotation in [90, 270, -90, 450] {
+      let g = try XCTUnwrap(YlVideoGeometryResolver.managed(format: f, rotationDegrees: rotation))
+      XCTAssertEqual(g.encodedSize, CGSize(width: 720, height: 480))
+      XCTAssertEqual(g.cleanAperture.size, CGSize(width: 704, height: 460))
+      XCTAssertEqual(g.displaySize.width, 704, accuracy: 0.001)
+      XCTAssertEqual(g.displaySize.height, 460)
+      XCTAssertEqual(g.pixelAspectRatio, 10.0 / 11, accuracy: 0.00001)
+      XCTAssertEqual(g.message.displaySize.width, 704, accuracy: 0.001)
+      XCTAssertEqual(g.message.pixelAspectRatio, 10.0 / 11, accuracy: 0.00001)
+      XCTAssertEqual(g.finalDisplaySize, CGSize(width: 460, height: 640))
+      XCTAssertEqual(g.rotationDegrees, (rotation % 360 + 360) % 360)
+    }
+    let oriented = try XCTUnwrap(YlVideoGeometryResolver.managed(format: f, rotationDegrees: 90, pixelsAreOriented: true))
+    XCTAssertEqual(oriented.rotationDegrees, 0)
+    XCTAssertEqual(oriented.pixelAspectRatio, 1)
+    XCTAssertEqual(oriented.displaySize, CGSize(width: 460, height: 640))
+    XCTAssertEqual(oriented.finalDisplaySize, CGSize(width: 460, height: 640))
+    let viewFixture = try XCTUnwrap(YlVideoGeometryResolver.resolve(
+      encodedSize: CGSize(width: 720, height: 576), cleanAperture: nil,
+      pixelAspectRatio: 16.0 / 15, rotationDegrees: 90))
+    XCTAssertEqual(viewFixture.message.displaySize.width, 720)
+    XCTAssertEqual(viewFixture.message.displaySize.height, 576)
+    XCTAssertEqual(viewFixture.message.pixelAspectRatio, 16.0 / 15, accuracy: 0.00001)
+    XCTAssertEqual(viewFixture.finalDisplaySize, CGSize(width: 576, height: 768))
+  }
+  func testAbsentMetadataUsesValidFormatButRejectsInvalidMeasurements() throws {
+    let g = try XCTUnwrap(YlVideoGeometryResolver.managed(format: format()))
+    XCTAssertEqual(g.encodedSize, g.displaySize)
+    XCTAssertEqual(g.pixelAspectRatio, 1)
+    XCTAssertEqual(g.rotationDegrees, 0)
+    XCTAssertNil(YlVideoGeometryResolver.avPlayer(presentationSize: .zero, naturalSize: .zero,
+      preferredTransform: .identity, format: nil))
+    for invalid in [0.0, -1.0, Double.nan, Double.infinity] {
+      XCTAssertNil(YlVideoGeometryResolver.resolve(encodedSize: CGSize(width: invalid, height: 480),
+        cleanAperture: nil, pixelAspectRatio: 1, rotationDegrees: 0))
+      XCTAssertNil(YlVideoGeometryResolver.resolve(encodedSize: CGSize(width: 720, height: 480),
+        cleanAperture: nil, pixelAspectRatio: invalid, rotationDegrees: 0))
+    }
+    XCTAssertNil(YlVideoGeometryResolver.managed(format: try format(), rotationDegrees: 45))
+    XCTAssertNil(YlVideoGeometryResolver.resolve(encodedSize: CGSize(width: 720, height: 480),
+      cleanAperture: CGRect(x: 0, y: 0, width: -1, height: 10), pixelAspectRatio: 1, rotationDegrees: 0))
+  }
+  func testAVPreferredTransformAndPresentationFallbackDoNotDoubleRotate() throws {
+    for degrees in [90.0, 270.0] {
+      let transform = CGAffineTransform(rotationAngle: degrees * .pi / 180)
+      let g = try XCTUnwrap(YlVideoGeometryResolver.avPlayer(presentationSize: CGSize(width: 480, height: 720),
+        naturalSize: CGSize(width: 720, height: 480), preferredTransform: transform, format: format()))
+      XCTAssertEqual(g.displaySize, CGSize(width: 720, height: 480))
+      XCTAssertEqual(g.rotationDegrees, Int(degrees))
+      XCTAssertEqual(g.finalDisplaySize, CGSize(width: 480, height: 720))
+    }
+    let fallback = try XCTUnwrap(YlVideoGeometryResolver.avPlayer(presentationSize: CGSize(width: 320, height: 180),
+      naturalSize: CGSize(width: 320, height: 180), preferredTransform: .identity, format: nil))
+    XCTAssertEqual(fallback.displaySize, CGSize(width: 320, height: 180))
+    XCTAssertEqual(YlMetricsCollector.decoderMode(state: .characterizationReady), .unknown)
+  }
+  func testMonotonicMilestonesNullableCountersAndNonOverlappingRebuffers() {
+    var now: Int64 = 100
+    let m = YlMetricsCollector(clock: { now })
+    XCTAssertNil(m.snapshot.openDurationMs)
+    XCTAssertNil(m.snapshot.rebufferCount)
+    XCTAssertNil(m.snapshot.droppedVideoFrames)
+    XCTAssertNil(m.snapshot.audioUnderruns)
+    XCTAssertNil(m.snapshot.reconnectCount)
+    m.observe(.playback("buffering")) // startup is not a rebuffer
+    now = 125; m.observe(.ready(durationMs: nil))
+    XCTAssertEqual(m.snapshot.openDurationMs, 25)
+    XCTAssertEqual(m.snapshot.rebufferCount, 0)
+    m.observe(.playback("buffering"))
+    XCTAssertEqual(m.snapshot.rebufferCount, 0, "Startup waiting is not a rebuffer")
+    now = 140; m.observe(.firstFrame(durationMs: nil))
+    m.observe(.playback("playing"))
+    now = 150; m.observe(.playback("buffering"))
+    now = 160; m.observe(.playback("buffering"))
+    XCTAssertEqual(m.snapshot.rebufferCount, 1)
+    XCTAssertEqual(m.snapshot.rebufferDurationMs, 10)
+    now = 175; m.observe(.playback("paused"))
+    m.observe(.playback("paused"))
+    now = 200; m.observe(.ready(durationMs: 999)); m.observe(.firstFrame(durationMs: 999))
+    XCTAssertEqual(m.snapshot.openDurationMs, 25)
+    XCTAssertEqual(m.snapshot.firstFrameDurationMs, 40)
+    XCTAssertEqual(m.snapshot.rebufferDurationMs, 25)
+    m.observe(.videoDropped(total: 0)); m.observe(.audioUnderruns(total: 0))
+    XCTAssertEqual(m.snapshot.droppedVideoFrames, 0)
+    XCTAssertEqual(m.snapshot.audioUnderruns, 0)
+    m.observe(.reconnect(id: 1)); m.observe(.reconnect(id: 1)); m.observe(.reconnect(id: 2))
+    XCTAssertEqual(m.snapshot.reconnectCount, 2)
+    XCTAssertNil(m.snapshot.bufferedBytes)
+    XCTAssertNil(m.snapshot.bufferedDurationMs)
+    XCTAssertNil(YlApplePlayerHost.metrics(m.snapshot).estimatedBitrate)
+  }
 }

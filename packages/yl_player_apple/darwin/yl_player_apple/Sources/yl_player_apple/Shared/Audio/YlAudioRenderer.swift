@@ -214,7 +214,7 @@ final class YlAudioRenderer: YlAudioRendering {
         category: "decoderUnsupported",
         code: Self.unsupportedCode(stream.codec),
         message: "The \(Self.codecName(stream.codec)) audio configuration is unsupported.",
-        diagnostic: String(describing: error)
+        diagnostic: YlAppleSafeDiagnostics.diagnostic(error)
       )
     }
     flush()
@@ -265,7 +265,7 @@ final class YlAudioRenderer: YlAudioRendering {
         category: "decoderFailure",
         code: "decoder.audio_failed",
         message: "\(codecName) audio conversion failed.",
-        diagnostic: String(describing: error)
+        diagnostic: YlAppleSafeDiagnostics.diagnostic(error)
       )
     }
 
@@ -335,7 +335,7 @@ final class YlAudioRenderer: YlAudioRendering {
         category: "render",
         code: "render.audio_engine_failed",
         message: "The native audio engine could not start.",
-        diagnostic: String(describing: error)
+        diagnostic: YlAppleSafeDiagnostics.diagnostic(error)
       )
       onOutputFailure?(failure)
       throw failure

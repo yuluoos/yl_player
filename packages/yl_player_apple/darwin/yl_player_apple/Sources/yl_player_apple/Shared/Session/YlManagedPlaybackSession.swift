@@ -187,7 +187,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       do { try services.activateAudioSession() }
       catch {
         throw NativePlayerError(category: "resource", code: "ios.audio_session_failed",
-          message: "The playback audio session could not be activated.", diagnostic: String(describing: error))
+          message: "The playback audio session could not be activated.", diagnostic: YlAppleSafeDiagnostics.diagnostic(error))
       }
     }
     if playing { try audio.prepareForPlayback() }
@@ -478,16 +478,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     let durationMs = demux.mediaPolicy.durationMs(mediaDurationUs: demux.mediaInfo.duration_us)
     let renderer = currentAudioRenderer
     let scheduledAudioDurationUs = renderer?.scheduledDurationUs ?? 0
-    let audioUnderruns = audio.observeUnderruns(renderer: renderer) ?? 0
-    let metrics = YlBackendStateEncoder.fallbackMetrics(
-      openDurationMs: openDurationMs,
-      firstFrameDurationMs: presentation.firstFrameDuration,
-      bufferedDurationMs: metricsCollector.managedBufferedDurationMs,
-      bufferedBytes: metricsCollector.managedBufferedBytes,
-      droppedVideoFrames: presentation.lateFrameDropCount,
-      audioUnderruns: audioUnderruns,
-      reconnectCount: recovery.reconnectCount
-    )
+    let metrics = collectMetrics(renderer: renderer)
     emit(.state(YlNativeState(
         status: status,
         positionMs: positionUs / 1_000,
@@ -508,7 +499,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         videoTracks: videoTracks,
         metrics: metrics,
         error: currentError,
-        decoderEvidence: video.hardwareEvidence
+        decoderEvidence: video.hardwareEvidence,
+        geometry: video.geometry
       )))
   }
 
@@ -517,16 +509,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     let positionUs = presentation.position(atHostTimeUs: Self.hostTimeUs())
     let renderer = currentAudioRenderer
     let scheduledAudioDurationUs = renderer?.scheduledDurationUs ?? 0
-    let audioUnderruns = audio.observeUnderruns(renderer: renderer) ?? 0
-    let metrics = YlBackendStateEncoder.fallbackMetrics(
-      openDurationMs: openDurationMs,
-      firstFrameDurationMs: presentation.firstFrameDuration,
-      bufferedDurationMs: metricsCollector.managedBufferedDurationMs,
-      bufferedBytes: metricsCollector.managedBufferedBytes,
-      droppedVideoFrames: presentation.lateFrameDropCount,
-      audioUnderruns: audioUnderruns,
-      reconnectCount: recovery.reconnectCount
-    )
+    let metrics = collectMetrics(renderer: renderer)
     emit(.delta(YlNativeTimelineDelta(
         positionMs: positionUs / 1_000,
         bufferedPositionMs: (positionUs + scheduledAudioDurationUs) / 1_000,
@@ -534,6 +517,17 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         liveOffsetMs: nil,
         metrics: metrics
       )))
+  }
+
+  private func collectMetrics(renderer: YlAudioPipeline.Resource?) -> YlNativeMetrics {
+    if let ready = openDurationMs { metricsCollector.observe(.ready(durationMs: ready)) }
+    if let frame = presentation.firstFrameDuration { metricsCollector.observe(.firstFrame(durationMs: frame)) }
+    metricsCollector.observe(.playback(status))
+    metricsCollector.observe(.videoDropped(total: presentation.lateFrameDropCount))
+    metricsCollector.observe(.audioUnderruns(total: audio.observeUnderruns(renderer: demux.selectedAudioStream == nil ? nil : renderer)))
+    // Recovery counts only a current, installed reconnect's first frame, never a request retry.
+    if recovery.reconnectCount > 0 { metricsCollector.observe(.reconnect(id: UInt64(recovery.reconnectCount))) }
+    return metricsCollector.snapshot
   }
 
   func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? { presentation.copyPixelBuffer() }
@@ -891,7 +885,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
               category: "decoderFailure",
               code: "decoder.audio_failed",
               message: "The reconnected audio renderer could not start.",
-              diagnostic: String(describing: error)
+              diagnostic: YlAppleSafeDiagnostics.diagnostic(error)
             ))
             return
           }
@@ -1122,7 +1116,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         category: "container",
         code: "container.mkv_seek_failed",
         message: "The Matroska media could not be seeked.",
-        diagnostic: String(describing: error)
+        diagnostic: YlAppleSafeDiagnostics.diagnostic(error)
       )
       endControlOperation()
       if cancellationToken?.isCancelled == true {
@@ -1567,7 +1561,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         category: "decoderFailure",
         code: "decoder.audio_failed",
         message: "The selected \(audioCodecName(requestedStream)) track could not be started.",
-        diagnostic: String(describing: error)
+        diagnostic: YlAppleSafeDiagnostics.diagnostic(error)
       )
       endControlOperation()
       if cancellationToken?.isCancelled == true {

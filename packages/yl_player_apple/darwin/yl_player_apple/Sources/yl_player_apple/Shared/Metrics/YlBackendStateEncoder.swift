@@ -45,8 +45,7 @@ enum YlBackendStateEncoder {
     droppedVideoFrames: Int, audioUnderruns: Int, reconnectCount: Int
   ) -> YlNativeMetrics {
     YlNativeMetrics(openDurationMs: openDurationMs,
-      firstFrameDurationMs: firstFrameDurationMs, rebufferCount: 0,
-      rebufferDurationMs: 0, bufferedDurationMs: bufferedDurationMs,
+      firstFrameDurationMs: firstFrameDurationMs, bufferedDurationMs: bufferedDurationMs,
       bufferedBytes: bufferedBytes, droppedVideoFrames: droppedVideoFrames,
       audioUnderruns: audioUnderruns, reconnectCount: reconnectCount)
   }

@@ -195,7 +195,7 @@ final class YlAudioPipeline {
           category: "decoderFailure",
           code: "decoder.audio_failed",
           message: "\(codecName) audio conversion failed.",
-          diagnostic: String(describing: error)
+          diagnostic: YlAppleSafeDiagnostics.diagnostic(error)
         ))
       }
       return
@@ -226,7 +226,7 @@ final class YlAudioPipeline {
           category: "decoderFailure",
           code: "decoder.audio_failed",
           message: "\(codecName) audio conversion failed.",
-          diagnostic: String(describing: error)
+          diagnostic: YlAppleSafeDiagnostics.diagnostic(error)
         ))
       }
     return ()

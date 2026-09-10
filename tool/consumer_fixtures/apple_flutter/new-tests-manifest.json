@@ -97,7 +97,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift",
-    "sha256": "d64e9270a0a327fc4782ea1e3a22c4ec5187fe4a5cdafa5c6faf3437330f00ef",
+    "sha256": "383d85af5517c9ac6f33bf71c574bbaef3e1b2fa4511df9f8bc7bac03a4e0d48",
     "methods": [
       "testImmutableRequestAndSessionIdentityStartsAtZero",
       "testNegativeMeasuredLiveOffsetIsZeroAndUnknownRemainsNil",
@@ -136,7 +136,19 @@
       "testInterruptionResumesOnlyPriorIntentAndCannotReviveStoppedPlayer",
       "testInterruptionWithoutResumePermissionDoesNotAutoplay",
       "testUnownedReleaseDoesNotClaimAnExternalAppActivation",
-      "testMacosDriverTracksOutputWithoutGlobalSession"
+      "testMacosDriverTracksOutputWithoutGlobalSession",
+      "testUnobservedFallbackRebufferCountersMustRemainAbsent",
+      "testDiagnosticFuzzAcrossNativeFailureStateRetryAndDescriptions",
+      "testDiagnosticMustNotPublishEvenCredentialFreeURLs",
+      "testRepeatedSafeCommandMappingPreservesClassificationWithoutRawForwarding",
+      "testUntrustedPigeonFailureCannotBypassSafeBoundary",
+      "testManagedMetricsReadSingleLedgerIncludingRetiredGenerationUntilRelease",
+      "testAVAssetTrackPreferredTransformFlowsIntoPublicGeometry",
+      "testLoadToReadyIncludesPreparationUsingSessionMonotonicClock",
+      "testCleanApertureAndPARApplyExactlyOnceWithUnappliedQuarterTurns",
+      "testAbsentMetadataUsesValidFormatButRejectsInvalidMeasurements",
+      "testAVPreferredTransformAndPresentationFallbackDoNotDoubleRotate",
+      "testMonotonicMilestonesNullableCountersAndNonOverlappingRebuffers"
     ],
     "task7_provenance": "Task7 native registry/reducer/identity, READY, private/public texture ownership and acknowledged callback boundary; R23 partial/absent geometry must remain unknown without changing actual internal dimensions.",
     "task7_typed_migration": {
@@ -155,6 +167,11 @@
     "hardening_task2_migration": {
       "from_sha256": "1d268f6979ce0ac8b1a1b1fc94b04ff5feb5db0a9758ef0d6406ac70943886bd",
       "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
+    },
+    "hardening_task7_observability": {
+      "from_sha256": "d64e9270a0a327fc4782ea1e3a22c4ec5187fe4a5cdafa5c6faf3437330f00ef",
+      "base": "91aaa3f3d9f5618a02ad8183b267a6eab4a9b7b6",
+      "reason": "Restore authoritative geometry, Load-based clocks and nullable common metrics; central safe errors remove credential-free source URLs too. Current destination assertions changed; historical origins retained."
     }
   },
   {
@@ -255,7 +272,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlManagedFallbackCharacterizationTests.swift",
-    "sha256": "2a39dfb4f17b6fd7f4170134b49e87036df7b4e26eff4b069fdf64441ec895e3",
+    "sha256": "ffa88b842ecdc0d55e68a4abb6307def111d1f4b8ac0fd05488cb64fe5c23899",
     "methods": [
       "testHardwareEvidenceRequiresActualCFBooleanAndSafeIdentity",
       "testRequiredPipelineRejectsSoftwareBeforeDecoderInstallation",
@@ -303,6 +320,11 @@
     "hardening_task2_migration": {
       "from_sha256": "39c75b6ae576ab4060c5310c888de0eb735482bdc289ce4817c96f72a8d83145",
       "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
+    },
+    "hardening_task7_observability": {
+      "from_sha256": "2a39dfb4f17b6fd7f4170134b49e87036df7b4e26eff4b069fdf64441ec895e3",
+      "base": "91aaa3f3d9f5618a02ad8183b267a6eab4a9b7b6",
+      "reason": "Restore authoritative geometry, Load-based clocks and nullable common metrics; central safe errors remove credential-free source URLs too. Current destination assertions changed; historical origins retained."
     }
   }
 ]

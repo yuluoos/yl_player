@@ -141,9 +141,8 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   private var openStartedAt: CFTimeInterval?
   private var openDurationMs: Int64?
   private var firstFrameDurationMs: Int64?
-  private var rebufferCount = 0
-  private var bufferingStartedAt: CFTimeInterval?
-  private var rebufferDurationMs: Int64 = 0
+  private var metricsCollector = YlMetricsCollector()
+  private var awaitingReconnectFrame: UInt64?
   private var hasBeenReady = false
   private var currentError: NativePlayerError?
   private let failureGate = YlAvPlayerFailureGate()
@@ -314,7 +313,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
         category: "resource",
         code: "ios.audio_session_failed",
         message: "The playback audio session could not be activated.",
-        diagnostic: String(describing: error)
+        diagnostic: YlAppleSafeDiagnostics.diagnostic(error)
       )
     }
   }
@@ -382,12 +381,10 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     videoTracks.removeAll()
     firstFrameSent = false
     hasBeenReady = false
+    metricsCollector = YlMetricsCollector(); awaitingReconnectFrame = nil
     openStartedAt = nil
     openDurationMs = nil
     firstFrameDurationMs = nil
-    bufferingStartedAt = nil
-    rebufferCount = 0
-    rebufferDurationMs = 0
     currentError = nil
     status = "idle"
     resetting = false
@@ -485,12 +482,10 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     playRequested = !resume && (loadOptions?.autoplay ?? false)
     firstFrameSent = false
     hasBeenReady = false
+    if !resume { metricsCollector = YlMetricsCollector(); awaitingReconnectFrame = nil }
     openStartedAt = CACurrentMediaTime()
     openDurationMs = nil
     firstFrameDurationMs = nil
-    rebufferCount = 0
-    rebufferDurationMs = 0
-    bufferingStartedAt = nil
     currentError = nil
   }
 
@@ -611,10 +606,6 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     guard player.currentItem != nil else { return }
     switch player.timeControlStatus {
     case .waitingToPlayAtSpecifiedRate:
-      if hasBeenReady && bufferingStartedAt == nil {
-        rebufferCount += 1
-        bufferingStartedAt = CACurrentMediaTime()
-      }
       status = "buffering"
     case .playing:
       finishBuffering()
@@ -631,12 +622,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     refreshStallWatchdog()
   }
 
-  private func finishBuffering() {
-    if let started = bufferingStartedAt {
-      rebufferDurationMs += Int64((CACurrentMediaTime() - started) * 1_000)
-      bufferingStartedAt = nil
-    }
-  }
+  private func finishBuffering() { metricsCollector.observe(.playback("paused")) }
 
   private func handleFailure(
     _ error: Error?,
@@ -730,6 +716,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     let itemTime = videoOutput.itemTime(forHostTime: CACurrentMediaTime())
     guard videoOutput.hasNewPixelBuffer(forItemTime: itemTime) else { return }
     if services.compatibility.reconnectsAvPlayer { liveReconnectController.markFirstFrame() }
+    if let reconnect = awaitingReconnectFrame {
+      metricsCollector.observe(.reconnect(id: reconnect)); awaitingReconnectFrame = nil
+    }
     services.textureOutput.publish(copyPixelBuffer()?.takeRetainedValue())
     if !firstFrameSent {
       firstFrameSent = true
@@ -892,6 +881,15 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     callbackBinding.emit(YlNativeBackendCallback(generation: channelGeneration, loadRequestId: lastSource?.loadRequestId, event: event))
   }
 
+  private func collectMetrics(liveOffsetMs: Int64?) -> YlNativeMetrics {
+    if let ready = openDurationMs { metricsCollector.observe(.ready(durationMs: ready)) }
+    if let frame = firstFrameDurationMs { metricsCollector.observe(.firstFrame(durationMs: frame)) }
+    metricsCollector.observe(.playback(status))
+    var metrics = metricsCollector.snapshot
+    metrics.liveOffsetMs = liveOffsetMs
+    return metrics
+  }
+
   func emitState() {
     emitState(error: nil)
   }
@@ -919,11 +917,8 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       videoHeight: size.height > 0 ? Int(size.height) : nil,
       engine: .avPlayer, isHardwareDecoding: false, decoderName: nil,
       audioTracks: audioTracks, videoTracks: videoTracks,
-      metrics: YlNativeMetrics(openDurationMs: openDurationMs,
-        firstFrameDurationMs: firstFrameDurationMs, rebufferCount: rebufferCount,
-        rebufferDurationMs: rebufferDurationMs,
-        bufferedDurationMs: max(0, loadedEndMs - positionMs), liveOffsetMs: liveOffsetMs),
-      error: error ?? currentError)))
+      metrics: collectMetrics(liveOffsetMs: liveOffsetMs),
+      error: error ?? currentError, geometry: YlVideoGeometryResolver.avPlayer(item: item))))
   }
 
   private func emitStateDelta() {
@@ -940,10 +935,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       bufferedPositionMs: loadedEndMs,
       isAtLiveEdge: liveOffsetMs.map { $0 <= 2_000 } ?? false,
       liveOffsetMs: liveOffsetMs,
-      metrics: YlNativeMetrics(openDurationMs: openDurationMs,
-        firstFrameDurationMs: firstFrameDurationMs, rebufferCount: rebufferCount,
-        rebufferDurationMs: rebufferDurationMs,
-        bufferedDurationMs: max(0, loadedEndMs - positionMs), liveOffsetMs: liveOffsetMs))))
+      metrics: collectMetrics(liveOffsetMs: liveOffsetMs))))
   }
 
   func dispose() {
@@ -1013,6 +1005,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       self.pendingLiveReconnect = nil
       do {
         try self.installItem(source, positionMs: 0)
+        self.awaitingReconnectFrame = self.itemGeneration
         if self.playRequested {
           try self.startOutput()
         }

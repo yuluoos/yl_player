@@ -563,7 +563,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
       category: "internal",
       code: "\(YlApplePlatform.current.rawValue).hls_loader_failed",
       message: "The HLS resource loader failed.",
-      diagnostic: String(describing: error)
+      diagnostic: YlAppleSafeDiagnostics.diagnostic(error)
     )
   }
 }

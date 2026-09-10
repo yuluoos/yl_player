@@ -360,6 +360,12 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     XCTAssertEqual(publicCommitCount, 1)
     XCTAssertEqual(factory.sessions.count, 1, "Commit must adopt the exact proven decoder")
     XCTAssertEqual(f.host.initialState.decoderMode, .hardware)
+    XCTAssertEqual(f.host.initialState.geometry?.displaySize.width, 320)
+    XCTAssertEqual(f.host.initialState.geometry?.displaySize.height, 180)
+    XCTAssertEqual(f.host.initialState.geometry?.encodedSize.width, 320)
+    XCTAssertEqual(f.host.initialState.geometry?.encodedSize.height, 180)
+    XCTAssertEqual(f.host.initialState.geometry?.pixelAspectRatio, 1)
+    XCTAssertEqual(f.host.initialState.geometry?.rotationDegrees, 0)
     XCTAssertEqual(f.host.sessionId, reply.sessionId)
     try await AppleHostCharacterizations.waitFor { factory.sessions[0].lastGeneration != nil }
     try factory.sessions[0].send(generation: XCTUnwrap(factory.sessions[0].lastGeneration))

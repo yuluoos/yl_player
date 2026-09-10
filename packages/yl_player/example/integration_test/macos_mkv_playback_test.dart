@@ -54,7 +54,15 @@ void main() {
     expect(controller.state.engine, YlPlaybackEngine.managedFallback);
     expect(controller.state.decoderMode, YlDecoderMode.hardware);
     expect(controller.state.decoderIdentity, 'VideoToolbox');
-    expect(controller.state.videoGeometry, isNull);
+    expect(controller.state.videoGeometry?.displaySize.width, 320);
+    expect(controller.state.videoGeometry?.displaySize.height, 180);
+    expect(controller.state.videoGeometry?.encodedSize.width, 320);
+    expect(controller.state.videoGeometry?.encodedSize.height, 180);
+    expect(controller.state.videoGeometry?.pixelAspectRatio, 1);
+    expect(controller.state.videoGeometry?.rotationDegrees, 0);
+    debugPrint(
+      'TASK7_LOCAL_MKV_GEOMETRY_PASS: encoded=320x180 display=320x180 PAR=1 rotation=0',
+    );
     expect(controller.textureId.value, isNotNull);
 
     await sessionFor(controller).seekTo(const Duration(milliseconds: 900));
