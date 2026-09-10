@@ -21,7 +21,7 @@
     "source": "packages/yl_player/example/ios/RunnerTests/YlFallbackBufferBudgetTests.swift",
     "source_sha256": "592290acf1332b3830d16afd72dd16dc61263ad7356158376af4195cdb6ea44e",
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlFallbackBufferBudgetTests.swift",
-    "destination_sha256": "b7c9080b0f2cb2ae5bea100b06a052de5eb2f7899f5509cc315ca1844a9efc0a",
+    "destination_sha256": "c50b1144438ff6c751bae62b47640b9adc61bbb40e71826ce4731237094adb2d",
     "adaptations": [
       "@testable import yl_player_ios -> @testable import yl_player_apple"
     ]
@@ -56,7 +56,7 @@
     "source": "packages/yl_player/example/ios/RunnerTests/YlNetworkByteSourceTests.swift",
     "source_sha256": "f0513850df69b14e4563dc0c3098ac4f32a5fa3611bd676c7d54663bec96ae90",
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlNetworkByteSourceTests.swift",
-    "destination_sha256": "51d6fa63d1cc73a6dc87638cf8f07527f95ea18fc349d521fa232c457e1c0977",
+    "destination_sha256": "f664bddcdd6147c0c47b4c102e8e20a9e26660e47f2a9f129ff27a0600ea3bae",
     "adaptations": [
       "@testable import yl_player_ios -> @testable import yl_player_apple"
     ],

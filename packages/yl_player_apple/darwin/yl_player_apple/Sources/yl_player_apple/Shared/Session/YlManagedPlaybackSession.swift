@@ -53,6 +53,19 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   private let configuration: PlayerConfiguration
   private let onEvent: (YlNativeBackendCallback) -> Void
   private let bufferBudget: YlFallbackBufferBudget
+  private let metricsCollector: YlMetricsCollector
+  private let boundedStateLock = NSLock()
+  private var boundedStartedValue = false
+  private var boundedProducerLimitedValue = false
+  private var boundedStarted: Bool {
+    get { boundedStateLock.withLock { boundedStartedValue } }
+    set { boundedStateLock.withLock { boundedStartedValue = newValue } }
+  }
+  private var boundedProducerLimited: Bool {
+    get { boundedStateLock.withLock { boundedProducerLimitedValue } }
+    set { boundedStateLock.withLock { boundedProducerLimitedValue = newValue } }
+  }
+  private var bufferReleaseObserver: UUID?
   private var qualityConstraint: YlFallbackQualityConstraint
   private let stateLock = NSLock()
   private var active = false
@@ -103,7 +116,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     self.playerId = playerId
     self.services = services
     self.configuration = configuration
-    self.bufferBudget = try YlFallbackBufferBudget.make(configuration: configuration)
+    self.bufferBudget = try YlFallbackBufferBudget.make(configuration: configuration, prepared: prepared)
+    self.metricsCollector = YlMetricsCollector(scope: prepared.bufferScope, bounded: prepared.boundedPlan != nil)
     let resumeState = prepared.resumeState
     self.qualityConstraint = qualityConstraint
     self.generation = generation
@@ -120,6 +134,10 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     self.savedPositionUs = resumeState?.positionUs ?? 0
     super.init()
 
+    bufferReleaseObserver = prepared.bufferScope.ledger.onRelease { [weak self] in
+      DispatchQueue.main.async { [weak self] in self?.requestPump() }
+    }
+    presentation.configureBounded(prepared.boundedPlan)
     audio.initializeRenderer()
     self.presentation.configureClock(providedMediaClock, audioTime: { [weak self] in
       guard let self else { return nil }
@@ -148,6 +166,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       throw error
     }
     presentation.flushFrames(generation: generation)
+    boundedStarted = false; boundedProducerLimited = false
+    bufferBudget.bufferScope?.beginMediaGeneration()
     openDurationMs = Int64((CACurrentMediaTime() - openStartedAt) * 1_000)
     installDisplayLink(paused: true)
   }
@@ -187,9 +207,9 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       reconfiguring = false
     }
     presentation.setDisplayPaused(false)
-    if playing {
-      if demux.selectedAudioStream != nil { try audio.playInstalled() }
-      presentation.play(atHostTimeUs: Self.hostTimeUs())
+    if playing && bufferBudget.boundedPlan == nil {
+      if demux.selectedAudioStream != nil { if bufferBudget.boundedPlan == nil || boundedStarted { try audio.playInstalled() } }
+      if bufferBudget.boundedPlan == nil || boundedStarted { presentation.play(atHostTimeUs: Self.hostTimeUs()) }
       status = "playing"
     }
     emit(.engineActivated(.managedFallback))
@@ -251,6 +271,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       }
     ).run()
     presentation.flushFrames(generation: currentGeneration)
+    boundedStarted = false; boundedProducerLimited = false
+    bufferBudget.bufferScope?.beginMediaGeneration()
     stateLock.withLock {
       presentation.clearFrame()
       if mayClearOutput { presentation.clearOutput() }
@@ -319,6 +341,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     }
     media?.resumeReads()
     presentation.flushFrames(generation: currentGeneration)
+    boundedStarted = false; boundedProducerLimited = false
+    bufferBudget.bufferScope?.beginMediaGeneration()
     stateLock.withLock {
       presentation.clearFrameAndTexture()
       pumping = false
@@ -378,9 +402,9 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         playing = true
         return previous
       }
-      if !wasPlaying {
-        if demux.selectedAudioStream != nil { try currentAudioRenderer?.play() }
-        presentation.play(atHostTimeUs: Self.hostTimeUs())
+      if !wasPlaying && bufferBudget.boundedPlan == nil {
+        if demux.selectedAudioStream != nil { if bufferBudget.boundedPlan == nil || boundedStarted { try currentAudioRenderer?.play() } }
+        if bufferBudget.boundedPlan == nil || boundedStarted { presentation.play(atHostTimeUs: Self.hostTimeUs()) }
       }
       status = "playing"
       emitState()
@@ -443,7 +467,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         videoWidth: nil, videoHeight: nil, engine: .managedFallback,
         isHardwareDecoding: false, decoderName: nil, audioTracks: [], videoTracks: [],
         metrics: YlBackendStateEncoder.fallbackMetrics(openDurationMs: nil,
-          firstFrameDurationMs: nil, bufferedDurationMs: 0, bufferedBytes: 0,
+          firstFrameDurationMs: nil, bufferedDurationMs: metricsCollector.managedBufferedDurationMs, bufferedBytes: metricsCollector.managedBufferedBytes,
           droppedVideoFrames: 0, audioUnderruns: 0, reconnectCount: 0), error: nil)))
       return
     }
@@ -451,13 +475,12 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     let durationMs = demux.mediaPolicy.durationMs(mediaDurationUs: demux.mediaInfo.duration_us)
     let renderer = currentAudioRenderer
     let scheduledAudioDurationUs = renderer?.scheduledDurationUs ?? 0
-    let scheduledAudioBytes = renderer?.scheduledBytes ?? 0
     let audioUnderruns = audio.observeUnderruns(renderer: renderer) ?? 0
     let metrics = YlBackendStateEncoder.fallbackMetrics(
       openDurationMs: openDurationMs,
       firstFrameDurationMs: presentation.firstFrameDuration,
-      bufferedDurationMs: scheduledAudioDurationUs / 1_000,
-      bufferedBytes: scheduledAudioBytes,
+      bufferedDurationMs: metricsCollector.managedBufferedDurationMs,
+      bufferedBytes: metricsCollector.managedBufferedBytes,
       droppedVideoFrames: presentation.lateFrameDropCount,
       audioUnderruns: audioUnderruns,
       reconnectCount: recovery.reconnectCount
@@ -490,13 +513,12 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     let positionUs = presentation.position(atHostTimeUs: Self.hostTimeUs())
     let renderer = currentAudioRenderer
     let scheduledAudioDurationUs = renderer?.scheduledDurationUs ?? 0
-    let scheduledAudioBytes = renderer?.scheduledBytes ?? 0
     let audioUnderruns = audio.observeUnderruns(renderer: renderer) ?? 0
     let metrics = YlBackendStateEncoder.fallbackMetrics(
       openDurationMs: openDurationMs,
       firstFrameDurationMs: presentation.firstFrameDuration,
-      bufferedDurationMs: scheduledAudioDurationUs / 1_000,
-      bufferedBytes: scheduledAudioBytes,
+      bufferedDurationMs: metricsCollector.managedBufferedDurationMs,
+      bufferedBytes: metricsCollector.managedBufferedBytes,
       droppedVideoFrames: presentation.lateFrameDropCount,
       audioUnderruns: audioUnderruns,
       reconnectCount: recovery.reconnectCount
@@ -578,7 +600,26 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     emitState()
   }
 
-  func presentationDidTick(atHostTimeUs value: Int64) { completeIfDrained(atHostTimeUs: value) }
+  func presentationDidTick(atHostTimeUs value: Int64) {
+    updateBoundedPlayback(atHostTimeUs: value)
+    completeIfDrained(atHostTimeUs: value)
+  }
+  private func updateBoundedPlayback(atHostTimeUs value: Int64) {
+    guard let plan = bufferBudget.boundedPlan,
+          stateLock.withLock({ active && playing && !reconfiguring && !disposed }) else { return }
+    let duration = bufferBudget.bufferScope?.bufferedDurationUs ?? 0
+    let eof = stateLock.withLock { demuxEOF }
+    if !boundedStarted, plan.ready(durationUs: duration, eof: eof, producerLimited: boundedProducerLimited) {
+      do { if demux.selectedAudioStream != nil { try currentAudioRenderer?.play() } }
+      catch { fail(YlManagedBufferLedger.unsupported()); return }
+      boundedStarted = true; presentation.play(atHostTimeUs: value); status = "playing"
+    } else if boundedStarted && duration == 0 && !eof {
+      currentAudioRenderer?.pause(); presentation.pause(atHostTimeUs: value)
+      boundedStarted = false; status = "buffering"
+    }
+    requestPump()
+  }
+  var allowsBoundedPresentation: Bool { bufferBudget.boundedPlan == nil || boundedStarted }
   func emitPresentationDelta() { emitStateDelta() }
 
   func fail(_ error: NativePlayerError) {
@@ -612,7 +653,17 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     }
     stateLock.unlock()
 
+    if bufferBudget.boundedPlan != nil {
+      let duration = bufferBudget.bufferScope?.bufferedDurationUs ?? 0
+      let snapshot = bufferBudget.bufferScope!.ledger.snapshot
+      let nearByteLimit = snapshot.maxBytes - snapshot.currentBytes < 256 * 1024
+      if (bufferBudget.bufferScope?.shouldPausePacketAdmission == true || nearByteLimit) && duration > 0 {
+        stateLock.withLock { pumping = false }; boundedProducerLimited = true; return
+      }
+    }
+    boundedProducerLimited = false
     if audio.hasPendingPacket {
+      boundedProducerLimited = true
       audio.retryPending(codecName: selectedAudioCodecName)
       return
     }
@@ -643,7 +694,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   }
 
   func consumeDemuxVideo(packet: inout YLFPacketRef?, ownedPacket: YLFPacketRef,
-                         generation packetGeneration: UInt64) -> Void? {
+                         generation packetGeneration: UInt64, managedPayload: YlManagedBufferLedger.Token?) -> Void? {
         let shouldCancel = { [weak self] in
           guard let self else { return true }
           return self.stateLock.withLock {
@@ -651,7 +702,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
               || self.generation != packetGeneration
           }
         }
-    return video.consume(packet: &packet, ownedPacket: ownedPacket, generation: packetGeneration,
+    return video.consume(packet: &packet, ownedPacket: ownedPacket, generation: packetGeneration, managedPayload: managedPayload,
       hasAudio: demux.selectedAudioStream != nil, compatibility: services.compatibility,
       shouldCancel: shouldCancel,
       onSubmitted: { [self] in stateLock.withLock { prebufferedVideoSample = true } },
@@ -714,6 +765,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     prebufferedVideoSample = false
     audio.resetAnchor()
     presentation.flushFrames(generation: transition.generation)
+    boundedStarted = false; boundedProducerLimited = false
+    bufferBudget.bufferScope?.beginMediaGeneration()
     presentation.suppressFramesBefore( nil)
     stateLock.withLock { presentation.clearFrameAndTexture() }
 
@@ -810,6 +863,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   func resumeRecovery(generation reconnectGeneration: UInt64) {
       stateLock.withLock { demux.resetInitialKeyframeGate() }
       presentation.flushFrames(generation: reconnectGeneration)
+      boundedStarted = false; boundedProducerLimited = false
+    bufferBudget.bufferScope?.beginMediaGeneration()
       DispatchQueue.main.async { [weak self] in
         guard let self else { return }
         let shouldResume = self.stateLock.withLock { () -> Bool in
@@ -823,9 +878,9 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         if self.playing {
           do {
             if self.demux.selectedAudioStream != nil {
-              try self.currentAudioRenderer?.play()
+              if self.bufferBudget.boundedPlan == nil || self.boundedStarted { try self.currentAudioRenderer?.play() }
             }
-            self.presentation.play(atHostTimeUs: Self.hostTimeUs())
+            if self.bufferBudget.boundedPlan == nil || self.boundedStarted { self.presentation.play(atHostTimeUs: Self.hostTimeUs()) }
             self.status = "playing"
           } catch {
             self.setFailure(NativePlayerError(
@@ -963,6 +1018,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
             presentation.clearFrameAndTexture()
           }
           presentation.flushFrames(generation: nextGeneration)
+          boundedStarted = false; boundedProducerLimited = false
+    bufferBudget.bufferScope?.beginMediaGeneration()
         }
       },
       seekDemux: { [self] targetUs in
@@ -1018,8 +1075,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
             playing = wasPlaying
           }
           if wasPlaying {
-            if demux.selectedAudioStream != nil { try currentAudioRenderer?.play() }
-            presentation.play(atHostTimeUs: Self.hostTimeUs())
+            if demux.selectedAudioStream != nil { if bufferBudget.boundedPlan == nil || boundedStarted { try currentAudioRenderer?.play() } }
+            if bufferBudget.boundedPlan == nil || boundedStarted { presentation.play(atHostTimeUs: Self.hostTimeUs()) }
             status = "playing"
           } else {
             status = "paused"
@@ -1096,8 +1153,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       }
       guard shouldRestore else { return }
       if wasPlaying {
-        try? currentAudioRenderer?.play()
-        presentation.play(atHostTimeUs: Self.hostTimeUs())
+        if bufferBudget.boundedPlan == nil || boundedStarted { try? currentAudioRenderer?.play() }
+        if bufferBudget.boundedPlan == nil || boundedStarted { presentation.play(atHostTimeUs: Self.hostTimeUs()) }
         status = "playing"
       } else {
         status = "paused"
@@ -1257,6 +1314,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     completionSent = false
     audio.resetAnchor()
     presentation.flushFrames(generation: generation)
+    boundedStarted = false; boundedProducerLimited = false
+    bufferBudget.bufferScope?.beginMediaGeneration()
     presentation.seek(to: positionUs)
     mediaNeedsClose = false
     retiredDecoder?.dispose()
@@ -1345,6 +1404,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       renderer?.pause()
       self.presentation.pause(atHostTimeUs: Self.hostTimeUs())
       self.presentation.flushFrames(generation: transition.generation)
+      self.boundedStarted = false; self.boundedProducerLimited = false
+      self.bufferBudget.bufferScope?.beginMediaGeneration()
       self.presentation.suppressFramesBefore( nil)
       self.stateLock.withLock { self.presentation.clearFrameAndTexture() }
       self.emit(.failure(details))
@@ -1469,8 +1530,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         previous?.dispose()
         presentation.seek(to: state.positionUs)
         if state.wasPlaying {
-          try candidate.play()
-          presentation.play(atHostTimeUs: Self.hostTimeUs())
+          if bufferBudget.boundedPlan == nil || boundedStarted { try candidate.play() }
+          if bufferBudget.boundedPlan == nil || boundedStarted { presentation.play(atHostTimeUs: Self.hostTimeUs()) }
         }
         emit(.tracksChanged(audio: audioTracks, video: videoTracks))
       }
@@ -1539,8 +1600,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       guard shouldRestore else { return }
       presentation.seek(to: state.positionUs)
       if state.wasPlaying {
-        try? currentAudioRenderer?.play()
-        presentation.play(atHostTimeUs: Self.hostTimeUs())
+        if bufferBudget.boundedPlan == nil || boundedStarted { try? currentAudioRenderer?.play() }
+        if bufferBudget.boundedPlan == nil || boundedStarted { presentation.play(atHostTimeUs: Self.hostTimeUs()) }
         status = "playing"
       } else {
         status = "paused"
@@ -1581,6 +1642,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   }
 
   deinit {
+    if let bufferReleaseObserver { bufferBudget.bufferScope?.ledger.removeObserver(bufferReleaseObserver) }
     dispose()
   }
 }

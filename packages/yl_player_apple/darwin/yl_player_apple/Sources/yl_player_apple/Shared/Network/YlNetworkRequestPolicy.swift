@@ -30,6 +30,7 @@ struct YlNetworkRequestRecipe {
   let credentialContext: YlNetworkCredentialContext
   let configuration: YlNetworkConfiguration
   let managedIntent: YlManagedRequestIntent?
+  let bufferScope: YlManagedBufferScope?
   let mode: YlNetworkInputMode
 
   init(
@@ -39,8 +40,10 @@ struct YlNetworkRequestRecipe {
     credentialContext: YlNetworkCredentialContext = YlNetworkCredentialContext(),
     configuration: YlNetworkConfiguration,
     mode: YlNetworkInputMode = .randomAccessVOD,
-    managedIntent: YlManagedRequestIntent? = nil
+    managedIntent: YlManagedRequestIntent? = nil,
+    bufferScope: YlManagedBufferScope? = nil
   ) {
+    self.bufferScope = bufferScope
     self.url = url
     self.headers = headers
     self.credentials = credentials

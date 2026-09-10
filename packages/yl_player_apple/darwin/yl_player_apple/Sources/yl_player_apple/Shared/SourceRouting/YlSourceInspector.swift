@@ -13,6 +13,10 @@ enum YlSourceInspector {
                       managedTransportFactory: YlManagedHTTPTransport.Factory? = YlManagedHTTPTransport.make) throws -> YlAppleSourceDescriptor {
     try token.throwIfCancelled()
     guard let url = source.url else { throw unsupported() }
+    // Prefix/read/byte-array and transient UTF-8/trim probe copies can coexist.
+    // This assigned workspace is conservative, like the transport parser lease.
+    let inspectionReservation = try source.bufferScope?.require(category: .networkCache, bytes: maximumBytes * 8)
+    defer { withExtendedLifetime(inspectionReservation) {} }
     var prefix = Data()
     if source.kind == .file {
       let handle = try FileHandle(forReadingFrom: url)
@@ -24,7 +28,8 @@ enum YlSourceInspector {
         credentialContext: source.credentialContext,
         configuration: source.networkConfiguration.map(YlNetworkConfiguration.init(options:)) ?? configuration,
         mode: .sequentialLive,
-        managedIntent: source.networkPolicy == .managed ? source.managedRequestIntent : nil), capacity: maximumBytes, sessionConfiguration: sessionConfiguration, managedTransportFactory: managedTransportFactory)
+        managedIntent: source.networkPolicy == .managed ? source.managedRequestIntent : nil,
+        bufferScope: source.bufferScope), capacity: maximumBytes, sessionConfiguration: sessionConfiguration, managedTransportFactory: managedTransportFactory)
       token.onCancel { bytes.cancel() }
       defer { bytes.cancel() }
       var buffer = [UInt8](repeating: 0, count: maximumBytes)

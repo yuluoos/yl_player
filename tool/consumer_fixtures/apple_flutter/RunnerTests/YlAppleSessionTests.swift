@@ -629,13 +629,14 @@ final class YlEngineAssessmentTests: XCTestCase {
             kind: kind, formatHint: format)
           var options = YlAppleLoadOptions()
           if policy == 1 { source.networkPolicy = .managed }
-          if policy == 2 { options.bufferStrategy = .bounded; options.maxManagedBytes = 1024 }
+          if policy == 2 { options.bufferStrategy = .bounded; options.minDurationMs = 100; options.maxDurationMs = 500; options.maxManagedBytes = 16 * 1024 * 1024 }
           if policy == 3 { options.decoderPolicy = .hardwareRequired }
           source.loadOptions = options
           let production = YlEngineRouter.assess(source)
-          if policy == 1 && (format == .matroska || (format == .flv && kind == .network)) {
+          if (policy == 1 || policy == 2) && (format == .matroska || (format == .flv && kind == .network)) {
             XCTAssertEqual(production.outcome, .requiresInspection)
-            XCTAssertTrue(production.satisfiedRequirements.contains(.networkManaged))
+            XCTAssertTrue(production.satisfiedRequirements.contains(policy == 1 ? .networkManaged : .bufferBounded))
+            if policy == 2 { XCTAssertTrue(production.limitations.contains(.bufferOsMemoryExcluded)) }
           } else if policy > 0 {
             XCTAssertEqual(production.rejection?.code, "policy.unsupported", "\(kind) \(format) \(policy)")
           }
@@ -718,5 +719,65 @@ final class YlEngineAssessmentTests: XCTestCase {
     let cancelled = YlOpenCancellationToken(); cancelled.cancel()
     XCTAssertThrowsError(try YlSourceInspector.inspect(source, configuration: .init(map: [:]), token: cancelled))
     XCTAssertEqual(YlSourceInspector.format(Data([0x1a, 0x45, 0xdf, 0xa3])), .automatic)
+  }
+}
+
+@MainActor
+extension YlAppleSessionTests {
+  func testBoundedAndRetiredHlsHostRejectionsPreserveCommittedPlayback() async throws {
+    let ledger = YlManagedBufferLedger()
+    let f = AppleHostFixture(bufferLedger: ledger); defer { f.host.close() }
+    let accepted = try await f.host.load(request: AppleHostFixture.request("active", autoplay: true))
+    let item = try XCTUnwrap(f.av.currentItem)
+    let intent = f.host.playbackIntent
+    let lease = try ledger.acquireOpaqueHlsRetention()
+    var bounded = AppleHostFixture.request("bounded", url: "https://unreachable.invalid/movie.mkv", format: .matroska, buffer: .bounded)
+    bounded.options.bufferStrategy.minDurationMs = 100
+    bounded.options.bufferStrategy.maxDurationMs = 500
+    bounded.options.bufferStrategy.maxManagedBytes = 16 * 1024 * 1024
+    do { _ = try await f.host.load(request: bounded); XCTFail("Opaque payload overlapped bounded preparation") }
+    catch let error as PigeonError { XCTAssertEqual(error.code, "policy.unsupported") }
+    XCTAssertEqual(f.host.sessionId, accepted.sessionId)
+    XCTAssertTrue(f.av.currentItem === item)
+    XCTAssertEqual(f.host.playbackIntent, intent)
+    withExtendedLifetime(lease) {}
+  }
+  func testBoundedScopeRejectsHlsBeforeNetworkPreparationAndKeepsCurrentItem() async throws {
+    let ledger = YlManagedBufferLedger()
+    let f = AppleHostFixture(bufferLedger: ledger); defer { f.host.close() }
+    let accepted = try await f.host.load(request: AppleHostFixture.request("active", autoplay: true))
+    let item = try XCTUnwrap(f.av.currentItem), intent = f.host.playbackIntent
+    let scope = try ledger.makeScope(maxBytes: 16 * 1024 * 1024)
+    var hls = AppleHostFixture.request("hls", url: "https://unreachable.invalid/master.m3u8", format: .hls)
+    hls.source.request = AppleHttpRequestMessage(headers: ["X-Test": "ordinary"], credentials: [:])
+    do { _ = try await f.host.load(request: hls); XCTFail("HLS prepared while bounded payload remained") }
+    catch let error as PigeonError { XCTAssertEqual(error.code, "policy.unsupported") }
+    XCTAssertEqual(f.host.sessionId, accepted.sessionId)
+    XCTAssertTrue(f.av.currentItem === item)
+    XCTAssertEqual(f.host.playbackIntent, intent)
+    withExtendedLifetime(scope) {}
+  }
+}
+
+extension YlEngineAssessmentTests {
+  func testBoundedPlanRequiresCompleteValidDurationsAndSoleByteBoundary() {
+    var source = YlAppleSourceDescriptor(uri: "https://example.test/movie.mkv", kind: .network)
+    source.loadOptions = YlAppleLoadOptions(bufferStrategy: .bounded, minDurationMs: 100,
+      maxDurationMs: 500, maxManagedBytes: 16 * 1024 * 1024)
+    let supported = YlEngineRouter.assess(source)
+    XCTAssertEqual(supported.engine, .managedFallback)
+    XCTAssertTrue(supported.satisfiedRequirements.contains(.bufferBounded))
+    XCTAssertTrue(supported.limitations.contains(.bufferOsMemoryExcluded))
+    for format in [YlSourceFormat.hls, .mp4, .mov] {
+      var system = source; system.formatHint = format
+      XCTAssertEqual(YlEngineRouter.assess(system).rejection?.code, "policy.unsupported")
+    }
+    source.loadOptions?.maxManagedBytes = 1
+    XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
+    source.loadOptions?.maxManagedBytes = 16 * 1024 * 1024
+    source.loadOptions?.maxDurationMs = 10
+    XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
+    source.loadOptions?.minDurationMs = nil
+    XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
   }
 }

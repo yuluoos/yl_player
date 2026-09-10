@@ -20,6 +20,31 @@ enum YlAudioCodec: Equatable {
   case unsupported
 }
 
+/// Resolve missing packet duration only for the inspected AAC-LC configuration.
+/// AudioSpecificConfig's frameLengthFlag selects 1024 or 960 samples. Other
+/// objects, absent bits and rate mismatches are not guessed for bounded timing.
+func ylBoundedAACPacketDurationUs(sampleRate: Double, cookie: Data) -> Int64? {
+  guard sampleRate > 0, sampleRate.isFinite else { return nil }
+  var offset = 0
+  func bits(_ count: Int) -> Int? {
+    guard offset + count <= cookie.count * 8 else { return nil }
+    var value = 0
+    for _ in 0..<count {
+      value = value * 2 + Int((cookie[cookie.startIndex + offset / 8] >> (7 - offset % 8)) & 1)
+      offset += 1
+    }
+    return value
+  }
+  guard bits(5) == 2, let frequencyIndex = bits(4) else { return nil }
+  let rates = [96000, 88200, 64000, 48000, 44100, 32000, 24000, 22050, 16000, 12000, 11025, 8000, 7350]
+  let frequency: Int
+  if frequencyIndex == 15 { guard let explicit = bits(24) else { return nil }; frequency = explicit }
+  else { guard frequencyIndex < rates.count else { return nil }; frequency = rates[frequencyIndex] }
+  guard Double(frequency) == sampleRate, let channels = bits(4), (1...7).contains(channels),
+        let shortFrame = bits(1), bits(1) == 0, bits(1) == 0 else { return nil }
+  return Int64((Double(shortFrame == 0 ? 1024 : 960) * 1_000_000 / sampleRate).rounded(.up))
+}
+
 struct YlAudioStreamConfiguration: Equatable {
   let codec: YlAudioCodec
   let sampleRate: Double
@@ -29,6 +54,7 @@ struct YlAudioStreamConfiguration: Equatable {
 }
 
 struct YlCompressedAudioPacket {
+  var reservation: YlManagedBufferLedger.Token? = nil
   let data: Data
   let ptsUs: Int64
   let durationUs: Int64
@@ -41,6 +67,7 @@ struct YlAudioBufferEstimate: Equatable {
 }
 
 struct YlScheduledAudioBuffer {
+  var reservation: YlManagedBufferLedger.Token? = nil
   let payload: AnyObject
   let ptsUs: Int64
   let durationUs: Int64
@@ -100,6 +127,8 @@ final class YlAudioRenderer: YlAudioRendering {
   private let maxScheduledBytes: Int
   private let converter: YlAudioPacketConverting
   private let output: YlAudioOutputDriving
+  private let bufferScope: YlManagedBufferScope?
+  private let boundedPlan: YlBoundedBufferPlan?
   private var configuredGeneration: UInt64?
   private var configuredCodec: YlAudioCodec?
   private var completionGeneration: UInt64 = 0
@@ -115,11 +144,16 @@ final class YlAudioRenderer: YlAudioRendering {
   init(
     maxScheduledDurationUs: Int64 = 500_000,
     maxScheduledBytes: Int = 2 * 1024 * 1024,
+    bufferScope: YlManagedBufferScope? = nil,
+    boundedPlan: YlBoundedBufferPlan? = nil,
     converter: YlAudioPacketConverting = YlAppleCompressedAudioConverter(),
     output: YlAudioOutputDriving = YlSystemAudioOutput()
   ) {
     precondition(maxScheduledDurationUs >= 0)
     precondition(maxScheduledBytes >= 0)
+    self.bufferScope = bufferScope
+    self.boundedPlan = boundedPlan
+    (converter as? YlAppleCompressedAudioConverter)?.bufferScope = bufferScope
     self.maxScheduledDurationUs = maxScheduledDurationUs
     self.maxScheduledBytes = maxScheduledBytes
     self.converter = converter
@@ -134,6 +168,7 @@ final class YlAudioRenderer: YlAudioRendering {
     self.init(
       maxScheduledDurationUs: YlAppleCompatibility.current.audioDurationUs,
       maxScheduledBytes: bufferBudget.scheduledAudioBytes,
+      bufferScope: bufferBudget.bufferScope, boundedPlan: bufferBudget.boundedPlan,
       converter: converter,
       output: output
     )
@@ -202,14 +237,25 @@ final class YlAudioRenderer: YlAudioRendering {
       byteCount: estimate.byteCount
     )
     lock.unlock()
+    if let boundedPlan, estimate.durationUs > boundedPlan.maxDurationUs || estimate.byteCount > boundedPlan.maxBytes {
+      throw YlManagedBufferLedger.unsupported()
+    }
     guard estimatedCapacity == .scheduled else { return estimatedCapacity }
 
-    let buffer: YlScheduledAudioBuffer
+    // System converter accounts exact allocations itself. Test/custom converters
+    // use their declared conservative estimate before entering conversion.
+    let reservation = converter is YlAppleCompressedAudioConverter ? nil
+      : bufferScope?.reserve(category: .scheduledAudio, bytes: max(0, estimate.byteCount))
+    if !(converter is YlAppleCompressedAudioConverter), bufferScope != nil, reservation == nil { return .wouldExceedBytes }
+    var buffer: YlScheduledAudioBuffer
     do {
       guard let converted = try converter.convert(packet: packet) else {
         return .buffered
       }
       buffer = converted
+      if buffer.reservation == nil { buffer.reservation = reservation }
+    } catch let error as NativePlayerError where error.code == "policy.unsupported" {
+      throw error
     } catch {
       let codecName = lock.withLock {
         Self.codecName(configuredCodec ?? .unsupported)
@@ -222,6 +268,10 @@ final class YlAudioRenderer: YlAudioRendering {
       )
     }
 
+    guard buffer.reservation?.mediaEpoch != nil || (buffer.reservation?.carryTiming(ptsUs: buffer.ptsUs, durationUs: buffer.durationUs, from: packet.reservation) ?? true) else {
+      throw YlManagedBufferLedger.unsupported()
+    }
+    if !(converter is YlAppleCompressedAudioConverter) { packet.reservation?.endQueuedTiming() }
     lock.lock()
     guard !disposed, configuredGeneration == packet.generation else {
       lock.unlock()
@@ -244,6 +294,7 @@ final class YlAudioRenderer: YlAudioRendering {
     lock.unlock()
 
     output.schedule(buffer) { [weak self] in
+      buffer.reservation?.endQueuedTiming()
       self?.complete(
         durationUs: buffer.durationUs,
         byteCount: buffer.byteCount,
@@ -376,7 +427,7 @@ final class YlAudioRenderer: YlAudioRendering {
       return .wouldExceedBytes
     }
     let nextDuration = scheduledDuration.addingReportingOverflow(max(0, durationUs))
-    let rateAdjustedDurationLimit = Int64(
+    let rateAdjustedDurationLimit = boundedPlan?.maxDurationUs ?? Int64(
       (Double(maxScheduledDurationUs) * Double(YlAppleCompatibility.current.scalesAudioDuration ? playbackRate : 1)).rounded(.up)
     )
     if nextDuration.overflow || nextDuration.partialValue > rateAdjustedDurationLimit {
@@ -425,6 +476,7 @@ final class YlAudioRenderer: YlAudioRendering {
 }
 
 final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
+  var bufferScope: YlManagedBufferScope?
   private var converter: AVAudioConverter?
   private var inputFormat: AVAudioFormat?
   private var outputFormat: AVAudioFormat?
@@ -521,6 +573,9 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     }
     pendingPackets.append(packet)
     let packetBatch = Array(pendingPackets.prefix(YlAppleCompatibility.current.batchesAudioInput ? 2 : 1))
+    let copiedBytes = packetBatch.reduce(0) { $0 + $1.data.count }
+    let copyReservation = try bufferScope?.require(category: .compressedPackets, bytes: copiedBytes)
+    defer { withExtendedLifetime(copyReservation) {} }
     let compressedBuffers = packetBatch.map { queuedPacket in
       let packetSize = UInt32(clamping: queuedPacket.data.count)
       let compressed = AVAudioCompressedBuffer(
@@ -548,6 +603,9 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     let frameCapacity = YlAppleCompatibility.current.batchesAudioInput
       ? AVAudioFrameCount(framesPerPacket)
       : AVAudioFrameCount(max(Int(framesPerPacket), estimate.byteCount / bytesPerFrame + Int(framesPerPacket)))
+    let allocatedBytes = YlAudioFormatPolicy.byteCount(frameCount: Int(frameCapacity), bytesPerFrame: bytesPerFrame,
+      channelCount: Int(outputFormat.channelCount))
+    let pcmReservation = try bufferScope?.require(category: .scheduledAudio, bytes: allocatedBytes)
     guard let pcm = AVAudioPCMBuffer(pcmFormat: outputFormat, frameCapacity: frameCapacity) else {
       throw YlAudioImplementationError.allocationFailed
     }
@@ -566,6 +624,10 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
       inputStatus.pointee = .haveData
       return input
     }
+    // Input callbacks have returned: those compressed samples are consumed.
+    // Retained bookkeeping Data remains byte-charged, but no longer represents
+    // media queued for input. PCM gets its own interval below.
+    for consumed in packetBatch.prefix(nextInputIndex) { consumed.reservation?.endQueuedTiming() }
     pendingOutputPackets.append(contentsOf: packetBatch.prefix(nextInputIndex))
     pendingPackets.removeFirst(nextInputIndex)
     if YlAppleCompatibility.current.batchesAudioInput, status == .inputRanDry, pcm.frameLength == 0 {
@@ -582,7 +644,12 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     let durationUs = Int64(
       (Double(pcm.frameLength) * 1_000_000 / pcm.format.sampleRate).rounded(.towardZero)
     )
+    guard pcmReservation?.carryTiming(ptsUs: outputPacket.ptsUs, durationUs: durationUs, from: outputPacket.reservation) ?? true else {
+      throw YlManagedBufferLedger.unsupported("PCM timing pts=\(outputPacket.ptsUs) duration=\(durationUs)")
+    }
+    outputPacket.reservation?.endQueuedTiming()
     return YlScheduledAudioBuffer(
+      reservation: pcmReservation,
       payload: pcm,
       ptsUs: outputPacket.ptsUs,
       durationUs: durationUs,

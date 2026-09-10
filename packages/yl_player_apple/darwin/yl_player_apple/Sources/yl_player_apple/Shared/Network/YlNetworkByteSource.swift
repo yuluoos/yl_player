@@ -47,7 +47,7 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
     self.managedPolicy = managedPolicy
     self.managedTransportFactory = managedTransportFactory
     policy = YlNetworkRequestPolicy(recipe: recipe)
-    ring = YlByteRingBuffer(capacity: capacity)
+    ring = YlByteRingBuffer(capacity: capacity, bufferScope: recipe.bufferScope)
     self.onRetry = onRetry
     super.init()
 
@@ -210,6 +210,7 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
     let transport = try managedTransportFactory!(request) { [weak self] event in
       self?.receiveManaged(event, identifier: identifier, requestURL: request.url!)
     }
+    try transport.assignBufferScope(recipe.bufferScope)
     managedTransport?.cancel()
     managedTransport = transport
     managedIdentifier = identifier
@@ -494,6 +495,9 @@ extension YlNetworkByteSource: URLSessionDataDelegate, URLSessionTaskDelegate {
       return (writeOffset, ring.writeGeneration)
     }) else { return }
     do {
+      let callbackReservation = try identifier >= 0
+        ? recipe.bufferScope?.require(category: .networkCache, bytes: data.count) : nil
+      defer { withExtendedLifetime(callbackReservation) {} }
       try ring.write(data, at: target.0, generation: target.1)
       guard resumeReadDeadline(
         taskIdentifier: identifier,

@@ -1229,3 +1229,43 @@ private final class ManagedScriptServer {
   }
   func close() { listener.cancel() }
 }
+
+extension YlNetworkByteSourceTests {
+  func testBoundedAndOpaqueHlsAdmissionsAreMutuallyExclusive() throws {
+    let ledger = YlManagedBufferLedger()
+    var bounded: YlManagedBufferScope? = try ledger.makeScope(maxBytes: 16 * 1024 * 1024)
+    let delayed = try XCTUnwrap(bounded?.reserve(category: .scheduledAudio, bytes: 128))
+    XCTAssertThrowsError(try ledger.acquireOpaqueHlsRetention()) { error in
+      XCTAssertEqual((error as? NativePlayerError)?.code, "policy.unsupported")
+    }
+    bounded = nil
+    XCTAssertThrowsError(try ledger.acquireOpaqueHlsRetention())
+    delayed.release()
+    var opaque: YlManagedBufferLedger.OpaqueHlsRetention? = try ledger.acquireOpaqueHlsRetention()
+    XCTAssertNotNil(opaque)
+    XCTAssertThrowsError(try ledger.makeScope(maxBytes: 16 * 1024 * 1024))
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0, "Opaque admission metadata is not media measurement")
+    opaque = nil
+    XCTAssertNoThrow(try ledger.makeScope(maxBytes: 16 * 1024 * 1024))
+  }
+  func testHlsPayloadCompletionLeaseOutlivesCancelAndInterveningRoute() async throws {
+    let ledger = YlManagedBufferLedger()
+    var lease: YlManagedBufferLedger.OpaqueHlsRetention? = try ledger.acquireOpaqueHlsRetention()
+    var proxy: YlHlsMediaProxy? = try YlHlsMediaProxy(originURL: URL(string: "https://media.test/master.m3u8")!,
+      headers: [:], configuration: .init(map: [:]), opaqueRetention: lease)
+    weak var retiredProxy = proxy
+    // Uses the same wrapper passed to every actual NW contentProcessed send.
+    var heldCompletion: ((NWError?) -> Void)? = proxy?.retainingPayloadCompletion { _ in }
+    lease = nil
+    proxy?.cancelAll(); proxy = nil
+    let interveningSystemRoute = try ledger.makeScope(maxBytes: nil)
+    for _ in 0..<100 where retiredProxy != nil { try await Task.sleep(nanoseconds: 10_000_000) }
+    XCTAssertNil(retiredProxy)
+    XCTAssertThrowsError(try ledger.makeScope(maxBytes: 16 * 1024 * 1024))
+    heldCompletion?(nil)
+    XCTAssertThrowsError(try ledger.makeScope(maxBytes: 16 * 1024 * 1024), "Retained completion still owns its media lease")
+    heldCompletion = nil
+    XCTAssertNoThrow(try ledger.makeScope(maxBytes: 16 * 1024 * 1024))
+    withExtendedLifetime(interveningSystemRoute) {}
+  }
+}

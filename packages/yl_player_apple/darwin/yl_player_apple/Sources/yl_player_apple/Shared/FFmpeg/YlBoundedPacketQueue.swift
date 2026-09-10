@@ -6,6 +6,7 @@ enum YlPacketKind: Equatable {
 }
 
 struct YlPacketEnvelope {
+  var reservation: YlManagedBufferLedger.Token? = nil
   let packet: AnyObject
   let kind: YlPacketKind
   let ptsUs: Int64
@@ -27,12 +28,14 @@ final class YlBoundedPacketQueue {
   private let condition = NSCondition()
   private let maxDurationUs: Int64
   private let maxBytes: Int
+  private let bufferScope: YlManagedBufferScope?
   private var packets = [YlPacketEnvelope]()
   private var durationUs: Int64 = 0
   private var bytes = 0
   private var cancelled = false
 
-  init(maxDurationUs: Int64, maxBytes: Int) {
+  init(maxDurationUs: Int64, maxBytes: Int, bufferScope: YlManagedBufferScope? = nil) {
+    self.bufferScope = bufferScope
     precondition(maxDurationUs >= 0)
     precondition(maxBytes >= 0)
     self.maxDurationUs = maxDurationUs
@@ -61,7 +64,7 @@ final class YlBoundedPacketQueue {
     guard !cancelled else { return .cancelled }
     let result = capacityResult(for: packet)
     guard result == .accepted else { return result }
-    append(packet)
+    guard append(packet) else { return .wouldExceedBytes }
     condition.broadcast()
     return .accepted
   }
@@ -77,7 +80,7 @@ final class YlBoundedPacketQueue {
     while true {
       guard !cancelled else { return .cancelled }
       if capacityResult(for: packet) == .accepted {
-        append(packet)
+        guard append(packet) else { return .wouldExceedBytes }
         condition.broadcast()
         return .accepted
       }
@@ -138,10 +141,16 @@ final class YlBoundedPacketQueue {
     return .accepted
   }
 
-  private func append(_ packet: YlPacketEnvelope) {
+  private func append(_ value: YlPacketEnvelope) -> Bool {
+    var packet = value
+    if packet.reservation == nil, let bufferScope {
+      guard let token = bufferScope.reserve(category: .compressedPackets, bytes: max(0, packet.byteCount)) else { return false }
+      packet.reservation = token
+    }
     packets.append(packet)
     durationUs += max(0, packet.durationUs)
     bytes += max(0, packet.byteCount)
+    return true
   }
 
   deinit {

@@ -6,10 +6,16 @@ import Foundation
 protocol YlPresentationScheduling: AnyObject {
   var lateFrameDropCount: Int { get }
   var pendingPTS: [Int64] { get }
+  var bufferedDurationUs: Int64 { get }
+  func configureBounded(_ plan: YlBoundedBufferPlan?)
   func enqueue(_ frame: YlFrameEnvelope) -> Bool
   func frame(at positionUs: Int64, generation: UInt64) -> YlFrameEnvelope?
   func flush(generation: UInt64)
   func dispose()
+}
+extension YlPresentationScheduling {
+  var bufferedDurationUs: Int64 { 0 }
+  func configureBounded(_ plan: YlBoundedBufferPlan?) {}
 }
 extension YlFrameScheduler: YlPresentationScheduling {}
 
@@ -19,6 +25,7 @@ protocol YlPresentationOutput: AnyObject {
   func didAcceptPresentationFrame(generation: UInt64)
   func didPublishFirstPresentationFrame()
   func presentationDidTick(atHostTimeUs: Int64)
+  var allowsBoundedPresentation: Bool { get }
   func emitPresentationDelta()
 }
 
@@ -65,6 +72,7 @@ final class YlPresentationCoordinator: YlAudioTimeline {
   private let postSeekGate = YlPostSeekGate()
   private var mediaClock: YlMediaClock!
   private var displayLink: (any YlDisplayDriving)?
+  private var currentFrameReservation: YlManagedBufferLedger.Token?
   private var currentPixelBuffer: CVPixelBuffer?
   private var firstFrameSent = false
   private var firstFrameDurationMs: Int64?
@@ -83,6 +91,8 @@ final class YlPresentationCoordinator: YlAudioTimeline {
   var hasDisplay: Bool { displayLink != nil }
   var firstFrameDuration: Int64? { firstFrameDurationMs }
   var lateFrameDropCount: Int { frameScheduler.lateFrameDropCount }
+  var bufferedDurationUs: Int64 { frameScheduler.bufferedDurationUs }
+  func configureBounded(_ plan: YlBoundedBufferPlan?) { frameScheduler.configureBounded(plan) }
   var pendingFrames: [Int64] { frameScheduler.pendingPTS }
   func configureClock(_ provided: YlMediaClock?, audioTime: @escaping () -> YlRenderedAudioTime?) {
     mediaClock = provided ?? YlMediaClock(audioTime: audioTime)
@@ -98,12 +108,12 @@ final class YlPresentationCoordinator: YlAudioTimeline {
   func flushFrames(generation: UInt64) { frameScheduler.flush(generation: generation) }
   func disposeFrames() { frameScheduler.dispose() }
   func clearFrame() { currentPixelBuffer = nil }
-  func clearFrameAndTexture() { currentPixelBuffer = nil; clearOutput() }
+  func clearFrameAndTexture() { currentPixelBuffer = nil; clearOutput(); currentFrameReservation = nil }
   func setDisplayPaused(_ paused: Bool) { displayLink?.isPaused = paused }
   func retireDisplay() { displayLink?.invalidate(); displayLink = nil }
   func resetMilestones() { firstFrameDurationMs = nil; firstFrameSent = false }
 
-  func clearOutput() { services.textureOutput.clear() }
+  func clearOutput() { services.textureOutput.clear(); currentFrameReservation = nil }
 
   func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? {
     stateLock.lock()
@@ -116,6 +126,7 @@ final class YlPresentationCoordinator: YlAudioTimeline {
     guard let output, output.acceptsPresentationFrame(generation: frame.generation),
           postSeekGate.acceptsVideo(ptsUs: frame.ptsUs) else { return }
     let accepted = frameScheduler.enqueue(YlFrameEnvelope(
+      reservation: frame.reservation,
       payload: frame.pixelBuffer,
       ptsUs: frame.ptsUs == .min ? 0 : frame.ptsUs,
       durationUs: frame.durationUs,
@@ -128,7 +139,7 @@ final class YlPresentationCoordinator: YlAudioTimeline {
       guard let self, !self.firstFrameSent,
             let output = self.output, output.acceptsPresentationFrame(generation: frame.generation)
       else { return }
-      self.present(frame.pixelBuffer)
+      self.present(frame.pixelBuffer, reservation: frame.reservation)
       self.firstFrameSent = true
       self.firstFrameDurationMs = Int64(
         (CACurrentMediaTime() - self.openStartedAt) * 1_000
@@ -142,9 +153,10 @@ final class YlPresentationCoordinator: YlAudioTimeline {
     let position = mediaClock.position(atHostTimeUs: now)
     guard let output else { return }
     let currentGeneration = output.presentationGeneration
-    if let frame = frameScheduler.frame(at: position, generation: currentGeneration) {
+    if output.allowsBoundedPresentation, let frame = frameScheduler.frame(at: position, generation: currentGeneration) {
+      frame.reservation?.endQueuedTiming()
       let pixelBuffer = unsafeBitCast(frame.payload, to: CVPixelBuffer.self)
-      present(pixelBuffer)
+      present(pixelBuffer, reservation: frame.reservation)
     }
     output.presentationDidTick(atHostTimeUs: now)
     let wallNow = CACurrentMediaTime()
@@ -154,9 +166,12 @@ final class YlPresentationCoordinator: YlAudioTimeline {
     }
   }
 
-  private func present(_ pixelBuffer: CVPixelBuffer) {
-    stateLock.withLock { currentPixelBuffer = pixelBuffer }
+  private func present(_ pixelBuffer: CVPixelBuffer, reservation: YlManagedBufferLedger.Token?) {
+    let old = stateLock.withLock { () -> YlManagedBufferLedger.Token? in
+      let old = currentFrameReservation; currentPixelBuffer = pixelBuffer; currentFrameReservation = reservation; return old
+    }
     if textureId >= 0 { services.textureOutput.publish(pixelBuffer) }
+    withExtendedLifetime(old) {}
   }
 
   func installDisplayLink(paused: Bool) {

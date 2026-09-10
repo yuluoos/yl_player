@@ -1,6 +1,7 @@
 import Foundation
 
 struct YlFrameEnvelope {
+  var reservation: YlManagedBufferLedger.Token? = nil
   let payload: AnyObject
   let ptsUs: Int64
   let durationUs: Int64
@@ -18,6 +19,7 @@ final class YlFrameScheduler {
   private var lastPresentedPTS: Int64?
   private var disposed = false
   private var droppedFrames = 0
+  private var boundedPlan: YlBoundedBufferPlan?
 
   init(
     compatibility: YlAppleCompatibility = .current,
@@ -31,6 +33,14 @@ final class YlFrameScheduler {
     self.enqueueWaitTimeout = enqueueWaitTimeout
   }
 
+  func configureBounded(_ plan: YlBoundedBufferPlan?) { lock.withLock { boundedPlan = plan } }
+  var bufferedDurationUs: Int64 { lock.withLock { durationLocked } }
+  private var durationLocked: Int64 {
+    guard let first = frames.first, let last = frames.last else { return 0 }
+    let end = last.ptsUs.addingReportingOverflow(max(0, last.durationUs))
+    let span = end.partialValue.subtractingReportingOverflow(first.ptsUs)
+    return end.overflow || span.overflow ? Int64.max : max(0, span.partialValue)
+  }
   var pendingPTS: [Int64] {
     lock.withLock { frames.map(\.ptsUs) }
   }
@@ -53,8 +63,16 @@ final class YlFrameScheduler {
       return false
     }
 
+    if let boundedPlan {
+      let start = min(frames.first?.ptsUs ?? frame.ptsUs, frame.ptsUs)
+      let end = frame.ptsUs.addingReportingOverflow(max(0, frame.durationUs))
+      let span = end.partialValue.subtractingReportingOverflow(start)
+      guard !end.overflow, !span.overflow, span.partialValue <= boundedPlan.maxDurationUs else {
+        droppedFrames += 1; lock.unlock(); return false
+      }
+    }
     let deadline = Date(timeIntervalSinceNow: enqueueWaitTimeout)
-    while compatibility.usesBackpressure && frames.count >= maxFrames {
+    while boundedPlan == nil && compatibility.usesBackpressure && frames.count >= maxFrames {
       let signalled = lock.wait(until: deadline)
       guard !disposed,
             activeGeneration == nil || activeGeneration == frame.generation else {
@@ -73,7 +91,7 @@ final class YlFrameScheduler {
     } ?? frames.endIndex
     frames.insert(frame, at: insertionIndex)
     var releasedFrame: YlFrameEnvelope?
-    if !compatibility.usesBackpressure && frames.count > maxFrames {
+    if boundedPlan == nil && !compatibility.usesBackpressure && frames.count > maxFrames {
       releasedFrame = frames.removeFirst()
       droppedFrames += 1
     }

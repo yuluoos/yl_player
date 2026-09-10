@@ -1,3 +1,4 @@
+import ObjectiveC
 import CoreMedia
 import Foundation
 import YlFFmpegBridge
@@ -15,6 +16,17 @@ final class YlFallbackOutputRelay {
   weak var backend: (any YlVideoPipelineOutput)?
   func frame(_ frame: YlVideoFrame) { backend?.receive(frame) }
   func error(_ error: NativePlayerError) { backend?.fail(error) }
+}
+
+private var ylManagedSamplePayloadAssociation: UInt8 = 0
+
+/// Keep opaque ownership out of CM attachments serialized to the VT service.
+/// The backing block also owns the receipt if a sample copy outlives its source.
+func ylRetainManagedPayload(_ token: YlManagedBufferLedger.Token, in sample: CMSampleBuffer) {
+  objc_setAssociatedObject(sample, &ylManagedSamplePayloadAssociation, token, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+  if let block = CMSampleBufferGetDataBuffer(sample) {
+    objc_setAssociatedObject(block, &ylManagedSamplePayloadAssociation, token, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+  }
 }
 
 /// Owns format, decoder and serialized submissions. Session-generation predicates
@@ -45,7 +57,7 @@ final class YlVideoPipeline {
 
   private func makeDecoder(format: CMVideoFormatDescription) throws -> YlVideoToolboxDecoder {
     try YlVideoToolboxDecoder(formatDescription: format,
-      maxInFlightBytes: bufferBudget.inFlightPacketBytes, factory: factory,
+      maxInFlightBytes: bufferBudget.inFlightPacketBytes, bufferScope: bufferBudget.bufferScope, factory: factory,
       onFrame: { [outputRelay] frame in outputRelay.frame(frame) },
       onError: { [outputRelay] error in outputRelay.error(error) })
   }
@@ -75,7 +87,7 @@ final class YlVideoPipeline {
     decoder = candidate?.decoder
     return old
   }
-  func finishInput(generation packetGeneration: UInt64, hasAudio: Bool,
+  func finishInput(generation packetGeneration: UInt64, managedPayload: YlManagedBufferLedger.Token? = nil, hasAudio: Bool,
                    compatibility: YlAppleCompatibility) {
     if !compatibility.limitsVideoReservations {
       decoder?.flush()
@@ -87,7 +99,7 @@ final class YlVideoPipeline {
   }
 
   func consume(packet: inout YLFPacketRef?, ownedPacket: YLFPacketRef,
-                         generation packetGeneration: UInt64, hasAudio: Bool,
+                         generation packetGeneration: UInt64, managedPayload: YlManagedBufferLedger.Token? = nil, hasAudio: Bool,
                          compatibility: YlAppleCompatibility, shouldCancel: @escaping () -> Bool,
                          onSubmitted: () -> Void, onCancelled: () -> Void) -> Void? {
       guard let decoder = decoder else {
@@ -102,7 +114,7 @@ final class YlVideoPipeline {
       }
       do {
         guard try submit(packet: &packet, ownedPacket: ownedPacket, decoder: decoder,
-          generation: packetGeneration, hasAudio: hasAudio,
+          generation: packetGeneration, managedPayload: managedPayload, hasAudio: hasAudio,
           compatibility: compatibility, shouldCancel: shouldCancel,
           onSubmitted: onSubmitted,
           onCancelled: onCancelled,
@@ -130,14 +142,16 @@ final class YlVideoPipeline {
   /// schedule another demux turn. A non-nil Void means this packet turn completed.
   func submit(packet: inout YLFPacketRef?, ownedPacket: YLFPacketRef,
               decoder: YlVideoToolboxDecoder, generation packetGeneration: UInt64,
-              hasAudio: Bool, compatibility: YlAppleCompatibility,
+              managedPayload: YlManagedBufferLedger.Token? = nil, hasAudio: Bool, compatibility: YlAppleCompatibility,
               shouldCancel: @escaping () -> Bool,
               onSubmitted: () -> Void, onCancelled: () -> Void,
               schedule: (CMSampleBuffer, UInt64, YlVideoToolboxDecoder, YlVideoDecodeReservation) -> Void) throws -> Void? {
         let byteCount = ylf_packet_size(ownedPacket)
+        let managedPayload = managedPayload ?? bufferBudget.bufferScope?.reserve(category: .compressedPackets, bytes: byteCount)
+        guard bufferBudget.bufferScope == nil || managedPayload != nil else { throw YlManagedBufferLedger.unsupported() }
         // Charge the sample before either the sample buffer or queue can own it.
         let reservation: YlVideoDecodeReservation?
-        if compatibility.limitsVideoReservations {
+        if compatibility.limitsVideoReservations || bufferBudget.bufferScope != nil {
           reservation = try !hasAudio
             ? decoder.reserve(byteCount: byteCount, shouldCancel: shouldCancel)
             : decoder.reserveSubmission(byteCount: byteCount, shouldCancel: shouldCancel)
@@ -147,6 +161,7 @@ final class YlVideoPipeline {
           onCancelled()
           return nil
         }
+        reservation?.managedPayload = managedPayload
         var unmanagedSample: Unmanaged<CMSampleBuffer>?
         let sampleResult = ylf_create_video_sample_buffer(
           &packet,
@@ -156,6 +171,12 @@ final class YlVideoPipeline {
         if sampleResult == 0, let unmanagedSample {
           onSubmitted()
           let sample = unmanagedSample.takeRetainedValue()
+          // Bridge CMBlockBuffer takes the AVPacket without a copy. Transfer the
+          // same token and bind it to actual sample lifetime, including any
+          // delayed decoder retention beyond the output callback.
+          if let managedPayload {
+            ylRetainManagedPayload(managedPayload, in: sample)
+          }
           if !compatibility.limitsVideoReservations || !hasAudio {
             decoder.decode(
               sample: sample, generation: packetGeneration, reservation: reservation

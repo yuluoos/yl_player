@@ -21,6 +21,7 @@ final class YlAppleSessionCoordinator: NSObject {
   private let textureOwner: YlAppleTextureOwner
   private let avTexture: YlAppleAvTextureBinding
   private var activeTexture: YlAppleTextureLease?
+  private let bufferLedger: YlManagedBufferLedger
   private let configuration: PlayerConfiguration
   private let emit: (YlAppleSessionIdentity, YlNativeBackendCallback) -> Void
   private let avBackend: YlAvPlayerBackend
@@ -51,7 +52,9 @@ final class YlAppleSessionCoordinator: NSObject {
        commandCoordinator: YlAsyncCommandCoordinator = YlAsyncCommandCoordinator(),
        beforeFallbackConstruction: ((YlPlaybackBackend) throws -> Void)? = nil,
        slotCompatibility: YlAppleCompatibility? = nil,
+       bufferLedger: YlManagedBufferLedger = YlManagedBufferLedger(),
        emit: @escaping (YlAppleSessionIdentity, YlNativeBackendCallback) -> Void) {
+    self.bufferLedger = bufferLedger
     self.commandCoordinator = commandCoordinator
     self.beforeFallbackConstruction = beforeFallbackConstruction
     self.playerId = playerId
@@ -74,7 +77,19 @@ final class YlAppleSessionCoordinator: NSObject {
     completion: @escaping (Result<Void, NativePlayerError>) -> Void) {
     let assessment = YlEngineRouter.assess(recipe.source)
     if let rejection = assessment.rejection { completion(.failure(rejection)); return }
-    beginOpen(recipe.source, decision: assessment, identity: identity, willCommit: willCommit,
+    var source = recipe.source
+    do {
+      if source.loadOptions?.bufferStrategy == .bounded {
+        guard let options = source.loadOptions, let low = options.minDurationMs,
+              let high = options.maxDurationMs, let bytes = options.maxManagedBytes else {
+          throw YlManagedBufferLedger.unsupported()
+        }
+        source.boundedPlan = try YlBoundedBufferPlan(minDurationMs: low, maxDurationMs: high, maxBytes: bytes)
+      }
+      source.bufferScope = try bufferLedger.makeScope(maxBytes: source.boundedPlan?.maxBytes)
+    } catch let error as NativePlayerError { completion(.failure(error)); return }
+    catch { completion(.failure(YlManagedBufferLedger.unsupported())); return }
+    beginOpen(source, decision: assessment, identity: identity, willCommit: willCommit,
       didCommit: didCommit, didRollback: didRollback, completion: completion)
   }
 
@@ -684,7 +699,8 @@ final class YlAppleSessionCoordinator: NSObject {
       credentials: source.credentials,
       configuration: configuration.network,
       cancellationToken: token,
-      credentialContext: credentialContext
+      credentialContext: credentialContext,
+      opaqueRetention: try bufferLedger.acquireOpaqueHlsRetention()
     )
   }
 

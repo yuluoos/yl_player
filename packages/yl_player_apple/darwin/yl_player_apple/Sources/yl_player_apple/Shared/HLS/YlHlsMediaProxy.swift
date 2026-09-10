@@ -9,6 +9,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
   }
 
   private final class TaskRecord {
+    var opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention?
     let connection: NWConnection
     let method: String
     let range: String?
@@ -22,7 +23,8 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     var upstreamFinished = false
     var upstreamError: Error?
 
-    init(connection: NWConnection, method: String, range: String?) {
+    init(connection: NWConnection, method: String, range: String?, opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention? = nil) {
+      self.opaqueRetention = opaqueRetention
       self.connection = connection
       self.method = method
       self.range = range
@@ -34,6 +36,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     qos: .userInitiated
   )
   private let lock = NSLock()
+  private let opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention?
   private let headerPolicy: YlHlsHeaderPolicy
   private let configuration: YlNetworkConfiguration
   private let listener: NWListener
@@ -51,8 +54,10 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     headers: [String: String],
     credentials: [String: String] = [:],
     configuration: YlNetworkConfiguration,
-    credentialContext: YlHlsCredentialContext = YlHlsCredentialContext()
+    credentialContext: YlHlsCredentialContext = YlHlsCredentialContext(),
+    opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention? = nil
   ) throws {
+    self.opaqueRetention = opaqueRetention
     self.credentialContext = credentialContext
     headerPolicy = YlHlsHeaderPolicy(originURL: originURL, headers: headers, credentials: credentials)
     self.configuration = configuration
@@ -254,7 +259,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       taskRecords[task.taskIdentifier] = TaskRecord(
         connection: connection,
         method: method,
-        range: range
+        range: range, opaqueRetention: opaqueRetention
       )
       taskRecords[task.taskIdentifier]?.requestContext = headerPolicy.requestContext(for: destination, credentialsStripped: stripped)
       taskRecords[task.taskIdentifier]?.resourceKey = resourceKey
@@ -293,6 +298,14 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     return request
   }
 
+  /// Completion ownership is independent of proxy cancellation and weak self.
+  /// Kept as one seam so all response body/header/chunk-tail sends obey R18.
+  func retainingPayloadCompletion(_ completion: @escaping (NWError?) -> Void) -> (NWError?) -> Void {
+    { [opaqueRetention] error in
+      defer { withExtendedLifetime(opaqueRetention) {} }; completion(error)
+    }
+  }
+
   private func send(
     status: Int,
     body: Data,
@@ -304,9 +317,9 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     response += "Content-Length: \(body.count)\r\nConnection: close\r\n\r\n"
     var payload = Data(response.utf8)
     payload.append(body)
-    connection.send(content: payload, completion: .contentProcessed { [weak self] _ in
+    connection.send(content: payload, completion: .contentProcessed(retainingPayloadCompletion { [weak self] _ in
       self?.close(connection)
-    })
+    }))
   }
 
   private func close(_ connection: NWConnection) {
@@ -389,7 +402,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     lock.withLock { record.pendingSends += 1 }
     record.connection.send(
       content: payload,
-      completion: .contentProcessed { [weak self, weak dataTask] error in
+      completion: .contentProcessed(retainingPayloadCompletion { [weak self, weak dataTask] error in
         guard let self, let dataTask else { return }
         self.responseSendDidComplete(
           error,
@@ -397,7 +410,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
           record: record,
           resumeTask: true
         )
-      }
+      })
     )
   }
 
@@ -482,9 +495,9 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     case .finishChunked:
       record.connection.send(
         content: Data("0\r\n\r\n".utf8),
-        completion: .contentProcessed { [weak self] _ in
+        completion: .contentProcessed(retainingPayloadCompletion { [weak self] _ in
           self?.close(record.connection)
-        }
+        })
       )
     case .close:
       close(record.connection)
@@ -532,7 +545,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     response += "Connection: close\r\n\r\n"
     connection.send(
       content: Data(response.utf8),
-      completion: .contentProcessed(completion)
+      completion: .contentProcessed(retainingPayloadCompletion(completion))
     )
   }
 

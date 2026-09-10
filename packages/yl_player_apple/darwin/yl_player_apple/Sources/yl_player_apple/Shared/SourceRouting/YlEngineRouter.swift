@@ -16,6 +16,13 @@ enum YlEngineRouter {
     let options = source.loadOptions ?? .init()
     let managed = source.networkPolicy == .managed
     let bounded = options.bufferStrategy == .bounded
+    if bounded {
+      guard let low = options.minDurationMs, let high = options.maxDurationMs,
+            let bytes = options.maxManagedBytes,
+            (try? YlBoundedBufferPlan(minDurationMs: low, maxDurationMs: high, maxBytes: bytes)) != nil else {
+        return reject("unsupported", "policy.unsupported")
+      }
+    }
     let hardware = options.decoderPolicy == .hardwareRequired
     let strict = managed || bounded || hardware
     let hinted = resolvedFormat(source, url: url)

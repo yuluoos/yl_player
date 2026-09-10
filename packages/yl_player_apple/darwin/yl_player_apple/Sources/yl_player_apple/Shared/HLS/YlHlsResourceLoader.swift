@@ -87,6 +87,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   static let manifestByteLimit = 2 * 1024 * 1024
 
   private struct CachedResponse {
+    var opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention? = nil
     let data: Data
     let contentType: String?
     let contentLength: Int64
@@ -94,6 +95,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   }
 
   private final class TaskRecord {
+    var opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention?
     let request: YlHlsLoadingRequest
     let cacheKey: String
     let rangeHeader: String?
@@ -181,6 +183,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     qos: .userInitiated
   )
 
+  private let opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention?
   private let originURL: URL
   let credentialContext: YlHlsCredentialContext
   private let hasExplicitCredentials: Bool
@@ -199,8 +202,10 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     credentials: [String: String] = [:],
     configuration: YlNetworkConfiguration,
     credentialContext: YlHlsCredentialContext = YlHlsCredentialContext(),
-    sessionConfiguration: URLSessionConfiguration = .ephemeral
+    sessionConfiguration: URLSessionConfiguration = .ephemeral,
+    opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention? = nil
   ) throws {
+    self.opaqueRetention = opaqueRetention
     self.credentialContext = credentialContext
     self.originURL = originURL
     self.hasExplicitCredentials = !credentials.isEmpty || headers.keys.contains {
@@ -213,7 +218,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
       headers: headers,
       credentials: credentials,
       configuration: configuration,
-      credentialContext: credentialContext
+      credentialContext: credentialContext, opaqueRetention: opaqueRetention
     )
     super.init()
 
@@ -301,6 +306,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
       isManifest: isManifest
     )
     record.requestContext = headerPolicy.requestContext(for: destination, credentialsStripped: credentialsStripped)
+    record.opaqueRetention = opaqueRetention
     let task = session.dataTask(with: request)
     record.task = task
     let accepted = stateLock.withLock { () -> Bool in
@@ -685,6 +691,7 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
       )
       let response = record.response
       finish(task: task, result: .success(CachedResponse(
+        opaqueRetention: opaqueRetention,
         data: rewritten,
         contentType: response.flatMap(Self.contentType),
         contentLength: Int64(rewritten.count),
@@ -748,7 +755,8 @@ final class YlPreparedHlsAsset {
     configuration: YlNetworkConfiguration,
     cancellationToken: YlOpenCancellationToken,
     credentialContext: YlHlsCredentialContext = YlHlsCredentialContext(),
-    sessionConfiguration: URLSessionConfiguration = .ephemeral
+    sessionConfiguration: URLSessionConfiguration = .ephemeral,
+    opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention? = nil
   ) throws {
     let loader = try YlHlsResourceLoader(
       originURL: originURL,
@@ -756,7 +764,7 @@ final class YlPreparedHlsAsset {
       credentials: credentials,
       configuration: configuration,
       credentialContext: credentialContext,
-      sessionConfiguration: sessionConfiguration
+      sessionConfiguration: sessionConfiguration, opaqueRetention: opaqueRetention
     )
     self.loader = loader
     do {

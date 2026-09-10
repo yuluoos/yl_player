@@ -1,6 +1,7 @@
 @testable import yl_player_apple
 import AVFoundation
 import CoreVideo
+import VideoToolbox
 import XCTest
 import YlFFmpegBridge
 
@@ -13,6 +14,7 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     let usesHardwareDecoder = true
     let output: (YlVTDecodedImage) -> Void
     let lock = NSLock()
+    var automaticFrames = false
     var submitted: [UInt64] = []
     var invalidations = 0
     var onInvalidate: (() -> Void)?
@@ -20,6 +22,14 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     func decode(_ sample: CMSampleBuffer, generation: UInt64,
                 reservation: YlVideoDecodeReservation?) -> OSStatus {
       lock.withLock { submitted.append(generation) }
+      if automaticFrames {
+        var pixel: CVPixelBuffer?
+        let status = CVPixelBufferCreate(kCFAllocatorDefault, 320, 180, kCVPixelFormatType_32BGRA, nil, &pixel)
+        guard status == kCVReturnSuccess else { return status }
+        output(YlVTDecodedImage(status: noErr, pixelBuffer: pixel,
+          pts: CMSampleBufferGetPresentationTimeStamp(sample), duration: CMSampleBufferGetDuration(sample),
+          keyframe: true, generation: generation, reservation: reservation, ownershipToken: nil))
+      }
       reservation?.release()
       return noErr
     }
@@ -36,12 +46,13 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     }
   }
   private final class Factory: YlVTSessionFactory {
+    var automaticFrames = false
     var sessions = [Session]()
     var onCreate: (() -> Void)?
     var onInvalidate: (() -> Void)?
     func makeSession(formatDescription: CMVideoFormatDescription,
                      output: @escaping (YlVTDecodedImage) -> Void) throws -> YlVTSession {
-      let session = Session(output: output); session.onInvalidate = onInvalidate
+      let session = Session(output: output); session.automaticFrames = automaticFrames; session.onInvalidate = onInvalidate
       sessions.append(session); onCreate?(); return session
     }
   }
@@ -126,6 +137,12 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     var renderedAudioTime: YlRenderedAudioTime? { nil }
     private var storedCompletions = [() -> Void]()
     var completions: [() -> Void] { lock.withLock { storedCompletions } }
+    func completeAll() {
+      let pending = lock.withLock { () -> [() -> Void] in
+        let values = storedCompletions; storedCompletions.removeAll(); return values
+      }
+      pending.forEach { $0() }
+    }
     init(_ trace: Trace) { self.trace = trace }
     func configure(sampleRate: Double, channelCount: Int) throws {}
     func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void) {
@@ -369,5 +386,119 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     XCTAssertEqual(ylFallbackPacketReadError(result: -1, inputError: nil,
       container: .matroska).code, "container.mkv_malformed")
     XCTAssertEqual(ylf_debug_outstanding_packet_count(), 0)
+  }
+}
+
+extension YlManagedFallbackCharacterizationTests {
+  private final class BoundedDisplay: YlDisplayDriving {
+    var isPaused = true
+    var tick: (() -> Void)?
+    func invalidate() { tick = nil }
+    func advance() { if !isPaused { tick?() } }
+  }
+  func testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF() async throws {
+    try await runBoundedFixture(controlledVideo: false)
+  }
+  func testBoundedSixteenMiBManagedFixtureWithControlledVideoMustProgressAndReachEOF() async throws {
+    try await runBoundedFixture(controlledVideo: true)
+  }
+  func testBoundedFiveHundredMsControlledFixtureProgressesWithoutExceedingDuration() async throws {
+    try await runBoundedFixture(controlledVideo: true, maximumMs: 500)
+  }
+  func testBoundedEOFBelowMinimumStillProgressesWithRealManagedInput() async throws {
+    try await runBoundedFixture(controlledVideo: true, minimumMs: 10000, maximumMs: 12000)
+  }
+  private func runBoundedFixture(controlledVideo: Bool, minimumMs: Int64 = 100, maximumMs: Int64 = 2000) async throws {
+    let fixture = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv"))
+    let server = try ReactivationMediaServer(data: Data(contentsOf: fixture))
+    defer { server.close() }
+    let ledger = YlManagedBufferLedger()
+    let scope = try ledger.makeScope(maxBytes: 16 * 1024 * 1024)
+    let plan = try YlBoundedBufferPlan(minDurationMs: minimumMs, maxDurationMs: maximumMs, maxBytes: 16 * 1024 * 1024)
+    let source = YlAppleSourceDescriptor(uri: server.url.absoluteString, kind: .network, formatHint: .matroska,
+      networkPolicy: .managed, bufferScope: scope, boundedPlan: plan)
+    var candidate: YlPreparedFallback? = try YlPreparedFallback(source: source, requireHardwareProbe: false)
+    let subtype = CMFormatDescriptionGetMediaSubType(candidate!.videoFormat)
+    let hardwareAvailable = VTIsHardwareDecodeSupported(subtype)
+    let attachment = XCTAttachment(string: "fixture=h264_aac.mkv subtype=\(subtype) h264=\(kCMVideoCodecType_H264) hardwareAvailable=\(hardwareAvailable) controlledVideo=\(controlledVideo)")
+    attachment.name = "Task4-video-capability"; attachment.lifetime = .keepAlways; add(attachment)
+    XCTAssertEqual(subtype, kCMVideoCodecType_H264)
+    #if targetEnvironment(simulator)
+    if !controlledVideo, subtype == kCMVideoCodecType_H264, !hardwareAvailable {
+      throw XCTSkip("Task4 actual H264 hardware fixture: simulator VTIsHardwareDecodeSupported=false; physical iOS evidence pending (R19).")
+    }
+    #endif
+    let controlledFactory = Factory(); controlledFactory.automaticFrames = true
+    let selectedFactory: any YlVTSessionFactory = controlledVideo ? controlledFactory : YlHardwareVTSessionFactory()
+    let output = Output(), display = BoundedDisplay()
+    var failures = [String](), lastPosition: Int64 = 0, completed = false, metricSamples = 0
+    let eventLock = NSLock()
+    var instance: YlFallbackBackend? = try YlFallbackBackend(playerId: 731,
+      services: YlPlatformServices(platform: .current, textureOutput: output,
+        makeDisplayDriver: { tick in display.tick = tick; return display }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: candidate!, generation: 31,
+      videoSessionFactory: selectedFactory,
+      emit: { callback in
+        eventLock.withLock {
+          switch callback.event {
+          case .failure(let error): failures.append(String(describing: error))
+          case .state(let state):
+            lastPosition = max(lastPosition, state.positionMs); completed = state.status == "completed"
+            if let bytes = state.metrics.bufferedBytes {
+              XCTAssertLessThanOrEqual(bytes, 16 * 1024 * 1024)
+              XCTAssertNotNil(state.metrics.bufferedDurationMs)
+              XCTAssertLessThanOrEqual(state.metrics.bufferedDurationMs ?? 0, maximumMs); metricSamples += 1
+            }
+          default: break
+          }
+        }
+      })
+    defer { instance?.dispose() }
+    candidate = nil
+    try instance!.activate(); try instance!.play()
+    for _ in 0..<1000 {
+      try await Task.sleep(nanoseconds: 10_000_000)
+      display.advance()
+      let done = eventLock.withLock { completed || !failures.isEmpty }
+      if done { break }
+    }
+    eventLock.withLock {
+      XCTAssertTrue(failures.isEmpty, "\(failures)")
+      XCTAssertTrue(completed, "position=\(lastPosition), ledger=\(ledger.snapshot.currentBytes)")
+      XCTAssertGreaterThan(lastPosition, 500)
+      XCTAssertGreaterThan(metricSamples, 1)
+    }
+    XCTAssertGreaterThan(output.published, 1)
+    XCTAssertLessThanOrEqual(ledger.snapshot.peakBytes, 16 * 1024 * 1024)
+    instance?.dispose(); instance = nil
+    for _ in 0..<100 where ledger.snapshot.currentBytes != 0 { try await Task.sleep(nanoseconds: 10_000_000) }
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+  }
+  func testBoundedInspectedFrameRejectsTooSmallBudgetBeforeActivation() throws {
+    let fixture = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv"))
+    let plan = try YlBoundedBufferPlan(minDurationMs: 0, maxDurationMs: 500,
+      maxBytes: YlBoundedBufferPlan.safetyBytes + 1)
+    let source = YlAppleSourceDescriptor(uri: fixture.absoluteString, kind: .file,
+      formatHint: .matroska, boundedPlan: plan)
+    XCTAssertThrowsError(try YlPreparedFallback(source: source, requireHardwareProbe: false)) { error in
+      XCTAssertEqual((error as? NativePlayerError)?.code, "policy.unsupported")
+    }
+  }
+  func testBoundedAudioHeldCompletionRemainsChargedAfterResetAndDisposal() throws {
+    let ledger = YlManagedBufferLedger(maxBytes: 16 * 1024 * 1024)
+    let scope = try ledger.makeScope(maxBytes: nil)
+    let trace = Trace(), output = AudioOutput(Trace()), converter = Converter(trace)
+    let renderer = YlAudioRenderer(bufferScope: scope, converter: converter, output: output)
+    try renderer.configure(stream: YlAudioStreamConfiguration(codec: .aac, sampleRate: 48000,
+      channelCount: 2, magicCookie: Data(), generation: 1))
+    XCTAssertEqual(try renderer.enqueue(packet: YlCompressedAudioPacket(data: Data([1]), ptsUs: 0,
+      durationUs: 20000, generation: 1)), .scheduled)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 64)
+    renderer.reset(generation: 2)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 64)
+    renderer.dispose()
+    XCTAssertEqual(ledger.snapshot.currentBytes, 64)
+    output.completeAll()
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
   }
 }

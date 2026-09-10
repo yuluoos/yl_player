@@ -15,6 +15,14 @@ final class YlManagedHTTPTransport {
   private let lock = NSLock()
   private var cancelled = false
   private let parser: YlHTTPResponseParser
+  // Covers the outstanding receive plus parser COW input and emitted event
+  // backing. Admission happens before NW receive/queued delivery. Conservative
+  // assigned workspace survives cancellation until the actual hop owner dies.
+  private var payloadWorkspace: YlManagedBufferLedger.Token?
+  func assignBufferScope(_ scope: YlManagedBufferScope?) throws {
+    payloadWorkspace = try scope?.require(category: .networkCache,
+      bytes: 3 * (YlHTTPResponseParser.maximumHeaderBytes + Self.maximumReceiveBytes))
+  }
   private let requestBytes: Data
   private let receiveEvent: (Event) -> Void
 
@@ -69,6 +77,12 @@ final class YlManagedHTTPTransport {
     lock.lock(); cancelled = true; lock.unlock()
     // Does not enqueue behind a delegate blocked on the consumer's ring buffer.
     connection.cancel()
+    retireWorkspace()
+  }
+  private func retireWorkspace() {
+    // This queue also owns parser mutations. A body callback blocked in ring
+    // write completes before this receipt frees its parser/delivery workspace.
+    queue.async { [self] in parser.discard(); payloadWorkspace = nil }
   }
 
   private var isCancelled: Bool { lock.lock(); defer { lock.unlock() }; return cancelled }
@@ -105,6 +119,7 @@ final class YlManagedHTTPTransport {
     lock.unlock()
     connection.cancel()
     receiveEvent(.complete(error))
+    retireWorkspace()
   }
 
   static func serialize(_ request: URLRequest) throws -> Data {

@@ -172,6 +172,7 @@ final class YlVideoDecodeReservation {
   private let lock = NSLock()
   private var budget: YlVideoDecodeBudget?
   private var occupiesFrame: Bool
+  var managedPayload: YlManagedBufferLedger.Token?
 
   fileprivate init(
     budget: YlVideoDecodeBudget,
@@ -283,6 +284,7 @@ struct YlVideoFrame {
   let keyframe: Bool
   let generation: UInt64
   let ownershipToken: AnyObject?
+  var reservation: YlManagedBufferLedger.Token? = nil
 }
 
 protocol YlVideoToolboxDecoding: AnyObject {
@@ -306,6 +308,7 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
   private let onError: (NativePlayerError) -> Void
   private let outputRelay: YlVTOutputRelay
   private let budget: YlVideoDecodeBudget
+  private let bufferScope: YlManagedBufferScope?
   private var lease: YlHardwareDecoderLease?
   private var session: YlVTSession?
   let usesHardwareDecoder: Bool
@@ -315,10 +318,12 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
   init(
     formatDescription: CMVideoFormatDescription,
     maxInFlightBytes: Int = 4 * 1024 * 1024,
+    bufferScope: YlManagedBufferScope? = nil,
     factory: YlVTSessionFactory = YlHardwareVTSessionFactory(),
     onFrame: @escaping (YlVideoFrame) -> Void,
     onError: @escaping (NativePlayerError) -> Void
   ) throws {
+    self.bufferScope = bufferScope
     self.onFrame = onFrame
     self.onError = onError
     self.budget = YlVideoDecodeBudget(maxBytes: maxInFlightBytes)
@@ -466,7 +471,7 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
   }
 
   fileprivate func handle(_ image: YlVTDecodedImage) {
-    defer { image.reservation?.release() }
+    defer { image.reservation?.managedPayload?.endQueuedTiming(); image.reservation?.release() }
     lock.lock()
     let acceptsOutput = !disposed && activeGeneration == image.generation
     lock.unlock()
@@ -482,13 +487,19 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
       return
     }
 
+    let frameReservation = bufferScope?.reserve(category: .queuedVideoFrames, bytes: CVPixelBufferGetDataSize(pixelBuffer))
+    guard bufferScope == nil || frameReservation != nil else { return }
+    guard frameReservation?.carryTiming(ptsUs: Self.microseconds(image.pts), durationUs: Self.microseconds(image.duration, unknown: 0), from: image.reservation?.managedPayload) ?? true else {
+      onError(YlManagedBufferLedger.unsupported("decoded frame timing pts=\(Self.microseconds(image.pts)) duration=\(Self.microseconds(image.duration, unknown: 0))")); return
+    }
     onFrame(YlVideoFrame(
       pixelBuffer: pixelBuffer,
       ptsUs: Self.microseconds(image.pts),
       durationUs: Self.microseconds(image.duration, unknown: 0),
       keyframe: image.keyframe,
       generation: image.generation,
-      ownershipToken: image.ownershipToken
+      ownershipToken: image.ownershipToken,
+      reservation: frameReservation
     ))
   }
 

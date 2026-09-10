@@ -100,6 +100,8 @@ final class YlHTTPResponseParser {
     }
   }
 
+  func discard() { buffer = Data(); state = .done }
+
   func endOfStream() throws -> [Event] {
     switch state {
     case .close: state = .done; return [.complete]

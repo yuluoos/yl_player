@@ -22,7 +22,7 @@ protocol YlDemuxOutput: YlAudioPipelineOutput {
   func demuxDidReachEOF(generation: UInt64)
   func shouldReportDemuxFailure(generation: UInt64) -> Bool
   func beginLiveReconnect(after error: NativePlayerError, packetGeneration: UInt64)
-  func consumeDemuxVideo(packet: inout YLFPacketRef?, ownedPacket: YLFPacketRef, generation: UInt64) -> Void?
+  func consumeDemuxVideo(packet: inout YLFPacketRef?, ownedPacket: YLFPacketRef, generation: UInt64, managedPayload: YlManagedBufferLedger.Token?) -> Void?
   var demuxAudioGeneration: UInt64 { get }
   func acceptsDemuxAudio(ptsUs: Int64) -> Bool
   func consumeDemuxAudio(_ packet: YlCompressedAudioPacket, onBackpressure: (TimeInterval) -> Void) -> Void?
@@ -196,6 +196,10 @@ final class YlDemuxPipeline {
       )
     }
 
+    try bufferBudget.boundedPlan?.validate(width: Int(selectedVideo.width), height: Int(selectedVideo.height))
+    if bufferBudget.boundedPlan != nil {
+      bufferBudget.bufferScope?.protectFrame(bytes: Int(selectedVideo.width) * Int(selectedVideo.height) * 8)
+    }
     try validateVideo(selectedVideo)
 
     var copiedAudioCookies: [Int32: Data] = [:]
@@ -307,6 +311,27 @@ final class YlDemuxPipeline {
     }
 
     let streamIndex = ylf_packet_stream_index(ownedPacket)
+    guard streamIndex == videoStream.index || streamIndex == selectedAudioStream?.index else {
+      ylf_packet_release(&packet); output.setDemuxPumping(false); output.requestAudioPump(); return
+    }
+    var packetDuration = ylf_packet_duration_us(ownedPacket)
+    if bufferBudget.boundedPlan != nil, packetDuration <= 0, let stream = selectedAudioStream, stream.index == streamIndex,
+       Int(stream.codec) == YLFCodecAAC {
+      packetDuration = ylBoundedAACPacketDurationUs(sampleRate: Double(stream.sample_rate),
+        cookie: audioCookies[stream.index] ?? Data()) ?? 0
+    }
+    let packetReservation = bufferBudget.bufferScope?.reserve(category: .compressedPackets, bytes: ylf_packet_size(ownedPacket))
+    guard bufferBudget.bufferScope == nil || packetReservation != nil else {
+      ylf_packet_release(&packet); output.setDemuxPumping(false)
+      output.fail(YlManagedBufferLedger.unsupported()); return
+    }
+    defer { withExtendedLifetime(packetReservation) {} }
+    let packetPTS = ylf_packet_pts_us(ownedPacket) == Int64.min ? ylf_packet_dts_us(ownedPacket) : ylf_packet_pts_us(ownedPacket)
+    guard packetReservation?.carryTiming(ptsUs: packetPTS, durationUs: packetDuration) ?? true else {
+      let error = YlManagedBufferLedger.unsupported("packet timing pts=\(packetPTS) duration=\(packetDuration) \(bufferBudget.bufferScope?.timingDiagnostic ?? "")")
+      ylf_packet_release(&packet); output.setDemuxPumping(false); output.fail(error); return
+    }
+    bufferBudget.bufferScope?.observePacketDuration(packetDuration, ptsUs: packetPTS)
     if mediaPolicy.requiresInitialVideoKeyframe {
       let isVideo = streamIndex == videoStream.index
       let accepted = lock.withLock {
@@ -324,13 +349,21 @@ final class YlDemuxPipeline {
     }
     var retryDelay = TimeInterval(0)
     if streamIndex == videoStream.index {
-      guard output.consumeDemuxVideo(packet: &packet, ownedPacket: ownedPacket, generation: packetGeneration) != nil else { return }
+      guard output.consumeDemuxVideo(packet: &packet, ownedPacket: ownedPacket, generation: packetGeneration, managedPayload: packetReservation) != nil else { return }
     } else if streamIndex == selectedAudioStream?.index,
               let bytes = ylf_packet_data(ownedPacket) {
+      let audioReservation = bufferBudget.bufferScope?.reserve(category: .compressedPackets, bytes: ylf_packet_size(ownedPacket))
+      guard bufferBudget.bufferScope == nil || audioReservation != nil else {
+        ylf_packet_release(&packet); output.setDemuxPumping(false); output.fail(YlManagedBufferLedger.unsupported()); return
+      }
+      guard audioReservation?.carryTiming(ptsUs: packetPTS, durationUs: packetDuration, from: packetReservation) ?? true else {
+        ylf_packet_release(&packet); output.setDemuxPumping(false); output.fail(YlManagedBufferLedger.unsupported()); return
+      }
       let audioPacket = YlCompressedAudioPacket(
+        reservation: audioReservation,
         data: Data(bytes: bytes, count: ylf_packet_size(ownedPacket)),
-        ptsUs: ylf_packet_pts_us(ownedPacket),
-        durationUs: ylf_packet_duration_us(ownedPacket),
+        ptsUs: packetPTS,
+        durationUs: packetDuration,
         generation: output.demuxAudioGeneration
       )
       ylf_packet_release(&packet)

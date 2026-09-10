@@ -1,6 +1,21 @@
 import Foundation
 
 struct YlFallbackBufferBudget: Equatable {
+  var bufferScope: YlManagedBufferScope? = nil
+  var boundedPlan: YlBoundedBufferPlan? = nil
+  static func == (lhs: Self, rhs: Self) -> Bool {
+    lhs.networkBytes == rhs.networkBytes && lhs.scheduledAudioBytes == rhs.scheduledAudioBytes
+      && lhs.inFlightPacketBytes == rhs.inFlightPacketBytes && lhs.boundedPlan == rhs.boundedPlan
+  }
+  static func bounded(_ plan: YlBoundedBufferPlan, scope: YlManagedBufferScope) -> Self {
+    Self(bufferScope: scope, boundedPlan: plan, networkBytes: plan.networkWatermark,
+      scheduledAudioBytes: plan.maxBytes, inFlightPacketBytes: plan.maxBytes)
+  }
+  static func make(configuration: PlayerConfiguration, prepared: YlPreparedFallback) throws -> Self {
+    if let plan = prepared.boundedPlan { return bounded(plan, scope: prepared.bufferScope) }
+    var result = try make(configuration: configuration); result.bufferScope = prepared.bufferScope
+    return result
+  }
   let networkBytes: Int
   let scheduledAudioBytes: Int
   let inFlightPacketBytes: Int

@@ -26,6 +26,8 @@ enum YlPreparedOpen {
 }
 
 final class YlPreparedFallback {
+  let bufferScope: YlManagedBufferScope
+  let boundedPlan: YlBoundedBufferPlan?
   let commitEvents: YlAppleCommitEmitter?
   let sourceRecipe: YlFallbackSourceRecipe
   let policy: YlFallbackMediaPolicy
@@ -50,6 +52,14 @@ final class YlPreparedFallback {
     commitEvents: YlAppleCommitEmitter? = nil,
     onRetry: YlNetworkByteSource.RetryCallback? = nil
   ) throws {
+    var plan = source.boundedPlan
+    if plan == nil, let options = source.loadOptions, options.bufferStrategy == .bounded,
+       let low = options.minDurationMs, let high = options.maxDurationMs, let bytes = options.maxManagedBytes {
+      plan = try YlBoundedBufferPlan(minDurationMs: low, maxDurationMs: high, maxBytes: bytes)
+    }
+    self.bufferScope = try source.bufferScope ?? YlManagedBufferLedger().makeScope(maxBytes: plan?.maxBytes)
+    self.boundedPlan = plan
+    bufferScope.configureTimeline(plan)
     self.commitEvents = commitEvents
     self.sessionConfiguration = sessionConfiguration
     try cancellationToken?.throwIfCancelled()
@@ -76,7 +86,8 @@ final class YlPreparedFallback {
         credentialContext: source.credentialContext,
         configuration: source.networkConfiguration.map(YlNetworkConfiguration.init(options:)) ?? configuration.network,
         mode: container == .flv ? .sequentialLive : .randomAccessVOD,
-        managedIntent: source.networkPolicy == .managed ? source.managedRequestIntent : nil
+        managedIntent: source.networkPolicy == .managed ? source.managedRequestIntent : nil,
+        bufferScope: bufferScope
       ), container: container)
     } else {
       throw NativePlayerError(
@@ -85,10 +96,12 @@ final class YlPreparedFallback {
         message: "Only file, HTTP, and HTTPS fallback media URIs are supported."
       )
     }
-    let budget = try YlFallbackBufferBudget.make(configuration: configuration)
+    let budget: YlFallbackBufferBudget
+    if let boundedPlan { budget = .bounded(boundedPlan, scope: bufferScope) }
+    else { budget = try YlFallbackBufferBudget.make(configuration: configuration) }
     let opened = try YlOpenedMedia(
       recipe: sourceRecipe,
-      networkBufferBytes: budget.networkBytes,
+      networkBufferBytes: boundedPlan?.networkWatermark ?? budget.networkBytes,
       sessionConfiguration: sessionConfiguration,
       onRetry: onRetry,
       onSourceCreated: { source in
@@ -148,6 +161,8 @@ final class YlPreparedFallback {
           : "The selected Matroska audio track is not AAC."
       )
     }
+    try boundedPlan?.validate(width: Int(selectedVideo.width), height: Int(selectedVideo.height))
+    if boundedPlan != nil { bufferScope.protectFrame(bytes: Int(selectedVideo.width) * Int(selectedVideo.height) * 8) }
     videoStream = selectedVideo
     audioStreams = selectedAudio
     videoFormat = try YlVideoToolboxDecoder.makeFormatDescription(

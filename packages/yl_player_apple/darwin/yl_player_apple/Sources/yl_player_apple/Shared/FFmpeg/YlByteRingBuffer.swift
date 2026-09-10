@@ -2,6 +2,9 @@ import Foundation
 
 final class YlByteRingBuffer {
   private let condition = NSCondition()
+  private let bufferScope: YlManagedBufferScope?
+  private var reservations: [YlManagedBufferLedger.Token] = []
+  private var releaseObserver: UUID?
   private var storage: [UInt8]
   private var capacityLimit: Int
   private var head = 0
@@ -18,11 +21,20 @@ final class YlByteRingBuffer {
 
   var writeGeneration: UInt64 { condition.withLock { producerGeneration } }
 
-  init(capacity: Int) {
+  init(capacity: Int, bufferScope: YlManagedBufferScope? = nil) {
+    self.bufferScope = bufferScope
     precondition(capacity > 0)
     storage = [UInt8](repeating: 0, count: capacity)
     capacityLimit = capacity
+    releaseObserver = bufferScope?.ledger.onRelease { [weak self] in
+      // Release may happen while this ring owns its condition; wake on a
+      // separate executor rather than recursively taking that condition.
+      DispatchQueue.global().async { [weak self] in
+        guard let self else { return }; self.condition.lock(); self.condition.broadcast(); self.condition.unlock()
+      }
+    }
   }
+  deinit { if let releaseObserver { bufferScope?.ledger.removeObserver(releaseObserver) } }
 
   var capacity: Int {
     condition.withLock { capacityLimit }
@@ -119,6 +131,7 @@ final class YlByteRingBuffer {
       producerGeneration &+= 1
       head = 0
       storedCount = 0
+      reservations.removeAll()
       startOffset = offset
       readOffset = offset
       hasEstablishedOffset = true
@@ -223,8 +236,12 @@ final class YlByteRingBuffer {
       discardConsumedLocked(maximum: desired - immediatelyAvailable)
     }
     resizeStorageIfPossibleLocked()
-    let writable = min(bytes.count, max(0, capacityLimit - storedCount))
+    let writable = min(bytes.count, max(0, capacityLimit - storedCount), bufferScope?.ledger.availableBytes(category: .networkCache) ?? Int.max)
     guard writable > 0 else { return 0 }
+    if let bufferScope {
+      guard let token = bufferScope.reserve(category: .networkCache, bytes: writable) else { return 0 }
+      reservations.append(token)
+    }
     copyInLocked(from: bytes, count: writable)
     storedCount += writable
     condition.broadcast()
@@ -237,7 +254,8 @@ final class YlByteRingBuffer {
     while true {
       guard generation == nil || generation == producerGeneration else { throw YlByteSourceError.cancelled }
       try throwIfNotWritableLocked()
-      if capacityLimit - storedCount + consumedCount > 0 { return }
+      if capacityLimit - storedCount + consumedCount > 0,
+         bufferScope.map({ $0.ledger.availableBytes(category: .networkCache) > 0 }) ?? true { return }
       condition.wait()
     }
   }
@@ -252,6 +270,12 @@ final class YlByteRingBuffer {
     let discard = min(consumedCount, max(0, maximum))
     guard discard > 0 else { return }
     head = (head + discard) % storage.count
+    var remaining = discard
+    while remaining > 0, let token = reservations.first {
+      let released = min(remaining, token.bytes)
+      token.shrink(to: token.bytes - released); remaining -= released
+      if token.bytes == 0 { reservations.removeFirst() }
+    }
     storedCount -= discard
     startOffset += Int64(discard)
     if storedCount == 0 { head = 0 }
@@ -261,6 +285,9 @@ final class YlByteRingBuffer {
     guard storage.count != capacityLimit, storedCount <= capacityLimit else {
       return
     }
+    let copyReservation = bufferScope?.reserve(category: .networkCache, bytes: storedCount)
+    guard bufferScope == nil || copyReservation != nil else { return }
+    defer { withExtendedLifetime(copyReservation) {} }
     var replacement = [UInt8](repeating: 0, count: capacityLimit)
     if storedCount > 0 {
       replacement.withUnsafeMutableBytes { destination in

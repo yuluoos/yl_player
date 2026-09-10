@@ -41,7 +41,7 @@ enum YlBackendStateEncoder {
 
   static func fallbackMetrics(
     openDurationMs: Int64?, firstFrameDurationMs: Int64?,
-    bufferedDurationMs: Int64, bufferedBytes: Int,
+    bufferedDurationMs: Int64?, bufferedBytes: Int?,
     droppedVideoFrames: Int, audioUnderruns: Int, reconnectCount: Int
   ) -> YlNativeMetrics {
     YlNativeMetrics(openDurationMs: openDurationMs,
