@@ -70,6 +70,8 @@ final class YlPlayerController implements Listenable {
   String get implementationVersion => _backend.implementation.version;
   YlPlayerCapabilities get capabilities => _backend.capabilities;
   YlPlayerState get state => _state;
+  bool get isCurrentFramePresented =>
+      _milestones?.isFirstFramePresented ?? false;
   ValueListenable<int?> get textureId => _texture;
   Stream<YlPlayerState> get states => _states.stream;
   Stream<YlPlayerEvent> get events => _events.stream;
@@ -192,6 +194,7 @@ final class YlPlayerController implements Listenable {
       milestones.completeReady();
     }
     if (next.status == YlPlaybackStatus.failed) {
+      milestones.clearFirstFramePresentation();
       milestones.fail(
         YlPlayerException(
           next.failure ?? _exception(YlFailureCodes.platformFailure).failure,
@@ -207,7 +210,10 @@ final class YlPlayerController implements Listenable {
       return;
     }
     validateYlPlayerEvent(event);
-    if (event is YlFirstFrameEvent) _milestones?.completeFirstFrame();
+    if (event is YlFirstFrameEvent &&
+        (_milestones?.completeFirstFrame() ?? false)) {
+      _notifier.notify();
+    }
     _events.add(event);
   }
 
@@ -230,9 +236,11 @@ final class YlPlayerController implements Listenable {
     final sessionId = state.sessionId;
     await _backend.stop();
     if (state.sessionId == sessionId) {
+      final presentationChanged = isCurrentFramePresented;
       _stoppedSession = sessionId;
       _milestones?.fail(_exception(YlFailureCodes.sessionStale));
       _milestones = null;
+      if (presentationChanged) _notifier.notify();
     }
   }
 
@@ -240,8 +248,10 @@ final class YlPlayerController implements Listenable {
   Future<void> _dispose() async {
     _disposed = true;
     _cancelLoad(YlFailureCodes.playerDisposed);
+    final presentationChanged = isCurrentFramePresented;
     _milestones?.fail(_exception(YlFailureCodes.playerDisposed));
     _milestones = null;
+    if (presentationChanged) _notifier.notify();
     await _stateSubscription?.cancel();
     await _eventSubscription?.cancel();
     _backend.textureId.removeListener(_updateTexture);
@@ -287,13 +297,19 @@ final class _Milestones {
   final YlPlaybackSessionId id;
   final ready = Completer<void>();
   final firstFrame = Completer<void>();
+  bool isFirstFramePresented = false;
   void completeReady() {
     if (!ready.isCompleted) ready.complete();
   }
 
-  void completeFirstFrame() {
+  bool completeFirstFrame() {
+    if (isFirstFramePresented || firstFrame.isCompleted) return false;
+    isFirstFramePresented = true;
     if (!firstFrame.isCompleted) firstFrame.complete();
+    return true;
   }
+
+  void clearFirstFramePresentation() => isFirstFramePresented = false;
 
   void fail(YlPlayerException error) {
     if (!ready.isCompleted) ready.completeError(error);

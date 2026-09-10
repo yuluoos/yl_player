@@ -103,4 +103,146 @@ void main() {
       );
     },
   );
+
+  test(
+    'presentation cache accepts one delayed current-session milestone and resets on replacement',
+    () async {
+      final backend = FakePlatformPlayer();
+      final player = await YlPlayerController.create(
+        platform: FakePlayerPlatform(backend),
+      );
+      const first = YlPlaybackSessionId('first');
+      const second = YlPlaybackSessionId('second');
+      final loading = player.load(_source);
+      _publishSession(backend, first);
+      backend.emit(status: YlPlaybackStatus.playing);
+      var notices = 0;
+      player.addListener(() => notices++);
+
+      backend.emitFirstFrame(first, revision: 1);
+      expect(player.isCurrentFramePresented, isTrue);
+      expect(notices, 1);
+      backend.emitFirstFrame(first, revision: 1);
+      backend.emitFirstFrame(second);
+      expect(player.isCurrentFramePresented, isTrue);
+      expect(notices, 1);
+
+      backend.loads.single.complete(
+        const YlPlatformLoadResult(sessionId: first),
+      );
+      final session = await loading;
+      await session.firstFrame;
+      _publishSession(backend, second);
+      expect(player.isCurrentFramePresented, isFalse);
+      expect(notices, 2);
+
+      backend.emitFirstFrame(first);
+      expect(player.isCurrentFramePresented, isFalse);
+      expect(notices, 2);
+      await player.dispose();
+    },
+  );
+
+  test('failed current session clears presentation cache', () async {
+    final backend = FakePlatformPlayer();
+    final player = await YlPlayerController.create(
+      platform: FakePlayerPlatform(backend),
+    );
+    const sessionId = YlPlaybackSessionId('failed');
+    final loading = player.load(_source);
+    _publishSession(backend, sessionId);
+    backend.loads.single.complete(
+      const YlPlatformLoadResult(sessionId: sessionId),
+    );
+    await loading;
+    backend.emitFirstFrame(sessionId);
+    expect(player.isCurrentFramePresented, isTrue);
+
+    backend.emit(status: YlPlaybackStatus.failed, failure: _failure.failure);
+    expect(player.isCurrentFramePresented, isFalse);
+    await player.dispose();
+  });
+
+  test('disposal clears presentation cache with one notification', () async {
+    final backend = FakePlatformPlayer();
+    final player = await YlPlayerController.create(
+      platform: FakePlayerPlatform(backend),
+    );
+    const sessionId = YlPlaybackSessionId('disposed');
+    final loading = player.load(_source);
+    _publishSession(backend, sessionId);
+    backend.loads.single.complete(
+      const YlPlatformLoadResult(sessionId: sessionId),
+    );
+    await loading;
+    backend.emitFirstFrame(sessionId);
+    var notices = 0;
+    player.addListener(() => notices++);
+
+    await player.dispose();
+    expect(player.isCurrentFramePresented, isFalse);
+    expect(notices, 1);
+  });
+
+  test(
+    'accepted Stop clears presentation but rejected Stop preserves it',
+    () async {
+      final backend = FakePlatformPlayer();
+      final player = await YlPlayerController.create(
+        platform: FakePlayerPlatform(backend),
+      );
+      const sessionId = YlPlaybackSessionId('playing');
+      final loading = player.load(_source);
+      _publishSession(backend, sessionId);
+      backend.loads.single.complete(
+        const YlPlatformLoadResult(sessionId: sessionId),
+      );
+      await loading;
+      backend.emitFirstFrame(sessionId);
+      var notices = 0;
+      player.addListener(() => notices++);
+
+      backend.stopError = _failure;
+      await expectLater(player.stop(), throwsA(same(_failure)));
+      expect(player.isCurrentFramePresented, isTrue);
+      expect(notices, 0);
+
+      backend.stopError = null;
+      backend.emitIdleOnStop = false;
+      await player.stop();
+      expect(player.state.sessionId, sessionId);
+      expect(player.isCurrentFramePresented, isFalse);
+      expect(notices, 1);
+      await player.dispose();
+    },
+  );
+}
+
+final _source = YlNetworkSource(Uri.parse('https://example.test/video.mp4'));
+const _failure = YlPlayerException(
+  YlFailure(
+    category: YlFailureCategory.decoder,
+    code: YlFailureCodes.decoderUnavailable,
+    message: 'Unavailable.',
+    retryable: false,
+    scope: YlFailureScope.session,
+    diagnosticId: 'view-test',
+  ),
+);
+
+void _publishSession(
+  FakePlatformPlayer backend,
+  YlPlaybackSessionId sessionId,
+) {
+  backend.emitState(
+    YlPlayerState(
+      revision: backend.state.revision + 1,
+      sessionId: sessionId,
+      status: YlPlaybackStatus.loading,
+      videoGeometry: const YlVideoGeometry(
+        encodedSize: YlPixelSize(1920, 1080),
+        displaySize: YlPixelSize(1920, 1080),
+      ),
+    ),
+  );
 }
