@@ -21,6 +21,8 @@ final class YlAppleSessionCoordinator: NSObject {
   private let textureOwner: YlAppleTextureOwner
   private let avTexture: YlAppleAvTextureBinding
   private var activeTexture: YlAppleTextureLease?
+  private let videoSessionFactory: YlVTSessionFactory?
+  private let hardwareEvidenceStage: YlHardwareEvidencePreparation
   private let bufferLedger: YlManagedBufferLedger
   private let configuration: PlayerConfiguration
   private let emit: (YlAppleSessionIdentity, YlNativeBackendCallback) -> Void
@@ -53,7 +55,11 @@ final class YlAppleSessionCoordinator: NSObject {
        beforeFallbackConstruction: ((YlPlaybackBackend) throws -> Void)? = nil,
        slotCompatibility: YlAppleCompatibility? = nil,
        bufferLedger: YlManagedBufferLedger = YlManagedBufferLedger(),
+       videoSessionFactory: YlVTSessionFactory? = nil,
+       hardwareEvidenceStage: YlHardwareEvidencePreparation = .init(),
        emit: @escaping (YlAppleSessionIdentity, YlNativeBackendCallback) -> Void) {
+    self.videoSessionFactory = videoSessionFactory
+    self.hardwareEvidenceStage = hardwareEvidenceStage
     self.bufferLedger = bufferLedger
     self.commandCoordinator = commandCoordinator
     self.beforeFallbackConstruction = beforeFallbackConstruction
@@ -579,6 +585,7 @@ final class YlAppleSessionCoordinator: NSObject {
           prepared: prepared,
           qualityConstraint: qualityConstraint,
           generation: slot.generation &+ 1,
+          videoSessionFactory: videoSessionFactory,
           loadRequestId: identity.loadRequestId,
           channelIdentity: preservedIdentity,
           emit: candidateEvents.accept
@@ -671,6 +678,8 @@ final class YlAppleSessionCoordinator: NSObject {
       let options = source.loadOptions
       try prepared.prepareForLoad(positionMs: options?.startPositionMs ?? 0, autoplay: options?.autoplay ?? false)
     }
+    try prepared.prepareHardwareEvidence(configuration: configuration.forLoad(source),
+      factory: videoSessionFactory, stage: hardwareEvidenceStage, token: token)
     return prepared
   }
 

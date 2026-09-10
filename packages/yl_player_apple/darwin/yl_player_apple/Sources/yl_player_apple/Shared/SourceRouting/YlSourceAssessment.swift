@@ -89,7 +89,7 @@ struct YlRoutingAvailability {
   var hardwareEvidence = false
   var inspectedWebM = false
   var inspectedLocalFlv = false
-  static let production = YlRoutingAvailability(managedNetwork: true, boundedBuffer: true)
+  static let production = YlRoutingAvailability(managedNetwork: true, boundedBuffer: true, hardwareEvidence: true)
 }
 
 struct YlSourceInspection {

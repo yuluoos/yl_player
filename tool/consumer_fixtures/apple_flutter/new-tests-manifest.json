@@ -49,7 +49,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
-    "sha256": "aac245ec6cdf87aa48d4c0a554b14b554492f7d3609ade1758cfcf231f09f42d",
+    "sha256": "ccbcd79fb8f688bdf5f8368d81ea6b9f8c8bbe98eb41a76c6919486276cfe0f0",
     "methods": [
       "testInputValidationPrecedesReplacementAndRejectsUnrepresentableTimeline",
       "testSemanticCommandRejectionCompletesFutureWithoutFailingHealthySession"
@@ -97,7 +97,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift",
-    "sha256": "c1082f3ec5dc9105cfffb6e563693b59c7ad3c48f537c2ba1e36c9f8ed5e697d",
+    "sha256": "d4eef1ae91602566889c7b1bb0bea9a9b6e522da7111ed46e5f542acf005b21b",
     "methods": [
       "testImmutableRequestAndSessionIdentityStartsAtZero",
       "testNegativeMeasuredLiveOffsetIsZeroAndUnknownRemainsNil",
@@ -120,7 +120,7 @@
       "testManagedUnsupportedLoadDoesNotOpenUpstreamOrReplaceSession",
       "testTypedInputPreservesRequestedNetworkBoundsForEnforcedManagedRoute",
       "testUnknownLocalSourceLoadRefinesSameAssessmentBeforeCommit",
-      "testCompletePolicyRouteMatrixEnablesManagedAndKeepsBufferHardwareStaged",
+      "testCompletePolicyRouteMatrixEnablesEnforcedManagedBufferAndHardwareRoutes",
       "testCustomCredentialsAndOrdinaryHeadersRequireControlledRoutes",
       "testInspectedCodecAndHardwareEvidenceAreRequiredBeforeGuarantee",
       "testUnknownFormatInspectionIsBoundedAndRefinedPolicyStillRejects",
@@ -245,8 +245,24 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlManagedFallbackCharacterizationTests.swift",
-    "sha256": "be3c3e5fb41b81cb55168f1993fdaedd1ea0beadcea03596b8aa0440430d3b38",
+    "sha256": "280438b92f6855d2a8ed2c2b9e3ba86de022faa66c9c70723894d445a0402b17",
     "methods": [
+      "testHardwareEvidenceRequiresActualCFBooleanAndSafeIdentity",
+      "testRequiredPipelineRejectsSoftwareBeforeDecoderInstallation",
+      "testRequiredPipelineRecreationRejectsUnknownBeforeInstall",
+      "testStrictInspectedFormatRecreationRejectsSoftware",
+      "testPreferredPipelineAllowsUnknownWithoutClaimingHardware",
+      "testStrictHostTransfersExactProvenDecoderBeforeCommitAndFirstFrameOnce",
+      "testStrictSoftwareAndUnknownCandidatesPreserveAcceptedSession",
+      "testPreferredHostCommitsUnknownAndSoftwareHonestly",
+      "testStrictCommittedSeekRejectsRecreatedSoftwareAndLateFrames",
+      "testRealHardwareRequiredFixtureCommitsHardwareOrTruthfullyRejects",
+      "testEvidenceDeadlineRetainsLatePayloadAndRejectsSecondProbeUntilNativeReturn",
+      "testEvidenceCancellationRetainsLatePayloadAndNeverAcceptsLateSuccess",
+      "testInjectedPropertyReaderPreservesCompatibleKeyAndCFType",
+      "testStrictHostDeadlineCannotCommitLateProvenDecoder",
+      "testStrictHostReplacementRespectsPlatformDecoderPermit",
+      "testAudioOnlyFallbackRejectsActualUnsupportedRouteBeforeHardwareProbe",
       "testPreparedCandidateIsSilentAndDiscardPreventsTransfer",
       "testSeekRecreatesDecoderAndRejectsOldOutputBeforeNewFrame",
       "testBackendSeekOrdersHeldStagesAndSuppressesOldAudioAndVideo",

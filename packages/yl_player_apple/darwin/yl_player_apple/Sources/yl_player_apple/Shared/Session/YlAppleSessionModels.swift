@@ -68,6 +68,7 @@ struct YlNativeState {
   let videoTracks: [YlNativeTrack]
   var metrics: YlNativeMetrics
   let error: NativePlayerError?
+  var decoderEvidence: YlHardwareDecoderEvidence? = nil
 }
 
 struct YlNativeTimelineDelta {

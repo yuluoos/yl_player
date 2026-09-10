@@ -12,6 +12,7 @@ import YlFFmpegBridge
 final class YlManagedFallbackCharacterizationTests: XCTestCase {
   private final class Session: YlVTSession {
     let usesHardwareDecoder = true
+    var hardwareEvidence = YlHardwareDecoderEvidence(mode: .hardware)
     let output: (YlVTDecodedImage) -> Void
     let lock = NSLock()
     var automaticFrames = false
@@ -47,12 +48,14 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
   }
   private final class Factory: YlVTSessionFactory {
     var automaticFrames = false
+    var evidence = YlHardwareDecoderEvidence(mode: .hardware)
     var sessions = [Session]()
     var onCreate: (() -> Void)?
     var onInvalidate: (() -> Void)?
     func makeSession(formatDescription: CMVideoFormatDescription,
                      output: @escaping (YlVTDecodedImage) -> Void) throws -> YlVTSession {
       let session = Session(output: output); session.automaticFrames = automaticFrames; session.onInvalidate = onInvalidate
+      session.hardwareEvidence = evidence
       sessions.append(session); onCreate?(); return session
     }
   }
@@ -164,9 +167,10 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     }
   }
 
-  private func prepared(_ token: YlOpenCancellationToken? = nil) throws -> YlPreparedFallback {
+  private func prepared(_ token: YlOpenCancellationToken? = nil, policy: YlDecoderPolicy? = nil) throws -> YlPreparedFallback {
     let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv"))
-    return try YlPreparedFallback(source: YlAppleSourceDescriptor(uri: url.absoluteString, kind: .file, formatHint: .matroska),
+    return try YlPreparedFallback(source: YlAppleSourceDescriptor(uri: url.absoluteString, kind: .file, formatHint: .matroska,
+      loadOptions: policy.map { .init(decoderPolicy: $0) }),
       requireHardwareProbe: false, cancellationToken: token)
   }
   private func backend(_ prepared: YlPreparedFallback, factory: Factory, output: Output,
@@ -176,6 +180,320 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
         makeDisplayDriver: { _ in Display() }),
       configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared,
       generation: 17, videoSessionFactory: factory, emit: emit)
+  }
+
+  func testHardwareEvidenceRequiresActualCFBooleanAndSafeIdentity() {
+    let values: [(OSStatus, CFTypeRef?, YlHardwareDecoderEvidence.Mode)] = [
+      (noErr, kCFBooleanTrue, .hardware), (noErr, kCFBooleanFalse, .software),
+      (noErr, nil, .unknown), (-1, kCFBooleanTrue, .unknown),
+      (noErr, NSNumber(value: 1), .unknown), (noErr, "true" as CFString, .unknown)
+    ]
+    for (status, value, expected) in values {
+      let evidence = YlHardwareDecoderEvidence(status: status, value: value)
+      XCTAssertEqual(evidence.mode, expected)
+      XCTAssertEqual(evidence.decoderName, "VideoToolbox")
+    }
+  }
+
+  func testRequiredPipelineRejectsSoftwareBeforeDecoderInstallation() throws {
+    let candidate = try prepared(); defer { candidate.discard() }
+    let factory = Factory(); factory.evidence = .init(mode: .software)
+    let pipeline = YlVideoPipeline(format: candidate.videoFormat,
+      bufferBudget: try .make(configuration: .init(map: [:]), prepared: candidate),
+      factory: factory, policy: .hardwareRequired)
+    XCTAssertThrowsError(try pipeline.initializeDecoder()) {
+      XCTAssertEqual(($0 as? NativePlayerError)?.code, "decoder.unavailable")
+    }
+    XCTAssertFalse(pipeline.hasDecoder)
+    XCTAssertEqual(factory.sessions.first?.invalidations, 1)
+  }
+
+  func testRequiredPipelineRecreationRejectsUnknownBeforeInstall() throws {
+    let candidate = try prepared(); defer { candidate.discard() }
+    let factory = Factory()
+    let pipeline = YlVideoPipeline(format: candidate.videoFormat,
+      bufferBudget: try .make(configuration: .init(map: [:]), prepared: candidate),
+      factory: factory, policy: .hardwareRequired)
+    try pipeline.initializeDecoder()
+    XCTAssertEqual(pipeline.hardwareEvidence.mode, .hardware)
+    pipeline.discardDecoder()
+    factory.evidence = .unknown
+    XCTAssertThrowsError(try pipeline.prepareCurrent()) {
+      XCTAssertEqual(($0 as? NativePlayerError)?.code, "decoder.unavailable")
+    }
+    XCTAssertFalse(pipeline.hasDecoder)
+    XCTAssertEqual(factory.sessions.last?.invalidations, 1)
+  }
+
+  func testStrictInspectedFormatRecreationRejectsSoftware() throws {
+    let candidate = try prepared(); defer { candidate.discard() }
+    let media = try candidate.takeMedia(); defer { media.close() }
+    let factory = Factory(); factory.evidence = .init(mode: .software)
+    let pipeline = YlVideoPipeline(format: candidate.videoFormat,
+      bufferBudget: try .make(configuration: .init(map: [:]), prepared: candidate),
+      factory: factory, policy: .hardwareRequired)
+    XCTAssertThrowsError(try pipeline.prepare(context: XCTUnwrap(media.context), streamIndex: candidate.videoStream.index)) {
+      XCTAssertEqual(($0 as? NativePlayerError)?.code, "decoder.unavailable")
+    }
+    XCTAssertFalse(pipeline.hasDecoder)
+    XCTAssertEqual(factory.sessions.last?.invalidations, 1)
+  }
+
+  func testPreferredPipelineAllowsUnknownWithoutClaimingHardware() throws {
+    let candidate = try prepared(); defer { candidate.discard() }
+    let factory = Factory(); factory.evidence = .unknown
+    let pipeline = YlVideoPipeline(format: candidate.videoFormat,
+      bufferBudget: try .make(configuration: .init(map: [:]), prepared: candidate),
+      factory: factory, policy: .hardwarePreferred)
+    try pipeline.initializeDecoder(); defer { pipeline.discardDecoder() }
+    XCTAssertEqual(pipeline.hardwareEvidence.mode, .unknown)
+    XCTAssertEqual(pipeline.usesHardwareDecoder, false)
+  }
+
+  private func hardwareRequest(_ id: String, policy: AppleDecoderPolicy = .hardwareRequired) throws -> AppleLoadRequest {
+    let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv"))
+    var request = AppleHostFixture.request(id, url: url.absoluteString, format: .matroska)
+    request.source.kind = .file; request.source.locator = url.path
+    request.options.decoderPolicyOverride = policy
+    return request
+  }
+
+  func testStrictHostTransfersExactProvenDecoderBeforeCommitAndFirstFrameOnce() async throws {
+    let factory = Factory()
+    let f = AppleHostFixture(videoSessionFactory: factory); defer { f.host.close() }
+    try f.host.attach()
+    var publicCommitCount = 0
+    f.host.willCommit = { _ in
+      publicCommitCount += 1
+      XCTAssertEqual(factory.sessions.count, 1)
+      XCTAssertTrue(f.output.frames.isEmpty)
+      XCTAssertTrue(f.callbacks.frames.isEmpty)
+    }
+    let reply = try await f.load(hardwareRequest("positive"))
+    XCTAssertEqual(publicCommitCount, 1)
+    XCTAssertEqual(factory.sessions.count, 1, "Commit must adopt the exact proven decoder")
+    XCTAssertEqual(f.host.initialState.decoderMode, .hardware)
+    XCTAssertEqual(f.host.sessionId, reply.sessionId)
+    try await AppleHostCharacterizations.waitFor { factory.sessions[0].lastGeneration != nil }
+    try factory.sessions[0].send(generation: XCTUnwrap(factory.sessions[0].lastGeneration))
+    try await AppleHostCharacterizations.waitFor { f.callbacks.frames.count == 1 }
+    try f.host.seekTo(command: .init(sessionId: reply.sessionId, positionMs: 0))
+    try await AppleHostCharacterizations.waitFor { factory.sessions.count == 2 }
+    XCTAssertEqual(factory.sessions.count, 2)
+    try await AppleHostCharacterizations.waitFor { factory.sessions[1].lastGeneration != nil }
+    try factory.sessions[1].send(generation: XCTUnwrap(factory.sessions[1].lastGeneration))
+    await f.settle()
+    XCTAssertEqual(f.callbacks.frames.count, 1)
+  }
+
+  func testStrictSoftwareAndUnknownCandidatesPreserveAcceptedSession() async throws {
+    for mode: YlHardwareDecoderEvidence.Mode in [.software, .unknown] {
+      let factory = Factory(); factory.evidence = .init(mode: mode)
+      let f = AppleHostFixture(videoSessionFactory: factory); defer { f.host.close() }
+      let old = try await f.load(AppleHostFixture.request("old"))
+      let item = f.av.currentItem
+      try f.host.setVolume(volume: 0.3)
+      var commits = 0
+      f.host.willCommit = { _ in commits += 1 }
+      do { _ = try await f.load(hardwareRequest("rejected")); XCTFail("Nonhardware candidate committed") }
+      catch { XCTAssertEqual((error as NSError).domain, "decoder.unavailable") }
+      XCTAssertEqual(commits, 0)
+      XCTAssertEqual(f.host.sessionId, old.sessionId)
+      XCTAssertTrue(f.av.currentItem === item)
+      XCTAssertEqual(f.av.volume, 0.3, accuracy: 0.001)
+      XCTAssertFalse(f.host.playbackIntent)
+      XCTAssertEqual(factory.sessions.last?.invalidations, 1)
+    }
+  }
+
+  func testPreferredHostCommitsUnknownAndSoftwareHonestly() async throws {
+    for mode: YlHardwareDecoderEvidence.Mode in [.unknown, .software] {
+      let factory = Factory(); factory.evidence = .init(mode: mode)
+      let f = AppleHostFixture(videoSessionFactory: factory); defer { f.host.close() }
+      _ = try await f.load(hardwareRequest("preferred", policy: .hardwarePreferred))
+      XCTAssertEqual(f.host.initialState.decoderMode, mode == .software ? .software : .unknown)
+    }
+  }
+
+  func testStrictCommittedSeekRejectsRecreatedSoftwareAndLateFrames() async throws {
+    let factory = Factory(), output = Output()
+    let instance = try backend(prepared(policy: .hardwareRequired), factory: factory, output: output)
+    defer { instance.dispose() }
+    try instance.activate()
+    try await AppleHostCharacterizations.waitFor { factory.sessions[0].lastGeneration != nil }
+    let old = factory.sessions[0], oldGeneration = try XCTUnwrap(factory.sessions[0].lastGeneration)
+    factory.evidence = .init(mode: .software)
+    XCTAssertThrowsError(try instance.seek(toMs: Int64(0), cancellationToken: nil)) {
+      XCTAssertEqual(($0 as? NativePlayerError)?.code, "decoder.unavailable")
+    }
+    XCTAssertEqual(factory.sessions.last?.invalidations, 1)
+    try old.send(generation: oldGeneration)
+    await Task.yield()
+    XCTAssertEqual(output.published, 0)
+  }
+
+  func testRealHardwareRequiredFixtureCommitsHardwareOrTruthfullyRejects() async throws {
+    let f = AppleHostFixture(); defer { f.host.close() }
+    do {
+      _ = try await f.load(hardwareRequest("real-hardware-policy"))
+      XCTAssertEqual(f.host.initialState.decoderMode, .hardware)
+      let attachment = XCTAttachment(string: "Actual VT hardwareRequired commit; decoderMode=hardware. Simulator is policy evidence only.")
+      attachment.name = "Task5-real-hardware-policy"; attachment.lifetime = .keepAlways; add(attachment)
+    } catch {
+      XCTAssertEqual((error as NSError).domain, "decoder.unavailable")
+      XCTAssertNil(f.host.sessionId)
+      let attachment = XCTAttachment(string: "Actual VT hardwareRequired rejected decoder.unavailable; no hardware performance claim.")
+      attachment.name = "Task5-real-hardware-policy"; attachment.lifetime = .keepAlways; add(attachment)
+    }
+  }
+
+  private final class EvidenceClock {
+    private let lock = NSLock()
+    private var time: TimeInterval = 100
+    private var timeout: (() -> Void)?
+    func now() -> TimeInterval { lock.withLock { time } }
+    func schedule(_ seconds: TimeInterval, _ action: @escaping () -> Void) -> (() -> Void) {
+      XCTAssertEqual(seconds, 5)
+      lock.withLock { timeout = action }
+      return { [weak self] in self?.lock.withLock { self?.timeout = nil } }
+    }
+    func expire() {
+      let action = lock.withLock { () -> (() -> Void)? in time += 5; return timeout }
+      action?()
+    }
+  }
+
+  func testEvidenceDeadlineRetainsLatePayloadAndRejectsSecondProbeUntilNativeReturn() async throws {
+    try await heldEvidence(cancel: false)
+  }
+  func testEvidenceCancellationRetainsLatePayloadAndNeverAcceptsLateSuccess() async throws {
+    try await heldEvidence(cancel: true)
+  }
+  private func heldEvidence(cancel: Bool) async throws {
+    final class Payload {
+      let token: YlManagedBufferLedger.Token
+      init(_ token: YlManagedBufferLedger.Token) { self.token = token }
+    }
+    let clock = EvidenceClock()
+    let stage = YlHardwareEvidencePreparation(now: clock.now, schedule: clock.schedule)
+    let token = YlOpenCancellationToken(), ledger = YlManagedBufferLedger()
+    let scope = try ledger.makeScope(maxBytes: 1024)
+    let entered = expectation(description: "actual retained native work")
+    let finished = expectation(description: "authority completed before native return")
+    let discarded = expectation(description: "late owner discarded on actual return")
+    let release = DispatchSemaphore(value: 0)
+    defer { release.signal() }
+    DispatchQueue.global().async {
+      do {
+        _ = try stage.run(token: token, work: {
+          let payload = Payload(try XCTUnwrap(scope.reserve(category: .compressedPackets, bytes: 128)))
+          entered.fulfill(); _ = release.wait(timeout: .now() + 10); return payload
+        }, discard: { _ in discarded.fulfill() })
+        XCTFail("Late result acquired authority")
+      } catch {
+        XCTAssertEqual((error as? NativePlayerError)?.code, cancel ? "network.cancelled" : "decoder.unavailable")
+      }
+      finished.fulfill()
+    }
+    await fulfillment(of: [entered], timeout: 2)
+    if cancel { token.cancel() } else { clock.expire() }
+    await fulfillment(of: [finished], timeout: 2)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 128)
+    let busy = expectation(description: "second probe rejects without a new worker")
+    DispatchQueue.global().async {
+      do {
+        let _: Int = try stage.run(token: .init(), work: { XCTFail("Overlapping work started"); return 1 }, discard: { (_: Int) in })
+        XCTFail("Overlapping probe admitted")
+      } catch { XCTAssertEqual((error as? NativePlayerError)?.code, "decoder.unavailable") }
+      busy.fulfill()
+    }
+    await fulfillment(of: [busy], timeout: 2)
+    release.signal()
+    await fulfillment(of: [discarded], timeout: 2)
+    try await AppleHostCharacterizations.waitFor { ledger.snapshot.currentBytes == 0 }
+  }
+
+  func testInjectedPropertyReaderPreservesCompatibleKeyAndCFType() {
+    for value: CFTypeRef in [kCFBooleanTrue!, kCFBooleanFalse!, NSNumber(value: 1)] {
+      let reader = YlVTSessionPropertyReader(copy: { _, key, output in
+        XCTAssertEqual(key as String, "UsingHardwareAcceleratedVideoDecoder")
+        output = value; return noErr
+      })
+      // The reader is injected; the opaque handle is never passed to native VT.
+      let evidence = reader.evidence(for: kCFBooleanTrue)
+      XCTAssertEqual(evidence.mode, CFGetTypeID(value) != CFBooleanGetTypeID() ? .unknown : (CFEqual(value, kCFBooleanTrue) ? .hardware : .software))
+    }
+  }
+
+  func testStrictHostDeadlineCannotCommitLateProvenDecoder() async throws {
+    let clock = EvidenceClock(), factory = Factory()
+    let entered = expectation(description: "candidate native factory held")
+    let returned = expectation(description: "native candidate invalidated after actual return")
+    let release = DispatchSemaphore(value: 0)
+    defer { release.signal() }
+    factory.onCreate = { entered.fulfill(); _ = release.wait(timeout: .now() + 10) }
+    factory.onInvalidate = { returned.fulfill() }
+    let stage = YlHardwareEvidencePreparation(now: clock.now, schedule: clock.schedule)
+    let f = AppleHostFixture(videoSessionFactory: factory, hardwareEvidenceStage: stage)
+    defer { f.host.close() }
+    let old = try await f.load(AppleHostFixture.request("old"))
+    let item = f.av.currentItem
+    var commits = 0
+    f.host.willCommit = { _ in commits += 1 }
+    let request = try hardwareRequest("late-positive")
+    let loading = Task { try await f.load(request) }
+    await fulfillment(of: [entered], timeout: 2)
+    clock.expire()
+    do { _ = try await loading.value; XCTFail("Deadline candidate committed") }
+    catch { XCTAssertEqual((error as NSError).domain, "decoder.unavailable") }
+    XCTAssertEqual(factory.sessions[0].invalidations, 0)
+    XCTAssertEqual(f.host.sessionId, old.sessionId)
+    XCTAssertTrue(f.av.currentItem === item)
+    release.signal()
+    await fulfillment(of: [returned], timeout: 2)
+    await f.settle()
+    XCTAssertEqual(commits, 0)
+    XCTAssertEqual(factory.sessions[0].invalidations, 1)
+    XCTAssertEqual(f.host.sessionId, old.sessionId)
+  }
+
+  func testStrictHostReplacementRespectsPlatformDecoderPermit() async throws {
+    let factory = Factory()
+    let f = AppleHostFixture(videoSessionFactory: factory); defer { f.host.close() }
+    let old = try await f.load(hardwareRequest("old-hardware"))
+    var commits = 0
+    f.host.willCommit = { _ in commits += 1 }
+    if YlAppleCompatibility.current.limitsVideoReservations {
+      do { _ = try await f.load(hardwareRequest("busy")); XCTFail("Second scarce permit acquired") }
+      catch { XCTAssertEqual((error as NSError).domain, "decoder.unavailable") }
+      XCTAssertEqual(commits, 0)
+      XCTAssertEqual(f.host.sessionId, old.sessionId)
+      XCTAssertEqual(factory.sessions.count, 1)
+      XCTAssertEqual(factory.sessions[0].invalidations, 0)
+    } else {
+      let replacement = try await f.load(hardwareRequest("coexisting"))
+      XCTAssertEqual(commits, 1)
+      XCTAssertNotEqual(replacement.sessionId, old.sessionId)
+      XCTAssertEqual(f.host.sessionId, replacement.sessionId)
+      XCTAssertEqual(factory.sessions.count, 2)
+      XCTAssertEqual(factory.sessions[0].invalidations, 1)
+    }
+    XCTAssertEqual(f.host.initialState.decoderMode, .hardware)
+    XCTAssertFalse(f.host.playbackIntent)
+  }
+
+  func testAudioOnlyFallbackRejectsActualUnsupportedRouteBeforeHardwareProbe() throws {
+    // 624-byte AAC-LC Matroska: ffmpeg anullsrc 48k stereo, 50ms, AAC.
+    // This is an actual audio-only demux input, not a video-evidence rejection.
+    let bytes = Data(base64Encoded: "GkXfo6NChoEBQveBAULygQRC84EIQoKIbWF0cm9za2FCh4EEQoWBAhhTgGcBAAAAAAACPBFNm3TAv4QP11p3TbuLU6uEFUmpZlOsgaFNu4tTq4QWVK5rU6yB7027jFOrhBJUw2dTrIIBTk27jFOrhBxTu2tTrIICIOwBAAAAAAAAUwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFUmpZsm/hCJ4+sIq17GDD0JATYCMTGF2ZjYyLjMuMTAwV0GMTGF2ZjYyLjMuMTAwc6SQudSwHc6PsCoj/Cb6H1kIPUSJiEBRwAAAAAAAFlSua9q/hBSGLoquAQAAAAAAAEvXgQFzxYgiBWUlNB3T35yBACK1nIN1bmSIgQCGhUFfQUFDVqqEAUWFVYOBAuGRn4ECtYhA53AAAAAAAGJkgSBV7oEAY6KFEZBW5QASVMNn/r+EIJ0GuXNzn2PAgGfImUWjh0VOQ09ERVJEh4xMYXZmNjIuMy4xMDBzc9NjwItjxYgiBWUlNB3T32fInkWjh0VOQ09ERVJEh5FMYXZjNjIuMTEuMTAwIGFhY2fIoUWjiERVUkFUSU9ORIeTMDA6MDA6MDAuMDcxMDAwMDAwAB9DtnXKv4RSlaYJ54EAo5uBAACA3gIATGF2YzYyLjExLjEwMABCIAjBGDijioEAFYAhEARgjByjioEAKoAhEARgjByjioEAQIAhEARgjBwcU7trl7+ED3V4pruPs4EAt4r3gQHxggHR8IEJ")!
+    let file = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mka")
+    try bytes.write(to: file); defer { try? FileManager.default.removeItem(at: file) }
+    let source = YlAppleSourceDescriptor(uri: file.absoluteString, kind: .file,
+      formatHint: .matroska, loadOptions: .init(decoderPolicy: .hardwareRequired))
+    XCTAssertThrowsError(try YlPreparedFallback(source: source, requireHardwareProbe: false)) {
+      XCTAssertEqual(($0 as? NativePlayerError)?.code, "policy.unsupported")
+      XCTAssertEqual(($0 as? NativePlayerError)?.category, "unsupported")
+    }
   }
 
   // Removing candidate privacy or media transfer invalidation must fail this.

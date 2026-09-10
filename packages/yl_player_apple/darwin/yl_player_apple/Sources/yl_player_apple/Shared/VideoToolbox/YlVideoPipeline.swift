@@ -43,9 +43,11 @@ final class YlVideoPipeline {
   private let outputRelay = YlFallbackOutputRelay()
   private let bufferBudget: YlFallbackBufferBudget
   private let factory: YlVTSessionFactory
+  private let policy: YlDecoderPolicy
 
   init(format: CMVideoFormatDescription, bufferBudget: YlFallbackBufferBudget,
-       factory: YlVTSessionFactory) {
+       factory: YlVTSessionFactory, policy: YlDecoderPolicy = .systemDefault) {
+    self.policy = policy
     self.format = format
     self.bufferBudget = bufferBudget
     self.factory = factory
@@ -56,14 +58,27 @@ final class YlVideoPipeline {
   }
 
   private func makeDecoder(format: CMVideoFormatDescription) throws -> YlVideoToolboxDecoder {
-    try YlVideoToolboxDecoder(formatDescription: format,
+    let created: YlVideoToolboxDecoder
+    do { created = try YlVideoToolboxDecoder(formatDescription: format,
       maxInFlightBytes: bufferBudget.inFlightPacketBytes, bufferScope: bufferBudget.bufferScope, factory: factory,
       onFrame: { [outputRelay] frame in outputRelay.frame(frame) },
       onError: { [outputRelay] error in outputRelay.error(error) })
+    } catch let error as NativePlayerError {
+      if policy == .hardwareRequired && (error.code == "decoder.video_hardware_unavailable" || error.code == "resource.video_decoder_limit") {
+        throw YlHardwareDecoderEvidence.unavailable()
+      }
+      throw error
+    }
+    if policy == .hardwareRequired && created.hardwareEvidence.mode != .hardware {
+      created.dispose()
+      throw YlHardwareDecoderEvidence.unavailable()
+    }
+    return created
   }
 
   var isDrained: Bool { submissions.isDrained }
   var hasDecoder: Bool { decoder != nil }
+  var hardwareEvidence: YlHardwareDecoderEvidence { decoder?.hardwareEvidence ?? .unknown }
   var usesHardwareDecoder: Bool? { decoder?.usesHardwareDecoder }
   func connect(_ output: any YlVideoPipelineOutput) { outputRelay.backend = output }
   func initializeDecoder() throws { decoder = try makeDecoder(format: format) }
@@ -227,6 +242,8 @@ final class YlVideoPipeline {
       decoder.drain()
     }
   }
+
+  deinit { decoder?.dispose() }
 
   func cancelVideoSubmissions() {
     submissions.cancelPending()

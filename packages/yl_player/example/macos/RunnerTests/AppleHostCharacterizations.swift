@@ -12,12 +12,15 @@ final class AppleHostFixture {
   init(commandCoordinator: YlAsyncCommandCoordinator = YlAsyncCommandCoordinator(),
        beforeFallbackConstruction: ((YlPlaybackBackend) throws -> Void)? = nil,
        slotCompatibility: YlAppleCompatibility? = nil,
-       bufferLedger: YlManagedBufferLedger = YlManagedBufferLedger()) {
+       bufferLedger: YlManagedBufferLedger = YlManagedBufferLedger(),
+       videoSessionFactory: YlVTSessionFactory? = nil,
+       hardwareEvidenceStage: YlHardwareEvidencePreparation = .init()) {
     host = YlApplePlayerHost(playerId: 91, suffix: "fixture-91",
       options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 100),
       services: .init(platform: .current, textureOutput: output,
         makeDisplayDriver: { AppleClockDisplay(onTick: $0) }), callbacks: callbacks, avPlayer: av, commandCoordinator: commandCoordinator,
-      beforeFallbackConstruction: beforeFallbackConstruction, slotCompatibility: slotCompatibility, bufferLedger: bufferLedger)
+      beforeFallbackConstruction: beforeFallbackConstruction, slotCompatibility: slotCompatibility, bufferLedger: bufferLedger,
+      videoSessionFactory: videoSessionFactory, hardwareEvidenceStage: hardwareEvidenceStage)
   }
   static func request(_ id: String, url: String = "https://example.test/media.mp4",
       format: AppleMediaFormat = .mp4, autoplay: Bool = false, start: Int64? = nil,

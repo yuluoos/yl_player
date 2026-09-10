@@ -621,7 +621,7 @@ extension YlAppleSessionTests {
 final class YlEngineAssessmentTests: XCTestCase {
   private let enforcing = YlRoutingAvailability(managedNetwork: true, boundedBuffer: true, hardwareEvidence: true)
 
-  func testCompletePolicyRouteMatrixEnablesManagedAndKeepsBufferHardwareStaged() {
+  func testCompletePolicyRouteMatrixEnablesEnforcedManagedBufferAndHardwareRoutes() {
     for kind: YlSourceKind in [.file, .network] {
       for format: YlSourceFormat in [.hls, .mp4, .mov, .matroska, .flv, .webm, .avi, .mpegTs, .mpegPs] {
         for policy in 0..<4 {
@@ -633,9 +633,10 @@ final class YlEngineAssessmentTests: XCTestCase {
           if policy == 3 { options.decoderPolicy = .hardwareRequired }
           source.loadOptions = options
           let production = YlEngineRouter.assess(source)
-          if (policy == 1 || policy == 2) && (format == .matroska || (format == .flv && kind == .network)) {
+          if (policy > 0) && (format == .matroska || (format == .flv && kind == .network)) {
             XCTAssertEqual(production.outcome, .requiresInspection)
-            XCTAssertTrue(production.satisfiedRequirements.contains(policy == 1 ? .networkManaged : .bufferBounded))
+            if policy != 3 { XCTAssertTrue(production.satisfiedRequirements.contains(policy == 1 ? .networkManaged : .bufferBounded)) }
+            else { XCTAssertFalse(production.satisfiedRequirements.contains(.decoderHardwareRequired)) }
             if policy == 2 { XCTAssertTrue(production.limitations.contains(.bufferOsMemoryExcluded)) }
           } else if policy > 0 {
             XCTAssertEqual(production.rejection?.code, "policy.unsupported", "\(kind) \(format) \(policy)")

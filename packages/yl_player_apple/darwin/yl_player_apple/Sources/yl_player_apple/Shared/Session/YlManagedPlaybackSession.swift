@@ -98,7 +98,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     prepared: YlPreparedFallback,
     qualityConstraint: YlFallbackQualityConstraint = .unconstrained,
     generation: UInt64,
-    videoSessionFactory: YlVTSessionFactory = YlHardwareVTSessionFactory(),
+    videoSessionFactory: YlVTSessionFactory? = nil,
     mediaClock providedMediaClock: YlMediaClock? = nil,
     audioRendererFactory: any YlAudioRendererMaking = YlPlatformAudioRendererFactory(),
     presentationScheduler: any YlPresentationScheduling = YlFrameScheduler(),
@@ -123,8 +123,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     self.generation = generation
     self.onEvent = emit
     self.demux = try YlDemuxPipeline(prepared: prepared, lock: stateLock, bufferBudget: bufferBudget, control: demuxControl)
-    self.video = YlVideoPipeline(format: prepared.videoFormat, bufferBudget: bufferBudget,
-      factory: videoSessionFactory)
+    self.video = prepared.takePreparedVideo() ?? YlVideoPipeline(format: prepared.videoFormat, bufferBudget: bufferBudget,
+      factory: videoSessionFactory ?? YlHardwareVTSessionFactory(policy: prepared.decoderFactoryPolicy), policy: prepared.decoderPolicy)
     self.audio = YlAudioPipeline(bufferBudget: bufferBudget, lock: stateLock, generation: generation, factory: audioRendererFactory)
     self.presentation = YlPresentationCoordinator(services: services, lock: stateLock,
       openedAt: openStartedAt, positionEventIntervalMs: configuration.positionEventIntervalMs, scheduler: presentationScheduler)
@@ -155,7 +155,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     if savedPositionUs > 0 { presentation.suppressFramesBefore( savedPositionUs) }
     video.connect(self)
     do {
-      try video.initializeDecoder()
+      if !video.hasDecoder { try video.initializeDecoder() }
       if let audioStream = demux.selectedAudioStream {
         try audio.configureInitial(stream: audioStream, cookies: demux.audioCookies)
       }
@@ -504,7 +504,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         audioTracks: audioTracks,
         videoTracks: videoTracks,
         metrics: metrics,
-        error: currentError
+        error: currentError,
+        decoderEvidence: video.hardwareEvidence
       )))
   }
 

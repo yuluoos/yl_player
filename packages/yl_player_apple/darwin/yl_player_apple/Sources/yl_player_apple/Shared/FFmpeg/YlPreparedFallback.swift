@@ -26,6 +26,9 @@ enum YlPreparedOpen {
 }
 
 final class YlPreparedFallback {
+  let decoderPolicy: YlDecoderPolicy
+  let decoderFactoryPolicy: YlDecoderPolicy
+  private var preparedVideo: YlVideoPipeline?
   let bufferScope: YlManagedBufferScope
   let boundedPlan: YlBoundedBufferPlan?
   let commitEvents: YlAppleCommitEmitter?
@@ -52,6 +55,8 @@ final class YlPreparedFallback {
     commitEvents: YlAppleCommitEmitter? = nil,
     onRetry: YlNetworkByteSource.RetryCallback? = nil
   ) throws {
+    self.decoderPolicy = source.loadOptions?.decoderPolicy ?? .systemDefault
+    self.decoderFactoryPolicy = source.loadOptions?.decoderPolicy ?? .hardwareRequired
     var plan = source.boundedPlan
     if plan == nil, let options = source.loadOptions, options.bufferStrategy == .bounded,
        let low = options.minDurationMs, let high = options.maxDurationMs, let bytes = options.maxManagedBytes {
@@ -130,9 +135,11 @@ final class YlPreparedFallback {
     var selectedVideo: YLFStreamInfo?
     var selectedAudio: [YLFStreamInfo] = []
     var sawUnsupportedAudio = false
+    var sawVideo = false
     for index in 0..<mediaInfo.stream_count {
       var stream = YLFStreamInfo()
       guard ylf_copy_stream_info(validContext, index, &stream) == 0 else { continue }
+      if Int(stream.kind) == YLFStreamVideo { sawVideo = true }
       if Int(stream.kind) == YLFStreamVideo,
          (Int(stream.codec) == YLFCodecH264 || Int(stream.codec) == YLFCodecHEVC),
          selectedVideo == nil {
@@ -147,9 +154,9 @@ final class YlPreparedFallback {
     }
     guard let selectedVideo else {
       throw NativePlayerError(
-        category: "decoderUnsupported",
-        code: "decoder.video_hardware_unavailable",
-        message: "The file does not contain supported H.264 or H.265 video."
+        category: sawVideo ? "decoderUnsupported" : "unsupported",
+        code: sawVideo ? "decoder.unsupported" : "policy.unsupported",
+        message: sawVideo ? "The video codec is unsupported." : "This fallback route does not implement audio-only playback."
       )
     }
     if selectedAudio.isEmpty && sawUnsupportedAudio {
@@ -210,6 +217,31 @@ final class YlPreparedFallback {
     mediaNeedsClose = false
   }
 
+  func prepareHardwareEvidence(configuration: PlayerConfiguration,
+      factory: YlVTSessionFactory?, stage: YlHardwareEvidencePreparation,
+      token: YlOpenCancellationToken) throws {
+    guard decoderPolicy == .hardwareRequired else { return }
+    let pipeline = try stage.run(token: token, work: { [self] in
+      let pipeline = YlVideoPipeline(format: videoFormat,
+        bufferBudget: try .make(configuration: configuration, prepared: self),
+        factory: factory ?? YlHardwareVTSessionFactory(policy: decoderPolicy), policy: decoderPolicy)
+      do { try pipeline.initializeDecoder() }
+      catch let error as NativePlayerError {
+        if error.code == "resource.video_decoder_limit" || error.code == "decoder.video_hardware_unavailable" {
+          throw YlHardwareDecoderEvidence.unavailable()
+        }
+        throw error
+      }
+      return pipeline
+    }, discard: { $0.discardDecoder() })
+    try token.throwIfCancelled()
+    preparedVideo = pipeline
+  }
+
+  func takePreparedVideo() -> YlVideoPipeline? {
+    defer { preparedVideo = nil }; return preparedVideo
+  }
+
   func takeMedia() throws -> YlOpenedMedia {
     guard let openedMedia else {
       throw NativePlayerError(
@@ -258,6 +290,7 @@ final class YlPreparedFallback {
   }
 
   func discard() {
+    preparedVideo?.discardDecoder(); preparedVideo = nil
     cancellationToken?.cancel()
     cancellationToken = nil
     openedMedia?.close()

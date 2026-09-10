@@ -35,6 +35,8 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
        beforeFallbackConstruction: ((YlPlaybackBackend) throws -> Void)? = nil,
        slotCompatibility: YlAppleCompatibility? = nil,
        bufferLedger: YlManagedBufferLedger = YlManagedBufferLedger(),
+       videoSessionFactory: YlVTSessionFactory? = nil,
+       hardwareEvidenceStage: YlHardwareEvidencePreparation = .init(),
        clock: @escaping () -> Int64 = YlAppleSafeDiagnostics.nowMilliseconds) {
     self.playerId = playerId
     self.suffix = suffix
@@ -50,7 +52,8 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
     coordinator = YlAppleSessionCoordinator(playerId: playerId, services: services,
       configuration: PlayerConfiguration(positionEventIntervalMs: options.positionUpdateIntervalMs),
       textureOwner: textureOwner, avPlayer: avPlayer, commandCoordinator: commandCoordinator,
-      beforeFallbackConstruction: beforeFallbackConstruction, slotCompatibility: slotCompatibility, bufferLedger: bufferLedger) { [weak self] identity, callback in
+      beforeFallbackConstruction: beforeFallbackConstruction, slotCompatibility: slotCompatibility, bufferLedger: bufferLedger,
+      videoSessionFactory: videoSessionFactory, hardwareEvidenceStage: hardwareEvidenceStage) { [weak self] identity, callback in
         self?.receive(callback, identity: identity)
       }
     reducer.onOutput = { [weak self] output in self?.send(output) }
@@ -506,7 +509,7 @@ extension YlApplePlayerHost {
         liveOffsetMs: YlAppleTimeline.liveOffset(value?.liveOffsetMs), dvrWindow: window),
       geometry: nil, audioTracks: value?.audioTracks.map(Self.track) ?? [],
       videoTracks: value?.videoTracks.map(Self.track) ?? [], engine: Self.engine(value?.engine),
-      decoderMode: value?.engine == .managedFallback && value?.isHardwareDecoding == true ? .hardware : .unknown,
+      decoderMode: YlMetricsCollector.decoderMode(state: value),
       decoderIdentity: value?.decoderName, metrics: Self.metrics(value?.metrics ?? .init()),
       failure: state.failure.map { YlAppleFailureMapper.message($0, scope: .session) })
   }

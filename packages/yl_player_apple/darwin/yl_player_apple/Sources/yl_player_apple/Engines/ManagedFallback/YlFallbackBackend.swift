@@ -18,7 +18,7 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
        prepared: YlPreparedFallback,
        qualityConstraint: YlFallbackQualityConstraint = .unconstrained,
        generation: UInt64,
-       videoSessionFactory: YlVTSessionFactory = YlHardwareVTSessionFactory(),
+       videoSessionFactory: YlVTSessionFactory? = nil,
        mediaClock: YlMediaClock? = nil, loadRequestId: String? = nil,
        channelIdentity: UInt64? = nil,
        audioRendererFactory: any YlAudioRendererMaking = YlPlatformAudioRendererFactory(),

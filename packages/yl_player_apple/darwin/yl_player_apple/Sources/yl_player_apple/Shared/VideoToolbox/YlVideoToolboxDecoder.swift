@@ -261,6 +261,7 @@ final class YlHardwareDecoderLeasePool {
 
 protocol YlVTSession: AnyObject {
   var usesHardwareDecoder: Bool { get }
+  var hardwareEvidence: YlHardwareDecoderEvidence { get }
   func decode(
     _ sample: CMSampleBuffer,
     generation: UInt64,
@@ -268,6 +269,11 @@ protocol YlVTSession: AnyObject {
   ) -> OSStatus
   func flush()
   func invalidate()
+}
+
+extension YlVTSession {
+  // Legacy Boolean-only implementations provide no positive evidence.
+  var hardwareEvidence: YlHardwareDecoderEvidence { .unknown }
 }
 
 protocol YlVTSessionFactory {
@@ -311,7 +317,8 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
   private let bufferScope: YlManagedBufferScope?
   private var lease: YlHardwareDecoderLease?
   private var session: YlVTSession?
-  let usesHardwareDecoder: Bool
+  let hardwareEvidence: YlHardwareDecoderEvidence
+  var usesHardwareDecoder: Bool { hardwareEvidence.mode == .hardware }
   private var activeGeneration: UInt64?
   private var disposed = false
 
@@ -337,7 +344,7 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
       output: { image in outputRelay.handle(image) }
     )
     session = createdSession
-    usesHardwareDecoder = createdSession.usesHardwareDecoder
+    hardwareEvidence = createdSession.hardwareEvidence
     outputRelay.decoder = self
   }
 
@@ -573,13 +580,19 @@ private let ylVTOutputCallback: VTDecompressionOutputCallback = {
 }
 
 final class YlHardwareVTSessionFactory: YlVTSessionFactory {
+  private let policy: YlDecoderPolicy
+  private let propertyReader: YlVTSessionPropertyReader
+  init(policy: YlDecoderPolicy = .hardwareRequired,
+       propertyReader: YlVTSessionPropertyReader = .init()) {
+    self.policy = policy; self.propertyReader = propertyReader
+  }
   func makeSession(
     formatDescription: CMVideoFormatDescription,
     output: @escaping (YlVTDecodedImage) -> Void
   ) throws -> YlVTSession {
     let codec = CMFormatDescriptionGetMediaSubType(formatDescription)
     guard codec == kCMVideoCodecType_H264 || codec == kCMVideoCodecType_HEVC,
-          VTIsHardwareDecodeSupported(codec) else {
+          policy != .hardwareRequired || VTIsHardwareDecodeSupported(codec) else {
       throw Self.hardwareUnavailable(status: nil)
     }
 
@@ -589,9 +602,13 @@ final class YlHardwareVTSessionFactory: YlVTSessionFactory {
       decompressionOutputRefCon: Unmanaged.passUnretained(outputContext).toOpaque()
     )
     // Preserve the legacy string keys across SDK availability differences.
-    let decoderSpecification = [
-      "RequireHardwareAcceleratedVideoDecoder" as CFString: kCFBooleanTrue as Any,
-    ] as CFDictionary
+    var specification: [CFString: Any] = [:]
+    if policy == .hardwareRequired {
+      specification["RequireHardwareAcceleratedVideoDecoder" as CFString] = kCFBooleanTrue
+    } else if policy == .hardwarePreferred {
+      specification["EnableHardwareAcceleratedVideoDecoder" as CFString] = kCFBooleanTrue
+    }
+    let decoderSpecification = specification as CFDictionary
     var imageAttributes: [String: Any] = [
       kCVPixelBufferPixelFormatTypeKey as String:
         (YlAppleCompatibility.current.limitsVideoReservations
@@ -614,22 +631,13 @@ final class YlHardwareVTSessionFactory: YlVTSessionFactory {
       throw Self.hardwareUnavailable(status: status)
     }
 
-    var hardwareValue: CFTypeRef?
-    let propertyStatus = VTSessionCopyProperty(
-      rawSession,
-      key: "UsingHardwareAcceleratedVideoDecoder" as CFString,
-      allocator: kCFAllocatorDefault,
-      valueOut: &hardwareValue
-    )
-    let usesHardware = propertyStatus == noErr && hardwareValue as? Bool == true
-    guard usesHardware else {
+    let evidence = propertyReader.evidence(for: rawSession)
+    if policy == .hardwareRequired && evidence.mode != .hardware {
       VTDecompressionSessionInvalidate(rawSession)
-      throw Self.hardwareUnavailable(status: propertyStatus)
+      throw Self.hardwareUnavailable(status: noErr)
     }
     return YlHardwareVTSession(
-      session: rawSession,
-      outputContext: outputContext,
-      usesHardwareDecoder: true
+      session: rawSession, outputContext: outputContext, hardwareEvidence: evidence
     )
   }
 
@@ -644,7 +652,8 @@ final class YlHardwareVTSessionFactory: YlVTSessionFactory {
 }
 
 private final class YlHardwareVTSession: YlVTSession {
-  let usesHardwareDecoder: Bool
+  let hardwareEvidence: YlHardwareDecoderEvidence
+  var usesHardwareDecoder: Bool { hardwareEvidence.mode == .hardware }
   private let outputContext: YlVTOutputContext
   private var session: VTDecompressionSession?
   private let lock = NSLock()
@@ -652,11 +661,11 @@ private final class YlHardwareVTSession: YlVTSession {
   init(
     session: VTDecompressionSession,
     outputContext: YlVTOutputContext,
-    usesHardwareDecoder: Bool
+    hardwareEvidence: YlHardwareDecoderEvidence
   ) {
     self.session = session
     self.outputContext = outputContext
-    self.usesHardwareDecoder = usesHardwareDecoder
+    self.hardwareEvidence = hardwareEvidence
   }
 
   func decode(

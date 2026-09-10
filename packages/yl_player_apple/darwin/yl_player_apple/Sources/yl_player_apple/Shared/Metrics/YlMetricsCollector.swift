@@ -1,6 +1,14 @@
 import Foundation
 
 final class YlMetricsCollector {
+  static func decoderMode(state: YlNativeState?) -> AppleDecoderMode {
+    guard state?.engine == .managedFallback else { return .unknown }
+    switch state?.decoderEvidence?.mode {
+    case .hardware: return .hardware
+    case .software: return .software
+    default: return .unknown
+    }
+  }
   private let scope: YlManagedBufferScope
   private let bounded: Bool
   init(scope: YlManagedBufferScope, bounded: Bool) { self.scope = scope; self.bounded = bounded }
