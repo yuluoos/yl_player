@@ -1,5 +1,8 @@
 ## 0.2.0-dev.1
 
+- Dispatch every native Pigeon callback on the platform thread, including after
+  asynchronous acknowledgements.
+
 - Consolidate the typed registry, session lifecycle, Pigeon transport, AVPlayer
   and fallback engines into one endorsed iOS/macOS implementation.
 - Share one FFmpeg XCFramework across iOS device, iOS Simulator and macOS.

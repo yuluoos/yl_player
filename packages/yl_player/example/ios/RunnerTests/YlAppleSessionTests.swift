@@ -1,4 +1,9 @@
 import XCTest
+#if os(iOS)
+import Flutter
+#else
+import FlutterMacOS
+#endif
 import CoreVideo
 import AVFoundation
 import Network
@@ -319,6 +324,36 @@ final class YlAppleOutboundTests: XCTestCase {
 
 @MainActor
 final class YlAppleHostDeliveryTests: XCTestCase {
+  func testGeneratedCallbacksSendOnPlatformThreadAfterAsyncHops() async throws {
+    let delivered = expectation(description: "all generated callbacks reached messenger")
+    delivered.expectedFulfillmentCount = 8
+    let messenger = AppleThreadRecordingMessenger(delivered: delivered)
+    let callbacks = YlPlayerApplePlugin.makeCallbacks(messenger: messenger, suffix: "thread-regression")
+    let host = YlApplePlayerHost(playerId: 93, suffix: "thread-regression",
+      options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 250),
+      services: YlAppleRegistryTests.services(), callbacks: callbacks)
+    defer { host.close() }
+    try host.attach()
+    let id = YlAppleSessionIdentity(sessionId: "session", loadRequestId: "request")
+    let meta = YlAppleEventMetadata(identity: id, revision: 2, sequence: 3, occurredAtMs: 10)
+    host.send(.state(.init(identity: id, revision: 1, sequence: 1, snapshot: .characterizationReady, failure: nil)))
+    host.send(.delta(.init(identity: id, revision: 2, sequence: 2, occurredAtMs: 10), previousRevision: 1,
+      .init(positionMs: 1, bufferedPositionMs: 2, isAtLiveEdge: false, liveOffsetMs: nil, metrics: .init())))
+    host.send(.firstFrame(meta))
+    let error = NativePlayerError(category: "network", code: "network.failed", message: "failed")
+    host.send(.retry(meta, attempt: 1, delayMs: 20, error))
+    host.send(.engineChanged(meta, previous: .avPlayer, current: .managedFallback))
+    host.send(.state(.init(identity: id, revision: 3, sequence: 6, snapshot: .characterizationReady, failure: error)))
+    host.send(.failed(meta, error))
+    await fulfillment(of: [delivered], timeout: 5)
+    let records = messenger.records
+    XCTAssertEqual(records.map(\.method), ["onState", "onState", "onStateDelta", "onFirstFrame",
+      "onRetryScheduled", "onEngineChanged", "onState", "onPlaybackFailed"])
+    XCTAssertTrue(records.allSatisfy(\.isMainThread), "Actual Pigeon messenger sends must use the platform thread: \(records)")
+    XCTAssertTrue(records.allSatisfy { $0.channel.hasSuffix(".thread-regression") })
+    XCTAssertTrue(records.allSatisfy { $0.argumentCount == 1 })
+  }
+
   func testSixGeneratedCallbackMethodsShareAcknowledgedHostFIFO() async throws {
     let f = AppleHostFixture(); defer { f.host.close() }
     let entered = expectation(description: "initial callback entered")
@@ -1240,4 +1275,37 @@ final class YlGeometryAndMetricTests: XCTestCase {
     XCTAssertNil(m.snapshot.bufferedDurationMs)
     XCTAssertNil(YlApplePlayerHost.metrics(m.snapshot).estimatedBitrate)
   }
+}
+
+/// Observe the actual binary send boundary; acknowledgements deliberately resume
+/// from a background queue so each subsequent callback crosses an async boundary.
+private final class AppleThreadRecordingMessenger: NSObject, FlutterBinaryMessenger {
+  struct Record {
+    let method: String
+    let channel: String
+    let isMainThread: Bool
+    let argumentCount: Int
+  }
+  private let lock = NSLock()
+  private var storage = [Record]()
+  private let delivered: XCTestExpectation
+  init(delivered: XCTestExpectation) { self.delivered = delivered }
+  var records: [Record] { lock.lock(); defer { lock.unlock() }; return storage }
+  func send(onChannel channel: String, message: Data?) {
+    send(onChannel: channel, message: message, binaryReply: nil)
+  }
+  func send(onChannel channel: String, message: Data?, binaryReply: FlutterBinaryReply?) {
+    let arguments = YlPlayerApplePigeonCodec.shared.decode(message) as? [Any]
+    let method = channel.split(separator: ".").dropLast().last.map(String.init) ?? ""
+    lock.lock()
+    storage.append(.init(method: method, channel: channel, isMainThread: Thread.isMainThread,
+      argumentCount: arguments?.count ?? -1))
+    lock.unlock()
+    delivered.fulfill()
+    let response = YlPlayerApplePigeonCodec.shared.encode([NSNull()])
+    DispatchQueue.global().async { binaryReply?(response) }
+  }
+  func setMessageHandlerOnChannel(_ channel: String,
+      binaryMessageHandler handler: FlutterBinaryMessageHandler?) -> FlutterBinaryMessengerConnection { 0 }
+  func cleanUpConnection(_ connection: FlutterBinaryMessengerConnection) {}
 }

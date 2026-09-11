@@ -97,7 +97,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift",
-    "sha256": "60d94f2ba04eb8697268d838d622808ffcc798e283fae6f4e68c8396235d58b8",
+    "sha256": "2179929e13bd8ce5902037d3bb4bae464c0a7ee09c7200f2eec9033ca4d6e373",
     "methods": [
       "testImmutableRequestAndSessionIdentityStartsAtZero",
       "testNegativeMeasuredLiveOffsetIsZeroAndUnknownRemainsNil",
@@ -111,6 +111,7 @@
       "testPrivateFrameCommitAndRetiredClearRespectHostOwnership",
       "testAcknowledgementBlocksFollowingCallsAndFailureClosesQueue",
       "testHungAcknowledgementHasBoundedCleanup",
+      "testGeneratedCallbacksSendOnPlatformThreadAfterAsyncHops",
       "testSixGeneratedCallbackMethodsShareAcknowledgedHostFIFO",
       "testFailedAcknowledgementDisposesHostAndUninstallsSuffixExactlyOnce",
       "testUnknownInspectionStrippingSurvivesHlsRefinement",
@@ -177,6 +178,10 @@
     "hardening_task8_migration": {
       "from_sha256": "383d85af5517c9ac6f33bf71c574bbaef3e1b2fa4511df9f8bc7bac03a4e0d48",
       "reason": "Actual iOS driver activation/category/mode plus two registry owners; no active-state inference or physical-engine evidence claim."
+    },
+    "callback_thread_regression": {
+      "from_sha256": "60d94f2ba04eb8697268d838d622808ffcc798e283fae6f4e68c8396235d58b8",
+      "reason": "Observe actual generated callback binary sends on the platform thread, including background acknowledgements; retain existing callback FIFO tests."
     }
   },
   {
