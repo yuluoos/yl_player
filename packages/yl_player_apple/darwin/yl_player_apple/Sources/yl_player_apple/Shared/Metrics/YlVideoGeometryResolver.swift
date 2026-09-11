@@ -24,6 +24,16 @@ struct YlVideoGeometry {
 }
 
 enum YlVideoGeometryResolver {
+  static func avPlayer(pixelBuffer: CVPixelBuffer, rotationDegrees: Int = 0) -> YlVideoGeometry? {
+    // HLS may expose no AVAssetTrack even while video output is delivering
+    // frames. Read measured frame dimensions/aperture/PAR without asset I/O.
+    var format: CMVideoFormatDescription?
+    guard CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault,
+      imageBuffer: pixelBuffer, formatDescriptionOut: &format) == noErr,
+      let format else { return nil }
+    return managed(format: format, rotationDegrees: rotationDegrees)
+  }
+
   static func resolve(encodedSize: CGSize, cleanAperture: CGRect?, pixelAspectRatio: Double,
                       rotationDegrees: Int, pixelsAreOriented: Bool = false) -> YlVideoGeometry? {
     guard valid(encodedSize), pixelAspectRatio.isFinite, pixelAspectRatio > 0,

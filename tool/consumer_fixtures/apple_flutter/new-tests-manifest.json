@@ -97,8 +97,9 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift",
-    "sha256": "2179929e13bd8ce5902037d3bb4bae464c0a7ee09c7200f2eec9033ca4d6e373",
+    "sha256": "06e6ff4a3936e87700c696d5379af6f5d9d3fb4af708c2f68c8a18dc743e37ae",
     "methods": [
+      "testStatePublicationDoesNotSynchronouslyReadPendingAssetTracks",
       "testImmutableRequestAndSessionIdentityStartsAtZero",
       "testNegativeMeasuredLiveOffsetIsZeroAndUnknownRemainsNil",
       "testDeltaRetainsTimelineForLaterSemanticSnapshots",

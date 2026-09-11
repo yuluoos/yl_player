@@ -125,6 +125,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   private var audioOptions: [String: AVMediaSelectionOption] = [:]
   private var audioTracks: [YlNativeTrack] = []
   private var videoTracks: [YlNativeTrack] = []
+  private var videoGeometry: YlVideoGeometry?
+  private var audioGroup: AVMediaSelectionGroup?
+  private var metadataTask: Task<Void, Never>?
   private var sourceIsLive = false
   private var status = "idle"
   private var stopped = false
@@ -592,7 +595,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       if resumeAtLiveEdge {
         try? seekToLiveEdge()
       }
-      rebuildTracks(item)
+      loadMetadata(item, generation: generation)
       emitState()
       refreshStallWatchdog()
     case .failed:
@@ -719,7 +722,17 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     if let reconnect = awaitingReconnectFrame {
       metricsCollector.observe(.reconnect(id: reconnect)); awaitingReconnectFrame = nil
     }
-    services.textureOutput.publish(copyPixelBuffer()?.takeRetainedValue())
+    guard let buffer = copyPixelBuffer()?.takeRetainedValue() else { return }
+    let frameGeometry = YlVideoGeometryResolver.avPlayer(pixelBuffer: buffer,
+      rotationDegrees: videoGeometry?.rotationDegrees ?? 0)
+    let geometryChanged = frameGeometry.map {
+      videoGeometry?.encodedSize != $0.encodedSize ||
+        videoGeometry?.displaySize != $0.displaySize ||
+        videoGeometry?.pixelAspectRatio != $0.pixelAspectRatio
+    } ?? false
+    if let frameGeometry { videoGeometry = frameGeometry }
+    if geometryChanged { emitState() }
+    services.textureOutput.publish(buffer)
     if !firstFrameSent {
       firstFrameSent = true
       firstFrameDurationMs = elapsedMilliseconds(since: openStartedAt)
@@ -817,13 +830,13 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     }
     selectedAudioTrackId = trackId
     guard let item = player.currentItem,
-          let group = item.asset.mediaSelectionGroup(forMediaCharacteristic: .audible)
+          let group = audioGroup
     else {
       emitState()
       return
     }
     item.select(option, in: group)
-    rebuildTracks(item)
+    rebuildAudioTracks(item)
     emitState()
   }
 
@@ -848,9 +861,52 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     item.preferredMaximumResolution = CGSize(width: resolvedWidth, height: resolvedHeight)
   }
 
-  private func rebuildTracks(_ item: AVPlayerItem) {
+  private func loadMetadata(_ item: AVPlayerItem, generation: UInt64) {
+    guard metadataTask == nil else { return }
+    // State publication must never synchronously inspect a network asset. On
+    // merged Flutter threads that also blocks the app's loopback HTTP server.
+    metadataTask = Task { @MainActor [weak self, weak item] in
+      guard let item else { return }
+      do {
+        let tracks = try await item.asset.loadTracks(withMediaType: .video)
+        var catalog = [YlNativeTrack]()
+        var geometry: YlVideoGeometry?
+        for (index, track) in tracks.enumerated() {
+          let (size, transform, bitrate, formats) = try await track.load(
+            .naturalSize, .preferredTransform, .estimatedDataRate, .formatDescriptions)
+          try Task.checkCancellation()
+          let display = size.applying(transform)
+          catalog.append(YlNativeTrack(id: "video-\(index)", kind: .video,
+            bitrate: Int(bitrate), width: Int(abs(display.width)),
+            height: Int(abs(display.height)), isSelected: true))
+          if index == 0 {
+            geometry = YlVideoGeometryResolver.avPlayer(
+              presentationSize: item.presentationSize, naturalSize: size,
+              preferredTransform: transform, format: formats.first)
+          }
+        }
+        guard let self, self.isCurrent(item, generation: generation) else { return }
+        self.videoTracks = catalog
+        // Do not erase frame-measured HLS geometry when the asset has no tracks.
+        if let geometry { self.videoGeometry = geometry }
+        self.emitState()
+        let group = try await item.asset.loadMediaSelectionGroup(for: .audible)
+        try Task.checkCancellation()
+        guard self.isCurrent(item, generation: generation) else { return }
+        self.audioGroup = group
+        self.rebuildAudioTracks(item)
+        self.emitState()
+      } catch {
+        guard !Task.isCancelled, let self,
+              self.isCurrent(item, generation: generation) else { return }
+        self.handleFailure(error, item: item, generation: generation)
+      }
+    }
+  }
+
+  private func rebuildAudioTracks(_ item: AVPlayerItem) {
     audioOptions.removeAll()
-    if let group = item.asset.mediaSelectionGroup(forMediaCharacteristic: .audible) {
+    if let group = audioGroup {
       group.options.enumerated().forEach { index, option in
         let id = "audio-\(index)"
         audioOptions[id] = option
@@ -868,12 +924,6 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       audioTracks = []
     }
 
-    videoTracks = item.asset.tracks(withMediaType: .video).enumerated().map { index, track in
-      let size = track.naturalSize.applying(track.preferredTransform)
-      return YlNativeTrack(id: "video-\(index)", kind: .video,
-        bitrate: Int(track.estimatedDataRate), width: Int(abs(size.width)),
-        height: Int(abs(size.height)), isSelected: true)
-    }
     emit(.tracksChanged(audio: audioTracks, video: videoTracks))
   }
 
@@ -918,7 +968,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       engine: .avPlayer, isHardwareDecoding: false, decoderName: nil,
       audioTracks: audioTracks, videoTracks: videoTracks,
       metrics: collectMetrics(liveOffsetMs: liveOffsetMs),
-      error: error ?? currentError, geometry: YlVideoGeometryResolver.avPlayer(item: item))))
+      error: error ?? currentError, geometry: videoGeometry)))
   }
 
   private func emitStateDelta() {
@@ -970,6 +1020,13 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   }
 
   private func removeCurrentItem(releaseReplacement: Bool = true, clearOutput: Bool = true) {
+    metadataTask?.cancel()
+    metadataTask = nil
+    videoGeometry = nil
+    audioGroup = nil
+    audioOptions.removeAll()
+    audioTracks.removeAll()
+    videoTracks.removeAll()
     if releaseReplacement { finishReplacement() }
     itemGeneration &+= 1
     stallWatchdog.cancel()

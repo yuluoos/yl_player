@@ -1104,6 +1104,45 @@ final class YlObservabilityBoundaryTests: XCTestCase {
   }
 }
 
+// A pending remote asset must never be synchronously inspected by state publication.
+private final class PendingGeometryAsset: AVURLAsset, @unchecked Sendable {
+  var synchronousTrackReads = 0
+  override func tracks(withMediaType mediaType: AVMediaType) -> [AVAssetTrack] {
+    synchronousTrackReads += 1
+    return []
+  }
+}
+
+private final class PendingGeometryPlayer: AVPlayer {
+  let pendingItem: AVPlayerItem
+  init(item: AVPlayerItem) { pendingItem = item; super.init() }
+  override var currentItem: AVPlayerItem? { pendingItem }
+}
+
+@MainActor
+final class YlAvPlayerNonblockingMetadataTests: XCTestCase {
+  func testStatePublicationDoesNotSynchronouslyReadPendingAssetTracks() throws {
+    let url = try XCTUnwrap(URL(string: "https://example.test/pending.m3u8"))
+    let asset = PendingGeometryAsset(url: url)
+    let player = PendingGeometryPlayer(item: AVPlayerItem(asset: asset))
+    let services = YlPlatformServices(platform: .current, textureOutput: AppleTestTexture(),
+      makeDisplayDriver: { _ in AppleTestDisplay() })
+    var states = [YlNativeState]()
+    let backend = YlAvPlayerBackend(playerId: 97, services: services,
+      configuration: PlayerConfiguration(map: [:]), player: player,
+      emit: { if case .state(let state) = $0.event { states.append(state) } })
+    defer { backend.dispose() }
+
+    backend.emitState()
+    backend.emitState()
+
+    XCTAssertEqual(states.count, 2)
+    XCTAssertNil(states.last?.geometry)
+    XCTAssertEqual(asset.synchronousTrackReads, 0,
+      "Snapshot publication must not block the platform/UI thread waiting for network metadata")
+  }
+}
+
 final class YlGeometryAndMetricTests: XCTestCase {
   func testManagedMetricsReadSingleLedgerIncludingRetiredGenerationUntilRelease() throws {
     let ledger = YlManagedBufferLedger(maxBytes: 4096)
@@ -1210,6 +1249,16 @@ final class YlGeometryAndMetricTests: XCTestCase {
     XCTAssertEqual(viewFixture.finalDisplaySize, CGSize(width: 576, height: 768))
   }
   func testAbsentMetadataUsesValidFormatButRejectsInvalidMeasurements() throws {
+    var pixel: CVPixelBuffer?
+    XCTAssertEqual(CVPixelBufferCreate(kCFAllocatorDefault, 320, 180,
+      kCVPixelFormatType_32BGRA, nil, &pixel), kCVReturnSuccess)
+    let buffer = try XCTUnwrap(pixel)
+    let frame = try XCTUnwrap(YlVideoGeometryResolver.avPlayer(pixelBuffer: buffer))
+    XCTAssertEqual(frame.encodedSize, CGSize(width: 320, height: 180))
+    XCTAssertEqual(frame.displaySize, CGSize(width: 320, height: 180))
+    XCTAssertEqual(frame.pixelAspectRatio, 1)
+    let rotated = try XCTUnwrap(YlVideoGeometryResolver.avPlayer(pixelBuffer: buffer, rotationDegrees: 90))
+    XCTAssertEqual(rotated.finalDisplaySize, CGSize(width: 180, height: 320))
     let g = try XCTUnwrap(YlVideoGeometryResolver.managed(format: format()))
     XCTAssertEqual(g.encodedSize, g.displaySize)
     XCTAssertEqual(g.pixelAspectRatio, 1)

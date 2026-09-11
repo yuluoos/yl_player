@@ -66,6 +66,14 @@ void main() {
         .timeout(const Duration(seconds: 5));
     expect(controller.textureId.value, isNotNull);
     expect(controller.state.engine, YlPlaybackEngine.avPlayer);
+    expect(
+      controller.state.videoGeometry,
+      isNotNull,
+      reason:
+          'A decoded HLS frame must carry geometry so the view can display it',
+    );
+    await tester.pump();
+    expect(find.byType(Texture), findsOneWidget);
 
     await controller.dispose();
   });
