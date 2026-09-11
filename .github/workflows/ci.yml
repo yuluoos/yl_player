@@ -53,6 +53,37 @@ jobs:
         working-directory: ${{ github.workspace }}
       - run: ./gradlew :yl_player_android:testDebugUnitTest --stacktrace
 
+  android-consumer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: true
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v5
+      - name: Build independent Android consumer
+        env:
+          YL_REPO_ROOT: ${{ github.workspace }}
+          YL_CONSUMER_OUTPUT: ${{ runner.temp }}/yl-consumers
+          YL_CONSUMER_LOG_DIR: ${{ runner.temp }}/consumer-logs
+        run: sh tool/check_consumers.sh --android-only
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-consumer-evidence
+          path: ${{ runner.temp }}/consumer-logs
+          if-no-files-found: error
+
   android-native-integration:
     needs: android-native
     runs-on: ubuntu-latest
@@ -132,6 +163,47 @@ jobs:
         with:
           name: ios-exact-runtime-evidence
           path: packages/yl_player/example/build/apple-evidence
+          if-no-files-found: error
+
+  apple-consumers:
+    runs-on: macos-15
+    timeout-minutes: 90
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: true
+      - uses: actions/cache@v5
+        with:
+          path: |
+            ~/Library/Caches/CocoaPods
+            ~/.cocoapods/repos
+            ${{ runner.temp }}/yl-consumers/apple/pub-cache
+            ${{ runner.temp }}/apple-package-cache
+          key: apple-consumers-${{ runner.os }}-${{ hashFiles('packages/yl_player_apple/pubspec.yaml', 'packages/yl_player_apple/darwin/yl_player_apple.podspec', 'packages/yl_player_apple/darwin/yl_player_apple/Package.swift') }}
+          restore-keys: apple-consumers-${{ runner.os }}-
+      - name: Select iOS Simulator
+        run: echo "YL_IOS_SIMULATOR=$(sh tool/boot_ci_ios_simulator.sh)" >> "$GITHUB_ENV"
+      - name: Build independent Apple consumers
+        env:
+          YL_REPO_ROOT: ${{ github.workspace }}
+          YL_CONSUMER_OUTPUT: ${{ runner.temp }}/yl-consumers
+          YL_APPLE_CONSUMERS: ${{ runner.temp }}/yl-consumers/apple
+          YL_APPLE_PACKAGE_CACHE_ROOT: ${{ runner.temp }}/apple-package-cache
+          YL_CONSUMER_LOG_DIR: ${{ runner.temp }}/consumer-logs
+          YL_APPLE_LOG_DIR: ${{ runner.temp }}/consumer-logs
+        run: sh tool/check_consumers.sh --apple-only
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: apple-consumer-evidence
+          path: |
+            ${{ runner.temp }}/consumer-logs
+            ${{ runner.temp }}/yl-consumers/apple/*/results-*.xcresult
           if-no-files-found: error
 
   macos-native-integration:

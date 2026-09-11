@@ -20,6 +20,25 @@ def require(condition, message):
         raise RuntimeError(message)
 
 
+def require_architectures(output, expected, label):
+    actual = set(output.split())
+    missing = sorted(set(expected) - actual)
+    require(not missing, f"{label} is missing architectures: {', '.join(missing)}")
+
+
+def require_symbols(output, label, plugin=True, bridge=True):
+    if plugin:
+        require("YlPlayerApplePlugin" in output, f"{label} lacks YlPlayerApplePlugin symbol")
+    if bridge:
+        require("_ylf_build_configuration" in output, f"{label} lacks _ylf_build_configuration symbol")
+
+
+def require_minimum_os(output, expected, label):
+    values = re.findall(r"\bminos\s+([0-9.]+)", output)
+    require(values and all(value == expected for value in values),
+            f"{label} minimum OS values {values} differ from {expected}")
+
+
 ROOT = Path(os.environ["YL_REPO_ROOT"]).resolve()
 FIXTURES = Path(__file__).resolve().parent
 require(ROOT == FIXTURES.parents[2], "YL_REPO_ROOT must identify this script's active checkout")
@@ -32,13 +51,19 @@ require(not OUTPUT.is_relative_to(ROOT), "Generated consumers must be outside th
 OUTPUT.mkdir(parents=True, exist_ok=True)
 LOGS = Path(os.environ.get("YL_APPLE_LOG_DIR", str(OUTPUT / "logs"))).resolve()
 LOGS.mkdir(parents=True, exist_ok=True)
+PACKAGE_CACHE_ROOT = Path(os.environ.get("YL_APPLE_PACKAGE_CACHE_ROOT", str(OUTPUT / "shared-package-cache"))).resolve()
+require(not PACKAGE_CACHE_ROOT.is_relative_to(ROOT), "Apple package caches must be outside the tracked checkout")
+SOURCE_PACKAGES = PACKAGE_CACHE_ROOT / "source-packages"
+PACKAGE_CACHE = PACKAGE_CACHE_ROOT / "package-cache"
+SOURCE_PACKAGES.mkdir(parents=True, exist_ok=True)
+PACKAGE_CACHE.mkdir(parents=True, exist_ok=True)
 FLUTTER = os.environ.get("YL_FLUTTER") or shutil.which("flutter")
 require(FLUTTER is not None, "Set YL_FLUTTER to the installed Flutter executable")
 ENV = os.environ.copy()
 ENV.update({"YL_REPO_ROOT": str(ROOT), "COCOAPODS_DISABLE_STATS": "true", "PUB_CACHE": str(OUTPUT / "pub-cache")})
 
 
-def run(command, cwd, name, capture=False):
+def run(command, cwd, name, capture=False, input_text=None):
     stamp = time.strftime("%Y%m%d-%H%M%S") + f"-{time.time_ns() % 1000000000:09d}"
     path = LOGS / f"{stamp}-{name}.txt"
     record = {"command": [str(x) for x in command], "cwd": str(cwd), "repo_root": str(ROOT), "log": str(path)}
@@ -46,7 +71,8 @@ def run(command, cwd, name, capture=False):
     with path.open("w") as log:
         log.write(json.dumps(record) + "\n")
         log.flush()
-        result = subprocess.run(command, cwd=cwd, env=ENV, stdout=log, stderr=subprocess.STDOUT)
+        result = subprocess.run(command, cwd=cwd, env=ENV, stdout=log, stderr=subprocess.STDOUT,
+                                input=input_text, text=input_text is not None)
     record["exit_code"] = result.returncode
     path.with_suffix(".json").write_text(json.dumps(record, indent=2) + "\n")
     if result.returncode:
@@ -103,7 +129,12 @@ def fixture_tests(platform):
     return list((FIXTURES / "RunnerTests").glob("*.swift")) + list((FIXTURES / ("RunnerTests-" + platform)).glob("*.swift"))
 
 
-def sync_fixtures(host, platform, manager):
+def sync_fixtures(host, platform, manager, link=False):
+    shutil.copyfile(FIXTURES / "main.dart", host / "lib/main.dart")
+    if link:
+        shutil.copyfile(FIXTURES / "ConsumerLinkProbe.swift", host / platform / "Runner/ConsumerLinkProbe.swift")
+        run(["ruby", str(FIXTURES / "configure_project.rb"), str(host), platform, manager, str(FIXTURES), "link"], ROOT, f"{platform}-{manager}-link-fixture")
+        return
     verify_fixtures()
     tests = host / platform / "RunnerTests"
     for existing in tests.glob("*.swift"):
@@ -116,20 +147,21 @@ def sync_fixtures(host, platform, manager):
     for resource in (FIXTURES / "Resources").iterdir():
         if resource.is_file():
             shutil.copyfile(resource, tests / resource.name)
-    run(["ruby", str(FIXTURES / "configure_project.rb"), str(host), platform, manager, str(FIXTURES)], ROOT, f"{platform}-{manager}-fixtures")
+    run(["ruby", str(FIXTURES / "configure_project.rb"), str(host), platform, manager, str(FIXTURES), "unit"], ROOT, f"{platform}-{manager}-fixtures")
 
 
-def bootstrap(platform, manager):
-    host = OUTPUT / f"{platform}-{manager}"
+def bootstrap(platform, manager, link=False):
+    host = OUTPUT / f"{platform}-{manager}{'-link' if link else ''}"
     marker = host / "consumer.json"
     pending = host / "bootstrap-owner.json"
     if marker.is_file():
         saved = json.loads(marker.read_text())
         require(saved["repo_root"] == str(ROOT), "Consumer belongs to another checkout")
-        sync_fixtures(host, platform, manager)
+        require(saved.get("link", False) == link, "Consumer mode differs from its owner marker")
+        sync_fixtures(host, platform, manager, link)
         if manager == "cocoapods":
             run(["pod", "install"], host / platform, f"{platform}-{manager}-refresh-pods")
-        verify_graph(host, platform, manager)
+        verify_graph(host, platform, manager, link)
         return host
     require(not host.exists() or (pending.is_file() and json.loads(pending.read_text())["repo_root"] == str(ROOT)), f"Unowned host exists at {host}; choose a fresh YL_APPLE_CONSUMERS directory")
     host.mkdir(exist_ok=True)
@@ -138,18 +170,21 @@ def bootstrap(platform, manager):
     run([FLUTTER, "create", "--no-pub", "--platforms", platform, "--project-name", "apple_consumer", str(host)], ROOT, f"{platform}-{manager}-create")
     (host / "pubspec.yaml").write_text(pubspec(manager))
     shutil.copyfile(FIXTURES / "main.dart", host / "lib/main.dart")
-    tests = host / platform / "RunnerTests"
-    for generated in tests.glob("*.swift"):
-        generated.unlink()
-    for source in fixture_tests(platform):
-        shutil.copyfile(source, tests / source.name)
-    shutil.copyfile(FIXTURES / "Resources/h264_aac.mkv", tests / "h264_aac.mkv")
+    if link:
+        shutil.copyfile(FIXTURES / "ConsumerLinkProbe.swift", host / platform / "Runner/ConsumerLinkProbe.swift")
+    else:
+        tests = host / platform / "RunnerTests"
+        for generated in tests.glob("*.swift"):
+            generated.unlink()
+        for source in fixture_tests(platform):
+            shutil.copyfile(source, tests / source.name)
+        shutil.copyfile(FIXTURES / "Resources/h264_aac.mkv", tests / "h264_aac.mkv")
     if manager == "cocoapods":
         shutil.copyfile(FIXTURES / f"Podfile-{platform}", host / platform / "Podfile")
         # Flutter's standard pre-action is only necessary for SwiftPM.
         scheme = host / platform / "Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme"
         scheme.write_text(re.sub(r"\s*<PreActions>.*?</PreActions>", "", scheme.read_text(), flags=re.S))
-    run(["ruby", str(FIXTURES / "configure_project.rb"), str(host), platform, manager, str(FIXTURES)], ROOT, f"{platform}-{manager}-configure")
+    run(["ruby", str(FIXTURES / "configure_project.rb"), str(host), platform, manager, str(FIXTURES), "link" if link else "unit"], ROOT, f"{platform}-{manager}-configure")
     if platform == "ios":
         info = host / "ios/Flutter/AppFrameworkInfo.plist"
         data = plistlib.loads(info.read_bytes())
@@ -169,21 +204,24 @@ def bootstrap(platform, manager):
         text = re.sub(r'\.iOS\([^)]*\)', '.iOS("15.0")', text)
         text = re.sub(r'\.macOS\([^)]*\)', '.macOS("12.0")', text)
         manifest.write_text(text)
-    sync_fixtures(host, platform, manager)
-    verify_graph(host, platform, manager)
-    marker.write_text(json.dumps({"repo_root": str(ROOT), "platform": platform, "manager": manager}, indent=2) + "\n")
+    sync_fixtures(host, platform, manager, link)
+    verify_graph(host, platform, manager, link)
+    marker.write_text(json.dumps({"repo_root": str(ROOT), "platform": platform, "manager": manager, "link": link}, indent=2) + "\n")
     return host
 
 
-def verify_graph(host, platform, manager):
+def verify_graph(host, platform, manager, link=False):
     native = host / platform
-    expected_tests = {path.name: path.read_bytes() for path in fixture_tests(platform)}
-    host_tests = {path.name: path.read_bytes() for path in (native / "RunnerTests").glob("*.swift")}
-    require(expected_tests == host_tests, "Consumer characterization suites differ from current fixtures; choose a fresh consumer root")
     require((host / "lib/main.dart").read_bytes() == (FIXTURES / "main.dart").read_bytes(), "Consumer application differs from its fixture")
-    for resource in (FIXTURES / "Resources").iterdir():
-        require((native / "RunnerTests" / resource.name).read_bytes() == resource.read_bytes(), "Bundled consumer resource changed")
-        require((host / "assets/test_media" / resource.name).read_bytes() == resource.read_bytes(), "Source-relative consumer resource changed")
+    if link:
+        require((native / "Runner/ConsumerLinkProbe.swift").read_bytes() == (FIXTURES / "ConsumerLinkProbe.swift").read_bytes(), "Consumer link probe differs from its fixture")
+    else:
+        expected_tests = {path.name: path.read_bytes() for path in fixture_tests(platform)}
+        host_tests = {path.name: path.read_bytes() for path in (native / "RunnerTests").glob("*.swift")}
+        require(expected_tests == host_tests, "Consumer characterization suites differ from current fixtures; choose a fresh consumer root")
+        for resource in (FIXTURES / "Resources").iterdir():
+            require((native / "RunnerTests" / resource.name).read_bytes() == resource.read_bytes(), "Bundled consumer resource changed")
+            require((host / "assets/test_media" / resource.name).read_bytes() == resource.read_bytes(), "Source-relative consumer resource changed")
     project = (native / "Runner.xcodeproj/project.pbxproj").read_text()
     plugins = json.loads((host / ".flutter-plugins-dependencies").read_text())
     names = {item["name"] for item in plugins["plugins"][platform]}
@@ -215,9 +253,10 @@ def check(platform, manager, link):
             "YL_APPLE_TEST_DIAGNOSTICS must be unset or exactly 'never'")
     require(diagnostics is None or not link,
             "YL_APPLE_TEST_DIAGNOSTICS applies only to unit-test gates")
-    host = bootstrap(platform, manager)
+    host = bootstrap(platform, manager, link)
     native = host / platform
-    destination = "platform=macOS,arch=" + subprocess.check_output(["uname", "-m"], text=True).strip()
+    host_architecture = subprocess.check_output(["uname", "-m"], text=True).strip()
+    destination = "platform=macOS,arch=" + host_architecture
     if platform == "ios":
         devices = json.loads(run(["xcrun", "simctl", "list", "devices", "available", "-j"], ROOT, "simulators", capture=True))
         requested = os.environ.get("YL_IOS_SIMULATOR")
@@ -234,15 +273,21 @@ def check(platform, manager, link):
     run([FLUTTER, "--version"], ROOT, f"{platform}-{manager}-flutter-version")
     run(["sw_vers"], ROOT, f"{platform}-{manager}-host-os")
     run(["xcodebuild", "-version"], ROOT, f"{platform}-{manager}-xcode-version")
-    command = ["xcodebuild", "-workspace", str(native / "Runner.xcworkspace"), "-scheme", "Runner", "-configuration", "Debug", "-destination", destination,
+    configuration = "Release" if link and platform == "macos" else "Debug"
+    if link and platform == "macos":
+        destination = "generic/platform=macOS"
+    command = ["xcodebuild", "-workspace", str(native / "Runner.xcworkspace"), "-scheme", "Runner", "-configuration", configuration, "-destination", destination,
                "-parallel-testing-enabled", "NO",
-               "-derivedDataPath", str(derived), "-clonedSourcePackagesDirPath", str(host / "source-packages"), "-packageCachePath", str(host / "package-cache"), "-disablePackageRepositoryCache",
+               "-derivedDataPath", str(derived), "-clonedSourcePackagesDirPath", str(SOURCE_PACKAGES), "-packageCachePath", str(PACKAGE_CACHE), "-disablePackageRepositoryCache",
                "-resultBundlePath", str(result), "CODE_SIGNING_ALLOWED=NO", "COMPILER_INDEX_STORE_ENABLE=NO", "build" if link else "test"]
+    if link and platform == "macos":
+        command.extend(["ARCHS=arm64 x86_64", "ONLY_ACTIVE_ARCH=NO"])
     if diagnostics == "never":
         command.extend(["-collect-test-diagnostics", "never"])
     run(command, host, f"{platform}-{manager}-{'link' if link else 'unit'}")
-    verify_graph(host, platform, manager)
-    verify_product(host, platform, manager, derived=derived, expect_tests=not link)
+    verify_graph(host, platform, manager, link)
+    verify_product(host, platform, manager, derived=derived, expect_tests=not link,
+                   configuration=configuration, host_architecture=host_architecture)
     if link:
         print(json.dumps({"platform": platform, "manager": manager, "link": "passed", "result": str(result)}), flush=True)
         return
@@ -262,8 +307,8 @@ def verify_cases(result, platform, manager):
     verify_result_bundle(ROOT, result, platform, LOGS / f"{platform}-{manager}-runtime")
 
 
-def verify_product(host, platform, manager, derived=None, expect_tests=True):
-    products = (derived or host / "derived") / "Build/Products" / ("Debug" if platform == "macos" else "Debug-iphonesimulator")
+def verify_product(host, platform, manager, derived=None, expect_tests=True, configuration="Debug", host_architecture=None):
+    products = (derived or host / "derived") / "Build/Products" / (configuration if platform == "macos" else f"{configuration}-iphonesimulator")
     apps = list(products.glob("*.app"))
     require(len(apps) == 1, f"Expected one built consumer app, found {apps}")
     app = apps[0]
@@ -277,7 +322,7 @@ def verify_product(host, platform, manager, derived=None, expect_tests=True):
     slice_id = "macos-arm64_x86_64" if platform == "macos" else "ios-arm64_x86_64-simulator"
     original_bridge = ROOT / "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework" / slice_id / "YlFFmpegBridge.framework/YlFFmpegBridge"
     embedded_bridge = frameworks / "YlFFmpegBridge.framework/YlFFmpegBridge"
-    architecture = subprocess.check_output(["uname", "-m"], text=True).strip()
+    architecture = host_architecture or subprocess.check_output(["uname", "-m"], text=True).strip()
     with tempfile.TemporaryDirectory(prefix="yl-bridge-identity-") as temporary:
         def native_slice(path, name):
             data = path.read_bytes()
@@ -291,12 +336,26 @@ def verify_product(host, platform, manager, derived=None, expect_tests=True):
     commands = run(["otool", "-l", str(executable)], ROOT, f"{platform}-{manager}-app-load-commands", capture=True)
     expected_path = "@executable_path/../Frameworks" if platform == "macos" else "@executable_path/Frameworks"
     require(expected_path in commands, "Built host lacks framework runtime search path")
-    require(re.search(r"minos\s+" + ("12.0" if platform == "macos" else "15.0") + r"\b", commands), "Built host minimum OS differs from required floor")
+    floor = "12.0" if platform == "macos" else "15.0"
+    require_minimum_os(commands, floor, "Built host")
     plugin_binaries = [frameworks / "yl_player_apple.framework/yl_player_apple"] if manager == "cocoapods" else list(executable.parent.glob("*.debug.dylib")) or [executable]
     require(all(path.is_file() for path in plugin_binaries), "Linked plugin binary missing")
     links = "\n".join(run(["otool", "-L", str(path)], ROOT, f"{platform}-{manager}-plugin-linkage", capture=True) for path in plugin_binaries)
     require("YlFFmpegBridge.framework/" in links, "Consumer plugin has no dynamic bridge linkage")
     require(engine + ".framework/" in links, "Consumer plugin has no real Flutter engine linkage")
+    if not expect_tests:
+        required_architectures = {"arm64", "x86_64"} if platform == "macos" else {architecture}
+        inspected = [("host", executable), ("bridge", embedded_bridge)] + [("plugin", path) for path in plugin_binaries]
+        for label, path in inspected:
+            arches = run(["lipo", "-archs", str(path)], ROOT, f"{platform}-{manager}-{label}-architectures", capture=True)
+            require_architectures(arches, required_architectures, f"{label} binary")
+            loads = run(["otool", "-l", str(path)], ROOT, f"{platform}-{manager}-{label}-minimum-os", capture=True)
+            require_minimum_os(loads, floor, f"{label} binary")
+        raw_plugin_symbols = "\n".join(run(["nm", "-gU", str(path)], ROOT, f"{platform}-{manager}-plugin-symbols-raw", capture=True) for path in plugin_binaries)
+        plugin_symbols = run(["xcrun", "swift-demangle"], ROOT, f"{platform}-{manager}-plugin-symbols", capture=True, input_text=raw_plugin_symbols)
+        require_symbols(plugin_symbols, "linked plugin", bridge=False)
+        bridge_symbols = run(["nm", "-gU", str(embedded_bridge)], ROOT, f"{platform}-{manager}-bridge-symbols", capture=True)
+        require_symbols(bridge_symbols, "embedded bridge", plugin=False)
     tests = list(contents.glob("PlugIns/RunnerTests.xctest"))
     require(not expect_tests or len(tests) == 1, "Built native test bundle is missing from the test host")
     for bundle in tests:
@@ -320,7 +379,7 @@ def main():
     else:
         for platform in [args.platform] if args.platform else ["macos", "ios"]:
             for manager in [args.manager] if args.manager else ["swiftpm", "cocoapods"]:
-                bootstrap(platform, manager)
+                bootstrap(platform, manager, args.link)
         print(f"Consumers: {OUTPUT}")
 
 
