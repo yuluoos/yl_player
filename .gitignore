@@ -1,4 +1,5 @@
 .dart_tool/
+.flutter-plugins-dependencies
 .idea/
 .packages
 build/
@@ -11,4 +12,5 @@ coverage/
 **/ios/Pods/
 **/ios/Flutter/ephemeral/
 **/DerivedData/
-
+**/.swiftpm/
+**/*.xcresult/

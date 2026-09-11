@@ -24,9 +24,9 @@ verify_registrant() {
 }
 
 case "$mode" in
-  all|--unit-only|--build-only) ;;
+  all|--unit-only|--build-only|--integration-only) ;;
   *)
-    echo "usage: $0 [--unit-only|--build-only]" >&2
+    echo "usage: $0 [--unit-only|--build-only|--integration-only]" >&2
     exit 64
     ;;
 esac
@@ -173,6 +173,7 @@ run_integration_tests() {
     integration_test/macos_mkv_playback_test.dart \
     integration_test/macos_network_mkv_playback_test.dart \
     integration_test/macos_http_flv_playback_test.dart \
+    integration_test/state_update_cadence_test.dart \
     integration_test/apple_strict_policy_test.dart
   do
     integration_log="$evidence/$(basename "$test_file").log"
@@ -187,6 +188,12 @@ run_integration_tests() {
 
 if [ "$mode" = "--build-only" ]; then
   run_universal_build
+  exit 0
+fi
+
+if [ "$mode" = "--integration-only" ]; then
+  run_universal_build
+  run_integration_tests
   exit 0
 fi
 

@@ -10,6 +10,8 @@
   legacy protocol bridge and split Apple packages.
 - Publish the v0.2 migration, support, policy, diagnostics, and runnable lifecycle
   documentation. Final multi-platform acceptance remains pending.
+- Add transport-size, measured-cadence, package-archive, and publication dry-run
+  gates for the v0.2 release candidate.
 
 ## 0.1.0-dev.1
 

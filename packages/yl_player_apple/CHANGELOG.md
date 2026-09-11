@@ -11,5 +11,6 @@
   positive VideoToolbox hardware requirements, and process-wide audio ownership.
 - Add transactional replacement/recovery, controlled HLS credential routing,
   safe diagnostics, and authoritative geometry/first-frame publication.
+- Add generated-callback transport size/schema invariants and publication gates.
 - Remain a development checkpoint: physical-device, minimum-OS, Intel-native,
   profiling, consumer, and final release validation are still outstanding.

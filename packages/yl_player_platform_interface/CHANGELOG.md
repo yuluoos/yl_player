@@ -6,6 +6,7 @@
   state/timeline/geometry models, correlated events, and safe structured failures.
 - Add validation at Dart/native publication boundaries and reusable observable
   platform conformance utilities.
+- Verify the synchronized v0.2 package contract in the publication dry-run gate.
 
 ## 0.1.0-dev.1
 

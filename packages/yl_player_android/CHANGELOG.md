@@ -8,6 +8,7 @@
   hardware-required decoder policies; reject exact bounded-buffer requests.
 - Add one-owner plugin-managed audio focus and generation-safe replacement,
   lifecycle, output, Stop, and Dispose behavior.
+- Add generated-callback transport size/schema invariants and publication gates.
 
 ## 0.1.0-dev.1
 

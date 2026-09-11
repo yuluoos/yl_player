@@ -3,10 +3,19 @@
 set -eu
 
 repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+mode=${1:-all}
 simulator_id=${YL_IOS_SIMULATOR_ID:-}
 evidence_root=${YL_APPLE_EVIDENCE_DIR:-"$repo_root/packages/yl_player/example/build/apple-evidence"}
 mkdir -p "$evidence_root"
 evidence=$(mktemp -d "$evidence_root/ios.XXXXXX")
+
+case "$mode" in
+  all|--unit-only|--integration-only) ;;
+  *)
+    echo "usage: $0 [--unit-only|--integration-only]" >&2
+    exit 64
+    ;;
+esac
 
 
 verify_registrant() {
@@ -36,28 +45,34 @@ if [ -z "$simulator_id" ]; then
   exit 1
 fi
 
-# Integration tests replace Flutter's generated Dart entrypoint with a
-# temporary listener. Restore the normal example configuration before invoking
-# Xcode directly so a previous test run cannot poison the native test build.
-(
-  cd "$repo_root/packages/yl_player/example"
-  flutter build ios --simulator --debug --config-only
-)
-python3 -B "$repo_root/tool/consumer_fixtures/apple_flutter/main_example_tests.py" --current-only
-verify_registrant
+if [ "$mode" != "--integration-only" ]; then
+  # Integration tests replace Flutter's generated Dart entrypoint with a
+  # temporary listener. Restore the normal example configuration before invoking
+  # Xcode directly so a previous test run cannot poison the native test build.
+  (
+    cd "$repo_root/packages/yl_player/example"
+    flutter build ios --simulator --debug --config-only
+  )
+  python3 -B "$repo_root/tool/consumer_fixtures/apple_flutter/main_example_tests.py" --current-only
+  verify_registrant
 
-native_status=0
-xcodebuild test -quiet -sdk iphonesimulator \
-  -workspace "$repo_root/packages/yl_player/example/ios/Runner.xcworkspace" \
-  -scheme Runner \
-  -parallel-testing-enabled NO \
-  -derivedDataPath "$repo_root/packages/yl_player/example/build/native-ios-tests" \
-  -destination "platform=iOS Simulator,id=$simulator_id" \
-  -resultBundlePath "$evidence/native.xcresult" >"$evidence/native.log" 2>&1 || native_status=$?
-cat "$evidence/native.log"
-python3 -B "$repo_root/tool/consumer_fixtures/apple_flutter/main_example_tests.py" \
-  --result-bundle "$evidence/native.xcresult" --platform ios --output "$evidence/runtime"
-[ "$native_status" -eq 0 ]
+  native_status=0
+  xcodebuild test -quiet -sdk iphonesimulator \
+    -workspace "$repo_root/packages/yl_player/example/ios/Runner.xcworkspace" \
+    -scheme Runner \
+    -parallel-testing-enabled NO \
+    -derivedDataPath "$repo_root/packages/yl_player/example/build/native-ios-tests" \
+    -destination "platform=iOS Simulator,id=$simulator_id" \
+    -resultBundlePath "$evidence/native.xcresult" >"$evidence/native.log" 2>&1 || native_status=$?
+  cat "$evidence/native.log"
+  python3 -B "$repo_root/tool/consumer_fixtures/apple_flutter/main_example_tests.py" \
+    --result-bundle "$evidence/native.xcresult" --platform ios --output "$evidence/runtime"
+  [ "$native_status" -eq 0 ]
+fi
+
+if [ "$mode" = "--unit-only" ]; then
+  exit 0
+fi
 
 # xcodebuild can shut down the source simulator after running tests on a clone.
 # Restore it before Flutter tries to discover the requested device.
@@ -69,6 +84,7 @@ xcrun simctl bootstatus "$simulator_id" -b
 cd "$repo_root/packages/yl_player/example"
 flutter test integration_test/hls_playback_test.dart -d "$simulator_id"
 flutter test integration_test/apple_default_positive_test.dart -d "$simulator_id"
+flutter test integration_test/state_update_cadence_test.dart -d "$simulator_id"
 
 # The aggregator includes managed network, bounded buffers, hardwareRequired,
 # session replacement/ACK ordering and audio policy lifecycle on both platforms.

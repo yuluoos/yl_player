@@ -43,16 +43,23 @@ case "$*" in *getprop*) echo 24;; esac''')
         return subprocess.run(["sh", str(self.root / "tool/check_native_android.sh")],
                               cwd="/", env=self.env, capture_output=True, text=True, timeout=20)
 
-    def test_standalone_is_rooted_and_runs_qualified_jvm_then_four_suites(self):
+    def test_standalone_is_rooted_and_runs_qualified_jvm_then_five_suites(self):
         result = self.run_gate()
         self.assertEqual(result.returncode, 0, result.stderr)
         calls = self.log.read_text().splitlines()
         self.assertTrue(calls[0].startswith("JVM " + str(self.root)))
         self.assertIn(":yl_player_android:testDebugUnitTest --stacktrace", calls[0])
         suites = [line for line in calls if line.startswith("FLUTTER")]
-        self.assertEqual(len(suites), 4)
-        for name, line in zip(("progressive_playback", "hls_playback", "session_replacement", "multi_player_rollback"), suites):
-            self.assertIn(f"integration_test/android_{name}_test.dart", line)
+        self.assertEqual(len(suites), 5)
+        names = (
+            "android_progressive_playback",
+            "android_hls_playback",
+            "android_session_replacement",
+            "android_multi_player_rollback",
+            "state_update_cadence",
+        )
+        for name, line in zip(names, suites):
+            self.assertIn(f"integration_test/{name}_test.dart", line)
             self.assertIn("--dart-define=YL_ANDROID_API=24", line)
             self.assertIn(str(self.root / "packages/yl_player/example"), line)
 
@@ -61,7 +68,7 @@ case "$*" in *getprop*) echo 24;; esac''')
         self.assertEqual(result.returncode, 0, result.stderr)
         calls = self.log.read_text()
         self.assertNotIn("JVM ", calls)
-        self.assertEqual(calls.count("FLUTTER "), 4)
+        self.assertEqual(calls.count("FLUTTER "), 5)
 
     def test_failure_stops_later_suites(self):
         self.executable(self.bin / "flutter", 'echo FLUTTER >> "$CALL_LOG"\nexit 17')

@@ -3,6 +3,8 @@ name: CI
 on:
   push:
   pull_request:
+  schedule:
+    - cron: '17 7 * * *'
   workflow_dispatch:
 
 concurrency:
@@ -10,15 +12,66 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  foundation:
+  changes:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    outputs:
+      full: ${{ steps.select.outputs.full }}
+      android: ${{ steps.select.outputs.android }}
+      apple: ${{ steps.select.outputs.apple }}
+      consumers: ${{ steps.select.outputs.consumers }}
+      artifact: ${{ steps.select.outputs.artifact }}
+      base: ${{ steps.select.outputs.base }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - id: select
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          full=false
+          if [ "$EVENT_NAME" = schedule ] || [ "$EVENT_NAME" = workflow_dispatch ]; then full=true; fi
+          android=$full
+          apple=$full
+          consumers=$full
+          artifact=$full
+          base=$EVENT_BASE
+          if [ "$full" != true ]; then
+            if [ -z "$base" ] || ! git rev-parse --verify --quiet "$base^{commit}" >/dev/null; then
+              echo 'Missing or invalid change base: selecting every affected suite.'
+              android=true
+              apple=true
+              consumers=true
+              artifact=true
+              base=INVALID_RUN_ALL
+            else
+              paths=$(git diff --name-only "$base"...HEAD)
+              if printf '%s\n' "$paths" | grep -Eq '^(packages/yl_player_android/|packages/yl_player_platform_interface/|packages/yl_player/(lib|example)/|pubspec\.yaml$|tool/|\.github/workflows/)'; then android=true; fi
+              if printf '%s\n' "$paths" | grep -Eq '^(packages/yl_player_apple/|packages/yl_player_platform_interface/|packages/yl_player/(lib|example)/|pubspec\.yaml$|tool/|\.github/workflows/)'; then apple=true; fi
+              if printf '%s\n' "$paths" | grep -Eq '^(packages/|tool/check_(apple_)?consumer|tool/consumer_fixtures/|\.github/workflows/)'; then consumers=true; fi
+              if printf '%s\n' "$paths" | grep -Eq '^(packages/yl_player_apple/(darwin/yl_player_apple/Frameworks/|darwin/native/|tool/apple_ffmpeg/)|\.github/workflows/ci\.yml$)'; then artifact=true; fi
+            fi
+          fi
+          {
+            echo "full=$full"
+            echo "android=$android"
+            echo "apple=$apple"
+            echo "consumers=$consumers"
+            echo "artifact=$artifact"
+            echo "base=$base"
+          } >> "$GITHUB_OUTPUT"
+
+  foundation:
+    needs: changes
+    runs-on: macos-15
+    timeout-minutes: 45
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v7
         with:
-          fetch-depth: 1
+          fetch-depth: 0
       - name: Fetch pinned Apple migration provenance
         run: git fetch --no-tags --depth=1 origin ce368c55ad291b163b02157b487dbbf798a69892
       - uses: subosito/flutter-action@v2
@@ -26,18 +79,29 @@ jobs:
           flutter-version: '3.44.0'
           channel: stable
           cache: true
-      - run: sh tool/check_foundation.sh
+      - name: Quick common gate
+        if: needs.changes.outputs.full != 'true'
+        env:
+          YL_BASE_REF: ${{ needs.changes.outputs.base }}
+        run: sh tool/check_player_v2.sh --quick --stage common
+      - name: Full drift, artifact, and foundation stages
+        if: needs.changes.outputs.full == 'true'
+        run: |
+          sh tool/check_player_v2.sh --full --stage drift
+          sh tool/check_player_v2.sh --full --stage artifact
+          sh tool/check_player_v2.sh --full --stage foundation
 
-  android-native:
+  android-unit:
+    needs: changes
+    if: needs.changes.outputs.android == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    defaults:
-      run:
-        working-directory: packages/yl_player_android/example/android
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - uses: actions/setup-java@v6
         with:
           distribution: temurin
@@ -48,46 +112,40 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-        working-directory: ${{ github.workspace }}
-      - run: sh packages/yl_player_android/tool/check_pigeon.sh
-        working-directory: ${{ github.workspace }}
-      - run: ./gradlew :yl_player_android:testDebugUnitTest --stacktrace
+      - name: Android JVM once
+        env:
+          YL_BASE_REF: ${{ needs.changes.outputs.base }}
+        run: sh tool/check_player_v2.sh ${{ needs.changes.outputs.full == 'true' && '--full' || '--quick' }} --stage android-unit
 
-  android-consumer:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
+  apple-unit:
+    needs: changes
+    if: needs.changes.outputs.full != 'true' && needs.changes.outputs.apple == 'true'
+    runs-on: macos-15
+    timeout-minutes: 60
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-java@v6
         with:
-          distribution: temurin
-          java-version: '17'
+          fetch-depth: 0
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.44.0'
           channel: stable
           cache: true
-      - uses: android-actions/setup-android@v3
-      - uses: gradle/actions/setup-gradle@v5
-      - name: Build independent Android consumer
+      - run: flutter pub get
+      - name: Boot exact iOS Simulator
+        run: echo "YL_IOS_SIMULATOR_ID=$(sh tool/boot_ci_ios_simulator.sh)" >> "$GITHUB_ENV"
+      - name: Affected Apple unit suites
         env:
-          YL_REPO_ROOT: ${{ github.workspace }}
-          YL_CONSUMER_OUTPUT: ${{ runner.temp }}/yl-consumers
-          YL_CONSUMER_LOG_DIR: ${{ runner.temp }}/consumer-logs
-        run: sh tool/check_consumers.sh --android-only
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: android-consumer-evidence
-          path: ${{ runner.temp }}/consumer-logs
-          if-no-files-found: error
+          YL_BASE_REF: ${{ needs.changes.outputs.base }}
+        run: sh tool/check_player_v2.sh --quick --stage apple-unit
 
-  android-native-integration:
-    needs: android-native
+  android-integration:
+    needs: [changes, android-unit]
+    if: always() && needs.changes.outputs.android == 'true' && needs.android-unit.result == 'success'
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 75
     strategy:
       fail-fast: false
       matrix:
@@ -118,27 +176,27 @@ jobs:
         run: |
           YL_ANDROID_DEVICE_ID=$(sh tool/boot_ci_android_emulator.sh)
           echo "YL_ANDROID_DEVICE_ID=$YL_ANDROID_DEVICE_ID" >> "$GITHUB_ENV"
-      - name: Android integration after shared JVM gate
+      - name: Required Android API integration shard
         env:
-          YL_ANDROID_SKIP_JVM: '1'
-        run: sh tool/check_native_android.sh
+          YL_ANDROID_API: ${{ matrix.api }}
+        run: sh tool/check_player_v2.sh --full --stage android-device
       - name: Capture failure diagnostics
         if: failure()
         run: |
           mkdir -p android-failure
           adb devices -l > android-failure/devices.txt
-          if [ -n "$YL_ANDROID_DEVICE_ID" ]; then
-            adb -s "$YL_ANDROID_DEVICE_ID" logcat -d > android-failure/logcat.txt
-          fi
+          if [ -n "$YL_ANDROID_DEVICE_ID" ]; then adb -s "$YL_ANDROID_DEVICE_ID" logcat -d > android-failure/logcat.txt; fi
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: android-api-${{ matrix.api }}-failure
           path: android-failure
 
-  ios-native-integration:
+  ios-integration:
+    needs: [changes, foundation]
+    if: always() && needs.changes.outputs.apple == 'true' && needs.foundation.result == 'success'
     runs-on: macos-15
-    timeout-minutes: 60
+    timeout-minutes: 75
     permissions:
       contents: read
     steps:
@@ -149,23 +207,85 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - name: Verify shared Apple schema and binary contract
-        run: |
-          sh packages/yl_player_apple/tool/check_pigeon.sh
-          sh packages/yl_player_apple/tool/apple_ffmpeg/test_build_contract.sh
-          python3 packages/yl_player_apple/tool/apple_ffmpeg/test_verify_artifact.py
       - name: Boot iOS Simulator
         run: echo "YL_IOS_SIMULATOR_ID=$(sh tool/boot_ci_ios_simulator.sh)" >> "$GITHUB_ENV"
-      - run: python3 -B tool/consumer_fixtures/apple_flutter/test_runtime_evidence.py
-      - run: sh tool/check_native_ios.sh
+      - name: Full iOS stage
+        if: needs.changes.outputs.full == 'true'
+        run: sh tool/check_player_v2.sh --full --stage ios
+      - name: Affected iOS integration without duplicate unit suite
+        if: needs.changes.outputs.full != 'true'
+        run: sh tool/check_native_ios.sh --integration-only
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && needs.changes.outputs.full == 'true'
         with:
           name: ios-exact-runtime-evidence
           path: packages/yl_player/example/build/apple-evidence
           if-no-files-found: error
 
+  macos-integration:
+    needs: [changes, foundation]
+    if: always() && needs.changes.outputs.apple == 'true' && needs.foundation.result == 'success'
+    runs-on: macos-15
+    timeout-minutes: 75
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Full macOS stage
+        if: needs.changes.outputs.full == 'true'
+        run: sh tool/check_player_v2.sh --full --stage macos
+      - name: Affected macOS integration without duplicate unit suite
+        if: needs.changes.outputs.full != 'true'
+        run: sh tool/check_native_macos.sh --integration-only
+      - uses: actions/upload-artifact@v4
+        if: always() && needs.changes.outputs.full == 'true'
+        with:
+          name: macos-exact-runtime-evidence
+          path: packages/yl_player/example/build/apple-evidence
+          if-no-files-found: error
+
+  android-consumer:
+    needs: changes
+    if: needs.changes.outputs.consumers == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: true
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v5
+      - name: Build independent Android consumer
+        env:
+          YL_REPO_ROOT: ${{ github.workspace }}
+          YL_CONSUMER_OUTPUT: ${{ runner.temp }}/yl-consumers
+          YL_CONSUMER_LOG_DIR: ${{ runner.temp }}/consumer-logs
+        run: sh tool/check_consumers.sh --android-only
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-consumer-evidence
+          path: ${{ runner.temp }}/consumer-logs
+          if-no-files-found: error
+
   apple-consumers:
+    needs: changes
+    if: needs.changes.outputs.consumers == 'true'
     runs-on: macos-15
     timeout-minutes: 90
     permissions:
@@ -206,29 +326,70 @@ jobs:
             ${{ runner.temp }}/yl-consumers/apple/*/results-*.xcresult
           if-no-files-found: error
 
-  macos-native-integration:
+  ffmpeg-reproducibility:
+    needs: changes
+    if: needs.changes.outputs.artifact == 'true'
+    runs-on: macos-15
+    timeout-minutes: 180
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - name: Exact clean FFmpeg reproduction
+        run: sh packages/yl_player_apple/tool/apple_ffmpeg/build_xcframework.sh --rebuild-check
+
+  release-gates:
+    needs: [changes, foundation, android-unit, android-integration, ios-integration, macos-integration, android-consumer, apple-consumers, ffmpeg-reproducibility]
+    if: always() && needs.changes.outputs.full == 'true'
     runs-on: macos-15
     timeout-minutes: 60
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Require every automated full-matrix result
+        env:
+          YL_RESULT_FOUNDATION: ${{ needs.foundation.result }}
+          YL_RESULT_ANDROID_UNIT: ${{ needs.android-unit.result }}
+          YL_RESULT_ANDROID_INTEGRATION: ${{ needs.android-integration.result }}
+          YL_RESULT_IOS: ${{ needs.ios-integration.result }}
+          YL_RESULT_MACOS: ${{ needs.macos-integration.result }}
+          YL_RESULT_ANDROID_CONSUMER: ${{ needs.android-consumer.result }}
+          YL_RESULT_APPLE_CONSUMERS: ${{ needs.apple-consumers.result }}
+          YL_RESULT_REPRODUCIBILITY: ${{ needs.ffmpeg-reproducibility.result }}
+        run: sh tool/check_player_v2.sh --aggregate-full
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.44.0'
           channel: stable
           cache: true
-      - run: flutter pub get
-      - name: Verify shared Apple schema and binary contract
+      - name: Public surface, publication, and final hygiene
         run: |
-          sh packages/yl_player_apple/tool/check_pigeon.sh
-          sh packages/yl_player_apple/tool/apple_ffmpeg/test_build_contract.sh
-          python3 packages/yl_player_apple/tool/apple_ffmpeg/test_verify_artifact.py
-      - run: python3 -B tool/consumer_fixtures/apple_flutter/test_runtime_evidence.py
-      - run: sh tool/check_native_macos.sh
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: macos-exact-runtime-evidence
-          path: packages/yl_player/example/build/apple-evidence
-          if-no-files-found: error
+          sh tool/check_player_v2.sh --full --stage public-surface
+          sh tool/check_player_v2.sh --full --stage publication
+          sh tool/check_player_v2.sh --full --stage final
+
+  quick-aggregate:
+    needs: [changes, foundation, android-unit, apple-unit, android-integration, ios-integration, macos-integration, android-consumer, apple-consumers, ffmpeg-reproducibility]
+    if: always() && needs.changes.outputs.full != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Fail closed on each selected quick or affected job
+        env:
+          YL_RESULT_FOUNDATION: ${{ needs.foundation.result }}
+          YL_SELECTED_ANDROID: ${{ needs.changes.outputs.android }}
+          YL_RESULT_ANDROID_UNIT: ${{ needs.android-unit.result }}
+          YL_RESULT_ANDROID_INTEGRATION: ${{ needs.android-integration.result }}
+          YL_SELECTED_APPLE: ${{ needs.changes.outputs.apple }}
+          YL_RESULT_APPLE_UNIT: ${{ needs.apple-unit.result }}
+          YL_RESULT_IOS: ${{ needs.ios-integration.result }}
+          YL_RESULT_MACOS: ${{ needs.macos-integration.result }}
+          YL_SELECTED_CONSUMERS: ${{ needs.changes.outputs.consumers }}
+          YL_RESULT_ANDROID_CONSUMER: ${{ needs.android-consumer.result }}
+          YL_RESULT_APPLE_CONSUMERS: ${{ needs.apple-consumers.result }}
+          YL_SELECTED_ARTIFACT: ${{ needs.changes.outputs.artifact }}
+          YL_RESULT_REPRODUCIBILITY: ${{ needs.ffmpeg-reproducibility.result }}
+        run: sh tool/check_player_v2.sh --aggregate-quick
