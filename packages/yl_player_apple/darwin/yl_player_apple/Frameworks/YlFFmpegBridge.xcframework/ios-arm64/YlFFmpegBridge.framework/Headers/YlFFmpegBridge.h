@@ -57,6 +57,7 @@ enum {
   YLFCodecHEVC = 2,
   YLFCodecAAC = 3,
   YLFCodecMP3 = 4,
+  YLFCodecDTS = 5,
 };
 
 typedef struct {
@@ -100,6 +101,17 @@ YLF_EXPORT int32_t ylf_open_callbacks(void *opaque,
                                       YLFCancelCallback cancel_callback,
                                       YLFMediaContextRef *out_context,
                                       YLFMediaInfo *out_info);
+// DTS is decoded without encoders/resampling to stereo float PCM. Decode owns
+// no caller memory; samples are interleaved L/R and capacity is stereo frames.
+typedef struct YLFDtsDecoder *YLFDtsDecoderRef;
+YLF_EXPORT bool ylf_mp4_requires_fallback(YLFMediaContextRef context);
+YLF_EXPORT YLFDtsDecoderRef ylf_dts_create(void);
+YLF_EXPORT int32_t ylf_dts_decode(YLFDtsDecoderRef decoder, const uint8_t *data,
+    size_t size, float *samples, int32_t capacity_frames,
+    int32_t *out_frames, int32_t *out_sample_rate);
+YLF_EXPORT void ylf_dts_reset(YLFDtsDecoderRef decoder);
+YLF_EXPORT void ylf_dts_free(YLFDtsDecoderRef decoder);
+
 YLF_EXPORT int32_t ylf_copy_stream_info(YLFMediaContextRef context,
                                         int32_t stream_index,
                                         YLFStreamInfo *out_info);

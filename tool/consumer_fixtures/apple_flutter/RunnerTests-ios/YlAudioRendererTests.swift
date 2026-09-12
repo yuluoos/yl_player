@@ -4,6 +4,117 @@ import XCTest
 import YlFFmpegBridge
 
 final class YlAudioRendererTests: XCTestCase {
+  func testStereoConverterKeepsOnePacketOfPCMHeadroom() throws {
+    let converter = YlAppleCompressedAudioConverter()
+    try converter.configure(stream: YlAudioStreamConfiguration(
+      codec: .aac, sampleRate: 48_000, channelCount: 2,
+      magicCookie: Data([0x11, 0x90]), generation: 1
+    ))
+    // One AAC-LC silence packet, 48 kHz stereo, without an ADTS header.
+    let packet = YlCompressedAudioPacket(
+      data: Data([0x21, 0x10, 0x04, 0x60, 0x8c, 0x1c]),
+      ptsUs: 0, durationUs: 21_333, generation: 1
+    )
+    let converted = try XCTUnwrap(converter.convert(packet: packet))
+    let pcm = try XCTUnwrap(converted.payload as? AVAudioPCMBuffer)
+    XCTAssertEqual(pcm.frameLength, 1024)
+    XCTAssertEqual(pcm.frameCapacity, 2048)
+    XCTAssertEqual(converted.byteCount, 1024 * 2 * MemoryLayout<Float>.size)
+  }
+
+  func testSystemOutputConfiguresMonoAndStereoPCMWithoutAudioUnitException() throws {
+    let output = YlSystemAudioOutput()
+    defer { output.dispose() }
+    for channels in [1, 2] {
+      try output.configure(sampleRate: 48_000, channelCount: channels)
+      try output.configure(sampleRate: 44_100, channelCount: channels)
+    }
+  }
+
+  func testPlayedBufferClockFreezesDuringStarvationAndIgnoresOldCompletions() throws {
+    let output = FakeOutput()
+    let renderer = YlAudioRenderer(converter: FakeConverter(), output: output)
+    try renderer.configure(stream: stream())
+    try renderer.play()
+    func enqueue(_ pts: Int64, generation: UInt64 = 1) throws {
+      XCTAssertEqual(try renderer.enqueue(packet: YlCompressedAudioPacket(
+        data: Data([1]), ptsUs: pts, durationUs: 250_000, generation: generation
+      )), .scheduled)
+    }
+    try enqueue(1_000_000)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 1_000_000)
+    output.completions[0]()
+    XCTAssertEqual(renderer.renderedAudioTime, YlRenderedAudioTime(sampleTime: 1_250_000, sampleRate: 1_000_000))
+    renderer.setRate(3)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 1_250_000)
+    try enqueue(1_250_000)
+    output.completions[1]()
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 1_500_000)
+    renderer.reset(generation: 2)
+    XCTAssertNil(renderer.renderedAudioTime)
+    try enqueue(5_000_000, generation: 2)
+    output.completions[0]()
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 5_000_000)
+    output.completions[2]()
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 5_250_000)
+    renderer.finishInput()
+    XCTAssertNil(renderer.renderedAudioTime)
+  }
+
+  func testPausedBufferCompletionDoesNotLosePositionAfterResume() throws {
+    let output = FakeOutput()
+    let renderer = YlAudioRenderer(converter: FakeConverter(), output: output)
+    try renderer.configure(stream: stream())
+    try renderer.play()
+    for pts in [Int64(0), 250_000] {
+      XCTAssertEqual(try renderer.enqueue(packet: YlCompressedAudioPacket(
+        data: Data([1]), ptsUs: pts, durationUs: 250_000, generation: 1
+      )), .scheduled)
+    }
+    output.completions[0]()
+    renderer.pause()
+    output.completions[1]()
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 250_000)
+    try renderer.play()
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 250_000)
+    XCTAssertEqual(try renderer.enqueue(packet: YlCompressedAudioPacket(
+      data: Data([1]), ptsUs: 500_000, durationUs: 250_000, generation: 1
+    )), .scheduled)
+    output.completions[2]()
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 750_000)
+  }
+
+  func testSilentVideoTailAdvancesOnlyThroughDecodedVideoAndAudioResumesOnce() throws {
+    let output = FakeOutput()
+    let renderer = YlAudioRenderer(converter: FakeConverter(), output: output)
+    try renderer.configure(stream: stream())
+    try renderer.play()
+    XCTAssertEqual(try renderer.enqueue(packet: packet()), .scheduled)
+    output.completions[0]()
+    renderer.advanceSilence(through: nil, atHostTimeUs: 0)
+    renderer.advanceSilence(through: nil, atHostTimeUs: 10_000_000)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 250_000)
+    renderer.advanceSilence(through: 750_000, atHostTimeUs: 11_000_000)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 750_000)
+    renderer.advanceSilence(through: 750_000, atHostTimeUs: 20_000_000)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 750_000)
+    renderer.setRate(3)
+    renderer.advanceSilence(through: 2_000_000, atHostTimeUs: 20_250_000)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 1_500_000)
+    XCTAssertEqual(try renderer.enqueue(packet: YlCompressedAudioPacket(
+      data: Data([1]), ptsUs: 1_500_000, durationUs: 250_000, generation: 1
+    )), .scheduled)
+    renderer.advanceSilence(through: 3_000_000, atHostTimeUs: 21_000_000)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 1_500_000)
+    output.completions[1]()
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 1_750_000)
+    renderer.advanceSilence(through: 3_000_000, atHostTimeUs: 21_010_000)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 1_750_000, "Completion must not double-count the previous audible tick")
+    renderer.pause()
+    renderer.advanceSilence(through: 3_000_000, atHostTimeUs: 30_000_000)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 1_750_000)
+  }
+
   private final class Token {}
 
   private final class FakeConverter: YlAudioPacketConverting {
@@ -140,6 +251,41 @@ final class YlAudioRendererTests: XCTestCase {
     output.completions[0]()
     XCTAssertEqual(renderer.scheduledDurationUs, 250_000)
     XCTAssertEqual(try renderer.enqueue(packet: packet()), .scheduled)
+  }
+
+  func testRateScalesAudioCapacityAndReturningToNormalDrainsQueuedAudio() throws {
+    let converter = FakeConverter()
+    let output = FakeOutput()
+    let renderer = YlAudioRenderer(
+      maxScheduledDurationUs: 500_000,
+      maxScheduledBytes: 10_000,
+      converter: converter,
+      output: output
+    )
+    defer { renderer.dispose() }
+    try renderer.configure(stream: stream())
+    renderer.setRate(3)
+    for _ in 0..<6 {
+      XCTAssertEqual(try renderer.enqueue(packet: packet()), .scheduled)
+    }
+    XCTAssertEqual(renderer.scheduledDurationUs, 1_500_000)
+    XCTAssertEqual(renderer.scheduledBytes, 6_000)
+    XCTAssertEqual(try renderer.enqueue(packet: packet()), .wouldExceedDuration)
+
+    renderer.setRate(1)
+    XCTAssertEqual(renderer.scheduledDurationUs, 1_500_000)
+    XCTAssertEqual(renderer.scheduledBytes, 6_000)
+    XCTAssertEqual(try renderer.enqueue(packet: packet()), .wouldExceedDuration)
+    for index in 0..<4 { output.completions[index]() }
+    XCTAssertEqual(renderer.scheduledDurationUs, 500_000)
+    XCTAssertEqual(try renderer.enqueue(packet: packet()), .wouldExceedDuration)
+    XCTAssertEqual(converter.convertCount, 6)
+
+    output.completions[4]()
+    XCTAssertEqual(renderer.scheduledDurationUs, 250_000)
+    XCTAssertEqual(try renderer.enqueue(packet: packet()), .scheduled)
+    XCTAssertEqual(renderer.scheduledDurationUs, 500_000)
+    XCTAssertEqual(renderer.scheduledBytes, 2_000)
   }
 
   func testByteLimitWinsBeforeConversion() throws {

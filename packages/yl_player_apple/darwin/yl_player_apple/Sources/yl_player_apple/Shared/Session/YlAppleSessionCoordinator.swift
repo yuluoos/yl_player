@@ -215,7 +215,7 @@ final class YlAppleSessionCoordinator: NSObject {
         try token.throwIfCancelled()
         switch decision.candidate {
         case .avPlayer:
-          return .avPlayer(source: source)
+          return try self.prepareNativeOrMp4(source: source, token: token, identity: identity)
         case .localMatroska, .networkMatroska, .networkFlv:
           return .fallback(
             source: source,
@@ -231,7 +231,7 @@ final class YlAppleSessionCoordinator: NSObject {
           let refined = YlEngineRouter.assess(inspected)
           if let error = refined.rejection { throw error }
           switch refined.candidate {
-          case .avPlayer: return .avPlayer(source: inspected)
+          case .avPlayer: return try self.prepareNativeOrMp4(source: inspected, token: token, identity: identity)
           case .headeredHls: return .headeredHls(source: inspected,
             prepared: try self.prepareHeaderedHls(source: inspected, token: token, credentialContext: hlsCredentials))
           case .localMatroska, .networkMatroska, .networkFlv:
@@ -688,6 +688,14 @@ final class YlAppleSessionCoordinator: NSObject {
   private func applyPersistentPlaybackControls(to backend: YlPlaybackBackend) {
     try? backend.setVolume(lastVolume)
     try? backend.setPlaybackSpeed(lastPlaybackSpeed)
+  }
+
+  private func prepareNativeOrMp4(source: YlAppleSourceDescriptor, token: YlOpenCancellationToken,
+    identity: YlAppleSessionIdentity) throws -> YlPreparedOpen {
+    if try YlMp4CompatibilityInspector.requiresFallback(source, configuration: configuration.network, token: token) {
+      return .fallback(source: source, prepared: try prepareFallback(source: source, token: token, identity: identity))
+    }
+    return .avPlayer(source: source)
   }
 
   private func prepareFallback(

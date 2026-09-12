@@ -78,7 +78,7 @@ final class YlPreparedFallback {
     let formatHint = source.formatHint
     let container: YlFallbackContainer = formatHint == .flv
       || (formatHint == .automatic && url.pathExtension.lowercased() == "flv")
-      ? .flv : .matroska
+      ? .flv : ([YlSourceFormat.mp4, .mov].contains(YlEngineRouter.resolvedFormat(source, url: url)) ? .mp4 : .matroska)
     if url.isFileURL {
       sourceRecipe = .local(path: url.path, container: container)
     } else if let scheme = url.scheme?.lowercased(),
@@ -145,7 +145,7 @@ final class YlPreparedFallback {
          selectedVideo == nil {
         selectedVideo = stream
       } else if Int(stream.kind) == YLFStreamAudio {
-        if Int(stream.codec) == YLFCodecAAC || Int(stream.codec) == YLFCodecMP3 {
+        if Int(stream.codec) == YLFCodecAAC || Int(stream.codec) == YLFCodecMP3 || Int(stream.codec) == YLFCodecDTS {
           selectedAudio.append(stream)
         } else {
           sawUnsupportedAudio = true

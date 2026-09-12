@@ -13,6 +13,7 @@ final class YlFrameScheduler {
   private let lock = NSCondition()
   private let compatibility: YlAppleCompatibility
   private let maxFrames: Int
+  private var frameLimit: Int
   private let enqueueWaitTimeout: TimeInterval
   private var frames = [YlFrameEnvelope]()
   private var activeGeneration: UInt64?
@@ -30,7 +31,18 @@ final class YlFrameScheduler {
     precondition(enqueueWaitTimeout >= 0)
     self.compatibility = compatibility
     self.maxFrames = maxFrames
+    self.frameLimit = maxFrames
     self.enqueueWaitTimeout = enqueueWaitTimeout
+  }
+
+  func setRate(_ rate: Double) {
+    guard rate.isFinite else { return }
+    lock.lock()
+    // Keep the same wall-clock decode lead at high playback rates.
+    // Shrinking leaves queued frames intact until presentation releases them.
+    frameLimit = Int((Double(maxFrames) * min(4, max(1, rate))).rounded(.up))
+    lock.broadcast()
+    lock.unlock()
   }
 
   func configureBounded(_ plan: YlBoundedBufferPlan?) { lock.withLock { boundedPlan = plan } }
@@ -72,7 +84,7 @@ final class YlFrameScheduler {
       }
     }
     let deadline = Date(timeIntervalSinceNow: enqueueWaitTimeout)
-    while boundedPlan == nil && compatibility.usesBackpressure && frames.count >= maxFrames {
+    while boundedPlan == nil && compatibility.usesBackpressure && frames.count >= frameLimit {
       let signalled = lock.wait(until: deadline)
       guard !disposed,
             activeGeneration == nil || activeGeneration == frame.generation else {
@@ -86,6 +98,12 @@ final class YlFrameScheduler {
       }
     }
 
+    // Presentation can advance while the producer waits for capacity.
+    if let lastPresentedPTS, frame.ptsUs <= lastPresentedPTS {
+      droppedFrames += 1
+      lock.unlock()
+      return false
+    }
     let insertionIndex = frames.firstIndex { existing in
       existing.ptsUs > frame.ptsUs
     } ?? frames.endIndex

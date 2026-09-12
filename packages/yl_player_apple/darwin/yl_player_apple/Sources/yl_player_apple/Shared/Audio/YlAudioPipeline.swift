@@ -29,6 +29,9 @@ final class YlAudioPipeline {
     fileprivate let renderer: YlAudioRenderer
     func dispose() { renderer.dispose() }
     func pause() { renderer.pause() }
+    func advanceSilence(through videoPTS: Int64?, atHostTimeUs now: Int64) {
+      renderer.advanceSilence(through: videoPTS, atHostTimeUs: now)
+    }
     func play() throws { try renderer.play() }
     var scheduledDurationUs: Int64 { renderer.scheduledDurationUs }
     var scheduledBytes: Int { renderer.scheduledBytes }
@@ -102,6 +105,7 @@ final class YlAudioPipeline {
   func nextGeneration() -> UInt64 { audioGeneration &+ 1 }
   func discardPendingPacket() { pendingAudioPacket = nil }
   func resetAnchor() { audioAnchored = false }
+  func finishInput() { currentAudioRenderer?.finishInput() }
   func detach() -> Resource? {
     let old = audioRenderer
     audioRenderer = nil
@@ -247,7 +251,7 @@ final class YlAudioPipeline {
   ) -> YlAudioStreamConfiguration {
     YlAudioStreamConfiguration(
       codec: Int(stream.codec) == YLFCodecAAC
-        ? .aac : (Int(stream.codec) == YLFCodecMP3 ? .mp3 : .unsupported),
+        ? .aac : (Int(stream.codec) == YLFCodecMP3 ? .mp3 : (Int(stream.codec) == YLFCodecDTS ? .dts : .unsupported)),
       sampleRate: Double(stream.sample_rate),
       channelCount: Int(stream.channel_count),
       magicCookie: audioCookies[stream.index] ?? Data(),
@@ -267,7 +271,7 @@ final class YlAudioPipeline {
   }
 
   func codecName(_ stream: YLFStreamInfo) -> String {
-    Int(stream.codec) == YLFCodecMP3 ? "MP3" : "AAC"
+    Int(stream.codec) == YLFCodecDTS ? "DTS" : (Int(stream.codec) == YLFCodecMP3 ? "MP3" : "AAC")
   }
 
 }

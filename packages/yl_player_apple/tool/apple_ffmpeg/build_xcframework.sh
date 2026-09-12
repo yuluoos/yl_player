@@ -27,9 +27,10 @@ common_flags=(
   --enable-avutil
   --enable-avcodec
   --enable-avformat
-  --enable-demuxer=matroska,flv
+  --enable-demuxer=matroska,flv,mov
+  --enable-decoder=dca
   --enable-protocol=file
-  --enable-parser=aac,h264,hevc,mpegaudio
+  --enable-parser=aac,h264,hevc,mpegaudio,dca
   --enable-pic
   --enable-static
   --disable-shared
@@ -200,6 +201,11 @@ build_slice() {
   fi
   mkdir -p "$contents/Headers" "$contents/Modules"
   printf '%s\n' \
+    _ylf_mp4_requires_fallback \
+    _ylf_dts_create \
+    _ylf_dts_decode \
+    _ylf_dts_reset \
+    _ylf_dts_free \
     _ylf_build_configuration \
     _ylf_ffmpeg_version \
     _ylf_open_local \

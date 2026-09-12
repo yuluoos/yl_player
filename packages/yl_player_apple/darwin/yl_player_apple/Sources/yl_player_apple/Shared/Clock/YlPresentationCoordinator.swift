@@ -8,6 +8,7 @@ protocol YlPresentationScheduling: AnyObject {
   var pendingPTS: [Int64] { get }
   var bufferedDurationUs: Int64 { get }
   func configureBounded(_ plan: YlBoundedBufferPlan?)
+  func setRate(_ rate: Double)
   func enqueue(_ frame: YlFrameEnvelope) -> Bool
   func frame(at positionUs: Int64, generation: UInt64) -> YlFrameEnvelope?
   func flush(generation: UInt64)
@@ -16,6 +17,7 @@ protocol YlPresentationScheduling: AnyObject {
 extension YlPresentationScheduling {
   var bufferedDurationUs: Int64 { 0 }
   func configureBounded(_ plan: YlBoundedBufferPlan?) {}
+  func setRate(_ rate: Double) {}
 }
 extension YlFrameScheduler: YlPresentationScheduling {}
 
@@ -102,7 +104,10 @@ final class YlPresentationCoordinator: YlAudioTimeline {
   func play(atHostTimeUs time: Int64) { mediaClock.play(atHostTimeUs: time) }
   func pause(atHostTimeUs time: Int64) { mediaClock.pause(atHostTimeUs: time) }
   func seek(to time: Int64) { mediaClock.seek(to: time) }
-  func setRate(_ rate: Double, atHostTimeUs time: Int64) { mediaClock.setRate(rate, atHostTimeUs: time) }
+  func setRate(_ rate: Double, atHostTimeUs time: Int64) {
+    frameScheduler.setRate(rate)
+    mediaClock.setRate(rate, atHostTimeUs: time)
+  }
   func suppressFramesBefore(_ time: Int64?) { postSeekGate.reset(targetUs: time) }
   func acceptsAudio(ptsUs: Int64) -> Bool { postSeekGate.acceptsAudio(ptsUs: ptsUs) }
   func flushFrames(generation: UInt64) { frameScheduler.flush(generation: generation) }

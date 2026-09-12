@@ -23,6 +23,7 @@
 		402A8006C1DF55EEC2A1238C /* h264_aac.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 5C15EC2F7E0A1B173BA9AABC /* h264_aac.mkv */; };
 		587EB717819122C46A720E55 /* YlAppleHostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168FD4E065847901D7DBDBD0 /* YlAppleHostTests.swift */; };
 		5B13D240F2307F61A86AFE72 /* hevc_aac.mkv in Resources */ = {isa = PBXBuildFile; fileRef = EFD3B5BAF89BE4B11BA58C0A /* hevc_aac.mkv */; };
+		5B96B8EC56913260A9B6DECD /* h264_aac.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F824141A740C72F6261D58F2 /* h264_aac.mp4 */; };
 		609D86C13EB4DB1A5177DCE5 /* NativeBackendFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A513C8CB5AB83592903956 /* NativeBackendFixtures.swift */; };
 		61858A7255947D46DC380A6D /* YlFallbackBufferBudgetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D475D6EA7306C86E3716F52 /* YlFallbackBufferBudgetTests.swift */; };
 		64F6F9D61A307CF3E98ED4FD /* YlNetworkRequestPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D625C7306C042E41AE1A9B /* YlNetworkRequestPolicyTests.swift */; };
@@ -56,6 +57,7 @@
 		EC8F5A2A15D9B66E241C68ED /* YlAppleCompatibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2EDF0C181C46F834064C7FD /* YlAppleCompatibilityTests.swift */; };
 		EF5B971F01A8C0B2D0116F56 /* hls_key.bin in Resources */ = {isa = PBXBuildFile; fileRef = 174513D67DB1951A5E7189A9 /* hls_key.bin */; };
 		F133BE32E66FBB093593A1EB /* YlLiveReconnectControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4ED9D4EBB695809F00AF55 /* YlLiveReconnectControllerTests.swift */; };
+		F1DFA0093AF41500A1C26982 /* hevc_dts.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6B34872C32270987BA3B97B1 /* hevc_dts.mp4 */; };
 		F2E3FFEE4F15D313CAC12411 /* YlFrameSchedulerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489E43A8E15E66C58AC621E4 /* YlFrameSchedulerTests.swift */; };
 		F5E5C8FE7B5BFA81190CEB7A /* two_audio_tracks.mkv in Resources */ = {isa = PBXBuildFile; fileRef = CC9C0645E85B5C304253D6B4 /* two_audio_tracks.mkv */; };
 /* End PBXBuildFile section */
@@ -105,6 +107,7 @@
 		5C15EC2F7E0A1B173BA9AABC /* h264_aac.mkv */ = {isa = PBXFileReference; includeInIndex = 1; path = h264_aac.mkv; sourceTree = "<group>"; };
 		62B1ADF191C0FE16D80C7858 /* YlFFmpegBridgeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFFmpegBridgeTests.swift; sourceTree = "<group>"; };
 		6890B53414F61D0929D2E667 /* YlAppleSessionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleSessionTests.swift; sourceTree = "<group>"; };
+		6B34872C32270987BA3B97B1 /* hevc_dts.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = hevc_dts.mp4; sourceTree = "<group>"; };
 		71D56196691C901AD9EBA86A /* YlHlsHeaderPolicyTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlHlsHeaderPolicyTests.swift; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -145,6 +148,7 @@
 		E9574A980A0BBF71BF4FD7F2 /* NativeCallbackCharacterization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeCallbackCharacterization.swift; sourceTree = "<group>"; };
 		EBD49FC1AE129A046B75B04C /* YlVideoToolboxDecoderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlVideoToolboxDecoderTests.swift; sourceTree = "<group>"; };
 		EFD3B5BAF89BE4B11BA58C0A /* hevc_aac.mkv */ = {isa = PBXFileReference; includeInIndex = 1; path = hevc_aac.mkv; sourceTree = "<group>"; };
+		F824141A740C72F6261D58F2 /* h264_aac.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = h264_aac.mp4; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,11 +202,13 @@
 				EBD49FC1AE129A046B75B04C /* YlVideoToolboxDecoderTests.swift */,
 				C659117285F409F43C371560 /* h264_aac.flv */,
 				5C15EC2F7E0A1B173BA9AABC /* h264_aac.mkv */,
+				F824141A740C72F6261D58F2 /* h264_aac.mp4 */,
 				9915A0A95F829E34418E60C8 /* h264_mp3.flv */,
 				AD36E29154BDA690EA8EC35E /* hevc_aac.flv */,
 				EFD3B5BAF89BE4B11BA58C0A /* hevc_aac.mkv */,
 				B70723F5407676A3C944FFE9 /* hls_encrypted_segment0.ts */,
 				174513D67DB1951A5E7189A9 /* hls_key.bin */,
+				6B34872C32270987BA3B97B1 /* hevc_dts.mp4 */,
 				77F4C6F088448FA9F3E0593F /* network_seek_h264_aac.mkv */,
 				CC9C0645E85B5C304253D6B4 /* two_audio_tracks.mkv */,
 				B9FF793AD29FF2287251C0CA /* YlManagedFallbackCharacterizationTests.swift */,
@@ -358,9 +364,11 @@
 			files = (
 				E7A3327BB6F1426555E63E54 /* h264_aac.flv in Resources */,
 				402A8006C1DF55EEC2A1238C /* h264_aac.mkv in Resources */,
+				5B96B8EC56913260A9B6DECD /* h264_aac.mp4 in Resources */,
 				717123CF5D40832EB2557371 /* h264_mp3.flv in Resources */,
 				DDD06A3FA3EF1F04403A7097 /* hevc_aac.flv in Resources */,
 				5B13D240F2307F61A86AFE72 /* hevc_aac.mkv in Resources */,
+				F1DFA0093AF41500A1C26982 /* hevc_dts.mp4 in Resources */,
 				89832909ABEB257CCA4BD775 /* hls_encrypted_segment0.ts in Resources */,
 				EF5B971F01A8C0B2D0116F56 /* hls_key.bin in Resources */,
 				8502B50B6A592B29C7E58378 /* network_seek_h264_aac.mkv in Resources */,

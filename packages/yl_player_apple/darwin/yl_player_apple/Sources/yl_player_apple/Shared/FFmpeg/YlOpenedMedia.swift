@@ -351,6 +351,9 @@ final class YlOpenedMedia {
       )
     }
     switch container {
+    case .mp4:
+      return NativePlayerError(category: "container", code: "container.mp4_open_failed",
+        message: "The MP4 media could not be opened.", diagnostic: "YlFFmpegBridge result \(result)")
     case .flv:
       return NativePlayerError(
         category: "container",

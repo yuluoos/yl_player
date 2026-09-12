@@ -174,7 +174,7 @@ final class YlDemuxPipeline {
          selectedVideo == nil {
         selectedVideo = stream
       } else if Int(stream.kind) == YLFStreamAudio {
-        if Int(stream.codec) == YLFCodecAAC || Int(stream.codec) == YLFCodecMP3 {
+        if Int(stream.codec) == YLFCodecAAC || Int(stream.codec) == YLFCodecMP3 || Int(stream.codec) == YLFCodecDTS {
           supportedAudio.append(stream)
         } else {
           sawUnsupportedAudio = true

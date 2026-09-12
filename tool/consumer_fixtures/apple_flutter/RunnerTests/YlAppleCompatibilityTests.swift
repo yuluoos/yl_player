@@ -7,10 +7,13 @@ final class YlAppleCompatibilityTests: XCTestCase {
     .init(payload: NSObject(), ptsUs: pts, durationUs: 10_000, keyframe: false, generation: 1)
   }
 
-  func testIosOverflowKeepsNewestThreeFrames() {
-    let scheduler = YlFrameScheduler(compatibility: .init(platform: .ios))
-    for pts in [10_000, 20_000, 30_000, 40_000] { XCTAssertTrue(scheduler.enqueue(frame(Int64(pts)))) }
-    XCTAssertEqual(scheduler.pendingPTS, [20_000, 30_000, 40_000])
+  func testIosOverflowPreservesTheNextFramesForPresentation() {
+    let scheduler = YlFrameScheduler(compatibility: .init(platform: .ios), enqueueWaitTimeout: 0)
+    for pts in [10_000, 20_000, 30_000] { XCTAssertTrue(scheduler.enqueue(frame(Int64(pts)))) }
+    XCTAssertFalse(scheduler.enqueue(frame(40_000)))
+    XCTAssertEqual(scheduler.pendingPTS, [10_000, 20_000, 30_000])
+    XCTAssertEqual(scheduler.frame(at: 10_000, generation: 1)?.ptsUs, 10_000)
+    XCTAssertEqual(scheduler.pendingPTS, [20_000, 30_000])
     XCTAssertEqual(scheduler.lateFrameDropCount, 1)
   }
 

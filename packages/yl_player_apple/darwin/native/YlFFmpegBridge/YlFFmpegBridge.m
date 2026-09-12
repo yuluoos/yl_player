@@ -6,9 +6,12 @@
 #include <pthread.h>
 #include <stdatomic.h>
 #include <errno.h>
+#include <math.h>
 #include <string.h>
 
 #include <libavcodec/codec_par.h>
+#include <libavcodec/avcodec.h>
+#include <libavutil/opt.h>
 #include <libavutil/error.h>
 #include <libavutil/mathematics.h>
 #include <libavformat/avformat.h>
@@ -122,7 +125,8 @@ static bool ylf_is_supported_input_format(const AVInputFormat *input_format) {
     return false;
   }
   return strstr(input_format->name, "matroska") != NULL ||
-         strstr(input_format->name, "flv") != NULL;
+         strstr(input_format->name, "flv") != NULL ||
+         strstr(input_format->name, "mov") != NULL;
 }
 
 static int32_t ylf_discover_streams(struct YLFMediaContext *context,
@@ -199,6 +203,8 @@ static int32_t ylf_codec(enum AVCodecID codec_id) {
     return YLFCodecAAC;
   case AV_CODEC_ID_MP3:
     return YLFCodecMP3;
+  case AV_CODEC_ID_DTS:
+    return YLFCodecDTS;
   default:
     return YLFCodecUnsupported;
   }
@@ -858,4 +864,92 @@ int32_t ylf_create_video_sample_buffer(
     }
   }
   return YLFResultOK;
+}
+
+
+bool ylf_mp4_requires_fallback(YLFMediaContextRef context) {
+  if (!context || !context->format) return false;
+  for (unsigned i = 0; i < context->format->nb_streams; i++) {
+    AVCodecParameters *p = context->format->streams[i]->codecpar;
+    if (p->codec_id == AV_CODEC_ID_DTS ||
+        (p->codec_id == AV_CODEC_ID_HEVC && p->codec_tag == MKTAG('h','e','v','1'))) return true;
+  }
+  return false;
+}
+
+struct YLFDtsDecoder { AVCodecContext *codec; AVFrame *frame; AVPacket *packet; };
+YLFDtsDecoderRef ylf_dts_create(void) {
+  const AVCodec *codec = avcodec_find_decoder(AV_CODEC_ID_DTS);
+  if (!codec) return NULL;
+  struct YLFDtsDecoder *d = calloc(1, sizeof(*d));
+  if (!d) return NULL;
+  d->codec = avcodec_alloc_context3(codec);
+  d->frame = av_frame_alloc();
+  d->packet = av_packet_alloc();
+  if (!d->codec || !d->frame || !d->packet ||
+      av_opt_set(d->codec->priv_data, "downmix", "stereo", 0) < 0 ||
+      avcodec_open2(d->codec, codec, NULL) < 0) {
+    ylf_dts_free(d); return NULL;
+  }
+  return d;
+}
+int32_t ylf_dts_decode(YLFDtsDecoderRef d, const uint8_t *data, size_t size,
+    float *samples, int32_t capacity_frames, int32_t *out_frames, int32_t *out_sample_rate) {
+  if (!d || !data || !size || size > INT_MAX || !samples || capacity_frames <= 0 ||
+      !out_frames || !out_sample_rate) return YLFResultInvalidArgument;
+  *out_frames = 0; *out_sample_rate = 0;
+  av_packet_unref(d->packet);
+  if (av_new_packet(d->packet, (int)size) < 0) return YLFResultReadFailed;
+  memcpy(d->packet->data, data, size);
+  int result = avcodec_send_packet(d->codec, d->packet);
+  av_packet_unref(d->packet);
+  if (result < 0) return YLFResultReadFailed;
+  av_frame_unref(d->frame);
+  result = avcodec_receive_frame(d->codec, d->frame);
+  // dca has no delayed-output capability: each demuxed frame produces PCM.
+  if (result < 0) return YLFResultReadFailed;
+  AVFrame *f = d->frame;
+  if (f->nb_samples <= 0 || f->nb_samples > capacity_frames || f->sample_rate <= 0 ||
+      f->ch_layout.nb_channels < 1 || f->ch_layout.nb_channels > 8 ||
+      (f->format != AV_SAMPLE_FMT_FLTP && f->format != AV_SAMPLE_FMT_S32P)) {
+    av_frame_unref(f); return YLFResultReadFailed;
+  }
+  // The decoder uses embedded DTS downmix coefficients when supplied. Core
+  // DTS without them retains its original layout; apply a normalized Lo/Ro
+  // matrix using channel identities (never channel-count guesses). LFE is
+  // excluded from stereo, matching the standard full-range stereo downmix.
+  float matrix[8][2] = {{0}};
+  float sum[2] = {0, 0};
+  for (int c = 0; c < f->ch_layout.nb_channels; c++) {
+    switch (av_channel_layout_channel_from_index(&f->ch_layout, c)) {
+    case AV_CHAN_FRONT_LEFT: matrix[c][0] = 1; break;
+    case AV_CHAN_FRONT_RIGHT: matrix[c][1] = 1; break;
+    case AV_CHAN_FRONT_CENTER: matrix[c][0] = matrix[c][1] = 0.70710678f; break;
+    case AV_CHAN_BACK_LEFT: case AV_CHAN_SIDE_LEFT: matrix[c][0] = 0.70710678f; break;
+    case AV_CHAN_BACK_RIGHT: case AV_CHAN_SIDE_RIGHT: matrix[c][1] = 0.70710678f; break;
+    case AV_CHAN_BACK_CENTER: matrix[c][0] = matrix[c][1] = 0.5f; break;
+    case AV_CHAN_LOW_FREQUENCY: break;
+    default: av_frame_unref(f); return YLFResultReadFailed;
+    }
+    sum[0] += matrix[c][0]; sum[1] += matrix[c][1];
+  }
+  float scale = 1.0f / fmaxf(1.0f, fmaxf(sum[0], sum[1]));
+  memset(samples, 0, f->nb_samples * 2 * sizeof(float));
+  for (int c = 0; c < f->ch_layout.nb_channels; c++) {
+    for (int i = 0; i < f->nb_samples; i++) {
+      float value = f->format == AV_SAMPLE_FMT_FLTP
+        ? ((float *)f->extended_data[c])[i]
+        : (float)(((int32_t *)f->extended_data[c])[i] / 2147483648.0);
+      samples[2*i] += value * matrix[c][0] * scale;
+      samples[2*i+1] += value * matrix[c][1] * scale;
+    }
+  }
+  *out_frames = f->nb_samples; *out_sample_rate = f->sample_rate;
+  av_frame_unref(f);
+  return YLFResultOK;
+}
+void ylf_dts_reset(YLFDtsDecoderRef d) { if (d) avcodec_flush_buffers(d->codec); }
+void ylf_dts_free(YLFDtsDecoderRef d) {
+  if (!d) return;
+  avcodec_free_context(&d->codec); av_frame_free(&d->frame); av_packet_free(&d->packet); free(d);
 }

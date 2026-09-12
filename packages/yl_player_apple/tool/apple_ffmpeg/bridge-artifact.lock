@@ -23,9 +23,10 @@
     "--enable-avutil",
     "--enable-avcodec",
     "--enable-avformat",
-    "--enable-demuxer=matroska,flv",
+    "--enable-demuxer=matroska,flv,mov",
+    "--enable-decoder=dca",
     "--enable-protocol=file",
-    "--enable-parser=aac,h264,hevc,mpegaudio",
+    "--enable-parser=aac,h264,hevc,mpegaudio,dca",
     "--enable-pic",
     "--enable-static",
     "--disable-shared",
@@ -42,8 +43,8 @@
       "size": 1656
     },
     "ios-arm64/YlFFmpegBridge.framework/Headers/YlFFmpegBridge.h": {
-      "sha256": "a6e962ac9cbe56216bbfaeb3eb3c54a845a6c933b025d10c97aab316b117ba5e",
-      "size": 5343
+      "sha256": "015c1c1872cd3093d2d33ffd1ef46119605f3146904d1b4df8b567854197488a",
+      "size": 5995
     },
     "ios-arm64/YlFFmpegBridge.framework/Info.plist": {
       "sha256": "ab25c77849b32b60fd3747baab898a1cc4a65e9717f19f98080f74641610bb2f",
@@ -54,12 +55,12 @@
       "size": 84
     },
     "ios-arm64/YlFFmpegBridge.framework/YlFFmpegBridge": {
-      "sha256": "612bc07579bf2f323e2d54cb8799b6e22455086bc21290040137bacc2dff116e",
-      "size": 1014344
+      "sha256": "7a395ea73262ed59e29dc43502dcf7c51ae0f0c5cc733c9cc3febcd6228ac0d4",
+      "size": 1766544
     },
     "ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/Headers/YlFFmpegBridge.h": {
-      "sha256": "a6e962ac9cbe56216bbfaeb3eb3c54a845a6c933b025d10c97aab316b117ba5e",
-      "size": 5343
+      "sha256": "015c1c1872cd3093d2d33ffd1ef46119605f3146904d1b4df8b567854197488a",
+      "size": 5995
     },
     "ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/Info.plist": {
       "sha256": "ab25c77849b32b60fd3747baab898a1cc4a65e9717f19f98080f74641610bb2f",
@@ -70,8 +71,8 @@
       "size": 84
     },
     "ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/YlFFmpegBridge": {
-      "sha256": "4fa84d99d67afee3a96edb03ff5c80cc1b81efca7d59d1debbc0c9747ad49279",
-      "size": 1941824
+      "sha256": "bc8410341f3060054fa15e338491200e62a12a18f4edf05409bcb235dcffa0a6",
+      "size": 3503440
     },
     "macos-arm64_x86_64/YlFFmpegBridge.framework/Headers": {
       "symlink": "Versions/Current/Headers"
@@ -83,8 +84,8 @@
       "symlink": "Versions/Current/Resources"
     },
     "macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/Headers/YlFFmpegBridge.h": {
-      "sha256": "a6e962ac9cbe56216bbfaeb3eb3c54a845a6c933b025d10c97aab316b117ba5e",
-      "size": 5343
+      "sha256": "015c1c1872cd3093d2d33ffd1ef46119605f3146904d1b4df8b567854197488a",
+      "size": 5995
     },
     "macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/Modules/module.modulemap": {
       "sha256": "07b626cfd01759b3d6586317975779dadc3afad2611abbdf92e03ca7db0bea40",
@@ -95,8 +96,8 @@
       "size": 617
     },
     "macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge": {
-      "sha256": "041d85d4a1e978aef5d188e54c266fd4cf7d2e9a6506bc18503635942caf0c72",
-      "size": 1955728
+      "sha256": "e7330535f778f315532daab9f9888f52e2b9a5f84072ae9621c4e6d51fbe2d5b",
+      "size": 3500176
     },
     "macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/Current": {
       "symlink": "A"
@@ -106,11 +107,11 @@
     }
   },
   "inputs": {
-    "darwin/native/YlFFmpegBridge/YlFFmpegBridge.m": "95ce0e27eff2d6f1a9f00aca2b676d68eddd06b3be39ccc75b2ddb7eabbfb455",
-    "darwin/native/YlFFmpegBridge/include/YlFFmpegBridge.h": "a6e962ac9cbe56216bbfaeb3eb3c54a845a6c933b025d10c97aab316b117ba5e",
+    "darwin/native/YlFFmpegBridge/YlFFmpegBridge.m": "120a62689fe2fd031229d07678a2d5ac89cd1171781f963f22323e9bfa1fabe2",
+    "darwin/native/YlFFmpegBridge/include/YlFFmpegBridge.h": "015c1c1872cd3093d2d33ffd1ef46119605f3146904d1b4df8b567854197488a",
     "darwin/native/YlFFmpegBridge/module.modulemap": "07b626cfd01759b3d6586317975779dadc3afad2611abbdf92e03ca7db0bea40",
     "tool/apple_ffmpeg/FFMPEG_RELEASE_KEY.asc": "397b3becedcd5a98769967ff1ff8501ddc89f8368b8f766e4701377d7dbaabe5",
-    "tool/apple_ffmpeg/build_xcframework.sh": "6d6db93bf7bc2344b4dcfad58ad4a6872e41b6b435a3ef33f275d7548da11fde",
+    "tool/apple_ffmpeg/build_xcframework.sh": "869277b3fc0dc5fb369c058d9d48467eb673814579e2addc6537f43f1dc136bb",
     "tool/apple_ffmpeg/ffmpeg-9.0.1.lock": "80af0e63635f1ee913cbb4aded6380d2d56f9eaa014d19e34f3ef16ddef38e30"
   },
   "schema": 1,

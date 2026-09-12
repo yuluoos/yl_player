@@ -17,6 +17,7 @@ enum YlAudioFormatPolicy {
 enum YlAudioCodec: Equatable {
   case aac
   case mp3
+  case dts
   case unsupported
 }
 
@@ -161,6 +162,11 @@ final class YlAudioRenderer: YlAudioRendering {
   private var playbackRate: Float = 1
   private var playbackRequested = false
   private var waitingForAudio = false
+  // Player-node sample time advances through starvation. Completed PCM timestamps
+  // measure media actually played and remain stable while input catches up.
+  private var playedPositionUs: Int64?
+  private var inputFinished = false
+  private var silenceHostTimeUs: Int64?
 
   init(
     maxScheduledDurationUs: Int64 = 500_000,
@@ -208,10 +214,31 @@ final class YlAudioRenderer: YlAudioRendering {
   }
 
   var renderedAudioTime: YlRenderedAudioTime? {
-    operations.lock()
-    defer { operations.unlock() }
-    return output.renderedAudioTime
+    lock.withLock {
+      guard !disposed, let playedPositionUs,
+            !(inputFinished && scheduledBufferCount == 0) else { return nil }
+      return YlRenderedAudioTime(sampleTime: playedPositionUs, sampleRate: 1_000_000)
+    }
   }
+
+  func finishInput() {
+    lock.withLock { inputFinished = true }
+  }
+
+  // An audio gap or video-only tail must not block demux behind a full video
+  // queue. Fill only time covered by decoded video, never unbounded device time.
+  func advanceSilence(through videoPTS: Int64?, atHostTimeUs now: Int64) {
+    lock.withLock {
+      defer { silenceHostTimeUs = playbackRequested ? now : nil }
+      guard !disposed, playbackRequested, scheduledBufferCount == 0,
+            let previousHost = silenceHostTimeUs, let videoPTS,
+            let position = playedPositionUs, videoPTS > position else { return }
+      let elapsed = max(0, now - previousHost)
+      let advance = min(Double(videoPTS - position), Double(elapsed) * Double(playbackRate))
+      playedPositionUs = position + Int64(advance.rounded(.towardZero))
+    }
+  }
+
 
   func configure(stream: YlAudioStreamConfiguration) throws {
     operations.lock()
@@ -227,7 +254,7 @@ final class YlAudioRenderer: YlAudioRendering {
       try converter.configure(stream: stream)
       try output.configure(
         sampleRate: stream.sampleRate,
-        channelCount: stream.channelCount
+        channelCount: stream.codec == .dts ? 2 : stream.channelCount
       )
     } catch {
       throw NativePlayerError(
@@ -311,12 +338,14 @@ final class YlAudioRenderer: YlAudioRendering {
     scheduledDuration += max(0, buffer.durationUs)
     scheduledByteCount += max(0, buffer.byteCount)
     scheduledBufferCount += 1
+    if playedPositionUs == nil { playedPositionUs = max(0, buffer.ptsUs) }
     if shouldRestartOutput { waitingForAudio = false }
     lock.unlock()
 
     output.schedule(buffer) { [weak self] in
       buffer.reservation?.endQueuedTiming()
       self?.complete(
+        ptsUs: buffer.ptsUs,
         durationUs: buffer.durationUs,
         byteCount: buffer.byteCount,
         completionGeneration: token
@@ -368,6 +397,7 @@ final class YlAudioRenderer: YlAudioRendering {
     lock.withLock {
       playbackRequested = false
       waitingForAudio = false
+      silenceHostTimeUs = nil
     }
     output.pause()
   }
@@ -405,6 +435,9 @@ final class YlAudioRenderer: YlAudioRendering {
     scheduledDuration = 0
     scheduledByteCount = 0
     scheduledBufferCount = 0
+    playedPositionUs = nil
+    silenceHostTimeUs = nil
+    inputFinished = false
     waitingForAudio = playbackRequested
     lock.unlock()
     converter.reset()
@@ -435,6 +468,9 @@ final class YlAudioRenderer: YlAudioRendering {
     scheduledDuration = 0
     scheduledByteCount = 0
     scheduledBufferCount = 0
+    playedPositionUs = nil
+    silenceHostTimeUs = nil
+    inputFinished = false
     playbackRequested = false
     waitingForAudio = false
     lock.unlock()
@@ -463,17 +499,19 @@ final class YlAudioRenderer: YlAudioRendering {
     switch codec {
     case .aac: return "AAC"
     case .mp3: return "MP3"
+    case .dts: return "DTS"
     case .unsupported: return "Compressed"
     }
   }
 
   private static func unsupportedCode(_ codec: YlAudioCodec) -> String {
-    codec == .mp3
+    codec == .dts ? "decoder.audio_dts_unsupported" : codec == .mp3
       ? "decoder.audio_mp3_unsupported"
       : "decoder.audio_aac_unsupported"
   }
 
   private func complete(
+    ptsUs: Int64,
     durationUs: Int64,
     byteCount: Int,
     completionGeneration: UInt64
@@ -483,9 +521,14 @@ final class YlAudioRenderer: YlAudioRendering {
       lock.unlock()
       return
     }
+    if playbackRequested {
+      let end = max(0, ptsUs).addingReportingOverflow(max(0, durationUs))
+      if !end.overflow { playedPositionUs = max(playedPositionUs ?? 0, end.partialValue) }
+    }
     scheduledDuration = max(0, scheduledDuration - max(0, durationUs))
     scheduledByteCount = max(0, scheduledByteCount - max(0, byteCount))
     scheduledBufferCount = max(0, scheduledBufferCount - 1)
+    if scheduledBufferCount == 0 { silenceHostTimeUs = nil }
     if YlAppleCompatibility.current.batchesAudioInput, scheduledBufferCount == 0, playbackRequested, !waitingForAudio {
       underruns += 1
       waitingForAudio = true
@@ -499,6 +542,7 @@ final class YlAudioRenderer: YlAudioRendering {
 }
 
 final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
+  private var dtsConverter: YlDtsAudioConverter?
   var bufferScope: YlManagedBufferScope?
   private var converter: AVAudioConverter?
   private var inputFormat: AVAudioFormat?
@@ -508,6 +552,14 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   private var pendingOutputPackets: [YlCompressedAudioPacket] = []
 
   func configure(stream: YlAudioStreamConfiguration) throws {
+    dtsConverter = nil
+    if stream.codec == .dts {
+      let dts = YlDtsAudioConverter()
+      dts.bufferScope = bufferScope
+      try dts.configure(stream: stream)
+      dtsConverter = dts
+      return
+    }
     guard stream.codec == .aac || stream.codec == .mp3,
           stream.sampleRate > 0,
           (1...8).contains(stream.channelCount),
@@ -571,6 +623,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   }
 
   func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate {
+    if let dtsConverter { return dtsConverter.estimateOutput(for: packet) }
     guard let outputFormat else {
       return YlAudioBufferEstimate(durationUs: 0, byteCount: 0)
     }
@@ -591,6 +644,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   }
 
   func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
+    if let dtsConverter { return try dtsConverter.convert(packet: packet) }
     guard let converter, let inputFormat, let outputFormat, !packet.data.isEmpty else {
       throw YlAudioImplementationError.notConfigured
     }
@@ -623,9 +677,13 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
 
     let bytesPerFrame = max(1, Int(outputFormat.streamDescription.pointee.mBytesPerFrame))
     let estimate = estimateOutput(for: packet)
+    let bytesPerSampleFrame = YlAudioFormatPolicy.byteCount(
+      frameCount: 1, bytesPerFrame: bytesPerFrame,
+      channelCount: Int(outputFormat.channelCount)
+    )
     let frameCapacity = YlAppleCompatibility.current.batchesAudioInput
       ? AVAudioFrameCount(framesPerPacket)
-      : AVAudioFrameCount(max(Int(framesPerPacket), estimate.byteCount / bytesPerFrame + Int(framesPerPacket)))
+      : AVAudioFrameCount(max(Int(framesPerPacket), estimate.byteCount / bytesPerSampleFrame + Int(framesPerPacket)))
     let allocatedBytes = YlAudioFormatPolicy.byteCount(frameCount: Int(frameCapacity), bytesPerFrame: bytesPerFrame,
       channelCount: Int(outputFormat.channelCount))
     let pcmReservation = try bufferScope?.require(category: .scheduledAudio, bytes: allocatedBytes)
@@ -686,6 +744,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   }
 
   func reset() {
+    dtsConverter?.reset()
     converter?.reset()
     pendingPackets.removeAll(keepingCapacity: true)
     pendingOutputPackets.removeAll(keepingCapacity: true)
@@ -742,7 +801,10 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
 
   var rate: Float {
     get { timePitch.rate }
-    set { timePitch.rate = newValue }
+    set {
+      timePitch.rate = newValue
+      timePitch.bypass = newValue == 1
+    }
   }
 
   var renderedAudioTime: YlRenderedAudioTime? {

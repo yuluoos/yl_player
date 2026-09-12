@@ -59,7 +59,7 @@ struct YlFallbackMediaPolicy: Equatable {
   init(container: YlFallbackContainer, sourceSupportsRandomAccess: Bool) {
     self.container = container
     switch container {
-    case .matroska:
+    case .matroska, .mp4:
       isLive = false
       isSeekable = sourceSupportsRandomAccess
       requiresInitialVideoKeyframe = false

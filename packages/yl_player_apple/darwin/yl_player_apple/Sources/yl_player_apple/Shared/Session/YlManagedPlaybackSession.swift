@@ -599,6 +599,11 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   }
 
   func presentationDidTick(atHostTimeUs value: Int64) {
+    if stateLock.withLock({ active && playing && !reconfiguring && !disposed }) {
+      currentAudioRenderer?.advanceSilence(
+        through: presentation.pendingFrames.last, atHostTimeUs: value
+      )
+    }
     updateBoundedPlayback(atHostTimeUs: value)
     completeIfDrained(atHostTimeUs: value)
   }
@@ -674,6 +679,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         pumping = false
         demuxEOF = true
       }
+      audio.finishInput()
       video.finishInput(generation: packetGeneration, hasAudio: demux.selectedAudioStream != nil,
                         compatibility: services.compatibility)
   }

@@ -18,13 +18,16 @@ enum YlApplePlatform: String {
 struct YlAppleCompatibility {
   let platform: YlApplePlatform
   static let current = Self(platform: .current)
-  var usesBackpressure: Bool { platform == .macos }
+  // Preserve frames until their presentation time on both Apple platforms.
+  var usesBackpressure: Bool { true }
   var preservesLiveResumeIntent: Bool { platform == .macos }
   var audioDurationUs: Int64 { platform == .ios ? 500_000 : 1_000_000 }
-  var scalesAudioDuration: Bool { platform == .macos }
+  var scalesAudioDuration: Bool { true }
   var batchesAudioInput: Bool { platform == .macos }
-  var usesInterleavedPCM: Bool { platform == .ios }
-  var limitsVideoReservations: Bool { platform == .macos }
+  // AVAudioUnitTimePitch rejects interleaved Float32 on iOS (-10868).
+  // Keep converter buffers and the engine graph in the same planar format.
+  var usesInterleavedPCM: Bool { false }
+  var limitsVideoReservations: Bool { true }
   var retainsReplacementHls: Bool { platform == .ios }
   var reconnectsAvPlayer: Bool { platform == .ios }
 }

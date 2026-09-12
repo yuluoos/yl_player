@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		02BC4EF0AD01BD356F8934F9 /* hevc_dts.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E96C775B3FFEF572759E674D /* hevc_dts.mp4 */; };
 		0488061E6C550329C1A2AD37 /* YlAppleHostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658FB8FAECDCE44699033363 /* YlAppleHostTests.swift */; };
 		12861F95ACE46A02A0CBA584 /* YlMacosNetworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B509B46AA724A701AA04AE0 /* YlMacosNetworkTests.swift */; };
 		14164CDD4EA0E0249E35D15C /* YlMacosFallbackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AE1EAAB6CCB99842DC935F /* YlMacosFallbackTests.swift */; };
@@ -61,6 +62,7 @@
 		B3A45795ACCA75FB86AC66CC /* NativeBackendFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B7D51CF08FAC8784F95BD6 /* NativeBackendFixtures.swift */; };
 		B5C298DACB58584FE533CE27 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA24690362B0678640630C3 /* RunnerTests.swift */; };
 		B8B3D95B002BDC5D6A96E09D /* YlAppleDecoderRestorationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86E30B31257D07B5657CC67 /* YlAppleDecoderRestorationTests.swift */; };
+		BAFB465838DEEB9D529F7B52 /* h264_aac.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = FB2F60D7B6D4F13983231D13 /* h264_aac.mp4 */; };
 		BF522BF2A904047FDD27C1AA /* YlMacosHlsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEFC9014C1577D41C092E60 /* YlMacosHlsTests.swift */; };
 		C1DEE157BE1F1F1546A5FDA3 /* YlMacosVideoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72BF365E597279C7651DDCF0 /* YlMacosVideoTests.swift */; };
 		C3D64527DB616335EAAD938B /* YlOpenedMediaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30F20FC7B3A73915ABD9CD2 /* YlOpenedMediaTests.swift */; };
@@ -165,12 +167,14 @@
 		DC841E196E0B29027DB776C3 /* YlApplePublicationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlApplePublicationTests.swift; sourceTree = "<group>"; };
 		DF89DC2247430B175C7B15E1 /* YlMacosAudioTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosAudioTests.swift; sourceTree = "<group>"; };
 		E36B41E2C43EA3201334FA12 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+		E96C775B3FFEF572759E674D /* hevc_dts.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = hevc_dts.mp4; sourceTree = "<group>"; };
 		ED2E66846088B64C685280EF /* YlMacosPresentationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosPresentationTests.swift; sourceTree = "<group>"; };
 		EE9C53482676289E84337BBD /* YlAppleCompatibilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleCompatibilityTests.swift; sourceTree = "<group>"; };
 		EEF2A2862C2636E0EBEE15CE /* YlFallbackBufferBudgetTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFallbackBufferBudgetTests.swift; sourceTree = "<group>"; };
 		F86E30B31257D07B5657CC67 /* YlAppleDecoderRestorationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleDecoderRestorationTests.swift; sourceTree = "<group>"; };
 		F9E9683F561AC67CAE681D1C /* YlManagedFallbackCharacterizationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlManagedFallbackCharacterizationTests.swift; sourceTree = "<group>"; };
 		FA4FE72EA5EE191708834C71 /* NativeCallbackCharacterization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeCallbackCharacterization.swift; sourceTree = "<group>"; };
+		FB2F60D7B6D4F13983231D13 /* h264_aac.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = h264_aac.mp4; sourceTree = "<group>"; };
 		FCEE590BC8393392AEEF82DC /* YlAppleSessionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleSessionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -232,9 +236,11 @@
 				13676CA8BFCE1E0827079D9B /* YlV2ReactivationTests.swift */,
 				D37036ED0B37F9CB511089DD /* h264_aac.flv */,
 				70D68B196278A79A91FCAC34 /* h264_aac.mkv */,
+				FB2F60D7B6D4F13983231D13 /* h264_aac.mp4 */,
 				9EA852F9EB314FAAC30F8E10 /* h264_mp3.flv */,
 				B4C3ACD32668B7EADD61BA5C /* hevc_aac.flv */,
 				9C4FFA18C36468580895FF07 /* hevc_aac.mkv */,
+				E96C775B3FFEF572759E674D /* hevc_dts.mp4 */,
 				8F05A65C502A4348996533F5 /* hls_encrypted_segment0.ts */,
 				7DE17B23DC7094916B707171 /* hls_key.bin */,
 				D75128AAE8A9BB6E769A696C /* network_seek_h264_aac.mkv */,
@@ -442,9 +448,11 @@
 			files = (
 				25980B7AEB3BE078CF45CBAF /* h264_aac.flv in Resources */,
 				4DCAA922EB396E4F4BE847BB /* h264_aac.mkv in Resources */,
+				BAFB465838DEEB9D529F7B52 /* h264_aac.mp4 in Resources */,
 				EF7970A4DABBB5D80192583D /* h264_mp3.flv in Resources */,
 				E09260D0B5C1AF50F876A2A5 /* hevc_aac.flv in Resources */,
 				6E254F8464BED359D59D6DA2 /* hevc_aac.mkv in Resources */,
+				02BC4EF0AD01BD356F8934F9 /* hevc_dts.mp4 in Resources */,
 				26EE8E1256592B363990DAE6 /* hls_encrypted_segment0.ts in Resources */,
 				EAF8171AE61C13EE3191671C /* hls_key.bin in Resources */,
 				7F67DCD390FA97B1A5442C90 /* network_seek_h264_aac.mkv in Resources */,

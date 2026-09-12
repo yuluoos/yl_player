@@ -11,6 +11,7 @@ final class YlMediaClock {
   private var mediaAnchorUs: Int64 = 0
   private var hostAnchorUs: Int64 = 0
   private var audioSampleAnchor: Int64?
+  private var lastAudioPosition: (positionUs: Int64, hostTimeUs: Int64)?
   private var rate: Double = 1
   private var playing = false
 
@@ -22,6 +23,7 @@ final class YlMediaClock {
     lock.lock()
     mediaAnchorUs = max(0, ptsUs)
     audioSampleAnchor = sampleTime
+    lastAudioPosition = nil
     lock.unlock()
   }
 
@@ -34,6 +36,7 @@ final class YlMediaClock {
     }
     hostAnchorUs = hostTimeUs
     audioSampleAnchor = renderedAudioTime?.sampleTime
+    lastAudioPosition = nil
     playing = true
     lock.unlock()
   }
@@ -51,6 +54,7 @@ final class YlMediaClock {
     )
     hostAnchorUs = hostTimeUs
     audioSampleAnchor = renderedAudioTime?.sampleTime
+    lastAudioPosition = nil
     playing = false
     lock.unlock()
   }
@@ -59,6 +63,7 @@ final class YlMediaClock {
     lock.lock()
     mediaAnchorUs = max(0, positionUs)
     audioSampleAnchor = nil
+    lastAudioPosition = nil
     lock.unlock()
   }
 
@@ -72,6 +77,7 @@ final class YlMediaClock {
     mediaAnchorUs = position
     hostAnchorUs = hostTimeUs
     audioSampleAnchor = renderedAudioTime?.sampleTime
+    lastAudioPosition = nil
     rate = min(max(value, 0.25), 4)
     lock.unlock()
   }
@@ -92,18 +98,29 @@ final class YlMediaClock {
   ) -> Int64 {
     guard playing else { return mediaAnchorUs }
     if let rendered = renderedAudioTime, rendered.sampleRate > 0 {
+      let position: Int64
       if let audioSampleAnchor {
         let elapsedSamples = max(0, rendered.sampleTime - audioSampleAnchor)
         let elapsedUs = Double(elapsedSamples) * 1_000_000
           / rendered.sampleRate
-        return mediaAnchorUs + Int64(elapsedUs.rounded(.towardZero))
+        position = mediaAnchorUs + Int64(elapsedUs.rounded(.towardZero))
+      } else {
+        position = hostPosition(atHostTimeUs: hostTimeUs)
+        mediaAnchorUs = position
+        hostAnchorUs = hostTimeUs
+        audioSampleAnchor = rendered.sampleTime
       }
-      let recoveredPosition = hostPosition(atHostTimeUs: hostTimeUs)
-      mediaAnchorUs = recoveredPosition
-      hostAnchorUs = hostTimeUs
-      audioSampleAnchor = rendered.sampleTime
-      return recoveredPosition
+      lastAudioPosition = (position, hostTimeUs)
+      return position
     }
+    if let lastAudioPosition {
+      // Audio may end before video. Continue from its last observed position,
+      // excluding any earlier wall-clock time spent waiting for audio data.
+      mediaAnchorUs = lastAudioPosition.positionUs
+      hostAnchorUs = lastAudioPosition.hostTimeUs
+      self.lastAudioPosition = nil
+    }
+    audioSampleAnchor = nil
     return hostPosition(atHostTimeUs: hostTimeUs)
   }
 

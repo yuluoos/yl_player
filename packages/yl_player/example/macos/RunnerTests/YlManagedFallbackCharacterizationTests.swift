@@ -83,6 +83,9 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     func clear() { lock.withLock { entries.removeAll() } }
   }
   private final class SeekControl: YlDemuxControlling {
+    private let lock = NSLock()
+    private var joinedWorker: DispatchQueue?
+    var worker: DispatchQueue? { lock.withLock { joinedWorker } }
     let trace: Trace
     let releaseJoin = DispatchSemaphore(value: 0)
     let releaseSeek = DispatchSemaphore(value: 0)
@@ -90,6 +93,7 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     func interrupt(_ media: YlOpenedMedia) { trace.add("interrupt"); media.interruptRead() }
     func resume(_ media: YlOpenedMedia) { media.resumeReads(); trace.add("read.resume") }
     func join(_ worker: DispatchQueue, operation: () -> Void) {
+      lock.withLock { joinedWorker = worker }
       // Real pending work on the exact demux queue must finish before buffers clear.
       worker.async { [self] in
         trace.add("worker.held")
@@ -699,16 +703,19 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
       XCTAssertGreaterThan(index, previous, "Wrong actual seek order: \(stages)")
       previous = index
     }
+    let currentVideo = try XCTUnwrap(factory.sessions.last)
+    try await AppleHostCharacterizations.waitFor { currentVideo.lastGeneration != nil }
+    let currentGeneration = try XCTUnwrap(currentVideo.lastGeneration)
     try instance.pause()
+    // Once video has prebuffered, paused pumpOne admits no new packets. Drain
+    // the actual demux turn that may already have passed its playing check.
+    try XCTUnwrap(control.worker).sync {}
     XCTAssertEqual(try renderer.enqueue(packet: YlCompressedAudioPacket(data: Data([1]),
       ptsUs: 0, durationUs: 20_000, generation: oldGeneration)), .staleGeneration)
     let scheduledAfterSeek = renderer.scheduledBytes
     for completion in oldCompletions { completion() }
     XCTAssertEqual(renderer.scheduledBytes, scheduledAfterSeek, "Pre-seek completions cannot consume new audio")
     XCTAssertEqual(oldVideo.invalidations, 1)
-    let currentVideo = try XCTUnwrap(factory.sessions.last)
-    try await AppleHostCharacterizations.waitFor { currentVideo.lastGeneration != nil }
-    let currentGeneration = try XCTUnwrap(currentVideo.lastGeneration)
     try oldVideo.send(generation: oldGeneration)
     try currentVideo.send(generation: currentGeneration, ptsUs: 0)
     await Task.yield()

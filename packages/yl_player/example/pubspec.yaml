@@ -34,4 +34,6 @@ flutter:
     - assets/test_media/hls_encrypted_segment0.ts
     - assets/test_media/hls_key.bin
     - assets/test_media/network_seek_h264_aac.mkv
+    - assets/test_media/long_60fps_h264_aac.mkv
+    - assets/test_media/video_tail_60fps_h264_aac.mkv
     - assets/test_media/two_audio_tracks.mkv

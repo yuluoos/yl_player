@@ -20,7 +20,7 @@ assert pins == {'FFMPEG_VERSION':'9.0.1', 'FFMPEG_URL':'https://ffmpeg.org/relea
  'FFMPEG_SIGNING_KEY_SHA256':'397b3becedcd5a98769967ff1ff8501ddc89f8368b8f766e4701377d7dbaabe5',
  'IOS_DEPLOYMENT_TARGET':'15.0', 'MACOS_DEPLOYMENT_TARGET':'12.0'}
 allowed_enables = {'--enable-cross-compile','--enable-avutil','--enable-avcodec','--enable-avformat',
- '--enable-demuxer=matroska,flv','--enable-protocol=file','--enable-parser=aac,h264,hevc,mpegaudio',
+ '--enable-demuxer=matroska,flv,mov','--enable-decoder=dca','--enable-protocol=file','--enable-parser=aac,h264,hevc,mpegaudio,dca',
  '--enable-pic','--enable-static'}
 required_disables = {'--disable-everything','--disable-autodetect','--disable-network',
  '--disable-programs','--disable-doc','--disable-avdevice','--disable-avfilter','--disable-swscale',
@@ -86,7 +86,7 @@ with tempfile.TemporaryDirectory(prefix='yl-apple-contract-') as root:
  copy = pathlib.Path(root)/'yl_player_apple'; shutil.copytree(package,copy,symlinks=True)
  copied_script = copy/'tool/apple_ffmpeg'; copied_lock = copied_script/'bridge-artifact.lock'
  mutations = [('source',copy/'darwin/native/YlFFmpegBridge/YlFFmpegBridge.m',lambda b:b+b'\n// corruption\n'),
-  ('configuration',copied_script/'build_xcframework.sh',lambda b:b.replace(b'--enable-demuxer=matroska,flv',b'--enable-demuxer=matroska,flv,mov')),
+  ('configuration',copied_script/'build_xcframework.sh',lambda b:b.replace(b'--enable-demuxer=matroska,flv,mov',b'--enable-demuxer=matroska,flv,mov,avi')),
   ('slice',copy/'darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64/YlFFmpegBridge.framework/YlFFmpegBridge',lambda b:b[:4096]+bytes([b[4096]^1])+b[4097:])]
  for name,path,mutate in mutations:
   original=path.read_bytes(); changed=mutate(original); assert changed!=original
