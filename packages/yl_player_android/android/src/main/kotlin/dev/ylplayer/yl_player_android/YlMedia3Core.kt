@@ -448,6 +448,13 @@ internal class YlMedia3Core(
         ).minOrNull() ?: Int.MAX_VALUE
         trackSelector.parameters = trackSelector.buildUponParameters()
             .setTrackTypeDisabled(C.TRACK_TYPE_TEXT, true)
+            // Display size guides adaptive selection, not encoded video dimensions:
+            // a portrait 1080px screen can still display a 1920px landscape stream.
+            .setViewportSize(
+                deviceProfile.displayWidth ?: Int.MAX_VALUE,
+                deviceProfile.displayHeight ?: Int.MAX_VALUE,
+                true,
+            )
             .setMaxVideoSize(envelope.maxWidth ?: Int.MAX_VALUE, envelope.maxHeight ?: Int.MAX_VALUE)
             .setMaxVideoFrameRate(envelope.maxFrameRate?.roundToInt() ?: Int.MAX_VALUE)
             .setMaxVideoBitrate(bitrate)

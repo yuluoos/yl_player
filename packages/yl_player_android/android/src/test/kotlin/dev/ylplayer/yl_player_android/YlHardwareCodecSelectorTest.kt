@@ -140,21 +140,35 @@ class YlHardwareCodecSelectorTest {
     fun `constrained envelope is capped at 1080p30`() {
         assertEquals(
             YlVideoEnvelope(1920, 1080, 30.0),
-            videoEnvelope(YlDeviceTier.CONSTRAINED, 3840, 2160, 60.0),
+            displayEnvelope(YlDeviceTier.CONSTRAINED, 3840, 2160, 60.0),
         )
     }
 
     @Test
-    fun `display limits intersect the tier envelope`() {
+    fun `portrait display does not reject landscape video by encoded width`() {
+        val envelope = displayEnvelope(YlDeviceTier.STANDARD, 1080, 2400, 60.0)
+        assertTrue(1920 <= (envelope.maxWidth ?: Int.MAX_VALUE))
+        assertTrue(1080 <= (envelope.maxHeight ?: Int.MAX_VALUE))
+    }
+
+    @Test
+    fun `landscape display does not reject portrait video by encoded height`() {
+        val envelope = displayEnvelope(YlDeviceTier.STANDARD, 2400, 1080, 60.0)
+        assertTrue(1080 <= (envelope.maxWidth ?: Int.MAX_VALUE))
+        assertTrue(1920 <= (envelope.maxHeight ?: Int.MAX_VALUE))
+    }
+
+    @Test
+    fun `display resolution is a viewport preference and tier limits remain hard`() {
         assertEquals(
-            YlVideoEnvelope(1280, 720, 25.0),
-            videoEnvelope(YlDeviceTier.CONSTRAINED, 1280, 720, 25.0),
+            YlVideoEnvelope(1920, 1080, 25.0),
+            displayEnvelope(YlDeviceTier.CONSTRAINED, 1280, 720, 25.0),
         )
         assertEquals(
-            YlVideoEnvelope(1280, 720, 60.0),
-            videoEnvelope(YlDeviceTier.STANDARD, 1280, 720, 60.0),
+            YlVideoEnvelope(null, null, 60.0),
+            displayEnvelope(YlDeviceTier.STANDARD, 1280, 720, 60.0),
         )
-        val unknown = videoEnvelope(YlDeviceTier.CAPABLE, null, null, null)
+        val unknown = displayEnvelope(YlDeviceTier.CAPABLE, null, null, null)
         assertNull(unknown.maxWidth)
         assertNull(unknown.maxHeight)
         assertNull(unknown.maxFrameRate)
@@ -162,10 +176,24 @@ class YlHardwareCodecSelectorTest {
 
     @Test
     fun `host limits can only tighten an envelope`() {
-        val constrained = videoEnvelope(YlDeviceTier.CONSTRAINED, 3840, 2160, 60.0)
+        val constrained = displayEnvelope(YlDeviceTier.CONSTRAINED, 3840, 2160, 60.0)
         assertEquals(
             YlVideoEnvelope(1280, 720, 30.0),
             constrained.intersect(maxWidth = 1280, maxHeight = 720),
         )
     }
+
+    private fun displayEnvelope(
+        tier: YlDeviceTier,
+        width: Int?,
+        height: Int?,
+        refreshRate: Double?,
+    ): YlVideoEnvelope = YlAndroidDeviceProfile(
+        signals = YlDeviceSignals(null, 256, true, 31),
+        tier = tier,
+        displayWidth = width,
+        displayHeight = height,
+        displayRefreshRate = refreshRate,
+    ).videoEnvelope
+
 }

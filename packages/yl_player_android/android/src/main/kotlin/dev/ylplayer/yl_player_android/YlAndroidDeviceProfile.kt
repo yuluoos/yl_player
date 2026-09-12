@@ -15,7 +15,7 @@ internal data class YlAndroidDeviceProfile(
     val displayRefreshRate: Double?,
 ) {
     val videoEnvelope: YlVideoEnvelope
-        get() = videoEnvelope(tier, displayWidth, displayHeight, displayRefreshRate)
+        get() = videoEnvelope(tier, displayRefreshRate)
 
     companion object {
         @Suppress("DEPRECATION")

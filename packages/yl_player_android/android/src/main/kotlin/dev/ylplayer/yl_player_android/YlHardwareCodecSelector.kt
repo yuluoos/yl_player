@@ -27,17 +27,15 @@ internal data class YlVideoEnvelope(
 
 internal fun videoEnvelope(
     tier: YlDeviceTier,
-    displayWidth: Int?,
-    displayHeight: Int?,
     displayRate: Double?,
 ): YlVideoEnvelope = if (tier == YlDeviceTier.CONSTRAINED) {
     YlVideoEnvelope(
-        maxWidth = minimum(1920, displayWidth),
-        maxHeight = minimum(1080, displayHeight),
+        maxWidth = 1920,
+        maxHeight = 1080,
         maxFrameRate = minimum(30.0, displayRate),
     )
 } else {
-    YlVideoEnvelope(displayWidth, displayHeight, displayRate)
+    YlVideoEnvelope(null, null, displayRate)
 }
 
 internal fun isHardwareCodecName(decoderName: String): Boolean {
