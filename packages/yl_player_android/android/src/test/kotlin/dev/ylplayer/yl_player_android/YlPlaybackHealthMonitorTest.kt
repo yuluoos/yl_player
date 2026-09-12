@@ -16,6 +16,28 @@ class YlPlaybackHealthMonitorTest {
     }
 
     @Test
+    fun `sustained frame drops cannot terminate a fixed rendition`() {
+        val monitor = YlPlaybackHealthMonitor()
+        for (nowMs in listOf(30_000L, 60_000L, 90_000L, 120_000L)) {
+            assertEquals(
+                YlRecoveryAction.None,
+                monitor.record(sample(nowMs, dropped = 2_000, canDowngrade = false)),
+            )
+        }
+    }
+
+    @Test
+    fun `rebuffer statistics alone cannot declare a fixed rendition unsupported`() {
+        val monitor = YlPlaybackHealthMonitor()
+        for (nowMs in listOf(30_000L, 60_000L)) {
+            assertEquals(
+                YlRecoveryAction.None,
+                monitor.record(sample(nowMs, rebuffers = 3, rebufferMs = 4_000, canDowngrade = false)),
+            )
+        }
+    }
+
+    @Test
     fun `downgrade cooldown is sixty seconds and never emits upgrade`() {
         val monitor = YlPlaybackHealthMonitor()
         monitor.record(unhealthyWindow(30_000))

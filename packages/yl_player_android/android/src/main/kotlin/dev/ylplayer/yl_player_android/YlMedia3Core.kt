@@ -703,9 +703,7 @@ internal class YlMedia3Core(
             YlRecoveryAction.None -> Unit
             YlRecoveryAction.DowngradeOneStep -> {
                 val lowerBitrate = nextLowerBitrate()
-                if (lowerBitrate == null) {
-                    failWith(stableError(YlPlaybackFailure.CAPABILITY_EXCEEDED))
-                } else {
+                if (lowerBitrate != null) {
                     adaptiveBitrateCeiling = lowerBitrate
                     adaptiveDowngradeCount += 1
                     applyTrackConstraints()

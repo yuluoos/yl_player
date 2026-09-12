@@ -11,6 +11,26 @@ import org.mockito.Mockito.*
 import kotlin.test.*
 
 class YlMetricsCollectorTest {
+    @Test fun `three times speed with sustained frame drops keeps a fixed video playing`() = withCore { core, player, events ->
+        core.setPlaybackSpeed(3.0)
+        core.field("active", true)
+        core.field("hasBeenReady", true)
+        core.field("status", "playing")
+        core.field("healthWindowStartedAtMs", 0L)
+        val ticker = core.javaClass.getDeclaredField("positionTicker")
+            .apply { isAccessible = true }.get(core) as Runnable
+        clearInvocations(player)
+        for ((index, nowMs) in listOf(30_000L, 60_000L, 90_000L).withIndex()) {
+            `when`(android.os.SystemClock.elapsedRealtime()).thenReturn(nowMs)
+            core.field("droppedVideoFrames", (index + 1) * 2_000)
+            ticker.run()
+            core.ensureHealthy()
+        }
+        assertTrue(events.none { it is YlEngineEvent.Failed })
+        verify(player, never()).pause()
+        verify(player, never()).stop()
+    }
+
     @Test fun `public texture resizes to renderer dimensions without coded rotation or PAR`() {
         val texture = mock(io.flutter.view.TextureRegistry.SurfaceTextureEntry::class.java)
         val surface = mock(android.graphics.SurfaceTexture::class.java)

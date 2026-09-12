@@ -40,7 +40,7 @@ internal class YlPlaybackHealthMonitor {
 
     fun record(sample: YlHealthSample): YlRecoveryAction {
         if (sample.memoryPressure) {
-            return if (sample.canDowngrade) downgradeOrFail(sample) else YlRecoveryAction.None
+            return if (sample.canDowngrade) downgradeIfAvailable(sample) else YlRecoveryAction.None
         }
 
         if (
@@ -88,12 +88,14 @@ internal class YlPlaybackHealthMonitor {
             return YlRecoveryAction.None
         }
         consecutiveUnhealthyWindows = 0
-        return downgradeOrFail(sample)
+        return downgradeIfAvailable(sample)
     }
 
-    private fun downgradeOrFail(sample: YlHealthSample): YlRecoveryAction {
+    private fun downgradeIfAvailable(sample: YlHealthSample): YlRecoveryAction {
         if (!sample.canDowngrade) {
-            return YlRecoveryAction.Fail(stableError(YlPlaybackFailure.CAPABILITY_EXCEEDED))
+            // Dropping frames or rebuffering does not prove decoder incompatibility.
+            // Fixed renditions (including high-speed VOD) have no lower track to select.
+            return YlRecoveryAction.None
         }
         if (!downgradeCooldownElapsed(sample.nowMs)) return YlRecoveryAction.None
         lastDowngradeMs = sample.nowMs
