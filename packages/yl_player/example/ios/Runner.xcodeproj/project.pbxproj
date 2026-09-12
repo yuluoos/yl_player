@@ -23,6 +23,7 @@
 		402A8006C1DF55EEC2A1238C /* h264_aac.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 5C15EC2F7E0A1B173BA9AABC /* h264_aac.mkv */; };
 		587EB717819122C46A720E55 /* YlAppleHostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168FD4E065847901D7DBDBD0 /* YlAppleHostTests.swift */; };
 		5B13D240F2307F61A86AFE72 /* hevc_aac.mkv in Resources */ = {isa = PBXBuildFile; fileRef = EFD3B5BAF89BE4B11BA58C0A /* hevc_aac.mkv */; };
+		5B13D241F2307F61A86AFE72 /* hevc_aac.ts in Resources */ = {isa = PBXBuildFile; fileRef = EFD3B5BBF89BE4B11BA58C0A /* hevc_aac.ts */; };
 		5B96B8EC56913260A9B6DECD /* h264_aac.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F824141A740C72F6261D58F2 /* h264_aac.mp4 */; };
 		609D86C13EB4DB1A5177DCE5 /* NativeBackendFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A513C8CB5AB83592903956 /* NativeBackendFixtures.swift */; };
 		61858A7255947D46DC380A6D /* YlFallbackBufferBudgetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D475D6EA7306C86E3716F52 /* YlFallbackBufferBudgetTests.swift */; };
@@ -148,6 +149,7 @@
 		E9574A980A0BBF71BF4FD7F2 /* NativeCallbackCharacterization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeCallbackCharacterization.swift; sourceTree = "<group>"; };
 		EBD49FC1AE129A046B75B04C /* YlVideoToolboxDecoderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlVideoToolboxDecoderTests.swift; sourceTree = "<group>"; };
 		EFD3B5BAF89BE4B11BA58C0A /* hevc_aac.mkv */ = {isa = PBXFileReference; includeInIndex = 1; path = hevc_aac.mkv; sourceTree = "<group>"; };
+		EFD3B5BBF89BE4B11BA58C0A /* hevc_aac.ts */ = {isa = PBXFileReference; includeInIndex = 1; path = hevc_aac.ts; sourceTree = "<group>"; };
 		F824141A740C72F6261D58F2 /* h264_aac.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = h264_aac.mp4; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -206,6 +208,7 @@
 				9915A0A95F829E34418E60C8 /* h264_mp3.flv */,
 				AD36E29154BDA690EA8EC35E /* hevc_aac.flv */,
 				EFD3B5BAF89BE4B11BA58C0A /* hevc_aac.mkv */,
+				EFD3B5BBF89BE4B11BA58C0A /* hevc_aac.ts */,
 				B70723F5407676A3C944FFE9 /* hls_encrypted_segment0.ts */,
 				174513D67DB1951A5E7189A9 /* hls_key.bin */,
 				6B34872C32270987BA3B97B1 /* hevc_dts.mp4 */,
@@ -368,6 +371,7 @@
 				717123CF5D40832EB2557371 /* h264_mp3.flv in Resources */,
 				DDD06A3FA3EF1F04403A7097 /* hevc_aac.flv in Resources */,
 				5B13D240F2307F61A86AFE72 /* hevc_aac.mkv in Resources */,
+				5B13D241F2307F61A86AFE72 /* hevc_aac.ts in Resources */,
 				F1DFA0093AF41500A1C26982 /* hevc_dts.mp4 in Resources */,
 				89832909ABEB257CCA4BD775 /* hls_encrypted_segment0.ts in Resources */,
 				EF5B971F01A8C0B2D0116F56 /* hls_key.bin in Resources */,

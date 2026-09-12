@@ -4,4 +4,5 @@ enum YlFallbackContainer: Equatable {
   case matroska
   case flv
   case mp4
+  case hlsMpegTs
 }

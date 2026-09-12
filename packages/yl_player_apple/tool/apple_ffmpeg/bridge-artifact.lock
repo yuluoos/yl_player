@@ -23,7 +23,7 @@
     "--enable-avutil",
     "--enable-avcodec",
     "--enable-avformat",
-    "--enable-demuxer=matroska,flv,mov",
+    "--enable-demuxer=matroska,flv,mov,mpegts",
     "--enable-decoder=dca",
     "--enable-protocol=file",
     "--enable-parser=aac,h264,hevc,mpegaudio,dca",
@@ -43,8 +43,8 @@
       "size": 1656
     },
     "ios-arm64/YlFFmpegBridge.framework/Headers/YlFFmpegBridge.h": {
-      "sha256": "015c1c1872cd3093d2d33ffd1ef46119605f3146904d1b4df8b567854197488a",
-      "size": 5995
+      "sha256": "1f9056af3c2f8ceb1f644748f7ed06837ed4f2d6c30df103d12b8614386a97e4",
+      "size": 6399
     },
     "ios-arm64/YlFFmpegBridge.framework/Info.plist": {
       "sha256": "ab25c77849b32b60fd3747baab898a1cc4a65e9717f19f98080f74641610bb2f",
@@ -55,12 +55,12 @@
       "size": 84
     },
     "ios-arm64/YlFFmpegBridge.framework/YlFFmpegBridge": {
-      "sha256": "7a395ea73262ed59e29dc43502dcf7c51ae0f0c5cc733c9cc3febcd6228ac0d4",
-      "size": 1766544
+      "sha256": "337977ad58ff072b29cdfdcfa09ba5986ad50c2d9e96451809dc17893e36dc98",
+      "size": 1822200
     },
     "ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/Headers/YlFFmpegBridge.h": {
-      "sha256": "015c1c1872cd3093d2d33ffd1ef46119605f3146904d1b4df8b567854197488a",
-      "size": 5995
+      "sha256": "1f9056af3c2f8ceb1f644748f7ed06837ed4f2d6c30df103d12b8614386a97e4",
+      "size": 6399
     },
     "ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/Info.plist": {
       "sha256": "ab25c77849b32b60fd3747baab898a1cc4a65e9717f19f98080f74641610bb2f",
@@ -71,8 +71,8 @@
       "size": 84
     },
     "ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/YlFFmpegBridge": {
-      "sha256": "bc8410341f3060054fa15e338491200e62a12a18f4edf05409bcb235dcffa0a6",
-      "size": 3503440
+      "sha256": "9563a129707defa1a6e8679e06c713223330edbe9bc9d330489970d9efef2411",
+      "size": 3608720
     },
     "macos-arm64_x86_64/YlFFmpegBridge.framework/Headers": {
       "symlink": "Versions/Current/Headers"
@@ -84,8 +84,8 @@
       "symlink": "Versions/Current/Resources"
     },
     "macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/Headers/YlFFmpegBridge.h": {
-      "sha256": "015c1c1872cd3093d2d33ffd1ef46119605f3146904d1b4df8b567854197488a",
-      "size": 5995
+      "sha256": "1f9056af3c2f8ceb1f644748f7ed06837ed4f2d6c30df103d12b8614386a97e4",
+      "size": 6399
     },
     "macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/Modules/module.modulemap": {
       "sha256": "07b626cfd01759b3d6586317975779dadc3afad2611abbdf92e03ca7db0bea40",
@@ -96,8 +96,8 @@
       "size": 617
     },
     "macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge": {
-      "sha256": "e7330535f778f315532daab9f9888f52e2b9a5f84072ae9621c4e6d51fbe2d5b",
-      "size": 3500176
+      "sha256": "23b119b86bf99f36a5274b32efc0af914188d22815bb0c291b8683239e09feaa",
+      "size": 3605424
     },
     "macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/Current": {
       "symlink": "A"
@@ -107,11 +107,11 @@
     }
   },
   "inputs": {
-    "darwin/native/YlFFmpegBridge/YlFFmpegBridge.m": "120a62689fe2fd031229d07678a2d5ac89cd1171781f963f22323e9bfa1fabe2",
-    "darwin/native/YlFFmpegBridge/include/YlFFmpegBridge.h": "015c1c1872cd3093d2d33ffd1ef46119605f3146904d1b4df8b567854197488a",
+    "darwin/native/YlFFmpegBridge/YlFFmpegBridge.m": "30a82c70ae0819479f2e43aeb8d8baacbaa27da9ff87c5492c472da54ee293c1",
+    "darwin/native/YlFFmpegBridge/include/YlFFmpegBridge.h": "1f9056af3c2f8ceb1f644748f7ed06837ed4f2d6c30df103d12b8614386a97e4",
     "darwin/native/YlFFmpegBridge/module.modulemap": "07b626cfd01759b3d6586317975779dadc3afad2611abbdf92e03ca7db0bea40",
     "tool/apple_ffmpeg/FFMPEG_RELEASE_KEY.asc": "397b3becedcd5a98769967ff1ff8501ddc89f8368b8f766e4701377d7dbaabe5",
-    "tool/apple_ffmpeg/build_xcframework.sh": "869277b3fc0dc5fb369c058d9d48467eb673814579e2addc6537f43f1dc136bb",
+    "tool/apple_ffmpeg/build_xcframework.sh": "627466c2822f2a5ed166519687603bdeb3fd06a1f057e3b3b6740a2f01c9cdda",
     "tool/apple_ffmpeg/ffmpeg-9.0.1.lock": "80af0e63635f1ee913cbb4aded6380d2d56f9eaa014d19e34f3ef16ddef38e30"
   },
   "schema": 1,

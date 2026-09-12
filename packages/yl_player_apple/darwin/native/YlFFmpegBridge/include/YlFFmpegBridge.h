@@ -84,6 +84,8 @@ typedef int32_t (*YLFReadCallback)(void *opaque,
 typedef int64_t (*YLFSeekCallback)(void *opaque,
                                    int64_t offset,
                                    int32_t whence);
+typedef int64_t (*YLFTimeSeekCallback)(void *opaque,
+                                      int64_t position_us);
 typedef void (*YLFCancelCallback)(void *opaque);
 
 // Accepts an absolute filesystem path or file:// URL. Returned contexts and
@@ -101,6 +103,14 @@ YLF_EXPORT int32_t ylf_open_callbacks(void *opaque,
                                       YLFCancelCallback cancel_callback,
                                       YLFMediaContextRef *out_context,
                                       YLFMediaInfo *out_info);
+YLF_EXPORT int32_t ylf_open_callbacks_with_time_seek(
+    void *opaque,
+    YLFReadCallback read_callback,
+    YLFSeekCallback seek_callback,
+    YLFTimeSeekCallback time_seek_callback,
+    YLFCancelCallback cancel_callback,
+    YLFMediaContextRef *out_context,
+    YLFMediaInfo *out_info);
 // DTS is decoded without encoders/resampling to stereo float PCM. Decode owns
 // no caller memory; samples are interleaved L/R and capacity is stereo frames.
 typedef struct YLFDtsDecoder *YLFDtsDecoderRef;

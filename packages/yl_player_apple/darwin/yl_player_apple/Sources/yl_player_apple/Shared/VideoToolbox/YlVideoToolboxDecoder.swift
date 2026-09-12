@@ -484,7 +484,7 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
     lock.unlock()
     guard acceptsOutput else { return }
 
-    guard image.status == noErr, let pixelBuffer = image.pixelBuffer else {
+    guard image.status == noErr else {
       onError(NativePlayerError(
         category: "decoderFailure",
         code: "decoder.video_decode_failed",
@@ -493,6 +493,7 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
       ))
       return
     }
+    guard let pixelBuffer = image.pixelBuffer else { return }
 
     let frameReservation = bufferScope?.reserve(category: .queuedVideoFrames, bytes: CVPixelBufferGetDataSize(pixelBuffer))
     guard bufferScope == nil || frameReservation != nil else { return }

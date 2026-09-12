@@ -13,7 +13,7 @@ actual source and requirements before Load.
 | Android `content:` URI | Supported; Android only | Rejected as invalid | Rejected as invalid |
 | Local MP4/MOV and platform-native progressive media | Supported subject to Media3 extractor/codec | Supported subject to AVFoundation/codec | Not selected |
 | Network MP4/MOV | Supported with Media3 | Supported only without request headers or credentials | Managed request rejected |
-| HLS without request metadata | Supported | Supported | Managed request rejected |
+| HLS without request metadata | Supported | Supported; VOD HEVC-in-MPEG-TS media playlists use managed demux + VideoToolbox | Managed request rejected |
 | HLS with ordinary headers or credentials | Supported subject to Android origin filtering | Inspection-dependent controlled manifest/key/media-proxy route; same-origin credentials enforced | Managed request rejected |
 | Local Matroska | Supported subject to Media3 | Not selected | Inspection-dependent; supported H.264/H.265 video with AAC-LC/MP3 route |
 | Network Matroska VOD | Supported subject to Media3 | Not selected | Inspection-dependent owned byte route |
@@ -23,7 +23,7 @@ actual source and requirements before Load.
 | AVI, MPEG-TS, or MPEG-PS request | Media3 route; runtime-dependent | Rejected before engine selection (`container.unsupported`, or `policy.unsupported` for a strict request) | Rejected before engine selection |
 | Unknown network format | Inspection-dependent | Inspection-dependent | Apple inspection reads at most the bounded 4096-byte signature window, then reassesses |
 
-The Apple FFmpeg artifact enables only Matroska and FLV demuxing plus the
+The Apple FFmpeg artifact enables Matroska, FLV, MP4, and MPEG-TS demuxing plus the
 documented parsers. It does not provide networking or software video decoding.
 Apple managed fallback requires a supported video stream; audio-only fallback
 media is currently rejected.

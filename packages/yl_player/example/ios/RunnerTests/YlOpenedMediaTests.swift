@@ -60,6 +60,60 @@ final class YlOpenedMediaTests: XCTestCase {
     )
   }
 
+  func testMpegTransportStreamHlsSourceOpensAndSeeksByTimeline() throws {
+    let baseURL = try XCTUnwrap(
+      URL(string: "https://media.example.com/vod/index.m3u8")
+    )
+    let playlist = try YlHlsMediaPlaylist.parse(
+      data: Data("""
+      #EXTM3U
+      #EXTINF:2.02,
+      hevc_aac.ts
+      #EXT-X-ENDLIST
+      """.utf8),
+      baseURL: baseURL
+    )
+    let segment = try Data(contentsOf: XCTUnwrap(
+      Bundle(for: Self.self).url(forResource: "hevc_aac", withExtension: "ts")
+    ))
+    let source = YlHlsSegmentByteSource(playlist: playlist) { _ in segment }
+    let media = try YlOpenedMedia(byteSource: source)
+    defer { media.close() }
+
+    XCTAssertEqual(media.info.duration_us, 2_020_000)
+    var video: YLFStreamInfo?
+    var audio: YLFStreamInfo?
+    for index in 0..<media.info.stream_count {
+      var stream = YLFStreamInfo()
+      XCTAssertEqual(ylf_copy_stream_info(media.context, index, &stream), 0)
+      if Int(stream.kind) == YLFStreamVideo { video = stream }
+      if Int(stream.kind) == YLFStreamAudio { audio = stream }
+    }
+    let videoStream = try XCTUnwrap(video)
+    XCTAssertEqual(videoStream.codec, Int32(YLFCodecHEVC))
+    XCTAssertNoThrow(try YlVideoToolboxDecoder.makeFormatDescription(
+      context: XCTUnwrap(media.context),
+      streamIndex: videoStream.index
+    ))
+    let audioStream = try XCTUnwrap(audio)
+    XCTAssertEqual(audioStream.codec, Int32(YLFCodecAAC))
+    XCTAssertEqual(audioStream.sample_rate, 48_000)
+    XCTAssertEqual(audioStream.channel_count, 1)
+
+    XCTAssertEqual(try media.seek(toMediaTimeUs: 1_000_000), 1_000_000)
+    var packet: YLFPacketRef?
+    XCTAssertEqual(ylf_read_packet(media.context, &packet), Int32(YLFResultOK))
+    ylf_packet_release(&packet)
+  }
+
+  func testMpegTransportStreamAACBuildsAudioSpecificConfig() {
+    XCTAssertEqual(
+      ylAACLCConfiguration(sampleRate: 48_000, channelCount: 1),
+      Data([0x11, 0x88])
+    )
+    XCTAssertNil(ylAACLCConfiguration(sampleRate: 12_345, channelCount: 1))
+  }
+
   func testNetworkOpenMatchesLocalStreamMetadata() throws {
     let url = try fixture()
     let bytes = try Data(contentsOf: url)

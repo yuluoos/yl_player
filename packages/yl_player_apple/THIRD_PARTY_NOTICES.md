@@ -3,13 +3,15 @@
 ## FFmpeg 9.0.1
 
 `YlFFmpegBridge.xcframework` contains a minimized build of FFmpeg 9.0.1
-`libavformat`, `libavcodec`, and `libavutil`. It is used for Matroska and FLV
-demultiplexing and packet parsing only; video decoding remains in Apple
-VideoToolbox and AAC/MP3 decoding remains in AudioToolbox.
+`libavformat`, `libavcodec`, and `libavutil`. It is used for Matroska, FLV, MP4,
+and MPEG-TS
+demultiplexing, packet parsing, and DCA audio decoding; video decoding remains
+in Apple VideoToolbox and AAC/MP3 decoding remains in AudioToolbox.
 
-The minimized allowlist enables only the `matroska,flv` demuxers; the
-`aac,h264,hevc,mpegaudio` parsers; and the `file` protocol used by package-owned
-custom AVIO. FFmpeg networking, protocols other than `file`, decoders, encoders,
+The minimized allowlist enables only the `matroska,flv,mov,mpegts` demuxers; the
+`aac,h264,hevc,mpegaudio,dca` parsers; the DCA audio decoder; and the `file`
+protocol used by package-owned custom AVIO. FFmpeg networking, protocols other
+than `file`, all other decoders, encoders,
 muxers, filters, scaling/resampling, GPL, and nonfree components remain disabled.
 
 - Source: <https://ffmpeg.org/releases/ffmpeg-9.0.1.tar.xz>

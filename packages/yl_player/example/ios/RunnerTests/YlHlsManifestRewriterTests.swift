@@ -145,6 +145,92 @@ final class YlHlsManifestRewriterTests: XCTestCase {
     }
   }
 
+  func testManagedTransportStreamPlaylistBuildsSeekableTimeline() throws {
+    let manifest = """
+    #EXTM3U
+    #EXT-X-TARGETDURATION:5
+    #EXT-X-MEDIA-SEQUENCE:17
+    #EXTINF:4.0,
+    segment-17.ts
+    #EXTINF:3.5,
+    segment-18.ts?token=one
+    #EXTINF:5.0,
+    segment-19.ts
+    #EXT-X-ENDLIST
+    """
+
+    let playlist = try YlHlsMediaPlaylist.parse(
+      data: Data(manifest.utf8),
+      baseURL: URL(string: "http://127.0.0.1:8080/media/index.m3u8")!
+    )
+
+    XCTAssertEqual(playlist.durationUs, 12_500_000)
+    XCTAssertEqual(playlist.segments.map(\.startUs), [0, 4_000_000, 7_500_000])
+    XCTAssertEqual(playlist.segmentIndex(containing: 0), 0)
+    XCTAssertEqual(playlist.segmentIndex(containing: 3_999_999), 0)
+    XCTAssertEqual(playlist.segmentIndex(containing: 4_000_000), 1)
+    XCTAssertEqual(playlist.segmentIndex(containing: 12_500_000), 2)
+    XCTAssertEqual(
+      playlist.segments[1].url.absoluteString,
+      "http://127.0.0.1:8080/media/segment-18.ts?token=one"
+    )
+  }
+
+  func testManagedTransportStreamPlaylistRejectsUnsupportedHlsFeatures() throws {
+    let baseURL = URL(string: "http://127.0.0.1:8080/media/index.m3u8")!
+    let unsupported = [
+      "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000\nvariant.m3u8\n",
+      "#EXTM3U\n#EXT-X-KEY:METHOD=AES-128,URI=\"key\"\n#EXTINF:4,\na.ts\n#EXT-X-ENDLIST\n",
+      "#EXTM3U\n#EXTINF:4,\na.ts\n#EXT-X-DISCONTINUITY\n#EXTINF:4,\nb.ts\n#EXT-X-ENDLIST\n",
+      "#EXTM3U\n#EXTINF:4,\nhttps://other.test/a.ts\n#EXT-X-ENDLIST\n",
+    ]
+
+    for manifest in unsupported {
+      XCTAssertThrowsError(try YlHlsMediaPlaylist.parse(
+        data: Data(manifest.utf8),
+        baseURL: baseURL
+      )) { error in
+        XCTAssertEqual(
+          (error as? NativePlayerError)?.code,
+          "container.hls_managed_unsupported"
+        )
+      }
+    }
+  }
+
+  func testManagedTransportStreamByteSourceConcatenatesAndSeeksByTime() throws {
+    let baseURL = URL(string: "http://127.0.0.1:8080/media/index.m3u8")!
+    let playlist = try YlHlsMediaPlaylist.parse(
+      data: Data("""
+      #EXTM3U
+      #EXTINF:4,
+      a.ts
+      #EXTINF:3,
+      b.ts
+      #EXTINF:5,
+      c.ts
+      #EXT-X-ENDLIST
+      """.utf8),
+      baseURL: baseURL
+    )
+    let payloads = ["a.ts": Data("AAAA".utf8), "b.ts": Data("BBB".utf8),
+                    "c.ts": Data("CCCCC".utf8)]
+    let source = YlHlsSegmentByteSource(playlist: playlist) { url in
+      try XCTUnwrap(payloads[url.lastPathComponent])
+    }
+    defer { source.cancel() }
+
+    var initial = [UInt8](repeating: 0, count: 16)
+    let initialCount = try initial.withUnsafeMutableBytes { try source.read(into: $0) }
+    XCTAssertEqual(String(decoding: initial.prefix(initialCount), as: UTF8.self), "AAAABBBCCCCC")
+    XCTAssertEqual(source.durationUs, 12_000_000)
+
+    XCTAssertEqual(try source.seek(toMediaTimeUs: 5_500_000), 4_000_000)
+    var afterSeek = [UInt8](repeating: 0, count: 8)
+    let seekCount = try afterSeek.withUnsafeMutableBytes { try source.read(into: $0) }
+    XCTAssertEqual(String(decoding: afterSeek.prefix(seekCount), as: UTF8.self), "BBBCCCCC")
+  }
+
   private func internalURLs(in manifest: String) throws -> [URL] {
     let expression = try NSRegularExpression(pattern: "ylhls://[^\\\"\\s,]+")
     let range = NSRange(manifest.startIndex..., in: manifest)

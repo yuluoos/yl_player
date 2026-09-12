@@ -27,7 +27,7 @@ common_flags=(
   --enable-avutil
   --enable-avcodec
   --enable-avformat
-  --enable-demuxer=matroska,flv,mov
+  --enable-demuxer=matroska,flv,mov,mpegts
   --enable-decoder=dca
   --enable-protocol=file
   --enable-parser=aac,h264,hevc,mpegaudio,dca
@@ -210,6 +210,7 @@ build_slice() {
     _ylf_ffmpeg_version \
     _ylf_open_local \
     _ylf_open_callbacks \
+    _ylf_open_callbacks_with_time_seek \
     _ylf_copy_stream_info \
     _ylf_stream_codec_config_size \
     _ylf_copy_stream_codec_config \

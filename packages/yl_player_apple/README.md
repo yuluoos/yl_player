@@ -6,13 +6,15 @@ platforms. Deployment floors are iOS 15.0 and macOS 12.0 for CocoaPods and Swift
 Package Manager.
 
 The package contains one typed registry/session lifecycle, AVPlayer routes,
-controlled HLS loading, managed Matroska/FLV fallback, VideoToolbox and
+controlled HLS loading, managed Matroska/FLV/MPEG-TS fallback, VideoToolbox and
 AudioToolbox output, and one combined FFmpeg bridge XCFramework. AVPlayer handles
 HLS and native progressive media where policy permits. Package-owned fallback
-handles inspected Matroska and network FLV with the codec and timing limits in
+also handles VOD HEVC-in-MPEG-TS media playlists, inspected Matroska, and
+network FLV with the codec and timing limits in
 the [support matrix](../../docs/platform-support.md).
 
-Apple managed networking is available only on the owned Matroska/FLV byte
+Apple managed networking is available only on the owned Matroska/FLV and
+supported MPEG-TS HLS byte
 routes. Bounded buffering uses one Player-wide assigned-byte ledger and is
 available only on the managed fallback. Hardware-required video needs positive
 VideoToolbox evidence before commit; AVPlayer cannot supply that evidence.
@@ -22,8 +24,9 @@ session/category management and macOS no-global-session behavior. See
 restrictions.
 
 The combined XCFramework contains iOS device, iOS Simulator, and universal
-macOS slices. It uses FFmpeg 9.0.1 only for Matroska/FLV demuxing and packet
-parsing; networking and video/audio decode remain package/system owned. Binary
+macOS slices. It uses FFmpeg 9.0.1 only for Matroska/FLV/MP4/MPEG-TS demuxing,
+packet parsing, and DCA audio decoding; networking and video decode remain
+package/system owned. Binary
 redistributors must keep `THIRD_PARTY_NOTICES.md`,
 `LICENSES/FFmpeg-LGPL-2.1-or-later.txt`, the artifact lock, and replacement
 scripts. The notice documents verification and exact-toolchain rebuild flows.

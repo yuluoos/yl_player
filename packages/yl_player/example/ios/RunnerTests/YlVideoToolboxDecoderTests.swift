@@ -227,6 +227,31 @@ final class YlVideoToolboxDecoderTests: XCTestCase {
     decoder.dispose()
   }
 
+  func testSuccessfulDroppedFrameDoesNotFailDecoder() throws {
+    let factory = FakeFactory()
+    var errors: [NativePlayerError] = []
+    let decoder = try YlVideoToolboxDecoder(
+      formatDescription: formatDescription(),
+      factory: factory,
+      onFrame: { _ in XCTFail("Unexpected decoded frame") },
+      onError: { errors.append($0) }
+    )
+    decoder.decode(sample: try sampleBuffer(), generation: 1)
+
+    factory.session?.output(YlVTDecodedImage(
+      status: noErr,
+      pixelBuffer: nil,
+      pts: CMTime(value: 1, timescale: 24),
+      duration: CMTime(value: 1, timescale: 24),
+      keyframe: false,
+      generation: 1,
+      ownershipToken: nil
+    ))
+
+    XCTAssertTrue(errors.isEmpty)
+    decoder.dispose()
+  }
+
   func testFixtureDecodesFirstFrameOrReportsHardwareUnavailable() throws {
     let fixture = try XCTUnwrap(
       Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mkv")

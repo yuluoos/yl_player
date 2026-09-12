@@ -411,13 +411,23 @@ func ylFallbackPacketReadError(
   if result == Int32(YLFResultCallbackFailed), let inputError {
     return inputError
   }
+  let code: String
+  let message: String
+  switch container {
+  case .flv:
+    code = "container.flv_malformed"
+    message = "The FLV packet stream is malformed."
+  case .hlsMpegTs:
+    code = "container.hls_mpegts_malformed"
+    message = "The MPEG-TS HLS packet stream is malformed."
+  case .matroska, .mp4:
+    code = "container.mkv_malformed"
+    message = "The managed packet stream is malformed."
+  }
   return NativePlayerError(
     category: "container",
-    code: container == .flv
-      ? "container.flv_malformed" : "container.mkv_malformed",
-    message: container == .flv
-      ? "The FLV packet stream is malformed."
-      : "The Matroska packet stream is malformed.",
+    code: code,
+    message: message,
     diagnostic: "YlFFmpegBridge result \(result)"
   )
 }

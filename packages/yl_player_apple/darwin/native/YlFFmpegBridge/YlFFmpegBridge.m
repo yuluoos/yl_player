@@ -14,6 +14,7 @@
 #include <libavutil/opt.h>
 #include <libavutil/error.h>
 #include <libavutil/mathematics.h>
+#include <libavutil/mem.h>
 #include <libavformat/avformat.h>
 #include <libavutil/avutil.h>
 
@@ -34,6 +35,7 @@ struct YLFMediaContext {
   void *callback_opaque;
   YLFReadCallback read_callback;
   YLFSeekCallback seek_callback;
+  YLFTimeSeekCallback time_seek_callback;
   YLFCancelCallback cancel_callback;
   int32_t callback_result;
   struct YLFPacket *packets;
@@ -126,7 +128,137 @@ static bool ylf_is_supported_input_format(const AVInputFormat *input_format) {
   }
   return strstr(input_format->name, "matroska") != NULL ||
          strstr(input_format->name, "flv") != NULL ||
-         strstr(input_format->name, "mov") != NULL;
+         strstr(input_format->name, "mov") != NULL ||
+         strstr(input_format->name, "mpegts") != NULL;
+}
+
+static int32_t ylf_reset_after_transport_stream_probe(
+    struct YLFMediaContext *context) {
+  if (context->time_seek_callback != NULL) {
+    int64_t result = context->time_seek_callback(context->callback_opaque, 0);
+    if (result < 0) {
+      context->callback_result = (int32_t)result;
+      return ylf_callback_failure(context, YLFResultSeekFailed);
+    }
+    context->avio->buf_ptr = context->avio->buf_end;
+    context->avio->eof_reached = 0;
+    context->avio->error = 0;
+    context->avio->pos = 0;
+    avformat_flush(context->format);
+    return YLFResultOK;
+  }
+  if (avformat_seek_file(context->format, -1, INT64_MIN, 0, INT64_MAX,
+                         AVSEEK_FLAG_BACKWARD) < 0) {
+    return YLFResultSeekFailed;
+  }
+  avformat_flush(context->format);
+  return YLFResultOK;
+}
+
+static bool ylf_prime_aac_from_adts(AVCodecParameters *parameters,
+                                    const uint8_t *data,
+                                    size_t size) {
+  if (parameters == NULL || data == NULL || size < 7 ||
+      data[0] != 0xff || (data[1] & 0xf6) != 0xf0) {
+    return false;
+  }
+  int object_type = ((data[2] >> 6) & 0x03) + 1;
+  int frequency_index = (data[2] >> 2) & 0x0f;
+  int channel_configuration = ((data[2] & 0x01) << 2) | (data[3] >> 6);
+  static const int sample_rates[] = {
+      96000, 88200, 64000, 48000, 44100, 32000, 24000,
+      22050, 16000, 12000, 11025, 8000, 7350,
+  };
+  if (object_type != 2 || frequency_index >= 13 ||
+      channel_configuration < 1 || channel_configuration > 7) {
+    return false;
+  }
+  if (parameters->extradata_size == 0) {
+    parameters->extradata = av_mallocz(2 + AV_INPUT_BUFFER_PADDING_SIZE);
+    if (parameters->extradata == NULL) return false;
+    parameters->extradata[0] = (uint8_t)((object_type << 3) |
+                                         (frequency_index >> 1));
+    parameters->extradata[1] = (uint8_t)(((frequency_index & 1) << 7) |
+                                         (channel_configuration << 3));
+    parameters->extradata_size = 2;
+  }
+  parameters->sample_rate = sample_rates[frequency_index];
+  if (parameters->ch_layout.nb_channels == 0) {
+    av_channel_layout_uninit(&parameters->ch_layout);
+    av_channel_layout_default(&parameters->ch_layout, channel_configuration);
+  }
+  return true;
+}
+
+static bool ylf_transport_stream_needs_metadata(AVFormatContext *format) {
+  for (unsigned int index = 0; index < format->nb_streams; index++) {
+    AVCodecParameters *parameters = format->streams[index]->codecpar;
+    if (parameters->codec_type == AVMEDIA_TYPE_VIDEO &&
+        (parameters->codec_id == AV_CODEC_ID_H264 ||
+         parameters->codec_id == AV_CODEC_ID_HEVC) &&
+        parameters->extradata_size == 0) {
+      return true;
+    }
+    if (parameters->codec_type == AVMEDIA_TYPE_AUDIO &&
+        parameters->codec_id == AV_CODEC_ID_AAC &&
+        (parameters->extradata_size == 0 || parameters->sample_rate <= 0 ||
+         parameters->ch_layout.nb_channels <= 0)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+static int32_t ylf_prime_transport_stream_video_config(
+    struct YLFMediaContext *context) {
+  if (context->format->iformat == NULL ||
+      strstr(context->format->iformat->name, "mpegts") == NULL) {
+    return YLFResultOK;
+  }
+  bool needs_metadata = ylf_transport_stream_needs_metadata(context->format);
+  if (!needs_metadata) return YLFResultOK;
+
+  AVPacket *packet = av_packet_alloc();
+  if (packet == NULL) return YLFResultOpenFailed;
+  bool read_any = false;
+  for (int attempt = 0; attempt < 512 && needs_metadata; attempt++) {
+    av_packet_unref(packet);
+    int result = av_read_frame(context->format, packet);
+    if (result < 0) break;
+    read_any = true;
+    if (packet->stream_index < 0 ||
+        (unsigned int)packet->stream_index >= context->format->nb_streams ||
+        packet->size <= 4 || packet->data == NULL) {
+      continue;
+    }
+    AVCodecParameters *parameters =
+        context->format->streams[packet->stream_index]->codecpar;
+    if (parameters->codec_type == AVMEDIA_TYPE_AUDIO &&
+        parameters->codec_id == AV_CODEC_ID_AAC) {
+      ylf_prime_aac_from_adts(parameters, packet->data, (size_t)packet->size);
+    } else if (parameters->codec_type == AVMEDIA_TYPE_VIDEO &&
+               parameters->extradata_size == 0 &&
+               (parameters->codec_id == AV_CODEC_ID_H264 ||
+                parameters->codec_id == AV_CODEC_ID_HEVC)) {
+      bool annex_b = packet->data[0] == 0 && packet->data[1] == 0 &&
+                     (packet->data[2] == 1 ||
+                      (packet->data[2] == 0 && packet->data[3] == 1));
+      if (annex_b) {
+        parameters->extradata = av_mallocz(
+            (size_t)packet->size + AV_INPUT_BUFFER_PADDING_SIZE);
+        if (parameters->extradata == NULL) {
+          av_packet_free(&packet);
+          return YLFResultOpenFailed;
+        }
+        memcpy(parameters->extradata, packet->data, (size_t)packet->size);
+        parameters->extradata_size = packet->size;
+      }
+    }
+    needs_metadata = ylf_transport_stream_needs_metadata(context->format);
+  }
+  av_packet_free(&packet);
+  if (!read_any) return ylf_callback_failure(context, YLFResultOpenFailed);
+  return ylf_reset_after_transport_stream_probe(context);
 }
 
 static int32_t ylf_discover_streams(struct YLFMediaContext *context,
@@ -137,6 +269,8 @@ static int32_t ylf_discover_streams(struct YLFMediaContext *context,
   if (avformat_find_stream_info(context->format, NULL) < 0) {
     return ylf_callback_failure(context, YLFResultOpenFailed);
   }
+  int32_t prime_result = ylf_prime_transport_stream_video_config(context);
+  if (prime_result != YLFResultOK) return prime_result;
   out_info->stream_count = (int32_t)context->format->nb_streams;
   out_info->duration_us = context->format->duration == AV_NOPTS_VALUE
                               ? INT64_MIN
@@ -237,6 +371,169 @@ static void ylf_destroy_packet(struct YLFPacket *packet) {
 
 static uint16_t ylf_read_be16(const uint8_t *bytes) {
   return (uint16_t)(((uint16_t)bytes[0] << 8) | bytes[1]);
+}
+
+static bool ylf_start_code_at(const uint8_t *data,
+                              size_t size,
+                              size_t offset,
+                              size_t *out_length) {
+  if (offset + 3 <= size && data[offset] == 0 && data[offset + 1] == 0 &&
+      data[offset + 2] == 1) {
+    *out_length = 3;
+    return true;
+  }
+  if (offset + 4 <= size && data[offset] == 0 && data[offset + 1] == 0 &&
+      data[offset + 2] == 0 && data[offset + 3] == 1) {
+    *out_length = 4;
+    return true;
+  }
+  return false;
+}
+
+static bool ylf_find_start_code(const uint8_t *data,
+                                size_t size,
+                                size_t search_offset,
+                                size_t *out_offset,
+                                size_t *out_length) {
+  for (size_t offset = search_offset; offset + 3 <= size; offset++) {
+    if (ylf_start_code_at(data, size, offset, out_length)) {
+      *out_offset = offset;
+      return true;
+    }
+  }
+  return false;
+}
+
+static OSStatus ylf_annexb_format_description(
+    enum AVCodecID codec,
+    const uint8_t *data,
+    size_t size,
+    CMVideoFormatDescriptionRef *out_description) {
+  const uint8_t *parameter_sets[16];
+  size_t parameter_set_sizes[16];
+  size_t parameter_set_count = 0;
+  bool saw_vps = codec != AV_CODEC_ID_HEVC;
+  bool saw_sps = false;
+  bool saw_pps = false;
+  size_t start = 0;
+  size_t prefix = 0;
+  if (!ylf_find_start_code(data, size, 0, &start, &prefix)) {
+    return kCMFormatDescriptionError_InvalidParameter;
+  }
+  while (start < size) {
+    size_t nal_start = start + prefix;
+    size_t next = size;
+    size_t next_prefix = 0;
+    bool has_next = ylf_find_start_code(data, size, nal_start, &next,
+                                        &next_prefix);
+    size_t nal_end = next;
+    while (nal_end > nal_start && data[nal_end - 1] == 0) {
+      nal_end--;
+    }
+    if (nal_end > nal_start) {
+      uint8_t nal_type = codec == AV_CODEC_ID_HEVC
+                             ? (data[nal_start] >> 1) & 0x3f
+                             : data[nal_start] & 0x1f;
+      bool wanted = codec == AV_CODEC_ID_HEVC
+                        ? (nal_type == 32 || nal_type == 33 || nal_type == 34)
+                        : (nal_type == 7 || nal_type == 8);
+      if (wanted && parameter_set_count < 16) {
+        parameter_sets[parameter_set_count] = data + nal_start;
+        parameter_set_sizes[parameter_set_count++] = nal_end - nal_start;
+        saw_vps |= nal_type == 32;
+        saw_sps |= codec == AV_CODEC_ID_HEVC ? nal_type == 33 : nal_type == 7;
+        saw_pps |= codec == AV_CODEC_ID_HEVC ? nal_type == 34 : nal_type == 8;
+      }
+    }
+    if (!has_next) break;
+    start = next;
+    prefix = next_prefix;
+  }
+  if (!saw_vps || !saw_sps || !saw_pps) {
+    return kCMFormatDescriptionError_InvalidParameter;
+  }
+  if (codec == AV_CODEC_ID_HEVC) {
+    return CMVideoFormatDescriptionCreateFromHEVCParameterSets(
+        kCFAllocatorDefault, parameter_set_count, parameter_sets,
+        parameter_set_sizes, 4, NULL, out_description);
+  }
+  return CMVideoFormatDescriptionCreateFromH264ParameterSets(
+      kCFAllocatorDefault, parameter_set_count, parameter_sets,
+      parameter_set_sizes, 4, out_description);
+}
+
+static bool ylf_convert_annexb_packet(AVPacket **packet_pointer) {
+  AVPacket *packet = *packet_pointer;
+  size_t first = 0;
+  size_t first_prefix = 0;
+  if (packet == NULL || packet->data == NULL || packet->size <= 0 ||
+      !ylf_find_start_code(packet->data, (size_t)packet->size, 0, &first,
+                           &first_prefix) || first != 0) {
+    return true;
+  }
+
+  size_t output_size = 0;
+  size_t start = first;
+  size_t prefix = first_prefix;
+  size_t nal_count = 0;
+  while (start < (size_t)packet->size) {
+    size_t nal_start = start + prefix;
+    size_t next = (size_t)packet->size;
+    size_t next_prefix = 0;
+    bool has_next = ylf_find_start_code(packet->data, (size_t)packet->size,
+                                        nal_start, &next, &next_prefix);
+    size_t nal_end = next;
+    while (nal_end > nal_start && packet->data[nal_end - 1] == 0) nal_end--;
+    if (nal_end > nal_start) {
+      size_t nal_size = nal_end - nal_start;
+      if (nal_size > UINT32_MAX || nal_size > INT_MAX - 4 ||
+          output_size > (size_t)INT_MAX - 4 - nal_size) {
+        return false;
+      }
+      output_size += 4 + nal_size;
+      nal_count++;
+    }
+    if (!has_next) break;
+    start = next;
+    prefix = next_prefix;
+  }
+  if (nal_count == 0 || output_size == 0) return false;
+
+  AVPacket *converted = av_packet_alloc();
+  if (converted == NULL || av_new_packet(converted, (int)output_size) < 0 ||
+      av_packet_copy_props(converted, packet) < 0) {
+    av_packet_free(&converted);
+    return false;
+  }
+  converted->stream_index = packet->stream_index;
+  size_t output_offset = 0;
+  start = first;
+  prefix = first_prefix;
+  while (start < (size_t)packet->size) {
+    size_t nal_start = start + prefix;
+    size_t next = (size_t)packet->size;
+    size_t next_prefix = 0;
+    bool has_next = ylf_find_start_code(packet->data, (size_t)packet->size,
+                                        nal_start, &next, &next_prefix);
+    size_t nal_end = next;
+    while (nal_end > nal_start && packet->data[nal_end - 1] == 0) nal_end--;
+    if (nal_end > nal_start) {
+      uint32_t nal_size = (uint32_t)(nal_end - nal_start);
+      converted->data[output_offset++] = (uint8_t)(nal_size >> 24);
+      converted->data[output_offset++] = (uint8_t)(nal_size >> 16);
+      converted->data[output_offset++] = (uint8_t)(nal_size >> 8);
+      converted->data[output_offset++] = (uint8_t)nal_size;
+      memcpy(converted->data + output_offset, packet->data + nal_start,
+             nal_size);
+      output_offset += nal_size;
+    }
+    if (!has_next) break;
+    start = next;
+    prefix = next_prefix;
+  }
+  av_packet_free(packet_pointer);
+  *packet_pointer = converted;
+  return true;
 }
 
 static OSStatus ylf_h264_format_description(
@@ -428,6 +725,23 @@ int32_t ylf_open_callbacks(void *opaque,
                            YLFCancelCallback cancel_callback,
                            YLFMediaContextRef *out_context,
                            YLFMediaInfo *out_info) {
+  return ylf_open_callbacks_with_time_seek(opaque,
+                                           read_callback,
+                                           seek_callback,
+                                           NULL,
+                                           cancel_callback,
+                                           out_context,
+                                           out_info);
+}
+
+int32_t ylf_open_callbacks_with_time_seek(
+    void *opaque,
+    YLFReadCallback read_callback,
+    YLFSeekCallback seek_callback,
+    YLFTimeSeekCallback time_seek_callback,
+    YLFCancelCallback cancel_callback,
+    YLFMediaContextRef *out_context,
+    YLFMediaInfo *out_info) {
   if (opaque == NULL || read_callback == NULL || out_context == NULL ||
       out_info == NULL) {
     return YLFResultInvalidArgument;
@@ -445,6 +759,7 @@ int32_t ylf_open_callbacks(void *opaque,
   context->callback_opaque = opaque;
   context->read_callback = read_callback;
   context->seek_callback = seek_callback;
+  context->time_seek_callback = time_seek_callback;
   context->cancel_callback = cancel_callback;
 
   const int avio_buffer_size = 64 * 1024;
@@ -557,6 +872,25 @@ int32_t ylf_copy_stream_codec_config(YLFMediaContextRef context,
   return YLFResultOK;
 }
 
+static bool ylf_strip_single_adts_header(AVPacket *packet) {
+  if (packet == NULL || packet->data == NULL || packet->size < 7 ||
+      packet->data[0] != 0xff || (packet->data[1] & 0xf6) != 0xf0) {
+    return true;
+  }
+  int header_size = (packet->data[1] & 0x01) != 0 ? 7 : 9;
+  int frame_size = ((packet->data[3] & 0x03) << 11) |
+                   (packet->data[4] << 3) |
+                   (packet->data[5] >> 5);
+  if (header_size >= frame_size || frame_size != packet->size ||
+      av_packet_make_writable(packet) < 0) {
+    return false;
+  }
+  memmove(packet->data, packet->data + header_size,
+          (size_t)(packet->size - header_size));
+  packet->size -= header_size;
+  return true;
+}
+
 int32_t ylf_read_packet(YLFMediaContextRef context, YLFPacketRef *out_packet) {
   if (context == NULL || out_packet == NULL) {
     return YLFResultInvalidArgument;
@@ -597,6 +931,17 @@ int32_t ylf_read_packet(YLFMediaContextRef context, YLFPacketRef *out_packet) {
     }
     return ylf_callback_failure(context, YLFResultReadFailed);
   }
+  AVCodecParameters *parameters =
+      context->format->streams[packet->value->stream_index]->codecpar;
+  bool is_mpegts = context->format->iformat != NULL &&
+                   strstr(context->format->iformat->name, "mpegts") != NULL;
+  if (is_mpegts && parameters->codec_id == AV_CODEC_ID_AAC &&
+      !ylf_strip_single_adts_header(packet->value)) {
+    av_packet_free(&packet->value);
+    free(packet);
+    pthread_mutex_unlock(&context->mutex);
+    return YLFResultReadFailed;
+  }
 
   packet->owner = context;
   packet->next = context->packets;
@@ -616,6 +961,26 @@ int32_t ylf_seek(YLFMediaContextRef context, int64_t position_us) {
     return YLFResultInvalidArgument;
   }
   pthread_mutex_lock(&context->mutex);
+  if (context->time_seek_callback != NULL) {
+    context->callback_result = 0;
+    int64_t actual_position = context->time_seek_callback(
+        context->callback_opaque,
+        position_us);
+    if (actual_position >= 0) {
+      if (context->avio != NULL) {
+        context->avio->buf_ptr = context->avio->buf_end;
+        context->avio->eof_reached = 0;
+        context->avio->error = 0;
+        context->avio->pos = 0;
+      }
+      avformat_flush(context->format);
+      pthread_mutex_unlock(&context->mutex);
+      return YLFResultOK;
+    }
+    context->callback_result = (int32_t)actual_position;
+    pthread_mutex_unlock(&context->mutex);
+    return ylf_callback_failure(context, YLFResultSeekFailed);
+  }
   int result = avformat_seek_file(context->format,
                                   -1,
                                   INT64_MIN,
@@ -733,14 +1098,24 @@ int32_t ylf_copy_video_format_description(
   OSStatus status;
   switch (parameters->codec_id) {
   case AV_CODEC_ID_H264:
-    status = ylf_h264_format_description(parameters->extradata,
-                                         (size_t)parameters->extradata_size,
-                                         out_description);
+    status = parameters->extradata_size > 0 && parameters->extradata[0] == 1
+                 ? ylf_h264_format_description(parameters->extradata,
+                                               (size_t)parameters->extradata_size,
+                                               out_description)
+                 : ylf_annexb_format_description(parameters->codec_id,
+                                                 parameters->extradata,
+                                                 (size_t)parameters->extradata_size,
+                                                 out_description);
     break;
   case AV_CODEC_ID_HEVC:
-    status = ylf_hevc_format_description(parameters->extradata,
-                                         (size_t)parameters->extradata_size,
-                                         out_description);
+    status = parameters->extradata_size > 0 && parameters->extradata[0] == 1
+                 ? ylf_hevc_format_description(parameters->extradata,
+                                               (size_t)parameters->extradata_size,
+                                               out_description)
+                 : ylf_annexb_format_description(parameters->codec_id,
+                                                 parameters->extradata,
+                                                 (size_t)parameters->extradata_size,
+                                                 out_description);
     break;
   default:
     return YLFResultVideoConfigurationInvalid;
@@ -787,6 +1162,9 @@ int32_t ylf_create_video_sample_buffer(
   struct YLFPacket *packet = *packet_pointer;
   if (packet->value == NULL || packet->owner == NULL ||
       packet->value->size <= 0) {
+    return YLFResultSampleBufferFailed;
+  }
+  if (!ylf_convert_annexb_packet(&packet->value)) {
     return YLFResultSampleBufferFailed;
   }
 

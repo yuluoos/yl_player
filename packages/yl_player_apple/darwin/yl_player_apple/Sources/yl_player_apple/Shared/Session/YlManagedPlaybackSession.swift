@@ -19,14 +19,19 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     let needsPipeline = demux.context == nil || (services.compatibility.limitsVideoReservations && !video.hasDecoder)
     guard needsPipeline else { return false }
     let sourceRecipe = demux.sourceRecipe
-    if case .network = sourceRecipe { return true }
-    return false
+    switch sourceRecipe {
+    case .network, .hls: return true
+    case .local: return false
+    }
   }
 
   var isNetworkSource: Bool {
     let isNetwork: Bool
     let sourceRecipe = demux.sourceRecipe
-    if case .network = sourceRecipe { isNetwork = true } else { isNetwork = false }
+    switch sourceRecipe {
+    case .network, .hls: isNetwork = true
+    case .local: isNetwork = false
+    }
     return isNetwork
   }
   var isStopped: Bool { stateLock.withLock { stopped } }
@@ -812,7 +817,11 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
 
   var recoveryGeneration: UInt64 { stateLock.withLock { generation } }
   var managedRequestFailure: NativePlayerError? {
-    guard case let .network(request, _) = demux.sourceRecipe else { return nil }
+    let request: YlNetworkRequestRecipe
+    switch demux.sourceRecipe {
+    case let .network(value, _), let .hls(value): request = value
+    case .local: return nil
+    }
     return request.managedIntent?.terminalFailure
   }
 

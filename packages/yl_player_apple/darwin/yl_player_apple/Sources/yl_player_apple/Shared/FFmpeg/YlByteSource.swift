@@ -20,6 +20,11 @@ protocol YlByteSource: AnyObject {
   func handleMemoryWarning()
 }
 
+protocol YlMediaTimeSeekableByteSource: YlByteSource {
+  var durationUs: Int64 { get }
+  func seek(toMediaTimeUs positionUs: Int64) throws -> Int64
+}
+
 extension YlByteSource {
   func interruptRead() {}
   func resumeReads() {}

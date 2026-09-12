@@ -76,24 +76,43 @@ final class YlPreparedFallback {
       )
     }
     let formatHint = source.formatHint
-    let container: YlFallbackContainer = formatHint == .flv
-      || (formatHint == .automatic && url.pathExtension.lowercased() == "flv")
-      ? .flv : ([YlSourceFormat.mp4, .mov].contains(YlEngineRouter.resolvedFormat(source, url: url)) ? .mp4 : .matroska)
+    let resolvedFormat = YlEngineRouter.resolvedFormat(source, url: url)
+    let container: YlFallbackContainer
+    if resolvedFormat == .hls {
+      container = .hlsMpegTs
+    } else if formatHint == .flv
+      || (formatHint == .automatic && url.pathExtension.lowercased() == "flv") {
+      container = .flv
+    } else if [YlSourceFormat.mp4, .mov].contains(resolvedFormat) {
+      container = .mp4
+    } else {
+      container = .matroska
+    }
     if url.isFileURL {
+      guard container != .hlsMpegTs else {
+        throw NativePlayerError(
+          category: "unsupported",
+          code: "container.hls_managed_unsupported",
+          message: "Managed MPEG-TS HLS currently supports network playlists only."
+        )
+      }
       sourceRecipe = .local(path: url.path, container: container)
     } else if let scheme = url.scheme?.lowercased(),
               scheme == "http" || scheme == "https" {
       let headers = source.headers
-      sourceRecipe = .network(request: YlNetworkRequestRecipe(
+      let request = YlNetworkRequestRecipe(
         url: url,
         headers: headers,
         credentials: source.credentials,
         credentialContext: source.credentialContext,
         configuration: source.networkConfiguration.map(YlNetworkConfiguration.init(options:)) ?? configuration.network,
-        mode: container == .flv ? .sequentialLive : .randomAccessVOD,
+        mode: container == .flv || container == .hlsMpegTs ? .sequentialLive : .randomAccessVOD,
         managedIntent: source.networkPolicy == .managed ? source.managedRequestIntent : nil,
         bufferScope: bufferScope
-      ), container: container)
+      )
+      sourceRecipe = container == .hlsMpegTs
+        ? .hls(request: request)
+        : .network(request: request, container: container)
     } else {
       throw NativePlayerError(
         category: "source",
@@ -165,7 +184,7 @@ final class YlPreparedFallback {
         code: "decoder.audio_aac_unsupported",
         message: container == .flv
           ? "The selected FLV audio track is not AAC or MP3."
-          : "The selected Matroska audio track is not AAC."
+          : "The selected managed audio track is unsupported."
       )
     }
     try boundedPlan?.validate(width: Int(selectedVideo.width), height: Int(selectedVideo.height))
@@ -179,33 +198,42 @@ final class YlPreparedFallback {
     var copiedAudioCookies: [Int32: Data] = [:]
     for audioStream in selectedAudio where Int(audioStream.codec) == YLFCodecAAC {
       let size = ylf_stream_codec_config_size(validContext, audioStream.index)
-      guard size > 0 else {
+      if size > 0 {
+        var bytes = [UInt8](repeating: 0, count: size)
+        guard ylf_copy_stream_codec_config(
+          validContext,
+          audioStream.index,
+          &bytes,
+          bytes.count
+        ) == 0 else {
+          throw NativePlayerError(
+            category: "decoderUnsupported",
+            code: "decoder.audio_aac_unsupported",
+            message: "The AAC codec configuration is invalid."
+          )
+        }
+        copiedAudioCookies[audioStream.index] = Data(bytes)
+      } else if container == .hlsMpegTs,
+                let cookie = ylAACLCConfiguration(
+                  sampleRate: Int(audioStream.sample_rate),
+                  channelCount: Int(audioStream.channel_count)
+                ) {
+        // MPEG-TS carries AAC configuration in ADTS headers rather than
+        // codecpar extradata. AudioToolbox consumes the equivalent ASC cookie.
+        copiedAudioCookies[audioStream.index] = cookie
+      } else {
         throw NativePlayerError(
           category: "decoderUnsupported",
           code: "decoder.audio_aac_unsupported",
           message: "The AAC codec configuration is missing."
         )
       }
-      var bytes = [UInt8](repeating: 0, count: size)
-      guard ylf_copy_stream_codec_config(
-        validContext,
-        audioStream.index,
-        &bytes,
-        bytes.count
-      ) == 0 else {
-        throw NativePlayerError(
-          category: "decoderUnsupported",
-          code: "decoder.audio_aac_unsupported",
-          message: "The AAC codec configuration is invalid."
-        )
-      }
-      copiedAudioCookies[audioStream.index] = Data(bytes)
     }
     // FLV AAC SoundRate/SoundType are placeholders; the sequence header's
     // AudioSpecificConfig is authoritative (FLV specification, AudioTagHeader).
     // The minimal demux bridge has not run a decoder to normalize these fields.
     audioStreams = selectedAudio.map { stream in
-      guard container == .flv, Int(stream.codec) == YLFCodecAAC,
+      guard (container == .flv || container == .hlsMpegTs), Int(stream.codec) == YLFCodecAAC,
             let cookie = copiedAudioCookies[stream.index],
             let config = ylInspectedAACLCConfiguration(cookie: cookie) else { return stream }
       var normalized = stream
@@ -310,4 +338,16 @@ final class YlPreparedFallback {
   deinit {
     discard()
   }
+}
+
+func ylAACLCConfiguration(sampleRate: Int, channelCount: Int) -> Data? {
+  let sampleRates = [96_000, 88_200, 64_000, 48_000, 44_100, 32_000,
+                     24_000, 22_050, 16_000, 12_000, 11_025, 8_000, 7_350]
+  guard let frequencyIndex = sampleRates.firstIndex(of: sampleRate),
+        (1...7).contains(channelCount) else { return nil }
+  let objectType = 2 // AAC Low Complexity
+  return Data([
+    UInt8((objectType << 3) | (frequencyIndex >> 1)),
+    UInt8(((frequencyIndex & 1) << 7) | (channelCount << 3)),
+  ])
 }

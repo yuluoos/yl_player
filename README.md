@@ -22,6 +22,6 @@ and release acceptance remains pending; the support matrix distinguishes
 implemented automated evidence from physical evidence.
 
 The project is BSD-3-Clause licensed. The Apple package redistributes a
-minimized LGPL-2.1-or-later FFmpeg component for Matroska/FLV demuxing. Keep its
+minimized LGPL-2.1-or-later FFmpeg component for Matroska/FLV/MP4/MPEG-TS demuxing. Keep its
 [`THIRD_PARTY_NOTICES.md`](packages/yl_player_apple/THIRD_PARTY_NOTICES.md),
 license text, replacement scripts, and artifact lock with binary distributions.

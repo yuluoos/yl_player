@@ -1,6 +1,7 @@
 import AVFoundation
 import CoreVideo
 import Foundation
+import YlFFmpegBridge
 
 final class YlAppleSessionCoordinator: NSObject {
   private final class PreparedRestorationRevision {
@@ -692,6 +693,24 @@ final class YlAppleSessionCoordinator: NSObject {
 
   private func prepareNativeOrMp4(source: YlAppleSourceDescriptor, token: YlOpenCancellationToken,
     identity: YlAppleSessionIdentity) throws -> YlPreparedOpen {
+    if let url = source.url,
+       source.kind == .network,
+       YlEngineRouter.resolvedFormat(source, url: url) == .hls {
+      do {
+        let prepared = try prepareFallback(source: source, token: token, identity: identity)
+        if Int(prepared.videoStream.codec) == YLFCodecHEVC {
+          return .fallback(source: source, prepared: prepared)
+        }
+        prepared.discard()
+      } catch let error as NativePlayerError {
+        try token.throwIfCancelled()
+        // Master, fMP4, encrypted, discontinuous and non-TS playlists keep
+        // their established AVPlayer route. Managed playback is only selected
+        // after a complete HEVC-in-MPEG-TS preparation succeeds.
+        if error.code != "network.cancelled" { return .avPlayer(source: source) }
+        throw error
+      }
+    }
     if try YlMp4CompatibilityInspector.requiresFallback(source, configuration: configuration.network, token: token) {
       return .fallback(source: source, prepared: try prepareFallback(source: source, token: token, identity: identity))
     }

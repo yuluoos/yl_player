@@ -5,11 +5,14 @@ import YlFFmpegBridge
 enum YlFallbackSourceRecipe {
   case local(path: String, container: YlFallbackContainer)
   case network(request: YlNetworkRequestRecipe, container: YlFallbackContainer)
+  case hls(request: YlNetworkRequestRecipe)
 
   var container: YlFallbackContainer {
     switch self {
     case let .local(_, container), let .network(_, container):
       return container
+    case .hls:
+      return .hlsMpegTs
     }
   }
 }
@@ -144,6 +147,27 @@ private func ylByteSourceSeek(
   }
 }
 
+private func ylByteSourceTimeSeek(
+  _ opaque: UnsafeMutableRawPointer?,
+  _ positionUs: Int64
+) -> Int64 {
+  guard let box = ylByteSourceBox(opaque),
+        let source = box.source as? YlMediaTimeSeekableByteSource else {
+    return Int64(YLFCallbackSeekUnsupported)
+  }
+  if box.isOperationCancelled { return Int64(YLFCallbackCancelled) }
+  do {
+    return try source.seek(toMediaTimeUs: positionUs)
+  } catch YlByteSourceError.cancelled {
+    return Int64(YLFCallbackCancelled)
+  } catch let YlByteSourceError.failed(error) {
+    box.remember(error)
+    return Int64(YLFCallbackError)
+  } catch {
+    return Int64(YLFCallbackError)
+  }
+}
+
 private func ylByteSourceCancel(_ opaque: UnsafeMutableRawPointer?) {
   ylByteSourceBox(opaque)?.source.cancel()
 }
@@ -164,6 +188,7 @@ final class YlOpenedMedia {
     lock.withLock {
       if let source = callbackBox?.source { return source.supportsRandomAccess }
       if case .network = recipe { return false }
+      if case .hls = recipe { return true }
       return true
     }
   }
@@ -203,6 +228,16 @@ final class YlOpenedMedia {
       )
       onSourceCreated?(source)
       try self.init(byteSource: source, recipe: recipe)
+
+    case let .hls(request):
+      let source = try YlHlsSegmentByteSource(
+        request: request,
+        capacity: networkBufferBytes,
+        sessionConfiguration: sessionConfiguration,
+        onRetry: onRetry
+      )
+      onSourceCreated?(source)
+      try self.init(byteSource: source, recipe: recipe, container: .hlsMpegTs)
     }
   }
 
@@ -218,10 +253,13 @@ final class YlOpenedMedia {
     let box = YlByteSourceCallbackBox(source: byteSource)
     var context: YLFMediaContextRef?
     var info = YLFMediaInfo()
-    let result = ylf_open_callbacks(
+    let timeSeek: YLFTimeSeekCallback? = byteSource is YlMediaTimeSeekableByteSource
+      ? ylByteSourceTimeSeek : nil
+    let result = ylf_open_callbacks_with_time_seek(
       box.opaque,
       ylByteSourceRead,
       ylByteSourceSeek,
+      timeSeek,
       ylByteSourceCancel,
       &context,
       &info
@@ -233,6 +271,10 @@ final class YlOpenedMedia {
         network: true,
         container: container ?? recipe?.container ?? .matroska
       )
+    }
+    if let source = byteSource as? YlMediaTimeSeekableByteSource,
+       source.durationUs > 0 {
+      info.duration_us = source.durationUs
     }
     self.init(context: context, info: info, box: box, recipe: recipe)
   }
@@ -351,6 +393,13 @@ final class YlOpenedMedia {
       )
     }
     switch container {
+    case .hlsMpegTs:
+      return NativePlayerError(
+        category: "container",
+        code: "container.hls_managed_open_failed",
+        message: "The MPEG-TS HLS media could not be opened.",
+        diagnostic: "YlFFmpegBridge result \(result)"
+      )
     case .mp4:
       return NativePlayerError(category: "container", code: "container.mp4_open_failed",
         message: "The MP4 media could not be opened.", diagnostic: "YlFFmpegBridge result \(result)")

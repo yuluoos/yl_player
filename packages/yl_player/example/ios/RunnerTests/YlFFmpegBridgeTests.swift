@@ -8,6 +8,7 @@ private final class CallbackFixture {
     var offset = 0
     var cancelCount = 0
     var failReads = false
+    var timeSeekCount = 0
 
     init(bytes: Data) {
         self.bytes = bytes
@@ -16,6 +17,16 @@ private final class CallbackFixture {
     var opaque: UnsafeMutableRawPointer {
         Unmanaged.passUnretained(self).toOpaque()
     }
+}
+
+private func fixtureTimeSeek(
+    _ opaque: UnsafeMutableRawPointer?,
+    _ positionUs: Int64
+) -> Int64 {
+    guard let fixture = callbackFixture(opaque), positionUs >= 0 else { return -1 }
+    fixture.timeSeekCount += 1
+    fixture.offset = 0
+    return 0
 }
 
 private func callbackFixture(
@@ -79,6 +90,12 @@ private func fixtureCancel(_ opaque: UnsafeMutableRawPointer?) {
 
 final class YlFFmpegBridgeTests: XCTestCase {
     private let unknownTimestamp = Int64.min
+
+    func testBuildEnablesMpegTransportStreamDemuxing() {
+        let configuration = String(cString: ylf_build_configuration())
+        XCTAssertTrue(configuration.contains("--enable-demuxer="))
+        XCTAssertTrue(configuration.contains("matroska,flv,mov,mpegts"))
+    }
 
     private func fixture(_ name: String, extension fileExtension: String = "mkv") throws -> URL {
         try XCTUnwrap(
@@ -285,6 +302,84 @@ final class YlFFmpegBridgeTests: XCTestCase {
         XCTAssertEqual(ylf_debug_outstanding_packet_count(), 0)
     }
 
+    func testCreatesHEVCFormatAndSampleFromMpegTransportStream() throws {
+        var (context, mediaInfo) = try open("hevc_aac", extension: "ts")
+        defer { ylf_close(&context) }
+
+        var videoIndex: Int32?
+        var audioIndex: Int32?
+        for index in 0..<mediaInfo.stream_count {
+            var stream = YLFStreamInfo()
+            XCTAssertEqual(ylf_copy_stream_info(context, index, &stream), 0)
+            if Int(stream.kind) == YLFStreamVideo {
+                XCTAssertEqual(stream.codec, Int32(YLFCodecHEVC))
+                videoIndex = stream.index
+            }
+            if Int(stream.kind) == YLFStreamAudio { audioIndex = stream.index }
+        }
+        let streamIndex = try XCTUnwrap(videoIndex)
+        let configSize = ylf_stream_codec_config_size(context, streamIndex)
+        XCTAssertGreaterThan(configSize, 0)
+        var codecConfig = [UInt8](repeating: 0, count: configSize)
+        XCTAssertEqual(
+            ylf_copy_stream_codec_config(
+                context,
+                streamIndex,
+                &codecConfig,
+                codecConfig.count
+            ),
+            Int32(YLFResultOK)
+        )
+        XCTAssertTrue(
+            Array(codecConfig.prefix(3)) == [0, 0, 1]
+                || Array(codecConfig.prefix(4)) == [0, 0, 0, 1]
+        )
+        var unmanagedFormat: Unmanaged<CMVideoFormatDescription>?
+        XCTAssertEqual(
+            ylf_copy_video_format_description(context, streamIndex, &unmanagedFormat),
+            Int32(YLFResultOK)
+        )
+        let format = try XCTUnwrap(unmanagedFormat).takeRetainedValue()
+        XCTAssertEqual(CMFormatDescriptionGetMediaSubType(format), kCMVideoCodecType_HEVC)
+
+        var videoPacket: YLFPacketRef?
+        while videoPacket == nil {
+            var packet: YLFPacketRef?
+            XCTAssertEqual(ylf_read_packet(context, &packet), Int32(YLFResultOK))
+            if let packet, ylf_packet_stream_index(packet) == streamIndex {
+                videoPacket = packet
+            } else {
+                ylf_packet_release(&packet)
+            }
+        }
+        var unmanagedSample: Unmanaged<CMSampleBuffer>?
+        XCTAssertEqual(
+            ylf_create_video_sample_buffer(&videoPacket, format, &unmanagedSample),
+            Int32(YLFResultOK)
+        )
+        XCTAssertNil(videoPacket)
+        var sample: CMSampleBuffer? = try XCTUnwrap(unmanagedSample).takeRetainedValue()
+        XCTAssertTrue(CMSampleBufferDataIsReady(try XCTUnwrap(sample)))
+        sample = nil
+        XCTAssertEqual(ylf_debug_outstanding_packet_count(), 0)
+
+        let expectedAudioIndex = try XCTUnwrap(audioIndex)
+        var audioPacket: YLFPacketRef?
+        while audioPacket == nil {
+            var packet: YLFPacketRef?
+            XCTAssertEqual(ylf_read_packet(context, &packet), Int32(YLFResultOK))
+            if let packet, ylf_packet_stream_index(packet) == expectedAudioIndex {
+                audioPacket = packet
+            } else {
+                ylf_packet_release(&packet)
+            }
+        }
+        let ownedAudioPacket = try XCTUnwrap(audioPacket)
+        let audioBytes = try XCTUnwrap(ylf_packet_data(ownedAudioPacket))
+        XCTAssertNotEqual(audioBytes[0], 0xff, "ADTS framing must be removed before AudioToolbox")
+        ylf_packet_release(&audioPacket)
+    }
+
     func testCloseReleasesPacketsStillOwnedByContext() throws {
         var (context, _) = try open("h264_aac")
         var packet: YLFPacketRef?
@@ -326,6 +421,34 @@ final class YlFFmpegBridgeTests: XCTestCase {
         XCTAssertEqual(ylf_read_packet(context, &packet), Int32(YLFResultOK))
         ylf_packet_release(&packet)
         XCTAssertEqual(ylf_debug_outstanding_packet_count(), 0)
+    }
+
+    func testTimelineSeekCallbackResetsStreamingInput() throws {
+        let box = CallbackFixture(
+            bytes: try Data(contentsOf: fixture("hevc_aac", extension: "ts"))
+        )
+        var context: YLFMediaContextRef?
+        var info = YLFMediaInfo()
+        XCTAssertEqual(
+            ylf_open_callbacks_with_time_seek(
+                box.opaque,
+                fixtureRead,
+                fixtureSeek,
+                fixtureTimeSeek,
+                fixtureCancel,
+                &context,
+                &info
+            ),
+            Int32(YLFResultOK)
+        )
+        defer { ylf_close(&context) }
+
+        let seekCountAfterOpen = box.timeSeekCount
+        XCTAssertEqual(ylf_seek(context, 900_000), Int32(YLFResultOK))
+        XCTAssertEqual(box.timeSeekCount, seekCountAfterOpen + 1)
+        var packet: YLFPacketRef?
+        XCTAssertEqual(ylf_read_packet(context, &packet), Int32(YLFResultOK))
+        ylf_packet_release(&packet)
     }
 
     func testCallbackCloseCancelsSourceAndReleasesPackets() throws {
