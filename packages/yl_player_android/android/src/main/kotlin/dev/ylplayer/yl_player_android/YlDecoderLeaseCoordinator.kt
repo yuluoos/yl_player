@@ -28,6 +28,7 @@ internal interface YlDecoderLeaseParticipant {
     val needsExclusiveLease: Boolean
     val canRestore: Boolean
     val leaseCommitVersion: Long get() = 0
+    val activationTimeoutMs: Long get() = 15_000
     val activationTimeoutFailure: YlFailureKind get() = YlFailureKind.RESOURCE_EXHAUSTED
     fun publicationFailed(error: Throwable) {}
     fun quiesceForLease(attempt: YlLeaseAttempt, complete: (Result<YlLeaseSnapshot>) -> Unit): YlCancelHandle
@@ -111,7 +112,7 @@ internal class YlDecoderLeaseCoordinator(
                         }
                         currentCoroutineContext().ensureActive()
                     }
-                    try { stage(attempts, 15_000, operation = candidate::activateForLease) }
+                    try { stage(attempts, candidate.activationTimeoutMs, operation = candidate::activateForLease) }
                     catch (_: TimeoutCancellationException) { throw YlBoundaryException(candidate.activationTimeoutFailure) }
                     currentCoroutineContext().ensureActive()
                     if (!attached || (exclusive && request != requestGeneration)) throw CancellationException()

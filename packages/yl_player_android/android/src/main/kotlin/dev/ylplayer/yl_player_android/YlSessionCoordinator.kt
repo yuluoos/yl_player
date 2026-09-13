@@ -407,6 +407,10 @@ internal class YlSessionCoordinator(
         fun ensureResourcesUsable() {
             if (resourcesFailed) throw YlBoundaryException(YlFailureKind.RESOURCE_EXHAUSTED)
         }
+        override val activationTimeoutMs get() = if (
+            session.source.kind == AndroidSourceKind.NETWORK &&
+            session.source.intent == AndroidStreamIntent.ON_DEMAND
+        ) 45_000L else 15_000L
         override val activationTimeoutFailure get() = if (session.decoderRequirement == YlDecoderRequirement.HARDWARE_REQUIRED) YlFailureKind.DECODER_UNAVAILABLE else YlFailureKind.RESOURCE_EXHAUSTED
         override fun activateForLease(attempt: YlLeaseAttempt, complete: (Result<Unit>) -> Unit) = operation(complete) {
             ensureResourcesUsable()

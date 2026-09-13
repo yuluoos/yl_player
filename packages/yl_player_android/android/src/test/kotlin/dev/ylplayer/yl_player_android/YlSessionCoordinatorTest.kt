@@ -7,6 +7,23 @@ import kotlin.test.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlSessionCoordinatorTest {
+    @Test fun `network on demand activation may continue beyond the live deadline`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        val activation = CompletableDeferred<Unit>()
+        f.next = FakeSessionEngine().apply { activationAcknowledgement = activation }
+        val result = async { runCatching { f.coordinator.load(request("slow-vod")) } }
+        runCurrent()
+
+        advanceTimeBy(18_000)
+        runCurrent()
+        assertFalse(result.isCompleted)
+
+        activation.complete(Unit)
+        runCurrent()
+        assertTrue(result.await().isSuccess)
+        f.finish()
+    }
+
     @Test fun `foreground publishes snapshot observed during held restoration only after acknowledgement`() = runTest {
         val f = SessionFixture(StandardTestDispatcher(testScheduler))
         f.coordinator.load(request("playing").withAutoplay(true)); runCurrent()
