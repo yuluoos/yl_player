@@ -57,8 +57,20 @@ internal class YlFfmpegSession private constructor(
         return YlNativePacket(metadata[0].toInt(), bytes, metadata[1], metadata[2], metadata[3], metadata[4] != 0L)
     }
 
-    fun decodeSoftwareVideo(packet: YlNativePacket): Int =
-        YlFfmpegBridge.nativeDecodeSoftwareVideo(handle, packet.data, packet.presentationTimeUs)
+    fun decodeSoftwareVideo(packet: YlNativePacket): LongArray =
+        YlFfmpegBridge.nativeDecodeSoftwareVideo(
+            handle,
+            packet.data,
+            packet.presentationTimeUs,
+            packet.decodeTimeUs,
+        ) ?: throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
+
+    fun finishSoftwareVideo(): LongArray =
+        YlFfmpegBridge.nativeFinishSoftwareVideo(handle)
+            ?: throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
+
+    fun renderSoftwareVideoFrame(): Boolean =
+        YlFfmpegBridge.nativeRenderSoftwareVideoFrame(handle)
 
     fun decodeSoftwareAudio(packet: YlNativePacket): YlNativePcmChunk? {
         val metadata = YlFfmpegBridge.nativeDecodeSoftwareAudio(handle, packet.data, packet.presentationTimeUs) ?: return null
@@ -107,7 +119,14 @@ internal object YlFfmpegBridge {
     external fun nativeConfigureSoftwareAudio(handle: Long, streamIndex: Int): Boolean
     external fun nativeReadPacket(handle: Long): LongArray?
     external fun nativeTakePacketData(handle: Long): ByteArray
-    external fun nativeDecodeSoftwareVideo(handle: Long, data: ByteArray, presentationTimeUs: Long): Int
+    external fun nativeDecodeSoftwareVideo(
+        handle: Long,
+        data: ByteArray,
+        presentationTimeUs: Long,
+        decodeTimeUs: Long,
+    ): LongArray?
+    external fun nativeFinishSoftwareVideo(handle: Long): LongArray?
+    external fun nativeRenderSoftwareVideoFrame(handle: Long): Boolean
     external fun nativeDecodeSoftwareAudio(handle: Long, data: ByteArray, presentationTimeUs: Long): LongArray?
     external fun nativeTakePcmData(handle: Long): ByteArray
     external fun nativeSeek(handle: Long, positionUs: Long): Boolean

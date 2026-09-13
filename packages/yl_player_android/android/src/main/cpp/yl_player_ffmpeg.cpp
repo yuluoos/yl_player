@@ -7,6 +7,7 @@
 #include <atomic>
 #include <cstdint>
 #include <cstring>
+#include <deque>
 #include <mutex>
 #include <string>
 #include <vector>
@@ -47,6 +48,11 @@ struct Renderer {
   std::vector<uint8_t> planes[3];
 };
 
+struct DecodedVideoFrame {
+  AVFrame* frame = nullptr;
+  int64_t presentation_time_us = INT64_MIN;
+};
+
 struct Session {
   JavaVM* vm = nullptr;
   jobject source = nullptr;
@@ -61,6 +67,7 @@ struct Session {
   AVBSFContext* video_bsf = nullptr;
   AVCodecContext* video_decoder = nullptr;
   int software_video_stream = -1;
+  std::deque<DecodedVideoFrame> decoded_video_frames;
   Renderer renderer;
   AVCodecContext* audio_decoder = nullptr;
   SwrContext* resampler = nullptr;
@@ -143,6 +150,10 @@ int kind_value(AVMediaType type) {
 
 int64_t timestamp_us(int64_t value, AVRational base) {
   return value == AV_NOPTS_VALUE ? INT64_MIN : av_rescale_q(value, base, AV_TIME_BASE_Q);
+}
+
+int64_t timestamp_from_us(int64_t value, AVRational base) {
+  return value == INT64_MIN ? AV_NOPTS_VALUE : av_rescale_q(value, AV_TIME_BASE_Q, base);
 }
 
 GLuint compile_shader(GLenum kind, const char* source) {
@@ -300,10 +311,16 @@ bool render_frame(Renderer* renderer, const AVFrame* frame) {
   return glGetError() == GL_NO_ERROR && eglSwapBuffers(renderer->display, renderer->surface);
 }
 
+void clear_decoded_video_frames(Session* session) {
+  for (auto& decoded : session->decoded_video_frames) av_frame_free(&decoded.frame);
+  session->decoded_video_frames.clear();
+}
+
 void free_session(JNIEnv* env, Session* session) {
   if (!session) return;
   session->cancelled.store(true);
   av_bsf_free(&session->video_bsf);
+  clear_decoded_video_frames(session);
   avcodec_free_context(&session->video_decoder);
   avcodec_free_context(&session->audio_decoder);
   swr_free(&session->resampler);
@@ -324,7 +341,32 @@ AVCodecContext* create_decoder(Session* session, int stream_index) {
     avcodec_free_context(&decoder);
     return nullptr;
   }
+  decoder->pkt_timebase = session->format->streams[stream_index]->time_base;
   return decoder;
+}
+
+jlongArray receive_video_frames(JNIEnv* env, Session* session) {
+  std::vector<jlong> presentation_times;
+  while (true) {
+    AVFrame* frame = av_frame_alloc();
+    if (!frame) return nullptr;
+    int result = avcodec_receive_frame(session->video_decoder, frame);
+    if (result < 0) {
+      av_frame_free(&frame);
+      if (result != AVERROR(EAGAIN) && result != AVERROR_EOF) return nullptr;
+      break;
+    }
+    AVStream* stream = session->format->streams[session->software_video_stream];
+    int64_t presentation_time_us = timestamp_us(frame->best_effort_timestamp, stream->time_base);
+    session->decoded_video_frames.push_back({frame, presentation_time_us});
+    presentation_times.push_back(presentation_time_us);
+  }
+  jlongArray result = env->NewLongArray(static_cast<jsize>(presentation_times.size()));
+  if (result && !presentation_times.empty()) {
+    env->SetLongArrayRegion(result, 0, static_cast<jsize>(presentation_times.size()),
+                            presentation_times.data());
+  }
+  return result;
 }
 
 Session* from(jlong handle) { return reinterpret_cast<Session*>(handle); }
@@ -458,6 +500,7 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeConfigureSoftwareVide
     avcodec_free_context(&decoder); destroy_renderer(&session->renderer); return JNI_FALSE;
   }
   avcodec_free_context(&session->video_decoder);
+  clear_decoded_video_frames(session);
   session->video_decoder = decoder;
   session->software_video_stream = index;
   return JNI_TRUE;
@@ -532,28 +575,44 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeTakePacketData(JNIEnv
   return result;
 }
 
-extern "C" JNIEXPORT jint JNICALL
+extern "C" JNIEXPORT jlongArray JNICALL
 Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeDecodeSoftwareVideo(
-    JNIEnv* env, jobject, jlong handle, jbyteArray data, jlong) {
+    JNIEnv* env, jobject, jlong handle, jbyteArray data, jlong pts_us, jlong dts_us) {
   auto* session = from(handle);
-  if (!session || !session->video_decoder) return -1;
+  if (!session || !session->video_decoder || session->software_video_stream < 0) return nullptr;
   const jsize size = env->GetArrayLength(data);
   AVPacket* packet = av_packet_alloc();
-  if (!packet || av_new_packet(packet, size) < 0) { av_packet_free(&packet); return -1; }
+  if (!packet || av_new_packet(packet, size) < 0) { av_packet_free(&packet); return nullptr; }
   env->GetByteArrayRegion(data, 0, size, reinterpret_cast<jbyte*>(packet->data));
-  packet->pts = AV_NOPTS_VALUE;
+  AVStream* stream = session->format->streams[session->software_video_stream];
+  packet->pts = timestamp_from_us(pts_us, stream->time_base);
+  packet->dts = timestamp_from_us(dts_us, stream->time_base);
   int result = avcodec_send_packet(session->video_decoder, packet);
   av_packet_free(&packet);
-  if (result < 0 && result != AVERROR(EAGAIN)) return -1;
-  AVFrame* frame = av_frame_alloc();
-  int rendered = 0;
-  while (frame && avcodec_receive_frame(session->video_decoder, frame) >= 0) {
-    if (!render_frame(&session->renderer, frame)) { rendered = -1; break; }
-    ++rendered;
-    av_frame_unref(frame);
-  }
-  av_frame_free(&frame);
-  return rendered;
+  if (result < 0) return nullptr;
+  return receive_video_frames(env, session);
+}
+
+extern "C" JNIEXPORT jlongArray JNICALL
+Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeFinishSoftwareVideo(
+    JNIEnv* env, jobject, jlong handle) {
+  auto* session = from(handle);
+  if (!session || !session->video_decoder) return nullptr;
+  int result = avcodec_send_packet(session->video_decoder, nullptr);
+  if (result < 0 && result != AVERROR_EOF) return nullptr;
+  return receive_video_frames(env, session);
+}
+
+extern "C" JNIEXPORT jboolean JNICALL
+Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeRenderSoftwareVideoFrame(
+    JNIEnv*, jobject, jlong handle) {
+  auto* session = from(handle);
+  if (!session || session->decoded_video_frames.empty()) return JNI_FALSE;
+  DecodedVideoFrame decoded = session->decoded_video_frames.front();
+  session->decoded_video_frames.pop_front();
+  const bool rendered = render_frame(&session->renderer, decoded.frame);
+  av_frame_free(&decoded.frame);
+  return rendered ? JNI_TRUE : JNI_FALSE;
 }
 
 extern "C" JNIEXPORT jlongArray JNICALL
@@ -618,6 +677,7 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeSeek(JNIEnv*, jobject
     session->io->error = 0;
     avformat_flush(session->format);
     if (session->video_bsf) av_bsf_flush(session->video_bsf);
+    clear_decoded_video_frames(session);
     if (session->video_decoder) avcodec_flush_buffers(session->video_decoder);
     if (session->audio_decoder) avcodec_flush_buffers(session->audio_decoder);
     return JNI_TRUE;
@@ -626,6 +686,7 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeSeek(JNIEnv*, jobject
   if (result >= 0) {
     avformat_flush(session->format);
     if (session->video_bsf) av_bsf_flush(session->video_bsf);
+    clear_decoded_video_frames(session);
     if (session->video_decoder) avcodec_flush_buffers(session->video_decoder);
     if (session->audio_decoder) avcodec_flush_buffers(session->audio_decoder);
   }
@@ -637,6 +698,7 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeFlush(JNIEnv*, jobjec
   auto* session = from(handle);
   if (!session) return;
   if (session->video_bsf) av_bsf_flush(session->video_bsf);
+  clear_decoded_video_frames(session);
   if (session->video_decoder) avcodec_flush_buffers(session->video_decoder);
   if (session->audio_decoder) avcodec_flush_buffers(session->audio_decoder);
 }

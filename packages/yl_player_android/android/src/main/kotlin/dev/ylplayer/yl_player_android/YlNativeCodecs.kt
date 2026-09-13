@@ -155,8 +155,12 @@ internal class YlPcmAudioOutput(
     private val stream: YlNativeStreamInfo,
 ) : AutoCloseable {
     private var output: AudioTrack? = null
+    private val pendingWrite = YlPendingPcmWrite()
     private var firstPresentationUs = Long.MIN_VALUE
     private var writtenFrames = 0L
+    private var outputChannelCount = 0
+    private var clockFramePosition = 0L
+    private var clockTimestampNs = 0L
     private var volume = 1f
     private var speed = 1f
     private var playing = false
@@ -166,17 +170,26 @@ internal class YlPcmAudioOutput(
         if (!session.configureSoftwareAudio(stream.index)) throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
     }
 
+    val hasPendingData: Boolean get() = pendingWrite.hasData
+
     fun consume(packet: YlNativePacket) {
+        check(!pendingWrite.hasData)
         val pcm = session.decodeSoftwareAudio(packet) ?: return
-        val audio = output ?: create(pcm).also { output = it }
         if (firstPresentationUs == Long.MIN_VALUE) firstPresentationUs = pcm.presentationTimeUs.coerceAtLeast(0)
-        var offset = 0
-        while (offset < pcm.data.size) {
-            val count = audio.write(pcm.data, offset, pcm.data.size - offset, AudioTrack.WRITE_BLOCKING)
-            if (count <= 0) throw YlBoundaryException(YlFailureKind.PLATFORM_FAILURE)
-            offset += count
+        outputChannelCount = pcm.channelCount.coerceAtLeast(1)
+        output ?: create(pcm).also { output = it }
+        pendingWrite.enqueue(pcm.data)
+    }
+
+    fun drainPending(): Int {
+        val audio = output ?: return 0
+        val written = pendingWrite.writeAvailable { data, offset, length ->
+            audio.write(data, offset, length, AudioTrack.WRITE_NON_BLOCKING).also {
+                if (it < 0) throw YlBoundaryException(YlFailureKind.PLATFORM_FAILURE)
+            }
         }
-        writtenFrames += pcm.data.size / (pcm.channelCount * 2L)
+        writtenFrames += written / (outputChannelCount * 2L)
+        return written
     }
 
     private fun create(pcm: YlNativePcmChunk): AudioTrack {
@@ -189,15 +202,38 @@ internal class YlPcmAudioOutput(
                 .setSampleRate(pcm.sampleRate).setChannelMask(channels).build())
             .setTransferMode(AudioTrack.MODE_STREAM)
             .setBufferSizeInBytes(max(minimum, pcm.sampleRate * pcm.channelCount * 2 / 2))
-            .build().also { applyParameters(it); if (playing) it.play() }
+            .build().also {
+                applyParameters(it)
+                if (playing) {
+                    it.play()
+                    resetClockAnchor(it)
+                }
+            }
     }
 
-    fun play() { playing = true; output?.play() }
+    fun play() {
+        playing = true
+        output?.let {
+            it.play()
+            resetClockAnchor(it)
+        }
+    }
     fun pause() { playing = false; output?.pause() }
     fun flush() {
-        output?.let { audio -> audio.pause(); audio.flush() }
+        output?.let { audio ->
+            audio.pause()
+            audio.flush()
+            if (playing) {
+                audio.play()
+                resetClockAnchor(audio)
+            }
+        }
+        pendingWrite.clear()
         firstPresentationUs = Long.MIN_VALUE
         writtenFrames = 0
+        outputChannelCount = 0
+        clockFramePosition = 0
+        clockTimestampNs = 0
     }
     fun setVolume(value: Double) { volume = value.toFloat(); output?.setVolume(volume) }
     fun setSpeed(value: Double) { speed = value.toFloat(); output?.let(::applyParameters) }
@@ -213,12 +249,40 @@ internal class YlPcmAudioOutput(
     fun positionUs(): Long? {
         val audio = output ?: return null
         if (firstPresentationUs == Long.MIN_VALUE || stream.sampleRate <= 0) return null
-        return firstPresentationUs + audio.playbackHeadPosition.toLong() * 1_000_000L / stream.sampleRate
+        val coarseFramePosition = audio.playbackHeadPosition.toLong() and 0xffffffffL
+        if (!playing) {
+            return firstPresentationUs + coarseFramePosition * 1_000_000L / stream.sampleRate
+        }
+        if (clockTimestampNs == 0L) resetClockAnchor(audio)
+        val nowNs = System.nanoTime()
+        val estimated = YlAudioClockEstimator.positionUs(
+            firstPresentationUs = firstPresentationUs,
+            sampleRate = stream.sampleRate,
+            hardwareFramePosition = clockFramePosition,
+            hardwareTimestampNs = clockTimestampNs,
+            nowNs = nowNs,
+            speed = speed.toDouble(),
+            writtenFrames = writtenFrames,
+        )
+        val lastWrittenPositionUs = firstPresentationUs + writtenFrames * 1_000_000L / stream.sampleRate
+        if (estimated == lastWrittenPositionUs) {
+            clockFramePosition = writtenFrames
+            clockTimestampNs = nowNs
+        }
+        return estimated
+    }
+
+    private fun resetClockAnchor(audio: AudioTrack) {
+        clockFramePosition = audio.playbackHeadPosition.toLong() and 0xffffffffL
+        clockTimestampNs = System.nanoTime()
     }
 
     override fun close() {
+        pendingWrite.clear()
         output?.let { runCatching { it.stop() }; it.release() }
         output = null
         playbackRateParametersApplied = false
+        clockFramePosition = 0
+        clockTimestampNs = 0
     }
 }

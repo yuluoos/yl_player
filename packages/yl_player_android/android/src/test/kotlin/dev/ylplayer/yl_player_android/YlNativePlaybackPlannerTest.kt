@@ -2,6 +2,7 @@ package dev.ylplayer.yl_player_android
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 
 class YlNativePlaybackPlannerTest {
     private val h264 = YlNativeStreamInfo(0, YlNativeStreamKind.VIDEO, YlNativeCodec.H264, 1280, 720, 30.0)
@@ -74,6 +75,32 @@ class YlNativePlaybackPlannerTest {
     }
 
     @Test
+    fun `software video pacing uses decoded frame time instead of reordered packet time`() {
+        val rendered = mutableListOf<Long>()
+        val frames = YlSoftwareVideoFrames(
+            decodeFrameTimestamps = { longArrayOf(56_000) },
+            renderNextFrame = {
+                rendered += it
+                true
+            },
+        )
+
+        frames.decode(
+            YlNativePacket(
+                streamIndex = 0,
+                data = byteArrayOf(1),
+                presentationTimeUs = 156_000,
+                decodeTimeUs = 56_000,
+                durationUs = 33_000,
+                keyFrame = false,
+            ),
+        )
+        frames.renderDue(clockUs = 100_000)
+
+        assertEquals(listOf(56_000L), rendered)
+    }
+
+    @Test
     fun `normal speed does not install muting playback parameters`() {
         assertEquals(
             false,
@@ -86,6 +113,75 @@ class YlNativePlaybackPlannerTest {
         assertEquals(
             true,
             YlAudioPlaybackRatePolicy.shouldApply(speed = 1f, parametersWereApplied = true),
+        )
+    }
+
+    @Test
+    fun `non blocking pcm write retains partial data for a later scheduler turn`() {
+        val calls = mutableListOf<Pair<Int, Int>>()
+        val pending = YlPendingPcmWrite()
+        pending.enqueue(byteArrayOf(1, 2, 3, 4))
+
+        val blockedBytes = pending.writeAvailable { _, offset, length ->
+            calls += offset to length
+            0
+        }
+        val partialBytes = pending.writeAvailable { _, offset, length ->
+            calls += offset to length
+            2
+        }
+        val completedBytes = pending.writeAvailable { _, offset, length ->
+            calls += offset to length
+            length
+        }
+
+        assertEquals(0, blockedBytes)
+        assertEquals(2, partialBytes)
+        assertEquals(2, completedBytes)
+        assertEquals(listOf(0 to 4, 0 to 4, 2 to 2), calls)
+        assertFalse(pending.hasData)
+    }
+
+    @Test
+    fun `pcm flush discards bytes that were not accepted by audio track`() {
+        val pending = YlPendingPcmWrite()
+        pending.enqueue(byteArrayOf(1, 2, 3))
+        pending.writeAvailable { _, _, _ -> 1 }
+
+        pending.clear()
+
+        assertFalse(pending.hasData)
+    }
+
+    @Test
+    fun `audio clock interpolates between coarse hardware timestamps`() {
+        assertEquals(
+            115_000L,
+            YlAudioClockEstimator.positionUs(
+                firstPresentationUs = 0,
+                sampleRate = 48_000,
+                hardwareFramePosition = 4_800,
+                hardwareTimestampNs = 1_000_000_000,
+                nowNs = 1_015_000_000,
+                speed = 1.0,
+                writtenFrames = 24_000,
+            ),
+        )
+    }
+
+    @Test
+    fun `audio clock interpolation never advances beyond written pcm`() {
+        assertEquals(
+            500_000L,
+            YlAudioClockEstimator.positionUs(
+                firstPresentationUs = 0,
+                sampleRate = 48_000,
+                hardwareFramePosition = 23_900,
+                hardwareTimestampNs = 1_000_000_000,
+                nowNs = 1_100_000_000,
+                speed = 1.0,
+                writtenFrames = 24_000,
+            ),
         )
     }
 }

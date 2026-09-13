@@ -124,28 +124,63 @@ internal class YlNativeFallbackEngine(
         if (playbackJob?.isActive == true) return
         playbackJob = scope.launch {
             try {
-                val pendingVideo = ArrayDeque<YlNativePacket>()
+                val pendingHardwareVideo = ArrayDeque<YlNativePacket>()
+                val softwareVideoFrames = if (videoPath == YlNativeVideoPath.SOFTWARE) {
+                    YlSoftwareVideoFrames(
+                        decodeFrameTimestamps = { requireSession().decodeSoftwareVideo(it) },
+                        renderNextFrame = { requireSession().renderSoftwareVideoFrame() },
+                        finishDecoding = { requireSession().finishSoftwareVideo() },
+                    )
+                } else {
+                    null
+                }
                 var generation = playbackGeneration
                 while (isActive && !closed) {
                     if (!playing) { delay(10); continue }
                     if (generation != playbackGeneration) {
-                        pendingVideo.clear()
+                        pendingHardwareVideo.clear()
+                        softwareVideoFrames?.clear()
                         generation = playbackGeneration
+                    }
+                    if (audioOutput?.hasPendingData == true) {
+                        val written = audioOutput?.drainPending() ?: 0
+                        drainDueVideo(pendingHardwareVideo)
+                        softwareVideoFrames?.let { markFirstFrame(it.renderDue(currentPositionUs())) }
+                        positionUs = currentPositionUs()
+                        if (written == 0) delay(AUDIO_DRAIN_RETRY_MS) else yield()
+                        continue
                     }
                     val packet = requireSession().readPacket()
                     if (packet == null) {
-                        while (pendingVideo.isNotEmpty() && playing) renderWhenDue(pendingVideo.removeFirst())
+                        while (pendingHardwareVideo.isNotEmpty() && playing) {
+                            renderWhenDue(pendingHardwareVideo.removeFirst())
+                        }
+                        softwareVideoFrames?.let { frames ->
+                            frames.finish()
+                            while (frames.bufferedCount > 0 && playing) renderSoftwareWhenDue(frames)
+                        }
                         playing = false; audioOutput?.pause(); emitSnapshot(AndroidPlaybackStatus.COMPLETED, true); break
                     }
                     when (packet.streamIndex) {
                         selectedAudioIndex -> {
                             audioOutput?.consume(packet)
-                            drainDueVideo(pendingVideo)
+                            drainDueVideo(pendingHardwareVideo)
+                            softwareVideoFrames?.let { markFirstFrame(it.renderDue(currentPositionUs())) }
                         }
                         video?.index -> {
-                            pendingVideo.addLast(packet)
-                            drainDueVideo(pendingVideo)
-                            if (pendingVideo.size > 30) renderWhenDue(pendingVideo.removeFirst())
+                            if (softwareVideoFrames != null) {
+                                while (softwareVideoFrames.bufferedCount >= MAX_SOFTWARE_VIDEO_FRAMES && playing) {
+                                    renderSoftwareWhenDue(softwareVideoFrames)
+                                }
+                                softwareVideoFrames.decode(packet)
+                                markFirstFrame(softwareVideoFrames.renderDue(currentPositionUs()))
+                            } else {
+                                pendingHardwareVideo.addLast(packet)
+                                drainDueVideo(pendingHardwareVideo)
+                                if (pendingHardwareVideo.size > 30) {
+                                    renderWhenDue(pendingHardwareVideo.removeFirst())
+                                }
+                            }
                         }
                     }
                     positionUs = currentPositionUs()
@@ -180,10 +215,28 @@ internal class YlNativeFallbackEngine(
         renderVideo(packet)
     }
 
+    private suspend fun renderSoftwareWhenDue(frames: YlSoftwareVideoFrames) {
+        val pts = frames.nextPresentationTimeUs ?: return
+        if (pts != Long.MIN_VALUE) {
+            while (playing) {
+                val clockUs = currentPositionUs()
+                val aheadUs = pts - clockUs
+                if (YlVideoPacingPolicy.action(pts, clockUs) == YlVideoPacingAction.PRESENT) break
+                delay((aheadUs / 1000).coerceIn(1, 20))
+            }
+        }
+        if (playing) {
+            frames.renderNext()
+            markFirstFrame(1)
+        }
+    }
+
     private fun renderVideo(packet: YlNativePacket) {
-        val rendered = hardwareVideo?.consume(packet) == true ||
-            (videoPath == YlNativeVideoPath.SOFTWARE && requireSession().decodeSoftwareVideo(packet) > 0)
-        if (rendered && !firstFrame) {
+        if (hardwareVideo?.consume(packet) == true) markFirstFrame(1)
+    }
+
+    private fun markFirstFrame(renderedCount: Int) {
+        if (renderedCount > 0 && !firstFrame) {
             firstFrame = true
             firstFrameAtMs = SystemClock.elapsedRealtime()
             outputIdentity?.let { emit(YlEngineEvent.FirstFrame(it, firstFrameAtMs)) }
@@ -268,7 +321,10 @@ internal class YlNativeFallbackEngine(
         val public = output ?: return@withContext
         val surface = public.recreateBorrowedSurface()
         hardwareVideo?.replaceSurface(surface) ?: video?.let { stream ->
-            if (!requireSession().configureSoftwareVideo(stream.index, surface)) throw YlBoundaryException(YlFailureKind.PLATFORM_FAILURE)
+            if (!requireSession().configureSoftwareVideo(stream.index, surface)) {
+                throw YlBoundaryException(YlFailureKind.PLATFORM_FAILURE)
+            }
+            playbackGeneration++
         }
         public.acknowledgeReplacement(surface)
         outputIdentity = public.identity
@@ -321,6 +377,8 @@ internal class YlNativeFallbackEngine(
     private fun requireSession() = checkNotNull(session)
 
     companion object {
+        private const val AUDIO_DRAIN_RETRY_MS = 2L
+        private const val MAX_SOFTWARE_VIDEO_FRAMES = 30
         private val supportedAudio = setOf(YlNativeCodec.AAC, YlNativeCodec.MP3, YlNativeCodec.AC3,
             YlNativeCodec.EAC3, YlNativeCodec.DTS, YlNativeCodec.FLAC, YlNativeCodec.OPUS, YlNativeCodec.VORBIS)
     }

@@ -71,6 +71,92 @@ internal object YlVideoPacingPolicy {
         }
 }
 
+internal class YlSoftwareVideoFrames(
+    private val decodeFrameTimestamps: (YlNativePacket) -> LongArray,
+    private val renderNextFrame: (Long) -> Boolean,
+    private val finishDecoding: () -> LongArray = { longArrayOf() },
+) {
+    private val pendingPresentationTimesUs = ArrayDeque<Long>()
+
+    val bufferedCount: Int get() = pendingPresentationTimesUs.size
+    val nextPresentationTimeUs: Long? get() = pendingPresentationTimesUs.firstOrNull()
+
+    fun decode(packet: YlNativePacket): Int = enqueue(decodeFrameTimestamps(packet))
+
+    fun finish(): Int = enqueue(finishDecoding())
+
+    fun renderDue(clockUs: Long): Int {
+        var rendered = 0
+        while (pendingPresentationTimesUs.isNotEmpty() &&
+            YlVideoPacingPolicy.action(pendingPresentationTimesUs.first(), clockUs) == YlVideoPacingAction.PRESENT
+        ) {
+            renderNext()
+            rendered++
+        }
+        return rendered
+    }
+
+    fun renderNext() {
+        val presentationTimeUs = pendingPresentationTimesUs.removeFirst()
+        if (!renderNextFrame(presentationTimeUs)) {
+            throw YlBoundaryException(YlFailureKind.PLATFORM_FAILURE)
+        }
+    }
+
+    fun clear() = pendingPresentationTimesUs.clear()
+
+    private fun enqueue(timestamps: LongArray): Int {
+        timestamps.forEach(pendingPresentationTimesUs::addLast)
+        return timestamps.size
+    }
+}
+
+internal class YlPendingPcmWrite {
+    private var data: ByteArray? = null
+    private var offset = 0
+
+    val hasData: Boolean get() = data != null
+
+    fun enqueue(bytes: ByteArray) {
+        check(data == null) { "Previous PCM data has not been written" }
+        if (bytes.isNotEmpty()) data = bytes
+    }
+
+    fun writeAvailable(writer: (ByteArray, Int, Int) -> Int): Int {
+        val current = data ?: return 0
+        val remaining = current.size - offset
+        val written = writer(current, offset, remaining)
+        require(written in 0..remaining) { "PCM writer returned an invalid byte count" }
+        offset += written
+        if (offset == current.size) clear()
+        return written
+    }
+
+    fun clear() {
+        data = null
+        offset = 0
+    }
+}
+
+internal object YlAudioClockEstimator {
+    fun positionUs(
+        firstPresentationUs: Long,
+        sampleRate: Int,
+        hardwareFramePosition: Long,
+        hardwareTimestampNs: Long,
+        nowNs: Long,
+        speed: Double,
+        writtenFrames: Long,
+    ): Long {
+        if (sampleRate <= 0) return firstPresentationUs
+        val hardwarePositionUs = firstPresentationUs +
+            hardwareFramePosition * 1_000_000L / sampleRate
+        val elapsedUs = ((nowNs - hardwareTimestampNs).coerceAtLeast(0) / 1000 * speed).toLong()
+        val lastWrittenPositionUs = firstPresentationUs + writtenFrames * 1_000_000L / sampleRate
+        return (hardwarePositionUs + elapsedUs).coerceIn(firstPresentationUs, lastWrittenPositionUs)
+    }
+}
+
 internal object YlAudioPlaybackRatePolicy {
     fun shouldApply(speed: Float, parametersWereApplied: Boolean): Boolean =
         parametersWereApplied || speed != 1f
