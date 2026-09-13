@@ -18,13 +18,26 @@ import androidx.media3.exoplayer.upstream.ParsingLoadable
 import dev.ylplayer.yl_player_android.pigeon.*
 import okhttp3.HttpUrl.Companion.toHttpUrl
 
+internal fun requiresHlsCredentialAncestry(
+    headers: Map<String, String>,
+    credentials: Map<String, String>,
+): Boolean = credentials.isNotEmpty() || headers.keys.any { name ->
+    name.equals("Authorization", ignoreCase = true) ||
+        name.equals("Cookie", ignoreCase = true) ||
+        name.equals("Proxy-Authorization", ignoreCase = true)
+}
+
 /** One factory and provenance graph per source, retained through stop/restore/recovery. */
 @OptIn(UnstableApi::class)
 internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: NetworkConfiguration, onRetry: (Int, Long) -> Unit) {
     private val managed = source.networkPolicy?.kind == AndroidNetworkPolicyKind.MANAGED
+    private val requestHeaders = source.request?.headers.orEmpty()
+    private val requestCredentials = source.request?.credentials.orEmpty()
     private val credentials = if (source.kind == AndroidSourceKind.NETWORK) YlOriginCredentialPolicy(
-        source.locator.toHttpUrl(), source.request?.headers.orEmpty(), source.request?.credentials.orEmpty(),
+        source.locator.toHttpUrl(), requestHeaders, requestCredentials,
         requireKnownAncestry = source.format == AndroidMediaFormat.HLS || source.locator.toHttpUrl().encodedPath.lowercase().endsWith(".m3u8")) else null
+    private val protectHlsCredentialAncestry =
+        credentials != null && requiresHlsCredentialAncestry(requestHeaders, requestCredentials)
     private val http = credentials?.let { YlManagedHttpClient(it, if (managed) network else null, onRetry = onRetry) }
     private val loaderPolicy = if (managed) YlManagedLoadErrorPolicy() else DefaultLoadErrorHandlingPolicy()
     fun create(context: Context, item: MediaItem): MediaSource {
@@ -35,7 +48,11 @@ internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: Netwo
             item.localConfiguration?.uri?.path?.lowercase()?.endsWith(".m3u8") == true
         return if (hls) HlsMediaSource.Factory(dataSources)
             .setLoadErrorHandlingPolicy(loaderPolicy)
-            .apply { credentials?.let { setPlaylistParserFactory(YlOriginPlaylistParserFactory(it)) } }
+            .apply {
+                if (protectHlsCredentialAncestry) {
+                    setPlaylistParserFactory(YlOriginPlaylistParserFactory(checkNotNull(credentials)))
+                }
+            }
             .createMediaSource(item)
         else DefaultMediaSourceFactory(dataSources).setLoadErrorHandlingPolicy(loaderPolicy).createMediaSource(item)
     }

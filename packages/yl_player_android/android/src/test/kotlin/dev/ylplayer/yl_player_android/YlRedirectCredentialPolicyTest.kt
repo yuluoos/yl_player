@@ -2,11 +2,32 @@ package dev.ylplayer.yl_player_android
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 import okhttp3.Request
 import okhttp3.HttpUrl.Companion.toHttpUrl
 
 class YlRedirectCredentialPolicyTest {
+    @Test
+    fun `HLS ancestry graph is skipped when requests contain no sensitive credentials`() {
+        assertFalse(requiresHlsCredentialAncestry(emptyMap(), emptyMap()))
+        assertFalse(
+            requiresHlsCredentialAncestry(
+                mapOf("User-Agent" to "YL", "Referer" to "https://media.test"),
+                emptyMap(),
+            ),
+        )
+    }
+
+    @Test
+    fun `HLS ancestry graph is retained for every supported credential source`() {
+        for (header in listOf("Authorization", "authorization", "Cookie", "Proxy-Authorization")) {
+            assertTrue(requiresHlsCredentialAncestry(mapOf(header to "secret"), emptyMap()))
+        }
+        assertTrue(requiresHlsCredentialAncestry(emptyMap(), mapOf("X-Api-Key" to "secret")))
+    }
+
     @Test fun `HLS reload query and cached graph edges cannot restore stripped credentials`() {
         val root = "https://origin.test/master.m3u8".toHttpUrl()
         val outside = "https://cdn.test/media.m3u8".toHttpUrl()
