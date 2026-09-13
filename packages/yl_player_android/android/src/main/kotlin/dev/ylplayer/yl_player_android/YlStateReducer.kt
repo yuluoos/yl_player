@@ -87,6 +87,13 @@ internal class YlStateReducer(
         val failure = failures.toMessage(YlBoundaryException(YlFailureKind.NETWORK_FAILED), AndroidFailureScope.SESSION)
         events?.onRetryScheduled(AndroidRetryScheduledMessage(id, revision, ++sequence, event.occurredAtMs, event.index, event.delayMs, failure))
     }
+    fun engineChanged(event: YlEngineEvent.BackendChanged) {
+        val id = state.sessionId ?: return
+        if (terminal || state.engine == event.current) return
+        publish(state.copy(engine = event.current))
+        events?.onEngineChanged(AndroidEngineChangedMessage(
+            id, revision, ++sequence, event.occurredAtMs, event.previous, event.current))
+    }
     private fun publish(next: AndroidStateMessage) {
         state = next.copy(revision = ++revision, sequence = ++sequence)
         events?.onState(state)

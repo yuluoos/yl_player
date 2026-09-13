@@ -1,5 +1,15 @@
 ## 0.2.0-dev.1
 
+- Add an Android managed fallback that uses FFmpeg for demuxing and MediaCodec
+  hardware video when possible, then bounded H.264/H.265 software video and PCM
+  audio decoding when the stream is unsupported by device hardware.
+- Add progressive HTTP and AES-128 HLS VOD/live native input, one-shot Media3
+  fallback routing, backend-change events, and three-ABI replaceable LGPL
+  artifacts with reproducible signed-source build tooling.
+- Pace a full native video queue against presentation timestamps instead of
+  rendering frames in bursts, reuse allocated YUV textures across software
+  frames, route unselected Media3 audio tracks through FFmpeg audio fallback,
+  and avoid muting normal-speed PCM when a device rejects playback parameters.
 - Implement the typed SPI major 2 registry, per-player transport, source
   assessment, commit/state barrier, session authority, and correlated callbacks.
 - Add platform-default and managed Media3 networking with same-origin credential,

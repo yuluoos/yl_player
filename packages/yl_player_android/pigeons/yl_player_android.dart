@@ -51,7 +51,7 @@ enum AndroidPlaybackStatus {
   failed,
 }
 
-enum AndroidEngine { unknown, media3 }
+enum AndroidEngine { unknown, media3, managedFallback }
 
 enum AndroidTrackKind { audio, video }
 

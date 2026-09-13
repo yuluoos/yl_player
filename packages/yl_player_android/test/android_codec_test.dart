@@ -67,7 +67,11 @@ void main() {
   test(
     'Android engines are the explicit public subset and source kinds cover all variants',
     () {
-      const supported = {YlPlaybackEngine.unknown, YlPlaybackEngine.media3};
+      const supported = {
+        YlPlaybackEngine.unknown,
+        YlPlaybackEngine.media3,
+        YlPlaybackEngine.managedFallback,
+      };
       expect(AndroidEngine.values.map(AndroidCodec.engine).toSet(), supported);
       expect(
         AndroidEngine.values.map((value) => value.name).toSet(),

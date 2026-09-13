@@ -24,15 +24,24 @@ final class AuthenticatedHlsServer {
     required this._segment,
     required this.sameOrigin,
     required this.returnSegmentToPrimary,
+    required this.codecs,
+    required this.resolution,
+    required this.isLive,
+    required this.durationSeconds,
   });
 
   static Future<AuthenticatedHlsServer> start({
     bool sameOrigin = false,
     bool returnSegmentToPrimary = false,
+    String segmentAsset = 'assets/test_media/hls_encrypted_segment0.ts',
+    String codecs = 'avc1.42c00d,mp4a.40.2',
+    String resolution = '320x180',
+    bool isLive = false,
+    double durationSeconds = 1.968,
   }) async {
     final values = await Future.wait<ByteData>(<Future<ByteData>>[
       rootBundle.load('assets/test_media/hls_key.bin'),
-      rootBundle.load('assets/test_media/hls_encrypted_segment0.ts'),
+      rootBundle.load(segmentAsset),
     ]);
     final primary = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
     final secondary = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
@@ -43,6 +52,10 @@ final class AuthenticatedHlsServer {
       segment: _bytes(values[1]),
       sameOrigin: sameOrigin,
       returnSegmentToPrimary: returnSegmentToPrimary,
+      codecs: codecs,
+      resolution: resolution,
+      isLive: isLive,
+      durationSeconds: durationSeconds,
     );
     primary.listen((request) => unawaited(result._handlePrimary(request)));
     secondary.listen((request) => unawaited(result._handleSecondary(request)));
@@ -55,6 +68,11 @@ final class AuthenticatedHlsServer {
   final HttpServer _secondary;
   final Uint8List _key;
   final Uint8List _segment;
+  final String codecs;
+  final String resolution;
+  final bool isLive;
+  final double durationSeconds;
+  int _playlistReload = 0;
   final List<RecordedHlsRequest> requests = <RecordedHlsRequest>[];
 
   Uri get masterUri => _uri(_primary, '/master.m3u8');
@@ -83,7 +101,7 @@ final class AuthenticatedHlsServer {
           '#EXTM3U\n'
           '#EXT-X-VERSION:3\n'
           '#EXT-X-STREAM-INF:BANDWIDTH=350000,'
-          'CODECS="avc1.42c00d,mp4a.40.2",RESOLUTION=320x180\n'
+          'CODECS="$codecs",RESOLUTION=$resolution\n'
           '$child\n',
         );
       case '/media.m3u8':
@@ -105,20 +123,24 @@ final class AuthenticatedHlsServer {
     switch (request.uri.path) {
       case '/media.m3u8':
         final key = _uri(_primary, '/key.bin');
+        final sequence = isLive ? _playlistReload++ : 0;
         final segment = returnSegmentToPrimary
-            ? _uri(_primary, '/segment0.ts').toString()
-            : 'segment0.ts';
+            ? _uri(
+                _primary,
+                '/segment0.ts',
+              ).replace(queryParameters: {'sequence': '$sequence'}).toString()
+            : 'segment0.ts?sequence=$sequence';
         await _serveText(
           request.response,
           '#EXTM3U\n'
           '#EXT-X-VERSION:3\n'
           '#EXT-X-TARGETDURATION:2\n'
-          '#EXT-X-MEDIA-SEQUENCE:0\n'
+          '#EXT-X-MEDIA-SEQUENCE:$sequence\n'
           '#EXT-X-KEY:METHOD=AES-128,URI="$key",'
           'IV=0x00000000000000000000000000000000\n'
-          '#EXTINF:1.968000,\n'
+          '#EXTINF:${durationSeconds.toStringAsFixed(6)},\n'
           '$segment\n'
-          '#EXT-X-ENDLIST\n',
+          '${isLive ? '' : '#EXT-X-ENDLIST\n'}',
         );
       case '/segment0.ts':
         await _serveBytes(

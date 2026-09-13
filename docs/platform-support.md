@@ -28,6 +28,17 @@ documented parsers. It does not provide networking or software video decoding.
 Apple managed fallback requires a supported video stream; audio-only fallback
 media is currently rejected.
 
+Android first tries Media3, then makes at most one managed fallback attempt for
+container/extractor and decoder failures. The fallback uses package-owned local,
+content, progressive HTTP, or HLS VOD/live input; FFmpeg demuxes MP4/MOV,
+Matroska/WebM, FLV, and MPEG-TS. H.264/H.265 packets stay compressed for
+MediaCodec when the stream's codec/profile/level has a hardware decoder. If no
+compatible decoder exists, H.264/H.265 video at no more than 720p30 is software
+decoded to the Flutter texture. Higher adaptive variants are downgraded when a
+qualifying variant exists; otherwise Load fails. Supported fallback audio is
+AAC, MP3, AC-3, E-AC-3, DTS, FLAC, Opus, and Vorbis. Standard HLS AES-128 is
+supported; Widevine, SAMPLE-AES, and DRM bypass are not.
+
 ## Policy matrix
 
 | Requirement | Android Media3 | Apple AVPlayer | Apple managed fallback |

@@ -175,6 +175,7 @@ enum AndroidPlaybackStatus {
 enum AndroidEngine {
   unknown,
   media3,
+  managedFallback,
 }
 
 enum AndroidTrackKind {

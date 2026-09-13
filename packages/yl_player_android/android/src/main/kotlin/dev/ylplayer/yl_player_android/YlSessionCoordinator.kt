@@ -52,6 +52,7 @@ internal class YlSessionCoordinator(
     private var candidateFailure: YlFailureKind? = null
     private var stopping = false
     private var candidateFrame: YlEngineEvent.FirstFrame? = null
+    private var candidateBackend: YlEngineEvent.BackendChanged? = null
     private val candidateRetries = mutableListOf<YlEngineEvent.Retry>()
     private var operation = 0L
     private var loadSequence = 0L
@@ -144,8 +145,9 @@ internal class YlSessionCoordinator(
     private var foreground = CompletableDeferred(Unit)
     private var backgroundPlayIntent: Pair<YlSessionIdentity, Boolean>? = null
     override val initialState get() = reducer.state
-    override val capabilities = AndroidCapabilitiesMessage("android", listOf(AndroidEngine.MEDIA3),
-        decoderEvidence.capability, hardwareVideoCodecs = decoderEvidence.hardwareCodecs, supportedOperations = AndroidPlayerOperation.entries)
+    override val capabilities = AndroidCapabilitiesMessage("android",
+        listOf(AndroidEngine.MEDIA3, AndroidEngine.MANAGED_FALLBACK), AndroidDecoderEvidence.HARDWARE_AND_SOFTWARE,
+        hardwareVideoCodecs = decoderEvidence.hardwareCodecs, supportedOperations = AndroidPlayerOperation.entries)
     private var eventSink: YlPlayerEventSink? = null
     override fun attach(events: YlPlayerEventSink) { eventSink = events; reducer.attach(events) }
     override fun assess(request: AndroidAssessRequest): AndroidAssessmentReply {
@@ -187,6 +189,7 @@ internal class YlSessionCoordinator(
                 candidateFailure = null
                 candidateSnapshot = null
                 candidateFrame = null
+                candidateBackend = null
                 candidateRetries.clear()
                 try {
                     val engine = engines.create(identity, request.source, request.options)
@@ -221,9 +224,11 @@ internal class YlSessionCoordinator(
                         }
                         val snapshot = candidateSnapshot
                         val frame = candidateFrame
+                        val backend = candidateBackend
                         // Loading is installed before any staged decoder/Ready callback is published.
                         scope.launch {
                             if (active?.identity == identity && token == operation) {
+                                backend?.let(reducer::engineChanged)
                                 snapshot?.let(reducer::snapshot)
                                 frame?.let { reducer.firstFrame(it.output, it.occurredAtMs) }
                                 if (autoplayPending == identity && !backgrounded) {
@@ -459,6 +464,7 @@ internal class YlSessionCoordinator(
                 is YlEngineEvent.FirstFrame -> if (event.output == output.identity) candidateFrame = event
                 is YlEngineEvent.Failed -> candidateFailure = event.kind
                 is YlEngineEvent.Retry -> candidateRetries += event
+                is YlEngineEvent.BackendChanged -> candidateBackend = event
                 else -> Unit
             }
             return
@@ -480,6 +486,7 @@ internal class YlSessionCoordinator(
             }
             is YlEngineEvent.Failed -> { releaseAudio(); reducer.fail(event.kind) }
             is YlEngineEvent.Retry -> reducer.retry(event)
+            is YlEngineEvent.BackendChanged -> reducer.engineChanged(event)
         }
     }
     private fun checkOpen() { if (closed) throw YlBoundaryException(YlFailureKind.PLAYER_DISPOSED) }

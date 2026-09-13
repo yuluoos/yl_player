@@ -1,0 +1,12 @@
+FFmpeg 9.0.1 is used under the GNU Lesser General Public License,
+version 2.1 or later. The packaged Android bridge enables no GPL or nonfree
+components, no encoders, no filters, and no FFmpeg network protocols.
+
+The complete bridge source is android/src/main/cpp/yl_player_ffmpeg.cpp.
+The pinned, signature-verifying build and relink procedure is in
+tool/android_ffmpeg/build_shared_libraries.sh. It produces one dynamically
+loaded and replaceable libyl_player_ffmpeg.so for each supported Android ABI.
+
+Upstream source: https://ffmpeg.org/releases/ffmpeg-9.0.1.tar.xz
+Corresponding source and local modifications: this package and the build
+script above.

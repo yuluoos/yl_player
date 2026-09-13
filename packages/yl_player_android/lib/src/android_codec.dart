@@ -414,6 +414,7 @@ abstract final class AndroidCodec {
   static YlPlaybackEngine engine(AndroidEngine value) => switch (value) {
     AndroidEngine.unknown => YlPlaybackEngine.unknown,
     AndroidEngine.media3 => YlPlaybackEngine.media3,
+    AndroidEngine.managedFallback => YlPlaybackEngine.managedFallback,
   };
 
   static YlDecoderMode _decoderMode(AndroidDecoderMode value) =>

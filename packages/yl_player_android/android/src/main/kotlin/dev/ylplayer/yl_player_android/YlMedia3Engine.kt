@@ -80,6 +80,7 @@ internal class YlMedia3Engine(
     override suspend fun activate(output: YlSessionVideoOutput) {
         val readiness = onWorker { decoderGate.reset(); requireCore().initializeDecoder(); decoderGate.ready }
         val prepared = readiness.await()
+        requireSelectedVideo(prepared)
         exclusive = prepared.videoTracks.isNotEmpty() || prepared.audioTracks.isEmpty()
         attachPublicOutput(output)
     }
@@ -160,6 +161,14 @@ internal class YlMedia3Engine(
     private data class Worker(val thread: HandlerThread, val handler: Handler, val dispatcher: CoroutineDispatcher)
 }
 
+internal fun requireSelectedVideo(snapshot: YlEngineSnapshot) {
+    val videoUnavailable = snapshot.videoTracks.isNotEmpty() && snapshot.videoTracks.none { it.isSelected }
+    val audioUnavailable = snapshot.audioTracks.isNotEmpty() && snapshot.audioTracks.none { it.isSelected }
+    if (videoUnavailable || audioUnavailable) {
+        throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
+    }
+}
+
 internal fun createMedia3Configuration(
     source: AndroidSourceMessage,
     options: AndroidLoadOptionsMessage,
@@ -196,7 +205,10 @@ internal class YlMedia3SessionFactory(
         return { texture ->
             YlSessionCoordinator(playerId, options, YlVideoOutput(texture, ownsTexture = false),
                 YlPlaybackEngineFactory { identity, source, loadOptions ->
-                    createEngine(identity, source, loadOptions, options)
+                    val primary = createEngine(identity, source, loadOptions, options)
+                    YlManagedAndroidEngine(identity, primary, {
+                        YlNativeFallbackEngine(context, identity, source, loadOptions, options, dispatcher)
+                    }, dispatcher)
                 }, dispatcher, audioFocus = { YlSharedAudioFocus.get(context) })
         }
     }

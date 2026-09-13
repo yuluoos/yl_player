@@ -322,7 +322,8 @@ enum class AndroidPlaybackStatus(val raw: Int) {
 
 enum class AndroidEngine(val raw: Int) {
   UNKNOWN(0),
-  MEDIA3(1);
+  MEDIA3(1),
+  MANAGED_FALLBACK(2);
 
   companion object {
     fun ofRaw(raw: Int): AndroidEngine? {

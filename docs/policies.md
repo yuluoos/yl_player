@@ -103,7 +103,9 @@ requests hardware while allowing a truthful software or unknown result.
 hardware evidence.
 
 Android classifies the initialized MediaCodec and filters software candidates
-for `hardwareRequired`; `hardwarePreferred` retains fallback candidates.
+for `hardwareRequired`; `hardwarePreferred` retains the managed FFmpeg fallback.
+The public engine changes from `media3` to `managedFallback` when that one-shot
+route commits, while decoder mode independently reports hardware or software.
 Apple managed fallback reads the actual VideoToolbox
 `UsingHardwareAcceleratedVideoDecoder` CFBoolean. Missing, numeric, or errored
 properties are unknown. Its strict candidate retains the exact proven decoder
