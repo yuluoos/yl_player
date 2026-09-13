@@ -23,12 +23,24 @@ class YlNativePlaybackPlannerTest {
     }
 
     @Test
-    fun `rejects software video above 720p or 30fps`() {
+    fun `uses software for 1080p HEVC when device decoders reject its profile level`() {
+        val planner = YlNativePlaybackPlanner { false }
+
+        assertEquals(
+            YlNativeVideoPath.SOFTWARE,
+            planner.chooseVideoPath(
+                hevcMain10.copy(width = 1920, height = 1080, profile = 1, level = 186),
+            ),
+        )
+    }
+
+    @Test
+    fun `rejects software video above 1080p or 30fps`() {
         val planner = YlNativePlaybackPlanner { false }
 
         assertEquals(
             YlNativeVideoPath.UNSUPPORTED,
-            planner.chooseVideoPath(hevcMain10.copy(width = 1920, height = 1080)),
+            planner.chooseVideoPath(hevcMain10.copy(width = 2560, height = 1440)),
         )
         assertEquals(
             YlNativeVideoPath.UNSUPPORTED,

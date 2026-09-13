@@ -171,7 +171,7 @@ internal class YlNativePlaybackPlanner(
             return YlNativeVideoPath.UNSUPPORTED
         }
         if (supportsHardwareConfiguration(stream)) return YlNativeVideoPath.HARDWARE
-        val inEnvelope = stream.width in 1..1280 && stream.height in 1..720 &&
+        val inEnvelope = stream.width in 1..1920 && stream.height in 1..1080 &&
             (stream.frameRate <= 0.0 || stream.frameRate <= 30.0)
         return if (inEnvelope) YlNativeVideoPath.SOFTWARE else YlNativeVideoPath.UNSUPPORTED
     }
