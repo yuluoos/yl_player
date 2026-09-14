@@ -162,9 +162,12 @@ final class YlAudioRenderer: YlAudioRendering {
   private var playbackRate: Float = 1
   private var playbackRequested = false
   private var waitingForAudio = false
-  // Player-node sample time advances through starvation. Completed PCM timestamps
-  // measure media actually played and remain stable while input catches up.
+  // Completion callbacks can arrive in bursts. Follow the player sample clock
+  // between callbacks, capped by scheduled PCM so starvation cannot advance video.
   private var playedPositionUs: Int64?
+  private var renderAnchor: (nodeUs: Double, mediaUs: Int64)?
+  private var scheduledEndUs: Int64?
+  private var lastNodeUs: Double = 0
   private var inputFinished = false
   private var silenceHostTimeUs: Int64?
 
@@ -214,11 +217,35 @@ final class YlAudioRenderer: YlAudioRendering {
   }
 
   var renderedAudioTime: YlRenderedAudioTime? {
-    lock.withLock {
-      guard !disposed, let playedPositionUs,
+    let generation = lock.withLock { completionGeneration }
+    // Do not hold the state lock while consulting the native audio graph.
+    let nodeUs = Self.nodeMicroseconds(output.renderedAudioTime)
+    return lock.withLock {
+      guard !disposed, playedPositionUs != nil,
             !(inputFinished && scheduledBufferCount == 0) else { return nil }
-      return YlRenderedAudioTime(sampleTime: playedPositionUs, sampleRate: 1_000_000)
+      if completionGeneration == generation {
+        updatePlayedPosition(nodeUs: nodeUs)
+      }
+      return YlRenderedAudioTime(sampleTime: playedPositionUs!, sampleRate: 1_000_000)
     }
+  }
+
+  private static func nodeMicroseconds(_ time: YlRenderedAudioTime?) -> Double? {
+    guard let time, time.sampleRate.isFinite, time.sampleRate > 0 else { return nil }
+    let value = Double(time.sampleTime) * 1_000_000 / time.sampleRate
+    return value.isFinite ? value : nil
+  }
+
+  // Caller holds lock. Player sample time already accounts for speed and pause.
+  private func updatePlayedPosition(nodeUs: Double?) {
+    if let nodeUs { lastNodeUs = nodeUs }
+    guard playbackRequested, scheduledBufferCount > 0,
+          let nodeUs, let renderAnchor, let scheduledEndUs else { return }
+    let elapsed = max(0, nodeUs - renderAnchor.nodeUs)
+    let remaining = max(0, scheduledEndUs - renderAnchor.mediaUs)
+    let advance = elapsed >= Double(remaining) ? remaining : Int64(elapsed.rounded(.towardZero))
+    let position = renderAnchor.mediaUs + advance
+    playedPositionUs = max(playedPositionUs ?? 0, position)
   }
 
   func finishInput() {
@@ -320,6 +347,7 @@ final class YlAudioRenderer: YlAudioRendering {
       throw YlManagedBufferLedger.unsupported()
     }
     if !(converter is YlAppleCompressedAudioConverter) { packet.reservation?.endQueuedTiming() }
+    let nodeUs = Self.nodeMicroseconds(output.renderedAudioTime)
     lock.lock()
     guard !disposed, configuredGeneration == packet.generation else {
       lock.unlock()
@@ -335,6 +363,22 @@ final class YlAudioRenderer: YlAudioRendering {
     }
     let token = completionGeneration
     let shouldRestartOutput = YlAppleCompatibility.current.batchesAudioInput && playbackRequested && scheduledBufferCount == 0
+    let startUs = max(0, buffer.ptsUs)
+    let end = startUs.addingReportingOverflow(max(0, buffer.durationUs))
+    updatePlayedPosition(nodeUs: nodeUs)
+    var needsAnchor = scheduledBufferCount == 0
+    if let renderAnchor, let scheduledEndUs {
+      // Callback delivery can lag behind actual exhaustion of scheduled PCM,
+      // including when refill happens while the player is paused.
+      needsAnchor = needsAnchor || lastNodeUs - renderAnchor.nodeUs >= Double(scheduledEndUs - renderAnchor.mediaUs)
+    }
+    if needsAnchor {
+      // Exclude silent node time on refill. Pause preserves the last node time;
+      // only stop/reset makes a missing render timestamp mean sample zero.
+      renderAnchor = (nodeUs ?? lastNodeUs, startUs)
+      scheduledEndUs = startUs
+    }
+    scheduledEndUs = max(scheduledEndUs ?? startUs, end.overflow ? Int64.max : end.partialValue)
     scheduledDuration += max(0, buffer.durationUs)
     scheduledByteCount += max(0, buffer.byteCount)
     scheduledBufferCount += 1
@@ -394,7 +438,10 @@ final class YlAudioRenderer: YlAudioRendering {
   func pause() {
     operations.lock()
     defer { operations.unlock() }
+    // playerTime(forNodeTime:) becomes nil after the player is paused.
+    let nodeUs = Self.nodeMicroseconds(output.renderedAudioTime)
     lock.withLock {
+      updatePlayedPosition(nodeUs: nodeUs)
       playbackRequested = false
       waitingForAudio = false
       silenceHostTimeUs = nil
@@ -436,6 +483,9 @@ final class YlAudioRenderer: YlAudioRendering {
     scheduledByteCount = 0
     scheduledBufferCount = 0
     playedPositionUs = nil
+    renderAnchor = nil
+    scheduledEndUs = nil
+    lastNodeUs = 0
     silenceHostTimeUs = nil
     inputFinished = false
     waitingForAudio = playbackRequested
@@ -469,6 +519,9 @@ final class YlAudioRenderer: YlAudioRendering {
     scheduledByteCount = 0
     scheduledBufferCount = 0
     playedPositionUs = nil
+    renderAnchor = nil
+    scheduledEndUs = nil
+    lastNodeUs = 0
     silenceHostTimeUs = nil
     inputFinished = false
     playbackRequested = false

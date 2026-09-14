@@ -115,6 +115,110 @@ final class YlAudioRendererTests: XCTestCase {
     XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 1_750_000)
   }
 
+  func testVideoClockAdvancesWhilePlayedBackCallbacksAreDelayed() throws {
+    let output = FakeOutput()
+    output.renderedAudioTime = YlRenderedAudioTime(sampleTime: 0, sampleRate: 48_000)
+    let renderer = YlAudioRenderer(converter: FakeConverter(), output: output)
+    try renderer.configure(stream: stream())
+    XCTAssertEqual(try renderer.enqueue(packet: packet()), .scheduled)
+    try renderer.play()
+    let clock = YlMediaClock(audioTime: { renderer.renderedAudioTime })
+    clock.play(atHostTimeUs: 0)
+    let scheduler = YlFrameScheduler()
+    defer { scheduler.dispose() }
+    for pts in [Int64(40_000), 80_000, 120_000] {
+      XCTAssertTrue(scheduler.enqueue(YlFrameEnvelope(payload: Token(), ptsUs: pts,
+        durationUs: 40_000, keyframe: false, generation: 1)))
+    }
+    // Audio renders normally, but no dataPlayedBack completion has arrived.
+    for (sample, pts) in [(Int64(1_920), Int64(40_000)), (3_840, 80_000), (5_760, 120_000)] {
+      output.renderedAudioTime = YlRenderedAudioTime(sampleTime: sample, sampleRate: 48_000)
+      let position = clock.position(atHostTimeUs: pts)
+      XCTAssertEqual(position, pts)
+      XCTAssertEqual(scheduler.frame(at: position, generation: 1)?.ptsUs, pts)
+    }
+    XCTAssertEqual(scheduler.lateFrameDropCount, 0)
+    output.completions[0]()
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 250_000)
+  }
+
+  func testRenderClockCapsAtScheduledAudioAndExcludesStarvationOnRefill() throws {
+    let output = FakeOutput()
+    output.renderedAudioTime = YlRenderedAudioTime(sampleTime: 0, sampleRate: 48_000)
+    let renderer = YlAudioRenderer(converter: FakeConverter(), output: output)
+    try renderer.configure(stream: stream())
+    XCTAssertEqual(try renderer.enqueue(packet: packet()), .scheduled)
+    try renderer.play()
+    output.renderedAudioTime = YlRenderedAudioTime(sampleTime: 48_000, sampleRate: 48_000)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 250_000)
+    output.completions[0]()
+    output.renderedAudioTime = YlRenderedAudioTime(sampleTime: 96_000, sampleRate: 48_000)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 250_000)
+    XCTAssertEqual(try renderer.enqueue(packet: YlCompressedAudioPacket(
+      data: Data([1]), ptsUs: 250_000, durationUs: 250_000, generation: 1)), .scheduled)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 250_000)
+    output.renderedAudioTime = YlRenderedAudioTime(sampleTime: 100_800, sampleRate: 48_000)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 350_000)
+    renderer.setRate(3)
+    output.renderedAudioTime = YlRenderedAudioTime(sampleTime: 103_200, sampleRate: 48_000)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 400_000, "Player samples already include playback rate")
+  }
+
+  func testRenderClockPreservesPauseAndResetsItsAnchorAfterSeek() throws {
+    let output = FakeOutput()
+    output.renderedAudioTime = YlRenderedAudioTime(sampleTime: 0, sampleRate: 48_000)
+    let renderer = YlAudioRenderer(converter: FakeConverter(), output: output)
+    try renderer.configure(stream: stream())
+    XCTAssertEqual(try renderer.enqueue(packet: packet()), .scheduled)
+    try renderer.play()
+    output.renderedAudioTime = YlRenderedAudioTime(sampleTime: 4_800, sampleRate: 48_000)
+    renderer.pause()
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 100_000)
+    try renderer.play()
+    output.renderedAudioTime = YlRenderedAudioTime(sampleTime: 7_200, sampleRate: 48_000)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 150_000)
+    renderer.pause()
+    output.completions[0]()
+    XCTAssertEqual(try renderer.enqueue(packet: YlCompressedAudioPacket(
+      data: Data([1]), ptsUs: 250_000, durationUs: 250_000, generation: 1)), .scheduled)
+    try renderer.play()
+    output.renderedAudioTime = YlRenderedAudioTime(sampleTime: 9_600, sampleRate: 48_000)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 300_000, "Refill while paused retains the player sample offset")
+    renderer.reset(generation: 2)
+    output.renderedAudioTime = nil
+    XCTAssertEqual(try renderer.enqueue(packet: YlCompressedAudioPacket(
+      data: Data([1]), ptsUs: 5_000_000, durationUs: 250_000, generation: 2)), .scheduled)
+    output.completions[0]()
+    output.renderedAudioTime = YlRenderedAudioTime(sampleTime: 2_400, sampleRate: 48_000)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 5_050_000)
+    renderer.finishInput()
+    output.completions[2]()
+    XCTAssertNil(renderer.renderedAudioTime)
+  }
+
+  func testRefillBeforeDelayedCompletionDoesNotCountSilentNodeTime() throws {
+    for paused in [false, true] {
+      let output = FakeOutput()
+      output.renderedAudioTime = YlRenderedAudioTime(sampleTime: 0, sampleRate: 48_000)
+      let renderer = YlAudioRenderer(converter: FakeConverter(), output: output)
+      try renderer.configure(stream: stream())
+      XCTAssertEqual(try renderer.enqueue(packet: packet()), .scheduled)
+      try renderer.play()
+      output.renderedAudioTime = YlRenderedAudioTime(sampleTime: 48_000, sampleRate: 48_000)
+      XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 250_000)
+      if paused { renderer.pause() }
+      // PCM ended 750 ms ago, but its completion is still pending when input resumes.
+      XCTAssertEqual(try renderer.enqueue(packet: YlCompressedAudioPacket(
+        data: Data([1]), ptsUs: 250_000, durationUs: 250_000, generation: 1)), .scheduled)
+      if paused { try renderer.play() }
+      output.renderedAudioTime = YlRenderedAudioTime(sampleTime: 48_000, sampleRate: 48_000)
+      XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 250_000)
+      output.completions[0]()
+      output.renderedAudioTime = YlRenderedAudioTime(sampleTime: 52_800, sampleRate: 48_000)
+      XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 350_000)
+    }
+  }
+
   private final class Token {}
 
   private final class FakeConverter: YlAudioPacketConverting {
@@ -148,7 +252,7 @@ final class YlAudioRendererTests: XCTestCase {
   private final class FakeOutput: YlAudioOutputDriving {
     var volume: Float = 1
     var rate: Float = 1
-    let renderedAudioTime: YlRenderedAudioTime? = nil
+    var renderedAudioTime: YlRenderedAudioTime? = nil
     private(set) var playCount = 0
     private(set) var pauseCount = 0
     private(set) var resetCount = 0
@@ -160,7 +264,11 @@ final class YlAudioRendererTests: XCTestCase {
       completions.append(completion)
     }
     func play() throws { playCount += 1 }
-    func pause() { pauseCount += 1 }
+    func pause() {
+      pauseCount += 1
+      // AVAudioPlayerNode.playerTime(forNodeTime:) is nil when not playing.
+      renderedAudioTime = nil
+    }
     func reset() { resetCount += 1 }
     func dispose() { disposeCount += 1 }
   }
