@@ -20,7 +20,7 @@ assert pins == {'FFMPEG_VERSION':'9.0.1', 'FFMPEG_URL':'https://ffmpeg.org/relea
  'FFMPEG_SIGNING_KEY_SHA256':'397b3becedcd5a98769967ff1ff8501ddc89f8368b8f766e4701377d7dbaabe5',
  'IOS_DEPLOYMENT_TARGET':'15.0', 'MACOS_DEPLOYMENT_TARGET':'12.0'}
 allowed_enables = {'--enable-cross-compile','--enable-avutil','--enable-avcodec','--enable-avformat',
- '--enable-demuxer=matroska,flv,mov','--enable-decoder=dca','--enable-protocol=file','--enable-parser=aac,h264,hevc,mpegaudio,dca',
+ '--enable-demuxer=matroska,flv,mov,mpegts','--enable-decoder=dca','--enable-protocol=file','--enable-parser=aac,h264,hevc,mpegaudio,dca',
  '--enable-pic','--enable-static'}
 required_disables = {'--disable-everything','--disable-autodetect','--disable-network',
  '--disable-programs','--disable-doc','--disable-avdevice','--disable-avfilter','--disable-swscale',
