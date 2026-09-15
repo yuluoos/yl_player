@@ -696,8 +696,13 @@ final class YlAppleSessionCoordinator: NSObject {
     if let url = source.url,
        source.kind == .network,
        YlEngineRouter.resolvedFormat(source, url: url) == .hls {
+      // Discarding a non-HEVC probe cancels its resources, not the Load that
+      // must still commit AVPlayer. Stop/replacement cancellation continues
+      // to propagate from the Load into the probe (and a retained HEVC session).
+      let probeToken = YlOpenCancellationToken()
+      token.onCancel { probeToken.cancel() }
       do {
-        let prepared = try prepareFallback(source: source, token: token, identity: identity)
+        let prepared = try prepareFallback(source: source, token: probeToken, identity: identity)
         if Int(prepared.videoStream.codec) == YLFCodecHEVC {
           return .fallback(source: source, prepared: prepared)
         }

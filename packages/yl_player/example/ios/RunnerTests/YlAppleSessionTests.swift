@@ -7,7 +7,170 @@ import FlutterMacOS
 import CoreVideo
 import AVFoundation
 import Network
+import CommonCrypto
 @testable import yl_player_apple
+
+
+@MainActor
+final class YlAppleHlsProbeTests: XCTestCase {
+  func testH264ProbeCleanupCommitsAvPlayerAndReachesReady() async throws {
+    let server = try HlsProbeServer(segment: clearH264Segment())
+    defer { server.close() }
+    let f = AppleHostFixture()
+    defer { f.host.close() }
+    let reply: AppleLoadReply
+    do {
+      reply = try await f.host.load(request: AppleHostFixture.request(
+        "h264", url: server.url.absoluteString, format: .hls))
+    } catch let error as PigeonError {
+      XCTFail("H264 Load failed: \(error.code)")
+      return
+    }
+    XCTAssertEqual(f.host.sessionId, reply.sessionId)
+    XCTAssertNotNil(f.av.currentItem, "Discarding H264 probe resources must still commit AVPlayer")
+    try await AppleHostCharacterizations.waitFor({ f.av.currentItem?.status == .readyToPlay })
+    XCTAssertNil(f.host.initialState.failure)
+  }
+
+  func testStopDuringHlsProbeUnblocksNextLoad() async throws {
+    let entered = expectation(description: "HLS segment probe is waiting for data")
+    let held = try HlsProbeServer(segment: clearH264Segment(), holdSegment: true) {
+      entered.fulfill()
+    }
+    defer { held.close() }
+    let f = AppleHostFixture()
+    defer { f.host.close() }
+    let pending = Task {
+      try await f.host.load(request: AppleHostFixture.request(
+        "held", url: held.url.absoluteString, format: .hls))
+    }
+    await fulfillment(of: [entered], timeout: 5)
+    try await f.host.stop()
+    do {
+      _ = try await pending.value
+      XCTFail("Stop must cancel the pending HLS load")
+    } catch let error as PigeonError {
+      XCTAssertEqual(error.code, "network.cancelled")
+    }
+    XCTAssertNil(f.host.sessionId)
+
+    // The first server remains held: only propagating cancellation to the
+    // real probe reader can free the serial preparation queue for this load.
+    let fresh = try HlsProbeServer(segment: clearH264Segment())
+    defer { fresh.close() }
+    let completed = expectation(description: "new load commits without waiting for old HTTP timeout")
+    let next = Task {
+      defer { completed.fulfill() }
+      do {
+        let reply = try await f.host.load(request: AppleHostFixture.request(
+          "fresh", url: fresh.url.absoluteString, format: .hls))
+        XCTAssertEqual(f.host.sessionId, reply.sessionId)
+        XCTAssertNotNil(f.av.currentItem)
+      } catch {
+        XCTFail("Fresh load failed: \(error)")
+      }
+    }
+    await fulfillment(of: [completed], timeout: 5)
+    f.host.close()
+    held.close()
+    await next.value
+  }
+
+  func testLiveHlsKeepsAvPlayerRoute() async throws {
+    let server = try HlsProbeServer(segment: clearH264Segment(), live: true)
+    defer { server.close() }
+    let f = AppleHostFixture()
+    defer { f.host.close() }
+    var request = AppleHostFixture.request("live", url: server.url.absoluteString, format: .hls)
+    request.source.intent = .live
+    let reply = try await f.host.load(request: request)
+    XCTAssertEqual(f.host.sessionId, reply.sessionId)
+    XCTAssertNotNil(f.av.currentItem)
+    XCTAssertEqual(f.host.initialState.engine, .avPlayer)
+    XCTAssertNil(f.host.initialState.failure)
+  }
+
+
+  private func clearH264Segment() throws -> Data {
+    let bundle = Bundle(for: Self.self)
+    let encrypted = try Data(contentsOf: XCTUnwrap(
+      bundle.url(forResource: "hls_encrypted_segment0", withExtension: "ts")))
+    let key = try Data(contentsOf: XCTUnwrap(bundle.url(forResource: "hls_key", withExtension: "bin")))
+    let iv = [UInt8](repeating: 0, count: kCCBlockSizeAES128)
+    var clear = Data(count: encrypted.count + kCCBlockSizeAES128)
+    let capacity = clear.count
+    var written = 0
+    let status = clear.withUnsafeMutableBytes { output in
+      encrypted.withUnsafeBytes { input in
+        key.withUnsafeBytes { keyBytes in
+          iv.withUnsafeBytes { ivBytes in
+            CCCrypt(CCOperation(kCCDecrypt), CCAlgorithm(kCCAlgorithmAES),
+              CCOptions(kCCOptionPKCS7Padding), keyBytes.baseAddress, key.count,
+              ivBytes.baseAddress, input.baseAddress, encrypted.count,
+              output.baseAddress, capacity, &written)
+          }
+        }
+      }
+    }
+    guard status == kCCSuccess else { throw NSError(domain: "HlsFixtureDecrypt", code: Int(status)) }
+    clear.count = written
+    return clear
+  }
+}
+
+/// Serves real fixture bytes; a held segment makes cancellation observable at
+/// the network/preparation boundary without replacing any playback component.
+final class HlsProbeServer {
+  private let listener: NWListener
+  private let queue = DispatchQueue(label: "yl.test.hls-probe")
+  private var connections = [NWConnection]()
+  var url: URL { URL(string: "http://127.0.0.1:\(listener.port!.rawValue)/index.m3u8")! }
+
+  init(segment: Data, live: Bool = false, holdSegment: Bool = false,
+       onHeldSegment: @escaping () -> Void = {}) throws {
+    listener = try NWListener(using: .tcp, on: .any)
+    let ready = DispatchSemaphore(value: 0)
+    listener.stateUpdateHandler = { if case .ready = $0 { ready.signal() } }
+    listener.newConnectionHandler = { [weak self] connection in
+      guard let self else { connection.cancel(); return }
+      self.connections.append(connection)
+      connection.start(queue: self.queue)
+      connection.receive(minimumIncompleteLength: 1, maximumLength: 16384) { bytes, _, _, _ in
+        let path = String(decoding: bytes ?? Data(), as: UTF8.self)
+          .split(separator: " ").dropFirst().first.map(String.init) ?? ""
+        let body: Data
+        let type: String
+        switch path {
+        case "/index.m3u8":
+          body = Data(("#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:3\n#EXT-X-MEDIA-SEQUENCE:0\n#EXTINF:2.02,\nsegment.ts\n"
+            + (live ? "" : "#EXT-X-ENDLIST\n")).utf8)
+          type = "application/vnd.apple.mpegurl"
+        case "/segment.ts":
+          if holdSegment { onHeldSegment(); return }
+          body = segment
+          type = "video/mp2t"
+        default: connection.cancel(); return
+        }
+        let header = "HTTP/1.1 200 OK\r\nContent-Type: \(type)\r\nContent-Length: \(body.count)\r\nConnection: close\r\n\r\n"
+        connection.send(content: Data(header.utf8) + body,
+          completion: .contentProcessed { _ in connection.cancel() })
+      }
+    }
+    listener.start(queue: queue)
+    guard ready.wait(timeout: .now() + 5) == .success, listener.port != nil else {
+      listener.cancel()
+      throw NSError(domain: "HlsProbeServer", code: 1)
+    }
+  }
+
+  func close() {
+    queue.sync {
+      listener.cancel()
+      connections.forEach { $0.cancel() }
+      connections.removeAll()
+    }
+  }
+}
 
 final class YlAppleSessionTests: XCTestCase {
   func testImmutableRequestAndSessionIdentityStartsAtZero() {

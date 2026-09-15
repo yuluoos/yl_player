@@ -97,8 +97,11 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift",
-    "sha256": "06e6ff4a3936e87700c696d5379af6f5d9d3fb4af708c2f68c8a18dc743e37ae",
+    "sha256": "148e75eabddd99a58a88182ce7663ff8fb1ac23c75496a0e8d932abca4a23309",
     "methods": [
+      "testH264ProbeCleanupCommitsAvPlayerAndReachesReady",
+      "testStopDuringHlsProbeUnblocksNextLoad",
+      "testLiveHlsKeepsAvPlayerRoute",
       "testStatePublicationDoesNotSynchronouslyReadPendingAssetTracks",
       "testImmutableRequestAndSessionIdentityStartsAtZero",
       "testNegativeMeasuredLiveOffsetIsZeroAndUnknownRemainsNil",

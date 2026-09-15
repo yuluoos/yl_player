@@ -6,6 +6,29 @@ import XCTest
 import YlFFmpegBridge
 
 final class YlOpenedMediaTests: XCTestCase {
+  @MainActor
+  func testHevcHlsStillSelectsManagedFallback() async throws {
+    let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "hevc_aac", withExtension: "ts"))
+    let server = try HlsProbeServer(segment: Data(contentsOf: url))
+    defer { server.close() }
+    var reachedFallback = false
+    let f = AppleHostFixture(beforeFallbackConstruction: { _ in
+      reachedFallback = true
+      // Inspect the committed route without requiring simulator HEVC hardware.
+      throw NativePlayerError(category: "decoder", code: "decoder.unavailable", message: "Test decoder unavailable.")
+    })
+    defer { f.host.close() }
+    do {
+      _ = try await f.host.load(request: AppleHostFixture.request(
+        "hevc", url: server.url.absoluteString, format: .hls))
+      XCTFail("Expected the injected decoder failure")
+    } catch let error as PigeonError {
+      XCTAssertEqual(error.code, "decoder.unavailable")
+    }
+    XCTAssertTrue(reachedFallback, "HEVC-in-TS must retain the managed playback route")
+    XCTAssertNil(f.av.currentItem)
+  }
+
   private final class CancellationProbe {
     var count = 0
   }
