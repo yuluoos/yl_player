@@ -37,13 +37,15 @@ final class YlAvPlayerStallWatchdog {
     active: Bool,
     wantsToPlay: Bool,
     hasCurrentItem: Bool,
-    isWaiting: Bool,
+    timeControlStatus: AVPlayer.TimeControlStatus,
+    playbackStatus: String,
     firstFrameSent: Bool,
     timeoutMs: Int64,
     waitingReason: String?,
     onTimeout: @escaping (NativePlayerError) -> Void
   ) {
-    guard active, wantsToPlay, hasCurrentItem else {
+    guard active, wantsToPlay, hasCurrentItem,
+          playbackStatus != "completed", playbackStatus != "error" else {
       cancel()
       return
     }
@@ -55,7 +57,8 @@ final class YlAvPlayerStallWatchdog {
       phase = .firstFrame
       code = "avplayer.first_frame_timeout"
       message = "AVPlayer did not render the first frame before the read timeout."
-    } else if isWaiting {
+    } else if timeControlStatus != .playing {
+      // AVPlayer can pause internally while playback is still requested.
       phase = .rebuffer
       code = "avplayer.stall_timeout"
       message = "AVPlayer remained stalled beyond the read timeout."
@@ -235,7 +238,13 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
 
   private func startOutput() throws {
     try beforeAudioOutput()
-    player.playImmediately(atRate: desiredRate)
+    if configuration.forLoad(lastSource).bufferMode == "stable", hlsResourceLoader == nil {
+      // Respect AVPlayer's buffering decision for smooth playback. Immediate
+      // playback bypasses that decision even when automatic waiting is enabled.
+      player.rate = desiredRate
+    } else {
+      player.playImmediately(atRate: desiredRate)
+    }
   }
 
   func play() throws {
@@ -749,7 +758,8 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       active: active,
       wantsToPlay: playRequested,
       hasCurrentItem: player.currentItem != nil,
-      isWaiting: player.timeControlStatus == .waitingToPlayAtSpecifiedRate,
+      timeControlStatus: player.timeControlStatus,
+      playbackStatus: status,
       firstFrameSent: firstFrameSent,
       timeoutMs: configuration.network.readTimeoutMs,
       waitingReason: player.reasonForWaitingToPlay?.rawValue
@@ -767,6 +777,20 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
             generation: generation,
             currentGeneration: itemGeneration
           ), !disposed, active else {
+      return
+    }
+    // A silent read stall is recoverable just like an explicit network timeout.
+    // Keep playback intent and the last frame until native retries are exhausted.
+    if services.compatibility.reconnectsAvPlayer, let source = lastSource,
+       YlAvPlayerRecoveryPolicy.shouldReconnect(
+         source: source,
+         usesResourceLoader: hlsResourceLoader != nil,
+         hasBeenReady: hasBeenReady,
+         playRequested: playRequested,
+         error: NSError(domain: NSURLErrorDomain, code: NSURLErrorTimedOut),
+         errorLogDomain: nil,
+         errorLogStatusCode: nil
+       ), scheduleLiveReconnect(source: source) {
       return
     }
     failureGate.markTerminal(generation: generation)
@@ -1048,7 +1072,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
 
     status = "buffering"
     currentError = nil
-    removeCurrentItem()
+    // Reconnect the same live source without flashing an empty texture between
+    // items. The next frame replaces it; stop and source changes still clear it.
+    removeCurrentItem(clearOutput: false)
     let expectedGeneration = itemGeneration
     let reconnect = DispatchWorkItem { [weak self] in
       guard let self, !self.disposed, self.active,
