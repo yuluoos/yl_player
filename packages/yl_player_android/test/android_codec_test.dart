@@ -7,6 +7,46 @@ import 'support/android_fakes.dart';
 
 void main() {
   test(
+    'media clock survives full snapshots and absent, set, cleared deltas',
+    () {
+      final wire = wireState(session: 's1', revision: 4);
+      wire.metrics.mediaClockPositionMs = 12000;
+      final state = AndroidCodec.state(wire);
+      expect(state.metrics.mediaClockPosition, const Duration(seconds: 12));
+      final delta = wireDelta(previous: 4, revision: 5, sequence: 11);
+      expect(
+        AndroidCodec.delta(state, delta).metrics.mediaClockPosition,
+        const Duration(seconds: 12),
+      );
+      final changes = AndroidMetricsDeltaMessage(
+        hasLoadToReadyMs: false,
+        hasLoadToFirstFrameMs: false,
+        hasRebufferCount: false,
+        hasRebufferDurationMs: false,
+        hasDroppedVideoFrames: false,
+        hasAudioUnderruns: false,
+        hasEstimatedBitrate: false,
+        hasManagedBufferedDurationMs: false,
+        hasManagedBufferedBytes: false,
+        hasLiveOffsetMs: false,
+        hasReconnectCount: false,
+        hasMediaClockPositionMs: true,
+        mediaClockPositionMs: 13000,
+      );
+      delta.metrics = changes;
+      expect(
+        AndroidCodec.delta(state, delta).metrics.mediaClockPosition,
+        const Duration(seconds: 13),
+      );
+      changes.mediaClockPositionMs = null;
+      expect(
+        AndroidCodec.delta(state, delta).metrics.mediaClockPosition,
+        isNull,
+      );
+    },
+  );
+
+  test(
     'actual Android capability and assessment decoding accepts native MIME and policy identifiers',
     () {
       final capabilities = AndroidCodec.capabilities(
@@ -102,6 +142,7 @@ void main() {
   test('metrics deltas distinguish every absent, set and cleared field', () {
     final state = AndroidCodec.state(wireState(session: 's1', revision: 4));
     final changes = AndroidMetricsDeltaMessage(
+      hasMediaClockPositionMs: false,
       hasLoadToReadyMs: true,
       loadToReadyMs: 12,
       hasLoadToFirstFrameMs: true,
@@ -143,6 +184,7 @@ void main() {
       ),
     );
     final absent = AndroidMetricsDeltaMessage(
+      hasMediaClockPositionMs: false,
       hasLoadToReadyMs: false,
       hasLoadToFirstFrameMs: false,
       hasRebufferCount: false,

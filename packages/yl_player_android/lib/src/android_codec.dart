@@ -216,6 +216,7 @@ abstract final class AndroidCodec {
       managedBufferedBytes: value.managedBufferedBytes,
       liveOffset: _time(value.liveOffsetMs, liveOffset: true),
       reconnectCount: value.reconnectCount,
+      mediaClockPosition: _time(value.mediaClockPositionMs),
     );
     validateYlPlaybackMetrics(result);
     return result;
@@ -341,6 +342,9 @@ abstract final class AndroidCodec {
               liveOffset: changed.hasLiveOffsetMs
                   ? _time(changed.liveOffsetMs, liveOffset: true)
                   : old.liveOffset,
+              mediaClockPosition: changed.hasMediaClockPositionMs
+                  ? _time(changed.mediaClockPositionMs)
+                  : old.mediaClockPosition,
               reconnectCount: changed.hasReconnectCount
                   ? changed.reconnectCount
                   : old.reconnectCount,

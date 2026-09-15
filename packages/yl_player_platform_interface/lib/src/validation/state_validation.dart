@@ -101,6 +101,7 @@ void validateYlPlaybackMetrics(YlPlaybackMetrics metrics) {
     metrics.rebufferDuration,
     metrics.managedBufferedDuration,
     metrics.liveOffset,
+    metrics.mediaClockPosition,
   ]) {
     if (duration != null) _duration(duration);
   }

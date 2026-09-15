@@ -22,6 +22,8 @@ void main() {
         hasLiveOffsetMs: true,
         liveOffsetMs: _maxInt64,
         metrics: AndroidMetricsDeltaMessage(
+          hasMediaClockPositionMs: true,
+          mediaClockPositionMs: _maxInt64,
           hasLoadToReadyMs: true,
           loadToReadyMs: _maxInt64,
           hasLoadToFirstFrameMs: true,
@@ -63,6 +65,7 @@ void main() {
       expect(decoded.liveOffsetMs, _maxInt64);
       expect(decoded.metrics!.managedBufferedBytes, _maxInt64);
       expect(decoded.metrics!.reconnectCount, _maxInt64);
+      expect(decoded.metrics!.mediaClockPositionMs, _maxInt64);
       // Printed output is retained by the release evidence log.
       // ignore: avoid_print
       print('ANDROID_MAX_CALLBACK_BYTES=${bytes.lengthInBytes}');
@@ -78,6 +81,7 @@ void main() {
       hasIsAtLiveEdge: true,
       hasLiveOffsetMs: true,
       metrics: AndroidMetricsDeltaMessage(
+        hasMediaClockPositionMs: true,
         hasLoadToReadyMs: true,
         hasLoadToFirstFrameMs: true,
         hasRebufferCount: true,

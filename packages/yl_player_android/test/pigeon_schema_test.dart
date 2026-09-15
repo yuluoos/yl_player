@@ -136,6 +136,7 @@ void main() {
       hasLiveOffsetMs: true,
       liveOffsetMs: null,
       metrics: AndroidMetricsDeltaMessage(
+        hasMediaClockPositionMs: false,
         hasLoadToReadyMs: false,
         loadToReadyMs: null,
         hasLoadToFirstFrameMs: false,

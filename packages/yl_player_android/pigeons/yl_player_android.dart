@@ -263,6 +263,7 @@ class AndroidMetricsMessage {
   int? managedBufferedBytes;
   int? liveOffsetMs;
   int? reconnectCount;
+  int? mediaClockPositionMs;
 }
 
 class AndroidFailureMessage {
@@ -328,6 +329,8 @@ class AndroidMetricsDeltaMessage {
   int? liveOffsetMs;
   bool hasReconnectCount;
   int? reconnectCount;
+  bool hasMediaClockPositionMs;
+  int? mediaClockPositionMs;
 }
 
 class AndroidFirstFrameMessage {

@@ -1668,6 +1668,7 @@ class AndroidMetricsMessage {
     this.managedBufferedBytes,
     this.liveOffsetMs,
     this.reconnectCount,
+    this.mediaClockPositionMs,
   });
 
   int? loadToReadyMs;
@@ -1692,6 +1693,8 @@ class AndroidMetricsMessage {
 
   int? reconnectCount;
 
+  int? mediaClockPositionMs;
+
   List<Object?> _toList() {
     return <Object?>[
       loadToReadyMs,
@@ -1705,6 +1708,7 @@ class AndroidMetricsMessage {
       managedBufferedBytes,
       liveOffsetMs,
       reconnectCount,
+      mediaClockPositionMs,
     ];
   }
 
@@ -1725,6 +1729,7 @@ class AndroidMetricsMessage {
       managedBufferedBytes: result[8] as int?,
       liveOffsetMs: result[9] as int?,
       reconnectCount: result[10] as int?,
+      mediaClockPositionMs: result[11] as int?,
     );
   }
 
@@ -1737,7 +1742,7 @@ class AndroidMetricsMessage {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(loadToReadyMs, other.loadToReadyMs) && _deepEquals(loadToFirstFrameMs, other.loadToFirstFrameMs) && _deepEquals(rebufferCount, other.rebufferCount) && _deepEquals(rebufferDurationMs, other.rebufferDurationMs) && _deepEquals(droppedVideoFrames, other.droppedVideoFrames) && _deepEquals(audioUnderruns, other.audioUnderruns) && _deepEquals(estimatedBitrate, other.estimatedBitrate) && _deepEquals(managedBufferedDurationMs, other.managedBufferedDurationMs) && _deepEquals(managedBufferedBytes, other.managedBufferedBytes) && _deepEquals(liveOffsetMs, other.liveOffsetMs) && _deepEquals(reconnectCount, other.reconnectCount);
+    return _deepEquals(loadToReadyMs, other.loadToReadyMs) && _deepEquals(loadToFirstFrameMs, other.loadToFirstFrameMs) && _deepEquals(rebufferCount, other.rebufferCount) && _deepEquals(rebufferDurationMs, other.rebufferDurationMs) && _deepEquals(droppedVideoFrames, other.droppedVideoFrames) && _deepEquals(audioUnderruns, other.audioUnderruns) && _deepEquals(estimatedBitrate, other.estimatedBitrate) && _deepEquals(managedBufferedDurationMs, other.managedBufferedDurationMs) && _deepEquals(managedBufferedBytes, other.managedBufferedBytes) && _deepEquals(liveOffsetMs, other.liveOffsetMs) && _deepEquals(reconnectCount, other.reconnectCount) && _deepEquals(mediaClockPositionMs, other.mediaClockPositionMs);
   }
 
   @override
@@ -1746,7 +1751,7 @@ class AndroidMetricsMessage {
 
   @override
   String toString() {
-    return 'AndroidMetricsMessage(loadToReadyMs: $loadToReadyMs, loadToFirstFrameMs: $loadToFirstFrameMs, rebufferCount: $rebufferCount, rebufferDurationMs: $rebufferDurationMs, droppedVideoFrames: $droppedVideoFrames, audioUnderruns: $audioUnderruns, estimatedBitrate: $estimatedBitrate, managedBufferedDurationMs: $managedBufferedDurationMs, managedBufferedBytes: $managedBufferedBytes, liveOffsetMs: $liveOffsetMs, reconnectCount: $reconnectCount)';
+    return 'AndroidMetricsMessage(loadToReadyMs: $loadToReadyMs, loadToFirstFrameMs: $loadToFirstFrameMs, rebufferCount: $rebufferCount, rebufferDurationMs: $rebufferDurationMs, droppedVideoFrames: $droppedVideoFrames, audioUnderruns: $audioUnderruns, estimatedBitrate: $estimatedBitrate, managedBufferedDurationMs: $managedBufferedDurationMs, managedBufferedBytes: $managedBufferedBytes, liveOffsetMs: $liveOffsetMs, reconnectCount: $reconnectCount, mediaClockPositionMs: $mediaClockPositionMs)';
   }
 }
 
@@ -2049,6 +2054,8 @@ class AndroidMetricsDeltaMessage {
     this.liveOffsetMs,
     required this.hasReconnectCount,
     this.reconnectCount,
+    required this.hasMediaClockPositionMs,
+    this.mediaClockPositionMs,
   });
 
   bool hasLoadToReadyMs;
@@ -2095,6 +2102,10 @@ class AndroidMetricsDeltaMessage {
 
   int? reconnectCount;
 
+  bool hasMediaClockPositionMs;
+
+  int? mediaClockPositionMs;
+
   List<Object?> _toList() {
     return <Object?>[
       hasLoadToReadyMs,
@@ -2119,6 +2130,8 @@ class AndroidMetricsDeltaMessage {
       liveOffsetMs,
       hasReconnectCount,
       reconnectCount,
+      hasMediaClockPositionMs,
+      mediaClockPositionMs,
     ];
   }
 
@@ -2150,6 +2163,8 @@ class AndroidMetricsDeltaMessage {
       liveOffsetMs: result[19] as int?,
       hasReconnectCount: result[20]! as bool,
       reconnectCount: result[21] as int?,
+      hasMediaClockPositionMs: result[22]! as bool,
+      mediaClockPositionMs: result[23] as int?,
     );
   }
 
@@ -2162,7 +2177,7 @@ class AndroidMetricsDeltaMessage {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(hasLoadToReadyMs, other.hasLoadToReadyMs) && _deepEquals(loadToReadyMs, other.loadToReadyMs) && _deepEquals(hasLoadToFirstFrameMs, other.hasLoadToFirstFrameMs) && _deepEquals(loadToFirstFrameMs, other.loadToFirstFrameMs) && _deepEquals(hasRebufferCount, other.hasRebufferCount) && _deepEquals(rebufferCount, other.rebufferCount) && _deepEquals(hasRebufferDurationMs, other.hasRebufferDurationMs) && _deepEquals(rebufferDurationMs, other.rebufferDurationMs) && _deepEquals(hasDroppedVideoFrames, other.hasDroppedVideoFrames) && _deepEquals(droppedVideoFrames, other.droppedVideoFrames) && _deepEquals(hasAudioUnderruns, other.hasAudioUnderruns) && _deepEquals(audioUnderruns, other.audioUnderruns) && _deepEquals(hasEstimatedBitrate, other.hasEstimatedBitrate) && _deepEquals(estimatedBitrate, other.estimatedBitrate) && _deepEquals(hasManagedBufferedDurationMs, other.hasManagedBufferedDurationMs) && _deepEquals(managedBufferedDurationMs, other.managedBufferedDurationMs) && _deepEquals(hasManagedBufferedBytes, other.hasManagedBufferedBytes) && _deepEquals(managedBufferedBytes, other.managedBufferedBytes) && _deepEquals(hasLiveOffsetMs, other.hasLiveOffsetMs) && _deepEquals(liveOffsetMs, other.liveOffsetMs) && _deepEquals(hasReconnectCount, other.hasReconnectCount) && _deepEquals(reconnectCount, other.reconnectCount);
+    return _deepEquals(hasLoadToReadyMs, other.hasLoadToReadyMs) && _deepEquals(loadToReadyMs, other.loadToReadyMs) && _deepEquals(hasLoadToFirstFrameMs, other.hasLoadToFirstFrameMs) && _deepEquals(loadToFirstFrameMs, other.loadToFirstFrameMs) && _deepEquals(hasRebufferCount, other.hasRebufferCount) && _deepEquals(rebufferCount, other.rebufferCount) && _deepEquals(hasRebufferDurationMs, other.hasRebufferDurationMs) && _deepEquals(rebufferDurationMs, other.rebufferDurationMs) && _deepEquals(hasDroppedVideoFrames, other.hasDroppedVideoFrames) && _deepEquals(droppedVideoFrames, other.droppedVideoFrames) && _deepEquals(hasAudioUnderruns, other.hasAudioUnderruns) && _deepEquals(audioUnderruns, other.audioUnderruns) && _deepEquals(hasEstimatedBitrate, other.hasEstimatedBitrate) && _deepEquals(estimatedBitrate, other.estimatedBitrate) && _deepEquals(hasManagedBufferedDurationMs, other.hasManagedBufferedDurationMs) && _deepEquals(managedBufferedDurationMs, other.managedBufferedDurationMs) && _deepEquals(hasManagedBufferedBytes, other.hasManagedBufferedBytes) && _deepEquals(managedBufferedBytes, other.managedBufferedBytes) && _deepEquals(hasLiveOffsetMs, other.hasLiveOffsetMs) && _deepEquals(liveOffsetMs, other.liveOffsetMs) && _deepEquals(hasReconnectCount, other.hasReconnectCount) && _deepEquals(reconnectCount, other.reconnectCount) && _deepEquals(hasMediaClockPositionMs, other.hasMediaClockPositionMs) && _deepEquals(mediaClockPositionMs, other.mediaClockPositionMs);
   }
 
   @override
@@ -2171,7 +2186,7 @@ class AndroidMetricsDeltaMessage {
 
   @override
   String toString() {
-    return 'AndroidMetricsDeltaMessage(hasLoadToReadyMs: $hasLoadToReadyMs, loadToReadyMs: $loadToReadyMs, hasLoadToFirstFrameMs: $hasLoadToFirstFrameMs, loadToFirstFrameMs: $loadToFirstFrameMs, hasRebufferCount: $hasRebufferCount, rebufferCount: $rebufferCount, hasRebufferDurationMs: $hasRebufferDurationMs, rebufferDurationMs: $rebufferDurationMs, hasDroppedVideoFrames: $hasDroppedVideoFrames, droppedVideoFrames: $droppedVideoFrames, hasAudioUnderruns: $hasAudioUnderruns, audioUnderruns: $audioUnderruns, hasEstimatedBitrate: $hasEstimatedBitrate, estimatedBitrate: $estimatedBitrate, hasManagedBufferedDurationMs: $hasManagedBufferedDurationMs, managedBufferedDurationMs: $managedBufferedDurationMs, hasManagedBufferedBytes: $hasManagedBufferedBytes, managedBufferedBytes: $managedBufferedBytes, hasLiveOffsetMs: $hasLiveOffsetMs, liveOffsetMs: $liveOffsetMs, hasReconnectCount: $hasReconnectCount, reconnectCount: $reconnectCount)';
+    return 'AndroidMetricsDeltaMessage(hasLoadToReadyMs: $hasLoadToReadyMs, loadToReadyMs: $loadToReadyMs, hasLoadToFirstFrameMs: $hasLoadToFirstFrameMs, loadToFirstFrameMs: $loadToFirstFrameMs, hasRebufferCount: $hasRebufferCount, rebufferCount: $rebufferCount, hasRebufferDurationMs: $hasRebufferDurationMs, rebufferDurationMs: $rebufferDurationMs, hasDroppedVideoFrames: $hasDroppedVideoFrames, droppedVideoFrames: $droppedVideoFrames, hasAudioUnderruns: $hasAudioUnderruns, audioUnderruns: $audioUnderruns, hasEstimatedBitrate: $hasEstimatedBitrate, estimatedBitrate: $estimatedBitrate, hasManagedBufferedDurationMs: $hasManagedBufferedDurationMs, managedBufferedDurationMs: $managedBufferedDurationMs, hasManagedBufferedBytes: $hasManagedBufferedBytes, managedBufferedBytes: $managedBufferedBytes, hasLiveOffsetMs: $hasLiveOffsetMs, liveOffsetMs: $liveOffsetMs, hasReconnectCount: $hasReconnectCount, reconnectCount: $reconnectCount, hasMediaClockPositionMs: $hasMediaClockPositionMs, mediaClockPositionMs: $mediaClockPositionMs)';
   }
 }
 

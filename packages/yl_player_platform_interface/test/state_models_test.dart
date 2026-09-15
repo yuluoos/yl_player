@@ -37,6 +37,32 @@ YlPlayerState snapshot() => YlPlayerState(
 
 void main() {
   test(
+    'media clock metric retains null, observed zero, copy and validation',
+    () {
+      const unknown = YlPlaybackMetrics();
+      const zero = YlPlaybackMetrics(mediaClockPosition: Duration.zero);
+      expect(unknown.mediaClockPosition, isNull);
+      expect(zero, isNot(unknown));
+      expect(zero.copyWith().mediaClockPosition, Duration.zero);
+      expect(zero.copyWith(mediaClockPosition: null), unknown);
+      expect(
+        zero
+            .copyWith(mediaClockPosition: const Duration(seconds: 12))
+            .mediaClockPosition,
+        const Duration(seconds: 12),
+      );
+      expect(
+        () => validateYlPlaybackMetrics(
+          const YlPlaybackMetrics(
+            mediaClockPosition: Duration(microseconds: -1),
+          ),
+        ),
+        throwsArgumentError,
+      );
+    },
+  );
+
+  test(
     'capability video MIME families remain safe and generic metadata stays strict',
     () {
       expect(

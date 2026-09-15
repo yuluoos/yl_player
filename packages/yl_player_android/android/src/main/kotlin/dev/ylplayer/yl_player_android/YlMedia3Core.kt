@@ -853,9 +853,18 @@ internal class YlMedia3Core(
         val timeline = timeline()
         emit(YlEngineEvent.Tick(timeline, metrics(timeline)))
     }
+    private fun mediaClockPositionMs(): Long? {
+        if (!active || !hasBeenReady || exoPlayer.currentTimeline.isEmpty) return null
+        // currentPosition is window-relative and may stay negative while cached
+        // live media is still playing. Observe the native period clock without
+        // changing the public timeline/seek coordinate system or moving playback.
+        val period = exoPlayer.currentTimeline.getPeriod(exoPlayer.currentPeriodIndex, Timeline.Period())
+        return (exoPlayer.currentPosition - period.positionInWindowMs).coerceAtLeast(0)
+    }
+
     private fun metrics(timeline: AndroidTimelineMessage) = metricsCollector.snapshot(SystemClock.elapsedRealtime(),
         if (active && hasBeenReady) (timeline.bufferedPositionMs - timeline.positionMs).coerceAtLeast(0) else null,
-        timeline.liveOffsetMs)
+        timeline.liveOffsetMs).copy(mediaClockPositionMs = mediaClockPositionMs())
 
     override fun onVideoEnabled(eventTime: AnalyticsListener.EventTime, decoderCounters: androidx.media3.exoplayer.DecoderCounters) {
         if (isCurrentEvent(eventTime)) metricsCollector.videoEnabled()

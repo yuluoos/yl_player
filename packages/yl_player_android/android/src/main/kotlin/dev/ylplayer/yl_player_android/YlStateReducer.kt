@@ -102,4 +102,4 @@ internal class YlStateReducer(
 private fun AndroidMetricsMessage.asDelta() = AndroidMetricsDeltaMessage(
     true, loadToReadyMs, true, loadToFirstFrameMs, true, rebufferCount, true, rebufferDurationMs,
     true, droppedVideoFrames, true, audioUnderruns, true, estimatedBitrate,
-    true, managedBufferedDurationMs, true, managedBufferedBytes, true, liveOffsetMs, true, reconnectCount)
+    true, managedBufferedDurationMs, true, managedBufferedBytes, true, liveOffsetMs, true, reconnectCount, true, mediaClockPositionMs)

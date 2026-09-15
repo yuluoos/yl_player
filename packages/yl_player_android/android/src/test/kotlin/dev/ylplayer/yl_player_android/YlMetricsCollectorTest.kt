@@ -11,6 +11,37 @@ import org.mockito.Mockito.*
 import kotlin.test.*
 
 class YlMetricsCollectorTest {
+    @Test fun `live clock preserves real progress behind the sliding window without inventing pause progress`() = withCore { core, player, events ->
+        core.field("active", true)
+        core.field("hasBeenReady", true)
+        core.field("sourceClass", YlSourceClass.HLS_LIVE)
+        core.field("sourceIsLive", true)
+        var offsetMs = 40_000L
+        val nativeTimeline = mock(Timeline::class.java)
+        `when`(nativeTimeline.isEmpty).thenReturn(false)
+        `when`(nativeTimeline.getPeriod(anyInt(), any(Timeline.Period::class.java))).thenAnswer {
+            (it.arguments[1] as Timeline.Period).set(null, "period", 0, C.TIME_UNSET, -offsetMs * 1000)
+        }
+        `when`(player.currentTimeline).thenReturn(nativeTimeline)
+        `when`(player.currentPosition).thenReturn(-28_000L)
+        core.emitState()
+        assertEquals(0L, events.lastSnapshot().timeline.positionMs)
+        assertEquals(12_000L, events.lastSnapshot().metrics.mediaClockPositionMs)
+        `when`(player.currentPosition).thenReturn(-27_000L)
+        core.emitState()
+        assertEquals(13_000L, events.lastSnapshot().metrics.mediaClockPositionMs)
+        // A paused clock does not advance just because the playlist window moves.
+        offsetMs = 50_000L
+        `when`(player.currentPosition).thenReturn(-37_000L)
+        core.emitState()
+        assertEquals(13_000L, events.lastSnapshot().metrics.mediaClockPositionMs)
+        // A new native timeline has a new epoch; never accumulate guessed progress.
+        offsetMs = 0L
+        `when`(player.currentPosition).thenReturn(0L)
+        core.emitState()
+        assertEquals(0L, events.lastSnapshot().metrics.mediaClockPositionMs)
+    }
+
     @Test fun `three times speed with sustained frame drops keeps a fixed video playing`() = withCore { core, player, events ->
         core.setPlaybackSpeed(3.0)
         core.field("active", true)
@@ -102,11 +133,13 @@ class YlMetricsCollectorTest {
         val geometry = AndroidVideoGeometryMessage(AndroidSizeMessage(1920.0, 1080.0), AndroidSizeMessage(1080.0, 1920.0), 2.0, 0)
         reducer.snapshot(YlEngineSnapshot(status = AndroidPlaybackStatus.READY, geometry = geometry))
         val count = events.states.size
-        reducer.tick(emptyTimeline().copy(positionMs = 50), AndroidMetricsMessage(estimatedBitrate = 100))
+        reducer.tick(emptyTimeline().copy(positionMs = 50), AndroidMetricsMessage(estimatedBitrate = 100, mediaClockPositionMs = 12_000))
         assertEquals(count, events.states.size)
         assertEquals(1, events.deltas.size)
         assertEquals(geometry, reducer.state.geometry)
         assertEquals(100L, events.deltas.single().metrics?.estimatedBitrate)
+        assertEquals(true, events.deltas.single().metrics?.hasMediaClockPositionMs)
+        assertEquals(12_000L, events.deltas.single().metrics?.mediaClockPositionMs)
     }
     @Test fun `real core fresh metrics do not claim unobserved zero or managed allocator bytes`() = withCore { core, _, events ->
         core.emitState()
@@ -138,6 +171,7 @@ internal fun withCore(policy: AndroidAudioPolicy = AndroidAudioPolicy.APP_MANAGE
     action: (YlMedia3Core, ExoPlayer, MutableList<YlEngineEvent>) -> Unit) {
     val player = mock(ExoPlayer::class.java)
     `when`(player.duration).thenReturn(C.TIME_UNSET)
+    `when`(player.currentTimeline).thenReturn(Timeline.EMPTY)
     `when`(player.currentLiveOffset).thenReturn(C.TIME_UNSET)
     val events = mutableListOf<YlEngineEvent>()
     val scoped = mutableListOf<AutoCloseable>()
