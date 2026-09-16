@@ -1,3 +1,8 @@
+## 0.2.0-dev.2
+
+- Expose media-clock progress metrics and update the synchronized endorsed
+  Android and Apple implementations with live-playback stability fixes.
+
 ## 0.2.0-dev.1
 
 - Replace implicit construction/open with asynchronous Player creation, source

@@ -14,7 +14,7 @@ case "$mode" in
     ;;
 esac
 
-release_version=0.2.0-dev.1
+release_version=0.2.0-dev.2
 package_names='yl_player_platform_interface yl_player_android yl_player_apple yl_player'
 log_root=${YL_PUBLICATION_LOG_DIR:-}
 cleanup_logs=0

@@ -1,3 +1,8 @@
+## 0.2.0-dev.2
+
+- Report period-adjusted Media3 clock progress even when a live window exposes
+  negative or shifting timeline coordinates.
+
 ## 0.2.0-dev.1
 
 - Add an Android managed fallback that uses FFmpeg for demuxing and MediaCodec

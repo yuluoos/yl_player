@@ -19,7 +19,7 @@ HISTORICAL_MANIFESTS = {
     "engine-tests-manifest.json": PINNED_REVISION,
     "resources-manifest.json": PINNED_REVISION,
 }
-EXPECTED_CASES = {"ios": 404, "macos": 346}
+EXPECTED_CASES = {"ios": 423, "macos": 349}
 
 
 def digest(data):
@@ -206,12 +206,15 @@ def expected_identities(fixtures, platform):
     identities = []
     for name, data in accepted_tests(fixtures, platform).items():
         text = platform_source(data.decode(), platform)
-        classes = list(re.finditer(r'class (\w+)\s*:\s*XCTestCase', text))
+        owners = list(re.finditer(
+            r'(?:class (\w+)\s*:\s*XCTestCase|extension (\w+)\s*\{)', text
+        ))
         for method in re.finditer(r'\bfunc (test\w+)\(', text):
-            owners = [owner for owner in classes if owner.start() < method.start()]
-            if not owners:
+            candidates = [owner for owner in owners if owner.start() < method.start()]
+            if not candidates:
                 raise RuntimeError(f'XCTest method without class: {name}')
-            identities.append(owners[-1].group(1) + '/' + method.group(1) + '()')
+            owner = candidates[-1]
+            identities.append((owner.group(1) or owner.group(2)) + '/' + method.group(1) + '()')
     if len(identities) != len(set(identities)):
         raise RuntimeError('duplicate canonical XCTest identity')
     return set(identities)

@@ -264,7 +264,7 @@ final class YlAppleAcceptedIntentTests: XCTestCase {
         XCTAssertFalse(backend.isActive, "Failure occurs after the actual current backend quiesces")
         XCTAssertTrue(backend is YlFallbackBackend)
         former = backend
-        throw NativePlayerError(category: "resource", code: "resource.test_candidate_failure", message: "Controlled construction failure")
+        throw NativePlayerError(category: "resource", code: "resource.video_decoder_limit", message: "Controlled construction failure")
       }
     }); defer { f.host.close() }
     var request = AppleHostFixture.request("local-active", format: .matroska, autoplay: true)
@@ -282,7 +282,7 @@ final class YlAppleAcceptedIntentTests: XCTestCase {
     try f.host.setVideoConstraints(command: .init(sessionId: loaded.sessionId, constraints: .init(maxHeight: 720)))
     rejectCandidate = true; request.loadRequestId = "post-quiescence-failure"
     do { _ = try await f.load(request); XCTFail("Controlled candidate committed") }
-    catch { XCTAssertEqual((error as NSError).domain, "resource.test_candidate_failure") }
+    catch { XCTAssertEqual((error as NSError).domain, "resource.video_decoder_limit") }
     XCTAssertTrue(try XCTUnwrap(former).isActive, "Actual former backend is reactivated by slot rollback")
     XCTAssertEqual(f.host.sessionId, loaded.sessionId)
     XCTAssertGreaterThanOrEqual(f.host.initialState.timeline.positionMs, 2_950)

@@ -1,7 +1,7 @@
 [
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleCompatibilityTests.swift",
-    "sha256": "7b90e16c05496577773b3b82b21ee0556e15c5907af1f93f91e0072561671e9f",
+    "sha256": "9a33f78031695a31541b209dfe93b5bcf82a4480afab07beab47590b11de46fa",
     "methods": [
       "testIosOverflowKeepsNewestThreeFrames",
       "testMacosOverflowRejectsNewestAndPreservesQueuedOrder"
@@ -97,7 +97,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift",
-    "sha256": "148e75eabddd99a58a88182ce7663ff8fb1ac23c75496a0e8d932abca4a23309",
+    "sha256": "ad241af4a0fcd6d858e85d51b6a3759911fe868053be7308369f20dd161466fb",
     "methods": [
       "testH264ProbeCleanupCommitsAvPlayerAndReachesReady",
       "testStopDuringHlsProbeUnblocksNextLoad",
@@ -227,7 +227,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleHostTests.swift",
-    "sha256": "55060f16677b4baf0bc144d8e9c06cf07231c4d715fb1c486c556bd1e1c081fe",
+    "sha256": "84f64da0c6162052f5c358b5855d18be0d5ae5cfc80a686ffc206197b7d7aa2d",
     "methods": [
       "testCancelOpenMatchesOnlyThePreparingCandidate",
       "testStopCancelsPendingOpenRetainsTextureAndAllowsFreshOpen",
@@ -286,7 +286,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlManagedFallbackCharacterizationTests.swift",
-    "sha256": "9c7ec0a3dd025922fd68221dff271c2963d1397406e5b4ef2108d19c8e27a01f",
+    "sha256": "011e880847ecd5691765f882640399ad1ccd28490adccd3604b73138f3aac3e5",
     "methods": [
       "testHardwareEvidenceRequiresActualCFBooleanAndSafeIdentity",
       "testRequiredPipelineRejectsSoftwareBeforeDecoderInstallation",
@@ -346,5 +346,100 @@
       "from_sha256": "ffa88b842ecdc0d55e68a4abb6307def111d1f4b8ac0fd05488cb64fe5c23899",
       "reason": "Task8 exact strict public commit envelopes, actual iOS audio driver, FLV AAC initial/reopen authority and bounded lifetime with complete LC sync-extension negatives. Original hardware skip identities unchanged; MKV R19 remains distinct."
     }
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAudioRendererTests.swift",
+    "sha256": "034f4576e82fec628eb5aa1b7c722b5391989358f5ac1acd41ee5ccb462920c7",
+    "methods": [
+      "testVideoClockAdvancesWhilePlayedBackCallbacksAreDelayed",
+      "testRenderClockCapsAtScheduledAudioAndExcludesStarvationOnRefill",
+      "testRenderClockPreservesPauseAndResetsItsAnchorAfterSeek",
+      "testRefillBeforeDelayedCompletionDoesNotCountSilentNodeTime"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlFFmpegBridgeTests.swift",
+    "sha256": "977c1afc5e8f69ec1f66bbde327c6008947fa2bc30314d0bd42390d3cc54ad59",
+    "methods": [
+      "testBuildEnablesMpegTransportStreamDemuxing",
+      "testCreatesHEVCFormatAndSampleFromMpegTransportStream",
+      "testTimelineSeekCallbackResetsStreamingInput"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlFrameSchedulerTests.swift",
+    "sha256": "70ff6d4dce3080e63a336c16f39792bcd8cec4a9575841310587be4e084b876d",
+    "methods": [
+      "testBackpressuresUntilPresentationFreesCapacity",
+      "testDisposeCancelsWaitingEnqueueAndReleasesFrames",
+      "testGenerationFlushCancelsWaitingEnqueueAndReleasesFrames",
+      "testIncreasingRateWakesProducerAndAllowsNineQueuedFrames",
+      "testRejectsLateAndDuplicateFramesAfterPresentation",
+      "testRejectsWaitingFrameThatBecomesLateBeforeCapacityIsAvailable",
+      "testReturningToNormalRatePreservesQueuedFramesUntilCapacityDrains"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlHlsManifestRewriterTests.swift",
+    "sha256": "be6289cdc5efe508d393d182732298177c42dbe832c377e87b4631f4df1762a6",
+    "methods": [
+      "testManagedTransportStreamPlaylistBuildsSeekableTimeline",
+      "testManagedTransportStreamPlaylistRejectsUnsupportedHlsFeatures",
+      "testManagedTransportStreamByteSourceConcatenatesAndSeeksByTime"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlLiveReconnectControllerTests.swift",
+    "sha256": "f04be8e9fc38404be8c8a763e43a73d03bdb722a644df5c5ad88c7e5be832e13",
+    "methods": [
+      "testStableBufferingRespectsWaitPolicyAndPlaybackSpeed",
+      "testLiveTimeoutReconnectsInternallyBeforeReportingFailure",
+      "testStopCancelsPendingTimeoutReconnect",
+      "testVodAndDisabledRetryTimeoutsRemainTerminal",
+      "testPausedLivePlaybackDoesNotReconnectAfterReadTimeout",
+      "testAutomaticLiveReconnectPreservesFrameUntilReplacementButStopClears",
+      "testInternalPauseWithPlaybackIntentStillTimesOutAfterFirstFrame",
+      "testTerminalPlaybackCannotRearmStallTimeoutOnDelayedPause",
+      "testUserPauseCancelsInternalPauseTimeout"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlMediaClockTests.swift",
+    "sha256": "8e18fa50de2755f00a4a2e5588e432f641b3ead09381d91ff4e03470cf92af18",
+    "methods": [
+      "testAudioEndHandsOffContinuouslyToTheVideoTail",
+      "testAudioEndUsesPlaybackRateAndCanReturnToNormalDuringVideoTail",
+      "testAudioRecoveryContinuesFromTheHostPositionWithoutJumpingBack"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlOpenedMediaTests.swift",
+    "sha256": "92c8dfa6c81a73f2a22232ac4271ef29013c15203e2e4ee99e9be8f4f11012dd",
+    "methods": [
+      "testHevcHlsStillSelectsManagedFallback",
+      "testMpegTransportStreamHlsSourceOpensAndSeeksByTimeline",
+      "testMpegTransportStreamAACBuildsAudioSpecificConfig"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlVideoToolboxDecoderTests.swift",
+    "sha256": "ebc951eeb6ca0a34724e1ef93d75274462eb9c86910f38ae8f20f81de8d673b6",
+    "methods": [
+      "testSuccessfulDroppedFrameDoesNotFailDecoder"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlMacosAvPlayerStateTests.swift",
+    "sha256": "bdb8a85977b3fac933a72a4790a1bd6874b2c8ace73d94c86fa902e0a9ecf3b9",
+    "methods": [
+      "testInternalPauseWithPlaybackIntentStillTimesOutAfterFirstFrame",
+      "testTerminalPlaybackCannotRearmStallTimeoutOnDelayedPause",
+      "testUserPauseCancelsInternalPauseTimeout"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/Resources/hevc_aac.ts",
+    "sha256": "253155ff968d1fe0210aa81618dfea87b8bcb5027395d4a1f946782e7a68371a",
+    "methods": []
   }
 ]

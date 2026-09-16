@@ -1,3 +1,12 @@
+## 0.2.0-dev.2
+
+- Advance managed-fallback video smoothly between audio completion callbacks
+  while bounding the clock by scheduled PCM.
+- Recover direct live playback from silent stalls without clearing the last
+  frame, and respect AVPlayer's stable-buffering decisions.
+- Keep rejected HLS fallback-probe cleanup separate from the parent Load so
+  non-HEVC HLS can still commit through AVPlayer.
+
 ## 0.2.0-dev.1
 
 - Dispatch every native Pigeon callback on the platform thread, including after

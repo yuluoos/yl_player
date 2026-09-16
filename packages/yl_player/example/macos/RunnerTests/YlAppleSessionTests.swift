@@ -1005,7 +1005,10 @@ final class YlAudioOwnershipTests: XCTestCase {
       server = instance
       addTeardownBlock { instance.close() }
     }
-    return AppleHostFixture.request(id, url: server!.url.absoluteString, format: .hls)
+    var request = AppleHostFixture.request(id, url: server!.url.absoluteString, format: .hls)
+    request.source.request = .init(
+      headers: [:], credentials: ["Authorization": "Bearer rollback-test"])
+    return request
   }
   func registry(_ coordinator: YlAudioOwnershipCoordinator) -> YlApplePlayerRegistry {
     YlApplePlayerRegistry(makeServices: { _ in YlAppleRegistryTests.services() },

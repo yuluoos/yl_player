@@ -70,7 +70,7 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "c59b5b92fb9edc12f6109ac63f196e80a4d9ff9ee45266447bdd31103e78cfa0"
+    "destination_sha256": "034f4576e82fec628eb5aa1b7c722b5391989358f5ac1acd41ee5ccb462920c7"
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlFFmpegBridgeTests.swift",
@@ -95,7 +95,7 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "54538c3b2f103e73f050559f98d1242d2f1f678b8b4f83ad1056ff29f868cdac"
+    "destination_sha256": "977c1afc5e8f69ec1f66bbde327c6008947fa2bc30314d0bd42390d3cc54ad59"
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlFallbackBackendTests.swift",
@@ -188,7 +188,7 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "611548dfa2518e379bd6140a625cde5f21b9ecf49d6ea7b68ac4c92eddc9389f"
+    "destination_sha256": "70ff6d4dce3080e63a336c16f39792bcd8cec4a9575841310587be4e084b876d"
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlHlsResourceLoaderTests.swift",
@@ -268,7 +268,7 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "bf7ea1f8ee49adbf41b5b9a58535cef208147769003940582683045b3241b6b5",
+    "destination_sha256": "f04be8e9fc38404be8c8a763e43a73d03bdb722a644df5c5ad88c7e5be832e13",
     "hardening_task2_migration": {
       "from_sha256": "ce5e651ae797678a91c813d3d04f317f3f44973f9fb316f9f372b621b8c82d35",
       "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
@@ -294,7 +294,7 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "030cf88447d1f197f60afc8493dc440f01e88bee7bd535e98e92436489128a0a"
+    "destination_sha256": "8e18fa50de2755f00a4a2e5588e432f641b3ead09381d91ff4e03470cf92af18"
   },
   {
     "source": "packages/yl_player/example/ios/RunnerTests/YlOpenCoordinatorTests.swift",
@@ -406,7 +406,7 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "13ee7a8a533405f67d0be9d1cde29a9ca743bfc9b91aa0ae5cab15ff87d96361"
+    "destination_sha256": "ebc951eeb6ca0a34724e1ef93d75274462eb9c86910f38ae8f20f81de8d673b6"
   },
   {
     "source": "packages/yl_player/example/macos/RunnerTests/RunnerTests.swift",
@@ -501,7 +501,7 @@
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
       "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
     ],
-    "destination_sha256": "dc5980c94fde7a211ee0a87ecef4772fd3614cd48768d528cec67059f3d79bc7",
+    "destination_sha256": "bdb8a85977b3fac933a72a4790a1bd6874b2c8ace73d94c86fa902e0a9ecf3b9",
     "hardening_task7_observability": {
       "from_sha256": "ab412353a76a8eca582fadab9aafb1e2d992a77276fd8628617b53e066756043",
       "base": "91aaa3f3d9f5618a02ad8183b267a6eab4a9b7b6",

@@ -1,3 +1,8 @@
+## 0.2.0-dev.2
+
+- Add an optional media-clock position metric for observing playback progress
+  independently from live-window timeline coordinates.
+
 ## 0.2.0-dev.1
 
 - Replace the v0.1 backend contract with SPI major 2, explicit implementation

@@ -148,7 +148,7 @@ void main() {
       textureId: 42,
       platform: platform,
       implementationName: 'yl_player_apple',
-      implementationVersion: '0.2.0-dev.1',
+      implementationVersion: '0.2.0-dev.2',
       capabilities: capabilities,
       initialState: state,
     );

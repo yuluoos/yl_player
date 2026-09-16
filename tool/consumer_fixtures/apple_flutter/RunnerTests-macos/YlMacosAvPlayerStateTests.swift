@@ -2,6 +2,48 @@
 import XCTest
 
 final class YlMacosAvPlayerStateTests: XCTestCase {
+  func testInternalPauseWithPlaybackIntentStillTimesOutAfterFirstFrame() {
+    var scheduledAction: (() -> Void)?
+    let watchdog = YlAvPlayerStallWatchdog { _, action in scheduledAction = action }
+    var failure: NativePlayerError?
+    watchdog.update(active: true, wantsToPlay: true, hasCurrentItem: true,
+      timeControlStatus: .paused, playbackStatus: "buffering", firstFrameSent: true, timeoutMs: 15_000,
+      waitingReason: nil) { failure = $0 }
+    scheduledAction?()
+    XCTAssertEqual(failure?.code, "avplayer.stall_timeout")
+  }
+
+  func testTerminalPlaybackCannotRearmStallTimeoutOnDelayedPause() {
+    for terminalStatus in ["completed", "error"] {
+      var scheduledActions = [() -> Void]()
+      let watchdog = YlAvPlayerStallWatchdog { _, action in scheduledActions.append(action) }
+      var failures = [NativePlayerError]()
+      watchdog.update(active: true, wantsToPlay: true, hasCurrentItem: true,
+        timeControlStatus: .waitingToPlayAtSpecifiedRate, playbackStatus: "buffering",
+        firstFrameSent: true, timeoutMs: 15_000, waitingReason: nil) { failures.append($0) }
+      watchdog.update(active: true, wantsToPlay: true, hasCurrentItem: true,
+        timeControlStatus: .paused, playbackStatus: terminalStatus,
+        firstFrameSent: true, timeoutMs: 15_000, waitingReason: nil) { failures.append($0) }
+      scheduledActions.forEach { $0() }
+      XCTAssertEqual(scheduledActions.count, 1)
+      XCTAssertTrue(failures.isEmpty, terminalStatus)
+    }
+  }
+
+  func testUserPauseCancelsInternalPauseTimeout() {
+    var scheduledAction: (() -> Void)?
+    let watchdog = YlAvPlayerStallWatchdog { _, action in scheduledAction = action }
+    var failures = [NativePlayerError]()
+    watchdog.update(active: true, wantsToPlay: true, hasCurrentItem: true,
+      timeControlStatus: .waitingToPlayAtSpecifiedRate, playbackStatus: "buffering", firstFrameSent: true,
+      timeoutMs: 15_000, waitingReason: nil) { failures.append($0) }
+    watchdog.update(active: true, wantsToPlay: false, hasCurrentItem: true,
+      timeControlStatus: .paused, playbackStatus: "buffering", firstFrameSent: true, timeoutMs: 15_000,
+      waitingReason: nil) { failures.append($0) }
+    scheduledAction?()
+    XCTAssertTrue(failures.isEmpty)
+  }
+
   func testFailureGateCoalescesCallbacksForOneItem() {
     let gate = YlAvPlayerFailureGate()
 
@@ -81,7 +123,7 @@ final class YlMacosAvPlayerStateTests: XCTestCase {
       active: true,
       wantsToPlay: true,
       hasCurrentItem: true,
-      isWaiting: false,
+      timeControlStatus: .playing, playbackStatus: "buffering",
       firstFrameSent: false,
       timeoutMs: 12_000,
       waitingReason: nil
@@ -108,7 +150,7 @@ final class YlMacosAvPlayerStateTests: XCTestCase {
       active: true,
       wantsToPlay: true,
       hasCurrentItem: true,
-      isWaiting: true,
+      timeControlStatus: .waitingToPlayAtSpecifiedRate, playbackStatus: "buffering",
       firstFrameSent: true,
       timeoutMs: 15_000,
       waitingReason: "AVPlayerWaitingToMinimizeStallsReason"
@@ -135,7 +177,7 @@ final class YlMacosAvPlayerStateTests: XCTestCase {
       active: true,
       wantsToPlay: true,
       hasCurrentItem: true,
-      isWaiting: true,
+      timeControlStatus: .waitingToPlayAtSpecifiedRate, playbackStatus: "buffering",
       firstFrameSent: true,
       timeoutMs: 15_000,
       waitingReason: nil
@@ -144,7 +186,7 @@ final class YlMacosAvPlayerStateTests: XCTestCase {
       active: true,
       wantsToPlay: true,
       hasCurrentItem: true,
-      isWaiting: false,
+      timeControlStatus: .playing, playbackStatus: "buffering",
       firstFrameSent: true,
       timeoutMs: 15_000,
       waitingReason: nil
@@ -166,7 +208,7 @@ final class YlMacosAvPlayerStateTests: XCTestCase {
         active: true,
         wantsToPlay: true,
         hasCurrentItem: true,
-        isWaiting: false,
+        timeControlStatus: .playing, playbackStatus: "buffering",
         firstFrameSent: false,
         timeoutMs: 15_000,
         waitingReason: nil

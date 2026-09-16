@@ -17,7 +17,7 @@ Before adopting v0.2, read the [migration guide](docs/migration-to-0.2.md),
 [platform support matrix](docs/platform-support.md), [policy semantics](docs/policies.md),
 and [diagnostics contract](docs/diagnostics.md).
 
-This is `0.2.0-dev.1`. Final physical-device, endurance, profiling, consumer,
+This is `0.2.0-dev.2`. Final physical-device, endurance, profiling, consumer,
 and release acceptance remains pending; the support matrix distinguishes
 implemented automated evidence from physical evidence.
 
