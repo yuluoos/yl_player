@@ -21,8 +21,20 @@ This is `0.2.0-dev.2`. Final physical-device, endurance, profiling, consumer,
 and release acceptance remains pending; the support matrix distinguishes
 implemented automated evidence from physical evidence.
 
-The project is BSD-3-Clause licensed. The Android and Apple packages redistribute
-minimized LGPL-2.1-or-later FFmpeg components for demuxing; Android additionally
-uses its replaceable component for bounded software decoding. Keep each package's
-license text, notices, replacement scripts, and artifact lock with binary
-distributions.
+## License
+
+Except where otherwise noted, original code and documentation in this repository
+are licensed under the [BSD 3-Clause License](LICENSE), consistent with all four
+library packages. Existing copyright notices are retained.
+
+Third-party components retain their own licenses; the repository license does
+not relicense them. The Android and Apple packages redistribute minimized
+LGPL-2.1-or-later FFmpeg components. See the
+[Apple third-party notices](packages/yl_player_apple/THIRD_PARTY_NOTICES.md),
+[Android FFmpeg notice](packages/yl_player_android/LICENSES/FFmpeg-NOTICE.txt),
+and the LGPL license texts in each platform package's `LICENSES` directory.
+Keep each package's license text, notices, replacement scripts, and artifact
+lock with binary distributions. Distribution also requires satisfying the
+applicable LGPL source and replacement/relinking requirements; these files alone
+are not a complete compliance assessment. See
+[FFmpeg's license and legal guidance](https://ffmpeg.org/legal.html).
