@@ -52,6 +52,16 @@ final class AppleDecodedOutputObservation: YlTextureOutput {
 
 @MainActor
 final class YlApplePublicationTests: XCTestCase {
+  func testUnsupportedDolbyFormatsRetainTheirPublicFailureCodes() {
+    for code in ["decoder.audio_ac3_unsupported", "decoder.audio_eac3_unsupported",
+                 "decoder.audio_unsupported", "decoder.dolby_vision_unsupported"] {
+      let failure = YlAppleSafeDiagnostics.failure(NativePlayerError(
+        category: "decoderUnsupported", code: code, message: "private source detail"), scope: .command)
+      XCTAssertEqual(failure.code, code)
+      XCTAssertFalse(failure.message.contains("private source detail"))
+    }
+  }
+
   private func server() throws -> RollbackHlsServer {
     func data(_ name: String, _ ext: String) throws -> Data {
       #if os(iOS)

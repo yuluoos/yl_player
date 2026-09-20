@@ -5,6 +5,69 @@ import YlFFmpegBridge
 
 final class YlAudioRendererTests: XCTestCase {
 
+  func testDolbySurroundConvertsCenterWithoutChangingSpeakerOrderAndResets() throws {
+    // Synthetic center-only 440 Hz tones, AC-3 / E-AC-3, 48 kHz 5.1(side).
+    let fixtures: [(YlAudioCodec, String)] = [
+      (.ac3, "C3f6xhRA6/hAPv4Afw8PCEBAQfw8PD+Hh4fw8PDVXVeG+/51fPnz58+fPnz4g0Tx/IkOu+fPnz4/51fPnz58+fPnz4/51fPnz58+fPnz4/51fPnz58+fPnz4/51y/whAgQIECBIAAAAAG+fPG2222228ePHju8gVWXWXW0rDfDTPR8M4sx2lal4f/pdJCaKBoiN2DioVUAAAAN8+fNtttttt48ePHdwAAAA3z582222223jx48d3AAAADfPm2222228ePHju4AAAAbwHwEACob58/fPgAAAABvn0BttttttvHjx47uvbR1l1l1lxrdIHOadej48Vip8s9VcIz9czAvfSwR9Gp1eAAAAG+fPm2222228ePHju4AAAAb58+bbbbbbbx48eO7gAAABvnzbbbbbbePHjx3cAAAAN4D4AAAAAAAAN8+eNtttttt48ePHd8A8AWk2k2kymAmm2kPR9drPCizv0ErSxEToRIEVGQRUxAAAAAA3z582222223jx48d3AAAADfPnzbbbbbbePHjx3cAAAAN8+bbbbbbbx48eO7gAAABvAfAAAAAAAABvnz9ttttttvHjx47ulwnMususustpukDXoV+eOIUBOLYFXsgrgZ00KFy2AvUKqAAAAG+fPm2222228ePHju4AAAAb58+bbbbbbbx48eO7gAAABvnzbbbbbbePHjx3cAAAAN4D4CABUN8+fV3wAAAAA3z5+2222223jx48d3dty6y4040404mc1oVsvxzFw15WXZSZoxdFhftW0i+Kq82sAAAADfPm2222228ePHju4AAAAb58+bbbbbbbx48eO7gAAABvnz5ttttttvHjx47uAAAAGD4AAAAAAAAN8+eNtttttt48ePHd6o9kXE2oyoyo6cBNAki8f4j2WWoJtGZ7wuwXqKUIwyJKxAAAAAA3z5ttttttvHjx47uAAAAG+fPm2222228ePHju4AAAAb58+bbbbbbbx48eO7gAAABgAAAAAAAAAAAAAAAAAAAAAAF2m"),
+      (.eac3, "C3cBfz+HwAAgkAAAAgAAAAQYHwB+Hh4BAQEH4eHh+Hh4fh4eFV4b7/nV8+fPnz58+fPiDRPH8iQ6758+fPj/nV8+fPnz58+fPj/nV8+fPnz58+fPj/nV8+fPnz58+fPj/nUAAAAAG+fPn7bbbbbePHjx4XXL9y/em9uHmHmHmXWXWPhnFmO0rUvD/9LpITP0DREbsBxaMqsCpAAAADfPnz5tttttvHjx48AAAADfPnz5tttttvHjx48AAAADfPnzbbbbbePHjx4AAAAG8AVDfPn758AAAABvnz56222223jx48ee1LXSlz9ze3N6dHmHmHmXa9Hx4rFT5Z6q4Rn65mAXvpYIvY2K2coFVIAAAAN8+fPm222228ePHjwAAAAN8+fPm222228ePHjwAAAAN8+fNttttt48ePG4AAAAbwAAAAABvnz58222223jx48eIQA2jMBjMM7szqwNgNiLST0fXazwos79BK0sRE6FEgRUZAhXipqBSwAAAAAN8+fPm222228ePHjwAAAAN8+fPm222228ePHjwAAAAN8+fNttttt48ePG4AAAAbwAAAAABvnz5+222223jx48eZ9pH6TV4muDa3N8w8w8w6wr88cQoCcWwKvZBXAzmaFC5bAF49o0sQKkAAAAN8+fPm222228ePHjwAAAAN8+fPm222228ePHjwAAAAN8+fNttttt48ePG4AAAAbwBUN8+fV3wAAAAG+fPnrbbbbbePHjx4Dj9y/cvnR6dHp0eWXWXWXbZfjmLhrysuykzRi6LIv2raRfhWKWjWtakAAAAN8+fPm222228ePHjwAAAAN8+fPm222228ePHjwAAAAN8+fNttttt48ePG4AAAAbwAAAAABvnz5+222223jx48eHQL2l8Ji8QqtDq0O4i4i5FJF4/xHsstQTaMz3hdhL1FKEUKSOyagUsAAAAADfPnz5tttttvHjx48AAAADfPnz5tttttvHjx48AAAADfPnzbbbbbePHjxuAAAAG8AAAAAAAE9R")
+    ]
+    for (codec, encoded) in fixtures {
+      let converter = YlAppleCompressedAudioConverter()
+      try converter.configure(stream: YlAudioStreamConfiguration(
+        codec: codec, sampleRate: 48_000, channelCount: 6,
+        magicCookie: Data(), generation: 1, channelMask: 0x60f
+      ))
+      let data = try XCTUnwrap(Data(base64Encoded: encoded))
+      for _ in 0..<2 {
+        var decoded: YlScheduledAudioBuffer?
+        for index in 0..<4 {
+          decoded = try converter.convert(packet: YlCompressedAudioPacket(
+            data: data, ptsUs: Int64(index) * 32_000, durationUs: 32_000, generation: 1))
+          if decoded != nil { break }
+        }
+        let buffer = try XCTUnwrap(decoded)
+        let pcm = try XCTUnwrap(buffer.payload as? AVAudioPCMBuffer)
+        XCTAssertGreaterThan(pcm.frameLength, 0)
+        XCTAssertEqual(pcm.format.channelCount, 6)
+        let samples = try XCTUnwrap(pcm.floatChannelData)
+        var energy = [Double](repeating: 0, count: 6)
+        for frame in 0..<Int(pcm.frameLength) {
+          for channel in 0..<6 {
+            let value = pcm.format.isInterleaved ? samples[0][frame * 6 + channel] : samples[channel][frame]
+            energy[channel] += Double(value * value)
+          }
+        }
+        XCTAssertGreaterThan(energy[2], 1, "Center signal must remain in the center channel")
+        for channel in [0, 1, 3, 4, 5] { XCTAssertLessThan(energy[channel], energy[2] * 0.001) }
+        XCTAssertEqual(buffer.byteCount, Int(pcm.frameLength) * 6 * MemoryLayout<Float>.size)
+        converter.reset()
+      }
+    }
+  }
+
+  func testDolbyAudioRejectsMissingOrMismatchedSpeakerLayouts() {
+    for codec: YlAudioCodec in [.ac3, .eac3] {
+      for mask: UInt64 in [0, 3, 0x8000000000000000] {
+        let converter = YlAppleCompressedAudioConverter()
+        XCTAssertThrowsError(try converter.configure(stream: YlAudioStreamConfiguration(
+          codec: codec, sampleRate: 48_000, channelCount: 6,
+          magicCookie: Data(), generation: 1, channelMask: mask)))
+      }
+    }
+  }
+
+  func testDolbySurroundSystemOutputCanSwitchToAAC() throws {
+    let renderer = YlAudioRenderer()
+    defer { renderer.dispose() }
+    for codec: YlAudioCodec in [.ac3, .eac3, .aac] {
+      try renderer.configure(stream: YlAudioStreamConfiguration(
+        codec: codec, sampleRate: 48_000, channelCount: 6,
+        magicCookie: codec == .aac ? Data([0x11, 0xb0]) : Data(),
+        generation: 1, channelMask: 0x60f))
+    }
+  }
+
+
   func testAACSurroundRejectsMissingOrMismatchedChannelConfiguration() {
     for cookie in [Data(), Data([0x11]), Data([0x11, 0x90])] {
       let converter = YlAppleCompressedAudioConverter()

@@ -281,6 +281,15 @@ protocol YlVTSessionFactory {
     formatDescription: CMVideoFormatDescription,
     output: @escaping (YlVTDecodedImage) -> Void
   ) throws -> YlVTSession
+  func makeSession(formatDescription: CMVideoFormatDescription, outputPixelFormat: OSType?,
+                   output: @escaping (YlVTDecodedImage) -> Void) throws -> YlVTSession
+}
+
+extension YlVTSessionFactory {
+  func makeSession(formatDescription: CMVideoFormatDescription, outputPixelFormat: OSType?,
+                   output: @escaping (YlVTDecodedImage) -> Void) throws -> YlVTSession {
+    try makeSession(formatDescription: formatDescription, output: output)
+  }
 }
 
 struct YlVideoFrame {
@@ -316,6 +325,9 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
   private let budget: YlVideoDecodeBudget
   private let bufferScope: YlManagedBufferScope?
   private var lease: YlHardwareDecoderLease?
+  // A FEL pair is one admitted playback owner with two hardware sessions.
+  // The coordinator releases this lease only after both sessions are retired.
+  private var sharedLease: YlHardwareDecoderLease?
   private var session: YlVTSession?
   let hardwareEvidence: YlHardwareDecoderEvidence
   var usesHardwareDecoder: Bool { hardwareEvidence.mode == .hardware }
@@ -327,6 +339,8 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
     maxInFlightBytes: Int = 4 * 1024 * 1024,
     bufferScope: YlManagedBufferScope? = nil,
     factory: YlVTSessionFactory = YlHardwareVTSessionFactory(),
+    sharedLease: YlHardwareDecoderLease? = nil,
+    outputPixelFormat: OSType? = nil,
     onFrame: @escaping (YlVideoFrame) -> Void,
     onError: @escaping (NativePlayerError) -> Void
   ) throws {
@@ -334,13 +348,15 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
     self.onFrame = onFrame
     self.onError = onError
     self.budget = YlVideoDecodeBudget(maxBytes: maxInFlightBytes)
-    if YlAppleCompatibility.current.limitsVideoReservations {
+    self.sharedLease = sharedLease
+    if YlAppleCompatibility.current.limitsVideoReservations && sharedLease == nil {
       self.lease = try YlHardwareDecoderLeasePool.shared.acquire()
     }
     let outputRelay = YlVTOutputRelay()
     self.outputRelay = outputRelay
     let createdSession = try factory.makeSession(
       formatDescription: formatDescription,
+      outputPixelFormat: outputPixelFormat,
       output: { image in outputRelay.handle(image) }
     )
     session = createdSession
@@ -416,6 +432,11 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
     // The bridge's -8 result combines parser and CoreMedia errors; it is not OSStatus.
     let diagnostic = "stage=formatDescription codec=\(codecName) streamIndex=\(streamIndex ?? -1)"
       + " width=\(width ?? -1) height=\(height ?? -1) configBytes=\(configBytes) bridgeResult=\(result)"
+    if result == YLFResultDolbyVisionUnsupported {
+      NSLog("%@", "[YLPlayer][VideoToolbox] event=dolbyVisionUnsupported \(diagnostic)")
+      return NativePlayerError(category: "decoderUnsupported", code: "decoder.dolby_vision_unsupported",
+        message: "This Dolby Vision profile is unsupported by the current native output path.", diagnostic: diagnostic)
+    }
     NSLog("%@", "[YLPlayer][VideoToolbox] event=videoConfigurationInvalid \(diagnostic)")
     return NativePlayerError(category: "decoderFailure", code: "decoder.video_configuration_invalid",
       message: "The video codec configuration is invalid.", diagnostic: diagnostic)
@@ -503,6 +524,7 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
     self.lease = nil
     lock.unlock()
     session?.invalidate()
+    sharedLease = nil
     budget.reset()
     lease?.release()
   }
@@ -621,6 +643,11 @@ final class YlHardwareVTSessionFactory: YlVTSessionFactory {
     formatDescription: CMVideoFormatDescription,
     output: @escaping (YlVTDecodedImage) -> Void
   ) throws -> YlVTSession {
+    try makeSession(formatDescription: formatDescription, outputPixelFormat: nil, output: output)
+  }
+
+  func makeSession(formatDescription: CMVideoFormatDescription, outputPixelFormat: OSType?,
+                   output: @escaping (YlVTDecodedImage) -> Void) throws -> YlVTSession {
     let codec = CMFormatDescriptionGetMediaSubType(formatDescription)
     guard codec == kCMVideoCodecType_H264 || codec == kCMVideoCodecType_HEVC
             || codec == kCMVideoCodecType_DolbyVisionHEVC,
@@ -643,7 +670,7 @@ final class YlHardwareVTSessionFactory: YlVTSessionFactory {
     let decoderSpecification = specification as CFDictionary
     var imageAttributes: [String: Any] = [
       kCVPixelBufferPixelFormatTypeKey as String:
-        YlHDRVideoPolicy.pixelFormat(for: formatDescription),
+        outputPixelFormat ?? YlHDRVideoPolicy.pixelFormat(for: formatDescription),
       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
     ]
     if YlAppleCompatibility.current.limitsVideoReservations {

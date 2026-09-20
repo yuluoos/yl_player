@@ -37,6 +37,7 @@ enum {
   YLFResultCallbackFailed = -10,
   YLFResultCallbackSeekUnsupported = -11,
   YLFResultCallbackCancelled = -12,
+  YLFResultDolbyVisionUnsupported = -13,
 };
 
 enum {
@@ -58,6 +59,8 @@ enum {
   YLFCodecAAC = 3,
   YLFCodecMP3 = 4,
   YLFCodecDTS = 5,
+  YLFCodecAC3 = 6,
+  YLFCodecEAC3 = 7,
 };
 
 typedef struct {
@@ -76,6 +79,8 @@ typedef struct {
   int64_t duration_us;
   int32_t time_base_num;
   int32_t time_base_den;
+  // AVChannel native speaker-bit mask; zero when speaker roles are unspecified.
+  uint64_t channel_layout_mask;
 } YLFStreamInfo;
 
 typedef int32_t (*YLFReadCallback)(void *opaque,
@@ -145,6 +150,19 @@ YLF_EXPORT const uint8_t *ylf_packet_data(YLFPacketRef packet);
 YLF_EXPORT bool ylf_packet_is_keyframe(YLFPacketRef packet);
 YLF_EXPORT void ylf_packet_release(YLFPacketRef *packet);
 
+// FEL objects are independent of the demux context after creation. Calls on one
+// object must be serialized. Any failed access unit invalidates RPU history;
+// reset before feeding a new random-access sequence. Returned dictionaries and
+// formats follow Create Rule; packets remain caller-owned.
+typedef struct YLFFELContext *YLFFELContextRef;
+YLF_EXPORT int32_t ylf_stream_dolby_vision_profile(YLFMediaContextRef context, int32_t stream_index);
+YLF_EXPORT int32_t ylf_fel_create(YLFMediaContextRef context, int32_t stream_index, YLFFELContextRef *out_fel);
+YLF_EXPORT int32_t ylf_fel_clone(YLFFELContextRef original, YLFFELContextRef *out_fel);
+YLF_EXPORT int32_t ylf_fel_copy_base_format(YLFMediaContextRef context, int32_t stream_index, CMVideoFormatDescriptionRef *out_format);
+YLF_EXPORT int32_t ylf_fel_copy_access_unit(YLFFELContextRef fel, YLFPacketRef packet, CFDictionaryRef *out_unit);
+YLF_EXPORT void ylf_fel_reset(YLFFELContextRef fel);
+YLF_EXPORT void ylf_fel_free(YLFFELContextRef fel);
+
 // Test/diagnostic counter for FFmpeg packets currently owned by bridge
 // contexts. It must return to zero after release or context close.
 YLF_EXPORT int32_t ylf_debug_outstanding_packet_count(void);
@@ -159,8 +177,9 @@ YLF_EXPORT int32_t ylf_copy_video_format_description(
 // Recovered in-band avcC/hvcC (or Annex B) configuration, combined with the
 // original track's color/HDR/Dolby Vision metadata. Does not mutate the track.
 // Dolby Vision currently accepts only Profile 5, levels 1-9, RPU+BL, no EL,
-// compatibility ID 0 and uncompressed metadata. Unsupported/invalid DV fails
-// with YLFResultVideoConfigurationInvalid; it never falls back to plain HEVC.
+// compatibility ID 0 and uncompressed metadata. Recognized unsupported DV
+// configurations return YLFResultDolbyVisionUnsupported; malformed metadata
+// returns YLFResultVideoConfigurationInvalid. Neither falls back to plain HEVC.
 YLF_EXPORT int32_t ylf_copy_video_format_description_with_codec_config(
     YLFMediaContextRef context,
     int32_t stream_index,

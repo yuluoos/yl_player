@@ -250,28 +250,21 @@ final class YlAudioPipeline {
     generation: UInt64, audioCookies: [Int32: Data]
   ) -> YlAudioStreamConfiguration {
     YlAudioStreamConfiguration(
-      codec: Int(stream.codec) == YLFCodecAAC
-        ? .aac : (Int(stream.codec) == YLFCodecMP3 ? .mp3 : (Int(stream.codec) == YLFCodecDTS ? .dts : .unsupported)),
+      codec: YlAudioCodec(bridgeCodec: stream.codec),
       sampleRate: Double(stream.sample_rate),
       channelCount: Int(stream.channel_count),
       magicCookie: audioCookies[stream.index] ?? Data(),
-      generation: generation
+      generation: generation, channelMask: stream.channel_layout_mask
     )
   }
 
   func reconnectConfiguration(for stream: YLFStreamInfo, generation: UInt64,
                               copiedAudioCookies: [Int32: Data]) -> YlAudioStreamConfiguration {
-    YlAudioStreamConfiguration(
-        codec: Int(stream.codec) == YLFCodecAAC ? .aac : .mp3,
-        sampleRate: Double(stream.sample_rate),
-        channelCount: Int(stream.channel_count),
-        magicCookie: copiedAudioCookies[stream.index] ?? Data(),
-        generation: generation
-      )
+    configuration(for: stream, generation: generation, audioCookies: copiedAudioCookies)
   }
 
   func codecName(_ stream: YLFStreamInfo) -> String {
-    Int(stream.codec) == YLFCodecDTS ? "DTS" : (Int(stream.codec) == YLFCodecMP3 ? "MP3" : "AAC")
+    YlAudioCodec(bridgeCodec: stream.codec).label
   }
 
 }

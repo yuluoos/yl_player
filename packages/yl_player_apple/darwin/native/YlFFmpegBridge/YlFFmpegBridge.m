@@ -341,6 +341,10 @@ static int32_t ylf_codec(enum AVCodecID codec_id) {
     return YLFCodecMP3;
   case AV_CODEC_ID_DTS:
     return YLFCodecDTS;
+  case AV_CODEC_ID_AC3:
+    return YLFCodecAC3;
+  case AV_CODEC_ID_EAC3:
+    return YLFCodecEAC3;
   default:
     return YLFCodecUnsupported;
   }
@@ -844,6 +848,8 @@ int32_t ylf_copy_stream_info(YLFMediaContextRef context,
   out_info->height = parameters->height;
   out_info->sample_rate = parameters->sample_rate;
   out_info->channel_count = parameters->ch_layout.nb_channels;
+  if (parameters->ch_layout.order == AV_CHANNEL_ORDER_NATIVE)
+    out_info->channel_layout_mask = parameters->ch_layout.u.mask;
   out_info->duration_us = ylf_timestamp_us(stream->duration, stream->time_base);
   out_info->time_base_num = stream->time_base.num;
   out_info->time_base_den = stream->time_base.den;
@@ -1213,6 +1219,20 @@ static OSStatus ylf_apply_video_metadata(const AVCodecParameters *parameters,
     if (!side->data || side->size < sizeof(AVDOVIDecoderConfigurationRecord)) return kCMFormatDescriptionError_InvalidParameter;
     AVDOVIDecoderConfigurationRecord dovi;
     memcpy(&dovi, side->data, sizeof(dovi));
+    // Classify common, structurally valid unsupported HEVC configurations
+    // separately so callers do not attempt codec-configuration repair for them.
+    bool validCommon = parameters->codec_id == AV_CODEC_ID_HEVC &&
+        dovi.dv_version_major == 1 && dovi.dv_version_minor == 0 &&
+        dovi.dv_level >= 1 && dovi.dv_level <= 13 &&
+        dovi.rpu_present_flag == 1 && dovi.bl_present_flag == 1 &&
+        dovi.dv_md_compression == AV_DOVI_COMPRESSION_NONE;
+    bool profile7 = dovi.dv_profile == 7 && dovi.el_present_flag == 1 &&
+        dovi.dv_bl_signal_compatibility_id == 6;
+    bool profile8 = dovi.dv_profile == 8 && dovi.el_present_flag == 0 &&
+        (dovi.dv_bl_signal_compatibility_id == 1 ||
+         dovi.dv_bl_signal_compatibility_id == 2 ||
+         dovi.dv_bl_signal_compatibility_id == 4);
+    if (validCommon && (profile7 || profile8)) return YLFResultDolbyVisionUnsupported;
     // Only the single-layer, uncompressed Profile 5 path is qualified. Never
     // silently decode unsupported DV as ordinary HEVC (its BL may not be HDR10).
     if (parameters->codec_id != AV_CODEC_ID_HEVC || dovi.dv_version_major != 1 ||
@@ -1288,6 +1308,7 @@ int32_t ylf_copy_video_format_description_with_codec_config(
   if (status == noErr && base != NULL)
     status = ylf_apply_video_metadata(parameters, base, out_description);
   if (base) CFRelease(base);
+  if (status == YLFResultDolbyVisionUnsupported) return YLFResultDolbyVisionUnsupported;
   return status == noErr && *out_description != NULL ? YLFResultOK : YLFResultVideoConfigurationInvalid;
 }
 
@@ -1511,3 +1532,5 @@ void ylf_dts_free(YLFDtsDecoderRef d) {
   if (!d) return;
   avcodec_free_context(&d->codec); av_frame_free(&d->frame); av_packet_free(&d->packet); free(d);
 }
+
+#include "YlFELBridge.inc"

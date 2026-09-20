@@ -1,6 +1,7 @@
 import AudioToolbox
 import AVFAudio
 import Foundation
+import YlFFmpegBridge
 
 enum YlAudioFormatPolicy {
   static let usesInterleavedPCM = YlAppleCompatibility.current.usesInterleavedPCM
@@ -18,7 +19,31 @@ enum YlAudioCodec: Equatable {
   case aac
   case mp3
   case dts
+  case ac3
+  case eac3
   case unsupported
+
+  init(bridgeCodec: Int32) {
+    switch Int(bridgeCodec) {
+    case YLFCodecAAC: self = .aac
+    case YLFCodecMP3: self = .mp3
+    case YLFCodecDTS: self = .dts
+    case YLFCodecAC3: self = .ac3
+    case YLFCodecEAC3: self = .eac3
+    default: self = .unsupported
+    }
+  }
+
+  var label: String {
+    switch self {
+    case .aac: return "AAC"
+    case .mp3: return "MP3"
+    case .dts: return "DTS"
+    case .ac3: return "AC-3"
+    case .eac3: return "E-AC-3"
+    case .unsupported: return "Compressed"
+    }
+  }
 }
 
 /// Resolve missing packet duration only for the inspected AAC-LC configuration.
@@ -72,6 +97,7 @@ struct YlAudioStreamConfiguration: Equatable {
   let channelCount: Int
   let magicCookie: Data
   let generation: UInt64
+  var channelMask: UInt64 = 0
 }
 
 struct YlCompressedAudioPacket {
@@ -562,18 +588,18 @@ final class YlAudioRenderer: YlAudioRendering {
   }
 
   private static func codecName(_ codec: YlAudioCodec) -> String {
-    switch codec {
-    case .aac: return "AAC"
-    case .mp3: return "MP3"
-    case .dts: return "DTS"
-    case .unsupported: return "Compressed"
-    }
+    codec.label
   }
 
   private static func unsupportedCode(_ codec: YlAudioCodec) -> String {
-    codec == .dts ? "decoder.audio_dts_unsupported" : codec == .mp3
-      ? "decoder.audio_mp3_unsupported"
-      : "decoder.audio_aac_unsupported"
+    switch codec {
+    case .aac: return "decoder.audio_aac_unsupported"
+    case .mp3: return "decoder.audio_mp3_unsupported"
+    case .dts: return "decoder.audio_dts_unsupported"
+    case .ac3: return "decoder.audio_ac3_unsupported"
+    case .eac3: return "decoder.audio_eac3_unsupported"
+    case .unsupported: return "decoder.audio_unsupported"
+    }
   }
 
   private func complete(
@@ -615,6 +641,8 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   private var outputFormat: AVAudioFormat?
   var pcmFormat: AVAudioFormat? { dtsConverter == nil ? outputFormat : nil }
   private var framesPerPacket: UInt32 = 0
+  private var batchesInput = YlAppleCompatibility.current.batchesAudioInput
+  private var variablePacketFrames = false
   private var pendingPackets: [YlCompressedAudioPacket] = []
   private var pendingOutputPackets: [YlCompressedAudioPacket] = []
 
@@ -627,18 +655,24 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
       dtsConverter = dts
       return
     }
-    guard stream.codec == .aac || stream.codec == .mp3,
+    let isDolby = stream.codec == .ac3 || stream.codec == .eac3
+    guard stream.codec == .aac || stream.codec == .mp3 || isDolby,
           stream.sampleRate > 0,
           (1...8).contains(stream.channelCount),
           stream.codec != .aac || !stream.magicCookie.isEmpty else {
       throw YlAudioImplementationError.invalidConfiguration
     }
-    let formatID: AudioFormatID = stream.codec == .aac
-      ? kAudioFormatMPEG4AAC
-      : kAudioFormatMPEGLayer3
+    let formatID: AudioFormatID
+    switch stream.codec {
+    case .aac: formatID = kAudioFormatMPEG4AAC
+    case .mp3: formatID = kAudioFormatMPEGLayer3
+    case .ac3: formatID = kAudioFormatAC3
+    case .eac3: formatID = kAudioFormatEnhancedAC3
+    default: throw YlAudioImplementationError.invalidConfiguration
+    }
     let formatFlags: AudioFormatFlags = stream.codec == .aac && !YlAppleCompatibility.current.batchesAudioInput
       ? AudioFormatFlags(MPEG4ObjectID.AAC_LC.rawValue) : 0
-    let inputFramesPerPacket: UInt32 = stream.codec == .aac ? 1024 : 1152
+    let inputFramesPerPacket: UInt32 = isDolby ? 1536 : (stream.codec == .aac ? 1024 : 1152)
     let magicCookie = stream.codec == .aac && YlAppleCompatibility.current.batchesAudioInput
       ? Self.aacMagicCookie(audioSpecificConfig: stream.magicCookie)
       : stream.magicCookie
@@ -647,7 +681,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
       mFormatID: formatID,
       mFormatFlags: formatFlags,
       mBytesPerPacket: 0,
-      mFramesPerPacket: inputFramesPerPacket,
+      mFramesPerPacket: stream.codec == .eac3 ? 0 : inputFramesPerPacket,
       mBytesPerFrame: 0,
       mChannelsPerFrame: UInt32(stream.channelCount),
       mBitsPerChannel: 0,
@@ -670,7 +704,13 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     }
     let layout: AVAudioChannelLayout?
     let output: AVAudioFormat?
-    if stream.channelCount > 2 {
+    if isDolby {
+      let speakers = try Self.dolbyChannelLayout(mask: stream.channelMask, channelCount: stream.channelCount)
+      layout = speakers
+      output = AVAudioFormat(commonFormat: .pcmFormatFloat32,
+        sampleRate: stream.sampleRate, interleaved: YlAudioFormatPolicy.usesInterleavedPCM,
+        channelLayout: speakers)
+    } else if stream.channelCount > 2 {
       // A channel count alone is insufficient for surround AVAudioFormats.
       // Read the encoded speaker order from ESDS, including any AAC PCE, and
       // preserve that layout through PCM conversion and the output graph.
@@ -695,6 +735,11 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     if stream.codec == .aac {
       converter.magicCookie = magicCookie
     }
+    // Dolby syncframes are self-contained; preserve one packet's timing per
+    // output instead of applying the macOS AAC look-ahead batching policy.
+    batchesInput = YlAppleCompatibility.current.batchesAudioInput && !isDolby
+    variablePacketFrames = stream.codec == .eac3
+    if isDolby { converter.primeMethod = .none }
     self.inputFormat = input
     self.outputFormat = output
     self.converter = converter
@@ -730,7 +775,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
       throw YlAudioImplementationError.notConfigured
     }
     pendingPackets.append(packet)
-    let packetBatch = Array(pendingPackets.prefix(YlAppleCompatibility.current.batchesAudioInput ? 2 : 1))
+    let packetBatch = Array(pendingPackets.prefix(batchesInput ? 2 : 1))
     let copiedBytes = packetBatch.reduce(0) { $0 + $1.data.count }
     let copyReservation = try bufferScope?.require(category: .compressedPackets, bytes: copiedBytes)
     defer { withExtendedLifetime(copyReservation) {} }
@@ -748,7 +793,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
       }
       compressed.packetDescriptions?.pointee = AudioStreamPacketDescription(
         mStartOffset: 0,
-        mVariableFramesInPacket: YlAppleCompatibility.current.batchesAudioInput ? 0 : framesPerPacket,
+        mVariableFramesInPacket: batchesInput || variablePacketFrames ? 0 : framesPerPacket,
         mDataByteSize: packetSize
       )
       compressed.byteLength = packetSize
@@ -762,7 +807,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
       frameCount: 1, bytesPerFrame: bytesPerFrame,
       channelCount: Int(outputFormat.channelCount)
     )
-    let frameCapacity = YlAppleCompatibility.current.batchesAudioInput
+    let frameCapacity = batchesInput
       ? AVAudioFrameCount(framesPerPacket)
       : AVAudioFrameCount(max(Int(framesPerPacket), estimate.byteCount / bytesPerSampleFrame + Int(framesPerPacket)))
     let allocatedBytes = YlAudioFormatPolicy.byteCount(frameCount: Int(frameCapacity), bytesPerFrame: bytesPerFrame,
@@ -792,7 +837,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     for consumed in packetBatch.prefix(nextInputIndex) { consumed.reservation?.endQueuedTiming() }
     pendingOutputPackets.append(contentsOf: packetBatch.prefix(nextInputIndex))
     pendingPackets.removeFirst(nextInputIndex)
-    if YlAppleCompatibility.current.batchesAudioInput, status == .inputRanDry, pcm.frameLength == 0 {
+    if batchesInput, status == .inputRanDry, pcm.frameLength == 0 {
       return nil
     }
     guard status != AVAudioConverterOutputStatus.error, pcm.frameLength > 0 else {
@@ -829,6 +874,37 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     converter?.reset()
     pendingPackets.removeAll(keepingCapacity: true)
     pendingOutputPackets.removeAll(keepingCapacity: true)
+  }
+
+  private static func dolbyChannelLayout(mask: UInt64, channelCount: Int) throws -> AVAudioChannelLayout {
+    // FFmpeg's native mask identifies speakers, not just a channel count.
+    // Keep that order in explicit CoreAudio descriptions so center/LFE and
+    // side/back surrounds cannot be silently interchanged.
+    let labels: [AudioChannelLabel] = [
+      kAudioChannelLabel_Left, kAudioChannelLabel_Right, kAudioChannelLabel_Center,
+      kAudioChannelLabel_LFEScreen, kAudioChannelLabel_RearSurroundLeft,
+      kAudioChannelLabel_RearSurroundRight, kAudioChannelLabel_LeftCenter,
+      kAudioChannelLabel_RightCenter, kAudioChannelLabel_CenterSurround,
+      kAudioChannelLabel_LeftSurround, kAudioChannelLabel_RightSurround,
+    ]
+    guard mask != 0, mask >> labels.count == 0, mask.nonzeroBitCount == channelCount else {
+      throw YlAudioImplementationError.invalidConfiguration
+    }
+    let selected = labels.enumerated().compactMap { index, label in
+      mask & (UInt64(1) << index) != 0 ? label : nil
+    }
+    let offset = MemoryLayout<AudioChannelLayout>.offset(of: \.mChannelDescriptions)!
+    let size = offset + selected.count * MemoryLayout<AudioChannelDescription>.stride
+    let storage = UnsafeMutableRawPointer.allocate(byteCount: size,
+      alignment: MemoryLayout<AudioChannelLayout>.alignment)
+    defer { storage.deallocate() }
+    storage.initializeMemory(as: UInt8.self, repeating: 0, count: size)
+    let layout = storage.assumingMemoryBound(to: AudioChannelLayout.self)
+    layout.pointee.mChannelLayoutTag = kAudioChannelLayoutTag_UseChannelDescriptions
+    layout.pointee.mNumberChannelDescriptions = UInt32(selected.count)
+    let descriptions = storage.advanced(by: offset).assumingMemoryBound(to: AudioChannelDescription.self)
+    for (index, label) in selected.enumerated() { descriptions[index].mChannelLabel = label }
+    return AVAudioChannelLayout(layout: layout)
   }
 
   private static func aacChannelLayout(

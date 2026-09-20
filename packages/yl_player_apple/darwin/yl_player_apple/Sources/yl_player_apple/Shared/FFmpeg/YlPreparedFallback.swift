@@ -38,6 +38,7 @@ final class YlPreparedFallback {
   let videoStream: YLFStreamInfo
   let audioStreams: [YLFStreamInfo]
   let videoFormat: CMVideoFormatDescription
+  let felConfiguration: YlFELConfiguration?
   let usesInBandVideoConfiguration: Bool
   let audioCookies: [Int32: Data]
   let sessionConfiguration: URLSessionConfiguration
@@ -165,7 +166,7 @@ final class YlPreparedFallback {
          selectedVideo == nil {
         selectedVideo = stream
       } else if Int(stream.kind) == YLFStreamAudio {
-        if Int(stream.codec) == YLFCodecAAC || Int(stream.codec) == YLFCodecMP3 || Int(stream.codec) == YLFCodecDTS {
+        if YlAudioCodec(bridgeCodec: stream.codec) != .unsupported {
           selectedAudio.append(stream)
         } else {
           sawUnsupportedAudio = true
@@ -182,17 +183,29 @@ final class YlPreparedFallback {
     if selectedAudio.isEmpty && sawUnsupportedAudio {
       throw NativePlayerError(
         category: "decoderUnsupported",
-        code: "decoder.audio_aac_unsupported",
+        code: "decoder.audio_unsupported",
         message: container == .flv
-          ? "The selected FLV audio track is not AAC or MP3."
+          ? "The selected FLV audio codec is unsupported."
           : "The selected managed audio track is unsupported."
       )
     }
     try boundedPlan?.validate(width: Int(selectedVideo.width), height: Int(selectedVideo.height))
     if boundedPlan != nil { bufferScope.protectFrame(bytes: Int(selectedVideo.width) * Int(selectedVideo.height) * 8) }
     videoStream = selectedVideo
+    felConfiguration = try YlFELConfiguration.probe(
+      context: validContext, streamIndex: selectedVideo.index,
+      maxPacketBytes: budget.inFlightPacketBytes,
+      checkCancellation: { try cancellationToken?.throwIfCancelled() },
+      reserveBytes: { [bufferScope] count in
+        guard let reservation = bufferScope.reserve(category: .compressedPackets, bytes: count) else {
+          throw YlManagedBufferLedger.unsupported()
+        }
+        return reservation
+      },
+      rewind: { _ = try opened.seek(toMediaTimeUs: 0) }
+    )
     let inBandFormat: CMVideoFormatDescription?
-    if container == .matroska, policy.isSeekable {
+    if felConfiguration == nil, container == .matroska, policy.isSeekable {
       inBandFormat = try YlHEVCInBandConfiguration.makeFormatDescription(
         context: validContext, streamIndex: selectedVideo.index,
         maxPacketBytes: budget.inFlightPacketBytes,
@@ -211,8 +224,8 @@ final class YlPreparedFallback {
     } else {
       inBandFormat = nil
     }
-    usesInBandVideoConfiguration = inBandFormat != nil
-    videoFormat = try inBandFormat ?? YlVideoToolboxDecoder.makeFormatDescription(
+    usesInBandVideoConfiguration = inBandFormat != nil || felConfiguration != nil
+    videoFormat = try felConfiguration?.baseFormat ?? inBandFormat ?? YlVideoToolboxDecoder.makeFormatDescription(
       context: validContext, streamIndex: selectedVideo.index)
 
     var copiedAudioCookies: [Int32: Data] = [:]
@@ -263,12 +276,22 @@ final class YlPreparedFallback {
     audioCookies = copiedAudioCookies
 
     if requireHardwareProbe {
-      let probe = try YlVideoToolboxDecoder(
-        formatDescription: videoFormat,
-        onFrame: { _ in },
-        onError: { _ in }
-      )
-      probe.dispose()
+      if let felConfiguration {
+        var probeBudget = budget
+        probeBudget.bufferScope = bufferScope
+        let probe = try YlFELVideoDecoder(configuration: felConfiguration,
+          bufferBudget: probeBudget,
+          factory: YlHardwareVTSessionFactory(policy: decoderFactoryPolicy), policy: decoderPolicy,
+          onFrame: { _ in }, onError: { _ in })
+        probe.dispose()
+      } else {
+        let probe = try YlVideoToolboxDecoder(
+          formatDescription: videoFormat,
+          onFrame: { _ in },
+          onError: { _ in }
+        )
+        probe.dispose()
+      }
     }
     openedMedia = opened
     self.cancellationToken = cancellationToken
@@ -282,7 +305,8 @@ final class YlPreparedFallback {
     let pipeline = try stage.run(token: token, work: { [self] in
       let pipeline = YlVideoPipeline(format: videoFormat,
         bufferBudget: try .make(configuration: configuration, prepared: self),
-        factory: factory ?? YlHardwareVTSessionFactory(policy: decoderPolicy), policy: decoderPolicy)
+        factory: factory ?? YlHardwareVTSessionFactory(policy: decoderPolicy), policy: decoderPolicy,
+        felConfiguration: felConfiguration)
       do { try pipeline.initializeDecoder() }
       catch let error as NativePlayerError {
         if error.code == "resource.video_decoder_limit" || error.code == "decoder.video_hardware_unavailable" {

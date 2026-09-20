@@ -174,7 +174,7 @@ final class YlDemuxPipeline {
          selectedVideo == nil {
         selectedVideo = stream
       } else if Int(stream.kind) == YLFStreamAudio {
-        if Int(stream.codec) == YLFCodecAAC || Int(stream.codec) == YLFCodecMP3 || Int(stream.codec) == YLFCodecDTS {
+        if YlAudioCodec(bridgeCodec: stream.codec) != .unsupported {
           supportedAudio.append(stream)
         } else {
           sawUnsupportedAudio = true
@@ -191,8 +191,8 @@ final class YlDemuxPipeline {
     if supportedAudio.isEmpty && sawUnsupportedAudio {
       throw NativePlayerError(
         category: "decoderUnsupported",
-        code: "decoder.audio_aac_unsupported",
-        message: "The reconnected FLV audio track is not AAC or MP3."
+        code: "decoder.audio_unsupported",
+        message: "The reconnected FLV audio codec is unsupported."
       )
     }
 

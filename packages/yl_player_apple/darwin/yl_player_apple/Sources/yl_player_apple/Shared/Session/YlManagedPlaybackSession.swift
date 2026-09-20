@@ -135,7 +135,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     self.onEvent = emit
     self.demux = try YlDemuxPipeline(prepared: prepared, lock: stateLock, bufferBudget: bufferBudget, control: demuxControl)
     self.video = prepared.takePreparedVideo() ?? YlVideoPipeline(format: prepared.videoFormat, bufferBudget: bufferBudget,
-      factory: videoSessionFactory ?? YlHardwareVTSessionFactory(policy: prepared.decoderFactoryPolicy), policy: prepared.decoderPolicy)
+      factory: videoSessionFactory ?? YlHardwareVTSessionFactory(policy: prepared.decoderFactoryPolicy), policy: prepared.decoderPolicy,
+      felConfiguration: prepared.felConfiguration)
     self.audio = YlAudioPipeline(bufferBudget: bufferBudget, lock: stateLock, generation: generation, factory: audioRendererFactory)
     self.audio.beforeOutput = services.beforeAudioOutput
     self.presentation = YlPresentationCoordinator(services: services, lock: stateLock,
@@ -1255,7 +1256,9 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     let supportedAudio = catalog.audio
     let copiedAudioCookies = catalog.cookies
 
-    let newDecoder = try video.prepare(context: validContext, streamIndex: selectedVideo.index)
+    let newDecoder = try video.prepare(context: validContext, streamIndex: selectedVideo.index,
+      checkCancellation: { try cancellationToken.throwIfCancelled() },
+      rewind: { try demux.seek(reopenedMedia, toMediaTimeUs: 0) })
     candidateDecoder = newDecoder
 
     let preferredAudioIndex = demux.selectedAudioStream?.index
@@ -1312,7 +1315,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     // parameter sets recovered during open; retain that format across rebuilds.
     candidateDecoder = try usesInBandVideoConfiguration
       ? video.prepareCurrent()
-      : video.prepare(context: validContext, streamIndex: demux.videoStream.index)
+      : video.prepare(context: validContext, streamIndex: demux.videoStream.index,
+          rewind: { try demux.seek(reopenedMedia, toMediaTimeUs: 0) })
     let renderer = try audio.prepareRebuild(stream: demux.selectedAudioStream, cookies: demux.audioCookies,
       onCreated: { resource in candidateAudio = resource })
     if positionUs > 0 {

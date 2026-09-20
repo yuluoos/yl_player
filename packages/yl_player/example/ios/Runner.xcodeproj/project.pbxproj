@@ -28,6 +28,7 @@
 		609D86C13EB4DB1A5177DCE5 /* NativeBackendFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A513C8CB5AB83592903956 /* NativeBackendFixtures.swift */; };
 		61858A7255947D46DC380A6D /* YlFallbackBufferBudgetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D475D6EA7306C86E3716F52 /* YlFallbackBufferBudgetTests.swift */; };
 		64F6F9D61A307CF3E98ED4FD /* YlNetworkRequestPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D625C7306C042E41AE1A9B /* YlNetworkRequestPolicyTests.swift */; };
+		6DB7E85DFB6C621CAE146D5E /* YlFELVideoPipelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CAC3600C89F425EBD23C0 /* YlFELVideoPipelineTests.swift */; };
 		6DFCC01EE40DD7CC55D5869C /* NativeCallbackCharacterization.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9574A980A0BBF71BF4FD7F2 /* NativeCallbackCharacterization.swift */; };
 		6F43BF4498B2665AD6D1CE3C /* YlByteRingBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DC14A8C92588F454E6E925 /* YlByteRingBufferTests.swift */; };
 		717123CF5D40832EB2557371 /* h264_mp3.flv in Resources */ = {isa = PBXBuildFile; fileRef = 9915A0A95F829E34418E60C8 /* h264_mp3.flv */; };
@@ -98,6 +99,7 @@
 		174513D67DB1951A5E7189A9 /* hls_key.bin */ = {isa = PBXFileReference; includeInIndex = 1; path = hls_key.bin; sourceTree = "<group>"; };
 		1BCB2C2DA130F1CBF2491D1F /* YlFallbackQualityPolicyTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFallbackQualityPolicyTests.swift; sourceTree = "<group>"; };
 		1DB9C810C6AB43B1BFDD3E1D /* YlOpenCoordinatorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlOpenCoordinatorTests.swift; sourceTree = "<group>"; };
+		268CAC3600C89F425EBD23C0 /* YlFELVideoPipelineTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFELVideoPipelineTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		36DF51B8E6895CA5FCCE6988 /* YlNetworkByteSourceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlNetworkByteSourceTests.swift; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
@@ -215,6 +217,7 @@
 				77F4C6F088448FA9F3E0593F /* network_seek_h264_aac.mkv */,
 				CC9C0645E85B5C304253D6B4 /* two_audio_tracks.mkv */,
 				B9FF793AD29FF2287251C0CA /* YlManagedFallbackCharacterizationTests.swift */,
+				268CAC3600C89F425EBD23C0 /* YlFELVideoPipelineTests.swift */,
 			);
 			path = RunnerTests;
 			sourceTree = "<group>";
@@ -466,6 +469,7 @@
 				284B95B246D290C1CEB72EE9 /* YlV2ReactivationTests.swift in Sources */,
 				235DA2E9947F240D9C4EF0F7 /* YlVideoToolboxDecoderTests.swift in Sources */,
 				20962E2C4B474BB3727D1717 /* YlManagedFallbackCharacterizationTests.swift in Sources */,
+				6DB7E85DFB6C621CAE146D5E /* YlFELVideoPipelineTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -43,3 +43,21 @@ Texture-only consumers still reject managed HDR instead of displaying an invalid
 recorded in [HDR verification](../../docs/verification/2026-09-19-ios-hdr-dolby-vision.html);
 The source colored-frame comparison passed on this Mac; active HDR highlights,
 sustained playback and physical iOS acceptance remain pending.
+
+## Dolby audio and profile limits
+
+Managed fallback playback identifies AC-3/E-AC-3 and decodes them through
+CoreAudio, preserving explicit speaker layouts in PCM and the output graph.
+Unknown audio codecs report `decoder.audio_unsupported`.
+
+Profile 8 remains unsupported on the managed fallback path.
+
+An experimental Profile 7 path splits single-track BL/EL access units, decodes
+both layers at 10-bit precision, pairs frames by timestamp, and reconstructs FEL
+into floating-point HDR output. Missing EL/RPU, unsupported NLQ ranges or Dolby
+display trims fail explicitly; there is no base-layer fallback. This is not full
+Dolby Vision display-management or external Dolby Vision signaling support.
+The reported Baidu source still fails with
+`decoder.dolby_vision_fel_metadata_unsupported` because its non-neutral Level 2
+trims are not implemented. See the
+[FEL verification record](../../docs/verification/2026-09-20-dolby-audio-and-profiles.md).

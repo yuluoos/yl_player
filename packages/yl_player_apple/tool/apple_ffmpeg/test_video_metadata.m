@@ -118,6 +118,17 @@ int main(int argc, const char *argv[]) {
       CHECK(ylf_copy_video_format_description(&context, 0, &format) == YLFResultVideoConfigurationInvalid && format == NULL, "unsupported or malformed Dolby Vision fields fail closed");
       *fields[i] = original;
     }
+    dovi->dv_profile = 7; dovi->el_present_flag = 1;
+    dovi->dv_bl_signal_compatibility_id = 6;
+    CHECK(ylf_copy_video_format_description(&context, 0, &format) == YLFResultDolbyVisionUnsupported && !format, "valid Profile 7 reports unsupported Dolby Vision without HEVC fallback");
+    CHECK(ylf_copy_video_format_description_with_codec_config(&context, 0, config.bytes, config.length, &format) == YLFResultDolbyVisionUnsupported && !format, "recovered config preserves unsupported Dolby Vision result");
+    dovi->bl_present_flag = 0;
+    CHECK(ylf_copy_video_format_description(&context, 0, &format) == YLFResultVideoConfigurationInvalid && !format, "malformed Profile 7 stays configuration invalid");
+    dovi->bl_present_flag = 1;
+    dovi->dv_profile = 8; dovi->el_present_flag = 0;
+    dovi->dv_bl_signal_compatibility_id = 1;
+    CHECK(ylf_copy_video_format_description(&context, 0, &format) == YLFResultDolbyVisionUnsupported && !format, "valid Profile 8 reports unsupported Dolby Vision");
+    dovi->dv_profile = 5; dovi->dv_bl_signal_compatibility_id = 0;
     parameters->coded_side_data[0].size = 1;
     CHECK(ylf_copy_video_format_description(&context, 0, &format) == YLFResultVideoConfigurationInvalid && !format, "truncated parsed Dolby Vision struct rejected");
     parameters->coded_side_data[0].size = dovi_size;

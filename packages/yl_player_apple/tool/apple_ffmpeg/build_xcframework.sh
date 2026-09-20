@@ -29,8 +29,9 @@ common_flags=(
   --enable-avformat
   --enable-demuxer=matroska,flv,mov,mpegts
   --enable-decoder=dca
+  --enable-bsf=dovi_rpu
   --enable-protocol=file
-  --enable-parser=aac,h264,hevc,mpegaudio,dca
+  --enable-parser=aac,h264,hevc,mpegaudio,dca,ac3
   --enable-pic
   --enable-static
   --disable-shared
@@ -58,6 +59,7 @@ def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
 def run(*args): return subprocess.check_output(args,text=True).strip()
 inputs={p:sha(package/p) for p in ['darwin/native/YlFFmpegBridge/YlFFmpegBridge.m',
  'darwin/native/YlFFmpegBridge/include/YlFFmpegBridge.h',
+ 'darwin/native/YlFFmpegBridge/YlFELBridge.inc',
  'darwin/native/YlFFmpegBridge/module.modulemap','tool/apple_ffmpeg/ffmpeg-9.0.1.lock',
  'tool/apple_ffmpeg/FFMPEG_RELEASE_KEY.asc','tool/apple_ffmpeg/build_xcframework.sh']}
 toolchain={'xcode':run('xcodebuild','-version'),'clang':run('xcrun','clang','--version')}
@@ -201,6 +203,13 @@ build_slice() {
   fi
   mkdir -p "$contents/Headers" "$contents/Modules"
   printf '%s\n' \
+    _ylf_fel_create \
+    _ylf_fel_clone \
+    _ylf_fel_copy_base_format \
+    _ylf_fel_copy_access_unit \
+    _ylf_fel_reset \
+    _ylf_fel_free \
+    _ylf_stream_dolby_vision_profile \
     _ylf_mp4_requires_fallback \
     _ylf_dts_create \
     _ylf_dts_decode \
@@ -234,7 +243,7 @@ build_slice() {
   (
   cd "$slice_root"
   "$clang" -fobjc-arc -fvisibility=hidden -arch "$apple_arch" -isysroot "$sdk_root" \
-    "$minimum_flag" -I"$install_root/include" -I"$bridge_root/include" \
+    "$minimum_flag" -I"$install_root/include" -I"$bridge_root/include" -I"../../ffmpeg-$FFMPEG_VERSION" -I. \
     -g0 -ffile-prefix-map=../../bridge=/yl_ffmpeg/bridge -fdebug-compilation-dir=/yl_ffmpeg/build/$slice_name \
     -c ../../bridge/YlFFmpegBridge.m -o "$object_file"
   "$clang" -dynamiclib -arch "$apple_arch" -isysroot "$sdk_root" "$minimum_flag" \
