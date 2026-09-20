@@ -105,6 +105,7 @@ enum YlAudioEnqueueResult: Equatable {
 }
 
 protocol YlAudioPacketConverting: AnyObject {
+  var pcmFormat: AVAudioFormat? { get }
   func configure(stream: YlAudioStreamConfiguration) throws
   func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate
   func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer?
@@ -112,6 +113,7 @@ protocol YlAudioPacketConverting: AnyObject {
 }
 
 extension YlAudioPacketConverting {
+  var pcmFormat: AVAudioFormat? { nil }
   func reset() {}
 }
 
@@ -120,11 +122,18 @@ protocol YlAudioOutputDriving: AnyObject {
   var rate: Float { get set }
   var renderedAudioTime: YlRenderedAudioTime? { get }
   func configure(sampleRate: Double, channelCount: Int) throws
+  func configure(format: AVAudioFormat) throws
   func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void)
   func play() throws
   func pause()
   func reset()
   func dispose()
+}
+
+extension YlAudioOutputDriving {
+  func configure(format: AVAudioFormat) throws {
+    try configure(sampleRate: format.sampleRate, channelCount: Int(format.channelCount))
+  }
 }
 
 protocol YlAudioRendering: AnyObject {
@@ -279,10 +288,14 @@ final class YlAudioRenderer: YlAudioRendering {
     }
     do {
       try converter.configure(stream: stream)
-      try output.configure(
-        sampleRate: stream.sampleRate,
-        channelCount: stream.codec == .dts ? 2 : stream.channelCount
-      )
+      if let format = converter.pcmFormat {
+        try output.configure(format: format)
+      } else {
+        try output.configure(
+          sampleRate: stream.sampleRate,
+          channelCount: stream.codec == .dts ? 2 : stream.channelCount
+        )
+      }
     } catch {
       throw NativePlayerError(
         category: "decoderUnsupported",
@@ -600,6 +613,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   private var converter: AVAudioConverter?
   private var inputFormat: AVAudioFormat?
   private var outputFormat: AVAudioFormat?
+  var pcmFormat: AVAudioFormat? { dtsConverter == nil ? outputFormat : nil }
   private var framesPerPacket: UInt32 = 0
   private var pendingPackets: [YlCompressedAudioPacket] = []
   private var pendingOutputPackets: [YlCompressedAudioPacket] = []
@@ -654,13 +668,27 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
         throw YlAudioImplementationError.invalidConfiguration
       }
     }
-    guard let input = AVAudioFormat(streamDescription: &description),
-          let output = AVAudioFormat(
-            commonFormat: .pcmFormatFloat32,
-            sampleRate: stream.sampleRate,
-            channels: AVAudioChannelCount(stream.channelCount),
-            interleaved: YlAudioFormatPolicy.usesInterleavedPCM
-          ),
+    let layout: AVAudioChannelLayout?
+    let output: AVAudioFormat?
+    if stream.channelCount > 2 {
+      // A channel count alone is insufficient for surround AVAudioFormats.
+      // Read the encoded speaker order from ESDS, including any AAC PCE, and
+      // preserve that layout through PCM conversion and the output graph.
+      guard stream.codec == .aac else { throw YlAudioImplementationError.invalidConfiguration }
+      let surround = try Self.aacChannelLayout(
+        audioSpecificConfig: stream.magicCookie, channelCount: stream.channelCount)
+      layout = surround
+      output = AVAudioFormat(commonFormat: .pcmFormatFloat32,
+        sampleRate: stream.sampleRate, interleaved: YlAudioFormatPolicy.usesInterleavedPCM,
+        channelLayout: surround)
+    } else {
+      layout = nil
+      output = AVAudioFormat(commonFormat: .pcmFormatFloat32,
+        sampleRate: stream.sampleRate, channels: AVAudioChannelCount(stream.channelCount),
+        interleaved: YlAudioFormatPolicy.usesInterleavedPCM)
+    }
+    guard let input = AVAudioFormat(streamDescription: &description, channelLayout: layout),
+          let output,
           let converter = AVAudioConverter(from: input, to: output) else {
       throw YlAudioImplementationError.invalidConfiguration
     }
@@ -803,6 +831,32 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     pendingOutputPackets.removeAll(keepingCapacity: true)
   }
 
+  private static func aacChannelLayout(
+    audioSpecificConfig: Data, channelCount: Int
+  ) throws -> AVAudioChannelLayout {
+    let cookie = aacMagicCookie(audioSpecificConfig: audioSpecificConfig)
+    return try cookie.withUnsafeBytes { bytes in
+      var size: UInt32 = 0
+      guard AudioFormatGetPropertyInfo(kAudioFormatProperty_ChannelLayoutFromESDS,
+        UInt32(bytes.count), bytes.baseAddress, &size) == noErr,
+        size >= MemoryLayout<AudioChannelLayout>.size, size <= 4096 else {
+        throw YlAudioImplementationError.invalidConfiguration
+      }
+      let storage = UnsafeMutableRawPointer.allocate(
+        byteCount: Int(size), alignment: MemoryLayout<AudioChannelLayout>.alignment)
+      defer { storage.deallocate() }
+      guard AudioFormatGetProperty(kAudioFormatProperty_ChannelLayoutFromESDS,
+        UInt32(bytes.count), bytes.baseAddress, &size, storage) == noErr else {
+        throw YlAudioImplementationError.invalidConfiguration
+      }
+      let layout = AVAudioChannelLayout(layout: storage.assumingMemoryBound(to: AudioChannelLayout.self))
+      guard layout.channelCount == channelCount else {
+        throw YlAudioImplementationError.invalidConfiguration
+      }
+      return layout
+    }
+  }
+
   private static func aacMagicCookie(audioSpecificConfig: Data) -> Data {
     var cookie = Data()
     func appendDescriptor(tag: UInt8, payloadSize: Int) {
@@ -882,6 +936,11 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
           ) else {
       throw YlAudioImplementationError.invalidConfiguration
     }
+    try configure(format: format)
+  }
+
+  func configure(format: AVAudioFormat) throws {
+    guard !disposed else { throw YlAudioImplementationError.invalidConfiguration }
     engine.stop()
     player.stop()
     engine.disconnectNodeOutput(player)

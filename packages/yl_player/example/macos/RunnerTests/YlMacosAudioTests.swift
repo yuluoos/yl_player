@@ -7,6 +7,54 @@ import XCTest
 import YlFFmpegBridge
 
 final class YlMacosAudioTests: XCTestCase {
+
+  func testAACSurroundRejectsMissingOrMismatchedChannelConfiguration() {
+    for cookie in [Data(), Data([0x11]), Data([0x11, 0x90])] {
+      let converter = YlAppleCompressedAudioConverter()
+      XCTAssertThrowsError(try converter.configure(stream: YlAudioStreamConfiguration(
+        codec: .aac, sampleRate: 48_000, channelCount: 6,
+        magicCookie: cookie, generation: 1
+      )))
+    }
+  }
+
+  func testAACSurroundConvertsAllSixChannelsWithExplicitLayout() throws {
+    let converter = YlAppleCompressedAudioConverter()
+    try converter.configure(stream: YlAudioStreamConfiguration(
+      codec: .aac, sampleRate: 48_000, channelCount: 6,
+      magicCookie: Data([0x11, 0xb0]), generation: 1
+    ))
+    // Synthetic AAC-LC 5.1 silence, generated from anullsrc (48 kHz).
+    let data = Data([0x01, 0x18, 0x20, 0x01, 0x08, 0x80, 0x23, 0x04, 0x60,
+                     0x23, 0x10, 0x04, 0x60, 0x8c, 0x0c, 0x23, 0x00, 0x00, 0xe0])
+    var decoded: YlScheduledAudioBuffer?
+    for index in 0..<4 {
+      decoded = try converter.convert(packet: YlCompressedAudioPacket(
+        data: data, ptsUs: Int64(index) * 21_333, durationUs: 21_333, generation: 1
+      ))
+      if decoded != nil { break }
+    }
+    let buffer = try XCTUnwrap(decoded)
+    let pcm = try XCTUnwrap(buffer.payload as? AVAudioPCMBuffer)
+    XCTAssertEqual(pcm.frameLength, 1024)
+    XCTAssertEqual(pcm.format.channelCount, 6)
+    XCTAssertEqual(pcm.format.channelLayout?.layoutTag, kAudioChannelLayoutTag_AAC_5_1)
+    XCTAssertEqual(buffer.byteCount, 1024 * 6 * MemoryLayout<Float>.size)
+  }
+
+  func testAACSurroundConfiguresTheSystemOutputAndCanReconfigureStereo() throws {
+    let renderer = YlAudioRenderer()
+    defer { renderer.dispose() }
+    try renderer.configure(stream: YlAudioStreamConfiguration(
+      codec: .aac, sampleRate: 48_000, channelCount: 6,
+      magicCookie: Data([0x11, 0xb0]), generation: 1
+    ))
+    try renderer.configure(stream: YlAudioStreamConfiguration(
+      codec: .aac, sampleRate: 44_100, channelCount: 2,
+      magicCookie: Data([0x12, 0x10]), generation: 2
+    ))
+  }
+
   private final class TestAudioConverter: YlAudioPacketConverting {
     func configure(stream: YlAudioStreamConfiguration) throws {}
 
