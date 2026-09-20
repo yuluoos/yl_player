@@ -40,6 +40,27 @@ protocol YlTextureOutput: AnyObject {
   func dispose()
 }
 
+/// Native presentation may retain a sample after publication returns. Carry the
+/// frame's budget reservation with that sample rather than a reusable pixel pool.
+protocol YlRetainedVideoOutput: YlTextureOutput {
+  func publish(_ pixelBuffer: CVPixelBuffer, retaining reservation: AnyObject?)
+}
+
+func ylPublishVideoFrame(_ pixelBuffer: CVPixelBuffer, retaining reservation: AnyObject?,
+                         to output: any YlTextureOutput) {
+  if let retained = output as? any YlRetainedVideoOutput {
+    retained.publish(pixelBuffer, retaining: reservation)
+  } else {
+    output.publish(pixelBuffer)
+  }
+}
+
+/// Optional capability, so texture-only adapters and test doubles stay valid.
+protocol YlNativeVideoSurfaceOutput: AnyObject {
+  var nativeViewType: String? { get }
+  var onRenderFailure: ((NativePlayerError) -> Void)? { get set }
+}
+
 protocol YlDisplayDriving: AnyObject {
   var isPaused: Bool { get set }
   func invalidate()
@@ -62,6 +83,7 @@ struct YlPlatformServices {
   let textureOutput: any YlTextureOutput
   let makeDisplayDriver: (@escaping () -> Void) -> any YlDisplayDriving
   let activateAudioSession: () throws -> Void
+  var nativeViewType: String?
   var beforeAudioOutput: () throws -> Void = {}
 
   init(platform: YlApplePlatform, textureOutput: any YlTextureOutput,
@@ -69,6 +91,7 @@ struct YlPlatformServices {
        activateAudioSession: @escaping () throws -> Void = {}) {
     self.platform = platform
     self.textureOutput = textureOutput
+    self.nativeViewType = (textureOutput as? YlNativeVideoSurfaceOutput)?.nativeViewType
     self.makeDisplayDriver = makeDisplayDriver
     self.activateAudioSession = activateAudioSession
   }
@@ -80,6 +103,7 @@ extension YlPlatformServices {
     var result = Self(platform: platform, textureOutput: output,
       makeDisplayDriver: makeDisplayDriver, activateAudioSession: activateAudioSession)
     result.beforeAudioOutput = beforeAudioOutput
+    result.nativeViewType = nativeViewType
     return result
   }
 }
@@ -89,69 +113,99 @@ extension YlPlatformServices {
 final class YlAppleTextureOwner {
   private let output: any YlTextureOutput
   private var current: YlAppleTextureLease?
+  private let leases = NSHashTable<YlAppleTextureLease>.weakObjects()
   private var disposed = false
   private let onFrame: (YlAppleSessionIdentity) -> Void
-  init(output: any YlTextureOutput, onFrame: @escaping (YlAppleSessionIdentity) -> Void) {
+  init(output: any YlTextureOutput, onFailure: ((YlAppleSessionIdentity, NativePlayerError) -> Void)? = nil, onFrame: @escaping (YlAppleSessionIdentity) -> Void) {
     self.output = output
     self.onFrame = onFrame
+    (output as? YlNativeVideoSurfaceOutput)?.onRenderFailure = { [weak self] error in
+      guard let self, !self.disposed, let current = self.current, !current.invalidated else { return }
+      onFailure?(current.identity, error)
+    }
   }
   var textureId: Int64 { output.textureId }
   func makeLease(identity: YlAppleSessionIdentity) -> YlAppleTextureLease {
-    YlAppleTextureLease(owner: self, identity: identity)
+    let lease = YlAppleTextureLease(owner: self, identity: identity)
+    lease.invalidated = disposed
+    leases.add(lease)
+    return lease
   }
   func commit(_ lease: YlAppleTextureLease) {
     guard !disposed, !lease.invalidated else { return }
+    if let current, current !== lease {
+      current.pendingFrame = nil
+      current.invalidated = true
+      if (output as? YlNativeVideoSurfaceOutput)?.nativeViewType != nil { output.clear() }
+    }
     current = lease
-    if let pending = lease.pendingFrame { publish(pending, from: lease) }
+    if let pending = lease.pendingFrame {
+      publish(pending.pixelBuffer, retaining: pending.reservation, from: lease)
+    }
     lease.pendingFrame = nil
   }
-  fileprivate func publish(_ frame: CVPixelBuffer?, from lease: YlAppleTextureLease) {
+  fileprivate func publish(_ frame: CVPixelBuffer?, retaining reservation: AnyObject?, from lease: YlAppleTextureLease) {
     guard !disposed, !lease.invalidated else { return }
-    guard current === lease else { lease.pendingFrame = frame; return }
+    guard current === lease else {
+      lease.pendingFrame = frame.map { (pixelBuffer: $0, reservation: reservation) }
+      return
+    }
     guard let frame else { return }
-    output.publish(frame)
+    ylPublishVideoFrame(frame, retaining: reservation, to: output)
     onFrame(lease.identity)
   }
   fileprivate func clear(_ lease: YlAppleTextureLease) {
     lease.pendingFrame = nil
     if current === lease, !disposed { output.clear() }
   }
-  func stop() {
-    current?.pendingFrame = nil
+  private func invalidateLeases() {
+    for lease in leases.allObjects {
+      lease.pendingFrame = nil
+      lease.invalidated = true
+    }
+    leases.removeAllObjects()
     current = nil
+  }
+  func stop() {
+    invalidateLeases()
     if !disposed { output.clear() }
   }
   func dispose() {
     guard !disposed else { return }
     disposed = true
-    current?.pendingFrame = nil
-    current = nil
+    invalidateLeases()
     output.dispose()
   }
 }
 
-final class YlAppleTextureLease: YlTextureOutput {
+final class YlAppleTextureLease: YlRetainedVideoOutput {
   fileprivate weak var owner: YlAppleTextureOwner?
   let identity: YlAppleSessionIdentity
-  fileprivate var pendingFrame: CVPixelBuffer?
+  fileprivate var pendingFrame: (pixelBuffer: CVPixelBuffer, reservation: AnyObject?)?
   fileprivate var invalidated = false
   fileprivate init(owner: YlAppleTextureOwner, identity: YlAppleSessionIdentity) {
     self.owner = owner
     self.identity = identity
   }
   var textureId: Int64 { owner?.textureId ?? -1 }
-  func publish(_ pixelBuffer: CVPixelBuffer?) { owner?.publish(pixelBuffer, from: self) }
+  func publish(_ pixelBuffer: CVPixelBuffer?) { owner?.publish(pixelBuffer, retaining: nil, from: self) }
+  func publish(_ pixelBuffer: CVPixelBuffer, retaining reservation: AnyObject?) {
+    owner?.publish(pixelBuffer, retaining: reservation, from: self)
+  }
   func resize(width: Int, height: Int) {}
   func clear() { owner?.clear(self) }
   func dispose() { clear(); invalidated = true }
 }
 
 /// The retained AVPlayer changes item authority without reallocating its texture.
-final class YlAppleAvTextureBinding: YlTextureOutput {
+final class YlAppleAvTextureBinding: YlRetainedVideoOutput {
   var lease: YlAppleTextureLease?
   let textureId: Int64
   init(textureId: Int64) { self.textureId = textureId }
   func publish(_ pixelBuffer: CVPixelBuffer?) { lease?.publish(pixelBuffer) }
+  func publish(_ pixelBuffer: CVPixelBuffer, retaining reservation: AnyObject?) {
+    lease?.publish(pixelBuffer, retaining: reservation)
+  }
   func resize(width: Int, height: Int) { lease?.resize(width: width, height: height) }
   func clear() { lease?.clear() }
   func dispose() { lease?.dispose(); lease = nil }

@@ -409,6 +409,7 @@ struct AppleCreateReply: Hashable, CustomStringConvertible {
   var implementationVersion: String
   var capabilities: AppleCapabilitiesMessage
   var initialState: AppleStateMessage
+  var nativeViewType: String? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
@@ -422,6 +423,7 @@ struct AppleCreateReply: Hashable, CustomStringConvertible {
     let implementationVersion = pigeonVar_list[6] as! String
     let capabilities = pigeonVar_list[7] as! AppleCapabilitiesMessage
     let initialState = pigeonVar_list[8] as! AppleStateMessage
+    let nativeViewType: String? = nilOrValue(pigeonVar_list[9])
 
     return AppleCreateReply(
       schemaMajor: schemaMajor,
@@ -432,7 +434,8 @@ struct AppleCreateReply: Hashable, CustomStringConvertible {
       implementationName: implementationName,
       implementationVersion: implementationVersion,
       capabilities: capabilities,
-      initialState: initialState
+      initialState: initialState,
+      nativeViewType: nativeViewType
     )
   }
   func toList() -> [Any?] {
@@ -446,13 +449,14 @@ struct AppleCreateReply: Hashable, CustomStringConvertible {
       implementationVersion,
       capabilities,
       initialState,
+      nativeViewType,
     ]
   }
   static func == (lhs: AppleCreateReply, rhs: AppleCreateReply) -> Bool {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return YlPlayerApplePigeonInternal.deepEquals(lhs.schemaMajor, rhs.schemaMajor) && YlPlayerApplePigeonInternal.deepEquals(lhs.spiMajor, rhs.spiMajor) && YlPlayerApplePigeonInternal.deepEquals(lhs.channelSuffix, rhs.channelSuffix) && YlPlayerApplePigeonInternal.deepEquals(lhs.textureId, rhs.textureId) && YlPlayerApplePigeonInternal.deepEquals(lhs.platform, rhs.platform) && YlPlayerApplePigeonInternal.deepEquals(lhs.implementationName, rhs.implementationName) && YlPlayerApplePigeonInternal.deepEquals(lhs.implementationVersion, rhs.implementationVersion) && YlPlayerApplePigeonInternal.deepEquals(lhs.capabilities, rhs.capabilities) && YlPlayerApplePigeonInternal.deepEquals(lhs.initialState, rhs.initialState)
+    return YlPlayerApplePigeonInternal.deepEquals(lhs.schemaMajor, rhs.schemaMajor) && YlPlayerApplePigeonInternal.deepEquals(lhs.spiMajor, rhs.spiMajor) && YlPlayerApplePigeonInternal.deepEquals(lhs.channelSuffix, rhs.channelSuffix) && YlPlayerApplePigeonInternal.deepEquals(lhs.textureId, rhs.textureId) && YlPlayerApplePigeonInternal.deepEquals(lhs.platform, rhs.platform) && YlPlayerApplePigeonInternal.deepEquals(lhs.implementationName, rhs.implementationName) && YlPlayerApplePigeonInternal.deepEquals(lhs.implementationVersion, rhs.implementationVersion) && YlPlayerApplePigeonInternal.deepEquals(lhs.capabilities, rhs.capabilities) && YlPlayerApplePigeonInternal.deepEquals(lhs.initialState, rhs.initialState) && YlPlayerApplePigeonInternal.deepEquals(lhs.nativeViewType, rhs.nativeViewType)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -466,10 +470,11 @@ struct AppleCreateReply: Hashable, CustomStringConvertible {
     YlPlayerApplePigeonInternal.deepHash(value: implementationVersion, hasher: &hasher)
     YlPlayerApplePigeonInternal.deepHash(value: capabilities, hasher: &hasher)
     YlPlayerApplePigeonInternal.deepHash(value: initialState, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: nativeViewType, hasher: &hasher)
   }
 
   public var description: String {
-    return "AppleCreateReply(schemaMajor: \(String(describing: schemaMajor)), spiMajor: \(String(describing: spiMajor)), channelSuffix: \(String(describing: channelSuffix)), textureId: \(String(describing: textureId)), platform: \(String(describing: platform)), implementationName: \(String(describing: implementationName)), implementationVersion: \(String(describing: implementationVersion)), capabilities: \(String(describing: capabilities)), initialState: \(String(describing: initialState)))"
+    return "AppleCreateReply(schemaMajor: \(String(describing: schemaMajor)), spiMajor: \(String(describing: spiMajor)), channelSuffix: \(String(describing: channelSuffix)), textureId: \(String(describing: textureId)), platform: \(String(describing: platform)), implementationName: \(String(describing: implementationName)), implementationVersion: \(String(describing: implementationVersion)), capabilities: \(String(describing: capabilities)), initialState: \(String(describing: initialState)), nativeViewType: \(String(describing: nativeViewType)))"
   }
 }
 

@@ -88,6 +88,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   private var prebufferedVideoSample = false
   private var demuxEOF = false
   private var completionSent = false
+  private let usesInBandVideoConfiguration: Bool
   private var openStartedAt = CACurrentMediaTime()
   private var openDurationMs: Int64?
   private var currentError: NativePlayerError?
@@ -112,6 +113,10 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     channelIdentity: UInt64? = nil,
     emit: @escaping (YlNativeBackendCallback) -> Void
   ) throws {
+    guard !YlHDRVideoPolicy.isHDR(prepared.videoFormat) || services.nativeViewType != nil else {
+      throw NativePlayerError(category: "unsupported", code: "render.hdr_surface_unavailable",
+        message: "HDR video requires a native HDR display surface.")
+    }
     try YlFallbackQualityPolicy.validate(
       constraint: qualityConstraint,
       stream: Self.videoDescriptor(prepared.videoStream)
@@ -121,6 +126,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     self.playerId = playerId
     self.services = services
     self.configuration = configuration
+    self.usesInBandVideoConfiguration = prepared.usesInBandVideoConfiguration
     self.bufferBudget = try YlFallbackBufferBudget.make(configuration: configuration, prepared: prepared)
     self.metricsCollector = YlMetricsCollector(scope: prepared.bufferScope, bounded: prepared.boundedPlan != nil)
     let resumeState = prepared.resumeState
@@ -1302,7 +1308,11 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       }
     }
 
-    candidateDecoder = try video.prepare(context: validContext, streamIndex: demux.videoStream.index)
+    // This is the same loaded asset. Its container header still lacks the
+    // parameter sets recovered during open; retain that format across rebuilds.
+    candidateDecoder = try usesInBandVideoConfiguration
+      ? video.prepareCurrent()
+      : video.prepare(context: validContext, streamIndex: demux.videoStream.index)
     let renderer = try audio.prepareRebuild(stream: demux.selectedAudioStream, cookies: demux.audioCookies,
       onCreated: { resource in candidateAudio = resource })
     if positionUs > 0 {

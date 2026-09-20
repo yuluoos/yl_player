@@ -83,6 +83,65 @@ final class YlPlatformServicesTests: XCTestCase {
     XCTAssertEqual(services.textureOutput.textureId, 81)
   }
 
+  private final class NativeSurface: YlTextureOutput, YlNativeVideoSurfaceOutput {
+    let textureId: Int64 = 91
+    let nativeViewType: String? = "yl_player_apple/video"
+    var onRenderFailure: ((NativePlayerError) -> Void)?
+    var clears = 0
+    func publish(_ pixelBuffer: CVPixelBuffer?) {}
+    func resize(width: Int, height: Int) {}
+    func clear() { clears += 1 }
+    func dispose() {}
+  }
+
+  func testNativeSurfaceCapabilityAndErrorAuthoritySurviveLeasing() {
+    let output = NativeSurface()
+    var failures: [YlAppleSessionIdentity] = []
+    let owner = YlAppleTextureOwner(output: output,
+      onFailure: { identity, _ in failures.append(identity) }, onFrame: { _ in })
+    let a = YlAppleSessionIdentity(sessionId: "a", loadRequestId: "a")
+    let b = YlAppleSessionIdentity(sessionId: "b", loadRequestId: "b")
+    let old = owner.makeLease(identity: a)
+    let next = owner.makeLease(identity: b)
+    owner.commit(old)
+    owner.commit(next)
+    XCTAssertEqual(output.clears, 1, "A native layer must remove the previous session's image")
+    old.clear()
+    XCTAssertEqual(output.clears, 1)
+    let error = NativePlayerError(category: "render", code: "render.video_surface_failed", message: "Test")
+    output.onRenderFailure?(error)
+    XCTAssertEqual(failures, [b])
+    let services = YlPlatformServices(platform: .ios, textureOutput: output,
+      makeDisplayDriver: { _ in fatalError("This test does not create a display driver") })
+    XCTAssertEqual(services.borrowing(next).nativeViewType, output.nativeViewType)
+    owner.stop()
+    output.onRenderFailure?(error)
+    owner.dispose()
+    output.onRenderFailure?(error)
+    XCTAssertEqual(failures, [b])
+  }
+
+  func testNativeSampleKeepsHDRPrecisionAndDolbyAttachments() throws {
+    var buffer: CVPixelBuffer?
+    XCTAssertEqual(CVPixelBufferCreate(kCFAllocatorDefault, 16, 16,
+      kCVPixelFormatType_420YpCbCr10BiPlanarFullRange,
+      [kCVPixelBufferIOSurfacePropertiesKey: [:]] as CFDictionary, &buffer), kCVReturnSuccess)
+    let frame = try XCTUnwrap(buffer)
+    let rpu = Data([1, 2, 3, 4])
+    CVBufferSetAttachment(frame, "DolbyVisionRPUData" as CFString, rpu as CFData, .shouldPropagate)
+    CVBufferSetAttachment(frame, kCVImageBufferTransferFunctionKey,
+      kCVImageBufferTransferFunction_SMPTE_ST_2084_PQ, .shouldPropagate)
+    let sample = try YlSampleBufferVideoRenderer.makeSample(frame)
+    XCTAssertTrue(CMSampleBufferGetImageBuffer(sample) === frame)
+    XCTAssertEqual(CVPixelBufferGetPixelFormatType(try XCTUnwrap(CMSampleBufferGetImageBuffer(sample))),
+      kCVPixelFormatType_420YpCbCr10BiPlanarFullRange)
+    XCTAssertEqual(CVBufferCopyAttachment(frame, "DolbyVisionRPUData" as CFString, nil) as? Data, rpu)
+    let format = try XCTUnwrap(CMSampleBufferGetFormatDescription(sample))
+    XCTAssertTrue(YlHDRVideoPolicy.isHDR(format))
+    let attachments = try XCTUnwrap(CMSampleBufferGetSampleAttachmentsArray(sample, createIfNecessary: false)) as NSArray
+    XCTAssertEqual((attachments[0] as! NSDictionary)[kCMSampleAttachmentKey_DisplayImmediately] as? Bool, true)
+  }
+
   private final class PassiveSession: YlVTSession {
     var usesHardwareDecoder: Bool { true }
     func decode(_ sample: CMSampleBuffer, generation: UInt64,

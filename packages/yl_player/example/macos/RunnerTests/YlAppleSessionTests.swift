@@ -410,6 +410,88 @@ final class AppleClockDisplay: YlDisplayDriving {
 
 @MainActor
 final class YlAppleLeaseTests: XCTestCase {
+  private final class RetainingOutput: YlRetainedVideoOutput {
+    let textureId: Int64 = 42
+    var reservation: AnyObject?
+    var published = 0
+    func publish(_ pixelBuffer: CVPixelBuffer?) { published += 1 }
+    func publish(_ pixelBuffer: CVPixelBuffer, retaining reservation: AnyObject?) {
+      published += 1
+      self.reservation = reservation
+    }
+    func resize(width: Int, height: Int) {}
+    func clear() { reservation = nil }
+    func dispose() { clear() }
+  }
+
+  func testFrameReservationFollowsPrivateCommitAndPublicClear() throws {
+    let output = RetainingOutput()
+    var observed: [YlAppleSessionIdentity] = []
+    let owner = YlAppleTextureOwner(output: output, onFrame: { observed.append($0) })
+    let identity = YlAppleSessionIdentity(sessionId: "a", loadRequestId: "a")
+    let lease = owner.makeLease(identity: identity)
+    let binding = YlAppleAvTextureBinding(textureId: 42)
+    binding.lease = lease
+    var buffer: CVPixelBuffer?
+    XCTAssertEqual(CVPixelBufferCreate(kCFAllocatorDefault, 2, 2, kCVPixelFormatType_32BGRA,
+      nil, &buffer), kCVReturnSuccess)
+    let frame = try XCTUnwrap(buffer)
+    let ledger = YlManagedBufferLedger(maxBytes: 4096)
+    var token = ledger.reserve(category: .queuedVideoFrames, bytes: 1024, generation: 1)
+    weak var retained = token
+    ylPublishVideoFrame(frame, retaining: token, to: binding)
+    token = nil
+    XCTAssertNotNil(retained, "Private pending frames retain their managed budget")
+    XCTAssertEqual(ledger.snapshot.currentBytes, 1024)
+    XCTAssertEqual(output.published, 0)
+    XCTAssertTrue(observed.isEmpty)
+    owner.commit(lease)
+    XCTAssertTrue(output.reservation === retained)
+    XCTAssertNotNil(retained)
+    XCTAssertEqual(output.published, 1)
+    XCTAssertEqual(observed, [identity])
+    ledger.invalidate(generation: 1)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 1024)
+    lease.clear()
+    XCTAssertNil(retained, "The presentation output releases its sample budget on clear")
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+    retained = nil
+  }
+
+  func testPendingReservationsReleaseOnClearStopDisposeAndRetirement() throws {
+    var buffer: CVPixelBuffer?
+    XCTAssertEqual(CVPixelBufferCreate(kCFAllocatorDefault, 2, 2, kCVPixelFormatType_32BGRA,
+      nil, &buffer), kCVReturnSuccess)
+    let frame = try XCTUnwrap(buffer)
+    let identity = YlAppleSessionIdentity(sessionId: "a", loadRequestId: "a")
+    for action in ["clear", "stop", "dispose"] {
+      let owner = YlAppleTextureOwner(output: RetainingOutput(), onFrame: { _ in })
+      let candidate = owner.makeLease(identity: identity)
+      var token: NSObject? = NSObject()
+      weak var retained = token
+      ylPublishVideoFrame(frame, retaining: token, to: candidate)
+      token = nil
+      XCTAssertNotNil(retained)
+      switch action {
+      case "clear": candidate.clear()
+      case "stop": owner.stop()
+      default: owner.dispose()
+      }
+      XCTAssertNil(retained, "\(action) must release a non-current candidate's reservation")
+      retained = nil
+    }
+    let owner = YlAppleTextureOwner(output: RetainingOutput(), onFrame: { _ in })
+    let retired = owner.makeLease(identity: identity)
+    owner.commit(retired)
+    owner.commit(owner.makeLease(identity: .init(sessionId: "b", loadRequestId: "b")))
+    var late: NSObject? = NSObject()
+    weak var retainedLate = late
+    ylPublishVideoFrame(frame, retaining: late, to: retired)
+    late = nil
+    XCTAssertNil(retainedLate, "A retired lease cannot retain a late decoded frame's reservation")
+    retainedLate = nil
+  }
+
   func testPrivateFrameCommitAndRetiredClearRespectHostOwnership() throws {
     let output = AppleTestTexture()
     var observed = [YlAppleSessionIdentity]()

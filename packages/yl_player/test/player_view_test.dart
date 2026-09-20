@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player/yl_player.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart'
-    show YlPlatformLoadResult;
+    show YlPlatformLoadResult, YlPlatformNativeVideoSurfaceProvider;
 
 import 'support/fake_player_platform.dart';
 
@@ -15,6 +17,229 @@ const _wideGeometry = YlVideoGeometry(
 final _source = YlNetworkSource(Uri.parse('https://example.test/video.mp4'));
 
 void main() {
+  final nativeCalls = <MethodCall>[];
+  setUp(() {
+    nativeCalls.clear();
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(SystemChannels.platform_views, (call) async {
+          nativeCalls.add(call);
+          return null;
+        });
+  });
+  tearDown(() {
+    debugDefaultTargetPlatformOverride = null;
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(SystemChannels.platform_views, null);
+  });
+
+  for (final platform in [TargetPlatform.iOS, TargetPlatform.macOS]) {
+    final nativeWidgetType = platform == TargetPlatform.iOS
+        ? UiKitView
+        : AppKitView;
+    testWidgets(
+      'negotiated native view mounts before current FirstFrame and retains identity on $platform',
+      (tester) async {
+        debugDefaultTargetPlatformOverride = platform;
+        final backend = _NativePlatformPlayer(platform: platform);
+        final controller = await _createCommittedController(
+          backend,
+          sessionId: _s2,
+          geometry: _wideGeometry,
+        );
+        await _pumpView(
+          tester,
+          YlPlayerView(
+            controller: controller,
+            placeholder: const Text('waiting'),
+          ),
+        );
+        await tester.pump();
+        expect(find.byType(nativeWidgetType), findsOneWidget);
+        expect(find.byType(Texture), findsNothing);
+        expect(find.text('waiting'), findsOneWidget);
+        expect(tester.widget<Opacity>(find.byType(Opacity)).opacity, 0);
+        final create = nativeCalls.singleWhere(
+          (call) => call.method == 'create',
+        );
+        final arguments = create.arguments as Map;
+        expect(arguments['viewType'], 'yl_player_apple/video');
+        expect(
+          const StandardMessageCodec().decodeMessage(
+            ByteData.sublistView(arguments['params']),
+          ),
+          {'textureId': 42},
+        );
+
+        backend.emitFirstFrame(_s1);
+        await tester.pump();
+        expect(find.text('waiting'), findsOneWidget);
+        backend.emitFirstFrame(_s2);
+        await tester.pump();
+        expect(find.text('waiting'), findsNothing);
+        expect(tester.widget<Opacity>(find.byType(Opacity)).opacity, 1);
+        _expectRect(
+          tester.getRect(find.byType(nativeWidgetType)),
+          left: 0,
+          top: 65.625,
+          width: 300,
+          height: 168.75,
+        );
+        expect(
+          nativeCalls.where((call) => call.method == 'create'),
+          hasLength(1),
+        );
+
+        _publishSession(backend, sessionId: _s1, geometry: _wideGeometry);
+        await tester.pump();
+        expect(find.text('waiting'), findsOneWidget);
+        expect(
+          nativeCalls.where((call) => call.method == 'create'),
+          hasLength(1),
+        );
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        expect(backend.disposeCount, 0);
+        expect(
+          nativeCalls.where((call) => call.method == 'dispose'),
+          hasLength(1),
+        );
+        await tester.runAsync(controller.dispose);
+        expect(backend.disposeCount, 1);
+        debugDefaultTargetPlatformOverride = null;
+      },
+    );
+
+    testWidgets(
+      'native surface applies pixel aspect ratio rotation cover and alignment on $platform',
+      (tester) async {
+        debugDefaultTargetPlatformOverride = platform;
+        final backend = _NativePlatformPlayer(platform: platform);
+        const geometry = YlVideoGeometry(
+          encodedSize: YlPixelSize(720, 576),
+          displaySize: YlPixelSize(720, 576),
+          pixelAspectRatio: 16 / 15,
+          rotationDegrees: 90,
+        );
+        final controller = await _presentedController(
+          backend,
+          geometry: geometry,
+        );
+        await _pumpView(
+          tester,
+          YlPlayerView(
+            controller: controller,
+            fit: BoxFit.cover,
+            alignment: Alignment.topLeft,
+          ),
+        );
+        await tester.pump();
+        _expectRect(
+          tester.getRect(find.byType(nativeWidgetType)),
+          left: 0,
+          top: 0,
+          width: 300,
+          height: 400,
+        );
+        expect(
+          tester.widget<RotatedBox>(find.byType(RotatedBox)).quarterTurns,
+          1,
+        );
+        expect(
+          tester.widget<FittedBox>(find.byType(FittedBox)).alignment,
+          Alignment.topLeft,
+        );
+        await _dispose(tester, controller);
+      },
+    );
+
+    testWidgets(
+      'disposed native output unmounts the surface and restores placeholder on $platform',
+      (tester) async {
+        debugDefaultTargetPlatformOverride = platform;
+        final backend = _NativePlatformPlayer(platform: platform);
+        final controller = await _presentedController(
+          backend,
+          geometry: _wideGeometry,
+        );
+        await _pumpView(
+          tester,
+          YlPlayerView(
+            controller: controller,
+            placeholder: const Text('waiting'),
+          ),
+        );
+        await tester.pump();
+        expect(find.byType(nativeWidgetType), findsOneWidget);
+        await tester.runAsync(controller.dispose);
+        await tester.pump();
+        expect(find.byType(nativeWidgetType), findsNothing);
+        expect(find.text('waiting'), findsOneWidget);
+        expect(backend.disposeCount, 1);
+        await tester.pumpWidget(const SizedBox.shrink());
+        debugDefaultTargetPlatformOverride = null;
+      },
+    );
+
+    testWidgets(
+      'native output requires authoritative geometry even after FirstFrame on $platform',
+      (tester) async {
+        debugDefaultTargetPlatformOverride = platform;
+        final backend = _NativePlatformPlayer(platform: platform);
+        final controller = await _createCommittedController(
+          backend,
+          sessionId: _s1,
+        );
+        backend.emitFirstFrame(_s1);
+        await _pumpView(
+          tester,
+          YlPlayerView(
+            controller: controller,
+            placeholder: const Text('waiting'),
+          ),
+        );
+        expect(find.byType(nativeWidgetType), findsNothing);
+        expect(find.text('waiting'), findsOneWidget);
+        _publishGeometry(backend, _wideGeometry);
+        await tester.pump();
+        await tester.pump();
+        expect(find.byType(nativeWidgetType), findsOneWidget);
+        expect(find.text('waiting'), findsNothing);
+        await _dispose(tester, controller);
+      },
+    );
+  }
+
+  for (final hasCapability in [false, true]) {
+    testWidgets(
+      'macOS retains Texture without a matching advertisement: capability=$hasCapability',
+      (tester) async {
+        debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+        final backend = hasCapability
+            ? _NativePlatformPlayer()
+            : FakePlatformPlayer();
+        final controller = await _presentedController(
+          backend,
+          geometry: _wideGeometry,
+        );
+        await _pumpView(
+          tester,
+          YlPlayerView(
+            controller: controller,
+            filterQuality: FilterQuality.high,
+          ),
+        );
+        expect(find.byType(UiKitView), findsNothing);
+        expect(find.byType(AppKitView), findsNothing);
+        expect(tester.widget<Texture>(find.byType(Texture)).textureId, 42);
+        expect(
+          tester.widget<Texture>(find.byType(Texture)).filterQuality,
+          FilterQuality.high,
+        );
+        await _dispose(tester, controller);
+      },
+    );
+  }
+
   testWidgets('keeps placeholder until current session first frame', (
     tester,
   ) async {
@@ -368,4 +593,16 @@ Future<void> _dispose(
 ) async {
   await tester.pumpWidget(const SizedBox.shrink());
   await tester.runAsync(controller.dispose);
+  debugDefaultTargetPlatformOverride = null;
+}
+
+final class _NativePlatformPlayer extends FakePlatformPlayer
+    implements YlPlatformNativeVideoSurfaceProvider {
+  _NativePlatformPlayer({this.platform = TargetPlatform.iOS});
+  final TargetPlatform platform;
+  @override
+  YlNativeVideoSurface? get nativeVideoSurface => YlNativeVideoSurface(
+    viewType: 'yl_player_apple/video',
+    platform: platform,
+  );
 }

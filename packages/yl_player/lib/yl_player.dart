@@ -5,6 +5,7 @@ export 'src/player_controller.dart' show YlPlayerController, YlPlaybackSession;
 export 'src/player_view.dart' show YlPlayerView;
 export 'package:yl_player_platform_interface/yl_player_platform_interface.dart'
     show
+        YlNativeVideoSurface,
         YlPlayerOptions,
         YlLoadOptions,
         YlDecoderPolicy,

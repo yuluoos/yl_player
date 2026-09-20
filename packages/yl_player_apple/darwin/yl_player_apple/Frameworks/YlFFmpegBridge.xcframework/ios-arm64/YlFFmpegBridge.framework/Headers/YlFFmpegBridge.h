@@ -156,6 +156,19 @@ YLF_EXPORT int32_t ylf_copy_video_format_description(
     YLFMediaContextRef context,
     int32_t stream_index,
     CMVideoFormatDescriptionRef *out_description);
+// Recovered in-band avcC/hvcC (or Annex B) configuration, combined with the
+// original track's color/HDR/Dolby Vision metadata. Does not mutate the track.
+// Dolby Vision currently accepts only Profile 5, levels 1-9, RPU+BL, no EL,
+// compatibility ID 0 and uncompressed metadata. Unsupported/invalid DV fails
+// with YLFResultVideoConfigurationInvalid; it never falls back to plain HEVC.
+YLF_EXPORT int32_t ylf_copy_video_format_description_with_codec_config(
+    YLFMediaContextRef context,
+    int32_t stream_index,
+    const uint8_t *configuration,
+    size_t configuration_size,
+    CMVideoFormatDescriptionRef *out_description);
+// Compatibility API: only codec configuration is available, so this function
+// cannot preserve metadata from the original demuxed track.
 YLF_EXPORT int32_t ylf_copy_video_format_description_from_codec_config(
     int32_t codec,
     const uint8_t *configuration,

@@ -73,6 +73,15 @@ final class YlPlayerController implements Listenable {
   bool get isCurrentFramePresented =>
       _milestones?.isFirstFramePresented ?? false;
   ValueListenable<int?> get textureId => _texture;
+
+  /// Optional surface explicitly negotiated by the platform implementation.
+  YlNativeVideoSurface? get nativeVideoSurface {
+    final backend = _backend;
+    return backend is YlPlatformNativeVideoSurfaceProvider
+        ? (backend as YlPlatformNativeVideoSurfaceProvider).nativeVideoSurface
+        : null;
+  }
+
   Stream<YlPlayerState> get states => _states.stream;
   Stream<YlPlayerEvent> get events => _events.stream;
   @override

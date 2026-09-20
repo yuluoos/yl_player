@@ -9,7 +9,8 @@ import 'apple_transport.dart';
 import 'pigeon/yl_player_apple.g.dart';
 
 /// Owns one native identity, its callback reducer and in-flight operations.
-final class ApplePlayer implements YlPlatformPlayer {
+final class ApplePlayer
+    implements YlPlatformPlayer, YlPlatformNativeVideoSurfaceProvider {
   ApplePlayer._(
     this._transport,
     this._suffix,
@@ -17,6 +18,7 @@ final class ApplePlayer implements YlPlatformPlayer {
     this.implementation,
     this.capabilities,
     int texture,
+    this.nativeVideoSurface,
     YlPlayerState initial,
     int sequence,
   ) : _texture = ValueNotifier(texture) {
@@ -31,6 +33,9 @@ final class ApplePlayer implements YlPlatformPlayer {
           _terminate(AppleCodec.problem(YlFailureCodes.protocolMismatch)),
     );
   }
+
+  @override
+  final YlNativeVideoSurface? nativeVideoSurface;
 
   static const _transportDeadline = Duration(seconds: 5);
 
@@ -62,6 +67,19 @@ final class ApplePlayer implements YlPlatformPlayer {
         throw AppleCodec.problem(YlFailureCodes.protocolMismatch);
       }
       AppleCodec.integer(reply.textureId);
+      final nativeViewType = reply.nativeViewType;
+      if (nativeViewType != null && nativeViewType != 'yl_player_apple/video') {
+        throw AppleCodec.problem(YlFailureCodes.protocolMismatch);
+      }
+      final nativeSurface = nativeViewType == null
+          ? null
+          : YlNativeVideoSurface(
+              viewType: nativeViewType,
+              platform: switch (reply.platform) {
+                ApplePlatform.ios => TargetPlatform.iOS,
+                ApplePlatform.macos => TargetPlatform.macOS,
+              },
+            );
       final initial = AppleCodec.state(reply.initialState);
       final capabilities = AppleCodec.capabilities(reply.capabilities);
       player = ApplePlayer._(
@@ -75,6 +93,7 @@ final class ApplePlayer implements YlPlatformPlayer {
         ),
         capabilities,
         reply.textureId,
+        nativeSurface,
         initial,
         reply.initialState.sequence,
       );

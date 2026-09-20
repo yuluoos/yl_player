@@ -16,7 +16,7 @@ final class FakePlayerPlatform extends YlPlayerPlatform {
   }
 }
 
-final class FakePlatformPlayer implements YlPlatformPlayer {
+class FakePlatformPlayer implements YlPlatformPlayer {
   @override
   YlPlatformImplementationInfo implementation =
       const YlPlatformImplementationInfo(

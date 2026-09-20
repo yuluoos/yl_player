@@ -348,6 +348,7 @@ class AppleCreateReply {
     required this.implementationVersion,
     required this.capabilities,
     required this.initialState,
+    this.nativeViewType,
   });
 
   int schemaMajor;
@@ -368,6 +369,8 @@ class AppleCreateReply {
 
   AppleStateMessage initialState;
 
+  String? nativeViewType;
+
   List<Object?> _toList() {
     return <Object?>[
       schemaMajor,
@@ -379,6 +382,7 @@ class AppleCreateReply {
       implementationVersion,
       capabilities,
       initialState,
+      nativeViewType,
     ];
   }
 
@@ -397,6 +401,7 @@ class AppleCreateReply {
       implementationVersion: result[6]! as String,
       capabilities: result[7]! as AppleCapabilitiesMessage,
       initialState: result[8]! as AppleStateMessage,
+      nativeViewType: result[9] as String?,
     );
   }
 
@@ -409,7 +414,7 @@ class AppleCreateReply {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(schemaMajor, other.schemaMajor) && _deepEquals(spiMajor, other.spiMajor) && _deepEquals(channelSuffix, other.channelSuffix) && _deepEquals(textureId, other.textureId) && _deepEquals(platform, other.platform) && _deepEquals(implementationName, other.implementationName) && _deepEquals(implementationVersion, other.implementationVersion) && _deepEquals(capabilities, other.capabilities) && _deepEquals(initialState, other.initialState);
+    return _deepEquals(schemaMajor, other.schemaMajor) && _deepEquals(spiMajor, other.spiMajor) && _deepEquals(channelSuffix, other.channelSuffix) && _deepEquals(textureId, other.textureId) && _deepEquals(platform, other.platform) && _deepEquals(implementationName, other.implementationName) && _deepEquals(implementationVersion, other.implementationVersion) && _deepEquals(capabilities, other.capabilities) && _deepEquals(initialState, other.initialState) && _deepEquals(nativeViewType, other.nativeViewType);
   }
 
   @override
@@ -418,7 +423,7 @@ class AppleCreateReply {
 
   @override
   String toString() {
-    return 'AppleCreateReply(schemaMajor: $schemaMajor, spiMajor: $spiMajor, channelSuffix: $channelSuffix, textureId: $textureId, platform: $platform, implementationName: $implementationName, implementationVersion: $implementationVersion, capabilities: $capabilities, initialState: $initialState)';
+    return 'AppleCreateReply(schemaMajor: $schemaMajor, spiMajor: $spiMajor, channelSuffix: $channelSuffix, textureId: $textureId, platform: $platform, implementationName: $implementationName, implementationVersion: $implementationVersion, capabilities: $capabilities, initialState: $initialState, nativeViewType: $nativeViewType)';
   }
 }
 

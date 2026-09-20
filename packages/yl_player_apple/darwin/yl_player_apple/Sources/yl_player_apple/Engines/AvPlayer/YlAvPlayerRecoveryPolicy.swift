@@ -1,6 +1,54 @@
 import AVFoundation
 import Foundation
 
+/// Observes frame delivery independently of AVPlayer's timeControlStatus.
+/// A gap is diagnostic evidence only; sparse video and buffering can also cause it.
+final class YlAvPlayerVideoProgressProbe {
+  struct Observation {
+    enum Kind: String { case videoOutputGap, videoOutputResumed }
+    let kind: Kind
+    let frameGapMs: Int64
+    let timelineGapMs: Int64
+    let positionMs: Int64
+  }
+
+  private var lastFrameMs: Int64?
+  private var lastProgressMs: Int64?
+  private var lastPositionMs: Int64?
+  private var lastReportMs: Int64?
+
+  func reset() {
+    lastFrameMs = nil
+    lastProgressMs = nil
+    lastPositionMs = nil
+    lastReportMs = nil
+  }
+
+  func observe(enabled: Bool, framePublished: Bool, positionMs: Int64?,
+               nowMs: Int64, timeoutMs: Int64) -> Observation? {
+    guard enabled, let positionMs, positionMs >= 0 else { reset(); return nil }
+    if let lastPositionMs, positionMs < lastPositionMs { reset() }
+    if lastFrameMs == nil { lastFrameMs = nowMs }
+    if lastPositionMs == nil || positionMs > lastPositionMs! { lastProgressMs = nowMs }
+    lastPositionMs = positionMs
+    let frameGapMs = max(0, nowMs - (lastFrameMs ?? nowMs))
+    let timelineGapMs = max(0, nowMs - (lastProgressMs ?? nowMs))
+    if framePublished {
+      lastFrameMs = nowMs
+      guard lastReportMs != nil else { return nil }
+      lastReportMs = nil
+      return Observation(kind: .videoOutputResumed, frameGapMs: frameGapMs,
+        timelineGapMs: timelineGapMs, positionMs: positionMs)
+    }
+    let interval = max(5_000, timeoutMs)
+    guard frameGapMs >= interval,
+          lastReportMs == nil || nowMs - lastReportMs! >= interval else { return nil }
+    lastReportMs = nowMs
+    return Observation(kind: .videoOutputGap, frameGapMs: frameGapMs,
+      timelineGapMs: timelineGapMs, positionMs: positionMs)
+  }
+}
+
 struct YlAvPlayerErrorLogSnapshot {
   let domain: String?
   let statusCode: Int?

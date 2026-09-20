@@ -22,6 +22,7 @@ enum YlAppleSafeDiagnostics {
   // Package-owned classifications only. A syntactically safe source-derived
   // identifier is still private and must not be published as an error code.
   private static let publicCodes: Set<String> = [
+    "render.video_surface_failed", "render.hdr_surface_unavailable",
     "audio.activation_failed",
     "avplayer.failed",
     "avplayer.first_frame_timeout",

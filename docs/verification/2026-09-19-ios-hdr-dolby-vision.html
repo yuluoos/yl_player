@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>iOS HDR 与 Dolby Vision 显示方案</title>
+<style>body{font:16px/1.7 system-ui,sans-serif;max-width:940px;margin:48px auto;padding:0 24px;color:#20252c;background:#fafbfc}h1,h2,h3{line-height:1.3}h2{margin-top:36px}code{background:#edf0f4;padding:2px 5px;border-radius:4px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #d9dfe7;padding:10px;text-align:left;vertical-align:top}.note{padding:16px 20px;border-left:4px solid #466eb8;background:#eef3fc}.status{color:#735017}a{color:#245fb0}li{margin:8px 0}</style>
+<h1>iOS HDR 与 Dolby Vision 显示方案</h1>
+<p>日期：2026-09-19。状态：<strong class="status">iOS／macOS 代码已接入；Mac 原片彩色同帧对照通过；真机 HDR 与持续播放待验收</strong>。</p>
+<p>目标：在支持的 iOS 真机上正确显示当前 Matroska Dolby Vision Profile 5 片源，保留 HDR 动态范围和逐帧杜比元数据，同时维持 TVS 的播放控件、首帧、seek、切集和前后台恢复行为。用户已明确选择完整 HDR／杜比视界，不采用将 SDR 输出作为完成标准的方案。</p>
+
+<h2>已取得的证据</h2>
+<ul>
+<li>原始媒体为 HEVC Main 10、3840×1616、Dolby Vision Profile 5 / level 6；有 RPU，无增强层，基础层兼容标记为 0。hvcC 缺参数集导致启动失败的问题已单独修复。</li>
+<li>用户截图显示绿紫偏色。当前桥接格式为普通 HEVC，未传递媒体中已有的 dvcC；当前 iOS 输出使用 8 位 Flutter Texture。</li>
+<li>本机独立实验使用媒体中的真实 dvcC 和补齐后的 hvcC：普通 HEVC 与 dvh1 都能创建 VideoToolbox 会话并解出首帧；dvh1 输出保留 PQ transfer 标记及 293 字节 DolbyVisionRPUData。</li>
+<li>仅补 dvh1/dvcC、请求 BGRA，并设置标准像素转换或 Core Image toneMapHDRtoSDR，没有提供颜色正确的充分证据。实验只包含近黑首帧，不能替代彩色场景对照或 HDR 真机显示验证。</li>
+<li>FlutterTexture 的公开 iOS 合约列出 BGRA、8 位双平面 YUV；Apple 的 HDR 显示路径使用 AVPlayerLayer 或携带元数据的高位深 AVSampleBufferDisplayLayer。Profile 8.4 文档不能直接作为 Profile 5 已验证支持的证据。</li>
+</ul>
+
+<h2>实现</h2>
+<p class="note">采用 iOS 原生 HDR 视频表面承接画面，Flutter 保留控件和布局。先用独立原生实验验证当前 Profile 5 的 10 位帧、RPU 与 AVSampleBufferDisplayLayer 能正确显示，再接入正式播放流程；若实验失败，不把同一假设扩散到产品。</p>
+<table><thead><tr><th>边界</th><th>改动与约束</th></tr></thead><tbody>
+<tr><td>解封装与格式描述</td><td>FFmpeg 桥接读取轨道颜色描述与 Dolby Vision 配置，构建保留 dvcC 的格式描述。补取带内 VPS/SPS/PPS 时也必须保留该轨道元数据。逐帧 RPU 留在压缩样本及解码输出中，不把全部 NAL type 62 一概认定为受支持的 Dolby Vision。</td></tr>
+<tr><td>解码输出</td><td>对已确认的 HDR 格式请求 10 位或更高位深输出，保留色彩附件和逐帧元数据。遵守当前硬解策略、缓冲预算、取消和错误处理；不对所有普通 SDR 视频强制增加位深或分配。</td></tr>
+<tr><td>iOS 显示</td><td>通过插件注册的原生视频 view 承载 AVSampleBufferDisplayLayer。沿用已有媒体时钟调度帧；若样本已由现有显示时钟调度，则明确使用即时呈现，避免双重调度。seek／切集／stop 清空旧帧，surface 销毁、重建与播放器生命周期解耦。</td></tr>
+<tr><td>Flutter 接入</td><td>新增可选、可协商的原生显示表面能力，YlPlayerView 选择受支持的表面；保留现有 Texture 路径供 Android 和旧平台实现使用；macOS 通过 AppKitView 接入同一原生显示组件。不得仅根据操作系统或实现名称硬编码假定原生 view 已注册。保持 YlPlayerView 当前 fit、alignment、rotation、placeholder 和控件调用方式。</td></tr>
+<tr><td>系统播放器路径</td><td>审查 AVPlayer 输出是否在进入显示表面前被降为 8 位。由内容和输出能力选择 HDR 原生显示／高位深输出；验证普通 SDR 的性能和颜色不退化。</td></tr>
+<tr><td>不支持的环境</td><td>设备、系统或杜比 profile 不具备已验证能力时，返回可辨识的不支持错误；不把绿色画面、仅播放基础层或静默 SDR 降级标记为完整 Dolby Vision 成功。任何降级策略均需作为独立、显式行为定义。</td></tr>
+</tbody></table>
+
+<h2>范围</h2>
+<p>第一阶段验收 iOS 当前 Profile 5 单层片源，并回归 SDR。HDR10、HLG、其他 Dolby Vision profile 需分别具有样本和验收证据后才能列入支持范围；不以这次修复宣称 Profile 7、增强层重建、HDR10+、AV1 Dolby Vision 或 macOS 全面支持。不改变音轨、字幕、采集源接口，也不将此次工作当作早先“波波秒播”中途卡帧问题的已证实修复。</p>
+
+<h2>实现步骤与验证</h2>
+<ol>
+<li><strong>原生显示可行性。</strong>用带有效授权／来源的 Profile 5 彩色样本在 AVSampleBufferDisplayLayer 上验证 10 位帧与 RPU；记录格式类型、位深、附件是否保留和 layer 错误。用系统认可的参考播放路径对照；首帧解码成功不等于色彩正确。</li>
+<li><strong>桥接元数据。</strong>在 <code>darwin/native/YlFFmpegBridge</code> 增加元数据保留及带内参数集重建配套接口。先写缺 dvcC、错误 profile、截断配置、正常 SDR 和有效 Profile 5 的测试。通过现有 <code>build_xcframework.sh --build-candidate</code> 构建候选，再独立 <code>--rebuild-check</code>，验证后才替换 framework/锁文件，不能只更新哈希。</li>
+<li><strong>高位深解码。</strong>修改 <code>YlVideoToolboxDecoder</code>、<code>YlHEVCInBandConfiguration</code>、<code>YlPreparedFallback</code> 和同源恢复路径。覆盖格式与元数据不丢失、设备拒绝、内存记账、取消、seek 和 reactivation；普通 HEVC/H.264 保持已有路径。</li>
+<li><strong>原生表面与能力协商。</strong>修改 Apple 插件注册、iOS 输出适配器、Apple Dart transport/SPI 可选能力、controller 和 <code>YlPlayerView</code>。同步生成协议和对应 fixtures；以 widget/channel/native 生命周期测试证明旧后端无需实现新能力即可继续工作，HDR 表面不会残留上一集画面或吞掉控件手势。</li>
+<li><strong>TVS 接入与验收。</strong>验证依赖指向本工作区并完整重编译。覆盖首次播放、暂停恢复、连续 seek、切集、旋转、横竖屏、退后台再进入、停止和销毁。采集源、URL 和凭据不得进入仓库或对外测试报告。</li>
+</ol>
+
+<h2>完成标准</h2>
+<p>首阶段允许使用本机 Mac 验证共享的格式、解码和原生显示方案。已测设备为 MacBookPro17,1／Apple M1，AVPlayer.eligibleForHDRPlayback 为 true；内置 Retina 屏当前 EDR 为 1、潜在 EDR 为 2，外接 DELL P2314H 两者均为 1。验证窗口应位于内置屏；潜在 EDR 为 2 不代表当前测试已经输出 HDR，也不等价于 2 倍码值或固定峰值亮度。Mac 原生实验不是 macOS Flutter 产品支持承诺，也不替代 iOS 集成验收。</p>
+<ul>
+<li>与可信参考相比，无绿紫偏色，亮暗部细节和肤色正常；不能仅凭截图判断 HDR 亮度。</li>
+<li>从文件到格式描述、解码帧和原生显示表面，杜比配置、位深及逐帧元数据具有可核查证据；没有隐藏的 8 位／SDR 中间输出。</li>
+<li>在支持 HDR 的 iPhone／iPad 真机及其实际系统版本上验收，记录设备、系统、片源 profile 与结果；模拟器结果只能覆盖流程，不替代 HDR 真机验收。</li>
+<li>SDR 回归、seek／切集／生命周期、内存和定向测试通过；性能测试包含 4K 连续播放，不能用首帧成功代替持续播放。</li>
+<li>清晰标注未验证的设备与格式。未经真机和色彩验收不声称“完整 HDR／Dolby Vision 已修复”。</li>
+</ul>
+
+<h2>本轮实现与验证结果</h2>
+<ul>
+<li>FFmpeg 上下文格式工厂及带内 HEVC 重建均保留轨道颜色、HDR 静态元数据和受支持的 dvcC。Profile 5 限单层 RPU+BL、无 EL、兼容标记 0、level 1–9；其他配置拒绝。候选及独立五架构重建逐字节一致，产物锁及契约验证通过。</li>
+<li>iOS 插件协商原生 view，10 位帧直接进入 AVSampleBufferDisplayLayer；布局与控件仍由 Flutter 管理。跨队列清空经 mailbox 合并到主线程，每次清空作废旧 epoch 并重建显示 layer。显示 sample 持有真实预算凭证，直到显示层释放 sample。</li>
+<li>AVPlayer 固定 SDR 文件保留 8 位输出；已识别 HDR 和可能切换精度的自适应 HLS 使用高位深输出，等异步轨道信息完成后才交付原生视频帧。macOS 插件已补齐 AppKitView 原生显示协商与注册；只有未提供原生表面的消费者才会返回 render.hdr_surface_unavailable。</li>
+<li>245 项 Dart 三包回归通过；35 项原生桥接检查和 ASan/UBSan 通过；Mac 上 10 项 XCTest 原生输出／租约测试通过。policy、mailbox、sample 和 lease 的独立测试也通过；复审发现的线程、旧错误归属、预算持有和错误码四项问题已修正并复审。</li>
+<li>TVS iOS 编译通过。iOS example 与新增原生 view 测试已编译；定向 XCTest 等待已关闭的模拟器后主动停止，没有把该测试记为运行通过。当前清单为 iOS 438、macOS 353，清单数量不等于执行数量。</li>
+<li>使用本轮正式桥接与显示组件的 Mac probe：源片首帧解码为 x420（10 位 full-range），保留 293 字节 RPU；显示层状态 rendering，无 error。该近黑首帧时 current EDR 为 1，不能据此证明 HDR 高光已经验收。</li>
+</ul>
+<p class="note">Mac 原片 10.28 秒彩色同帧参考对照已完成。尚未完成：真实 HDR 高光、iOS 真机，以及 4K 持续播放的性能与生命周期验收。此次代码变更不能作为此前“波波秒播”中途停帧已修复的证据。</p>
+<h2>macOS 应用接入补充</h2>
+<p>用户在 Mac 版 TVS 重试后报告 render.hdr_surface_unavailable，暴露上一轮只完成 Mac 独立组件验证、未接入 Mac 产品显示的遗漏。本轮新增 macOS NSView 工厂和 AppKitView 协商，复用相同 mailbox、layer epoch 和预算持有逻辑，移除 VideoToolbox 按 macOS 全局拒绝 HDR 的临时保护；ManagedSession 仍检查真实显示能力。</p>
+<ul>
+<li>65 项相关 Dart 测试通过（先复现 5 项失败），12 项 Mac 原生测试通过，含真实 NSView 注册、尺寸变化、清空和销毁。Mac 版 TVS 完整编译和原项目本地临时签名通过；已启动 /private/tmp/yl-tvs-macos-hdr/Build/Products/Debug/tvs.app 并核实进程路径与首页。清单更新为 iOS 438／macOS 354。</li>
+<li>从用户当前本机代理读取最多 16 MiB 临时片段，在 10.28 秒取得彩色帧；保持 x420 和 293 字节 RPU。正式 sample renderer 显示与系统 AVPlayerLayer 的同帧截图肉眼颜色一致，无原先绿紫偏色。</li>
+<li>参考短片仅在 /private/tmp 内重封装，补齐 hvcC 并明确保留 dvcC 后才作为有效参考。此前默认 FFmpeg 重封装丢失 dvcC 的结果不作为参考结论。</li>
+<li>窗口截图仅证明该场景的色彩对照，不等于峰值亮度／动态元数据效果／长时间播放或 iOS 真机验收。</li>
+</ul>
+<h2>参考与实验位置</h2>
+<p><a href="https://api.flutter.dev/ios-embedder/protocol_flutter_texture-p.html">FlutterTexture iOS 合约</a> · <a href="https://developer.apple.com/av-foundation/High-Dynamic-Range-Metadata-for-Apple-Devices.pdf">Apple Profile 5 文件元数据要求（2019）</a> · <a href="https://developer.apple.com/av-foundation/Incorporating-HDR-video-with-Dolby-Vision-into-your-apps.pdf">Apple HDR／Profile 8.4 渲染说明</a>。</p>
+<p>本机临时实验位于 <code>/private/tmp/yl-dovi-probe</code>；不是产品代码，也不是可重分发媒体 fixture。上一轮启动修复和测试结果记录于同目录下 <code>2026-09-19-ios-video-configuration.md</code>。</p>
+</html>

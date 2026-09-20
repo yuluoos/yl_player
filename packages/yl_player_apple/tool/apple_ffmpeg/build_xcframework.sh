@@ -227,6 +227,7 @@ build_slice() {
     _ylf_packet_release \
     _ylf_debug_outstanding_packet_count \
     _ylf_copy_video_format_description \
+    _ylf_copy_video_format_description_with_codec_config \
     _ylf_copy_video_format_description_from_codec_config \
     _ylf_create_video_sample_buffer \
     >"$exports_file"
@@ -243,7 +244,7 @@ build_slice() {
     -Wl,-force_load,"$install_root/lib/libavformat.a" \
     -Wl,-force_load,"$install_root/lib/libavcodec.a" \
     -Wl,-force_load,"$install_root/lib/libavutil.a" \
-    -framework CoreFoundation -framework CoreMedia -framework Foundation -framework Security \
+    -framework CoreFoundation -framework CoreMedia -framework CoreVideo -framework Foundation -framework Security \
     -o "$contents/YlFFmpegBridge"
   )
   cp "$bridge_root/include/YlFFmpegBridge.h" "$contents/Headers/"

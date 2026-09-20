@@ -113,12 +113,13 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   private var callbackBinding: CallbackBinding
   private let player: AVPlayer
   private let errorLogCollector = YlAvPlayerErrorLogCollector()
-  private let videoOutput = AVPlayerItemVideoOutput(
+  private var videoOutput = AVPlayerItemVideoOutput(
     pixelBufferAttributes: [
       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
     ]
   )
+  private var videoOutputConfigured = true
   private var displayLink: (any YlDisplayDriving)?
   private var periodicObserver: Any?
   private var itemStatusObservation: NSKeyValueObservation?
@@ -153,6 +154,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   private var currentError: NativePlayerError?
   private let failureGate = YlAvPlayerFailureGate()
   private let stallWatchdog = YlAvPlayerStallWatchdog()
+  private let videoProgressProbe = YlAvPlayerVideoProgressProbe()
   private var active = false
   private var lastSource: YlAppleSourceDescriptor?
   private var savedPositionMs: Int64 = 0
@@ -190,6 +192,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   /// Rebind permanent observers with an immutable authority captured before delivery.
   /// Retired periodic/display/observation closures cannot relabel queued old work.
   func bindCallbacks(_ emit: @escaping (YlNativeBackendCallback) -> Void) {
+    videoProgressProbe.reset()
     callbackBinding = CallbackBinding(emit)
     timeControlObservation?.invalidate()
     if let periodicObserver { player.removeTimeObserver(periodicObserver) }
@@ -262,12 +265,14 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   func pause() throws {
     try checkAlive(); guard !stopped else { return }
     playRequested = false
+    videoProgressProbe.reset()
     stallWatchdog.cancel()
     player.pause()
   }
   func seek(toMs milliseconds: Int64, cancellationToken: YlOpenCancellationToken? = nil) throws {
     try checkAlive(); guard !stopped else { return }
     try cancellationToken?.throwIfCancelled()
+    videoProgressProbe.reset()
     resumeAtLiveEdge = false
     if active {
       player.seek(to: CMTime(milliseconds: milliseconds, preferredTimescale: 1_000),
@@ -540,6 +545,11 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     item.preferredForwardBufferDuration = effectiveConfiguration.preferredForwardBufferDuration
     player.automaticallyWaitsToMinimizeStalling = effectiveConfiguration.bufferMode != "lowLatency"
     applyQualityConstraint(qualityConstraint, to: item)
+    videoOutput = AVPlayerItemVideoOutput(pixelBufferAttributes: [
+      kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+      kCVPixelBufferIOSurfacePropertiesKey as String: [:],
+    ])
+    videoOutputConfigured = services.nativeViewType == nil
     item.add(videoOutput)
     player.replaceCurrentItem(with: item)
     displayLink?.isPaused = false
@@ -690,6 +700,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     ), !disposed, active else {
       return
     }
+    recordPlaybackDiagnostic(event: "playbackFailure", error: error, errorLogCode: log?.statusCode)
     if services.compatibility.reconnectsAvPlayer, let source = lastSource,
        YlAvPlayerRecoveryPolicy.shouldReconnect(
          source: source,
@@ -724,7 +735,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   }
 
   @objc private func displayLinkTick() {
-    guard !disposed, textureId >= 0, player.currentItem != nil else { return }
+    guard !disposed, videoOutputConfigured, textureId >= 0, player.currentItem != nil else { return }
+    var framePublished = false
+    defer { observeVideoProgress(framePublished: framePublished) }
     let itemTime = videoOutput.itemTime(forHostTime: CACurrentMediaTime())
     guard videoOutput.hasNewPixelBuffer(forItemTime: itemTime) else { return }
     if services.compatibility.reconnectsAvPlayer { liveReconnectController.markFirstFrame() }
@@ -742,6 +755,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     if let frameGeometry { videoGeometry = frameGeometry }
     if geometryChanged { emitState() }
     services.textureOutput.publish(buffer)
+    framePublished = true
     if !firstFrameSent {
       firstFrameSent = true
       firstFrameDurationMs = elapsedMilliseconds(since: openStartedAt)
@@ -750,6 +764,45 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       emitState()
       refreshStallWatchdog()
     }
+  }
+
+  private func observeVideoProgress(framePublished: Bool) {
+    guard active, playRequested, firstFrameSent,
+          player.currentItem?.status == .readyToPlay,
+          status != "completed", status != "error" else {
+      videoProgressProbe.reset()
+      return
+    }
+    guard let observation = videoProgressProbe.observe(enabled: true,
+      framePublished: framePublished, positionMs: milliseconds(player.currentTime()),
+      nowMs: YlAppleSafeDiagnostics.nowMilliseconds(),
+      timeoutMs: configuration.network.readTimeoutMs) else { return }
+    recordPlaybackDiagnostic(event: observation.kind.rawValue, observation: observation)
+  }
+
+  /// Only package-owned labels and numeric state are logged. Never interpolate
+  /// source URLs, request IDs/headers, NSError descriptions or error-log URIs.
+  private func recordPlaybackDiagnostic(event: String,
+    observation: YlAvPlayerVideoProgressProbe.Observation? = nil,
+    error: NSError? = nil, errorLogCode: Int? = nil) {
+    let item = player.currentItem
+    let positionMs = observation?.positionMs ?? milliseconds(player.currentTime()) ?? -1
+    let loadedEndMs = item?.loadedTimeRanges.last
+      .flatMap { milliseconds(CMTimeRangeGetEnd($0.timeRangeValue)) } ?? -1
+    var errorCodes = [Int]()
+    var underlying = error
+    for _ in 0..<8 {
+      guard let current = underlying else { break }
+      errorCodes.append(current.code)
+      underlying = current.userInfo[NSUnderlyingErrorKey] as? NSError
+    }
+    NSLog("%@", "[YLPlayer][AVPlayer] event=\(event) player=\(playerId) item=\(itemGeneration)"
+      + " positionMs=\(positionMs) frameGapMs=\(observation?.frameGapMs ?? -1)"
+      + " timelineGapMs=\(observation?.timelineGapMs ?? -1)"
+      + " timeControl=\(player.timeControlStatus.rawValue) itemStatus=\(item?.status.rawValue ?? -1)"
+      + " rate=\(player.rate) bufferEmpty=\(item?.isPlaybackBufferEmpty ?? false)"
+      + " likelyToKeepUp=\(item?.isPlaybackLikelyToKeepUp ?? false) loadedEndMs=\(loadedEndMs)"
+      + " headeredHls=\(hlsResourceLoader != nil) errorCodes=\(errorCodes) errorLogCode=\(errorLogCode ?? 0)")
   }
 
   private func refreshStallWatchdog() {
@@ -779,6 +832,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
           ), !disposed, active else {
       return
     }
+    recordPlaybackDiagnostic(event: "stallTimeout")
     // A silent read stall is recoverable just like an explicit network timeout.
     // Keep playback intent and the last frame until native retries are exhausted.
     if services.compatibility.reconnectsAvPlayer, let source = lastSource,
@@ -828,6 +882,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
         message: "The current source is not live."
       )
     }
+    videoProgressProbe.reset()
     if !active {
       resumeAtLiveEdge = true
       emitState()
@@ -895,6 +950,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
         let tracks = try await item.asset.loadTracks(withMediaType: .video)
         var catalog = [YlNativeTrack]()
         var geometry: YlVideoGeometry?
+        var selectedFormat: CMVideoFormatDescription?
         for (index, track) in tracks.enumerated() {
           let (size, transform, bitrate, formats) = try await track.load(
             .naturalSize, .preferredTransform, .estimatedDataRate, .formatDescriptions)
@@ -904,12 +960,32 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
             bitrate: Int(bitrate), width: Int(abs(display.width)),
             height: Int(abs(display.height)), isSelected: true))
           if index == 0 {
+            selectedFormat = formats.first
             geometry = YlVideoGeometryResolver.avPlayer(
               presentationSize: item.presentationSize, naturalSize: size,
               preferredTransform: transform, format: formats.first)
           }
         }
         guard let self, self.isCurrent(item, generation: generation) else { return }
+        if self.services.nativeViewType != nil {
+          // Adaptive HLS can change precision after its initial track metadata.
+          // Keep that output at 10 bits; fixed SDR files retain the 8-bit path.
+          let adaptive = self.lastSource?.url.map {
+            YlEngineRouter.resolvedFormat(self.lastSource!, url: $0) == .hls
+          } ?? false
+          if selectedFormat.map(YlHDRVideoPolicy.isHDR) == true || adaptive {
+            let pixelFormat = selectedFormat.map(YlHDRVideoPolicy.pixelFormat)
+            let hdrPixelFormat = pixelFormat == kCVPixelFormatType_420YpCbCr10BiPlanarFullRange
+              ? kCVPixelFormatType_420YpCbCr10BiPlanarFullRange : kCVPixelFormatType_420YpCbCr10BiPlanarVideoRange
+            item.remove(self.videoOutput)
+            self.videoOutput = AVPlayerItemVideoOutput(pixelBufferAttributes: [
+              kCVPixelBufferPixelFormatTypeKey as String: hdrPixelFormat,
+              kCVPixelBufferIOSurfacePropertiesKey as String: [:],
+            ])
+            item.add(self.videoOutput)
+          }
+          self.videoOutputConfigured = true
+        }
         self.videoTracks = catalog
         // Do not erase frame-measured HLS geometry when the asset has no tracks.
         if let geometry { self.videoGeometry = geometry }
@@ -1044,6 +1120,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   }
 
   private func removeCurrentItem(releaseReplacement: Bool = true, clearOutput: Bool = true) {
+    videoProgressProbe.reset()
     metadataTask?.cancel()
     metadataTask = nil
     videoGeometry = nil

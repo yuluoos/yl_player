@@ -175,7 +175,9 @@ final class YlPresentationCoordinator: YlAudioTimeline {
     let old = stateLock.withLock { () -> YlManagedBufferLedger.Token? in
       let old = currentFrameReservation; currentPixelBuffer = pixelBuffer; currentFrameReservation = reservation; return old
     }
-    if textureId >= 0 { services.textureOutput.publish(pixelBuffer) }
+    if textureId >= 0 {
+      ylPublishVideoFrame(pixelBuffer, retaining: reservation, to: services.textureOutput)
+    }
     withExtendedLifetime(old) {}
   }
 

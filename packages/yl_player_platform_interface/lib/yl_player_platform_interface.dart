@@ -16,6 +16,7 @@ export 'src/options/load_options.dart';
 export 'src/options/player_options.dart';
 export 'src/options/policies.dart';
 export 'src/options/video_constraints.dart';
+export 'src/platform/native_video_surface.dart';
 export 'src/platform/platform_implementation_info.dart';
 export 'src/platform/platform_load_result.dart';
 export 'src/platform/platform_player.dart';

@@ -1,4 +1,5 @@
 """Actual verifier foreign-host and corruption discriminators; no source build."""
+import json
 import os
 from pathlib import Path
 import shutil
@@ -73,7 +74,9 @@ with tempfile.TemporaryDirectory(prefix='yl-foreign-verifier-') as temporary:
         else:
             env[variable] = previous
     # Provenance mutation is rejected even if a caller changes hashes to bless bytes.
-    changed = before.replace(b'Xcode 26.6', b'Xcode 00.0')
+    mutated_provenance = json.loads(before)
+    mutated_provenance['toolchain']['xcode'] = 'Xcode deliberately corrupted provenance'
+    changed = (json.dumps(mutated_provenance, indent=2, sort_keys=True) + '\n').encode()
     assert changed != before
     lock.write_bytes(changed)
     result = subprocess.run(verify, env=env, text=True, capture_output=True)

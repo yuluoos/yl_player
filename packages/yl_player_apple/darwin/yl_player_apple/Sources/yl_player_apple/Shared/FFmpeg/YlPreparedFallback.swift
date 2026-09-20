@@ -38,6 +38,7 @@ final class YlPreparedFallback {
   let videoStream: YLFStreamInfo
   let audioStreams: [YLFStreamInfo]
   let videoFormat: CMVideoFormatDescription
+  let usesInBandVideoConfiguration: Bool
   let audioCookies: [Int32: Data]
   let sessionConfiguration: URLSessionConfiguration
   var container: YlFallbackContainer { policy.container }
@@ -190,10 +191,29 @@ final class YlPreparedFallback {
     try boundedPlan?.validate(width: Int(selectedVideo.width), height: Int(selectedVideo.height))
     if boundedPlan != nil { bufferScope.protectFrame(bytes: Int(selectedVideo.width) * Int(selectedVideo.height) * 8) }
     videoStream = selectedVideo
-    videoFormat = try YlVideoToolboxDecoder.makeFormatDescription(
-      context: validContext,
-      streamIndex: selectedVideo.index
-    )
+    let inBandFormat: CMVideoFormatDescription?
+    if container == .matroska, policy.isSeekable {
+      inBandFormat = try YlHEVCInBandConfiguration.makeFormatDescription(
+        context: validContext, streamIndex: selectedVideo.index,
+        maxPacketBytes: budget.inFlightPacketBytes,
+        checkCancellation: { try cancellationToken?.throwIfCancelled() },
+        reserveBytes: { [bufferScope] count in
+          guard let reservation = bufferScope.reserve(category: .compressedPackets, bytes: count) else {
+            throw YlManagedBufferLedger.unsupported()
+          }
+          return reservation
+        },
+        readFailure: { result in
+          ylFallbackPacketReadError(result: result, inputError: opened.lastInputError, container: container)
+        },
+        rewind: { _ = try opened.seek(toMediaTimeUs: 0) }
+      )
+    } else {
+      inBandFormat = nil
+    }
+    usesInBandVideoConfiguration = inBandFormat != nil
+    videoFormat = try inBandFormat ?? YlVideoToolboxDecoder.makeFormatDescription(
+      context: validContext, streamIndex: selectedVideo.index)
 
     var copiedAudioCookies: [Int32: Data] = [:]
     for audioStream in selectedAudio where Int(audioStream.codec) == YLFCodecAAC {

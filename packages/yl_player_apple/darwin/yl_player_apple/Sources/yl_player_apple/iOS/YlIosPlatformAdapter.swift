@@ -5,9 +5,10 @@ import AVFoundation
 import CoreVideo
 enum YlIosPlatformAdapter {
   static func makeServices(textures: FlutterTextureRegistry, textureId: Int64? = nil,
-    activateAudioSession: (() throws -> Void)? = nil) -> YlPlatformServices {
+    activateAudioSession: (() throws -> Void)? = nil,
+    nativeViews: YlIosVideoViewFactory? = nil) -> YlPlatformServices {
     YlPlatformServices(platform: .ios,
-      textureOutput: YlIosTextureOutput(textures: textures, textureId: textureId),
+      textureOutput: YlIosTextureOutput(textures: textures, textureId: textureId, nativeViews: nativeViews),
       makeDisplayDriver: { tick in YlIosDisplayDriver(onTick: tick) },
       activateAudioSession: activateAudioSession ?? {})
   }

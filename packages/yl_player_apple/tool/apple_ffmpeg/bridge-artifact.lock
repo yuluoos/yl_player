@@ -43,8 +43,8 @@
       "size": 1656
     },
     "ios-arm64/YlFFmpegBridge.framework/Headers/YlFFmpegBridge.h": {
-      "sha256": "1f9056af3c2f8ceb1f644748f7ed06837ed4f2d6c30df103d12b8614386a97e4",
-      "size": 6399
+      "sha256": "f34942d55cba2ef649de926a6b729223eb31ef105b2bbe0b83ca07c6cbf89f03",
+      "size": 7175
     },
     "ios-arm64/YlFFmpegBridge.framework/Info.plist": {
       "sha256": "ab25c77849b32b60fd3747baab898a1cc4a65e9717f19f98080f74641610bb2f",
@@ -55,12 +55,12 @@
       "size": 84
     },
     "ios-arm64/YlFFmpegBridge.framework/YlFFmpegBridge": {
-      "sha256": "337977ad58ff072b29cdfdcfa09ba5986ad50c2d9e96451809dc17893e36dc98",
-      "size": 1822200
+      "sha256": "7f25ea5e4d0eaaaf2e40558794bee9eebb626668d64b72d9bbb285db86a6e613",
+      "size": 1842848
     },
     "ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/Headers/YlFFmpegBridge.h": {
-      "sha256": "1f9056af3c2f8ceb1f644748f7ed06837ed4f2d6c30df103d12b8614386a97e4",
-      "size": 6399
+      "sha256": "f34942d55cba2ef649de926a6b729223eb31ef105b2bbe0b83ca07c6cbf89f03",
+      "size": 7175
     },
     "ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/Info.plist": {
       "sha256": "ab25c77849b32b60fd3747baab898a1cc4a65e9717f19f98080f74641610bb2f",
@@ -71,8 +71,8 @@
       "size": 84
     },
     "ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/YlFFmpegBridge": {
-      "sha256": "9563a129707defa1a6e8679e06c713223330edbe9bc9d330489970d9efef2411",
-      "size": 3608720
+      "sha256": "7e0768be459b1a039266d49228931a3253fe5a52b566aa4189d0a05706887713",
+      "size": 3645888
     },
     "macos-arm64_x86_64/YlFFmpegBridge.framework/Headers": {
       "symlink": "Versions/Current/Headers"
@@ -84,8 +84,8 @@
       "symlink": "Versions/Current/Resources"
     },
     "macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/Headers/YlFFmpegBridge.h": {
-      "sha256": "1f9056af3c2f8ceb1f644748f7ed06837ed4f2d6c30df103d12b8614386a97e4",
-      "size": 6399
+      "sha256": "f34942d55cba2ef649de926a6b729223eb31ef105b2bbe0b83ca07c6cbf89f03",
+      "size": 7175
     },
     "macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/Modules/module.modulemap": {
       "sha256": "07b626cfd01759b3d6586317975779dadc3afad2611abbdf92e03ca7db0bea40",
@@ -96,8 +96,8 @@
       "size": 617
     },
     "macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge": {
-      "sha256": "23b119b86bf99f36a5274b32efc0af914188d22815bb0c291b8683239e09feaa",
-      "size": 3605424
+      "sha256": "775776d839ace5268ed07fe4ea560739198a96d48cc02f3de4c34d1d4a0b54b7",
+      "size": 3642592
     },
     "macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/Current": {
       "symlink": "A"
@@ -107,11 +107,11 @@
     }
   },
   "inputs": {
-    "darwin/native/YlFFmpegBridge/YlFFmpegBridge.m": "30a82c70ae0819479f2e43aeb8d8baacbaa27da9ff87c5492c472da54ee293c1",
-    "darwin/native/YlFFmpegBridge/include/YlFFmpegBridge.h": "1f9056af3c2f8ceb1f644748f7ed06837ed4f2d6c30df103d12b8614386a97e4",
+    "darwin/native/YlFFmpegBridge/YlFFmpegBridge.m": "eff3bcacdbfcdce105d3e977c571ca54bea7b55a7b5891fdc7e0aa18a699bde3",
+    "darwin/native/YlFFmpegBridge/include/YlFFmpegBridge.h": "f34942d55cba2ef649de926a6b729223eb31ef105b2bbe0b83ca07c6cbf89f03",
     "darwin/native/YlFFmpegBridge/module.modulemap": "07b626cfd01759b3d6586317975779dadc3afad2611abbdf92e03ca7db0bea40",
     "tool/apple_ffmpeg/FFMPEG_RELEASE_KEY.asc": "397b3becedcd5a98769967ff1ff8501ddc89f8368b8f766e4701377d7dbaabe5",
-    "tool/apple_ffmpeg/build_xcframework.sh": "627466c2822f2a5ed166519687603bdeb3fd06a1f057e3b3b6740a2f01c9cdda",
+    "tool/apple_ffmpeg/build_xcframework.sh": "f3c653f03ddca0a15c907f53911b560e08574db5bde066383bd1db960bc5fe48",
     "tool/apple_ffmpeg/ffmpeg-9.0.1.lock": "80af0e63635f1ee913cbb4aded6380d2d56f9eaa014d19e34f3ef16ddef38e30"
   },
   "schema": 1,
@@ -133,32 +133,32 @@
   },
   "toolchain": {
     "ar_path": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar",
-    "ar_sha256": "e49ffad64ad1cee722540fc5ecb00a230fd8071680682c60d9c851029d20e814",
-    "clang": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+    "ar_sha256": "85d15bd3999895f659e8a483b17ea9ab44b924c8e0b3026abfe359f2de02cbd7",
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)\nTarget: arm64-apple-darwin27.0.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
     "clang_path": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
-    "clang_sha256": "7def90dd8829726686213a747fc5bff1583df933dae5edc55d755479e0bfe00a",
+    "clang_sha256": "1590ac950a3d627817d09ade5cb60b2115f17a72182a3141e010b4bcc482a0c9",
     "iphoneos": {
-      "build": "23F81a",
-      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk",
-      "settings_sha256": "6d01ffc01efe09ccb1bbaf5e90a96a34b07bfe049ee77e7352303984193f83f0",
-      "version": "26.5"
+      "build": "24A430",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.0.sdk",
+      "settings_sha256": "2227b37c40c85b24d2b9ade62cdf8f6a889f1ff36e79019a2d5136264768f112",
+      "version": "27.0"
     },
     "iphonesimulator": {
-      "build": "23F81a",
-      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk",
-      "settings_sha256": "038a8a5fb9ac4ba60db102748ed117bf674cf64545cce8092eec0c6c44048adc",
-      "version": "26.5"
+      "build": "24A430",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk",
+      "settings_sha256": "b8c86f02919d336244af1509b95b3bdaf9fd1151ee97ba188f5f77b301ed4a1e",
+      "version": "27.0"
     },
     "ld_path": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld",
-    "ld_sha256": "5897b275efd93b201b6df5832dd541262b3f20f290859ba78f2200a6a66ef38b",
+    "ld_sha256": "374d9f0713bce2c8a9e1e82bde51615d5433516a10d99b63107eb6ee70542e4c",
     "macosx": {
-      "build": "25F70",
-      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
-      "settings_sha256": "f8d005f09381389167f9e0aeaa169bc9e7dff162ef22ca2fd8e98df7ff1acafe",
-      "version": "26.5"
+      "build": "26A425",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+      "settings_sha256": "7b93ad7e534cc4b31c6a4e39d19b5e0288acf2168c2649479a796d1cb51939fb",
+      "version": "27.0"
     },
     "ranlib_path": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib",
-    "ranlib_sha256": "229eb9d8027953d2aee0590f983eed587d52bdd1ebc21114a62ce693f77b03f1",
-    "xcode": "Xcode 26.6\nBuild version 17F113"
+    "ranlib_sha256": "2840879786eb8868f03c3d378eef6c71d8416e15d8b14aebbf0c0cb80ad81c24",
+    "xcode": "Xcode 27.0\nBuild version 27A266a"
   }
 }

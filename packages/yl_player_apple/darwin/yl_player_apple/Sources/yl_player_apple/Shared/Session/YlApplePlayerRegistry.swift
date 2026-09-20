@@ -81,7 +81,8 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
         platform: services.platform == .ios ? .ios : .macos,
         implementationName: "yl_player_apple", implementationVersion: "0.2.0-dev.2",
         capabilities: Self.capabilities(YlBackendStateEncoder.deviceCapabilities, platform: services.platform),
-        initialState: host.initialState)
+        initialState: host.initialState,
+        nativeViewType: (services.textureOutput as? YlNativeVideoSurfaceOutput)?.nativeViewType)
     } catch { throw YlAppleFailureMapper.command(error) }
   }
   static func capabilities(_ native: YlNativeCapabilities, platform: YlApplePlatform) -> AppleCapabilitiesMessage {

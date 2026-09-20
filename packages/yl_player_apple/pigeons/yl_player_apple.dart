@@ -109,6 +109,7 @@ class AppleCreateReply {
   String implementationVersion;
   AppleCapabilitiesMessage capabilities;
   AppleStateMessage initialState;
+  String? nativeViewType;
 }
 
 class AppleCapabilitiesMessage {

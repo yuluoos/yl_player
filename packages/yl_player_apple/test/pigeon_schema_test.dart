@@ -151,6 +151,9 @@ void main() {
       implementationVersion: '0.2.0-dev.2',
       capabilities: capabilities,
       initialState: state,
+      nativeViewType: platform == ApplePlatform.ios
+          ? 'yl_player_apple/video'
+          : null,
     );
     final loadRequest = AppleLoadRequest(
       loadRequestId: 'load-1',
@@ -254,6 +257,11 @@ void main() {
     );
     expect((decoded[1]! as AppleCreateReply).platform, ApplePlatform.ios);
     expect((decoded[2]! as AppleCreateReply).platform, ApplePlatform.macos);
+    expect(
+      (decoded[1]! as AppleCreateReply).nativeViewType,
+      'yl_player_apple/video',
+    );
+    expect((decoded[2]! as AppleCreateReply).nativeViewType, isNull);
     expect((decoded[3]! as AppleLoadRequest).loadRequestId, 'load-1');
     expect(
       (decoded[3]! as AppleLoadRequest).source.request!.credentials,

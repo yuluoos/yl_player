@@ -359,10 +359,15 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
       &unmanagedDescription
     )
     guard result == YLFResultOK, let unmanagedDescription else {
-      throw NativePlayerError(
-        category: "decoderFailure",
-        code: "decoder.video_configuration_invalid",
-        message: "The video codec configuration is invalid."
+      var stream = YLFStreamInfo()
+      let infoResult = ylf_copy_stream_info(context, streamIndex, &stream)
+      throw configurationFailure(
+        result: result,
+        codec: infoResult == YLFResultOK ? stream.codec : nil,
+        configBytes: ylf_stream_codec_config_size(context, streamIndex),
+        streamIndex: streamIndex,
+        width: infoResult == YLFResultOK ? stream.width : nil,
+        height: infoResult == YLFResultOK ? stream.height : nil
       )
     }
     return unmanagedDescription.takeRetainedValue()
@@ -382,13 +387,38 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
       )
     }
     guard result == YLFResultOK, let unmanagedDescription else {
-      throw NativePlayerError(
-        category: "decoderFailure",
-        code: "decoder.video_configuration_invalid",
-        message: "The video codec configuration is invalid."
-      )
+      throw configurationFailure(result: result, codec: codec, configBytes: configuration.count)
     }
     return unmanagedDescription.takeRetainedValue()
+  }
+
+  static func makeFormatDescription(context: YLFMediaContextRef, streamIndex: Int32,
+    configuration: [UInt8]) throws -> CMVideoFormatDescription {
+    var description: Unmanaged<CMVideoFormatDescription>?
+    let result = configuration.withUnsafeBytes { bytes in
+      ylf_copy_video_format_description_with_codec_config(context, streamIndex,
+        bytes.bindMemory(to: UInt8.self).baseAddress, bytes.count, &description)
+    }
+    guard result == YLFResultOK, let description else {
+      throw configurationFailure(result: result, codec: Int32(YLFCodecHEVC),
+        configBytes: configuration.count, streamIndex: streamIndex)
+    }
+    return description.takeRetainedValue()
+  }
+
+  private static func configurationFailure(
+    result: Int32, codec: Int32?, configBytes: Int, streamIndex: Int32? = nil,
+    width: Int32? = nil, height: Int32? = nil
+  ) -> NativePlayerError {
+    let codecName = codec == Int32(YLFCodecH264) ? "h264"
+      : codec == Int32(YLFCodecHEVC) ? "hevc" : "unknown"
+    // Metadata only: never log the source, codec bytes, paths or credentials.
+    // The bridge's -8 result combines parser and CoreMedia errors; it is not OSStatus.
+    let diagnostic = "stage=formatDescription codec=\(codecName) streamIndex=\(streamIndex ?? -1)"
+      + " width=\(width ?? -1) height=\(height ?? -1) configBytes=\(configBytes) bridgeResult=\(result)"
+    NSLog("%@", "[YLPlayer][VideoToolbox] event=videoConfigurationInvalid \(diagnostic)")
+    return NativePlayerError(category: "decoderFailure", code: "decoder.video_configuration_invalid",
+      message: "The video codec configuration is invalid.", diagnostic: diagnostic)
   }
 
   func reserve(
@@ -592,7 +622,8 @@ final class YlHardwareVTSessionFactory: YlVTSessionFactory {
     output: @escaping (YlVTDecodedImage) -> Void
   ) throws -> YlVTSession {
     let codec = CMFormatDescriptionGetMediaSubType(formatDescription)
-    guard codec == kCMVideoCodecType_H264 || codec == kCMVideoCodecType_HEVC,
+    guard codec == kCMVideoCodecType_H264 || codec == kCMVideoCodecType_HEVC
+            || codec == kCMVideoCodecType_DolbyVisionHEVC,
           policy != .hardwareRequired || VTIsHardwareDecodeSupported(codec) else {
       throw Self.hardwareUnavailable(status: nil)
     }
@@ -612,8 +643,7 @@ final class YlHardwareVTSessionFactory: YlVTSessionFactory {
     let decoderSpecification = specification as CFDictionary
     var imageAttributes: [String: Any] = [
       kCVPixelBufferPixelFormatTypeKey as String:
-        (YlAppleCompatibility.current.limitsVideoReservations
-          ? kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange : kCVPixelFormatType_32BGRA),
+        YlHDRVideoPolicy.pixelFormat(for: formatDescription),
       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
     ]
     if YlAppleCompatibility.current.limitsVideoReservations {

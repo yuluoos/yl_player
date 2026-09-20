@@ -17,6 +17,8 @@
 #include <libavutil/mem.h>
 #include <libavformat/avformat.h>
 #include <libavutil/avutil.h>
+#include <libavutil/dovi_meta.h>
+#include <libavutil/mastering_display_metadata.h>
 
 struct YLFPacket {
   AVPacket *value;
@@ -1081,46 +1083,224 @@ int32_t ylf_debug_outstanding_packet_count(void) {
   return atomic_load_explicit(&g_outstanding_packet_count, memory_order_relaxed);
 }
 
-int32_t ylf_copy_video_format_description(
-    YLFMediaContextRef context,
-    int32_t stream_index,
+static const AVPacketSideData *ylf_video_side_data(
+    const AVCodecParameters *parameters, enum AVPacketSideDataType type) {
+  return av_packet_side_data_get(parameters->coded_side_data,
+                                 parameters->nb_coded_side_data, type);
+}
+
+static CFStringRef ylf_color_primaries(enum AVColorPrimaries value) {
+  switch (value) {
+  case AVCOL_PRI_BT709: return kCMFormatDescriptionColorPrimaries_ITU_R_709_2;
+  case AVCOL_PRI_BT470BG: return kCMFormatDescriptionColorPrimaries_EBU_3213;
+  case AVCOL_PRI_SMPTE170M:
+  case AVCOL_PRI_SMPTE240M: return kCMFormatDescriptionColorPrimaries_SMPTE_C;
+  case AVCOL_PRI_BT2020: return kCMFormatDescriptionColorPrimaries_ITU_R_2020;
+  case AVCOL_PRI_SMPTE431: return kCMFormatDescriptionColorPrimaries_DCI_P3;
+  case AVCOL_PRI_SMPTE432: return kCMFormatDescriptionColorPrimaries_P3_D65;
+  default: return NULL;
+  }
+}
+
+static CFStringRef ylf_transfer_function(enum AVColorTransferCharacteristic value) {
+  switch (value) {
+  case AVCOL_TRC_BT709:
+  case AVCOL_TRC_SMPTE170M:
+  case AVCOL_TRC_BT2020_10:
+  case AVCOL_TRC_BT2020_12: return kCMFormatDescriptionTransferFunction_ITU_R_709_2;
+  case AVCOL_TRC_SMPTE240M: return kCMFormatDescriptionTransferFunction_SMPTE_240M_1995;
+  case AVCOL_TRC_LINEAR: return kCMFormatDescriptionTransferFunction_Linear;
+  case AVCOL_TRC_IEC61966_2_1: return kCMFormatDescriptionTransferFunction_sRGB;
+  case AVCOL_TRC_SMPTE2084: return kCMFormatDescriptionTransferFunction_SMPTE_ST_2084_PQ;
+  case AVCOL_TRC_ARIB_STD_B67: return kCMFormatDescriptionTransferFunction_ITU_R_2100_HLG;
+  case AVCOL_TRC_SMPTE428: return kCMFormatDescriptionTransferFunction_SMPTE_ST_428_1;
+  default: return NULL;
+  }
+}
+
+static CFStringRef ylf_color_matrix(enum AVColorSpace value) {
+  switch (value) {
+  case AVCOL_SPC_BT709: return kCMFormatDescriptionYCbCrMatrix_ITU_R_709_2;
+  case AVCOL_SPC_BT470BG:
+  case AVCOL_SPC_SMPTE170M: return kCMFormatDescriptionYCbCrMatrix_ITU_R_601_4;
+  case AVCOL_SPC_SMPTE240M: return kCMFormatDescriptionYCbCrMatrix_SMPTE_240M_1995;
+  case AVCOL_SPC_BT2020_NCL: return kCMFormatDescriptionYCbCrMatrix_ITU_R_2020;
+  default: return NULL;
+  }
+}
+
+static void ylf_set_color(NSMutableDictionary *extensions, CFStringRef key,
+                           CFStringRef value) {
+  if (value) extensions[(__bridge NSString *)key] = (__bridge NSString *)value;
+  else [extensions removeObjectForKey:(__bridge NSString *)key];
+}
+
+static void ylf_write_be16(uint8_t *bytes, uint32_t value) {
+  bytes[0] = (uint8_t)(value >> 8); bytes[1] = (uint8_t)value;
+}
+
+static void ylf_write_be32(uint8_t *bytes, uint32_t value) {
+  ylf_write_be16(bytes, value >> 16); ylf_write_be16(bytes + 2, value);
+}
+
+static bool ylf_hdr_value(AVRational value, uint32_t scale, uint32_t maximum,
+                           uint32_t *result) {
+  if (value.den <= 0 || value.num < 0) return false;
+  int64_t scaled = av_rescale(value.num, scale, value.den);
+  if (scaled < 0 || scaled > maximum) return false;
+  *result = (uint32_t)scaled;
+  return true;
+}
+
+static bool ylf_apply_static_hdr(const AVCodecParameters *parameters,
+                                  NSMutableDictionary *extensions,
+                                  NSMutableDictionary *atoms) {
+  const AVPacketSideData *side = ylf_video_side_data(parameters, AV_PKT_DATA_MASTERING_DISPLAY_METADATA);
+  if (side) {
+    if (!side->data || side->size < sizeof(AVMasteringDisplayMetadata)) return false;
+    AVMasteringDisplayMetadata metadata;
+    memcpy(&metadata, side->data, sizeof(metadata));
+    if (metadata.has_primaries && metadata.has_luminance) {
+      uint8_t bytes[24] = {0};
+      // FFmpeg stores R,G,B; HEVC mastering-display SEI stores G,B,R.
+      const int order[3] = {1, 2, 0};
+      uint32_t value, minimum, maximum;
+      for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 2; j++) {
+          if (!ylf_hdr_value(metadata.display_primaries[order[i]][j], 50000, 50000, &value)) return false;
+          ylf_write_be16(bytes + i * 4 + j * 2, value);
+        }
+      }
+      for (int j = 0; j < 2; j++) {
+        if (!ylf_hdr_value(metadata.white_point[j], 50000, 50000, &value)) return false;
+        ylf_write_be16(bytes + 12 + j * 2, value);
+      }
+      if (!ylf_hdr_value(metadata.max_luminance, 10000, UINT32_MAX, &maximum) ||
+          !ylf_hdr_value(metadata.min_luminance, 10000, UINT32_MAX, &minimum) ||
+          maximum == 0 || minimum > maximum) return false;
+      ylf_write_be32(bytes + 16, maximum);
+      ylf_write_be32(bytes + 20, minimum);
+      NSData *data = [NSData dataWithBytes:bytes length:sizeof(bytes)];
+      extensions[(__bridge NSString *)kCMFormatDescriptionExtension_MasteringDisplayColorVolume] = data;
+      atoms[@"mdcv"] = data;
+    }
+  }
+  side = ylf_video_side_data(parameters, AV_PKT_DATA_CONTENT_LIGHT_LEVEL);
+  if (side) {
+    if (!side->data || side->size < sizeof(AVContentLightMetadata)) return false;
+    AVContentLightMetadata metadata;
+    memcpy(&metadata, side->data, sizeof(metadata));
+    if (metadata.MaxCLL > UINT16_MAX || metadata.MaxFALL > UINT16_MAX) return false;
+    uint8_t bytes[4];
+    ylf_write_be16(bytes, metadata.MaxCLL); ylf_write_be16(bytes + 2, metadata.MaxFALL);
+    NSData *data = [NSData dataWithBytes:bytes length:sizeof(bytes)];
+    extensions[(__bridge NSString *)kCMFormatDescriptionExtension_ContentLightLevelInfo] = data;
+    atoms[@"clli"] = data;
+  }
+  return true;
+}
+
+static OSStatus ylf_apply_video_metadata(const AVCodecParameters *parameters,
+                                           CMVideoFormatDescriptionRef base,
+                                           CMVideoFormatDescriptionRef *out_description) {
+  NSMutableDictionary *extensions = [(__bridge NSDictionary *)CMFormatDescriptionGetExtensions(base) mutableCopy];
+  if (!extensions) extensions = [NSMutableDictionary dictionary];
+  NSString *atomsKey = (__bridge NSString *)kCMFormatDescriptionExtension_SampleDescriptionExtensionAtoms;
+  NSMutableDictionary *atoms = [extensions[atomsKey] mutableCopy] ?: [NSMutableDictionary dictionary];
+  CMVideoCodecType codec = CMFormatDescriptionGetMediaSubType(base);
+  const AVPacketSideData *side = ylf_video_side_data(parameters, AV_PKT_DATA_DOVI_CONF);
+  if (side) {
+    if (!side->data || side->size < sizeof(AVDOVIDecoderConfigurationRecord)) return kCMFormatDescriptionError_InvalidParameter;
+    AVDOVIDecoderConfigurationRecord dovi;
+    memcpy(&dovi, side->data, sizeof(dovi));
+    // Only the single-layer, uncompressed Profile 5 path is qualified. Never
+    // silently decode unsupported DV as ordinary HEVC (its BL may not be HDR10).
+    if (parameters->codec_id != AV_CODEC_ID_HEVC || dovi.dv_version_major != 1 ||
+        dovi.dv_version_minor != 0 || dovi.dv_profile != 5 ||
+        dovi.dv_level < 1 || dovi.dv_level > 9 ||
+        dovi.rpu_present_flag != 1 || dovi.el_present_flag != 0 ||
+        dovi.bl_present_flag != 1 || dovi.dv_bl_signal_compatibility_id != 0 ||
+        dovi.dv_md_compression != AV_DOVI_COMPRESSION_NONE) return kCMFormatDescriptionError_InvalidParameter;
+    NSData *hvcc = atoms[@"hvcC"];
+    const uint8_t *bytes = hvcc.bytes;
+    if (hvcc.length < 23 || (bytes[16] & 3) != 1 ||
+        (bytes[17] & 7) != 2 || (bytes[18] & 7) != 2) return kCMFormatDescriptionError_InvalidParameter;
+    uint8_t dvcc[24] = {0};
+    dvcc[0] = dovi.dv_version_major; dvcc[1] = dovi.dv_version_minor;
+    dvcc[2] = (uint8_t)((dovi.dv_profile << 1) | (dovi.dv_level >> 5));
+    dvcc[3] = (uint8_t)((dovi.dv_level << 3) | 5); // RPU + BL, no EL.
+    atoms[@"dvcC"] = [NSData dataWithBytes:dvcc length:sizeof(dvcc)];
+    codec = kCMVideoCodecType_DolbyVisionHEVC;
+    // Profile 5 is full-range IPT-PQ, with unspecified CICP values. Ordinary
+    // YCbCr/PQ declarations on this BL would make its colours misleading.
+    const uint8_t colr[] = {'n', 'c', 'l', 'c', 0, 2, 0, 2, 0, 2};
+    atoms[@"colr"] = [NSData dataWithBytes:colr length:sizeof(colr)];
+    ylf_set_color(extensions, kCMFormatDescriptionExtension_ColorPrimaries, NULL);
+    ylf_set_color(extensions, kCMFormatDescriptionExtension_TransferFunction, NULL);
+    ylf_set_color(extensions, kCMFormatDescriptionExtension_YCbCrMatrix, NULL);
+    extensions[(__bridge NSString *)kCMFormatDescriptionExtension_FullRangeVideo] = @YES;
+  } else {
+    if (parameters->color_primaries != AVCOL_PRI_UNSPECIFIED)
+      ylf_set_color(extensions, kCMFormatDescriptionExtension_ColorPrimaries, ylf_color_primaries(parameters->color_primaries));
+    if (parameters->color_trc != AVCOL_TRC_UNSPECIFIED)
+      ylf_set_color(extensions, kCMFormatDescriptionExtension_TransferFunction, ylf_transfer_function(parameters->color_trc));
+    if (parameters->color_space != AVCOL_SPC_UNSPECIFIED)
+      ylf_set_color(extensions, kCMFormatDescriptionExtension_YCbCrMatrix, ylf_color_matrix(parameters->color_space));
+    if (parameters->color_range == AVCOL_RANGE_JPEG || parameters->color_range == AVCOL_RANGE_MPEG)
+      extensions[(__bridge NSString *)kCMFormatDescriptionExtension_FullRangeVideo] = @(parameters->color_range == AVCOL_RANGE_JPEG);
+    // Keep the original colr values for fields the container did not declare.
+    NSData *oldColr = atoms[@"colr"];
+    uint8_t colr[] = {'n', 'c', 'l', 'c', 0, 2, 0, 2, 0, 2};
+    if (oldColr.length >= 10 && (!memcmp(oldColr.bytes, "nclc", 4) || !memcmp(oldColr.bytes, "nclx", 4)))
+      memcpy(colr + 4, (const uint8_t *)oldColr.bytes + 4, 6);
+    const int values[] = {parameters->color_primaries, parameters->color_trc, parameters->color_space};
+    for (int i = 0; i < 3; i++) {
+      if (values[i] != 2 && values[i] >= 0 && values[i] <= UINT16_MAX)
+        ylf_write_be16(colr + 4 + i * 2, (uint32_t)values[i]);
+    }
+    atoms[@"colr"] = [NSData dataWithBytes:colr length:sizeof(colr)];
+    if (!ylf_apply_static_hdr(parameters, extensions, atoms)) return kCMFormatDescriptionError_InvalidParameter;
+  }
+  extensions[atomsKey] = atoms;
+  CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(base);
+  return CMVideoFormatDescriptionCreate(kCFAllocatorDefault, codec,
+      dimensions.width, dimensions.height, (__bridge CFDictionaryRef)extensions, out_description);
+}
+
+int32_t ylf_copy_video_format_description_with_codec_config(
+    YLFMediaContextRef context, int32_t stream_index,
+    const uint8_t *configuration, size_t configuration_size,
     CMVideoFormatDescriptionRef *out_description) {
-  if (context == NULL || out_description == NULL) {
-    return YLFResultVideoConfigurationInvalid;
-  }
+  if (out_description == NULL) return YLFResultVideoConfigurationInvalid;
   *out_description = NULL;
-  if (stream_index < 0 ||
-      (unsigned int)stream_index >= context->format->nb_streams) {
-    return YLFResultVideoConfigurationInvalid;
-  }
-  AVCodecParameters *parameters =
-      context->format->streams[stream_index]->codecpar;
-  OSStatus status;
-  switch (parameters->codec_id) {
-  case AV_CODEC_ID_H264:
-    status = parameters->extradata_size > 0 && parameters->extradata[0] == 1
-                 ? ylf_h264_format_description(parameters->extradata,
-                                               (size_t)parameters->extradata_size,
-                                               out_description)
-                 : ylf_annexb_format_description(parameters->codec_id,
-                                                 parameters->extradata,
-                                                 (size_t)parameters->extradata_size,
-                                                 out_description);
-    break;
-  case AV_CODEC_ID_HEVC:
-    status = parameters->extradata_size > 0 && parameters->extradata[0] == 1
-                 ? ylf_hevc_format_description(parameters->extradata,
-                                               (size_t)parameters->extradata_size,
-                                               out_description)
-                 : ylf_annexb_format_description(parameters->codec_id,
-                                                 parameters->extradata,
-                                                 (size_t)parameters->extradata_size,
-                                                 out_description);
-    break;
-  default:
-    return YLFResultVideoConfigurationInvalid;
-  }
-  return status == noErr ? YLFResultOK : YLFResultVideoConfigurationInvalid;
+  if (context == NULL || context->format == NULL || stream_index < 0 ||
+      (unsigned int)stream_index >= context->format->nb_streams ||
+      configuration == NULL || configuration_size == 0) return YLFResultVideoConfigurationInvalid;
+  const AVCodecParameters *parameters = context->format->streams[stream_index]->codecpar;
+  if (parameters->codec_type != AVMEDIA_TYPE_VIDEO ||
+      (parameters->codec_id != AV_CODEC_ID_H264 && parameters->codec_id != AV_CODEC_ID_HEVC)) return YLFResultVideoConfigurationInvalid;
+  CMVideoFormatDescriptionRef base = NULL;
+  OSStatus status = configuration[0] != 1
+      ? ylf_annexb_format_description(parameters->codec_id, configuration, configuration_size, &base)
+      : parameters->codec_id == AV_CODEC_ID_H264
+          ? ylf_h264_format_description(configuration, configuration_size, &base)
+          : ylf_hevc_format_description(configuration, configuration_size, &base);
+  if (status == noErr && base != NULL)
+    status = ylf_apply_video_metadata(parameters, base, out_description);
+  if (base) CFRelease(base);
+  return status == noErr && *out_description != NULL ? YLFResultOK : YLFResultVideoConfigurationInvalid;
+}
+
+int32_t ylf_copy_video_format_description(
+    YLFMediaContextRef context, int32_t stream_index,
+    CMVideoFormatDescriptionRef *out_description) {
+  if (out_description == NULL) return YLFResultVideoConfigurationInvalid;
+  *out_description = NULL;
+  if (context == NULL || context->format == NULL || stream_index < 0 ||
+      (unsigned int)stream_index >= context->format->nb_streams) return YLFResultVideoConfigurationInvalid;
+  const AVCodecParameters *parameters = context->format->streams[stream_index]->codecpar;
+  return ylf_copy_video_format_description_with_codec_config(context, stream_index,
+      parameters->extradata, parameters->extradata_size > 0 ? (size_t)parameters->extradata_size : 0, out_description);
 }
 
 int32_t ylf_copy_video_format_description_from_codec_config(

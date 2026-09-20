@@ -46,7 +46,11 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
     self.services = services
     self.callbacks = callbacks
     reducer = YlAppleStateReducer(playerId: playerId, clock: clock)
-    textureOwner = YlAppleTextureOwner(output: services.textureOutput) { [weak self] identity in
+    textureOwner = YlAppleTextureOwner(output: services.textureOutput, onFailure: { [weak self] identity, error in
+      guard let self, !self.disposed, self.reducer.identity == identity else { return }
+      try? self.coordinator.executeSynchronous(.pause)
+      self.receive(.init(generation: 0, event: .failure(error)), identity: identity)
+    }) { [weak self] identity in
       guard let self, !self.disposed, !self.suspended, !self.restoring else { return }
       self.reducer.publicFrame(identity: identity)
     }

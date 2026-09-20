@@ -14,18 +14,22 @@ public final class YlPlayerApplePlugin: NSObject, FlutterPlugin {
     #if os(iOS)
     let messenger = registrar.messenger()
     let lifecycle = YlIosLifecycle()
+    let nativeViews = YlIosVideoViewFactory()
+    registrar.register(nativeViews, withId: YlIosVideoViewFactory.viewType)
     let services: (ApplePlayerOptionsMessage) throws -> YlPlatformServices = { [weak registrar] _ in
       guard let registrar else { throw YlAppleFailureMapper.invalid("player.detached") }
       // appManaged must not mutate application-owned AVAudioSession state.
-      return YlIosPlatformAdapter.makeServices(textures: registrar.textures(), activateAudioSession: {})
+      return YlIosPlatformAdapter.makeServices(textures: registrar.textures(), activateAudioSession: {}, nativeViews: nativeViews)
     }
     #else
     let messenger = registrar.messenger
     let lifecycle = YlMacosLifecycle()
+    let nativeViews = YlMacosVideoViewFactory()
+    registrar.register(nativeViews, withId: YlMacosVideoViewFactory.viewType)
     let services: (ApplePlayerOptionsMessage) throws -> YlPlatformServices = { [weak registrar] _ in
       guard let registrar else { throw YlAppleFailureMapper.invalid("player.detached") }
       return YlMacosPlatformAdapter.makeServices(textures: registrar.textures,
-        displayView: registrar.view, activateAudioSession: {})
+        displayView: registrar.view, activateAudioSession: {}, nativeViews: nativeViews)
     }
     #endif
     let registry = YlApplePlayerRegistry(makeServices: services,

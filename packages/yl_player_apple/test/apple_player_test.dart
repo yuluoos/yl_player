@@ -10,6 +10,59 @@ Matcher failsWith(String code) => throwsA(
   isA<YlPlayerException>().having((e) => e.failure.code, 'code', code),
 );
 void main() {
+  test('native video surface requires explicit native advertisement', () async {
+    for (final platform in ApplePlatform.values) {
+      final legacy = await createFake(
+        FakeTransport(),
+        reply: wireCreate()..platform = platform,
+      );
+      expect(legacy.nativeVideoSurface, isNull);
+      await legacy.dispose();
+    }
+    for (final (platform, target) in [
+      (ApplePlatform.ios, TargetPlatform.iOS),
+      (ApplePlatform.macos, TargetPlatform.macOS),
+    ]) {
+      final player = await createFake(
+        FakeTransport(),
+        reply: wireCreate()
+          ..platform = platform
+          ..nativeViewType = 'yl_player_apple/video',
+      );
+      expect(player.nativeVideoSurface?.viewType, 'yl_player_apple/video');
+      expect(player.nativeVideoSurface?.platform, target);
+      expect(player.textureId.value, 42);
+      await player.dispose();
+      expect(player.textureId.value, isNull);
+    }
+  });
+
+  test(
+    'invalid native surface advertisements reject and release native ownership',
+    () async {
+      for (final platform in ApplePlatform.values) {
+        for (final viewType in [
+          '',
+          ' ',
+          'other/plugin',
+          'yl_player_apple/video\n',
+        ]) {
+          final transport = FakeTransport();
+          await expectLater(
+            createFake(
+              transport,
+              reply: wireCreate()
+                ..platform = platform
+                ..nativeViewType = viewType,
+            ),
+            failsWith(YlFailureCodes.protocolMismatch),
+          );
+          expect(transport.calls, ['dispose']);
+        }
+      }
+    },
+  );
+
   test(
     'replacement Stop cancellation and late replies retain bounded authority',
     () async {

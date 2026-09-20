@@ -35,3 +35,11 @@ Focused native and Flutter evidence exists for iOS Simulator and native macOS,
 including strict-policy rejection and controlled hardware paths. Physical iOS,
 minimum-OS, native Intel decoding, endurance, profiling, full consumer, and
 release matrices remain pending final acceptance.
+
+The iOS and macOS plugins negotiate native video surfaces for HDR precision. Managed
+Dolby Vision Profile 5 retains dvcC/RPU and uses 10-bit output; in-band HEVC
+configuration repair preserves track metadata. AppKitView and UiKitView use the same high-bit-depth sample renderer.
+Texture-only consumers still reject managed HDR instead of displaying an invalid base layer. Code/build and native Mac probe evidence are
+recorded in [HDR verification](../../docs/verification/2026-09-19-ios-hdr-dolby-vision.html);
+The source colored-frame comparison passed on this Mac; active HDR highlights,
+sustained playback and physical iOS acceptance remain pending.
