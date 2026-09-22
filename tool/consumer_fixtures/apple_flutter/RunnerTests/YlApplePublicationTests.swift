@@ -62,6 +62,40 @@ final class YlApplePublicationTests: XCTestCase {
     }
   }
 
+  func testKnownFailuresUseFixedUsefulMessagesAndUnknownFailureIsHonest() {
+    let cases = [
+      ("decoder.dolby_vision_unsupported", "This Dolby Vision profile is not supported. Try a compatible version of the media."),
+      ("decoder.dolby_vision_fel_metadata_unsupported", "This Dolby Vision enhancement metadata is not supported. Try a base-layer or compatible version."),
+      ("network.read_timeout", "The media request timed out while reading. Check the network connection and try again."),
+      ("decoder.video_hardware_unavailable", "A required hardware video decoder is unavailable. Close other media apps or choose compatible media."),
+      ("network.cancelled", "The media request was cancelled."),
+    ]
+    for (code, message) in cases {
+      let failure = YlAppleSafeDiagnostics.failure(NativePlayerError(category: "network", code: code,
+        message: "private secret"), scope: .session)
+      XCTAssertEqual(failure.message, message)
+      XCTAssertFalse(failure.message.contains("private secret"))
+    }
+    let unknown = YlAppleSafeDiagnostics.failure(NSError(domain: "private", code: 7,
+      userInfo: [NSLocalizedDescriptionKey: "secret"]), scope: .command)
+    XCTAssertEqual(unknown.message, "Playback failed for an unknown reason.")
+  }
+
+  func testRetryExhaustionAndRepeatedPigeonBridgeKeepSafeTerminalSemantics() {
+    let terminal = YlAppleSafeDiagnostics.failure(NativePlayerError(category: "network",
+      code: "network.retry_exhausted", message: "private"), scope: .session)
+    XCTAssertEqual(terminal.message, "The configured network retry attempts were exhausted. Check the connection and try again.")
+    XCTAssertFalse(terminal.retryable)
+    let first = PigeonError(code: "network.http_forbidden", message: "secret", details: terminal)
+    let bridged = YlAppleSafeDiagnostics.failure(first, scope: .command)
+    let repeated = YlAppleSafeDiagnostics.failure(PigeonError(code: bridged.code,
+      message: "another secret", details: bridged), scope: .player)
+    XCTAssertEqual(repeated.code, "network.http_forbidden")
+    XCTAssertEqual(repeated.message, "The media server refused the request. Check access credentials and request configuration.")
+    XCTAssertFalse(repeated.retryable)
+    XCTAssertEqual(repeated.scope, .player)
+  }
+
   private func server() throws -> RollbackHlsServer {
     func data(_ name: String, _ ext: String) throws -> Data {
       #if os(iOS)

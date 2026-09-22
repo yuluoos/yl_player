@@ -1,0 +1,25 @@
+name: yl_script_resolver_example
+description: Explicit optional script resolution and player handoff.
+publish_to: none
+version: 1.0.0+1
+resolution: workspace
+environment:
+  sdk: ^3.12.0
+  flutter: '>=3.44.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  yl_player: ^0.2.0-dev.2
+  yl_player_source_resolver: 0.1.0-dev.1
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  crypto: ^3.0.7
+  pointycastle: 3.9.1
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/fixture-video.mp4

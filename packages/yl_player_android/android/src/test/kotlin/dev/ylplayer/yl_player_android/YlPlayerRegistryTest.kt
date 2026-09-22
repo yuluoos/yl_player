@@ -122,7 +122,7 @@ class YlPlayerRegistryTest {
         val fixture = RegistryFixture(StandardTestDispatcher(testScheduler))
         val first = fixture.registry.create(createRequest())
         val second = fixture.registry.create(createRequest())
-        assertEquals(2L, first.schemaMajor)
+        assertEquals(3L, first.schemaMajor)
         assertEquals(2L, first.spiMajor)
         assertEquals(41L, first.textureId)
         assertTrue(first.channelSuffix.matches(Regex("p1-[a-zA-Z0-9-]+")))
@@ -196,7 +196,11 @@ class YlPlayerRegistryTest {
         val reply = fixture.registry.create(createRequest())
         assertEquals(AndroidPlaybackStatus.IDLE, reply.initialState.status)
         assertEquals(0L, reply.initialState.revision)
-        assertEquals("platform.incompatible", assertFailsWith<FlutterError> { fixture.registry.create(createRequest().copy(schemaMajor = 1)) }.code)
+        for (unsupportedSchema in listOf(1L, 2L)) {
+            assertEquals("platform.incompatible", assertFailsWith<FlutterError> {
+                fixture.registry.create(createRequest().copy(schemaMajor = unsupportedSchema))
+            }.code)
+        }
         verify(fixture.textures).createSurfaceTexture()
         fixture.registry.detach()
         runCurrent()
@@ -416,7 +420,7 @@ class YlPlayerRegistryTest {
     }
 }
 
-internal fun createRequest() = AndroidCreateRequest(2, AndroidPlayerOptionsMessage(AndroidDecoderPolicy.SYSTEM_DEFAULT, AndroidAudioPolicy.APP_MANAGED, 250))
+internal fun createRequest() = AndroidCreateRequest(3, AndroidPlayerOptionsMessage(AndroidDecoderPolicy.SYSTEM_DEFAULT, AndroidAudioPolicy.APP_MANAGED, 250))
 
 internal class RegistryFixture(dispatcher: CoroutineDispatcher, factory: YlPlayerSessionFactory? = null) {
     val messenger = mock(BinaryMessenger::class.java)

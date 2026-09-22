@@ -16,7 +16,8 @@ enum YlAppleSafeDiagnostics {
     let safeCode = publicCodes.contains(code) || code.range(of: "^avplayer\\.-?[0-9]{1,20}$", options: .regularExpression) != nil
       ? code : "platform.failure"
     return .init(category: native.map { YlAppleFailureMapper.category($0.category) } ?? previous?.category ?? .internalFailure,
-      code: safeCode, message: "Playback operation failed.", retryable: false,
+      code: safeCode, message: publicMessages[safeCode] ?? "Playback failed for an unknown reason.",
+      retryable: retryableCodes.contains(safeCode),
       scope: scope, diagnosticId: identifier())
   }
   // Package-owned classifications only. A syntactically safe source-derived
@@ -66,6 +67,8 @@ enum YlAppleSafeDiagnostics {
     "network.framing",
     "network.headers_too_large",
     "network.http_status",
+    "network.http_forbidden",
+    "network.dns_failed",
     "network.invalid_redirect",
     "network.local_proxy_unavailable",
     "network.managed",
@@ -100,6 +103,20 @@ enum YlAppleSafeDiagnostics {
     "source.not_seekable",
     "source.quality_constraint_invalid",
     "track.not_found",
+  ]
+  private static let retryableCodes: Set<String> = [
+    "network.dns_failed", "network.connect_timeout", "network.read_timeout",
+  ]
+  private static let publicMessages: [String: String] = [
+    "decoder.dolby_vision_unsupported": "This Dolby Vision profile is not supported. Try a compatible version of the media.",
+    "decoder.dolby_vision_fel_metadata_unsupported": "This Dolby Vision enhancement metadata is not supported. Try a base-layer or compatible version.",
+    "network.connect_timeout": "The media request timed out while connecting. Check the network connection and try again.",
+    "network.read_timeout": "The media request timed out while reading. Check the network connection and try again.",
+    "decoder.video_hardware_unavailable": "A required hardware video decoder is unavailable. Close other media apps or choose compatible media.",
+    "network.cancelled": "The media request was cancelled.",
+    "network.dns_failed": "The media host could not be resolved. Check the network connection and source host configuration.",
+    "network.http_forbidden": "The media server refused the request. Check access credentials and request configuration.",
+    "network.retry_exhausted": "The configured network retry attempts were exhausted. Check the connection and try again.",
   ]
   /// No heuristic redactor can prove absence of encoded credentials or paths.
   /// Keep only a fixed diagnostic; package error codes carry the classification.

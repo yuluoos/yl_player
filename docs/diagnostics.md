@@ -21,7 +21,9 @@ or `internal`.
 | `session.stale` | A replaced/stopped Session handle was used |
 | `policy.unsupported` | The selected route cannot enforce a requested policy |
 | `source.invalid` / `source.missing` | Invalid source metadata or unavailable local source |
-| `network.failed` | Managed or platform network operation failed |
+| `network.failed` | Managed or platform network operation failed without a more specific structured classification |
+| `network.dns_failed` | A platform DNS error proved that the source host could not be resolved |
+| `network.http_forbidden` | The media server returned HTTP 403; check credentials and request configuration |
 | `container.unsupported` | No supported container route |
 | `decoder.unsupported` / `decoder.unavailable` | Unsupported media or unavailable required decoder |
 | `resource.exhausted` | A bounded native resource could not be acquired |
@@ -35,9 +37,23 @@ category conservatively.
 `session` terminates or rejects one session, and `player` makes the Player
 unusable. `retryable` is a property of that failure, not permission to bypass
 the configured retry budget or repeat a non-idempotent application action.
+`network.dns_failed` may be retryable, but remains subject to the existing
+managed retry budget and cancellation/session fences. `network.http_forbidden`
+is not retryable. These codes refine failures that previously appeared as
+`network.failed` (Android DNS) or `network.http_status` (Apple HTTP 403).
+
+DNS classification requires a bounded native cause chain containing
+`UnknownHostException` on Android or an `NSURLErrorDomain` DNS/host lookup code
+on Apple. HTTP 403 classification requires the structured response status.
+Messages and diagnostic strings are never parsed to infer either code. Other
+I/O, HTTP statuses, and unknown failures keep their existing conservative
+classification. This phase does not classify every network, decoder, container,
+render, DRM, subtitle, or external-device failure.
 
 `message` is safe user-facing text supplied at the public boundary. Native
-adapters replace untrusted native text with a generic message. Applications may
+adapters replace untrusted native text with package-owned fixed wording. Known
+Apple codes describe the failed stage, known cause, and a safe next action;
+unknown errors explicitly say that the reason is unknown. Applications may
 display it, but should branch on category/code rather than wording.
 
 `diagnosticId` is an opaque correlation token. Include it with code, category,
@@ -67,3 +83,25 @@ There is no public method that exposes raw native diagnostics. Do not document
 or depend on implementation methods, Pigeon messages, platform channels, or
 private native logs as an application API. `toString()` redacts sensitive model
 fields and unsafe metadata, but explicit safe-field logging remains preferred.
+
+## Optional script resolver errors
+
+The independent `yl_player_source_resolver` reports `YlScriptException` before a
+media source is handed to the player. Its stable `script.*` code, fixed
+phase/scope, per-resolution `diagnosticId`, safe Chinese `message` and
+`retryable` flag identify the failed attempt without retaining script text,
+URL, parameters, headers or arbitrary exception text. The player transport
+schema and `YlFailure` contract are unchanged.
+
+Known HTTP 403 is `script.http_forbidden` and is not retryable. Timeout,
+cancellation, resource limits, unsupported host APIs, invalid results and
+explicit expiry are separate classifications. A script's own nonempty `error`
+field takes precedence over a returned URL and produces a fixed safe error;
+its original text is never shown. Unknown expiry is not inferred from a token.
+
+Cancellation completes after transport/native cleanup; a business interface
+should suppress cancellation feedback when switching channels. Applications
+may resolve again explicitly, but the module does not automatically retry
+requests, replace media, or switch to another source. See the
+[resolver report](superpowers/reports/2026-09-22-script-resolver.md) for verified
+behavior and boundaries.

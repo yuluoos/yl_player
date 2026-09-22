@@ -1,7 +1,7 @@
 import Foundation
 
 enum YlSourceKind { case file, network, content }
-enum YlSourceFormat: String { case automatic, hls, mp4, mov, matroska, webm, mpegTs, mpegPs, flv, avi }
+enum YlSourceFormat: String { case automatic, hls, mp4, mov, matroska, webm, mpegTs, mpegPs, flv, avi, dash }
 enum YlSourceIntent { case automatic, onDemand, live }
 enum YlDecoderPolicy: String { case systemDefault, hardwarePreferred, hardwareRequired }
 enum YlBufferGoal: String { case automatic, lowLatency, smoothPlayback, bounded }
@@ -74,7 +74,7 @@ struct YlSourceAssessment {
   var engine: YlNativeEngine? {
     guard let candidate else { return nil }
     switch candidate {
-    case .avPlayer, .headeredHls: return .avPlayer
+    case .avPlayer, .headeredHls, .dashHls: return .avPlayer
     case .localMatroska, .networkMatroska, .networkFlv: return .managedFallback
     case .inspect, .reject: return nil
     }

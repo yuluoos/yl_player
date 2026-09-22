@@ -55,7 +55,10 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     credentials: [String: String] = [:],
     configuration: YlNetworkConfiguration,
     credentialContext: YlHlsCredentialContext = YlHlsCredentialContext(),
-    opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention? = nil
+    opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention? = nil,
+    sessionFactory: (URLSessionConfiguration, URLSessionDelegate, OperationQueue) -> URLSession = {
+      URLSession(configuration: $0, delegate: $1, delegateQueue: $2)
+    }
   ) throws {
     self.opaqueRetention = opaqueRetention
     self.credentialContext = credentialContext
@@ -82,11 +85,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     sessionConfiguration.timeoutIntervalForResource = TimeInterval(
       max(1, configuration.connectTimeoutMs + configuration.readTimeoutMs)
     ) / 1_000
-    session = URLSession(
-      configuration: sessionConfiguration,
-      delegate: self,
-      delegateQueue: delegateQueue
-    )
+    session = sessionFactory(sessionConfiguration, self, delegateQueue)
 
     let ready = DispatchSemaphore(value: 0)
     var startupError: NWError?
@@ -254,8 +253,12 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     let stripped = Self.inheritsCredentialStripping(fromRequestTarget: requestTarget) || !headerPolicy.isSourceOrigin(destination) || credentialContext.isStripped(resourceKey)
     if stripped { credentialContext.strip(resourceKey) }
     let request = makeRequest(destination: destination, range: range, method: method, credentialsStripped: stripped)
-    let task = session.dataTask(with: request)
-    lock.withLock {
+    let admitted = lock.withLock { () -> Bool in
+      // Cancellation and disconnect remove ownership under this same lock.
+      // Creating a task after URLSession invalidation raises an ObjC exception;
+      // even the task factory and resume must belong to this admission fence.
+      guard !cancelled, connections[ObjectIdentifier(connection)] === connection else { return false }
+      let task = session.dataTask(with: request)
       taskRecords[task.taskIdentifier] = TaskRecord(
         connection: connection,
         method: method,
@@ -264,9 +267,11 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       taskRecords[task.taskIdentifier]?.requestContext = headerPolicy.requestContext(for: destination, credentialsStripped: stripped)
       taskRecords[task.taskIdentifier]?.resourceKey = resourceKey
       connectionTasks[ObjectIdentifier(connection)] = task
+      task.resume()
+      return true
     }
-    task.resume()
-    return true
+    if !admitted { close(connection) }
+    return admitted
   }
 
   private func monitorDisconnect(_ connection: NWConnection) {

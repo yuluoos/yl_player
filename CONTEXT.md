@@ -15,6 +15,49 @@ An immutable description of where media is located and what is required to
 request it. It is not the loaded media itself.
 _Avoid_: URL, media item
 
+**Scripted Live Source**:
+A live source whose playable Media Source and request requirements are
+obtained by executing a source-specific script.
+_Avoid_: JavaScript media protocol, script decoder
+
+**Source Resolution**:
+The process of obtaining a playable Media Source and its validity information
+from a Scripted Live Source. Successful resolution does not establish that the
+resulting media can be played.
+_Avoid_: Playback, decoding
+
+**Clear DASH VOD**:
+Unencrypted on-demand media described by a DASH manifest, included in the
+playback scope on Android, iOS, and macOS.
+_Avoid_: DRM playback, encrypted DASH
+
+**DASH Period**:
+A section of a DASH presentation's overall timeline with its own media track
+and representation descriptions. A Period boundary is not the end of the
+overall presentation.
+_Avoid_: Playback Session, media segment
+
+**Automatic Quality**:
+A playback quality policy that adapts representation selection to current
+playback conditions within the eligible choices.
+_Avoid_: Fixed Quality
+
+**Quality Ceiling**:
+An upper bound on eligible playback quality that still permits automatic
+selection of lower qualities.
+_Avoid_: Fixed Quality, guaranteed quality
+
+**Fixed Quality**:
+A user-selected playback quality that is not automatically lowered when
+network conditions worsen.
+_Avoid_: Quality Ceiling, preferred quality
+
+**Platform-Specific Protected Rendition**:
+A protected delivery of the same content using the media address and DRM
+scheme appropriate to its target platform. Equivalent content does not imply
+an identical manifest or license service across platforms.
+_Avoid_: Universal encrypted MPD, identical cross-platform DRM
+
 **Source Assessment**:
 A pre-load determination of whether a Player can route a Media Source while
 honouring its explicit requirements. It is not a playback guarantee.
@@ -101,3 +144,25 @@ _Avoid_: Raw exception, platform diagnostic
 The display dimensions, pixel shape, and rotation needed to present video with
 its intended proportions.
 _Avoid_: Encoded size, aspect-ratio guess
+
+**Text Subtitle Track**:
+A timed sequence of textual cues, optionally including styling, positioning,
+or animation, presented alongside the media.
+_Avoid_: Bitmap subtitle track
+
+**Bitmap Subtitle Track**:
+A timed sequence of subtitle images and their display placement, presented
+alongside the media.
+_Avoid_: Text subtitle track, burned-in captions
+
+**Complete Dolby Display Mapping**:
+For an agreed supported source, faithful processing of its applicable Dolby
+dynamic display metadata for the target display, including full FEL image
+reconstruction when present, assessed against independent reference output.
+_Avoid_: FEL reconstruction alone, retained metadata alone
+
+**Native External Dolby Vision Output**:
+A Dolby Vision signal delivered to an external display through an agreed
+device and connection path. Display recognition and picture fidelity are
+separate acceptance requirements.
+_Avoid_: HDR output, Dolby badge alone

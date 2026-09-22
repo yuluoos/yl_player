@@ -31,7 +31,7 @@ internal class YlSourceAssessment(private val evidence: YlDecoderEvidenceProvide
         if (decoder == AndroidDecoderPolicy.HARDWARE_REQUIRED && hasVideo == true && initializedName != null &&
             !evidence.satisfiesRequired(true, initializedName)) return reject(YlFailureKind.DECODER_UNAVAILABLE)
         val known = hasVideo != null || source.format != AndroidMediaFormat.AUTOMATIC || uri?.path?.lowercase()?.substringAfterLast('.') in
-            listOf("mp4", "m4v", "mov", "mkv", "webm", "m3u8", "ts", "mpg", "mpeg", "flv", "avi", "mp3", "aac", "wav", "flac", "ogg", "m4a")
+            listOf("mp4", "m4v", "mov", "mkv", "webm", "m3u8", "mpd", "ts", "mpg", "mpeg", "flv", "avi", "mp3", "aac", "wav", "flac", "ogg", "m4a")
         val strictPending = decoder == AndroidDecoderPolicy.HARDWARE_REQUIRED && (hasVideo == null || !evidence.satisfiesRequired(hasVideo, initializedName))
         val inspect = !known || strictPending
         val limitations = buildList {

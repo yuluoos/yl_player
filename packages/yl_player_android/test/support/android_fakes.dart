@@ -47,7 +47,7 @@ AndroidFailureMessage wireFailure({
 );
 AndroidCreateReply wireCreate({String suffix = 'instance-1'}) =>
     AndroidCreateReply(
-      schemaMajor: 2,
+      schemaMajor: 3,
       spiMajor: 2,
       channelSuffix: suffix,
       textureId: 42,

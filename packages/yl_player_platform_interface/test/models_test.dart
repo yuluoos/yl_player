@@ -2,6 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 void main() {
+  test('landed network failure codes are public and stable', () {
+    expect(YlFailureCodes.networkDnsFailed, 'network.dns_failed');
+    expect(YlFailureCodes.networkHttpForbidden, 'network.http_forbidden');
+  });
   test('network source snapshots request headers and records live intent', () {
     final headers = {'Referer': 'https://example.test'};
     final source = YlNetworkSource(

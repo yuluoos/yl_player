@@ -442,6 +442,7 @@ enum YlAppleNativeInput {
     case .mpegPs: format = .mpegPs
     case .flv: format = .flv
     case .avi: format = .avi
+    case .dash: format = .dash
     }
     let strategy: YlBufferGoal
     switch buffer.kind {

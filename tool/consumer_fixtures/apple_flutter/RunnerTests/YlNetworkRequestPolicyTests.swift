@@ -292,7 +292,8 @@ final class YlNetworkRequestPolicyTests: XCTestCase {
         requestedOffset: 0
       )
     }
-    XCTAssertEqual(received.code, "network.http_status")
+    XCTAssertEqual(received.code, "network.http_forbidden")
+    XCTAssertEqual(received.message, "The media server refused the request. Check access credentials and request configuration.")
     XCTAssertEqual(received.diagnostic, "HTTP 403 network.request")
   }
   func testReturnOriginAndRetryDoNotRestoreStrippedCredentials() throws {

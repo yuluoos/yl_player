@@ -208,7 +208,8 @@ internal class YlMedia3SessionFactory(
                     val primary = createEngine(identity, source, loadOptions, options)
                     YlManagedAndroidEngine(identity, primary, {
                         YlNativeFallbackEngine(context, identity, source, loadOptions, options, dispatcher)
-                    }, dispatcher)
+                    }, dispatcher, allowFallback = source.format != AndroidMediaFormat.DASH &&
+                        runCatching { java.net.URI(source.locator).path?.lowercase()?.endsWith(".mpd") }.getOrNull() != true)
                 }, dispatcher, audioFocus = { YlSharedAudioFocus.get(context) })
         }
     }

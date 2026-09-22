@@ -88,15 +88,18 @@ private class FrameObservation(private val flutter: FlutterEngine) {
         }
         val engine = checkNotNull(field(session, "candidateEngine"))
         val id = field(field(engine, "identity")!!, "sessionId") as String
+        val observedEngine = if (
+            engine.javaClass.name == "dev.ylplayer.yl_player_android.YlManagedAndroidEngine"
+        ) checkNotNull(field(engine, "current")) else engine
         // Deferred completion safely publishes the immutable worker holder. No looper wait.
-        val deferred = field(engine, "worker")!!
+        val deferred = field(observedEngine, "worker")!!
         val worker = deferred.javaClass.getMethod("getCompleted").apply { isAccessible = true }.invoke(deferred)
         val handler = field(worker, "handler") as Handler
         onWorker(handler, result) {
             check(!closed)
-            val core = field(engine, "core")!!
+            val core = field(observedEngine, "core")!!
             val player = field(core, "exoPlayer") as ExoPlayer
-            val privateSurface = field(field(engine, "privateOutput")!!, "surface") as Surface
+            val privateSurface = field(field(observedEngine, "privateOutput")!!, "surface") as Surface
             val records = ArrayList<Map<String, Any>>()
             fun record(value: Map<String, Any>) {
                 if (records.size < 32) records += value

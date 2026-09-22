@@ -27,6 +27,7 @@ enum AppleMediaFormat {
   mpegPs,
   flv,
   avi,
+  dash,
 }
 
 enum AppleNetworkPolicyKind { platformDefault, managed }

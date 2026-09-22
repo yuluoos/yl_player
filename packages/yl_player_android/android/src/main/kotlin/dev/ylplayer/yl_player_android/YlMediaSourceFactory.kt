@@ -8,6 +8,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.okhttp.OkHttpDataSource
+import androidx.media3.exoplayer.dash.DashMediaSource
 import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.hls.playlist.*
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
@@ -35,7 +36,7 @@ internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: Netwo
     private val requestCredentials = source.request?.credentials.orEmpty()
     private val credentials = if (source.kind == AndroidSourceKind.NETWORK) YlOriginCredentialPolicy(
         source.locator.toHttpUrl(), requestHeaders, requestCredentials,
-        requireKnownAncestry = source.format == AndroidMediaFormat.HLS || source.locator.toHttpUrl().encodedPath.lowercase().endsWith(".m3u8")) else null
+        requireKnownAncestry = source.format in listOf(AndroidMediaFormat.HLS, AndroidMediaFormat.DASH) || source.locator.toHttpUrl().encodedPath.lowercase().let { it.endsWith(".m3u8") || it.endsWith(".mpd") }) else null
     private val protectHlsCredentialAncestry =
         credentials != null && requiresHlsCredentialAncestry(requestHeaders, requestCredentials)
     private val http = credentials?.let { YlManagedHttpClient(it, if (managed) network else null, onRetry = onRetry) }
@@ -46,7 +47,13 @@ internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: Netwo
         val hls = item.localConfiguration?.mimeType == "application/x-mpegURL" ||
             item.localConfiguration?.mimeType == "application/vnd.apple.mpegurl" ||
             item.localConfiguration?.uri?.path?.lowercase()?.endsWith(".m3u8") == true
-        return if (hls) HlsMediaSource.Factory(dataSources)
+        val dash = item.localConfiguration?.mimeType == "application/dash+xml" ||
+            item.localConfiguration?.uri?.path?.lowercase()?.endsWith(".mpd") == true
+        return if (dash) DashMediaSource.Factory(dataSources)
+            .setManifestParser(YlDashManifestParser(credentials))
+            .setLoadErrorHandlingPolicy(loaderPolicy)
+            .createMediaSource(item)
+        else if (hls) HlsMediaSource.Factory(dataSources)
             .setLoadErrorHandlingPolicy(loaderPolicy)
             .apply {
                 if (protectHlsCredentialAncestry) {

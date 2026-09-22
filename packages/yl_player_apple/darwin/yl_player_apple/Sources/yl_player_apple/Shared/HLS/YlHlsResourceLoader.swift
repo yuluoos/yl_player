@@ -184,6 +184,12 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   )
 
   private let opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention?
+  private let isDash: Bool
+  private let virtualNamespace = UUID().uuidString.lowercased()
+  // Immutable after one successful preflight; removed on cancellation. Synthetic
+  // identities are never credential origins or upstream fetch destinations.
+  private var dashPresentation: YlDashHlsPresentation?
+  private var preflightStarted = false
   private let originURL: URL
   let credentialContext: YlHlsCredentialContext
   private let hasExplicitCredentials: Bool
@@ -198,13 +204,18 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
 
   init(
     originURL: URL,
+    isDash: Bool = false,
     headers: [String: String],
     credentials: [String: String] = [:],
     configuration: YlNetworkConfiguration,
     credentialContext: YlHlsCredentialContext = YlHlsCredentialContext(),
     sessionConfiguration: URLSessionConfiguration = .ephemeral,
-    opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention? = nil
+    opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention? = nil,
+    sessionFactory: (URLSessionConfiguration, URLSessionDelegate, OperationQueue) -> URLSession = {
+      URLSession(configuration: $0, delegate: $1, delegateQueue: $2)
+    }
   ) throws {
+    self.isDash = isDash
     self.opaqueRetention = opaqueRetention
     self.credentialContext = credentialContext
     self.originURL = originURL
@@ -237,15 +248,17 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     delegateQueue.name = "dev.ylplayer.hls.url-session"
     delegateQueue.maxConcurrentOperationCount = 1
     delegateQueue.qualityOfService = .userInitiated
-    session = URLSession(
-      configuration: sessionConfiguration,
-      delegate: self,
-      delegateQueue: delegateQueue
-    )
+    session = sessionFactory(sessionConfiguration, self, delegateQueue)
   }
 
   func encodedAssetURL() throws -> URL {
-    try YlHlsURLCodec.encode(originURL, kind: .manifest)
+    let root = try stateLock.withLock { () throws -> URL in
+      guard !cancelled else { throw Self.cancelledError() }
+      guard isDash else { return originURL }
+      guard let root = dashPresentation?.rootURL else { throw Self.virtualResourceError() }
+      return root
+    }
+    return try YlHlsURLCodec.encode(root, kind: .manifest)
   }
 
   @discardableResult
@@ -263,6 +276,15 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
       return true
     }
 
+    if isDash {
+      let state = stateLock.withLock {
+        (cancelled, resourceKind == .manifest ? dashPresentation?.manifests[destination] : nil)
+      }
+      if state.0 { loadingRequest.finishLoading(with: Self.cancelledError()) }
+      else if let data = state.1 { respond(Self.virtualResponse(data), to: loadingRequest) }
+      else { loadingRequest.finishLoading(with: Self.virtualResourceError()) }
+      return true
+    }
     let cacheKey = destination.absoluteString
     let credentialsStripped = YlHlsURLCodec.credentialsStripped(loadingRequest.url) || !headerPolicy.isSourceOrigin(destination) || credentialContext.isStripped(cacheKey)
     let loaderState = stateLock.withLock {
@@ -278,6 +300,14 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
       return true
     }
 
+    return startUpstreamLoading(loadingRequest, destination: destination,
+      resourceKind: resourceKind, credentialsStripped: credentialsStripped)
+  }
+
+  // DASH calls this only for its original MPD preflight. Public loading requests
+  // in virtual mode cannot enter this network path, even before publication.
+  private func startUpstreamLoading(_ loadingRequest: YlHlsLoadingRequest,
+    destination: URL, resourceKind: YlHlsResourceKind, credentialsStripped: Bool) -> Bool {
     let isManifest = resourceKind == .manifest
     let rangeHeader = isManifest ? nil : Self.rangeHeader(for: loadingRequest)
     if resourceKind == .media {
@@ -307,26 +337,40 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     )
     record.requestContext = headerPolicy.requestContext(for: destination, credentialsStripped: credentialsStripped)
     record.opaqueRetention = opaqueRetention
-    let task = session.dataTask(with: request)
-    record.task = task
     let accepted = stateLock.withLock { () -> Bool in
+      // Session invalidation follows cancellation under this lock. Never call
+      // its task factory, publish a record, or resume after that ownership ends.
       guard !cancelled else { return false }
+      let task = session.dataTask(with: request)
+      record.task = task
       records[task.taskIdentifier] = record
+      task.resume()
       return true
     }
     guard accepted else {
       loadingRequest.finishLoading(with: Self.cancelledError())
       return true
     }
-    task.resume()
     return true
   }
 
   func preflight(cancellationToken: YlOpenCancellationToken) throws {
     try cancellationToken.throwIfCancelled()
     cancellationToken.onCancel { [weak self] in self?.cancelAll() }
-    let request = PreflightRequest(url: try encodedAssetURL())
-    _ = startLoading(request)
+    let request: PreflightRequest
+    if isDash {
+      try stateLock.withLock {
+        guard !cancelled else { throw Self.cancelledError() }
+        guard !preflightStarted else { throw Self.virtualResourceError() }
+        preflightStarted = true
+      }
+      request = PreflightRequest(url: try YlHlsURLCodec.encode(originURL, kind: .manifest))
+      _ = startUpstreamLoading(request, destination: originURL, resourceKind: .manifest,
+        credentialsStripped: credentialContext.isStripped(originURL.absoluteString))
+    } else {
+      request = PreflightRequest(url: try encodedAssetURL())
+      _ = startLoading(request)
+    }
     let maximumWaitMs = max(
       1_000,
       configuration.connectTimeoutMs + configuration.readTimeoutMs + 1_000
@@ -352,6 +396,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
       let pending = Array(records.values)
       records.removeAll()
       cachedResponses.removeAll()
+      dashPresentation = nil
       return pending
     }
     for record in pending {
@@ -428,7 +473,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
       guard let record = records.removeValue(forKey: task.taskIdentifier) else {
         return nil
       }
-      if !cancelled,
+      if !cancelled, !isDash,
          case let .success(cached?) = result,
          record.cacheKey == originURL.absoluteString {
         cachedResponses["\(record.credentialsStripped):\(record.cacheKey)"] = cached
@@ -469,7 +514,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     if request.requestsAllDataToEnd || request.requestedLength <= 0 {
       end = data.count
     } else {
-      end = min(data.count, start + request.requestedLength)
+      end = start + min(data.count - start, request.requestedLength)
     }
     return data.subdata(in: start..<end)
   }
@@ -550,6 +595,22 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     )
   }
 
+  private static func virtualResourceError() -> NativePlayerError {
+    NativePlayerError(category: "container", code: "container.hls_url_invalid",
+      message: "The private manifest resource is unavailable.")
+  }
+
+  private static func virtualResponse(_ data: Data) -> CachedResponse {
+    CachedResponse(data: data, contentType: "com.apple.m3u-playlist",
+      contentLength: Int64(data.count), byteRangeAccessSupported: true)
+  }
+
+  private var manifestLimitError: NativePlayerError {
+    NativePlayerError(category: "resource",
+      code: isDash ? "resource.dash_manifest_too_large" : "resource.hls_manifest_too_large",
+      message: "The manifest exceeds the 2 MiB limit.")
+  }
+
   private static func cancelledError() -> NativePlayerError {
     NativePlayerError(
       category: "cancelled",
@@ -591,7 +652,7 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
       completionHandler(.cancel)
       finish(task: dataTask, result: .failure(NativePlayerError(
         category: "network",
-        code: "network.http_status",
+        code: isDash && response.statusCode == 403 ? "network.http_forbidden" : "network.http_status",
         message: "The HLS server rejected the resource request.",
         diagnostic: "HTTP \(response.statusCode)"
       )))
@@ -617,11 +678,7 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
     if record.isManifest,
        response.expectedContentLength > Self.manifestByteLimit {
       completionHandler(.cancel)
-      finish(task: dataTask, result: .failure(NativePlayerError(
-        category: "resource",
-        code: "resource.hls_manifest_too_large",
-        message: "The HLS manifest exceeds the 2 MiB limit."
-      )))
+      finish(task: dataTask, result: .failure(manifestLimitError))
       return
     }
     if !record.isManifest {
@@ -642,12 +699,8 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
     guard let record = record(for: dataTask), isCurrent(record, task: dataTask)
     else { return }
     if record.isManifest {
-      guard record.manifestData.count + data.count <= Self.manifestByteLimit else {
-        finish(task: dataTask, result: .failure(NativePlayerError(
-          category: "resource",
-          code: "resource.hls_manifest_too_large",
-          message: "The HLS manifest exceeds the 2 MiB limit."
-        )))
+      guard data.count <= Self.manifestByteLimit - record.manifestData.count else {
+        finish(task: dataTask, result: .failure(manifestLimitError))
         return
       }
       record.manifestData.append(data)
@@ -683,6 +736,29 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
       return
     }
     do {
+      if isDash {
+        let presentation = try YlDashHlsCompiler.compile(data: record.manifestData,
+          finalManifestURL: record.destinationURL, sourceURL: originURL,
+          credentialsStripped: record.credentialsStripped,
+          manifestURL: { [virtualNamespace] name in
+            URL(string: "http://yl-dash.invalid/\(virtualNamespace)/\(name).m3u8")!
+          },
+          mediaURL: { [mediaProxy, credentialContext] url, stripped in
+            try mediaProxy.proxyURL(for: url,
+              credentialsStripped: stripped || credentialContext.isStripped(url.absoluteString))
+          })
+        let published = stateLock.withLock { () -> Bool in
+          // Compilation and proxy construction happen outside the state lock.
+          // A cancelled/replaced task can never reinstall the registry.
+          guard !cancelled, records[task.taskIdentifier] === record else { return false }
+          for resource in presentation.strippedResources { credentialContext.strip(resource) }
+          dashPresentation = presentation
+          return true
+        }
+        guard published else { return }
+        finish(task: task, result: .success(Self.virtualResponse(presentation.manifests[presentation.rootURL]!)))
+        return
+      }
       let rewritten = try YlHlsManifestRewriter.rewrite(
         data: record.manifestData,
         baseURL: record.destinationURL,
@@ -750,6 +826,7 @@ final class YlPreparedHlsAsset {
 
   init(
     originURL: URL,
+    isDash: Bool = false,
     headers: [String: String],
     credentials: [String: String] = [:],
     configuration: YlNetworkConfiguration,
@@ -760,6 +837,7 @@ final class YlPreparedHlsAsset {
   ) throws {
     let loader = try YlHlsResourceLoader(
       originURL: originURL,
+      isDash: isDash,
       headers: headers,
       credentials: credentials,
       configuration: configuration,

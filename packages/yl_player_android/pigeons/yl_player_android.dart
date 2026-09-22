@@ -28,6 +28,7 @@ enum AndroidMediaFormat {
   mpegPs,
   flv,
   avi,
+  dash,
 }
 
 enum AndroidNetworkPolicyKind { platformDefault, managed }

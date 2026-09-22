@@ -33,6 +33,11 @@ abstract final class YlFailureCodes {
   static const sourceInvalid = 'source.invalid';
   static const sourceMissing = 'source.missing';
   static const networkFailed = 'network.failed';
+  /// The source host could not be resolved from structured platform DNS evidence.
+  static const networkDnsFailed = 'network.dns_failed';
+
+  /// The media server returned HTTP 403. This failure is not retryable.
+  static const networkHttpForbidden = 'network.http_forbidden';
   static const containerUnsupported = 'container.unsupported';
   static const decoderUnsupported = 'decoder.unsupported';
   static const decoderUnavailable = 'decoder.unavailable';

@@ -216,6 +216,7 @@ enum AppleMediaFormat: Int, CaseIterable {
   case mpegPs = 7
   case flv = 8
   case avi = 9
+  case dash = 10
 }
 
 enum AppleNetworkPolicyKind: Int, CaseIterable {

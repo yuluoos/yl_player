@@ -15,6 +15,7 @@ actual source and requirements before Load.
 | Network MP4/MOV | Supported with Media3 | Supported only without request headers or credentials | Managed request rejected |
 | HLS without request metadata | Supported | Supported; VOD HEVC-in-MPEG-TS media playlists use managed demux + VideoToolbox | Managed request rejected |
 | HLS with ordinary headers or credentials | Supported subject to Android origin filtering | Inspection-dependent controlled manifest/key/media-proxy route; same-origin credentials enforced | Managed request rejected |
+| Static clear DASH (`dash` or `.mpd`) | Owned Media3 1.11.0 DASH route; current validation described below | Inspection-dependent private HLS adaptation for a bounded static AVC/AAC fMP4 subset | Not selected |
 | Local Matroska | Supported subject to Media3 | Not selected | Inspection-dependent; supported H.264/H.265 video with AAC-LC/MP3 route |
 | Network Matroska VOD | Supported subject to Media3 | Not selected | Inspection-dependent owned byte route |
 | Network Matroska marked live | Media3 route; runtime-dependent | Not selected | Rejected |
@@ -28,7 +29,7 @@ documented parsers. It does not provide networking or software video decoding.
 Apple managed fallback requires a supported video stream; audio-only fallback
 media is currently rejected.
 
-Android first tries Media3, then makes at most one managed fallback attempt for
+For formats other than DASH, Android first tries Media3, then makes at most one managed fallback attempt for
 container/extractor and decoder failures. The fallback uses package-owned local,
 content, progressive HTTP, or HLS VOD/live input; FFmpeg demuxes MP4/MOV,
 Matroska/WebM, FLV, and MPEG-TS. H.264/H.265 packets stay compressed for
@@ -53,7 +54,7 @@ supported; Widevine, SAMPLE-AES, and DRM bypass are not.
 | `audio.appManaged` | Supported; application owns focus | Supported; application owns audio session/category | Supported; application owns audio policy |
 | `audio.pluginManagedMediaPlayback` | Supported with one plugin focus owner | Supported with process-wide Apple leases | Supported with the same Apple ownership lease |
 
-Package-controlled Apple HLS and bounded fallback temporarily cannot overlap
+Package-controlled Apple HLS (including the DASH adapter) and bounded fallback temporarily cannot overlap
 while either route still owns payload or completion state. The candidate is
 rejected and accepted playback is preserved. See [policy semantics](policies.md)
 for exact networking, buffer, decoder, and audio behavior.
@@ -77,3 +78,113 @@ Still pending final acceptance: physical iOS hardware playback, Android
 7/1.5-GB/32-bit endurance, minimum-OS runtime matrices, native Intel macOS
 decoding, Instruments/memgraph profiling, full consumer/package-manager
 matrices, remote CI, and the complete canonical regression/release matrix.
+
+## DASH implementation boundary
+
+`YlMediaFormat.dash` appends ordinal 10; existing format ordinals 0–9 are unchanged.
+Android recognizes `.mpd` from the URI path (independent of query) and honors an
+explicit DASH hint on extensionless URLs. The same Media3 1.11.0 module, owned
+HTTP data source, origin graph and managed load retry policy serve manifests,
+initialization/index requests and media. DASH never selects the FFmpeg fallback.
+`buffer.bounded` stays rejected; hardware-required decoding retains its existing
+positive-evidence requirement.
+
+The initial parser accepts clear, static MPDs with known positive period durations.
+Media3 expands finite SegmentTemplate/Timeline/List URLs; SegmentBase supports
+initialization and index URLs plus byte-range media in the same representation
+resource. Each BaseURL ancestor and resolved request URI is registered before
+requests can consume the manifest. Cross-origin ancestry permanently strips
+credentials, including return-to-origin and previously registered children;
+unknown ancestry remains stripped. Ordinary headers continue to apply.
+
+URI admission also caps each raw/resolved/normalized URI at 8,192 UTF-16 code
+units and charges at most 4,194,304 URI code units per parse before graph retention.
+Every registration charges both parent and child, both raw and normalized HTTP
+forms, including repeated values. This conservatively bounds long-prefix × finite
+segment amplification without attempting an OOM-sized input. Raw BaseURL text and
+all XML attributes also have an 8,192-unit cap before Media3 expands them. Template
+numeric padding is limited to 64 characters; a conservative expansion estimate
+using the longest representation ID must fit the same per-URI cap before Media3
+formats any template. Oversized normalized percent-escaped URLs are rejected too.
+
+Resource admission limits are 2 MiB of MPD bytes, 4,096 representations, 128 base
+URL results per inherited parent-list identity (cumulative across sibling uses),
+depth 64, 100,000 XML elements,
+100,000 expanded timeline elements, and 100,000 total graph registrations per
+parse. Oversized repeats are rejected before expansion; each timeline element and
+graph edge is also checked before allocation/registration. These limits are parser
+and credential-graph limits, not a media buffer accounting claim. Dynamic MPD,
+ContentProtection, unknown/unbounded indexes, XLink, Location, UTCTiming and content
+steering are currently rejected as `container.unsupported`; no unlicensed or
+uncontrolled fallback is attempted. Malformed XML remains a parser failure.
+
+Android assessment and real Media3 parser/credential-policy JVM tests establish the
+route and network-policy implementation. Six Android 16 / API 36 emulator
+integration cases pass for the synthetic two-Period H.264/AAC fixture: actual
+first-frame, program-time seek/resume/completion, request credential ancestry,
+safe HTTP 403 failure, and active/pending Stop. This is a controlled fixture
+result, not a general stream/device matrix; see the [implementation report](superpowers/reports/2026-09-22-dash-foundation.md). Apple
+now routes explicit DASH and automatic `.mpd` network VOD to an inspected private
+HLS adapter and AVPlayer. The original DASH identity is retained. Its initial
+subset accepts one AVC video and optional AAC-LC audio representation per Period,
+consistent corresponding codec/dimensions/sample rate/channels/roles, contiguous finite
+Periods from zero, and zero presentationTimeOffset. SegmentTemplate/Timeline and
+SegmentList support bounded URL expansion, initialization and media byte ranges.
+Only one BaseURL choice per level is admitted in this initial Apple subset.
+Unsupported timing/numbering attributes fail closed before inheritance.
+
+The Apple loader fetches at most 2 MiB of MPD and keeps generated playlists in a
+per-session registry (2 MiB each, 4 MiB total). XML depth/elements, Period count,
+segment expansion and URI retention have explicit limits documented in the
+[Apple adapter plan](superpowers/plans/2026-09-22-apple-dash-adapter.md).
+Virtual manifest identities are served only locally; unknown identities and
+wrong resource kinds cannot reach upstream. Every real init/media request uses
+the owned loopback proxy, including requests without explicit credentials.
+Original source origin and sticky cross-origin ancestry govern credentials;
+redirecting back to the source origin cannot restore them.
+
+Local/live DASH, dynamic or encrypted MPD, SegmentBase, nonzero offsets, gaps or
+overlaps, track/codec changes and multiple representations remain rejected by the
+Apple subset. Managed network, bounded buffer and hardware-required requests
+remain `policy.unsupported`; parser/registry budgets do not enforce those media
+policies. The route does not use FFmpeg or add a commercial SDK.
+
+Focused native tests verify Apple compiler, loader, credentials, range
+requests, cancellation and restoration. Thirteen public Flutter integration
+cases pass on each of macOS 27 arm64 and iOS 27 arm64 Simulator for the synthetic
+two-Period AVC/AAC fixture: real first-frame output, natural Period transition,
+forward/backward seek and completion, credential ancestry, failed-candidate
+rollback, cancellation, safe errors and strict-policy rejection. See the [Apple implementation report](superpowers/reports/2026-09-22-apple-dash-adapter.md)
+for executed evidence and limitations. Full Apple DASH coverage, DRM, full
+ABR/subtitle matrices and cross-device coverage remain part of the accepted
+delivery scope and are not completed here.
+See [transport compatibility](transport-compatibility.md) for private schema 3
+negotiation and mixed-version safety.
+
+## Optional JavaScript source resolution
+
+`yl_player_source_resolver` is a separate development package; installing the
+player does not install or execute a JavaScript runtime. It resolves a script
+into a media URI and request metadata. The application owns cancellation when
+changing channels, explicit refresh, and handing the result to the player.
+
+The resolver uses the same pinned QuickJS source on Android, iOS and macOS,
+with per-job native execution, deadline/cancellation and heap/stack limits.
+Its HTTP host has separate request and response budgets; these are not the
+player's media `buffer.bounded` policy. Caller/script headers are all treated
+as credentials, with sticky removal after a cross-origin redirect.
+
+A resolved RTMP/RTMPS URI can be represented, but conversion to the current
+player source rejects those protocols explicitly. HTTP(S) conversion retains
+credentials and live intent; playback remains subject to the selected engine's
+route and policy checks above. Unknown script expiry remains unknown.
+
+The focused application matrix has 26 passing cases on each of macOS arm64,
+iOS 27 arm64 Simulator and Android API 36 arm64 Emulator, including the nine
+frozen scripts and matching-session AVPlayer/Media3 firstFrame. macOS evidence
+combines 25 initial passes and one focused handoff rerun; iOS/Android each passed
+a complete run. No physical/minimum-OS/endurance coverage is implied. See the
+[resolver implementation record](superpowers/reports/2026-09-22-script-resolver.md)
+for exact evidence and remaining gates. Controlled original-script
+compatibility, actual media handoff and external subscription availability
+are separate claims.

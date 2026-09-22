@@ -5,6 +5,8 @@ environment:
 workspace:
   - packages/yl_player
   - packages/yl_player/example
+  - packages/yl_player_source_resolver
+  - packages/yl_player_source_resolver/example
   - packages/yl_player_platform_interface
   - packages/yl_player_android
   - packages/yl_player_android/example

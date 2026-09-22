@@ -5,7 +5,7 @@ import 'pigeon/yl_player_apple.g.dart';
 
 /// The schema boundary. Generated values never escape this package.
 abstract final class AppleCodec {
-  static const schemaMajor = 2;
+  static const schemaMajor = 3;
   static const _maxDurationMs = 9223372036854775;
   static final _metadata = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$');
 
@@ -46,7 +46,7 @@ abstract final class AppleCodec {
   static YlFailure failure(AppleFailureMessage value) => YlFailure(
     category: _category(value.category),
     code: _failureCode(value.code),
-    message: 'Playback operation failed.',
+    message: YlSafeDiagnostics.messageForCode(value.code),
     retryable: value.retryable,
     scope: _scope(value.scope),
     diagnosticId: _safe(value.diagnosticId)
@@ -62,7 +62,7 @@ abstract final class AppleCodec {
     YlFailure(
       category: category,
       code: code,
-      message: 'Playback operation failed.',
+      message: YlSafeDiagnostics.messageForCode(code),
       retryable: false,
       scope: scope,
       diagnosticId: 'apple-adapter',
@@ -412,6 +412,7 @@ abstract final class AppleCodec {
     YlMediaFormat.mpegPs => AppleMediaFormat.mpegPs,
     YlMediaFormat.flv => AppleMediaFormat.flv,
     YlMediaFormat.avi => AppleMediaFormat.avi,
+    YlMediaFormat.dash => AppleMediaFormat.dash,
   };
 
   static AppleNetworkPolicyKind _networkPolicy(YlNetworkPolicyKind value) =>

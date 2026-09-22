@@ -621,7 +621,7 @@ internal class YlMedia3Core(
         stallWatchdog.cancel()
         if (tryDecoderRecovery(error)) return
         status = "error"
-        lastFailure = mediaFailure(error.errorCode, decoderPolicy)
+        lastFailure = mediaFailure(error, decoderPolicy)
         currentError = lastFailure
         emit(YlEngineEvent.Failed(lastFailure!!))
         emitState()
@@ -919,13 +919,28 @@ internal class YlMedia3Core(
 }
 
 private fun Int.valueOrNull(): Int? = takeUnless { it == C.LENGTH_UNSET }
-internal fun mediaFailure(errorCode: Int, decoderPolicy: AndroidDecoderPolicy): YlFailureKind = when (errorCode) {
+internal fun mediaFailure(error: PlaybackException, decoderPolicy: AndroidDecoderPolicy): YlFailureKind {
+    return mediaFailure(error.errorCode, error.cause, decoderPolicy)
+}
+internal fun mediaFailure(errorCode: Int, cause: Throwable?, decoderPolicy: AndroidDecoderPolicy): YlFailureKind {
+    cause?.boundedCauses()?.firstOrNull { it is YlBoundaryException }?.let {
+        return (it as YlBoundaryException).kind
+    }
+    if (cause?.boundedCauses()?.any { it is java.util.concurrent.CancellationException } == true) {
+        return YlFailureKind.LOAD_CANCELLED
+    }
+    if (cause?.boundedCauses()?.any { it is java.net.UnknownHostException } == true) return YlFailureKind.NETWORK_DNS_FAILED
+    if (cause?.boundedCauses()?.any { it is androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException && it.responseCode == 403 } == true) {
+        return YlFailureKind.NETWORK_HTTP_FORBIDDEN
+    }
+    return when (errorCode) {
     PlaybackException.ERROR_CODE_DECODING_FORMAT_UNSUPPORTED -> if (decoderPolicy == AndroidDecoderPolicy.HARDWARE_REQUIRED) YlFailureKind.DECODER_UNAVAILABLE else YlFailureKind.DECODER_UNSUPPORTED
     PlaybackException.ERROR_CODE_DECODER_INIT_FAILED, PlaybackException.ERROR_CODE_DECODING_FAILED -> YlFailureKind.DECODER_UNAVAILABLE
     PlaybackException.ERROR_CODE_IO_FILE_NOT_FOUND -> YlFailureKind.SOURCE_MISSING
     in 2000..2999 -> YlFailureKind.NETWORK_FAILED
     in 3000..3999 -> YlFailureKind.CONTAINER_UNSUPPORTED
     else -> YlFailureKind.PLATFORM_FAILURE
+    }
 }
 private fun formatHint(format: AndroidMediaFormat): String = when (format) {
     AndroidMediaFormat.MPEG_TS -> "mpegTs"
@@ -934,6 +949,7 @@ private fun formatHint(format: AndroidMediaFormat): String = when (format) {
 }
 private fun mediaMimeType(format: AndroidMediaFormat): String? = when (format) {
     AndroidMediaFormat.HLS -> "application/x-mpegURL"
+    AndroidMediaFormat.DASH -> "application/dash+xml"
     AndroidMediaFormat.MP4 -> "video/mp4"
     AndroidMediaFormat.MOV -> "video/quicktime"
     AndroidMediaFormat.MATROSKA -> "video/x-matroska"

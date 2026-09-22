@@ -12,6 +12,67 @@ import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlManagedAndroidEngineTest {
+    @Test fun `disposal acknowledgement waits for owned release and completes without self cancellation`() = runTest {
+        val released = CompletableDeferred<Unit>()
+        val primary = FakeManagedEngine(release = released)
+        val engine = YlManagedAndroidEngine(YlSessionIdentity("s", "r"), primary, { error("unexpected fallback") }, StandardTestDispatcher(testScheduler), clockMs = { 0 }, allowFallback = false)
+        val disposal = engine.dispose()
+        testScheduler.runCurrent()
+        kotlin.test.assertFalse(disposal.isCompleted)
+        kotlin.test.assertSame(disposal, engine.dispose())
+        released.complete(Unit)
+        disposal.await()
+        kotlin.test.assertFalse(disposal.isCancelled)
+    }
+
+    @Test fun `already completed release remains successful with immediate dispatch`() = runTest {
+        val engine = YlManagedAndroidEngine(YlSessionIdentity("s", "r"), FakeManagedEngine(), { error("unexpected fallback") }, kotlinx.coroutines.test.UnconfinedTestDispatcher(testScheduler), clockMs = { 0 }, allowFallback = false)
+        val disposal = engine.dispose()
+        assertTrue(disposal.isCompleted)
+        disposal.await()
+        kotlin.test.assertFalse(disposal.isCancelled)
+        kotlin.test.assertSame(disposal, engine.dispose())
+    }
+
+    @Test fun `failed borrower release still waits for every other owned release`() = runTest {
+        val released = CompletableDeferred<Unit>()
+        val originalFailure = YlBoundaryException(YlFailureKind.PLATFORM_FAILURE)
+        val failed = CompletableDeferred<Unit>().apply { completeExceptionally(originalFailure) }
+        val primary = FakeManagedEngine(preparationFailure = YlFailureKind.DECODER_UNSUPPORTED, release = failed)
+        val fallback = FakeManagedEngine(release = released)
+        val engine = YlManagedAndroidEngine(YlSessionIdentity("s", "r"), primary, { fallback }, StandardTestDispatcher(testScheduler), clockMs = { 0 })
+        engine.prepare()
+        val disposal = engine.dispose()
+        testScheduler.runCurrent()
+        val completedBeforeAllBorrowers = disposal.isCompleted
+        released.complete(Unit)
+        val error = kotlin.test.assertFailsWith<YlBoundaryException> { disposal.await() }
+        kotlin.test.assertFalse(completedBeforeAllBorrowers)
+        kotlin.test.assertSame(originalFailure, error)
+    }
+
+    @Test fun `DASH disabled fallback preserves terminal prepare and asynchronous failures`() = runTest {
+        val fallback = FakeManagedEngine()
+        val primary = FakeManagedEngine(preparationFailure = YlFailureKind.CONTAINER_UNSUPPORTED)
+        val engine = YlManagedAndroidEngine(YlSessionIdentity("s", "r"), primary, { fallback }, StandardTestDispatcher(testScheduler), clockMs = { 0 }, allowFallback = false)
+        val failure = kotlin.test.assertFailsWith<YlBoundaryException> { engine.prepare() }
+        assertEquals(YlFailureKind.CONTAINER_UNSUPPORTED, failure.kind)
+        assertEquals(0, fallback.prepareCount)
+        engine.dispose().await()
+        testScheduler.advanceUntilIdle()
+        val activePrimary = FakeManagedEngine()
+        val active = YlManagedAndroidEngine(YlSessionIdentity("s", "r"), activePrimary, { fallback }, StandardTestDispatcher(testScheduler), clockMs = { 0 }, allowFallback = false)
+        val events = mutableListOf<YlEngineEvent>()
+        active.registerCallback { _, event -> events += event }
+        active.prepare(); active.activate(FakeOutput)
+        activePrimary.fail(YlFailureKind.CONTAINER_UNSUPPORTED)
+        testScheduler.advanceUntilIdle()
+        assertEquals(0, fallback.prepareCount)
+        assertEquals(listOf<YlEngineEvent>(YlEngineEvent.Failed(YlFailureKind.CONTAINER_UNSUPPORTED)), events)
+        active.dispose().await()
+        testScheduler.advanceUntilIdle()
+    }
+
     @Test
     fun `decoder failure during preparation publishes the backend switch`() = runTest {
         val primary = FakeManagedEngine(preparationFailure = YlFailureKind.DECODER_UNSUPPORTED)
@@ -71,6 +132,7 @@ private object FakeOutput : YlSessionVideoOutput {
 private class FakeManagedEngine(
     private val preparationFailure: YlFailureKind? = null,
     private val activationFailure: YlFailureKind? = null,
+    private val release: Deferred<Unit> = CompletableDeferred(Unit),
 ) : YlPlaybackEngineAdapter {
     private var callback: ((YlSessionIdentity, YlEngineEvent) -> Unit)? = null
     private val identity = YlSessionIdentity("s", "r")
@@ -97,7 +159,7 @@ private class FakeManagedEngine(
     override suspend fun setVideoConstraints(constraints: AndroidVideoConstraintsMessage) = Unit
     override suspend fun setVolume(volume: Double) { this.volume = volume }
     override suspend fun stop() = Unit
-    override fun dispose(): Deferred<Unit> = CompletableDeferred(Unit)
+    override fun dispose(): Deferred<Unit> = release
     override suspend fun onForeground() = Unit
     override suspend fun onBackground() = Unit
     override suspend fun onTrimMemory(level: Int) = Unit

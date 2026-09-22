@@ -21,6 +21,7 @@ internal class YlManagedAndroidEngine(
     private val createFallback: () -> YlPlaybackEngineAdapter,
     dispatcher: CoroutineDispatcher = Dispatchers.Main,
     private val clockMs: () -> Long = SystemClock::elapsedRealtime,
+    private val allowFallback: Boolean = true,
 ) : YlPlaybackEngineAdapter {
     private val scope = CoroutineScope(SupervisorJob() + dispatcher)
     private val switchLock = Mutex()
@@ -46,7 +47,7 @@ internal class YlManagedAndroidEngine(
         engine.registerCallback { eventIdentity, event ->
             if (closed || eventIdentity != identity || engine !== current) return@registerCallback
             if (event is YlEngineEvent.Snapshot) positionMs = event.value.timeline.positionMs
-            if (event is YlEngineEvent.Failed && YlFallbackRoutingPolicy.shouldFallback(event.kind, fallbackAttempted)) {
+            if (event is YlEngineEvent.Failed && allowFallback && YlFallbackRoutingPolicy.shouldFallback(event.kind, fallbackAttempted)) {
                 val activeOutput = output
                 if (activeOutput != null) scope.launch {
                     runCatching { switchToFallback(activeOutput) }
@@ -78,7 +79,7 @@ internal class YlManagedAndroidEngine(
     }
 
     private fun shouldFallback(error: Throwable): Boolean =
-        (error as? YlBoundaryException)?.kind?.let { YlFallbackRoutingPolicy.shouldFallback(it, fallbackAttempted) } == true
+        allowFallback && (error as? YlBoundaryException)?.kind?.let { YlFallbackRoutingPolicy.shouldFallback(it, fallbackAttempted) } == true
 
     private suspend fun switchToFallback(output: YlSessionVideoOutput) = switchLock.withLock {
         if (fallbackAttempted) return@withLock
@@ -142,8 +143,19 @@ internal class YlManagedAndroidEngine(
         closeResult?.let { return it }
         closed = true; callback = null
         return scope.async {
-            owned.map { it.dispose() }.forEach { it.await() }
-            scope.cancel()
-        }.also { closeResult = it }
+            // Start every borrower release, then await all acknowledgements even when
+            // one fails. A safe exceptional close must not abandon another borrower.
+            val releases = owned.map { runCatching { it.dispose() } }
+            val failures = releases.map { release ->
+                runCatching { release.getOrThrow().await() }.exceptionOrNull()
+            }
+            failures.firstOrNull { it != null }?.let { throw it }
+            Unit
+        }.also { result ->
+            closeResult = result
+            // Cancelling our parent inside async cancels this very acknowledgement,
+            // turning successful Stop into load.cancelled. Retire after it settles.
+            result.invokeOnCompletion { scope.cancel() }
+        }
     }
 }

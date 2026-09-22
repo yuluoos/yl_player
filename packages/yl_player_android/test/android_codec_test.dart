@@ -6,6 +6,17 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'support/android_fakes.dart';
 
 void main() {
+  test('DASH appends wire ordinal ten without changing old formats', () {
+    const oldNames = ['automatic', 'hls', 'mp4', 'mov', 'matroska', 'webm', 'mpegTs', 'mpegPs', 'flv', 'avi'];
+    expect(AndroidMediaFormat.values.take(10).map((value) => value.name), oldNames);
+    expect(YlMediaFormat.values.take(10).map((value) => value.name), oldNames);
+    expect(AndroidMediaFormat.dash.index, 10);
+    expect(YlMediaFormat.dash.index, 10);
+    final source = AndroidCodec.source(YlNetworkSource(Uri.parse('https://media.test/manifest'), format: YlMediaFormat.dash));
+    final decoded = AndroidSourceMessage.decode(source.encode());
+    expect(decoded.format, AndroidMediaFormat.dash);
+  });
+
   test(
     'media clock survives full snapshots and absent, set, cleared deltas',
     () {

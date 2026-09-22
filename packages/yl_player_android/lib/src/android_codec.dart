@@ -5,7 +5,7 @@ import 'pigeon/yl_player_android.g.dart';
 
 /// The schema boundary. Generated values never escape this package.
 abstract final class AndroidCodec {
-  static const schemaMajor = 2;
+  static const schemaMajor = 3;
   static const _maxDurationMs = 9223372036854775;
   static final _metadata = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$');
 
@@ -41,7 +41,7 @@ abstract final class AndroidCodec {
   static YlFailure failure(AndroidFailureMessage value) => YlFailure(
     category: _category(value.category),
     code: _safe(value.code) ? value.code : YlFailureCodes.platformFailure,
-    message: 'Playback operation failed.',
+    message: YlSafeDiagnostics.messageForCode(value.code),
     retryable: value.retryable,
     scope: _scope(value.scope),
     diagnosticId: _safe(value.diagnosticId)
@@ -57,7 +57,7 @@ abstract final class AndroidCodec {
     YlFailure(
       category: category,
       code: code,
-      message: 'Playback operation failed.',
+      message: YlSafeDiagnostics.messageForCode(code),
       retryable: false,
       scope: scope,
       diagnosticId: 'android-adapter',
@@ -386,6 +386,7 @@ abstract final class AndroidCodec {
     YlMediaFormat.mpegPs => AndroidMediaFormat.mpegPs,
     YlMediaFormat.flv => AndroidMediaFormat.flv,
     YlMediaFormat.avi => AndroidMediaFormat.avi,
+    YlMediaFormat.dash => AndroidMediaFormat.dash,
   };
 
   static AndroidNetworkPolicyKind _networkPolicy(YlNetworkPolicyKind value) =>

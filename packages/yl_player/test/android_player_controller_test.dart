@@ -296,7 +296,7 @@ final class _Factory implements AndroidFactoryTransport {
   @override
   Future<AndroidCreateReply> create(AndroidCreateRequest request) async =>
       AndroidCreateReply(
-        schemaMajor: 2,
+        schemaMajor: 3,
         spiMajor: 2,
         channelSuffix: 'controller-test',
         textureId: 1,

@@ -189,7 +189,7 @@ void main() {
       addTearDown(media.close);
       final created = await AndroidPlayerFactoryHostApi().create(
         AndroidCreateRequest(
-          schemaMajor: 2,
+          schemaMajor: 3,
           options: AndroidPlayerOptionsMessage(
             decoderPolicy: AndroidDecoderPolicy.hardwarePreferred,
             audioPolicy: AndroidAudioPolicy.appManaged,

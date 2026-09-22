@@ -222,7 +222,7 @@ final class YlAppleSessionCoordinator: NSObject {
             source: source,
             prepared: try self.prepareFallback(source: source, token: token, identity: identity)
           )
-        case .headeredHls:
+        case .headeredHls, .dashHls:
           return .headeredHls(
             source: source,
             prepared: try self.prepareHeaderedHls(source: source, token: token, credentialContext: hlsCredentials)
@@ -233,7 +233,7 @@ final class YlAppleSessionCoordinator: NSObject {
           if let error = refined.rejection { throw error }
           switch refined.candidate {
           case .avPlayer: return try self.prepareNativeOrMp4(source: inspected, token: token, identity: identity)
-          case .headeredHls: return .headeredHls(source: inspected,
+          case .headeredHls, .dashHls: return .headeredHls(source: inspected,
             prepared: try self.prepareHeaderedHls(source: inspected, token: token, credentialContext: hlsCredentials))
           case .localMatroska, .networkMatroska, .networkFlv:
             return .fallback(source: inspected, prepared: try self.prepareFallback(source: inspected, token: token, identity: identity))
@@ -308,9 +308,11 @@ final class YlAppleSessionCoordinator: NSObject {
       completion(.failure(YlOpenCancellationToken.cancellationError()))
       return
     }
-    if slot.current === avBackend,
+    // Play on an accepted active session must not start another open: doing
+    // so would supersede an unrelated candidate that is still preparing.
+    if slot.current === avBackend, !avBackend.isActive,
        let source = lastCommittedSource,
-       route(for: source) == .headeredHls,
+       [YlAppleSourceRoute.headeredHls, .dashHls].contains(route(for: source)),
        let hlsCredentials = committedHlsCredentials {
       openCoordinator.begin(
         prepare: { [weak self] token in
@@ -771,6 +773,7 @@ final class YlAppleSessionCoordinator: NSObject {
     }
     return try YlPreparedHlsAsset(
       originURL: url,
+      isDash: route(for: source) == .dashHls,
       headers: source.headers,
       credentials: source.credentials,
       configuration: configuration.network,

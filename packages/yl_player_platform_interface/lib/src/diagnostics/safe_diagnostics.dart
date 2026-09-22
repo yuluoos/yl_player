@@ -1,6 +1,24 @@
+import '../model/failure.dart';
+
 /// Centralized sanitization for public playback diagnostics.
 abstract final class YlSafeDiagnostics {
   static const _fallbackMessage = 'Playback operation failed.';
+
+  /// Fixed public guidance for recognized codes, never native error prose.
+  static String messageForCode(String code) => switch (code) {
+    YlFailureCodes.networkDnsFailed =>
+      'The media host could not be resolved. Check the network connection and source host configuration.',
+    YlFailureCodes.networkHttpForbidden =>
+      'The media server refused the request. Check access credentials and request configuration.',
+    'network.retry_exhausted' =>
+      'The configured network retry attempts were exhausted. Check the connection and try again.',
+    YlFailureCodes.loadCancelled => 'The operation was cancelled.',
+    YlFailureCodes.containerUnsupported =>
+      'The media container is not supported. Try a compatible version of the media.',
+    YlFailureCodes.policyUnsupported =>
+      'The requested playback policy is unsupported. Check the playback configuration.',
+    _ => _fallbackMessage,
+  };
   static const _redactedCredential = '<redacted-credential>';
   static const _redactedHeader = '<redacted-header>';
   static const _redactedPath = '<redacted-path>';

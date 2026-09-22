@@ -15,6 +15,7 @@ enum YlMediaFormat {
   mpegPs,
   flv,
   avi,
+  dash,
 }
 
 /// Closed source family. Source identities and request metadata are sensitive.

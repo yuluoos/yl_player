@@ -3,6 +3,7 @@ import Foundation
 enum YlAppleSourceRoute: Equatable {
   case inspect
   case avPlayer
+  case dashHls
   case headeredHls
   case localMatroska
   case networkMatroska

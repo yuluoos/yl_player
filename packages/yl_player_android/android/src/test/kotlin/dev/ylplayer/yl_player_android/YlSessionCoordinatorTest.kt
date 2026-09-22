@@ -7,6 +7,52 @@ import kotlin.test.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlSessionCoordinatorTest {
+    @Test fun `real managed wrapper stop succeeds for active and pending replacement while load cancels`() = runTest {
+        for (replacement in listOf(false, true)) {
+            val f = SessionFixture(StandardTestDispatcher(testScheduler), managedWrapper = true)
+            f.coordinator.load(request("active"))
+            val pending = if (replacement) {
+                f.next = FakeSessionEngine().apply { activationAcknowledgement = CompletableDeferred() }
+                async { runCatching { f.coordinator.load(request("pending")) } }.also { runCurrent() }
+            } else null
+            f.coordinator.stop()
+            assertEquals(AndroidPlaybackStatus.IDLE, f.coordinator.initialState.status)
+            pending?.let {
+                val failure = assertNotNull(it.await().exceptionOrNull())
+                assertEquals("load.cancelled", YlFailureMapper().toMessage(failure).code)
+            }
+            f.coordinator.load(request("after-stop"))
+            f.finish()
+            assertEquals(1, f.output.releases)
+        }
+    }
+
+    @Test fun `managed close preserves output until every borrower acknowledges even after failure`() = runTest {
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        val held = CompletableDeferred<Unit>()
+        val failure = YlBoundaryException(YlFailureKind.PLATFORM_FAILURE)
+        val primary = FakeSessionEngine().apply {
+            prepareError = YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
+            release = CompletableDeferred<Unit>().apply { completeExceptionally(failure) }
+        }
+        val fallback = FakeSessionEngine().apply { release = held }
+        val output = FakeSessionOutput()
+        val coordinator = YlSessionCoordinator(99, sessionOptions, output, YlPlaybackEngineFactory { identity, _, _ ->
+            primary.identity = identity; fallback.identity = identity
+            YlManagedAndroidEngine(identity, primary, { fallback }, dispatcher, clockMs = { 123L })
+        }, dispatcher, clockMs = { 123L }).also {
+            it.bindLeases(YlDecoderLeaseCoordinator(dispatcher) { 123L }); it.attach(SessionEvents())
+        }
+        coordinator.load(request("fallback"))
+        val close = coordinator.close()
+        runCurrent()
+        assertFalse(close.isCompleted)
+        assertEquals(0, output.releases)
+        held.complete(Unit)
+        assertSame(failure, assertFailsWith<YlBoundaryException> { close.await() })
+        assertEquals(1, output.releases)
+    }
+
     @Test fun `network on demand activation may continue beyond the live deadline`() = runTest {
         val f = SessionFixture(StandardTestDispatcher(testScheduler))
         val activation = CompletableDeferred<Unit>()
@@ -790,13 +836,14 @@ internal class SessionEvents : YlPlayerEventSink {
     override fun onRetryScheduled(event: AndroidRetryScheduledMessage) { retries += event }
     override fun onEngineChanged(event: AndroidEngineChangedMessage) = Unit
 }
-internal class SessionFixture(dispatcher: CoroutineDispatcher, playerId: Long = 7, options: AndroidPlayerOptionsMessage = sessionOptions, audioFocus: (() -> YlAudioFocusCoordinator)? = null) {
+internal class SessionFixture(dispatcher: CoroutineDispatcher, playerId: Long = 7, options: AndroidPlayerOptionsMessage = sessionOptions, audioFocus: (() -> YlAudioFocusCoordinator)? = null, managedWrapper: Boolean = false) {
     val output = FakeSessionOutput()
     val engines = mutableListOf<FakeSessionEngine>()
     var next: FakeSessionEngine? = null
     val events = SessionEvents()
     val coordinator = YlSessionCoordinator(playerId, options, output, YlPlaybackEngineFactory { identity, _, _ ->
-        (next ?: FakeSessionEngine()).also { next = null; it.identity = identity; engines += it }
+        val engine = (next ?: FakeSessionEngine()).also { next = null; it.identity = identity; engines += it }
+        if (managedWrapper) YlManagedAndroidEngine(identity, engine, { error("unexpected fallback") }, dispatcher, clockMs = { 123L }, allowFallback = false) else engine
     }, dispatcher, clockMs = { 123L }, audioFocus = audioFocus).also { it.bindLeases(YlDecoderLeaseCoordinator(dispatcher) { 123L }); it.attach(events) }
     suspend fun finish() { coordinator.close().await() }
 }

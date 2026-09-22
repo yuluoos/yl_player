@@ -155,6 +155,34 @@ private final class ScriptedURLProtocol: URLProtocol {
 }
 
 final class YlNetworkByteSourceTests: XCTestCase {
+  func testTransportErrorClassifiesOnlyStructuredDnsEvidence() {
+    let secret = "private-host.example?token=secret"
+    let direct = YlNetworkByteSource.transportError(URLError(.cannotFindHost,
+      userInfo: [NSLocalizedDescriptionKey: secret]))
+    let wrapped = YlNetworkByteSource.transportError(NSError(domain: "wrapper", code: 1,
+      userInfo: [NSUnderlyingErrorKey: URLError(.dnsLookupFailed)]))
+    XCTAssertEqual(direct.code, "network.dns_failed")
+    XCTAssertEqual(wrapped.code, "network.dns_failed")
+    XCTAssertFalse(direct.message.contains(secret))
+
+    let proseOnly = YlNetworkByteSource.transportError(NSError(domain: "custom", code: NSURLErrorCannotFindHost,
+      userInfo: [NSLocalizedDescriptionKey: "cannot find host \(secret)"]))
+    XCTAssertEqual(proseOnly.code, "network.http_status")
+  }
+
+  func testTransportCancellationOutranksNestedDnsEvidence() {
+    let direct = YlNetworkByteSource.transportError(URLError(.cancelled))
+    let competing = NSError(domain: NSURLErrorDomain, code: NSURLErrorCancelled,
+      userInfo: [NSUnderlyingErrorKey: URLError(.cannotFindHost)])
+    let nested = NSError(domain: "wrapper", code: 1, userInfo: [NSUnderlyingErrorKey: competing])
+    for error in [direct, YlNetworkByteSource.transportError(competing),
+                  YlNetworkByteSource.transportError(nested)] {
+      XCTAssertEqual(error.code, "network.cancelled")
+      let publicFailure = YlAppleSafeDiagnostics.failure(error, scope: .session)
+      XCTAssertEqual(publicFailure.code, "network.cancelled")
+      XCTAssertFalse(publicFailure.retryable)
+    }
+  }
   func testActualRequestsKeepExplicitCredentialsStrippedAcrossRedirectRetryAndReopen() throws {
     let original = ScriptedURLProtocol.configure([])
     let other = ScriptedURLProtocol.configure([.redirect(to: original)])
@@ -648,7 +676,7 @@ final class YlNetworkByteSourceTests: XCTestCase {
       var byte = [UInt8](repeating: 0, count: 1)
       return try byte.withUnsafeMutableBytes { try source.read(into: $0) }
     }
-    XCTAssertEqual(received.code, "network.http_status")
+    XCTAssertEqual(received.code, "network.http_forbidden")
     XCTAssertFalse(received.diagnostic?.contains("secret") ?? true)
     XCTAssertFalse(received.diagnostic?.contains("token") ?? true)
   }

@@ -75,6 +75,7 @@ dependencies {
     val media3Version = "1.11.0"
     implementation("androidx.media3:media3-exoplayer:$media3Version")
     implementation("androidx.media3:media3-exoplayer-hls:$media3Version")
+    implementation("androidx.media3:media3-exoplayer-dash:$media3Version")
     implementation("androidx.media3:media3-datasource-okhttp:$media3Version")
 
     // Generated Pigeon suspend handlers and the owned callback/command scopes.
@@ -83,5 +84,6 @@ dependencies {
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.mockito:mockito-core:5.0.0")
+    testImplementation("net.sf.kxml:kxml2:2.3.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 }

@@ -33,6 +33,9 @@ enum YlEngineRouter {
     if format == .matroska && source.kind == .network && source.isLive {
       return reject(strict ? "unsupported" : "container", strict ? "policy.unsupported" : "container.network_mkv_live_unsupported")
     }
+    if format == .dash && (strict || source.kind != .network || source.isLive) {
+      return reject(strict ? "unsupported" : "container", strict ? "policy.unsupported" : "container.unsupported")
+    }
     let av = [YlSourceFormat.hls, .mp4, .mov].contains(format)
     if strict && (av || (managed && !availability.managedNetwork) ||
         (bounded && !availability.boundedBuffer) || (hardware && !availability.hardwareEvidence)) {
@@ -61,6 +64,13 @@ enum YlEngineRouter {
       }
     }
     var limitations: [YlLimitation] = bounded ? [.bufferOsMemoryExcluded] : []
+    if format == .dash {
+      // Preflight must validate the bounded static clear AVC/AAC subset before
+      // commit. Eligibility does not imply managed network or hardware evidence.
+      return .init(outcome: .requiresInspection, candidate: .dashHls,
+        satisfiedRequirements: requirements,
+        limitations: [.sourceRequiresInspection, .decoderModeUnknown, .networkSystemStackOpaque], rejection: nil)
+    }
     if av {
       if source.hasHeaders && !(format == .hls && source.kind == .network) {
         return reject("container", "container.headers_require_fallback")
@@ -90,6 +100,7 @@ enum YlEngineRouter {
     if source.formatHint != .automatic { return source.formatHint }
     switch url.pathExtension.lowercased() {
     case "m3u8", "m3u": return .hls
+    case "mpd": return .dash
     case "mp4", "m4v", "m4a": return .mp4
     case "mov": return .mov
     case "mkv", "mka": return .matroska

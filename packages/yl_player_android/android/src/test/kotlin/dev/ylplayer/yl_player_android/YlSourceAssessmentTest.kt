@@ -8,6 +8,9 @@ class YlSourceAssessmentTest {
     private fun assess(source: AndroidSourceMessage, decoder: AndroidDecoderPolicy = AndroidDecoderPolicy.SYSTEM_DEFAULT, evidence: YlDecoderEvidenceProvider = YlDecoderEvidenceProvider(29, listOf(YlCodecDescriptor("vendor", true, false)) ), load: AndroidLoadOptionsMessage = options) =
         YlSourceAssessment(evidence).assess(source, load, decoder)
     private fun source(kind: AndroidSourceKind, url: String, format: AndroidMediaFormat = AndroidMediaFormat.MP4) = AndroidSourceMessage(kind, url, AndroidStreamIntent.ON_DEMAND, format)
+    @Test fun `automatic DASH path is a known route despite query`() {
+        assertEquals(AndroidAssessmentOutcome.COMPATIBLE, assess(source(AndroidSourceKind.NETWORK, "https://media.test/movie.mpd?token=private", AndroidMediaFormat.AUTOMATIC)).outcome)
+    }
     @Test fun `invalid ports and HTTP header values fail before native allocation`() {
         assertEquals(AndroidAssessmentOutcome.INCOMPATIBLE, assess(source(AndroidSourceKind.NETWORK, "https://media.test:99999/video.mp4")).outcome)
         assertEquals(AndroidAssessmentOutcome.INCOMPATIBLE, assess(source(AndroidSourceKind.NETWORK, "https://media.test/video.mp4").copy(request = AndroidHttpRequestMessage(mapOf("X-Test" to "value\r\nInjected: bad"), emptyMap()))).outcome)

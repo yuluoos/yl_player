@@ -409,7 +409,28 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
     }
   }
 
-  private static func transportError(_ error: Error) -> NativePlayerError {
+  static func transportError(_ error: Error) -> NativePlayerError {
+    let chain = boundedNSErrorChain(error)
+    if let cancellation = chain.first(where: {
+      $0.domain == NSURLErrorDomain && $0.code == NSURLErrorCancelled
+    }) {
+      return NativePlayerError(
+        category: "cancelled",
+        code: "network.cancelled",
+        message: "The media request was cancelled.",
+        diagnostic: "transport.\(cancellation.code)"
+      )
+    }
+    if let urlError = chain.first(where: {
+      $0.domain == NSURLErrorDomain && ($0.code == NSURLErrorCannotFindHost || $0.code == NSURLErrorDNSLookupFailed)
+    }) {
+      return NativePlayerError(
+        category: "network",
+        code: "network.dns_failed",
+        message: "The media host could not be resolved. Check the network connection and source host configuration.",
+        diagnostic: "transport.\(urlError.code)"
+      )
+    }
     let value = error as NSError
     return NativePlayerError(
       category: "network",
@@ -417,6 +438,19 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
       message: "The network media request failed.",
       diagnostic: "transport.\(value.code)"
     )
+  }
+
+  private static func boundedNSErrorChain(_ error: Error, limit: Int = 8) -> [NSError] {
+    var result: [NSError] = []
+    var current: NSError? = error as NSError
+    var seen = Set<ObjectIdentifier>()
+    while let value = current, result.count < limit {
+      let identity = ObjectIdentifier(value)
+      guard seen.insert(identity).inserted else { break }
+      result.append(value)
+      current = value.userInfo[NSUnderlyingErrorKey] as? NSError
+    }
+    return result
   }
 
 

@@ -861,6 +861,7 @@ void main() {
       expect(t.callbacks, isNull);
       for (final reply in [
         wireCreate()..schemaMajor = 1,
+        wireCreate()..schemaMajor = 2,
         wireCreate()..spiMajor = 1,
         wireCreate()..textureId = -1,
         wireCreate()..initialState.revision = -1,

@@ -235,7 +235,8 @@ enum class AndroidMediaFormat(val raw: Int) {
   MPEG_TS(6),
   MPEG_PS(7),
   FLV(8),
-  AVI(9);
+  AVI(9),
+  DASH(10);
 
   companion object {
     fun ofRaw(raw: Int): AndroidMediaFormat? {

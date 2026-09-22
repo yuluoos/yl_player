@@ -12,6 +12,12 @@ The workspace requires Dart 3.12 and Flutter 3.44. Applications depend on
 authors use the
 [`yl_player_platform_interface`](packages/yl_player_platform_interface/README.md).
 
+The optional [`yl_player_source_resolver`](packages/yl_player_source_resolver/README.md)
+module resolves JavaScript sources before playback. It is a separate development
+package; the player does not depend on it. See its
+[implementation and validation record](docs/superpowers/reports/2026-09-22-script-resolver.md)
+for current evidence and limits.
+
 Start with the [application API and lifecycle](packages/yl_player/README.md).
 Before adopting v0.2, read the [migration guide](docs/migration-to-0.2.md),
 [platform support matrix](docs/platform-support.md), [policy semantics](docs/policies.md),
@@ -24,8 +30,11 @@ implemented automated evidence from physical evidence.
 ## License
 
 Except where otherwise noted, original code and documentation in this repository
-are licensed under the [BSD 3-Clause License](LICENSE), consistent with all four
+are licensed under the [BSD 3-Clause License](LICENSE), consistent with the workspace
 library packages. Existing copyright notices are retained.
+
+The optional resolver embeds MIT-licensed QuickJS and CryptoJS with pinned
+source provenance and license files in its `src` directory.
 
 Third-party components retain their own licenses; the repository license does
 not relicense them. The Android and Apple packages redistribute minimized

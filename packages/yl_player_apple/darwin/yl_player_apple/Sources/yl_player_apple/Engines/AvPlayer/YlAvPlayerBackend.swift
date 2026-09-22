@@ -139,10 +139,12 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   private var disposed = false
   private var firstFrameSent = false
   private var playRequested = false
-  var playbackIntent: Bool { playRequested || player.rate > 0 }
+  // AVPlayer rate observations may arrive after pause/item retirement. Native
+  // output cannot recreate playback intent once this backend is inactive.
+  var playbackIntent: Bool { playRequested || (active && player.rate > 0) }
   var requiresExternalRollbackActivation: Bool {
     guard services.compatibility.retainsReplacementHls == false, let source = lastSource else { return false }
-    return YlSourceRouter.route(source) == .headeredHls
+    return [YlAppleSourceRoute.headeredHls, .dashHls].contains(YlSourceRouter.route(source))
   }
   private var desiredRate: Float = 1
   private var openStartedAt: CFTimeInterval?
