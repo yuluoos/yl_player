@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../options/load_options.dart';
 import '../options/player_options.dart';
 import '../options/policies.dart';
@@ -11,6 +13,12 @@ const _maxPolicyDuration = Duration(milliseconds: _maxPolicyInt);
 final _headerToken = RegExp(r"^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$");
 final _unsafeHeaderValue = RegExp(r'[\x00-\x08\x0a-\x1f\x7f]');
 final _unsafePathCharacter = RegExp(r'[\x00-\x1f\x7f]');
+// Match encoded C0/DEL bytes and valid UTF-8 C1 controls without requiring opaque
+// app/playpath/query octets to form UTF-8. Never decode/rewrite their contents.
+final _encodedRtmpControl = RegExp(
+  r'%(?:[01][0-9a-f]|7f)|%c2%[89][0-9a-f]',
+  caseSensitive: false,
+);
 final _windowsDrive = RegExp(r'^[A-Za-z]:[\\/]');
 final _credentialName = RegExp(r'auth|cookie|token|key|secret|credential');
 const _reservedHeaders = {
@@ -41,23 +49,65 @@ void _validateUri(Uri uri, {required bool network}) {
   // original input through a FormatException or ArgumentError.value.
   var valid = false;
   try {
-    valid =
-        (network
-            ? uri.scheme == 'http' || uri.scheme == 'https'
-            : uri.scheme == 'content') &&
-        uri.hasAuthority &&
-        uri.host.isNotEmpty &&
-        uri.userInfo.isEmpty &&
-        !uri.authority.contains('@') &&
-        !_unsafePathCharacter.hasMatch(uri.host) &&
-        !uri.host.contains(' ') &&
-        (!network || (uri.port > 0 && uri.port <= 65535));
+    if (network && (uri.scheme == 'rtmp' || uri.scheme == 'rtmps')) {
+      valid = _validRtmpUri(uri);
+    } else {
+      valid =
+          (network
+              ? uri.scheme == 'http' || uri.scheme == 'https'
+              : uri.scheme == 'content') &&
+          uri.hasAuthority &&
+          uri.host.isNotEmpty &&
+          uri.userInfo.isEmpty &&
+          !uri.authority.contains('@') &&
+          !_unsafePathCharacter.hasMatch(uri.host) &&
+          !uri.host.contains(' ') &&
+          (!network || (uri.port > 0 && uri.port <= 65535));
+    }
   } on FormatException {
     valid = false;
   } on ArgumentError {
     valid = false;
   }
   if (!valid) throw ArgumentError('Source URI is invalid.');
+}
+
+// Validate the supplied serialization: Uri.parse may already have normalized
+// escapes. Do not decode/re-encode the app, playpath or query sent to native.
+bool _validRtmpUri(Uri uri) {
+  final raw = uri.toString();
+  if (raw.length > 8192 ||
+      utf8.encode(raw).length > 8192 ||
+      RegExp(r'%(?![0-9a-fA-F]{2})').hasMatch(raw) ||
+      RegExp(r'[\x00-\x20\x7f-\x9f]').hasMatch(raw) ||
+      _encodedRtmpControl.hasMatch(raw)) {
+    return false;
+  }
+  final match = RegExp(
+    r'^rtmps?://([^/?#]+)(/[^?#]*)(?:\?[^#]*)?$',
+  ).firstMatch(raw);
+  if (match == null || match.end != raw.length) return false;
+  final authority = match[1]!;
+  final path = match[2]!;
+  if (authority.contains('@')) return false;
+  // Brackets keep IPv6 colons distinct from the optional explicit port.
+  final endpoint = RegExp(
+    r'^(?:\[[^\]]+\]|[^:\[\]]+)(?::([0-9]+))?$',
+  ).firstMatch(authority);
+  if (endpoint == null || endpoint.end != authority.length) return false;
+  final explicitPort = endpoint[1];
+  if (explicitPort != null) {
+    final port = int.tryParse(explicitPort);
+    if (port == null || port < 1 || port > 65535) return false;
+  }
+  final separator = path.indexOf('/', 1);
+  return uri.hasAuthority &&
+      uri.host.isNotEmpty &&
+      uri.userInfo.isEmpty &&
+      !_unsafePathCharacter.hasMatch(uri.host) &&
+      !uri.host.contains(' ') &&
+      separator > 1 &&
+      separator < path.length - 1;
 }
 
 void _validatePath(String path) {

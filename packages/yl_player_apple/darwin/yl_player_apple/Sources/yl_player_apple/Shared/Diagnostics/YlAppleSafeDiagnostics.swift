@@ -59,6 +59,8 @@ enum YlAppleSafeDiagnostics {
     "decoder.video_hardware_unavailable",
     "internal.fallback_invariant",
     "ios.audio_session_failed",
+    "network.rtmp_handshake_failed", "network.rtmp_disconnected", "network.rtmp_stream_unavailable",
+    "container.rtmp_track_layout_changed",
     "network.cancelled",
     "network.configuration",
     "network.connect_timeout",
@@ -105,9 +107,14 @@ enum YlAppleSafeDiagnostics {
     "track.not_found",
   ]
   private static let retryableCodes: Set<String> = [
+    "network.rtmp_handshake_failed", "network.rtmp_disconnected",
     "network.dns_failed", "network.connect_timeout", "network.read_timeout",
   ]
   private static let publicMessages: [String: String] = [
+    "network.rtmp_handshake_failed": "The RTMP connection could not be established. Check the server and connection, then try again.",
+    "network.rtmp_disconnected": "The RTMP stream was disconnected. Check the connection and try again.",
+    "network.rtmp_stream_unavailable": "The RTMP stream is unavailable. Check the stream address and access permissions.",
+    "container.rtmp_track_layout_changed": "The RTMP track configuration changed. Reload the stream to continue playback.",
     "decoder.dolby_vision_unsupported": "This Dolby Vision profile is not supported. Try a compatible version of the media.",
     "decoder.dolby_vision_fel_metadata_unsupported": "This Dolby Vision enhancement metadata is not supported. Try a base-layer or compatible version.",
     "network.connect_timeout": "The media request timed out while connecting. Check the network connection and try again.",

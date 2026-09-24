@@ -168,6 +168,7 @@ internal fun YlMedia3Core.field(name: String, value: Any?) {
     javaClass.getDeclaredField(name).apply { isAccessible = true }.set(this, value)
 }
 internal fun withCore(policy: AndroidAudioPolicy = AndroidAudioPolicy.APP_MANAGED,
+    coreSource: AndroidSourceMessage = source(), coreHandler: Handler = mock(Handler::class.java),
     action: (YlMedia3Core, ExoPlayer, MutableList<YlEngineEvent>) -> Unit) {
     val player = mock(ExoPlayer::class.java)
     `when`(player.duration).thenReturn(C.TIME_UNSET)
@@ -194,9 +195,9 @@ internal fun withCore(policy: AndroidAudioPolicy = AndroidAudioPolicy.APP_MANAGE
             override val surface = mock(android.view.Surface::class.java)
             override fun releaseAfterAcknowledgedDetach() = Unit
         }
-        val core = YlMedia3Core(mock(Context::class.java), YlSessionIdentity("test", "load"), source(), request("load").options,
-            createMedia3Configuration(source(), request("load").options, sessionOptions.copy(audioPolicy = policy)),
-            mock(Handler::class.java), YlEngineVideoOutput(privateOutput), events::add)
+        val core = YlMedia3Core(mock(Context::class.java), YlSessionIdentity("test", "load"), coreSource, request("load").options,
+            createMedia3Configuration(coreSource, request("load").options, sessionOptions.copy(audioPolicy = policy)),
+            coreHandler, YlEngineVideoOutput(privateOutput), events::add)
         core.initialize()
         action(core, player, events)
     } finally {

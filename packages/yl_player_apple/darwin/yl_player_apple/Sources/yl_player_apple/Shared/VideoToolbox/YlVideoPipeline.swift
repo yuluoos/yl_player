@@ -191,6 +191,9 @@ final class YlVideoPipeline {
                          onSubmitted: () -> Void, onCancelled: () -> Void) -> Void? {
       guard let activeResource = resource else {
         ylf_packet_release(&packet)
+        // A main-thread live-edge transition can retire the decoder while an
+        // old demux packet is arriving. Its generation fence owns cancellation.
+        if shouldCancel() { onCancelled(); return nil }
         outputRelay.backend?.setDemuxPumping(false)
         outputRelay.error(NativePlayerError(
           category: "internal",

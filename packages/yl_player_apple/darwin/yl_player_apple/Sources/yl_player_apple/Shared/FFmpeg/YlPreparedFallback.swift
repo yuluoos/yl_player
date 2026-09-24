@@ -55,7 +55,8 @@ final class YlPreparedFallback {
     sessionConfiguration: URLSessionConfiguration = .ephemeral,
     cancellationToken: YlOpenCancellationToken? = nil,
     commitEvents: YlAppleCommitEmitter? = nil,
-    onRetry: YlNetworkByteSource.RetryCallback? = nil
+    onRetry: YlNetworkByteSource.RetryCallback? = nil,
+    rtmpSourceFactory: ((YlRtmpRequestRecipe) -> YlRtmpByteSource)? = nil
   ) throws {
     self.decoderPolicy = source.loadOptions?.decoderPolicy ?? .systemDefault
     self.decoderFactoryPolicy = source.loadOptions?.decoderPolicy ?? .hardwareRequired
@@ -80,7 +81,9 @@ final class YlPreparedFallback {
     let formatHint = source.formatHint
     let resolvedFormat = YlEngineRouter.resolvedFormat(source, url: url)
     let container: YlFallbackContainer
-    if resolvedFormat == .hls {
+    if ["rtmp", "rtmps"].contains(url.scheme?.lowercased() ?? "") {
+      container = .flv
+    } else if resolvedFormat == .hls {
       container = .hlsMpegTs
     } else if formatHint == .flv
       || (formatHint == .automatic && url.pathExtension.lowercased() == "flv") {
@@ -90,7 +93,10 @@ final class YlPreparedFallback {
     } else {
       container = .matroska
     }
-    if url.isFileURL {
+    if ["rtmp", "rtmps"].contains(url.scheme?.lowercased() ?? "") {
+      sourceRecipe = .rtmp(request: .init(address: try YlRtmpAddress.validate(source),
+        recovery: source.rtmpRecovery, bufferScope: bufferScope))
+    } else if url.isFileURL {
       guard container != .hlsMpegTs else {
         throw NativePlayerError(
           category: "unsupported",
@@ -132,7 +138,7 @@ final class YlPreparedFallback {
       onRetry: onRetry,
       onSourceCreated: { source in
         cancellationToken?.onCancel { source.cancel() }
-      }
+      }, rtmpSourceFactory: rtmpSourceFactory
     )
     try cancellationToken?.throwIfCancelled()
     mediaInfo = opened.info
@@ -160,6 +166,10 @@ final class YlPreparedFallback {
     for index in 0..<mediaInfo.stream_count {
       var stream = YLFStreamInfo()
       guard ylf_copy_stream_info(validContext, index, &stream) == 0 else { continue }
+      if sourceRecipe.isRtmp && ((Int(stream.kind) == YLFStreamVideo && Int(stream.codec) != YLFCodecH264)
+          || (Int(stream.kind) == YLFStreamAudio && Int(stream.codec) != YLFCodecAAC)) {
+        throw ylRtmpError("container.unsupported")
+      }
       if Int(stream.kind) == YLFStreamVideo { sawVideo = true }
       if Int(stream.kind) == YLFStreamVideo,
          (Int(stream.codec) == YLFCodecH264 || Int(stream.codec) == YLFCodecHEVC),

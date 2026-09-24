@@ -68,9 +68,12 @@ Keep the current `YlScriptResolution` to `await pending.cancel()` when replacing
 an input. Use an application generation counter before accepting results and
 serialize player load/stop operations. Cancellation is distinct from failure.
 `expiresAt` is unknown unless the script explicitly returns the supported UTC
-value; refresh is always an explicit new resolution. `toNetworkSource()` rejects
-RTMP/RTMPS with `script.media_protocol_unsupported`; this module does not add an
-RTMP player engine. Do not log returned URLs, headers, parameters or script text.
+value; refresh is always an explicit new resolution. `toNetworkSource()` accepts
+a valid header-free RTMP app/playpath URI and preserves live intent. RTMP results
+with HTTP headers fail with `script.invalid_headers`; RTMPS remains
+`script.media_protocol_unsupported`. Conversion delegates playback to the core
+player's native route and policy checks; this resolver supplies no RTMP engine.
+Do not log returned URLs, headers, parameters or script text.
 
 ## Separate optional example
 
@@ -95,8 +98,15 @@ flutter test --no-pub integration_test/script_runtime_test.dart -d DEVICE
 ```
 
 This checked-in entry exercises the actual public native runtime, deadlines,
-live cancellation, socket disconnect, memory bounds/reuse, safe RTMP rejection,
+live cancellation, socket disconnect, memory bounds/reuse, header-free RTMP
+conversion and explicit RTMPS rejection,
 and actual `YlPlayerView` HTTP handoff/first frame. It has no private fixture import.
+
+`integration_test/rtmp_handoff_test.dart` is the focused owned-JavaScript RTMP
+handoff case. Run it with the repository's `tool/rtmp_acceptance/run.py` wrapper,
+which starts the pinned independent MediaMTX peer and owned publishers. Pass
+`--dart-define=YL_RTMP_HOST=10.0.2.2` on Android Emulator; Apple uses loopback.
+This integration entry is separate from the example's HTTP demo UI.
 
 The exact nine-original acceptance entry is generated only when the restricted
 archive is available. From this package directory:

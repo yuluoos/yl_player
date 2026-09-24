@@ -9,6 +9,34 @@ enum YlEngineRouter {
       .init(outcome: .incompatible, candidate: nil, satisfiedRequirements: [], limitations: [],
         rejection: NativePlayerError(category: category, code: code, message: "The requested source route is unsupported."))
     }
+    if ["rtmp", "rtmps"].contains(source.url?.scheme?.lowercased() ?? "") {
+      do { _ = try YlRtmpAddress.validate(source) }
+      catch let error as NativePlayerError { return reject(error.category, error.code) }
+      catch { return reject("source", "source.invalid_uri") }
+      let options = source.loadOptions ?? .init()
+      if options.decoderPolicy == .hardwareRequired && !availability.hardwareEvidence {
+        return reject("unsupported", "policy.unsupported")
+      }
+      if let inspection {
+        guard inspection.demuxerSupported && inspection.codecsSupported && inspection.hasVideo else {
+          return reject("container", "container.unsupported")
+        }
+        if options.decoderPolicy == .hardwareRequired && inspection.hardwareAccelerated != true {
+          return reject("decoder", "decoder.unavailable")
+        }
+      }
+      var requirements: [YlRequirement] = [.networkPlatformDefault]
+      requirements.append(options.bufferStrategy == .lowLatency ? .bufferLowLatency :
+        options.bufferStrategy == .smoothPlayback ? .bufferSmoothPlayback : .bufferAutomatic)
+      if options.decoderPolicy == .systemDefault { requirements.append(.decoderSystemDefault) }
+      if options.decoderPolicy == .hardwarePreferred { requirements.append(.decoderHardwarePreferred) }
+      if options.decoderPolicy == .hardwareRequired && inspection?.hardwareAccelerated == true {
+        requirements.append(.decoderHardwareRequired)
+      }
+      return .init(outcome: inspection == nil ? .requiresInspection : .compatible,
+        candidate: .networkRtmp, satisfiedRequirements: requirements,
+        limitations: inspection == nil ? [.codecRequiresInspection] : [], rejection: nil)
+    }
     guard source.kind != .content else { return reject("source", "source.invalid") }
     guard let url = source.url, !source.uri.isEmpty,
       (source.kind == .file ? url.isFileURL : (["http", "https"].contains(url.scheme?.lowercased()) && url.host?.isEmpty == false)),

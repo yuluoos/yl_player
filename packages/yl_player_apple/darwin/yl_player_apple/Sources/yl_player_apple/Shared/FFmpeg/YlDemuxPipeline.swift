@@ -54,6 +54,7 @@ final class YlDemuxPipeline {
     var lastInputError: NativePlayerError? { media.lastInputError }
     func close() { media.close() }
     func cancelInput() { media.cancelInput() }
+    func setPlaybackPaused(_ paused: Bool) { media.setPlaybackPaused(paused) }
     func interruptRead() { media.interruptRead() }
     func resumeReads() { media.resumeReads() }
     func beginControlOperation(_ token: YlOpenCancellationToken?) { media.beginControlOperation(token) }
@@ -169,6 +170,10 @@ final class YlDemuxPipeline {
     for index in 0..<info.stream_count {
       var stream = YLFStreamInfo()
       guard ylf_copy_stream_info(validContext, index, &stream) == 0 else { continue }
+      if sourceRecipe.isRtmp && ((Int(stream.kind) == YLFStreamVideo && Int(stream.codec) != YLFCodecH264)
+          || (Int(stream.kind) == YLFStreamAudio && Int(stream.codec) != YLFCodecAAC)) {
+        throw ylRtmpError("container.unsupported")
+      }
       if Int(stream.kind) == YLFStreamVideo,
          (Int(stream.codec) == YLFCodecH264 || Int(stream.codec) == YLFCodecHEVC),
          selectedVideo == nil {
@@ -268,7 +273,7 @@ final class YlDemuxPipeline {
         output.beginLiveReconnect(
           after: NativePlayerError(
             category: "network",
-            code: "network.http_status",
+            code: sourceRecipe.isRtmp ? "network.rtmp_disconnected" : "network.http_status",
             message: "The HTTP-FLV connection ended."
           ),
           packetGeneration: packetGeneration
@@ -285,7 +290,7 @@ final class YlDemuxPipeline {
         output.beginLiveReconnect(
           after: inputError ?? NativePlayerError(
             category: "network",
-            code: "network.http_status",
+            code: sourceRecipe.isRtmp ? "network.rtmp_disconnected" : "network.http_status",
             message: "The HTTP-FLV network input failed.",
             diagnostic: "YlFFmpegBridge result \(result)"
           ),

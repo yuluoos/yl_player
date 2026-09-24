@@ -21,61 +21,72 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		02BC4EF0AD01BD356F8934F9 /* hevc_dts.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E96C775B3FFEF572759E674D /* hevc_dts.mp4 */; };
-		0488061E6C550329C1A2AD37 /* YlAppleHostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658FB8FAECDCE44699033363 /* YlAppleHostTests.swift */; };
-		12861F95ACE46A02A0CBA584 /* YlMacosNetworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B509B46AA724A701AA04AE0 /* YlMacosNetworkTests.swift */; };
-		14164CDD4EA0E0249E35D15C /* YlMacosFallbackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AE1EAAB6CCB99842DC935F /* YlMacosFallbackTests.swift */; };
-		1A72AF0DA7908BE24540B093 /* YlFallbackTrackCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3B561E7809DB5C33E9A4D0 /* YlFallbackTrackCatalogTests.swift */; };
-		1E5A8C8AF7A20F18A6D0831F /* YlByteRingBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080F7D1424F3308F6A05F094 /* YlByteRingBufferTests.swift */; };
-		25980B7AEB3BE078CF45CBAF /* h264_aac.flv in Resources */ = {isa = PBXBuildFile; fileRef = D37036ED0B37F9CB511089DD /* h264_aac.flv */; };
-		26EE8E1256592B363990DAE6 /* hls_encrypted_segment0.ts in Resources */ = {isa = PBXBuildFile; fileRef = 8F05A65C502A4348996533F5 /* hls_encrypted_segment0.ts */; };
+		01DF178319EF10D49C1EF278 /* hevc_aac.flv in Resources */ = {isa = PBXBuildFile; fileRef = 6F135885A3F56F40C6C7F785 /* hevc_aac.flv */; };
+		0297CDE8E558DC16D82844EE /* YlApplePublicationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75630A8AD23C5386F95DD3C9 /* YlApplePublicationTests.swift */; };
+		128EE532DF3F7C4AB32BD6E9 /* YlFallbackTrackCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA4DF6E8543446084572902 /* YlFallbackTrackCatalogTests.swift */; };
+		1399747E93FC08A04A2C4C26 /* NativeBackendFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5852DE332CF67DAEE6216FE /* NativeBackendFixtures.swift */; };
+		1408C46C12ADA157AC6675E7 /* hls_key.bin in Resources */ = {isa = PBXBuildFile; fileRef = F46174D8E67323FE3A505CEC /* hls_key.bin */; };
+		15F61606E06F31904D65AB2B /* YlNetworkByteSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA906E28F7E9BB1BB59881 /* YlNetworkByteSourceTests.swift */; };
+		1AE1B10A26FA004B660FCED2 /* YlRtmpManagedPauseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5665E9BD72A711AE838F4EF4 /* YlRtmpManagedPauseTests.swift */; };
+		1B61BD2DE3CA07A2222BC039 /* YlDashResourceLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147A4BAE0B3DF7169ECAFEC2 /* YlDashResourceLoaderTests.swift */; };
+		1CFE0E84FBBF882082B056C5 /* YlFELVideoPipelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A0857EAFBD7712C5D79D22 /* YlFELVideoPipelineTests.swift */; };
+		1E1D4FA513032FE78F764BEF /* h264_aac.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 35E565BAC00CE569E200466E /* h264_aac.mkv */; };
+		24F51B70F9AF478DCE7E3FA0 /* YlAppleCompatibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34DC077E1E92452D216CAA1E /* YlAppleCompatibilityTests.swift */; };
+		25E694718161B4E6B34ED875 /* YlMacosPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD6B0E3C6E6F7A719D8CDB9 /* YlMacosPresentationTests.swift */; };
+		2C21C04BD36EA61953A1CD61 /* YlDashHlsCompilerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC53E1C867EB626EF8E8CB17 /* YlDashHlsCompilerTests.swift */; };
+		33360611418A26793305401C /* YlOpenedMediaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C700A177742B3233701EEB56 /* YlOpenedMediaTests.swift */; };
 		335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335BBD1A22A9A15E00E9071D /* GeneratedPluginRegistrant.swift */; };
 		33CC10F12044A3C60003C045 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC10F02044A3C60003C045 /* AppDelegate.swift */; };
 		33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F22044A3C60003C045 /* Assets.xcassets */; };
 		33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F42044A3C60003C045 /* MainMenu.xib */; };
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
 		3715C81ACB2358DB2928B9DB /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A211740DD9C25615F49813E6 /* Pods_Runner.framework */; };
-		4644DE80A7825A723FDE23E6 /* YlAppleCompatibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9C53482676289E84337BBD /* YlAppleCompatibilityTests.swift */; };
-		4DCAA922EB396E4F4BE847BB /* h264_aac.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 70D68B196278A79A91FCAC34 /* h264_aac.mkv */; };
-		4E58B9299400E7A3D886A5C9 /* two_audio_tracks.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 43861863016C836339CF66DC /* two_audio_tracks.mkv */; };
-		51634107CF57772C40FD4C20 /* YlHlsHeaderPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258F490128A5842FDC1C80D8 /* YlHlsHeaderPolicyTests.swift */; };
-		5EEFE481A08CE6B381C8EB20 /* YlMacosAudioTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF89DC2247430B175C7B15E1 /* YlMacosAudioTests.swift */; };
-		5FD3DC4D5525F1B48F84317F /* YlApplePublicationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC841E196E0B29027DB776C3 /* YlApplePublicationTests.swift */; };
-		60CAE5DA24146B2992785AD5 /* AppleHostCharacterizations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D2A674C6F6638D6338528AE /* AppleHostCharacterizations.swift */; };
-		652C93A9363EA0F1BC1CD7F8 /* YlHlsManifestRewriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC924B1B78083E67EB2AE0A6 /* YlHlsManifestRewriterTests.swift */; };
-		6581B64707F7407C0873308A /* YlMacosAvPlayerStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CCB3C53A98E04364865410 /* YlMacosAvPlayerStateTests.swift */; };
-		6E254F8464BED359D59D6DA2 /* hevc_aac.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 9C4FFA18C36468580895FF07 /* hevc_aac.mkv */; };
-		77361B1156985F22DB05737C /* YlManagedFallbackCharacterizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E9683F561AC67CAE681D1C /* YlManagedFallbackCharacterizationTests.swift */; };
-		781F1C9D6E2F6455140DB053 /* YlPlatformServicesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259BBE58C534BE7C4EEAE8FB /* YlPlatformServicesTests.swift */; };
+		3973B9D78981967D69457677 /* h264_mp3.flv in Resources */ = {isa = PBXBuildFile; fileRef = 27822507808069AA8F7D1B81 /* h264_mp3.flv */; };
+		3E2588A1BC1F6CE2448ADCD5 /* NativeCallbackCharacterization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C290055C8B9FFBB2409465E /* NativeCallbackCharacterization.swift */; };
+		42994F34DE8B764CC1A55FE3 /* YlMacosPlatformAdapterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5066B6A5AC2AF4ABCEC96DF /* YlMacosPlatformAdapterTests.swift */; };
+		50C9997DD3468F1581BF954D /* YlRtmpRestorationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A21ADBFB4A3DDD36999D8 /* YlRtmpRestorationTests.swift */; };
+		531C81BF18DE8F8339B09B48 /* YlRtmpLifecycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8BF19BF6B42EDC46588613 /* YlRtmpLifecycleTests.swift */; };
+		54C92931EF395AD5E8078BF1 /* hevc_aac.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 57D5CB3220138BCD13684C98 /* hevc_aac.mkv */; };
+		592CF9D166E70142D76DF428 /* YlRtmpProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECAB55485ABB0439C7A04F72 /* YlRtmpProtocolTests.swift */; };
+		5C4FDD002E1570DA9995F58F /* YlMacosVideoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06FAF8C98F9EFA76BF5E3893 /* YlMacosVideoTests.swift */; };
+		5DB2A160509CFEE73CD12485 /* YlAppleHostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E869F508D73E44FF6836F05 /* YlAppleHostTests.swift */; };
+		631320C1C8CD65B03B4B6E8C /* two_audio_tracks.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 8070E6E11F3656127214D0F4 /* two_audio_tracks.mkv */; };
+		691CF2566C16D4594341EABD /* YlRtmpFixturePeer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1956A71D967865D262FCA1F9 /* YlRtmpFixturePeer.swift */; };
+		6F49EF49E579AB7E9171BBD9 /* network_seek_h264_aac.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 20781E1F08377A5E656C399D /* network_seek_h264_aac.mkv */; };
+		70529071DFB43B0D27BE0982 /* YlManagedFallbackCharacterizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED88046AF4BCC838E47A1DE8 /* YlManagedFallbackCharacterizationTests.swift */; };
+		7124B764DD7AA7206E99F46E /* YlRtmpPeerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0D368844FF6CB6BD2F11AF /* YlRtmpPeerTests.swift */; };
+		71DCDA0543ACCA2C98D40E5F /* YlMacosHlsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEC84DECE9358BB2DB25A6 /* YlMacosHlsTests.swift */; };
+		7395EE697E69B3E4BF38ECBB /* h264_aac.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3FB68FDA267E2CE9BF8139A7 /* h264_aac.mp4 */; };
+		76383578A5C364DA7B94F82C /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3BBC424ABB148ACE6662454 /* RunnerTests.swift */; };
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
-		7EE6E9FB7B61694955645CE5 /* YlMacosPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2E66846088B64C685280EF /* YlMacosPresentationTests.swift */; };
-		7F67DCD390FA97B1A5442C90 /* network_seek_h264_aac.mkv in Resources */ = {isa = PBXBuildFile; fileRef = D75128AAE8A9BB6E769A696C /* network_seek_h264_aac.mkv */; };
-		856AC02BB6D2B1DBA02733CC /* NativeCallbackCharacterization.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4FE72EA5EE191708834C71 /* NativeCallbackCharacterization.swift */; };
-		8CD25E805695C2419EFFF930 /* YlMacosOpenCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DF9584C1B56A031101F1F1 /* YlMacosOpenCoordinatorTests.swift */; };
-		921A16898D076EAC56845EFC /* YlAppleSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEE590BC8393392AEEF82DC /* YlAppleSessionTests.swift */; };
-		9447057A02C566D82711FF7D /* YlNetworkByteSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA46EFC334F68FA86529FC7 /* YlNetworkByteSourceTests.swift */; };
-		9748DE63F00D9ECAAA96F22B /* YlFallbackBufferBudgetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF2A2862C2636E0EBEE15CE /* YlFallbackBufferBudgetTests.swift */; };
-		977235CC5AC5E7FA739672C0 /* YlFallbackStateEncoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC81D3581442DF2B0D18CC4C /* YlFallbackStateEncoderTests.swift */; };
-		9E0A3236052168D1FF70E1E7 /* YlDashHlsCompilerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADE067E8C3C30103F5B5FE /* YlDashHlsCompilerTests.swift */; };
-		A27D25A99B86DC286F30835A /* YlDashResourceLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8C9AB8DD14155728878024 /* YlDashResourceLoaderTests.swift */; };
-		A52B4B776141C7449114EEE1 /* YlV2ReactivationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13676CA8BFCE1E0827079D9B /* YlV2ReactivationTests.swift */; };
-		A52DBAE3CE888006BD1929DB /* YlNetworkRequestPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118DB3F767F3D0A2A76201CA /* YlNetworkRequestPolicyTests.swift */; };
+		79ACA2DD67FBDFC418B563BA /* YlAppleSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDADAD5CF8DEDC2E5C43A37B /* YlAppleSessionTests.swift */; };
+		7B24E48BDC5412592CFA118F /* YlRtmpTransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2D6E2CD9F47DEBD2EA9913 /* YlRtmpTransportTests.swift */; };
+		7C9D11245578AD3EF5C79527 /* hls_encrypted_segment0.ts in Resources */ = {isa = PBXBuildFile; fileRef = EA232D5E16F22AC9EB08B629 /* hls_encrypted_segment0.ts */; };
+		85D362935E205A4417D85505 /* YlHlsHeaderPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D0D598749685F138906073 /* YlHlsHeaderPolicyTests.swift */; };
+		8E0F089F97147D279FD80AF9 /* hevc_dts.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C6912F19C303058E527259FE /* hevc_dts.mp4 */; };
+		94A1AB46BDBECF7581585A79 /* YlMacosAudioTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC623098CF3B0C9CB3A171F /* YlMacosAudioTests.swift */; };
+		95ECC632E9A30F88372C0F87 /* YlNetworkRequestPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C33F40306C9E0359CDF71 /* YlNetworkRequestPolicyTests.swift */; };
+		97F9E4BC225964B8857DCC61 /* YlMacosFallbackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E615412A9A1C967D196015 /* YlMacosFallbackTests.swift */; };
+		A537C05BE28B586A5287A247 /* YlMacosAvPlayerStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD8D32CCC2F980B6D63E834 /* YlMacosAvPlayerStateTests.swift */; };
 		A643CC937C14D2A3D8766502 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F9645960A2FC8869FE4E674 /* Pods_RunnerTests.framework */; };
-		B3A45795ACCA75FB86AC66CC /* NativeBackendFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B7D51CF08FAC8784F95BD6 /* NativeBackendFixtures.swift */; };
-		B5C298DACB58584FE533CE27 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA24690362B0678640630C3 /* RunnerTests.swift */; };
-		B8B3D95B002BDC5D6A96E09D /* YlAppleDecoderRestorationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86E30B31257D07B5657CC67 /* YlAppleDecoderRestorationTests.swift */; };
-		BAFB465838DEEB9D529F7B52 /* h264_aac.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = FB2F60D7B6D4F13983231D13 /* h264_aac.mp4 */; };
-		BF522BF2A904047FDD27C1AA /* YlMacosHlsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEFC9014C1577D41C092E60 /* YlMacosHlsTests.swift */; };
-		C1DEE157BE1F1F1546A5FDA3 /* YlMacosVideoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72BF365E597279C7651DDCF0 /* YlMacosVideoTests.swift */; };
-		C3D64527DB616335EAAD938B /* YlOpenedMediaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30F20FC7B3A73915ABD9CD2 /* YlOpenedMediaTests.swift */; };
-		D73F69476404923456630341 /* YlAppleReconciliationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CD0C082C4EBB0F5C8A0390 /* YlAppleReconciliationTests.swift */; };
-		E09260D0B5C1AF50F876A2A5 /* hevc_aac.flv in Resources */ = {isa = PBXBuildFile; fileRef = B4C3ACD32668B7EADD61BA5C /* hevc_aac.flv */; };
-		E58C3B556B427541301328F2 /* YlBoundedPacketQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42244AE867D958836C1BC62D /* YlBoundedPacketQueueTests.swift */; };
-		E9EAE1AEFDB8CCADB2B45DF5 /* YlMacosPlatformAdapterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D232E97EBE2730828227F9 /* YlMacosPlatformAdapterTests.swift */; };
-		EAF8171AE61C13EE3191671C /* hls_key.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7DE17B23DC7094916B707171 /* hls_key.bin */; };
-		EB7169D1B7AD690C342CF206 /* YlFallbackQualityPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A20416A8C37E53B2091A4E /* YlFallbackQualityPolicyTests.swift */; };
-		EF7970A4DABBB5D80192583D /* h264_mp3.flv in Resources */ = {isa = PBXBuildFile; fileRef = 9EA852F9EB314FAAC30F8E10 /* h264_mp3.flv */; };
-		F6562F172B23A832540E5245 /* YlFELVideoPipelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A5E6B423F73AA2E39B89AA /* YlFELVideoPipelineTests.swift */; };
+		A77EA5EB232ED78C4F4884EC /* h264_aac.flv in Resources */ = {isa = PBXBuildFile; fileRef = 65975264F807CAFFC710D2F5 /* h264_aac.flv */; };
+		ACE2BD982F4DA89D82D4E434 /* YlRtmpRecoveryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A940DD8D6F94037E79F8AD /* YlRtmpRecoveryTests.swift */; };
+		B0748004F715FE005444B080 /* hevc_aac.ts in Resources */ = {isa = PBXBuildFile; fileRef = D2930D5C73B77DB4B8813E4C /* hevc_aac.ts */; };
+		B5C2EC2C16033EAB5CECFA6A /* YlHlsManifestRewriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C04CC5CBCBC2772ACBE6DC /* YlHlsManifestRewriterTests.swift */; };
+		BFA20ACF2B5A0A4CF3D7C296 /* YlBoundedPacketQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6DA221934353776A2AC38D /* YlBoundedPacketQueueTests.swift */; };
+		BFF1C7D1C89792326B8953A6 /* YlFallbackStateEncoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B87C8143455324448E46AD /* YlFallbackStateEncoderTests.swift */; };
+		C2F69E74F1E0D739869EFC4D /* YlAppleReconciliationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC082FBAB1E5C3F7599EC575 /* YlAppleReconciliationTests.swift */; };
+		C5A353E021CD2BEB6B3D0BF9 /* YlV2ReactivationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BF641F6A99C9F5B84A6281 /* YlV2ReactivationTests.swift */; };
+		C68334BB60FDB260277DA25D /* YlMacosNetworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72379C7C4D7DEBE351C1E629 /* YlMacosNetworkTests.swift */; };
+		CF5D0A1C9A42FAB6FBDFA3F4 /* YlAppleDecoderRestorationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADC0D265B741EEDE905AAB4 /* YlAppleDecoderRestorationTests.swift */; };
+		CF9C0C382D7037AD9D01A6A4 /* YlFallbackQualityPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4DEEB55CF6DE6A59CC5C34 /* YlFallbackQualityPolicyTests.swift */; };
+		D83AA932861FC8905B380F53 /* AppleHostCharacterizations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F106567CEBABEBF23D41980 /* AppleHostCharacterizations.swift */; };
+		E1FF0A95F043B494CFB33A67 /* YlRtmpRouteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7B70FBAE1B54C38E94045F /* YlRtmpRouteTests.swift */; };
+		E9B7F057DC900A96DD20A8E5 /* YlPlatformServicesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CDC667398959E0CB3B44375 /* YlPlatformServicesTests.swift */; };
+		EE46F4FD4C16129982B9867E /* YlRtmpDemandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1974E285FC714C815AB6BF9 /* YlRtmpDemandTests.swift */; };
+		F331CC72B45CF2B10650905D /* YlByteRingBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8048684C57A62ABB3E04D95 /* YlByteRingBufferTests.swift */; };
+		F671D2612D05B09B54372859 /* YlFallbackBufferBudgetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB5CBCF374E238AE0921D63 /* YlFallbackBufferBudgetTests.swift */; };
+		FE3A4AEE8C06A75FECF71E88 /* YlMacosOpenCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38BA5B23113A06B10DBA6A8 /* YlMacosOpenCoordinatorTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,17 +120,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		080F7D1424F3308F6A05F094 /* YlByteRingBufferTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlByteRingBufferTests.swift; sourceTree = "<group>"; };
-		0A8C9AB8DD14155728878024 /* YlDashResourceLoaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlDashResourceLoaderTests.swift; sourceTree = "<group>"; };
+		04EA906E28F7E9BB1BB59881 /* YlNetworkByteSourceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlNetworkByteSourceTests.swift; sourceTree = "<group>"; };
+		06FAF8C98F9EFA76BF5E3893 /* YlMacosVideoTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosVideoTests.swift; sourceTree = "<group>"; };
+		08BEC84DECE9358BB2DB25A6 /* YlMacosHlsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosHlsTests.swift; sourceTree = "<group>"; };
+		0DC623098CF3B0C9CB3A171F /* YlMacosAudioTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosAudioTests.swift; sourceTree = "<group>"; };
 		0F9645960A2FC8869FE4E674 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		118DB3F767F3D0A2A76201CA /* YlNetworkRequestPolicyTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlNetworkRequestPolicyTests.swift; sourceTree = "<group>"; };
-		13676CA8BFCE1E0827079D9B /* YlV2ReactivationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlV2ReactivationTests.swift; sourceTree = "<group>"; };
+		147A4BAE0B3DF7169ECAFEC2 /* YlDashResourceLoaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlDashResourceLoaderTests.swift; sourceTree = "<group>"; };
+		1956A71D967865D262FCA1F9 /* YlRtmpFixturePeer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlRtmpFixturePeer.swift; sourceTree = "<group>"; };
 		1D3F70440357CA5E69E00CB9 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
-		1EA46EFC334F68FA86529FC7 /* YlNetworkByteSourceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlNetworkByteSourceTests.swift; sourceTree = "<group>"; };
-		258F490128A5842FDC1C80D8 /* YlHlsHeaderPolicyTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlHlsHeaderPolicyTests.swift; sourceTree = "<group>"; };
-		259BBE58C534BE7C4EEAE8FB /* YlPlatformServicesTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlPlatformServicesTests.swift; sourceTree = "<group>"; };
-		2DEFC9014C1577D41C092E60 /* YlMacosHlsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosHlsTests.swift; sourceTree = "<group>"; };
-		30B7D51CF08FAC8784F95BD6 /* NativeBackendFixtures.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeBackendFixtures.swift; sourceTree = "<group>"; };
+		20781E1F08377A5E656C399D /* network_seek_h264_aac.mkv */ = {isa = PBXFileReference; includeInIndex = 1; path = network_seek_h264_aac.mkv; sourceTree = "<group>"; };
+		27822507808069AA8F7D1B81 /* h264_mp3.flv */ = {isa = PBXFileReference; includeInIndex = 1; path = h264_mp3.flv; sourceTree = "<group>"; };
+		27A0857EAFBD7712C5D79D22 /* YlFELVideoPipelineTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFELVideoPipelineTests.swift; sourceTree = "<group>"; };
+		2AB5CBCF374E238AE0921D63 /* YlFallbackBufferBudgetTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFallbackBufferBudgetTests.swift; sourceTree = "<group>"; };
+		2F106567CEBABEBF23D41980 /* AppleHostCharacterizations.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppleHostCharacterizations.swift; sourceTree = "<group>"; };
+		2FD6B0E3C6E6F7A719D8CDB9 /* YlMacosPresentationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosPresentationTests.swift; sourceTree = "<group>"; };
 		331C80D5294CF71000263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		333000ED22D3DE5D00554162 /* Warnings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Warnings.xcconfig; sourceTree = "<group>"; };
 		335BBD1A22A9A15E00E9071D /* GeneratedPluginRegistrant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneratedPluginRegistrant.swift; sourceTree = "<group>"; };
@@ -135,53 +149,61 @@
 		33E51913231747F40026EE4D /* DebugProfile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DebugProfile.entitlements; sourceTree = "<group>"; };
 		33E51914231749380026EE4D /* Release.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Release.entitlements; sourceTree = "<group>"; };
 		33E5194F232828860026EE4D /* AppInfo.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = AppInfo.xcconfig; sourceTree = "<group>"; };
-		36CCB3C53A98E04364865410 /* YlMacosAvPlayerStateTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosAvPlayerStateTests.swift; sourceTree = "<group>"; };
-		42244AE867D958836C1BC62D /* YlBoundedPacketQueueTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlBoundedPacketQueueTests.swift; sourceTree = "<group>"; };
-		43861863016C836339CF66DC /* two_audio_tracks.mkv */ = {isa = PBXFileReference; includeInIndex = 1; path = two_audio_tracks.mkv; sourceTree = "<group>"; };
-		53ADE067E8C3C30103F5B5FE /* YlDashHlsCompilerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlDashHlsCompilerTests.swift; sourceTree = "<group>"; };
-		54AE1EAAB6CCB99842DC935F /* YlMacosFallbackTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosFallbackTests.swift; sourceTree = "<group>"; };
-		58CD0C082C4EBB0F5C8A0390 /* YlAppleReconciliationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleReconciliationTests.swift; sourceTree = "<group>"; };
-		658FB8FAECDCE44699033363 /* YlAppleHostTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleHostTests.swift; sourceTree = "<group>"; };
-		66A5E6B423F73AA2E39B89AA /* YlFELVideoPipelineTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFELVideoPipelineTests.swift; sourceTree = "<group>"; };
-		70D68B196278A79A91FCAC34 /* h264_aac.mkv */ = {isa = PBXFileReference; includeInIndex = 1; path = h264_aac.mkv; sourceTree = "<group>"; };
-		72BF365E597279C7651DDCF0 /* YlMacosVideoTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosVideoTests.swift; sourceTree = "<group>"; };
+		34DC077E1E92452D216CAA1E /* YlAppleCompatibilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleCompatibilityTests.swift; sourceTree = "<group>"; };
+		35E565BAC00CE569E200466E /* h264_aac.mkv */ = {isa = PBXFileReference; includeInIndex = 1; path = h264_aac.mkv; sourceTree = "<group>"; };
+		3ADC0D265B741EEDE905AAB4 /* YlAppleDecoderRestorationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleDecoderRestorationTests.swift; sourceTree = "<group>"; };
+		3C290055C8B9FFBB2409465E /* NativeCallbackCharacterization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeCallbackCharacterization.swift; sourceTree = "<group>"; };
+		3FB68FDA267E2CE9BF8139A7 /* h264_aac.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = h264_aac.mp4; sourceTree = "<group>"; };
+		42E615412A9A1C967D196015 /* YlMacosFallbackTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosFallbackTests.swift; sourceTree = "<group>"; };
+		4D7B70FBAE1B54C38E94045F /* YlRtmpRouteTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlRtmpRouteTests.swift; sourceTree = "<group>"; };
+		4F4DEEB55CF6DE6A59CC5C34 /* YlFallbackQualityPolicyTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFallbackQualityPolicyTests.swift; sourceTree = "<group>"; };
+		50A940DD8D6F94037E79F8AD /* YlRtmpRecoveryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlRtmpRecoveryTests.swift; sourceTree = "<group>"; };
+		530A21ADBFB4A3DDD36999D8 /* YlRtmpRestorationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlRtmpRestorationTests.swift; sourceTree = "<group>"; };
+		5665E9BD72A711AE838F4EF4 /* YlRtmpManagedPauseTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlRtmpManagedPauseTests.swift; sourceTree = "<group>"; };
+		57D5CB3220138BCD13684C98 /* hevc_aac.mkv */ = {isa = PBXFileReference; includeInIndex = 1; path = hevc_aac.mkv; sourceTree = "<group>"; };
+		5E869F508D73E44FF6836F05 /* YlAppleHostTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleHostTests.swift; sourceTree = "<group>"; };
+		63C04CC5CBCBC2772ACBE6DC /* YlHlsManifestRewriterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlHlsManifestRewriterTests.swift; sourceTree = "<group>"; };
+		65975264F807CAFFC710D2F5 /* h264_aac.flv */ = {isa = PBXFileReference; includeInIndex = 1; path = h264_aac.flv; sourceTree = "<group>"; };
+		6F135885A3F56F40C6C7F785 /* hevc_aac.flv */ = {isa = PBXFileReference; includeInIndex = 1; path = hevc_aac.flv; sourceTree = "<group>"; };
+		72379C7C4D7DEBE351C1E629 /* YlMacosNetworkTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosNetworkTests.swift; sourceTree = "<group>"; };
+		75630A8AD23C5386F95DD3C9 /* YlApplePublicationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlApplePublicationTests.swift; sourceTree = "<group>"; };
 		78E0A7A72DC9AD7400C4905E /* FlutterGeneratedPluginSwiftPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterGeneratedPluginSwiftPackage; path = ephemeral/Packages/FlutterGeneratedPluginSwiftPackage; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
-		7DE17B23DC7094916B707171 /* hls_key.bin */ = {isa = PBXFileReference; includeInIndex = 1; path = hls_key.bin; sourceTree = "<group>"; };
-		8B509B46AA724A701AA04AE0 /* YlMacosNetworkTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosNetworkTests.swift; sourceTree = "<group>"; };
-		8D2A674C6F6638D6338528AE /* AppleHostCharacterizations.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppleHostCharacterizations.swift; sourceTree = "<group>"; };
-		8F05A65C502A4348996533F5 /* hls_encrypted_segment0.ts */ = {isa = PBXFileReference; includeInIndex = 1; path = hls_encrypted_segment0.ts; sourceTree = "<group>"; };
+		7CDC667398959E0CB3B44375 /* YlPlatformServicesTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlPlatformServicesTests.swift; sourceTree = "<group>"; };
+		8070E6E11F3656127214D0F4 /* two_audio_tracks.mkv */ = {isa = PBXFileReference; includeInIndex = 1; path = two_audio_tracks.mkv; sourceTree = "<group>"; };
+		8B8BF19BF6B42EDC46588613 /* YlRtmpLifecycleTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlRtmpLifecycleTests.swift; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
-		9C4FFA18C36468580895FF07 /* hevc_aac.mkv */ = {isa = PBXFileReference; includeInIndex = 1; path = hevc_aac.mkv; sourceTree = "<group>"; };
-		9EA852F9EB314FAAC30F8E10 /* h264_mp3.flv */ = {isa = PBXFileReference; includeInIndex = 1; path = h264_mp3.flv; sourceTree = "<group>"; };
-		A0D232E97EBE2730828227F9 /* YlMacosPlatformAdapterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosPlatformAdapterTests.swift; sourceTree = "<group>"; };
-		A1A20416A8C37E53B2091A4E /* YlFallbackQualityPolicyTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFallbackQualityPolicyTests.swift; sourceTree = "<group>"; };
 		A211740DD9C25615F49813E6 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2AB35850815DE4EF09C4738 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
-		AD3B561E7809DB5C33E9A4D0 /* YlFallbackTrackCatalogTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFallbackTrackCatalogTests.swift; sourceTree = "<group>"; };
+		AD2D6E2CD9F47DEBD2EA9913 /* YlRtmpTransportTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlRtmpTransportTests.swift; sourceTree = "<group>"; };
+		AE6DA221934353776A2AC38D /* YlBoundedPacketQueueTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlBoundedPacketQueueTests.swift; sourceTree = "<group>"; };
 		AEF2FD4DE4B6FC8F6D20896D /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
-		B30F20FC7B3A73915ABD9CD2 /* YlOpenedMediaTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlOpenedMediaTests.swift; sourceTree = "<group>"; };
-		B4C3ACD32668B7EADD61BA5C /* hevc_aac.flv */ = {isa = PBXFileReference; includeInIndex = 1; path = hevc_aac.flv; sourceTree = "<group>"; };
+		AFA4DF6E8543446084572902 /* YlFallbackTrackCatalogTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFallbackTrackCatalogTests.swift; sourceTree = "<group>"; };
+		AFD8D32CCC2F980B6D63E834 /* YlMacosAvPlayerStateTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosAvPlayerStateTests.swift; sourceTree = "<group>"; };
+		B2BF641F6A99C9F5B84A6281 /* YlV2ReactivationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlV2ReactivationTests.swift; sourceTree = "<group>"; };
 		B6FBB4B98E0FE7E5627D613D /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
-		BC81D3581442DF2B0D18CC4C /* YlFallbackStateEncoderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFallbackStateEncoderTests.swift; sourceTree = "<group>"; };
-		BC924B1B78083E67EB2AE0A6 /* YlHlsManifestRewriterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlHlsManifestRewriterTests.swift; sourceTree = "<group>"; };
-		C1DF9584C1B56A031101F1F1 /* YlMacosOpenCoordinatorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosOpenCoordinatorTests.swift; sourceTree = "<group>"; };
-		CAA24690362B0678640630C3 /* RunnerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
+		BA0D368844FF6CB6BD2F11AF /* YlRtmpPeerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlRtmpPeerTests.swift; sourceTree = "<group>"; };
+		C3BBC424ABB148ACE6662454 /* RunnerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
+		C5D0D598749685F138906073 /* YlHlsHeaderPolicyTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlHlsHeaderPolicyTests.swift; sourceTree = "<group>"; };
+		C6912F19C303058E527259FE /* hevc_dts.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = hevc_dts.mp4; sourceTree = "<group>"; };
+		C700A177742B3233701EEB56 /* YlOpenedMediaTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlOpenedMediaTests.swift; sourceTree = "<group>"; };
+		C8048684C57A62ABB3E04D95 /* YlByteRingBufferTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlByteRingBufferTests.swift; sourceTree = "<group>"; };
 		CB582FEB03DF6D2F0385A33C /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
-		D37036ED0B37F9CB511089DD /* h264_aac.flv */ = {isa = PBXFileReference; includeInIndex = 1; path = h264_aac.flv; sourceTree = "<group>"; };
-		D75128AAE8A9BB6E769A696C /* network_seek_h264_aac.mkv */ = {isa = PBXFileReference; includeInIndex = 1; path = network_seek_h264_aac.mkv; sourceTree = "<group>"; };
-		DC841E196E0B29027DB776C3 /* YlApplePublicationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlApplePublicationTests.swift; sourceTree = "<group>"; };
-		DF89DC2247430B175C7B15E1 /* YlMacosAudioTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosAudioTests.swift; sourceTree = "<group>"; };
+		CDADAD5CF8DEDC2E5C43A37B /* YlAppleSessionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleSessionTests.swift; sourceTree = "<group>"; };
+		D0B87C8143455324448E46AD /* YlFallbackStateEncoderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFallbackStateEncoderTests.swift; sourceTree = "<group>"; };
+		D2930D5C73B77DB4B8813E4C /* hevc_aac.ts */ = {isa = PBXFileReference; includeInIndex = 1; path = hevc_aac.ts; sourceTree = "<group>"; };
+		D5066B6A5AC2AF4ABCEC96DF /* YlMacosPlatformAdapterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosPlatformAdapterTests.swift; sourceTree = "<group>"; };
+		DC082FBAB1E5C3F7599EC575 /* YlAppleReconciliationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleReconciliationTests.swift; sourceTree = "<group>"; };
+		E1974E285FC714C815AB6BF9 /* YlRtmpDemandTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlRtmpDemandTests.swift; sourceTree = "<group>"; };
 		E36B41E2C43EA3201334FA12 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
-		E96C775B3FFEF572759E674D /* hevc_dts.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = hevc_dts.mp4; sourceTree = "<group>"; };
-		ED2E66846088B64C685280EF /* YlMacosPresentationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosPresentationTests.swift; sourceTree = "<group>"; };
-		EE9C53482676289E84337BBD /* YlAppleCompatibilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleCompatibilityTests.swift; sourceTree = "<group>"; };
-		EEF2A2862C2636E0EBEE15CE /* YlFallbackBufferBudgetTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFallbackBufferBudgetTests.swift; sourceTree = "<group>"; };
-		F86E30B31257D07B5657CC67 /* YlAppleDecoderRestorationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleDecoderRestorationTests.swift; sourceTree = "<group>"; };
-		F9E9683F561AC67CAE681D1C /* YlManagedFallbackCharacterizationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlManagedFallbackCharacterizationTests.swift; sourceTree = "<group>"; };
-		FA4FE72EA5EE191708834C71 /* NativeCallbackCharacterization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeCallbackCharacterization.swift; sourceTree = "<group>"; };
-		FB2F60D7B6D4F13983231D13 /* h264_aac.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = h264_aac.mp4; sourceTree = "<group>"; };
-		FCEE590BC8393392AEEF82DC /* YlAppleSessionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleSessionTests.swift; sourceTree = "<group>"; };
+		E43C33F40306C9E0359CDF71 /* YlNetworkRequestPolicyTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlNetworkRequestPolicyTests.swift; sourceTree = "<group>"; };
+		E5852DE332CF67DAEE6216FE /* NativeBackendFixtures.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeBackendFixtures.swift; sourceTree = "<group>"; };
+		EA232D5E16F22AC9EB08B629 /* hls_encrypted_segment0.ts */ = {isa = PBXFileReference; includeInIndex = 1; path = hls_encrypted_segment0.ts; sourceTree = "<group>"; };
+		ECAB55485ABB0439C7A04F72 /* YlRtmpProtocolTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlRtmpProtocolTests.swift; sourceTree = "<group>"; };
+		ED88046AF4BCC838E47A1DE8 /* YlManagedFallbackCharacterizationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlManagedFallbackCharacterizationTests.swift; sourceTree = "<group>"; };
+		F38BA5B23113A06B10DBA6A8 /* YlMacosOpenCoordinatorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosOpenCoordinatorTests.swift; sourceTree = "<group>"; };
+		F46174D8E67323FE3A505CEC /* hls_key.bin */ = {isa = PBXFileReference; includeInIndex = 1; path = hls_key.bin; sourceTree = "<group>"; };
+		FC53E1C867EB626EF8E8CB17 /* YlDashHlsCompilerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlDashHlsCompilerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,53 +230,64 @@
 		331C80D6294CF71000263BE5 /* RunnerTests */ = {
 			isa = PBXGroup;
 			children = (
-				8D2A674C6F6638D6338528AE /* AppleHostCharacterizations.swift */,
-				30B7D51CF08FAC8784F95BD6 /* NativeBackendFixtures.swift */,
-				FA4FE72EA5EE191708834C71 /* NativeCallbackCharacterization.swift */,
-				CAA24690362B0678640630C3 /* RunnerTests.swift */,
-				EE9C53482676289E84337BBD /* YlAppleCompatibilityTests.swift */,
-				F86E30B31257D07B5657CC67 /* YlAppleDecoderRestorationTests.swift */,
-				658FB8FAECDCE44699033363 /* YlAppleHostTests.swift */,
-				DC841E196E0B29027DB776C3 /* YlApplePublicationTests.swift */,
-				58CD0C082C4EBB0F5C8A0390 /* YlAppleReconciliationTests.swift */,
-				FCEE590BC8393392AEEF82DC /* YlAppleSessionTests.swift */,
-				42244AE867D958836C1BC62D /* YlBoundedPacketQueueTests.swift */,
-				080F7D1424F3308F6A05F094 /* YlByteRingBufferTests.swift */,
-				EEF2A2862C2636E0EBEE15CE /* YlFallbackBufferBudgetTests.swift */,
-				A1A20416A8C37E53B2091A4E /* YlFallbackQualityPolicyTests.swift */,
-				BC81D3581442DF2B0D18CC4C /* YlFallbackStateEncoderTests.swift */,
-				AD3B561E7809DB5C33E9A4D0 /* YlFallbackTrackCatalogTests.swift */,
-				258F490128A5842FDC1C80D8 /* YlHlsHeaderPolicyTests.swift */,
-				BC924B1B78083E67EB2AE0A6 /* YlHlsManifestRewriterTests.swift */,
-				DF89DC2247430B175C7B15E1 /* YlMacosAudioTests.swift */,
-				36CCB3C53A98E04364865410 /* YlMacosAvPlayerStateTests.swift */,
-				54AE1EAAB6CCB99842DC935F /* YlMacosFallbackTests.swift */,
-				2DEFC9014C1577D41C092E60 /* YlMacosHlsTests.swift */,
-				8B509B46AA724A701AA04AE0 /* YlMacosNetworkTests.swift */,
-				C1DF9584C1B56A031101F1F1 /* YlMacosOpenCoordinatorTests.swift */,
-				A0D232E97EBE2730828227F9 /* YlMacosPlatformAdapterTests.swift */,
-				ED2E66846088B64C685280EF /* YlMacosPresentationTests.swift */,
-				72BF365E597279C7651DDCF0 /* YlMacosVideoTests.swift */,
-				1EA46EFC334F68FA86529FC7 /* YlNetworkByteSourceTests.swift */,
-				118DB3F767F3D0A2A76201CA /* YlNetworkRequestPolicyTests.swift */,
-				B30F20FC7B3A73915ABD9CD2 /* YlOpenedMediaTests.swift */,
-				259BBE58C534BE7C4EEAE8FB /* YlPlatformServicesTests.swift */,
-				13676CA8BFCE1E0827079D9B /* YlV2ReactivationTests.swift */,
-				D37036ED0B37F9CB511089DD /* h264_aac.flv */,
-				70D68B196278A79A91FCAC34 /* h264_aac.mkv */,
-				FB2F60D7B6D4F13983231D13 /* h264_aac.mp4 */,
-				9EA852F9EB314FAAC30F8E10 /* h264_mp3.flv */,
-				B4C3ACD32668B7EADD61BA5C /* hevc_aac.flv */,
-				9C4FFA18C36468580895FF07 /* hevc_aac.mkv */,
-				E96C775B3FFEF572759E674D /* hevc_dts.mp4 */,
-				8F05A65C502A4348996533F5 /* hls_encrypted_segment0.ts */,
-				7DE17B23DC7094916B707171 /* hls_key.bin */,
-				D75128AAE8A9BB6E769A696C /* network_seek_h264_aac.mkv */,
-				43861863016C836339CF66DC /* two_audio_tracks.mkv */,
-				F9E9683F561AC67CAE681D1C /* YlManagedFallbackCharacterizationTests.swift */,
-				66A5E6B423F73AA2E39B89AA /* YlFELVideoPipelineTests.swift */,
-				53ADE067E8C3C30103F5B5FE /* YlDashHlsCompilerTests.swift */,
-				0A8C9AB8DD14155728878024 /* YlDashResourceLoaderTests.swift */,
+				2F106567CEBABEBF23D41980 /* AppleHostCharacterizations.swift */,
+				E5852DE332CF67DAEE6216FE /* NativeBackendFixtures.swift */,
+				3C290055C8B9FFBB2409465E /* NativeCallbackCharacterization.swift */,
+				C3BBC424ABB148ACE6662454 /* RunnerTests.swift */,
+				34DC077E1E92452D216CAA1E /* YlAppleCompatibilityTests.swift */,
+				3ADC0D265B741EEDE905AAB4 /* YlAppleDecoderRestorationTests.swift */,
+				5E869F508D73E44FF6836F05 /* YlAppleHostTests.swift */,
+				75630A8AD23C5386F95DD3C9 /* YlApplePublicationTests.swift */,
+				DC082FBAB1E5C3F7599EC575 /* YlAppleReconciliationTests.swift */,
+				CDADAD5CF8DEDC2E5C43A37B /* YlAppleSessionTests.swift */,
+				AE6DA221934353776A2AC38D /* YlBoundedPacketQueueTests.swift */,
+				C8048684C57A62ABB3E04D95 /* YlByteRingBufferTests.swift */,
+				FC53E1C867EB626EF8E8CB17 /* YlDashHlsCompilerTests.swift */,
+				147A4BAE0B3DF7169ECAFEC2 /* YlDashResourceLoaderTests.swift */,
+				27A0857EAFBD7712C5D79D22 /* YlFELVideoPipelineTests.swift */,
+				2AB5CBCF374E238AE0921D63 /* YlFallbackBufferBudgetTests.swift */,
+				4F4DEEB55CF6DE6A59CC5C34 /* YlFallbackQualityPolicyTests.swift */,
+				D0B87C8143455324448E46AD /* YlFallbackStateEncoderTests.swift */,
+				AFA4DF6E8543446084572902 /* YlFallbackTrackCatalogTests.swift */,
+				C5D0D598749685F138906073 /* YlHlsHeaderPolicyTests.swift */,
+				63C04CC5CBCBC2772ACBE6DC /* YlHlsManifestRewriterTests.swift */,
+				0DC623098CF3B0C9CB3A171F /* YlMacosAudioTests.swift */,
+				AFD8D32CCC2F980B6D63E834 /* YlMacosAvPlayerStateTests.swift */,
+				42E615412A9A1C967D196015 /* YlMacosFallbackTests.swift */,
+				08BEC84DECE9358BB2DB25A6 /* YlMacosHlsTests.swift */,
+				72379C7C4D7DEBE351C1E629 /* YlMacosNetworkTests.swift */,
+				F38BA5B23113A06B10DBA6A8 /* YlMacosOpenCoordinatorTests.swift */,
+				D5066B6A5AC2AF4ABCEC96DF /* YlMacosPlatformAdapterTests.swift */,
+				2FD6B0E3C6E6F7A719D8CDB9 /* YlMacosPresentationTests.swift */,
+				06FAF8C98F9EFA76BF5E3893 /* YlMacosVideoTests.swift */,
+				ED88046AF4BCC838E47A1DE8 /* YlManagedFallbackCharacterizationTests.swift */,
+				04EA906E28F7E9BB1BB59881 /* YlNetworkByteSourceTests.swift */,
+				E43C33F40306C9E0359CDF71 /* YlNetworkRequestPolicyTests.swift */,
+				C700A177742B3233701EEB56 /* YlOpenedMediaTests.swift */,
+				7CDC667398959E0CB3B44375 /* YlPlatformServicesTests.swift */,
+				E1974E285FC714C815AB6BF9 /* YlRtmpDemandTests.swift */,
+				1956A71D967865D262FCA1F9 /* YlRtmpFixturePeer.swift */,
+				8B8BF19BF6B42EDC46588613 /* YlRtmpLifecycleTests.swift */,
+				5665E9BD72A711AE838F4EF4 /* YlRtmpManagedPauseTests.swift */,
+				BA0D368844FF6CB6BD2F11AF /* YlRtmpPeerTests.swift */,
+				ECAB55485ABB0439C7A04F72 /* YlRtmpProtocolTests.swift */,
+				50A940DD8D6F94037E79F8AD /* YlRtmpRecoveryTests.swift */,
+				530A21ADBFB4A3DDD36999D8 /* YlRtmpRestorationTests.swift */,
+				4D7B70FBAE1B54C38E94045F /* YlRtmpRouteTests.swift */,
+				AD2D6E2CD9F47DEBD2EA9913 /* YlRtmpTransportTests.swift */,
+				B2BF641F6A99C9F5B84A6281 /* YlV2ReactivationTests.swift */,
+				65975264F807CAFFC710D2F5 /* h264_aac.flv */,
+				35E565BAC00CE569E200466E /* h264_aac.mkv */,
+				3FB68FDA267E2CE9BF8139A7 /* h264_aac.mp4 */,
+				27822507808069AA8F7D1B81 /* h264_mp3.flv */,
+				6F135885A3F56F40C6C7F785 /* hevc_aac.flv */,
+				57D5CB3220138BCD13684C98 /* hevc_aac.mkv */,
+				D2930D5C73B77DB4B8813E4C /* hevc_aac.ts */,
+				C6912F19C303058E527259FE /* hevc_dts.mp4 */,
+				EA232D5E16F22AC9EB08B629 /* hls_encrypted_segment0.ts */,
+				F46174D8E67323FE3A505CEC /* hls_key.bin */,
+				20781E1F08377A5E656C399D /* network_seek_h264_aac.mkv */,
+				8070E6E11F3656127214D0F4 /* two_audio_tracks.mkv */,
 			);
 			path = RunnerTests;
 			sourceTree = "<group>";
@@ -455,17 +488,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				25980B7AEB3BE078CF45CBAF /* h264_aac.flv in Resources */,
-				4DCAA922EB396E4F4BE847BB /* h264_aac.mkv in Resources */,
-				BAFB465838DEEB9D529F7B52 /* h264_aac.mp4 in Resources */,
-				EF7970A4DABBB5D80192583D /* h264_mp3.flv in Resources */,
-				E09260D0B5C1AF50F876A2A5 /* hevc_aac.flv in Resources */,
-				6E254F8464BED359D59D6DA2 /* hevc_aac.mkv in Resources */,
-				02BC4EF0AD01BD356F8934F9 /* hevc_dts.mp4 in Resources */,
-				26EE8E1256592B363990DAE6 /* hls_encrypted_segment0.ts in Resources */,
-				EAF8171AE61C13EE3191671C /* hls_key.bin in Resources */,
-				7F67DCD390FA97B1A5442C90 /* network_seek_h264_aac.mkv in Resources */,
-				4E58B9299400E7A3D886A5C9 /* two_audio_tracks.mkv in Resources */,
+				A77EA5EB232ED78C4F4884EC /* h264_aac.flv in Resources */,
+				1E1D4FA513032FE78F764BEF /* h264_aac.mkv in Resources */,
+				7395EE697E69B3E4BF38ECBB /* h264_aac.mp4 in Resources */,
+				3973B9D78981967D69457677 /* h264_mp3.flv in Resources */,
+				01DF178319EF10D49C1EF278 /* hevc_aac.flv in Resources */,
+				54C92931EF395AD5E8078BF1 /* hevc_aac.mkv in Resources */,
+				B0748004F715FE005444B080 /* hevc_aac.ts in Resources */,
+				8E0F089F97147D279FD80AF9 /* hevc_dts.mp4 in Resources */,
+				7C9D11245578AD3EF5C79527 /* hls_encrypted_segment0.ts in Resources */,
+				1408C46C12ADA157AC6675E7 /* hls_key.bin in Resources */,
+				6F49EF49E579AB7E9171BBD9 /* network_seek_h264_aac.mkv in Resources */,
+				631320C1C8CD65B03B4B6E8C /* two_audio_tracks.mkv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -570,42 +604,52 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60CAE5DA24146B2992785AD5 /* AppleHostCharacterizations.swift in Sources */,
-				B3A45795ACCA75FB86AC66CC /* NativeBackendFixtures.swift in Sources */,
-				856AC02BB6D2B1DBA02733CC /* NativeCallbackCharacterization.swift in Sources */,
-				B5C298DACB58584FE533CE27 /* RunnerTests.swift in Sources */,
-				4644DE80A7825A723FDE23E6 /* YlAppleCompatibilityTests.swift in Sources */,
-				B8B3D95B002BDC5D6A96E09D /* YlAppleDecoderRestorationTests.swift in Sources */,
-				0488061E6C550329C1A2AD37 /* YlAppleHostTests.swift in Sources */,
-				5FD3DC4D5525F1B48F84317F /* YlApplePublicationTests.swift in Sources */,
-				D73F69476404923456630341 /* YlAppleReconciliationTests.swift in Sources */,
-				921A16898D076EAC56845EFC /* YlAppleSessionTests.swift in Sources */,
-				E58C3B556B427541301328F2 /* YlBoundedPacketQueueTests.swift in Sources */,
-				1E5A8C8AF7A20F18A6D0831F /* YlByteRingBufferTests.swift in Sources */,
-				9748DE63F00D9ECAAA96F22B /* YlFallbackBufferBudgetTests.swift in Sources */,
-				EB7169D1B7AD690C342CF206 /* YlFallbackQualityPolicyTests.swift in Sources */,
-				977235CC5AC5E7FA739672C0 /* YlFallbackStateEncoderTests.swift in Sources */,
-				1A72AF0DA7908BE24540B093 /* YlFallbackTrackCatalogTests.swift in Sources */,
-				51634107CF57772C40FD4C20 /* YlHlsHeaderPolicyTests.swift in Sources */,
-				652C93A9363EA0F1BC1CD7F8 /* YlHlsManifestRewriterTests.swift in Sources */,
-				5EEFE481A08CE6B381C8EB20 /* YlMacosAudioTests.swift in Sources */,
-				6581B64707F7407C0873308A /* YlMacosAvPlayerStateTests.swift in Sources */,
-				14164CDD4EA0E0249E35D15C /* YlMacosFallbackTests.swift in Sources */,
-				BF522BF2A904047FDD27C1AA /* YlMacosHlsTests.swift in Sources */,
-				12861F95ACE46A02A0CBA584 /* YlMacosNetworkTests.swift in Sources */,
-				8CD25E805695C2419EFFF930 /* YlMacosOpenCoordinatorTests.swift in Sources */,
-				E9EAE1AEFDB8CCADB2B45DF5 /* YlMacosPlatformAdapterTests.swift in Sources */,
-				7EE6E9FB7B61694955645CE5 /* YlMacosPresentationTests.swift in Sources */,
-				C1DEE157BE1F1F1546A5FDA3 /* YlMacosVideoTests.swift in Sources */,
-				9447057A02C566D82711FF7D /* YlNetworkByteSourceTests.swift in Sources */,
-				A52DBAE3CE888006BD1929DB /* YlNetworkRequestPolicyTests.swift in Sources */,
-				C3D64527DB616335EAAD938B /* YlOpenedMediaTests.swift in Sources */,
-				781F1C9D6E2F6455140DB053 /* YlPlatformServicesTests.swift in Sources */,
-				A52B4B776141C7449114EEE1 /* YlV2ReactivationTests.swift in Sources */,
-				77361B1156985F22DB05737C /* YlManagedFallbackCharacterizationTests.swift in Sources */,
-				F6562F172B23A832540E5245 /* YlFELVideoPipelineTests.swift in Sources */,
-				9E0A3236052168D1FF70E1E7 /* YlDashHlsCompilerTests.swift in Sources */,
-				A27D25A99B86DC286F30835A /* YlDashResourceLoaderTests.swift in Sources */,
+				D83AA932861FC8905B380F53 /* AppleHostCharacterizations.swift in Sources */,
+				1399747E93FC08A04A2C4C26 /* NativeBackendFixtures.swift in Sources */,
+				3E2588A1BC1F6CE2448ADCD5 /* NativeCallbackCharacterization.swift in Sources */,
+				76383578A5C364DA7B94F82C /* RunnerTests.swift in Sources */,
+				24F51B70F9AF478DCE7E3FA0 /* YlAppleCompatibilityTests.swift in Sources */,
+				CF5D0A1C9A42FAB6FBDFA3F4 /* YlAppleDecoderRestorationTests.swift in Sources */,
+				5DB2A160509CFEE73CD12485 /* YlAppleHostTests.swift in Sources */,
+				0297CDE8E558DC16D82844EE /* YlApplePublicationTests.swift in Sources */,
+				C2F69E74F1E0D739869EFC4D /* YlAppleReconciliationTests.swift in Sources */,
+				79ACA2DD67FBDFC418B563BA /* YlAppleSessionTests.swift in Sources */,
+				BFA20ACF2B5A0A4CF3D7C296 /* YlBoundedPacketQueueTests.swift in Sources */,
+				F331CC72B45CF2B10650905D /* YlByteRingBufferTests.swift in Sources */,
+				2C21C04BD36EA61953A1CD61 /* YlDashHlsCompilerTests.swift in Sources */,
+				1B61BD2DE3CA07A2222BC039 /* YlDashResourceLoaderTests.swift in Sources */,
+				1CFE0E84FBBF882082B056C5 /* YlFELVideoPipelineTests.swift in Sources */,
+				F671D2612D05B09B54372859 /* YlFallbackBufferBudgetTests.swift in Sources */,
+				CF9C0C382D7037AD9D01A6A4 /* YlFallbackQualityPolicyTests.swift in Sources */,
+				BFF1C7D1C89792326B8953A6 /* YlFallbackStateEncoderTests.swift in Sources */,
+				128EE532DF3F7C4AB32BD6E9 /* YlFallbackTrackCatalogTests.swift in Sources */,
+				85D362935E205A4417D85505 /* YlHlsHeaderPolicyTests.swift in Sources */,
+				B5C2EC2C16033EAB5CECFA6A /* YlHlsManifestRewriterTests.swift in Sources */,
+				94A1AB46BDBECF7581585A79 /* YlMacosAudioTests.swift in Sources */,
+				A537C05BE28B586A5287A247 /* YlMacosAvPlayerStateTests.swift in Sources */,
+				97F9E4BC225964B8857DCC61 /* YlMacosFallbackTests.swift in Sources */,
+				71DCDA0543ACCA2C98D40E5F /* YlMacosHlsTests.swift in Sources */,
+				C68334BB60FDB260277DA25D /* YlMacosNetworkTests.swift in Sources */,
+				FE3A4AEE8C06A75FECF71E88 /* YlMacosOpenCoordinatorTests.swift in Sources */,
+				42994F34DE8B764CC1A55FE3 /* YlMacosPlatformAdapterTests.swift in Sources */,
+				25E694718161B4E6B34ED875 /* YlMacosPresentationTests.swift in Sources */,
+				5C4FDD002E1570DA9995F58F /* YlMacosVideoTests.swift in Sources */,
+				70529071DFB43B0D27BE0982 /* YlManagedFallbackCharacterizationTests.swift in Sources */,
+				15F61606E06F31904D65AB2B /* YlNetworkByteSourceTests.swift in Sources */,
+				95ECC632E9A30F88372C0F87 /* YlNetworkRequestPolicyTests.swift in Sources */,
+				33360611418A26793305401C /* YlOpenedMediaTests.swift in Sources */,
+				E9B7F057DC900A96DD20A8E5 /* YlPlatformServicesTests.swift in Sources */,
+				EE46F4FD4C16129982B9867E /* YlRtmpDemandTests.swift in Sources */,
+				691CF2566C16D4594341EABD /* YlRtmpFixturePeer.swift in Sources */,
+				531C81BF18DE8F8339B09B48 /* YlRtmpLifecycleTests.swift in Sources */,
+				1AE1B10A26FA004B660FCED2 /* YlRtmpManagedPauseTests.swift in Sources */,
+				7124B764DD7AA7206E99F46E /* YlRtmpPeerTests.swift in Sources */,
+				592CF9D166E70142D76DF428 /* YlRtmpProtocolTests.swift in Sources */,
+				ACE2BD982F4DA89D82D4E434 /* YlRtmpRecoveryTests.swift in Sources */,
+				50C9997DD3468F1581BF954D /* YlRtmpRestorationTests.swift in Sources */,
+				E1FF0A95F043B494CFB33A67 /* YlRtmpRouteTests.swift in Sources */,
+				7B24E48BDC5412592CFA118F /* YlRtmpTransportTests.swift in Sources */,
+				C5A353E021CD2BEB6B3D0BF9 /* YlV2ReactivationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -652,8 +696,12 @@
 			baseConfigurationReference = 1D3F70440357CA5E69E00CB9 /* Pods-RunnerTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
 				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.ylplayer.ylPlayerExample.RunnerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -667,8 +715,12 @@
 			baseConfigurationReference = CB582FEB03DF6D2F0385A33C /* Pods-RunnerTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
 				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.ylplayer.ylPlayerExample.RunnerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -682,8 +734,12 @@
 			baseConfigurationReference = AEF2FD4DE4B6FC8F6D20896D /* Pods-RunnerTests.profile.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
 				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.ylplayer.ylPlayerExample.RunnerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -750,11 +806,13 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/DebugProfile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 			};
@@ -764,6 +822,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Manual;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Profile;
@@ -882,11 +942,13 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/DebugProfile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -902,11 +964,13 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Release.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 			};
@@ -916,6 +980,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Manual;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -924,6 +990,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

@@ -11,6 +11,12 @@ final class AndroidFrameObservation {
             'previousSession': previousSession,
           })
           .timeout(const Duration(seconds: 5)))!;
+  Future<Map<Object?, Object?>> installActive(String sessionId) async =>
+      (await _channel
+          .invokeMapMethod<Object?, Object?>('installActive', {
+            'sessionId': sessionId,
+          })
+          .timeout(const Duration(seconds: 5)))!;
   Future<List<Map<Object?, Object?>>> read() async =>
       (await _channel
               .invokeListMethod<Object?>('read')

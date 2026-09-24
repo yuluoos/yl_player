@@ -6,8 +6,10 @@ setting, floor = platform == 'ios' ? ['IPHONEOS_DEPLOYMENT_TARGET', '15.0'] : ['
 ([project] + project.targets).each do |object|
   object.build_configurations.each do |config|
     config.build_settings[setting] = floor
-    config.build_settings['ENABLE_TESTABILITY'] = 'YES'
-    config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+    if object.respond_to?(:name) && object.name == 'RunnerTests'
+      config.build_settings['ENABLE_TESTABILITY'] = 'YES'
+      config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+    end
     config.build_settings['ENABLE_USER_SCRIPT_SANDBOXING'] = 'NO'
   end
 end

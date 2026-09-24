@@ -35,6 +35,8 @@ internal class YlMedia3Core(
     private val handler: Handler,
     private val videoOutput: YlEngineVideoOutput,
     private val emit: (YlEngineEvent) -> Unit,
+    private val rtmpRecovery: YlRtmpRecovery = YlRtmpRecovery(),
+    private val resetDecoderGate: () -> Unit = {},
 ) : Player.Listener, AnalyticsListener {
     // Entire class, including construction, lives on the owned engine application Looper.
     private val acknowledgement = YlMedia3Acknowledgement()
@@ -44,6 +46,13 @@ internal class YlMedia3Core(
     private val trackSelector = DefaultTrackSelector(context)
     private val decoderPolicy = AndroidDecoderPolicy.valueOf(configuration.decoderPolicy)
     private val decoderEvidence = YlDecoderEvidenceProvider.collect()
+    private val rtmp = YlRtmpSourcePolicy.isRtmp(source)
+    @Volatile var mediaEpoch = 0L; private set
+    private var rtmpBackoff: Runnable? = null
+    private var rtmpBackoffTicket: Runnable? = null
+    private var rtmpBackoffDueMs = 0L
+    private var rtmpBackoffRemainingMs = 0L
+    private var rtmpPendingFailure: YlRtmpException? = null
     private val managedNetwork = source.networkPolicy?.kind == AndroidNetworkPolicyKind.MANAGED
     private var inspectingDecoder = false
     private val sourceFactory = YlMediaSourceFactory(source, configuration.network) { attempt, delayMs ->
@@ -146,24 +155,26 @@ internal class YlMedia3Core(
     fun play() {
         cancelFocusGrace(); lifecycle.reduce(YlLifecycleEvent.USER_PLAY)
         if (!active) activate()
-        exoPlayer.play(); refreshStallWatchdog()
+        syncRtmpDemand(); exoPlayer.play(); refreshStallWatchdog()
     }
     fun pause() {
         cancelFocusGrace(); lifecycle.reduce(YlLifecycleEvent.USER_PAUSE)
-        stallWatchdog.cancel(); exoPlayer.pause()
+        syncRtmpDemand(); stallWatchdog.cancel(); exoPlayer.pause()
     }
     fun pauseForAudioFocus() {
         if (lifecycle.reduce(YlLifecycleEvent.FOCUS_TRANSIENT_LOSS) != YlLifecycleAction.PAUSE_KEEP_RESOURCES) return
         cancelFocusGrace()
-        stallWatchdog.cancel()
+        syncRtmpDemand(); stallWatchdog.cancel()
         exoPlayer.pause()
         handler.postDelayed(focusGraceRunnable, 3_000L)
     }
     fun seekTo(positionMs: Long) {
+        if (rtmp) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
         resumeAtLiveEdge = false
         if (active) exoPlayer.seekTo(positionMs) else { savedPositionMs = positionMs; emitState() }
     }
     fun seekToLiveEdge() {
+        if (rtmp) { if (active) restartRtmpEpoch() else resumeAtLiveEdge = true; return }
         if (!sourceIsLive && !exoPlayer.isCurrentMediaItemLive) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
         if (active) { resumeAtLiveEdge = false; exoPlayer.seekToDefaultPosition() }
         else { resumeAtLiveEdge = true; emitState() }
@@ -177,11 +188,12 @@ internal class YlMedia3Core(
         requestedPlaybackSpeed.toDouble(), exoPlayer.volume.toDouble(),
         hostQualityConstraint.maxWidth?.toLong(), hostQualityConstraint.maxHeight?.toLong(), hostQualityConstraint.maxBitrate?.toLong())
     fun restore(point: YlEngineRestorePoint) {
-        savedPositionMs = point.positionMs; resumeAtLiveEdge = point.liveEdge
+        savedPositionMs = if (rtmp) 0 else point.positionMs; resumeAtLiveEdge = rtmp || point.liveEdge
         setPlaybackSpeed(point.speed)
         setVolume(point.volume)
         setVideoConstraints(AndroidVideoConstraintsMessage(point.maxWidth, point.maxHeight, point.maxBitrate))
         lifecycle.reduce(if (point.playbackIntended) YlLifecycleEvent.USER_PLAY else YlLifecycleEvent.USER_PAUSE)
+        syncRtmpDemand()
         activate()
     }
     fun ensureHealthy() { lastFailure?.let { throw YlBoundaryException(it) } }
@@ -207,14 +219,15 @@ internal class YlMedia3Core(
         videoOutput.attach(sourceGeneration, sourceGeneration, ::attachSurface)
         if (exoPlayer.currentMediaItem != null && exoPlayer.playbackState == Player.STATE_IDLE) {
             status = "opening"
-            prepareDecoder()
-            if (resumeAtLiveEdge) {
+            if (rtmp) restartRtmpEpoch() else prepareDecoder()
+            if (rtmp) { resumeAtLiveEdge = false } else if (resumeAtLiveEdge) {
                 exoPlayer.seekToDefaultPosition()
                 resumeAtLiveEdge = false
             } else {
                 exoPlayer.seekTo(savedPositionMs)
             }
         }
+        syncRtmpDemand()
         if (lifecycle.state.playbackIntended) exoPlayer.play() else exoPlayer.pause()
         handler.removeCallbacks(positionTicker)
         handler.post(positionTicker)
@@ -259,6 +272,8 @@ internal class YlMedia3Core(
         bufferingStartedAtMs?.let { rebufferDurationMs += SystemClock.elapsedRealtime() - it }
         bufferingStartedAtMs = null
         active = false
+        cancelRtmpWork()
+        sourceFactory.cancelAll()
         decoderAttemptStartedAtMs = Long.MAX_VALUE
         decoderName = null
         isHardwareDecoding = false
@@ -281,6 +296,7 @@ internal class YlMedia3Core(
         lifecycle.reduce(YlLifecycleEvent.USER_PAUSE)
         stallWatchdog.cancel()
         handler.removeCallbacksAndMessages(null)
+        cancelRtmpWork()
         sourceFactory.cancelAll()
         firstFrameRendered = false
         sourceIsLive = false
@@ -328,8 +344,10 @@ internal class YlMedia3Core(
     fun prepare() {
         val uriString = source.locator
         val generation = sourceGeneration + 1
+        mediaEpoch = rtmpRecovery.invalidate()
         val mediaItem = MediaItem.Builder()
             .setMediaId(identity.sessionId)
+            .setTag(if (rtmp) mediaEpoch else null)
             .setUri(Uri.parse(uriString))
             .setMimeType(mediaMimeType(source.format))
             .build()
@@ -343,7 +361,7 @@ internal class YlMedia3Core(
         handler.removeCallbacks(positionTicker)
         handler.post(positionTicker)
         firstFrameRendered = false
-        sourceIsLive = source.intent == AndroidStreamIntent.LIVE
+        sourceIsLive = rtmp || source.intent == AndroidStreamIntent.LIVE
         sourceClass = YlPlaybackPolicy.classifySource(
             kind = source.kind.name.lowercase(),
             isLive = sourceIsLive,
@@ -397,6 +415,7 @@ internal class YlMedia3Core(
         exoPlayer.setMediaSource(mediaSource, startPosition)
         // Candidates initialize privately and silently. Coordinator applies autoplay after commit.
         lifecycle.reduce(YlLifecycleEvent.USER_PAUSE)
+        syncRtmpDemand()
         exoPlayer.playWhenReady = false
         // No decoder is acquired during candidate preparation. Lease activation starts it.
         emitState()
@@ -497,6 +516,7 @@ internal class YlMedia3Core(
             cancelFocusGrace()
             lifecycle.reduce(YlLifecycleEvent.FOCUS_GAIN)
         }
+        syncRtmpDemand()
         if (exoPlayer.playbackState == Player.STATE_READY) {
             status = YlMedia3StatePolicy.readyStatus(status, isPlaying)
             emitState()
@@ -530,6 +550,7 @@ internal class YlMedia3Core(
                 }
             }
         }
+        syncRtmpDemand()
         refreshStallWatchdog()
     }
 
@@ -619,6 +640,7 @@ internal class YlMedia3Core(
     ) {
         if (!isCurrentEvent(eventTime)) return
         stallWatchdog.cancel()
+        if (rtmp && tryRtmpRecovery(error)) return
         if (tryDecoderRecovery(error)) return
         status = "error"
         lastFailure = mediaFailure(error, decoderPolicy)
@@ -627,8 +649,94 @@ internal class YlMedia3Core(
         emitState()
     }
 
+    private fun rtmpPaused() = !lifecycle.state.playbackIntended || lifecycle.state.focusPaused
+    /** All retry admission and pause transitions run on the owned application Handler. */
+    private fun syncRtmpDemand() {
+        if (!rtmp) return
+        val paused = rtmpPaused()
+        sourceFactory.setPlaybackPaused(paused)
+        if (paused) {
+            if (rtmpBackoffTicket != null) {
+                rtmpBackoffTicket?.let(handler::removeCallbacks)
+                rtmpBackoffRemainingMs = (rtmpBackoffDueMs - SystemClock.elapsedRealtime()).coerceAtLeast(0)
+                rtmpBackoffTicket = null
+            }
+        } else if (active && !disposed && !stopped) {
+            if (rtmpPendingFailure != null) reserveRtmpRecovery()
+            scheduleRtmpBackoff()
+        }
+    }
+    private fun cancelRtmpWork() {
+        if (!rtmp) return
+        rtmpBackoffTicket?.let(handler::removeCallbacks); rtmpBackoff = null
+        rtmpBackoffTicket = null; rtmpPendingFailure = null
+        mediaEpoch = rtmpRecovery.invalidate()
+    }
+    private fun tryRtmpRecovery(error: PlaybackException): Boolean {
+        if (!active || disposed || stopped) return false
+        val typed = error.boundedCauses().filterIsInstance<YlRtmpException>().firstOrNull() ?: return false
+        if (!rtmpRecovery.canRecover(typed.kind, typed.transient)) return false
+        cancelRtmpWork()
+        sourceFactory.cancelAll()
+        status = "buffering"; currentError = null; lastFailure = null
+        rtmpPendingFailure = typed
+        syncRtmpDemand()
+        return true
+    }
+    private fun reserveRtmpRecovery() {
+        val failure = rtmpPendingFailure ?: return
+        val delay = checkNotNull(rtmpRecovery.next(failure.kind, failure.transient))
+        rtmpPendingFailure = null
+        val epoch = mediaEpoch
+        rtmpBackoffRemainingMs = delay
+        recordRetry(rtmpRecovery.attempts, delay, SystemClock.elapsedRealtime())
+        rtmpBackoff = object : Runnable {
+            override fun run() {
+                if (rtmpBackoff !== this) return
+                rtmpBackoffRemainingMs = 0
+                if (rtmpPaused()) return // Keep the same reserved continuation for play().
+                rtmpBackoff = null
+                if (!disposed && !stopped && active && mediaEpoch == epoch) restartRtmpEpoch()
+            }
+        }
+    }
+    private fun scheduleRtmpBackoff() {
+        val pending = rtmpBackoff ?: return
+        if (rtmpBackoffTicket != null) return
+        rtmpBackoffDueMs = SystemClock.elapsedRealtime() + rtmpBackoffRemainingMs
+        val ticket = object : Runnable {
+            override fun run() {
+                if (rtmpBackoffTicket !== this) return
+                rtmpBackoffTicket = null
+                pending.run()
+            }
+        }
+        rtmpBackoffTicket = ticket
+        handler.postDelayed(ticket, rtmpBackoffRemainingMs)
+    }
+    /** A fresh media source/extractor, never a new FLV header inside an existing extractor. */
+    private fun restartRtmpEpoch() {
+        cancelRtmpWork()
+        sourceFactory.cancelAll()
+        sourceGeneration++
+        decoderAttemptStartedAtMs = Long.MAX_VALUE
+        decoderName = null; isHardwareDecoding = false
+        firstFrameRendered = false; hasBeenReady = false
+        currentError = null; lastFailure = null; status = "opening"
+        audioSelections.clear(); audioTracks = emptyList(); videoTracks = emptyList()
+        resetDecoderGate()
+        val item = MediaItem.Builder().setMediaId(identity.sessionId).setUri(Uri.parse(source.locator))
+            .setMimeType("video/x-flv").setTag(mediaEpoch).build()
+        exoPlayer.stop(); exoPlayer.clearMediaItems()
+        exoPlayer.setMediaSource(sourceFactory.create(context, item), 0L)
+        videoOutput.attach(sourceGeneration, sourceGeneration, ::attachSurface)
+        prepareDecoder()
+        exoPlayer.playWhenReady = lifecycle.state.playbackIntended
+        emitState()
+    }
+
     private fun tryDecoderRecovery(error: PlaybackException): Boolean {
-        if (!active || managedNetwork || error.errorCode != PlaybackException.ERROR_CODE_DECODER_INIT_FAILED) return false
+        if (!active || managedNetwork || rtmp || error.errorCode != PlaybackException.ERROR_CODE_DECODER_INIT_FAILED) return false
         val selected = selectedVideoBitrate ?: return false
         val lowerBitrate = availableVideoBitrates.firstOrNull { it < selected } ?: return false
         if (
@@ -652,7 +760,7 @@ internal class YlMedia3Core(
     }
 
     private fun maybeEvaluateHealth(memoryPressure: Boolean = false) {
-        if (!hasBeenReady || status == "error") return
+        if (rtmp || !hasBeenReady || status == "error") return
         val nowMs = SystemClock.elapsedRealtime()
         val startedAtMs = healthWindowStartedAtMs ?: nowMs.also(::resetHealthWindow)
         if (!memoryPressure && nowMs - lastHealthEvaluationMs < 1_000L) return
@@ -699,6 +807,7 @@ internal class YlMedia3Core(
     }
 
     private fun applyRecoveryAction(action: YlRecoveryAction) {
+        if (rtmp) return
         when (action) {
             YlRecoveryAction.None -> Unit
             YlRecoveryAction.DowngradeOneStep -> {
@@ -744,7 +853,7 @@ internal class YlMedia3Core(
 
     private fun refreshStallWatchdog() {
         // Managed HTTP owns hop/header/body timing; a source watchdog is not a second request timer.
-        if (managedNetwork) { stallWatchdog.cancel(); return }
+        if (managedNetwork || rtmp) { stallWatchdog.cancel(); return }
         val generation = sourceGeneration
         stallWatchdog.update(
             active = active,
@@ -817,17 +926,17 @@ internal class YlMedia3Core(
         emitState()
     }
 
-    private fun normalizedLiveOffset(): Long? = exoPlayer.currentLiveOffset
+    private fun normalizedLiveOffset(): Long? = if (rtmp) null else exoPlayer.currentLiveOffset
         .takeUnless { it == C.TIME_UNSET }?.coerceAtLeast(0)
 
     private fun timeline(): AndroidTimelineMessage {
         val position = if (active) max(0L, exoPlayer.currentPosition) else savedPositionMs
-        val duration = exoPlayer.duration.takeUnless { it == C.TIME_UNSET || it < 0 }
+        val duration = if (rtmp) null else exoPlayer.duration.takeUnless { it == C.TIME_UNSET || it < 0 }
         val live = sourceIsLive || exoPlayer.isCurrentMediaItemLive
         val offset = normalizedLiveOffset()
         return AndroidTimelineMessage(position, duration,
             if (active) max(position, exoPlayer.bufferedPosition) else position,
-            exoPlayer.isCurrentMediaItemSeekable, live,
+            !rtmp && exoPlayer.isCurrentMediaItemSeekable, live,
             if (live && offset != null) offset <= 2_000L else null, offset,
             if (live && exoPlayer.isCurrentMediaItemSeekable && duration != null) AndroidDvrWindowMessage(0, duration) else null)
     }
@@ -885,12 +994,13 @@ internal class YlMedia3Core(
         sourceGeneration += 1
         cancelFocusGrace()
         handler.removeCallbacksAndMessages(null)
+        cancelRtmpWork()
+        sourceFactory.close()
         // Keep the Player.Listener installed until release returns: timeout is a listener event.
         if (::exoPlayer.isInitialized) {
             acknowledgement.perform { videoOutput.detach(::clearSurface) }
             acknowledgement.perform { exoPlayer.release() }
         }
-        sourceFactory.close()
         if (!acknowledgement.isSafe) return false
         videoOutput.dispose { }
         return true
@@ -907,13 +1017,14 @@ internal class YlMedia3Core(
     private fun isCurrentEvent(eventTime: AnalyticsListener.EventTime): Boolean {
         if (!acceptsCurrentCallbacks()) return false
         if (eventTime.timeline.isEmpty || eventTime.windowIndex == C.INDEX_UNSET) {
+            if (rtmp) return false
             return exoPlayer.currentMediaItem?.mediaId == identity.sessionId
         }
         return runCatching {
             val item = eventTime.timeline
                 .getWindow(eventTime.windowIndex, Timeline.Window())
                 .mediaItem
-            item.mediaId == identity.sessionId
+            item.mediaId == identity.sessionId && (!rtmp || item.localConfiguration?.tag == mediaEpoch)
         }.getOrDefault(false)
     }
 }
@@ -923,6 +1034,7 @@ internal fun mediaFailure(error: PlaybackException, decoderPolicy: AndroidDecode
     return mediaFailure(error.errorCode, error.cause, decoderPolicy)
 }
 internal fun mediaFailure(errorCode: Int, cause: Throwable?, decoderPolicy: AndroidDecoderPolicy): YlFailureKind {
+    cause?.boundedCauses()?.filterIsInstance<YlRtmpException>()?.firstOrNull()?.let { return it.kind }
     cause?.boundedCauses()?.firstOrNull { it is YlBoundaryException }?.let {
         return (it as YlBoundaryException).kind
     }

@@ -14,7 +14,7 @@ internal class YlSourceAssessment(private val evidence: YlDecoderEvidenceProvide
         catch (error: YlBoundaryException) { return reject(error.kind) }
         val uri = runCatching { URI(source.locator) }.getOrNull()
         val valid = when (source.kind) {
-            AndroidSourceKind.NETWORK -> uri?.scheme?.lowercase() in listOf("http", "https") && !uri?.host.isNullOrBlank() && uri?.userInfo == null && source.locator.toHttpUrlOrNull() != null
+            AndroidSourceKind.NETWORK -> YlRtmpSourcePolicy.isRtmp(source) || uri?.scheme?.lowercase() in listOf("http", "https") && !uri?.host.isNullOrBlank() && uri?.userInfo == null && source.locator.toHttpUrlOrNull() != null
             AndroidSourceKind.FILE -> (uri?.scheme == "file" && !uri.path.isNullOrBlank()) || (uri?.scheme == null && source.locator.startsWith('/'))
             AndroidSourceKind.CONTENT -> uri?.scheme == "content" && !uri.authority.isNullOrBlank() && !uri.path.isNullOrBlank()
         }

@@ -20,6 +20,8 @@ actual source and requirements before Load.
 | Network Matroska VOD | Supported subject to Media3 | Not selected | Inspection-dependent owned byte route |
 | Network Matroska marked live | Media3 route; runtime-dependent | Not selected | Rejected |
 | Network HTTP-FLV | Supported subject to Media3 | Not selected | Inspection-dependent sequential owned byte route |
+| Plain TCP RTMP, classic AVC with optional AAC | Owned bounded transport into Media3 FLV extractor; no fallback/retry nesting | Not selected | Owned bounded transport into custom AVIO/FLV and VideoToolbox |
+| RTMPS, enhanced RTMP, other RTMP codecs or audio-only RTMP | Explicitly unsupported | Not selected | Explicitly unsupported |
 | Local FLV or WebM | Media3 route; runtime-dependent | Not selected | Rejected until an inspected supported route is available |
 | AVI, MPEG-TS, or MPEG-PS request | Media3 route; runtime-dependent | Rejected before engine selection (`container.unsupported`, or `policy.unsupported` for a strict request) | Rejected before engine selection |
 | Unknown network format | Inspection-dependent | Inspection-dependent | Apple inspection reads at most the bounded 4096-byte signature window, then reassesses |
@@ -29,7 +31,7 @@ documented parsers. It does not provide networking or software video decoding.
 Apple managed fallback requires a supported video stream; audio-only fallback
 media is currently rejected.
 
-For formats other than DASH, Android first tries Media3, then makes at most one managed fallback attempt for
+For non-RTMP sources with formats other than DASH, Android first tries Media3, then makes at most one managed fallback attempt for
 container/extractor and decoder failures. The fallback uses package-owned local,
 content, progressive HTTP, or HLS VOD/live input; FFmpeg demuxes MP4/MOV,
 Matroska/WebM, FLV, and MPEG-TS. H.264/H.265 packets stay compressed for
@@ -39,6 +41,32 @@ decoded to the Flutter texture. Higher adaptive variants are downgraded when a
 qualifying variant exists; otherwise Load fails. Supported fallback audio is
 AAC, MP3, AC-3, E-AC-3, DTS, FLAC, Opus, and Vorbis. Standard HLS AES-128 is
 supported; Widevine, SAMPLE-AES, and DRM bypass are not.
+
+## RTMP foundation scope
+
+RTMP accepts automatic/FLV format and automatic/live intent. It is live,
+nonseekable, with unknown duration. HTTP headers/credentials, managed HTTP
+networking, bounded buffering, VOD, nonzero initial position, and every runtime
+`seekTo` (including zero) are rejected explicitly before unsupported work.
+`seekToLiveEdge` starts a fresh live epoch. Ordinary buffer modes remain tuning
+goals; this phase establishes no latency SLO or complete CAP-LIVE/REQ-08 support.
+
+Setup has one absolute 10 s deadline; established media inactivity counts 15 s of
+active read demand, suspended during consumer pause/backpressure. Media/control
+messages are capped at 4 MiB/64 KiB, aggregate reassembly at 8 MiB, chunk histories at 32,
+and outbound controls at 64 KiB. These engineering limits do not implement the
+public bounded-buffer policy. Committed automatic recovery has one owner and
+at most three attempts at 500/1000/2000 ms, without budget reset on successful frames.
+Cancellation closes owned sockets and cancels pending work. Android API 24 system
+DNS can outlive caller cancellation in at most two globally retained slots;
+no unbounded queue or claim of OS-thread termination.
+
+See the [RTMP stage report](superpowers/reports/2026-09-22-rtmp-foundation.md)
+for the measured application matrix, independent MediaMTX peer, safe errors and
+separately labeled native restoration evidence. Runtime missing-stream candidate
+preservation alone does not prove post-lease rollback. Audio-track presence does
+not establish audible quality, AV sync, physical/minimum-OS coverage, endurance,
+or real subscription availability.
 
 ## Policy matrix
 
@@ -174,10 +202,11 @@ Its HTTP host has separate request and response budgets; these are not the
 player's media `buffer.bounded` policy. Caller/script headers are all treated
 as credentials, with sticky removal after a cross-origin redirect.
 
-A resolved RTMP/RTMPS URI can be represented, but conversion to the current
-player source rejects those protocols explicitly. HTTP(S) conversion retains
-credentials and live intent; playback remains subject to the selected engine's
-route and policy checks above. Unknown script expiry remains unknown.
+A valid header-free resolved RTMP app/playpath URI converts to a player source
+and retains live intent. RTMP results with HTTP headers are rejected; RTMPS
+conversion remains explicitly unsupported. HTTP(S) conversion retains credentials
+and live intent. Playback remains subject to the selected engine's route and
+policy checks above. Unknown script expiry remains unknown.
 
 The focused application matrix has 26 passing cases on each of macOS arm64,
 iOS 27 arm64 Simulator and Android API 36 arm64 Emulator, including the nine

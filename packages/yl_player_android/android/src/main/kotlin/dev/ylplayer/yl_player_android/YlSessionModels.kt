@@ -28,6 +28,8 @@ internal interface YlPlaybackEngineAdapter {
     /** Unknown media is conservatively exclusive until READY proves audio-only. */
     val needsExclusiveLease: Boolean get() = true
     fun registerCallback(callback: (YlSessionIdentity, YlEngineEvent) -> Unit)
+    /** Commit notification only publishes state; it must not block or throw. */
+    fun markCommitted() {}
     suspend fun prepare()
     suspend fun activate(output: YlSessionVideoOutput)
     suspend fun quiesce(): YlEngineRestorePoint

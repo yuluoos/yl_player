@@ -136,16 +136,29 @@ final class YlResolvedSource {
   final Map<String, String> headers;
   final DateTime? expiresAt;
 
+  /// Converts HTTP(S) or header-free RTMP results. RTMPS stays unsupported;
+  /// RTMP syntax is checked by the core source validator before native routing.
   YlNetworkSource toNetworkSource() {
-    if (uri.scheme != 'http' && uri.scheme != 'https') {
+    if (uri.scheme != 'http' && uri.scheme != 'https' && uri.scheme != 'rtmp') {
       throw scriptFailure('media_protocol_unsupported');
     }
     checkExpiry(expiresAt);
-    return YlNetworkSource(
+    if (uri.scheme == 'rtmp' && headers.isNotEmpty) {
+      throw scriptFailure('invalid_headers');
+    }
+    final source = YlNetworkSource(
       uri,
       intent: YlStreamIntent.live,
       request: YlHttpRequest(credentials: headers),
     );
+    if (uri.scheme == 'rtmp') {
+      try {
+        validateYlSource(source);
+      } on ArgumentError {
+        throw scriptFailure('invalid_url');
+      }
+    }
+    return source;
   }
 
   @override

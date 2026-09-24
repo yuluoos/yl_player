@@ -108,6 +108,12 @@ final class YlAppleSessionCoordinator: NSObject {
     lastQualityConstraint
   }
 
+  func validateTimeSeek() throws {
+    if lastCommittedSource?.url?.scheme?.lowercased() == "rtmp" {
+      throw ylRtmpError("policy.unsupported")
+    }
+  }
+
   func execute(_ command: YlApplePlaybackCommand,
     completion: @escaping (Result<Void, NativePlayerError>) -> Void) {
     if case .constraints(let constraints) = command, let fallback = slot.current as? YlFallbackBackend {
@@ -124,6 +130,8 @@ final class YlAppleSessionCoordinator: NSObject {
   /// Synchronous transport methods acknowledge validated intent here. Queued
   /// effects may be cancelled with their backend; acknowledged intent cannot be.
   func executeSynchronous(_ command: YlApplePlaybackCommand) throws {
+    // Reject source policy before acknowledging or retaining a restoration intent.
+    if case .seek = command { try validateTimeSeek() }
     let revision = synchronousIntentRevision &+ 1
     var immediate: Result<Void, NativePlayerError>?
     execute(command) { [weak self] result in
@@ -217,7 +225,7 @@ final class YlAppleSessionCoordinator: NSObject {
         switch decision.candidate {
         case .avPlayer:
           return try self.prepareNativeOrMp4(source: source, token: token, identity: identity)
-        case .localMatroska, .networkMatroska, .networkFlv:
+        case .localMatroska, .networkMatroska, .networkFlv, .networkRtmp:
           return .fallback(
             source: source,
             prepared: try self.prepareFallback(source: source, token: token, identity: identity)
@@ -235,7 +243,7 @@ final class YlAppleSessionCoordinator: NSObject {
           case .avPlayer: return try self.prepareNativeOrMp4(source: inspected, token: token, identity: identity)
           case .headeredHls, .dashHls: return .headeredHls(source: inspected,
             prepared: try self.prepareHeaderedHls(source: inspected, token: token, credentialContext: hlsCredentials))
-          case .localMatroska, .networkMatroska, .networkFlv:
+          case .localMatroska, .networkMatroska, .networkFlv, .networkRtmp:
             return .fallback(source: inspected, prepared: try self.prepareFallback(source: inspected, token: token, identity: identity))
           default: throw NativePlayerError(category: "container", code: "container.unsupported", message: "Inspection could not establish a supported route.")
           }
@@ -374,10 +382,16 @@ final class YlAppleSessionCoordinator: NSObject {
     openCoordinator.begin(
       prepare: { [weak self] token in
         guard let self else { throw YlOpenCancellationToken.cancellationError() }
-        let prepared = try self.prepareFallback(source: source, token: token, identity: identity, reactivating: true)
-        try prepared.prepareForReactivation(resumeState)
-        try token.throwIfCancelled()
-        return .fallback(source: source, prepared: prepared)
+        let prepare = {
+          let prepared = try self.prepareFallback(source: source, token: token, identity: identity, reactivating: true)
+          try prepared.prepareForReactivation(resumeState)
+          try token.throwIfCancelled()
+          return YlPreparedOpen.fallback(source: source, prepared: prepared)
+        }
+        if source.url?.scheme?.lowercased() == "rtmp" {
+          return try source.rtmpRecovery.prepareRestoration(token: token, work: prepare)
+        }
+        return try prepare()
       },
       commit: { [weak self, weak fallback] candidate in
         guard let self, let fallback, !self.disposed,

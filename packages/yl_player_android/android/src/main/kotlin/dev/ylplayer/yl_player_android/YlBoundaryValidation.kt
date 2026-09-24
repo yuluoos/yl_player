@@ -22,6 +22,7 @@ internal object YlBoundaryValidation {
         listOf(value.maxWidth, value.maxHeight, value.maxBitrate).filterNotNull().forEach { policy(it, true) }
     }
     fun load(source: AndroidSourceMessage, options: AndroidLoadOptionsMessage) {
+        if (YlRtmpSourcePolicy.isRtmp(source)) YlRtmpSourcePolicy.validate(source, options)
         options.startPositionMs?.let(::position)
         constraints(options.videoConstraints)
         // Bounded allocation is unsupported, including malformed requests; never allocate or

@@ -3,6 +3,19 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 void main() {
   test('landed network failure codes are public and stable', () {
+    expect(
+      YlFailureCodes.networkRtmpHandshakeFailed,
+      'network.rtmp_handshake_failed',
+    );
+    expect(
+      YlFailureCodes.networkRtmpStreamUnavailable,
+      'network.rtmp_stream_unavailable',
+    );
+    expect(YlFailureCodes.networkRtmpDisconnected, 'network.rtmp_disconnected');
+    expect(
+      YlFailureCodes.networkProtocolUnsupported,
+      'network.protocol_unsupported',
+    );
     expect(YlFailureCodes.networkDnsFailed, 'network.dns_failed');
     expect(YlFailureCodes.networkHttpForbidden, 'network.http_forbidden');
   });

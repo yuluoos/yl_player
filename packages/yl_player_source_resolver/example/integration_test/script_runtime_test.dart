@@ -22,7 +22,7 @@ void main() {
 
 void registerRuntimeContracts() {
   test(
-    'public native success raw parameters credentials and explicit RTMP rejection',
+    'public native success raw parameters credentials RTMP admission and RTMPS rejection',
     () async {
       final resolver = YlScriptResolver();
       addTearDown(resolver.dispose);
@@ -38,11 +38,18 @@ void registerRuntimeContracts() {
       });
       final rtmp = await resolver
           .resolveSource(
-            'function main(){return {url:"rtmp://fixture.invalid/live"}}',
+            'function main(){return {url:"rtmp://fixture.invalid/live/owned"}}',
+          )
+          .result;
+      expect(rtmp.toNetworkSource().uri, rtmp.uri);
+      expect(rtmp.toNetworkSource().request.headers, isEmpty);
+      final rtmps = await resolver
+          .resolveSource(
+            'function main(){return {url:"rtmps://fixture.invalid/live/owned"}}',
           )
           .result;
       expect(
-        () => rtmp.toNetworkSource(),
+        () => rtmps.toNetworkSource(),
         throwsA(failure('media_protocol_unsupported')),
       );
     },

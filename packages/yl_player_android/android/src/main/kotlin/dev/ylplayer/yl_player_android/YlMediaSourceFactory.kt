@@ -13,6 +13,9 @@ import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.hls.playlist.*
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.media3.extractor.ExtractorsFactory
+import androidx.media3.extractor.flv.FlvExtractor
 import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy
 import androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy
 import androidx.media3.exoplayer.upstream.ParsingLoadable
@@ -31,17 +34,20 @@ internal fun requiresHlsCredentialAncestry(
 /** One factory and provenance graph per source, retained through stop/restore/recovery. */
 @OptIn(UnstableApi::class)
 internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: NetworkConfiguration, onRetry: (Int, Long) -> Unit) {
+    private val rtmp = if (YlRtmpSourcePolicy.isRtmp(source)) YlRtmpDataSources(source.locator) else null
     private val managed = source.networkPolicy?.kind == AndroidNetworkPolicyKind.MANAGED
     private val requestHeaders = source.request?.headers.orEmpty()
     private val requestCredentials = source.request?.credentials.orEmpty()
-    private val credentials = if (source.kind == AndroidSourceKind.NETWORK) YlOriginCredentialPolicy(
+    private val credentials = if (source.kind == AndroidSourceKind.NETWORK && rtmp == null) YlOriginCredentialPolicy(
         source.locator.toHttpUrl(), requestHeaders, requestCredentials,
         requireKnownAncestry = source.format in listOf(AndroidMediaFormat.HLS, AndroidMediaFormat.DASH) || source.locator.toHttpUrl().encodedPath.lowercase().let { it.endsWith(".m3u8") || it.endsWith(".mpd") }) else null
     private val protectHlsCredentialAncestry =
         credentials != null && requiresHlsCredentialAncestry(requestHeaders, requestCredentials)
     private val http = credentials?.let { YlManagedHttpClient(it, if (managed) network else null, onRetry = onRetry) }
-    private val loaderPolicy = if (managed) YlManagedLoadErrorPolicy() else DefaultLoadErrorHandlingPolicy()
+    private val loaderPolicy = if (managed || rtmp != null) YlManagedLoadErrorPolicy() else DefaultLoadErrorHandlingPolicy()
     fun create(context: Context, item: MediaItem): MediaSource {
+        rtmp?.let { return ProgressiveMediaSource.Factory(it.factory(), ExtractorsFactory { arrayOf(FlvExtractor()) })
+            .setLoadErrorHandlingPolicy(loaderPolicy).createMediaSource(item) }
         val dataSources = if (http == null) DefaultDataSource.Factory(context)
             else DefaultDataSource.Factory(context, OkHttpDataSource.Factory(http))
         val hls = item.localConfiguration?.mimeType == "application/x-mpegURL" ||
@@ -63,8 +69,9 @@ internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: Netwo
             .createMediaSource(item)
         else DefaultMediaSourceFactory(dataSources).setLoadErrorHandlingPolicy(loaderPolicy).createMediaSource(item)
     }
-    fun cancelAll() { http?.cancelAll() }
-    fun close() { http?.close() }
+    fun setPlaybackPaused(paused: Boolean) { rtmp?.setPlaybackPaused(paused) }
+    fun cancelAll() { rtmp?.cancelAll(); http?.cancelAll() }
+    fun close() { rtmp?.cancelAll(); http?.close() }
 }
 
 /** Media3 must surface terminal managed errors, never replay them via loader or HLS fallback. */

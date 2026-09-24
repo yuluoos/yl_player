@@ -63,7 +63,7 @@ run_unit_tests() {
   verify_registrant
 
   native_status=0
-  python3 -B "$repo_root/tool/run_with_display_awake.py" xcodebuild test -quiet -sdk macosx \
+  python3 -B "$repo_root/tool/run_with_display_awake.py" xcodebuild test CODE_SIGNING_ALLOWED=NO ENABLE_TESTABILITY=YES -quiet -sdk macosx \
     -workspace "$example_root/macos/Runner.xcworkspace" \
     -scheme Runner \
     -parallel-testing-enabled NO \

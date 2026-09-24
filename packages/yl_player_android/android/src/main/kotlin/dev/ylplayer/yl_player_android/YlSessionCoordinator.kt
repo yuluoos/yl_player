@@ -160,6 +160,8 @@ internal class YlSessionCoordinator(
         decision.rejection?.let { throw YlBoundaryException(when (it.code) {
             "policy.unsupported" -> YlFailureKind.POLICY_UNSUPPORTED
             "decoder.unavailable" -> YlFailureKind.DECODER_UNAVAILABLE
+            "network.protocol_unsupported" -> YlFailureKind.NETWORK_PROTOCOL_UNSUPPORTED
+            "container.unsupported" -> YlFailureKind.CONTAINER_UNSUPPORTED
             else -> YlFailureKind.SOURCE_INVALID
         }) }
     }
@@ -437,7 +439,7 @@ internal class YlSessionCoordinator(
             transacting = false
             if (!committedOnce) {
                 inCommit = true
-                try { commit(); committedOnce = true } finally { inCommit = false }
+                try { commit(); committedOnce = true; session.engine.markCommitted() } finally { inCommit = false }
             }
             publishRestoration()
         }
@@ -540,6 +542,7 @@ internal class YlSessionCoordinator(
     override fun seekTo(command: AndroidSeekCommand) {
         val session = current(command.sessionId)
         YlBoundaryValidation.position(command.positionMs)
+        if (YlRtmpSourcePolicy.isRtmp(session.source)) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
         val lease = checkNotNull(activeLease)
         val ticket = lease.timelineIntent.issue()
         lease.timelineIntent.accept(ticket) {

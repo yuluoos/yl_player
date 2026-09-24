@@ -28,6 +28,12 @@ internal enum class YlFailureKind(
     NETWORK_FAILED(AndroidFailureCategory.NETWORK, "network.failed", "The network request failed.", true),
     NETWORK_DNS_FAILED(AndroidFailureCategory.NETWORK, "network.dns_failed", "The media host could not be resolved. Check the network connection and source host configuration.", true),
     NETWORK_HTTP_FORBIDDEN(AndroidFailureCategory.NETWORK, "network.http_forbidden", "The media server refused the request. Check access credentials and request configuration."),
+    NETWORK_PROTOCOL_UNSUPPORTED(AndroidFailureCategory.UNSUPPORTED, "network.protocol_unsupported", "This streaming protocol is unsupported. Use standard RTMP over TCP."),
+    RTMP_HANDSHAKE_FAILED(AndroidFailureCategory.NETWORK, "network.rtmp_handshake_failed", "RTMP setup failed or timed out. Check the connection and stream configuration.", true),
+    RTMP_HANDSHAKE_INVALID(AndroidFailureCategory.NETWORK, "network.rtmp_handshake_failed", "The RTMP handshake is invalid. Check server protocol compatibility."),
+    RTMP_DISCONNECTED(AndroidFailureCategory.NETWORK, "network.rtmp_disconnected", "The RTMP connection was interrupted or media timed out.", true),
+    RTMP_STREAM_UNAVAILABLE(AndroidFailureCategory.NETWORK, "network.rtmp_stream_unavailable", "The RTMP server denied or could not provide the stream. Check stream access and availability."),
+    RTMP_TRACK_LAYOUT_CHANGED(AndroidFailureCategory.CONTAINER, "container.rtmp_track_layout_changed", "The RTMP track configuration changed. Reload the stream to continue playback."),
     CONTAINER_UNSUPPORTED(AndroidFailureCategory.CONTAINER, "container.unsupported", "The media container is unsupported."),
     DECODER_UNSUPPORTED(AndroidFailureCategory.DECODER, "decoder.unsupported", "The required decoder is unsupported."),
     DECODER_UNAVAILABLE(AndroidFailureCategory.DECODER, "decoder.unavailable", "The required decoder is unavailable."),
@@ -44,6 +50,7 @@ internal class YlFailureMapper(private val diagnostics: YlSafeDiagnostics = YlSa
         val causes = error.boundedCauses().toList()
         val kind = when {
             error is YlBoundaryException -> error.kind
+            causes.any { it is YlRtmpException } -> (causes.first { it is YlRtmpException } as YlRtmpException).kind
             error is CancellationException -> YlFailureKind.LOAD_CANCELLED
             error is FileNotFoundException -> YlFailureKind.SOURCE_MISSING
             causes.firstOrNull { it is YlBoundaryException } != null ->

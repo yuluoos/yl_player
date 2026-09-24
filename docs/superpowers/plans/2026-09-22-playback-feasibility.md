@@ -12,8 +12,8 @@
 | CAP-DRM / iOS、macOS | AVPlayer 路由使用 AVPlayerItemVideoOutput 取像素；未见 AVContentKeySession 集成 | HLS + 系统 FairPlay + 原生受保护显示候选。Apple 提供内容密钥会话 API [E] | 原生 AVPlayerLayer 与 Flutter 视图接口、字幕/几何、外接保护；应用证书和合法许可证服务；不可依赖解密像素回读 | 架构及真实设备验证待补；用户暂无授权资源 |
 | CAP-DV-MAP / 三端 | Apple YlFELMetadata 当前只接受显示元数据 L1/L5/L6，明确拒绝 creative trims；YlFELCompositor 声明不是完整显示管理 [L2] | 保留 FEL 重建工作，单独评估显示映射。libplacebo 当前源码存在 FEL/NLQ 数据结构，可作为研究线索 [F] | 固定候选版本、逐项元数据/CM 覆盖、目标显示参数、独立参考图及误差容限；三端性能与一致性 | 未证明完整映射可行；不可把源码有 FEL 字段等同已完成验收 |
 | CAP-DV-OUT / 三端 | 尚无指定外接设备链和信号证据 | 系统输出路线需逐设备验证；完整映射和原生 DV 信号独立判定 | 设备/OS/连接器/电视模式、内容样本、断接恢复及画面对照 | 外部条件缺失；不能从 EDR/HDR 输出推断原生 DV |
-| CAP-JS / 三端 | 独立可选 yl_player_source_resolver，QuickJS 2026-06-04 + CryptoJS 4.2.0；原生终止、受控 HTTP 宿主和安全诊断 | 冻结九脚本原始字节，业务显式解析、刷新、取消后交给内核；不改变 RTMP 支持 | 真实订阅/外部业务入口；设备与最低系统矩阵；不能从受控响应推出线上可用 | 九脚本及运行层实际 App 检查每端 26 项通过（macOS 合并首轮与单项重测），真实 AVPlayer / Media3 首帧；最终独立复审通过，见[阶段报告](../reports/2026-09-22-script-resolver.md) |
-| CAP-RTMP / 三端 | Apple FFmpeg `--disable-network`、仅 file 协议；当前 owned byte source 是 HTTP 路径 [L1] | 独立受控 RTMP transport 或重新设计受限 FFmpeg 网络入口；FFmpeg 官方存在 RTMP 协议实现 [G] | 握手、取消、时间戳、断连恢复、资源限制和构建制品复现；HTTP 请求头/重定向语义不能盲套 RTMP | 未接入；RTMPS/增强 RTMP 不自动视为覆盖 |
+| CAP-JS / 三端 | 独立可选 yl_player_source_resolver，QuickJS 2026-06-04 + CryptoJS 4.2.0；原生终止、受控 HTTP 宿主和安全诊断 | 冻结九脚本原始字节，业务显式解析、刷新、取消后交给内核；RTMP 播放能力仍由内核提供 | 真实订阅/外部业务入口；设备与最低系统矩阵；不能从受控响应推出线上可用 | 九脚本及运行层实际 App 检查每端 26 项通过（macOS 合并首轮与单项重测），真实 AVPlayer / Media3 首帧；最终独立复审通过，见[阶段报告](../reports/2026-09-22-script-resolver.md) |
+| CAP-RTMP / 三端 | 独立自有 TCP RTMP 接收器；Android 接 Media3 FLV extractor，Apple 接 custom AVIO/FLV + VideoToolbox；禁用网络的 FFmpeg 制品不变 | 普通 RTMP classic AVC 与可选 AAC 直播；10 秒准备期限、15 秒主动读需求期限、有限资源与三次终身自动恢复；HTTP 请求语义不移植 | RTMPS、增强 RTMP、其他编码、真实订阅、最低系统/物理设备及长期稳定性仍未覆盖；API 24 系统 DNS 最多两槽，不能保证终止 OS 查询线程 | 原生边界回归与应用验收证据见[RTMP 阶段报告](../reports/2026-09-22-rtmp-foundation.md)；仅基础子集，不代表完整 CAP-RTMP 或 CAP-LIVE/REQ-08 |
 
 以上下一步由后续对应能力的实施任务负责。外部输入只阻塞相关真机/许可证/参考验收，不阻塞可独立推进的代码。
 

@@ -33,11 +33,25 @@ abstract final class YlFailureCodes {
   static const sourceInvalid = 'source.invalid';
   static const sourceMissing = 'source.missing';
   static const networkFailed = 'network.failed';
+  static const networkProtocolUnsupported = 'network.protocol_unsupported';
+
   /// The source host could not be resolved from structured platform DNS evidence.
   static const networkDnsFailed = 'network.dns_failed';
 
   /// The media server returned HTTP 403. This failure is not retryable.
   static const networkHttpForbidden = 'network.http_forbidden';
+
+  /// RTMP connection or setup failed before playback.
+  static const networkRtmpHandshakeFailed = 'network.rtmp_handshake_failed';
+
+  /// The server denied the requested stream. This failure is not retryable.
+  static const networkRtmpStreamUnavailable = 'network.rtmp_stream_unavailable';
+
+  /// An established RTMP playback connection was lost.
+  static const networkRtmpDisconnected = 'network.rtmp_disconnected';
+  /// RTMP tracks or codec configuration changed within an established epoch.
+  static const containerRtmpTrackLayoutChanged =
+      'container.rtmp_track_layout_changed';
   static const containerUnsupported = 'container.unsupported';
   static const decoderUnsupported = 'decoder.unsupported';
   static const decoderUnavailable = 'decoder.unavailable';

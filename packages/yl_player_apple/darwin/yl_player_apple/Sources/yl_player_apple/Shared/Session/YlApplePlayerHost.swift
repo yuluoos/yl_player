@@ -150,6 +150,8 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
   func seekTo(command: AppleSeekCommand) throws {
     try session(command.sessionId)
     guard command.positionMs >= 0, command.positionMs <= Int64.max / 1000 else { throw YlAppleFailureMapper.command(YlAppleFailureMapper.invalid()) }
+    do { try coordinator.validateTimeSeek() }
+    catch { throw YlAppleFailureMapper.command(error) }
     if let snapshot = reducer.state.snapshot, snapshot.engine == .managedFallback {
       do {
         try YlFallbackSeekPolicy(isSeekable: snapshot.isSeekable) { _ in }
@@ -408,9 +410,12 @@ enum YlAppleNativeInput {
       uri = URL(fileURLWithPath: source.locator).absoluteString
     case .network:
       guard let url = URLComponents(string: source.locator),
-        ["http", "https"].contains(url.scheme), let host = url.host, !host.isEmpty,
+        ["http", "https", "rtmp", "rtmps"].contains(url.scheme?.lowercased()), let host = url.host, !host.isEmpty,
         !host.contains(" "), url.user == nil, url.password == nil,
         url.port == nil || (1...65535).contains(url.port!) else { throw YlAppleFailureMapper.invalid() }
+      if ["rtmp", "rtmps"].contains(url.scheme?.lowercased() ?? "") {
+        _ = try YlRtmpAddress(source.locator)
+      }
       uri = source.locator
     case .content: throw YlAppleFailureMapper.invalid("source.invalid")
     }

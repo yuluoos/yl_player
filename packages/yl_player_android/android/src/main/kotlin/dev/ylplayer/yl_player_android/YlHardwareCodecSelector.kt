@@ -166,6 +166,9 @@ internal class YlInitializedDecoderGate(private val policy: dev.ylplayer.yl_play
     var ready = kotlinx.coroutines.CompletableDeferred<YlEngineSnapshot>()
         private set
     fun reset() { ready = kotlinx.coroutines.CompletableDeferred() }
+    /** A restore operation can span automatic media epochs. Keep its pending waiter while
+     * Core clears decoder evidence and fences old callbacks; completed epochs get a new gate. */
+    fun resetForEpoch() { if (ready.isCompleted) reset() }
     fun fail(kind: YlFailureKind) { ready.completeExceptionally(YlBoundaryException(kind)) }
     fun accept(snapshot: YlEngineSnapshot) {
         if (snapshot.status !in listOf(dev.ylplayer.yl_player_android.pigeon.AndroidPlaybackStatus.READY, dev.ylplayer.yl_player_android.pigeon.AndroidPlaybackStatus.PLAYING)) return

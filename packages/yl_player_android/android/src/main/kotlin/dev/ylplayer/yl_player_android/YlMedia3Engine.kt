@@ -42,6 +42,8 @@ internal class YlMedia3Engine(
     private var core: YlMedia3Core? = null
     private var privateOutput: YlCandidateVideoOutput? = null
     private val decoderGate = YlInitializedDecoderGate(options.decoderPolicyOverride ?: playerOptions.decoderPolicy)
+    private val rtmpRecovery = YlRtmpRecovery()
+    override fun markCommitted() { rtmpRecovery.committed = true }
     private var exclusive = true // Main-owned; unknown is conservative until READY track evidence.
     override val needsExclusiveLease get() = exclusive
 
@@ -58,7 +60,7 @@ internal class YlMedia3Engine(
         onWorker {
             val candidate = YlCandidateVideoOutput(context).also { privateOutput = it }
             core = YlMedia3Core(context, identity, source, options, createMedia3Configuration(source, options, playerOptions),
-                owner.handler, YlEngineVideoOutput(candidate), ::receive)
+                owner.handler, YlEngineVideoOutput(candidate), ::receive, rtmpRecovery, decoderGate::resetForEpoch)
             requireCore().initialize()
             requireCore().prepare()
         }
@@ -70,8 +72,9 @@ internal class YlMedia3Engine(
             is YlEngineEvent.Failed -> decoderGate.fail(event.kind)
             else -> Unit
         }
+        val epoch = core?.mediaEpoch
         main.launch {
-            if (!closed) {
+            if (!closed && (!YlRtmpSourcePolicy.isRtmp(source) || core?.mediaEpoch == epoch)) {
                 if (event is YlEngineEvent.Snapshot) publicOutput?.updateGeometry(event.value.geometry)
                 callback?.invoke(identity, event)
             }
@@ -81,6 +84,7 @@ internal class YlMedia3Engine(
         val readiness = onWorker { decoderGate.reset(); requireCore().initializeDecoder(); decoderGate.ready }
         val prepared = readiness.await()
         requireSelectedVideo(prepared)
+        if (YlRtmpSourcePolicy.isRtmp(source) && prepared.videoTracks.none { it.isSelected }) throw YlBoundaryException(YlFailureKind.DECODER_UNAVAILABLE)
         exclusive = prepared.videoTracks.isNotEmpty() || prepared.audioTracks.isEmpty()
         attachPublicOutput(output)
     }
@@ -208,7 +212,7 @@ internal class YlMedia3SessionFactory(
                     val primary = createEngine(identity, source, loadOptions, options)
                     YlManagedAndroidEngine(identity, primary, {
                         YlNativeFallbackEngine(context, identity, source, loadOptions, options, dispatcher)
-                    }, dispatcher, allowFallback = source.format != AndroidMediaFormat.DASH &&
+                    }, dispatcher, allowFallback = !YlRtmpSourcePolicy.isRtmp(source) && source.format != AndroidMediaFormat.DASH &&
                         runCatching { java.net.URI(source.locator).path?.lowercase()?.endsWith(".mpd") }.getOrNull() != true)
                 }, dispatcher, audioFocus = { YlSharedAudioFocus.get(context) })
         }

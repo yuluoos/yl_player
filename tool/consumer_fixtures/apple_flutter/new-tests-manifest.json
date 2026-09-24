@@ -497,5 +497,110 @@
       "testCrossOriginBaseURLReturnSeedsStickyContext"
     ],
     "apple_dash_task2": "Current static DASH owned preflight, private registry, routing integration and lifecycle regressions; historical fixtures unchanged."
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpFixturePeer.swift",
+    "sha256": "c488fd815e8d5a6f6fe35f5f9058c405515c0658a1c617461050d85f3f8ca279",
+    "methods": []
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpRouteTests.swift",
+    "sha256": "00c6d9e9b49a4d48b30b99e42aefc5408b897a8d64cb0df438f6f5442041b847",
+    "methods": [
+      "testPublicRtmpTimeSeekRejectsZeroAndPositiveWithoutChangingIntent",
+      "testPublicHttpFlvTimeSeekRetainsRangeRejectionWithoutChangingIntent",
+      "testClassicRtmpAutomaticSelectsOwnedManagedRoute",
+      "testRtmpsIsExplicitlyUnsupported",
+      "testRtmpRejectsUnsupportedPoliciesBeforeOpen",
+      "testPublicHostAdmitsRtmpBeforeRoutingAndRejectsRtmpsSafely",
+      "testExplicitIncompatibleFormatRejectsAsContainerBeforeOpen"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpDemandTests.swift",
+    "sha256": "b908cbfcea2bc7a8d2c13d2a93e95e755836c30c30f6fe8b9fe546586f32f4d4",
+    "methods": [
+      "testExplicitAmfDenialIsPermanentAndServerTextIsNotExposed",
+      "testOpeningDeadlineContinuesThroughRealAvioDiscoveryAfterFirstKeyframe",
+      "testConfigurationOnlyCannotCompleteSetup",
+      "testTemporaryInterruptPreservesPartialChunkHeaderAndPayloadOnSameSocket",
+      "testConsumerIdleDoesNotSpendInactivityBudget",
+      "testRepeatedConfigurationDoesNotResetActiveDemandBudget"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpTransportTests.swift",
+    "sha256": "93f6c0fcf5fadf35b4c59d181d88a09ea6b7adb88ab8316f9d474d9343bcd9e8",
+    "methods": [
+      "testAbsoluteSetupDeadlineWithSilentRealSocket",
+      "testCancelWakesBlockedHandshakeAndPreCancelledSourceDoesNotConnect",
+      "testInterruptWakesConsumerWithoutClosingHandshakeSocket",
+      "testWorkspaceAdmissionFailsBeforeConnectAndCancellationReleasesReservation"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpPeerTests.swift",
+    "sha256": "3db8c523aee3792a661b08f3971b88f05bde8c4b02e7d8ff92cfdce9f09c974a",
+    "methods": [
+      "testSocketFixturePreparesClassicAvcAacAndFreshEpoch",
+      "testBareEofDoesNotInventStreamDenial"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpLifecycleTests.swift",
+    "sha256": "00f398825a5dd579be2fd31e620586ffc176a1c4d32dd72067853848c996d65f",
+    "methods": [
+      "testRealAvioBlockedReadResumesSameContextAfterTemporaryInterrupt",
+      "testSafeNativeRtmpErrorsNeverExposeServerText"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpManagedPauseTests.swift",
+    "sha256": "85b905679a05a897be0bf2284137bb87433ac66ed01f25e18201798ac8322497",
+    "methods": [
+      "testRetiredDecoderCancelsStalePacketBeforeReportingInvariant",
+      "testPublicLiveEdgeInterruptsPendingReadWithSameIdentityAndFreeAttempt",
+      "testManagedPauseDuringBackoffRetainsOneReservedAttemptAndStopFencesResume",
+      "testManagedPauseSuspendsBlockedReadThenResumesSameConnectionAndStopCancels"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpProtocolTests.swift",
+    "sha256": "7a19508116180b5dcd88e04e752f80a5544e60c503c408d04bd3bf5685164a27",
+    "methods": [
+      "testFmtThreeNewMessageInheritsNonzeroAbsoluteDelta",
+      "testAmfReadsKnownConnectResultAndRejectsTruncatedString",
+      "testFlvStartupFlagsAndCompositionOffsetArePreserved",
+      "testMalformedPayloadPrecedesTimestampEpochAndValidResetPrecedesLayoutChange",
+      "testRtmpAddressPreservesRawAppPlaypathAndRetryBudgetSurvivesCopies",
+      "testExtendedTimestampsInterleaveAndChunkLimits",
+      "testAbortReleasesPartialPayloadAndRetainsChunkHistory",
+      "testPeerBandwidthCreditNeverRequiresRecursiveReads",
+      "testAmfDepthEntryAndUtf8BoundsRejectBeforeUnboundedAllocation",
+      "testRtmpUriMalformedLexicalFormsAreRejected",
+      "testOpaqueEscapedBytesRemainValidWhileEscapedControlsAreRejected"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpRestorationTests.swift",
+    "sha256": "6e814ef300122aab564d49016b1adf923b7f6678c62611eabc8fe098132435e7",
+    "methods": [
+      "testCommittedCoordinatorRestorationRetriesTransientPrepareAndCompletesOriginalWaiter",
+      "testExhaustedRestorationMakesOneExplicitAttemptAndInitialCandidateNeverRetries"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpRecoveryTests.swift",
+    "sha256": "04ece4480c83b5d415bb0acd4f0bbb8715a7595913fc6ef671ed3d1e46280437",
+    "methods": [
+      "testPausePlayBetweenAdmissionChecksCannotLoseReservedAttempt",
+      "testDeferredAdmissionRejectsStaleGenerationAndDisposedSession",
+      "testPauseDefersReservedAttemptWithoutChargingAgainAndCancellationFencesResume",
+      "testTransientWhilePausedDefersReservationButPermanentFailureStaysTyped",
+      "testOneLifetimeBudgetSurvivesFirstFramesAndCoordinatorReconstruction",
+      "testPermanentFailuresAndCancelledGenerationNeverOpen",
+      "testRestorationBackoffCancellationKeepsOriginalWaiterAndDoesNotOpenAgain",
+      "testPermanentRestorationFailureNeverConsumesRecoveryBudget"
+    ]
   }
 ]

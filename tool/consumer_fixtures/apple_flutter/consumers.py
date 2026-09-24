@@ -280,6 +280,8 @@ def check(platform, manager, link):
                "-parallel-testing-enabled", "NO",
                "-derivedDataPath", str(derived), "-clonedSourcePackagesDirPath", str(SOURCE_PACKAGES), "-packageCachePath", str(PACKAGE_CACHE), "-disablePackageRepositoryCache",
                "-resultBundlePath", str(result), "CODE_SIGNING_ALLOWED=NO", "COMPILER_INDEX_STORE_ENABLE=NO", "build" if link else "test"]
+    if not link:
+        command.append("ENABLE_TESTABILITY=YES")
     if link and platform == "macos":
         command.extend(["ARCHS=arm64 x86_64", "ONLY_ACTIVE_ARCH=NO"])
     if diagnostics == "never":

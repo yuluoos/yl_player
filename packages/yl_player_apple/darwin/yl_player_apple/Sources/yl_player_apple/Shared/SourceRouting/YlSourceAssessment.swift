@@ -44,6 +44,7 @@ struct YlAppleSourceDescriptor {
   var loadRequestId: String? = nil
   var credentialContext = YlNetworkCredentialContext()
   var managedRequestIntent = YlManagedRequestIntent()
+  var rtmpRecovery = YlRtmpRecoveryBudget()
   var bufferScope: YlManagedBufferScope? = nil
   var boundedPlan: YlBoundedBufferPlan? = nil
   var isLive: Bool { intent == .live }
@@ -75,7 +76,7 @@ struct YlSourceAssessment {
     guard let candidate else { return nil }
     switch candidate {
     case .avPlayer, .headeredHls, .dashHls: return .avPlayer
-    case .localMatroska, .networkMatroska, .networkFlv: return .managedFallback
+    case .localMatroska, .networkMatroska, .networkFlv, .networkRtmp: return .managedFallback
     case .inspect, .reject: return nil
     }
   }

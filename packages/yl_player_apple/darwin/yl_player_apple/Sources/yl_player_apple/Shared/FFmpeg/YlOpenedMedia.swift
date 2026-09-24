@@ -6,11 +6,18 @@ enum YlFallbackSourceRecipe {
   case local(path: String, container: YlFallbackContainer)
   case network(request: YlNetworkRequestRecipe, container: YlFallbackContainer)
   case hls(request: YlNetworkRequestRecipe)
+  case rtmp(request: YlRtmpRequestRecipe)
+
+  var rtmpRecovery: YlRtmpRecoveryBudget? {
+    if case let .rtmp(request) = self { return request.recovery }; return nil
+  }
+  var isRtmp: Bool { rtmpRecovery != nil }
 
   var container: YlFallbackContainer {
     switch self {
     case let .local(_, container), let .network(_, container):
       return container
+    case .rtmp: return .flv
     case .hls:
       return .hlsMpegTs
     }
@@ -139,7 +146,7 @@ private func ylByteSourceSeek(
     return Int64(YLFCallbackCancelled)
   } catch let YlByteSourceError.failed(error) {
     box.remember(error)
-    return error.code == "network.range_not_supported"
+    return ["network.range_not_supported", "source.not_seekable"].contains(error.code)
       ? Int64(YLFCallbackSeekUnsupported)
       : Int64(YLFCallbackError)
   } catch {
@@ -202,7 +209,8 @@ final class YlOpenedMedia {
     networkBufferBytes: Int = 8 * 1024 * 1024,
     sessionConfiguration: URLSessionConfiguration = .ephemeral,
     onRetry: YlNetworkByteSource.RetryCallback? = nil,
-    onSourceCreated: ((YlByteSource) -> Void)? = nil
+    onSourceCreated: ((YlByteSource) -> Void)? = nil,
+    rtmpSourceFactory: ((YlRtmpRequestRecipe) -> YlRtmpByteSource)? = nil
   ) throws {
     switch recipe {
     case let .local(path, container):
@@ -228,6 +236,11 @@ final class YlOpenedMedia {
       )
       onSourceCreated?(source)
       try self.init(byteSource: source, recipe: recipe)
+
+    case let .rtmp(request):
+      let source = rtmpSourceFactory?(request) ?? YlRtmpByteSource(recipe: request)
+      onSourceCreated?(source)
+      try self.init(byteSource: source, recipe: recipe, container: .flv)
 
     case let .hls(request):
       let source = try YlHlsSegmentByteSource(
@@ -271,6 +284,10 @@ final class YlOpenedMedia {
         network: true,
         container: container ?? recipe?.container ?? .matroska
       )
+    }
+    if let source = byteSource as? YlRtmpByteSource {
+      do { try source.finishPreparation() }
+      catch { ylf_close(&context); throw error }
     }
     if let source = byteSource as? YlMediaTimeSeekableByteSource,
        source.durationUs > 0 {
@@ -350,6 +367,11 @@ final class YlOpenedMedia {
   func resumeReads() {
     let source = lock.withLock { callbackBox?.source }
     source?.resumeReads()
+  }
+
+  func setPlaybackPaused(_ paused: Bool) {
+    let source = lock.withLock { callbackBox?.source as? YlRtmpByteSource }
+    source?.setPlaybackPaused(paused)
   }
 
   func handleMemoryWarning() {

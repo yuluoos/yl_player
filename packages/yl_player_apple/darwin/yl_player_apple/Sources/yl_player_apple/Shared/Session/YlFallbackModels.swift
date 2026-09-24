@@ -8,6 +8,7 @@ enum YlAppleSourceRoute: Equatable {
   case localMatroska
   case networkMatroska
   case networkFlv
+  case networkRtmp
   case reject(category: String, code: String, message: String)
 
   var rejectionCode: String? {

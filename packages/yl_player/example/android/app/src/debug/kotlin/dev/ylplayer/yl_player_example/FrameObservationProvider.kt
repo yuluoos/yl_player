@@ -59,7 +59,8 @@ private class FrameObservation(private val flutter: FlutterEngine) {
         channel.setMethodCallHandler { call, result ->
             try {
                 when (call.method) {
-                    "install" -> install(call.argument<String>("previousSession")!!, result)
+                    "install" -> install(call.argument<String>("previousSession")!!, false, result)
+                    "installActive" -> install(call.argument<String>("sessionId")!!, true, result)
                     "read" -> {
                         val current = checkNotNull(attached)
                         onWorker(current.handler, result) { current.records.toList() }
@@ -76,7 +77,7 @@ private class FrameObservation(private val flutter: FlutterEngine) {
         }
     }
     @Suppress("UNCHECKED_CAST")
-    private fun install(previousSession: String, result: MethodChannel.Result) {
+    private fun install(previousSession: String, activeMode: Boolean, result: MethodChannel.Result) {
         check(attached == null && !closed)
         val pluginType = Class.forName("dev.ylplayer.yl_player_android.YlPlayerAndroidPlugin") as Class<out FlutterPlugin>
         val plugin = checkNotNull(flutter.plugins.get(pluginType))
@@ -86,7 +87,7 @@ private class FrameObservation(private val flutter: FlutterEngine) {
             val active = field(it, "active")
             active != null && field(field(active, "identity")!!, "sessionId") == previousSession
         }
-        val engine = checkNotNull(field(session, "candidateEngine"))
+        val engine = checkNotNull(if (activeMode) field(field(session, "active")!!, "engine") else field(session, "candidateEngine"))
         val id = field(field(engine, "identity")!!, "sessionId") as String
         val observedEngine = if (
             engine.javaClass.name == "dev.ylplayer.yl_player_android.YlManagedAndroidEngine"

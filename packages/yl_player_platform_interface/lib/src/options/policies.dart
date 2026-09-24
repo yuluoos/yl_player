@@ -8,11 +8,13 @@ enum YlNetworkPolicyKind { platformDefault, managed }
 
 enum YlBufferStrategyKind { automatic, lowLatency, smoothPlayback, bounded }
 
-/// Source-specific transport guarantees. Unsupported requirements must fail.
+/// Source-specific HTTP transport guarantees. Unsupported requirements must fail.
+/// RTMP has separate native transport limits and accepts only [platformDefault];
+/// [managed] is an HTTP policy and must be rejected by RTMP assessment.
 /// Policy durations must be whole signed32 milliseconds; timeouts are positive,
 /// retry delays are nonnegative, and counts are nonnegative signed32 integers.
 ///
-/// Both kinds enforce credential origin protection. [platformDefault] delegates
+/// For HTTP, both kinds enforce credential origin protection. [platformDefault] delegates
 /// scheduling, timeout and retry behavior without promising exact values.
 ///
 /// Managed connect time is the per-hop deadline through response headers,
@@ -91,7 +93,9 @@ final class YlNetworkPolicy {
       'maxRetryDelay: $maxRetryDelay, maxRedirects: $maxRedirects)';
 }
 
-/// Built-in strategies are optimization goals. [bounded] requires exact
+/// Built-in strategies are optimization goals, not measured latency promises.
+/// RTMP does not support [bounded]; fixed transport workspace limits do not
+/// satisfy a requested buffer budget. [bounded] requires exact
 /// managed-media duration and byte admission limits, not a process RSS bound.
 /// Platforms unable to enforce the required budget must reject it. Durations
 /// are whole nonnegative signed32 milliseconds; bytes are positive signed32.

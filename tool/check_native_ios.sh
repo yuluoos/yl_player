@@ -57,7 +57,7 @@ if [ "$mode" != "--integration-only" ]; then
   verify_registrant
 
   native_status=0
-  xcodebuild test -quiet -sdk iphonesimulator \
+  xcodebuild test CODE_SIGNING_ALLOWED=NO ENABLE_TESTABILITY=YES -quiet -sdk iphonesimulator \
     -workspace "$repo_root/packages/yl_player/example/ios/Runner.xcworkspace" \
     -scheme Runner \
     -parallel-testing-enabled NO \

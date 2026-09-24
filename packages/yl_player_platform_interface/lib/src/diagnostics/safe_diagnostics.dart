@@ -6,6 +6,14 @@ abstract final class YlSafeDiagnostics {
 
   /// Fixed public guidance for recognized codes, never native error prose.
   static String messageForCode(String code) => switch (code) {
+    YlFailureCodes.networkProtocolUnsupported =>
+      'The media transport protocol is not supported. Use a supported source protocol.',
+    YlFailureCodes.networkRtmpHandshakeFailed =>
+      'The RTMP connection could not be established. Check the connection and server configuration, then try again.',
+    YlFailureCodes.networkRtmpStreamUnavailable =>
+      'The RTMP stream is unavailable. Check the stream name and whether the publisher is active.',
+    YlFailureCodes.networkRtmpDisconnected =>
+      'The RTMP connection was lost during playback. Check the connection and try again.',
     YlFailureCodes.networkDnsFailed =>
       'The media host could not be resolved. Check the network connection and source host configuration.',
     YlFailureCodes.networkHttpForbidden =>
@@ -13,6 +21,8 @@ abstract final class YlSafeDiagnostics {
     'network.retry_exhausted' =>
       'The configured network retry attempts were exhausted. Check the connection and try again.',
     YlFailureCodes.loadCancelled => 'The operation was cancelled.',
+    YlFailureCodes.containerRtmpTrackLayoutChanged =>
+      'The RTMP track configuration changed. Reload the stream to continue playback.',
     YlFailureCodes.containerUnsupported =>
       'The media container is not supported. Try a compatible version of the media.',
     YlFailureCodes.policyUnsupported =>

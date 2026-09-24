@@ -60,6 +60,7 @@ internal class YlManagedAndroidEngine(
     }
 
     override fun registerCallback(callback: (YlSessionIdentity, YlEngineEvent) -> Unit) { this.callback = callback }
+    override fun markCommitted() { current.markCommitted() }
     override suspend fun prepare() {
         try { current.prepare() }
         catch (error: Throwable) {

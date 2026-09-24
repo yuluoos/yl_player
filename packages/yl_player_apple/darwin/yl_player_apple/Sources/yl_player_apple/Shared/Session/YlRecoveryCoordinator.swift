@@ -14,15 +14,21 @@ struct YlDispatchRecoveryScheduler: YlRecoveryScheduling {
 protocol YlRecoverySession: AnyObject {
   var recoveryGeneration: UInt64 { get }
   var managedRequestFailure: NativePlayerError? { get }
+  func deferRecoveryIfPaused(generation: UInt64, operation: @escaping () -> Void) -> Bool
   func mayScheduleRecovery(generation: UInt64) -> Bool
   func emitRecoveryRetry(attempt: Int, delayMs: Int64, error: NativePlayerError, generation: UInt64)
   func installRecoveryWorkItem(_ workItem: DispatchWorkItem, generation: UInt64) -> Bool
-  func beginRecoveryOpen(_ token: YlOpenCancellationToken, generation: UInt64) -> Bool
+  func beginRecoveryOpen(_ token: YlOpenCancellationToken, generation: UInt64,
+                         whenPaused: @escaping () -> Void) -> Bool
   func makeLiveReconnectPipeline(generation: UInt64, cancellationToken: YlOpenCancellationToken) throws -> YlFallbackReconnectPipeline
   func installRecoveryCandidate(_ candidate: YlFallbackReconnectPipeline, token: YlOpenCancellationToken, generation: UInt64) -> Bool
   func resumeRecovery(generation: UInt64)
   func shouldRetryRecovery(token: YlOpenCancellationToken, generation: UInt64) -> Bool
   func reportRecoveryExhaustion(_ error: NativePlayerError, generation: UInt64)
+}
+
+extension YlRecoverySession {
+  func deferRecoveryIfPaused(generation: UInt64, operation: @escaping () -> Void) -> Bool { false }
 }
 
 struct YlFallbackReconnectPipeline {
@@ -49,11 +55,13 @@ final class YlRecoveryCoordinator {
   weak var session: (any YlRecoverySession)?
   private let scheduler: any YlRecoveryScheduling
   private let liveReconnectController: YlLiveReconnectController
+  private let rtmpBudget: YlRtmpRecoveryBudget?
   private var reconnectWorkItem: DispatchWorkItem?
   private var awaitingReconnectFirstFrame = false
   private(set) var reconnectCount = 0
 
-  init(configuration: YlNetworkConfiguration, scheduler: any YlRecoveryScheduling) {
+  init(configuration: YlNetworkConfiguration, scheduler: any YlRecoveryScheduling, rtmpBudget: YlRtmpRecoveryBudget? = nil) {
+    self.rtmpBudget = rtmpBudget
     self.scheduler = scheduler
     self.liveReconnectController = YlLiveReconnectController(configuration: configuration)
   }
@@ -86,19 +94,28 @@ final class YlRecoveryCoordinator {
     reconnectCount += 1
     return true
   }
-  func markFirstFrame() { liveReconnectController.markFirstFrame() }
+  func markFirstFrame() { if rtmpBudget == nil { liveReconnectController.markFirstFrame() } }
 
-  func scheduleLiveReconnect(after error: NativePlayerError, generation reconnectGeneration: UInt64) {
+  func scheduleLiveReconnect(after error: NativePlayerError, generation reconnectGeneration: UInt64, explicitLiveAttempt: Bool = false) {
     guard let session, session.mayScheduleRecovery(generation: reconnectGeneration) else { return }
     if let terminal = session.managedRequestFailure {
       session.reportRecoveryExhaustion(terminal, generation: reconnectGeneration)
       return
     }
-    guard let delayMs = liveReconnectController.nextDelayMs() else {
+    if rtmpBudget != nil && !YlRtmpRecoveryBudget.isTransient(error) {
+      session.reportRecoveryExhaustion(error, generation: reconnectGeneration); return
+    }
+    if rtmpBudget != nil, session.deferRecoveryIfPaused(generation: reconnectGeneration, operation: { [weak self] in
+      self?.scheduleLiveReconnect(after: error, generation: reconnectGeneration, explicitLiveAttempt: explicitLiveAttempt)
+    }) { return }
+    let nextDelay: Int64?
+    if let rtmpBudget { nextDelay = explicitLiveAttempt ? 0 : rtmpBudget.nextDelay(after: error) }
+    else { nextDelay = liveReconnectController.nextDelayMs() }
+    guard let delayMs = nextDelay else {
       finishLiveReconnectExhausted(error, generation: reconnectGeneration)
       return
     }
-    let attempt = liveReconnectController.attempt
+    let attempt = rtmpBudget?.attempts ?? liveReconnectController.attempt
     DispatchQueue.main.async { [weak self] in
       self?.session?.emitRecoveryRetry(attempt: attempt, delayMs: delayMs,
         error: error, generation: reconnectGeneration)
@@ -115,8 +132,9 @@ final class YlRecoveryCoordinator {
     guard let session, liveReconnectController.shouldInstall(
       reconnectGeneration: reconnectGeneration, currentGeneration: session.recoveryGeneration
     ) else { return }
+    let resume = { [weak self] in self?.performLiveReconnect(generation: reconnectGeneration) }
     let token = YlOpenCancellationToken()
-    let mayOpen = session.beginRecoveryOpen(token, generation: reconnectGeneration)
+    let mayOpen = session.beginRecoveryOpen(token, generation: reconnectGeneration, whenPaused: { resume() })
     guard mayOpen else { return }
     do {
       let candidate = try session.makeLiveReconnectPipeline(generation: reconnectGeneration, cancellationToken: token)
@@ -130,7 +148,7 @@ final class YlRecoveryCoordinator {
     } catch {
       let shouldRetry = session.shouldRetryRecovery(token: token, generation: reconnectGeneration)
       if shouldRetry {
-        scheduleLiveReconnect(after: NativePlayerError(category: "network", code: "network.http_status",
+        scheduleLiveReconnect(after: rtmpBudget != nil ? ylRtmpInvalid() : NativePlayerError(category: "network", code: "network.http_status",
           message: "The HTTP-FLV reconnect failed.", diagnostic: YlAppleSafeDiagnostics.diagnostic(error)),
           generation: reconnectGeneration)
       }
@@ -143,7 +161,7 @@ final class YlRecoveryCoordinator {
       session.reportRecoveryExhaustion(NativePlayerError(
         category: "network",
         code: "network.retry_exhausted",
-        message: "HTTP-FLV reconnect attempts were exhausted.",
+        message: "Live reconnect attempts were exhausted.",
         diagnostic: lastError.code
       ), generation: reconnectGeneration)
     }
