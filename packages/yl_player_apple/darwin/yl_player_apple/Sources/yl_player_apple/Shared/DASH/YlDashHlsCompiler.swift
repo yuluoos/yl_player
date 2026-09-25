@@ -15,7 +15,9 @@ enum YlDashHlsCompiler {
       let document = YlDashDocument(source: sourceURL)
       let (periods, duration) = try document.parse(data, final: finalManifestURL,
         credentialsStripped: credentialsStripped)
-      let names = periods[0].audio == nil ? ["master", "video"] : ["master", "video", "audio"]
+      let videoNames = periods[0].videos.count == 1 ? ["video"]
+        : periods[0].videos.indices.map { "video-\($0)" }
+      let names = ["master"] + videoNames + (periods[0].audio == nil ? [] : ["audio"])
       var identities: [String: URL] = [:]
       for name in names {
         let url = try YlDashBounds.url(manifestURL(name).absoluteString)
@@ -41,7 +43,8 @@ enum YlDashHlsCompiler {
         return safe
       }
       for name in names where name != "master" {
-        let tracks = periods.map { name == "video" ? $0.video : $0.audio! }
+        let videoIndex = videoNames.firstIndex(of: name)
+        let tracks = periods.map { period in videoIndex.map { period.videos[$0] } ?? period.audio! }
         var target: Int64 = 1
         for track in tracks {
           for segment in track.segments {
@@ -64,18 +67,20 @@ enum YlDashHlsCompiler {
         try append("#EXT-X-ENDLIST\n", to: &playlist)
         try store(name, playlist)
       }
-      let video = periods[0].video
       let audio = periods[0].audio
-      let videoURL = try YlHlsURLCodec.encode(identities["video"]!, kind: .manifest).absoluteString
       var master = "#EXTM3U\n#EXT-X-VERSION:7\n"
       if let audioID = identities["audio"] {
         let audioURL = try YlHlsURLCodec.encode(audioID, kind: .manifest).absoluteString
         try append("#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"audio\",NAME=\"Audio\",DEFAULT=YES,AUTOSELECT=YES,URI=\"\(audioURL)\"\n", to: &master)
       }
-      let bandwidth = periods.map { $0.video.bandwidth + ($0.audio?.bandwidth ?? 0) }.max()!
-      let codecs = video.codec + (audio.map { "," + $0.codec } ?? "")
-      let group = audio == nil ? "" : ",AUDIO=\"audio\""
-      try append("#EXT-X-STREAM-INF:BANDWIDTH=\(bandwidth),CODECS=\"\(codecs)\",RESOLUTION=\(video.width)x\(video.height)\(group)\n\(videoURL)\n", to: &master)
+      for (index, name) in videoNames.enumerated() {
+        let video = periods[0].videos[index]
+        let videoURL = try YlHlsURLCodec.encode(identities[name]!, kind: .manifest).absoluteString
+        let bandwidth = periods.map { $0.videos[index].bandwidth + ($0.audio?.bandwidth ?? 0) }.max()!
+        let codecs = video.codec + (audio.map { "," + $0.codec } ?? "")
+        let group = audio == nil ? "" : ",AUDIO=\"audio\""
+        try append("#EXT-X-STREAM-INF:BANDWIDTH=\(bandwidth),CODECS=\"\(codecs)\",RESOLUTION=\(video.width)x\(video.height)\(group)\n\(videoURL)\n", to: &master)
+      }
       try store("master", master)
       return YlDashHlsPresentation(rootURL: identities["master"]!, manifests: registry,
         strippedResources: document.stripped, durationUs: duration)

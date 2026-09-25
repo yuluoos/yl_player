@@ -63,6 +63,7 @@ final class DashServer {
 
   static Future<DashServer> start({
     DashOriginMode originMode = DashOriginMode.sameOrigin,
+    bool variants = false,
     bool failMedia = false,
     bool delayMedia = false,
     bool delayManifest = false,
@@ -70,15 +71,30 @@ final class DashServer {
     int? rootStatusCode,
     bool missingMedia = false,
   }) async {
+    final assetRoot = variants ? 'assets/test_media/dash_variants' : _assetRoot;
+    final fileNames = variants
+        ? <String>[
+            for (final period in [0, 1])
+              for (final track in [0, 1, 2]) ...[
+                'period$period/init-$track.m4s',
+                for (
+                  var segment = 1;
+                  segment <= (track == 2 ? 5 : 4);
+                  segment++
+                )
+                  'period$period/chunk-$track-${segment.toString().padLeft(5, '0')}.m4s',
+              ],
+          ]
+        : _fileNames;
     final loaded = await Future.wait<ByteData>([
-      rootBundle.load('$_assetRoot/manifest.mpd'),
-      for (final name in _fileNames) rootBundle.load('$_assetRoot/$name'),
+      rootBundle.load('$assetRoot/manifest.mpd'),
+      for (final name in fileNames) rootBundle.load('$assetRoot/$name'),
     ]);
     final primary = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
     final secondary = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
     final files = <String, Uint8List>{};
-    for (var index = 0; index < _fileNames.length; index += 1) {
-      files['/${_fileNames[index]}'] = _bytes(loaded[index + 1]);
+    for (var index = 0; index < fileNames.length; index += 1) {
+      files['/${fileNames[index]}'] = _bytes(loaded[index + 1]);
     }
     final result = DashServer._(
       primary: primary,

@@ -197,4 +197,87 @@ final class YlDashHlsCompilerTests: XCTestCase {
     }
   }
 
+  private func rendition(_ id: String, width: Int = 320, bandwidth: Int = 350000,
+    template: String? = nil, extra: String = "") -> String {
+    "<Representation id=\"\(id)\" bandwidth=\"\(bandwidth)\" width=\"\(width)\" height=\"\(width * 9 / 16)\" \(extra)>\(template ?? "<SegmentTemplate timescale=\"1\" duration=\"2\" initialization=\"init-$RepresentationID$.mp4\" media=\"$RepresentationID$-$Number$.m4s\"/>")</Representation>"
+  }
+  private func ladder(_ representations: String, start: Int = 0, audio: Bool = false) -> String {
+    let sound = audio ? "<AdaptationSet contentType=\"audio\" codecs=\"mp4a.40.2\" audioSamplingRate=\"48000\"><Representation id=\"a\" bandwidth=\"64000\"><SegmentTemplate duration=\"2\" initialization=\"a-init.mp4\" media=\"a-$Number$.m4s\"/></Representation></AdaptationSet>" : ""
+    return "<Period start=\"PT\(start)S\" duration=\"PT4S\"><AdaptationSet contentType=\"video\" codecs=\"avc1.42c01e\">\(representations)</AdaptationSet>\(sound)</Period>"
+  }
+  func testVariantsMatchReorderedChangedIDsAcrossPeriodsAndShareAudio() throws {
+    let one = ladder(rendition("low") + rendition("high", width: 640, bandwidth: 700000), audio: true)
+    let two = ladder(rendition("new-high", width: 640, bandwidth: 700000) + rendition("new-low"), start: 4, audio: true)
+    let result = try compile(mpd(one + two, duration: 8))
+    XCTAssertEqual(result.durationUs, 8_000_000)
+    XCTAssertEqual(result.manifests.count, 4)
+    let master = String(data: result.manifests[result.rootURL]!, encoding: .utf8)!
+    XCTAssertTrue(master.contains("BANDWIDTH=414000,CODECS=\"avc1.42c01e,mp4a.40.2\",RESOLUTION=320x180,AUDIO=\"audio\""))
+    XCTAssertTrue(master.contains("BANDWIDTH=764000,CODECS=\"avc1.42c01e,mp4a.40.2\",RESOLUTION=640x360,AUDIO=\"audio\""))
+    XCTAssertEqual(master.components(separatedBy: "#EXT-X-MEDIA:").count - 1, 1)
+    let urls = try master.split(separator: "\n").filter { $0.hasPrefix("ylhls:") }.map { try YlHlsURLCodec.decode(URL(string: String($0))!) }
+    XCTAssertEqual(urls.count, 2)
+    let playlists = urls.map { String(data: result.manifests[$0]!, encoding: .utf8)! }
+    for (index, name) in ["low", "high"].enumerated() {
+      XCTAssertTrue(playlists[index].contains("/init-\(name).mp4"))
+      XCTAssertTrue(playlists[index].contains("/init-new-\(name).mp4"))
+      XCTAssertEqual(playlists[index].components(separatedBy: "#EXTINF:2.000000,").count - 1, 4)
+      XCTAssertEqual(playlists[index].components(separatedBy: "#EXT-X-DISCONTINUITY\n").count - 1, 1)
+      XCTAssertFalse(playlists[index].contains("#EXT-X-INDEPENDENT-SEGMENTS"))
+    }
+  }
+  func testVariantsAcceptExactEquivalentTimescalesAndNoAudio() throws {
+    let scaled = "<SegmentTemplate timescale=\"90000\" duration=\"180000\" initialization=\"i.mp4\" media=\"$Number$.m4s\"/>"
+    let result = try compile(mpd(ladder(rendition("a") + rendition("b", width: 640, bandwidth: 700000, template: scaled))))
+    XCTAssertEqual(result.manifests.count, 3)
+    let master = String(data: result.manifests[result.rootURL]!, encoding: .utf8)!
+    XCTAssertFalse(master.contains("AUDIO="))
+    XCTAssertTrue(master.contains("BANDWIDTH=700000,CODECS=\"avc1.42c01e\",RESOLUTION=640x360"))
+  }
+  func testVariantsRejectAmbiguousChangedAndIncompatibleLaddersBeforeEmission() {
+    let low = rendition("a"), high = rendition("b", width: 640, bandwidth: 700000)
+    reject(mpd(ladder(low + rendition("duplicate"))))
+    reject(mpd(ladder(low + high.replacingOccurrences(of: "<Representation ", with: "<Representation codecs=\"avc1.64001e\" "))))
+    reject(mpd(ladder(low + high.replacingOccurrences(of: "<SegmentTemplate", with: "<Role value=\"alternate\"/><SegmentTemplate"))))
+    reject(mpd(ladder(low + high.replacingOccurrences(of: "<SegmentTemplate", with: "<SupplementalProperty schemeIdUri=\"urn:mpeg:mpegB:cicp:TransferCharacteristics\" value=\"16\"/><SegmentTemplate"))))
+    for second in [low, low + high.replacingOccurrences(of: "700000", with: "800000"), low + high + rendition("c", width: 1280, bandwidth: 1400000)] {
+      reject(mpd(ladder(low + high) + ladder(second, start: 4), duration: 8))
+    }
+    reject(mpd(ladder(low + high, audio: true) + ladder(low + high, start: 4), duration: 8))
+  }
+  func testVariantsRejectSubMicrosecondMisalignmentWithoutDoubleRounding() {
+    // Both first durations round to 2.000000; equality must use exact fractions.
+    let timeline = "<SegmentTemplate timescale=\"10000000\" initialization=\"i.mp4\" media=\"$Time$.m4s\"><SegmentTimeline><S d=\"20000001\"/><S d=\"19999999\"/></SegmentTimeline></SegmentTemplate>"
+    reject(mpd(ladder(rendition("a") + rendition("b", width: 640, bandwidth: 700000, template: timeline))))
+    reject(mpd(ladder(rendition("a") + rendition("b", width: 640, bandwidth: 700000).replacingOccurrences(of: "duration=\"2\"", with: "duration=\"1\""))))
+  }
+  func testVariantsShareGeneratedRegistryBudget() {
+    let template = "<SegmentTemplate timescale=\"50\" duration=\"1\" initialization=\"i\" media=\"$Number$\"/>"
+    let variants = (1...3).map { rendition("v\($0)", width: $0 * 320, bandwidth: $0 * 350000, template: template) }.joined()
+    XCTAssertThrowsError(try YlDashHlsCompiler.compile(data: Data(mpd(ladder(variants)).utf8), finalManifestURL: source, sourceURL: source, credentialsStripped: false,
+      manifestURL: { URL(string: "https://virtual.test/\($0).m3u8")! },
+      mediaURL: { _, _ in URL(string: "https://proxy.test/" + String(repeating: "x", count: 8000))! })) { error in
+        XCTAssertEqual((error as? NativePlayerError)?.code, "container.unsupported")
+      }
+  }
+  func testVariantsShareStrictestCredentialHistoryAcrossAllRenditions() throws {
+    let low = rendition("a")
+    let high = rendition("b", width: 640, bandwidth: 700000).replacingOccurrences(of: "<SegmentTemplate", with: "<BaseURL>https://foreign.test/</BaseURL><SegmentTemplate").replacingOccurrences(of: "init-$RepresentationID$.mp4", with: source.deletingLastPathComponent().appendingPathComponent("init-a.mp4").absoluteString)
+    var shared: [Bool] = []
+    _ = try compile(mpd(ladder(low + high)), seen: { u, stripped in if u.lastPathComponent == "init-a.mp4" { shared.append(stripped) } })
+    XCTAssertEqual(shared, [true, true])
+  }
+  func testVariantsChargeAggregateSegmentURIBudgetsAndRepresentationLimit() throws {
+    let dense = "<SegmentTemplate timescale=\"15000\" duration=\"1\" initialization=\"i\" media=\"$Number$\"/>"
+    reject(mpd(ladder(rendition("a", template: dense) + rendition("b", width: 640, bandwidth: 700000, template: dense))))
+    let long = "<SegmentTemplate timescale=\"75\" duration=\"1\" initialization=\"i\" media=\"" + String(repeating: "x", count: 8000) + "$Number$\"/>"
+    reject(mpd(ladder(rendition("a", template: long) + rendition("b", width: 640, bandwidth: 700000, template: long))))
+    let tooMany = (1...17).map { rendition("v\($0)", width: $0 * 32, bandwidth: $0 * 10000) }.joined()
+    reject(mpd(ladder(tooMany)))
+    let maximum = (1...16).map { rendition("v\($0)", width: $0 * 32, bandwidth: $0 * 10000) }.joined()
+    let atLimit = (0..<16).map { ladder(maximum, start: $0 * 4) }.joined()
+    XCTAssertEqual(try compile(mpd(atLimit, duration: 64)).manifests.count, 17)
+    reject(mpd(atLimit + ladder(maximum, start: 64), duration: 68))
+  }
+
 }

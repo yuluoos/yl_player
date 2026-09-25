@@ -79,6 +79,82 @@ def runner_fixture(mode, record):
     return asyncio.run(module.main([sys.executable, str(Path(__file__).resolve()), 'command', mode, record]))
 
 
+class MemoryWriter:
+    def __init__(self):
+        self.closed = False
+        self.transport = self
+
+    def close(self):
+        self.closed = True
+
+    def abort(self):
+        self.closed = True
+
+
+class ObservedReader(asyncio.StreamReader):
+    def __init__(self):
+        super().__init__()
+        self.started = asyncio.Event()
+        self.finished = asyncio.Event()
+
+    async def read(self, size):
+        self.started.set()
+        try:
+            return await super().read(size)
+        finally:
+            self.finished.set()
+
+
+class ProxyReaderTest(unittest.IsolatedAsyncioTestCase):
+    def setUp(self):
+        spec = importlib.util.spec_from_file_location('rtmp_runner_reader', HERE / 'run.py')
+        self.module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(self.module)
+
+    async def test_repeated_eof_retires_reader_tasks(self):
+        proxy = self.module.Proxy()
+        tracked_counts = []
+        for _ in range(3):
+            downstream, incoming = asyncio.StreamReader(), asyncio.StreamReader()
+            downstream.feed_eof()
+            incoming.feed_eof()
+            output, upstream = MemoryWriter(), MemoryWriter()
+            with mock.patch.object(self.module.asyncio, 'open_connection',
+                                   return_value=(incoming, upstream)):
+                reader_task = asyncio.create_task(proxy.reader(downstream, output))
+                await asyncio.wait_for(reader_task, 1)
+            self.assertEqual(proxy.stats()['active'], 0)
+            self.assertEqual(proxy.stats()['heldBytes'], 0)
+            self.assertTrue(output.closed and upstream.closed)
+            tracked_counts.append(len(proxy.tasks))
+        self.assertEqual(proxy.accepted, 3)
+        self.assertEqual(proxy.closed, 3)
+        self.assertEqual(proxy.errors, [])
+        self.assertEqual(tracked_counts, [0, 0, 0])
+
+    async def test_close_cancels_and_retires_active_reader(self):
+        proxy = self.module.Proxy()
+        downstream, incoming = ObservedReader(), ObservedReader()
+        output, upstream = MemoryWriter(), MemoryWriter()
+        with mock.patch.object(self.module.asyncio, 'open_connection',
+                               return_value=(incoming, upstream)):
+            reader_task = asyncio.create_task(proxy.reader(downstream, output))
+            await asyncio.wait_for(asyncio.gather(downstream.started.wait(),
+                                                 incoming.started.wait()), 1)
+            self.assertEqual(proxy.stats()['active'], 1)
+            self.assertEqual(proxy.tasks, {reader_task})
+            cleanup = await proxy.close()
+        self.assertTrue(cleanup['complete'], cleanup)
+        self.assertEqual(cleanup['pendingTasks'], 0)
+        self.assertTrue(reader_task.done())
+        self.assertTrue(downstream.finished.is_set() and incoming.finished.is_set())
+        self.assertTrue(output.closed and upstream.closed)
+        self.assertEqual(proxy.stats()['active'], 0)
+        self.assertEqual(proxy.stats()['heldBytes'], 0)
+        self.assertEqual(proxy.errors, [])
+        self.assertEqual(len(proxy.tasks), 0)
+
+
 class RunnerTest(unittest.TestCase):
     def run_case(self, mode, expected_exit, outcome):
         with tempfile.TemporaryDirectory(prefix='yl-rtmp-runner-test-') as root:

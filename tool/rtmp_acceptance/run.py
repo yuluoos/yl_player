@@ -46,8 +46,8 @@ class Proxy:
         if len(self.clients) >= 8:
             output.close()
             return
-        task = asyncio.current_task()
-        self.tasks.add(task)
+        reader_task = asyncio.current_task()
+        self.tasks.add(reader_task)
         self.accepted += 1
         self.history.append(dict(event='connect', id=self.accepted, time=asyncio.get_running_loop().time()))
         self.history = self.history[-128:]
@@ -105,7 +105,7 @@ class Proxy:
                 client['upstream'].close()
             self.clients.discard(client)
             self.closed += 1
-            self.tasks.discard(task)
+            self.tasks.discard(reader_task)
 
     async def control(self, reader, writer):
         if self.control_clients >= 4:

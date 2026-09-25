@@ -154,9 +154,14 @@ safe HTTP 403 failure, and active/pending Stop. This is a controlled fixture
 result, not a general stream/device matrix; see the [implementation report](superpowers/reports/2026-09-22-dash-foundation.md). Apple
 now routes explicit DASH and automatic `.mpd` network VOD to an inspected private
 HLS adapter and AVPlayer. The original DASH identity is retained. Its initial
-subset accepts one AVC video and optional AAC-LC audio representation per Period,
-consistent corresponding codec/dimensions/sample rate/channels/roles, contiguous finite
-Periods from zero, and zero presentationTimeOffset. SegmentTemplate/Timeline and
+subset accepts one video AdaptationSet with up to 16 compatible AVC representations
+and optional shared AAC-LC audio per Period, with at most 256 total representations
+including audio. Multiple video renditions must share codec/roles and exactly
+aligned segment boundaries. Every Period retains the same unambiguous ladder of
+dimensions and bandwidths, matched independently of representation ID or XML order;
+audio format and presence stay consistent. Singleton video retains its original
+cross-Period compatibility rules. Periods remain contiguous and finite from zero,
+with zero presentationTimeOffset. SegmentTemplate/Timeline and
 SegmentList support bounded URL expansion, initialization and media byte ranges.
 Only one BaseURL choice per level is admitted in this initial Apple subset.
 Unsupported timing/numbering attributes fail closed before inheritance.
@@ -172,8 +177,11 @@ Original source origin and sticky cross-origin ancestry govern credentials;
 redirecting back to the source origin cannot restore them.
 
 Local/live DASH, dynamic or encrypted MPD, SegmentBase, nonzero offsets, gaps or
-overlaps, track/codec changes and multiple representations remain rejected by the
-Apple subset. Managed network, bounded buffer and hardware-required requests
+overlaps, changing ladders, multiple video AdaptationSets, multiple audio
+representations and track/codec changes remain rejected by the Apple subset.
+Multi-video admission also rejects explicit unsupported color/range descriptors
+in its ancestry; the adapter does not inspect arbitrary media bitstreams to prove
+HDR equivalence. Managed network, bounded buffer and hardware-required requests
 remain `policy.unsupported`; parser/registry budgets do not enforce those media
 policies. The route does not use FFmpeg or add a commercial SDK.
 
@@ -186,6 +194,15 @@ rollback, cancellation, safe errors and strict-policy rejection. See the [Apple 
 for executed evidence and limitations. Full Apple DASH coverage, DRM, full
 ABR/subtitle matrices and cross-device coverage remain part of the accepted
 delivery scope and are not completed here.
+
+The subsequent compatible-ladder extension passed 45 focused compiler/loader
+tests on each of macOS and iOS Simulator, and one public playback case per
+platform using separately encoded 320×180 and 640×360 variants across two
+reordered Periods. Both public runs selected the lower variant and verified
+first frame, natural Period transition, bidirectional seeks and completion.
+These runs establish consumption of a multivariant presentation, not observed
+adaptive up/down switching, a strict quality ceiling or a fixed-quality API.
+See the [follow-up report](superpowers/reports/2026-09-24-dash-variants-and-live-integration.md).
 See [transport compatibility](transport-compatibility.md) for private schema 3
 negotiation and mixed-version safety.
 

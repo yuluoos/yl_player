@@ -448,7 +448,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashHlsCompilerTests.swift",
-    "sha256": "888e736e1bde97acba64d53be1552531d3d9f5c8a6eae67d914f60ff90a759e2",
+    "sha256": "50f17ff4b3309b0c8721aedeb8c6541457b98dd2f4aba07e095b3c0a5e0018de",
     "methods": [
       "testSinglePeriodProducesMapDurationsAndRewrittenManifestReference",
       "testTwoPeriodsHaveOneDiscontinuityAndDistinctInitialization",
@@ -469,7 +469,14 @@
       "testGeneratedPlaylistBudgetAndIdentityCollisionFailSafely",
       "testProxyClosureReceivesEveryInitializationAndMediaAndErrorsAreSanitized",
       "testRejectsUnsupportedSegmentTimingAtEveryInheritanceScope",
-      "testRejectsExplicitTimelineNumberAndUnknownSampleSemantics"
+      "testRejectsExplicitTimelineNumberAndUnknownSampleSemantics",
+      "testVariantsMatchReorderedChangedIDsAcrossPeriodsAndShareAudio",
+      "testVariantsAcceptExactEquivalentTimescalesAndNoAudio",
+      "testVariantsRejectAmbiguousChangedAndIncompatibleLaddersBeforeEmission",
+      "testVariantsRejectSubMicrosecondMisalignmentWithoutDoubleRounding",
+      "testVariantsShareGeneratedRegistryBudget",
+      "testVariantsShareStrictestCredentialHistoryAcrossAllRenditions",
+      "testVariantsChargeAggregateSegmentURIBudgetsAndRepresentationLimit"
     ],
     "apple_dash_task1": "Current bounded pure MPD-to-HLS compiler regressions; no historical fixture identities changed."
   },

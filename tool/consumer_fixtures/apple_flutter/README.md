@@ -58,8 +58,8 @@ mixed suites are deferred. These are complete engine matrices;
 complete player parity additionally requires those host cases and four complete
 consumer matrices before endorsement.
 
-The endorsed main example currently declares 493 iOS and 409 macOS cases.
-The Apple DASH compiler adds 20 shared current cases; these declarations do not
+The endorsed main example currently declares 546 iOS and 462 macOS cases.
+The Apple DASH compiler adds 27 shared current cases; these declarations do not
 claim execution of a new full platform matrix.
 The post-R42 inventory was 252/214; this phase correction adds one shared HLS
 intent case. The 251 iOS / 213 macOS counts describe the pre-R42 full execution

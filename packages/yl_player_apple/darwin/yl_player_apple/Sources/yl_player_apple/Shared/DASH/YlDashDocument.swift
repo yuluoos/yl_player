@@ -20,6 +20,8 @@ final class YlDashNode {
 enum YlDashBounds {
   static let maxDocument = 2 * 1024 * 1024
   static let maxSegments = 100_000
+  static let maxVideoVariants = 16
+  static let maxRepresentations = 256
   static let maxURI = 8192
   static let maxTotalURI = 4 * 1024 * 1024
   static var unsupported: NativePlayerError {
@@ -143,6 +145,16 @@ struct YlDashSegment {
   let resource: YlDashResource
   let ticks: Int64
   let scale: Int64
+  func aligned(with other: YlDashSegment) -> Bool {
+    // Reduce before comparing: neither Double rounding nor cross-product overflow.
+    func gcd(_ a: Int64, _ b: Int64) -> Int64 {
+      var a = a; var b = b
+      while b != 0 { let remainder = a % b; a = b; b = remainder }
+      return a
+    }
+    let left = gcd(ticks, scale), right = gcd(other.ticks, other.scale)
+    return ticks / left == other.ticks / right && scale / left == other.scale / right
+  }
 }
 struct YlDashTrack {
   let codec: String
@@ -160,7 +172,7 @@ struct YlDashTrack {
   }
 }
 struct YlDashPeriod {
-  let video: YlDashTrack
+  let videos: [YlDashTrack]
   let audio: YlDashTrack?
 }
 
@@ -169,6 +181,7 @@ final class YlDashDocument {
   var stripped = Set<String>()
   private var uriUnits = 0
   private var segmentCount = 0
+  private var representationCount = 0
   init(source: URL) { self.source = source }
   private func record(_ value: String, base: URL, inherited: Bool, isResource: Bool = true) throws -> URL {
     let url = try YlDashBounds.url(value, relativeTo: base)
@@ -202,28 +215,63 @@ final class YlDashDocument {
       guard let duration = duration, duration > 0 else { throw YlDashBounds.unsupported }
       end = try YlDashBounds.add(start, duration)
       let periodBase = try base(period, roots)
-      var video: YlDashTrack?; var audio: YlDashTrack?
+      var videos: [YlDashTrack] = []; var audio: YlDashTrack?
       for adaptation in period.nodes("AdaptationSet") {
         let representations = adaptation.nodes("Representation")
-        guard representations.count == 1 else { throw YlDashBounds.unsupported }
-        let representation = representations[0]
-        let ancestors = [root, period, adaptation, representation]
-        var attributes: [String: String] = [:]
-        for node in [adaptation, representation] { attributes.merge(node.attributes) { _, new in new } }
-        let mime = attributes["mimeType"]
-        let kind = attributes["contentType"] ?? (mime == "video/mp4" ? "video" : mime == "audio/mp4" ? "audio" : "")
-        guard kind == "video" || kind == "audio", mime == nil || mime == "\(kind)/mp4" else { throw YlDashBounds.unsupported }
-        let location = try base(representation, base(adaptation, periodBase))
-        let track = try buildTrack(ancestors, attributes, kind, duration, location)
-        if kind == "video" { guard video == nil else { throw YlDashBounds.unsupported }; video = track }
-        else { guard audio == nil else { throw YlDashBounds.unsupported }; audio = track }
+        guard !representations.isEmpty,
+              representations.count <= YlDashBounds.maxVideoVariants,
+              representations.count <= YlDashBounds.maxRepresentations - representationCount else { throw YlDashBounds.unsupported }
+        representationCount += representations.count
+        let adaptationBase = try base(adaptation, periodBase)
+        var tracks: [YlDashTrack] = []
+        var adaptationKind: String?
+        for representation in representations {
+          let ancestors = [root, period, adaptation, representation]
+          var attributes: [String: String] = [:]
+          for node in [adaptation, representation] { attributes.merge(node.attributes) { _, new in new } }
+          let mime = attributes["mimeType"]
+          let kind = attributes["contentType"] ?? (mime == "video/mp4" ? "video" : mime == "audio/mp4" ? "audio" : "")
+          guard kind == "video" || kind == "audio", mime == nil || mime == "\(kind)/mp4",
+                adaptationKind == nil || adaptationKind == kind else { throw YlDashBounds.unsupported }
+          adaptationKind = kind
+          if representations.count > 1 {
+            // Do not silently turn format/range descriptors into an AVC/SDR promise.
+            guard kind == "video", ancestors.allSatisfy({ $0.nodes("SupplementalProperty").isEmpty }),
+                  !ancestors.contains(where: { node in
+                    ["videoRange", "colourPrimaries", "transferCharacteristics", "matrixCoefficients"].contains(where: { node.attributes[$0] != nil })
+                  }) else { throw YlDashBounds.unsupported }
+          }
+          let location = try base(representation, adaptationBase)
+          tracks.append(try buildTrack(ancestors, attributes, kind, duration, location))
+        }
+        if adaptationKind == "video" {
+          guard videos.isEmpty else { throw YlDashBounds.unsupported }
+          videos = tracks
+        } else {
+          guard audio == nil, tracks.count == 1 else { throw YlDashBounds.unsupported }
+          audio = tracks[0]
+        }
       }
-      guard let video = video else { throw YlDashBounds.unsupported }
+      guard !videos.isEmpty else { throw YlDashBounds.unsupported }
+      if videos.count > 1 {
+        let first = videos[0]
+        for (index, track) in videos.enumerated() {
+          guard track.codec == first.codec, track.roles == first.roles,
+                track.segments.count == first.segments.count,
+                zip(track.segments, first.segments).allSatisfy({ $0.aligned(with: $1) }),
+                !videos.prefix(index).contains(where: { track.matches($0) && track.bandwidth == $0.bandwidth }) else { throw YlDashBounds.unsupported }
+        }
+        // Stable quality identity, independent of XML ordering and Representation IDs.
+        videos.sort { ($0.width, $0.height, $0.bandwidth) < ($1.width, $1.height, $1.bandwidth) }
+      }
       if let previous = result.last {
-        guard video.matches(previous.video), (audio == nil) == (previous.audio == nil),
+        guard videos.count == previous.videos.count,
+              zip(videos, previous.videos).allSatisfy({ current, old in
+                current.matches(old) && (videos.count == 1 || current.bandwidth == old.bandwidth)
+              }), (audio == nil) == (previous.audio == nil),
               audio == nil || audio!.matches(previous.audio!) else { throw YlDashBounds.unsupported }
       }
-      result.append(YlDashPeriod(video: video, audio: audio))
+      result.append(YlDashPeriod(videos: videos, audio: audio))
     }
     guard total == nil || total == end else { throw YlDashBounds.unsupported }
     return (result, end)
