@@ -30,7 +30,8 @@ internal interface YlPlayerSession {
     suspend fun seekToLiveEdge(command: AndroidSessionCommand)
     fun setPlaybackSpeed(command: AndroidSpeedCommand)
     suspend fun selectAudioTrack(command: AndroidTrackCommand)
-    fun setVideoConstraints(command: AndroidVideoConstraintsCommand)
+    suspend fun selectVideoTrack(command: AndroidVideoTrackCommand)
+    suspend fun setVideoConstraints(command: AndroidVideoConstraintsCommand)
     fun setVolume(volume: Double)
     suspend fun stop()
     fun close(): Deferred<Unit>
@@ -115,7 +116,8 @@ internal class YlPigeonPlayerHost(
     override suspend fun seekToLiveEdge(command: AndroidSessionCommand) = command { session.seekToLiveEdge(command) }
     override fun setPlaybackSpeed(command: AndroidSpeedCommand) = safe { session.setPlaybackSpeed(command) }
     override suspend fun selectAudioTrack(command: AndroidTrackCommand) = command { session.selectAudioTrack(command) }
-    override fun setVideoConstraints(command: AndroidVideoConstraintsCommand) = safe { session.setVideoConstraints(command) }
+    override suspend fun selectVideoTrack(command: AndroidVideoTrackCommand) = command { session.selectVideoTrack(command) }
+    override suspend fun setVideoConstraints(command: AndroidVideoConstraintsCommand) = command { session.setVideoConstraints(command) }
     override fun setVolume(volume: Double) = safe { session.setVolume(volume) }
     override suspend fun stop() = command { session.stop() }
     override suspend fun dispose() {

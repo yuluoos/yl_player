@@ -28,6 +28,20 @@ final class YlPlaybackSession {
     validateYlTrackId(trackId);
     return _player._backend.selectAudioTrack(id, trackId);
   });
+  Future<void> selectVideoTrack(String? trackId) => _command(() {
+    if (trackId != null) validateYlTrackId(trackId);
+    final backend = _player._backend;
+    if (backend is! YlVideoTrackSelectionPlatformPlayer ||
+        !backend.capabilities.supportedOperations.contains(
+          YlPlayerOperation.videoTrackSelection,
+        )) {
+      throw _exception(YlFailureCodes.policyUnsupported);
+    }
+    return (backend as YlVideoTrackSelectionPlatformPlayer).selectVideoTrack(
+      id,
+      trackId,
+    );
+  });
   Future<void> setVideoConstraints(YlVideoConstraints constraints) =>
       _command(() {
         validateYlVideoConstraints(constraints);

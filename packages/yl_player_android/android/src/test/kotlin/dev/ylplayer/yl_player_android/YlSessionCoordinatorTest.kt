@@ -7,6 +7,120 @@ import kotlin.test.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlSessionCoordinatorTest {
+    @Test fun `fixed semantic restore point survives replacement rollback and old session cannot affect replacement or stop`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        val original = f.coordinator.load(request("fixed-original"))
+        val first = f.engines.single()
+        first.supportsVideoTrackSelection = true
+        first.emit(YlEngineEvent.Snapshot(YlEngineSnapshot(videoTracks = listOf(AndroidTrackMessage("high", AndroidTrackKind.VIDEO, isSelected = true)))))
+        f.coordinator.selectVideoTrack(AndroidVideoTrackCommand(original.sessionId, "high"))
+        val fixed = first.currentVideoSelection
+        assertNotNull(fixed.quality)
+        f.next = FakeSessionEngine().apply { activationError = YlBoundaryException(YlFailureKind.DECODER_UNAVAILABLE) }
+        assertFailsWith<YlBoundaryException> { f.coordinator.load(request("failed-replacement")) }
+        assertEquals(fixed, first.currentVideoSelection)
+        assertEquals(1, first.restores)
+        val replacement = f.coordinator.load(request("replacement"))
+        assertEquals("initial", f.coordinator.initialState.videoSelection!!.reason)
+        val stale = assertFailsWith<YlBoundaryException> {
+            f.coordinator.selectVideoTrack(AndroidVideoTrackCommand(original.sessionId, null))
+        }
+        assertEquals(YlFailureKind.SESSION_STALE, stale.kind)
+        first.emit(YlEngineEvent.Snapshot(YlEngineSnapshot(videoSelection = fixed.message())))
+        assertEquals(replacement.sessionId, f.coordinator.initialState.sessionId)
+        assertNull(f.coordinator.initialState.videoSelection!!.fixedTrackId)
+        f.coordinator.stop()
+        first.emit(YlEngineEvent.Snapshot(YlEngineSnapshot(videoSelection = fixed.message())))
+        assertEquals(AndroidPlaybackStatus.IDLE, f.coordinator.initialState.status)
+        assertEquals("initial", f.coordinator.initialState.videoSelection!!.reason)
+        f.finish()
+    }
+
+    @Test fun `fixed commands require worker acknowledgement and reject held restoration`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        val session = f.coordinator.load(request("fixed-worker"))
+        val engine = f.engines.single()
+        engine.supportsVideoTrackSelection = true
+        engine.emit(YlEngineEvent.Snapshot(YlEngineSnapshot(videoTracks = listOf(AndroidTrackMessage("high", AndroidTrackKind.VIDEO, isSelected = true)))))
+        val heldCommand = CompletableDeferred<Unit>()
+        engine.videoAcknowledgement = heldCommand
+        val select = async { f.coordinator.selectVideoTrack(AndroidVideoTrackCommand(session.sessionId, "high")) }
+        runCurrent()
+        assertFalse(select.isCompleted)
+        heldCommand.complete(Unit); select.await()
+        assertEquals(listOf<String?>("high"), engine.videoCalls)
+        f.coordinator.onBackground(); runCurrent()
+        val heldRestore = CompletableDeferred<Unit>()
+        engine.restoreAcknowledgement = heldRestore
+        f.coordinator.onForeground(); runCurrent()
+        val failure = assertFailsWith<YlBoundaryException> { f.coordinator.selectVideoTrack(AndroidVideoTrackCommand(session.sessionId, null)) }
+        assertEquals(YlFailureKind.RESOURCE_EXHAUSTED, failure.kind)
+        assertEquals(listOf<String?>("high"), engine.videoCalls)
+        heldRestore.complete(Unit); runCurrent()
+        f.coordinator.selectVideoTrack(AndroidVideoTrackCommand(session.sessionId, null))
+        assertEquals(listOf("high", null), engine.videoCalls)
+        f.finish()
+    }
+
+    @Test fun `held restore cannot acknowledge constraints without worker application`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        val session = f.coordinator.load(request("held-cap"))
+        val engine = f.engines.single()
+        val original = AndroidVideoConstraintsMessage(maxWidth = 1920)
+        val tighter = AndroidVideoConstraintsMessage(maxWidth = 1280)
+        f.coordinator.setVideoConstraints(AndroidVideoConstraintsCommand(session.sessionId, original))
+        assertEquals(original, engine.currentConstraints)
+        f.coordinator.onBackground(); runCurrent()
+        val held = CompletableDeferred<Unit>()
+        engine.restoreAcknowledgement = held
+        f.coordinator.onForeground(); runCurrent()
+        assertEquals(1, engine.restores)
+        val pending = async { runCatching {
+            f.coordinator.setVideoConstraints(AndroidVideoConstraintsCommand(session.sessionId, tighter))
+        } }
+        runCurrent()
+        val failure = pending.await().exceptionOrNull()
+        assertEquals(YlFailureKind.RESOURCE_EXHAUSTED, (failure as? YlBoundaryException)?.kind)
+        assertEquals(listOf(original), engine.constraintsCalls)
+        held.complete(Unit); runCurrent()
+        assertEquals(original, engine.currentConstraints)
+        f.coordinator.setVideoConstraints(AndroidVideoConstraintsCommand(session.sessionId, tighter))
+        assertEquals(listOf(original, tighter), engine.constraintsCalls)
+        assertEquals(tighter, engine.currentConstraints)
+        f.finish()
+    }
+
+    @Test fun `worker rejection does not replace remembered video constraints`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        val session = f.coordinator.load(request("cap-rejection"))
+        val engine = f.engines.single()
+        val original = AndroidVideoConstraintsMessage(maxWidth = 1920)
+        val rejected = AndroidVideoConstraintsMessage(maxWidth = 1280)
+        f.coordinator.setVideoConstraints(AndroidVideoConstraintsCommand(session.sessionId, original))
+        engine.constraintsError = YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
+        assertFailsWith<YlBoundaryException> {
+            f.coordinator.setVideoConstraints(AndroidVideoConstraintsCommand(session.sessionId, rejected))
+        }
+        assertEquals(original, engine.currentConstraints)
+        engine.constraintsError = null
+        f.coordinator.onBackground(); runCurrent()
+        f.coordinator.onForeground(); runCurrent()
+        assertEquals(original, engine.currentConstraints)
+        assertEquals(listOf(original, rejected), engine.constraintsCalls)
+        f.finish()
+    }
+    @Test fun `video command rejects unimplemented engine without changing mode`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        assertTrue(AndroidPlayerOperation.VIDEO_TRACK_SELECTION in f.coordinator.capabilities.supportedOperations)
+        val committed = f.coordinator.load(request("video-unsupported"))
+        val before = f.coordinator.initialState
+        val error = assertFailsWith<YlBoundaryException> {
+            f.coordinator.selectVideoTrack(AndroidVideoTrackCommand(committed.sessionId, null))
+        }
+        assertEquals(YlFailureKind.POLICY_UNSUPPORTED, error.kind)
+        assertEquals(before, f.coordinator.initialState)
+        f.finish()
+    }
     @Test fun `real managed wrapper stop succeeds for active and pending replacement while load cancels`() = runTest {
         for (replacement in listOf(false, true)) {
             val f = SessionFixture(StandardTestDispatcher(testScheduler), managedWrapper = true)
@@ -852,6 +966,9 @@ internal class FakeSessionEngine : YlPlaybackEngineAdapter {
     var currentVolume = 1.0
     var currentSpeed = 1.0
     var currentTrack: String? = null
+    var currentConstraints = AndroidVideoConstraintsMessage()
+    val constraintsCalls = mutableListOf<AndroidVideoConstraintsMessage>()
+    var constraintsError: Throwable? = null
     var commandError: Throwable? = null
     var commandAcknowledgement: CompletableDeferred<Unit>? = null
     var restoredLiveEdge = false
@@ -892,15 +1009,31 @@ internal class FakeSessionEngine : YlPlaybackEngineAdapter {
     fun emit(event: YlEngineEvent) { callback?.invoke(identity, event) }
     override suspend fun prepare() { preparation?.await(); prepareError?.let { throw it } }
     override suspend fun activate(output: YlSessionVideoOutput) { activationCalls++; onActivate?.invoke(); activationAcknowledgement?.await(); activationError?.let { throw it } }
-    override suspend fun quiesce(): YlEngineRestorePoint { quiesces++; quiesceAcknowledgement?.await(); quiesceError?.let { throw it }; playing = false; return YlEngineRestorePoint(position, false, playbackIntended, currentTrack, speed = currentSpeed, volume = currentVolume) }
-    override suspend fun restore(point: YlEngineRestorePoint, output: YlSessionVideoOutput) { lifecycleCalls += "restore"; restoredLiveEdge = point.liveEdge; currentLiveEdge = point.liveEdge; restores++; playbackIntended = point.playbackIntended; playing = playbackIntended; currentSpeed = point.speed; currentTrack = point.selectedAudioTrack; currentVolume = point.volume; position = point.positionMs; onRestore?.invoke(); restoreAcknowledgement?.await() }
+    override suspend fun quiesce(): YlEngineRestorePoint { quiesces++; quiesceAcknowledgement?.await(); quiesceError?.let { throw it }; playing = false; return YlEngineRestorePoint(position, false, playbackIntended, currentTrack, speed = currentSpeed, volume = currentVolume, maxWidth = currentConstraints.maxWidth, maxHeight = currentConstraints.maxHeight, maxBitrate = currentConstraints.maxBitrate, videoSelection = currentVideoSelection) }
+    override suspend fun restore(point: YlEngineRestorePoint, output: YlSessionVideoOutput) { lifecycleCalls += "restore"; currentVideoSelection = point.videoSelection; restoredLiveEdge = point.liveEdge; currentLiveEdge = point.liveEdge; restores++; playbackIntended = point.playbackIntended; playing = playbackIntended; currentSpeed = point.speed; currentTrack = point.selectedAudioTrack; currentVolume = point.volume; currentConstraints = AndroidVideoConstraintsMessage(point.maxWidth, point.maxHeight, point.maxBitrate); position = point.positionMs; onRestore?.invoke(); restoreAcknowledgement?.await() }
     override suspend fun play() { playCalls++; playbackIntended = true; playing = true }
     override suspend fun pause() { playbackIntended = false; playing = false }
     override suspend fun seekTo(positionMs: Long) { seekCommandAcknowledgement?.await(); position = positionMs; currentLiveEdge = false }
     override suspend fun seekToLiveEdge() { liveCommandAcknowledgement?.await(); commandError?.let { throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED) }; currentLiveEdge = true }
     override suspend fun setPlaybackSpeed(speed: Double) { currentSpeed = speed }
+    var currentVideoSelection = YlFixedVideoState()
+    override var supportsVideoTrackSelection = false
+    var videoAcknowledgement: CompletableDeferred<Unit>? = null
+    val videoCalls = mutableListOf<String?>()
+    override suspend fun selectVideoTrack(trackId: String?) {
+        if (!supportsVideoTrackSelection) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
+        videoAcknowledgement?.await()
+        videoCalls += trackId
+        currentVideoSelection = if (trackId == null) YlFixedVideoState(reason = "user") else YlFixedVideoState(
+            YlVideoQualityIdentity("video/avc", "avc1.64001f", 1280, 720, 900000, -1, 900000, 30f,
+                0, 0, null, null, null, null, null, null, 0, 1f), trackId, "user")
+    }
     override suspend fun selectAudioTrack(trackId: String) { commandAcknowledgement?.await(); commandError?.let { throw it }; trackErrors[trackId]?.let { throw it }; currentTrack = trackId }
-    override suspend fun setVideoConstraints(constraints: AndroidVideoConstraintsMessage) = Unit
+    override suspend fun setVideoConstraints(constraints: AndroidVideoConstraintsMessage) {
+        constraintsCalls += constraints
+        constraintsError?.let { throw it }
+        currentConstraints = constraints
+    }
     override suspend fun setVolume(volume: Double) {
         currentVolume = volume
         volumeAssigned?.complete(Unit)

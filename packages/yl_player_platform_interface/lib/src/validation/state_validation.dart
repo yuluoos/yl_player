@@ -8,6 +8,7 @@ import '../model/player_state.dart';
 import '../model/source_assessment.dart';
 import '../model/timeline.dart';
 import '../model/video_geometry.dart';
+import '../model/video_selection.dart';
 
 const _maxSigned64 = 0x7fffffffffffffff;
 final _safeMetadata = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$');
@@ -157,6 +158,14 @@ void validateYlPlayerState(YlPlayerState state) {
     validateYlMediaTrack(track);
     if (track.kind != YlTrackKind.video) {
       throw ArgumentError('Video track list contains a different track kind.');
+    }
+  }
+  final selection = state.videoSelection;
+  if (selection.fixedTrackId case final id?) {
+    if (id.isEmpty ||
+        selection.reason != YlVideoSelectionReason.user ||
+        !state.videoTracks.any((track) => track.id == id)) {
+      throw ArgumentError('Fixed video selection is invalid.');
     }
   }
 }

@@ -34,6 +34,7 @@ AndroidStateMessage wireState({
   engine: AndroidEngine.media3,
   decoderMode: AndroidDecoderMode.unknown,
   metrics: AndroidMetricsMessage(),
+  videoSelection: AndroidVideoSelectionMessage(reason: 'initial'),
 );
 AndroidFailureMessage wireFailure({
   AndroidFailureScope scope = AndroidFailureScope.session,
@@ -47,7 +48,7 @@ AndroidFailureMessage wireFailure({
 );
 AndroidCreateReply wireCreate({String suffix = 'instance-1'}) =>
     AndroidCreateReply(
-      schemaMajor: 3,
+      schemaMajor: 4,
       spiMajor: 2,
       channelSuffix: suffix,
       textureId: 42,
@@ -58,7 +59,12 @@ AndroidCreateReply wireCreate({String suffix = 'instance-1'}) =>
         availableEngines: [AndroidEngine.media3],
         decoderEvidence: AndroidDecoderEvidence.none,
         hardwareVideoCodecs: [],
-        supportedOperations: AndroidPlayerOperation.values,
+        supportedOperations: AndroidPlayerOperation.values
+            .where(
+              (operation) =>
+                  operation != AndroidPlayerOperation.videoTrackSelection,
+            )
+            .toList(),
       ),
       initialState: wireState(),
     );
@@ -165,6 +171,11 @@ final class FakeTransport implements AndroidPlayerTransport {
   @override
   Future<void> selectAudioTrack(AndroidTrackCommand c) async {
     calls.add('track:${c.sessionId}:${c.trackId}');
+  }
+
+  @override
+  Future<void> selectVideoTrack(AndroidVideoTrackCommand c) async {
+    calls.add('video-track:${c.sessionId}:${c.trackId}');
   }
 
   @override

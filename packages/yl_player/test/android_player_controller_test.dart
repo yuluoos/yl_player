@@ -270,6 +270,7 @@ AndroidStateMessage _state({
   engine: AndroidEngine.media3,
   decoderMode: AndroidDecoderMode.unknown,
   metrics: AndroidMetricsMessage(),
+  videoSelection: AndroidVideoSelectionMessage(reason: 'initial'),
 );
 
 Future<YlPlayerController> _controller(_Native native) async {
@@ -296,7 +297,7 @@ final class _Factory implements AndroidFactoryTransport {
   @override
   Future<AndroidCreateReply> create(AndroidCreateRequest request) async =>
       AndroidCreateReply(
-        schemaMajor: 3,
+        schemaMajor: 4,
         spiMajor: 2,
         channelSuffix: 'controller-test',
         textureId: 1,
@@ -355,6 +356,9 @@ final class _Native implements AndroidPlayerTransport {
       throw UnimplementedError();
   @override
   Future<void> selectAudioTrack(AndroidTrackCommand command) =>
+      throw UnimplementedError();
+  @override
+  Future<void> selectVideoTrack(AndroidVideoTrackCommand command) =>
       throw UnimplementedError();
   @override
   Future<void> setVideoConstraints(AndroidVideoConstraintsCommand command) =>

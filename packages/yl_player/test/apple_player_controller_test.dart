@@ -13,6 +13,34 @@ import 'package:yl_player_apple/src/pigeon/yl_player_apple.g.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 void main() {
+  test('Apple session reports unsupported video selection', () async {
+    final native = _Native();
+    final controller = await _controller(native);
+    addTearDown(controller.dispose);
+    final session = await _commit(controller, native);
+    expect(controller.state.videoSelection, const YlVideoSelection());
+    await expectLater(
+      session.selectVideoTrack('v0'),
+      throwsA(
+        isA<YlPlayerException>()
+            .having(
+              (error) => error.failure.code,
+              'code',
+              YlFailureCodes.policyUnsupported,
+            )
+            .having(
+              (error) => error.failure.category,
+              'category',
+              YlFailureCategory.unsupported,
+            )
+            .having(
+              (error) => error.failure.scope,
+              'scope',
+              YlFailureScope.command,
+            ),
+      ),
+    );
+  });
   for (final stateFirst in [false, true]) {
     test(
       'public session pairs Load reply and READY in both orders: stateFirst=$stateFirst',

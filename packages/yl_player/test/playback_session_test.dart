@@ -30,6 +30,50 @@ void main() {
   tearDown(() async {
     await player.dispose();
   });
+  test(
+    'optional video selection rejects unsupported and stale sessions',
+    () async {
+      final loading = player.load(source);
+      backend.commit(s1);
+      final session = await loading;
+      await expectLater(session.selectVideoTrack(''), throwsArgumentError);
+      await expectLater(
+        session.selectVideoTrack(null),
+        throwsA(
+          isA<YlPlayerException>()
+              .having(
+                (error) => error.failure.code,
+                'code',
+                YlFailureCodes.policyUnsupported,
+              )
+              .having(
+                (error) => error.failure.category,
+                'category',
+                YlFailureCategory.unsupported,
+              )
+              .having(
+                (error) => error.failure.scope,
+                'scope',
+                YlFailureScope.command,
+              ),
+        ),
+      );
+      expect(backend.calls, isEmpty);
+      final next = player.load(source);
+      backend.commit(s2);
+      await next;
+      await expectLater(
+        session.selectVideoTrack('v0'),
+        throwsA(
+          isA<YlPlayerException>().having(
+            (error) => error.failure.code,
+            'code',
+            YlFailureCodes.sessionStale,
+          ),
+        ),
+      );
+    },
+  );
   test('paused app observer cannot delay public dispose completion', () async {
     final observer = player.states.listen((_) {});
     observer.pause();

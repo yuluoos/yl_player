@@ -192,6 +192,7 @@ enum AndroidPlayerOperation {
   videoConstraints,
   volume,
   stop,
+  videoTrackSelection,
 }
 
 enum AndroidDecoderMode {
@@ -1842,6 +1843,7 @@ class AndroidStateMessage {
     this.decoderIdentity,
     required this.metrics,
     this.failure,
+    this.videoSelection,
   });
 
   String? loadRequestId;
@@ -1872,6 +1874,8 @@ class AndroidStateMessage {
 
   AndroidFailureMessage? failure;
 
+  AndroidVideoSelectionMessage? videoSelection;
+
   List<Object?> _toList() {
     return <Object?>[
       loadRequestId,
@@ -1888,6 +1892,7 @@ class AndroidStateMessage {
       decoderIdentity,
       metrics,
       failure,
+      videoSelection,
     ];
   }
 
@@ -1911,6 +1916,7 @@ class AndroidStateMessage {
       decoderIdentity: result[11] as String?,
       metrics: result[12]! as AndroidMetricsMessage,
       failure: result[13] as AndroidFailureMessage?,
+      videoSelection: result[14] as AndroidVideoSelectionMessage?,
     );
   }
 
@@ -1923,7 +1929,7 @@ class AndroidStateMessage {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(loadRequestId, other.loadRequestId) && _deepEquals(sessionId, other.sessionId) && _deepEquals(revision, other.revision) && _deepEquals(sequence, other.sequence) && _deepEquals(status, other.status) && _deepEquals(timeline, other.timeline) && _deepEquals(geometry, other.geometry) && _deepEquals(audioTracks, other.audioTracks) && _deepEquals(videoTracks, other.videoTracks) && _deepEquals(engine, other.engine) && _deepEquals(decoderMode, other.decoderMode) && _deepEquals(decoderIdentity, other.decoderIdentity) && _deepEquals(metrics, other.metrics) && _deepEquals(failure, other.failure);
+    return _deepEquals(loadRequestId, other.loadRequestId) && _deepEquals(sessionId, other.sessionId) && _deepEquals(revision, other.revision) && _deepEquals(sequence, other.sequence) && _deepEquals(status, other.status) && _deepEquals(timeline, other.timeline) && _deepEquals(geometry, other.geometry) && _deepEquals(audioTracks, other.audioTracks) && _deepEquals(videoTracks, other.videoTracks) && _deepEquals(engine, other.engine) && _deepEquals(decoderMode, other.decoderMode) && _deepEquals(decoderIdentity, other.decoderIdentity) && _deepEquals(metrics, other.metrics) && _deepEquals(failure, other.failure) && _deepEquals(videoSelection, other.videoSelection);
   }
 
   @override
@@ -1932,7 +1938,7 @@ class AndroidStateMessage {
 
   @override
   String toString() {
-    return 'AndroidStateMessage(loadRequestId: $loadRequestId, sessionId: $sessionId, revision: $revision, sequence: $sequence, status: $status, timeline: $timeline, geometry: $geometry, audioTracks: $audioTracks, videoTracks: $videoTracks, engine: $engine, decoderMode: $decoderMode, decoderIdentity: $decoderIdentity, metrics: $metrics, failure: $failure)';
+    return 'AndroidStateMessage(loadRequestId: $loadRequestId, sessionId: $sessionId, revision: $revision, sequence: $sequence, status: $status, timeline: $timeline, geometry: $geometry, audioTracks: $audioTracks, videoTracks: $videoTracks, engine: $engine, decoderMode: $decoderMode, decoderIdentity: $decoderIdentity, metrics: $metrics, failure: $failure, videoSelection: $videoSelection)';
   }
 }
 
@@ -2461,6 +2467,106 @@ class AndroidPlaybackFailedMessage {
   }
 }
 
+class AndroidVideoTrackCommand {
+  AndroidVideoTrackCommand({
+    required this.sessionId,
+    this.trackId,
+  });
+
+  String sessionId;
+
+  String? trackId;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      sessionId,
+      trackId,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AndroidVideoTrackCommand decode(Object result) {
+    result as List<Object?>;
+    return AndroidVideoTrackCommand(
+      sessionId: result[0]! as String,
+      trackId: result[1] as String?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AndroidVideoTrackCommand || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(sessionId, other.sessionId) && _deepEquals(trackId, other.trackId);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AndroidVideoTrackCommand(sessionId: $sessionId, trackId: $trackId)';
+  }
+}
+
+class AndroidVideoSelectionMessage {
+  AndroidVideoSelectionMessage({
+    this.fixedTrackId,
+    required this.reason,
+  });
+
+  String? fixedTrackId;
+
+  String reason;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      fixedTrackId,
+      reason,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AndroidVideoSelectionMessage decode(Object result) {
+    result as List<Object?>;
+    return AndroidVideoSelectionMessage(
+      fixedTrackId: result[0] as String?,
+      reason: result[1]! as String,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AndroidVideoSelectionMessage || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(fixedTrackId, other.fixedTrackId) && _deepEquals(reason, other.reason);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AndroidVideoSelectionMessage(fixedTrackId: $fixedTrackId, reason: $reason)';
+  }
+}
+
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
@@ -2616,6 +2722,12 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is AndroidPlaybackFailedMessage) {
       buffer.putUint8(177);
       writeValue(buffer, value.encode());
+    }    else if (value is AndroidVideoTrackCommand) {
+      buffer.putUint8(178);
+      writeValue(buffer, value.encode());
+    }    else if (value is AndroidVideoSelectionMessage) {
+      buffer.putUint8(179);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -2738,6 +2850,10 @@ class _PigeonCodec extends StandardMessageCodec {
         return AndroidEngineChangedMessage.decode(readValue(buffer)!);
       case 177:
         return AndroidPlaybackFailedMessage.decode(readValue(buffer)!);
+      case 178:
+        return AndroidVideoTrackCommand.decode(readValue(buffer)!);
+      case 179:
+        return AndroidVideoSelectionMessage.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -2938,6 +3054,24 @@ class AndroidPlayerHostApi {
 
   Future<void> selectAudioTrack(AndroidTrackCommand command) async {
     final pigeonVar_channelName = 'dev.flutter.pigeon.yl_player_android.AndroidPlayerHostApi.selectAudioTrack$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[command]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
+  }
+
+  Future<void> selectVideoTrack(AndroidVideoTrackCommand command) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.yl_player_android.AndroidPlayerHostApi.selectVideoTrack$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,

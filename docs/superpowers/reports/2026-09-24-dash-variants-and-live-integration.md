@@ -1,6 +1,6 @@
 # DASH 多档位与 tvs 直播接入
 
-依据[实施计划](../plans/2026-09-24-dash-variants-and-live-integration.md)。播放器基线 `2b24d93`，业务项目 tvs 基线 `82ed28f`。本轮修改尚未提交；业务功能分支为 `codex/live-script-rtmp-integration`。三项实现、定向验证、独立任务复审及整批复审已完成。整批发现的三处 tvs 问题经一次集中修复和一次增量复审，均已解决，无剩余阻塞项；签收仅限本报告的阶段范围。
+依据[实施计划](../plans/2026-09-24-dash-variants-and-live-integration.md)。播放器基线 `2b24d93`，业务项目 tvs 基线 `82ed28f`。本阶段交付后，已按用户要求提交为播放器 `9f6b490`、tvs `9c183fd`，未推送；业务功能分支为 `codex/live-script-rtmp-integration`。三项实现、定向验证、独立任务复审及整批复审已完成。整批发现的三处 tvs 问题经一次集中修复和一次增量复审，均已解决，无剩余阻塞项；签收仅限本报告的阶段范围。
 
 ## Apple DASH 多档位
 

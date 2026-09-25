@@ -3,6 +3,7 @@ package dev.ylplayer.yl_player_android
 import android.os.SystemClock
 import dev.ylplayer.yl_player_android.pigeon.AndroidEngine
 import dev.ylplayer.yl_player_android.pigeon.AndroidVideoConstraintsMessage
+import dev.ylplayer.yl_player_android.pigeon.AndroidVideoSelectionMessage
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -38,6 +39,9 @@ internal class YlManagedAndroidEngine(
     private var speed = 1.0
     private var volume = 1.0
     private var audioTrack: String? = null
+    private var videoSelection = AndroidVideoSelectionMessage(reason = "initial")
+    private val fixedVideo get() = videoSelection.fixedTrackId != null
+    override val supportsVideoTrackSelection get() = current.supportsVideoTrackSelection
     private var constraints: AndroidVideoConstraintsMessage? = null
     override val needsExclusiveLease: Boolean get() = current.needsExclusiveLease
 
@@ -46,8 +50,17 @@ internal class YlManagedAndroidEngine(
     private fun bind(engine: YlPlaybackEngineAdapter) {
         engine.registerCallback { eventIdentity, event ->
             if (closed || eventIdentity != identity || engine !== current) return@registerCallback
-            if (event is YlEngineEvent.Snapshot) positionMs = event.value.timeline.positionMs
-            if (event is YlEngineEvent.Failed && allowFallback && YlFallbackRoutingPolicy.shouldFallback(event.kind, fallbackAttempted)) {
+            val forwarded = if (event is YlEngineEvent.Snapshot) {
+                positionMs = event.value.timeline.positionMs
+                val incoming = event.value.videoSelection
+                // Backend replacement stays in this session. A fallback that cannot select video
+                // reports only its default initial state, not a new accepted selection intent.
+                if (!fallbackAttempted || incoming.fixedTrackId != null || incoming.reason != "initial") {
+                    videoSelection = incoming
+                }
+                event.copy(value = event.value.copy(videoSelection = videoSelection))
+            } else event
+            if (event is YlEngineEvent.Failed && !fixedVideo && allowFallback && YlFallbackRoutingPolicy.shouldFallback(event.kind, fallbackAttempted)) {
                 val activeOutput = output
                 if (activeOutput != null) scope.launch {
                     runCatching { switchToFallback(activeOutput) }
@@ -55,7 +68,7 @@ internal class YlManagedAndroidEngine(
                 }
                 return@registerCallback
             }
-            callback?.invoke(identity, event)
+            callback?.invoke(identity, forwarded)
         }
     }
 
@@ -80,9 +93,10 @@ internal class YlManagedAndroidEngine(
     }
 
     private fun shouldFallback(error: Throwable): Boolean =
-        allowFallback && (error as? YlBoundaryException)?.kind?.let { YlFallbackRoutingPolicy.shouldFallback(it, fallbackAttempted) } == true
+        !fixedVideo && allowFallback && (error as? YlBoundaryException)?.kind?.let { YlFallbackRoutingPolicy.shouldFallback(it, fallbackAttempted) } == true
 
     private suspend fun switchToFallback(output: YlSessionVideoOutput) = switchLock.withLock {
+        if (fixedVideo) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
         if (fallbackAttempted) return@withLock
         val previous = current
         val fallback = installFallback()
@@ -117,11 +131,16 @@ internal class YlManagedAndroidEngine(
     }
 
     private fun failureKind(error: Throwable) = (error as? YlBoundaryException)?.kind ?: YlFailureKind.PLATFORM_FAILURE
-    override suspend fun quiesce(): YlEngineRestorePoint = current.quiesce().also { remember(it) }
+    override suspend fun quiesce(): YlEngineRestorePoint = current.quiesce().let { point ->
+        if (fallbackAttempted && point.videoSelection == YlFixedVideoState()) {
+            point.copy(videoSelection = YlFixedVideoState(reason = videoSelection.reason))
+        } else point
+    }.also { remember(it) }
     override suspend fun restore(point: YlEngineRestorePoint, output: YlSessionVideoOutput) {
         this.output = output; remember(point); current.restore(point, output)
     }
     private fun remember(point: YlEngineRestorePoint) {
+        videoSelection = point.videoSelection.message()
         positionMs = point.positionMs; liveEdge = point.liveEdge; playing = point.playbackIntended
         speed = point.speed; volume = point.volume; audioTrack = point.selectedAudioTrack
         constraints = AndroidVideoConstraintsMessage(point.maxWidth, point.maxHeight, point.maxBitrate)
@@ -133,9 +152,20 @@ internal class YlManagedAndroidEngine(
     override suspend fun seekToLiveEdge() { liveEdge = true; current.seekToLiveEdge() }
     override suspend fun setPlaybackSpeed(speed: Double) { this.speed = speed; current.setPlaybackSpeed(speed) }
     override suspend fun selectAudioTrack(trackId: String) { audioTrack = trackId; current.selectAudioTrack(trackId) }
-    override suspend fun setVideoConstraints(constraints: AndroidVideoConstraintsMessage) { this.constraints = constraints; current.setVideoConstraints(constraints) }
+    override suspend fun selectVideoTrack(trackId: String?) = switchLock.withLock {
+        current.selectVideoTrack(trackId)
+        videoSelection = AndroidVideoSelectionMessage(trackId, "user")
+    }
+    override suspend fun setVideoConstraints(constraints: AndroidVideoConstraintsMessage) {
+        current.setVideoConstraints(constraints)
+        this.constraints = constraints
+    }
     override suspend fun setVolume(volume: Double) { this.volume = volume; current.setVolume(volume) }
-    override suspend fun stop() { playing = false; current.stop() }
+    override suspend fun stop() {
+        playing = false
+        videoSelection = AndroidVideoSelectionMessage(reason = "initial")
+        current.stop()
+    }
     override suspend fun onForeground() = current.onForeground()
     override suspend fun onBackground() = current.onBackground()
     override suspend fun onTrimMemory(level: Int) = current.onTrimMemory(level)

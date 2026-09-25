@@ -15,6 +15,8 @@ export 'package:yl_player_platform_interface/yl_player_platform_interface.dart'
         YlBufferStrategy,
         YlBufferStrategyKind,
         YlVideoConstraints,
+        YlVideoSelection,
+        YlVideoSelectionReason,
         YlMediaSource,
         YlNetworkSource,
         YlFileSource,

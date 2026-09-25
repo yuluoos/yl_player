@@ -279,9 +279,11 @@ final class YlPlayerController implements Listenable {
 
 YlPlayerException _exception(String code) => YlPlayerException(
   YlFailure(
-    category: code == YlFailureCodes.loadCancelled
-        ? YlFailureCategory.cancelled
-        : YlFailureCategory.platform,
+    category: switch (code) {
+      YlFailureCodes.loadCancelled => YlFailureCategory.cancelled,
+      YlFailureCodes.policyUnsupported => YlFailureCategory.unsupported,
+      _ => YlFailureCategory.platform,
+    },
     code: code,
     message: 'Playback operation failed.',
     retryable: false,

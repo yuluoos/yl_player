@@ -5,7 +5,6 @@ import android.os.Handler
 import android.os.Process
 import androidx.media3.common.*
 import androidx.media3.exoplayer.*
-import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import dev.ylplayer.yl_player_android.pigeon.*
 import org.mockito.Mockito.*
 import kotlin.test.*
@@ -146,10 +145,12 @@ class YlMetricsCollectorTest {
         assertEquals(AndroidMetricsMessage(), events.lastSnapshot().metrics)
     }
     @Test fun `real core keeps PAR out of rendered dimensions and uses coded format dimensions`() = withCore { core, player, events ->
-        val format = Format.Builder().setWidth(1920).setHeight(1080).setRotationDegrees(90).build()
+        val format = Format.Builder().setWidth(1920).setHeight(1080).setRotationDegrees(90).setPixelWidthHeightRatio(0.5f).build()
         `when`(player.videoFormat).thenReturn(format)
-        core.field("lastVideoSize", VideoSize(1080, 1920, 2f))
-        core.emitState()
+        val item = MediaItem.Builder().setMediaId("test").build()
+        `when`(player.currentMediaItem).thenReturn(item)
+        val event = androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime(0, Timeline.EMPTY, 0, null, 0, Timeline.EMPTY, 0, null, 0, 0)
+        core.outputFrame(format)
         val geometry = assertNotNull(events.lastSnapshot().geometry)
         assertEquals(AndroidSizeMessage(1920.0, 1080.0), geometry.encodedSize)
         assertEquals(AndroidSizeMessage(1080.0, 1920.0), geometry.displaySize)
@@ -185,8 +186,8 @@ internal fun withCore(policy: AndroidAudioPolicy = AndroidAudioPolicy.APP_MANAGE
             if (invocation.method.name == "isEmpty") (invocation.arguments[0] as? CharSequence).isNullOrEmpty() else invocation.callRealMethod()
         }
         scoped += mockStatic(Process::class.java)
-        scoped += mockConstruction(DefaultTrackSelector::class.java, withSettings().defaultAnswer(RETURNS_DEEP_STUBS))
-        scoped += mockConstruction(DefaultRenderersFactory::class.java, withSettings().defaultAnswer(RETURNS_SELF))
+        scoped += mockConstruction(YlFixedVideoTrackSelector::class.java, withSettings().defaultAnswer(RETURNS_DEEP_STUBS))
+        scoped += mockConstruction(YlOutputRenderersFactory::class.java, withSettings().defaultAnswer(RETURNS_SELF))
         scoped += mockConstruction(ExoPlayer.Builder::class.java, withSettings().defaultAnswer(RETURNS_SELF)) { builder, _ ->
             `when`(builder.build()).thenReturn(player)
         }
@@ -203,4 +204,14 @@ internal fun withCore(policy: AndroidAudioPolicy = AndroidAudioPolicy.APP_MANAGE
     } finally {
         scoped.asReversed().forEach { it.close() }
     }
+}
+
+/** Drives the real output observer; the player input property is deliberately independent. */
+internal fun YlMedia3Core.outputFrame(format: Format, period: String = "p0", mediaFormat: android.media.MediaFormat? = null) {
+    val handler = javaClass.getDeclaredField("handler").apply { isAccessible = true }.get(this) as Handler
+    doAnswer { (it.arguments[0] as Runnable).run(); true }.`when`(handler).post(any(Runnable::class.java))
+    val clock = if (period == "p1") 5_000_001L else 1_000_001L
+    outputObserver.stream(clock, clock, period)
+    outputObserver.outputFormat(format, mediaFormat)
+    outputObserver.rendered(clock, clock)
 }

@@ -20,7 +20,8 @@ internal class YlStateReducer(
     fun attach(events: YlPlayerEventSink) { this.events = events }
     private fun idleState() = AndroidStateMessage(revision = revision, sequence = sequence,
         status = AndroidPlaybackStatus.IDLE, timeline = emptyTimeline(), audioTracks = emptyList(),
-        videoTracks = emptyList(), engine = AndroidEngine.UNKNOWN, decoderMode = AndroidDecoderMode.UNKNOWN,
+        videoTracks = emptyList(), videoSelection = AndroidVideoSelectionMessage(reason = "initial"),
+        engine = AndroidEngine.UNKNOWN, decoderMode = AndroidDecoderMode.UNKNOWN,
         metrics = AndroidMetricsMessage())
     fun commit(identity: YlSessionIdentity, output: YlOutputIdentity) {
         reachedReady = false; sentFrame = false; terminal = false; this.output = output
@@ -34,6 +35,7 @@ internal class YlStateReducer(
         val status = if (snapshot.status == AndroidPlaybackStatus.BUFFERING && !reachedReady) AndroidPlaybackStatus.LOADING else snapshot.status
         val next = state.copy(status = status, timeline = snapshot.timeline, geometry = snapshot.geometry,
             audioTracks = snapshot.audioTracks.toList(), videoTracks = snapshot.videoTracks.toList(),
+            videoSelection = snapshot.videoSelection,
             decoderMode = snapshot.decoderMode, decoderIdentity = snapshot.decoderIdentity, metrics = snapshot.metrics)
         if (next != state) {
             if (next.copy(timeline = state.timeline, metrics = state.metrics) != state ||

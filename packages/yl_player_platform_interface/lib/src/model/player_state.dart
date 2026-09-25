@@ -8,6 +8,7 @@ import 'playback_metrics.dart';
 import 'timeline.dart';
 import 'value_helpers.dart';
 import 'video_geometry.dart';
+import 'video_selection.dart';
 
 const _absent = Object();
 
@@ -21,6 +22,7 @@ final class YlPlayerState {
     this.videoGeometry,
     List<YlMediaTrack> audioTracks = const [],
     List<YlMediaTrack> videoTracks = const [],
+    this.videoSelection = const YlVideoSelection(),
     this.engine = YlPlaybackEngine.unknown,
     this.decoderMode = YlDecoderMode.unknown,
     this.decoderIdentity,
@@ -43,6 +45,8 @@ final class YlPlayerState {
 
   final List<YlMediaTrack> videoTracks;
 
+  final YlVideoSelection videoSelection;
+
   final YlPlaybackEngine engine;
 
   final YlDecoderMode decoderMode;
@@ -62,6 +66,7 @@ final class YlPlayerState {
     Object? videoGeometry = _absent,
     List<YlMediaTrack>? audioTracks,
     List<YlMediaTrack>? videoTracks,
+    YlVideoSelection? videoSelection,
     YlPlaybackEngine? engine,
     YlDecoderMode? decoderMode,
     Object? decoderIdentity = _absent,
@@ -79,6 +84,7 @@ final class YlPlayerState {
         : ylNullableValue<YlVideoGeometry>(videoGeometry),
     audioTracks: audioTracks ?? this.audioTracks,
     videoTracks: videoTracks ?? this.videoTracks,
+    videoSelection: videoSelection ?? this.videoSelection,
     engine: engine ?? this.engine,
     decoderMode: decoderMode ?? this.decoderMode,
     decoderIdentity: identical(decoderIdentity, _absent)
@@ -102,6 +108,7 @@ final class YlPlayerState {
         videoGeometry == other.videoGeometry &&
         listEquals(audioTracks, other.audioTracks) &&
         listEquals(videoTracks, other.videoTracks) &&
+        videoSelection == other.videoSelection &&
         engine == other.engine &&
         decoderMode == other.decoderMode &&
         decoderIdentity == other.decoderIdentity &&
@@ -118,6 +125,7 @@ final class YlPlayerState {
     videoGeometry,
     Object.hashAll(audioTracks),
     Object.hashAll(videoTracks),
+    videoSelection,
     engine,
     decoderMode,
     decoderIdentity,
@@ -127,5 +135,5 @@ final class YlPlayerState {
 
   @override
   String toString() =>
-      'YlPlayerState(revision: $revision, sessionId: $sessionId, status: $status, timeline: $timeline, videoGeometry: $videoGeometry, audioTracks: $audioTracks, videoTracks: $videoTracks, engine: $engine, decoderMode: $decoderMode, decoderIdentity: <redacted>, metrics: $metrics, failure: $failure)';
+      'YlPlayerState(revision: $revision, sessionId: $sessionId, status: $status, timeline: $timeline, videoGeometry: $videoGeometry, audioTracks: $audioTracks, videoTracks: $videoTracks, videoSelection: $videoSelection, engine: $engine, decoderMode: $decoderMode, decoderIdentity: <redacted>, metrics: $metrics, failure: $failure)';
 }

@@ -64,6 +64,7 @@ enum AndroidPlayerOperation {
   videoConstraints,
   volume,
   stop,
+  videoTrackSelection,
 }
 
 enum AndroidDecoderMode { unknown, hardware, software }
@@ -291,6 +292,7 @@ class AndroidStateMessage {
   String? decoderIdentity;
   AndroidMetricsMessage metrics;
   AndroidFailureMessage? failure;
+  AndroidVideoSelectionMessage? videoSelection;
 }
 
 class AndroidStateDeltaMessage {
@@ -368,6 +370,18 @@ class AndroidPlaybackFailedMessage {
   AndroidFailureMessage failure;
 }
 
+// Append schema-4 classes after all schema-3 classes so factory codec tags
+// remain decodable across versions before the schema-major check runs.
+class AndroidVideoTrackCommand {
+  String sessionId;
+  String? trackId;
+}
+
+class AndroidVideoSelectionMessage {
+  String? fixedTrackId;
+  String reason;
+}
+
 @HostApi()
 abstract class AndroidPlayerFactoryHostApi {
   AndroidCreateReply create(AndroidCreateRequest request);
@@ -388,6 +402,9 @@ abstract class AndroidPlayerHostApi {
   void setPlaybackSpeed(AndroidSpeedCommand command);
   @async
   void selectAudioTrack(AndroidTrackCommand command);
+  @async
+  void selectVideoTrack(AndroidVideoTrackCommand command);
+  @async
   void setVideoConstraints(AndroidVideoConstraintsCommand command);
   void setVolume(double volume);
   @async

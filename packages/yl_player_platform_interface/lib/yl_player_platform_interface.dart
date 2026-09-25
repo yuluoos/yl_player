@@ -12,6 +12,7 @@ export 'src/model/player_state.dart';
 export 'src/model/source_assessment.dart';
 export 'src/model/timeline.dart';
 export 'src/model/video_geometry.dart';
+export 'src/model/video_selection.dart';
 export 'src/options/load_options.dart';
 export 'src/options/player_options.dart';
 export 'src/options/policies.dart';

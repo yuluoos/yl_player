@@ -14,6 +14,27 @@ import kotlin.test.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlPlayerRegistryTest {
+    @Test fun `committed schema 3 bytes reach schema 4 factory version gate`() = runTest {
+        // Encoded with the committed 9f6b490 Pigeon factory codec.
+        val oldRequest = java.util.Base64.getDecoder().decode(
+            "DAGSDAIEAwAAAAAAAACRDAOGBAAAAAAAAAAAhwQAAAAAAAAAAAT6AAAAAAAAAA==")
+        val oldCodecMajor4 = "DAGSDAIEBAAAAAAAAACRDAOGBAAAAAAAAAAAhwQAAAAAAAAAAAT6AAAAAAAAAA=="
+        val fixture = RegistryFixture(StandardTestDispatcher(testScheduler))
+        AndroidPlayerFactoryHostApi.setUp(fixture.messenger, fixture.registry)
+        val handler = fixture.handlers.getValue(
+            "dev.flutter.pigeon.yl_player_android.AndroidPlayerFactoryHostApi.create")
+        var reply: java.nio.ByteBuffer? = null
+        handler.onMessage(java.nio.ByteBuffer.wrap(oldRequest)) { reply = it }
+        val response = AndroidPlayerFactoryHostApi.codec.decodeMessage(assertNotNull(reply).apply { flip() }) as List<*>
+        assertEquals("platform.incompatible", response[0])
+        verify(fixture.textures, never()).createSurfaceTexture()
+        val current = assertNotNull(AndroidPlayerFactoryHostApi.codec.encodeMessage(listOf(createRequest())))
+        current.flip()
+        val bytes = ByteArray(current.remaining()).also(current::get)
+        assertEquals(oldCodecMajor4, java.util.Base64.getEncoder().encodeToString(bytes))
+        AndroidPlayerFactoryHostApi.setUp(fixture.messenger, null)
+        fixture.registry.detach(); runCurrent()
+    }
     @Test fun `real factories across registries retain one application focus owner until final registry detaches`() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         val app = mock(Application::class.java)
@@ -122,13 +143,16 @@ class YlPlayerRegistryTest {
         val fixture = RegistryFixture(StandardTestDispatcher(testScheduler))
         val first = fixture.registry.create(createRequest())
         val second = fixture.registry.create(createRequest())
-        assertEquals(3L, first.schemaMajor)
+        assertEquals(4L, first.schemaMajor)
         assertEquals(2L, first.spiMajor)
         assertEquals(41L, first.textureId)
         assertTrue(first.channelSuffix.matches(Regex("p1-[a-zA-Z0-9-]+")))
         assertTrue(second.channelSuffix.startsWith("p2-"))
         assertNotEquals(first.channelSuffix, second.channelSuffix)
-        assertEquals(26, fixture.handlers.size)
+        assertEquals(28, fixture.handlers.size)
+        assertEquals("platform.incompatible", assertFailsWith<FlutterError> {
+            fixture.registry.create(createRequest().copy(schemaMajor = 3))
+        }.code)
         assertTrue(fixture.handlers.keys.all { it.endsWith(first.channelSuffix) || it.endsWith(second.channelSuffix) })
         assertEquals(0, fixture.sessions[0].attachments)
         fixture.call(first.channelSuffix, "attach")
@@ -196,7 +220,7 @@ class YlPlayerRegistryTest {
         val reply = fixture.registry.create(createRequest())
         assertEquals(AndroidPlaybackStatus.IDLE, reply.initialState.status)
         assertEquals(0L, reply.initialState.revision)
-        for (unsupportedSchema in listOf(1L, 2L)) {
+        for (unsupportedSchema in listOf(1L, 2L, 3L)) {
             assertEquals("platform.incompatible", assertFailsWith<FlutterError> {
                 fixture.registry.create(createRequest().copy(schemaMajor = unsupportedSchema))
             }.code)
@@ -283,6 +307,7 @@ class YlPlayerRegistryTest {
             "seekToLiveEdge" to AndroidSessionCommand("s"),
             "setPlaybackSpeed" to AndroidSpeedCommand("s", 1.5),
             "selectAudioTrack" to AndroidTrackCommand("s", "audio"),
+            "selectVideoTrack" to AndroidVideoTrackCommand("s", null),
             "setVideoConstraints" to AndroidVideoConstraintsCommand("s", AndroidVideoConstraintsMessage()),
             "setVolume" to 0.5,
             "stop" to null,
@@ -368,7 +393,7 @@ class YlPlayerRegistryTest {
         runCurrent()
         assertEquals(1, fixture.sessions.first().closes)
         assertEquals(listOf("foreground", "background", "trim:80", "configuration"), fixture.sessions.last().lifecycleCalls)
-        assertEquals(13, fixture.handlers.size)
+        assertEquals(14, fixture.handlers.size)
         fixture.registry.detach()
     }
 
@@ -420,7 +445,7 @@ class YlPlayerRegistryTest {
     }
 }
 
-internal fun createRequest() = AndroidCreateRequest(3, AndroidPlayerOptionsMessage(AndroidDecoderPolicy.SYSTEM_DEFAULT, AndroidAudioPolicy.APP_MANAGED, 250))
+internal fun createRequest() = AndroidCreateRequest(4, AndroidPlayerOptionsMessage(AndroidDecoderPolicy.SYSTEM_DEFAULT, AndroidAudioPolicy.APP_MANAGED, 250))
 
 internal class RegistryFixture(dispatcher: CoroutineDispatcher, factory: YlPlayerSessionFactory? = null) {
     val messenger = mock(BinaryMessenger::class.java)
@@ -509,7 +534,8 @@ internal class FakeSession : YlPlayerSession {
     override suspend fun seekToLiveEdge(command: AndroidSessionCommand) = command()
     override fun setPlaybackSpeed(command: AndroidSpeedCommand) = command()
     override suspend fun selectAudioTrack(command: AndroidTrackCommand) = command()
-    override fun setVideoConstraints(command: AndroidVideoConstraintsCommand) = command()
+    override suspend fun selectVideoTrack(command: AndroidVideoTrackCommand) = command()
+    override suspend fun setVideoConstraints(command: AndroidVideoConstraintsCommand) = command()
     override fun setVolume(volume: Double) = command()
     override suspend fun stop() = command()
     override fun onForeground() = lifecycle("foreground")

@@ -147,7 +147,8 @@ internal class YlSessionCoordinator(
     override val initialState get() = reducer.state
     override val capabilities = AndroidCapabilitiesMessage("android",
         listOf(AndroidEngine.MEDIA3, AndroidEngine.MANAGED_FALLBACK), AndroidDecoderEvidence.HARDWARE_AND_SOFTWARE,
-        hardwareVideoCodecs = decoderEvidence.hardwareCodecs, supportedOperations = AndroidPlayerOperation.entries)
+        hardwareVideoCodecs = decoderEvidence.hardwareCodecs,
+        supportedOperations = AndroidPlayerOperation.entries)
     private var eventSink: YlPlayerEventSink? = null
     override fun attach(events: YlPlayerEventSink) { eventSink = events; reducer.attach(events) }
     override fun assess(request: AndroidAssessRequest): AndroidAssessmentReply {
@@ -302,6 +303,8 @@ internal class YlSessionCoordinator(
         var desiredPlay: Boolean? = null
         var desiredConstraints: AndroidVideoConstraintsMessage? = null
         val trackIntent = YlIntentOrder()
+        val videoTrackIntent = YlIntentOrder()
+        val constraintsIntent = YlIntentOrder()
         val timelineIntent = YlIntentOrder()
         var pendingSeek: YlPendingSeek? = null
         private fun selectionVersions() = YlSelectionVersions(trackIntent.accepted, timelineIntent.accepted)
@@ -573,6 +576,7 @@ internal class YlSessionCoordinator(
         validate: () -> Unit,
         apply: suspend YlPlaybackEngineAdapter.() -> Unit,
         remember: SessionLease.() -> Unit,
+        workerRequired: Boolean = false,
     ) {
         val session = current(id)
         val lease = checkNotNull(activeLease)
@@ -580,7 +584,10 @@ internal class YlSessionCoordinator(
         lease.ensureResourcesUsable()
         val order = lease.intent()
         val ticket = order.issue()
-        if (lease.quiescing || lease.suspended != null) { order.accept(ticket) { lease.remember() }; return }
+        if (lease.quiescing || lease.suspended != null) {
+            if (workerRequired) throw YlBoundaryException(YlFailureKind.RESOURCE_EXHAUSTED)
+            order.accept(ticket) { lease.remember() }; return
+        }
         val token = operation
         transaction.withLock {
             current(id)
@@ -588,9 +595,16 @@ internal class YlSessionCoordinator(
             if (activeLease !== lease || operation != token) throw YlBoundaryException(YlFailureKind.SESSION_STALE)
             validate()
             lease.ensureResourcesUsable()
-            if (order.supersedes(ticket)) return@withLock
+            if (lease.quiescing || lease.suspended != null) {
+                if (workerRequired) throw YlBoundaryException(YlFailureKind.RESOURCE_EXHAUSTED)
+                order.accept(ticket) { lease.remember() }; return@withLock
+            }
+            if (order.supersedes(ticket)) {
+                if (workerRequired) throw YlBoundaryException(YlFailureKind.SESSION_STALE)
+                return@withLock
+            }
             lease.commandWorker {
-                if (!lease.quiescing && lease.suspended == null) session.engine.apply()
+                if (workerRequired || !lease.quiescing && lease.suspended == null) session.engine.apply()
                 currentCoroutineContext().ensureActive()
                 current(id)
                 if (activeLease !== lease || operation != token) throw YlBoundaryException(YlFailureKind.SESSION_STALE)
@@ -610,12 +624,22 @@ internal class YlSessionCoordinator(
             YlBoundaryValidation.identity(command.trackId)
             if (reducer.state.audioTracks.none { it.id == command.trackId }) throw YlBoundaryException(YlFailureKind.SOURCE_MISSING)
         }, apply = { selectAudioTrack(command.trackId) }, remember = { desiredTrack = command.trackId })
-    override fun setVideoConstraints(command: AndroidVideoConstraintsCommand) {
-        current(command.sessionId)
-        YlBoundaryValidation.constraints(command.constraints)
-        activeLease?.desiredConstraints = command.constraints
-        enqueue(command.sessionId) { setVideoConstraints(command.constraints) }
-    }
+    override suspend fun selectVideoTrack(command: AndroidVideoTrackCommand) = acceptedCommand(command.sessionId,
+        intent = { videoTrackIntent },
+        validate = {
+            command.trackId?.let { id ->
+                YlBoundaryValidation.identity(id)
+                if (reducer.state.videoTracks.none { it.id == id }) throw YlBoundaryException(YlFailureKind.SOURCE_MISSING)
+            }
+            if (active?.engine?.supportsVideoTrackSelection != true) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
+        }, apply = { selectVideoTrack(command.trackId) }, remember = {
+            // Worker-required commands are already captured as semantic identity in quiesce().
+            // There is no unvalidated late video intent to replay against recreated groups.
+        }, workerRequired = true)
+    override suspend fun setVideoConstraints(command: AndroidVideoConstraintsCommand) = acceptedCommand(command.sessionId,
+        intent = { constraintsIntent }, validate = { YlBoundaryValidation.constraints(command.constraints) },
+        apply = { setVideoConstraints(command.constraints) },
+        remember = { desiredConstraints = command.constraints }, workerRequired = true)
     override fun setVolume(volume: Double) {
         checkOpen()
         YlBoundaryValidation.volume(volume)

@@ -5,7 +5,7 @@ import 'pigeon/yl_player_android.g.dart';
 
 /// The schema boundary. Generated values never escape this package.
 abstract final class AndroidCodec {
-  static const schemaMajor = 3;
+  static const schemaMajor = 4;
   static const _maxDurationMs = 9223372036854775;
   static final _metadata = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$');
 
@@ -224,6 +224,10 @@ abstract final class AndroidCodec {
 
   static YlPlayerState state(AndroidStateMessage value) {
     integer(value.sequence);
+    final nativeSelection = value.videoSelection;
+    if (nativeSelection == null) {
+      throw ArgumentError('Missing schema 4 video selection.');
+    }
     if ((value.sessionId == null) != (value.loadRequestId == null) ||
         value.loadRequestId != null && value.loadRequestId!.isEmpty) {
       throw ArgumentError('Invalid native Load request identity.');
@@ -265,6 +269,15 @@ abstract final class AndroidCodec {
             ),
       audioTracks: value.audioTracks.map(track).toList(),
       videoTracks: value.videoTracks.map(track).toList(),
+      videoSelection: YlVideoSelection(
+        fixedTrackId: nativeSelection.fixedTrackId,
+        reason: switch (nativeSelection.reason) {
+          'initial' => YlVideoSelectionReason.initial,
+          'user' => YlVideoSelectionReason.user,
+          'trackUnavailable' => YlVideoSelectionReason.trackUnavailable,
+          _ => throw ArgumentError('Invalid native video selection reason.'),
+        },
+      ),
       engine: engine(value.engine),
       decoderMode: _decoderMode(value.decoderMode),
       decoderIdentity: value.decoderIdentity,
@@ -454,6 +467,8 @@ abstract final class AndroidCodec {
           YlPlayerOperation.videoConstraints,
         AndroidPlayerOperation.volume => YlPlayerOperation.volume,
         AndroidPlayerOperation.stop => YlPlayerOperation.stop,
+        AndroidPlayerOperation.videoTrackSelection =>
+          YlPlayerOperation.videoTrackSelection,
       };
 
   static YlFailureCategory _category(AndroidFailureCategory value) =>

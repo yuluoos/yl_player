@@ -16,10 +16,8 @@ import androidx.media3.common.Tracks
 import androidx.media3.common.Timeline
 import androidx.media3.common.VideoSize
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
-import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import dev.ylplayer.yl_player_android.pigeon.*
 import android.view.Surface
 import kotlin.math.max
@@ -43,7 +41,8 @@ internal class YlMedia3Core(
     private var lastFailure: YlFailureKind? = null
     private val lifecycle = YlLifecycleCoordinator()
     private val deviceProfile = YlAndroidDeviceProfile.collect(context)
-    private val trackSelector = DefaultTrackSelector(context)
+    private val trackSelector = YlFixedVideoTrackSelector(context)
+    private var videoSelection = YlFixedVideoState()
     private val decoderPolicy = AndroidDecoderPolicy.valueOf(configuration.decoderPolicy)
     private val decoderEvidence = YlDecoderEvidenceProvider.collect()
     private val rtmp = YlRtmpSourcePolicy.isRtmp(source)
@@ -114,7 +113,9 @@ internal class YlMedia3Core(
     private val stallWatchdog = YlPlaybackStallWatchdog { delayMs, action ->
         handler.postDelayed(action, delayMs)
     }
-    private var lastVideoSize = VideoSize.UNKNOWN
+    private var videoGeometry: AndroidVideoGeometryMessage? = null
+    private val pendingVideoGeometry = mutableMapOf<Any, AndroidVideoGeometryMessage?>()
+    internal val outputObserver = YlVideoOutputObserver({ work -> handler.post { work() } }, ::onVideoOutput)
     private var audioTracks: List<AndroidTrackMessage> = emptyList()
     private var videoTracks: List<AndroidTrackMessage> = emptyList()
     private val positionTicker = object : Runnable {
@@ -128,7 +129,7 @@ internal class YlMedia3Core(
     }
 
     fun initialize() {
-        val renderersFactory = DefaultRenderersFactory(context)
+        val renderersFactory = YlOutputRenderersFactory(context, outputObserver)
             .setEnableDecoderFallback(true)
             .setMediaCodecSelector(YlPolicyCodecSelector(decoderPolicy, evidence = decoderEvidence))
         exoPlayer = ExoPlayer.Builder(context, renderersFactory)
@@ -186,11 +187,12 @@ internal class YlMedia3Core(
         resumeAtLiveEdge || (normalizedLiveOffset()?.let { it <= 2_000L } == true), lifecycle.state.playbackIntended,
         audioTracks.firstOrNull { it.isSelected }?.id, videoTracks.filter { it.isSelected }.map { it.id },
         requestedPlaybackSpeed.toDouble(), exoPlayer.volume.toDouble(),
-        hostQualityConstraint.maxWidth?.toLong(), hostQualityConstraint.maxHeight?.toLong(), hostQualityConstraint.maxBitrate?.toLong())
+        hostQualityConstraint.maxWidth?.toLong(), hostQualityConstraint.maxHeight?.toLong(), hostQualityConstraint.maxBitrate?.toLong(), videoSelection)
     fun restore(point: YlEngineRestorePoint) {
         savedPositionMs = if (rtmp) 0 else point.positionMs; resumeAtLiveEdge = rtmp || point.liveEdge
         setPlaybackSpeed(point.speed)
         setVolume(point.volume)
+        videoSelection = point.videoSelection
         setVideoConstraints(AndroidVideoConstraintsMessage(point.maxWidth, point.maxHeight, point.maxBitrate))
         lifecycle.reduce(if (point.playbackIntended) YlLifecycleEvent.USER_PLAY else YlLifecycleEvent.USER_PAUSE)
         syncRtmpDemand()
@@ -264,6 +266,8 @@ internal class YlMedia3Core(
         metricsCollector.endBuffering(SystemClock.elapsedRealtime())
         cancelFocusGrace()
         if (!active) return
+        outputObserver.invalidate()
+        pendingVideoGeometry.clear()
         stallWatchdog.cancel()
         savedPositionMs = max(0L, exoPlayer.currentPosition)
         if (normalizedLiveOffset()?.let { it <= 2_000L } == true) {
@@ -332,7 +336,11 @@ internal class YlMedia3Core(
         audioSelections.clear()
         audioTracks = emptyList()
         videoTracks = emptyList()
-        lastVideoSize = VideoSize.UNKNOWN
+        videoSelection = YlFixedVideoState()
+        trackSelector.fixedIntent = null
+        videoGeometry = null
+        outputObserver.invalidate()
+        pendingVideoGeometry.clear()
         healthWindowDroppedFrames = 0
         healthWindowRebufferCount = 0
         healthWindowRebufferDurationMs = 0L
@@ -397,7 +405,11 @@ internal class YlMedia3Core(
         audioSelections.clear()
         audioTracks = emptyList()
         videoTracks = emptyList()
-        lastVideoSize = VideoSize.UNKNOWN
+        videoSelection = YlFixedVideoState()
+        trackSelector.fixedIntent = null
+        videoGeometry = null
+        outputObserver.invalidate()
+        pendingVideoGeometry.clear()
         hostQualityConstraint = AndroidQualityConstraint(loadOptions.videoConstraints.maxWidth?.toInt(),
             loadOptions.videoConstraints.maxHeight?.toInt(), loadOptions.videoConstraints.maxBitrate?.toInt())
         applyTrackConstraints()
@@ -450,10 +462,33 @@ internal class YlMedia3Core(
             .build()
     }
 
+    fun selectVideoTrack(trackId: String?) {
+        if (disposed || stopped) throw YlBoundaryException(YlFailureKind.SESSION_STALE)
+        val actual = exoPlayer.currentTracks
+        val selected = YlVideoSelectionPolicy.select(actual, trackId, hostQualityConstraint, deviceProfile.videoEnvelope)
+        val parameters = YlVideoSelectionPolicy.parameters(trackSelector.parameters, actual, selected)
+        videoSelection = selected
+        syncFixedVideoIntent()
+        // A prior health ceiling is not a host constraint. Explicit fixed quality supersedes it.
+        if (selected.quality != null) adaptiveBitrateCeiling = null
+        trackSelector.parameters = parameters
+        applyTrackConstraints()
+        emitState()
+    }
+
     fun setVideoConstraints(constraint: AndroidVideoConstraintsMessage) {
         YlBoundaryValidation.constraints(constraint)
-        hostQualityConstraint = AndroidQualityConstraint(constraint.maxWidth?.toInt(), constraint.maxHeight?.toInt(), constraint.maxBitrate?.toInt())
+        val next = AndroidQualityConstraint(constraint.maxWidth?.toInt(), constraint.maxHeight?.toInt(), constraint.maxBitrate?.toInt())
+        videoSelection.quality?.let { YlVideoSelectionPolicy.validate(it, next, deviceProfile.videoEnvelope) }
+        hostQualityConstraint = next
+        syncFixedVideoIntent()
         applyTrackConstraints()
+    }
+
+    private fun syncFixedVideoIntent() {
+        trackSelector.fixedIntent = videoSelection.quality?.let {
+            YlFixedVideoIntent(it, hostQualityConstraint, deviceProfile.videoEnvelope)
+        }
     }
 
     private fun applyTrackConstraints() {
@@ -554,12 +589,20 @@ internal class YlMedia3Core(
         refreshStallWatchdog()
     }
 
-    override fun onVideoSizeChanged(
-        eventTime: AnalyticsListener.EventTime,
-        videoSize: VideoSize,
-    ) {
-        if (!isCurrentEvent(eventTime)) return
-        lastVideoSize = videoSize
+    private fun onVideoOutput(periodUid: Any?, geometry: AndroidVideoGeometryMessage?) {
+        if (disposed || stopped || resetting) return
+        // Null marks a real renderer reset/disable. A no-op seek never sends this marker.
+        if (periodUid == null) { pendingVideoGeometry.clear(); return }
+        val timeline = exoPlayer.currentTimeline
+        if (!timeline.isEmpty) {
+            val index = timeline.getIndexOfPeriod(periodUid)
+            if (index != exoPlayer.currentPeriodIndex) {
+                if (index > exoPlayer.currentPeriodIndex) pendingVideoGeometry[periodUid] = geometry
+                return
+            }
+        }
+        pendingVideoGeometry.remove(periodUid)
+        videoGeometry = geometry
         emitState()
     }
 
@@ -583,6 +626,28 @@ internal class YlMedia3Core(
 
     override fun onTracksChanged(eventTime: AnalyticsListener.EventTime, tracks: Tracks) {
         if (!isCurrentEvent(eventTime)) return
+        // Analytics may report a reading-ahead Period. Only the playing Period owns public mode.
+        if (eventTime.mediaPeriodId?.periodUid != eventTime.currentMediaPeriodId?.periodUid) return
+        val currentTimeline = exoPlayer.currentTimeline
+        val eventPeriod = eventTime.mediaPeriodId
+        if (eventPeriod != null && !currentTimeline.isEmpty &&
+            currentTimeline.getUidOfPeriod(exoPlayer.currentPeriodIndex) != eventPeriod.periodUid) return
+        if (tracks.groups.isEmpty() && videoSelection.quality != null) { emitState(); return }
+        val nextSelection = try {
+            YlVideoSelectionPolicy.reconcile(tracks, videoSelection, hostQualityConstraint, deviceProfile.videoEnvelope)
+        } catch (error: YlBoundaryException) {
+            status = "error"; currentError = error.kind; lastFailure = error.kind
+            emit(YlEngineEvent.Failed(error.kind)); emitState(); return
+        }
+        videoSelection = nextSelection
+        syncFixedVideoIntent()
+        trackSelector.parameters = YlVideoSelectionPolicy.parameters(trackSelector.parameters, tracks, nextSelection)
+        val currentUid = if (!currentTimeline.isEmpty) currentTimeline.getUidOfPeriod(exoPlayer.currentPeriodIndex)
+            else eventPeriod?.periodUid
+        if (pendingVideoGeometry.containsKey(currentUid)) videoGeometry = pendingVideoGeometry.remove(currentUid)
+        if (!currentTimeline.isEmpty) {
+            pendingVideoGeometry.keys.removeAll { currentTimeline.getIndexOfPeriod(it) <= exoPlayer.currentPeriodIndex }
+        }
         audioSelections.clear()
         val audio = mutableListOf<AndroidTrackMessage>()
         val video = mutableListOf<AndroidTrackMessage>()
@@ -716,6 +781,8 @@ internal class YlMedia3Core(
     }
     /** A fresh media source/extractor, never a new FLV header inside an existing extractor. */
     private fun restartRtmpEpoch() {
+        outputObserver.invalidate()
+        pendingVideoGeometry.clear()
         cancelRtmpWork()
         sourceFactory.cancelAll()
         sourceGeneration++
@@ -723,7 +790,8 @@ internal class YlMedia3Core(
         decoderName = null; isHardwareDecoding = false
         firstFrameRendered = false; hasBeenReady = false
         currentError = null; lastFailure = null; status = "opening"
-        audioSelections.clear(); audioTracks = emptyList(); videoTracks = emptyList()
+        audioSelections.clear(); audioTracks = emptyList()
+        if (videoSelection.quality == null) videoTracks = emptyList()
         resetDecoderGate()
         val item = MediaItem.Builder().setMediaId(identity.sessionId).setUri(Uri.parse(source.locator))
             .setMimeType("video/x-flv").setTag(mediaEpoch).build()
@@ -736,7 +804,7 @@ internal class YlMedia3Core(
     }
 
     private fun tryDecoderRecovery(error: PlaybackException): Boolean {
-        if (!active || managedNetwork || rtmp || error.errorCode != PlaybackException.ERROR_CODE_DECODER_INIT_FAILED) return false
+        if (videoSelection.quality != null || !active || managedNetwork || rtmp || error.errorCode != PlaybackException.ERROR_CODE_DECODER_INIT_FAILED) return false
         val selected = selectedVideoBitrate ?: return false
         val lowerBitrate = availableVideoBitrates.firstOrNull { it < selected } ?: return false
         if (
@@ -802,6 +870,7 @@ internal class YlMedia3Core(
     }
 
     private fun nextLowerBitrate(): Int? {
+        if (videoSelection.quality != null) return null
         val selected = selectedVideoBitrate ?: adaptiveBitrateCeiling ?: return null
         return availableVideoBitrates.firstOrNull { it < selected }
     }
@@ -943,7 +1012,7 @@ internal class YlMedia3Core(
     fun emitState() {
         if (disposed || resetting) return
         val timeline = timeline()
-        val geometry = media3VideoGeometry(lastVideoSize, exoPlayer.videoFormat)
+        val geometry = videoGeometry
         emit(YlEngineEvent.Snapshot(YlEngineSnapshot(
             when (status) {
                 "idle" -> AndroidPlaybackStatus.IDLE
@@ -955,7 +1024,7 @@ internal class YlMedia3Core(
                 "error" -> AndroidPlaybackStatus.FAILED
                 else -> AndroidPlaybackStatus.LOADING
             }, timeline, geometry, audioTracks.toList(), videoTracks.toList(),
-            decoderEvidence.mode(decoderName), decoderName, metrics(timeline), hasBeenReady)))
+            decoderEvidence.mode(decoderName), decoderName, metrics(timeline), hasBeenReady, videoSelection.message())))
     }
     private fun emitPositionDelta() {
         if (disposed || stopped || resetting) return
@@ -992,6 +1061,7 @@ internal class YlMedia3Core(
         stallWatchdog.cancel()
         disposed = true
         sourceGeneration += 1
+        outputObserver.invalidate()
         cancelFocusGrace()
         handler.removeCallbacksAndMessages(null)
         cancelRtmpWork()

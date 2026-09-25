@@ -6,13 +6,83 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'support/android_fakes.dart';
 
 void main() {
+  test('schema 4 full state requires selection and delta retains it', () {
+    final wire = wireState(session: 's1', revision: 4);
+    wire.videoSelection = null;
+    expect(() => AndroidCodec.state(wire), throwsArgumentError);
+    wire.videoSelection = AndroidVideoSelectionMessage(
+      reason: 'trackUnavailable',
+    );
+    final state = AndroidCodec.state(wire);
+    expect(
+      state.videoSelection.reason,
+      YlVideoSelectionReason.trackUnavailable,
+    );
+    expect(
+      AndroidCodec.delta(
+        state,
+        wireDelta(previous: 4, revision: 5),
+      ).videoSelection,
+      state.videoSelection,
+    );
+    wire.videoSelection!.reason = 'unknownFutureReason';
+    expect(() => AndroidCodec.state(wire), throwsArgumentError);
+  });
+  test(
+    'fixed selection survives generated state roundtrip with matching track',
+    () {
+      final wire = wireState(session: 's1', revision: 4)
+        ..videoTracks = [
+          AndroidTrackMessage(
+            id: 'v0',
+            kind: AndroidTrackKind.video,
+            isSelected: true,
+          ),
+        ]
+        ..videoSelection = AndroidVideoSelectionMessage(
+          fixedTrackId: 'v0',
+          reason: 'user',
+        );
+      final state = AndroidCodec.state(
+        AndroidStateMessage.decode(wire.encode()),
+      );
+      expect(state.videoSelection.fixedTrackId, 'v0');
+      expect(state.videoSelection.reason, YlVideoSelectionReason.user);
+      expect(
+        AndroidCodec.delta(
+          state,
+          wireDelta(previous: 4, revision: 5),
+        ).videoSelection,
+        state.videoSelection,
+      );
+    },
+  );
   test('DASH appends wire ordinal ten without changing old formats', () {
-    const oldNames = ['automatic', 'hls', 'mp4', 'mov', 'matroska', 'webm', 'mpegTs', 'mpegPs', 'flv', 'avi'];
-    expect(AndroidMediaFormat.values.take(10).map((value) => value.name), oldNames);
+    const oldNames = [
+      'automatic',
+      'hls',
+      'mp4',
+      'mov',
+      'matroska',
+      'webm',
+      'mpegTs',
+      'mpegPs',
+      'flv',
+      'avi',
+    ];
+    expect(
+      AndroidMediaFormat.values.take(10).map((value) => value.name),
+      oldNames,
+    );
     expect(YlMediaFormat.values.take(10).map((value) => value.name), oldNames);
     expect(AndroidMediaFormat.dash.index, 10);
     expect(YlMediaFormat.dash.index, 10);
-    final source = AndroidCodec.source(YlNetworkSource(Uri.parse('https://media.test/manifest'), format: YlMediaFormat.dash));
+    final source = AndroidCodec.source(
+      YlNetworkSource(
+        Uri.parse('https://media.test/manifest'),
+        format: YlMediaFormat.dash,
+      ),
+    );
     final decoded = AndroidSourceMessage.decode(source.encode());
     expect(decoded.format, AndroidMediaFormat.dash);
   });
@@ -432,7 +502,9 @@ void main() {
         expect(decoded.decoderEvidence.name, evidence.name);
         expect(
           decoded.supportedOperations.map((v) => v.name),
-          YlPlayerOperation.values.map((v) => v.name),
+          YlPlayerOperation.values
+              .where((value) => value != YlPlayerOperation.videoTrackSelection)
+              .map((v) => v.name),
         );
       }
       for (final kind in AndroidTrackKind.values) {

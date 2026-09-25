@@ -28,6 +28,7 @@ enum YlPlayerOperation {
   videoConstraints,
   volume,
   stop,
+  videoTrackSelection,
 }
 
 const _absent = Object();

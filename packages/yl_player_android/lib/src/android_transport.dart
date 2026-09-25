@@ -15,6 +15,7 @@ abstract interface class AndroidPlayerTransport {
   Future<void> seekToLiveEdge(AndroidSessionCommand command);
   Future<void> setPlaybackSpeed(AndroidSpeedCommand command);
   Future<void> selectAudioTrack(AndroidTrackCommand command);
+  Future<void> selectVideoTrack(AndroidVideoTrackCommand command);
   Future<void> setVideoConstraints(AndroidVideoConstraintsCommand command);
   Future<void> setVolume(double volume);
   Future<void> stop();
@@ -75,6 +76,9 @@ final class PigeonAndroidPlayerTransport implements AndroidPlayerTransport {
   @override
   Future<void> selectAudioTrack(AndroidTrackCommand command) =>
       _invoke(() => _api.selectAudioTrack(command));
+  @override
+  Future<void> selectVideoTrack(AndroidVideoTrackCommand command) =>
+      _invoke(() => _api.selectVideoTrack(command));
   @override
   Future<void> setVideoConstraints(AndroidVideoConstraintsCommand command) =>
       _invoke(() => _api.setVideoConstraints(command));

@@ -13,7 +13,8 @@ internal interface YlSessionVideoOutput {
 internal data class YlEngineRestorePoint(val positionMs: Long, val liveEdge: Boolean, val playbackIntended: Boolean,
     val selectedAudioTrack: String? = null, val selectedVideoTracks: List<String> = emptyList(),
     val speed: Double = 1.0, val volume: Double = 1.0,
-    val maxWidth: Long? = null, val maxHeight: Long? = null, val maxBitrate: Long? = null)
+    val maxWidth: Long? = null, val maxHeight: Long? = null, val maxBitrate: Long? = null,
+    val videoSelection: YlFixedVideoState = YlFixedVideoState())
 internal enum class YlDecoderRequirement { DEFAULT, PREFERRED, HARDWARE_REQUIRED }
 internal data class YlPreparedSession(
     val identity: YlSessionIdentity,
@@ -41,6 +42,10 @@ internal interface YlPlaybackEngineAdapter {
     suspend fun seekToLiveEdge()
     suspend fun setPlaybackSpeed(speed: Double)
     suspend fun selectAudioTrack(trackId: String)
+    val supportsVideoTrackSelection: Boolean get() = false
+    suspend fun selectVideoTrack(trackId: String?) {
+        throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
+    }
     suspend fun setVideoConstraints(constraints: AndroidVideoConstraintsMessage)
     suspend fun setVolume(volume: Double)
     suspend fun stop()
@@ -64,6 +69,8 @@ internal data class YlEngineSnapshot(
     val decoderIdentity: String? = null,
     val metrics: AndroidMetricsMessage = AndroidMetricsMessage(),
     val reachedReady: Boolean = false,
+    val videoSelection: AndroidVideoSelectionMessage = AndroidVideoSelectionMessage(
+        reason = "initial"),
 )
 internal sealed interface YlEngineEvent {
     data class Snapshot(val value: YlEngineSnapshot) : YlEngineEvent

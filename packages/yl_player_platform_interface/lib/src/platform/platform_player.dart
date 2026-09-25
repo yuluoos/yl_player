@@ -45,3 +45,8 @@ abstract interface class YlPlatformPlayer {
   Future<void> stop();
   Future<void> dispose();
 }
+
+/// Optional SPI for backends that can enforce one exact video track.
+abstract interface class YlVideoTrackSelectionPlatformPlayer {
+  Future<void> selectVideoTrack(YlPlaybackSessionId sessionId, String? trackId);
+}

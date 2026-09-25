@@ -46,6 +46,7 @@ internal class YlMedia3Engine(
     override fun markCommitted() { rtmpRecovery.committed = true }
     private var exclusive = true // Main-owned; unknown is conservative until READY track evidence.
     override val needsExclusiveLease get() = exclusive
+    override val supportsVideoTrackSelection = true
 
     override fun registerCallback(callback: (YlSessionIdentity, YlEngineEvent) -> Unit) { this.callback = callback }
     private suspend fun <T> onWorker(action: () -> T): T {
@@ -117,6 +118,7 @@ internal class YlMedia3Engine(
     override suspend fun seekToLiveEdge() = onWorker { requireCore().seekToLiveEdge() }
     override suspend fun setPlaybackSpeed(speed: Double) = onWorker { requireCore().setPlaybackSpeed(speed) }
     override suspend fun selectAudioTrack(trackId: String) = onWorker { requireCore().selectAudioTrack(trackId) }
+    override suspend fun selectVideoTrack(trackId: String?) = onWorker { requireCore().selectVideoTrack(trackId) }
     override suspend fun setVideoConstraints(constraints: AndroidVideoConstraintsMessage) = onWorker { requireCore().setVideoConstraints(constraints) }
     override suspend fun setVolume(volume: Double) = onWorker { requireCore().setVolume(volume) }
     override suspend fun stop() = onWorker { requireCore().stop() }

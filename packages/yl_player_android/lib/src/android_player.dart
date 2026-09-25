@@ -9,7 +9,8 @@ import 'android_transport.dart';
 import 'pigeon/yl_player_android.g.dart';
 
 /// Owns one native identity, its callback reducer and in-flight operations.
-final class AndroidPlayer implements YlPlatformPlayer {
+final class AndroidPlayer
+    implements YlPlatformPlayer, YlVideoTrackSelectionPlatformPlayer {
   AndroidPlayer._(
     this._transport,
     this._suffix,
@@ -566,6 +567,20 @@ final class AndroidPlayer implements YlPlatformPlayer {
       sessionId,
       () => _transport.selectAudioTrack(
         AndroidTrackCommand(sessionId: sessionId.value, trackId: trackId),
+      ),
+    );
+  }
+
+  @override
+  Future<void> selectVideoTrack(
+    YlPlaybackSessionId sessionId,
+    String? trackId,
+  ) async {
+    if (trackId != null) validateYlTrackId(trackId);
+    await _sessionCommand(
+      sessionId,
+      () => _transport.selectVideoTrack(
+        AndroidVideoTrackCommand(sessionId: sessionId.value, trackId: trackId),
       ),
     );
   }

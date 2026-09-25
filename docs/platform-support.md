@@ -203,8 +203,40 @@ first frame, natural Period transition, bidirectional seeks and completion.
 These runs establish consumption of a multivariant presentation, not observed
 adaptive up/down switching, a strict quality ceiling or a fixed-quality API.
 See the [follow-up report](superpowers/reports/2026-09-24-dash-variants-and-live-integration.md).
-See [transport compatibility](transport-compatibility.md) for private schema 3
-negotiation and mixed-version safety.
+See [transport compatibility](transport-compatibility.md) for Android schema 4,
+Apple schema 3, and mixed-version safety.
+
+## Fixed video selection stage
+
+The public session command `selectVideoTrack(trackId)` accepts an ID from the
+current `state.videoTracks`; `selectVideoTrack(null)` explicitly returns to
+automatic selection. `state.videoSelection` reports the authoritative mode and
+its `initial`, `user`, or `trackUnavailable` reason. A successful command
+acknowledges the selection request, while observed `videoGeometry` and playback
+state establish what the decoder actually displayed. `videoTracks.isSelected`
+does not by itself prove decoded pixel dimensions. Existing
+`setVideoConstraints` remains an independent upper limit; an incompatible
+update while fixed fails rather than silently moving the fixed selection.
+
+Android Media3 is the first implementation of this command. It pins one
+compatible AVC/SDR video track using a real Media3 track override, matches the
+same quality across Periods despite representation ID or order changes, and
+returns to automatic selection with `trackUnavailable` when the current Period
+confirms that quality is absent. Transient empty catalogs do not by themselves
+mean the quality disappeared. The conservative fixed path rejects incompatible
+codec/profile, HDR, ambiguous quality identity, or an unproven host/device cap.
+Apple currently reports fixed-video selection as unsupported; its existing
+compatible DASH ladder remains under AVPlayer's automatic choice.
+
+The controlled Android playback gate uses an eight-second, two-Period
+320×180/640×360 AVC/AAC fixture to inspect first frame, decoded geometry,
+state transitions, segment requests, timeline, seek, and Stop. Its precise
+result and any remaining discrepancy are recorded in the
+[fixed-selection stage report](superpowers/reports/2026-09-24-fixed-video-selection.md).
+This gate does not establish full adaptive bitrate behavior, weak-network
+quantitative response, HDR switching, general DASH interoperability, or a
+physical/minimum-OS device matrix. Fixed Apple behavior and dynamic Apple
+ladder changes remain future work.
 
 ## Optional JavaScript source resolution
 

@@ -9,6 +9,22 @@ Matcher failsWith(String code) => throwsA(
   isA<YlPlayerException>().having((e) => e.failure.code, 'code', code),
 );
 void main() {
+  test('video command sends nullable auto ID without asserting a state change', () async {
+    final transport = FakeTransport();
+    final player = await createFake(transport);
+    addTearDown(player.dispose);
+    final session = (await commit(transport, player)).sessionId;
+    await player.selectVideoTrack(session, null);
+    expect(transport.calls.last, 'video-track:s1:null');
+    expect(player.state.videoSelection.isAutomatic, isTrue);
+    expect(player.state.videoSelection.reason, YlVideoSelectionReason.initial);
+    await expectLater(player.selectVideoTrack(session, ''), throwsArgumentError);
+    await player.stop();
+    await expectLater(
+      player.selectVideoTrack(session, 'v0'),
+      failsWith(YlFailureCodes.sessionStale),
+    );
+  });
   test('completion-window deltas use the latest authoritative state', () async {
     final t = FakeTransport();
     final p = await createFake(t);
@@ -573,6 +589,7 @@ void main() {
       for (final reply in [
         wireCreate()..schemaMajor = 1,
         wireCreate()..schemaMajor = 2,
+        wireCreate()..schemaMajor = 3,
         wireCreate()..spiMajor = 1,
         wireCreate()..textureId = -1,
         wireCreate()..initialState.revision = -1,

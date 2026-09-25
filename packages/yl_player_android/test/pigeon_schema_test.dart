@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player_android/src/pigeon/yl_player_android.g.dart';
@@ -6,6 +8,40 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart'
     as public_api;
 
 void main() {
+  test('schema 3 and 4 factory requests retain committed codec tags', () {
+    // Captured with the committed 9f6b490 schema-3 Pigeon codec, including
+    // a schema-4 major sent to an old binary. These are real codec bytes.
+    const oldMajor3 =
+        'DAGSDAIEAwAAAAAAAACRDAOGBAAAAAAAAAAAhwQAAAAAAAAAAAT6AAAAAAAAAA==';
+    const oldMajor4 =
+        'DAGSDAIEBAAAAAAAAACRDAOGBAAAAAAAAAAAhwQAAAAAAAAAAAT6AAAAAAAAAA==';
+    const codec = AndroidPlayerFactoryHostApi.pigeonChannelCodec;
+    final oldRequest =
+        codec.decodeMessage(ByteData.sublistView(base64Decode(oldMajor3)))!
+            as List<Object?>;
+    final request = oldRequest.single! as AndroidCreateRequest;
+    expect(request.schemaMajor, 3);
+    expect(request.options.positionUpdateIntervalMs, 250);
+    final newBytes = codec.encodeMessage([
+      AndroidCreateRequest(
+        schemaMajor: 4,
+        options: AndroidPlayerOptionsMessage(
+          decoderPolicy: AndroidDecoderPolicy.systemDefault,
+          audioPolicy: AndroidAudioPolicy.appManaged,
+          positionUpdateIntervalMs: 250,
+        ),
+      ),
+    ])!;
+    expect(
+      base64Encode(
+        newBytes.buffer.asUint8List(
+          newBytes.offsetInBytes,
+          newBytes.lengthInBytes,
+        ),
+      ),
+      oldMajor4,
+    );
+  });
   test('generated messages preserve the complete v2 transport shape', () {
     final failure = AndroidFailureMessage(
       category: AndroidFailureCategory.decoder,
@@ -123,6 +159,7 @@ void main() {
         reconnectCount: 1,
       ),
       failure: failure,
+      videoSelection: AndroidVideoSelectionMessage(reason: 'initial'),
     );
     final delta = AndroidStateDeltaMessage(
       sessionId: 'session-1',
