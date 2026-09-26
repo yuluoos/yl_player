@@ -164,6 +164,9 @@ struct YlDashTrack {
   let channels: String
   let roles: [String]
   let bandwidth: Int64
+  let frameRate: String?
+  let squarePixels: Bool
+  let hasRangeDeclaration: Bool
   let initialization: YlDashResource
   let segments: [YlDashSegment]
   func matches(_ other: YlDashTrack) -> Bool {
@@ -265,10 +268,7 @@ final class YlDashDocument {
         videos.sort { ($0.width, $0.height, $0.bandwidth) < ($1.width, $1.height, $1.bandwidth) }
       }
       if let previous = result.last {
-        guard videos.count == previous.videos.count,
-              zip(videos, previous.videos).allSatisfy({ current, old in
-                current.matches(old) && (videos.count == 1 || current.bandwidth == old.bandwidth)
-              }), (audio == nil) == (previous.audio == nil),
+        guard (audio == nil) == (previous.audio == nil),
               audio == nil || audio!.matches(previous.audio!) else { throw YlDashBounds.unsupported }
       }
       result.append(YlDashPeriod(videos: videos, audio: audio))
@@ -371,7 +371,13 @@ final class YlDashDocument {
       }
     }
     return YlDashTrack(codec: codec, width: width, height: height, samplingRate: rate,
-      channels: channels, roles: roles.sorted(), bandwidth: bandwidth, initialization: initResource, segments: segments)
+      channels: channels, roles: roles.sorted(), bandwidth: bandwidth,
+      frameRate: attrs["frameRate"],
+      squarePixels: ancestors.allSatisfy { $0.attributes["sar"] == nil || $0.attributes["sar"] == "1:1" },
+      hasRangeDeclaration: ancestors.contains { node in
+        !node.nodes("SupplementalProperty").isEmpty ||
+          ["videoRange", "colourPrimaries", "transferCharacteristics", "matrixCoefficients"].contains { node.attributes[$0] != nil }
+      }, initialization: initResource, segments: segments)
   }
   private func resource(_ name: String?, _ range: String?, _ location: (URL, Bool)) throws -> YlDashResource {
     guard let name = name else { throw YlDashBounds.unsupported }

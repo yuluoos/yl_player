@@ -15,8 +15,9 @@ enum YlDashHlsCompiler {
       let document = YlDashDocument(source: sourceURL)
       let (periods, duration) = try document.parse(data, final: finalManifestURL,
         credentialsStripped: credentialsStripped)
-      let videoNames = periods[0].videos.count == 1 ? ["video"]
-        : periods[0].videos.indices.map { "video-\($0)" }
+      let videoPaths = try YlDashVideoPaths.plan(periods)
+      let videoNames = videoPaths.count == 1 ? ["video"]
+        : videoPaths.indices.map { "video-\($0)" }
       let names = ["master"] + videoNames + (periods[0].audio == nil ? [] : ["audio"])
       var identities: [String: URL] = [:]
       for name in names {
@@ -44,7 +45,7 @@ enum YlDashHlsCompiler {
       }
       for name in names where name != "master" {
         let videoIndex = videoNames.firstIndex(of: name)
-        let tracks = periods.map { period in videoIndex.map { period.videos[$0] } ?? period.audio! }
+        let tracks = videoIndex.map { videoPaths[$0] } ?? periods.map { $0.audio! }
         var target: Int64 = 1
         for track in tracks {
           for segment in track.segments {
@@ -74,9 +75,10 @@ enum YlDashHlsCompiler {
         try append("#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"audio\",NAME=\"Audio\",DEFAULT=YES,AUTOSELECT=YES,URI=\"\(audioURL)\"\n", to: &master)
       }
       for (index, name) in videoNames.enumerated() {
-        let video = periods[0].videos[index]
+        let path = videoPaths[index]
+        let video = path.max { ($0.width, $0.height) < ($1.width, $1.height) }!
         let videoURL = try YlHlsURLCodec.encode(identities[name]!, kind: .manifest).absoluteString
-        let bandwidth = periods.map { $0.videos[index].bandwidth + ($0.audio?.bandwidth ?? 0) }.max()!
+        let bandwidth = zip(path, periods).map { $0.bandwidth + ($1.audio?.bandwidth ?? 0) }.max()!
         let codecs = video.codec + (audio.map { "," + $0.codec } ?? "")
         let group = audio == nil ? "" : ",AUDIO=\"audio\""
         try append("#EXT-X-STREAM-INF:BANDWIDTH=\(bandwidth),CODECS=\"\(codecs)\",RESOLUTION=\(video.width)x\(video.height)\(group)\n\(videoURL)\n", to: &master)
@@ -88,5 +90,71 @@ enum YlDashHlsCompiler {
       // Includes injected URL-closure/native errors: never publish source text.
       throw YlDashBounds.unsupported
     }
+  }
+}
+
+/// Automatic full-program paths only: anchors are neither fixed requests nor caps.
+private enum YlDashVideoPaths {
+  private struct Quality: Hashable, Comparable {
+    let width: Int64, height: Int64, bandwidth: Int64
+    init(_ track: YlDashTrack) {
+      width = track.width; height = track.height; bandwidth = track.bandwidth
+    }
+    static func < (lhs: Quality, rhs: Quality) -> Bool {
+      (lhs.width, lhs.height, lhs.bandwidth) < (rhs.width, rhs.height, rhs.bandwidth)
+    }
+  }
+  private static func frameRate(_ value: String?) throws -> String? {
+    guard let value = value else { return nil }
+    let parts = value.split(separator: "/", omittingEmptySubsequences: false)
+    guard parts.count == 1 || parts.count == 2 else { throw YlDashBounds.unsupported }
+    let numerator = try YlDashBounds.number(String(parts[0]))
+    let denominator = try parts.count == 2 ? YlDashBounds.number(String(parts[1])) : 1
+    guard numerator > 0, denominator > 0 else { throw YlDashBounds.unsupported }
+    var a = numerator, b = denominator
+    while b != 0 { let remainder = a % b; a = b; b = remainder }
+    return "\(numerator / a)/\(denominator / a)"
+  }
+  static func plan(_ periods: [YlDashPeriod]) throws -> [[YlDashTrack]] {
+    let first = periods[0].videos
+    // Preserve the previously admitted domain, including 64 singleton Periods
+    // with varying bandwidth. The new union/family rules apply only after this.
+    if periods.allSatisfy({ period in
+      period.videos.count == first.count && zip(period.videos, first).allSatisfy {
+        $0.matches($1) && (first.count == 1 || $0.bandwidth == $1.bandwidth)
+      }
+    }) {
+      return first.indices.map { index in periods.map { $0.videos[index] } }
+    }
+    let reference = first[0]
+    let rate = try frameRate(reference.frameRate)
+    // The profile byte admits only the established 8-bit AVC profiles. This is
+    // declaration validation, not inspection of the encoded media parameters.
+    let profile = Int(reference.codec.split(separator: ".")[1].prefix(2), radix: 16)
+    guard let profile = profile, [66, 77, 88, 100].contains(profile) else { throw YlDashBounds.unsupported }
+    var qualities = Set<Quality>()
+    for period in periods {
+      var periodQualities = Set<Quality>()
+      for track in period.videos {
+        guard track.codec == reference.codec, track.roles == reference.roles,
+              track.squarePixels, !track.hasRangeDeclaration,
+              track.width * reference.height == reference.width * track.height,
+              try frameRate(track.frameRate) == rate else { throw YlDashBounds.unsupported }
+        let quality = Quality(track)
+        guard periodQualities.insert(quality).inserted else { throw YlDashBounds.unsupported }
+        qualities.insert(quality)
+        guard qualities.count <= YlDashBounds.maxVideoVariants else { throw YlDashBounds.unsupported }
+      }
+    }
+    var paths: [[YlDashTrack]] = []
+    var sequences = Set<[Quality]>()
+    for anchor in qualities.sorted() {
+      // Per-Period tracks are already sorted and aligned before planning.
+      let path = periods.map { period in
+        period.videos.last { Quality($0) <= anchor } ?? period.videos[0]
+      }
+      if sequences.insert(path.map(Quality.init)).inserted { paths.append(path) }
+    }
+    return paths
   }
 }

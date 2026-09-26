@@ -157,11 +157,19 @@ HLS adapter and AVPlayer. The original DASH identity is retained. Its initial
 subset accepts one video AdaptationSet with up to 16 compatible AVC representations
 and optional shared AAC-LC audio per Period, with at most 256 total representations
 including audio. Multiple video renditions must share codec/roles and exactly
-aligned segment boundaries. Every Period retains the same unambiguous ladder of
-dimensions and bandwidths, matched independently of representation ID or XML order;
-audio format and presence stay consistent. Singleton video retains its original
-cross-Period compatibility rules. Periods remain contiguous and finite from zero,
-with zero presentationTimeOffset. SegmentTemplate/Timeline and
+aligned segment boundaries. The original identical-ladder and singleton routes
+remain supported. The automatic route also accepts compatible ladders that add
+or remove qualities between Periods, including disjoint high-only and low-only
+Periods. It maps at most 16 distinct `(width,height,bandwidth)` identities to
+bounded complete-program paths, independent of representation ID or XML order;
+this mapping is neither a fixed selection nor a quality ceiling. The changing
+route requires the same declared AVC codec/Profile and role, equal display
+ratio, consistent normalized frame rate, absent or 1:1 SAR, and, when present,
+a compatible shared AAC track with consistent presence. It rejects declared color/range,
+SupplementalProperty and unsupported high-bit-depth profiles. These are MPD
+declaration checks, not inspection of arbitrary encoded media bytes. Periods
+remain contiguous and finite from zero, with zero presentationTimeOffset.
+SegmentTemplate/Timeline and
 SegmentList support bounded URL expansion, initialization and media byte ranges.
 Only one BaseURL choice per level is admitted in this initial Apple subset.
 Unsupported timing/numbering attributes fail closed before inheritance.
@@ -177,11 +185,9 @@ Original source origin and sticky cross-origin ancestry govern credentials;
 redirecting back to the source origin cannot restore them.
 
 Local/live DASH, dynamic or encrypted MPD, SegmentBase, nonzero offsets, gaps or
-overlaps, changing ladders, multiple video AdaptationSets, multiple audio
-representations and track/codec changes remain rejected by the Apple subset.
-Multi-video admission also rejects explicit unsupported color/range descriptors
-in its ancestry; the adapter does not inspect arbitrary media bitstreams to prove
-HDR equivalence. Managed network, bounded buffer and hardware-required requests
+overlaps, incompatible changing ladders, multiple video AdaptationSets, multiple
+audio representations and track/codec changes remain rejected by the Apple subset.
+Managed network, bounded buffer and hardware-required requests
 remain `policy.unsupported`; parser/registry budgets do not enforce those media
 policies. The route does not use FFmpeg or add a commercial SDK.
 
@@ -203,6 +209,12 @@ first frame, natural Period transition, bidirectional seeks and completion.
 These runs establish consumption of a multivariant presentation, not observed
 adaptive up/down switching, a strict quality ceiling or a fixed-quality API.
 See the [follow-up report](superpowers/reports/2026-09-24-dash-variants-and-live-integration.md).
+The later changing-ladder compiler gate adds complete automatic program paths
+for compatible additions/removals. Its focused native evidence is 55/55
+(37 compiler, 18 loader) on each Apple platform before the duplicate-identity
+review fix, followed by three targeted compiler passes per platform for that
+fix. These are separate runs, not a 56-test full rerun. The public playback
+evidence and its precise limits are in the [changing-ladders report](superpowers/reports/2026-09-24-apple-dash-changing-ladders.md).
 See [transport compatibility](transport-compatibility.md) for Android schema 4,
 Apple schema 3, and mixed-version safety.
 
@@ -235,8 +247,8 @@ result and any remaining discrepancy are recorded in the
 [fixed-selection stage report](superpowers/reports/2026-09-24-fixed-video-selection.md).
 This gate does not establish full adaptive bitrate behavior, weak-network
 quantitative response, HDR switching, general DASH interoperability, or a
-physical/minimum-OS device matrix. Fixed Apple behavior and dynamic Apple
-ladder changes remain future work.
+physical/minimum-OS device matrix. Fixed Apple behavior, strict caps and
+quantitative weak-network ABR remain future work.
 
 ## Optional JavaScript source resolution
 

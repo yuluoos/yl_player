@@ -234,15 +234,12 @@ final class YlDashHlsCompilerTests: XCTestCase {
     XCTAssertFalse(master.contains("AUDIO="))
     XCTAssertTrue(master.contains("BANDWIDTH=700000,CODECS=\"avc1.42c01e\",RESOLUTION=640x360"))
   }
-  func testVariantsRejectAmbiguousChangedAndIncompatibleLaddersBeforeEmission() {
+  func testVariantsRejectAmbiguousAndIncompatibleLaddersBeforeEmission() {
     let low = rendition("a"), high = rendition("b", width: 640, bandwidth: 700000)
     reject(mpd(ladder(low + rendition("duplicate"))))
     reject(mpd(ladder(low + high.replacingOccurrences(of: "<Representation ", with: "<Representation codecs=\"avc1.64001e\" "))))
     reject(mpd(ladder(low + high.replacingOccurrences(of: "<SegmentTemplate", with: "<Role value=\"alternate\"/><SegmentTemplate"))))
     reject(mpd(ladder(low + high.replacingOccurrences(of: "<SegmentTemplate", with: "<SupplementalProperty schemeIdUri=\"urn:mpeg:mpegB:cicp:TransferCharacteristics\" value=\"16\"/><SegmentTemplate"))))
-    for second in [low, low + high.replacingOccurrences(of: "700000", with: "800000"), low + high + rendition("c", width: 1280, bandwidth: 1400000)] {
-      reject(mpd(ladder(low + high) + ladder(second, start: 4), duration: 8))
-    }
     reject(mpd(ladder(low + high, audio: true) + ladder(low + high, start: 4), duration: 8))
   }
   func testVariantsRejectSubMicrosecondMisalignmentWithoutDoubleRounding() {
@@ -278,6 +275,171 @@ final class YlDashHlsCompilerTests: XCTestCase {
     let atLimit = (0..<16).map { ladder(maximum, start: $0 * 4) }.joined()
     XCTAssertEqual(try compile(mpd(atLimit, duration: 64)).manifests.count, 17)
     reject(mpd(atLimit + ladder(maximum, start: 64), duration: 68))
+  }
+
+
+  private func changingPaths(_ result: YlDashHlsPresentation) throws -> [String] {
+    let master = String(data: result.manifests[result.rootURL]!, encoding: .utf8)!
+    return try master.split(separator: "\n").filter { $0.hasPrefix("ylhls:") }.map {
+      let url = try YlHlsURLCodec.decode(URL(string: String($0))!)
+      return String(data: try XCTUnwrap(result.manifests[url]), encoding: .utf8)!
+    }
+  }
+  private func assertPath(_ text: String, _ ids: [String], file: StaticString = #filePath, line: UInt = #line) {
+    let periods = text.components(separatedBy: "#EXT-X-DISCONTINUITY\n")
+    XCTAssertEqual(periods.count, ids.count, file: file, line: line)
+    for (period, id) in zip(periods, ids) {
+      XCTAssertTrue(period.contains("#EXT-X-MAP:URI=\"https://origin.test/dash/init-\(id).mp4\""), file: file, line: line)
+      for number in 1...2 { XCTAssertTrue(period.contains("/\(id)-\(number).m4s\n"), file: file, line: line) }
+      XCTAssertEqual(period.components(separatedBy: "#EXTINF:2.000000,\n").count - 1, 2, file: file, line: line)
+    }
+  }
+  func testChangingLaddersRemoveAndAddQualityByIdentityWithRenamedReorderedIDs() throws {
+    let low = rendition("old-low"), high = rendition("old-high", width: 640, bandwidth: 700000)
+    let removed = try compile(mpd(ladder(high + low) + ladder(rendition("new-low"), start: 4), duration: 8))
+    let removedPaths = try changingPaths(removed)
+    XCTAssertEqual(removedPaths.count, 2)
+    if removedPaths.count == 2 {
+      assertPath(removedPaths[0], ["old-low", "new-low"])
+      assertPath(removedPaths[1], ["old-high", "new-low"])
+    }
+    let added = try changingPaths(compile(mpd(ladder(low) + ladder(rendition("new-high", width: 640, bandwidth: 700000) + rendition("new-low"), start: 4), duration: 8)))
+    XCTAssertEqual(added.count, 2)
+    if added.count == 2 {
+      assertPath(added[0], ["old-low", "new-low"])
+      assertPath(added[1], ["old-low", "new-high"])
+    }
+    // Bandwidth participates in identity even when the dimensions are equal.
+    let changed = try changingPaths(compile(mpd(ladder(low + high) + ladder(rendition("new-low") + rendition("new-high", width: 640, bandwidth: 800000), start: 4), duration: 8)))
+    XCTAssertEqual(changed.count, 3)
+    if changed.count == 3 {
+      assertPath(changed[0], ["old-low", "new-low"])
+      assertPath(changed[1], ["old-high", "new-low"])
+      assertPath(changed[2], ["old-high", "new-high"])
+    }
+  }
+  func testChangingSingletonsDeduplicateBothDirectionsAndKeepVideoIdentity() throws {
+    for widths in [[640, 320], [320, 640]] {
+      let xml = mpd(ladder(rendition("first", width: widths[0])) + ladder(rendition("second", width: widths[1]), start: 4), duration: 8)
+      let result = try compile(xml)
+      XCTAssertEqual(result.manifests.count, 2)
+      let playlist = try XCTUnwrap(result.manifests[URL(string: "https://virtual.test/video.m3u8")!])
+      assertPath(String(data: playlist, encoding: .utf8)!, ["first", "second"])
+    }
+  }
+  func testChangingPathsUseFloorThenMinimumAndMasterEnvelopes() throws {
+    let first = ladder(rendition("low", bandwidth: 900000) + rendition("high", width: 1280, bandwidth: 700000), audio: true)
+    let second = ladder(rendition("middle", width: 640, bandwidth: 400000), start: 4, audio: true).replacingOccurrences(of: "64000", with: "128000")
+    let result = try compile(mpd(first + second, duration: 8))
+    let paths = try changingPaths(result)
+    XCTAssertEqual(paths.count, 2) // low and middle anchors map to the same complete sequence.
+    if paths.count == 2 {
+      assertPath(paths[0], ["low", "middle"])
+      assertPath(paths[1], ["high", "middle"])
+    }
+    let master = String(data: result.manifests[result.rootURL]!, encoding: .utf8)!
+    XCTAssertTrue(master.contains("BANDWIDTH=964000,CODECS=\"avc1.42c01e,mp4a.40.2\",RESOLUTION=640x360"))
+    XCTAssertTrue(master.contains("BANDWIDTH=764000,CODECS=\"avc1.42c01e,mp4a.40.2\",RESOLUTION=1280x720"))
+    XCTAssertEqual(result.manifests.count, 4)
+    XCTAssertFalse(master.contains("#EXT-X-INDEPENDENT-SEGMENTS"))
+  }
+  func testChangingLaddersAcceptEquivalentDeclaredFrameRatesAndSquareSAR() throws {
+    let one = ladder(rendition("a", extra: "frameRate=\"24\" sar=\"1:1\""))
+    for rate in ["24/1", "48/2"] {
+      let two = ladder(rendition("b", width: 640, extra: "frameRate=\"\(rate)\""), start: 4)
+      assertPath(video(try compile(mpd(one + two, duration: 8))), ["a", "b"])
+    }
+  }
+  func testChangingSingletonCannotBypassConservativeFamilyValidation() {
+    let first = ladder(rendition("a") + rendition("b", width: 640, bandwidth: 700000))
+    let singleton = ladder(rendition("c"), start: 4)
+    for attribute in ["videoRange=\"PQ\"", "colourPrimaries=\"9\"", "transferCharacteristics=\"16\"", "matrixCoefficients=\"9\"", "sar=\"2:1\"", "sar=\"0:0\"", "codecs=\"avc1.64001e\"", "frameRate=\"25\""] {
+      reject(mpd(first + singleton.replacingOccurrences(of: "<Representation ", with: "<Representation \(attribute) "), duration: 8))
+    }
+    reject(mpd(first + singleton.replacingOccurrences(of: "<SegmentTemplate", with: "<Role value=\"alternate\"/><SegmentTemplate"), duration: 8))
+    reject(mpd(first + singleton.replacingOccurrences(of: "<SegmentTemplate", with: "<SupplementalProperty schemeIdUri=\"range\" value=\"SDR\"/><SegmentTemplate"), duration: 8))
+    reject(mpd(first + singleton.replacingOccurrences(of: "height=\"180\"", with: "height=\"181\""), duration: 8))
+    let changing = mpd(ladder(rendition("a")) + ladder(rendition("b", width: 640), start: 4), duration: 8)
+    for codec in ["avc1.6e001e", "avc1.7a001e", "avc1.f4001e"] {
+      reject(changing.replacingOccurrences(of: "avc1.42c01e", with: codec))
+    }
+    for node in ["<MPD ", "<Period ", "<AdaptationSet "] {
+      reject(changing.replacingOccurrences(of: node, with: node + "videoRange=\"SDR\" "))
+    }
+  }
+  func testChangingLaddersRejectUnequalMissingAndMalformedFrameRates() {
+    let one = ladder(rendition("a", extra: "frameRate=\"24\""))
+    for attribute in ["", "frameRate=\"25\"", "frameRate=\"24/0\"", "frameRate=\"0\"", "frameRate=\"24/1/1\"", "frameRate=\"1.5\""] {
+      reject(mpd(one + ladder(rendition("b", width: 640, extra: attribute), start: 4), duration: 8))
+    }
+    let missing = ladder(rendition("a"))
+    reject(mpd(missing + ladder(rendition("b", width: 640, extra: "frameRate=\"24\""), start: 4), duration: 8))
+  }
+  func testChangingLaddersBoundGlobalUnionBeforeEitherURLClosure() throws {
+    func document(_ count: Int) -> String {
+      mpd((1...count).map { ladder(rendition("v\($0)", width: $0 * 32), start: ($0 - 1) * 4) }.joined(), duration: count * 4)
+    }
+    XCTAssertEqual(try compile(document(16)).manifests.count, 2)
+    var manifestCalls = 0, mediaCalls = 0
+    XCTAssertThrowsError(try YlDashHlsCompiler.compile(data: Data(document(17).utf8), finalManifestURL: source, sourceURL: source, credentialsStripped: false,
+      manifestURL: { name in manifestCalls += 1; return URL(string: "https://virtual.test/\(name).m3u8")! },
+      mediaURL: { url, _ in mediaCalls += 1; return url }))
+    XCTAssertEqual(manifestCalls, 0); XCTAssertEqual(mediaCalls, 0)
+  }
+  func testLegacySingletonBandwidthChangesRemainAcceptedFor64Periods() throws {
+    let periods = (0..<64).map { ladder(rendition("v\($0)", bandwidth: 350000 + $0), start: $0 * 4) }.joined()
+    let result = try compile(mpd(periods, duration: 256))
+    XCTAssertEqual(result.manifests.count, 2)
+    XCTAssertEqual(video(result).components(separatedBy: "#EXT-X-DISCONTINUITY\n").count - 1, 63)
+  }
+  func testChangingLaddersPreserveStrictestSharedCredentialHistory() throws {
+    let low = rendition("a")
+    let later = ladder(rendition("b", width: 640), start: 4).replacingOccurrences(of: "<AdaptationSet", with: "<BaseURL>https://foreign.test/</BaseURL><AdaptationSet").replacingOccurrences(of: "<SegmentTemplate", with: "<BaseURL>https://origin.test/dash/</BaseURL><SegmentTemplate").replacingOccurrences(of: "init-$RepresentationID$.mp4", with: "init-a.mp4")
+    var shared: [Bool] = []
+    _ = try compile(mpd(ladder(low) + later, duration: 8), seen: { url, stripped in if url.lastPathComponent == "init-a.mp4" { shared.append(stripped) } })
+    XCTAssertEqual(shared, [true, true])
+  }
+  func testChangingLaddersShareInputAndExpandedPlaylistBudgets() {
+    let dense = "<SegmentTemplate timescale=\"15000\" duration=\"1\" initialization=\"i\" media=\"$Number$\"/>"
+    reject(mpd(ladder(rendition("a", template: dense)) + ladder(rendition("b", width: 640, template: dense), start: 4), duration: 8))
+    let long = "<SegmentTemplate timescale=\"75\" duration=\"1\" initialization=\"i\" media=\"" + String(repeating: "x", count: 8000) + "$Number$\"/>"
+    reject(mpd(ladder(rendition("a", template: long)) + ladder(rendition("b", width: 640, template: long), start: 4), duration: 8))
+    let template = "<SegmentTemplate timescale=\"25\" duration=\"1\" initialization=\"i\" media=\"$Number$\"/>"
+    let one = ladder(rendition("a", template: template) + rendition("b", width: 640, template: template) + rendition("c", width: 960, template: template))
+    let two = ladder(rendition("d", template: template), start: 4)
+    XCTAssertNoThrow(try compile(mpd(one + two, duration: 8)))
+    var emitted = 0
+    XCTAssertThrowsError(try YlDashHlsCompiler.compile(data: Data(mpd(one + two, duration: 8).utf8), finalManifestURL: source, sourceURL: source, credentialsStripped: false,
+      manifestURL: { URL(string: "https://virtual.test/\($0).m3u8")! },
+      mediaURL: { _, _ in emitted += 1; return URL(string: "https://proxy.test/" + String(repeating: "x", count: 8000))! }))
+    XCTAssertGreaterThan(emitted, 400, "The cumulative registry budget must reject after two individually valid playlists")
+  }
+
+
+  func testChangingLaddersRejectDuplicateQualityWithIrrelevantAudioDeclarationsBeforeURLClosures() throws {
+    let first = rendition("alpha")
+    let alternatives = [
+      rendition("beta", extra: "audioSamplingRate=\"1\""),
+      rendition("beta").replacingOccurrences(of: "<SegmentTemplate", with: "<AudioChannelConfiguration schemeIdUri=\"urn:mpeg:dash:23003:3:audio_channel_configuration:2011\" value=\"2\"/><SegmentTemplate"),
+    ]
+    for second in alternatives {
+      for duplicates in [first + second, second + first] {
+        // The legacy homogeneous route retains its pre-existing admission domain.
+        XCTAssertNoThrow(try compile(mpd(ladder(duplicates))))
+        for duplicatePeriod in [0, 1] {
+          let one = ladder(duplicatePeriod == 0 ? duplicates : rendition("high", width: 640))
+          let two = ladder(duplicatePeriod == 1 ? duplicates : rendition("high", width: 640), start: 4)
+          var manifestCalls = 0, mediaCalls = 0
+          XCTAssertThrowsError(try YlDashHlsCompiler.compile(data: Data(mpd(one + two, duration: 8).utf8), finalManifestURL: source, sourceURL: source, credentialsStripped: false,
+            manifestURL: { name in manifestCalls += 1; return URL(string: "https://virtual.test/\(name).m3u8")! },
+            mediaURL: { url, _ in mediaCalls += 1; return url })) { error in
+              XCTAssertEqual((error as? NativePlayerError)?.code, "container.unsupported")
+            }
+          XCTAssertEqual(manifestCalls, 0)
+          XCTAssertEqual(mediaCalls, 0)
+        }
+      }
+    }
   }
 
 }

@@ -448,7 +448,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashHlsCompilerTests.swift",
-    "sha256": "50f17ff4b3309b0c8721aedeb8c6541457b98dd2f4aba07e095b3c0a5e0018de",
+    "sha256": "97e8601131b6bed2bc6f4237d6cfa16b1d4a68f447d886fc202d91d4e87dba6a",
     "methods": [
       "testSinglePeriodProducesMapDurationsAndRewrittenManifestReference",
       "testTwoPeriodsHaveOneDiscontinuityAndDistinctInitialization",
@@ -472,11 +472,22 @@
       "testRejectsExplicitTimelineNumberAndUnknownSampleSemantics",
       "testVariantsMatchReorderedChangedIDsAcrossPeriodsAndShareAudio",
       "testVariantsAcceptExactEquivalentTimescalesAndNoAudio",
-      "testVariantsRejectAmbiguousChangedAndIncompatibleLaddersBeforeEmission",
+      "testVariantsRejectAmbiguousAndIncompatibleLaddersBeforeEmission",
       "testVariantsRejectSubMicrosecondMisalignmentWithoutDoubleRounding",
       "testVariantsShareGeneratedRegistryBudget",
       "testVariantsShareStrictestCredentialHistoryAcrossAllRenditions",
-      "testVariantsChargeAggregateSegmentURIBudgetsAndRepresentationLimit"
+      "testVariantsChargeAggregateSegmentURIBudgetsAndRepresentationLimit",
+      "testChangingLaddersRemoveAndAddQualityByIdentityWithRenamedReorderedIDs",
+      "testChangingSingletonsDeduplicateBothDirectionsAndKeepVideoIdentity",
+      "testChangingPathsUseFloorThenMinimumAndMasterEnvelopes",
+      "testChangingLaddersAcceptEquivalentDeclaredFrameRatesAndSquareSAR",
+      "testChangingSingletonCannotBypassConservativeFamilyValidation",
+      "testChangingLaddersRejectUnequalMissingAndMalformedFrameRates",
+      "testChangingLaddersBoundGlobalUnionBeforeEitherURLClosure",
+      "testLegacySingletonBandwidthChangesRemainAcceptedFor64Periods",
+      "testChangingLaddersPreserveStrictestSharedCredentialHistory",
+      "testChangingLaddersShareInputAndExpandedPlaylistBudgets",
+      "testChangingLaddersRejectDuplicateQualityWithIrrelevantAudioDeclarationsBeforeURLClosures"
     ],
     "apple_dash_task1": "Current bounded pure MPD-to-HLS compiler regressions; no historical fixture identities changed."
   },
