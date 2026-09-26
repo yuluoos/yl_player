@@ -68,6 +68,254 @@ final class YlDashResourceLoaderTests: XCTestCase {
     try XCTUnwrap(String(data: master, encoding: .utf8)?.split(separator: "\n").last.flatMap { URL(string: String($0)) })
   }
 
+  private var changingCatalogMPD: Data {
+    let one = String(data: mpd, encoding: .utf8)!
+      .replacingOccurrences(of: "mediaPresentationDuration=\"PT4S\"", with: "mediaPresentationDuration=\"PT8S\"")
+      .replacingOccurrences(of: "<Period>", with: "<Period duration=\"PT4S\">")
+    let low = one.components(separatedBy: "<Period")[1].components(separatedBy: "</Period>")[0]
+    return Data(one.replacingOccurrences(of: "width=\"320\" height=\"180\"", with: "width=\"640\" height=\"360\"")
+      .replacingOccurrences(of: "</MPD>", with: "<Period" + low + "</Period></MPD>").utf8)
+  }
+
+  @MainActor
+  func testCatalogFollowsMeasuredProgramTimeAndPeriodicPublication() throws {
+    let data = changingCatalogMPD
+    let prepared = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+    let player = DashCatalogClockPlayer()
+    player.measuredTime = CMTime(value: 1_000_000, timescale: 1_000_000)
+    var states: [YlNativeState] = [], trackEvents = 0
+    let backend = YlAvPlayerBackend(playerId: 99,
+      services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player, emit: {
+        if case .state(let state) = $0.event { states.append(state) }
+        if case .tracksChanged = $0.event { trackEvents += 1 }
+      })
+    defer { backend.dispose() }
+    try backend.stagePreparedHls(source: .init(uri: origin.absoluteString, kind: .network, formatHint: .dash), prepared: prepared, resume: false)
+    try backend.activate()
+    XCTAssertEqual(states.last?.videoTracks.map(\.id), ["dash-video-w640-h360-b1000"])
+    XCTAssertEqual(states.last?.videoTracks.map(\.isSelected), [false])
+    let loader = try XCTUnwrap((player.currentItem?.asset as? AVURLAsset)?.resourceLoader.delegate as? YlHlsResourceLoader)
+    let master = read(loader, try loader.encodedAssetURL())
+    _ = read(loader, try child(master.received)) // Reading all later segments cannot advance the catalog.
+    backend.emitState()
+    XCTAssertEqual(states.last?.videoTracks.first?.width, 640)
+    let count = trackEvents
+    player.tick?(.zero); player.tick?(.zero)
+    XCTAssertEqual(trackEvents, count)
+    player.measuredTime = CMTime(value: 5_000_000, timescale: 1_000_000)
+    player.tick?(.zero)
+    XCTAssertEqual(states.last?.positionMs, 5000)
+    XCTAssertEqual(states.last?.videoTracks.map(\.id), ["dash-video-w320-h180-b1000"])
+    XCTAssertEqual(trackEvents, count + 1)
+  }
+
+  func testCatalogLoaderSnapshotSurvivesCancellationWhilePrivateSnapshotClears() throws {
+    let data = changingCatalogMPD
+    let prepared = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+    let loader = try prepared.takeLoader()
+    let snapshot = try XCTUnwrap(loader.videoCatalog)
+    XCTAssertEqual(snapshot.tracks(at: 0).first?.width, 640)
+    XCTAssertEqual(snapshot.tracks(at: 4_000_000).first?.width, 320)
+    loader.cancelAll()
+    XCTAssertNil(loader.videoCatalog)
+    XCTAssertEqual(snapshot.tracks(at: 4_000_000).first?.width, 320)
+  }
+
+  @MainActor
+  func testCatalogSeekUsesActualLandingAndRetiredCompletionCannotPublish() async throws {
+    let data = changingCatalogMPD
+    let prepared = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+    let player = DashCatalogClockPlayer()
+    player.measuredTime = CMTime(value: 1, timescale: 1)
+    var states: [YlNativeState] = []
+    let backend = YlAvPlayerBackend(playerId: 99,
+      services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player,
+      emit: { if case .state(let state) = $0.event { states.append(state) } })
+    defer { backend.dispose() }
+    try backend.stagePreparedHls(source: .init(uri: origin.absoluteString, kind: .network, formatHint: .dash), prepared: prepared, resume: false)
+    try backend.activate(); try backend.pause()
+    try backend.seek(toMs: 5000)
+    backend.emitState()
+    XCTAssertEqual(states.last?.positionMs, 1000)
+    XCTAssertEqual(states.last?.videoTracks.first?.width, 640)
+    player.measuredTime = CMTime(value: 5, timescale: 1)
+    player.seekCompletion?(true)
+    for _ in 0..<12 { await Task.yield() }
+    XCTAssertEqual(states.last?.positionMs, 5000)
+    XCTAssertEqual(states.last?.videoTracks.first?.width, 320)
+    try backend.seek(toMs: 1000)
+    let retired = player.seekCompletion
+    backend.stop()
+    XCTAssertEqual(states.last?.videoTracks.count, 0)
+    retired?(true)
+    for _ in 0..<12 { await Task.yield() }
+    XCTAssertEqual(states.last?.videoTracks.count, 0)
+    XCTAssertEqual(states.last?.status, "idle")
+  }
+
+  @MainActor
+  func testCatalogMetadataIsolationOrdinarySourceAndSavedPositionRestoration() throws {
+    let data = changingCatalogMPD
+    let prepared = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+    let player = DashCatalogClockPlayer()
+    player.measuredTime = CMTime(value: 5, timescale: 1)
+    var states: [YlNativeState] = []
+    let backend = YlAvPlayerBackend(playerId: 99,
+      services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player,
+      emit: { if case .state(let state) = $0.event { states.append(state) } })
+    defer { backend.dispose() }
+    let source = YlAppleSourceDescriptor(uri: origin.absoluteString, kind: .network, formatHint: .dash)
+    try backend.stagePreparedHls(source: source, prepared: prepared, resume: false)
+    try backend.activate()
+    let retiredItem = try XCTUnwrap(player.currentItem)
+    let metadata = [YlNativeTrack(id: "video-0", kind: .video, width: 999, isSelected: true)]
+    backend.applyMetadataVideoTracks(metadata, for: retiredItem); backend.emitState()
+    XCTAssertEqual(states.last?.videoTracks.first?.id, "dash-video-w320-h180-b1000")
+    backend.deactivate()
+    player.measuredTime = .invalid
+    backend.emitState()
+    XCTAssertEqual(states.last?.positionMs, 5000)
+    XCTAssertEqual(states.last?.videoTracks.first?.width, 320)
+    let restored = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+    try backend.stagePreparedHls(source: source, prepared: restored, resume: true)
+    try backend.activate()
+    XCTAssertEqual(states.last?.videoTracks.first?.width, 320)
+    XCTAssertEqual(states.last?.positionMs, 5000)
+    try backend.open(.init(uri: "https://origin.test/new.mp4", kind: .network, formatHint: .mp4))
+    backend.applyMetadataVideoTracks(metadata, for: retiredItem); backend.emitState()
+    XCTAssertEqual(states.last?.videoTracks.count, 0)
+    backend.applyMetadataVideoTracks(metadata, for: try XCTUnwrap(player.currentItem)); backend.emitState()
+    XCTAssertEqual(states.last?.videoTracks.first?.id, "video-0")
+    XCTAssertEqual(states.last?.videoTracks.first?.isSelected, true)
+  }
+
+  @MainActor
+  func testCatalogBackendSubMillisecondBoundaryAndInvalidClockAreSafe() throws {
+    let data = Data(String(data: changingCatalogMPD, encoding: .utf8)!
+      .replacingOccurrences(of: "PT8S", with: "PT8.001S")
+      .replacingOccurrences(of: "PT4S", with: "PT4.000500S")
+      .replacingOccurrences(of: "duration=\"2\"", with: "timescale=\"1000000\" duration=\"4000500\"").utf8)
+    let prepared = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+    let player = DashCatalogClockPlayer()
+    player.measuredTime = CMTime(value: 4_000_499, timescale: 1_000_000)
+    var states: [YlNativeState] = []
+    let backend = YlAvPlayerBackend(playerId: 99,
+      services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player,
+      emit: { if case .state(let state) = $0.event { states.append(state) } })
+    defer { backend.dispose() }
+    try backend.stagePreparedHls(source: .init(uri: origin.absoluteString, kind: .network, formatHint: .dash), prepared: prepared, resume: false)
+    try backend.activate()
+    XCTAssertEqual(states.last?.positionMs, 4000)
+    XCTAssertEqual(states.last?.videoTracks.first?.width, 640)
+    player.measuredTime = CMTime(value: 4_000_500, timescale: 1_000_000)
+    player.tick?(.zero)
+    XCTAssertEqual(states.last?.positionMs, 4000)
+    XCTAssertEqual(states.last?.videoTracks.first?.width, 320)
+    for time in [CMTime.invalid, .indefinite, .positiveInfinity, CMTime(value: -1, timescale: 1)] {
+      player.measuredTime = time; backend.emitState()
+      XCTAssertEqual(states.last?.positionMs, 0)
+      XCTAssertEqual(states.last?.videoTracks.first?.width, 640)
+    }
+    player.measuredTime = CMTime(value: Int64.max, timescale: 1)
+    backend.emitState() // Conversion overflow must never trap.
+    XCTAssertGreaterThanOrEqual(states.last?.positionMs ?? -1, 0)
+    player.measuredTime = CMTime(value: 4_000_500, timescale: 1_000_000)
+    backend.deactivate(); backend.emitState()
+    XCTAssertEqual(states.last?.positionMs, 4000)
+    XCTAssertEqual(states.last?.videoTracks.first?.width, 320, "Saving time must retain the fractional-ms boundary")
+  }
+
+  @MainActor
+  func testCatalogRetainedReplacementRestoreSeeksExactFractionalBoundary() throws {
+    try assertCatalogRestoreLanding(retained: true)
+  }
+
+  @MainActor
+  func testCatalogStagedLoaderRestoreSeeksExactFractionalBoundary() throws {
+    try assertCatalogRestoreLanding(retained: false)
+  }
+
+  @MainActor
+  private func assertCatalogRestoreLanding(retained: Bool) throws {
+    let xml = String(data: mpd, encoding: .utf8)!
+    let high = xml.replacingOccurrences(of: "mediaPresentationDuration=\"PT4S\"", with: "mediaPresentationDuration=\"PT8.001S\"")
+      .replacingOccurrences(of: "<Period>", with: "<Period duration=\"PT6.500500S\">")
+      .replacingOccurrences(of: "width=\"320\" height=\"180\"", with: "width=\"640\" height=\"360\"")
+      .replacingOccurrences(of: "duration=\"2\"", with: "timescale=\"1000000\" duration=\"6500500\"")
+    let low = xml.components(separatedBy: "<Period>")[1].components(separatedBy: "</Period>")[0]
+      .replacingOccurrences(of: "duration=\"2\"", with: "timescale=\"1000000\" duration=\"1500500\"")
+    let data = Data(high.replacingOccurrences(of: "</MPD>", with: "<Period duration=\"PT1.500500S\">" + low + "</Period></MPD>").utf8)
+    let prepared = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+    let player = DashCatalogClockPlayer()
+    let boundary = CMTime(value: 6_500_500, timescale: 1_000_000)
+    player.measuredTime = boundary
+    player.timelineDuration = CMTime(value: 8_001_000, timescale: 1_000_000)
+    player.timelineRanges = [NSValue(timeRange: CMTimeRange(start: .zero, duration: player.timelineDuration!))]
+    var states: [YlNativeState] = []
+    let backend = YlAvPlayerBackend(playerId: 99,
+      // The iOS compatibility route retains the installed asset for rollback.
+      services: .init(platform: retained ? .ios : .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player,
+      emit: { if case .state(let state) = $0.event { states.append(state) } })
+    defer { backend.dispose() }
+    let source = YlAppleSourceDescriptor(uri: origin.absoluteString, kind: .network, formatHint: .dash)
+    try backend.stagePreparedHls(source: source, prepared: prepared, resume: false)
+    try backend.activate()
+    let originalAsset = player.currentItem?.asset
+    XCTAssertEqual(player.currentItem?.duration.isNumeric, true)
+    XCTAssertEqual(player.currentItem?.seekableTimeRanges.count, 1)
+    XCTAssertEqual(states.last?.videoTracks.first?.width, 320)
+    if retained { backend.quiesceForReplacement() } else { backend.deactivate() }
+    XCTAssertEqual(states.last?.positionMs, 6500)
+    XCTAssertEqual(states.last?.videoTracks.first?.width, 320)
+    if !retained {
+      let restored = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+      try backend.stagePreparedHls(source: source, prepared: restored, resume: true)
+    }
+    player.measuredTime = .invalid
+    player.requestedSeek = nil
+    player.landOnSeek = true
+    try backend.activate()
+    XCTAssertEqual(player.currentItem?.asset === originalAsset, retained)
+    let requested = try XCTUnwrap(player.requestedSeek)
+    XCTAssertEqual(CMTimeCompare(requested, boundary), 0, "Restoration must not cross back into the previous Period")
+    XCTAssertEqual(CMTimeCompare(player.measuredTime, boundary), 0)
+    backend.emitState()
+    XCTAssertEqual(states.last?.positionMs, 6500, "Public timeline remains milliseconds")
+    XCTAssertEqual(states.last?.videoTracks.first?.id, "dash-video-w320-h180-b1000")
+    XCTAssertEqual(states.last?.videoTracks.first?.isSelected, false)
+  }
+
+  @MainActor
+  func testLiveEdgeRestorationPreservesExplicitAndIndefiniteLiveBehavior() throws {
+    for explicitLive in [false, true] {
+      let player = DashCatalogClockPlayer()
+      player.measuredTime = CMTime(value: 6_500_500, timescale: 1_000_000)
+      let end = CMTime(value: 8_001_000, timescale: 1_000_000)
+      player.timelineDuration = explicitLive ? end : .indefinite
+      player.timelineRanges = [NSValue(timeRange: CMTimeRange(start: .zero, duration: end))]
+      let backend = YlAvPlayerBackend(playerId: 99,
+        services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+        configuration: .init(map: ["audioPolicy": "appManaged"]), player: player, emit: { _ in })
+      defer { backend.dispose() }
+      try backend.open(.init(uri: "https://origin.test/live.m3u8", kind: .network, formatHint: .hls,
+        intent: explicitLive ? .live : .automatic))
+      backend.deactivate()
+      player.measuredTime = .invalid
+      player.requestedSeek = nil
+      player.landOnSeek = true
+      try backend.activate()
+      XCTAssertNil(player.requestedSeek, "Live near-edge restore must retain its deferred edge seek")
+      try backend.seekToLiveEdge()
+      XCTAssertEqual(CMTimeCompare(try XCTUnwrap(player.requestedSeek), end), 0)
+      XCTAssertEqual(CMTimeCompare(player.measuredTime, end), 0)
+    }
+  }
+
   @MainActor
   func testLoadCapsDropActualOversizedBufferBeforeDirectReturnAndPublication() async throws {
     let data = mpd
@@ -710,21 +958,29 @@ final class YlDashResourceLoaderTests: XCTestCase {
     let server = try DashHTTPServer(); defer { server.close() }
     server.handler = { request in
       if request.path == "/held.mpd" { held.fulfill(); _ = release.wait(timeout: .now() + 6) }
-      return (200, [:], data)
+      let response = request.path == "/held.mpd" ? Data(String(data: data, encoding: .utf8)!
+        .replacingOccurrences(of: "width=\"320\" height=\"180\"", with: "width=\"640\" height=\"360\"").utf8) : data
+      return (200, [:], response)
     }
     let fixture = AppleHostFixture(); defer { fixture.host.close() }
+    try fixture.host.attach()
     let pending = Task { try await fixture.host.load(request: AppleHostFixture.request("held", url: server.url("/held.mpd").absoluteString, format: .dash)) }
     await fulfillment(of: [held], timeout: 3)
     try await fixture.host.stop()
     do { _ = try await pending.value; XCTFail("Stopped MPD committed") }
     catch let error as PigeonError { XCTAssertEqual(error.code, "network.cancelled") }
     XCTAssertNil(fixture.host.sessionId)
+    await fixture.settle()
+    XCTAssertEqual(fixture.callbacks.states.last?.videoTracks.count, 0)
     let fresh = try await fixture.host.load(request: AppleHostFixture.request("fresh", url: server.url("/fresh.mpd").absoluteString, format: .dash))
     let current = fixture.av.currentItem
     release.signal()
     try await Task.sleep(nanoseconds: 100_000_000)
     XCTAssertEqual(fixture.host.sessionId, fresh.sessionId)
     XCTAssertTrue(fixture.av.currentItem === current)
+    await fixture.settle()
+    XCTAssertEqual(fixture.callbacks.states.last?.videoTracks.map(\.id), ["dash-video-w320-h180-b1000"])
+    XCTAssertFalse(fixture.callbacks.states.contains { $0.videoTracks.contains { $0.width == 640 } })
   }
 
   @MainActor
@@ -737,7 +993,10 @@ final class YlDashResourceLoaderTests: XCTestCase {
       return (404, [:], Data())
     }
     let fixture = AppleHostFixture(); defer { fixture.host.close() }
+    try fixture.host.attach()
     let accepted = try await fixture.host.load(request: AppleHostFixture.request("dash", url: server.url("/good.mpd").absoluteString, format: .dash))
+    await fixture.settle()
+    XCTAssertEqual(fixture.callbacks.states.last?.videoTracks.map(\.id), ["dash-video-w320-h180-b1000"])
     let item = try XCTUnwrap(fixture.av.currentItem)
     let originalPrivateURL = try XCTUnwrap((item.asset as? AVURLAsset)?.url)
     XCTAssertNotEqual(try YlHlsURLCodec.decode(originalPrivateURL), server.url("/good.mpd"))
@@ -745,6 +1004,8 @@ final class YlDashResourceLoaderTests: XCTestCase {
     catch let error as PigeonError { XCTAssertEqual(error.code, "container.unsupported") }
     XCTAssertEqual(fixture.host.sessionId, accepted.sessionId)
     XCTAssertTrue(fixture.av.currentItem === item)
+    await fixture.settle()
+    XCTAssertEqual(fixture.callbacks.states.last?.videoTracks.map(\.id), ["dash-video-w320-h180-b1000"])
     fixture.host.suspend(); fixture.host.resume()
     try await AppleHostCharacterizations.waitFor { fixture.av.currentItem != nil && fixture.av.currentItem !== item }
     let restoredURL = try XCTUnwrap((fixture.av.currentItem?.asset as? AVURLAsset)?.url)
@@ -752,7 +1013,11 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertEqual(try YlHlsURLCodec.resourceKind(restoredURL), .manifest)
     XCTAssertEqual(fixture.host.sessionId, accepted.sessionId)
     XCTAssertEqual(server.requests.filter { $0.path == "/good.mpd" }.count, 2)
+    await fixture.settle()
+    XCTAssertEqual(fixture.callbacks.states.last?.videoTracks.map(\.id), ["dash-video-w320-h180-b1000"])
     try await fixture.host.stop()
+    await fixture.settle()
+    XCTAssertEqual(fixture.callbacks.states.last?.videoTracks.count, 0)
     XCTAssertNil(fixture.av.currentItem); XCTAssertNil(fixture.host.sessionId)
   }
 
@@ -884,4 +1149,48 @@ private final class DashPassiveVTSession: YlVTSession {
   }
   func flush() {}
   func invalidate() {}
+}
+
+private final class DashCatalogClockPlayer: AVPlayer {
+  var measuredTime = CMTime.zero
+  var timelineDuration: CMTime?
+  var timelineRanges: [NSValue] = []
+  private var timelineItem: DashCatalogTimelineItem?
+  override var currentItem: AVPlayerItem? { timelineItem ?? super.currentItem }
+  override func replaceCurrentItem(with item: AVPlayerItem?) {
+    timelineItem = item.flatMap { item in
+      timelineDuration.map { DashCatalogTimelineItem(asset: item.asset, duration: $0, ranges: timelineRanges) }
+    }
+    super.replaceCurrentItem(with: item)
+  }
+  var tick: ((CMTime) -> Void)?
+  var seekCompletion: ((Bool) -> Void)?
+  var requestedSeek: CMTime?
+  var landOnSeek = false
+  override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) {
+    requestedSeek = time
+    if landOnSeek { measuredTime = time }
+  }
+  override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
+    requestedSeek = time
+    if landOnSeek { measuredTime = time }
+    seekCompletion = completionHandler
+  }
+  override func currentTime() -> CMTime { measuredTime }
+  override func addPeriodicTimeObserver(forInterval interval: CMTime, queue: DispatchQueue?, using block: @escaping (CMTime) -> Void) -> Any {
+    tick = block
+    return NSObject()
+  }
+  override func removeTimeObserver(_ observer: Any) {}
+}
+
+private final class DashCatalogTimelineItem: AVPlayerItem, @unchecked Sendable {
+  private let measuredDuration: CMTime
+  private let measuredRanges: [NSValue]
+  init(asset: AVAsset, duration: CMTime, ranges: [NSValue]) {
+    measuredDuration = duration; measuredRanges = ranges
+    super.init(asset: asset, automaticallyLoadedAssetKeys: nil)
+  }
+  override var duration: CMTime { measuredDuration }
+  override var seekableTimeRanges: [NSValue] { measuredRanges }
 }

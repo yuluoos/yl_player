@@ -29,6 +29,66 @@ final class YlDashHlsCompilerTests: XCTestCase {
     }
     XCTAssertEqual(emitted, 0, "Unsupported MPD must fail before media emission", file: file, line: line)
   }
+  func testCatalogStableNumericIdentitySortingAndVideoOnlyBitrate() throws {
+    let low = "dash-video-w320-h180-b350000", high = "dash-video-w640-h360-b700000"
+    let xml = mpd(ladder(rendition("secret-high", width: 640, bandwidth: 700000) + rendition("private-low"), audio: true)
+      + ladder(rendition("reordered-low") + rendition("renamed-high", width: 640, bandwidth: 700000), start: 4, audio: true), duration: 8)
+    let catalog = try compile(xml).videoCatalog
+    for time: Int64 in [-1, 0, 3_999_999, 4_000_000, 8_000_000, Int64.max] {
+      let tracks = catalog.tracks(at: time)
+      XCTAssertEqual(tracks.map(\.id), [low, high])
+      XCTAssertEqual(tracks.map(\.bitrate), [350000, 700000])
+      XCTAssertEqual(tracks.map(\.width), [320, 640])
+      XCTAssertEqual(tracks.map(\.height), [180, 360])
+      XCTAssertEqual(tracks.map(\.codec), ["avc1.42c01e", "avc1.42c01e"])
+      XCTAssertTrue(tracks.allSatisfy { !$0.isSelected && $0.label == nil && $0.language == nil })
+    }
+  }
+
+  func testCatalogTracksDisappearAndReappearAtExactPeriodBoundaries() throws {
+    let high = rendition("first", width: 640, bandwidth: 700000)
+    let catalog = try compile(mpd(ladder(high) + ladder(rendition("low"), start: 4)
+      + ladder(rendition("again", width: 640, bandwidth: 700000), start: 8), duration: 12)).videoCatalog
+    for time: Int64 in [Int64.min, 0, 3_999_999, 8_000_000, 12_000_000, Int64.max] {
+      XCTAssertEqual(catalog.tracks(at: time).map(\.id), ["dash-video-w640-h360-b700000"])
+    }
+    for time: Int64 in [4_000_000, 7_999_999] {
+      XCTAssertEqual(catalog.tracks(at: time).map(\.id), ["dash-video-w320-h180-b350000"])
+    }
+  }
+
+  func testCatalogPreservesSubMillisecondBoundsThroughCapProjection() throws {
+    let segment = "<SegmentTemplate timescale=\"1000000\" duration=\"4000500\" initialization=\"init.mp4\" media=\"$Number$.m4s\"/>"
+    let one = ladder(rendition("first", bandwidth: 350000, template: segment))
+      .replacingOccurrences(of: "duration=\"PT4S\"", with: "duration=\"PT4.000500S\"")
+    let two = ladder(rendition("second", bandwidth: 340000, template: segment), start: 4)
+      .replacingOccurrences(of: "start=\"PT4S\"", with: "start=\"PT4.000500S\"")
+      .replacingOccurrences(of: "duration=\"PT4S\"", with: "duration=\"PT4.000500S\"")
+    let xml = "<MPD type=\"static\" mediaPresentationDuration=\"PT8.001S\">" + one + two + "</MPD>"
+    for caps in [YlAppleVideoConstraints.unconstrained, .init(maxWidth: 320, maxHeight: 180, maxBitrate: 350000)] {
+      let catalog = try YlDashHlsCompiler.compile(data: Data(xml.utf8), finalManifestURL: source,
+        sourceURL: source, credentialsStripped: false, videoConstraints: caps,
+        manifestURL: { URL(string: "https://virtual.test/\($0).m3u8")! }, mediaURL: { url, _ in url }).videoCatalog
+      XCTAssertEqual(catalog.tracks(at: 4_000_499).first?.bitrate, 350000)
+      XCTAssertEqual(catalog.tracks(at: 4_000_500).first?.bitrate, 340000)
+    }
+  }
+
+  func testCatalogDeduplicatesLegacyQualityWithoutChangingCompiledPaths() throws {
+    let first = rendition("a"), second = rendition("b", extra: "audioSamplingRate=\"1\"")
+    let result = try compile(mpd(ladder(first + second)))
+    XCTAssertEqual(result.videoCatalog.tracks(at: 0).map(\.id), ["dash-video-w320-h180-b350000"])
+    XCTAssertEqual(result.manifests.count, 3, "Display deduplication must preserve both admitted media paths")
+  }
+
+  func testCatalogPreservesLegacyVaryingBitratesAcross64Periods() throws {
+    let xml = mpd((0..<64).map { ladder(rendition("v\($0)", bandwidth: 350000 + $0), start: $0 * 4) }.joined(), duration: 256)
+    let catalog = try compile(xml).videoCatalog
+    for index in 0..<64 {
+      XCTAssertEqual(catalog.tracks(at: Int64(index) * 4_000_000).first?.bitrate, 350000 + index)
+    }
+  }
+
   func testSinglePeriodProducesMapDurationsAndRewrittenManifestReference() throws {
     var resources: [String] = []
     let p = try compile(mpd(period()), seen: { resources.append($0.absoluteString); XCTAssertFalse($1) })
@@ -452,6 +512,9 @@ final class YlDashHlsCompilerTests: XCTestCase {
       let result = try YlDashHlsCompiler.compile(data: Data(xml.utf8), finalManifestURL: source,
         sourceURL: source, credentialsStripped: false, videoConstraints: cap,
         manifestURL: { URL(string: "https://virtual.test/\($0).m3u8")! }, mediaURL: { url, _ in url })
+      for time: Int64 in [0, 3_999_999, 4_000_000, 8_000_000] {
+        XCTAssertEqual(result.videoCatalog.tracks(at: time).map(\.id), ["dash-video-w320-h180-b350000"])
+      }
       let paths = try changingPaths(result)
       XCTAssertEqual(paths.count, 1)
       for path in paths { assertPath(path, ["low", "new-low"]); XCTAssertFalse(path.contains("high")) }

@@ -276,6 +276,28 @@ accepted session playing. Normal HLS/MP4 video preference behavior is unchanged.
 See the [Load caps report](superpowers/reports/2026-09-25-apple-dash-load-caps.md)
 for the exact native and public playback evidence.
 
+## Apple DASH current-Period video catalog
+
+For an accepted Apple DASH Load, `state.videoTracks` lists the declared video
+Representations available in the **current playback Period**, after any Load
+video cap has filtered them. Each entry reports the MPD's declared width,
+height, video bandwidth, and codec. It is a catalog of available qualities,
+not evidence of which rendition AVPlayer is decoding. All DASH video entries
+have `isSelected == false`; `state.videoSelection` remains automatic with the
+initial reason. The decoded `videoGeometry` is the separate observation of the
+displayed frame.
+
+IDs use `dash-video-w{width}-h{height}-b{bandwidth}`. They remain stable when
+Representation IDs or XML ordering change between Periods, and the catalog is
+sorted by width, height, then video bandwidth. At a Period boundary it follows
+the measured program position; seeking back or forward restores the catalog
+for the landed Period. A failed candidate Load preserves the accepted session's
+catalog, and Stop clears it. This catalog does not implement fixed selection,
+runtime DASH cap changes, adaptive fallback policy, or a quantitative ABR
+guarantee. The existing clear static AVC/AAC Apple DASH subset and its admission
+limits still apply. See the [catalog stage report](superpowers/reports/2026-09-25-apple-dash-track-catalog.md)
+for separate native and public evidence and the tested device scope.
+
 ## Optional JavaScript source resolution
 
 `yl_player_source_resolver` is a separate development package; installing the

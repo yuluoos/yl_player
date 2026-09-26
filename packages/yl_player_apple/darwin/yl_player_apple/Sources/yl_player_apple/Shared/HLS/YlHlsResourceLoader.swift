@@ -254,6 +254,10 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     session = sessionFactory(sessionConfiguration, self, delegateQueue)
   }
 
+  var videoCatalog: YlDashVideoCatalog? {
+    stateLock.withLock { dashPresentation?.videoCatalog }
+  }
+
   func encodedAssetURL() throws -> URL {
     let root = try stateLock.withLock { () throws -> URL in
       guard !cancelled else { throw Self.cancelledError() }

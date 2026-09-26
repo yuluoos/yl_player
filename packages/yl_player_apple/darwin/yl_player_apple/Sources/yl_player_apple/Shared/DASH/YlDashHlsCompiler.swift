@@ -5,6 +5,40 @@ struct YlDashHlsPresentation {
   let manifests: [URL: Data]
   let strippedResources: Set<String>
   let durationUs: Int64
+  let videoCatalog: YlDashVideoCatalog
+}
+
+/// Declared available qualities, not AVPlayer's current adaptive selection.
+struct YlDashVideoCatalog {
+  private struct Period {
+    let startUs: Int64
+    let endUs: Int64
+    let tracks: [YlNativeTrack]
+  }
+  private let periods: [Period]
+
+  init(periods: [YlDashPeriod]) {
+    self.periods = periods.map { period in
+      var identities = Set<String>()
+      let tracks = period.videos.sorted {
+        ($0.width, $0.height, $0.bandwidth) < ($1.width, $1.height, $1.bandwidth)
+      }.compactMap { video -> YlNativeTrack? in
+        let id = "dash-video-w\(video.width)-h\(video.height)-b\(video.bandwidth)"
+        // Legacy admission can include duplicate display qualities; keep media
+        // paths untouched and deduplicate only this bounded public projection.
+        guard identities.insert(id).inserted else { return nil }
+        return YlNativeTrack(id: id, kind: .video, codec: video.codec,
+          bitrate: Int(video.bandwidth), width: Int(video.width), height: Int(video.height))
+      }
+      return Period(startUs: period.startUs, endUs: period.endUs, tracks: tracks)
+    }
+  }
+
+  func tracks(at positionUs: Int64) -> [YlNativeTrack] {
+    let position = max(0, positionUs)
+    return periods.first { position >= $0.startUs && position < $0.endUs }?.tracks
+      ?? periods.last?.tracks ?? []
+  }
 }
 
 enum YlDashHlsCompiler {
@@ -27,7 +61,7 @@ enum YlDashHlsCompiler {
               && (videoConstraints.maxBitrate.map { track.bandwidth <= Int64($0) } ?? true)
           }
           guard !videos.isEmpty else { throw ProjectionError.noEligibleVideo }
-          return YlDashPeriod(videos: videos, audio: period.audio)
+          return YlDashPeriod(startUs: period.startUs, endUs: period.endUs, videos: videos, audio: period.audio)
         }
       } else { periods = originalPeriods }
       let videoPaths = try YlDashVideoPaths.plan(periods)
@@ -100,7 +134,7 @@ enum YlDashHlsCompiler {
       }
       try store("master", master)
       return YlDashHlsPresentation(rootURL: identities["master"]!, manifests: registry,
-        strippedResources: document.stripped, durationUs: duration)
+        strippedResources: document.stripped, durationUs: duration, videoCatalog: YlDashVideoCatalog(periods: periods))
     } catch ProjectionError.noEligibleVideo {
       throw YlAppleVideoConstraints.unsupportedOutput
     } catch {

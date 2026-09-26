@@ -175,6 +175,8 @@ struct YlDashTrack {
   }
 }
 struct YlDashPeriod {
+  let startUs: Int64
+  let endUs: Int64
   let videos: [YlDashTrack]
   let audio: YlDashTrack?
 }
@@ -271,7 +273,7 @@ final class YlDashDocument {
         guard (audio == nil) == (previous.audio == nil),
               audio == nil || audio!.matches(previous.audio!) else { throw YlDashBounds.unsupported }
       }
-      result.append(YlDashPeriod(videos: videos, audio: audio))
+      result.append(YlDashPeriod(startUs: start, endUs: end, videos: videos, audio: audio))
     }
     guard total == nil || total == end else { throw YlDashBounds.unsupported }
     return (result, end)

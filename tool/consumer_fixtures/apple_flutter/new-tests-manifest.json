@@ -448,8 +448,13 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashHlsCompilerTests.swift",
-    "sha256": "71edc0662068d56e937e85d5252879e7a2d93f7227172487cd75dca212b0a223",
+    "sha256": "168839752223070d9af0ab5efb7c4981d1d91e2676681e45b789b9835029c613",
     "methods": [
+      "testCatalogStableNumericIdentitySortingAndVideoOnlyBitrate",
+      "testCatalogTracksDisappearAndReappearAtExactPeriodBoundaries",
+      "testCatalogPreservesSubMillisecondBoundsThroughCapProjection",
+      "testCatalogDeduplicatesLegacyQualityWithoutChangingCompiledPaths",
+      "testCatalogPreservesLegacyVaryingBitratesAcross64Periods",
       "testSinglePeriodProducesMapDurationsAndRewrittenManifestReference",
       "testTwoPeriodsHaveOneDiscontinuityAndDistinctInitialization",
       "testTimelineTimeAndFiniteNegativeRepeat",
@@ -497,8 +502,16 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift",
-    "sha256": "80e66d42a20555e0c2c1d5b2b438b96713d83d5c6bbc331ae047067ed7ce4487",
+    "sha256": "8d6db346353b6d5ee6c057d495865ba1eb0fc52d044c9785f0fa394163016baf",
     "methods": [
+      "testCatalogFollowsMeasuredProgramTimeAndPeriodicPublication",
+      "testCatalogLoaderSnapshotSurvivesCancellationWhilePrivateSnapshotClears",
+      "testCatalogSeekUsesActualLandingAndRetiredCompletionCannotPublish",
+      "testCatalogMetadataIsolationOrdinarySourceAndSavedPositionRestoration",
+      "testCatalogBackendSubMillisecondBoundaryAndInvalidClockAreSafe",
+      "testCatalogRetainedReplacementRestoreSeeksExactFractionalBoundary",
+      "testCatalogStagedLoaderRestoreSeeksExactFractionalBoundary",
+      "testLiveEdgeRestorationPreservesExplicitAndIndefiniteLiveBehavior",
       "testLoadCapsDropActualOversizedBufferBeforeDirectReturnAndPublication",
       "testLoadCapsRuntimeMutationFailsBeforeAcceptedIntentAndSurvivesRestore",
       "testLoadCapsLoaderRejectsIneligibleCandidateBeforePublishingAssetAndRedactsErrors",
