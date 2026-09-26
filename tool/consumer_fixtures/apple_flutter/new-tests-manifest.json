@@ -448,7 +448,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashHlsCompilerTests.swift",
-    "sha256": "97e8601131b6bed2bc6f4237d6cfa16b1d4a68f447d886fc202d91d4e87dba6a",
+    "sha256": "71edc0662068d56e937e85d5252879e7a2d93f7227172487cd75dca212b0a223",
     "methods": [
       "testSinglePeriodProducesMapDurationsAndRewrittenManifestReference",
       "testTwoPeriodsHaveOneDiscontinuityAndDistinctInitialization",
@@ -487,14 +487,27 @@
       "testLegacySingletonBandwidthChangesRemainAcceptedFor64Periods",
       "testChangingLaddersPreserveStrictestSharedCredentialHistory",
       "testChangingLaddersShareInputAndExpandedPlaylistBudgets",
-      "testChangingLaddersRejectDuplicateQualityWithIrrelevantAudioDeclarationsBeforeURLClosures"
+      "testChangingLaddersRejectDuplicateQualityWithIrrelevantAudioDeclarationsBeforeURLClosures",
+      "testLoadCapsIntersectAtInclusiveVideoBandwidthBoundaryAcrossAllPeriods",
+      "testLoadCapsRejectEmptyPeriodAndOriginalUnsupportedFamilyBeforeAnyEmission",
+      "testLoadCapsRetainCredentialHistoryAndSanitizeInjectedSemanticErrors",
+      "testLoadCapsConstrainedLegacyCannotBypassUnionOrOriginalInputBudgets"
     ],
     "apple_dash_task1": "Current bounded pure MPD-to-HLS compiler regressions; no historical fixture identities changed."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift",
-    "sha256": "4cf6acc17e0647bd0170547285a217a965ce5356975c776a51029d41ceacc296",
+    "sha256": "80e66d42a20555e0c2c1d5b2b438b96713d83d5c6bbc331ae047067ed7ce4487",
     "methods": [
+      "testLoadCapsDropActualOversizedBufferBeforeDirectReturnAndPublication",
+      "testLoadCapsRuntimeMutationFailsBeforeAcceptedIntentAndSurvivesRestore",
+      "testLoadCapsLoaderRejectsIneligibleCandidateBeforePublishingAssetAndRedactsErrors",
+      "testLoadCapsPixelAspectRatioRejectsAndRetiredFailureCannotPoisonNewItem",
+      "testLoadCapsExactPixelBoundaryPublishesAndBackendRejectsChangedTuple",
+      "testLoadCapsLegacyNilOptionsCaptureOnMainAndPendingRestorationRejectsChanges",
+      "testLoadCapsLateMetadataCannotRotatePublishedPixelsBeyondCapsOrErasePAR",
+      "testLoadCapsRetainedDashCannotVetoLegacyMp4AfterFallbackChangesAcceptedTuple",
+      "testHeaderedHlsRestoreKeepsLatestPreferencesWhileNewLoadKeepsCapturedTuple",
       "testProxyCancellationCannotInvalidateSessionDuringTaskAdmission",
       "testLoaderCancellationCannotInvalidateSessionDuringTaskAdmission",
       "testPreflightCreatesPrivateMasterAndProxiesAllMediaWithoutCredentials",

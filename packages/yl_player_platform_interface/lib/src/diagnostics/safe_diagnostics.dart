@@ -25,6 +25,10 @@ abstract final class YlSafeDiagnostics {
       'The RTMP track configuration changed. Reload the stream to continue playback.',
     YlFailureCodes.containerUnsupported =>
       'The media container is not supported. Try a compatible version of the media.',
+    YlFailureCodes.videoConstraintsReloadRequired =>
+      'Reload the DASH source with new video constraints to change or clear the limits.',
+    YlFailureCodes.qualityConstraintUnsupported =>
+      'The source cannot satisfy the requested video constraints. Choose compatible limits or another source.',
     YlFailureCodes.policyUnsupported =>
       'The requested playback policy is unsupported. Check the playback configuration.',
     _ => _fallbackMessage,

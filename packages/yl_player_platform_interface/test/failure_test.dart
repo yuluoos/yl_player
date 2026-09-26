@@ -2,6 +2,24 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 void main() {
+  test('DASH cap failures provide actionable fixed public guidance', () {
+    expect(
+      YlSafeDiagnostics.messageForCode(
+        'policy.video_constraints_reload_required',
+      ).toLowerCase(),
+      contains('reload'),
+    );
+    expect(
+      YlSafeDiagnostics.messageForCode(
+        'decoder.quality_constraint_unsupported',
+      ).toLowerCase(),
+      contains('constraints'),
+    );
+    expect(
+      YlSafeDiagnostics.messageForCode('https://private.test?token=secret'),
+      'Playback operation failed.',
+    );
+  });
   test('session ids and failures use structural equality', () {
     const a = YlPlaybackSessionId('native-7');
     const b = YlPlaybackSessionId('native-7');

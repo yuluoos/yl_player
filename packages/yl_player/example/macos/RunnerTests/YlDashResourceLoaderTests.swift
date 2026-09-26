@@ -68,6 +68,314 @@ final class YlDashResourceLoaderTests: XCTestCase {
     try XCTUnwrap(String(data: master, encoding: .utf8)?.split(separator: "\n").last.flatMap { URL(string: String($0)) })
   }
 
+  @MainActor
+  func testLoadCapsDropActualOversizedBufferBeforeDirectReturnAndPublication() async throws {
+    let data = mpd
+    let prepared = try YlPreparedHlsAsset(originURL: origin, isDash: true,
+      videoConstraints: .init(maxWidth: 320, maxHeight: 180, maxBitrate: nil), headers: [:],
+      configuration: .init(map: [:]), cancellationToken: .init(),
+      sessionConfiguration: DashLoaderProtocol.configuration { $0.respond(data) })
+    let output = AppleTestTexture()
+    let pixels = DashPixelOutput(width: 640, height: 360)
+    var tick: (() -> Void)?
+    var failures: [NativePlayerError] = [], firstFrames = 0
+    let backend = YlAvPlayerBackend(playerId: 99,
+      services: .init(platform: .current, textureOutput: output,
+        makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), makeVideoOutput: { _ in pixels }, emit: {
+        if case .failure(let error) = $0.event { failures.append(error); XCTAssertTrue(Thread.isMainThread) }
+        if case .firstFrame = $0.event { firstFrames += 1 }
+      })
+    defer { backend.dispose() }
+    let source = YlAppleSourceDescriptor(uri: origin.absoluteString, kind: .network, formatHint: .dash)
+    try backend.stagePreparedHls(source: source, prepared: prepared, resume: false)
+    try backend.activate()
+    XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue())
+    tick?()
+    for _ in 0..<12 { await Task.yield() }
+    XCTAssertEqual(output.frames.count, 0)
+    XCTAssertEqual(firstFrames, 0)
+    XCTAssertEqual(failures.map(\.code), ["decoder.quality_constraint_unsupported"])
+    XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue())
+  }
+
+  @MainActor
+  func testLoadCapsRuntimeMutationFailsBeforeAcceptedIntentAndSurvivesRestore() async throws {
+    let data = mpd
+    let server = try DashHTTPServer(); defer { server.close() }
+    server.handler = { _ in (200, [:], data) }
+    let fixture = AppleHostFixture(); defer { fixture.host.close() }
+    let loaded = try await fixture.host.load(request: AppleHostFixture.request("caps", url: server.url("/movie.mpd").absoluteString, format: .dash, width: 320))
+    try fixture.host.setVideoConstraints(command: .init(sessionId: loaded.sessionId, constraints: .init(maxWidth: 320)))
+    for constraints in [AppleVideoConstraintsMessage(maxWidth: 160), .init()] {
+      XCTAssertThrowsError(try fixture.host.setVideoConstraints(command: .init(sessionId: loaded.sessionId, constraints: constraints))) { error in
+        XCTAssertEqual((error as? PigeonError)?.code, "policy.video_constraints_reload_required")
+      }
+      XCTAssertEqual(fixture.host.acceptedVideoConstraints.maxWidth, 320)
+    }
+    let old = fixture.av.currentItem
+    do {
+      _ = try await fixture.host.load(request: AppleHostFixture.request("empty-candidate", url: server.url("/movie.mpd").absoluteString, format: .dash, width: 319))
+      XCTFail("An ineligible replacement must not commit")
+    } catch let error as PigeonError {
+      XCTAssertEqual(error.code, "decoder.quality_constraint_unsupported")
+    }
+    XCTAssertTrue(fixture.av.currentItem === old)
+    XCTAssertEqual(fixture.host.sessionId, loaded.sessionId)
+    XCTAssertEqual(fixture.host.acceptedVideoConstraints.maxWidth, 320)
+    fixture.host.suspend()
+    XCTAssertThrowsError(try fixture.host.setVideoConstraints(command: .init(sessionId: loaded.sessionId, constraints: .init())))
+    fixture.host.resume()
+    try await AppleHostCharacterizations.waitFor { fixture.av.currentItem != nil && fixture.av.currentItem !== old }
+    let restored = try XCTUnwrap((fixture.av.currentItem?.asset as? AVURLAsset)?.resourceLoader.delegate as? YlHlsResourceLoader)
+    XCTAssertEqual(restored.videoConstraints.maxWidth, 320)
+    let next = try await fixture.host.load(request: AppleHostFixture.request("new", url: server.url("/movie.mpd").absoluteString, format: .dash))
+    XCTAssertNotEqual(next.sessionId, loaded.sessionId)
+    XCTAssertNil(fixture.host.acceptedVideoConstraints.maxWidth)
+    try await fixture.host.stop()
+    XCTAssertNil(fixture.host.acceptedVideoConstraints.maxWidth)
+  }
+
+  func testLoadCapsLoaderRejectsIneligibleCandidateBeforePublishingAssetAndRedactsErrors() throws {
+    let data = mpd
+    XCTAssertThrowsError(try YlPreparedHlsAsset(originURL: origin, isDash: true,
+      videoConstraints: .init(maxWidth: nil, maxHeight: 179, maxBitrate: nil), headers: ["Authorization": "secret"],
+      configuration: .init(map: [:]), cancellationToken: .init(),
+      sessionConfiguration: DashLoaderProtocol.configuration { $0.respond(data) })) { error in
+        let safe = YlAppleSafeDiagnostics.failure(error, scope: .command)
+        XCTAssertEqual(safe.code, "decoder.quality_constraint_unsupported")
+        XCTAssertTrue(safe.message.contains("constraints"))
+        XCTAssertFalse(safe.message.contains("private")); XCTAssertFalse(safe.message.contains("secret"))
+      }
+    XCTAssertEqual(DashLoaderProtocol.captured.count, 1)
+    let safe = YlAppleSafeDiagnostics.failure(NativePlayerError(category: "unsupported",
+      code: "policy.video_constraints_reload_required", message: "https://private.test?token=secret"), scope: .command)
+    XCTAssertEqual(safe.code, "policy.video_constraints_reload_required")
+    XCTAssertTrue(safe.message.contains("Reload")); XCTAssertFalse(safe.retryable)
+    XCTAssertFalse(safe.message.contains("private")); XCTAssertFalse(safe.message.contains("secret"))
+  }
+
+  @MainActor
+  func testLoadCapsPixelAspectRatioRejectsAndRetiredFailureCannotPoisonNewItem() async throws {
+    let data = mpd
+    let prepared = try YlPreparedHlsAsset(originURL: origin, isDash: true,
+      videoConstraints: .init(maxWidth: 320, maxHeight: 180, maxBitrate: nil), headers: [:],
+      configuration: .init(map: [:]), cancellationToken: .init(),
+      sessionConfiguration: DashLoaderProtocol.configuration { $0.respond(data) })
+    let pixels = DashPixelOutput(width: 320, height: 180)
+    CVBufferSetAttachment(pixels.buffer, kCVImageBufferPixelAspectRatioKey,
+      [kCVImageBufferPixelAspectRatioHorizontalSpacingKey: 2, kCVImageBufferPixelAspectRatioVerticalSpacingKey: 1] as CFDictionary, .shouldPropagate)
+    let output = AppleTestTexture()
+    var tick: (() -> Void)?, failures = 0, frames = 0
+    let backend = YlAvPlayerBackend(playerId: 99,
+      services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), makeVideoOutput: { _ in pixels }, emit: {
+        if case .failure = $0.event { failures += 1 }; if case .firstFrame = $0.event { frames += 1 }
+      })
+    defer { backend.dispose() }
+    try backend.stagePreparedHls(source: .init(uri: origin.absoluteString, kind: .network, formatHint: .dash), prepared: prepared, resume: false)
+    try backend.activate()
+    XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue())
+    // Replace before the queued failure reaches main: it belongs to the old item.
+    try backend.open(.init(uri: "https://origin.test/new.mp4", kind: .network, formatHint: .mp4))
+    for _ in 0..<12 { await Task.yield() }
+    XCTAssertEqual(failures, 0)
+    XCTAssertNotNil(backend.copyPixelBuffer()?.takeRetainedValue())
+    tick?()
+    XCTAssertEqual(output.frames.count, 1); XCTAssertEqual(frames, 1)
+  }
+
+  @MainActor
+  func testLoadCapsExactPixelBoundaryPublishesAndBackendRejectsChangedTuple() throws {
+    let data = mpd
+    let prepared = try YlPreparedHlsAsset(originURL: origin, isDash: true,
+      videoConstraints: .init(maxWidth: 320, maxHeight: 180, maxBitrate: nil), headers: [:],
+      configuration: .init(map: [:]), cancellationToken: .init(),
+      sessionConfiguration: DashLoaderProtocol.configuration { $0.respond(data) })
+    let pixels = DashPixelOutput(width: 320, height: 180), output = AppleTestTexture()
+    var tick: (() -> Void)?, frames = 0
+    let backend = YlAvPlayerBackend(playerId: 99,
+      services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), makeVideoOutput: { _ in pixels }, emit: { if case .firstFrame = $0.event { frames += 1 } })
+    defer { backend.dispose() }
+    try backend.stagePreparedHls(source: .init(uri: origin.absoluteString, kind: .network, formatHint: .dash), prepared: prepared, resume: false)
+    try backend.activate()
+    XCTAssertNoThrow(try backend.setVideoConstraints(.init(maxWidth: 320, maxHeight: 180, maxBitrate: nil)))
+    XCTAssertThrowsError(try backend.setVideoConstraints(.unconstrained))
+    XCTAssertNotNil(backend.copyPixelBuffer()?.takeRetainedValue())
+    tick?(); XCTAssertEqual(output.frames.count, 1); XCTAssertEqual(frames, 1)
+    backend.stop(); XCTAssertNoThrow(try backend.setVideoConstraints(.unconstrained))
+  }
+
+  @MainActor
+  func testLoadCapsLegacyNilOptionsCaptureOnMainAndPendingRestorationRejectsChanges() async throws {
+    let data = mpd, held = expectation(description: "legacy candidate preparing")
+    let release = DispatchSemaphore(value: 0); defer { release.signal() }
+    let server = try DashHTTPServer(); defer { server.close() }
+    server.handler = { [weak server] _ in if server?.requests.count == 1 { held.fulfill(); _ = release.wait(timeout: .now() + 6) }; return (200, [:], data) }
+    let player = AVPlayer(), output = AppleTestTexture()
+    let coordinator = YlAppleSessionCoordinator(playerId: 99,
+      services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { _ in AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]),
+      textureOwner: .init(output: output, onFrame: { _ in }), avPlayer: player, emit: { _, _ in })
+    defer { coordinator.dispose() }
+    func load(_ source: YlAppleSourceDescriptor, _ id: String) async throws {
+      try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+        coordinator.load(.init(source: source), identity: .init(sessionId: id, loadRequestId: id),
+          willCommit: { _ in }, didCommit: {}, didRollback: {}, completion: { continuation.resume(with: $0.mapError { $0 as Error }) })
+      }
+    }
+    try await load(.init(uri: "https://origin.test/a.mp4", kind: .network, formatHint: .mp4), "old")
+    try coordinator.executeSynchronous(.constraints(.init(maxWidth: 320, maxHeight: nil, maxBitrate: nil)))
+    let pending = Task { try await load(.init(uri: server.url("/movie.mpd").absoluteString, kind: .network, formatHint: .dash), "dash") }
+    await fulfillment(of: [held], timeout: 3)
+    try coordinator.executeSynchronous(.constraints(.init(maxWidth: 640, maxHeight: nil, maxBitrate: nil)))
+    release.signal(); try await pending.value
+    XCTAssertEqual(coordinator.acceptedVideoConstraints.maxWidth, 320)
+    XCTAssertEqual((player.currentItem?.asset as? AVURLAsset).flatMap { $0.resourceLoader.delegate as? YlHlsResourceLoader }?.videoConstraints.maxWidth, 320)
+    coordinator.deactivate()
+    coordinator.restoreAfterHardwareDecoderRollback(forcePlay: false)
+    XCTAssertThrowsError(try coordinator.executeSynchronous(.constraints(.unconstrained))) { error in
+      XCTAssertEqual((error as? NativePlayerError)?.code, "policy.video_constraints_reload_required")
+    }
+    XCTAssertNoThrow(try coordinator.executeSynchronous(.constraints(.init(maxWidth: 320, maxHeight: nil, maxBitrate: nil))))
+    XCTAssertEqual(coordinator.acceptedVideoConstraints.maxWidth, 320)
+    try await AppleHostCharacterizations.waitFor { coordinator.isActive }
+    XCTAssertEqual(coordinator.acceptedVideoConstraints.maxWidth, 320)
+  }
+
+  @MainActor
+  func testLoadCapsLateMetadataCannotRotatePublishedPixelsBeyondCapsOrErasePAR() async throws {
+    for invalidMetadata in [false, true] {
+      let data = mpd
+      let prepared = try YlPreparedHlsAsset(originURL: origin, isDash: true,
+        videoConstraints: .init(maxWidth: 640, maxHeight: 180, maxBitrate: nil), headers: [:],
+        configuration: .init(map: [:]), cancellationToken: .init(),
+        sessionConfiguration: DashLoaderProtocol.configuration { $0.respond(data) })
+      let pixels = DashPixelOutput(width: 320, height: 180), output = AppleTestTexture()
+      CVBufferSetAttachment(pixels.buffer, kCVImageBufferPixelAspectRatioKey,
+        [kCVImageBufferPixelAspectRatioHorizontalSpacingKey: 2, kCVImageBufferPixelAspectRatioVerticalSpacingKey: 1] as CFDictionary, .shouldPropagate)
+      var tick: (() -> Void)?, failures = 0
+      var states: [YlNativeState] = []
+      let backend = YlAvPlayerBackend(playerId: 99,
+        services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
+        configuration: .init(map: ["audioPolicy": "appManaged"]), makeVideoOutput: { _ in pixels }, emit: { if case .failure = $0.event { failures += 1 }; if case .state(let state) = $0.event { states.append(state) } })
+      defer { backend.dispose() }
+      try backend.stagePreparedHls(source: .init(uri: origin.absoluteString, kind: .network, formatHint: .dash), prepared: prepared, resume: false)
+      try backend.activate()
+      tick?(); XCTAssertEqual(output.frames.count, 1)
+      let plainMetadata = YlVideoGeometryResolver.resolve(encodedSize: .init(width: 320, height: 180), cleanAperture: nil, pixelAspectRatio: 1, rotationDegrees: 0)
+      XCTAssertTrue(backend.applyMetadataGeometry(plainMetadata, hasVideoTracks: true))
+      backend.emitState()
+      XCTAssertEqual(states.last?.geometry?.pixelAspectRatio, 2)
+      let metadata = YlVideoGeometryResolver.resolve(encodedSize: .init(width: 320, height: 180), cleanAperture: nil, pixelAspectRatio: 1, rotationDegrees: 90)
+      XCTAssertFalse(backend.applyMetadataGeometry(invalidMetadata ? nil : metadata, hasVideoTracks: true))
+      XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue())
+      tick?(); XCTAssertEqual(output.frames.count, 1)
+      for _ in 0..<12 { await Task.yield() }
+      XCTAssertEqual(failures, 1)
+      XCTAssertFalse(states.contains { $0.geometry?.rotationDegrees == 90 })
+    }
+  }
+
+  @MainActor
+  func testLoadCapsRetainedDashCannotVetoLegacyMp4AfterFallbackChangesAcceptedTuple() async throws {
+    let data = mpd
+    let server = try DashHTTPServer(); defer { server.close() }
+    server.handler = { _ in (200, [:], data) }
+    let file = FileManager.default.temporaryDirectory.appendingPathComponent("dash-caps-fallback-\(UUID().uuidString).mkv")
+    try AppleHostCharacterizations.fixtureMedia().write(to: file)
+    defer { try? FileManager.default.removeItem(at: file) }
+    let player = AVPlayer(), output = AppleTestTexture()
+    var states: [YlNativeState] = []
+    let coordinator = YlAppleSessionCoordinator(playerId: 99,
+      services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { _ in AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]),
+      textureOwner: .init(output: output, onFrame: { _ in }), avPlayer: player,
+      videoSessionFactory: DashPassiveVTFactory(), emit: { _, callback in if case .state(let state) = callback.event { states.append(state) } })
+    defer { coordinator.dispose() }
+    func load(_ source: YlAppleSourceDescriptor, _ id: String) async throws {
+      try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+        coordinator.load(.init(source: source), identity: .init(sessionId: id, loadRequestId: id),
+          willCommit: { _ in }, didCommit: {}, didRollback: {}, completion: { continuation.resume(with: $0.mapError { $0 as Error }) })
+      }
+    }
+    for (index, inherited) in [YlAppleVideoConstraints(maxWidth: 640, maxHeight: nil, maxBitrate: nil), .unconstrained].enumerated() {
+      try await load(.init(uri: server.url("/movie.mpd").absoluteString, kind: .network, formatHint: .dash,
+        loadOptions: .init(videoConstraints: .init(maxWidth: 320, maxHeight: nil, maxBitrate: nil))), "dash-\(index)")
+      XCTAssertThrowsError(try coordinator.executeSynchronous(.constraints(inherited)))
+      try await load(.init(uri: file.absoluteString, kind: .file, formatHint: .matroska,
+        loadOptions: .init(videoConstraints: inherited)), "fallback-\(index)")
+      coordinator.emitState()
+      guard case .managedFallback? = states.last?.engine else { return XCTFail("The real fallback must be current before returning to AVPlayer") }
+      XCTAssertEqual(coordinator.acceptedVideoConstraints, inherited)
+      do {
+        try await load(.init(uri: "https://origin.test/legacy.mp4", kind: .network, formatHint: .mp4), "legacy-\(index)")
+      } catch let error as NativePlayerError {
+        return XCTFail("Legacy MP4 Load failed with \(error.code)")
+      }
+      XCTAssertEqual(coordinator.identity?.sessionId, "legacy-\(index)")
+      XCTAssertEqual(coordinator.acceptedVideoConstraints, inherited)
+      XCTAssertEqual((player.currentItem?.asset as? AVURLAsset)?.url.absoluteString, "https://origin.test/legacy.mp4")
+      XCTAssertEqual(player.currentItem?.preferredMaximumResolution.width, inherited.maxWidth.map(CGFloat.init) ?? 0)
+    }
+  }
+
+  @MainActor
+  func testHeaderedHlsRestoreKeepsLatestPreferencesWhileNewLoadKeepsCapturedTuple() async throws {
+    let original = YlAppleVideoConstraints(maxWidth: 320, maxHeight: nil, maxBitrate: nil)
+    for restoring in [true, false] {
+      for changed in [YlAppleVideoConstraints(maxWidth: 640, maxHeight: nil, maxBitrate: nil), .unconstrained] {
+        let held = expectation(description: "HLS preflight held")
+        let release = DispatchSemaphore(value: 0); defer { release.signal() }
+        let server = try DashHTTPServer(); defer { server.close() }
+        let manifest = Data("#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:4\n#EXTINF:4,\nsegment.ts\n#EXT-X-ENDLIST\n".utf8)
+        server.handler = { [weak server] request in
+          if request.path == "/master.m3u8", server?.requests.filter({ $0.path == "/master.m3u8" }).count == 2 {
+            held.fulfill(); _ = release.wait(timeout: .now() + 6)
+          }
+          return (200, ["Content-Type": "application/vnd.apple.mpegurl"], manifest)
+        }
+        let player = AVPlayer(), output = AppleTestTexture()
+        let coordinator = YlAppleSessionCoordinator(playerId: 99,
+          services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { _ in AppleTestDisplay() }),
+          configuration: .init(map: ["audioPolicy": "appManaged"]),
+          textureOwner: .init(output: output, onFrame: { _ in }), avPlayer: player, emit: { _, _ in })
+        defer { coordinator.dispose() }
+        func load(_ source: YlAppleSourceDescriptor, _ id: String) async throws {
+          try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            coordinator.load(.init(source: source), identity: .init(sessionId: id, loadRequestId: id),
+              willCommit: { _ in }, didCommit: {}, didRollback: {}, completion: { continuation.resume(with: $0.mapError { $0 as Error }) })
+          }
+        }
+        var source = YlAppleSourceDescriptor(uri: server.url("/master.m3u8").absoluteString, kind: .network,
+          formatHint: .hls, headers: ["X-Client": "ordinary"], loadOptions: .init(videoConstraints: original))
+        try await load(source, "accepted")
+        let oldItem = try XCTUnwrap(player.currentItem)
+        XCTAssertEqual(oldItem.preferredMaximumResolution.width, 320)
+        if restoring { coordinator.deactivate() }
+        source.loadOptions = nil
+        let pending = Task {
+          if restoring {
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+              coordinator.beginActivation(forcePlay: false, willCommit: { _ in }, didCommit: {}, didRollback: {},
+                completion: { continuation.resume(with: $0.mapError { $0 as Error }) })
+            }
+          } else { try await load(source, "new-load") }
+        }
+        await fulfillment(of: [held], timeout: 3)
+        XCTAssertNoThrow(try coordinator.executeSynchronous(.constraints(changed)))
+        XCTAssertEqual(coordinator.acceptedVideoConstraints, changed)
+        release.signal(); try await pending.value
+        let expected = restoring ? changed : original
+        XCTAssertEqual(coordinator.acceptedVideoConstraints, expected)
+        XCTAssertEqual(player.currentItem?.preferredMaximumResolution.width, expected.maxWidth.map(CGFloat.init) ?? 0)
+        XCTAssertFalse(player.currentItem === oldItem)
+        XCTAssertEqual(coordinator.identity?.sessionId, restoring ? "accepted" : "new-load")
+      }
+    }
+  }
+
   func testProxyCancellationCannotInvalidateSessionDuringTaskAdmission() throws {
     let entered = expectation(description: "proxy reached URLSession task creation")
     let session = AdmissionRecordingSession(entered: entered)
@@ -548,4 +856,32 @@ private final class ResidualRatePlayer: AVPlayer {
     set { observedRate = newValue }
   }
   override func pause() {}
+}
+
+private final class DashPixelOutput: AVPlayerItemVideoOutput, @unchecked Sendable {
+  let buffer: CVPixelBuffer
+  init(width: Int, height: Int) {
+    var result: CVPixelBuffer?
+    precondition(CVPixelBufferCreate(kCFAllocatorDefault, width, height, kCVPixelFormatType_32BGRA,
+      nil, &result) == kCVReturnSuccess)
+    buffer = result!
+    super.init(pixelBufferAttributes: nil)
+  }
+  override func hasNewPixelBuffer(forItemTime itemTime: CMTime) -> Bool { true }
+  override func copyPixelBuffer(forItemTime itemTime: CMTime, itemTimeForDisplay outItemTimeForDisplay: UnsafeMutablePointer<CMTime>?) -> CVPixelBuffer? { buffer }
+}
+
+// The decoder allocation boundary is controlled; source preparation, FFmpeg
+// demux, fallback construction, backend retention, and Load commit stay real.
+private final class DashPassiveVTFactory: YlVTSessionFactory {
+  func makeSession(formatDescription: CMVideoFormatDescription,
+    output: @escaping (YlVTDecodedImage) -> Void) throws -> YlVTSession { DashPassiveVTSession() }
+}
+private final class DashPassiveVTSession: YlVTSession {
+  let usesHardwareDecoder = true
+  func decode(_ sample: CMSampleBuffer, generation: UInt64, reservation: YlVideoDecodeReservation?) -> OSStatus {
+    reservation?.release(); return noErr
+  }
+  func flush() {}
+  func invalidate() {}
 }

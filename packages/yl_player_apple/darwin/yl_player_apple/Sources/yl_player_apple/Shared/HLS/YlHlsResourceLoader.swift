@@ -185,6 +185,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
 
   private let opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention?
   private let isDash: Bool
+  let videoConstraints: YlAppleVideoConstraints
   private let virtualNamespace = UUID().uuidString.lowercased()
   // Immutable after one successful preflight; removed on cancellation. Synthetic
   // identities are never credential origins or upstream fetch destinations.
@@ -205,6 +206,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   init(
     originURL: URL,
     isDash: Bool = false,
+    videoConstraints: YlAppleVideoConstraints = .unconstrained,
     headers: [String: String],
     credentials: [String: String] = [:],
     configuration: YlNetworkConfiguration,
@@ -216,6 +218,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     }
   ) throws {
     self.isDash = isDash
+    self.videoConstraints = videoConstraints
     self.opaqueRetention = opaqueRetention
     self.credentialContext = credentialContext
     self.originURL = originURL
@@ -740,6 +743,7 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
         let presentation = try YlDashHlsCompiler.compile(data: record.manifestData,
           finalManifestURL: record.destinationURL, sourceURL: originURL,
           credentialsStripped: record.credentialsStripped,
+          videoConstraints: videoConstraints,
           manifestURL: { [virtualNamespace] name in
             URL(string: "http://yl-dash.invalid/\(virtualNamespace)/\(name).m3u8")!
           },
@@ -827,6 +831,7 @@ final class YlPreparedHlsAsset {
   init(
     originURL: URL,
     isDash: Bool = false,
+    videoConstraints: YlAppleVideoConstraints = .unconstrained,
     headers: [String: String],
     credentials: [String: String] = [:],
     configuration: YlNetworkConfiguration,
@@ -838,6 +843,7 @@ final class YlPreparedHlsAsset {
     let loader = try YlHlsResourceLoader(
       originURL: originURL,
       isDash: isDash,
+      videoConstraints: videoConstraints,
       headers: headers,
       credentials: credentials,
       configuration: configuration,

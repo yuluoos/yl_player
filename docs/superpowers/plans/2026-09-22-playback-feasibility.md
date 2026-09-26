@@ -4,9 +4,11 @@
 
 2026-09-24 后续已扩展 Apple 兼容多档位清单，macOS/iOS 定向原生各45项、公开播放各1项通过；实际仅观察到低档，尚未验证弱网升降档或固定清晰度接口。用户提供的 tvs 业务项目已接入 JS/RTMP 并通过93项目标测试，尚未执行完整应用/真实订阅验收。PD-01 档位缺失行为已确认自动回到自动清晰度，PD-02/03 仍未确认。详见[后续实施报告](../reports/2026-09-24-dash-variants-and-live-integration.md)；下表保留各初始阶段的证据边界。
 
-2026-09-24 固定档位阶段已提交为 `76b99d7`：公开选择/状态契约与 Android Media3 真实固定、跨 Period 语义重绑、PD-01 自动回退已实现；最终两个 Android 受控播放用例通过，详见[固定档位报告](../reports/2026-09-24-fixed-video-selection.md)。Apple 固定仍明确 unsupported。后续[Apple 跨 Period 档位变化阶段](2026-09-24-apple-dash-changing-ladders.md)已实现兼容明文 AVC 节目的档位增删与完整路径播放，iOS/macOS 各三个受控用例通过；详见[该阶段报告](../reports/2026-09-24-apple-dash-changing-ladders.md)。跨段档位改动随本次提交交付，自动播放扩展不等同固定/严格上限/弱网 ABR 验收。上面的早期“尚未固定接口”仅描述此前阶段。
+2026-09-24 固定档位阶段已提交为 `76b99d7`：公开选择/状态契约与 Android Media3 真实固定、跨 Period 语义重绑、PD-01 自动回退已实现；最终两个 Android 受控播放用例通过，详见[固定档位报告](../reports/2026-09-24-fixed-video-selection.md)。Apple 固定仍明确 unsupported。后续[Apple 跨 Period 档位变化阶段](2026-09-24-apple-dash-changing-ladders.md)已实现兼容明文 AVC 节目的档位增删与完整路径播放，iOS/macOS 各三个受控用例通过；详见[该阶段报告](../reports/2026-09-24-apple-dash-changing-ladders.md)。跨段档位改动已提交为 `d1b5b65`，自动播放扩展不等同固定/严格上限/弱网 ABR 验收。上面的早期“尚未固定接口”仅描述此前阶段。
 
 ## 1. 架构门槛
+
+2026-09-25 跨段档位阶段已提交为 `d1b5b65`。[Apple DASH 加载时严格上限](2026-09-25-apple-dash-load-caps.md)已实现每个 Period 候选过滤与真实输出检查。macOS/iOS 公开播放各四例通过，随后加强的脱敏异常用例各一例通过；原生与公开证据分批记录在[上限验收报告](../reports/2026-09-25-apple-dash-load-caps.md)，本阶段改动随严格上限实现提交交付。现有 active AV item 替换尚无完整回滚/恢复事务，运行中改限与固定选择仍需后续独立实现；本阶段不能把 AVPlayer 偏好或加载时过滤描述成完整运行时 ABR。
 
 | 能力 | 仓库证据 | 候选路径与依据 | 下一步必须证明的内容 | 当前判定 |
 |---|---|---|---|---|

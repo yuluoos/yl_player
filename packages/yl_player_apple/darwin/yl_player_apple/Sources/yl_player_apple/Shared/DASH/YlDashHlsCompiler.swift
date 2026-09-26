@@ -8,13 +8,28 @@ struct YlDashHlsPresentation {
 }
 
 enum YlDashHlsCompiler {
+  private enum ProjectionError: Error { case noEligibleVideo }
   static func compile(data: Data, finalManifestURL: URL, sourceURL: URL,
-    credentialsStripped: Bool, manifestURL: (String) throws -> URL,
+    credentialsStripped: Bool, videoConstraints: YlAppleVideoConstraints = .unconstrained, manifestURL: (String) throws -> URL,
     mediaURL: (URL, Bool) throws -> URL) throws -> YlDashHlsPresentation {
     do {
       let document = YlDashDocument(source: sourceURL)
-      let (periods, duration) = try document.parse(data, final: finalManifestURL,
+      let (originalPeriods, duration) = try document.parse(data, final: finalManifestURL,
         credentialsStripped: credentialsStripped)
+      let periods: [YlDashPeriod]
+      if videoConstraints != .unconstrained {
+        // Validate the complete original family before pruning can hide a track.
+        _ = try YlDashVideoPaths.plan(originalPeriods, strictFamily: true)
+        periods = try originalPeriods.map { period in
+          let videos = period.videos.filter { track in
+            (videoConstraints.maxWidth.map { track.width <= Int64($0) } ?? true)
+              && (videoConstraints.maxHeight.map { track.height <= Int64($0) } ?? true)
+              && (videoConstraints.maxBitrate.map { track.bandwidth <= Int64($0) } ?? true)
+          }
+          guard !videos.isEmpty else { throw ProjectionError.noEligibleVideo }
+          return YlDashPeriod(videos: videos, audio: period.audio)
+        }
+      } else { periods = originalPeriods }
       let videoPaths = try YlDashVideoPaths.plan(periods)
       let videoNames = videoPaths.count == 1 ? ["video"]
         : videoPaths.indices.map { "video-\($0)" }
@@ -86,6 +101,8 @@ enum YlDashHlsCompiler {
       try store("master", master)
       return YlDashHlsPresentation(rootURL: identities["master"]!, manifests: registry,
         strippedResources: document.stripped, durationUs: duration)
+    } catch ProjectionError.noEligibleVideo {
+      throw YlAppleVideoConstraints.unsupportedOutput
     } catch {
       // Includes injected URL-closure/native errors: never publish source text.
       throw YlDashBounds.unsupported
@@ -115,11 +132,11 @@ private enum YlDashVideoPaths {
     while b != 0 { let remainder = a % b; a = b; b = remainder }
     return "\(numerator / a)/\(denominator / a)"
   }
-  static func plan(_ periods: [YlDashPeriod]) throws -> [[YlDashTrack]] {
+  static func plan(_ periods: [YlDashPeriod], strictFamily: Bool = false) throws -> [[YlDashTrack]] {
     let first = periods[0].videos
     // Preserve the previously admitted domain, including 64 singleton Periods
     // with varying bandwidth. The new union/family rules apply only after this.
-    if periods.allSatisfy({ period in
+    if !strictFamily, periods.allSatisfy({ period in
       period.videos.count == first.count && zip(period.videos, first).allSatisfy {
         $0.matches($1) && (first.count == 1 || $0.bandwidth == $1.bandwidth)
       }

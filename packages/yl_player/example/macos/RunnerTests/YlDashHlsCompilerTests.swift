@@ -442,4 +442,74 @@ final class YlDashHlsCompilerTests: XCTestCase {
     }
   }
 
+  func testLoadCapsIntersectAtInclusiveVideoBandwidthBoundaryAcrossAllPeriods() throws {
+    let xml = mpd(ladder(rendition("low") + rendition("high", width: 640, bandwidth: 700000), audio: true)
+      + ladder(rendition("new-high", width: 640, bandwidth: 700000) + rendition("new-low"), start: 4, audio: true), duration: 8)
+    for cap in [YlAppleVideoConstraints(maxWidth: 320, maxHeight: 180, maxBitrate: 350000),
+                .init(maxWidth: 320, maxHeight: nil, maxBitrate: nil),
+                .init(maxWidth: nil, maxHeight: 180, maxBitrate: nil),
+                .init(maxWidth: nil, maxHeight: nil, maxBitrate: 350000)] {
+      let result = try YlDashHlsCompiler.compile(data: Data(xml.utf8), finalManifestURL: source,
+        sourceURL: source, credentialsStripped: false, videoConstraints: cap,
+        manifestURL: { URL(string: "https://virtual.test/\($0).m3u8")! }, mediaURL: { url, _ in url })
+      let paths = try changingPaths(result)
+      XCTAssertEqual(paths.count, 1)
+      for path in paths { assertPath(path, ["low", "new-low"]); XCTAssertFalse(path.contains("high")) }
+      let master = String(decoding: result.manifests[result.rootURL]!, as: UTF8.self)
+      XCTAssertTrue(master.contains("BANDWIDTH=414000"))
+      XCTAssertEqual(result.manifests.count, 3)
+    }
+  }
+  func testLoadCapsRejectEmptyPeriodAndOriginalUnsupportedFamilyBeforeAnyEmission() {
+    let low = rendition("low"), high = rendition("high", width: 640, bandwidth: 700000)
+    let cases: [(String, String)] = [
+      (mpd(ladder(low) + ladder(high, start: 4), duration: 8), "decoder.quality_constraint_unsupported"),
+      (mpd(ladder(high) + ladder(low, start: 4), duration: 8), "decoder.quality_constraint_unsupported"),
+      (mpd(ladder(low + high.replacingOccurrences(of: "<Representation ", with: "<Representation sar=\"2:1\" "))), "container.unsupported"),
+      (mpd(ladder(low)).replacingOccurrences(of: "avc1.42c01e", with: "avc1.6e001e"), "container.unsupported")]
+    for (xml, code) in cases {
+      var manifests = 0, media = 0
+      XCTAssertThrowsError(try YlDashHlsCompiler.compile(data: Data(xml.utf8), finalManifestURL: source,
+        sourceURL: source, credentialsStripped: false,
+        videoConstraints: .init(maxWidth: 320, maxHeight: 180, maxBitrate: 350000),
+        manifestURL: { name in manifests += 1; return URL(string: "https://virtual.test/\(name).m3u8")! },
+        mediaURL: { url, _ in media += 1; return url })) { error in
+          XCTAssertEqual((error as? NativePlayerError)?.code, code)
+        }
+      XCTAssertEqual(manifests, 0); XCTAssertEqual(media, 0)
+    }
+  }
+
+  func testLoadCapsRetainCredentialHistoryAndSanitizeInjectedSemanticErrors() throws {
+    let high = rendition("high", width: 640, bandwidth: 700000)
+      .replacingOccurrences(of: "<SegmentTemplate", with: "<BaseURL>https://foreign.test/</BaseURL><SegmentTemplate")
+      .replacingOccurrences(of: "init-$RepresentationID$.mp4", with: "https://origin.test/dash/init-low.mp4")
+    let xml = mpd(ladder(rendition("low") + high))
+    var stripped: [Bool] = []
+    _ = try YlDashHlsCompiler.compile(data: Data(xml.utf8), finalManifestURL: source, sourceURL: source,
+      credentialsStripped: false, videoConstraints: .init(maxWidth: 320, maxHeight: nil, maxBitrate: nil),
+      manifestURL: { URL(string: "https://virtual.test/\($0).m3u8")! },
+      mediaURL: { url, value in if url.lastPathComponent == "init-low.mp4" { stripped.append(value) }; return url })
+    XCTAssertEqual(stripped, [true], "Filtering must not erase stricter provenance from the original high track")
+    XCTAssertThrowsError(try YlDashHlsCompiler.compile(data: Data(xml.utf8), finalManifestURL: source, sourceURL: source,
+      credentialsStripped: false, videoConstraints: .init(maxWidth: 320, maxHeight: nil, maxBitrate: nil),
+      manifestURL: { _ in throw NativePlayerError(category: "decoder", code: "decoder.quality_constraint_unsupported", message: "https://private.test?token=secret") },
+      mediaURL: { url, _ in url })) { error in
+        XCTAssertEqual((error as? NativePlayerError)?.code, "container.unsupported")
+        XCTAssertFalse((error as? NativePlayerError)?.message.contains("private") ?? true)
+      }
+  }
+  func testLoadCapsConstrainedLegacyCannotBypassUnionOrOriginalInputBudgets() {
+    let union = (0..<17).map { ladder(rendition("v\($0)", bandwidth: 350000 + $0), start: $0 * 4) }.joined()
+    let dense = "<SegmentTemplate timescale=\"15000\" duration=\"1\" initialization=\"i\" media=\"$Number$\"/>"
+    for xml in [mpd(union, duration: 68), mpd(ladder(rendition("low", template: dense) + rendition("high", width: 640, bandwidth: 700000, template: dense)))] {
+      var calls = 0
+      XCTAssertThrowsError(try YlDashHlsCompiler.compile(data: Data(xml.utf8), finalManifestURL: source, sourceURL: source,
+        credentialsStripped: false, videoConstraints: .init(maxWidth: nil, maxHeight: nil, maxBitrate: 350000),
+        manifestURL: { name in calls += 1; return URL(string: "https://virtual.test/\(name).m3u8")! },
+        mediaURL: { url, _ in calls += 1; return url }))
+      XCTAssertEqual(calls, 0)
+    }
+  }
+
 }

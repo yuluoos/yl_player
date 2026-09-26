@@ -30,6 +30,10 @@ abstract final class YlFailureCodes {
   static const loadCancelled = 'load.cancelled';
   static const sessionStale = 'session.stale';
   static const policyUnsupported = 'policy.unsupported';
+  static const videoConstraintsReloadRequired =
+      'policy.video_constraints_reload_required';
+  static const qualityConstraintUnsupported =
+      'decoder.quality_constraint_unsupported';
   static const sourceInvalid = 'source.invalid';
   static const sourceMissing = 'source.missing';
   static const networkFailed = 'network.failed';
@@ -49,6 +53,7 @@ abstract final class YlFailureCodes {
 
   /// An established RTMP playback connection was lost.
   static const networkRtmpDisconnected = 'network.rtmp_disconnected';
+
   /// RTMP tracks or codec configuration changed within an established epoch.
   static const containerRtmpTrackLayoutChanged =
       'container.rtmp_track_layout_changed';

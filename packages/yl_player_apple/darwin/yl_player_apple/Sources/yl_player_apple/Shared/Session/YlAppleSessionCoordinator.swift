@@ -116,6 +116,17 @@ final class YlAppleSessionCoordinator: NSObject {
 
   func execute(_ command: YlApplePlaybackCommand,
     completion: @escaping (Result<Void, NativePlayerError>) -> Void) {
+    if case .constraints(let constraints) = command,
+       let source = lastCommittedSource, route(for: source) == .dashHls {
+      do { _ = try YlFallbackQualityConstraint(validating: constraints) }
+      catch let error as NativePlayerError { completion(.failure(error)); return }
+      catch { completion(.failure(Self.commandError(error))); return }
+      guard constraints == lastQualityConstraint else {
+        completion(.failure(YlAppleVideoConstraints.reloadRequired)); return
+      }
+      // No asynchronous restoration queue may retain an unexecuted policy.
+      completion(.success(())); return
+    }
     if case .constraints(let constraints) = command, let fallback = slot.current as? YlFallbackBackend {
       do { try fallback.validateQualityConstraint(YlFallbackQualityConstraint(validating: constraints)) }
       catch let error as NativePlayerError { completion(.failure(error)); return }
@@ -215,6 +226,7 @@ final class YlAppleSessionCoordinator: NSObject {
     // A candidate owns fresh provenance; failed/cancelled work never writes the
     // surviving session's context or a later user Load's context.
     let hlsCredentials = YlHlsCredentialContext()
+    let loadConstraints = source.loadOptions?.videoConstraints ?? lastQualityConstraint
     let requestedLoadRequestId = identity.loadRequestId
     pendingLoadRequestId = requestedLoadRequestId
     var openGeneration: UInt64 = 0
@@ -233,7 +245,7 @@ final class YlAppleSessionCoordinator: NSObject {
         case .headeredHls, .dashHls:
           return .headeredHls(
             source: source,
-            prepared: try self.prepareHeaderedHls(source: source, token: token, credentialContext: hlsCredentials)
+            prepared: try self.prepareHeaderedHls(source: source, token: token, credentialContext: hlsCredentials, videoConstraints: loadConstraints)
           )
         case .inspect:
           let inspected = try YlSourceInspector.inspect(source, configuration: self.configuration.network, token: token)
@@ -242,7 +254,7 @@ final class YlAppleSessionCoordinator: NSObject {
           switch refined.candidate {
           case .avPlayer: return try self.prepareNativeOrMp4(source: inspected, token: token, identity: identity)
           case .headeredHls, .dashHls: return .headeredHls(source: inspected,
-            prepared: try self.prepareHeaderedHls(source: inspected, token: token, credentialContext: hlsCredentials))
+            prepared: try self.prepareHeaderedHls(source: inspected, token: token, credentialContext: hlsCredentials, videoConstraints: loadConstraints))
           case .localMatroska, .networkMatroska, .networkFlv, .networkRtmp:
             return .fallback(source: inspected, prepared: try self.prepareFallback(source: inspected, token: token, identity: identity))
           default: throw NativePlayerError(category: "container", code: "container.unsupported", message: "Inspection could not establish a supported route.")
@@ -261,7 +273,7 @@ final class YlAppleSessionCoordinator: NSObject {
         let rollbackPlaybackIntent = self.currentPlaybackIntent
         willCommit(candidate.requiresHardwareDecoderLease)
         do {
-          try self.commit(candidate, identity: identity, reactivating: false)
+          try self.commit(candidate, identity: identity, reactivating: false, loadVideoConstraints: loadConstraints)
           self.identity = identity
           didCommit()
           self.activeEvents?.commit()
@@ -322,12 +334,13 @@ final class YlAppleSessionCoordinator: NSObject {
        let source = lastCommittedSource,
        [YlAppleSourceRoute.headeredHls, .dashHls].contains(route(for: source)),
        let hlsCredentials = committedHlsCredentials {
+      let loadConstraints = lastQualityConstraint
       openCoordinator.begin(
         prepare: { [weak self] token in
           guard let self else { throw YlOpenCancellationToken.cancellationError() }
           return .headeredHls(
             source: source,
-            prepared: try self.prepareHeaderedHls(source: source, token: token, credentialContext: hlsCredentials)
+            prepared: try self.prepareHeaderedHls(source: source, token: token, credentialContext: hlsCredentials, videoConstraints: loadConstraints)
           )
         },
         commit: { [weak self] candidate in
@@ -530,7 +543,8 @@ final class YlAppleSessionCoordinator: NSObject {
   private func commit(
     _ candidate: YlPreparedOpen,
     identity: YlAppleSessionIdentity,
-    reactivating: Bool
+    reactivating: Bool,
+    loadVideoConstraints: YlAppleVideoConstraints? = nil
   ) throws {
     commandCoordinator.cancelCurrent()
     let preservedIdentity = reactivating ? (slot.current as? YlFallbackBackend)?.channelGeneration : nil
@@ -587,9 +601,9 @@ final class YlAppleSessionCoordinator: NSObject {
     case let .avPlayer(source):
       avTexture.lease = candidateTexture
       avBackend.bindCallbacks(candidateEvents.accept)
-      if source.loadOptions == nil {
-        try avBackend.setVideoConstraints(lastQualityConstraint)
-      }
+      // A new Load installs its captured policy; a retained backend's previous
+      // DASH session has no authority to veto the new source's inheritance.
+      let constraints = loadVideoConstraints ?? source.loadOptions?.videoConstraints ?? lastQualityConstraint
       applyPersistentPlaybackControls(to: avBackend)
       if slot.current !== avBackend {
         let previous = try slot.replace(beforeRollbackActivation: beforeRollbackActivation) { avBackend }
@@ -597,16 +611,13 @@ final class YlAppleSessionCoordinator: NSObject {
       } else {
         try avBackend.activate()
       }
-      try avBackend.open(source)
+      try avBackend.open(source, videoConstraints: constraints)
       lastCommittedSource = source
       committedHlsCredentials = nil
-      if !reactivating, source.loadOptions != nil { lastQualityConstraint = source.loadOptions?.videoConstraints ?? .unconstrained }
+      lastQualityConstraint = constraints
     case let .headeredHls(source, prepared):
       avTexture.lease = candidateTexture
       avBackend.bindCallbacks(candidateEvents.accept)
-      if source.loadOptions == nil {
-        try avBackend.setVideoConstraints(lastQualityConstraint)
-      }
       applyPersistentPlaybackControls(to: avBackend)
       try avBackend.stagePreparedHls(
         source: source,
@@ -623,7 +634,11 @@ final class YlAppleSessionCoordinator: NSObject {
       }
       lastCommittedSource = source
       committedHlsCredentials = prepared.loader.credentialContext
-      if !reactivating, source.loadOptions != nil { lastQualityConstraint = source.loadOptions?.videoConstraints ?? .unconstrained }
+      // New Loads own their captured tuple, and DASH restores its immutable
+      // projection. Ordinary HLS resume retains the latest acknowledged intent.
+      if !reactivating || route(for: source) == .dashHls {
+        lastQualityConstraint = prepared.loader.videoConstraints
+      }
     case let .fallback(source, prepared):
       let qualityConstraint = try YlFallbackQualityConstraint(
         validating: reactivating || source.loadOptions == nil ? lastQualityConstraint : source.loadOptions?.videoConstraints ?? .unconstrained
@@ -769,7 +784,8 @@ final class YlAppleSessionCoordinator: NSObject {
   private func prepareHeaderedHls(
     source: YlAppleSourceDescriptor,
     token: YlOpenCancellationToken,
-    credentialContext: YlHlsCredentialContext
+    credentialContext: YlHlsCredentialContext,
+    videoConstraints: YlAppleVideoConstraints
   ) throws -> YlPreparedHlsAsset {
     try token.throwIfCancelled()
     guard let url = source.url else {
@@ -788,6 +804,7 @@ final class YlAppleSessionCoordinator: NSObject {
     return try YlPreparedHlsAsset(
       originURL: url,
       isDash: route(for: source) == .dashHls,
+      videoConstraints: videoConstraints,
       headers: source.headers,
       credentials: source.credentials,
       configuration: configuration.network,

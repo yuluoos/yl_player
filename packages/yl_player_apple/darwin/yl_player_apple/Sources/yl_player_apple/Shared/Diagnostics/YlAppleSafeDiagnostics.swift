@@ -88,6 +88,7 @@ enum YlAppleSafeDiagnostics {
     "player.detached",
     "player.disposed",
     "policy.unsupported",
+    "policy.video_constraints_reload_required",
     "protocol.mismatch",
     "render.audio_engine_failed",
     "resource.exhausted",
@@ -111,6 +112,8 @@ enum YlAppleSafeDiagnostics {
     "network.dns_failed", "network.connect_timeout", "network.read_timeout",
   ]
   private static let publicMessages: [String: String] = [
+    "policy.video_constraints_reload_required": "Reload the DASH source with new video constraints to change or clear the limits.",
+    "decoder.quality_constraint_unsupported": "The source cannot satisfy the requested video constraints.",
     "network.rtmp_handshake_failed": "The RTMP connection could not be established. Check the server and connection, then try again.",
     "network.rtmp_disconnected": "The RTMP stream was disconnected. Check the connection and try again.",
     "network.rtmp_stream_unavailable": "The RTMP stream is unavailable. Check the stream address and access permissions.",

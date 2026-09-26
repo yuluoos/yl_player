@@ -247,8 +247,34 @@ result and any remaining discrepancy are recorded in the
 [fixed-selection stage report](superpowers/reports/2026-09-24-fixed-video-selection.md).
 This gate does not establish full adaptive bitrate behavior, weak-network
 quantitative response, HDR switching, general DASH interoperability, or a
-physical/minimum-OS device matrix. Fixed Apple behavior, strict caps and
-quantitative weak-network ABR remain future work.
+physical/minimum-OS device matrix. Fixed Apple behavior, runtime cap changes,
+and quantitative weak-network ABR remain future work.
+
+## Apple DASH Load video caps
+
+For static clear AVC/AAC DASH on Apple, `YlLoadOptions.videoConstraints` can
+set `maxWidth`, `maxHeight`, and `maxBitrate` independently or together. Explicit
+DASH and automatic `.mpd` loads use the same path. A constrained load keeps only
+declared video Representations within every supplied limit in every Period;
+if a Period has no candidate, it fails with
+`decoder.quality_constraint_unsupported` before requesting candidate media.
+The bitrate field compares the MPD's declared **video Representation**
+bandwidth. It does not include audio and is not a network speed limit. The
+displayed frame is also checked against width and height limits before output;
+an oversized or unprovable decoded frame fails that session without a first
+frame.
+
+The constrained path accepts a conservative, compatible subset of the existing
+static DASH adapter: one AVC codec/profile family, compatible display ratio and
+frame rate, square pixels, and no color, dynamic-range, or supplemental
+declarations. The full original presentation is validated before filtering.
+AVPlayer remains in automatic video selection. Passing the same constraints
+through `session.setVideoConstraints` succeeds; changing or clearing them during
+that DASH Load returns `policy.video_constraints_reload_required`. Load the
+source again with new options to change the cap. A rejected Load leaves the
+accepted session playing. Normal HLS/MP4 video preference behavior is unchanged.
+See the [Load caps report](superpowers/reports/2026-09-25-apple-dash-load-caps.md)
+for the exact native and public playback evidence.
 
 ## Optional JavaScript source resolution
 

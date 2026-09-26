@@ -112,6 +112,22 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   }
   private var callbackBinding: CallbackBinding
   private let player: AVPlayer
+  private final class FramePolicy {
+    let output: AVPlayerItemVideoOutput
+    let generation: UInt64
+    let constraints: YlAppleVideoConstraints
+    var rotation: Int
+    var blocked = false
+    var measuredGeometry: YlVideoGeometry? = nil
+    init(output: AVPlayerItemVideoOutput, generation: UInt64,
+      constraints: YlAppleVideoConstraints, rotation: Int) {
+      self.output = output; self.generation = generation
+      self.constraints = constraints; self.rotation = rotation
+    }
+  }
+  private let framePolicyLock = NSLock()
+  private var framePolicy: FramePolicy?
+  private let makeVideoOutput: ([String: Any]) -> AVPlayerItemVideoOutput
   private let errorLogCollector = YlAvPlayerErrorLogCollector()
   private var videoOutput = AVPlayerItemVideoOutput(
     pixelBufferAttributes: [
@@ -177,11 +193,13 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     services: YlPlatformServices,
     configuration: PlayerConfiguration,
     player: AVPlayer = AVPlayer(),
+    makeVideoOutput: @escaping ([String: Any]) -> AVPlayerItemVideoOutput = { AVPlayerItemVideoOutput(pixelBufferAttributes: $0) },
     emit: @escaping (YlNativeBackendCallback) -> Void
   ) {
     self.playerId = playerId
     self.services = services
     self.player = player
+    self.makeVideoOutput = makeVideoOutput
     self.liveReconnectController = YlLiveReconnectController(configuration: configuration.network)
     self.configuration = configuration
     self.callbackBinding = CallbackBinding(emit)
@@ -390,6 +408,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     stagedHls?.prepared.discard()
     stagedHls = nil
     lastSource = nil
+    qualityConstraint = .unconstrained
     channelGeneration = YlBackendGeneration.next()
     savedPositionMs = 0
     resumeAtLiveEdge = false
@@ -469,13 +488,15 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     emitState(error: details)
   }
 
-  func open(_ source: YlAppleSourceDescriptor) throws {
+  func open(_ source: YlAppleSourceDescriptor, videoConstraints: YlAppleVideoConstraints? = nil) throws {
     try checkAlive()
     try validateOpen(source)
+    if let videoConstraints { _ = try YlFallbackQualityConstraint(validating: videoConstraints) }
     if source.loadOptions?.autoplay == true { try beforeAudioOutput() }
     if stopped && services.platform == .ios { try configureAudioSession() }
     channelGeneration = YlBackendGeneration.next()
     resetOpenState(source, resume: false)
+    if let videoConstraints { qualityConstraint = videoConstraints }
     try installItem(source, positionMs: source.loadOptions?.startPositionMs ?? 0)
     emitState()
   }
@@ -521,8 +542,13 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       channelGeneration = YlBackendGeneration.next()
     }
     let positionMs = stagedHls.resume ? savedPositionMs : (stagedHls.source.loadOptions?.startPositionMs ?? 0)
-    resetOpenState(stagedHls.source, resume: stagedHls.resume)
     let loader = try stagedHls.prepared.takeLoader()
+    resetOpenState(stagedHls.source, resume: stagedHls.resume)
+    // DASH's projection is immutable. Ordinary HLS restoration instead keeps
+    // preferences successfully changed while its manifest was being prepared.
+    if !stagedHls.resume || YlSourceRouter.route(stagedHls.source) == .dashHls {
+      qualityConstraint = loader.videoConstraints
+    }
     hlsResourceLoader = loader
     installItem(asset: stagedHls.prepared.asset, positionMs: positionMs)
     emitState()
@@ -547,12 +573,13 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     item.preferredForwardBufferDuration = effectiveConfiguration.preferredForwardBufferDuration
     player.automaticallyWaitsToMinimizeStalling = effectiveConfiguration.bufferMode != "lowLatency"
     applyQualityConstraint(qualityConstraint, to: item)
-    videoOutput = AVPlayerItemVideoOutput(pixelBufferAttributes: [
+    videoOutput = makeVideoOutput([
       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
     ])
     videoOutputConfigured = services.nativeViewType == nil
     item.add(videoOutput)
+    refreshFramePolicy()
     player.replaceCurrentItem(with: item)
     displayLink?.isPaused = false
     observe(item, generation: generation)
@@ -761,7 +788,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     if !firstFrameSent {
       firstFrameSent = true
       firstFrameDurationMs = elapsedMilliseconds(since: openStartedAt)
-      let size = player.currentItem?.presentationSize ?? .zero
+      let size = hasDashDimensionLimits ? (videoGeometry?.finalDisplaySize ?? .zero) : (player.currentItem?.presentationSize ?? .zero)
       emit(.firstFrame(width: size.width > 0 ? Int(size.width) : nil, height: size.height > 0 ? Int(size.height) : nil))
       emitState()
       refreshStallWatchdog()
@@ -865,14 +892,81 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     emitState(error: details)
   }
 
+  // Raster callbacks may run off-main. Their immutable item authority and the
+  // rejection latch share one lock; only the terminal event is queued to main.
   func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? {
-    let itemTime = videoOutput.itemTime(forHostTime: CACurrentMediaTime())
-    guard videoOutput.hasNewPixelBuffer(forItemTime: itemTime),
-          let buffer = videoOutput.copyPixelBuffer(forItemTime: itemTime, itemTimeForDisplay: nil)
-    else {
+    framePolicyLock.lock()
+    guard let policy = framePolicy, !policy.blocked else { framePolicyLock.unlock(); return nil }
+    let rotation = policy.rotation
+    framePolicyLock.unlock()
+    let itemTime = policy.output.itemTime(forHostTime: CACurrentMediaTime())
+    guard policy.output.hasNewPixelBuffer(forItemTime: itemTime),
+          let buffer = policy.output.copyPixelBuffer(forItemTime: itemTime, itemTimeForDisplay: nil)
+    else { return nil }
+    let caps = policy.constraints
+    let geometry = YlVideoGeometryResolver.avPlayer(pixelBuffer: buffer, rotationDegrees: rotation)
+    let permitted = Self.permits(geometry, constraints: caps)
+    framePolicyLock.lock()
+    guard framePolicy === policy, !policy.blocked, policy.rotation == rotation else { framePolicyLock.unlock(); return nil }
+    if !permitted { policy.blocked = true }
+    else { policy.measuredGeometry = geometry }
+    framePolicyLock.unlock()
+    guard permitted else {
+      scheduleVideoConstraintFailure(generation: policy.generation)
       return nil
     }
     return Unmanaged.passRetained(buffer)
+  }
+
+  private func refreshFramePolicy() {
+    let constraints = lastSource.map { YlSourceRouter.route($0) == .dashHls } == true
+      ? qualityConstraint : .unconstrained
+    framePolicyLock.lock()
+    if let policy = framePolicy, policy.generation == itemGeneration, policy.output === videoOutput {
+      policy.rotation = videoGeometry?.rotationDegrees ?? 0
+    } else {
+      let blocked = framePolicy.map { $0.generation == itemGeneration && $0.blocked } ?? false
+      let measured = framePolicy.flatMap { $0.generation == itemGeneration ? $0.measuredGeometry : nil }
+      framePolicy = FramePolicy(output: videoOutput, generation: itemGeneration,
+        constraints: constraints, rotation: videoGeometry?.rotationDegrees ?? 0)
+      framePolicy?.blocked = blocked
+      framePolicy?.measuredGeometry = measured
+    }
+    framePolicyLock.unlock()
+  }
+
+  private static func permits(_ geometry: YlVideoGeometry?, constraints: YlAppleVideoConstraints) -> Bool {
+    guard constraints.maxWidth != nil || constraints.maxHeight != nil else { return true }
+    guard let size = geometry?.finalDisplaySize, size.width.isFinite, size.height.isFinite,
+          size.width > 0, size.height > 0 else { return false }
+    return (constraints.maxWidth.map { CGFloat($0) >= size.width } ?? true)
+      && (constraints.maxHeight.map { CGFloat($0) >= size.height } ?? true)
+  }
+
+  private var hasDashDimensionLimits: Bool {
+    lastSource.map { YlSourceRouter.route($0) == .dashHls } == true
+      && (qualityConstraint.maxWidth != nil || qualityConstraint.maxHeight != nil)
+  }
+
+  private func scheduleVideoConstraintFailure(generation: UInt64) {
+    DispatchQueue.main.async { [weak self] in
+      guard let self, !self.disposed, self.itemGeneration == generation else { return }
+      self.failVideoConstraints(generation: generation)
+    }
+  }
+
+  private func failVideoConstraints(generation: UInt64) {
+    guard generation == itemGeneration, !disposed else { return }
+    failureGate.markTerminal(generation: generation)
+    stallWatchdog.cancel()
+    displayLink?.isPaused = true
+    playRequested = false
+    player.pause()
+    status = "error"
+    let error = YlAppleVideoConstraints.unsupportedOutput
+    currentError = error
+    emit(.failure(error))
+    emitState(error: error)
   }
 
   func seekToLiveEdge() throws {
@@ -924,6 +1018,8 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   func setVideoConstraints(_ constraint: YlAppleVideoConstraints) throws {
     try checkAlive()
     _ = try YlFallbackQualityConstraint(validating: constraint)
+    if let source = lastSource, YlSourceRouter.route(source) == .dashHls,
+       constraint != qualityConstraint { throw YlAppleVideoConstraints.reloadRequired }
     qualityConstraint = constraint
     guard let item = player.currentItem else { return }
     applyQualityConstraint(constraint, to: item)
@@ -940,6 +1036,35 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     let resolvedWidth = CGFloat(width ?? 100_000)
     let resolvedHeight = CGFloat(height ?? 100_000)
     item.preferredMaximumResolution = CGSize(width: resolvedWidth, height: resolvedHeight)
+  }
+
+  @discardableResult
+  func applyMetadataGeometry(_ geometry: YlVideoGeometry?, hasVideoTracks: Bool) -> Bool {
+    guard hasDashDimensionLimits else {
+      if let geometry { videoGeometry = geometry }
+      return true
+    }
+    // Missing HLS tracks are normal; an existing track with invalid transform
+    // evidence cannot authorize a new display geometry for constrained output.
+    guard hasVideoTracks else { return true }
+    framePolicyLock.lock()
+    guard let policy = framePolicy, !policy.blocked else { framePolicyLock.unlock(); return false }
+    let resolved: YlVideoGeometry?
+    if let geometry, let measured = policy.measuredGeometry {
+      resolved = YlVideoGeometry(encodedSize: measured.encodedSize, cleanAperture: measured.cleanAperture,
+        displaySize: measured.displaySize, pixelAspectRatio: measured.pixelAspectRatio,
+        rotationDegrees: geometry.rotationDegrees)
+    } else { resolved = geometry }
+    guard Self.permits(resolved, constraints: policy.constraints) else {
+      policy.blocked = true
+      framePolicyLock.unlock()
+      scheduleVideoConstraintFailure(generation: policy.generation)
+      return false
+    }
+    policy.rotation = resolved?.rotationDegrees ?? 0
+    framePolicyLock.unlock()
+    videoGeometry = resolved
+    return true
   }
 
   private func loadMetadata(_ item: AVPlayerItem, generation: UInt64) {
@@ -980,7 +1105,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
             let hdrPixelFormat = pixelFormat == kCVPixelFormatType_420YpCbCr10BiPlanarFullRange
               ? kCVPixelFormatType_420YpCbCr10BiPlanarFullRange : kCVPixelFormatType_420YpCbCr10BiPlanarVideoRange
             item.remove(self.videoOutput)
-            self.videoOutput = AVPlayerItemVideoOutput(pixelBufferAttributes: [
+            self.videoOutput = self.makeVideoOutput([
               kCVPixelBufferPixelFormatTypeKey as String: hdrPixelFormat,
               kCVPixelBufferIOSurfacePropertiesKey as String: [:],
             ])
@@ -988,9 +1113,10 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
           }
           self.videoOutputConfigured = true
         }
-        self.videoTracks = catalog
         // Do not erase frame-measured HLS geometry when the asset has no tracks.
-        if let geometry { self.videoGeometry = geometry }
+        guard self.applyMetadataGeometry(geometry, hasVideoTracks: !tracks.isEmpty) else { return }
+        self.videoTracks = catalog
+        self.refreshFramePolicy()
         self.emitState()
         let group = try await item.asset.loadMediaSelectionGroup(for: .audible)
         try Task.checkCancellation()
@@ -1058,7 +1184,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     let dvrEndMs = seekableRange.flatMap { milliseconds(CMTimeRangeGetEnd($0)) }
     let live = sourceIsLive || isIndefinite(item?.duration)
     let liveOffsetMs = live ? dvrEndMs.map { max(0, $0 - positionMs) } : nil
-    let size = item?.presentationSize ?? .zero
+    let size = hasDashDimensionLimits ? (videoGeometry?.finalDisplaySize ?? .zero) : (item?.presentationSize ?? .zero)
     emit(.state(YlNativeState(
       status: status, positionMs: positionMs, durationMs: durationMs,
       bufferedPositionMs: loadedEndMs, isLive: live,
@@ -1122,6 +1248,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   }
 
   private func removeCurrentItem(releaseReplacement: Bool = true, clearOutput: Bool = true) {
+    framePolicyLock.lock(); framePolicy = nil; framePolicyLock.unlock()
     videoProgressProbe.reset()
     metadataTask?.cancel()
     metadataTask = nil

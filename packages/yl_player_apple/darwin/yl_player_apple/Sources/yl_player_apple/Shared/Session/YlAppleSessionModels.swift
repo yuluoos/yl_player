@@ -102,11 +102,19 @@ struct YlAppleLoadRecipe {
   let source: YlAppleSourceDescriptor
 }
 
-struct YlAppleVideoConstraints {
+struct YlAppleVideoConstraints: Equatable {
   let maxWidth: Int?
   let maxHeight: Int?
   let maxBitrate: Int?
   static let unconstrained = YlAppleVideoConstraints(maxWidth: nil, maxHeight: nil, maxBitrate: nil)
+  static var reloadRequired: NativePlayerError {
+    NativePlayerError(category: "unsupported", code: "policy.video_constraints_reload_required",
+      message: "Reload the DASH source to change video constraints.")
+  }
+  static var unsupportedOutput: NativePlayerError {
+    NativePlayerError(category: "decoder", code: "decoder.quality_constraint_unsupported",
+      message: "The source cannot satisfy the requested video constraints.")
+  }
 }
 
 enum YlApplePlaybackCommand {
