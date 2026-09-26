@@ -6,13 +6,69 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'support/apple_fakes.dart';
 
 void main() {
+  test('schema 4 selection is mandatory, validated and retained by deltas', () {
+    final wire = wireState(session: 's1', revision: 4, sequence: 10)
+      ..videoTracks = [
+        AppleTrackMessage(
+          id: 'high',
+          kind: AppleTrackKind.video,
+          isSelected: false,
+        ),
+      ]
+      ..videoSelection = AppleVideoSelectionMessage(
+        fixedTrackId: 'high',
+        reason: 'user',
+      );
+    final fixed = AppleCodec.state(wire);
+    expect(fixed.videoSelection.fixedTrackId, 'high');
+    expect(
+      AppleCodec.delta(fixed, wireDelta()).videoSelection,
+      fixed.videoSelection,
+    );
+    for (final selection in [
+      null,
+      AppleVideoSelectionMessage(reason: 'private-invalid'),
+      AppleVideoSelectionMessage(fixedTrackId: 'missing', reason: 'user'),
+      AppleVideoSelectionMessage(fixedTrackId: 'high', reason: 'initial'),
+    ]) {
+      wire.videoSelection = selection;
+      expect(() => AppleCodec.state(wire), throwsArgumentError);
+    }
+    wire.videoSelection = AppleVideoSelectionMessage(
+      reason: 'trackUnavailable',
+    );
+    expect(
+      AppleCodec.state(wire).videoSelection.reason,
+      YlVideoSelectionReason.trackUnavailable,
+    );
+  });
+
   test('DASH appends wire ordinal ten without changing old formats', () {
-    const oldNames = ['automatic', 'hls', 'mp4', 'mov', 'matroska', 'webm', 'mpegTs', 'mpegPs', 'flv', 'avi'];
-    expect(AppleMediaFormat.values.take(10).map((value) => value.name), oldNames);
+    const oldNames = [
+      'automatic',
+      'hls',
+      'mp4',
+      'mov',
+      'matroska',
+      'webm',
+      'mpegTs',
+      'mpegPs',
+      'flv',
+      'avi',
+    ];
+    expect(
+      AppleMediaFormat.values.take(10).map((value) => value.name),
+      oldNames,
+    );
     expect(YlMediaFormat.values.take(10).map((value) => value.name), oldNames);
     expect(AppleMediaFormat.dash.index, 10);
     expect(YlMediaFormat.dash.index, 10);
-    final source = AppleCodec.source(YlNetworkSource(Uri.parse('https://media.test/manifest'), format: YlMediaFormat.dash));
+    final source = AppleCodec.source(
+      YlNetworkSource(
+        Uri.parse('https://media.test/manifest'),
+        format: YlMediaFormat.dash,
+      ),
+    );
     final decoded = AppleSourceMessage.decode(source.encode());
     expect(decoded.format, AppleMediaFormat.dash);
   });

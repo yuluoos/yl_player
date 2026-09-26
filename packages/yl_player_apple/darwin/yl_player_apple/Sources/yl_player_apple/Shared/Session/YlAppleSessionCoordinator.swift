@@ -85,6 +85,7 @@ final class YlAppleSessionCoordinator: NSObject {
     self.avBackend = avBackend
     self.slot = YlBackendSlot(initial: avBackend, compatibility: slotCompatibility ?? services.compatibility)
     super.init()
+    avBackend.onAutomaticFallback = { [weak self] in self?.capsCoordinator.cancelCurrent() }
   }
 
   func load(_ recipe: YlAppleLoadRecipe, identity: YlAppleSessionIdentity,
@@ -121,39 +122,56 @@ final class YlAppleSessionCoordinator: NSObject {
 
   func execute(_ command: YlApplePlaybackCommand,
     completion: @escaping (Result<Void, NativePlayerError>) -> Void) {
-    if case .constraints = command { capsCoordinator.cancelCurrent() }
-    if case .constraints(let constraints) = command,
-       let source = lastCommittedSource, route(for: source) == .dashHls {
-      do { _ = try YlFallbackQualityConstraint(validating: constraints) }
-      catch let error as NativePlayerError { completion(.failure(error)); return }
-      catch { completion(.failure(Self.commandError(error))); return }
-      if constraints == lastQualityConstraint { completion(.success(())); return }
-      guard slot.current === avBackend, avBackend.isActive, activeRestorationGeneration == nil,
-            let snapshot = committedDashSnapshot, let credentials = committedHlsCredentials,
-            let identity else {
-        completion(.failure(YlAppleVideoConstraints.reloadRequired)); return
+    let policy: (YlAppleVideoConstraints, YlNativeVideoSelection)?
+    switch command {
+    case .constraints(let constraints): policy = (constraints, avBackend.videoSelection)
+    case .videoTrack(let id): policy = (lastQualityConstraint, .init(fixedTrackId: id, reason: "user"))
+    default: policy = nil
+    }
+    if let (constraints, selection) = policy {
+      capsCoordinator.cancelCurrent()
+      if let source = lastCommittedSource, route(for: source) == .dashHls {
+        do {
+          _ = try YlFallbackQualityConstraint(validating: constraints)
+          guard pendingLoadRequestId == nil else { throw YlOpenCancellationToken.cancellationError() }
+          if constraints == lastQualityConstraint && selection.fixedTrackId == avBackend.videoSelection.fixedTrackId {
+            if case .videoTrack = command { avBackend.acceptVideoSelection(selection) }
+            completion(.success(())); return
+          }
+          guard slot.current === avBackend, avBackend.isActive, activeRestorationGeneration == nil,
+                let snapshot = committedDashSnapshot, let credentials = committedHlsCredentials,
+                let identity else {
+            if case .constraints = command { throw YlAppleVideoConstraints.reloadRequired }
+            throw YlNativeVideoSelection.unsupported
+          }
+          guard pendingLoadRequestId == nil else { throw YlOpenCancellationToken.cancellationError() }
+          if case .videoTrack(let id) = command, let id {
+            guard avBackend.confirmedVideoTracks.contains(where: { $0.id == id }) else {
+              throw YlNativeVideoSelection.unsupported
+            }
+          }
+          capsCoordinator.begin(prepare: { [weak self] token in
+            guard let self else { throw YlOpenCancellationToken.cancellationError() }
+            try self.beforeDashCapsPreparation?(token)
+            try token.throwIfCancelled()
+            return .headeredHls(source: source, prepared: try self.prepareHeaderedHls(
+              source: source, token: token, credentialContext: credentials,
+              videoConstraints: constraints, dashSnapshot: snapshot, fixedTrackId: selection.fixedTrackId))
+          }, commit: { [weak self] candidate in
+            guard let self, !self.disposed, self.identity == identity,
+                  self.pendingLoadRequestId == nil, self.slot.current === self.avBackend,
+                  self.avBackend.isActive, self.activeRestorationGeneration == nil,
+                  case let .headeredHls(_, prepared) = candidate else {
+              throw YlOpenCancellationToken.cancellationError()
+            }
+            try self.avBackend.replaceActiveDash(source: source, prepared: prepared, selection: selection)
+            self.lastQualityConstraint = constraints
+          }, completion: completion)
+        } catch let error as NativePlayerError { completion(.failure(error)) }
+        catch { completion(.failure(Self.commandError(error))) }
+        return
       }
-      guard pendingLoadRequestId == nil else {
-        completion(.failure(YlOpenCancellationToken.cancellationError())); return
-      }
-      capsCoordinator.begin(prepare: { [weak self] token in
-        guard let self else { throw YlOpenCancellationToken.cancellationError() }
-        try self.beforeDashCapsPreparation?(token)
-        try token.throwIfCancelled()
-        return .headeredHls(source: source, prepared: try self.prepareHeaderedHls(
-          source: source, token: token, credentialContext: credentials,
-          videoConstraints: constraints, dashSnapshot: snapshot))
-      }, commit: { [weak self] candidate in
-        guard let self, !self.disposed, self.identity == identity,
-              self.pendingLoadRequestId == nil, self.slot.current === self.avBackend,
-              self.avBackend.isActive, self.activeRestorationGeneration == nil,
-              case let .headeredHls(_, prepared) = candidate else {
-          throw YlOpenCancellationToken.cancellationError()
-        }
-        try self.avBackend.replaceActiveDash(source: source, prepared: prepared)
-        self.lastQualityConstraint = constraints
-      }, completion: completion)
-      return
+      if case .videoTrack = command { completion(.failure(YlNativeVideoSelection.unsupported)); return }
     }
     if case .constraints(let constraints) = command, let fallback = slot.current as? YlFallbackBackend {
       do { try fallback.validateQualityConstraint(YlFallbackQualityConstraint(validating: constraints)) }
@@ -370,12 +388,13 @@ final class YlAppleSessionCoordinator: NSObject {
        let hlsCredentials = committedHlsCredentials {
       let loadConstraints = lastQualityConstraint
       let dashSnapshot = committedDashSnapshot
+      let fixedTrackId = avBackend.videoSelection.fixedTrackId
       openCoordinator.begin(
         prepare: { [weak self] token in
           guard let self else { throw YlOpenCancellationToken.cancellationError() }
           return .headeredHls(
             source: source,
-            prepared: try self.prepareHeaderedHls(source: source, token: token, credentialContext: hlsCredentials, videoConstraints: loadConstraints, dashSnapshot: dashSnapshot)
+            prepared: try self.prepareHeaderedHls(source: source, token: token, credentialContext: hlsCredentials, videoConstraints: loadConstraints, dashSnapshot: dashSnapshot, fixedTrackId: fixedTrackId)
           )
         },
         commit: { [weak self] candidate in
@@ -826,7 +845,8 @@ final class YlAppleSessionCoordinator: NSObject {
     token: YlOpenCancellationToken,
     credentialContext: YlHlsCredentialContext,
     videoConstraints: YlAppleVideoConstraints,
-    dashSnapshot: YlDashManifestSnapshot? = nil
+    dashSnapshot: YlDashManifestSnapshot? = nil,
+    fixedTrackId: String? = nil
   ) throws -> YlPreparedHlsAsset {
     try token.throwIfCancelled()
     guard let url = source.url else {
@@ -842,10 +862,10 @@ final class YlAppleSessionCoordinator: NSObject {
     if !source.credentialContext.maySendCredentials {
       credentialContext.strip(url.absoluteString)
     }
-    return try YlPreparedHlsAsset(
+    let prepared = try YlPreparedHlsAsset(
       originURL: url,
       isDash: route(for: source) == .dashHls,
-      videoConstraints: videoConstraints,
+      videoConstraints: videoConstraints, fixedTrackId: fixedTrackId,
       headers: source.headers,
       credentials: source.credentials,
       configuration: configuration.network,
@@ -854,6 +874,12 @@ final class YlAppleSessionCoordinator: NSObject {
       credentialContext: credentialContext,
       opaqueRetention: try bufferLedger.acquireOpaqueHlsRetention()
     )
+    if fixedTrackId != nil {
+      prepared.automaticCandidate = try prepareHeaderedHls(source: source, token: token,
+        credentialContext: credentialContext, videoConstraints: videoConstraints,
+        dashSnapshot: prepared.loader.dashSnapshot)
+    }
+    return prepared
   }
 
   private func route(for source: YlAppleSourceDescriptor) -> YlAppleSourceRoute {

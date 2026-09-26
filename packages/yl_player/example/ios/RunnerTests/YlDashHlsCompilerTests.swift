@@ -29,6 +29,42 @@ final class YlDashHlsCompilerTests: XCTestCase {
     }
     XCTAssertEqual(emitted, 0, "Unsupported MPD must fail before media emission", file: file, line: line)
   }
+  func testFixedProjectionMatchesSemanticIdentityAcrossReorderAndMissingPeriod() throws {
+    let xml = mpd(ladder(rendition("low") + rendition("high", width: 640, bandwidth: 700000))
+      + ladder(rendition("renamed-high", width: 640, bandwidth: 700000) + rendition("renamed-low"), start: 4)
+      + ladder(rendition("only-low"), start: 8), duration: 12)
+    let result = try YlDashHlsCompiler.compile(data: Data(xml.utf8), finalManifestURL: source,
+      sourceURL: source, credentialsStripped: false, fixedTrackId: "dash-video-w640-h360-b700000",
+      manifestURL: { URL(string: "https://virtual.test/\($0).m3u8")! }, mediaURL: { url, _ in url })
+    let paths = result.manifests.filter { $0.key != result.rootURL }.values.map { String(decoding: $0, as: UTF8.self) }
+    XCTAssertFalse(paths.isEmpty)
+    for path in paths {
+      XCTAssertTrue(path.contains("init-high.mp4"))
+      XCTAssertTrue(path.contains("init-renamed-high.mp4"))
+      XCTAssertFalse(path.contains("init-low.mp4"))
+      XCTAssertFalse(path.contains("init-renamed-low.mp4"))
+      XCTAssertTrue(path.contains("init-only-low.mp4"))
+    }
+    XCTAssertEqual(result.videoCatalog.tracks(at: 0).map(\.width), [320, 640])
+    XCTAssertEqual(result.videoCatalog.tracks(at: 8_000_000).map(\.width), [320])
+  }
+
+  func testFixedProjectionRejectsAmbiguityIncompatibilityAndCapsAcrossWholeProgram() throws {
+    let high = rendition("high", width: 640, bandwidth: 700000)
+    let cases = [mpd(ladder(rendition("a") + rendition("b"))),
+      mpd(ladder(rendition("a") + high.replacingOccurrences(of: "width=\"640\"", with: "width=\"641\""))),
+      mpd(ladder(high) + ladder(rendition("low"), start: 4), duration: 8)]
+    for (index, xml) in cases.enumerated() {
+      var resources = 0
+      XCTAssertThrowsError(try YlDashHlsCompiler.compile(data: Data(xml.utf8), finalManifestURL: source,
+        sourceURL: source, credentialsStripped: false,
+        videoConstraints: index == 2 ? .init(maxWidth: 320, maxHeight: nil, maxBitrate: nil) : .unconstrained,
+        fixedTrackId: index == 0 ? "dash-video-w320-h180-b350000" : "dash-video-w640-h360-b700000",
+        manifestURL: { URL(string: "https://virtual.test/\($0).m3u8")! }, mediaURL: { url, _ in resources += 1; return url }))
+      XCTAssertEqual(resources, 0)
+    }
+  }
+
   func testCatalogStableNumericIdentitySortingAndVideoOnlyBitrate() throws {
     let low = "dash-video-w320-h180-b350000", high = "dash-video-w640-h360-b700000"
     let xml = mpd(ladder(rendition("secret-high", width: 640, bandwidth: 700000) + rendition("private-low"), audio: true)

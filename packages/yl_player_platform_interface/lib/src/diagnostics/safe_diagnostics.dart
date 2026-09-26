@@ -6,6 +6,10 @@ abstract final class YlSafeDiagnostics {
 
   /// Fixed public guidance for recognized codes, never native error prose.
   static String messageForCode(String code) => switch (code) {
+    'source.seek_failed' =>
+      'The playback position could not be restored. Reload the source to continue.',
+    'policy.video_selection_unsupported' =>
+      'The requested video quality is unavailable for this source.',
     YlFailureCodes.networkProtocolUnsupported =>
       'The media transport protocol is not supported. Use a supported source protocol.',
     YlFailureCodes.networkRtmpHandshakeFailed =>

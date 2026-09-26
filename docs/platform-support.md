@@ -216,7 +216,8 @@ review fix, followed by three targeted compiler passes per platform for that
 fix. These are separate runs, not a 56-test full rerun. The public playback
 evidence and its precise limits are in the [changing-ladders report](superpowers/reports/2026-09-24-apple-dash-changing-ladders.md).
 See [transport compatibility](transport-compatibility.md) for Android schema 4,
-Apple schema 3, and mixed-version safety.
+Apple schema 4 in the fixed-selection stage, and mixed-version safety. The
+earlier Apple adapter and caps reports describe the schema at their own dates.
 
 ## Fixed video selection stage
 
@@ -237,8 +238,12 @@ returns to automatic selection with `trackUnavailable` when the current Period
 confirms that quality is absent. Transient empty catalogs do not by themselves
 mean the quality disappeared. The conservative fixed path rejects incompatible
 codec/profile, HDR, ambiguous quality identity, or an unproven host/device cap.
-Apple currently reports fixed-video selection as unsupported; its existing
-compatible DASH ladder remains under AVPlayer's automatic choice.
+Apple implements fixed selection for its admitted static clear AVC/AAC DASH
+subset. It projects the chosen quality into every containing Period's media
+paths while retaining the complete allowed catalog. An absent quality in the
+confirmed current Period returns to sticky automatic selection with
+`trackUnavailable`; a later seek back does not reselect it. An unknown or
+ambiguous ID and incompatible source are rejected with a safe command error.
 
 The controlled Android playback gate uses an eight-second, two-Period
 320×180/640×360 AVC/AAC fixture to inspect first frame, decoded geometry,
@@ -247,9 +252,9 @@ result and any remaining discrepancy are recorded in the
 [fixed-selection stage report](superpowers/reports/2026-09-24-fixed-video-selection.md).
 This gate does not establish full adaptive bitrate behavior, weak-network
 quantitative response, HDR switching, general DASH interoperability, or a
-physical/minimum-OS device matrix. Fixed Apple behavior and quantitative
-weak-network ABR remain future work. Active caps for the bounded static Apple
-DASH subset are described below.
+physical/minimum-OS device matrix. Apple fixed selection's own native and
+public evidence is in the [Apple fixed-selection report](superpowers/reports/2026-09-26-apple-dash-fixed-selection.md).
+Active caps for the bounded static Apple DASH subset are described below.
 
 ## Apple DASH Load video caps
 
@@ -269,16 +274,18 @@ The constrained path accepts a conservative, compatible subset of the existing
 static DASH adapter: one AVC codec/profile family, compatible display ratio and
 frame rate, square pixels, and no color, dynamic-range, or supplemental
 declarations. The full original presentation is validated before filtering.
-AVPlayer remains in automatic video selection. Passing the same constraints
-through `session.setVideoConstraints` succeeds. An active accepted static DASH
+AVPlayer starts in automatic video selection unless an explicit fixed command
+is accepted. Passing the same constraints through
+`session.setVideoConstraints` succeeds. An active accepted static DASH
 session can also tighten, loosen, or clear them with the same Future API while
 keeping its session identity, measured position, current play/pause intent,
-and automatic video selection. The Future completes when the new item and
+and accepted selection mode. The Future completes when the new item and
 policy are committed; a new decoded frame can arrive later, and brief
 rebuffering is possible. Changes recompile the accepted original MPD snapshot,
 so they do not fetch the MPD again. A cap that leaves any Period without a
-video candidate fails with `decoder.quality_constraint_unsupported` and keeps
-the old item and policy. An equal accepted cap is an idempotent no-op. For an
+video candidate, or excludes a fixed identity in a Period containing it,
+fails with `decoder.quality_constraint_unsupported` and keeps the old item and
+policy. An equal accepted cap is an idempotent no-op. For an
 inactive or restoring DASH session, a changed cap still returns
 `policy.video_constraints_reload_required`; load the source again with new
 options in that state. A rejected Load leaves the accepted session playing.
@@ -294,8 +301,10 @@ Representations available in the **current playback Period**, after the
 accepted Load or runtime video cap has filtered them. Each entry reports the
 MPD's declared width, height, video bandwidth, and codec. It is a catalog of
 available qualities, not evidence of which rendition AVPlayer is decoding.
-All DASH video entries have `isSelected == false`; `state.videoSelection`
-remains automatic with the initial reason. The decoded `videoGeometry` is the
+All DASH video entries have `isSelected == false`; this catalog does not report
+which rendition the decoder displayed. `state.videoSelection` starts automatic
+with the initial reason, then reflects an accepted user fixed/auto command or
+sticky `trackUnavailable` fallback. The decoded `videoGeometry` is the
 separate observation of the displayed frame.
 
 IDs use `dash-video-w{width}-h{height}-b{bandwidth}`. They remain stable when
@@ -304,9 +313,10 @@ sorted by width, height, then video bandwidth. At a Period boundary it follows
 the measured program position; seeking back or forward restores the catalog
 for the landed Period. A failed candidate Load or runtime cap change preserves
 the accepted session's catalog, and Stop clears it. A successful runtime cap
-change publishes the current Period's newly filtered catalog. This catalog
-does not implement fixed selection, adaptive fallback policy, or a quantitative
-ABR guarantee. The existing clear static AVC/AAC Apple DASH subset and its
+change publishes the current Period's newly filtered catalog. Fixed selection
+uses the same full allowed catalog and a separate effective media projection;
+the catalog alone does not establish an adaptive fallback policy or a
+quantitative ABR guarantee. The existing clear static AVC/AAC Apple DASH subset and its
 admission limits still apply. See the [catalog stage report](superpowers/reports/2026-09-25-apple-dash-track-catalog.md)
 for separate native and public evidence and the tested device scope.
 

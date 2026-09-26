@@ -109,6 +109,46 @@ void main() {
     },
   );
 
+  test(
+    'video selection transport awaits native installation and safe late failure',
+    () async {
+      final entered = Completer<void>(), reply = Completer<Object?>();
+      host('selectVideoTrack', (message) {
+        final command = (message as List).single as AppleVideoTrackCommand;
+        expect(command.sessionId, 'accepted');
+        expect(command.trackId, isNull);
+        entered.complete();
+        return reply.future;
+      });
+      final api = ApplePlayerHostApi(messageChannelSuffix: 'instance-1');
+      var settled = false;
+      final command = api
+          .selectVideoTrack(AppleVideoTrackCommand(sessionId: 'accepted'))
+          .whenComplete(() {
+            settled = true;
+          });
+      final check = expectLater(
+        command,
+        throwsA(
+          isA<PlatformException>().having(
+            (e) => e.code,
+            'code',
+            'policy.video_selection_unsupported',
+          ),
+        ),
+      );
+      await entered.future;
+      expect(settled, isFalse);
+      reply.complete([
+        'policy.video_selection_unsupported',
+        'Selection unavailable.',
+        null,
+      ]);
+      await check;
+      expect(settled, isTrue);
+    },
+  );
+
   for (final format in [YlMediaFormat.matroska, YlMediaFormat.flv]) {
     for (final replyFirst in [true, false]) {
       test(
@@ -207,7 +247,7 @@ void main() {
       final calls = <String>[];
       factory((message) {
         final request = (message as List).single as AppleCreateRequest;
-        expect(request.schemaMajor, 3);
+        expect(request.schemaMajor, 4);
         expect(request.options.audioPolicy, AppleAudioPolicy.appManaged);
         return [wireCreate()];
       });

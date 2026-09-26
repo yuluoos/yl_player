@@ -68,6 +68,11 @@ final class YlDashResourceLoaderTests: XCTestCase {
     try XCTUnwrap(String(data: master, encoding: .utf8)?.split(separator: "\n").last.flatMap { URL(string: String($0)) })
   }
 
+  private var twoQualityMPD: Data {
+    let high = "<Representation id=\"high\" bandwidth=\"2000\" codecs=\"avc1.64001f\" width=\"640\" height=\"360\"><SegmentTemplate initialization=\"high-init.mp4\" media=\"high-$Number$.m4s\" duration=\"2\"/></Representation>"
+    return Data(String(decoding: mpd, as: UTF8.self).replacingOccurrences(of: "</AdaptationSet>", with: high + "</AdaptationSet>").utf8)
+  }
+
   private var changingCatalogMPD: Data {
     let one = String(data: mpd, encoding: .utf8)!
       .replacingOccurrences(of: "mediaPresentationDuration=\"PT4S\"", with: "mediaPresentationDuration=\"PT8S\"")
@@ -477,6 +482,61 @@ final class YlDashResourceLoaderTests: XCTestCase {
   }
 
   @MainActor
+  func testFixedSelectionPreparationReconcilesLatestPeriodAndTransportIntent() async throws {
+    let entered = expectation(description: "caps preparation entered")
+    let release = DispatchSemaphore(value: 0); defer { release.signal() }
+    let server = try DashHTTPServer(); defer { server.close() }
+    let data = changingCatalogMPD
+    server.handler = { _ in (200, [:], data) }
+    let player = DashCatalogClockPlayer(), output = AppleTestTexture()
+    var states: [YlNativeState] = []
+    let coordinator = YlAppleSessionCoordinator(playerId: 99,
+      services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { _ in AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), textureOwner: .init(output: output, onFrame: { _ in }),
+      avPlayer: player, beforeDashCapsPreparation: { token in
+        entered.fulfill(); _ = release.wait(timeout: .now() + 5); try token.throwIfCancelled()
+      }, emit: { _, callback in if case .state(let state) = callback.event { states.append(state) } })
+    defer { coordinator.dispose() }
+    try await withCheckedThrowingContinuation { (c: CheckedContinuation<Void, Error>) in
+      coordinator.load(.init(source: .init(uri: server.url("/movie.mpd").absoluteString, kind: .network, formatHint: .dash)),
+        identity: .init(sessionId: "stable", loadRequestId: "load"), willCommit: { _ in }, didCommit: {}, didRollback: {},
+        completion: { c.resume(with: $0.mapError { $0 as Error }) })
+    }
+    let old = player.currentItem
+    var result: Result<Void, NativePlayerError>?
+    coordinator.execute(.videoTrack("dash-video-w640-h360-b1000")) { result = $0 }
+    await fulfillment(of: [entered], timeout: 2)
+    XCTAssertNil(result); XCTAssertTrue(player.currentItem === old)
+    player.landOnSeek = true
+    try coordinator.executeSynchronous(.seek(4_000))
+    player.seekCompletion?(true)
+    for _ in 0..<8 { await Task.yield() }
+    player.measuredTime = CMTime(value: 4_000_500, timescale: 1_000_000)
+    try coordinator.executeSynchronous(.pause)
+    try coordinator.executeSynchronous(.speed(1.5))
+    try coordinator.executeSynchronous(.volume(0.25))
+    player.resetClockOnReplacement = true; player.landOnSeek = false
+    release.signal()
+    try await AppleHostCharacterizations.waitFor { result != nil }
+    try result?.get()
+    XCTAssertFalse(player.currentItem === old)
+    XCTAssertEqual(CMTimeCompare(try XCTUnwrap(player.requestedSeek), CMTime(value: 4_000_500, timescale: 1_000_000)), 0)
+    XCTAssertFalse(coordinator.currentPlaybackIntent)
+    XCTAssertEqual(player.volume, 0.25)
+    XCTAssertNil(coordinator.acceptedVideoConstraints.maxWidth)
+    XCTAssertEqual(states.last?.videoSelection.reason, "trackUnavailable")
+    XCTAssertNil(states.last?.videoSelection.fixedTrackId)
+    XCTAssertEqual(states.last?.positionMs, 4_000)
+    XCTAssertEqual(states.last?.videoTracks.first?.id, "dash-video-w320-h180-b1000")
+    let completion = player.seekCompletion
+    player.measuredTime = CMTime(value: 4_001_000, timescale: 1_000_000)
+    completion?(true)
+    for _ in 0..<8 { await Task.yield() }
+    coordinator.emitState()
+    XCTAssertEqual(states.last?.positionMs, 4_001)
+  }
+
+  @MainActor
   func testRuntimeCapsTransfersLatestUnlandedSeekAndRejectsRetiredCompletions() async throws {
     for targetMs: Int64 in [5_000, 0] {
       let entered = expectation(description: "caps held for unresolved seek")
@@ -523,6 +583,91 @@ final class YlDashResourceLoaderTests: XCTestCase {
       try result?.get()
       XCTAssertFalse(player.currentItem === oldItem)
       XCTAssertEqual(CMTimeCompare(try XCTUnwrap(player.requestedSeek), CMTime(value: targetMs, timescale: 1_000)), 0)
+      let transferred = try XCTUnwrap(player.seekCompletion)
+      retired(true)
+      for _ in 0..<8 { await Task.yield() }
+      coordinator.emitState()
+      XCTAssertEqual(states.last?.positionMs, targetMs, "Retired item completion cannot clear the transferred anchor")
+      try coordinator.executeSynchronous(.seek(6_000))
+      let latest = try XCTUnwrap(player.seekCompletion)
+      transferred(false)
+      for _ in 0..<8 { await Task.yield() }
+      coordinator.emitState()
+      XCTAssertEqual(states.last?.positionMs, 6_000, "Superseded replacement seek cannot clear the newest anchor")
+      player.measuredTime = CMTime(value: 6_001_500, timescale: 1_000_000)
+      latest(true)
+      for _ in 0..<8 { await Task.yield() }
+      result = nil
+      coordinator.execute(.constraints(.unconstrained)) { result = $0 }
+      try await AppleHostCharacterizations.waitFor { result != nil }
+      try result?.get()
+      XCTAssertEqual(CMTimeCompare(try XCTUnwrap(player.requestedSeek), CMTime(value: 6_001_500, timescale: 1_000_000)), 0,
+        "Completed user seek no longer overrides the measured fractional clock")
+      try coordinator.executeSynchronous(.seek(7_000))
+      let stoppedSeek = try XCTUnwrap(player.seekCompletion)
+      coordinator.stop()
+      try await load("after-stop")
+      stoppedSeek(true)
+      for _ in 0..<8 { await Task.yield() }
+      player.measuredTime = CMTime(value: 2_001_500, timescale: 1_000_000)
+      result = nil
+      coordinator.execute(.constraints(.init(maxWidth: 640, maxHeight: nil, maxBitrate: nil))) { result = $0 }
+      try await AppleHostCharacterizations.waitFor { result != nil }
+      try result?.get()
+      XCTAssertEqual(CMTimeCompare(try XCTUnwrap(player.requestedSeek), CMTime(value: 2_001_500, timescale: 1_000_000)), 0,
+        "Stop and new Load cannot retain a retired user seek")
+    }
+  }
+
+  @MainActor
+  func testFixedSelectionTransfersLatestUnlandedSeekAndRejectsRetiredCompletions() async throws {
+    for targetMs: Int64 in [5_000, 0] {
+      let entered = expectation(description: "caps held for unresolved seek")
+      let release = DispatchSemaphore(value: 0); defer { release.signal() }
+      let server = try DashHTTPServer(); defer { server.close() }
+      let data = changingCatalogMPD; server.handler = { _ in (200, [:], data) }
+      let player = DashCatalogClockPlayer(), output = AppleTestTexture()
+      var states: [YlNativeState] = [], preparations = 0
+      let coordinator = YlAppleSessionCoordinator(playerId: 99,
+        services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { _ in AppleTestDisplay() }),
+        configuration: .init(map: ["audioPolicy": "appManaged"]), textureOwner: .init(output: output, onFrame: { _ in }),
+        avPlayer: player, beforeDashCapsPreparation: { token in
+          preparations += 1
+          if preparations == 1 { entered.fulfill(); _ = release.wait(timeout: .now() + 5) }
+          try token.throwIfCancelled()
+        }, emit: { _, callback in if case .state(let state) = callback.event { states.append(state) } })
+      defer { coordinator.dispose() }
+      func load(_ id: String) async throws {
+        try await withCheckedThrowingContinuation { (c: CheckedContinuation<Void, Error>) in
+          coordinator.load(.init(source: .init(uri: server.url("/movie.mpd").absoluteString, kind: .network, formatHint: .dash)),
+            identity: .init(sessionId: id, loadRequestId: id), willCommit: { _ in }, didCommit: {}, didRollback: {},
+            completion: { c.resume(with: $0.mapError { $0 as Error }) })
+        }
+      }
+      try await load("accepted")
+      player.measuredTime = CMTime(value: 1_000_500, timescale: 1_000_000)
+      let oldItem = player.currentItem
+      var result: Result<Void, NativePlayerError>?
+      coordinator.execute(.videoTrack("dash-video-w640-h360-b1000")) { result = $0 }
+      await fulfillment(of: [entered], timeout: 2)
+      XCTAssertFalse(player.landOnSeek)
+      try coordinator.executeSynchronous(.seek(2_000))
+      let superseded = try XCTUnwrap(player.seekCompletion)
+      try coordinator.executeSynchronous(.seek(targetMs))
+      let retired = try XCTUnwrap(player.seekCompletion)
+      superseded(false)
+      for _ in 0..<8 { await Task.yield() }
+      coordinator.emitState()
+      XCTAssertEqual(states.last?.positionMs, 1_000, "Ordinary pending seek must still publish measured time")
+      XCTAssertTrue(player.currentItem === oldItem)
+      player.resetClockOnReplacement = true
+      release.signal()
+      try await AppleHostCharacterizations.waitFor { result != nil }
+      try result?.get()
+      XCTAssertFalse(player.currentItem === oldItem)
+      XCTAssertEqual(CMTimeCompare(try XCTUnwrap(player.requestedSeek), CMTime(value: targetMs, timescale: 1_000)), 0)
+      XCTAssertEqual(states.last?.videoSelection.fixedTrackId, "dash-video-w640-h360-b1000")
+      XCTAssertEqual(states.last?.videoTracks.map(\.width), [640])
       let transferred = try XCTUnwrap(player.seekCompletion)
       retired(true)
       for _ in 0..<8 { await Task.yield() }
@@ -608,6 +753,363 @@ final class YlDashResourceLoaderTests: XCTestCase {
       for _ in 0..<12 { await Task.yield() }
       XCTAssertEqual(results.count, 1)
     }
+  }
+
+  @MainActor
+  func testFixedSelectionSharesCapsSupersessionAndLifecycleCancellation() async throws {
+    for action in ["newer", "noop", "caps", "stop", "dispose", "deactivate", "memory", "load"] {
+      let entered = expectation(description: "pending \(action)")
+      let release = DispatchSemaphore(value: 0); defer { release.signal() }
+      let server = try DashHTTPServer(); defer { server.close() }
+      let data = twoQualityMPD; server.handler = { _ in (200, [:], data) }
+      let player = AVPlayer(), output = AppleTestTexture()
+      var calls = 0
+      let coordinator = YlAppleSessionCoordinator(playerId: 99,
+        services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { _ in AppleTestDisplay() }),
+        configuration: .init(map: ["audioPolicy": "appManaged"]), textureOwner: .init(output: output, onFrame: { _ in }),
+        avPlayer: player, beforeDashCapsPreparation: { token in
+          calls += 1
+          if calls == 1 { entered.fulfill(); _ = release.wait(timeout: .now() + 5) }
+          try token.throwIfCancelled()
+        }, emit: { _, _ in })
+      defer { coordinator.dispose() }
+      func load(_ id: String) async throws {
+        try await withCheckedThrowingContinuation { (c: CheckedContinuation<Void, Error>) in
+          coordinator.load(.init(source: .init(uri: server.url("/movie.mpd").absoluteString, kind: .network, formatHint: .dash)),
+            identity: .init(sessionId: id, loadRequestId: id), willCommit: { _ in }, didCommit: {}, didRollback: {},
+            completion: { c.resume(with: $0.mapError { $0 as Error }) })
+        }
+      }
+      try await load("stable")
+      let old = player.currentItem
+      var results: [Result<Void, NativePlayerError>] = []
+      coordinator.execute(.videoTrack("dash-video-w640-h360-b2000")) { results.append($0) }
+      await fulfillment(of: [entered], timeout: 2)
+      var second: Result<Void, NativePlayerError>?
+      switch action {
+      case "newer": coordinator.execute(.videoTrack("dash-video-w320-h180-b1000")) { second = $0 }
+      case "caps": coordinator.execute(.constraints(.init(maxWidth: 320, maxHeight: nil, maxBitrate: nil))) { second = $0 }
+      case "noop": coordinator.execute(.videoTrack(nil)) { second = $0 }
+      case "stop": coordinator.stop()
+      case "dispose": coordinator.dispose()
+      case "deactivate": coordinator.deactivate()
+      case "memory": coordinator.handleMemoryWarning()
+      default: try await load("next")
+      }
+      XCTAssertEqual(results.count, 1)
+      if case .failure(let error) = results.first { XCTAssertEqual(error.code, "network.cancelled") }
+      else { XCTFail("Pending caps must be cancelled") }
+      if action == "noop" { XCTAssertTrue(player.currentItem === old); try second?.get() }
+      release.signal()
+      if action == "newer" || action == "caps" { try await AppleHostCharacterizations.waitFor { second != nil }; try second?.get() }
+      for _ in 0..<12 { await Task.yield() }
+      XCTAssertEqual(results.count, 1)
+    }
+  }
+
+  @MainActor
+  func testFixedSelectionConfirmedLandingFallbackIsStickyAndRestorationRetainsPolicy() async throws {
+    let data = changingCatalogMPD
+    let server = try DashHTTPServer(); defer { server.close() }
+    server.handler = { _ in (200, [:], data) }
+    let player = DashCatalogClockPlayer(), output = AppleTestTexture()
+    var states: [YlNativeState] = []
+    let coordinator = YlAppleSessionCoordinator(playerId: 99,
+      services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { _ in AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), textureOwner: .init(output: output, onFrame: { _ in }),
+      avPlayer: player, emit: { _, callback in if case .state(let state) = callback.event { states.append(state) } })
+    defer { coordinator.dispose() }
+    func load(_ id: String) async throws {
+      try await withCheckedThrowingContinuation { (c: CheckedContinuation<Void, Error>) in
+        coordinator.load(.init(source: .init(uri: server.url("/movie.mpd").absoluteString, kind: .network, formatHint: .dash)),
+          identity: .init(sessionId: id, loadRequestId: id), willCommit: { _ in }, didCommit: {}, didRollback: {},
+          completion: { c.resume(with: $0.mapError { $0 as Error }) })
+      }
+    }
+    func command(_ command: YlApplePlaybackCommand) async throws {
+      try await withCheckedThrowingContinuation { (c: CheckedContinuation<Void, Error>) in
+        coordinator.execute(command) { c.resume(with: $0.mapError { $0 as Error }) }
+      }
+    }
+    try await load("stable")
+    try await command(.videoTrack("dash-video-w640-h360-b1000"))
+    XCTAssertEqual(states.last?.videoSelection.fixedTrackId, "dash-video-w640-h360-b1000")
+    let fixedItem = player.currentItem
+    let fixedLoader = try XCTUnwrap((fixedItem?.asset as? AVURLAsset)?.resourceLoader.delegate as? YlHlsResourceLoader)
+    // Reading the whole future playlist must not change the current mode.
+    _ = read(fixedLoader, try child(read(fixedLoader, try fixedLoader.encodedAssetURL()).received))
+    coordinator.emitState()
+    XCTAssertEqual(states.last?.videoSelection.reason, "user")
+    try coordinator.executeSynchronous(.seek(5_000))
+    let retired = try XCTUnwrap(player.seekCompletion)
+    player.measuredTime = CMTime(value: 5_000_000, timescale: 1_000_000)
+    coordinator.emitState()
+    XCTAssertTrue(player.currentItem === fixedItem)
+    XCTAssertEqual(states.last?.videoTracks.map(\.width), [640], "Unlanded seek retains coherent fixed catalog")
+    XCTAssertEqual(states.last?.videoSelection.fixedTrackId, "dash-video-w640-h360-b1000")
+    retired(false)
+    for _ in 0..<12 { await Task.yield() }
+    XCTAssertTrue(player.currentItem === fixedItem, "Cancelled seek completion cannot trigger PD-01")
+    XCTAssertEqual(states.last?.videoSelection.reason, "user")
+    XCTAssertEqual(CMTimeCompare(try XCTUnwrap(player.requestedSeek), .zero), 0, "Cancelled landing recovers without another user command")
+    player.measuredTime = .zero
+    player.seekCompletion?(true)
+    for _ in 0..<8 { await Task.yield() }
+    XCTAssertEqual(states.last?.videoSelection.reason, "user")
+    try coordinator.executeSynchronous(.seek(5_000))
+    player.measuredTime = CMTime(value: 5_000, timescale: 1_000)
+    player.seekCompletion?(true)
+    for _ in 0..<12 { await Task.yield() }
+    XCTAssertFalse(player.currentItem === fixedItem)
+    XCTAssertNil(states.last?.videoSelection.fixedTrackId)
+    XCTAssertEqual(states.last?.videoSelection.reason, "trackUnavailable")
+    XCTAssertEqual(states.last?.videoTracks.map(\.width), [320])
+    let automaticItem = player.currentItem
+    player.seekCompletion?(true)
+    for _ in 0..<8 { await Task.yield() }
+    player.landOnSeek = true
+    try coordinator.executeSynchronous(.seek(1_000))
+    player.seekCompletion?(true)
+    for _ in 0..<8 { await Task.yield() }
+    coordinator.emitState()
+    XCTAssertTrue(player.currentItem === automaticItem)
+    XCTAssertEqual(states.last?.videoSelection.reason, "trackUnavailable")
+    XCTAssertNil(states.last?.videoSelection.fixedTrackId)
+    XCTAssertEqual(states.last?.videoTracks.map(\.width), [640])
+    coordinator.deactivate()
+    do { try await command(.videoTrack("dash-video-w640-h360-b1000")); XCTFail("Inactive changed mode must reject") }
+    catch { XCTAssertEqual((error as? NativePlayerError)?.code, "policy.video_selection_unsupported") }
+    try await command(.play)
+    player.seekCompletion?(true)
+    for _ in 0..<8 { await Task.yield() }
+    coordinator.emitState()
+    XCTAssertEqual(states.last?.videoSelection.reason, "trackUnavailable")
+    XCTAssertEqual(server.requests.filter { $0.path == "/movie.mpd" }.count, 1)
+    coordinator.stop(); try await load("new")
+    XCTAssertEqual(states.last?.videoSelection.reason, "initial")
+    XCTAssertNil(states.last?.videoSelection.fixedTrackId)
+    retired(true)
+    for _ in 0..<8 { await Task.yield() }
+    XCTAssertEqual(states.last?.videoSelection.reason, "initial")
+  }
+
+  @MainActor
+  func testFixedRecoveryFailureAndTimeoutSurfaceSafeFailureWithoutAuto() async throws {
+    for timeout in [false, true] {
+      let data = changingCatalogMPD
+      let config = DashLoaderProtocol.configuration { $0.respond(data) }
+      let player = DashCatalogClockPlayer()
+      var states: [YlNativeState] = [], failures: [NativePlayerError] = []
+      let backend = YlAvPlayerBackend(playerId: 99,
+        services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+        configuration: .init(map: ["audioPolicy": "appManaged"]), player: player, emit: {
+          if case .state(let state) = $0.event { states.append(state) }
+          if case .failure(let error) = $0.event { failures.append(error) }
+        })
+      defer { backend.dispose() }
+      let source = YlAppleSourceDescriptor(uri: origin.absoluteString, kind: .network, formatHint: .dash)
+      let original = try prepare(config), snapshot = try XCTUnwrap(original.loader.dashSnapshot)
+      try backend.stagePreparedHls(source: source, prepared: original, resume: false); try backend.activate()
+      let fixed = try YlPreparedHlsAsset(originURL: origin, isDash: true, fixedTrackId: "dash-video-w640-h360-b1000",
+        headers: [:], configuration: .init(map: [:]), cancellationToken: .init(), dashSnapshot: snapshot)
+      fixed.automaticCandidate = try YlPreparedHlsAsset(originURL: origin, isDash: true,
+        headers: [:], configuration: .init(map: [:]), cancellationToken: .init(), dashSnapshot: snapshot)
+      try backend.replaceActiveDash(source: source, prepared: fixed, selection: .init(fixedTrackId: "dash-video-w640-h360-b1000", reason: "user"))
+      try backend.seek(toMs: 5_000)
+      player.measuredTime = CMTime(value: 5_000, timescale: 1_000)
+      player.seekCompletion?(false)
+      for _ in 0..<8 { await Task.yield() }
+      XCTAssertEqual(CMTimeCompare(try XCTUnwrap(player.requestedSeek), .zero), 0)
+      if timeout { try await Task.sleep(nanoseconds: 5_200_000_000) }
+      else { player.seekCompletion?(false); for _ in 0..<8 { await Task.yield() } }
+      XCTAssertEqual(failures.map(\.code), ["source.seek_failed"])
+      XCTAssertEqual(states.last?.status, "error")
+      XCTAssertEqual(states.last?.videoSelection.reason, "user")
+      XCTAssertEqual(states.last?.videoTracks.map(\.width), [640])
+      XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue())
+      player.seekCompletion?(true)
+      for _ in 0..<8 { await Task.yield() }
+      XCTAssertEqual(failures.count, 1)
+    }
+  }
+
+  @MainActor
+  func testFixedLeaseRollbackRebuildsSpareAndNaturalPeriodFallback() async throws {
+    let data = changingCatalogMPD
+    let server = try DashHTTPServer(); defer { server.close() }
+    server.handler = { _ in (200, [:], data) }
+    let player = DashCatalogClockPlayer(), output = AppleTestTexture()
+    var states: [YlNativeState] = []
+    let coordinator = YlAppleSessionCoordinator(playerId: 99,
+      services: .init(platform: .ios, textureOutput: output, makeDisplayDriver: { _ in AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), textureOwner: .init(output: output, onFrame: { _ in }),
+      avPlayer: player, emit: { _, callback in if case .state(let state) = callback.event { states.append(state) } })
+    defer { coordinator.dispose() }
+    try await withCheckedThrowingContinuation { (c: CheckedContinuation<Void, Error>) in
+      coordinator.load(.init(source: .init(uri: server.url("/movie.mpd").absoluteString, kind: .network, formatHint: .dash)),
+        identity: .init(sessionId: "stable", loadRequestId: "load"), willCommit: { _ in }, didCommit: {}, didRollback: {},
+        completion: { c.resume(with: $0.mapError { $0 as Error }) })
+    }
+    try await withCheckedThrowingContinuation { (c: CheckedContinuation<Void, Error>) in
+      coordinator.execute(.videoTrack("dash-video-w640-h360-b1000")) { c.resume(with: $0.mapError { $0 as Error }) }
+    }
+    let old = player.currentItem
+    coordinator.quiesceForHardwareDecoderLease()
+    XCTAssertNil(player.currentItem)
+    coordinator.restoreAfterHardwareDecoderRollback(forcePlay: false)
+    try await AppleHostCharacterizations.waitFor { player.currentItem != nil }
+    XCTAssertFalse(player.currentItem === old)
+    player.seekCompletion?(true)
+    for _ in 0..<8 { await Task.yield() }
+    XCTAssertEqual(states.last?.videoSelection.fixedTrackId, "dash-video-w640-h360-b1000")
+    XCTAssertFalse(coordinator.currentPlaybackIntent)
+    let restored = player.currentItem
+    player.measuredTime = CMTime(value: 5_000, timescale: 1_000)
+    player.tick?(player.measuredTime)
+    XCTAssertFalse(player.currentItem === restored)
+    XCTAssertEqual(states.last?.videoSelection.reason, "trackUnavailable")
+    XCTAssertNil(states.last?.videoSelection.fixedTrackId)
+    XCTAssertEqual(server.requests.filter { $0.path == "/movie.mpd" }.count, 1)
+  }
+
+  @MainActor
+  func testFixedFrameCannotPublishAfterFallbackRetiresItsItem() async throws {
+    let data = changingCatalogMPD
+    let player = DashCatalogClockPlayer(), output = AppleTestTexture()
+    let pixels = DashPixelOutput(width: 640, height: 360)
+    var tick: (() -> Void)?, states: [YlNativeState] = []
+    let backend = YlAvPlayerBackend(playerId: 99,
+      services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player, makeVideoOutput: { _ in pixels }, emit: {
+        if case .state(let state) = $0.event { states.append(state) }
+      })
+    defer { backend.dispose() }
+    let source = YlAppleSourceDescriptor(uri: origin.absoluteString, kind: .network, formatHint: .dash)
+    let original = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+    let snapshot = try XCTUnwrap(original.loader.dashSnapshot)
+    try backend.stagePreparedHls(source: source, prepared: original, resume: false); try backend.activate()
+    let fixed = try YlPreparedHlsAsset(originURL: origin, isDash: true, fixedTrackId: "dash-video-w640-h360-b1000",
+      headers: [:], configuration: .init(map: [:]), cancellationToken: .init(), dashSnapshot: snapshot)
+    fixed.automaticCandidate = try YlPreparedHlsAsset(originURL: origin, isDash: true,
+      headers: [:], configuration: .init(map: [:]), cancellationToken: .init(), dashSnapshot: snapshot)
+    try backend.replaceActiveDash(source: source, prepared: fixed, selection: .init(fixedTrackId: "dash-video-w640-h360-b1000", reason: "user"))
+    // A previous-Period output sample can overlap the authoritative clock's
+    // boundary. The metadata/state sample synchronously retires this item.
+    player.measuredTime = CMTime(value: 5_000, timescale: 1_000)
+    pixels.measuredItemTime = .zero
+    tick?()
+    XCTAssertEqual(states.last?.videoSelection.reason, "trackUnavailable")
+    XCTAssertTrue(output.frames.isEmpty, "The retired fixed item must not publish after automatic installation")
+  }
+
+  @MainActor
+  func testFixedOutputRejectsFuturePeriodAndContradictoryPixelsBeforePublication() async throws {
+    let data = changingCatalogMPD
+    let player = DashCatalogClockPlayer(), output = AppleTestTexture()
+    let pixels = DashPixelOutput(width: 320, height: 180)
+    var states: [YlNativeState] = [], failures: [NativePlayerError] = []
+    let backend = YlAvPlayerBackend(playerId: 99,
+      services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { _ in AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player, makeVideoOutput: { _ in pixels }, emit: {
+        if case .state(let state) = $0.event { states.append(state) }
+        if case .failure(let error) = $0.event { failures.append(error) }
+      })
+    defer { backend.dispose() }
+    let source = YlAppleSourceDescriptor(uri: origin.absoluteString, kind: .network, formatHint: .dash)
+    let original = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+    let snapshot = try XCTUnwrap(original.loader.dashSnapshot)
+    try backend.stagePreparedHls(source: source, prepared: original, resume: false); try backend.activate()
+    let fixed = try YlPreparedHlsAsset(originURL: origin, isDash: true, fixedTrackId: "dash-video-w640-h360-b1000",
+      headers: [:], configuration: .init(map: [:]), cancellationToken: .init(), dashSnapshot: snapshot)
+    fixed.automaticCandidate = try YlPreparedHlsAsset(originURL: origin, isDash: true,
+      headers: [:], configuration: .init(map: [:]), cancellationToken: .init(), dashSnapshot: snapshot)
+    try backend.replaceActiveDash(source: source, prepared: fixed, selection: .init(fixedTrackId: "dash-video-w640-h360-b1000", reason: "user"))
+    pixels.measuredItemTime = CMTime(value: 5_000, timescale: 1_000)
+    XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue())
+    for _ in 0..<8 { await Task.yield() }
+    XCTAssertTrue(failures.isEmpty, "Prefetched future Period is not current authority")
+    XCTAssertEqual(states.last?.videoSelection.reason, "user")
+    XCTAssertEqual(states.last?.videoTracks.map(\.width), [640])
+    pixels.measuredItemTime = .zero
+    XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue())
+    for _ in 0..<8 { await Task.yield() }
+    XCTAssertEqual(failures.map(\.code), ["decoder.quality_constraint_unsupported"])
+    XCTAssertNil(states.last?.geometry)
+    XCTAssertTrue(output.frames.isEmpty)
+    XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue())
+  }
+
+  @MainActor
+  func testFixedAutomaticInstallationFailureRetainsTruthfulModeAndReleasesSpare() async throws {
+    let data = changingCatalogMPD
+    let player = DashCatalogClockPlayer()
+    var states: [YlNativeState] = [], failures: [NativePlayerError] = []
+    let backend = YlAvPlayerBackend(playerId: 99,
+      services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player, emit: {
+        if case .state(let state) = $0.event { states.append(state) }
+        if case .failure(let error) = $0.event { failures.append(error) }
+      })
+    defer { backend.dispose() }
+    let source = YlAppleSourceDescriptor(uri: origin.absoluteString, kind: .network, formatHint: .dash)
+    let original = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+    let snapshot = try XCTUnwrap(original.loader.dashSnapshot)
+    try backend.stagePreparedHls(source: source, prepared: original, resume: false); try backend.activate()
+    let fixed = try YlPreparedHlsAsset(originURL: origin, isDash: true, fixedTrackId: "dash-video-w640-h360-b1000",
+      headers: [:], configuration: .init(map: [:]), cancellationToken: .init(), dashSnapshot: snapshot)
+    let automatic = try YlPreparedHlsAsset(originURL: origin, isDash: true,
+      headers: [:], configuration: .init(map: [:]), cancellationToken: .init(), dashSnapshot: snapshot)
+    fixed.automaticCandidate = automatic
+    try backend.replaceActiveDash(source: source, prepared: fixed, selection: .init(fixedTrackId: "dash-video-w640-h360-b1000", reason: "user"))
+    try backend.play()
+    backend.beforeAudioOutput = { throw YlNativeVideoSelection.unsupported }
+    player.measuredTime = CMTime(value: 5_000, timescale: 1_000)
+    backend.emitState()
+    XCTAssertEqual(failures.count, 1)
+    XCTAssertEqual(states.last?.status, "error")
+    XCTAssertEqual(states.last?.videoSelection.reason, "user")
+    XCTAssertEqual(states.last?.videoTracks.map(\.width), [640])
+    XCTAssertNil(automatic.loader.dashSnapshot)
+    backend.emitState()
+    XCTAssertEqual(failures.count, 1)
+  }
+
+  @MainActor
+  func testFixedSelectionHostProjectsHighAndKeepsFullCatalog() async throws {
+    let one = String(data: mpd, encoding: .utf8)!
+    let high = "<Representation id=\"high\" bandwidth=\"2000\" codecs=\"avc1.64001f\" width=\"640\" height=\"360\"><SegmentTemplate initialization=\"high-init.mp4\" media=\"high-$Number$.m4s\" duration=\"2\"/></Representation>"
+    let data = Data(one.replacingOccurrences(of: "</AdaptationSet>", with: high + "</AdaptationSet>").utf8)
+    let server = try DashHTTPServer(); defer { server.close() }
+    server.handler = { _ in (200, [:], data) }
+    let fixture = AppleHostFixture(); defer { fixture.host.close() }
+    let loaded = try await fixture.host.load(request: AppleHostFixture.request("fixed", url: server.url("/movie.mpd").absoluteString, format: .dash))
+    let originalItem = fixture.av.currentItem
+    do {
+      try await fixture.host.selectVideoTrack(command: .init(sessionId: loaded.sessionId, trackId: "private-missing-id"))
+      XCTFail("An unknown ID must reject")
+    } catch let error as PigeonError { XCTAssertEqual(error.code, "policy.video_selection_unsupported") }
+    XCTAssertTrue(fixture.av.currentItem === originalItem)
+    try await fixture.host.selectVideoTrack(command: .init(sessionId: loaded.sessionId, trackId: "dash-video-w640-h360-b2000"))
+    let selectedItem = fixture.av.currentItem
+    try await fixture.host.selectVideoTrack(command: .init(sessionId: loaded.sessionId, trackId: "dash-video-w640-h360-b2000"))
+    XCTAssertTrue(fixture.av.currentItem === selectedItem)
+    let loader = try XCTUnwrap((fixture.av.currentItem?.asset as? AVURLAsset)?.resourceLoader.delegate as? YlHlsResourceLoader)
+    XCTAssertEqual(loader.videoCatalog?.tracks(at: 0).map(\.id), ["dash-video-w320-h180-b1000", "dash-video-w640-h360-b2000"])
+    let master = read(loader, try loader.encodedAssetURL())
+    let media = String(data: read(loader, try child(master.received)).received, encoding: .utf8)!
+    XCTAssertTrue(media.contains("high-init.mp4"))
+    XCTAssertFalse(media.contains("/init.mp4"))
+    XCTAssertEqual(server.requests.filter { $0.path == "/movie.mpd" }.count, 1)
+    let accepted = fixture.av.currentItem
+    do {
+      try await fixture.host.setVideoConstraints(command: .init(sessionId: loaded.sessionId, constraints: .init(maxWidth: 320)))
+      XCTFail("Fixed high cannot be silently cleared by a cap")
+    } catch let error as PigeonError { XCTAssertEqual(error.code, "decoder.quality_constraint_unsupported") }
+    XCTAssertTrue(fixture.av.currentItem === accepted)
+    try await fixture.host.selectVideoTrack(command: .init(sessionId: loaded.sessionId, trackId: nil))
+    let auto = try XCTUnwrap((fixture.av.currentItem?.asset as? AVURLAsset)?.resourceLoader.delegate as? YlHlsResourceLoader)
+    let autoMaster = String(data: read(auto, try auto.encodedAssetURL()).received, encoding: .utf8)!
+    XCTAssertEqual(autoMaster.components(separatedBy: "#EXT-X-STREAM-INF:").count - 1, 2)
   }
 
   @MainActor
@@ -1425,6 +1927,8 @@ private final class ResidualRatePlayer: AVPlayer {
 
 private final class DashPixelOutput: AVPlayerItemVideoOutput, @unchecked Sendable {
   let buffer: CVPixelBuffer
+  var measuredItemTime = CMTime.zero
+  override func itemTime(forHostTime hostTimeInSeconds: CFTimeInterval) -> CMTime { measuredItemTime }
   init(width: Int, height: Int) {
     var result: CVPixelBuffer?
     precondition(CVPixelBufferCreate(kCFAllocatorDefault, width, height, kCVPixelFormatType_32BGRA,

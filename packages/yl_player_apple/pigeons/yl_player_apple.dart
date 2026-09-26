@@ -63,6 +63,7 @@ enum ApplePlayerOperation {
   videoConstraints,
   volume,
   stop,
+  videoTrackSelection,
 }
 
 enum AppleDecoderMode { unknown, hardware, software }
@@ -295,6 +296,7 @@ class AppleStateMessage {
   String? decoderIdentity;
   AppleMetricsMessage metrics;
   AppleFailureMessage? failure;
+  AppleVideoSelectionMessage? videoSelection;
 }
 
 class AppleStateDeltaMessage {
@@ -370,6 +372,17 @@ class ApplePlaybackFailedMessage {
   AppleFailureMessage failure;
 }
 
+// Append wire classes to retain existing factory codec tags.
+class AppleVideoSelectionMessage {
+  String? fixedTrackId;
+  String reason;
+}
+
+class AppleVideoTrackCommand {
+  String sessionId;
+  String? trackId;
+}
+
 @HostApi()
 abstract class ApplePlayerFactoryHostApi {
   AppleCreateReply create(AppleCreateRequest request);
@@ -392,6 +405,8 @@ abstract class ApplePlayerHostApi {
   void selectAudioTrack(AppleTrackCommand command);
   @async
   void setVideoConstraints(AppleVideoConstraintsCommand command);
+  @async
+  void selectVideoTrack(AppleVideoTrackCommand command);
   void setVolume(double volume);
   @async
   void stop();

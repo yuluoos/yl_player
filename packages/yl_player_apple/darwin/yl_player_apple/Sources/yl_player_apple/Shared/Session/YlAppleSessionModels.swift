@@ -70,6 +70,7 @@ struct YlNativeState {
   let error: NativePlayerError?
   var decoderEvidence: YlHardwareDecoderEvidence? = nil
   var geometry: YlVideoGeometry? = nil
+  var videoSelection: YlNativeVideoSelection = .init()
 }
 
 struct YlNativeTimelineDelta {
@@ -117,10 +118,20 @@ struct YlAppleVideoConstraints: Equatable {
   }
 }
 
+struct YlNativeVideoSelection: Equatable {
+  var fixedTrackId: String? = nil
+  var reason = "initial"
+  static var unsupported: NativePlayerError {
+    NativePlayerError(category: "unsupported", code: "policy.video_selection_unsupported",
+      message: "The requested video selection is unavailable.")
+  }
+}
+
 enum YlApplePlaybackCommand {
   case play, pause, liveEdge
   case seek(Int64), speed(Double), volume(Double), track(String)
   case constraints(YlAppleVideoConstraints)
+  case videoTrack(String?)
 
   func apply(to backend: YlPlaybackBackend, cancellationToken: YlOpenCancellationToken? = nil) throws {
     switch self {
@@ -132,6 +143,7 @@ enum YlApplePlaybackCommand {
     case .volume(let volume): try backend.setVolume(Float(volume))
     case .track(let track): try backend.selectAudioTrack(track, cancellationToken: cancellationToken)
     case .constraints(let constraints): try backend.setVideoConstraints(constraints)
+    case .videoTrack: throw YlNativeVideoSelection.unsupported
     }
   }
 }

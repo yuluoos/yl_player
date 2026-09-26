@@ -5,7 +5,7 @@ import 'pigeon/yl_player_apple.g.dart';
 
 /// The schema boundary. Generated values never escape this package.
 abstract final class AppleCodec {
-  static const schemaMajor = 3;
+  static const schemaMajor = 4;
   static const _maxDurationMs = 9223372036854775;
   static final _metadata = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$');
 
@@ -293,6 +293,7 @@ abstract final class AppleCodec {
             ),
       audioTracks: value.audioTracks.map(track).toList(),
       videoTracks: value.videoTracks.map(track).toList(),
+      videoSelection: _selection(value.videoSelection),
       engine: engine(value.engine),
       decoderMode: value.engine == AppleEngine.avPlayer
           ? YlDecoderMode.unknown
@@ -465,6 +466,19 @@ abstract final class AppleCodec {
     AppleTrackKind.video => YlTrackKind.video,
   };
 
+  static YlVideoSelection _selection(AppleVideoSelectionMessage? value) {
+    if (value == null) throw ArgumentError('Missing video selection.');
+    return YlVideoSelection(
+      fixedTrackId: value.fixedTrackId,
+      reason: switch (value.reason) {
+        'initial' => YlVideoSelectionReason.initial,
+        'user' => YlVideoSelectionReason.user,
+        'trackUnavailable' => YlVideoSelectionReason.trackUnavailable,
+        _ => throw ArgumentError('Invalid video selection reason.'),
+      },
+    );
+  }
+
   static YlPlayerOperation _operation(ApplePlayerOperation value) =>
       switch (value) {
         ApplePlayerOperation.seek => YlPlayerOperation.seek,
@@ -476,6 +490,8 @@ abstract final class AppleCodec {
           YlPlayerOperation.videoConstraints,
         ApplePlayerOperation.volume => YlPlayerOperation.volume,
         ApplePlayerOperation.stop => YlPlayerOperation.stop,
+        ApplePlayerOperation.videoTrackSelection =>
+          YlPlayerOperation.videoTrackSelection,
       };
 
   static YlFailureCategory _category(AppleFailureCategory value) =>

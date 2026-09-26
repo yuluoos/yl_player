@@ -120,6 +120,8 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     var blocked = false
     var awaitingResumeSeek = false
     var measuredGeometry: YlVideoGeometry? = nil
+    var fixedTrack: YlNativeTrack?
+    var catalog: YlDashVideoCatalog?
     init(output: AVPlayerItemVideoOutput, generation: UInt64,
       constraints: YlAppleVideoConstraints, rotation: Int) {
       self.output = output; self.generation = generation
@@ -148,6 +150,25 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   private var audioTracks: [YlNativeTrack] = []
   private var videoTracks: [YlNativeTrack] = []
   private var dashVideoCatalog: YlDashVideoCatalog?
+  private(set) var videoSelection = YlNativeVideoSelection()
+  private var automaticDashCandidate: YlPreparedHlsAsset?
+  private var confirmedDashPositionUs: Int64 = 0
+  private var unconfirmedFixedLanding = false
+  private var fixedRecoveryDeadline: DispatchWorkItem?
+  var onAutomaticFallback: (() -> Void)?
+  var confirmedVideoTracks: [YlNativeTrack] {
+    dashVideoCatalog?.tracks(at: confirmedPositionUs()) ?? []
+  }
+  private func confirmedPositionUs() -> Int64 {
+    if pendingRuntimeResume != nil || (videoSelection.fixedTrackId != nil && (pendingUserSeek != nil || unconfirmedFixedLanding)) {
+      return confirmedDashPositionUs
+    }
+    return active ? (microseconds(player.currentTime()) ?? confirmedDashPositionUs) : confirmedDashPositionUs
+  }
+  func acceptVideoSelection(_ selection: YlNativeVideoSelection) {
+    videoSelection = selection
+    emitState()
+  }
   private var videoGeometry: YlVideoGeometry?
   private var audioGroup: AVMediaSelectionGroup?
   private var metadataTask: Task<Void, Never>?
@@ -162,7 +183,8 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   // output cannot recreate playback intent once this backend is inactive.
   var playbackIntent: Bool { playRequested || (active && player.rate > 0) }
   var requiresExternalRollbackActivation: Bool {
-    guard services.compatibility.retainsReplacementHls == false, let source = lastSource else { return false }
+    guard services.compatibility.retainsReplacementHls == false || videoSelection.fixedTrackId != nil,
+          let source = lastSource else { return false }
     return [YlAppleSourceRoute.headeredHls, .dashHls].contains(YlSourceRouter.route(source))
   }
   private var desiredRate: Float = 1
@@ -306,23 +328,34 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     if active {
       let generation = itemGeneration
       let binding = callbackBinding
+      fixedRecoveryDeadline?.cancel(); fixedRecoveryDeadline = nil
       let seekId = UUID()
       let targetUs = Self.microsecondsFromMilliseconds(milliseconds)
+      if videoSelection.fixedTrackId != nil { confirmedDashPositionUs = confirmedPositionUs() }
       pendingUserSeek = (seekId, generation, targetUs)
+      unconfirmedFixedLanding = videoSelection.fixedTrackId != nil
+      refreshFramePolicy()
       let resumeId = pendingRuntimeResume.map { _ in seekId }
       if let resumeId { pendingRuntimeResume = (resumeId, targetUs) }
       player.seek(to: CMTime(milliseconds: milliseconds, preferredTimescale: 1_000),
-        toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] _ in
+        toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] finished in
           DispatchQueue.main.async {
             guard let self, self.itemGeneration == generation, self.callbackBinding === binding,
                   self.active, !self.stopped, self.pendingUserSeek?.id == seekId else { return }
             self.pendingUserSeek = nil
+            if finished {
+              self.unconfirmedFixedLanding = false
+              self.confirmedDashPositionUs = microseconds(self.player.currentTime()) ?? self.confirmedDashPositionUs
+            } else if self.videoSelection.fixedTrackId != nil { self.unconfirmedFixedLanding = true }
             if let resumeId, self.pendingRuntimeResume?.id == resumeId {
               self.pendingRuntimeResume = nil
               self.refreshFramePolicy()
             }
-            // AVPlayer may land elsewhere or cancel: publish measured time only.
-            self.emitState()
+            self.refreshFramePolicy()
+            // A cancelled fixed seek has no landing authority. Keep its last
+            // coherent catalog and gate output until a guarded landing succeeds.
+            if finished || self.videoSelection.fixedTrackId == nil { self.emitState() }
+            else { self.recoverFixedLanding() }
           }
         }
     } else {
@@ -331,6 +364,47 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       emitState()
     }
   }
+  /// One recovery attempt owns an item generation and a seek UUID. A cancelled
+  /// landing must neither manufacture PD-01 nor leave output gated indefinitely.
+  private func recoverFixedLanding() {
+    guard active, !stopped, let fixedId = videoSelection.fixedTrackId else { return }
+    let generation = itemGeneration, seekId = UUID(), binding = callbackBinding
+    let target = confirmedDashPositionUs
+    pendingUserSeek = (seekId, generation, target)
+    unconfirmedFixedLanding = true
+    refreshFramePolicy()
+    let fail = { [weak self] in
+      guard let self, self.itemGeneration == generation, self.callbackBinding === binding,
+            self.pendingUserSeek?.id == seekId, self.active, !self.stopped else { return }
+      self.pendingUserSeek = nil
+      self.fixedRecoveryDeadline?.cancel(); self.fixedRecoveryDeadline = nil
+      self.failVideoConstraints(generation: generation, error: NativePlayerError(category: "source",
+        code: "source.seek_failed", message: "The playback position could not be restored."))
+    }
+    fixedRecoveryDeadline?.cancel()
+    let deadline = DispatchWorkItem(block: fail)
+    fixedRecoveryDeadline = deadline
+    DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: deadline)
+    player.seek(to: CMTime(value: target, timescale: 1_000_000), toleranceBefore: .zero,
+      toleranceAfter: .zero) { [weak self] finished in
+      DispatchQueue.main.async {
+        guard let self, self.itemGeneration == generation, self.callbackBinding === binding,
+              self.pendingUserSeek?.id == seekId, self.active, !self.stopped else { return }
+        let measured = microseconds(self.player.currentTime())
+        guard finished, let measured,
+              self.dashVideoCatalog?.tracks(at: measured).contains(where: { $0.id == fixedId }) == true else {
+          fail(); return
+        }
+        self.fixedRecoveryDeadline?.cancel(); self.fixedRecoveryDeadline = nil
+        self.pendingUserSeek = nil
+        self.unconfirmedFixedLanding = false
+        self.confirmedDashPositionUs = measured
+        self.refreshFramePolicy()
+        self.emitState()
+      }
+    }
+  }
+
   func setPlaybackSpeed(_ speed: Float) throws {
     try checkAlive()
     guard speed >= 0.25, speed <= 4 else {
@@ -370,14 +444,23 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
 
   /// Preparation has succeeded. All fallible checks precede item/output mutation.
   /// Installation retains the session generation and samples transport intent now.
-  func replaceActiveDash(source: YlAppleSourceDescriptor, prepared: YlPreparedHlsAsset) throws {
+  func replaceActiveDash(source: YlAppleSourceDescriptor, prepared: YlPreparedHlsAsset, selection requestedSelection: YlNativeVideoSelection? = nil) throws {
     try checkAlive()
     guard active, YlSourceRouter.route(source) == .dashHls else {
       throw YlAppleVideoConstraints.reloadRequired
     }
     let shouldPlay = playRequested
     if shouldPlay { try beforeAudioOutput() }
-    let loader = try prepared.takeLoader()
+    let coherentPosition = confirmedPositionUs()
+    var selection = requestedSelection ?? videoSelection
+    var chosen = prepared
+    if let id = selection.fixedTrackId,
+       prepared.loader.videoCatalog?.tracks(at: coherentPosition).contains(where: { $0.id == id }) != true {
+      guard let automatic = prepared.takeAutomaticCandidate() else { throw YlNativeVideoSelection.unsupported }
+      chosen = automatic
+      selection = .init(reason: "trackUnavailable")
+    }
+    let loader = try chosen.takeLoader()
     let pendingSeekUs = pendingUserSeek.flatMap { $0.generation == itemGeneration ? $0.positionUs : nil }
     let positionUs = pendingSeekUs ?? currentPositionUs()
     resetOpenState(source, resume: true)
@@ -385,8 +468,11 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     savedPositionMs = positionUs / 1_000
     playRequested = shouldPlay
     qualityConstraint = loader.videoConstraints
+    videoSelection = selection
+    confirmedDashPositionUs = coherentPosition
+    automaticDashCandidate = chosen.takeAutomaticCandidate()
     hlsResourceLoader = loader
-    installItem(asset: prepared.asset, positionMs: savedPositionMs, resumePositionUs: positionUs,
+    installItem(asset: chosen.asset, positionMs: savedPositionMs, resumePositionUs: positionUs,
       anchorRuntimeResume: true, forceResumeSeek: pendingSeekUs != nil)
     // Ready/status callbacks resume output using the preserved rate and intent.
     emitState()
@@ -450,6 +536,8 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
 
   // Used by the slot owner to clear an inactive AV source without a second event.
   func clearMediaForStop() {
+    videoSelection = .init()
+    confirmedDashPositionUs = 0
     guard !disposed else { return }
     resetting = true
     stopped = true
@@ -486,7 +574,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   }
 
   func quiesceForReplacement() {
-    deactivate(retainingHlsForReplacement: services.compatibility.retainsReplacementHls)
+    deactivate(retainingHlsForReplacement: services.compatibility.retainsReplacementHls && videoSelection.fixedTrackId == nil)
   }
 
   func finishReplacement() {
@@ -575,6 +663,8 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       qualityConstraint = loadOptions?.videoConstraints ?? .unconstrained
     }
     if !resume {
+      videoSelection = .init()
+      confirmedDashPositionUs = 0
       savedPositionMs = 0
       savedPositionUs = 0
       resumeAtLiveEdge = false
@@ -615,7 +705,10 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       qualityConstraint = loader.videoConstraints
     }
     hlsResourceLoader = loader
-    installItem(asset: stagedHls.prepared.asset, positionMs: positionMs, resumePositionUs: resumePositionUs)
+    automaticDashCandidate = stagedHls.prepared.takeAutomaticCandidate()
+    installItem(asset: stagedHls.prepared.asset, positionMs: positionMs, resumePositionUs: resumePositionUs,
+      anchorRuntimeResume: videoSelection.fixedTrackId != nil,
+      forceResumeSeek: stagedHls.resume && videoSelection.fixedTrackId != nil)
     emitState()
   }
 
@@ -662,13 +755,18 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       let position = exactResumeUs.map { CMTime(value: $0, timescale: 1_000_000) }
         ?? CMTime(milliseconds: positionMs, preferredTimescale: 1_000)
       if let pending = pendingRuntimeResume {
-        player.seek(to: position, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] _ in
+        player.seek(to: position, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] finished in
           DispatchQueue.main.async {
             guard let self, self.isCurrent(item, generation: generation),
                   self.pendingRuntimeResume?.id == pending.id else { return }
             self.pendingRuntimeResume = nil
+            if finished {
+              self.unconfirmedFixedLanding = false
+              self.confirmedDashPositionUs = microseconds(self.player.currentTime()) ?? self.confirmedDashPositionUs
+            } else if self.videoSelection.fixedTrackId != nil { self.unconfirmedFixedLanding = true }
             self.refreshFramePolicy()
-            self.emitState()
+            if finished || self.videoSelection.fixedTrackId == nil { self.emitState() }
+            else { self.recoverFixedLanding() }
           }
         }
       } else {
@@ -850,6 +948,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
 
   @objc private func displayLinkTick() {
     guard !disposed, videoOutputConfigured, textureId >= 0, player.currentItem != nil else { return }
+    let generation = itemGeneration
     var framePublished = false
     defer { observeVideoProgress(framePublished: framePublished) }
     let itemTime = videoOutput.itemTime(forHostTime: CACurrentMediaTime())
@@ -868,6 +967,8 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     } ?? false
     if let frameGeometry { videoGeometry = frameGeometry }
     if geometryChanged { emitState() }
+    // Current-Period reconciliation can synchronously install automatic output.
+    guard generation == itemGeneration else { return }
     services.textureOutput.publish(buffer)
     framePublished = true
     if !firstFrameSent {
@@ -983,6 +1084,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     framePolicyLock.lock()
     guard let policy = framePolicy, !policy.blocked, !policy.awaitingResumeSeek else { framePolicyLock.unlock(); return nil }
     let rotation = policy.rotation
+    let fixedTrack = policy.fixedTrack, catalog = policy.catalog
     framePolicyLock.unlock()
     let itemTime = policy.output.itemTime(forHostTime: CACurrentMediaTime())
     guard policy.output.hasNewPixelBuffer(forItemTime: itemTime),
@@ -990,6 +1092,22 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     else { return nil }
     let caps = policy.constraints
     let geometry = YlVideoGeometryResolver.avPlayer(pixelBuffer: buffer, rotationDegrees: rotation)
+    if let fixed = fixedTrack {
+      let framePosition = microseconds(itemTime) ?? 0
+      let available = catalog?.tracks(at: framePosition).contains { $0.id == fixed.id } == true
+      guard available else {
+        DispatchQueue.main.async { [weak self] in
+          guard let self, self.itemGeneration == policy.generation else { return }
+          self.emitState()
+        }
+        return nil
+      }
+      guard geometry?.encodedSize.width == CGFloat(fixed.width ?? 0),
+            geometry?.encodedSize.height == CGFloat(fixed.height ?? 0) else {
+        scheduleVideoConstraintFailure(generation: policy.generation)
+        return nil
+      }
+    }
     let permitted = Self.permits(geometry, constraints: caps)
     framePolicyLock.lock()
     guard framePolicy === policy, !policy.blocked, !policy.awaitingResumeSeek, policy.rotation == rotation else { framePolicyLock.unlock(); return nil }
@@ -1017,7 +1135,12 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       framePolicy?.blocked = blocked
       framePolicy?.measuredGeometry = measured
     }
+    framePolicy?.fixedTrack = videoSelection.fixedTrackId.flatMap { id in
+      dashVideoCatalog?.tracks(at: confirmedDashPositionUs).first { $0.id == id }
+    }
+    framePolicy?.catalog = dashVideoCatalog
     framePolicy?.awaitingResumeSeek = pendingRuntimeResume != nil
+      || (videoSelection.fixedTrackId != nil && (pendingUserSeek != nil || unconfirmedFixedLanding))
     framePolicyLock.unlock()
   }
 
@@ -1041,15 +1164,15 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     }
   }
 
-  private func failVideoConstraints(generation: UInt64) {
-    guard generation == itemGeneration, !disposed else { return }
+  private func failVideoConstraints(generation: UInt64, error: NativePlayerError = YlAppleVideoConstraints.unsupportedOutput) {
+    guard generation == itemGeneration, !disposed, status != "error" else { return }
+    framePolicyLock.lock(); framePolicy?.blocked = true; framePolicyLock.unlock()
     failureGate.markTerminal(generation: generation)
     stallWatchdog.cancel()
     displayLink?.isPaused = true
     playRequested = false
     player.pause()
     status = "error"
-    let error = YlAppleVideoConstraints.unsupportedOutput
     currentError = error
     emit(.failure(error))
     emitState(error: error)
@@ -1126,6 +1249,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
 
   @discardableResult
   func applyMetadataGeometry(_ geometry: YlVideoGeometry?, hasVideoTracks: Bool) -> Bool {
+    if videoSelection.fixedTrackId != nil { return true }
     guard hasDashDimensionLimits else {
       if let geometry { videoGeometry = geometry }
       return true
@@ -1276,7 +1400,29 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   @discardableResult
   private func refreshDashVideoTracks(at positionUs: Int64) -> Bool {
     guard let dashVideoCatalog else { return false }
-    let tracks = dashVideoCatalog.tracks(at: positionUs)
+    if status == "error", videoSelection.fixedTrackId != nil { return false }
+    let coherent = videoSelection.fixedTrackId == nil ? positionUs : confirmedPositionUs()
+    if let id = videoSelection.fixedTrackId,
+       pendingRuntimeResume == nil, pendingUserSeek == nil, !unconfirmedFixedLanding,
+       !dashVideoCatalog.tracks(at: coherent).contains(where: { $0.id == id }),
+       let source = lastSource {
+      guard let automatic = automaticDashCandidate else {
+        failVideoConstraints(generation: itemGeneration)
+        return false
+      }
+      automaticDashCandidate = nil
+      do {
+        onAutomaticFallback?()
+        try replaceActiveDash(source: source, prepared: automatic, selection: .init(reason: "trackUnavailable"))
+      } catch {
+        // Do not claim auto if the automatic item could not be installed.
+        automatic.discard()
+        failVideoConstraints(generation: itemGeneration)
+      }
+      return true
+    }
+    if pendingRuntimeResume == nil && pendingUserSeek == nil && !unconfirmedFixedLanding { confirmedDashPositionUs = coherent }
+    let tracks = dashVideoCatalog.tracks(at: coherent)
     guard tracks.count != videoTracks.count || !zip(tracks, videoTracks).allSatisfy({
       $0.id == $1.id && $0.codec == $1.codec && $0.isSelected == $1.isSelected
     }) else { return false }
@@ -1290,7 +1436,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     let item = player.currentItem
     let positionUs = sampledPositionUs ?? currentPositionUs()
     let positionMs = positionUs / 1_000
+    let generation = itemGeneration
     refreshDashVideoTracks(at: positionUs)
+    guard generation == itemGeneration else { return }
     let durationMs = milliseconds(item?.duration)
     let loadedEndMs = item?.loadedTimeRanges.last
       .map { milliseconds(CMTimeRangeGetEnd($0.timeRangeValue)) ?? 0 } ?? 0
@@ -1311,14 +1459,16 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       engine: .avPlayer, isHardwareDecoding: false, decoderName: nil,
       audioTracks: audioTracks, videoTracks: videoTracks,
       metrics: collectMetrics(liveOffsetMs: liveOffsetMs),
-      error: error ?? currentError, geometry: videoGeometry)))
+      error: error ?? currentError, geometry: videoGeometry, videoSelection: videoSelection)))
   }
 
   private func emitStateDelta() {
     guard !disposed, !stopped, !resetting else { return }
     let item = player.currentItem
     let positionUs = currentPositionUs()
+    let generation = itemGeneration
     if refreshDashVideoTracks(at: positionUs) {
+      guard generation == itemGeneration else { return }
       // One sample owns both timeline and catalog, including fractional-ms edges.
       emitState(error: nil, positionUs: positionUs)
       return
@@ -1369,6 +1519,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   }
 
   private func removeCurrentItem(releaseReplacement: Bool = true, clearOutput: Bool = true, preserveDashCatalog: Bool = false) {
+    automaticDashCandidate?.discard(); automaticDashCandidate = nil
+    fixedRecoveryDeadline?.cancel(); fixedRecoveryDeadline = nil
+    unconfirmedFixedLanding = false
     pendingRuntimeResume = nil
     pendingUserSeek = nil
     if !preserveDashCatalog { dashVideoCatalog = nil }

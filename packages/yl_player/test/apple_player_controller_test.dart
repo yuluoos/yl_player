@@ -525,6 +525,7 @@ AppleStateMessage _state({
   ),
   audioTracks: [],
   videoTracks: [],
+  videoSelection: AppleVideoSelectionMessage(reason: 'initial'),
   engine: AppleEngine.avPlayer,
   decoderMode: AppleDecoderMode.unknown,
   metrics: AppleMetricsMessage(),
@@ -554,7 +555,7 @@ final class _Factory implements AppleFactoryTransport {
   @override
   Future<AppleCreateReply> create(AppleCreateRequest request) async =>
       AppleCreateReply(
-        schemaMajor: 3,
+        schemaMajor: 4,
         spiMajor: 2,
         platform: ApplePlatform.ios,
         channelSuffix: 'controller-test',
@@ -619,6 +620,9 @@ final class _Native implements ApplePlayerTransport {
       throw UnimplementedError();
   @override
   Future<void> selectAudioTrack(AppleTrackCommand command) =>
+      throw UnimplementedError();
+  @override
+  Future<void> selectVideoTrack(AppleVideoTrackCommand command) =>
       throw UnimplementedError();
   @override
   Future<void> setVideoConstraints(AppleVideoConstraintsCommand command) =>

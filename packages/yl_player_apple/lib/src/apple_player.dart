@@ -10,7 +10,10 @@ import 'pigeon/yl_player_apple.g.dart';
 
 /// Owns one native identity, its callback reducer and in-flight operations.
 final class ApplePlayer
-    implements YlPlatformPlayer, YlPlatformNativeVideoSurfaceProvider {
+    implements
+        YlPlatformPlayer,
+        YlPlatformNativeVideoSurfaceProvider,
+        YlVideoTrackSelectionPlatformPlayer {
   ApplePlayer._(
     this._transport,
     this._suffix,
@@ -588,6 +591,20 @@ final class ApplePlayer
       sessionId,
       () => _transport.selectAudioTrack(
         AppleTrackCommand(sessionId: sessionId.value, trackId: trackId),
+      ),
+    );
+  }
+
+  @override
+  Future<void> selectVideoTrack(
+    YlPlaybackSessionId sessionId,
+    String? trackId,
+  ) async {
+    if (trackId != null) validateYlTrackId(trackId);
+    await _sessionCommand(
+      sessionId,
+      () => _transport.selectVideoTrack(
+        AppleVideoTrackCommand(sessionId: sessionId.value, trackId: trackId),
       ),
     );
   }

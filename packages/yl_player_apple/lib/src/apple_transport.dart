@@ -15,6 +15,7 @@ abstract interface class ApplePlayerTransport {
   Future<void> seekToLiveEdge(AppleSessionCommand command);
   Future<void> setPlaybackSpeed(AppleSpeedCommand command);
   Future<void> selectAudioTrack(AppleTrackCommand command);
+  Future<void> selectVideoTrack(AppleVideoTrackCommand command);
   Future<void> setVideoConstraints(AppleVideoConstraintsCommand command);
   Future<void> setVolume(double volume);
   Future<void> stop();
@@ -74,6 +75,9 @@ final class PigeonApplePlayerTransport implements ApplePlayerTransport {
   @override
   Future<void> selectAudioTrack(AppleTrackCommand command) =>
       _invoke(() => _api.selectAudioTrack(command));
+  @override
+  Future<void> selectVideoTrack(AppleVideoTrackCommand command) =>
+      _invoke(() => _api.selectVideoTrack(command));
   @override
   Future<void> setVideoConstraints(AppleVideoConstraintsCommand command) =>
       _invoke(() => _api.setVideoConstraints(command));

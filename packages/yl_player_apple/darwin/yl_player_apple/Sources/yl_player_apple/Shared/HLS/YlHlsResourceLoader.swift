@@ -186,6 +186,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   private let opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention?
   private let isDash: Bool
   let videoConstraints: YlAppleVideoConstraints
+  let fixedTrackId: String?
   private let virtualNamespace = UUID().uuidString.lowercased()
   // Immutable after one successful preflight; removed on cancellation. Synthetic
   // identities are never credential origins or upstream fetch destinations.
@@ -208,6 +209,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     originURL: URL,
     isDash: Bool = false,
     videoConstraints: YlAppleVideoConstraints = .unconstrained,
+    fixedTrackId: String? = nil,
     headers: [String: String],
     credentials: [String: String] = [:],
     configuration: YlNetworkConfiguration,
@@ -220,6 +222,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   ) throws {
     self.isDash = isDash
     self.videoConstraints = videoConstraints
+    self.fixedTrackId = fixedTrackId
     self.opaqueRetention = opaqueRetention
     self.credentialContext = credentialContext
     self.originURL = originURL
@@ -370,7 +373,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     try YlDashHlsCompiler.compile(data: snapshot.data,
       finalManifestURL: snapshot.effectiveURL, sourceURL: originURL,
       credentialsStripped: snapshot.credentialsStripped,
-      videoConstraints: videoConstraints,
+      videoConstraints: videoConstraints, fixedTrackId: fixedTrackId,
       manifestURL: { [virtualNamespace] name in
         URL(string: "http://yl-dash.invalid/\(virtualNamespace)/\(name).m3u8")!
       },
@@ -863,11 +866,17 @@ final class YlPreparedHlsAsset {
   let loader: YlHlsResourceLoader
   private let ownershipLock = NSLock()
   private var ownsLoader = true
+  var automaticCandidate: YlPreparedHlsAsset?
+
+  func takeAutomaticCandidate() -> YlPreparedHlsAsset? {
+    let candidate = automaticCandidate; automaticCandidate = nil; return candidate
+  }
 
   init(
     originURL: URL,
     isDash: Bool = false,
     videoConstraints: YlAppleVideoConstraints = .unconstrained,
+    fixedTrackId: String? = nil,
     headers: [String: String],
     credentials: [String: String] = [:],
     configuration: YlNetworkConfiguration,
@@ -880,7 +889,7 @@ final class YlPreparedHlsAsset {
     let loader = try YlHlsResourceLoader(
       originURL: originURL,
       isDash: isDash,
-      videoConstraints: videoConstraints,
+      videoConstraints: videoConstraints, fixedTrackId: fixedTrackId,
       headers: headers,
       credentials: credentials,
       configuration: configuration,
@@ -900,6 +909,7 @@ final class YlPreparedHlsAsset {
   }
 
   func discard() {
+    automaticCandidate?.discard(); automaticCandidate = nil
     let shouldCancel = ownershipLock.withLock { () -> Bool in
       guard ownsLoader else { return false }
       ownsLoader = false

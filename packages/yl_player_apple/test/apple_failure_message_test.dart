@@ -9,6 +9,11 @@ void main() {
   const hostile =
       'https://user:secret@private.test/media?token=secret Authorization: Bearer secret';
   const messages = {
+    'source.seek_failed':
+        'The playback position could not be restored. Reload the source to continue.',
+    'policy.video_selection_unsupported':
+        'The requested video quality is unavailable for this source.',
+
     'network.protocol_unsupported':
         'The media transport protocol is not supported. Use a supported source protocol.',
     'network.rtmp_handshake_failed':

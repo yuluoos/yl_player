@@ -1,8 +1,8 @@
 # Dart/native transport compatibility
 
 The DASH format addition used private Android and Apple transport schema **3**.
-Android fixed-video selection now uses private schema **4**; Apple remains at
-schema **3**. The public Dart platform SPI remains **2**. Existing media-format
+Android fixed-video selection and the later Apple DASH fixed-selection stage
+each use private schema **4**. The public Dart platform SPI remains **2**. Existing media-format
 enum wire values 0–9 are unchanged; DASH is appended at value 10.
 
 Appending an enum value does not make a new client safe against an older native
@@ -16,8 +16,9 @@ Update the Dart adapter and its native plugin together and rebuild the host app.
 A hot reload into an old native binary is insufficient. Android schema 3/4
 combinations are deliberately incompatible even when the caller plans to play
 an older format; matching schema 4 adds nullable fixed-video commands and
-selection state. Apple schema 2/3 combinations remain incompatible, and
-matching schema 3 retains the existing Apple Player/Session behavior. The
+selection state. Apple schema 2/3 and 3/4 combinations are also incompatible;
+matching Apple schema 4 adds the nullable fixed-video command and selection
+metadata to the existing Player/Session behavior. The
 private generated channels are not consumer APIs.
 
 Android's schema-4 Pigeon additions follow the schema-3 message classes. In
@@ -32,9 +33,12 @@ failure rather than a codec cast failure before negotiation.
 
 Both adapters reject a schema 2 Create reply and release any returned native
 identity. Both native registries reject schema 2 requests before allocating a
-texture/session. Android additionally rejects schema 3 requests and replies;
-Apple continues to use schema 3. Regression tests retain the older schema 1
-rejection and the public SPI mismatch checks.
+texture/session. Both schema-4 adapters reject schema 3 requests and replies;
+Apple appends its new Pigeon message classes after the prior layout, retaining
+the existing factory request/options codec tags 147/146 so an old-schema
+factory request reaches the version check and fails before allocation.
+Regression tests retain the older schema 1 rejection and the public SPI
+mismatch checks.
 
 Apple routes an inspected, bounded subset of clear static DASH through its
 private HLS adapter. Protocol recognition alone does not establish playback

@@ -42,14 +42,17 @@ struct YlDashVideoCatalog {
 }
 
 enum YlDashHlsCompiler {
-  private enum ProjectionError: Error { case noEligibleVideo }
+  private enum ProjectionError: Error { case noEligibleVideo, invalidSelection }
   static func compile(data: Data, finalManifestURL: URL, sourceURL: URL,
-    credentialsStripped: Bool, videoConstraints: YlAppleVideoConstraints = .unconstrained, manifestURL: (String) throws -> URL,
+    credentialsStripped: Bool, videoConstraints: YlAppleVideoConstraints = .unconstrained, fixedTrackId: String? = nil, manifestURL: (String) throws -> URL,
     mediaURL: (URL, Bool) throws -> URL) throws -> YlDashHlsPresentation {
     do {
       let document = YlDashDocument(source: sourceURL)
       let (originalPeriods, duration) = try document.parse(data, final: finalManifestURL,
         credentialsStripped: credentialsStripped)
+      // Fixed policy uses the strict admitted semantic family. IDs and XML order
+      // are immaterial; duplicate display identities are rejected before pruning.
+      if fixedTrackId != nil { _ = try YlDashVideoPaths.plan(originalPeriods, strictFamily: true) }
       let periods: [YlDashPeriod]
       if videoConstraints != .unconstrained {
         // Validate the complete original family before pruning can hide a track.
@@ -64,7 +67,23 @@ enum YlDashHlsCompiler {
           return YlDashPeriod(startUs: period.startUs, endUs: period.endUs, videos: videos, audio: period.audio)
         }
       } else { periods = originalPeriods }
-      let videoPaths = try YlDashVideoPaths.plan(periods)
+      var mediaPeriods = periods
+      if let fixedTrackId {
+        func identity(_ track: YlDashTrack) -> String {
+          "dash-video-w\(track.width)-h\(track.height)-b\(track.bandwidth)"
+        }
+        guard originalPeriods.contains(where: { $0.videos.contains { identity($0) == fixedTrackId } }) else {
+          throw ProjectionError.invalidSelection
+        }
+        mediaPeriods = try zip(originalPeriods, periods).map { original, allowed in
+          let originals = original.videos.filter { identity($0) == fixedTrackId }
+          let matches = allowed.videos.filter { identity($0) == fixedTrackId }
+          guard originals.isEmpty || matches.count == 1 else { throw ProjectionError.noEligibleVideo }
+          return YlDashPeriod(startUs: allowed.startUs, endUs: allowed.endUs,
+            videos: matches.isEmpty ? allowed.videos : matches, audio: allowed.audio)
+        }
+      }
+      let videoPaths = try YlDashVideoPaths.plan(mediaPeriods)
       let videoNames = videoPaths.count == 1 ? ["video"]
         : videoPaths.indices.map { "video-\($0)" }
       let names = ["master"] + videoNames + (periods[0].audio == nil ? [] : ["audio"])
@@ -135,6 +154,8 @@ enum YlDashHlsCompiler {
       try store("master", master)
       return YlDashHlsPresentation(rootURL: identities["master"]!, manifests: registry,
         strippedResources: document.stripped, durationUs: duration, videoCatalog: YlDashVideoCatalog(periods: periods))
+    } catch ProjectionError.invalidSelection {
+      throw YlNativeVideoSelection.unsupported
     } catch ProjectionError.noEligibleVideo {
       throw YlAppleVideoConstraints.unsupportedOutput
     } catch {

@@ -232,6 +232,10 @@ void main() {
     );
 
     const codec = ApplePlayerHostApi.pigeonChannelCodec;
+    // Pre-schema-4 binaries must still decode a mismatched request far enough
+    // to reject its schema before allocating a player (factory tag 147).
+    expect(codec.encodeMessage(createRequest)!.getUint8(0), 147);
+    expect(codec.encodeMessage(createRequest.options)!.getUint8(0), 146);
     final decoded =
         codec.decodeMessage(
               codec.encodeMessage(<Object?>[

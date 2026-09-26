@@ -31,6 +31,7 @@ AppleStateMessage wireState({
   ),
   audioTracks: [],
   videoTracks: [],
+  videoSelection: AppleVideoSelectionMessage(reason: 'initial'),
   engine: AppleEngine.avPlayer,
   decoderMode: AppleDecoderMode.unknown,
   metrics: AppleMetricsMessage(),
@@ -46,7 +47,7 @@ AppleFailureMessage wireFailure({
   diagnosticId: 'apple-network-1',
 );
 AppleCreateReply wireCreate({String suffix = 'instance-1'}) => AppleCreateReply(
-  schemaMajor: 3,
+  schemaMajor: 4,
   spiMajor: 2,
   platform: ApplePlatform.ios,
   channelSuffix: suffix,
@@ -165,6 +166,11 @@ final class FakeTransport implements ApplePlayerTransport {
   @override
   Future<void> selectAudioTrack(AppleTrackCommand c) async {
     calls.add('track:${c.sessionId}:${c.trackId}');
+  }
+
+  @override
+  Future<void> selectVideoTrack(AppleVideoTrackCommand command) async {
+    calls.add('video');
   }
 
   @override

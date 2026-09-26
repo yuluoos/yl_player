@@ -10,6 +10,12 @@ Matcher failsWith(String code) => throwsA(
   isA<YlPlayerException>().having((e) => e.failure.code, 'code', code),
 );
 void main() {
+  test('Apple exposes the optional video selection operation', () async {
+    final player = await createFake(FakeTransport());
+    addTearDown(player.dispose);
+    expect(player, isA<YlVideoTrackSelectionPlatformPlayer>());
+  });
+
   test('native video surface requires explicit native advertisement', () async {
     for (final platform in ApplePlatform.values) {
       final legacy = await createFake(
@@ -862,6 +868,7 @@ void main() {
       for (final reply in [
         wireCreate()..schemaMajor = 1,
         wireCreate()..schemaMajor = 2,
+        wireCreate()..schemaMajor = 3,
         wireCreate()..spiMajor = 1,
         wireCreate()..textureId = -1,
         wireCreate()..initialState.revision = -1,

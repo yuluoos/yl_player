@@ -184,6 +184,15 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
       } catch { completion(.failure(error)) }
     }
   }
+  func selectVideoTrack(command: AppleVideoTrackCommand) async throws {
+    try await onMain { completion in
+      do {
+        try self.session(command.sessionId)
+        if command.trackId?.isEmpty == true { throw YlAppleFailureMapper.invalid() }
+        self.coordinator.execute(.videoTrack(command.trackId)) { completion($0.mapError { $0 as Error }) }
+      } catch { completion(.failure(error)) }
+    }
+  }
   func setVideoConstraints(command: AppleVideoConstraintsCommand) async throws {
     try await onMain { completion in
       do {
@@ -530,7 +539,9 @@ extension YlApplePlayerHost {
       videoTracks: value?.videoTracks.map(Self.track) ?? [], engine: Self.engine(value?.engine),
       decoderMode: YlMetricsCollector.decoderMode(state: value),
       decoderIdentity: value?.decoderName, metrics: Self.metrics(value?.metrics ?? .init()),
-      failure: state.failure.map { YlAppleFailureMapper.message($0, scope: .session) })
+      failure: state.failure.map { YlAppleFailureMapper.message($0, scope: .session) },
+      videoSelection: AppleVideoSelectionMessage(fixedTrackId: value?.videoSelection.fixedTrackId,
+        reason: value?.videoSelection.reason ?? "initial"))
   }
   static func track(_ value: YlNativeTrack) -> AppleTrackMessage {
     AppleTrackMessage(id: value.id, kind: value.kind == .audio ? .audio : .video,

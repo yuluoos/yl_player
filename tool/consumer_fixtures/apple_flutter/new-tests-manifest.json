@@ -9,11 +9,13 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlPlatformServicesTests.swift",
-    "sha256": "4556bb8945ec37ce4f9d5bf69bb1a47408d94c1a060d7081a60b6e93b4a6e2cd",
+    "sha256": "c9e23ad7fe30cee610184c81b1d68d295e995f0ece805e04f637635bf7ab84ec",
     "methods": [
       "testTexturePublicationClearAndDisposalRetainOneIdentity",
       "testStopClearsPixelBufferInPlatformOutput",
       "testRetiredBackendCannotDisposeOrClearCandidateTexture",
+      "testNativeSurfaceCapabilityAndErrorAuthoritySurviveLeasing",
+      "testNativeSampleKeepsHDRPrecisionAndDolbyAttachments",
       "testRetiredFallbackCannotClearCandidateTexture",
       "testLifecycleStartIsIdempotentAndStopRemovesObservers"
     ],
@@ -42,14 +44,15 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlMacosPlatformAdapterTests.swift",
-    "sha256": "8adb1529697bd202ef053f9fd76186bd69643c1750faa2dbf46038b35598366b",
+    "sha256": "13b78ae5bfd1efa130024acea65c3946c8fc05d51687eb117cacbc2f4c05357a",
     "methods": [
+      "testNativeHDRSurfaceRegistrationLayoutClearAndRetirement",
       "testDisplayFactoryDoesNotRetainTheFlutterView"
     ]
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
-    "sha256": "1ef51bc56d751e9b9ce740bb5516d56ddd8a14cd0a9d14a898d8b2264eb0ae27",
+    "sha256": "6fa42cdfbd9d27ce1409a0817de9f450390bfaf5f901409455d080d0ade7ff39",
     "methods": [
       "testInputValidationPrecedesReplacementAndRejectsUnrepresentableTimeline",
       "testSemanticCommandRejectionCompletesFutureWithoutFailingHealthySession"
@@ -78,8 +81,11 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlApplePublicationTests.swift",
-    "sha256": "e4d50f0d46daa8683cb0920c382aa95bb619e8bdd8ccc6ef95aeaeeb9d49122c",
+    "sha256": "78f58cabc0012c41eb142669bd589376d411a2884ff991c0e3194dc8a94ffc12",
     "methods": [
+      "testUnsupportedDolbyFormatsRetainTheirPublicFailureCodes",
+      "testKnownFailuresUseFixedUsefulMessagesAndUnknownFailureIsHonest",
+      "testRetryExhaustionAndRepeatedPigeonBridgeKeepSafeTerminalSemantics",
       "testDecodedPrivateFrameDoesNotConsumeFirstCommittedPublication",
       "testActualHostEmitsFirstFrameOnlyAfterPositivePublicTextureSubmission",
       "testFailedCandidateRetainsActiveHlsSessionAndRestoresPublicProjection",
@@ -97,7 +103,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift",
-    "sha256": "45798045a5884a0ccf75c52cd104cb06529c566bc6d26529ebbdd0e034caab0e",
+    "sha256": "51ca09acb5a403665ddc43bca53170fd517def7fb60bb0e6f312bc314fd23bbe",
     "methods": [
       "testH264ProbeCleanupCommitsAvPlayerAndReachesReady",
       "testStopDuringHlsProbeUnblocksNextLoad",
@@ -194,7 +200,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
-    "sha256": "03ccb231afeeeb58bd00c852f3b3ae2bfca11331bab7194f1017bf7942ced85a",
+    "sha256": "880ef707e18a4cc7e83b3be3b1760403275d7e48cbd30da9b6f37c3cbcfa01e2",
     "methods": [
       "testCancelOpenMatchesOnlyThePreparingCandidate",
       "testPlayerVolumeAndCandidateOptionsSurviveFailedReplacementAndStop",
@@ -353,12 +359,33 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAudioRendererTests.swift",
-    "sha256": "034f4576e82fec628eb5aa1b7c722b5391989358f5ac1acd41ee5ccb462920c7",
+    "sha256": "610bbdaa2bba62991ffe9a8686eea729b391cfe1a7e63662e7d094b0a7b10793",
     "methods": [
+      "testDolbySurroundConvertsCenterWithoutChangingSpeakerOrderAndResets",
+      "testDolbyAudioRejectsMissingOrMismatchedSpeakerLayouts",
+      "testDolbySurroundSystemOutputCanSwitchToAAC",
+      "testAACSurroundRejectsMissingOrMismatchedChannelConfiguration",
+      "testAACSurroundConvertsAllSixChannelsWithExplicitLayout",
+      "testAACSurroundConfiguresTheSystemOutputAndCanReconfigureStereo",
+      "testStereoConverterKeepsOnePacketOfPCMHeadroom",
+      "testSystemOutputConfiguresMonoAndStereoPCMWithoutAudioUnitException",
+      "testPlayedBufferClockFreezesDuringStarvationAndIgnoresOldCompletions",
+      "testPausedBufferCompletionDoesNotLosePositionAfterResume",
+      "testSilentVideoTailAdvancesOnlyThroughDecodedVideoAndAudioResumesOnce",
       "testVideoClockAdvancesWhilePlayedBackCallbacksAreDelayed",
       "testRenderClockCapsAtScheduledAudioAndExcludesStarvationOnRefill",
       "testRenderClockPreservesPauseAndResetsItsAnchorAfterSeek",
-      "testRefillBeforeDelayedCompletionDoesNotCountSilentNodeTime"
+      "testRefillBeforeDelayedCompletionDoesNotCountSilentNodeTime",
+      "testConfigurationFailureMapsToStableAACError",
+      "testConfigurationFailureMapsToStableMP3Error",
+      "testConversionFailureUsesCodecSpecificMessage",
+      "testBalancedDurationAndByteCapsAreHardLimits",
+      "testRateScalesAudioCapacityAndReturningToNormalDrainsQueuedAudio",
+      "testByteLimitWinsBeforeConversion",
+      "testScheduledPCMByteLimitComesFromFallbackBudget",
+      "testUnderrunClampAndStaleCompletionSuppression",
+      "testAppleConverterDecodesFixtureAACPacket",
+      "testAppleConverterDecodesFixtureMP3Packet"
     ]
   },
   {
@@ -427,9 +454,22 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlVideoToolboxDecoderTests.swift",
-    "sha256": "ebc951eeb6ca0a34724e1ef93d75274462eb9c86910f38ae8f20f81de8d673b6",
+    "sha256": "7272437d8c0682296bef7df8b186bd9b98ce81f176297b9cef7ca1ed8499794f",
     "methods": [
-      "testSuccessfulDroppedFrameDoesNotFailDecoder"
+      "testInvalidBridgeConfigurationMapsToStableError",
+      "testMalformedH264ExtradataMapsToStableError",
+      "testUnsupportedCodecMapsToHardwareUnavailable",
+      "testOldGenerationOutputIsDroppedAndReleased",
+      "testDisposeIsIdempotent",
+      "testOldGenerationDecoderFailureIsSuppressed",
+      "testSuccessfulDroppedFrameDoesNotFailDecoder",
+      "testFixtureDecodesFirstFrameOrReportsHardwareUnavailable",
+      "testInBandHEVCFormatPreservesFirstPacketAndSeek",
+      "testInBandHEVCRespectsCancellationAndPacketBudget",
+      "testInBandHEVCDoesNotProbeCompleteConfiguration",
+      "testInBandHEVCRejectsTruncatedNALAndReleasesPackets",
+      "testInBandHEVCPropagatesRewindFailureAndReleasesReservations",
+      "testInBandHEVCLocalReactivationKeepsRecoveredFormat"
     ]
   },
   {
@@ -448,8 +488,10 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashHlsCompilerTests.swift",
-    "sha256": "168839752223070d9af0ab5efb7c4981d1d91e2676681e45b789b9835029c613",
+    "sha256": "3321b4ba45729740c092dc7510793c2d9f6d8abb77cf6345564c475c95c033f7",
     "methods": [
+      "testFixedProjectionMatchesSemanticIdentityAcrossReorderAndMissingPeriod",
+      "testFixedProjectionRejectsAmbiguityIncompatibilityAndCapsAcrossWholeProgram",
       "testCatalogStableNumericIdentitySortingAndVideoOnlyBitrate",
       "testCatalogTracksDisappearAndReappearAtExactPeriodBoundaries",
       "testCatalogPreservesSubMillisecondBoundsThroughCapProjection",
@@ -502,7 +544,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift",
-    "sha256": "48dde7e0927dcb031998b9defa03c1c0031a8c6613f8a5d582bbb6808df34fe0",
+    "sha256": "5c9c3308a934bdfb8bb962d0ca0df09ed800395e2242882a58bff9ea05b6cdc6",
     "methods": [
       "testCatalogFollowsMeasuredProgramTimeAndPeriodicPublication",
       "testCatalogLoaderSnapshotSurvivesCancellationWhilePrivateSnapshotClears",
@@ -516,8 +558,18 @@
       "testRuntimeMetadataBeforeHeldResumeKeepsAudioSelectionRotationAndReadiness",
       "testRuntimeSnapshotKeepsOriginalEffectiveURLAndClearsCancelledLoaderOwnership",
       "testRuntimeCapsCommitSamplesLatestExactTimeAndPauseAndFreezesPendingSeek",
+      "testFixedSelectionPreparationReconcilesLatestPeriodAndTransportIntent",
       "testRuntimeCapsTransfersLatestUnlandedSeekAndRejectsRetiredCompletions",
+      "testFixedSelectionTransfersLatestUnlandedSeekAndRejectsRetiredCompletions",
       "testRuntimeCapsSupersedingNoOpAndLifecycleCancelPendingExactlyOnce",
+      "testFixedSelectionSharesCapsSupersessionAndLifecycleCancellation",
+      "testFixedSelectionConfirmedLandingFallbackIsStickyAndRestorationRetainsPolicy",
+      "testFixedRecoveryFailureAndTimeoutSurfaceSafeFailureWithoutAuto",
+      "testFixedLeaseRollbackRebuildsSpareAndNaturalPeriodFallback",
+      "testFixedFrameCannotPublishAfterFallbackRetiresItsItem",
+      "testFixedOutputRejectsFuturePeriodAndContradictoryPixelsBeforePublication",
+      "testFixedAutomaticInstallationFailureRetainsTruthfulModeAndReleasesSpare",
+      "testFixedSelectionHostProjectsHighAndKeepsFullCatalog",
       "testRuntimeCapsClearRestoresAcceptedOriginalWithoutRefetch",
       "testLoadCapsRuntimeMutationFailsBeforeAcceptedIntentAndSurvivesRestore",
       "testLoadCapsLoaderRejectsIneligibleCandidateBeforePublishingAssetAndRedactsErrors",
