@@ -154,6 +154,8 @@ enum YlDashHlsCompiler {
       try store("master", master)
       return YlDashHlsPresentation(rootURL: identities["master"]!, manifests: registry,
         strippedResources: document.stripped, durationUs: duration, videoCatalog: YlDashVideoCatalog(periods: periods))
+    } catch let error as YlDashAdmissionError {
+      throw error.nativeError
     } catch ProjectionError.invalidSelection {
       throw YlNativeVideoSelection.unsupported
     } catch ProjectionError.noEligibleVideo {

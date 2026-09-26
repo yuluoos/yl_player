@@ -6,6 +6,17 @@ abstract final class YlSafeDiagnostics {
 
   /// Fixed public guidance for recognized codes, never native error prose.
   static String messageForCode(String code) => switch (code) {
+    YlFailureCodes.dashManifestInvalid =>
+      'The DASH manifest could not be parsed. Ask the provider for a valid UTF-8 MPD.',
+    YlFailureCodes.dashDynamicUnsupported =>
+      'Dynamic DASH manifests are not supported by this playback path. Choose a static DASH VOD source.',
+    YlFailureCodes.dashProtectionUnsupported =>
+      'The DASH manifest contains a protected-content declaration unsupported by this playback path. Choose a compatible source.',
+    YlFailureCodes.dashSegmentBaseUnsupported =>
+      'DASH SegmentBase addressing is not supported by this playback path. Choose a compatible SegmentTemplate or SegmentList source.',
+    YlFailureCodes.dashManifestTooLarge =>
+      'The DASH manifest exceeds the 2 MiB input limit. Ask the provider for a smaller manifest.',
+
     'source.seek_failed' =>
       'The playback position could not be restored. Reload the source to continue.',
     'policy.video_selection_unsupported' =>

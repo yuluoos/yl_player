@@ -17,6 +17,31 @@ final class YlDashNode {
   }
 }
 
+// Only parser-owned reasons may cross the compiler's sanitizing boundary.
+// No XML, URL or underlying parser prose is retained in this value.
+enum YlDashAdmissionError: Error {
+  case invalidManifest, dynamicManifest, protectedManifest, segmentBase, manifestTooLarge
+  var nativeError: NativePlayerError {
+    switch self {
+    case .invalidManifest:
+      return NativePlayerError(category: "container", code: "container.dash_manifest_invalid",
+        message: "The DASH manifest could not be parsed. Ask the provider for a valid UTF-8 MPD.")
+    case .dynamicManifest:
+      return NativePlayerError(category: "container", code: "container.dash_dynamic_unsupported",
+        message: "Dynamic DASH manifests are not supported by this playback path. Choose a static DASH VOD source.")
+    case .protectedManifest:
+      return NativePlayerError(category: "container", code: "container.dash_protection_unsupported",
+        message: "The DASH manifest contains a protected-content declaration unsupported by this playback path. Choose a compatible source.")
+    case .segmentBase:
+      return NativePlayerError(category: "container", code: "container.dash_segment_base_unsupported",
+        message: "DASH SegmentBase addressing is not supported by this playback path. Choose a compatible SegmentTemplate or SegmentList source.")
+    case .manifestTooLarge:
+      return NativePlayerError(category: "resource", code: "resource.dash_manifest_too_large",
+        message: "The DASH manifest exceeds the 2 MiB input limit. Ask the provider for a smaller manifest.")
+    }
+  }
+}
+
 enum YlDashBounds {
   static let maxDocument = 2 * 1024 * 1024
   static let maxSegments = 100_000
@@ -89,15 +114,25 @@ private final class YlDashXMLReader: NSObject, XMLParserDelegate {
   var stack: [YlDashNode] = []
   var count = 0
   var invalid = false
+  var rejection: YlDashAdmissionError?
   func parser(_ parser: XMLParser, didStartElement name: String, namespaceURI: String?,
     qualifiedName qName: String?, attributes: [String: String]) {
     count += 1
     let forbidden: Set<String> = ["ContentProtection", "SegmentBase", "UTCTiming", "Location",
       "PatchLocation", "ContentSteering", "EssentialProperty", "Subset", "SubRepresentation",
       "SegmentURLIndex", "RepresentationIndex", "BitstreamSwitching"]
-    guard count <= 100_000, stack.count < 64, !forbidden.contains(name),
-          namespaceURI == nil || namespaceURI == "" || namespaceURI == "urn:mpeg:dash:schema:mpd:2011",
-          !attributes.keys.contains(where: { $0.contains(":") && !$0.hasPrefix("xmlns") }),
+    guard count <= 100_000, stack.count < 64,
+          namespaceURI == nil || namespaceURI == "" || namespaceURI == "urn:mpeg:dash:schema:mpd:2011" else {
+      invalid = true; parser.abortParsing(); return
+    }
+    if forbidden.contains(name) {
+      if root?.name == "MPD" {
+        if name == "ContentProtection" { rejection = .protectedManifest }
+        if name == "SegmentBase" { rejection = .segmentBase }
+      }
+      invalid = true; parser.abortParsing(); return
+    }
+    guard !attributes.keys.contains(where: { $0.contains(":") && !$0.hasPrefix("xmlns") }),
           !attributes.keys.contains(where: { ["availabilityTimeOffset", "availabilityTimeComplete", "index", "indexRange"].contains($0) }) else {
       invalid = true; parser.abortParsing(); return
     }
@@ -124,15 +159,20 @@ private final class YlDashXMLReader: NSObject, XMLParserDelegate {
     if !stack.isEmpty { stack.removeLast() }
   }
   static func parse(_ data: Data) throws -> YlDashNode {
-    guard data.count <= YlDashBounds.maxDocument,
-          let text = String(data: data, encoding: .utf8),
-          !text.uppercased().contains("<!DOCTYPE"), !text.uppercased().contains("<!ENTITY") else { throw YlDashBounds.unsupported }
+    guard data.count <= YlDashBounds.maxDocument else { throw YlDashAdmissionError.manifestTooLarge }
+    guard let text = String(data: data, encoding: .utf8) else { throw YlDashAdmissionError.invalidManifest }
+    guard !text.uppercased().contains("<!DOCTYPE"), !text.uppercased().contains("<!ENTITY") else { throw YlDashBounds.unsupported }
     let reader = YlDashXMLReader()
     let parser = XMLParser(data: data)
     parser.shouldProcessNamespaces = true
     parser.shouldResolveExternalEntities = false
     parser.delegate = reader
-    guard parser.parse(), !reader.invalid, let root = reader.root, root.name == "MPD" else { throw YlDashBounds.unsupported }
+    let parsed = parser.parse()
+    if let rejection = reader.rejection { throw rejection }
+    // An intentional policy abort is not evidence of malformed XML.
+    guard !reader.invalid else { throw YlDashBounds.unsupported }
+    guard parsed else { throw YlDashAdmissionError.invalidManifest }
+    guard let root = reader.root, root.name == "MPD" else { throw YlDashBounds.unsupported }
     return root
   }
 }
@@ -204,6 +244,7 @@ final class YlDashDocument {
   func parse(_ data: Data, final: URL, credentialsStripped: Bool) throws -> ([YlDashPeriod], Int64) {
     _ = try YlDashBounds.url(source.absoluteString); _ = try YlDashBounds.url(final.absoluteString)
     let root = try YlDashXMLReader.parse(data)
+    if root.attributes["type"] == "dynamic" { throw YlDashAdmissionError.dynamicManifest }
     guard root.attributes["type", default: "static"] == "static" else { throw YlDashBounds.unsupported }
     let total = try root.attributes["mediaPresentationDuration"].map(YlDashBounds.duration)
     let roots = try base(root, (final, credentialsStripped || YlRequestOrigin(url: final) != YlRequestOrigin(url: source)))

@@ -58,6 +58,14 @@ abstract final class YlFailureCodes {
   static const containerRtmpTrackLayoutChanged =
       'container.rtmp_track_layout_changed';
   static const containerUnsupported = 'container.unsupported';
+  static const dashManifestInvalid = 'container.dash_manifest_invalid';
+  static const dashDynamicUnsupported = 'container.dash_dynamic_unsupported';
+  static const dashProtectionUnsupported =
+      'container.dash_protection_unsupported';
+  static const dashSegmentBaseUnsupported =
+      'container.dash_segment_base_unsupported';
+  static const dashManifestTooLarge = 'resource.dash_manifest_too_large';
+
   static const decoderUnsupported = 'decoder.unsupported';
   static const decoderUnavailable = 'decoder.unavailable';
   static const resourceExhausted = 'resource.exhausted';

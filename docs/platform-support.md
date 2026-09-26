@@ -219,6 +219,31 @@ See [transport compatibility](transport-compatibility.md) for Android schema 4,
 Apple schema 4 in the fixed-selection stage, and mixed-version safety. The
 earlier Apple adapter and caps reports describe the schema at their own dates.
 
+## Apple DASH admission diagnostics
+
+The bounded Apple DASH adapter distinguishes five known preflight failures:
+
+| Code | Meaning and next step |
+|---|---|
+| `container.dash_manifest_invalid` | Input is not valid UTF-8 or cannot be parsed as XML. Ask the provider for a valid UTF-8 MPD. |
+| `container.dash_dynamic_unsupported` | The parsed MPD declares `type="dynamic"`. Choose a static DASH VOD source for this path. |
+| `container.dash_protection_unsupported` | A DASH `ContentProtection` declaration was encountered. This path cannot accept it; this is not a license-service diagnosis. |
+| `container.dash_segment_base_unsupported` | A DASH `SegmentBase` declaration was encountered. Use a compatible SegmentTemplate/SegmentList presentation. |
+| `resource.dash_manifest_too_large` | MPD input exceeds the existing 2 MiB byte limit, including declared or streamed response size. Ask for a smaller MPD. |
+
+These are nonretryable failures with fixed safe guidance and diagnostic IDs.
+They preserve failed-candidate rollback and do not add format or DRM support.
+Other unsupported structures, namespaces, DTD/entity restrictions and resource
+budgets keep `container.unsupported`; an unsupported declaration is not
+necessarily malformed XML. If several problems exist, the first detected
+admission failure is reported, not an exhaustive MPD validation report.
+
+Consumers that previously matched only `container.unsupported` should include
+these more specific codes or handle the failure category. No wire-schema change
+is required; older Dart adapters can retain the code but show generic guidance.
+The evidence and limits are recorded in the
+[diagnostics report](superpowers/reports/2026-09-26-apple-dash-diagnostics.md).
+
 ## Fixed video selection stage
 
 The public session command `selectVideoTrack(trackId)` accepts an ID from the

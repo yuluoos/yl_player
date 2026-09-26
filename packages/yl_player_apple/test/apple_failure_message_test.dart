@@ -9,6 +9,17 @@ void main() {
   const hostile =
       'https://user:secret@private.test/media?token=secret Authorization: Bearer secret';
   const messages = {
+    'container.dash_manifest_invalid':
+        'The DASH manifest could not be parsed. Ask the provider for a valid UTF-8 MPD.',
+    'container.dash_dynamic_unsupported':
+        'Dynamic DASH manifests are not supported by this playback path. Choose a static DASH VOD source.',
+    'container.dash_protection_unsupported':
+        'The DASH manifest contains a protected-content declaration unsupported by this playback path. Choose a compatible source.',
+    'container.dash_segment_base_unsupported':
+        'DASH SegmentBase addressing is not supported by this playback path. Choose a compatible SegmentTemplate or SegmentList source.',
+    'resource.dash_manifest_too_large':
+        'The DASH manifest exceeds the 2 MiB input limit. Ask the provider for a smaller manifest.',
+
     'source.seek_failed':
         'The playback position could not be restored. Reload the source to continue.',
     'policy.video_selection_unsupported':

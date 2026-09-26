@@ -201,7 +201,7 @@ void main() {
       await _render(player, old, events);
       final rejected = expectLater(
         player.load(YlNetworkSource(candidateServer.automaticUri)),
-        failureCode(YlFailureCodes.containerUnsupported),
+        failureCode(YlFailureCodes.dashManifestInvalid),
       );
       await candidateServer.manifestEntered.timeout(const Duration(seconds: 5));
       debugPrint('DASH invalid candidate: MPD entered');

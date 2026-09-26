@@ -1544,9 +1544,15 @@ final class YlDashResourceLoaderTests: XCTestCase {
       }
       XCTAssertThrowsError(try prepare(config)) { error in
         let native = error as? NativePlayerError
-        XCTAssertEqual(native?.code, scenario == "403" ? "network.http_forbidden" : scenario.contains("limit") ? "resource.dash_manifest_too_large" : "container.unsupported")
+        XCTAssertEqual(native?.code, scenario == "403" ? "network.http_forbidden" : scenario.contains("limit") ? "resource.dash_manifest_too_large" : "container.dash_manifest_invalid")
         XCTAssertFalse(String(describing: native).contains("secret"))
         XCTAssertFalse(String(describing: native).contains("signed-url"))
+        let published = YlAppleSafeDiagnostics.failure(error, scope: .command)
+        XCTAssertEqual(published.code, native?.code)
+        XCTAssertFalse(published.retryable)
+        XCTAssertFalse(published.message.contains("secret"))
+        XCTAssertFalse(published.message.contains("signed-url"))
+        if scenario.contains("limit") { XCTAssertTrue(published.message.contains("2 MiB")) }
       }
     }
   }
@@ -1737,7 +1743,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertEqual(server.requests.filter { $0.path == goodPath }.count, 1, "Active play cannot refetch the accepted source")
     release.signal()
     do { _ = try await pending.value; XCTFail("Malformed candidate committed") }
-    catch let error as PigeonError { XCTAssertEqual(error.code, "container.unsupported", "Accepted-session controls must not supersede a pending Load") }
+    catch let error as PigeonError { XCTAssertEqual(error.code, "container.dash_dynamic_unsupported", "Accepted-session controls must not supersede a pending Load") }
     try fixture.host.pause(command: .init(sessionId: accepted.sessionId))
     try await fixture.host.play(command: .init(sessionId: accepted.sessionId))
     XCTAssertTrue(fixture.av.currentItem === item)
@@ -1803,7 +1809,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
     let originalPrivateURL = try XCTUnwrap((item.asset as? AVURLAsset)?.url)
     XCTAssertNotEqual(try YlHlsURLCodec.decode(originalPrivateURL), server.url("/good.mpd"))
     do { _ = try await fixture.host.load(request: AppleHostFixture.request("bad", url: server.url("/bad.mpd").absoluteString, format: .dash)); XCTFail("Invalid DASH committed") }
-    catch let error as PigeonError { XCTAssertEqual(error.code, "container.unsupported") }
+    catch let error as PigeonError { XCTAssertEqual(error.code, "container.dash_dynamic_unsupported") }
     XCTAssertEqual(fixture.host.sessionId, accepted.sessionId)
     XCTAssertTrue(fixture.av.currentItem === item)
     await fixture.settle()

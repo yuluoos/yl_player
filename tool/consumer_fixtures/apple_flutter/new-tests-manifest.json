@@ -488,8 +488,10 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashHlsCompilerTests.swift",
-    "sha256": "3321b4ba45729740c092dc7510793c2d9f6d8abb77cf6345564c475c95c033f7",
+    "sha256": "1e3fd8c1e02045e5d784615ff134ecad32f4af0a7a7d1f0253bff5c966d3d1dd",
     "methods": [
+      "testAdmissionReasonsSurviveSafePublicationWithoutSourceDetails",
+      "testAdmissionClassificationDoesNotGuessFromUnsupportedOrCallbackErrors",
       "testFixedProjectionMatchesSemanticIdentityAcrossReorderAndMissingPeriod",
       "testFixedProjectionRejectsAmbiguityIncompatibilityAndCapsAcrossWholeProgram",
       "testCatalogStableNumericIdentitySortingAndVideoOnlyBitrate",
@@ -544,7 +546,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift",
-    "sha256": "5c9c3308a934bdfb8bb962d0ca0df09ed800395e2242882a58bff9ea05b6cdc6",
+    "sha256": "7128c541239f4fe4da1b7d1822d1dba212be21942a830c3e4231ca89b717e826",
     "methods": [
       "testCatalogFollowsMeasuredProgramTimeAndPeriodicPublication",
       "testCatalogLoaderSnapshotSurvivesCancellationWhilePrivateSnapshotClears",

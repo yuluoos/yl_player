@@ -21,14 +21,65 @@ final class YlDashHlsCompilerTests: XCTestCase {
   private func video(_ result: YlDashHlsPresentation) -> String {
     String(data: result.manifests[URL(string: "https://virtual.test/video.m3u8")!]!, encoding: .utf8)!
   }
-  private func reject(_ xml: String, file: StaticString = #filePath, line: UInt = #line) {
+  private func reject(_ xml: String, code: String = "container.unsupported", file: StaticString = #filePath, line: UInt = #line) {
     var emitted = 0
     XCTAssertThrowsError(try compile(xml, seen: { _, _ in emitted += 1 }), file: file, line: line) { error in
-      XCTAssertEqual((error as? NativePlayerError)?.code, "container.unsupported", file: file, line: line)
+      XCTAssertEqual((error as? NativePlayerError)?.code, code, file: file, line: line)
       XCTAssertFalse(String(describing: error).contains("origin.test"), file: file, line: line)
     }
     XCTAssertEqual(emitted, 0, "Unsupported MPD must fail before media emission", file: file, line: line)
   }
+  func testAdmissionReasonsSurviveSafePublicationWithoutSourceDetails() {
+    let cases: [(String, String, String)] = [
+      ("<MPD><private-secret>", "container.dash_manifest_invalid", "valid UTF-8 MPD"),
+      ("<MPD type=\"dynamic\"/>", "container.dash_dynamic_unsupported", "static DASH"),
+      (mpd("<ContentProtection value=\"private-secret\"/>"), "container.dash_protection_unsupported", "protected-content declaration"),
+      (mpd("<SegmentBase indexRange=\"private-secret\"/>"), "container.dash_segment_base_unsupported", "SegmentTemplate or SegmentList"),
+      (String(repeating: " ", count: 2 * 1024 * 1024 + 1), "resource.dash_manifest_too_large", "2 MiB")
+    ]
+    for (xml, code, guidance) in cases {
+      var emitted = 0
+      XCTAssertThrowsError(try compile(xml, seen: { _, _ in emitted += 1 })) { error in
+        XCTAssertEqual((error as? NativePlayerError)?.code, code)
+        let failure = YlAppleSafeDiagnostics.failure(error, scope: .command)
+        XCTAssertEqual(failure.code, code)
+        XCTAssertEqual(failure.category, code.hasPrefix("resource.") ? .resource : .container)
+        XCTAssertFalse(failure.retryable)
+        XCTAssertTrue(failure.message.contains(guidance), failure.message)
+        XCTAssertFalse(failure.message.contains("private-secret"))
+        XCTAssertFalse(failure.message.contains("origin.test"))
+        XCTAssertTrue(failure.diagnosticId.hasPrefix("apple-"))
+      }
+      XCTAssertEqual(emitted, 0)
+    }
+    XCTAssertThrowsError(try YlDashHlsCompiler.compile(data: Data([0xff]), finalManifestURL: source,
+      sourceURL: source, credentialsStripped: false,
+      manifestURL: { _ in self.source }, mediaURL: { url, _ in url })) {
+        XCTAssertEqual(($0 as? NativePlayerError)?.code, "container.dash_manifest_invalid")
+    }
+  }
+
+  func testAdmissionClassificationDoesNotGuessFromUnsupportedOrCallbackErrors() {
+    for xml in ["<MPD type=\"private-secret\"/>", "<other/>",
+      "<MPD xmlns=\"urn:private-secret\"><ContentProtection/></MPD>",
+      mpd("<ContentProtection xmlns=\"urn:private-secret\"/>"),
+      mpd("<SegmentBase xmlns=\"urn:private-secret\"/>"),
+      mpd("<Location>private-secret</Location>"),
+      "<!DOCTYPE MPD>" + mpd(period())] {
+      reject(xml)
+    }
+    for code in ["container.dash_manifest_invalid", "container.dash_dynamic_unsupported",
+      "container.dash_protection_unsupported", "container.dash_segment_base_unsupported",
+      "resource.dash_manifest_too_large"] {
+      XCTAssertThrowsError(try YlDashHlsCompiler.compile(data: Data(mpd(period()).utf8), finalManifestURL: source,
+        sourceURL: source, credentialsStripped: false,
+        manifestURL: { _ in throw NativePlayerError(category: "container", code: code, message: "private-secret") },
+        mediaURL: { url, _ in url })) {
+          XCTAssertEqual(($0 as? NativePlayerError)?.code, "container.unsupported")
+      }
+    }
+  }
+
   func testFixedProjectionMatchesSemanticIdentityAcrossReorderAndMissingPeriod() throws {
     let xml = mpd(ladder(rendition("low") + rendition("high", width: 640, bandwidth: 700000))
       + ladder(rendition("renamed-high", width: 640, bandwidth: 700000) + rendition("renamed-low"), start: 4)
@@ -170,8 +221,8 @@ final class YlDashHlsCompilerTests: XCTestCase {
   }
   func testRejectsDynamicDRMPTOAndMissingInitialization() {
     let valid = mpd(period())
-    reject(valid.replacingOccurrences(of: "static", with: "dynamic"))
-    reject(valid.replacingOccurrences(of: "<Representation", with: "<ContentProtection/><Representation"))
+    reject(valid.replacingOccurrences(of: "static", with: "dynamic"), code: "container.dash_dynamic_unsupported")
+    reject(valid.replacingOccurrences(of: "<Representation", with: "<ContentProtection/><Representation"), code: "container.dash_protection_unsupported")
     reject(valid.replacingOccurrences(of: "timescale=\"1\"", with: "timescale=\"1\" presentationTimeOffset=\"1\""))
     reject(valid.replacingOccurrences(of: "initialization=\"init-$RepresentationID$.mp4\"", with: ""))
   }
@@ -185,7 +236,7 @@ final class YlDashHlsCompilerTests: XCTestCase {
     let p = period()
     reject(mpd(p.replacingOccurrences(of: "</AdaptationSet>", with: "<Representation id=\"other\"/></AdaptationSet>")))
     for node in ["SegmentBase", "UTCTiming", "EssentialProperty", "Location", "ContentSteering"] {
-      reject(mpd(p).replacingOccurrences(of: "</MPD>", with: "<\(node)/></MPD>"))
+      reject(mpd(p).replacingOccurrences(of: "</MPD>", with: "<\(node)/></MPD>"), code: node == "SegmentBase" ? "container.dash_segment_base_unsupported" : "container.unsupported")
     }
   }
   func testRejectsUnsafeURLsDTDDepthAndLargePayload() {
@@ -193,7 +244,7 @@ final class YlDashHlsCompilerTests: XCTestCase {
     reject(mpd(period(base: "<BaseURL>https://user:pass@origin.test/</BaseURL>")))
     reject(mpd(period(base: "<BaseURL>file:///tmp/</BaseURL>")))
     reject(mpd(String(repeating: "<meta>", count: 65) + String(repeating: "</meta>", count: 65) + period()))
-    reject(String(repeating: " ", count: 2 * 1024 * 1024 + 1))
+    reject(String(repeating: " ", count: 2 * 1024 * 1024 + 1), code: "resource.dash_manifest_too_large")
   }
   func testRejectsHugeRepeatsFormattingURIAndIntegerOverflow() {
     reject(mpd(period("<SegmentTemplate initialization=\"i\" media=\"$Time$\"><SegmentTimeline><S d=\"1\" r=\"9223372036854775807\"/></SegmentTimeline></SegmentTemplate>")))
