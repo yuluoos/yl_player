@@ -70,7 +70,7 @@ enum AppleHostCharacterizations {
   static func persistedQuality(_ test: XCTestCase) async throws {
     let f = AppleHostFixture(); defer { f.host.close() }
     let loaded = try await f.host.load(request: AppleHostFixture.request("a"))
-    try f.host.setVideoConstraints(command: .init(sessionId: loaded.sessionId,
+    try await f.host.setVideoConstraints(command: .init(sessionId: loaded.sessionId,
       constraints: .init(maxHeight: 720)))
     XCTAssertEqual(f.av.currentItem?.preferredMaximumResolution.height, 720)
     f.host.suspend(); f.host.resume()
@@ -363,7 +363,7 @@ extension AppleHostCharacterizations {
     try f.host.pause(command: .init(sessionId: loaded.sessionId))
     f.host.refreshState()
     XCTAssertGreaterThanOrEqual(f.host.initialState.timeline.positionMs, 450)
-    try f.host.setVideoConstraints(command: .init(sessionId: loaded.sessionId, constraints: .init(maxWidth: 800)))
+    try await f.host.setVideoConstraints(command: .init(sessionId: loaded.sessionId, constraints: .init(maxWidth: 800)))
     try f.host.setVolume(volume: 0.2)
     try f.host.setPlaybackSpeed(command: .init(sessionId: loaded.sessionId, speed: 2))
     try f.host.seekTo(command: .init(sessionId: loaded.sessionId, positionMs: 700))

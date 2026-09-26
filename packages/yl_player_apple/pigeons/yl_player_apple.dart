@@ -390,6 +390,7 @@ abstract class ApplePlayerHostApi {
   void setPlaybackSpeed(AppleSpeedCommand command);
   @async
   void selectAudioTrack(AppleTrackCommand command);
+  @async
   void setVideoConstraints(AppleVideoConstraintsCommand command);
   void setVolume(double volume);
   @async

@@ -2603,7 +2603,7 @@ protocol ApplePlayerHostApi {
   func seekToLiveEdge(command: AppleSessionCommand) async throws
   func setPlaybackSpeed(command: AppleSpeedCommand) throws
   func selectAudioTrack(command: AppleTrackCommand) async throws
-  func setVideoConstraints(command: AppleVideoConstraintsCommand) throws
+  func setVideoConstraints(command: AppleVideoConstraintsCommand) async throws
   func setVolume(volume: Double) throws
   func stop() async throws
   func dispose() async throws
@@ -2761,11 +2761,13 @@ class ApplePlayerHostApiSetup {
       setVideoConstraintsChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let commandArg = args[0] as! AppleVideoConstraintsCommand
-        do {
-          try api.setVideoConstraints(command: commandArg)
-          reply(wrapResult(nil))
-        } catch {
-          reply(wrapError(error))
+        Task { @MainActor in
+          do {
+            try await api.setVideoConstraints(command: commandArg)
+            reply(wrapResult(nil))
+          } catch {
+            reply(wrapError(error))
+          }
         }
       }
     } else {

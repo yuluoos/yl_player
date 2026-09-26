@@ -184,10 +184,14 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
       } catch { completion(.failure(error)) }
     }
   }
-  func setVideoConstraints(command: AppleVideoConstraintsCommand) throws {
-    try session(command.sessionId)
-    do { try runSynchronous(.constraints(try YlAppleNativeInput.constraints(command.constraints))) }
-    catch { throw YlAppleFailureMapper.command(error) }
+  func setVideoConstraints(command: AppleVideoConstraintsCommand) async throws {
+    try await onMain { completion in
+      do {
+        try self.session(command.sessionId)
+        let constraints = try YlAppleNativeInput.constraints(command.constraints)
+        self.coordinator.execute(.constraints(constraints)) { completion($0.mapError { $0 as Error }) }
+      } catch { completion(.failure(error)) }
+    }
   }
   func setVolume(volume: Double) throws {
     try alive()

@@ -117,7 +117,7 @@ final class YlAppleCommandOrderingTests: XCTestCase {
     catch { settlements.append("missing-rejected") }
     XCTAssertFalse(settlements.contains("new-success"), "Enqueued is not completed/accepted yet")
     do {
-      try f.host.setVideoConstraints(command: .init(sessionId: loaded.sessionId, constraints: .init(maxWidth: 1)))
+      try await f.host.setVideoConstraints(command: .init(sessionId: loaded.sessionId, constraints: .init(maxWidth: 1)))
       XCTFail("Queued fixed-stream rejection must be synchronous")
     } catch let error as PigeonError { XCTAssertEqual(error.code, "decoder.quality_constraint_unsupported") }
     release.signal()
@@ -211,15 +211,15 @@ final class YlAppleAcceptedIntentTests: XCTestCase {
     if !network { request.source.kind = .file; request.source.locator = file.path }
     let loaded = try await f.load(request)
     try await AppleHostCharacterizations.waitFor({ f.host.initialState.timeline.positionMs > 50 })
+    try await f.host.setVideoConstraints(command: .init(sessionId: loaded.sessionId, constraints: .init(maxHeight: 720)))
     let held = expectation(description: "command worker holds acknowledged session setter effects")
     let release = DispatchSemaphore(value: 0); defer { release.signal() }
     commands.begin(operation: { _ in held.fulfill(); _ = release.wait(timeout: .now() + 10) }, completion: { _ in })
     await fulfillment(of: [held], timeout: 1)
     try f.host.pause(command: .init(sessionId: loaded.sessionId))
     try f.host.seekTo(command: .init(sessionId: loaded.sessionId, positionMs: 3_000))
-    try f.host.setVideoConstraints(command: .init(sessionId: loaded.sessionId, constraints: .init(maxHeight: 720)))
     do {
-      try f.host.setVideoConstraints(command: .init(sessionId: loaded.sessionId, constraints: .init(maxWidth: 1)))
+      try await f.host.setVideoConstraints(command: .init(sessionId: loaded.sessionId, constraints: .init(maxWidth: 1)))
       XCTFail("Semantically invalid constraint accepted")
     } catch let error as PigeonError { XCTAssertEqual(error.code, "decoder.quality_constraint_unsupported") }
     XCTAssertThrowsError(try f.host.seekTo(command: .init(sessionId: loaded.sessionId, positionMs: -1)))
@@ -271,6 +271,7 @@ final class YlAppleAcceptedIntentTests: XCTestCase {
     request.source.kind = .file; request.source.locator = file.path
     let loaded = try await f.load(request)
     try await AppleHostCharacterizations.waitFor({ f.host.initialState.timeline.positionMs > 50 })
+    try await f.host.setVideoConstraints(command: .init(sessionId: loaded.sessionId, constraints: .init(maxHeight: 720)))
     let held = expectation(description: "old native command worker held through failed candidate")
     let release = DispatchSemaphore(value: 0); defer { release.signal() }
     commands.begin(operation: { _ in held.fulfill(); _ = release.wait(timeout: .now() + 10) }, completion: { _ in })
@@ -279,7 +280,6 @@ final class YlAppleAcceptedIntentTests: XCTestCase {
     try f.host.seekTo(command: .init(sessionId: loaded.sessionId, positionMs: 3_000))
     try f.host.setVolume(volume: 0.2)
     try f.host.setPlaybackSpeed(command: .init(sessionId: loaded.sessionId, speed: 1.5))
-    try f.host.setVideoConstraints(command: .init(sessionId: loaded.sessionId, constraints: .init(maxHeight: 720)))
     rejectCandidate = true; request.loadRequestId = "post-quiescence-failure"
     do { _ = try await f.load(request); XCTFail("Controlled candidate committed") }
     catch { XCTAssertEqual((error as NSError).domain, "resource.video_decoder_limit") }

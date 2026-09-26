@@ -32,6 +32,9 @@ final class YlAppleSessionCoordinator: NSObject {
   private let avBackend: YlAvPlayerBackend
   private let slot: YlBackendSlot
   private let openCoordinator = YlOpenCoordinator()
+  private let capsCoordinator = YlOpenCoordinator(label: "dev.ylplayer.dash.caps")
+  private let beforeDashCapsPreparation: ((YlOpenCancellationToken) throws -> Void)?
+  private var committedDashSnapshot: YlDashManifestSnapshot?
   private let commandCoordinator: YlAsyncCommandCoordinator
   private let beforeFallbackConstruction: ((YlPlaybackBackend) throws -> Void)?
   private var lastCommittedSource: YlAppleSourceDescriptor?
@@ -55,6 +58,7 @@ final class YlAppleSessionCoordinator: NSObject {
   init(playerId: Int64, services: YlPlatformServices,
        configuration: PlayerConfiguration, textureOwner: YlAppleTextureOwner, avPlayer: AVPlayer = AVPlayer(),
        commandCoordinator: YlAsyncCommandCoordinator = YlAsyncCommandCoordinator(),
+       beforeDashCapsPreparation: ((YlOpenCancellationToken) throws -> Void)? = nil,
        beforeFallbackConstruction: ((YlPlaybackBackend) throws -> Void)? = nil,
        slotCompatibility: YlAppleCompatibility? = nil,
        bufferLedger: YlManagedBufferLedger = YlManagedBufferLedger(),
@@ -62,6 +66,7 @@ final class YlAppleSessionCoordinator: NSObject {
        hardwareEvidenceStage: YlHardwareEvidencePreparation = .init(),
        audioOwnership: YlPlayerAudioOwnership? = nil,
        emit: @escaping (YlAppleSessionIdentity, YlNativeBackendCallback) -> Void) {
+    self.beforeDashCapsPreparation = beforeDashCapsPreparation
     self.audioOwnership = audioOwnership
     self.videoSessionFactory = videoSessionFactory
     self.hardwareEvidenceStage = hardwareEvidenceStage
@@ -116,16 +121,39 @@ final class YlAppleSessionCoordinator: NSObject {
 
   func execute(_ command: YlApplePlaybackCommand,
     completion: @escaping (Result<Void, NativePlayerError>) -> Void) {
+    if case .constraints = command { capsCoordinator.cancelCurrent() }
     if case .constraints(let constraints) = command,
        let source = lastCommittedSource, route(for: source) == .dashHls {
       do { _ = try YlFallbackQualityConstraint(validating: constraints) }
       catch let error as NativePlayerError { completion(.failure(error)); return }
       catch { completion(.failure(Self.commandError(error))); return }
-      guard constraints == lastQualityConstraint else {
+      if constraints == lastQualityConstraint { completion(.success(())); return }
+      guard slot.current === avBackend, avBackend.isActive, activeRestorationGeneration == nil,
+            let snapshot = committedDashSnapshot, let credentials = committedHlsCredentials,
+            let identity else {
         completion(.failure(YlAppleVideoConstraints.reloadRequired)); return
       }
-      // No asynchronous restoration queue may retain an unexecuted policy.
-      completion(.success(())); return
+      guard pendingLoadRequestId == nil else {
+        completion(.failure(YlOpenCancellationToken.cancellationError())); return
+      }
+      capsCoordinator.begin(prepare: { [weak self] token in
+        guard let self else { throw YlOpenCancellationToken.cancellationError() }
+        try self.beforeDashCapsPreparation?(token)
+        try token.throwIfCancelled()
+        return .headeredHls(source: source, prepared: try self.prepareHeaderedHls(
+          source: source, token: token, credentialContext: credentials,
+          videoConstraints: constraints, dashSnapshot: snapshot))
+      }, commit: { [weak self] candidate in
+        guard let self, !self.disposed, self.identity == identity,
+              self.pendingLoadRequestId == nil, self.slot.current === self.avBackend,
+              self.avBackend.isActive, self.activeRestorationGeneration == nil,
+              case let .headeredHls(_, prepared) = candidate else {
+          throw YlOpenCancellationToken.cancellationError()
+        }
+        try self.avBackend.replaceActiveDash(source: source, prepared: prepared)
+        self.lastQualityConstraint = constraints
+      }, completion: completion)
+      return
     }
     if case .constraints(let constraints) = command, let fallback = slot.current as? YlFallbackBackend {
       do { try fallback.validateQualityConstraint(YlFallbackQualityConstraint(validating: constraints)) }
@@ -133,7 +161,10 @@ final class YlAppleSessionCoordinator: NSObject {
       catch { completion(.failure(Self.commandError(error))); return }
     }
     beginCommand(command) { [weak self] result in
-      if case .success = result, case .track = command { self?.restorationIntentRevision &+= 1 }
+      if case .success = result {
+        if case .track = command { self?.restorationIntentRevision &+= 1 }
+        if case .constraints(let constraints) = command { self?.lastQualityConstraint = constraints }
+      }
       completion(result)
     }
   }
@@ -156,7 +187,7 @@ final class YlAppleSessionCoordinator: NSObject {
     switch command {
     case let .volume(volume): lastVolume = Float(volume)
     case let .speed(speed): lastPlaybackSpeed = Float(speed)
-    case let .constraints(constraints): lastQualityConstraint = constraints
+    case .constraints: break
     case let .seek(position):
       restorationIntentRevision &+= 1
       pendingSeekIntent = immediate == nil ? (revision, position) : nil
@@ -178,6 +209,7 @@ final class YlAppleSessionCoordinator: NSObject {
   }
 
   func stop() {
+      capsCoordinator.cancelCurrent()
       commandCoordinator.cancelCurrent()
       openCoordinator.cancelCurrent()
       restorationGeneration &+= 1
@@ -188,6 +220,7 @@ final class YlAppleSessionCoordinator: NSObject {
       activeEvents = nil
       lastCommittedSource = nil
       committedHlsCredentials = nil
+      committedDashSnapshot = nil
       pendingSeekIntent = nil
       pendingPauseIntent = nil
       lastQualityConstraint = .unconstrained
@@ -223,6 +256,7 @@ final class YlAppleSessionCoordinator: NSObject {
     restorationGeneration &+= 1
     activeRestorationGeneration = nil
     cancelDeferredRestorationCommands()
+    capsCoordinator.cancelCurrent()
     // A candidate owns fresh provenance; failed/cancelled work never writes the
     // surviving session's context or a later user Load's context.
     let hlsCredentials = YlHlsCredentialContext()
@@ -335,12 +369,13 @@ final class YlAppleSessionCoordinator: NSObject {
        [YlAppleSourceRoute.headeredHls, .dashHls].contains(route(for: source)),
        let hlsCredentials = committedHlsCredentials {
       let loadConstraints = lastQualityConstraint
+      let dashSnapshot = committedDashSnapshot
       openCoordinator.begin(
         prepare: { [weak self] token in
           guard let self else { throw YlOpenCancellationToken.cancellationError() }
           return .headeredHls(
             source: source,
-            prepared: try self.prepareHeaderedHls(source: source, token: token, credentialContext: hlsCredentials, videoConstraints: loadConstraints)
+            prepared: try self.prepareHeaderedHls(source: source, token: token, credentialContext: hlsCredentials, videoConstraints: loadConstraints, dashSnapshot: dashSnapshot)
           )
         },
         commit: { [weak self] candidate in
@@ -446,6 +481,7 @@ final class YlAppleSessionCoordinator: NSObject {
   }
 
   func deactivate() {
+    capsCoordinator.cancelCurrent()
     restorationGeneration &+= 1
     activeRestorationGeneration = nil
     cancelDeferredRestorationCommands()
@@ -455,6 +491,7 @@ final class YlAppleSessionCoordinator: NSObject {
   }
 
   func handleMemoryWarning() {
+    capsCoordinator.cancelCurrent()
     restorationGeneration &+= 1
     activeRestorationGeneration = nil
     cancelDeferredRestorationCommands()
@@ -614,6 +651,7 @@ final class YlAppleSessionCoordinator: NSObject {
       try avBackend.open(source, videoConstraints: constraints)
       lastCommittedSource = source
       committedHlsCredentials = nil
+      committedDashSnapshot = nil
       lastQualityConstraint = constraints
     case let .headeredHls(source, prepared):
       avTexture.lease = candidateTexture
@@ -634,6 +672,7 @@ final class YlAppleSessionCoordinator: NSObject {
       }
       lastCommittedSource = source
       committedHlsCredentials = prepared.loader.credentialContext
+      committedDashSnapshot = prepared.loader.dashSnapshot
       // New Loads own their captured tuple, and DASH restores its immutable
       // projection. Ordinary HLS resume retains the latest acknowledged intent.
       if !reactivating || route(for: source) == .dashHls {
@@ -671,6 +710,7 @@ final class YlAppleSessionCoordinator: NSObject {
       backend.emitState()
       lastCommittedSource = source
       committedHlsCredentials = nil
+      committedDashSnapshot = nil
       if !reactivating, source.loadOptions != nil { lastQualityConstraint = source.loadOptions?.videoConstraints ?? .unconstrained }
     }
     // Successful replacement/restoration consumed these session intents. A
@@ -785,7 +825,8 @@ final class YlAppleSessionCoordinator: NSObject {
     source: YlAppleSourceDescriptor,
     token: YlOpenCancellationToken,
     credentialContext: YlHlsCredentialContext,
-    videoConstraints: YlAppleVideoConstraints
+    videoConstraints: YlAppleVideoConstraints,
+    dashSnapshot: YlDashManifestSnapshot? = nil
   ) throws -> YlPreparedHlsAsset {
     try token.throwIfCancelled()
     guard let url = source.url else {
@@ -809,6 +850,7 @@ final class YlAppleSessionCoordinator: NSObject {
       credentials: source.credentials,
       configuration: configuration.network,
       cancellationToken: token,
+      dashSnapshot: dashSnapshot,
       credentialContext: credentialContext,
       opaqueRetention: try bufferLedger.acquireOpaqueHlsRetention()
     )
@@ -832,6 +874,7 @@ final class YlAppleSessionCoordinator: NSObject {
   }
 
   func quiesceForHardwareDecoderLease() {
+    capsCoordinator.cancelCurrent()
     hardwareRollbackPlaybackIntent = currentPlaybackIntent
     slot.current.quiesceForReplacement()
   }
@@ -937,7 +980,9 @@ final class YlAppleSessionCoordinator: NSObject {
   func dispose() {
     guard !disposed else { return }
     disposed = true
+    capsCoordinator.cancelCurrent()
     committedHlsCredentials = nil
+    committedDashSnapshot = nil
     lastCommittedSource = nil
     activeEvents?.invalidate()
     activeEvents = nil

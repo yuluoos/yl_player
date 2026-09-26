@@ -49,7 +49,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
-    "sha256": "9a289c120c0b02af8be498a50ffa1e813fe150027b2d380efbca0d99deefead3",
+    "sha256": "1ef51bc56d751e9b9ce740bb5516d56ddd8a14cd0a9d14a898d8b2264eb0ae27",
     "methods": [
       "testInputValidationPrecedesReplacementAndRejectsUnrepresentableTimeline",
       "testSemanticCommandRejectionCompletesFutureWithoutFailingHealthySession"
@@ -231,7 +231,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleHostTests.swift",
-    "sha256": "84f64da0c6162052f5c358b5855d18be0d5ae5cfc80a686ffc206197b7d7aa2d",
+    "sha256": "06b64b9e27d7fb343aad83d8101ef4b8a426c529bd39015d74daa3d6dbf96055",
     "methods": [
       "testCancelOpenMatchesOnlyThePreparingCandidate",
       "testStopCancelsPendingOpenRetainsTextureAndAllowsFreshOpen",
@@ -502,7 +502,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift",
-    "sha256": "8d6db346353b6d5ee6c057d495865ba1eb0fc52d044c9785f0fa394163016baf",
+    "sha256": "48dde7e0927dcb031998b9defa03c1c0031a8c6613f8a5d582bbb6808df34fe0",
     "methods": [
       "testCatalogFollowsMeasuredProgramTimeAndPeriodicPublication",
       "testCatalogLoaderSnapshotSurvivesCancellationWhilePrivateSnapshotClears",
@@ -513,6 +513,12 @@
       "testCatalogStagedLoaderRestoreSeeksExactFractionalBoundary",
       "testLiveEdgeRestorationPreservesExplicitAndIndefiniteLiveBehavior",
       "testLoadCapsDropActualOversizedBufferBeforeDirectReturnAndPublication",
+      "testRuntimeMetadataBeforeHeldResumeKeepsAudioSelectionRotationAndReadiness",
+      "testRuntimeSnapshotKeepsOriginalEffectiveURLAndClearsCancelledLoaderOwnership",
+      "testRuntimeCapsCommitSamplesLatestExactTimeAndPauseAndFreezesPendingSeek",
+      "testRuntimeCapsTransfersLatestUnlandedSeekAndRejectsRetiredCompletions",
+      "testRuntimeCapsSupersedingNoOpAndLifecycleCancelPendingExactlyOnce",
+      "testRuntimeCapsClearRestoresAcceptedOriginalWithoutRefetch",
       "testLoadCapsRuntimeMutationFailsBeforeAcceptedIntentAndSurvivesRestore",
       "testLoadCapsLoaderRejectsIneligibleCandidateBeforePublishingAssetAndRedactsErrors",
       "testLoadCapsPixelAspectRatioRejectsAndRetiredFailureCannotPoisonNewItem",

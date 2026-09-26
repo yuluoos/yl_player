@@ -190,6 +190,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   // Immutable after one successful preflight; removed on cancellation. Synthetic
   // identities are never credential origins or upstream fetch destinations.
   private var dashPresentation: YlDashHlsPresentation?
+  private var acceptedDashSnapshot: YlDashManifestSnapshot?
   private var preflightStarted = false
   private let originURL: URL
   let credentialContext: YlHlsCredentialContext
@@ -252,6 +253,10 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     delegateQueue.maxConcurrentOperationCount = 1
     delegateQueue.qualityOfService = .userInitiated
     session = sessionFactory(sessionConfiguration, self, delegateQueue)
+  }
+
+  var dashSnapshot: YlDashManifestSnapshot? {
+    stateLock.withLock { acceptedDashSnapshot }
   }
 
   var videoCatalog: YlDashVideoCatalog? {
@@ -361,7 +366,21 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     return true
   }
 
-  func preflight(cancellationToken: YlOpenCancellationToken) throws {
+  private func compile(_ snapshot: YlDashManifestSnapshot) throws -> YlDashHlsPresentation {
+    try YlDashHlsCompiler.compile(data: snapshot.data,
+      finalManifestURL: snapshot.effectiveURL, sourceURL: originURL,
+      credentialsStripped: snapshot.credentialsStripped,
+      videoConstraints: videoConstraints,
+      manifestURL: { [virtualNamespace] name in
+        URL(string: "http://yl-dash.invalid/\(virtualNamespace)/\(name).m3u8")!
+      },
+      mediaURL: { [mediaProxy, credentialContext] url, stripped in
+        try mediaProxy.proxyURL(for: url,
+          credentialsStripped: stripped || credentialContext.isStripped(url.absoluteString))
+      })
+  }
+
+  func preflight(cancellationToken: YlOpenCancellationToken, snapshot: YlDashManifestSnapshot? = nil) throws {
     try cancellationToken.throwIfCancelled()
     cancellationToken.onCancel { [weak self] in self?.cancelAll() }
     let request: PreflightRequest
@@ -370,6 +389,17 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
         guard !cancelled else { throw Self.cancelledError() }
         guard !preflightStarted else { throw Self.virtualResourceError() }
         preflightStarted = true
+      }
+      if let snapshot {
+        let presentation = try compile(snapshot)
+        try cancellationToken.throwIfCancelled()
+        try stateLock.withLock {
+          guard !cancelled else { throw Self.cancelledError() }
+          for resource in presentation.strippedResources { credentialContext.strip(resource) }
+          dashPresentation = presentation
+          acceptedDashSnapshot = snapshot
+        }
+        return
       }
       request = PreflightRequest(url: try YlHlsURLCodec.encode(originURL, kind: .manifest))
       _ = startUpstreamLoading(request, destination: originURL, resourceKind: .manifest,
@@ -404,6 +434,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
       records.removeAll()
       cachedResponses.removeAll()
       dashPresentation = nil
+      acceptedDashSnapshot = nil
       return pending
     }
     for record in pending {
@@ -744,23 +775,16 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
     }
     do {
       if isDash {
-        let presentation = try YlDashHlsCompiler.compile(data: record.manifestData,
-          finalManifestURL: record.destinationURL, sourceURL: originURL,
-          credentialsStripped: record.credentialsStripped,
-          videoConstraints: videoConstraints,
-          manifestURL: { [virtualNamespace] name in
-            URL(string: "http://yl-dash.invalid/\(virtualNamespace)/\(name).m3u8")!
-          },
-          mediaURL: { [mediaProxy, credentialContext] url, stripped in
-            try mediaProxy.proxyURL(for: url,
-              credentialsStripped: stripped || credentialContext.isStripped(url.absoluteString))
-          })
+        let snapshot = YlDashManifestSnapshot(data: record.manifestData,
+          effectiveURL: record.destinationURL, credentialsStripped: record.credentialsStripped)
+        let presentation = try compile(snapshot)
         let published = stateLock.withLock { () -> Bool in
           // Compilation and proxy construction happen outside the state lock.
           // A cancelled/replaced task can never reinstall the registry.
           guard !cancelled, records[task.taskIdentifier] === record else { return false }
           for resource in presentation.strippedResources { credentialContext.strip(resource) }
           dashPresentation = presentation
+          acceptedDashSnapshot = snapshot
           return true
         }
         guard published else { return }
@@ -826,6 +850,14 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
   }
 }
 
+/// Accepted, bounded original MPD input. Value semantics preserve the unfiltered
+/// bytes and effective redirect origin across projections and restoration.
+struct YlDashManifestSnapshot {
+  let data: Data
+  let effectiveURL: URL
+  let credentialsStripped: Bool
+}
+
 final class YlPreparedHlsAsset {
   let asset: AVURLAsset
   let loader: YlHlsResourceLoader
@@ -840,6 +872,7 @@ final class YlPreparedHlsAsset {
     credentials: [String: String] = [:],
     configuration: YlNetworkConfiguration,
     cancellationToken: YlOpenCancellationToken,
+    dashSnapshot: YlDashManifestSnapshot? = nil,
     credentialContext: YlHlsCredentialContext = YlHlsCredentialContext(),
     sessionConfiguration: URLSessionConfiguration = .ephemeral,
     opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention? = nil
@@ -856,7 +889,7 @@ final class YlPreparedHlsAsset {
     )
     self.loader = loader
     do {
-      try loader.preflight(cancellationToken: cancellationToken)
+      try loader.preflight(cancellationToken: cancellationToken, snapshot: dashSnapshot)
       let asset = AVURLAsset(url: try loader.encodedAssetURL())
       asset.resourceLoader.setDelegate(loader, queue: loader.resourceLoaderQueue)
       self.asset = asset

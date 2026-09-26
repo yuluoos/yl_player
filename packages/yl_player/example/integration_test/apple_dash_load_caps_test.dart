@@ -185,7 +185,7 @@ void main() {
   });
 
   testWidgets(
-    'same cap is idempotent; changed or cleared cap requires new Load',
+    'same cap is idempotent; active cap rejects infeasible and clears',
     (tester) async {
       final constrained = await DashServer.start(variants: true);
       final highToLow = await DashServer.start(
@@ -206,11 +206,7 @@ void main() {
         old.setVideoConstraints(
           const YlVideoConstraints(maxWidth: 160, maxHeight: 90),
         ),
-        failureCode(YlFailureCodes.videoConstraintsReloadRequired),
-      );
-      await expectLater(
-        old.setVideoConstraints(const YlVideoConstraints()),
-        failureCode(YlFailureCodes.videoConstraintsReloadRequired),
+        failureCode(YlFailureCodes.qualityConstraintUnsupported),
       );
       final before = player.state.timeline.position;
       final continued = await stateWhere(
@@ -223,6 +219,9 @@ void main() {
       _expectAutomaticInitial(continued);
       _expectSize(continued, '320x180');
       expect(_failures(events, old), isEmpty);
+
+      // The old session keeps its accepted low cap until clearing succeeds.
+      await old.setVideoConstraints(const YlVideoConstraints());
 
       final fresh = await player.load(YlNetworkSource(highToLow.automaticUri));
       await readyAndPlay(player, fresh);

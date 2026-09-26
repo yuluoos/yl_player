@@ -61,6 +61,54 @@ void main() {
     return completion.future;
   }
 
+  test(
+    'constraints transport awaits native completion and propagates failure',
+    () async {
+      final entered = Completer<void>();
+      final reply = Completer<Object?>();
+      host('setVideoConstraints', (_) {
+        entered.complete();
+        return reply.future;
+      });
+      final api = ApplePlayerHostApi(messageChannelSuffix: 'instance-1');
+      var settled = false;
+      final command = api.setVideoConstraints(
+        AppleVideoConstraintsCommand(
+          sessionId: 'accepted',
+          constraints: AppleVideoConstraintsMessage(maxWidth: 1),
+        ),
+      );
+      final observed = command.then<void>(
+        (_) {
+          settled = true;
+        },
+        onError: (Object error) {
+          settled = true;
+          throw error;
+        },
+      );
+      final assertion = expectLater(
+        observed,
+        throwsA(
+          isA<PlatformException>().having(
+            (error) => error.code,
+            'code',
+            'decoder.quality_constraint_unsupported',
+          ),
+        ),
+      );
+      await entered.future;
+      expect(settled, isFalse);
+      reply.complete([
+        'decoder.quality_constraint_unsupported',
+        'No eligible representation.',
+        null,
+      ]);
+      await assertion;
+      expect(settled, isTrue);
+    },
+  );
+
   for (final format in [YlMediaFormat.matroska, YlMediaFormat.flv]) {
     for (final replyFirst in [true, false]) {
       test(

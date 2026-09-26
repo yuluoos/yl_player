@@ -247,8 +247,9 @@ result and any remaining discrepancy are recorded in the
 [fixed-selection stage report](superpowers/reports/2026-09-24-fixed-video-selection.md).
 This gate does not establish full adaptive bitrate behavior, weak-network
 quantitative response, HDR switching, general DASH interoperability, or a
-physical/minimum-OS device matrix. Fixed Apple behavior, runtime cap changes,
-and quantitative weak-network ABR remain future work.
+physical/minimum-OS device matrix. Fixed Apple behavior and quantitative
+weak-network ABR remain future work. Active caps for the bounded static Apple
+DASH subset are described below.
 
 ## Apple DASH Load video caps
 
@@ -269,33 +270,44 @@ static DASH adapter: one AVC codec/profile family, compatible display ratio and
 frame rate, square pixels, and no color, dynamic-range, or supplemental
 declarations. The full original presentation is validated before filtering.
 AVPlayer remains in automatic video selection. Passing the same constraints
-through `session.setVideoConstraints` succeeds; changing or clearing them during
-that DASH Load returns `policy.video_constraints_reload_required`. Load the
-source again with new options to change the cap. A rejected Load leaves the
-accepted session playing. Normal HLS/MP4 video preference behavior is unchanged.
+through `session.setVideoConstraints` succeeds. An active accepted static DASH
+session can also tighten, loosen, or clear them with the same Future API while
+keeping its session identity, measured position, current play/pause intent,
+and automatic video selection. The Future completes when the new item and
+policy are committed; a new decoded frame can arrive later, and brief
+rebuffering is possible. Changes recompile the accepted original MPD snapshot,
+so they do not fetch the MPD again. A cap that leaves any Period without a
+video candidate fails with `decoder.quality_constraint_unsupported` and keeps
+the old item and policy. An equal accepted cap is an idempotent no-op. For an
+inactive or restoring DASH session, a changed cap still returns
+`policy.video_constraints_reload_required`; load the source again with new
+options in that state. A rejected Load leaves the accepted session playing.
+Normal HLS/MP4 video preference behavior is unchanged.
 See the [Load caps report](superpowers/reports/2026-09-25-apple-dash-load-caps.md)
-for the exact native and public playback evidence.
+for the original Load behavior, and the [runtime caps report](superpowers/reports/2026-09-26-apple-dash-runtime-caps.md)
+for active changes and their test scope.
 
 ## Apple DASH current-Period video catalog
 
 For an accepted Apple DASH Load, `state.videoTracks` lists the declared video
-Representations available in the **current playback Period**, after any Load
-video cap has filtered them. Each entry reports the MPD's declared width,
-height, video bandwidth, and codec. It is a catalog of available qualities,
-not evidence of which rendition AVPlayer is decoding. All DASH video entries
-have `isSelected == false`; `state.videoSelection` remains automatic with the
-initial reason. The decoded `videoGeometry` is the separate observation of the
-displayed frame.
+Representations available in the **current playback Period**, after the
+accepted Load or runtime video cap has filtered them. Each entry reports the
+MPD's declared width, height, video bandwidth, and codec. It is a catalog of
+available qualities, not evidence of which rendition AVPlayer is decoding.
+All DASH video entries have `isSelected == false`; `state.videoSelection`
+remains automatic with the initial reason. The decoded `videoGeometry` is the
+separate observation of the displayed frame.
 
 IDs use `dash-video-w{width}-h{height}-b{bandwidth}`. They remain stable when
 Representation IDs or XML ordering change between Periods, and the catalog is
 sorted by width, height, then video bandwidth. At a Period boundary it follows
 the measured program position; seeking back or forward restores the catalog
-for the landed Period. A failed candidate Load preserves the accepted session's
-catalog, and Stop clears it. This catalog does not implement fixed selection,
-runtime DASH cap changes, adaptive fallback policy, or a quantitative ABR
-guarantee. The existing clear static AVC/AAC Apple DASH subset and its admission
-limits still apply. See the [catalog stage report](superpowers/reports/2026-09-25-apple-dash-track-catalog.md)
+for the landed Period. A failed candidate Load or runtime cap change preserves
+the accepted session's catalog, and Stop clears it. A successful runtime cap
+change publishes the current Period's newly filtered catalog. This catalog
+does not implement fixed selection, adaptive fallback policy, or a quantitative
+ABR guarantee. The existing clear static AVC/AAC Apple DASH subset and its
+admission limits still apply. See the [catalog stage report](superpowers/reports/2026-09-25-apple-dash-track-catalog.md)
 for separate native and public evidence and the tested device scope.
 
 ## Optional JavaScript source resolution
