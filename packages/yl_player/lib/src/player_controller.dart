@@ -103,12 +103,22 @@ final class YlPlayerController implements Listenable {
     }
   }
 
+  void _checkDrmAdmission(YlMediaSource source) {
+    if (source is! YlNetworkSource || source.drm == null) return;
+    final backend = _backend;
+    if (backend is! YlPlatformDrmSourceSupport ||
+        (backend as YlPlatformDrmSourceSupport).drmContractVersion != 1) {
+      throw ylDrmException(YlFailureCodes.drmUnsupported);
+    }
+  }
+
   Future<YlSourceAssessment> assess(
     YlMediaSource source, {
     YlLoadOptions options = const YlLoadOptions(),
   }) async {
     _check();
     validateYlSource(source);
+    _checkDrmAdmission(source);
     validateYlLoadOptions(options);
     final result = await _backend.assess(source, options: options);
     _check();
@@ -123,6 +133,7 @@ final class YlPlayerController implements Listenable {
     try {
       _check();
       validateYlSource(source);
+      _checkDrmAdmission(source);
       validateYlLoadOptions(options);
       _cancelLoad();
       final serial = ++_loadSerial;

@@ -1,4 +1,5 @@
 import '../model/value_helpers.dart';
+import '../drm/drm_config.dart';
 import '../options/policies.dart';
 import 'http_request.dart';
 
@@ -67,10 +68,12 @@ final class YlNetworkSource extends YlMediaSource {
     super.intent = YlStreamIntent.automatic,
     super.format = YlMediaFormat.automatic,
     YlHttpRequest? request,
+    this.drm,
     this.networkPolicy = const YlNetworkPolicy.platformDefault(),
   }) : request = request ?? YlHttpRequest();
 
   final Uri uri;
+  final YlDrmConfig? drm;
   final YlHttpRequest request;
   final YlNetworkPolicy networkPolicy;
 
@@ -82,13 +85,21 @@ final class YlNetworkSource extends YlMediaSource {
         uri == other.uri &&
         intent == other.intent &&
         format == other.format &&
+        drm == other.drm &&
         request == other.request &&
         networkPolicy == other.networkPolicy,
   );
 
   @override
-  int get hashCode =>
-      Object.hash(YlNetworkSource, uri, intent, format, request, networkPolicy);
+  int get hashCode => Object.hash(
+    YlNetworkSource,
+    uri,
+    intent,
+    format,
+    request,
+    networkPolicy,
+    drm,
+  );
 
   @override
   String toString() =>

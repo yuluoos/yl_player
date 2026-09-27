@@ -24,6 +24,18 @@ enum YlFailureCategory {
 enum YlFailureScope { command, session, player }
 
 abstract final class YlFailureCodes {
+  static const drmConfigInvalid = 'drm.config_invalid';
+  static const drmUnsupported = 'drm.unsupported';
+  static const drmSchemeMismatch = 'drm.scheme_mismatch';
+  static const drmEncryptionModeUnsupported = 'drm.encryption_mode_unsupported';
+  static const drmLicenseDenied = 'drm.license_denied';
+  static const drmLicenseExpired = 'drm.license_expired';
+  static const drmLicenseTimeout = 'drm.license_timeout';
+  static const drmLicenseFailed = 'drm.license_failed';
+  static const drmLicenseRedirectRejected = 'drm.license_redirect_rejected';
+  static const drmPayloadTooLarge = 'drm.payload_too_large';
+  static const drmLicenseResponseInvalid = 'drm.license_response_invalid';
+
   static const playerDisposed = 'player.disposed';
   static const platformUnavailable = 'platform.unavailable';
   static const platformIncompatible = 'platform.incompatible';

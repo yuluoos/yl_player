@@ -112,6 +112,11 @@ abstract final class AppleCodec {
 
   static AppleSourceMessage source(YlMediaSource value) {
     validateYlSource(value);
+    if (value is YlNetworkSource && value.drm != null) {
+      validateYlDrmPlatform(value.drm!, TargetPlatform.iOS);
+      // Schema 4 has no DRM fields: fail before serializing a clear source.
+      throw ylDrmException(YlFailureCodes.drmUnsupported);
+    }
     final commonIntent = _intent(value.intent);
     final commonFormat = _format(value.format);
     return switch (value) {

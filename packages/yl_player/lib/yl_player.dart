@@ -22,6 +22,13 @@ export 'package:yl_player_platform_interface/yl_player_platform_interface.dart'
         YlFileSource,
         YlAndroidContentSource,
         YlHttpRequest,
+        YlDrmConfig,
+        YlWidevineDrm,
+        YlFairPlayDrm,
+        YlDrmBytes,
+        YlDrmLicenseEndpoint,
+        YlDrmEncryption,
+        YlDrmPostReplay,
         YlStreamIntent,
         YlMediaFormat,
         YlPlayerState,
@@ -53,3 +60,6 @@ export 'package:yl_player_platform_interface/yl_player_platform_interface.dart'
         YlRetryScheduledEvent,
         YlPlaybackEngineChangedEvent,
         YlPlaybackFailedEvent;
+
+export 'src/drm/license_client.dart'
+    show YlDrmLicenseClient, YlDrmCancellationToken;

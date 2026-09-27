@@ -67,3 +67,63 @@ YL_ANDROID_DEVICE_ID=emulator-5580 sh ../../../tool/run_android_integration.sh i
 - `packages/yl_player/example/android/app/src/debug/kotlin/dev/ylplayer/yl_player_example/ProtectedViewProbe.kt`：`ebaa2063c6489d40b7427282f39c2c1002229db2dba14ce407e4db7b50e0cfc5`
 - `packages/yl_player/example/integration_test/protected_view_probe_test.dart`：`f3665aa39972e533685c68d474b8ad1daa1afba59324324a9c7ed1a98cf061c0`
 - `tool/check_foundation.sh`：`63005129c0ac99de1f1c0768c049170f1f6b7895b2e29752189385bc34f98fff`
+
+## Task 2：配置、许可证传输与旧适配器准入（2026-09-27）
+
+基线 `b96ad0c7af9e55a5781928c8ec1f30dcd6ba3964`。本项增加公开 Widevine/FairPlay 配置、不可变脱敏字节容器和独立 raw-binary 许可证 POST 客户端。完整签名、限额、错误表和生命周期边界见 [契约第 6/7 节](../specs/2026-09-26-drm-contract.md#6-已实现的-dart-配置与许可证-post)。无商业 SDK，无原生解密或输出保护结论。
+
+### 交付与行为
+
+- Widevine 要求显式 DASH，FairPlay 要求显式 HLS 及宿主提供证书/content ID；平台和 cenc/cbcs 下限独立验证。保留原有 category/scope 和 Pigeon enum ordinal，schemaMajor 仍为 4。
+- 许可证 POST 与媒体 GET 分离，默认 HTTPS、默认不重试/不重定向。显式幂等才可重试最多两次；显式开启重定向也仅限同源 307/308 两跳。跨源既不传凭据，也不传 challenge。
+- 单次 challenge ≤1MiB、响应 ≤4MiB；全请求总期限覆盖正文与重试；每客户端最多四个并发请求。关闭/取消中止连接且禁止迟到结果。401/403 表示拒绝；410/其他 HTTP 错误不推断过期。
+- 现有 controller 在取消当前 clear 候选之前拒绝不支持 DRM 的请求，双端 codec 再次拒绝，防止旧 DTO 静默丢弃 DRM 配置后尝试 clear 播放。没有让当前适配器声明 protected-playback 能力。
+
+### 实际验证
+
+新增配置 4 项、真实 loopback HTTP/TLS 14 项、controller 准入 2 项、双端 codec 各 1 项，共 22 项。HTTP 记录器断言原始 POST 字节、实际次数、同源凭据、跨源零请求、断连后不重发、显式重试、流式正文超时、取消后迟到响应、响应超限、并发上限与 close。测试使用自有测试字节和本地 HTTP 服务，不是有效许可证，也不证明密钥可安装。
+
+已观察配置/客户端缺失时 RED；旧适配器准入的行为 RED 是 assess 被错误接受、双端序列化为 clear、pending clear load 被取消。实现后 GREEN。四包完整 Dart 回归 **381/381**，无跳过；静态分析 **0 issues**；公开 API 表面检查及双端 Pigeon 生成一致性均通过。Task 2 没有改原生源码或协议生成物，未重复运行 Task 1 模拟器实播。
+
+```sh
+flutter test packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test
+sh tool/check_public_surface.sh
+sh packages/yl_player_apple/tool/check_pigeon.sh
+sh packages/yl_player_android/tool/check_pigeon.sh
+dart analyze packages/yl_player/lib packages/yl_player/test/drm_admission_test.dart packages/yl_player/test/drm_license_client_test.dart packages/yl_player_platform_interface/lib packages/yl_player_platform_interface/test/drm_contract_test.dart packages/yl_player_apple/lib/src/apple_codec.dart packages/yl_player_apple/test/drm_codec_test.dart packages/yl_player_android/lib/src/android_codec.dart packages/yl_player_android/test/drm_codec_test.dart
+```
+
+本机 macOS27/M1，Flutter3.44 / Dart3.12；HTTP/TLS 请求发生在 Dart VM 本地受控服务，不代表任何特定 license provider 或最低系统实测。证据在本计划忽略目录内的 `license-{contract,http,admission}-red.log`、对应 green 日志、`license-dart-all.log`、`license-dart-final.log`、`license-analysis-final.log`。双端 Pigeon check 退出码 0，无生成物差异。
+
+### 决定与仍未完成
+
+本项采用原始二进制服务契约；宿主提供授权证书及 content ID，未猜 JSON/base64/SPC/CKC 包装规则，使用其他供应商格式需要后续显式适配。生产受保护 view attachment、密钥 challenge/response Pigeon 桥接从 Task 2 移至 Task 3，随原子会话生命周期落地；代价是 Task 2 配置/网络可用仍不能授权播放。此时新增未接原生的占位桥接会制造不实能力，所以 schema4 继续明确拒绝。
+
+Task 3 尚需系统密钥请求/安装/更新、代际校验、候选回滚、后台恢复、受保护显示与错误事件；Task 4 尚缺授权流、服务/证书和物理设备验收。HTTP 200 不等于授权成功，HTTP 错误不能当作过期，clear 原型不等于受保护播放。CAP-DRM 仍未完成。
+
+### 独立复核与修复
+
+独立只读复核发现 1 项 Important：Dart3.12 的 HttpClient 强制关闭不能及时中断已经完成 TCP、尚未完成 TLS 的握手；调用方返回超时/取消后连接仍可能占用资源。新增两个测试先复现对端 EOF 未到达，再修复为显式持有原始 TCP 连接直到 TLS 完成，并由内部适配器把已验证 RawSecureSocket 交给 HttpClient。取消/超时各重复五次，均要求上一连接收到 EOF，防止配额释放后积累隐藏连接。
+
+另补测系统默认信任拒绝自有证书（零 HTTP 请求），内部私有 CA 上下文成功传输 1MiB 二进制请求和响应；没有开放生产证书忽略回调。夹具含刻意公开的测试服务器私钥，不能用于生产；证书到期 2027-09-27，更新说明见 `test/fixtures/drm_tls/README.md`。原始 TLS 适配器只承担 I/O 与背压，HTTP 解析仍由 HttpClient 执行。修复后全套 381/381，通过；0 静态问题，无剩余 Critical/Important/Minor。TLS RED 日志 `license-tls-red.log`，最终 GREEN 见 `license-dart-final.log`。未重派复核；本轮修复由行为 RED→GREEN 与完整回归证明。
+
+复核未独立重跑的测试由实施者实际运行。真实服务协议、证书资源、系统密钥生命周期、物理保护及字幕/外接仍按 Task 3/4 门槛保留，不借本地 TLS 测试推导支持。
+
+### Task 2 最终实现/测试 SHA-256
+
+- `packages/yl_player_platform_interface/lib/src/drm/drm_config.dart`：`ed61fc80db045943174bee54d5ff3481642d590b55e9015d1701664e82bef866`
+- `packages/yl_player/lib/src/drm/license_client.dart`：`5e4792d421defbf8b827279a9e2a8ebbdd9d61b30bcda71a3ca53fd0e4f5c761`
+- `packages/yl_player/lib/src/drm/license_io.dart`：`697377d74b85428ecf06d9aa4ec9050c4cb50d0167e35d63639b09929c513e52`
+- `packages/yl_player/lib/src/drm/license_secure_socket.dart`：`e840dd82f87e6dd1e31bb82d84a9bdc7ec78f662610d7219ddd562344bd9cc6d`
+- `packages/yl_player/lib/src/drm/license_stub.dart`：`ea85799c71e1d7b8b51ac024b8c16d8fa60cd03ffa20ff20ce444405b65bf7ea`
+- `packages/yl_player/lib/src/player_controller.dart`：`58669e603ea52371d1895a7f1a3ef21709acc39cd506fdee612965874a904bc6`
+- `packages/yl_player_apple/lib/src/apple_codec.dart`：`c3ae9c57ca97527c6c3ace972cf0ebc9c035d019f2c30a6946e9a99845ff423f`
+- `packages/yl_player_android/lib/src/android_codec.dart`：`9e238bd672b9730b39fbdf476f755a32620f9a66c99062fc36f29b0d986986d0`
+- `packages/yl_player/test/drm_license_client_test.dart`：`d692bc5429917c502753006f4d14c931809e446fb2c44717f470751d50b980a9`
+- `packages/yl_player/test/drm_admission_test.dart`：`412d34576c6723e1132138cb272d64f109027394d0f2b9ebb818574077c61286`
+- `packages/yl_player_platform_interface/test/drm_contract_test.dart`：`8f2599ed23ee456228cf423daafb3a409a2f87fa322a6fa191e5d85ba1e934c8`
+- `packages/yl_player_apple/test/drm_codec_test.dart`：`5a44dbee03a18c1f0c0601b6575d3ec768bce817c525c7634e9266c7efc22a79`
+- `packages/yl_player_android/test/drm_codec_test.dart`：`6e4337ef86bb065c24bc496c6bba34cb1ff504e8989fefce3f59e7e648ea4510`
+- `packages/yl_player/test/fixtures/drm_tls/ca.pem`：`c1ff500c39c2f977748507d3a1608919c5d1413e15ac5db64faf088c9be0cf71`
+- `packages/yl_player/test/fixtures/drm_tls/server.pem`：`cd7f54d12cbd8ed18ea65e11efb3bfb4b230670e784dbe2dc6c4b36c2bdd5652`
+- `packages/yl_player/test/fixtures/drm_tls/server.key`：`e72920b439cac67cff47d5c94de711d9a3635e8ffd1a002ba73e90fc13816e2b`

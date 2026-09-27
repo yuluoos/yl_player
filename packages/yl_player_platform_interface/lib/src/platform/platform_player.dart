@@ -50,3 +50,10 @@ abstract interface class YlPlatformPlayer {
 abstract interface class YlVideoTrackSelectionPlatformPlayer {
   Future<void> selectVideoTrack(YlPlaybackSessionId sessionId, String? trackId);
 }
+
+/// Optional DRM configuration admission, not evidence of DRM/security support.
+/// Implement only when config v1 is consumed explicitly by assess/load and a
+/// protected session path is implemented. Per-source capability checks remain required.
+abstract interface class YlPlatformDrmSourceSupport {
+  int get drmContractVersion;
+}

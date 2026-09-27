@@ -452,3 +452,12 @@ composition on Android). Clear-fixture view tests do not enable DRM in the publi
 player or prove secure decoding/output. See the [P06 report](superpowers/reports/2026-09-26-remaining-06-drm.md)
 and [planned protected-view contract](superpowers/specs/2026-09-26-drm-contract.md);
 authorized playback and actual protection remain unverified.
+
+P06 Task 2 adds public Widevine/FairPlay configuration and a separate bounded raw
+binary license POST client, with opt-in idempotent retries, same-origin-only
+redirect policy, cancellation and sanitized errors. This is transport support,
+not protected playback: current adapters reject DRM sources before cancelling an
+existing clear load or serializing the source. Production protected-view/key
+bridges and native license installation remain P06 Task 3 work; authorized
+decryption and output protection remain unverified. See the
+[DRM contract](superpowers/specs/2026-09-26-drm-contract.md#6-已实现的-dart-配置与许可证-post).

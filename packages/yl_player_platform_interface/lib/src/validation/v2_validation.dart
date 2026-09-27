@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '../drm/drm_config.dart';
 
 import '../options/load_options.dart';
 import '../options/player_options.dart';
@@ -39,6 +40,7 @@ void validateYlSource(YlMediaSource source) {
       _validateUri(source.uri, network: true);
       _validateRequest(source.request);
       _validateNetworkPolicy(source.networkPolicy);
+      validateYlDrmSource(source);
     case YlAndroidContentSource():
       _validateUri(source.uri, network: false);
   }

@@ -46,7 +46,7 @@
 - Apple：`packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift`、`Shared/Session/YlOpenCoordinator.swift`、`iOS/YlIosVideoView.swift`、`macOS/YlMacosVideoView.swift`。
 - 新建：`docs/superpowers/specs/2026-09-26-drm-contract.md`；`docs/superpowers/reports/2026-09-26-remaining-06-drm.md`；`packages/yl_player/example/integration_test/drm_lifecycle_test.dart`。
 
-公开 DRM 类型尚未冻结。任务 1 产出保护能力/视图契约，任务 2 产出精确 Dart/native 配置与回调签名；后续实现只能消费这份契约。许可证请求对象必须与媒体请求策略分开，不能复用一个无法表达 POST/body/idempotency 的 GET 配置。
+Dart DRM 配置类型已在 Task 2 冻结，生产受保护视图类型仍待 Task 3 实现。任务 1 产出保护能力/视图契约，任务 2 产出精确 Dart 配置/许可证传输；原生配置和回调桥接随任务 3 的原子会话实现；后续实现只能消费这份契约。许可证请求对象必须与媒体请求策略分开，不能复用一个无法表达 POST/body/idempotency 的 GET 配置。
 
 ### Task 1：受保护显示可行性与架构决定
 
@@ -58,9 +58,9 @@
 
 ### Task 2：DRM 契约及许可证请求边界
 
-- [ ] 在 DRM spec 定义 Widevine/FairPlay 的配置结构、证书/内容标识获取、请求/响应格式、取消 token、期限、密钥更新、错误码和隐私边界。二进制响应与安全标识不得通过 `toString` 或普通诊断透传。
-- [ ] 公共合约与桥接先写失败测试：缺配置、scheme 与平台不匹配、旧适配器、不支持加密模式、过大 body、无证据过期、HTTP403、timeout、取消迟到回包。
-- [ ] 用本地受控 HTTP 记录器验证 POST 的真实请求次数和凭据流向；默认不因网络错误重发不可证明可重试的许可证 POST。示例测试预期不是生产返回值：
+- [x] 在 DRM spec 定义 Widevine/FairPlay 的配置结构、证书/内容标识获取、请求/响应格式、取消 token、期限、密钥更新、错误码和隐私边界。二进制响应与安全标识不得通过 `toString` 或普通诊断透传。
+- [x] 公共合约与现有桥接拒绝路径先写失败测试：缺配置、scheme 与平台不匹配、旧适配器、不支持加密模式、过大 body、无证据过期、HTTP403、timeout、取消迟到回包。
+- [x] 用本地受控 HTTP 记录器验证 POST 的真实请求次数和凭据流向；默认不因网络错误重发不可证明可重试的许可证 POST。示例测试预期不是生产返回值：
 
 ```text
 case: license-http-403
@@ -71,10 +71,12 @@ repeat_same_request_without_policy: false
 public_payload_contains_body_or_key: false
 ```
 
-- [ ] 实现最小配置/验证、限额、显式重试许可与错误映射；先将 ERR-07 正式码表写进 spec 和 `failure.dart`，再在 native mapper 使用同一值。
-- [ ] 跑合约/HTTP/双端 Pigeon check，提交公开配置与受控许可证传输；报告明确“尚无真实解密播放结论”。
+- [x] 实现最小配置/验证、限额、显式重试许可与错误映射；先将 ERR-07 正式码表写进 spec 和 `failure.dart`，再在 native mapper 使用同一值。
+- [x] 跑合约/HTTP/双端 Pigeon check，提交公开配置与受控许可证传输；报告明确“尚无真实解密播放结论”。
 
 ### Task 3：系统密钥与会话生命周期
+
+- [ ] 随原子会话实现生产受保护 view 描述符、attach/detach/ACK 与 challenge/response Pigeon 桥接（从 Task 2 移入）；不得用 schema4 丢弃配置后继续 clear 播放。
 
 - [ ] 依 Task 1 选定路径接 MediaDrm/AVContentKeySession；测试 load 候选失败回滚、stop/dispose、replacement、后台恢复、更新/rotation。密钥回调使用会话代际且严格限制资源生命周期。
 - [ ] 先以系统边界 fake 驱动状态机失败/成功/取消，断言过期需明确系统/许可证证据，普通 HTTP 错误不能推断过期。
@@ -98,4 +100,4 @@ public_payload_contains_body_or_key: false
 - [ ] 对照本计划五项 Review Focus 和需求矩阵复核；只把实际通过的子行写进 `docs/platform-support.md`。仍缺输入的行保留具体解除条件。
 - [ ] 更新总览的实施/验证状态。没有完整实现及实际验收时，不将整个 CAP 标为完成。
 
-2026-09-27 Task 1 已完成 clear 内容的三端 Debug 原型与架构决定，详见执行报告；Task 2–4 仍为后续工作。Task 1 通过不代表真实受保护播放通过。
+2026-09-27 Task 1 已完成 clear 内容的三端 Debug 原型与架构决定，详见执行报告；Task 2 已完成 Dart 配置、受控许可证 POST 与旧适配器拒绝；原生桥接随 Task 3 实现。Task 3/4 仍未完成，Task 1/2 通过不代表真实受保护播放通过。

@@ -6,6 +6,29 @@ abstract final class YlSafeDiagnostics {
 
   /// Fixed public guidance for recognized codes, never native error prose.
   static String messageForCode(String code) => switch (code) {
+    YlFailureCodes.drmConfigInvalid =>
+      'The DRM configuration is incomplete or invalid. Check delivery format, certificate, content ID and license policy.',
+    YlFailureCodes.drmUnsupported =>
+      'This adapter does not support the requested protected playback path.',
+    YlFailureCodes.drmSchemeMismatch =>
+      'The DRM scheme does not match this platform. Use Widevine on Android or FairPlay on Apple.',
+    YlFailureCodes.drmEncryptionModeUnsupported =>
+      'The requested encryption mode is unavailable on this operating system.',
+    YlFailureCodes.drmLicenseDenied =>
+      'The license server refused the request. Check authorization and license request configuration.',
+    YlFailureCodes.drmLicenseExpired =>
+      'The license has expired according to explicit DRM evidence. Renew authorization.',
+    YlFailureCodes.drmLicenseTimeout =>
+      'The license request exceeded its deadline.',
+    YlFailureCodes.drmLicenseFailed =>
+      'The license request failed. Check the connection and license service.',
+    YlFailureCodes.drmLicenseRedirectRejected =>
+      'The license redirect was rejected by the POST policy. Configure the final license endpoint.',
+    YlFailureCodes.drmPayloadTooLarge =>
+      'The DRM request or response exceeds its byte limit.',
+    YlFailureCodes.drmLicenseResponseInvalid =>
+      'The license server returned an empty or unsupported response.',
+
     YlFailureCodes.dashManifestInvalid =>
       'The DASH manifest could not be parsed. Ask the provider for a valid UTF-8 MPD.',
     YlFailureCodes.dashDynamicUnsupported =>
