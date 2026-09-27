@@ -445,3 +445,10 @@ a complete run. No physical/minimum-OS/endurance coverage is implied. See the
 for exact evidence and remaining gates. Controlled original-script
 compatibility, actual media handoff and external subscription availability
 are separate claims.
+
+DRM protected-view feasibility has a separate Debug-only example prototype
+(AVPlayerLayer on Apple; secure-requested SurfaceView with explicit hybrid
+composition on Android). Clear-fixture view tests do not enable DRM in the public
+player or prove secure decoding/output. See the [P06 report](superpowers/reports/2026-09-26-remaining-06-drm.md)
+and [planned protected-view contract](superpowers/specs/2026-09-26-drm-contract.md);
+authorized playback and actual protection remain unverified.

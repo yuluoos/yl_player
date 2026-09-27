@@ -125,6 +125,7 @@ cd /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example
 # 用该计划已创建的具体测试文件替换下例，macOS 与 iOS 逐个跑。
 flutter test integration_test/apple_dash_segment_base_test.dart -d macos
 flutter test integration_test/apple_dash_timeline_edges_test.dart -d macos
+flutter test integration_test/protected_view_probe_test.dart -d macos
 # YL_IOS_SIMULATOR_ID 必须是已核验设备；不要使用占位设备 ID。
 flutter test integration_test/apple_dash_segment_base_test.dart -d "$YL_IOS_SIMULATOR_ID"
 flutter test integration_test/apple_dash_timeline_edges_test.dart -d "$YL_IOS_SIMULATOR_ID"
@@ -146,3 +147,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 - [x] 不引入商业 SDK、静默降画质、全局系统下限变化或虚假验收。
 
 2026-09-27 已从 **P08-A 的测量工具/可用设备盘点**切入；[执行报告](../reports/2026-09-26-remaining-08-performance-release.md)记录当前边界。P01-Task 1 的 sidx 夹具/解析及 iOS/macOS 各 123 项定向回归已通过；[P01 执行报告](../reports/2026-09-26-remaining-01-dash.md)记录边界。随后 P01-Task 2 已完成有界取索引和 SegmentBase 播放：最终 iOS/macOS 各 134 项原生测试及三端各 2 项公开实播通过；支持范围与物理声音/最低系统等限制详见报告。P01-Task 3 已交付精确大时基换算、七维媒体夹具与映射实验；通用时间轴、公开路径音画同步及跨编码重配仍未完成，详见同一报告。
+
+2026-09-27 P06-Task 1 已交付三端 Debug 原生显示原型与保护视图契约；clear 原型各1项通过只证明 view 布线，不代表 CAP-DRM。下一步 P06-Task 2 配置/许可证边界；[报告](../reports/2026-09-26-remaining-06-drm.md)保留真实授权、保护解码与输出链缺口。
