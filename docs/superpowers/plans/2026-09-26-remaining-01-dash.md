@@ -10,7 +10,7 @@
 
 **Spec:** [需求基线 v2.2](../specs/2026-09-20-playback-expansion-requirements.md)、[架构入口](2026-09-22-playback-feasibility.md)、[执行总览](2026-09-26-remaining-overview.md)。
 
-**起点：** `5409313`；本计划状态为未开始。此后执行前重新记录 HEAD 和工作区，不能覆盖后来改动。
+**规划起点：** `5409313`；2026-09-27 从干净的 `4d9830e` 执行 Task 1，有界解析及两端原生回归已通过。Task 2–4 尚未完成；详见[执行报告](../reports/2026-09-26-remaining-01-dash.md)。此后执行前重新记录 HEAD 和工作区，不能覆盖后来改动。
 
 ## Global Constraints
 
@@ -51,8 +51,8 @@
 
 ### Task 1：有界 sidx 解析
 
-- [ ] 生成 owned fMP4 单文件的 v0/v1 sidx 夹具，记录 box 起点/终点、timescale、earliestPresentationTime、firstOffset、reference 类型和 SAP；哈希纳入样本账本。区分字节偏移和媒体时间单位。
-- [ ] 新增 `YlDashSidxTests.swift`，先定义下列**拟新增私有接口**，固定此阶段只接受平面 media references；嵌套索引必须明确拒绝，不能伪装媒体段：
+- [x] 生成 owned fMP4 单文件的 v0/v1 sidx 夹具，记录 box 起点/终点、timescale、earliestPresentationTime、firstOffset、reference 类型和 SAP；哈希纳入样本账本。区分字节偏移和媒体时间单位。
+- [x] 新增 `YlDashSidxTests.swift`，先定义下列**私有接口**，固定此阶段只接受平面 media references；嵌套索引必须明确拒绝，不能伪装媒体段：
 
 ```swift
 struct YlDashSidxReference: Equatable {
@@ -64,12 +64,13 @@ struct YlDashSidxReference: Equatable {
   let sapDeltaTicks: UInt32
 }
 struct YlDashSidxIndex {
+  let referenceID: UInt32 // 保留供后续 loader 校验媒体身份；私有接口
   let timescale: UInt32
   let earliestPresentationTimeTicks: UInt64
   let references: [YlDashSidxReference]
 }
 enum YlDashSidx {
-  // 拟新增签名；具体函数体在失败用例确认后实现。
+  // Task 1 已实现；函数体在失败用例确认后加入。
   static func parse(_ data: Data, boxEndOffset: UInt64,
                     maxReferences: Int) throws -> YlDashSidxIndex
 }
@@ -80,9 +81,9 @@ XCTAssertEqual(index.references.map(\.offset), [120, 150])
 XCTAssertEqual(index.references.map(\.length), [30, 40])
 ```
 
-- [ ] 对 0 timescale、截断、overflow、reference_type=1、0/超限引用先观察失败；测试输入来自构造的字节，不依赖解析器自产输出。时间投影使用返回的 timescale/起始时间，不能用 durationTicks 当微秒；非随机访问边界不能不经验证直接宣告可 seek。
-- [ ] 用 checked arithmetic 计算 box 终点 + firstOffset + 累计 size；先做数量/字节/时间预算，再分配数组。沿用现有安全错误，不输出完整 URL。
-- [ ] 跑总览 Apple 原生检查入口，证明两端发现并执行新增用例；提交 `feat: parse bounded DASH sidx references`。
+- [x] 对 0 timescale、截断、overflow、reference_type=1、0/超限引用先观察失败；测试输入来自构造的字节，不依赖解析器自产输出。时间投影使用返回的 timescale/起始时间，不能用 durationTicks 当微秒；非随机访问边界不能不经验证直接宣告可 seek。
+- [x] 用 checked arithmetic 计算 box 终点 + firstOffset + 累计 size；先做数量/字节/时间预算，再分配数组。沿用现有安全错误，不输出完整 URL。
+- [x] 跑总览 Apple 原生检查入口，证明两端发现并执行新增用例；提交 `feat: parse bounded DASH sidx references`。
 
 ### Task 2：SegmentBase 从网络到真实播放
 
@@ -125,4 +126,4 @@ expect(player.state.failure, isNull);
 - [ ] 对照本计划五项 Review Focus 和需求矩阵复核；只把实际通过的子行写进 `docs/platform-support.md`。仍缺输入的行保留具体解除条件。
 - [ ] 更新总览的实施/验证状态。没有完整实现及实际验收时，不将整个 CAP 标为完成。
 
-本文件是执行计划，以下检查命令属于未来执行步骤；编写本计划本身没有运行播放器测试或证明新增能力。
+2026-09-27 Task 1 已执行两端定向原生检查、测试身份核对及夹具门禁。其余未勾选项仍是未来步骤；本阶段未证明 SegmentBase 播放能力。

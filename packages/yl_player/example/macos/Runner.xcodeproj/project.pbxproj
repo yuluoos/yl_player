@@ -21,6 +21,9 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		656C4754B872EAAA63371991 /* dash-sidx-v1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 478CEBF666133EE514223540 /* dash-sidx-v1.mp4 */; };
+		B5C232983E28BCC94B7FAD9B /* dash-sidx-v0.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 163664CDFDA8A7FA6E87C46B /* dash-sidx-v0.mp4 */; };
+		24D7431496C1095F497FEB46 /* YlDashSidxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C231623837BFB5931216B1D /* YlDashSidxTests.swift */; };
 		01DF178319EF10D49C1EF278 /* hevc_aac.flv in Resources */ = {isa = PBXBuildFile; fileRef = 6F135885A3F56F40C6C7F785 /* hevc_aac.flv */; };
 		0297CDE8E558DC16D82844EE /* YlApplePublicationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75630A8AD23C5386F95DD3C9 /* YlApplePublicationTests.swift */; };
 		128EE532DF3F7C4AB32BD6E9 /* YlFallbackTrackCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA4DF6E8543446084572902 /* YlFallbackTrackCatalogTests.swift */; };
@@ -120,6 +123,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		478CEBF666133EE514223540 /* dash-sidx-v1.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = dash-sidx-v1.mp4; sourceTree = "<group>"; };
+		163664CDFDA8A7FA6E87C46B /* dash-sidx-v0.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = dash-sidx-v0.mp4; sourceTree = "<group>"; };
+		2C231623837BFB5931216B1D /* YlDashSidxTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlDashSidxTests.swift; sourceTree = "<group>"; };
 		04EA906E28F7E9BB1BB59881 /* YlNetworkByteSourceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlNetworkByteSourceTests.swift; sourceTree = "<group>"; };
 		06FAF8C98F9EFA76BF5E3893 /* YlMacosVideoTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosVideoTests.swift; sourceTree = "<group>"; };
 		08BEC84DECE9358BB2DB25A6 /* YlMacosHlsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosHlsTests.swift; sourceTree = "<group>"; };
@@ -243,6 +249,7 @@
 				AE6DA221934353776A2AC38D /* YlBoundedPacketQueueTests.swift */,
 				C8048684C57A62ABB3E04D95 /* YlByteRingBufferTests.swift */,
 				FC53E1C867EB626EF8E8CB17 /* YlDashHlsCompilerTests.swift */,
+				2C231623837BFB5931216B1D /* YlDashSidxTests.swift */,
 				147A4BAE0B3DF7169ECAFEC2 /* YlDashResourceLoaderTests.swift */,
 				27A0857EAFBD7712C5D79D22 /* YlFELVideoPipelineTests.swift */,
 				2AB5CBCF374E238AE0921D63 /* YlFallbackBufferBudgetTests.swift */,
@@ -279,6 +286,8 @@
 				65975264F807CAFFC710D2F5 /* h264_aac.flv */,
 				35E565BAC00CE569E200466E /* h264_aac.mkv */,
 				3FB68FDA267E2CE9BF8139A7 /* h264_aac.mp4 */,
+				478CEBF666133EE514223540 /* dash-sidx-v1.mp4 */,
+				163664CDFDA8A7FA6E87C46B /* dash-sidx-v0.mp4 */,
 				27822507808069AA8F7D1B81 /* h264_mp3.flv */,
 				6F135885A3F56F40C6C7F785 /* hevc_aac.flv */,
 				57D5CB3220138BCD13684C98 /* hevc_aac.mkv */,
@@ -491,6 +500,8 @@
 				A77EA5EB232ED78C4F4884EC /* h264_aac.flv in Resources */,
 				1E1D4FA513032FE78F764BEF /* h264_aac.mkv in Resources */,
 				7395EE697E69B3E4BF38ECBB /* h264_aac.mp4 in Resources */,
+				656C4754B872EAAA63371991 /* dash-sidx-v1.mp4 in Resources */,
+				B5C232983E28BCC94B7FAD9B /* dash-sidx-v0.mp4 in Resources */,
 				3973B9D78981967D69457677 /* h264_mp3.flv in Resources */,
 				01DF178319EF10D49C1EF278 /* hevc_aac.flv in Resources */,
 				54C92931EF395AD5E8078BF1 /* hevc_aac.mkv in Resources */,
@@ -617,6 +628,7 @@
 				BFA20ACF2B5A0A4CF3D7C296 /* YlBoundedPacketQueueTests.swift in Sources */,
 				F331CC72B45CF2B10650905D /* YlByteRingBufferTests.swift in Sources */,
 				2C21C04BD36EA61953A1CD61 /* YlDashHlsCompilerTests.swift in Sources */,
+				24D7431496C1095F497FEB46 /* YlDashSidxTests.swift in Sources */,
 				1B61BD2DE3CA07A2222BC039 /* YlDashResourceLoaderTests.swift in Sources */,
 				1CFE0E84FBBF882082B056C5 /* YlFELVideoPipelineTests.swift in Sources */,
 				F671D2612D05B09B54372859 /* YlFallbackBufferBudgetTests.swift in Sources */,

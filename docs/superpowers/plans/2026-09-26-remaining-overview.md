@@ -1,6 +1,6 @@
 # 播放器剩余工作：8 个执行计划
 
-规划日期：2026-09-26。已将有限末段 DASH 时长推导提交为 **`5409313` — `feat: infer finite final Apple DASH period duration`**。2026-09-26 本批规划完成；2026-09-27 按用户授权开始执行 P08-A 的测量工具切片，其余计划尚未开始；历史已完成子集仍有效。
+规划日期：2026-09-26。已将有限末段 DASH 时长推导提交为 **`5409313` — `feat: infer finite final Apple DASH period duration`**。2026-09-26 本批规划完成；2026-09-27 按用户授权交付 P08-A 的测量工具切片与 P01-Task 1 的有界 sidx 解析，其余步骤仍按依赖推进；历史已完成子集仍有效。
 
 唯一需求入口是[需求基线 v2.2](../specs/2026-09-20-playback-expansion-requirements.md)。本总览负责工作顺序与责任分配，不改写需求；[架构入口](2026-09-22-playback-feasibility.md)及历史报告保留已完成阶段和证据。后续代码执行延续当前会话自行实施方式，按 `superpowers:executing-plans` 逐任务处理，不因拆计划自动创建线程或子代理。
 
@@ -143,4 +143,4 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 - [x] 新 API/文件标为拟新增，未知架构先产生精确契约，不冒充现有接口。
 - [x] 不引入商业 SDK、静默降画质、全局系统下限变化或虚假验收。
 
-2026-09-27 已从 **P08-A 的测量工具/可用设备盘点**切入；[执行报告](../reports/2026-09-26-remaining-08-performance-release.md)记录当前边界。P01-Task 1 的 sidx 夹具/解析尚未开始。
+2026-09-27 已从 **P08-A 的测量工具/可用设备盘点**切入；[执行报告](../reports/2026-09-26-remaining-08-performance-release.md)记录当前边界。P01-Task 1 的 sidx 夹具/解析及 iOS/macOS 各 123 项定向回归已通过；[P01 执行报告](../reports/2026-09-26-remaining-01-dash.md)记录边界。下一步是 P01-Task 2 的有界取索引和 SegmentBase 播放，公开能力尚未开放。

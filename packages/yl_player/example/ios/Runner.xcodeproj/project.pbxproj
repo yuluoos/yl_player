@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0CDB332D567945BE06C95DD9 /* dash-sidx-v1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 578B7BC67B897FF955320AC2 /* dash-sidx-v1.mp4 */; };
+		75B9F91E508C3CA35D070364 /* dash-sidx-v0.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 61AFAB76A3C41C80668BE11D /* dash-sidx-v0.mp4 */; };
+		72A970AEB7028354396B1A25 /* YlDashSidxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95830AC3D960051FDAB6EF0B /* YlDashSidxTests.swift */; };
 		07DB2C47F79A77D6C58C098C /* YlAudioRendererTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C049944E1B8644354058B45F /* YlAudioRendererTests.swift */; };
 		09F2AC1D995ECDA28980FBDE /* YlRtmpDemandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D02B05DFDBA0961EA15654 /* YlRtmpDemandTests.swift */; };
 		0E7E78F0AE2CD25DFA1C4BA4 /* YlNetworkRequestPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2831BB6C7C5C1B090D6BA56C /* YlNetworkRequestPolicyTests.swift */; };
@@ -100,6 +103,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		578B7BC67B897FF955320AC2 /* dash-sidx-v1.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = dash-sidx-v1.mp4; sourceTree = "<group>"; };
+		61AFAB76A3C41C80668BE11D /* dash-sidx-v0.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = dash-sidx-v0.mp4; sourceTree = "<group>"; };
+		95830AC3D960051FDAB6EF0B /* YlDashSidxTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlDashSidxTests.swift; sourceTree = "<group>"; };
 		06FA2F2F03DD977DE5688FD4 /* YlDashResourceLoaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlDashResourceLoaderTests.swift; sourceTree = "<group>"; };
 		0BF7026BB963DC08CDE70DCB /* YlFallbackTrackCatalogTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFallbackTrackCatalogTests.swift; sourceTree = "<group>"; };
 		12A8497B908F8DF71591DAF6 /* YlRtmpPeerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlRtmpPeerTests.swift; sourceTree = "<group>"; };
@@ -214,6 +220,7 @@
 				B9BAD5C2C71E88345DBF447D /* YlBoundedPacketQueueTests.swift */,
 				91A3B51E3F0F8FA3D02C9C7D /* YlByteRingBufferTests.swift */,
 				DD38FBD644F0A24BC6FF727F /* YlDashHlsCompilerTests.swift */,
+				95830AC3D960051FDAB6EF0B /* YlDashSidxTests.swift */,
 				06FA2F2F03DD977DE5688FD4 /* YlDashResourceLoaderTests.swift */,
 				407C32685811B50987938EE7 /* YlFELVideoPipelineTests.swift */,
 				D494DF03624CC31BDBBECFE1 /* YlFFmpegBridgeTests.swift */,
@@ -252,6 +259,8 @@
 				85546D3726E0022CFE106841 /* h264_aac.flv */,
 				8EAC1C11A6CE697A2FC40E4A /* h264_aac.mkv */,
 				88F57D88A4E0F808EB8F5292 /* h264_aac.mp4 */,
+				578B7BC67B897FF955320AC2 /* dash-sidx-v1.mp4 */,
+				61AFAB76A3C41C80668BE11D /* dash-sidx-v0.mp4 */,
 				A0421CBC80A800550CAA7CFF /* h264_mp3.flv */,
 				A8F8ABCBA46C0DE389A8DB34 /* hevc_aac.flv */,
 				93D85D9FE324A754243043EE /* hevc_aac.mkv */,
@@ -415,6 +424,8 @@
 				A843A688C3A14A0ED05D5CCD /* h264_aac.flv in Resources */,
 				E74D0B0FD8C49F6931CF0DE6 /* h264_aac.mkv in Resources */,
 				2F4188A946DF652FEAF0B93C /* h264_aac.mp4 in Resources */,
+				0CDB332D567945BE06C95DD9 /* dash-sidx-v1.mp4 in Resources */,
+				75B9F91E508C3CA35D070364 /* dash-sidx-v0.mp4 in Resources */,
 				A0836586E17A7A6BA066E445 /* h264_mp3.flv in Resources */,
 				33906EFA0656BEA8B1129094 /* hevc_aac.flv in Resources */,
 				DF0A6E0123DA2DC9A3029562 /* hevc_aac.mkv in Resources */,
@@ -491,6 +502,7 @@
 				BDAEE7613D9B75D11A092A40 /* YlBoundedPacketQueueTests.swift in Sources */,
 				C0AD9C4D9829EBF691D28A63 /* YlByteRingBufferTests.swift in Sources */,
 				FED92D2B7E02FC3947E6C5E8 /* YlDashHlsCompilerTests.swift in Sources */,
+				72A970AEB7028354396B1A25 /* YlDashSidxTests.swift in Sources */,
 				C1984BE62F4C8AB96444B52E /* YlDashResourceLoaderTests.swift in Sources */,
 				775BCED61B3657ED31A70B3F /* YlFELVideoPipelineTests.swift in Sources */,
 				1AE4BB2DD751752F0D1F95A1 /* YlFFmpegBridgeTests.swift in Sources */,

@@ -19,7 +19,7 @@ HISTORICAL_MANIFESTS = {
     "engine-tests-manifest.json": PINNED_REVISION,
     "resources-manifest.json": PINNED_REVISION,
 }
-EXPECTED_CASES = {"ios": 614, "macos": 530}
+EXPECTED_CASES = {"ios": 624, "macos": 540}
 
 
 def digest(data):

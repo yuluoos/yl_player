@@ -1,0 +1,90 @@
+[
+  {
+    "file": "dash-sidx-v0.mp4",
+    "version": 0,
+    "indexStart": 826,
+    "indexEndExclusive": 906,
+    "timescale": 12288,
+    "earliestPresentationTimeTicks": 0,
+    "firstOffset": 0,
+    "referenceID": 1,
+    "references": [
+      {
+        "offset": 906,
+        "length": 13625,
+        "durationTicks": 12288,
+        "startsWithSAP": true,
+        "sapType": 1,
+        "sapDeltaTicks": 0
+      },
+      {
+        "offset": 14531,
+        "length": 23935,
+        "durationTicks": 12288,
+        "startsWithSAP": true,
+        "sapType": 1,
+        "sapDeltaTicks": 0
+      },
+      {
+        "offset": 38466,
+        "length": 31162,
+        "durationTicks": 12288,
+        "startsWithSAP": true,
+        "sapType": 1,
+        "sapDeltaTicks": 0
+      },
+      {
+        "offset": 69628,
+        "length": 33734,
+        "durationTicks": 12288,
+        "startsWithSAP": true,
+        "sapType": 1,
+        "sapDeltaTicks": 0
+      }
+    ]
+  },
+  {
+    "file": "dash-sidx-v1.mp4",
+    "version": 1,
+    "indexStart": 826,
+    "indexEndExclusive": 914,
+    "timescale": 12288,
+    "earliestPresentationTimeTicks": 0,
+    "firstOffset": 0,
+    "referenceID": 1,
+    "references": [
+      {
+        "offset": 914,
+        "length": 13625,
+        "durationTicks": 12288,
+        "startsWithSAP": true,
+        "sapType": 1,
+        "sapDeltaTicks": 0
+      },
+      {
+        "offset": 14539,
+        "length": 23935,
+        "durationTicks": 12288,
+        "startsWithSAP": true,
+        "sapType": 1,
+        "sapDeltaTicks": 0
+      },
+      {
+        "offset": 38474,
+        "length": 31162,
+        "durationTicks": 12288,
+        "startsWithSAP": true,
+        "sapType": 1,
+        "sapDeltaTicks": 0
+      },
+      {
+        "offset": 69636,
+        "length": 33734,
+        "durationTicks": 12288,
+        "startsWithSAP": true,
+        "sapType": 1,
+        "sapDeltaTicks": 0
+      }
+    ]
+  }
+]
