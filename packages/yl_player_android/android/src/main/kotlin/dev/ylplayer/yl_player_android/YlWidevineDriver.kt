@@ -8,8 +8,8 @@ import android.media.UnsupportedSchemeException
 import android.os.Handler
 import java.util.UUID
 
-/** Internal system boundary, not wired into Media3 until protected output and
- * session transactions are ready. Must be constructed/called on its owner Looper.
+/** Internal system boundary consumed by the Media3 DRM adapter; public playback
+ * still requires the protected output and session transaction integration. Must be constructed/called on its owner Looper.
  * Does no networking, provisioning, logging, content-key extraction or L3 fallback.
  */
 @Suppress("DEPRECATION")
@@ -18,7 +18,7 @@ internal class YlWidevineDriver(
     private val cbcs: Boolean,
     private val handler: Handler?,
     private val create: () -> MediaDrm = { MediaDrm(UUID.fromString("edef8ba9-79d6-4ace-a3c8-27dcd51d21ed")) },
-) : YlDrmSystemDriver {
+) : YlDrmCryptoDriver {
     private var media: MediaDrm? = null
     private var session: ByteArray? = null
     private var closed = false
@@ -57,6 +57,9 @@ internal class YlWidevineDriver(
             close()
             throw sanitized(error)
         }
+    }
+    override fun cryptoConfig(): androidx.media3.exoplayer.drm.FrameworkCryptoConfig = checked { _, id ->
+        androidx.media3.exoplayer.drm.FrameworkCryptoConfig(YL_WIDEVINE_UUID, id.copyOf(), false)
     }
     override fun challenge(initData: ByteArray?, mime: String): ByteArray = checked { system, id ->
         // The source's configured license endpoint owns routing; never use the

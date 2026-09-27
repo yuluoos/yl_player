@@ -151,3 +151,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-09-27 P06-Task 1 已交付三端 Debug 原生显示原型与保护视图契约；clear 原型各1项通过只证明 view 布线，不代表 CAP-DRM。P06-Task 2 已交付 Dart 配置、独立有界许可证 POST、明确错误及旧适配器拒绝，381 项 Dart 回归通过；下一步 Task 3 原生桥接/系统密钥与会话生命周期；[报告](../reports/2026-09-26-remaining-06-drm.md)保留真实授权、保护解码与输出链缺口。
 
 2026-09-27 P06 Task 3A 已实现 Android 内部系统密钥边界与代际生命周期测试；生产 Media3/保护输出/Pigeon 和 Apple 接入尚未完成，Task 3 仍进行中。内部 driver 要求 API28+ 实际安全级别证据，API24–27 受保护路径继续拒绝；整包下限不变。当前公开 adapter 仍拒绝 DRM，详见 P06 报告。
+
+2026-09-27 P06 Task 3B1 已完成内部 Media3 DRM 会话消费与安全 decoder 查询边界；3B2 保护输出/候选事务、3B3 Pigeon/许可证连接仍未完成。生产 DRM 准入保持拒绝，CAP-DRM 不变。

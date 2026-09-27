@@ -125,3 +125,16 @@ Android 系统 driver 使用 Widevine UUID、streaming key type、系统 L1 会�
 新增正式错误码先冻结为：`drm.session_failed`（系统密钥会话失败）、`drm.protection_insufficient`（所需保护未满足）、`drm.provisioning_required`（设备 DRM 尚需初始化）。消息必须固定且有修复建议。它们沿用现有 category/scope，不改变 enum ordinal。生产受保护 view、Pigeon、Media3 和 Apple key session 仍需后续接入；当前 adapter 不声明 DRM 支持。
 
 系统 API 依据：[MediaDrm.openSession(int)](https://developer.android.com/reference/android/media/MediaDrm#openSession(int))、[getSecurityLevel](https://developer.android.com/reference/android/media/MediaDrm#getSecurityLevel(byte[]))、[KeyStatus](https://developer.android.com/reference/android/media/MediaDrm.KeyStatus)，2026-09-27 核查。驱动忽略系统请求中的 defaultUrl，不自行联网。会话 owner dispatcher 上的 mutex 使外部系统调用及状态转换成为一个操作；即使注入内联 dispatcher，同步回调也需等该操作结束。许可证请求结束而仅等待 key-status 时，KEY_REQUIRED 可立即发起更新；不能等新许可证才能产生的 USABLE 来解锁更新。
+
+
+## 9. Task 3B1：Media3 密钥会话消费（内部，未开放准入）
+
+`YlMedia3DrmSessionManager` 实现锁定 Media3 1.11 的实际 `DrmSessionManager`/`DrmSession` 接口，每个候选独立实例，绑定 Media3 提供的 playback Looper。声明的 cenc/cbcs 必须与格式一致；能力探测允许匹配 Widevine 元数据暂缺 PSSH，等初始化分片提供；实际 acquire 仅消费匹配 Widevine UUID、1..1MiB 的 MP4 初始化数据，缺数据仍拒绝。相同初始化数据在同一 prepare 周期共享引用；不同 Period/track 数据独立会话。同一格式若有不同 Widevine 初始化 payload 则明确拒绝，不猜测选取或拼接；不读取其 licenseServerUrl。clear 格式返回空 DRM session，不等于声明为受保护的整个 source 可以按 clear 准入，后续候选还需检查实际轨道。
+
+每个 manager 最多保留 4 个系统会话，包含失败、旧 prepare 周期和待清理对象。回包身份新增不透明 `exchangeId`，避免相同 output 四元组下多个 CDM session 的 epoch/requestId 重合。跨桥接时必须原样保留此值并检查所属会话。manager release 不借机关闭 decoder 仍持有的系统会话；最后一个 consumer release 先同步失效，再取消传输和状态机，关闭系统并清零 handle。系统失败立即终止可用状态和在途请求，但 CDM close 推迟到最后一个 Media3 引用释放。没有 keepalive、离线 license 或 CDM 默认网络请求。
+
+`FrameworkCryptoConfig` 只包含系统会话句柄副本且禁止 insecure decoder components；不是内容密钥。HTTP/安装成功仍只 OPENED，系统 usable 才 OPENED_WITH_KEYS；pending/renewal 撤回可用状态。Media3 事件按 dispatcher 的引用数去重，失败只传固定类型，无 URL/body/vendor 状态字典或原始异常文本。
+
+`YlProtectedCodecSelector` 为后续保护 renderer 专用，所有查询强制 secure，拒绝非 secure codec。视频另须精确硬件 metadata 证据；现有证据采集 API29+ 才能满足，API28 的 L1 会话门槛本身不保证这一 decoder 条件。包 minSdk24 不变。Media3 可以在 secure 查询为空时再查询非 secure decoder，因此仅关闭 decoder fallback 或请求 L1 不够。后续 3B2 还需核查实际初始化 decoder 与安全输出；本类的可用候选列表不能代替实际证据。
+
+接口依据：[DrmSession 引用与状态](https://developer.android.com/reference/androidx/media3/exoplayer/drm/DrmSession)、[DrmSessionManager](https://developer.android.com/reference/androidx/media3/exoplayer/drm/DrmSessionManager)、[Media3 1.11 MediaCodecRenderer 的 secure fallback](https://github.com/androidx/media/blob/1.11.0/libraries/exoplayer/src/main/java/androidx/media3/exoplayer/mediacodec/MediaCodecRenderer.java)。本次仅以系统 fake 验证接口逻辑，没有真机解密、rotation/显示/HDCP 结论；生产 core/source factory/view/Pigeon 尚未接入这些内部类型。

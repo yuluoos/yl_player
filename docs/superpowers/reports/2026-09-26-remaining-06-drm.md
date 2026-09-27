@@ -178,3 +178,37 @@ sh packages/yl_player_apple/tool/check_pigeon.sh
 - `packages/yl_player_platform_interface/lib/src/model/failure.dart`：`cee511ea7386bb96e2f2ab0920d829b8af22d20eead7582be7b994e036de165b`
 - `packages/yl_player_platform_interface/lib/src/diagnostics/safe_diagnostics.dart`：`810d447142dd102281f01d7e0a4edc6f3b68e6d8ab37a72ed74915740b159827`
 - `packages/yl_player_platform_interface/test/drm_contract_test.dart`：`f280f0712051a45e863c4eabad71203ce848632b2f4b1b096d294ac7e9773151`
+
+## Task 3B1：内部 Media3 DRM 消费与引用所有权（2026-09-27）
+
+基线 `5232f71`，沿用干净的 `codex/fel-integration` checkout。本次完成 Task 3B 的第一步：真正实现锁定 Media3 1.11 的 `DrmSessionManager`/`DrmSession` 接口，消费 Task 3A 系统密钥状态并提供 `FrameworkCryptoConfig`；**尚未接到生产 Media3 core/source factory、保护 view、候选事务或 Pigeon/Task 2 许可证客户端**。生产 DRM admission 继续拒绝，Task 3B 和 CAP-DRM 均未完成。
+
+拆分是资源所有权的前置依赖：原先只有自主关闭的 key state machine，没有 Media3 decoder/source 引用消费者；若直接连接，失败时关闭系统对象可能抢先于 decoder 释放。现在密钥失效和底层资源释放分开，最后一个引用释放才实际关闭，先同步标记 released、再取消和清理。代价是本提交本身没有新增用户可播放的 DRM 场景。
+
+已验证边界：相同初始化共享引用、不同 Period 初始化隔离、最多 4 个系统会话（含失败/清理中）、manager release 不抢关借用会话、重复 acquire/release 与事件订阅匹配、HTTP 成功不代表 usable、pending/续期撤回可用状态、拒绝/过期/超时独立、迟到回包与旧系统回调不安装到新会话、启动前取消零分配、异常关闭不逃逸为原始协程异常。回包增加不透明 exchangeId，区分同 output 下多个 CDM 会话。
+
+系统 handle 仅以副本进入 FrameworkCryptoConfig，禁止 insecure decoder components，销毁时清零。DRM 格式严格验证 Widevine、cenc/cbcs、MP4 init payload 上限；多个不同 Widevine payload 明确拒绝，不猜测拼接，不使用 manifest/CDM 提供的 license URL。clear 格式返回 null session 不等于受保护 source 的 clear 准入，3B2 还必须验证实际轨道。
+
+安全 selector 总是查询并筛选 secure codec，视频还需实际硬件 metadata；防止 Media3 内置的非 secure 重试。现有 metadata 证据需要 API29+，不能因 API28+ 已有 L1 证明就跳过此门槛，整包 API24 下限仍不变。selector 列表也不是实际初始化 decoder/secure Surface/HDCP 的证明，均留待 3B2 与真机验收。
+
+本机 macOS27/M1、JDK17、compileSdk36、Media3 1.11.0。Android 全套 **436** 项，**433 通过、3 跳过、0 失败**；新增 manager 10、selector 3、driver 1 项全部通过。3 个跳过仍是既有 MediaMTX 独立 RTMP peer 用例（AVC/AAC、video-only、ACK windows），缺外部服务不计通过。公开 API 表面与双端 Pigeon check 通过，schema4 与 Dart 合约未变。本次没有 Dart 源码更改，未重复 Dart 全套，也未做模拟器媒体实播或物理 CDM 测试。
+
+命令：`JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home packages/yl_player_android/example/android/gradlew -p packages/yl_player_android/example/android :yl_player_android:testDebugUnitTest`，及 `sh tool/check_public_surface.sh`、双端 `tool/check_pigeon.sh`。测试由标准 JUnit 发现；全套日志 `media3-drm-all.log`。缺新接口/类的 RED 见 `media3-drm-red.log`、`media3-codec-red.log`；关闭异常行为 RED 见 `media3-close-red.log`，随后全套 GREEN。
+
+实际授权服务、设备 provisioning、物理密钥轮换、受保护显示/字幕/外接、实际 decoder 证据尚未验收，不从 fake 得出播放结论。后续先做 3B2 保护输出/候选事务，再做 3B3 bridge/transport，随后 Apple 3C；授权资源缺失仍只阻塞 Task 4 的真实验收。
+
+### Task 3B1 复核与修复
+
+独立只读复核发现 1 项 Important：DASH manifest 可以只声明 Widevine，PSSH 要等初始化分片提供；getCryptoType 若复用 acquire 的完整 payload 校验会误报 unsupported，导致轨道不能选择。新增 metadata-only probe → 提前 acquire 拒绝 → 带初始化数据 acquire 成功的回归，观察 `media3-probe-red.log` 失败后修复。探测不分配 driver、不发许可证请求；实际 acquire 的边界未放宽。没有 Critical/Minor，没有未处理复核项；单次修复后运行完整原生回归，最终日志 `media3-drm-final.log`，不重派复核。
+
+复核未独立运行测试的部分由实施者实际执行。未判断项逐项保留：Task 2 的 POST/凭据传输未改动；候选失败/取消和当前播放的隔离仍需 3B2/3B3；安全 Surface/实际 codec/物理保护、授权 rotation/后台/seek、字幕/几何/外接/禁止回读均需后续组合与真机证据；Pigeon routing 尚未实现，exchangeId 不是桥接验证；Apple 仍为 3C。决定继续交付内部边界的代价是以上各项没有生产支持结论，不能通过本次单测解除。
+
+### Task 3B1 最终源文件 SHA-256
+
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDrmKeySession.kt`：`d11421e0d06b9b5d376219814b4f41653e03a2f3f09f61006471c11df4920060`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlWidevineDriver.kt`：`62a8d13d3b17366b4ddb1d97439fb7e70ff5c8324bf38941302aea05f43fc918`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3DrmSessionManager.kt`：`c711d036674e22652adc25ba12e69db8be957d74fee39c89025200fb6151ea71`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlProtectedCodecSelector.kt`：`ed53ee56b02584fac8319e17da2995a80c3f6fe1fc95fabf6d907b238f055a87`
+- `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlWidevineDriverTest.kt`：`901d303dc68e8a3ce3cc5e1e66a76bb5354ec3b9c895c7326925d43e2e4e5817`
+- `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlMedia3DrmSessionTest.kt`：`91d2de36ab77f782f4f09f65b653fad97003fbeb1599ae090b52c08d83a9df90`
+- `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlProtectedCodecSelectorTest.kt`：`86c82eab950c7bc723a0bdc03d6e13b05585dd6172ce5be2f374bf220d8edda1`

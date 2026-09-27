@@ -468,3 +468,5 @@ connected to Media3, the protected surface or the Dart license transport yet.
 The internal driver requires API28+ per-session HW_SECURE_ALL evidence and
 rejects API24–27 protection admission; the app-wide API24 floor is unchanged.
 No production DRM capability is enabled by these internal/mock tests.
+
+P06 Task 3B1 补齐内部 Media3 DrmSession 适配、引用释放与禁止非安全 decoder 查询；尚未连接生产 Media3 core/source factory、保护 view 或许可证 Pigeon，不构成 DRM 播放支持。视频硬件 metadata 证据仍要求 API29+；系统 L1 API28+ 与整包 API24 下限分别保留。

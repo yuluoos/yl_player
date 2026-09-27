@@ -17,6 +17,8 @@ internal interface YlDrmSystemDriver {
 }
 internal class YlDrmKeyRequest(val identity: YlDrmSessionIdentity, val epoch: Long,
     val requestId: Long, bytes: ByteArray) {
+    // Several Media3 track/Period sessions can share the same output identity.
+    val exchangeId: String = java.util.UUID.randomUUID().toString()
     private val value = bytes.copyOf()
     val bytes get() = value.copyOf()
     fun clear() { value.fill(0) }
@@ -36,6 +38,7 @@ internal class YlDrmKeySession(
     private val makeDriver: () -> YlDrmSystemDriver,
     private val exchange: suspend (YlDrmKeyRequest) -> ByteArray,
     private val onFailure: (YlFailureKind) -> Unit,
+    private val onPhaseChanged: (YlDrmKeyPhase) -> Unit = {},
 ) {
     // Also serializes immediate/reentrant driver callbacks on the same dispatcher.
     private val mutex = Mutex()
@@ -50,7 +53,10 @@ internal class YlDrmKeySession(
     private var request: YlDrmKeyRequest? = null
     private var renewQueued = false
     var phase = YlDrmKeyPhase.IDLE
-        private set
+        private set(value) {
+            field = value
+            onPhaseChanged(value)
+        }
     init {
         if (initData.isEmpty() || initData.size > 1024 * 1024 ||
             mime !in setOf("video/mp4", "audio/mp4") || timeoutMs !in 1..60_000 ||

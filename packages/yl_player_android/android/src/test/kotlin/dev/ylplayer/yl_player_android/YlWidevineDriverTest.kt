@@ -73,4 +73,16 @@ class YlWidevineDriverTest {
         callback.onKeyStatusChange(media, id, listOf(key(0)), true)
         assertEquals(count, events.size)
     }
+    @Test fun `Media3 receives copied secure session handle only while driver is open`() {
+        val media = media(); val driver = YlWidevineDriver(36, false, null) { media }
+        assertFailsWith<YlBoundaryException> { driver.cryptoConfig() }
+        driver.open {}
+        val first = driver.cryptoConfig()
+        assertFalse(first.forceAllowInsecureDecoderComponents)
+        first.sessionId.fill(99)
+        assertContentEquals(byteArrayOf(1, 2, 3), driver.cryptoConfig().sessionId)
+        driver.close()
+        assertFailsWith<YlBoundaryException> { driver.cryptoConfig() }
+    }
+
 }
