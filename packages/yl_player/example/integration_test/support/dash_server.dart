@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 
 import 'dash_offset_fixture.dart';
+import 'dash_duration_fixture.dart';
 import 'dash_single_file_fixture.dart';
 
 enum DashOriginMode { sameOrigin, crossOrigin, returnToPrimary }
@@ -70,6 +71,7 @@ final class DashServer {
     bool presentationOffsets = false,
     bool offsetSegmentList = false,
     bool singleFileSegmentList = false,
+    bool omitFinalDuration = false,
     bool failMedia = false,
     bool delayMedia = false,
     bool delayManifest = false,
@@ -125,6 +127,7 @@ final class DashServer {
         ..clear()
         ..addAll(packedFiles);
     }
+    if (omitFinalDuration) manifest = omitFinalDashDuration(manifest);
     final primary = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
     final secondary = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
     final result = DashServer._(
@@ -167,6 +170,7 @@ final class DashServer {
   final String _manifest;
   final Completer<void> _mediaGate = Completer<void>();
   final List<RecordedDashRequest> requests = <RecordedDashRequest>[];
+  final List<String> manifestsServed = <String>[];
 
   Uri get automaticUri => _uri(_primary, '/manifest.mpd');
   Uri get explicitUri => _uri(_primary, '/explicit');
@@ -253,7 +257,9 @@ final class DashServer {
         await _empty(request.response, rootStatusCode!);
         return;
       }
-      final bytes = utf8.encode(manifestOverride ?? _servedManifest());
+      final manifest = manifestOverride ?? _servedManifest();
+      manifestsServed.add(manifest);
+      final bytes = utf8.encode(manifest);
       await _serve(
         request,
         Uint8List.fromList(bytes),

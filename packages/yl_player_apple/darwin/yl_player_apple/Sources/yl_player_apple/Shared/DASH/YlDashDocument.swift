@@ -267,9 +267,15 @@ final class YlDashDocument {
       let start = try period.attributes["start"].map(YlDashBounds.duration) ?? end
       guard start == end else { throw YlDashBounds.unsupported }
       let nextStart = try (index + 1 < periods.count ? periods[index + 1].attributes["start"] : nil).map(YlDashBounds.duration)
-      let duration = try period.attributes["duration"].map(YlDashBounds.duration)
+      let declaredDuration = try period.attributes["duration"].map(YlDashBounds.duration)
         ?? nextStart.map { $0 - start } ?? (index + 1 == periods.count ? total.map { $0 - start } : nil)
-      guard let duration = duration, duration > 0 else { throw YlDashBounds.unsupported }
+      let duration: Int64
+      if let declaredDuration { duration = declaredDuration }
+      else {
+        guard index + 1 == periods.count else { throw YlDashBounds.unsupported }
+        duration = try inferredDuration(root, period)
+      }
+      guard duration > 0 else { throw YlDashBounds.unsupported }
       end = try YlDashBounds.add(start, duration)
       let periodBase = try base(period, roots)
       var videos: [YlDashTrack] = []; var audio: YlDashTrack?
@@ -332,6 +338,94 @@ final class YlDashDocument {
     guard total == nil || total == end else { throw YlDashBounds.unsupported }
     return (result, end)
   }
+  private struct SegmentInfo {
+    let mode: String
+    let attributes: [String: String]
+    let timeline: YlDashNode?
+    let initialization: YlDashNode?
+    let urls: [YlDashNode]
+  }
+  private func segmentInfo(_ ancestors: [YlDashNode]) throws -> SegmentInfo {
+    var mode: String?; var segmentAttrs: [String: String] = [:]
+    var timeline: YlDashNode?; var initialization: YlDashNode?; var urls: [YlDashNode] = []
+    for node in ancestors {
+      for name in ["SegmentTemplate", "SegmentList"] {
+        if let segment = try node.one(name) {
+          guard mode == nil || mode == name else { throw YlDashBounds.unsupported }; mode = name
+          segmentAttrs.merge(segment.attributes) { _, new in new }
+          if let value = try segment.one("SegmentTimeline") { timeline = value }
+          if let value = try segment.one("Initialization") { initialization = value }
+          if !segment.nodes("SegmentURL").isEmpty { urls = segment.nodes("SegmentURL") }
+        }
+      }
+    }
+    guard let mode = mode else { throw YlDashBounds.unsupported }
+    return SegmentInfo(mode: mode, attributes: segmentAttrs, timeline: timeline,
+      initialization: initialization, urls: urls)
+  }
+  private struct TimelineRun {
+    let start: Int64
+    let duration: Int64
+    let count: Int64
+  }
+  // Used by both duration inference and media expansion. Never expand repetitions here.
+  private func timelineRuns(_ timeline: YlDashNode, offset: Int64, end: Int64?,
+    budget: Int) throws -> [TimelineRun] {
+    let entries = timeline.nodes("S")
+    guard entries.count == timeline.children.count, !entries.isEmpty else { throw YlDashBounds.unsupported }
+    var cursor = offset, remaining = Int64(budget)
+    var runs: [TimelineRun] = []
+    for (index, entry) in entries.enumerated() {
+      let t = try YlDashBounds.number(entry.attributes["t"], default: index == 0 ? 0 : cursor)
+      let d = try YlDashBounds.number(entry.attributes["d"])
+      guard t == cursor, d > 0 else { throw YlDashBounds.unsupported }
+      let count: Int64
+      if entry.attributes["r"] == "-1" {
+        let boundary: Int64
+        if index + 1 < entries.count { boundary = try YlDashBounds.number(entries[index + 1].attributes["t"]) }
+        else if let end { boundary = end }
+        else { throw YlDashBounds.unsupported }
+        guard boundary > t, (boundary - t) % d == 0 else { throw YlDashBounds.unsupported }
+        count = (boundary - t) / d
+      } else { count = try YlDashBounds.add(YlDashBounds.number(entry.attributes["r"], default: 0), 1) }
+      guard count > 0, count <= remaining else { throw YlDashBounds.unsupported }
+      cursor = try YlDashBounds.add(t, YlDashBounds.multiply(d, count))
+      guard end == nil || cursor <= end! else { throw YlDashBounds.unsupported }
+      remaining -= count
+      runs.append(TimelineRun(start: t, duration: d, count: count))
+    }
+    guard end == nil || cursor == end! else { throw YlDashBounds.unsupported }
+    return runs
+  }
+  private func inferredDuration(_ root: YlDashNode, _ period: YlDashNode) throws -> Int64 {
+    var duration: Int64?
+    var remaining = YlDashBounds.maxSegments - segmentCount
+    var representations = 0
+    for adaptation in period.nodes("AdaptationSet") {
+      let tracks = adaptation.nodes("Representation")
+      guard !tracks.isEmpty, tracks.count <= YlDashBounds.maxVideoVariants,
+        tracks.count <= YlDashBounds.maxRepresentations - representationCount - representations else { throw YlDashBounds.unsupported }
+      representations += tracks.count
+      for track in tracks {
+        let info = try segmentInfo([root, period, adaptation, track])
+        guard let timeline = info.timeline else { throw YlDashBounds.unsupported }
+        let scale = try YlDashBounds.number(info.attributes["timescale"], default: 1)
+        let offset = try YlDashBounds.number(info.attributes["presentationTimeOffset"], default: 0)
+        guard scale > 0 else { throw YlDashBounds.unsupported }
+        let runs = try timelineRuns(timeline, offset: offset, end: nil, budget: remaining)
+        let last = runs.last!
+        let end = try YlDashBounds.add(last.start, YlDashBounds.multiply(last.duration, last.count))
+        let microticks = try YlDashBounds.multiply(end - offset, 1_000_000)
+        guard microticks % scale == 0, microticks / scale > 0 else { throw YlDashBounds.unsupported }
+        let candidate = microticks / scale
+        guard duration == nil || duration == candidate else { throw YlDashBounds.unsupported }
+        duration = candidate
+        for run in runs { remaining -= Int(run.count) }
+      }
+    }
+    guard let duration else { throw YlDashBounds.unsupported }
+    return duration
+  }
   private func buildTrack(_ ancestors: [YlDashNode], _ attrs: [String: String], _ kind: String,
     _ duration: Int64, _ location: (URL, Bool)) throws -> YlDashTrack {
     guard let codec = attrs["codecs"],
@@ -356,20 +450,9 @@ final class YlDashDocument {
         guard number > 0, number <= 8 else { throw YlDashBounds.unsupported }; channels = String(number)
       }
     }
-    var mode: String?; var segmentAttrs: [String: String] = [:]
-    var timeline: YlDashNode?; var initialization: YlDashNode?; var urls: [YlDashNode] = []
-    for node in ancestors {
-      for name in ["SegmentTemplate", "SegmentList"] {
-        if let segment = try node.one(name) {
-          guard mode == nil || mode == name else { throw YlDashBounds.unsupported }; mode = name
-          segmentAttrs.merge(segment.attributes) { _, new in new }
-          if let value = try segment.one("SegmentTimeline") { timeline = value }
-          if let value = try segment.one("Initialization") { initialization = value }
-          if !segment.nodes("SegmentURL").isEmpty { urls = segment.nodes("SegmentURL") }
-        }
-      }
-    }
-    guard let mode = mode else { throw YlDashBounds.unsupported }
+    let info = try segmentInfo(ancestors)
+    let mode = info.mode, segmentAttrs = info.attributes
+    let timeline = info.timeline, initialization = info.initialization, urls = info.urls
     let scale = try YlDashBounds.number(segmentAttrs["timescale"], default: 1)
     guard scale > 0 else { throw YlDashBounds.unsupported }
     let offset = try YlDashBounds.number(segmentAttrs["presentationTimeOffset"], default: 0)
@@ -386,25 +469,10 @@ final class YlDashDocument {
       for i in 0..<count { samples.append((try YlDashBounds.add(start, YlDashBounds.multiply(i, d)), d)) }
     }
     if let timeline = timeline {
-      let entries = timeline.nodes("S")
-      guard entries.count == timeline.children.count, !entries.isEmpty else { throw YlDashBounds.unsupported }
-      var cursor = offset
-      for (index, entry) in entries.enumerated() {
-        // DASH's absent first t means zero, never presentationTimeOffset.
-        let t = try YlDashBounds.number(entry.attributes["t"], default: index == 0 ? 0 : cursor)
-        let d = try YlDashBounds.number(entry.attributes["d"])
-        guard t == cursor, d > 0 else { throw YlDashBounds.unsupported }
-        let r = entry.attributes["r", default: "0"]
-        let count: Int64
-        if r == "-1" {
-          let boundary = try index + 1 < entries.count ? YlDashBounds.number(entries[index + 1].attributes["t"]) : sampleEnd
-          guard boundary > t, (boundary - t) % d == 0 else { throw YlDashBounds.unsupported }
-          count = (boundary - t) / d
-        } else { count = try YlDashBounds.add(YlDashBounds.number(r), 1) }
-        try append(t, d, count)
-        cursor = try YlDashBounds.add(t, YlDashBounds.multiply(d, count))
+      for run in try timelineRuns(timeline, offset: offset, end: sampleEnd,
+        budget: YlDashBounds.maxSegments - segmentCount) {
+        try append(run.start, run.duration, run.count)
       }
-      guard cursor == sampleEnd else { throw YlDashBounds.unsupported }
     } else {
       let d = try YlDashBounds.number(segmentAttrs["duration"])
       guard d > 0, total % d == 0 else { throw YlDashBounds.unsupported }

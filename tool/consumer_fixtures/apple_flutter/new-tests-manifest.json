@@ -488,8 +488,12 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashHlsCompilerTests.swift",
-    "sha256": "be7531f94d22b1dc3af7c9664b479f6c180b056422231f54a1d71d0dc9341c4a",
+    "sha256": "78d2558899a7dc7cd429f1aca6d11288ac97b0d35646e3eb5932e31421726de2",
     "methods": [
+      "testFiniteFinalDurationUsesInheritedOffsetAndInternalNegativeRepeat",
+      "testFiniteFinalDurationCompletesTwoPeriodProgramAndSegmentListAudio",
+      "testFiniteFinalDurationRejectsUnknownOrUnsafeWindows",
+      "testFiniteFinalDurationValidatesHiddenRenditionsBeforeCaps",
       "testSegmentListBaseReferencePreservesRangesAndNearestBase",
       "testSegmentListBaseReferenceUsesFinalDocumentAndKeepsStripping",
       "testSegmentListBaseReferenceRejectsInvalidRangesAndUnsafeBases",

@@ -32,6 +32,55 @@ final class YlDashHlsCompilerTests: XCTestCase {
   private func offsetTemplate(_ offset: String = "100", scale: String = "10", entries: String = "<S t=\"100\" d=\"20\" r=\"-1\"/>") -> String {
     "<SegmentTemplate timescale=\"\(scale)\" presentationTimeOffset=\"\(offset)\" initialization=\"init.mp4\" media=\"$Number$-$Time$.m4s\"><SegmentTimeline>\(entries)</SegmentTimeline></SegmentTemplate>"
   }
+  private func undelimited(_ xml: String) -> String {
+    xml.replacingOccurrences(of: " mediaPresentationDuration=\"PT4S\"", with: "")
+      .replacingOccurrences(of: " duration=\"PT4S\"", with: "")
+  }
+  func testFiniteFinalDurationUsesInheritedOffsetAndInternalNegativeRepeat() throws {
+    let template = offsetTemplate(entries: "<S t=\"100\" d=\"10\" r=\"-1\"/><S t=\"120\" d=\"20\"/>")
+    let xml = undelimited(mpd(period("<SegmentTemplate startNumber=\"7\"/>")
+      .replacingOccurrences(of: "<Representation", with: template + "<Representation")))
+    let result = try compile(xml)
+    XCTAssertEqual(result.durationUs, 4_000_000)
+    for path in ["/7-100.m4s", "/8-110.m4s", "/9-120.m4s"] { XCTAssertTrue(video(result).contains(path)) }
+  }
+  func testFiniteFinalDurationCompletesTwoPeriodProgramAndSegmentListAudio() throws {
+    let finite = offsetTemplate(entries: "<S t=\"100\" d=\"20\" r=\"1\"/>")
+    let last = period(finite, start: 4).replacingOccurrences(of: " duration=\"PT4S\"", with: "")
+    let result = try compile("<MPD type=\"static\">" + period() + last + "</MPD>")
+    XCTAssertEqual(result.durationUs, 8_000_000)
+    XCTAssertEqual(video(result).components(separatedBy: "#EXT-X-DISCONTINUITY\n").count - 1, 1)
+    let list = "<SegmentList timescale=\"100\" presentationTimeOffset=\"1000\"><SegmentTimeline><S t=\"1000\" d=\"200\" r=\"1\"/></SegmentTimeline><Initialization sourceURL=\"a.mp4\"/><SegmentURL media=\"a1.m4s\"/><SegmentURL media=\"a2.m4s\"/></SegmentList>"
+    let audio = "<AdaptationSet contentType=\"audio\" mimeType=\"audio/mp4\" codecs=\"mp4a.40.2\" audioSamplingRate=\"48000\"><Representation id=\"a\" bandwidth=\"64000\">\(list)</Representation></AdaptationSet>"
+    let xml = undelimited(mpd(period(finite).replacingOccurrences(of: "</Period>", with: audio + "</Period>")))
+    XCTAssertEqual(try compile(xml).durationUs, 4_000_000)
+    reject(xml.replacingOccurrences(of: "d=\"200\"", with: "d=\"199\""))
+  }
+  func testFiniteFinalDurationRejectsUnknownOrUnsafeWindows() {
+    for entries in ["<S t=\"100\" d=\"20\" r=\"-1\"/>", "<S t=\"100\" d=\"20\"/><S t=\"121\" d=\"20\"/>", "<S t=\"100\" d=\"9223372036854775807\"/>", "<S t=\"100\" d=\"1\" r=\"100000\"/>", "<S d=\"20\" r=\"1\"/>"] {
+      reject(undelimited(mpd(period(offsetTemplate(entries: entries)))))
+    }
+    reject(undelimited(mpd(period(offsetTemplate("0", scale: "3", entries: "<S d=\"1\"/>")))))
+    reject(undelimited(mpd(period())))
+    let finite = offsetTemplate(entries: "<S t=\"100\" d=\"20\" r=\"1\"/>")
+    let middle = period(finite).replacingOccurrences(of: " duration=\"PT4S\"", with: "")
+    let last = period(finite).replacingOccurrences(of: " start=\"PT0S\"", with: "")
+    reject("<MPD>" + middle + last + "</MPD>")
+    // Declared finite boundary remains authoritative even if timeline is shorter.
+    reject(mpd(period(finite).replacingOccurrences(of: "duration=\"PT4S\"", with: "duration=\"PT5S\"")))
+  }
+  func testFiniteFinalDurationValidatesHiddenRenditionsBeforeCaps() {
+    let low = rendition("low", template: offsetTemplate(entries: "<S t=\"100\" d=\"20\" r=\"1\"/>"))
+    let high = rendition("high", width: 640, bandwidth: 700000, template: offsetTemplate(entries: "<S t=\"100\" d=\"30\" r=\"1\"/>"))
+    let xml = undelimited(mpd(ladder(low + high)))
+    var emitted = 0
+    XCTAssertThrowsError(try YlDashHlsCompiler.compile(data: Data(xml.utf8), finalManifestURL: source, sourceURL: source, credentialsStripped: false,
+      videoConstraints: .init(maxWidth: 320, maxHeight: nil, maxBitrate: nil), fixedTrackId: "dash-video-w320-h180-b350000",
+      manifestURL: { _ in self.source }, mediaURL: { url, _ in emitted += 1; return url })) {
+        XCTAssertEqual(($0 as? NativePlayerError)?.code, "container.unsupported")
+    }
+    XCTAssertEqual(emitted, 0)
+  }
   private func singleFileList(_ empty: Bool = false) -> String {
     let initURL = empty ? " sourceURL=\"\"" : ""
     let mediaURL = empty ? " media=\"\"" : ""

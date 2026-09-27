@@ -220,6 +220,18 @@ See [transport compatibility](transport-compatibility.md) for Android schema 4,
 Apple schema 4 in the fixed-selection stage, and mixed-version safety. The
 earlier Apple adapter and caps reports describe the schema at their own dates.
 
+## Apple DASH finite final-Period duration
+
+If static MPD and final Period timing do not declare an end, the supported
+AVC/AAC adapter can derive it from finite inherited SegmentTimelines only when
+all original representations have the same exact positive microsecond duration.
+Declared boundaries remain authoritative; existing full-segment/common-origin
+checks remain. Unknown middle boundaries, duration-only addressing, unbounded
+final repeats and divergent track tails are rejected. This is a bounded
+compatibility fallback, outside DASH-IF's restricted explicit-final-duration
+profile. See [duration verification](superpowers/reports/2026-09-26-apple-dash-inferred-duration.md)
+for executed evidence and limits; it is not general unknown-duration DASH support.
+
 ## Apple DASH single-file SegmentList references
 
 Within the existing clear static AVC/AAC fMP4 subset, SegmentList Initialization

@@ -8,7 +8,9 @@
 
 ## 1. 架构门槛
 
-2026-09-26 完成[Apple DASH 单文件 SegmentList](2026-09-26-apple-dash-single-file.md)：支持省略/空资源 URL 继承 BaseURL，并保持字节范围、凭据及原有清单边界。两端原生各109项、公开播放各2项、示例13项通过，最终独立复核通过；实际播放验收记录见[报告](../reports/2026-09-26-apple-dash-single-file.md)，本阶段尚未提交。
+2026-09-26 完成[Apple DASH 有限末段时长推导](2026-09-26-apple-dash-inferred-duration.md)：仅在静态末段缺少声明时长且所有原始轨道的有限时间轴得出相同精确时长时启用，保留声明优先与全部资源策略。两端原生各113项、公开播放各2项、示例14项通过，最终独立复核通过；验证见[报告](../reports/2026-09-26-apple-dash-inferred-duration.md)；本阶段尚未提交。
+
+2026-09-26 完成[Apple DASH 单文件 SegmentList](2026-09-26-apple-dash-single-file.md)：支持省略/空资源 URL 继承 BaseURL，并保持字节范围、凭据及原有清单边界。两端原生各109项、公开播放各2项、示例13项通过，最终独立复核通过；实际播放验收记录见[报告](../reports/2026-09-26-apple-dash-single-file.md)，该阶段已提交为 `bd51daf`。
 
 2026-09-26 完成[Apple DASH 对齐时间偏移](2026-09-26-apple-dash-offsets.md)：扩展带显式 SegmentTimeline、完整分段对齐且音视频同原点的非零 presentationTimeOffset；原始媒体不经生产重写，使用现有私有 HLS 多 Period 路径。两端原生各106项、公开播放各2项、示例12项通过，最终独立复核通过，该阶段已提交为 `1a4757c`。其余裁剪与独立轨道偏移仍待后续支持；见[报告](../reports/2026-09-26-apple-dash-offsets.md)。
 
