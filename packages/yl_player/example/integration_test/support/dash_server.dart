@@ -69,6 +69,7 @@ final class DashServer {
   static Future<DashServer> start({
     DashOriginMode originMode = DashOriginMode.sameOrigin,
     bool variants = false,
+    bool timelineMarkers = false,
     bool presentationOffsets = false,
     bool offsetSegmentList = false,
     bool singleFileSegmentList = false,
@@ -86,7 +87,12 @@ final class DashServer {
     }
     final useVariants =
         variants || presentationOffsets || singleFileSegmentList;
-    final assetRoot = useVariants
+    if (timelineMarkers && (useVariants || segmentBaseVersion != null)) {
+      throw ArgumentError('Timeline markers require their original media');
+    }
+    final assetRoot = timelineMarkers
+        ? 'assets/test_media/dash_timeline'
+        : useVariants
         ? 'assets/test_media/dash_variants'
         : _assetRoot;
     final fileNames = useVariants
@@ -104,7 +110,9 @@ final class DashServer {
           ]
         : _fileNames;
     final loaded = await Future.wait<ByteData>([
-      rootBundle.load('$assetRoot/manifest.mpd'),
+      rootBundle.load(
+        '$assetRoot/${timelineMarkers ? 'large-exact' : 'manifest'}.mpd',
+      ),
       for (final name in fileNames) rootBundle.load('$assetRoot/$name'),
     ]);
     final files = <String, Uint8List>{};

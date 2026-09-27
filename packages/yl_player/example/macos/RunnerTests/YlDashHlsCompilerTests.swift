@@ -81,6 +81,31 @@ final class YlDashHlsCompilerTests: XCTestCase {
     }
     XCTAssertEqual(emitted, 0)
   }
+  func testLargeExactClockConversionDoesNotOverflowIntermediateProduct() throws {
+    let template = offsetTemplate("0", scale: "10000000000000", entries: "<S t=\"0\" d=\"20000000000000\" r=\"1\"/>")
+    let declared = try compile(mpd(period(template)))
+    let inferred = try compile(undelimited(mpd(period(template))))
+    for result in [declared, inferred] {
+      XCTAssertEqual(result.durationUs, 4_000_000)
+      XCTAssertEqual(video(result).components(separatedBy: "#EXTINF:2.000000,").count - 1, 2)
+      XCTAssertTrue(video(result).contains("1-0.m4s"))
+      XCTAssertTrue(video(result).contains("2-20000000000000.m4s"))
+    }
+  }
+  func testExactClockReductionRejectsFractionalOverflowAndHiddenMalformedTrack() {
+    reject(undelimited(mpd(period(offsetTemplate("0", scale: "3", entries: "<S t=\"0\" d=\"1\"/>")))))
+    reject(undelimited(mpd(period(offsetTemplate("0", scale: "1", entries: "<S t=\"0\" d=\"9223372036854775807\"/>")))))
+    let template = offsetTemplate("0", scale: "10000000000000", entries: "<S t=\"0\" d=\"20000000000000\" r=\"1\"/>")
+    let low = rendition("low", template: template)
+    let high = rendition("high", width: 640, bandwidth: 700000, template: template.replacingOccurrences(of: "20000000000000", with: "19999999999999"))
+    XCTAssertThrowsError(try YlDashHlsCompiler.compile(data: Data(mpd(ladder(low + high)).utf8),
+      finalManifestURL: source, sourceURL: source, credentialsStripped: false,
+      videoConstraints: .init(maxWidth: 320, maxHeight: nil, maxBitrate: nil),
+      manifestURL: { _ in self.source }, mediaURL: { url, _ in XCTFail("Invalid original timeline emitted media"); return url })) {
+        XCTAssertEqual(($0 as? NativePlayerError)?.code, "container.unsupported")
+    }
+  }
+
   private func singleFileList(_ empty: Bool = false) -> String {
     let initURL = empty ? " sourceURL=\"\"" : ""
     let mediaURL = empty ? " media=\"\"" : ""

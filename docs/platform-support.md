@@ -198,6 +198,13 @@ snapshots are immutable and reused during quality reprojection. See the
 [P01 report](superpowers/reports/2026-09-26-remaining-01-dash.md) for device evidence
 and remaining general DASH gaps; this is not arbitrary SegmentBase support.
 
+Exact integer-microsecond duration conversion reduces rational factors before
+checked multiplication. Large MPD clocks whose final values fit Int64 therefore
+no longer fail solely because an intermediate product overflows. Fractional
+microsecond Period endpoints remain rejected; this does not add independent
+A/V offsets, endpoint cropping or gap/overlap support. The P01 report separates
+offline decoded markers, direct HLS experiments and public player evidence.
+
 Local/live DASH, dynamic or encrypted MPD, unsupported SegmentBase forms, unaligned or independently shifted rendition offsets, gaps or
 overlaps, incompatible changing ladders, multiple video AdaptationSets, multiple
 audio representations and track/codec changes remain rejected by the Apple subset.

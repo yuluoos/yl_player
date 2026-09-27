@@ -16,6 +16,7 @@ esac
 
 python3 -B -m unittest discover -s tool/playback_benchmark -p 'test_*.py'
 python3 -B -m unittest discover -s tool/dash_sidx -p 'test_*.py'
+python3 -B -m unittest discover -s tool/dash_timeline -p 'test_*.py'
 python3 tool/test_android_scripts.py
 python3 -B -m unittest tool.test_native_apple_scripts
 if [ "$mode" = all ]; then

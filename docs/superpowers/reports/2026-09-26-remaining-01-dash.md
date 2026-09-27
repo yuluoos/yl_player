@@ -176,3 +176,77 @@ flutter test test
 - `packages/yl_player/example/integration_test/apple_dash_segment_base_test.dart`：`0af095ef4233ead56f442c8a43955e2fa6b2f20d45dea68a0fd12cef5058c6c4`
 - `packages/yl_player/example/integration_test/android_dash_segment_base_test.dart`：`5b8659ec17375e36ae28a8ec3b8880f9ac982b6dd92780c356e39d45c6a1cf87`
 - `packages/yl_player/example/test/dash_segment_base_fixture_test.dart`：`ab31980f3bb172e3cdcf7d8765b10e414aea48920869f605e00a508da562a913`
+
+## Task 3：精确换算与剩余时间轴实验（2026-09-27）
+
+基线 `9707c9d2255589e762e7f7e64a2b533561414904`。本轮只放行一个可准确表达的子集：最终整数值可表示、但直接相乘会溢出的时基换算。`rescaleExact` 先约去分子/分母公因数，确认余下分母为 1 后才 checked multiply；显式时长转 ticks 与末段 ticks 转微秒共用这一边界。真实结果溢出、非整数微秒端点及被 caps 隐藏的原始非法轨道仍拒绝。没有生产重封装、平移媒体时间戳或商业 SDK。
+
+### CAP-DASH / CAP-PERIOD 子行
+
+| 子行 | 本轮证据 / 精确预期 | 结论和剩余步骤 |
+| --- | --- | --- |
+| 可整除的大时基 | 同一 AVC/AAC 媒体，MPD ticks/scale 同乘 10^9；两段各 4 秒，总 8 秒 | 已实现；公开 API 边界 seek 与取消替换已测，严格逐帧/音频同步验收仍缺 |
+| 独立 A/V PTO | 原始编码 payload 的离线副本：video +10s、audio +20s；DASH 应均映射 [0,4) | 当前直接 HLS 实验实际 duration=14s；0.5/2.5/3.45/3.8s 均未在 2 秒采样窗口拿到图像。**需要新的映射/播放路径或重封装方案**；未证明所有 AVFoundation 路径不可行，继续拒绝 |
+| Period 端点裁剪 | 原始媒体到 4s，要求 [0,3.5) | 仅改 EXTINF 的实验实际 duration=4s，3.8s 仍输出白帧/PTS 3.791667。**需要样本裁剪或新播放路径**，此快捷做法无效；继续拒绝 |
+| gap | P0=[0,4)、空缺=[4,5)、P1=[5,9) | 无补洞/时间映射实验，**无法判断**可用实现；连续 HLS 基线仅 8s 不能充当目标 9s。需保留空缺的时钟/渲染模型，继续拒绝 |
+| overlap | P0=[0,4)、P1=[3,7)，[3,4) 重叠 | **无法判断**；需要明确重叠样本归属与原始媒体播放实验，不能简单拼成 8s；继续拒绝 |
+| 未知中间时长 | 首段 duration 和下一段 start 均未声明；媒体自然结束为 4s | **无法判断**清单边界权威；末段推导算法不推广到中间段，继续拒绝 |
+| 多 BaseURL | period0/、period1/ 两个同长但色块不同的候选 | **无法判断**候选/故障切换实现；需要 URL 选择、粘性凭据及资源身份契约；继续拒绝 |
+| 非整数微秒端点 | 8 帧 × 512 / 12288 = 1/3s，即 1000000/3µs | 当前 Int64 微秒节目边界无法精确表达；需有理数时间契约或明确精度政策，继续拒绝，不作四舍五入放行 |
+
+七行均有 `assets/test_media/dash_timeline/{id}.mpd`、原始/明确标注的离线派生媒体、`matrix.json` 预期和 SHA256SUMS。公开负向测试读取这七份真实清单，断言 `container.unsupported`、无媒体子请求、旧会话继续可播。当前错误码仍为通用容器不支持；上表提供诊断维度，不冒充已有七个独立公开错误码。
+
+### 原始时标与可行性实验
+
+自有 FFmpeg 8.0.1 生成的 Period0 是红/绿/蓝/白，Period1 是黄/青/品红/黑，每色一秒；每段四个音频标记依次为 440/880/1320/1760 Hz。`tool/dash_timeline/verify_markers.py` 独立解码媒体字节，八个中点色块 RGB 容差 ≤5，半秒窗口测频误差 ≤4 Hz。ffprobe 的原始视频为 1/12288，首 PTS=0、末 PTS=48640、末 duration=512；AAC 为 1/48000，首 PTS=-1024（priming）、末 PTS=191488、末 duration=512。负 priming 如实保留。
+
+`reference.vtt` 只建立节目时钟/色块/频率标签，**不是字幕呈现验收**。独立 PTO 的离线派生文件只改 tfdt/sidx，测试检查所有其他 box（含 mdat）不变。生产路径没有采用此改写。
+
+macOS 27 (Apple M1) 上的 `probe.swift` 使用 AVPlayerItemVideoOutput 测直接 HLS 候选。基线总长 8s，实测如下；RGB 由解码 buffer 中心读取：
+
+| seek | 显示 PTS | RGB | 预期 |
+| --- | --- | --- | --- |
+| 0.5 | 0.5 | 254,0,0 | 红 |
+| 3.8 | 3.791667 | 255,255,255 | 前段白 |
+| 4.0 | 4.0 | 254,255,1 | 后段黄 |
+| 4.2 | 4.166667 | 254,255,1 | 后段黄 |
+| 7.5 | 7.5 | 0,0,0 | 黑 |
+
+这是**直接 HLS 图像实验**，不是实际 `player.load` DASH 投影图像捕获。probe 静音、无音频 tap，离线 tone 检查不等于公开路径音频同步或物理扬声器验收。尚需将公开播放器的显示帧和输出音频统一采集，测量边界首个新段声音及同步误差；不把 Task 3 全项勾完。
+
+`clip.m3u8` 刻意让声明时长短于样本，是失败假设实验，不作为合规 HLS 产品夹具。HLS 的 EXTINF 应与媒体样本时长对应：[RFC 8216](https://www.rfc-editor.org/rfc/rfc8216)。实验只否定这个快捷方案，不证明任意新路径都不可行。
+
+### 检查与复现
+
+新增 native 正向换算测试已实际 RED（抛 Playback operation failed）；修复后 macOS DASH compiler/loader/sidx 三组 **133/133**、0 skipped，xcresult 身份逐项核对。两份例程 RunnerTests 与 canonical 保持一致，发现总量 iOS 634 / macOS 550 只是静态清单，不是本轮全量执行数。
+
+macOS 公开套件 **2/2**：总长 8s、3.8/4.0/4.2/0.5s seek 后时钟推进/选中音轨、会话身份、取消候选无后续媒体请求、迟到事件隔离，以及七维拒绝保留旧会话。日志存在 foreground warning，测试运行器正常执行并通过；不把它当作前台可见证据。
+
+Python 夹具校验 **4/4**，原始色块/音频参考独立解码通过；example 原生迁移 **4/4**、运行证据工具 **9/9**，新增 Dart 文件分析 0 issues。iOS 27 模拟器公开套件 **2/2**、原生同三组 **133/133**（0 skipped）也已通过，xcresult 身份核对完成。独立只读复核无 Critical / Important / Minor；没有因此扩大能力声明。
+
+复现命令：
+
+```sh
+python3 -B -m unittest discover -s tool/dash_timeline -p 'test_*.py'
+python3 -B tool/dash_timeline/verify_markers.py
+# 实验编译与三个 URL 见 tool/dash_timeline/README.md
+cd packages/yl_player/example
+flutter test integration_test/apple_dash_timeline_edges_test.dart -d macos
+flutter test integration_test/apple_dash_timeline_edges_test.dart -d A2A68268-6CBC-4D9B-AA8F-FA81CDC30FA6
+```
+
+本机原始证据仍在 `.superpowers/sdd/2026-09-26-remaining-01-dash/`：`time-red.xcresult`、`time-macos-green.xcresult`、`time-macos-evidence/`、`time-ios-green.xcresult`、`time-ios-evidence/`、`time-public-macos.log`、`time-public-ios.log`、`time-marker-reference.json`、`time-probe-{baseline,independent,clip}.json`。实验工具与媒体哈希已纳入版本管理，夹具测试接入 `tool/check_foundation.sh`，本轮只运行受影响入口，不宣称整个 foundation/release gate 通过。Android 路径未修改，本轮无新增 Android 实播；最低系统、物理设备和定量音画同步留待 P08。
+
+Task 3 收尾：关闭本轮启动的本地 HTTP 服务和 iOS 模拟器；四份 Apple 生成配置恢复 `lib/main.dart`。未 push。Task 3 的剩余架构/同步项及 Task 4 依赖继续保留。
+
+### Task 3 最终源文件 SHA-256
+
+- `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashDocument.swift`：`c5a720b4f6cf9faa56b09a82f70f69cdfe7ad0b31a9adc228881a3d62c7df4f7`
+- `tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashHlsCompilerTests.swift`：`c9c638f532c0ee2f90345210bf47837e6c6540343f8022335692cea7a2fafe7b`
+- `tool/consumer_fixtures/apple_flutter/main_example_tests.py`：`3f1765240d8af8527caf799e7e22382f5349779d76e8cd485c445ac973400bcf`
+- `packages/yl_player/example/integration_test/support/dash_server.dart`：`f255891762c448169386e6668807ad3c1b850f94488f9e73fb8c86160cba9c0b`
+- `packages/yl_player/example/integration_test/apple_dash_timeline_edges_test.dart`：`6f5b2236cf26fc37340c22ff3605dcb457f798eba71cfbf552f9d13377a49bb9`
+- `tool/dash_timeline/generate_fixture.py`：`924084ed0627c491e6244da48a4bc4c0d367fd5f26be945524f95aa063299830`
+- `tool/dash_timeline/verify_markers.py`：`2555dc9536b5806f23ee85eb8a63439e397daae9fbb0138654e05b2c526d0214`
+- `tool/dash_timeline/probe.swift`：`4221c814cfd0ce81d54022638fc101fdc4cea407b8dd26c64c28eb4895001add`
+- `tool/dash_timeline/test_fixtures.py`：`8b9f7d34809544711595087de9fb177a06c02b152302df315a4bd0a2b74968cd`

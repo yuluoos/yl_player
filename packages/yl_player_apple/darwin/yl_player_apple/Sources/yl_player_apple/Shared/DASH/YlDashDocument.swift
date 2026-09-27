@@ -61,6 +61,21 @@ enum YlDashBounds {
     let r = a.multipliedReportingOverflow(by: b)
     guard !r.overflow else { throw unsupported }; return r.partialValue
   }
+  /// Exact nonnegative rational conversion. Reduce both numerator factors before
+  /// multiplication, so representable results never fail on an intermediate product.
+  static func rescaleExact(_ value: Int64, from: Int64, to: Int64) throws -> Int64 {
+    guard value >= 0, from > 0, to > 0 else { throw unsupported }
+    func gcd(_ lhs: Int64, _ rhs: Int64) -> Int64 {
+      var a = lhs, b = rhs
+      while b != 0 { let remainder = a % b; a = b; b = remainder }
+      return a
+    }
+    let first = gcd(value, from)
+    let numerator = value / first, denominator = from / first
+    let second = gcd(to, denominator)
+    guard denominator / second == 1 else { throw unsupported }
+    return try multiply(numerator, to / second)
+  }
   static func number(_ value: String?, default fallback: Int64? = nil) throws -> Int64 {
     guard let value = value else {
       guard let fallback = fallback else { throw unsupported }; return fallback
@@ -465,9 +480,8 @@ final class YlDashDocument {
         let runs = try timelineRuns(timeline, offset: offset, end: nil, budget: remaining)
         let last = runs.last!
         let end = try YlDashBounds.add(last.start, YlDashBounds.multiply(last.duration, last.count))
-        let microticks = try YlDashBounds.multiply(end - offset, 1_000_000)
-        guard microticks % scale == 0, microticks / scale > 0 else { throw YlDashBounds.unsupported }
-        let candidate = microticks / scale
+        let candidate = try YlDashBounds.rescaleExact(end - offset, from: scale, to: 1_000_000)
+        guard candidate > 0 else { throw YlDashBounds.unsupported }
         guard duration == nil || duration == candidate else { throw YlDashBounds.unsupported }
         duration = candidate
         for run in runs { remaining -= Int(run.count) }
@@ -517,9 +531,7 @@ final class YlDashDocument {
       scale = indexScale; offset = indexOffset; indexed = resolved
     }
     guard offset == 0 || timeline != nil || indexed != nil else { throw YlDashBounds.unsupported }
-    let product = try YlDashBounds.multiply(duration, scale)
-    guard product % 1_000_000 == 0 else { throw YlDashBounds.unsupported }
-    let total = product / 1_000_000
+    let total = try YlDashBounds.rescaleExact(duration, from: 1_000_000, to: scale)
     let sampleEnd = try YlDashBounds.add(offset, total)
     var samples: [(Int64, Int64)] = []
     func append(_ start: Int64, _ d: Int64, _ count: Int64) throws {
