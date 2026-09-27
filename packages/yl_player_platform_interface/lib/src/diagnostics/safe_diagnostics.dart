@@ -6,6 +6,12 @@ abstract final class YlSafeDiagnostics {
 
   /// Fixed public guidance for recognized codes, never native error prose.
   static String messageForCode(String code) => switch (code) {
+    YlFailureCodes.drmSessionFailed =>
+      'The system DRM session failed. Reload the source or check device DRM support.',
+    YlFailureCodes.drmProtectionInsufficient =>
+      'The required DRM protection is unavailable. Use a device and output path meeting the content protection requirements.',
+    YlFailureCodes.drmProvisioningRequired =>
+      'The device DRM system requires provisioning. Complete device DRM initialization before retrying.',
     YlFailureCodes.drmConfigInvalid =>
       'The DRM configuration is incomplete or invalid. Check delivery format, certificate, content ID and license policy.',
     YlFailureCodes.drmUnsupported =>

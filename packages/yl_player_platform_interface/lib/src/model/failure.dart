@@ -35,6 +35,9 @@ abstract final class YlFailureCodes {
   static const drmLicenseRedirectRejected = 'drm.license_redirect_rejected';
   static const drmPayloadTooLarge = 'drm.payload_too_large';
   static const drmLicenseResponseInvalid = 'drm.license_response_invalid';
+  static const drmSessionFailed = 'drm.session_failed';
+  static const drmProtectionInsufficient = 'drm.protection_insufficient';
+  static const drmProvisioningRequired = 'drm.provisioning_required';
 
   static const playerDisposed = 'player.disposed';
   static const platformUnavailable = 'platform.unavailable';

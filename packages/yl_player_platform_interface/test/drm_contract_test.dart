@@ -9,6 +9,22 @@ void main() {
   final endpoint = YlDrmLicenseEndpoint(
     Uri.parse('https://license.test/token?secret=value'),
   );
+  test(
+    'native DRM errors preserve categories and actionable safe messages',
+    () {
+      for (final entry in {
+        YlFailureCodes.drmSessionFailed: YlFailureCategory.platform,
+        YlFailureCodes.drmLicenseExpired: YlFailureCategory.platform,
+        YlFailureCodes.drmProtectionInsufficient: YlFailureCategory.unsupported,
+        YlFailureCodes.drmProvisioningRequired: YlFailureCategory.unsupported,
+      }.entries) {
+        final failure = ylDrmException(entry.key).failure;
+        expect(failure.category, entry.value);
+        expect(failure.retryable, isFalse);
+        expect(failure.message, isNot('Playback operation failed.'));
+      }
+    },
+  );
   test('DRM binary values copy, compare and redact', () {
     final input = Uint8List.fromList([65, 66]);
     final data = YlDrmBytes(input);

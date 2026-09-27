@@ -76,6 +76,14 @@ public_payload_contains_body_or_key: false
 
 ### Task 3：系统密钥与会话生命周期
 
+2026-09-27 开始按平台分步交付，**Task 3 整体未完成**：
+
+- [x] 3A：Android 内部 MediaDrm driver、密钥代际/取消/更新/后台恢复边界和系统 fake 测试；当前未接生产播放器。
+- [ ] 3B：Android 受保护输出与 Media3 candidate 原子事务、Pigeon challenge/response 和 Task 2 传输连接；验证 clear 回归。
+- [ ] 3C：Apple AVContentKeySession、AVPlayerLayer 与候选事务/同一桥接，验证原生状态机和 clear 回归。
+
+以下完整验收要求仍逐项保留，不能用 3A 的内部测试替代生产集成：
+
 - [ ] 随原子会话实现生产受保护 view 描述符、attach/detach/ACK 与 challenge/response Pigeon 桥接（从 Task 2 移入）；不得用 schema4 丢弃配置后继续 clear 播放。
 
 - [ ] 依 Task 1 选定路径接 MediaDrm/AVContentKeySession；测试 load 候选失败回滚、stop/dispose、replacement、后台恢复、更新/rotation。密钥回调使用会话代际且严格限制资源生命周期。

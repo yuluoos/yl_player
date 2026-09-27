@@ -461,3 +461,10 @@ existing clear load or serializing the source. Production protected-view/key
 bridges and native license installation remain P06 Task 3 work; authorized
 decryption and output protection remain unverified. See the
 [DRM contract](superpowers/specs/2026-09-26-drm-contract.md#6-已实现的-dart-配置与许可证-post).
+
+P06 Task 3A adds an internal Android MediaDrm key-session boundary with tested
+cancellation, epoch isolation, renewal and background recreation. It is not
+connected to Media3, the protected surface or the Dart license transport yet.
+The internal driver requires API28+ per-session HW_SECURE_ALL evidence and
+rejects API24–27 protection admission; the app-wide API24 floor is unchanged.
+No production DRM capability is enabled by these internal/mock tests.

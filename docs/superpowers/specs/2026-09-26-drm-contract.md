@@ -113,3 +113,15 @@ mount/unmount 只改变呈现，不转移 player/session 所有权。dispose/rep
 - `drm.license_redirect_rejected`：The license redirect was rejected by the POST policy. Configure the final license endpoint.
 - `drm.payload_too_large`：The DRM request or response exceeds its byte limit.
 - `drm.license_response_invalid`：The license server returned an empty or unsupported response.
+
+## 8. Task 3 Android 系统密钥边界（分步实现）
+
+先实现内部 `YlDrmKeySession`，每个候选独占一个系统 driver。其身份为 playerId/surfaceId/sessionId/generation；另以内部 epoch 和 requestId 隔离后台恢复及更新请求。系统调用在同一个 owner dispatcher 上执行，HTTP/桥接是可取消的挂起传输；所有返回安装前重新检查 epoch/requestId，stop、失败、dispose、后台释放先失效身份，再取消传输并释放 driver。传输需要接 Task 2 的许可证策略；本步注入的 fake 不代表真实服务。
+
+状态依次为 idle/requesting/awaitingKeys/usable，后台为 suspended，终止为 failed/disposed。许可证 POST/提供响应成功均不直接代表 keys usable；仅当前 MediaDrm 的非空、全部 usable key-status 集合可确认。明确 expired 状态才报告过期；output-not-allowed 报保护不足；普通 HTTP 拒绝保持 license_denied。一次只允许一个请求；系统重复 key-required 事件合并，当前请求完成后最多补一个更新请求，所有等待（包括 key-status）受单次总期限约束。后台恢复重新创建系统会话和请求，不复用旧许可证回调。
+
+Android 系统 driver 使用 Widevine UUID、streaming key type、系统 L1 会话请求和状态回调，不获取或暴露内容密钥。整个包的 API24 下限及 cenc/cbcs 格式门槛保持；此内部 driver 另要求 API28+ 的实际 per-session security-level 查询。API24–27 目前缺该证据，明确返回保护不足；不能将设置 securityLevel 属性当作实际 L1 证明。openSession 后实际安全级别不满足也释放并拒绝，不转 L3。L1 只是一项系统证据，不能替代 secure decoder、SurfaceView、HDCP 或实际播放验收。Provisioning 不与许可证 POST 混用；设备需要 provisioning 时明确拒绝，后续单独实现授权的系统 provision 请求。
+
+新增正式错误码先冻结为：`drm.session_failed`（系统密钥会话失败）、`drm.protection_insufficient`（所需保护未满足）、`drm.provisioning_required`（设备 DRM 尚需初始化）。消息必须固定且有修复建议。它们沿用现有 category/scope，不改变 enum ordinal。生产受保护 view、Pigeon、Media3 和 Apple key session 仍需后续接入；当前 adapter 不声明 DRM 支持。
+
+系统 API 依据：[MediaDrm.openSession(int)](https://developer.android.com/reference/android/media/MediaDrm#openSession(int))、[getSecurityLevel](https://developer.android.com/reference/android/media/MediaDrm#getSecurityLevel(byte[]))、[KeyStatus](https://developer.android.com/reference/android/media/MediaDrm.KeyStatus)，2026-09-27 核查。驱动忽略系统请求中的 defaultUrl，不自行联网。会话 owner dispatcher 上的 mutex 使外部系统调用及状态转换成为一个操作；即使注入内联 dispatcher，同步回调也需等该操作结束。许可证请求结束而仅等待 key-status 时，KEY_REQUIRED 可立即发起更新；不能等新许可证才能产生的 USABLE 来解锁更新。

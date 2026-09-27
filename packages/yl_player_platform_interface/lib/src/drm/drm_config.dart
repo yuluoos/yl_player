@@ -227,6 +227,10 @@ YlPlayerException ylDrmException(String code) => YlPlayerException(
       YlFailureCodes.drmConfigInvalid => YlFailureCategory.source,
       YlFailureCodes.drmPayloadTooLarge ||
       YlFailureCodes.resourceExhausted => YlFailureCategory.resource,
+      YlFailureCodes.drmSessionFailed ||
+      YlFailureCodes.drmLicenseExpired => YlFailureCategory.platform,
+      YlFailureCodes.drmProtectionInsufficient ||
+      YlFailureCodes.drmProvisioningRequired ||
       YlFailureCodes.drmUnsupported ||
       YlFailureCodes.drmSchemeMismatch ||
       YlFailureCodes.drmEncryptionModeUnsupported =>

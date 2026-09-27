@@ -127,3 +127,54 @@ Task 3 尚需系统密钥请求/安装/更新、代际校验、候选回滚、�
 - `packages/yl_player/test/fixtures/drm_tls/ca.pem`：`c1ff500c39c2f977748507d3a1608919c5d1413e15ac5db64faf088c9be0cf71`
 - `packages/yl_player/test/fixtures/drm_tls/server.pem`：`cd7f54d12cbd8ed18ea65e11efb3bfb4b230670e784dbe2dc6c4b36c2bdd5652`
 - `packages/yl_player/test/fixtures/drm_tls/server.key`：`e72920b439cac67cff47d5c94de711d9a3635e8ffd1a002ba73e90fc13816e2b`
+
+## Task 3A：Android 系统密钥生命周期边界（2026-09-27）
+
+基线 `6e45451f35479e2da485e09f7087a79454cc6d07`，沿用干净的 `codex/fel-integration` checkout。本次交付内部 `YlDrmKeySession` 与真实系统 API 的 `YlWidevineDriver` 实现及系统 fake 测试；**没有将它们接到生产 Media3、受保护显示、Pigeon 或 Dart 许可证客户端，Task 3 整体仍未完成**。生产适配器继续在 admission 阶段拒绝 DRM，clear 生产路径没有改动。
+
+### 行为与边界
+
+- 每个候选拥有独立 driver，身份包含 player/surface/session/generation，另外使用 epoch/requestId 区分后台重建与密钥更新；失效先于取消和外部清理，迟到响应不安装。后台恢复创建新的系统对象；dispose 幂等。传输回包、生成的 challenge、内部初始数据使用有界副本，许可证安装用的副本在调用后清零。
+- HTTP 成功及 provideKeyResponse 返回不等于密钥可用。仅当前非空且全部 usable 的系统状态确认可用；pending 撤销该状态，后续 KEY_REQUIRED 可直接请求更新。重复在途更新合并，初始加载有排队更新时不提前完成 ready；请求及等待系统状态有期限。
+- owner dispatcher 加 mutex 串行执行系统调用与状态转换，防止内联系统回调丢失或覆盖 failed；失败候选不关闭其他实例。许可证拒绝不推断过期；仅系统 expired 状态/事件产生 `drm.license_expired`，输出限制返回 `drm.protection_insufficient`。
+- driver 请求并读取实际 per-session HW_SECURE_ALL，低于该级别时释放并拒绝，无 L3 fallback。API24–27 无本实现要求的公开 per-session 查询，明确拒绝保护准入；API28+ 仍须实际证据，整包 API24 下限不变。L1 等级不证明安全 decoder、SurfaceView、HDCP 或实际播放。
+- 不使用 CDM defaultUrl、不自行联网、不混用媒体 GET、不提取内容密钥。需要 provisioning 时返回独立 `drm.provisioning_required`；实际 provision 传输尚未接入。新增的 `drm.session_failed` 等错误使用固定指导信息；Dart 与 native 分类一致，Pigeon schema4 和既有 wire enum ordinal 不变。
+
+### 实际验证
+
+本机 macOS27/M1、JDK17、compileSdk36、现有 Media3 1.11.0，Android 测试为 JVM/Mockito 系统边界测试，**没有物理 MediaDrm 或授权播放证据**。新状态机/driver 19 项全部通过；Android 全套发现 **422** 项，**419 通过、3 跳过、0 失败**。跳过的是既有 `YlRtmpExtractorTest` 的三个独立 MediaMTX peer 用例（AVC/AAC、video-only、ACK windows），本轮未提供对应外部服务，不计通过。
+
+四包 Dart **382/382** 通过；新增错误分类测试观察到 network 与 platform 不符的 RED 后修复；静态分析 0 issues、公开 API 表面和双端 Pigeon check 通过。原生全套包含原有候选替换、恢复、网络、clear 路径的逻辑回归；本次未重跑模拟器媒体实播，不将单元测试写成真实播放验收。
+
+```sh
+cd packages/yl_player_android/example/android
+JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home ./gradlew :yl_player_android:testDebugUnitTest
+# 仓库根目录
+flutter test packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test
+dart analyze packages/yl_player_platform_interface/lib packages/yl_player_platform_interface/test/drm_contract_test.dart
+sh tool/check_public_surface.sh
+sh packages/yl_player_android/tool/check_pigeon.sh
+sh packages/yl_player_apple/tool/check_pigeon.sh
+```
+
+新增 API 缺失的 RED 见 `key-android-red.log` / `key-driver-red.log`；行为 RED 见 `key-status-red.log`。最终输出位于本计划本机忽略目录的 `key-android-final.log`、`key-dart-all.log`、`key-dart-analysis.log`；原生测试发现由 Gradle 的标准 `src/test/kotlin` 和 JUnit XML 验证。
+
+### 复核、决定与后续
+
+独立只读复核发现 2 项 Important：pending 后 KEY_REQUIRED 无法发送更新，以及同步 install 回调可能丢失就绪/覆盖失败。已分别以事件序列和真正内联 dispatcher 复现，再用请求在途状态与 owner mutex 修复；UnconfinedTestDispatcher 会排队，不能用其通过来冒充重入验证。同步测试在撤销串行化修复时失败，恢复后通过。修复过程中另复现并修正排队续期 challenge 异常被新 requestId 掩盖的分支。日志 `key-review-red.log`、`key-reentrant-red.log`、`key-renew-error-red.log` 及最终全套 GREEN。无未处理 Critical/Important/Minor，未重派复核。
+
+按平台分步交付是本轮决定：先建立系统边界，再接不同的输出/候选事务；代价是此提交本身不能播放 DRM。API28+ 实际等级门槛是另一决定，代价是 API24–27 保护能力仍拒绝，后续若扩展必须提出可验证的证据。复核未运行的测试由实施者执行；未判断的实际设备/CDM/服务/rotation、Media3/保护输出/Pigeon/Apple/候选事务、secure decoder/HDCP 都保留为 Task 3B/3C/4 的门槛，不能用本次 fake 解除。
+
+下一项是 Task 3B 的 Android 受保护显示、Media3 candidate 原子切换及许可证桥接，随后是 Apple Task 3C。Task 4 仍缺授权流、服务/证书和物理设备验收；CAP-DRM 尚未完成。
+
+### Task 3A 最终源文件 SHA-256
+
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDrmKeySession.kt`：`610bf1f0f2793ee3cef88439f5a476ff1baeb03cfa75b13e05277fc9a2b251bf`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlWidevineDriver.kt`：`675aad4c4ef640bbd95ea71283f129188177267d8615d64f6d6c3ab2dae780e2`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlFailureMapper.kt`：`1299026d6e1434f0dcfca4bdecf0fe1c4d4e8d58f5409795880fb990a5ae9294`
+- `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDrmKeySessionTest.kt`：`c8d965594fa3dad838e1fc112cf99d6f4c018a907f734aa54cf6f1c202146c5f`
+- `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlWidevineDriverTest.kt`：`a936d2676ed5a7a9ec809f45dc40394a2774b9c83c3fe5c833da009caa3cfab4`
+- `packages/yl_player_platform_interface/lib/src/drm/drm_config.dart`：`5d7394c18f7102a4fe4084d0b90cb553322cf8c09499515fc0236ea66c62c6ff`
+- `packages/yl_player_platform_interface/lib/src/model/failure.dart`：`cee511ea7386bb96e2f2ab0920d829b8af22d20eead7582be7b994e036de165b`
+- `packages/yl_player_platform_interface/lib/src/diagnostics/safe_diagnostics.dart`：`810d447142dd102281f01d7e0a4edc6f3b68e6d8ab37a72ed74915740b159827`
+- `packages/yl_player_platform_interface/test/drm_contract_test.dart`：`f280f0712051a45e863c4eabad71203ce848632b2f4b1b096d294ac7e9773151`
