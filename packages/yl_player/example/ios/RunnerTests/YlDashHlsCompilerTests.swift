@@ -32,6 +32,47 @@ final class YlDashHlsCompilerTests: XCTestCase {
   private func offsetTemplate(_ offset: String = "100", scale: String = "10", entries: String = "<S t=\"100\" d=\"20\" r=\"-1\"/>") -> String {
     "<SegmentTemplate timescale=\"\(scale)\" presentationTimeOffset=\"\(offset)\" initialization=\"init.mp4\" media=\"$Number$-$Time$.m4s\"><SegmentTimeline>\(entries)</SegmentTimeline></SegmentTemplate>"
   }
+  private func singleFileList(_ empty: Bool = false) -> String {
+    let initURL = empty ? " sourceURL=\"\"" : ""
+    let mediaURL = empty ? " media=\"\"" : ""
+    return "<SegmentList duration=\"2\"><Initialization\(initURL) range=\"0-99\"/><SegmentURL\(mediaURL) mediaRange=\"100-199\"/><SegmentURL\(mediaURL) mediaRange=\"200-399\"/></SegmentList>"
+  }
+  func testSegmentListBaseReferencePreservesRangesAndNearestBase() throws {
+    for empty in [false, true] {
+      let xml = mpd(period("<BaseURL>all.m4s?token=one&amp;v=2</BaseURL>" + singleFileList(empty), base: "<BaseURL>nested/</BaseURL>"))
+      var urls: [URL] = []; var strips: [Bool] = []
+      let text = video(try compile(xml, seen: { urls.append($0); strips.append($1) }))
+      XCTAssertFalse(urls.isEmpty)
+      XCTAssertTrue(urls.allSatisfy { $0.absoluteString == "https://origin.test/dash/nested/all.m4s?token=one&v=2" })
+      XCTAssertTrue(strips.allSatisfy { !$0 })
+      XCTAssertTrue(text.contains("BYTERANGE=\"100@0\""))
+      XCTAssertTrue(text.contains("#EXT-X-BYTERANGE:100@100"))
+      XCTAssertTrue(text.contains("#EXT-X-BYTERANGE:200@200"))
+    }
+  }
+  func testSegmentListBaseReferenceUsesFinalDocumentAndKeepsStripping() throws {
+    let final = URL(string: "https://cdn.test/final.mpd?token=one")!
+    var urls: [URL] = []; var strips: [Bool] = []
+    _ = try compile(mpd(period(singleFileList())), final: final, seen: { urls.append($0); strips.append($1) })
+    XCTAssertFalse(urls.isEmpty)
+    XCTAssertTrue(urls.allSatisfy { $0 == final })
+    XCTAssertTrue(strips.allSatisfy { $0 })
+    strips.removeAll()
+    let xml = mpd(period("<BaseURL>https://origin.test/returned.m4s</BaseURL>" + singleFileList(true), base: "<BaseURL>https://cdn.test/</BaseURL>"))
+    _ = try compile(xml, seen: { _, strip in strips.append(strip) })
+    XCTAssertFalse(strips.isEmpty)
+    XCTAssertTrue(strips.allSatisfy { $0 })
+  }
+  func testSegmentListBaseReferenceRejectsInvalidRangesAndUnsafeBases() {
+    let valid = mpd(period(singleFileList(), base: "<BaseURL>all.m4s</BaseURL>"))
+    for range in ["200-100", "-1-2", "0-9223372036854775807", "1-", "a-b"] {
+      reject(valid.replacingOccurrences(of: "100-199", with: range))
+      reject(valid.replacingOccurrences(of: "0-99", with: range))
+    }
+    for base in ["file:///private/media.m4s", "https://u:p@origin.test/a", "https://origin.test/a#fragment"] {
+      reject(valid.replacingOccurrences(of: "all.m4s", with: base))
+    }
+  }
   func testAlignedOffsetTemplatePreservesRawTimeAndInheritedWindowAcrossPeriods() throws {
     let first = period("<SegmentTemplate startNumber=\"7\"/>")
       .replacingOccurrences(of: "<Representation", with: offsetTemplate() + "<Representation")

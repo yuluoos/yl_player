@@ -220,6 +220,21 @@ See [transport compatibility](transport-compatibility.md) for Android schema 4,
 Apple schema 4 in the fixed-selection stage, and mixed-version safety. The
 earlier Apple adapter and caps reports describe the schema at their own dates.
 
+## Apple DASH single-file SegmentList references
+
+Within the existing clear static AVC/AAC fMP4 subset, SegmentList Initialization
+`sourceURL` and SegmentURL `media` may be omitted or empty. They resolve to the
+effective inherited BaseURL, retaining queries, declared byte ranges, URI budgets
+and sticky credential stripping. Explicit nonempty references keep their existing
+behavior. This permits one file per rendition/Period with initialization and media
+selected by byte ranges; it does not add SegmentBase or sidx index discovery.
+The final redirected document URL is the base when no BaseURL is declared;
+resolution alone does not prove its bytes are playable media.
+
+See the [single-file verification report](superpowers/reports/2026-09-26-apple-dash-single-file.md)
+for executed native/public playback evidence and limits. General DASH, DRM,
+minimum OS/physical-device behavior and measured lip-sync remain separate work.
+
 ## Apple DASH aligned presentation offsets
 
 The clear static AVC/AAC subset accepts nonnegative integer

@@ -440,7 +440,9 @@ final class YlDashDocument {
       }, initialization: initResource, segments: segments)
   }
   private func resource(_ name: String?, _ range: String?, _ location: (URL, Bool)) throws -> YlDashResource {
-    guard let name = name else { throw YlDashBounds.unsupported }
+    // An omitted/empty SegmentList reference identifies the effective base itself.
+    // Keep recording it as a resource: budgets and sticky credential stripping apply.
+    let reference = (name == nil || name == "") ? location.0.absoluteString : name!
     var normalized: String?
     if let range = range {
       let parts = range.split(separator: "-", omittingEmptySubsequences: false)
@@ -449,7 +451,7 @@ final class YlDashDocument {
       guard end >= start else { throw YlDashBounds.unsupported }
       normalized = "\(try YlDashBounds.add(end - start, 1))@\(start)"
     }
-    return YlDashResource(url: try record(name, base: location.0, inherited: location.1), range: normalized)
+    return YlDashResource(url: try record(reference, base: location.0, inherited: location.1), range: normalized)
   }
   private func template(_ value: String, id: String, bandwidth: Int64, number: Int64?, time: Int64?) throws -> String {
     guard value.utf16.count <= YlDashBounds.maxURI else { throw YlDashBounds.unsupported }

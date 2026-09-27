@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 
 import 'dash_offset_fixture.dart';
+import 'dash_single_file_fixture.dart';
 
 enum DashOriginMode { sameOrigin, crossOrigin, returnToPrimary }
 
@@ -68,6 +69,7 @@ final class DashServer {
     bool variants = false,
     bool presentationOffsets = false,
     bool offsetSegmentList = false,
+    bool singleFileSegmentList = false,
     bool failMedia = false,
     bool delayMedia = false,
     bool delayManifest = false,
@@ -78,7 +80,8 @@ final class DashServer {
     if (offsetSegmentList && !presentationOffsets) {
       throw ArgumentError('Offset SegmentList requires presentationOffsets');
     }
-    final useVariants = variants || presentationOffsets;
+    final useVariants =
+        variants || presentationOffsets || singleFileSegmentList;
     final assetRoot = useVariants
         ? 'assets/test_media/dash_variants'
         : _assetRoot;
@@ -100,23 +103,30 @@ final class DashServer {
       rootBundle.load('$assetRoot/manifest.mpd'),
       for (final name in fileNames) rootBundle.load('$assetRoot/$name'),
     ]);
-    final primary = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
-    final secondary = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
     final files = <String, Uint8List>{};
     for (var index = 0; index < fileNames.length; index += 1) {
       files['/${fileNames[index]}'] = _bytes(loaded[index + 1]);
     }
     var manifest = utf8.decode(_bytes(loaded.first));
-    if (presentationOffsets) {
+    if (presentationOffsets || singleFileSegmentList) {
       final shifted = DashOffsetFixture.fromVariants(
         files,
-        segmentList: offsetSegmentList,
+        segmentList: offsetSegmentList || singleFileSegmentList,
       );
       manifest = shifted.manifest;
       files
         ..clear()
         ..addAll(shifted.files);
     }
+    if (singleFileSegmentList) {
+      final (packedManifest, packedFiles) = packDashSingleFile(manifest, files);
+      manifest = packedManifest;
+      files
+        ..clear()
+        ..addAll(packedFiles);
+    }
+    final primary = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+    final secondary = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
     final result = DashServer._(
       primary: primary,
       secondary: secondary,

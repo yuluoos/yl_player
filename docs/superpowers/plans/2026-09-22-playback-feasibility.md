@@ -8,7 +8,9 @@
 
 ## 1. 架构门槛
 
-2026-09-26 完成[Apple DASH 对齐时间偏移](2026-09-26-apple-dash-offsets.md)：扩展带显式 SegmentTimeline、完整分段对齐且音视频同原点的非零 presentationTimeOffset；原始媒体不经生产重写，使用现有私有 HLS 多 Period 路径。两端原生各106项、公开播放各2项、示例12项通过，最终独立复核通过，本阶段尚未提交。其余裁剪与独立轨道偏移仍待后续支持；见[报告](../reports/2026-09-26-apple-dash-offsets.md)。
+2026-09-26 完成[Apple DASH 单文件 SegmentList](2026-09-26-apple-dash-single-file.md)：支持省略/空资源 URL 继承 BaseURL，并保持字节范围、凭据及原有清单边界。两端原生各109项、公开播放各2项、示例13项通过，最终独立复核通过；实际播放验收记录见[报告](../reports/2026-09-26-apple-dash-single-file.md)，本阶段尚未提交。
+
+2026-09-26 完成[Apple DASH 对齐时间偏移](2026-09-26-apple-dash-offsets.md)：扩展带显式 SegmentTimeline、完整分段对齐且音视频同原点的非零 presentationTimeOffset；原始媒体不经生产重写，使用现有私有 HLS 多 Period 路径。两端原生各106项、公开播放各2项、示例12项通过，最终独立复核通过，该阶段已提交为 `1a4757c`。其余裁剪与独立轨道偏移仍待后续支持；见[报告](../reports/2026-09-26-apple-dash-offsets.md)。
 
 2026-09-26 继续[Apple DASH 错误归因阶段](2026-09-26-apple-dash-diagnostics.md)：已完成五类已知清单拒绝原因和安全提示贯通；两端原生各102项、Dart233项、公开诊断各五例及独立回滚各一例通过，最终独立复核通过，该阶段已提交为 `f88f993`。保持既有支持范围和失败候选回滚；验证记录见[报告](../reports/2026-09-26-apple-dash-diagnostics.md)。
 
