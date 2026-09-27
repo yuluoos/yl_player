@@ -1,0 +1,146 @@
+# 播放器剩余工作：8 个执行计划
+
+规划日期：2026-09-26。已将有限末段 DASH 时长推导提交为 **`5409313` — `feat: infer finite final Apple DASH period duration`**。2026-09-26 本批规划完成；2026-09-27 按用户授权开始执行 P08-A 的测量工具切片，其余计划尚未开始；历史已完成子集仍有效。
+
+唯一需求入口是[需求基线 v2.2](../specs/2026-09-20-playback-expansion-requirements.md)。本总览负责工作顺序与责任分配，不改写需求；[架构入口](2026-09-22-playback-feasibility.md)及历史报告保留已完成阶段和证据。后续代码执行延续当前会话自行实施方式，按 `superpowers:executing-plans` 逐任务处理，不因拆计划自动创建线程或子代理。
+
+## 1. 已完成起点与剩余边界
+
+已交付的受限明文 DASH 路径、固定/上限选择、PD-01、Apple 对齐 PTO、单文件 SegmentList、有限末段时长推导不重新开发。JS 九脚本受控执行及三端媒体交接、普通 TCP RTMP 基础播放、TVS 集成及定向测试也已有证据。
+
+这不代表通用 DASH 全范围、多字幕格式、弱网定量 ABR、完整业务真机播放、DRM、完整杜比映射、原生 DV 外接信号、性能与发布矩阵均已完成。每项都区分“代码缺口”和“已有代码缺少实际验收”。历史报告出现的“固定接口尚未实现”等文字是当时状态，以后续已提交阶段为准。
+
+## 2. 计划与交付物
+
+| 计划 | 主要剩余交付 | 前置条件与启动顺序 |
+|---|---|---|
+| [P01 DASH 寻址与节目时间轴](2026-09-26-remaining-01-dash.md) | SegmentBase/sidx、剩余时间轴维度、已支持编码的跨段重配 | Task 1/2 可直接开始；异编码重配消费 P03；字幕/音轨整合消费 P02 |
+| [P02 多音轨与字幕](2026-09-26-remaining-02-tracks-subtitles.md) | 轨道契约、SRT/WebVTT/TTML、ASS/SSA、PGS/VobSub、实际合成与同步 | 契约/普通媒体先行；故障恢复依赖 PD-03；保护输出依赖 P06 |
+| [P03 格式覆盖与受控解码](2026-09-26-remaining-03-formats-decoding.md) | 容器/编码组合、路由/制品缺口、硬解证据、分档软解预算 | 基线可立即盘点；优化及预算开放先消费 P08-A/B |
+| [P04 弱网 ABR 与直播模式](2026-09-26-remaining-04-abr-live.md) | 网络轨迹、auto/caps/fixed 定量、HLS/FLV/RTMP 两模式运行时切换 | P08 基线先行；先用现有 AVC/AAC；动态范围转换依赖 PD-02 |
+| [P05 JS / RTMP 业务闭环](2026-09-26-remaining-05-live-business.md) | TVS 真实构建/设备/订阅、归档复现、刷新取消、错误汇总 | 核心验收可直接做；新增直播模式接 P04；协议扩展先核查范围 |
+| [P06 DRM 与受保护输出](2026-09-26-remaining-06-drm.md) | Widevine/FairPlay、许可证 POST 策略、密钥生命周期、真实安全输出 | 架构/受控测试尽早；真实播放需授权流/证书/许可证与设备 |
+| [P07 杜比完整映射与输出](2026-09-26-remaining-07-dolby.md) | 独立参考、适用元数据/CM、屏幕映射、独立 DV 信号验收 | 先可行性及参考；性能消费 P08，编码能力消费 P03 |
+| [P08 性能基线、优化与共同验收](2026-09-26-remaining-08-performance-release.md) | A 测量、B 基线冻结、C 瓶颈优化、D 三端真机/长期/消费者/发布回归 | **A/B 最早执行，D 最后执行**，避免把性能基线放到优化之后 |
+
+这些是八个可分别追踪的工作包，每包再按任务/格式切片提交，并非八次大提交。未知架构的任务先交付有证据的接口/路径决定，再实现下游；不把研究门槛当已完成的功能。
+
+## 3. 推荐执行顺序与无环交接
+
+1. **先 P08-A/B + P01-Task 1/2**：建立可复用测量工具和现有路径基线，然后实现 SegmentBase/sidx。基线工具不要求完整字幕/DRM 等尚不存在的能力。
+2. **尽早做 P06-Task 1/2、P07-Task 1**：暴露受保护输出、参考和设备条件，不拖到最后才发现架构不可行；资源缺失时继续独立工程工作。
+3. **推进 P03 格式、P02 轨道/字幕契约、P05 业务验收**：沿用已支持媒体先交付，按各自原生/公开测试验证。
+4. **汇合 P01-Task 3/4、P02 合成、P04 定量 ABR/直播、P05 模式接入**：已支持 codec 元数据由 P03 向 P01 提供；P01 统一时间轴向 P02 提供；P02 的轨道身份契约可先完成，避免等待完整字幕产生依赖环。
+5. **完成 P06/P07 实现及条件齐备的真实验收，按证据做 P08-C，最后 P08-D**。保护 view 由 P06 向 P02 提供，P06 先测无字幕，最后再做共同合成测试，不互相等待才能起步。
+
+“可并行”表示依赖关系允许，不授权自动开启多代理或同时占用同一设备/生成目录。原生构建、Flutter 生成入口和设备测试串行使用；各阶段沿用已有 checkout，先核对当前变更。
+
+## 4. 需求与错误责任表
+
+| 需求 | 负责计划/任务 | 验收落点 |
+|---|---|---|
+| REQ-01 三端/无商业 SDK | 全部；P08-D 汇总 | 全 CAP + REG-OS |
+| REQ-02 未加密 DASH | P01 全部，P02、P04 | CAP-DASH 每个 MPD 子集独立行 |
+| REQ-03 平台 DRM | P06 全部 | CAP-DRM，Android/Apple 分行 |
+| REQ-04 多 Period | P01-3/4，P02-1/2，P03 解码 | CAP-PERIOD/同步/seek |
+| REQ-05 自动/上限/固定 | P04-2，P01-4 | CAP-ABR/PD-01 回归 |
+| REQ-06 可选 JS 模块 | P05-1/3/4 | CAP-JS 九脚本逐哈希 |
+| REQ-07 RTMP 播放 | P05-2/3/4 | CAP-RTMP 基础与扩展变体分开 |
+| REQ-08 两种直播模式 | P04-1/3/4，P05-4 | CAP-LIVE 三协议分别定量 |
+| REQ-09 全字幕集合 | P02 全部 | CAP-SUB 格式/效果/输入类型逐行 |
+| REQ-10 容器/编码 | P03-1/2/4 | CAP-FORMAT 合理组合，无遗漏确认格式 |
+| REQ-11 受控软解 | P03-3/4 | CAP-DECODE/REG-DEC |
+| REQ-12 完整映射/原生 DV | P07 全部 | CAP-DV-MAP 与 CAP-DV-OUT 分开 |
+| REQ-13 错误清晰 | 下表各负责人；P08-D 汇总 | ERR-01–12/REG-DIAG |
+| REQ-14 专业性能优化 | P08-A/B/C，P04 定量 | 实测、冻结目标、同条件前后对比 |
+| REQ-15 无回归 | 每包定向，P08-D 共同验收 | REG-OS/API/NET/BUF/DEC/LIFE/AUDIO/VIEW/DIAG |
+
+| 错误 | 责任任务 | 必须保留的区别 |
+|---|---|---|
+| ERR-01 HTML 非 M3U | P05-2 | 本次返回网页，不宣称各地区永久失效 |
+| ERR-02 DNS、ERR-03 403 | P05-2；P01-2/P06-2 验各自网络边界 | 已知 DNS 与普通网络失败分开；403 不猜 token 过期 |
+| ERR-04 JS 超时、ERR-05 宿主/结果 | P05-1/3 | 原生真正终止；缺接口与无地址分别提示 |
+| ERR-06 RTMP | P05-3/4，P04-3 | 建连失败与已连接后中断分开、预算有界 |
+| ERR-07 DRM | P06-2/3/4 | 拒绝、过期、超时必须有对应证据 |
+| ERR-08 解码/预算 | P03-3 | 硬解不可证与资源超限，不暗中降档 |
+| ERR-09 Dolby | P07-2/3 | 未支持与损坏分开，不忽略元数据 |
+| ERR-10 字幕 | P02-2/3/4 | 字幕原因与视频错误分开；恢复受 PD-03 约束 |
+| ERR-11 多源汇总 | P05-3 | 只记录实际尝试，有容量/截断/关联，无额外自动换源 |
+| ERR-12 取消/旧会话/未知 | 全部生命周期任务；P05-3/P08-D 汇总 | 取消不弹当前故障；未知只报已知阶段和关联 ID |
+
+每个模块先核对 `YlFailureCodes` 已有正式码，避免将需求文档早期“候选码”当成尚不存在。新增码须同一任务更新公共合约、native 映射、Dart 解码、UI 安全提示和测试。
+
+## 5. 尚缺输入及其局部影响
+
+| 条件 | 当前状态 | 只阻塞哪些步骤 | 仍可继续 |
+|---|---|---|---|
+| PD-02 HDR/SDR/Dolby 转换策略 | 未确认 | P01/P04 跨动态范围自动转换 | 同动态范围 DASH/ABR、固定格式映射 |
+| PD-03 字幕失败行为 | 未确认 | P02 最终错误恢复行为 | 正常字幕、解析/资源隔离、错误分类 |
+| DRM 授权资源 | 用户暂无 | P06 真实保护播放/密钥更新验收 | 契约、许可证受控传输、view/状态机原型 |
+| Dolby 独立参考/容差 | 尚缺 | P07 完整画质通过结论；未证实算法的正式实现门槛 | 候选核查、现有 FEL 回归、元数据差距表 |
+| 原生 DV 实际外接链 | 尚未指定 | P07 原生信号验收 | 非该链路工作、其他已具备参考的映射 |
+| 最低系统/物理设备档位 | 需 P08 盘点 | 对应性能及发布行 | 可用设备上的准确结果 |
+| RTMPS/增强 RTMP 支持范围 | 尚未冻结为扩展交付 | 扩展协议实现承诺 | 普通 RTMP/业务闭环及可行性核查 |
+
+输入未到不能写“通过”，但不能拿一个输入阻塞整个升级。当前用户请求是规划，本轮不重复发起全部决定的问题；进入依赖步骤前检查需求记录，仍缺时再只问该决定。
+
+## 6. 统一证据格式与检查入口
+
+能力行遵循需求中的完整字段：`CAP 子编号 → REQ → 平台/最低可用系统 → 设备/输出 → 媒体/脚本哈希 → 封装/编码/Profile → 策略 → 操作 → 阈值/预期事件 → 实现状态 → 验证状态 → 证据 → 责任/解除条件`。四态实现与五态验证分列；以下内部数据值需按文档映射，不把 `not_run` 当 unsupported：
+
+```json
+{"implementation":"unverified|missing|partial|implemented",
+ "verification":"not_run|external_missing|passed|failed|skipped"}
+```
+
+这里是枚举说明，非合法单行结果；真实记录只能取一个值。上述值与需求原表一一对应。报告记录源文件哈希、提交和未提交差异；只记录某次“全部通过”文本不够。
+
+以下命令是执行者使用的入口，**本次写计划未运行它们**。路径基准为仓库根 `/Users/yy2021_8689/Desktop/Flutter/yl_player`，Flutter 为 `/Users/yy2021_8689/flutter/bin/flutter`。优先定向用例，每个有代码变化的阶段只做必要扩大回归；最终封板一次统一检查。
+
+```sh
+export PATH="/Users/yy2021_8689/flutter/bin:$PATH"
+# Dart 合约：在受影响包目录运行 flutter test，新增文件必须被发现。
+cd /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface
+flutter test
+cd /Users/yy2021_8689/Desktop/Flutter/yl_player
+sh packages/yl_player_apple/tool/check_pigeon.sh
+sh packages/yl_player_android/tool/check_pigeon.sh
+
+# Android JVM：不以 JVM 通过代替 Android 媒体播放。
+cd packages/yl_player_android/example/android
+./gradlew :yl_player_android:testDebugUnitTest --stacktrace
+cd /Users/yy2021_8689/Desktop/Flutter/yl_player
+
+# Apple 原生入口；执行前通过 simctl 选择并验证 YL_IOS_SIMULATOR_ID。
+sh tool/check_native_macos.sh --unit-only
+sh tool/check_native_ios.sh --unit-only
+```
+
+新原生测试写入 canonical `tool/consumer_fixtures/apple_flutter/RunnerTests/`，按仓库现有同步机制更新两端镜像。读取 `main_example_tests.py --help` 后使用其实际参数完成 inventory/result-bundle 验证；不能猜测不存在的同步开关。新增 suite 要有真实测试发现与结果身份，避免跑旧二进制冒充通过。
+
+公开测试统一从 example 目录执行：
+
+```sh
+cd /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example
+# 用该计划已创建的具体测试文件替换下例，macOS 与 iOS 逐个跑。
+flutter test integration_test/apple_dash_segment_base_test.dart -d macos
+# YL_IOS_SIMULATOR_ID 必须是已核验设备；不要使用占位设备 ID。
+flutter test integration_test/apple_dash_segment_base_test.dart -d "$YL_IOS_SIMULATOR_ID"
+# Android runner 使用已核验 YL_ANDROID_DEVICE_ID；选择包含 Android 用例的文件。
+sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.dart
+```
+
+新增文件在其任务完成前不存在；执行时不能靠缺文件/空套件得到通过。RTMP 按 `tool/rtmp_acceptance/README.md` 固定发送端版本与哈希，TVS 按 P05 的独立仓库命令运行。iOS/Android 设备、架构及实际 runner 均须核验。
+
+最终 P08-D 先查看 `tool/check_player_v2.sh` 当前参数和 stage 清单再运行合适入口。已有 full 入口是 `sh tool/check_player_v2.sh --aggregate-full`；无设备的 `--no-device` 不能作为设备验收，也不能与 `--stage` 组合。消费者/原生大套件已有通过记录时，只有新代码影响或发现问题才扩大重跑，文档编辑只检查格式、链接与覆盖表。
+
+## 7. 规划完成检查
+
+- [x] REQ-01–15、全部 CAP、ERR-01–12 和 REG 均有责任计划。
+- [x] 已交付子集不列为从零开发；固定选择、运行时 caps、末段时长等历史状态已区分。
+- [x] 性能 A/B 在优化前；DRM/杜比可行性尽早；共享接口无循环等待。
+- [x] 每包有当前边界、代码入口、任务、验证命令、提交和证据要求。
+- [x] 新 API/文件标为拟新增，未知架构先产生精确契约，不冒充现有接口。
+- [x] 不引入商业 SDK、静默降画质、全局系统下限变化或虚假验收。
+
+2026-09-27 已从 **P08-A 的测量工具/可用设备盘点**切入；[执行报告](../reports/2026-09-26-remaining-08-performance-release.md)记录当前边界。P01-Task 1 的 sidx 夹具/解析尚未开始。
