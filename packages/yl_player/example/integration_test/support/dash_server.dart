@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'dash_offset_fixture.dart';
 import 'dash_duration_fixture.dart';
 import 'dash_single_file_fixture.dart';
+import 'dash_segment_base_fixture.dart';
 
 enum DashOriginMode { sameOrigin, crossOrigin, returnToPrimary }
 
@@ -71,6 +72,7 @@ final class DashServer {
     bool presentationOffsets = false,
     bool offsetSegmentList = false,
     bool singleFileSegmentList = false,
+    int? segmentBaseVersion,
     bool omitFinalDuration = false,
     bool failMedia = false,
     bool delayMedia = false,
@@ -127,6 +129,16 @@ final class DashServer {
         ..clear()
         ..addAll(packedFiles);
     }
+    if (segmentBaseVersion != null) {
+      final (indexedManifest, indexedFiles) = packDashSegmentBase(
+        files,
+        version: segmentBaseVersion,
+      );
+      manifest = indexedManifest;
+      files
+        ..clear()
+        ..addAll(indexedFiles);
+    }
     if (omitFinalDuration) manifest = omitFinalDashDuration(manifest);
     final primary = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
     final secondary = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
@@ -179,8 +191,9 @@ final class DashServer {
   List<RecordedDashRequest> requestsFor(String path) =>
       requests.where((request) => request.path == path).toList(growable: false);
 
-  Iterable<RecordedDashRequest> get childRequests =>
-      requests.where((request) => request.path.endsWith('.m4s'));
+  Iterable<RecordedDashRequest> get childRequests => requests.where(
+    (request) => request.path.endsWith('.m4s') || request.path.endsWith('.mp4'),
+  );
 
   void releaseDelayedMedia() {
     if (!_mediaGate.isCompleted) _mediaGate.complete();
@@ -313,6 +326,7 @@ final class DashServer {
 
   String _rewritePeriodForReturn(String value, String period) {
     final start = value.indexOf('<Period id="$period"');
+    if (start < 0) return value;
     final end = value.indexOf('</Period>', start) + '</Period>'.length;
     final original = value.substring(start, end);
     final crossBase = _uri(_secondary, '/cross/');

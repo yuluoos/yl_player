@@ -104,6 +104,10 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     var destinationURL: URL
     var isManifest: Bool
     var response: HTTPURLResponse?
+    var indexRequest: PreflightRequest? {
+      guard let preflight = request as? PreflightRequest, preflight.index != nil else { return nil }
+      return preflight
+    }
     var manifestData = Data()
     var requestContext: YlManagedRequestContext?
     var redirectCount: Int { requestContext?.redirectsFollowed ?? 0 }
@@ -132,18 +136,22 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
 
   private final class PreflightRequest: YlHlsLoadingRequest {
     let url: URL
-    let requestedOffset: Int64 = 0
+    let index: YlDashIndexRequest?
+    var requestedOffset: Int64 { index?.start ?? 0 }
     let currentOffset: Int64 = 0
-    let requestedLength: Int = 0
-    let requestsAllDataToEnd = true
+    var requestedLength: Int { index?.length ?? 0 }
+    var requestsAllDataToEnd: Bool { index == nil }
+    var effectiveURL: URL
+    var credentialsStripped = false
+    var resourceLength: Int64 = 0
     let semaphore = DispatchSemaphore(value: 0)
     private let lock = NSLock()
     private(set) var data = Data()
     private(set) var error: NativePlayerError?
     private var finished = false
 
-    init(url: URL) {
-      self.url = url
+    init(url: URL, index: YlDashIndexRequest? = nil) {
+      self.url = url; self.effectiveURL = url; self.index = index
     }
 
     func setContentInformation(
@@ -343,7 +351,10 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
       loadingRequest.finishLoading()
       return true
     }
-    let request = makeRequest(url: destination, rangeHeader: rangeHeader, credentialsStripped: credentialsStripped)
+    var request = makeRequest(url: destination, rangeHeader: rangeHeader, credentialsStripped: credentialsStripped)
+    if (loadingRequest as? PreflightRequest)?.index != nil {
+      request.setValue("identity", forHTTPHeaderField: "Accept-Encoding")
+    }
     let record = TaskRecord(
       request: loadingRequest,
       destinationURL: destination,
@@ -372,7 +383,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   private func compile(_ snapshot: YlDashManifestSnapshot) throws -> YlDashHlsPresentation {
     try YlDashHlsCompiler.compile(data: snapshot.data,
       finalManifestURL: snapshot.effectiveURL, sourceURL: originURL,
-      credentialsStripped: snapshot.credentialsStripped,
+      credentialsStripped: snapshot.credentialsStripped, indexes: snapshot.indexes,
       videoConstraints: videoConstraints, fixedTrackId: fixedTrackId,
       manifestURL: { [virtualNamespace] name in
         URL(string: "http://yl-dash.invalid/\(virtualNamespace)/\(name).m3u8")!
@@ -386,47 +397,77 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   func preflight(cancellationToken: YlOpenCancellationToken, snapshot: YlDashManifestSnapshot? = nil) throws {
     try cancellationToken.throwIfCancelled()
     cancellationToken.onCancel { [weak self] in self?.cancelAll() }
-    let request: PreflightRequest
-    if isDash {
-      try stateLock.withLock {
-        guard !cancelled else { throw Self.cancelledError() }
-        guard !preflightStarted else { throw Self.virtualResourceError() }
-        preflightStarted = true
+    let maximumWaitMs = max(1_000, configuration.connectTimeoutMs + configuration.readTimeoutMs + 1_000)
+    let deadline = DispatchTime.now() + .milliseconds(Int(maximumWaitMs))
+    func wait(_ request: PreflightRequest) throws {
+      if request.semaphore.wait(timeout: deadline) == .timedOut {
+        cancelAll()
+        throw NativePlayerError(category: "network", code: "network.read_timeout",
+          message: "The manifest and segment index preparation timed out.")
       }
-      if let snapshot {
-        let presentation = try compile(snapshot)
+      try cancellationToken.throwIfCancelled()
+      if let error = request.error { throw error }
+    }
+    do {
+      if isDash {
+        try stateLock.withLock {
+          guard !cancelled else { throw Self.cancelledError() }
+          guard !preflightStarted else { throw Self.virtualResourceError() }
+          preflightStarted = true
+        }
+        let accepted: YlDashManifestSnapshot
+        if let snapshot { accepted = snapshot }
+        else {
+          let request = PreflightRequest(url: originURL)
+          _ = startUpstreamLoading(request, destination: originURL, resourceKind: .manifest,
+            credentialsStripped: credentialContext.isStripped(originURL.absoluteString))
+          try wait(request)
+          let requests = try YlDashDocument(source: originURL).indexRequests(request.data,
+            final: request.effectiveURL, credentialsStripped: request.credentialsStripped)
+          var indexes: [YlDashIndexRequest: YlDashResolvedIndex] = [:]
+          var remaining = YlDashBounds.maxSegments
+          for index in requests {
+            try cancellationToken.throwIfCancelled()
+            guard DispatchTime.now() < deadline else {
+              throw NativePlayerError(category: "network", code: "network.read_timeout",
+                message: "The segment index preparation timed out.")
+            }
+            let fetch = PreflightRequest(url: index.url, index: index)
+            _ = startUpstreamLoading(fetch, destination: index.url, resourceKind: .key,
+              credentialsStripped: index.credentialsStripped || credentialContext.isStripped(index.url.absoluteString))
+            try wait(fetch)
+            let parsed = try YlDashSidx.parse(fetch.data,
+              boxEndOffset: UInt64(index.start) + UInt64(index.length), maxReferences: remaining)
+            remaining -= parsed.references.count
+            indexes[index] = YlDashResolvedIndex(index: parsed, effectiveURL: fetch.effectiveURL,
+              credentialsStripped: fetch.credentialsStripped, resourceLength: fetch.resourceLength)
+          }
+          accepted = YlDashManifestSnapshot(data: request.data, effectiveURL: request.effectiveURL,
+            credentialsStripped: request.credentialsStripped, indexes: indexes)
+        }
+        let presentation = try compile(accepted)
         try cancellationToken.throwIfCancelled()
+        guard DispatchTime.now() < deadline else {
+          throw NativePlayerError(category: "network", code: "network.read_timeout",
+            message: "The DASH presentation preparation timed out.")
+        }
         try stateLock.withLock {
           guard !cancelled else { throw Self.cancelledError() }
           for resource in presentation.strippedResources { credentialContext.strip(resource) }
           dashPresentation = presentation
-          acceptedDashSnapshot = snapshot
+          acceptedDashSnapshot = accepted
         }
-        return
+      } else {
+        let request = PreflightRequest(url: try encodedAssetURL())
+        _ = startLoading(request)
+        try wait(request)
       }
-      request = PreflightRequest(url: try YlHlsURLCodec.encode(originURL, kind: .manifest))
-      _ = startUpstreamLoading(request, destination: originURL, resourceKind: .manifest,
-        credentialsStripped: credentialContext.isStripped(originURL.absoluteString))
-    } else {
-      request = PreflightRequest(url: try encodedAssetURL())
-      _ = startLoading(request)
-    }
-    let maximumWaitMs = max(
-      1_000,
-      configuration.connectTimeoutMs + configuration.readTimeoutMs + 1_000
-    )
-    if request.semaphore.wait(
-      timeout: .now() + .milliseconds(Int(maximumWaitMs))
-    ) == .timedOut {
+    } catch {
       cancelAll()
-      throw NativePlayerError(
-        category: "network",
-        code: "network.read_timeout",
-        message: "The HLS manifest preflight timed out."
-      )
+      if let admission = error as? YlDashAdmissionError { throw admission.nativeError }
+      if let index = error as? YlDashSidxError { throw index.nativeError }
+      throw error
     }
-    try cancellationToken.throwIfCancelled()
-    if let error = request.error { throw error }
   }
 
   func cancelAll() {
@@ -524,8 +565,17 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     guard let record else { return }
     switch result {
     case let .success(cached):
+      if let preflight = record.request as? PreflightRequest {
+        preflight.effectiveURL = record.destinationURL
+        preflight.credentialsStripped = record.credentialsStripped
+      }
       if let cached {
-        respond(cached, to: record.request)
+        if record.indexRequest != nil {
+          // These bytes already represent the absolute requested range; do not
+          // slice them again at the original file offset.
+          record.request.respond(with: cached.data)
+          record.request.finishLoading()
+        } else { respond(cached, to: record.request) }
       } else {
         record.request.finishLoading()
       }
@@ -636,6 +686,11 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     )
   }
 
+  private static func indexRangeError() -> NativePlayerError {
+    NativePlayerError(category: "network", code: "network.range_invalid",
+      message: "The DASH index server did not return the exact requested byte range. Use a source with byte-range support.")
+  }
+
   private static func virtualResourceError() -> NativePlayerError {
     NativePlayerError(category: "container", code: "container.hls_url_invalid",
       message: "The private manifest resource is unavailable.")
@@ -701,6 +756,23 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
     }
     record.response = response
     record.destinationURL = response.url ?? record.destinationURL
+    if let fetch = record.indexRequest, let index = fetch.index {
+      let expectedEnd = index.start + Int64(index.length - 1)
+      let value = response.value(forHTTPHeaderField: "Content-Range") ?? ""
+      let parts = value.components(separatedBy: "/")
+      let total = parts.count == 2 ? Int64(parts[1]) : nil
+      guard response.statusCode == 206, parts.first == "bytes \(index.start)-\(expectedEnd)",
+        let total, total > expectedEnd,
+        response.expectedContentLength == -1 || response.expectedContentLength == index.length,
+        response.value(forHTTPHeaderField: "Content-Encoding") == nil || response.value(forHTTPHeaderField: "Content-Encoding") == "identity" else {
+        completionHandler(.cancel)
+        finish(task: dataTask, result: .failure(Self.indexRangeError()))
+        return
+      }
+      fetch.resourceLength = total
+      completionHandler(.allow)
+      return
+    }
     record.isManifest = record.isManifest || Self.isManifestResponse(response)
     if response.statusCode == 206 {
       guard let range = Self.parsedContentRange(response),
@@ -739,7 +811,13 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
   ) {
     guard let record = record(for: dataTask), isCurrent(record, task: dataTask)
     else { return }
-    if record.isManifest {
+    if let fetch = record.indexRequest {
+      guard data.count <= fetch.requestedLength - record.manifestData.count else {
+        finish(task: dataTask, result: .failure(Self.indexRangeError()))
+        return
+      }
+      record.manifestData.append(data)
+    } else if record.isManifest {
       guard data.count <= Self.manifestByteLimit - record.manifestData.count else {
         finish(task: dataTask, result: .failure(manifestLimitError))
         return
@@ -772,26 +850,21 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
       finish(task: task, result: .failure(Self.transportError(error)))
       return
     }
+    if let fetch = record.indexRequest {
+      guard record.manifestData.count == fetch.requestedLength else {
+        finish(task: task, result: .failure(Self.indexRangeError()))
+        return
+      }
+      finish(task: task, result: .success(Self.virtualResponse(record.manifestData)))
+      return
+    }
     guard record.isManifest else {
       finish(task: task, result: .success(nil))
       return
     }
     do {
       if isDash {
-        let snapshot = YlDashManifestSnapshot(data: record.manifestData,
-          effectiveURL: record.destinationURL, credentialsStripped: record.credentialsStripped)
-        let presentation = try compile(snapshot)
-        let published = stateLock.withLock { () -> Bool in
-          // Compilation and proxy construction happen outside the state lock.
-          // A cancelled/replaced task can never reinstall the registry.
-          guard !cancelled, records[task.taskIdentifier] === record else { return false }
-          for resource in presentation.strippedResources { credentialContext.strip(resource) }
-          dashPresentation = presentation
-          acceptedDashSnapshot = snapshot
-          return true
-        }
-        guard published else { return }
-        finish(task: task, result: .success(Self.virtualResponse(presentation.manifests[presentation.rootURL]!)))
+        finish(task: task, result: .success(Self.virtualResponse(record.manifestData)))
         return
       }
       let rewritten = try YlHlsManifestRewriter.rewrite(
@@ -849,7 +922,9 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
       return
     }
     record.destinationURL = destination
-    completionHandler(makeRequest(url: destination, rangeHeader: record.rangeHeader, credentialsStripped: record.credentialsStripped))
+    var redirected = makeRequest(url: destination, rangeHeader: record.rangeHeader, credentialsStripped: record.credentialsStripped)
+    if record.indexRequest != nil { redirected.setValue("identity", forHTTPHeaderField: "Accept-Encoding") }
+    completionHandler(redirected)
   }
 }
 
@@ -859,6 +934,12 @@ struct YlDashManifestSnapshot {
   let data: Data
   let effectiveURL: URL
   let credentialsStripped: Bool
+  let indexes: [YlDashIndexRequest: YlDashResolvedIndex]
+  init(data: Data, effectiveURL: URL, credentialsStripped: Bool,
+    indexes: [YlDashIndexRequest: YlDashResolvedIndex] = [:]) {
+    self.data = data; self.effectiveURL = effectiveURL
+    self.credentialsStripped = credentialsStripped; self.indexes = indexes
+  }
 }
 
 final class YlPreparedHlsAsset {

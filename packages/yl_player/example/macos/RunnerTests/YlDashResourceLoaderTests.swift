@@ -68,6 +68,138 @@ final class YlDashResourceLoaderTests: XCTestCase {
     try XCTUnwrap(String(data: master, encoding: .utf8)?.split(separator: "\n").last.flatMap { URL(string: String($0)) })
   }
 
+  private var indexedMPD: Data { Data("""
+    <MPD type="static" mediaPresentationDuration="PT4S"><Period><AdaptationSet mimeType="video/mp4"><SegmentBase indexRange="826-905"><Initialization range="0-825"/></SegmentBase><Representation id="v" bandwidth="1000" codecs="avc1.42c01e" width="320" height="180"><BaseURL>indexed.mp4</BaseURL></Representation></AdaptationSet></Period></MPD>
+    """.utf8) }
+  private func indexBytes() throws -> Data {
+    let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "dash-sidx-v0", withExtension: "mp4"))
+    return try Data(contentsOf: url).subdata(in: 826..<906)
+  }
+  func testIndexedPreflightRequestsExactRangeAndSnapshotReprojectsWithoutNetwork() throws {
+    let manifest = indexedMPD, bytes = try indexBytes()
+    let config = DashLoaderProtocol.configuration { request in
+      if request.request.url!.path.hasSuffix(".mpd") { request.respond(manifest) }
+      else { request.respond(bytes, status: 206, headers: ["Content-Range": "bytes 826-905/103362", "Content-Length": "80"]) }
+    }
+    let prepared = try prepare(config)
+    let loader = try prepared.takeLoader(); defer { loader.cancelAll() }
+    XCTAssertEqual(DashLoaderProtocol.captured.count, 2)
+    XCTAssertEqual(DashLoaderProtocol.captured.last?.value(forHTTPHeaderField: "Range"), "bytes=826-905")
+    let master = read(loader, try loader.encodedAssetURL())
+    let playlist = String(decoding: read(loader, try child(master.received)).received, as: UTF8.self)
+    XCTAssertTrue(playlist.contains("13625@906"))
+    XCTAssertTrue(playlist.contains("826@0"))
+    let snapshot = try XCTUnwrap(loader.dashSnapshot)
+    let replacement = try YlPreparedHlsAsset(originURL: origin, isDash: true,
+      videoConstraints: .init(maxWidth: 320, maxHeight: 180, maxBitrate: 1000),
+      headers: [:], configuration: .init(map: [:]), cancellationToken: .init(),
+      dashSnapshot: snapshot, sessionConfiguration: config)
+    let replacementLoader = try replacement.takeLoader(); defer { replacementLoader.cancelAll() }
+    XCTAssertEqual(DashLoaderProtocol.captured.count, 2)
+    XCTAssertEqual(replacementLoader.videoCatalog?.tracks(at: 0).count, 1)
+  }
+  func testIndexedPreflightRejectsWrongRangesWholeFilesAndTruncatedBodies() throws {
+    let manifest = indexedMPD, bytes = try indexBytes()
+    for (status, range, body) in [(200, "", bytes), (416, "", Data()),
+      (206, "bytes 827-906/103362", bytes), (206, "bytes 826-904/103362", bytes),
+      (206, "bytes 826-905/905", bytes), (206, "bytes 826-905/*", bytes),
+      (206, "bytes 826-905/103362", Data(bytes.dropLast())),
+      (206, "bytes 826-905/103362", bytes + Data([0]))] {
+      let config = DashLoaderProtocol.configuration { request in
+        if request.request.url!.path.hasSuffix(".mpd") { request.respond(manifest) }
+        else { request.respond(body, status: status, headers: ["Content-Range": range]) }
+      }
+      XCTAssertThrowsError(try prepare(config)) { error in
+        XCTAssertEqual((error as? NativePlayerError)?.code, status == 416 ? "network.http_status" : "network.range_invalid")
+      }
+    }
+  }
+  func testIndexedPreflightRejectsIndexOutsideResourceAndNonRandomAccess() throws {
+    let manifest = indexedMPD, original = try indexBytes()
+    for invalidSAP in [false, true] {
+      var bytes = original
+      if invalidSAP { bytes[40] = 0 } // first reference starts_with_SAP flag
+      let config = DashLoaderProtocol.configuration { request in
+        if request.request.url!.path.hasSuffix(".mpd") { request.respond(manifest) }
+        else { request.respond(bytes, status: 206, headers: ["Content-Range": "bytes 826-905/\(invalidSAP ? 103362 : 1000)"]) }
+      }
+      XCTAssertThrowsError(try prepare(config)) { XCTAssertEqual(($0 as? NativePlayerError)?.code, "container.unsupported") }
+    }
+  }
+  func testIndexedPreflightBudgetRejectsBeforeFetchingIndex() {
+    let manifest = Data(String(decoding: indexedMPD, as: UTF8.self).replacingOccurrences(of: "826-905", with: "0-1048576").utf8)
+    XCTAssertThrowsError(try prepare(DashLoaderProtocol.configuration { $0.respond(manifest) })) {
+      XCTAssertEqual(($0 as? NativePlayerError)?.code, "resource.exhausted")
+    }
+    XCTAssertEqual(DashLoaderProtocol.captured.count, 1)
+  }
+  func testIndexedPreflightCancellationStopsPendingIndexAndCannotPublish() throws {
+    let manifest = indexedMPD, token = YlOpenCancellationToken()
+    let requested = expectation(description: "index requested")
+    let finished = expectation(description: "preflight cancelled")
+    let config = DashLoaderProtocol.configuration { request in
+      if request.request.url!.path.hasSuffix(".mpd") { request.respond(manifest) }
+      else { requested.fulfill() }
+    }
+    DispatchQueue.global().async {
+      do { _ = try self.prepare(config, token: token); XCTFail("cancelled preflight published") }
+      catch { XCTAssertEqual((error as? NativePlayerError)?.code, "network.cancelled") }
+      finished.fulfill()
+    }
+    wait(for: [requested], timeout: 3)
+    token.cancel()
+    wait(for: [finished], timeout: 3)
+  }
+
+  func testIndexedRangeAtInt64EndRejectsWithoutArithmeticTrap() {
+    let manifest = Data(String(decoding: indexedMPD, as: UTF8.self)
+      .replacingOccurrences(of: "826-905", with: "9223372036854775807-9223372036854775807").utf8)
+    let config = DashLoaderProtocol.configuration { request in
+      if request.request.url!.path.hasSuffix(".mpd") { request.respond(manifest) }
+      else { request.respond(Data([0]), status: 206,
+        headers: ["Content-Range": "bytes 9223372036854775807-9223372036854775807/9223372036854775807"]) }
+    }
+    XCTAssertThrowsError(try prepare(config)) { XCTAssertEqual(($0 as? NativePlayerError)?.code, "network.range_invalid") }
+  }
+
+  func testIndexedRedirectCrossOriginReturnKeepsRangeAndStripsCredentials() throws {
+    let bytes = try indexBytes(), manifest = indexedMPD
+    let other = try DashHTTPServer(), server = try DashHTTPServer()
+    defer { server.close(); other.close() }
+    other.handler = { _ in (302, ["Location": server.url("/returned.mp4").absoluteString], Data()) }
+    server.handler = { request in
+      if request.path == "/movie.mpd" { return (200, [:], manifest) }
+      if request.path == "/indexed.mp4" { return (302, ["Location": other.url("/hop").absoluteString], Data()) }
+      return (206, ["Content-Range": "bytes 826-905/103362"], bytes)
+    }
+    let prepared = try YlPreparedHlsAsset(originURL: server.url("/movie.mpd"), isDash: true,
+      headers: ["Authorization": "private", "Cookie": "private", "X-Client": "ordinary"],
+      configuration: .init(map: [:]), cancellationToken: .init())
+    defer { prepared.discard() }
+    let returned = try XCTUnwrap(server.requests.first { $0.path == "/returned.mp4" })
+    for request in [returned] + other.requests {
+      XCTAssertNil(request.headers["authorization"]); XCTAssertNil(request.headers["cookie"])
+      XCTAssertEqual(request.headers["range"], "bytes=826-905")
+      XCTAssertEqual(request.headers["x-client"], "ordinary")
+    }
+    let master = read(prepared.loader, prepared.asset.url)
+    let video = String(decoding: read(prepared.loader, try child(master.received)).received, as: UTF8.self)
+    XCTAssertTrue(video.contains("credentialsStripped=1"))
+  }
+  func testIndexedRedirectLoopIsBounded() throws {
+    let manifest = indexedMPD, server = try DashHTTPServer()
+    defer { server.close() }
+    server.handler = { request in
+      request.path == "/movie.mpd" ? (200, [:], manifest)
+        : (302, ["Location": server.url("/loop.mp4").absoluteString], Data())
+    }
+    XCTAssertThrowsError(try YlPreparedHlsAsset(originURL: server.url("/movie.mpd"), isDash: true,
+      headers: [:], configuration: .init(map: ["maxRedirects": 2]), cancellationToken: .init())) {
+      XCTAssertEqual(($0 as? NativePlayerError)?.code, "network.redirect_limit")
+    }
+    XCTAssertLessThanOrEqual(server.requests.count, 4)
+  }
+
   private var twoQualityMPD: Data {
     let high = "<Representation id=\"high\" bandwidth=\"2000\" codecs=\"avc1.64001f\" width=\"640\" height=\"360\"><SegmentTemplate initialization=\"high-init.mp4\" media=\"high-$Number$.m4s\" duration=\"2\"/></Representation>"
     return Data(String(decoding: mpd, as: UTF8.self).replacingOccurrences(of: "</AdaptationSet>", with: high + "</AdaptationSet>").utf8)

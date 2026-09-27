@@ -44,10 +44,10 @@ struct YlDashVideoCatalog {
 enum YlDashHlsCompiler {
   private enum ProjectionError: Error { case noEligibleVideo, invalidSelection }
   static func compile(data: Data, finalManifestURL: URL, sourceURL: URL,
-    credentialsStripped: Bool, videoConstraints: YlAppleVideoConstraints = .unconstrained, fixedTrackId: String? = nil, manifestURL: (String) throws -> URL,
+    credentialsStripped: Bool, indexes: [YlDashIndexRequest: YlDashResolvedIndex] = [:], videoConstraints: YlAppleVideoConstraints = .unconstrained, fixedTrackId: String? = nil, manifestURL: (String) throws -> URL,
     mediaURL: (URL, Bool) throws -> URL) throws -> YlDashHlsPresentation {
     do {
-      let document = YlDashDocument(source: sourceURL)
+      let document = YlDashDocument(source: sourceURL, indexes: indexes)
       let (originalPeriods, duration) = try document.parse(data, final: finalManifestURL,
         credentialsStripped: credentialsStripped)
       // Fixed policy uses the strict admitted semantic family. IDs and XML order

@@ -106,10 +106,12 @@ private final class YlDashXMLReader: NSObject, XMLParserDelegate {
   // inheritance, so an unsupported ancestor cannot disappear under an override.
   private static let segmentAttributes: [String: Set<String>] = [
     "SegmentTemplate": ["timescale", "presentationTimeOffset", "duration", "startNumber", "initialization", "media"],
+    "SegmentBase": ["timescale", "presentationTimeOffset", "indexRange", "indexRangeExact"],
     "SegmentList": ["timescale", "presentationTimeOffset", "duration", "startNumber"],
     "SegmentTimeline": [],
     "S": ["t", "d", "r"],
   ]
+  var allowSegmentBase = false
   var root: YlDashNode?
   var stack: [YlDashNode] = []
   var count = 0
@@ -125,7 +127,7 @@ private final class YlDashXMLReader: NSObject, XMLParserDelegate {
           namespaceURI == nil || namespaceURI == "" || namespaceURI == "urn:mpeg:dash:schema:mpd:2011" else {
       invalid = true; parser.abortParsing(); return
     }
-    if forbidden.contains(name) {
+    if forbidden.contains(name) && !(name == "SegmentBase" && allowSegmentBase) {
       if root?.name == "MPD" {
         if name == "ContentProtection" { rejection = .protectedManifest }
         if name == "SegmentBase" { rejection = .segmentBase }
@@ -133,7 +135,7 @@ private final class YlDashXMLReader: NSObject, XMLParserDelegate {
       invalid = true; parser.abortParsing(); return
     }
     guard !attributes.keys.contains(where: { $0.contains(":") && !$0.hasPrefix("xmlns") }),
-          !attributes.keys.contains(where: { ["availabilityTimeOffset", "availabilityTimeComplete", "index", "indexRange"].contains($0) }) else {
+          !attributes.keys.contains(where: { ["availabilityTimeOffset", "availabilityTimeComplete", "index"].contains($0) || ($0 == "indexRange" && !(name == "SegmentBase" && allowSegmentBase)) }) else {
       invalid = true; parser.abortParsing(); return
     }
     if let allowed = Self.segmentAttributes[name],
@@ -158,11 +160,12 @@ private final class YlDashXMLReader: NSObject, XMLParserDelegate {
   func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
     if !stack.isEmpty { stack.removeLast() }
   }
-  static func parse(_ data: Data) throws -> YlDashNode {
+  static func parse(_ data: Data, allowSegmentBase: Bool = false) throws -> YlDashNode {
     guard data.count <= YlDashBounds.maxDocument else { throw YlDashAdmissionError.manifestTooLarge }
     guard let text = String(data: data, encoding: .utf8) else { throw YlDashAdmissionError.invalidManifest }
     guard !text.uppercased().contains("<!DOCTYPE"), !text.uppercased().contains("<!ENTITY") else { throw YlDashBounds.unsupported }
     let reader = YlDashXMLReader()
+    reader.allowSegmentBase = allowSegmentBase
     let parser = XMLParser(data: data)
     parser.shouldProcessNamespaces = true
     parser.shouldResolveExternalEntities = false
@@ -238,7 +241,51 @@ final class YlDashDocument {
   private var uriUnits = 0
   private var segmentCount = 0
   private var representationCount = 0
-  init(source: URL) { self.source = source }
+  private let indexes: [YlDashIndexRequest: YlDashResolvedIndex]
+  init(source: URL, indexes: [YlDashIndexRequest: YlDashResolvedIndex] = [:]) {
+    self.source = source; self.indexes = indexes
+  }
+  /// Discovery is bounded and network-free; full track/timeline admission still
+  /// happens for every original representation before any quality projection.
+  func indexRequests(_ data: Data, final: URL, credentialsStripped: Bool) throws -> [YlDashIndexRequest] {
+    let root = try YlDashXMLReader.parse(data, allowSegmentBase: true)
+    if root.attributes["type"] == "dynamic" { throw YlDashAdmissionError.dynamicManifest }
+    guard root.attributes["type", default: "static"] == "static" else { throw YlDashBounds.unsupported }
+    let roots = try base(root, (final, credentialsStripped || YlRequestOrigin(url: final) != YlRequestOrigin(url: source)))
+    let periods = root.nodes("Period")
+    guard !periods.isEmpty, periods.count <= 64 else { throw YlDashBounds.unsupported }
+    var result: [YlDashIndexRequest] = []
+    var seen = Set<YlDashIndexRequest>(), count = 0, byteCount = 0
+    for period in periods {
+      let periodBase = try base(period, roots)
+      for adaptation in period.nodes("AdaptationSet") {
+        let adaptationBase = try base(adaptation, periodBase)
+        for representation in adaptation.nodes("Representation") {
+          count += 1
+          guard count <= YlDashBounds.maxRepresentations else { throw YlDashBounds.unsupported }
+          let info = try segmentInfo([root, period, adaptation, representation])
+          if info.mode != "SegmentBase" { continue }
+          let location = try base(representation, adaptationBase)
+          let request = try indexRequest(info, location)
+          if seen.insert(request).inserted {
+            guard request.length <= 4 * 1024 * 1024 - byteCount else { throw YlDashSidxError.limitExceeded }
+            byteCount += request.length; result.append(request)
+          }
+        }
+      }
+    }
+    return result
+  }
+  private func indexRequest(_ info: SegmentInfo, _ location: (URL, Bool)) throws -> YlDashIndexRequest {
+    guard let range = info.attributes["indexRange"], info.initialization != nil,
+      info.attributes["indexRangeExact"] == nil || ["true", "false", "1", "0"].contains(info.attributes["indexRangeExact"]!) else { throw YlDashAdmissionError.segmentBase }
+    let resource = try resource(nil, range, location)
+    let parts = resource.range!.split(separator: "@")
+    let length = Int(parts[0])!, start = Int64(parts[1])!
+    guard length <= YlDashSidx.maxIndexBytes else { throw YlDashSidxError.limitExceeded }
+    return YlDashIndexRequest(url: resource.url, start: start, length: length,
+      credentialsStripped: stripped.contains(resource.url.absoluteString))
+  }
   private func record(_ value: String, base: URL, inherited: Bool, isResource: Bool = true) throws -> URL {
     let url = try YlDashBounds.url(value, relativeTo: base)
     let units = url.absoluteString.utf16.count
@@ -254,7 +301,7 @@ final class YlDashDocument {
   }
   func parse(_ data: Data, final: URL, credentialsStripped: Bool) throws -> ([YlDashPeriod], Int64) {
     _ = try YlDashBounds.url(source.absoluteString); _ = try YlDashBounds.url(final.absoluteString)
-    let root = try YlDashXMLReader.parse(data)
+    let root = try YlDashXMLReader.parse(data, allowSegmentBase: !indexes.isEmpty)
     if root.attributes["type"] == "dynamic" { throw YlDashAdmissionError.dynamicManifest }
     guard root.attributes["type", default: "static"] == "static" else { throw YlDashBounds.unsupported }
     let total = try root.attributes["mediaPresentationDuration"].map(YlDashBounds.duration)
@@ -349,8 +396,11 @@ final class YlDashDocument {
     var mode: String?; var segmentAttrs: [String: String] = [:]
     var timeline: YlDashNode?; var initialization: YlDashNode?; var urls: [YlDashNode] = []
     for node in ancestors {
-      for name in ["SegmentTemplate", "SegmentList"] {
+      for name in ["SegmentTemplate", "SegmentList", "SegmentBase"] {
         if let segment = try node.one(name) {
+          if name == "SegmentBase" {
+            guard segment.children.allSatisfy({ $0.name == "Initialization" }) else { throw YlDashBounds.unsupported }
+          }
           guard mode == nil || mode == name else { throw YlDashBounds.unsupported }; mode = name
           segmentAttrs.merge(segment.attributes) { _, new in new }
           if let value = try segment.one("SegmentTimeline") { timeline = value }
@@ -453,10 +503,20 @@ final class YlDashDocument {
     let info = try segmentInfo(ancestors)
     let mode = info.mode, segmentAttrs = info.attributes
     let timeline = info.timeline, initialization = info.initialization, urls = info.urls
-    let scale = try YlDashBounds.number(segmentAttrs["timescale"], default: 1)
+    var scale = try YlDashBounds.number(segmentAttrs["timescale"], default: 1)
     guard scale > 0 else { throw YlDashBounds.unsupported }
-    let offset = try YlDashBounds.number(segmentAttrs["presentationTimeOffset"], default: 0)
-    guard offset == 0 || timeline != nil else { throw YlDashBounds.unsupported }
+    var offset = try YlDashBounds.number(segmentAttrs["presentationTimeOffset"], default: 0)
+    var indexed: YlDashResolvedIndex?
+    if mode == "SegmentBase" {
+      let request = try indexRequest(info, location)
+      guard let resolved = indexes[request],
+        resolved.index.earliestPresentationTimeTicks <= UInt64(Int64.max) else { throw YlDashBounds.unsupported }
+      let indexScale = Int64(resolved.index.timescale)
+      let indexOffset = Int64(resolved.index.earliestPresentationTimeTicks)
+      guard YlDashMediaOrigin(ticks: offset, scale: scale) == YlDashMediaOrigin(ticks: indexOffset, scale: indexScale) else { throw YlDashBounds.unsupported }
+      scale = indexScale; offset = indexOffset; indexed = resolved
+    }
+    guard offset == 0 || timeline != nil || indexed != nil else { throw YlDashBounds.unsupported }
     let product = try YlDashBounds.multiply(duration, scale)
     guard product % 1_000_000 == 0 else { throw YlDashBounds.unsupported }
     let total = product / 1_000_000
@@ -468,7 +528,17 @@ final class YlDashDocument {
       segmentCount += Int(count)
       for i in 0..<count { samples.append((try YlDashBounds.add(start, YlDashBounds.multiply(i, d)), d)) }
     }
-    if let timeline = timeline {
+    if let indexed {
+      var time = offset
+      for reference in indexed.index.references {
+        guard reference.startsWithSAP, reference.sapType == 1, reference.sapDeltaTicks == 0,
+          reference.offset <= UInt64(Int64.max), reference.length <= UInt64(Int64.max),
+          reference.offset + reference.length <= UInt64(indexed.resourceLength) else { throw YlDashBounds.unsupported }
+        try append(time, Int64(reference.durationTicks), 1)
+        time = try YlDashBounds.add(time, Int64(reference.durationTicks))
+      }
+      guard time == sampleEnd else { throw YlDashBounds.unsupported }
+    } else if let timeline = timeline {
       for run in try timelineRuns(timeline, offset: offset, end: sampleEnd,
         budget: YlDashBounds.maxSegments - segmentCount) {
         try append(run.start, run.duration, run.count)
@@ -482,7 +552,25 @@ final class YlDashDocument {
     let id = attrs["id", default: ""]
     let initResource: YlDashResource
     var segments: [YlDashSegment] = []
-    if mode == "SegmentTemplate" {
+    if let indexed {
+      guard let initialization, initialization.attributes["range"] != nil,
+        initialization.attributes.keys.allSatisfy({ ["sourceURL", "range"].contains($0) }) else { throw YlDashBounds.unsupported }
+      let originalInit = try resource(initialization.attributes["sourceURL"], initialization.attributes["range"], location)
+      if originalInit.url == location.0 {
+        initResource = YlDashResource(url: try record(indexed.effectiveURL.absoluteString,
+          base: location.0, inherited: location.1 || indexed.credentialsStripped), range: originalInit.range)
+      } else { initResource = originalInit }
+      if initResource.url == indexed.effectiveURL, let range = initResource.range {
+        let parts = range.split(separator: "@")
+        guard try YlDashBounds.add(Int64(parts[0])!, Int64(parts[1])!) <= indexed.resourceLength else { throw YlDashBounds.unsupported }
+      }
+      for reference in indexed.index.references {
+        let url = try record(indexed.effectiveURL.absoluteString, base: location.0,
+          inherited: location.1 || indexed.credentialsStripped)
+        segments.append(YlDashSegment(resource: .init(url: url, range: "\(reference.length)@\(reference.offset)"),
+          ticks: Int64(reference.durationTicks), scale: scale))
+      }
+    } else if mode == "SegmentTemplate" {
       guard let initTemplate = segmentAttrs["initialization"], let media = segmentAttrs["media"] else { throw YlDashBounds.unsupported }
       let initName = try template(initTemplate, id: id, bandwidth: bandwidth, number: nil, time: nil)
       initResource = YlDashResource(url: try record(initName, base: location.0, inherited: location.1), range: nil)

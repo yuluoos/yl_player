@@ -185,7 +185,20 @@ the owned loopback proxy, including requests without explicit credentials.
 Original source origin and sticky cross-origin ancestry govern credentials;
 redirecting back to the source origin cannot restore them.
 
-Local/live DASH, dynamic or encrypted MPD, SegmentBase, unaligned or independently shifted rendition offsets, gaps or
+Apple also accepts a bounded static AVC/AAC `SegmentBase` subset: an explicit
+`Initialization range`, one exact `indexRange` containing a flat sidx v0/v1,
+positive references with SAP type 1 and zero SAP delta, declared finite Period
+duration, exact full-Period coverage, and EPT aligned with PTO across tracks.
+Inherited addressing and sticky BaseURL credentials use the same admission rules.
+Index requests require exact HTTP 206/Content-Range, identity encoding and exact
+body length; HTTP 200 whole-file fallback and nested indexes are rejected.
+Per-index input is capped at 1 MiB, all indexes at 4 MiB, with a shared 100,000
+reference budget and the existing preflight deadline/cancellation. Accepted index
+snapshots are immutable and reused during quality reprojection. See the
+[P01 report](superpowers/reports/2026-09-26-remaining-01-dash.md) for device evidence
+and remaining general DASH gaps; this is not arbitrary SegmentBase support.
+
+Local/live DASH, dynamic or encrypted MPD, unsupported SegmentBase forms, unaligned or independently shifted rendition offsets, gaps or
 overlaps, incompatible changing ladders, multiple video AdaptationSets, multiple
 audio representations and track/codec changes remain rejected by the Apple subset.
 Managed network, bounded buffer and hardware-required requests
@@ -239,7 +252,7 @@ Within the existing clear static AVC/AAC fMP4 subset, SegmentList Initialization
 effective inherited BaseURL, retaining queries, declared byte ranges, URI budgets
 and sticky credential stripping. Explicit nonempty references keep their existing
 behavior. This permits one file per rendition/Period with initialization and media
-selected by byte ranges; it does not add SegmentBase or sidx index discovery.
+selected by byte ranges; that earlier slice did not add SegmentBase or sidx index discovery. The bounded indexed subset described below was added separately.
 The final redirected document URL is the base when no BaseURL is declared;
 resolution alone does not prove its bytes are playable media.
 
@@ -280,7 +293,7 @@ The bounded Apple DASH adapter distinguishes five known preflight failures:
 | `container.dash_manifest_invalid` | Input is not valid UTF-8 or cannot be parsed as XML. Ask the provider for a valid UTF-8 MPD. |
 | `container.dash_dynamic_unsupported` | The parsed MPD declares `type="dynamic"`. Choose a static DASH VOD source for this path. |
 | `container.dash_protection_unsupported` | A DASH `ContentProtection` declaration was encountered. This path cannot accept it; this is not a license-service diagnosis. |
-| `container.dash_segment_base_unsupported` | A DASH `SegmentBase` declaration was encountered. Use a compatible SegmentTemplate/SegmentList presentation. |
+| `container.dash_segment_base_unsupported` | A DASH `SegmentBase` declaration cannot be resolved by the bounded indexed path (for example, missing indexRange or initialization). Use a compatible indexed source or SegmentTemplate/SegmentList presentation. |
 | `resource.dash_manifest_too_large` | MPD input exceeds the existing 2 MiB byte limit, including declared or streamed response size. Ask for a smaller MPD. |
 
 These are nonretryable failures with fixed safe guidance and diagnostic IDs.

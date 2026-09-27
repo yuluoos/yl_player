@@ -10,7 +10,7 @@
 
 **Spec:** [需求基线 v2.2](../specs/2026-09-20-playback-expansion-requirements.md)、[架构入口](2026-09-22-playback-feasibility.md)、[执行总览](2026-09-26-remaining-overview.md)。
 
-**规划起点：** `5409313`；2026-09-27 从干净的 `4d9830e` 执行 Task 1，有界解析及两端原生回归已通过。Task 2–4 尚未完成；详见[执行报告](../reports/2026-09-26-remaining-01-dash.md)。此后执行前重新记录 HEAD 和工作区，不能覆盖后来改动。
+**规划起点：** `5409313`；2026-09-27 从干净的 `4d9830e` 执行 Task 1，有界解析及两端原生回归已通过。Task 2 已接通有界子集并通过三端主机/模拟器自动化播放，Task 3/4 尚未完成；详见[执行报告](../reports/2026-09-26-remaining-01-dash.md)。此后执行前重新记录 HEAD 和工作区，不能覆盖后来改动。
 
 ## Global Constraints
 
@@ -87,11 +87,13 @@ XCTAssertEqual(index.references.map(\.length), [30, 40])
 
 ### Task 2：SegmentBase 从网络到真实播放
 
-- [ ] 扩展 `integration_test/support/dash_server.dart`，添加单文件 `Initialization range` + `indexRange` 清单；服务记录每次 Range、凭据过滤和取消。基准样本采用单 Period AVC/AAC，避免同时引入编码变更。
-- [ ] 在 loader 测试固定：索引只读取预算内字节；206 必须验证范围；200 整体响应只能在明确有限字节规则内处理，否则拒绝；416、错范围、重定向循环均可安全失败。
-- [ ] 按既有异步 preflight 生命周期读取索引并生成不可变 segment descriptors，再交编译器；取消时终止索引请求，失败候选不替换当前会话。BaseURL、继承、Range 及跨域粘性剥离沿用既有规则。
-- [ ] 新公开测试通过 `player.load` 播放、seek 后观察首帧和音频推进；断言真实请求范围匹配夹具、session 不变、position 单调（主动 seek 除外）。Android 对同一夹具补实际播放证据，不以 Media3 文档代替本项目运行。
-- [ ] 运行新增公开套件及原生 loader/compiler 相关回归；提交 `feat: play indexed SegmentBase DASH on Apple`。仅将验证过的 sidx 子集更新为支持。
+- [x] 扩展 `integration_test/support/dash_server.dart`，添加单文件 `Initialization range` + `indexRange` 清单；服务记录每次 Range、凭据过滤和取消。基准样本采用单 Period AVC/AAC，避免同时引入编码变更。
+- [x] 在 loader 测试固定：索引只读取预算内字节；206 必须验证范围；200 整体响应只能在明确有限字节规则内处理，否则拒绝；416、错范围、重定向循环均可安全失败。
+- [x] 按既有异步 preflight 生命周期读取索引并生成不可变 segment descriptors，再交编译器；取消时终止索引请求，失败候选不替换当前会话。BaseURL、继承、Range 及跨域粘性剥离沿用既有规则。
+- [x] 新公开测试通过 `player.load` 播放、seek 后观察首帧和音频推进；断言真实请求范围匹配夹具、session 不变、position 单调（主动 seek 除外）。Android 对同一夹具补实际播放证据，不以 Media3 文档代替本项目运行。
+- [x] 运行新增公开套件及原生 loader/compiler 相关回归；提交 `feat: play indexed SegmentBase DASH on Apple`。仅将验证过的 sidx 子集更新为支持。
+
+Task 2 验证边界：音频采用选中音轨与播放时钟观察，物理可听输出/同步及最低系统仍由 P08 验收；仅支持报告列明的索引子集。
 
 ### Task 3：时间轴剩余维度与可行性收敛
 
@@ -126,4 +128,4 @@ expect(player.state.failure, isNull);
 - [ ] 对照本计划五项 Review Focus 和需求矩阵复核；只把实际通过的子行写进 `docs/platform-support.md`。仍缺输入的行保留具体解除条件。
 - [ ] 更新总览的实施/验证状态。没有完整实现及实际验收时，不将整个 CAP 标为完成。
 
-2026-09-27 Task 1 已执行两端定向原生检查、测试身份核对及夹具门禁。其余未勾选项仍是未来步骤；本阶段未证明 SegmentBase 播放能力。
+2026-09-27 Task 1/2 已执行索引解析、三端有界 SegmentBase 自动化播放、两端原生回归和测试身份核对。其余未勾选项仍是未来步骤，不代表通用 DASH 完成。

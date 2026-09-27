@@ -107,3 +107,18 @@ enum YlDashSidx {
     }
   }
 }
+
+/// Per-manifest identity; stripping is part of the key, so a cross-origin branch
+/// can never reuse a credential-bearing fetch of the same URL.
+struct YlDashIndexRequest: Hashable {
+  let url: URL
+  let start: Int64
+  let length: Int
+  let credentialsStripped: Bool
+}
+struct YlDashResolvedIndex {
+  let index: YlDashSidxIndex
+  let effectiveURL: URL
+  let credentialsStripped: Bool
+  let resourceLength: Int64
+}
