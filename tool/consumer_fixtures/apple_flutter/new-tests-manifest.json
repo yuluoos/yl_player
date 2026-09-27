@@ -488,8 +488,12 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashHlsCompilerTests.swift",
-    "sha256": "1e3fd8c1e02045e5d784615ff134ecad32f4af0a7a7d1f0253bff5c966d3d1dd",
+    "sha256": "0d07b7c0f199bd2754b6665cd99fbd27282c6841a4a71c91dbe24a82e3a66517",
     "methods": [
+      "testAlignedOffsetTemplatePreservesRawTimeAndInheritedWindowAcrossPeriods",
+      "testAlignedOffsetSegmentListRetainsRangesAndProgramDurations",
+      "testAlignedOffsetUsesExactRationalOriginsForVideoAndAudio",
+      "testAlignedOffsetRejectsClippingImplicitStartOverflowAndHiddenMismatch",
       "testAdmissionReasonsSurviveSafePublicationWithoutSourceDetails",
       "testAdmissionClassificationDoesNotGuessFromUnsupportedOrCallbackErrors",
       "testFixedProjectionMatchesSemanticIdentityAcrossReorderAndMissingPeriod",

@@ -168,7 +168,8 @@ ratio, consistent normalized frame rate, absent or 1:1 SAR, and, when present,
 a compatible shared AAC track with consistent presence. It rejects declared color/range,
 SupplementalProperty and unsupported high-bit-depth profiles. These are MPD
 declaration checks, not inspection of arbitrary encoded media bytes. Periods
-remain contiguous and finite from zero, with zero presentationTimeOffset.
+remain contiguous and finite from zero. The aligned-offset extension below
+also accepts a bounded nonzero presentationTimeOffset subset.
 SegmentTemplate/Timeline and
 SegmentList support bounded URL expansion, initialization and media byte ranges.
 Only one BaseURL choice per level is admitted in this initial Apple subset.
@@ -184,7 +185,7 @@ the owned loopback proxy, including requests without explicit credentials.
 Original source origin and sticky cross-origin ancestry govern credentials;
 redirecting back to the source origin cannot restore them.
 
-Local/live DASH, dynamic or encrypted MPD, SegmentBase, nonzero offsets, gaps or
+Local/live DASH, dynamic or encrypted MPD, SegmentBase, unaligned or independently shifted rendition offsets, gaps or
 overlaps, incompatible changing ladders, multiple video AdaptationSets, multiple
 audio representations and track/codec changes remain rejected by the Apple subset.
 Managed network, bounded buffer and hardware-required requests
@@ -218,6 +219,30 @@ evidence and its precise limits are in the [changing-ladders report](superpowers
 See [transport compatibility](transport-compatibility.md) for Android schema 4,
 Apple schema 4 in the fixed-selection stage, and mixed-version safety. The
 earlier Apple adapter and caps reports describe the schema at their own dates.
+
+## Apple DASH aligned presentation offsets
+
+The clear static AVC/AAC subset accepts nonnegative integer
+`presentationTimeOffset` in SegmentTemplate or SegmentList with an explicit
+SegmentTimeline. Its first segment must start exactly at the offset, subsequent
+segments must be contiguous, and complete segments must end exactly at offset
+plus Period duration. An omitted first `S@t` still means zero. `$Time$` URLs keep
+the original sample timestamp; program position is relative to the Period.
+
+All original video candidates and the shared audio within a Period must have
+the same offset/time-scale ratio. Different timescales are compared exactly;
+caps/fixed selection cannot hide an incompatible origin. The common origin may
+change in a later Period. Production forwards original media bytes and uses the
+existing HLS discontinuity path; it does not rewrite fragment timestamps.
+
+Nonzero offsets without a timeline, partial-segment clipping, gaps/overlaps,
+independently shifted audio/video and overflowing/unbounded timing remain
+unsupported. This extends the earlier zero-offset subset; it is not generic
+DASH editorial timing support. Controlled playback covers real shifted tfdt/sidx
+fragments, natural transitions, seeks, fixed/automatic selection, runtime caps
+and rejected-candidate rollback. It does not measure audio/video synchronization
+error. See the [offset-stage report](superpowers/reports/2026-09-26-apple-dash-offsets.md)
+for exact platform results and limits.
 
 ## Apple DASH admission diagnostics
 

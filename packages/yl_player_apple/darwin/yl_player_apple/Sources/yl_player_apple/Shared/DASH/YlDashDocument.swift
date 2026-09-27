@@ -196,7 +196,18 @@ struct YlDashSegment {
     return ticks / left == other.ticks / right && scale / left == other.scale / right
   }
 }
+/// Reduced rational media origin; equality is exact without cross multiplication.
+struct YlDashMediaOrigin: Equatable {
+  let ticks: Int64
+  let scale: Int64
+  init(ticks: Int64, scale: Int64) {
+    var a = ticks, b = scale
+    while b != 0 { let remainder = a % b; a = b; b = remainder }
+    self.ticks = ticks / a; self.scale = scale / a
+  }
+}
 struct YlDashTrack {
+  let mediaOrigin: YlDashMediaOrigin
   let codec: String
   let width: Int64
   let height: Int64
@@ -298,7 +309,9 @@ final class YlDashDocument {
           audio = tracks[0]
         }
       }
-      guard !videos.isEmpty else { throw YlDashBounds.unsupported }
+      guard let firstVideo = videos.first,
+        videos.allSatisfy({ $0.mediaOrigin == firstVideo.mediaOrigin }),
+        audio == nil || audio!.mediaOrigin == firstVideo.mediaOrigin else { throw YlDashBounds.unsupported }
       if videos.count > 1 {
         let first = videos[0]
         for (index, track) in videos.enumerated() {
@@ -358,36 +371,40 @@ final class YlDashDocument {
     }
     guard let mode = mode else { throw YlDashBounds.unsupported }
     let scale = try YlDashBounds.number(segmentAttrs["timescale"], default: 1)
-    guard scale > 0, try YlDashBounds.number(segmentAttrs["presentationTimeOffset"], default: 0) == 0 else { throw YlDashBounds.unsupported }
+    guard scale > 0 else { throw YlDashBounds.unsupported }
+    let offset = try YlDashBounds.number(segmentAttrs["presentationTimeOffset"], default: 0)
+    guard offset == 0 || timeline != nil else { throw YlDashBounds.unsupported }
     let product = try YlDashBounds.multiply(duration, scale)
     guard product % 1_000_000 == 0 else { throw YlDashBounds.unsupported }
     let total = product / 1_000_000
+    let sampleEnd = try YlDashBounds.add(offset, total)
     var samples: [(Int64, Int64)] = []
     func append(_ start: Int64, _ d: Int64, _ count: Int64) throws {
       guard d > 0, count > 0, count <= Int64(YlDashBounds.maxSegments - segmentCount),
-        try YlDashBounds.add(start, YlDashBounds.multiply(d, count)) <= total else { throw YlDashBounds.unsupported }
+        try YlDashBounds.add(start, YlDashBounds.multiply(d, count)) <= sampleEnd else { throw YlDashBounds.unsupported }
       segmentCount += Int(count)
       for i in 0..<count { samples.append((try YlDashBounds.add(start, YlDashBounds.multiply(i, d)), d)) }
     }
     if let timeline = timeline {
       let entries = timeline.nodes("S")
       guard entries.count == timeline.children.count, !entries.isEmpty else { throw YlDashBounds.unsupported }
-      var cursor: Int64 = 0
+      var cursor = offset
       for (index, entry) in entries.enumerated() {
-        let t = try YlDashBounds.number(entry.attributes["t"], default: cursor)
+        // DASH's absent first t means zero, never presentationTimeOffset.
+        let t = try YlDashBounds.number(entry.attributes["t"], default: index == 0 ? 0 : cursor)
         let d = try YlDashBounds.number(entry.attributes["d"])
         guard t == cursor, d > 0 else { throw YlDashBounds.unsupported }
         let r = entry.attributes["r", default: "0"]
         let count: Int64
         if r == "-1" {
-          let boundary = try index + 1 < entries.count ? YlDashBounds.number(entries[index + 1].attributes["t"]) : total
+          let boundary = try index + 1 < entries.count ? YlDashBounds.number(entries[index + 1].attributes["t"]) : sampleEnd
           guard boundary > t, (boundary - t) % d == 0 else { throw YlDashBounds.unsupported }
           count = (boundary - t) / d
         } else { count = try YlDashBounds.add(YlDashBounds.number(r), 1) }
         try append(t, d, count)
         cursor = try YlDashBounds.add(t, YlDashBounds.multiply(d, count))
       }
-      guard cursor == total else { throw YlDashBounds.unsupported }
+      guard cursor == sampleEnd else { throw YlDashBounds.unsupported }
     } else {
       let d = try YlDashBounds.number(segmentAttrs["duration"])
       guard d > 0, total % d == 0 else { throw YlDashBounds.unsupported }
@@ -413,7 +430,7 @@ final class YlDashDocument {
         segments.append(YlDashSegment(resource: try resource(node.attributes["media"], node.attributes["mediaRange"], location), ticks: samples[i].1, scale: scale))
       }
     }
-    return YlDashTrack(codec: codec, width: width, height: height, samplingRate: rate,
+    return YlDashTrack(mediaOrigin: .init(ticks: offset, scale: scale), codec: codec, width: width, height: height, samplingRate: rate,
       channels: channels, roles: roles.sorted(), bandwidth: bandwidth,
       frameRate: attrs["frameRate"],
       squarePixels: ancestors.allSatisfy { $0.attributes["sar"] == nil || $0.attributes["sar"] == "1:1" },

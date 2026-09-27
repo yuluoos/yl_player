@@ -8,7 +8,9 @@
 
 ## 1. 架构门槛
 
-2026-09-26 继续[Apple DASH 错误归因阶段](2026-09-26-apple-dash-diagnostics.md)：已完成五类已知清单拒绝原因和安全提示贯通；两端原生各102项、Dart233项、公开诊断各五例及独立回滚各一例通过，最终独立复核通过，阶段尚未提交。保持既有支持范围和失败候选回滚；验证记录见[报告](../reports/2026-09-26-apple-dash-diagnostics.md)。
+2026-09-26 完成[Apple DASH 对齐时间偏移](2026-09-26-apple-dash-offsets.md)：扩展带显式 SegmentTimeline、完整分段对齐且音视频同原点的非零 presentationTimeOffset；原始媒体不经生产重写，使用现有私有 HLS 多 Period 路径。两端原生各106项、公开播放各2项、示例12项通过，最终独立复核通过，本阶段尚未提交。其余裁剪与独立轨道偏移仍待后续支持；见[报告](../reports/2026-09-26-apple-dash-offsets.md)。
+
+2026-09-26 继续[Apple DASH 错误归因阶段](2026-09-26-apple-dash-diagnostics.md)：已完成五类已知清单拒绝原因和安全提示贯通；两端原生各102项、Dart233项、公开诊断各五例及独立回滚各一例通过，最终独立复核通过，该阶段已提交为 `f88f993`。保持既有支持范围和失败候选回滚；验证记录见[报告](../reports/2026-09-26-apple-dash-diagnostics.md)。
 
 2026-09-26 [Apple DASH 固定档位与缺档回退](2026-09-26-apple-dash-fixed-selection.md)已完成既有公开选择契约和已确认 PD-01：固定选择约束真实媒体路径，确认当前 Period 缺档时安装自动路径，随后回跳仍保持自动。受支持范围为既有兼容明文 static AVC/AAC DASH 子集；macOS/iOS 公开播放各三例及分批原生定向验证通过，两项任务复核和整阶段复核通过，非阻塞覆盖与告警限制见[验收报告](../reports/2026-09-26-apple-dash-fixed-selection.md)。该阶段已提交为 `685a22a`，不代表完整 DASH、DRM 或弱网 ABR 已完成。
 

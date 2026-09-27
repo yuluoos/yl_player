@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 
+import 'dash_offset_fixture.dart';
+
 enum DashOriginMode { sameOrigin, crossOrigin, returnToPrimary }
 
 final class RecordedDashRequest {
@@ -64,6 +66,8 @@ final class DashServer {
   static Future<DashServer> start({
     DashOriginMode originMode = DashOriginMode.sameOrigin,
     bool variants = false,
+    bool presentationOffsets = false,
+    bool offsetSegmentList = false,
     bool failMedia = false,
     bool delayMedia = false,
     bool delayManifest = false,
@@ -71,8 +75,14 @@ final class DashServer {
     int? rootStatusCode,
     bool missingMedia = false,
   }) async {
-    final assetRoot = variants ? 'assets/test_media/dash_variants' : _assetRoot;
-    final fileNames = variants
+    if (offsetSegmentList && !presentationOffsets) {
+      throw ArgumentError('Offset SegmentList requires presentationOffsets');
+    }
+    final useVariants = variants || presentationOffsets;
+    final assetRoot = useVariants
+        ? 'assets/test_media/dash_variants'
+        : _assetRoot;
+    final fileNames = useVariants
         ? <String>[
             for (final period in [0, 1])
               for (final track in [0, 1, 2]) ...[
@@ -96,11 +106,22 @@ final class DashServer {
     for (var index = 0; index < fileNames.length; index += 1) {
       files['/${fileNames[index]}'] = _bytes(loaded[index + 1]);
     }
+    var manifest = utf8.decode(_bytes(loaded.first));
+    if (presentationOffsets) {
+      final shifted = DashOffsetFixture.fromVariants(
+        files,
+        segmentList: offsetSegmentList,
+      );
+      manifest = shifted.manifest;
+      files
+        ..clear()
+        ..addAll(shifted.files);
+    }
     final result = DashServer._(
       primary: primary,
       secondary: secondary,
       files: files,
-      manifest: utf8.decode(_bytes(loaded.first)),
+      manifest: manifest,
       originMode: originMode,
       failMedia: failMedia,
       delayMedia: delayMedia,

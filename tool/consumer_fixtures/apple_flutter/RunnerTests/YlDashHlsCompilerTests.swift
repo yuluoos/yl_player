@@ -29,6 +29,65 @@ final class YlDashHlsCompilerTests: XCTestCase {
     }
     XCTAssertEqual(emitted, 0, "Unsupported MPD must fail before media emission", file: file, line: line)
   }
+  private func offsetTemplate(_ offset: String = "100", scale: String = "10", entries: String = "<S t=\"100\" d=\"20\" r=\"-1\"/>") -> String {
+    "<SegmentTemplate timescale=\"\(scale)\" presentationTimeOffset=\"\(offset)\" initialization=\"init.mp4\" media=\"$Number$-$Time$.m4s\"><SegmentTimeline>\(entries)</SegmentTimeline></SegmentTemplate>"
+  }
+  func testAlignedOffsetTemplatePreservesRawTimeAndInheritedWindowAcrossPeriods() throws {
+    let first = period("<SegmentTemplate startNumber=\"7\"/>")
+      .replacingOccurrences(of: "<Representation", with: offsetTemplate() + "<Representation")
+    let second = period(offsetTemplate("300", entries: "<S t=\"300\" d=\"10\" r=\"-1\"/><S t=\"320\" d=\"20\"/>"), start: 4)
+    let result = try compile(mpd(first + second, duration: 8))
+    let text = video(result)
+    for path in ["/7-100.m4s", "/8-120.m4s", "/1-300.m4s", "/2-310.m4s", "/3-320.m4s"] { XCTAssertTrue(text.contains(path), path) }
+    XCTAssertFalse(text.contains("/7-0.m4s"))
+    XCTAssertEqual(result.durationUs, 8_000_000)
+    XCTAssertEqual(text.components(separatedBy: "#EXT-X-DISCONTINUITY\n").count - 1, 1)
+    XCTAssertEqual(result.videoCatalog.tracks(at: 4_000_000).map(\.width), [320])
+  }
+  func testAlignedOffsetSegmentListRetainsRangesAndProgramDurations() throws {
+    let list = "<SegmentList timescale=\"10\" presentationTimeOffset=\"100\"><SegmentTimeline><S t=\"100\" d=\"20\" r=\"1\"/></SegmentTimeline><Initialization sourceURL=\"all.mp4\" range=\"0-99\"/><SegmentURL media=\"all.mp4\" mediaRange=\"100-199\"/><SegmentURL media=\"all.mp4\" mediaRange=\"200-399\"/></SegmentList>"
+    let text = video(try compile(mpd(period(list))))
+    XCTAssertTrue(text.contains("BYTERANGE=\"100@0\""))
+    XCTAssertTrue(text.contains("#EXT-X-BYTERANGE:100@100"))
+    XCTAssertTrue(text.contains("#EXT-X-BYTERANGE:200@200"))
+    XCTAssertEqual(text.components(separatedBy: "#EXTINF:2.000000,").count - 1, 2)
+  }
+  func testAlignedOffsetUsesExactRationalOriginsForVideoAndAudio() throws {
+    let audio = "<AdaptationSet contentType=\"audio\" mimeType=\"audio/mp4\" codecs=\"mp4a.40.2\" audioSamplingRate=\"48000\"><Representation id=\"a\" bandwidth=\"64000\">\(offsetTemplate("1000", scale: "100", entries: "<S t=\"1000\" d=\"200\" r=\"1\"/>"))</Representation></AdaptationSet>"
+    let xml = mpd(period(offsetTemplate()).replacingOccurrences(of: "</Period>", with: audio + "</Period>"))
+    let result = try compile(xml)
+    XCTAssertEqual(result.durationUs, 4_000_000)
+    XCTAssertEqual(result.manifests.count, 3)
+    reject(xml.replacingOccurrences(of: "1000", with: "1001"))
+    // Huge nearly equal origins must not compare equal through Double rounding.
+    let large = "9007199254740992"
+    let one = period(offsetTemplate(large, scale: "1", entries: "<S t=\"\(large)\" d=\"4\"/>"))
+    let other = audio.replacingOccurrences(of: offsetTemplate("1000", scale: "100", entries: "<S t=\"1000\" d=\"200\" r=\"1\"/>"), with: offsetTemplate("9007199254740993", scale: "1", entries: "<S t=\"9007199254740993\" d=\"4\"/>"))
+    reject(mpd(one.replacingOccurrences(of: "</Period>", with: other + "</Period>")))
+  }
+  func testAlignedOffsetRejectsClippingImplicitStartOverflowAndHiddenMismatch() {
+    for (offset, entries) in [("100", "<S d=\"20\" r=\"1\"/>"),
+      ("100", "<S t=\"99\" d=\"20\" r=\"1\"/>"),
+      ("100", "<S t=\"101\" d=\"20\" r=\"1\"/>"),
+      ("100", "<S t=\"100\" d=\"30\" r=\"-1\"/>"),
+      ("100", "<S t=\"100\" d=\"20\"/><S t=\"121\" d=\"19\"/>"),
+      ("100", "<S t=\"100\" d=\"20\" r=\"100000\"/>"),
+      ("-1", "<S t=\"0\" d=\"20\" r=\"1\"/>"),
+      ("9223372036854775800", "<S t=\"9223372036854775800\" d=\"20\" r=\"1\"/>")] {
+      reject(mpd(period(offsetTemplate(offset, entries: entries))))
+    }
+    reject(mpd(period().replacingOccurrences(of: "timescale=\"1\"", with: "timescale=\"1\" presentationTimeOffset=\"10\"")))
+    let low = rendition("low", template: offsetTemplate())
+    let high = rendition("high", width: 640, bandwidth: 700000, template: offsetTemplate("101", entries: "<S t=\"101\" d=\"20\" r=\"1\"/>"))
+    var emitted = 0
+    XCTAssertThrowsError(try YlDashHlsCompiler.compile(data: Data(mpd(ladder(low + high)).utf8), finalManifestURL: source,
+      sourceURL: source, credentialsStripped: false, videoConstraints: .init(maxWidth: 320, maxHeight: nil, maxBitrate: nil),
+      fixedTrackId: "dash-video-w320-h180-b350000", manifestURL: { _ in self.source }, mediaURL: { url, _ in emitted += 1; return url })) {
+        XCTAssertEqual(($0 as? NativePlayerError)?.code, "container.unsupported")
+    }
+    XCTAssertEqual(emitted, 0)
+  }
+
   func testAdmissionReasonsSurviveSafePublicationWithoutSourceDetails() {
     let cases: [(String, String, String)] = [
       ("<MPD><private-secret>", "container.dash_manifest_invalid", "valid UTF-8 MPD"),
