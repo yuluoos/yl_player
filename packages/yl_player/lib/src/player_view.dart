@@ -57,7 +57,11 @@ final class YlPlayerView extends StatelessWidget {
         if (protected != null) {
           if (kIsWeb ||
               protected.platform != defaultTargetPlatform ||
-              protected.platform != TargetPlatform.android ||
+              ![
+                TargetPlatform.android,
+                TargetPlatform.iOS,
+                TargetPlatform.macOS,
+              ].contains(protected.platform) ||
               protected.sessionId != controller.state.sessionId?.value) {
             return const ColoredBox(color: Color(0xFF000000));
           }
@@ -68,7 +72,7 @@ final class YlPlayerView extends StatelessWidget {
           }
           return ColoredBox(
             color: const Color(0xFF000000),
-            child: _ProtectedAndroidView(
+            child: _ProtectedVideoView(
               key: ValueKey((controller, protected)),
               controller: controller,
               surface: protected,
@@ -148,8 +152,8 @@ final class YlPlayerView extends StatelessWidget {
 
 /// Native secure SurfaceView owns geometry and its pre-frame black cover. Never
 /// put this output through Flutter texture, opacity or pixel transforms.
-class _ProtectedAndroidView extends StatefulWidget {
-  const _ProtectedAndroidView({
+class _ProtectedVideoView extends StatefulWidget {
+  const _ProtectedVideoView({
     super.key,
     required this.controller,
     required this.surface,
@@ -157,10 +161,10 @@ class _ProtectedAndroidView extends StatefulWidget {
   final YlPlayerController controller;
   final YlProtectedVideoSurface surface;
   @override
-  State<_ProtectedAndroidView> createState() => _ProtectedAndroidViewState();
+  State<_ProtectedVideoView> createState() => _ProtectedVideoViewState();
 }
 
-class _ProtectedAndroidViewState extends State<_ProtectedAndroidView> {
+class _ProtectedVideoViewState extends State<_ProtectedVideoView> {
   int? _viewId;
   void _created(int id) {
     if (!mounted) return;
@@ -175,32 +179,59 @@ class _ProtectedAndroidViewState extends State<_ProtectedAndroidView> {
   }
 
   @override
-  Widget build(BuildContext context) => PlatformViewLink(
-    viewType: widget.surface.viewType,
-    surfaceFactory: (context, controller) => AndroidViewSurface(
-      controller: controller as AndroidViewController,
-      hitTestBehavior: PlatformViewHitTestBehavior.opaque,
-      gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
-    ),
-    onCreatePlatformView: (params) {
-      final controller = PlatformViewsService.initExpensiveAndroidView(
-        id: params.id,
+  Widget build(BuildContext context) {
+    final params = <String, Object>{
+      'playerId': widget.surface.playerId,
+      'surfaceId': widget.surface.surfaceId,
+      'sessionId': widget.surface.sessionId,
+      'generation': widget.surface.generation,
+    };
+    if (widget.surface.platform == TargetPlatform.iOS) {
+      return UiKitView(
         viewType: widget.surface.viewType,
-        layoutDirection: Directionality.of(context),
-        creationParams: <String, Object>{
-          'playerId': widget.surface.playerId,
-          'surfaceId': widget.surface.surfaceId,
-          'sessionId': widget.surface.sessionId,
-          'generation': widget.surface.generation,
-        },
+        creationParams: params,
         creationParamsCodec: const StandardMessageCodec(),
+        onPlatformViewCreated: _created,
       );
-      controller.addOnPlatformViewCreatedListener(params.onPlatformViewCreated);
-      controller.addOnPlatformViewCreatedListener(_created);
-      unawaited(controller.create());
-      return controller;
-    },
-  );
+    }
+    if (widget.surface.platform == TargetPlatform.macOS) {
+      return AppKitView(
+        viewType: widget.surface.viewType,
+        creationParams: params,
+        creationParamsCodec: const StandardMessageCodec(),
+        onPlatformViewCreated: _created,
+      );
+    }
+    return PlatformViewLink(
+      viewType: widget.surface.viewType,
+      surfaceFactory: (context, controller) => AndroidViewSurface(
+        controller: controller as AndroidViewController,
+        hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+        gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
+      ),
+      onCreatePlatformView: (params) {
+        final controller = PlatformViewsService.initExpensiveAndroidView(
+          id: params.id,
+          viewType: widget.surface.viewType,
+          layoutDirection: Directionality.of(context),
+          creationParams: <String, Object>{
+            'playerId': widget.surface.playerId,
+            'surfaceId': widget.surface.surfaceId,
+            'sessionId': widget.surface.sessionId,
+            'generation': widget.surface.generation,
+          },
+          creationParamsCodec: const StandardMessageCodec(),
+        );
+        controller.addOnPlatformViewCreatedListener(
+          params.onPlatformViewCreated,
+        );
+        controller.addOnPlatformViewCreatedListener(_created);
+        unawaited(controller.create());
+        return controller;
+      },
+    );
+  }
+
   @override
   void dispose() {
     final id = _viewId;

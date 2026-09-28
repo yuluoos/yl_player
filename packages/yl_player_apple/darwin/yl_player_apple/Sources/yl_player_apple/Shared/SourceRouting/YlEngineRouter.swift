@@ -9,6 +9,23 @@ enum YlEngineRouter {
       .init(outcome: .incompatible, candidate: nil, satisfiedRequirements: [], limitations: [],
         rejection: NativePlayerError(category: category, code: code, message: "The requested source route is unsupported."))
     }
+    if let drm = source.drm {
+      guard !drm.certificate.isEmpty, drm.certificate.count <= 65_536,
+            !drm.contentId.isEmpty, drm.contentId.count <= 8192,
+            (1...60_000).contains(drm.timeoutMs) else { return reject("source", "drm.config_invalid") }
+      guard source.kind == .network, source.formatHint == .hls,
+            let url = source.url, ["http", "https"].contains(url.scheme?.lowercased()),
+            url.host?.isEmpty == false, url.user == nil, url.password == nil else {
+        return reject("unsupported", "drm.unsupported")
+      }
+      let options = source.loadOptions ?? .init()
+      guard source.networkPolicy == .platformDefault, !source.hasHeaders,
+            options.bufferStrategy == .automatic, options.decoderPolicy != .hardwareRequired,
+            options.videoConstraints == .unconstrained else { return reject("unsupported", "policy.unsupported") }
+      return .init(outcome: .requiresInspection, candidate: .fairPlay,
+        satisfiedRequirements: [.networkPlatformDefault, .bufferAutomatic],
+        limitations: [.sourceRequiresInspection, .decoderModeUnknown, .networkSystemStackOpaque], rejection: nil)
+    }
     if ["rtmp", "rtmps"].contains(source.url?.scheme?.lowercased() ?? "") {
       do { _ = try YlRtmpAddress.validate(source) }
       catch let error as NativePlayerError { return reject(error.category, error.code) }

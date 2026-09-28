@@ -31,11 +31,12 @@
       "message": "Simulator VideoToolbox unavailable; no hardware playback claim",
       "condition": "Only initial real decoder.video_hardware_unavailable; other errors fail; Simulator only.",
       "source": "RunnerTests/AppleHostCharacterizations.swift",
-      "source_sha256": "6fa42cdfbd9d27ce1409a0817de9f450390bfaf5f901409455d080d0ade7ff39",
+      "source_sha256": "388dbf2ba3c46a71393d252c63e200a9f9d65d864be57c840a72563edcb5c7a3",
       "schema3_reconciliation": {
         "from_sha256": "9a289c120c0b02af8be498a50ffa1e813fe150027b2d380efbca0d99deefead3",
         "reason": "DASH foundation private schema migration changes only two create-request literals and one schema assertion from 2 to 3. Entire source compared with these exact substitutions; conditional hardware skip body and original task7 provenance remain unchanged."
-      }
+      },
+      "schema5_reconciliation": "Only factory schema literals changed from 4 to 5; hardware skip condition, exact message and test assertions unchanged."
     }
   },
   "hardening_r19": {

@@ -14,6 +14,14 @@ final class YlAppleSessionCoordinator: NSObject {
     let completion: (Result<Void, NativePlayerError>) -> Void
   }
 
+  var drmBridge: YlFairPlayBridge?
+  var protectedSurface: AppleProtectedSurfaceMessage? {
+    (slot.current as? YlFairPlayBackend)?.record.identity.message
+  }
+  func cancelProtectedLoad(_ requestId: String) {
+    if pendingLoadRequestId == requestId { openCoordinator.cancelCurrent() }
+  }
+
   let playerId: Int64
   var textureId: Int64 { services.textureOutput.textureId }
   var isActive: Bool { slot.current.isActive }
@@ -287,6 +295,10 @@ final class YlAppleSessionCoordinator: NSObject {
         guard let self else { throw YlOpenCancellationToken.cancellationError() }
         try token.throwIfCancelled()
         switch decision.candidate {
+        case .fairPlay:
+          guard let bridge = self.drmBridge else { throw YlFairPlayFailure.error("drm.unsupported") }
+          return .fairPlay(source: source, backend: try YlFairPlayBackend.prepare(source: source,
+            identity: identity, bridge: bridge, token: token, emit: self.emit))
         case .avPlayer:
           return try self.prepareNativeOrMp4(source: source, token: token, identity: identity)
         case .localMatroska, .networkMatroska, .networkFlv, .networkRtmp:
@@ -378,6 +390,20 @@ final class YlAppleSessionCoordinator: NSObject {
     }
     guard let identity = self.identity else {
       completion(.failure(YlOpenCancellationToken.cancellationError()))
+      return
+    }
+    if let protected = slot.current as? YlFairPlayBackend {
+      do { try applyAcknowledgedControls(to: protected, forcePlay: forcePlay) }
+      catch { completion(.failure(Self.commandError(error))); return }
+      willCommit(false)
+      protected.restore(forcePlay: forcePlay) { [weak self, weak protected] result in
+        guard let self, let protected, self.slot.current === protected,
+              self.identity == identity else { completion(.failure(YlOpenCancellationToken.cancellationError())); return }
+        switch result {
+        case .success: didCommit(); completion(.success(()))
+        case .failure(let error): didRollback(); completion(.failure(error))
+        }
+      }
       return
     }
     // Play on an accepted active session must not start another open: doing
@@ -608,7 +634,9 @@ final class YlAppleSessionCoordinator: NSObject {
     let priorTexture = activeTexture
     let candidateTexture = textureOwner.makeLease(identity: identity)
     let candidateEvents: YlAppleCommitEmitter
-    if case let .fallback(_, prepared) = candidate, let events = prepared.commitEvents {
+    if case let .fairPlay(_, backend) = candidate {
+      candidateEvents = backend.events
+    } else if case let .fallback(_, prepared) = candidate, let events = prepared.commitEvents {
       candidateEvents = events
     } else { candidateEvents = YlAppleCommitEmitter(identity: identity, emit: emit) }
     let audioTransaction = audioOwnership?.beginSession()
@@ -648,12 +676,21 @@ final class YlAppleSessionCoordinator: NSObject {
     }
     let wantsOutput: Bool
     switch candidate {
+    case let .fairPlay(source, _): wantsOutput = source.loadOptions?.autoplay ?? false
     case let .avPlayer(source): wantsOutput = source.loadOptions?.autoplay ?? false
     case let .headeredHls(source, _): wantsOutput = reactivating ? currentPlaybackIntent : (source.loadOptions?.autoplay ?? false)
     case let .fallback(_, prepared): wantsOutput = prepared.resumeState?.shouldPlay ?? false
     }
     if wantsOutput { try candidateServices.beforeAudioOutput() }
     switch candidate {
+    case let .fairPlay(source, backend):
+      backend.beforeAudioOutput = candidateServices.beforeAudioOutput
+      applyPersistentPlaybackControls(to: backend)
+      let previous = try slot.replace(beforeRollbackActivation: beforeRollbackActivation) { backend }
+      if previous !== avBackend { previous.dispose() }
+      lastCommittedSource = source
+      committedHlsCredentials = nil; committedDashSnapshot = nil
+      lastQualityConstraint = .unconstrained
     case let .avPlayer(source):
       avTexture.lease = candidateTexture
       avBackend.bindCallbacks(candidateEvents.accept)
@@ -662,12 +699,13 @@ final class YlAppleSessionCoordinator: NSObject {
       let constraints = loadVideoConstraints ?? source.loadOptions?.videoConstraints ?? lastQualityConstraint
       applyPersistentPlaybackControls(to: avBackend)
       if slot.current !== avBackend {
-        let previous = try slot.replace(beforeRollbackActivation: beforeRollbackActivation) { avBackend }
+        let previous = try slot.replace(beforeRollbackActivation: beforeRollbackActivation,
+          afterActivation: { _ in try self.avBackend.open(source, videoConstraints: constraints) }) { avBackend }
         previous.dispose()
       } else {
         try avBackend.activate()
+        try avBackend.open(source, videoConstraints: constraints)
       }
-      try avBackend.open(source, videoConstraints: constraints)
       lastCommittedSource = source
       committedHlsCredentials = nil
       committedDashSnapshot = nil
@@ -957,12 +995,15 @@ final class YlAppleSessionCoordinator: NSObject {
     if let fallback = slot.current as? YlFallbackBackend {
       return fallback.playbackIntent
     }
+    if let protected = slot.current as? YlFairPlayBackend { return protected.playbackIntent }
     return slot.current === avBackend && avBackend.playbackIntent
   }
 
   private func reportRestorationFailure(_ error: NativePlayerError) {
     if let fallback = slot.current as? YlFallbackBackend {
       fallback.reportRestorationFailure(error)
+    } else if let protected = slot.current as? YlFairPlayBackend {
+      protected.fail(error)
     } else {
       avBackend.reportRestorationFailure(error)
     }

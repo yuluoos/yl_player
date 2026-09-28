@@ -5,6 +5,7 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 import 'apple_callbacks.dart';
 import 'apple_codec.dart';
+import 'apple_drm.dart';
 import 'apple_transport.dart';
 import 'pigeon/yl_player_apple.g.dart';
 
@@ -12,6 +13,9 @@ import 'pigeon/yl_player_apple.g.dart';
 final class ApplePlayer
     implements
         YlPlatformPlayer,
+        YlPlatformDrmSourceSupport,
+        YlPlatformDrmLicenseTransport,
+        YlPlatformProtectedVideoSurfaceProvider,
         YlPlatformNativeVideoSurfaceProvider,
         YlVideoTrackSelectionPlatformPlayer {
   ApplePlayer._(
@@ -47,6 +51,7 @@ final class ApplePlayer
     required AppleFactoryTransport factory,
     required AppleTransportFactory transportForSuffix,
     required AppleCallbackSetup setupCallbacks,
+    AppleDrmChannel Function(String, AppleDrmSupportMessage)? drmFactory,
   }) async {
     final encoded = AppleCodec.playerOptions(options);
     final AppleCreateReply reply;
@@ -100,6 +105,21 @@ final class ApplePlayer
         initial,
         reply.initialState.sequence,
       );
+      if (reply.drmSupport case final support?) {
+        if (support.contractVersion != 1 ||
+            support.playerId < 0 ||
+            support.platform != reply.platform) {
+          throw AppleCodec.problem(YlFailureCodes.protocolMismatch);
+        }
+        player._drm =
+            drmFactory?.call(reply.channelSuffix, support) ??
+            AppleDrmChannel(reply.channelSuffix, support);
+        player._drm!.onFrameReady = player._flushProtectedFrame;
+        AppleDrmFlutterApi.setUp(
+          player._drm,
+          messageChannelSuffix: reply.channelSuffix,
+        );
+      }
       player._currentRequestId = reply.initialState.loadRequestId;
       setupCallbacks(reply.channelSuffix, player._callbacks);
       await player
@@ -126,6 +146,55 @@ final class ApplePlayer
         }
       }
       throw failure;
+    }
+  }
+
+  AppleDrmChannel? _drm;
+  (YlPlayerEvent, int)? _protectedFrame;
+  @override
+  int get drmContractVersion => _drm == null ? 0 : 1;
+  @override
+  void setDrmLicenseExchange(YlDrmLicenseExchange exchange) {
+    _drm?.exchange = exchange;
+  }
+
+  @override
+  YlProtectedVideoSurface? get protectedVideoSurface => _drm?.surface;
+  @override
+  Future<void> attachProtectedView(
+    YlProtectedVideoSurface surface,
+    int viewId,
+  ) async {
+    await _drm?.attach(
+      surface,
+      viewId,
+      onFailure: (error) => _terminate(AppleCodec.exception(error)),
+    );
+  }
+
+  @override
+  Future<void> detachProtectedView(
+    YlProtectedVideoSurface surface,
+    int viewId,
+  ) async {
+    // Native view disposal is also an idempotent detach. Replacement may retire it first.
+    try {
+      await _drm?.detach(surface, viewId);
+    } catch (_) {}
+  }
+
+  void _flushProtectedFrame() {
+    final event = _protectedFrame;
+    if (event != null && _drm?.frameReady(event.$1.sessionId.value) == true) {
+      _protectedFrame = null;
+      _receiveEvent(event.$1, event.$2);
+    }
+  }
+
+  void _validateDrm(YlMediaSource source) {
+    if (source is YlNetworkSource && source.drm != null) {
+      if (_drm == null) throw ylDrmException(YlFailureCodes.drmUnsupported);
+      _drm!.validate(source);
     }
   }
 
@@ -239,6 +308,7 @@ final class ApplePlayer
     YlLoadOptions options = const YlLoadOptions(),
   }) async {
     _checkAlive();
+    _validateDrm(source);
     final request = AppleAssessRequest(
       source: AppleCodec.source(source),
       options: AppleCodec.loadOptions(options),
@@ -267,12 +337,14 @@ final class ApplePlayer
   }) {
     try {
       _checkAlive();
+      _validateDrm(source);
       final request = AppleLoadRequest(
         loadRequestId: 'load-${++_requestCounter}',
         source: AppleCodec.source(source),
         options: AppleCodec.loadOptions(options),
       );
       _cancelLoad(_cancelled);
+      _drm?.begin(request.loadRequestId, source);
       final pending = _PendingLoad(request.loadRequestId);
       _pending = pending;
       // The public barrier is installed before assessment begins.
@@ -303,6 +375,14 @@ final class ApplePlayer
       if (session == state.sessionId) {
         throw AppleCodec.problem(YlFailureCodes.protocolMismatch);
       }
+      if (_drm == null && reply.protectedSurface != null) {
+        throw AppleCodec.problem(YlFailureCodes.protocolMismatch);
+      }
+      _drm?.checkReply(
+        pending.requestId,
+        session.value,
+        reply.protectedSurface,
+      );
       pending.reply = session;
       _startPairDeadline(pending);
       _completePair(pending);
@@ -426,6 +506,8 @@ final class ApplePlayer
     }
     _stoppedSession = null;
     _currentRequestId = pending.requestId;
+    _drm?.commit(pending.requestId);
+    _protectedFrame = null;
     pending.paired = true;
     pending.deadline?.cancel();
     // Retain only the first, first semantic READY and latest full snapshots.
@@ -486,6 +568,12 @@ final class ApplePlayer
       }
       return;
     }
+    if (event is YlFirstFrameEvent &&
+        _drm?.surface?.sessionId == event.sessionId.value &&
+        _drm?.frameReady(event.sessionId.value) != true) {
+      _protectedFrame = (event, sequence);
+      return;
+    }
     if (!_callbacks.acceptEvent(event, sequence)) return;
     _events.add(event);
     if (event is YlPlaybackFailedEvent) {
@@ -501,6 +589,7 @@ final class ApplePlayer
     final pending = _pending;
     if (pending == null) return;
     _pending = null;
+    _drm?.cancel(pending.requestId);
     pending.deadline?.cancel();
     pending.publication?.cancel();
     if (pending.paired && pending.reply == state.sessionId) {
@@ -638,6 +727,8 @@ final class ApplePlayer
     _checkAlive();
     final captured = state.sessionId;
     _cancelLoad(_cancelled);
+    _drm?.stop();
+    _protectedFrame = null;
     await _run(_transport.stop);
     // Only the accepted Stop's captured identity is fenced; idle is authoritative.
     if (captured != null && captured == state.sessionId) {
@@ -678,6 +769,8 @@ final class ApplePlayer
   Future<void> dispose() {
     if (_disposeFuture case final result?) return result;
     _disposed = true;
+    _drm?.close();
+    _protectedFrame = null;
     _callbacks.close();
     final error =
         _terminal ??
@@ -696,6 +789,9 @@ final class ApplePlayer
     await _release(_transport);
     try {
       _setupCallbacks(_suffix, null);
+      if (_drm != null) {
+        AppleDrmFlutterApi.setUp(null, messageChannelSuffix: _suffix);
+      }
     } catch (_) {
       /* Never strand owned Dart resources. */
     }

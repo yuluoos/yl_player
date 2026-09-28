@@ -1,6 +1,8 @@
 import Foundation
 
 final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
+  private let makeDrmBridge: ((Int64, String) -> YlFairPlayBridge)?
+  private let uninstallDrm: ((String) -> Void)?
   private let makeServices: (ApplePlayerOptionsMessage) throws -> YlPlatformServices
   private let makeCallbacks: (String) -> ApplePlayerFlutterApiProtocol
   private let installHost: (String, ApplePlayerHostApi?) -> Void
@@ -18,7 +20,10 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
        makeCallbacks: @escaping (String) -> ApplePlayerFlutterApiProtocol,
        installHost: @escaping (String, ApplePlayerHostApi?) -> Void,
        lifecycle: YlLifecycleDriving? = nil,
+       makeDrmBridge: ((Int64, String) -> YlFairPlayBridge)? = nil,
+       uninstallDrm: ((String) -> Void)? = nil,
        audioOwnership: YlAudioOwnershipCoordinator = .shared) {
+    self.makeDrmBridge = makeDrmBridge; self.uninstallDrm = uninstallDrm
     self.audioOwnership = audioOwnership
     self.makeServices = makeServices
     self.makeCallbacks = makeCallbacks
@@ -35,7 +40,7 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
   func create(request: AppleCreateRequest) throws -> AppleCreateReply {
     do {
       guard !detached else { throw NativePlayerError(category: "resource", code: "player.detached", message: "Plugin detached.") }
-      guard request.schemaMajor == 4 else { throw NativePlayerError(category: "protocol", code: "protocol.mismatch", message: "Protocol mismatch.") }
+      guard request.schemaMajor == 5 else { throw NativePlayerError(category: "protocol", code: "protocol.mismatch", message: "Protocol mismatch.") }
       guard request.options.positionUpdateIntervalMs > 0,
         request.options.positionUpdateIntervalMs <= Int64(Int32.max) else { throw YlAppleFailureMapper.invalid() }
       guard nextPlayerId < Int64.max else { throw NativePlayerError(category: "resource", code: "resource.exhausted", message: "Player identifiers exhausted.") }
@@ -52,6 +57,8 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
       }
       let host = YlApplePlayerHost(playerId: nextPlayerId, suffix: suffix,
         options: request.options, services: services, callbacks: makeCallbacks(suffix), audioOwnership: audio)
+      let drm = makeDrmBridge?(nextPlayerId, suffix)
+      if let drm { host.bindDrm(drm) }
       var quiesced = [YlApplePlayerHost]()
       host.willCommit = { [weak self, weak host] requiresLease in
         guard let self, let host, requiresLease, services.compatibility.limitsVideoReservations else { return }
@@ -72,17 +79,20 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
         guard let self else { return }
         self.players.removeValue(forKey: suffix)
         self.installHost(suffix, nil)
+        self.uninstallDrm?(suffix)
       }
       players[suffix] = host
       installHost(suffix, host)
       if backgrounded || (managed && audioInterrupted) { host.suspend() }
-      return AppleCreateReply(schemaMajor: 4, spiMajor: 2, channelSuffix: suffix,
+      return AppleCreateReply(schemaMajor: 5, spiMajor: 2, channelSuffix: suffix,
         textureId: services.textureOutput.textureId,
         platform: services.platform == .ios ? .ios : .macos,
         implementationName: "yl_player_apple", implementationVersion: "0.2.0-dev.2",
         capabilities: Self.capabilities(YlBackendStateEncoder.deviceCapabilities, platform: services.platform),
         initialState: host.initialState,
-        nativeViewType: (services.textureOutput as? YlNativeVideoSurfaceOutput)?.nativeViewType)
+        nativeViewType: (services.textureOutput as? YlNativeVideoSurfaceOutput)?.nativeViewType,
+        drmSupport: drm.map { _ in .init(contractVersion: 1, playerId: nextPlayerId,
+          platform: services.platform == .ios ? .ios : .macos, schemeAvailable: true) })
     } catch { throw YlAppleFailureMapper.command(error) }
   }
   static func capabilities(_ native: YlNativeCapabilities, platform: YlApplePlatform) -> AppleCapabilitiesMessage {

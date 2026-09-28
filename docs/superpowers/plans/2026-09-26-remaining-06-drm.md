@@ -76,26 +76,26 @@ public_payload_contains_body_or_key: false
 
 ### Task 3：系统密钥与会话生命周期
 
-2026-09-27 开始按平台分步交付，**Task 3 整体未完成**：
+2026-09-27 开始按平台分步交付，2026-09-28 **Task 3 工程集成完成，授权物理验收留在Task4**：
 
 - [x] 3A：Android 内部 MediaDrm driver、密钥代际/取消/更新/后台恢复边界和系统 fake 测试；当前未接生产播放器。
 - [x] 3B：Android 受保护输出与 Media3 candidate 原子事务、Pigeon challenge/response 和 Task 2 传输连接；验证 clear 回归。
   - [x] 3B1：内部 Media3 DrmSessionManager/DrmSession 消费 3A 密钥状态，管理 decoder 引用、CryptoConfig 与安全 decoder 查询；不开放生产准入。
   - [x] 3B2：原生受保护 view 注册/attach/detach、secure candidate output、内部 Media3 route、实际 decoder/key 门槛与原子替换/回滚；Dart provider 和正式 ACK wire 留在 3B3。
   - [x] 3B3：Pigeon challenge/response、受保护 view ACK 与 Task 2 许可证传输连接，完成组合回归后才开放对应准入。
-- [ ] 3C：Apple AVContentKeySession、AVPlayerLayer 与候选事务/同一桥接，验证原生状态机和 clear 回归。
+- [x] 3C：Apple AVContentKeySession、AVPlayerLayer 与候选事务/同一桥接，验证原生状态机和 clear 回归。
   - [x] 3C1：AVContentKeySession streaming driver、SPC/CKC 交换边界、确认/更新/取消/期限与 fresh-recipient 生命周期；原生 fake 回归，不开放公共准入。
-  - [ ] 3C2：独立 AVPlayerLayer 生产输出、候选原子事务/音频归属、Pigeon 与 Task2 连接及逐源准入；禁止接入现有像素读取路径。
+  - [x] 3C2：独立 AVPlayerLayer 生产输出、候选原子事务/音频归属、Pigeon 与 Task2 连接及逐源准入；禁止接入现有像素读取路径。
 
 以下完整验收要求仍逐项保留，不能用 3A 的内部测试替代生产集成：
 
-- [ ] 随原子会话实现生产受保护 view 描述符、attach/detach/ACK 与 challenge/response Pigeon 桥接（从 Task 2 移入）；不得用 schema4 丢弃配置后继续 clear 播放。
+- [x] 随原子会话实现生产受保护 view 描述符、attach/detach/ACK 与 challenge/response Pigeon 桥接（从 Task 2 移入）；不得用 schema4 丢弃配置后继续 clear 播放。
 
-- [ ] 依 Task 1 选定路径接 MediaDrm/AVContentKeySession；测试 load 候选失败回滚、stop/dispose、replacement、后台恢复、更新/rotation。密钥回调使用会话代际且严格限制资源生命周期。
-- [ ] 先以系统边界 fake 驱动状态机失败/成功/取消，断言过期需明确系统/许可证证据，普通 HTTP 错误不能推断过期。
-- [ ] 实现系统事件→同一 `YlFailure`/session 状态映射、命令 ACK 和资源清理；保护不足、secure decoder 不可用时明确拒绝，不切非保护 surface 或基础画质。
-- [ ] 跑原生状态机及 clear-path 回归，保证增加 DRM 不破坏普通 DASH/HLS、音频所有权或严格策略。
-- [ ] 提交按平台分开的生命周期实现；mock 结果与真机结果分表。
+- [x] 依 Task 1 选定路径接 MediaDrm/AVContentKeySession；测试 load 候选失败回滚、stop/dispose、replacement、后台恢复、更新/rotation。密钥回调使用会话代际且严格限制资源生命周期。
+- [x] 先以系统边界 fake 驱动状态机失败/成功/取消，断言过期需明确系统/许可证证据，普通 HTTP 错误不能推断过期。
+- [x] 实现系统事件→同一 `YlFailure`/session 状态映射、命令 ACK 和资源清理；保护不足、secure decoder 不可用时明确拒绝，不切非保护 surface 或基础画质。
+- [x] 跑原生状态机及 clear-path 回归，保证增加 DRM 不破坏普通 DASH/HLS、音频所有权或严格策略。
+- [x] 提交按平台分开的生命周期实现；mock 结果与真机结果分表。
 
 ### Task 4：授权资源与真实设备验收
 
@@ -118,3 +118,6 @@ public_payload_contains_body_or_key: false
 2026-09-28 Task 3B3 已完成 Android schema5 许可证/取消桥接、保护视图描述符和 ACK、控制器传输与 hybrid view 接入；3B 工程集成完成，下一项为 Apple 3C。Android API29+ 仍逐源检查系统密钥、安全 decoder 和输出，授权真机验收保留在 Task4；上方跨平台验收项继续未勾选。
 
 2026-09-28 Task3C1 系统密钥阶段完成，双端最终各32项定向回归通过，macOS复核前全量561项通过。iOS完整复验stdout644通过/3跳过，但Xcode收尾停滞，完整xcresult gate未完成，报告保留该限制。下一项3C2生产AVPlayerLayer/候选/桥接；3C整体、授权物理验收和CAP-DRM不勾选。
+
+
+2026-09-28 Task3C2 工程集成完成：Apple 独立AVPlayerLayer、FairPlay候选/音频事务、schema5许可证与受保护view ACK、Task2真实POST组合已接通。最终macOS完整571项、iOS定向40项及普通媒体202项、Dart203项通过；测试身份/哈希、Pigeon和公开surface检查通过。独立复审两项重要竞态及自检暂停状态问题均修复。iOS本次仅定向覆盖242项，未声明完整suite；此前完整xcresult收尾限制保留。下一项Task4仍缺授权资源，CAP-DRM不勾选；不得将工程测试当作真实解密/HDCP/物理输出验收。

@@ -52,7 +52,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
-    "sha256": "6fa42cdfbd9d27ce1409a0817de9f450390bfaf5f901409455d080d0ade7ff39",
+    "sha256": "388dbf2ba3c46a71393d252c63e200a9f9d65d864be57c840a72563edcb5c7a3",
     "methods": [
       "testInputValidationPrecedesReplacementAndRejectsUnrepresentableTimeline",
       "testSemanticCommandRejectionCompletesFutureWithoutFailingHealthySession"
@@ -71,6 +71,10 @@
     "task8_r39": {
       "from_sha256": "ddc76f4919e131f71df4af07ffe95bc5fc1ac5ed4c1b82c9f0373c183b3e1135",
       "reason": "The existing semantic command rejection case now also proves the real sequential HTTP 200 fallback rejects seek with network.range_not_supported before mutation while retaining the healthy session snapshot."
+    },
+    "fairplay_schema5_migration": {
+      "from_sha256": "6fa42cdfbd9d27ce1409a0817de9f450390bfaf5f901409455d080d0ade7ff39",
+      "reason": "Negotiate schema5 with optional protected-media messages; schema4 is rejected before allocation."
     }
   },
   {
@@ -103,7 +107,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift",
-    "sha256": "51ca09acb5a403665ddc43bca53170fd517def7fb60bb0e6f312bc314fd23bbe",
+    "sha256": "4d219383a98fa05237a9c022412bc506eb1c7a24e0f5558ef02766424dfc132d",
     "methods": [
       "testH264ProbeCleanupCommitsAvPlayerAndReachesReady",
       "testStopDuringHlsProbeUnblocksNextLoad",
@@ -196,11 +200,15 @@
     "callback_thread_regression": {
       "from_sha256": "60d94f2ba04eb8697268d838d622808ffcc798e283fae6f4e68c8396235d58b8",
       "reason": "Observe actual generated callback binary sends on the platform thread, including background acknowledgements; retain existing callback FIFO tests."
+    },
+    "fairplay_schema5_migration": {
+      "from_sha256": "51ca09acb5a403665ddc43bca53170fd517def7fb60bb0e6f312bc314fd23bbe",
+      "reason": "Negotiate schema5 with optional protected-media messages; schema4 is rejected before allocation."
     }
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
-    "sha256": "880ef707e18a4cc7e83b3be3b1760403275d7e48cbd30da9b6f37c3cbcfa01e2",
+    "sha256": "df0e2f6e39239a514d4ef65fcb7eb4493dbc0a7314a472fcd9c7dccd61833124",
     "methods": [
       "testCancelOpenMatchesOnlyThePreparingCandidate",
       "testPlayerVolumeAndCandidateOptionsSurviveFailedReplacementAndStop",
@@ -220,6 +228,10 @@
     "task7_typed_migration": {
       "from_sha256": "54f1d7609d75c0897cb4ab486aec2452675824b2f2ec7aecce26bcc50a5c8787",
       "reason": "Task7 exact 20 host methods call explicit shared assertion bodies (task7-host-cases.json). Additional platform lifecycle/held-command regressions preserve actual native behavior; R21 only original initial-MKV hardware skip, R22 real decoded restoration."
+    },
+    "fairplay_schema5_migration": {
+      "from_sha256": "880ef707e18a4cc7e83b3be3b1760403275d7e48cbd30da9b6f37c3cbcfa01e2",
+      "reason": "Negotiate schema5 with optional protected-media messages; schema4 is rejected before allocation."
     }
   },
   {
@@ -488,7 +500,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashHlsCompilerTests.swift",
-    "sha256": "78d2558899a7dc7cd429f1aca6d11288ac97b0d35646e3eb5932e31421726de2",
+    "sha256": "c9c638f532c0ee2f90345210bf47837e6c6540343f8022335692cea7a2fafe7b",
     "methods": [
       "testFiniteFinalDurationUsesInheritedOffsetAndInternalNegativeRepeat",
       "testFiniteFinalDurationCompletesTwoPeriodProgramAndSegmentListAudio",
@@ -553,11 +565,15 @@
       "testLoadCapsRetainCredentialHistoryAndSanitizeInjectedSemanticErrors",
       "testLoadCapsConstrainedLegacyCannotBypassUnionOrOriginalInputBudgets"
     ],
-    "apple_dash_task1": "Current bounded pure MPD-to-HLS compiler regressions; no historical fixture identities changed."
+    "apple_dash_task1": "Current bounded pure MPD-to-HLS compiler regressions; no historical fixture identities changed.",
+    "fairplay_schema5_migration": {
+      "from_sha256": "78d2558899a7dc7cd429f1aca6d11288ac97b0d35646e3eb5932e31421726de2",
+      "reason": "Negotiate schema5 with optional protected-media messages; schema4 is rejected before allocation."
+    }
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift",
-    "sha256": "7128c541239f4fe4da1b7d1822d1dba212be21942a830c3e4231ca89b717e826",
+    "sha256": "c7bb1303c359dd863d253a35d95aa28abe29bb0ef42f35d5635586550030cf05",
     "methods": [
       "testCatalogFollowsMeasuredProgramTimeAndPeriodicPublication",
       "testCatalogLoaderSnapshotSurvivesCancellationWhilePrivateSnapshotClears",
@@ -611,7 +627,11 @@
       "testCoordinatorKeepsDashSessionOnInvalidReplacementAndRebuildsPrivateAssetOnResume",
       "testCrossOriginBaseURLReturnSeedsStickyContext"
     ],
-    "apple_dash_task2": "Current static DASH owned preflight, private registry, routing integration and lifecycle regressions; historical fixtures unchanged."
+    "apple_dash_task2": "Current static DASH owned preflight, private registry, routing integration and lifecycle regressions; historical fixtures unchanged.",
+    "fairplay_schema5_migration": {
+      "from_sha256": "7128c541239f4fe4da1b7d1822d1dba212be21942a830c3e4231ca89b717e826",
+      "reason": "Negotiate schema5 with optional protected-media messages; schema4 is rejected before allocation."
+    }
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpFixturePeer.swift",
@@ -736,6 +756,20 @@
       "testCancelledExchangeKeepsItsPublicDiagnosticMeaning",
       "testReadinessIsRevokedBeforeDriverCleanup",
       "testConfigurationLimitsAndSafeDiagnostics"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlFairPlayOutputTests.swift",
+    "sha256": "7986945327134dc9837f57491fd777f0b0a012970b194956d435b3a198ab0b16",
+    "methods": [
+      "testUncommittedWrongOwnerAndDuplicateViewsCannotBorrowPlayer",
+      "testRemountAndAssetReplacementCreateFreshLayerAndRejectOldReadiness",
+      "testProtectionPolicyRejectsStrictAndHeaderedMediaWithoutGuessingEvidence",
+      "testPauseRemainsPausedAcrossPeriodicStateAndControlUpdates",
+      "testConcurrentRestorationsSharePreparationAndEveryCommandSettles",
+      "testPostActivationFailureRestoresOldBackendAndAudioAuthority",
+      "testBridgeCancelsOldExchangeAndRejectsMismatchedReply",
+      "testBridgeAcceptsOnlyMountedOwnedRecord"
     ]
   }
 ]

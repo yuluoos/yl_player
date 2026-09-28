@@ -78,6 +78,7 @@
 		FED92D2B7E02FC3947E6C5E8 /* YlDashHlsCompilerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD38FBD644F0A24BC6FF727F /* YlDashHlsCompilerTests.swift */; };
 		FFBCC078A9FDB4AED906D2AB /* YlOpenedMediaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716DDC92C7595A0C545C4C0B /* YlOpenedMediaTests.swift */; };
 		A4881AA61F313B36BB6986F5 /* YlFairPlayKeySessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001E4455E1F4073F218A3EC6 /* YlFairPlayKeySessionTests.swift */; };
+		DC5FF46793ED90E69E2B73A4 /* YlFairPlayOutputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217B1E6D80434A0D717E4B3B /* YlFairPlayOutputTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -185,6 +186,7 @@
 		FB2FBA77A1B1133BDD48908A /* YlFallbackStateEncoderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFallbackStateEncoderTests.swift; sourceTree = "<group>"; };
 		FE34287D1A237D5A0A3182DC /* YlRtmpFixturePeer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlRtmpFixturePeer.swift; sourceTree = "<group>"; };
 		001E4455E1F4073F218A3EC6 /* YlFairPlayKeySessionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFairPlayKeySessionTests.swift; sourceTree = "<group>"; };
+		217B1E6D80434A0D717E4B3B /* YlFairPlayOutputTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFairPlayOutputTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -224,6 +226,7 @@
 				DD38FBD644F0A24BC6FF727F /* YlDashHlsCompilerTests.swift */,
 				95830AC3D960051FDAB6EF0B /* YlDashSidxTests.swift */,
 				001E4455E1F4073F218A3EC6 /* YlFairPlayKeySessionTests.swift */,
+				217B1E6D80434A0D717E4B3B /* YlFairPlayOutputTests.swift */,
 				06FA2F2F03DD977DE5688FD4 /* YlDashResourceLoaderTests.swift */,
 				407C32685811B50987938EE7 /* YlFELVideoPipelineTests.swift */,
 				D494DF03624CC31BDBBECFE1 /* YlFFmpegBridgeTests.swift */,
@@ -507,6 +510,7 @@
 				FED92D2B7E02FC3947E6C5E8 /* YlDashHlsCompilerTests.swift in Sources */,
 				72A970AEB7028354396B1A25 /* YlDashSidxTests.swift in Sources */,
 				A4881AA61F313B36BB6986F5 /* YlFairPlayKeySessionTests.swift in Sources */,
+				DC5FF46793ED90E69E2B73A4 /* YlFairPlayOutputTests.swift in Sources */,
 				C1984BE62F4C8AB96444B52E /* YlDashResourceLoaderTests.swift in Sources */,
 				775BCED61B3657ED31A70B3F /* YlFELVideoPipelineTests.swift in Sources */,
 				1AE4BB2DD751752F0D1F95A1 /* YlFFmpegBridgeTests.swift in Sources */,

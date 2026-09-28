@@ -43,6 +43,7 @@ final class YlBackendSlot {
   @discardableResult
   func replace(
     beforeRollbackActivation: ((YlPlaybackBackend) throws -> Void)? = nil,
+    afterActivation: ((YlPlaybackBackend) throws -> Void)? = nil,
     _ prepare: () throws -> YlPlaybackBackend
   ) throws -> YlPlaybackBackend {
     guard !disposed else {
@@ -62,6 +63,7 @@ final class YlBackendSlot {
       let candidate = try preparedBeforeQuiescing ?? prepare()
       do {
         try candidate.activate()
+        try afterActivation?(candidate)
       } catch {
         candidate.dispose()
         throw error

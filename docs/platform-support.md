@@ -476,3 +476,6 @@ P06 Task 3B2 已连接 Android 内部安全候选输出、Media3 DRM manager、�
 P06 Task 3B3 已实现 Android schema5 公共 Widevine 配置、Pigeon 密钥交换/取消、Task2 许可证 POST 与受保护视图描述符/ACK。API29+ 且系统识别 Widevine 才进入逐源检查；实际播放仍须安全 output、L1、实际硬件 secure decoder 与 keys usable，评估中的 unknown 不当作通过。保护路线使用显式 hybrid composition，仅支持 contain/center，拒绝非保护 fallback；明文路径保持原样。Apple DRM 留待3C。当前只有 JVM、Dart/真实 loopback POST 和 widget 组合证据，**没有授权内容解密或真机显示保护验收，CAP-DRM 未完成**。前述3A/3B1/3B2段落为各阶段交付时状态。
 
 P06 Task3C1 增加内部 Apple AVContentKeySession streaming driver 与 SPC/CKC 生命周期。仅系统确认响应后标记 keys usable；更新撤回、迟到响应隔离、fresh asset 恢复和有界期限已纳入原生测试。该结果不证明安全decoder/HDCP/受保护显示，生产 AVPlayerLayer/候选/Pigeon 接入仍待3C2，Apple adapter 继续明确拒绝 DRM，CAP-DRM 未完成。
+
+
+P06 Task3C2 已接入 Apple schema5 公共 FairPlay HLS、独立 AVPlayerLayer、候选会话/音频事务、受保护 view ACK 和 Task2 许可证传输。系统API可用性不等于授权播放可用；逐源仍需protected asset、item/key状态检查。首版仅接受无媒体自定义header的platformDefault、automatic缓冲、非强制硬解和无画质约束；音轨/variant目录暂不公开，受保护视图仅contain/center。普通播放回归及fake/loopback组合验证详见P06报告。**授权物理播放、HDCP/外接/HDR和CAP-DRM仍未完成**。前述3C1段落保留历史阶段状态。

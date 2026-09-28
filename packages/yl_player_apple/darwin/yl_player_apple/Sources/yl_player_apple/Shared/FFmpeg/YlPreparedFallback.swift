@@ -4,12 +4,16 @@ import Foundation
 import YlFFmpegBridge
 
 enum YlPreparedOpen {
+  case fairPlay(source: YlAppleSourceDescriptor, backend: YlFairPlayBackend)
   case avPlayer(source: YlAppleSourceDescriptor)
   case headeredHls(source: YlAppleSourceDescriptor, prepared: YlPreparedHlsAsset)
   case fallback(source: YlAppleSourceDescriptor, prepared: YlPreparedFallback)
 
   func discard() {
     switch self {
+    case let .fairPlay(_, backend):
+      if Thread.isMainThread { backend.dispose() }
+      else { DispatchQueue.main.async { backend.dispose() } }
     case .avPlayer:
       break
     case let .headeredHls(_, prepared):

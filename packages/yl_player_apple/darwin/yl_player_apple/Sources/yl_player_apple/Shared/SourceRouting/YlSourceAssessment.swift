@@ -31,6 +31,12 @@ struct YlAppleNetworkOptions {
 
 /// Native input contains only validated fields; header dictionaries carry HTTP
 /// metadata, never dispatch or playback state. Credential history is per Load.
+struct YlFairPlayConfiguration {
+  let certificate: Data
+  let contentId: Data
+  let timeoutMs: Int64
+}
+
 struct YlAppleSourceDescriptor {
   var uri: String
   var kind: YlSourceKind
@@ -41,6 +47,7 @@ struct YlAppleSourceDescriptor {
   var networkPolicy: YlNetworkPolicy = .platformDefault
   var networkConfiguration: YlAppleNetworkOptions? = nil
   var loadOptions: YlAppleLoadOptions? = nil
+  var drm: YlFairPlayConfiguration? = nil
   var loadRequestId: String? = nil
   var credentialContext = YlNetworkCredentialContext()
   var managedRequestIntent = YlManagedRequestIntent()
@@ -75,7 +82,7 @@ struct YlSourceAssessment {
   var engine: YlNativeEngine? {
     guard let candidate else { return nil }
     switch candidate {
-    case .avPlayer, .headeredHls, .dashHls: return .avPlayer
+    case .avPlayer, .headeredHls, .dashHls, .fairPlay: return .avPlayer
     case .localMatroska, .networkMatroska, .networkFlv, .networkRtmp: return .managedFallback
     case .inspect, .reject: return nil
     }

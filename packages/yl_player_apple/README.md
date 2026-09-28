@@ -61,3 +61,19 @@ The reported Baidu source still fails with
 `decoder.dolby_vision_fel_metadata_unsupported` because its non-neutral Level 2
 trims are not implemented. See the
 [FEL verification record](../../docs/verification/2026-09-20-dolby-audio-and-profiles.md).
+
+
+FairPlay HLS uses a separate AVPlayer/AVContentKeySession/AVPlayerLayer route
+negotiated through private schema5. It never reads decoded pixels into the
+Flutter texture path. The public license client sends binary SPC/CKC through
+an independently configured endpoint; media headers are not license headers.
+This initial route requires explicit HLS, platform-default networking without
+media headers/credentials, automatic buffering, unconstrained video and no
+hardware-required policy. Protected video supports contain/center layout.
+Protected audio/variant track catalogs are not yet exposed; system ABR remains
+in control. Unsupported strict settings are rejected before replacing playback.
+
+Engineering tests cover ownership, cancellation, recovery, protected view ACKs
+and ordinary media regression. Authorized FairPlay playback, device protection,
+HDCP and external/HDR output remain unverified without licensed test resources;
+see the [DRM contract](../../docs/superpowers/specs/2026-09-26-drm-contract.md).

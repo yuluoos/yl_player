@@ -412,6 +412,7 @@ struct AppleCreateReply: Hashable, CustomStringConvertible {
   var capabilities: AppleCapabilitiesMessage
   var initialState: AppleStateMessage
   var nativeViewType: String? = nil
+  var drmSupport: AppleDrmSupportMessage? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
@@ -426,6 +427,7 @@ struct AppleCreateReply: Hashable, CustomStringConvertible {
     let capabilities = pigeonVar_list[7] as! AppleCapabilitiesMessage
     let initialState = pigeonVar_list[8] as! AppleStateMessage
     let nativeViewType: String? = nilOrValue(pigeonVar_list[9])
+    let drmSupport: AppleDrmSupportMessage? = nilOrValue(pigeonVar_list[10])
 
     return AppleCreateReply(
       schemaMajor: schemaMajor,
@@ -437,7 +439,8 @@ struct AppleCreateReply: Hashable, CustomStringConvertible {
       implementationVersion: implementationVersion,
       capabilities: capabilities,
       initialState: initialState,
-      nativeViewType: nativeViewType
+      nativeViewType: nativeViewType,
+      drmSupport: drmSupport
     )
   }
   func toList() -> [Any?] {
@@ -452,13 +455,14 @@ struct AppleCreateReply: Hashable, CustomStringConvertible {
       capabilities,
       initialState,
       nativeViewType,
+      drmSupport,
     ]
   }
   static func == (lhs: AppleCreateReply, rhs: AppleCreateReply) -> Bool {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return YlPlayerApplePigeonInternal.deepEquals(lhs.schemaMajor, rhs.schemaMajor) && YlPlayerApplePigeonInternal.deepEquals(lhs.spiMajor, rhs.spiMajor) && YlPlayerApplePigeonInternal.deepEquals(lhs.channelSuffix, rhs.channelSuffix) && YlPlayerApplePigeonInternal.deepEquals(lhs.textureId, rhs.textureId) && YlPlayerApplePigeonInternal.deepEquals(lhs.platform, rhs.platform) && YlPlayerApplePigeonInternal.deepEquals(lhs.implementationName, rhs.implementationName) && YlPlayerApplePigeonInternal.deepEquals(lhs.implementationVersion, rhs.implementationVersion) && YlPlayerApplePigeonInternal.deepEquals(lhs.capabilities, rhs.capabilities) && YlPlayerApplePigeonInternal.deepEquals(lhs.initialState, rhs.initialState) && YlPlayerApplePigeonInternal.deepEquals(lhs.nativeViewType, rhs.nativeViewType)
+    return YlPlayerApplePigeonInternal.deepEquals(lhs.schemaMajor, rhs.schemaMajor) && YlPlayerApplePigeonInternal.deepEquals(lhs.spiMajor, rhs.spiMajor) && YlPlayerApplePigeonInternal.deepEquals(lhs.channelSuffix, rhs.channelSuffix) && YlPlayerApplePigeonInternal.deepEquals(lhs.textureId, rhs.textureId) && YlPlayerApplePigeonInternal.deepEquals(lhs.platform, rhs.platform) && YlPlayerApplePigeonInternal.deepEquals(lhs.implementationName, rhs.implementationName) && YlPlayerApplePigeonInternal.deepEquals(lhs.implementationVersion, rhs.implementationVersion) && YlPlayerApplePigeonInternal.deepEquals(lhs.capabilities, rhs.capabilities) && YlPlayerApplePigeonInternal.deepEquals(lhs.initialState, rhs.initialState) && YlPlayerApplePigeonInternal.deepEquals(lhs.nativeViewType, rhs.nativeViewType) && YlPlayerApplePigeonInternal.deepEquals(lhs.drmSupport, rhs.drmSupport)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -473,10 +477,11 @@ struct AppleCreateReply: Hashable, CustomStringConvertible {
     YlPlayerApplePigeonInternal.deepHash(value: capabilities, hasher: &hasher)
     YlPlayerApplePigeonInternal.deepHash(value: initialState, hasher: &hasher)
     YlPlayerApplePigeonInternal.deepHash(value: nativeViewType, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: drmSupport, hasher: &hasher)
   }
 
   public var description: String {
-    return "AppleCreateReply(schemaMajor: \(String(describing: schemaMajor)), spiMajor: \(String(describing: spiMajor)), channelSuffix: \(String(describing: channelSuffix)), textureId: \(String(describing: textureId)), platform: \(String(describing: platform)), implementationName: \(String(describing: implementationName)), implementationVersion: \(String(describing: implementationVersion)), capabilities: \(String(describing: capabilities)), initialState: \(String(describing: initialState)), nativeViewType: \(String(describing: nativeViewType)))"
+    return "AppleCreateReply(schemaMajor: \(String(describing: schemaMajor)), spiMajor: \(String(describing: spiMajor)), channelSuffix: \(String(describing: channelSuffix)), textureId: \(String(describing: textureId)), platform: \(String(describing: platform)), implementationName: \(String(describing: implementationName)), implementationVersion: \(String(describing: implementationVersion)), capabilities: \(String(describing: capabilities)), initialState: \(String(describing: initialState)), nativeViewType: \(String(describing: nativeViewType)), drmSupport: \(String(describing: drmSupport)))"
   }
 }
 
@@ -663,6 +668,7 @@ struct AppleSourceMessage: Hashable, CustomStringConvertible {
   var format: AppleMediaFormat
   var request: AppleHttpRequestMessage? = nil
   var networkPolicy: AppleNetworkPolicyMessage? = nil
+  var drm: AppleDrmConfigMessage? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
@@ -673,6 +679,7 @@ struct AppleSourceMessage: Hashable, CustomStringConvertible {
     let format = pigeonVar_list[3] as! AppleMediaFormat
     let request: AppleHttpRequestMessage? = nilOrValue(pigeonVar_list[4])
     let networkPolicy: AppleNetworkPolicyMessage? = nilOrValue(pigeonVar_list[5])
+    let drm: AppleDrmConfigMessage? = nilOrValue(pigeonVar_list[6])
 
     return AppleSourceMessage(
       kind: kind,
@@ -680,7 +687,8 @@ struct AppleSourceMessage: Hashable, CustomStringConvertible {
       intent: intent,
       format: format,
       request: request,
-      networkPolicy: networkPolicy
+      networkPolicy: networkPolicy,
+      drm: drm
     )
   }
   func toList() -> [Any?] {
@@ -691,13 +699,14 @@ struct AppleSourceMessage: Hashable, CustomStringConvertible {
       format,
       request,
       networkPolicy,
+      drm,
     ]
   }
   static func == (lhs: AppleSourceMessage, rhs: AppleSourceMessage) -> Bool {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return YlPlayerApplePigeonInternal.deepEquals(lhs.kind, rhs.kind) && YlPlayerApplePigeonInternal.deepEquals(lhs.locator, rhs.locator) && YlPlayerApplePigeonInternal.deepEquals(lhs.intent, rhs.intent) && YlPlayerApplePigeonInternal.deepEquals(lhs.format, rhs.format) && YlPlayerApplePigeonInternal.deepEquals(lhs.request, rhs.request) && YlPlayerApplePigeonInternal.deepEquals(lhs.networkPolicy, rhs.networkPolicy)
+    return YlPlayerApplePigeonInternal.deepEquals(lhs.kind, rhs.kind) && YlPlayerApplePigeonInternal.deepEquals(lhs.locator, rhs.locator) && YlPlayerApplePigeonInternal.deepEquals(lhs.intent, rhs.intent) && YlPlayerApplePigeonInternal.deepEquals(lhs.format, rhs.format) && YlPlayerApplePigeonInternal.deepEquals(lhs.request, rhs.request) && YlPlayerApplePigeonInternal.deepEquals(lhs.networkPolicy, rhs.networkPolicy) && YlPlayerApplePigeonInternal.deepEquals(lhs.drm, rhs.drm)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -708,10 +717,11 @@ struct AppleSourceMessage: Hashable, CustomStringConvertible {
     YlPlayerApplePigeonInternal.deepHash(value: format, hasher: &hasher)
     YlPlayerApplePigeonInternal.deepHash(value: request, hasher: &hasher)
     YlPlayerApplePigeonInternal.deepHash(value: networkPolicy, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: drm, hasher: &hasher)
   }
 
   public var description: String {
-    return "AppleSourceMessage(kind: \(String(describing: kind)), locator: \(String(describing: locator)), intent: \(String(describing: intent)), format: \(String(describing: format)), request: \(String(describing: request)), networkPolicy: \(String(describing: networkPolicy)))"
+    return "AppleSourceMessage(kind: \(String(describing: kind)), locator: \(String(describing: locator)), intent: \(String(describing: intent)), format: \(String(describing: format)), request: \(String(describing: request)), networkPolicy: \(String(describing: networkPolicy)), drm: \(String(describing: drm)))"
   }
 }
 
@@ -1009,39 +1019,44 @@ struct AppleAssessmentReply: Hashable, CustomStringConvertible {
 struct AppleLoadReply: Hashable, CustomStringConvertible {
   var loadRequestId: String
   var sessionId: String
+  var protectedSurface: AppleProtectedSurfaceMessage? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> AppleLoadReply? {
     let loadRequestId = pigeonVar_list[0] as! String
     let sessionId = pigeonVar_list[1] as! String
+    let protectedSurface: AppleProtectedSurfaceMessage? = nilOrValue(pigeonVar_list[2])
 
     return AppleLoadReply(
       loadRequestId: loadRequestId,
-      sessionId: sessionId
+      sessionId: sessionId,
+      protectedSurface: protectedSurface
     )
   }
   func toList() -> [Any?] {
     return [
       loadRequestId,
       sessionId,
+      protectedSurface,
     ]
   }
   static func == (lhs: AppleLoadReply, rhs: AppleLoadReply) -> Bool {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return YlPlayerApplePigeonInternal.deepEquals(lhs.loadRequestId, rhs.loadRequestId) && YlPlayerApplePigeonInternal.deepEquals(lhs.sessionId, rhs.sessionId)
+    return YlPlayerApplePigeonInternal.deepEquals(lhs.loadRequestId, rhs.loadRequestId) && YlPlayerApplePigeonInternal.deepEquals(lhs.sessionId, rhs.sessionId) && YlPlayerApplePigeonInternal.deepEquals(lhs.protectedSurface, rhs.protectedSurface)
   }
 
   func hash(into hasher: inout Hasher) {
     hasher.combine("AppleLoadReply")
     YlPlayerApplePigeonInternal.deepHash(value: loadRequestId, hasher: &hasher)
     YlPlayerApplePigeonInternal.deepHash(value: sessionId, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: protectedSurface, hasher: &hasher)
   }
 
   public var description: String {
-    return "AppleLoadReply(loadRequestId: \(String(describing: loadRequestId)), sessionId: \(String(describing: sessionId)))"
+    return "AppleLoadReply(loadRequestId: \(String(describing: loadRequestId)), sessionId: \(String(describing: sessionId)), protectedSurface: \(String(describing: protectedSurface)))"
   }
 }
 
@@ -2300,6 +2315,381 @@ struct AppleVideoTrackCommand: Hashable, CustomStringConvertible {
   }
 }
 
+/// Generated class from Pigeon that represents data sent in messages.
+struct AppleDrmConfigMessage: Hashable, CustomStringConvertible {
+  var certificate: FlutterStandardTypedData
+  var contentId: FlutterStandardTypedData
+  var timeoutMs: Int64
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> AppleDrmConfigMessage? {
+    let certificate = pigeonVar_list[0] as! FlutterStandardTypedData
+    let contentId = pigeonVar_list[1] as! FlutterStandardTypedData
+    let timeoutMs = pigeonVar_list[2] as! Int64
+
+    return AppleDrmConfigMessage(
+      certificate: certificate,
+      contentId: contentId,
+      timeoutMs: timeoutMs
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      certificate,
+      contentId,
+      timeoutMs,
+    ]
+  }
+  static func == (lhs: AppleDrmConfigMessage, rhs: AppleDrmConfigMessage) -> Bool {
+    if Swift.type(of: lhs) != Swift.type(of: rhs) {
+      return false
+    }
+    return YlPlayerApplePigeonInternal.deepEquals(lhs.certificate, rhs.certificate) && YlPlayerApplePigeonInternal.deepEquals(lhs.contentId, rhs.contentId) && YlPlayerApplePigeonInternal.deepEquals(lhs.timeoutMs, rhs.timeoutMs)
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine("AppleDrmConfigMessage")
+    YlPlayerApplePigeonInternal.deepHash(value: certificate, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: contentId, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: timeoutMs, hasher: &hasher)
+  }
+
+  public var description: String {
+    return "AppleDrmConfigMessage(certificate: \(String(describing: certificate)), contentId: \(String(describing: contentId)), timeoutMs: \(String(describing: timeoutMs)))"
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
+struct AppleDrmSupportMessage: Hashable, CustomStringConvertible {
+  var contractVersion: Int64
+  var playerId: Int64
+  var platform: ApplePlatform
+  var schemeAvailable: Bool
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> AppleDrmSupportMessage? {
+    let contractVersion = pigeonVar_list[0] as! Int64
+    let playerId = pigeonVar_list[1] as! Int64
+    let platform = pigeonVar_list[2] as! ApplePlatform
+    let schemeAvailable = pigeonVar_list[3] as! Bool
+
+    return AppleDrmSupportMessage(
+      contractVersion: contractVersion,
+      playerId: playerId,
+      platform: platform,
+      schemeAvailable: schemeAvailable
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      contractVersion,
+      playerId,
+      platform,
+      schemeAvailable,
+    ]
+  }
+  static func == (lhs: AppleDrmSupportMessage, rhs: AppleDrmSupportMessage) -> Bool {
+    if Swift.type(of: lhs) != Swift.type(of: rhs) {
+      return false
+    }
+    return YlPlayerApplePigeonInternal.deepEquals(lhs.contractVersion, rhs.contractVersion) && YlPlayerApplePigeonInternal.deepEquals(lhs.playerId, rhs.playerId) && YlPlayerApplePigeonInternal.deepEquals(lhs.platform, rhs.platform) && YlPlayerApplePigeonInternal.deepEquals(lhs.schemeAvailable, rhs.schemeAvailable)
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine("AppleDrmSupportMessage")
+    YlPlayerApplePigeonInternal.deepHash(value: contractVersion, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: playerId, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: platform, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: schemeAvailable, hasher: &hasher)
+  }
+
+  public var description: String {
+    return "AppleDrmSupportMessage(contractVersion: \(String(describing: contractVersion)), playerId: \(String(describing: playerId)), platform: \(String(describing: platform)), schemeAvailable: \(String(describing: schemeAvailable)))"
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
+struct AppleProtectedSurfaceMessage: Hashable, CustomStringConvertible {
+  var playerId: Int64
+  var surfaceId: Int64
+  var sessionId: String
+  var generation: Int64
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> AppleProtectedSurfaceMessage? {
+    let playerId = pigeonVar_list[0] as! Int64
+    let surfaceId = pigeonVar_list[1] as! Int64
+    let sessionId = pigeonVar_list[2] as! String
+    let generation = pigeonVar_list[3] as! Int64
+
+    return AppleProtectedSurfaceMessage(
+      playerId: playerId,
+      surfaceId: surfaceId,
+      sessionId: sessionId,
+      generation: generation
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      playerId,
+      surfaceId,
+      sessionId,
+      generation,
+    ]
+  }
+  static func == (lhs: AppleProtectedSurfaceMessage, rhs: AppleProtectedSurfaceMessage) -> Bool {
+    if Swift.type(of: lhs) != Swift.type(of: rhs) {
+      return false
+    }
+    return YlPlayerApplePigeonInternal.deepEquals(lhs.playerId, rhs.playerId) && YlPlayerApplePigeonInternal.deepEquals(lhs.surfaceId, rhs.surfaceId) && YlPlayerApplePigeonInternal.deepEquals(lhs.sessionId, rhs.sessionId) && YlPlayerApplePigeonInternal.deepEquals(lhs.generation, rhs.generation)
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine("AppleProtectedSurfaceMessage")
+    YlPlayerApplePigeonInternal.deepHash(value: playerId, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: surfaceId, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: sessionId, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: generation, hasher: &hasher)
+  }
+
+  public var description: String {
+    return "AppleProtectedSurfaceMessage(playerId: \(String(describing: playerId)), surfaceId: \(String(describing: surfaceId)), sessionId: \(String(describing: sessionId)), generation: \(String(describing: generation)))"
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
+struct AppleProtectedViewCommand: Hashable, CustomStringConvertible {
+  var surface: AppleProtectedSurfaceMessage
+  var viewId: Int64
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> AppleProtectedViewCommand? {
+    let surface = pigeonVar_list[0] as! AppleProtectedSurfaceMessage
+    let viewId = pigeonVar_list[1] as! Int64
+
+    return AppleProtectedViewCommand(
+      surface: surface,
+      viewId: viewId
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      surface,
+      viewId,
+    ]
+  }
+  static func == (lhs: AppleProtectedViewCommand, rhs: AppleProtectedViewCommand) -> Bool {
+    if Swift.type(of: lhs) != Swift.type(of: rhs) {
+      return false
+    }
+    return YlPlayerApplePigeonInternal.deepEquals(lhs.surface, rhs.surface) && YlPlayerApplePigeonInternal.deepEquals(lhs.viewId, rhs.viewId)
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine("AppleProtectedViewCommand")
+    YlPlayerApplePigeonInternal.deepHash(value: surface, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: viewId, hasher: &hasher)
+  }
+
+  public var description: String {
+    return "AppleProtectedViewCommand(surface: \(String(describing: surface)), viewId: \(String(describing: viewId)))"
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
+struct AppleProtectedViewAck: Hashable, CustomStringConvertible {
+  var surface: AppleProtectedSurfaceMessage
+  var viewId: Int64
+  var revision: Int64
+  var attached: Bool
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> AppleProtectedViewAck? {
+    let surface = pigeonVar_list[0] as! AppleProtectedSurfaceMessage
+    let viewId = pigeonVar_list[1] as! Int64
+    let revision = pigeonVar_list[2] as! Int64
+    let attached = pigeonVar_list[3] as! Bool
+
+    return AppleProtectedViewAck(
+      surface: surface,
+      viewId: viewId,
+      revision: revision,
+      attached: attached
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      surface,
+      viewId,
+      revision,
+      attached,
+    ]
+  }
+  static func == (lhs: AppleProtectedViewAck, rhs: AppleProtectedViewAck) -> Bool {
+    if Swift.type(of: lhs) != Swift.type(of: rhs) {
+      return false
+    }
+    return YlPlayerApplePigeonInternal.deepEquals(lhs.surface, rhs.surface) && YlPlayerApplePigeonInternal.deepEquals(lhs.viewId, rhs.viewId) && YlPlayerApplePigeonInternal.deepEquals(lhs.revision, rhs.revision) && YlPlayerApplePigeonInternal.deepEquals(lhs.attached, rhs.attached)
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine("AppleProtectedViewAck")
+    YlPlayerApplePigeonInternal.deepHash(value: surface, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: viewId, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: revision, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: attached, hasher: &hasher)
+  }
+
+  public var description: String {
+    return "AppleProtectedViewAck(surface: \(String(describing: surface)), viewId: \(String(describing: viewId)), revision: \(String(describing: revision)), attached: \(String(describing: attached)))"
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
+struct AppleDrmExchangeId: Hashable, CustomStringConvertible {
+  var surface: AppleProtectedSurfaceMessage
+  var loadRequestId: String
+  var epoch: Int64
+  var requestId: Int64
+  var exchangeId: String
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> AppleDrmExchangeId? {
+    let surface = pigeonVar_list[0] as! AppleProtectedSurfaceMessage
+    let loadRequestId = pigeonVar_list[1] as! String
+    let epoch = pigeonVar_list[2] as! Int64
+    let requestId = pigeonVar_list[3] as! Int64
+    let exchangeId = pigeonVar_list[4] as! String
+
+    return AppleDrmExchangeId(
+      surface: surface,
+      loadRequestId: loadRequestId,
+      epoch: epoch,
+      requestId: requestId,
+      exchangeId: exchangeId
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      surface,
+      loadRequestId,
+      epoch,
+      requestId,
+      exchangeId,
+    ]
+  }
+  static func == (lhs: AppleDrmExchangeId, rhs: AppleDrmExchangeId) -> Bool {
+    if Swift.type(of: lhs) != Swift.type(of: rhs) {
+      return false
+    }
+    return YlPlayerApplePigeonInternal.deepEquals(lhs.surface, rhs.surface) && YlPlayerApplePigeonInternal.deepEquals(lhs.loadRequestId, rhs.loadRequestId) && YlPlayerApplePigeonInternal.deepEquals(lhs.epoch, rhs.epoch) && YlPlayerApplePigeonInternal.deepEquals(lhs.requestId, rhs.requestId) && YlPlayerApplePigeonInternal.deepEquals(lhs.exchangeId, rhs.exchangeId)
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine("AppleDrmExchangeId")
+    YlPlayerApplePigeonInternal.deepHash(value: surface, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: loadRequestId, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: epoch, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: requestId, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: exchangeId, hasher: &hasher)
+  }
+
+  public var description: String {
+    return "AppleDrmExchangeId(surface: \(String(describing: surface)), loadRequestId: \(String(describing: loadRequestId)), epoch: \(String(describing: epoch)), requestId: \(String(describing: requestId)), exchangeId: \(String(describing: exchangeId)))"
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
+struct AppleDrmLicenseRequest: Hashable, CustomStringConvertible {
+  var id: AppleDrmExchangeId
+  var challenge: FlutterStandardTypedData
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> AppleDrmLicenseRequest? {
+    let id = pigeonVar_list[0] as! AppleDrmExchangeId
+    let challenge = pigeonVar_list[1] as! FlutterStandardTypedData
+
+    return AppleDrmLicenseRequest(
+      id: id,
+      challenge: challenge
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      id,
+      challenge,
+    ]
+  }
+  static func == (lhs: AppleDrmLicenseRequest, rhs: AppleDrmLicenseRequest) -> Bool {
+    if Swift.type(of: lhs) != Swift.type(of: rhs) {
+      return false
+    }
+    return YlPlayerApplePigeonInternal.deepEquals(lhs.id, rhs.id) && YlPlayerApplePigeonInternal.deepEquals(lhs.challenge, rhs.challenge)
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine("AppleDrmLicenseRequest")
+    YlPlayerApplePigeonInternal.deepHash(value: id, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: challenge, hasher: &hasher)
+  }
+
+  public var description: String {
+    return "AppleDrmLicenseRequest(id: \(String(describing: id)), challenge: \(String(describing: challenge)))"
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
+struct AppleDrmLicenseReply: Hashable, CustomStringConvertible {
+  var id: AppleDrmExchangeId
+  var response: FlutterStandardTypedData? = nil
+  var failureCode: String? = nil
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> AppleDrmLicenseReply? {
+    let id = pigeonVar_list[0] as! AppleDrmExchangeId
+    let response: FlutterStandardTypedData? = nilOrValue(pigeonVar_list[1])
+    let failureCode: String? = nilOrValue(pigeonVar_list[2])
+
+    return AppleDrmLicenseReply(
+      id: id,
+      response: response,
+      failureCode: failureCode
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      id,
+      response,
+      failureCode,
+    ]
+  }
+  static func == (lhs: AppleDrmLicenseReply, rhs: AppleDrmLicenseReply) -> Bool {
+    if Swift.type(of: lhs) != Swift.type(of: rhs) {
+      return false
+    }
+    return YlPlayerApplePigeonInternal.deepEquals(lhs.id, rhs.id) && YlPlayerApplePigeonInternal.deepEquals(lhs.response, rhs.response) && YlPlayerApplePigeonInternal.deepEquals(lhs.failureCode, rhs.failureCode)
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine("AppleDrmLicenseReply")
+    YlPlayerApplePigeonInternal.deepHash(value: id, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: response, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: failureCode, hasher: &hasher)
+  }
+
+  public var description: String {
+    return "AppleDrmLicenseReply(id: \(String(describing: id)), response: \(String(describing: response)), failureCode: \(String(describing: failureCode)))"
+  }
+}
+
 private class YlPlayerApplePigeonCodecReader: FlutterStandardReader {
   override func readValue(ofType type: UInt8) -> Any? {
     switch type {
@@ -2475,6 +2865,22 @@ private class YlPlayerApplePigeonCodecReader: FlutterStandardReader {
       return AppleVideoSelectionMessage.fromList(self.readValue() as! [Any?])
     case 180:
       return AppleVideoTrackCommand.fromList(self.readValue() as! [Any?])
+    case 181:
+      return AppleDrmConfigMessage.fromList(self.readValue() as! [Any?])
+    case 182:
+      return AppleDrmSupportMessage.fromList(self.readValue() as! [Any?])
+    case 183:
+      return AppleProtectedSurfaceMessage.fromList(self.readValue() as! [Any?])
+    case 184:
+      return AppleProtectedViewCommand.fromList(self.readValue() as! [Any?])
+    case 185:
+      return AppleProtectedViewAck.fromList(self.readValue() as! [Any?])
+    case 186:
+      return AppleDrmExchangeId.fromList(self.readValue() as! [Any?])
+    case 187:
+      return AppleDrmLicenseRequest.fromList(self.readValue() as! [Any?])
+    case 188:
+      return AppleDrmLicenseReply.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
     }
@@ -2638,6 +3044,30 @@ private class YlPlayerApplePigeonCodecWriter: FlutterStandardWriter {
       super.writeValue(value.toList())
     } else if let value = value as? AppleVideoTrackCommand {
       super.writeByte(180)
+      super.writeValue(value.toList())
+    } else if let value = value as? AppleDrmConfigMessage {
+      super.writeByte(181)
+      super.writeValue(value.toList())
+    } else if let value = value as? AppleDrmSupportMessage {
+      super.writeByte(182)
+      super.writeValue(value.toList())
+    } else if let value = value as? AppleProtectedSurfaceMessage {
+      super.writeByte(183)
+      super.writeValue(value.toList())
+    } else if let value = value as? AppleProtectedViewCommand {
+      super.writeByte(184)
+      super.writeValue(value.toList())
+    } else if let value = value as? AppleProtectedViewAck {
+      super.writeByte(185)
+      super.writeValue(value.toList())
+    } else if let value = value as? AppleDrmExchangeId {
+      super.writeByte(186)
+      super.writeValue(value.toList())
+    } else if let value = value as? AppleDrmLicenseRequest {
+      super.writeByte(187)
+      super.writeValue(value.toList())
+    } else if let value = value as? AppleDrmLicenseReply {
+      super.writeByte(188)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -3059,6 +3489,151 @@ class ApplePlayerFlutterApi: ApplePlayerFlutterApiProtocol {
       let channelName: String = "dev.flutter.pigeon.yl_player_apple.ApplePlayerFlutterApi.onPlaybackFailed\(messageChannelSuffix)"
       let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
       channel.sendMessage([eventArg] as [Any?]) { response in
+        guard let listResponse = response as? [Any?] else {
+          continuation.resume(throwing: createConnectionError(withChannelName: channelName))
+          return
+        }
+        if listResponse.count > 1 {
+          let code: String = listResponse[0] as! String
+          let message: String? = nilOrValue(listResponse[1])
+          let details: String? = nilOrValue(listResponse[2])
+          continuation.resume(throwing: PigeonError(code: code, message: message, details: details))
+        } else {
+          continuation.resume()
+        }
+      }
+    }
+  }
+}
+/// Generated protocol from Pigeon that represents a handler of messages from Flutter.
+protocol AppleDrmHostApi {
+  func cancelProtectedLoad(loadRequestId: String) throws
+  func attachProtectedView(command: AppleProtectedViewCommand) async throws -> AppleProtectedViewAck
+  func detachProtectedView(command: AppleProtectedViewCommand) async throws -> AppleProtectedViewAck
+}
+
+/// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
+class AppleDrmHostApiSetup {
+  static var codec: FlutterStandardMessageCodec { YlPlayerApplePigeonCodec.shared }
+  /// Sets up an instance of `AppleDrmHostApi` to handle messages through the `binaryMessenger`.
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: AppleDrmHostApi?, messageChannelSuffix: String = "") {
+    let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+    let cancelProtectedLoadChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.yl_player_apple.AppleDrmHostApi.cancelProtectedLoad\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      cancelProtectedLoadChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let loadRequestIdArg = args[0] as! String
+        do {
+          try api.cancelProtectedLoad(loadRequestId: loadRequestIdArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      cancelProtectedLoadChannel.setMessageHandler(nil)
+    }
+    let attachProtectedViewChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.yl_player_apple.AppleDrmHostApi.attachProtectedView\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      attachProtectedViewChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let commandArg = args[0] as! AppleProtectedViewCommand
+        Task { @MainActor in
+          do {
+            let result = try await api.attachProtectedView(command: commandArg)
+            reply(wrapResult(result))
+          } catch {
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      attachProtectedViewChannel.setMessageHandler(nil)
+    }
+    let detachProtectedViewChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.yl_player_apple.AppleDrmHostApi.detachProtectedView\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      detachProtectedViewChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let commandArg = args[0] as! AppleProtectedViewCommand
+        Task { @MainActor in
+          do {
+            let result = try await api.detachProtectedView(command: commandArg)
+            reply(wrapResult(result))
+          } catch {
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      detachProtectedViewChannel.setMessageHandler(nil)
+    }
+  }
+}
+
+/// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
+protocol AppleDrmFlutterApiProtocol {
+  func exchangeLicense(request requestArg: AppleDrmLicenseRequest) async throws -> AppleDrmLicenseReply
+  func cancelLicense(id idArg: AppleDrmExchangeId) async throws
+  func onProtectedFrame(frame frameArg: AppleProtectedViewAck) async throws
+}
+class AppleDrmFlutterApi: AppleDrmFlutterApiProtocol {
+  private let binaryMessenger: FlutterBinaryMessenger
+  private let messageChannelSuffix: String
+  init(binaryMessenger: FlutterBinaryMessenger, messageChannelSuffix: String = "") {
+    self.binaryMessenger = binaryMessenger
+    self.messageChannelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+  }
+  var codec: YlPlayerApplePigeonCodec {
+    return YlPlayerApplePigeonCodec.shared
+  }
+  func exchangeLicense(request requestArg: AppleDrmLicenseRequest) async throws -> AppleDrmLicenseReply {
+    return try await withCheckedThrowingContinuation { continuation in
+      let channelName: String = "dev.flutter.pigeon.yl_player_apple.AppleDrmFlutterApi.exchangeLicense\(messageChannelSuffix)"
+      let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+      channel.sendMessage([requestArg] as [Any?]) { response in
+        guard let listResponse = response as? [Any?] else {
+          continuation.resume(throwing: createConnectionError(withChannelName: channelName))
+          return
+        }
+        if listResponse.count > 1 {
+          let code: String = listResponse[0] as! String
+          let message: String? = nilOrValue(listResponse[1])
+          let details: String? = nilOrValue(listResponse[2])
+          continuation.resume(throwing: PigeonError(code: code, message: message, details: details))
+        } else if listResponse[0] == nil {
+          continuation.resume(throwing: PigeonError(code: "null-error", message: "Flutter api returned null value for non-null return value.", details: ""))
+        } else {
+          let result = listResponse[0] as! AppleDrmLicenseReply
+          continuation.resume(returning: result)
+        }
+      }
+    }
+  }
+  func cancelLicense(id idArg: AppleDrmExchangeId) async throws {
+    return try await withCheckedThrowingContinuation { continuation in
+      let channelName: String = "dev.flutter.pigeon.yl_player_apple.AppleDrmFlutterApi.cancelLicense\(messageChannelSuffix)"
+      let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+      channel.sendMessage([idArg] as [Any?]) { response in
+        guard let listResponse = response as? [Any?] else {
+          continuation.resume(throwing: createConnectionError(withChannelName: channelName))
+          return
+        }
+        if listResponse.count > 1 {
+          let code: String = listResponse[0] as! String
+          let message: String? = nilOrValue(listResponse[1])
+          let details: String? = nilOrValue(listResponse[2])
+          continuation.resume(throwing: PigeonError(code: code, message: message, details: details))
+        } else {
+          continuation.resume()
+        }
+      }
+    }
+  }
+  func onProtectedFrame(frame frameArg: AppleProtectedViewAck) async throws {
+    return try await withCheckedThrowingContinuation { continuation in
+      let channelName: String = "dev.flutter.pigeon.yl_player_apple.AppleDrmFlutterApi.onProtectedFrame\(messageChannelSuffix)"
+      let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+      channel.sendMessage([frameArg] as [Any?]) { response in
         guard let listResponse = response as? [Any?] else {
           continuation.resume(throwing: createConnectionError(withChannelName: channelName))
           return

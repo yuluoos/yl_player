@@ -320,7 +320,7 @@ final class YlAppleRegistryTests: XCTestCase {
       return Self.services()
     }, makeCallbacks: { _ in AppleRecordingCallbacks() }, installHost: { _, _ in })
     defer { registry.detach() }
-    for incompatibleSchema: Int64 in [1, 2, 3] {
+    for incompatibleSchema: Int64 in [1, 2, 3, 4] {
       XCTAssertThrowsError(try registry.create(request: AppleCreateRequest(schemaMajor: incompatibleSchema,
         options: ApplePlayerOptionsMessage(decoderPolicy: .systemDefault,
           audioPolicy: .appManaged, positionUpdateIntervalMs: 5000)))) { error in
@@ -328,11 +328,11 @@ final class YlAppleRegistryTests: XCTestCase {
       }
     }
     XCTAssertEqual(allocations, 0)
-    XCTAssertThrowsError(try registry.create(request: AppleCreateRequest(schemaMajor: 4,
+    XCTAssertThrowsError(try registry.create(request: AppleCreateRequest(schemaMajor: 5,
       options: ApplePlayerOptionsMessage(decoderPolicy: .systemDefault,
         audioPolicy: .appManaged, positionUpdateIntervalMs: 0))))
     XCTAssertEqual(allocations, 0)
-    let reply = try registry.create(request: AppleCreateRequest(schemaMajor: 4,
+    let reply = try registry.create(request: AppleCreateRequest(schemaMajor: 5,
       options: ApplePlayerOptionsMessage(decoderPolicy: .systemDefault,
         audioPolicy: .appManaged, positionUpdateIntervalMs: 5000)))
     XCTAssertEqual(allocations, 1)
@@ -352,7 +352,7 @@ final class YlAppleRegistryTests: XCTestCase {
     }, makeCallbacks: { _ in AppleRecordingCallbacks() }, installHost: { _, _ in },
       lifecycle: lifecycle)
     defer { registry.detach() }
-    let created = try registry.create(request: .init(schemaMajor: 4,
+    let created = try registry.create(request: .init(schemaMajor: 5,
       options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged,
         positionUpdateIntervalMs: 500)))
     let host = try XCTUnwrap(registry.host(for: created.channelSuffix))
@@ -647,7 +647,7 @@ final class YlAppleHostDeliveryTests: XCTestCase {
     let registry = YlApplePlayerRegistry(makeServices: { _ in textures.services() },
       makeCallbacks: { _ in callbacks }, installHost: { suffix, host in if host == nil { removed.append(suffix) } })
     defer { registry.detach() }
-    let created = try registry.create(request: .init(schemaMajor: 4,
+    let created = try registry.create(request: .init(schemaMajor: 5,
       options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 100)))
     let host = try XCTUnwrap(registry.host(for: created.channelSuffix))
     XCTAssertTrue(callbacks.states.isEmpty, "Create stays silent until attach")
@@ -1133,7 +1133,7 @@ final class YlAudioOwnershipTests: XCTestCase {
       makeCallbacks: { _ in AppleRecordingCallbacks() }, installHost: { _, _ in }, audioOwnership: coordinator)
   }
   func create(_ registry: YlApplePlayerRegistry, managed: Bool = true) throws -> YlApplePlayerHost {
-    let reply = try registry.create(request: .init(schemaMajor: 4,
+    let reply = try registry.create(request: .init(schemaMajor: 5,
       options: .init(decoderPolicy: .systemDefault, audioPolicy: managed ? .pluginManagedMediaPlayback : .appManaged, positionUpdateIntervalMs: 100)))
     return try XCTUnwrap(registry.host(for: reply.channelSuffix))
   }

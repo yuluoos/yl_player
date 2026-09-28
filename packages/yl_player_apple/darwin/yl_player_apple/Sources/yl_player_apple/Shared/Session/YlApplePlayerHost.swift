@@ -68,6 +68,10 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
     outbound.onFailure = { [weak self] in self?.close() }
   }
 
+  func bindDrm(_ bridge: YlFairPlayBridge) {
+    coordinator.drmBridge = bridge
+    bridge.cancelLoad = { [weak self] id in self?.coordinator.cancelProtectedLoad(id) }
+  }
   var initialState: AppleStateMessage { encode(reducer.state) }
   var managesAudio: Bool { options.audioPolicy == .pluginManagedMediaPlayback }
   var isActive: Bool { coordinator.isActive }
@@ -125,7 +129,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
             self.didCommit?()
           }, didRollback: { self.didRollback?() }, completion: { result in
             completion(result.map { AppleLoadReply(loadRequestId: identity.loadRequestId,
-              sessionId: identity.sessionId) }.mapError { $0 as Error })
+              sessionId: identity.sessionId, protectedSurface: self.coordinator.protectedSurface) }.mapError { $0 as Error })
           })
       } catch { completion(.failure(error)) }
     }
@@ -335,6 +339,9 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
       return
     }
     reducer.accept(callback, identity: identity)
+    if case .firstFrame = callback.event, coordinator.protectedSurface != nil {
+      reducer.publicFrame(identity: identity)
+    }
   }
   private func alive() throws {
     if disposed { throw YlAppleFailureMapper.command(NativePlayerError(category: "resource",
@@ -481,6 +488,8 @@ enum YlAppleNativeInput {
     case .onDemand: intent = .onDemand
     case .live: intent = .live
     }
+    let drm = source.drm.map { YlFairPlayConfiguration(certificate: $0.certificate.data,
+      contentId: $0.contentId.data, timeoutMs: $0.timeoutMs) }
     return YlAppleLoadRecipe(source: YlAppleSourceDescriptor(uri: uri,
       kind: source.kind == .file ? .file : .network, formatHint: format, intent: intent,
       headers: headers, credentials: credentials,
@@ -495,7 +504,7 @@ enum YlAppleNativeInput {
         startPositionMs: options.startPositionMs, bufferStrategy: strategy,
         minDurationMs: buffer.minDurationMs, maxDurationMs: buffer.maxDurationMs,
         maxManagedBytes: buffer.maxManagedBytes.map(Int.init), videoConstraints: limits, decoderPolicy: decoder),
-      loadRequestId: loadRequestId))
+      drm: drm, loadRequestId: loadRequestId))
   }
 }
 

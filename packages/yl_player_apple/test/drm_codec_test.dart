@@ -3,7 +3,7 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'package:yl_player_apple/src/apple_codec.dart';
 
 void main() {
-  test('schema4 codec rejects DRM instead of dropping its configuration', () {
+  test('schema5 keeps FairPlay binary configuration and rejects Widevine', () {
     final endpoint = YlDrmLicenseEndpoint(Uri.parse('https://license.test'));
     final widevine = YlNetworkSource(
       Uri.parse('https://media.test/v'),
@@ -29,16 +29,10 @@ void main() {
         ),
       ),
     );
-    expect(
-      () => AppleCodec.source(fps),
-      throwsA(
-        isA<YlPlayerException>().having(
-          (e) => e.failure.code,
-          'code',
-          YlFailureCodes.drmUnsupported,
-        ),
-      ),
-    );
-    expect(AppleCodec.schemaMajor, 4);
+    final wire = AppleCodec.source(fps);
+    expect(wire.drm!.certificate, [1]);
+    expect(wire.drm!.contentId, [2]);
+    expect(wire.drm!.timeoutMs, 10000);
+    expect(AppleCodec.schemaMajor, 5);
   });
 }

@@ -1,6 +1,6 @@
 # DRM 契约：受保护显示与许可证边界（P06 Task 1/2）
 
-2026-09-27。需求依据：REQ-01/03/13/15，[需求基线](2026-09-20-playback-expansion-requirements.md)及 [P06](../plans/2026-09-26-remaining-06-drm.md)。本节冻结后续实现的显示边界；第 3 节冻结生产显示接口；第 6 节 Dart 配置和许可证传输已实现。Android 3B3 的公共桥接现状见第11节，Apple 仍等待3C。原型只在 example Debug 生效，不接受 DRM 配置，不获取许可证，不声明保护通过。
+2026-09-27。需求依据：REQ-01/03/13/15，[需求基线](2026-09-20-playback-expansion-requirements.md)及 [P06](../plans/2026-09-26-remaining-06-drm.md)。本节冻结后续实现的显示边界；第 3 节冻结生产显示接口；第 6 节 Dart 配置和许可证传输已实现。Android 3B3 的公共桥接现状见第11节，Apple 3C2 的工程集成见第13节。原型只在 example Debug 生效，不接受 DRM 配置，不获取许可证，不声明保护通过。
 
 ## 1. 输出路线与现状
 
@@ -20,14 +20,14 @@
 | --- | --- | --- |
 | Android DASH + Widevine cenc | 项目 API24+；系统支持对应 UUID、实际 codec 与请求安全等级 | Android 公共工程路径已实现，当前视频硬件证据需 API29+；设备能力/安全 decoder/原生 surface 任一不满足则拒绝。授权真机未验收 |
 | Android DASH + Widevine cbcs | API25+，其余门槛相同 | API24 明确拒绝 cbcs，不提高整包 minSdk |
-| Apple HLS + FairPlay | iOS15/macOS12 项目下限内使用系统 FPS API；原生受保护显示 | 仅可行性原型。确切 HLS 加密封装、设备、证书/许可证与系统保护状态必须逐样本验证；不承诺任意加密 MPD 或两平台地址通用 |
+| Apple HLS + FairPlay | iOS15/macOS12 项目下限内使用系统 FPS API；原生受保护显示 | 公共工程接入已实现，授权播放未验收。确切 HLS 加密封装、设备、证书/许可证与系统保护状态必须逐样本验证；不承诺任意加密 MPD 或两平台地址通用 |
 | 离线/永久许可证、跨 DRM 转换、外接 DV 信号 | 不属于本轮实现范围 | 不新增隐式支持；外接保护和 DV 输出分别验收 |
 
 API 可用性来自本地 SDK：AVContentKeySession/FairPlay 常量为 macOS10.12.4/iOS10.3 起；本项目仍保持更高的既有下限。设备上存在 API 不等于授权播放可用。
 
 官方依据（2026-09-27 核查）：[Media3 DRM 模式表](https://developer.android.com/media/media3/exoplayer/drm)、[SurfaceView.setSecure](https://developer.android.com/reference/android/view/SurfaceView#setSecure(boolean))、[Flutter 显式 hybrid composition](https://api.flutter.dev/flutter/services/PlatformViewsService/initExpensiveAndroidView.html)、[AVPlayerLayer 就绪含义](https://developer.apple.com/documentation/avfoundation/avplayerlayer/isreadyfordisplay)、[FairPlay Streaming 概览](https://developer.apple.com/streaming/fps/FairPlayStreamingOverview.pdf)。FPS 概览是历史架构文档，不代替当前设备/授权验收。
 
-## 3. 生产 view/bridge 契约（Android 已实现，Apple 待3C）
+## 3. 生产 view/bridge 契约（双平台工程接入已实现，授权物理验收待Task4）
 
 新能力不得复用 `textureId` 表示保护级别，也不得插入旧 Pigeon enum ordinal。Task 2 增加可选配置准入标记；Task 3 随原生受保护会话增加独立消息；未实现能力的旧 adapter 对 DRM 请求在 load admission 阶段返回明确不支持，clear 请求保持兼容。
 
@@ -184,3 +184,18 @@ Apple 没有可复用的系统密钥 owner，现有 AVPlayer 后端读取像素�
 后续3C2必须先从 AVPlayerLayer/AVPlayer 解绑过期recipient的播放，再调用suspend/close；恢复时创建新asset，禁止复用当前明文像素路径。isUsable 仅为系统响应处理证据，不是实际安全decoder、显示保护或HDCP证明；后续逐源策略与真实授权输出仍需独立验证。本阶段无离线持久密钥、证书自动获取、许可证会话报告上传或商业SDK。
 
 依据：本地Xcode27 SDK AVContentKeySession.h，以及 Apple [系统响应成功回调](https://developer.apple.com/documentation/avfoundation/avcontentkeysessiondelegate/contentkeysession(_:contentkeyrequestdidsucceed:))、[密钥接收者注册](https://developer.apple.com/documentation/avfoundation/avcontentkeysession/addcontentkeyrecipient(_:))、[会话expire](https://developer.apple.com/documentation/avfoundation/avcontentkeysession/expire())，2026-09-28核查；包下限仍iOS15/macOS12。
+
+
+## 13. Task 3C2：Apple schema5 与独立保护输出（2026-09-28）
+
+Apple 原生/Dart 共同升级私有 schema5，SPI仍为2；schema4在分配资源前拒绝。`AppleDrmConfigMessage`仅携带certificate/contentId二进制及timeout，许可证endpoint/凭据留在Dart Task2客户端。`drmSupport`表示桥接/API路线存在，不证明当前设备、样本或HDCP可用。逐源评估始终requiresInspection，不能把unknown变成通过。
+
+`YlFairPlayBackend`独占新AVURLAsset、AVPlayer、AVContentKeySession；在加载metadata之前注册recipient。候选保持静音，只有protected-content元数据、item ready及当前系统keys usable同时满足且无显式保护不足时才进入现有原子session/audio事务。明文保护配置不转clear。替换失败保留原session/音频归属；切回普通AVPlayer时open也位于原子提交边界内。该门槛是否覆盖具体提供方的实际播放时序仍需授权样本验证。
+
+输出使用`YlFairPlayViewRegistry`的player/surface/session/generation四元组。只有已提交记录可借给一个view；错owner、过期和重复视图保持黑屏。每次挂载、资产重建、密钥更新和停用撤下旧layer并推进revision；重新挂载创建新AVPlayerLayer。首帧只接受当前layer/revision的isReadyForDisplay，经过当前view的ACK后由Dart公开。ACK与frame分别单调合并，允许新frame先于旧ACK到达，不允许迟到旧frame撤回新状态。不进入AVPlayerItemVideoOutput、FFmpeg或CVPixelBuffer路径。
+
+后台/peer停用先解绑layer、静音和移除item，再关闭密钥owner；恢复新建asset/player/keysession，保留公开session身份。并发Play/自动恢复共用一次准备，最多32个等待命令，成功、失败或取消逐一完成；不覆盖旧回调。更新撤回显示和音频直至新密钥系统确认。暂停状态在周期快照和音量/速度更新后保持paused。stop/dispose使输出记录与旧回包失效。
+
+许可证请求外包完整四元组、loadRequestId、key epoch/requestId及唯一exchangeId，回包必须全部匹配；每播放器最多4项并发。原生返回错误使用固定白名单；不输出URL、授权头、证书、SPC或CKC。媒体请求与许可证请求不共享配置或重试预算。具体二进制限额及HTTP规则沿用第6/12节。
+
+本阶段准入限制：HTTP(S)显式HLS；platformDefault且没有媒体headers/credentials；automatic缓冲、非hardwareRequired、无严格画质约束。其他配置明确policy.unsupported或drm.unsupported。受保护音轨/视频variant目录暂未公开，音轨/固定清晰度选择明确拒绝；自适应选择由系统控制。视图只支持contain/center。字幕合成、crop/rotation、HDR/DV、外接保护和实际provider封装归Task4验证。本次原生/Dart测试是工程证据，CAP-DRM和授权物理验收仍不勾选。

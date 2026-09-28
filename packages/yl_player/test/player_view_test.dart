@@ -70,6 +70,44 @@ void main() {
   );
 
   for (final platform in [TargetPlatform.iOS, TargetPlatform.macOS]) {
+    testWidgets('protected Apple view mounts before first frame on $platform', (
+      tester,
+    ) async {
+      debugDefaultTargetPlatformOverride = platform;
+      final backend = _ProtectedPlatformPlayer(platform: platform);
+      final controller = await _createCommittedController(
+        backend,
+        sessionId: _s1,
+        geometry: _wideGeometry,
+      );
+      await _pumpView(tester, YlPlayerView(controller: controller));
+      await tester.pump();
+      expect(
+        find.byType(platform == TargetPlatform.iOS ? UiKitView : AppKitView),
+        findsOneWidget,
+      );
+      expect(find.byType(Texture), findsNothing);
+      expect(find.byType(Opacity), findsNothing);
+      final args =
+          nativeCalls.singleWhere((call) => call.method == 'create').arguments
+              as Map;
+      expect(args['viewType'], 'yl_player_apple/protected_video');
+      expect(
+        const StandardMessageCodec().decodeMessage(
+          ByteData.sublistView(args['params']),
+        ),
+        {'playerId': 1, 'surfaceId': 2, 'sessionId': 's1', 'generation': 3},
+      );
+      expect(backend.attached, 1);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump();
+      expect(backend.detached, 1);
+      await tester.runAsync(controller.dispose);
+      debugDefaultTargetPlatformOverride = null;
+    });
+  }
+
+  for (final platform in [TargetPlatform.iOS, TargetPlatform.macOS]) {
     final nativeWidgetType = platform == TargetPlatform.iOS
         ? UiKitView
         : AppKitView;
@@ -646,17 +684,20 @@ final class _NativePlatformPlayer extends FakePlatformPlayer
 
 final class _ProtectedPlatformPlayer extends FakePlatformPlayer
     implements YlPlatformProtectedVideoSurfaceProvider {
+  _ProtectedPlatformPlayer({this.platform = TargetPlatform.android});
+  final TargetPlatform platform;
   int attached = 0, detached = 0;
   @override
-  YlProtectedVideoSurface? get protectedVideoSurface =>
-      const YlProtectedVideoSurface(
-        playerId: 1,
-        surfaceId: 2,
-        sessionId: 's1',
-        generation: 3,
-        viewType: 'yl_player_android/protected_video',
-        platform: TargetPlatform.android,
-      );
+  YlProtectedVideoSurface? get protectedVideoSurface => YlProtectedVideoSurface(
+    playerId: 1,
+    surfaceId: 2,
+    sessionId: 's1',
+    generation: 3,
+    viewType: platform == TargetPlatform.android
+        ? 'yl_player_android/protected_video'
+        : 'yl_player_apple/protected_video',
+    platform: platform,
+  );
   @override
   Future<void> attachProtectedView(
     YlProtectedVideoSurface surface,

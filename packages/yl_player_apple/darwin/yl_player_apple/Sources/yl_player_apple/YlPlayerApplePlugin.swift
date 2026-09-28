@@ -32,11 +32,20 @@ public final class YlPlayerApplePlugin: NSObject, FlutterPlugin {
         displayView: registrar.view, activateAudioSession: {}, nativeViews: nativeViews)
     }
     #endif
+    let protectedViews = YlFairPlayViewRegistry()
+    registrar.register(YlFairPlayViewFactory(registry: protectedViews), withId: YlFairPlayViewFactory.viewType)
     let registry = YlApplePlayerRegistry(makeServices: services,
       makeCallbacks: { makeCallbacks(messenger: messenger, suffix: $0) },
       installHost: { suffix, host in
         ApplePlayerHostApiSetup.setUp(binaryMessenger: messenger, api: host, messageChannelSuffix: suffix)
-      }, lifecycle: lifecycle)
+      }, lifecycle: lifecycle, makeDrmBridge: { id, suffix in
+        let bridge = YlFairPlayBridge(playerId: id, views: protectedViews,
+          callbacks: AppleDrmFlutterApi(binaryMessenger: YlApplePlatformMessenger(messenger), messageChannelSuffix: suffix))
+        AppleDrmHostApiSetup.setUp(binaryMessenger: messenger, api: bridge, messageChannelSuffix: suffix)
+        return bridge
+      }, uninstallDrm: { suffix in
+        AppleDrmHostApiSetup.setUp(binaryMessenger: messenger, api: nil, messageChannelSuffix: suffix)
+      })
     ApplePlayerFactoryHostApiSetup.setUp(binaryMessenger: messenger, api: registry)
     registrar.publish(YlPlayerApplePlugin(registry: registry))
   }

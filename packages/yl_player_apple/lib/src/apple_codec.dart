@@ -5,7 +5,7 @@ import 'pigeon/yl_player_apple.g.dart';
 
 /// The schema boundary. Generated values never escape this package.
 abstract final class AppleCodec {
-  static const schemaMajor = 4;
+  static const schemaMajor = 5;
   static const _maxDurationMs = 9223372036854775;
   static final _metadata = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$');
 
@@ -114,8 +114,6 @@ abstract final class AppleCodec {
     validateYlSource(value);
     if (value is YlNetworkSource && value.drm != null) {
       validateYlDrmPlatform(value.drm!, TargetPlatform.iOS);
-      // Schema 4 has no DRM fields: fail before serializing a clear source.
-      throw ylDrmException(YlFailureCodes.drmUnsupported);
     }
     final commonIntent = _intent(value.intent);
     final commonFormat = _format(value.format);
@@ -135,6 +133,13 @@ abstract final class AppleCodec {
       YlNetworkSource() => AppleSourceMessage(
         kind: AppleSourceKind.network,
         locator: value.uri.toString(),
+        drm: value.drm is YlFairPlayDrm
+            ? AppleDrmConfigMessage(
+                certificate: (value.drm! as YlFairPlayDrm).certificate.bytes,
+                contentId: (value.drm! as YlFairPlayDrm).contentId.bytes,
+                timeoutMs: value.drm!.license.timeout.inMilliseconds,
+              )
+            : null,
         intent: commonIntent,
         format: commonFormat,
         request: AppleHttpRequestMessage(

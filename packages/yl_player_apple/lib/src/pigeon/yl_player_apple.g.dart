@@ -351,6 +351,7 @@ class AppleCreateReply {
     required this.capabilities,
     required this.initialState,
     this.nativeViewType,
+    this.drmSupport,
   });
 
   int schemaMajor;
@@ -373,6 +374,8 @@ class AppleCreateReply {
 
   String? nativeViewType;
 
+  AppleDrmSupportMessage? drmSupport;
+
   List<Object?> _toList() {
     return <Object?>[
       schemaMajor,
@@ -385,6 +388,7 @@ class AppleCreateReply {
       capabilities,
       initialState,
       nativeViewType,
+      drmSupport,
     ];
   }
 
@@ -404,6 +408,7 @@ class AppleCreateReply {
       capabilities: result[7]! as AppleCapabilitiesMessage,
       initialState: result[8]! as AppleStateMessage,
       nativeViewType: result[9] as String?,
+      drmSupport: result[10] as AppleDrmSupportMessage?,
     );
   }
 
@@ -416,7 +421,7 @@ class AppleCreateReply {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(schemaMajor, other.schemaMajor) && _deepEquals(spiMajor, other.spiMajor) && _deepEquals(channelSuffix, other.channelSuffix) && _deepEquals(textureId, other.textureId) && _deepEquals(platform, other.platform) && _deepEquals(implementationName, other.implementationName) && _deepEquals(implementationVersion, other.implementationVersion) && _deepEquals(capabilities, other.capabilities) && _deepEquals(initialState, other.initialState) && _deepEquals(nativeViewType, other.nativeViewType);
+    return _deepEquals(schemaMajor, other.schemaMajor) && _deepEquals(spiMajor, other.spiMajor) && _deepEquals(channelSuffix, other.channelSuffix) && _deepEquals(textureId, other.textureId) && _deepEquals(platform, other.platform) && _deepEquals(implementationName, other.implementationName) && _deepEquals(implementationVersion, other.implementationVersion) && _deepEquals(capabilities, other.capabilities) && _deepEquals(initialState, other.initialState) && _deepEquals(nativeViewType, other.nativeViewType) && _deepEquals(drmSupport, other.drmSupport);
   }
 
   @override
@@ -425,7 +430,7 @@ class AppleCreateReply {
 
   @override
   String toString() {
-    return 'AppleCreateReply(schemaMajor: $schemaMajor, spiMajor: $spiMajor, channelSuffix: $channelSuffix, textureId: $textureId, platform: $platform, implementationName: $implementationName, implementationVersion: $implementationVersion, capabilities: $capabilities, initialState: $initialState, nativeViewType: $nativeViewType)';
+    return 'AppleCreateReply(schemaMajor: $schemaMajor, spiMajor: $spiMajor, channelSuffix: $channelSuffix, textureId: $textureId, platform: $platform, implementationName: $implementationName, implementationVersion: $implementationVersion, capabilities: $capabilities, initialState: $initialState, nativeViewType: $nativeViewType, drmSupport: $drmSupport)';
   }
 }
 
@@ -642,6 +647,7 @@ class AppleSourceMessage {
     required this.format,
     this.request,
     this.networkPolicy,
+    this.drm,
   });
 
   AppleSourceKind kind;
@@ -656,6 +662,8 @@ class AppleSourceMessage {
 
   AppleNetworkPolicyMessage? networkPolicy;
 
+  AppleDrmConfigMessage? drm;
+
   List<Object?> _toList() {
     return <Object?>[
       kind,
@@ -664,6 +672,7 @@ class AppleSourceMessage {
       format,
       request,
       networkPolicy,
+      drm,
     ];
   }
 
@@ -679,6 +688,7 @@ class AppleSourceMessage {
       format: result[3]! as AppleMediaFormat,
       request: result[4] as AppleHttpRequestMessage?,
       networkPolicy: result[5] as AppleNetworkPolicyMessage?,
+      drm: result[6] as AppleDrmConfigMessage?,
     );
   }
 
@@ -691,7 +701,7 @@ class AppleSourceMessage {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(kind, other.kind) && _deepEquals(locator, other.locator) && _deepEquals(intent, other.intent) && _deepEquals(format, other.format) && _deepEquals(request, other.request) && _deepEquals(networkPolicy, other.networkPolicy);
+    return _deepEquals(kind, other.kind) && _deepEquals(locator, other.locator) && _deepEquals(intent, other.intent) && _deepEquals(format, other.format) && _deepEquals(request, other.request) && _deepEquals(networkPolicy, other.networkPolicy) && _deepEquals(drm, other.drm);
   }
 
   @override
@@ -700,7 +710,7 @@ class AppleSourceMessage {
 
   @override
   String toString() {
-    return 'AppleSourceMessage(kind: $kind, locator: $locator, intent: $intent, format: $format, request: $request, networkPolicy: $networkPolicy)';
+    return 'AppleSourceMessage(kind: $kind, locator: $locator, intent: $intent, format: $format, request: $request, networkPolicy: $networkPolicy, drm: $drm)';
   }
 }
 
@@ -1058,16 +1068,20 @@ class AppleLoadReply {
   AppleLoadReply({
     required this.loadRequestId,
     required this.sessionId,
+    this.protectedSurface,
   });
 
   String loadRequestId;
 
   String sessionId;
 
+  AppleProtectedSurfaceMessage? protectedSurface;
+
   List<Object?> _toList() {
     return <Object?>[
       loadRequestId,
       sessionId,
+      protectedSurface,
     ];
   }
 
@@ -1079,6 +1093,7 @@ class AppleLoadReply {
     return AppleLoadReply(
       loadRequestId: result[0]! as String,
       sessionId: result[1]! as String,
+      protectedSurface: result[2] as AppleProtectedSurfaceMessage?,
     );
   }
 
@@ -1091,7 +1106,7 @@ class AppleLoadReply {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(loadRequestId, other.loadRequestId) && _deepEquals(sessionId, other.sessionId);
+    return _deepEquals(loadRequestId, other.loadRequestId) && _deepEquals(sessionId, other.sessionId) && _deepEquals(protectedSurface, other.protectedSurface);
   }
 
   @override
@@ -1100,7 +1115,7 @@ class AppleLoadReply {
 
   @override
   String toString() {
-    return 'AppleLoadReply(loadRequestId: $loadRequestId, sessionId: $sessionId)';
+    return 'AppleLoadReply(loadRequestId: $loadRequestId, sessionId: $sessionId, protectedSurface: $protectedSurface)';
   }
 }
 
@@ -2569,6 +2584,461 @@ class AppleVideoTrackCommand {
   }
 }
 
+class AppleDrmConfigMessage {
+  AppleDrmConfigMessage({
+    required this.certificate,
+    required this.contentId,
+    required this.timeoutMs,
+  });
+
+  Uint8List certificate;
+
+  Uint8List contentId;
+
+  int timeoutMs;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      certificate,
+      contentId,
+      timeoutMs,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AppleDrmConfigMessage decode(Object result) {
+    result as List<Object?>;
+    return AppleDrmConfigMessage(
+      certificate: result[0]! as Uint8List,
+      contentId: result[1]! as Uint8List,
+      timeoutMs: result[2]! as int,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AppleDrmConfigMessage || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(certificate, other.certificate) && _deepEquals(contentId, other.contentId) && _deepEquals(timeoutMs, other.timeoutMs);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AppleDrmConfigMessage(certificate: $certificate, contentId: $contentId, timeoutMs: $timeoutMs)';
+  }
+}
+
+class AppleDrmSupportMessage {
+  AppleDrmSupportMessage({
+    required this.contractVersion,
+    required this.playerId,
+    required this.platform,
+    required this.schemeAvailable,
+  });
+
+  int contractVersion;
+
+  int playerId;
+
+  ApplePlatform platform;
+
+  bool schemeAvailable;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      contractVersion,
+      playerId,
+      platform,
+      schemeAvailable,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AppleDrmSupportMessage decode(Object result) {
+    result as List<Object?>;
+    return AppleDrmSupportMessage(
+      contractVersion: result[0]! as int,
+      playerId: result[1]! as int,
+      platform: result[2]! as ApplePlatform,
+      schemeAvailable: result[3]! as bool,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AppleDrmSupportMessage || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(contractVersion, other.contractVersion) && _deepEquals(playerId, other.playerId) && _deepEquals(platform, other.platform) && _deepEquals(schemeAvailable, other.schemeAvailable);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AppleDrmSupportMessage(contractVersion: $contractVersion, playerId: $playerId, platform: $platform, schemeAvailable: $schemeAvailable)';
+  }
+}
+
+class AppleProtectedSurfaceMessage {
+  AppleProtectedSurfaceMessage({
+    required this.playerId,
+    required this.surfaceId,
+    required this.sessionId,
+    required this.generation,
+  });
+
+  int playerId;
+
+  int surfaceId;
+
+  String sessionId;
+
+  int generation;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      playerId,
+      surfaceId,
+      sessionId,
+      generation,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AppleProtectedSurfaceMessage decode(Object result) {
+    result as List<Object?>;
+    return AppleProtectedSurfaceMessage(
+      playerId: result[0]! as int,
+      surfaceId: result[1]! as int,
+      sessionId: result[2]! as String,
+      generation: result[3]! as int,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AppleProtectedSurfaceMessage || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(playerId, other.playerId) && _deepEquals(surfaceId, other.surfaceId) && _deepEquals(sessionId, other.sessionId) && _deepEquals(generation, other.generation);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AppleProtectedSurfaceMessage(playerId: $playerId, surfaceId: $surfaceId, sessionId: $sessionId, generation: $generation)';
+  }
+}
+
+class AppleProtectedViewCommand {
+  AppleProtectedViewCommand({
+    required this.surface,
+    required this.viewId,
+  });
+
+  AppleProtectedSurfaceMessage surface;
+
+  int viewId;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      surface,
+      viewId,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AppleProtectedViewCommand decode(Object result) {
+    result as List<Object?>;
+    return AppleProtectedViewCommand(
+      surface: result[0]! as AppleProtectedSurfaceMessage,
+      viewId: result[1]! as int,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AppleProtectedViewCommand || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(surface, other.surface) && _deepEquals(viewId, other.viewId);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AppleProtectedViewCommand(surface: $surface, viewId: $viewId)';
+  }
+}
+
+class AppleProtectedViewAck {
+  AppleProtectedViewAck({
+    required this.surface,
+    required this.viewId,
+    required this.revision,
+    required this.attached,
+  });
+
+  AppleProtectedSurfaceMessage surface;
+
+  int viewId;
+
+  int revision;
+
+  bool attached;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      surface,
+      viewId,
+      revision,
+      attached,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AppleProtectedViewAck decode(Object result) {
+    result as List<Object?>;
+    return AppleProtectedViewAck(
+      surface: result[0]! as AppleProtectedSurfaceMessage,
+      viewId: result[1]! as int,
+      revision: result[2]! as int,
+      attached: result[3]! as bool,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AppleProtectedViewAck || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(surface, other.surface) && _deepEquals(viewId, other.viewId) && _deepEquals(revision, other.revision) && _deepEquals(attached, other.attached);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AppleProtectedViewAck(surface: $surface, viewId: $viewId, revision: $revision, attached: $attached)';
+  }
+}
+
+class AppleDrmExchangeId {
+  AppleDrmExchangeId({
+    required this.surface,
+    required this.loadRequestId,
+    required this.epoch,
+    required this.requestId,
+    required this.exchangeId,
+  });
+
+  AppleProtectedSurfaceMessage surface;
+
+  String loadRequestId;
+
+  int epoch;
+
+  int requestId;
+
+  String exchangeId;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      surface,
+      loadRequestId,
+      epoch,
+      requestId,
+      exchangeId,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AppleDrmExchangeId decode(Object result) {
+    result as List<Object?>;
+    return AppleDrmExchangeId(
+      surface: result[0]! as AppleProtectedSurfaceMessage,
+      loadRequestId: result[1]! as String,
+      epoch: result[2]! as int,
+      requestId: result[3]! as int,
+      exchangeId: result[4]! as String,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AppleDrmExchangeId || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(surface, other.surface) && _deepEquals(loadRequestId, other.loadRequestId) && _deepEquals(epoch, other.epoch) && _deepEquals(requestId, other.requestId) && _deepEquals(exchangeId, other.exchangeId);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AppleDrmExchangeId(surface: $surface, loadRequestId: $loadRequestId, epoch: $epoch, requestId: $requestId, exchangeId: $exchangeId)';
+  }
+}
+
+class AppleDrmLicenseRequest {
+  AppleDrmLicenseRequest({
+    required this.id,
+    required this.challenge,
+  });
+
+  AppleDrmExchangeId id;
+
+  Uint8List challenge;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      id,
+      challenge,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AppleDrmLicenseRequest decode(Object result) {
+    result as List<Object?>;
+    return AppleDrmLicenseRequest(
+      id: result[0]! as AppleDrmExchangeId,
+      challenge: result[1]! as Uint8List,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AppleDrmLicenseRequest || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(id, other.id) && _deepEquals(challenge, other.challenge);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AppleDrmLicenseRequest(id: $id, challenge: $challenge)';
+  }
+}
+
+class AppleDrmLicenseReply {
+  AppleDrmLicenseReply({
+    required this.id,
+    this.response,
+    this.failureCode,
+  });
+
+  AppleDrmExchangeId id;
+
+  Uint8List? response;
+
+  String? failureCode;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      id,
+      response,
+      failureCode,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AppleDrmLicenseReply decode(Object result) {
+    result as List<Object?>;
+    return AppleDrmLicenseReply(
+      id: result[0]! as AppleDrmExchangeId,
+      response: result[1] as Uint8List?,
+      failureCode: result[2] as String?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AppleDrmLicenseReply || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(id, other.id) && _deepEquals(response, other.response) && _deepEquals(failureCode, other.failureCode);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AppleDrmLicenseReply(id: $id, response: $response, failureCode: $failureCode)';
+  }
+}
+
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
@@ -2733,6 +3203,30 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is AppleVideoTrackCommand) {
       buffer.putUint8(180);
       writeValue(buffer, value.encode());
+    }    else if (value is AppleDrmConfigMessage) {
+      buffer.putUint8(181);
+      writeValue(buffer, value.encode());
+    }    else if (value is AppleDrmSupportMessage) {
+      buffer.putUint8(182);
+      writeValue(buffer, value.encode());
+    }    else if (value is AppleProtectedSurfaceMessage) {
+      buffer.putUint8(183);
+      writeValue(buffer, value.encode());
+    }    else if (value is AppleProtectedViewCommand) {
+      buffer.putUint8(184);
+      writeValue(buffer, value.encode());
+    }    else if (value is AppleProtectedViewAck) {
+      buffer.putUint8(185);
+      writeValue(buffer, value.encode());
+    }    else if (value is AppleDrmExchangeId) {
+      buffer.putUint8(186);
+      writeValue(buffer, value.encode());
+    }    else if (value is AppleDrmLicenseRequest) {
+      buffer.putUint8(187);
+      writeValue(buffer, value.encode());
+    }    else if (value is AppleDrmLicenseReply) {
+      buffer.putUint8(188);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -2862,6 +3356,22 @@ class _PigeonCodec extends StandardMessageCodec {
         return AppleVideoSelectionMessage.decode(readValue(buffer)!);
       case 180:
         return AppleVideoTrackCommand.decode(readValue(buffer)!);
+      case 181:
+        return AppleDrmConfigMessage.decode(readValue(buffer)!);
+      case 182:
+        return AppleDrmSupportMessage.decode(readValue(buffer)!);
+      case 183:
+        return AppleProtectedSurfaceMessage.decode(readValue(buffer)!);
+      case 184:
+        return AppleProtectedViewCommand.decode(readValue(buffer)!);
+      case 185:
+        return AppleProtectedViewAck.decode(readValue(buffer)!);
+      case 186:
+        return AppleDrmExchangeId.decode(readValue(buffer)!);
+      case 187:
+        return AppleDrmLicenseRequest.decode(readValue(buffer)!);
+      case 188:
+        return AppleDrmLicenseReply.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -3303,6 +3813,153 @@ abstract class ApplePlayerFlutterApi {
           final ApplePlaybackFailedMessage arg_event = args[0]! as ApplePlaybackFailedMessage;
           try {
             api.onPlaybackFailed(arg_event);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+  }
+}
+
+class AppleDrmHostApi {
+  /// Constructor for [AppleDrmHostApi]. The [binaryMessenger] named argument is
+  /// available for dependency injection. If it is left null, the default
+  /// BinaryMessenger will be used which routes to the host platform.
+  AppleDrmHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+      : pigeonVar_binaryMessenger = binaryMessenger,
+        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  final BinaryMessenger? pigeonVar_binaryMessenger;
+
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  final String pigeonVar_messageChannelSuffix;
+
+  Future<void> cancelProtectedLoad(String loadRequestId) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.yl_player_apple.AppleDrmHostApi.cancelProtectedLoad$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[loadRequestId]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
+  }
+
+  Future<AppleProtectedViewAck> attachProtectedView(AppleProtectedViewCommand command) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.yl_player_apple.AppleDrmHostApi.attachProtectedView$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[command]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
+    return pigeonVar_replyValue! as AppleProtectedViewAck;
+  }
+
+  Future<AppleProtectedViewAck> detachProtectedView(AppleProtectedViewCommand command) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.yl_player_apple.AppleDrmHostApi.detachProtectedView$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[command]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
+    return pigeonVar_replyValue! as AppleProtectedViewAck;
+  }
+}
+
+abstract class AppleDrmFlutterApi {
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  Future<AppleDrmLicenseReply> exchangeLicense(AppleDrmLicenseRequest request);
+
+  void cancelLicense(AppleDrmExchangeId id);
+
+  void onProtectedFrame(AppleProtectedViewAck frame);
+
+  static void setUp(AppleDrmFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.yl_player_apple.AppleDrmFlutterApi.exchangeLicense$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final AppleDrmLicenseRequest arg_request = args[0]! as AppleDrmLicenseRequest;
+          try {
+            final AppleDrmLicenseReply output = await api.exchangeLicense(arg_request);
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.yl_player_apple.AppleDrmFlutterApi.cancelLicense$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final AppleDrmExchangeId arg_id = args[0]! as AppleDrmExchangeId;
+          try {
+            api.cancelLicense(arg_id);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.yl_player_apple.AppleDrmFlutterApi.onProtectedFrame$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final AppleProtectedViewAck arg_frame = args[0]! as AppleProtectedViewAck;
+          try {
+            api.onProtectedFrame(arg_frame);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

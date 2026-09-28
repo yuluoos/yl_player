@@ -112,6 +112,7 @@ class AppleCreateReply {
   AppleCapabilitiesMessage capabilities;
   AppleStateMessage initialState;
   String? nativeViewType;
+  AppleDrmSupportMessage? drmSupport;
 }
 
 class AppleCapabilitiesMessage {
@@ -147,6 +148,7 @@ class AppleSourceMessage {
   AppleMediaFormat format;
   AppleHttpRequestMessage? request;
   AppleNetworkPolicyMessage? networkPolicy;
+  AppleDrmConfigMessage? drm;
 }
 
 class AppleVideoConstraintsMessage {
@@ -192,6 +194,7 @@ class AppleAssessmentReply {
 class AppleLoadReply {
   String loadRequestId;
   String sessionId;
+  AppleProtectedSurfaceMessage? protectedSurface;
 }
 
 class AppleSessionCommand {
@@ -422,4 +425,63 @@ abstract class ApplePlayerFlutterApi {
   void onRetryScheduled(AppleRetryScheduledMessage event);
   void onEngineChanged(AppleEngineChangedMessage event);
   void onPlaybackFailed(ApplePlaybackFailedMessage event);
+}
+
+class AppleDrmConfigMessage {
+  Uint8List certificate;
+  Uint8List contentId;
+  int timeoutMs;
+}
+class AppleDrmSupportMessage {
+  int contractVersion;
+  int playerId;
+  ApplePlatform platform;
+  bool schemeAvailable;
+}
+class AppleProtectedSurfaceMessage {
+  int playerId;
+  int surfaceId;
+  String sessionId;
+  int generation;
+}
+class AppleProtectedViewCommand {
+  AppleProtectedSurfaceMessage surface;
+  int viewId;
+}
+class AppleProtectedViewAck {
+  AppleProtectedSurfaceMessage surface;
+  int viewId;
+  int revision;
+  bool attached;
+}
+class AppleDrmExchangeId {
+  AppleProtectedSurfaceMessage surface;
+  String loadRequestId;
+  int epoch;
+  int requestId;
+  String exchangeId;
+}
+class AppleDrmLicenseRequest {
+  AppleDrmExchangeId id;
+  Uint8List challenge;
+}
+class AppleDrmLicenseReply {
+  AppleDrmExchangeId id;
+  Uint8List? response;
+  String? failureCode;
+}
+@HostApi()
+abstract class AppleDrmHostApi {
+  void cancelProtectedLoad(String loadRequestId);
+  @async
+  AppleProtectedViewAck attachProtectedView(AppleProtectedViewCommand command);
+  @async
+  AppleProtectedViewAck detachProtectedView(AppleProtectedViewCommand command);
+}
+@FlutterApi()
+abstract class AppleDrmFlutterApi {
+  @async
+  AppleDrmLicenseReply exchangeLicense(AppleDrmLicenseRequest request);
+  void cancelLicense(AppleDrmExchangeId id);
+  void onProtectedFrame(AppleProtectedViewAck frame);
 }

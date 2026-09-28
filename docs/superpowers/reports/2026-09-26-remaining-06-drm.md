@@ -348,7 +348,7 @@ macOS27/M1、JDK17、compileSdk36、Media3 1.11.0。标准 JUnit 发现 **454** 
 | 验证 | 实际结果 | 证据（本地plan workspace） |
 |---|---|---|
 | macOS全量原生（复核前） | 561发现/通过，0跳过/失败；实际身份核对通过 | `fairplay-macos-all.log`、`fairplay-macos-runtime/case-identities.json` |
-| macOS最终定向 | 32通过：14项FairPlay + 会话/诊断/AVPlayer元数据 | `fairplay-macos-final.log`、对应`final-runtime` |
+| macOS最终定向 | 32通过：14项FairPlay + 会话/诊断/AVPlayer元数据 | `fairplay-macos-final.xcresult`、对应`final-runtime` |
 | iOS最终定向 | 32通过，0跳过/失败；实际身份核对通过 | `fairplay-ios-final.log`、对应`final-runtime` |
 | iOS完整复验 | stdout逐项匹配647发现：644通过/3跳过/0失败；收尾停滞，完整xcresult gate未完成 | `fairplay-ios-full-final.log`、`fairplay-ios-full-stdout-identities.json` |
 | 测试发现/迁移/公开surface | 双端PBX成员/三份源码哈希一致；迁移工具4项通过；public-surface通过 | `main_example_tests.py --current-only`、`test_main_example_migration.py`、`check_public_surface.sh` |
@@ -374,3 +374,52 @@ macOS27/M1、JDK17、compileSdk36、Media3 1.11.0。标准 JUnit 发现 **454** 
 - `tool/consumer_fixtures/apple_flutter/RunnerTests/YlFairPlayKeySessionTests.swift`：`fc87637164c690bb7c0bf8c85a0146023958b6e475b89a838e82cad959981726`
 - `tool/consumer_fixtures/apple_flutter/main_example_tests.py`：`9ef77a64c2189c56c49ef28f4286a58650faeb6529b66dbcf0aec0ab513c67b1`
 - `tool/consumer_fixtures/apple_flutter/new-tests-manifest.json`：`d1b04af79b8f6098df1119749c677bd28e4ab44d8ea3d01f9424d0a07bf610f5`
+
+
+## Task 3C2：Apple 受保护输出与公共桥接
+
+基线 `f62b4c5`；2026-09-28完成工程集成，**授权物理验收仍external_missing，CAP-DRM未完成**。
+
+实现独立AVPlayer/AVPlayerLayer保护路线，候选保持静音，逐源protected asset/item/key检查通过后进入已有session/audio事务。保护视图四元组和revision隔离旧输出，后台释放后重新创建asset/keysession；不创建VideoOutput、读取像素或走FFmpeg。schema5 Pigeon携带二进制配置、许可证请求完整身份、取消和保护视图ACK；现有Task2客户端负责POST、凭据和限额。普通播放继续现有路线，切回AVPlayer的open纳入候选回滚边界。
+
+工程范围取舍：只接受显式HTTP(S) HLS、无媒体headers/credentials的platformDefault、automatic缓冲、非hardwareRequired和无严格画质约束；拒绝不能兑现的策略。受保护音轨/variant目录暂不公开，手工选择明确拒绝，系统ABR仍生效；代价是这些手工功能需后续扩展。视图只支持contain/center，授权封装、provider时序、HDCP/HDR/DV、外接、字幕和物理组合仍需Task4。API/系统key/item状态不等于真实显示保护通过。
+
+独立只读复审发现两项Important：并发恢复覆盖前一completion；新frame先于旧ACK到达导致首帧永久等待。分别以恢复合并/有界等待命令及单调ACK/frame合并修复，新增测试先失败再通过。自检另复现Pause被周期快照写回ready，修复后保持paused。复审无Critical或Minor；没有重复派发复审。原Task2 HTTP和3C1 driver只作为依赖检查，当前回归不冒充新的独立安全审计。
+
+### 最终执行证据
+
+所有记录位于本计划 `.superpowers/sdd/2026-09-26-remaining-06-drm/` 工作目录。原生结果逐项匹配canonical身份，不能仅按退出码判断。
+
+| 范围 | 实际结果 | 证据 |
+|---|---|---|
+| macOS完整原生 | 571通过，0跳过/失败 | `fps3c2-macos-accepted.xcresult`、`fps3c2-macos-accepted-receipt.json` |
+| iOS DRM/会话/安全边界定向 | 40通过，0跳过/失败 | `fps3c2-ios-accepted.xcresult`、同名`-receipt.json` |
+| iOS普通DASH/HLS/宿主/音频定向 | 202通过，0跳过/失败 | `fps3c2-ios-clear.xcresult`、`fps3c2-ios-clear-receipt.json` |
+| Apple adapter + 公共播放器Dart完整目录 | 203通过 | `fairplay-dart-final.log` |
+| 静态检查 | 无问题 | `fps3c2-analysis-final2.log` |
+| Pigeon可重复生成 / 公开surface | 通过 | `fps3c2-pigeon-check.log`、`fps3c2-public-check.log` |
+| 原生注册/fixture一致性 | iOS656/macOS572源码方法；PBX/副本一致 | `main_example_tests.py --current-only` |
+| 迁移工具回归 | 4通过 | `fps3c2-migration.log` |
+| 授权媒体/物理设备 | 未执行，媒体hash无 | Task4 external_missing |
+
+源码方法数包含条件编译分支，与运行身份数区别保留。iOS本次两个定向集合共242项，不是完整suite；3C1记录的完整xcresult收尾停滞未宣称解决。环境沿用macOS27.0(26A428)/arm64、Xcode27，iOS27 iPhone18Pro Simulator；包下限仍iOS15/macOS12。SDK对既有XCTest低部署下限及测试Sendable有警告，不通过修改最低系统规避。
+
+命令：`flutter test --no-pub packages/yl_player_apple/test packages/yl_player/test`；`flutter analyze --no-pub packages/yl_player_apple packages/yl_player/lib packages/yl_player/test`；原生沿用3C1工作区/Runner scheme和独立native平台derivedData，`-parallel-testing-enabled NO`，macOS完整执行；iOS定向类为YlFairPlayOutputTests、YlFairPlayKeySessionTests、YlAppleSessionTests、YlObservabilityBoundaryTests、YlAvPlayerNonblockingMetadataTests及YlDashHlsCompilerTests、YlDashSidxTests、YlDashResourceLoaderTests、YlHlsManifestRewriterTests、YlHlsHeaderPolicyTests、YlHlsResourceLoaderTests、YlAppleHostTests、YlApplePublicationTests、YlAudioRendererTests。
+
+初始失败均保留：codec缺DRM字段、native缺保护registry/route；桥接复审RED为旧ACK和旧frame复现；恢复合并RED为缺少单一准备门；暂停RED在既有状态投影上返回ready。组合测试移植曾残留Android cbcs断言、fixture曾误复制iOS文件到macOS，已修正且通过上述回归。第一轮Dart从包目录运行导致一项读取根目录路径失败，公共controller fixture仍schema4导致18项握手失败；统一从根目录执行并更新当前协议fixture后203项通过。原生异步测试以期望等待替换不可靠的Task.yield时序假设。没有放宽硬件skip条件或删除断言。
+
+### Task 3C2 最终关键源文件 SHA-256
+
+- `packages/yl_player/lib/src/player_view.dart`：`7b3bf9fac83f10ad4c6da90e050fb369b42f8deedc229223135b77406fc9cd35`
+- `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DRM/YlFairPlayBackend.swift`：`3fa8f8f597cc01315983f687b8e2ebeb4fd6ce47251fa61ef6085a36316d85bf`
+- `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DRM/YlFairPlayBridge.swift`：`8b71736f58c19c22db385f92890ef7fc450ba574e0f2085d54e4f558c5a5b152`
+- `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DRM/YlFairPlayDriver.swift`：`4422effd4d350b52aca727cf123ffa5eac936f965a93461e7d653a7623f410ba`
+- `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DRM/YlFairPlayFailure.swift`：`7d1d48b9516c82779d0e4b6e1cdf3454df593d645a515b5fbeaa2c1e2d1b064e`
+- `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DRM/YlFairPlayKeySession.swift`：`89e7c3822bd65d02c68667e082320aae8e1c2aaeb2290cb4c3e1cb963e64c0c5`
+- `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DRM/YlFairPlayView.swift`：`968513a2a9616a04fb97a808cd6c7b0f18108b6bfa4a9e770c8dca34dfdaa59b`
+- `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DRM/YlFairPlayViewRegistry.swift`：`94f0ecd7c2a91ddaaa36df249b37fbda66b4d5e3318f87e0ef2c751bbb4953fe`
+- `packages/yl_player_apple/lib/src/apple_drm.dart`：`feaa3b330cb170dce8b20d6bf7322aa0f67897bc6fde11b555df40287a77821c`
+- `packages/yl_player_apple/lib/src/apple_player.dart`：`b4205183d933cd26802e473c1858e53bf589f0245c021d9b8359046340b39a7b`
+- `packages/yl_player_apple/pigeons/yl_player_apple.dart`：`bdeb11f2cb5b28b6933f4fcf1624c6651b48e749ffb693dd12f82bcdf00259e9`
+- `tool/consumer_fixtures/apple_flutter/RunnerTests/YlFairPlayOutputTests.swift`：`7986945327134dc9837f57491fd777f0b0a012970b194956d435b3a198ab0b16`
+- `tool/consumer_fixtures/apple_flutter/new-tests-manifest.json`：`533527eff35618d877bed85c9079ab605d03c327d01698f06c97bb605d4bedbc`

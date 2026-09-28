@@ -159,3 +159,6 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-09-28 P06 Task 3B3 已完成 Android 公开 schema5 DRM 许可证/保护视图 ACK 桥接及 Task2 POST 连接，3B 工程集成完成。457 项 Android 原生测试通过（另3项既有外部 RTMP 跳过），289 项相关 Dart 回归及102项 Apple adapter 兼容回归通过。Android 保护路线须 API29+ 并通过逐会话密钥/实际 decoder/output 检查；CAP-DRM 未完成。下一项 Apple 3C，授权真机和物理输出验收仍留 Task4，详见 P06 报告。
 
 2026-09-28 P06 Task3C1 已交付内部 Apple AVContentKeySession/SPC/CKC 生命周期，14项FairPlay测试包含在最终双端各32项定向通过记录中；macOS复核前全量561通过。iOS完整复验stdout644通过/3跳过，但Xcode收尾卡住，完整结果包验收仍未完成；详见P06报告。下一项3C2接生产AVPlayerLayer、候选事务和Pigeon，Apple公开DRM准入仍关闭，CAP-DRM未完成。
+
+
+2026-09-28 P06 Task3C2/Task3工程集成完成：Apple FairPlay HLS独立保护输出、schema5许可证/视图ACK与候选音频事务已实现。最终macOS完整571项、iOS定向242项、相关Dart203项通过；无新增跳过。iOS本次不代表完整suite通过，此前完整结果包问题仍保留。Task4授权真机、HDCP/外接/HDR和字幕合成仍external_missing，CAP-DRM未完成；不阻塞其他可执行计划。
