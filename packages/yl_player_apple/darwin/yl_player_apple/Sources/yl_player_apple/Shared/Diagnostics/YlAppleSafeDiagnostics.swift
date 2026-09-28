@@ -13,10 +13,10 @@ enum YlAppleSafeDiagnostics {
     let pigeon = error as? PigeonError
     let previous = pigeon?.details as? AppleFailureMessage
     let code = native?.code ?? pigeon?.code ?? "platform.failure"
-    let safeCode = publicCodes.contains(code) || code.range(of: "^avplayer\\.-?[0-9]{1,20}$", options: .regularExpression) != nil
+    let safeCode = publicCodes.contains(code) || YlFairPlayFailure.codes.contains(code) || code.range(of: "^avplayer\\.-?[0-9]{1,20}$", options: .regularExpression) != nil
       ? code : "platform.failure"
     return .init(category: native.map { YlAppleFailureMapper.category($0.category) } ?? previous?.category ?? .internalFailure,
-      code: safeCode, message: publicMessages[safeCode] ?? "Playback failed for an unknown reason.",
+      code: safeCode, message: publicMessages[safeCode] ?? YlFairPlayFailure.messages[safeCode] ?? "Playback failed for an unknown reason.",
       retryable: retryableCodes.contains(safeCode),
       scope: scope, diagnosticId: identifier())
   }

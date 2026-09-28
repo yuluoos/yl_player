@@ -329,3 +329,48 @@ macOS27/M1、JDK17、compileSdk36、Media3 1.11.0。标准 JUnit 发现 **454** 
 - `packages/yl_player_platform_interface/lib/src/drm/drm_transport.dart`：`36187192ee95c9878eed22bd9464b2617c1b9f209f63c6199278384b617e0517`
 - `packages/yl_player_platform_interface/lib/src/platform/native_video_surface.dart`：`b15b36200c37f68513cdfbde73756f723b81170eb07a9d116fdd265e228ac431`
 - `packages/yl_player_platform_interface/lib/yl_player_platform_interface.dart`：`6538b38795fc453ba8c0888314ef9b553cb772e73ef5f9b436dd2ad4c86b1186`
+
+
+## 2026-09-28 Task 3C1：Apple 系统密钥边界
+
+基线 `09023d1`。本次交付独立 AVContentKeySession streaming driver 和主线程密钥状态机；**不等于完整 Apple DRM 接入**。Apple 公开 adapter 仍拒绝 DRM，schema4、普通 clear 显示路线和整包 iOS15/macOS12 下限不变，没有商业SDK。
+
+分步裁定：现有 Apple AVPlayer 后端读像素，并复用 asset/播放器；SDK 要求在加载任何 asset key 前注册 recipient，expire 后旧 recipient 不可继续使用。因此先冻结 fresh-recipient 密钥所有权为3C1，再由3C2接独立 AVPlayerLayer、候选原子事务/音频归属、Pigeon 与 Task2 POST。代价是本阶段不能完成公共 FairPlay 播放；3C整体和CAP-DRM保持未完成。
+
+实现：证书/内容ID输入限额、SPC≤1MiB/CKC≤4MiB、总期限含系统确认、4并发与4096请求上限、重复回调合并、epoch/request匹配、迟到响应隔离、更新撤回可用状态、停止/后台/销毁清理。CKC安装返回不代表可用，须当前系统请求成功；过期只取明确expired-lease证据，普通HTTP错误不推断过期。系统重试关闭，POST重试政策仍归Task2；不获取证书、不猜skd映射、不存离线密钥、不上传session报告。清理保持主线程，配置清除不保证SDK所有副本物理抹除。
+
+系统fake测试是必要替身：本机没有授权FPS证书/内容/CKC服务，不触发真实授权解密。真实系统driver经两端SDK编译；mock的.protection事件不证明系统已检测到安全decoder/HDCP，isUsable也不是输出保护结论。
+
+### 复核与验证
+
+一次只读复核：无Critical/Minor，1个Important（取消码在safe diagnostics被简化）；执行者另发现清理过程中可重入读取到旧isUsable。两项在 `fairplay-review-red.log` 先观察失败，一次修复后双端定向回归通过，不重审。初始API缺失RED见 `fairplay-key-red.log`；旧recipient复用/所有者释放泄漏的行为RED见 `fairplay-lifecycle-red.log`，修复后10项通过，再扩展至14项。
+
+| 验证 | 实际结果 | 证据（本地plan workspace） |
+|---|---|---|
+| macOS全量原生（复核前） | 561发现/通过，0跳过/失败；实际身份核对通过 | `fairplay-macos-all.log`、`fairplay-macos-runtime/case-identities.json` |
+| macOS最终定向 | 32通过：14项FairPlay + 会话/诊断/AVPlayer元数据 | `fairplay-macos-final.log`、对应`final-runtime` |
+| iOS最终定向 | 32通过，0跳过/失败；实际身份核对通过 | `fairplay-ios-final.log`、对应`final-runtime` |
+| iOS完整复验 | stdout逐项匹配647发现：644通过/3跳过/0失败；收尾停滞，完整xcresult gate未完成 | `fairplay-ios-full-final.log`、`fairplay-ios-full-stdout-identities.json` |
+| 测试发现/迁移/公开surface | 双端PBX成员/三份源码哈希一致；迁移工具4项通过；public-surface通过 | `main_example_tests.py --current-only`、`test_main_example_migration.py`、`check_public_surface.sh` |
+| Dart/Pigeon | 本阶段没有Dart/wire/schema变化，未重复运行 | git差异范围 |
+| 授权真机解密/显示保护 | 未运行，媒体哈希无；external_missing | Task4 |
+
+首次iOS完整运行未能正常结束：测试进程退出后xcodebuild空闲超过5分钟，testmanager日志证实进程退出；SIGINT未结束且输出内部DVTOperation诊断，SIGTERM终止自有命令（143）。该次不计通过；保留`fairplay-ios-all.log`、部分xcresult和`fairplay-ios-testmanager.log`。之后双端32项定向成功，iOS完整复验开启60秒默认/120秒最大单例时限，记录详细测试事件。第二次完整运行的647个stdout身份与当前canonical清单精确一致（644通过/3跳过），但All tests完成后Xcode再次空闲超过2分钟且结果包仍停留Staging；采样保留在`fairplay-ios-xcode-sample.txt`，终止自有命令（143）。因此仅声明用例日志结果，不声明iOS完整xcresult gate通过；硬件跳过的结果包附件也未完成核验。最终双端32项定向xcresult正常生成、身份检查通过。没有用生产代码变更掩盖测试收尾问题。
+
+命令：`xcodebuild test CODE_SIGNING_ALLOWED=NO ENABLE_TESTABILITY=YES -workspace packages/yl_player/example/<platform>/Runner.xcworkspace -scheme Runner -parallel-testing-enabled NO -derivedDataPath packages/yl_player/example/build/native-<platform>-tests`，macOS SDK/destination为macosx/本机，iOS为iphonesimulator/iPhone18Pro模拟器；定向使用 YlFairPlayKeySessionTests、YlObservabilityBoundaryTests、YlAppleSessionTests、YlAvPlayerNonblockingMetadataTests 四组。macOS27.0(26A428)/arm64，iOS27模拟器；Xcode27 SDK对既有XCTest低部署下限及既有Sendable测试有警告，不修改产品最低系统以规避。结果按xcresult实际身份解析，源码中的平台条件计数不当作实际执行数量。
+
+复核放在后续阶段的项目及裁定：Task2 POST凭据/重定向未动；外层身份认证、候选回滚、fresh asset生产调用顺序和protected view接入属于3C2；实际secure decoder/HDCP/外接、授权rotation/seek/Period/后台及字幕/几何仍需Task4/P02/P07。审查者未运行测试，以上为执行者实际结果。下一项3C2必须在解绑AVPlayer/AVPlayerLayer后expire，恢复创建新asset，并继续逐源严格策略检查，不能把本阶段成功标记当作输出安全证明。
+
+### Task 3C1 最终源文件 SHA-256
+
+- `packages/yl_player/example/ios/Runner.xcodeproj/project.pbxproj`：`fb686bfc0cb162a55f54bbcb6dbe684ecfc34d185b22294832aa646482393393`
+- `packages/yl_player/example/ios/RunnerTests/YlFairPlayKeySessionTests.swift`：`fc87637164c690bb7c0bf8c85a0146023958b6e475b89a838e82cad959981726`
+- `packages/yl_player/example/macos/Runner.xcodeproj/project.pbxproj`：`9fcf2404cb6a3e7aadd5dbd497b4b3ccd015c0506c45b721bc9ec5e0e786c087`
+- `packages/yl_player/example/macos/RunnerTests/YlFairPlayKeySessionTests.swift`：`fc87637164c690bb7c0bf8c85a0146023958b6e475b89a838e82cad959981726`
+- `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DRM/YlFairPlayDriver.swift`：`4422effd4d350b52aca727cf123ffa5eac936f965a93461e7d653a7623f410ba`
+- `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DRM/YlFairPlayFailure.swift`：`7d1d48b9516c82779d0e4b6e1cdf3454df593d645a515b5fbeaa2c1e2d1b064e`
+- `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DRM/YlFairPlayKeySession.swift`：`89e7c3822bd65d02c68667e082320aae8e1c2aaeb2290cb4c3e1cb963e64c0c5`
+- `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlAppleSafeDiagnostics.swift`：`9060a1decda224d8bfd716b633d9f745bb4a216d3ca98a58c81ef9cf457e50b1`
+- `tool/consumer_fixtures/apple_flutter/RunnerTests/YlFairPlayKeySessionTests.swift`：`fc87637164c690bb7c0bf8c85a0146023958b6e475b89a838e82cad959981726`
+- `tool/consumer_fixtures/apple_flutter/main_example_tests.py`：`9ef77a64c2189c56c49ef28f4286a58650faeb6529b66dbcf0aec0ab513c67b1`
+- `tool/consumer_fixtures/apple_flutter/new-tests-manifest.json`：`d1b04af79b8f6098df1119749c677bd28e4ab44d8ea3d01f9424d0a07bf610f5`

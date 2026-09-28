@@ -169,3 +169,18 @@ Media3 最后一个 decoder 引用释放时，在该 owner 调用中同步撤销
 系统 scheme 探测、桥接契约版本、API 门槛与实际保护证据分开：目前硬件 metadata 需要 API29，因此保护路线在 API24–28 明确拒绝（整包 minSdk24 不变）。评估报告 secureOutputUnknown/secureDecoderUnknown/protectionUnknown 和 keysRequireInspection；真正 load 仍须经过3B2的 secure output、实际初始化 decoder、L1 与 keys usable 检查。合同版本1不是全局 DRM 支持承诺，mock/普通 POST 测试也不证明物理解密播放成功。
 
 attach 的成功、失败和超时同时核验当前 surface/viewId 与独立 attempt token；重试同一 viewId 也会撤销旧 attempt。替换、stop、unmount、dispose 立即撤销其发布资格，旧错误不终止新会话。当前失败在身份检查的同一同步步骤发布，不能在异步 caller catch 中无条件终止播放器。许可证白名单保留 `drm.license_redirect_rejected`，拒绝重定向与一般网络失败可明确区分。
+
+
+## 12. Task 3C1：Apple 系统密钥所有权（内部）
+
+Apple 没有可复用的系统密钥 owner，现有 AVPlayer 后端读取像素且保留 asset 路线。3C 分为本节系统密钥边界与后续3C2独立 AVPlayerLayer/候选事务/Pigeon 接入；3C 整体和公开 Apple DRM 准入仍未完成，schema4 保持，不能丢弃配置后转 clear。
+
+`YlFairPlayKeySession` 每个候选独占 driver，主线程串行处理系统事件及响应安装。certificate 1..65536 bytes、contentId 1..8192 bytes、总期限1..60000ms；宿主给定内容标识用于生成SPC，不猜测 skd URL/provider规则。SPC最多1MiB、CKC最多4MiB；4个并发请求、每个系统会话最多4096个不同请求对象；重入/重复回调不重复交换，超限明确 resource.exhausted。内部 exchange 带 epoch/requestId，后续桥接还必须外包 player/session/surface/load 身份，不能仅靠这两个计数认证。
+
+提交 CKC 不直接表示可用；仅当前对象、当前epoch、已经提交响应的系统 didSucceed 可确认。全部待处理请求确认后 isUsable 才为true，更新/rotation请求立即撤回；期限覆盖SPC生成、传输及系统确认。过期仅取系统明确的 receivedResponseWithExpiredLease；HTTP失败和SDK正常关闭生成的 expired-session report 均不代表许可证过期。系统自动 retry 永远false，网络POST重放预算由Task2独立负责。错误使用固定安全码与文案，不传播任意 NSError/vendor/URL/证书/SPC/CKC文本。
+
+在 asset 加载任何键/元数据之前注册 AVContentKeyRecipient。停止/失败/释放先撤销归属，再取消deadline/传输、拒绝未完成请求、解绑delegate/recipient并expire。后台暂停终止该系统会话，恢复必须新建尚未加载的asset和新driver；已用asset的弱身份表阻止复用，不强持有全部历史asset。许可证回包及系统回调必须重新核对代际，旧事件不能恢复新会话。owner从非主线程释放时，将捕获的清理资源安排到主线程，不跨线程调用系统密钥对象。配置清理不声称能抹除SDK或Data所有内部副本。
+
+后续3C2必须先从 AVPlayerLayer/AVPlayer 解绑过期recipient的播放，再调用suspend/close；恢复时创建新asset，禁止复用当前明文像素路径。isUsable 仅为系统响应处理证据，不是实际安全decoder、显示保护或HDCP证明；后续逐源策略与真实授权输出仍需独立验证。本阶段无离线持久密钥、证书自动获取、许可证会话报告上传或商业SDK。
+
+依据：本地Xcode27 SDK AVContentKeySession.h，以及 Apple [系统响应成功回调](https://developer.apple.com/documentation/avfoundation/avcontentkeysessiondelegate/contentkeysession(_:contentkeyrequestdidsucceed:))、[密钥接收者注册](https://developer.apple.com/documentation/avfoundation/avcontentkeysession/addcontentkeyrecipient(_:))、[会话expire](https://developer.apple.com/documentation/avfoundation/avcontentkeysession/expire())，2026-09-28核查；包下限仍iOS15/macOS12。

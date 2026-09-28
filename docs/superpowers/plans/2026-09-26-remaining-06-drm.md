@@ -84,6 +84,8 @@ public_payload_contains_body_or_key: false
   - [x] 3B2：原生受保护 view 注册/attach/detach、secure candidate output、内部 Media3 route、实际 decoder/key 门槛与原子替换/回滚；Dart provider 和正式 ACK wire 留在 3B3。
   - [x] 3B3：Pigeon challenge/response、受保护 view ACK 与 Task 2 许可证传输连接，完成组合回归后才开放对应准入。
 - [ ] 3C：Apple AVContentKeySession、AVPlayerLayer 与候选事务/同一桥接，验证原生状态机和 clear 回归。
+  - [x] 3C1：AVContentKeySession streaming driver、SPC/CKC 交换边界、确认/更新/取消/期限与 fresh-recipient 生命周期；原生 fake 回归，不开放公共准入。
+  - [ ] 3C2：独立 AVPlayerLayer 生产输出、候选原子事务/音频归属、Pigeon 与 Task2 连接及逐源准入；禁止接入现有像素读取路径。
 
 以下完整验收要求仍逐项保留，不能用 3A 的内部测试替代生产集成：
 
@@ -114,3 +116,5 @@ public_payload_contains_body_or_key: false
 2026-09-27 Task 1 已完成 clear 内容的三端 Debug 原型与架构决定，详见执行报告；Task 2 已完成 Dart 配置、受控许可证 POST 与旧适配器拒绝；原生桥接随 Task 3 实现。Task 3/4 仍未完成，Task 1/2 通过不代表真实受保护播放通过。
 
 2026-09-28 Task 3B3 已完成 Android schema5 许可证/取消桥接、保护视图描述符和 ACK、控制器传输与 hybrid view 接入；3B 工程集成完成，下一项为 Apple 3C。Android API29+ 仍逐源检查系统密钥、安全 decoder 和输出，授权真机验收保留在 Task4；上方跨平台验收项继续未勾选。
+
+2026-09-28 Task3C1 系统密钥阶段完成，双端最终各32项定向回归通过，macOS复核前全量561项通过。iOS完整复验stdout644通过/3跳过，但Xcode收尾停滞，完整xcresult gate未完成，报告保留该限制。下一项3C2生产AVPlayerLayer/候选/桥接；3C整体、授权物理验收和CAP-DRM不勾选。

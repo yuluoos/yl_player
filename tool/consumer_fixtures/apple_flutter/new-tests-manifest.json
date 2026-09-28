@@ -717,5 +717,25 @@
       "testRestorationBackoffCancellationKeepsOriginalWaiterAndDoesNotOpenAgain",
       "testPermanentRestorationFailureNeverConsumesRecoveryBudget"
     ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlFairPlayKeySessionTests.swift",
+    "sha256": "fc87637164c690bb7c0bf8c85a0146023958b6e475b89a838e82cad959981726",
+    "methods": [
+      "testResponseIsNotUsableUntilMatchingSystemSuccessAndRenewalWithdrawsReadiness",
+      "testSuspendAndNewRecipientFenceLateChallengeResponseAndSystemCallbacks",
+      "testDuplicateRequestsDoNotPostTwiceAndLimitFailsClosed",
+      "testDeadlineIncludesChallengeAndSystemConfirmation",
+      "testTransportFailuresRemainTypedAndExpiredNeedsExplicitSystemEvidence",
+      "testUnsolicitedSuccessAndOversizedPayloadCannotAuthorizeKeys",
+      "testSynchronousCallbacksCannotLoseCancellationOrReuseClosedSession",
+      "testExpiredRecipientCannotBeReusedAfterSuspension",
+      "testOwnerDeallocationCancelsRequestsBeforeClosingDriver",
+      "testConcurrentKeysNeedAllConfirmationsAndCancelledDeadlinesStayStale",
+      "testInvalidLicenseResponseNeverReachesSystemAndTransportCannotInventExpiry",
+      "testCancelledExchangeKeepsItsPublicDiagnosticMeaning",
+      "testReadinessIsRevokedBeforeDriverCleanup",
+      "testConfigurationLimitsAndSafeDiagnostics"
+    ]
   }
 ]
