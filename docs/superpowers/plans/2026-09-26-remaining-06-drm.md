@@ -99,6 +99,12 @@ public_payload_contains_body_or_key: false
 
 ### Task 4：授权资源与真实设备验收
 
+2026-09-28 分为准备与真实验收两段：
+
+- [x] 4A：建立被 Git 忽略的私有资源模板、离线预检、脱敏缺项报告和公共基础生命周期集成入口。配置/文件工具回归通过；集成入口仅完成静态检查，未运行授权设备。
+- [ ] 4B：取得授权资源，补齐并执行下列完整正向/负向/更新/物理矩阵。4A 不替代此项。
+
+
 - [ ] 创建私有验收资源表：Android DASH URL/Widevine 服务及必要请求配置，Apple HLS URL/FairPlay 应用证书与许可证服务，授权使用范围/有效期、拒绝/失效/更新用例、设备/保护输出条件。仓库只保存不含秘密的样本标识和哈希。
 - [ ] 在资源可用后运行 `drm_lifecycle_test.dart`，覆盖首次播放、seek、跨段、切轨、密钥更新、拒绝/超时/过期、断网恢复、后台恢复和取消。不得从 DRM 截图/像素探针判断成功；用允许的系统状态、实际显示观察和播放进度证据。
 - [ ] 与 P02 验证字幕和画面几何，与 P07 分开验证外接保护/信号；同内容不同平台 delivery 的时间轴应一致。
@@ -121,3 +127,5 @@ public_payload_contains_body_or_key: false
 
 
 2026-09-28 Task3C2 工程集成完成：Apple 独立AVPlayerLayer、FairPlay候选/音频事务、schema5许可证与受保护view ACK、Task2真实POST组合已接通。最终macOS完整571项、iOS定向40项及普通媒体202项、Dart203项通过；测试身份/哈希、Pigeon和公开surface检查通过。独立复审两项重要竞态及自检暂停状态问题均修复。iOS本次仅定向覆盖242项，未声明完整suite；此前完整xcresult收尾限制保留。下一项Task4仍缺授权资源，CAP-DRM不勾选；不得将工程测试当作真实解密/HDCP/物理输出验收。
+
+2026-09-28 Task4A 准备完成，离线空表预检退出2，Android/iOS/macOS均为external_missing，网络请求0；见 `tool/drm_acceptance/README.md` 和 P06 报告。基础生命周期入口不覆盖完整负向/更新/后台矩阵。Task4B和CAP-DRM仍未完成，下一独立可执行项为P07 Task1。

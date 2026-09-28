@@ -162,3 +162,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 
 
 2026-09-28 P06 Task3C2/Task3工程集成完成：Apple FairPlay HLS独立保护输出、schema5许可证/视图ACK与候选音频事务已实现。最终macOS完整571项、iOS定向242项、相关Dart203项通过；无新增跳过。iOS本次不代表完整suite通过，此前完整结果包问题仍保留。Task4授权真机、HDCP/外接/HDR和字幕合成仍external_missing，CAP-DRM未完成；不阻塞其他可执行计划。
+
+2026-09-28 P06 Task4A 验收准备已实现：私有模板、离线预检、缺项报告及基础生命周期入口。空资源表三端均external_missing（退出2、0网络请求）；基础入口未运行授权设备，不能替代完整Task4B/HDCP/物理验收，CAP-DRM保持未完成。下一独立项为P07 Task1参考/设备/映射差距冻结。

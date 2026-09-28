@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "stage": "resource_preflight",
+  "selectedCase": null,
+  "networkRequests": 0,
+  "cases": [
+    {
+      "caseId": "android-widevine",
+      "platform": "android",
+      "scheme": "widevine-cenc",
+      "implementation": "implemented",
+      "verification": "external_missing",
+      "physicalAcceptance": "not_run",
+      "declaredMediaSha256": null,
+      "mediaHashVerified": false,
+      "missing": [
+        "mediaUrl",
+        "licenseUrl",
+        "mediaSha256",
+        "authorizationScope",
+        "authorizationExpiresAt",
+        "deviceId",
+        "deviceModel",
+        "osVersion",
+        "physicalDevice"
+      ],
+      "manualEvidenceRequired": [
+        "authorization_and_resource_provenance",
+        "physical_device_and_build",
+        "actual_picture_and_sound",
+        "key_rotation_and_expiry",
+        "background_recovery",
+        "period_transition",
+        "negative_license_cases",
+        "cancel_inflight_license",
+        "subtitles_and_geometry",
+        "external_protection"
+      ]
+    },
+    {
+      "caseId": "ios-fairplay",
+      "platform": "ios",
+      "scheme": "fairplay-hls",
+      "implementation": "implemented",
+      "verification": "external_missing",
+      "physicalAcceptance": "not_run",
+      "declaredMediaSha256": null,
+      "mediaHashVerified": false,
+      "missing": [
+        "mediaUrl",
+        "licenseUrl",
+        "certificateBase64",
+        "contentIdBase64",
+        "mediaSha256",
+        "authorizationScope",
+        "authorizationExpiresAt",
+        "deviceId",
+        "deviceModel",
+        "osVersion",
+        "physicalDevice"
+      ],
+      "manualEvidenceRequired": [
+        "authorization_and_resource_provenance",
+        "physical_device_and_build",
+        "actual_picture_and_sound",
+        "key_rotation_and_expiry",
+        "background_recovery",
+        "period_transition",
+        "negative_license_cases",
+        "cancel_inflight_license",
+        "subtitles_and_geometry",
+        "external_protection"
+      ]
+    },
+    {
+      "caseId": "macos-fairplay",
+      "platform": "macos",
+      "scheme": "fairplay-hls",
+      "implementation": "implemented",
+      "verification": "external_missing",
+      "physicalAcceptance": "not_run",
+      "declaredMediaSha256": null,
+      "mediaHashVerified": false,
+      "missing": [
+        "mediaUrl",
+        "licenseUrl",
+        "certificateBase64",
+        "contentIdBase64",
+        "mediaSha256",
+        "authorizationScope",
+        "authorizationExpiresAt",
+        "deviceId",
+        "deviceModel",
+        "osVersion",
+        "physicalDevice"
+      ],
+      "manualEvidenceRequired": [
+        "authorization_and_resource_provenance",
+        "physical_device_and_build",
+        "actual_picture_and_sound",
+        "key_rotation_and_expiry",
+        "background_recovery",
+        "period_transition",
+        "negative_license_cases",
+        "cancel_inflight_license",
+        "subtitles_and_geometry",
+        "external_protection"
+      ]
+    }
+  ]
+}

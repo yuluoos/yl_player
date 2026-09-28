@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "caseId": "android-widevine",
+      "platform": "android",
+      "mediaUrl": "",
+      "licenseUrl": "",
+      "licenseHeaders": {},
+      "licenseCredentials": {},
+      "certificateBase64": "",
+      "contentIdBase64": "",
+      "mediaSha256": "",
+      "authorizationScope": "",
+      "authorizationExpiresAt": "",
+      "deviceId": "",
+      "deviceModel": "",
+      "osVersion": "",
+      "physicalDevice": false,
+      "outputPath": "internal",
+      "seekPositionMs": 5000
+    },
+    {
+      "caseId": "ios-fairplay",
+      "platform": "ios",
+      "mediaUrl": "",
+      "licenseUrl": "",
+      "licenseHeaders": {},
+      "licenseCredentials": {},
+      "certificateBase64": "",
+      "contentIdBase64": "",
+      "mediaSha256": "",
+      "authorizationScope": "",
+      "authorizationExpiresAt": "",
+      "deviceId": "",
+      "deviceModel": "",
+      "osVersion": "",
+      "physicalDevice": false,
+      "outputPath": "internal",
+      "seekPositionMs": 5000
+    },
+    {
+      "caseId": "macos-fairplay",
+      "platform": "macos",
+      "mediaUrl": "",
+      "licenseUrl": "",
+      "licenseHeaders": {},
+      "licenseCredentials": {},
+      "certificateBase64": "",
+      "contentIdBase64": "",
+      "mediaSha256": "",
+      "authorizationScope": "",
+      "authorizationExpiresAt": "",
+      "deviceId": "",
+      "deviceModel": "",
+      "osVersion": "",
+      "physicalDevice": false,
+      "outputPath": "internal",
+      "seekPositionMs": 5000
+    }
+  ]
+}

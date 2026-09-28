@@ -199,3 +199,12 @@ Apple 原生/Dart 共同升级私有 schema5，SPI仍为2；schema4在分配资�
 许可证请求外包完整四元组、loadRequestId、key epoch/requestId及唯一exchangeId，回包必须全部匹配；每播放器最多4项并发。原生返回错误使用固定白名单；不输出URL、授权头、证书、SPC或CKC。媒体请求与许可证请求不共享配置或重试预算。具体二进制限额及HTTP规则沿用第6/12节。
 
 本阶段准入限制：HTTP(S)显式HLS；platformDefault且没有媒体headers/credentials；automatic缓冲、非hardwareRequired、无严格画质约束。其他配置明确policy.unsupported或drm.unsupported。受保护音轨/视频variant目录暂未公开，音轨/固定清晰度选择明确拒绝；自适应选择由系统控制。视图只支持contain/center。字幕合成、crop/rotation、HDR/DV、外接保护和实际provider封装归Task4验证。本次原生/Dart测试是工程证据，CAP-DRM和授权物理验收仍不勾选。
+
+
+## 14. Task4A 授权验收准备边界（2026-09-28）
+
+私有表与运行 define 仅保存在被 Git 忽略的 `.drm-acceptance-private/`。固定 android-widevine/ios-fairplay/macos-fairplay 用例 ID；端点、认证、证书/内容标识、设备身份和授权证明不进入公开报告。离线预检不访问网络，缺项返回2及external_missing；完整配置仍not_run，声明哈希的mediaHashVerified始终false。输出文件独占创建且权限600，拒绝已有目标、符号链接和目录外输出；配置有效期在设备执行前重验。该声明不验证授权真实性、实际设备或样本哈希。
+
+`drm_lifecycle_test.dart` 使用公共生产控制器与受保护view，观察ready/首帧信号/进度/暂停/seek/继续/替换/stop及旧会话失效；清理完成后才输出白名单摘要。缺配置不得skip；自动生命周期通过也不改变physicalAcceptance=not_run。不截图或读取受保护像素。真实画面/声音、密钥轮换、负向许可证、断网/后台恢复、跨段/切轨、在途取消、字幕几何和外接保护仍需独立授权用例及人工/系统证据，全部完成前不得声明CAP-DRM完成。当前入口只接受内屏和无媒体自定义请求头的点播资源。
+
+Dart define 会进入验收构建产物，产物和原始工具/设备日志按私有资源保存；公开报告只摘取审核后的脱敏摘要。预检/入口自身脱敏不承诺第三方工具或系统原始日志脱敏。

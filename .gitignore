@@ -14,3 +14,6 @@ coverage/
 **/DerivedData/
 **/.swiftpm/
 **/*.xcresult/
+
+# Local authorized DRM endpoints, credentials and generated Dart defines.
+/.drm-acceptance-private/

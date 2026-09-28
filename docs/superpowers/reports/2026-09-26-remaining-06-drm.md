@@ -423,3 +423,37 @@ macOS27/M1、JDK17、compileSdk36、Media3 1.11.0。标准 JUnit 发现 **454** 
 - `packages/yl_player_apple/pigeons/yl_player_apple.dart`：`bdeb11f2cb5b28b6933f4fcf1624c6651b48e749ffb693dd12f82bcdf00259e9`
 - `tool/consumer_fixtures/apple_flutter/RunnerTests/YlFairPlayOutputTests.swift`：`7986945327134dc9837f57491fd777f0b0a012970b194956d435b3a198ab0b16`
 - `tool/consumer_fixtures/apple_flutter/new-tests-manifest.json`：`533527eff35618d877bed85c9079ab605d03c327d01698f06c97bb605d4bedbc`
+
+
+## 2026-09-28 Task4A：授权验收准备（基线 6780f73）
+
+已建立私有资源模板、离线预检和公共基础生命周期入口。真实授权媒体/许可证/证书与物理证据仍缺失，**Task4B 与 CAP-DRM 未完成**。下一独立可执行项为 P07 Task1；不因缺授权资源暂停参考矩阵/普通媒体工作。
+
+私有空表已创建在 Git 忽略目录，目录700/文件600；没有真实端点或凭据。工具拒绝未知配置、过期授权声明、平台错配、非法请求头/二进制、重复平台，并限制资源表大小。运行 define 独占创建于私有目录，拒绝覆盖、符号链接和目录外输出。预检只检查声明，不验证授权真实性/实际设备或下载验证哈希。详情和执行命令见[验收入口说明](../../../tool/drm_acceptance/README.md)。
+
+| 检查 | 实际结果 | 证据 |
+|---|---|---|
+| 配置验证 | 9通过，包含三平台/过期/脱敏/缺项 | `task4-config-green.log`；最终包含于示例套件 |
+| CLI 文件/权限/脱敏 | 7通过，无网络 | `task4-cli.log` |
+| 清理回归 | 2通过，修复前两项均失败 | `task4-cleanup-red.log`；最终包含于示例套件 |
+| 示例应用完整 test 目录 | 35通过 | `task4-example-final-cwd.log` |
+| 新增 Dart 静态检查 | 无问题 | `task4-analysis-final.log` |
+| 实际空表预检 | 退出2；网络请求0；三平台external_missing | [resource-status.json](../../../tool/drm_acceptance/resource-status.json) |
+| 授权设备生命周期 | 未运行，缺授权媒体和服务；媒体哈希/设备身份无 | Task4B external_missing |
+
+日志位于本计划 `.superpowers/sdd/2026-09-26-remaining-06-drm/`。命令：`PATH=<Flutter SDK>/bin:$PATH python3 -B -m unittest discover -s tool/drm_acceptance -p 'test_*.py'`；`(cd packages/yl_player/example && flutter test --no-pub test)`；`flutter analyze --no-pub` 指向新增CLI/集成入口/支持文件/测试。首次配置测试因缺类型失败后实现通过；一次完整示例测试从根目录启动导致4个既有相对资源夹具失败，按既有检查入口切回example目录后35项通过，未修改夹具或弱化断言。
+
+基础入口通过生产控制器观察ready、受保护view描述符/首帧信号、进度、暂停、seek、继续、替换、停止后的旧会话拒绝；仅静态检查过，未证明实际解密播放。缺配置显式失败，不skip；`automatedLifecycle`与`physicalAcceptance`分列，后者始终not_run。真实画面/声音、更新/rotation、负向/超时/明确过期、断网与后台恢复、跨段/切轨、在途取消、字幕/几何、HDCP/外接仍须独立授权用例与人工/系统证据；当前模板只用于基础正向内屏验收。Dart define及其构建产物/原始日志保持私有，公开只保存审核后的脱敏摘要。
+
+一次独立只读复审发现两项P2：创建超时后迟到控制器泄漏；卸载视图异常跳过dispose。用资源owner处理迟到创建及独立finally释放，两项先复现失败再通过，最终示例套件35项通过；没有重复派发复审。未审计既有生产DRM内部，也未对授权真实性/HDCP等作通过判断。
+
+### Task4A 最终源文件 SHA-256
+
+- `tool/drm_acceptance/prepare.dart`：`a7b1a8e066f00c8fc84f1f3c168d2eb85583870d810662d0c5fedebf02e20f82`
+- `tool/drm_acceptance/test_prepare.py`：`a423614d51915bc305cf8b12f084038220475f2c1bb7eb549a4a0ec123ec3903`
+- `packages/yl_player/example/integration_test/drm_lifecycle_test.dart`：`28693b834da50eb5dba92caf30b48bb81596ec3c236598f162f5c4a96453ac2c`
+- `packages/yl_player/example/integration_test/support/drm_acceptance_case.dart`：`af43140a90136dffc649d3bca4314ab5f0b3c9777bcb0e136c3bb81c8c4d1ff3`
+- `packages/yl_player/example/integration_test/support/drm_acceptance_owner.dart`：`35729135d6d50c6d5600e582b791be8103997e9dd9fdad51c81d4c5236a02766`
+- `packages/yl_player/example/test/drm_acceptance_case_test.dart`：`3b43c0f1daea22b96efef8eebe729fa950b61bac59aa0d45d92c91a4feeb1ea8`
+- `packages/yl_player/example/test/drm_acceptance_owner_test.dart`：`0ef9ecb5aa0a961bbd25c50bf70648f6b9ca0d385e2fc2e687e70de9e56ab232`
+- `tool/drm_acceptance/resource-status.json`：`44eb84bab4f68e2cfa9d22435f18c0990d34f1ef864bac94479e7021d73f3e69`
