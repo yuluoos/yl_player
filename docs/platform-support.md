@@ -481,3 +481,5 @@ P06 Task3C1 增加内部 Apple AVContentKeySession streaming driver 与 SPC/CKC 
 P06 Task3C2 已接入 Apple schema5 公共 FairPlay HLS、独立 AVPlayerLayer、候选会话/音频事务、受保护 view ACK 和 Task2 许可证传输。系统API可用性不等于授权播放可用；逐源仍需protected asset、item/key状态检查。首版仅接受无媒体自定义header的platformDefault、automatic缓冲、非强制硬解和无画质约束；音轨/variant目录暂不公开，受保护视图仅contain/center。普通播放回归及fake/loopback组合验证详见P06报告。**授权物理播放、HDCP/外接/HDR和CAP-DRM仍未完成**。前述3C1段落保留历史阶段状态。
 
 2026-09-28 P06 Task4A 提供[私有资源预检与基础生命周期入口](../tool/drm_acceptance/README.md)。三平台授权资源仍external_missing；配置检查通过不等于实际授权/播放/输出验收，CAP-DRM状态不变。
+
+2026-09-28 [P07-Task1调查](superpowers/reports/2026-09-26-remaining-07-dolby.md)冻结FEL/HDR源码基线和候选版本，本机6个检查程序通过；没有扩大生产杜比支持。24个调查组合均缺独立参考/容差，候选三端构建未完成，CAP-DV-MAP与CAP-DV-OUT继续未验证。

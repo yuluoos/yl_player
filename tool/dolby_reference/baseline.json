@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "baseline_commit": "e69d5dc47db3dc08a808dd73c80de56acd446a4d",
+  "recorded_date": "2026-09-28",
+  "host": {
+    "os": "macOS27.0",
+    "build": "26A428",
+    "architecture": "arm64",
+    "xcode": "27.0 (27A266a)"
+  },
+  "sources": [
+    {
+      "path": "packages/yl_player_android/android/build.gradle.kts",
+      "sha256": "c67e7c51d5188d34267cbe5d7ba65d16be8415f01809066b2ec63c267e5a83b9"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/native/YlFFmpegBridge/YlFELBridge.inc",
+      "sha256": "1e3e2ce10591b2b8561f1b6676beee313326d4796f7126a2a3a46e55d70d9973"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlFELCompositor.swift",
+      "sha256": "d339f82b4869ce72cc95fdbac7d92f0ca827d858740fb07c415aded2976f7b60"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlFELConfiguration.swift",
+      "sha256": "6d12c43b425eb2a35fa511c14d20c2f7d46d09cf1196eb602bc08917e08147a1"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlFELMetadata.swift",
+      "sha256": "c1df330661c1b73084662725040e241dce9314210eb26666fee44ed423bc04be"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlFELPairing.swift",
+      "sha256": "a12e69770e39cf7b0a8eb4a39455c8c88fd415a4002f34aa36e0301c2b650616"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlFELVideoDecoder.swift",
+      "sha256": "f17156d0479a9888c69e2cf94d918eb399be6fb1f32a5383ebc95a0110b66551"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlHDRVideoPolicy.swift",
+      "sha256": "1f02dcb3cee4b55bf9f5a10f6c1524c9fd9b7afb717ce63a43b35b9c322633ad"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlSampleBufferVideoRenderer.swift",
+      "sha256": "8cf83b4898408ddd8ca16729251f2059a371584aeacc980fcfb0f290fb7fb9aa"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlVideoPipeline.swift",
+      "sha256": "52da2e6b65561f85b1de0de98e979ee95f9c24b6633f2db3b32d800a36fd939c"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlVideoSurfaceMailbox.swift",
+      "sha256": "a4ef195f32d672c6a816ddd63d76becb6213083e8e90dc6b805bd21e2139f308"
+    },
+    {
+      "path": "packages/yl_player_apple/tool/apple_ffmpeg/bridge-artifact.lock",
+      "sha256": "b9157bf0b5d9ffd4750bda20b07ec32551a36210a96d8e78ea91d626edbc678e"
+    },
+    {
+      "path": "packages/yl_player_apple/tool/apple_ffmpeg/ffmpeg-9.0.1.lock",
+      "sha256": "80af0e63635f1ee913cbb4aded6380d2d56f9eaa014d19e34f3ef16ddef38e30"
+    },
+    {
+      "path": "tool/apple_fel/pairing_tests.swift",
+      "sha256": "9850d48bd8ca3fdcebe2d0dff15e0d97751b952db32f7fca49ce767c1b22b892"
+    },
+    {
+      "path": "tool/apple_fel/run_tests.sh",
+      "sha256": "a9da6d65c276ce419433e403b94a0e49497867120d56c1035f9cac800603d482"
+    },
+    {
+      "path": "tool/apple_hdr/fel_compositor_tests.swift",
+      "sha256": "b28bebc126f76a7e40882240c3868ff1be524a8d31bf1891c2c565563ce2bb71"
+    },
+    {
+      "path": "tool/apple_hdr/lease_tests.swift",
+      "sha256": "d758c92e5287f52808701516f10d94fc1ce65d5bd9b4f42160ae70ddb08e5fc2"
+    },
+    {
+      "path": "tool/apple_hdr/mailbox_tests.swift",
+      "sha256": "4fa703805f8f97f3b4b760ae126b34eb351356f4fe59c3d7111057cfaa390514"
+    },
+    {
+      "path": "tool/apple_hdr/policy_tests.swift",
+      "sha256": "4d1bbf254b62fce35d9056d838ce8ed8696133ba1cc15670903b43bba9fc1083"
+    },
+    {
+      "path": "tool/apple_hdr/run_fel_compositor_tests.sh",
+      "sha256": "5b90704691fc650e49eb03cd3ddb9c14f59907fa189ec3e012b8a35de312164b"
+    },
+    {
+      "path": "tool/apple_hdr/run_tests.sh",
+      "sha256": "880254c01b586a4dda1d10819df927ff2e453bae8e393e2bba29d821998f0ad4"
+    },
+    {
+      "path": "tool/apple_hdr/sample_tests.swift",
+      "sha256": "b830a06276b1b169f0cf04778f2c67ea4731d91a34ceaf59e353c84aa53a4402"
+    },
+    {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlFELVideoPipelineTests.swift",
+      "sha256": "40010a9d323c9ffc06f55276e965907f9e7117fe605e089674fe15efc98daf95"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt",
+      "sha256": "b1a307c94fa9ce0005908c812fc7d668437a93e6b75d764bcb72565bb274ef8f"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Configuration.kt",
+      "sha256": "6afe6ca89467ed1db0c77ecad8e3dbd787d5dae832175ee66c67d800ccef63db"
+    }
+  ],
+  "original_fel_sample": {
+    "status": "external_missing",
+    "sha256": null,
+    "reason": "historical_private_temporary_prefix_unavailable"
+  },
+  "synthetic_arithmetic": {
+    "status": "passed",
+    "oracle": "independent_scalar_formula_in_existing_test",
+    "input_identity": "tool/apple_hdr/fel_compositor_tests.swift hash above, not original media",
+    "tolerance": "abs(actual-expected) < max(0.003, abs(expected)*0.003)",
+    "domain": "linear BT.2020 RGB; 1.0 = 100 nits; RGBAHalf readback",
+    "scope": "selected synthetic pixels only; not full-image display mapping"
+  },
+  "checks": [
+    {
+      "command": "sh tool/apple_fel/run_tests.sh",
+      "exit_code": 0,
+      "executables_passed": 1
+    },
+    {
+      "command": "bash tool/apple_hdr/run_fel_compositor_tests.sh",
+      "exit_code": 0,
+      "executables_passed": 1
+    },
+    {
+      "command": "sh tool/apple_hdr/run_tests.sh",
+      "exit_code": 0,
+      "executables_passed": 4
+    }
+  ],
+  "mapping_quality": "not_run",
+  "native_dv_signal": "not_run"
+}

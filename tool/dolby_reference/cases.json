@@ -1,0 +1,997 @@
+{
+  "schema_version": 1,
+  "phase": "reference_investigation",
+  "baseline_commit": "e69d5dc47db3dc08a808dd73c80de56acd446a4d",
+  "cases": [
+    {
+      "id": "p5-cm29-base",
+      "profile": "5",
+      "metadata_set": "cm29-base",
+      "cm": "2.9",
+      "levels": [
+        1,
+        5,
+        6
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p5-cm29-trims",
+      "profile": "5",
+      "metadata_set": "cm29-trims",
+      "cm": "2.9",
+      "levels": [
+        1,
+        2,
+        4,
+        5,
+        6
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p5-cm40-base",
+      "profile": "5",
+      "metadata_set": "cm40-base",
+      "cm": "4.0",
+      "levels": [
+        1,
+        5,
+        6
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p5-cm40-trims",
+      "profile": "5",
+      "metadata_set": "cm40-trims",
+      "cm": "4.0",
+      "levels": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        8
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p7-mel-cm29-base",
+      "profile": "7-mel",
+      "metadata_set": "cm29-base",
+      "cm": "2.9",
+      "levels": [
+        1,
+        5,
+        6
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p7-mel-cm29-trims",
+      "profile": "7-mel",
+      "metadata_set": "cm29-trims",
+      "cm": "2.9",
+      "levels": [
+        1,
+        2,
+        4,
+        5,
+        6
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p7-mel-cm40-base",
+      "profile": "7-mel",
+      "metadata_set": "cm40-base",
+      "cm": "4.0",
+      "levels": [
+        1,
+        5,
+        6
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p7-mel-cm40-trims",
+      "profile": "7-mel",
+      "metadata_set": "cm40-trims",
+      "cm": "4.0",
+      "levels": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        8
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p7-fel-cm29-base",
+      "profile": "7-fel",
+      "metadata_set": "cm29-base",
+      "cm": "2.9",
+      "levels": [
+        1,
+        5,
+        6
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p7-fel-cm29-trims",
+      "profile": "7-fel",
+      "metadata_set": "cm29-trims",
+      "cm": "2.9",
+      "levels": [
+        1,
+        2,
+        4,
+        5,
+        6
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p7-fel-cm40-base",
+      "profile": "7-fel",
+      "metadata_set": "cm40-base",
+      "cm": "4.0",
+      "levels": [
+        1,
+        5,
+        6
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p7-fel-cm40-trims",
+      "profile": "7-fel",
+      "metadata_set": "cm40-trims",
+      "cm": "4.0",
+      "levels": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        8
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p8.1-cm29-base",
+      "profile": "8.1",
+      "metadata_set": "cm29-base",
+      "cm": "2.9",
+      "levels": [
+        1,
+        5,
+        6
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p8.1-cm29-trims",
+      "profile": "8.1",
+      "metadata_set": "cm29-trims",
+      "cm": "2.9",
+      "levels": [
+        1,
+        2,
+        4,
+        5,
+        6
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p8.1-cm40-base",
+      "profile": "8.1",
+      "metadata_set": "cm40-base",
+      "cm": "4.0",
+      "levels": [
+        1,
+        5,
+        6
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p8.1-cm40-trims",
+      "profile": "8.1",
+      "metadata_set": "cm40-trims",
+      "cm": "4.0",
+      "levels": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        8
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p8.2-cm29-base",
+      "profile": "8.2",
+      "metadata_set": "cm29-base",
+      "cm": "2.9",
+      "levels": [
+        1,
+        5,
+        6
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p8.2-cm29-trims",
+      "profile": "8.2",
+      "metadata_set": "cm29-trims",
+      "cm": "2.9",
+      "levels": [
+        1,
+        2,
+        4,
+        5,
+        6
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p8.2-cm40-base",
+      "profile": "8.2",
+      "metadata_set": "cm40-base",
+      "cm": "4.0",
+      "levels": [
+        1,
+        5,
+        6
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p8.2-cm40-trims",
+      "profile": "8.2",
+      "metadata_set": "cm40-trims",
+      "cm": "4.0",
+      "levels": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        8
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p8.4-cm29-base",
+      "profile": "8.4",
+      "metadata_set": "cm29-base",
+      "cm": "2.9",
+      "levels": [
+        1,
+        5,
+        6
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p8.4-cm29-trims",
+      "profile": "8.4",
+      "metadata_set": "cm29-trims",
+      "cm": "2.9",
+      "levels": [
+        1,
+        2,
+        4,
+        5,
+        6
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p8.4-cm40-base",
+      "profile": "8.4",
+      "metadata_set": "cm40-base",
+      "cm": "4.0",
+      "levels": [
+        1,
+        5,
+        6
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    },
+    {
+      "id": "p8.4-cm40-trims",
+      "profile": "8.4",
+      "metadata_set": "cm40-trims",
+      "cm": "4.0",
+      "levels": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        8
+      ],
+      "applicability": "to_verify",
+      "input_sha256": null,
+      "reference_sha256": null,
+      "tolerance": null,
+      "platforms": {
+        "android": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "ios": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        },
+        "macos": {
+          "arithmetic": "not_run",
+          "mapping_quality": "external_missing",
+          "native_dv_signal": "external_missing"
+        }
+      },
+      "missing": [
+        "original_authorized_input",
+        "verified_profile_cm_levels",
+        "independent_target_reference",
+        "target_and_frame_alignment",
+        "frozen_tolerance",
+        "physical_output_chain"
+      ]
+    }
+  ]
+}

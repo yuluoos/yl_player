@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "inspected_date": "2026-09-28",
+  "adopted_new_dependency": false,
+  "candidates": [
+    {
+      "id": "existing-apple-fel",
+      "version": "e69d5dc47db3dc08a808dd73c80de56acd446a4d",
+      "role": "bounded experimental Metal reconstruction",
+      "builds": {
+        "macos": "six_local_regression_executables_passed",
+        "ios": "not_run_this_task",
+        "android": "not_applicable_apple_implementation"
+      },
+      "complete_display_mapping": "not_implemented",
+      "native_dv_output": "not_verified"
+    },
+    {
+      "id": "libplacebo",
+      "version": "7.372.0",
+      "commit": "c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56",
+      "role": "FEL reconstruction and generic HDR rendering candidate",
+      "builds": {
+        "android": "not_built",
+        "ios": "not_built",
+        "macos": "not_built"
+      },
+      "complete_display_mapping": "not_established",
+      "native_dv_output": "not_verified",
+      "license_declared": "LGPL-2.1-or-later"
+    },
+    {
+      "id": "libdovi",
+      "version": "3.4.0",
+      "cli_version": "2.3.4",
+      "commit": "614c816b6446dcd1dbaf433403d499a6026fbb5a",
+      "role": "metadata parsing/writing; not a display mapper",
+      "builds": {
+        "android": "not_built",
+        "ios": "not_built",
+        "macos": "not_built"
+      },
+      "complete_display_mapping": "not_a_renderer",
+      "license_declared": "MIT",
+      "library_rust_min": "1.88.0",
+      "cli_rust_min": "1.95.0",
+      "host_rust": "1.94.0"
+    },
+    {
+      "id": "apple-system",
+      "version": "Xcode27.0 SDK27.0",
+      "role": "AVPlayer or sample-buffer system HDR rendering",
+      "physical_profile_acceptance": "not_run",
+      "deployment_minimum": {
+        "ios": "15.0",
+        "macos": "12.0"
+      }
+    },
+    {
+      "id": "android-system",
+      "version": "Media3 1.11.0",
+      "role": "device MediaCodec and display-dependent HDR rendering",
+      "physical_profile_acceptance": "not_run",
+      "deployment_minimum_api": 24
+    },
+    {
+      "id": "ffmpeg-bridge",
+      "version": "9.0.1",
+      "role": "pinned parser and BL/EL separation; not target display mapping",
+      "source_archive_sha256": "cf38e0e28c7e5605942c4a77755349b0145804a397af37eb1fb4c77cb237f635",
+      "build_evidence": "existing five-slice artifact lock; no rebuild in this task"
+    }
+  ],
+  "upstream_files": [
+    {
+      "candidate": "libplacebo",
+      "revision": "c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56",
+      "path": "meson.build",
+      "url": "https://raw.githubusercontent.com/haasn/libplacebo/c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56/meson.build",
+      "sha256": "8266fc18c97762dc2e67fabfcb617f247d6cc2e29e48488b975516a670ba56f7"
+    },
+    {
+      "candidate": "libplacebo",
+      "revision": "c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56",
+      "path": "meson_options.txt",
+      "url": "https://raw.githubusercontent.com/haasn/libplacebo/c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56/meson_options.txt",
+      "sha256": "c3e83797d567108e89f4c76c1ca5fc8124da4c4e27a686230570056d0aedeed5"
+    },
+    {
+      "candidate": "libplacebo",
+      "revision": "c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56",
+      "path": "src/include/libplacebo/colorspace.h",
+      "url": "https://raw.githubusercontent.com/haasn/libplacebo/c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56/src/include/libplacebo/colorspace.h",
+      "sha256": "045ae8a75caa8d1dc50dcfdf1b190817af3a07c0d381df20d86178095dab9a0d"
+    },
+    {
+      "candidate": "libplacebo",
+      "revision": "c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56",
+      "path": "src/include/libplacebo/renderer.h",
+      "url": "https://raw.githubusercontent.com/haasn/libplacebo/c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56/src/include/libplacebo/renderer.h",
+      "sha256": "5b3b87d10294e4fae2548878425d7ec837c84a14529a107dd6ba95dd52e6510c"
+    },
+    {
+      "candidate": "libplacebo",
+      "revision": "c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56",
+      "path": "src/include/libplacebo/utils/libav_internal.h",
+      "url": "https://raw.githubusercontent.com/haasn/libplacebo/c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56/src/include/libplacebo/utils/libav_internal.h",
+      "sha256": "542055662c561cbccbb479a89be0ed1b6e295bbc7b2298a83d8424d053d14189"
+    },
+    {
+      "candidate": "libplacebo",
+      "revision": "c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56",
+      "path": "src/shaders/colorspace.c",
+      "url": "https://raw.githubusercontent.com/haasn/libplacebo/c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56/src/shaders/colorspace.c",
+      "sha256": "9a2f00f72388030685477bcf06ccd5d7433b408a499c616a1016714ad785c625"
+    },
+    {
+      "candidate": "libplacebo",
+      "revision": "c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56",
+      "path": "src/renderer.c",
+      "url": "https://raw.githubusercontent.com/haasn/libplacebo/c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56/src/renderer.c",
+      "sha256": "36dd764719101c2ff75d1673fe5cb755b3bc26e41cbaeca31c9264e55cf61e21"
+    },
+    {
+      "candidate": "libplacebo",
+      "revision": "c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56",
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/haasn/libplacebo/c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56/LICENSE",
+      "sha256": "b3aa400aca6d2ba1f0bd03bd98d03d1fe7489a3bbb26969d72016360af8a5c9d"
+    },
+    {
+      "candidate": "libplacebo",
+      "revision": "c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56",
+      "path": "README.md",
+      "url": "https://raw.githubusercontent.com/haasn/libplacebo/c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56/README.md",
+      "sha256": "d55aaef57cbc560d5b13fec4f3b6e807307d72ca8dd8c547c6bcc320c33a8287"
+    },
+    {
+      "candidate": "dovi_tool",
+      "revision": "614c816b6446dcd1dbaf433403d499a6026fbb5a",
+      "path": "Cargo.toml",
+      "url": "https://raw.githubusercontent.com/quietvoid/dovi_tool/614c816b6446dcd1dbaf433403d499a6026fbb5a/Cargo.toml",
+      "sha256": "875fc6ad1c353bb5cc17f153aafa812038e788c8a6e74f3a629f90c5916fcedb"
+    },
+    {
+      "candidate": "dovi_tool",
+      "revision": "614c816b6446dcd1dbaf433403d499a6026fbb5a",
+      "path": "dolby_vision/Cargo.toml",
+      "url": "https://raw.githubusercontent.com/quietvoid/dovi_tool/614c816b6446dcd1dbaf433403d499a6026fbb5a/dolby_vision/Cargo.toml",
+      "sha256": "0395429dafe734047b1a1730d2e3fa1cfaecb7d1fe60afb23b77bce11c492f72"
+    },
+    {
+      "candidate": "dovi_tool",
+      "revision": "614c816b6446dcd1dbaf433403d499a6026fbb5a",
+      "path": "dolby_vision/src/rpu/rpu_data_nlq.rs",
+      "url": "https://raw.githubusercontent.com/quietvoid/dovi_tool/614c816b6446dcd1dbaf433403d499a6026fbb5a/dolby_vision/src/rpu/rpu_data_nlq.rs",
+      "sha256": "616e8c6afc6374e1cad657996d75f0e4e6029e0fe66e80bc0fe210ccfe72a462"
+    },
+    {
+      "candidate": "dovi_tool",
+      "revision": "614c816b6446dcd1dbaf433403d499a6026fbb5a",
+      "path": "README.md",
+      "url": "https://raw.githubusercontent.com/quietvoid/dovi_tool/614c816b6446dcd1dbaf433403d499a6026fbb5a/README.md",
+      "sha256": "abd181f15f6b3304926f2d2317347d6deddb1336d9cd2ddca122518fb3085ae2"
+    },
+    {
+      "candidate": "dovi_tool",
+      "revision": "614c816b6446dcd1dbaf433403d499a6026fbb5a",
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/quietvoid/dovi_tool/614c816b6446dcd1dbaf433403d499a6026fbb5a/LICENSE",
+      "sha256": "e9d76c149b1176de4aa0202cfb6a4a266a0c4cb71959f429d670c3a857f95e52"
+    }
+  ],
+  "local_build_prerequisites": {
+    "platform": "macos",
+    "architecture": "arm64",
+    "tools": {
+      "meson": false,
+      "ninja": false,
+      "pkg-config": true,
+      "rustc": true,
+      "cargo": true
+    },
+    "pkg_config": {
+      "vulkan": {
+        "status": "not_found",
+        "version": null
+      },
+      "glslang": {
+        "status": "not_found",
+        "version": null
+      },
+      "shaderc": {
+        "status": "not_found",
+        "version": null
+      },
+      "lcms2": {
+        "status": "available",
+        "version": "2.19"
+      },
+      "libdovi": {
+        "status": "not_found",
+        "version": null
+      },
+      "libplacebo": {
+        "status": "not_found",
+        "version": null
+      }
+    },
+    "macosx": "27.0",
+    "iphoneos": "27.0",
+    "iphonesimulator": "27.0"
+  }
+}
