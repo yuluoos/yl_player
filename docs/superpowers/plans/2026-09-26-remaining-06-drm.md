@@ -81,7 +81,7 @@ public_payload_contains_body_or_key: false
 - [x] 3A：Android 内部 MediaDrm driver、密钥代际/取消/更新/后台恢复边界和系统 fake 测试；当前未接生产播放器。
 - [ ] 3B：Android 受保护输出与 Media3 candidate 原子事务、Pigeon challenge/response 和 Task 2 传输连接；验证 clear 回归。
   - [x] 3B1：内部 Media3 DrmSessionManager/DrmSession 消费 3A 密钥状态，管理 decoder 引用、CryptoConfig 与安全 decoder 查询；不开放生产准入。
-  - [ ] 3B2：受保护 view 注册/attach/detach、secure candidate output、实际 decoder 证据与原子替换/回滚。
+  - [x] 3B2：原生受保护 view 注册/attach/detach、secure candidate output、内部 Media3 route、实际 decoder/key 门槛与原子替换/回滚；Dart provider 和正式 ACK wire 留在 3B3。
   - [ ] 3B3：Pigeon challenge/response、受保护 view ACK 与 Task 2 许可证传输连接，完成组合回归后才开放对应准入。
 - [ ] 3C：Apple AVContentKeySession、AVPlayerLayer 与候选事务/同一桥接，验证原生状态机和 clear 回归。
 

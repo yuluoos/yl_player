@@ -153,3 +153,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-09-27 P06 Task 3A 已实现 Android 内部系统密钥边界与代际生命周期测试；生产 Media3/保护输出/Pigeon 和 Apple 接入尚未完成，Task 3 仍进行中。内部 driver 要求 API28+ 实际安全级别证据，API24–27 受保护路径继续拒绝；整包下限不变。当前公开 adapter 仍拒绝 DRM，详见 P06 报告。
 
 2026-09-27 P06 Task 3B1 已完成内部 Media3 DRM 会话消费与安全 decoder 查询边界；3B2 保护输出/候选事务、3B3 Pigeon/许可证连接仍未完成。生产 DRM 准入保持拒绝，CAP-DRM 不变。
+
+2026-09-28 P06 Task 3B2 完成 Android 原生安全视图与内部 Media3 候选/原子回滚路线；3B3 公共描述符、Pigeon/许可证桥接尚未完成。公开 DRM 准入继续拒绝，CAP-DRM 不变。

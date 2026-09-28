@@ -90,6 +90,16 @@ class YlMedia3DrmSessionTest {
         assertEquals(DrmSession.STATE_RELEASED, session.state)
         assertFailsWith<YlBoundaryException> { session.acquire(null) }
     }
+    @Test fun `last release closes CDM and clears challenge before playback looper can quit`() = runTest {
+        val f = Fixture(this)
+        val session = f.manager.acquireSession(null, format())!!; runCurrent()
+        val crypto = assertIs<FrameworkCryptoConfig>(session.cryptoConfig)
+        session.release(null)
+        assertEquals(1, f.drivers.single().closes)
+        assertContentEquals(byteArrayOf(0, 0), crypto.sessionId)
+        assertContentEquals(byteArrayOf(0), f.requests.single().bytes)
+        f.manager.release(); runCurrent()
+    }
     @Test fun `last release cancels license and discards late response and callback`() = runTest {
         val f = Fixture(this); f.ignoreCancellation = true
         val old = f.manager.acquireSession(null, format())!!; runCurrent()
@@ -196,6 +206,19 @@ class YlMedia3DrmSessionTest {
         val sampleFormat = format(byteArrayOf(1, 2, 3))
         val session = f.manager.acquireSession(null, sampleFormat)!!; runCurrent()
         assertContentEquals(byteArrayOf(1, 2, 3), f.drivers[0].initializations.single())
+        session.release(null); f.manager.release(); runCurrent()
+    }
+
+    @Test fun `candidate waits for usable system keys and failure ends readiness wait`() = runTest {
+        val f = Fixture(this); val session = f.manager.acquireSession(null, format())!!
+        val ready = async { f.manager.awaitUsableKeys() }; runCurrent()
+        f.replies[0].complete(byteArrayOf(7)); runCurrent(); assertFalse(ready.isCompleted)
+        f.drivers[0].event(YlDrmSystemEvent.USABLE); runCurrent(); ready.await()
+        f.drivers[0].event(YlDrmSystemEvent.PENDING); runCurrent()
+        val next = async { runCatching { f.manager.awaitUsableKeys() } }; runCurrent()
+        assertFalse(next.isCompleted)
+        f.drivers[0].event(YlDrmSystemEvent.EXPIRED); runCurrent()
+        assertEquals(YlFailureKind.DRM_LICENSE_EXPIRED, (next.await().exceptionOrNull() as YlBoundaryException).kind)
         session.release(null); f.manager.release(); runCurrent()
     }
 

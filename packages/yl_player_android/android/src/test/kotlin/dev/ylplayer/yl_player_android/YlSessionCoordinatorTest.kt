@@ -962,6 +962,7 @@ internal class SessionFixture(dispatcher: CoroutineDispatcher, playerId: Long = 
     suspend fun finish() { coordinator.close().await() }
 }
 internal class FakeSessionEngine : YlPlaybackEngineAdapter {
+    override var presentationIdentity: YlOutputIdentity? = null
     override var needsExclusiveLease = true
     var currentVolume = 1.0
     var currentSpeed = 1.0

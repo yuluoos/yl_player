@@ -470,3 +470,5 @@ rejects API24–27 protection admission; the app-wide API24 floor is unchanged.
 No production DRM capability is enabled by these internal/mock tests.
 
 P06 Task 3B1 补齐内部 Media3 DrmSession 适配、引用释放与禁止非安全 decoder 查询；尚未连接生产 Media3 core/source factory、保护 view 或许可证 Pigeon，不构成 DRM 播放支持。视频硬件 metadata 证据仍要求 API29+；系统 L1 API28+ 与整包 API24 下限分别保留。
+
+P06 Task 3B2 已连接 Android 内部安全候选输出、Media3 DRM manager、原生安全 SurfaceView 与会话替换/回滚。四元组/输出 revision/attach ACK 隔离旧帧；不允许明文 fallback。尚无 Dart/Pigeon 完整入口与真机授权证据，生产 DRM 支持仍未开放。

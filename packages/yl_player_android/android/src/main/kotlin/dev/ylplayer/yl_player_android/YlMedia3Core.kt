@@ -35,6 +35,7 @@ internal class YlMedia3Core(
     private val emit: (YlEngineEvent) -> Unit,
     private val rtmpRecovery: YlRtmpRecovery = YlRtmpRecovery(),
     private val resetDecoderGate: () -> Unit = {},
+    private val protectedDrm: androidx.media3.exoplayer.drm.DrmSessionManager? = null,
 ) : Player.Listener, AnalyticsListener {
     // Entire class, including construction, lives on the owned engine application Looper.
     private val acknowledgement = YlMedia3Acknowledgement()
@@ -43,8 +44,9 @@ internal class YlMedia3Core(
     private val deviceProfile = YlAndroidDeviceProfile.collect(context)
     private val trackSelector = YlFixedVideoTrackSelector(context)
     private var videoSelection = YlFixedVideoState()
-    private val decoderPolicy = AndroidDecoderPolicy.valueOf(configuration.decoderPolicy)
+    private val decoderPolicy = if (protectedDrm != null) AndroidDecoderPolicy.HARDWARE_REQUIRED else AndroidDecoderPolicy.valueOf(configuration.decoderPolicy)
     private val decoderEvidence = YlDecoderEvidenceProvider.collect()
+    private val protectedSelector = if (protectedDrm != null) YlProtectedCodecSelector(evidence = decoderEvidence) else null
     private val rtmp = YlRtmpSourcePolicy.isRtmp(source)
     @Volatile var mediaEpoch = 0L; private set
     private var rtmpBackoff: Runnable? = null
@@ -54,7 +56,7 @@ internal class YlMedia3Core(
     private var rtmpPendingFailure: YlRtmpException? = null
     private val managedNetwork = source.networkPolicy?.kind == AndroidNetworkPolicyKind.MANAGED
     private var inspectingDecoder = false
-    private val sourceFactory = YlMediaSourceFactory(source, configuration.network) { attempt, delayMs ->
+    private val sourceFactory = YlMediaSourceFactory(source, configuration.network, protectedDrm) { attempt, delayMs ->
         val occurredAtMs = SystemClock.elapsedRealtime()
         handler.post { if (!disposed && !stopped) recordRetry(attempt, delayMs, occurredAtMs) }
     }
@@ -129,9 +131,10 @@ internal class YlMedia3Core(
     }
 
     fun initialize() {
+        if (protectedDrm != null && (!videoOutput.isProtected || source.format != AndroidMediaFormat.DASH)) throw YlBoundaryException(YlFailureKind.DRM_PROTECTION_INSUFFICIENT)
         val renderersFactory = YlOutputRenderersFactory(context, outputObserver)
-            .setEnableDecoderFallback(true)
-            .setMediaCodecSelector(YlPolicyCodecSelector(decoderPolicy, evidence = decoderEvidence))
+            .setEnableDecoderFallback(protectedDrm == null)
+            .setMediaCodecSelector(protectedSelector ?: YlPolicyCodecSelector(decoderPolicy, evidence = decoderEvidence))
         exoPlayer = ExoPlayer.Builder(context, renderersFactory)
             .setLooper(handler.looper)
             .setTrackSelector(trackSelector)
@@ -182,7 +185,25 @@ internal class YlMedia3Core(
     }
     fun setPlaybackSpeed(speed: Double) { requestedPlaybackSpeed = speed.toFloat(); exoPlayer.setPlaybackSpeed(requestedPlaybackSpeed) }
     fun setVolume(volume: Double) { exoPlayer.volume = volume.toFloat() }
-    fun switchOutput(surface: Surface, output: YlOutputIdentity) { videoOutput.switchTo(surface, output, ::attachSurface); ensureHealthy() }
+    fun switchOutput(surface: Surface, output: YlOutputIdentity) {
+        if (protectedDrm != null) throw YlBoundaryException(YlFailureKind.DRM_PROTECTION_INSUFFICIENT)
+        videoOutput.switchTo(surface, output, ::attachSurface); ensureHealthy()
+    }
+    fun switchProtectedOutput(surface: Surface, output: YlOutputIdentity) {
+        if (disposed || stopped) throw YlBoundaryException(YlFailureKind.SESSION_STALE)
+        check(protectedDrm != null)
+        videoOutput.switchTo(surface, output, ::attachSurface, protected = true); ensureHealthy()
+    }
+    fun parkProtectedOutput() { if (!disposed) videoOutput.parkProtected(::attachSurface) }
+    fun detachProtectedHolder() {
+        try { parkProtectedOutput() }
+        catch (error: Exception) {
+            // A vendor detach timeout is not an ACK. Stop/release the player, keep unsafe
+            // resources quarantined, and report failure; never reuse this protected session.
+            dispose()
+            throw error
+        }
+    }
     fun snapshotRestorePoint() = YlEngineRestorePoint(if (active) max(0L, exoPlayer.currentPosition) else savedPositionMs,
         resumeAtLiveEdge || (normalizedLiveOffset()?.let { it <= 2_000L } == true), lifecycle.state.playbackIntended,
         audioTracks.firstOrNull { it.isSelected }?.id, videoTracks.filter { it.isSelected }.map { it.id },
@@ -439,7 +460,7 @@ internal class YlMedia3Core(
         isHardwareDecoding = false
         if (decoderPolicy == AndroidDecoderPolicy.HARDWARE_REQUIRED && !inspectingDecoder) {
             inspectingDecoder = true
-            videoOutput.beginInspection(YlCandidateVideoOutput(context), ::attachSurface)
+            videoOutput.beginInspection(YlCandidateVideoOutput(context, protectedDrm != null), ::attachSurface)
         }
         exoPlayer.prepare()
     }
@@ -634,6 +655,7 @@ internal class YlMedia3Core(
             currentTimeline.getUidOfPeriod(exoPlayer.currentPeriodIndex) != eventPeriod.periodUid) return
         if (tracks.groups.isEmpty() && videoSelection.quality != null) { emitState(); return }
         val nextSelection = try {
+            if (protectedDrm != null) requireProtectedTracks(tracks)
             YlVideoSelectionPolicy.reconcile(tracks, videoSelection, hostQualityConstraint, deviceProfile.videoEnvelope)
         } catch (error: YlBoundaryException) {
             status = "error"; currentError = error.kind; lastFailure = error.kind
@@ -954,6 +976,10 @@ internal class YlMedia3Core(
     ) {
         if (!isCurrentEvent(eventTime)) return
         if (initializedTimestampMs < decoderAttemptStartedAtMs) return
+        if (protectedSelector != null && !protectedSelector.provesInitialized(decoderName)) {
+            status = "error"; lastFailure = YlFailureKind.DRM_PROTECTION_INSUFFICIENT; currentError = lastFailure
+            exoPlayer.pause(); emit(YlEngineEvent.Failed(YlFailureKind.DRM_PROTECTION_INSUFFICIENT)); return
+        }
         this.decoderName = decoderName
         isHardwareDecoding = decoderEvidence.mode(decoderName) == AndroidDecoderMode.HARDWARE
         if (decoderPolicy == AndroidDecoderPolicy.HARDWARE_REQUIRED) {
@@ -1153,4 +1179,16 @@ internal fun media3VideoGeometry(size: VideoSize, format: androidx.media3.common
     return AndroidVideoGeometryMessage(coded, rendered,
         size.pixelWidthHeightRatio.toDouble().takeIf { it.isFinite() && it > 0 } ?: 1.0,
         size.unappliedRotationDegrees.toLong())
+}
+
+/** A declared protected delivery cannot turn into successful clear playback. */
+internal fun requireProtectedTracks(tracks: Tracks) {
+    val selected = tracks.groups.flatMap { group -> (0 until group.length)
+        .filter { group.isTrackSelected(it) }.map { group.type to group.getTrackFormat(it) } }
+    val video = selected.filter { it.first == C.TRACK_TYPE_VIDEO }
+    val protected = if (video.isNotEmpty()) video else selected.filter { it.first == C.TRACK_TYPE_AUDIO }
+    if (protected.isEmpty()) return // Track discovery is not ready yet; no admission follows here.
+    if (protected.any { (_, format) -> format.drmInitData?.let { drm ->
+        (0 until drm.schemeDataCount).none { drm[it].uuid == YL_WIDEVINE_UUID }
+    } != false }) throw YlBoundaryException(YlFailureKind.DRM_CONFIG_INVALID)
 }

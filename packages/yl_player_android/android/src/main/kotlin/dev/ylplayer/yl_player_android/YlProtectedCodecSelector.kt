@@ -18,12 +18,15 @@ internal class YlProtectedCodecSelector(
     private val delegate: MediaCodecSelector = MediaCodecSelector.DEFAULT,
     private val evidence: YlDecoderEvidenceProvider = YlDecoderEvidenceProvider.collect(),
 ) : MediaCodecSelector {
+    private val selected = java.util.concurrent.ConcurrentHashMap.newKeySet<String>()
+    fun provesInitialized(name: String) = name in selected && evidence.mode(name) == AndroidDecoderMode.HARDWARE
     override fun getDecoderInfos(mimeType: String, requiresSecureDecoder: Boolean,
         requiresTunnelingDecoder: Boolean): List<MediaCodecInfo> {
         val allowed = delegate.getDecoderInfos(mimeType, true, requiresTunnelingDecoder).filter {
             it.secure && (!MimeTypes.isVideo(mimeType) || evidence.mode(it.name) == AndroidDecoderMode.HARDWARE)
         }
         if (allowed.isEmpty()) throw YlBoundaryException(YlFailureKind.DRM_PROTECTION_INSUFFICIENT)
+        if (MimeTypes.isVideo(mimeType)) selected.addAll(allowed.map { it.name })
         return allowed
     }
 }

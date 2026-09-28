@@ -16,7 +16,10 @@ class YlProtectedCodecSelectorTest {
             queries += secure; listOf(ordinary, software, protected)
         }, YlDecoderEvidenceProvider(29, listOf(YlCodecDescriptor("protected", true, false),
             YlCodecDescriptor("ordinary", true, false), YlCodecDescriptor("software", false, true))))
+        assertFalse(selector.provesInitialized("protected"))
         assertEquals(listOf(protected), selector.getDecoderInfos("video/avc", true, false))
+        assertTrue(selector.provesInitialized("protected"))
+        assertFalse(selector.provesInitialized("ordinary"))
         assertEquals(listOf(protected), selector.getDecoderInfos("video/avc", false, false))
         assertEquals(listOf(true, true), queries)
     }

@@ -13,14 +13,24 @@ class YlPlayerAndroidPlugin :
     ComponentCallbacks2,
     Application.ActivityLifecycleCallbacks {
     private var application: Application? = null
+    private var protectedViews: YlProtectedViewRegistry? = null
     private var registry: YlPlayerRegistry? = null
     private var startedActivities = 0
     private val failures = YlFailureMapper()
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        val views = YlProtectedViewRegistry().also { protectedViews = it }
         val owner = YlPlayerRegistry(binding.binaryMessenger, binding.textureRegistry, YlMedia3SessionFactory(binding.applicationContext), failures)
         registry = owner
         try {
+            val platformViews = binding.platformViewRegistry
+            val registered = protectedFactories[platformViews]
+            if (registered != null) registered.bind(views)
+            else {
+                val factory = YlProtectedViewFactory(views)
+                check(platformViews.registerViewFactory(YlProtectedViewFactory.TYPE, factory)) { "Protected view type already registered" }
+                protectedFactories[platformViews] = factory
+            }
             application = binding.applicationContext as Application
             application?.registerComponentCallbacks(this)
             application?.registerActivityLifecycleCallbacks(this)
@@ -41,6 +51,13 @@ class YlPlayerAndroidPlugin :
         cleanup { app?.unregisterComponentCallbacks(this) }
         cleanup { app?.unregisterActivityLifecycleCallbacks(this) }
         cleanup { owner?.detach() }
+        cleanup { protectedViews?.detach(); protectedViews = null }
+    }
+
+    private companion object {
+        // Flutter owns registrations for the engine lifetime, which can exceed a plugin instance.
+        // Values do not reference the registry key; a collected engine is not retained here.
+        val protectedFactories = java.util.WeakHashMap<io.flutter.plugin.platform.PlatformViewRegistry, YlProtectedViewFactory>()
     }
 
     private inline fun cleanup(action: () -> Unit) {

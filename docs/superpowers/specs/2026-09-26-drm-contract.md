@@ -138,3 +138,20 @@ Android 系统 driver 使用 Widevine UUID、streaming key type、系统 L1 会�
 `YlProtectedCodecSelector` 为后续保护 renderer 专用，所有查询强制 secure，拒绝非 secure codec。视频另须精确硬件 metadata 证据；现有证据采集 API29+ 才能满足，API28 的 L1 会话门槛本身不保证这一 decoder 条件。包 minSdk24 不变。Media3 可以在 secure 查询为空时再查询非 secure decoder，因此仅关闭 decoder fallback 或请求 L1 不够。后续 3B2 还需核查实际初始化 decoder 与安全输出；本类的可用候选列表不能代替实际证据。
 
 接口依据：[DrmSession 引用与状态](https://developer.android.com/reference/androidx/media3/exoplayer/drm/DrmSession)、[DrmSessionManager](https://developer.android.com/reference/androidx/media3/exoplayer/drm/DrmSessionManager)、[Media3 1.11 MediaCodecRenderer 的 secure fallback](https://github.com/androidx/media/blob/1.11.0/libraries/exoplayer/src/main/java/androidx/media3/exoplayer/mediacodec/MediaCodecRenderer.java)。本次仅以系统 fake 验证接口逻辑，没有真机解密、rotation/显示/HDCP 结论；生产 core/source factory/view/Pigeon 尚未接入这些内部类型。
+
+
+## 10. Task 3B2：Android 原生保护输出与内部候选路线
+
+原生 `yl_player_android/protected_video` 工厂使用安全 SurfaceView；创建时先 setSecure(true)，再添加到容器和注册 holder callback。四元组必须完全匹配已经 commit 的注册记录，且同一记录只能被一个 viewId 占用；未知、旧代际、候选未提交、重复占用均返回空黑视图。插件 detach 清空注册，原生 view 的销毁不释放 player；同一 Flutter engine 重新 attach（包括新的插件实例）时复用已注册工厂并绑定新的 registry；未知工厂占用相同类型时停止接入，不假装注册成功。
+
+`YlProtectedPlayback` 是内部显式路由，连接 3B1 manager、Media3 DASH source factory、安全候选 PlaceholderSurface 和安全 inspection output。与旧输出共用 worker ACK、decoder lease 和会话协调器；受保护 route 不调用 Flutter texture、不进入 native/FFmpeg fallback。实际初始化 codec 必须属于已核查 secure 且 hardware 的候选；激活和恢复还需等待当前系统 keys usable，HTTP/Media3 READY 不能替代。声明 DRM 的已选视频不得转为 clear 成功。
+
+候选独立准备且静音，安全/密钥失败走原有 lease 回滚；成功提交才激活 registry 身份并撤销前一呈现。首帧使用 engine 自己的输出身份，不能复用 texture generation。每次 holder attach/destroy 和 mount/unmount 都推进输出 revision；首帧必须同时匹配当前身份和成功的 worker attach ACK。先于 ACK 的帧暂存，旧 ACK/旧帧不显示。同一 Surface 重用时先同步停车到安全候选，记录 elapsedRealtime 边界，在 worker 等待 1ms 跨过时间戳精度后再绑定；只有 renderTimeMs 严格晚于边界的帧才属于当前输出，不以回调抵达时的 Surface 身份推断代次。后台或 view 消失时遮黑并停车到保留的安全候选 surface；恢复重新等待 decoder/key 证据后重绑仍存活的 holder。
+
+SurfaceView holder 拥有其 Surface，插件不调用 release；holder 销毁立即撤销呈现资格，并同步等待 worker 的 Media3 停车确认才正常返回，dispose/retire 同样先解绑。此处是主线程异步策略的生命周期例外：不等待主线程协程续体或 registry mutex，排队 attach 在 worker 再次核验 volatile revision，避免销毁后重新借用 Surface。Media3 解绑失败/超时则终止该播放器、报告明确的原生错误；未获释放确认的私有资源保持 quarantine，不将错误返回视为 ACK，也不宣称失去响应的厂商渲染线程已安全释放。原生视图默认按显示尺寸/PAR 等比居中，使用黑色遮罩控制当前首帧；不读像素、不截图。裁切/Flutter overlay/旋转及实际物理保护仍需后续组合/真机验证。
+
+Media3 最后一个 decoder 引用释放时，在该 owner 调用中同步撤销密钥请求、清除 challenge/session handle 并关闭 CDM；不把关闭操作排到即将退出的 playback Looper。
+
+接口依据：[SurfaceHolder 销毁回调](https://developer.android.com/reference/android/view/SurfaceHolder.Callback#surfaceDestroyed(android.view.SurfaceHolder))、[Media3 首帧时间](https://developer.android.com/reference/androidx/media3/exoplayer/video/VideoRendererEventListener#onRenderedFirstFrame(java.lang.Object,long))，2026-09-28 核查。
+
+这一步不提供 Dart descriptor/provider 或 Pigeon attach/key 消息，属于已经规划的 3B3；公开 adapter 仍拒绝 DRM 配置。内部 route 已与 core/source/事务连接，不等于已完成公共端到端受保护播放。API29 硬件 evidence、API28 系统 L1 和整包 API24 门槛保持。

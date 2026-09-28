@@ -33,7 +33,7 @@ internal fun requiresHlsCredentialAncestry(
 
 /** One factory and provenance graph per source, retained through stop/restore/recovery. */
 @OptIn(UnstableApi::class)
-internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: NetworkConfiguration, onRetry: (Int, Long) -> Unit) {
+internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: NetworkConfiguration, private val drmManager: androidx.media3.exoplayer.drm.DrmSessionManager? = null, onRetry: (Int, Long) -> Unit) {
     private val rtmp = if (YlRtmpSourcePolicy.isRtmp(source)) YlRtmpDataSources(source.locator) else null
     private val managed = source.networkPolicy?.kind == AndroidNetworkPolicyKind.MANAGED
     private val requestHeaders = source.request?.headers.orEmpty()
@@ -56,6 +56,7 @@ internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: Netwo
         val dash = item.localConfiguration?.mimeType == "application/dash+xml" ||
             item.localConfiguration?.uri?.path?.lowercase()?.endsWith(".mpd") == true
         return if (dash) DashMediaSource.Factory(dataSources)
+            .apply { drmManager?.let { drm -> setDrmSessionManagerProvider { drm } } }
             .setManifestParser(YlDashManifestParser(credentials))
             .setLoadErrorHandlingPolicy(loaderPolicy)
             .createMediaSource(item)

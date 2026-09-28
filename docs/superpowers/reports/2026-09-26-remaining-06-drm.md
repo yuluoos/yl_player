@@ -212,3 +212,52 @@ sh packages/yl_player_apple/tool/check_pigeon.sh
 - `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlWidevineDriverTest.kt`：`901d303dc68e8a3ce3cc5e1e66a76bb5354ec3b9c895c7326925d43e2e4e5817`
 - `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlMedia3DrmSessionTest.kt`：`91d2de36ab77f782f4f09f65b653fad97003fbeb1599ae090b52c08d83a9df90`
 - `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlProtectedCodecSelectorTest.kt`：`86c82eab950c7bc723a0bdc03d6e13b05585dd6172ce5be2f374bf220d8edda1`
+
+
+## Task 3B2：Android 内部保护输出与候选事务（2026-09-28）
+
+基线 `a623a0b`。本次把安全 SurfaceView 工厂、四元组身份 registry、secure PlaceholderSurface 候选/inspection output、3B1 DRM manager、Media3 DASH source 与原有原子替换/回滚协调器接通。实际初始化 codec 必须匹配已核实的 secure/hardware 候选，激活/恢复等待系统 keys usable；已选视频没有 Widevine 元数据不能以 clear 成功提交。保护路线拒绝普通 texture/output replacement 和 native fallback。首帧展示同时校验当前输出身份、渲染时间边界和成功的 worker ACK；画面按显示几何/PAR 等比居中。
+
+公共 Dart descriptor/provider、Pigeon challenge/response/视图 ACK 和 Task2 传输连接仍为 3B3，公开 adapter 仍拒绝 DRM。此内部集成不代表公开受保护播放已可用，也没有真机保护结论。没有新增商业 SDK，Media3 1.11.0、包 API24、系统 L1 API28 与硬件 metadata API29 的门槛保持不变。
+
+一次独立只读复核发现三个 Important：holder 销毁异步解绑、同一 Surface 的旧首帧被重新标记、插件新实例重复注册工厂被静默忽略。输出 replacement 非 active/inspection 分支的保护绕过从 Minor 提升为 Important 并一并修复。先观察 `protected-review-red.log` 三个行为失败、`protected-frame-red.log` 迟到首帧失败，再修复；`protected-review-green.log` 定向通过。新增真实线程等待断言覆盖销毁在 worker ACK 前不能返回，queued attach 在 worker 再核验 revision；注册拒绝不能留下可用 host。
+
+集成核查另发现最终 CDM 关闭被排队，可能在 playback Looper 退出时丢失；`protected-cdm-close-red.log` 复现最后引用释放后尚未关闭，修复为同一 owner turn 内取消请求、清除 challenge/session handle、关闭 CDM，`protected-cdm-close-green.log` 通过。随后只做一次完整回归，不重派复核。
+
+### 本项决定与边界
+
+- 修正文档允许 holder 销毁异步停车的错误。正常销毁/dispose/retire 同步等待 worker native ACK，worker 不等待 main 续体或 registry mutex。代价是这个原生生命周期边界可能短暂阻塞主线程。厂商解绑超时触发停止/释放尝试和明确失败，未知安全资源继续隔离；未确认解绑不能标为 ACK，JVM 测试不能证明故障硬件已经停止使用 Surface。[Android 销毁契约](https://developer.android.com/reference/android/view/SurfaceHolder.Callback#surfaceDestroyed(android.view.SurfaceHolder))。
+- 同一 Surface 重用前先安全停车，记录 monotonic 渲染时间边界，并在 worker 等待 1ms 后绑定；拒绝边界及以前的帧。代价为每次保护 attach 增加 1ms，换取毫秒时间戳相等时也不会误认旧帧。[Media3 首帧时间契约](https://developer.android.com/reference/androidx/media3/exoplayer/video/VideoRendererEventListener#onRenderedFirstFrame(java.lang.Object,long))。
+- 复核曾怀疑 foreground/trim 绕过 readiness，经追踪实际 coordinator 路径确认先通过 restore 的 decoder/key 门槛；保留现有路由，后续不得把 adapter 直接调用误当成完整生命周期入口。
+- 复核未判断的公共桥接、物理旋转/seek/字幕 overlay/外接保护仍属 3B3/Task4；secure audio policy 沿用 3B1，Task2 POST 凭据逻辑未变。代价是这些部分仍未得到本轮端到端验证。没有延期 Minor。
+
+### 本地验证
+
+macOS27/M1、JDK17、compileSdk36、Media3 1.11.0。标准 JUnit 发现 **454** 项，**451 通过、3 跳过、0 失败/错误**。3 项跳过仍为缺独立 MediaMTX 服务的既有 RTMP peer 用例（AVC/AAC、video-only、ACK windows），不计通过。最终日志 `protected-final.log`，Gradle BUILD SUCCESSFUL。公开 API 表面与双端 Pigeon check 通过，schema4/Dart 合约未改变。没有 Dart 实现改动，未重复 Dart 全套；没有模拟器媒体实播或授权物理 DRM 验收。
+
+命令：`JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home packages/yl_player_android/example/android/gradlew -p packages/yl_player_android/example/android :yl_player_android:testDebugUnitTest`；`sh tool/check_public_surface.sh`；双端 `tool/check_pigeon.sh`。初始接口/行为 RED 另见 `protected-output-red.log`、`protected-ack-red.log`、`protected-view-red.log`、`protected-core-red.log`、`protected-transaction-behavior-red.log`、`protected-key-gate-red.log`、`protected-fallback-red.log`、`protected-geometry-red.log`、`protected-plugin-red.log`。
+
+下一项为 3B3 公共桥接/许可证传输连接，再做 Apple 3C；Task4 的授权资源仍缺失。完整 CAP-DRM 继续保持未完成。
+
+### Task 3B2 最终源文件 SHA-256
+
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlCandidateVideoOutput.kt`：`4a15c509ee62ed46348f6127f372e23d77b427029c4f832b556d62295e50dede`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDrmKeySession.kt`：`d9a0457e0d9ef6ea37c1b02e27d877753416f7bd08f0c82ff5f2a60378f95c8d`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlManagedAndroidEngine.kt`：`8818d75c2164b5e90c456ef22e2d93e4f96a56bc81eff2a3793c2d115545a1fc`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt`：`b1a307c94fa9ce0005908c812fc7d668437a93e6b75d764bcb72565bb274ef8f`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3DrmSessionManager.kt`：`fce63143c5ec1417b2ca8510f3aa8570210fdfbd081d773e3d2daed2471b5879`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Engine.kt`：`4286a3647f08940acfb3f88d803c71f7bb2d10928c284bf2ee85ca30d2a07d28`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMediaSourceFactory.kt`：`b956a2c1f9a47c75d2f36455a5f478476517d89be097b162b4d3025c18ab70a2`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlayerAndroidPlugin.kt`：`ab677a771381057b3492fe29ea808a09165da0d7eaa2f0f6c33bb64befd23c4a`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlProtectedCodecSelector.kt`：`9cd18b916702f491fdb41e8e801fddb8e6aac16545d289467fe927e200156396`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlProtectedViewFactory.kt`：`957514685a9fc15c3a46cc35fe0cb92ac9934907261b3304ab2dbf14fb467b97`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlProtectedViewRegistry.kt`：`00a322e0bf8adec43c96e91218d0dcbdf38f2937ba6422a7cbf83cb8fd5ba457`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlSessionCoordinator.kt`：`d2d05622b14d3d08beedcbb42b24dd7193afebb45fe7237609541e74c0509a81`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlSessionModels.kt`：`8b5ee68ac4229c2748f313ccf2d03d1ce722fd6c5f11d4aa33ab842be91b9e6f`
+- `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlMedia3DrmSessionTest.kt`：`f9e093cd4a34130f1e9c2ea1c9026a316c7b88df2eb90ea7583a30f2a4ed8130`
+- `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlMetricsCollectorTest.kt`：`0d598734a3920567be9260fb86fde118de95dd483244b22f02c80008b2d51890`
+- `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlPlayerRegistryTest.kt`：`b097f8d113315084c69cb76bd56480147bd4866c00c9d2d4914eeeb3938c92bc`
+- `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlProtectedCodecSelectorTest.kt`：`2057a92a6710232eee3d8e773841413333d4dd0a7a2bbc07ce7221e5a408178b`
+- `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlProtectedOutputTest.kt`：`29e3ec8c3dad64bc4c3d9cd6c3cbf3e3710648bd80b7153bc19475b1704e24c1`
+- `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlProtectedViewTest.kt`：`58143f2262356c96570650d511820f8ef1dfa1d2240a394b44ff437ad0d9c74a`
+- `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlSessionCoordinatorTest.kt`：`f76a50825ba11a7a0ee54e24d1f484f84727fe4525ffab28c6fd16e3d7c19938`

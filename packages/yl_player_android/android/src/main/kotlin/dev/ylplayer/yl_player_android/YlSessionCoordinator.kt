@@ -217,7 +217,7 @@ internal class YlSessionCoordinator(
                         committed = true
                         transacting = false
                         pendingIdentity = null
-                        reducer.commit(identity, output.identity)
+                        reducer.commit(identity, engine.presentationIdentity ?: output.identity)
                         // commitLease has crossed its final fallible check and installed activeLease.
                         // Preserve occurrence time and retry order; the reducer only enqueues events.
                         val retries = candidateRetries.toList()
@@ -391,7 +391,7 @@ internal class YlSessionCoordinator(
                 try {
                     val runtime = session.engine.quiesce()
                     priorCommands.forEach { it.await() }
-                    YlLeaseSnapshot(session.identity, session.source, session.options, runtime, output.identity)
+                    YlLeaseSnapshot(session.identity, session.source, session.options, runtime, session.engine.presentationIdentity ?: output.identity)
                         .also { suspended = it }
                 } catch (error: Throwable) {
                     restorationFailed()
@@ -470,7 +470,7 @@ internal class YlSessionCoordinator(
         if (pendingIdentity == identity) {
             when (event) {
                 is YlEngineEvent.Snapshot -> candidateSnapshot = event.value
-                is YlEngineEvent.FirstFrame -> if (event.output == output.identity) candidateFrame = event
+                is YlEngineEvent.FirstFrame -> if (event.output == (candidateEngine?.presentationIdentity ?: output.identity)) candidateFrame = event
                 is YlEngineEvent.Failed -> candidateFailure = event.kind
                 is YlEngineEvent.Retry -> candidateRetries += event
                 is YlEngineEvent.BackendChanged -> candidateBackend = event
@@ -489,8 +489,8 @@ internal class YlSessionCoordinator(
                 if (event.value.status == AndroidPlaybackStatus.COMPLETED) { audioIntended = false; releaseAudio() }
             }
             is YlEngineEvent.Tick -> reducer.tick(event.timeline, event.metrics)
-            is YlEngineEvent.FirstFrame -> if (!backgrounded && event.output == output.identity) {
-                reducer.updateOutput(output.identity)
+            is YlEngineEvent.FirstFrame -> if (!backgrounded && event.output == (active?.engine?.presentationIdentity ?: output.identity)) {
+                reducer.updateOutput(event.output)
                 reducer.firstFrame(event.output, event.occurredAtMs)
             }
             is YlEngineEvent.Failed -> { releaseAudio(); reducer.fail(event.kind) }

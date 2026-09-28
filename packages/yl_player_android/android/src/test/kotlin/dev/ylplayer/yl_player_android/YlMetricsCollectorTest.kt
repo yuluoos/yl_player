@@ -169,7 +169,7 @@ internal fun YlMedia3Core.field(name: String, value: Any?) {
     javaClass.getDeclaredField(name).apply { isAccessible = true }.set(this, value)
 }
 internal fun withCore(policy: AndroidAudioPolicy = AndroidAudioPolicy.APP_MANAGED,
-    coreSource: AndroidSourceMessage = source(), coreHandler: Handler = mock(Handler::class.java),
+    coreSource: AndroidSourceMessage = source(), protectedDrm: androidx.media3.exoplayer.drm.DrmSessionManager? = null, coreHandler: Handler = mock(Handler::class.java),
     action: (YlMedia3Core, ExoPlayer, MutableList<YlEngineEvent>) -> Unit) {
     val player = mock(ExoPlayer::class.java)
     `when`(player.duration).thenReturn(C.TIME_UNSET)
@@ -192,13 +192,14 @@ internal fun withCore(policy: AndroidAudioPolicy = AndroidAudioPolicy.APP_MANAGE
             `when`(builder.build()).thenReturn(player)
         }
         val privateOutput = object : YlPrivateVideoOutput {
+            override val isProtected = protectedDrm != null
             override val identity = YlOutputIdentity(0, false)
             override val surface = mock(android.view.Surface::class.java)
             override fun releaseAfterAcknowledgedDetach() = Unit
         }
         val core = YlMedia3Core(mock(Context::class.java), YlSessionIdentity("test", "load"), coreSource, request("load").options,
             createMedia3Configuration(coreSource, request("load").options, sessionOptions.copy(audioPolicy = policy)),
-            coreHandler, YlEngineVideoOutput(privateOutput), events::add)
+            coreHandler, YlEngineVideoOutput(privateOutput), events::add, protectedDrm = protectedDrm)
         core.initialize()
         action(core, player, events)
     } finally {

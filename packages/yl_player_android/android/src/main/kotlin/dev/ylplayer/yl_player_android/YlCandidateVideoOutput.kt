@@ -2,6 +2,7 @@ package dev.ylplayer.yl_player_android
 
 import android.content.Context
 import android.view.Surface
+import android.os.SystemClock
 import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.video.PlaceholderSurface
@@ -13,12 +14,15 @@ import androidx.media3.exoplayer.video.PlaceholderSurface
 internal interface YlPrivateVideoOutput {
     val surface: Surface
     val identity: YlOutputIdentity
+    val isProtected: Boolean get() = false
     fun releaseAfterAcknowledgedDetach()
 }
 
 @OptIn(UnstableApi::class)
-internal class YlCandidateVideoOutput(context: Context) : YlPrivateVideoOutput {
-    override val surface: Surface = PlaceholderSurface.newInstance(context, false)
+internal class YlCandidateVideoOutput(context: Context, override val isProtected: Boolean = false) : YlPrivateVideoOutput {
+    override val surface: Surface = if (isProtected && !PlaceholderSurface.isSecureSupported(context)) {
+        throw YlBoundaryException(YlFailureKind.DRM_PROTECTION_INSUFFICIENT)
+    } else PlaceholderSurface.newInstance(context, isProtected)
     override val identity = YlOutputIdentity(0, false)
     private var released = false
     override fun releaseAfterAcknowledgedDetach() {
@@ -30,10 +34,12 @@ internal class YlCandidateVideoOutput(context: Context) : YlPrivateVideoOutput {
 
 /** Worker-side borrow bookkeeping. A failed/timeout detach leaves both resources retained. */
 internal class YlEngineVideoOutput(private val candidate: YlPrivateVideoOutput) {
+    val isProtected get() = candidate.isProtected
     private var surface: Surface? = candidate.surface
     private var identity = candidate.identity
     private var renderSurface: Surface? = candidate.surface
     private var candidateAttached = true
+    private var protectedFrameFenceMs = Long.MIN_VALUE
     private var inspection: YlPrivateVideoOutput? = null
     var surfaceRebuildCount = 0
         private set
@@ -43,6 +49,7 @@ internal class YlEngineVideoOutput(private val candidate: YlPrivateVideoOutput) 
         return surface != null
     }
     fun beginInspection(output: YlPrivateVideoOutput, acknowledgedAttach: (Surface) -> Unit) {
+        if (candidate.isProtected && !output.isProtected) throw YlBoundaryException(YlFailureKind.DRM_PROTECTION_INSUFFICIENT)
         check(inspection == null)
         // Retain the new output even on an unacknowledged attach; disposal owns safe cleanup.
         inspection = output
@@ -55,22 +62,39 @@ internal class YlEngineVideoOutput(private val candidate: YlPrivateVideoOutput) 
         inspection = null
         pending.releaseAfterAcknowledgedDetach()
     }
-    fun switchTo(output: Surface, identity: YlOutputIdentity, acknowledgedAttach: (Surface) -> Unit) {
+    fun switchTo(output: Surface, identity: YlOutputIdentity, acknowledgedAttach: (Surface) -> Unit) =
+        switchTo(output, identity, acknowledgedAttach, false)
+    fun switchTo(output: Surface, identity: YlOutputIdentity, acknowledgedAttach: (Surface) -> Unit, protected: Boolean) {
+        if (candidate.isProtected && !protected) throw YlBoundaryException(YlFailureKind.DRM_PROTECTION_INSUFFICIENT)
+        if (candidate.isProtected) {
+            // Stop producing frames on the old holder before recording a render-time fence.
+            // Waiting one millisecond on the worker avoids ambiguous equal-ms callbacks.
+            parkProtected(acknowledgedAttach)
+            protectedFrameFenceMs = SystemClock.elapsedRealtime()
+            SystemClock.sleep(1)
+        }
         acknowledgedAttach(output)
         surface = output
         renderSurface = output
         this.identity = identity
         inspection?.releaseAfterAcknowledgedDetach()
         inspection = null
-        if (candidateAttached) {
+        if (candidateAttached && !candidate.isProtected) {
             candidateAttached = false
             candidate.releaseAfterAcknowledgedDetach()
         }
+    }
+    fun parkProtected(acknowledgedAttach: (Surface) -> Unit) {
+        check(candidate.isProtected)
+        acknowledgedAttach(candidate.surface)
+        surface = candidate.surface; renderSurface = candidate.surface; identity = candidate.identity
+        inspection?.releaseAfterAcknowledgedDetach(); inspection = null
     }
     fun detach(clear: (Surface) -> Unit) {
         renderSurface?.let { clear(it); renderSurface = null }
     }
     fun installReplacement(output: Surface, identity: YlOutputIdentity, active: Boolean, acknowledgedAttach: (Surface) -> Unit): Boolean {
+        if (candidate.isProtected) throw YlBoundaryException(YlFailureKind.DRM_PROTECTION_INSUFFICIENT)
         val pending = inspection
         if (pending != null) {
             // A main-owned public wrapper can change during an evidence wait. Keep rendering
@@ -97,6 +121,7 @@ internal class YlEngineVideoOutput(private val candidate: YlPrivateVideoOutput) 
     fun recordRebuild() { surfaceRebuildCount++ }
     fun renderedIdentity(output: Any): YlOutputIdentity? = if (output !== renderSurface) null else inspection?.identity ?: identity
     fun firstFrameEvent(output: Any, occurredAtMs: Long): YlEngineEvent.FirstFrame? {
+        if (candidate.isProtected && occurredAtMs <= protectedFrameFenceMs) return null
         val outputIdentity = renderedIdentity(output) ?: return null
         // This is eligibility only. Main may reject this observation after a generation change;
         // only the authoritative reducer may consume the once-per-session milestone.

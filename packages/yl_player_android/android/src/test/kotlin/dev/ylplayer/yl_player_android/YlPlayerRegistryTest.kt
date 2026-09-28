@@ -92,6 +92,8 @@ class YlPlayerRegistryTest {
         val fixture = RegistryFixture(StandardTestDispatcher(testScheduler))
         val app = mock(Application::class.java)
         val binding = mock(FlutterPlugin.FlutterPluginBinding::class.java)
+        `when`(binding.platformViewRegistry).thenReturn(mock(io.flutter.plugin.platform.PlatformViewRegistry::class.java))
+        `when`(binding.platformViewRegistry.registerViewFactory(eq(YlProtectedViewFactory.TYPE), any())).thenReturn(true)
         `when`(binding.applicationContext).thenReturn(app)
         `when`(binding.binaryMessenger).thenReturn(fixture.messenger)
         `when`(binding.textureRegistry).thenReturn(fixture.textures)
@@ -114,8 +116,36 @@ class YlPlayerRegistryTest {
             verify(app).unregisterComponentCallbacks(plugin)
             verify(app).unregisterActivityLifecycleCallbacks(plugin)
             runCurrent()
+            plugin.onAttachedToEngine(binding)
+            verify(binding.platformViewRegistry, times(1)).registerViewFactory(eq(YlProtectedViewFactory.TYPE), any())
+            plugin.onDetachedFromEngine(binding); runCurrent()
+            val replacementPlugin = YlPlayerAndroidPlugin()
+            replacementPlugin.onAttachedToEngine(binding)
+            verify(binding.platformViewRegistry, times(1)).registerViewFactory(eq(YlProtectedViewFactory.TYPE), any())
+            assertTrue(fixture.handlers.isNotEmpty())
+            replacementPlugin.onDetachedFromEngine(binding); runCurrent()
             Dispatchers.resetMain()
         }
+    }
+
+    @Test
+    fun `foreign protected view registration fails attachment without host admission`() = runTest {
+        val fixture = RegistryFixture(StandardTestDispatcher(testScheduler))
+        val app = mock(Application::class.java)
+        val binding = mock(FlutterPlugin.FlutterPluginBinding::class.java)
+        val platforms = mock(io.flutter.plugin.platform.PlatformViewRegistry::class.java)
+        `when`(binding.platformViewRegistry).thenReturn(platforms)
+        `when`(platforms.registerViewFactory(eq(YlProtectedViewFactory.TYPE), any())).thenReturn(false)
+        `when`(binding.applicationContext).thenReturn(app)
+        `when`(binding.binaryMessenger).thenReturn(fixture.messenger)
+        `when`(binding.textureRegistry).thenReturn(fixture.textures)
+        val plugin = YlPlayerAndroidPlugin()
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        try {
+            mockStatic(Looper::class.java).use { plugin.onAttachedToEngine(binding); runCurrent() }
+            assertTrue(fixture.handlers.isEmpty())
+            verify(app, never()).registerComponentCallbacks(plugin)
+        } finally { Dispatchers.resetMain(); fixture.registry.detach() }
     }
 
     @Test

@@ -13,7 +13,8 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.android.asCoroutineDispatcher
 
 /** The application Looper for every Media3 call is an explicitly owned worker. Its startup,
- * surface replacement, foreground-mode release and player release can wait only off main.
+ * surface replacement, foreground-mode release and player release execute off main.
+ * SurfaceHolder destruction is the one synchronous main-to-worker lifetime barrier.
  * Coordinator, Flutter texture access and the callback ingress remain on main.
  */
 @OptIn(UnstableApi::class)
@@ -24,12 +25,30 @@ internal class YlMedia3Engine(
     private val options: AndroidLoadOptionsMessage,
     private val playerOptions: AndroidPlayerOptionsMessage,
     dispatcher: CoroutineDispatcher = Dispatchers.Main,
+    private val protectedPlayback: YlProtectedPlayback? = null,
 ) : YlPlaybackEngineAdapter {
     private val main = CoroutineScope(SupervisorJob() + dispatcher)
     private val cleanup = CoroutineScope(SupervisorJob() + dispatcher)
     private var callback: ((YlSessionIdentity, YlEngineEvent) -> Unit)? = null
     private var publicOutput: YlVideoOutput? = null
     private var closed = false
+    private val protectedOutput = protectedPlayback?.let { route ->
+        if (route.identity.sessionId != identity.sessionId || source.format != AndroidMediaFormat.DASH) throw YlBoundaryException(YlFailureKind.DRM_CONFIG_INVALID)
+        route.registry.register(route.identity, object : YlProtectedOutputPort {
+            override suspend fun attach(surface: android.view.Surface, identity: YlOutputIdentity, isCurrent: () -> Boolean) {
+                if (closed) throw YlBoundaryException(YlFailureKind.SESSION_STALE)
+                onWorker { if (isCurrent()) requireCore().switchProtectedOutput(surface, identity) }
+            }
+            override suspend fun park() { if (!closed) onWorker { core?.parkProtectedOutput() } }
+            override fun detachBeforeDestroy() {
+                // Native rendering cannot outlive a borrowed holder. No worker action waits on
+                // main. The regular background/transaction paths remain suspendable.
+                runBlocking { onWorker { requireCore().detachProtectedHolder() } }
+            }
+        }) { kind -> if (!closed) callback?.invoke(identity, YlEngineEvent.Failed(kind)) }
+    }
+    override val presentationIdentity get() = protectedOutput?.outputIdentity
+    private var protectedDrm: YlMedia3DrmSessionManager? = null
     private var closeResult: CompletableDeferred<Unit>? = null
     private val worker = cleanup.async(Dispatchers.Default) {
         val thread = HandlerThread("yl-media3-${identity.sessionId}")
@@ -41,9 +60,9 @@ internal class YlMedia3Engine(
     // These fields are exclusively accessed on the owned worker.
     private var core: YlMedia3Core? = null
     private var privateOutput: YlCandidateVideoOutput? = null
-    private val decoderGate = YlInitializedDecoderGate(options.decoderPolicyOverride ?: playerOptions.decoderPolicy)
+    private val decoderGate = YlInitializedDecoderGate(if (protectedPlayback != null) AndroidDecoderPolicy.HARDWARE_REQUIRED else options.decoderPolicyOverride ?: playerOptions.decoderPolicy)
     private val rtmpRecovery = YlRtmpRecovery()
-    override fun markCommitted() { rtmpRecovery.committed = true }
+    override fun markCommitted() { rtmpRecovery.committed = true; protectedOutput?.commit() }
     private var exclusive = true // Main-owned; unknown is conservative until READY track evidence.
     override val needsExclusiveLease get() = exclusive
     override val supportsVideoTrackSelection = true
@@ -59,9 +78,10 @@ internal class YlMedia3Engine(
     override suspend fun prepare() {
         val owner = worker.await()
         onWorker {
-            val candidate = YlCandidateVideoOutput(context).also { privateOutput = it }
+            val candidate = YlCandidateVideoOutput(context, protectedPlayback != null).also { privateOutput = it }
+            protectedDrm = protectedPlayback?.let { route -> YlMedia3DrmSessionManager(route.identity, route.cbcs, route.timeoutMs, route.exchange) }
             core = YlMedia3Core(context, identity, source, options, createMedia3Configuration(source, options, playerOptions),
-                owner.handler, YlEngineVideoOutput(candidate), ::receive, rtmpRecovery, decoderGate::resetForEpoch)
+                owner.handler, YlEngineVideoOutput(candidate), ::receive, rtmpRecovery, decoderGate::resetForEpoch, protectedDrm = protectedDrm)
             requireCore().initialize()
             requireCore().prepare()
         }
@@ -76,28 +96,33 @@ internal class YlMedia3Engine(
         val epoch = core?.mediaEpoch
         main.launch {
             if (!closed && (!YlRtmpSourcePolicy.isRtmp(source) || core?.mediaEpoch == epoch)) {
-                if (event is YlEngineEvent.Snapshot) publicOutput?.updateGeometry(event.value.geometry)
-                callback?.invoke(identity, event)
+                if (event is YlEngineEvent.Snapshot) { publicOutput?.updateGeometry(event.value.geometry); protectedOutput?.updateGeometry(event.value.geometry) }
+                if (event is YlEngineEvent.FirstFrame && protectedOutput != null) {
+                    protectedOutput.frame(event.output) { if (!closed) callback?.invoke(identity, event) }
+                } else callback?.invoke(identity, event)
             }
         }
     }
     override suspend fun activate(output: YlSessionVideoOutput) {
         val readiness = onWorker { decoderGate.reset(); requireCore().initializeDecoder(); decoderGate.ready }
         val prepared = readiness.await()
+        protectedDrm?.awaitUsableKeys()
         requireSelectedVideo(prepared)
         if (YlRtmpSourcePolicy.isRtmp(source) && prepared.videoTracks.none { it.isSelected }) throw YlBoundaryException(YlFailureKind.DECODER_UNAVAILABLE)
         exclusive = prepared.videoTracks.isNotEmpty() || prepared.audioTracks.isEmpty()
         attachPublicOutput(output)
     }
     private suspend fun attachPublicOutput(output: YlSessionVideoOutput) {
+        if (protectedOutput != null) { protectedOutput.resumePresentation(); return }
         val video = output as YlVideoOutput
         val surface = video.borrowSurface() // Main-owned texture access.
         val outputIdentity = video.identity
         publicOutput = video
         onWorker { requireCore().switchOutput(surface, outputIdentity) }
     }
-    override suspend fun quiesce(): YlEngineRestorePoint = onWorker {
-        requireCore().snapshotRestorePoint().also { requireCore().deactivate() }
+    override suspend fun quiesce(): YlEngineRestorePoint {
+        protectedOutput?.suspendPresentation()
+        return onWorker { requireCore().snapshotRestorePoint().also { requireCore().deactivate() } }
     }
     override suspend fun restore(point: YlEngineRestorePoint, output: YlSessionVideoOutput) {
         val restored = onWorker {
@@ -106,6 +131,7 @@ internal class YlMedia3Engine(
             decoderGate.ready
         }
         restored.await()
+        protectedDrm?.awaitUsableKeys()
         attachPublicOutput(output)
         // stop() can clear track groups. Reapply the captured selection only after the restored
         // source reports READY and its current groups exist, never against stale TrackGroups.
@@ -121,9 +147,9 @@ internal class YlMedia3Engine(
     override suspend fun selectVideoTrack(trackId: String?) = onWorker { requireCore().selectVideoTrack(trackId) }
     override suspend fun setVideoConstraints(constraints: AndroidVideoConstraintsMessage) = onWorker { requireCore().setVideoConstraints(constraints) }
     override suspend fun setVolume(volume: Double) = onWorker { requireCore().setVolume(volume) }
-    override suspend fun stop() = onWorker { requireCore().stop() }
-    override suspend fun onForeground() = onWorker { requireCore().restoreAfterForeground() }
-    override suspend fun onBackground() = onWorker { requireCore().releaseForLifecycle() }
+    override suspend fun stop() { protectedOutput?.suspendPresentation(); onWorker { requireCore().stop() } }
+    override suspend fun onForeground() { onWorker { requireCore().restoreAfterForeground() }; protectedOutput?.resumePresentation() }
+    override suspend fun onBackground() { protectedOutput?.suspendPresentation(); onWorker { requireCore().releaseForLifecycle() } }
     @Suppress("DEPRECATION")
     override suspend fun onTrimMemory(level: Int) = onWorker {
         if (level >= ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) core?.releaseForLifecycle()
@@ -140,6 +166,7 @@ internal class YlMedia3Engine(
     override fun dispose(): Deferred<Unit> {
         closeResult?.let { return it }
         closed = true
+        protectedOutput?.retire()
         callback = null
         main.cancel()
         val result = CompletableDeferred<Unit>().also { closeResult = it }
@@ -220,3 +247,9 @@ internal class YlMedia3SessionFactory(
         }
     }
 }
+
+/** Internal route supplied only after DRM bridge admission (3B3). No public wire
+ * configuration is silently promoted to this path. */
+internal class YlProtectedPlayback(val identity: YlDrmSessionIdentity,
+    val registry: YlProtectedViewRegistry, val cbcs: Boolean, val timeoutMs: Long,
+    val exchange: suspend (YlDrmKeyRequest) -> ByteArray)

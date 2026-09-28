@@ -27,6 +27,7 @@ internal data class YlPreparedSession(
 /** All suspend operations acknowledge actual worker completion. No synchronous player access. */
 internal interface YlPlaybackEngineAdapter {
     /** Unknown media is conservatively exclusive until READY proves audio-only. */
+    val presentationIdentity: YlOutputIdentity? get() = null
     val needsExclusiveLease: Boolean get() = true
     fun registerCallback(callback: (YlSessionIdentity, YlEngineEvent) -> Unit)
     /** Commit notification only publishes state; it must not block or throw. */

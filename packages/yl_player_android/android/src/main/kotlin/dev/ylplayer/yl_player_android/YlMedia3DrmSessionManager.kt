@@ -11,6 +11,8 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.analytics.PlayerId
 import androidx.media3.exoplayer.drm.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.android.asCoroutineDispatcher
 import java.util.IdentityHashMap
 import java.util.UUID
@@ -48,6 +50,17 @@ internal class YlMedia3DrmSessionManager(
     private var prepares = 0
     private var cycle = 0L
     private val sessions = mutableListOf<Session>()
+    private val readiness = MutableStateFlow(false to (null as YlFailureKind?))
+    suspend fun awaitUsableKeys() {
+        val state = try { withTimeout(timeoutMs) { readiness.first { it.first || it.second != null } } }
+        catch (_: TimeoutCancellationException) { throw YlBoundaryException(YlFailureKind.DRM_LICENSE_TIMEOUT) }
+        state.second?.let { throw YlBoundaryException(it) }
+    }
+    private fun publishReadiness() {
+        val active = sessions.filter { it.state != DrmSession.STATE_RELEASED }
+        val error = active.firstNotNullOfOrNull { (it.error?.cause as? YlBoundaryException)?.kind }
+        readiness.value = (active.isNotEmpty() && active.all { it.state == DrmSession.STATE_OPENED_WITH_KEYS }) to error
+    }
     init { if (timeoutMs !in 1..60_000) throw YlBoundaryException(YlFailureKind.DRM_CONFIG_INVALID) }
 
     override fun setPlayer(playbackLooper: Looper, playerId: PlayerId) {
@@ -79,6 +92,7 @@ internal class YlMedia3DrmSessionManager(
         if (sessions.size >= 4) { init.clear(); return rejected(YlFailureKind.RESOURCE_EXHAUSTED, eventDispatcher) }
         val session = Session(cycle, init)
         sessions += session
+        publishReadiness()
         session.acquire(eventDispatcher)
         return session
     }
@@ -194,11 +208,13 @@ internal class YlMedia3DrmSessionManager(
                     state = if (crypto == null) DrmSession.STATE_OPENING else DrmSession.STATE_OPENED
                 else -> Unit // onFailure owns the sanitized error; release owns RELEASED.
             }
+            publishReadiness()
         }
         private fun fail(kind: YlFailureKind) {
             if (released || state == DrmSession.STATE_ERROR) return
             error = sessionError(kind)
             state = DrmSession.STATE_ERROR
+            publishReadiness()
             dispatch { it.drmSessionManagerError(checkNotNull(error)) }
         }
         private fun dispatch(action: (DrmSessionEventListener.EventDispatcher) -> Unit) {
@@ -212,18 +228,20 @@ internal class YlMedia3DrmSessionManager(
             if (--references != 0) return
             released = true // Fence callbacks and network results synchronously before cleanup.
             state = DrmSession.STATE_RELEASED
-            scope.launch {
-                try { keys?.dispose() }
-                finally {
-                    try { driver?.close() } catch (_: Exception) {
-                        // Teardown prose is never delivered to the coroutine exception handler.
-                    } finally {
-                        crypto?.sessionId?.fill(0); crypto = null
-                        init.clear(); sessions.remove(this@Session); scope.cancel()
-                    }
+            publishReadiness()
+            // Media3 may quit its playback Looper immediately after this returns.
+            // Fence and wipe the key request, close CDM and cancel jobs on this owner turn.
+            try { keys?.disposeOnOwner() }
+            finally {
+                try { driver?.close() } catch (_: Exception) {
+                    // Teardown prose is never delivered to the coroutine exception handler.
+                } finally {
+                    crypto?.sessionId?.fill(0); crypto = null
+                    init.clear(); sessions.remove(this@Session); scope.cancel()
                 }
             }
         }
+
         override fun getState() = state
         override fun getError() = error.takeIf { state == DrmSession.STATE_ERROR }
         override fun getSchemeUuid() = YL_WIDEVINE_UUID

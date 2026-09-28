@@ -190,10 +190,18 @@ internal class YlDrmKeySession(
             ready.cancel()
         }
     } }
-    suspend fun dispose() = withContext(dispatcher) { mutex.withLock {
+    private fun disposeLocked() {
         if (phase != YlDrmKeyPhase.DISPOSED) {
             invalidate(YlDrmKeyPhase.DISPOSED)
             ready.cancel(); initData.fill(0); scope.cancel()
         }
-    } }
+    }
+    suspend fun dispose() = withContext(dispatcher) { mutex.withLock { disposeLocked() } }
+    /** Called only by the Media3 owner at its last decoder reference. No driver call or
+     * suspension holds this mutex across an owner turn; teardown cannot be posted to
+     * a playback Looper which Media3 is about to quit. */
+    internal fun disposeOnOwner() {
+        check(mutex.tryLock()) { "Reentrant DRM disposal" }
+        try { disposeLocked() } finally { mutex.unlock() }
+    }
 }

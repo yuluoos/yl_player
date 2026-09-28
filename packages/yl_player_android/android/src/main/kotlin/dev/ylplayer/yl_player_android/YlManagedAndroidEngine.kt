@@ -41,6 +41,7 @@ internal class YlManagedAndroidEngine(
     private var audioTrack: String? = null
     private var videoSelection = AndroidVideoSelectionMessage(reason = "initial")
     private val fixedVideo get() = videoSelection.fixedTrackId != null
+    override val presentationIdentity get() = current.presentationIdentity
     override val supportsVideoTrackSelection get() = current.supportsVideoTrackSelection
     private var constraints: AndroidVideoConstraintsMessage? = null
     override val needsExclusiveLease: Boolean get() = current.needsExclusiveLease
@@ -60,7 +61,7 @@ internal class YlManagedAndroidEngine(
                 }
                 event.copy(value = event.value.copy(videoSelection = videoSelection))
             } else event
-            if (event is YlEngineEvent.Failed && !fixedVideo && allowFallback && YlFallbackRoutingPolicy.shouldFallback(event.kind, fallbackAttempted)) {
+            if (event is YlEngineEvent.Failed && !fixedVideo && current.presentationIdentity == null && allowFallback && YlFallbackRoutingPolicy.shouldFallback(event.kind, fallbackAttempted)) {
                 val activeOutput = output
                 if (activeOutput != null) scope.launch {
                     runCatching { switchToFallback(activeOutput) }
@@ -93,9 +94,10 @@ internal class YlManagedAndroidEngine(
     }
 
     private fun shouldFallback(error: Throwable): Boolean =
-        !fixedVideo && allowFallback && (error as? YlBoundaryException)?.kind?.let { YlFallbackRoutingPolicy.shouldFallback(it, fallbackAttempted) } == true
+        !fixedVideo && current.presentationIdentity == null && allowFallback && (error as? YlBoundaryException)?.kind?.let { YlFallbackRoutingPolicy.shouldFallback(it, fallbackAttempted) } == true
 
     private suspend fun switchToFallback(output: YlSessionVideoOutput) = switchLock.withLock {
+        if (current.presentationIdentity != null) throw YlBoundaryException(YlFailureKind.DRM_PROTECTION_INSUFFICIENT)
         if (fixedVideo) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
         if (fallbackAttempted) return@withLock
         val previous = current
