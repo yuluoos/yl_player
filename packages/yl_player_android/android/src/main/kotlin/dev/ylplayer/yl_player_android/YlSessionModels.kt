@@ -27,6 +27,7 @@ internal data class YlPreparedSession(
 /** All suspend operations acknowledge actual worker completion. No synchronous player access. */
 internal interface YlPlaybackEngineAdapter {
     /** Unknown media is conservatively exclusive until READY proves audio-only. */
+    val protectedSurface: YlDrmSessionIdentity? get() = null
     val presentationIdentity: YlOutputIdentity? get() = null
     val needsExclusiveLease: Boolean get() = true
     fun registerCallback(callback: (YlSessionIdentity, YlEngineEvent) -> Unit)
@@ -59,6 +60,8 @@ internal interface YlPlaybackEngineAdapter {
 }
 internal fun interface YlPlaybackEngineFactory {
     fun create(identity: YlSessionIdentity, source: AndroidSourceMessage, options: AndroidLoadOptionsMessage): YlPlaybackEngineAdapter
+    fun createProtected(identity: YlSessionIdentity, source: AndroidSourceMessage, options: AndroidLoadOptionsMessage,
+        playback: YlProtectedPlayback): YlPlaybackEngineAdapter = throw YlBoundaryException(YlFailureKind.DRM_UNSUPPORTED)
 }
 internal data class YlEngineSnapshot(
     val status: AndroidPlaybackStatus = AndroidPlaybackStatus.LOADING,

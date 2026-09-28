@@ -5,12 +5,18 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 import 'android_callbacks.dart';
 import 'android_codec.dart';
+import 'android_drm.dart';
 import 'android_transport.dart';
 import 'pigeon/yl_player_android.g.dart';
 
 /// Owns one native identity, its callback reducer and in-flight operations.
 final class AndroidPlayer
-    implements YlPlatformPlayer, YlVideoTrackSelectionPlatformPlayer {
+    implements
+        YlPlatformPlayer,
+        YlVideoTrackSelectionPlatformPlayer,
+        YlPlatformDrmSourceSupport,
+        YlPlatformDrmLicenseTransport,
+        YlPlatformProtectedVideoSurfaceProvider {
   AndroidPlayer._(
     this._transport,
     this._suffix,
@@ -40,6 +46,7 @@ final class AndroidPlayer
     required AndroidFactoryTransport factory,
     required AndroidTransportFactory transportForSuffix,
     required AndroidCallbackSetup setupCallbacks,
+    AndroidDrmChannel Function(String, AndroidDrmSupportMessage)? drmFactory,
   }) async {
     final encoded = AndroidCodec.playerOptions(options);
     final AndroidCreateReply reply;
@@ -79,6 +86,21 @@ final class AndroidPlayer
         initial,
         reply.initialState.sequence,
       );
+      if (reply.drmSupport case final support?) {
+        if (support.contractVersion != 1 ||
+            support.playerId < 0 ||
+            support.androidApi < 24) {
+          throw AndroidCodec.problem(YlFailureCodes.protocolMismatch);
+        }
+        player._drm =
+            drmFactory?.call(reply.channelSuffix, support) ??
+            AndroidDrmChannel(reply.channelSuffix, support);
+        player._drm!.onFrameReady = player._flushProtectedFrame;
+        AndroidDrmFlutterApi.setUp(
+          player._drm,
+          messageChannelSuffix: reply.channelSuffix,
+        );
+      }
       player._currentRequestId = reply.initialState.loadRequestId;
       setupCallbacks(reply.channelSuffix, player._callbacks);
       await player
@@ -105,6 +127,55 @@ final class AndroidPlayer
         }
       }
       throw failure;
+    }
+  }
+
+  AndroidDrmChannel? _drm;
+  (YlPlayerEvent, int)? _protectedFrame;
+  @override
+  int get drmContractVersion => _drm == null ? 0 : 1;
+  @override
+  void setDrmLicenseExchange(YlDrmLicenseExchange exchange) {
+    _drm?.exchange = exchange;
+  }
+
+  @override
+  YlProtectedVideoSurface? get protectedVideoSurface => _drm?.surface;
+  @override
+  Future<void> attachProtectedView(
+    YlProtectedVideoSurface surface,
+    int viewId,
+  ) async {
+    await _drm?.attach(
+      surface,
+      viewId,
+      onFailure: (error) => _terminate(AndroidCodec.exception(error)),
+    );
+  }
+
+  @override
+  Future<void> detachProtectedView(
+    YlProtectedVideoSurface surface,
+    int viewId,
+  ) async {
+    // Native view disposal is also an idempotent detach. Replacement may retire it first.
+    try {
+      await _drm?.detach(surface, viewId);
+    } catch (_) {}
+  }
+
+  void _flushProtectedFrame() {
+    final event = _protectedFrame;
+    if (event != null && _drm?.frameReady(event.$1.sessionId.value) == true) {
+      _protectedFrame = null;
+      _receiveEvent(event.$1, event.$2);
+    }
+  }
+
+  void _validateDrm(YlMediaSource source) {
+    if (source is YlNetworkSource && source.drm != null) {
+      if (_drm == null) throw ylDrmException(YlFailureCodes.drmUnsupported);
+      _drm!.validate(source);
     }
   }
 
@@ -208,6 +279,7 @@ final class AndroidPlayer
     YlLoadOptions options = const YlLoadOptions(),
   }) async {
     _checkAlive();
+    _validateDrm(source);
     final request = AndroidAssessRequest(
       source: AndroidCodec.source(source),
       options: AndroidCodec.loadOptions(options),
@@ -236,12 +308,14 @@ final class AndroidPlayer
   }) {
     try {
       _checkAlive();
+      _validateDrm(source);
       final request = AndroidLoadRequest(
         loadRequestId: 'load-${++_requestCounter}',
         source: AndroidCodec.source(source),
         options: AndroidCodec.loadOptions(options),
       );
       _cancelLoad(_cancelled);
+      _drm?.begin(request.loadRequestId, source);
       final pending = _PendingLoad(request.loadRequestId);
       _pending = pending;
       // The public barrier is installed before assessment begins.
@@ -285,6 +359,14 @@ final class AndroidPlayer
       if (_retired.contains(session) || session == state.sessionId) {
         throw AndroidCodec.problem(YlFailureCodes.protocolMismatch);
       }
+      if (_drm == null && reply.protectedSurface != null) {
+        throw AndroidCodec.problem(YlFailureCodes.protocolMismatch);
+      }
+      _drm?.checkReply(
+        pending.requestId,
+        session.value,
+        reply.protectedSurface,
+      );
       pending.reply = session;
       _startPairDeadline(pending);
       _completePair(pending);
@@ -410,6 +492,8 @@ final class AndroidPlayer
     final previous = state.sessionId;
     if (previous != null) _retired.add(previous);
     _currentRequestId = pending.requestId;
+    _drm?.commit(pending.requestId);
+    _protectedFrame = null;
     pending.paired = true;
     pending.deadline?.cancel();
     // Retain only the first, first semantic READY and latest full snapshots.
@@ -471,6 +555,12 @@ final class AndroidPlayer
       }
       return;
     }
+    if (event is YlFirstFrameEvent &&
+        _drm?.surface?.sessionId == event.sessionId.value &&
+        _drm?.frameReady(event.sessionId.value) != true) {
+      _protectedFrame = (event, sequence);
+      return;
+    }
     if (!_callbacks.acceptEvent(event, sequence)) return;
     _events.add(event);
     if (event is YlPlaybackFailedEvent) {
@@ -486,6 +576,7 @@ final class AndroidPlayer
     final pending = _pending;
     if (pending == null) return;
     _pending = null;
+    _drm?.cancel(pending.requestId);
     pending.deadline?.cancel();
     pending.publication?.cancel();
     _retired.addAll(pending.states.keys);
@@ -614,6 +705,8 @@ final class AndroidPlayer
     _checkAlive();
     final captured = state.sessionId;
     _cancelLoad(_cancelled);
+    _drm?.stop();
+    _protectedFrame = null;
     await _run(_transport.stop);
     // Only the accepted Stop's captured identity is fenced; idle is authoritative.
     if (captured != null) _retired.add(captured);
@@ -652,6 +745,8 @@ final class AndroidPlayer
   Future<void> dispose() {
     if (_disposeFuture case final result?) return result;
     _disposed = true;
+    _drm?.close();
+    _protectedFrame = null;
     _callbacks.closed = true;
     final error =
         _terminal ??
@@ -668,6 +763,9 @@ final class AndroidPlayer
     await _release(_transport);
     try {
       _setupCallbacks(_suffix, null);
+      if (_drm != null) {
+        AndroidDrmFlutterApi.setUp(null, messageChannelSuffix: _suffix);
+      }
     } catch (_) {
       /* Never strand owned Dart resources. */
     }

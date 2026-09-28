@@ -342,6 +342,7 @@ class AndroidCreateReply {
     required this.implementationVersion,
     required this.capabilities,
     required this.initialState,
+    this.drmSupport,
   });
 
   int schemaMajor;
@@ -360,6 +361,8 @@ class AndroidCreateReply {
 
   AndroidStateMessage initialState;
 
+  AndroidDrmSupportMessage? drmSupport;
+
   List<Object?> _toList() {
     return <Object?>[
       schemaMajor,
@@ -370,6 +373,7 @@ class AndroidCreateReply {
       implementationVersion,
       capabilities,
       initialState,
+      drmSupport,
     ];
   }
 
@@ -387,6 +391,7 @@ class AndroidCreateReply {
       implementationVersion: result[5]! as String,
       capabilities: result[6]! as AndroidCapabilitiesMessage,
       initialState: result[7]! as AndroidStateMessage,
+      drmSupport: result[8] as AndroidDrmSupportMessage?,
     );
   }
 
@@ -399,7 +404,7 @@ class AndroidCreateReply {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(schemaMajor, other.schemaMajor) && _deepEquals(spiMajor, other.spiMajor) && _deepEquals(channelSuffix, other.channelSuffix) && _deepEquals(textureId, other.textureId) && _deepEquals(implementationName, other.implementationName) && _deepEquals(implementationVersion, other.implementationVersion) && _deepEquals(capabilities, other.capabilities) && _deepEquals(initialState, other.initialState);
+    return _deepEquals(schemaMajor, other.schemaMajor) && _deepEquals(spiMajor, other.spiMajor) && _deepEquals(channelSuffix, other.channelSuffix) && _deepEquals(textureId, other.textureId) && _deepEquals(implementationName, other.implementationName) && _deepEquals(implementationVersion, other.implementationVersion) && _deepEquals(capabilities, other.capabilities) && _deepEquals(initialState, other.initialState) && _deepEquals(drmSupport, other.drmSupport);
   }
 
   @override
@@ -408,7 +413,7 @@ class AndroidCreateReply {
 
   @override
   String toString() {
-    return 'AndroidCreateReply(schemaMajor: $schemaMajor, spiMajor: $spiMajor, channelSuffix: $channelSuffix, textureId: $textureId, implementationName: $implementationName, implementationVersion: $implementationVersion, capabilities: $capabilities, initialState: $initialState)';
+    return 'AndroidCreateReply(schemaMajor: $schemaMajor, spiMajor: $spiMajor, channelSuffix: $channelSuffix, textureId: $textureId, implementationName: $implementationName, implementationVersion: $implementationVersion, capabilities: $capabilities, initialState: $initialState, drmSupport: $drmSupport)';
   }
 }
 
@@ -625,6 +630,7 @@ class AndroidSourceMessage {
     required this.format,
     this.request,
     this.networkPolicy,
+    this.drm,
   });
 
   AndroidSourceKind kind;
@@ -639,6 +645,8 @@ class AndroidSourceMessage {
 
   AndroidNetworkPolicyMessage? networkPolicy;
 
+  AndroidDrmConfigMessage? drm;
+
   List<Object?> _toList() {
     return <Object?>[
       kind,
@@ -647,6 +655,7 @@ class AndroidSourceMessage {
       format,
       request,
       networkPolicy,
+      drm,
     ];
   }
 
@@ -662,6 +671,7 @@ class AndroidSourceMessage {
       format: result[3]! as AndroidMediaFormat,
       request: result[4] as AndroidHttpRequestMessage?,
       networkPolicy: result[5] as AndroidNetworkPolicyMessage?,
+      drm: result[6] as AndroidDrmConfigMessage?,
     );
   }
 
@@ -674,7 +684,7 @@ class AndroidSourceMessage {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(kind, other.kind) && _deepEquals(locator, other.locator) && _deepEquals(intent, other.intent) && _deepEquals(format, other.format) && _deepEquals(request, other.request) && _deepEquals(networkPolicy, other.networkPolicy);
+    return _deepEquals(kind, other.kind) && _deepEquals(locator, other.locator) && _deepEquals(intent, other.intent) && _deepEquals(format, other.format) && _deepEquals(request, other.request) && _deepEquals(networkPolicy, other.networkPolicy) && _deepEquals(drm, other.drm);
   }
 
   @override
@@ -683,7 +693,7 @@ class AndroidSourceMessage {
 
   @override
   String toString() {
-    return 'AndroidSourceMessage(kind: $kind, locator: $locator, intent: $intent, format: $format, request: $request, networkPolicy: $networkPolicy)';
+    return 'AndroidSourceMessage(kind: $kind, locator: $locator, intent: $intent, format: $format, request: $request, networkPolicy: $networkPolicy, drm: $drm)';
   }
 }
 
@@ -1041,16 +1051,20 @@ class AndroidLoadReply {
   AndroidLoadReply({
     required this.loadRequestId,
     required this.sessionId,
+    this.protectedSurface,
   });
 
   String loadRequestId;
 
   String sessionId;
 
+  AndroidProtectedSurfaceMessage? protectedSurface;
+
   List<Object?> _toList() {
     return <Object?>[
       loadRequestId,
       sessionId,
+      protectedSurface,
     ];
   }
 
@@ -1062,6 +1076,7 @@ class AndroidLoadReply {
     return AndroidLoadReply(
       loadRequestId: result[0]! as String,
       sessionId: result[1]! as String,
+      protectedSurface: result[2] as AndroidProtectedSurfaceMessage?,
     );
   }
 
@@ -1074,7 +1089,7 @@ class AndroidLoadReply {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(loadRequestId, other.loadRequestId) && _deepEquals(sessionId, other.sessionId);
+    return _deepEquals(loadRequestId, other.loadRequestId) && _deepEquals(sessionId, other.sessionId) && _deepEquals(protectedSurface, other.protectedSurface);
   }
 
   @override
@@ -1083,7 +1098,7 @@ class AndroidLoadReply {
 
   @override
   String toString() {
-    return 'AndroidLoadReply(loadRequestId: $loadRequestId, sessionId: $sessionId)';
+    return 'AndroidLoadReply(loadRequestId: $loadRequestId, sessionId: $sessionId, protectedSurface: $protectedSurface)';
   }
 }
 
@@ -2567,6 +2582,456 @@ class AndroidVideoSelectionMessage {
   }
 }
 
+class AndroidDrmConfigMessage {
+  AndroidDrmConfigMessage({
+    required this.cbcs,
+    required this.timeoutMs,
+  });
+
+  bool cbcs;
+
+  int timeoutMs;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      cbcs,
+      timeoutMs,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AndroidDrmConfigMessage decode(Object result) {
+    result as List<Object?>;
+    return AndroidDrmConfigMessage(
+      cbcs: result[0]! as bool,
+      timeoutMs: result[1]! as int,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AndroidDrmConfigMessage || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(cbcs, other.cbcs) && _deepEquals(timeoutMs, other.timeoutMs);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AndroidDrmConfigMessage(cbcs: $cbcs, timeoutMs: $timeoutMs)';
+  }
+}
+
+class AndroidDrmSupportMessage {
+  AndroidDrmSupportMessage({
+    required this.contractVersion,
+    required this.playerId,
+    required this.androidApi,
+    required this.schemeAvailable,
+  });
+
+  int contractVersion;
+
+  int playerId;
+
+  int androidApi;
+
+  bool schemeAvailable;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      contractVersion,
+      playerId,
+      androidApi,
+      schemeAvailable,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AndroidDrmSupportMessage decode(Object result) {
+    result as List<Object?>;
+    return AndroidDrmSupportMessage(
+      contractVersion: result[0]! as int,
+      playerId: result[1]! as int,
+      androidApi: result[2]! as int,
+      schemeAvailable: result[3]! as bool,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AndroidDrmSupportMessage || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(contractVersion, other.contractVersion) && _deepEquals(playerId, other.playerId) && _deepEquals(androidApi, other.androidApi) && _deepEquals(schemeAvailable, other.schemeAvailable);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AndroidDrmSupportMessage(contractVersion: $contractVersion, playerId: $playerId, androidApi: $androidApi, schemeAvailable: $schemeAvailable)';
+  }
+}
+
+class AndroidProtectedSurfaceMessage {
+  AndroidProtectedSurfaceMessage({
+    required this.playerId,
+    required this.surfaceId,
+    required this.sessionId,
+    required this.generation,
+  });
+
+  int playerId;
+
+  int surfaceId;
+
+  String sessionId;
+
+  int generation;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      playerId,
+      surfaceId,
+      sessionId,
+      generation,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AndroidProtectedSurfaceMessage decode(Object result) {
+    result as List<Object?>;
+    return AndroidProtectedSurfaceMessage(
+      playerId: result[0]! as int,
+      surfaceId: result[1]! as int,
+      sessionId: result[2]! as String,
+      generation: result[3]! as int,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AndroidProtectedSurfaceMessage || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(playerId, other.playerId) && _deepEquals(surfaceId, other.surfaceId) && _deepEquals(sessionId, other.sessionId) && _deepEquals(generation, other.generation);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AndroidProtectedSurfaceMessage(playerId: $playerId, surfaceId: $surfaceId, sessionId: $sessionId, generation: $generation)';
+  }
+}
+
+class AndroidProtectedViewCommand {
+  AndroidProtectedViewCommand({
+    required this.surface,
+    required this.viewId,
+  });
+
+  AndroidProtectedSurfaceMessage surface;
+
+  int viewId;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      surface,
+      viewId,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AndroidProtectedViewCommand decode(Object result) {
+    result as List<Object?>;
+    return AndroidProtectedViewCommand(
+      surface: result[0]! as AndroidProtectedSurfaceMessage,
+      viewId: result[1]! as int,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AndroidProtectedViewCommand || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(surface, other.surface) && _deepEquals(viewId, other.viewId);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AndroidProtectedViewCommand(surface: $surface, viewId: $viewId)';
+  }
+}
+
+class AndroidProtectedViewAck {
+  AndroidProtectedViewAck({
+    required this.surface,
+    required this.viewId,
+    required this.revision,
+    required this.attached,
+  });
+
+  AndroidProtectedSurfaceMessage surface;
+
+  int viewId;
+
+  int revision;
+
+  bool attached;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      surface,
+      viewId,
+      revision,
+      attached,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AndroidProtectedViewAck decode(Object result) {
+    result as List<Object?>;
+    return AndroidProtectedViewAck(
+      surface: result[0]! as AndroidProtectedSurfaceMessage,
+      viewId: result[1]! as int,
+      revision: result[2]! as int,
+      attached: result[3]! as bool,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AndroidProtectedViewAck || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(surface, other.surface) && _deepEquals(viewId, other.viewId) && _deepEquals(revision, other.revision) && _deepEquals(attached, other.attached);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AndroidProtectedViewAck(surface: $surface, viewId: $viewId, revision: $revision, attached: $attached)';
+  }
+}
+
+class AndroidDrmExchangeId {
+  AndroidDrmExchangeId({
+    required this.surface,
+    required this.loadRequestId,
+    required this.epoch,
+    required this.requestId,
+    required this.exchangeId,
+  });
+
+  AndroidProtectedSurfaceMessage surface;
+
+  String loadRequestId;
+
+  int epoch;
+
+  int requestId;
+
+  String exchangeId;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      surface,
+      loadRequestId,
+      epoch,
+      requestId,
+      exchangeId,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AndroidDrmExchangeId decode(Object result) {
+    result as List<Object?>;
+    return AndroidDrmExchangeId(
+      surface: result[0]! as AndroidProtectedSurfaceMessage,
+      loadRequestId: result[1]! as String,
+      epoch: result[2]! as int,
+      requestId: result[3]! as int,
+      exchangeId: result[4]! as String,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AndroidDrmExchangeId || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(surface, other.surface) && _deepEquals(loadRequestId, other.loadRequestId) && _deepEquals(epoch, other.epoch) && _deepEquals(requestId, other.requestId) && _deepEquals(exchangeId, other.exchangeId);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AndroidDrmExchangeId(surface: $surface, loadRequestId: $loadRequestId, epoch: $epoch, requestId: $requestId, exchangeId: $exchangeId)';
+  }
+}
+
+class AndroidDrmLicenseRequest {
+  AndroidDrmLicenseRequest({
+    required this.id,
+    required this.challenge,
+  });
+
+  AndroidDrmExchangeId id;
+
+  Uint8List challenge;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      id,
+      challenge,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AndroidDrmLicenseRequest decode(Object result) {
+    result as List<Object?>;
+    return AndroidDrmLicenseRequest(
+      id: result[0]! as AndroidDrmExchangeId,
+      challenge: result[1]! as Uint8List,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AndroidDrmLicenseRequest || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(id, other.id) && _deepEquals(challenge, other.challenge);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AndroidDrmLicenseRequest(id: $id, challenge: $challenge)';
+  }
+}
+
+class AndroidDrmLicenseReply {
+  AndroidDrmLicenseReply({
+    required this.id,
+    this.response,
+    this.failureCode,
+  });
+
+  AndroidDrmExchangeId id;
+
+  Uint8List? response;
+
+  String? failureCode;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      id,
+      response,
+      failureCode,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AndroidDrmLicenseReply decode(Object result) {
+    result as List<Object?>;
+    return AndroidDrmLicenseReply(
+      id: result[0]! as AndroidDrmExchangeId,
+      response: result[1] as Uint8List?,
+      failureCode: result[2] as String?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AndroidDrmLicenseReply || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(id, other.id) && _deepEquals(response, other.response) && _deepEquals(failureCode, other.failureCode);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AndroidDrmLicenseReply(id: $id, response: $response, failureCode: $failureCode)';
+  }
+}
+
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
@@ -2728,6 +3193,30 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is AndroidVideoSelectionMessage) {
       buffer.putUint8(179);
       writeValue(buffer, value.encode());
+    }    else if (value is AndroidDrmConfigMessage) {
+      buffer.putUint8(180);
+      writeValue(buffer, value.encode());
+    }    else if (value is AndroidDrmSupportMessage) {
+      buffer.putUint8(181);
+      writeValue(buffer, value.encode());
+    }    else if (value is AndroidProtectedSurfaceMessage) {
+      buffer.putUint8(182);
+      writeValue(buffer, value.encode());
+    }    else if (value is AndroidProtectedViewCommand) {
+      buffer.putUint8(183);
+      writeValue(buffer, value.encode());
+    }    else if (value is AndroidProtectedViewAck) {
+      buffer.putUint8(184);
+      writeValue(buffer, value.encode());
+    }    else if (value is AndroidDrmExchangeId) {
+      buffer.putUint8(185);
+      writeValue(buffer, value.encode());
+    }    else if (value is AndroidDrmLicenseRequest) {
+      buffer.putUint8(186);
+      writeValue(buffer, value.encode());
+    }    else if (value is AndroidDrmLicenseReply) {
+      buffer.putUint8(187);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -2854,6 +3343,22 @@ class _PigeonCodec extends StandardMessageCodec {
         return AndroidVideoTrackCommand.decode(readValue(buffer)!);
       case 179:
         return AndroidVideoSelectionMessage.decode(readValue(buffer)!);
+      case 180:
+        return AndroidDrmConfigMessage.decode(readValue(buffer)!);
+      case 181:
+        return AndroidDrmSupportMessage.decode(readValue(buffer)!);
+      case 182:
+        return AndroidProtectedSurfaceMessage.decode(readValue(buffer)!);
+      case 183:
+        return AndroidProtectedViewCommand.decode(readValue(buffer)!);
+      case 184:
+        return AndroidProtectedViewAck.decode(readValue(buffer)!);
+      case 185:
+        return AndroidDrmExchangeId.decode(readValue(buffer)!);
+      case 186:
+        return AndroidDrmLicenseRequest.decode(readValue(buffer)!);
+      case 187:
+        return AndroidDrmLicenseReply.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -3295,6 +3800,153 @@ abstract class AndroidPlayerFlutterApi {
           final AndroidPlaybackFailedMessage arg_event = args[0]! as AndroidPlaybackFailedMessage;
           try {
             api.onPlaybackFailed(arg_event);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+  }
+}
+
+class AndroidDrmHostApi {
+  /// Constructor for [AndroidDrmHostApi]. The [binaryMessenger] named argument is
+  /// available for dependency injection. If it is left null, the default
+  /// BinaryMessenger will be used which routes to the host platform.
+  AndroidDrmHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+      : pigeonVar_binaryMessenger = binaryMessenger,
+        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  final BinaryMessenger? pigeonVar_binaryMessenger;
+
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  final String pigeonVar_messageChannelSuffix;
+
+  Future<void> cancelProtectedLoad(String loadRequestId) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.yl_player_android.AndroidDrmHostApi.cancelProtectedLoad$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[loadRequestId]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
+  }
+
+  Future<AndroidProtectedViewAck> attachProtectedView(AndroidProtectedViewCommand command) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.yl_player_android.AndroidDrmHostApi.attachProtectedView$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[command]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
+    return pigeonVar_replyValue! as AndroidProtectedViewAck;
+  }
+
+  Future<AndroidProtectedViewAck> detachProtectedView(AndroidProtectedViewCommand command) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.yl_player_android.AndroidDrmHostApi.detachProtectedView$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[command]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
+    return pigeonVar_replyValue! as AndroidProtectedViewAck;
+  }
+}
+
+abstract class AndroidDrmFlutterApi {
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  Future<AndroidDrmLicenseReply> exchangeLicense(AndroidDrmLicenseRequest request);
+
+  void cancelLicense(AndroidDrmExchangeId id);
+
+  void onProtectedFrame(AndroidProtectedViewAck frame);
+
+  static void setUp(AndroidDrmFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.yl_player_android.AndroidDrmFlutterApi.exchangeLicense$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final AndroidDrmLicenseRequest arg_request = args[0]! as AndroidDrmLicenseRequest;
+          try {
+            final AndroidDrmLicenseReply output = await api.exchangeLicense(arg_request);
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.yl_player_android.AndroidDrmFlutterApi.cancelLicense$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final AndroidDrmExchangeId arg_id = args[0]! as AndroidDrmExchangeId;
+          try {
+            api.cancelLicense(arg_id);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.yl_player_android.AndroidDrmFlutterApi.onProtectedFrame$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final AndroidProtectedViewAck arg_frame = args[0]! as AndroidProtectedViewAck;
+          try {
+            api.onProtectedFrame(arg_frame);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

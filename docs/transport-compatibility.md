@@ -2,7 +2,7 @@
 
 The DASH format addition used private Android and Apple transport schema **3**.
 Android fixed-video selection and the later Apple DASH fixed-selection stage
-each use private schema **4**. The public Dart platform SPI remains **2**. Existing media-format
+each used private schema **4**. Android DRM bridge now uses private schema **5**; Apple remains **4**. The public Dart platform SPI remains **2**. Existing media-format
 enum wire values 0–9 are unchanged; DASH is appended at value 10.
 
 Appending an enum value does not make a new client safe against an older native
@@ -50,3 +50,14 @@ runtime and does not alter this schema or the public platform SPI. Applications
 explicitly convert a successful HTTP(S) resolution into an existing
 `YlNetworkSource`; installing the resolver does not add media protocols to the
 player.
+
+Android schema5 appends DRM configuration to sources, optional protection
+admission metadata to Create, and the committed protected-surface descriptor to
+Load. Separate generated DRM APIs carry binary license exchanges and correlated
+view ACKs. License endpoints and credentials stay on the Dart side. Factory
+request/options tags remain unchanged, so schema4 requests reach the version
+gate and are rejected before allocation; schema5 requests also reach an old
+schema4 factory's version gate. Android 4/5 combinations require rebuilding the
+native host. Nullable fields do not permit silent downgrade to clear playback.
+The new optional public SPI interfaces do not change the SPI major; older
+backends continue to reject DRM configuration explicitly.

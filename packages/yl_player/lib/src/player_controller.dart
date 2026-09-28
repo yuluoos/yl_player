@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'drm/license_client.dart';
 import 'package:flutter/foundation.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 part 'playback_session.dart';
@@ -24,6 +25,11 @@ final class YlPlayerController implements Listenable {
       validateYlPlayerCapabilities(backend.capabilities);
       validateYlPlayerState(backend.state);
       player = YlPlayerController._(backend);
+      if (backend is YlPlatformDrmLicenseTransport) {
+        (backend as YlPlatformDrmLicenseTransport).setDrmLicenseExchange(
+          player._exchangeLicense,
+        );
+      }
       player._stateSubscription = backend.states.listen(
         player._acceptState,
         onError: (Object _) => player!._transportLost(),
@@ -51,6 +57,41 @@ final class YlPlayerController implements Listenable {
       rethrow;
     }
   }
+
+  final _licenseClient = YlDrmLicenseClient();
+  Future<YlDrmBytes> _exchangeLicense(
+    YlDrmLicenseEndpoint endpoint,
+    YlDrmBytes challenge,
+    Future<void> cancelled,
+  ) async {
+    final token = YlDrmCancellationToken();
+    unawaited(cancelled.then((_) => token.cancel()));
+    try {
+      return await _licenseClient.send(
+        endpoint,
+        challenge,
+        cancellation: token,
+      );
+    } finally {
+      token.cancel();
+    }
+  }
+
+  YlProtectedVideoSurface? get protectedVideoSurface =>
+      _backend is YlPlatformProtectedVideoSurfaceProvider
+      ? (_backend as YlPlatformProtectedVideoSurfaceProvider)
+            .protectedVideoSurface
+      : null;
+  Future<void> attachProtectedView(
+    YlProtectedVideoSurface surface,
+    int viewId,
+  ) => (_backend as YlPlatformProtectedVideoSurfaceProvider)
+      .attachProtectedView(surface, viewId);
+  Future<void> detachProtectedView(
+    YlProtectedVideoSurface surface,
+    int viewId,
+  ) => (_backend as YlPlatformProtectedVideoSurfaceProvider)
+      .detachProtectedView(surface, viewId);
 
   final YlPlatformPlayer _backend;
   final _notifier = _PlayerNotifier();
@@ -266,6 +307,7 @@ final class YlPlayerController implements Listenable {
 
   Future<void> dispose() => _disposeFuture ??= _dispose();
   Future<void> _dispose() async {
+    _licenseClient.close();
     _disposed = true;
     _cancelLoad(YlFailureCodes.playerDisposed);
     final presentationChanged = isCurrentFramePresented;

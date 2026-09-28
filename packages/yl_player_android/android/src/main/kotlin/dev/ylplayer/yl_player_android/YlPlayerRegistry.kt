@@ -14,6 +14,7 @@ internal class YlPlayerRegistry(
     private val sessionFactory: YlPlayerSessionFactory,
     private val failures: YlFailureMapper = YlFailureMapper(),
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main,
+    private val protectedViews: YlProtectedViewRegistry? = null,
     private val checkMainThread: () -> Unit = {
         check(Looper.myLooper() == Looper.getMainLooper()) { "Main looper required" }
     },
@@ -34,7 +35,7 @@ internal class YlPlayerRegistry(
         try {
             checkMainThread()
             if (detached) throw YlBoundaryException(YlFailureKind.PLAYER_DISPOSED)
-            if (request.schemaMajor != 4L) throw YlBoundaryException(YlFailureKind.PLATFORM_INCOMPATIBLE)
+            if (request.schemaMajor != 5L) throw YlBoundaryException(YlFailureKind.PLATFORM_INCOMPATIBLE)
             YlBoundaryValidation.player(request.options)
             val createSession = sessionFactory.prepare(request.options)
             val suffix = "p${nextId++}-${UUID.randomUUID()}"
@@ -42,19 +43,26 @@ internal class YlPlayerRegistry(
             session = createSession(texture)
             session.bindLeases(leases)
             if (backgrounded) session.onBackground()
+            val drmSupport = session.drmSupport
+            val drm = if (drmSupport != null && protectedViews != null) {
+                val api = AndroidDrmFlutterApi(messenger, suffix)
+                YlDrmBridge(drmSupport.playerId, protectedViews, api::exchangeLicense, api::cancelLicense, api::onProtectedFrame, dispatcher)
+                    .also { session.bindDrm(it) }
+            } else null
             host = YlPigeonPlayerHost(
                 suffix, texture, messenger, session, failures, dispatcher, checkMainThread,
                 remove = { beginDispose(suffix)?.await()?.let { throw it } },
                 terminate = { beginDispose(suffix, reportFailure = true) },
+                drm = drm,
                 transportFailed = { error ->
                     failures.record(error)
                     beginDispose(suffix, reportFailure = true)
                 },
             )
             val reply = AndroidCreateReply(
-                schemaMajor = 4, spiMajor = 2, channelSuffix = suffix, textureId = texture.id(),
+                schemaMajor = 5, spiMajor = 2, channelSuffix = suffix, textureId = texture.id(),
                 implementationName = "yl_player_android", implementationVersion = "0.2.0",
-                capabilities = session.capabilities, initialState = session.initialState,
+                capabilities = session.capabilities, initialState = session.initialState, drmSupport = drmSupport,
             )
             host.install()
             players[suffix] = host

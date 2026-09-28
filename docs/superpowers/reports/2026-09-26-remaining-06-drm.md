@@ -261,3 +261,71 @@ macOS27/M1、JDK17、compileSdk36、Media3 1.11.0。标准 JUnit 发现 **454** 
 - `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlProtectedOutputTest.kt`：`29e3ec8c3dad64bc4c3d9cd6c3cbf3e3710648bd80b7153bc19475b1704e24c1`
 - `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlProtectedViewTest.kt`：`58143f2262356c96570650d511820f8ef1dfa1d2240a394b44ff437ad0d9c74a`
 - `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlSessionCoordinatorTest.kt`：`f76a50825ba11a7a0ee54e24d1f484f84727fe4525ffab28c6fd16e3d7c19938`
+
+
+## 2026-09-28 Task 3B3：Android 公共 DRM/保护视图桥接
+
+基线 `2518d4d`。本阶段完成 3B 工程集成；Android API29+ 可接收 Widevine DASH，保留系统 scheme、L1、实际安全硬件 decoder、secure output 和 keys usable 的逐会话检查。没有商业 SDK。Apple 仍待3C，授权内容与许可证服务仍缺，**没有真实受保护解密/物理输出通过结论，CAP-DRM 未完成**。
+
+- Android wire 升为 schema5（Apple仍4，SPI仍2），Dart/native 必须同步升级。源消息仅携带 cbcs/timeout；许可证地址和凭据留在 Dart，由控制器可选 SPI delegate 接既有 Task2 有界 POST client。
+- 独立 Pigeon challenge/response/cancel 与 view attach/detach/ACK 通道完整关联 player/surface/session/generation/load/epoch/request/exchange 身份；取消精确 pending load 不伤保留会话，迟到响应不安装。
+- 公开描述符驱动显式 hybrid AndroidViewSurface；匹配当前 attach ACK 与帧 revision 才发布首帧。原生遮黑和 contain/center 布局，不经 texture/Opacity/像素回读。非默认 fit/alignment 明确拒绝；裁切和字幕等仍需组合验证。
+- 许可证最多4并发、每存活 context4096个唯一 exchangeId；达到上限报告 resource.exhausted，长会话可能需要重新加载。直接 SPI 使用者须注入交换 delegate。系统能力查询或 contractVersion 不能替代解码/物理输出证据。
+
+### 复核与修复裁定
+
+一次新鲜只读复核后一次修复，不重审。旧 attach 失败/5秒超时可能终止新会话为 Important；许可证重定向码丢失原评 Minor，执行者按用户明确错误信息要求和冻结契约升级 Important。4个替换/卸载错误与超时测试、真实 HTTP307 经生成回调的测试及 native 错误码测试先观察失败，再修复通过。额外同 viewId 重试用例覆盖迟到成功和错误，以及当前超时仍正常上报。使用独立 attempt token，当前错误在核验归属的同一同步步骤发布，避免异步 catch 再次竞态。
+
+复核范围裁定：授权真机播放、rotation/seek/Period/后台真实效果及截图/HDCP/外接/字幕/裁切/旋转留Task4或合成验收；Apple留3C；既有安全音频和直接 adapter 生命周期约束未变。复核者未独立运行测试，以下为执行者实际命令与 XML 证据。Pigeon Kotlin 自带新增3行尾空格，保留生成一致性，不手改生成物；其他文件 whitespace 检查通过。
+
+### 实际验证
+
+| 检查 | 结果 | 证据（本地 plan workspace） |
+|---|---|---|
+| Android JVM/Robolectric 全量 | 460发现，457通过，3既有外部 MediaMTX RTMP跳过，0失败/错误；BUILD SUCCESSFUL | `bridge-native-final.log` + JUnit XML |
+| Android/SPI/主包 Dart 全量 | 289通过 | `bridge-dart-final.log` |
+| Apple adapter兼容回归 | 102通过（复核前完成；后续修复仅Android） | `bridge-apple-regression.log` |
+| 竞态/POST 组合定向 | 8通过，修复前对应5项失败 | `bridge-review-dart-red.log` / `bridge-review-green.log` |
+| 原生 redirect码 | 修复前1失败，最终6项bridge全过 | `bridge-review-native-red.log` / `bridge-native-final.log` |
+| 静态分析 | 0 issues | `bridge-analysis-final.log` |
+| 公开surface、双端Pigeon | 通过；生成物对暂存版本无差异 | `bridge-pigeon-check.log` / public-surface stdout |
+| 授权真机/DRM媒体 | 未运行，无媒体哈希；仍 external_missing | Task4 |
+
+命令：JDK17 下 `packages/yl_player_android/example/android/gradlew -p packages/yl_player_android/example/android :yl_player_android:testDebugUnitTest`；`flutter test packages/yl_player_android/test packages/yl_player_platform_interface/test packages/yl_player/test`；`flutter test packages/yl_player_apple/test`；`flutter analyze` 对3包lib及3个新增/修改测试；`sh tool/check_public_surface.sh`；双端 `tool/check_pigeon.sh`。测试环境为本地 macOS + JVM/Robolectric/Flutter VM；没有把 host 单测标成真机实播。初次全量失败为旧schema fixture及插件测试过早reset Main，已修正测试；旧schema4 golden仍保留。
+
+下一项：Apple Task3C。Task3整体和Task4保持未完成。
+
+### Task 3B3 最终源文件 SHA-256
+
+- `packages/yl_player/lib/src/player_controller.dart`：`efbc82a3c1e4b64fb2ce680196e81aab61c816cad9138c318361980ae44eb303`
+- `packages/yl_player/lib/src/player_view.dart`：`a9f127b4e3259fc6ebe6f3d9ae3fd57d80b95c2b7421565e91a95cb1eb3af32c`
+- `packages/yl_player/lib/yl_player.dart`：`6e6d5870f39e20f557dd69b8fc52e99fc724178114d20bd507d80aba19a21f37`
+- `packages/yl_player/test/android_player_controller_test.dart`：`283c8e87d3eceaed14efca417b4c114ff64769fdaaf7a738f9e8746d15fc35e0`
+- `packages/yl_player/test/drm_android_bridge_test.dart`：`921d611fb5220fee1399ed2916ebb491a2f9e8f5cf420be01dce17fa2ff3c602`
+- `packages/yl_player/test/player_view_test.dart`：`d1523ebca609fcc55e654719db5432afb17873b8b91af552c0704ab38885e8f2`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlBoundaryValidation.kt`：`146d55d99606d848d0406ca5174083c62684362db3d954c0b9c6e23cb24047eb`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDrmBridge.kt`：`f04543697748d61856e73a0ff25cf5f8b95439386a442727cade4502fae1c2d4`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlFailureMapper.kt`：`82bf0747a179f97e8e3a23d96b77f36be4b7b8d93cde13f6f70e794c69ac1312`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Engine.kt`：`6e28df85f440f59f650595d749863cddd80cd3a353d0eadac685170cf5e86456`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPigeonPlayerHost.kt`：`66ec8f355ef2d8a12e34fcdc3eec725523898316a3f9654e93792fed20069140`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlayerAndroidPlugin.kt`：`6e6af4ad7ec94dc513744b0399394e0a48c88c38e90c194881e980a57f1e060b`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlayerRegistry.kt`：`260b780fdb8d8f76f8bb6dc0e0edf1bb66acd5b4795a19c5d60a5eaf6c596ed4`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlProtectedViewRegistry.kt`：`1a5babde9c63c40895bbb2ba15e1b2fa63f2d990839f8f9401d1df06a2d6b1e2`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlSessionCoordinator.kt`：`7f6845faf509c7c1400ce0d0b37b0fa8a3121dbfc6b00ee1d8a04b6f2f65c69d`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlSessionModels.kt`：`59023f52153823b59433e7b5cfb8b9e7c91ac038b1a11522149eb8ba2302d67f`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlSourceAssessment.kt`：`bf6a17d652777a8263f5c54a953323c281c5aa81ca0ba7e07015b95590d88616`
+- `packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/pigeon/YlPlayerAndroid.g.kt`：`fd7f5aa0437bfd5b374d6f8fd0c1fa058840427b79ed6c4fe135fe7cc30a8a37`
+- `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDrmBridgeTest.kt`：`0565d248c5ea1fa0051e41a94a8339851facafda2d008dcbcc0709b3cf95c058`
+- `packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlPlayerRegistryTest.kt`：`83841206605d99c860ecb1b322573138703d9134f5b968360e7f38c22012fa5b`
+- `packages/yl_player_android/lib/src/android_codec.dart`：`890d70376c7a8d6017029aab19281de6f3b5f630570daae56b4454429888ce49`
+- `packages/yl_player_android/lib/src/android_drm.dart`：`964283be5f50f33b4a6381ed722d7162032dc08da918a699319a8fd362496645`
+- `packages/yl_player_android/lib/src/android_player.dart`：`2e60170f7edbf35fc9975b572248e03f126bbab9aedc377b9273ff3f8d9e1fc5`
+- `packages/yl_player_android/lib/src/pigeon/yl_player_android.g.dart`：`1f9b8b8c1694e2e6be0804b92f8fc6d788bb8dcf512b109bc3e88c23cc0c88d9`
+- `packages/yl_player_android/pigeons/yl_player_android.dart`：`18a5c3175fb425dc27626921d50e32c0e61b0572021d7b88984dd411e04515d1`
+- `packages/yl_player_android/test/drm_bridge_test.dart`：`6d8e39634a165e4a5dfa5153a42f2d033debf1cc8c43bc093ad9c340aae1cf00`
+- `packages/yl_player_android/test/drm_codec_test.dart`：`e48582864c53abca7336ec9b303f3323015423b6c4ad192985966334ddc3c76e`
+- `packages/yl_player_android/test/support/android_fakes.dart`：`55255593b0be4a9e62db672c1400bda164f449c4ce086bd354d3ac3a8339208f`
+- `packages/yl_player_android/test/yl_player_android_test.dart`：`6595fcb507d8462a7fc69fbfbeb498436b16890d313ff5543b9e1a3f6daa5f42`
+- `packages/yl_player_platform_interface/lib/src/drm/drm_transport.dart`：`36187192ee95c9878eed22bd9464b2617c1b9f209f63c6199278384b617e0517`
+- `packages/yl_player_platform_interface/lib/src/platform/native_video_surface.dart`：`b15b36200c37f68513cdfbde73756f723b81170eb07a9d116fdd265e228ac431`
+- `packages/yl_player_platform_interface/lib/yl_player_platform_interface.dart`：`6538b38795fc453ba8c0888314ef9b553cb772e73ef5f9b436dd2ad4c86b1186`

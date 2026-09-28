@@ -27,3 +27,4 @@ export 'src/source/media_source.dart';
 export 'src/validation/state_validation.dart';
 export 'src/validation/v2_validation.dart';
 export 'src/drm/drm_config.dart';
+export 'src/drm/drm_transport.dart';

@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -50,6 +53,28 @@ final class YlPlayerView extends StatelessWidget {
     builder: (context, child) => ValueListenableBuilder<int?>(
       valueListenable: controller.textureId,
       builder: (context, textureId, child) {
+        final protected = controller.protectedVideoSurface;
+        if (protected != null) {
+          if (kIsWeb ||
+              protected.platform != defaultTargetPlatform ||
+              protected.platform != TargetPlatform.android ||
+              protected.sessionId != controller.state.sessionId?.value) {
+            return const ColoredBox(color: Color(0xFF000000));
+          }
+          if (fit != BoxFit.contain || alignment != Alignment.center) {
+            throw FlutterError(
+              'Protected video currently requires BoxFit.contain and Alignment.center.',
+            );
+          }
+          return ColoredBox(
+            color: const Color(0xFF000000),
+            child: _ProtectedAndroidView(
+              key: ValueKey((controller, protected)),
+              controller: controller,
+              surface: protected,
+            ),
+          );
+        }
         final geometry = controller.state.videoGeometry;
         final native = controller.nativeVideoSurface;
         final useNative =
@@ -119,4 +144,73 @@ final class YlPlayerView extends StatelessWidget {
       },
     ),
   );
+}
+
+/// Native secure SurfaceView owns geometry and its pre-frame black cover. Never
+/// put this output through Flutter texture, opacity or pixel transforms.
+class _ProtectedAndroidView extends StatefulWidget {
+  const _ProtectedAndroidView({
+    super.key,
+    required this.controller,
+    required this.surface,
+  });
+  final YlPlayerController controller;
+  final YlProtectedVideoSurface surface;
+  @override
+  State<_ProtectedAndroidView> createState() => _ProtectedAndroidViewState();
+}
+
+class _ProtectedAndroidViewState extends State<_ProtectedAndroidView> {
+  int? _viewId;
+  void _created(int id) {
+    if (!mounted) return;
+    _viewId = id;
+    unawaited(
+      widget.controller.attachProtectedView(widget.surface, id).catchError((
+        Object _,
+      ) {
+        // The adapter publishes the sanitized failure through its player state.
+      }),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) => PlatformViewLink(
+    viewType: widget.surface.viewType,
+    surfaceFactory: (context, controller) => AndroidViewSurface(
+      controller: controller as AndroidViewController,
+      hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+      gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
+    ),
+    onCreatePlatformView: (params) {
+      final controller = PlatformViewsService.initExpensiveAndroidView(
+        id: params.id,
+        viewType: widget.surface.viewType,
+        layoutDirection: Directionality.of(context),
+        creationParams: <String, Object>{
+          'playerId': widget.surface.playerId,
+          'surfaceId': widget.surface.surfaceId,
+          'sessionId': widget.surface.sessionId,
+          'generation': widget.surface.generation,
+        },
+        creationParamsCodec: const StandardMessageCodec(),
+      );
+      controller.addOnPlatformViewCreatedListener(params.onPlatformViewCreated);
+      controller.addOnPlatformViewCreatedListener(_created);
+      unawaited(controller.create());
+      return controller;
+    },
+  );
+  @override
+  void dispose() {
+    final id = _viewId;
+    if (id != null) {
+      unawaited(
+        widget.controller
+            .detachProtectedView(widget.surface, id)
+            .catchError((Object _) {}),
+      );
+    }
+    super.dispose();
+  }
 }

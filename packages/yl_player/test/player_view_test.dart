@@ -4,7 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player/yl_player.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart'
-    show YlPlatformLoadResult, YlPlatformNativeVideoSurfaceProvider;
+    show
+        YlPlatformLoadResult,
+        YlPlatformNativeVideoSurfaceProvider,
+        YlPlatformProtectedVideoSurfaceProvider;
 
 import 'support/fake_player_platform.dart';
 
@@ -31,6 +34,40 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(SystemChannels.platform_views, null);
   });
+
+  testWidgets(
+    'protected Android mounts explicit hybrid before first frame without texture or opacity',
+    (tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final backend = _ProtectedPlatformPlayer();
+      final controller = await _createCommittedController(
+        backend,
+        sessionId: _s1,
+        geometry: _wideGeometry,
+      );
+      await _pumpView(tester, YlPlayerView(controller: controller));
+      await tester.pump();
+      expect(find.byType(AndroidViewSurface), findsOneWidget);
+      expect(find.byType(Texture), findsNothing);
+      expect(find.byType(Opacity), findsNothing);
+      final create = nativeCalls.singleWhere((call) => call.method == 'create');
+      final args = create.arguments as Map;
+      expect(args['hybrid'], isTrue);
+      expect(args['viewType'], 'yl_player_android/protected_video');
+      expect(
+        const StandardMessageCodec().decodeMessage(
+          ByteData.sublistView(args['params']),
+        ),
+        {'playerId': 1, 'surfaceId': 2, 'sessionId': 's1', 'generation': 3},
+      );
+      expect(backend.attached, 1);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump();
+      expect(backend.detached, 1);
+      await tester.runAsync(controller.dispose);
+      debugDefaultTargetPlatformOverride = null;
+    },
+  );
 
   for (final platform in [TargetPlatform.iOS, TargetPlatform.macOS]) {
     final nativeWidgetType = platform == TargetPlatform.iOS
@@ -605,4 +642,34 @@ final class _NativePlatformPlayer extends FakePlatformPlayer
     viewType: 'yl_player_apple/video',
     platform: platform,
   );
+}
+
+final class _ProtectedPlatformPlayer extends FakePlatformPlayer
+    implements YlPlatformProtectedVideoSurfaceProvider {
+  int attached = 0, detached = 0;
+  @override
+  YlProtectedVideoSurface? get protectedVideoSurface =>
+      const YlProtectedVideoSurface(
+        playerId: 1,
+        surfaceId: 2,
+        sessionId: 's1',
+        generation: 3,
+        viewType: 'yl_player_android/protected_video',
+        platform: TargetPlatform.android,
+      );
+  @override
+  Future<void> attachProtectedView(
+    YlProtectedVideoSurface surface,
+    int viewId,
+  ) async {
+    attached++;
+  }
+
+  @override
+  Future<void> detachProtectedView(
+    YlProtectedVideoSurface surface,
+    int viewId,
+  ) async {
+    detached++;
+  }
 }

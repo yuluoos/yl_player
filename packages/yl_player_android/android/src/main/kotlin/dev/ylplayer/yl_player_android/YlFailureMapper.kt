@@ -18,6 +18,7 @@ internal enum class YlFailureKind(
     val retryable: Boolean = false,
 ) {
     DRM_CONFIG_INVALID(AndroidFailureCategory.SOURCE, "drm.config_invalid", "The DRM configuration is incomplete or invalid. Check delivery format, certificate, content ID and license policy."),
+    DRM_LICENSE_REDIRECT_REJECTED(AndroidFailureCategory.NETWORK, "drm.license_redirect_rejected", "The license redirect was rejected. Check the configured license endpoint and allowed redirect origins."),
     DRM_LICENSE_DENIED(AndroidFailureCategory.NETWORK, "drm.license_denied", "The license server refused the request. Check authorization and license request configuration."),
     DRM_LICENSE_EXPIRED(AndroidFailureCategory.PLATFORM, "drm.license_expired", "The license has expired according to explicit DRM evidence. Renew authorization."),
     DRM_LICENSE_TIMEOUT(AndroidFailureCategory.NETWORK, "drm.license_timeout", "The license request exceeded its deadline."),

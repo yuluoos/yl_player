@@ -3,6 +3,9 @@ package dev.ylplayer.yl_player_android
 import android.os.Looper
 import android.view.Surface
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
+import dev.ylplayer.yl_player_android.pigeon.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
@@ -18,6 +21,24 @@ internal class YlProtectedViewRegistry(
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main,
     private val checkMain: () -> Unit = { check(Looper.myLooper() == Looper.getMainLooper()) },
 ) {
+    val frameSinks = mutableMapOf<Long, (AndroidProtectedViewAck) -> Unit>()
+    suspend fun acknowledge(command: AndroidProtectedViewCommand): AndroidProtectedViewAck {
+        checkMain()
+        val binding = records[command.surface.identity()] ?: throw YlBoundaryException(YlFailureKind.SESSION_STALE)
+        if (binding.claim?.viewId?.toLong() != command.viewId) throw YlBoundaryException(YlFailureKind.SESSION_STALE)
+        val output = try { withTimeout(5000) { binding.ackFlow.first { it != null }!! } }
+        catch (_: TimeoutCancellationException) { throw YlBoundaryException(YlFailureKind.DRM_PROTECTION_INSUFFICIENT) }
+        if (binding.retired || binding.claim?.viewId?.toLong() != command.viewId || output != binding.outputIdentity)
+            throw YlBoundaryException(YlFailureKind.SESSION_STALE)
+        return AndroidProtectedViewAck(command.surface, command.viewId, output.generation, true)
+    }
+    fun detachView(command: AndroidProtectedViewCommand): AndroidProtectedViewAck {
+        checkMain()
+        val binding = records[command.surface.identity()] ?: throw YlBoundaryException(YlFailureKind.SESSION_STALE)
+        if (binding.claim?.viewId?.toLong() != command.viewId) throw YlBoundaryException(YlFailureKind.SESSION_STALE)
+        binding.claim?.dispose()
+        return AndroidProtectedViewAck(command.surface, command.viewId, binding.outputIdentity.generation, false)
+    }
     private val records = mutableMapOf<YlDrmSessionIdentity, Binding>()
     private val generations = mutableMapOf<Long, Long>()
     private var next = 0L
@@ -48,7 +69,9 @@ internal class YlProtectedViewRegistry(
         private val scope = CoroutineScope(SupervisorJob() + dispatcher)
         private val serial = Mutex()
         @Volatile private var revision = 0L
+        internal val ackFlow = MutableStateFlow<YlOutputIdentity?>(null)
         private var acknowledged: YlOutputIdentity? = null
+            set(value) { field = value; ackFlow.value = value }
         private var pendingFrame: Pair<YlOutputIdentity, () -> Unit>? = null
         internal var enabled = true
         internal var geometry: dev.ylplayer.yl_player_android.pigeon.AndroidVideoGeometryMessage? = null
@@ -102,6 +125,7 @@ internal class YlProtectedViewRegistry(
             if (output != acknowledged) { pendingFrame = output to accepted; return }
             pendingFrame = null
             claim?.onFrame?.invoke(output)
+            claim?.let { frameSinks[identity.playerId]?.invoke(AndroidProtectedViewAck(identity.wire(), it.viewId.toLong(), output.generation, true)) }
             accepted()
         }
         fun suspendPresentation() { checkMain(); enabled = false; change(null) }

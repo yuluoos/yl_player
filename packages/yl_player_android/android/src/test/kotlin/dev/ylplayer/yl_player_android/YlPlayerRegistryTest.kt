@@ -28,7 +28,7 @@ class YlPlayerRegistryTest {
         val response = AndroidPlayerFactoryHostApi.codec.decodeMessage(assertNotNull(reply).apply { flip() }) as List<*>
         assertEquals("platform.incompatible", response[0])
         verify(fixture.textures, never()).createSurfaceTexture()
-        val current = assertNotNull(AndroidPlayerFactoryHostApi.codec.encodeMessage(listOf(createRequest())))
+        val current = assertNotNull(AndroidPlayerFactoryHostApi.codec.encodeMessage(listOf(createRequest().copy(schemaMajor = 4))))
         current.flip()
         val bytes = ByteArray(current.remaining()).also(current::get)
         assertEquals(oldCodecMajor4, java.util.Base64.getEncoder().encodeToString(bytes))
@@ -123,7 +123,7 @@ class YlPlayerRegistryTest {
             replacementPlugin.onAttachedToEngine(binding)
             verify(binding.platformViewRegistry, times(1)).registerViewFactory(eq(YlProtectedViewFactory.TYPE), any())
             assertTrue(fixture.handlers.isNotEmpty())
-            replacementPlugin.onDetachedFromEngine(binding); runCurrent()
+            replacementPlugin.onDetachedFromEngine(binding); advanceUntilIdle()
             Dispatchers.resetMain()
         }
     }
@@ -173,7 +173,7 @@ class YlPlayerRegistryTest {
         val fixture = RegistryFixture(StandardTestDispatcher(testScheduler))
         val first = fixture.registry.create(createRequest())
         val second = fixture.registry.create(createRequest())
-        assertEquals(4L, first.schemaMajor)
+        assertEquals(5L, first.schemaMajor)
         assertEquals(2L, first.spiMajor)
         assertEquals(41L, first.textureId)
         assertTrue(first.channelSuffix.matches(Regex("p1-[a-zA-Z0-9-]+")))
@@ -250,7 +250,7 @@ class YlPlayerRegistryTest {
         val reply = fixture.registry.create(createRequest())
         assertEquals(AndroidPlaybackStatus.IDLE, reply.initialState.status)
         assertEquals(0L, reply.initialState.revision)
-        for (unsupportedSchema in listOf(1L, 2L, 3L)) {
+        for (unsupportedSchema in listOf(1L, 2L, 3L, 4L)) {
             assertEquals("platform.incompatible", assertFailsWith<FlutterError> {
                 fixture.registry.create(createRequest().copy(schemaMajor = unsupportedSchema))
             }.code)
@@ -475,7 +475,7 @@ class YlPlayerRegistryTest {
     }
 }
 
-internal fun createRequest() = AndroidCreateRequest(4, AndroidPlayerOptionsMessage(AndroidDecoderPolicy.SYSTEM_DEFAULT, AndroidAudioPolicy.APP_MANAGED, 250))
+internal fun createRequest() = AndroidCreateRequest(5, AndroidPlayerOptionsMessage(AndroidDecoderPolicy.SYSTEM_DEFAULT, AndroidAudioPolicy.APP_MANAGED, 250))
 
 internal class RegistryFixture(dispatcher: CoroutineDispatcher, factory: YlPlayerSessionFactory? = null) {
     val messenger = mock(BinaryMessenger::class.java)

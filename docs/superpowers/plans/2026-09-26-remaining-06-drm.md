@@ -79,10 +79,10 @@ public_payload_contains_body_or_key: false
 2026-09-27 开始按平台分步交付，**Task 3 整体未完成**：
 
 - [x] 3A：Android 内部 MediaDrm driver、密钥代际/取消/更新/后台恢复边界和系统 fake 测试；当前未接生产播放器。
-- [ ] 3B：Android 受保护输出与 Media3 candidate 原子事务、Pigeon challenge/response 和 Task 2 传输连接；验证 clear 回归。
+- [x] 3B：Android 受保护输出与 Media3 candidate 原子事务、Pigeon challenge/response 和 Task 2 传输连接；验证 clear 回归。
   - [x] 3B1：内部 Media3 DrmSessionManager/DrmSession 消费 3A 密钥状态，管理 decoder 引用、CryptoConfig 与安全 decoder 查询；不开放生产准入。
   - [x] 3B2：原生受保护 view 注册/attach/detach、secure candidate output、内部 Media3 route、实际 decoder/key 门槛与原子替换/回滚；Dart provider 和正式 ACK wire 留在 3B3。
-  - [ ] 3B3：Pigeon challenge/response、受保护 view ACK 与 Task 2 许可证传输连接，完成组合回归后才开放对应准入。
+  - [x] 3B3：Pigeon challenge/response、受保护 view ACK 与 Task 2 许可证传输连接，完成组合回归后才开放对应准入。
 - [ ] 3C：Apple AVContentKeySession、AVPlayerLayer 与候选事务/同一桥接，验证原生状态机和 clear 回归。
 
 以下完整验收要求仍逐项保留，不能用 3A 的内部测试替代生产集成：
@@ -112,3 +112,5 @@ public_payload_contains_body_or_key: false
 - [ ] 更新总览的实施/验证状态。没有完整实现及实际验收时，不将整个 CAP 标为完成。
 
 2026-09-27 Task 1 已完成 clear 内容的三端 Debug 原型与架构决定，详见执行报告；Task 2 已完成 Dart 配置、受控许可证 POST 与旧适配器拒绝；原生桥接随 Task 3 实现。Task 3/4 仍未完成，Task 1/2 通过不代表真实受保护播放通过。
+
+2026-09-28 Task 3B3 已完成 Android schema5 许可证/取消桥接、保护视图描述符和 ACK、控制器传输与 hybrid view 接入；3B 工程集成完成，下一项为 Apple 3C。Android API29+ 仍逐源检查系统密钥、安全 decoder 和输出，授权真机验收保留在 Task4；上方跨平台验收项继续未勾选。

@@ -107,6 +107,7 @@ class AndroidCreateReply {
   String implementationVersion;
   AndroidCapabilitiesMessage capabilities;
   AndroidStateMessage initialState;
+  AndroidDrmSupportMessage? drmSupport;
 }
 
 class AndroidCapabilitiesMessage {
@@ -142,6 +143,7 @@ class AndroidSourceMessage {
   AndroidMediaFormat format;
   AndroidHttpRequestMessage? request;
   AndroidNetworkPolicyMessage? networkPolicy;
+  AndroidDrmConfigMessage? drm;
 }
 
 class AndroidVideoConstraintsMessage {
@@ -187,6 +189,7 @@ class AndroidAssessmentReply {
 class AndroidLoadReply {
   String loadRequestId;
   String sessionId;
+  AndroidProtectedSurfaceMessage? protectedSurface;
 }
 
 class AndroidSessionCommand {
@@ -421,4 +424,62 @@ abstract class AndroidPlayerFlutterApi {
   void onRetryScheduled(AndroidRetryScheduledMessage event);
   void onEngineChanged(AndroidEngineChangedMessage event);
   void onPlaybackFailed(AndroidPlaybackFailedMessage event);
+}
+
+class AndroidDrmConfigMessage {
+  bool cbcs;
+  int timeoutMs;
+}
+class AndroidDrmSupportMessage {
+  int contractVersion;
+  int playerId;
+  int androidApi;
+  bool schemeAvailable;
+}
+class AndroidProtectedSurfaceMessage {
+  int playerId;
+  int surfaceId;
+  String sessionId;
+  int generation;
+}
+class AndroidProtectedViewCommand {
+  AndroidProtectedSurfaceMessage surface;
+  int viewId;
+}
+class AndroidProtectedViewAck {
+  AndroidProtectedSurfaceMessage surface;
+  int viewId;
+  int revision;
+  bool attached;
+}
+class AndroidDrmExchangeId {
+  AndroidProtectedSurfaceMessage surface;
+  String loadRequestId;
+  int epoch;
+  int requestId;
+  String exchangeId;
+}
+class AndroidDrmLicenseRequest {
+  AndroidDrmExchangeId id;
+  Uint8List challenge;
+}
+class AndroidDrmLicenseReply {
+  AndroidDrmExchangeId id;
+  Uint8List? response;
+  String? failureCode;
+}
+@HostApi()
+abstract class AndroidDrmHostApi {
+  void cancelProtectedLoad(String loadRequestId);
+  @async
+  AndroidProtectedViewAck attachProtectedView(AndroidProtectedViewCommand command);
+  @async
+  AndroidProtectedViewAck detachProtectedView(AndroidProtectedViewCommand command);
+}
+@FlutterApi()
+abstract class AndroidDrmFlutterApi {
+  @async
+  AndroidDrmLicenseReply exchangeLicense(AndroidDrmLicenseRequest request);
+  void cancelLicense(AndroidDrmExchangeId id);
+  void onProtectedFrame(AndroidProtectedViewAck frame);
 }

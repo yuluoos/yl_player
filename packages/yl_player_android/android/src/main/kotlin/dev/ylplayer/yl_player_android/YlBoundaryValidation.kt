@@ -22,6 +22,11 @@ internal object YlBoundaryValidation {
         listOf(value.maxWidth, value.maxHeight, value.maxBitrate).filterNotNull().forEach { policy(it, true) }
     }
     fun load(source: AndroidSourceMessage, options: AndroidLoadOptionsMessage) {
+        source.drm?.let {
+            if (source.kind != AndroidSourceKind.NETWORK || source.format != AndroidMediaFormat.DASH ||
+                !source.locator.startsWith("https://") && !source.locator.startsWith("http://") || it.timeoutMs !in 1..60_000)
+                throw YlBoundaryException(YlFailureKind.DRM_CONFIG_INVALID)
+        }
         if (YlRtmpSourcePolicy.isRtmp(source)) YlRtmpSourcePolicy.validate(source, options)
         options.startPositionMs?.let(::position)
         constraints(options.videoConstraints)

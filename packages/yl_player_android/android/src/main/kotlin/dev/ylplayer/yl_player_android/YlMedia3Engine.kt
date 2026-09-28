@@ -47,6 +47,7 @@ internal class YlMedia3Engine(
             }
         }) { kind -> if (!closed) callback?.invoke(identity, YlEngineEvent.Failed(kind)) }
     }
+    override val protectedSurface get() = protectedPlayback?.identity
     override val presentationIdentity get() = protectedOutput?.outputIdentity
     private var protectedDrm: YlMedia3DrmSessionManager? = null
     private var closeResult: CompletableDeferred<Unit>? = null
@@ -228,6 +229,7 @@ internal fun createMedia3Configuration(
 internal class YlMedia3SessionFactory(
     private val context: Context,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main,
+    private val protectedViews: YlProtectedViewRegistry? = null,
     private val createEngine: (YlSessionIdentity, AndroidSourceMessage, AndroidLoadOptionsMessage, AndroidPlayerOptionsMessage) -> YlPlaybackEngineAdapter =
         { identity, source, load, player -> YlMedia3Engine(context, identity, source, load, player, dispatcher) },
 ) : YlPlayerSessionFactory {
@@ -237,13 +239,18 @@ internal class YlMedia3SessionFactory(
         val playerId = ++nextPlayerId
         return { texture ->
             YlSessionCoordinator(playerId, options, YlVideoOutput(texture, ownsTexture = false),
-                YlPlaybackEngineFactory { identity, source, loadOptions ->
+                object : YlPlaybackEngineFactory {
+                  override fun createProtected(identity: YlSessionIdentity, source: AndroidSourceMessage, loadOptions: AndroidLoadOptionsMessage,
+                      playback: YlProtectedPlayback): YlPlaybackEngineAdapter =
+                      YlMedia3Engine(context, identity, source, loadOptions, options, dispatcher, playback)
+                  override fun create(identity: YlSessionIdentity, source: AndroidSourceMessage, loadOptions: AndroidLoadOptionsMessage): YlPlaybackEngineAdapter {
+
                     val primary = createEngine(identity, source, loadOptions, options)
-                    YlManagedAndroidEngine(identity, primary, {
+                    return YlManagedAndroidEngine(identity, primary, {
                         YlNativeFallbackEngine(context, identity, source, loadOptions, options, dispatcher)
                     }, dispatcher, allowFallback = !YlRtmpSourcePolicy.isRtmp(source) && source.format != AndroidMediaFormat.DASH &&
                         runCatching { java.net.URI(source.locator).path?.lowercase()?.endsWith(".mpd") }.getOrNull() != true)
-                }, dispatcher, audioFocus = { YlSharedAudioFocus.get(context) })
+                } }, dispatcher, audioFocus = { YlSharedAudioFocus.get(context) }, protectedViews = protectedViews)
         }
     }
 }

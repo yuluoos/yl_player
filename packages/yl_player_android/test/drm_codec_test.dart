@@ -3,7 +3,7 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'package:yl_player_android/src/android_codec.dart';
 
 void main() {
-  test('schema4 codec rejects DRM instead of dropping its configuration', () {
+  test('Widevine configuration survives encoding without license endpoint secrets', () {
     final endpoint = YlDrmLicenseEndpoint(Uri.parse('https://license.test'));
     final widevine = YlNetworkSource(
       Uri.parse('https://media.test/v'),
@@ -19,16 +19,11 @@ void main() {
         contentId: YlDrmBytes([2]),
       ),
     );
-    expect(
-      () => AndroidCodec.source(widevine),
-      throwsA(
-        isA<YlPlayerException>().having(
-          (e) => e.failure.code,
-          'code',
-          YlFailureCodes.drmUnsupported,
-        ),
-      ),
-    );
+    final dynamic encoded = AndroidCodec.source(widevine);
+    expect(encoded.drm.cbcs, isFalse);
+    expect(encoded.drm.timeoutMs, 10000);
+    // Endpoint and credentials never cross into native media requests.
+    expect(encoded.request?.credentials ?? {}, isEmpty);
     expect(
       () => AndroidCodec.source(fps),
       throwsA(
@@ -39,6 +34,6 @@ void main() {
         ),
       ),
     );
-    expect(AndroidCodec.schemaMajor, 4);
+    expect(AndroidCodec.schemaMajor, 5);
   });
 }

@@ -236,7 +236,7 @@ for compatible additions/removals. Its focused native evidence is 55/55
 review fix, followed by three targeted compiler passes per platform for that
 fix. These are separate runs, not a 56-test full rerun. The public playback
 evidence and its precise limits are in the [changing-ladders report](superpowers/reports/2026-09-24-apple-dash-changing-ladders.md).
-See [transport compatibility](transport-compatibility.md) for Android schema 4,
+See [transport compatibility](transport-compatibility.md) for Android schema 5 (DRM bridge),
 Apple schema 4 in the fixed-selection stage, and mixed-version safety. The
 earlier Apple adapter and caps reports describe the schema at their own dates.
 
@@ -472,3 +472,5 @@ No production DRM capability is enabled by these internal/mock tests.
 P06 Task 3B1 补齐内部 Media3 DrmSession 适配、引用释放与禁止非安全 decoder 查询；尚未连接生产 Media3 core/source factory、保护 view 或许可证 Pigeon，不构成 DRM 播放支持。视频硬件 metadata 证据仍要求 API29+；系统 L1 API28+ 与整包 API24 下限分别保留。
 
 P06 Task 3B2 已连接 Android 内部安全候选输出、Media3 DRM manager、原生安全 SurfaceView 与会话替换/回滚。四元组/输出 revision/attach ACK 隔离旧帧；不允许明文 fallback。尚无 Dart/Pigeon 完整入口与真机授权证据，生产 DRM 支持仍未开放。
+
+P06 Task 3B3 已实现 Android schema5 公共 Widevine 配置、Pigeon 密钥交换/取消、Task2 许可证 POST 与受保护视图描述符/ACK。API29+ 且系统识别 Widevine 才进入逐源检查；实际播放仍须安全 output、L1、实际硬件 secure decoder 与 keys usable，评估中的 unknown 不当作通过。保护路线使用显式 hybrid composition，仅支持 contain/center，拒绝非保护 fallback；明文路径保持原样。Apple DRM 留待3C。当前只有 JVM、Dart/真实 loopback POST 和 widget 组合证据，**没有授权内容解密或真机显示保护验收，CAP-DRM 未完成**。前述3A/3B1/3B2段落为各阶段交付时状态。

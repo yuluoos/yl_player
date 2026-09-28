@@ -512,7 +512,8 @@ data class AndroidCreateReply (
   val implementationName: String,
   val implementationVersion: String,
   val capabilities: AndroidCapabilitiesMessage,
-  val initialState: AndroidStateMessage
+  val initialState: AndroidStateMessage,
+  val drmSupport: AndroidDrmSupportMessage? = null
 )
  {
   companion object {
@@ -525,7 +526,8 @@ data class AndroidCreateReply (
       val implementationVersion = pigeonVar_list[5] as String
       val capabilities = pigeonVar_list[6] as AndroidCapabilitiesMessage
       val initialState = pigeonVar_list[7] as AndroidStateMessage
-      return AndroidCreateReply(schemaMajor, spiMajor, channelSuffix, textureId, implementationName, implementationVersion, capabilities, initialState)
+      val drmSupport = pigeonVar_list[8] as AndroidDrmSupportMessage?
+      return AndroidCreateReply(schemaMajor, spiMajor, channelSuffix, textureId, implementationName, implementationVersion, capabilities, initialState, drmSupport)
     }
   }
   fun toList(): List<Any?> {
@@ -538,6 +540,7 @@ data class AndroidCreateReply (
       implementationVersion,
       capabilities,
       initialState,
+      drmSupport,
     )
   }
   override fun equals(other: Any?): Boolean {
@@ -548,7 +551,7 @@ data class AndroidCreateReply (
       return true
     }
     val other = other as AndroidCreateReply
-    return YlPlayerAndroidPigeonUtils.deepEquals(this.schemaMajor, other.schemaMajor) && YlPlayerAndroidPigeonUtils.deepEquals(this.spiMajor, other.spiMajor) && YlPlayerAndroidPigeonUtils.deepEquals(this.channelSuffix, other.channelSuffix) && YlPlayerAndroidPigeonUtils.deepEquals(this.textureId, other.textureId) && YlPlayerAndroidPigeonUtils.deepEquals(this.implementationName, other.implementationName) && YlPlayerAndroidPigeonUtils.deepEquals(this.implementationVersion, other.implementationVersion) && YlPlayerAndroidPigeonUtils.deepEquals(this.capabilities, other.capabilities) && YlPlayerAndroidPigeonUtils.deepEquals(this.initialState, other.initialState)
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.schemaMajor, other.schemaMajor) && YlPlayerAndroidPigeonUtils.deepEquals(this.spiMajor, other.spiMajor) && YlPlayerAndroidPigeonUtils.deepEquals(this.channelSuffix, other.channelSuffix) && YlPlayerAndroidPigeonUtils.deepEquals(this.textureId, other.textureId) && YlPlayerAndroidPigeonUtils.deepEquals(this.implementationName, other.implementationName) && YlPlayerAndroidPigeonUtils.deepEquals(this.implementationVersion, other.implementationVersion) && YlPlayerAndroidPigeonUtils.deepEquals(this.capabilities, other.capabilities) && YlPlayerAndroidPigeonUtils.deepEquals(this.initialState, other.initialState) && YlPlayerAndroidPigeonUtils.deepEquals(this.drmSupport, other.drmSupport)
   }
 
   override fun hashCode(): Int {
@@ -561,10 +564,11 @@ data class AndroidCreateReply (
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.implementationVersion)
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.capabilities)
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.initialState)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.drmSupport)
     return result
   }
   override fun toString(): String {
-    return "AndroidCreateReply(schemaMajor=$schemaMajor, spiMajor=$spiMajor, channelSuffix=$channelSuffix, textureId=$textureId, implementationName=$implementationName, implementationVersion=$implementationVersion, capabilities=$capabilities, initialState=$initialState)"
+    return "AndroidCreateReply(schemaMajor=$schemaMajor, spiMajor=$spiMajor, channelSuffix=$channelSuffix, textureId=$textureId, implementationName=$implementationName, implementationVersion=$implementationVersion, capabilities=$capabilities, initialState=$initialState, drmSupport=$drmSupport)"
   }
 }
 
@@ -742,7 +746,8 @@ data class AndroidSourceMessage (
   val intent: AndroidStreamIntent,
   val format: AndroidMediaFormat,
   val request: AndroidHttpRequestMessage? = null,
-  val networkPolicy: AndroidNetworkPolicyMessage? = null
+  val networkPolicy: AndroidNetworkPolicyMessage? = null,
+  val drm: AndroidDrmConfigMessage? = null
 )
  {
   companion object {
@@ -753,7 +758,8 @@ data class AndroidSourceMessage (
       val format = pigeonVar_list[3] as AndroidMediaFormat
       val request = pigeonVar_list[4] as AndroidHttpRequestMessage?
       val networkPolicy = pigeonVar_list[5] as AndroidNetworkPolicyMessage?
-      return AndroidSourceMessage(kind, locator, intent, format, request, networkPolicy)
+      val drm = pigeonVar_list[6] as AndroidDrmConfigMessage?
+      return AndroidSourceMessage(kind, locator, intent, format, request, networkPolicy, drm)
     }
   }
   fun toList(): List<Any?> {
@@ -764,6 +770,7 @@ data class AndroidSourceMessage (
       format,
       request,
       networkPolicy,
+      drm,
     )
   }
   override fun equals(other: Any?): Boolean {
@@ -774,7 +781,7 @@ data class AndroidSourceMessage (
       return true
     }
     val other = other as AndroidSourceMessage
-    return YlPlayerAndroidPigeonUtils.deepEquals(this.kind, other.kind) && YlPlayerAndroidPigeonUtils.deepEquals(this.locator, other.locator) && YlPlayerAndroidPigeonUtils.deepEquals(this.intent, other.intent) && YlPlayerAndroidPigeonUtils.deepEquals(this.format, other.format) && YlPlayerAndroidPigeonUtils.deepEquals(this.request, other.request) && YlPlayerAndroidPigeonUtils.deepEquals(this.networkPolicy, other.networkPolicy)
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.kind, other.kind) && YlPlayerAndroidPigeonUtils.deepEquals(this.locator, other.locator) && YlPlayerAndroidPigeonUtils.deepEquals(this.intent, other.intent) && YlPlayerAndroidPigeonUtils.deepEquals(this.format, other.format) && YlPlayerAndroidPigeonUtils.deepEquals(this.request, other.request) && YlPlayerAndroidPigeonUtils.deepEquals(this.networkPolicy, other.networkPolicy) && YlPlayerAndroidPigeonUtils.deepEquals(this.drm, other.drm)
   }
 
   override fun hashCode(): Int {
@@ -785,10 +792,11 @@ data class AndroidSourceMessage (
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.format)
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.request)
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.networkPolicy)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.drm)
     return result
   }
   override fun toString(): String {
-    return "AndroidSourceMessage(kind=$kind, locator=$locator, intent=$intent, format=$format, request=$request, networkPolicy=$networkPolicy)"
+    return "AndroidSourceMessage(kind=$kind, locator=$locator, intent=$intent, format=$format, request=$request, networkPolicy=$networkPolicy, drm=$drm)"
   }
 }
 
@@ -1081,20 +1089,23 @@ data class AndroidAssessmentReply (
 /** Generated class from Pigeon that represents data sent in messages. */
 data class AndroidLoadReply (
   val loadRequestId: String,
-  val sessionId: String
+  val sessionId: String,
+  val protectedSurface: AndroidProtectedSurfaceMessage? = null
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): AndroidLoadReply {
       val loadRequestId = pigeonVar_list[0] as String
       val sessionId = pigeonVar_list[1] as String
-      return AndroidLoadReply(loadRequestId, sessionId)
+      val protectedSurface = pigeonVar_list[2] as AndroidProtectedSurfaceMessage?
+      return AndroidLoadReply(loadRequestId, sessionId, protectedSurface)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
       loadRequestId,
       sessionId,
+      protectedSurface,
     )
   }
   override fun equals(other: Any?): Boolean {
@@ -1105,17 +1116,18 @@ data class AndroidLoadReply (
       return true
     }
     val other = other as AndroidLoadReply
-    return YlPlayerAndroidPigeonUtils.deepEquals(this.loadRequestId, other.loadRequestId) && YlPlayerAndroidPigeonUtils.deepEquals(this.sessionId, other.sessionId)
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.loadRequestId, other.loadRequestId) && YlPlayerAndroidPigeonUtils.deepEquals(this.sessionId, other.sessionId) && YlPlayerAndroidPigeonUtils.deepEquals(this.protectedSurface, other.protectedSurface)
   }
 
   override fun hashCode(): Int {
     var result = javaClass.hashCode()
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.loadRequestId)
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.sessionId)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.protectedSurface)
     return result
   }
   override fun toString(): String {
-    return "AndroidLoadReply(loadRequestId=$loadRequestId, sessionId=$sessionId)"
+    return "AndroidLoadReply(loadRequestId=$loadRequestId, sessionId=$sessionId, protectedSurface=$protectedSurface)"
   }
 }
 
@@ -2323,6 +2335,374 @@ data class AndroidVideoSelectionMessage (
     return "AndroidVideoSelectionMessage(fixedTrackId=$fixedTrackId, reason=$reason)"
   }
 }
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class AndroidDrmConfigMessage (
+  val cbcs: Boolean,
+  val timeoutMs: Long
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): AndroidDrmConfigMessage {
+      val cbcs = pigeonVar_list[0] as Boolean
+      val timeoutMs = pigeonVar_list[1] as Long
+      return AndroidDrmConfigMessage(cbcs, timeoutMs)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      cbcs,
+      timeoutMs,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as AndroidDrmConfigMessage
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.cbcs, other.cbcs) && YlPlayerAndroidPigeonUtils.deepEquals(this.timeoutMs, other.timeoutMs)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.cbcs)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.timeoutMs)
+    return result
+  }
+  override fun toString(): String {
+    return "AndroidDrmConfigMessage(cbcs=$cbcs, timeoutMs=$timeoutMs)"
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class AndroidDrmSupportMessage (
+  val contractVersion: Long,
+  val playerId: Long,
+  val androidApi: Long,
+  val schemeAvailable: Boolean
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): AndroidDrmSupportMessage {
+      val contractVersion = pigeonVar_list[0] as Long
+      val playerId = pigeonVar_list[1] as Long
+      val androidApi = pigeonVar_list[2] as Long
+      val schemeAvailable = pigeonVar_list[3] as Boolean
+      return AndroidDrmSupportMessage(contractVersion, playerId, androidApi, schemeAvailable)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      contractVersion,
+      playerId,
+      androidApi,
+      schemeAvailable,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as AndroidDrmSupportMessage
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.contractVersion, other.contractVersion) && YlPlayerAndroidPigeonUtils.deepEquals(this.playerId, other.playerId) && YlPlayerAndroidPigeonUtils.deepEquals(this.androidApi, other.androidApi) && YlPlayerAndroidPigeonUtils.deepEquals(this.schemeAvailable, other.schemeAvailable)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.contractVersion)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.playerId)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.androidApi)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.schemeAvailable)
+    return result
+  }
+  override fun toString(): String {
+    return "AndroidDrmSupportMessage(contractVersion=$contractVersion, playerId=$playerId, androidApi=$androidApi, schemeAvailable=$schemeAvailable)"
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class AndroidProtectedSurfaceMessage (
+  val playerId: Long,
+  val surfaceId: Long,
+  val sessionId: String,
+  val generation: Long
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): AndroidProtectedSurfaceMessage {
+      val playerId = pigeonVar_list[0] as Long
+      val surfaceId = pigeonVar_list[1] as Long
+      val sessionId = pigeonVar_list[2] as String
+      val generation = pigeonVar_list[3] as Long
+      return AndroidProtectedSurfaceMessage(playerId, surfaceId, sessionId, generation)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      playerId,
+      surfaceId,
+      sessionId,
+      generation,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as AndroidProtectedSurfaceMessage
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.playerId, other.playerId) && YlPlayerAndroidPigeonUtils.deepEquals(this.surfaceId, other.surfaceId) && YlPlayerAndroidPigeonUtils.deepEquals(this.sessionId, other.sessionId) && YlPlayerAndroidPigeonUtils.deepEquals(this.generation, other.generation)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.playerId)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.surfaceId)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.sessionId)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.generation)
+    return result
+  }
+  override fun toString(): String {
+    return "AndroidProtectedSurfaceMessage(playerId=$playerId, surfaceId=$surfaceId, sessionId=$sessionId, generation=$generation)"
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class AndroidProtectedViewCommand (
+  val surface: AndroidProtectedSurfaceMessage,
+  val viewId: Long
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): AndroidProtectedViewCommand {
+      val surface = pigeonVar_list[0] as AndroidProtectedSurfaceMessage
+      val viewId = pigeonVar_list[1] as Long
+      return AndroidProtectedViewCommand(surface, viewId)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      surface,
+      viewId,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as AndroidProtectedViewCommand
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.surface, other.surface) && YlPlayerAndroidPigeonUtils.deepEquals(this.viewId, other.viewId)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.surface)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.viewId)
+    return result
+  }
+  override fun toString(): String {
+    return "AndroidProtectedViewCommand(surface=$surface, viewId=$viewId)"
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class AndroidProtectedViewAck (
+  val surface: AndroidProtectedSurfaceMessage,
+  val viewId: Long,
+  val revision: Long,
+  val attached: Boolean
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): AndroidProtectedViewAck {
+      val surface = pigeonVar_list[0] as AndroidProtectedSurfaceMessage
+      val viewId = pigeonVar_list[1] as Long
+      val revision = pigeonVar_list[2] as Long
+      val attached = pigeonVar_list[3] as Boolean
+      return AndroidProtectedViewAck(surface, viewId, revision, attached)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      surface,
+      viewId,
+      revision,
+      attached,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as AndroidProtectedViewAck
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.surface, other.surface) && YlPlayerAndroidPigeonUtils.deepEquals(this.viewId, other.viewId) && YlPlayerAndroidPigeonUtils.deepEquals(this.revision, other.revision) && YlPlayerAndroidPigeonUtils.deepEquals(this.attached, other.attached)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.surface)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.viewId)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.revision)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.attached)
+    return result
+  }
+  override fun toString(): String {
+    return "AndroidProtectedViewAck(surface=$surface, viewId=$viewId, revision=$revision, attached=$attached)"
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class AndroidDrmExchangeId (
+  val surface: AndroidProtectedSurfaceMessage,
+  val loadRequestId: String,
+  val epoch: Long,
+  val requestId: Long,
+  val exchangeId: String
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): AndroidDrmExchangeId {
+      val surface = pigeonVar_list[0] as AndroidProtectedSurfaceMessage
+      val loadRequestId = pigeonVar_list[1] as String
+      val epoch = pigeonVar_list[2] as Long
+      val requestId = pigeonVar_list[3] as Long
+      val exchangeId = pigeonVar_list[4] as String
+      return AndroidDrmExchangeId(surface, loadRequestId, epoch, requestId, exchangeId)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      surface,
+      loadRequestId,
+      epoch,
+      requestId,
+      exchangeId,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as AndroidDrmExchangeId
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.surface, other.surface) && YlPlayerAndroidPigeonUtils.deepEquals(this.loadRequestId, other.loadRequestId) && YlPlayerAndroidPigeonUtils.deepEquals(this.epoch, other.epoch) && YlPlayerAndroidPigeonUtils.deepEquals(this.requestId, other.requestId) && YlPlayerAndroidPigeonUtils.deepEquals(this.exchangeId, other.exchangeId)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.surface)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.loadRequestId)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.epoch)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.requestId)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.exchangeId)
+    return result
+  }
+  override fun toString(): String {
+    return "AndroidDrmExchangeId(surface=$surface, loadRequestId=$loadRequestId, epoch=$epoch, requestId=$requestId, exchangeId=$exchangeId)"
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class AndroidDrmLicenseRequest (
+  val id: AndroidDrmExchangeId,
+  val challenge: ByteArray
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): AndroidDrmLicenseRequest {
+      val id = pigeonVar_list[0] as AndroidDrmExchangeId
+      val challenge = pigeonVar_list[1] as ByteArray
+      return AndroidDrmLicenseRequest(id, challenge)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      id,
+      challenge,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as AndroidDrmLicenseRequest
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.id, other.id) && YlPlayerAndroidPigeonUtils.deepEquals(this.challenge, other.challenge)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.id)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.challenge)
+    return result
+  }
+  override fun toString(): String {
+    return "AndroidDrmLicenseRequest(id=$id, challenge=${challenge.contentToString()})"
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class AndroidDrmLicenseReply (
+  val id: AndroidDrmExchangeId,
+  val response: ByteArray? = null,
+  val failureCode: String? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): AndroidDrmLicenseReply {
+      val id = pigeonVar_list[0] as AndroidDrmExchangeId
+      val response = pigeonVar_list[1] as ByteArray?
+      val failureCode = pigeonVar_list[2] as String?
+      return AndroidDrmLicenseReply(id, response, failureCode)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      id,
+      response,
+      failureCode,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as AndroidDrmLicenseReply
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.id, other.id) && YlPlayerAndroidPigeonUtils.deepEquals(this.response, other.response) && YlPlayerAndroidPigeonUtils.deepEquals(this.failureCode, other.failureCode)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.id)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.response)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.failureCode)
+    return result
+  }
+  override fun toString(): String {
+    return "AndroidDrmLicenseReply(id=$id, response=${response?.contentToString()}, failureCode=$failureCode)"
+  }
+}
 private open class YlPlayerAndroidPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
@@ -2581,6 +2961,46 @@ private open class YlPlayerAndroidPigeonCodec : StandardMessageCodec() {
           AndroidVideoSelectionMessage.fromList(it)
         }
       }
+      180.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          AndroidDrmConfigMessage.fromList(it)
+        }
+      }
+      181.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          AndroidDrmSupportMessage.fromList(it)
+        }
+      }
+      182.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          AndroidProtectedSurfaceMessage.fromList(it)
+        }
+      }
+      183.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          AndroidProtectedViewCommand.fromList(it)
+        }
+      }
+      184.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          AndroidProtectedViewAck.fromList(it)
+        }
+      }
+      185.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          AndroidDrmExchangeId.fromList(it)
+        }
+      }
+      186.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          AndroidDrmLicenseRequest.fromList(it)
+        }
+      }
+      187.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          AndroidDrmLicenseReply.fromList(it)
+        }
+      }
       else -> super.readValueOfType(type, buffer)
     }
   }
@@ -2788,6 +3208,38 @@ private open class YlPlayerAndroidPigeonCodec : StandardMessageCodec() {
       }
       is AndroidVideoSelectionMessage -> {
         stream.write(179)
+        writeValue(stream, value.toList())
+      }
+      is AndroidDrmConfigMessage -> {
+        stream.write(180)
+        writeValue(stream, value.toList())
+      }
+      is AndroidDrmSupportMessage -> {
+        stream.write(181)
+        writeValue(stream, value.toList())
+      }
+      is AndroidProtectedSurfaceMessage -> {
+        stream.write(182)
+        writeValue(stream, value.toList())
+      }
+      is AndroidProtectedViewCommand -> {
+        stream.write(183)
+        writeValue(stream, value.toList())
+      }
+      is AndroidProtectedViewAck -> {
+        stream.write(184)
+        writeValue(stream, value.toList())
+      }
+      is AndroidDrmExchangeId -> {
+        stream.write(185)
+        writeValue(stream, value.toList())
+      }
+      is AndroidDrmLicenseRequest -> {
+        stream.write(186)
+        writeValue(stream, value.toList())
+      }
+      is AndroidDrmLicenseReply -> {
+        stream.write(187)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -3228,6 +3680,149 @@ class AndroidPlayerFlutterApi(private val binaryMessenger: BinaryMessenger, priv
       val channelName = "dev.flutter.pigeon.yl_player_android.AndroidPlayerFlutterApi.onPlaybackFailed$separatedMessageChannelSuffix"
       val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
       channel.send(listOf(eventArg)) {
+        if (it is List<*>) {
+          if (it.size > 1) {
+            continuation.resumeWithException(FlutterError(it[0] as String, it[1] as String, it[2] as String?))
+          } else {
+            continuation.resume(Unit)
+          }
+        } else {
+          continuation.resumeWithException(YlPlayerAndroidPigeonUtils.createConnectionError(channelName))
+        } 
+      }
+    }
+  }
+}
+/** Generated interface from Pigeon that represents a handler of messages from Flutter. */
+interface AndroidDrmHostApi {
+  fun cancelProtectedLoad(loadRequestId: String)
+  suspend fun attachProtectedView(command: AndroidProtectedViewCommand): AndroidProtectedViewAck
+  suspend fun detachProtectedView(command: AndroidProtectedViewCommand): AndroidProtectedViewAck
+
+  companion object {
+    /** The codec used by AndroidDrmHostApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      YlPlayerAndroidPigeonCodec()
+    }
+    /** Sets up an instance of `AndroidDrmHostApi` to handle messages through the `binaryMessenger`. */
+    @JvmOverloads
+    fun setUp(binaryMessenger: BinaryMessenger, api: AndroidDrmHostApi?, messageChannelSuffix: String = "") {
+      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.yl_player_android.AndroidDrmHostApi.cancelProtectedLoad$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val loadRequestIdArg = args[0] as String
+            val wrapped: List<Any?> = try {
+              api.cancelProtectedLoad(loadRequestIdArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              YlPlayerAndroidPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.yl_player_android.AndroidDrmHostApi.attachProtectedView$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val commandArg = args[0] as AndroidProtectedViewCommand
+            CoroutineScope(Dispatchers.Main).launch {
+              val wrapped: List<Any?> = try {
+                listOf(api.attachProtectedView(commandArg))
+              } catch (exception: Throwable) {
+                YlPlayerAndroidPigeonUtils.wrapError(exception)
+              }
+              reply.reply(wrapped)
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.yl_player_android.AndroidDrmHostApi.detachProtectedView$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val commandArg = args[0] as AndroidProtectedViewCommand
+            CoroutineScope(Dispatchers.Main).launch {
+              val wrapped: List<Any?> = try {
+                listOf(api.detachProtectedView(commandArg))
+              } catch (exception: Throwable) {
+                YlPlayerAndroidPigeonUtils.wrapError(exception)
+              }
+              reply.reply(wrapped)
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+    }
+  }
+}
+/** Generated class from Pigeon that represents Flutter messages that can be called from Kotlin. */
+class AndroidDrmFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
+  companion object {
+    /** The codec used by AndroidDrmFlutterApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      YlPlayerAndroidPigeonCodec()
+    }
+  }
+  suspend fun exchangeLicense(requestArg: AndroidDrmLicenseRequest): AndroidDrmLicenseReply
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    return suspendCancellableCoroutine { continuation ->
+      val channelName = "dev.flutter.pigeon.yl_player_android.AndroidDrmFlutterApi.exchangeLicense$separatedMessageChannelSuffix"
+      val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+      channel.send(listOf(requestArg)) {
+        if (it is List<*>) {
+          if (it.size > 1) {
+            continuation.resumeWithException(FlutterError(it[0] as String, it[1] as String, it[2] as String?))
+          } else if (it[0] == null) {
+            continuation.resumeWithException(FlutterError("null-error", "Flutter api returned null value for non-null return value.", ""))
+          } else {
+            val output = it[0] as AndroidDrmLicenseReply
+            continuation.resume(output)
+          }
+        } else {
+          continuation.resumeWithException(YlPlayerAndroidPigeonUtils.createConnectionError(channelName))
+        } 
+      }
+    }
+  }
+  suspend fun cancelLicense(idArg: AndroidDrmExchangeId)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    return suspendCancellableCoroutine { continuation ->
+      val channelName = "dev.flutter.pigeon.yl_player_android.AndroidDrmFlutterApi.cancelLicense$separatedMessageChannelSuffix"
+      val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+      channel.send(listOf(idArg)) {
+        if (it is List<*>) {
+          if (it.size > 1) {
+            continuation.resumeWithException(FlutterError(it[0] as String, it[1] as String, it[2] as String?))
+          } else {
+            continuation.resume(Unit)
+          }
+        } else {
+          continuation.resumeWithException(YlPlayerAndroidPigeonUtils.createConnectionError(channelName))
+        } 
+      }
+    }
+  }
+  suspend fun onProtectedFrame(frameArg: AndroidProtectedViewAck)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    return suspendCancellableCoroutine { continuation ->
+      val channelName = "dev.flutter.pigeon.yl_player_android.AndroidDrmFlutterApi.onProtectedFrame$separatedMessageChannelSuffix"
+      val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+      channel.send(listOf(frameArg)) {
         if (it is List<*>) {
           if (it.size > 1) {
             continuation.resumeWithException(FlutterError(it[0] as String, it[1] as String, it[2] as String?))

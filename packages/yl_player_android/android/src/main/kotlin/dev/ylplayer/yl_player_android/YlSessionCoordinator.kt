@@ -33,6 +33,9 @@ internal class YlSessionCoordinator(
     clockMs: () -> Long = SystemClock::elapsedRealtime,
     private val decoderEvidence: YlDecoderEvidenceProvider = YlDecoderEvidenceProvider.collect(),
     private val audioFocus: (() -> YlAudioFocusCoordinator)? = null,
+    private val protectedViews: YlProtectedViewRegistry? = null,
+    private val drmDevice: () -> Pair<Int, Boolean> = { android.os.Build.VERSION.SDK_INT to
+        runCatching { android.media.MediaDrm.isCryptoSchemeSupported(YL_WIDEVINE_UUID) }.getOrDefault(false) },
 ) : YlPlayerSession {
     private val scope = CoroutineScope(SupervisorJob() + dispatcher)
     private val cleanup = CoroutineScope(SupervisorJob() + dispatcher)
@@ -44,6 +47,7 @@ internal class YlSessionCoordinator(
     private val owned = mutableSetOf<YlPlaybackEngineAdapter>()
     private var active: YlPreparedSession? = null
     private var pending: Deferred<AndroidLoadReply>? = null
+    private var pendingLoadRequestId: String? = null
     private var pendingCommitted = false
     private var autoplayPending: YlSessionIdentity? = null
     private var pendingIdentity: YlSessionIdentity? = null
@@ -149,21 +153,43 @@ internal class YlSessionCoordinator(
         listOf(AndroidEngine.MEDIA3, AndroidEngine.MANAGED_FALLBACK), AndroidDecoderEvidence.HARDWARE_AND_SOFTWARE,
         hardwareVideoCodecs = decoderEvidence.hardwareCodecs,
         supportedOperations = AndroidPlayerOperation.entries)
+    private var drmBridge: YlDrmBridge? = null
+    override val drmSupport get() = protectedViews?.let { val (api, scheme) = drmDevice(); AndroidDrmSupportMessage(1, playerId, api.toLong(), scheme) }
+    override fun bindDrm(bridge: YlDrmBridge) { check(bridge.playerId == playerId); drmBridge = bridge; bridge.cancelPending = ::cancelProtectedLoad }
+    fun cancelProtectedLoad(requestId: String) {
+        checkOpen()
+        if (pendingLoadRequestId == requestId && !pendingCommitted) {
+            pending?.cancel()
+            leases.cancel(playerId.toString())
+        }
+    }
     private var eventSink: YlPlayerEventSink? = null
     override fun attach(events: YlPlayerEventSink) { eventSink = events; reducer.attach(events) }
     override fun assess(request: AndroidAssessRequest): AndroidAssessmentReply {
         checkOpen()
+        if (request.source.drm != null) {
+            val error = drmAdmission()
+            if (error != null) return AndroidAssessmentReply(AndroidAssessmentOutcome.INCOMPATIBLE, AndroidEngine.MEDIA3,
+                emptyList(), emptyList(), YlFailureMapper().toMessage(YlBoundaryException(error)))
+        }
         return assessment.assess(request.source, request.options, request.options.decoderPolicyOverride ?: options.decoderPolicy)
+    }
+    private fun drmAdmission(): YlFailureKind? = when {
+        protectedViews == null || drmBridge == null -> YlFailureKind.DRM_UNSUPPORTED
+        (drmSupport?.androidApi ?: 0) < 29 -> YlFailureKind.DRM_PROTECTION_INSUFFICIENT
+        drmSupport?.schemeAvailable != true -> YlFailureKind.DRM_UNSUPPORTED
+        else -> null
     }
     private val assessment = YlSourceAssessment(decoderEvidence)
     private fun validate(source: AndroidSourceMessage, load: AndroidLoadOptionsMessage) {
+        if (source.drm != null) drmAdmission()?.let { throw YlBoundaryException(it) }
         val decision = assessment.assess(source, load, load.decoderPolicyOverride ?: options.decoderPolicy)
         decision.rejection?.let { throw YlBoundaryException(when (it.code) {
             "policy.unsupported" -> YlFailureKind.POLICY_UNSUPPORTED
             "decoder.unavailable" -> YlFailureKind.DECODER_UNAVAILABLE
             "network.protocol_unsupported" -> YlFailureKind.NETWORK_PROTOCOL_UNSUPPORTED
             "container.unsupported" -> YlFailureKind.CONTAINER_UNSUPPORTED
-            else -> YlFailureKind.SOURCE_INVALID
+            else -> YlFailureKind.entries.firstOrNull { kind -> kind.code == it.code } ?: YlFailureKind.SOURCE_INVALID
         }) }
     }
     override suspend fun load(request: AndroidLoadRequest): AndroidLoadReply {
@@ -195,7 +221,12 @@ internal class YlSessionCoordinator(
                 candidateBackend = null
                 candidateRetries.clear()
                 try {
-                    val engine = engines.create(identity, request.source, request.options)
+                    val engine = request.source.drm?.let { drm ->
+                        val bridge = checkNotNull(drmBridge)
+                        val viewIdentity = bridge.views.nextIdentity(playerId, identity.sessionId)
+                        engines.createProtected(identity, request.source, request.options,
+                            YlProtectedPlayback(viewIdentity, bridge.views, drm.cbcs, drm.timeoutMs) { key -> bridge.exchange(identity.loadRequestId, key) })
+                    } ?: engines.create(identity, request.source, request.options)
                     owned += engine
                     candidateEngine = engine
                     candidate = YlPreparedSession(identity, request.source, request.options, engine,
@@ -247,7 +278,7 @@ internal class YlSessionCoordinator(
                         candidateFailure?.let { throw YlBoundaryException(it) }
                         checkGeneration(token)
                     }
-                    AndroidLoadReply(identity.loadRequestId, identity.sessionId)
+                    AndroidLoadReply(identity.loadRequestId, identity.sessionId, engine.protectedSurface?.wire())
                 } catch (error: Throwable) {
                     if (!committed) withContext(NonCancellable) {
                         candidate?.engine?.let { runCatching { releaseEngine(it).await() } }
@@ -262,8 +293,9 @@ internal class YlSessionCoordinator(
             }
         }
         pending = task
+        pendingLoadRequestId = request.loadRequestId
         try { return task.await() }
-        finally { if (!task.isCompleted) task.cancel(); if (pending === task) pending = null }
+        finally { if (!task.isCompleted) task.cancel(); if (pending === task) { pending = null; pendingLoadRequestId = null } }
     }
     private inner class SessionLease(
         val session: YlPreparedSession,

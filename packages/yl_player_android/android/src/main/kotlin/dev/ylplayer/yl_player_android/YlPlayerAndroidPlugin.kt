@@ -20,7 +20,7 @@ class YlPlayerAndroidPlugin :
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         val views = YlProtectedViewRegistry().also { protectedViews = it }
-        val owner = YlPlayerRegistry(binding.binaryMessenger, binding.textureRegistry, YlMedia3SessionFactory(binding.applicationContext), failures)
+        val owner = YlPlayerRegistry(binding.binaryMessenger, binding.textureRegistry, YlMedia3SessionFactory(binding.applicationContext, protectedViews = views), failures, protectedViews = views)
         registry = owner
         try {
             val platformViews = binding.platformViewRegistry

@@ -5,7 +5,7 @@ import 'pigeon/yl_player_android.g.dart';
 
 /// The schema boundary. Generated values never escape this package.
 abstract final class AndroidCodec {
-  static const schemaMajor = 4;
+  static const schemaMajor = 5;
   static const _maxDurationMs = 9223372036854775;
   static final _metadata = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$');
 
@@ -107,10 +107,10 @@ abstract final class AndroidCodec {
 
   static AndroidSourceMessage source(YlMediaSource value) {
     validateYlSource(value);
-    if (value is YlNetworkSource && value.drm != null) {
-      validateYlDrmPlatform(value.drm!, TargetPlatform.android);
-      // Schema 4 has no DRM fields: fail before serializing a clear source.
-      throw ylDrmException(YlFailureCodes.drmUnsupported);
+    if (value is YlNetworkSource &&
+        value.drm != null &&
+        value.drm is! YlWidevineDrm) {
+      throw ylDrmException(YlFailureCodes.drmSchemeMismatch);
     }
     final commonIntent = _intent(value.intent);
     final commonFormat = _format(value.format);
@@ -130,6 +130,14 @@ abstract final class AndroidCodec {
       YlNetworkSource() => AndroidSourceMessage(
         kind: AndroidSourceKind.network,
         locator: value.uri.toString(),
+        drm: value.drm is YlWidevineDrm
+            ? AndroidDrmConfigMessage(
+                cbcs:
+                    (value.drm! as YlWidevineDrm).encryption ==
+                    YlDrmEncryption.cbcs,
+                timeoutMs: value.drm!.license.timeout.inMilliseconds,
+              )
+            : null,
         intent: commonIntent,
         format: commonFormat,
         request: AndroidHttpRequestMessage(

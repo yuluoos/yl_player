@@ -155,3 +155,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-09-27 P06 Task 3B1 已完成内部 Media3 DRM 会话消费与安全 decoder 查询边界；3B2 保护输出/候选事务、3B3 Pigeon/许可证连接仍未完成。生产 DRM 准入保持拒绝，CAP-DRM 不变。
 
 2026-09-28 P06 Task 3B2 完成 Android 原生安全视图与内部 Media3 候选/原子回滚路线；3B3 公共描述符、Pigeon/许可证桥接尚未完成。公开 DRM 准入继续拒绝，CAP-DRM 不变。
+
+2026-09-28 P06 Task 3B3 已完成 Android 公开 schema5 DRM 许可证/保护视图 ACK 桥接及 Task2 POST 连接，3B 工程集成完成。457 项 Android 原生测试通过（另3项既有外部 RTMP 跳过），289 项相关 Dart 回归及102项 Apple adapter 兼容回归通过。Android 保护路线须 API29+ 并通过逐会话密钥/实际 decoder/output 检查；CAP-DRM 未完成。下一项 Apple 3C，授权真机和物理输出验收仍留 Task4，详见 P06 报告。

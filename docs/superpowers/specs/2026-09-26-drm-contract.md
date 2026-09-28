@@ -1,6 +1,6 @@
 # DRM 契约：受保护显示与许可证边界（P06 Task 1/2）
 
-2026-09-27。需求依据：REQ-01/03/13/15，[需求基线](2026-09-20-playback-expansion-requirements.md)及 [P06](../plans/2026-09-26-remaining-06-drm.md)。本节冻结后续实现的显示边界；第 3 节生产显示类型是**待 Task 3 实现的接口约定**；第 6 节 Dart 配置和许可证传输已实现，现有适配器仍拒绝 DRM 播放。原型只在 example Debug 生效，不接受 DRM 配置，不获取许可证，不声明保护通过。
+2026-09-27。需求依据：REQ-01/03/13/15，[需求基线](2026-09-20-playback-expansion-requirements.md)及 [P06](../plans/2026-09-26-remaining-06-drm.md)。本节冻结后续实现的显示边界；第 3 节冻结生产显示接口；第 6 节 Dart 配置和许可证传输已实现。Android 3B3 的公共桥接现状见第11节，Apple 仍等待3C。原型只在 example Debug 生效，不接受 DRM 配置，不获取许可证，不声明保护通过。
 
 ## 1. 输出路线与现状
 
@@ -18,7 +18,7 @@
 
 | delivery | 允许的后续工程范围 | 当前状态 / 必须拒绝的情况 |
 | --- | --- | --- |
-| Android DASH + Widevine cenc | 项目 API24+；系统支持对应 UUID、实际 codec 与请求安全等级 | 未实现。设备能力/安全 decoder/原生 surface 任一不满足则拒绝；不把可用普通 decoder 当 secure decoder |
+| Android DASH + Widevine cenc | 项目 API24+；系统支持对应 UUID、实际 codec 与请求安全等级 | Android 公共工程路径已实现，当前视频硬件证据需 API29+；设备能力/安全 decoder/原生 surface 任一不满足则拒绝。授权真机未验收 |
 | Android DASH + Widevine cbcs | API25+，其余门槛相同 | API24 明确拒绝 cbcs，不提高整包 minSdk |
 | Apple HLS + FairPlay | iOS15/macOS12 项目下限内使用系统 FPS API；原生受保护显示 | 仅可行性原型。确切 HLS 加密封装、设备、证书/许可证与系统保护状态必须逐样本验证；不承诺任意加密 MPD 或两平台地址通用 |
 | 离线/永久许可证、跨 DRM 转换、外接 DV 信号 | 不属于本轮实现范围 | 不新增隐式支持；外接保护和 DV 输出分别验收 |
@@ -27,7 +27,7 @@ API 可用性来自本地 SDK：AVContentKeySession/FairPlay 常量为 macOS10.1
 
 官方依据（2026-09-27 核查）：[Media3 DRM 模式表](https://developer.android.com/media/media3/exoplayer/drm)、[SurfaceView.setSecure](https://developer.android.com/reference/android/view/SurfaceView#setSecure(boolean))、[Flutter 显式 hybrid composition](https://api.flutter.dev/flutter/services/PlatformViewsService/initExpensiveAndroidView.html)、[AVPlayerLayer 就绪含义](https://developer.apple.com/documentation/avfoundation/avplayerlayer/isreadyfordisplay)、[FairPlay Streaming 概览](https://developer.apple.com/streaming/fps/FairPlayStreamingOverview.pdf)。FPS 概览是历史架构文档，不代替当前设备/授权验收。
 
-## 3. 待实现的生产 view/bridge 契约
+## 3. 生产 view/bridge 契约（Android 已实现，Apple 待3C）
 
 新能力不得复用 `textureId` 表示保护级别，也不得插入旧 Pigeon enum ordinal。Task 2 增加可选配置准入标记；Task 3 随原生受保护会话增加独立消息；未实现能力的旧 adapter 对 DRM 请求在 load admission 阶段返回明确不支持，clear 请求保持兼容。
 
@@ -126,7 +126,6 @@ Android 系统 driver 使用 Widevine UUID、streaming key type、系统 L1 会�
 
 系统 API 依据：[MediaDrm.openSession(int)](https://developer.android.com/reference/android/media/MediaDrm#openSession(int))、[getSecurityLevel](https://developer.android.com/reference/android/media/MediaDrm#getSecurityLevel(byte[]))、[KeyStatus](https://developer.android.com/reference/android/media/MediaDrm.KeyStatus)，2026-09-27 核查。驱动忽略系统请求中的 defaultUrl，不自行联网。会话 owner dispatcher 上的 mutex 使外部系统调用及状态转换成为一个操作；即使注入内联 dispatcher，同步回调也需等该操作结束。许可证请求结束而仅等待 key-status 时，KEY_REQUIRED 可立即发起更新；不能等新许可证才能产生的 USABLE 来解锁更新。
 
-
 ## 9. Task 3B1：Media3 密钥会话消费（内部，未开放准入）
 
 `YlMedia3DrmSessionManager` 实现锁定 Media3 1.11 的实际 `DrmSessionManager`/`DrmSession` 接口，每个候选独立实例，绑定 Media3 提供的 playback Looper。声明的 cenc/cbcs 必须与格式一致；能力探测允许匹配 Widevine 元数据暂缺 PSSH，等初始化分片提供；实际 acquire 仅消费匹配 Widevine UUID、1..1MiB 的 MP4 初始化数据，缺数据仍拒绝。相同初始化数据在同一 prepare 周期共享引用；不同 Period/track 数据独立会话。同一格式若有不同 Widevine 初始化 payload 则明确拒绝，不猜测选取或拼接；不读取其 licenseServerUrl。clear 格式返回空 DRM session，不等于声明为受保护的整个 source 可以按 clear 准入，后续候选还需检查实际轨道。
@@ -138,7 +137,6 @@ Android 系统 driver 使用 Widevine UUID、streaming key type、系统 L1 会�
 `YlProtectedCodecSelector` 为后续保护 renderer 专用，所有查询强制 secure，拒绝非 secure codec。视频另须精确硬件 metadata 证据；现有证据采集 API29+ 才能满足，API28 的 L1 会话门槛本身不保证这一 decoder 条件。包 minSdk24 不变。Media3 可以在 secure 查询为空时再查询非 secure decoder，因此仅关闭 decoder fallback 或请求 L1 不够。后续 3B2 还需核查实际初始化 decoder 与安全输出；本类的可用候选列表不能代替实际证据。
 
 接口依据：[DrmSession 引用与状态](https://developer.android.com/reference/androidx/media3/exoplayer/drm/DrmSession)、[DrmSessionManager](https://developer.android.com/reference/androidx/media3/exoplayer/drm/DrmSessionManager)、[Media3 1.11 MediaCodecRenderer 的 secure fallback](https://github.com/androidx/media/blob/1.11.0/libraries/exoplayer/src/main/java/androidx/media3/exoplayer/mediacodec/MediaCodecRenderer.java)。本次仅以系统 fake 验证接口逻辑，没有真机解密、rotation/显示/HDCP 结论；生产 core/source factory/view/Pigeon 尚未接入这些内部类型。
-
 
 ## 10. Task 3B2：Android 原生保护输出与内部候选路线
 
@@ -155,3 +153,19 @@ Media3 最后一个 decoder 引用释放时，在该 owner 调用中同步撤销
 接口依据：[SurfaceHolder 销毁回调](https://developer.android.com/reference/android/view/SurfaceHolder.Callback#surfaceDestroyed(android.view.SurfaceHolder))、[Media3 首帧时间](https://developer.android.com/reference/androidx/media3/exoplayer/video/VideoRendererEventListener#onRenderedFirstFrame(java.lang.Object,long))，2026-09-28 核查。
 
 这一步不提供 Dart descriptor/provider 或 Pigeon attach/key 消息，属于已经规划的 3B3；公开 adapter 仍拒绝 DRM 配置。内部 route 已与 core/source/事务连接，不等于已完成公共端到端受保护播放。API29 硬件 evidence、API28 系统 L1 和整包 API24 门槛保持。
+
+## 11. Task 3B3：Android schema5 公共桥接（2026-09-28）
+
+本节更新前文阶段性现状：Android 已消费 Widevine source，Apple 仍明确拒绝（待3C）。Android Dart/native 必须一起升级 schema5；旧 schema 在工厂创建前拒绝，不因新增字段丢弃 DRM。既有 enum 和工厂请求 codec tag 不变，Apple schema4 不变。
+
+`AndroidDrmConfigMessage` 仅包含 cbcs 和许可证期限；URL、请求头和凭据留在 Dart `YlDrmLicenseEndpoint`。控制器通过可选 `YlPlatformDrmLicenseTransport` 注入既有 Task2 client；直接使用 SPI 的宿主须提供相同的 exchange delegate。取消 Future 在成功/失败结束时也完成，避免永久持有监听。许可证并发最多4个，每个存活会话最多4096个 exchangeId，重复请求不重复 POST，超限明确 resource.exhausted。
+
+独立生成的 `AndroidDrmFlutterApi` 发送许可证 challenge/response、取消和受保护帧 ACK；`AndroidDrmHostApi` 提供按 loadRequestId 取消候选、attach/detach。exchange 身份包含 playerId/surfaceId/sessionId/generation、loadRequestId、epoch/requestId/exchangeId，响应须精确回传；原生只接受许可证错误白名单，不把 HTTP 失败推断为过期。双方释放/停止/替换会取消对应 exchange；候选失败保留当前会话，迟到字节不安装。桥接通知最多等待5秒。
+
+加载回复提供独立的 `YlProtectedVideoSurface` 描述符，Dart 在会话回复与状态配对后才发布它。原生工厂只借用已提交的四元组；attach ACK 等待实际 worker 绑定，帧回调携带同一四元组/viewId/revision，首帧事件须与当前有效 ACK 配对后公开。dispose/unmount 仅解绑视图，不转移播放器所有权。
+
+`YlPlayerView` 对 Android 保护描述符使用 `initExpensiveAndroidView` 显式 hybrid composition，依靠原生黑色遮罩与等比居中布局，不使用 texture、Opacity、FittedBox 或像素回读。当前保护视图仅接受默认 contain/center；其他 fit/alignment 明确报配置错误，不能悄悄忽略。字幕 overlay、旋转、裁切和外接物理保护仍需后续组合/授权验收。
+
+系统 scheme 探测、桥接契约版本、API 门槛与实际保护证据分开：目前硬件 metadata 需要 API29，因此保护路线在 API24–28 明确拒绝（整包 minSdk24 不变）。评估报告 secureOutputUnknown/secureDecoderUnknown/protectionUnknown 和 keysRequireInspection；真正 load 仍须经过3B2的 secure output、实际初始化 decoder、L1 与 keys usable 检查。合同版本1不是全局 DRM 支持承诺，mock/普通 POST 测试也不证明物理解密播放成功。
+
+attach 的成功、失败和超时同时核验当前 surface/viewId 与独立 attempt token；重试同一 viewId 也会撤销旧 attempt。替换、stop、unmount、dispose 立即撤销其发布资格，旧错误不终止新会话。当前失败在身份检查的同一同步步骤发布，不能在异步 caller catch 中无条件终止播放器。许可证白名单保留 `drm.license_redirect_rejected`，拒绝重定向与一般网络失败可明确区分。

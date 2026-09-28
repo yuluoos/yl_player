@@ -2,7 +2,7 @@
 
 Endorsed Android implementation for `yl_player` 0.2. Applications should depend
 on `yl_player`; Flutter registers this package automatically. It targets Android
-7.0/API 24 or later and uses Media3 1.11.0 with a Flutter texture.
+7.0/API 24 or later and uses Media3 1.11.0. Clear media uses a Flutter texture.
 
 Media3 remains the primary route. When its extractor cannot expose video or its
 decoder cannot initialize, the package makes one managed fallback attempt:
@@ -44,3 +44,14 @@ VP9/AV1 software decoding, subtitles, downloads, persistent media cache, and
 background audio are outside
 the package. See the [support matrix](../../docs/platform-support.md) for route
 limits and the outstanding physical Android endurance evidence.
+
+The schema5 Widevine DASH route consumes `YlWidevineDrm` explicitly. Protected
+playback requires API29+ for hardware codec evidence, system Widevine/L1,
+secure output and usable keys. It uses a secure native SurfaceView with explicit
+hybrid composition; it cannot fall back to FFmpeg, software video or a texture.
+The current protected view supports contain/center layout. License POST runs
+through the controller's separate bounded Dart client; credentials are not
+copied to native media requests. Upgrade Dart/native packages together and
+rebuild the app. These engineering paths have local state-machine, wire, HTTP
+and widget tests; authorized device decryption/display protection is still
+unverified. See the [DRM contract](../../docs/superpowers/specs/2026-09-26-drm-contract.md).

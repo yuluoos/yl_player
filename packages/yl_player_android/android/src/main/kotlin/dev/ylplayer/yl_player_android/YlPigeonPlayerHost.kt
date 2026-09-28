@@ -20,6 +20,8 @@ import kotlinx.coroutines.*
 internal interface YlPlayerSession {
     val initialState: AndroidStateMessage
     val capabilities: AndroidCapabilitiesMessage
+    val drmSupport: AndroidDrmSupportMessage? get() = null
+    fun bindDrm(bridge: YlDrmBridge) {}
     fun bindLeases(leases: YlDecoderLeaseCoordinator) {}
     fun attach(events: YlPlayerEventSink)
     fun assess(request: AndroidAssessRequest): AndroidAssessmentReply
@@ -57,6 +59,7 @@ internal class YlPigeonPlayerHost(
     private val remove: suspend () -> Unit,
     private val terminate: () -> Unit,
     private val transportFailed: (Throwable) -> Unit,
+    private val drm: YlDrmBridge? = null,
 ) : AndroidPlayerHostApi {
     private val commandScope = CoroutineScope(SupervisorJob() + dispatcher)
     private val callbacks = YlCallbackDispatcher(
@@ -65,7 +68,10 @@ internal class YlPigeonPlayerHost(
     private var attached = false
     private var closed = false
 
-    fun install() = AndroidPlayerHostApi.setUp(messenger, this, suffix)
+    fun install() {
+        AndroidPlayerHostApi.setUp(messenger, this, suffix)
+        if (drm != null) AndroidDrmHostApi.setUp(messenger, drm, suffix)
+    }
 
     /** Registry invokes every cleanup step even if a preceding step fails. */
     fun invalidate(): List<Throwable> {
@@ -73,6 +79,7 @@ internal class YlPigeonPlayerHost(
         closed = true
         val errors = mutableListOf<Throwable>()
         fun attempt(action: () -> Unit) { try { action() } catch (error: Throwable) { errors += error } }
+        attempt { drm?.close() }
         attempt { callbacks.close() }
         attempt { commandScope.cancel() }
         // Continue generated handler removal if a messenger operation itself throws.
@@ -87,6 +94,7 @@ internal class YlPigeonPlayerHost(
             }
         }
         attempt { AndroidPlayerHostApi.setUp(cleanupMessenger, null, suffix) }
+        if (drm != null) attempt { AndroidDrmHostApi.setUp(cleanupMessenger, null, suffix) }
         return errors
     }
 
