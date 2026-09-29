@@ -16,13 +16,14 @@ actual source and requirements before Load.
 | HLS without request metadata | Supported | Supported; VOD HEVC-in-MPEG-TS media playlists use managed demux + VideoToolbox | Managed request rejected |
 | HLS with ordinary headers or credentials | Supported subject to Android origin filtering | Inspection-dependent controlled manifest/key/media-proxy route; same-origin credentials enforced | Managed request rejected |
 | Static clear DASH (`dash` or `.mpd`) | Owned Media3 1.11.0 DASH route; current validation described below | Inspection-dependent private HLS adaptation for a bounded static AVC/AAC fMP4 subset | Not selected |
-| Local Matroska | Supported subject to Media3 | Not selected | Inspection-dependent; supported H.264/H.265 video with AAC-LC/MP3 route |
+| Local Matroska | Supported subject to Media3 | Not selected | Inspection-dependent; supported H.264/H.265 video with supported compressed audio; FLAC scope below |
 | Network Matroska VOD | Supported subject to Media3 | Not selected | Inspection-dependent owned byte route |
 | Network Matroska marked live | Media3 route; runtime-dependent | Not selected | Rejected |
-| Network HTTP-FLV | Supported subject to Media3 | Not selected | Inspection-dependent sequential owned byte route |
+| Network HTTP-FLV | Supported subject to Media3 | Not selected | Inspection-dependent; automatic/live use sequential input, explicit onDemand supports VOD with seekability determined by HTTP Range |
 | Plain TCP RTMP, classic AVC with optional AAC | Owned bounded transport into Media3 FLV extractor; no fallback/retry nesting | Not selected | Owned bounded transport into custom AVIO/FLV and VideoToolbox |
 | RTMPS, enhanced RTMP, other RTMP codecs or audio-only RTMP | Explicitly unsupported | Not selected | Explicitly unsupported |
-| Local FLV or WebM | Media3 route; runtime-dependent | Not selected | Rejected until an inspected supported route is available |
+| Local FLV | Media3 route; runtime-dependent | Not selected | Inspection-dependent VOD; AVC/MP3 lifecycle measured on macOS |
+| Local WebM | Media3 route; runtime-dependent | Not selected | Rejected until supported video/audio paths are available |
 | AVI, MPEG-TS, or MPEG-PS request | Media3 route; runtime-dependent | Rejected before engine selection (`container.unsupported`, or `policy.unsupported` for a strict request) | Rejected before engine selection |
 | Unknown network format | Inspection-dependent | Inspection-dependent | Apple inspection reads at most the bounded 4096-byte signature window, then reassesses |
 
@@ -30,6 +31,15 @@ The Apple FFmpeg artifact enables Matroska, FLV, MP4, and MPEG-TS demuxing plus 
 documented parsers. It does not provide networking or software video decoding.
 Apple managed fallback requires a supported video stream; audio-only fallback
 media is currently rejected.
+
+Apple managed fallback now passes inspected FLAC STREAMINFO to the system audio
+converter for 16/24-bit mono/stereo. On Apple M1/macOS 27, two 48 kHz owned
+fixtures have independent sample-by-sample PCM verification, including short
+final frames and reset; the AVC/FLAC MKV file, HTTP, and renamed-file paths pass
+forward/backward seek and completion. Other bit depths and surround remain
+explicitly unsupported. Physical audio output, AV sync, iOS/Intel/minimum-OS
+runtime and other formats remain unverified; this does not claim complete
+CAP-FORMAT acceptance. See the [P03 report](superpowers/reports/2026-09-26-remaining-03-formats-decoding.md).
 
 For non-RTMP sources with formats other than DASH, Android first tries Media3, then makes at most one managed fallback attempt for
 container/extractor and decoder failures. The fallback uses package-owned local,

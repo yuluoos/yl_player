@@ -12,7 +12,7 @@ import subprocess
 import tempfile
 import urllib.request
 
-ACCEPTED_LOCK_SHA256 = 'b9157bf0b5d9ffd4750bda20b07ec32551a36210a96d8e78ea91d626edbc678e'
+ACCEPTED_LOCK_SHA256 = 'c039a3d45ec97df4356b5a8af0150cd33a29cd9899aef1f1fc5c57d7f855dc3b'
 
 
 def sha(path):

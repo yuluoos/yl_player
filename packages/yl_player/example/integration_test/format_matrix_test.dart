@@ -164,7 +164,8 @@ void main() {
             2000,
             if (id == 'mov-hevc-aac' ||
                 id == 'mkv-hevc-main10-aac' ||
-                id == 'flv-avc-mp3')
+                id == 'flv-avc-mp3' ||
+                id == 'mkv-avc-flac')
               1250,
           ];
           for (final targetMs in targets) {

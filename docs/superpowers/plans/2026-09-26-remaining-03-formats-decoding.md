@@ -113,3 +113,5 @@ expect(failure.retryable, isFalse);
 2026-09-29 HEVC跳转切片：普通HEVC解码序列增加CRA/BLA随机访问RASL过滤；MOV/Main10 MKV的6条本地/HTTP/改名路径通过前向2秒、反向1.25秒及自然结束严格测试。完整输出、跨平台/最低系统、其他Profile及格式/音频扩展仍未完成，Task1/Task2不整体勾选。
 
 2026-09-29 Task2 FLV点播切片：本地FLV启用真实准备路径，HTTP显式onDemand使用随机访问传输；三条AVC/MP3路径通过前后seek及结束，nonRange三意图和原有直播重连回归通过。其他音频/容器、完整输出、跨平台/最低系统验收仍未完成。
+
+2026-09-29 Task2 FLAC切片：新增桥接ID及STREAMINFO传递，系统转换器支持受检16/24位mono/stereo；两份48kHz夹具通过独立PCM逐样本核对，MKV AVC/FLAC三条公开路径通过双向seek与自然结束。WebM完整解码链、FLAC其他位深/多声道、物理输出/同步和其他平台仍未完成。

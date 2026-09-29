@@ -278,6 +278,20 @@ final class YlPreparedFallback {
         )
       }
     }
+    for audioStream in selectedAudio where Int(audioStream.codec) == YLFCodecFLAC {
+      // Matroska's demuxed FLAC config is exactly one STREAMINFO payload.
+      // Reject unexpected sizes before allocating or copying source bytes.
+      guard ylf_stream_codec_config_size(validContext, audioStream.index) == 34 else {
+        throw NativePlayerError(category: "decoderUnsupported",
+          code: "decoder.audio_flac_unsupported", message: "The FLAC STREAMINFO is missing or invalid.")
+      }
+      var bytes = [UInt8](repeating: 0, count: 34)
+      guard ylf_copy_stream_codec_config(validContext, audioStream.index, &bytes, bytes.count) == 0 else {
+        throw NativePlayerError(category: "decoderUnsupported",
+          code: "decoder.audio_flac_unsupported", message: "The FLAC STREAMINFO could not be read.")
+      }
+      copiedAudioCookies[audioStream.index] = Data(bytes)
+    }
     // FLV AAC SoundRate/SoundType are placeholders; the sequence header's
     // AudioSpecificConfig is authoritative (FLV specification, AudioTagHeader).
     // The minimal demux bridge has not run a decoder to normalize these fields.

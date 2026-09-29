@@ -345,6 +345,8 @@ static int32_t ylf_codec(enum AVCodecID codec_id) {
     return YLFCodecAC3;
   case AV_CODEC_ID_EAC3:
     return YLFCodecEAC3;
+  case AV_CODEC_ID_FLAC:
+    return YLFCodecFLAC;
   default:
     return YLFCodecUnsupported;
   }

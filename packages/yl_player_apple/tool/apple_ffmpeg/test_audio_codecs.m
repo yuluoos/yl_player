@@ -47,7 +47,8 @@ int main(int argc, const char *argv[]) {
     CHECK(ylf_codec(AV_CODEC_ID_EAC3) == 7, "E-AC-3 stable bridge codec ID");
     CHECK(ylf_codec(AV_CODEC_ID_AAC) == YLFCodecAAC, "AAC mapping unchanged");
     CHECK(ylf_codec(AV_CODEC_ID_DTS) == YLFCodecDTS, "DTS mapping unchanged");
-    CHECK(ylf_codec(AV_CODEC_ID_FLAC) == YLFCodecUnsupported, "unimplemented codec stays unsupported");
+    CHECK(ylf_codec(AV_CODEC_ID_FLAC) == 8, "FLAC stable bridge codec ID");
+    CHECK(ylf_codec(AV_CODEC_ID_OPUS) == YLFCodecUnsupported, "unimplemented codec stays unsupported");
     if (argc != 3 && argc != 4) {
       fprintf(stderr, "usage: test_audio_codecs AC3_MKV EAC3_MKV [REAL_EAC3_MKV]\n");
       return 2;

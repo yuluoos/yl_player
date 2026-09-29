@@ -8,6 +8,76 @@ import YlFFmpegBridge
 
 final class YlMacosAudioTests: XCTestCase {
 
+  func testFLACDecodesExactMono16AndStereo24SamplesIncludingShortFinalPacketAndReset() throws {
+    // Owned integer ramps, 1000 frames at 48 kHz. Host FFmpeg 8.0.1 FLAC,
+    // -frame_size 576; expected PCM is independently computed below.
+    let fixtures: [(Int, Int, String, [(Int, String)])] = [
+      (16, 1, "AkACQAACEwAClQu4APAAAAPoTudV7k7wxTEl3pHrSkX4Fg==", [(576, "//gqCADmQIrQ5z+pFQ2ZLlypMiRfddbZXXVTIKFHFFOV3X2zZGTGNc95BJJRZhhpx54gqJEkTKFCpYuXMGTJo2cOHTfP35AQkJERkhISkxOTlBSUlRlZYWFpcXl5gYmJkZmhoamxubmcHJydHZ4eHp8fn4gEIhEQjEgkOikYjkckEkkkolkwmE0nE8nlAolI6kUyoVCqViuVywWS0Wi2XC4XS8Xzr5gMJiMRjMhkMpmM5nNBpNRqNZsO2G03G83nA4nI5HM6HQ6nY7nc8Hk70ej2fD4fT8fz+IAgiEIQhiIIgiiMhDkORBEkURRFkYRhGkcR5HkgSJJEkSaEoShKksS5LkwTJNE0TZOE4TpPE+T5QIUJRFEUZSFIUpTFOU5UFSVRVFWVhWFahXFeV5YFiWRZFmWhaFqWxbluXBcl0XSF2XheF6Xxfl+YBgmEYRhmIYhimMY5joZBkmUZRlmYZhmmcZ5nmgaJpGkaZqGohqmsa5rmwbJtG0bZuG4bpvG+b5wHCcSHEcZyHIcpzHOc50HSdR1HWdh2Hadx3od54HieR5Hmeh6Hqex7nufB8n0fR9n4n+P6/z/v+QAgJAiBEDIIQQgpBiDkHIQQlKFEKIWQwhhDSHEPIeRAiJEiJETIoRQipFkouRcjBGSNEaI2RwjhHSPEfI+SAkJIiREjZJIkkSSpJkk6ScAAAACTfArgUwJ4E8CWBHAhgQwH4DsBsxYk880skl7VrT/7cnMVmchCmOcQUYYcIXjrz75AiSJEyhQqWLlzBkrRo2cOHTx8+ICIkJCYoKCosZOTlBSVFRWWFhaXF5eYGJkZGZmhoamxubnBydHR2eHh6fH5+IDoJCIRDIhEIpGI5HJBJJRKJZMJhNBLVQ=="), (424, "//h6CAEBp8VA1LDnP4oN/T2+Pr8/kAgkIhkQiEUjEckEklEsmE0nE8oFEpFMqFUrFcsFktFsuF0vF8wGExGMyGUzGc0Gk1Gs2I7Xc73g8Xk83o9Xs93w+X0+34/X8/yAIEgiDIQhSGIciCJIoiyMI0jiOI8kCRJIkyUJUliXJgmSaJsnCdJ4nygQoSiKMpClKYpyoKkqirKwrSuK8sCxLIsy0LUti3LguS6LsvC9L4vzAMEwjDMQxTGMcyDJMoyzMM0zjPNA0TSNM1DVQ1jXNg2TZNo2zcN03jfOA4TiOM5DlOY5zoOk6jrOw7TuO88DxPI8z0PU9j3Pg+T6Ps/D9P4/xACBEEIMQghRDCHEQIlKFELIYQ0hxDyIERIkRMihFSLEXIwRkjRGyOEdI8R8kBISREjJGSQkpJiTkoJSSolZLCWkuJeTAmJMiZk0JqTYm5OCck6J2Twnq6fKfqgKgqhKhqiKiqjKjqkKkqlKlqmKmqnKnqoKoqpKpqqKqqrKrqsKsqtKtquKuqvKvqwAAAAAAAAAAn9ibiZiZiXiViTiRiPiNiLiJiHiFiDiBh/h9Z7eXd1c3FvbWtpZ2VjYV9dW1lXVVNRT01LSUdFQ0H/99+e/Xnx37denPlx4b923Zr1aa43210zyyxwwRSTUVWXYZabcdefIESRMoVLFzBk0bOHTx8QERITFBUWFxgZGgABr")]),
+      (24, 2, "AkACQAADnwAEzQu4A3AAAAPoBAnqjMe7WPsv7qc4O7XlIA==", [(576, "//gqHADlToXuAIYM74Yr3oZKzYZpvIaIq4anmobGieYtjJLmtdrdCbSduaJHftugZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWTpjEh5jjdpkCZZkhVJlAQ5lfMpl+IZmdEOYtjZLktdrdCbSduaJHftugZSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJS6Ks="), (424, "//h6HAEBp/pOy4fAy6avy8Wey+SNzAN8zCJrzEFazGBJ5i2Dkwq1kt2Js8264kW+3SBnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJycnJyTt5eR959Nt6cJd67FN7aA9748t8X4d820OYtu5JUtlrdEbLdv+I2Pu+gZOTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTtk6")]),
+    ]
+    for (bits, channels, encodedCookie, packets) in fixtures {
+      let converter = YlAppleCompressedAudioConverter()
+      let cookie = try XCTUnwrap(Data(base64Encoded: encodedCookie))
+      let stream = YlAudioStreamConfiguration(codec: .flac, sampleRate: 48_000,
+        channelCount: channels, magicCookie: cookie, generation: 3)
+      try converter.configure(stream: stream)
+      for _ in 0..<2 {
+        var sampleIndex = 0
+        for (frames, encoded) in packets {
+          let packet = YlCompressedAudioPacket(data: try XCTUnwrap(Data(base64Encoded: encoded)),
+            ptsUs: Int64(sampleIndex) * 1_000_000 / 48_000,
+            durationUs: Int64.max, generation: 3)
+          let estimate = converter.estimateOutput(for: packet)
+          XCTAssertLessThanOrEqual(estimate.byteCount, 577 * channels * 4)
+          XCTAssertLessThanOrEqual(estimate.durationUs, 12_000)
+          let result = try XCTUnwrap(converter.convert(packet: packet))
+          let pcm = try XCTUnwrap(result.payload as? AVAudioPCMBuffer)
+          XCTAssertEqual(Int(pcm.frameLength), frames)
+          XCTAssertEqual(pcm.frameCapacity, UInt32(frames))
+          XCTAssertEqual(result.ptsUs, packet.ptsUs)
+          XCTAssertEqual(result.generation, 3)
+          XCTAssertEqual(result.byteCount, frames * channels * 4)
+          let samples = try XCTUnwrap(pcm.floatChannelData)
+          for frame in 0..<frames {
+            for channel in 0..<channels {
+              let index = sampleIndex + frame
+              let integer = bits == 16 ? (index * 137) % 60000 - 30000
+                : (index * 7919 + channel * 1234567) % 16000000 - 8000000
+              let expected = Float(integer) / (bits == 16 ? 32768 : 8388608)
+              let actual = pcm.format.isInterleaved ? samples[0][frame * channels + channel] : samples[channel][frame]
+              XCTAssertEqual(actual, expected, accuracy: 0.0000001)
+            }
+          }
+          sampleIndex += frames
+        }
+        XCTAssertEqual(sampleIndex, 1000)
+        converter.reset()
+      }
+      for badPacket in [Data(), Data([0xff, 0xf8, 0x70, 0x08, 0, 0xff, 0xff, 0]),
+                        Data([0xff, 0xf8, 0x70, 0x08, 0xff, 0, 0])] {
+        XCTAssertThrowsError(try converter.convert(packet: YlCompressedAudioPacket(
+          data: badPacket, ptsUs: 0, durationUs: 0, generation: 3)))
+      }
+      for badCookie in [Data(), cookie.dropLast(), cookie + Data([0])] {
+        XCTAssertThrowsError(try converter.configure(stream: YlAudioStreamConfiguration(
+          codec: .flac, sampleRate: 48_000, channelCount: channels,
+          magicCookie: Data(badCookie), generation: 3)))
+      }
+      for (rate, count) in [(44_100.0, channels), (48_000.0, 6)] {
+        XCTAssertThrowsError(try converter.configure(stream: YlAudioStreamConfiguration(
+          codec: .flac, sampleRate: rate, channelCount: count, magicCookie: cookie, generation: 3)))
+      }
+      for offset in [0, 1, 10, 11, 12, 13] {
+        var invalid = cookie
+        invalid[offset] = offset == 13 ? (invalid[offset] ^ 0x10) : 0xff
+        XCTAssertNil(YlFLACConfiguration(stream: YlAudioStreamConfiguration(
+          codec: .flac, sampleRate: 48_000, channelCount: channels, magicCookie: invalid, generation: 3)),
+          "Mutated STREAMINFO offset \(offset)")
+      }
+    }
+  }
+
+
   func testDolbySurroundConvertsCenterWithoutChangingSpeakerOrderAndResets() throws {
     // Synthetic center-only 440 Hz tones, AC-3 / E-AC-3, 48 kHz 5.1(side).
     let fixtures: [(YlAudioCodec, String)] = [

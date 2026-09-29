@@ -169,3 +169,31 @@ flutter test integration_test/format_matrix_test.dart -d macos --no-pub
 - `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/SourceRouting/YlSourceAssessment.swift`：`19f1078927f023c18617478b2f57f8892c8779aaa8d63e4eea0a1ca8eb24a390`
 - `tool/check_native_macos.sh`：`1119e0b3df744f864253cc5530f921ee32d77a98106ada77f889639d797a8ca7`
 - `tool/media_matrix/macos-flv-vod-observations.json`：`4da69e048de61d0f5d94b6c6e8de6976965a5c338e43520f5b1fca8d9910e5e4`
+
+## FLAC音频切片：系统解码与有界PCM
+
+2026-09-29，基线`e2c9e98`。先复现MKV AVC/FLAC的本地、HTTP和改名文件3条严格测试，均在load报`decoder.audio_unsupported`。WebM还缺VP9、Opus/Vorbis桥接及解码，不能仅打开路由；本轮先交付独立FLAC音频链路，WebM仍未完成。
+
+bridge新增稳定codec ID8，保留0–7原值。准备阶段精确读取34字节STREAMINFO，校验长度后才分配；系统转换器校验采样率、16/24位及单/双声道，构造CoreAudio dfLa cookie。输入ASBD使用最大block长度，各packet按帧头报告实际样本数，末帧不会补成整帧；PCM分配受STREAMINFO上限和实际帧头双重约束，不采信任意packet duration放大分配，沿用既有Player缓冲账本。配置不支持时发布明确且不含输入数据的`decoder.audio_flac_unsupported`。FLAC帧格式依据[RFC9639](https://www.rfc-editor.org/rfc/rfc9639.html)，CoreAudio参数由本机SDK与独立探针核对。
+
+不增加商业SDK或FFmpeg decoder/parser/demuxer。固定签名FFmpeg9.0.1的五目标候选产物经第二次独立重建，18个规范文件/符号链接逐字节一致，再显式更新制品、lock及接受的provenance哈希；macOS12/iOS15下限不变。制品契约验证3slice/5架构/30符号和3项负例，音频metadata30项、视频metadata35项通过。五架构产物构建不能代替iOS/Intel运行时验收。
+
+新增原生测试用原创整数斜坡，覆盖16位mono和24位stereo、48kHz，每段1000样本（576+424）。使用生产转换器逐样本比较独立计算的Float PCM，检查声道顺序、容量/时长、时间戳/generation、短末帧及reset后重复转换；拒绝缺失/错长cookie、采样率/声道不一致、未支持位深、截断及超大block帧头，使用Int64.max包时长验证分配不随之膨胀。原生音频类17项通过，无跳过；包含原有AAC/MP3/Dolby及音频生命周期回归。公开格式测试只证明生命周期，独立PCM证据仅适用于上述两份夹具，不能推广为物理声音、完整A/V同步或所有FLAC Profile通过。
+
+验证中保留失败记录：第一次Xcode运行因Flutter临时入口已被清理而构建失败；修复入口后定位CoreAudio不接受FLAC的零framesPerPacket；PCM通过后修正一条误改totalSamples而非位深的负例；公开播放进一步发现准备阶段仅复制AAC cookie并补齐FLAC传递。沙箱音频探针/缓存访问和离线制品验签环境问题不计为播放器支持结果。
+
+三条严格公开生命周期全部通过：file/http/同字节.bin均通过首帧、音轨选中、时钟推进、前向2秒/反向1.25秒seek、自然结束及释放。最终55项基线全部匹配（退出0）：32条正常生命周期完成、18条有效素材缺口、5条截断输入拒绝；全部释放完成，媒体hash逐项核对，仅3条FLAC缺口转为通过，其余52条原始观测与上一轮相同。已知失败仍记录failed，不视为格式支持。范围仍限macOS当前设备证据；其他位深/多声道、其他容器、物理输出/同步、iOS/Android/最低系统、硬解失效和持续资源预算均未完成，P03整体不封板。
+
+
+单次独立复审无Critical/Important/Minor。决定保持上述受检范围：其他位深/多声道/未测采样率与容器、物理输出/完整同步、其他设备/iOS/Intel/最低系统、更广错误扩展名/损坏/无索引、hardwareRequired重建/视频软解预算/HDR或分辨率策略、持续资源及候选/当前共存均不由本切片验收；代价是这些范围仍需独立证据。复审未重跑的strict3/full55最终结果已由主执行者检查，不再次派发复审。源与日志指纹、55条原始观测、独立PCM测试结果见[macos-flac-observations.json](../../../tool/media_matrix/macos-flac-observations.json)，历史证据均保留。
+
+命令（Flutter在`packages/yl_player/example`运行）：
+
+```sh
+flutter test integration_test/format_matrix_test.dart -d macos --no-pub --dart-define=YL_FORMAT_REQUIRE_SUPPORT=true --plain-name 'mkv-avc-flac /'
+flutter test integration_test/format_matrix_test.dart -d macos --no-pub
+# Xcode原生定向入口（先 flutter build macos --debug --config-only）
+xcodebuild test CODE_SIGNING_ALLOWED=NO ENABLE_TESTABILITY=YES -workspace macos/Runner.xcworkspace -scheme Runner -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:RunnerTests/YlMacosAudioTests
+```
+
+补充回归：35项example单元测试、8项Python台账检查通过，Dart定向分析无问题，36项素材/台账指纹及原生测试源对齐检查通过。未执行完整原生聚合门禁；已执行本轮17项音频原生类、3项严格FLAC和55项格式回归。

@@ -21,6 +21,7 @@ enum YlAudioCodec: Equatable {
   case dts
   case ac3
   case eac3
+  case flac
   case unsupported
 
   init(bridgeCodec: Int32) {
@@ -30,6 +31,7 @@ enum YlAudioCodec: Equatable {
     case YLFCodecDTS: self = .dts
     case YLFCodecAC3: self = .ac3
     case YLFCodecEAC3: self = .eac3
+    case YLFCodecFLAC: self = .flac
     default: self = .unsupported
     }
   }
@@ -41,6 +43,7 @@ enum YlAudioCodec: Equatable {
     case .dts: return "DTS"
     case .ac3: return "AC-3"
     case .eac3: return "E-AC-3"
+    case .flac: return "FLAC"
     case .unsupported: return "Compressed"
     }
   }
@@ -598,6 +601,7 @@ final class YlAudioRenderer: YlAudioRendering {
     case .dts: return "decoder.audio_dts_unsupported"
     case .ac3: return "decoder.audio_ac3_unsupported"
     case .eac3: return "decoder.audio_eac3_unsupported"
+    case .flac: return "decoder.audio_flac_unsupported"
     case .unsupported: return "decoder.audio_unsupported"
     }
   }
@@ -643,11 +647,13 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   private var framesPerPacket: UInt32 = 0
   private var batchesInput = YlAppleCompatibility.current.batchesAudioInput
   private var variablePacketFrames = false
+  private var flacConfiguration: YlFLACConfiguration?
   private var pendingPackets: [YlCompressedAudioPacket] = []
   private var pendingOutputPackets: [YlCompressedAudioPacket] = []
 
   func configure(stream: YlAudioStreamConfiguration) throws {
     dtsConverter = nil
+    flacConfiguration = nil
     if stream.codec == .dts {
       let dts = YlDtsAudioConverter()
       dts.bufferScope = bufferScope
@@ -656,7 +662,8 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
       return
     }
     let isDolby = stream.codec == .ac3 || stream.codec == .eac3
-    guard stream.codec == .aac || stream.codec == .mp3 || isDolby,
+    let flac = stream.codec == .flac ? YlFLACConfiguration(stream: stream) : nil
+    guard stream.codec == .aac || stream.codec == .mp3 || isDolby || flac != nil,
           stream.sampleRate > 0,
           (1...8).contains(stream.channelCount),
           stream.codec != .aac || !stream.magicCookie.isEmpty else {
@@ -668,14 +675,15 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     case .mp3: formatID = kAudioFormatMPEGLayer3
     case .ac3: formatID = kAudioFormatAC3
     case .eac3: formatID = kAudioFormatEnhancedAC3
+    case .flac: formatID = kAudioFormatFLAC
     default: throw YlAudioImplementationError.invalidConfiguration
     }
-    let formatFlags: AudioFormatFlags = stream.codec == .aac && !YlAppleCompatibility.current.batchesAudioInput
-      ? AudioFormatFlags(MPEG4ObjectID.AAC_LC.rawValue) : 0
-    let inputFramesPerPacket: UInt32 = isDolby ? 1536 : (stream.codec == .aac ? 1024 : 1152)
-    let magicCookie = stream.codec == .aac && YlAppleCompatibility.current.batchesAudioInput
+    let formatFlags: AudioFormatFlags = flac?.formatFlags ?? (stream.codec == .aac && !YlAppleCompatibility.current.batchesAudioInput
+      ? AudioFormatFlags(MPEG4ObjectID.AAC_LC.rawValue) : 0)
+    let inputFramesPerPacket: UInt32 = flac?.maxBlockSize ?? (isDolby ? 1536 : (stream.codec == .aac ? 1024 : 1152))
+    let magicCookie = flac?.coreAudioCookie ?? (stream.codec == .aac && YlAppleCompatibility.current.batchesAudioInput
       ? Self.aacMagicCookie(audioSpecificConfig: stream.magicCookie)
-      : stream.magicCookie
+      : stream.magicCookie)
     var description = AudioStreamBasicDescription(
       mSampleRate: stream.sampleRate,
       mFormatID: formatID,
@@ -732,14 +740,15 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
           let converter = AVAudioConverter(from: input, to: output) else {
       throw YlAudioImplementationError.invalidConfiguration
     }
-    if stream.codec == .aac {
+    if stream.codec == .aac || flac != nil {
       converter.magicCookie = magicCookie
     }
-    // Dolby syncframes are self-contained; preserve one packet's timing per
+    // Dolby and FLAC frames are self-contained; preserve one packet's timing per
     // output instead of applying the macOS AAC look-ahead batching policy.
-    batchesInput = YlAppleCompatibility.current.batchesAudioInput && !isDolby
-    variablePacketFrames = stream.codec == .eac3
-    if isDolby { converter.primeMethod = .none }
+    batchesInput = YlAppleCompatibility.current.batchesAudioInput && !isDolby && flac == nil
+    variablePacketFrames = stream.codec == .eac3 || flac != nil
+    if isDolby || flac != nil { converter.primeMethod = .none }
+    flacConfiguration = flac
     self.inputFormat = input
     self.outputFormat = output
     self.converter = converter
@@ -753,7 +762,10 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     guard let outputFormat else {
       return YlAudioBufferEstimate(durationUs: 0, byteCount: 0)
     }
-    let durationUs = packet.durationUs > 0
+    let flacFrames = flacConfiguration?.frameCount(packet: packet.data)
+    let durationUs = flacConfiguration != nil
+      ? Int64((Double(flacFrames ?? 0) * 1_000_000 / outputFormat.sampleRate).rounded(.up))
+      : packet.durationUs > 0
       ? packet.durationUs
       : Int64(
         (Double(framesPerPacket) * 1_000_000 / outputFormat.sampleRate).rounded(.up)
@@ -774,6 +786,10 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     guard let converter, let inputFormat, let outputFormat, !packet.data.isEmpty else {
       throw YlAudioImplementationError.notConfigured
     }
+    let flacFrames = flacConfiguration?.frameCount(packet: packet.data)
+    if flacConfiguration != nil, flacFrames == nil {
+      throw YlAudioImplementationError.conversionFailed
+    }
     pendingPackets.append(packet)
     let packetBatch = Array(pendingPackets.prefix(batchesInput ? 2 : 1))
     let copiedBytes = packetBatch.reduce(0) { $0 + $1.data.count }
@@ -793,7 +809,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
       }
       compressed.packetDescriptions?.pointee = AudioStreamPacketDescription(
         mStartOffset: 0,
-        mVariableFramesInPacket: batchesInput || variablePacketFrames ? 0 : framesPerPacket,
+        mVariableFramesInPacket: flacFrames ?? (batchesInput || variablePacketFrames ? 0 : framesPerPacket),
         mDataByteSize: packetSize
       )
       compressed.byteLength = packetSize
@@ -807,9 +823,9 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
       frameCount: 1, bytesPerFrame: bytesPerFrame,
       channelCount: Int(outputFormat.channelCount)
     )
-    let frameCapacity = batchesInput
+    let frameCapacity = flacFrames ?? (batchesInput
       ? AVAudioFrameCount(framesPerPacket)
-      : AVAudioFrameCount(max(Int(framesPerPacket), estimate.byteCount / bytesPerSampleFrame + Int(framesPerPacket)))
+      : AVAudioFrameCount(max(Int(framesPerPacket), estimate.byteCount / bytesPerSampleFrame + Int(framesPerPacket))))
     let allocatedBytes = YlAudioFormatPolicy.byteCount(frameCount: Int(frameCapacity), bytesPerFrame: bytesPerFrame,
       channelCount: Int(outputFormat.channelCount))
     let pcmReservation = try bufferScope?.require(category: .scheduledAudio, bytes: allocatedBytes)
@@ -842,6 +858,9 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     }
     guard status != AVAudioConverterOutputStatus.error, pcm.frameLength > 0 else {
       if let conversionError { throw conversionError }
+      throw YlAudioImplementationError.conversionFailed
+    }
+    if let flacFrames, pcm.frameLength != flacFrames || nextInputIndex != 1 {
       throw YlAudioImplementationError.conversionFailed
     }
     guard !pendingOutputPackets.isEmpty else {

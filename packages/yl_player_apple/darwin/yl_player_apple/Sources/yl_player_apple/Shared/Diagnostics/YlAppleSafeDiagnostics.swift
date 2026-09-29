@@ -48,6 +48,7 @@ enum YlAppleSafeDiagnostics {
     "decoder.audio_aac_unsupported",
     "decoder.audio_ac3_unsupported",
     "decoder.audio_eac3_unsupported",
+    "decoder.audio_flac_unsupported",
     "decoder.audio_dts_unsupported",
     "decoder.audio_unsupported",
     "decoder.dolby_vision_unsupported",
@@ -120,6 +121,7 @@ enum YlAppleSafeDiagnostics {
     "network.dns_failed", "network.connect_timeout", "network.read_timeout",
   ]
   private static let publicMessages: [String: String] = [
+    "decoder.audio_flac_unsupported": "This FLAC audio configuration is unsupported; use 16- or 24-bit mono/stereo audio on a device with a FLAC decoder.",
     "container.dash_manifest_invalid": "The DASH manifest could not be parsed. Ask the provider for a valid UTF-8 MPD.",
     "container.dash_dynamic_unsupported": "Dynamic DASH manifests are not supported by this playback path. Choose a static DASH VOD source.",
     "container.dash_protection_unsupported": "The DASH manifest contains a protected-content declaration unsupported by this playback path. Choose a compatible source.",
