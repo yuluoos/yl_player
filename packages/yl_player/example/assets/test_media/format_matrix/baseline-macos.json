@@ -1,0 +1,519 @@
+{
+  "kind": "characterization-only",
+  "platform": "macos",
+  "os": "27.0",
+  "device": "Apple M1",
+  "note": "Known playback failures remain failures in observation rows. Matching these expectations is not format support acceptance. Use YL_FORMAT_REQUIRE_SUPPORT=true to expose all unsatisfied playback requirements.",
+  "expectations": {
+    "mp4-avc-aac/file": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mp4-avc-aac/http": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mp4-avc-aac/renamed-file": {
+      "outcome": "failed",
+      "stage": "ready",
+      "code": "avplayer.-11828",
+      "category": "container",
+      "scope": "session",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "mov-hevc-aac/file": {
+      "outcome": "timeout",
+      "stage": "seek",
+      "code": "decoder.video_decode_failed",
+      "category": "decoder",
+      "scope": "session",
+      "firstFrame": true,
+      "seekProgress": false,
+      "completed": false
+    },
+    "mov-hevc-aac/http": {
+      "outcome": "timeout",
+      "stage": "seek",
+      "code": "decoder.video_decode_failed",
+      "category": "decoder",
+      "scope": "session",
+      "firstFrame": true,
+      "seekProgress": false,
+      "completed": false
+    },
+    "mov-hevc-aac/renamed-file": {
+      "outcome": "timeout",
+      "stage": "seek",
+      "code": "decoder.video_decode_failed",
+      "category": "decoder",
+      "scope": "session",
+      "firstFrame": true,
+      "seekProgress": false,
+      "completed": false
+    },
+    "mkv-avc-aac/file": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mkv-avc-aac/http": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mkv-avc-aac/renamed-file": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "webm-vp9-opus/file": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "container.unsupported",
+      "category": "container",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "webm-vp9-opus/http": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "container.unsupported",
+      "category": "container",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "webm-vp9-opus/renamed-file": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "container.unsupported",
+      "category": "container",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "flv-avc-mp3/file": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "container.unsupported",
+      "category": "container",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "flv-avc-mp3/http": {
+      "outcome": "failed",
+      "stage": "seek",
+      "code": "network.range_not_supported",
+      "category": "network",
+      "scope": "command",
+      "firstFrame": true,
+      "seekProgress": false,
+      "completed": false
+    },
+    "flv-avc-mp3/renamed-file": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "container.unsupported",
+      "category": "container",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "ts-avc-ac3/file": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "container.unsupported",
+      "category": "container",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "ts-avc-ac3/http": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "container.unsupported",
+      "category": "container",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "ts-avc-ac3/renamed-file": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "container.unsupported",
+      "category": "container",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "ps-mpeg2-mp3/file": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "container.unsupported",
+      "category": "container",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "ps-mpeg2-mp3/http": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "container.unsupported",
+      "category": "container",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "ps-mpeg2-mp3/renamed-file": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "container.unsupported",
+      "category": "container",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "avi-avc-mp3/file": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "container.unsupported",
+      "category": "container",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "avi-avc-mp3/http": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "container.unsupported",
+      "category": "container",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "avi-avc-mp3/renamed-file": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "container.unsupported",
+      "category": "container",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "mkv-av1-opus/file": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "decoder.unsupported",
+      "category": "decoder",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "mkv-av1-opus/http": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "decoder.unsupported",
+      "category": "decoder",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "mkv-av1-opus/renamed-file": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "decoder.unsupported",
+      "category": "decoder",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "mkv-avc-eac3/file": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mkv-avc-eac3/http": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mkv-avc-eac3/renamed-file": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mkv-avc-dts/file": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mkv-avc-dts/http": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mkv-avc-dts/renamed-file": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mkv-avc-flac/file": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "decoder.audio_unsupported",
+      "category": "decoder",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "mkv-avc-flac/http": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "decoder.audio_unsupported",
+      "category": "decoder",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "mkv-avc-flac/renamed-file": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "decoder.audio_unsupported",
+      "category": "decoder",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "webm-vp9-vorbis/file": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "container.unsupported",
+      "category": "container",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "webm-vp9-vorbis/http": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "container.unsupported",
+      "category": "container",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "webm-vp9-vorbis/renamed-file": {
+      "outcome": "failed",
+      "stage": "load",
+      "code": "container.unsupported",
+      "category": "container",
+      "scope": "command",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "mkv-hevc-main10-aac/file": {
+      "outcome": "timeout",
+      "stage": "seek",
+      "code": "decoder.video_decode_failed",
+      "category": "decoder",
+      "scope": "session",
+      "firstFrame": true,
+      "seekProgress": false,
+      "completed": false
+    },
+    "mkv-hevc-main10-aac/http": {
+      "outcome": "timeout",
+      "stage": "seek",
+      "code": "decoder.video_decode_failed",
+      "category": "decoder",
+      "scope": "session",
+      "firstFrame": true,
+      "seekProgress": false,
+      "completed": false
+    },
+    "mkv-hevc-main10-aac/renamed-file": {
+      "outcome": "timeout",
+      "stage": "seek",
+      "code": "decoder.video_decode_failed",
+      "category": "decoder",
+      "scope": "session",
+      "firstFrame": true,
+      "seekProgress": false,
+      "completed": false
+    },
+    "mkv-avc-ac3-51/file": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mkv-avc-ac3-51/http": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mkv-avc-ac3-51/renamed-file": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mkv-avc-aac-no-cues/file": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mkv-avc-aac-no-cues/http": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mkv-avc-aac-no-cues/renamed-file": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mp4-truncated/file": {
+      "outcome": "failed",
+      "stage": "ready",
+      "code": "avplayer.-11829",
+      "category": "source",
+      "scope": "session",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "mp4-truncated/http": {
+      "outcome": "failed",
+      "stage": "ready",
+      "code": "avplayer.-11829",
+      "category": "source",
+      "scope": "session",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "mp4-truncated/renamed-file": {
+      "outcome": "failed",
+      "stage": "ready",
+      "code": "avplayer.-11828",
+      "category": "container",
+      "scope": "session",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    }
+  }
+}

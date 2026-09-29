@@ -1,0 +1,635 @@
+{
+  "ffmpeg": "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers",
+  "method": "host independent decode; color error<=24/255, tone frequency error<=6Hz; fixture validity only",
+  "results": [
+    {
+      "caseId": "mp4-avc-aac",
+      "sha256": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          438.333,
+          493.333
+        ],
+        [
+          660.0,
+          715.0
+        ],
+        [
+          880.0,
+          935.0
+        ],
+        [
+          1098.333,
+          1155.0
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
+    },
+    {
+      "caseId": "mov-hevc-aac",
+      "sha256": "7510780fb779a64ef698f917443b44dcc432968788f8d20b35c13e4aea778956",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          438.333,
+          493.333
+        ],
+        [
+          660.0,
+          715.0
+        ],
+        [
+          880.0,
+          935.0
+        ],
+        [
+          1098.333,
+          1155.0
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
+    },
+    {
+      "caseId": "mkv-avc-aac",
+      "sha256": "0812b7fcb4c587e51621b8e1f08ab494c062a2c345e47ad0ba9a1bfce80230b3",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          440.0,
+          495.0
+        ],
+        [
+          660.0,
+          715.0
+        ],
+        [
+          880.0,
+          935.0
+        ],
+        [
+          1100.0,
+          1155.0
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
+    },
+    {
+      "caseId": "webm-vp9-opus",
+      "sha256": "e32bbdbb915c91ad8ec3fc65bb2dfae40c0b42abf416a262a73d7a92b98b5d8d",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          438.333,
+          493.333
+        ],
+        [
+          658.333,
+          713.333
+        ],
+        [
+          878.333,
+          933.333
+        ],
+        [
+          1098.333,
+          1153.333
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
+    },
+    {
+      "caseId": "flv-avc-mp3",
+      "sha256": "c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          440.0,
+          495.0
+        ],
+        [
+          660.0,
+          715.0
+        ],
+        [
+          880.0,
+          935.0
+        ],
+        [
+          1100.0,
+          1155.0
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
+    },
+    {
+      "caseId": "ts-avc-ac3",
+      "sha256": "d0e61a11b46b769bfcc2ea6480991866681f9b89262c0bde1336a229e7bd2b8f",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          440.0,
+          495.0
+        ],
+        [
+          660.0,
+          715.0
+        ],
+        [
+          880.0,
+          933.333
+        ],
+        [
+          1100.0,
+          1155.0
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
+    },
+    {
+      "caseId": "ps-mpeg2-mp3",
+      "sha256": "5ba56c8fe34ec805490e1ea0c79c8d689a437b96f1d02d962f545b5119c91775",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          440.0,
+          495.0
+        ],
+        [
+          660.0,
+          715.0
+        ],
+        [
+          880.0,
+          935.0
+        ],
+        [
+          1100.0,
+          1155.0
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
+    },
+    {
+      "caseId": "avi-avc-mp3",
+      "sha256": "8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          440.0,
+          495.0
+        ],
+        [
+          660.0,
+          715.0
+        ],
+        [
+          880.0,
+          935.0
+        ],
+        [
+          1100.0,
+          1155.0
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
+    },
+    {
+      "caseId": "mkv-av1-opus",
+      "sha256": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          438.333,
+          493.333
+        ],
+        [
+          658.333,
+          713.333
+        ],
+        [
+          878.333,
+          933.333
+        ],
+        [
+          1098.333,
+          1153.333
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
+    },
+    {
+      "caseId": "mkv-avc-eac3",
+      "sha256": "e96d6cd701ad473140a919b8ba2849bad8616c1865e36973642a636432da4a36",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          440.0,
+          495.0
+        ],
+        [
+          660.0,
+          715.0
+        ],
+        [
+          880.0,
+          933.333
+        ],
+        [
+          1100.0,
+          1155.0
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
+    },
+    {
+      "caseId": "mkv-avc-dts",
+      "sha256": "8652de28fefeda796833f65618c152f3fdb70fecc51cf6bf7d8d4b5b68a9ed83",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          440.0,
+          495.0
+        ],
+        [
+          660.0,
+          715.0
+        ],
+        [
+          880.0,
+          935.0
+        ],
+        [
+          1100.0,
+          1155.0
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
+    },
+    {
+      "caseId": "mkv-avc-flac",
+      "sha256": "251da8168c9aa18110cf6bad0324d528114ea9f7d72d1298dbc2fcf9952ab217",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          440.0,
+          495.0
+        ],
+        [
+          660.0,
+          715.0
+        ],
+        [
+          880.0,
+          935.0
+        ],
+        [
+          1100.0,
+          1155.0
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
+    },
+    {
+      "caseId": "webm-vp9-vorbis",
+      "sha256": "aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          440.0,
+          495.0
+        ],
+        [
+          658.333,
+          713.333
+        ],
+        [
+          880.0,
+          933.333
+        ],
+        [
+          1098.333,
+          1153.333
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
+    },
+    {
+      "caseId": "mkv-hevc-main10-aac",
+      "sha256": "8971c412c033e6b4fafdc2703bd1f4b9c7cb3d01bcedecff8eed3daf150d2245",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        1,
+        0,
+        254,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          440.0,
+          495.0
+        ],
+        [
+          660.0,
+          715.0
+        ],
+        [
+          880.0,
+          935.0
+        ],
+        [
+          1100.0,
+          1155.0
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
+    },
+    {
+      "caseId": "mkv-avc-ac3-51",
+      "sha256": "18195270c5a74b210131e9b1242ba87ab22de60de185c6443751b1aec39672a3",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          440.0,
+          495.0,
+          550.0,
+          60.0,
+          660.0,
+          715.0
+        ],
+        [
+          660.0,
+          715.0,
+          770.0,
+          70.0,
+          880.0,
+          933.333
+        ],
+        [
+          880.0,
+          933.333,
+          990.0,
+          80.0,
+          1100.0,
+          1155.0
+        ],
+        [
+          1100.0,
+          1155.0,
+          1210.0,
+          90.0,
+          1320.0,
+          1375.0
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
+    },
+    {
+      "caseId": "mkv-avc-aac-no-cues",
+      "sha256": "3b385143133b96604f8b108aa9e129eb96b46576a506d21e4abb51f29c4c3987",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          440.0,
+          495.0
+        ],
+        [
+          660.0,
+          715.0
+        ],
+        [
+          880.0,
+          935.0
+        ],
+        [
+          1100.0,
+          1155.0
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
+    },
+    {
+      "caseId": "mp4-truncated",
+      "sha256": "b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c",
+      "probe": "rejected"
+    }
+  ]
+}

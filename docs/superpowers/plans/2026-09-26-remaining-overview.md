@@ -170,3 +170,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-09-28 P07-Task1B1补齐libdovi/libplacebo三端arm64候选构建和官方P5首份输入盘点；macOS libplacebo13通过/1 GPU跳过，libdovi2单测/5 C API预期匹配。构建没有接入生产或证明画质；独立参考/容差、原始FEL及实际GPU/设备输出仍缺，Task1/完整杜比仍未完成。
 
 2026-09-29 P07 Task1B2新增当前Mac的CGL实跑证据：上游GPU条件测试返回成功，覆盖浮点往返/10-bit位对齐；显式研究测试发现13通过，默认12通过/1 GPU跳过。没有真实FEL、独立显示参考或移动端/原生DV输出验收；Task1及CAP-DV-MAP/OUT仍未完成，详见P07报告。
+
+2026-09-29 P07独立参考相关工作保持未完成，按顺序推进P03 Task1：17份原创格式夹具、102调查行及macOS51条file/http/错误扩展名实验。17条正常路径完成公共生命周期、31条有效素材缺口、3条损坏拒绝；默认基线匹配不等于格式全部通过。Task2可消费明确的容器/解码/seek缺口；音画标记、其他平台与完整CAP-FORMAT仍待验，详见P03报告。

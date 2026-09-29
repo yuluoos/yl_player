@@ -26,6 +26,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/test_media/format_matrix/
     - assets/test_media/android_audio_only.m4a
     - assets/test_media/h264_aac.flv
     - assets/test_media/h264_mp3.flv

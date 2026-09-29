@@ -1,0 +1,782 @@
+{
+  "schemaVersion": 1,
+  "source": "Original lavfi color/tone patterns generated for this repository; no third-party media.",
+  "generatorVersion": "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers",
+  "markers": {
+    "video": [
+      "red",
+      "lime",
+      "blue",
+      "white"
+    ],
+    "intervalSeconds": 1,
+    "audio": "per-second 440/660/880/1100 Hz plus 55 Hz per channel; 5.1 LFE=60/70/80/90 Hz; amplitude0.04"
+  },
+  "cases": [
+    {
+      "id": "mp4-avc-aac",
+      "file": "mp4-avc-aac.mp4",
+      "container": "mp4",
+      "sha256": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+      "video": {
+        "codec": "h264",
+        "profile": "Constrained Baseline",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "aac",
+        "channels": 2,
+        "layout": "stereo",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 4.0,
+      "probe": "mp4-avc-aac.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
+    },
+    {
+      "id": "mov-hevc-aac",
+      "file": "mov-hevc-aac.mov",
+      "container": "mov",
+      "sha256": "7510780fb779a64ef698f917443b44dcc432968788f8d20b35c13e4aea778956",
+      "video": {
+        "codec": "hevc",
+        "profile": "Main",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "aac",
+        "channels": 2,
+        "layout": "stereo",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 4.0,
+      "probe": "mov-hevc-aac.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
+    },
+    {
+      "id": "mkv-avc-aac",
+      "file": "mkv-avc-aac.mkv",
+      "container": "matroska",
+      "sha256": "0812b7fcb4c587e51621b8e1f08ab494c062a2c345e47ad0ba9a1bfce80230b3",
+      "video": {
+        "codec": "h264",
+        "profile": "Constrained Baseline",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "aac",
+        "channels": 2,
+        "layout": "stereo",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 4.021,
+      "probe": "mkv-avc-aac.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
+    },
+    {
+      "id": "webm-vp9-opus",
+      "file": "webm-vp9-opus.webm",
+      "container": "webm",
+      "sha256": "e32bbdbb915c91ad8ec3fc65bb2dfae40c0b42abf416a262a73d7a92b98b5d8d",
+      "video": {
+        "codec": "vp9",
+        "profile": "Profile 0",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "opus",
+        "channels": 2,
+        "layout": "stereo",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 4.008,
+      "probe": "webm-vp9-opus.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
+    },
+    {
+      "id": "flv-avc-mp3",
+      "file": "flv-avc-mp3.flv",
+      "container": "flv",
+      "sha256": "c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f",
+      "video": {
+        "codec": "h264",
+        "profile": "Constrained Baseline",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "mp3",
+        "channels": 2,
+        "layout": "stereo",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 4.022999,
+      "probe": "flv-avc-mp3.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
+    },
+    {
+      "id": "ts-avc-ac3",
+      "file": "ts-avc-ac3.ts",
+      "container": "mpegTs",
+      "sha256": "d0e61a11b46b769bfcc2ea6480991866681f9b89262c0bde1336a229e7bd2b8f",
+      "video": {
+        "codec": "h264",
+        "profile": "Constrained Baseline",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "ac3",
+        "channels": 2,
+        "layout": "stereo",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 4.005333,
+      "probe": "ts-avc-ac3.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
+    },
+    {
+      "id": "ps-mpeg2-mp3",
+      "file": "ps-mpeg2-mp3.mpg",
+      "container": "mpegPs",
+      "sha256": "5ba56c8fe34ec805490e1ea0c79c8d689a437b96f1d02d962f545b5119c91775",
+      "video": {
+        "codec": "mpeg2video",
+        "profile": "Main",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "mp3",
+        "channels": 2,
+        "layout": "stereo",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 3.981356,
+      "probe": "ps-mpeg2-mp3.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
+    },
+    {
+      "id": "avi-avc-mp3",
+      "file": "avi-avc-mp3.avi",
+      "container": "avi",
+      "sha256": "8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc",
+      "video": {
+        "codec": "h264",
+        "profile": "Constrained Baseline",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "mp3",
+        "channels": 2,
+        "layout": "stereo",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 4.041667,
+      "probe": "avi-avc-mp3.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
+    },
+    {
+      "id": "mkv-av1-opus",
+      "file": "mkv-av1-opus.mkv",
+      "container": "matroska",
+      "sha256": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+      "video": {
+        "codec": "av1",
+        "profile": "Main",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "opus",
+        "channels": 2,
+        "layout": "stereo",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 4.008,
+      "probe": "mkv-av1-opus.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
+    },
+    {
+      "id": "mkv-avc-eac3",
+      "file": "mkv-avc-eac3.mkv",
+      "container": "matroska",
+      "sha256": "e96d6cd701ad473140a919b8ba2849bad8616c1865e36973642a636432da4a36",
+      "video": {
+        "codec": "h264",
+        "profile": "Constrained Baseline",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "eac3",
+        "channels": 2,
+        "layout": "stereo",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 4.0,
+      "probe": "mkv-avc-eac3.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
+    },
+    {
+      "id": "mkv-avc-dts",
+      "file": "mkv-avc-dts.mkv",
+      "container": "matroska",
+      "sha256": "8652de28fefeda796833f65618c152f3fdb70fecc51cf6bf7d8d4b5b68a9ed83",
+      "video": {
+        "codec": "h264",
+        "profile": "Constrained Baseline",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "dts",
+        "channels": 2,
+        "layout": "stereo",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 4.0,
+      "probe": "mkv-avc-dts.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
+    },
+    {
+      "id": "mkv-avc-flac",
+      "file": "mkv-avc-flac.mkv",
+      "container": "matroska",
+      "sha256": "251da8168c9aa18110cf6bad0324d528114ea9f7d72d1298dbc2fcf9952ab217",
+      "video": {
+        "codec": "h264",
+        "profile": "Constrained Baseline",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "flac",
+        "channels": 2,
+        "layout": "stereo",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 4.0,
+      "probe": "mkv-avc-flac.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
+    },
+    {
+      "id": "webm-vp9-vorbis",
+      "file": "webm-vp9-vorbis.webm",
+      "container": "webm",
+      "sha256": "aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e",
+      "video": {
+        "codec": "vp9",
+        "profile": "Profile 0",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "vorbis",
+        "channels": 2,
+        "layout": "stereo",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 4.021,
+      "probe": "webm-vp9-vorbis.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
+    },
+    {
+      "id": "mkv-hevc-main10-aac",
+      "file": "mkv-hevc-main10-aac.mkv",
+      "container": "matroska",
+      "sha256": "8971c412c033e6b4fafdc2703bd1f4b9c7cb3d01bcedecff8eed3daf150d2245",
+      "video": {
+        "codec": "hevc",
+        "profile": "Main 10",
+        "bitDepth": 10,
+        "pixelFormat": "yuv420p10le",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "aac",
+        "channels": 2,
+        "layout": "stereo",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 4.021,
+      "probe": "mkv-hevc-main10-aac.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
+    },
+    {
+      "id": "mkv-avc-ac3-51",
+      "file": "mkv-avc-ac3-51.mkv",
+      "container": "matroska",
+      "sha256": "18195270c5a74b210131e9b1242ba87ab22de60de185c6443751b1aec39672a3",
+      "video": {
+        "codec": "h264",
+        "profile": "Constrained Baseline",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "ac3",
+        "channels": 6,
+        "layout": "5.1(side)",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 4.0,
+      "probe": "mkv-avc-ac3-51.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
+    },
+    {
+      "id": "mkv-avc-aac-no-cues",
+      "file": "mkv-avc-aac-no-cues.mkv",
+      "container": "matroska",
+      "sha256": "3b385143133b96604f8b108aa9e129eb96b46576a506d21e4abb51f29c4c3987",
+      "video": {
+        "codec": "h264",
+        "profile": "Constrained Baseline",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "aac",
+        "channels": 2,
+        "layout": "stereo",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": null,
+      "probe": "mkv-avc-aac-no-cues.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "no_cues",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
+    },
+    {
+      "id": "mp4-truncated",
+      "file": "truncated.mp4",
+      "container": "mp4",
+      "sha256": "b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c",
+      "video": {
+        "codec": "h264",
+        "profile": "Constrained Baseline",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "aac",
+        "channels": 2,
+        "layout": "stereo",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": null,
+      "probe": null,
+      "source": "owned-generated",
+      "integrity": "truncated",
+      "seekability": "invalid",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,239 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:yl_player/yl_player.dart';
+
+import 'support/apple_strict_support.dart' show stateWhere;
+
+const _assets = 'assets/test_media/format_matrix';
+const _caseIds = [
+  'mp4-avc-aac',
+  'mov-hevc-aac',
+  'mkv-avc-aac',
+  'webm-vp9-opus',
+  'flv-avc-mp3',
+  'ts-avc-ac3',
+  'ps-mpeg2-mp3',
+  'avi-avc-mp3',
+  'mkv-av1-opus',
+  'mkv-avc-eac3',
+  'mkv-avc-dts',
+  'mkv-avc-flac',
+  'webm-vp9-vorbis',
+  'mkv-hevc-main10-aac',
+  'mkv-avc-ac3-51',
+  'mkv-avc-aac-no-cues',
+  'mp4-truncated',
+];
+
+void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  var aborted = false;
+  for (final id in _caseIds) {
+    for (final transport in ['file', 'http', 'renamed-file']) {
+      testWidgets('$id / $transport', (tester) async {
+        expect(aborted, isFalse, reason: 'Previous cleanup did not finish');
+        final catalog =
+            jsonDecode(await rootBundle.loadString('$_assets/cases.json'))
+                as Map<String, dynamic>;
+        expect(
+          (catalog['cases'] as List).map((r) => r['id']).toSet(),
+          _caseIds.toSet(),
+        );
+        final row = (catalog['cases'] as List)
+            .cast<Map<String, dynamic>>()
+            .singleWhere((r) => r['id'] == id);
+        final data = await rootBundle.load('$_assets/${row['file']}');
+        final bytes = data.buffer.asUint8List(
+          data.offsetInBytes,
+          data.lengthInBytes,
+        );
+        final directory = await Directory.systemTemp.createTemp('yl_format_');
+        final name = transport == 'renamed-file'
+            ? 'wrong-extension.bin'
+            : row['file'] as String;
+        final file = File('${directory.path}/$name');
+        await file.writeAsBytes(bytes, flush: true);
+        HttpServer? server;
+        if (transport == 'http') {
+          server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+          server.listen((request) async {
+            final response = request.response;
+            response.headers.set(HttpHeaders.acceptRangesHeader, 'bytes');
+            response.headers.contentType = ContentType.binary;
+            final range = request.headers.value(HttpHeaders.rangeHeader);
+            var start = 0;
+            var end = bytes.length - 1;
+            if (range != null) {
+              final match = RegExp(r'^bytes=(\d+)-(\d*)$').firstMatch(range);
+              if (match == null) {
+                response.statusCode = 416;
+                await response.close();
+                return;
+              }
+              start = int.parse(match[1]!);
+              if (match[2]!.isNotEmpty) {
+                end = int.parse(match[2]!).clamp(0, end);
+              }
+              if (start > end) {
+                response.statusCode = 416;
+                await response.close();
+                return;
+              }
+              response.statusCode = 206;
+              response.headers.set(
+                HttpHeaders.contentRangeHeader,
+                'bytes $start-$end/${bytes.length}',
+              );
+            }
+            response.contentLength = end - start + 1;
+            if (request.method != 'HEAD') {
+              response.add(bytes.sublist(start, end + 1));
+            }
+            await response.close();
+          });
+        }
+        YlPlayerController? player;
+        var stage = 'create';
+        var outcome = 'failed';
+        String? code;
+        String? category;
+        String? scope;
+        var firstFrame = false;
+        var seek = false;
+        var completed = false;
+        var audioSelected = false;
+        var cleaned = false;
+        var engine = 'unknown';
+        var decoder = 'unknown';
+        try {
+          player = await YlPlayerController.create(
+            options: const YlPlayerOptions(
+              audioPolicy: YlAudioPolicy.appManaged,
+            ),
+          );
+          await tester.pumpWidget(
+            MaterialApp(home: YlPlayerView(controller: player)),
+          );
+          stage = 'load';
+          final source = server == null
+              ? YlFileSource(file.path)
+              : YlNetworkSource(
+                  Uri.parse('http://127.0.0.1:${server.port}/$name'),
+                  intent: YlStreamIntent.onDemand,
+                );
+          final session = await player
+              .load(source)
+              .timeout(const Duration(seconds: 12));
+          stage = 'ready';
+          await session.ready.timeout(const Duration(seconds: 10));
+          stage = 'first-frame';
+          await session.play();
+          await session.firstFrame.timeout(const Duration(seconds: 10));
+          firstFrame = true;
+          stage = 'progress';
+          await stateWhere(
+            player,
+            (s) => s.timeline.position > const Duration(milliseconds: 400),
+          );
+          expect(player.state.videoGeometry, isNotNull);
+          audioSelected = player.state.audioTracks.any((t) => t.isSelected);
+          expect(audioSelected, isTrue);
+          stage = 'seek';
+          await session.pause();
+          await session.seekTo(const Duration(seconds: 2));
+          await stateWhere(
+            player,
+            (s) => (s.timeline.position.inMilliseconds - 2000).abs() <= 300,
+          );
+          await session.play();
+          await stateWhere(
+            player,
+            (s) => s.timeline.position > const Duration(milliseconds: 2350),
+          );
+          seek = true;
+          stage = 'end';
+          await stateWhere(
+            player,
+            (s) => s.status == YlPlaybackStatus.completed,
+          );
+          completed = true;
+          expect(player.state.failure, isNull);
+          outcome = 'passed';
+        } on YlPlayerException catch (error) {
+          code = error.failure.code;
+          category = error.failure.category.name;
+          scope = error.failure.scope.name;
+        } on TimeoutException {
+          outcome = 'timeout';
+          final failure = player?.state.failure;
+          code = failure?.code;
+          category = failure?.category.name;
+          scope = failure?.scope.name;
+        } catch (_) {
+          // Fixed stage only: never dump native exceptions or source identities.
+          code = 'test.assertion';
+        } finally {
+          engine = player?.state.engine.name ?? 'unknown';
+          decoder = player?.state.decoderMode.name ?? 'unknown';
+          try {
+            await (player?.dispose() ?? Future<void>.value()).timeout(
+              const Duration(seconds: 5),
+            );
+            await tester.pumpWidget(const SizedBox.shrink());
+            await server?.close(force: true);
+            await directory.delete(recursive: true);
+            cleaned = true;
+          } catch (_) {
+            aborted = true;
+            outcome = 'cleanup-failed';
+          }
+          debugPrint(
+            'YL_FORMAT_ROW=${jsonEncode({'caseId': id, 'transport': transport, 'platform': Platform.operatingSystem, 'mediaHash': row['sha256'], 'outcome': outcome, 'stage': stage, 'code': code, 'category': category, 'scope': scope, 'engine': engine, 'decoder': decoder, 'firstFrame': firstFrame, 'audioTrackSelected': audioSelected, 'audioOutputVerified': false, 'pixelMarkersVerified': false, 'audioClockUs': null, 'seekProgress': seek, 'completed': completed, 'disposed': cleaned})}',
+            wrapWidth: 100000,
+          );
+        }
+        const requireSupport = bool.fromEnvironment(
+          'YL_FORMAT_REQUIRE_SUPPORT',
+        );
+        if (Platform.isMacOS && !requireSupport) {
+          // Pin known baseline failures, while keeping failed/timeout in JSONL.
+          // This is a regression characterization, never a support claim.
+          final baseline =
+              jsonDecode(
+                    await rootBundle.loadString('$_assets/baseline-macos.json'),
+                  )
+                  as Map<String, dynamic>;
+          final expected =
+              baseline['expectations']['$id/$transport']
+                  as Map<String, dynamic>;
+          expect(outcome, expected['outcome']);
+          expect(stage, expected['stage']);
+          expect(code, expected['code']);
+          expect(category, expected['category']);
+          expect(scope, expected['scope']);
+          expect(firstFrame, expected['firstFrame']);
+          expect(seek, expected['seekProgress']);
+          expect(completed, expected['completed']);
+        } else if (row['integrity'] == 'truncated') {
+          expect(outcome, 'failed');
+          expect(category, anyOf('source', 'container'));
+          expect(scope, 'session');
+          expect(firstFrame, isFalse);
+        } else {
+          expect(
+            outcome,
+            'passed',
+            reason: '$id/$transport failed at $stage ($code)',
+          );
+        }
+        expect(cleaned, isTrue);
+      }, timeout: const Timeout(Duration(seconds: 90)));
+    }
+  }
+}

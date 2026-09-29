@@ -18,6 +18,8 @@ python3 -B -m unittest discover -s tool/playback_benchmark -p 'test_*.py'
 python3 -B -m unittest discover -s tool/dash_sidx -p 'test_*.py'
 python3 -B -m unittest discover -s tool/dash_timeline -p 'test_*.py'
 python3 -B -m unittest discover -s tool/drm_acceptance -p 'test_*.py'
+python3 -B -m unittest discover -s tool/media_matrix -p 'test_*.py'
+python3 -B tool/media_matrix/catalog.py
 python3 -B -m unittest discover -s tool/dolby_reference -p 'test_*.py'
 python3 -B tool/dolby_reference/inventory.py
 python3 -B tool/protected_output/sync_apple_probe.py --check

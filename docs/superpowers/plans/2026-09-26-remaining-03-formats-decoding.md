@@ -10,7 +10,7 @@
 
 **Spec:** [需求基线 v2.2](../specs/2026-09-20-playback-expansion-requirements.md)、[架构入口](2026-09-22-playback-feasibility.md)、[执行总览](2026-09-26-remaining-overview.md)。
 
-**起点：** `5409313`；本计划状态为未开始。此后执行前重新记录 HEAD 和工作区，不能覆盖后来改动。
+**起点：** `5409313`；2026-09-29已开始Task1组合/素材及macOS基线调查。此后执行前重新记录 HEAD 和工作区，不能覆盖后来改动。
 
 ## Global Constraints
 
@@ -50,8 +50,8 @@
 
 ### Task 1：组合矩阵与原始样本
 
-- [ ] 创建 `tool/media_matrix/cases.json`（新增），每个 REQ-10 容器/编码在三端有可追踪行；本地/HTTP、Profile、位深、声道、seekability 分列。不得用几个 AVC 文件代表全部格式。
-- [ ] 每行记录独立 probe 元数据、来源/授权、SHA-256、预期时长、画面/声音标记、基线是否可播放。行结构采用总览的能力字段；新增元数据结构示例：
+- [x] 创建 `tool/media_matrix/cases.json`（新增），每个 REQ-10 容器/编码在三端有可追踪行；本地/HTTP、Profile、位深、声道、seekability 分列。不得用几个 AVC 文件代表全部格式。
+- [x] 每行记录独立 probe 元数据、来源/授权、SHA-256、预期时长、画面/声音标记、基线是否可播放。行结构采用总览的能力字段；新增元数据结构示例：
 
 ```json
 {"caseId":"FORMAT-MKV-AV1-OPUS-LOCAL","container":"matroska",
@@ -105,3 +105,5 @@ expect(failure.retryable, isFalse);
 - [ ] 更新总览的实施/验证状态。没有完整实现及实际验收时，不将整个 CAP 标为完成。
 
 本文件是执行计划，以下检查命令属于未来执行步骤；编写本计划本身没有运行播放器测试或证明新增能力。
+
+2026-09-29 Task1进度：17份原创夹具/102调查行、独立颜色与声道音调验证、macOS51条公开路径观测及逐项现状回归入口已交付。公共生命周期成功17条，有效素材缺口31条，损坏输入拒绝3条；默认回归匹配不得计为51条格式支持。完整Task1的输出标记/音频时标及其他平台仍待验，详见[执行报告](../reports/2026-09-26-remaining-03-formats-decoding.md)。
