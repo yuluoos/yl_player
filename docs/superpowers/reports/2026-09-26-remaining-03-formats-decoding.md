@@ -102,3 +102,35 @@ flutter test integration_test/format_matrix_test.dart -d macos --no-pub
 - `packages/yl_player/example/assets/test_media/format_matrix/baseline-macos.json`：`5815e05156ba0f13d1b50323514607ad0355f83ce1d10124f678aefdae8cf48c`
 - `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift`：`b9b516e70fa809274009a7fd09675d7a7e7573a1dd3efda4b0b94732e3fbe7bc`
 - `tool/media_matrix/macos-mp4-mime-observations.json`：`a95c029158b63b2d1c660934ecf47daf68a23e3a8d8d9cb5b4355f48738aea64`
+
+## HEVC跳转切片：随机访问前置帧
+
+2026-09-29，基线`9cd27e7`，开始工作区干净。严格运行MOV HEVC和MKV Main10的file/http/renamed-file共6条路径，全部在seek后出现`decoder.video_decode_failed`（等待最终截止）；不是网络或容器打开失败。独立ffprobe在两份既有样本的2秒落点均读到CRA(type21)，后续3个解码顺序上的访问单元分别为RASL_R(type9)、RASL_N(type8)、RASL_N(type8)，显示时间均早于CRA。现有seek事务重新创建VideoToolbox解码器，旧参考图像不在新实例中，但此前仍向它提交RASL。[RFC7798随机访问说明](https://www.rfc-editor.org/rfc/rfc7798.html#section-1.1.2)明确区分可解的RADL与随机访问时不可解的RASL。
+
+修复只在普通`YlVideoPipeline`提交路径增加HEVC随机访问过滤：每次安装资源重置；从CRA开始或遇BLA时丢弃关联RASL，连续播放经过后续CRA则保留RASL；保留RADL和普通帧。NAL长度前缀支持1/2/4字节，完整验证边界/头部/同一图像类型后才更新状态；无效/多层/未知结构交回原解码路径，不把错误伪装成成功。读取bridge已持有的连续CMBlockBuffer头部，不拷贝媒体负载、不增加未计量帧缓存；丢弃时释放提交预留，sample正常释放原packet。FEL走原独立分支，解码策略、硬件证据、固定档位/HDR约束、FFmpeg制品和部署下限不变。
+
+本次决定：采用解码序列边界上的RASL语义过滤，不扩大软解或忽略VideoToolbox错误；代价是其他未支持的输入表示仍沿用已有失败路径。没有声称所有HEVC Profile/FEL/实际输出均通过。
+
+验证入口：
+
+```sh
+sh tool/media_matrix/check_hevc_random_access.sh
+# 在 packages/yl_player/example 下
+flutter test integration_test/format_matrix_test.dart -d macos --no-pub --dart-define=YL_FORMAT_REQUIRE_SUPPORT=true --name '^(mov-hevc-aac|mkv-hevc-main10-aac) /'
+flutter test integration_test/format_matrix_test.dart -d macos --no-pub
+```
+
+新增纯Swift状态/边界入口有56项断言，并接入`check_foundation.sh`的macOS发现路径。实际播放先6项失败，再6项通过；随后将HEVC公开用例加严为先seek2秒、再反向seek1.25秒并继续到自然结束，6项再次通过。初次Swift独立编译被默认模块缓存权限阻止，不计行为失败；改用临时模块缓存后成功。Dart格式化写入成功后的遥测文件权限提示也不计播放失败。
+
+最终55项格式基线全部匹配（退出0）：26条正常路径完成公开生命周期、24条有效素材缺口仍失败、5条截断输入拒绝，所有行释放完成。与上一轮同55项相比，6条HEVC缺口转为通过，其余行结果不变；不是55条格式支持。35项example回归、8项Python台账通过；56项Swift断言由主执行者和独立复审者分别运行通过；Dart定向分析/格式检查及源迁移身份/36项资产指纹检查通过。未重复无关完整原生矩阵。
+
+单次独立复审无Critical/Important/Minor。复审暂未判断的真实像素/声音/同步/Main10输出质量、iOS/Intel/最低系统、FEL物理输出、hardwareRequired全生命周期故障注入/持续资源性能，以及其他格式/损坏/无索引完整验收继续保持未完成。复审期间待结束的55项回归已由主执行者检查最终结果与全部媒体/预期身份；未再次派发复审。明确代价是这些平台和完整输出要求仍需各自证据，不据此封板P03。
+
+当前55项原始行、独立NAL类型探测、工具版本与源/日志指纹见[macos-hevc-seek-observations.json](../../../tool/media_matrix/macos-hevc-seek-observations.json)，前两轮文件保留历史身份。本切片最终源身份：
+- `packages/yl_player/example/integration_test/format_matrix_test.dart`：`f94ef19bd16db2517a1e4732c04009a4baf948cf2182fef92b7515cbf2ff54bf`
+- `packages/yl_player/example/assets/test_media/format_matrix/baseline-macos.json`：`9c802654b6b9b328442443d71677d4ce0df9de9d1ab7a4210db931b3216bfa27`
+- `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlVideoPipeline.swift`：`6cd01b4bdb5199070ebd6ec98ae9df3ae5af5882472690675a9fa830c3a10ca4`
+- `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlHEVCRandomAccessGate.swift`：`c8042be62235cd84adeb7191583b0eae197f2ca36b4a790aafc7f82c4675ccf8`
+- `tool/media_matrix/hevc_random_access_test.swift`：`50e37cf2a2b919834cdd41de5dae2a439754fa8e4adb039b472fc335bec7a201`
+- `tool/media_matrix/check_hevc_random_access.sh`：`2342dd7aca399ecefe9a5eee56ba82a6a4df5f169ecf3667cec4ac83aa8bb0b5`
+- `tool/media_matrix/macos-hevc-seek-observations.json`：`1951b1324042da180dadb8c5b28393f80ba14a31e51046f87462279e228ec5df`

@@ -36,34 +36,34 @@
       "completed": true
     },
     "mov-hevc-aac/file": {
-      "outcome": "timeout",
-      "stage": "seek",
-      "code": "decoder.video_decode_failed",
-      "category": "decoder",
-      "scope": "session",
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
       "firstFrame": true,
-      "seekProgress": false,
-      "completed": false
+      "seekProgress": true,
+      "completed": true
     },
     "mov-hevc-aac/http": {
-      "outcome": "timeout",
-      "stage": "seek",
-      "code": "decoder.video_decode_failed",
-      "category": "decoder",
-      "scope": "session",
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
       "firstFrame": true,
-      "seekProgress": false,
-      "completed": false
+      "seekProgress": true,
+      "completed": true
     },
     "mov-hevc-aac/renamed-file": {
-      "outcome": "timeout",
-      "stage": "seek",
-      "code": "decoder.video_decode_failed",
-      "category": "decoder",
-      "scope": "session",
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
       "firstFrame": true,
-      "seekProgress": false,
-      "completed": false
+      "seekProgress": true,
+      "completed": true
     },
     "mkv-avc-aac/file": {
       "outcome": "passed",
@@ -396,34 +396,34 @@
       "completed": false
     },
     "mkv-hevc-main10-aac/file": {
-      "outcome": "timeout",
-      "stage": "seek",
-      "code": "decoder.video_decode_failed",
-      "category": "decoder",
-      "scope": "session",
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
       "firstFrame": true,
-      "seekProgress": false,
-      "completed": false
+      "seekProgress": true,
+      "completed": true
     },
     "mkv-hevc-main10-aac/http": {
-      "outcome": "timeout",
-      "stage": "seek",
-      "code": "decoder.video_decode_failed",
-      "category": "decoder",
-      "scope": "session",
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
       "firstFrame": true,
-      "seekProgress": false,
-      "completed": false
+      "seekProgress": true,
+      "completed": true
     },
     "mkv-hevc-main10-aac/renamed-file": {
-      "outcome": "timeout",
-      "stage": "seek",
-      "code": "decoder.video_decode_failed",
-      "category": "decoder",
-      "scope": "session",
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
       "firstFrame": true,
-      "seekProgress": false,
-      "completed": false
+      "seekProgress": true,
+      "completed": true
     },
     "mkv-avc-ac3-51/file": {
       "outcome": "passed",

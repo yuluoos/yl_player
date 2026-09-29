@@ -155,17 +155,26 @@ void main() {
           audioSelected = player.state.audioTracks.any((t) => t.isSelected);
           expect(audioSelected, isTrue);
           stage = 'seek';
-          await session.pause();
-          await session.seekTo(const Duration(seconds: 2));
-          await stateWhere(
-            player,
-            (s) => (s.timeline.position.inMilliseconds - 2000).abs() <= 300,
-          );
-          await session.play();
-          await stateWhere(
-            player,
-            (s) => s.timeline.position > const Duration(milliseconds: 2350),
-          );
+          final targets = [
+            2000,
+            if (id == 'mov-hevc-aac' || id == 'mkv-hevc-main10-aac') 1250,
+          ];
+          for (final targetMs in targets) {
+            await session.pause();
+            await session.seekTo(Duration(milliseconds: targetMs));
+            await stateWhere(
+              player,
+              (s) =>
+                  (s.timeline.position.inMilliseconds - targetMs).abs() <= 300,
+            );
+            await session.play();
+            await stateWhere(
+              player,
+              (s) =>
+                  s.timeline.position > Duration(milliseconds: targetMs + 350),
+            );
+            expect(player.state.failure, isNull);
+          }
           seek = true;
           stage = 'end';
           await stateWhere(

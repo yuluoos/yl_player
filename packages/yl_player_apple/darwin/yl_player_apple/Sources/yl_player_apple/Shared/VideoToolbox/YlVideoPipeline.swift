@@ -64,6 +64,7 @@ final class YlVideoPipeline {
   private var format: CMVideoFormatDescription
   private var felConfiguration: YlFELConfiguration?
   private var resource: Resource?
+  private var hevcRandomAccess = YlHEVCRandomAccessGate()
   private var decoder: YlVideoToolboxDecoder? { resource?.decoder }
   private let submissions = YlVideoSubmissionQueue()
   private let outputRelay = YlFallbackOutputRelay()
@@ -157,6 +158,7 @@ final class YlVideoPipeline {
   @discardableResult
   func install(_ candidate: Resource?) -> Resource? {
     let old = resource
+    hevcRandomAccess = YlHEVCRandomAccessGate()
     if let candidate {
       format = candidate.format
       felConfiguration = candidate.felConfiguration
@@ -275,6 +277,10 @@ final class YlVideoPipeline {
         if sampleResult == 0, let unmanagedSample {
           onSubmitted()
           let sample = unmanagedSample.takeRetainedValue()
+          if shouldDiscardHEVCLeadingPicture(sample) {
+            reservation?.release()
+            return ()
+          }
           // Bridge CMBlockBuffer takes the AVPacket without a copy. Transfer the
           // same token and bind it to actual sample lifetime, including any
           // delayed decoder retention beyond the output callback.
@@ -319,6 +325,25 @@ final class YlVideoPipeline {
         }
       }
     }
+  }
+
+  private func shouldDiscardHEVCLeadingPicture(_ sample: CMSampleBuffer) -> Bool {
+    guard CMFormatDescriptionGetMediaSubType(format) == kCMVideoCodecType_HEVC,
+          let block = CMSampleBufferGetDataBuffer(sample) else { return false }
+    var lengthBytes: Int32 = 0
+    guard CMVideoFormatDescriptionGetHEVCParameterSetAtIndex(format, parameterSetIndex: 0,
+      parameterSetPointerOut: nil, parameterSetSizeOut: nil, parameterSetCountOut: nil,
+      nalUnitHeaderLengthOut: &lengthBytes) == noErr else { return false }
+    var pointer: UnsafeMutablePointer<Int8>?
+    var contiguous = 0
+    var total = 0
+    // The bridge transfers one contiguous AVPacket block; do not copy payloads
+    // or allocate an unaccounted media buffer if another producer differs.
+    guard CMBlockBufferGetDataPointer(block, atOffset: 0, lengthAtOffsetOut: &contiguous,
+      totalLengthOut: &total, dataPointerOut: &pointer) == noErr,
+      contiguous == total, let pointer else { return false }
+    return hevcRandomAccess.shouldDiscard(UnsafeRawBufferPointer(start: pointer, count: total),
+      nalLengthBytes: Int(lengthBytes))
   }
 
   func scheduleVideoDrain(

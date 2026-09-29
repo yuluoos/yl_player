@@ -174,3 +174,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-09-29 P07独立参考相关工作保持未完成，按顺序推进P03 Task1：17份原创格式夹具、102调查行及macOS51条file/http/错误扩展名实验。17条正常路径完成公共生命周期、31条有效素材缺口、3条损坏拒绝；默认基线匹配不等于格式全部通过。Task2可消费明确的容器/解码/seek缺口；音画标记、其他平台与完整CAP-FORMAT仍待验，详见P03报告。
 
 2026-09-29 P03 Task2推进MP4探测结果到AVPlayer的传递：新增无扩展名本地/错误扩展名HTTP与截断负例；新版Apple系统使用公开MIME接口。旧系统、其他容器/音频、HEVC seek及完整输出验收保持未完成，范围与实跑证据见[P03报告](../reports/2026-09-26-remaining-03-formats-decoding.md)。
+
+2026-09-29 P03继续修复6条HEVC seek缺口：普通解码序列正确过滤随机访问RASL，保留连续播放及FEL分支；支持边界与证据见[P03报告](../reports/2026-09-26-remaining-03-formats-decoding.md)，整体CAP仍未完成。
