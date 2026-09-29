@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-29",
+  "base_commit": "d46b1a0",
+  "candidate": "libplacebo",
+  "commit": "c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56",
+  "version": "7.372.0",
+  "platform": "macos",
+  "architecture": "arm64",
+  "os": "27.0",
+  "os_build": "26A428",
+  "backend": "OpenGL via accelerated CGL",
+  "vendor": "Apple",
+  "renderer": "Apple M1",
+  "opengl_version": "4.1 Metal - 91.7",
+  "glsl_version": 410,
+  "direct_metal_backend": false,
+  "software_renderer_allowed": false,
+  "production_dependency_added": false,
+  "executable": "cgl-native/placebo-cgl-tests",
+  "executable_sha256": "0bb2b4f40de46b7042db9293ee514904283b4fa3113d4cbfaf85179f0eedd2d9",
+  "build_minimum": "macOS 12.0",
+  "minimum_os_runtime": "not_run",
+  "runs": {
+    "missing_prerequisites_exit": 2,
+    "sandbox_context_exit": 77,
+    "native_exit": 0,
+    "opt_in_discovery": {
+      "run": 13,
+      "passed": 13,
+      "skipped": 0
+    },
+    "default_discovery": {
+      "run": 13,
+      "passed": 12,
+      "skipped": 1
+    }
+  },
+  "upstream_entrypoints": [
+    "gpu_shader_tests",
+    "gpu_interop_tests"
+  ],
+  "required_formats": {
+    "shader_test": "rgba32f",
+    "bit_padding_test": "rgba16"
+  },
+  "observed_groups": [
+    "buffer creation/copy/readback",
+    "texture creation/transfer/readback",
+    "shader/transfer/color roundtrips",
+    "scalers",
+    "rendering/frame queue",
+    "10-bit MSB/LSB alignment in 16-bit storage",
+    "YCbCr processing"
+  ],
+  "dolby_dispatch": {
+    "input": "upstream synthetic dovi_meta",
+    "reshape_shader_dispatched": true,
+    "enhancement_layer_supplied": false,
+    "pixel_golden_comparison": false,
+    "real_media_decoded": false
+  },
+  "conditional_or_unavailable": [
+    "compute shaders (compute_queues=0)",
+    "SSBO (max_ssbo_size=0)",
+    "compute-dependent HDR peak detection",
+    "H.274 film grain synthesis",
+    "GL_KHR_debug callbacks",
+    "g8_b8_r8_420 planar test",
+    "DMA-BUF import/export",
+    "host-pointer import"
+  ],
+  "assertion_scope": "Upstream assertions returned; branches gated by GPU capabilities are not all exercised. Not a complete feature pass count.",
+  "mapping_quality": "external_missing",
+  "native_dv_signal": "external_missing",
+  "final_mapping_tolerance": null,
+  "independent_reference_sha256": null,
+  "original_p7_fel_sha256": null,
+  "device_discovery": {
+    "android_transports": 0,
+    "apple_physical": [
+      {
+        "model": "iPhone 16",
+        "os": "27.0",
+        "tunnel": "unavailable",
+        "ddi_services_available": false
+      }
+    ],
+    "apple_simulators": 3,
+    "physical_mobile_runtime": "not_run",
+    "raw_identifiers_committed": false
+  },
+  "upstream_test_sha256": {
+    "src/tests/gpu_tests.c": "58c7ccea9e59327f02e45a9379e8f1436e0e93c9825374b6b044a098a3284f3b",
+    "src/tests/gpu_tests.h": "d5d1da2425f81da89c58abb015f6cd92bddb6d08a89e04dfce86bcff91cc2fd7",
+    "src/tests/utils.h": "23e7da826543c5ece9e1a6f3a5527708595f9d5ba86648d5383679bf9846c9f0"
+  },
+  "probe_sha256": {
+    "tool/dolby_reference/probes/placebo_cgl_tests.c": "880230de1548b9acd44159f97632ad96af8fa9f92397243c595eeae2515d5095",
+    "tool/dolby_reference/probes/run_cgl_tests.sh": "89bc0956a2f3a674559c65a7e20b3a40c4a0dcfb25605d6cc9b4b76c958c50e4",
+    "tool/dolby_reference/test_cgl_probe.py": "622bffd28c33246a9b10b9143f6b971fc86adb37708f667851e8f2dcfb6d49d4"
+  },
+  "evidence_root": ".superpowers/sdd/2026-09-26-remaining-07-dolby/build-probes",
+  "log_sha256": {
+    "cgl-tests-sandbox.log": "26b99b8ba6d037a4299bbfff40cda5b6b9f4b5958a8a540e59109a6ebcc5bef4",
+    "cgl-missing-build.log": "9b127ccd49fd1b39be872205a9cb6eeb435677d28000ee78d052dec8f38f0507",
+    "cgl-native-final.log": "f8c52643ce36f64c43bab5bb955ddbd8f2a60f13df5bd2aa9e42fc9fe0867765",
+    "cgl-discovery.log": "97fb4d2a16d841ff1f621f57ae97c1942cb0c27cfa05a00cbe5c2809cbb695c1",
+    "cgl-discovery-tests.log": "c251a09737bb5ddfa5447ba5c54d556926106ff24650b4ab707bc10f860d6bfc",
+    "cgl-object-manifest.json": "0289f5700db9ef2c03d2781297e6b9c77cefdbcb87f9d98c11d775eeb03065bd",
+    "apple-devices-native.json": "19bc5b88e49821d434c205e911aa3126ae919dc16bd1c253f44bdc404d15de0c",
+    "android-devices-native.log": "36f15c2fe32964a6fbe902e914a47739d4e6304b0d3e812bf08096ff0419b7ae"
+  },
+  "reference_search": [
+    {
+      "url": "https://kodi.wiki/view/Samples",
+      "finding": "FEL playback-test links available; page claims fair use for non-copyleft clips. Original media bytes, permissions and target-reference parameters not verified in this increment.",
+      "accepted_independent_reference": false
+    },
+    {
+      "url": "https://github.com/quietvoid/dovi_tool/discussions/168",
+      "finding": "Discussion includes metadata-altered single-layer derivatives; maintainer notes random RPU in discussed pattern. Not accepted as original FEL or independent target-display reference.",
+      "accepted_independent_reference": false
+    },
+    {
+      "url": "https://ott.dolby.com/browser_test_kit/help_files/index.html",
+      "finding": "Search lead found; page retrieval failed in this session. Contents and suitability unverified.",
+      "accepted_independent_reference": false
+    }
+  ]
+}

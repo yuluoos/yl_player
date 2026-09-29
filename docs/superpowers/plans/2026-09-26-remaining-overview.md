@@ -168,3 +168,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-09-28 P07-Task1部分完成：FEL/HDR基线6个检查程序通过，候选固定版本/源码调查、24行三平台参考调查台账及8项校验测试已交付。原始FEL、独立参考/容差与候选三端构建仍未齐备，Task1整体、CAP-DV-MAP/OUT均未完成；不得把合成算术或公开LFS样本声明当作完整画质证据。详见P07报告。
 
 2026-09-28 P07-Task1B1补齐libdovi/libplacebo三端arm64候选构建和官方P5首份输入盘点；macOS libplacebo13通过/1 GPU跳过，libdovi2单测/5 C API预期匹配。构建没有接入生产或证明画质；独立参考/容差、原始FEL及实际GPU/设备输出仍缺，Task1/完整杜比仍未完成。
+
+2026-09-29 P07 Task1B2新增当前Mac的CGL实跑证据：上游GPU条件测试返回成功，覆盖浮点往返/10-bit位对齐；显式研究测试发现13通过，默认12通过/1 GPU跳过。没有真实FEL、独立显示参考或移动端/原生DV输出验收；Task1及CAP-DV-MAP/OUT仍未完成，详见P07报告。

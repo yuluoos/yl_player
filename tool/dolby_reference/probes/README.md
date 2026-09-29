@@ -61,3 +61,22 @@ SolLevante by Netflix, Inc.; Dolby, Inc. modified version。发布方随附说�
 FFmpeg/ffprobe8.0.1只用于离线样本盘点，不替换播放器9.0.1桥接。`ffprobe -show_streams` 确认P5、1920×1080、24fps；copy+hevc_mp4toannexb抽取首access unit后取NAL type62，未改写RPU内容。`inspect_rpu.rs` 使用固定libdovi的serde功能及serde_json1.0.150输出首RPU解析结果，独立Cargo工程/锁文件留在研究目录。实际结果为CM2.9块、L1/L2/L4/L5/L6，含非默认L2 trim；只检查首RPU，不推断全片元数据或所有帧正确。
 
 目前没有独立目标参考图、最终容差或原始P7 FEL，因此不升级 `cases.json` 的历史调查行。新输入观察是补充证据，并不表示Task1整体结束、完整映射或原生DV信号通过。
+
+## Task1B2：macOS 原生 GPU 实验
+
+`placebo_cgl_tests.c` 只提供加速CGL上下文并调用固定上游的 `gpu_shader_tests` / `gpu_interop_tests`；不修改上游断言，不接入生产。它要求GLSL410、上游shader测试所需浮点格式和16-bit UNORM读回格式，缺失时返回77，避免这些测试组提前返回却误报成功。其余上游条件分支仍按实际能力执行，不能将进程退出0解释为所有GPU功能通过。
+
+`run_cgl_tests.sh` 复用Task1B1同版本macOS核心对象，重新编译本上下文适配和原始 `gpu_tests.c`，不安装依赖。必须先按本文件前文准备固定版本源码与构建，不能把同名目录内的其他版本当作证据。实际源文件、可执行程序和核心对象清单哈希见 `../runtime-evidence.json` 及忽略目录中的 `cgl-object-manifest.json`。
+
+```sh
+bash tool/dolby_reference/probes/run_cgl_tests.sh
+# 已接入check_foundation.sh既有的Python测试发现入口。单独启用研究测试：
+YL_DOLBY_CGL_PROBE_ROOT="$PWD/.superpowers/sdd/2026-09-26-remaining-07-dolby/build-probes" \
+  python3 -B -m unittest discover -s tool/dolby_reference -p 'test_*.py'
+```
+
+默认发现结果是12通过、1项真实GPU测试跳过；设置上述变量后，本次13项通过。缺构建先决条件退出2；无原生上下文/必要格式退出77（unittest记录skip）；构建、创建libplacebo或断言错误保留非零退出，不能吞错。研究测试超时120秒。本次沙箱CGL像素格式失败10017/退出77，主机权限运行成功，不把沙箱限制写成设备不支持。
+
+实际主机macOS27.0/26A428、Apple M1、OpenGL4.1 Metal - 91.7，使用CGL/OpenGL后端，驱动字符串中的Metal不代表libplacebo直接Metal后端。shader格式rgba32f、位对齐目标rgba16；上游执行了纹理读回、浮点颜色/传递函数往返、缩放/渲染/帧队列及10-bit高低位对齐检查。Dolby合成fixture只dispatch了reshape/decode shader：没有增强层、没有真实流、没有独立像素golden，不能证明FEL或CM映射画质。
+
+原始EGL测试13通过/1跳过记录保留，本次另记CGL实验，不改写成14通过。compute_queues及max_ssbo_size均0，峰值检测和H.274会报告能力错误；GL_KHR_debug缺失，planar/DMA-BUF/host-pointer等条件分支未覆盖。日志及OpenGL弃用警告均保留。iOS/Android及最低系统运行未通过：本次ADB无设备，已配对iPhone16的通道不可用，模拟器不替代实体设备。

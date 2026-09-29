@@ -485,3 +485,5 @@ P06 Task3C2 已接入 Apple schema5 公共 FairPlay HLS、独立 AVPlayerLayer�
 2026-09-28 [P07-Task1调查](superpowers/reports/2026-09-26-remaining-07-dolby.md)冻结FEL/HDR源码基线和候选版本，本机6个检查程序通过；没有扩大生产杜比支持。24个调查组合均缺独立参考/容差，候选三端构建未完成，CAP-DV-MAP与CAP-DV-OUT继续未验证。
 
 2026-09-28 P07-Task1B1仅推进研究候选：libdovi/libplacebo三端arm64构建与公开P5输入hash/首RPU验证。macOS GPU测试跳过，移动端未运行；没有新增生产依赖或提升CAP-DV-MAP/OUT。
+
+2026-09-29研究补充：固定libplacebo在当前Apple M1/macOS27的加速CGL路径上完成有限GPU断言，详见 [P07报告](superpowers/reports/2026-09-26-remaining-07-dolby.md)。此候选仍未接入播放器，compute/SSBO能力受限；不能据此新增FEL、完整杜比映射、移动端或原生DV输出支持声明。

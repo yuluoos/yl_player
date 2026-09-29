@@ -1,6 +1,6 @@
 # P07 执行报告：Task1 参考、候选与完整性门槛
 
-2026-09-28；当前增量基线 `e69d5dc47db3dc08a808dd73c80de56acd446a4d`，工作区最初干净。**Task1 部分完成：基线、调查台账及后续三端arm64候选构建已交付；原始FEL、独立参考、最终容差与实际渲染验证尚缺。CAP-DV-MAP / CAP-DV-OUT 均未完成。** 以下Task1A为历史记录，最新进度见末尾Task1B1。 本次没有修改生产播放器、放宽元数据拒绝或新增依赖。
+更新于2026-09-29；最初基线 `e69d5dc47db3dc08a808dd73c80de56acd446a4d`，各增量基线分别记录。**Task1 部分完成：基线、调查台账、三端arm64候选构建与本机有限GPU实验已交付；原始FEL、独立参考、最终容差及完整映射验证尚缺。CAP-DV-MAP / CAP-DV-OUT 均未完成。** 以下Task1A为历史记录，最新进度见末尾Task1B2。本轮没有修改生产播放器、放宽元数据拒绝或新增依赖。
 
 ## 现有基线与真实运行
 
@@ -120,3 +120,32 @@ Homebrew Rust1.94和官方std ABI不兼容；其自带macOS std还有26.0下限�
 - `tool/dolby_reference/probes/libdovi_smoke.c`：`01005a65be6d3bc30a89c61a7740d6d4e0cab28c30ef57918800df96e3f099e8`
 - `tool/dolby_reference/probes/inspect_rpu.rs`：`88858633006b312a9208f3f100d63def0723e834c376ae7a61cb5d1c731aa1ce`
 - `tool/dolby_reference/probes/README.md`：`a18ec7371b79dfbb8dcbb666d1022cb9b59b2b2e9fdf93ec20f322b2f542e80d`
+
+## 2026-09-29 Task1B2：本机 GPU 实验与剩余外部条件
+
+基线 `d46b1a0`。本增量完成macOS候选原生GPU子实验，**Task1B2与Task1整体仍未完成**。新增 [CGL实验记录](../../../tool/dolby_reference/runtime-evidence.json) 和 [复现入口](../../../tool/dolby_reference/probes/run_cgl_tests.sh)，生产源码、依赖、部署下限和历史验收状态不变。
+
+- Apple M1/macOS27.0 (26A428)，CGL加速上下文；OpenGL4.1/GLSL410。固定libplacebo7.372.0的原始GPU测试在真实GPU运行并退出0。驱动字符串含Metal不等于直接Metal后端。
+- 实际浮点shader目标为rgba32f、位对齐目标为rgba16。纹理读回、色彩/传递函数往返、缩放、渲染/帧队列与10-bit高低位对齐走到了上游断言。其容差是既有合成测试容差，未转用为最终杜比显示容差。
+- Dolby段使用上游合成 `dovi_meta`，只验证reshape/decode shader能够dispatch；没有传入增强层，没有真实媒体解码或独立golden像素比较。不能从这里推出NLQ/FEL、L2/L8 trims或CM完整画质通过。
+- 上游GPU入口带条件分支：compute_queues/max_ssbo_size均0，峰值检测及H.274报告能力不足；GL_KHR_debug缺失；planar、DMA-BUF和host-pointer路径未验证。进程退出0不等于所有功能通过；原13通过/1 EGL跳过记录保持原样。
+- 首次沙箱上下文取得失败10017/退出77，主机权限运行成功；复现脚本缺构建目录返回2。新增测试进入既有unittest发现入口：默认12通过/1 GPU跳过，显式开启后13通过/0跳过。未修改上游测试断言；没有新增生产行为，使用实际研究探针及上游断言验证。
+
+设备发现最初受沙箱影响（ADB监听被拒、devicectl超时），主机重试成功：ADB无设备；发现已配对iPhone16/iOS27，但tunnel unavailable、DDI不可用；另有3个模拟器，未作为实体设备证据。没有安装应用、重新配对或修改设备。可执行文件最低版本为macOS12，但实际仅在27运行；最低系统兼容性仍待验证。原始设备清单留在忽略目录，提交记录不含序列号/UDID。
+
+### 原始输入与独立参考核查
+
+本轮核查 [Kodi官方样本页](https://kodi.wiki/view/Samples) 的FEL测试链接；该页对非copyleft片段声明fair use，但本轮未核验这些媒体的原始字节、使用依据或独立目标输出，因此只保留为线索。[dovi_tool讨论168](https://github.com/quietvoid/dovi_tool/discussions/168) 涉及删除mapping的单层衍生物，维护者也指出所讨论pattern使用随机RPU；这类结果不作为原始FEL或独立显示参考。[Dolby Browser Test Kit入口](https://ott.dolby.com/browser_test_kit/help_files/index.html)检索到但本轮页面读取失败，不猜测其覆盖。以上是本轮检索结果，不宣称不存在可用公开参考。
+
+仍缺：可核验的原始P7 FEL及使用依据、同目标显示参数的独立多帧输出/参考hash、事先冻结的最终容差、移动端真实运行和物理DV输出链路。已向用户询问是否有本地原始材料，同时完成了不依赖材料的GPU实验。缺参考时不进入Task2/3映射实现，也不拿合成fixture或上游往返结果冒充独立参考。
+
+本次决定：在既有固定候选上补CGL运行证据，保留所有能力错误和跳过；代价是该结果只适用于当前Mac的有限路径，不能外推移动端或完整映射。研究目录继续保留，因为P07尚未完成。
+
+本增量关键文件SHA-256：
+
+- `tool/dolby_reference/runtime-evidence.json`：`527278f71b830a1530bc77330ddef0227903e8e56412a0f34f531a1a70ed45c2`
+- `tool/dolby_reference/probes/placebo_cgl_tests.c`：`880230de1548b9acd44159f97632ad96af8fa9f92397243c595eeae2515d5095`
+- `tool/dolby_reference/probes/run_cgl_tests.sh`：`89bc0956a2f3a674559c65a7e20b3a40c4a0dcfb25605d6cc9b4b76c958c50e4`
+- `tool/dolby_reference/test_cgl_probe.py`：`622bffd28c33246a9b10b9143f6b971fc86adb37708f667851e8f2dcfb6d49d4`
+
+单次独立复审未发现重要或次要问题：60项登记校验和匹配（含45个核心对象），242份上游源码与固定归档一致；复审默认发现12通过/1跳过，显式GPU运行依据原始13通过日志。复审没有重跑GPU或覆盖证据。未评判的完整FEL/CM映射、显示变化、资源耗尽回退、物理信号、移动/最低系统及性能均保留为未完成项；这些限制不被本次测试覆盖，生产支持声明保持原样。

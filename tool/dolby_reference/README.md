@@ -1,6 +1,6 @@
 # P07 Dolby 参考调查台账
 
-当前阶段已推进到固定候选三端arm64构建和首份官方输入盘点，**Task1 未整体完成**。没有新增播放支持，也没有把现有 FEL 算术测试提升为完整画质结论。
+当前阶段已完成固定候选三端arm64构建、首份官方输入盘点和本机有限GPU实验，**Task1 未整体完成**。没有新增播放支持，也没有把现有 FEL 算术测试提升为完整画质结论。
 
 - `baseline.json`：e69d5dc 的现有源码/合成夹具哈希、当前主机上6个检查可执行程序的结果。原始 FEL 媒体缺失，媒体哈希为空。GPU 与手写 scalar 对照仅覆盖既有选定算术点。
 - `candidates.json`：固定提交与14个上游源文件哈希、版本和当前构建条件。libplacebo/libdovi 未接入；后续三端arm64构建记录在 `build-evidence.json`。历史PATH预检仍保留；PATH/pkg-config 未发现依赖仅是本机预检结果，不表示这些平台不可能构建。
@@ -28,3 +28,5 @@ sh tool/apple_hdr/run_tests.sh
 不能据此宣称 iOS物理设备、Android、原始FEL、完整CM映射、外接DV输出或持续性能通过。完整发现及下一验证实验见 [P07报告](../../docs/superpowers/reports/2026-09-26-remaining-07-dolby.md) 和 [映射契约](../../docs/superpowers/specs/2026-09-26-dolby-mapping-contract.md)。
 
 Task1B1复现、初始失败及最终边界见 [构建探针说明](probes/README.md)。调查/证据测试当前12项；本机上游libplacebo13项通过、1项GPU跳过，libdovi2项单测及5个C API退出预期匹配。iOS/Android仅构建链接，尚无设备运行结论。
+
+2026-09-29 Task1B2补充：[runtime-evidence.json](runtime-evidence.json)记录Apple M1原生CGL上游GPU实验和条件分支缺口。复现见[探针说明](probes/README.md)。现有测试发现新增可选真实GPU检查：默认12通过/1跳过，设置 `YL_DOLBY_CGL_PROBE_ROOT` 后本机13通过。原EGL跳过记录不变；Task1仍缺原始FEL、独立参考/容差及移动端/物理链路。
