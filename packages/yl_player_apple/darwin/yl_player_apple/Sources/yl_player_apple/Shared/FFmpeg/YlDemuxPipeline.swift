@@ -422,6 +422,11 @@ func ylFallbackPacketReadError(
   case .flv:
     code = "container.flv_malformed"
     message = "The FLV packet stream is malformed."
+  case .avi:
+    code = result == Int32(YLFResultVideoConfigurationInvalid) ? "container.avi_timing_unsupported" : "container.avi_malformed"
+    message = result == Int32(YLFResultVideoConfigurationInvalid)
+      ? "The AVI video lacks supported presentation timing. Use a file with explicit timestamps or Baseline AVC without frame reordering."
+      : "The AVI packet stream is malformed."
   case .mpegTs:
     code = "container.mpegts_malformed"
     message = "The MPEG-TS packet stream is malformed."

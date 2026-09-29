@@ -2,6 +2,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 void main() {
+  test('AVI failures provide fixed recovery guidance', () {
+    const guidance = {
+      'container.avi_timing_unsupported': 'without frame reordering',
+      'container.avi_open_failed': 'supported codecs',
+      'container.avi_seek_failed': 'usable index',
+      'container.avi_malformed': 'complete copy',
+      'container.avi_live_unsupported': 'supported live stream format',
+    };
+    for (final entry in guidance.entries) {
+      final message = YlSafeDiagnostics.messageForCode(entry.key);
+      expect(message, contains('AVI'));
+      expect(message, contains(entry.value));
+    }
+  });
   test('MPEG-TS failures explain the failing operation and recovery', () {
     const guidance = {
       'container.mpegts_open_failed': 'complete supported transport stream',

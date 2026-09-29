@@ -237,3 +237,38 @@ YL_TEST_FFMPEG_BUILD=<retained-build-root> sh packages/yl_player_apple/tool/appl
 附加公开HLS回归首次在末尾UI断言失败：首帧/时钟/暂停已通过，但旧测试仍查找Flutter Texture；现有`YlPlayerView`在Apple普通视频路径已使用先前提交的原生AppKitView。本次改为断言原生视图存在且viewType与公开surface一致，未调整播放器显示实现。
 
 最终公开HLS回归1项、example单元35项均通过，3个Dart入口分析无问题，Python台账8项通过，Apple测试源对齐iOS657/macOS574。原始HLS失败与修复后日志均纳入证据指纹；未将平台视图存在等同于像素或HDR显示验收。
+
+
+## AVI点播切片
+
+基线`2e4b7ea`，初始工作区干净。既有原创`avi-avc-mp3.avi`为320×180/24fps Constrained Baseline AVC与48kHz双声道MP3，SHA256 `8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc`。file/http/同字节.bin三条严格公开测试实际RED，均在load报`container.unsupported`；原生有索引和移除idx1两份输入也无法打开。选择AVI先于WebM/PS是因为样本可复用已有视频和音频解码链；WebM仍缺完整VP9/Opus/Vorbis，现有PS样本需要MPEG-2视频路径，均保留缺口。
+
+只为固定签名FFmpeg9.0.1增加AVI demuxer，不新增decoder/parser、商业SDK或网络模块，不提高iOS15/macOS12下限。AVI具有独立路由和容器身份，文件与普通HTTP automatic/onDemand走点播；live、managed/bounded/hardwareRequired继续明确拒绝。字节前缀沿用已有RIFF/AVI探测，真正支持仍依赖准备阶段解复用与codec校验；HTTP seekability由实际Range能力决定。
+
+第一版仅打开解复用后，原生53项检查26失败：裁剪产物未从packet补齐SPS/PPS，AVI视频PTS缺失，无idx1的合成索引也可能落到P帧。将既有Annex-B探测扩展到AVI，AVI探测最多512packet/8MiB；缺失PTS仅在AVC Baseline/Constrained Baseline且声明video_delay=0、DTS存在时补为DTS，已有PTS保持不变。未知Profile、Main/High或重排/缺DTS不猜测，发布`container.avi_timing_unsupported`。没有开启可能向前累计媒体的通用GENPTS路径。
+
+AVI seek复用TS的1/2/4/8秒有限关键帧定位，每次最多512packet/8MiB；回放探测起点后，由既有关键帧门控和目标前呈现抑制完成preroll。无idx1用复制样本删除完整索引chunk并更新RIFF大小构造，不修改原始夹具。原生测试原先要求首个demux packet就是关键帧且限1.1秒回看，与真实门控和8秒上限不符；改为检查门控后首个关键帧在目标之前且位于允许窗口。88项AVI检查通过，包括有/无idx1前向2秒、反向1.25秒及零、sample时间和不允许推断PTS的边界；既有视频metadata35项、TS30项通过。
+
+中间保留环境失败：首个候选构建结束清理临时目录，使使用已清理headers的探针编译失败；改为直接链接候选framework验证，第一次传相对路径被本地输入接口拒绝，换绝对路径后获得上述实际26项失败。另建独立macOS测试库用于快速验证，最终产品仍须五目标独立复建通过后采纳；这些探针/环境失败不计为播放器支持结果。
+
+最终五目标候选对应的保留构建库再次通过AVI88、TS30、video35、audio30检查。二进制大小变化（字节）：iOS device 2182904→2219128，iOS simulator合并4349360→4402160，macOS合并4362240→4415008。错误提示19项、Apple适配/codec37项、example35项、Python台账8项通过；2个Dart入口分析无问题。单次独立静态复审无Critical/Important/Minor，运行时和制品复建仍由主执行者继续核对。
+
+最终候选完成第二次独立五目标重建，18个规范文件/符号链接逐字节一致后才替换制品、lock及接受的来源哈希。契约验证3slice/5架构/31个Swift消费符号、3项负例通过；导出API/codec ID均未扩展。构建切片不能替代iOS/Intel/最低系统运行时证据。
+
+最终产物3条严格公开路径全部通过：首帧、音轨选中、时钟推进、点播/可seek/时长元数据、前向2秒和反向1.25秒seek、自然结束与释放；本机报告managedFallback/hardware。策略4项通过：明确live及managed/bounded/hardwareRequired在网络访问前拒绝；损坏候选返回不含路径的AVI错误且现有会话仍可继续；本地移除idx1后完成前后seek和自然结束；无Range HTTP200服务可播放但不宣称可seek，seek返回command范围`network.range_not_supported`。仅更新3条已实测的AVI基线预期及对应SHA256SUMS；36项素材/台账指纹核对通过。
+
+最终原生定向33项通过，0失败/0跳过，含路由/AVI/TS、17项音频、3项FEL管线和3项HLS探测。并未执行完整原生聚合门禁，FEL单元和HLS探测不代替实际FEL画面或完整HEVC-HLS跳转。移除idx1的派生样本为79288字节，SHA256 `b74ef7699cd990c3a75d427ea70c88dcd0b60dbab6bf04ec1845294d7af686e0`；只更改索引chunk和RIFF长度，媒体payload保留。
+
+最终55项基线全部匹配（退出0）：38条正常播放生命周期完成、12条有效素材支持缺口、5条损坏输入拒绝，全部释放完成。与上一轮55条逐项比较，仅3条AVI由失败转为通过，其余52条原始观测相同；预期失败不计为格式支持。原始行、日志与执行源指纹见[macos-avi-vod-observations.json](../../../tool/media_matrix/macos-avi-vod-observations.json)，保留历史TS/FLAC等证据。Apple测试源对齐iOS658/macOS575；最终静态复审未要求代码修改。
+
+复现命令（Flutter从`packages/yl_player/example`运行）：
+
+```sh
+flutter test integration_test/format_matrix_test.dart -d macos --no-pub --dart-define=YL_FORMAT_REQUIRE_SUPPORT=true --plain-name 'avi-avc-mp3 /'
+flutter test integration_test/avi_policy_test.dart -d macos --no-pub
+flutter test integration_test/format_matrix_test.dart -d macos --no-pub
+# 仓库根目录，固定签名FFmpeg9.0.1的保留构建：
+YL_TEST_FFMPEG_BUILD=<retained-build-root> sh packages/yl_player_apple/tool/apple_ffmpeg/test_video_metadata.sh
+```
+
+本轮不验收AVI其他codec/Profile、重排帧的缺失PTS重建、OpenDML/多段/大文件、任意损坏或异常索引、物理声音/像素/同步、跨端/最低系统、资源曲线和严格策略。上述搜索/探测限制是工程防护，不代表完整FFmpeg索引操作或软解性能预算。未新增软件视频解码，P03 Task1/Task2与CAP-FORMAT均继续保持未完成。

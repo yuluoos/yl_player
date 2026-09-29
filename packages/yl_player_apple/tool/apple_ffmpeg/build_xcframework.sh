@@ -27,7 +27,7 @@ common_flags=(
   --enable-avutil
   --enable-avcodec
   --enable-avformat
-  --enable-demuxer=matroska,flv,mov,mpegts
+  --enable-demuxer=matroska,flv,mov,mpegts,avi
   --enable-decoder=dca
   --enable-bsf=dovi_rpu
   --enable-protocol=file

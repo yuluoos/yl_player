@@ -348,8 +348,10 @@ final class YlOpenedMedia {
         }
         throw NativePlayerError(
           category: "container",
-          code: recipe?.container == .mpegTs ? "container.mpegts_seek_failed" : "container.mkv_seek_failed",
-          message: recipe?.container == .mpegTs
+          code: recipe?.container == .avi ? "container.avi_seek_failed"
+            : recipe?.container == .mpegTs ? "container.mpegts_seek_failed" : "container.mkv_seek_failed",
+          message: recipe?.container == .avi ? "The AVI media could not be seeked. Check that it contains a usable index."
+            : recipe?.container == .mpegTs
             ? "The MPEG-TS seek could not find a usable keyframe within the bounded search."
             : "The Matroska media could not be seeked.",
           diagnostic: "YlFFmpegBridge result \(result)"
@@ -428,6 +430,10 @@ final class YlOpenedMedia {
       )
     }
     switch container {
+    case .avi:
+      return NativePlayerError(category: "container", code: "container.avi_open_failed",
+        message: "The AVI media could not be opened. Check that the source is complete and uses supported codecs.",
+        diagnostic: "YlFFmpegBridge result \(result)")
     case .mpegTs:
       return NativePlayerError(category: "container", code: "container.mpegts_open_failed",
         message: "The MPEG-TS media could not be opened or its timeline could not be established.",

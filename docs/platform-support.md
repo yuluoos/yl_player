@@ -25,10 +25,11 @@ actual source and requirements before Load.
 | Local FLV | Media3 route; runtime-dependent | Not selected | Inspection-dependent VOD; AVC/MP3 lifecycle measured on macOS |
 | Local WebM | Media3 route; runtime-dependent | Not selected | Rejected until supported video/audio paths are available |
 | Standalone MPEG-TS VOD | Media3 route; runtime-dependent | Not selected | Inspection-dependent defaults; 188-byte AVC/AC-3 file/HTTP/renamed-file scope measured on macOS; strict policies and live intent rejected |
-| AVI or MPEG-PS request | Media3 route; runtime-dependent | Rejected before engine selection (`container.unsupported`, or `policy.unsupported` for a strict request) | Rejected before engine selection |
+| AVI VOD | Media3 route; runtime-dependent | Not selected | Inspection-dependent defaults; Baseline AVC/MP3 scope below; strict policies and live intent rejected |
+| MPEG-PS request | Media3 route; runtime-dependent | Rejected before engine selection (`container.unsupported`, or `policy.unsupported` for a strict request) | Rejected before engine selection |
 | Unknown network format | Inspection-dependent | Inspection-dependent | Apple inspection reads at most the bounded 4096-byte signature window, then reassesses |
 
-The Apple FFmpeg artifact enables Matroska, FLV, MP4, and MPEG-TS demuxing plus the
+The Apple FFmpeg artifact enables Matroska, FLV, MP4, MPEG-TS, and AVI demuxing plus the
 documented parsers. It does not provide networking or software video decoding.
 Apple managed fallback requires a supported video stream; audio-only fallback
 media is currently rejected.
@@ -50,6 +51,14 @@ acceptance. HTTP seekability depends on actual Range support. Explicit live,
 managed networking, bounded buffering and hardwareRequired remain rejected.
 192/204-byte packet signatures have detection tests only, not playback acceptance.
 Physical output/sync, other codecs, devices and platforms remain unverified.
+
+AVI fallback reuses the existing compressed video/audio decoders. Missing video
+PTS can use DTS only for Baseline/Constrained Baseline AVC with zero reported
+reorder delay; other missing-timestamp layouts fail explicitly. AVI uses the
+same bounded keyframe search limits as standalone TS. The owned Baseline AVC/MP3
+fixture and its local idx1-removed variant define this increment's runtime scope;
+other AVI codecs/profiles, OpenDML/multipart files and physical output need
+separate acceptance. Explicit live and strict policies remain rejected.
 
 For non-RTMP sources with formats other than DASH, Android first tries Media3, then makes at most one managed fallback attempt for
 container/extractor and decoder failures. The fallback uses package-owned local,

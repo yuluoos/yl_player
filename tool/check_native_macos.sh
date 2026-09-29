@@ -175,6 +175,7 @@ run_integration_tests() {
     integration_test/macos_http_flv_playback_test.dart \
     integration_test/flv_intent_test.dart \
     integration_test/mpegts_policy_test.dart \
+    integration_test/avi_policy_test.dart \
     integration_test/state_update_cadence_test.dart \
     integration_test/apple_strict_policy_test.dart
   do

@@ -130,13 +130,14 @@ static bool ylf_is_supported_input_format(const AVInputFormat *input_format) {
   if (input_format == NULL || input_format->name == NULL) {
     return false;
   }
-  return strstr(input_format->name, "matroska") != NULL ||
+  return strcmp(input_format->name, "avi") == 0 ||
+         strstr(input_format->name, "matroska") != NULL ||
          strstr(input_format->name, "flv") != NULL ||
          strstr(input_format->name, "mov") != NULL ||
          strstr(input_format->name, "mpegts") != NULL;
 }
 
-static int32_t ylf_reset_after_transport_stream_probe(
+static int32_t ylf_reset_after_annexb_probe(
     struct YLFMediaContext *context) {
   if (context->time_seek_callback != NULL) {
     int64_t result = context->time_seek_callback(context->callback_opaque, 0);
@@ -194,7 +195,7 @@ static bool ylf_prime_aac_from_adts(AVCodecParameters *parameters,
   return true;
 }
 
-static bool ylf_transport_stream_needs_metadata(AVFormatContext *format) {
+static bool ylf_annexb_needs_metadata(AVFormatContext *format) {
   for (unsigned int index = 0; index < format->nb_streams; index++) {
     AVCodecParameters *parameters = format->streams[index]->codecpar;
     if (parameters->codec_type == AVMEDIA_TYPE_VIDEO &&
@@ -213,23 +214,27 @@ static bool ylf_transport_stream_needs_metadata(AVFormatContext *format) {
   return false;
 }
 
-static int32_t ylf_prime_transport_stream_video_config(
+static int32_t ylf_prime_annexb_video_config(
     struct YLFMediaContext *context) {
-  if (context->format->iformat == NULL ||
-      strstr(context->format->iformat->name, "mpegts") == NULL) {
+  const char *name = context->format->iformat ? context->format->iformat->name : NULL;
+  bool is_avi = name != NULL && strcmp(name, "avi") == 0;
+  if (name == NULL || (!is_avi && strstr(name, "mpegts") == NULL)) {
     return YLFResultOK;
   }
-  bool needs_metadata = ylf_transport_stream_needs_metadata(context->format);
+  bool needs_metadata = ylf_annexb_needs_metadata(context->format);
   if (!needs_metadata) return YLFResultOK;
 
   AVPacket *packet = av_packet_alloc();
   if (packet == NULL) return YLFResultOpenFailed;
   bool read_any = false;
+  int64_t scanned_bytes = 0;
   for (int attempt = 0; attempt < 512 && needs_metadata; attempt++) {
     av_packet_unref(packet);
     int result = av_read_frame(context->format, packet);
     if (result < 0) break;
     read_any = true;
+    scanned_bytes += FFMAX(packet->size, 0);
+    if (is_avi && scanned_bytes > 8 * 1024 * 1024) break;
     if (packet->stream_index < 0 ||
         (unsigned int)packet->stream_index >= context->format->nb_streams ||
         packet->size <= 4 || packet->data == NULL) {
@@ -258,11 +263,11 @@ static int32_t ylf_prime_transport_stream_video_config(
         parameters->extradata_size = packet->size;
       }
     }
-    needs_metadata = ylf_transport_stream_needs_metadata(context->format);
+    needs_metadata = ylf_annexb_needs_metadata(context->format);
   }
   av_packet_free(&packet);
   if (!read_any) return ylf_callback_failure(context, YLFResultOpenFailed);
-  return ylf_reset_after_transport_stream_probe(context);
+  return ylf_reset_after_annexb_probe(context);
 }
 
 static int32_t ylf_discover_streams(struct YLFMediaContext *context,
@@ -273,7 +278,7 @@ static int32_t ylf_discover_streams(struct YLFMediaContext *context,
   if (avformat_find_stream_info(context->format, NULL) < 0) {
     return ylf_callback_failure(context, YLFResultOpenFailed);
   }
-  int32_t prime_result = ylf_prime_transport_stream_video_config(context);
+  int32_t prime_result = ylf_prime_annexb_video_config(context);
   if (prime_result != YLFResultOK) return prime_result;
   out_info->stream_count = (int32_t)context->format->nb_streams;
   out_info->duration_us = context->format->duration == AV_NOPTS_VALUE
@@ -903,6 +908,21 @@ static bool ylf_strip_single_adts_header(AVPacket *packet) {
   return true;
 }
 
+// AVI often stores decode timestamps only. Only Baseline AVC (no B pictures)
+// with zero declared reorder delay can use DTS as its missing presentation time.
+// Never invent timestamps for Main/High, HEVC or unknown/reordered streams.
+static bool ylf_normalize_avi_timing(AVFormatContext *format, AVPacket *packet) {
+  if (!format->iformat || strcmp(format->iformat->name, "avi") != 0) return true;
+  AVCodecParameters *parameters = format->streams[packet->stream_index]->codecpar;
+  if (parameters->codec_type != AVMEDIA_TYPE_VIDEO || packet->pts != AV_NOPTS_VALUE) return true;
+  if (parameters->codec_id != AV_CODEC_ID_H264 || parameters->video_delay != 0 ||
+      (parameters->profile != AV_PROFILE_H264_BASELINE &&
+       parameters->profile != AV_PROFILE_H264_CONSTRAINED_BASELINE) ||
+      packet->dts == AV_NOPTS_VALUE) return false;
+  packet->pts = packet->dts;
+  return true;
+}
+
 int32_t ylf_read_packet(YLFMediaContextRef context, YLFPacketRef *out_packet) {
   if (context == NULL || out_packet == NULL) {
     return YLFResultInvalidArgument;
@@ -942,6 +962,12 @@ int32_t ylf_read_packet(YLFMediaContextRef context, YLFPacketRef *out_packet) {
                                 : YLFResultCancelled;
     }
     return ylf_callback_failure(context, YLFResultReadFailed);
+  }
+  if (!ylf_normalize_avi_timing(context->format, packet->value)) {
+    av_packet_free(&packet->value);
+    free(packet);
+    pthread_mutex_unlock(&context->mutex);
+    return YLFResultVideoConfigurationInvalid;
   }
   AVCodecParameters *parameters =
       context->format->streams[packet->value->stream_index]->codecpar;
@@ -985,11 +1011,11 @@ int32_t ylf_use_relative_transport_stream_timestamps(YLFMediaContextRef context)
   return valid ? YLFResultOK : YLFResultUnsupportedContainer;
 }
 
-// MPEG-TS timestamp seeks land on arbitrary PES packets, not necessarily an
+// MPEG-TS timestamp seeks and AVI synthesized indexes may land away from an
 // IDR. Find a decodable anchor at/before the requested video time, then replay
 // from that seek point through the existing keyframe gate and output suppression.
 // These are search-work guards, not software-decoder performance allowances.
-static int ylf_seek_transport_stream_anchor(struct YLFMediaContext *context,
+static int ylf_seek_video_anchor(struct YLFMediaContext *context,
                                            int64_t position_us, int64_t absolute_us) {
   int video = -1;
   for (unsigned int i = 0; i < context->format->nb_streams; i++) {
@@ -1019,6 +1045,7 @@ static int ylf_seek_transport_stream_anchor(struct YLFMediaContext *context,
       scanned_bytes += FFMAX(packet->size, 0);
       if (scanned_bytes > 8 * 1024 * 1024) break;
       if (packet->stream_index != video || !(packet->flags & AV_PKT_FLAG_KEY)) continue;
+      if (!ylf_normalize_avi_timing(context->format, packet)) break;
       int64_t pts = ylf_timestamp_us(packet->pts, stream->time_base);
       if (pts == INT64_MIN) continue;
       found = pts <= latest_anchor_us;
@@ -1068,8 +1095,9 @@ int32_t ylf_seek(YLFMediaContextRef context, int64_t position_us) {
     pthread_mutex_unlock(&context->mutex);
     return YLFResultSeekFailed;
   }
-  int result = context->relative_transport_stream_timeline
-      ? ylf_seek_transport_stream_anchor(context, position_us, absolute_position_us)
+  bool is_avi = context->format->iformat && strcmp(context->format->iformat->name, "avi") == 0;
+  int result = (context->relative_transport_stream_timeline || is_avi)
+      ? ylf_seek_video_anchor(context, position_us, absolute_position_us)
       : avformat_seek_file(context->format,
                                   -1,
                                   INT64_MIN,

@@ -216,34 +216,34 @@
       "completed": false
     },
     "avi-avc-mp3/file": {
-      "outcome": "failed",
-      "stage": "load",
-      "code": "container.unsupported",
-      "category": "container",
-      "scope": "command",
-      "firstFrame": false,
-      "seekProgress": false,
-      "completed": false
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
     },
     "avi-avc-mp3/http": {
-      "outcome": "failed",
-      "stage": "load",
-      "code": "container.unsupported",
-      "category": "container",
-      "scope": "command",
-      "firstFrame": false,
-      "seekProgress": false,
-      "completed": false
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
     },
     "avi-avc-mp3/renamed-file": {
-      "outcome": "failed",
-      "stage": "load",
-      "code": "container.unsupported",
-      "category": "container",
-      "scope": "command",
-      "firstFrame": false,
-      "seekProgress": false,
-      "completed": false
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
     },
     "mkv-av1-opus/file": {
       "outcome": "failed",

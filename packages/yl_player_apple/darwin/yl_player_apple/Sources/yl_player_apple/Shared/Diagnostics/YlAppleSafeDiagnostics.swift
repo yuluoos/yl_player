@@ -41,6 +41,11 @@ enum YlAppleSafeDiagnostics {
     "container.hls_url_invalid",
     "container.mkv_malformed",
     "container.mkv_open_failed",
+    "container.avi_timing_unsupported",
+    "container.avi_open_failed",
+    "container.avi_seek_failed",
+    "container.avi_malformed",
+    "container.avi_live_unsupported",
     "container.mpegts_open_failed", "container.mpegts_seek_failed", "container.mpegts_malformed", "container.mpegts_live_unsupported",
     "container.mkv_seek_failed",
     "container.native_fallback_required",
@@ -122,6 +127,11 @@ enum YlAppleSafeDiagnostics {
     "network.dns_failed", "network.connect_timeout", "network.read_timeout",
   ]
   private static let publicMessages: [String: String] = [
+    "container.avi_timing_unsupported": "The AVI video lacks supported presentation timing. Use a file with explicit timestamps or Baseline AVC without frame reordering.",
+    "container.avi_open_failed": "The AVI media could not be opened. Check that the source is complete and uses supported codecs.",
+    "container.avi_seek_failed": "The AVI seek failed. Try another position or a complete media file with a usable index.",
+    "container.avi_malformed": "The AVI packet stream is damaged. Try a complete copy of the media.",
+    "container.avi_live_unsupported": "AVI currently supports on-demand playback only. Use a supported live stream format.",
     "container.mpegts_open_failed": "The MPEG-TS media or its timeline could not be read. Check that the source contains a complete supported transport stream.",
     "container.mpegts_seek_failed": "The MPEG-TS seek could not find a usable keyframe within the bounded search. Try an earlier position or a media file with more frequent keyframes.",
     "container.mpegts_malformed": "The MPEG-TS packet stream is damaged. Try a complete copy of the media.",

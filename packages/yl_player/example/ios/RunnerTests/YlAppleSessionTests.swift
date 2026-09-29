@@ -839,7 +839,7 @@ extension YlAppleSessionTests {
   func testAssessmentRejectsUnsupportedContainerAndLoadKeepsCommittedSession() async throws {
     let f = AppleHostFixture(); defer { f.host.close() }
     let current = try await f.host.load(request: AppleHostFixture.request("current"))
-    for format in [AppleMediaFormat.avi, .mpegPs] {
+    for format in [AppleMediaFormat.mpegPs] {
       let request = AppleHostFixture.request("unsupported", format: format)
       let assessment = try f.host.assess(request: .init(source: request.source, options: request.options))
       XCTAssertEqual(assessment.outcome, .incompatible)
@@ -930,7 +930,7 @@ final class YlEngineAssessmentTests: XCTestCase {
             XCTAssertEqual(production.rejection?.code, "policy.unsupported", "\(kind) \(format) \(policy)")
           }
           let assessed = YlEngineRouter.assess(source, availability: enforcing)
-          let fallback = format == .matroska || (format == .flv && kind == .network) || (format == .mpegTs && policy == 0)
+          let fallback = format == .matroska || (format == .flv && kind == .network) || ([YlSourceFormat.mpegTs, .avi].contains(format) && policy == 0)
           let av = [.hls, .mp4, .mov].contains(format)
           if fallback {
             XCTAssertEqual(assessed.outcome, .requiresInspection)
@@ -1664,6 +1664,27 @@ extension YlAppleSessionTests {
       XCTAssertEqual(YlEngineRouter.assess(source).engine, .managedFallback)
       source.intent = .live
       XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "container.mpegts_live_unsupported")
+      source.intent = .onDemand
+      source.networkPolicy = .managed
+      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
+      source.networkPolicy = .platformDefault
+      source.loadOptions = YlAppleLoadOptions(decoderPolicy: .hardwareRequired)
+      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
+    }
+  }
+}
+
+@MainActor
+extension YlAppleSessionTests {
+  func testAVISignatureAndVodEligibilityKeepStrictAndLivePoliciesClosed() {
+    XCTAssertEqual(YlSourceInspector.format(Data([0x52,0x49,0x46,0x46,0,0,0,0,0x41,0x56,0x49,0x20])), .avi)
+    XCTAssertEqual(YlSourceInspector.format(Data("RIFF".utf8)), .automatic)
+    for kind: YlSourceKind in [.file, .network] {
+      var source = YlAppleSourceDescriptor(uri: kind == .file ? "file:///tmp/clip.avi" : "https://example.invalid/clip.avi", kind: kind)
+      XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
+      XCTAssertEqual(YlEngineRouter.assess(source).engine, .managedFallback)
+      source.intent = .live
+      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "container.avi_live_unsupported")
       source.intent = .onDemand
       source.networkPolicy = .managed
       XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")

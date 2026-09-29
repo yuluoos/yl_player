@@ -88,6 +88,8 @@ final class YlPreparedFallback {
     let flvIsLive = source.kind != .file && source.intent != .onDemand
     if ["rtmp", "rtmps"].contains(url.scheme?.lowercased() ?? "") {
       container = .flv
+    } else if resolvedFormat == .avi {
+      container = .avi
     } else if resolvedFormat == .mpegTs {
       container = .mpegTs
     } else if resolvedFormat == .hls {

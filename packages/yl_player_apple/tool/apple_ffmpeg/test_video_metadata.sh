@@ -16,3 +16,5 @@ xcrun clang -fobjc-arc -I"$ffmpeg_prefix/include" -I"$YL_TEST_FFMPEG_BUILD/ffmpe
 "$temporary/test_video_metadata" "$@"
 
 sh "$script_dir/test_transport_stream.sh"
+
+sh "$script_dir/test_avi.sh"
