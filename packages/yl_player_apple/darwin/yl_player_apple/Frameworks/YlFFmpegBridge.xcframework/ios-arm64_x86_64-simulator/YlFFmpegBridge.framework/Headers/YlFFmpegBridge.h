@@ -139,6 +139,10 @@ YLF_EXPORT int32_t ylf_copy_stream_codec_config(YLFMediaContextRef context,
                                                 size_t capacity);
 YLF_EXPORT int32_t ylf_read_packet(YLFMediaContextRef context,
                                    YLFPacketRef *out_packet);
+// Standalone MPEG-TS only: call before consuming packets; align packet/sample
+// timestamps and subsequent seeks to format start_time. HLS callbacks rejected.
+YLF_EXPORT int32_t ylf_use_relative_transport_stream_timestamps(YLFMediaContextRef context);
+
 YLF_EXPORT int32_t ylf_seek(YLFMediaContextRef context, int64_t position_us);
 YLF_EXPORT void ylf_close(YLFMediaContextRef *context);
 

@@ -839,7 +839,7 @@ extension YlAppleSessionTests {
   func testAssessmentRejectsUnsupportedContainerAndLoadKeepsCommittedSession() async throws {
     let f = AppleHostFixture(); defer { f.host.close() }
     let current = try await f.host.load(request: AppleHostFixture.request("current"))
-    for format in [AppleMediaFormat.avi, .mpegTs, .mpegPs] {
+    for format in [AppleMediaFormat.avi, .mpegPs] {
       let request = AppleHostFixture.request("unsupported", format: format)
       let assessment = try f.host.assess(request: .init(source: request.source, options: request.options))
       XCTAssertEqual(assessment.outcome, .incompatible)
@@ -921,7 +921,7 @@ final class YlEngineAssessmentTests: XCTestCase {
           if policy == 3 { options.decoderPolicy = .hardwareRequired }
           source.loadOptions = options
           let production = YlEngineRouter.assess(source)
-          if (policy > 0) && (format == .matroska || (format == .flv && kind == .network)) {
+          if (policy > 0) && (format == .matroska || format == .flv) {
             XCTAssertEqual(production.outcome, .requiresInspection)
             if policy != 3 { XCTAssertTrue(production.satisfiedRequirements.contains(policy == 1 ? .networkManaged : .bufferBounded)) }
             else { XCTAssertFalse(production.satisfiedRequirements.contains(.decoderHardwareRequired)) }
@@ -930,7 +930,7 @@ final class YlEngineAssessmentTests: XCTestCase {
             XCTAssertEqual(production.rejection?.code, "policy.unsupported", "\(kind) \(format) \(policy)")
           }
           let assessed = YlEngineRouter.assess(source, availability: enforcing)
-          let fallback = format == .matroska || (format == .flv && kind == .network)
+          let fallback = format == .matroska || (format == .flv && kind == .network) || (format == .mpegTs && policy == 0)
           let av = [.hls, .mp4, .mov].contains(format)
           if fallback {
             XCTAssertEqual(assessed.outcome, .requiresInspection)
@@ -1641,4 +1641,35 @@ private final class AppleThreadRecordingMessenger: NSObject, FlutterBinaryMessen
   func setMessageHandlerOnChannel(_ channel: String,
       binaryMessageHandler handler: FlutterBinaryMessageHandler?) -> FlutterBinaryMessengerConnection { 0 }
   func cleanUpConnection(_ connection: FlutterBinaryMessengerConnection) {}
+}
+
+
+@MainActor
+extension YlAppleSessionTests {
+  func testTransportStreamSignatureAndVodEligibilityKeepStrictAndLivePoliciesClosed() {
+    for (stride, prefix) in [(188, 0), (192, 4), (204, 0)] {
+      var bytes = Data(repeating: 0, count: stride * 3)
+      for packet in 0..<3 {
+        bytes[prefix + packet * stride] = 0x47
+        bytes[prefix + packet * stride + 3] = 0x10
+      }
+      XCTAssertEqual(YlSourceInspector.format(bytes), .mpegTs)
+      XCTAssertEqual(YlSourceInspector.format(bytes.prefix(prefix + 2 * stride)), .automatic)
+      bytes[prefix + stride] = 0
+      XCTAssertEqual(YlSourceInspector.format(bytes), .automatic)
+    }
+    for kind: YlSourceKind in [.file, .network] {
+      var source = YlAppleSourceDescriptor(uri: kind == .file ? "file:///tmp/clip.ts" : "https://example.invalid/clip.ts", kind: kind)
+      XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
+      XCTAssertEqual(YlEngineRouter.assess(source).engine, .managedFallback)
+      source.intent = .live
+      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "container.mpegts_live_unsupported")
+      source.intent = .onDemand
+      source.networkPolicy = .managed
+      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
+      source.networkPolicy = .platformDefault
+      source.loadOptions = YlAppleLoadOptions(decoderPolicy: .hardwareRequired)
+      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
+    }
+  }
 }

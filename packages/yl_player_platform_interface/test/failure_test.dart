@@ -2,6 +2,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 void main() {
+  test('MPEG-TS failures explain the failing operation and recovery', () {
+    const guidance = {
+      'container.mpegts_open_failed': 'complete supported transport stream',
+      'container.mpegts_seek_failed': 'more frequent keyframes',
+      'container.mpegts_malformed': 'complete copy',
+      'container.mpegts_live_unsupported': 'supported live stream format',
+    };
+    for (final entry in guidance.entries) {
+      final message = YlSafeDiagnostics.messageForCode(entry.key);
+      expect(message, contains('MPEG-TS'));
+      expect(message, contains(entry.value));
+    }
+  });
   test('DASH cap failures provide actionable fixed public guidance', () {
     expect(
       YlSafeDiagnostics.messageForCode(

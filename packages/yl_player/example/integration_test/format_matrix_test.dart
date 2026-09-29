@@ -146,6 +146,16 @@ void main() {
           await session.play();
           await session.firstFrame.timeout(const Duration(seconds: 10));
           firstFrame = true;
+          if (id == 'ts-avc-ac3') {
+            expect(
+              player.state.timeline.position.inMilliseconds,
+              lessThan(1000),
+            );
+            expect(
+              player.state.timeline.duration!.inMilliseconds,
+              closeTo(4000, 100),
+            );
+          }
           stage = 'progress';
           await stateWhere(
             player,
@@ -154,7 +164,7 @@ void main() {
           expect(player.state.videoGeometry, isNotNull);
           audioSelected = player.state.audioTracks.any((t) => t.isSelected);
           expect(audioSelected, isTrue);
-          if (id == 'flv-avc-mp3') {
+          if (id == 'flv-avc-mp3' || id == 'ts-avc-ac3') {
             expect(player.state.timeline.isLive, isFalse);
             expect(player.state.timeline.isSeekable, isTrue);
             expect(player.state.timeline.duration, isNotNull);
@@ -165,7 +175,8 @@ void main() {
             if (id == 'mov-hevc-aac' ||
                 id == 'mkv-hevc-main10-aac' ||
                 id == 'flv-avc-mp3' ||
-                id == 'mkv-avc-flac')
+                id == 'mkv-avc-flac' ||
+                id == 'ts-avc-ac3')
               1250,
           ];
           for (final targetMs in targets) {

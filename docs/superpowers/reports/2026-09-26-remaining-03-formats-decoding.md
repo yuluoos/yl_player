@@ -197,3 +197,43 @@ xcodebuild test CODE_SIGNING_ALLOWED=NO ENABLE_TESTABILITY=YES -workspace macos/
 ```
 
 补充回归：35项example单元测试、8项Python台账检查通过，Dart定向分析无问题，36项素材/台账指纹及原生测试源对齐检查通过。未执行完整原生聚合门禁；已执行本轮17项音频原生类、3项严格FLAC和55项格式回归。
+
+## 独立MPEG-TS点播切片
+
+2026-09-29，基线`bfcadf6`，初始工作区干净。既有`ts-avc-ac3.ts`的file/http/同字节.bin三条严格路径先失败，均不能建立支持路由；新增原生签名/策略测试也实际失败。本轮消费现有FFmpeg MPEG-TS解复用、Annex-B视频及AC-3路径，增加独立TS路由/容器身份，不把TS当Matroska或HLS播放列表。
+
+有限前缀检查3个连续TS包头，可识别188字节TS、带4字节前缀的192字节M2TS及204字节TS；只有188字节AVC/AC-3样本进入本轮实际播放验收，其他两种包尺寸目前只有探测单元证据。后续仍需解复用和真实codec准备，签名不等于支持。automatic/onDemand是点播；live意图以`container.mpegts_live_unsupported`拒绝。`network.managed`、`buffer.bounded`和`hardwareRequired`本轮继续明确拒绝，不推断完整严格策略已验收；代价是这些TS选项仍待独立工作。
+
+独立probe确认素材容器start_time=1.4s、duration=4.005333s。直接暴露原始PTS会把片内2秒seek当成绝对2秒，原生时间轴测试初跑17检查有4项失败。新增显式bridge接口，在独立TS打开后且未持有packet时启用相对时间：保留统一format origin，音/视频packet PTS/DTS与CMSampleBuffer均减去相同origin，seek目标加回origin；保留负DTS和未知时间，防止加减溢出。HLS有独立time-seek回调，拒绝该接口；其他上下文默认origin=0。26项时间轴检查通过，包含初始相对时间、AV偏移、sample时间、前后seek、溢出/缺失值及HLS所有权边界。普通视频metadata35项通过；FEL入口仅运行无输入的2条基础断言，不冒充真实FEL素材或输出回归。
+
+codec ID、FFmpeg版本/模块/许可证、网络禁用边界、iOS15/macOS12部署下限不变。为导出新增时间轴接口重建五目标产物；候选独立重建及原生/公开最终验收结果在本节后续记录。WebM/VP9/Opus/Vorbis及PS/AVI仍未完成，P03不封板。
+
+公开seek首次触发`decoder.video_decode_failed`：重建decoder后未重置既有等待关键帧门控，补齐reset后三条生命周期通过。但独立packet核查发现1.25s反向seek从后方2.005s关键帧开始；强化“关键帧必须位于目标之前”的测试再次RED。最终新增1/2/4/8秒逐级回看，每次最多512个解复用packet/8MiB扫描；找到目标前关键帧后重新定位并经既有门控/preroll与目标前呈现抑制恢复。不能找到时明确失败，不能静默跳过目标。30项原生TS检查通过，包含新生成的12秒稀疏GOP媒体：10秒seek因8秒范围内无关键帧而拒绝，随后seek零仍成功。这里的搜索上限是工程保护，不等于软解预算或持续资源验收。
+
+损坏TS公开测试发现Dart固定消息表覆盖了原生详细提示，导致`Playback operation failed.`；新增open/seek/malformed/live四类安全固定消息。对应单测实际RED后18项通过，Apple错误适配与编解码37项通过。输入路径/凭据和原生错误文本不拼接到这些消息中。
+
+最终关键帧桥接候选重新完成五目标构建，第二次独立重建18个规范文件/符号链接逐字节相同后采纳；制品契约3slice/5架构/31个Swift消费符号和3项负例通过。音频metadata30项、视频metadata35项及TS30项通过。构建签名与FFmpeg模块保持原约束。采纳时第一次指纹更新脚本因引号格式未匹配而未写入新hash，契约正确拒绝旧hash；修正接受的指纹后通过，未修改验签标准。
+
+最终产物3条严格TS公开路径通过：相对时间从零附近开始、约4秒时长、首帧、音轨选中、前向2秒/反向1.25秒seek、自然结束及释放。首次原生定向29项中28通过、1失败：生产本地FLV的旧严格策略测试仍期待`policy.unsupported`，与前一FLV切片已开放的行为不符；仅更新生产矩阵预期，注入的未开放availability预期保留。Dart format曾因缓存/遥测写入沙箱受限退出，格式修改本身完成；后续授权检查单独核对。
+
+最终TS策略3项全部通过：live/managed/bounded/hardwareRequired在网络访问前拒绝；损坏候选以明确TS错误返回且保持现有会话可暂停、seek及继续播放；无Range的HTTP200服务可播放但不虚报seekability，seek以command错误拒绝。最终原生32项通过、0失败/0跳过，覆盖路由矩阵/TS探测/候选保留、17项音频、3项FEL管线、3项HLS探测/取消/直播路由。FEL管线单元测试不是实际FEL显示验收；HLS探测回归不是完整HEVC-HLS seek验收。
+
+单次独立静态复审无Critical/Important/Minor；由主执行者补齐最终制品和运行时结果。复审后仅修正已复现的旧FLV/HLS测试预期、格式化和证据文档；未改变生产范围。未执行完整原生聚合门禁，定向结果不能替代跨端完整验收。
+
+最终55项格式基线全部匹配（退出0）：35条正常播放生命周期完成、15条有效素材支持缺口、5条损坏输入拒绝，全部释放完成。与上一轮55项逐行对照，只有3条TS由失败转为通过，其余52条原始观测相同；仅更新已实测的3条baseline预期及其SHA256SUMS条目，36项素材/台账指纹核对通过。记录见[macos-mpegts-vod-observations.json](../../../tool/media_matrix/macos-mpegts-vod-observations.json)，含原始55行、执行代码与日志指纹；历史证据保留。已知失败的预期匹配不计为支持，P03整体不封板。
+
+主要复现命令（Flutter从`packages/yl_player/example`运行）：
+
+```sh
+flutter test integration_test/format_matrix_test.dart -d macos --no-pub --dart-define=YL_FORMAT_REQUIRE_SUPPORT=true --plain-name 'ts-avc-ac3 /'
+flutter test integration_test/mpegts_policy_test.dart -d macos --no-pub
+flutter test integration_test/format_matrix_test.dart -d macos --no-pub
+# 仓库根目录，使用固定签名9.0.1保留构建的库：
+YL_TEST_FFMPEG_BUILD=<retained-build-root> sh packages/yl_player_apple/tool/apple_ffmpeg/test_video_metadata.sh
+```
+
+搜索测试额外使用本机FFmpeg8.0.1生成原创12秒黑色视频稀疏GOP，仅作为负例夹具；实际产品与原生测试链接的FFmpeg仍为固定9.0.1。未验收192/204实际播放、完整HEVC-HLS seek、独立TS其他codec/异常时间轴/多节目/长时seek及断续恢复、物理输出/完整同步、iOS/Intel/最低系统和资源预算。搜索失败有明确错误，但本轮不把这些有限样本推广为所有TS支持。
+
+附加公开HLS回归首次在末尾UI断言失败：首帧/时钟/暂停已通过，但旧测试仍查找Flutter Texture；现有`YlPlayerView`在Apple普通视频路径已使用先前提交的原生AppKitView。本次改为断言原生视图存在且viewType与公开surface一致，未调整播放器显示实现。
+
+最终公开HLS回归1项、example单元35项均通过，3个Dart入口分析无问题，Python台账8项通过，Apple测试源对齐iOS657/macOS574。原始HLS失败与修复后日志均纳入证据指纹；未将平台视图存在等同于像素或HDR显示验收。

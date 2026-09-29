@@ -115,3 +115,5 @@ expect(failure.retryable, isFalse);
 2026-09-29 Task2 FLV点播切片：本地FLV启用真实准备路径，HTTP显式onDemand使用随机访问传输；三条AVC/MP3路径通过前后seek及结束，nonRange三意图和原有直播重连回归通过。其他音频/容器、完整输出、跨平台/最低系统验收仍未完成。
 
 2026-09-29 Task2 FLAC切片：新增桥接ID及STREAMINFO传递，系统转换器支持受检16/24位mono/stereo；两份48kHz夹具通过独立PCM逐样本核对，MKV AVC/FLAC三条公开路径通过双向seek与自然结束。WebM完整解码链、FLAC其他位深/多声道、物理输出/同步和其他平台仍未完成。
+
+2026-09-29 Task2独立MPEG-TS切片：188字节AVC/AC-3的file/http/同字节改名文件通过时间轴、双向seek、结束与释放；补齐相对时间、有限关键帧定位和明确错误提示。192/204仅探测测试，严格策略/live、其他codec/平台/物理输出仍未验收；WebM/PS/AVI等缺口及Task1整体仍开放。

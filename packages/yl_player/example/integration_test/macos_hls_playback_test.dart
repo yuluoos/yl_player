@@ -73,7 +73,12 @@ void main() {
           'A decoded HLS frame must carry geometry so the view can display it',
     );
     await tester.pump();
-    expect(find.byType(Texture), findsOneWidget);
+    expect(controller.nativeVideoSurface, isNotNull);
+    expect(find.byType(AppKitView), findsOneWidget);
+    expect(
+      tester.widget<AppKitView>(find.byType(AppKitView)).viewType,
+      controller.nativeVideoSurface!.viewType,
+    );
 
     await controller.dispose();
   });

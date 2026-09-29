@@ -224,6 +224,7 @@ build_slice() {
     _ylf_stream_codec_config_size \
     _ylf_copy_stream_codec_config \
     _ylf_read_packet \
+    _ylf_use_relative_transport_stream_timestamps \
     _ylf_seek \
     _ylf_close \
     _ylf_packet_stream_index \

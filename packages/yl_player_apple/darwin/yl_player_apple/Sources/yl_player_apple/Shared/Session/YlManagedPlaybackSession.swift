@@ -1074,6 +1074,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
           try stateLock.withLock {
             try requireCurrentSeek(nextGeneration)
             audio.discardPendingPacket()
+            demux.resetInitialKeyframeGate()
             prebufferedVideoSample = false
             demuxEOF = false
             completionSent = false

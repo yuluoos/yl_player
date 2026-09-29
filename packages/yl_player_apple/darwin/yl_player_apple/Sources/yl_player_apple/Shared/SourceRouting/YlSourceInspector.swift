@@ -66,6 +66,15 @@ enum YlSourceInspector {
        text.trimmingCharacters(in: .whitespacesAndNewlines).hasPrefix("#EXTM3U") { return .hls }
     if bytes.count >= 12, Array(bytes.prefix(4)) == Array("RIFF".utf8),
        Array(bytes[8..<12]) == Array("AVI ".utf8) { return .avi }
+    // Three consecutive TS headers distinguish 188-byte packets, 192-byte
+    // M2TS (four-byte prefix), and 204-byte packets within the bounded prefix.
+    for (stride, offset) in [(188, 0), (192, 4), (204, 0)] {
+      if bytes.count >= offset + 2 * stride + 4,
+         (0..<3).allSatisfy({ index in
+           let start = offset + index * stride
+           return bytes[start] == 0x47 && bytes[start + 3] & 0x30 != 0
+         }) { return .mpegTs }
+    }
     return .automatic
   }
 

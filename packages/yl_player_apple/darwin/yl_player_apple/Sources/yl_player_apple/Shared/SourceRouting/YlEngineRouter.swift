@@ -72,8 +72,11 @@ enum YlEngineRouter {
     let strict = managed || bounded || hardware
     let hinted = resolvedFormat(source, url: url)
     let format = inspection?.format ?? hinted
-    if [YlSourceFormat.avi, .mpegTs, .mpegPs].contains(format) {
+    if [YlSourceFormat.avi, .mpegPs].contains(format) || (format == .mpegTs && strict) {
       return reject(strict ? "unsupported" : "container", strict ? "policy.unsupported" : "container.unsupported")
+    }
+    if format == .mpegTs && source.isLive {
+      return reject("container", "container.mpegts_live_unsupported")
     }
     if format == .matroska && source.kind == .network && source.isLive {
       return reject(strict ? "unsupported" : "container", strict ? "policy.unsupported" : "container.network_mkv_live_unsupported")
@@ -136,7 +139,8 @@ enum YlEngineRouter {
       return reject(strict ? "unsupported" : "container", strict ? "policy.unsupported" : "container.unsupported")
     }
     if inspection == nil { limitations.append(.codecRequiresInspection) }
-    let route: YlAppleSourceRoute = format == .flv ? .networkFlv : (source.kind == .file ? .localMatroska : .networkMatroska)
+    let route: YlAppleSourceRoute = format == .mpegTs ? .transportStream
+      : format == .flv ? .networkFlv : (source.kind == .file ? .localMatroska : .networkMatroska)
     return .init(outcome: inspection == nil ? .requiresInspection : .compatible, candidate: route,
       satisfiedRequirements: requirements, limitations: limitations, rejection: nil)
   }

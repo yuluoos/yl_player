@@ -40,6 +40,8 @@ struct YLFMediaContext {
   YLFTimeSeekCallback time_seek_callback;
   YLFCancelCallback cancel_callback;
   int32_t callback_result;
+  int64_t timeline_origin_us;
+  bool relative_transport_stream_timeline;
   struct YLFPacket *packets;
 };
 
@@ -966,6 +968,75 @@ int32_t ylf_read_packet(YLFMediaContextRef context, YLFPacketRef *out_packet) {
   return YLFResultOK;
 }
 
+int32_t ylf_use_relative_transport_stream_timestamps(YLFMediaContextRef context) {
+  if (context == NULL) return YLFResultInvalidArgument;
+  pthread_mutex_lock(&context->mutex);
+  // Opt in only before consuming packets on standalone TS. HLS owns its own
+  // time-seek callback and must retain the existing timestamp behavior.
+  bool valid = context->format != NULL && context->format->iformat != NULL &&
+      strcmp(context->format->iformat->name, "mpegts") == 0 &&
+      context->format->start_time != AV_NOPTS_VALUE &&
+      context->time_seek_callback == NULL && context->packets == NULL;
+  if (valid) {
+    context->timeline_origin_us = context->format->start_time;
+    context->relative_transport_stream_timeline = true;
+  }
+  pthread_mutex_unlock(&context->mutex);
+  return valid ? YLFResultOK : YLFResultUnsupportedContainer;
+}
+
+// MPEG-TS timestamp seeks land on arbitrary PES packets, not necessarily an
+// IDR. Find a decodable anchor at/before the requested video time, then replay
+// from that seek point through the existing keyframe gate and output suppression.
+// These are search-work guards, not software-decoder performance allowances.
+static int ylf_seek_transport_stream_anchor(struct YLFMediaContext *context,
+                                           int64_t position_us, int64_t absolute_us) {
+  int video = -1;
+  for (unsigned int i = 0; i < context->format->nb_streams; i++) {
+    enum AVCodecID codec = context->format->streams[i]->codecpar->codec_id;
+    if (context->format->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO &&
+        (codec == AV_CODEC_ID_H264 || codec == AV_CODEC_ID_HEVC)) { video = (int)i; break; }
+  }
+  if (video < 0) return AVERROR_INVALIDDATA;
+  AVStream *stream = context->format->streams[video];
+  int64_t first_us = ylf_timestamp_us(stream->start_time, stream->time_base);
+  int64_t latest_anchor_us = FFMAX(absolute_us, first_us);
+  AVPacket *packet = av_packet_alloc();
+  if (packet == NULL) return AVERROR(ENOMEM);
+  int result = AVERROR_INVALIDDATA;
+  for (int64_t window = 1000000; window <= 8000000; window *= 2) {
+    int64_t probe_us = FFMAX((int64_t)0, position_us - window), absolute_probe;
+    if (__builtin_add_overflow(probe_us, context->timeline_origin_us, &absolute_probe)) break;
+    result = avformat_seek_file(context->format, -1, INT64_MIN, absolute_probe, absolute_probe, 0);
+    if (result < 0) break;
+    avformat_flush(context->format);
+    int64_t scanned_bytes = 0;
+    bool found = false;
+    for (int count = 0; count < 512 && scanned_bytes < 8 * 1024 * 1024; count++) {
+      av_packet_unref(packet);
+      result = av_read_frame(context->format, packet);
+      if (result < 0) break;
+      scanned_bytes += FFMAX(packet->size, 0);
+      if (scanned_bytes > 8 * 1024 * 1024) break;
+      if (packet->stream_index != video || !(packet->flags & AV_PKT_FLAG_KEY)) continue;
+      int64_t pts = ylf_timestamp_us(packet->pts, stream->time_base);
+      if (pts == INT64_MIN) continue;
+      found = pts <= latest_anchor_us;
+      break;
+    }
+    av_packet_unref(packet);
+    if (found) {
+      result = avformat_seek_file(context->format, -1, INT64_MIN, absolute_probe, absolute_probe, 0);
+      break;
+    }
+    result = AVERROR_INVALIDDATA;
+    if (probe_us == 0 || atomic_load_explicit(&context->cancelled, memory_order_relaxed) ||
+        context->callback_result != 0) break;
+  }
+  av_packet_free(&packet);
+  return result;
+}
+
 int32_t ylf_seek(YLFMediaContextRef context, int64_t position_us) {
   if (context == NULL || position_us < 0) {
     return YLFResultInvalidArgument;
@@ -991,10 +1062,18 @@ int32_t ylf_seek(YLFMediaContextRef context, int64_t position_us) {
     pthread_mutex_unlock(&context->mutex);
     return ylf_callback_failure(context, YLFResultSeekFailed);
   }
-  int result = avformat_seek_file(context->format,
+  int64_t absolute_position_us;
+  if (__builtin_add_overflow(position_us, context->timeline_origin_us, &absolute_position_us) ||
+      absolute_position_us == AV_NOPTS_VALUE) {
+    pthread_mutex_unlock(&context->mutex);
+    return YLFResultSeekFailed;
+  }
+  int result = context->relative_transport_stream_timeline
+      ? ylf_seek_transport_stream_anchor(context, position_us, absolute_position_us)
+      : avformat_seek_file(context->format,
                                   -1,
                                   INT64_MIN,
-                                  position_us,
+                                  absolute_position_us,
                                   INT64_MAX,
                                   AVSEEK_FLAG_BACKWARD);
   if (result >= 0) {
@@ -1035,20 +1114,27 @@ int32_t ylf_packet_stream_index(YLFPacketRef packet) {
   return packet == NULL || packet->value == NULL ? -1 : packet->value->stream_index;
 }
 
+static int64_t ylf_relative_timestamp_us(YLFPacketRef packet, int64_t timestamp) {
+  AVStream *stream = packet->owner->format->streams[packet->value->stream_index];
+  int64_t raw = ylf_timestamp_us(timestamp, stream->time_base), relative;
+  if (raw == INT64_MIN || __builtin_sub_overflow(raw, packet->owner->timeline_origin_us, &relative)) {
+    return INT64_MIN;
+  }
+  return relative;
+}
+
 int64_t ylf_packet_pts_us(YLFPacketRef packet) {
   if (packet == NULL || packet->value == NULL || packet->owner == NULL) {
     return INT64_MIN;
   }
-  AVStream *stream = packet->owner->format->streams[packet->value->stream_index];
-  return ylf_timestamp_us(packet->value->pts, stream->time_base);
+  return ylf_relative_timestamp_us(packet, packet->value->pts);
 }
 
 int64_t ylf_packet_dts_us(YLFPacketRef packet) {
   if (packet == NULL || packet->value == NULL || packet->owner == NULL) {
     return INT64_MIN;
   }
-  AVStream *stream = packet->owner->format->streams[packet->value->stream_index];
-  return ylf_timestamp_us(packet->value->dts, stream->time_base);
+  return ylf_relative_timestamp_us(packet, packet->value->dts);
 }
 
 int64_t ylf_packet_duration_us(YLFPacketRef packet) {
@@ -1379,16 +1465,10 @@ int32_t ylf_create_video_sample_buffer(
                                                     stream->time_base),
                                    AV_TIME_BASE)
                       : kCMTimeInvalid,
-      .presentationTimeStamp = packet->value->pts == AV_NOPTS_VALUE
-                                   ? kCMTimeInvalid
-                                   : CMTimeMake(ylf_timestamp_us(packet->value->pts,
-                                                                 stream->time_base),
-                                                AV_TIME_BASE),
-      .decodeTimeStamp = packet->value->dts == AV_NOPTS_VALUE
-                             ? kCMTimeInvalid
-                             : CMTimeMake(ylf_timestamp_us(packet->value->dts,
-                                                           stream->time_base),
-                                          AV_TIME_BASE),
+      .presentationTimeStamp = ylf_packet_pts_us(packet) == INT64_MIN
+          ? kCMTimeInvalid : CMTimeMake(ylf_packet_pts_us(packet), AV_TIME_BASE),
+      .decodeTimeStamp = ylf_packet_dts_us(packet) == INT64_MIN
+          ? kCMTimeInvalid : CMTimeMake(ylf_packet_dts_us(packet), AV_TIME_BASE),
   };
   size_t sample_size = (size_t)packet->value->size;
   CMBlockBufferCustomBlockSource source = {

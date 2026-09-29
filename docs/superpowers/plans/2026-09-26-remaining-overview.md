@@ -180,3 +180,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-09-29 P03推进FLV点播：修复本地拒绝及HTTP onDemand仍按直播处理的问题，保留automatic/live网络FLV与RTMP原行为；三条格式缺口修复证据及未完成边界见[P03报告](../reports/2026-09-26-remaining-03-formats-decoding.md)。
 
 2026-09-29 P03推进FLAC：系统音频转换器接入、精确PCM与三条MKV生命周期通过；五目标桥接制品重建可复现，FFmpeg模块未扩展。完整格式/输出/跨平台验收仍开放，见[P03报告](../reports/2026-09-26-remaining-03-formats-decoding.md)。
+
+2026-09-29 P03推进独立MPEG-TS点播：受检188字节AVC/AC-3三条公开路径及策略回归通过，修正零基时间与seek关键帧定位；五目标制品独立复建一致。更广格式、严格策略、设备与输出验收仍开放，详见[P03报告](../reports/2026-09-26-remaining-03-formats-decoding.md)。

@@ -422,6 +422,9 @@ func ylFallbackPacketReadError(
   case .flv:
     code = "container.flv_malformed"
     message = "The FLV packet stream is malformed."
+  case .mpegTs:
+    code = "container.mpegts_malformed"
+    message = "The MPEG-TS packet stream is malformed."
   case .hlsMpegTs:
     code = "container.hls_mpegts_malformed"
     message = "The MPEG-TS HLS packet stream is malformed."

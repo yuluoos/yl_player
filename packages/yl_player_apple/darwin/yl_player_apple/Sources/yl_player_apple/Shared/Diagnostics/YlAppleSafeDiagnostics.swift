@@ -41,6 +41,7 @@ enum YlAppleSafeDiagnostics {
     "container.hls_url_invalid",
     "container.mkv_malformed",
     "container.mkv_open_failed",
+    "container.mpegts_open_failed", "container.mpegts_seek_failed", "container.mpegts_malformed", "container.mpegts_live_unsupported",
     "container.mkv_seek_failed",
     "container.native_fallback_required",
     "container.network_mkv_live_unsupported",
@@ -121,6 +122,10 @@ enum YlAppleSafeDiagnostics {
     "network.dns_failed", "network.connect_timeout", "network.read_timeout",
   ]
   private static let publicMessages: [String: String] = [
+    "container.mpegts_open_failed": "The MPEG-TS media or its timeline could not be read. Check that the source contains a complete supported transport stream.",
+    "container.mpegts_seek_failed": "The MPEG-TS seek could not find a usable keyframe within the bounded search. Try an earlier position or a media file with more frequent keyframes.",
+    "container.mpegts_malformed": "The MPEG-TS packet stream is damaged. Try a complete copy of the media.",
+    "container.mpegts_live_unsupported": "Standalone MPEG-TS currently supports on-demand playback only. Use a supported live stream format.",
     "decoder.audio_flac_unsupported": "This FLAC audio configuration is unsupported; use 16- or 24-bit mono/stereo audio on a device with a FLAC decoder.",
     "container.dash_manifest_invalid": "The DASH manifest could not be parsed. Ask the provider for a valid UTF-8 MPD.",
     "container.dash_dynamic_unsupported": "Dynamic DASH manifests are not supported by this playback path. Choose a static DASH VOD source.",

@@ -46,6 +46,15 @@ abstract final class YlSafeDiagnostics {
     YlFailureCodes.dashManifestTooLarge =>
       'The DASH manifest exceeds the 2 MiB input limit. Ask the provider for a smaller manifest.',
 
+    'container.mpegts_open_failed' =>
+      'The MPEG-TS media or its timeline could not be read. Check that the source contains a complete supported transport stream.',
+    'container.mpegts_seek_failed' =>
+      'The MPEG-TS seek could not find a usable keyframe within the bounded search. Try an earlier position or a media file with more frequent keyframes.',
+    'container.mpegts_malformed' =>
+      'The MPEG-TS packet stream is damaged. Try a complete copy of the media.',
+    'container.mpegts_live_unsupported' =>
+      'Standalone MPEG-TS currently supports on-demand playback only. Use a supported live stream format.',
+
     'source.seek_failed' =>
       'The playback position could not be restored. Reload the source to continue.',
     'policy.video_selection_unsupported' =>

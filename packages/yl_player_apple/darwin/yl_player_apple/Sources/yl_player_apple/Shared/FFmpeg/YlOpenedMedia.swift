@@ -225,6 +225,11 @@ final class YlOpenedMedia {
           container: container
         )
       }
+      if container == .mpegTs, ylf_use_relative_transport_stream_timestamps(context) != Int32(YLFResultOK) {
+        ylf_close(&context)
+        throw Self.openError(result: Int32(YLFResultUnsupportedContainer), callbackError: nil,
+          network: false, container: container)
+      }
       self.init(context: context, info: info, box: nil, recipe: recipe)
 
     case let .network(request, _):
@@ -285,6 +290,12 @@ final class YlOpenedMedia {
         container: container ?? recipe?.container ?? .matroska
       )
     }
+    if (container ?? recipe?.container) == .mpegTs,
+       ylf_use_relative_transport_stream_timestamps(context) != Int32(YLFResultOK) {
+      ylf_close(&context)
+      throw Self.openError(result: Int32(YLFResultUnsupportedContainer), callbackError: nil,
+        network: true, container: .mpegTs)
+    }
     if let source = byteSource as? YlRtmpByteSource {
       do { try source.finishPreparation() }
       catch { ylf_close(&context); throw error }
@@ -337,8 +348,10 @@ final class YlOpenedMedia {
         }
         throw NativePlayerError(
           category: "container",
-          code: "container.mkv_seek_failed",
-          message: "The Matroska media could not be seeked.",
+          code: recipe?.container == .mpegTs ? "container.mpegts_seek_failed" : "container.mkv_seek_failed",
+          message: recipe?.container == .mpegTs
+            ? "The MPEG-TS seek could not find a usable keyframe within the bounded search."
+            : "The Matroska media could not be seeked.",
           diagnostic: "YlFFmpegBridge result \(result)"
         )
       }
@@ -415,6 +428,10 @@ final class YlOpenedMedia {
       )
     }
     switch container {
+    case .mpegTs:
+      return NativePlayerError(category: "container", code: "container.mpegts_open_failed",
+        message: "The MPEG-TS media could not be opened or its timeline could not be established.",
+        diagnostic: "YlFFmpegBridge result \(result)")
     case .hlsMpegTs:
       return NativePlayerError(
         category: "container",

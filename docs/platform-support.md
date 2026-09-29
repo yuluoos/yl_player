@@ -24,7 +24,8 @@ actual source and requirements before Load.
 | RTMPS, enhanced RTMP, other RTMP codecs or audio-only RTMP | Explicitly unsupported | Not selected | Explicitly unsupported |
 | Local FLV | Media3 route; runtime-dependent | Not selected | Inspection-dependent VOD; AVC/MP3 lifecycle measured on macOS |
 | Local WebM | Media3 route; runtime-dependent | Not selected | Rejected until supported video/audio paths are available |
-| AVI, MPEG-TS, or MPEG-PS request | Media3 route; runtime-dependent | Rejected before engine selection (`container.unsupported`, or `policy.unsupported` for a strict request) | Rejected before engine selection |
+| Standalone MPEG-TS VOD | Media3 route; runtime-dependent | Not selected | Inspection-dependent defaults; 188-byte AVC/AC-3 file/HTTP/renamed-file scope measured on macOS; strict policies and live intent rejected |
+| AVI or MPEG-PS request | Media3 route; runtime-dependent | Rejected before engine selection (`container.unsupported`, or `policy.unsupported` for a strict request) | Rejected before engine selection |
 | Unknown network format | Inspection-dependent | Inspection-dependent | Apple inspection reads at most the bounded 4096-byte signature window, then reassesses |
 
 The Apple FFmpeg artifact enables Matroska, FLV, MP4, and MPEG-TS demuxing plus the
@@ -40,6 +41,15 @@ forward/backward seek and completion. Other bit depths and surround remain
 explicitly unsupported. Physical audio output, AV sync, iOS/Intel/minimum-OS
 runtime and other formats remain unverified; this does not claim complete
 CAP-FORMAT acceptance. See the [P03 report](superpowers/reports/2026-09-26-remaining-03-formats-decoding.md).
+
+Standalone Apple MPEG-TS uses a relative timeline shared by audio and video.
+Seek searches for a prior decodable keyframe with lookbacks of 1, 2, 4 and
+8 seconds, at most 512 demuxed packets / 8 MiB per attempt; no anchor yields
+`container.mpegts_seek_failed`. These search guards are not resource/performance
+acceptance. HTTP seekability depends on actual Range support. Explicit live,
+managed networking, bounded buffering and hardwareRequired remain rejected.
+192/204-byte packet signatures have detection tests only, not playback acceptance.
+Physical output/sync, other codecs, devices and platforms remain unverified.
 
 For non-RTMP sources with formats other than DASH, Android first tries Media3, then makes at most one managed fallback attempt for
 container/extractor and decoder failures. The fallback uses package-owned local,
