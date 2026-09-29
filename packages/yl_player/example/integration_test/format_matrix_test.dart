@@ -154,10 +154,18 @@ void main() {
           expect(player.state.videoGeometry, isNotNull);
           audioSelected = player.state.audioTracks.any((t) => t.isSelected);
           expect(audioSelected, isTrue);
+          if (id == 'flv-avc-mp3') {
+            expect(player.state.timeline.isLive, isFalse);
+            expect(player.state.timeline.isSeekable, isTrue);
+            expect(player.state.timeline.duration, isNotNull);
+          }
           stage = 'seek';
           final targets = [
             2000,
-            if (id == 'mov-hevc-aac' || id == 'mkv-hevc-main10-aac') 1250,
+            if (id == 'mov-hevc-aac' ||
+                id == 'mkv-hevc-main10-aac' ||
+                id == 'flv-avc-mp3')
+              1250,
           ];
           for (final targetMs in targets) {
             await session.pause();

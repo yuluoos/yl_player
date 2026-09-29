@@ -56,7 +56,7 @@ struct YlFallbackMediaPolicy: Equatable {
   let isSeekable: Bool
   let requiresInitialVideoKeyframe: Bool
 
-  init(container: YlFallbackContainer, sourceSupportsRandomAccess: Bool) {
+  init(container: YlFallbackContainer, sourceSupportsRandomAccess: Bool, flvIsLive: Bool = true) {
     self.container = container
     switch container {
     case .matroska, .mp4, .hlsMpegTs:
@@ -64,8 +64,8 @@ struct YlFallbackMediaPolicy: Equatable {
       isSeekable = sourceSupportsRandomAccess
       requiresInitialVideoKeyframe = container == .hlsMpegTs
     case .flv:
-      isLive = true
-      isSeekable = false
+      isLive = flvIsLive
+      isSeekable = !flvIsLive && sourceSupportsRandomAccess
       requiresInitialVideoKeyframe = true
     }
   }

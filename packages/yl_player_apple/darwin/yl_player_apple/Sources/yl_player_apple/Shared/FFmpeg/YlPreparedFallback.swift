@@ -85,6 +85,7 @@ final class YlPreparedFallback {
     let formatHint = source.formatHint
     let resolvedFormat = YlEngineRouter.resolvedFormat(source, url: url)
     let container: YlFallbackContainer
+    let flvIsLive = source.kind != .file && source.intent != .onDemand
     if ["rtmp", "rtmps"].contains(url.scheme?.lowercased() ?? "") {
       container = .flv
     } else if resolvedFormat == .hls {
@@ -118,7 +119,7 @@ final class YlPreparedFallback {
         credentials: source.credentials,
         credentialContext: source.credentialContext,
         configuration: source.networkConfiguration.map(YlNetworkConfiguration.init(options:)) ?? configuration.network,
-        mode: container == .flv || container == .hlsMpegTs ? .sequentialLive : .randomAccessVOD,
+        mode: (container == .flv && flvIsLive) || container == .hlsMpegTs ? .sequentialLive : .randomAccessVOD,
         managedIntent: source.networkPolicy == .managed ? source.managedRequestIntent : nil,
         bufferScope: bufferScope
       )
@@ -148,7 +149,8 @@ final class YlPreparedFallback {
     mediaInfo = opened.info
     policy = YlFallbackMediaPolicy(
       container: container,
-      sourceSupportsRandomAccess: opened.supportsRandomAccess
+      sourceSupportsRandomAccess: opened.supportsRandomAccess,
+      flvIsLive: flvIsLive
     )
     guard let validContext = opened.context else {
       opened.close()

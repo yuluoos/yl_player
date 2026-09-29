@@ -111,3 +111,5 @@ expect(failure.retryable, isFalse);
 2026-09-29 Task2首个切片：修复已探测/显式MP4格式在AVPlayer资产创建时丢失的问题；本地`.bin`、无扩展名及HTTP`.bin`通过严格生命周期回归，截断文件保持拒绝。公开MIME接口门槛为macOS14/iOS17；部署下限保持不变，旧系统缺口及iOS实测保留。容器/音频扩展、HEVC seek、完整Task1输出验收均未完成。
 
 2026-09-29 HEVC跳转切片：普通HEVC解码序列增加CRA/BLA随机访问RASL过滤；MOV/Main10 MKV的6条本地/HTTP/改名路径通过前向2秒、反向1.25秒及自然结束严格测试。完整输出、跨平台/最低系统、其他Profile及格式/音频扩展仍未完成，Task1/Task2不整体勾选。
+
+2026-09-29 Task2 FLV点播切片：本地FLV启用真实准备路径，HTTP显式onDemand使用随机访问传输；三条AVC/MP3路径通过前后seek及结束，nonRange三意图和原有直播重连回归通过。其他音频/容器、完整输出、跨平台/最低系统验收仍未完成。

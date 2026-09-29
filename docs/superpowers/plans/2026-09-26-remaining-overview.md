@@ -176,3 +176,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-09-29 P03 Task2推进MP4探测结果到AVPlayer的传递：新增无扩展名本地/错误扩展名HTTP与截断负例；新版Apple系统使用公开MIME接口。旧系统、其他容器/音频、HEVC seek及完整输出验收保持未完成，范围与实跑证据见[P03报告](../reports/2026-09-26-remaining-03-formats-decoding.md)。
 
 2026-09-29 P03继续修复6条HEVC seek缺口：普通解码序列正确过滤随机访问RASL，保留连续播放及FEL分支；支持边界与证据见[P03报告](../reports/2026-09-26-remaining-03-formats-decoding.md)，整体CAP仍未完成。
+
+2026-09-29 P03推进FLV点播：修复本地拒绝及HTTP onDemand仍按直播处理的问题，保留automatic/live网络FLV与RTMP原行为；三条格式缺口修复证据及未完成边界见[P03报告](../reports/2026-09-26-remaining-03-formats-decoding.md)。

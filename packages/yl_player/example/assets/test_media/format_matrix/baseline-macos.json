@@ -126,34 +126,34 @@
       "completed": false
     },
     "flv-avc-mp3/file": {
-      "outcome": "failed",
-      "stage": "load",
-      "code": "container.unsupported",
-      "category": "container",
-      "scope": "command",
-      "firstFrame": false,
-      "seekProgress": false,
-      "completed": false
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
     },
     "flv-avc-mp3/http": {
-      "outcome": "failed",
-      "stage": "seek",
-      "code": "network.range_not_supported",
-      "category": "network",
-      "scope": "command",
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
       "firstFrame": true,
-      "seekProgress": false,
-      "completed": false
+      "seekProgress": true,
+      "completed": true
     },
     "flv-avc-mp3/renamed-file": {
-      "outcome": "failed",
-      "stage": "load",
-      "code": "container.unsupported",
-      "category": "container",
-      "scope": "command",
-      "firstFrame": false,
-      "seekProgress": false,
-      "completed": false
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
     },
     "ts-avc-ac3/file": {
       "outcome": "failed",

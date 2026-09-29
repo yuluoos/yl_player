@@ -134,3 +134,38 @@ flutter test integration_test/format_matrix_test.dart -d macos --no-pub
 - `tool/media_matrix/hevc_random_access_test.swift`：`50e37cf2a2b919834cdd41de5dae2a439754fa8e4adb039b472fc335bec7a201`
 - `tool/media_matrix/check_hevc_random_access.sh`：`2342dd7aca399ecefe9a5eee56ba82a6a4df5f169ecf3667cec4ac83aa8bb0b5`
 - `tool/media_matrix/macos-hevc-seek-observations.json`：`1951b1324042da180dadb8c5b28393f80ba14a31e51046f87462279e228ec5df`
+
+## FLV点播切片：分离播放意图与传输能力
+
+2026-09-29，基线`19e0244`，开始工作区干净。严格复现3条既有AVC/MP3 FLV路径：本地与同字节`.bin`在加载时被路由拒绝；HTTP声明onDemand但仍被当作直播，seek报`network.range_not_supported`。生产bridge已包含FLV解复用且接受本地输入，本轮无需扩大FFmpeg模块。
+
+修复启用本地FLV的待探测路由；仍由fallback准备验证真实媒体、codec及策略后提交。文件作为点播；网络显式onDemand使用现有randomAccessVOD传输，其余automatic/live保留顺序直播兼容行为。`YlFallbackMediaPolicy`分别记录是否直播和实际字节源随机访问能力：点播可报告媒体时长，但仅真实支持Range时才可seek。RTMP请求仍先走原有地址/意图校验，本轮未改变RTMP连接或重连实现；HLS、FEL、decoder、buffer预算、凭据过滤、取消/重试机制和部署下限不变。
+
+本次决定：automatic HTTP-FLV继续直播语义，HTTP点播调用方应显式传onDemand；代价是不会靠有限响应自动猜测点播。局部路由开放不代表FLV任意codec/损坏索引均受支持。
+
+3条严格公开路径修复后通过首帧、音轨选中、时钟推进、前向2秒/反向1.25秒seek、自然结束和释放，且断言isLive=false、isSeekable=true、duration非空。新增`flv_intent_test.dart`对无Range的HTTP200服务执行automatic/onDemand/live：3项均通过；onDemand发Range请求但不虚报seekability、保留时长，automatic/live不发Range且不报告点播时长；seek均以`network.range_not_supported`和command范围拒绝，当前会话无终止错误。原有HTTP-FLV断线重连测试通过，验证首帧、重连、live/nonseekable及自定义header保留。新意图测试已加入`check_native_macos.sh`发现清单。
+
+命令（Flutter从`packages/yl_player/example`运行）：
+
+```sh
+flutter test integration_test/format_matrix_test.dart -d macos --no-pub --dart-define=YL_FORMAT_REQUIRE_SUPPORT=true --plain-name 'flv-avc-mp3 /'
+flutter test integration_test/flv_intent_test.dart -d macos --no-pub
+flutter test integration_test/macos_http_flv_playback_test.dart -d macos --no-pub
+flutter test integration_test/format_matrix_test.dart -d macos --no-pub
+```
+
+脚本契约7项检查首次有1项因沙箱禁止`ps`读取测试自建子进程而报错；授权执行重跑后7项通过，不计为播放器失败。原始失败日志保留。原生运行仍有既有构建/前台激活提示；没有用这些测试代替像素、物理声音或同步验收。
+
+最终55项格式基线全部匹配（退出0）：29条正常路径完成公共生命周期、21条有效素材缺口仍失败、5条截断输入拒绝，全部释放完成。相对上一轮同55项，仅3条FLV缺口转为通过；已有MP4/HEVC修复结果不变，不将已知失败的预期匹配当作支持。35项example回归、8项Python台账、7项原生脚本契约检查通过，2个Dart入口定向分析无问题，36项资产/台账指纹核对通过。未运行完整原生聚合门禁；专项入口分别执行。
+
+单次独立复审无Critical/Important/Minor新增问题。复审未判断的独立声音/像素/同步、异常FLV/无索引及更广泛错误扩展名、其他codec/Profile/位深/声道、iOS/Android/其他设备/最低系统、真实RTMP/长时网络恢复、资源曲线/硬解失效注入/严格策略全组合继续保持未完成；代价是这些范围仍需单独证据。复审时待完成的前后seek、直播回归、55项基线和文档已由主执行者补齐并核对，没有再次派发复审。P03整体不封板。
+
+本轮原始55条观测、日志及执行源hash见[macos-flv-vod-observations.json](../../../tool/media_matrix/macos-flv-vod-observations.json)，前轮文件均保留历史身份。最终源文件指纹：
+- `packages/yl_player/example/integration_test/format_matrix_test.dart`：`70f5e40e47336f851384e5f86f1e0c503709b9692aedf47571f66e262fca7107`
+- `packages/yl_player/example/integration_test/flv_intent_test.dart`：`ec2de7642f1dff817d7a1f671d55ba9e76d45000e32ac749c5f9376eb8df7f9b`
+- `packages/yl_player/example/assets/test_media/format_matrix/baseline-macos.json`：`6fb3d1a591b1488a36bf045fabbb09c0bd7e39cb930f6c080a33ec9653378dda`
+- `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift`：`7f34aec2ae585c686f045ab8ed22ad31d533fea819776527a10118f1d901be57`
+- `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlFallbackRecoveryPolicy.swift`：`fe93611aa5c5a5645cf56a837a8c92d5ef74dd0b0043658d70f92cc898b6138d`
+- `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/SourceRouting/YlSourceAssessment.swift`：`19f1078927f023c18617478b2f57f8892c8779aaa8d63e4eea0a1ca8eb24a390`
+- `tool/check_native_macos.sh`：`1119e0b3df744f864253cc5530f921ee32d77a98106ada77f889639d797a8ca7`
+- `tool/media_matrix/macos-flv-vod-observations.json`：`4da69e048de61d0f5d94b6c6e8de6976965a5c338e43520f5b1fca8d9910e5e4`

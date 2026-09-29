@@ -29,3 +29,5 @@ flutter test integration_test/format_matrix_test.dart -d macos --dart-define=YL_
 MP4格式传递修复后的记录在 `macos-mp4-mime-observations.json`。新增4项变体不改写原始51项历史证据；55项当前预期见资产中的baseline。macOS14/iOS17起使用公开MIME指定接口保留已探测/显式MP4格式；本轮仅实跑Apple M1/macOS27，旧系统仍保留原行为，未声称iOS实测或任意已知错误扩展名均可播放。
 
 HEVC跳转修复记录见`macos-hevc-seek-observations.json`，保留前两轮历史观测。两个HEVC样本现执行前向2秒及反向1.25秒跳转；`sh tool/media_matrix/check_hevc_random_access.sh`验证随机访问状态、连续CRA、RADL、1/2/4字节NAL前缀和损坏边界，已接入macOS基础检查。此测试不证明输出像素、声音或跨平台支持。
+
+FLV点播修复记录见`macos-flv-vod-observations.json`。FLV三路径增加点播时长/seekability断言和前向2秒、反向1.25秒跳转；`flv_intent_test.dart`独立验证无Range服务的三种意图，已接入macOS原生脚本；`macos_http_flv_playback_test.dart`保留原直播重连回归。HTTP-FLV点播须显式声明onDemand，automatic继续直播语义。

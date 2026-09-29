@@ -493,3 +493,5 @@ P06 Task3C2 已接入 Apple schema5 公共 FairPlay HLS、独立 AVPlayerLayer�
 2026-09-29 P03 MP4格式传递修复：Apple M1/macOS27下，同字节AVC/AAC MP4的本地`.bin`、无扩展名和HTTP`.bin`完成公共播放/seek/结束/释放，截断输入仍拒绝。实现使用macOS14/iOS17起的公开MIME接口；旧系统保留原行为，iOS及真实影音输出未验收。并非任意错误的已知扩展名均已修复，CAP-FORMAT整体仍未完成。
 
 2026-09-29 P03 HEVC跳转修复：Apple M1/macOS27下既有MOV HEVC Main与MKV Main10样本的本地/HTTP/改名路径通过前向、反向seek及自然结束；普通解码路径按CRA/BLA随机访问语义过滤RASL。仅公共生命周期验证，像素/声音/同步、其他Apple设备/最低系统及FEL物理输出不由此推定。
+
+2026-09-29 P03 FLV点播：Apple M1/macOS27实测AVC/MP3 FLV本地、HTTP显式onDemand及本地改名路径可前后seek并结束；HTTP无Range时明确拒绝seek，automatic/live仍保留直播语义，旧直播重连回归通过。未新增FFmpeg模块；其他codec、iOS/Intel/最低系统及真实声音/像素/同步仍未验收。
