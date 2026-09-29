@@ -20,8 +20,10 @@ flutter test integration_test/format_matrix_test.dart -d macos
 flutter test integration_test/format_matrix_test.dart -d macos --dart-define=YL_FORMAT_REQUIRE_SUPPORT=true
 ```
 
-每个夹具测试file/http及同字节错误扩展名，共51项；自动探测，不显式提示格式。HTTP为受控本机Range服务器，不能推出广域网性能。公共首帧、position推进、音轨选中、seek后推进、结束、释放分别断言；没有独立audio-clock API，记录null，不把timeline或“有音轨”当音频输出/同步已验收。像素和声音标记在播放器输出上仍待验证。
+每个夹具测试file/http及同字节错误扩展名；MP4正常/截断样本另有无扩展名本地、错误扩展名HTTP，共55项；自动探测，不显式提示格式。HTTP为受控本机Range服务器，不能推出广域网性能。公共首帧、position推进、音轨选中、seek后推进、结束、释放分别断言；没有独立audio-clock API，记录null，不把timeline或“有音轨”当音频输出/同步已验收。像素和声音标记在播放器输出上仍待验证。
 
 `baseline-macos.json`是当前macOS27/Apple M1的逐项回归预期，记录具体outcome/stage/code/category/scope及里程碑。默认模式验证现状是否变化；已知正常媒体失败仍在`YL_FORMAT_ROW`中写failed/timeout，不能把“51项基线匹配”写成“51条格式支持”。正常素材严格模式要求全部播放成功；损坏素材要求失败、source/container分类、session范围且没有首帧。其他平台没有现状基线，默认按严格门槛运行，不能套macOS预期。支持扩展后应重新实测再更新基线。
 
-本次macOS记录在 `macos-observations.json`：17个正常路径完成公开生命周期、31个正常路径存在缺口、3个损坏输入拒绝。全部仍缺输出像素/声音/同步及最低系统验证。Android/iOS未运行，不能从同一Swift源码推出它们通过。详见 [P03报告](../../docs/superpowers/reports/2026-09-26-remaining-03-formats-decoding.md)。
+首轮历史macOS记录在 `macos-observations.json`（51项）：17个正常路径完成公开生命周期、31个正常路径存在缺口、3个损坏输入拒绝。全部仍缺输出像素/声音/同步及最低系统验证。Android/iOS未运行，不能从同一Swift源码推出它们通过。详见 [P03报告](../../docs/superpowers/reports/2026-09-26-remaining-03-formats-decoding.md)。
+
+MP4格式传递修复后的记录在 `macos-mp4-mime-observations.json`。新增4项变体不改写原始51项历史证据；55项当前预期见资产中的baseline。macOS14/iOS17起使用公开MIME指定接口保留已探测/显式MP4格式；本轮仅实跑Apple M1/macOS27，旧系统仍保留原行为，未声称iOS实测或任意已知错误扩展名均可播放。

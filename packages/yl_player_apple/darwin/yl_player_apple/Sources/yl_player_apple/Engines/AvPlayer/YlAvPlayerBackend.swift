@@ -720,7 +720,15 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
         message: "A valid media URI is required."
       )
     }
-    installItem(asset: AVURLAsset(url: url), positionMs: positionMs)
+    let asset: AVURLAsset
+    if #available(macOS 14.0, iOS 17.0, *), source.formatHint == .mp4 {
+      // Preserve the explicit or inspected format when the URL has no usable
+      // extension. AVFoundation otherwise rejects even a validated MP4 prefix.
+      asset = AVURLAsset(url: url, options: [AVURLAssetOverrideMIMETypeKey: "video/mp4"])
+    } else {
+      asset = AVURLAsset(url: url)
+    }
+    installItem(asset: asset, positionMs: positionMs)
   }
 
   private func installItem(asset: AVURLAsset, positionMs: Int64, resumePositionUs: Int64? = nil, anchorRuntimeResume: Bool = false, forceResumeSeek: Bool = false) {

@@ -489,3 +489,5 @@ P06 Task3C2 已接入 Apple schema5 公共 FairPlay HLS、独立 AVPlayerLayer�
 2026-09-29研究补充：固定libplacebo在当前Apple M1/macOS27的加速CGL路径上完成有限GPU断言，详见 [P07报告](superpowers/reports/2026-09-26-remaining-07-dolby.md)。此候选仍未接入播放器，compute/SSBO能力受限；不能据此新增FEL、完整杜比映射、移动端或原生DV输出支持声明。
 
 2026-09-29 P03新增原创格式组合与当前macOS自动路由调查，见[P03报告](superpowers/reports/2026-09-26-remaining-03-formats-decoding.md)。17条公共生命周期成功不代表输出图像/声音完整验收；有效素材失败、错误扩展名差异及未运行平台逐项保留。本次未修改生产格式支持范围。
+
+2026-09-29 P03 MP4格式传递修复：Apple M1/macOS27下，同字节AVC/AAC MP4的本地`.bin`、无扩展名和HTTP`.bin`完成公共播放/seek/结束/释放，截断输入仍拒绝。实现使用macOS14/iOS17起的公开MIME接口；旧系统保留原行为，iOS及真实影音输出未验收。并非任意错误的已知扩展名均已修复，CAP-FORMAT整体仍未完成。

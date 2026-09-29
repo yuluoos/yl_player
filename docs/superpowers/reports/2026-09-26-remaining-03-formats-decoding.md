@@ -73,3 +73,32 @@ macOS最终51项现状回归预期匹配，8项Python台账测试、35项example
 - `tool/media_matrix/macos-observations.json`：`75546022786effe0657e4fc354689896f4ffe1828243fc6dd8f225af08474bac`
 - `tool/media_matrix/fixture-verification.json`：`60b22acd837ca43eb2b21aa2f18718fdcae58685a8eff9a312a5436d3edd3d7c`
 - `packages/yl_player/example/integration_test/format_matrix_test.dart`：`4949b3368784c85ff41de2167e984fe374edda7c671e1a8c64ff9c0b0ab51e10`
+
+## Task2切片：MP4探测结果传递
+
+2026-09-29，基线`d133977`。根因：`YlSourceInspector`在4KiB内识别ftyp并将formatHint设为mp4，但`YlAvPlayerBackend.installItem`只传URL，AVFoundation仍依据未知扩展名拒绝；原严格用例在ready报`avplayer.-11828`。新增无扩展名本地和`.bin` HTTP后，修复前10项严格测试中3条正常媒体变体失败、其余7项通过。
+
+修复在创建资产时为已显式指定或已探测的MP4传`AVURLAssetOverrideMIMETypeKey: video/mp4`，URL、请求策略和生命周期不变；原生后续恢复也经过同一入口。使用本机Xcode公开SDK声明，API门槛macOS14/iOS17，带可用性保护，不提高macOS12/iOS15包部署下限。旧系统继续原路径，扩展名缺口仍未修复；没有通过私有key或静默软解绕过限制。自动路径仍只在原路由要求时探测，本轮不承诺把`.avi`等另一种已知扩展名也统一探测，MOV/HLS/DRM/FEL及裁剪FFmpeg不变。
+
+本轮决定：先修复有现成失败证据的MP4格式传递，再逐切片推进容器扩展与HEVC seek。代价是旧系统、其他已知扩展名不符和其他格式仍需后续修复。本切片不代表Task1、Task2或CAP-FORMAT完成。
+
+验证命令在`packages/yl_player/example`执行：
+
+```sh
+flutter test integration_test/format_matrix_test.dart -d macos --no-pub --dart-define=YL_FORMAT_REQUIRE_SUPPORT=true --name '^(mp4-avc-aac|mp4-truncated) /'
+flutter test integration_test/format_matrix_test.dart -d macos --no-pub
+```
+
+首条严格专项修复后10项通过：5条正常MP4路径都完成首帧、position、选中音轨、seek、自然结束和释放；5条截断路径均在ready报`avplayer.-11829`，category=source/scope=session，没有首帧且释放完成。截断`.bin`不再误报不识别格式，但仍保留系统错误码；不是新增通用损坏媒体错误映射。所有素材字节及hash不变；默认基线仅更新实测受影响的MP4行。运行提示前台激活失败及既有构建提示，不影响实际公共路径测试；不计为视觉/声音输出验证。
+
+最终55项格式基线预期全部匹配（命令退出0）：20条正常路径完成公共生命周期，30条有效素材缺口仍失败/超时，5条截断输入拒绝；所有55条释放完成。相对原51项，仅原有MP4 `.bin`正常路径从失败转通过、截断`.bin`错误分类修正；新增4项贡献2条正常通过及2条截断拒绝，不能把新增样本数当作修复数。8项Python台账、35项example回归通过，定向Dart分析无问题；源迁移身份检查通过。本次没有运行无关完整原生矩阵。
+
+当前逐条观测及执行源/日志hash见[macos-mp4-mime-observations.json](../../../tool/media_matrix/macos-mp4-mime-observations.json)。原始51项证据`macos-observations.json`及本文前述表格/指纹保留历史身份，当前55项以新文件为准。
+
+单次独立复审无Critical/Important/Minor。复审未独立验收的旧系统、iOS/Intel、已知错误扩展名、像素/声音/同步/Profile/多声道、强制硬解重建/软件预算/HDR策略，以及HEVC/其他容器/无索引完整验收继续保留缺口；显式提示及恢复入口仅代码流检查，本轮无独立运行测试。复审时尚未结束的55项回归现由主执行者确认通过，未再派发复审。这些边界均不提升整体能力状态，代价是相关平台/场景仍需独立证据。
+
+本切片最终源文件身份：
+- `packages/yl_player/example/integration_test/format_matrix_test.dart`：`10ae93015e16782d29c1baae6fb913861677bd5b52b18e330d91f7c7709e58c5`
+- `packages/yl_player/example/assets/test_media/format_matrix/baseline-macos.json`：`5815e05156ba0f13d1b50323514607ad0355f83ce1d10124f678aefdae8cf48c`
+- `packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift`：`b9b516e70fa809274009a7fd09675d7a7e7573a1dd3efda4b0b94732e3fbe7bc`
+- `tool/media_matrix/macos-mp4-mime-observations.json`：`a95c029158b63b2d1c660934ecf47daf68a23e3a8d8d9cb5b4355f48738aea64`

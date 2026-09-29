@@ -35,7 +35,15 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   var aborted = false;
   for (final id in _caseIds) {
-    for (final transport in ['file', 'http', 'renamed-file']) {
+    for (final transport in [
+      'file',
+      'http',
+      'renamed-file',
+      if (id == 'mp4-avc-aac' || id == 'mp4-truncated') ...[
+        'extensionless-file',
+        'renamed-http',
+      ],
+    ]) {
       testWidgets('$id / $transport', (tester) async {
         expect(aborted, isFalse, reason: 'Previous cleanup did not finish');
         final catalog =
@@ -54,13 +62,15 @@ void main() {
           data.lengthInBytes,
         );
         final directory = await Directory.systemTemp.createTemp('yl_format_');
-        final name = transport == 'renamed-file'
+        final name = transport.startsWith('renamed-')
             ? 'wrong-extension.bin'
+            : transport == 'extensionless-file'
+            ? 'no-extension'
             : row['file'] as String;
         final file = File('${directory.path}/$name');
         await file.writeAsBytes(bytes, flush: true);
         HttpServer? server;
-        if (transport == 'http') {
+        if (transport == 'http' || transport == 'renamed-http') {
           server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
           server.listen((request) async {
             final response = request.response;

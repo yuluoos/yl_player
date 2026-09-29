@@ -26,14 +26,14 @@
       "completed": true
     },
     "mp4-avc-aac/renamed-file": {
-      "outcome": "failed",
-      "stage": "ready",
-      "code": "avplayer.-11828",
-      "category": "container",
-      "scope": "session",
-      "firstFrame": false,
-      "seekProgress": false,
-      "completed": false
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
     },
     "mov-hevc-aac/file": {
       "outcome": "timeout",
@@ -508,8 +508,48 @@
     "mp4-truncated/renamed-file": {
       "outcome": "failed",
       "stage": "ready",
-      "code": "avplayer.-11828",
-      "category": "container",
+      "code": "avplayer.-11829",
+      "category": "source",
+      "scope": "session",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "mp4-avc-aac/extensionless-file": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mp4-avc-aac/renamed-http": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mp4-truncated/extensionless-file": {
+      "outcome": "failed",
+      "stage": "ready",
+      "code": "avplayer.-11829",
+      "category": "source",
+      "scope": "session",
+      "firstFrame": false,
+      "seekProgress": false,
+      "completed": false
+    },
+    "mp4-truncated/renamed-http": {
+      "outcome": "failed",
+      "stage": "ready",
+      "code": "avplayer.-11829",
+      "category": "source",
       "scope": "session",
       "firstFrame": false,
       "seekProgress": false,
