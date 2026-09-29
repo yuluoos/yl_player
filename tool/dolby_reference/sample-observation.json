@@ -1,0 +1,35 @@
+{
+  "case": "sol-levante-p5-1080p",
+  "url": "https://media.githubusercontent.com/media/DolbyLaboratories/dolby-vision-contents/957c53ac160e11ae581aa1f4fe811a8ad6cf27df/SolLevante_Netflix/BL_RPU_dvhe-05_1920x1080%4024fps_0_6313.mp4",
+  "bytes": 141871521,
+  "sha256": "87fe0115f3002a621d2380a9f91852ef91a15854a446efe26de8744f77ef5346",
+  "hash_verified": true,
+  "license": "CC-BY-4.0",
+  "attribution": "SolLevante by Netflix, Inc.; Dolby, Inc. modification; downloaded without modification",
+  "independent_target_reference": false,
+  "reference_sha256": null,
+  "inspection_scope": "first_rpu_only",
+  "profile": 5,
+  "cm_blocks": [
+    "2.9"
+  ],
+  "levels": [
+    1,
+    2,
+    4,
+    5,
+    6
+  ],
+  "first_rpu_sha256": "5d70cf29f0bd6f52f9567b0d101283397bddcf7bd55d39a9e47bf0893c3719b4",
+  "first_rpu_bytes": 167,
+  "first_frame_pts": {
+    "value": 0,
+    "timescale": 24000
+  },
+  "full_stream_metadata_coverage": "not_run",
+  "license_notice_url": "https://github.com/DolbyLaboratories/dolby-vision-contents/blob/957c53ac160e11ae581aa1f4fe811a8ad6cf27df/SolLevante_Netflix/SolLevante%20by%20Netflix.docx",
+  "license_notice_sha256": "4b6690d1e90d9ca86659a382d2cf5aa7218a2b5abac1154bcdd10f56924dc37a",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "mapping_quality": "external_missing",
+  "native_dv_signal": "external_missing"
+}

@@ -1,6 +1,6 @@
 # P07 执行报告：Task1 参考、候选与完整性门槛
 
-2026-09-28；当前增量基线 `e69d5dc47db3dc08a808dd73c80de56acd446a4d`，工作区最初干净。**Task1 部分完成：基线与调查台账已交付；原始FEL、独立参考、最终容差及候选三端构建尚未齐备。CAP-DV-MAP / CAP-DV-OUT 均未完成。** 本次没有修改生产播放器、放宽元数据拒绝或新增依赖。
+2026-09-28；当前增量基线 `e69d5dc47db3dc08a808dd73c80de56acd446a4d`，工作区最初干净。**Task1 部分完成：基线、调查台账及后续三端arm64候选构建已交付；原始FEL、独立参考、最终容差与实际渲染验证尚缺。CAP-DV-MAP / CAP-DV-OUT 均未完成。** 以下Task1A为历史记录，最新进度见末尾Task1B1。 本次没有修改生产播放器、放宽元数据拒绝或新增依赖。
 
 ## 现有基线与真实运行
 
@@ -73,3 +73,50 @@ Task1尚需：原始合法FEL及其hash、独立多帧目标输出和来源/参�
 - `docs/superpowers/specs/2026-09-26-dolby-mapping-contract.md`：`c324c7f2400a9d631523295f62faa37ec1bbc685a243cc121a3f82ff3d6a9908`
 
 独立fresh review完成：未发现重要问题；核对25个基线源码hash与e69d5dc一致，14个固定上游源码hash、版本/MSRV/日志和状态边界一致。仅覆盖Task1A，不代替候选构建、完整画质或物理输出验收。最终工具8项通过，snapshot匹配；没有再次派发复审。
+
+## 2026-09-28 Task1B1：实际候选构建与第一份官方输入
+
+基线 `798fc80`，延续同一干净分支。本次补齐两个候选的Android/iOS/macOS **arm64构建**，没有接入生产。上方Task1A未构建/未下载描述是历史状态；当前以本节、[build-evidence.json](../../../tool/dolby_reference/build-evidence.json) 和 [sample-observation.json](../../../tool/dolby_reference/sample-observation.json) 为准。Task1仍缺原始P7 FEL、独立目标显示参考/容差和实际GPU/物理输出。
+
+| 项目 | 最终实际结果 | 限制 |
+|---|---|---|
+| libdovi3.4.0 | 官方Rust1.94三端arm64静态库构建成功；三端C API消费者链接成功 | iOS/Android未运行；不是映射器 |
+| libdovi macOS | 上游2单测通过；C ABI探针5个退出预期匹配，含真实首RPU成功及无效/缺项输入拒绝 | 单测最初使用Homebrew Rust；最终静态库/C ABI用官方工具链 |
+| libplacebo7.372.0 | OpenGL+Dovi路线三端arm64动态库构建成功 | Vulkan/直接Metal及联合libdovi未验证；未接平台视图 |
+| libplacebo macOS | 13通过、1跳过、0失败；opengl_surfaceless.c退出77 | GPU渲染测试未执行，不能计作14通过 |
+| 调查/证据测试 | 最终12项通过；新增4项中3项先因证据文件缺失失败 | 只保证台账边界，不替代真实播放 |
+| 官方P5 1080p输入 | 141,871,521字节，全文件SHA-256匹配发布方LFS声明 | 没有取得独立目标图；不是P7 FEL |
+| 首RPU盘点 | 167字节；P5、CM2.9块，L1/L2/L4/L5/L6；PTS0/24000 | 只检查首RPU，不推断全片或CM4覆盖 |
+
+实际Mach-O消费者下限为macOS12.0/iOS15.0，libplacebo动态库也分别为12.0/15.0；Android用NDK28.2.13676358的API24 wrapper，最终库和探针为aarch64 ELF。这里只证明目标编译/链接，没有在最低系统设备执行，不能宣称完整兼容性。未修改包最低系统或现有FEL/HDR实现。
+
+### 版本、复现与失败保留
+
+[探针说明](../../../tool/dolby_reference/probes/README.md)记录命令、工具、隔离sysroot、cross配置与边界。6个实际库hash、源码归档/子模块/官方Rust组件校验和和运行日志hash保存于build-evidence。所有二进制/媒体在忽略的 `build-probes/`，没有发布或进入播放器依赖。原始锁文件未改；使用`cargo --locked`。宿主ffprobe8.0.1仅做离线盘点，生产FFmpeg9.0.1不变。
+
+首次失败均保留并按原因处理：源码归档不含glad/fast_float/Vulkan-Headers子模块，按原commit补齐；上游可选xxhash/头文件测试路径问题，关闭可选缓存哈希并显式提供已安装dav1d头；错误Meson reconfigure参数/属性段按工具错误修正。未修改上游源码、跳过断言或关闭Dovi处理。
+
+Homebrew Rust1.94和官方std ABI不兼容；其自带macOS std还有26.0下限，未作为最终候选采用。改用校验过的官方编译器与三端std。强加主机最低系统变量曾导致Xcode27生成mis-aligned LINKEDIT的proc-macro，最终用新的隔离目录和官方默认host配置构建，再以macOS12消费者链接并核对产物，无高系统版本链接警告。初次将crate-type传到rustc而非cargo导致依赖格式报错，也已修正；未将这些失败描述成候选最终不支持。
+
+### 样本来源与变化
+
+[官方样本附带署名说明](https://github.com/DolbyLaboratories/dolby-vision-contents/blob/957c53ac160e11ae581aa1f4fe811a8ad6cf27df/SolLevante_Netflix/SolLevante%20by%20Netflix.docx)声明：SolLevante由Netflix, Inc.提供、Dolby, Inc.修改，按[CC BY4.0](https://creativecommons.org/licenses/by/4.0/)分发。本次保留署名，下载的MP4未修改；首access unit/RPU抽取是解析衍生物，不是改写元数据的替代片。声明文件hash已记录。其余5份官方样本仍未下载。
+
+首RPU的L2 trim_slope=2070，不能以“有P5素材”推断所有动态映射已完成。当前24行历史调查网格保留原来的未验收状态，新样本仅补充输入观察。真正升级到支持/画质通过须取得同目标显示参数的独立多帧输出，冻结容差并证明实际处理；GPU skip、库可编译或可解析RPU都不解除这一门槛。
+
+本次决定：只做固定候选编译与非保护公开输入盘点，生产依赖/渲染行为不改；其代价是仍没有新增完整杜比能力。移动端运行、其他架构、最低系统实机和实际GPU精度继续待验证，不从arm64构建外推。
+
+### Task1B1 最终复审与文件校验
+
+单次独立复审未发现重要问题；6个库与17份日志的哈希匹配，上游libdovi 211份、libplacebo 242份源码与归档一致。C ABI签名、错误路径和释放、官方输入及首RPU哈希已核对。复审实跑12项Python测试通过。GPU跳过和移动端未运行仍保留，Task1未勾选完成；没有再次派发复审。
+
+以下哈希对应本次增量，上方Task1A哈希保留为历史记录：
+
+- `tool/dolby_reference/build-evidence.json`：`9d7cef633a6d52b70a4c374970a77aafe8e0a335b35970e1d7fb3d75c2b5380c`
+- `tool/dolby_reference/sample-observation.json`：`16115abd6b264369dbdc6cc5d455129d9aac051477ef955ef97ba1f0291866a0`
+- `tool/dolby_reference/candidates.json`：`6f9af592228fb2da5c8465c0214da632565176775252b5c7564138d6bf90531f`
+- `tool/dolby_reference/sample-candidates.json`：`12901caae3c466079815ae4bda22bfc76348775e9599ab401673a09ecd6721aa`
+- `tool/dolby_reference/test_build_evidence.py`：`e9398248c4614d1d1e5c4e3a485c7e11b6bd5e49cafb7ab92e78bb4a186cd2fb`
+- `tool/dolby_reference/probes/libdovi_smoke.c`：`01005a65be6d3bc30a89c61a7740d6d4e0cab28c30ef57918800df96e3f099e8`
+- `tool/dolby_reference/probes/inspect_rpu.rs`：`88858633006b312a9208f3f100d63def0723e834c376ae7a61cb5d1c731aa1ce`
+- `tool/dolby_reference/probes/README.md`：`a18ec7371b79dfbb8dcbb666d1022cb9b59b2b2e9fdf93ec20f322b2f542e80d`

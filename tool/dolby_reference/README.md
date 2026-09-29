@@ -1,10 +1,10 @@
 # P07 Dolby 参考调查台账
 
-当前阶段是调查与基线冻结，**Task1 未整体完成**。没有新增播放支持，也没有把现有 FEL 算术测试提升为完整画质结论。
+当前阶段已推进到固定候选三端arm64构建和首份官方输入盘点，**Task1 未整体完成**。没有新增播放支持，也没有把现有 FEL 算术测试提升为完整画质结论。
 
 - `baseline.json`：e69d5dc 的现有源码/合成夹具哈希、当前主机上6个检查可执行程序的结果。原始 FEL 媒体缺失，媒体哈希为空。GPU 与手写 scalar 对照仅覆盖既有选定算术点。
-- `candidates.json`：固定提交与14个上游源文件哈希、版本和当前构建条件。libplacebo/libdovi 未接入、未完成三端构建；PATH/pkg-config 未发现依赖仅是本机预检结果，不表示这些平台不可能构建。
-- `sample-candidates.json`：Dolby 官方仓库6个公开样本线索及 LFS 声明哈希。没有下载实际媒体、未验证使用条款/哈希/CM/元数据集合，不是独立参考图，不能填入 `cases.json` 的实测输入或参考哈希。
+- `candidates.json`：固定提交与14个上游源文件哈希、版本和当前构建条件。libplacebo/libdovi 未接入；后续三端arm64构建记录在 `build-evidence.json`。历史PATH预检仍保留；PATH/pkg-config 未发现依赖仅是本机预检结果，不表示这些平台不可能构建。
+- `sample-candidates.json`：Dolby 官方仓库6个公开样本线索及 LFS 声明哈希。Task1B1已核实发布方CC BY 4.0声明并下载核验其中P5 1080p，首RPU观察另记 `sample-observation.json`；其余5份未下载，均不是独立参考图。不得据此升级历史调查行的画质或信号状态。
 - `cases.json`：6个 Profile 调查类别 × 4组 CM/level 调查条件，共24行，每行三平台独立状态。组合的适用性待原始流确认；不是宣称全部组合均为规范有效流。L3/L9/L10/L11等其他level仍须在真实样本盘点后扩展，当前24行不穷举所有合法元数据组合。
 
 ```sh
@@ -26,3 +26,5 @@ sh tool/apple_hdr/run_tests.sh
 ```
 
 不能据此宣称 iOS物理设备、Android、原始FEL、完整CM映射、外接DV输出或持续性能通过。完整发现及下一验证实验见 [P07报告](../../docs/superpowers/reports/2026-09-26-remaining-07-dolby.md) 和 [映射契约](../../docs/superpowers/specs/2026-09-26-dolby-mapping-contract.md)。
+
+Task1B1复现、初始失败及最终边界见 [构建探针说明](probes/README.md)。调查/证据测试当前12项；本机上游libplacebo13项通过、1项GPU跳过，libdovi2项单测及5个C API退出预期匹配。iOS/Android仅构建链接，尚无设备运行结论。

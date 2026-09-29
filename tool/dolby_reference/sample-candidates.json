@@ -1,17 +1,17 @@
 {
   "repository": "DolbyLaboratories/dolby-vision-contents",
   "commit": "957c53ac160e11ae581aa1f4fe811a8ad6cf27df",
-  "status": "public_source_leads_only",
+  "status": "one_input_hash_verified_no_target_reference",
   "samples": [
     {
       "path": "SolLevante_Netflix/BL_RPU_dvhe-05_1920x1080@24fps_0_6313.mp4",
       "source_url": "https://github.com/DolbyLaboratories/dolby-vision-contents/blob/957c53ac160e11ae581aa1f4fe811a8ad6cf27df/SolLevante_Netflix/BL_RPU_dvhe-05_1920x1080%4024fps_0_6313.mp4",
       "declared_lfs_sha256": "87fe0115f3002a621d2380a9f91852ef91a15854a446efe26de8744f77ef5346",
       "declared_bytes": 141871521,
-      "downloaded": false,
-      "hash_verified": false,
-      "usage_terms": "not_verified",
-      "cm_levels": "not_inspected",
+      "downloaded": true,
+      "hash_verified": true,
+      "usage_terms": "publisher_declared_CC-BY-4.0",
+      "cm_levels": "first RPU only: CM2.9 L1/L2/L4/L5/L6; full stream not inspected",
       "independent_target_reference": false
     },
     {
@@ -21,7 +21,7 @@
       "declared_bytes": 289758635,
       "downloaded": false,
       "hash_verified": false,
-      "usage_terms": "not_verified",
+      "usage_terms": "publisher_declared_CC-BY-4.0",
       "cm_levels": "not_inspected",
       "independent_target_reference": false
     },
@@ -32,7 +32,7 @@
       "declared_bytes": 143530356,
       "downloaded": false,
       "hash_verified": false,
-      "usage_terms": "not_verified",
+      "usage_terms": "publisher_declared_CC-BY-4.0",
       "cm_levels": "not_inspected",
       "independent_target_reference": false
     },
@@ -43,7 +43,7 @@
       "declared_bytes": 290650387,
       "downloaded": false,
       "hash_verified": false,
-      "usage_terms": "not_verified",
+      "usage_terms": "publisher_declared_CC-BY-4.0",
       "cm_levels": "not_inspected",
       "independent_target_reference": false
     },
@@ -54,7 +54,7 @@
       "declared_bytes": 139976302,
       "downloaded": false,
       "hash_verified": false,
-      "usage_terms": "not_verified",
+      "usage_terms": "publisher_declared_CC-BY-4.0",
       "cm_levels": "not_inspected",
       "independent_target_reference": false
     },
@@ -65,7 +65,7 @@
       "declared_bytes": 285352109,
       "downloaded": false,
       "hash_verified": false,
-      "usage_terms": "not_verified",
+      "usage_terms": "publisher_declared_CC-BY-4.0",
       "cm_levels": "not_inspected",
       "independent_target_reference": false
     }

@@ -166,3 +166,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-09-28 P06 Task4A 验收准备已实现：私有模板、离线预检、缺项报告及基础生命周期入口。空资源表三端均external_missing（退出2、0网络请求）；基础入口未运行授权设备，不能替代完整Task4B/HDCP/物理验收，CAP-DRM保持未完成。下一独立项为P07 Task1参考/设备/映射差距冻结。
 
 2026-09-28 P07-Task1部分完成：FEL/HDR基线6个检查程序通过，候选固定版本/源码调查、24行三平台参考调查台账及8项校验测试已交付。原始FEL、独立参考/容差与候选三端构建仍未齐备，Task1整体、CAP-DV-MAP/OUT均未完成；不得把合成算术或公开LFS样本声明当作完整画质证据。详见P07报告。
+
+2026-09-28 P07-Task1B1补齐libdovi/libplacebo三端arm64候选构建和官方P5首份输入盘点；macOS libplacebo13通过/1 GPU跳过，libdovi2单测/5 C API预期匹配。构建没有接入生产或证明画质；独立参考/容差、原始FEL及实际GPU/设备输出仍缺，Task1/完整杜比仍未完成。

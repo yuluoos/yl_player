@@ -21,9 +21,9 @@
       "commit": "c42968d8616a1d1c8ad5f4f1a8d6f5a9cb396e56",
       "role": "FEL reconstruction and generic HDR rendering candidate",
       "builds": {
-        "android": "not_built",
-        "ios": "not_built",
-        "macos": "not_built"
+        "macos": "arm64_built_runtime_13_upstream_tests_passed_gpu_skipped",
+        "ios": "arm64_built_runtime_not_run",
+        "android": "arm64_built_runtime_not_run"
       },
       "complete_display_mapping": "not_established",
       "native_dv_output": "not_verified",
@@ -36,9 +36,9 @@
       "commit": "614c816b6446dcd1dbaf433403d499a6026fbb5a",
       "role": "metadata parsing/writing; not a display mapper",
       "builds": {
-        "android": "not_built",
-        "ios": "not_built",
-        "macos": "not_built"
+        "macos": "arm64_built_runtime_c_api_smoke_passed",
+        "ios": "arm64_built_runtime_not_run",
+        "android": "arm64_built_runtime_not_run"
       },
       "complete_display_mapping": "not_a_renderer",
       "license_declared": "MIT",
@@ -209,6 +209,8 @@
     },
     "macosx": "27.0",
     "iphoneos": "27.0",
-    "iphonesimulator": "27.0"
-  }
+    "iphonesimulator": "27.0",
+    "historical_note": "Task1A host PATH snapshot; isolated tools and official Rust added under ignored build-probes in Task1B1; see build-evidence.json"
+  },
+  "build_evidence": "build-evidence.json"
 }

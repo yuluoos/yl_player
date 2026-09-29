@@ -483,3 +483,5 @@ P06 Task3C2 已接入 Apple schema5 公共 FairPlay HLS、独立 AVPlayerLayer�
 2026-09-28 P06 Task4A 提供[私有资源预检与基础生命周期入口](../tool/drm_acceptance/README.md)。三平台授权资源仍external_missing；配置检查通过不等于实际授权/播放/输出验收，CAP-DRM状态不变。
 
 2026-09-28 [P07-Task1调查](superpowers/reports/2026-09-26-remaining-07-dolby.md)冻结FEL/HDR源码基线和候选版本，本机6个检查程序通过；没有扩大生产杜比支持。24个调查组合均缺独立参考/容差，候选三端构建未完成，CAP-DV-MAP与CAP-DV-OUT继续未验证。
+
+2026-09-28 P07-Task1B1仅推进研究候选：libdovi/libplacebo三端arm64构建与公开P5输入hash/首RPU验证。macOS GPU测试跳过，移动端未运行；没有新增生产依赖或提升CAP-DV-MAP/OUT。
