@@ -7,6 +7,12 @@ From `packages/yl_player/example`, run:
 ```sh
 flutter test integration_test/display_readback_test.dart -d macos --no-pub \
   --dart-define=YL_DISPLAY_RUN_ID=display-owned-001
+# Metadata-only BT.601 matrix / BT.709 primaries+transfer control:
+flutter test integration_test/display_readback_test.dart -d macos --no-pub \
+  --dart-define=YL_DISPLAY_RUN_ID=display-owned-601 --dart-define=YL_DISPLAY_CASE=bt601
+# Negative qualification case, not a playback/color-accuracy pass:
+flutter test integration_test/display_readback_test.dart -d macos --no-pub \
+  --dart-define=YL_DISPLAY_RUN_ID=display-unqualified --dart-define=YL_DISPLAY_CASE=untagged
 flutter test --no-pub test/display_markers_test.dart
 ```
 
@@ -46,6 +52,31 @@ a replacement requires moving the old file aside and creates a new evidence
 identity. The original format-matrix fixture had unspecified color metadata and
 failed the original fixed tolerance; that run remains a recorded gap. The new
 fixture does not establish that untagged-content color interpretation is fixed.
+
+Schema 2 adds `caseId` and per-sample `colorMetadata` (matrix, primaries,
+transfer and Core Image resolved `rgbColorSpace`), using fixed labels rather
+than arbitrary native descriptions. The pure-RGB reference is qualified only
+for BT.601/BT.709 matrices, BT.709 transfer, resolved Core Media 709 RGB space,
+and BT.709 or renderer-normalized unspecified primaries. An unspecified
+primaries attachment alone does not qualify or disqualify the image: the tested
+renderer returns it even for fully tagged positive controls. Missing/other
+resolved spaces (including an unnamed space) and explicit conflicting primaries
+cannot pass even if the RGB happens to match. Such readbacks remain in raw
+observations and yield `reference-unqualified`; remaining trials are skipped.
+The `untagged` negative suite succeeds only when this exact outcome sequence is
+observed. Its test-runner exit 0 is **not** an original-media color-accuracy pass.
+Other color spaces require their own reference and are not rejected by the
+production player through this test-only rule.
+
+`generate_color_control.py` creates `benchmark_601.mkv` by changing SPS/container
+color metadata only. It verifies all 96 decoded video and 189 audio frame hashes
+against the untouched original; no image re-encoding is involved. This control
+distinguishes reference interpretation from damaged decoded samples. The old
+untagged red observation had correct YUV and a BT.601 matrix, but unspecified
+primaries; an assumed pure-sRGB reference did not justify a decoder/matrix fix.
+See `macos-color-reference-observations.json` for separately retained positive
+controls and the unqualified original. No production color-default override,
+tolerance relaxation, first-frame latency or physical-color claim follows.
 
 Cleanup independently attempts disposal, view removal, post-removal inspection
 and temporary-file deletion, with a five-second deadline for each step. An

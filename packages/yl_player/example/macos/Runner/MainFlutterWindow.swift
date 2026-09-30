@@ -33,7 +33,7 @@ private enum YlDisplayReadbackProbe {
         reply(FlutterError(code: "probe.thread", message: "Display probe unavailable", details: nil)); return
       }
       var result: [String: Any] = ["status": "noLayer", "layerCount": 0, "ready": false,
-        "width": NSNull(), "height": NSNull(), "pixels": NSNull()]
+        "width": NSNull(), "height": NSNull(), "pixels": NSNull(), "colorMetadata": NSNull()]
       guard #available(macOS 14.4, *) else { result["status"] = "unsupported"; reply(result); return }
       var visited = Set<ObjectIdentifier>()
       var displays: [AVSampleBufferDisplayLayer] = []
@@ -61,7 +61,29 @@ private enum YlDisplayReadbackProbe {
         let pixelBuffer = display.sampleBufferRenderer.displayedPixelBuffer() else { reply(result); return }
       let width = CVPixelBufferGetWidth(pixelBuffer), height = CVPixelBufferGetHeight(pixelBuffer)
       guard width == 320, height == 180 else { reply(result); return }
+      func label(_ key: CFString, _ known: [String: String]) -> String {
+        guard let value = CVBufferCopyAttachment(pixelBuffer, key, nil) as? String else { return "missing" }
+        return known[value] ?? "other"
+      }
       let image = CIImage(cvPixelBuffer: pixelBuffer)
+      // Core Image resolves a color space even when the renderer normalizes
+      // the redundant primaries attachment to ColorPrimaries#2. Never override it.
+      let rgbName = image.colorSpace?.name as String?
+      let rgbLabel = image.colorSpace == nil ? "missing" :
+        (["kCGColorSpaceCoreMedia709": "coreMedia709", "kCGColorSpaceSRGB": "srgb"][rgbName ?? ""] ?? "other")
+      result["colorMetadata"] = [
+        "rgbColorSpace": rgbLabel,
+        "matrix": label(kCVImageBufferYCbCrMatrixKey, [
+          kCVImageBufferYCbCrMatrix_ITU_R_601_4 as String: "bt601",
+          kCVImageBufferYCbCrMatrix_ITU_R_709_2 as String: "bt709",
+          kCVImageBufferYCbCrMatrix_ITU_R_2020 as String: "bt2020"]),
+        "primaries": label(kCVImageBufferColorPrimariesKey, [
+          kCVImageBufferColorPrimaries_ITU_R_709_2 as String: "bt709",
+          kCVImageBufferColorPrimaries_SMPTE_C as String: "smpteC", "ColorPrimaries#2": "unspecified"]),
+        "transfer": label(kCVImageBufferTransferFunctionKey, [
+          kCVImageBufferTransferFunction_ITU_R_709_2 as String: "bt709",
+          kCVImageBufferTransferFunction_SMPTE_ST_2084_PQ as String: "pq",
+          kCVImageBufferTransferFunction_ITU_R_2100_HLG as String: "hlg"])]
       var rgba = [UInt8](repeating: 0, count: width * height * 4)
       let colorSpace = CGColorSpace(name: CGColorSpace.sRGB)!
       rgba.withUnsafeMutableBytes { bytes in

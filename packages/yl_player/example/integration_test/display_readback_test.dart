@@ -27,6 +27,13 @@ void main() {
       if (!RegExp(r'^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$').hasMatch(runId)) {
         throw const FormatException('Display run identity required');
       }
+      const colorCase = String.fromEnvironment(
+        'YL_DISPLAY_CASE',
+        defaultValue: 'bt709',
+      );
+      if (!['bt709', 'bt601', 'untagged'].contains(colorCase)) {
+        throw const FormatException('Invalid display case');
+      }
       final clock = Stopwatch()..start();
       var aborted = false;
       final outcomes = <String>[];
@@ -45,9 +52,11 @@ void main() {
             before = await snapshot();
             expect(before['status'], 'noLayer');
             directory = await Directory.systemTemp.createTemp('yl_display_');
-            final asset = await rootBundle.load(
-              'assets/test_media/benchmark_sdr.mkv',
-            );
+            final asset = await rootBundle.load(switch (colorCase) {
+              'bt709' => 'assets/test_media/benchmark_sdr.mkv',
+              'bt601' => 'assets/test_media/benchmark_601.mkv',
+              _ => 'assets/test_media/format_matrix/mkv-avc-aac.mkv',
+            });
             final file = File('${directory.path}/owned.mkv');
             await file.writeAsBytes(
               asset.buffer.asUint8List(
@@ -98,6 +107,8 @@ void main() {
             }
             expect(markers.complete, isTrue);
             outcome = 'passed';
+          } on DisplayReferenceUnavailable {
+            outcome = 'reference-unqualified';
           } on TimeoutException {
             outcome = 'timeout';
           } catch (_) {
@@ -127,14 +138,16 @@ void main() {
           }
         }
         debugPrint(
-          'YL_DISPLAY_ROW=${jsonEncode({'schemaVersion': 1, 'runId': runId, 'attempt': attempt, 'plannedAttempts': 3, 'buildMode': 'debug', 'measurement': 'paused-display-layer-readback', 'outcome': outcome, 'stage': stage, 'engine': engine, 'decoder': decoder, 'startedUs': markers?.startedUs, 'firstReadbackUs': markers?.firstReadbackUs, 'firstReadbackDelayUs': markers?.firstReadbackDelayUs, 'markersComplete': markers?.complete ?? false, 'before': before, 'after': after, 'cleaned': cleaned, 'samples': markers?.observations ?? [], 'physicalOutputVerified': false, 'performanceBaseline': false})}',
+          'YL_DISPLAY_ROW=${jsonEncode({'schemaVersion': 2, 'caseId': colorCase, 'runId': runId, 'attempt': attempt, 'plannedAttempts': 3, 'buildMode': 'debug', 'measurement': 'paused-display-layer-readback', 'outcome': outcome, 'stage': stage, 'engine': engine, 'decoder': decoder, 'startedUs': markers?.startedUs, 'firstReadbackUs': markers?.firstReadbackUs, 'firstReadbackDelayUs': markers?.firstReadbackDelayUs, 'markersComplete': markers?.complete ?? false, 'before': before, 'after': after, 'cleaned': cleaned, 'samples': markers?.observations ?? [], 'physicalOutputVerified': false, 'performanceBaseline': false})}',
           wrapWidth: 100000,
         );
         outcomes.add(outcome);
       }
       expect(
         outcomes,
-        everyElement('passed'),
+        colorCase == 'untagged'
+            ? equals(['reference-unqualified', 'skipped', 'skipped'])
+            : everyElement('passed'),
         reason: 'All display trial outcomes retained',
       );
     },

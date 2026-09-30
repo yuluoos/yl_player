@@ -5,6 +5,12 @@ const _colors = [
   [255, 255, 255],
 ];
 
+final class DisplayReferenceUnavailable implements Exception {
+  const DisplayReferenceUnavailable();
+  @override
+  String toString() => 'Display color reference is not qualified';
+}
+
 /// Paused display-layer readback, never a physical presentation timestamp.
 final class DisplayMarkers {
   DisplayMarkers({required this.startedUs});
@@ -19,7 +25,15 @@ final class DisplayMarkers {
   List<Map<String, Object?>> get observations => List.unmodifiable(_rows);
 
   void observe(Map<String, Object?> row, int receivedUs) {
-    const keys = {'status', 'layerCount', 'ready', 'width', 'height', 'pixels'};
+    const keys = {
+      'status',
+      'layerCount',
+      'ready',
+      'width',
+      'height',
+      'pixels',
+      'colorMetadata',
+    };
     if (row.length != keys.length ||
         !keys.every(row.containsKey) ||
         row['layerCount'] is! int ||
@@ -34,7 +48,47 @@ final class DisplayMarkers {
       throw const FormatException('Invalid display observation');
     }
     final pixels = row['pixels'];
+    final color = row['colorMetadata'];
     final observed = row['status'] == 'observed';
+    if (observed
+        ? (color is! Map ||
+              color.length != 4 ||
+              ![
+                'bt601',
+                'bt709',
+                'bt2020',
+                'missing',
+                'other',
+              ].contains(color['matrix']) ||
+              ![
+                'bt709',
+                'smpteC',
+                'unspecified',
+                'missing',
+                'other',
+              ].contains(color['primaries']) ||
+              ![
+                'bt709',
+                'pq',
+                'hlg',
+                'missing',
+                'other',
+              ].contains(color['transfer']) ||
+              ![
+                'coreMedia709',
+                'srgb',
+                'missing',
+                'other',
+              ].contains(color['rgbColorSpace']))
+        : color != null) {
+      throw const FormatException('Invalid display color metadata');
+    }
+    final qualified =
+        observed &&
+        ['bt709', 'unspecified'].contains((color as Map)['primaries']) &&
+        color['rgbColorSpace'] == 'coreMedia709' &&
+        color['transfer'] == 'bt709' &&
+        ['bt601', 'bt709'].contains(color['matrix']);
     if (observed
         ? (row['layerCount'] != 1 ||
               row['ready'] != true ||
@@ -52,7 +106,7 @@ final class DisplayMarkers {
       throw StateError('Invalid display observation clock or count');
     }
     int? marker;
-    if (observed) {
+    if (qualified) {
       for (var c = 0; c < _colors.length; c++) {
         if (List.generate(27, (i) => i).every(
           (i) => (((pixels as List)[i] as int) - _colors[c][i % 3]).abs() <= 24,
@@ -66,10 +120,12 @@ final class DisplayMarkers {
       Map.unmodifiable({
         ...row,
         'pixels': pixels is List ? List.unmodifiable(pixels) : null,
+        'colorMetadata': color is Map ? Map.unmodifiable(color) : null,
         'receivedUs': receivedUs,
         'marker': marker,
       }),
     );
+    if (observed && !qualified) throw const DisplayReferenceUnavailable();
     if (['ambiguous', 'unsupported'].contains(row['status'])) {
       throw StateError('Display probe unavailable');
     }

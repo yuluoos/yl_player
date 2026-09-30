@@ -8,8 +8,102 @@ Map<String, Object?> sample(List<int>? rgb) => {
   'width': rgb == null ? null : 320,
   'height': rgb == null ? null : 180,
   'pixels': rgb == null ? null : List.generate(27, (i) => rgb[i % 3]),
+  'colorMetadata': rgb == null
+      ? null
+      : {
+          'matrix': 'bt709',
+          'primaries': 'bt709',
+          'transfer': 'bt709',
+          'rgbColorSpace': 'coreMedia709',
+        },
 };
 void main() {
+  test(
+    'unknown primaries retain pixels but cannot qualify an sRGB reference',
+    () {
+      final markers = DisplayMarkers(startedUs: 0);
+      final row = sample([248, 36, 0]);
+      row['colorMetadata'] = {
+        'matrix': 'bt601',
+        'primaries': 'unspecified',
+        'transfer': 'bt709',
+        'rgbColorSpace': 'other',
+      };
+      expect(
+        () => markers.observe(row, 1),
+        throwsA(isA<DisplayReferenceUnavailable>()),
+      );
+      expect(markers.observations.single['pixels'], row['pixels']);
+      expect(markers.observations.single['marker'], isNull);
+      expect(markers.complete, isFalse);
+    },
+  );
+  test(
+    'BT601 matrix with explicit BT709 primaries is a qualified reference',
+    () {
+      final markers = DisplayMarkers(startedUs: 0);
+      final row = sample([254, 0, 0]);
+      row['colorMetadata'] = {
+        'matrix': 'bt601',
+        'primaries': 'bt709',
+        'transfer': 'bt709',
+        'rgbColorSpace': 'coreMedia709',
+      };
+      markers.observe(row, 1);
+      expect(markers.markersSeen, 1);
+    },
+  );
+  test(
+    'explicit other primaries and missing metadata cannot silently pass',
+    () {
+      for (final primaries in ['smpteC', 'missing', 'other']) {
+        final row = sample([255, 0, 0]);
+        row['colorMetadata'] = {
+          'matrix': 'bt601',
+          'primaries': primaries,
+          'transfer': 'bt709',
+          'rgbColorSpace': 'coreMedia709',
+        };
+        expect(
+          () => DisplayMarkers(startedUs: 0).observe(row, 1),
+          throwsA(isA<DisplayReferenceUnavailable>()),
+        );
+      }
+      expect(
+        () => DisplayMarkers(startedUs: 0).observe({
+          ...sample([255, 0, 0]),
+          'colorMetadata': null,
+        }, 1),
+        throwsFormatException,
+      );
+    },
+  );
+  test('normalized primaries require a resolved Core Media 709 space', () {
+    for (final matrix in ['bt601', 'bt709']) {
+      final row = sample([255, 0, 0]);
+      row['colorMetadata'] = {
+        'matrix': matrix,
+        'primaries': 'unspecified',
+        'transfer': 'bt709',
+        'rgbColorSpace': 'coreMedia709',
+      };
+      final markers = DisplayMarkers(startedUs: 0)..observe(row, 1);
+      expect(markers.markersSeen, 1);
+    }
+    for (final space in ['srgb', 'other', 'missing']) {
+      final row = sample([255, 0, 0]);
+      row['colorMetadata'] = {
+        'matrix': 'bt709',
+        'primaries': 'bt709',
+        'transfer': 'bt709',
+        'rgbColorSpace': space,
+      };
+      expect(
+        () => DisplayMarkers(startedUs: 0).observe(row, 1),
+        throwsA(isA<DisplayReferenceUnavailable>()),
+      );
+    }
+  });
   test(
     'requires all four ordered displayed colors and retains polling bounds',
     () {
