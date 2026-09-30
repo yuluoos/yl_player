@@ -27,7 +27,9 @@ void main() {
         throw const FormatException('Resource probe configuration is required');
       }
       const profileCycles = bool.fromEnvironment('YL_RESOURCE_PROFILE_CYCLES');
-      if (profileCycles && !kProfileMode) {
+      const harnessOnly = bool.fromEnvironment('YL_RESOURCE_HARNESS_ONLY');
+      const workload = harnessOnly ? 'harness-only' : 'playback';
+      if ((profileCycles && !kProfileMode) || (harnessOnly && !profileCycles)) {
         throw const FormatException('Resource cycles require profile mode');
       }
       const attempts = profileCycles ? 10 : 3;
@@ -58,7 +60,7 @@ void main() {
         var engine = 'unknown';
         var decoder = 'unknown';
         void emitObservation() => debugPrint(
-          'YL_RESOURCE_OBSERVATION=${jsonEncode({'runId': runId, 'attempt': attempt, 'outcome': outcome, 'samples': series?.observations ?? []})}',
+          'YL_RESOURCE_OBSERVATION=${jsonEncode({'workload': workload, 'runId': runId, 'attempt': attempt, 'outcome': outcome, 'samples': series?.observations ?? []})}',
           wrapWidth: 100000,
         );
         Future<bool> releaseTrial() {
@@ -113,37 +115,47 @@ void main() {
             });
             await Future<void>.delayed(const Duration(seconds: 2));
             series.enter('opening');
-            final activePlayer = await cleanup.create<YlPlayerController>(
-              YlPlayerController.create(
-                options: const YlPlayerOptions(
-                  audioPolicy: YlAudioPolicy.appManaged,
+            if (harnessOnly) {
+              // Keep fixture I/O, UI mount, sampling and cleanup, without
+              // creating a player. "playing" is only the phase clock here.
+              await tester.pumpWidget(
+                const MaterialApp(home: SizedBox.shrink()),
+              );
+              series.enter('playing');
+              await Future<void>.delayed(const Duration(seconds: 2));
+            } else {
+              final activePlayer = await cleanup.create<YlPlayerController>(
+                YlPlayerController.create(
+                  options: const YlPlayerOptions(
+                    audioPolicy: YlAudioPolicy.appManaged,
+                  ),
                 ),
-              ),
-              timeout: const Duration(seconds: 10),
-              release: (latePlayer) => latePlayer.dispose(),
-            );
-            player = activePlayer;
-            await tester.pumpWidget(
-              MaterialApp(home: YlPlayerView(controller: activePlayer)),
-            );
-            final session = await activePlayer
-                .load(YlFileSource(file.path, format: YlMediaFormat.matroska))
-                .timeout(const Duration(seconds: 20));
-            await session.play().timeout(const Duration(seconds: 10));
-            await session.firstFrame.timeout(const Duration(seconds: 10));
-            engine = activePlayer.state.engine.name;
-            decoder = activePlayer.state.decoderMode.name;
-            expect(activePlayer.state.videoGeometry, isNotNull);
-            expect(
-              activePlayer.state.audioTracks.any((t) => t.isSelected),
-              isTrue,
-            );
-            series.enter('playing');
-            await stateWhere(
-              activePlayer,
-              (s) => s.timeline.position >= const Duration(seconds: 2),
-            );
-            expect(activePlayer.state.failure, isNull);
+                timeout: const Duration(seconds: 10),
+                release: (latePlayer) => latePlayer.dispose(),
+              );
+              player = activePlayer;
+              await tester.pumpWidget(
+                MaterialApp(home: YlPlayerView(controller: activePlayer)),
+              );
+              final session = await activePlayer
+                  .load(YlFileSource(file.path, format: YlMediaFormat.matroska))
+                  .timeout(const Duration(seconds: 20));
+              await session.play().timeout(const Duration(seconds: 10));
+              await session.firstFrame.timeout(const Duration(seconds: 10));
+              engine = activePlayer.state.engine.name;
+              decoder = activePlayer.state.decoderMode.name;
+              expect(activePlayer.state.videoGeometry, isNotNull);
+              expect(
+                activePlayer.state.audioTracks.any((t) => t.isSelected),
+                isTrue,
+              );
+              series.enter('playing');
+              await stateWhere(
+                activePlayer,
+                (s) => s.timeline.position >= const Duration(seconds: 2),
+              );
+              expect(activePlayer.state.failure, isNull);
+            }
             series.enter('disposing');
             emitObservation();
             cleaned = await releaseTrial();
@@ -166,7 +178,7 @@ void main() {
         }
         final rows = series?.close() ?? <Map<String, Object?>>[];
         debugPrint(
-          'YL_RESOURCE_SERIES=${jsonEncode({'schemaVersion': 1, 'runId': runId, 'attempt': attempt, 'plannedAttempts': attempts, 'pid': pid, 'buildMode': mode, 'intervalMs': 250, 'engine': engine, 'decoder': decoder, 'outcome': outcome, 'samples': rows})}',
+          'YL_RESOURCE_SERIES=${jsonEncode({'schemaVersion': 2, 'workload': workload, 'runId': runId, 'attempt': attempt, 'plannedAttempts': attempts, 'pid': pid, 'buildMode': mode, 'intervalMs': 250, 'engine': engine, 'decoder': decoder, 'outcome': outcome, 'samples': rows})}',
           wrapWidth: 100000,
         );
         outcomes.add(outcome);

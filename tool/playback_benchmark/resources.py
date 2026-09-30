@@ -15,9 +15,9 @@ def integer(v, minimum=0): return type(v) is int and minimum <= v <= 2**53-1
 
 
 def summarize_series(trial):
-    if not isinstance(trial, dict) or set(trial) != TRIAL:
+    if not isinstance(trial, dict) or set(trial) != (TRIAL | {'workload'} if trial.get('schemaVersion') == 2 else TRIAL):
         raise ValueError('Invalid resource trial')
-    if (type(trial['schemaVersion']) is not int or trial['schemaVersion'] != 1
+    if (type(trial['schemaVersion']) is not int or trial['schemaVersion'] not in (1,2)
         or not isinstance(trial['runId'],str) or not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}',trial['runId'])
         or not integer(trial['pid'],1) or not integer(trial['attempt'],1)
         or not integer(trial['plannedAttempts'],1) or not 1 <= trial['attempt'] <= trial['plannedAttempts'] <= 100
@@ -27,6 +27,10 @@ def summarize_series(trial):
         or type(trial['intervalMs']) is not int
         or trial['outcome'] not in ('passed','failed','timeout','skipped')):
         raise ValueError('Invalid resource identity')
+    workload=trial.get('workload','playback')
+    if workload not in ('playback','harness-only') or (workload=='harness-only' and
+        (trial['buildMode']!='profile' or trial['engine']!='unknown' or trial['decoder']!='unknown')):
+        raise ValueError('Invalid resource workload')
     rows=trial['samples']
     if not isinstance(rows,list) or len(rows)>256 or not rows and trial['outcome']=='passed':
         raise ValueError('Invalid resource sample count')
@@ -66,7 +70,7 @@ def summarize_series(trial):
                 weightedMean=100*sum(cpu for cpu,dt in pairs)/elapsed if elapsed else None,
                 peak=max(100*cpu/dt for cpu,dt in pairs) if pairs else None),
             rssBytes=memory(p['rss']),footprintBytes=memory(p['footprint']))
-    return dict(outcome=trial['outcome'],engine=trial['engine'],decoder=trial['decoder'],sampleCount=len(rows),unavailableSamples=sum(p['unavailable'] for p in groups.values()),
+    return dict(workload=workload,outcome=trial['outcome'],engine=trial['engine'],decoder=trial['decoder'],sampleCount=len(rows),unavailableSamples=sum(p['unavailable'] for p in groups.values()),
                 phases=phases,thermalCounts=dict(thermal),powerCounts=dict(power),temperatureCelsius=None,
                 gpuBytes=None,mediaLedgerBytes=None,budgetAdmission=False,performanceBaseline=False)
 
@@ -75,11 +79,11 @@ def summarize_trials(trials):
     if not trials or len(trials)>100: raise ValueError('Invalid resource run')
     summaries=[summarize_series(t) for t in trials]
     first=trials[0]
-    keys=('runId','pid','buildMode','intervalMs','plannedAttempts')
-    if (any(any(t[k]!=first[k] for k in keys) for t in trials)
+    keys=('schemaVersion','runId','pid','buildMode','intervalMs','plannedAttempts')
+    if (any(any(t[k]!=first[k] for k in keys) or t.get('workload','playback')!=first.get('workload','playback') for t in trials)
         or sorted(t['attempt'] for t in trials)!=list(range(1,first['plannedAttempts']+1))):
         raise ValueError('Mixed or incomplete resource run')
-    return dict(runId=first['runId'],plannedAttempts=first['plannedAttempts'],
+    return dict(workload=first.get('workload','playback'),runId=first['runId'],plannedAttempts=first['plannedAttempts'],
                 outcomes=dict(collections.Counter(t['outcome'] for t in trials)),trials=summaries,
                 budgetAdmission=False,performanceBaseline=False)
 
@@ -108,7 +112,7 @@ def summarize_disposed_memory(trials):
         eligible &= t['outcome']=='passed' and available and len(disposed)>=2 and window>=1000000
     eligible &= len(conditions)==1 and all('unknown' not in pair for pair in conditions)
     first,last=endpoints[0],endpoints[-1]
-    return dict(endpoints=endpoints,conditionsStableAndKnown=len(conditions)==1 and all('unknown' not in pair for pair in conditions),
+    return dict(workload=ordered[0].get('workload','playback'),endpoints=endpoints,conditionsStableAndKnown=len(conditions)==1 and all('unknown' not in pair for pair in conditions),
         elapsedUs=last['monotonicUs']-first['monotonicUs'] if eligible else None,
         deltaBytes=dict(rss=last['rssBytes']-first['rssBytes'],
                         footprint=last['footprintBytes']-first['footprintBytes']) if eligible else None,

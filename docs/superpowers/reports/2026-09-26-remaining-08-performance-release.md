@@ -213,3 +213,24 @@ profile 实跑预先冻结三次、无预热剔除、已有本地 AVC/AAC 素材
 这是一条需要继续归因的资源增长观察，不能直接宣布泄漏，也不能因播放/释放 ACK 成功就宣称资源完全回收。采样包含 Flutter、原生缓存/分配器、测量日志和观察器开销；本项没有分离这些来源，也没有冻结增长阈值。[完整证据](../../../tool/playback_benchmark/macos-resource-cycle-observations.json)保存每轮各阶段、末端和命令；最终 sourceHash `bbcfedf5ae8400b5091955e22a17918fdc01d3034748ac8de86f51aad8349903` 及源码/依赖/原生二进制/媒体/采样器哈希逐项核对一致。profile 宿主及 AOT 制品均为 arm64。原始日志保存在本计划忽略目录 `profile-resource-cycles/`。
 
 前台激活失败和 native integration_test plugin 提示继续保留；十条最终行、VMService driver 成功返回证明本次循环执行，不替代物理音画、显示层消失、长播、Intel/最低系统或故障注入验收。**完整 P08 Task1/2 和 AV1 软件预算仍开放。下一项优先定位已观察到的释放后 footprint 增长来源**，采用同协议的可比对照/分配或资源所有权证据，定位前不做推测性缓存改写。
+
+## 2026-09-30 释放后增长归因：无播放器对照
+
+起点 `9bede85`。按 P08 先归因再优化，新增 `run_resources.py --profile-control`：与十轮 profile 播放保留相同媒体复制、空白 MaterialApp 挂载、250 ms 进程采样、日志、独立清理及前后各 2 s 等待，但不创建或加载播放器；`playing` 只是阶段名称，控制组等待墙钟 2 s，播放组仍等待媒体位置达到 2 s。新 schema2 明确区分 `harness-only` / `playback`，摘要保留标签，拒绝混合工作负载或 schema；schema1 继续解释为历史播放数据。对照成功不计为播放成功。原生插件仍会注册、库仍加载，不是剥离所有播放器代码的 Flutter 应用。
+
+先对未改动的十轮播放做外部只读 VM 观察：`macos-resource-20260930T145352Z` 10/10，通过的 footprint 首末增加 **13402112 B**，第 5 轮阶跃再次出现。第 1–9 轮后 `getMemoryUsage` 可用，heapUsage 从 **8951104** 到 **7746320 B**，中间有涨落、没有持续上升；第 10 轮不可用。`getAllocationProfile` 请求被拒绝（-32602），不能据空类列表认定零存活对象。RPC 在日志行输出后发起，可能已进入下一轮，不能和端点当作同步读数；未强制 GC，Dart heap/externalUsage 与进程 footprint 账本不同，不能相减推算原生占用。此观察只缩小方向，未证明对象回收或泄漏。
+
+随后按预先记录的协议，独立新进程先对照、后播放。首对运行 `145842Z` / `150011Z` 各 10 轮通过，也观察到无播放器时第 5 轮阶跃；自审发现 runner 将对照的墙钟等待误写为 `playingUntilMediaSeconds`，保留全部初采证据，修正为互斥的 `playingWallSeconds` / `playingUntilMediaSeconds` 后重新采集以下最终两组，未改变运行时测试协议或剔除高值。
+
+| 最终组 | runId（macos-resource- 前缀） | 成功/计划 | 样本/缺失 | RSS 首末差 | footprint 首末差 | 端点跨度 |
+|---|---|---:|---:|---:|---:|---:|
+| 无播放器对照 | 20260930T150209Z | 10/10 | 300/0 | +3178496 B（3.03125 MiB） | +6520832 B（6.21875 MiB） | 54.452859 s |
+| 实际播放 | 20260930T150336Z | 10/10 | 310/0 | +11616256 B（11.078125 MiB） | +14909440 B（14.21875 MiB） | 57.507022 s |
+
+两组均为 MacBookPro17,1 / Apple M1 / macOS27.0(26A428)、arm64/profile、battery/nominal；播放组均 managedFallback/hardware，对照 engine/decoder=unknown。对照第 4→5 轮 footprint **50807816→60867592 B（+9.59375 MiB）**，播放组 **56902736→67454032 B（+10.0625 MiB）**；对照后来有明显回落。**该阶跃在不创建播放器时也可发生，因此不能仅凭先前阶跃判定播放器泄漏。** 但总增长来源、两组差异及具体保留对象仍未确定；不同阶段时长、profile/测试运行时、系统缓存、分配器与观察开销都未完全分离，不把差值当作播放器所有字节，也不宣布无泄漏。 进一步检查相邻采样，两组在首个 idle 采样后约 **27.205 / 28.205 s**、第 5 轮 playing 阶段均出现 **+8241152 B** 的单步增量；这是后续定位运行时/分配事件的时间线索，不是特定组件的所有权证据。
+
+最终两组 sourceHash 均为 `da4468d6ed3e1390ff84338afc412872b290565abccd04c480becdcd7ec326e4`，源码、依赖、生产原生制品、媒体和设备身份逐项核对一致。采样 dylib 每次构建的 install name 含输出目录，完整二进制哈希不同；独立检查两组全部有文件内容的 Mach-O section 字节哈希及各 section 大小一致，原始哈希也保留，未声称 dylib 整体相同。验证脚本与 VM 探针原文/哈希随[完整五次运行证据](../../../tool/playback_benchmark/macos-resource-attribution-observations.json)保存；原始日志在本计划忽略目录 `resource-attribution/`。前台激活失败和 native integration_test plugin 提示仍保留，driver 退出 0 和最终行只证明测试执行，不替代物理画面/声音验收。
+
+新增 4 项 schema/工作负载行为测试先 RED（缺新 schema/标签）后 **37/37 Python**；已有采样/独立清理 **15/15 Dart**，集成文件静态分析无问题。没有改生产释放路径：只读检查确认 registry 注销、coordinator dispose、managed session 取消输入/释放解码器与帧队列均有调用；公共 controller 会吞掉 backend dispose 异常，因此返回 ACK 仍不是完整原生回收证据。
+
+本项交付可重复的空载对照和归因边界，**未完成泄漏归因、正式性能基线或完整 P08 Task1/2**。下一步在独立诊断协议中采集进程内存类别与原生对象生命周期/分配证据，区分测试运行时、分配器缓存及未释放媒体对象；未定位所有权前不修改生产缓存或释放策略。长播、多播放器、最低系统/其他设备与 AV1 软件预算仍开放。

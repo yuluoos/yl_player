@@ -36,15 +36,19 @@ def run_logged(command, cwd, path, timeout):
             raise
 
 
-def collect(output, flutter, *, profile_cycles=False):
+def collect(output, flutter, *, profile_cycles=False, harness_only=False):
+    if harness_only and not profile_cycles:
+        raise ValueError('Harness control requires profile cycles')
+    workload='harness-only' if harness_only else 'playback'
     output.mkdir(parents=True,exist_ok=False)
     attempts=10 if profile_cycles else 3
     mode='profile' if profile_cycles else 'debug'
     run='macos-resource-'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ')
-    result=dict(schemaVersion=1,runId=run,runStatus='failed',stage='setup',purpose='instrumentation-smoke',
+    result=dict(schemaVersion=2,workload=workload,runId=run,runStatus='failed',stage='setup',purpose='instrumentation-smoke',
                 performanceBaseline=False,budgetAdmission=False,physicalOutput='not_verified',
                 cacheState='os-cache-uncontrolled',networkProfile='local-file',buildMode=mode,plannedAttempts=attempts,
-                protocol=dict(idleSeconds=2,playingUntilMediaSeconds=2,disposedSeconds=2,intervalMs=250))
+                protocol=dict(idleSeconds=2,playingUntilMediaSeconds=None if harness_only else 2,
+                              playingWallSeconds=2 if harness_only else None,disposedSeconds=2,intervalMs=250))
     try:
         paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','--','packages','tool/playback_benchmark'],cwd=ROOT,text=True).splitlines()
         source={n:digest(ROOT/n) for n in sorted(set(paths)) if Path(n).suffix in (
@@ -69,7 +73,7 @@ def collect(output, flutter, *, profile_cycles=False):
             subprocess.run(['sh',str(HERE/'build_apple_resources.sh'),str(library)],stdout=log,stderr=log,timeout=60,check=True)
         result['samplerSha256']=digest(library)
         defines=output/'defines.json'
-        defines.write_text(json.dumps(dict(YL_RESOURCE_RUN_ID=run,YL_RESOURCE_PROFILE_CYCLES=profile_cycles,YL_RESOURCE_LIBRARY_BYTES=base64.b64encode(library.read_bytes()).decode()))+'\n')
+        defines.write_text(json.dumps(dict(YL_RESOURCE_RUN_ID=run,YL_RESOURCE_PROFILE_CYCLES=profile_cycles,YL_RESOURCE_HARNESS_ONLY=harness_only,YL_RESOURCE_LIBRARY_BYTES=base64.b64encode(library.read_bytes()).decode()))+'\n')
         result['stage']='playback'
         command=[flutter,'test','integration_test/resource_benchmark_test.dart','-d','macos','--no-pub','--dart-define-from-file='+str(defines)]
         if profile_cycles:
@@ -88,7 +92,7 @@ def collect(output, flutter, *, profile_cycles=False):
         (output/'observations.jsonl').write_text(''.join(json.dumps(r,separators=(',',':'))+'\n' for r in trials))
         result['observations']=trials
         result['stage']='classification';result['summary']=summarize_trials(trials)
-        assert all(t['runId']==run and t['buildMode']==mode and t['plannedAttempts']==attempts for t in trials)
+        assert all(t['runId']==run and t['buildMode']==mode and t['plannedAttempts']==attempts and t.get('workload')==workload and t['schemaVersion']==2 for t in trials)
         if profile_cycles: result['disposedMemory']=summarize_disposed_memory(trials)
         result['sourceIdentityVerified']=all(digest(ROOT/p)==v for p,v in source.items())
         assert result['sourceIdentityVerified']
@@ -103,14 +107,15 @@ def collect(output, flutter, *, profile_cycles=False):
 
 def main():
     args=sys.argv[1:]
-    profile_cycles=bool(args and args[0]=='--profile-cycles')
+    harness_only=bool(args and args[0]=='--profile-control')
+    profile_cycles=bool(args and args[0] in ('--profile-cycles','--profile-control'))
     if profile_cycles: args=args[1:]
     if len(args) not in (1,2):
-        print('Usage: run_resources.py [--profile-cycles] NEW_DIRECTORY [FLUTTER_EXECUTABLE]',file=sys.stderr);return 2
+        print('Usage: run_resources.py [--profile-cycles | --profile-control] NEW_DIRECTORY [FLUTTER_EXECUTABLE]',file=sys.stderr);return 2
     flutter=args[1] if len(args)==2 else shutil.which('flutter')
     if not flutter:
         print('Flutter executable is required.',file=sys.stderr);return 2
-    try: passed=collect(Path(args[0]).resolve(),flutter,profile_cycles=profile_cycles)
+    try: passed=collect(Path(args[0]).resolve(),flutter,profile_cycles=profile_cycles,harness_only=harness_only)
     except OSError:
         print('A fresh writable result directory is required.',file=sys.stderr);return 2
     print('Resource smoke collected; no budget or baseline is admitted.' if passed else

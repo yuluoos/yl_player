@@ -97,3 +97,31 @@ presentation observation technique (or explicitly adopt a separately named
 publication-latency metric), then freeze the corresponding controlled protocol.
 Missing physical output verification blocks only its baseline rows; other
 functional plan work can continue. P08 Task 1/2 remain incomplete.
+
+## Resource attribution control (2026-09-30)
+
+Before attributing the ten-cycle footprint increase, run one fresh profile
+`--profile-control` and one fresh `--profile-cycles` process, in that order, with
+identical source fingerprints, host architecture, fixture and sampler source. Each has
+ten cycles, 250 ms sampling, two seconds idle and two seconds after cleanup.
+Control keeps fixture copying, empty MaterialApp mounting, sampling/logging and
+independent cleanup, but never creates/loads a player; its `playing` phase is a
+two-second wall-clock wait. Playback retains its existing media-position >= 2 s
+condition. Opening/playing durations and resource allocation therefore need not
+match exactly. No VM polling, forced GC, cache clearing or warm-up is added to
+this pair. OS cache remains uncontrolled; no numeric threshold is frozen.
+
+Resource trial schema 2 explicitly carries `workload=playback|harness-only`.
+Legacy schema 1 means playback; mixed versions/workloads are rejected. Controls
+are profile-only and engine/decoder remain unknown. A passed control means only
+that the harness completed; it is never successful playback evidence. Retain
+all failures/skips/unknown conditions and the actual last disposed sample.
+Compare endpoint trends as exploratory observations, not a subtraction yielding
+player-owned bytes or a leak verdict. The Dart/native/OS ledgers differ, and
+public dispose acknowledgement is not proof of complete native deallocation.
+
+The sampler is rebuilt in each fresh output directory. Its Mach-O install name
+contains that directory, so full dylib hashes may differ even for the paired
+runs. Keep both hashes; verify the paired section contents and size independently
+before treating their sampling code as equivalent. This does not make two app
+processes identical or control the OS cache.
