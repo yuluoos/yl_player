@@ -202,3 +202,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-09-30 P08 Task1补齐macOS进程资源采样子项：CPU/RSS/physical footprint、电源和系统热状态，三次公开AVC硬解播放均通过、94点无缺失；25项Python、8项Dart与静态检查通过。仅debug测量链路，正式呈现/受控profile-release基线、GPU/媒体账本及长期资源仍未完成；完整Task1/2和AV1软件预算继续开放，详见P08报告。
 
 2026-09-30 P08 Task1新增macOS14.4+ Debug暂停显示层回读：明确BT.709原创素材3次×4段×9点颜色匹配、释放后无层；12项Dart与静态检查通过。保留旧未标注素材容差失败及两项失败清理Minor；回读不能替代首帧/物理呈现、音频/同步或正式基线，完整Task1/2继续开放，见P08报告。
+
+2026-09-30 P08显示回读的两项失败清理问题已修复：独立限时清理、未确认创建不提前报告已清理；19项定向Dart、静态检查及真实播放3/3通过。未标注素材色差、正式呈现时序和受控性能基线仍开放，完整Task1/2未完成，见执行报告。

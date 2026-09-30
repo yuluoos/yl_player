@@ -9,7 +9,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:yl_player/yl_player.dart';
 import 'support/apple_strict_support.dart';
 import 'support/display_markers.dart';
-import 'support/resource_series.dart';
+import 'support/display_cleanup.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +31,7 @@ void main() {
       var aborted = false;
       final outcomes = <String>[];
       for (var attempt = 1; attempt <= 3; attempt++) {
+        final cleanup = DisplayTrialCleanup();
         YlPlayerController? player;
         Directory? directory;
         DisplayMarkers? markers;
@@ -54,7 +55,7 @@ void main() {
                 asset.lengthInBytes,
               ),
             );
-            player = await createResourceOwner<YlPlayerController>(
+            player = await cleanup.create<YlPlayerController>(
               YlPlayerController.create(),
               timeout: const Duration(seconds: 10),
               release: (p) => p.dispose(),
@@ -107,18 +108,21 @@ void main() {
               'YL_DISPLAY_OBSERVATION=${jsonEncode({'runId': runId, 'attempt': attempt, 'stage': stage, 'outcome': outcome, 'samples': markers?.observations ?? []})}',
               wrapWidth: 100000,
             );
-            try {
-              await player?.dispose().timeout(const Duration(seconds: 5));
-              await tester.pumpWidget(const SizedBox.shrink());
-              after = await snapshot();
-              expect(after['status'], 'noLayer');
-              await directory
-                  ?.delete(recursive: true)
-                  .timeout(const Duration(seconds: 5));
-              cleaned = true;
-            } catch (_) {
-              if (outcome != 'timeout') outcome = 'failed';
-            }
+            cleaned = await cleanup.run([
+              () async {
+                await player?.dispose();
+              },
+              () => tester.pumpWidget(const SizedBox.shrink()),
+              () async {
+                final observed = await snapshot();
+                after = observed;
+                expect(observed['status'], 'noLayer');
+              },
+              () async {
+                await directory?.delete(recursive: true);
+              },
+            ]);
+            if (!cleaned && outcome != 'timeout') outcome = 'failed';
             if (!cleaned || outcome != 'passed') aborted = true;
           }
         }

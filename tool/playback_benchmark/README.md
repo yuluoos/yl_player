@@ -47,10 +47,15 @@ identity. The original format-matrix fixture had unspecified color metadata and
 failed the original fixed tolerance; that run remains a recorded gap. The new
 fixture does not establish that untagged-content color interpretation is fixed.
 
-Two failure-path cleanup limitations remain: an earlier cleanup exception can
-skip later cleanup operations, and `cleaned=true` after a creation timeout does
-not confirm late native release. Such trials remain unsuccessful and stop later
-playback; only successful rows confirm the complete cleanup path. See P08 report.
+Cleanup independently attempts disposal, view removal, post-removal inspection
+and temporary-file deletion, with a five-second deadline for each step. An
+exception or timeout does not skip later steps. Creation without a confirmed
+handoff keeps `cleaned=false`, even if independent cleanup succeeds; the creation
+helper continues to own late instances. Late completion never upgrades a recorded
+timeout or resumes subsequent attempts. `cleaned=false` means cleanup could not
+be confirmed, not proof of a permanent leak. The two original failure-path
+limitations are covered by `test/display_cleanup_test.dart`; final regression
+evidence is in `macos-display-cleanup-observations.json`. See P08 report.
 
 ## macOS process resources (instrumentation smoke)
 
