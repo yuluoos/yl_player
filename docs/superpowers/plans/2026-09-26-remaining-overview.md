@@ -200,3 +200,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-09-30 P03 Task3推进AV1实际会话调查：M1/macOS27下AVC对照6次×96帧硬解通过，AV1 Main8/Main10三策略×两次创建共12次均-12906。新增可复用探测、完整性/对照门禁，未启用产品AV1。P08资源/热基线缺失，软件预算保持未测不准入；不得套Android限额。下一步补P08测量或在AV1硬解设备采证，Task1/2/3和CAP均仍开放，详见P03报告。
 
 2026-09-30 P08 Task1补齐macOS进程资源采样子项：CPU/RSS/physical footprint、电源和系统热状态，三次公开AVC硬解播放均通过、94点无缺失；25项Python、8项Dart与静态检查通过。仅debug测量链路，正式呈现/受控profile-release基线、GPU/媒体账本及长期资源仍未完成；完整Task1/2和AV1软件预算继续开放，详见P08报告。
+
+2026-09-30 P08 Task1新增macOS14.4+ Debug暂停显示层回读：明确BT.709原创素材3次×4段×9点颜色匹配、释放后无层；12项Dart与静态检查通过。保留旧未标注素材容差失败及两项失败清理Minor；回读不能替代首帧/物理呈现、音频/同步或正式基线，完整Task1/2继续开放，见P08报告。

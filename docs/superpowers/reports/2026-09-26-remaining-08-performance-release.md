@@ -102,3 +102,37 @@ Python 25/25（含严格统计、缺失/失败/跳过完整性、真实 native �
 最终运行仍有 `Failed to foreground app; open returned 1`，因此几何/音轨/时间线检查只验证播放状态，不能宣称窗口可见、音质或物理呈现正确。初始测试命令的目录错误、Flutter 缓存权限、generic 推断静态检查错误均修正，不能计为播放器通过或失败试次。
 
 **本次仅完成资源测量工具子项；P08 Task 1/A、Task 2/B 仍未完成。** 后续先补可见呈现/音画正确性、受控 profile/release 测量协议及正式资源基线，再按候选 decoder 冻结软件预算。seek/切台/同步/JS/许可证阶段、GPU/媒体账本、长期增长、其他平台和最低系统仍待完成；不启用 AV1 软件路线，不输出优化百分比。
+
+
+## 2026-09-30 暂停显示层像素回读子项
+
+起点 `c7bc8a2`。为 example macOS Debug 宿主新增只读 method channel，遍历自己窗口中的 AVSampleBufferDisplayLayer，要求唯一输出层，通过公开 [displayedPixelBuffer()](https://developer.apple.com/documentation/avfoundation/avsamplebuffervideorenderer/displayedpixelbuffer()) 回读。当前 SDK 明确该接口在非零播放速率或受保护/不可用图像时可返回 nil，故试验主动暂停后读取；不获取屏幕权限、不读取其他应用、不改变生产包接口/内核/最低部署版本。探测自身要求 macOS 14.4+；profile/release 不编译该通道。
+
+三个预定试次均使用同一原创 AVC/AAC BT.709 文件，经公共 Player/Session 播放，在媒体位置达到 0.25/1.25/2.25/3.25 s 后暂停。Core Image 按输出元数据转换为 sRGB RGBA8，取四分之一/中心/四分之三位置组成的九个内点；每点每通道与红、绿、蓝、白顺序标记误差不得超过 24/255。纯黑、不完整顺序、跳色、倒序和任一点不匹配不能通过。创建前/释放移除视图后都检查 noLayer；每次原始观测先于清理输出，失败/超时保留，随后试次显式 skipped。
+
+### 最终结果与身份
+
+运行 `display-20260930T133656Z`，Apple M1 / MacBookPro17,1 / macOS 27.0 (26A428)，Flutter debug，local file、OS cache uncontrolled，电源/热状态本次未测。完整[源身份与原始回读](../../../tool/playback_benchmark/macos-display-readback-observations.json)已提交；源映射 `dac418988510ffd09c4255da9b67480bddc61e98ea308b14a50a1b6e044b644f`，媒体 `eff602e743256a41a50cb5ea25d94446d2518eb7eedd93673d9ba9d1019c9995`，运行后源码/构建配置/依赖/媒体逐一核对一致。命令见工具 README。
+
+| 标记 | 目标 RGB | 最终三次回读 RGB（各九点相同） |
+|---|---|---|
+| 红 | 255,0,0 | 251,0,0 |
+| 绿 | 0,255,0 | 0,253,0 |
+| 蓝 | 0,0,255 | 0,0,252 |
+| 白 | 255,255,255 | 251,253,253 |
+
+3/3 试次通过，共 12 个标记帧、108 个 RGB 点；另有 6 个 noLayer/noImage 过渡观测完整保留，没有算作成功像素。三次均 managedFallback/hardware，释放后 layerCount=0。新增 Dart 标记测试 4/4、复用资源/创建生命周期测试 8/8，通过合计 12；三个 Dart 文件静态检查无问题；macOS 实际构建及集成退出 0。没有重跑无关完整媒体/原生 suite；新增 Dart 测试由 example test 目录发现，集成是需要显式 runId 的 README 独立入口。
+
+### 失败、方法修正与复审
+
+- Dart RED 为 helper 尚未实现；原生通道实现前的真实运行在 setup 失败，1 failed/2 skipped，不能当输出证据。
+- 第一轮用旧 `format_matrix/mkv-avc-aac.mkv`：实际已回读图像，但红色为 248,36,0，超出原先固定 24 容差，1 failed/2 skipped。ffprobe 确认旧素材缺少矩阵/原色/传递函数完整标注。没有放宽容差，也没有修复或宣称修复未标注内容的生产色彩解释。
+- 新 `benchmark_sdr.mkv` 用 FFmpeg 明确把 lavfi BT.601 色值转换为 BT.709，并通过 setparams 与编码元数据同时标注 limited range、矩阵、原色、传递函数。生成器首次检查发现仅矩阵生效，元数据断言失败，保留中间素材及结果；补齐后独立 ffprobe/FFmpeg 验证通过，RGB 为 250,0,0 / 1,254,0 / 0,0,253 / 251,253,253。最终集成使用此已验证固定哈希素材，旧/中间/最终结果分组，不能据此输出性能改善百分比。
+- 一次独立复审无 Critical/Important，两项 Minor 记账暂缓：清理在单个 try 中，先前步骤失败会跳过后续移除视图/临时文件删除；创建超时后 `player=null` 时 `cleaned=true` 不证明迟到原生创建已释放。两种路径始终为 failed/timeout 并跳过后续试次，不产生通过；仅成功试次可确认完整清理。后续扩展失败路径时应分开独立清理并记录迟到释放是否已确认。
+- 本地原始证据在忽略目录 `.superpowers/sdd/2026-09-26-remaining-08-performance-release/display-development/` 与 `display-final/`；已提交结果保留所有最终回读和完整日志 SHA-256，非远程 CI 制品。
+
+### 能力边界与下一项
+
+`firstReadbackDelayUs` 从 Load 前同一 Dart 单调时钟计到首次匹配回读返回，包含主动播放等待、暂停、50 ms 轮询、通道和像素转换开销，**不是首帧延迟**，不写入 firstPresentedUs、不汇入延迟统计或阈值。回读观察到的是系统显示层提供的暂停图像，不是 compositor ACK、最终屏幕/显示器色度或物理扫描；均匀色块的九点也不能证明全图几何/旋转/细节正确。
+
+最终运行仍有 `Failed to foreground app; open returned 1`。因此不宣称实际窗口可见、物理音频/同步、HDR/杜比或跨设备画质通过。Debug 宿主探测和 Core Image 本身有开销，不能与未带探测的性能结果直接比较。正式无暂停呈现时序、受控 profile/release 协议、音频/同步与资源长播基线仍需补齐；完整 P08 Task1/2 和 AV1 软件预算仍未完成。后续优先处理呈现时序可观测边界及上述失败清理，再冻结可用设备的性能采样协议。

@@ -11,11 +11,77 @@ class MainFlutterWindow: NSWindow {
     RegisterGeneratedPlugins(registry: flutterViewController)
 #if DEBUG
     YlProtectedViewProbe.register(flutterViewController.registrar(forPlugin: "YlProtectedViewProbe"))
+    YlDisplayReadbackProbe.register(flutterViewController.registrar(forPlugin: "YlDisplayReadbackProbe"), window: self)
 #endif
 
     super.awakeFromNib()
   }
 }
+
+// Example-only inspection of owned clear SDR fixtures; no screen capture or
+// production API. This is a paused display-layer buffer, not compositor timing.
+#if DEBUG
+import CoreImage
+private enum YlDisplayReadbackProbe {
+  static func register(_ registrar: FlutterPluginRegistrar, window: NSWindow) {
+    let channel = FlutterMethodChannel(name: "yl_player_example/display_readback", binaryMessenger: registrar.messenger)
+    let context = CIContext(options: [.cacheIntermediates: false])
+    channel.setMethodCallHandler { [weak window] call, reply in
+      guard call.method == "snapshot", call.arguments == nil else { reply(FlutterMethodNotImplemented); return }
+      // Flutter macOS method handlers execute on the platform main thread.
+      guard Thread.isMainThread else {
+        reply(FlutterError(code: "probe.thread", message: "Display probe unavailable", details: nil)); return
+      }
+      var result: [String: Any] = ["status": "noLayer", "layerCount": 0, "ready": false,
+        "width": NSNull(), "height": NSNull(), "pixels": NSNull()]
+      guard #available(macOS 14.4, *) else { result["status"] = "unsupported"; reply(result); return }
+      var visited = Set<ObjectIdentifier>()
+      var displays: [AVSampleBufferDisplayLayer] = []
+      var exhausted = false
+      func visitLayer(_ layer: CALayer) {
+        guard visited.insert(ObjectIdentifier(layer)).inserted else { return }
+        guard visited.count <= 2048 else { exhausted = true; return }
+        if let display = layer as? AVSampleBufferDisplayLayer { displays.append(display) }
+        for child in layer.sublayers ?? [] { visitLayer(child) }
+      }
+      var viewCount = 0
+      func visitView(_ view: NSView) {
+        viewCount += 1
+        guard viewCount <= 512 else { exhausted = true; return }
+        if let layer = view.layer { visitLayer(layer) }
+        for child in view.subviews { visitView(child) }
+      }
+      if let view = window?.contentView { visitView(view) }
+      result["layerCount"] = displays.count
+      guard !exhausted, displays.count <= 1 else { result["status"] = "ambiguous"; reply(result); return }
+      guard let display = displays.first else { reply(result); return }
+      result["status"] = "noImage"
+      result["ready"] = display.isReadyForDisplay
+      guard display.isReadyForDisplay,
+        let pixelBuffer = display.sampleBufferRenderer.displayedPixelBuffer() else { reply(result); return }
+      let width = CVPixelBufferGetWidth(pixelBuffer), height = CVPixelBufferGetHeight(pixelBuffer)
+      guard width == 320, height == 180 else { reply(result); return }
+      let image = CIImage(cvPixelBuffer: pixelBuffer)
+      var rgba = [UInt8](repeating: 0, count: width * height * 4)
+      let colorSpace = CGColorSpace(name: CGColorSpace.sRGB)!
+      rgba.withUnsafeMutableBytes { bytes in
+        context.render(image, toBitmap: bytes.baseAddress!, rowBytes: width * 4,
+          bounds: CGRect(x: 0, y: 0, width: width, height: height), format: .RGBA8, colorSpace: colorSpace)
+      }
+      var pixels: [Int] = []
+      for y in [height / 4, height / 2, height * 3 / 4] {
+        for x in [width / 4, width / 2, width * 3 / 4] {
+          let index = (y * width + x) * 4
+          pixels.append(contentsOf: rgba[index..<index + 3].map(Int.init))
+        }
+      }
+      result["status"] = "observed"; result["width"] = width; result["height"] = height
+      result["pixels"] = pixels
+      reply(result)
+    }
+  }
+}
+#endif
 
 // BEGIN GENERATED PROTECTED VIEW PROBE
 // Example Debug-only clear-media feasibility probe, not a DRM implementation.

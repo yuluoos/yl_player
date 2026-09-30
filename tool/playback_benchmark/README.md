@@ -1,5 +1,57 @@
 # Playback measurements
 
+## macOS paused display-layer readback
+
+From `packages/yl_player/example`, run:
+
+```sh
+flutter test integration_test/display_readback_test.dart -d macos --no-pub \
+  --dart-define=YL_DISPLAY_RUN_ID=display-owned-001
+flutter test --no-pub test/display_markers_test.dart
+```
+
+Use a fresh nonsecret run ID, retain the complete log (including failed/skipped
+rows), and record the checkout/source/config/dependency/media hashes before a
+run, as in `macos-display-readback-observations.json`. This explicit Debug-only
+example channel uses macOS 14.4+ `AVSampleBufferVideoRenderer.displayedPixelBuffer()`;
+unsupported systems fail the probe without changing package deployment targets.
+It traverses only the example window, requires exactly one display layer, and
+does not capture the screen or protected content. The channel does not exist in
+profile/release builds and does not change the production player package.
+
+Three predeclared attempts play the owned `benchmark_sdr.mkv`; each pauses at
+media positions at least 0.25/1.25/2.25/3.25 seconds. The API requires a paused
+renderer. Each readback converts the displayed buffer through Core Image into
+sRGB RGBA8 and checks nine interior points against red/green/blue/white in order
+(maximum channel error 24/255). Unknown/blank pixels never become valid markers;
+all four are required. There must be no layer before creation and after disposal.
+No-image/no-layer observations are retained. Ambiguous output, timeout and
+cleanup failures fail the attempt and skip subsequent attempts. Known readbacks
+are emitted before cleanup as `YL_DISPLAY_OBSERVATION`; final identities use
+`YL_DISPLAY_ROW`. A missing final row is incomplete evidence, never a pass.
+
+`firstReadbackDelayUs` includes deliberate playback, pause, polling, channel and
+pixel-copy overhead. It is **not first-frame latency** and is not fed into the
+latency summarizer or any SLO. This proves a paused display-layer buffer's coarse
+color content, not compositor presentation, physical scanout, monitor color
+accuracy, spatial geometry, audio output, synchronization, HDR or Dolby Vision.
+The final run has 12 matching marker frames (108 RGB points) and six retained
+pending observations across three attempts; foreground activation still failed.
+
+The separate owned fixture explicitly transforms BT.601 lavfi pixels to BT.709
+and signals matrix, primaries, transfer and limited range. Its committed identity
+and independent host FFmpeg checks are in the evidence JSON. The generator
+`generate_display_fixture.py` refuses to overwrite an existing fixture; generating
+a replacement requires moving the old file aside and creates a new evidence
+identity. The original format-matrix fixture had unspecified color metadata and
+failed the original fixed tolerance; that run remains a recorded gap. The new
+fixture does not establish that untagged-content color interpretation is fixed.
+
+Two failure-path cleanup limitations remain: an earlier cleanup exception can
+skip later cleanup operations, and `cleaned=true` after a creation timeout does
+not confirm late native release. Such trials remain unsuccessful and stop later
+playback; only successful rows confirm the complete cleanup path. See P08 report.
+
 ## macOS process resources (instrumentation smoke)
 
 From the repository root, choose a **new** output directory:
