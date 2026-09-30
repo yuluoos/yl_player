@@ -1,0 +1,25 @@
+{
+  "source": "packages/yl_player/example/assets/test_media/format_matrix/webm-vp9-opus.webm",
+  "sourceSha256": "e32bbdbb915c91ad8ec3fc65bb2dfae40c0b42abf416a262a73d7a92b98b5d8d",
+  "sourceLicense": "owned-generated project color/tone fixture",
+  "command": [
+    "ffmpeg",
+    "-v",
+    "error",
+    "-i",
+    "packages/yl_player/example/assets/test_media/format_matrix/webm-vp9-opus.webm",
+    "-map",
+    "0:v",
+    "-c",
+    "copy",
+    "-f",
+    "ivf",
+    "tool/media_matrix/fixtures/vp9-profile0.ivf"
+  ],
+  "sha256": "51abe128946b44ae99d5682fd9685d79377cedbdf566f98b17480b51c145fd1c",
+  "bytes": 3227,
+  "frames": 96,
+  "keyframes": 4,
+  "width": 320,
+  "height": 180
+}

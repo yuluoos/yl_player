@@ -65,6 +65,7 @@ enum {
   YLFCodecFLAC = 8,
   YLFCodecOpus = 9,
   YLFCodecVorbis = 10,
+  YLFCodecVP9 = 11,
 };
 
 typedef struct {

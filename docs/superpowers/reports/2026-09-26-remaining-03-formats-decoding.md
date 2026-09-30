@@ -429,3 +429,26 @@ flutter test integration_test/format_matrix_test.dart -d macos --no-pub
 最终macOS原生43项托管生命周期+18项音频+3项FEL共64项通过，0失败/跳过。5项Vorbis策略/错误/切轨、5项Opus回归、3条Vorbis严格公开路径及20项Dart错误检查通过；8项目录检查和静态分析通过。Apple测试源/资源对齐iOS666/macOS584，未声称完整原生聚合门禁或iOS运行通过。
 
 完整67项矩阵符合基线：50条正常播放生命周期完成、12条有效媒体支持缺口、5条损坏输入拒绝。旧64条原始观测逐项相同，旧20份媒体及元数据不变；新增3条Vorbis预期只在严格路径实测成功后加入。证据、PCM结果和最终源码/日志指纹见[macos-vorbis-observations.json](../../../tool/media_matrix/macos-vorbis-observations.json)。Vorbis策略测试已接入macOS集成检查脚本。下一项继续VP9/AV1视频缺口；完整Task1/Task2和物理输出/跨端验收保持开放。
+
+
+## 2026-09-30 VP9 硬解切片
+
+起点`46a1a00`。本机Apple M1/macOS27的独立VideoToolbox探测显示：AVC/HEVC硬解提示为true，VP9在注册补充解码器前false、注册后true；AV1前后均false。探测只记录系统能力提示，不能代替真实session属性或输出证明。探测入口`tool/media_matrix/probe_apple_video_codecs.swift`；采用SDK公开API，macOS11/iOS26.2 availability检查，不提高包部署下限。
+
+范围决定：本轮只开启普通、可seek的Matroska/WebM VP9 Profile0、8-bit 4:2:0 SDR，固定尺寸不超过4096×2160、可见单帧包；保持现有音频限制。未知/BT601/BT709位流色彩受限映射，容器色彩冲突、HDR/Dolby metadata明确拒绝。隐藏帧、show-existing、superframe、动态尺寸/显示尺寸变化及更广Profile暂不支持。严格managed网络/bounded缓冲仍明确拒绝，不把普通播放的有界输入检查等同严格资源保证。代价是部分合法VP9文件仍不可播放；AV1与软件视频回退需要其他硬件证据/P08设备预算，继续保留缺口。
+
+制品只增加VP9稳定codec ID11和受检vpcC格式描述接口分支，没有启用额外FFmpeg parser/decoder或新运行时依赖，无商业SDK。Swift开流最多检查64包/8MiB，读取实际首关键帧profile、尺寸、范围和色彩，成功后回退游标；每个送入VT的包重复验证受限帧头。视频数据仍由系统硬件解码，systemDefault/hardwarePreferred也不能转为软件；每次创建/重建同时要求VT硬件选择与真实CFBoolean硬件证据，缺失或software都拒绝。码流校验不替代VT完整解码校验。
+
+独立复审发现一项Important：重建清空历史后，首关键帧可绕过原开流色彩/范围限制。新增回归先复现3次失败，再将开流位流配置保存在格式描述的独立扩展中，参考帧就绪状态与不可变格式约束分离。即使首帧尚未提交就seek，也持续校验原颜色/范围；不使用被容器覆盖后的色彩倒推原位流。修复后218项真实96包/4关键帧及受限头部、重建范围/色彩检查通过。仅进行一次独立复审。
+
+Apple源同步iOS668/macOS586；macOS原生45项生命周期/硬解证据+18音频+3FEL，共66项通过，0失败/跳过。该结果是聚焦回归，不是完整原生聚合门禁或iOS运行验收。原始首轮VP9三条公开严格路径均因container.unsupported失败。最终公开路径与矩阵结果见本节后续记录。
+
+五目标候选制品独立复建18个文件/符号链接项逐字节一致，接受lock SHA256 `bd946e9d73226acbce582429b5808ad69e14eaac9f97b057cb213e01fb0925a0`；3slices/5architectures/42 Swift符号及5项篡改负例通过。原生VP9格式验证48项、原video35/TS30/AVI88回归通过。
+
+参考：Apple SDK的`VTUtilities.h`及[VP9 Profile定义](https://www.webmproject.org/vp9/profiles/)、[VP Codec配置记录](https://www.webmproject.org/vp9/mp4/)。VP9码流没有明确level时vpcC记录0（Undefined），不伪造解码等级。
+
+真实路径初次重试在load阶段返回container.unsupported，定位到生产`inspectedWebM`开关遗漏。新增文件/HTTP路由回归先出现6项断言失败，开启受检入口后通过；开流仍检查实际codec、格式和硬件证据，不能因扩展名声明兼容。最终定向原生46项生命周期+18音频+3FEL=67项通过，0失败/跳过；测试源对齐iOS669/macOS587。Flutter集成测试遗留临时listener路径使首次原生构建失败，重置config-only后复现并验证，不计为产品测试结果。
+
+最终公开验收：VP9/Opus三条严格路径通过硬件session、首帧、2s/1.25s/0跳转、结束与释放；完整矩阵另在每次VP9重建后断言hardware。3项策略测试验证严格资源策略拒绝、不支持Profile保留原会话，以及seek后的颜色范围变化明确拒绝。已有路由策略矩阵7项通过（加上原生67项共74项定向测试），Dart错误21项、目录8项、218项帧头检查及静态分析通过。原音频31、Opus32轮162876、Vorbis8组25892、Opus解复用844及FEL回归保持通过。
+
+完整67项矩阵符合逐项基线：53条正常播放生命周期完成、9条有效媒体支持缺口、5条损坏输入拒绝。61条非VP9原始观测及21份原媒体/元数据保持不变。VP9/Vorbis旧样本非零CodecDelay仍被拒绝，错误由container.unsupported具体化为decoder.audio_vorbis_unsupported；不替换素材、不计为成功。证据及最终源码/日志指纹见[macos-vp9-observations.json](../../../tool/media_matrix/macos-vp9-observations.json)。只完成本轮受限VP9硬解增量，未完成P03 Task1/Task2/Task3整体；AV1、广泛VP9模式、物理像素/声音/同步、iOS/最低系统与跨端验收仍开放。下一项继续AV1硬件证据/软件预算边界核查，不从本机AV1提示false推广其他设备。

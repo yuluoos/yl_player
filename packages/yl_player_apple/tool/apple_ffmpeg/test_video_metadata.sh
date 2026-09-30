@@ -18,3 +18,5 @@ xcrun clang -fobjc-arc -I"${YL_TEST_OPUS_PREFIX:-$YL_TEST_FFMPEG_BUILD/build/mac
 sh "$script_dir/test_transport_stream.sh"
 
 sh "$script_dir/test_avi.sh"
+
+sh "$script_dir/test_vp9_metadata.sh"

@@ -85,3 +85,9 @@ mono/stereo at 44.1/48 kHz, with 200 ms seek/track-switch preroll and PCM target
 trimming. CodecDelay/leading trim, other rates/channels and strict policies
 are rejected with specific errors. Independent Xiph PCM reference tools are
 test-only; no commercial SDK or new runtime dependency is introduced.
+
+Ordinary seekable Matroska/WebM VP9 uses a bounded Profile 0, 8-bit SDR,
+fixed-size visible-frame path. Every system decoder creation requires actual
+hardware evidence, including default/preferred policies. Unsupported profiles,
+color changes, hidden/superframes and strict network/buffer policies fail
+explicitly. No VP9 software decoder or commercial SDK is shipped.

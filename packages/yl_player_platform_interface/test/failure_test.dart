@@ -2,6 +2,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 void main() {
+  test('VP9 failures distinguish unsupported frames from strict policy', () {
+    expect(
+      YlSafeDiagnostics.messageForCode('decoder.video_vp9_unsupported'),
+      contains('8-bit SDR'),
+    );
+    expect(
+      YlSafeDiagnostics.messageForCode('policy.vp9_unsupported'),
+      contains('seekable Matroska or WebM'),
+    );
+  });
   test(
     'Opus failures distinguish codec, malformed packet and policy limits',
     () {

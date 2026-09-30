@@ -65,6 +65,7 @@ final class YlVideoPipeline {
   private var felConfiguration: YlFELConfiguration?
   private var resource: Resource?
   private var hevcRandomAccess = YlHEVCRandomAccessGate()
+  private var vp9PacketGate: YlVP9PacketGate?
   private var decoder: YlVideoToolboxDecoder? { resource?.decoder }
   private let submissions = YlVideoSubmissionQueue()
   private let outputRelay = YlFallbackOutputRelay()
@@ -98,7 +99,7 @@ final class YlVideoPipeline {
       }
       throw error
     }
-    if policy == .hardwareRequired && created.hardwareEvidence.mode != .hardware {
+    if (policy == .hardwareRequired || CMFormatDescriptionGetMediaSubType(format) == kCMVideoCodecType_VP9) && created.hardwareEvidence.mode != .hardware {
       created.dispose()
       throw YlHardwareDecoderEvidence.unavailable()
     }
@@ -162,6 +163,7 @@ final class YlVideoPipeline {
     if let candidate {
       format = candidate.format
       felConfiguration = candidate.felConfiguration
+      vp9PacketGate = YlVP9Configuration.packetGate(for: candidate.format)
     }
     resource = candidate
     return old
@@ -253,6 +255,10 @@ final class YlVideoPipeline {
               onSubmitted: () -> Void, onCancelled: () -> Void,
               schedule: (CMSampleBuffer, UInt64, YlVideoToolboxDecoder, YlVideoDecodeReservation) -> Void) throws -> Void? {
         let byteCount = ylf_packet_size(ownedPacket)
+        if CMFormatDescriptionGetMediaSubType(format) == kCMVideoCodecType_VP9 {
+          guard let bytes = ylf_packet_data(ownedPacket),
+                vp9PacketGate?.accepts(.init(start: bytes, count: byteCount)) == true else { throw ylVP9UnsupportedError() }
+        }
         let managedPayload = managedPayload ?? bufferBudget.bufferScope?.reserve(category: .compressedPackets, bytes: byteCount)
         guard bufferBudget.bufferScope == nil || managedPayload != nil else { throw YlManagedBufferLedger.unsupported() }
         // Charge the sample before either the sample buffer or queue can own it.

@@ -360,6 +360,8 @@ static int32_t ylf_codec(enum AVCodecID codec_id) {
     return YLFCodecOpus;
   case AV_CODEC_ID_VORBIS:
     return YLFCodecVorbis;
+  case AV_CODEC_ID_VP9:
+    return YLFCodecVP9;
   default:
     return YLFCodecUnsupported;
   }
@@ -1450,6 +1452,38 @@ int32_t ylf_copy_video_format_description_with_codec_config(
       (unsigned int)stream_index >= context->format->nb_streams ||
       configuration == NULL || configuration_size == 0) return YLFResultVideoConfigurationInvalid;
   const AVCodecParameters *parameters = context->format->streams[stream_index]->codecpar;
+  if (parameters->codec_type == AVMEDIA_TYPE_VIDEO && parameters->codec_id == AV_CODEC_ID_VP9) {
+    // VP Codec Configuration Box v1, supplied by the bounded keyframe probe.
+    // This initial route does not downgrade HDR, chroma or bit depth.
+    if (configuration_size != 12 || configuration[0] != 1 || configuration[1] ||
+        configuration[2] || configuration[3] || configuration[4] != 0 ||
+        configuration[5] != 0 || (configuration[6] & 0xfe) != 0x82 ||
+        configuration[10] || configuration[11] || parameters->width <= 0 ||
+        parameters->height <= 0 || parameters->width > 4096 || parameters->height > 2160 ||
+        ylf_video_side_data(parameters, AV_PKT_DATA_DOVI_CONF) ||
+        ylf_video_side_data(parameters, AV_PKT_DATA_MASTERING_DISPLAY_METADATA) ||
+        ylf_video_side_data(parameters, AV_PKT_DATA_CONTENT_LIGHT_LEVEL)) return YLFResultVideoConfigurationInvalid;
+    const int colors[] = {configuration[7], configuration[8], configuration[9],
+      parameters->color_primaries, parameters->color_trc, parameters->color_space};
+    for (int i = 0; i < 6; i++)
+      if (colors[i] != 1 && colors[i] != 2 && colors[i] != 6) return YLFResultVideoConfigurationInvalid;
+    uint8_t vpc[12]; memcpy(vpc, configuration, 12);
+    for (int i = 0; i < 3; i++) {
+      if (colors[i] != 2 && colors[i+3] != 2 && colors[i] != colors[i+3]) return YLFResultVideoConfigurationInvalid;
+      if (colors[i+3] != 2) vpc[7+i] = colors[i+3];
+    }
+    if (parameters->color_range != AVCOL_RANGE_UNSPECIFIED &&
+        ((parameters->color_range == AVCOL_RANGE_JPEG) != ((vpc[6] & 1) != 0))) return YLFResultVideoConfigurationInvalid;
+    NSData *record = [NSData dataWithBytes:vpc length:12];
+    NSDictionary *ext = @{(__bridge NSString *)kCMFormatDescriptionExtension_SampleDescriptionExtensionAtoms: @{ @"vpcC": record },
+      (__bridge NSString *)kCMFormatDescriptionExtension_FullRangeVideo: @((vpc[6] & 1) != 0)};
+    CMVideoFormatDescriptionRef base = NULL;
+    OSStatus status = CMVideoFormatDescriptionCreate(kCFAllocatorDefault, kCMVideoCodecType_VP9,
+      parameters->width, parameters->height, (__bridge CFDictionaryRef)ext, &base);
+    if (status == noErr && base) status = ylf_apply_video_metadata(parameters, base, out_description);
+    if (base) CFRelease(base);
+    return status == noErr && *out_description ? YLFResultOK : YLFResultVideoConfigurationInvalid;
+  }
   if (parameters->codec_type != AVMEDIA_TYPE_VIDEO ||
       (parameters->codec_id != AV_CODEC_ID_H264 && parameters->codec_id != AV_CODEC_ID_HEVC)) return YLFResultVideoConfigurationInvalid;
   CMVideoFormatDescriptionRef base = NULL;

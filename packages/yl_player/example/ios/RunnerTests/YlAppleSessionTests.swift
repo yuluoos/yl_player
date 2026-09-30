@@ -921,7 +921,7 @@ final class YlEngineAssessmentTests: XCTestCase {
           if policy == 3 { options.decoderPolicy = .hardwareRequired }
           source.loadOptions = options
           let production = YlEngineRouter.assess(source)
-          if (policy > 0) && (format == .matroska || format == .flv) {
+          if (policy > 0) && (format == .matroska || format == .webm || format == .flv) {
             XCTAssertEqual(production.outcome, .requiresInspection)
             if policy != 3 { XCTAssertTrue(production.satisfiedRequirements.contains(policy == 1 ? .networkManaged : .bufferBounded)) }
             else { XCTAssertFalse(production.satisfiedRequirements.contains(.decoderHardwareRequired)) }

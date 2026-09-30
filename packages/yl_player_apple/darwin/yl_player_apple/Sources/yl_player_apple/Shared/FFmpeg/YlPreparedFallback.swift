@@ -186,7 +186,7 @@ final class YlPreparedFallback {
       }
       if Int(stream.kind) == YLFStreamVideo { sawVideo = true }
       if Int(stream.kind) == YLFStreamVideo,
-         (Int(stream.codec) == YLFCodecH264 || Int(stream.codec) == YLFCodecHEVC),
+         (Int(stream.codec) == YLFCodecH264 || Int(stream.codec) == YLFCodecHEVC || Int(stream.codec) == YLFCodecVP9),
          selectedVideo == nil {
         selectedVideo = stream
       } else if Int(stream.kind) == YLFStreamAudio {
@@ -212,6 +212,11 @@ final class YlPreparedFallback {
         code: sawVideo ? "decoder.unsupported" : "policy.unsupported",
         message: sawVideo ? "The video codec is unsupported." : "This fallback route does not implement audio-only playback."
       )
+    }
+    if Int(selectedVideo.codec) == YLFCodecVP9,
+       container != .matroska || source.intent == .live || !policy.isSeekable || boundedPlan != nil || source.networkPolicy == .managed {
+      throw NativePlayerError(category: "unsupported", code: "policy.vp9_unsupported",
+        message: "VP9 currently supports seekable Matroska or WebM VOD without strict networking or buffer policies.")
     }
     if selectedAudio.isEmpty && sawBlockedOpus {
       throw NativePlayerError(category: "unsupported", code: "policy.opus_unsupported",
@@ -246,7 +251,16 @@ final class YlPreparedFallback {
       rewind: { _ = try opened.seek(toMediaTimeUs: 0) }
     )
     let inBandFormat: CMVideoFormatDescription?
-    if felConfiguration == nil, container == .matroska, policy.isSeekable {
+    if Int(selectedVideo.codec) == YLFCodecVP9 {
+      inBandFormat = try YlVP9Configuration.makeFormatDescription(context: validContext, stream: selectedVideo,
+        maxPacketBytes: budget.inFlightPacketBytes, checkCancellation: { try cancellationToken?.throwIfCancelled() },
+        reserveBytes: { [bufferScope] bytes in
+          guard let token = bufferScope.reserve(category: .compressedPackets, bytes: bytes) else { throw YlManagedBufferLedger.unsupported() }
+          return token
+        }, readFailure: { result in
+          ylFallbackPacketReadError(result: result, inputError: opened.lastInputError, container: container)
+        }, rewind: { _ = try opened.seek(toMediaTimeUs: 0) })
+    } else if felConfiguration == nil, container == .matroska, policy.isSeekable {
       inBandFormat = try YlHEVCInBandConfiguration.makeFormatDescription(
         context: validContext, streamIndex: selectedVideo.index,
         maxPacketBytes: budget.inFlightPacketBytes,

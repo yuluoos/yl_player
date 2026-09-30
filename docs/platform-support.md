@@ -555,3 +555,20 @@ exclude this route. Inactive changes fail explicitly; candidate configuration
 failure preserves current playback. This scope does not establish full WebM,
 multichannel, physical output, minimum-system or cross-platform acceptance.
 See the [P03 execution report](superpowers/reports/2026-09-26-remaining-03-formats-decoding.md).
+
+
+### Scoped Apple VP9 hardware route (2026-09-30)
+
+Seekable ordinary Matroska/WebM VOD accepts VP9 Profile 0, 8-bit 4:2:0
+SDR with fixed dimensions up to 4096×2160 and visible single-frame packets.
+Opening and per-packet checks reject hidden/show-existing frames, superframes,
+geometry/render-size changes, color/range changes and unsupported HDR metadata.
+All decoder policies require actual hardware evidence on each session creation;
+there is no VP9 software fallback or new FFmpeg decoder/parser. Supplemental
+decoder registration is availability-guarded (macOS 11/iOS 26.2); older systems
+still require independently available hardware, without raising deployment targets.
+Managed network and bounded-buffer policies fail explicitly. Existing Opus and
+Vorbis restrictions still apply, including Vorbis zero CodecDelay. AV1 remains
+unsupported by this route. See the [P03 report](superpowers/reports/2026-09-26-remaining-03-formats-decoding.md)
+for measured platform coverage; this does not establish physical output, sync,
+minimum-system or cross-platform acceptance.

@@ -23,6 +23,8 @@ enum YlAppleSafeDiagnostics {
   // Package-owned classifications only. A syntactically safe source-derived
   // identifier is still private and must not be published as an error code.
   private static let publicCodes: Set<String> = [
+    "decoder.video_vp9_unsupported",
+    "policy.vp9_unsupported",
     "decoder.audio_vorbis_unsupported",
     "decoder.audio_vorbis_failed",
     "policy.vorbis_unsupported",
@@ -136,6 +138,8 @@ enum YlAppleSafeDiagnostics {
     "network.dns_failed", "network.connect_timeout", "network.read_timeout",
   ]
   private static let publicMessages: [String: String] = [
+    "decoder.video_vp9_unsupported": "VP9 currently requires fixed-size Profile 0, 8-bit SDR visible frames without superframes. Try another video track.",
+    "policy.vp9_unsupported": "VP9 currently supports seekable Matroska or WebM VOD without strict networking or buffer policies.",
     "decoder.audio_vorbis_unsupported": "Vorbis requires valid Vorbis I headers, mono or stereo at 44.1 or 48 kHz, and zero CodecDelay. Try another audio track.",
     "decoder.audio_vorbis_failed": "The Vorbis audio packet or timing is invalid. Try another audio track or a complete media file.",
     "policy.vorbis_unsupported": "Vorbis currently supports ordinary Matroska VOD without strict networking, buffer or hardware policies.",

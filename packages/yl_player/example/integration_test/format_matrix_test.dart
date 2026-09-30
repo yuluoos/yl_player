@@ -168,6 +168,10 @@ void main() {
           expect(player.state.videoGeometry, isNotNull);
           audioSelected = player.state.audioTracks.any((t) => t.isSelected);
           expect(audioSelected, isTrue);
+          if (id.startsWith('webm-vp9')) {
+            expect(player.state.engine.name, 'managedFallback');
+            expect(player.state.decoderMode.name, 'hardware');
+          }
           if (id == 'flv-avc-mp3' ||
               id == 'ts-avc-ac3' ||
               id == 'avi-avc-mp3') {
@@ -183,11 +187,15 @@ void main() {
                 id == 'flv-avc-mp3' ||
                 id == 'mkv-avc-flac' ||
                 id == 'mkv-avc-vorbis' ||
+                id.startsWith('webm-vp9') ||
                 id.startsWith('mkv-avc-opus') ||
                 id == 'ts-avc-ac3' ||
                 id == 'avi-avc-mp3')
               1250,
-            if (id.startsWith('mkv-avc-opus') || id == 'mkv-avc-vorbis') 0,
+            if (id.startsWith('mkv-avc-opus') ||
+                id == 'mkv-avc-vorbis' ||
+                id.startsWith('webm-vp9'))
+              0,
           ];
           for (final targetMs in targets) {
             await session.pause();
@@ -204,6 +212,9 @@ void main() {
                   s.timeline.position > Duration(milliseconds: targetMs + 350),
             );
             expect(player.state.failure, isNull);
+            if (id.startsWith('webm-vp9')) {
+              expect(player.state.decoderMode.name, 'hardware');
+            }
           }
           seek = true;
           stage = 'end';

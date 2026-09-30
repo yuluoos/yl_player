@@ -6,7 +6,7 @@
 `libavformat`, `libavcodec`, and `libavutil`. It is used for
 Matroska, FLV, MP4/MOV, MPEG-TS, and AVI demultiplexing, packet parsing,
 and DCA/Vorbis audio decoding. A statically linked libopus decoder handles Opus.
-Video decoding remains in Apple VideoToolbox. Ordinary Matroska VOD integrates container trimming and seek
+Video decoding remains in Apple VideoToolbox, including the restricted hardware-only VP9 route. Ordinary Matroska VOD integrates container trimming and seek
 preroll for family 0 mono/stereo 48 kHz Opus. Active audio-track changes reuse
 seek preroll. SILK, hybrid and CELT are supported within this family-0 scope;
 strict Opus policies remain unsupported.

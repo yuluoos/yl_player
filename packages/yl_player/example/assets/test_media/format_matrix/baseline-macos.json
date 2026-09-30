@@ -96,34 +96,34 @@
       "completed": true
     },
     "webm-vp9-opus/file": {
-      "outcome": "failed",
-      "stage": "load",
-      "code": "container.unsupported",
-      "category": "container",
-      "scope": "command",
-      "firstFrame": false,
-      "seekProgress": false,
-      "completed": false
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
     },
     "webm-vp9-opus/http": {
-      "outcome": "failed",
-      "stage": "load",
-      "code": "container.unsupported",
-      "category": "container",
-      "scope": "command",
-      "firstFrame": false,
-      "seekProgress": false,
-      "completed": false
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
     },
     "webm-vp9-opus/renamed-file": {
-      "outcome": "failed",
-      "stage": "load",
-      "code": "container.unsupported",
-      "category": "container",
-      "scope": "command",
-      "firstFrame": false,
-      "seekProgress": false,
-      "completed": false
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
     },
     "flv-avc-mp3/file": {
       "outcome": "passed",
@@ -368,8 +368,8 @@
     "webm-vp9-vorbis/file": {
       "outcome": "failed",
       "stage": "load",
-      "code": "container.unsupported",
-      "category": "container",
+      "code": "decoder.audio_vorbis_unsupported",
+      "category": "decoder",
       "scope": "command",
       "firstFrame": false,
       "seekProgress": false,
@@ -378,8 +378,8 @@
     "webm-vp9-vorbis/http": {
       "outcome": "failed",
       "stage": "load",
-      "code": "container.unsupported",
-      "category": "container",
+      "code": "decoder.audio_vorbis_unsupported",
+      "category": "decoder",
       "scope": "command",
       "firstFrame": false,
       "seekProgress": false,
@@ -388,8 +388,8 @@
     "webm-vp9-vorbis/renamed-file": {
       "outcome": "failed",
       "stage": "load",
-      "code": "container.unsupported",
-      "category": "container",
+      "code": "decoder.audio_vorbis_unsupported",
+      "category": "decoder",
       "scope": "command",
       "firstFrame": false,
       "seekProgress": false,

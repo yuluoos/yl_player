@@ -177,6 +177,7 @@ run_integration_tests() {
     integration_test/mpegts_policy_test.dart \
     integration_test/avi_policy_test.dart \
     integration_test/vorbis_policy_test.dart \
+    integration_test/vp9_policy_test.dart \
     integration_test/state_update_cadence_test.dart \
     integration_test/apple_strict_policy_test.dart
   do

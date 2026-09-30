@@ -129,3 +129,5 @@ expect(failure.retryable, isFalse);
 2026-09-29 P03 Opus模式扩展：已用固定开源libopus1.6.1替换native Opus/swresample，SILK/hybrid/CELT family0 mono/stereo PCM及五目标可重建制品通过。完整Opus/WebM、严格策略、物理输出和跨端验收仍开放；不勾选Task1/Task2，最终公开验证见P03报告。
 
 2026-09-30 P03 Vorbis切片：普通Matroska mono/stereo 44.1/48k通过native FFmpeg解码、200ms预解码、PCM目标裁剪及活动音轨切换；零CodecDelay与严格策略边界明确。64项macOS原生回归、5项公开Vorbis策略/切轨、3条严格格式路径通过；无商业SDK，Xiph参考库仅测试使用。物理输出/多声道/WebM视频/跨平台仍待完成，Task1/Task2不勾选；完整矩阵证据见P03报告。
+
+2026-09-30 P03 VP9切片：普通可seek Matroska/WebM Profile0、8-bit420 SDR固定尺寸/可见单帧包接入系统硬解，每次创建/seek重建均验证实际hardware；未引入VP9软件decoder或商业SDK。VP9/Opus file/http/改名三路径和3项异常策略已实测通过，原生67项与路由矩阵7项通过；Vorbis旧样本非零CodecDelay继续明确拒绝。完整Task1/Task2/Task3不勾选；AV1、广泛VP9 Profile、物理影音/最低系统/跨端验收仍开放，最终矩阵见P03报告。

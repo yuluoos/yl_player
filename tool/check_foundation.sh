@@ -22,6 +22,7 @@ python3 -B -m unittest discover -s tool/media_matrix -p 'test_*.py'
 python3 -B tool/media_matrix/catalog.py
 if [ "$(uname -s)" = Darwin ]; then
   sh tool/media_matrix/check_hevc_random_access.sh
+  sh tool/media_matrix/check_vp9_headers.sh
 fi
 python3 -B -m unittest discover -s tool/dolby_reference -p 'test_*.py'
 python3 -B tool/dolby_reference/inventory.py

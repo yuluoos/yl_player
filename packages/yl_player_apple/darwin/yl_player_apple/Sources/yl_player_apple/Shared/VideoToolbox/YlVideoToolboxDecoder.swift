@@ -416,6 +416,10 @@ final class YlVideoToolboxDecoder: YlVideoToolboxDecoding {
         bytes.bindMemory(to: UInt8.self).baseAddress, bytes.count, &description)
     }
     guard result == YLFResultOK, let description else {
+      var stream = YLFStreamInfo()
+      if ylf_copy_stream_info(context, streamIndex, &stream) == YLFResultOK, Int(stream.codec) == YLFCodecVP9 {
+        throw ylVP9UnsupportedError()
+      }
       throw configurationFailure(result: result, codec: Int32(YLFCodecHEVC),
         configBytes: configuration.count, streamIndex: streamIndex)
     }
@@ -649,9 +653,13 @@ final class YlHardwareVTSessionFactory: YlVTSessionFactory {
   func makeSession(formatDescription: CMVideoFormatDescription, outputPixelFormat: OSType?,
                    output: @escaping (YlVTDecodedImage) -> Void) throws -> YlVTSession {
     let codec = CMFormatDescriptionGetMediaSubType(formatDescription)
+    let requiresHardware = policy == .hardwareRequired || codec == kCMVideoCodecType_VP9
+    if codec == kCMVideoCodecType_VP9 {
+      if #available(macOS 11.0, iOS 26.2, *) { VTRegisterSupplementalVideoDecoderIfAvailable(codec) }
+    }
     guard codec == kCMVideoCodecType_H264 || codec == kCMVideoCodecType_HEVC
-            || codec == kCMVideoCodecType_DolbyVisionHEVC,
-          policy != .hardwareRequired || VTIsHardwareDecodeSupported(codec) else {
+            || codec == kCMVideoCodecType_DolbyVisionHEVC || codec == kCMVideoCodecType_VP9,
+          !requiresHardware || VTIsHardwareDecodeSupported(codec) else {
       throw Self.hardwareUnavailable(status: nil)
     }
 
@@ -662,7 +670,7 @@ final class YlHardwareVTSessionFactory: YlVTSessionFactory {
     )
     // Preserve the legacy string keys across SDK availability differences.
     var specification: [CFString: Any] = [:]
-    if policy == .hardwareRequired {
+    if requiresHardware {
       specification["RequireHardwareAcceleratedVideoDecoder" as CFString] = kCFBooleanTrue
     } else if policy == .hardwarePreferred {
       specification["EnableHardwareAcceleratedVideoDecoder" as CFString] = kCFBooleanTrue
@@ -690,7 +698,7 @@ final class YlHardwareVTSessionFactory: YlVTSessionFactory {
     }
 
     let evidence = propertyReader.evidence(for: rawSession)
-    if policy == .hardwareRequired && evidence.mode != .hardware {
+    if requiresHardware && evidence.mode != .hardware {
       VTDecompressionSessionInvalidate(rawSession)
       throw Self.hardwareUnavailable(status: noErr)
     }
@@ -703,7 +711,7 @@ final class YlHardwareVTSessionFactory: YlVTSessionFactory {
     NativePlayerError(
       category: "decoderUnsupported",
       code: "decoder.video_hardware_unavailable",
-      message: "A hardware H.264/HEVC decoder is unavailable.",
+      message: "A hardware decoder for this video codec is unavailable.",
       diagnostic: status.map { "OSStatus \($0)" }
     )
   }

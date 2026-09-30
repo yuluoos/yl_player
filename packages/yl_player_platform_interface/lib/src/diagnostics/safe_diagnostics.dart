@@ -46,6 +46,10 @@ abstract final class YlSafeDiagnostics {
     YlFailureCodes.dashManifestTooLarge =>
       'The DASH manifest exceeds the 2 MiB input limit. Ask the provider for a smaller manifest.',
 
+    'decoder.video_vp9_unsupported' =>
+      'VP9 currently requires fixed-size Profile 0, 8-bit SDR visible frames without superframes. Try another video track.',
+    'policy.vp9_unsupported' =>
+      'VP9 currently supports seekable Matroska or WebM VOD without strict networking or buffer policies.',
     'decoder.audio_vorbis_unsupported' =>
       'Vorbis requires valid Vorbis I headers, mono or stereo at 44.1 or 48 kHz, and zero CodecDelay. Try another audio track.',
     'decoder.audio_vorbis_failed' =>

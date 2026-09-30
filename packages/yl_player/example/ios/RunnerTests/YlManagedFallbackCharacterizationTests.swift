@@ -520,6 +520,55 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     XCTAssertEqual(latest?.error?.code, "network.cancelled")
   }
 
+  private func vp9Format() throws -> CMVideoFormatDescription {
+    var format: CMVideoFormatDescription?
+    XCTAssertEqual(CMVideoFormatDescriptionCreate(allocator: kCFAllocatorDefault,
+      codecType: kCMVideoCodecType_VP9, width: 320, height: 180, extensions: nil, formatDescriptionOut: &format), noErr)
+    return try XCTUnwrap(format)
+  }
+  func testWebMVODRequiresCodecInspectionBeforeFallbackCommit() {
+    for (uri, kind, route) in [
+      ("file:///tmp/clip.webm", YlSourceKind.file, YlAppleSourceRoute.localMatroska),
+      ("https://media.test/clip.webm", .network, .networkMatroska)
+    ] {
+      let source = YlAppleSourceDescriptor(uri: uri, kind: kind, intent: .onDemand)
+      let assessment = YlEngineRouter.assess(source)
+      XCTAssertEqual(assessment.outcome, .requiresInspection)
+      XCTAssertEqual(assessment.candidate, route)
+      XCTAssertNil(assessment.rejection)
+      let rejected = YlEngineRouter.assess(source, inspection: .init(format: .webm,
+        demuxerSupported: true, codecsSupported: false, hasVideo: true, hardwareAccelerated: nil))
+      XCTAssertEqual(rejected.rejection?.code, "decoder.unsupported")
+    }
+  }
+
+  func testVP9RejectsUnverifiedDecoderEvenWithoutRequiredPolicy() throws {
+    for policy: YlDecoderPolicy in [.systemDefault, .hardwarePreferred, .hardwareRequired] {
+      for mode: YlHardwareDecoderEvidence.Mode in [.software, .unknown] {
+        let factory = Factory(); factory.evidence = .init(mode: mode)
+        let pipeline = YlVideoPipeline(format: try vp9Format(), bufferBudget: try .make(configuration: .init(map: [:])),
+          factory: factory, policy: policy)
+        XCTAssertThrowsError(try pipeline.initializeDecoder()) {
+          XCTAssertEqual(($0 as? NativePlayerError)?.code, "decoder.unavailable")
+        }
+        XCTAssertFalse(pipeline.hasDecoder)
+        XCTAssertEqual(factory.sessions.first?.invalidations, 1)
+      }
+    }
+  }
+  func testVP9RecreationCannotFallBackToSoftware() throws {
+    let factory = Factory()
+    let pipeline = YlVideoPipeline(format: try vp9Format(), bufferBudget: try .make(configuration: .init(map: [:])), factory: factory)
+    try pipeline.initializeDecoder()
+    XCTAssertEqual(pipeline.hardwareEvidence.mode, .hardware)
+    pipeline.discardDecoder(); factory.evidence = .init(mode: .software)
+    XCTAssertThrowsError(try pipeline.prepareCurrent()) {
+      XCTAssertEqual(($0 as? NativePlayerError)?.code, "decoder.unavailable")
+    }
+    XCTAssertFalse(pipeline.hasDecoder)
+    XCTAssertEqual(factory.sessions.last?.invalidations, 1)
+  }
+
   func testHardwareEvidenceRequiresActualCFBooleanAndSafeIdentity() {
     let values: [(OSStatus, CFTypeRef?, YlHardwareDecoderEvidence.Mode)] = [
       (noErr, kCFBooleanTrue, .hardware), (noErr, kCFBooleanFalse, .software),

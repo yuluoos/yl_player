@@ -43,3 +43,10 @@ Vorbis切片新增零CodecDelay的原创AVC/Vorbis素材，目录现有21行/67�
 原有20份素材保持不变；初始native编码夹具另保留为`mkv-avc-vorbis-codec-delay.mkv`，
 用于明确拒绝1024采样CodecDelay，不计支持行。混合AAC/Vorbis仅用于切轨/策略。
 物理输出和跨平台验收仍未完成，详见`macos-vorbis-observations.json`和P03报告。
+
+VP9切片保留全部21份媒体，仍为67条公开路径。`webm-vp9-opus`增加
+2s/1.25s/0跳转和每次重建后的hardware断言。`webm-vp9-vorbis`保留原始
+非零CodecDelay样本，继续记录明确音频支持缺口。`check_vp9_headers.sh`使用
+从原WebM直接复制的96帧IVF，不依赖宿主FFmpeg；来源、命令及哈希见
+`fixtures/vp9-profile0.json`。硬件提示探测与真实session硬件证据分别记录；
+最终观测见`macos-vp9-observations.json`，物理像素/声音/同步仍未验收。
