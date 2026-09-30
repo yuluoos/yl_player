@@ -1,0 +1,530 @@
+{
+  "schemaVersion": 1,
+  "runStatus": "collected",
+  "stage": "complete",
+  "productionEnabled": false,
+  "softwareBudget": "unmeasured_not_admitted",
+  "baseCommit": "1da51a67bf18b54cefe6351ff96a9bcf50f68edb",
+  "sourceFingerprints": {
+    "tool/decoder_probe/apple_decode_probe.swift": "17b7bc778520ce785d957839c3fcadfdc88dce2c406b236be81c0444b6bddba0",
+    "tool/decoder_probe/run_apple.py": "6c36c23056ff983592f6cfdbea77b5d270d3a5454c70a0fe9b1d4bccc49f1a2b",
+    "tool/decoder_probe/evidence.py": "204e7464805f3908bd26067ee30e5645a4cf047d0c7f3969645af18281fab556",
+    "tool/decoder_probe/fixtures/manifest.json": "c77beb81a424d69b74a93c3b4fe01409ba613a686d6ff14b3403ac44a22e9b7b"
+  },
+  "fixtures": [
+    {
+      "caseId": "avc-control",
+      "fixture": "avc-control.json",
+      "sha256": "93957de58c49add03ed809f558c69d49f7895787775ade091888c7b5bd4ecd65",
+      "containerSha256": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+      "ownedSource": "packages/yl_player/example/assets/test_media/format_matrix/mp4-avc-aac.mp4",
+      "ownedSourceSha256": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+      "frames": 96,
+      "bitDepth": 8,
+      "profile": "Constrained Baseline",
+      "width": 320,
+      "height": 180
+    },
+    {
+      "caseId": "av1-main8",
+      "fixture": "av1-main8.json",
+      "sha256": "368c0d598cf95971d07af5722fc567ba3dd29ad5c3f08c1ccd0d4be8f940bbfb",
+      "containerSha256": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+      "ownedSource": "packages/yl_player/example/assets/test_media/format_matrix/mkv-av1-opus.mkv",
+      "ownedSourceSha256": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+      "frames": 96,
+      "bitDepth": 8,
+      "profile": "Main",
+      "width": 320,
+      "height": 180
+    },
+    {
+      "caseId": "av1-main10",
+      "fixture": "av1-main10.json",
+      "sha256": "bf899306e78b59d58d2059361b175a8ca4266040b3a1f2dcce88f58e1b684c19",
+      "containerSha256": "d1b883713b2fd2ba795f44181bde287f108e6ebedd68b1807702e93742253909",
+      "ownedSource": "packages/yl_player/example/assets/test_media/format_matrix/mkv-av1-opus.mkv",
+      "ownedSourceSha256": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+      "frames": 24,
+      "bitDepth": 10,
+      "profile": "Main",
+      "width": 320,
+      "height": 180
+    }
+  ],
+  "host": {
+    "model": "MacBookPro17,1",
+    "cpu": "Apple M1",
+    "os": "27.0",
+    "osBuild": "26A428"
+  },
+  "binarySha256": "af2260a2c6a98281c626114ba802b77e9e617bf2cf7b40c3e09651f881e174c8",
+  "summary": {
+    "observations": 18,
+    "av1HardwareDecodeObservations": 0,
+    "av1UnavailableObservations": 12,
+    "av1SessionCreationFailures": 12,
+    "productionEnabled": false,
+    "softwareBudget": "unmeasured_not_admitted",
+    "physicalOutput": "not_verified",
+    "otherDevices": "not_verified"
+  },
+  "observations": [
+    {
+      "callbackErrors": 0,
+      "caseId": "avc-control",
+      "createStatus": 0,
+      "decodeStatus": 0,
+      "expectedFrames": 96,
+      "finishStatus": 0,
+      "generation": 0,
+      "geometryErrors": 0,
+      "hardwareEvidence": "hardware",
+      "hardwareHint": true,
+      "outputFrames": 96,
+      "pixelFormats": [
+        "420v"
+      ],
+      "policy": "systemDefault",
+      "propertyStatus": 0,
+      "waitStatus": 0
+    },
+    {
+      "callbackErrors": 0,
+      "caseId": "avc-control",
+      "createStatus": 0,
+      "decodeStatus": 0,
+      "expectedFrames": 96,
+      "finishStatus": 0,
+      "generation": 1,
+      "geometryErrors": 0,
+      "hardwareEvidence": "hardware",
+      "hardwareHint": true,
+      "outputFrames": 96,
+      "pixelFormats": [
+        "420v"
+      ],
+      "policy": "systemDefault",
+      "propertyStatus": 0,
+      "waitStatus": 0
+    },
+    {
+      "callbackErrors": 0,
+      "caseId": "avc-control",
+      "createStatus": 0,
+      "decodeStatus": 0,
+      "expectedFrames": 96,
+      "finishStatus": 0,
+      "generation": 0,
+      "geometryErrors": 0,
+      "hardwareEvidence": "hardware",
+      "hardwareHint": true,
+      "outputFrames": 96,
+      "pixelFormats": [
+        "420v"
+      ],
+      "policy": "hardwarePreferred",
+      "propertyStatus": 0,
+      "waitStatus": 0
+    },
+    {
+      "callbackErrors": 0,
+      "caseId": "avc-control",
+      "createStatus": 0,
+      "decodeStatus": 0,
+      "expectedFrames": 96,
+      "finishStatus": 0,
+      "generation": 1,
+      "geometryErrors": 0,
+      "hardwareEvidence": "hardware",
+      "hardwareHint": true,
+      "outputFrames": 96,
+      "pixelFormats": [
+        "420v"
+      ],
+      "policy": "hardwarePreferred",
+      "propertyStatus": 0,
+      "waitStatus": 0
+    },
+    {
+      "callbackErrors": 0,
+      "caseId": "avc-control",
+      "createStatus": 0,
+      "decodeStatus": 0,
+      "expectedFrames": 96,
+      "finishStatus": 0,
+      "generation": 0,
+      "geometryErrors": 0,
+      "hardwareEvidence": "hardware",
+      "hardwareHint": true,
+      "outputFrames": 96,
+      "pixelFormats": [
+        "420v"
+      ],
+      "policy": "hardwareRequired",
+      "propertyStatus": 0,
+      "waitStatus": 0
+    },
+    {
+      "callbackErrors": 0,
+      "caseId": "avc-control",
+      "createStatus": 0,
+      "decodeStatus": 0,
+      "expectedFrames": 96,
+      "finishStatus": 0,
+      "generation": 1,
+      "geometryErrors": 0,
+      "hardwareEvidence": "hardware",
+      "hardwareHint": true,
+      "outputFrames": 96,
+      "pixelFormats": [
+        "420v"
+      ],
+      "policy": "hardwareRequired",
+      "propertyStatus": 0,
+      "waitStatus": 0
+    },
+    {
+      "callbackErrors": 0,
+      "caseId": "av1-main8",
+      "createStatus": -12906,
+      "decodeStatus": null,
+      "expectedFrames": 96,
+      "finishStatus": null,
+      "generation": 0,
+      "geometryErrors": 0,
+      "hardwareEvidence": "unknown",
+      "hardwareHint": false,
+      "outputFrames": 0,
+      "pixelFormats": [],
+      "policy": "systemDefault",
+      "propertyStatus": null,
+      "waitStatus": null
+    },
+    {
+      "callbackErrors": 0,
+      "caseId": "av1-main8",
+      "createStatus": -12906,
+      "decodeStatus": null,
+      "expectedFrames": 96,
+      "finishStatus": null,
+      "generation": 1,
+      "geometryErrors": 0,
+      "hardwareEvidence": "unknown",
+      "hardwareHint": false,
+      "outputFrames": 0,
+      "pixelFormats": [],
+      "policy": "systemDefault",
+      "propertyStatus": null,
+      "waitStatus": null
+    },
+    {
+      "callbackErrors": 0,
+      "caseId": "av1-main8",
+      "createStatus": -12906,
+      "decodeStatus": null,
+      "expectedFrames": 96,
+      "finishStatus": null,
+      "generation": 0,
+      "geometryErrors": 0,
+      "hardwareEvidence": "unknown",
+      "hardwareHint": false,
+      "outputFrames": 0,
+      "pixelFormats": [],
+      "policy": "hardwarePreferred",
+      "propertyStatus": null,
+      "waitStatus": null
+    },
+    {
+      "callbackErrors": 0,
+      "caseId": "av1-main8",
+      "createStatus": -12906,
+      "decodeStatus": null,
+      "expectedFrames": 96,
+      "finishStatus": null,
+      "generation": 1,
+      "geometryErrors": 0,
+      "hardwareEvidence": "unknown",
+      "hardwareHint": false,
+      "outputFrames": 0,
+      "pixelFormats": [],
+      "policy": "hardwarePreferred",
+      "propertyStatus": null,
+      "waitStatus": null
+    },
+    {
+      "callbackErrors": 0,
+      "caseId": "av1-main8",
+      "createStatus": -12906,
+      "decodeStatus": null,
+      "expectedFrames": 96,
+      "finishStatus": null,
+      "generation": 0,
+      "geometryErrors": 0,
+      "hardwareEvidence": "unknown",
+      "hardwareHint": false,
+      "outputFrames": 0,
+      "pixelFormats": [],
+      "policy": "hardwareRequired",
+      "propertyStatus": null,
+      "waitStatus": null
+    },
+    {
+      "callbackErrors": 0,
+      "caseId": "av1-main8",
+      "createStatus": -12906,
+      "decodeStatus": null,
+      "expectedFrames": 96,
+      "finishStatus": null,
+      "generation": 1,
+      "geometryErrors": 0,
+      "hardwareEvidence": "unknown",
+      "hardwareHint": false,
+      "outputFrames": 0,
+      "pixelFormats": [],
+      "policy": "hardwareRequired",
+      "propertyStatus": null,
+      "waitStatus": null
+    },
+    {
+      "callbackErrors": 0,
+      "caseId": "av1-main10",
+      "createStatus": -12906,
+      "decodeStatus": null,
+      "expectedFrames": 24,
+      "finishStatus": null,
+      "generation": 0,
+      "geometryErrors": 0,
+      "hardwareEvidence": "unknown",
+      "hardwareHint": false,
+      "outputFrames": 0,
+      "pixelFormats": [],
+      "policy": "systemDefault",
+      "propertyStatus": null,
+      "waitStatus": null
+    },
+    {
+      "callbackErrors": 0,
+      "caseId": "av1-main10",
+      "createStatus": -12906,
+      "decodeStatus": null,
+      "expectedFrames": 24,
+      "finishStatus": null,
+      "generation": 1,
+      "geometryErrors": 0,
+      "hardwareEvidence": "unknown",
+      "hardwareHint": false,
+      "outputFrames": 0,
+      "pixelFormats": [],
+      "policy": "systemDefault",
+      "propertyStatus": null,
+      "waitStatus": null
+    },
+    {
+      "callbackErrors": 0,
+      "caseId": "av1-main10",
+      "createStatus": -12906,
+      "decodeStatus": null,
+      "expectedFrames": 24,
+      "finishStatus": null,
+      "generation": 0,
+      "geometryErrors": 0,
+      "hardwareEvidence": "unknown",
+      "hardwareHint": false,
+      "outputFrames": 0,
+      "pixelFormats": [],
+      "policy": "hardwarePreferred",
+      "propertyStatus": null,
+      "waitStatus": null
+    },
+    {
+      "callbackErrors": 0,
+      "caseId": "av1-main10",
+      "createStatus": -12906,
+      "decodeStatus": null,
+      "expectedFrames": 24,
+      "finishStatus": null,
+      "generation": 1,
+      "geometryErrors": 0,
+      "hardwareEvidence": "unknown",
+      "hardwareHint": false,
+      "outputFrames": 0,
+      "pixelFormats": [],
+      "policy": "hardwarePreferred",
+      "propertyStatus": null,
+      "waitStatus": null
+    },
+    {
+      "callbackErrors": 0,
+      "caseId": "av1-main10",
+      "createStatus": -12906,
+      "decodeStatus": null,
+      "expectedFrames": 24,
+      "finishStatus": null,
+      "generation": 0,
+      "geometryErrors": 0,
+      "hardwareEvidence": "unknown",
+      "hardwareHint": false,
+      "outputFrames": 0,
+      "pixelFormats": [],
+      "policy": "hardwareRequired",
+      "propertyStatus": null,
+      "waitStatus": null
+    },
+    {
+      "callbackErrors": 0,
+      "caseId": "av1-main10",
+      "createStatus": -12906,
+      "decodeStatus": null,
+      "expectedFrames": 24,
+      "finishStatus": null,
+      "generation": 1,
+      "geometryErrors": 0,
+      "hardwareEvidence": "unknown",
+      "hardwareHint": false,
+      "outputFrames": 0,
+      "pixelFormats": [],
+      "policy": "hardwareRequired",
+      "propertyStatus": null,
+      "waitStatus": null
+    }
+  ],
+  "date": "2026-09-30",
+  "scope": "Device-specific AV1 feasibility only; no production decoder or software budget admission.",
+  "buildMode": "optimized-standalone-probe",
+  "performanceBaseline": false,
+  "minimumOSAcceptance": false,
+  "otherPlatforms": {
+    "ios": "not_run",
+    "android": "not_run"
+  },
+  "artifactLockSha256": "bd946e9d73226acbce582429b5808ad69e14eaac9f97b057cb213e01fb0925a0",
+  "pythonTests": 9,
+  "publicObservations": [
+    {
+      "caseId": "mkv-av1-opus",
+      "transport": "file",
+      "platform": "macos",
+      "mediaHash": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+      "outcome": "failed",
+      "stage": "load",
+      "code": "decoder.unsupported",
+      "category": "decoder",
+      "scope": "command",
+      "engine": "unknown",
+      "decoder": "unknown",
+      "firstFrame": false,
+      "audioTrackSelected": false,
+      "audioOutputVerified": false,
+      "pixelMarkersVerified": false,
+      "audioClockUs": null,
+      "seekProgress": false,
+      "completed": false,
+      "disposed": true
+    },
+    {
+      "caseId": "mkv-av1-opus",
+      "transport": "http",
+      "platform": "macos",
+      "mediaHash": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+      "outcome": "failed",
+      "stage": "load",
+      "code": "decoder.unsupported",
+      "category": "decoder",
+      "scope": "command",
+      "engine": "unknown",
+      "decoder": "unknown",
+      "firstFrame": false,
+      "audioTrackSelected": false,
+      "audioOutputVerified": false,
+      "pixelMarkersVerified": false,
+      "audioClockUs": null,
+      "seekProgress": false,
+      "completed": false,
+      "disposed": true
+    },
+    {
+      "caseId": "mkv-av1-opus",
+      "transport": "renamed-file",
+      "platform": "macos",
+      "mediaHash": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+      "outcome": "failed",
+      "stage": "load",
+      "code": "decoder.unsupported",
+      "category": "decoder",
+      "scope": "command",
+      "engine": "unknown",
+      "decoder": "unknown",
+      "firstFrame": false,
+      "audioTrackSelected": false,
+      "audioOutputVerified": false,
+      "pixelMarkersVerified": false,
+      "audioClockUs": null,
+      "seekProgress": false,
+      "completed": false,
+      "disposed": true
+    }
+  ],
+  "priorPublicObservationsUnchanged": 3,
+  "limitations": [
+    "M1/macOS27 only; other hardware may have AV1 decoders.",
+    "Second native creation is not product seek/Period reconstruction.",
+    "Main10 fixture is upconverted owned 8-bit content, not HDR or precision evidence.",
+    "Frame count/dimensions are not physical pixel, sound, AV sync or resource/thermal acceptance.",
+    "P08 A/B CPU/RSS/thermal measurements and software admission remain incomplete."
+  ],
+  "invalidInitialRun": {
+    "reason": "Sandbox AVC control failed with -12911; excluded from device conclusion.",
+    "rawLogSha256": "1505a7c9e5ae86ce3a5767ecce8a62a37a76e02a5c30c5b721b8b2cffeb101ea"
+  },
+  "logs": {
+    "evidence-red.log": {
+      "sha256": "fa9485353189652d811f267d74d276ead8b92d3013ba6ac7f05351c058b610be",
+      "bytes": 1012
+    },
+    "status-red.log": {
+      "sha256": "03f5a3e11f1e139b61b5032bf02318e718e0fe5dca51073c8c93f08f3ae7ec16",
+      "bytes": 753
+    },
+    "unit-final.log": {
+      "sha256": "d9d734ee1c2de67b748aeef1c4126433aa438ad8375ca953916f12b1df11414d",
+      "bytes": 107
+    },
+    "fixtures.log": {
+      "sha256": "ca5445cff69c3d671f720cd71bbc0a2c878ed53b5163bd20c250303ac5e43712",
+      "bytes": 1490
+    },
+    "public-av1.log": {
+      "sha256": "67e23573715e7eb134437e12d5134923db55b4b12ebda0561bc00110241abd17",
+      "bytes": 53082
+    },
+    "build.log": {
+      "sha256": "d94505af5b28e5fed81ecd4577980f00fc6c4ec48b505dc07e73118c8cb1e46e",
+      "bytes": 873
+    },
+    "avc-control.jsonl": {
+      "sha256": "40e218f1716df05044e358b608cc7e72c54c978602d0649a1a6d5f999f94eb1f",
+      "bytes": 1814
+    },
+    "av1-main8.jsonl": {
+      "sha256": "89faba7fc91b92fae91cba7a47300ffaddfc6aad761d8b4a375c6941e1496931",
+      "bytes": 1862
+    },
+    "av1-main10.jsonl": {
+      "sha256": "f1eabf1a5a0af88b89db5f69f40b02d3f653b32365d71edb1e5665cbd4993335",
+      "bytes": 1868
+    }
+  },
+  "validationSourceFingerprints": {
+    "tool/decoder_probe/test_evidence.py": "85cd54eb1f808588864586c0da3547831bb32552e97f9a704c68cded4ba26cd0",
+    "tool/decoder_probe/prepare_fixtures.py": "51ecbd878defa88e906554f164319ff7a6874ff76bf373eb7ee61d790e843280",
+    "tool/check_foundation.sh": "49812f7b7a0bc1c7dd7096b54b6848fcf8b91f79c1b0ffe91e5991b5de782ed7"
+  },
+  "review": {
+    "rounds": 1,
+    "critical": 0,
+    "important": 0,
+    "factualDocumentationCorrection": "AVC control is Constrained Baseline, not High; corrected README and report to match fixture, manifest and avcC profile_idc=0x42.",
+    "deferredFindings": []
+  }
+}

@@ -131,3 +131,5 @@ expect(failure.retryable, isFalse);
 2026-09-30 P03 Vorbis切片：普通Matroska mono/stereo 44.1/48k通过native FFmpeg解码、200ms预解码、PCM目标裁剪及活动音轨切换；零CodecDelay与严格策略边界明确。64项macOS原生回归、5项公开Vorbis策略/切轨、3条严格格式路径通过；无商业SDK，Xiph参考库仅测试使用。物理输出/多声道/WebM视频/跨平台仍待完成，Task1/Task2不勾选；完整矩阵证据见P03报告。
 
 2026-09-30 P03 VP9切片：普通可seek Matroska/WebM Profile0、8-bit420 SDR固定尺寸/可见单帧包接入系统硬解，每次创建/seek重建均验证实际hardware；未引入VP9软件decoder或商业SDK。VP9/Opus file/http/改名三路径和3项异常策略已实测通过，原生67项与路由矩阵7项通过；Vorbis旧样本非零CodecDelay继续明确拒绝。完整Task1/Task2/Task3不勾选；AV1、广泛VP9 Profile、物理影音/最低系统/跨端验收仍开放，最终矩阵见P03报告。
+
+2026-09-30 P03 Task3推进AV1实际会话调查：M1/macOS27下AVC对照6次×96帧硬解通过，AV1 Main8/Main10三策略×两次创建共12次均-12906。新增可复用探测、完整性/对照门禁，未启用产品AV1。P08资源/热基线缺失，软件预算保持未测不准入；不得套Android限额。下一步补P08测量或在AV1硬解设备采证，Task1/2/3和CAP均仍开放，详见P03报告。

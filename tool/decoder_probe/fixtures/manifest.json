@@ -1,0 +1,63 @@
+{
+  "sourceLicense": "owned-generated project color/tone fixtures",
+  "ffmpegVersion": "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers",
+  "tenBitDerivation": "Re-encode the owned 8-bit video to 10-bit sample storage; not a native 10-bit precision or HDR reference.",
+  "tenBitArguments": [
+    "-map",
+    "0:v:0",
+    "-an",
+    "-t",
+    "1",
+    "-c:v",
+    "libsvtav1",
+    "-preset",
+    "12",
+    "-crf",
+    "35",
+    "-pix_fmt",
+    "yuv420p10le",
+    "-svtav1-params",
+    "lp=2"
+  ],
+  "cases": [
+    {
+      "caseId": "avc-control",
+      "fixture": "avc-control.json",
+      "sha256": "93957de58c49add03ed809f558c69d49f7895787775ade091888c7b5bd4ecd65",
+      "containerSha256": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+      "ownedSource": "packages/yl_player/example/assets/test_media/format_matrix/mp4-avc-aac.mp4",
+      "ownedSourceSha256": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+      "frames": 96,
+      "bitDepth": 8,
+      "profile": "Constrained Baseline",
+      "width": 320,
+      "height": 180
+    },
+    {
+      "caseId": "av1-main8",
+      "fixture": "av1-main8.json",
+      "sha256": "368c0d598cf95971d07af5722fc567ba3dd29ad5c3f08c1ccd0d4be8f940bbfb",
+      "containerSha256": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+      "ownedSource": "packages/yl_player/example/assets/test_media/format_matrix/mkv-av1-opus.mkv",
+      "ownedSourceSha256": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+      "frames": 96,
+      "bitDepth": 8,
+      "profile": "Main",
+      "width": 320,
+      "height": 180
+    },
+    {
+      "caseId": "av1-main10",
+      "fixture": "av1-main10.json",
+      "sha256": "bf899306e78b59d58d2059361b175a8ca4266040b3a1f2dcce88f58e1b684c19",
+      "containerSha256": "d1b883713b2fd2ba795f44181bde287f108e6ebedd68b1807702e93742253909",
+      "ownedSource": "packages/yl_player/example/assets/test_media/format_matrix/mkv-av1-opus.mkv",
+      "ownedSourceSha256": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+      "frames": 24,
+      "bitDepth": 10,
+      "profile": "Main",
+      "width": 320,
+      "height": 180
+    }
+  ]
+}

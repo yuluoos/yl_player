@@ -452,3 +452,18 @@ Apple源同步iOS668/macOS586；macOS原生45项生命周期/硬解证据+18音�
 最终公开验收：VP9/Opus三条严格路径通过硬件session、首帧、2s/1.25s/0跳转、结束与释放；完整矩阵另在每次VP9重建后断言hardware。3项策略测试验证严格资源策略拒绝、不支持Profile保留原会话，以及seek后的颜色范围变化明确拒绝。已有路由策略矩阵7项通过（加上原生67项共74项定向测试），Dart错误21项、目录8项、218项帧头检查及静态分析通过。原音频31、Opus32轮162876、Vorbis8组25892、Opus解复用844及FEL回归保持通过。
 
 完整67项矩阵符合逐项基线：53条正常播放生命周期完成、9条有效媒体支持缺口、5条损坏输入拒绝。61条非VP9原始观测及21份原媒体/元数据保持不变。VP9/Vorbis旧样本非零CodecDelay仍被拒绝，错误由container.unsupported具体化为decoder.audio_vorbis_unsupported；不替换素材、不计为成功。证据及最终源码/日志指纹见[macos-vp9-observations.json](../../../tool/media_matrix/macos-vp9-observations.json)。只完成本轮受限VP9硬解增量，未完成P03 Task1/Task2/Task3整体；AV1、广泛VP9模式、物理像素/声音/同步、iOS/最低系统与跨端验收仍开放。下一项继续AV1硬件证据/软件预算边界核查，不从本机AV1提示false推广其他设备。
+
+
+## 2026-09-30 AV1 会话可行性与软解准入边界
+
+起点`1da51a6`；本轮推进Task3的设备证据，不启用生产AV1解码或新增商业SDK/FFmpeg模块。工具见[decoder_probe](../../../tool/decoder_probe/README.md)。固定矩阵为AVC Constrained Baseline 8-bit对照、AV1 Main 8-bit、AV1 Main 10-bit，各320×180；三种decoder策略各创建两次独立VT会话，共18条。10-bit是原创8-bit素材重新编码到10-bit存储，仅验证该编码输入形态，不是原生10-bit精度或HDR参考。测试使用Host FFmpeg制备和独立解码，依赖不进入产品。
+
+当前Apple M1/MacBookPro17,1、macOS27.0(26A428)下：AVC六次均严格CFBoolean硬解、96/96输出帧、尺寸正确，无decode/flush/wait/callback错误；AV1两种位深的12次实际创建全部返回`kVTCouldNotFindVideoDecoderErr`(-12906)，无session硬件属性和输出帧。每条原始结果均保留；第二次创建仅是独立原生重建，不能冒充播放器seek或跨Period验收。注册补充decoder后AV1提示仍false；此提示不单独参与成功计数。
+
+首次沙箱内AVC对照也返回-12911，说明该运行不具备有效设备推断条件，不能归入“设备不支持”。允许系统解码服务访问后对照通过。收集器要求所有对照成功和完整矩阵，保留失败/超时的原始文件，不给缺行结果生成能力结论；仅-12906计找不到decoder，malfunction单独计创建失败。每个探测子进程30秒期限，构建120秒期限；它们是测量工具终止界限，**不是生产软解CPU/RSS/热预算**。
+
+P08-A/B仍没有合格的Apple AV1软解基线；没有复用Android AVC/HEVC限额，也没有以96帧探测或host FFmpeg可解作为产品软解准入。因此softwareBudget记录`unmeasured_not_admitted`，productionEnabled保持false。后续需在AV1硬解设备上重跑Main8/Main10输入及输出/策略/重建，或先完成候选软件decoder的P08资源/热/持续负载基线并冻结逐档预算。Apple官方[M3资料](https://www.apple.com.cn/newsroom/2023/10/apple-unveils-m3-m3-pro-and-m3-max-the-most-advanced-chips-for-a-personal-computer/)列有AV1硬解，当前M1失败不能推广至全部Apple设备。iOS/Android/最低系统/Intel未由本探测验收。
+
+公开播放器AV1 file/http/renamed-file三项基线匹配，三条原始观测仍是load阶段`decoder.unsupported`，0首帧；不是三条播放成功。未改产品或原媒体，未重复无关67项全矩阵。单元测试和最终证据/复审记录见后续段落；P03Task3和CAP-DECODE/FORMAT仍未完成。
+
+最终9项工具单测通过（缺实现RED→8项GREEN；malfunction错误归类RED→9项GREEN）；测试发现已接入check_foundation，不重复无关全仓测试。18条原生观测完整收集、3条公开缺口与上轮完全相同，记录见[macos-av1-observations.json](../../../tool/decoder_probe/macos-av1-observations.json)。单轮独立复审无Critical/Important；纠正文档中的AVC对照Profile误写，真实为Constrained Baseline。Swift探测编译仍有CFTypeRef?作为valueOut原始指针的既有API写法警告，实际CFBoolean/输出对照均通过；公开Flutter运行提示无法前置窗口，不作物理显示验收。本轮完成可行性证据工具与当前设备记录，AV1播放能力仍未完成。

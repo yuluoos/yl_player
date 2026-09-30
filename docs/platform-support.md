@@ -572,3 +572,11 @@ Vorbis restrictions still apply, including Vorbis zero CodecDelay. AV1 remains
 unsupported by this route. See the [P03 report](superpowers/reports/2026-09-26-remaining-03-formats-decoding.md)
 for measured platform coverage; this does not establish physical output, sync,
 minimum-system or cross-platform acceptance.
+
+
+2026-09-30 AV1 evidence remains a gap: the owned Main 8/10-bit VideoToolbox
+probe cannot create a decoder on this M1/macOS27 for any of the three policies,
+while its AVC control fully decodes in hardware. This is device-specific and
+does not imply that AV1-capable Apple devices lack a decoder. The product route
+is unchanged; no Apple AV1 software budget is measured or admitted. See the
+[P03 report](superpowers/reports/2026-09-26-remaining-03-formats-decoding.md).
