@@ -1,6 +1,70 @@
 # Playback measurements
 
-This first slice measures **public FirstFrame event receipt**, from immediately
+## macOS process resources (instrumentation smoke)
+
+From the repository root, choose a **new** output directory:
+
+```sh
+python3 -B tool/playback_benchmark/run_resources.py /private/tmp/yl-resource-run
+# Optional second argument: absolute path to the Flutter executable.
+python3 -B tool/playback_benchmark/resources.py /private/tmp/yl-resource-run/observations.jsonl
+```
+
+This explicit runner builds a test-only native sampler, embeds its bytes using a
+Dart define, and loads it from the app's own temporary container. It does not
+change app sandbox entitlements or link the sampler into the shipped package.
+The library is loaded once and reused across three predeclared attempts in one
+app process. The test requires macOS, Xcode tools and the example's existing
+dependencies; it is not part of the unconfigured integration-test entry point.
+`flutter test test/resource_series_test.dart` runs the injected sampler and
+creation-lifetime unit tests without loading the dylib.
+
+The owned four-second `format_matrix/mkv-avc-aac.mkv` runs through the public
+player with app-managed audio. Each attempt observes two seconds idle, opening
+through public first-frame receipt, playing until media position reaches two
+seconds, disposal, and two seconds after disposal. The playing window is not
+necessarily two wall-clock seconds. Recorded engine/decoder, geometry, selected
+audio and continuing timeline validate the measurement path; physical picture,
+audio and display presentation remain unverified.
+
+Native samples use monotonic microseconds, cumulative self-process user+system
+CPU microseconds, RSS bytes and physical footprint bytes. Nominal cadence is
+250 ms; actual timestamps determine intervals. CPU 100% means one core and can
+exceed 100%. Per-phase means are weighted by observed elapsed time; missing
+samples and phase boundaries break CPU intervals. A singleton has unknown CPU,
+not zero. The summary retains each phase's sample count/window, covered CPU
+duration, memory first/last/peak, unavailable points, and all trial outcomes.
+It rejects counter resets, backward phases/clocks and incomplete/mixed runs.
+System thermal state is not a temperature; power/thermal unknown values remain
+explicit. Temperature, GPU and media-ledger memory are unmeasured (`null`).
+
+Creation has a ten-second deadline and late instances retain bounded disposal
+ownership. Load/play/first-frame/disposal have local deadlines; failure or
+timeout aborts later playback while emitting skipped identities. The app test
+has a four-minute outer timeout; the wrapper has a ten-minute build/run deadline
+and terminates only its owned process group. Build/setup/outer timeout failures
+retain logs and a failed result, never a zero-sample success. They may lack final
+trial rows; incomplete evidence must not be treated as passed.
+
+The fresh output directory retains raw playback/build logs, JSONL, result JSON,
+source and build-config hashes (including Podfile.lock, project/xcconfig/podspec,
+entitlements and manifests), dependency/artifact/media/sampler identity, and
+device/OS. `sourceHash` covers the recorded path map, not all external SDK/tool
+binaries or ignored generated caches. Failed and intermediate runs remain
+separate; never rewrite an old result's hashes to match later edits.
+
+These are whole **debug-process** observations, including Flutter, the test
+runner and sampling overhead. Cache state is uncontrolled; early/late trials
+can reflect warmup and allocator retention. RSS and physical footprint are
+distinct; a short post-dispose observation cannot prove absence of leaks or
+require RSS to return to its initial value. No steady-state, long-run growth,
+formal performance baseline, decoder-only cost, SLO or software-decoder budget
+is admitted. Both admission flags stay false. See the checked-in
+`macos-resource-observations.json` and the P08 report for the measured slice.
+
+## First-frame event receipt
+
+The first slice measures **public FirstFrame event receipt**, from immediately
 before calling public `Load`, in one Dart monotonic clock. It does not subtract a
 native `occurredAt` epoch from a Dart timestamp. Events arriving before Load
 returns are retained and matched to the returned session; stale/duplicate events

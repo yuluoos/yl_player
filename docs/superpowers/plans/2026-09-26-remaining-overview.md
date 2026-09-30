@@ -198,3 +198,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-09-30 P03 VP9切片：普通可seek Matroska/WebM Profile0、8-bit420 SDR固定尺寸/可见单帧包接入系统硬解，每次创建/seek重建均验证实际hardware；未引入VP9软件decoder或商业SDK。VP9/Opus file/http/改名三路径和3项异常策略已实测通过，原生67项与路由矩阵7项通过；Vorbis旧样本非零CodecDelay继续明确拒绝。完整Task1/Task2/Task3不勾选；AV1、广泛VP9 Profile、物理影音/最低系统/跨端验收仍开放，最终矩阵见P03报告。
 
 2026-09-30 P03 Task3推进AV1实际会话调查：M1/macOS27下AVC对照6次×96帧硬解通过，AV1 Main8/Main10三策略×两次创建共12次均-12906。新增可复用探测、完整性/对照门禁，未启用产品AV1。P08资源/热基线缺失，软件预算保持未测不准入；不得套Android限额。下一步补P08测量或在AV1硬解设备采证，Task1/2/3和CAP均仍开放，详见P03报告。
+
+2026-09-30 P08 Task1补齐macOS进程资源采样子项：CPU/RSS/physical footprint、电源和系统热状态，三次公开AVC硬解播放均通过、94点无缺失；25项Python、8项Dart与静态检查通过。仅debug测量链路，正式呈现/受控profile-release基线、GPU/媒体账本及长期资源仍未完成；完整Task1/2和AV1软件预算继续开放，详见P08报告。

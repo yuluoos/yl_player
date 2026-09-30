@@ -51,6 +51,8 @@
 
 2026-09-27：公开首帧事件计时 probe、严格 JSONL 统计和 macOS 三次 smoke 已实现；事件到达不等同最终可见呈现，暂不冻结性能目标。完整状态见[执行报告](../reports/2026-09-26-remaining-08-performance-release.md)。
 
+2026-09-30：补齐 macOS 进程内 CPU/RSS/physical footprint、电源和系统热状态采样；预定三次公开 AVC 播放均通过，94 点无缺失。创建超时/迟到释放、阶段隔离和按实际时间加权统计已测试；原始试次与构建配置指纹归档。该子项仅为 debug 测量工具 smoke，GPU/媒体账本、正式呈现、受控基线和 AV1 软件预算仍未完成，完整 Task 1/2 不勾选。
+
 - [ ] 定义每次运行记录：runId、caseId、commit、sourceHash、buildMode、dependency/artifact版本、device/OS/架构、power/thermal、output、mediaHash、networkProfile、cacheState、attempt、outcome、startedUs、firstPresentedUs、seek/同步/资源观察。未观察值用 null，不用 0。
 - [ ] 在公共 Load 调用前启动单调 Stopwatch，关联本次 Session 首次真实呈现事件；额外记录 JS/许可证/网络分阶段。禁止在 ready 或 Load 返回时才开始计时。
 - [x] 新统计工具先写失败测试，定义接口：
