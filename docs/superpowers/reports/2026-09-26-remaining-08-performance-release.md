@@ -181,3 +181,18 @@ profile 实跑预先冻结三次、无预热剔除、已有本地 AVC/AAC 素材
 公开事件到达间隔为 138396、33468、32577 μs；n=3、p50=33468、nearest-rank p95=138396 μs，仅为工具 smoke 的事件统计，不能称首帧呈现延迟、稳定性能目标或相对 Debug 的优化效果。实际 kProfileMode 与上下文一致；release 未实跑。前台激活仍失败，且日志有 integration_test native plugin 未检测到提示；本次通过由 VMService integrationDriver 成功返回和完整三条最终行共同确认，不把该提示忽略为原生 XCTest 集成已通过。编译 warning 原样留在日志。
 
 本项完成基线准入修复、观测边界审计及 profile 实跑入口验证，**完整 P08 Task1/2 仍未完成**。无暂停真实呈现、受控缓存/电源/热状态与音画资格仍是正式基线缺口；不冻结阈值、不声明物理输出或 Intel/universal/release 已验收。
+
+
+## 2026-09-30 无暂停系统渲染统计
+
+起点 `91d20ac`。本项推进持续播放质量的观测工具，不再扩展公开首帧事件 smoke。示例宿主在已有自有窗口/显示层探测通道增加只读 `performance` 方法，通过 macOS 14.4+ 系统 API 获取累计总帧、丢帧、损坏帧和累计帧延迟；不暂停、不改媒体时钟、不拦截解码/输出。原生回调有 2 s 截止、只回复一次，迟到结果忽略；Dart 通道 3 s 截止。只有示例 Debug 或显式 `YL_VIDEO_PERFORMANCE_PROBE` profile 构建启用，未改生产包 API、默认构建开关或部署下限。
+
+独立入口 `video_performance_test.dart` 预定三次，每次新播放器加载既有 BT.709 自有素材，公开首帧后约每 250 ms 采样，到媒体位置至少 3 s，窗口内没有 pause/seek/换会话。10 s 轮询和 80 条上限；缺少统计用 null 留样。只计算同一计数序列的首末差值，要求至少两次有效观察且总计数增长；负值、非有限值、时钟倒退或累计计数重置不能通过。schema/时钟不合法的载荷不直接写日志，以免泄漏任意字段或不可序列化数据，失败试次仍完整保留；有效的 reset/unavailable 样本在拒绝前留存。采样后继续使用已有四步独立清理；失败/未确认清理阻止下一次播放。
+
+6 项新增行为测试覆盖缺失值、计数增长、零/不变计数、各累计值重置、时钟倒退、非法值、不可用、不可变样本及数量上限，先观察缺实现 RED，再通过合计 **21/21** 相关 Dart 测试；三文件静态分析无问题。首轮 profile 编译发现 AVFoundation 原先依赖另一个 Debug 块的 import，补成观测块自身 import；保留失败运行 exit1/0试次，最终用新身份重新编译。原生 deadline 的故障分支未做真实系统回调挂起注入，Dart 覆盖不可用输入和既有创建/清理故障分支，不混称原生故障注入通过。
+
+最终 `video-counters-20260930T142752Z` profile/arm64 连续播放 **3/3**，均 managedFallback/hardware，合计 39 条有效 schema 采样（33 条系统统计、6 条初始 noLayer），三个窗口各增加 64 个系统总帧计数，丢帧/损坏帧增量均 0；每次释放后 layerCount=0、cleaned=true。观察窗口分别为 2659601、2651892、2671993 μs，是首末回调被 Dart 接收的间隔。系统累计帧延迟增量分别为 32.42215945、31.74829152、32.42212452 s；这是跨帧累计值，不能写成一次播放卡顿了 32 s，也不除以帧数宣称单帧实际延迟或 AV 同步误差，尤其本路线使用 DisplayImmediately。原样保留这些较大值，尚未赋予产品性能阈值含义。
+
+共用通道的旧 Debug 暂停像素回读另跑 **3/3** 通过，四段九点检查和清理正常。两套数据分别保留，不能把 Debug 像素正确性当成 profile/物理画面已验收。[完整运行证据](../../../tool/playback_benchmark/macos-video-performance-observations.json)含最终原始样本、编译失败、旧行为回归及日志哈希；最终 sourceHash `4d7742e2abdb76c09ad1be79960a16667e4cfb1e1352d1b0c9425e777cc35080` 与源码/依赖/原生制品/媒体逐项一致，profile 宿主与 AOT 制品均 arm64。前台激活失败及 integration_test native plugin 提示继续留存，不冒充原生 XCTest 或屏幕输出验收。
+
+本子项完成无暂停系统渲染统计工具，**不产生首帧呈现时间、正式基线、优化百分比或全量无丢帧承诺**。`firstPresentedUs=null`、performanceBaseline=false、physicalOutputVerified=false。完整 P08 Task1/2、长播资源/同步/物理输出和跨设备门槛仍开放。

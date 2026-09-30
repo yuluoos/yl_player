@@ -11,6 +11,8 @@ class MainFlutterWindow: NSWindow {
     RegisterGeneratedPlugins(registry: flutterViewController)
 #if DEBUG
     YlProtectedViewProbe.register(flutterViewController.registrar(forPlugin: "YlProtectedViewProbe"))
+#endif
+#if DEBUG || YL_VIDEO_PERFORMANCE_PROBE
     YlDisplayReadbackProbe.register(flutterViewController.registrar(forPlugin: "YlDisplayReadbackProbe"), window: self)
 #endif
 
@@ -19,21 +21,27 @@ class MainFlutterWindow: NSWindow {
 }
 
 // Example-only inspection of owned clear SDR fixtures; no screen capture or
-// production API. This is a paused display-layer buffer, not compositor timing.
-#if DEBUG
+// production API. Pixel readback pauses; performance counters do not. Neither
+// supplies compositor timing. Profile requires an explicit test-only build flag.
+#if DEBUG || YL_VIDEO_PERFORMANCE_PROBE
+import AVFoundation
 import CoreImage
 private enum YlDisplayReadbackProbe {
   static func register(_ registrar: FlutterPluginRegistrar, window: NSWindow) {
     let channel = FlutterMethodChannel(name: "yl_player_example/display_readback", binaryMessenger: registrar.messenger)
     let context = CIContext(options: [.cacheIntermediates: false])
     channel.setMethodCallHandler { [weak window] call, reply in
-      guard call.method == "snapshot", call.arguments == nil else { reply(FlutterMethodNotImplemented); return }
+      guard ["snapshot", "performance"].contains(call.method), call.arguments == nil else { reply(FlutterMethodNotImplemented); return }
       // Flutter macOS method handlers execute on the platform main thread.
       guard Thread.isMainThread else {
         reply(FlutterError(code: "probe.thread", message: "Display probe unavailable", details: nil)); return
       }
       var result: [String: Any] = ["status": "noLayer", "layerCount": 0, "ready": false,
         "width": NSNull(), "height": NSNull(), "pixels": NSNull(), "colorMetadata": NSNull()]
+      if call.method == "performance" {
+        result = ["status": "noLayer", "layerCount": 0, "totalFrames": NSNull(),
+          "droppedFrames": NSNull(), "corruptedFrames": NSNull(), "totalFrameDelaySeconds": NSNull()]
+      }
       guard #available(macOS 14.4, *) else { result["status"] = "unsupported"; reply(result); return }
       var visited = Set<ObjectIdentifier>()
       var displays: [AVSampleBufferDisplayLayer] = []
@@ -55,6 +63,32 @@ private enum YlDisplayReadbackProbe {
       result["layerCount"] = displays.count
       guard !exhausted, displays.count <= 1 else { result["status"] = "ambiguous"; reply(result); return }
       guard let display = displays.first else { reply(result); return }
+      if call.method == "performance" {
+        // Serialize completion/deadline on the main queue; a late callback never
+        // answers twice or keeps a timed-out caller waiting indefinitely.
+        var pending = true
+        let empty = result
+        let deadline = DispatchWorkItem {
+          guard pending else { return }; pending = false
+          var timedOut = empty; timedOut["status"] = "unavailable"; reply(timedOut)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: deadline)
+        display.sampleBufferRenderer.loadVideoPerformanceMetrics { metrics in
+          DispatchQueue.main.async {
+            guard pending else { return }; pending = false; deadline.cancel()
+            var snapshot = empty
+            if let metrics {
+              snapshot["status"] = "observed"
+              snapshot["totalFrames"] = metrics.totalNumberOfFrames
+              snapshot["droppedFrames"] = metrics.numberOfDroppedFrames
+              snapshot["corruptedFrames"] = metrics.numberOfCorruptedFrames
+              snapshot["totalFrameDelaySeconds"] = metrics.totalAccumulatedFrameDelay
+            } else { snapshot["status"] = "noMetrics" }
+            reply(snapshot)
+          }
+        }
+        return
+      }
       result["status"] = "noImage"
       result["ready"] = display.isReadyForDisplay
       guard display.isReadyForDisplay,

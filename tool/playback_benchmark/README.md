@@ -22,8 +22,9 @@ run, as in `macos-display-readback-observations.json`. This explicit Debug-only
 example channel uses macOS 14.4+ `AVSampleBufferVideoRenderer.displayedPixelBuffer()`;
 unsupported systems fail the probe without changing package deployment targets.
 It traverses only the example window, requires exactly one display layer, and
-does not capture the screen or protected content. The channel does not exist in
-profile/release builds and does not change the production player package.
+does not capture the screen or protected content. The channel is absent from ordinary profile/release builds. The continuous
+counter test below explicitly opts its example profile build into the probe;
+this does not change the production player package.
 
 Three predeclared attempts play the owned `benchmark_sdr.mkv`; each pauses at
 media positions at least 0.25/1.25/2.25/3.25 seconds. The API requires a paused
@@ -282,3 +283,54 @@ claims and the JS/license phase observations. P08-B will collect controlled,
 correct-content baselines and freeze numeric targets, then expand to seek,
 channel changes, buffering, synchronization, CPU/RSS/GPU/thermal and endurance.
 No target values are invented by these tools.
+
+
+## Continuous renderer counters (macOS 14.4+)
+
+`video_performance_test.dart` observes the existing display layer during playback
+without pause or seek. It loads the owned `benchmark_sdr.mkv` once per attempt,
+waits for the public first-frame event, polls at a nominal 250 ms cadence until
+media position reaches 3 seconds, and requires increasing counters from at least
+two valid snapshots. Three attempts are declared before launch; 10-second polling
+and 80-snapshot limits apply. No-layer/no-metrics samples remain in the record.
+Native callbacks have a two-second deadline; late callbacks are ignored. The Dart
+channel has a three-second deadline. Failure/timeout/unavailable or counter reset
+aborts later attempts as skipped. Four cleanup steps remain independently bounded.
+
+For the available Apple Silicon host, from the example directory:
+
+```sh
+FLUTTER_XCODE_ARCHS=arm64 \
+FLUTTER_XCODE_SWIFT_ACTIVE_COMPILATION_CONDITIONS=YL_VIDEO_PERFORMANCE_PROBE \
+flutter drive -d macos --profile --no-pub \
+  --driver=test_driver/integration_test.dart \
+  --target=integration_test/video_performance_test.dart \
+  --dart-define=YL_VIDEO_METRICS_RUN_ID=owned-video-metrics-001
+```
+
+The Swift flag enables only the example's read-only probe in this explicit profile
+build. Ordinary profile/release builds and the production package are unchanged.
+This adds observation overhead, so it is not comparable with the prior profile
+run lacking this probe. Use fresh run/source/media/dependency/command identities;
+retain complete logs and all rows, including failed and skipped attempts.
+
+Schema 1 (`continuous-renderer-counters`) uses `YL_VIDEO_METRICS_ROW`, separate
+from the first-frame summarizer. Each sample has status, layerCount, totalFrames,
+droppedFrames, corruptedFrames, totalFrameDelaySeconds and Dart receivedUs. Missing
+values are null. Samples are immutable; negative/nonfinite values, unknown fields,
+clock reversal and counter resets cannot produce a successful delta. Only
+schema-valid snapshots with an accepted receipt time enter the raw sample list;
+malformed payloads are not echoed, and the failed trial still remains. Valid
+reset/unavailable snapshots are retained before rejection. Delta spans
+the first and last observed snapshots, not the whole media duration or wall time
+of the renderer's internal sampling. It does not subtract clocks across APIs.
+
+These are raw system renderer counters. `totalFrames` includes frames that would
+have displayed without drops, not proof each frame displayed; do not call
+`totalFrames - droppedFrames` physical presentation. Accumulated frame delay is
+not user-visible stall duration or AV sync error, particularly for this player's
+DisplayImmediately sample path. No ratio, threshold, first-frame timestamp or
+physical-output claim is inferred. `firstPresentedUs` stays null and both
+performanceBaseline/physicalOutputVerified remain false even on passing trials.
+The earlier pixel-reference checks are separate evidence, not profile pixel or
+audio validation. Profile counters alone cannot close full P08 Task 1/2.
