@@ -9,6 +9,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:yl_player/yl_player.dart';
 import 'support/apple_strict_support.dart';
 import 'support/resource_series.dart';
+import 'support/display_cleanup.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +26,11 @@ void main() {
           encodedLibrary.length > 131072) {
         throw const FormatException('Resource probe configuration is required');
       }
-      const attempts = 3;
+      const profileCycles = bool.fromEnvironment('YL_RESOURCE_PROFILE_CYCLES');
+      if (profileCycles && !kProfileMode) {
+        throw const FormatException('Resource cycles require profile mode');
+      }
+      const attempts = profileCycles ? 10 : 3;
       final mode = kReleaseMode
           ? 'release'
           : kProfileMode
@@ -33,10 +38,16 @@ void main() {
           : 'debug';
       Map<String, Object?> Function()? readResources;
       Directory? samplerDirectory;
-      addTearDown(() async => samplerDirectory?.delete(recursive: true));
+      addTearDown(
+        () async => samplerDirectory
+            ?.delete(recursive: true)
+            .timeout(const Duration(seconds: 5)),
+      );
       var aborted = false;
       final outcomes = <String>[];
       for (var attempt = 1; attempt <= attempts; attempt++) {
+        final cleanup = DisplayTrialCleanup();
+        var cleanupAttempted = false;
         ResourceSeries? series;
         Timer? timer;
         Directory? directory;
@@ -46,6 +57,24 @@ void main() {
         var cleaned = false;
         var engine = 'unknown';
         var decoder = 'unknown';
+        void emitObservation() => debugPrint(
+          'YL_RESOURCE_OBSERVATION=${jsonEncode({'runId': runId, 'attempt': attempt, 'outcome': outcome, 'samples': series?.observations ?? []})}',
+          wrapWidth: 100000,
+        );
+        Future<bool> releaseTrial() {
+          cleanupAttempted = true;
+          return cleanup.run([
+            () async {
+              await player?.dispose();
+              player = null;
+            },
+            () => tester.pumpWidget(const SizedBox.shrink()),
+            () async {
+              await directory?.delete(recursive: true);
+            },
+          ]);
+        }
+
         if (!aborted) {
           try {
             if (readResources == null) {
@@ -84,7 +113,7 @@ void main() {
             });
             await Future<void>.delayed(const Duration(seconds: 2));
             series.enter('opening');
-            player = await createResourceOwner<YlPlayerController>(
+            final activePlayer = await cleanup.create<YlPlayerController>(
               YlPlayerController.create(
                 options: const YlPlayerOptions(
                   audioPolicy: YlAudioPolicy.appManaged,
@@ -93,29 +122,32 @@ void main() {
               timeout: const Duration(seconds: 10),
               release: (latePlayer) => latePlayer.dispose(),
             );
+            player = activePlayer;
             await tester.pumpWidget(
-              MaterialApp(home: YlPlayerView(controller: player)),
+              MaterialApp(home: YlPlayerView(controller: activePlayer)),
             );
-            final session = await player
+            final session = await activePlayer
                 .load(YlFileSource(file.path, format: YlMediaFormat.matroska))
                 .timeout(const Duration(seconds: 20));
             await session.play().timeout(const Duration(seconds: 10));
             await session.firstFrame.timeout(const Duration(seconds: 10));
-            engine = player.state.engine.name;
-            decoder = player.state.decoderMode.name;
-            expect(player.state.videoGeometry, isNotNull);
-            expect(player.state.audioTracks.any((t) => t.isSelected), isTrue);
+            engine = activePlayer.state.engine.name;
+            decoder = activePlayer.state.decoderMode.name;
+            expect(activePlayer.state.videoGeometry, isNotNull);
+            expect(
+              activePlayer.state.audioTracks.any((t) => t.isSelected),
+              isTrue,
+            );
             series.enter('playing');
             await stateWhere(
-              player,
+              activePlayer,
               (s) => s.timeline.position >= const Duration(seconds: 2),
             );
-            expect(player.state.failure, isNull);
+            expect(activePlayer.state.failure, isNull);
             series.enter('disposing');
-            await player.dispose().timeout(const Duration(seconds: 5));
-            player = null;
-            await tester.pumpWidget(const MaterialApp(home: SizedBox.shrink()));
-            cleaned = true;
+            emitObservation();
+            cleaned = await releaseTrial();
+            if (!cleaned) throw StateError('Resource cleanup unconfirmed');
             series.enter('disposed');
             await Future<void>.delayed(const Duration(seconds: 2));
             series.sample();
@@ -126,23 +158,9 @@ void main() {
             outcome = 'failed';
           } finally {
             timer?.cancel();
-            if (!cleaned) {
-              try {
-                await player?.dispose().timeout(const Duration(seconds: 5));
-                await tester.pumpWidget(const SizedBox.shrink());
-                cleaned = true;
-              } catch (_) {
-                if (outcome != 'timeout') outcome = 'failed';
-              }
-            }
-            try {
-              await directory
-                  ?.delete(recursive: true)
-                  .timeout(const Duration(seconds: 5));
-            } catch (_) {
-              cleaned = false;
-              if (outcome != 'timeout') outcome = 'failed';
-            }
+            emitObservation();
+            if (!cleanupAttempted) cleaned = await releaseTrial();
+            if (!cleaned && outcome != 'timeout') outcome = 'failed';
             if (!cleaned || sampleFailed || outcome != 'passed') aborted = true;
           }
         }

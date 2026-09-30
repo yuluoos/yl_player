@@ -9,7 +9,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-from resources import summarize_trials
+from resources import summarize_trials, summarize_disposed_memory
 
 ROOT=Path(__file__).resolve().parents[2]
 EXAMPLE=ROOT/'packages/yl_player/example'
@@ -36,12 +36,15 @@ def run_logged(command, cwd, path, timeout):
             raise
 
 
-def collect(output, flutter):
+def collect(output, flutter, *, profile_cycles=False):
     output.mkdir(parents=True,exist_ok=False)
+    attempts=10 if profile_cycles else 3
+    mode='profile' if profile_cycles else 'debug'
     run='macos-resource-'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ')
     result=dict(schemaVersion=1,runId=run,runStatus='failed',stage='setup',purpose='instrumentation-smoke',
                 performanceBaseline=False,budgetAdmission=False,physicalOutput='not_verified',
-                cacheState='os-cache-uncontrolled',networkProfile='local-file',buildMode='debug')
+                cacheState='os-cache-uncontrolled',networkProfile='local-file',buildMode=mode,plannedAttempts=attempts,
+                protocol=dict(idleSeconds=2,playingUntilMediaSeconds=2,disposedSeconds=2,intervalMs=250))
     try:
         paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','--','packages','tool/playback_benchmark'],cwd=ROOT,text=True).splitlines()
         source={n:digest(ROOT/n) for n in sorted(set(paths)) if Path(n).suffix in (
@@ -50,6 +53,8 @@ def collect(output, flutter):
         dependencies={n:digest(ROOT/n) for n in ['pubspec.yaml','pubspec.lock',
             'packages/yl_player/example/pubspec.yaml','packages/yl_player/example/macos/Podfile.lock']}
         artifact='packages/yl_player_apple/tool/apple_ffmpeg/bridge-artifact.lock'
+        native='packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge'
+        result['artifactFingerprints']={native:digest(ROOT/native),artifact:digest(ROOT/artifact)}
         result.update(commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
             sourceFingerprints=source,sourceHash=hashlib.sha256(json.dumps(source,sort_keys=True,separators=(',',':')).encode()).hexdigest(),
             dependencies=dependencies,artifactLockSha256=digest(ROOT/artifact),
@@ -64,17 +69,29 @@ def collect(output, flutter):
             subprocess.run(['sh',str(HERE/'build_apple_resources.sh'),str(library)],stdout=log,stderr=log,timeout=60,check=True)
         result['samplerSha256']=digest(library)
         defines=output/'defines.json'
-        defines.write_text(json.dumps(dict(YL_RESOURCE_RUN_ID=run,YL_RESOURCE_LIBRARY_BYTES=base64.b64encode(library.read_bytes()).decode()))+'\n')
+        defines.write_text(json.dumps(dict(YL_RESOURCE_RUN_ID=run,YL_RESOURCE_PROFILE_CYCLES=profile_cycles,YL_RESOURCE_LIBRARY_BYTES=base64.b64encode(library.read_bytes()).decode()))+'\n')
         result['stage']='playback'
         command=[flutter,'test','integration_test/resource_benchmark_test.dart','-d','macos','--no-pub','--dart-define-from-file='+str(defines)]
+        if profile_cycles:
+            architecture=subprocess.check_output(['uname','-m'],text=True).strip()
+            if architecture not in ('arm64','x86_64'): raise ValueError('Unsupported host architecture')
+            result['architecture']=architecture
+            command=['env','FLUTTER_XCODE_ARCHS='+architecture,flutter,'drive','-d','macos','--profile','--no-pub',
+                '--driver=test_driver/integration_test.dart','--target=integration_test/resource_benchmark_test.dart',
+                '--dart-define-from-file='+str(defines)]
+        result['command']=command
         exit_code=run_logged(command,EXAMPLE,output/'playback.log',600)
         result['flutterExitCode']=exit_code
         trials=[]
         for line in (output/'playback.log').read_text().splitlines():
             if 'YL_RESOURCE_SERIES=' in line: trials.append(json.loads(line.split('YL_RESOURCE_SERIES=',1)[1]))
         (output/'observations.jsonl').write_text(''.join(json.dumps(r,separators=(',',':'))+'\n' for r in trials))
+        result['observations']=trials
         result['stage']='classification';result['summary']=summarize_trials(trials)
-        assert all(t['runId']==run and t['buildMode']=='debug' for t in trials)
+        assert all(t['runId']==run and t['buildMode']==mode and t['plannedAttempts']==attempts for t in trials)
+        if profile_cycles: result['disposedMemory']=summarize_disposed_memory(trials)
+        result['sourceIdentityVerified']=all(digest(ROOT/p)==v for p,v in source.items())
+        assert result['sourceIdentityVerified']
         result.update(runStatus='collected' if exit_code==0 else 'playback_failed',stage='complete',observations=trials)
     except (OSError,ValueError,TypeError,KeyError,AssertionError,subprocess.SubprocessError):
         pass
@@ -85,12 +102,15 @@ def collect(output, flutter):
 
 
 def main():
-    if len(sys.argv) not in (2,3):
-        print('Usage: run_resources.py NEW_DIRECTORY [FLUTTER_EXECUTABLE]',file=sys.stderr);return 2
-    flutter=sys.argv[2] if len(sys.argv)==3 else shutil.which('flutter')
+    args=sys.argv[1:]
+    profile_cycles=bool(args and args[0]=='--profile-cycles')
+    if profile_cycles: args=args[1:]
+    if len(args) not in (1,2):
+        print('Usage: run_resources.py [--profile-cycles] NEW_DIRECTORY [FLUTTER_EXECUTABLE]',file=sys.stderr);return 2
+    flutter=args[1] if len(args)==2 else shutil.which('flutter')
     if not flutter:
         print('Flutter executable is required.',file=sys.stderr);return 2
-    try: passed=collect(Path(sys.argv[1]).resolve(),flutter)
+    try: passed=collect(Path(args[0]).resolve(),flutter,profile_cycles=profile_cycles)
     except OSError:
         print('A fresh writable result directory is required.',file=sys.stderr);return 2
     print('Resource smoke collected; no budget or baseline is admitted.' if passed else

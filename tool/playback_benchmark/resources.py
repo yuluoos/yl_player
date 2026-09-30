@@ -84,6 +84,37 @@ def summarize_trials(trials):
                 budgetAdmission=False,performanceBaseline=False)
 
 
+def summarize_disposed_memory(trials):
+    """Compare acknowledged-disposal endpoints; never diagnose a leak."""
+    summarize_trials(trials)  # Exact identity, completeness and row validation.
+    ordered=sorted(trials,key=lambda t:t['attempt'])
+    endpoints=[]; previous=None; conditions=set(); eligible=len(ordered)>=2
+    for t in ordered:
+        rows=t['samples']
+        if rows:
+            if previous is not None and rows[0]['monotonicUs']<=previous:
+                raise ValueError('Overlapping resource trials')
+            previous=rows[-1]['monotonicUs']
+        conditions.update((r['power'],r['thermal']) for r in rows)
+        disposed=[r for r in rows if r['phase']=='disposed']
+        end=disposed[-1] if disposed else None
+        window=disposed[-1]['monotonicUs']-disposed[0]['monotonicUs'] if disposed else None
+        available=end is not None and end['status']=='ok'
+        endpoints.append(dict(attempt=t['attempt'],outcome=t['outcome'],
+            monotonicUs=end['monotonicUs'] if end else None,
+            sampledWindowUs=window, samples=len(disposed),
+            rssBytes=end['rssBytes'] if available else None,
+            footprintBytes=end['footprintBytes'] if available else None))
+        eligible &= t['outcome']=='passed' and available and len(disposed)>=2 and window>=1000000
+    eligible &= len(conditions)==1 and all('unknown' not in pair for pair in conditions)
+    first,last=endpoints[0],endpoints[-1]
+    return dict(endpoints=endpoints,conditionsStableAndKnown=len(conditions)==1 and all('unknown' not in pair for pair in conditions),
+        elapsedUs=last['monotonicUs']-first['monotonicUs'] if eligible else None,
+        deltaBytes=dict(rss=last['rssBytes']-first['rssBytes'],
+                        footprint=last['footprintBytes']-first['footprintBytes']) if eligible else None,
+        leakVerdict=None,performanceBaseline=False,budgetAdmission=False)
+
+
 def main():
     try:
         if len(sys.argv)!=2: raise ValueError('Invalid arguments')

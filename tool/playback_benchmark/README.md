@@ -334,3 +334,48 @@ physical-output claim is inferred. `firstPresentedUs` stays null and both
 performanceBaseline/physicalOutputVerified remain false even on passing trials.
 The earlier pixel-reference checks are separate evidence, not profile pixel or
 audio validation. Profile counters alone cannot close full P08 Task 1/2.
+
+
+## Profile load/dispose resource cycles
+
+```sh
+python3 -B tool/playback_benchmark/run_resources.py --profile-cycles \
+  /absolute/path/to/fresh-result-directory /absolute/path/to/flutter
+```
+
+The optional mode predeclares **10** sequential fresh-player trials in profile,
+using `flutter drive` and the host's single architecture. It retains the existing
+local AVC/AAC resource fixture and 250 ms sampling cadence. Each trial waits 2 s
+idle, plays until media position reaches 2 s, independently attempts disposal,
+view removal and temporary-media deletion (5 s each), then observes 2 s after
+acknowledged cleanup. This is approximately one minute of repeated lifecycle
+work, not a long-duration soak. Default invocation remains a three-trial Debug
+smoke. No warm-up trial is removed; caches remain OS-uncontrolled.
+
+A creation timeout remains unconfirmed even when no instance was handed back;
+the existing late-owner helper still releases it. Known observations are emitted
+before cleanup as `YL_RESOURCE_OBSERVATION`. Final `YL_RESOURCE_SERIES` keeps the
+original schema, including failed/timeout/skipped outcomes, and aborts further
+playback after failure. The resource sampler observes this process, including
+the test harness and observer overhead. It cannot identify decoder-only usage.
+
+The runner stores exact commands, phase durations, planned count, source,
+media/dependency/native artifact and sampler identities. `disposedMemory` retains
+one endpoint per attempt. It uses the **actual last disposed sample**, never an
+earlier good value if the last reading is missing. A first-to-last endpoint delta
+is produced only for a complete run with at least two passed attempts, at least
+two disposed samples spanning 1 s per attempt, ordered nonoverlapping trial
+clocks, and one known power/thermal condition across every collected sample.
+Malformed/incomplete run identities or overlapping clocks are rejected; the runner
+retains raw observations and records classification failure. For structurally
+valid complete runs with failed/skipped attempts, missing/short disposed windows,
+or unknown/mixed conditions, delta and elapsed window are null while endpoints
+and outcomes remain.
+The requested 2 s settling period is not proof that all allocations have settled.
+
+RSS and physical footprint are separate byte counters. Positive growth can
+include caches/allocator retention; negative growth does not prove leak freedom.
+`leakVerdict` stays null and `performanceBaseline`/`budgetAdmission` stay false.
+No tolerance, software-decoder budget, leak verdict or long-run release gate is
+inferred from ten short cycles. Layer absence, physical picture/audio and GPU or
+media-ledger ownership are not measured by this resource-only run.

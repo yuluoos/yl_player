@@ -196,3 +196,20 @@ profile 实跑预先冻结三次、无预热剔除、已有本地 AVC/AAC 素材
 共用通道的旧 Debug 暂停像素回读另跑 **3/3** 通过，四段九点检查和清理正常。两套数据分别保留，不能把 Debug 像素正确性当成 profile/物理画面已验收。[完整运行证据](../../../tool/playback_benchmark/macos-video-performance-observations.json)含最终原始样本、编译失败、旧行为回归及日志哈希；最终 sourceHash `4d7742e2abdb76c09ad1be79960a16667e4cfb1e1352d1b0c9425e777cc35080` 与源码/依赖/原生制品/媒体逐项一致，profile 宿主与 AOT 制品均 arm64。前台激活失败及 integration_test native plugin 提示继续留存，不冒充原生 XCTest 或屏幕输出验收。
 
 本子项完成无暂停系统渲染统计工具，**不产生首帧呈现时间、正式基线、优化百分比或全量无丢帧承诺**。`firstPresentedUs=null`、performanceBaseline=false、physicalOutputVerified=false。完整 P08 Task1/2、长播资源/同步/物理输出和跨设备门槛仍开放。
+
+
+## 2026-09-30 profile 重复创建/释放资源观察
+
+起点 `526437f`。本项补充资源生命周期的跨轮观察，复用已有进程内 CPU/RSS/physical footprint 采样，未修改生产播放/解码路线。`run_resources.py --profile-cycles` 预先固定 10 轮 profile、每轮新播放器、250 ms 采样：空闲 2 s、播放至媒体位置 2 s、释放/移除视图/删除本轮媒体，然后继续采样 2 s。没有剔除首轮预热；每轮的阶段和失败/跳过完整保留。默认命令仍是原来的三轮 Debug smoke；本次新增模式的短循环不能替代长播或压力验收。
+
+资源入口原来的单段失败清理已改为复用验证过的 `DisplayTrialCleanup`：创建未确认交接时不报告已清理，迟到实例仍由所有权 helper 释放；dispose、视图移除、临时文件删除各自有 5 s 截止，互不跳过。只在三步都确认成功后进入 disposed 采样阶段。已知样本在开始清理及异常清理前输出，不等待可能挂起的原生释放。未确认清理/采样错误/失败即跳过余下轮次。原生实际释放故障未注入，故障语义沿用已有可控 Future 的创建与清理行为测试。
+
+新增释放后比较保留每一轮末端，包括失败/缺失。仅当完整轮次验证通过、至少两轮均成功、每轮 disposed 至少两条样本且覆盖 1 s、跨轮时钟不重叠、所有样本的电源/系统热状态已知且一致时，计算首末端点 RSS/footprint 字节差；身份畸形、轮次不完整或跨轮时钟重叠会被拒绝，runner 保留原始试次并记分类失败，不生成端点摘要；对结构合法完整的运行，失败/跳过、disposed 缺失/窗口过短或环境未知/变化才生成差值及比较窗口为 null 的端点摘要。最后一条不可用时不会回退使用此前正常读数。两个内存账本单列，不把缓存、分配器保留、observer 或 Flutter 开销归因到 decoder；增长不是已证明泄漏，下降也不是无泄漏证据，`leakVerdict=null`。
+
+6 项新增 Python 行为测试先因缺实现 RED，再通过合计 **33/33**；覆盖实际端点、末读数缺失、失败/跳过/缺 disposed/单样本、环境变化/未知、跨轮重叠以及乱序身份。相关资源/独立清理 Dart **15/15**，两文件静态分析无问题。没有为纯命令参数添加镜像实现的单测，最终实跑验证 profile/轮数/命令与行身份一致。
+
+最终 `macos-resource-20260930T144403Z`：profile/arm64 **10/10**，均 managedFallback/hardware，Flutter drive 退出 0。共 **311 条样本、0 缺失**，全部 battery/nominal；每轮释放后都有 10 个采样点，覆盖约 2 s。第 1 至第 10 轮释放后端点跨度 **57.738477 s**：RSS 从 **142262272** 到 **153731072 B**，增加 **11468800 B（10.9375 MiB）**；physical footprint 从 **55133216** 到 **69796896 B**，增加 **14663680 B（13.984375 MiB）**。保留所有中间轮次：第 5 轮有明显阶跃，末端也非完全稳定。没有删掉首轮、改变等待时间或重跑挑选更小增长。
+
+这是一条需要继续归因的资源增长观察，不能直接宣布泄漏，也不能因播放/释放 ACK 成功就宣称资源完全回收。采样包含 Flutter、原生缓存/分配器、测量日志和观察器开销；本项没有分离这些来源，也没有冻结增长阈值。[完整证据](../../../tool/playback_benchmark/macos-resource-cycle-observations.json)保存每轮各阶段、末端和命令；最终 sourceHash `bbcfedf5ae8400b5091955e22a17918fdc01d3034748ac8de86f51aad8349903` 及源码/依赖/原生二进制/媒体/采样器哈希逐项核对一致。profile 宿主及 AOT 制品均为 arm64。原始日志保存在本计划忽略目录 `profile-resource-cycles/`。
+
+前台激活失败和 native integration_test plugin 提示继续保留；十条最终行、VMService driver 成功返回证明本次循环执行，不替代物理音画、显示层消失、长播、Intel/最低系统或故障注入验收。**完整 P08 Task1/2 和 AV1 软件预算仍开放。下一项优先定位已观察到的释放后 footprint 增长来源**，采用同协议的可比对照/分配或资源所有权证据，定位前不做推测性缓存改写。

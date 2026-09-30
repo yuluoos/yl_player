@@ -115,6 +115,8 @@ class ResourceSeries {
     _samples.add(Map.unmodifiable({...row, 'phase': _phase}));
   }
 
+  List<Map<String, Object?>> get observations => List.unmodifiable(_samples);
+
   List<Map<String, Object?>> close() {
     _closed = true;
     return List.unmodifiable(_samples);

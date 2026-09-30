@@ -210,3 +210,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-09-30 P08完成呈现边界审计和profile测量入口验证：修复Python工具误收public-event为baseline，27项测试通过；本机arm64 profile实际3/3通过，协议预先固定并保留参数/双架构构建失败。未改SDK或默认架构，不计正式呈现基线、Intel/universal或release通过；完整Task1/2保持开放，见P08报告及measurement-protocol.md。
 
 2026-09-30 P08新增无暂停系统渲染统计工具：独立profile连续播放3/3，保留39条样本/33条统计，各窗口总计数增长64、丢帧/损坏增量0；21项Dart与静态检查、旧Debug暂停回读3/3通过。原始累计延迟保留，不能解释为首帧、单次卡顿或同步误差；显式示例profile开关不改生产API/默认构建。完整Task1/2及正式基线继续开放，详见P08报告。
+
+2026-09-30 P08新增profile十轮创建/播放/释放资源观察：10/10通过，311点无缺失、battery/nominal；33项Python、15项Dart与静态检查通过。首末释放后端点RSS增加10.9375MiB、footprint增加13.984375MiB，完整保留并待归因，不宣称泄漏或完全回收。资源入口复用独立清理/创建不确定性保护；完整Task1/2、正式基线及长播仍开放，下一项优先定位该增长来源，见P08报告。
