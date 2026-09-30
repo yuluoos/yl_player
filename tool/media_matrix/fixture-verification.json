@@ -630,6 +630,44 @@
       "caseId": "mp4-truncated",
       "sha256": "b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c",
       "probe": "rejected"
+    },
+    {
+      "caseId": "mkv-avc-opus",
+      "sha256": "918636a0ec494830433e56ecd30ff51a729f45a24d25edb93df14e22bc7166a9",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          438.333,
+          493.333
+        ],
+        [
+          658.333,
+          713.333
+        ],
+        [
+          878.333,
+          933.333
+        ],
+        [
+          1098.333,
+          1153.333
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
     }
   ]
 }

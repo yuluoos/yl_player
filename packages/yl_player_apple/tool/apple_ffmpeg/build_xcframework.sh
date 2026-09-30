@@ -211,6 +211,8 @@ build_slice() {
     _ylf_fel_free \
     _ylf_stream_dolby_vision_profile \
     _ylf_mp4_requires_fallback \
+    _ylf_stream_opus_delay_samples \
+    _ylf_packet_audio_trim \
     _ylf_opus_create \
     _ylf_opus_decode \
     _ylf_opus_reset \

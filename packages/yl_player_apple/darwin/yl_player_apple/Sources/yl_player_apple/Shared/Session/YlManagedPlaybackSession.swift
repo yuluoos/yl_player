@@ -725,6 +725,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   }
 
   var demuxAudioGeneration: UInt64 { stateLock.withLock { audio.audioGeneration } }
+  var demuxAudioPresentationStartUs: Int64? { presentation.audioTargetUs }
   func acceptsDemuxAudio(ptsUs: Int64) -> Bool { presentation.acceptsAudio(ptsUs: ptsUs) }
   func consumeDemuxAudio(_ packet: YlCompressedAudioPacket, onBackpressure: (TimeInterval) -> Void) -> Void? {
     audio.enqueue(packet, codecName: selectedAudioCodecName, onBackpressure: onBackpressure)
@@ -1521,6 +1522,12 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     try cancellationToken?.throwIfCancelled()
     let requestedStream = try demux.audioStream(for: trackId)
     guard requestedStream.index != demux.selectedAudioStream?.index else { return }
+    // A fresh Opus decoder needs a demux rewind plus PCM preroll trimming.
+    // Reject before changing the renderer/cursor until track-switch rewind is supported.
+    if Int(requestedStream.codec) == YLFCodecOpus {
+      throw NativePlayerError(category: "unsupported", code: "policy.opus_track_switch_unsupported",
+        message: "Switching to another Opus track is not supported yet. Keep the current track or use AAC.")
+    }
 
     let initialGeneration = stateLock.withLock { generation }
     if cancellationToken == nil, !stateLock.withLock({ active }) {

@@ -8,6 +8,43 @@ import YlFFmpegBridge
 
 final class YlMacosAudioTests: XCTestCase {
 
+  func testOpusTrimmingPrerollResetAndSafeFailure() throws {
+    let converter = YlAppleCompressedAudioConverter()
+    let head = Data([79,112,117,115,72,101,97,100,1,2,56,1,128,187,0,0,0,0,0])
+    try converter.configure(stream: .init(codec: .opus, sampleRate: 48000,
+      channelCount: 2, magicCookie: head, generation: 9))
+    let silence = Data([0xfc, 0xff, 0xfe])
+    let first = YlCompressedAudioPacket(data: silence, ptsUs: -6500,
+      durationUs: Int64.max, generation: 9, skipSamples: 312)
+    let estimate = converter.estimateOutput(for: first)
+    XCTAssertEqual(estimate.byteCount, 5760 * 8)
+    XCTAssertEqual(estimate.durationUs, 120000)
+    let trimmed = try XCTUnwrap(converter.convert(packet: first))
+    XCTAssertEqual(trimmed.ptsUs, 0)
+    XCTAssertEqual(trimmed.durationUs, 13500)
+    XCTAssertEqual((trimmed.payload as? AVAudioPCMBuffer)?.frameLength, 648)
+    XCTAssertEqual(trimmed.generation, 9)
+    converter.reset()
+    XCTAssertNil(try converter.convert(packet: .init(data: silence, ptsUs: 1000000,
+      durationUs: 20000, generation: 9, presentationStartUs: 1030000)))
+    let cut = try XCTUnwrap(converter.convert(packet: .init(data: silence, ptsUs: 1020000,
+      durationUs: 20000, generation: 9, discardSamples: 48, presentationStartUs: 1030000)))
+    XCTAssertEqual(cut.ptsUs, 1030000)
+    XCTAssertEqual(cut.durationUs, 9000)
+    XCTAssertEqual((cut.payload as? AVAudioPCMBuffer)?.frameLength, 432)
+    converter.reset()
+    let reset = try XCTUnwrap(converter.convert(packet: first))
+    XCTAssertEqual((reset.payload as? AVAudioPCMBuffer)?.frameLength, 648)
+    XCTAssertThrowsError(try converter.convert(packet: .init(data: Data([0,255,254]),
+      ptsUs: 0, durationUs: 20000, generation: 9))) { error in
+      XCTAssertEqual((error as? NativePlayerError)?.code, "decoder.audio_opus_unsupported")
+    }
+    for channels in [0,3] {
+      XCTAssertThrowsError(try converter.configure(stream: .init(codec: .opus,
+        sampleRate: 48000, channelCount: channels, magicCookie: head, generation: 9)))
+    }
+  }
+
   func testFLACDecodesExactMono16AndStereo24SamplesIncludingShortFinalPacketAndReset() throws {
     // Owned integer ramps, 1000 frames at 48 kHz. Host FFmpeg 8.0.1 FLAC,
     // -frame_size 576; expected PCM is independently computed below.

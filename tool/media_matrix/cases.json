@@ -777,6 +777,51 @@
           "verification": "not_run"
         }
       }
+    },
+    {
+      "id": "mkv-avc-opus",
+      "file": "mkv-avc-opus.mkv",
+      "container": "matroska",
+      "sha256": "918636a0ec494830433e56ecd30ff51a729f45a24d25edb93df14e22bc7166a9",
+      "video": {
+        "codec": "h264",
+        "profile": "Constrained Baseline",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "opus",
+        "channels": 2,
+        "layout": "stereo",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 4.008,
+      "probe": "mkv-avc-opus.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
     }
   ]
 }

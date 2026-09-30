@@ -24,9 +24,12 @@ protocol YlDemuxOutput: YlAudioPipelineOutput {
   func beginLiveReconnect(after error: NativePlayerError, packetGeneration: UInt64)
   func consumeDemuxVideo(packet: inout YLFPacketRef?, ownedPacket: YLFPacketRef, generation: UInt64, managedPayload: YlManagedBufferLedger.Token?) -> Void?
   var demuxAudioGeneration: UInt64 { get }
+  var demuxAudioPresentationStartUs: Int64? { get }
   func acceptsDemuxAudio(ptsUs: Int64) -> Bool
   func consumeDemuxAudio(_ packet: YlCompressedAudioPacket, onBackpressure: (TimeInterval) -> Void) -> Void?
 }
+
+extension YlDemuxOutput { var demuxAudioPresentationStartUs: Int64? { nil } }
 
 protocol YlDemuxOpening {
   func open(recipe: YlFallbackSourceRecipe, networkBufferBytes: Int,
@@ -372,15 +375,22 @@ final class YlDemuxPipeline {
       guard audioReservation?.carryTiming(ptsUs: packetPTS, durationUs: packetDuration, from: packetReservation) ?? true else {
         ylf_packet_release(&packet); output.setDemuxPumping(false); output.fail(YlManagedBufferLedger.unsupported()); return
       }
+      let isOpus = Int(selectedAudioStream?.codec ?? 0) == YLFCodecOpus
+      var skip: UInt32 = 0, discard: UInt32 = 0
+      if isOpus && (ylf_packet_size(ownedPacket) > 65536 || ylf_packet_audio_trim(ownedPacket, &skip, &discard) != 0) {
+        ylf_packet_release(&packet); output.setDemuxPumping(false); output.fail(ylOpusPacketError()); return
+      }
       let audioPacket = YlCompressedAudioPacket(
         reservation: audioReservation,
         data: Data(bytes: bytes, count: ylf_packet_size(ownedPacket)),
         ptsUs: packetPTS,
         durationUs: packetDuration,
-        generation: output.demuxAudioGeneration
+        generation: output.demuxAudioGeneration,
+        skipSamples: skip, discardSamples: discard,
+        presentationStartUs: isOpus ? output.demuxAudioPresentationStartUs : nil
       )
       ylf_packet_release(&packet)
-      if !output.acceptsDemuxAudio(ptsUs: audioPacket.ptsUs) {
+      if !isOpus && !output.acceptsDemuxAudio(ptsUs: audioPacket.ptsUs) {
         output.setDemuxPumping(false)
         output.requestAudioPump()
         return

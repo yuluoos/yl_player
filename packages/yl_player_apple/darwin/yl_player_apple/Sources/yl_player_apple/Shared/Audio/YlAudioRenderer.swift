@@ -22,6 +22,7 @@ enum YlAudioCodec: Equatable {
   case ac3
   case eac3
   case flac
+  case opus
   case unsupported
 
   init(bridgeCodec: Int32) {
@@ -32,6 +33,7 @@ enum YlAudioCodec: Equatable {
     case YLFCodecAC3: self = .ac3
     case YLFCodecEAC3: self = .eac3
     case YLFCodecFLAC: self = .flac
+    case YLFCodecOpus: self = .opus
     default: self = .unsupported
     }
   }
@@ -44,6 +46,7 @@ enum YlAudioCodec: Equatable {
     case .ac3: return "AC-3"
     case .eac3: return "E-AC-3"
     case .flac: return "FLAC"
+    case .opus: return "Opus"
     case .unsupported: return "Compressed"
     }
   }
@@ -109,6 +112,9 @@ struct YlCompressedAudioPacket {
   let ptsUs: Int64
   let durationUs: Int64
   let generation: UInt64
+  var skipSamples: UInt32 = 0
+  var discardSamples: UInt32 = 0
+  var presentationStartUs: Int64? = nil
 }
 
 struct YlAudioBufferEstimate: Equatable {
@@ -371,7 +377,7 @@ final class YlAudioRenderer: YlAudioRendering {
       }
       buffer = converted
       if buffer.reservation == nil { buffer.reservation = reservation }
-    } catch let error as NativePlayerError where error.code == "policy.unsupported" {
+    } catch let error as NativePlayerError where ["policy.unsupported", "decoder.audio_opus_unsupported", "decoder.audio_opus_failed"].contains(error.code) {
       throw error
     } catch {
       let codecName = lock.withLock {
@@ -602,6 +608,7 @@ final class YlAudioRenderer: YlAudioRendering {
     case .ac3: return "decoder.audio_ac3_unsupported"
     case .eac3: return "decoder.audio_eac3_unsupported"
     case .flac: return "decoder.audio_flac_unsupported"
+    case .opus: return "decoder.audio_opus_unsupported"
     case .unsupported: return "decoder.audio_unsupported"
     }
   }
@@ -639,11 +646,12 @@ final class YlAudioRenderer: YlAudioRendering {
 
 final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   private var dtsConverter: YlDtsAudioConverter?
+  private var opusConverter: YlOpusAudioConverter?
   var bufferScope: YlManagedBufferScope?
   private var converter: AVAudioConverter?
   private var inputFormat: AVAudioFormat?
   private var outputFormat: AVAudioFormat?
-  var pcmFormat: AVAudioFormat? { dtsConverter == nil ? outputFormat : nil }
+  var pcmFormat: AVAudioFormat? { opusConverter?.pcmFormat ?? (dtsConverter == nil ? outputFormat : nil) }
   private var framesPerPacket: UInt32 = 0
   private var batchesInput = YlAppleCompatibility.current.batchesAudioInput
   private var variablePacketFrames = false
@@ -653,7 +661,15 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
 
   func configure(stream: YlAudioStreamConfiguration) throws {
     dtsConverter = nil
+    opusConverter = nil
     flacConfiguration = nil
+    if stream.codec == .opus {
+      let opus = YlOpusAudioConverter()
+      opus.bufferScope = bufferScope
+      try opus.configure(stream: stream)
+      opusConverter = opus
+      return
+    }
     if stream.codec == .dts {
       let dts = YlDtsAudioConverter()
       dts.bufferScope = bufferScope
@@ -758,6 +774,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   }
 
   func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate {
+    if let opusConverter { return opusConverter.estimateOutput(for: packet) }
     if let dtsConverter { return dtsConverter.estimateOutput(for: packet) }
     guard let outputFormat else {
       return YlAudioBufferEstimate(durationUs: 0, byteCount: 0)
@@ -782,6 +799,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   }
 
   func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
+    if let opusConverter { return try opusConverter.convert(packet: packet) }
     if let dtsConverter { return try dtsConverter.convert(packet: packet) }
     guard let converter, let inputFormat, let outputFormat, !packet.data.isEmpty else {
       throw YlAudioImplementationError.notConfigured
@@ -890,6 +908,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
 
   func reset() {
     dtsConverter?.reset()
+    opusConverter?.reset()
     converter?.reset()
     pendingPackets.removeAll(keepingCapacity: true)
     pendingOutputPackets.removeAll(keepingCapacity: true)

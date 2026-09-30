@@ -304,3 +304,33 @@ sh packages/yl_player_apple/tool/apple_ffmpeg/test_build_contract.sh
 最终55项公开基线全部匹配，38条正常生命周期、12条有效素材缺口、5条损坏输入拒绝；55条原始观测与AVI切片逐项完全相同，不新增格式支持声明。8项Python台账检查通过，Apple测试源对齐iOS658/macOS575；初次从仓库根目录调用unittest因本地模块搜索路径错误失败，改在tool/media_matrix执行后通过。最终不可变制品验签/哈希验证再次通过。完整样本及参考PCM哈希、32条PCM观测、SILK失败实验、制品/源指纹和55条公开观测见[macos-opus-bridge-observations.json](../../../tool/media_matrix/macos-opus-bridge-observations.json)。
 
 独立复审共1项Important，已通过重叠裁剪拒绝/重试的RED→GREEN及最终源码/制品回归修复；无其他Critical/Important/Minor。此次决定仅交付CELT原生前置层，完整Opus/WebM、播放器trim/preroll、物理声音/同步、损坏/无索引扩展、跨设备、硬解重建、软解/缓冲预算和HDR约束验收仍开放，其代价是不能将解码制品通过视为播放器完整支持。
+
+## 2026-09-29 AVC/Opus CELT 播放接入切片
+
+起点 `ff095ef`。新增普通 Matroska VOD 的 CELT Opus 路由，限 OpusHead v1/family0、mono/stereo、48kHz。容器 CodecDelay/pre-skip 和 DiscardPadding 经桥接显式传入转换器；输出最大5760frames/120ms、输入64KiB，不依据不可信包duration分配。seek保留至少80ms可用解码历史，解码后在PCM层裁到原展示目标。seek(0)使用最早负PTS音频锚点，避免视频cue丢掉首包；native回归验证前后均192000frames，skip312、尾裁648。
+
+候选制品独立五目标重建18规范项逐字节一致；接受lock哈希 `59e6077fbbaf84bcac30fb2514b3fade0b07f54513c41f21ef80b12014bd0694`。3slices/5architectures/37Swift symbols及3契约负例通过。没有新增FFmpeg模块，iOS15/macOS12下限不变。原生audio30、CELT源码/制品55884项断言与demux844项检查通过，video35/TS30/AVI88回归通过。Swift音频18项通过，包含首尾裁剪、完整/部分preroll、reset和不支持模式。
+
+公开测试最初3条AVC/Opus均为decoder.audio_unsupported；接入后file/http/renamed-file均完成首帧、音轨选择、2s/1.25s/0 seek、结束与释放。独立错误测试发现新错误码未加入原生安全白名单，会退化为platform.failure；已加入固定文案，避免传播输入路径。失败事件与命令回执异步，测试等待原始失败事件；live源仍由既有容器策略先拒绝。
+
+复审Important：现有音轨切换不为冷Opus decoder回退解码。此切片在任何渲染器/游标修改前明确拒绝切换到另一Opus轨（policy.opus_track_switch_unsupported），保留当前播放；混合AAC/Opus回归先观察到错误地成功，修复后验证拒绝、当前轨保留、seek继续及bounded下AAC仍可用。完整切轨预解码仍在待办。复审指出新增--only生成模式用rows[0]复制错误元数据；移除非必要的通用增量CLI，保留原有全量生成契约和新增Opus case，避免扩大生成器行为。
+
+范围决定：SILK/hybrid继续拒绝；严格网络/缓冲/硬解策略下排除Opus并保留既有音轨，无可用音轨才返回policy.opus_unsupported。损坏/无索引Opus、非零时间原点广泛变体、物理声音/像素/同步、最低系统/其他设备/iOS/Android、硬解恢复/软件预算/HDR扩展均不作验收声明。Matroska毫秒时间基可能产生亚毫秒首包量化差，当前检查不等于端到端同步证明。代价是完整Opus/WebM与P03 Task1/Task2继续未完成。
+
+混合策略夹具由既有原创AAC和Opus素材stream-copy生成，命令与哈希在资产opus-policy-fixture.json；它仅用于策略检查，不计入新增格式支持行。历史媒体与旧观测文件保留。
+
+最终58项公开基线全部匹配：41条正常生命周期、12条有效素材支持缺口、5条损坏输入拒绝。旧55条原始观测逐项完全一致；旧17条素材记录不变。新增3条Opus严格播放要求均通过；4项公开策略/错误/候选失败保留/混合音轨测试通过，20项Dart错误测试、8项Python台账检查通过，静态分析无问题。Apple测试源对齐iOS658/macOS576。原始行及最终源/日志指纹见[macos-opus-playback-observations.json](../../../tool/media_matrix/macos-opus-playback-observations.json)。预期失败不计为支持成功。
+
+复现（Flutter命令在packages/yl_player/example执行）：
+
+```sh
+flutter test integration_test/format_matrix_test.dart -d macos --no-pub --dart-define=YL_FORMAT_REQUIRE_SUPPORT=true --plain-name 'mkv-avc-opus /'
+flutter test integration_test/opus_policy_test.dart -d macos --no-pub
+flutter test integration_test/format_matrix_test.dart -d macos --no-pub
+# 仓库根目录：
+YL_TEST_FFMPEG_BUILD=<retained-signed-build> sh packages/yl_player_apple/tool/apple_ffmpeg/test_audio_codecs.sh
+```
+
+下一项优先补充Opus音轨切换所需的generation安全回退/预解码/首PCM时序；随后继续SILK/hybrid差异与其余格式缺口，不能把本次CELT子集等同完整Opus验收。
+
+最终代码状态下macOS原生音频18+FEL管线3=21项全部通过，0失败/跳过；并非完整原生聚合门禁。独立复审问题已用失败回归和最终验证收束，无待处理Critical/Important；无需第二轮重复复审。

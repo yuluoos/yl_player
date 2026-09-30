@@ -20,6 +20,7 @@ CASES = [
     ('mkv-av1-opus', 'mkv', 'matroska', 'libsvtav1', 'libopus', 2, 8),
     ('mkv-avc-eac3', 'mkv', 'matroska', 'libx264', 'eac3', 2, 8),
     ('mkv-avc-dts', 'mkv', 'matroska', 'libx264', 'dca', 2, 8),
+    ('mkv-avc-opus', 'mkv', 'matroska', 'libx264', 'libopus', 2, 8),
     ('mkv-avc-flac', 'mkv', 'matroska', 'libx264', 'flac', 2, 8),
     ('webm-vp9-vorbis', 'webm', 'webm', 'libvpx-vp9', 'vorbis', 2, 8),
     ('mkv-hevc-main10-aac', 'mkv', 'matroska', 'libx265', 'aac', 2, 10),

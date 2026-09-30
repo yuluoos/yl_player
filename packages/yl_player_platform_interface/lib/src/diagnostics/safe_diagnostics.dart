@@ -46,6 +46,15 @@ abstract final class YlSafeDiagnostics {
     YlFailureCodes.dashManifestTooLarge =>
       'The DASH manifest exceeds the 2 MiB input limit. Ask the provider for a smaller manifest.',
 
+    'decoder.audio_opus_unsupported' =>
+      'Opus currently requires CELT mode, mapping family 0 and mono or stereo at 48 kHz. Try an AAC or FLAC audio track.',
+    'decoder.audio_opus_failed' =>
+      'The Opus audio packet or timing is invalid. Try another audio track or a complete media file.',
+    'policy.opus_track_switch_unsupported' =>
+      'Switching to another Opus track is not supported yet. Keep the current track or use AAC.',
+    'policy.opus_unsupported' =>
+      'Opus currently supports ordinary Matroska VOD without managed networking, bounded buffering or hardware-required decoding.',
+
     'container.avi_timing_unsupported' =>
       'The AVI video lacks supported presentation timing. Use a file with explicit timestamps or Baseline AVC without frame reordering.',
     'container.avi_open_failed' =>

@@ -554,6 +554,36 @@
       "firstFrame": false,
       "seekProgress": false,
       "completed": false
+    },
+    "mkv-avc-opus/file": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mkv-avc-opus/http": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "mkv-avc-opus/renamed-file": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
     }
   }
 }

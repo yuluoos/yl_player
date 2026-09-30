@@ -524,3 +524,19 @@ P06 Task3C2 已接入 Apple schema5 公共 FairPlay HLS、独立 AVPlayerLayer�
 2026-09-29 P03 HEVC跳转修复：Apple M1/macOS27下既有MOV HEVC Main与MKV Main10样本的本地/HTTP/改名路径通过前向、反向seek及自然结束；普通解码路径按CRA/BLA随机访问语义过滤RASL。仅公共生命周期验证，像素/声音/同步、其他Apple设备/最低系统及FEL物理输出不由此推定。
 
 2026-09-29 P03 FLV点播：Apple M1/macOS27实测AVC/MP3 FLV本地、HTTP显式onDemand及本地改名路径可前后seek并结束；HTTP无Range时明确拒绝seek，automatic/live仍保留直播语义，旧直播重连回归通过。未新增FFmpeg模块；其他codec、iOS/Intel/最低系统及真实声音/像素/同步仍未验收。
+
+### Scoped Apple CELT Opus playback evidence (2026-09-29)
+
+Ordinary Matroska VOD now routes Opus CELT, OpusHead v1/family 0,
+mono/stereo at 48 kHz through the native decoder. Container pre-skip and tail
+padding are applied once; seeks decode at least 80 ms of available preroll and
+trim PCM at the presentation target. Owned AVC/Opus file, HTTP and renamed-file
+lifecycle evidence is on macOS Apple M1; this does not establish physical output
+quality, AV sync, iOS runtime or full WebM support.
+
+SILK/hybrid, managed networking, bounded buffering and hardwareRequired policy
+remain rejected for Opus-only sources. Mixed sources retain existing compatible
+AAC/etc. choices under strict policies. Switching to a different Opus track is
+explicitly rejected before changing the current renderer; safe guidance explains
+the limitation. Same selected-track requests remain no-ops. See the
+[P03 execution report](superpowers/reports/2026-09-26-remaining-03-formats-decoding.md).

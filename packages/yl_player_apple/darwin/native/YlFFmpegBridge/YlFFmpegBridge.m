@@ -12,6 +12,7 @@
 #include <libavcodec/codec_par.h>
 #include <libavcodec/avcodec.h>
 #include <libavutil/opt.h>
+#include <libavutil/intreadwrite.h>
 #include <libavutil/error.h>
 #include <libavutil/mathematics.h>
 #include <libavutil/mem.h>
@@ -354,6 +355,8 @@ static int32_t ylf_codec(enum AVCodecID codec_id) {
     return YLFCodecEAC3;
   case AV_CODEC_ID_FLAC:
     return YLFCodecFLAC;
+  case AV_CODEC_ID_OPUS:
+    return YLFCodecOpus;
   default:
     return YLFCodecUnsupported;
   }
@@ -1089,11 +1092,39 @@ int32_t ylf_seek(YLFMediaContextRef context, int64_t position_us) {
     pthread_mutex_unlock(&context->mutex);
     return ylf_callback_failure(context, YLFResultSeekFailed);
   }
+  // Opus seeks decode at least 80 ms of preroll before the presentation target.
+  // Keep this local to the demux cursor; the player retains its original target.
+  bool opus_preroll = false;
+  for (unsigned i = 0; i < context->format->nb_streams; i++)
+    if (context->format->streams[i]->codecpar->codec_id == AV_CODEC_ID_OPUS) opus_preroll = true;
+  if (opus_preroll) position_us = FFMAX(0, position_us - 80000);
   int64_t absolute_position_us;
   if (__builtin_add_overflow(position_us, context->timeline_origin_us, &absolute_position_us) ||
       absolute_position_us == AV_NOPTS_VALUE) {
     pthread_mutex_unlock(&context->mutex);
     return YLFResultSeekFailed;
+  }
+  if (opus_preroll && position_us == 0) {
+    // A video cue at zero can suppress the first negative-PTS Opus packet.
+    // Anchor at the earliest delayed audio packet so Matroska retains it and
+    // the following initial video keyframe. Positive-start tracks use video.
+    int audio_index = -1; int64_t earliest_us = 0, audio_start = 0;
+    for (unsigned i = 0; i < context->format->nb_streams; i++) {
+      int delay = ylf_stream_opus_delay_samples(context, (int32_t)i);
+      AVStream *st = context->format->streams[i];
+      int64_t first;
+      if (delay < 0 || __builtin_sub_overflow(st->start_time,
+          av_rescale_q(delay, (AVRational){1,48000}, st->time_base), &first)) continue;
+      int64_t first_us = ylf_timestamp_us(first, st->time_base);
+      if (first_us < earliest_us) { earliest_us = first_us; audio_index = i; audio_start = first; }
+    }
+    if (audio_index >= 0) {
+      int result = avformat_seek_file(context->format, audio_index, INT64_MIN,
+          audio_start, audio_start, AVSEEK_FLAG_BACKWARD);
+      if (result >= 0) avformat_flush(context->format);
+      pthread_mutex_unlock(&context->mutex);
+      return result >= 0 ? YLFResultOK : ylf_callback_failure(context, YLFResultSeekFailed);
+    }
   }
   bool is_avi = context->format->iformat && strcmp(context->format->iformat->name, "avi") == 0;
   int result = (context->relative_transport_stream_timeline || is_avi)
@@ -1102,7 +1133,7 @@ int32_t ylf_seek(YLFMediaContextRef context, int64_t position_us) {
                                   -1,
                                   INT64_MIN,
                                   absolute_position_us,
-                                  INT64_MAX,
+                                  opus_preroll ? absolute_position_us : INT64_MAX,
                                   AVSEEK_FLAG_BACKWARD);
   if (result >= 0) {
     avformat_flush(context->format);
@@ -1644,6 +1675,42 @@ void ylf_dts_free(YLFDtsDecoderRef d) {
 }
 
 #include "YlFELBridge.inc"
+
+int32_t ylf_stream_opus_delay_samples(YLFMediaContextRef context, int32_t index) {
+  if (!context || !context->format || index < 0 || (unsigned)index >= context->format->nb_streams ||
+      !context->format->iformat || !strstr(context->format->iformat->name, "matroska")) return -1;
+  AVStream *stream = context->format->streams[index];
+  AVCodecParameters *p = stream->codecpar;
+  if (p->codec_id != AV_CODEC_ID_OPUS || p->sample_rate != 48000 ||
+      p->extradata_size != 19 || !p->extradata || memcmp(p->extradata, "OpusHead", 8) ||
+      p->extradata[8] != 1 || p->extradata[18] != 0 || p->extradata[9] < 1 || p->extradata[9] > 2 ||
+      p->ch_layout.nb_channels != p->extradata[9] || p->initial_padding != AV_RL16(p->extradata + 10) ||
+      p->seek_preroll < 0 || p->seek_preroll > 3840 || stream->start_time == AV_NOPTS_VALUE) return -1;
+  return p->initial_padding;
+}
+
+int32_t ylf_packet_audio_trim(YLFPacketRef packet, uint32_t *skip, uint32_t *discard) {
+  if (!packet || !packet->value || !packet->owner || !skip || !discard) return YLFResultInvalidArgument;
+  *skip = 0; *discard = 0;
+  AVPacket *p = packet->value;
+  int32_t delay = ylf_stream_opus_delay_samples(packet->owner, p->stream_index);
+  if (delay < 0 || p->pts == AV_NOPTS_VALUE) return YLFResultAudioConfigurationUnsupported;
+  size_t size = 0;
+  const uint8_t *side = av_packet_get_side_data(p, AV_PKT_DATA_SKIP_SAMPLES, &size);
+  if (side) {
+    if (size != 10) return YLFResultReadFailed;
+    *skip = AV_RL32(side); *discard = AV_RL32(side + 4);
+    if (*skip > 65535 || *discard > 5760) return YLFResultReadFailed;
+  }
+  // libavformat clears pending skip on seek. The timestamp of the original
+  // first packet identifies the only position where CodecDelay applies again.
+  AVStream *stream = packet->owner->format->streams[p->stream_index];
+  int64_t first;
+  if (__builtin_sub_overflow(stream->start_time,
+      av_rescale_q(delay, (AVRational){1,48000}, stream->time_base), &first)) return YLFResultReadFailed;
+  if (!*skip && p->pts == first) *skip = delay;
+  return YLFResultOK;
+}
 
 struct YLFOpusDecoder {
   AVCodecContext *codec;

@@ -24,6 +24,7 @@ const _caseIds = [
   'mkv-avc-eac3',
   'mkv-avc-dts',
   'mkv-avc-flac',
+  'mkv-avc-opus',
   'webm-vp9-vorbis',
   'mkv-hevc-main10-aac',
   'mkv-avc-ac3-51',
@@ -178,9 +179,11 @@ void main() {
                 id == 'mkv-hevc-main10-aac' ||
                 id == 'flv-avc-mp3' ||
                 id == 'mkv-avc-flac' ||
+                id == 'mkv-avc-opus' ||
                 id == 'ts-avc-ac3' ||
                 id == 'avi-avc-mp3')
               1250,
+            if (id == 'mkv-avc-opus') 0,
           ];
           for (final targetMs in targets) {
             await session.pause();

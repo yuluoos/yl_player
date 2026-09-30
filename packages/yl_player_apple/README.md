@@ -25,8 +25,8 @@ restrictions.
 
 The combined XCFramework contains iOS device, iOS Simulator, and universal
 macOS slices. It uses FFmpeg 9.0.1 for Matroska/FLV/MP4/MPEG-TS/AVI demuxing,
-packet parsing, DCA audio decoding, and a low-level CELT-only Opus decoder (player
-integration pending); networking and video decode remain
+packet parsing, DCA audio decoding, and a CELT-only Opus decoder with Matroska trim and seek preroll integration
+(ordinary VOD, family 0, mono/stereo 48 kHz; switching to another Opus track is deferred); networking and video decode remain
 package/system owned. Binary
 redistributors must keep `THIRD_PARTY_NOTICES.md`,
 `LICENSES/FFmpeg-LGPL-2.1-or-later.txt`, the artifact lock, and replacement

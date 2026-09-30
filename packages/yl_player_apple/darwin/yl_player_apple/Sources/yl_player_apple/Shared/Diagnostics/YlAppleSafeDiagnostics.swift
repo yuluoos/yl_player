@@ -23,6 +23,11 @@ enum YlAppleSafeDiagnostics {
   // Package-owned classifications only. A syntactically safe source-derived
   // identifier is still private and must not be published as an error code.
   private static let publicCodes: Set<String> = [
+    "decoder.audio_opus_unsupported",
+    "decoder.audio_opus_failed",
+    "policy.opus_unsupported",
+    "policy.opus_track_switch_unsupported",
+
     "container.dash_manifest_invalid",
     "container.dash_dynamic_unsupported",
     "container.dash_protection_unsupported",
@@ -127,6 +132,11 @@ enum YlAppleSafeDiagnostics {
     "network.dns_failed", "network.connect_timeout", "network.read_timeout",
   ]
   private static let publicMessages: [String: String] = [
+    "decoder.audio_opus_unsupported": "Opus currently requires CELT mode, mapping family 0 and mono or stereo at 48 kHz. Try another audio track.",
+    "decoder.audio_opus_failed": "The Opus audio packet or timing is invalid. Try another audio track or a complete media file.",
+    "policy.opus_unsupported": "Opus currently supports ordinary Matroska VOD without strict networking, buffer or hardware policies.",
+    "policy.opus_track_switch_unsupported": "Switching to another Opus track is not supported yet. Keep the current track or use AAC.",
+
     "container.avi_timing_unsupported": "The AVI video lacks supported presentation timing. Use a file with explicit timestamps or Baseline AVC without frame reordering.",
     "container.avi_open_failed": "The AVI media could not be opened. Check that the source is complete and uses supported codecs.",
     "container.avi_seek_failed": "The AVI seek failed. Try another position or a complete media file with a usable index.",

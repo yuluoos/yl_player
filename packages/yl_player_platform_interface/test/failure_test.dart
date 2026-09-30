@@ -2,6 +2,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 void main() {
+  test(
+    'Opus failures distinguish codec, malformed packet and policy limits',
+    () {
+      for (final entry in {
+        'decoder.audio_opus_unsupported': 'CELT',
+        'decoder.audio_opus_failed': 'complete media file',
+        'policy.opus_unsupported': 'ordinary Matroska',
+      }.entries) {
+        final message = YlSafeDiagnostics.messageForCode(entry.key);
+        expect(message, contains('Opus'));
+        expect(message, contains(entry.value));
+      }
+    },
+  );
   test('AVI failures provide fixed recovery guidance', () {
     const guidance = {
       'container.avi_timing_unsupported': 'without frame reordering',

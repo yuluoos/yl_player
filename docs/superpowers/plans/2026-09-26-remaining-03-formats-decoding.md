@@ -121,3 +121,5 @@ expect(failure.retryable, isFalse);
 2026-09-29 Task2 AVI切片：只增加AVI demuxer，受检Baseline AVC/MP3的file/http/改名路径及本地移除idx1后的双向seek/结束通过；补齐受限PTS和关键帧定位、明确错误。其他Profile/codec、OpenDML/大文件、物理输出/同步/跨平台以及WebM/PS等仍待完成。
 
 2026-09-29 Task2 Opus前置制品：新增原生CELT-only Opus桥接及所需swresample，mono/stereo独立PCM对照；SILK/hybrid在输出差异解决前明确拒绝。Swift路由尚未启用，容器trim/seek preroll和公开播放器验证为下一切片；Task1/Task2和完整Opus/WebM仍未完成，最终构建与验证证据见执行报告。
+
+2026-09-29 P03继续接入普通Matroska AVC/Opus CELT播放：显式首尾裁剪、seek预解码与PCM目标裁剪、固定安全错误。仅family0 mono/stereo48k；切换到另一Opus音轨先明确拒绝并保留当前播放。SILK/hybrid、完整WebM、严格策略、物理输出与跨端验收仍未完成，Task1/Task2不勾选。最终证据见P03执行报告。

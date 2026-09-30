@@ -52,6 +52,8 @@ final class YlPostSeekGate {
     }
   }
 
+  var audioTargetUs: Int64? { lock.withLock { minimumAudioPtsUs } }
+
   func acceptsAudio(ptsUs: Int64) -> Bool {
     lock.withLock {
       guard let minimumAudioPtsUs else { return true }
@@ -109,6 +111,7 @@ final class YlPresentationCoordinator: YlAudioTimeline {
     mediaClock.setRate(rate, atHostTimeUs: time)
   }
   func suppressFramesBefore(_ time: Int64?) { postSeekGate.reset(targetUs: time) }
+  var audioTargetUs: Int64? { postSeekGate.audioTargetUs }
   func acceptsAudio(ptsUs: Int64) -> Bool { postSeekGate.acceptsAudio(ptsUs: ptsUs) }
   func flushFrames(generation: UInt64) { frameScheduler.flush(generation: generation) }
   func disposeFrames() { frameScheduler.dispose() }

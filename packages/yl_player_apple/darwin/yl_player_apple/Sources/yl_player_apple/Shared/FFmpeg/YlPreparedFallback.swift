@@ -171,6 +171,9 @@ final class YlPreparedFallback {
 
     var selectedVideo: YLFStreamInfo?
     var selectedAudio: [YLFStreamInfo] = []
+    let opusPolicyAllowed = container == .matroska && source.intent != .live && boundedPlan == nil
+      && source.networkPolicy != .managed && decoderPolicy != .hardwareRequired
+    var sawBlockedOpus = false
     var sawUnsupportedAudio = false
     var sawVideo = false
     for index in 0..<mediaInfo.stream_count {
@@ -186,6 +189,11 @@ final class YlPreparedFallback {
          selectedVideo == nil {
         selectedVideo = stream
       } else if Int(stream.kind) == YLFStreamAudio {
+        if Int(stream.codec) == YLFCodecOpus && !opusPolicyAllowed {
+          // Retain existing AAC/etc. choices; excluded Opus is not advertised.
+          sawBlockedOpus = true
+          continue
+        }
         if YlAudioCodec(bridgeCodec: stream.codec) != .unsupported {
           selectedAudio.append(stream)
         } else {
@@ -199,6 +207,10 @@ final class YlPreparedFallback {
         code: sawVideo ? "decoder.unsupported" : "policy.unsupported",
         message: sawVideo ? "The video codec is unsupported." : "This fallback route does not implement audio-only playback."
       )
+    }
+    if selectedAudio.isEmpty && sawBlockedOpus {
+      throw NativePlayerError(category: "unsupported", code: "policy.opus_unsupported",
+        message: "Opus currently supports ordinary Matroska VOD without strict networking, buffer or hardware policies.")
     }
     if selectedAudio.isEmpty && sawUnsupportedAudio {
       throw NativePlayerError(
@@ -293,6 +305,15 @@ final class YlPreparedFallback {
       guard ylf_copy_stream_codec_config(validContext, audioStream.index, &bytes, bytes.count) == 0 else {
         throw NativePlayerError(category: "decoderUnsupported",
           code: "decoder.audio_flac_unsupported", message: "The FLAC STREAMINFO could not be read.")
+      }
+      copiedAudioCookies[audioStream.index] = Data(bytes)
+    }
+    for audioStream in selectedAudio where Int(audioStream.codec) == YLFCodecOpus {
+      guard ylf_stream_opus_delay_samples(validContext, audioStream.index) >= 0,
+            ylf_stream_codec_config_size(validContext, audioStream.index) == 19 else { throw ylOpusUnsupportedError() }
+      var bytes = [UInt8](repeating: 0, count: 19)
+      guard ylf_copy_stream_codec_config(validContext, audioStream.index, &bytes, bytes.count) == 0 else {
+        throw ylOpusUnsupportedError()
       }
       copiedAudioCookies[audioStream.index] = Data(bytes)
     }

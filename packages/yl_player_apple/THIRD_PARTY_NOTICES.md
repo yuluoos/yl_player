@@ -5,9 +5,10 @@
 `YlFFmpegBridge.xcframework` contains a minimized build of FFmpeg 9.0.1
 `libavformat`, `libavcodec`, `libavutil`, and `libswresample`. It is used for
 Matroska, FLV, MP4/MOV, MPEG-TS, and AVI demultiplexing, packet parsing,
-DCA audio decoding, and a low-level CELT-only Opus decoder. Video decoding remains in
-Apple VideoToolbox. The Opus bridge is a prerequisite only: player routing,
-trim metadata propagation, and seek preroll integration remain pending.
+DCA audio decoding, and a CELT-only Opus decoder. Video decoding remains in
+Apple VideoToolbox. Ordinary Matroska VOD integrates container trimming and seek
+preroll for family 0 mono/stereo 48 kHz Opus. SILK/hybrid, strict policies and
+switching to another Opus track remain unsupported.
 
 The minimized allowlist enables `matroska,flv,mov,mpegts,avi` demuxers;
 `aac,h264,hevc,mpegaudio,dca,ac3` parsers; `dca,opus` decoders; the `dovi_rpu`

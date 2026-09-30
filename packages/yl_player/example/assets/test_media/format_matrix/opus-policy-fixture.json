@@ -1,0 +1,22 @@
+{
+  "source": "owned-generated derivative, stream-copy of existing owned fixtures",
+  "file": "mkv-avc-aac-opus.mkv",
+  "sha256": "53bc74fc5d97ea101d04855ff343ad21e64b6a82e74bf206398b5943fcf521ed",
+  "command": [
+    "ffmpeg",
+    "-i",
+    "mkv-avc-aac.mkv",
+    "-i",
+    "mkv-avc-opus.mkv",
+    "-map",
+    "0:v",
+    "-map",
+    "0:a",
+    "-map",
+    "1:a",
+    "-c",
+    "copy",
+    "mkv-avc-aac-opus.mkv"
+  ],
+  "purpose": "Mixed AAC/Opus policy and rejected track-switch preservation; not a new format acceptance row"
+}
