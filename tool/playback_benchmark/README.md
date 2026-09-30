@@ -209,7 +209,7 @@ Required fields (no additional fields are accepted):
 | thermal | `nominal`, `fair`, `serious`, `critical`, `unknown` |
 | cacheState | `cold-controlled`, `warm`, `os-cache-uncontrolled` |
 | measurement | `load-to-public-first-frame-event` |
-| purpose | `smoke` or `baseline` |
+| purpose | `smoke`; `baseline` is rejected for the current event-receipt schema |
 | baselineComparable | Boolean; whether this media path was playable before optimization, not proof that this run is a baseline |
 | plannedAttempts, attempt | Positive integers, attempts exactly `1..plannedAttempts` |
 | outcome | `passed`, `failed`, `timeout`, `skipped`, `cancelled` |
@@ -222,11 +222,14 @@ starting with a letter/digit. Never put addresses, tokens, filenames containing
 usernames, response bodies or native exceptions in them. A hash documents
 identity, not permission or correctness.
 
-Baseline inputs require physical devices, profile/release, known power/thermal,
-and controlled cache state. This validation is necessary but **not sufficient**
-for a proper baseline: presentation semantics, correct content/audio, repeat
-counts, target metrics and the measurement protocol must also be frozen. The
-current integration runner deliberately only emits `purpose=smoke`.
+The current schema accepts **smoke only**, including profile/release smoke.
+`purpose=baseline` is rejected even on physical hardware with known power,
+nominal thermal state and controlled caches: none of these supply the missing
+presentation acknowledgement. Relabeling `measurement` is also rejected by the
+fixed allowlist. The Dart runner already enforces smoke-only input. Historical
+summaries are preserved as historical evidence, not retroactively admitted.
+See [measurement-protocol.md](measurement-protocol.md) for the frozen profile
+smoke protocol, observed API boundaries and requirements for a future baseline.
 
 Successful latency statistics use the usual median and nearest-rank p95. Failed,
 timeout, skipped and cancelled trials remain in `attempts` and `nonPassRate`.

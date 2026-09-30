@@ -164,3 +164,20 @@ Python 25/25（含严格统计、缺失/失败/跳过完整性、真实 native �
 最终运行 `color-reference-20260930T140521Z`：BT.709 正例 **3/3**、BT.601 元数据对照 **3/3**，合计 24 段标记图像、216 个 RGB 采样点通过；旧未标注负例为 **1 reference-unqualified / 2 skipped**。三组 Flutter 均退出 0，其中负例退出 0 只说明“参考不足”分类符合预期，不能计为原素材画质通过。七次实际创建均确认清理和释放后无层，正例均 managedFallback/hardware。独立复审未发现新增代码问题。
 
 [最终及首次误判的完整证据](../../../tool/playback_benchmark/macos-color-reference-observations.json)分别保留源身份、命令、试次/回读、媒体/依赖和日志哈希，最终 sourceHash `7f18bd8d9afb7865ba24d37294474f726bb4f90a361062ac196939185a15376c` 已逐文件核对一致；原始诊断和日志归档在本计划忽略目录 `color-reference/`。完整 P08 Task1/2 仍未完成：本次关闭的是颜色参考判定误报，未标注素材的实际色彩准确性仍未知。仍有前台激活失败提示，不宣称屏幕实际可见、物理色度、音频/同步或正式性能基线通过。下一项继续无暂停呈现观测边界与受控 profile/release 测量协议。
+
+
+## 2026-09-30 呈现边界审计与 profile 基线准入
+
+起点 `66a0c49`，工作区干净。继续 P08 Task 1/2，新增[测量协议 v1](../../../tool/playback_benchmark/measurement-protocol.md)，本项不改生产播放器、不设置性能目标。
+
+核查 Apple 生产路径与本机 SDK：AVPlayer 先发布 texture 再发公开 FirstFrame；managed 路径发布帧/提交 sample buffer 也不是 compositor 呈现确认。`displayedPixelBuffer()` 要求暂停，`AVVideoPerformanceMetrics.totalNumberOfFrames` 包括本应显示但被丢弃的帧，不能拿累计计数替代首次真实呈现时间。当前可用手段尚未建立无暂停、关联 Session 的首次呈现边界；这不是证明其他观测方案不存在。
+
+发现 Python 汇总入口存在准入漏洞：虽只允许 `load-to-public-first-frame-event`，却会接受 physical + profile/release + 已知电源/热状态 + warm cache 下的 `purpose=baseline`。这些条件无法补足呈现证据。现已对该事件 schema 明确拒绝 baseline，保留所有 debug/profile/release smoke；Dart 入口原本已限制 smoke，无需修改。新增/调整测试先复现 3 个失败（profile/release 正式基线误收及 CLI 错误输出成功），最终 **27/27 Python** 通过，验证 profile/release smoke 可用且不同构建模式不能混算。
+
+profile 实跑预先冻结三次、无预热剔除、已有本地 AVC/AAC 素材及哈希、未知电源/热状态、OS 缓存不受控和未验证物理输出。首次 `flutter test --profile` 因不支持该参数退出 64，未启动播放；改用既有 `integrationDriver()` 后，双架构构建在 `lipo -verify_arch arm64 x86_64` 处退出 1。独立验证同一引擎文件的 arm64/x86_64 单架构各退出 0，双架构校验两个顺序都报错。之后限定本机 `FLUTTER_XCODE_ARCHS=arm64`，该环境变量由 Flutter 官方工具代码传递为 Xcode build setting；不改项目默认架构或外部 SDK。每次运行使用新身份并保留前次失败；本次结果不覆盖 Intel/universal 制品验收。
+
+最终 `macos-profile-20260930T141527Z` profile/arm64 实跑 **3/3** 通过，Flutter drive 退出 0；实际宿主、App AOT 与 Flutter 引擎的制品均为 arm64，另存 SHA-256。源码、依赖、原生制品、媒体与协议指纹核对一致。[完整证据](../../../tool/playback_benchmark/macos-profile-smoke-observations.json)保留三条原始试次及前两次未启动播放的失败运行，原始日志在本计划忽略目录 `profile-admission/`。
+
+公开事件到达间隔为 138396、33468、32577 μs；n=3、p50=33468、nearest-rank p95=138396 μs，仅为工具 smoke 的事件统计，不能称首帧呈现延迟、稳定性能目标或相对 Debug 的优化效果。实际 kProfileMode 与上下文一致；release 未实跑。前台激活仍失败，且日志有 integration_test native plugin 未检测到提示；本次通过由 VMService integrationDriver 成功返回和完整三条最终行共同确认，不把该提示忽略为原生 XCTest 集成已通过。编译 warning 原样留在日志。
+
+本项完成基线准入修复、观测边界审计及 profile 实跑入口验证，**完整 P08 Task1/2 仍未完成**。无暂停真实呈现、受控缓存/电源/热状态与音画资格仍是正式基线缺口；不冻结阈值、不声明物理输出或 Intel/universal/release 已验收。

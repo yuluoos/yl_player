@@ -105,14 +105,34 @@ class SummaryTests(unittest.TestCase):
             with self.subTest(rows=rows), self.assertRaises(ValueError):
                 self.module.summarize_records(rows)
 
-    def test_baseline_requires_measured_conditions_and_profile_or_release(self):
-        for changes in [dict(purpose='baseline'),
-                        dict(purpose='baseline', buildMode='release')]:
-            with self.assertRaises(ValueError):
-                self.module.summarize_records([record(**changes)])
-        result = self.module.summarize_records([record(purpose='baseline',
-            buildMode='release', thermal='nominal', cacheState='warm')])
-        self.assertEqual(result['conditions']['purpose'], 'baseline')
+    def test_event_receipt_never_qualifies_for_a_presentation_baseline(self):
+        # Controlled conditions do not turn enqueue/event receipt into display ACK.
+        for mode in ['debug', 'profile', 'release']:
+            for device in ['physical', 'simulator', 'emulator']:
+                with self.subTest(mode=mode, device=device), self.assertRaises(ValueError):
+                    self.module.summarize_records([record(purpose='baseline',
+                        buildMode=mode, deviceKind=device, thermal='nominal',
+                        cacheState='warm')])
+
+    def test_profile_and_release_event_smokes_remain_separate_and_supported(self):
+        for mode in ['profile', 'release']:
+            result = self.module.summarize_records([record(buildMode=mode)])
+            self.assertEqual(result['conditions']['purpose'], 'smoke')
+            self.assertEqual(result['summary']['passed'], 1)
+        with self.assertRaises(ValueError):
+            self.module.summarize_records([
+                record(buildMode='profile', plannedAttempts=2),
+                record(buildMode='release', plannedAttempts=2, attempt=2)])
+
+    def test_cli_cannot_relabel_event_receipt_as_baseline(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'rows.jsonl'
+            path.write_text(json.dumps(record(purpose='baseline', buildMode='profile',
+                thermal='nominal', cacheState='warm')) + '\n')
+            result = subprocess.run([sys.executable, str(TOOL), str(path)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 2)
+            self.assertEqual(result.stdout, '')
+            self.assertNotIn('Traceback', result.stderr)
 
     def test_cli_rejects_invalid_input_without_echoing_payload(self):
         with tempfile.TemporaryDirectory() as directory:

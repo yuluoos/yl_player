@@ -96,11 +96,10 @@ def validate_record(row):
     if timestamp is not None:
         if not integer(timestamp) or not integer(duration) or timestamp - row['startedUs'] != duration:
             raise ValueError('inconsistent clock observation')
-    if row['purpose'] == 'baseline' and (
-            row['buildMode'] == 'debug' or row['deviceKind'] != 'physical'
-            or row['thermal'] == 'unknown' or row['power'] == 'unknown'
-            or row['cacheState'] == 'os-cache-uncontrolled'):
-        raise ValueError('baseline requires controlled physical conditions')
+    # This schema only observes public event receipt. Controlled hardware,
+    # cache and build mode cannot supply the missing presentation boundary.
+    if row['purpose'] == 'baseline':
+        raise ValueError('event receipt cannot establish a presentation baseline')
     summarize([row])
 
 
