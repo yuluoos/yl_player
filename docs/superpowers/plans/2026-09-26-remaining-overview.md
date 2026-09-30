@@ -184,3 +184,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-09-29 P03推进独立MPEG-TS点播：受检188字节AVC/AC-3三条公开路径及策略回归通过，修正零基时间与seek关键帧定位；五目标制品独立复建一致。更广格式、严格策略、设备与输出验收仍开放，详见[P03报告](../reports/2026-09-26-remaining-03-formats-decoding.md)。
 
 2026-09-29 P03推进AVI点播：受检Baseline AVC/MP3三条公开路径、移除idx1后的本地跳转和错误/策略测试通过；五架构制品独立复建一致，仅扩展AVI解复用。完整格式、输出和跨设备验收仍开放，见[P03报告](../reports/2026-09-26-remaining-03-formats-decoding.md)。
+
+2026-09-29 P03推进Opus制品前置：原生CELT-only mono/stereo解码及独立PCM参考校验；SILK/hybrid明确拒绝。尚未启用播放器路由，trim/preroll接入和完整Opus/WebM仍是后续项，见[P03报告](../reports/2026-09-26-remaining-03-formats-decoding.md)。

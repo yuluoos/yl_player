@@ -119,3 +119,5 @@ expect(failure.retryable, isFalse);
 2026-09-29 Task2独立MPEG-TS切片：188字节AVC/AC-3的file/http/同字节改名文件通过时间轴、双向seek、结束与释放；补齐相对时间、有限关键帧定位和明确错误提示。192/204仅探测测试，严格策略/live、其他codec/平台/物理输出仍未验收；WebM/PS/AVI等缺口及Task1整体仍开放。
 
 2026-09-29 Task2 AVI切片：只增加AVI demuxer，受检Baseline AVC/MP3的file/http/改名路径及本地移除idx1后的双向seek/结束通过；补齐受限PTS和关键帧定位、明确错误。其他Profile/codec、OpenDML/大文件、物理输出/同步/跨平台以及WebM/PS等仍待完成。
+
+2026-09-29 Task2 Opus前置制品：新增原生CELT-only Opus桥接及所需swresample，mono/stereo独立PCM对照；SILK/hybrid在输出差异解决前明确拒绝。Swift路由尚未启用，容器trim/seek preroll和公开播放器验证为下一切片；Task1/Task2和完整Opus/WebM仍未完成，最终构建与验证证据见执行报告。

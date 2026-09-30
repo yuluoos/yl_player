@@ -272,3 +272,35 @@ YL_TEST_FFMPEG_BUILD=<retained-build-root> sh packages/yl_player_apple/tool/appl
 ```
 
 本轮不验收AVI其他codec/Profile、重排帧的缺失PTS重建、OpenDML/多段/大文件、任意损坏或异常索引、物理声音/像素/同步、跨端/最低系统、资源曲线和严格策略。上述搜索/探测限制是工程防护，不代表完整FFmpeg索引操作或软解性能预算。未新增软件视频解码，P03 Task1/Task2与CAP-FORMAT均继续保持未完成。
+
+## 2026-09-29 Opus 原生制品前置切片（尚未开放播放器）
+
+起点 `ea8de71`。本轮先实现低层 `ylf_opus_create/decode/reset/free`，不修改 Swift codec 映射、容器路由或公开能力行。当前 macOS 27 的公开 `AVAudioConverter` Opus 创建探针返回 nil，因此选用同一签名 FFmpeg 9.0.1 的原生 Opus decoder，增加它要求的内部 `libswresample`，不使用私有系统注册接口、商业 SDK 或产品外部 libopus。部署下限保持 iOS 15/macOS 12。
+
+桥接当前只接受 OpusHead v1、mapping family 0、mono/stereo，输出 48 kHz interleaved float PCM；仅开放 CELT 包。按 [RFC 6716 TOC](https://www.rfc-editor.org/rfc/rfc6716.html#section-3.1) 限制每包最多 120 ms / 5760 frames，输入上限 64 KiB，分配前检查；不依据容器 duration 分配。按 [Opus 头及裁剪语义](https://www.rfc-editor.org/rfc/rfc7845.html#section-4) 由调用者显式传入 skip/discard，桥接不再次自动应用头部 pre-skip，返回首部裁剪的 frame offset。skip 可跨包，reset 清除 skip 与历史。无效参数和不支持模式在消费前拒绝；真实解码失败后要求 reset。
+
+原创 4 秒音调夹具覆盖 mono/stereo 的 2.5/5/10/20/40/60/120 ms 包及 +6 dB OpusHead gain，独立参考由主机 FFmpeg 8.0.1 的 libopus decoder 生成，产品使用 FFmpeg 原生 decoder。已测 CELT 每条均精确输出 192000 frames，未对齐 PCM SNR 约 70–76 dB（门槛 50 dB），检查头尾裁剪、完整包跳过、容量/畸形输入及 reset 后一致性。2.5 ms 夹具最后恰好落在包边界，合法无尾部 padding。
+
+SILK 的 8→48 kHz 重采样输出与 libopus 有约 2 samples 偏移；即使对齐，原始实验 mono/stereo SNR 也只有 38.50/39.96 dB。本轮不继续降低标准，明确返回 `YLFResultAudioConfigurationUnsupported` 拒绝全部 SILK/hybrid TOC。该差异并未证明整个 Opus 格式不成立，后续仍需独立解决。现有 WebM VP9/Opus、MKV AV1/Opus 公开缺口不变，完整 Opus 支持保持未完成。
+
+复审发现非法 skip/discard 重叠会提前推进 decoder；已新增“拒绝后重试与全新 decoder PCM 一致”的回归并观察失败，再将校验移到 decode 前。源代码回归已通过；最终制品复建、制品直连和消费者回归结果记录于下方最终证据。
+
+复现命令（仓库根目录）：
+
+```sh
+YL_TEST_FFMPEG_BUILD=<retained-signed-build> sh packages/yl_player_apple/tool/apple_ffmpeg/test_audio_codecs.sh
+YL_TEST_FFMPEG_BUILD=<retained-signed-build> sh packages/yl_player_apple/tool/apple_ffmpeg/test_video_metadata.sh
+sh packages/yl_player_apple/tool/apple_ffmpeg/test_build_contract.sh
+```
+
+`test_audio_codecs.sh` 自动发现并执行 `test_opus.sh`；Opus 同时验证源文件直连和真实 XCFramework。候选验收可通过 `YL_OPUS_FRAMEWORK_DIR` 指向候选 macOS slice。主机 FFmpeg 对每份 Matroska 参考输入会输出一次 Opus header 探测错误；参考解码命令退出 0，实际 PCM frame 数和逐样本对照另行检查，不能把日志静默或退出码单独当作正确性证明。
+
+下一切片仍需把容器 CodecDelay/pre-skip、DiscardPadding、seek preroll 传给音频转换器；当前 demux 在解码前丢弃 seek 前音频，不能直接启用 Opus 映射。其后再验收 AVC/Opus 独立组合、WebM 视频路径、物理输出/同步、严格缓冲预算、其他平台和最低系统。
+
+最终原生制品：新候选经独立五目标重建，18 个规范文件/符号链接逐字节一致，再更新制品、lock 和接受哈希。契约 3 slices / 5 architectures / 31 Swift symbols 与 4 个 Opus 导出、3 项预期负例通过。制品大小：iOS device 2,219,128→2,423,440 bytes；simulator universal 4,402,160→4,837,920；macOS universal 4,415,008→4,850,304。增加来自 Opus 及其内部 swresample，未增加外部运行库。
+
+最终源码/制品各 9 组模式测试退出 0：16 份 CELT 夹具各做两次 PCM 对照（32 条观测），另 2 份语音夹具各做两次明确拒绝；参数/状态/边界检查总计 55,884 次断言，0 失败。既有 audio metadata 30、video metadata 35、TS 30、AVI 88 检查通过，FEL C 基础烟测退出 0；macOS 原生音频 17 + FEL 管线 3 项全部通过、0 失败/跳过。尚未执行完整原生聚合门禁。
+
+最终55项公开基线全部匹配，38条正常生命周期、12条有效素材缺口、5条损坏输入拒绝；55条原始观测与AVI切片逐项完全相同，不新增格式支持声明。8项Python台账检查通过，Apple测试源对齐iOS658/macOS575；初次从仓库根目录调用unittest因本地模块搜索路径错误失败，改在tool/media_matrix执行后通过。最终不可变制品验签/哈希验证再次通过。完整样本及参考PCM哈希、32条PCM观测、SILK失败实验、制品/源指纹和55条公开观测见[macos-opus-bridge-observations.json](../../../tool/media_matrix/macos-opus-bridge-observations.json)。
+
+独立复审共1项Important，已通过重叠裁剪拒绝/重试的RED→GREEN及最终源码/制品回归修复；无其他Critical/Important/Minor。此次决定仅交付CELT原生前置层，完整Opus/WebM、播放器trim/preroll、物理声音/同步、损坏/无索引扩展、跨设备、硬解重建、软解/缓冲预算和HDR约束验收仍开放，其代价是不能将解码制品通过视为播放器完整支持。

@@ -3,16 +3,20 @@
 ## FFmpeg 9.0.1
 
 `YlFFmpegBridge.xcframework` contains a minimized build of FFmpeg 9.0.1
-`libavformat`, `libavcodec`, and `libavutil`. It is used for Matroska, FLV, MP4,
-and MPEG-TS
-demultiplexing, packet parsing, and DCA audio decoding; video decoding remains
-in Apple VideoToolbox and AAC/MP3 decoding remains in AudioToolbox.
+`libavformat`, `libavcodec`, `libavutil`, and `libswresample`. It is used for
+Matroska, FLV, MP4/MOV, MPEG-TS, and AVI demultiplexing, packet parsing,
+DCA audio decoding, and a low-level CELT-only Opus decoder. Video decoding remains in
+Apple VideoToolbox. The Opus bridge is a prerequisite only: player routing,
+trim metadata propagation, and seek preroll integration remain pending.
 
-The minimized allowlist enables only the `matroska,flv,mov,mpegts` demuxers; the
-`aac,h264,hevc,mpegaudio,dca` parsers; the DCA audio decoder; and the `file`
-protocol used by package-owned custom AVIO. FFmpeg networking, protocols other
-than `file`, all other decoders, encoders,
-muxers, filters, scaling/resampling, GPL, and nonfree components remain disabled.
+The minimized allowlist enables `matroska,flv,mov,mpegts,avi` demuxers;
+`aac,h264,hevc,mpegaudio,dca,ac3` parsers; `dca,opus` decoders; the `dovi_rpu`
+bitstream filter; and the `file` protocol used by package-owned custom AVIO.
+The native Opus decoder requires FFmpeg's internal `libswresample`; no external
+libopus is linked into the product. Test-only host libopus provides an
+independent PCM reference. FFmpeg networking, protocols other than `file`,
+all other decoders, encoders, muxers, filters, scaling, GPL, and nonfree
+components remain disabled.
 
 - Source: <https://ffmpeg.org/releases/ffmpeg-9.0.1.tar.xz>
 - Signature: <https://ffmpeg.org/releases/ffmpeg-9.0.1.tar.xz.asc>

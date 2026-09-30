@@ -15,7 +15,9 @@ trap 'rm -rf "$temporary"' EXIT
 xcrun clang -fobjc-arc -I"$ffmpeg_prefix/include" -I"$YL_TEST_FFMPEG_BUILD/ffmpeg-9.0.1" -I"$YL_TEST_FFMPEG_BUILD/build/macosx-arm64" \
   -I"$script_dir/../../darwin/native/YlFFmpegBridge/include" \
   "$script_dir/test_audio_codecs.m" -L"$ffmpeg_prefix/lib" \
-  -lavformat -lavcodec -lavutil \
+  -lavformat -lavcodec -lswresample -lavutil \
   -framework Foundation -framework CoreMedia -framework CoreVideo -framework Security \
   -o "$temporary/test_audio_codecs"
 "$temporary/test_audio_codecs" "$temporary/ac3.mkv" "$temporary/eac3.mkv" "$@"
+
+sh "$script_dir/test_opus.sh"

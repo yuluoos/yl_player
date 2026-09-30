@@ -7,7 +7,7 @@ temporary=$(mktemp -d "${TMPDIR:-/tmp}/yl-ts-timeline.XXXXXX")
 trap 'rm -rf "$temporary"' EXIT
 xcrun clang -fobjc-arc -I"$prefix/include" -I"$YL_TEST_FFMPEG_BUILD/ffmpeg-9.0.1" \
  -I"$YL_TEST_FFMPEG_BUILD/build/macosx-arm64" -I"$script_dir/../../darwin/native/YlFFmpegBridge/include" \
- "$script_dir/test_transport_stream.m" -L"$prefix/lib" -lavformat -lavcodec -lavutil \
+ "$script_dir/test_transport_stream.m" -L"$prefix/lib" -lavformat -lavcodec -lswresample -lavutil \
  -framework Foundation -framework CoreMedia -framework CoreVideo -framework Security -o "$temporary/test_ts"
 # Owned synthetic media: only the first frame is independently decodable.
 ffmpeg -hide_banner -loglevel error -f lavfi -i color=c=black:s=64x64:r=2:d=12 \

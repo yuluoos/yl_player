@@ -38,6 +38,7 @@ enum {
   YLFResultCallbackSeekUnsupported = -11,
   YLFResultCallbackCancelled = -12,
   YLFResultDolbyVisionUnsupported = -13,
+  YLFResultAudioConfigurationUnsupported = -14,
 };
 
 enum {
@@ -202,6 +203,26 @@ YLF_EXPORT int32_t ylf_create_video_sample_buffer(
     YLFPacketRef *packet,
     CMVideoFormatDescriptionRef format_description,
     CMSampleBufferRef *out_sample_buffer);
+
+// Opus CELT only: mapping family 0, version 1, mono/stereo, 48 kHz float PCM.
+// SILK/hybrid packets return AudioConfigurationUnsupported before consumption.
+// This low-level decoder does not enable a player route. Callers supply the
+// container's skip/discard metadata explicitly, exactly once. Reset clears
+// history and pending skip; seek callers must decode preroll before presenting.
+typedef struct YLFOpusDecoder *YLFOpusDecoderRef;
+YLF_EXPORT YLFOpusDecoderRef ylf_opus_create(const uint8_t *head, size_t size);
+// Interleaved output has the channel count from OpusHead. Capacity is in frames.
+// Maximum input 64 KiB / 5760 frames (120 ms); skip <= 65535 samples.
+// out_offset_frames advances the input packet PTS for leading trimmed samples.
+// Successful zero-frame output means the packet was entirely trimmed.
+// InvalidArgument / AudioConfigurationUnsupported preserve decoder state.
+// ReadFailed requires reset before reuse; output is unspecified on failure.
+YLF_EXPORT int32_t ylf_opus_decode(YLFOpusDecoderRef decoder,
+    const uint8_t *data, size_t size, uint32_t skip, uint32_t discard,
+    float *samples, int32_t capacity_frames, int32_t *out_frames,
+    int32_t *out_offset_frames);
+YLF_EXPORT void ylf_opus_reset(YLFOpusDecoderRef decoder);
+YLF_EXPORT void ylf_opus_free(YLFOpusDecoderRef decoder);
 
 #ifdef __cplusplus
 }

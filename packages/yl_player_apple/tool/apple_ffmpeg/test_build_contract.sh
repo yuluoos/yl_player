@@ -19,12 +19,12 @@ assert pins == {'FFMPEG_VERSION':'9.0.1', 'FFMPEG_URL':'https://ffmpeg.org/relea
  'FFMPEG_SIGNING_KEY_FINGERPRINT':'FCF986EA15E6E293A5644F10B4322F04D67658D8',
  'FFMPEG_SIGNING_KEY_SHA256':'397b3becedcd5a98769967ff1ff8501ddc89f8368b8f766e4701377d7dbaabe5',
  'IOS_DEPLOYMENT_TARGET':'15.0', 'MACOS_DEPLOYMENT_TARGET':'12.0'}
-allowed_enables = {'--enable-cross-compile','--enable-avutil','--enable-avcodec','--enable-avformat',
- '--enable-bsf=dovi_rpu','--enable-demuxer=matroska,flv,mov,mpegts,avi','--enable-decoder=dca','--enable-protocol=file','--enable-parser=aac,h264,hevc,mpegaudio,dca,ac3',
+allowed_enables = {'--enable-cross-compile','--enable-avutil','--enable-avcodec','--enable-avformat','--enable-swresample',
+ '--enable-bsf=dovi_rpu','--enable-demuxer=matroska,flv,mov,mpegts,avi','--enable-decoder=dca,opus','--enable-protocol=file','--enable-parser=aac,h264,hevc,mpegaudio,dca,ac3',
  '--enable-pic','--enable-static'}
 required_disables = {'--disable-everything','--disable-autodetect','--disable-network',
  '--disable-programs','--disable-doc','--disable-avdevice','--disable-avfilter','--disable-swscale',
- '--disable-swresample','--disable-encoders','--disable-decoders','--disable-muxers',
+ '--disable-encoders','--disable-decoders','--disable-muxers',
  '--disable-shared','--disable-symver','--disable-gpl','--disable-nonfree'}
 def check_configuration(text):
  args=set(shlex.split(text))
@@ -62,6 +62,7 @@ for entry in info:
    assert len(configs)==1
    check_configuration(configs[0])
   assert {'_'+s for s in symbols} <= names, (arch, symbols, names)
+  assert {'_ylf_opus_'+s for s in ('create','decode','reset','free')} <= names, arch
   loads = subprocess.check_output(['otool','-arch',arch,'-l',str(binary)],text=True)
   assert len(re.findall(r'cmd LC_UUID\n',loads)) == 1, 'dyld requires a UUID load command'
   builds = re.findall(r'cmd LC_BUILD_VERSION\n(.*?)(?=Load command|\Z)',loads,re.S)
