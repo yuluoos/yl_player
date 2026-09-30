@@ -115,7 +115,7 @@ void main() {
     },
   );
   testWidgets(
-    'Mixed AAC stays usable and Opus switching rejects before mutation',
+    'Mixed AAC switches to Opus and back while strict policies retain AAC',
     (tester) async {
       final directory = await Directory.systemTemp.createTemp('yl_opus_mixed_');
       final data = await rootBundle.load(
@@ -135,9 +135,23 @@ void main() {
         final opus = player.state.audioTracks
             .singleWhere((t) => !t.isSelected)
             .id;
-        await expectLater(
-          session.selectAudioTrack(opus),
-          failureCode('policy.opus_track_switch_unsupported'),
+        await session.pause();
+        await session.seekTo(const Duration(milliseconds: 1250));
+        await session.selectAudioTrack(opus);
+        await stateWhere(
+          player,
+          (s) => s.audioTracks.any((t) => t.id == opus && t.isSelected),
+        );
+        expect(player.state.failure, isNull);
+        await session.play();
+        await stateWhere(
+          player,
+          (s) => s.timeline.position > const Duration(milliseconds: 1600),
+        );
+        await session.selectAudioTrack(selected);
+        await stateWhere(
+          player,
+          (s) => s.audioTracks.any((t) => t.id == selected && t.isSelected),
         );
         expect(
           player.state.audioTracks.singleWhere((t) => t.isSelected).id,
@@ -160,6 +174,51 @@ void main() {
         await player.dispose();
         await tester.pumpWidget(const SizedBox.shrink());
         await directory.delete(recursive: true);
+      }
+    },
+  );
+  testWidgets(
+    'HTTP Opus switches preserve playing intent and complete after seek',
+    (tester) async {
+      final server = await RangeMediaServer.start(
+        asset: 'assets/test_media/format_matrix/mkv-avc-aac-opus.mkv',
+      );
+      final player = await appleController(tester);
+      try {
+        final session = await player.load(YlNetworkSource(server.mediaUri));
+        await readyAndPlay(player, session);
+        final aac = player.state.audioTracks
+            .singleWhere((t) => t.isSelected)
+            .id;
+        final opus = player.state.audioTracks
+            .singleWhere((t) => !t.isSelected)
+            .id;
+        await session.seekTo(const Duration(milliseconds: 1000));
+        await stateWhere(
+          player,
+          (s) => s.timeline.position >= const Duration(milliseconds: 1100),
+        );
+        for (final track in [opus, aac, opus]) {
+          final before = player.state.timeline.position;
+          await session.selectAudioTrack(track);
+          final selected = await stateWhere(
+            player,
+            (s) => s.audioTracks.any((t) => t.id == track && t.isSelected),
+          );
+          expect(selected.status, YlPlaybackStatus.playing);
+          expect(selected.failure, isNull);
+          expect(
+            selected.timeline.position.inMilliseconds,
+            greaterThanOrEqualTo(before.inMilliseconds - 1),
+          );
+        }
+        await session.seekTo(const Duration(milliseconds: 2500));
+        await stateWhere(player, (s) => s.status == YlPlaybackStatus.completed);
+        expect(player.state.failure, isNull);
+      } finally {
+        await player.dispose();
+        await server.close();
+        await tester.pumpWidget(const SizedBox.shrink());
       }
     },
   );

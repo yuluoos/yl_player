@@ -123,3 +123,5 @@ expect(failure.retryable, isFalse);
 2026-09-29 Task2 Opus前置制品：新增原生CELT-only Opus桥接及所需swresample，mono/stereo独立PCM对照；SILK/hybrid在输出差异解决前明确拒绝。Swift路由尚未启用，容器trim/seek preroll和公开播放器验证为下一切片；Task1/Task2和完整Opus/WebM仍未完成，最终构建与验证证据见执行报告。
 
 2026-09-29 P03继续接入普通Matroska AVC/Opus CELT播放：显式首尾裁剪、seek预解码与PCM目标裁剪、固定安全错误。仅family0 mono/stereo48k；切换到另一Opus音轨先明确拒绝并保留当前播放。SILK/hybrid、完整WebM、严格策略、物理输出与跨端验收仍未完成，Task1/Task2不勾选。最终证据见P03执行报告。
+
+2026-09-29 P03 Opus继续：活动会话切入/切出Opus复用seek事务，补齐代次隔离、容器回退、PCM裁剪与时钟锚点；暂停状态和播放意图保留。范围仍为CELT子集，完整Opus/WebM与Task1/Task2仍开放；细节和验证见P03报告。

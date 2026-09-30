@@ -991,7 +991,18 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     toMs positionMs: Int64,
     cancellationToken: YlOpenCancellationToken?
   ) throws {
-    let targetUs = max(0, positionMs) * 1_000
+    try seek(toUs: max(0, positionMs) * 1_000, selectingAudio: nil, cancellationToken: cancellationToken)
+  }
+
+  /// Audio switches involving Opus need the same demux history, video generation
+  /// and presentation gate as a seek. A nil target freezes the current position
+  /// only after candidate configuration succeeds, before pausing the clock.
+  private func seek(
+    toUs requestedTargetUs: Int64?,
+    selectingAudio requestedStream: YLFStreamInfo?,
+    cancellationToken: YlOpenCancellationToken?
+  ) throws {
+    var targetUs = requestedTargetUs ?? 0
     try YlFallbackSeekPolicy(isSeekable: demux.isSeekable) { _ in }.seek(toUs: targetUs)
     try cancellationToken?.throwIfCancelled()
     let initialGeneration = stateLock.withLock { generation }
@@ -1008,8 +1019,15 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       }
       return
     }
+    let candidate = try requestedStream.map { stream in
+      try audio.prepareTrack(stream: stream, generation: stateLock.withLock { audio.nextGeneration() },
+        cookies: demux.audioCookies)
+    }
+    var candidateInstalled = false
+    defer { if !candidateInstalled { candidate?.dispose() } }
     let entry = try onMainSync {
       try cancellationToken?.throwIfCancelled()
+      if requestedTargetUs == nil { targetUs = presentation.position(atHostTimeUs: Self.hostTimeUs()) }
       let value = try stateLock.withLock {
         guard !disposed, active, !reconfiguring, let media = demux.currentMedia else {
           throw YlOpenCancellationToken.cancellationError()
@@ -1043,7 +1061,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         throw YlOpenCancellationToken.cancellationError()
       }
     }
-    var operationGeneration = UInt64(0)
+    var operationGeneration = entry.generation
     let transaction = YlFallbackLifecycleTransaction(
       pauseClock: { [self] in
         try onMainSync {
@@ -1094,11 +1112,18 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       },
       resetAudio: { [self] nextGeneration in
         try demux.performSync {
-          let reset = try stateLock.withLock {
+          let replacement = try stateLock.withLock { () -> (YlAudioPipeline.Resource?, YlAudioPipeline.Reset) in
             try requireCurrentSeek(nextGeneration)
-            return audio.prepareReset(generation: nextGeneration)
+            var previous: YlAudioPipeline.Resource?
+            if let candidate, let requestedStream {
+              previous = audio.install(candidate)
+              candidateInstalled = true
+              demux.selectAudio(requestedStream)
+            }
+            return (previous, audio.prepareReset(generation: nextGeneration))
           }
-          reset.perform()
+          replacement.0?.dispose()
+          replacement.1.perform()
         }
       },
       recreateVideo: { [self] nextGeneration in
@@ -1161,15 +1186,21 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
           throw YlOpenCancellationToken.cancellationError()
         }
         requestPump()
+        if requestedStream != nil { emit(.tracksChanged(audio: audioTracks, video: videoTracks)) }
         emitState()
       }
     } catch let error as NativePlayerError {
       endControlOperation()
       if cancellationToken?.isCancelled == true || error.code == "network.cancelled" {
-        transitionToCancelledSeek(
-          wasPlaying: wasPlaying,
-          operationGeneration: operationGeneration
-        )
+        if requestedStream != nil && operationGeneration != entry.generation {
+          // After cursor/buffer mutation, resuming the retained codec would use
+          // unrelated history. Retire this operation instead; a newer generation
+          // is protected by transitionToTerminalSeekFailure's authority check.
+          transitionToTerminalSeekFailure(YlOpenCancellationToken.cancellationError(),
+            operationGeneration: operationGeneration)
+        } else {
+          transitionToCancelledSeek(wasPlaying: wasPlaying, operationGeneration: operationGeneration)
+        }
         throw YlOpenCancellationToken.cancellationError()
       } else {
         transitionToTerminalSeekFailure(
@@ -1187,10 +1218,15 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       )
       endControlOperation()
       if cancellationToken?.isCancelled == true {
-        transitionToCancelledSeek(
-          wasPlaying: wasPlaying,
-          operationGeneration: operationGeneration
-        )
+        if requestedStream != nil && operationGeneration != entry.generation {
+          // After cursor/buffer mutation, resuming the retained codec would use
+          // unrelated history. Retire this operation instead; a newer generation
+          // is protected by transitionToTerminalSeekFailure's authority check.
+          transitionToTerminalSeekFailure(YlOpenCancellationToken.cancellationError(),
+            operationGeneration: operationGeneration)
+        } else {
+          transitionToCancelledSeek(wasPlaying: wasPlaying, operationGeneration: operationGeneration)
+        }
         throw YlOpenCancellationToken.cancellationError()
       }
       transitionToTerminalSeekFailure(
@@ -1522,15 +1558,16 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     try cancellationToken?.throwIfCancelled()
     let requestedStream = try demux.audioStream(for: trackId)
     guard requestedStream.index != demux.selectedAudioStream?.index else { return }
-    // A fresh Opus decoder needs a demux rewind plus PCM preroll trimming.
-    // Reject before changing the renderer/cursor until track-switch rewind is supported.
-    if Int(requestedStream.codec) == YLFCodecOpus {
-      throw NativePlayerError(category: "unsupported", code: "policy.opus_track_switch_unsupported",
-        message: "Switching to another Opus track is not supported yet. Keep the current track or use AAC.")
-    }
-
+    let switchesOpus = Int(requestedStream.codec) == YLFCodecOpus
+      || demux.selectedAudioStream.map({ Int($0.codec) == YLFCodecOpus }) == true
     let initialGeneration = stateLock.withLock { generation }
     if cancellationToken == nil, !stateLock.withLock({ active }) {
+      // Inactive pipelines may retain a renderer and a prefetched cursor. Do
+      // not change their selection without a full reactivation transaction.
+      guard !switchesOpus else {
+        throw NativePlayerError(category: "unsupported", code: "policy.opus_track_switch_unsupported",
+          message: "Activate or resume playback before switching an Opus track.")
+      }
       try onMainSync {
         try stateLock.withLock {
           guard !disposed, !stopped, generation == initialGeneration else {
@@ -1542,6 +1579,11 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         emit(.tracksChanged(audio: audioTracks, video: videoTracks))
         emitState()
       }
+      return
+    }
+
+    if switchesOpus {
+      try seek(toUs: nil, selectingAudio: requestedStream, cancellationToken: cancellationToken)
       return
     }
 

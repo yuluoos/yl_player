@@ -21,11 +21,9 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		656C4754B872EAAA63371991 /* dash-sidx-v1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 478CEBF666133EE514223540 /* dash-sidx-v1.mp4 */; };
-		B5C232983E28BCC94B7FAD9B /* dash-sidx-v0.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 163664CDFDA8A7FA6E87C46B /* dash-sidx-v0.mp4 */; };
-		24D7431496C1095F497FEB46 /* YlDashSidxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C231623837BFB5931216B1D /* YlDashSidxTests.swift */; };
 		01DF178319EF10D49C1EF278 /* hevc_aac.flv in Resources */ = {isa = PBXBuildFile; fileRef = 6F135885A3F56F40C6C7F785 /* hevc_aac.flv */; };
 		0297CDE8E558DC16D82844EE /* YlApplePublicationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75630A8AD23C5386F95DD3C9 /* YlApplePublicationTests.swift */; };
+		0A09E52D8B8A29CCDC17180D /* YlFairPlayOutputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B04CFDDF3B1614FD42743EF /* YlFairPlayOutputTests.swift */; };
 		128EE532DF3F7C4AB32BD6E9 /* YlFallbackTrackCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA4DF6E8543446084572902 /* YlFallbackTrackCatalogTests.swift */; };
 		1399747E93FC08A04A2C4C26 /* NativeBackendFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5852DE332CF67DAEE6216FE /* NativeBackendFixtures.swift */; };
 		1408C46C12ADA157AC6675E7 /* hls_key.bin in Resources */ = {isa = PBXBuildFile; fileRef = F46174D8E67323FE3A505CEC /* hls_key.bin */; };
@@ -34,9 +32,11 @@
 		1B61BD2DE3CA07A2222BC039 /* YlDashResourceLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147A4BAE0B3DF7169ECAFEC2 /* YlDashResourceLoaderTests.swift */; };
 		1CFE0E84FBBF882082B056C5 /* YlFELVideoPipelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A0857EAFBD7712C5D79D22 /* YlFELVideoPipelineTests.swift */; };
 		1E1D4FA513032FE78F764BEF /* h264_aac.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 35E565BAC00CE569E200466E /* h264_aac.mkv */; };
+		24D7431496C1095F497FEB46 /* YlDashSidxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C231623837BFB5931216B1D /* YlDashSidxTests.swift */; };
 		24F51B70F9AF478DCE7E3FA0 /* YlAppleCompatibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34DC077E1E92452D216CAA1E /* YlAppleCompatibilityTests.swift */; };
 		25E694718161B4E6B34ED875 /* YlMacosPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD6B0E3C6E6F7A719D8CDB9 /* YlMacosPresentationTests.swift */; };
 		2C21C04BD36EA61953A1CD61 /* YlDashHlsCompilerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC53E1C867EB626EF8E8CB17 /* YlDashHlsCompilerTests.swift */; };
+		31F5B575A880807B063A4503 /* opus_switch.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 3DE4CCA76626E6D80436BF16 /* opus_switch.mkv */; };
 		33360611418A26793305401C /* YlOpenedMediaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C700A177742B3233701EEB56 /* YlOpenedMediaTests.swift */; };
 		335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335BBD1A22A9A15E00E9071D /* GeneratedPluginRegistrant.swift */; };
 		33CC10F12044A3C60003C045 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC10F02044A3C60003C045 /* AppDelegate.swift */; };
@@ -53,7 +53,9 @@
 		592CF9D166E70142D76DF428 /* YlRtmpProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECAB55485ABB0439C7A04F72 /* YlRtmpProtocolTests.swift */; };
 		5C4FDD002E1570DA9995F58F /* YlMacosVideoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06FAF8C98F9EFA76BF5E3893 /* YlMacosVideoTests.swift */; };
 		5DB2A160509CFEE73CD12485 /* YlAppleHostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E869F508D73E44FF6836F05 /* YlAppleHostTests.swift */; };
+		61052E29F6A475B84D6AD0A5 /* YlFairPlayKeySessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2EFBB9E75B58722FD53A37 /* YlFairPlayKeySessionTests.swift */; };
 		631320C1C8CD65B03B4B6E8C /* two_audio_tracks.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 8070E6E11F3656127214D0F4 /* two_audio_tracks.mkv */; };
+		656C4754B872EAAA63371991 /* dash-sidx-v1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 478CEBF666133EE514223540 /* dash-sidx-v1.mp4 */; };
 		691CF2566C16D4594341EABD /* YlRtmpFixturePeer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1956A71D967865D262FCA1F9 /* YlRtmpFixturePeer.swift */; };
 		6F49EF49E579AB7E9171BBD9 /* network_seek_h264_aac.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 20781E1F08377A5E656C399D /* network_seek_h264_aac.mkv */; };
 		70529071DFB43B0D27BE0982 /* YlManagedFallbackCharacterizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED88046AF4BCC838E47A1DE8 /* YlManagedFallbackCharacterizationTests.swift */; };
@@ -75,6 +77,7 @@
 		A77EA5EB232ED78C4F4884EC /* h264_aac.flv in Resources */ = {isa = PBXBuildFile; fileRef = 65975264F807CAFFC710D2F5 /* h264_aac.flv */; };
 		ACE2BD982F4DA89D82D4E434 /* YlRtmpRecoveryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A940DD8D6F94037E79F8AD /* YlRtmpRecoveryTests.swift */; };
 		B0748004F715FE005444B080 /* hevc_aac.ts in Resources */ = {isa = PBXBuildFile; fileRef = D2930D5C73B77DB4B8813E4C /* hevc_aac.ts */; };
+		B5C232983E28BCC94B7FAD9B /* dash-sidx-v0.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 163664CDFDA8A7FA6E87C46B /* dash-sidx-v0.mp4 */; };
 		B5C2EC2C16033EAB5CECFA6A /* YlHlsManifestRewriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C04CC5CBCBC2772ACBE6DC /* YlHlsManifestRewriterTests.swift */; };
 		BFA20ACF2B5A0A4CF3D7C296 /* YlBoundedPacketQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6DA221934353776A2AC38D /* YlBoundedPacketQueueTests.swift */; };
 		BFF1C7D1C89792326B8953A6 /* YlFallbackStateEncoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B87C8143455324448E46AD /* YlFallbackStateEncoderTests.swift */; };
@@ -90,8 +93,6 @@
 		F331CC72B45CF2B10650905D /* YlByteRingBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8048684C57A62ABB3E04D95 /* YlByteRingBufferTests.swift */; };
 		F671D2612D05B09B54372859 /* YlFallbackBufferBudgetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB5CBCF374E238AE0921D63 /* YlFallbackBufferBudgetTests.swift */; };
 		FE3A4AEE8C06A75FECF71E88 /* YlMacosOpenCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38BA5B23113A06B10DBA6A8 /* YlMacosOpenCoordinatorTests.swift */; };
-		61052E29F6A475B84D6AD0A5 /* YlFairPlayKeySessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2EFBB9E75B58722FD53A37 /* YlFairPlayKeySessionTests.swift */; };
-		0A09E52D8B8A29CCDC17180D /* YlFairPlayOutputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B04CFDDF3B1614FD42743EF /* YlFairPlayOutputTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -125,21 +126,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		478CEBF666133EE514223540 /* dash-sidx-v1.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = dash-sidx-v1.mp4; sourceTree = "<group>"; };
-		163664CDFDA8A7FA6E87C46B /* dash-sidx-v0.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = dash-sidx-v0.mp4; sourceTree = "<group>"; };
-		2C231623837BFB5931216B1D /* YlDashSidxTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlDashSidxTests.swift; sourceTree = "<group>"; };
 		04EA906E28F7E9BB1BB59881 /* YlNetworkByteSourceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlNetworkByteSourceTests.swift; sourceTree = "<group>"; };
 		06FAF8C98F9EFA76BF5E3893 /* YlMacosVideoTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosVideoTests.swift; sourceTree = "<group>"; };
 		08BEC84DECE9358BB2DB25A6 /* YlMacosHlsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosHlsTests.swift; sourceTree = "<group>"; };
 		0DC623098CF3B0C9CB3A171F /* YlMacosAudioTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosAudioTests.swift; sourceTree = "<group>"; };
 		0F9645960A2FC8869FE4E674 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		147A4BAE0B3DF7169ECAFEC2 /* YlDashResourceLoaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlDashResourceLoaderTests.swift; sourceTree = "<group>"; };
+		163664CDFDA8A7FA6E87C46B /* dash-sidx-v0.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = "dash-sidx-v0.mp4"; sourceTree = "<group>"; };
 		1956A71D967865D262FCA1F9 /* YlRtmpFixturePeer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlRtmpFixturePeer.swift; sourceTree = "<group>"; };
 		1D3F70440357CA5E69E00CB9 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		20781E1F08377A5E656C399D /* network_seek_h264_aac.mkv */ = {isa = PBXFileReference; includeInIndex = 1; path = network_seek_h264_aac.mkv; sourceTree = "<group>"; };
 		27822507808069AA8F7D1B81 /* h264_mp3.flv */ = {isa = PBXFileReference; includeInIndex = 1; path = h264_mp3.flv; sourceTree = "<group>"; };
 		27A0857EAFBD7712C5D79D22 /* YlFELVideoPipelineTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFELVideoPipelineTests.swift; sourceTree = "<group>"; };
 		2AB5CBCF374E238AE0921D63 /* YlFallbackBufferBudgetTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFallbackBufferBudgetTests.swift; sourceTree = "<group>"; };
+		2C231623837BFB5931216B1D /* YlDashSidxTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlDashSidxTests.swift; sourceTree = "<group>"; };
 		2F106567CEBABEBF23D41980 /* AppleHostCharacterizations.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppleHostCharacterizations.swift; sourceTree = "<group>"; };
 		2FD6B0E3C6E6F7A719D8CDB9 /* YlMacosPresentationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosPresentationTests.swift; sourceTree = "<group>"; };
 		331C80D5294CF71000263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -161,8 +161,10 @@
 		35E565BAC00CE569E200466E /* h264_aac.mkv */ = {isa = PBXFileReference; includeInIndex = 1; path = h264_aac.mkv; sourceTree = "<group>"; };
 		3ADC0D265B741EEDE905AAB4 /* YlAppleDecoderRestorationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleDecoderRestorationTests.swift; sourceTree = "<group>"; };
 		3C290055C8B9FFBB2409465E /* NativeCallbackCharacterization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeCallbackCharacterization.swift; sourceTree = "<group>"; };
+		3DE4CCA76626E6D80436BF16 /* opus_switch.mkv */ = {isa = PBXFileReference; includeInIndex = 1; path = opus_switch.mkv; sourceTree = "<group>"; };
 		3FB68FDA267E2CE9BF8139A7 /* h264_aac.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = h264_aac.mp4; sourceTree = "<group>"; };
 		42E615412A9A1C967D196015 /* YlMacosFallbackTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosFallbackTests.swift; sourceTree = "<group>"; };
+		478CEBF666133EE514223540 /* dash-sidx-v1.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = "dash-sidx-v1.mp4"; sourceTree = "<group>"; };
 		4D7B70FBAE1B54C38E94045F /* YlRtmpRouteTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlRtmpRouteTests.swift; sourceTree = "<group>"; };
 		4F4DEEB55CF6DE6A59CC5C34 /* YlFallbackQualityPolicyTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFallbackQualityPolicyTests.swift; sourceTree = "<group>"; };
 		50A940DD8D6F94037E79F8AD /* YlRtmpRecoveryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlRtmpRecoveryTests.swift; sourceTree = "<group>"; };
@@ -177,6 +179,7 @@
 		75630A8AD23C5386F95DD3C9 /* YlApplePublicationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlApplePublicationTests.swift; sourceTree = "<group>"; };
 		78E0A7A72DC9AD7400C4905E /* FlutterGeneratedPluginSwiftPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterGeneratedPluginSwiftPackage; path = ephemeral/Packages/FlutterGeneratedPluginSwiftPackage; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		7B04CFDDF3B1614FD42743EF /* YlFairPlayOutputTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFairPlayOutputTests.swift; sourceTree = "<group>"; };
 		7CDC667398959E0CB3B44375 /* YlPlatformServicesTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlPlatformServicesTests.swift; sourceTree = "<group>"; };
 		8070E6E11F3656127214D0F4 /* two_audio_tracks.mkv */ = {isa = PBXFileReference; includeInIndex = 1; path = two_audio_tracks.mkv; sourceTree = "<group>"; };
 		8B8BF19BF6B42EDC46588613 /* YlRtmpLifecycleTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlRtmpLifecycleTests.swift; sourceTree = "<group>"; };
@@ -211,9 +214,8 @@
 		ED88046AF4BCC838E47A1DE8 /* YlManagedFallbackCharacterizationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlManagedFallbackCharacterizationTests.swift; sourceTree = "<group>"; };
 		F38BA5B23113A06B10DBA6A8 /* YlMacosOpenCoordinatorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosOpenCoordinatorTests.swift; sourceTree = "<group>"; };
 		F46174D8E67323FE3A505CEC /* hls_key.bin */ = {isa = PBXFileReference; includeInIndex = 1; path = hls_key.bin; sourceTree = "<group>"; };
-		FC53E1C867EB626EF8E8CB17 /* YlDashHlsCompilerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlDashHlsCompilerTests.swift; sourceTree = "<group>"; };
 		FB2EFBB9E75B58722FD53A37 /* YlFairPlayKeySessionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFairPlayKeySessionTests.swift; sourceTree = "<group>"; };
-		7B04CFDDF3B1614FD42743EF /* YlFairPlayOutputTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFairPlayOutputTests.swift; sourceTree = "<group>"; };
+		FC53E1C867EB626EF8E8CB17 /* YlDashHlsCompilerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlDashHlsCompilerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -303,6 +305,7 @@
 				F46174D8E67323FE3A505CEC /* hls_key.bin */,
 				20781E1F08377A5E656C399D /* network_seek_h264_aac.mkv */,
 				8070E6E11F3656127214D0F4 /* two_audio_tracks.mkv */,
+				3DE4CCA76626E6D80436BF16 /* opus_switch.mkv */,
 			);
 			path = RunnerTests;
 			sourceTree = "<group>";
@@ -517,6 +520,7 @@
 				1408C46C12ADA157AC6675E7 /* hls_key.bin in Resources */,
 				6F49EF49E579AB7E9171BBD9 /* network_seek_h264_aac.mkv in Resources */,
 				631320C1C8CD65B03B4B6E8C /* two_audio_tracks.mkv in Resources */,
+				31F5B575A880807B063A4503 /* opus_switch.mkv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

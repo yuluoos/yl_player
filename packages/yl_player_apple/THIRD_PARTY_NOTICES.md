@@ -7,8 +7,8 @@
 Matroska, FLV, MP4/MOV, MPEG-TS, and AVI demultiplexing, packet parsing,
 DCA audio decoding, and a CELT-only Opus decoder. Video decoding remains in
 Apple VideoToolbox. Ordinary Matroska VOD integrates container trimming and seek
-preroll for family 0 mono/stereo 48 kHz Opus. SILK/hybrid, strict policies and
-switching to another Opus track remain unsupported.
+preroll for family 0 mono/stereo 48 kHz Opus. Active audio-track changes reuse seek preroll. SILK/hybrid and strict Opus
+policies remain unsupported.
 
 The minimized allowlist enables `matroska,flv,mov,mpegts,avi` demuxers;
 `aac,h264,hevc,mpegaudio,dca,ac3` parsers; `dca,opus` decoders; the `dovi_rpu`

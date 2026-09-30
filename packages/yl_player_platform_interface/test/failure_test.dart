@@ -9,6 +9,7 @@ void main() {
         'decoder.audio_opus_unsupported': 'CELT',
         'decoder.audio_opus_failed': 'complete media file',
         'policy.opus_unsupported': 'ordinary Matroska',
+        'policy.opus_track_switch_unsupported': 'Activate or resume',
       }.entries) {
         final message = YlSafeDiagnostics.messageForCode(entry.key);
         expect(message, contains('Opus'));

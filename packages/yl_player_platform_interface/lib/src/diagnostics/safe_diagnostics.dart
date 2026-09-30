@@ -51,7 +51,7 @@ abstract final class YlSafeDiagnostics {
     'decoder.audio_opus_failed' =>
       'The Opus audio packet or timing is invalid. Try another audio track or a complete media file.',
     'policy.opus_track_switch_unsupported' =>
-      'Switching to another Opus track is not supported yet. Keep the current track or use AAC.',
+      'Activate or resume playback before switching an Opus track.',
     'policy.opus_unsupported' =>
       'Opus currently supports ordinary Matroska VOD without managed networking, bounded buffering or hardware-required decoding.',
 

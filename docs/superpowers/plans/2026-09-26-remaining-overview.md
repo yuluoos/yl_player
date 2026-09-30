@@ -188,3 +188,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-09-29 P03推进Opus制品前置：原生CELT-only mono/stereo解码及独立PCM参考校验；SILK/hybrid明确拒绝。尚未启用播放器路由，trim/preroll接入和完整Opus/WebM仍是后续项，见[P03报告](../reports/2026-09-26-remaining-03-formats-decoding.md)。
 
 2026-09-29 P03继续接入普通Matroska AVC/Opus CELT播放：显式首尾裁剪、seek预解码与PCM目标裁剪、固定安全错误。仅family0 mono/stereo48k；切换到另一Opus音轨先明确拒绝并保留当前播放。SILK/hybrid、完整WebM、严格策略、物理输出与跨端验收仍未完成，Task1/Task2不勾选。最终证据见P03执行报告。
+
+2026-09-29 P03 Opus继续：活动会话切入/切出Opus复用seek事务，补齐代次隔离、容器回退、PCM裁剪与时钟锚点；暂停状态和播放意图保留。范围仍为CELT子集，完整Opus/WebM与Task1/Task2仍开放；细节和验证见P03报告。

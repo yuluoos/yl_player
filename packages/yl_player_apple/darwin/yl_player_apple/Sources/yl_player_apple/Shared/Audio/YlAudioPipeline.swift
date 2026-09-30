@@ -239,9 +239,13 @@ final class YlAudioPipeline {
   func anchorAudioIfNeeded(_ packet: YlCompressedAudioPacket) {
     guard !audioAnchored else { return }
     audioAnchored = true
+    // Renderer time is normalized to media microseconds and starts at the
+    // first scheduled PCM, after codec delay and presentation-target trimming.
+    // Compressed packet PTS can precede that PCM (or belong to a buffered batch).
+    let rendered = currentAudioRenderer?.renderedAudioTime
     timeline?.anchorAudio(
-      ptsUs: max(0, packet.ptsUs),
-      sampleTime: currentAudioRenderer?.renderedAudioTime?.sampleTime ?? 0
+      ptsUs: max(0, rendered?.sampleTime ?? packet.ptsUs),
+      sampleTime: rendered?.sampleTime ?? 0
     )
   }
 

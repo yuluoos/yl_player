@@ -536,7 +536,11 @@ quality, AV sync, iOS runtime or full WebM support.
 
 SILK/hybrid, managed networking, bounded buffering and hardwareRequired policy
 remain rejected for Opus-only sources. Mixed sources retain existing compatible
-AAC/etc. choices under strict policies. Switching to a different Opus track is
-explicitly rejected before changing the current renderer; safe guidance explains
-the limitation. Same selected-track requests remain no-ops. See the
+AAC/etc. choices under strict policies. Active switches into or out of Opus rewind the demux cursor, recreate the video
+decoder and trim decoded audio at the frozen presentation position. Candidate
+configuration failure preserves current playback. Same selected-track requests
+remain no-ops. Inactive/quiesced Opus changes remain explicitly rejected until
+reactivation. If a switch is cancelled after its demux cursor/buffers change,
+the current operation fails safely rather than resuming incompatible decoder
+history; later session generations remain protected. See the
 [P03 execution report](superpowers/reports/2026-09-26-remaining-03-formats-decoding.md).

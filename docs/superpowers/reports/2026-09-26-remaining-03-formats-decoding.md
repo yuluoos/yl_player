@@ -334,3 +334,37 @@ YL_TEST_FFMPEG_BUILD=<retained-signed-build> sh packages/yl_player_apple/tool/ap
 下一项优先补充Opus音轨切换所需的generation安全回退/预解码/首PCM时序；随后继续SILK/hybrid差异与其余格式缺口，不能把本次CELT子集等同完整Opus验收。
 
 最终代码状态下macOS原生音频18+FEL管线3=21项全部通过，0失败/跳过；并非完整原生聚合门禁。独立复审问题已用失败回归和最终验证收束，无待处理Critical/Important；无需第二轮重复复审。
+
+## 2026-09-29 Opus 活动音轨切换切片
+
+起点 `49be730`。切入或切出Opus时复用既有seek事务：先准备候选音频转换器，再在主线程冻结位置/播放意图，暂停旧输出、推进generation、join demux并清空旧缓冲、回退游标、安装/reset音轨、重建video decoder并设置展示目标。预解码包恢复Opus历史，PCM在展示目标处裁剪。配置失败发生在破坏当前资源之前；相同音轨请求保持no-op。其他codec之间的切轨路径不变。
+
+原生新回归先确认旧policy拒绝，然后使用真实Matroska demux/Opus转换器检查AAC→Opus、Opus→Opus冷decoder：至少80ms可用预解码、预解码期间不输出PCM、首PCM在目标后不足1ms、暂停位置/意图保留、旧video代次不可发布。还检查候选配置失败保持原轨/游标、游标变动后的取消不恢复不一致管线。VT和音频设备输出是受控依赖，不能把此测试当作物理设备输出证明。
+
+加强时钟断言后发现进度分别落后目标9ms/19ms：音频管线用未裁剪的包PTS锚定媒体时钟。现在使用renderer归一到微秒的实际PCM位置及同一次sampleTime快照，避免裁剪/分批转换造成锚点偏差。RED→GREEN后38项托管生命周期、18项音频、3项FEL，共59项通过，0失败/跳过。
+
+公开策略测试5项通过，包含本地暂停切轨/返回AAC、HTTP播放中AAC→Opus→AAC→Opus并保留播放状态与位置、后续seek到2.5s直至结束，以及既有严格策略/错误/失败候选保留。部署下限和FFmpeg制品未改变；原生资源与测试源同步到iOS/macOS，但本轮只有macOS运行证据。
+
+新增native原创夹具 `opus_switch.mkv`：从上一轮 `mkv-avc-aac-opus.mkv` 按 `-map 0:v -map 0:a:0 -map 0:a:1 -map 0:a:1 -c copy` 生成；SHA256 `daf6eb2541db739f83df4b9f7394178414168fb21cf118993bd6bcae6620389f`。两条Opus轨复制同一信号，仅验证冷decoder/选择/时序隔离，不证明不同音频内容的听感辨别。
+
+独立复审仅1项Important：未激活会话选轨只修改stream/generation，保留的旧renderer会拒绝新代次包。新增测试先观察到“不抛错、轨道被错误修改”，再在任何修改前明确拒绝未激活/已quiesce的Opus切轨；恢复播放后走活动事务。固定提示改为“Activate or resume playback before switching an Opus track.”，Dart消息回归先失败再修正。没有其他Critical/Important/Minor，不再重复派发复审。
+
+范围决定：候选配置失败不影响当前播放；游标/缓冲已改变后的同代次取消安全终止当前会话，不能用旧decoder继续，需要重新加载。普通控制指令按FIFO排队，不会自行取消前一条；stop/deactivate/dispose及替换会撤销代次权限，旧操作不得终止新会话。未激活选轨保持拒绝，避免扩大到整套再激活重构。上述选择的代价是这些边界不承诺无缝恢复。完整SILK/hybrid、WebM、损坏/无索引变体、物理声音/像素/同步、最低系统/其他设备/跨端、严格资源与硬解保证仍未验收。
+
+复审修复后原生39项托管生命周期+18项音频+3项FEL，共60项通过，0失败/跳过；5项公开策略/切轨测试和20项Dart错误提示测试再次通过。当前测试源/资源对齐iOS662/macOS580；这不是完整原生聚合门禁，也不构成iOS运行验收。
+
+复现：在`packages/yl_player/example`执行公开测试；原生测试前先用`flutter build macos --debug --config-only --no-pub`恢复普通入口，避免使用上一轮集成测试入口。
+
+```sh
+flutter test integration_test/opus_policy_test.dart -d macos --no-pub
+flutter test integration_test/format_matrix_test.dart -d macos --no-pub
+flutter build macos --debug --config-only --no-pub
+xcodebuild test CODE_SIGNING_ALLOWED=NO ENABLE_TESTABILITY=YES \
+  -workspace macos/Runner.xcworkspace -scheme Runner -destination 'platform=macOS' \
+  -parallel-testing-enabled NO \
+  -only-testing:RunnerTests/YlManagedFallbackCharacterizationTests \
+  -only-testing:RunnerTests/YlMacosAudioTests \
+  -only-testing:RunnerTests/YlFELVideoPipelineTests
+```
+
+最终代码58项矩阵全部符合基线：41条完成正常播放生命周期、12条有效素材缺口、5条损坏输入拒绝，58条原始观测与上轮逐项一致。原始行、测试日志指纹和最终源文件哈希见[macos-opus-switch-observations.json](../../../tool/media_matrix/macos-opus-switch-observations.json)。本轮不修改媒体基线、FFmpeg制品或历史证据；下一项继续SILK/hybrid PCM差异，完整Opus与P03任务保持开放。
