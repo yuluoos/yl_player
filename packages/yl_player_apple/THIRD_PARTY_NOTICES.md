@@ -5,14 +5,14 @@
 `YlFFmpegBridge.xcframework` contains a minimized build of FFmpeg 9.0.1
 `libavformat`, `libavcodec`, and `libavutil`. It is used for
 Matroska, FLV, MP4/MOV, MPEG-TS, and AVI demultiplexing, packet parsing,
-and DCA audio decoding. A statically linked libopus decoder handles Opus.
+and DCA/Vorbis audio decoding. A statically linked libopus decoder handles Opus.
 Video decoding remains in Apple VideoToolbox. Ordinary Matroska VOD integrates container trimming and seek
 preroll for family 0 mono/stereo 48 kHz Opus. Active audio-track changes reuse
 seek preroll. SILK, hybrid and CELT are supported within this family-0 scope;
 strict Opus policies remain unsupported.
 
 The minimized allowlist enables `matroska,flv,mov,mpegts,avi` demuxers;
-`aac,h264,hevc,mpegaudio,dca,ac3` parsers; `dca` decoder; the `dovi_rpu`
+`aac,h264,hevc,mpegaudio,dca,ac3` parsers; `dca,vorbis` decoders; the `dovi_rpu`
 bitstream filter; and the `file` protocol used by package-owned custom AVIO.
 FFmpeg's native Opus decoder and `libswresample` remain disabled.
 Test-only host libopus provides a PCM reference independent of bridge
@@ -99,3 +99,16 @@ verification is claimed for Opus. `YL_OPUS_ARCHIVE` may supply the pinned local
 archive. The canonical builder above builds both dependencies for all five
 targets, compares upstream COPYING with the tracked license, and records
 source pins and recipe inputs in the immutable artifact lock.
+
+## Test-only Vorbis reference
+
+`tool/apple_ffmpeg/build_vorbis_reference.sh` builds hash-pinned official
+[libogg 1.3.6](https://downloads.xiph.org/releases/ogg/libogg-1.3.6.tar.xz)
+and [libvorbis 1.3.7](https://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.xz)
+in a fresh external directory, retaining their upstream BSD notices there.
+These libraries only generate owned fixtures and independently compare PCM;
+they are not linked into the shipped framework. Runtime Vorbis uses FFmpeg's
+native decoder. Ordinary Matroska support is limited to mono/stereo at
+44.1/48 kHz, zero CodecDelay, no leading trim, and bounded headers/packets.
+Seek and active track changes use 200 ms preroll; strict policies remain
+unsupported. This does not establish multichannel or physical output acceptance.

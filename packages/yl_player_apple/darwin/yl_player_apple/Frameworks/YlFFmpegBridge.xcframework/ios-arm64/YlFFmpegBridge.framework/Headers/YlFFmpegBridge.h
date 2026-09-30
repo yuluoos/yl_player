@@ -64,6 +64,7 @@ enum {
   YLFCodecEAC3 = 7,
   YLFCodecFLAC = 8,
   YLFCodecOpus = 9,
+  YLFCodecVorbis = 10,
 };
 
 typedef struct {
@@ -208,7 +209,8 @@ YLF_EXPORT int32_t ylf_create_video_sample_buffer(
 // Validated Matroska Opus CodecDelay in 48 kHz samples; -1 for unsupported
 // header/delay/preroll metadata. Packet validity is checked separately.
 YLF_EXPORT int32_t ylf_stream_opus_delay_samples(YLFMediaContextRef context, int32_t index);
-// Copies explicit skip/discard samples, restoring initial delay after seek(0).
+// Copies Matroska Opus/Vorbis trim; restores Opus initial delay after seek(0).
+// Vorbis requires zero CodecDelay and rejects leading container trim.
 // Malformed trim metadata is an error, never silently treated as zero.
 YLF_EXPORT int32_t ylf_packet_audio_trim(YLFPacketRef packet, uint32_t *skip, uint32_t *discard);
 
@@ -230,6 +232,23 @@ YLF_EXPORT int32_t ylf_opus_decode(YLFOpusDecoderRef decoder,
     int32_t *out_offset_frames);
 YLF_EXPORT void ylf_opus_reset(YLFOpusDecoderRef decoder);
 YLF_EXPORT void ylf_opus_free(YLFOpusDecoderRef decoder);
+
+// Vorbis I Xiph-laced identification/comment/setup headers, mono/stereo,
+// 44.1 or 48 kHz. Input/header <=64 KiB; output <=4096 interleaved frames.
+// The decoder consumes one priming packet after create/reset without output.
+// Container skip/discard is applied once; callers still decode seek preroll.
+// Returns 200000 us for the accepted Matroska profile, -1 otherwise.
+YLF_EXPORT int32_t ylf_stream_vorbis_preroll_us(YLFMediaContextRef context, int32_t index);
+typedef struct YLFVorbisDecoder *YLFVorbisDecoderRef;
+YLF_EXPORT YLFVorbisDecoderRef ylf_vorbis_create(const uint8_t *head, size_t size,
+    int32_t sample_rate, int32_t channels);
+// Capacity must be >=4096 before any decoder state is consumed.
+// InvalidArgument preserves state. ReadFailed requires reset before reuse.
+YLF_EXPORT int32_t ylf_vorbis_decode(YLFVorbisDecoderRef decoder,
+    const uint8_t *data, size_t size, uint32_t skip, uint32_t discard,
+    float *samples, int32_t capacity_frames, int32_t *out_frames);
+YLF_EXPORT void ylf_vorbis_reset(YLFVorbisDecoderRef decoder);
+YLF_EXPORT void ylf_vorbis_free(YLFVorbisDecoderRef decoder);
 
 #ifdef __cplusplus
 }

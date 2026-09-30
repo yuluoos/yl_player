@@ -400,3 +400,32 @@ flutter test integration_test/format_matrix_test.dart -d macos --no-pub
 ```
 
 原生制品/PCM复现使用上文`test_audio_codecs.sh`、`test_video_metadata.sh`、`test_build_contract.sh`；`YL_TEST_FFMPEG_BUILD`须指向本轮包含`opus-stage`的固定源码构建目录。网络不可用时提供固定的`YL_FFMPEG_ARCHIVE`、`YL_FFMPEG_SIGNATURE`及`YL_OPUS_ARCHIVE`。下一切片继续Vorbis或VP9/AV1视频缺口，P03 Task1/Task2仍开放。
+
+
+## 2026-09-30 Vorbis 普通 Matroska 切片
+
+起点 `eb8c1af`。在现有 FFmpeg 9.0.1 制品启用 native Vorbis decoder，不新增产品运行时依赖，不接入商业 SDK。桥接新增稳定 codec ID 10、Xiph 三头校验和有界 float PCM 转换；单/双声道、44.1/48 kHz，header/packet 上限64KiB，单包输出上限4096frames。首包 overlap 由 FFmpeg 内部丢弃，禁止重复手动裁剪；容器支持尾裁，非零 CodecDelay、leading trim、其他采样率/声道明确拒绝。代价是部分合法但未覆盖的流暂不支持。
+
+seek 及活动会话切入/切出 Vorbis 使用200ms预解码并在目标处裁剪PCM，复用既有generation/视频重建事务。候选配置失败保留原播放；游标已改变后的取消安全结束当前会话；相同音轨no-op。未激活会话提前拒绝Vorbis切轨，含携带未取消token的调用，避免伪报network.cancelled。严格网络/缓冲/硬解策略排除Vorbis并保留可用AAC等轨道，无可用轨道时返回policy.vorbis_unsupported。
+
+独立PCM参考使用官方hash固定的libogg1.3.6/libvorbis1.3.7，只在外部临时目录构建，不进入产品。自有encoder按真实采样率/声道生成4秒逐秒音调，源码及候选制品各覆盖44.1/48k×mono/stereo、reset、容量/损坏header/包、2s/1.25s/0跳转。每次seek后的PCM与线性解码同包逐样本一致；Xiph参考SNR约136.46–136.53dB，高于原50dB门槛。测试源见test_vorbis.m，参考构建入口build_vorbis_reference.sh。
+
+复审发现两项编译问题（optional stream被误访问、重复测试helper）和一项未激活带token切轨错误分类；核对后删除误插入代码与重复声明，补齐非空token回归。仅进行一次独立复审。源码及测试资源同步Apple两端，但iOS未实跑。多声道、其他采样率、WebM视频、物理声音/像素/同步、最低系统/跨平台、严格资源和长期性能仍待完成，Task1/Task2保持开放。
+
+复现（前两行在仓库根目录；Flutter命令在packages/yl_player/example执行）：
+
+```sh
+sh packages/yl_player_apple/tool/apple_ffmpeg/build_vorbis_reference.sh /tmp/yl-vorbis-reference-new
+YL_TEST_FFMPEG_BUILD=<retained-signed-build> YL_TEST_VORBIS_REFERENCE=/tmp/yl-vorbis-reference-new/install sh packages/yl_player_apple/tool/apple_ffmpeg/test_audio_codecs.sh
+flutter test integration_test/vorbis_policy_test.dart -d macos --no-pub
+flutter test integration_test/format_matrix_test.dart -d macos --no-pub --dart-define=YL_FORMAT_REQUIRE_SUPPORT=true --plain-name 'mkv-avc-vorbis /'
+flutter test integration_test/format_matrix_test.dart -d macos --no-pub
+```
+
+初次原生64项中旧60项通过、新4项均在准备阶段失败；公开策略也复现decoder.audio_vorbis_unsupported。检查原始Matroska CodecDelay元素与最小demux参数确认native FFmpeg encoder写入1024采样delay，超出预定范围。保留该原始夹具作为负例；新正常夹具改用已验证Xiph encoder，零CodecDelay，独立颜色/音调检查再次通过且旧20行保持一致。公开5项策略/切轨/安全错误随后全通过。未放宽产品校验或改变既定50dB PCM门槛。
+
+五架构独立重建18项完全一致，接受lock SHA256 `8fa6982ca99070a2773d2211e682bb3cc8bab819dd2e111225d66fa320d2684e`。3slices/5architectures/42 Swift符号及5项篡改负例通过，锁未被验证过程改写。Vorbis源码和制品8组配置（每组含reset两遍）共25892项检查通过；原Opus32轮/162876检查及audio31、demux844、video35、TS30、AVI88和FEL回归通过。最终公开矩阵及源/日志指纹见本节后续记录。
+
+最终macOS原生43项托管生命周期+18项音频+3项FEL共64项通过，0失败/跳过。5项Vorbis策略/错误/切轨、5项Opus回归、3条Vorbis严格公开路径及20项Dart错误检查通过；8项目录检查和静态分析通过。Apple测试源/资源对齐iOS666/macOS584，未声称完整原生聚合门禁或iOS运行通过。
+
+完整67项矩阵符合基线：50条正常播放生命周期完成、12条有效媒体支持缺口、5条损坏输入拒绝。旧64条原始观测逐项相同，旧20份媒体及元数据不变；新增3条Vorbis预期只在严格路径实测成功后加入。证据、PCM结果和最终源码/日志指纹见[macos-vorbis-observations.json](../../../tool/media_matrix/macos-vorbis-observations.json)。Vorbis策略测试已接入macOS集成检查脚本。下一项继续VP9/AV1视频缺口；完整Task1/Task2和物理输出/跨端验收保持开放。

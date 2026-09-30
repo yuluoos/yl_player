@@ -2,6 +2,8 @@
 """Generate small original color/tone fixtures; no third-party media is used."""
 import hashlib
 import json
+import os
+import tempfile
 from pathlib import Path
 import subprocess
 
@@ -24,6 +26,7 @@ CASES = [
     ('mkv-avc-opus-silk', 'mkv', 'matroska', 'libx264', 'libopus', 1, 8),
     ('mkv-avc-opus-hybrid', 'mkv', 'matroska', 'libx264', 'libopus', 1, 8),
     ('mkv-avc-flac', 'mkv', 'matroska', 'libx264', 'flac', 2, 8),
+    ('mkv-avc-vorbis', 'mkv', 'matroska', 'libx264', 'vorbis', 2, 8),
     ('webm-vp9-vorbis', 'webm', 'webm', 'libvpx-vp9', 'vorbis', 2, 8),
     ('mkv-hevc-main10-aac', 'mkv', 'matroska', 'libx265', 'aac', 2, 10),
     ('mkv-avc-ac3-51', 'mkv', 'matroska', 'libx264', 'ac3', 6, 8),
@@ -32,6 +35,9 @@ CASES = [
 
 
 def main():
+    reference = Path(os.environ['YL_TEST_VORBIS_REFERENCE'])
+    encoder = reference / 'bin/yl_vorbis_encoder'
+    if not encoder.is_file(): raise ValueError('Build the test-only Xiph Vorbis reference tools first')
     OUT.mkdir(parents=True, exist_ok=True)
     rows, commands = [], []
     for name, ext, container, vc, ac, channels, depth in CASES:
@@ -58,7 +64,19 @@ def main():
         if ext in {'mp4','mov'}: cmd += ['-movflags','+faststart']
         if 'no-cues' in name: cmd += ['-live','1']
         cmd += [str(path)]
-        subprocess.run(cmd,check=True)
+        if name == 'mkv-avc-vorbis':
+            with tempfile.TemporaryDirectory(prefix='yl-vorbis-fixture-') as temporary:
+                ogg = Path(temporary) / 'owned.ogg'
+                with ogg.open('wb') as output:
+                    subprocess.run([str(encoder), '48000', '2'], stdout=output, check=True)
+                cmd = ['ffmpeg','-hide_banner','-loglevel','error','-y',
+                       '-f','lavfi','-i',video,'-i',str(ogg),'-map','0:v','-map','1:a',
+                       '-t','4','-c:v','libx264','-pix_fmt','yuv420p','-threads','2',
+                       '-preset','ultrafast','-g','24','-bf','0','-c:a','copy',str(path)]
+                commands.append([str(encoder), '48000', '2', '> ' + str(ogg)])
+                subprocess.run(cmd, check=True)
+        else:
+            subprocess.run(cmd,check=True)
         commands.append([str(Path(a).relative_to(ROOT)) if a.startswith(str(ROOT)) else a for a in cmd])
         probe=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_streams','-show_format','-of','json',str(path)]))
         # Do not commit machine paths from the independent probe.

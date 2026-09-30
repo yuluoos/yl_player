@@ -376,9 +376,11 @@ final class YlDemuxPipeline {
         ylf_packet_release(&packet); output.setDemuxPumping(false); output.fail(YlManagedBufferLedger.unsupported()); return
       }
       let isOpus = Int(selectedAudioStream?.codec ?? 0) == YLFCodecOpus
+      let isVorbis = Int(selectedAudioStream?.codec ?? 0) == YLFCodecVorbis
+      let usesPreroll = isOpus || isVorbis
       var skip: UInt32 = 0, discard: UInt32 = 0
-      if isOpus && (ylf_packet_size(ownedPacket) > 65536 || ylf_packet_audio_trim(ownedPacket, &skip, &discard) != 0) {
-        ylf_packet_release(&packet); output.setDemuxPumping(false); output.fail(ylOpusPacketError()); return
+      if usesPreroll && (ylf_packet_size(ownedPacket) > 65536 || ylf_packet_audio_trim(ownedPacket, &skip, &discard) != 0) {
+        ylf_packet_release(&packet); output.setDemuxPumping(false); output.fail(isVorbis ? ylVorbisPacketError() : ylOpusPacketError()); return
       }
       let audioPacket = YlCompressedAudioPacket(
         reservation: audioReservation,
@@ -387,10 +389,10 @@ final class YlDemuxPipeline {
         durationUs: packetDuration,
         generation: output.demuxAudioGeneration,
         skipSamples: skip, discardSamples: discard,
-        presentationStartUs: isOpus ? output.demuxAudioPresentationStartUs : nil
+        presentationStartUs: usesPreroll ? output.demuxAudioPresentationStartUs : nil
       )
       ylf_packet_release(&packet)
-      if !isOpus && !output.acceptsDemuxAudio(ptsUs: audioPacket.ptsUs) {
+      if !usesPreroll && !output.acceptsDemuxAudio(ptsUs: audioPacket.ptsUs) {
         output.setDemuxPumping(false)
         output.requestAudioPump()
         return

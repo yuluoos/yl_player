@@ -354,6 +354,172 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
       generation: 17, videoSessionFactory: factory, emit: emit)
   }
 
+  private final class VorbisRecordingConverter: YlAudioPacketConverting {
+    let vorbis = YlVorbisAudioConverter()
+    let fallback = Converter(Trace())
+    let lock = NSLock()
+    var isVorbis = false
+    var rejectVorbis = false
+    private var entries: [(pts: Int64, target: Int64?, output: Int64?)] = []
+    var observed: [(pts: Int64, target: Int64?, output: Int64?)] { lock.withLock { entries } }
+    func configure(stream: YlAudioStreamConfiguration) throws {
+      isVorbis = stream.codec == .vorbis
+      if isVorbis {
+        if rejectVorbis { throw ylVorbisUnsupportedError() }
+        try vorbis.configure(stream: stream)
+      } else { try fallback.configure(stream: stream) }
+    }
+    func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate {
+      isVorbis ? vorbis.estimateOutput(for: packet) : fallback.estimateOutput(for: packet)
+    }
+    func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
+      let value = try isVorbis ? vorbis.convert(packet: packet) : fallback.convert(packet: packet)
+      if isVorbis { lock.withLock { entries.append((packet.ptsUs, packet.presentationStartUs, value?.ptsUs)) } }
+      return value
+    }
+    func reset() { if isVorbis { vorbis.reset() } else { fallback.reset() } }
+  }
+  private final class VorbisAudioFactory: YlAudioRendererMaking {
+    var rejectVorbis = false
+    var converters = [VorbisRecordingConverter]()
+    var outputs = [AudioOutput]()
+    var renderers = [YlAudioRenderer]()
+    func makeRenderer(bufferBudget: YlFallbackBufferBudget) -> YlAudioRenderer {
+      let converter = VorbisRecordingConverter(), output = AudioOutput(Trace())
+      converter.rejectVorbis = rejectVorbis
+      converters.append(converter); outputs.append(output)
+      let renderer = YlAudioRenderer(bufferBudget: bufferBudget, converter: converter, output: output)
+      renderers.append(renderer); return renderer
+    }
+  }
+  private final class VorbisSwitchControl: YlDemuxControlling {
+    var targets = [Int64]()
+    var beforeSeek: (() -> Void)?
+    func interrupt(_ media: YlOpenedMedia) { media.interruptRead() }
+    func resume(_ media: YlOpenedMedia) { media.resumeReads() }
+    func join(_ worker: DispatchQueue, operation: () -> Void) { worker.sync(execute: operation) }
+    func seek(_ media: YlOpenedMedia, toMediaTimeUs target: Int64) throws {
+      targets.append(target); beforeSeek?()
+      try media.seek(toMediaTimeUs: target)
+    }
+  }
+  private func vorbisPrepared() throws -> YlPreparedFallback {
+    let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "vorbis_switch", withExtension: "mkv"))
+    return try YlPreparedFallback(source: .init(uri: url.absoluteString, kind: .file, formatHint: .matroska), requireHardwareProbe: false)
+  }
+  func testVorbisTrackSwitchRewindsAndTrimsRealPCMForEachColdDecoder() async throws {
+    let video = Factory(), output = Output(), audio = VorbisAudioFactory(), control = VorbisSwitchControl()
+    let clock = YlMediaClock(audioTime: { audio.renderers.last?.renderedAudioTime })
+    video.automaticFrames = true
+    var latest: YlNativeState?
+    let instance = try YlFallbackBackend(playerId: 731,
+      services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { _ in Display() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: vorbisPrepared(), generation: 17,
+      videoSessionFactory: video, mediaClock: clock, audioRendererFactory: audio, demuxControl: control,
+      emit: { if case .state(let state) = $0.event { latest = state } })
+    defer { instance.dispose() }
+    try instance.activate()
+    try await AppleHostCharacterizations.waitFor { video.sessions[0].lastGeneration != nil }
+    let old = video.sessions[0], oldGeneration = try XCTUnwrap(old.lastGeneration)
+    for (track, target): (String, Int64) in [("audio-2", 1_250_000), ("audio-3", 1_500_000)] {
+      try instance.pause(); clock.seek(to: target)
+      try instance.selectAudioTrack(track)
+      instance.emitState()
+      XCTAssertEqual(control.targets.last, target)
+      XCTAssertEqual(latest?.audioTracks.first(where: { $0.isSelected })?.id, track)
+      XCTAssertEqual(latest?.status, "paused")
+      XCTAssertEqual(latest?.positionMs, target / 1000)
+      XCTAssertEqual(old.invalidations, 1)
+      let converter = try XCTUnwrap(audio.converters.last)
+      try instance.play()
+      try await AppleHostCharacterizations.waitFor { converter.observed.contains { $0.output != nil } }
+      let rows = converter.observed
+      XCTAssertLessThanOrEqual(try XCTUnwrap(rows.first?.pts), target - 200_000)
+      XCTAssertTrue(rows.allSatisfy { $0.target == target })
+      XCTAssertTrue(rows.contains { $0.output == nil }, "Preroll must decode without presenting")
+      let first = try XCTUnwrap(rows.compactMap { $0.output }.first)
+      XCTAssertGreaterThanOrEqual(first, target)
+      XCTAssertLessThan(first, target + 1_000, "First PCM must start at the target, not a later packet")
+      try instance.pause()
+      XCTAssertGreaterThanOrEqual(clock.position(atHostTimeUs: YlPresentationCoordinator.hostTimeUs()), target, "The media clock must anchor to trimmed PCM, not the compressed packet PTS")
+      let decoderCount = video.sessions.count
+      try instance.selectAudioTrack(track)
+      XCTAssertEqual(video.sessions.count, decoderCount, "Same-track requests remain no-ops")
+    }
+    try instance.pause()
+    let current = try XCTUnwrap(video.sessions.last)
+    try await AppleHostCharacterizations.waitFor { current.lastGeneration != nil }
+    let before = output.published
+    try old.send(generation: oldGeneration, ptsUs: 1_500_000)
+    await Task.yield()
+    XCTAssertEqual(output.published, before, "Retired video cannot publish after audio switch rewind")
+  }
+  func testVorbisTrackCandidateFailureKeepsCurrentRendererAndCursor() async throws {
+    let audio = VorbisAudioFactory(), video = Factory(), output = Output(), control = VorbisSwitchControl()
+    var latest: YlNativeState?
+    let instance = try YlFallbackBackend(playerId: 731,
+      services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { _ in Display() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: vorbisPrepared(), generation: 17,
+      videoSessionFactory: video, audioRendererFactory: audio, demuxControl: control,
+      emit: { if case .state(let state) = $0.event { latest = state } })
+    defer { instance.dispose() }
+    try instance.activate(); try instance.play()
+    audio.rejectVorbis = true
+    XCTAssertThrowsError(try instance.selectAudioTrack("audio-2")) {
+      XCTAssertEqual(($0 as? NativePlayerError)?.code, "decoder.audio_vorbis_unsupported")
+    }
+    instance.emitState()
+    XCTAssertEqual(latest?.audioTracks.first(where: { $0.isSelected })?.id, "audio-1")
+    XCTAssertNil(latest?.error)
+    XCTAssertTrue(instance.isActive); XCTAssertTrue(instance.playbackIntent)
+    XCTAssertTrue(control.targets.isEmpty)
+    XCTAssertEqual(video.sessions.count, 1)
+    XCTAssertEqual(video.sessions[0].invalidations, 0)
+  }
+  func testInactiveVorbisSwitchPreservesPreparedRendererUntilActivation() throws {
+    let audio = VorbisAudioFactory(), video = Factory(), output = Output()
+    var latest: YlNativeState?
+    let instance = try YlFallbackBackend(playerId: 731,
+      services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { _ in Display() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: vorbisPrepared(), generation: 17,
+      videoSessionFactory: video, audioRendererFactory: audio,
+      emit: { if case .state(let state) = $0.event { latest = state } })
+    defer { instance.dispose() }
+    XCTAssertThrowsError(try instance.selectAudioTrack("audio-2")) {
+      XCTAssertEqual(($0 as? NativePlayerError)?.code, "policy.vorbis_track_switch_unsupported")
+    }
+    XCTAssertThrowsError(try instance.selectAudioTrack("audio-2", cancellationToken: YlOpenCancellationToken())) {
+      XCTAssertEqual(($0 as? NativePlayerError)?.code, "policy.vorbis_track_switch_unsupported")
+    }
+    instance.emitState()
+    XCTAssertEqual(latest?.audioTracks.first(where: { $0.isSelected })?.id, "audio-1")
+    XCTAssertNil(latest?.error)
+    XCTAssertEqual(audio.converters.count, 1)
+    XCTAssertFalse(instance.isActive)
+    try instance.activate()
+    XCTAssertTrue(instance.isActive)
+  }
+  func testCancelledVorbisSwitchAfterRewindCannotResumePartialPipeline() throws {
+    let audio = VorbisAudioFactory(), video = Factory(), output = Output(), control = VorbisSwitchControl()
+    let token = YlOpenCancellationToken()
+    var latest: YlNativeState?
+    let instance = try YlFallbackBackend(playerId: 731,
+      services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { _ in Display() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: vorbisPrepared(), generation: 17,
+      videoSessionFactory: video, audioRendererFactory: audio, demuxControl: control,
+      emit: { if case .state(let state) = $0.event { latest = state } })
+    defer { instance.dispose() }
+    try instance.activate(); try instance.play()
+    control.beforeSeek = { token.cancel() }
+    XCTAssertThrowsError(try instance.selectAudioTrack("audio-2", cancellationToken: token)) {
+      XCTAssertEqual(($0 as? NativePlayerError)?.code, "network.cancelled")
+    }
+    XCTAssertEqual(control.targets.count, 1)
+    instance.emitState()
+    XCTAssertFalse(instance.isActive, "A interrupted cursor cannot resume with old decoder history")
+    XCTAssertEqual(latest?.error?.code, "network.cancelled")
+  }
+
   func testHardwareEvidenceRequiresActualCFBooleanAndSafeIdentity() {
     let values: [(OSStatus, CFTypeRef?, YlHardwareDecoderEvidence.Mode)] = [
       (noErr, kCFBooleanTrue, .hardware), (noErr, kCFBooleanFalse, .software),

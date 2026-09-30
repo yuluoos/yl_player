@@ -37,6 +37,7 @@
 		25E694718161B4E6B34ED875 /* YlMacosPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD6B0E3C6E6F7A719D8CDB9 /* YlMacosPresentationTests.swift */; };
 		2C21C04BD36EA61953A1CD61 /* YlDashHlsCompilerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC53E1C867EB626EF8E8CB17 /* YlDashHlsCompilerTests.swift */; };
 		31F5B575A880807B063A4503 /* opus_switch.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 3DE4CCA76626E6D80436BF16 /* opus_switch.mkv */; };
+		5DF21573AD8336E7E7080C0B /* vorbis_switch.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 9222A10C08EA09E781058EF0 /* vorbis_switch.mkv */; };
 		33360611418A26793305401C /* YlOpenedMediaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C700A177742B3233701EEB56 /* YlOpenedMediaTests.swift */; };
 		335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335BBD1A22A9A15E00E9071D /* GeneratedPluginRegistrant.swift */; };
 		33CC10F12044A3C60003C045 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC10F02044A3C60003C045 /* AppDelegate.swift */; };
@@ -162,6 +163,7 @@
 		3ADC0D265B741EEDE905AAB4 /* YlAppleDecoderRestorationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleDecoderRestorationTests.swift; sourceTree = "<group>"; };
 		3C290055C8B9FFBB2409465E /* NativeCallbackCharacterization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeCallbackCharacterization.swift; sourceTree = "<group>"; };
 		3DE4CCA76626E6D80436BF16 /* opus_switch.mkv */ = {isa = PBXFileReference; includeInIndex = 1; path = opus_switch.mkv; sourceTree = "<group>"; };
+		9222A10C08EA09E781058EF0 /* vorbis_switch.mkv */ = {isa = PBXFileReference; includeInIndex = 1; path = vorbis_switch.mkv; sourceTree = "<group>"; };
 		3FB68FDA267E2CE9BF8139A7 /* h264_aac.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = h264_aac.mp4; sourceTree = "<group>"; };
 		42E615412A9A1C967D196015 /* YlMacosFallbackTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosFallbackTests.swift; sourceTree = "<group>"; };
 		478CEBF666133EE514223540 /* dash-sidx-v1.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = "dash-sidx-v1.mp4"; sourceTree = "<group>"; };
@@ -306,6 +308,7 @@
 				20781E1F08377A5E656C399D /* network_seek_h264_aac.mkv */,
 				8070E6E11F3656127214D0F4 /* two_audio_tracks.mkv */,
 				3DE4CCA76626E6D80436BF16 /* opus_switch.mkv */,
+				9222A10C08EA09E781058EF0 /* vorbis_switch.mkv */,
 			);
 			path = RunnerTests;
 			sourceTree = "<group>";
@@ -521,6 +524,7 @@
 				6F49EF49E579AB7E9171BBD9 /* network_seek_h264_aac.mkv in Resources */,
 				631320C1C8CD65B03B4B6E8C /* two_audio_tracks.mkv in Resources */,
 				31F5B575A880807B063A4503 /* opus_switch.mkv in Resources */,
+				5DF21573AD8336E7E7080C0B /* vorbis_switch.mkv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

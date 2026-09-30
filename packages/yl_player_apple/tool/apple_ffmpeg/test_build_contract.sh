@@ -23,7 +23,7 @@ opus_pins = dict(line.split('=',1) for line in (script/'opus-1.6.1.lock').read_t
 assert opus_pins == {'OPUS_VERSION':'1.6.1', 'OPUS_URL':'https://downloads.xiph.org/releases/opus/opus-1.6.1.tar.gz',
  'OPUS_SHA256':'6ffcb593207be92584df15b32466ed64bbec99109f007c82205f0194572411a1'}
 allowed_enables = {'--enable-cross-compile','--enable-avutil','--enable-avcodec','--enable-avformat',
- '--enable-bsf=dovi_rpu','--enable-demuxer=matroska,flv,mov,mpegts,avi','--enable-decoder=dca','--enable-protocol=file','--enable-parser=aac,h264,hevc,mpegaudio,dca,ac3',
+ '--enable-bsf=dovi_rpu','--enable-demuxer=matroska,flv,mov,mpegts,avi','--enable-decoder=dca,vorbis','--enable-protocol=file','--enable-parser=aac,h264,hevc,mpegaudio,dca,ac3',
  '--enable-pic','--enable-static'}
 required_disables = {'--disable-everything','--disable-autodetect','--disable-network',
  '--disable-swresample','--disable-programs','--disable-doc','--disable-avdevice','--disable-avfilter','--disable-swscale',
@@ -66,6 +66,7 @@ for entry in info:
    check_configuration(configs[0])
   assert not any(n.startswith('_opus_') for n in names), 'private libopus symbols leaked'
   assert {'_'+s for s in symbols} <= names, (arch, symbols, names)
+  assert {'_ylf_vorbis_'+s for s in ('create','decode','reset','free')} <= names, arch
   assert {'_ylf_opus_'+s for s in ('create','decode','reset','free')} <= names, arch
   loads = subprocess.check_output(['otool','-arch',arch,'-l',str(binary)],text=True)
   assert len(re.findall(r'cmd LC_UUID\n',loads)) == 1, 'dyld requires a UUID load command'

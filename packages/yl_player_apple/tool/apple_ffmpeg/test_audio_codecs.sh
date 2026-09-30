@@ -23,3 +23,5 @@ xcrun clang -fobjc-arc -I"${YL_TEST_OPUS_PREFIX:-$YL_TEST_FFMPEG_BUILD/build/mac
 sh "$script_dir/test_opus.sh"
 
 sh "$script_dir/test_opus_demux.sh"
+
+sh "$script_dir/test_vorbis.sh"

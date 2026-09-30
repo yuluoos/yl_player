@@ -23,6 +23,7 @@ enum YlAudioCodec: Equatable {
   case eac3
   case flac
   case opus
+  case vorbis
   case unsupported
 
   init(bridgeCodec: Int32) {
@@ -34,6 +35,7 @@ enum YlAudioCodec: Equatable {
     case YLFCodecEAC3: self = .eac3
     case YLFCodecFLAC: self = .flac
     case YLFCodecOpus: self = .opus
+    case YLFCodecVorbis: self = .vorbis
     default: self = .unsupported
     }
   }
@@ -47,6 +49,7 @@ enum YlAudioCodec: Equatable {
     case .eac3: return "E-AC-3"
     case .flac: return "FLAC"
     case .opus: return "Opus"
+    case .vorbis: return "Vorbis"
     case .unsupported: return "Compressed"
     }
   }
@@ -377,7 +380,7 @@ final class YlAudioRenderer: YlAudioRendering {
       }
       buffer = converted
       if buffer.reservation == nil { buffer.reservation = reservation }
-    } catch let error as NativePlayerError where ["policy.unsupported", "decoder.audio_opus_unsupported", "decoder.audio_opus_failed"].contains(error.code) {
+    } catch let error as NativePlayerError where ["policy.unsupported", "decoder.audio_opus_unsupported", "decoder.audio_opus_failed", "decoder.audio_vorbis_unsupported", "decoder.audio_vorbis_failed"].contains(error.code) {
       throw error
     } catch {
       let codecName = lock.withLock {
@@ -609,6 +612,7 @@ final class YlAudioRenderer: YlAudioRendering {
     case .eac3: return "decoder.audio_eac3_unsupported"
     case .flac: return "decoder.audio_flac_unsupported"
     case .opus: return "decoder.audio_opus_unsupported"
+    case .vorbis: return "decoder.audio_vorbis_unsupported"
     case .unsupported: return "decoder.audio_unsupported"
     }
   }
@@ -647,11 +651,12 @@ final class YlAudioRenderer: YlAudioRendering {
 final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   private var dtsConverter: YlDtsAudioConverter?
   private var opusConverter: YlOpusAudioConverter?
+  private var vorbisConverter: YlVorbisAudioConverter?
   var bufferScope: YlManagedBufferScope?
   private var converter: AVAudioConverter?
   private var inputFormat: AVAudioFormat?
   private var outputFormat: AVAudioFormat?
-  var pcmFormat: AVAudioFormat? { opusConverter?.pcmFormat ?? (dtsConverter == nil ? outputFormat : nil) }
+  var pcmFormat: AVAudioFormat? { vorbisConverter?.pcmFormat ?? opusConverter?.pcmFormat ?? (dtsConverter == nil ? outputFormat : nil) }
   private var framesPerPacket: UInt32 = 0
   private var batchesInput = YlAppleCompatibility.current.batchesAudioInput
   private var variablePacketFrames = false
@@ -662,7 +667,15 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   func configure(stream: YlAudioStreamConfiguration) throws {
     dtsConverter = nil
     opusConverter = nil
+    vorbisConverter = nil
     flacConfiguration = nil
+    if stream.codec == .vorbis {
+      let vorbis = YlVorbisAudioConverter()
+      vorbis.bufferScope = bufferScope
+      try vorbis.configure(stream: stream)
+      vorbisConverter = vorbis
+      return
+    }
     if stream.codec == .opus {
       let opus = YlOpusAudioConverter()
       opus.bufferScope = bufferScope
@@ -774,6 +787,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   }
 
   func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate {
+    if let vorbisConverter { return vorbisConverter.estimateOutput(for: packet) }
     if let opusConverter { return opusConverter.estimateOutput(for: packet) }
     if let dtsConverter { return dtsConverter.estimateOutput(for: packet) }
     guard let outputFormat else {
@@ -799,6 +813,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   }
 
   func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
+    if let vorbisConverter { return try vorbisConverter.convert(packet: packet) }
     if let opusConverter { return try opusConverter.convert(packet: packet) }
     if let dtsConverter { return try dtsConverter.convert(packet: packet) }
     guard let converter, let inputFormat, let outputFormat, !packet.data.isEmpty else {
@@ -909,6 +924,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   func reset() {
     dtsConverter?.reset()
     opusConverter?.reset()
+    vorbisConverter?.reset()
     converter?.reset()
     pendingPackets.removeAll(keepingCapacity: true)
     pendingOutputPackets.removeAll(keepingCapacity: true)

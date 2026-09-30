@@ -358,6 +358,8 @@ static int32_t ylf_codec(enum AVCodecID codec_id) {
     return YLFCodecFLAC;
   case AV_CODEC_ID_OPUS:
     return YLFCodecOpus;
+  case AV_CODEC_ID_VORBIS:
+    return YLFCodecVorbis;
   default:
     return YLFCodecUnsupported;
   }
@@ -1093,25 +1095,28 @@ int32_t ylf_seek(YLFMediaContextRef context, int64_t position_us) {
     pthread_mutex_unlock(&context->mutex);
     return ylf_callback_failure(context, YLFResultSeekFailed);
   }
-  // Opus seeks decode at least 80 ms of preroll before the presentation target.
+  // Decode at least 80 ms for Opus; Vorbis needs two overlap blocks (200 ms).
   // Keep this local to the demux cursor; the player retains its original target.
-  bool opus_preroll = false;
-  for (unsigned i = 0; i < context->format->nb_streams; i++)
-    if (context->format->streams[i]->codecpar->codec_id == AV_CODEC_ID_OPUS) opus_preroll = true;
-  if (opus_preroll) position_us = FFMAX(0, position_us - 80000);
+  int preroll_us = 0;
+  for (unsigned i = 0; i < context->format->nb_streams; i++) {
+    if (context->format->streams[i]->codecpar->codec_id == AV_CODEC_ID_OPUS) preroll_us = FFMAX(preroll_us, 80000);
+    preroll_us = FFMAX(preroll_us, ylf_stream_vorbis_preroll_us(context, (int32_t)i));
+  }
+  if (preroll_us) position_us = FFMAX(0, position_us - preroll_us);
   int64_t absolute_position_us;
   if (__builtin_add_overflow(position_us, context->timeline_origin_us, &absolute_position_us) ||
       absolute_position_us == AV_NOPTS_VALUE) {
     pthread_mutex_unlock(&context->mutex);
     return YLFResultSeekFailed;
   }
-  if (opus_preroll && position_us == 0) {
+  if (preroll_us && position_us == 0) {
     // A video cue at zero can suppress the first negative-PTS Opus packet.
     // Anchor at the earliest delayed audio packet so Matroska retains it and
     // the following initial video keyframe. Positive-start tracks use video.
     int audio_index = -1; int64_t earliest_us = 0, audio_start = 0;
     for (unsigned i = 0; i < context->format->nb_streams; i++) {
-      int delay = ylf_stream_opus_delay_samples(context, (int32_t)i);
+      bool vorbis = ylf_stream_vorbis_preroll_us(context, (int32_t)i) > 0;
+      int delay = vorbis ? 0 : ylf_stream_opus_delay_samples(context, (int32_t)i);
       AVStream *st = context->format->streams[i];
       int64_t first;
       if (delay < 0 || __builtin_sub_overflow(st->start_time,
@@ -1134,7 +1139,7 @@ int32_t ylf_seek(YLFMediaContextRef context, int64_t position_us) {
                                   -1,
                                   INT64_MIN,
                                   absolute_position_us,
-                                  opus_preroll ? absolute_position_us : INT64_MAX,
+                                  preroll_us ? absolute_position_us : INT64_MAX,
                                   AVSEEK_FLAG_BACKWARD);
   if (result >= 0) {
     avformat_flush(context->format);
@@ -1694,15 +1699,18 @@ int32_t ylf_packet_audio_trim(YLFPacketRef packet, uint32_t *skip, uint32_t *dis
   if (!packet || !packet->value || !packet->owner || !skip || !discard) return YLFResultInvalidArgument;
   *skip = 0; *discard = 0;
   AVPacket *p = packet->value;
-  int32_t delay = ylf_stream_opus_delay_samples(packet->owner, p->stream_index);
+  bool vorbis = ylf_stream_vorbis_preroll_us(packet->owner, p->stream_index) > 0;
+  int32_t delay = vorbis ? 0 : ylf_stream_opus_delay_samples(packet->owner, p->stream_index);
   if (delay < 0 || p->pts == AV_NOPTS_VALUE) return YLFResultAudioConfigurationUnsupported;
   size_t size = 0;
   const uint8_t *side = av_packet_get_side_data(p, AV_PKT_DATA_SKIP_SAMPLES, &size);
   if (side) {
     if (size != 10) return YLFResultReadFailed;
     *skip = AV_RL32(side); *discard = AV_RL32(side + 4);
-    if (*skip > 65535 || *discard > 5760) return YLFResultReadFailed;
+    if (*skip > (vorbis ? 4096 : 65535) || *discard > (vorbis ? 4096 : 5760)) return YLFResultReadFailed;
   }
+  // Leading container trim is outside the accepted Vorbis timestamp profile.
+  if (vorbis) return *skip ? YLFResultReadFailed : YLFResultOK;
   // libavformat clears pending skip on seek. The timestamp of the original
   // first packet identifies the only position where CodecDelay applies again.
   AVStream *stream = packet->owner->format->streams[p->stream_index];
@@ -1775,3 +1783,5 @@ void ylf_opus_free(YLFOpusDecoderRef d) {
   if (!d) return;
   opus_decoder_destroy(d->decoder); free(d);
 }
+
+#include "YlVorbisBridge.inc"

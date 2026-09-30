@@ -994,7 +994,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     try seek(toUs: max(0, positionMs) * 1_000, selectingAudio: nil, cancellationToken: cancellationToken)
   }
 
-  /// Audio switches involving Opus need the same demux history, video generation
+  /// Audio switches involving Opus or Vorbis need the same demux history, video generation
   /// and presentation gate as a seek. A nil target freezes the current position
   /// only after candidate configuration succeeds, before pausing the clock.
   private func seek(
@@ -1560,13 +1560,19 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     guard requestedStream.index != demux.selectedAudioStream?.index else { return }
     let switchesOpus = Int(requestedStream.codec) == YLFCodecOpus
       || demux.selectedAudioStream.map({ Int($0.codec) == YLFCodecOpus }) == true
+    let switchesVorbis = Int(requestedStream.codec) == YLFCodecVorbis
+      || demux.selectedAudioStream.map({ Int($0.codec) == YLFCodecVorbis }) == true
     let initialGeneration = stateLock.withLock { generation }
+    if switchesVorbis, !stateLock.withLock({ active }) {
+      throw NativePlayerError(category: "unsupported", code: "policy.vorbis_track_switch_unsupported",
+        message: "Activate or resume playback before switching a Vorbis track.")
+    }
     if cancellationToken == nil, !stateLock.withLock({ active }) {
       // Inactive pipelines may retain a renderer and a prefetched cursor. Do
       // not change their selection without a full reactivation transaction.
-      guard !switchesOpus else {
-        throw NativePlayerError(category: "unsupported", code: "policy.opus_track_switch_unsupported",
-          message: "Activate or resume playback before switching an Opus track.")
+      guard !switchesOpus && !switchesVorbis else {
+        throw NativePlayerError(category: "unsupported", code: switchesVorbis ? "policy.vorbis_track_switch_unsupported" : "policy.opus_track_switch_unsupported",
+          message: switchesVorbis ? "Activate or resume playback before switching a Vorbis track." : "Activate or resume playback before switching an Opus track.")
       }
       try onMainSync {
         try stateLock.withLock {
@@ -1582,7 +1588,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       return
     }
 
-    if switchesOpus {
+    if switchesOpus || switchesVorbis {
       try seek(toUs: nil, selectingAudio: requestedStream, cancellationToken: cancellationToken)
       return
     }

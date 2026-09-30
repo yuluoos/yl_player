@@ -79,3 +79,9 @@ Engineering tests cover ownership, cancellation, recovery, protected view ACKs
 and ordinary media regression. Authorized FairPlay playback, device protection,
 HDCP and external/HDR output remain unverified without licensed test resources;
 see the [DRM contract](../../docs/superpowers/specs/2026-09-26-drm-contract.md).
+
+Ordinary Matroska Vorbis playback uses the bundled FFmpeg native decoder for
+mono/stereo at 44.1/48 kHz, with 200 ms seek/track-switch preroll and PCM target
+trimming. CodecDelay/leading trim, other rates/channels and strict policies
+are rejected with specific errors. Independent Xiph PCM reference tools are
+test-only; no commercial SDK or new runtime dependency is introduced.

@@ -35,3 +35,11 @@ FLV点播修复记录见`macos-flv-vod-observations.json`。FLV三路径增加�
 FLAC修复记录见`macos-flac-observations.json`。AVC/FLAC三路径现执行前向2秒/反向1.25秒seek；原生`YlMacosAudioTests`另以原创16位mono/24位stereo整数斜坡独立核对PCM。PCM证据与公开生命周期分开，不声称物理输出或音画同步通过。
 
 Opus SILK/hybrid扩展新增两份原创mono素材，当前目录20份/64条公开路径。`mkv-avc-opus-silk`为60ms SILK；`mkv-avc-opus-hybrid`实际先20包hybrid后181包CELT，包含真实模式切换。两份素材的file/http/renamed-file均经严格支持测试，通过2s/1.25s/0 seek及结束。生产桥接使用固定开源libopus1.6.1，源码/制品的独立参考PCM检查覆盖mono/stereo，仍以50dB为门槛。物理输出和跨平台验收仍未完成；新证据见`macos-opus-modes-observations.json`，历史观测不改写。
+
+Vorbis切片新增零CodecDelay的原创AVC/Vorbis素材，目录现有21行/67条公开路径。
+`generate.py`现在要求`YL_TEST_VORBIS_REFERENCE`指向通过
+`packages/yl_player_apple/tool/apple_ffmpeg/build_vorbis_reference.sh`生成的install目录；
+自有Xiph encoder按真实采样率/声道输出，避免native FFmpeg encoder写入本轮未支持的CodecDelay。
+原有20份素材保持不变；初始native编码夹具另保留为`mkv-avc-vorbis-codec-delay.mkv`，
+用于明确拒绝1024采样CodecDelay，不计支持行。混合AAC/Vorbis仅用于切轨/策略。
+物理输出和跨平台验收仍未完成，详见`macos-vorbis-observations.json`和P03报告。

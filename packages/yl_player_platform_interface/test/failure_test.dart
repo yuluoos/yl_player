@@ -6,13 +6,20 @@ void main() {
     'Opus failures distinguish codec, malformed packet and policy limits',
     () {
       for (final entry in {
+        'decoder.audio_vorbis_unsupported': 'Vorbis I headers',
+        'decoder.audio_vorbis_failed': 'complete media file',
+        'policy.vorbis_unsupported': 'ordinary Matroska',
+        'policy.vorbis_track_switch_unsupported': 'Activate or resume',
         'decoder.audio_opus_unsupported': 'mapping family 0',
         'decoder.audio_opus_failed': 'complete media file',
         'policy.opus_unsupported': 'ordinary Matroska',
         'policy.opus_track_switch_unsupported': 'Activate or resume',
       }.entries) {
         final message = YlSafeDiagnostics.messageForCode(entry.key);
-        expect(message, contains('Opus'));
+        expect(
+          message,
+          contains(entry.key.contains('vorbis') ? 'Vorbis' : 'Opus'),
+        );
         expect(message, contains(entry.value));
         expect(message, isNot(contains('CELT')));
       }

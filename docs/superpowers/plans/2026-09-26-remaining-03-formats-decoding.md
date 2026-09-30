@@ -127,3 +127,5 @@ expect(failure.retryable, isFalse);
 2026-09-29 P03 Opus继续：活动会话切入/切出Opus复用seek事务，补齐代次隔离、容器回退、PCM裁剪与时钟锚点；暂停状态和播放意图保留。范围仍为CELT子集，完整Opus/WebM与Task1/Task2仍开放；细节和验证见P03报告。
 
 2026-09-29 P03 Opus模式扩展：已用固定开源libopus1.6.1替换native Opus/swresample，SILK/hybrid/CELT family0 mono/stereo PCM及五目标可重建制品通过。完整Opus/WebM、严格策略、物理输出和跨端验收仍开放；不勾选Task1/Task2，最终公开验证见P03报告。
+
+2026-09-30 P03 Vorbis切片：普通Matroska mono/stereo 44.1/48k通过native FFmpeg解码、200ms预解码、PCM目标裁剪及活动音轨切换；零CodecDelay与严格策略边界明确。64项macOS原生回归、5项公开Vorbis策略/切轨、3条严格格式路径通过；无商业SDK，Xiph参考库仅测试使用。物理输出/多声道/WebM视频/跨平台仍待完成，Task1/Task2不勾选；完整矩阵证据见P03报告。

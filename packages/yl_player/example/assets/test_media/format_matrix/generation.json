@@ -784,6 +784,34 @@
       "-frame_duration",
       "20",
       "packages/yl_player/example/assets/test_media/format_matrix/mkv-avc-opus-hybrid.mkv"
+    ],
+    [
+      "ffmpeg",
+      "-hide_banner",
+      "-loglevel",
+      "error",
+      "-y",
+      "-i",
+      "packages/yl_player/example/assets/test_media/format_matrix/mp4-avc-aac.mp4",
+      "-i",
+      "/private/tmp/yl-vorbis-public.ogg",
+      "-map",
+      "0:v",
+      "-map",
+      "1:a",
+      "-c",
+      "copy",
+      "packages/yl_player/example/assets/test_media/format_matrix/mkv-avc-vorbis.mkv"
     ]
-  ]
+  ],
+  "vorbisReference": {
+    "recipe": "packages/yl_player_apple/tool/apple_ffmpeg/build_vorbis_reference.sh",
+    "encoderCommand": [
+      "/private/tmp/yl-vorbis-reference-verified/install/bin/yl_vorbis_encoder",
+      "48000",
+      "2"
+    ],
+    "stdout": "/private/tmp/yl-vorbis-public.ogg",
+    "note": "Zero CodecDelay Xiph reference encoding. The initial native FFmpeg fixture is retained as codec-delay rejection input."
+  }
 }

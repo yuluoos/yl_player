@@ -29,7 +29,7 @@ common_flags=(
   --enable-avcodec
   --enable-avformat
   --enable-demuxer=matroska,flv,mov,mpegts,avi
-  --enable-decoder=dca
+  --enable-decoder=dca,vorbis
   --enable-bsf=dovi_rpu
   --enable-protocol=file
   --enable-parser=aac,h264,hevc,mpegaudio,dca,ac3
@@ -62,6 +62,7 @@ def run(*args): return subprocess.check_output(args,text=True).strip()
 inputs={p:sha(package/p) for p in ['darwin/native/YlFFmpegBridge/YlFFmpegBridge.m',
  'darwin/native/YlFFmpegBridge/include/YlFFmpegBridge.h',
  'darwin/native/YlFFmpegBridge/YlFELBridge.inc',
+ 'darwin/native/YlFFmpegBridge/YlVorbisBridge.inc',
  'darwin/native/YlFFmpegBridge/module.modulemap','tool/apple_ffmpeg/ffmpeg-9.0.1.lock',
  'tool/apple_ffmpeg/FFMPEG_RELEASE_KEY.asc','tool/apple_ffmpeg/opus-1.6.1.lock','LICENSES/Opus-BSD.txt','tool/apple_ffmpeg/build_xcframework.sh']}
 toolchain={'xcode':run('xcodebuild','-version'),'clang':run('xcrun','clang','--version')}
@@ -236,6 +237,11 @@ build_slice() {
     _ylf_mp4_requires_fallback \
     _ylf_stream_opus_delay_samples \
     _ylf_packet_audio_trim \
+    _ylf_stream_vorbis_preroll_us \
+    _ylf_vorbis_create \
+    _ylf_vorbis_decode \
+    _ylf_vorbis_reset \
+    _ylf_vorbis_free \
     _ylf_opus_create \
     _ylf_opus_decode \
     _ylf_opus_reset \

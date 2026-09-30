@@ -174,6 +174,7 @@ final class YlPreparedFallback {
     let opusPolicyAllowed = container == .matroska && source.intent != .live && boundedPlan == nil
       && source.networkPolicy != .managed && decoderPolicy != .hardwareRequired
     var sawBlockedOpus = false
+    var sawBlockedVorbis = false
     var sawUnsupportedAudio = false
     var sawVideo = false
     for index in 0..<mediaInfo.stream_count {
@@ -194,6 +195,10 @@ final class YlPreparedFallback {
           sawBlockedOpus = true
           continue
         }
+        if Int(stream.codec) == YLFCodecVorbis && !opusPolicyAllowed {
+          sawBlockedVorbis = true
+          continue
+        }
         if YlAudioCodec(bridgeCodec: stream.codec) != .unsupported {
           selectedAudio.append(stream)
         } else {
@@ -211,6 +216,10 @@ final class YlPreparedFallback {
     if selectedAudio.isEmpty && sawBlockedOpus {
       throw NativePlayerError(category: "unsupported", code: "policy.opus_unsupported",
         message: "Opus currently supports ordinary Matroska VOD without strict networking, buffer or hardware policies.")
+    }
+    if selectedAudio.isEmpty && sawBlockedVorbis {
+      throw NativePlayerError(category: "unsupported", code: "policy.vorbis_unsupported",
+        message: "Vorbis currently supports ordinary Matroska VOD without strict networking, buffer or hardware policies.")
     }
     if selectedAudio.isEmpty && sawUnsupportedAudio {
       throw NativePlayerError(
@@ -314,6 +323,16 @@ final class YlPreparedFallback {
       var bytes = [UInt8](repeating: 0, count: 19)
       guard ylf_copy_stream_codec_config(validContext, audioStream.index, &bytes, bytes.count) == 0 else {
         throw ylOpusUnsupportedError()
+      }
+      copiedAudioCookies[audioStream.index] = Data(bytes)
+    }
+    for audioStream in selectedAudio where Int(audioStream.codec) == YLFCodecVorbis {
+      let size = ylf_stream_codec_config_size(validContext, audioStream.index)
+      guard ylf_stream_vorbis_preroll_us(validContext, audioStream.index) > 0,
+            (3...65536).contains(size) else { throw ylVorbisUnsupportedError() }
+      var bytes = [UInt8](repeating: 0, count: Int(size))
+      guard ylf_copy_stream_codec_config(validContext, audioStream.index, &bytes, bytes.count) == 0 else {
+        throw ylVorbisUnsupportedError()
       }
       copiedAudioCookies[audioStream.index] = Data(bytes)
     }

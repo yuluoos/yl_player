@@ -544,3 +544,14 @@ reactivation. If a switch is cancelled after its demux cursor/buffers change,
 the current operation fails safely rather than resuming incompatible decoder
 history; later session generations remain protected. See the
 [P03 execution report](superpowers/reports/2026-09-26-remaining-03-formats-decoding.md).
+
+### Scoped Apple Vorbis Matroska route (2026-09-30)
+
+Ordinary Matroska VOD accepts bounded Vorbis headers and packets for mono/stereo
+44.1/48 kHz with zero CodecDelay and no leading trim. Tail trimming is supported.
+The native FFmpeg decoder supplies PCM; seeks and active track changes use
+200 ms preroll and target trimming. Strict network/buffer/hardware policies
+exclude this route. Inactive changes fail explicitly; candidate configuration
+failure preserves current playback. This scope does not establish full WebM,
+multichannel, physical output, minimum-system or cross-platform acceptance.
+See the [P03 execution report](superpowers/reports/2026-09-26-remaining-03-formats-decoding.md).

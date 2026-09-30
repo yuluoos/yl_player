@@ -736,6 +736,44 @@
       ],
       "fixtureDecode": "passed",
       "playerOutputVerified": false
+    },
+    {
+      "caseId": "mkv-avc-vorbis",
+      "sha256": "6f22cd9a60abda136bb332e37f70044977892d3cf40b10acdd7629e68054b2e6",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          440.0,
+          495.0
+        ],
+        [
+          658.333,
+          713.333
+        ],
+        [
+          880.0,
+          933.333
+        ],
+        [
+          1098.333,
+          1153.333
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
     }
   ]
 }

@@ -912,6 +912,51 @@
           "verification": "not_run"
         }
       }
+    },
+    {
+      "id": "mkv-avc-vorbis",
+      "file": "mkv-avc-vorbis.mkv",
+      "container": "matroska",
+      "sha256": "6f22cd9a60abda136bb332e37f70044977892d3cf40b10acdd7629e68054b2e6",
+      "video": {
+        "codec": "h264",
+        "profile": "Constrained Baseline",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "vorbis",
+        "channels": 2,
+        "layout": "stereo",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 4.003,
+      "probe": "mkv-avc-vorbis.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
     }
   ]
 }

@@ -46,6 +46,14 @@ abstract final class YlSafeDiagnostics {
     YlFailureCodes.dashManifestTooLarge =>
       'The DASH manifest exceeds the 2 MiB input limit. Ask the provider for a smaller manifest.',
 
+    'decoder.audio_vorbis_unsupported' =>
+      'Vorbis requires valid Vorbis I headers, mono or stereo at 44.1 or 48 kHz, and zero CodecDelay. Try another audio track.',
+    'decoder.audio_vorbis_failed' =>
+      'The Vorbis audio packet or timing is invalid. Try another audio track or a complete media file.',
+    'policy.vorbis_unsupported' =>
+      'Vorbis currently supports ordinary Matroska VOD without strict networking, buffer or hardware policies.',
+    'policy.vorbis_track_switch_unsupported' =>
+      'Activate or resume playback before switching a Vorbis track.',
     'decoder.audio_opus_unsupported' =>
       'Opus currently requires mapping family 0 and mono or stereo at 48 kHz. Try an AAC or FLAC audio track.',
     'decoder.audio_opus_failed' =>
