@@ -668,6 +668,74 @@
       ],
       "fixtureDecode": "passed",
       "playerOutputVerified": false
+    },
+    {
+      "caseId": "mkv-avc-opus-silk",
+      "sha256": "a2a16aaaf4dec4fcbed0bfca14341c0962771e50aec0efe984259ac2f3f2e08f",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          440.0
+        ],
+        [
+          660.0
+        ],
+        [
+          880.0
+        ],
+        [
+          1100.0
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
+    },
+    {
+      "caseId": "mkv-avc-opus-hybrid",
+      "sha256": "ada9695f11eed67aa58ce94f6a78af5e018e6e78ff5a01c331c4af84c647e730",
+      "rgb": [
+        254,
+        0,
+        0,
+        0,
+        254,
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255
+      ],
+      "toneHz": [
+        [
+          440.0
+        ],
+        [
+          660.0
+        ],
+        [
+          878.333
+        ],
+        [
+          1098.333
+        ]
+      ],
+      "fixtureDecode": "passed",
+      "playerOutputVerified": false
     }
   ]
 }

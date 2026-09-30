@@ -12,7 +12,7 @@ import subprocess
 import tempfile
 import urllib.request
 
-ACCEPTED_LOCK_SHA256 = '59e6077fbbaf84bcac30fb2514b3fade0b07f54513c41f21ef80b12014bd0694'
+ACCEPTED_LOCK_SHA256 = '058933a10c65ebecc3e938102c95184e7f808ca9444519c66f745d6b277f95ea'
 
 
 def sha(path):
@@ -47,9 +47,17 @@ def verify():
         elif path.is_file():
             files[relative] = {'sha256': sha(path), 'size': path.stat().st_size}
     require(files == expected['files'], 'artifact mismatch')
+    opus_pins = dict(line.split('=', 1) for line in (script / 'opus-1.6.1.lock').read_text().splitlines())
+    require(expected.get('opus_source') == opus_pins, 'Opus provenance mismatch')
     pins = dict(line.split('=', 1) for line in (script / 'ffmpeg-9.0.1.lock').read_text().splitlines())
     with tempfile.TemporaryDirectory(prefix='yl-apple-verify-') as temporary:
         work = Path(temporary)
+        opus_archive = work / 'opus.tar.gz'
+        if os.environ.get('YL_OPUS_ARCHIVE'):
+            opus_archive.write_bytes(Path(os.environ['YL_OPUS_ARCHIVE']).read_bytes())
+        else:
+            urllib.request.urlretrieve(opus_pins['OPUS_URL'], opus_archive)
+        require(sha(opus_archive) == opus_pins['OPUS_SHA256'], 'Opus archive mismatch')
         archive, signature = work / 'source.tar.xz', work / 'source.tar.xz.asc'
         for target, variable, url in (
             (archive, 'YL_FFMPEG_ARCHIVE', pins['FFMPEG_URL']),

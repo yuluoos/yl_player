@@ -1,3 +1,4 @@
+#include <opus/opus.h>
 #import "YlFFmpegBridge.h"
 
 #import <Foundation/Foundation.h>
@@ -1713,37 +1714,26 @@ int32_t ylf_packet_audio_trim(YLFPacketRef packet, uint32_t *skip, uint32_t *dis
 }
 
 struct YLFOpusDecoder {
-  AVCodecContext *codec;
-  AVFrame *frame;
-  AVPacket *packet;
+  OpusDecoder *decoder;
   uint32_t pending_skip;
   int channels;
+  float decoded[5760 * 2];
 };
 
 YLFOpusDecoderRef ylf_opus_create(const uint8_t *head, size_t size) {
-  // Exact family-0 identification header. Other mappings require an explicit
-  // speaker-layout and output contract; do not silently reorder/downmix them.
   if (!head || size != 19 || memcmp(head, "OpusHead", 8) || head[8] != 1 ||
       head[9] < 1 || head[9] > 2 || head[18] != 0) return NULL;
-  const AVCodec *codec = avcodec_find_decoder(AV_CODEC_ID_OPUS);
-  if (!codec) return NULL;
   struct YLFOpusDecoder *d = calloc(1, sizeof(*d));
   if (!d) return NULL;
-  d->codec = avcodec_alloc_context3(codec);
-  d->frame = av_frame_alloc();
-  d->packet = av_packet_alloc();
+  int error = OPUS_OK;
   d->channels = head[9];
-  if (!d->codec || !d->frame || !d->packet) { ylf_opus_free(d); return NULL; }
-  d->codec->extradata = av_mallocz(size + AV_INPUT_BUFFER_PADDING_SIZE);
-  if (!d->codec->extradata) { ylf_opus_free(d); return NULL; }
-  memcpy(d->codec->extradata, head, size);
-  d->codec->extradata_size = (int)size;
-  d->codec->sample_rate = 48000;
-  av_channel_layout_default(&d->codec->ch_layout, d->channels);
-  d->codec->thread_count = 1;
-  // Trim is owned here; never apply OpusHead pre-skip and container delay twice.
-  d->codec->flags2 |= AV_CODEC_FLAG2_SKIP_MANUAL;
-  if (avcodec_open2(d->codec, codec, NULL) < 0) { ylf_opus_free(d); return NULL; }
+  d->decoder = opus_decoder_create(48000, d->channels, &error);
+  // libopus applies the header's signed Q8 dB gain; pre-skip remains explicitly
+  // owned by container packet metadata, never implicitly applied a second time.
+  if (!d->decoder || error != OPUS_OK ||
+      opus_decoder_ctl(d->decoder, OPUS_SET_GAIN((int16_t)AV_RL16(head + 16))) != OPUS_OK) {
+    ylf_opus_free(d); return NULL;
+  }
   return d;
 }
 
@@ -1754,56 +1744,34 @@ int32_t ylf_opus_decode(YLFOpusDecoderRef d, const uint8_t *data, size_t size,
   if (out_offset_frames) *out_offset_frames = 0;
   if (!d || !data || !size || size > 65536 || !samples || !out_frames ||
       !out_offset_frames || skip > 65535) return YLFResultInvalidArgument;
-  // RFC 6716 TOC duration; use encoded bounds, never untrusted container duration.
-  int config = data[0] >> 3;
-  // Only CELT has passed independent PCM acceptance for this prerequisite.
-  // SILK/hybrid need separate resampler/output validation; reject mode changes
-  // before consuming them instead of silently degrading accepted audio.
-  if (config < 16) return YLFResultAudioConfigurationUnsupported;
-  int per_frame = 120 << (config & 3);
-  int code = data[0] & 3;
-  if (code == 3 && size < 2) return YLFResultInvalidArgument;
-  int count = code == 0 ? 1 : code == 3 ? data[1] & 63 : 2;
-  int expected_frames = per_frame * count;
-  if (!count || expected_frames > 5760 || capacity_frames < expected_frames ||
+  // The reference implementation validates SILK, hybrid and CELT packet duration.
+  // Bounds/trim errors must not consume decoder history.
+  int expected_frames = opus_packet_get_nb_samples(data, (opus_int32)size, 48000);
+  if (expected_frames <= 0 || expected_frames > 5760 || capacity_frames < expected_frames ||
       discard > (uint32_t)expected_frames) return YLFResultInvalidArgument;
   uint32_t pending_skip = skip ? skip : d->pending_skip;
   int start = (int)FFMIN(pending_skip, (uint32_t)expected_frames);
   if (discard > (uint32_t)(expected_frames - start)) return YLFResultInvalidArgument;
-  av_packet_unref(d->packet);
-  if (av_new_packet(d->packet, (int)size) < 0) return YLFResultReadFailed;
-  memcpy(d->packet->data, data, size);
-  int result = avcodec_send_packet(d->codec, d->packet);
-  av_packet_unref(d->packet);
-  if (result < 0) return YLFResultReadFailed;
-  av_frame_unref(d->frame);
-  result = avcodec_receive_frame(d->codec, d->frame);
-  AVFrame *f = d->frame;
-  if (result < 0 || f->nb_samples != expected_frames || f->sample_rate != 48000 ||
-      f->ch_layout.nb_channels != d->channels || f->format != AV_SAMPLE_FMT_FLTP) {
-    av_frame_unref(f); return YLFResultReadFailed;
+  int result = opus_decode_float(d->decoder, data, (opus_int32)size, d->decoded, 5760, 0);
+  if (result != expected_frames) return YLFResultReadFailed;
+  int frames = expected_frames - start - (int)discard;
+  for (int i = 0; i < frames * d->channels; i++) {
+    float value = d->decoded[start * d->channels + i];
+    if (!isfinite(value)) return YLFResultReadFailed;
+    samples[i] = value;
   }
   d->pending_skip = pending_skip - start;
-  int frames = expected_frames - start - (int)discard;
-  for (int i = 0; i < frames; i++)
-    for (int c = 0; c < d->channels; c++) {
-      float value = ((float *)f->extended_data[c])[start + i];
-      if (!isfinite(value)) { av_frame_unref(f); return YLFResultReadFailed; }
-      samples[i * d->channels + c] = value;
-    }
   *out_frames = frames;
   *out_offset_frames = start;
-  av_frame_unref(f);
   return YLFResultOK;
 }
 
 void ylf_opus_reset(YLFOpusDecoderRef d) {
   if (!d) return;
-  avcodec_flush_buffers(d->codec); d->pending_skip = 0;
-  av_frame_unref(d->frame); av_packet_unref(d->packet);
+  opus_decoder_ctl(d->decoder, OPUS_RESET_STATE);
+  d->pending_skip = 0;
 }
 void ylf_opus_free(YLFOpusDecoderRef d) {
   if (!d) return;
-  avcodec_free_context(&d->codec); av_frame_free(&d->frame);
-  av_packet_free(&d->packet); free(d);
+  opus_decoder_destroy(d->decoder); free(d);
 }

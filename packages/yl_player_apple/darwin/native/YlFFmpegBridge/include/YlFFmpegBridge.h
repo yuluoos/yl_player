@@ -206,14 +206,13 @@ YLF_EXPORT int32_t ylf_create_video_sample_buffer(
     CMSampleBufferRef *out_sample_buffer);
 
 // Validated Matroska Opus CodecDelay in 48 kHz samples; -1 for unsupported
-// header/delay/preroll metadata. Does not guarantee every packet uses CELT.
+// header/delay/preroll metadata. Packet validity is checked separately.
 YLF_EXPORT int32_t ylf_stream_opus_delay_samples(YLFMediaContextRef context, int32_t index);
 // Copies explicit skip/discard samples, restoring initial delay after seek(0).
 // Malformed trim metadata is an error, never silently treated as zero.
 YLF_EXPORT int32_t ylf_packet_audio_trim(YLFPacketRef packet, uint32_t *skip, uint32_t *discard);
 
-// Opus CELT only: mapping family 0, version 1, mono/stereo, 48 kHz float PCM.
-// SILK/hybrid packets return AudioConfigurationUnsupported before consumption.
+// Opus SILK/hybrid/CELT: mapping family 0, version 1, mono/stereo, 48 kHz float PCM.
 // This low-level decoder does not enable a player route. Callers supply the
 // container's skip/discard metadata explicitly, exactly once. Reset clears
 // history and pending skip; seek callers must decode preroll before presenting.

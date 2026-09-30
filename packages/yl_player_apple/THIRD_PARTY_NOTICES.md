@@ -3,19 +3,21 @@
 ## FFmpeg 9.0.1
 
 `YlFFmpegBridge.xcframework` contains a minimized build of FFmpeg 9.0.1
-`libavformat`, `libavcodec`, `libavutil`, and `libswresample`. It is used for
+`libavformat`, `libavcodec`, and `libavutil`. It is used for
 Matroska, FLV, MP4/MOV, MPEG-TS, and AVI demultiplexing, packet parsing,
-DCA audio decoding, and a CELT-only Opus decoder. Video decoding remains in
-Apple VideoToolbox. Ordinary Matroska VOD integrates container trimming and seek
-preroll for family 0 mono/stereo 48 kHz Opus. Active audio-track changes reuse seek preroll. SILK/hybrid and strict Opus
-policies remain unsupported.
+and DCA audio decoding. A statically linked libopus decoder handles Opus.
+Video decoding remains in Apple VideoToolbox. Ordinary Matroska VOD integrates container trimming and seek
+preroll for family 0 mono/stereo 48 kHz Opus. Active audio-track changes reuse
+seek preroll. SILK, hybrid and CELT are supported within this family-0 scope;
+strict Opus policies remain unsupported.
 
 The minimized allowlist enables `matroska,flv,mov,mpegts,avi` demuxers;
-`aac,h264,hevc,mpegaudio,dca,ac3` parsers; `dca,opus` decoders; the `dovi_rpu`
+`aac,h264,hevc,mpegaudio,dca,ac3` parsers; `dca` decoder; the `dovi_rpu`
 bitstream filter; and the `file` protocol used by package-owned custom AVIO.
-The native Opus decoder requires FFmpeg's internal `libswresample`; no external
-libopus is linked into the product. Test-only host libopus provides an
-independent PCM reference. FFmpeg networking, protocols other than `file`,
+FFmpeg's native Opus decoder and `libswresample` remain disabled.
+Test-only host libopus provides a PCM reference independent of bridge
+packet trimming and reset; it is not an independent decoder algorithm.
+FFmpeg networking, protocols other than `file`,
 all other decoders, encoders, muxers, filters, scaling, GPL, and nonfree
 components remain disabled.
 
@@ -40,12 +42,13 @@ sh packages/yl_player_apple/tool/apple_ffmpeg/build_xcframework.sh --rebuild-che
 ```
 
 `verify_artifact.py` is the consumer verifier used by CI. It checks the exact
-accepted lock (including recorded builder provenance), all six recipe/source/key
-inputs, configuration, complete artifact bytes and symlink targets, and the
-signed source receipt without requiring the verifier machine to match the
-original builder. It never compiles, updates a lock, or changes artifact bytes.
-`YL_FFMPEG_ARCHIVE` and `YL_FFMPEG_SIGNATURE` accept existing local source inputs;
-otherwise the verifier obtains the exact pinned public archive and signature.
+accepted lock (including recorded builder provenance), all recorded recipe,
+source, license and key inputs, configuration, complete artifact bytes and
+symlink targets, the signed FFmpeg source receipt and pinned Opus archive hash
+without requiring the verifier machine to match the original builder. It never compiles, updates a lock, or changes artifact bytes.
+`YL_FFMPEG_ARCHIVE`, `YL_FFMPEG_SIGNATURE`, and `YL_OPUS_ARCHIVE` accept
+existing local source inputs;
+otherwise the verifier obtains the exact pinned public archives and FFmpeg signature.
 
 `--rebuild-check` requires the exact toolchain recorded in the lock, builds all
 five targets in a fresh temporary directory, and compares every byte and
@@ -75,3 +78,24 @@ metadata, are compared without exclusions.
 Keep the scripts, lock files, license, and notices with every binary
 distribution so recipients can replace the LGPL component. Distribution
 still requires project-specific legal review.
+
+## libopus 1.6.1
+
+The same XCFramework statically links the official libopus 1.6.1 decoder. It
+decodes SILK, hybrid and CELT at 48 kHz for OpusHead v1, mapping family 0,
+mono/stereo. Multistream mappings and multichannel output are not enabled by
+this bridge. SIMD/assembly/runtime dispatch and optional neural extensions
+are disabled for a reproducible scalar build; unused encoder code is removed
+by static linking and dead stripping. No commercial SDK or host libopus dylib
+is required at runtime.
+
+- Source: <https://downloads.xiph.org/releases/opus/opus-1.6.1.tar.gz>
+- SHA-256: `6ffcb593207be92584df15b32466ed64bbec99109f007c82205f0194572411a1`
+- License: BSD; exact upstream notice and patent declaration references in
+  `LICENSES/Opus-BSD.txt`. Preserve it with redistributed binaries.
+
+The archive is hash-verified against `opus-1.6.1.lock`; no detached-signature
+verification is claimed for Opus. `YL_OPUS_ARCHIVE` may supply the pinned local
+archive. The canonical builder above builds both dependencies for all five
+targets, compares upstream COPYING with the tracked license, and records
+source pins and recipe inputs in the immutable artifact lock.

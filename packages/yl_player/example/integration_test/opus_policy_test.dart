@@ -97,7 +97,7 @@ void main() {
           fail('Invalid header committed');
         } on YlPlayerException catch (error) {
           expect(error.failure.code, 'decoder.audio_opus_unsupported');
-          expect(error.failure.message, contains('CELT'));
+          expect(error.failure.message, contains('mapping family 0'));
           expect(error.failure.message, isNot(contains('private-token')));
         }
         expect(player.state.sessionId, session.id);
@@ -222,13 +222,13 @@ void main() {
       }
     },
   );
-  testWidgets('Unsupported Opus packet mode reports a specific safe error', (
+  testWidgets('Malformed Opus packet reports a specific safe error', (
     tester,
   ) async {
     final directory = await Directory.systemTemp.createTemp('yl_opus_mode_');
     final bytes = await _bytes();
-    // Independently probed first packet prefix. Only mutate the TOC to exercise
-    // the mode rejection before decoding; this is a negative, modified sample.
+    // Independently probed first packet prefix. Mutate its frame count beyond
+    // 120 ms; this is a negative, modified sample, not an unsupported mode.
     final offset = _uniqueOffset(bytes, [
       252,
       115,
@@ -247,7 +247,8 @@ void main() {
       150,
       249,
     ]);
-    bytes[offset] = 4;
+    bytes[offset] = 255;
+    bytes[offset + 1] = 63;
     final file = File('${directory.path}/private-token.mkv');
     await file.writeAsBytes(bytes);
     final player = await appleController(tester);
@@ -264,8 +265,8 @@ void main() {
             ? (await stateWhere(player, (s) => s.failure != null)).failure
             : error.failure;
       }
-      expect(failure?.code, 'decoder.audio_opus_unsupported');
-      expect(failure?.message, contains('CELT'));
+      expect(failure?.code, 'decoder.audio_opus_failed');
+      expect(failure?.message, contains('complete media file'));
       expect(failure?.message, isNot(contains('private-token')));
     } finally {
       await player.dispose();

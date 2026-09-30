@@ -4,7 +4,7 @@ import YlFFmpegBridge
 
 func ylOpusUnsupportedError() -> NativePlayerError {
   NativePlayerError(category: "decoderUnsupported", code: "decoder.audio_opus_unsupported",
-    message: "Opus currently requires CELT mode, mapping family 0 and mono or stereo at 48 kHz. Try another audio track.")
+    message: "Opus currently requires mapping family 0 and mono or stereo at 48 kHz. Try another audio track.")
 }
 func ylOpusPacketError() -> NativePlayerError {
   NativePlayerError(category: "decoderFailure", code: "decoder.audio_opus_failed",

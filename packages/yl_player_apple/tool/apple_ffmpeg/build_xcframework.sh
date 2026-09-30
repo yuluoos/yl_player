@@ -10,6 +10,7 @@ bridge_root="$package_root/darwin/native/YlFFmpegBridge"
 output="$package_root/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework"
 artifact_lock="$script_dir/bridge-artifact.lock"
 source "$lock_file"
+source "$script_dir/opus-1.6.1.lock"
 
 common_flags=(
   --disable-everything
@@ -20,7 +21,7 @@ common_flags=(
   --disable-avdevice
   --disable-avfilter
   --disable-swscale
-  --enable-swresample
+  --disable-swresample
   --disable-encoders
   --disable-decoders
   --disable-muxers
@@ -28,7 +29,7 @@ common_flags=(
   --enable-avcodec
   --enable-avformat
   --enable-demuxer=matroska,flv,mov,mpegts,avi
-  --enable-decoder=dca,opus
+  --enable-decoder=dca
   --enable-bsf=dovi_rpu
   --enable-protocol=file
   --enable-parser=aac,h264,hevc,mpegaudio,dca,ac3
@@ -42,9 +43,10 @@ common_flags=(
 
 
 print_contract() {
-  cat "$lock_file"
+  cat "$lock_file" "$script_dir/opus-1.6.1.lock"
   printf '%s\n' "${common_flags[@]}" \
     'FFMPEG_X86_64_FLAGS=--disable-x86asm' \
+    'OPUS_FLAGS=--disable-shared,--enable-static,--disable-doc,--disable-extra-programs,--disable-intrinsics,--disable-asm,--disable-rtcd,--disable-deep-plc,--disable-dred,--disable-osce,--disable-qext' \
     'NORMALIZATION=relative-source,fixed-install-prefix,prefix-map,bridge-no-debug,zero-ar-date,linker-content-uuid,oso-prefix,sorted-plist-libraries' \
     'TARGETS=iphoneos-arm64,iphonesimulator-arm64,iphonesimulator-x86_64,macosx-arm64,macosx-x86_64'
 }
@@ -61,7 +63,7 @@ inputs={p:sha(package/p) for p in ['darwin/native/YlFFmpegBridge/YlFFmpegBridge.
  'darwin/native/YlFFmpegBridge/include/YlFFmpegBridge.h',
  'darwin/native/YlFFmpegBridge/YlFELBridge.inc',
  'darwin/native/YlFFmpegBridge/module.modulemap','tool/apple_ffmpeg/ffmpeg-9.0.1.lock',
- 'tool/apple_ffmpeg/FFMPEG_RELEASE_KEY.asc','tool/apple_ffmpeg/build_xcframework.sh']}
+ 'tool/apple_ffmpeg/FFMPEG_RELEASE_KEY.asc','tool/apple_ffmpeg/opus-1.6.1.lock','LICENSES/Opus-BSD.txt','tool/apple_ffmpeg/build_xcframework.sh']}
 toolchain={'xcode':run('xcodebuild','-version'),'clang':run('xcrun','clang','--version')}
 for name in ['clang','ld','ar','ranlib']:
  p=pathlib.Path(run('xcrun','--find',name));toolchain[name+'_path']=str(p);toolchain[name+'_sha256']=sha(p)
@@ -76,7 +78,8 @@ for p in sorted(artifact.rglob('*')):
  if p.is_symlink(): files[relative]={'symlink':os.readlink(p)}
  elif p.is_file():files[relative]={'sha256':sha(p),'size':p.stat().st_size}
 assert files, 'artifact mismatch: empty or absent XCFramework'
-current={'schema':1,'inputs':inputs,'configure_contract':contract,'toolchain':toolchain,'files':files}
+opus_pins=dict(line.split('=',1) for line in (package/'tool/apple_ffmpeg/opus-1.6.1.lock').read_text().splitlines())
+current={'opus_source':opus_pins,'schema':1,'inputs':inputs,'configure_contract':contract,'toolchain':toolchain,'files':files}
 if str(action)=='write':
  current['signed_source']=json.loads(receipt.read_text())
  lock.write_text(json.dumps(current,indent=2,sort_keys=True)+'\n')
@@ -140,9 +143,14 @@ assert len(valid)==1 and (valid[0][0]==fingerprint or valid[0][-1]==fingerprint)
 pathlib.Path(output).write_text(json.dumps({'archive_sha256':hashlib.sha256(pathlib.Path(archive).read_bytes()).hexdigest(),
  'signature_sha256':hashlib.sha256(pathlib.Path(signature).read_bytes()).hexdigest(),'validsig':valid[0]},sort_keys=True)+'\n')
 PYSIGN
+opus_archive="$work_root/opus-$OPUS_VERSION.tar.gz"
+if [[ -n ${YL_OPUS_ARCHIVE:-} ]]; then cp "$YL_OPUS_ARCHIVE" "$opus_archive"; else curl --fail --location --retry 3 --output "$opus_archive" "$OPUS_URL"; fi
+[[ $(shasum -a 256 "$opus_archive" | awk '{print $1}') == "$OPUS_SHA256" ]] || { echo 'Opus source archive checksum mismatch' >&2; exit 1; }
 if [[ $mode == --verify ]]; then manifest "$output" compare "$artifact_lock" "$work_root/signed-source.json"; exit 0; fi
 
 tar -xf "$archive" -C "$work_root"
+tar -xf "$opus_archive" -C "$work_root"
+cmp "$work_root/opus-$OPUS_VERSION/COPYING" "$package_root/LICENSES/Opus-BSD.txt"
 cp -R "$bridge_root" "$work_root/bridge"
 # Keep archive member timestamps and tool locale independent of the host.
 export ZERO_AR_DATE=1 LC_ALL=C SOURCE_DATE_EPOCH=0
@@ -185,6 +193,21 @@ build_slice() {
       "${common_flags[@]}"
     make -j"${YL_FFMPEG_JOBS:-4}"
     make install DESTDIR="$slice_root/stage"
+  )
+
+  local opus_root="$slice_root/opus-build"
+  local opus_install="$slice_root/opus-stage/yl_opus/install"
+  mkdir -p "$opus_root"
+  (
+    cd "$opus_root"
+    CC="$clang" AR="$ar" RANLIB="$ranlib" \
+    CFLAGS="-O2 -g0 -arch $apple_arch -isysroot $sdk_root $minimum_flag -fvisibility=hidden -ffile-prefix-map=$work_root=/yl_opus -fdebug-compilation-dir=/yl_opus/build/$slice_name" \
+    LDFLAGS="-arch $apple_arch -isysroot $sdk_root $minimum_flag" \
+    "../../../opus-$OPUS_VERSION/configure" --prefix=/yl_opus/install --host="$ffmpeg_arch-apple-darwin" \
+      --disable-shared --enable-static --disable-doc --disable-extra-programs \
+      --disable-intrinsics --disable-asm --disable-rtcd --disable-deep-plc --disable-dred --disable-osce --disable-qext
+    make -j"${YL_FFMPEG_JOBS:-4}"
+    make install DESTDIR="$slice_root/opus-stage"
   )
 
   local framework="$slice_root/YlFFmpegBridge.framework"
@@ -250,7 +273,7 @@ build_slice() {
   (
   cd "$slice_root"
   "$clang" -fobjc-arc -fvisibility=hidden -arch "$apple_arch" -isysroot "$sdk_root" \
-    "$minimum_flag" -I"$install_root/include" -I"$bridge_root/include" -I"../../ffmpeg-$FFMPEG_VERSION" -I. \
+    "$minimum_flag" -I"$install_root/include" -I"$opus_install/include" -I"$bridge_root/include" -I"../../ffmpeg-$FFMPEG_VERSION" -I. \
     -g0 -ffile-prefix-map=../../bridge=/yl_ffmpeg/bridge -fdebug-compilation-dir=/yl_ffmpeg/build/$slice_name \
     -c ../../bridge/YlFFmpegBridge.m -o "$object_file"
   "$clang" -dynamiclib -arch "$apple_arch" -isysroot "$sdk_root" "$minimum_flag" \
@@ -260,7 +283,7 @@ build_slice() {
     -Wl,-force_load,"$install_root/lib/libavformat.a" \
     -Wl,-force_load,"$install_root/lib/libavcodec.a" \
     -Wl,-force_load,"$install_root/lib/libavutil.a" \
-    -Wl,-force_load,"$install_root/lib/libswresample.a" \
+    "$opus_install/lib/libopus.a" \
     -framework CoreFoundation -framework CoreMedia -framework CoreVideo -framework Foundation -framework Security \
     -o "$contents/YlFFmpegBridge"
   )

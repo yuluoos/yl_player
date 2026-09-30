@@ -368,3 +368,35 @@ xcodebuild test CODE_SIGNING_ALLOWED=NO ENABLE_TESTABILITY=YES \
 ```
 
 最终代码58项矩阵全部符合基线：41条完成正常播放生命周期、12条有效素材缺口、5条损坏输入拒绝，58条原始观测与上轮逐项一致。原始行、测试日志指纹和最终源文件哈希见[macos-opus-switch-observations.json](../../../tool/media_matrix/macos-opus-switch-observations.json)。本轮不修改媒体基线、FFmpeg制品或历史证据；下一项继续SILK/hybrid PCM差异，完整Opus与P03任务保持开放。
+
+
+## 2026-09-29 Opus SILK/hybrid 解码切片
+
+起点 `a87966c`。此前 FFmpeg 9.0.1 native Opus 桥接的 SILK PCM 差异，本轮用宿主 FFmpeg 8.0.1 独立解码也复现：相对宿主 libopus 参考原始 SNR 13.02 dB，最佳移动两采样后仍仅 39.96 dB，低于既定 50 dB 门槛。差异存在于独立解码器对照，不能通过改变播放器 trim 或降低门槛处理。
+
+范围决定：使用官方开源 libopus 1.6.1（BSD）替换 FFmpeg native Opus，移除不再需要的 swresample；不接入商业 SDK。固定官方源码 URL/SHA256、原样保留 COPYING，在五个 Apple 目标中静态链接并隐藏内部符号。仅启用可重建的标量实现，SIMD/汇编/运行时分派及可选神经扩展关闭；性能与长时间功耗仍需后续测量。代价是新增开源依赖及构建维护责任。
+
+桥接现在接受 SILK、hybrid、CELT；范围仍为 OpusHead v1/family0、mono/stereo、48kHz。libopus 处理有符号 Q8 增益，reset 保留增益；容器继续显式持有 pre-skip/CodecDelay/DiscardPadding，不能重复裁剪。120ms/5760frames、64KiB 输入上限、先校验容量和裁剪再消费解码器的规则不变。活动音轨切换继续走上一切片的 generation/seek/preroll 事务；未激活切轨和严格网络/缓冲/硬解策略限制不变。无效帧计数返回 `decoder.audio_opus_failed`，不再把 SILK 伪装成“不支持模式”；header/mapping/channel 问题继续返回 `decoder.audio_opus_unsupported`，原生和 Dart 固定提示去掉过时 CELT 限制。
+
+新候选制品两次独立五目标构建的18个文件/链接项逐字节一致，接受 lock SHA256 `058933a10c65ebecc3e938102c95184e7f808ca9444519c66f745d6b277f95ea`。3 slices、5 architectures、37 Swift 消费符号通过；源码/配置/许可证/二进制篡改和错误 Opus 源码归档共5个负例均以预期原因拒绝，校验不改写 lock。FFmpeg 保留原签名验证；Opus 使用固定官方归档哈希，未声称有 detached signature。iOS15/macOS12 下限不变。
+
+原生源码与最终制品的32轮夹具检查共162876项断言通过。覆盖 CELT 2.5/5/10/20/40/60/120ms、SILK 10/20/40/60ms及窄/中/宽带、hybrid 10/20ms、mono/stereo、header增益、reset、跨包skip、尾裁与无效输入；每条4秒样本输出192000frames，PCM门槛仍为50dB。受控编码器通过同一个解码器执行 SILK→hybrid→CELT→hybrid→SILK，实际TOC包含三模式和四次切换，与独立解码状态逐样本一致。参考使用独立安装的宿主libopus，验证桥接与裁剪正确性，不是独立解码算法一致性的证明。
+
+新增两份原创 Matroska/AVC/Opus mono 夹具：SILK 为67包config11；hybrid夹具包含20包config15和181包config31，一次真实hybrid→CELT切换。低比特率立体声编码会内部降混，因此公开素材使用单声道原始tone，避免把混合音调当作声道标记；原生双声道PCM对照另行覆盖。旧18份矩阵素材不变，新增素材均通过独立宿主解码的原有颜色/频率门槛。生成命令、ffprobe、哈希及逐包模式统计随新证据记录。
+
+源码/制品 audio30、demux844、video35、TS30、AVI88和FEL回归通过。macOS原生39项托管生命周期+18项音频+3项FEL共60项通过，0失败/跳过；Dart错误20项通过，Python台账8项通过，Apple测试源对齐iOS662/macOS580。独立一次复审未发现Critical/Important/Minor；没有重复派发复审。
+
+公开策略/错误/切轨5项及新增SILK/hybrid的6条严格公开播放路径均通过：file/http/renamed-file，各自验证首帧、音轨选择、2s/1.25s/0 seek、结束和释放；对应集成代码静态分析无问题。完整矩阵最终结果与源/日志指纹见后续本节记录。以上不是完整P03或完整Opus/WebM验收：mapping family非0、多声道、Vorbis、VP9/AV1视频、物理声音/像素/同步、跨平台设备和最低系统、严格资源策略与长期性能仍待完成。
+
+
+最终64项格式基线全部匹配：47条正常播放生命周期完成、12条有效素材仍有支持缺口、5条损坏输入明确拒绝。原有58条原始观测逐项完全一致；旧18份素材及其元数据未变。只有新增6条已实测通过的SILK/hybrid预期加入baseline，未将历史失败改为成功。完整观测、逐包模式统计、PCM结果及源/日志指纹见[macos-opus-modes-observations.json](../../../tool/media_matrix/macos-opus-modes-observations.json)。首次严格筛选因新ID尚未加入静态用例目录而未执行任何测试；补齐目录后6项严格测试与64项完整矩阵均实际运行通过，空跑不计数。
+
+复现（Flutter命令在packages/yl_player/example执行）：
+
+```sh
+flutter test integration_test/opus_policy_test.dart -d macos --no-pub
+flutter test integration_test/format_matrix_test.dart -d macos --no-pub --dart-define=YL_FORMAT_REQUIRE_SUPPORT=true --name 'mkv-avc-opus-(silk|hybrid) /'
+flutter test integration_test/format_matrix_test.dart -d macos --no-pub
+```
+
+原生制品/PCM复现使用上文`test_audio_codecs.sh`、`test_video_metadata.sh`、`test_build_contract.sh`；`YL_TEST_FFMPEG_BUILD`须指向本轮包含`opus-stage`的固定源码构建目录。网络不可用时提供固定的`YL_FFMPEG_ARCHIVE`、`YL_FFMPEG_SIGNATURE`及`YL_OPUS_ARCHIVE`。下一切片继续Vorbis或VP9/AV1视频缺口，P03 Task1/Task2仍开放。

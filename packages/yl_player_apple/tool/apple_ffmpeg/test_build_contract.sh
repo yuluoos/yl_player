@@ -2,7 +2,7 @@
 set -eu
 script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 python3 - "$script_dir" <<'PY'
-import ctypes, hashlib, json, pathlib, plistlib, re, shlex, shutil, subprocess, sys, tempfile
+import ctypes, hashlib, json, os, pathlib, plistlib, re, shlex, shutil, subprocess, sys, tempfile
 script = pathlib.Path(sys.argv[1]); package = script.parent.parent
 artifact = package / 'darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework'
 assert artifact.is_dir(), 'combined YlFFmpegBridge.xcframework does not exist'
@@ -19,11 +19,14 @@ assert pins == {'FFMPEG_VERSION':'9.0.1', 'FFMPEG_URL':'https://ffmpeg.org/relea
  'FFMPEG_SIGNING_KEY_FINGERPRINT':'FCF986EA15E6E293A5644F10B4322F04D67658D8',
  'FFMPEG_SIGNING_KEY_SHA256':'397b3becedcd5a98769967ff1ff8501ddc89f8368b8f766e4701377d7dbaabe5',
  'IOS_DEPLOYMENT_TARGET':'15.0', 'MACOS_DEPLOYMENT_TARGET':'12.0'}
-allowed_enables = {'--enable-cross-compile','--enable-avutil','--enable-avcodec','--enable-avformat','--enable-swresample',
- '--enable-bsf=dovi_rpu','--enable-demuxer=matroska,flv,mov,mpegts,avi','--enable-decoder=dca,opus','--enable-protocol=file','--enable-parser=aac,h264,hevc,mpegaudio,dca,ac3',
+opus_pins = dict(line.split('=',1) for line in (script/'opus-1.6.1.lock').read_text().splitlines())
+assert opus_pins == {'OPUS_VERSION':'1.6.1', 'OPUS_URL':'https://downloads.xiph.org/releases/opus/opus-1.6.1.tar.gz',
+ 'OPUS_SHA256':'6ffcb593207be92584df15b32466ed64bbec99109f007c82205f0194572411a1'}
+allowed_enables = {'--enable-cross-compile','--enable-avutil','--enable-avcodec','--enable-avformat',
+ '--enable-bsf=dovi_rpu','--enable-demuxer=matroska,flv,mov,mpegts,avi','--enable-decoder=dca','--enable-protocol=file','--enable-parser=aac,h264,hevc,mpegaudio,dca,ac3',
  '--enable-pic','--enable-static'}
 required_disables = {'--disable-everything','--disable-autodetect','--disable-network',
- '--disable-programs','--disable-doc','--disable-avdevice','--disable-avfilter','--disable-swscale',
+ '--disable-swresample','--disable-programs','--disable-doc','--disable-avdevice','--disable-avfilter','--disable-swscale',
  '--disable-encoders','--disable-decoders','--disable-muxers',
  '--disable-shared','--disable-symver','--disable-gpl','--disable-nonfree'}
 def check_configuration(text):
@@ -61,6 +64,7 @@ for entry in info:
    configs=[line for line in strings.splitlines() if line.startswith('--prefix=')]
    assert len(configs)==1
    check_configuration(configs[0])
+  assert not any(n.startswith('_opus_') for n in names), 'private libopus symbols leaked'
   assert {'_'+s for s in symbols} <= names, (arch, symbols, names)
   assert {'_ylf_opus_'+s for s in ('create','decode','reset','free')} <= names, arch
   loads = subprocess.check_output(['otool','-arch',arch,'-l',str(binary)],text=True)
@@ -87,6 +91,7 @@ with tempfile.TemporaryDirectory(prefix='yl-apple-contract-') as root:
  copy = pathlib.Path(root)/'yl_player_apple'; shutil.copytree(package,copy,symlinks=True)
  copied_script = copy/'tool/apple_ffmpeg'; copied_lock = copied_script/'bridge-artifact.lock'
  mutations = [('source',copy/'darwin/native/YlFFmpegBridge/YlFFmpegBridge.m',lambda b:b+b'\n// corruption\n'),
+  ('opus-license',copy/'LICENSES/Opus-BSD.txt',lambda b:b+b'\ncorruption\n'),
   ('configuration',copied_script/'build_xcframework.sh',lambda b:b.replace(b'--enable-demuxer=matroska,flv,mov',b'--enable-demuxer=matroska,flv,mov,avi')),
   ('slice',copy/'darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64/YlFFmpegBridge.framework/YlFFmpegBridge',lambda b:b[:4096]+bytes([b[4096]^1])+b[4097:])]
  for name,path,mutate in mutations:
@@ -100,6 +105,13 @@ with tempfile.TemporaryDirectory(prefix='yl-apple-contract-') as root:
    assert result.returncode != 0 and reason in result.stdout, (name, mode, reason)
    assert digest(copied_lock)==before, 'failed verification refreshed lock'
   path.write_bytes(original)
+# A correctly recorded binary cannot bypass the pinned dependency archive.
+with tempfile.TemporaryDirectory(prefix='yl-opus-archive-') as root:
+ corrupt = pathlib.Path(root)/'opus.tar.gz'; corrupt.write_bytes(b'not the pinned source')
+ result = subprocess.run(['python3',str(script/'verify_artifact.py')],
+   env=dict(os.environ,YL_OPUS_ARCHIVE=str(corrupt)),text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+ assert result.returncode != 0 and 'Opus archive mismatch' in result.stdout, result.stdout
+ print('NEGATIVE Opus archive immutable-verify: rejected intended hash mismatch')
 assert digest(lock)==before
-print(f'Apple FFmpeg contract passed: 3 slices, 5 architectures, {len(symbols)} Swift symbols, 3 intended-reason negative checks; lock unchanged.')
+print(f'Apple FFmpeg contract passed: 3 slices, 5 architectures, {len(symbols)} Swift symbols, 5 intended-reason negative checks; lock unchanged.')
 PY

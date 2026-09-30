@@ -822,6 +822,96 @@
           "verification": "not_run"
         }
       }
+    },
+    {
+      "id": "mkv-avc-opus-silk",
+      "file": "mkv-avc-opus-silk.mkv",
+      "container": "matroska",
+      "sha256": "a2a16aaaf4dec4fcbed0bfca14341c0962771e50aec0efe984259ac2f3f2e08f",
+      "video": {
+        "codec": "h264",
+        "profile": "Constrained Baseline",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "opus",
+        "channels": 1,
+        "layout": "mono",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 4.008,
+      "probe": "mkv-avc-opus-silk.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
+    },
+    {
+      "id": "mkv-avc-opus-hybrid",
+      "file": "mkv-avc-opus-hybrid.mkv",
+      "container": "matroska",
+      "sha256": "ada9695f11eed67aa58ce94f6a78af5e018e6e78ff5a01c331c4af84c647e730",
+      "video": {
+        "codec": "h264",
+        "profile": "Constrained Baseline",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "opus",
+        "channels": 1,
+        "layout": "mono",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 4.008,
+      "probe": "mkv-avc-opus-hybrid.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      }
     }
   ]
 }

@@ -21,6 +21,8 @@ CASES = [
     ('mkv-avc-eac3', 'mkv', 'matroska', 'libx264', 'eac3', 2, 8),
     ('mkv-avc-dts', 'mkv', 'matroska', 'libx264', 'dca', 2, 8),
     ('mkv-avc-opus', 'mkv', 'matroska', 'libx264', 'libopus', 2, 8),
+    ('mkv-avc-opus-silk', 'mkv', 'matroska', 'libx264', 'libopus', 1, 8),
+    ('mkv-avc-opus-hybrid', 'mkv', 'matroska', 'libx264', 'libopus', 1, 8),
     ('mkv-avc-flac', 'mkv', 'matroska', 'libx264', 'flac', 2, 8),
     ('webm-vp9-vorbis', 'webm', 'webm', 'libvpx-vp9', 'vorbis', 2, 8),
     ('mkv-hevc-main10-aac', 'mkv', 'matroska', 'libx265', 'aac', 2, 10),
@@ -37,7 +39,7 @@ def main():
         for sec, color in [(1, 'lime'), (2, 'blue'), (3, 'white')]:
             video += f",drawbox=x=0:y=0:w=iw:h=ih:color={color}:t=fill:enable='gte(t,{sec})'"
         tones = '|'.join('0.04*sin(2*PI*(60+10*floor(t))*t)' if channels == 6 and c == 3 else f'0.04*sin(2*PI*(440+220*floor(t)+{c*55})*t)' for c in range(channels))
-        audio = f'aevalsrc={tones}:s=48000:d=4:c={"stereo" if channels==2 else "5.1"}'
+        audio = f'aevalsrc={tones}:s=48000:d=4:c={"mono" if channels==1 else "stereo" if channels==2 else "5.1"}'
         path = OUT / f'{name}.{ext}'
         cmd = ['ffmpeg','-hide_banner','-loglevel','error','-y','-f','lavfi','-i',video,
                '-f','lavfi','-i',audio,'-map','0:v','-map','1:a','-t','4',
@@ -49,6 +51,8 @@ def main():
         if vc == 'mpeg2video': cmd += ['-g','12','-b:v','300k']
         cmd += ['-c:a',ac,'-ar','48000','-ac',str(channels)]
         if ac in {'vorbis','dca'}: cmd += ['-strict','-2']
+        if name.endswith('opus-silk'): cmd += ['-application','voip','-b:a','16000','-cutoff','8000','-frame_duration','60']
+        if name.endswith('opus-hybrid'): cmd += ['-application','voip','-b:a','24000','-cutoff','20000','-frame_duration','20']
         if ac == 'dca': cmd += ['-b:a','768k']
         if ac == 'ac3' and channels == 6: cmd += ['-b:a','384k']
         if ext in {'mp4','mov'}: cmd += ['-movflags','+faststart']

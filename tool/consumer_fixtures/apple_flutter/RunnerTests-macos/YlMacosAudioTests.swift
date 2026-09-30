@@ -35,9 +35,9 @@ final class YlMacosAudioTests: XCTestCase {
     converter.reset()
     let reset = try XCTUnwrap(converter.convert(packet: first))
     XCTAssertEqual((reset.payload as? AVAudioPCMBuffer)?.frameLength, 648)
-    XCTAssertThrowsError(try converter.convert(packet: .init(data: Data([0,255,254]),
+    XCTAssertThrowsError(try converter.convert(packet: .init(data: Data([0xff,0x3f]),
       ptsUs: 0, durationUs: 20000, generation: 9))) { error in
-      XCTAssertEqual((error as? NativePlayerError)?.code, "decoder.audio_opus_unsupported")
+      XCTAssertEqual((error as? NativePlayerError)?.code, "decoder.audio_opus_failed")
     }
     for channels in [0,3] {
       XCTAssertThrowsError(try converter.configure(stream: .init(codec: .opus,

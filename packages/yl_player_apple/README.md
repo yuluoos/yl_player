@@ -25,11 +25,12 @@ restrictions.
 
 The combined XCFramework contains iOS device, iOS Simulator, and universal
 macOS slices. It uses FFmpeg 9.0.1 for Matroska/FLV/MP4/MPEG-TS/AVI demuxing,
-packet parsing, DCA audio decoding, and a CELT-only Opus decoder with Matroska trim and seek preroll integration
+packet parsing and DCA audio decoding. Pinned open-source libopus 1.6.1 supplies
+SILK/hybrid/CELT Opus decoding with Matroska trim and seek preroll integration
 (ordinary VOD, family 0, mono/stereo 48 kHz; active track switches rewind and trim decoder preroll); networking and video decode remain
 package/system owned. Binary
 redistributors must keep `THIRD_PARTY_NOTICES.md`,
-`LICENSES/FFmpeg-LGPL-2.1-or-later.txt`, the artifact lock, and replacement
+`LICENSES/FFmpeg-LGPL-2.1-or-later.txt`, `LICENSES/Opus-BSD.txt`, the artifact lock, and replacement
 scripts. The notice documents verification and exact-toolchain rebuild flows.
 
 Focused native and Flutter evidence exists for iOS Simulator and native macOS,
