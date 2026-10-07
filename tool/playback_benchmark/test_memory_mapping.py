@@ -7,6 +7,25 @@ def vm():return dict(type='VM',pid=123,isolates=[dict(id='isolates/1')],isolateG
 def memory():return dict(type='MemoryUsage',heapUsage=100,heapCapacity=200,externalUsage=12)
 
 class MappingTests(unittest.TestCase):
+    def test_system_groups_are_opt_in_distinct_and_identity_checked(self):
+        v=dict(vm(),systemIsolateGroups=[dict(id='isolateGroups/system')])
+        calls=[]
+        def rpc(method,params):
+            calls.append((method,params))
+            return v if method=='getVM' else memory()
+        r=mapping.read_memory(rpc,123,include_system=True)
+        self.assertEqual(r['scope'],'application-and-system-isolate-groups')
+        self.assertEqual([(g['id'],g['kind']) for g in r['groups']],
+                         [('isolateGroups/1','application'),('isolateGroups/system','system')])
+        self.assertEqual(len(calls),4)
+        for bad in (vm(),dict(v,systemIsolateGroups=[dict(id='isolateGroups/1')]),
+                    dict(v,systemIsolateGroups=[None])):
+            with self.assertRaises(ValueError):mapping.read_memory(lambda m,p:bad,123,include_system=True)
+        seq=iter([v,memory(),memory(),dict(v,systemIsolateGroups=[])])
+        with self.assertRaises(ValueError):mapping.read_memory(lambda m,p:next(seq),123,include_system=True)
+        empty=dict(vm(),systemIsolateGroups=[])
+        self.assertEqual(len(mapping.read_memory(lambda m,p:empty if m=='getVM' else memory(),123,include_system=True)['groups']),1)
+
     def test_only_literal_loopback_service_without_redirect_targets(self):
         self.assertEqual(mapping.service_uri('Connecting to Flutter application at http://127.0.0.1:1234/key=/'), 'http://127.0.0.1:1234/key=/')
         for uri in ('http://example.com:12/k/','http://127.0.0.1:12@evil/k/','http://127.0.0.1:12/k/?next=http://evil','https://127.0.0.1/k/'):
@@ -36,6 +55,14 @@ class MappingTests(unittest.TestCase):
         self.assertEqual(r[0]['start'],'0x104580000')
         for bad in (text.replace('104600000','104500000'),text.replace('[ 512K 96K','[ unknown 96K'),text+text.splitlines()[-1]+'\n'):
             with self.assertRaises(ValueError):mapping.untagged_regions(bad,123)
+
+    def test_reserved_category_is_not_an_allocated_untagged_region(self):
+        text=HEADER+'Untagged 512K 96K 96K 0K 0K 0K 0K 1\nUntagged (reserved) 32K 0K 0K 0K 0K 0K 0K 1         reserved VM address space (unallocated)\n'+END
+        text+='Untagged 104580000-104600000 [ 512K 96K 96K 0K] r--/rwx SM=PRV  \n'
+        text+='Untagged (reserved) 115d00000-115d08000 [ 32K 0K 0K 0K] rw-/rwx SM=NUL          reserved VM address space (unallocated)\n'
+        rows=mapping.untagged_regions(text,123)
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]['start'],'0x104580000')
 
 
 class RpcRetentionTests(unittest.TestCase):

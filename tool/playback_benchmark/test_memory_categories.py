@@ -12,6 +12,14 @@ ROW='Malloc Large (empty) 7920K 7904K 7904K 0K 0K 0K 0K 1         see MALLOC ZON
 END='=========== ======= ======== ===== ======= ======== ====== ===== =======\nTOTAL 60.2M\n'
 
 class MemoryCategoryTests(unittest.TestCase):
+    def test_stack_logging_overhead_keeps_total_exclusion_explicit(self):
+        row='Performance Tool Data 16.3M 13.0M 13.0M 0K 0K 0K 0K 17         not counted in TOTAL below\n'
+        r=parse_vmmap(HEADER+row+ROW+END,123)
+        self.assertEqual(r['regions']['Performance Tool Data']['excludedFromTotal'],True)
+        self.assertEqual(r['regions']['Performance Tool Data']['dirtySize'],'13.0M')
+        for bad in (row.replace('Performance Tool Data','Untagged'),row.replace('TOTAL below','TOTAL maybe')):
+            with self.assertRaises(ValueError):parse_vmmap(HEADER+bad+END,123)
+
     def test_preserves_rounded_units_and_distinct_ledgers(self):
         r=parse_vmmap(HEADER+ROW+END,123)
         self.assertEqual(r['physicalFootprint'],'60.2M')

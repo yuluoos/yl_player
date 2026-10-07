@@ -425,3 +425,41 @@ remain failures. Each Dart observer runs in its own bounded process, follows no
 redirects/proxies and does not request GC. Exact virtual address sizes and rounded
 resident usage remain separate; neither group counters nor matching addresses
 prove ownership. See the predeclared Dart heap/address mapping protocol.
+
+## System isolate groups and bounded address history
+
+```sh
+python3 -B tool/playback_benchmark/run_address_history.py \
+  /private/tmp/yl-system-address-new /absolute/path/to/flutter
+```
+
+This diagnostic freezes `protocol.json` before launch and uses ten profile
+load/dispose cycles with three 20-second windows (live 1, disposed 2 and 8).
+It builds normally, then launches the owned application with full malloc stack
+logging and non-compacted history. The environment affects only the launched
+process tree. It does not change production code, entitlements or system settings.
+
+Each window captures detailed vmmap, application **and system** isolate-group
+memory, then three bounded malloc_history queries (2 seconds each). At live 1,
+the largest Untagged `rw-/rwx` region of at least 8 MiB is selected, with lowest
+address as the tie-break. Queries reuse its base, base+16 KiB and base+32 KiB;
+selection is not changed after observing later dirty-page growth. Reused query
+addresses do not prove allocation continuity. Untagged reserved address space
+is a separate category. `Performance Tool Data` retains its explicit exclusion
+from the vmmap TOTAL rather than being silently counted as application memory.
+
+Dart queries preserve the earlier default application-group-only mode; the
+`memory_mapping.py --include-system` option requires both group lists and
+rejects duplicate IDs across them. Unsupported/missing values fail the probe,
+never become zero. Before/after VM identity checks and durable RPC journals also
+apply to system groups; no GC is requested. Samples are sequential, not atomic.
+
+All 15 planned probes remain in `history-probes.json`, including missing or
+failed probes. A completed capture qualifies only inside its own paired native
+clock window. A history command's `captured` status means its output was retained;
+it does not assert allocation/free matching, ownership or absence of leaks.
+Allocation claims require inspection of exact ranges and full stacks in the raw
+files. Stack logging changes process memory and timing; this run is not a
+performance baseline and must not be numerically compared as an optimization
+against uninstrumented runs. Incomplete newline-terminated checkpoint JSON
+fails closed; an unterminated trailing line is retried after the writer finishes.

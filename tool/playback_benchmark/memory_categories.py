@@ -39,13 +39,17 @@ def parse_vmmap(text, expected_pid):
     for line in lines[start+3:]:
         if re.fullmatch(r'[= ]+',line):
             complete=True;break
+        excluded=line.rstrip().endswith('not counted in TOTAL below')
+        if excluded:line=line.rstrip()[:-len('not counted in TOTAL below')].rstrip()
         match=re.fullmatch(r'([A-Za-z_][A-Za-z0-9_ ()/.,+-]{0,95}?)\s+'
             +r'\s+'.join(['('+SIZE+')']*7)+r'\s+([0-9]+)'
             +r'(?:\s+(?:see MALLOC ZONE table below|reserved VM address space \(unallocated\)))?\s*',line)
         if not match:raise ValueError('Invalid memory region row')
         name=match[1].strip()
+        if excluded and name!='Performance Tool Data':raise ValueError('Unknown total exclusion')
         if name in regions:raise ValueError('Duplicate memory region')
         regions[name]=dict(zip(COLUMNS,match.groups()[1:8]),regionCount=int(match[9]))
+        if excluded:regions[name]['excludedFromTotal']=True
     if not complete or not regions:raise ValueError('Incomplete memory region table')
     return dict(reportVersion=7,pid=expected_pid,physicalFootprint=footprint[0],
                 regions=regions,exactBytes=False,leakVerdict=None,

@@ -457,3 +457,56 @@ python3 -B tool/playback_benchmark/run_lifetime_probes.py --long-cycles --memory
 [完整证据](../../../tool/playback_benchmark/macos-memory-mapping-observations.json)保留中止尝试与最终运行，含 100 轮资源、4 份 heap 全表、4 份详细 vmmap、4 份 Dart 返回及逐块 journal、40 项核心类型摘录、归档脚本和完整源/制品身份。最终源文件、依赖、原生制品、媒体、采样库、冻结协议、原始日志、journal 和应用可执行文件均核验；journal 重组的响应与 Dart 返回逐项一致，heap 行加总与工具总数一致。原文件另存忽略工作区 `memory-mapping-preliminary/` 和 `memory-mapping-final/`。预备与最终 sourceHash 不同，不能混成一个统计组。
 
 前台激活失败和 integration_test 原生插件提示保留，不计物理画面/声音验收。生产代码未改，`leakVerdict=null`、`performanceBaseline=false`、`budgetAdmission=false`；系统 group、匿名分配来源、全局泄漏结论、连续长片、后台/多播放器/低内存、跨设备/最低系统和正式基线仍开放，**完整 P08 Task1/2 未完成**。
+
+## 2026-10-07：系统 group 与大块 Untagged 分配栈（短程独立诊断）
+
+本项选择先解决来源，而非再次扩大百轮次数。使用固定十轮 profile 播放，live 1、disposed 2/8 各 20 秒窗口；依次读取完整 vmmap、应用及系统 isolate group、三个地址的 malloc_history。目标在 live 1 固定为最大的 `Untagged / rw-/rwx / >=8MiB` 区域，同大小取最低地址；查询 base、base+16KiB、base+32KiB，每条历史查询限时 2 秒。目标不按后续增长重新挑选；地址重复不自动视为同一存活分配。协议在启动前写入且归档，所有探针必须完整落在同进程的成对原生时钟窗口内。
+
+构建阶段不加 MSL，启动预构建应用时只给所拥有的进程树设置 `MallocStackLogging=full`、`MallocStackLoggingNoCompact=1`。工具开销会影响进程资源；`Performance Tool Data` 的 vmmap `not counted in TOTAL below` 注解被显式保留，不能将本项与普通运行相减计算优化比例。系统 group 查询为显式选项，旧的应用 group 默认行为保留；分别检查两类 group，拒绝跨类重复 ID 和身份变化，缺失/不支持均不可当零，无强制 GC，响应逐块持久化。
+
+初次 `macos-resource-20261007T114335Z`、PID 15255，十轮播放均通过，但仅 **5/15 探针合格**。live vmmap 出现单独的 `Untagged (reserved)`、32K、`SM=NUL` 行，原严格解析器将其混入实际分配分类并拒绝；目标保持 null，九条历史查询均 unavailable。该运行完整保留为不完整诊断，不补造所有权证据，也不重写当时的源码身份。新增回归测试先复现 ValueError，随后仅排除该独立 reserved 分类，摘要仍保留其信息。
+
+独立复审还发现监控器可能读到日志正在追加的半行并永久退出。用真实临时文件分两次追加 checkpoint 复现：旧实现捕获 0 次，预期 2 次；修复后等待未换行尾部，下一轮读取完整行，已换行的非法 JSON 仍失败。包含该行为回归、系统 group、MSL 注解和原有 HTTP 硬终止/无效响应保留测试，**73 项 Python 测试通过**。没有 Dart 或生产代码变更。
+
+### 最终结果与直接地址证据
+
+最终 `macos-resource-20261007T114805Z`、PID **15908**，M1 / MacBookPro17,1 / macOS 27.0 (26A428)，arm64 profile，sourceHash **4fd2499df090d2f59ef62a861b9242f1ea41fc31d7ed5d3df3acae27e50a4e81**。**10/10 播放通过，15/15 探针完整位于各自窗口内**，监控错误为空。三个窗口分别 20.003345、20.004550、20.004125 秒；单条探针耗时 0.084943–1.189188 秒。388 个资源点全部可用、ac/nominal，managedFallback/hardware；首末点跨度 124.044853 秒，命令耗时 150.149896 秒。跨度包含诊断等待，不是连续长片或无间断资源采样。
+
+目标范围 **`0x11a8dc000..0x11bba4000`（末地址不含）**、**19,693,568 B** 虚拟内存。九份历史输出都包含相同的单条 `VM_ALLOC`，工具显示末地址为包含式 `0x11bba3fff`，换算后与 vmmap 的完整范围精确相等。直接调用栈为：
+
+```text
+vm_map
+  dart::GenericMapAligned
+  dart::VirtualMemory::AllocateAligned
+  dart::SampleBlockBuffer::SampleBlockBuffer
+  dart::Profiler::StartLocked / SetConfig / Init
+  dart::Dart::DartInit
+  Flutter engine launch
+```
+
+因此，本次精确映射的分配来源已定位到 **Dart Profiler 的 SampleBlockBuffer**。九次查询是同一范围在三个地址/三个窗口的重复证据，不是九次不同的分配。该范围各窗口脏页为 **192K → 1120K → 2896K**，虚拟边界相同。输出未捕获该范围的 FREE/VM_DEALLOC，不将其解释为已释放，也不从缺少释放事件推断泄漏、完整生命周期连续性或进程结束后的回收。
+
+前次百轮进程里另一个 19,693,568 B 范围的形状与此相似，但没有它自己的分配栈；**不把本次所有权结论直接覆盖到前次地址**，也不将所有 Untagged 或匿名 malloc 都归给 Profiler。当前证据足以将 Profiler 测量开销列为后续控制变量。
+
+### 应用与系统 group 指标
+
+本次三个窗口都分别识别应用 group `isolateGroups/157536982132139`（main.dart）和系统 group `isolateGroups/2578849968304378`（vm-service），各次前后 getVM 身份一致。以下都是精确字节，按顺序查询，非原子快照：
+
+| 窗口 | group | heapUsage | heapCapacity | externalUsage |
+|---|---|---:|---:|---:|
+| 1 / live | application | 8,262,496 | 9,158,656 | 70,224 |
+| 1 / live | system | 7,524,448 | 8,634,368 | 228,848 |
+| 2 / disposed | application | 7,876,048 | 9,158,656 | 69,168 |
+| 2 / disposed | system | 8,244,528 | 9,158,656 | 232,512 |
+| 8 / disposed | application | 7,815,008 | 9,158,656 | 800 |
+| 8 / disposed | system | 7,186,512 | 8,634,368 | 2,208 |
+
+系统 group 用量在本次短窗口中并非持续上升；这不证明长期稳定，也不覆盖 Dart VM 所有 native 内存。vmmap 的整个 Untagged 脏页依次 16.2M、20.4M、21.2M；Performance Tool Data 脏页均 49.0M，明确 `excludedFromTotal=true`。这些工具原始单位保留四舍五入，不冒充精确字节。
+
+### 归档、裁定与后续
+
+[完整证据](../../../tool/playback_benchmark/macos-system-address-observations.json)约 11.04 MB，保留初次不完整诊断和最终全部日志、vmmap、RPC journal、九份完整历史栈、协议、启动包装器、归档脚本、资源与源码身份。最终源码、依赖、制品、媒体、采样库、应用二进制、协议、原始文件和 RPC journal 均核验；逐块 journal 重组与响应相等，资源原始日志/JSONL/结果和重算摘要一致。原文件另存忽略工作区 `system-address-preliminary/`、`system-address-final/`，两组不同 sourceHash 不混并。
+
+裁定：优先使用短程有界归因查明本次分配来源；代价是本项不能关闭长期增长验收。复审的日志半行问题按会丢失后续观测的影响升级为 Important，并在同一修复轮次完成真实 RED→GREEN。没有凭此修改播放器释放逻辑或关闭生产 Profiler。
+
+下一项为**验证本地工具支持后冻结 Profiler 开/关的独立对照协议**，再区分测量开销与仍未归因的匿名增长；不能把移除观测开销算作播放器优化。连续长片、后台/多播放器/低内存、跨设备/最低系统、物理输出与正式基线仍开放，**完整 P08 Task1/2 未完成**。前台激活失败及 integration_test 原生插件提示保留，`leakVerdict=null`、`performanceBaseline=false`、`budgetAdmission=false`。

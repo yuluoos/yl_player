@@ -17,7 +17,7 @@ from memory_mapping import untagged_regions
 def raw_us():return time.clock_gettime_ns(time.CLOCK_MONOTONIC_RAW)//1000
 
 
-def capture_probe(marker, tool, output, *, detailed=False):
+def capture_probe(marker, tool, output, *, detailed=False, include_system=False):
     if tool not in ('heap','vmmap','dart-memory'):raise ValueError('Unknown lifetime observer')
     r=dict(attempt=marker['attempt'],phase=marker['phase'],tool=tool,
            runId=marker['runId'],pid=marker['pid'],status='unavailable',qualified=False,startedUs=raw_us())
@@ -29,6 +29,7 @@ def capture_probe(marker, tool, output, *, detailed=False):
         command=['/usr/bin/'+tool,'--noContent' if tool=='heap' else '-summary',str(r['pid'])]
         if tool=='vmmap' and detailed:command=['/usr/bin/vmmap','-wide','-interleaved','-noCoalesce',str(r['pid'])]
         if tool=='dart-memory':command=[sys.executable,str(Path(__file__).with_name('memory_mapping.py')),str(output/'playback.log'),str(r['pid']),str(journal)]
+        if tool=='dart-memory' and include_system:command.insert(2,'--include-system')
         r['command']=command
         with path.open('w') as stream:
             p=subprocess.run(command,stdout=stream,stderr=stream,timeout=10)

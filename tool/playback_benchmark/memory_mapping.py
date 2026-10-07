@@ -19,26 +19,34 @@ def service_uri(log):
     return value
 
 
-def read_memory(rpc,pid):
+def read_memory(rpc,pid,*,include_system=False):
     def identity():
         v=rpc('getVM',{})
         if v.get('type')!='VM' or type(v.get('pid')) is not int or v['pid']!=pid:
             raise ValueError('VM process mismatch')
-        groups=v.get('isolateGroups')
-        if not isinstance(groups,list) or not 1<=len(groups)<=8:raise ValueError('Unsupported isolate groups')
-        ids=[g.get('id') for g in groups]
-        if any(not isinstance(i,str) or not 1<=len(i)<=128 for i in ids) or len(set(ids))!=len(ids):
+        ids=[]
+        fields=[('isolateGroups','application',1)]
+        if include_system:fields.append(('systemIsolateGroups','system',0))
+        for field,kind,minimum in fields:
+            groups=v.get(field)
+            if not isinstance(groups,list) or not minimum<=len(groups)<=8 or any(not isinstance(g,dict) for g in groups):
+                raise ValueError('Unsupported isolate groups')
+            ids.extend((g.get('id'),kind) for g in groups)
+        names=[i for i,k in ids]
+        if any(not isinstance(i,str) or not 1<=len(i)<=128 for i in names) or len(set(names))!=len(names):
             raise ValueError('Invalid isolate groups')
         return sorted(ids)
     ids=identity();result=[]
-    for group in ids:
+    for group,kind in ids:
         m=rpc('getIsolateGroupMemoryUsage',{'isolateGroupId':group})
         fields=('heapUsage','heapCapacity','externalUsage')
         if m.get('type')!='MemoryUsage' or any(type(m.get(k)) is not int or not 0<=m[k]<=2**53-1 for k in fields) or m['heapUsage']>m['heapCapacity']:
             raise ValueError('Memory usage unavailable or invalid')
-        result.append(dict(id=group,memory={k:m[k] for k in ('type',*fields)}))
+        row=dict(id=group,memory={k:m[k] for k in ('type',*fields)})
+        if include_system:row['kind']=kind
+        result.append(row)
     if identity()!=ids:raise ValueError('Isolate groups changed')
-    return dict(scope='non-system-isolate-groups',groups=result,forcedGC=False,addressOwnership=None)
+    return dict(scope='application-and-system-isolate-groups' if include_system else 'non-system-isolate-groups',groups=result,forcedGC=False,addressOwnership=None)
 
 
 def http_rpc(uri,records,deadline,*,journal):
@@ -89,6 +97,8 @@ def untagged_regions(text,pid):
     rows=[];bounds=[]
     for line in text.splitlines():
         if not line.startswith('Untagged ') or '[' not in line:continue
+        # vmmap lists reserved address space as its own summary category.
+        if line.startswith('Untagged (reserved) '):continue
         m=re.fullmatch(r'Untagged\s+([0-9a-fA-F]+)-([0-9a-fA-F]+)\s+\[\s*('+SIZE+r')\s+('+SIZE+r')\s+('+SIZE+r')\s+('+SIZE+r')\s*\]\s+([rwx-]{3}/[rwx-]{3})\s+SM=([A-Z]+)\s*',line)
         if not m:raise ValueError('Unknown untagged region format')
         start,end=int(m[1],16),int(m[2],16)
@@ -108,12 +118,15 @@ def main():
     from pathlib import Path
     result=dict(status='unavailable',rpc=[],memory=None)
     try:
-        if len(sys.argv) not in (3,4):raise ValueError('Expected own log, PID and optional journal')
-        journal=Path(sys.argv[3]) if len(sys.argv)==4 else Path(sys.argv[1]).with_suffix('.rpc.jsonl')
+        args=sys.argv[1:]
+        include_system=bool(args and args[0]=='--include-system')
+        if include_system:args=args[1:]
+        if len(args) not in (2,3):raise ValueError('Expected own log, PID and optional journal')
+        journal=Path(args[2]) if len(args)==3 else Path(args[0]).with_suffix('.rpc.jsonl')
         with journal.open('x'):pass
-        pid=int(sys.argv[2]);result['pid']=pid
-        uri=service_uri(Path(sys.argv[1]).read_text())
-        result['memory']=read_memory(http_rpc(uri,result['rpc'],time.monotonic()+9,journal=journal),pid)
+        pid=int(args[1]);result['pid']=pid
+        uri=service_uri(Path(args[0]).read_text())
+        result['memory']=read_memory(http_rpc(uri,result['rpc'],time.monotonic()+9,journal=journal),pid,include_system=include_system)
         result['status']='captured'
     except (OSError,ValueError,TypeError,KeyError,http.client.HTTPException) as e:
         result['errorType']=type(e).__name__
