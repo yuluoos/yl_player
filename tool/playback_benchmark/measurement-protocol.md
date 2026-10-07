@@ -178,3 +178,37 @@ the tool may not recognize every Swift/native allocation. No global no-leak
 verdict, byte reclamation guarantee, GPU completeness or performance admission.
 The extra wait/tool overhead changes the protocol; do not compare these deltas
 to the original ten-cycle measurements.
+
+## Extended load/dispose observation (2026-10-07, fixed before execution)
+
+Run `run_resources.py --profile-endurance NEW_DIRECTORY FLUTTER` once on the
+available macOS host. Use 100 sequential fresh-player cycles, the same owned
+local AVC/AAC Matroska fixture and profile/host architecture. Each cycle has
+2 s idle, playback to media position >=2 s, independent cleanup (5 s per step),
+and 2 s disposed observation, sampled every 250 ms. Require at least 600 s from
+the first idle sample to the last disposed sample. This is repeated lifecycle
+endurance; the four-second fixture is not a continuous ten-minute film.
+
+Keep existing per-operation deadlines and the 256-sample per-cycle cap. Use a
+900 s integration-test deadline and 1200 s driver/build deadline. The first
+failed/timed-out/unconfirmed-cleanup cycle aborts further playback and marks
+remaining planned cycles skipped. A process crash/hang may prevent final rows;
+retain the original planned denominator, partial log/rows and failed status,
+never manufacture observations. No retries or warm-up exclusion. Store
+`protocol.json` with run identity, source/media/dependency/artifact hashes,
+commands and limits **before** launching the measured process, then preserve its
+hash in `result.json`. Sample clocks determine observation duration; host command
+elapsed time also includes build/driver startup and is not playback duration.
+
+Qualification requires 100 passed profile playback cycles, known engine/decoder,
+all five phases, >=2 s idle and disposed windows, available resource samples,
+nonoverlapping clocks and >=600 s span. Failed/skipped cycles remain visible;
+malformed or incomplete runs fail classification. Existing disposed-memory
+eligibility additionally requires one known power/thermal condition; changing
+conditions do not become a stable numeric comparison. No post-hoc byte-growth
+threshold. Caches remain OS-uncontrolled; no heap/vmmap/MSL observer, forced GC,
+memory pressure, SDK/product changes or background/multiplayer operations.
+Record resource endpoints/peaks and all failures; do not infer physical
+picture/audio correctness, object ownership, leak freedom or formal baseline.
+Continuous long playback, longer soaks and the remaining P08 device/workload
+matrix need separate evidence.

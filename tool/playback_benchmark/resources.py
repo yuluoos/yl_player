@@ -119,6 +119,36 @@ def summarize_disposed_memory(trials):
         leakVerdict=None,performanceBaseline=False,budgetAdmission=False)
 
 
+def summarize_endurance(trials):
+    """Qualify the fixed 100-cycle observation, not continuous playback or leaks."""
+    summary = summarize_trials(trials)
+    summarize_disposed_memory(trials)  # Also reject overlapping trial clocks.
+    if any(t['schemaVersion'] != 2 or t['plannedAttempts'] != 100 or
+           t['buildMode'] != 'profile' or t['workload'] != 'playback' for t in trials):
+        raise ValueError('Expected 100 profile playback cycles')
+    ordered = sorted(trials, key=lambda t: t['attempt'])
+    complete = summary['outcomes'] == {'passed': 100}
+    for trial in ordered:
+        if trial['outcome'] != 'passed':
+            continue
+        rows = trial['samples']
+        starts = {phase: next((r['monotonicUs'] for r in rows if r['phase'] == phase), None)
+                  for phase in PHASES}
+        if (None in starts.values() or trial['engine'] == 'unknown' or
+                trial['decoder'] == 'unknown'):
+            raise ValueError('Passed endurance cycle lacks playback/phase evidence')
+        complete &= (starts['opening'] - starts['idle'] >= 2000000 and
+                     rows[-1]['monotonicUs'] - starts['disposed'] >= 2000000 and
+                     all(r['status'] == 'ok' for r in rows))
+    observed = [r for t in ordered for r in t['samples']]
+    span = observed[-1]['monotonicUs'] - observed[0]['monotonicUs'] if observed else None
+    complete &= span is not None and span >= 600000000
+    return dict(plannedAttempts=100, outcomes=summary['outcomes'], observedSpanUs=span,
+                minimumObservationUs=600000000, protocolCompleted=bool(complete),
+                continuousPlayback=False, leakVerdict=None,
+                performanceBaseline=False, budgetAdmission=False)
+
+
 def main():
     try:
         if len(sys.argv)!=2: raise ValueError('Invalid arguments')

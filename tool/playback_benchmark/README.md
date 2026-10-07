@@ -379,3 +379,23 @@ include caches/allocator retention; negative growth does not prove leak freedom.
 No tolerance, software-decoder budget, leak verdict or long-run release gate is
 inferred from ten short cycles. Layer absence, physical picture/audio and GPU or
 media-ledger ownership are not measured by this resource-only run.
+
+## Extended lifecycle endurance (100 profile cycles)
+
+```sh
+python3 -B tool/playback_benchmark/run_resources.py --profile-endurance \
+  /absolute/path/to/fresh-result-directory /absolute/path/to/flutter
+```
+
+This freezes the protocol and identities in `protocol.json` before launch. It
+extends the existing playback cycle to 100 attempts and requires at least 600 s
+of resource observation; the integration and command deadlines are 900/1200 s.
+It cannot be combined with harness-only control or lifetime diagnostic windows.
+The existing 256-sample bound remains per cycle, avoiding an unbounded in-app
+sample list. All outcomes remain in the planned denominator; a failure stops
+further playback, and timeout/crash logs stay available even if final rows are
+incomplete. `endurance.protocolCompleted` is a protocol-completion gate, not a
+memory-growth, continuous-playback, picture/audio or no-leak verdict. The
+four-second fixture is repeatedly opened and disposed. See
+[the predeclared protocol](measurement-protocol.md#extended-load-dispose-observation-2026-10-07-fixed-before-execution)
+for windows, failure handling and unverified workloads.

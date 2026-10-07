@@ -13,6 +13,7 @@ import 'support/display_cleanup.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  const endurance = bool.fromEnvironment('YL_RESOURCE_ENDURANCE');
   testWidgets(
     'owned AVC process resource instrumentation smoke',
     (tester) async {
@@ -34,10 +35,11 @@ void main() {
       const workload = harnessOnly ? 'harness-only' : 'playback';
       if ((profileCycles && !kProfileMode) ||
           (harnessOnly && !profileCycles) ||
-          (lifetimeProbes && (!profileCycles || harnessOnly))) {
+          (lifetimeProbes && (!profileCycles || harnessOnly)) ||
+          (endurance && (!profileCycles || harnessOnly || lifetimeProbes))) {
         throw const FormatException('Resource cycles require profile mode');
       }
-      const attempts = profileCycles ? 10 : 3;
+      const attempts = endurance ? 100 : (profileCycles ? 10 : 3);
       final mode = kReleaseMode
           ? 'release'
           : kProfileMode
@@ -219,6 +221,6 @@ void main() {
         reason: 'Resource trials retained all outcomes',
       );
     },
-    timeout: const Timeout(Duration(minutes: 4)),
+    timeout: const Timeout(Duration(minutes: endurance ? 15 : 4)),
   );
 }
