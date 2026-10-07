@@ -267,3 +267,47 @@ profile 实跑预先冻结三次、无预热剔除、已有本地 AVC/AAC 素材
 这为共同阶跃提供了一个具体的**系统窗口状态保存分配来源**，但高水位树不是该 `Malloc Large (empty)` 区域的地址级分配/释放历史，尚未建立一一对应；也没有证明播放器其他对象全部释放。不得把此线索改写成整个增长已归因或无泄漏。未禁用窗口恢复、改变分配器或调整生产缓存；此处命名来自实际系统栈，不作为产品代码依赖。
 
 本项交付内存类别诊断和大块分配调用栈线索。完整 P08 Task1/2、长期资源预算与原生播放器对象生命周期仍开放。下一项优先建立大块区域地址与分配/释放历史的对应，并检查播放器会话/解码器/帧对象的存活情况；只对证实的生产缺陷实施修复。
+
+## 2026-10-07 地址级分配/释放配对与原生对象存活窗口
+
+起点 1f6a0f6。本项把上次的调用树线索推进到实际地址配对，并增加播放器存活/释放后的明确观察窗口。生产释放、缓存、窗口恢复策略均未改。先修正上次非阻塞测试入口问题：直接执行 test_memory_categories.py 实际从 6 项变为全部 8 项；标准 discovery 继续覆盖全部测试。
+
+### 大块区域地址配对
+
+初次空载诊断 20261007T094401Z（runId 均有 macos-resource- 前缀）10/10，298 个有效资源点：vmmap 中 7920K 的 Malloc Large (empty) 区域，基址查询已得到同范围的 VM_ALLOC，来源是 AppKit NSPersistentUIWindowSnapshotter。初次没有 malloc/free 配对；后来尝试查询内部地址时测试进程已退出，核对失败后没有执行任何进程检查，不能把未查询当作零分配或释放证据。
+
+预先固定第二次协议：单独空载十轮，正常构建后启动预构建应用，仅 driver/应用后代设置 MallocStackLogging=full 和 MallocStackLoggingNoCompact=1；第 5 轮后验证精确 PID/可执行文件，采集不合并的区域，查询最多两块 7–9 MiB 空闲大块的基址及 +16/+32 KiB 内部地址，只读取分配历史元数据。
+
+最终 20261007T095353Z：10/10，298 点，vmmap 与三个地址查询均退出 0，无额外错误。PID 9132 的结果：
+
+| 层次 | 地址范围 | 字节数 | 实际证据 |
+|---|---|---:|---|
+| VM 区域 | 0x75a8c00000 至 0x75a93bc000（右端不含） | 8110080 | vmmap 与 VM_ALLOC 范围一致，分配栈来自 AppKit 窗口快照 |
+| 区域内 malloc | 0x75a8c04000 至 0x75a93bb000（右端不含） | 8089600 | 同范围、同大小的 ALLOC 与 FREE 记录均存在，均为 AppKit 快照路径 |
+| 查询时区域状态 | 同一 VM 区域 | virtual 7920K，resident/dirty 各 7904K | 系统仍标为 Malloc Large (empty) |
+
++16 KiB 与 +32 KiB 查询命中的是**同一次分配与释放**，不重复计算为两次释放。地址换算已验证系统历史里的右端包含值与 vmmap 右端不含值一致。该空载样本中的快照 malloc 已 free，而其 VM 区域仍由分配器保留；这是“free 了对象但进程内存未立刻下降”的直接证据。没有 VM_DEALLOC 或 footprint 完全回收证据，也不能把这块空载区域的归属外推为所有播放组增长的归属。
+
+### 原生对象的明确观察窗口
+
+新增 run_lifetime_probes.py，显式启用示例中的三个 20 s 等待窗口：第 1 轮加载并播放至媒体位置 2 s 后、释放之前（live），以及第 2/8 轮完成释放、卸载视图、删除临时媒体和普通 2 s 观察之后（disposed）。live 等待期间短素材可能播完，但播放器所有权仍保留。每个窗口仅运行一次 heap --noContent，10 s 截止，工具和应用标记均使用 macOS CLOCK_MONOTONIC_RAW 微秒。只有同 run/PID/试次/阶段的完整 begin/end，且命令起止全部在窗口内，才计为合格观察；下轮不会在等待期间创建实例。没有强制 GC、分配器清理或启用 MallocStackLogging。
+
+最终 20261007T095123Z：10/10，383 个采样点，3/3 heap 命令成功并通过时间边界校验；各窗口约 20.003 s，命令分别耗时 2.943035 / 1.986764 / 1.995197 s。heap 的 timer/进程暂停开销属于此诊断协议，不能与原十轮协议作性能改善比较。
+
+| heap 精确类型（均有 live 正例） | 第 1 轮释放前 | 第 2 轮释放后 | 第 8 轮释放后 |
+|---|---:|---|---|
+| YlApplePlayerHost、YlAppleSessionCoordinator、YlManagedPlaybackSession | 各 1 | 均未列出 | 均未列出 |
+| YlOpenedMedia、YlVideoToolboxDecoder、YlFrameScheduler、YlPresentationCoordinator | 各 1 | 均未列出 | 均未列出 |
+| YlManagedBufferLedger | 1 | 未列出 | 未列出 |
+| YlManagedBufferLedger.Token | 191 | 未列出 | 未列出 |
+| YlApplePlayerRegistry（插件级常驻） | 1 | 1 | 1 |
+
+这些核心实例在本次两次释放后样本中未见滞留。证据保存 absent 为 not_listed/null，而非虚构零；容器类型名中含 YlApplePlayerHost 的 dictionary storage 仍列出，但它不是 Host 实例，不按字符串包含关系混计。heap 不保证识别全部 Swift/C/C++/GPU 分配，所以不能宣称整个播放器无泄漏、全部 native 内存已归还或长期稳定性已经完成。
+
+### 验证、源身份与后续
+
+新增 5 项窗口行为测试先因缺模块 RED，再通过共 **50/50 Python**；静态分析无问题，profile 实际播放十轮通过。测试覆盖缺标记、跨窗口、工具失败、时钟倒退/布尔值、身份混合及未声明阶段。异常 checkpoint 时钟读取可能中止余下试次；runner 会保留原始日志、计划次数并按不完整运行失败处理，不计未运行部分为成功，未做这条原生故障注入。
+
+最终生命周期与地址诊断的 sourceHash 均为 c415317b67bf23b8a9521c9ef34bd4c36d349fe57fc1f345913b897619c40cca，源码/依赖/生产原生制品/媒体身份逐项验证一致；两种诊断协议不同，不合并为一个统计组。二者均 M1 / MacBookPro17,1 / macOS27.0(26A428)、arm64/profile、ac/nominal。所有有效资源点保留，timer 在检查工具运行时可能延后，不称为无间隙采样。[完整证据](../../../tool/playback_benchmark/macos-address-lifetime-observations.json)含三次运行、heap 原文和精确类型摘录、区域原文、ALLOC/FREE 栈、脚本及哈希；原始目录归档在本计划忽略目录 address-lifetime/。前台激活失败和 native integration_test plugin 提示仍不构成物理输出验收。
+
+本轮完成该空载大块区域的归因与核心原生对象短循环存活观察，未发现能据此要求修改生产释放策略的缺陷。无需为消除该系统保留区域而禁用窗口恢复或强制清理分配器。完整 P08 Task1/2、首帧真实呈现/受控性能预算、长播、后台/多播放器及跨设备门槛仍开放；下一项进入预先固定时长与故障轨迹的长期资源观察，若出现新的持续增长，再按具体所有权证据定位。

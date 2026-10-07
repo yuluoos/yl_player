@@ -36,18 +36,21 @@ def run_logged(command, cwd, path, timeout):
             raise
 
 
-def collect(output, flutter, *, profile_cycles=False, harness_only=False):
+def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifetime_probes=False):
     if harness_only and not profile_cycles:
         raise ValueError('Harness control requires profile cycles')
+    if lifetime_probes and (not profile_cycles or harness_only):
+        raise ValueError('Lifetime checkpoints require profile playback')
     workload='harness-only' if harness_only else 'playback'
     output.mkdir(parents=True,exist_ok=False)
     attempts=10 if profile_cycles else 3
     mode='profile' if profile_cycles else 'debug'
     run='macos-resource-'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ')
-    result=dict(schemaVersion=2,workload=workload,runId=run,runStatus='failed',stage='setup',purpose='instrumentation-smoke',
+    result=dict(schemaVersion=2,workload=workload,lifetimeProbes=lifetime_probes,runId=run,runStatus='failed',stage='setup',purpose='instrumentation-smoke',
                 performanceBaseline=False,budgetAdmission=False,physicalOutput='not_verified',
                 cacheState='os-cache-uncontrolled',networkProfile='local-file',buildMode=mode,plannedAttempts=attempts,
                 protocol=dict(idleSeconds=2,playingUntilMediaSeconds=None if harness_only else 2,
+                              lifetimeCheckpointSeconds=20 if lifetime_probes else None,
                               playingWallSeconds=2 if harness_only else None,disposedSeconds=2,intervalMs=250))
     try:
         paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','--','packages','tool/playback_benchmark'],cwd=ROOT,text=True).splitlines()
@@ -73,7 +76,7 @@ def collect(output, flutter, *, profile_cycles=False, harness_only=False):
             subprocess.run(['sh',str(HERE/'build_apple_resources.sh'),str(library)],stdout=log,stderr=log,timeout=60,check=True)
         result['samplerSha256']=digest(library)
         defines=output/'defines.json'
-        defines.write_text(json.dumps(dict(YL_RESOURCE_RUN_ID=run,YL_RESOURCE_PROFILE_CYCLES=profile_cycles,YL_RESOURCE_HARNESS_ONLY=harness_only,YL_RESOURCE_LIBRARY_BYTES=base64.b64encode(library.read_bytes()).decode()))+'\n')
+        defines.write_text(json.dumps(dict(YL_RESOURCE_RUN_ID=run,YL_RESOURCE_PROFILE_CYCLES=profile_cycles,YL_RESOURCE_HARNESS_ONLY=harness_only,YL_RESOURCE_LIFETIME_PROBES=lifetime_probes,YL_RESOURCE_LIBRARY_BYTES=base64.b64encode(library.read_bytes()).decode()))+'\n')
         result['stage']='playback'
         command=[flutter,'test','integration_test/resource_benchmark_test.dart','-d','macos','--no-pub','--dart-define-from-file='+str(defines)]
         if profile_cycles:

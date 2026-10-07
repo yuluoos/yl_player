@@ -148,3 +148,33 @@ ledgers; their totals need not reconcile. `Malloc Large (empty)` is a system
 category, not an object count, ownership proof or no-leak verdict. This protocol
 has no frozen performance threshold. Allocation stacks and native object lifetime
 measurements require a separate, explicitly recorded diagnostic protocol.
+
+## Address history and object-lifetime windows (2026-10-07)
+
+For the address experiment, run a separate ten-cycle harness-only process with
+full, noncompacted malloc stack history. Build normally, then launch the prebuilt
+app through the existing driver with process-local MallocStackLogging=full and
+MallocStackLoggingNoCompact=1. After cycle 5, verify the exact owned PID/executable,
+capture wide noncoalesced vmmap regions, and query malloc_history only for up to
+two 7–9 MiB Malloc Large (empty) regions, at their start and +16/+32 KiB interior
+addresses. Preserve missing regions and failed queries; interior queries are
+metadata history lookups, not object contents. This is a diagnostic experiment,
+not a new allocator setting or performance comparison.
+
+run_lifetime_probes.py NEW_DIRECTORY FLUTTER separately enables example-only
+20-second checkpoints: cycle 1 after media position reaches 2 s but before
+disposal (live), and cycles 2/8 after disposal and the ordinary 2 s observation.
+Capture heap --noContent once per checkpoint with a 10 s deadline after verifying
+the exact owned executable. The app delays before the next operation; it does
+not ask the allocator to collect. The live fixture may end during its checkpoint
+but the controller/session remain owned. No MallocStackLogging is enabled here.
+
+Both marker and observer timestamps use macOS CLOCK_MONOTONIC_RAW in microseconds.
+Qualify only matching begin/end run/PID/trial/phase identities with the complete
+command interval inside that window; missing markers, tool failures or out-of-window
+captures cannot prove post-disposal state. Keep raw heap output and all statuses.
+A positive live capture is needed before interpreting a missing class later:
+the tool may not recognize every Swift/native allocation. No global no-leak
+verdict, byte reclamation guarantee, GPU completeness or performance admission.
+The extra wait/tool overhead changes the protocol; do not compare these deltas
+to the original ten-cycle measurements.

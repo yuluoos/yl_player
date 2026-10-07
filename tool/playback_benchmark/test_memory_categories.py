@@ -43,7 +43,6 @@ class MemoryCategoryTests(unittest.TestCase):
         for changes in ({'pid':True},{'pid':-1},{'attempt':11},{'attempt':True},{'runId':'other'},{'workload':'playback'},{'buildMode':'debug'},{'schemaVersion':1},{'plannedAttempts':3}):
             with self.assertRaises(ValueError):probe_identity(dict(row,**changes),'run-1','harness-only')
 
-if __name__=='__main__':unittest.main()
 
 class CategoryRunnerTests(unittest.TestCase):
     def test_failed_run_retains_all_unobserved_probes(self):
@@ -76,3 +75,5 @@ class CategoryRunnerTests(unittest.TestCase):
                 with self.assertRaises(FileExistsError):collect_categories(output,'unused',harness_only=True)
                 collect.assert_not_called()
             self.assertEqual((output/'category-probes.json').read_text(),'keep')
+
+if __name__=='__main__':unittest.main()

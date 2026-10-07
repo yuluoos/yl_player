@@ -28,8 +28,13 @@ void main() {
       }
       const profileCycles = bool.fromEnvironment('YL_RESOURCE_PROFILE_CYCLES');
       const harnessOnly = bool.fromEnvironment('YL_RESOURCE_HARNESS_ONLY');
+      const lifetimeProbes = bool.fromEnvironment(
+        'YL_RESOURCE_LIFETIME_PROBES',
+      );
       const workload = harnessOnly ? 'harness-only' : 'playback';
-      if ((profileCycles && !kProfileMode) || (harnessOnly && !profileCycles)) {
+      if ((profileCycles && !kProfileMode) ||
+          (harnessOnly && !profileCycles) ||
+          (lifetimeProbes && (!profileCycles || harnessOnly))) {
         throw const FormatException('Resource cycles require profile mode');
       }
       const attempts = profileCycles ? 10 : 3;
@@ -40,6 +45,23 @@ void main() {
           : 'debug';
       Map<String, Object?> Function()? readResources;
       Directory? samplerDirectory;
+      Future<void> checkpoint(int attempt, String phase) async {
+        void emit(String edge) {
+          final clock = readResources!()['monotonicUs'];
+          if (clock is! int || clock < 0) {
+            throw const FormatException('Checkpoint clock unavailable');
+          }
+          debugPrint(
+            'YL_RESOURCE_CHECKPOINT=${jsonEncode({'schemaVersion': 1, 'runId': runId, 'pid': pid, 'workload': workload, 'attempt': attempt, 'phase': phase, 'edge': edge, 'monotonicUs': clock})}',
+            wrapWidth: 100000,
+          );
+        }
+
+        emit('begin');
+        await Future<void>.delayed(const Duration(seconds: 20));
+        emit('end');
+      }
+
       addTearDown(
         () async => samplerDirectory
             ?.delete(recursive: true)
@@ -156,6 +178,9 @@ void main() {
               );
               expect(activePlayer.state.failure, isNull);
             }
+            if (lifetimeProbes && attempt == 1) {
+              await checkpoint(attempt, 'live');
+            }
             series.enter('disposing');
             emitObservation();
             cleaned = await releaseTrial();
@@ -181,6 +206,11 @@ void main() {
           'YL_RESOURCE_SERIES=${jsonEncode({'schemaVersion': 2, 'workload': workload, 'runId': runId, 'attempt': attempt, 'plannedAttempts': attempts, 'pid': pid, 'buildMode': mode, 'intervalMs': 250, 'engine': engine, 'decoder': decoder, 'outcome': outcome, 'samples': rows})}',
           wrapWidth: 100000,
         );
+        if (lifetimeProbes &&
+            outcome == 'passed' &&
+            (attempt == 2 || attempt == 8)) {
+          await checkpoint(attempt, 'disposed');
+        }
         outcomes.add(outcome);
       }
       expect(
