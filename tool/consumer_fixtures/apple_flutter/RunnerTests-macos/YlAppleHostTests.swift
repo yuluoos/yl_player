@@ -392,3 +392,118 @@ final class YlAppleAcceptedIntentTests: XCTestCase {
     XCTAssertNil(f.host.initialState.failure)
   }
 }
+
+// Keep the real engine's handler storage/connection semantics. Only the Dart
+// transport and texture registry are substituted; no Dart isolate/media is needed.
+import Cocoa
+import FlutterMacOS
+
+@MainActor
+final class YlMacosHostConnectionTests: XCTestCase {
+  func testDisposedPlayersRemoveAllSeventeenEngineChannelRecords() async throws {
+    let registrar = ConnectionRegistrar()
+    YlPlayerApplePlugin.register(with: registrar)
+    defer { registrar.plugin?.detachFromEngine(for: registrar) }
+    XCTAssertEqual(try registrar.transport.pluginChannelCount(), 1)
+    for _ in 0..<3 {
+      let player = try await create(registrar)
+      XCTAssertEqual(try registrar.transport.pluginChannelCount(), 18)
+      _ = try await registrar.transport.call("ApplePlayerHostApi.dispose.\(player.channelSuffix)", arguments: nil)
+      XCTAssertEqual(try registrar.transport.pluginChannelCount(), 1,
+        "Dispose must remove records, including nil-handler records, for all 14 player + 3 DRM channels")
+    }
+  }
+
+  func testDetachRemovesFactoryAndEveryLivePlayerOnlyOnce() async throws {
+    let registrar = ConnectionRegistrar()
+    YlPlayerApplePlugin.register(with: registrar)
+    _ = try await create(registrar)
+    _ = try await create(registrar)
+    XCTAssertEqual(try registrar.transport.pluginChannelCount(), 35)
+    registrar.plugin?.detachFromEngine(for: registrar)
+    XCTAssertEqual(try registrar.transport.pluginChannelCount(), 0)
+    registrar.plugin?.detachFromEngine(for: registrar)
+    XCTAssertEqual(try registrar.transport.pluginChannelCount(), 0,
+      "Repeated detach must not insert a fresh nil-handler factory record")
+  }
+
+  func testDisposingOnePlayerPreservesPeerAndNewerForeignConnection() async throws {
+    let registrar = ConnectionRegistrar()
+    YlPlayerApplePlugin.register(with: registrar)
+    defer { registrar.plugin?.detachFromEngine(for: registrar) }
+    let first = try await create(registrar), peer = try await create(registrar)
+    let replacement = "ApplePlayerHostApi.setVolume.\(first.channelSuffix)"
+    let connection = registrar.transport.setMessageHandlerOnChannel(ConnectionTransport.prefix + replacement,
+      binaryMessageHandler: { _, reply in reply(ApplePlayerHostApiSetup.codec.encode(["replacement"])) })
+    defer { registrar.transport.cleanUpConnection(connection) }
+    _ = try await registrar.transport.call("ApplePlayerHostApi.dispose.\(first.channelSuffix)", arguments: nil)
+    XCTAssertEqual(try registrar.transport.pluginChannelCount(), 19,
+      "Factory, live peer's 17 channels, and newer foreign connection must survive")
+    let reply = try await registrar.transport.call(replacement, arguments: nil)
+    XCTAssertEqual(reply.first as? String, "replacement")
+    let peerReply = try await registrar.transport.call("ApplePlayerHostApi.setVolume.\(peer.channelSuffix)", arguments: [0.3])
+    XCTAssertEqual(peerReply.count, 1)
+    XCTAssertTrue(peerReply[0] is NSNull)
+  }
+
+  private func create(_ registrar: ConnectionRegistrar) async throws -> AppleCreateReply {
+    let values = try await registrar.transport.call("ApplePlayerFactoryHostApi.create", arguments: [
+      AppleCreateRequest(schemaMajor: 5, options: .init(decoderPolicy: .systemDefault,
+        audioPolicy: .appManaged, positionUpdateIntervalMs: 250))])
+    return try XCTUnwrap(values.first as? AppleCreateReply)
+  }
+}
+
+private final class ConnectionTransport: NSObject, FlutterBinaryMessenger {
+  static let prefix = "dev.flutter.pigeon.yl_player_apple."
+  let engine = FlutterEngine(name: "channel-cleanup-regression", project: nil, allowHeadlessExecution: true)
+  private var handlers: [String: (FlutterBinaryMessengerConnection, FlutterBinaryMessageHandler)] = [:]
+
+  func pluginChannelCount() throws -> Int {
+    // Test-only inspection of the actual local macOS engine; production uses
+    // only FlutterBinaryMessenger's public connection API.
+    let records = try XCTUnwrap(engine.value(forKey: "messengerHandlers") as? [String: Any])
+    return records.keys.filter { $0.hasPrefix(Self.prefix) }.count
+  }
+  func call(_ name: String, arguments: [Any?]?) async throws -> [Any] {
+    let handler = try XCTUnwrap(handlers[Self.prefix + name]?.1, "Missing active route: \(name)")
+    let codec = ApplePlayerHostApiSetup.codec
+    let data = await withCheckedContinuation { continuation in
+      handler(codec.encode(arguments)) { continuation.resume(returning: $0) }
+    }
+    return try XCTUnwrap(codec.decode(data) as? [Any])
+  }
+  func send(onChannel channel: String, message: Data?) {}
+  func send(onChannel channel: String, message: Data?, binaryReply: FlutterBinaryReply?) {
+    binaryReply?(ApplePlayerHostApiSetup.codec.encode([nil] as [Any?]))
+  }
+  func setMessageHandlerOnChannel(_ channel: String,
+      binaryMessageHandler handler: FlutterBinaryMessageHandler?) -> FlutterBinaryMessengerConnection {
+    let connection = engine.binaryMessenger.setMessageHandlerOnChannel(channel, binaryMessageHandler: handler)
+    handlers[channel] = handler.map { (connection, $0) }
+    return connection
+  }
+  func cleanUpConnection(_ connection: FlutterBinaryMessengerConnection) {
+    engine.binaryMessenger.cleanUpConnection(connection)
+    handlers = handlers.filter { $0.value.0 != connection }
+  }
+}
+
+private final class ConnectionRegistrar: NSObject, FlutterPluginRegistrar, FlutterTextureRegistry {
+  let transport = ConnectionTransport()
+  var plugin: YlPlayerApplePlugin?
+  var messenger: FlutterBinaryMessenger { transport }
+  var textures: FlutterTextureRegistry { self }
+  var view: NSView? { nil }
+  var viewController: NSViewController? { nil }
+  private var nextTexture: Int64 = 0
+  func register(_ texture: FlutterTexture) -> Int64 { nextTexture += 1; return nextTexture }
+  func unregisterTexture(_ textureId: Int64) {}
+  func textureFrameAvailable(_ textureId: Int64) {}
+  func register(_ factory: FlutterPlatformViewFactory, withId factoryId: String) {}
+  func addMethodCallDelegate(_ delegate: FlutterPlugin, channel: FlutterMethodChannel) {}
+  func addApplicationDelegate(_ delegate: FlutterAppLifecycleDelegate) {}
+  func publish(_ value: NSObject) { plugin = value as? YlPlayerApplePlugin }
+  func lookupKey(forAsset asset: String) -> String { asset }
+  func lookupKey(forAsset asset: String, fromPackage package: String) -> String { asset }
+}

@@ -8,11 +8,17 @@ import FlutterMacOS
 
 public final class YlPlayerApplePlugin: NSObject, FlutterPlugin {
   private let registry: YlApplePlayerRegistry
-  private init(registry: YlApplePlayerRegistry) { self.registry = registry; super.init() }
+  private let hostMessenger: FlutterBinaryMessenger
+  private init(registry: YlApplePlayerRegistry, hostMessenger: FlutterBinaryMessenger) {
+    self.registry = registry
+    self.hostMessenger = hostMessenger
+    super.init()
+  }
 
   public static func register(with registrar: FlutterPluginRegistrar) {
     #if os(iOS)
     let messenger = registrar.messenger()
+    let hostMessenger = messenger
     let lifecycle = YlIosLifecycle()
     let nativeViews = YlIosVideoViewFactory()
     registrar.register(nativeViews, withId: YlIosVideoViewFactory.viewType)
@@ -23,6 +29,7 @@ public final class YlPlayerApplePlugin: NSObject, FlutterPlugin {
     }
     #else
     let messenger = registrar.messenger
+    let hostMessenger = YlMacosHostMessenger(messenger)
     let lifecycle = YlMacosLifecycle()
     let nativeViews = YlMacosVideoViewFactory()
     registrar.register(nativeViews, withId: YlMacosVideoViewFactory.viewType)
@@ -37,17 +44,17 @@ public final class YlPlayerApplePlugin: NSObject, FlutterPlugin {
     let registry = YlApplePlayerRegistry(makeServices: services,
       makeCallbacks: { makeCallbacks(messenger: messenger, suffix: $0) },
       installHost: { suffix, host in
-        ApplePlayerHostApiSetup.setUp(binaryMessenger: messenger, api: host, messageChannelSuffix: suffix)
+        ApplePlayerHostApiSetup.setUp(binaryMessenger: hostMessenger, api: host, messageChannelSuffix: suffix)
       }, lifecycle: lifecycle, makeDrmBridge: { id, suffix in
         let bridge = YlFairPlayBridge(playerId: id, views: protectedViews,
           callbacks: AppleDrmFlutterApi(binaryMessenger: YlApplePlatformMessenger(messenger), messageChannelSuffix: suffix))
-        AppleDrmHostApiSetup.setUp(binaryMessenger: messenger, api: bridge, messageChannelSuffix: suffix)
+        AppleDrmHostApiSetup.setUp(binaryMessenger: hostMessenger, api: bridge, messageChannelSuffix: suffix)
         return bridge
       }, uninstallDrm: { suffix in
-        AppleDrmHostApiSetup.setUp(binaryMessenger: messenger, api: nil, messageChannelSuffix: suffix)
+        AppleDrmHostApiSetup.setUp(binaryMessenger: hostMessenger, api: nil, messageChannelSuffix: suffix)
       })
-    ApplePlayerFactoryHostApiSetup.setUp(binaryMessenger: messenger, api: registry)
-    registrar.publish(YlPlayerApplePlugin(registry: registry))
+    ApplePlayerFactoryHostApiSetup.setUp(binaryMessenger: hostMessenger, api: registry)
+    registrar.publish(YlPlayerApplePlugin(registry: registry, hostMessenger: hostMessenger))
   }
 
   static func makeCallbacks(messenger: FlutterBinaryMessenger, suffix: String) -> ApplePlayerFlutterApi {
@@ -56,11 +63,7 @@ public final class YlPlayerApplePlugin: NSObject, FlutterPlugin {
 
   public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
     registry.detach()
-    #if os(iOS)
-    ApplePlayerFactoryHostApiSetup.setUp(binaryMessenger: registrar.messenger(), api: nil)
-    #else
-    ApplePlayerFactoryHostApiSetup.setUp(binaryMessenger: registrar.messenger, api: nil)
-    #endif
+    ApplePlayerFactoryHostApiSetup.setUp(binaryMessenger: hostMessenger, api: nil)
   }
 }
 
@@ -90,7 +93,7 @@ private final class YlApplePlatformMessenger: NSObject, FlutterBinaryMessenger {
   }
 
   // Only outbound FlutterApi channels use this adapter. Host channel registration
-  // still uses the registrar's original messenger and its existing task queues.
+  // uses a separate messenger; this adapter does not manage host connections.
   func setMessageHandlerOnChannel(_ channel: String,
       binaryMessageHandler handler: FlutterBinaryMessageHandler?) -> FlutterBinaryMessengerConnection {
     messenger.setMessageHandlerOnChannel(channel, binaryMessageHandler: handler)
@@ -100,3 +103,42 @@ private final class YlApplePlatformMessenger: NSObject, FlutterBinaryMessenger {
     messenger.cleanUpConnection(connection)
   }
 }
+
+#if os(macOS)
+/// Generated setUp(api: nil) creates fresh channels without their original
+/// connection IDs. macOS's nil-handler registration retains an engine record.
+/// Keep IDs across setup calls so disposal removes only our own registrations.
+/// These Pigeon host APIs use the platform thread and no background task queue.
+private final class YlMacosHostMessenger: NSObject, FlutterBinaryMessenger {
+  private let messenger: FlutterBinaryMessenger
+  private var connections: [String: FlutterBinaryMessengerConnection] = [:]
+
+  init(_ messenger: FlutterBinaryMessenger) { self.messenger = messenger }
+
+  func send(onChannel channel: String, message: Data?) {
+    messenger.send(onChannel: channel, message: message)
+  }
+
+  func send(onChannel channel: String, message: Data?, binaryReply: FlutterBinaryReply?) {
+    messenger.send(onChannel: channel, message: message, binaryReply: binaryReply)
+  }
+
+  func setMessageHandlerOnChannel(_ channel: String,
+      binaryMessageHandler handler: FlutterBinaryMessageHandler?) -> FlutterBinaryMessengerConnection {
+    if let handler {
+      let connection = messenger.setMessageHandlerOnChannel(channel, binaryMessageHandler: handler)
+      connections[channel] = connection
+      return connection
+    }
+    if let connection = connections.removeValue(forKey: channel) {
+      messenger.cleanUpConnection(connection)
+    }
+    return 0
+  }
+
+  func cleanUpConnection(_ connection: FlutterBinaryMessengerConnection) {
+    connections = connections.filter { $0.value != connection }
+    messenger.cleanUpConnection(connection)
+  }
+}
+#endif
