@@ -406,3 +406,54 @@ python3 -B tool/playback_benchmark/run_lifetime_probes.py --long-cycles \
 新增 5 项长窗口/协议隔离、完整未观察分母及错误可执行文件拒绝测试先 RED 后 **60/60 Python**，Dart 集成文件静态分析无问题，实际新协议百轮已通过；未重复运行未改动的生产媒体套件。最终源码、依赖、原生制品、媒体、采样库、协议、全部原始探针/日志与应用可执行文件身份已核对。[完整证据](../../../tool/playback_benchmark/macos-long-lifetime-observations.json) 内嵌四份完整 heap 表、四份 vmmap 原文、逐行堆摘要、归档脚本、100 轮资源样本及全部指纹；原文件另存本计划忽略工作区 `long-lifetimes-100/`。
 
 应用未能自动置前及 integration_test 原生插件提示均保留，不构成物理音画验收。`leakVerdict=null`、`performanceBaseline=false`、`budgetAdmission=false`；生产代码未改。连续长片、更长运行、后台/多播放器/低内存、其他设备与最低系统、真实呈现及正式基线仍未完成，**完整 P08 Task1/2 保持开放**。
+
+
+## 2026-10-07 Dart 堆与 Untagged 地址关联
+
+起点 `2768b11`，本项增加 `--memory-mapping`，在既定百轮四个 30 s 窗口内采集 heap、详细 vmmap 和 Dart group 堆元数据，共 12 项探针。生产/Dart 播放代码不变。Dart 端点只接受本次驱动日志里的字面回环 HTTP 地址，不走代理或重定向；前后 `getVM` 必须返回同一个 checkpoint PID 与 group 集合，逐 group 调用 `getIsolateGroupMemoryUsage`，不触发 GC、reset、堆快照或对象内容读取。读取非系统 group，**不包含 VM-service 等系统 group 的堆计数**。`externalUsage` 只是 embedder 向 VM 报告的关联外部内存，不能替代全部 native/GPU 账本。
+
+详细 vmmap 保留 Untagged 的起止地址、访问属性与原始单位；地址相减只得到精确虚拟大小，不把四舍五入的驻留/脏页数字当精确字节。重复、重叠、格式未知或与摘要 regionCount 不一致的表格会被拒绝。每份采集都有独立 10 s 子进程上限和原始时钟区间。
+
+### 失败路径修复与保留的尝试
+
+独立复核发现 Important：旧 Dart 探针只在结束时输出，硬超时会丢失已完成请求；JSON 解析前也没有保留无效响应。初次 `macos-resource-20261007T110858Z`（sourceHash `755e183465172ea72f08c2a2de3168dfa4557bfe57a64f73dc62b44ba8b525cf`）在 10 个完成试次后主动中止，原定 100 次、缺少的 90 行保持未观察，不编造 skipped 或完整成功；结果仍为 failed，原始日志和已取得的六份探针原文保留。此中止是修复工具记录缺口的决定，不记为播放器自身故障。
+
+修复后每次请求的 metadata、HTTP 状态和收到的数据块均先写入独立 JSONL 并 flush/fsync，再解析 JSON；无效 JSON 的原始字节保留，超限响应最多保存 1 MiB 前缀并显式记录 limit 事件。父进程即使硬终止子进程，也记录已写 journal 的哈希。真实本机回环测试先复现“getVM 已完成、下一请求悬挂时 kill 后证据丢失”，以及无效/超限响应丢失，再验证修复；首次受限环境不能绑定回环端口，随后在允许本地测试网络的环境完成有效 RED→GREEN。**共 66/66 Python 通过**，没有以 mock 成功替代这两项故障测试。
+
+### 最终固定协议实测
+
+```sh
+python3 -B tool/playback_benchmark/run_lifetime_probes.py --long-cycles --memory-mapping \
+  /private/tmp/yl-memory-mapping-final /Users/yy2021_8689/flutter/bin/flutter
+```
+
+最终 `macos-resource-20261007T111539Z`、PID **13802**，M1 / MacBookPro17,1 / macOS 27.0 (26A428)，arm64 profile，sourceHash **763eddf5857d63a898d7c75951b97765a19aeb43a44938ee26a7619788ee157c**。**100/100 播放通过、12/12 探针成功且完整位于各自窗口内**，监控错误为空。3224 个资源点均可用且全部 ac/nominal；managedFallback/hardware。资源首末跨度 **733.014149 s**，命令总耗时 **788.212431 s**；仍含诊断等待，不等于连续播放长片。四个 Dart 探针耗时 0.084584–0.090943 s（区间含进程身份核查），每组两次 getVM 身份匹配。
+
+所有窗口识别同一非系统 group `isolateGroups/5690361082348171`（VM 报告名称 main.dart），指标如下，单位为精确字节：
+
+| 窗口 | heapUsage | heapCapacity | externalUsage | Untagged 脏页（vmmap 原始单位） |
+|---|---:|---:|---:|---:|
+| 1 / live | 8,304,992 | 9,158,656 | 70,224 | 16.3M |
+| 10 / disposed | 8,781,712 | 9,682,944 | 70,672 | 22.2M |
+| 50 / disposed | 8,395,856 | 9,961,472 | 71,024 | 33.2M |
+| 100 / disposed | 6,978,064 | 9,437,184 | 96 | 39.3M |
+
+第 50→100 轮应用 group 的 heapUsage **8,395,856→6,978,064 B**，容量也从 **9,961,472→9,437,184 B** 回落，而 Untagged 脏页 **33.2M→39.3M**。这些同时段样本不支持“所测应用 group 堆使用量持续上升解释全部 Untagged 增长”的推断；不能据此排除系统 group、未报告外部内存或 native 分配。
+
+### 已缩小到具体地址范围
+
+四份详细表分别有 **48、49、52、52** 段 Untagged，数量与各自摘要一致。第 50/100 轮有 50 组相同边界，另有 2 组不再列出、2 组新列出；地址重用或重新映射未观测，因此“相同边界”不等于证明同一分配一直存活。
+
+同一报告边界 **`0x11ba48000..0x11cd10000`（末地址不含）**，虚拟大小 **19,693,568 B**、`rw-/rwx / PRV`，各窗口脏页依次 **176K、2944K、12.1M、18.8M**。它是第 50→100 轮相同边界区域中最显著的脏页增长；另一段 `0x103f00000..0x103f80000` 为 192K→512K。这些原始单位均有四舍五入，不将相减结果写成精确分配字节，也不根据数值相似给地址指定 Dart 所有权。
+
+核心八类原生播放器对象在 live 各 1、Ledger.Token 171；第 10/50/100 轮释放后均未列出这些九类，Registry 仍 1。heap 的全部已分配字节第 50→100 轮 **12,491,129→13,840,873 B**，non-object **6,724,769→7,850,497 B**，匿名分配仍增加，原生分配栈来源未测，不能宣布释放问题全部解决。
+
+本轮 normal disposed 资源端点首末 RSS 增加 **17,793,024 B（16.96875 MiB）**、footprint 增加 **15,433,728 B（14.71875 MiB）**，跨度 **696.759872 s**。探针与端点不是同一瞬间，不与上一轮不同方法的数字计算优化比例。
+
+下一项明确补齐两个证据缺口：**VM-service 等系统 group 的堆指标，以及该类大块 Untagged/匿名分配的地址级分配与释放历史**。先固定独立协议，验证工具支持和同进程身份，再按实际调用来源决定是否修改生产代码；本轮不预设这些区域归 Dart 或系统缓存所有。
+
+### 归档与验收范围
+
+[完整证据](../../../tool/playback_benchmark/macos-memory-mapping-observations.json)保留中止尝试与最终运行，含 100 轮资源、4 份 heap 全表、4 份详细 vmmap、4 份 Dart 返回及逐块 journal、40 项核心类型摘录、归档脚本和完整源/制品身份。最终源文件、依赖、原生制品、媒体、采样库、冻结协议、原始日志、journal 和应用可执行文件均核验；journal 重组的响应与 Dart 返回逐项一致，heap 行加总与工具总数一致。原文件另存忽略工作区 `memory-mapping-preliminary/` 和 `memory-mapping-final/`。预备与最终 sourceHash 不同，不能混成一个统计组。
+
+前台激活失败和 integration_test 原生插件提示保留，不计物理画面/声音验收。生产代码未改，`leakVerdict=null`、`performanceBaseline=false`、`budgetAdmission=false`；系统 group、匿名分配来源、全局泄漏结论、连续长片、后台/多播放器/低内存、跨设备/最低系统和正式基线仍开放，**完整 P08 Task1/2 未完成**。

@@ -37,7 +37,9 @@ def run_logged(command, cwd, path, timeout):
             raise
 
 
-def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifetime_probes=False, endurance=False, long_lifetime_probes=False):
+def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifetime_probes=False, endurance=False, long_lifetime_probes=False, memory_mapping=False):
+    if memory_mapping and not long_lifetime_probes:
+        raise ValueError("Memory mapping requires long lifecycle diagnostics")
     if long_lifetime_probes and (not profile_cycles or harness_only or lifetime_probes or endurance):
         raise ValueError("Long lifecycle diagnostics require separate profile playback")
     extended=endurance or long_lifetime_probes
@@ -67,6 +69,12 @@ def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifeti
         result['protocol'].update(lifetimeCheckpointSeconds=30,lifetimeProtocol='long-cycle-v1',
                                   lifetimeWindows=[[1,'live'],[10,'disposed'],[50,'disposed'],[100,'disposed']],
                                   observers=['heap --noContent','vmmap -summary'],observerTimeoutSeconds=10)
+    if memory_mapping:
+        result.update(purpose='long-cycle-memory-mapping',memoryMapping=True)
+        result['protocol'].update(observers=['heap --noContent','vmmap -wide -interleaved -noCoalesce',
+                                  'VM getVM/getIsolateGroupMemoryUsage/getVM'],
+                                  vmMemoryScope='non-system-isolate-groups',forcedGC=False,
+                                  vmRpcReadTimeoutSeconds=2,vmProbeProcessTimeoutSeconds=10)
     try:
         paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','--','packages','tool/playback_benchmark'],cwd=ROOT,text=True).splitlines()
         source={n:digest(ROOT/n) for n in sorted(set(paths)) if Path(n).suffix in (

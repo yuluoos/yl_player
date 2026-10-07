@@ -416,3 +416,12 @@ legacy short-cycle markers. Existing no-flag invocation retains the three-window
 heap-only diagnostic. The added pauses/probes change the workload; numeric deltas
 cannot be interpreted as improvement over the uninstrumented endurance run.
 See the frozen protocol for phase boundaries and ownership/absence limitations.
+
+Add `--memory-mapping` together with `--long-cycles` to retain detailed Untagged
+address ranges and collect metadata-only Dart isolate-group heap usage alongside
+heap/vmmap in the same four windows. This records 12 planned probes. The loopback
+VM PID/group set is verified before and after memory calls; unsupported responses
+remain failures. Each Dart observer runs in its own bounded process, follows no
+redirects/proxies and does not request GC. Exact virtual address sizes and rounded
+resident usage remain separate; neither group counters nor matching addresses
+prove ownership. See the predeclared Dart heap/address mapping protocol.

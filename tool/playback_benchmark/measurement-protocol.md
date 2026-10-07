@@ -245,3 +245,50 @@ not_listed/null, not zero. Neither a stable count nor heap totals can identify
 all anonymous C/C++/Dart/GPU memory. Probe pauses and allocator/tool effects mean
 these resource deltas are not a performance comparison with the unobserved run.
 Report continuing growth and unknown ownership; do not infer no-leak or a budget.
+
+## Dart heap and untagged address mapping (2026-10-07, before execution)
+
+Run `run_lifetime_probes.py --long-cycles --memory-mapping NEW_DIRECTORY FLUTTER`
+once with the same four 30 s long-cycle windows (live1, disposed10/50/100),
+100 playback cycles and 900/1200 s test/driver limits. Keep heap --noContent,
+replace vmmap-summary with `vmmap -wide -interleaved -noCoalesce`, and add one
+Dart-memory observer in each window (12 planned probes total). Each native tool
+and the separate Dart-memory Python process has an independent 10 s limit. All
+three intervals must independently fit their begin/end bracket. Failures,
+unsupported RPCs and partial output remain; no retry, GC or allocation reset.
+
+Discover only the literal loopback HTTP service advertised by this owned driver
+log; reject credentials, query/fragment or non-loopback targets. HTTPConnection
+uses no proxy or redirect following; each request has <=2 s socket timeout and a
+1 MiB response cap, plus the observer's hard process deadline. getVM must report
+the checkpoint PID. Enumerate <=8 non-system isolate groups, query
+getIsolateGroupMemoryUsage once per group and verify the same PID/group set again.
+Record heapUsage, heapCapacity and externalUsage separately per group; reject
+missing, negative, boolean, unavailable or usage>capacity values. Preserve raw
+RPC responses/error codes without recording the service endpoint in probe output.
+No object enumeration, heap snapshot, evaluation, GC or content inspection.
+
+Local vm_service15.3.0 API documents group memory and distinguishes external
+memory associated through embedder APIs; it is not a complete native/GPU ledger.
+Actual profile support is determined by responses, not documentation alone.
+Detailed vmmap parsing preserves each Untagged start/end/protection and rounded
+resident/dirty/swapped units. Address-derived virtualBytes is exact; rounded
+usage is not. Reject duplicate/overlapping/malformed/incomplete Untagged rows.
+Same address bounds across windows do not prove the same allocation survived.
+
+Freeze source/tool/protocol identities before launch. Compare these distinct
+ledgers and address groups without assigning ownership from correlated numbers.
+Heap non-object allocation origins remain unknown without allocation-stack
+history; this run does not enable MallocStackLogging. A successful Dart response
+cannot by itself prove Untagged is Dart, leaks are absent or a budget is met.
+
+Before the final run, review identified that hard observer termination could lose
+completed RPC responses held in memory. The preliminary run was intentionally
+interrupted after ten completed playback rows and is retained as incomplete
+(planned100, not counted as a completed run). Final protocol adds a per-probe
+exclusive JSONL journal: fsync request metadata, status and each bounded body
+chunk before parsing; preserve malformed bodies and a <=1MiB prefix plus explicit
+limit event for oversized responses. The parent records the journal hash even if
+the child times out without a final JSON result. Service endpoint remains absent
+from journal metadata. Actual local HTTP hard-kill/malformed/oversized regression
+tests demonstrate retention; there is no relaxation of the qualification gate.
