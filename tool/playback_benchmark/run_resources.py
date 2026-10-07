@@ -37,7 +37,10 @@ def run_logged(command, cwd, path, timeout):
             raise
 
 
-def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifetime_probes=False, endurance=False):
+def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifetime_probes=False, endurance=False, long_lifetime_probes=False):
+    if long_lifetime_probes and (not profile_cycles or harness_only or lifetime_probes or endurance):
+        raise ValueError("Long lifecycle diagnostics require separate profile playback")
+    extended=endurance or long_lifetime_probes
     if endurance and (not profile_cycles or harness_only or lifetime_probes):
         raise ValueError("Endurance requires profile playback without diagnostic checkpoints")
     if harness_only and not profile_cycles:
@@ -46,7 +49,7 @@ def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifeti
         raise ValueError('Lifetime checkpoints require profile playback')
     workload='harness-only' if harness_only else 'playback'
     output.mkdir(parents=True,exist_ok=False)
-    attempts=100 if endurance else 10 if profile_cycles else 3
+    attempts=100 if extended else 10 if profile_cycles else 3
     mode='profile' if profile_cycles else 'debug'
     run='macos-resource-'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ')
     result=dict(schemaVersion=2,workload=workload,lifetimeProbes=lifetime_probes,runId=run,runStatus='failed',stage='setup',purpose='load-dispose-endurance' if endurance else 'instrumentation-smoke',
@@ -55,10 +58,15 @@ def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifeti
                 protocol=dict(idleSeconds=2,playingUntilMediaSeconds=None if harness_only else 2,
                               lifetimeCheckpointSeconds=20 if lifetime_probes else None,
                               playingWallSeconds=2 if harness_only else None,disposedSeconds=2,intervalMs=250))
-    if endurance:
+    if extended:
         result['protocol'].update(minimumObservationSeconds=600, testTimeoutSeconds=900,
                                   commandTimeoutSeconds=1200, continuousPlayback=False,
                                   stopAfterFailure=True, plannedAttempts=100)
+    if long_lifetime_probes:
+        result.update(purpose='long-cycle-lifetime-diagnostics',longLifetimeProbes=True)
+        result['protocol'].update(lifetimeCheckpointSeconds=30,lifetimeProtocol='long-cycle-v1',
+                                  lifetimeWindows=[[1,'live'],[10,'disposed'],[50,'disposed'],[100,'disposed']],
+                                  observers=['heap --noContent','vmmap -summary'],observerTimeoutSeconds=10)
     try:
         paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','--','packages','tool/playback_benchmark'],cwd=ROOT,text=True).splitlines()
         source={n:digest(ROOT/n) for n in sorted(set(paths)) if Path(n).suffix in (
@@ -83,7 +91,7 @@ def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifeti
             subprocess.run(['sh',str(HERE/'build_apple_resources.sh'),str(library)],stdout=log,stderr=log,timeout=60,check=True)
         result['samplerSha256']=digest(library)
         defines=output/'defines.json'
-        defines.write_text(json.dumps(dict(YL_RESOURCE_RUN_ID=run,YL_RESOURCE_PROFILE_CYCLES=profile_cycles,YL_RESOURCE_HARNESS_ONLY=harness_only,YL_RESOURCE_LIFETIME_PROBES=lifetime_probes,YL_RESOURCE_ENDURANCE=endurance,YL_RESOURCE_LIBRARY_BYTES=base64.b64encode(library.read_bytes()).decode()))+'\n')
+        defines.write_text(json.dumps(dict(YL_RESOURCE_RUN_ID=run,YL_RESOURCE_PROFILE_CYCLES=profile_cycles,YL_RESOURCE_HARNESS_ONLY=harness_only,YL_RESOURCE_LIFETIME_PROBES=lifetime_probes,YL_RESOURCE_ENDURANCE=endurance,YL_RESOURCE_LONG_LIFETIME_PROBES=long_lifetime_probes,YL_RESOURCE_LIBRARY_BYTES=base64.b64encode(library.read_bytes()).decode()))+'\n')
         result['stage']='playback'
         command=[flutter,'test','integration_test/resource_benchmark_test.dart','-d','macos','--no-pub','--dart-define-from-file='+str(defines)]
         if profile_cycles:
@@ -94,14 +102,14 @@ def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifeti
                 '--driver=test_driver/integration_test.dart','--target=integration_test/resource_benchmark_test.dart',
                 '--dart-define-from-file='+str(defines)]
         result['command']=command
-        if endurance:
+        if extended:
             # Freeze identities/protocol before the measured process starts.
             protocol=output/'protocol.json'
             protocol.write_text(json.dumps(result,indent=2)+'\n')
             result['protocolSha256']=digest(protocol)
         started=time.monotonic()
         try:
-            exit_code=run_logged(command,EXAMPLE,output/'playback.log',1200 if endurance else 600)
+            exit_code=run_logged(command,EXAMPLE,output/'playback.log',1200 if extended else 600)
         except subprocess.TimeoutExpired:
             exit_code=None
             result['commandFailure']='timeout'
@@ -115,10 +123,10 @@ def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifeti
         result['stage']='classification';result['summary']=summarize_trials(trials)
         assert all(t['runId']==run and t['buildMode']==mode and t['plannedAttempts']==attempts and t.get('workload')==workload and t['schemaVersion']==2 for t in trials)
         if profile_cycles: result['disposedMemory']=summarize_disposed_memory(trials)
-        if endurance: result['endurance']=summarize_endurance(trials)
+        if extended: result['endurance']=summarize_endurance(trials)
         result['sourceIdentityVerified']=all(digest(ROOT/p)==v for p,v in source.items())
         assert result['sourceIdentityVerified']
-        result.update(runStatus='collected' if exit_code==0 and (not endurance or result['endurance']['protocolCompleted']) else 'playback_failed',stage='complete',observations=trials)
+        result.update(runStatus='collected' if exit_code==0 and (not extended or result['endurance']['protocolCompleted']) else 'playback_failed',stage='complete',observations=trials)
     except (OSError,ValueError,TypeError,KeyError,AssertionError,subprocess.SubprocessError):
         pass
     finally:

@@ -36,4 +36,21 @@ class LifetimeWindowTests(unittest.TestCase):
         a=dict(mark('begin',100),phase='live',attempt=1);b=dict(a,edge='end',monotonicUs=200)
         self.assertTrue(validate_window(a,b,probe(phase='live',attempt=1)))
 
+
+class LongLifetimeWindowTests(unittest.TestCase):
+    def test_long_protocol_accepts_only_its_four_declared_windows(self):
+        for attempt, phase in ((1,'live'),(10,'disposed'),(50,'disposed'),(100,'disposed')):
+            a=dict(mark('begin',100),schemaVersion=2,protocol='long-cycle-v1',attempt=attempt,phase=phase)
+            b=dict(a,edge='end',monotonicUs=200)
+            p=probe(attempt=attempt,phase=phase)
+            self.assertTrue(validate_window(a,b,p))
+
+    def test_protocols_and_undeclared_long_windows_cannot_mix(self):
+        a=dict(mark('begin',100),schemaVersion=2,protocol='long-cycle-v1',attempt=1,phase='live')
+        b=dict(a,edge='end',monotonicUs=200)
+        for change in ({'protocol':'unknown'}, {'attempt':2,'phase':'disposed'}, {'schemaVersion':1}):
+            with self.assertRaises(ValueError):validate_window(dict(a,**change),b,probe(attempt=1,phase='live'))
+        legacy=dict(mark('end',200),attempt=1,phase='live')
+        with self.assertRaises(ValueError):validate_window(a,legacy,probe(attempt=1,phase='live'))
+
 if __name__=='__main__':unittest.main()

@@ -14,6 +14,10 @@ import 'support/display_cleanup.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   const endurance = bool.fromEnvironment('YL_RESOURCE_ENDURANCE');
+  const longLifetimeProbes = bool.fromEnvironment(
+    'YL_RESOURCE_LONG_LIFETIME_PROBES',
+  );
+  const extended = endurance || longLifetimeProbes;
   testWidgets(
     'owned AVC process resource instrumentation smoke',
     (tester) async {
@@ -36,10 +40,12 @@ void main() {
       if ((profileCycles && !kProfileMode) ||
           (harnessOnly && !profileCycles) ||
           (lifetimeProbes && (!profileCycles || harnessOnly)) ||
-          (endurance && (!profileCycles || harnessOnly || lifetimeProbes))) {
+          (endurance && (!profileCycles || harnessOnly || lifetimeProbes)) ||
+          (longLifetimeProbes &&
+              (!profileCycles || harnessOnly || lifetimeProbes || endurance))) {
         throw const FormatException('Resource cycles require profile mode');
       }
-      const attempts = endurance ? 100 : (profileCycles ? 10 : 3);
+      const attempts = extended ? 100 : (profileCycles ? 10 : 3);
       final mode = kReleaseMode
           ? 'release'
           : kProfileMode
@@ -54,13 +60,15 @@ void main() {
             throw const FormatException('Checkpoint clock unavailable');
           }
           debugPrint(
-            'YL_RESOURCE_CHECKPOINT=${jsonEncode({'schemaVersion': 1, 'runId': runId, 'pid': pid, 'workload': workload, 'attempt': attempt, 'phase': phase, 'edge': edge, 'monotonicUs': clock})}',
+            'YL_RESOURCE_CHECKPOINT=${jsonEncode({'schemaVersion': longLifetimeProbes ? 2 : 1, if (longLifetimeProbes) 'protocol': 'long-cycle-v1', 'runId': runId, 'pid': pid, 'workload': workload, 'attempt': attempt, 'phase': phase, 'edge': edge, 'monotonicUs': clock})}',
             wrapWidth: 100000,
           );
         }
 
         emit('begin');
-        await Future<void>.delayed(const Duration(seconds: 20));
+        await Future<void>.delayed(
+          const Duration(seconds: longLifetimeProbes ? 30 : 20),
+        );
         emit('end');
       }
 
@@ -180,7 +188,7 @@ void main() {
               );
               expect(activePlayer.state.failure, isNull);
             }
-            if (lifetimeProbes && attempt == 1) {
+            if ((lifetimeProbes || longLifetimeProbes) && attempt == 1) {
               await checkpoint(attempt, 'live');
             }
             series.enter('disposing');
@@ -208,9 +216,10 @@ void main() {
           'YL_RESOURCE_SERIES=${jsonEncode({'schemaVersion': 2, 'workload': workload, 'runId': runId, 'attempt': attempt, 'plannedAttempts': attempts, 'pid': pid, 'buildMode': mode, 'intervalMs': 250, 'engine': engine, 'decoder': decoder, 'outcome': outcome, 'samples': rows})}',
           wrapWidth: 100000,
         );
-        if (lifetimeProbes &&
-            outcome == 'passed' &&
-            (attempt == 2 || attempt == 8)) {
+        if (outcome == 'passed' &&
+            ((lifetimeProbes && (attempt == 2 || attempt == 8)) ||
+                (longLifetimeProbes &&
+                    (attempt == 10 || attempt == 50 || attempt == 100)))) {
           await checkpoint(attempt, 'disposed');
         }
         outcomes.add(outcome);
@@ -221,6 +230,6 @@ void main() {
         reason: 'Resource trials retained all outcomes',
       );
     },
-    timeout: const Timeout(Duration(minutes: endurance ? 15 : 4)),
+    timeout: const Timeout(Duration(minutes: extended ? 15 : 4)),
   );
 }

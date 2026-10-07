@@ -399,3 +399,20 @@ memory-growth, continuous-playback, picture/audio or no-leak verdict. The
 four-second fixture is repeatedly opened and disposed. See
 [the predeclared protocol](measurement-protocol.md#extended-load-dispose-observation-2026-10-07-fixed-before-execution)
 for windows, failure handling and unverified workloads.
+
+## Long-cycle native lifetime and memory-category attribution
+
+```sh
+python3 -B tool/playback_benchmark/run_lifetime_probes.py --long-cycles \
+  /absolute/path/to/fresh-result-directory /absolute/path/to/flutter
+```
+
+This separate 100-cycle diagnostic waits 30 s at live cycle 1 and disposed cycles
+10/50/100. Each window collects heap metadata (`--noContent`) and a vmmap summary
+with independent 10 s limits, exact owned-process guards, raw hashes and native
+clock brackets. The final report retains all eight planned observations,
+including failures/unobserved probes. Schema-2 long-cycle markers cannot mix with
+legacy short-cycle markers. Existing no-flag invocation retains the three-window
+heap-only diagnostic. The added pauses/probes change the workload; numeric deltas
+cannot be interpreted as improvement over the uninstrumented endurance run.
+See the frozen protocol for phase boundaries and ownership/absence limitations.

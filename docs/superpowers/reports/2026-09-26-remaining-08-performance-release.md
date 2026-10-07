@@ -349,3 +349,60 @@ python3 -B tool/playback_benchmark/run_resources.py --profile-endurance \
 新增 5 项协议准入/负例测试先 RED（缺函数/模式）后 **55/55 Python**；既有采样/独立清理 **15/15 Dart**，集成文件静态分析无问题。覆盖不足 100 轮、缺阶段/未知引擎、时长不足、身份混合/时钟重叠、失败后 skipped 分母，以及不兼容诊断模式在创建输出前拒绝。运行时 100 轮是实测通过，单元负例不冒充设备崩溃/挂起故障注入。
 
 归档：[完整证据](../../../tool/playback_benchmark/macos-resource-endurance-observations.json) 内嵌最终结果、原始驱动/构建日志、冻结协议、100 轮观测与端点、源码/制品身份；原目录及本计划忽略工作区的 `endurance-100/` 保留原文件和采样库。`protocolCompleted=true` 只表示此次预定生命周期协议完成；`leakVerdict=null`、`performanceBaseline=false`、`budgetAdmission=false`。连续长片、更多时长、后台恢复、多播放器、低内存、其他设备/最低系统、真实呈现与正式性能目标仍开放，**完整 P08 Task1/2 未完成**。
+
+
+## 2026-10-07 百轮对象生命周期与内存类别归因
+
+起点 `3ee661f`，针对前一轮后半程 footprint 增长新增独立诊断入口：
+
+```sh
+python3 -B tool/playback_benchmark/run_lifetime_probes.py --long-cycles \
+  /private/tmp/yl-long-lifetimes-100 /Users/yy2021_8689/flutter/bin/flutter
+```
+
+仍为 100 次顺序创建/播放/释放，运行前固定第 **1 轮 live、第 10/50/100 轮 disposed** 四个 **30 s** 窗口，每个窗口依次执行 `heap --noContent`、`vmmap -summary`，各自 10 s 上限及独立状态。每条命令先核查精确可执行文件路径，采集前后读取与应用标记一致的 `CLOCK_MONOTONIC_RAW`；只有完整位于同一 begin/end 窗口内的命令才合格。新 schema 2 / `long-cycle-v1` 拒绝旧三窗口标记混入；所有八项预定探针在未观察或失败时仍保留。旧无参数三窗口 heap-only 模式保留。没有启用分配栈日志、强制 GC、压力或生产配置修改。
+
+运行 `macos-resource-20261007T103435Z`，PID **11641**，MacBookPro17,1 / M1 / macOS 27.0 (26A428)，arm64 profile，sourceHash **7f6148362ea18b7ef81278eae3ab41e96e2024790031fb0f451c80639be2c6ba**。**100/100 播放通过，8/8 探针捕获且合格，监控错误为空**。3216 个有效资源点全部 ac/nominal，无 unavailable；仍为 managedFallback/hardware。首末资源采样跨度 **731.497213 s**，驱动命令耗时 **787.769942 s**。live 等待在首轮采样内，三个 disposed 等待在相应最终资源行之后；最后窗口不在资源采样跨度内，故不能将这些数字称为连续播放时长或无间隙采样。
+
+| 轮次/阶段 | 标记窗口 (s) | heap 采集区间 (s) | vmmap 采集区间 (s) | 两项都完整位于窗口内 |
+|---|---:|---:|---:|---|
+| 1 / live | 30.003571 | 2.138335 | 1.060045 | 是 |
+| 10 / disposed | 30.003362 | 1.965474 | 1.026488 | 是 |
+| 50 / disposed | 30.003592 | 1.998559 | 1.012363 | 是 |
+| 100 / disposed | 30.003006 | 2.025599 | 1.022739 | 是 |
+
+采集区间包括 `ps` 身份核查和工具执行时间；它是时钟准入边界，不是工具内部耗时统计。
+
+### 对象与分配摘要
+
+精确匹配 `Swift / yl_player_example` 类型名（不把包含该名称的 Dictionary storage 算成对象）。live 窗口可识别八类核心对象各 1 个：Host、SessionCoordinator、ManagedPlaybackSession、OpenedMedia、VideoToolboxDecoder、FrameScheduler、PresentationCoordinator、ManagedBufferLedger；Ledger.Token 为 182 个。三次 disposed 窗口均**未列出这九个类型**，插件级 PlayerRegistry 始终为 1 个。未列出记录为 `not_listed/null`，不能改写为零、全部已释放或全局无泄漏；heap 对 Swift/C/C++/Dart/GPU 的识别并不完整。
+
+| heap 窗口 | 已分配节点数 | 已分配字节 | non-object 节点数 | non-object 字节 |
+|---|---:|---:|---:|---:|
+| 1 / live | 79,709 | 14,644,857 | 31,301 | 8,630,177 |
+| 10 / disposed | 92,300 | 11,978,985 | 48,040 | 6,299,457 |
+| 50 / disposed | 110,174 | 12,632,009 | 64,556 | 6,766,129 |
+| 100 / disposed | 132,077 | 13,983,737 | 84,762 | 7,895,425 |
+
+每份完整 heap 表的逐行 count/bytes 加总均与工具总数一致。第 50→100 轮仍增加 **21,903 个分配节点、1,351,728 B**，其中 non-object 增加 **20,206 个、1,129,296 B**；不能因核心类型未列出就忽略这些匿名分配，亦不能把 non-object 解读为“不是播放器内存”。其调用来源尚未确定。
+
+### 系统类别与结论边界
+
+下表保持 vmmap 原始四舍五入单位；`M/K` 不是精确字节值。分类驻留/脏页、malloc 已分配字节与 physical footprint 是不同账本，不做相减所有权推算。
+
+| vmmap 窗口 | physical footprint | Untagged 脏页 | Malloc Small 脏页 | IOSurface 脏页 |
+|---|---:|---:|---:|---:|
+| 1 / live | 60.8M | 16.3M | 16.1M | 7504K |
+| 10 / disposed | 60.3M | 24.5M | 17.1M | 0K |
+| 50 / disposed | 70.4M | 32.5M | 19.2M | 0K |
+| 100 / disposed | 79.7M | 39.5M | 21.4M | 0K |
+
+第 50→100 轮主要脏页增长出现在 **Untagged 32.5M→39.5M** 和 **Malloc Small 19.2M→21.4M**；三次 disposed 的 IOSurface 均 0K 脏页、IOAccelerator 均 64K。所有窗口均未列出 `Malloc Large (empty)`，因此不能拿先前那块已释放的 AppKit 分配解释这次剩余增长。
+
+本轮正常 disposed 资源端点首末 RSS 增加 **18,415,616 B（17.5625 MiB）**、footprint 增加 **16,187,392 B（15.4375 MiB）**，跨度 **695.207493 s**。它们与窗口内稍后执行的系统摘要不同步；新增等待和探针可能影响暂停、分配器和缓存行为，**不能将该增量比前一轮低解释为性能改善**。
+
+本切片将调查范围缩小到未标注 VM 区域及匿名/小块分配，未定位到足以修改生产释放路径的缺陷。下一项优先用独立固定协议关联 **Untagged 的具体区域、Dart 堆 used/capacity/external 及原生匿名分配来源**；仅在工具实际支持并能验证同进程/时钟身份时记录，不能预设 Untagged 就是 Dart 堆。必要的空载对照单独运行，不从现有不同协议数字推断所有权。
+
+新增 5 项长窗口/协议隔离、完整未观察分母及错误可执行文件拒绝测试先 RED 后 **60/60 Python**，Dart 集成文件静态分析无问题，实际新协议百轮已通过；未重复运行未改动的生产媒体套件。最终源码、依赖、原生制品、媒体、采样库、协议、全部原始探针/日志与应用可执行文件身份已核对。[完整证据](../../../tool/playback_benchmark/macos-long-lifetime-observations.json) 内嵌四份完整 heap 表、四份 vmmap 原文、逐行堆摘要、归档脚本、100 轮资源样本及全部指纹；原文件另存本计划忽略工作区 `long-lifetimes-100/`。
+
+应用未能自动置前及 integration_test 原生插件提示均保留，不构成物理音画验收。`leakVerdict=null`、`performanceBaseline=false`、`budgetAdmission=false`；生产代码未改。连续长片、更长运行、后台/多播放器/低内存、其他设备与最低系统、真实呈现及正式基线仍未完成，**完整 P08 Task1/2 保持开放**。

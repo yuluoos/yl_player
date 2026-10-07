@@ -212,3 +212,36 @@ Record resource endpoints/peaks and all failures; do not infer physical
 picture/audio correctness, object ownership, leak freedom or formal baseline.
 Continuous long playback, longer soaks and the remaining P08 device/workload
 matrix need separate evidence.
+
+## Long-cycle lifetime attribution (2026-10-07, fixed before execution)
+
+Run `run_lifetime_probes.py --long-cycles NEW_DIRECTORY FLUTTER` once. Reuse the
+100 fresh-player profile playback cycles, owned AVC/AAC fixture, 250 ms resource
+sampling, per-operation cleanup and failure handling from the endurance protocol.
+Use distinct schema-2 checkpoint markers with `protocol=long-cycle-v1`: cycle 1
+live (after media position >=2 s, controller still owned), cycles 10/50/100 after
+cleanup and the normal 2 s disposed observation. Wait 30 s at each checkpoint.
+The short fixture may end in the live window; it is not continuous long playback.
+
+At each begin marker, independently verify the exact owned executable/PID, then
+capture `heap --noContent` followed by `vmmap -summary`, each with a 10 s deadline
+and its own status, raw output/hash and CLOCK_MONOTONIC_RAW start/end. Verify PID
+consistency with the collected playback process. Only complete intervals inside
+matching begin/end markers qualify; missing, failed, foreign-protocol or
+out-of-window probes cannot become disposal evidence. Retain all eight planned
+probes even when none run. Do not mix the old three-window schema with this run.
+Use existing report-7 vmmap parsing, preserve rounded units and absent categories.
+
+Keep 900 s test / 1200 s driver deadlines; the four additional 30 s waits are
+explicit diagnostic overhead. Freeze identities and protocol before launch.
+The first live wait remains in that cycle's bounded resource series; the disposed
+waits occur after its final resource row. Resource span thus excludes the last
+checkpoint and is not the entire diagnostic command duration. No stack logging,
+forced GC, pressure, background/multiplayer operation or production change.
+Compare exact heap-recognized core classes (Host/session/opened media/decoder/
+scheduler/presentation/ledger/token and persistent registry), total heap nodes/
+bytes and vmmap categories at the declared checkpoints. A missing class is
+not_listed/null, not zero. Neither a stable count nor heap totals can identify
+all anonymous C/C++/Dart/GPU memory. Probe pauses and allocator/tool effects mean
+these resource deltas are not a performance comparison with the unobserved run.
+Report continuing growth and unknown ownership; do not infer no-leak or a budget.
