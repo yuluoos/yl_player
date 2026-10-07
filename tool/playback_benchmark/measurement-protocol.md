@@ -125,3 +125,26 @@ contains that directory, so full dylib hashes may differ even for the paired
 runs. Keep both hashes; verify the paired section contents and size independently
 before treating their sampling code as equivalent. This does not make two app
 processes identical or control the OS cache.
+
+## Memory category diagnostic (2026-10-07)
+
+`run_memory_categories.py harness-only|playback NEW_DIRECTORY FLUTTER` reuses the
+profile ten-cycle resource run. In separate fresh processes, run harness-only
+then playback. After receiving final trial rows 2, 5 and 8, verify the run/schema,
+workload and PID, and require `ps` to identify the exact Profile example executable
+before invoking `/usr/bin/vmmap -summary PID` (10 s deadline, no process-name scan).
+Keep raw reports, hashes, host start/end timestamps, failed/unobserved probes and
+all playback trials. Snapshots may overlap the next cycle and vmmap may pause or
+perturb the process; these are diagnostics, not simultaneous disposed endpoints
+or baseline observations. No forced GC, allocator-pressure call, MallocStackLogging
+or product changes. Do not subtract host timestamps from native raw clock values.
+
+Parse only the observed report version 7 and exact category column order. Preserve
+reported rounded units and category labels; unknown versions, malformed rows,
+wrong PIDs, duplicate categories or incomplete tables are failures. Missing
+categories stay absent, not fabricated zero; retain failures and raw reports.
+Virtual, resident, dirty, swapped and process physical footprint are distinct
+ledgers; their totals need not reconcile. `Malloc Large (empty)` is a system
+category, not an object count, ownership proof or no-leak verdict. This protocol
+has no frozen performance threshold. Allocation stacks and native object lifetime
+measurements require a separate, explicitly recorded diagnostic protocol.

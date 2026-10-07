@@ -234,3 +234,36 @@ profile 实跑预先冻结三次、无预热剔除、已有本地 AVC/AAC 素材
 新增 4 项 schema/工作负载行为测试先 RED（缺新 schema/标签）后 **37/37 Python**；已有采样/独立清理 **15/15 Dart**，集成文件静态分析无问题。没有改生产释放路径：只读检查确认 registry 注销、coordinator dispose、managed session 取消输入/释放解码器与帧队列均有调用；公共 controller 会吞掉 backend dispose 异常，因此返回 ACK 仍不是完整原生回收证据。
 
 本项交付可重复的空载对照和归因边界，**未完成泄漏归因、正式性能基线或完整 P08 Task1/2**。下一步在独立诊断协议中采集进程内存类别与原生对象生命周期/分配证据，区分测试运行时、分配器缓存及未释放媒体对象；未定位所有权前不修改生产缓存或释放策略。长播、多播放器、最低系统/其他设备与 AV1 软件预算仍开放。
+
+## 2026-10-07 内存类别与大块分配诊断
+
+起点 `aef6181`。本项继续归因，新增 `run_memory_categories.py`，复用既有 profile 十轮对照/播放入口，在接收到第 2、5、8 轮最终日志后验证 runId/schema/工作负载/PID，再要求 `ps` 返回本仓库 Profile 示例的精确可执行文件路径，才对该 PID 调用 `vmmap -summary`，每次截止 10 s。未扫描或采集其他应用。保留所有计划探针、未观察/失败状态、原文、哈希、主机起止时间；采集发生在日志接收后，可能已进入下一轮，不能称作同步的释放后端点。vmmap 可能暂停或扰动进程。
+
+解析器只接收实际观测的 report version 7 与准确列序，拒绝错误 PID/版本/列序、重复类别、畸形或截断表；保留系统舍入单位和类别原名，缺类别不补零。virtual/resident/dirty/swapped 与 physical footprint 分开，不能求和或相减推算对象占用。新增 6 项行为测试先因缺模块 RED，随后加两项运行失败/已有证据保护回归，标准发现命令 `python3 -B -m unittest discover -s tool/playback_benchmark -p 'test_*.py'` **45/45 通过**。没有 Dart/Swift/生产代码改动，不重复无关媒体回归。
+
+探索空载运行先确认系统工具可用，三次摘要均成功；随后按冻结协议先空载、后播放，最终证据如下。两组均 MacBookPro17,1 / M1 / macOS27.0(26A428)、arm64/profile、**ac/nominal**。与 9 月 30 日 battery 样本及无 vmmap 观察器的运行条件不同，不能用于优化前后比较。
+
+| 最终组 | runId（macos-resource- 前缀） | 试验/计划 | 资源采样/不可用 | vmmap 成功/计划 | 第 2 / 5 / 8 轮后 physical footprint（系统舍入值） |
+|---|---|---:|---:|---:|---|
+| 无播放器 | 20261007T082733Z | 10/10 | 294/0 | 3/3 | 47.8M / 57.4M / 59.9M |
+| 实际播放 | 20261007T082902Z | 10/10 | 304/0 | 3/3 | 53.6M / 63.7M / 57.7M |
+
+两组第 2 轮摘要均未列出 `Malloc Large (empty)`，第 5 轮均列出 **1 个 region，virtual 7920K、resident/dirty 各 7904K、swapped 0K**。第 8 轮空载仍列出同样数值，播放组已不再列出。观察将共同的大块阶跃缩小到分配器的空闲大块区域这一线索，但该系统标签不是存活对象数，更不是播放器所有权或“无泄漏”的证明；未列出也不能自行换算成已回收字节。每次摘要约耗时 1.0–1.1 s，包含工具附加的观察成本。
+
+所有进程资源试次仍完整保留：本轮释放后首末 footprint 空载 **+14745600 B**、播放 **+6668288 B**。没有因播放组数值较低而宣称优化，也没有删掉探索组后期页换出的记录。最终两组 sourceHash 均为 `5096bce4de74b30f16b5b3f18c1a17e0d271e5c52cd7574d11d649a8f74b48a9`；源码、依赖、原生制品、媒体和设备身份逐项核对一致。采样器仍按目录分别构建，保留各自 dylib 哈希，不声称整个二进制一致。[完整证据](../../../tool/playback_benchmark/macos-memory-category-observations.json)保留原始摘要及解析结果；原始运行目录归档在本计划忽略目录 `memory-categories/`。前台激活失败/native integration_test plugin 提示保留，成功的 driver 和日志不替代物理输出验收。
+
+独立代码复核发现一项非阻塞测试入口细节：`test_memory_categories.py` 的 main guard 位于两个 runner 测试之前，直接执行文件只运行 6 项；本计划使用的 unittest discovery 已实际发现并运行全部 8 项新增测试（总计 45 项）。为保持本轮已冻结的源指纹，暂保留该细节，后续整理测试入口时修正。
+
+### 分配调用栈探索（单独协议）
+
+为继续追踪大块区域，额外运行两次空载诊断，均保持十轮与第 5 轮后查询，原始结果全部保留，不能与前两组比较性能。首次设置 `MallocStackLogging=1`，本机实际是 lite 模式，`malloc_history -highWaterMark` 退出 **249**，明确不支持历史峰值查询；另发现 Flutter 已废弃的 `--no-build` 在此入口仍执行第二次构建，因此该次环境也传给了构建子进程，不能描述成“仅应用启用记录”。未修改全局环境、SDK 或 entitlement。
+
+依据本机 `man malloc` 和已安装 Flutter 源码，第二次先正常构建，再用 `--use-application-binary=<本次 Profile app>` 启动预构建应用，给 driver/应用后代设置 `MallocStackLogging=full`。日志确认只有一次构建。调用 `malloc_history PID -callTree -highWaterMark -noContent 'malloc[7m-9m]'`，截止 15 s；实际查询与 vmmap 合计约 **6.82 s**，历史查询退出 **0**。命令未请求对象内容；实际调用树仍包含其他尺寸分配，不能因传了过滤参数就声称只返回了 7–9 MiB 的记录。
+
+完整历史运行 `macos-resource-20261007T083351Z` 的调用树显示 AppKit 的 **`NSPersistentUIWindowSnapshotter` 保存窗口快照路径中存在单次约 7.71M malloc 分配**，上游是 `captureAndWriteSnapshotForWindowNumber:forWindowID:waitUntilDone:`，下游进入系统 malloc；同一路径还涉及 IOSurface 和 Foundation 的大块数据页。完整约 36.6 MB 调用树已归档，提交证据只保存头部、相关连续行段、原文行号及全文件 SHA-256，未把无关大体积栈输出放入仓库。
+
+两次开启栈记录的 vmmap 都增加了 Performance Tool Data 及“不计入 TOTAL”的注释，超出本次普通类别解析器支持的行格式；严格解析保持拒绝，原文保留，不计入最终两组 6/6 解析成功。
+
+这为共同阶跃提供了一个具体的**系统窗口状态保存分配来源**，但高水位树不是该 `Malloc Large (empty)` 区域的地址级分配/释放历史，尚未建立一一对应；也没有证明播放器其他对象全部释放。不得把此线索改写成整个增长已归因或无泄漏。未禁用窗口恢复、改变分配器或调整生产缓存；此处命名来自实际系统栈，不作为产品代码依赖。
+
+本项交付内存类别诊断和大块分配调用栈线索。完整 P08 Task1/2、长期资源预算与原生播放器对象生命周期仍开放。下一项优先建立大块区域地址与分配/释放历史的对应，并检查播放器会话/解码器/帧对象的存活情况；只对证实的生产缺陷实施修复。
