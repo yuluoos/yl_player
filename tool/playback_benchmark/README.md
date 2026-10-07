@@ -463,3 +463,44 @@ files. Stack logging changes process memory and timing; this run is not a
 performance baseline and must not be numerically compared as an optimization
 against uninstrumented runs. Incomplete newline-terminated checkpoint JSON
 fails closed; an unterminated trailing line is retried after the writer finishes.
+
+## Runtime Profiler on/off comparison
+
+```sh
+python3 -B tool/playback_benchmark/run_profiler_comparison.py \
+  /private/tmp/yl-profiler-pair-new /absolute/path/to/flutter
+```
+
+This predeclared short protocol runs separate `on` then `off` processes, each
+with ten profile playback cycles and the same live-1/disposed-2/disposed-8 windows.
+At live 1, **after the first player load**, the collector checks its owned
+executable/PID and calls `getVM`, `getFlagList`, `setFlag(profiler, true/false)`,
+`getFlagList`, `getVM`. Both arms execute the same RPC sequence. Later checkpoints
+read the flag without changing it. Each verified flag probe precedes detailed
+vmmap and application/system group memory. The collector rejects inherited
+`MallocStackLogging*` environment variables. No GC is requested.
+
+The HTTP helper remains read-only by default. Its explicit profiler-control
+option permits only the exact `setFlag` name `profiler` with string `true` or
+`false`; arbitrary flags, values and extra parameters are rejected before a
+request. It uses the existing loopback-only endpoint validation, response limits,
+process deadlines and durable raw journals. Actual readback is required; a
+successful setter alone is insufficient. PID and validated application/system
+group IDs must match before/after and across windows. Raw VM `startTime` values
+are retained but are not an equality gate: this host returned a 1 ms variation
+within one unchanged VM.
+
+All nine observations per arm retain their planned identities; failures and
+unobserved probes cannot qualify. Both successful arms must match source,
+dependency/native artifact/media/device/architecture/build/protocol identities,
+and have distinct PIDs. Fresh sampler libraries have path-dependent install
+names, so their binary hashes can differ; their source is covered by the shared
+source hash and each binary hash is retained. Application binary fingerprints
+are recorded separately before the next build.
+
+This checks a **runtime** switch, not startup without Profiler. Disabling sampling
+may retain the sample buffer. Fixed arm order, one pair, uncontrolled OS caches
+and sequential metadata probes prevent a performance-benefit or release-baseline
+claim. A similarly sized mapped region is descriptive evidence, not proof of
+cross-process allocation identity. See `macos-profiler-control-observations.json`
+and the P08 report for retained incomplete and final observations.

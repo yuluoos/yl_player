@@ -49,7 +49,7 @@ def read_memory(rpc,pid,*,include_system=False):
     return dict(scope='application-and-system-isolate-groups' if include_system else 'non-system-isolate-groups',groups=result,forcedGC=False,addressOwnership=None)
 
 
-def http_rpc(uri,records,deadline,*,journal):
+def http_rpc(uri,records,deadline,*,journal,allow_profiler_control=False):
     p=urlsplit(service_uri('Connecting to Flutter application at '+uri))
     def persist(event):
         with journal.open('a') as stream:
@@ -58,7 +58,12 @@ def http_rpc(uri,records,deadline,*,journal):
     sequence=0
     def rpc(method,params):
         nonlocal sequence
-        if method not in ('getVM','getIsolateGroupMemoryUsage'):raise ValueError('Unsupported read-only method')
+        if method=='setFlag':
+            if not allow_profiler_control or params not in ({'name':'profiler','value':'true'},{'name':'profiler','value':'false'}):
+                raise ValueError('Unsupported profiler control')
+        elif method not in ('getVM','getIsolateGroupMemoryUsage','getFlagList'):
+            raise ValueError('Unsupported read-only method')
+        if method=='getFlagList' and params:raise ValueError('Unexpected flag-list parameters')
         remaining=deadline-time.monotonic()
         if remaining<=0:raise TimeoutError('Memory observation deadline')
         sequence+=1

@@ -510,3 +510,64 @@ vm_map
 裁定：优先使用短程有界归因查明本次分配来源；代价是本项不能关闭长期增长验收。复审的日志半行问题按会丢失后续观测的影响升级为 Important，并在同一修复轮次完成真实 RED→GREEN。没有凭此修改播放器释放逻辑或关闭生产 Profiler。
 
 下一项为**验证本地工具支持后冻结 Profiler 开/关的独立对照协议**，再区分测量开销与仍未归因的匿名增长；不能把移除观测开销算作播放器优化。连续长片、后台/多播放器/低内存、跨设备/最低系统、物理输出与正式基线仍开放，**完整 P08 Task1/2 未完成**。前台激活失败及 integration_test 原生插件提示保留，`leakVerdict=null`、`performanceBaseline=false`、`budgetAdmission=false`。
+
+## 2026-10-07：Profiler 运行时开关对照（独立短程协议）
+
+本地 Flutter 的 `desktop_device.dart` 在桌面启动环境中直接添加 `enable-dart-profiling=true`；本地 engine 的 Dart 参数允许表也没有 `--no-profiler`。因此没有将命令行意图当作实际关闭证明，也没有修改 SDK。`vm_service` 文档支持运行时 `setFlag(profiler)`，同时明确停止采样可能不释放 sample buffer。本项采用该接口，并要求真实状态回读；相关本地源码、路径和哈希随证据归档。
+
+固定协议先运行 on、再运行 off，各为一个新进程、十轮 profile 播放，无 MallocStackLogging、无 GC；三个 20 秒窗口仍为 live 1、disposed 2/8。在 **第一个播放器已加载后的 live 1**，两组都执行相同的 getVM/getFlagList/setFlag/getFlagList/getVM 流程；后两窗口只读 Profiler 状态，然后依次采集详细 vmmap 和应用/系统 group 内存。这不是从进程启动时就关闭 Profiler，也不预设已经分配的缓冲区会释放。
+
+只允许所拥有的测试进程、literal loopback 服务、精确 `profiler=true/false` 设置；默认 RPC 路径仍不能修改标志，任意其他标志、值或额外参数都在请求前拒绝。已有每响应 1MiB、每次读取 2 秒、子进程 10 秒上限及原始 journal 持久化继续适用。每组九个计划探针全部保留；setter Success 不够，必须回读符合预期、身份一致、完整位于时钟窗口内。最终对照要求两组不同 PID，源码、依赖、原生制品、媒体、设备/架构、build mode 和 workload 协议一致。采样库 install name 带新输出路径，其二进制哈希独立记录，源码纳入共同 sourceHash；每组应用可执行文件指纹在下一次构建前记录。
+
+### 预备失败与身份校验修正
+
+预备 on `macos-resource-20261007T120839Z` / PID 16744、off `macos-resource-20261007T121109Z` / PID 17392，各 **10/10 播放通过**，但分别只有 **0/9、3/9 探针合格**。on 的 setter 和前后 true 回读都成功，同一 PID、相同应用/系统 group 的两次 getVM 却给出 `startTime=1791374942345` 与 `1791374942344`，相差 1 毫秒；原先精确相等校验按规则拒绝。off 已成功设置 false，后续身份检查也遇到该问题。两组均保留为不完整对照，未将其升级为正式结果。
+
+用完整真实 RPC 回放复现 RED，再以严格 PID + 非空应用 group / 完整系统 group ID 列表作为前后和跨窗口身份，保留原始两次 startTime，不使用任意时间容差。缺失、类型错误、重复、跨类重复和 group 变化仍拒绝。真实回放 GREEN，相关新增回归与全部 Python 测试 **78 项通过**。没有 Dart、生产播放器或 SDK 变更。
+
+### 正式对照结果
+
+正式共同 sourceHash 为 **f83a00f753da7918bdb6a7175cfc24347b4e6326d77a8d25dda544df6b89ed68**，698 项源码指纹相同；M1 / MacBookPro17,1 / macOS 27.0 (26A428)、arm64 profile、managedFallback/hardware。两组分别：
+
+| 条件 | runId | PID | 播放 | 窗口内探针 | 资源点 | 首末点跨度 | 命令耗时 |
+|---|---|---:|---:|---:|---:|---:|---:|
+| on | macos-resource-20261007T121601Z | 18181 | 10/10 | 9/9 | 388 | 123.869086s | 148.559794s |
+| off | macos-resource-20261007T121830Z | 18598 | 10/10 | 9/9 | 389 | 124.205368s | 149.187114s |
+
+全部资源点可用、ac/nominal，监控错误为空，`matchedConditions=true`；源码、依赖、原生制品、媒体、设备/架构、build mode、次数及 workload 协议匹配。跨度包含检查点等待及采样间隔，不是连续长片。on 的三次实际回读均 true；off 在 live 1 从 true 设置为 false，disposed 2/8 均保持 false，后两次只读没有重新设置。六个窗口都通过精确 PID/group 前后和跨窗口校验。
+
+每组详细 vmmap 都有一个与上一项目标同大小、19,693,568 B、`rw-/rwx` 的 Untagged 范围。on 是 `0x11de60000..0x11f128000`，off 是 `0x11b01c000..0x11c2e4000`，末地址均不含。下面保留工具四舍五入后的显示单位：
+
+| 条件 / 窗口 | 该大小区域脏页 | 整个 Untagged 脏页 | Malloc Small 脏页 | 进程 footprint |
+|---|---:|---:|---:|---:|
+| on / 1 live | 192K | 16.5M | 15.8M | 61.2M |
+| on / 2 disposed | 1136K | 21.0M | 16.7M | 65.2M |
+| on / 8 disposed | 3056K | 22.0M | 17.0M | 58.1M |
+| off / 1 live | 176K | 16.5M | 15.8M | 61.1M |
+| off / 2 disposed | 176K | 20.0M | 16.8M | 64.2M |
+| off / 8 disposed | 176K | 19.1M | 17.0M | 55.6M |
+
+**本次关闭采样后，该大小映射仍存在，三个窗口脏页保持 176K；开启组则继续增加。** 结合上一项直接分配栈，这支持 Profiler 采样是此类增长的一个来源。本次没有 MSL 栈，不凭大小相同宣布跨进程分配身份相同，也不证明缓冲区完整生命周期或全部 Untagged 所有权。
+
+应用/系统 group 的 heapUsage 如下，精确字节；heapCapacity、externalUsage 与完整原始响应保存在证据中，未合并成全进程内存账本：
+
+| 条件 / 窗口 | application heapUsage | system heapUsage |
+|---|---:|---:|
+| on / 1 live | 8,262,768 | 7,790,304 |
+| on / 2 disposed | 7,941,888 | 8,721,360 |
+| on / 8 disposed | 7,815,040 | 7,858,784 |
+| off / 1 live | 8,263,104 | 7,790,720 |
+| off / 2 disposed | 7,941,024 | 8,722,816 |
+| off / 8 disposed | 7,814,896 | 7,861,776 |
+
+normal disposed 第 1→10 轮端点，on 的 RSS/footprint 增量分别 **6,553,600 / 5,668,864 B**，跨度 97.585493 秒；off 分别 **2,785,280 / 2,293,760 B**，跨度 97.917757 秒。关闭组仍有增长，两组 Malloc Small 也都从 15.8M 到 17.0M。端点与 vmmap 不是同一瞬间；固定顺序、单一对照、OS 缓存不受控及诊断自身开销仍在，因此不报告播放器优化比例、稳定平台或无泄漏结论。
+
+### 验证与下一项
+
+[完整证据](../../../tool/playback_benchmark/macos-profiler-control-observations.json)约 16.54 MB，包含预备不完整对照、正式两组、全部资源/窗口原始记录、vmmap、FlagList/setFlag 返回、逐块 journal、冻结协议、每组应用指纹、本地 SDK 源码证据及归档脚本。重新计算资源摘要、重放控制与内存 RPC、重组 journal，并核验源码/依赖/制品/媒体/采样库/协议/日志哈希和全部 18 个窗口资格；最终代码全套 **78 项 Python 测试通过**。每组构建产物身份单独保留，不声称应用二进制逐字节相同。
+
+裁定：使用实际可回读的运行时控制作为本轮对照；代价是不能覆盖启动时禁用及长期/连续播放。启动时间保留为观测字段，用严格 PID/group 身份替代不可靠的精确时间戳相等要求。生产、SDK 和 Dart 代码均未改，去掉观测开销不计为播放器优化。
+
+下一项固定**Profiler 关闭后的百轮资源与生命周期复核**，确认晚期剩余增长的类别，再决定是否需要继续追查匿名分配；不把本次短程曲线外推到百轮。连续长片、后台/多播放器/低内存、物理音画、跨设备/最低系统和正式基线仍开放，**完整 P08 Task1/2 未完成**。前台激活失败及 integration_test 原生插件提示保留；`leakVerdict=null`、`performanceBaseline=false`、`budgetAdmission=false`。
+
+独立复审核验 67 份嵌入原始文件、698 项源码指纹、12 份 RPC journal 重组、六份 vmmap、18 个窗口资格、资源摘要和报告数值；Critical / Important / Minor 均无遗留。本切片可提交，不扩大全部功能或 P08 完成范围。
