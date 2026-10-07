@@ -571,3 +571,55 @@ normal disposed 第 1→10 轮端点，on 的 RSS/footprint 增量分别 **6,553
 下一项固定**Profiler 关闭后的百轮资源与生命周期复核**，确认晚期剩余增长的类别，再决定是否需要继续追查匿名分配；不把本次短程曲线外推到百轮。连续长片、后台/多播放器/低内存、物理音画、跨设备/最低系统和正式基线仍开放，**完整 P08 Task1/2 未完成**。前台激活失败及 integration_test 原生插件提示保留；`leakVerdict=null`、`performanceBaseline=false`、`budgetAdmission=false`。
 
 独立复审核验 67 份嵌入原始文件、698 项源码指纹、12 份 RPC journal 重组、六份 vmmap、18 个窗口资格、资源摘要和报告数值；Critical / Important / Minor 均无遗留。本切片可提交，不扩大全部功能或 P08 完成范围。
+
+## 2026-10-07：Profiler 关闭后的百轮资源与生命周期复核
+
+本项将上一项已验证的运行时 Profiler 关闭方式用于既有百轮协议。独立新进程，100 次加载/播放/释放，资源首末点至少相隔 600 秒；测试上限 900 秒、命令上限 1200 秒。live 1、disposed 10/50/100 各固定 30 秒窗口，每个窗口依次读取 Profiler 状态、原生 heap（不读对象内容）、详细 vmmap、应用/系统 Dart group 指标，共 16 个计划探针。根协议和资源身份/协议均在启动前冻结。
+
+仅 live 1 在第一个播放器加载后设置 `profiler=false`，后续三次只读并核对实际状态。PID/group 身份必须在单次和跨窗口保持一致；raw startTime 原样保留。每个探针必须完整落入对应原生时钟窗口；所有播放成功、最低跨度通过、16 个探针都合格才完成该诊断。采样和探针的缺失、超时或失败保留，不合成零值。不启用 MSL 或强制 GC，未更改 SDK、Dart 或生产播放器。
+
+新增测试先因缺少长模式失败，再通过：验证失败保留全部 16 个计划探针、四个 schema 2 窗口只进行一次设置且每次先验状态、禁止开启组及冲突模式。**81 项 Python 测试通过**，原短程模式保留；独立启动前代码复审无 Critical / Important / Minor。该运行用于百轮加载/释放观察，不代表连续长片、从启动禁用 Profiler、连续监视 flag 或正式性能基线。
+
+### 百轮结果与剩余增长
+
+本次 `macos-resource-20261007T130136Z` / PID **19992**，sourceHash **94c957eb9453da561b83c0bd0e1f1687e8f3cfdc939b94b591b877b5ff85fd55**，699 项源码指纹；M1 / MacBookPro17,1 / macOS 27.0 (26A428)、arm64 profile、managedFallback/hardware。**100/100 播放通过，16/16 窗口探针合格**，3224 个资源点均可用、ac/nominal，监控错误为空。首末资源点跨度 **733.228443 秒**，命令耗时 **789.272953 秒**。跨度包含诊断等待和采样间隔，最后 disposed 100 检查点在最后一条普通资源记录之后，不将二者当作相同采样终点或连续长片。
+
+live 1 实际 flag 从 true 设置并回读为 false；disposed 10/50/100 只读前后均为 false，四个窗口 PID/应用及系统 group 身份一致。这是四次合格状态观察，不是窗口之间的连续 flag 监控。
+
+| 窗口 | 19,693,568 B 区域脏页 | 整个 Untagged 脏页 | Malloc Small 脏页 | vmmap footprint | application heapUsage (B) | system heapUsage (B) |
+|---|---:|---:|---:|---:|---:|---:|
+| 1 live | 160K | 16.6M | 15.8M | 61.0M | 8,297,312 | 7,740,944 |
+| 10 disposed | 160K | 19.2M | 16.8M | 55.3M | 7,948,736 | 7,725,168 |
+| 50 disposed | 160K | 21.0M | 18.2M | 58.7M | 7,334,544 | 7,064,560 |
+| 100 disposed | 160K | 19.7M | 20.5M | 58.9M | 7,800,576 | 7,645,200 |
+
+该 Untagged 范围四次均为 `0x11d660000..0x11e928000`（末地址不含）、`rw-/rwx`，关闭后脏页在检查点保持 160K。它与此前定位的 Profiler 缓冲区大小相符，但本次没有 MSL 分配栈，不用形状替代所有权或完整生命周期证据。vmmap 单位保留工具四舍五入结果；Dart 指标为分组顺序查询的精确字节，不是原子快照或完整 native 内存账本。
+
+普通 disposed 第 1→100 轮端点 RSS **150,519,808 → 147,816,448 B**、footprint **66,634,784 → 61,326,368 B**，差值分别 **−2,703,360 / −5,308,416 B**，跨度 696.940826 秒。第 50→100 轮仍分别增加 **704,512 / 262,144 B**。早期峰值回落不代表对象数量稳定或无泄漏，普通端点也不与稍后 heap/vmmap 取样合并。
+
+live 中八个核心 Host/会话/解码/调度/账本类型各列出一个，Token 180 个；disposed 10/50/100 均未列出这些类型，registry 四次均列出一个。未列出保持 `not_listed` / null，不改写成零或已证明释放。
+
+| 窗口 | 全部 heap 节点 / 字节 | non-object 节点 / 字节 | FlutterEngineHandlerInfo 数量 / 字节 | Swift.StringStorage 数量 / 字节 |
+|---|---:|---:|---:|---:|
+| 1 live | 79,710 / 14,704,489 | 31,295 / 8,689,713 | 26 / 832 | 151 / 13,712 |
+| 10 disposed | 92,352 / 11,822,377 | 48,048 / 6,138,273 | 179 / 5,728 | 299 / 44,544 |
+| 50 disposed | 110,294 / 12,751,209 | 64,639 / 6,882,145 | 859 / 27,488 | 979 / 184,064 |
+| 100 disposed | 132,226 / 14,091,641 | 84,879 / 8,000,545 | 1,709 / 54,688 | 1,829 / 358,464 |
+
+### 已有源码支持的通道清理假设
+
+第 10→50 轮 `FlutterEngineHandlerInfo` 增加 **680 个**，第 50→100 轮增加 **850 个**，两段都精确对应 **每轮 17 个**；StringStorage 同期数量增量一致，但尚未证明这些字符串逐个属于通道名称。后半程 non-object 仍增加 20,240 个 / 1,118,400 B，不能把全部匿名增长归给通道。
+
+现有源码路径与该计数吻合：registry 的 `didDispose` 移除 host 后，插件分别调用播放和 DRM 生成接口的 `setUp(api:nil)`。生成代码分别为 14 个和 3 个通道创建新的 `FlutterBasicMessageChannel`，再设置 nil handler。新实例没有原注册连接号；本地 `FlutterChannels.mm` 因此走 `setMessageHandlerOnChannel(...nil)` 路径，而 macOS `FlutterEngine.mm` 的该路径仍向 `_messengerHandlers` 写入新的 `FlutterEngineHandlerInfo`。持有原连接号时的 `cleanUpConnection` 则会移除记录。每个播放器独立 suffix 使这些键不会在后续播放器中复用。
+
+这是**有源码与数量对应证据的卸载记录保留假设**，需要定向连接清理回归测试和修复后相同协议验证因果关系；不等于已证明 host 泄漏、字符串所有权或所有 RSS/匿名分配来源。生产播放器、生成代码和 SDK 在本切片均未修改。
+
+### 归档、裁定与下一项
+
+[完整证据](../../../tool/playback_benchmark/macos-profiler-off-long-observations.json)约 **14.41 MB**，保留 33 份原始文本文件、百轮资源记录、四份 heap/详细 vmmap、全部控制与内存 RPC/journal、两个冻结协议、应用/源码/依赖/制品/媒体指纹、相关本地 Flutter 与插件源码摘录和归档校验脚本。全部日志/JSONL/结果一致，重算摘要、重放 RPC、逐块重组 journal、重解析 heap/vmmap 和 16 个时钟窗口资格通过；源码身份再次核验。完整原文件另存忽略工作区 `profiler-off-long-final/`。
+
+裁定：关闭已识别的采样干扰后，优先处理具有计数和源码路径支持的通道连接清理候选，再评估剩余匿名增长；不把本次与不同插桩的旧百轮运行计算为优化比例。下一项先建立连接注册/卸载行为回归，修复实际连接清理，再按本次协议验证。
+
+连续长片、后台/多播放器/低内存、物理音画、跨设备/最低系统、正式呈现与性能基线仍开放，**完整 P08 Task1/2 未完成**。前台激活失败及 integration_test 原生插件提示保留；`leakVerdict=null`、`performanceBaseline=false`、`budgetAdmission=false`。
+
+独立最终复审核验 33 份原始文件、699 项源码指纹及其他身份、33 个 RPC 响应/8 份 journal、16 个窗口和四份 heap/vmmap，报告数值一致；Critical / Important / Minor 均无遗留。本诊断切片可提交，连接清理修复效果和完整 P08 验收保持开放。

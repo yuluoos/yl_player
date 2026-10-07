@@ -37,7 +37,9 @@ def run_logged(command, cwd, path, timeout):
             raise
 
 
-def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifetime_probes=False, endurance=False, long_lifetime_probes=False, memory_mapping=False):
+def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifetime_probes=False, endurance=False, long_lifetime_probes=False, memory_mapping=False, profiler_off_lifetimes=False):
+    if profiler_off_lifetimes and (not long_lifetime_probes or memory_mapping):
+        raise ValueError('Profiler-off diagnostics require their own long lifecycle protocol')
     if memory_mapping and not long_lifetime_probes:
         raise ValueError("Memory mapping requires long lifecycle diagnostics")
     if long_lifetime_probes and (not profile_cycles or harness_only or lifetime_probes or endurance):
@@ -75,6 +77,13 @@ def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifeti
                                   'VM getVM/getIsolateGroupMemoryUsage/getVM'],
                                   vmMemoryScope='non-system-isolate-groups',forcedGC=False,
                                   vmRpcReadTimeoutSeconds=2,vmProbeProcessTimeoutSeconds=10)
+    if profiler_off_lifetimes:
+        result.update(purpose='long-cycle-profiler-off-lifetimes',profilerOffLifetimes=True)
+        result['protocol'].update(observers=['VM profiler control/readback','heap --noContent',
+                                  'vmmap -wide -interleaved -noCoalesce','VM application/system group memory'],
+                                  profilerIntervention='setFlag(profiler,false) at live-1; read-only at disposed-10/50/100',
+                                  vmMemoryScope='application-and-system-isolate-groups',forcedGC=False,
+                                  stackLogging=False,vmRpcReadTimeoutSeconds=2,vmProbeProcessTimeoutSeconds=10)
     try:
         paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','--','packages','tool/playback_benchmark'],cwd=ROOT,text=True).splitlines()
         source={n:digest(ROOT/n) for n in sorted(set(paths)) if Path(n).suffix in (

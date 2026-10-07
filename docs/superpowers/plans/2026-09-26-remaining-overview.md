@@ -231,3 +231,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-10-07：P08补齐系统isolate group与短程地址栈归因，10/10播放、15/15探针和73Python通过。本次19,693,568B映射直接定位为Dart Profiler SampleBlockBuffer；不外推过去地址/全部增长/无泄漏。原始失败与最终证据已保留，无生产变更。下一项验证Profiler开关及固定对照；完整P08 Task1/2仍开放。
 
 2026-10-07：P08完成Profiler运行时on/off对照，各10/10播放、9/9探针和78Python通过；关闭后目标大小区域脏页短程保持176K，仍有其余增长。下一项固定关闭Profiler的百轮资源/生命周期复核；没有生产修改、优化比例或完整P08完成声明。
+
+2026-10-07：P08完成Profiler关闭后的百轮资源/生命周期复核，100/100播放、16/16探针和81Python测试通过；目标大小区域四次脏页均160K。第10/50/100轮FlutterEngineHandlerInfo为179/859/1709，精确每轮增加17，与14播放+3DRM通道卸载路径吻合；属于待回归和修复后对照验证的保留假设。无生产改动，不据此宣称无泄漏或全部增长已归因。下一项定向连接清理回归与修复，完整P08 Task1/2仍开放，见报告。

@@ -5,7 +5,7 @@ from pathlib import Path
 import subprocess
 import sys
 import threading
-from lifetime_windows import WINDOWS, validate_window
+from lifetime_windows import WINDOWS, LONG_WINDOWS, validate_window
 from run_address_history import checkpoint_markers
 from run_lifetime_probes import capture_probe, raw_us
 from run_memory_categories import EXECUTABLE
@@ -37,9 +37,12 @@ def capture_control(marker,output,mode):
     return r
 
 
-def collect_arm(output,flutter,arm):
+def collect_arm(output,flutter,arm,*,long_cycles=False):
+    if arm not in ('on','off') or (long_cycles and arm!='off'):raise ValueError('Unsupported profiler arm')
+    windows=LONG_WINDOWS if long_cycles else WINDOWS
+    observers=('profiler-control','heap','vmmap','dart-memory') if long_cycles else OBSERVERS
     records={(n,phase,tool):dict(attempt=n,phase=phase,tool=tool,status='not_observed',qualified=False)
-             for n,phase in WINDOWS for tool in OBSERVERS}
+             for n,phase in windows for tool in observers}
     markers={};errors=[];pid=None;done=threading.Event();collected=False
     def persist():
         if output.exists():
@@ -51,7 +54,7 @@ def collect_arm(output,flutter,arm):
         if not log.exists() or not defines.exists():return
         run=json.loads(defines.read_text())['YL_RESOURCE_RUN_ID']
         for m in checkpoint_markers(log.read_text(errors='replace')):
-            if m['runId']!=run or m['schemaVersion']!=1 or (pid is not None and pid!=m['pid']):
+            if m['runId']!=run or m['schemaVersion']!=(2 if long_cycles else 1) or (pid is not None and pid!=m['pid']):
                 raise ValueError('Unexpected checkpoint identity')
             pid=m['pid'];key=(m['attempt'],m['phase']);mk=(*key,m['edge'])
             if mk in markers:
@@ -63,7 +66,7 @@ def collect_arm(output,flutter,arm):
             records[(*key,'profiler-control')]=r;persist()
             if r['status']!='captured' or r['control']['after']!=(arm=='on'):
                 raise ValueError('Requested profiler state not verified')
-            for tool in ('vmmap','dart-memory'):
+            for tool in observers[1:]:
                 records[(*key,tool)]=capture_probe(m,tool,output,detailed=True,include_system=True);persist()
     def monitor():
         while not done.wait(.1):
@@ -71,17 +74,19 @@ def collect_arm(output,flutter,arm):
             except (OSError,ValueError,KeyError,TypeError) as e:
                 errors.append(type(e).__name__);persist();return
     thread=threading.Thread(target=monitor);thread.start()
-    try:collected=collect(output,flutter,profile_cycles=True,lifetime_probes=True)
+    try:collected=collect(output,flutter,profile_cycles=True,lifetime_probes=not long_cycles,
+                          long_lifetime_probes=long_cycles,profiler_off_lifetimes=long_cycles)
     finally:done.set();thread.join();persist()
     try:
         consume(False)
         if collected:
             run=json.loads((output/'result.json').read_text())
-            if len(run['observations'])!=10 or any(row['pid']!=pid or row['outcome']!='passed' for row in run['observations']):
+            if len(run['observations'])!=(100 if long_cycles else 10) or any(row['pid']!=pid or row['outcome']!='passed' for row in run['observations']):
                 raise ValueError('Incomplete resource workload')
+            if long_cycles and run['endurance']['protocolCompleted'] is not True:raise ValueError('Incomplete long resource protocol')
         for (n,phase,tool),r in records.items():
             r['qualified']=validate_window(markers.get((n,phase,'begin')),markers.get((n,phase,'end')),r)
-        controls=[records[(n,phase,'profiler-control')] for n,phase in WINDOWS]
+        controls=[records[(n,phase,'profiler-control')] for n,phase in windows]
         if all(r['qualified'] for r in controls):
             if len({json.dumps(r['control']['vmIdentity'],sort_keys=True) for r in controls})!=1:raise ValueError('VM group identity changed')
     except (OSError,ValueError,KeyError,TypeError) as e:errors.append(type(e).__name__)
@@ -93,6 +98,27 @@ def collect_arm(output,flutter,arm):
         result['appExecutable']=dict(path=str(EXECUTABLE),sha256=digest(EXECUTABLE))
     if output.exists():(output/'profiler-probes.json').write_text(json.dumps(result,indent=2)+'\n')
     return result
+
+
+def collect_long_off(output,flutter):
+    if any(k.startswith('MallocStackLogging') for k in os.environ):raise ValueError('Stack logging must be absent')
+    raw_us();output.mkdir(parents=True,exist_ok=False)
+    protocol=dict(schemaVersion=1,purpose='long-runtime-profiler-off-lifetimes',plannedAttempts=100,
+        windows=LONG_WINDOWS,checkpointSeconds=30,minimumObservationSeconds=600,
+        observers=['profiler-control','heap','vmmap','dart-memory'],
+        intervention='setFlag(profiler,false) at live-1; read-only at disposed-10/50/100',
+        startupProfiler='unchanged; runtime intervention after first player load',
+        vmIdentity='exact PID plus application/system group IDs; raw VM startTime retained without equality gate',
+        observerTimeoutSeconds=10,rpcReadTimeoutSeconds=2,testTimeoutSeconds=900,commandTimeoutSeconds=1200,
+        forcedGC=False,stackLogging=False,continuousPlayback=False,stopAfterFailure=True,
+        cacheState='os-cache-uncontrolled',scriptSha256=digest(Path(__file__)),flutter=flutter,
+        performanceBaseline=False,budgetAdmission=False,leakVerdict=None)
+    (output/'protocol.json').write_text(json.dumps(protocol,indent=2)+'\n')
+    arm=collect_arm(output/'off',flutter,'off',long_cycles=True)
+    result=dict(schemaVersion=1,protocolSha256=digest(output/'protocol.json'),arm=arm,
+                complete=arm['complete'],performanceBaseline=False,budgetAdmission=False,leakVerdict=None)
+    (output/'long-off.json').write_text(json.dumps(result,indent=2)+'\n')
+    return result['complete']
 
 
 def collect_pair(output,flutter):
@@ -125,7 +151,9 @@ def collect_pair(output,flutter):
 
 
 if __name__=='__main__':
-    if len(sys.argv)!=3:raise SystemExit('Usage: run_profiler_comparison.py NEW_DIRECTORY FLUTTER_EXECUTABLE')
-    ok=collect_pair(Path(sys.argv[1]).resolve(),sys.argv[2])
-    print('Runtime profiler comparison captured.' if ok else 'Incomplete comparison; raw evidence retained.')
+    args=sys.argv[1:];long=bool(args and args[0]=='--long-off')
+    if long:args=args[1:]
+    if len(args)!=2:raise SystemExit('Usage: run_profiler_comparison.py [--long-off] NEW_DIRECTORY FLUTTER_EXECUTABLE')
+    ok=(collect_long_off if long else collect_pair)(Path(args[0]).resolve(),args[1])
+    print('Profiler diagnostic captured.' if ok else 'Incomplete diagnostic; raw evidence retained.')
     raise SystemExit(0 if ok else 2)

@@ -504,3 +504,34 @@ and sequential metadata probes prevent a performance-benefit or release-baseline
 claim. A similarly sized mapped region is descriptive evidence, not proof of
 cross-process allocation identity. See `macos-profiler-control-observations.json`
 and the P08 report for retained incomplete and final observations.
+
+## Profiler-off hundred-cycle resource and lifetime observations
+
+```sh
+python3 -B tool/playback_benchmark/run_profiler_comparison.py --long-off \
+  /private/tmp/yl-profiler-off-long-new /absolute/path/to/flutter
+```
+
+This independent mode requires 100 profile load/dispose cycles and at least 600
+seconds between the first and last resource points. It reuses the existing
+schema-2 long windows: live 1 and disposed 10/50/100, each 30 seconds. The test and
+command deadlines remain 900 and 1200 seconds. The root protocol and resource
+collector's identity/protocol file are both frozen before the measured launch.
+
+There are 16 planned probes. Each window first verifies the runtime Profiler
+state, then captures `heap --noContent`, detailed vmmap, and application/system
+Dart group memory. Only live 1 requests `setFlag(profiler,false)`; the three
+subsequent checks are read-only. Failed/unverified control prevents later probes
+from being treated as a valid off-state observation. Complete qualification
+requires every probe to fit its own paired native-clock window, all 100 playback
+trials to pass, the minimum resource span to pass, and consistent PID/group IDs.
+Missing or partial observations retain their planned identities.
+
+This mode rejects the `on` arm and incompatible resource modes. The earlier
+short on/off mode is unchanged. No MallocStackLogging or GC is enabled, and there
+is no production/Dart/SDK change. As before, Profiler is stopped after the first
+player load; state is checked at four windows, not monitored continuously.
+Load/dispose cycles and checkpoint waits are not continuous film playback.
+Missing heap class rows mean not listed, not zero allocations or proof of free.
+The independent run is not a matched hundred-cycle on/off experiment; do not
+subtract earlier runs to claim an optimization or global absence of leaks.
