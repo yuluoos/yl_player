@@ -535,3 +535,27 @@ Load/dispose cycles and checkpoint waits are not continuous film playback.
 Missing heap class rows mean not listed, not zero allocations or proof of free.
 The independent run is not a matched hundred-cycle on/off experiment; do not
 subtract earlier runs to claim an optimization or global absence of leaks.
+
+### Bounded non-object allocation stack attribution
+
+```sh
+python3 -B tool/playback_benchmark/run_allocation_stacks.py NEW_DIRECTORY /path/to/flutter
+```
+
+Runs an independent ten-cycle profile diagnostic with MallocStackLogging=full
+and MallocStackLoggingNoCompact=1 using the existing prebuild/launch wrapper.
+At live 1 the runtime profiler is set off and read back; disposed 2/8 only
+observe its state. Each existing 20-second window captures control, heap
+`--noContent`, then `malloc_history -callTree -noContent -invert -ignoreThreads
+.*`, with an eight-second tree timeout. Selection covers the entire live allocation
+tree because MSL assigns derived names to non-objects. Empty graphs are rejected;
+no address sampling or object-content reads are used.
+All nine planned observers remain in the result, including missing/failed ones;
+each complete capture must fit its native-clock window and owned process.
+
+A qualified capture is not a proof of stack coverage or ownership. Full raw
+call trees must be inspected for unsymbolicated/no-stack allocations and
+attribution scope. Stack logging perturbs resources; do not compare these
+numbers directly with the prior uninstrumented hundred-cycle run as a
+performance improvement or claim all residual growth is explained. No forced GC,
+production changes, startup-disabled profiling, or global leak verdict.

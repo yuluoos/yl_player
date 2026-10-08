@@ -37,7 +37,9 @@ def run_logged(command, cwd, path, timeout):
             raise
 
 
-def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifetime_probes=False, endurance=False, long_lifetime_probes=False, memory_mapping=False, profiler_off_lifetimes=False):
+def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifetime_probes=False, endurance=False, long_lifetime_probes=False, memory_mapping=False, profiler_off_lifetimes=False, allocation_stacks=False):
+    if allocation_stacks and (not profile_cycles or not lifetime_probes or harness_only or endurance or long_lifetime_probes or memory_mapping or profiler_off_lifetimes):
+        raise ValueError('Allocation stacks require an independent short playback protocol')
     if profiler_off_lifetimes and (not long_lifetime_probes or memory_mapping):
         raise ValueError('Profiler-off diagnostics require their own long lifecycle protocol')
     if memory_mapping and not long_lifetime_probes:
@@ -84,6 +86,13 @@ def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifeti
                                   profilerIntervention='setFlag(profiler,false) at live-1; read-only at disposed-10/50/100',
                                   vmMemoryScope='application-and-system-isolate-groups',forcedGC=False,
                                   stackLogging=False,vmRpcReadTimeoutSeconds=2,vmProbeProcessTimeoutSeconds=10)
+    if allocation_stacks:
+        result.update(purpose='short-profiler-off-allocation-stacks',allocationStacks=True)
+        result['protocol'].update(observers=['VM profiler control/readback','heap --noContent',
+                                  'malloc_history -callTree -noContent -invert -ignoreThreads .*'],
+                                  profilerIntervention='off at live-1; read-only at disposed-2/8',
+                                  launchEnvironment=dict(MallocStackLogging='full',MallocStackLoggingNoCompact='1'),
+                                  forcedGC=False,treeTimeoutSeconds=8)
     try:
         paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','--','packages','tool/playback_benchmark'],cwd=ROOT,text=True).splitlines()
         source={n:digest(ROOT/n) for n in sorted(set(paths)) if Path(n).suffix in (

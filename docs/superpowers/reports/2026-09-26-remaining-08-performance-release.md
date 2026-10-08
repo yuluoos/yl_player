@@ -670,3 +670,44 @@ live 1 设置后实际回读 false，disposed 10/50/100 前后均为 false，四
 下一项为**修复后剩余 non-object 分配的有界栈归因**，先冻结短程、地址/分配选择和工具开销协议，再用证据决定是否需要下一处生产修复；不重新打开已解决的通道记录问题，也不为了 RSS 表面回落增加强制 GC 或任意缓存清空。连续长片、后台/多播放器/低内存、物理音画、跨设备/最低系统、iOS 本次运行、DRM 授权验收、正式呈现和性能基线仍开放，**完整 P08 Task1/2 未完成**。
 
 独立最终复审通过：核验 33 份百轮原始文件、10 份原生测试凭据、699 项源指纹及其他身份、33 个 RPC/8 份 journal、16 个窗口与四份 heap/vmmap，前后条件与报告数字一致。Critical / Important / Minor 均无遗留，可提交本次限定修复；上述剩余验收边界不变。
+
+## 2026-10-07：修复后 non-object 分配调用树归因
+
+本项依照上一项剩余增长结论，先固定独立短程协议：十轮 profile 创建/播放/释放，live 1、disposed 2/8 各 20 秒，依次采集 Profiler 控制/回读、`heap --noContent`、`malloc_history -callTree -noContent -invert -ignoreThreads non-object`。选择整个 non-object 类别，不事后挑选增长地址；系统工具本机手册明确支持此类别过滤。复用已有先构建再以 MallocStackLogging=full、MallocStackLoggingNoCompact=1 启动的包装器，原始启动输出和环境声明均保留。
+
+仅 live 1 在首次加载后设置 false，后两窗只读状态；精确 PID、应用/系统 group 和原生时钟窗口继续校验。调用树单次上限 8 秒，其余控制/heap 上限 10 秒；即使工具成功，超出窗口仍不合格。九个计划探针缺失、超时和部分输出均入档。捕获成功只代表有同 PID 的有界工具输出，不能自动声明堆栈覆盖、所有权或不存在泄漏。MSL 自身开销使该诊断不能直接与此前百轮内存值算优化比例，也不作连续长片或正式基线。
+
+新增四项测试先因缺少功能失败，再验证超时原始保留、禁止无关进程、九个未观测分母和独立资源协议守卫；完整 **85 项 Python 测试通过**。没有生产播放器、Dart、生成代码或 SDK 修改。
+
+预备运行 `macos-resource-20261007T235337Z` / PID 34158 为10/10播放、9/9原始窗口采集合格，但三份调用树均只有标题/映像表而没有栈行，**归因不合格**。同窗 heap 明确写出从分配栈推导出的类型名，原 non-object 筛选不能覆盖这些已改名节点；空树不代表没有匿名分配。原协议/源码/应用身份和完整原始输出已保留。用真实空树形状回归先观察失败，再拒绝无栈行输出，并冻结 v2 全部分配类别 `.*` 的新协议；后续从完整树与 heap 类型表关联来源，不事后限定为已看到的 Dart Timeline 名称。
+
+### 最终调用树与来源证据
+
+v2 独立运行 `macos-resource-20261007T235746Z` / PID **34777**，sourceHash **446d4e7d4d936b990c1cf7c356f2dc5fc39b22c41df97485b21fdfd9239f9c6b**；**10/10 播放、9/9 窗口探针合格**，360 个资源点无缺失、ac/nominal、监控错误为空。首末资源点跨度 **124.341798 秒**，命令耗时 **150.549099 秒**。设备为 M1 / MacBookPro17,1 / macOS 27.0 (26A428)，arm64 profile、managedFallback/hardware。新增真实空树回归后完整 **86 项 Python 测试通过**。
+
+三个窗口在干预后的 Profiler 回读均为 false；原始 `getFlagList` 同时显示 `timeline_recorder=ring`、`timeline_streams=Dart,Embedder,GC,Microtask`。关闭采样 Profiler 没有关闭 Timeline 记录。以下为 heap 的精确类型行，不把调用树祖先和子节点相加：
+
+| 类型或分配来源 | live 1 数量 / B | disposed 2 数量 / B | disposed 8 数量 / B |
+|---|---:|---:|---:|
+| 全部 heap | 80,230 / 14,572,137 | 84,688 / 11,658,793 | 91,894 / 11,653,225 |
+| TimelineEventArguments::CopyArgument | 889 / 14,832 | 4,538 / 73,936 | 5,918 / 97,808 |
+| malloc in Dart_RecordTimelineEvent | 560 / 8,960 | 2,966 / 47,456 | 3,841 / 61,456 |
+| AddAsyncTrackMetadataBasedOnEvent | 282 / 4,512 | 1,483 / 23,728 | 4,469 / 71,504 |
+| malloc in SimpleHashMap::Lookup | 1 / 12,288 | 2 / 49,920 | 2 / 197,376 |
+| FlutterEngineHandlerInfo | 26 / 832 | 9 / 288 | 9 / 288 |
+
+完整反向调用树可沿 `Dart_RecordTimelineEvent → fml::tracing → flutter::VsyncWaiter::FireCallback → EmbedderTaskRunner` 回溯调用者，直接识别出 Flutter Vsync 相关 Timeline 事件分配。另一条路径由 `SimpleHashMap::Lookup` 回溯到 `TimelineEventRecorderWithPerfettoSupport::AddAsyncTrackMetadataBasedOnEvent → TimelineEventFixedBufferRecorder::CompleteEvent → TimelineEvent::Complete → Dart_RecordTimelineEvent → TraceEventAsyncBegin0`。disposed 2/8 该分支分别显示 48.0K / 192K（工具的舍入展示值），与 heap 中 hash map 类型总字节增加 **147,456 B** 相符，支持至少一个增长 hash map 属于 Timeline 异步轨道元数据记录路径。
+
+因此本次已找到**部分剩余分配增长的具体记录来源**，下一步应隔离 Timeline 观察开销。不能把其他泛用 dart::malloc/calloc 行全部归入 Timeline，也不能把短程栈外推为此前百轮匿名增长的完整所有权证明。`ring` 模式并不证明这些元数据已经达到平台期或必然无限增长；本次没有地址连续性、释放历史或长程关闭 Timeline 对照，尚不裁定 VM 泄漏。
+
+第 2→8 轮 heap 节点增加 7,206，但全部 heap 字节减少 5,568 B，说明增长行与下降行并存。普通 disposed 第 1→10 轮 RSS 减少 **11,796,480 B**、footprint 增加 **1,212,416 B**，端点跨度 98.021625 秒；不同工具时间、覆盖与 MSL 开销使它们不能组成对象所有权账本。三份全类别调用树根节点为 77,969 / 23.3M、82,844 / 14.3M、89,968 / 14.5M，既非纯 non-object 总量，也不与 heap 的时刻和口径相同。
+
+### 归档与下一项
+
+[完整证据](../../../tool/playback_benchmark/macos-allocation-stacks-observations.json)为 **61,979,497 B**，保留两次运行共 43 份原始文件及其哈希。最终三份调用树原文共约 570 MB，以 gzip+base64 无损保存，分别验证压缩内容和解压原文 SHA-256；没有截断为选中栈片段。归档还包含资源日志/JSONL/结果、heap、控制 RPC/journal、冻结根协议、应用及源码/依赖/制品/媒体指纹和可复查归档脚本。预备运行完整保留 `attributionComplete=false`，原始 `complete=true` 只表示旧规则下九个工具输出与窗口合格；最终 v2 拒绝空调用树，`attributionComplete=true` 仅表示本有界归因采集完成，不代表所有分配所有权已解决。
+
+资源日志/JSONL/结果一致性、摘要重算、全部 RPC 回放与 journal 重组、两个运行的九个时钟窗口、heap 总和及源码身份均通过；最终 701 项源码指纹再次核验。此短程复用入口没有单独预写 `run/protocol.json`：预启动冻结的是根协议，资源模式元数据在结果中保留，归档明确记录该边界，不冒称两个预冻结协议。原文件另存忽略工作区 `allocation-stacks-preliminary/` 和 `allocation-stacks-final/`。
+
+下一项：先验证受支持的 Timeline 查询/控制能力，固定独立启用与关闭（或空 streams）对照协议，再用实际状态回读评估相关分配；不修改 SDK，不增加强制 GC 或任意清空记录来制造内存下降。生产播放器本次未改。完整 P08 Task1/2、正式呈现/性能基线、连续长片、后台/多播放器/低内存、物理音画、跨设备/最低系统与 DRM 授权验收仍开放，`leakVerdict=null`、`performanceBaseline=false`、`budgetAdmission=false`。
+
+独立最终复审通过：43 份原始文件及压缩/原文哈希、两组各 701 项源码指纹、18 个窗口资格、26 个 RPC 响应与 journal 重组、六份 heap、资源摘要及最终应用身份均核验一致。完整树支持上述 Timeline/Vsync 与异步元数据来源，预备失败未计为归因通过；Critical / Important / Minor 均无遗留。本有界切片可提交，全部匿名分配所有权、VM/全局泄漏、长期平台期、性能提升及完整 P08 仍未裁定。
