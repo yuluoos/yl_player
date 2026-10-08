@@ -134,6 +134,22 @@ struct YlScheduledAudioBuffer {
   let generation: UInt64
 }
 
+/// System outputs may retain a delivered callback until the node is stopped.
+/// Retire its captured media at delivery, without changing playback semantics.
+private final class YlAudioPlaybackCompletion {
+  private let lock = NSLock()
+  private var body: (() -> Void)?
+  init(_ body: @escaping () -> Void) { self.body = body }
+  func finish() {
+    lock.lock()
+    let callback = body
+    body = nil
+    lock.unlock()
+    // Delivery can release ledger ownership and reenter the renderer.
+    callback?()
+  }
+}
+
 enum YlAudioEnqueueResult: Equatable {
   case scheduled
   case buffered
@@ -437,7 +453,7 @@ final class YlAudioRenderer: YlAudioRendering {
     if shouldRestartOutput { waitingForAudio = false }
     lock.unlock()
 
-    output.schedule(buffer) { [weak self] in
+    let completion = YlAudioPlaybackCompletion { [weak self] in
       buffer.reservation?.endQueuedTiming()
       self?.complete(
         ptsUs: buffer.ptsUs,
@@ -446,6 +462,7 @@ final class YlAudioRenderer: YlAudioRendering {
         completionGeneration: token
       )
     }
+    output.schedule(buffer) { completion.finish() }
     if shouldRestartOutput, lock.withLock({
       !disposed && playbackRequested && completionGeneration == token
     }) {

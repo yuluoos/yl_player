@@ -8,6 +8,118 @@ import YlFFmpegBridge
 
 final class YlMacosAudioTests: XCTestCase {
 
+  func testPlayedSystemAudioReleasesPCMAndLedgerWhileOutputRemainsAlive() throws {
+    let ledger = YlManagedBufferLedger()
+    let scope = try ledger.makeScope(maxBytes: nil)
+    let converter = LifetimePCMConverter()
+    let output = YlSystemAudioOutput()
+    let renderer = YlAudioRenderer(bufferScope: scope, converter: converter, output: output)
+    defer { renderer.dispose() }
+    try renderer.configure(stream: .init(codec: .aac, sampleRate: 48000,
+      channelCount: 2, magicCookie: Data(), generation: 1))
+    for index in 0..<20 {
+      try autoreleasepool {
+        XCTAssertEqual(try renderer.enqueue(packet: .init(data: Data(),
+          ptsUs: Int64(index) * 21333, durationUs: 21333, generation: 1)), .scheduled)
+      }
+    }
+    XCTAssertEqual(ledger.snapshot.currentBytes, 20 * 8192)
+    try renderer.play()
+    let deadline = Date(timeIntervalSinceNow: 4)
+    while renderer.scheduledDurationUs > 0 && Date() < deadline {
+      RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.01))
+    }
+    XCTAssertEqual(renderer.scheduledDurationUs, 0, "Real system completion callbacks must run")
+    // Keep the output and its node alive; stop/dispose must not be required
+    // to release PCM that has already completed playback.
+    RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+    XCTAssertEqual(converter.buffers.filter { $0.value != nil }.count, 0)
+    withExtendedLifetime(output) {}
+  }
+
+  func testRetainedAudioCompletionReleasesPayloadAndCannotCompleteAnotherBuffer() throws {
+    let ledger = YlManagedBufferLedger()
+    let converter = LifetimePCMConverter()
+    let output = TestAudioOutput()
+    let renderer = YlAudioRenderer(bufferScope: try ledger.makeScope(maxBytes: nil),
+      converter: converter, output: output)
+    defer { renderer.dispose() }
+    try renderer.configure(stream: .init(codec: .aac, sampleRate: 48000,
+      channelCount: 2, magicCookie: Data(), generation: 1))
+    XCTAssertEqual(try renderer.enqueue(packet: .init(data: Data(), ptsUs: 0,
+      durationUs: 21333, generation: 1)), .scheduled)
+    let first = output.retainedCompletion(at: 0)
+    XCTAssertNotNil(converter.buffers[0].value)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 8192)
+    first()
+    XCTAssertNil(converter.buffers[0].value)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+    XCTAssertEqual(try renderer.enqueue(packet: .init(data: Data(), ptsUs: 21333,
+      durationUs: 21333, generation: 1)), .scheduled)
+    first() // The system may retain a callback; our completion must be one-shot.
+    XCTAssertEqual(renderer.scheduledDurationUs, 21333)
+    XCTAssertEqual(renderer.scheduledBytes, 8192)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 8192)
+    output.retainedCompletion(at: 1)()
+    XCTAssertNil(converter.buffers[1].value)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+  }
+
+  func testStaleAudioCompletionReleasesOnlyItsOwnPayloadAfterFlush() throws {
+    let ledger = YlManagedBufferLedger()
+    let converter = LifetimePCMConverter()
+    let output = TestAudioOutput()
+    let renderer = YlAudioRenderer(bufferScope: try ledger.makeScope(maxBytes: nil),
+      converter: converter, output: output)
+    defer { renderer.dispose() }
+    try renderer.configure(stream: .init(codec: .aac, sampleRate: 48000,
+      channelCount: 2, magicCookie: Data(), generation: 1))
+    XCTAssertEqual(try renderer.enqueue(packet: .init(data: Data(), ptsUs: 0,
+      durationUs: 21333, generation: 1)), .scheduled)
+    renderer.flush()
+    // A delayed output still owns its pending completion; flushing counters
+    // is not permission to release memory that completion still retains.
+    XCTAssertEqual(ledger.snapshot.currentBytes, 8192)
+    XCTAssertEqual(try renderer.enqueue(packet: .init(data: Data(), ptsUs: 500000,
+      durationUs: 21333, generation: 1)), .scheduled)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 16384)
+    output.retainedCompletion(at: 0)()
+    XCTAssertNil(converter.buffers[0].value)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 8192)
+    XCTAssertEqual(renderer.scheduledBytes, 8192)
+    XCTAssertEqual(renderer.scheduledDurationUs, 21333)
+    renderer.dispose()
+    output.retainedCompletion(at: 1)()
+    XCTAssertNil(converter.buffers[1].value)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+  }
+
+  private final class WeakPCM {
+    weak var value: AVAudioPCMBuffer?
+    init(_ value: AVAudioPCMBuffer) { self.value = value }
+  }
+  private final class LifetimePCMConverter: YlAudioPacketConverting {
+    let format = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 48000,
+      channels: 2, interleaved: YlAudioFormatPolicy.usesInterleavedPCM)!
+    var buffers: [WeakPCM] = []
+    var pcmFormat: AVAudioFormat? { format }
+    func configure(stream: YlAudioStreamConfiguration) throws {}
+    func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate {
+      .init(durationUs: 21333, byteCount: 8192)
+    }
+    func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
+      let pcm = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 1024)!
+      pcm.frameLength = 1024
+      for buffer in UnsafeMutableAudioBufferListPointer(pcm.mutableAudioBufferList) {
+        if let bytes = buffer.mData { memset(bytes, 0, Int(buffer.mDataByteSize)) }
+      }
+      buffers.append(WeakPCM(pcm))
+      return .init(payload: pcm, ptsUs: packet.ptsUs, durationUs: 21333,
+        byteCount: 8192, generation: packet.generation)
+    }
+  }
+
   func testOpusTrimmingPrerollResetAndSafeFailure() throws {
     let converter = YlAppleCompressedAudioConverter()
     let head = Data([79,112,117,115,72,101,97,100,1,2,56,1,128,187,0,0,0,0,0])
@@ -266,6 +378,8 @@ final class YlMacosAudioTests: XCTestCase {
     func pause() { isPlaying = false }
     func reset() {}
     func dispose() {}
+
+    func retainedCompletion(at index: Int) -> () -> Void { completions[index] }
 
     func completeNextBuffer() {
       guard !completions.isEmpty else { return }
