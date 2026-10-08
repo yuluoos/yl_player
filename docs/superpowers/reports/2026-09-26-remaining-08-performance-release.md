@@ -916,3 +916,30 @@ Dart 用量先下降后上升，容量和 externalUsage 精确值全部保留。
 本次交付具体 PCM 捕获生命周期修复及其回归、长播对象验证。**下一项优先追踪仍被保留的完成回调容器与系统计时器/dispatch source 生命周期，并保留无 heap 干扰的独立连续性验证。** 不宣称系统内部保留原因、全部所有权、全局无泄漏、稳定平台、预算、物理音画或完整 P08 Task1/2 已完成；其他设备/最低系统/iOS 运行、后台/多播放器/压力与授权 DRM 等边界继续开放。
 
 最终独立复审确认本切片可提交：53 份压缩原文、718 项源码和全部已记录身份、44 次 RPC/六份 journal、12 个窗口、三份 heap/vmmap、241 点资源及前后协议一致；三项实际 RED、21/21 音频、592/592 全量原生和七项工具结果核验，无重复设备或套件执行。Critical / Important / Minor 均无遗留；PCM 修复、残余增长及连续性 `complete=false` 的结论与原始证据一致，上述开放项不变。
+
+## 2026-10-08：已执行音频回调与系统计时器的有界引用归因
+
+承接 `e82871c`，本项定位仍在增长的回调容器与 dispatch source，**没有修改生产播放器**。新增独立 Swift 诊断夹具及可重复执行的采集入口，模拟 `YlSystemAudioOutput` 的 player→timePitch→mixer 连接、非交错 Float32/48kHz/双声道和 `.dataPlayedBack`；一次调度 200 个 1,024 帧静音缓冲，每次入队有 autoreleasepool。弱引用标记用于观察回调捕获对象，计数经锁保护；全数回调执行后仍保持引擎/节点存活，再分别观察 stop/reset 及 disconnect/detach。它不是实际 Flutter/解码/账本流水线，不能将其所有内存数值直接代入此前长播进程。
+
+协议在启动前保存源码、二进制 SHA-256、MSL full/NoCompact 环境、四阶段及 16 个槽位。每阶段 heap 和 dispatch-source 分配树必采，首个存活标记的反向引用树/地址分配史仅在标记存在时采集；不存在记为 not_applicable。父进程验证自建 PID/可执行路径，每个工具限时八秒；子进程等待父进程确认后才进入下一阶段，采集记录保留原生单调时钟边界。工具新增三项准入回归实际 RED→GREEN；全套 Python **112/112** 通过。首次全套的三项本地 HTTP server bind 被沙箱拒绝，原始失败日志保留，获准后同套通过；不是产品失败。本次未改原生测试夹具/生产源，不重复全量播放器设备测试。
+
+预备 v1 在配置阶段因诊断夹具误用交错 PCM 被系统以 **−10868** 拒绝，0/12 采集、没有播放；保留原源码、二进制、协议及崩溃文本。修正为项目实际 macOS 的非交错策略并设置 pitch=0/overlap=8 后，v2 的 200/200 回调完成、200 个捕获标记仍存活，stop/reset 后为零；6 份采集、6 项不适用，共 12 槽位。v2 尚无计时器分配栈，故预先增加该观察器后进行独立 v3，而不是把已有类型相关性写成分配归因。
+
+最终 v3 在本机 MacBookPro17,1 / arm64 / macOS 27.0.1 (26A434)，PID **85620**，父进程观察覆盖 **15.105953 秒**，正常退出。**16 槽位中 10 captured、6 not_applicable、0 failed/未观察**，原始 complete=true 仅表示该短时诊断采集完成，不是连续性/性能准入通过。
+
+| 阶段 | 已执行回调 | 存活捕获标记 | dispatch_source_t | block |
+|---|---:|---:|---:|---:|
+| 配置完成 | 0 | 0 | 140 | 203 |
+| 200 缓冲播放完成 | 200 | 200 | 341 | 614 |
+| stop + reset 后 | 200 | 0 | 142 | 215 |
+| disconnect + detach 后 | 200 | 0 | 142 | 212 |
+
+首个标记地址 `0x7a4d0dc030` 的反向引用树直接显示：标记被 Swift closure context、Objective-C block、`AVAudioPlayerNodeImpl::Command` 相关分配持有，并经 `AUInterfaceV3`、`AVAudioPlayerNodeImpl` 通向存活节点/引擎等根。地址历史包含此前重用的 ALLOC/FREE，最后一笔未释放 ALLOC 对应 `DeliveredCallbackMarker.__allocating_init`，没有把地址此前的其他对象误归为标记。
+
+播放完成阶段的 dispatch-source 分配树中，**200 个 / 25,600B** 来自 `AVAEDispatchQueueTimer::StartTimer → AVAudioPlayerNodeImpl::Command::~Command → BufferCommand::~BufferCommand`。配置阶段及 stop/reset、detach 后不再出现这条 Command 分配分支。reset 后另有一个 `AVAudioEngineGraph::MonitorState` 计时器，不能将“Command 分支消失”写成全部计时器归零。此证据将本机原生复现中的回调保留和逐缓冲计时器定位到系统音频 Command 路径；未证明所有系统版本同样表现，也没有归属此前所有匿名字节或判定全局泄漏。
+
+[完整取证归档](../../../tool/playback_benchmark/macos-audio-callback-roots-observations.json)保留三次运行的源/二进制/协议/原始输出、最终四份 heap/四份 dispatch 分配树/首标记引用树和历史，以及测试失败和通过日志。已逐份解压校验大小/SHA-256，核对最终源码/二进制/协议身份、PID、阶段与采集时钟、16 个槽位、类型计数和上述 200 个 Command 计时器分支。新 SDK 的弃用编译警告原样保留，没有修改最低系统或替换生产 API。
+
+本项裁定：**保留 `.dataPlayedBack` 语义，不用周期性 stop/reset 掩盖播放期增长**，因为重置会影响播放连续性且本次仅证明联合 stop/reset 后释放，没有区分两操作各自作用。下一项应比较并验证保持播放完成时序的有界回调管理方案，再决定生产修复；无 heap 干扰的独立长播连续性仍待验证。残余增长尚未修复，物理音画/同步、其他设备与最低系统、iOS、后台/多播放器/压力、授权 DRM 和完整 P08 Task1/2 保持开放。
+
+最终独立复审可提交：48 份压缩原文（507,214B）、三版协议/二进制与源码身份、最终采集时钟和槽位/类型计数、标记地址复用后的末笔分配、200 个 Command 计时器及重置后的独立 MonitorState 分支均核对一致；RED、沙箱失败和 112 项 GREEN 日志保留。Critical / Important / Minor 无遗留，无额外设备/套件重跑。实际 Flutter 渲染器（含 rate/bypass）、stop 与 reset 的各自作用、全局所有权及其他开放验收项均不纳入本次归因结论。

@@ -641,3 +641,24 @@ profiler/Timeline-off cycle runs, claim a leak/plateau/optimization ratio, or
 infer physical video presentation, audible output or AV sync from public state.
 The low-resolution synthetic fixture supplies bounded duration coverage, not
 full-feature-film, high-bitrate, HDR, DRM, background or memory-pressure coverage.
+
+### Native audio callback ownership probe
+
+`python3 -B tool/playback_benchmark/run_audio_callback_roots.py /private/tmp/NEW_DIRECTORY`
+compiles a standalone Swift AVAudioEngine graph and schedules 200 silent,
+noninterleaved stereo 48 kHz buffers of 1,024 frames with `.dataPlayedBack`.
+The fresh-directory runner freezes source/binary hashes and its protocol before
+launch, enables full malloc stack logging, then holds four checkpoints:
+configured, all callbacks delivered, stop/reset, and stop/disconnect/detach.
+Each checkpoint captures heap and dispatch-source allocation stacks, plus the
+first still-live callback marker's reverse reference tree and allocation history
+when one exists. Missing markers are explicit inapplicable slots, never fake
+successful reference traces. Sixteen slots remain in the result after failure;
+owned PID/executable checks and eight-second observer deadlines bound inspection.
+
+The runner may require permission for local process inspection. It never resets
+production playback. This graph mirrors the native output path, but does not run
+Flutter, the decoder, the managed buffer ledger, or the production renderer.
+The engine/player remain alive after detach. Results diagnose the current
+machine only; they do not certify audio timing, audible output, long playback,
+performance, or the origin of every byte in previous process measurements.
