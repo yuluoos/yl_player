@@ -711,3 +711,42 @@ v2 独立运行 `macos-resource-20261007T235746Z` / PID **34777**，sourceHash *
 下一项：先验证受支持的 Timeline 查询/控制能力，固定独立启用与关闭（或空 streams）对照协议，再用实际状态回读评估相关分配；不修改 SDK，不增加强制 GC 或任意清空记录来制造内存下降。生产播放器本次未改。完整 P08 Task1/2、正式呈现/性能基线、连续长片、后台/多播放器/低内存、物理音画、跨设备/最低系统与 DRM 授权验收仍开放，`leakVerdict=null`、`performanceBaseline=false`、`budgetAdmission=false`。
 
 独立最终复审通过：43 份原始文件及压缩/原文哈希、两组各 701 项源码指纹、18 个窗口资格、26 个 RPC 响应与 journal 重组、六份 heap、资源摘要及最终应用身份均核验一致。完整树支持上述 Timeline/Vsync 与异步元数据来源，预备失败未计为归因通过；Critical / Important / Minor 均无遗留。本有界切片可提交，全部匿名分配所有权、VM/全局泄漏、长期平台期、性能提升及完整 P08 仍未裁定。
+
+## 2026-10-08：Timeline 记录开销独立对照
+
+依据上一项已定位的 Timeline/Vsync 与异步轨道元数据分配，验证本地 vm_service 15.1.0 与[官方 API](https://pub.dev/documentation/vm_service/latest/vm_service/VmService/setVMTimelineFlags.html)：`setVMTimelineFlags` 的 recordedStreams 指定启用集合，未列出的流关闭；`getVMTimelineFlags` 回读 recorder、可用和实际记录流。工具仅允许既有 Dart/Embedder/GC/Microtask 或空列表，必须读取实际结果，拒绝无 recorder、未知流、状态不符与进程/group 变化；不调用 clearVMTimeline。
+
+预先冻结启用→关闭两组，各独立 profile 十轮，均以相同 MSL full/NoCompact 启动，live 1 加载后将采样 Profiler 设为 false 并设定 Timeline 流，disposed 2/8 只读状态。三个 20 秒窗口依次控制/回读、完整 heap 类型表、详细 vmmap，每个进程上限 10 秒；每组九个计划探针缺失/失败均保留。此前已具备完整调用树所有权路径，本次不重复大体积全树采集。根对照协议与每组协议在各自启动前保存；短资源入口元数据位于结果中。
+
+新增五项回归先因缺少控制/模式失败，初次 HTTP 测试只验证了 JSON 编码，完整 **92 项 Python 测试通过**，但随后实际 VM 拒绝了带引号的枚举列表；该测试不足以证明 VM 协议兼容。对照不清空已有事件、不强制 GC、不修改生产播放器、Dart、生成代码或 SDK；固定顺序、缓存未受控及 MSL 开销限制了性能与长期推论。
+
+预备运行启用组 `macos-resource-20261008T014213Z`（PID 36824）十轮播放通过，但控制请求收到 -32602 invalid params，九个探针中零个合格；关闭组的空列表成功，九个合格，但整组比较不准入。所有原始失败响应、journal、资源记录与运行源码身份保留。根因经[本机 Dart revision 对应官方源码](https://github.com/dart-lang/sdk/blob/98116461144f4429ab873f8497023a5ec3b08127/runtime/vm/service.cc#L210)确认：HTTP 路径的 EnumListParameter 接收 `[Dart,Embedder,GC,Microtask]`，不是带引号的 JSON 字符串数组。新增正确传输期望先观察 RED，再作方法专用编码修正；实际状态仍须回读验证，不依赖传输单测自行推定成功。v2 协议明确该编码，重新运行完整独立对照。
+
+### 正式对照结果
+
+最终启用组 `macos-resource-20261008T014814Z` / PID **38174**，关闭组 `macos-resource-20261008T015046Z` / PID **38696**；两组均 **10/10 播放、9/9 窗口探针合格**，监控错误为空。共同 sourceHash **af5081a98b0da0ea981c04b5e8e707a96d6d6369bca33dcad91ba96b18b5a955**、704 项源码指纹；依赖/原生制品/媒体、设备和资源协议一致。M1 / MacBookPro17,1 / macOS 27.0 (26A428)、arm64 profile、managedFallback/hardware。启用/关闭分别 382 / 381 个资源点，全可用，实际均 ac/nominal；资源跨度 **124.130260 / 124.041847 秒**，命令耗时 **151.644994 / 150.014782 秒**。
+
+`matchedConditions` 自动检查声明条件、源码和初始 Timeline 状态；实际电源/热状态另从所有资源点核验，不误称该字段包含所有环境控制。每组 VM 的 PID 与应用/系统 group 在三个窗口一致，干预后所有 Profiler 回读为 false。Timeline recorder 均为 Ring；启用组三窗实际 recordedStreams 均为四类，关闭组三窗均为空。两组干预前均为原有四类流，未声称从进程启动即关闭，也未调用清空接口。
+
+| 分配类型 | 启用 disposed 2 数量 / B | 启用 disposed 8 数量 / B | 关闭 disposed 2 数量 / B | 关闭 disposed 8 数量 / B |
+|---|---:|---:|---:|---:|
+| TimelineEventArguments::CopyArgument | 5,513 / 89,536 | 5,939 / 98,144 | 820 / 13,728 | 820 / 13,728 |
+| malloc in Dart_RecordTimelineEvent | 3,616 / 57,856 | 3,859 / 61,744 | 514 / 8,224 | 514 / 8,224 |
+| AddAsyncTrackMetadataBasedOnEvent | 1,808 / 28,928 | 5,062 / 80,992 | 259 / 4,144 | 259 / 4,144 |
+| malloc in SimpleHashMap::Lookup | 2 / 99,072 | 2 / 197,376 | 2 / 13,056 | 2 / 13,056 |
+| FlutterEngineHandlerInfo | 9 / 288 | 9 / 288 | 9 / 288 | 9 / 288 |
+| 全部 heap | 87,308 / 11,901,593 | 92,219 / 11,725,065 | 74,015 / 11,558,393 | 74,159 / 11,220,409 |
+
+关闭组前三类在 live 1 也分别为 820/13,728、514/8,224、259/4,144，保持至第八轮；保留的初始分配没有被强制清空。结合上一项完整栈来源和本次受控流切换，支持 **Timeline 记录贡献了这些分配类型的持续增长**。启用组异步元数据增加 3,254 个 / 52,064 B、hash map 类型增加 98,304 B，而关闭组对应行不变；并不证明每个泛用 hash map 的具体所有权，也不把两次运行的绝对值相减当作回收字节或性能提升比例。
+
+其他指标仍不能裁定完全稳定：关闭组第 2→8 轮总 heap 节点增加 144、字节减少 337,984 B，Malloc Small 脏页 16.3M→16.4M。启用组总 heap 节点增加 4,911、字节减少 176,528 B，Malloc Small 16.7M→16.8M。普通 disposed 第 1→10 轮启用组 RSS/footprint 增加 **3,702,784 / 3,063,808 B**，关闭组增加 **2,260,992 / 1,753,088 B**，端点跨度分别 97.778321 / 97.703888 秒；MSL、缓存、首次加载和分配器行为仍影响这些数值。没有全局无泄漏、长期平台期或生产性能优化结论。
+
+### 证据、裁定与后续
+
+[完整对照证据](../../../tool/playback_benchmark/macos-timeline-control-observations.json)为 **52,077,814 B**，保留预备和正式四次运行的 84 份原始文件、103 个 RPC 响应及 10 份 journal、九份完整 heap/详细 vmmap、所有协议/资源记录、四个实际应用可执行文件与源码/依赖/制品/媒体指纹、官方 SDK revision 源码片段和五份测试日志。预备启用组失败、关闭组单独通过均保留，整个预备比较仍为 false；36 个计划探针中 27 个合格、1 个实际控制失败、8 个未观测，未缩小分母。
+
+归档再次核对所有身份/原始哈希、资源日志/JSONL/结果一致性、摘要重算、RPC 顺序回放与 journal 内容重组、可观测探针时间窗口、heap 类型总和与 vmmap 解析，正式两组条件和实际 ac/nominal 一致。完整原文件另存忽略工作区 `timeline-preliminary/` 和 `timeline-final/`。方法修正后的完整 **92 项 Python 测试通过**，独立复审结论另附。
+
+下一项为**Profiler 与 Timeline 均关闭后的百轮资源/生命周期复核**：预先固定无 MSL 的长程协议，继续回读实际状态，再判断剩余增长。关闭 Timeline 是诊断条件调整，不是本插件生产修复；本项没有生产或 SDK 改动。连续长片、后台/多播放器/低内存、物理音画、跨设备/最低系统、DRM 授权验收、正式呈现/性能基线和完整 P08 Task1/2 保持开放。
+
+独立最终复审通过：84 份原始文件、四组各 704 项源码指纹、全部依赖/制品/媒体/应用身份、103 个 RPC 与 10 份 journal、九份 heap/vmmap、36 个计划探针及所有资源摘要均一致，报告数字核验通过；Critical / Important / Minor 均无遗留。本 Timeline-control 切片可提交，上述所有权/泄漏/长期稳定性和完整 P08 边界不变。

@@ -41,7 +41,9 @@ def capture_tree(marker,output):
     return r
 
 
-def collect_stacks(output,flutter):
+def collect_stacks(output,flutter,*,timeline_arm=None):
+    if timeline_arm not in (None,'on','off'):raise ValueError('Invalid timeline arm')
+    observers=('timeline-control','heap','vmmap') if timeline_arm else OBSERVERS
     if any(k.startswith('MallocStackLogging') for k in os.environ):raise ValueError('Inherited stack logging must be absent')
     raw_us();output.mkdir(parents=True,exist_ok=False)
     run_output=output/'run';wrapper=output/'flutter-stacks'
@@ -56,9 +58,14 @@ def collect_stacks(output,flutter):
         launchEnvironment=dict(MallocStackLogging='full',MallocStackLoggingNoCompact='1'),
         scriptSha256=digest(Path(__file__)),launcherSha256=digest(Path(__file__).with_name('run_address_history.py')),
         wrapperSha256=digest(wrapper),performanceBaseline=False,budgetAdmission=False,leakVerdict=None)
+    if timeline_arm:
+        protocol.update(purpose='short-timeline-control-arm',arm=timeline_arm,observers=observers,
+                        timelineIntervention='set recordedStreams at live-1; observe at disposed-2/8',
+                        requestedStreams=['Dart','Embedder','GC','Microtask'] if timeline_arm=='on' else [])
+        for key in ('classSelection','treeOptions','treeTimeoutSeconds'):protocol.pop(key)
     (output/'protocol.json').write_text(json.dumps(protocol,indent=2)+'\n')
     records={(n,phase,tool):dict(attempt=n,phase=phase,tool=tool,status='not_observed',qualified=False)
-             for n,phase in WINDOWS for tool in OBSERVERS}
+             for n,phase in WINDOWS for tool in observers}
     markers={};errors=[];pid=None;done=threading.Event();collected=False
     def persist():
         (output/'allocation-probes.json').write_text(json.dumps(dict(records=list(records.values()),
@@ -77,19 +84,24 @@ def collect_stacks(output,flutter):
                 continue
             markers[mk]=m
             if m['edge']!='begin' or not capture:continue
-            r=capture_control(m,run_output,'off' if key==(1,'live') else 'observe')
-            records[(*key,'profiler-control')]=r;persist()
-            if r['status']!='captured' or r['control']['after'] is not False:
-                raise ValueError('Profiler-off state not verified')
+            if timeline_arm:
+                from run_timeline_comparison import capture_timeline
+                r=capture_timeline(m,run_output,timeline_arm if key==(1,'live') else 'observe')
+            else:r=capture_control(m,run_output,'off' if key==(1,'live') else 'observe')
+            records[(*key,observers[0])]=r;persist()
+            if r['status']!='captured':raise ValueError('Control unavailable')
+            if timeline_arm:
+                if set(r['control']['after']['recordedStreams'])!=set(protocol['requestedStreams']):raise ValueError('Timeline state not verified')
+            elif r['control']['after'] is not False:raise ValueError('Profiler-off state not verified')
             records[(*key,'heap')]=capture_probe(m,'heap',run_output);persist()
-            records[(*key,'allocation-tree')]=capture_tree(m,run_output);persist()
+            records[(*key,observers[2])]=capture_probe(m,'vmmap',run_output,detailed=True) if timeline_arm else capture_tree(m,run_output);persist()
     def monitor():
         while not done.wait(.1):
             try:consume(True)
             except (OSError,ValueError,KeyError,TypeError) as e:
                 errors.append(type(e).__name__);persist();return
     thread=threading.Thread(target=monitor);thread.start()
-    try:collected=collect(run_output,str(wrapper),profile_cycles=True,lifetime_probes=True,allocation_stacks=True)
+    try:collected=collect(run_output,str(wrapper),profile_cycles=True,lifetime_probes=True,allocation_stacks=timeline_arm is None,timeline_control=timeline_arm is not None)
     finally:done.set();thread.join();persist()
     try:
         consume(False)
@@ -99,7 +111,7 @@ def collect_stacks(output,flutter):
                 raise ValueError('Incomplete resource workload')
         for (n,phase,tool),r in records.items():
             r['qualified']=validate_window(markers.get((n,phase,'begin')),markers.get((n,phase,'end')),r)
-        controls=[records[(n,phase,'profiler-control')] for n,phase in WINDOWS]
+        controls=[records[(n,phase,observers[0])] for n,phase in WINDOWS]
         if all(r['qualified'] for r in controls):
             if len({json.dumps(r['control']['vmIdentity'],sort_keys=True) for r in controls})!=1:raise ValueError('VM group identity changed')
     except (OSError,ValueError,KeyError,TypeError) as e:errors.append(type(e).__name__)

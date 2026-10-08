@@ -49,7 +49,7 @@ def read_memory(rpc,pid,*,include_system=False):
     return dict(scope='application-and-system-isolate-groups' if include_system else 'non-system-isolate-groups',groups=result,forcedGC=False,addressOwnership=None)
 
 
-def http_rpc(uri,records,deadline,*,journal,allow_profiler_control=False):
+def http_rpc(uri,records,deadline,*,journal,allow_profiler_control=False,allow_timeline_control=False):
     p=urlsplit(service_uri('Connecting to Flutter application at '+uri))
     def persist(event):
         with journal.open('a') as stream:
@@ -61,9 +61,12 @@ def http_rpc(uri,records,deadline,*,journal,allow_profiler_control=False):
         if method=='setFlag':
             if not allow_profiler_control or params not in ({'name':'profiler','value':'true'},{'name':'profiler','value':'false'}):
                 raise ValueError('Unsupported profiler control')
-        elif method not in ('getVM','getIsolateGroupMemoryUsage','getFlagList'):
+        elif method=='setVMTimelineFlags':
+            if not allow_timeline_control or params not in ({'recordedStreams':[]},{'recordedStreams':['Dart','Embedder','GC','Microtask']}):
+                raise ValueError('Unsupported timeline control')
+        elif method not in ('getVM','getIsolateGroupMemoryUsage','getFlagList','getVMTimelineFlags'):
             raise ValueError('Unsupported read-only method')
-        if method=='getFlagList' and params:raise ValueError('Unexpected flag-list parameters')
+        if method in ('getFlagList','getVMTimelineFlags') and params:raise ValueError('Unexpected flag-list parameters')
         remaining=deadline-time.monotonic()
         if remaining<=0:raise TimeoutError('Memory observation deadline')
         sequence+=1
@@ -71,7 +74,7 @@ def http_rpc(uri,records,deadline,*,journal,allow_profiler_control=False):
         persist(dict(identity,stage='request',params=params))
         connection=http.client.HTTPConnection(p.hostname,p.port,timeout=min(2,remaining))
         try:
-            connection.request('GET',p.path+method+('?' + urlencode(params) if params else ''))
+            connection.request('GET',p.path+method+('?' + urlencode({'recordedStreams':'['+','.join(params['recordedStreams'])+']'} if method=='setVMTimelineFlags' else params) if params else ''))
             response=connection.getresponse()
             persist(dict(identity,stage='headers',httpStatus=response.status))
             raw=bytearray()

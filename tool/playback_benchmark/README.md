@@ -559,3 +559,25 @@ attribution scope. Stack logging perturbs resources; do not compare these
 numbers directly with the prior uninstrumented hundred-cycle run as a
 performance improvement or claim all residual growth is explained. No forced GC,
 production changes, startup-disabled profiling, or global leak verdict.
+
+### Timeline stream control comparison
+
+```sh
+python3 -B tool/playback_benchmark/run_timeline_comparison.py NEW_DIRECTORY /path/to/flutter
+```
+
+Freezes an on/off pair before launch. Both independent ten-cycle profile arms
+use MallocStackLogging=full/NoCompact and disable the sampling profiler after
+first load. At live 1, `setVMTimelineFlags` selects Dart/Embedder/GC/Microtask
+or an empty list; `getVMTimelineFlags` verifies recorder, supported streams and
+actual recorded streams. Disposed 2/8 are read-only, including profiler checks.
+No `clearVMTimeline`, forced GC, SDK edit or startup-disabled claim is involved.
+
+Each 20-second window collects control, full `heap --noContent` type rows and
+detailed vmmap, with ten-second process bounds and exact owned PID/group/window
+gates. All nine planned probes per arm remain, including failed/missing captures.
+The root pair and each arm protocol are saved before their respective launches;
+short resource metadata is saved in results. The resource conditions and initial
+Timeline state must match across distinct PIDs. Fixed order, uncontrolled OS
+cache and MSL overhead limit interpretation: compare identified allocation
+sources, not product performance percentages or global leak status.

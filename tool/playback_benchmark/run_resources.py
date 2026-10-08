@@ -37,7 +37,9 @@ def run_logged(command, cwd, path, timeout):
             raise
 
 
-def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifetime_probes=False, endurance=False, long_lifetime_probes=False, memory_mapping=False, profiler_off_lifetimes=False, allocation_stacks=False):
+def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifetime_probes=False, endurance=False, long_lifetime_probes=False, memory_mapping=False, profiler_off_lifetimes=False, allocation_stacks=False, timeline_control=False):
+    if timeline_control and (not profile_cycles or not lifetime_probes or allocation_stacks or harness_only or endurance or long_lifetime_probes or memory_mapping or profiler_off_lifetimes):
+        raise ValueError('Timeline control requires an independent short playback protocol')
     if allocation_stacks and (not profile_cycles or not lifetime_probes or harness_only or endurance or long_lifetime_probes or memory_mapping or profiler_off_lifetimes):
         raise ValueError('Allocation stacks require an independent short playback protocol')
     if profiler_off_lifetimes and (not long_lifetime_probes or memory_mapping):
@@ -93,6 +95,12 @@ def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifeti
                                   profilerIntervention='off at live-1; read-only at disposed-2/8',
                                   launchEnvironment=dict(MallocStackLogging='full',MallocStackLoggingNoCompact='1'),
                                   forcedGC=False,treeTimeoutSeconds=8)
+    if timeline_control:
+        result.update(purpose='short-timeline-control',timelineControl=True)
+        result['protocol'].update(observers=['VM profiler-off and timeline control/readback','heap --noContent','vmmap -wide -interleaved -noCoalesce'],
+                                  intervention='runtime at live-1; read-only at disposed-2/8',
+                                  launchEnvironment=dict(MallocStackLogging='full',MallocStackLoggingNoCompact='1'),
+                                  forcedGC=False,observerTimeoutSeconds=10)
     try:
         paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','--','packages','tool/playback_benchmark'],cwd=ROOT,text=True).splitlines()
         source={n:digest(ROOT/n) for n in sorted(set(paths)) if Path(n).suffix in (
