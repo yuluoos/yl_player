@@ -8,6 +8,81 @@ import YlFFmpegBridge
 
 final class YlMacosAudioTests: XCTestCase {
 
+  private final class WeakCompletionPayload {
+    weak var value: NSObject?
+    init(_ value: NSObject) { self.value = value }
+  }
+
+  func testCompletionGroupDropsUndeliveredPayloadIndependently() {
+    var group: YlAudioCompletionGroup? = YlAudioCompletionGroup()
+    var first: NSObject? = NSObject()
+    var second: NSObject? = NSObject()
+    weak var firstWeak = first
+    weak var secondWeak = second
+    var firstCompletion: (() -> Void)? = group!.makeCompletion { [value = first!] in
+      withExtendedLifetime(value) {}
+    }
+    let secondCompletion = group!.makeCompletion { [value = second!] in
+      withExtendedLifetime(value) {}
+    }
+    first = nil
+    second = nil
+    group = nil // Escaped callbacks keep only their own work alive.
+    XCTAssertNotNil(firstWeak)
+    XCTAssertNotNil(secondWeak)
+    withExtendedLifetime(firstCompletion) {}
+    firstCompletion = nil
+    XCTAssertNil(firstWeak)
+    XCTAssertNotNil(secondWeak)
+    secondCompletion()
+    XCTAssertNil(secondWeak)
+    secondCompletion()
+  }
+
+  func testCompletionGroupConcurrentDuplicateDeliveryCanReenter() {
+    let group = YlAudioCompletionGroup()
+    let counterLock = NSLock()
+    var deliveries = 0
+    let completion = group.makeCompletion {
+      counterLock.lock()
+      deliveries += 1
+      counterLock.unlock()
+      let nested = group.makeCompletion {
+        counterLock.lock()
+        deliveries += 1
+        counterLock.unlock()
+      }
+      nested()
+      nested()
+    }
+    let finished = expectation(description: "Concurrent delivery finishes without lock reentry deadlock")
+    DispatchQueue.global().async {
+      DispatchQueue.concurrentPerform(iterations: 200) { _ in completion() }
+      finished.fulfill()
+    }
+    wait(for: [finished], timeout: 5)
+    counterLock.lock()
+    let actual = deliveries
+    counterLock.unlock()
+    XCTAssertEqual(actual, 2)
+  }
+
+  func testCompletionGroupRetiresBodiesWhileAllCallbacksStayAlive() {
+    let group = YlAudioCompletionGroup()
+    var callbacks: [() -> Void] = []
+    var references: [WeakCompletionPayload] = []
+    for _ in 0..<1000 {
+      let value = NSObject()
+      references.append(WeakCompletionPayload(value))
+      callbacks.append(group.makeCompletion { withExtendedLifetime(value) {} })
+    }
+    XCTAssertEqual(references.filter { $0.value != nil }.count, 1000)
+    for callback in callbacks { callback() }
+    XCTAssertEqual(references.filter { $0.value != nil }.count, 0)
+    for callback in callbacks { callback() }
+    withExtendedLifetime(callbacks) {}
+  }
+
   func testPlayedSystemAudioReleasesPCMAndLedgerWhileOutputRemainsAlive() throws {
     let ledger = YlManagedBufferLedger()
     let scope = try ledger.makeScope(maxBytes: nil)
