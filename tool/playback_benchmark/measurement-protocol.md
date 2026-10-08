@@ -292,3 +292,36 @@ limit event for oversized responses. The parent records the journal hash even if
 the child times out without a final JSON result. Service endpoint remains absent
 from journal metadata. Actual local HTTP hard-kill/malformed/oversized regression
 tests demonstrate retention; there is no relaxation of the qualification gate.
+
+## Continuous playback memory probes (independent diagnostic)
+
+Run `python3 tool/playback_benchmark/run_continuous_memory.py NEW_DIRECTORY FLUTTER_EXECUTABLE`
+on macOS with a fresh output directory. The v2 root and nested protocols are
+saved before launch. This reuses the original single-session twenty-minute
+synthetic AVC/AAC workload; it does not change production code or the continuous
+validator's timing, progress, state or cleanup gates.
+
+Three live tick windows, 0–10, 120–130 and 230–240, bracket four sequential
+observers each: Profiler/Timeline control, heap, detailed vmmap, and application
+plus system isolate-group memory. The probe `attempt` field is a checkpoint
+ordinal (1–3); there is only one playback attempt. Profiler=false and Timeline=[]
+are set and read back in the first window, then only observed in the remaining
+two. This is neither startup-disabled instrumentation nor proof of uninterrupted
+flag state between checkpoints. No MSL, forced GC or Timeline clearing.
+
+Each command has a ten-second subprocess bound. Both capture endpoints must lie
+inside the actual CLOCK_MONOTONIC_RAW tick edges with matching process/session
+and VM group identities. Preserve all twelve planned slots, partial logs and RPC
+journals. A cadence/progress failure remains in the final continuity verdict but
+does not suppress later diagnostic probes. Invalid identities, state or resource
+records still stop monitoring; errors are persisted before waiting for playback.
+`complete=true` requires both all qualified probes and the unchanged playback gate.
+
+Native inspection can disturb playback. Clock-qualified heap snapshots are not
+proof of uninterrupted presentation. Report a failed continuity gate even when
+all diagnostic snapshots are available; do not retry until a lucky pass, relax
+thresholds or label that run a performance baseline. Retain ordinary two-second
+post-disposal process samples, but this protocol has no disposed-object window.
+Correlated type counts/categories nominate a retention path for regression and
+intervention; they do not establish every anonymous allocation's owner, a leak,
+a stable plateau or a memory budget.

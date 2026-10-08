@@ -13,11 +13,15 @@ from run_resources import ROOT, EXAMPLE, HERE, digest, run_logged
 from summarize import unique_object, reject_constant
 
 
-def collect(output,flutter):
+def collect(output,flutter,*,memory_diagnostics=False):
+    protocol=dict(PROTOCOL)
+    if memory_diagnostics:
+        from run_continuous_memory import diagnostic_protocol
+        protocol=diagnostic_protocol()
     if any(k.startswith('MallocStackLogging') for k in os.environ):raise ValueError('Inherited stack logging must be absent')
     output.mkdir(parents=True,exist_ok=False)
     run='macos-continuous-'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ')
-    result=dict(schemaVersion=1,runId=run,stage='setup',complete=False,protocol=PROTOCOL,
+    result=dict(schemaVersion=1,runId=run,stage='setup',complete=False,protocol=protocol,
         performanceBaseline=False,budgetAdmission=False,physicalOutput='not_verified',leakVerdict=None)
     try:
         files=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','--','packages','tool/playback_benchmark'],cwd=ROOT,text=True).splitlines()
