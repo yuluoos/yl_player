@@ -581,3 +581,25 @@ short resource metadata is saved in results. The resource conditions and initial
 Timeline state must match across distinct PIDs. Fixed order, uncontrolled OS
 cache and MSL overhead limit interpretation: compare identified allocation
 sources, not product performance percentages or global leak status.
+
+### Long profiler and Timeline disabled observation
+
+```sh
+python3 -B tool/playback_benchmark/run_timeline_comparison.py --long-off NEW_DIRECTORY /path/to/flutter
+```
+
+This independent profile run rejects inherited MallocStackLogging settings and
+uses the existing 100-cycle workload, at least 600 seconds of resource sampling,
+and four 30-second windows (live 1; disposed 10/50/100). Both the root diagnostic
+and resource protocols are saved before launching their measured process.
+At live 1, set profiler false and Timeline recordedStreams empty, then read back;
+later windows only observe state. Each window captures control, heap --noContent,
+detailed vmmap and application/system isolate-group memory, in that order.
+All 16 planned probes remain in the result. State, owned PID/group, native clock,
+full workload and minimum-duration gates must pass before completion.
+
+No MSL, clearVMTimeline, forced GC or production changes are involved. This is
+load/dispose endurance, not continuous movie playback. The intervention occurs
+after first load; initial recorder allocations may remain. This single run is
+not a matched on/off performance baseline and cannot establish global absence
+of leaks, long-term plateau or cross-device results.

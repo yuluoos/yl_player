@@ -37,7 +37,9 @@ def run_logged(command, cwd, path, timeout):
             raise
 
 
-def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifetime_probes=False, endurance=False, long_lifetime_probes=False, memory_mapping=False, profiler_off_lifetimes=False, allocation_stacks=False, timeline_control=False):
+def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifetime_probes=False, endurance=False, long_lifetime_probes=False, memory_mapping=False, profiler_off_lifetimes=False, allocation_stacks=False, timeline_control=False, timeline_off_lifetimes=False):
+    if timeline_off_lifetimes and (not long_lifetime_probes or profiler_off_lifetimes or memory_mapping or timeline_control or allocation_stacks):
+        raise ValueError('Timeline-off requires an independent long resource protocol')
     if timeline_control and (not profile_cycles or not lifetime_probes or allocation_stacks or harness_only or endurance or long_lifetime_probes or memory_mapping or profiler_off_lifetimes):
         raise ValueError('Timeline control requires an independent short playback protocol')
     if allocation_stacks and (not profile_cycles or not lifetime_probes or harness_only or endurance or long_lifetime_probes or memory_mapping or profiler_off_lifetimes):
@@ -87,6 +89,13 @@ def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifeti
                                   'vmmap -wide -interleaved -noCoalesce','VM application/system group memory'],
                                   profilerIntervention='setFlag(profiler,false) at live-1; read-only at disposed-10/50/100',
                                   vmMemoryScope='application-and-system-isolate-groups',forcedGC=False,
+                                  stackLogging=False,vmRpcReadTimeoutSeconds=2,vmProbeProcessTimeoutSeconds=10)
+    if timeline_off_lifetimes:
+        result.update(purpose='long-cycle-profiler-timeline-off-lifetimes',timelineOffLifetimes=True)
+        result['protocol'].update(observers=['VM profiler-off and Timeline-empty control/readback','heap --noContent',
+                                  'vmmap -wide -interleaved -noCoalesce','VM application/system group memory'],
+                                  intervention='profiler false and Timeline empty at live-1; read-only at disposed-10/50/100',
+                                  vmMemoryScope='application-and-system-isolate-groups',forcedGC=False,clearTimeline=False,
                                   stackLogging=False,vmRpcReadTimeoutSeconds=2,vmProbeProcessTimeoutSeconds=10)
     if allocation_stacks:
         result.update(purpose='short-profiler-off-allocation-stacks',allocationStacks=True)

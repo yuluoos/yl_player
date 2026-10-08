@@ -37,10 +37,12 @@ def capture_control(marker,output,mode):
     return r
 
 
-def collect_arm(output,flutter,arm,*,long_cycles=False):
+def collect_arm(output,flutter,arm,*,long_cycles=False,timeline_off=False):
+    if timeline_off and (not long_cycles or arm!='off'):raise ValueError('Timeline-off requires independent long off workload')
     if arm not in ('on','off') or (long_cycles and arm!='off'):raise ValueError('Unsupported profiler arm')
     windows=LONG_WINDOWS if long_cycles else WINDOWS
-    observers=('profiler-control','heap','vmmap','dart-memory') if long_cycles else OBSERVERS
+    control_tool='timeline-control' if timeline_off else 'profiler-control'
+    observers=(control_tool,'heap','vmmap','dart-memory') if long_cycles else OBSERVERS
     records={(n,phase,tool):dict(attempt=n,phase=phase,tool=tool,status='not_observed',qualified=False)
              for n,phase in windows for tool in observers}
     markers={};errors=[];pid=None;done=threading.Event();collected=False
@@ -62,10 +64,15 @@ def collect_arm(output,flutter,arm,*,long_cycles=False):
                 continue
             markers[mk]=m
             if m['edge']!='begin' or not capture:continue
-            r=capture_control(m,output,arm if key==(1,'live') else 'observe')
-            records[(*key,'profiler-control')]=r;persist()
-            if r['status']!='captured' or r['control']['after']!=(arm=='on'):
-                raise ValueError('Requested profiler state not verified')
+            if timeline_off:
+                from run_timeline_comparison import capture_timeline
+                r=capture_timeline(m,output,'off' if key==(1,'live') else 'observe')
+            else:r=capture_control(m,output,arm if key==(1,'live') else 'observe')
+            records[(*key,control_tool)]=r;persist()
+            if r['status']!='captured':raise ValueError('Control unavailable')
+            if timeline_off:
+                if r['control']['after']['recordedStreams']!=[]:raise ValueError('Timeline-off state not verified')
+            elif r['control']['after']!=(arm=='on'):raise ValueError('Requested profiler state not verified')
             for tool in observers[1:]:
                 records[(*key,tool)]=capture_probe(m,tool,output,detailed=True,include_system=True);persist()
     def monitor():
@@ -75,7 +82,7 @@ def collect_arm(output,flutter,arm,*,long_cycles=False):
                 errors.append(type(e).__name__);persist();return
     thread=threading.Thread(target=monitor);thread.start()
     try:collected=collect(output,flutter,profile_cycles=True,lifetime_probes=not long_cycles,
-                          long_lifetime_probes=long_cycles,profiler_off_lifetimes=long_cycles)
+                          long_lifetime_probes=long_cycles,profiler_off_lifetimes=long_cycles and not timeline_off,timeline_off_lifetimes=timeline_off)
     finally:done.set();thread.join();persist()
     try:
         consume(False)
@@ -86,7 +93,7 @@ def collect_arm(output,flutter,arm,*,long_cycles=False):
             if long_cycles and run['endurance']['protocolCompleted'] is not True:raise ValueError('Incomplete long resource protocol')
         for (n,phase,tool),r in records.items():
             r['qualified']=validate_window(markers.get((n,phase,'begin')),markers.get((n,phase,'end')),r)
-        controls=[records[(n,phase,'profiler-control')] for n,phase in windows]
+        controls=[records[(n,phase,control_tool)] for n,phase in windows]
         if all(r['qualified'] for r in controls):
             if len({json.dumps(r['control']['vmIdentity'],sort_keys=True) for r in controls})!=1:raise ValueError('VM group identity changed')
     except (OSError,ValueError,KeyError,TypeError) as e:errors.append(type(e).__name__)

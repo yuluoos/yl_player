@@ -8,7 +8,7 @@ from run_allocation_stacks import collect_stacks
 from run_lifetime_probes import raw_us
 from run_memory_categories import EXECUTABLE
 from run_resources import digest
-from lifetime_windows import WINDOWS
+from lifetime_windows import WINDOWS, LONG_WINDOWS
 
 
 def capture_timeline(marker,output,mode):
@@ -65,8 +65,32 @@ def collect_pair(output,flutter):
     (output/'comparison.json').write_text(json.dumps(result,indent=2)+'\n')
     return result['complete']
 
+def collect_long_off(output,flutter):
+    from run_profiler_comparison import collect_arm
+    if any(k.startswith('MallocStackLogging') for k in os.environ):raise ValueError('Stack logging must be absent')
+    raw_us();output.mkdir(parents=True,exist_ok=False)
+    protocol=dict(schemaVersion=1,purpose='long-profiler-timeline-off-lifetimes',plannedAttempts=100,
+        windows=LONG_WINDOWS,checkpointSeconds=30,minimumObservationSeconds=600,
+        observers=['timeline-control','heap','vmmap','dart-memory'],recordedStreams=[],
+        intervention='profiler false and Timeline empty at live-1; read-only at disposed-10/50/100',
+        startup='unchanged; intervention after first load',clearTimeline=False,forcedGC=False,stackLogging=False,
+        vmIdentity='exact PID plus application/system group IDs; raw startTimes retained',
+        httpStreamEncoding='VM bracketed unquoted enum list',
+        observerTimeoutSeconds=10,rpcReadTimeoutSeconds=2,testTimeoutSeconds=900,commandTimeoutSeconds=1200,
+        cacheState='os-cache-uncontrolled',continuousPlayback=False,stopAfterFailure=True,
+        scriptSha256=digest(Path(__file__)),flutter=flutter,performanceBaseline=False,budgetAdmission=False,leakVerdict=None)
+    (output/'protocol.json').write_text(json.dumps(protocol,indent=2)+'\n')
+    arm=collect_arm(output/'off',flutter,'off',long_cycles=True,timeline_off=True)
+    result=dict(schemaVersion=1,protocolSha256=digest(output/'protocol.json'),arm=arm,
+                complete=arm['complete'],performanceBaseline=False,budgetAdmission=False,leakVerdict=None)
+    (output/'long-off.json').write_text(json.dumps(result,indent=2)+'\n')
+    return result['complete']
+
+
 if __name__=='__main__':
-    if len(sys.argv)!=3:raise SystemExit('Usage: run_timeline_comparison.py NEW_DIRECTORY FLUTTER_EXECUTABLE')
-    ok=collect_pair(Path(sys.argv[1]).resolve(),sys.argv[2])
-    print('Timeline comparison captured.' if ok else 'Incomplete diagnostic; raw evidence retained.')
+    args=sys.argv[1:];long=bool(args and args[0]=='--long-off')
+    if long:args=args[1:]
+    if len(args)!=2:raise SystemExit('Usage: run_timeline_comparison.py [--long-off] NEW_DIRECTORY FLUTTER_EXECUTABLE')
+    ok=(collect_long_off if long else collect_pair)(Path(args[0]).resolve(),args[1])
+    print('Timeline diagnostic captured.' if ok else 'Incomplete diagnostic; raw evidence retained.')
     raise SystemExit(0 if ok else 2)
