@@ -236,6 +236,151 @@ final class YlMacosAudioTests: XCTestCase {
     XCTAssertFalse(renderer.hasPendingPlayback)
   }
 
+  func testResourceRetirementDoesNotCompletePlaybackOrReleaseTimingBudget() throws {
+    let ledger = YlManagedBufferLedger()
+    let scope = try ledger.makeScope(maxBytes: nil)
+    scope.configureTimeline(try YlBoundedBufferPlan(minDurationMs: 0, maxDurationMs: 500, maxBytes: 16 * 1024 * 1024))
+    let converter = LifetimePCMConverter()
+    let output = SplitAudioOutput()
+    let renderer = YlAudioRenderer(bufferScope: scope, converter: converter, output: output)
+    defer { renderer.dispose() }
+    try renderer.configure(stream: .init(codec: .aac, sampleRate: 48000,
+      channelCount: 2, magicCookie: Data(), generation: 1))
+    XCTAssertEqual(try renderer.enqueue(packet: .init(data: Data(), ptsUs: 0,
+      durationUs: 21333, generation: 1)), .scheduled)
+    try renderer.play()
+    let underruns = renderer.underrunCount
+    XCTAssertEqual(scope.bufferedDurationUs, 21333)
+    output.callbacks[0].resourcesReleased()
+    output.callbacks[0].resourcesReleased()
+    XCTAssertEqual(scope.bufferedDurationUs, 21333)
+    XCTAssertNil(converter.buffers[0].value, "Payload must not remain in playback-only metadata")
+    XCTAssertEqual(renderer.scheduledBytes, 0)
+    XCTAssertEqual(renderer.scheduledDurationUs, 21333)
+    XCTAssertTrue(renderer.hasPendingPlayback)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 0)
+    XCTAssertEqual(renderer.underrunCount, underruns)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 8192,
+      "Conservative budget reservation must outlive early payload retirement")
+    output.callbacks[0].playedBack()
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+    XCTAssertEqual(scope.bufferedDurationUs, 0)
+    XCTAssertEqual(renderer.scheduledDurationUs, 0)
+    XCTAssertFalse(renderer.hasPendingPlayback)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 21333)
+    output.callbacks[0].playedBack()
+    XCTAssertEqual(renderer.underrunCount, underruns + 1)
+  }
+
+  func testSplitCompletionKeepsOldGenerationIsolatedAndDisposesOwnPayload() throws {
+    let ledger = YlManagedBufferLedger()
+    let converter = LifetimePCMConverter()
+    let output = SplitAudioOutput()
+    let renderer = YlAudioRenderer(bufferScope: try ledger.makeScope(maxBytes: nil),
+      converter: converter, output: output)
+    try renderer.configure(stream: .init(codec: .aac, sampleRate: 48000,
+      channelCount: 2, magicCookie: Data(), generation: 1))
+    XCTAssertEqual(try renderer.enqueue(packet: .init(data: Data(), ptsUs: 0,
+      durationUs: 21333, generation: 1)), .scheduled)
+    renderer.flush()
+    XCTAssertEqual(try renderer.enqueue(packet: .init(data: Data(), ptsUs: 500000,
+      durationUs: 21333, generation: 1)), .scheduled)
+    output.callbacks[0].resourcesReleased()
+    XCTAssertNil(converter.buffers[0].value)
+    XCTAssertEqual(renderer.scheduledBytes, 8192)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 16384)
+    output.callbacks[0].playedBack()
+    XCTAssertEqual(ledger.snapshot.currentBytes, 8192)
+    XCTAssertTrue(renderer.hasPendingPlayback)
+    XCTAssertEqual(renderer.scheduledDurationUs, 21333)
+    renderer.dispose()
+    output.callbacks[1].playedBack() // Complete directly, without a resource notification.
+    XCTAssertNil(converter.buffers[1].value)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+    output.callbacks[1].resourcesReleased()
+    XCTAssertFalse(renderer.hasPendingPlayback)
+  }
+
+  func testSplitResourceRetirementWhilePausedDoesNotAdvanceMediaTime() throws {
+    let output = SplitAudioOutput()
+    let renderer = YlAudioRenderer(converter: TestAudioConverter(), output: output)
+    defer { renderer.dispose() }
+    output.renderedAudioTime = .init(sampleTime: 0, sampleRate: 48000)
+    try renderer.configure(stream: .init(codec: .aac, sampleRate: 48000,
+      channelCount: 2, magicCookie: Data(), generation: 1))
+    XCTAssertEqual(try renderer.enqueue(packet: .init(data: Data(), ptsUs: 0,
+      durationUs: 250000, generation: 1)), .scheduled)
+    try renderer.play()
+    output.renderedAudioTime = .init(sampleTime: 4800, sampleRate: 48000)
+    renderer.pause(); renderer.setRate(2); output.renderedAudioTime = nil
+    output.callbacks[0].resourcesReleased()
+    XCTAssertTrue(renderer.hasPendingPlayback)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 100000)
+    output.callbacks[0].playedBack()
+    XCTAssertFalse(renderer.hasPendingPlayback)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 100000)
+  }
+
+  func testSplitCompletionConcurrentDuplicatesAndReentryAreOneShot() {
+    let group = YlAudioCompletionGroup()
+    let countLock = NSLock()
+    var resources = 0; var playback = 0; var reentries = 0
+    let callbacks = group.makeCallbacks(releaseResources: {
+      countLock.lock(); resources += 1; countLock.unlock()
+      group.makeCompletion { countLock.lock(); reentries += 1; countLock.unlock() }()
+    }, completePlayback: {
+      countLock.lock(); playback += 1; countLock.unlock()
+    })
+    let finished = expectation(description: "Concurrent split completions finish")
+    DispatchQueue.global().async {
+      DispatchQueue.concurrentPerform(iterations: 200) { index in
+        if index.isMultiple(of: 2) { callbacks.resourcesReleased() }
+        else { callbacks.playedBack() }
+      }
+      finished.fulfill()
+    }
+    wait(for: [finished], timeout: 5)
+    countLock.lock(); let actual = [resources, playback, reentries]; countLock.unlock()
+    XCTAssertEqual(actual, [1, 1, 1])
+  }
+
+  func testDroppingSplitCallbacksReleasesOnlyTheirOwnUndeliveredPayload() {
+    let group = YlAudioCompletionGroup()
+    var first: NSObject? = NSObject(); var second: NSObject? = NSObject()
+    weak var firstWeak = first; weak var secondWeak = second
+    var callbacks: YlAudioOutputCallbacks? = group.makeCallbacks(
+      releaseResources: { [value = first!] in withExtendedLifetime(value) {} },
+      completePlayback: {})
+    let other = group.makeCallbacks(
+      releaseResources: { [value = second!] in withExtendedLifetime(value) {} },
+      completePlayback: {})
+    first = nil; second = nil
+    XCTAssertNotNil(firstWeak); XCTAssertNotNil(secondWeak)
+    withExtendedLifetime(callbacks) {}
+    callbacks = nil
+    XCTAssertNil(firstWeak); XCTAssertNotNil(secondWeak)
+    other.playedBack()
+    XCTAssertNil(secondWeak)
+  }
+
+  private final class SplitAudioOutput: YlAudioOutputDriving {
+    var volume: Float = 1
+    var rate: Float = 1
+    var renderedAudioTime: YlRenderedAudioTime?
+    var callbacks: [YlAudioOutputCallbacks] = []
+    func configure(sampleRate: Double, channelCount: Int) throws {}
+    func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void) {
+      XCTFail("Renderer must submit distinct resource and playback callbacks")
+    }
+    func schedule(_ buffer: YlScheduledAudioBuffer, callbacks: YlAudioOutputCallbacks) {
+      self.callbacks.append(callbacks)
+    }
+    func play() throws {}
+    func pause() {}
+    func reset() {}
+    func dispose() {}
+  }
+
   private final class WeakPCM {
     weak var value: AVAudioPCMBuffer?
     init(_ value: AVAudioPCMBuffer) { self.value = value }

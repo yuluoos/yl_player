@@ -162,6 +162,7 @@ protocol YlAudioOutputDriving: AnyObject {
   func configure(sampleRate: Double, channelCount: Int) throws
   func configure(format: AVAudioFormat) throws
   func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void)
+  func schedule(_ buffer: YlScheduledAudioBuffer, callbacks: YlAudioOutputCallbacks)
   func play() throws
   func pause()
   func reset()
@@ -169,6 +170,11 @@ protocol YlAudioOutputDriving: AnyObject {
 }
 
 extension YlAudioOutputDriving {
+  // Existing outputs still signal both phases from their played-back callback.
+  func schedule(_ buffer: YlScheduledAudioBuffer, callbacks: YlAudioOutputCallbacks) {
+    schedule(buffer, completion: callbacks.playedBack)
+  }
+
   func configure(format: AVAudioFormat) throws {
     try configure(sampleRate: format.sampleRate, channelCount: Int(format.channelCount))
   }
@@ -444,16 +450,20 @@ final class YlAudioRenderer: YlAudioRendering {
     if shouldRestartOutput { waitingForAudio = false }
     lock.unlock()
 
-    let completion = completions.makeCompletion { [weak self] in
-      buffer.reservation?.endQueuedTiming()
-      self?.complete(
-        ptsUs: buffer.ptsUs,
-        durationUs: buffer.durationUs,
-        byteCount: buffer.byteCount,
-        completionGeneration: token
-      )
-    }
-    output.schedule(buffer, completion: completion)
+    // Only the resource phase captures PCM. Playback keeps scalar metadata and
+    // the conservative reservation so early resource release cannot free the
+    // global timing/byte budget while audio may still be downstream.
+    let ptsUs = buffer.ptsUs
+    let durationUs = buffer.durationUs
+    let playbackReservation = buffer.reservation
+    let callbacks = completions.makeCallbacks(releaseResources: { [weak self] in
+      self?.retireResources(byteCount: buffer.byteCount, completionGeneration: token)
+      withExtendedLifetime(buffer) {}
+    }, completePlayback: { [weak self] in
+      playbackReservation?.endQueuedTiming()
+      self?.completePlayback(ptsUs: ptsUs, durationUs: durationUs, completionGeneration: token)
+    })
+    output.schedule(buffer, callbacks: callbacks)
     if shouldRestartOutput, lock.withLock({
       !disposed && playbackRequested && completionGeneration == token
     }) {
@@ -625,10 +635,16 @@ final class YlAudioRenderer: YlAudioRendering {
     }
   }
 
-  private func complete(
+  private func retireResources(byteCount: Int, completionGeneration: UInt64) {
+    lock.withLock {
+      guard !disposed, self.completionGeneration == completionGeneration else { return }
+      scheduledByteCount = max(0, scheduledByteCount - max(0, byteCount))
+    }
+  }
+
+  private func completePlayback(
     ptsUs: Int64,
     durationUs: Int64,
-    byteCount: Int,
     completionGeneration: UInt64
   ) {
     lock.lock()
@@ -636,19 +652,28 @@ final class YlAudioRenderer: YlAudioRendering {
       lock.unlock()
       return
     }
-    if playbackRequested {
-      let end = max(0, ptsUs).addingReportingOverflow(max(0, durationUs))
-      if !end.overflow { playedPositionUs = max(playedPositionUs ?? 0, end.partialValue) }
-    }
+    updatePositionAfterPlayback(ptsUs: ptsUs, durationUs: durationUs)
+    retirePlayback(durationUs: durationUs)
+    lock.unlock()
+  }
+
+  // Caller holds the state lock and has validated the completion generation.
+  private func updatePositionAfterPlayback(ptsUs: Int64, durationUs: Int64) {
+    guard playbackRequested else { return }
+    let end = max(0, ptsUs).addingReportingOverflow(max(0, durationUs))
+    if !end.overflow { playedPositionUs = max(playedPositionUs ?? 0, end.partialValue) }
+  }
+
+  // Playback duration/count remain pending until output completion, even if PCM
+  // resources were released earlier. This phase owns underrun/drain decisions.
+  private func retirePlayback(durationUs: Int64) {
     scheduledDuration = max(0, scheduledDuration - max(0, durationUs))
-    scheduledByteCount = max(0, scheduledByteCount - max(0, byteCount))
     scheduledBufferCount = max(0, scheduledBufferCount - 1)
     if scheduledBufferCount == 0 { silenceHostTimeUs = nil }
     if YlAppleCompatibility.current.batchesAudioInput, scheduledBufferCount == 0, playbackRequested, !waitingForAudio {
       underruns += 1
       waitingForAudio = true
     }
-    lock.unlock()
   }
 
   deinit {

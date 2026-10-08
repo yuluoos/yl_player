@@ -664,9 +664,15 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     XCTAssertEqual(shared.ownerCount, 1)
     XCTAssertEqual(driver.calls, ["configure", "activate"])
     let retired = factory.sessions[0]
-    _ = try await f.load(AppleHostFixture.request("av", autoplay: true))
+    // Hold the current AV input locally: an unrelated TLS/DNS failure from the
+    // default placeholder URL would legitimately release its current lease.
+    let heldAV = try AppleHeldMediaServer(onRequest: {})
+    defer { heldAV.close() }
+    let heldAVURL = heldAV.url.deletingLastPathComponent().appendingPathComponent("active.mp4")
+    _ = try await f.load(AppleHostFixture.request("av", url: heldAVURL.absoluteString, autoplay: true))
     try retired.send(generation: retired.lastGeneration ?? 1, status: -1)
     await f.settle()
+    XCTAssertNil(f.host.initialState.failure, "Current input must remain healthy during retired-callback isolation")
     XCTAssertEqual(shared.ownerCount, 1, "Retiring the fallback or its delayed failure cannot release the AV session lease")
     try await f.host.stop()
     XCTAssertEqual(shared.ownerCount, 0)
