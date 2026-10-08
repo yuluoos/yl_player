@@ -1155,3 +1155,11 @@ Dart 用量先下降后上升，容量和 externalUsage 精确值全部保留。
 [本项源码与完整实验记录](../../../tool/playback_benchmark/macos-audio-tail-wait-observations.json)保留基线/候选源码、接口缺失和采集器缺失的 RED、14 项模型结果、139 项日志、冻结协议与二进制、逐缓冲事件和全部观察/heap，以及 tap 的流式帧核对汇总。SDK 弃用警告原样保留；未重跑未修改的生产原生或 iOS 套件，也未重跑上一项设备实验。
 
 最终独立复审可提交，Critical / Important / Minor 无遗留。核对 51 份归档原文 / 4,866,298B、当前/冻结/基线源码与二进制身份，重算 2,100 个事件、3,880 个观察及六份 heap，与报告一致；14/5/139 项通过日志和两个初始 RED 均保留。未重复设备或完整套件。第一声道以外的保真、物理音画、隐藏下游/整体内存与长期性能、生产媒体时钟及控制/并发交接、最低系统和设备/iOS/DRM/完整 P08 保持未验收；两项准入标志继续为 false。
+
+## 2026-10-08：有限点播候选适配方案与执行计划
+
+基于 `9c5967a` 完成生产源码核查与[五项实施计划](../plans/2026-10-08-apple-audio-terminal-integration.md)，并在[输出完成契约 §10](../specs/2026-10-08-audio-output-completion-contract.md)固定接入条件。此次只修改文档，未实现候选或运行播放器测试；文档自审覆盖接口、真实文件/测试镜像、相对链接与需求约束，不将此项计为生产性能验证。
+
+核查发现：转换器已持 token，直接移植工具 reserve 会重复计费；当前 scheduledBufferCount 同时参与时钟、underrun 和静音补时，不能用 rendered 资源计数直接替换。首次 held PCM 要等实际提交才锚定，EOF/watchdog 提交也须通知 pipeline；system stop 回调与 operations/session 锁需异步交接。buffer.bounded 的 scope 时间驱动暂停，首阶段保留原路径；这不是放宽其约束或减少已有支持。
+
+计划依次交付纯准入策略、明确输出通知、真实预算/最终排空、时钟/控制/单个观察 timer，以及真实生产路径和独立长播证据。候选默认关闭，首阶段限 macOS 本地有限可 seek、rate=1、AAC/48kHz 双声道实际 Float32 planar 且最多1024帧；真实首素材为 AAC-LC，不外推全部 AAC profile。兼容回退继续有逐缓冲保留限制；productionAdmission/downstreamBoundProven 保持 false。网络/直播、bounded 候选、iOS/设备/最低系统、物理音画、完整长期资源和 P08 Task1/2 仍未完成；原期限/分组失败完整保留。

@@ -95,3 +95,19 @@ EOF 将保留的真实末尾 PCM 以 playedBack 提交，整个 generation 只�
 兼容回退会恢复已知的逐缓冲系统对象保留，因此不能作为“任何网络状态下整体内存有界”的解法。本次无 MSL、播放中无 heap 的节点 tap 实验中，连续供给 2,000 块 / 2,048,000 帧逐帧序号完全连续，没有内部零值帧；主动断供 300ms 后恢复的场景在 108.058ms 触发回退，100 块完整交付，但留下 61 个 playedBack 外壳。帧序号观测位于 player 节点第一声道，最终 mixer 静音，不代表物理输出或生产音画同步。
 
 本项确定了可测的兼容行为，尚未证明隐藏下游工作集、长播或所有控制操作。后续生产适配方案应明确连续有限点播的适用范围及回退后的资源边界，补齐媒体时钟/暂停/seek/rate/路由/代际交接和独立长播；不能将本地节点连续性通过写成全面生产准入。此前期限与分组方案的否决保持有效。
+
+## 10. 默认关闭的点播适配设计
+
+本节是下一实施阶段的设计约束，尚未替代 §1–6 的生产行为。实施任务见[候选接入计划](../plans/2026-10-08-apple-audio-terminal-integration.md)。首阶段只允许内部显式注入的 macOS managed fallback、本地、非直播、正时长且可 seek 输入；rate=1、AAC、实际 PCM 为 48kHz 双声道 Float32 planar、每块 1…1024 帧。格式依据实际 stream 与转换后 PCM 双重判断；AAC 家族判断不代表全部 profile 已验证，首个真实素材固定 AAC-LC。默认保持 legacy，不新增公开配置或能力声明。
+
+**buffer.bounded 首阶段继续原路径。** 现有 session 用 scope.bufferedDurationUs 决定缓冲暂停；若普通 rendered 直接退还时间，输出仍在下游却可能被判为零缓冲。此计划不改变该硬约束，也不以候选的资源计数代替播放队列。网络/HLS/RTMP、未知时长、iOS、DRM 及其他格式同样继续兼容播放，排除的是本次优化候选。
+
+生产转换器已经取得 token，renderer 必须接管既有 reservation/timing；自定义转换器仍沿既有 reserve 路径，不能套用工具模型的第二次 reserve。尾部计入相同预算；只有真实资源释放或输出已停止才能清除 PCM 再释放 token。普通 rendered 不意味着已播放，不推进媒体位置或伪造完成。候选排空需要 EOF、末尾 playedBack、所有资源与待提交工作清空；缺通知保持未排空。
+
+首次 held PCM 不锚定时钟；第二包、EOF 或 watchdog 实际提交该 PCM 时，才用经过 trim 的 PCM PTS 发出一次代际化锚点。pipeline 在自身执行上下文核验安装的 renderer 身份和 audioGeneration，迟到旧事件不影响新 session。时钟保留独立的已提交区间，pause 冻结，范围受提交末尾限制；资源归零不能抹去等待最终通知时的时钟。held/末尾 fence 期间禁止提前静音补时，最终通知确认后才沿既有视频尾部补时规则前进。
+
+回调在原生线程只投递通知，通过每 renderer 的串行交接队列进入既有 operations；不得在原生回调同步等待 stop/reset 持有的锁。原生 output 操作不持 state lock，renderer 不在锁内同步回调 session。reset 先隔离旧代，实际停止输出后才清除旧 owner，旧回调只释放自己的所有权。不得保留逐缓冲已渲染历史或创建逐缓冲 timer。
+
+一个 renderer 最多一个生命周期受控的观察 timer，目标 10ms，独立于 display tick；连续播放且仅有 held 尾部达到 100ms 时单向兼容。暂停重置连续窗口，取消/释放停止观察；实际 gap 必须记录，100ms 不是硬实时或物理输出保证。只有尾部而无法容纳 lookahead 时主动提交尾部走兼容，等待真实通知后再试，不能永久背压。rate/格式变化在改变输出前提交旧尾部并兼容；失效 graph/route 则 fence 并走既有失败/重建流程，不假定失效图仍可播放。seek/切轨/rebuild 停止并重新评估新代；同代恢复 rate=1 不重新启用候选。
+
+真实 adapter/媒体时钟/控制回归、独立无 heap 长播、下游工作集与物理音画/最低系统是分开的验收行。实现这些内部接口不代表默认启用；兼容回退仍恢复已知系统对象保留。`productionAdmission=false` 继续成立，`downstreamBoundProven=false` 在独立证据足够前不得改变；此前失败的期限与分组方案结论继续有效。

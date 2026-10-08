@@ -265,3 +265,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-10-08：P08完成独立资源预算/最终排空工具实验，真实ledger在普通rendered后退还PCM字节/时间，EOF仅一个真实尾部playedBack；10 Swift模型、最终134 Python通过。三组原生2004通知/3753观察/11heap，200与2000缓冲断供点都只有一块8192B/21333µs尾部、零完成外壳，EOF后仅1个外壳。尚未证明系统下游工作集或批准断供尾部等待，productionAdmission/downstreamBoundProven均false；生产未改，下一项先明确尾部等待及连续性/下游资源边界，再做生产适配，详见报告与契约§8。
 
 2026-10-08：P08完成工具级100ms连续尾部等待限额与当前代单向playedBack兼容回退，14 Swift/5采集器/139完整工具通过。无MSL、播放中无heap的节点tap验证：2000缓冲2048000帧无丢失/重复/内部静音；主动断供组108.058ms回退、100缓冲帧序完整，保留14282内部零值帧及61完成外壳。回退恢复已知系统保留，因此生产准入/下游有界均仍false；下一项制定连续有限点播适配范围并补齐媒体时钟/控制与长播，完整P08开放，详见契约§9及报告。
+
+2026-10-08：P08完成默认关闭的音频尾部候选接入设计，拆为准入策略、输出通知、renderer 预算/排空、时钟/控制、真实验收五项，见[实施计划](2026-10-08-apple-audio-terminal-integration.md)。首阶段仅 macOS 本地有限可 seek 点播，明确排除 buffer.bounded，保留其硬约束与原播放路径；默认 legacy、不接入商业 SDK。已核查生产 token、首次 PCM 提交锚点、回调锁序与无 display tick 定时观察边界。本项仅文档自审与路径核验，未改生产或执行测试，不计内存修复/正式准入；下一项执行子计划 Task 1，完整 P08 Task1/2 仍开放。
