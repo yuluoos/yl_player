@@ -112,6 +112,47 @@ let tests: [(String, () throws -> Void)] = [
       try check(q.drained && scope.ledger.snapshot.currentBytes == 0 && accepted <= 59,"serialized EOF race lost resource")
     }
   }),
+  ("tail_wait_falls_back_once_without_faking_completion", {
+    let (q,scope)=try make();_=add(q,0)
+    q.observePlayback(playing:true,nowUs:0);q.observePlayback(playing:true,nowUs:99999)
+    try check(q.takeSubmissions().isEmpty && q.fallbackCount == 0,"tail flushed before limit")
+    q.observePlayback(playing:true,nowUs:100000);let a=q.takeSubmissions()
+    try check(a.count == 1 && a[0].usesPlayedBack && !a[0].isTerminal && q.fallbackCount == 1,"missing real fallback tail")
+    try check(scope.ledger.snapshot.currentBytes == 10 && !q.drained,"deadline faked playback")
+    q.rendered(a[0].ticket);try check(q.pendingCount == 1,"rendered released legacy buffer")
+    q.playedBack(a[0].ticket);_=add(q,1);let next=q.takeSubmissions()
+    try check(next.count == 1 && next[0].usesPlayedBack,"fallback not sticky")
+    q.observePlayback(playing:true,nowUs:999999);try check(q.fallbackCount == 1,"repeated fallback")
+    q.finishInput();try check(q.takeSubmissions().isEmpty && !q.drained,"EOF inserted sentinel or fake completion")
+    q.playedBack(next[0].ticket);try check(q.drained,"legacy EOF did not drain")
+  }),
+  ("pause_and_nonstarved_input_do_not_consume_tail_wait", {
+    let (q,_)=try make();_=add(q,0)
+    q.observePlayback(playing:true,nowUs:0);q.observePlayback(playing:false,nowUs:90000)
+    q.observePlayback(playing:false,nowUs:900000);q.observePlayback(playing:true,nowUs:1000000)
+    q.observePlayback(playing:true,nowUs:1099999);try check(q.fallbackCount == 0,"pause counted as starvation")
+    _=add(q,1);q.observePlayback(playing:true,nowUs:2000000)
+    try check(q.fallbackCount == 0,"queued work mistaken for starvation")
+    release(q,q.takeSubmissions());q.observePlayback(playing:true,nowUs:3000000)
+    q.observePlayback(playing:true,nowUs:3100000);try check(q.fallbackCount == 1,"new starvation window not timed")
+  }),
+  ("EOF_after_legacy_tail_already_played_needs_no_extra_callback", {
+    let (q,_)=try make();_=add(q,0);q.observePlayback(playing:true,nowUs:0)
+    q.observePlayback(playing:true,nowUs:100000);let a=q.takeSubmissions();q.playedBack(a[0].ticket)
+    try check(!q.drained,"live input falsely drained")
+    q.finishInput();try check(q.drained && q.takeSubmissions().isEmpty,"late EOF waited for nonexistent callback")
+  }),
+  ("late_old_tail_and_clock_regression_do_not_poison_reset", {
+    let (q,_)=try make();_=add(q,0);q.observePlayback(playing:true,nowUs:100)
+    q.observePlayback(playing:true,nowUs:99);let old=q.takeSubmissions()[0]
+    try check(q.fallbackReason == .clockRegression,"bad clock silently extended wait")
+    q.resetAfterOutputStop();_=add(q,1);q.playedBack(old.ticket)
+    try check(q.fallbackCount == 0 && q.pendingCount == 1,"reset inherited legacy state")
+    q.finishInput();let last=q.takeSubmissions()[0];q.observePlayback(playing:true,nowUs:999999)
+    try check(q.fallbackCount == 0 && last.isTerminal,"EOF triggered extra fallback")
+    q.playedBack(last.ticket);try check(q.drained,"fresh EOF stalled")
+  }),
+
 ]
 var result:[[String:Any]]=[]
 for (name,test) in tests {

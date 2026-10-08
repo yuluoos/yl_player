@@ -24,8 +24,8 @@ class TerminalBudgetTests(unittest.TestCase):
             run=subprocess.run([str(out/'tests')],capture_output=True,text=True,timeout=15)
             self.assertEqual(run.returncode,0,run.stdout+run.stderr)
             rows=json.loads(run.stdout)
-            self.assertEqual(len(rows),10)
-            self.assertEqual(len({r['name'] for r in rows}),10)
+            self.assertEqual(len(rows),14)
+            self.assertEqual(len({r['name'] for r in rows}),14)
             self.assertTrue(all(r['passed'] for r in rows),rows)
 
 
