@@ -603,3 +603,41 @@ load/dispose endurance, not continuous movie playback. The intervention occurs
 after first load; initial recorder allocations may remain. This single run is
 not a matched on/off performance baseline and cannot establish global absence
 of leaks, long-term plateau or cross-device results.
+
+### Single-session continuous synthetic AVC observation
+
+```sh
+python3 -B tool/playback_benchmark/run_continuous.py NEW_DIRECTORY /path/to/flutter
+```
+
+`continuous-avc-v2` freezes one create/load/play and a 1,200-second observation
+starting after the public first-frame event and media position >=2 seconds.
+There are no pause, seek, loop or reload calls. The checked-in owned 1,260-second
+320×180/24 fps AVC + silent AAC fixture is generated with
+`generate_continuous_fixture.py` (fresh destination only, host FFmpeg required).
+The source, fixture, dependency/native artifact and sampler hashes, device,
+profile mode and complete protocol are saved before launching the workload.
+
+Each five-second record includes the same session ID, public playback state,
+position, selected audio/video presence and process resources. Any observed
+non-playing state or player failure is sticky, including between sample ticks.
+Rows are printed individually; interrupted/malformed runs retain their raw log.
+The classifier requires >=1,200 seconds, no gap above 7.5 seconds, interval media
+progress between 90–110% of raw-clock elapsed time and <=5 seconds cumulative
+drift. These are instrumentation/continuity gates, not product performance SLOs.
+Resource schema 3 names the distinct cadence and single attempt; the existing
+256-sample limit and schema 1/2 semantics remain. After disposal/unmount, two
+resource samples span at least two seconds; cleanup must be acknowledged.
+The test deadline is 22 minutes and command deadline is 25 minutes. A temporary
+`caffeinate -d -i -u -t 1500` assertion is owned by the command; it does not
+change power settings or guarantee that macOS foregrounds the test window.
+
+This run leaves Flutter's profile-mode profiler/Timeline configuration at its
+launch defaults; it performs no runtime state control and does not attest those
+flags. MallocStackLogging variables are rejected. No forced GC occurs. CPU is
+actual-time weighted; RSS/footprint, power and thermal are observations only.
+Do not compare resource amounts directly with the separately controlled
+profiler/Timeline-off cycle runs, claim a leak/plateau/optimization ratio, or
+infer physical video presentation, audible output or AV sync from public state.
+The low-resolution synthetic fixture supplies bounded duration coverage, not
+full-feature-film, high-bitrate, HDR, DRM, background or memory-pressure coverage.

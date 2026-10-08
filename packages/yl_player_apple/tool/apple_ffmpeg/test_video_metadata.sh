@@ -20,3 +20,5 @@ sh "$script_dir/test_transport_stream.sh"
 sh "$script_dir/test_avi.sh"
 
 sh "$script_dir/test_vp9_metadata.sh"
+
+sh "$script_dir/test_packet_framing.sh"

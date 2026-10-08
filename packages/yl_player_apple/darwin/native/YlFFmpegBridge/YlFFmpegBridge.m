@@ -1552,11 +1552,21 @@ int32_t ylf_create_video_sample_buffer(
       packet->value->size <= 0) {
     return YLFResultSampleBufferFailed;
   }
-  if (!ylf_convert_annexb_packet(&packet->value)) {
+  AVStream *stream = packet->owner->format->streams[packet->value->stream_index];
+  const AVCodecParameters *parameters = stream->codecpar;
+  bool nal_codec = parameters->codec_id == AV_CODEC_ID_H264 ||
+                   parameters->codec_id == AV_CODEC_ID_HEVC;
+  // The demuxed stream's avcC/hvcC record declares length-prefixed packets.
+  // A valid four-byte NAL length 0x000001xx looks like a three-byte Annex B
+  // start code. Never sniff/convert those packets based on their payload.
+  // Use demux framing, not the output CM format (Annex B is also normalized
+  // to avcC/hvcC there). Preserve the existing recovery for missing config.
+  bool length_prefixed = nal_codec && parameters->extradata != NULL &&
+      parameters->extradata_size > 0 && parameters->extradata[0] == 1;
+  if (nal_codec && !length_prefixed &&
+      !ylf_convert_annexb_packet(&packet->value)) {
     return YLFResultSampleBufferFailed;
   }
-
-  AVStream *stream = packet->owner->format->streams[packet->value->stream_index];
   bool is_keyframe = (packet->value->flags & AV_PKT_FLAG_KEY) != 0;
   CMSampleTimingInfo timing = {
       .duration = packet->value->duration > 0

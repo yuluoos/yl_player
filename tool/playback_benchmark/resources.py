@@ -15,20 +15,22 @@ def integer(v, minimum=0): return type(v) is int and minimum <= v <= 2**53-1
 
 
 def summarize_series(trial):
-    if not isinstance(trial, dict) or set(trial) != (TRIAL | {'workload'} if trial.get('schemaVersion') == 2 else TRIAL):
+    if not isinstance(trial, dict) or set(trial) != (TRIAL | {'workload'} if trial.get('schemaVersion') in (2,3) else TRIAL):
         raise ValueError('Invalid resource trial')
-    if (type(trial['schemaVersion']) is not int or trial['schemaVersion'] not in (1,2)
+    if (type(trial['schemaVersion']) is not int or trial['schemaVersion'] not in (1,2,3)
         or not isinstance(trial['runId'],str) or not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}',trial['runId'])
         or not integer(trial['pid'],1) or not integer(trial['attempt'],1)
         or not integer(trial['plannedAttempts'],1) or not 1 <= trial['attempt'] <= trial['plannedAttempts'] <= 100
-        or trial['buildMode'] not in ('debug','profile','release') or trial['intervalMs'] != 250
+        or trial['buildMode'] not in ('debug','profile','release') or trial['intervalMs'] != (5000 if trial['schemaVersion']==3 else 250)
         or trial['engine'] not in ('unknown','avPlayer','managedFallback')
         or trial['decoder'] not in ('unknown','hardware','software')
         or type(trial['intervalMs']) is not int
         or trial['outcome'] not in ('passed','failed','timeout','skipped')):
         raise ValueError('Invalid resource identity')
     workload=trial.get('workload','playback')
-    if workload not in ('playback','harness-only') or (workload=='harness-only' and
+    if trial['schemaVersion']==3 and (workload!='continuous-playback' or trial['attempt']!=1 or trial['plannedAttempts']!=1 or trial['buildMode']!='profile'):
+        raise ValueError('Invalid continuous resource protocol')
+    if workload not in (('continuous-playback',) if trial['schemaVersion']==3 else ('playback','harness-only')) or (workload=='harness-only' and
         (trial['buildMode']!='profile' or trial['engine']!='unknown' or trial['decoder']!='unknown')):
         raise ValueError('Invalid resource workload')
     rows=trial['samples']
