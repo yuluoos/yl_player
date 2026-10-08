@@ -1441,7 +1441,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     }
     guard shouldComplete, video.isDrained,
           presentation.pendingFrames.isEmpty,
-          (currentAudioRenderer?.scheduledDurationUs ?? 0) == 0 else { return }
+          !(currentAudioRenderer?.hasPendingPlayback ?? false) else { return }
     stateLock.withLock {
       guard !completionSent else { return }
       completionSent = true

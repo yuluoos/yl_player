@@ -170,6 +170,72 @@ final class YlMacosAudioTests: XCTestCase {
     XCTAssertEqual(ledger.snapshot.currentBytes, 0)
   }
 
+  func testRenderedClockAtEndDoesNotDrainPendingPlayback() throws {
+    let output = TestAudioOutput()
+    let renderer = YlAudioRenderer(converter: TestAudioConverter(), output: output)
+    defer { renderer.dispose() }
+    output.renderedAudioTime = .init(sampleTime: 0, sampleRate: 48000)
+    try renderer.configure(stream: .init(codec: .aac, sampleRate: 48000,
+      channelCount: 2, magicCookie: Data(), generation: 1))
+    XCTAssertEqual(try renderer.enqueue(packet: .init(data: Data(), ptsUs: 0,
+      durationUs: 250000, generation: 1)), .scheduled)
+    try renderer.play()
+    renderer.finishInput()
+    output.renderedAudioTime = .init(sampleTime: 48000, sampleRate: 48000)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 250000)
+    XCTAssertTrue(renderer.hasPendingPlayback, "Rendered position is not an output completion")
+    XCTAssertEqual(renderer.scheduledDurationUs, 250000)
+    output.completeNextBuffer()
+    XCTAssertFalse(renderer.hasPendingPlayback)
+    XCTAssertNil(renderer.renderedAudioTime, "Finished input may leave the audio clock only after drain")
+  }
+
+  func testPausedPlaybackCompletionReleasesCapacityWithoutAdvancingPosition() throws {
+    let output = TestAudioOutput()
+    let renderer = YlAudioRenderer(converter: TestAudioConverter(), output: output)
+    defer { renderer.dispose() }
+    output.renderedAudioTime = .init(sampleTime: 0, sampleRate: 48000)
+    try renderer.configure(stream: .init(codec: .aac, sampleRate: 48000,
+      channelCount: 2, magicCookie: Data(), generation: 1))
+    XCTAssertEqual(try renderer.enqueue(packet: .init(data: Data(), ptsUs: 0,
+      durationUs: 250000, generation: 1)), .scheduled)
+    try renderer.play()
+    output.renderedAudioTime = .init(sampleTime: 4800, sampleRate: 48000)
+    renderer.pause()
+    renderer.setRate(2)
+    output.renderedAudioTime = nil
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 100000)
+    XCTAssertTrue(renderer.hasPendingPlayback)
+    output.completeNextBuffer()
+    XCTAssertFalse(renderer.hasPendingPlayback)
+    XCTAssertEqual(renderer.scheduledBytes, 0)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 100000,
+      "In-flight completion during pause must not move the media position")
+  }
+
+  func testZeroDurationStillRequiresCurrentGenerationPlaybackCompletion() throws {
+    let output = TestAudioOutput()
+    let converter = TestAudioConverter()
+    converter.durationUs = 0
+    let renderer = YlAudioRenderer(converter: converter, output: output)
+    defer { renderer.dispose() }
+    try renderer.configure(stream: .init(codec: .aac, sampleRate: 48000,
+      channelCount: 2, magicCookie: Data(), generation: 1))
+    XCTAssertEqual(try renderer.enqueue(packet: .init(data: Data(), ptsUs: 0,
+      durationUs: 0, generation: 1)), .scheduled)
+    XCTAssertEqual(renderer.scheduledDurationUs, 0)
+    XCTAssertTrue(renderer.hasPendingPlayback, "Duration statistics cannot prove output drain")
+    let stale = output.retainedCompletion(at: 0)
+    renderer.flush()
+    XCTAssertFalse(renderer.hasPendingPlayback)
+    XCTAssertEqual(try renderer.enqueue(packet: .init(data: Data(), ptsUs: 100000,
+      durationUs: 0, generation: 1)), .scheduled)
+    stale()
+    XCTAssertTrue(renderer.hasPendingPlayback, "Old completion must not drain the new generation")
+    output.retainedCompletion(at: 1)()
+    XCTAssertFalse(renderer.hasPendingPlayback)
+  }
+
   private final class WeakPCM {
     weak var value: AVAudioPCMBuffer?
     init(_ value: AVAudioPCMBuffer) { self.value = value }
@@ -413,12 +479,13 @@ final class YlMacosAudioTests: XCTestCase {
   }
 
   private final class TestAudioConverter: YlAudioPacketConverting {
+    var durationUs: Int64 = 250_000
     func configure(stream: YlAudioStreamConfiguration) throws {}
 
     func estimateOutput(
       for packet: YlCompressedAudioPacket
     ) -> YlAudioBufferEstimate {
-      YlAudioBufferEstimate(durationUs: 250_000, byteCount: 1_000)
+      YlAudioBufferEstimate(durationUs: durationUs, byteCount: 1_000)
     }
 
     func convert(
@@ -427,7 +494,7 @@ final class YlMacosAudioTests: XCTestCase {
       YlScheduledAudioBuffer(
         payload: NSObject(),
         ptsUs: packet.ptsUs,
-        durationUs: 250_000,
+        durationUs: durationUs,
         byteCount: 1_000,
         generation: packet.generation
       )
@@ -438,7 +505,7 @@ final class YlMacosAudioTests: XCTestCase {
   private final class TestAudioOutput: YlAudioOutputDriving {
     var volume: Float = 1
     var rate: Float = 1
-    let renderedAudioTime: YlRenderedAudioTime? = nil
+    var renderedAudioTime: YlRenderedAudioTime? = nil
     private(set) var playCount = 0
     private(set) var isPlaying = false
     var onSchedule: (() -> Void)?

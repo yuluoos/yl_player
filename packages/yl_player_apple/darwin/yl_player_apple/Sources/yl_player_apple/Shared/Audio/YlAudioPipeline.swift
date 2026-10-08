@@ -34,6 +34,7 @@ final class YlAudioPipeline {
     }
     func play() throws { try renderer.play() }
     var scheduledDurationUs: Int64 { renderer.scheduledDurationUs }
+    var hasPendingPlayback: Bool { renderer.hasPendingPlayback }
     var scheduledBytes: Int { renderer.scheduledBytes }
     var underrunCount: Int { renderer.underrunCount }
     var renderedAudioTime: YlRenderedAudioTime? { renderer.renderedAudioTime }

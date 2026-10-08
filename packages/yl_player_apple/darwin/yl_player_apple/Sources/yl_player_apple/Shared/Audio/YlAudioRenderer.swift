@@ -256,6 +256,12 @@ final class YlAudioRenderer: YlAudioRendering {
     lock.withLock { scheduledDuration }
   }
 
+  // Output completion is independent of duration statistics and render progress.
+  // Flush/dispose invalidate this generation before clearing its pending count.
+  var hasPendingPlayback: Bool {
+    lock.withLock { scheduledBufferCount > 0 }
+  }
+
   var scheduledBytes: Int {
     lock.withLock { scheduledByteCount }
   }
