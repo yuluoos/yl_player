@@ -10,7 +10,7 @@
 
 **Spec:** [输出完成契约 §10](../specs/2026-10-08-audio-output-completion-contract.md)、[需求基线](../specs/2026-09-20-playback-expansion-requirements.md)、[P08](2026-09-26-remaining-08-performance-release.md)。
 
-起点 `9c5967a`。本文件只完成设计与任务拆分，以下任务均未执行；既有工具通过不能替代生产验收。
+起点 `9c5967a`。Task 1 已实现并验证；Task 2–5 尚未执行。既有工具通过不能替代生产验收。
 
 ## Global Constraints
 
@@ -90,7 +90,7 @@ enum YlAudioCompletionPolicy: Equatable {
 }
 ```
 
-- [ ] 写 `testTerminalPolicyRequiresExplicitEligibleContext`，至少固定下面的边界，不依赖真实设备声音：
+- [x] 写 `testTerminalPolicyRequiresExplicitEligibleContext`，至少固定下面的边界，不依赖真实设备声音：
 
 ```swift
 let eligible = YlAudioCompletionContext(enabled: true, platform: .macos,
@@ -103,10 +103,10 @@ let bounded = YlAudioCompletionContext(enabled: true, platform: .macos,
 XCTAssertEqual(YlAudioCompletionPolicy.select(bounded), .legacy(.bounded))
 ```
 
-- [ ] 增加单字段变化的 disabled/iOS/network/unknown duration/nonseekable、非 AAC、44.1kHz、6 声道、rate=2、NaN 回归；记录定向 RED。
-- [ ] 实现按 enabled→platform→source→bounded→format→rate 顺序的 guard，精确匹配已声明值；返回稳定枚举原因。来源布尔的真实构造由 Task 4 负责，不接触公开错误 API。
-- [ ] 运行定向测试与发现检查，预期每种排除均为具体 legacy 原因，符合条件才是 candidate。
-- [ ] 提交 `feat: define gated audio terminal eligibility`，更新本计划状态与报告；此时生产默认行为没有变化。
+- [x] 增加单字段变化的 disabled/iOS/network/unknown duration/nonseekable、非 AAC、44.1kHz、6 声道、rate=2、NaN 回归；记录定向 RED。
+- [x] 实现按 enabled→platform→source→bounded→format→rate 顺序的 guard，精确匹配已声明值；返回稳定枚举原因。来源布尔的真实构造由 Task 4 负责，不接触公开错误 API。
+- [x] 运行定向测试与发现检查，预期每种排除均为具体 legacy 原因，符合条件才是 candidate。
+- [x] 提交 `feat: define gated audio terminal eligibility`，更新本计划状态与报告；此时生产默认行为没有变化。
 
 ### Task 2：给输出驱动增加明确的通知选择
 
@@ -226,4 +226,10 @@ renderer.observeTailWait(playing: true, nowUs: 100_000)
 
 2026-10-08 文档自审：准入与 bounded 排除→Task 1/4；通知来源→Task 2；既有 token/所有权与输出排空→Task 3；时钟/控制/定时器→Task 4；独立长播及未准入状态→Task 5。新接口均由前序任务定义，默认 factory 签名保持不变；测试路径按仓库实际镜像核查。历史 §4/7 的否决不被新计划改写。
 
-本次没有实现上述接口，没有运行播放器测试，也没有新增内存改善结论。下一执行项是 Task 1；沿用用户已授权的本会话实现与本地提交，不推送远端。
+规划提交 `184531f` 只包含文档。后续 Task 1 已实现下述纯策略，下一执行项为 Task 2；沿用用户已授权的本会话实现与本地提交，不推送远端。
+
+### 2026-10-08 Task 1 执行记录
+
+新增内部纯选择器与稳定排除原因；四项回归覆盖显式开关、平台/来源/bounded、非 AAC、采样率/声道、倍速及非有限数值、多条件排除优先级。先缺接口编译失败，再以恒定 legacy(disabled) 骨架观察四项行为失败（原32项通过）；最终音频36/36、夹具4/4通过，发现清单iOS669/macOS608核对。
+
+来源资格在当前接口是单一布尔值，本项只验证 false 被排除；network/未知时长/不可seek 的实际事实构造在 Task 4 验证，不将重复同一 false 输入写成三个集成通过。实际 PCM 帧数/布局与输出支持仍在 Task 3/4。未连接 renderer 或新增公开配置，不改变生产调度，也不报告内存改善；完整原生/iOS/物理设备与长播未在本项执行。原始结果和源码身份见[证据](../../../tool/playback_benchmark/macos-audio-policy-observations.json)。

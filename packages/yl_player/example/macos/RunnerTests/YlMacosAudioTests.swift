@@ -8,6 +8,69 @@ import YlFFmpegBridge
 
 final class YlMacosAudioTests: XCTestCase {
 
+  private func terminalContext(
+    enabled: Bool = true, platform: YlApplePlatform = .macos,
+    localFiniteSeekable: Bool = true, hasBoundedPlan: Bool = false,
+    codec: YlAudioCodec = .aac, sampleRate: Double = 48000,
+    channels: Int = 2, rate: Float = 1
+  ) -> YlAudioCompletionContext {
+    .init(enabled: enabled, platform: platform,
+      localFiniteSeekable: localFiniteSeekable, hasBoundedPlan: hasBoundedPlan,
+      codec: codec, sampleRate: sampleRate, channels: channels, rate: rate)
+  }
+
+  func testTerminalPolicyRequiresExplicitEligibleContext() {
+    XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext()), .terminalCandidate)
+    XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(enabled: false)),
+      .legacy(.disabled))
+    XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(platform: .ios)),
+      .legacy(.platform))
+    // The session derives this fact from the source recipe, duration and seekability.
+    XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(localFiniteSeekable: false)),
+      .legacy(.source))
+    XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(hasBoundedPlan: true)),
+      .legacy(.bounded))
+  }
+
+  func testTerminalPolicyRejectsUnsupportedStreamFormats() {
+    for codec: YlAudioCodec in [.mp3, .dts, .ac3, .eac3, .flac, .opus, .vorbis, .unsupported] {
+      XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(codec: codec)),
+        .legacy(.format), "codec: \(codec)")
+    }
+    for sampleRate: Double in [44100, 96000, 0, -48000, .nan, .infinity,
+                              -.infinity, Double(48000).nextDown, Double(48000).nextUp] {
+      XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(sampleRate: sampleRate)),
+        .legacy(.format), "sample rate: \(sampleRate)")
+    }
+    for channels in [0, -1, 1, 6, Int.max] {
+      XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(channels: channels)),
+        .legacy(.format), "channels: \(channels)")
+    }
+  }
+
+  func testTerminalPolicyRequiresExactNormalRate() {
+    for rate: Float in [0, -1, 0.5, 2, 4, .nan, .infinity, -.infinity,
+                       Float(1).nextDown, Float(1).nextUp] {
+      XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(rate: rate)),
+        .legacy(.rate), "rate: \(rate)")
+    }
+  }
+
+  func testTerminalPolicyReportsFirstExclusionDeterministically() {
+    XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(enabled: false,
+      platform: .ios, localFiniteSeekable: false, hasBoundedPlan: true,
+      codec: .unsupported, rate: .nan)), .legacy(.disabled))
+    XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(platform: .ios,
+      localFiniteSeekable: false, hasBoundedPlan: true, codec: .unsupported, rate: .nan)),
+      .legacy(.platform))
+    XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(localFiniteSeekable: false,
+      hasBoundedPlan: true, codec: .unsupported, rate: .nan)), .legacy(.source))
+    XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(hasBoundedPlan: true,
+      codec: .unsupported, rate: .nan)), .legacy(.bounded))
+    XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(codec: .unsupported,
+      rate: .nan)), .legacy(.format))
+  }
+
   private final class WeakCompletionPayload {
     weak var value: NSObject?
     init(_ value: NSObject) { self.value = value }

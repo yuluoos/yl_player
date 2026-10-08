@@ -1163,3 +1163,11 @@ Dart 用量先下降后上升，容量和 externalUsage 精确值全部保留。
 核查发现：转换器已持 token，直接移植工具 reserve 会重复计费；当前 scheduledBufferCount 同时参与时钟、underrun 和静音补时，不能用 rendered 资源计数直接替换。首次 held PCM 要等实际提交才锚定，EOF/watchdog 提交也须通知 pipeline；system stop 回调与 operations/session 锁需异步交接。buffer.bounded 的 scope 时间驱动暂停，首阶段保留原路径；这不是放宽其约束或减少已有支持。
 
 计划依次交付纯准入策略、明确输出通知、真实预算/最终排空、时钟/控制/单个观察 timer，以及真实生产路径和独立长播证据。候选默认关闭，首阶段限 macOS 本地有限可 seek、rate=1、AAC/48kHz 双声道实际 Float32 planar 且最多1024帧；真实首素材为 AAC-LC，不外推全部 AAC profile。兼容回退继续有逐缓冲保留限制；productionAdmission/downstreamBoundProven 保持 false。网络/直播、bounded 候选、iOS/设备/最低系统、物理音画、完整长期资源和 P08 Task1/2 仍未完成；原期限/分组失败完整保留。
+
+## 2026-10-08：音频尾部接入 Task 1 — 内部准入策略
+
+在 `184531f` 基础上新增纯 `YlAudioCompletionPolicy.select`，按显式启用、macOS、已确认本地有限可seek、无bounded、AAC/48kHz/双声道、rate=1顺序判断；排除原因仅为内部枚举，不含媒体地址等敏感文本。没有生产调用点，renderer、默认输出和公开接口均未改动，不能把返回 terminalCandidate 当成真实 PCM/输出准入或内存修复。
+
+四项新增回归覆盖正常候选及上述排除、全部现有非AAC枚举、无效声道、NaN/正负无穷/相邻浮点值和多条件原因顺序。缺接口初始编译失败后，恒定 legacy(disabled) 骨架产生4项实际断言失败，原32项音频回归通过；实现后本机音频 **36/36**、零失败/跳过。夹具/历史来源 **4/4** 通过，当前镜像及发现iOS669/macOS608一致；没有运行完整607项macOS套件或iOS，这两个声明总数不等于运行通过数。
+
+[验证证据](../../../tool/playback_benchmark/macos-audio-policy-observations.json)保留三次原生日志、RED/GREEN结果摘要、最终36项实际身份、夹具/发现日志及源码身份。原生构建的既有弱变量和XCTest链接版本警告保留，不计最低macOS验证。来源资格是上层传入的事实，本项不验证网络/时长/seek元数据构造；它们与实际PCM及输出能力门槛仍在后续任务。下一项实现明确的输出通知模式；默认启用、下游有界、正式准入及完整P08仍未完成。
