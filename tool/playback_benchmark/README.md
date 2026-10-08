@@ -662,3 +662,26 @@ Flutter, the decoder, the managed buffer ledger, or the production renderer.
 The engine/player remain alive after detach. Results diagnose the current
 machine only; they do not certify audio timing, audible output, long playback,
 performance, or the origin of every byte in previous process measurements.
+
+### Audio callback mode comparison
+
+`python3 -B tool/playback_benchmark/run_audio_callback_modes.py /private/tmp/NEW_DIRECTORY`
+compiles a standalone graph with the checked-in production completion group.
+It runs consumed/rendered/playedBack in that order, first at steady rate 1, then
+with pause at 1 second, resume at 1.5, rate 2 at 2, and rate 1 at 3 seconds.
+Each independent process schedules 200 silent 1,024-frame stereo 48 kHz buffers.
+For eight seconds it journals callback types/timestamps and samples player time,
+rate, play state, and reported downstream/output latency on the main thread.
+Callback threads never call back into player/engine APIs. The sample target is
+10 ms, with recorded actual intervals and a 250 ms admission gap/action-start
+tolerance; this is diagnostic coverage, not a playback performance SLO.
+
+Heap and dispatch-source allocation stacks are collected only at configured,
+post-observation, and disposed handshakes (36 planned probes total). Full malloc
+stack logging and sampling still perturb the process. Source/binary identities,
+protocol, raw observations, failures, and missing probe slots are retained.
+The analyzer keeps both neighboring clock reads, excludes transport crossings or
+missing clocks, and never treats interpolation or reported latency as physical
+audibility. These fixed-order short runs do not establish CPU/latency improvement,
+route-change behavior, general consumed/rendered equivalence, or a safe direct
+replacement of playedBack in the production renderer.
