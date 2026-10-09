@@ -42,3 +42,22 @@ class DecodedEOFResourcesTests(unittest.TestCase):
         for change in changes:
             r=rows();change(r)
             with self.subTest(change=change), self.assertRaises(ValueError):validate_decoded_rows(r,True)
+
+    def test_length_matrix_rejects_wrong_fixture_short_play_and_unbounded_recorder(self):
+        for update in (dict(fixtureName='other.mkv'), dict(playbackElapsedSeconds=1),
+                       dict(retainedDeltaCount=20), dict(retainedOrderCount=100)):
+            r=rows()
+            for row in r:
+                row.update(fixtureName='decoded-30.mkv', playbackElapsedSeconds=30,
+                           retainedDeltaCount=0, retainedOrderCount=0, retainedEventCount=8)
+            r[1].update(update)
+            with self.subTest(update=update), self.assertRaises(ValueError):
+                validate_decoded_rows(r, True, expected_seconds=30, expected_fixture='decoded-30.mkv')
+
+    def test_accepts_measured_length_and_bounded_recorder(self):
+        r=rows()
+        for row in r:
+            row.update(fixtureName='decoded-30.mkv', playbackElapsedSeconds=30,
+                       retainedDeltaCount=0, retainedOrderCount=0, retainedEventCount=8)
+        self.assertEqual(validate_decoded_rows(r, True, expected_seconds=30,
+                         expected_fixture='decoded-30.mkv')['playbackElapsedSeconds'],30)

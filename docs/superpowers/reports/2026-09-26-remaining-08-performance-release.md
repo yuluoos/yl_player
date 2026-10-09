@@ -1474,3 +1474,33 @@ legacy原采集器已记录TimeoutExpired；4次阶段调用不等于4份有效�
 [协议](../../../tool/playback_benchmark/decoded-eof-resources-protocol.md)和[119份可校验原始证据](../../../tool/playback_benchmark/macos-decoded-eof-resource-observations.json)包含初次/修订/复审后定向结果、两正式进程的heap/JSONL/结果包导出、环境和完整身份。历史失败原档保持不变；本次的连续性、物理音画、真实设备切换与全局资源上界不能由这些EOF快照证明。
 
 下一项：真实解码EOF资源对照的播放长度矩阵，检查保留量是否随提交数量增长。真实设备恢复、物理音画、最低系统/Intel/iOS运行及整体资源上界仍开放；defaultEnabled/productionAdmission/downstreamBoundProven均false，完整P08仍未完成。
+
+
+### 真实解码 EOF 资源长度矩阵完成（2026-10-09，base 1b0d691）
+
+从同一现有自有1260s AVC/AAC素材stream-copy 4/30/60s前缀，保持编码与媒体内容前缀一致；未重编码或循环播放。因视频包边界，ffprobe容器时长实际为4.229/30.229/60.229s，AAC包数188/1407/2813；素材字节、生成命令、版本、probe和源/派生hash均归档。每个长度分别运行默认和候选路径，六个独立进程顺序运行，源码和二进制指纹一致。
+
+为避免测试本身随播放时长积累对象，progress delta只计数并逐次清空payload和order历史，保留少量状态/首帧等事件。初次执行的4s默认和30s默认在configured观察到1条尚待异步ACK的order记录，collector按空数组规则判失败；4s候选通过。三组原生测试与9份heap都通过，失败属于采样记录时机。调度器在第三组收尾后停止，其余三组未启动。原始结果未改写，也未放宽空数组要求：修复为快照前最多等待5s让在途ACK完成，然后不再await直接读取；超时抛错并关闭Host。该等待位于记录的播放时长之外。复审认可修复，新冻结身份重新执行完整六组。
+
+最终定向**4/4、0失败/0跳过**；资源工具27/27、矩阵校验3/3、夹具4/4、发现iOS678/macOS663通过。复审另要求汇总补齐RSS/footprint、managed ledger与实际callback modes，负例/输出回归RED→GREEN后完成。正式**6/6组通过，18/18 heap有效**，每份2.201–5.615s，均在原8s期限内，PID、完整表格与汇总总数一致。原30s ACK、180s测试、240s父进程限制保持不变；仅自然EOF等待按素材标称时长+10s选取。
+
+以下均为All zones字节数，包含全进程其他模块；各增量使用本进程configured基线，未混用旧版本的4.021s素材结果。
+
+| 标称长度 | 路径 | PCM提交数 | configured heap | drained heap | drained增量 | disposed heap |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| 4s | 默认 | 188 | 20,157,297 | 20,254,129 | +96,832 | 21,414,849 |
+| 4s | 候选 | 188 | 20,152,673 | 20,177,073 | +24,400 | 21,440,561 |
+| 30s | 默认 | 1,407 | 20,647,057 | 21,736,465 | +1,089,408 | 21,866,305 |
+| 30s | 候选 | 1,407 | 20,768,113 | 20,975,761 | +207,648 | 22,143,985 |
+| 60s | 默认 | 2,813 | 20,137,473 | 21,865,969 | +1,728,496 | 21,121,329 |
+| 60s | 候选 | 2,813 | 20,847,217 | 21,040,833 | +193,616 | 22,340,705 |
+
+实测播放时长分别为默认/候选4.357/4.351、30.321/30.310、60.288/60.260s；实际音频缓冲提交数两路径逐长度一致，并通过>5倍、>1.8倍增长检查。默认全部为playedBack回调；候选分别187/1406/2812次rendered和恰好1次尾部playedBack，所有提交对应回调均到达，完成前候选未回退。所有组只发布一次firstFrame和completed，无公开播放failure。
+
+六组完成/drained时音频owned0、pendingfalse，总ledger均92944；close后立即与>=2s两点均ledger0、nativePlayingfalse、engineRunningfalse，回调计数保持不变。completed以后保留public事件数均10，delta/order数组均0，未保留随时间增长的progress历史。RSS/物理占用、账本峰值、heap节点数和各阶段回调模式在机器可读矩阵内单独列出，不把它们与heap字节合并成单一指标。
+
+默认路径drained增量随长度明显增加，候选在此组观察中增量较小且30→60s未继续增加。不过各单元只有一次测量，configured观察的ledger有2665与92944的差别，说明加载阶段观察并不具有完全相同的资源状态；系统/框架缓存、采样时机和进程基线差异仍会影响结果。disposed也并非全进程对象销毁，测试仍持有Host/factory/renderer。不能据此声明候选统计性节省、渐近有界、泄漏已排除或生产准入已通过。
+
+[协议](../../../tool/playback_benchmark/decoded-resource-length-protocol.md)与[372份原始证据](../../../tool/playback_benchmark/macos-decoded-resource-length-observations.json)保留初次三组、最终六组、定向结果、原始heap/JSONL、素材与完整冻结身份。本轮只修改测试/工具/文档，未重复完整原生套件、iOS或1200s长程。历史失败继续保留。
+
+下一项：对EOF后的资源增长做对象级归因，区分音频回调、框架和测试开销，再决定生产修复范围。活动播放整体资源上界、实际设备切换恢复、物理音画及最低系统/Intel/iOS运行仍开放；defaultEnabled/productionAdmission/downstreamBoundProven保持false，完整P08未完成。

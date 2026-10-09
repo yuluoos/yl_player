@@ -10,7 +10,7 @@
 
 **Spec:** [输出完成契约 §10](../specs/2026-10-08-audio-output-completion-contract.md)、[需求基线](../specs/2026-09-20-playback-expansion-requirements.md)、[P08](2026-09-26-remaining-08-performance-release.md)。
 
-最新状态（2026-10-09）：真实解码长程、自然EOF及单份素材的独立资源对照已通过；下一项为真实解码EOF资源对照的播放长度矩阵。下方历史执行记录保留当时的失败/未完成状态，当前进度以最后一节为准；正式准入仍关闭。
+最新状态（2026-10-09）：真实解码长程、自然EOF及4/30/60s独立资源对照矩阵已完成；下一项为资源保留增长的对象级归因，整体有界仍未证明。下方历史执行记录保留当时的失败/未完成状态，当前进度以最后一节为准；正式准入仍关闭。
 
 起点 `9c5967a`。Task 1–5 已实现并执行验证；资源采样帧断言失败如实保留，默认准入仍关闭。既有工具通过不能替代生产验收。
 
@@ -395,6 +395,24 @@ AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 o
 - [x] 两组6/6 heap均在原8s期限内取得完整表格、ownedPID及一致汇总；正式XCTest各1/1、最终定向4/4、资源工具25/25、夹具4/4，发现iOS678/macOS663。
 - [x] 两组完成时audioOwned0/pendingfalse，总ledger92944；close后立即及>=2s均ledger0、原生输出停止。默认189 playedBack，候选188 rendered+1 playedBack，全部回调到达。
 - [x] 119份原始数据/hash归档。进程堆close后仍可能增长，保留原始RSS/footprint与heap结果，不将受管资源释放等同全进程回收。
-- [ ] 下一项：扩大真实解码自然EOF资源对照的播放长度矩阵，检查随提交数量增加的保留趋势；仍不能以EOF快照代替活动播放上界证明。
+- [x] 真实解码自然EOF资源对照的播放长度矩阵：4/30/60s两路径共6组已完成，保留趋势见后续记录；不以EOF快照代替活动播放上界证明。
 
 本次仅测试/采集工具/文档，无生产修改；未重跑完整原生套件、iOS或1200s长程。defaultEnabled/productionAdmission/downstreamBoundProven继续false。单对照不支持统计性优化结论；实际设备切换、物理音画、平台矩阵及整体资源上界仍开放。见[协议](../../../tool/playback_benchmark/decoded-eof-resources-protocol.md)、[证据](../../../tool/playback_benchmark/macos-decoded-eof-resource-observations.json)及[报告](../reports/2026-09-26-remaining-08-performance-release.md)。
+
+
+长度矩阵执行裁定（2026-10-09）：采用同一现有1260s素材的4/30/60s前缀、两路径各独立进程共6组；清除测试进度事件历史以避免随时间人为增长。原8s heap/30s ACK/180s native/240s parent不变；自然完成等待按素材长度+10s。报告探索性趋势，不设事后内存阈值或据此开启准入。
+
+
+### 后续长度矩阵：4/30/60s独立资源对照（2026-10-09）
+
+- [x] 同一自有长素材stream-copy三个前缀，实际容器时长4.229/30.229/60.229s；素材、probe、命令与hash归档。
+- [x] 清空高频progress事件历史，只保留计数；定向4/4、资源工具27/27、矩阵工具3/3、夹具4/4、发现678/663通过。
+- [x] 初次配置快照观察到1条待确认order事件，三组中两组collector失败（native及9份heap均通过）；暂停调度器并在当前组结束后终止，保留全部记录。
+- [x] 每个快照前最多等待5s让在途ACK清空，超时throw清理；不放宽数组为空、8s heap、30s collector ACK、180s native或240s parent条件。复核通过，以新身份重新执行全部六组。
+- [x] 正式6/6组通过、18/18完整heap有效（2.201–5.615s），所有源码/二进制身份相同；实际播放约4.35/30.31/60.27s，提交188/1407/2813，各长度两路径一致。
+- [x] 自然完成时音频owned0/pendingfalse，总ledger92944；close后立即及>=2s均ledger0/输出停止，保留public事件10、progress/order数组0。
+- [x] 默认drained−configured随长度为96,832/1,089,408/1,728,496字节；候选24,400/207,648/193,616字节。保存全部原始量，不能把单次较小增量升级为整体有界或统计性改善。
+- [x] 372份原始文件归档，初次失败与最终通过均保留；只改测试/工具/文档，无生产修改，不重跑完整套件、iOS或1200s长程。
+- [ ] 下一项：对EOF后保留增长做对象级归因，区分音频输出回调、框架和测试记录开销，再确定是否需要生产修复；保持物理音画/真实设备/平台矩阵独立验收。
+
+详见[矩阵协议](../../../tool/playback_benchmark/decoded-resource-length-protocol.md)、[证据](../../../tool/playback_benchmark/macos-decoded-resource-length-observations.json)及[报告](../reports/2026-09-26-remaining-08-performance-release.md)。defaultEnabled/productionAdmission/downstreamBoundProven均false。

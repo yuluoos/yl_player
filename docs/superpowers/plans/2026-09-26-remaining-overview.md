@@ -309,3 +309,6 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 
 
 2026-10-09真实解码EOF后资源对照完成：同一4.021s素材默认/候选两独立进程、同源码/二进制指纹，6/6正式heap在原8s内通过完整性与PID校验；完成时音频资源0，总ledger92944，close后两点均ledger0/原生输出停止。候选188 rendered+1 playedBack，默认189 playedBack。定向4/4、正式各1/1、资源工具25/25、夹具4/4、发现678/663通过，119份证据归档。ACK超时继续播放的复审问题已修复；分组与dispose后清除的运行标志已分开。进程总堆关闭后仍增加，单对照不代表统计性改善或整体有界。下一项扩大真实解码EOF资源对照的播放长度矩阵；实际设备/物理音画/平台矩阵及整体资源上界继续开放，候选准入关闭。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)与[证据](../../../tool/playback_benchmark/macos-decoded-eof-resource-observations.json)。
+
+
+2026-10-09真实解码EOF资源长度矩阵完成：同源4/30/60s前缀、两路径六独立进程正式6/6通过、18/18 heap在原8s内有效；提交188/1407/2813，两路径一致。初次三组中两组因configured在途ACK事件使collector失败，保留后修复为采样前等待ACK清空，以新身份重跑完整矩阵，未放宽空记录/heap期限。定向4/4、资源27/27、矩阵3/3、夹具4/4、发现678/663通过，372份证据归档。默认EOF堆增量随长度增大，候选较小；各组单次且加载基线不同，不推断整体有界或统计性改善。close后账本均0。下一项对象级归因音频回调/框架/测试保留量，其他设备及平台验收独立开放，候选准入关闭。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)及[证据](../../../tool/playback_benchmark/macos-decoded-resource-length-observations.json)。

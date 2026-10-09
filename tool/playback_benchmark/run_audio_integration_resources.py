@@ -76,7 +76,7 @@ def eligible_decoded_checkpoint(row):
              not row['pending'] and row['ownedBytes'] == 0)))
 
 
-def validate_decoded_rows(rows, candidate):
+def validate_decoded_rows(rows, candidate, expected_seconds=None, expected_fixture=None):
     def require(condition, message):
         if not condition:
             raise ValueError(message)
@@ -95,11 +95,18 @@ def validate_decoded_rows(rows, candidate):
         require((modes['playedCallbacks'] == 1 and modes['renderedCallbacks'] > 1) if candidate else (modes['playedCallbacks'] > 1 and modes['renderedCallbacks'] == 0), 'Wrong native callback modes')
     require(all(not r['nativePlaying'] and not r['engineRunning'] and r['ledgerBytes'] == 0 for r in rows[-2:]), 'Incomplete close release')
     require(rows[-1]['uptime'] - rows[-2]['uptime'] >= 2, 'Missing delayed release')
-    return dict(modes=rows[1]['modes'], completedPublications=1, liveHeapProof=False,
+    if expected_seconds is not None:
+        require(all(r['fixtureName'] == expected_fixture for r in rows), 'Wrong length fixture')
+        require(all(r['retainedDeltaCount'] == 0 and r['retainedOrderCount'] == 0 and
+                    0 <= r['retainedEventCount'] <= 32 for r in rows), 'Unbounded resource recorder')
+        require(expected_seconds - .5 <= rows[1]['playbackElapsedSeconds'] <= expected_seconds + 10,
+                'Wrong measured playback length')
+    return dict(playbackElapsedSeconds=rows[1].get('playbackElapsedSeconds'),
+                modes=rows[1]['modes'], completedPublications=1, liveHeapProof=False,
                 continuousLongPlaybackProof=False, downstreamBoundProven=False)
 
 
-def freeze(out, products):
+def freeze(out, products, extra_files=()):
     shared = ROOT/'packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared'
     files = list(shared.rglob('*.swift')) + list((ROOT/'packages/yl_player/example/macos/RunnerTests').rglob('*.swift')) + [ROOT/p for p in (
         'packages/yl_player/example/macos/Flutter/ephemeral/Flutter-Generated.xcconfig',
@@ -109,6 +116,7 @@ def freeze(out, products):
         'tool/playback_benchmark/test_decoded_eof_resources.py',
         'tool/playback_benchmark/decoded-eof-resources-protocol.md',
         'packages/yl_player/example/assets/test_media/format_matrix/mkv-avc-aac.mkv')]
+    files.extend(extra_files)
     binaries = [p for p in products.rglob('*') if p.is_file() and
                 (p.suffix in ('.dylib','.xctestrun') or p.name in ('yl_player_example','RunnerTests','yl_player_apple'))]
     identity = dict(baseCommit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
@@ -125,10 +133,22 @@ def freeze(out, products):
     return identity
 
 
-def collect(arm, count, directory, decoded=False):
+def collect(arm, count, directory, decoded=False, decoded_seconds=None):
     out=Path(directory).resolve();out.mkdir(parents=True,exist_ok=False)
     products=ROOT/'packages/yl_player/example/build/native-macos-tests/Build/Products'
-    identity=freeze(out,products)
+    fixture = None
+    extras = []
+    if decoded_seconds is not None:
+        if not decoded or decoded_seconds not in (4, 30, 60):
+            raise ValueError('Decoded length requires --decoded-eof and a supported length')
+        fixtures = ROOT/'packages/yl_player/example/build/resource-length-fixtures'
+        fixture = fixtures/f'decoded-{decoded_seconds}.mkv'
+        extras = [fixtures/f'decoded-{seconds}.mkv' for seconds in (4, 30, 60)] + [
+            fixtures/'manifest.json', ROOT/'tool/playback_benchmark/generate_decoded_resource_fixtures.py',
+            ROOT/'tool/playback_benchmark/decoded-resource-length-protocol.md',
+            ROOT/'tool/playback_benchmark/summarize_decoded_resource_matrix.py',
+            ROOT/'tool/playback_benchmark/test_decoded_resource_matrix.py']
+    identity=freeze(out,products,extras)
     originals=list(products.glob('*.xctestrun'))
     if len(originals)!=1:raise ValueError('Expected exactly one native test manifest')
     def absolute(value):
@@ -140,6 +160,8 @@ def collect(arm, count, directory, decoded=False):
     for env in (os.environ,target.get('EnvironmentVariables',{}),target.get('TestingEnvironmentVariables',{})):
         if any(k.startswith('MallocStackLogging') for k in env):raise ValueError('MSL must be disabled')
     target.setdefault('EnvironmentVariables',{}).update(YL_AUDIO_PROBE_KIND='decoded-eof' if decoded else 'resource-drained-'+str(count),YL_AUDIO_PROBE_ARM=arm,YL_AUDIO_PROBE_DIRECTORY=str(out))
+    if fixture is not None:
+        target['EnvironmentVariables'].update(YL_AUDIO_PROBE_FIXTURE=str(fixture), YL_AUDIO_PROBE_SECONDS=str(decoded_seconds))
     custom=out/'probe.xctestrun';custom.write_bytes(plistlib.dumps(config))
     command=[sys.executable,'-B',str(ROOT/'tool/run_with_display_awake.py'),'xcodebuild','test-without-building','-quiet','-xctestrun',str(custom),
              '-destination','platform=macOS,arch=arm64','-parallel-testing-enabled','NO',
@@ -147,7 +169,7 @@ def collect(arm, count, directory, decoded=False):
              '-test-timeouts-enabled','YES','-maximum-test-execution-time-allowance','180',
              '-default-test-execution-time-allowance','180','-resultBundlePath',str(out)+'.xcresult']
     (out/'command.json').write_text(json.dumps(command,indent=2)+'\n')
-    result=dict(complete=False,arm=arm,buffers=None if decoded else count,decoded=decoded,probes=[],errors=[],productionAdmission=False,downstreamBoundProven=False)
+    result=dict(complete=False,arm=arm,buffers=None if decoded else count,decoded=decoded,decodedSeconds=decoded_seconds,probes=[],errors=[],productionAdmission=False,downstreamBoundProven=False)
     def save():(out/'result.json').write_text(json.dumps(result,indent=2)+'\n')
     save();seen=set();offset=0;started=time.monotonic()
     with (out/'xcode.log').open('w') as log:
@@ -185,7 +207,7 @@ def collect(arm, count, directory, decoded=False):
             result['testExitCode']=proc.returncode
             try:
                 rows=[json.loads(x) for x in (out/'rows.jsonl').read_text().splitlines()]
-                result['observation']=validate_decoded_rows(rows,arm=='candidate') if decoded else validate_rows(rows,arm=='candidate',count)
+                result['observation']=validate_decoded_rows(rows,arm=='candidate',decoded_seconds,fixture.name if fixture else None) if decoded else validate_rows(rows,arm=='candidate',count)
                 for name,sha in {**identity['sourceHashes'],**identity['binaryHashes']}.items():
                     if digest(ROOT/name)!=sha:raise ValueError('Source/binary changed: '+name)
             except (OSError,ValueError,KeyError,TypeError) as error:result['errors'].append(repr(error))
@@ -197,4 +219,5 @@ def collect(arm, count, directory, decoded=False):
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('arm',choices=['legacy','candidate']);parser.add_argument('buffers',type=int,choices=[1000,2000]);parser.add_argument('directory',type=Path)
     parser.add_argument('--decoded-eof', action='store_true', help='Use the finite decoded file; buffers is ignored')
-    args=parser.parse_args();sys.exit(0 if collect(args.arm,args.buffers,args.directory,decoded=args.decoded_eof) else 1)
+    parser.add_argument('--decoded-seconds', type=int, choices=[4,30,60], help='Use generated length-control fixture')
+    args=parser.parse_args();sys.exit(0 if collect(args.arm,args.buffers,args.directory,decoded=args.decoded_eof,decoded_seconds=args.decoded_seconds) else 1)

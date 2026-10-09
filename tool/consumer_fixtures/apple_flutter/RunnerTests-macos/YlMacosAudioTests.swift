@@ -602,7 +602,7 @@ final class YlMacosAudioTests: XCTestCase {
     }
   }
 
-  private enum ResourceProbeError: Error { case acknowledgementTimedOut }
+  private enum ResourceProbeError: Error { case acknowledgementTimedOut, invalidFixtureDuration }
 
   @MainActor
   private func waitForResourceAcknowledgement(_ exists: () -> Bool, timeout: TimeInterval = 30) async throws {
@@ -633,24 +633,40 @@ final class YlMacosAudioTests: XCTestCase {
     XCTAssertNil(env["MallocStackLogging"]); XCTAssertNil(env["MallocStackLoggingNoCompact"])
     let directory = env["YL_AUDIO_PROBE_DIRECTORY"].map { URL(fileURLWithPath: $0) }
     let arms = directory == nil ? [false, true] : [env["YL_AUDIO_PROBE_ARM"] != "legacy"]
+    let expectedSeconds = try XCTUnwrap(Double(env["YL_AUDIO_PROBE_SECONDS"] ?? "4.021"))
+    guard expectedSeconds > 0 && expectedSeconds <= 60 else { throw ResourceProbeError.invalidFixtureDuration }
     for candidate in arms {
       let factory = ReloadAudioFactory(), ledger = YlManagedBufferLedger()
       let registry = ApplePublicationRegistry(), callbacks = AppleRecordingCallbacks()
+      var publicDeltaCount = 0
+      // Count frequent progress events without retaining a history proportional to duration.
+      callbacks.acknowledge = { [weak callbacks] in
+        guard let callbacks else { return }
+        publicDeltaCount += callbacks.deltas.count
+        callbacks.deltas.removeAll(keepingCapacity: true)
+        callbacks.order.removeAll(keepingCapacity: true)
+      }
+      var playbackStarted: TimeInterval?
+      var playbackElapsed: TimeInterval = 0
       let host = YlApplePlayerHost(playerId: 743, suffix: "decoded-resource-743",
         options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 50),
         services: registry.services(), callbacks: callbacks, bufferLedger: ledger,
         audioRendererFactory: factory, audioTerminalCandidateEnabled: candidate)
       defer { host.close() }
       try host.attach(); try host.setVolume(volume: 0)
-      let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+      let defaultFixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
         .deletingLastPathComponent().deletingLastPathComponent()
         .appendingPathComponent("assets/test_media/format_matrix/mkv-avc-aac.mkv")
+      let fixture = env["YL_AUDIO_PROBE_FIXTURE"].map { URL(fileURLWithPath: $0) } ?? defaultFixture
       var request = AppleHostFixture.request("decoded-resource", url: fixture.path, format: .matroska, autoplay: false)
       request.source.kind = .file
       let session = try await host.load(request: request)
       let entry = try XCTUnwrap(factory.entries.first), renderer = try XCTUnwrap(entry.renderers.first)
       XCTAssertEqual(renderer.usesSubmissionAnchor, candidate)
       func probe(_ phase: String, checkpoint: Bool = false) async throws {
+        // onState appends before its async acknowledgement; let that in-flight
+        // acknowledgement finish before freezing the resource observation.
+        try await waitForResourceAcknowledgement({ callbacks.deltas.isEmpty && callbacks.order.isEmpty }, timeout: 5)
         if checkpoint {
           XCTAssertFalse(entry.nativePlaying)
           if phase != "configured" {
@@ -666,6 +682,10 @@ final class YlMacosAudioTests: XCTestCase {
           }
         }
         let row: [String: Any] = ["phase": phase, "uptime": ProcessInfo.processInfo.systemUptime,
+          "fixtureName": fixture.lastPathComponent, "playbackElapsedSeconds": playbackElapsed,
+          "publicDeltaCount": publicDeltaCount, "retainedDeltaCount": callbacks.deltas.count,
+          "retainedOrderCount": callbacks.order.count,
+          "retainedEventCount": callbacks.states.count + callbacks.frames.count + callbacks.engines.count + callbacks.failures.count + callbacks.retries.count,
           "pid": ProcessInfo.processInfo.processIdentifier, "sessionId": session.sessionId,
           "candidate": candidate, "submissionAnchor": renderer.usesSubmissionAnchor, "pending": renderer.hasPendingPlayback,
           "nativePlaying": entry.nativePlaying, "engineRunning": entry.engine.isRunning,
@@ -690,8 +710,10 @@ final class YlMacosAudioTests: XCTestCase {
         }
       }
       try await probe("configured", checkpoint: true)
+      playbackStarted = ProcessInfo.processInfo.systemUptime
       try await host.play(command: .init(sessionId: session.sessionId))
-      try await AppleHostCharacterizations.waitFor({ host.initialState.status == .completed }, timeout: 10)
+      try await AppleHostCharacterizations.waitFor({ host.initialState.status == .completed }, timeout: expectedSeconds + 10)
+      playbackElapsed = ProcessInfo.processInfo.systemUptime - (playbackStarted ?? 0)
       XCTAssertEqual(callbacks.states.filter { $0.status == .completed }.count, 1)
       XCTAssertTrue(callbacks.failures.isEmpty)
       XCTAssertFalse(renderer.hasPendingPlayback); XCTAssertEqual(renderer.scheduledBytes, 0)
