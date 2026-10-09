@@ -299,9 +299,22 @@ final class YlMacosAudioTests: XCTestCase {
     let env = ProcessInfo.processInfo.environment
     let kind = env["YL_AUDIO_PROBE_KIND"] ?? "short"
     XCTAssertNil(env["MallocStackLogging"]); XCTAssertNil(env["MallocStackLoggingNoCompact"])
-    let count = kind == "long" ? 56485 : kind == "resource" ? 2000 : 8
+    let afterDrain = kind == "resource-drained-1000" || kind == "resource-drained-2000"
+    let count = kind == "long" ? 56485 : kind == "resource-drained-1000" ? 1000 :
+      kind == "resource" || afterDrain ? 2000 : 8
     try runActualAdapter(count: count, candidate: env["YL_AUDIO_PROBE_ARM"] != "legacy",
-      probeDirectory: env["YL_AUDIO_PROBE_DIRECTORY"], resourceProbe: kind == "resource")
+      probeDirectory: env["YL_AUDIO_PROBE_DIRECTORY"], resourceProbe: kind == "resource" || afterDrain,
+      captureAfterDrain: afterDrain)
+  }
+
+  func testActualTerminalAdapterResourceCaptureWaitsForEOF() throws {
+    for candidate in [false, true] {
+      let row = try runActualAdapter(count: 64, candidate: candidate, resourceProbe: true, captureAfterDrain: true)
+      XCTAssertEqual(row["liveHeapCheckpointRequested"] as? Bool, false,
+        "Post-drain resource mode must never request heap during playback")
+      XCTAssertEqual((row["marker"] as? [String: Int])?["frames"], 65536)
+      XCTAssertEqual((row["marker"] as? [String: Int])?["errors"], 0)
+    }
   }
 
   func testActualSystemOutputClockAfterDisposeIsUnavailable() throws {
@@ -342,7 +355,8 @@ final class YlMacosAudioTests: XCTestCase {
 
   @discardableResult
   private func runActualAdapter(count: Int, candidate: Bool, starvation: Bool = false,
-                                pausedEOF: Bool = false, probeDirectory: String? = nil, resourceProbe: Bool = false) throws -> [String: Any] {
+                                pausedEOF: Bool = false, probeDirectory: String? = nil, resourceProbe: Bool = false,
+                                captureAfterDrain: Bool = false) throws -> [String: Any] {
     let ledger = YlManagedBufferLedger(maxBytes: 196608), engine = AVAudioEngine()
     let output = IntegrationOutput(engine: engine), converter = IntegrationPCM(), markers = IntegrationMarkers()
     let renderer = YlAudioRenderer(maxScheduledDurationUs: 512016, maxScheduledBytes: 196608,
@@ -376,6 +390,7 @@ final class YlMacosAudioTests: XCTestCase {
       let row: [String: Any] = ["phase": phase, "uptime": ProcessInfo.processInfo.systemUptime,
         "pid": ProcessInfo.processInfo.processIdentifier, "generation": 1, "candidate": candidate,
         "accepted": accepted, "marker": markers.snapshot, "modes": output.snapshot,
+        "captureAfterDrain": captureAfterDrain,
         "pending": renderer.hasPendingPlayback, "nativePlaying": player.isPlaying, "engineRunning": engine.isRunning,
         "ownedBytes": renderer.scheduledBytes,
         "ledgerBytes": ledger.snapshot.currentBytes, "ledgerPeak": ledger.snapshot.peakBytes,
@@ -428,7 +443,7 @@ final class YlMacosAudioTests: XCTestCase {
       if starvation && accepted == 40 && renderer.scheduledBytes <= 8192 && stalledAt == nil { stalledAt = now }
       if let stalledAt, now - stalledAt >= 0.3 { resumed = true }
       try pump(starvation && !resumed ? 40 : count)
-      if resourceProbe && accepted >= count / 2 && !recordedMidpoint {
+      if resourceProbe && !captureAfterDrain && accepted >= count / 2 && !recordedMidpoint {
         recordedMidpoint = true; resourcePhase = "mid"; try probe(resourcePhase)
       }
       if now >= nextSampleAt { try probe("playing"); nextSampleAt = now + 5 }
@@ -439,7 +454,7 @@ final class YlMacosAudioTests: XCTestCase {
     renderer.pause()
     try probe("drained", waitForCollector: resourceProbe)
     let row: [String: Any] = ["candidate": candidate, "buffers": count, "starvation": starvation,
-      "pausedEOF": pausedEOF, "marker": markers.snapshot, "modes": output.snapshot,
+      "pausedEOF": pausedEOF, "liveHeapCheckpointRequested": recordedMidpoint, "marker": markers.snapshot, "modes": output.snapshot,
       "anchors": eventsLock.withLock { anchors }, "failures": eventsLock.withLock { failures },
       "peakBytes": ledger.snapshot.peakBytes, "pending": renderer.hasPendingPlayback,
       "timerMaximumGapUs": renderer.tailObservationGapUs, "elapsedSeconds": ProcessInfo.processInfo.systemUptime - start]
