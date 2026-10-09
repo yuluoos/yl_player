@@ -36,6 +36,8 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
        slotCompatibility: YlAppleCompatibility? = nil,
        bufferLedger: YlManagedBufferLedger = YlManagedBufferLedger(),
        videoSessionFactory: YlVTSessionFactory? = nil,
+       audioRendererFactory: any YlAudioRendererMaking = YlPlatformAudioRendererFactory(),
+       audioTerminalCandidateEnabled: Bool = false,
        hardwareEvidenceStage: YlHardwareEvidencePreparation = .init(),
        audioOwnership: YlPlayerAudioOwnership? = nil,
        clock: @escaping () -> Int64 = YlAppleSafeDiagnostics.nowMilliseconds) {
@@ -60,7 +62,8 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
       configuration: PlayerConfiguration(positionEventIntervalMs: options.positionUpdateIntervalMs),
       textureOwner: textureOwner, avPlayer: avPlayer, commandCoordinator: commandCoordinator,
       beforeFallbackConstruction: beforeFallbackConstruction, slotCompatibility: slotCompatibility, bufferLedger: bufferLedger,
-      videoSessionFactory: videoSessionFactory, hardwareEvidenceStage: hardwareEvidenceStage, audioOwnership: audio) { [weak self] identity, callback in
+      videoSessionFactory: videoSessionFactory, audioRendererFactory: audioRendererFactory,
+      audioTerminalCandidateEnabled: audioTerminalCandidateEnabled, hardwareEvidenceStage: hardwareEvidenceStage, audioOwnership: audio) { [weak self] identity, callback in
         self?.receive(callback, identity: identity)
       }
     reducer.onOutput = { [weak self] output in self?.send(output) }

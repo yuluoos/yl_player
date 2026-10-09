@@ -33,6 +33,8 @@ final class YlAppleSessionCoordinator: NSObject {
   private let avTexture: YlAppleAvTextureBinding
   private var activeTexture: YlAppleTextureLease?
   private let videoSessionFactory: YlVTSessionFactory?
+  private let audioRendererFactory: any YlAudioRendererMaking
+  private let audioTerminalCandidateEnabled: Bool
   private let hardwareEvidenceStage: YlHardwareEvidencePreparation
   private let bufferLedger: YlManagedBufferLedger
   private let configuration: PlayerConfiguration
@@ -71,12 +73,16 @@ final class YlAppleSessionCoordinator: NSObject {
        slotCompatibility: YlAppleCompatibility? = nil,
        bufferLedger: YlManagedBufferLedger = YlManagedBufferLedger(),
        videoSessionFactory: YlVTSessionFactory? = nil,
+       audioRendererFactory: any YlAudioRendererMaking = YlPlatformAudioRendererFactory(),
+       audioTerminalCandidateEnabled: Bool = false,
        hardwareEvidenceStage: YlHardwareEvidencePreparation = .init(),
        audioOwnership: YlPlayerAudioOwnership? = nil,
        emit: @escaping (YlAppleSessionIdentity, YlNativeBackendCallback) -> Void) {
     self.beforeDashCapsPreparation = beforeDashCapsPreparation
     self.audioOwnership = audioOwnership
     self.videoSessionFactory = videoSessionFactory
+    self.audioRendererFactory = audioRendererFactory
+    self.audioTerminalCandidateEnabled = audioTerminalCandidateEnabled
     self.hardwareEvidenceStage = hardwareEvidenceStage
     self.bufferLedger = bufferLedger
     self.commandCoordinator = commandCoordinator
@@ -751,6 +757,8 @@ final class YlAppleSessionCoordinator: NSObject {
           videoSessionFactory: videoSessionFactory,
           loadRequestId: identity.loadRequestId,
           channelIdentity: preservedIdentity,
+          audioRendererFactory: audioRendererFactory,
+          audioTerminalCandidateEnabled: audioTerminalCandidateEnabled,
           emit: candidateEvents.accept
         )
         applyPersistentPlaybackControls(to: backend)

@@ -310,6 +310,7 @@ final class YlMacosAudioTests: XCTestCase {
     var snapshot: [String: Int] { lock.withLock { counts } }
     let supportsTerminalCompletion = true
     private let failureProbe: AudioFailureProbe?
+    var invalidateOnPlay = false
     init(engine: AVAudioEngine, failureProbe: AudioFailureProbe? = nil) {
       self.failureProbe = failureProbe; system = YlSystemAudioOutput(engine: engine)
     }
@@ -343,6 +344,7 @@ final class YlMacosAudioTests: XCTestCase {
     }
     func play() throws {
       failureProbe?.record("playAttempt")
+      if invalidateOnPlay { system.dispose() }
       do { try system.play(); failureProbe?.record("playSucceeded") }
       catch { failureProbe?.record("playFailed", error: error); throw error }
     }
@@ -551,6 +553,138 @@ final class YlMacosAudioTests: XCTestCase {
     XCTAssertNil(output.renderedAudioTime)
     output.dispose()
     XCTAssertNil(output.renderedAudioTime)
+  }
+
+  private final class ReloadAudioFactory: YlAudioRendererMaking {
+    var entries: [DecodedAudioFactory] = []
+    var invalidateNextPlay = false
+    func makeRenderer(bufferBudget: YlFallbackBufferBudget) -> YlAudioRenderer {
+      let entry = DecodedAudioFactory()
+      entry.output.invalidateOnPlay = invalidateNextPlay
+      invalidateNextPlay = false
+      entries.append(entry)
+      return entry.makeRenderer(bufferBudget: bufferBudget)
+    }
+  }
+
+  @MainActor
+  func testActualHostReloadRebuildsInvalidAudioAndFencesRetiredSession() async throws {
+    try await verifyHostAudioReload(rejectFirstReload: false)
+  }
+
+  @MainActor
+  func testActualHostRejectedAudioReloadStaysSafeAndLaterReloadRecovers() async throws {
+    try await verifyHostAudioReload(rejectFirstReload: true)
+  }
+
+  @MainActor
+  private func verifyHostAudioReload(rejectFirstReload: Bool) async throws {
+    let factory = ReloadAudioFactory(), ledger = YlManagedBufferLedger()
+    let registry = ApplePublicationRegistry(), callbacks = AppleRecordingCallbacks()
+    let host = YlApplePlayerHost(playerId: 739, suffix: "audio-reload-739",
+      options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 100),
+      services: registry.services(), callbacks: callbacks, bufferLedger: ledger,
+      audioRendererFactory: factory, audioTerminalCandidateEnabled: true)
+    defer { host.close() }
+    try host.attach(); try host.setVolume(volume: 0)
+    let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+      .deletingLastPathComponent().deletingLastPathComponent()
+      .appendingPathComponent("assets/test_media/format_matrix/continuous-avc-aac.mkv")
+    func request(_ id: String, start: Int64 = 0) -> AppleLoadRequest {
+      var value = AppleHostFixture.request(id, url: fixture.path,
+        format: .matroska, autoplay: true, start: start)
+      value.source.kind = .file
+      return value
+    }
+    func loadExpected(_ value: AppleLoadRequest) async throws -> AppleLoadReply {
+      do { return try await host.load(request: value) }
+      catch {
+        let failure = YlAppleSafeDiagnostics.failure(error, scope: .command)
+        XCTFail("Explicit audio reload phase \(value.loadRequestId) failed with \(failure.code)")
+        throw error
+      }
+    }
+    let first = try await loadExpected(request("initial"))
+    let retired = try XCTUnwrap(factory.entries.first)
+    let renderer = try XCTUnwrap(retired.renderers.first)
+    XCTAssertTrue(renderer.usesSubmissionAnchor)
+    try await AppleHostCharacterizations.waitFor({
+      retired.output.snapshot["renderedSubmissions", default: 0] > 0 &&
+        (retired.output.renderedAudioTime?.sampleTime ?? 0) > 0 &&
+        callbacks.frames.contains { $0.sessionId == first.sessionId }
+    })
+    let lateFailure = try XCTUnwrap(renderer.onOutputFailure)
+    NotificationCenter.default.post(name: .AVAudioEngineConfigurationChange, object: retired.engine)
+    try await AppleHostCharacterizations.waitFor({ callbacks.failures.count == 1 && !retired.engine.isRunning })
+    XCTAssertEqual(callbacks.failures[0].sessionId, first.sessionId)
+    XCTAssertEqual(callbacks.failures[0].failure.code, "render.audio_engine_failed")
+    XCTAssertEqual(callbacks.failures[0].failure.category, .render)
+    XCTAssertFalse(callbacks.failures[0].failure.retryable)
+    XCTAssertTrue(callbacks.failures[0].failure.message.contains("reload the media"))
+    XCTAssertEqual(host.initialState.status, .failed)
+    XCTAssertThrowsError(try renderer.play())
+    XCTAssertEqual(renderer.scheduledBytes, 0)
+    XCTAssertNil(retired.output.renderedAudioTime)
+    XCTAssertEqual(factory.entries.count, 1, "Failure must not automatically rebuild output")
+
+    if rejectFirstReload {
+      factory.invalidateNextPlay = true
+      do {
+        _ = try await host.load(request: request("rejected", start: 1000))
+        XCTFail("A native output that cannot start must not commit")
+      } catch let error as PigeonError {
+        XCTAssertEqual(error.code, "render.audio_engine_failed")
+        let failure = try XCTUnwrap(error.details as? AppleFailureMessage)
+        XCTAssertEqual(failure.category, .render)
+        XCTAssertFalse(failure.retryable)
+        XCTAssertTrue(failure.message.contains("reload the media"))
+      }
+      XCTAssertEqual(host.sessionId, first.sessionId)
+      XCTAssertEqual(factory.entries.count, 2, "Rejected Load must not silently reconstruct the failed prior graph")
+      XCTAssertFalse(retired.engine.isRunning)
+      XCTAssertFalse(factory.entries[1].engine.isRunning)
+    }
+    let next = try await loadExpected(request("reloaded", start: 1000))
+    let fresh = try XCTUnwrap(factory.entries.last)
+    XCTAssertFalse(fresh === retired)
+    XCTAssertNotEqual(next.sessionId, first.sessionId)
+    XCTAssertTrue(try XCTUnwrap(fresh.renderers.first).usesSubmissionAnchor)
+    try await AppleHostCharacterizations.waitFor({
+      fresh.output.snapshot["renderedSubmissions", default: 0] > 0 &&
+        (fresh.output.renderedAudioTime?.sampleTime ?? 0) > 0 &&
+        callbacks.frames.contains { $0.sessionId == next.sessionId } && host.initialState.timeline.positionMs >= 1000
+    })
+    let position = host.initialState.timeline.positionMs
+    let nativeTime = try XCTUnwrap(fresh.output.renderedAudioTime).sampleTime
+    let submissions = retired.output.snapshot
+    NotificationCenter.default.post(name: .AVAudioEngineConfigurationChange, object: retired.engine)
+    lateFailure(NativePlayerError(category: "render", code: "render.audio_engine_failed", message: "retired output"))
+    do {
+      try await host.play(command: .init(sessionId: first.sessionId))
+      XCTFail("Old session command reached the replacement")
+    } catch let error as PigeonError { XCTAssertEqual(error.code, "session.stale") }
+    try await AppleHostCharacterizations.waitFor({ host.initialState.timeline.positionMs > position + 200 })
+    XCTAssertGreaterThan(try XCTUnwrap(fresh.output.renderedAudioTime).sampleTime, nativeTime)
+    XCTAssertEqual(callbacks.failures.count, 1)
+    XCTAssertEqual(host.sessionId, next.sessionId)
+    XCTAssertEqual(host.initialState.status, .playing)
+    XCTAssertNil(host.initialState.failure)
+    XCTAssertEqual(retired.output.snapshot["renderedSubmissions"], submissions["renderedSubmissions"])
+    XCTAssertEqual(retired.output.snapshot["playedSubmissions"], submissions["playedSubmissions"])
+    XCTAssertFalse(retired.engine.isRunning)
+    XCTAssertTrue(fresh.engine.isRunning)
+    let recoveredPosition = host.initialState.timeline.positionMs
+    host.close()
+    XCTAssertTrue(factory.entries.allSatisfy { !$0.engine.isRunning })
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+    let data = try JSONSerialization.data(withJSONObject: [
+      "rejectedFirstReload": rejectFirstReload, "outputsCreated": factory.entries.count,
+      "distinctSession": first.sessionId != next.sessionId, "positionBeforeLateCallbackMs": position, "positionAfterLateCallbackMs": recoveredPosition,
+      "ledgerAfterClose": ledger.snapshot.currentBytes,
+      "audioDiagnostics": factory.entries.map { $0.failureProbe.snapshot }
+    ], options: [.sortedKeys])
+    let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+    attachment.name = "explicit-audio-reload"; attachment.lifetime = .keepAlways; add(attachment)
   }
 
   func testActualTerminalAdapterGraphNotificationAndNativeStartFailure() throws {

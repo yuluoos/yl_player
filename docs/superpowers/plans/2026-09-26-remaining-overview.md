@@ -297,3 +297,6 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 
 
 2026-10-09音频提示完成：Swift/Dart为render.audio_engine_failed统一提供检查音频设备并重新加载媒体的固定指引，保持render分类、retryable=false和旧图停止策略。公开边界RED→GREEN，定向原生9/9、Dart Apple112/112/接口123/123、夹具4/4、iOS arm64编译通过；本轮未重跑完整原生或长程验收。下一项验证显式Load重建恢复及旧图隔离，再完成带路由记录的1200s长程；候选默认和准入继续关闭。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)。
+
+
+2026-10-09显式重载恢复完成：默认false的内部音频注入贯通typed Host Load，真实解码/原生输出两场景覆盖配置失效→新session重载，以及启动失败使首次重载被拒→后续显式重载成功；旧图和迟到回调隔离、旧命令拒绝、新音频时钟/首帧/位置恢复、最终账本0均验证。最终macOS658/658、0失败/0跳过、夹具4/4、发现678/659和iOS arm64编译通过。本项为进程内受控通知/原生失效输出，真实设备切换未验收。下一项带路由记录的1200s长程，历史失败与候选准入关闭不变；见[报告](../reports/2026-09-26-remaining-08-performance-release.md)与[证据](../../../tool/playback_benchmark/macos-audio-reload-recovery-observations.json)。

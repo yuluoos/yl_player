@@ -1411,3 +1411,16 @@ legacy原采集器已记录TimeoutExpired；4次阶段调用不等于4份有效�
 过程中Apple Dart首次从包目录运行导致既有schema测试相对路径失败；从仓库根目录重跑完整112项通过，未修改该测试。夹具校验及独立复审发现标准夹具遗漏，同步后重新校验通过；未放宽检查。此固定提示变更无需重跑全套原生或1200s长程，不能将此前656/656或短程记录当作本轮新结果。
 
 下一项：显式Load重建恢复验收，检查新session/输出可用、旧图不可复活、重载失败仍安全传播；随后进行带路由事件记录的长程。实际设备切换恢复、物理音画、长程零丢帧及整体资源有界仍未证明，历史失败保持原状，defaultEnabled/productionAdmission/downstreamBoundProven继续false。
+
+
+### 显式音频重载恢复（2026-10-09，basebce567d）
+
+本轮贯通Host、Coordinator、Fallback的内部音频factory和默认false候选开关，使恢复验收经过真实typed Host Load事务；默认工厂、公开schema、系统最低版本、输出生命周期和自动重试策略不变。测试使用本地连续AVC/AAC Matroska、真实解码、AVAudioEngine/AVAudioPlayerNode及已提交纹理首帧。
+
+两项定向运行通过：播放中向自有engine发配置变化通知，验证安全render.audio_engine_failed、旧图停止、renderer字节清零且无自动重建。显式重新Load指定1000ms起点后，新的session和输出恢复候选提交、首帧及真实节点时钟；迟到旧图通知/renderer失败回调不影响新会话，旧session Play返回session.stale。另一场景将第一次重载候选的原生output在Play前dispose，使Load安全拒绝、旧session身份保留且没有隐式重建；再一次显式Load成功。
+
+本轮初始编译修正了缺少测试注入参数及状态字段引用；首次运行两项均在输入校验阶段失败，原因是测试给file locator传入file URL而非绝对路径，尚未进入音频路径。这些记录不构成生产恢复缺陷的RED证据。按已有Host契约修正后两项通过，生产改动仅为内部注入贯通。复审无新增可操作问题；旧输出检查约束新增提交，允许合法资源退还回调完成，不以回调静止冒充隔离。
+
+最终macOS完整原生**658/658、0失败/0跳过**，运行清单与发现iOS678/macOS659核对，夹具4/4通过。全套内恢复附件记录：直接重载创建2个输出，新会话媒体位置从1003推进至1212ms；先拒绝再重载创建3个输出，新会话从1049推进至1328ms。旧输出均只有1次configurationInvalidated；被拒候选有1次playFailed；成功输出均有真实playSucceeded。每个输出最终dispose，关闭后账本均为0。iOS arm64 simulator build-for-testing exit0；未运行iOS测试，也未重跑Dart或1200s长程。
+
+[协议](../../../tool/playback_benchmark/audio-reload-recovery-protocol.md)限定证据口径，[归档](../../../tool/playback_benchmark/macos-audio-reload-recovery-observations.json)保留失败尝试日志、定向/最终结果包导出、音频分支附件及源码/素材身份。真实系统设备切换未执行，进程内通知不能冒充物理路由切换。下一项为带路由记录的1200s长程；实际设备恢复、物理音画、完整文件EOF及整体资源上界仍未完成，候选默认、productionAdmission、downstreamBoundProven继续false。

@@ -348,6 +348,16 @@ AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 o
 - [x] Swift/Dart公开边界均为既有`render.audio_engine_failed`提供固定音频设备检查与重新加载提示；不使用原生message/diagnostic推断设备切换原因，retryable仍为false。
 - [x] 接入文档说明由用户显式调用`player.load`重建并使用新session；失败旧图不能反复play，不承诺自动保留位置/轨道。
 - [x] 原生发布边界RED1→GREEN；最终定向9/9（含配置通知/启动失败及停止后禁止重播）、Dart Apple112/112、平台接口123/123、夹具4/4、发现678/657；iOS arm64编译通过，未运行iOS测试。
-- [ ] 下一项：验收显式Load重建后的恢复行为（新session/输出、旧图保持失效及失败安全传播），再执行带路由记录的1200s长程。真实设备切换恢复与长程通过尚未证明。
+- [x] 显式Load重建后的受控恢复验收：真实解码/音频输出、新session、旧图隔离及失败Load安全传播两场景通过，详见后续记录。实际设备切换恢复仍未证明。
+- [ ] 下一项：执行带路由事件记录的1200s长程；保留此前失败和零丢帧门槛，实际设备切换恢复单独验收。
 
 本项只改变固定公开提示并完善接入指引，不改变输出生命周期或启用候选。本轮不重复完整macOS套件及短/长程播放；历史长程失败和正式准入关闭保持不变。
+
+### 后续恢复：显式 Host Load 重建输出（2026-10-09）
+
+- [x] 内部audioRendererFactory与默认false的候选开关贯通Host→Coordinator→Fallback→Session，不修改公开协议或默认行为。
+- [x] 两项真实AVC/AAC解码/AVAudioEngine定向测试通过：配置失效后显式Load恢复；候选原生输出启动失败使首次重载被拒，随后显式重载恢复。
+- [x] 新session/输出及首帧、节点时钟、媒体位置推进均检查；旧session命令拒绝、旧图无新提交、迟到失败回调不污染新会话；最终所有输出停止且账本0。
+- [x] 最终macOS完整原生658/658、0失败/0跳过；发现iOS678/macOS659及运行清单核对、夹具4/4；iOS arm64编译exit0（未运行iOS测试）。
+
+作用域为向自有engine发布配置通知及使候选原生output在play前失效，不变更系统音频设备。短程物理音画、真实设备切换、长程零丢帧与整体有界均不能由本项推导。详见[协议](../../../tool/playback_benchmark/audio-reload-recovery-protocol.md)、[证据](../../../tool/playback_benchmark/macos-audio-reload-recovery-observations.json)和[报告](../reports/2026-09-26-remaining-08-performance-release.md)。
