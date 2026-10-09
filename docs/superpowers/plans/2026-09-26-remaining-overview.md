@@ -306,3 +306,6 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 
 
 2026-10-09真实解码自然EOF通过：4.021s AVC/AAC文件从起点播放至自然完成；正常与真实尾回调受控暂停两场景均验证188次rendered退还、1次尾部playedBack、音频资源归零后公开completed且只发布一次，迟到回调/close后事件隔离有效。复审覆盖缺口已修正，最终音频及受控EOF79/79、夹具4/4、发现678/661通过，43份证据归档。本轮无生产修改、不重跑iOS/长程；下一项真实解码EOF后独立资源对照，实际设备/物理音画/平台矩阵及整体资源上界继续开放，准入保持关闭。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)和[证据](../../../tool/playback_benchmark/macos-decoded-natural-eof-observations.json)。
+
+
+2026-10-09真实解码EOF后资源对照完成：同一4.021s素材默认/候选两独立进程、同源码/二进制指纹，6/6正式heap在原8s内通过完整性与PID校验；完成时音频资源0，总ledger92944，close后两点均ledger0/原生输出停止。候选188 rendered+1 playedBack，默认189 playedBack。定向4/4、正式各1/1、资源工具25/25、夹具4/4、发现678/663通过，119份证据归档。ACK超时继续播放的复审问题已修复；分组与dispose后清除的运行标志已分开。进程总堆关闭后仍增加，单对照不代表统计性改善或整体有界。下一项扩大真实解码EOF资源对照的播放长度矩阵；实际设备/物理音画/平台矩阵及整体资源上界继续开放，候选准入关闭。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)与[证据](../../../tool/playback_benchmark/macos-decoded-eof-resource-observations.json)。

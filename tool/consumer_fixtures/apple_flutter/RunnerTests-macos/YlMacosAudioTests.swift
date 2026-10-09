@@ -602,6 +602,122 @@ final class YlMacosAudioTests: XCTestCase {
     }
   }
 
+  private enum ResourceProbeError: Error { case acknowledgementTimedOut }
+
+  @MainActor
+  private func waitForResourceAcknowledgement(_ exists: () -> Bool, timeout: TimeInterval = 30) async throws {
+    let deadline = ProcessInfo.processInfo.systemUptime + timeout
+    while !exists() {
+      guard ProcessInfo.processInfo.systemUptime < deadline else {
+        throw ResourceProbeError.acknowledgementTimedOut
+      }
+      try await Task.sleep(nanoseconds: 10_000_000)
+    }
+  }
+
+  @MainActor
+  func testResourceAcknowledgementTimeoutStopsBeforePlayback() async throws {
+    var proceeded = false
+    do {
+      try await waitForResourceAcknowledgement({ false }, timeout: 0.01)
+      proceeded = true
+      XCTFail("Missing ACK must throw before playback can begin")
+    } catch ResourceProbeError.acknowledgementTimedOut {}
+    XCTAssertFalse(proceeded)
+    try await waitForResourceAcknowledgement({ true }, timeout: 0)
+  }
+
+  @MainActor
+  func testActualDecodedEOFResourceObservation() async throws {
+    let env = ProcessInfo.processInfo.environment
+    XCTAssertNil(env["MallocStackLogging"]); XCTAssertNil(env["MallocStackLoggingNoCompact"])
+    let directory = env["YL_AUDIO_PROBE_DIRECTORY"].map { URL(fileURLWithPath: $0) }
+    let arms = directory == nil ? [false, true] : [env["YL_AUDIO_PROBE_ARM"] != "legacy"]
+    for candidate in arms {
+      let factory = ReloadAudioFactory(), ledger = YlManagedBufferLedger()
+      let registry = ApplePublicationRegistry(), callbacks = AppleRecordingCallbacks()
+      let host = YlApplePlayerHost(playerId: 743, suffix: "decoded-resource-743",
+        options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 50),
+        services: registry.services(), callbacks: callbacks, bufferLedger: ledger,
+        audioRendererFactory: factory, audioTerminalCandidateEnabled: candidate)
+      defer { host.close() }
+      try host.attach(); try host.setVolume(volume: 0)
+      let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+        .deletingLastPathComponent().deletingLastPathComponent()
+        .appendingPathComponent("assets/test_media/format_matrix/mkv-avc-aac.mkv")
+      var request = AppleHostFixture.request("decoded-resource", url: fixture.path, format: .matroska, autoplay: false)
+      request.source.kind = .file
+      let session = try await host.load(request: request)
+      let entry = try XCTUnwrap(factory.entries.first), renderer = try XCTUnwrap(entry.renderers.first)
+      XCTAssertEqual(renderer.usesSubmissionAnchor, candidate)
+      func probe(_ phase: String, checkpoint: Bool = false) async throws {
+        if checkpoint {
+          XCTAssertFalse(entry.nativePlaying)
+          if phase != "configured" {
+            XCTAssertEqual(callbacks.states.filter { $0.status == .completed }.count, 1)
+            XCTAssertFalse(renderer.hasPendingPlayback); XCTAssertEqual(renderer.scheduledBytes, 0)
+          }
+        }
+        var info = task_vm_info_data_t()
+        var size = mach_msg_type_number_t(MemoryLayout<task_vm_info_data_t>.size / MemoryLayout<integer_t>.size)
+        let status = withUnsafeMutablePointer(to: &info) { pointer in
+          pointer.withMemoryRebound(to: integer_t.self, capacity: Int(size)) {
+            task_info(mach_task_self_, task_flavor_t(TASK_VM_INFO), $0, &size)
+          }
+        }
+        let row: [String: Any] = ["phase": phase, "uptime": ProcessInfo.processInfo.systemUptime,
+          "pid": ProcessInfo.processInfo.processIdentifier, "sessionId": session.sessionId,
+          "candidate": candidate, "submissionAnchor": renderer.usesSubmissionAnchor, "pending": renderer.hasPendingPlayback,
+          "nativePlaying": entry.nativePlaying, "engineRunning": entry.engine.isRunning,
+          "ownedBytes": renderer.scheduledBytes, "ledgerBytes": ledger.snapshot.currentBytes,
+          "ledgerPeak": ledger.snapshot.peakBytes, "modes": entry.output.snapshot,
+          "completed": callbacks.states.filter { $0.status == .completed }.count,
+          "firstFrames": callbacks.frames.filter { $0.sessionId == session.sessionId }.count,
+          "failures": callbacks.failures.map { $0.failure.code }, "audioDiagnostics": entry.failureProbe.snapshot,
+          "rssBytes": status == KERN_SUCCESS ? info.resident_size as Any : NSNull(),
+          "footprintBytes": status == KERN_SUCCESS ? info.phys_footprint as Any : NSNull()]
+        let data = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
+        let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+        attachment.name = "decoded-resource-\(candidate)-\(phase)"; attachment.lifetime = .keepAlways; add(attachment)
+        guard let directory else { return }
+        let file = directory.appendingPathComponent("rows.jsonl")
+        if !FileManager.default.fileExists(atPath: file.path) { FileManager.default.createFile(atPath: file.path, contents: nil) }
+        let handle = try FileHandle(forWritingTo: file)
+        try handle.seekToEnd(); try handle.write(contentsOf: data + Data([10])); try handle.close()
+        if checkpoint {
+          let ack = directory.appendingPathComponent(phase + ".ack")
+          try await waitForResourceAcknowledgement({ FileManager.default.fileExists(atPath: ack.path) })
+        }
+      }
+      try await probe("configured", checkpoint: true)
+      try await host.play(command: .init(sessionId: session.sessionId))
+      try await AppleHostCharacterizations.waitFor({ host.initialState.status == .completed }, timeout: 10)
+      XCTAssertEqual(callbacks.states.filter { $0.status == .completed }.count, 1)
+      XCTAssertTrue(callbacks.failures.isEmpty)
+      XCTAssertFalse(renderer.hasPendingPlayback); XCTAssertEqual(renderer.scheduledBytes, 0)
+      let modes = entry.output.snapshot
+      XCTAssertEqual(modes["renderedSubmissions"], modes["renderedCallbacks"])
+      XCTAssertEqual(modes["playedSubmissions"], modes["playedCallbacks"])
+      XCTAssertEqual(callbacks.frames.filter { $0.sessionId == session.sessionId }.count, 1)
+      if candidate {
+        XCTAssertEqual(modes["playedCallbacks"], 1); XCTAssertGreaterThan(modes["renderedCallbacks", default: 0], 1)
+      } else {
+        XCTAssertEqual(modes["renderedCallbacks"], 0); XCTAssertGreaterThan(modes["playedCallbacks", default: 0], 1)
+      }
+      try await probe("completed")
+      // Quiesce only after natural completion; retain the graph for the drained heap.
+      renderer.pause()
+      try await probe("drained", checkpoint: true)
+      host.close()
+      XCTAssertFalse(entry.engine.isRunning); XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+      try await probe("disposed", checkpoint: true)
+      try await Task.sleep(nanoseconds: 2_000_000_000)
+      XCTAssertEqual(entry.output.snapshot, modes)
+      XCTAssertEqual(ledger.snapshot.currentBytes, 0); XCTAssertTrue(callbacks.failures.isEmpty)
+      try await probe("disposedLater")
+    }
+  }
+
   @MainActor
   func testActualDecodedNaturalEOFFollowsNativeTailAndResourceRelease() async throws {
     try await verifyNaturalEOF(holdTail: false)

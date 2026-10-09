@@ -1452,3 +1452,25 @@ legacy原采集器已记录TimeoutExpired；4次阶段调用不等于4份有效�
 受控组持有期间pendingtrue且owned bytes>0，无completed；paused后转交使音频排空，但保持paused且未完成，显式play后才completed。重复迟到回调不改变完成/资源状态；Host关闭后全部六类事件计数保持不变，输出引擎停止且ledger0。[协议](../../../tool/playback_benchmark/decoded-natural-eof-protocol.md)与[43份可校验原始证据](../../../tool/playback_benchmark/macos-decoded-natural-eof-observations.json)包含初次/最终结果包导出、完整完成快照、前后事件计数、素材probe和源码/二进制/素材指纹。
 
 本轮只改测试与证据工具，未重跑完整原生套件、iOS或1200s长程；先前长程通过仍绑定其原版本，不将本轮测试二进制视为重新长测。真实长短尾部格式组合、实际设备切换、物理音画、平台矩阵及整体资源上界仍开放。下一项为真实解码自然EOF后的独立资源对照取证；defaultEnabled/productionAdmission/downstreamBoundProven继续false，完整P08仍未完成。
+
+
+### 真实解码 EOF 后独立资源对照通过（2026-10-09，base a824dc4）
+
+使用同一4.021s AVC/AAC本地素材，默认路径与候选路径各自独立启动原生测试进程。源码、测试辅助代码、二进制、素材和采集协议前后指纹一致，两组冻结身份相同。configured在autoplay=false加载后采样；completed仅记录自然完成；随后显式pause音频renderer保留graph取得drained快照；Host close后取得disposed快照，再延迟至少2秒观察。全程不在播放期间采heap。dispose阶段保留测试持有的Host/factory/renderer引用，含义是原生图分离及账本释放，不是整个测试对象图销毁。
+
+正式两组XCTest各1/1，**6/6 heap有效**，每次2.280–3.689s，均保持原8s限制；ownedPID、完整COUNT表与All zones节点数/字节数总和严格一致，无放宽或重试。原始All zones如下（单位字节，包含进程其他模块）：
+
+| 路径 | configured | drained | disposed | drained − configured |
+| --- | ---: | ---: | ---: | ---: |
+| 默认 | 21,757,585 | 21,849,585 | 23,013,249 | +92,000 |
+| 候选 | 20,172,689 | 20,176,769 | 21,457,633 | +4,080 |
+
+两组起点已相差约1.58MB，单次不同进程结果不能声称候选节省约1.6MB，也不能从+4,080字节推出长期有界。关闭后的全进程堆反而增加，测试附件、框架缓存等仍在其中，当前没有分配归因证据，不将增长归咎于某个模块或宣称泄漏已排除。RSS和phys_footprint原始快照另存，不与heap字节混为同一指标。
+
+完成和drained阶段两组均audioOwnedBytes0/pendingfalse，总ledger92944（会话尚未关闭）；关闭后立即及>=2s两点均总ledger0、nativePlayingfalse、engineRunningfalse。默认路径189次playedBack提交/回调；候选188次rendered加1次尾部playedBack，完成前未回退，之后计数不变。两组各一次firstFrame/公开completed，无播放failure。
+
+采样流程初次定向3/3通过；原始附件审查发现dispose会清理usesSubmissionAnchor，现以固定candidate标记实验分组，另存实际submissionAnchor并校验前三阶段。采集器提前回退负例观察到RED→GREEN。独立复审发现ACK等待辅助函数超时只记录失败仍继续执行，已改为30s期限到达即throw并由defer关闭Host，添加有/无ACK回归并复核关闭。最终定向**4/4、0失败/0跳过**，资源工具**25/25**、夹具**4/4**、发现iOS678/macOS663。没有生产实现修改，也没有重跑完整原生套件、iOS或1200s长程。
+
+[协议](../../../tool/playback_benchmark/decoded-eof-resources-protocol.md)和[119份可校验原始证据](../../../tool/playback_benchmark/macos-decoded-eof-resource-observations.json)包含初次/修订/复审后定向结果、两正式进程的heap/JSONL/结果包导出、环境和完整身份。历史失败原档保持不变；本次的连续性、物理音画、真实设备切换与全局资源上界不能由这些EOF快照证明。
+
+下一项：真实解码EOF资源对照的播放长度矩阵，检查保留量是否随提交数量增长。真实设备恢复、物理音画、最低系统/Intel/iOS运行及整体资源上界仍开放；defaultEnabled/productionAdmission/downstreamBoundProven均false，完整P08仍未完成。

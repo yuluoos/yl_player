@@ -10,7 +10,7 @@
 
 **Spec:** [输出完成契约 §10](../specs/2026-10-08-audio-output-completion-contract.md)、[需求基线](../specs/2026-09-20-playback-expansion-requirements.md)、[P08](2026-09-26-remaining-08-performance-release.md)。
 
-最新状态（2026-10-09）：真实解码长程零丢帧门禁及自然EOF验收已通过；下一项为真实解码EOF后的独立资源对照取证。下方历史执行记录保留当时的失败/未完成状态，当前进度以最后一节为准；正式准入仍关闭。
+最新状态（2026-10-09）：真实解码长程、自然EOF及单份素材的独立资源对照已通过；下一项为真实解码EOF资源对照的播放长度矩阵。下方历史执行记录保留当时的失败/未完成状态，当前进度以最后一节为准；正式准入仍关闭。
 
 起点 `9c5967a`。Task 1–5 已实现并执行验证；资源采样帧断言失败如实保留，默认准入仍关闭。既有工具通过不能替代生产验收。
 
@@ -382,6 +382,19 @@ AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 o
 - [x] 完成时检查普通rendered资源回调齐全、恰好一次尾部playedBack、原生→转交→公开完成时序及音频bytes0/pendingfalse。
 - [x] 复审补齐迟到回调断言：重复转交后检查renderer/host状态；close后比对全部公开事件计数，镜像同步。
 - [x] 最终音频类及三项受控EOF回归79/79、0失败/0跳过；夹具4/4、发现iOS678/macOS661核对；43份带hash原始证据归档。
-- [ ] 下一项：真实解码路径的独立资源对照取证；在自然EOF后采集，保持播放连续性与资源测量互不替代。
+- [x] 真实解码路径的独立资源对照取证：两独立进程、6份有效heap；详见后续记录，保持播放连续性与资源测量互不替代。
 
 本轮只修改测试/证据工具，生产默认关闭策略不变。不重跑iOS或20分钟长程，已有结果保持原版本身份。真实设备切换、物理音画、平台矩阵及整体资源上界继续开放。详见[协议](../../../tool/playback_benchmark/decoded-natural-eof-protocol.md)、[证据](../../../tool/playback_benchmark/macos-decoded-natural-eof-observations.json)和[报告](../reports/2026-09-26-remaining-08-performance-release.md)。
+
+
+### 后续资源：真实解码自然 EOF 后独立对照（2026-10-09）
+
+- [x] 默认/候选各独立进程，冻结同一源码、二进制和4.021s AVC/AAC素材；configured/drained/disposed各采heap，completed仅观察，播放期间不采堆。
+- [x] 自然完成后先确认原生回调与音频排空，再pause原生节点保留graph；明确区分固定arm与dispose后清除的实际submissionAnchor。
+- [x] 复审发现ACK超时仍可继续播放，改为30s超时抛错并关闭Host；回归覆盖缺ACK中止和已有ACK继续，复核关闭。
+- [x] 两组6/6 heap均在原8s期限内取得完整表格、ownedPID及一致汇总；正式XCTest各1/1、最终定向4/4、资源工具25/25、夹具4/4，发现iOS678/macOS663。
+- [x] 两组完成时audioOwned0/pendingfalse，总ledger92944；close后立即及>=2s均ledger0、原生输出停止。默认189 playedBack，候选188 rendered+1 playedBack，全部回调到达。
+- [x] 119份原始数据/hash归档。进程堆close后仍可能增长，保留原始RSS/footprint与heap结果，不将受管资源释放等同全进程回收。
+- [ ] 下一项：扩大真实解码自然EOF资源对照的播放长度矩阵，检查随提交数量增加的保留趋势；仍不能以EOF快照代替活动播放上界证明。
+
+本次仅测试/采集工具/文档，无生产修改；未重跑完整原生套件、iOS或1200s长程。defaultEnabled/productionAdmission/downstreamBoundProven继续false。单对照不支持统计性优化结论；实际设备切换、物理音画、平台矩阵及整体资源上界仍开放。见[协议](../../../tool/playback_benchmark/decoded-eof-resources-protocol.md)、[证据](../../../tool/playback_benchmark/macos-decoded-eof-resource-observations.json)及[报告](../reports/2026-09-26-remaining-08-performance-release.md)。

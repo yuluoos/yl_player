@@ -69,14 +69,46 @@ def validate_rows(rows, candidate, count=2000):
                 continuousLongPlaybackProof=False)
 
 
+def eligible_decoded_checkpoint(row):
+    phase = row['phase']
+    return (phase in PHASES and not row['nativePlaying'] and
+            (phase == 'configured' or (row['completed'] == 1 and
+             not row['pending'] and row['ownedBytes'] == 0)))
+
+
+def validate_decoded_rows(rows, candidate):
+    def require(condition, message):
+        if not condition:
+            raise ValueError(message)
+    require([r['phase'] for r in rows] == ['configured', 'completed', 'drained', 'disposed', 'disposedLater'], 'Wrong decoded phases')
+    require(len({(r['pid'], r['sessionId']) for r in rows}) == 1, 'Decoded identity changed')
+    require(all(r['candidate'] == candidate and not r['failures'] for r in rows), 'Wrong arm or playback failure')
+    require(all(b['uptime'] > a['uptime'] for a, b in zip(rows, rows[1:])), 'Nonmonotonic decoded observations')
+    require(all(eligible_decoded_checkpoint(r) for r in rows if r['phase'] in PHASES), 'Unsafe heap checkpoint')
+    require(rows[0]['completed'] == 0, 'Already completed before play')
+    require(all(r['submissionAnchor'] == candidate for r in rows[:3]), 'Candidate fell back before drain')
+    for row in rows[1:]:
+        require(row['completed'] == 1 and row['firstFrames'] == 1 and not row['pending'] and row['ownedBytes'] == 0, 'Incomplete natural EOF')
+        modes = row['modes']
+        require(modes == rows[1]['modes'], 'Callbacks changed after completion')
+        require(modes['playedSubmissions'] == modes['playedCallbacks'] and modes['renderedSubmissions'] == modes['renderedCallbacks'], 'Missing native callbacks')
+        require((modes['playedCallbacks'] == 1 and modes['renderedCallbacks'] > 1) if candidate else (modes['playedCallbacks'] > 1 and modes['renderedCallbacks'] == 0), 'Wrong native callback modes')
+    require(all(not r['nativePlaying'] and not r['engineRunning'] and r['ledgerBytes'] == 0 for r in rows[-2:]), 'Incomplete close release')
+    require(rows[-1]['uptime'] - rows[-2]['uptime'] >= 2, 'Missing delayed release')
+    return dict(modes=rows[1]['modes'], completedPublications=1, liveHeapProof=False,
+                continuousLongPlaybackProof=False, downstreamBoundProven=False)
+
+
 def freeze(out, products):
     shared = ROOT/'packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared'
-    files = list(shared.rglob('*.swift')) + [ROOT/p for p in (
-        'packages/yl_player/example/macos/RunnerTests/YlMacosAudioTests.swift',
+    files = list(shared.rglob('*.swift')) + list((ROOT/'packages/yl_player/example/macos/RunnerTests').rglob('*.swift')) + [ROOT/p for p in (
         'packages/yl_player/example/macos/Flutter/ephemeral/Flutter-Generated.xcconfig',
         'tool/playback_benchmark/audio-postdrain-resources-protocol.md',
         'tool/playback_benchmark/run_audio_integration_resources.py',
-        'tool/playback_benchmark/test_audio_integration_resources.py')]
+        'tool/playback_benchmark/test_audio_integration_resources.py',
+        'tool/playback_benchmark/test_decoded_eof_resources.py',
+        'tool/playback_benchmark/decoded-eof-resources-protocol.md',
+        'packages/yl_player/example/assets/test_media/format_matrix/mkv-avc-aac.mkv')]
     binaries = [p for p in products.rglob('*') if p.is_file() and
                 (p.suffix in ('.dylib','.xctestrun') or p.name in ('yl_player_example','RunnerTests','yl_player_apple'))]
     identity = dict(baseCommit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
@@ -93,7 +125,7 @@ def freeze(out, products):
     return identity
 
 
-def collect(arm, count, directory):
+def collect(arm, count, directory, decoded=False):
     out=Path(directory).resolve();out.mkdir(parents=True,exist_ok=False)
     products=ROOT/'packages/yl_player/example/build/native-macos-tests/Build/Products'
     identity=freeze(out,products)
@@ -107,15 +139,15 @@ def collect(arm, count, directory):
     config=absolute(plistlib.loads(originals[0].read_bytes()));target=config['RunnerTests']
     for env in (os.environ,target.get('EnvironmentVariables',{}),target.get('TestingEnvironmentVariables',{})):
         if any(k.startswith('MallocStackLogging') for k in env):raise ValueError('MSL must be disabled')
-    target.setdefault('EnvironmentVariables',{}).update(YL_AUDIO_PROBE_KIND='resource-drained-'+str(count),YL_AUDIO_PROBE_ARM=arm,YL_AUDIO_PROBE_DIRECTORY=str(out))
+    target.setdefault('EnvironmentVariables',{}).update(YL_AUDIO_PROBE_KIND='decoded-eof' if decoded else 'resource-drained-'+str(count),YL_AUDIO_PROBE_ARM=arm,YL_AUDIO_PROBE_DIRECTORY=str(out))
     custom=out/'probe.xctestrun';custom.write_bytes(plistlib.dumps(config))
     command=[sys.executable,'-B',str(ROOT/'tool/run_with_display_awake.py'),'xcodebuild','test-without-building','-quiet','-xctestrun',str(custom),
              '-destination','platform=macOS,arch=arm64','-parallel-testing-enabled','NO',
-             '-only-testing:RunnerTests/YlMacosAudioTests/testActualTerminalAdapterContinuousObservation',
+             '-only-testing:RunnerTests/YlMacosAudioTests/' + ('testActualDecodedEOFResourceObservation' if decoded else 'testActualTerminalAdapterContinuousObservation'),
              '-test-timeouts-enabled','YES','-maximum-test-execution-time-allowance','180',
              '-default-test-execution-time-allowance','180','-resultBundlePath',str(out)+'.xcresult']
     (out/'command.json').write_text(json.dumps(command,indent=2)+'\n')
-    result=dict(complete=False,arm=arm,buffers=count,probes=[],errors=[],productionAdmission=False,downstreamBoundProven=False)
+    result=dict(complete=False,arm=arm,buffers=None if decoded else count,decoded=decoded,probes=[],errors=[],productionAdmission=False,downstreamBoundProven=False)
     def save():(out/'result.json').write_text(json.dumps(result,indent=2)+'\n')
     save();seen=set();offset=0;started=time.monotonic()
     with (out/'xcode.log').open('w') as log:
@@ -135,7 +167,7 @@ def collect(arm, count, directory):
                             actual=subprocess.check_output(['/bin/ps','-p',str(row['pid']),'-o','comm='],text=True,timeout=2).strip()
                             expected=str(products/'Debug/yl_player_example.app/Contents/MacOS/yl_player_example')
                             if actual!=expected:raise ValueError('Unexpected test process identity')
-                            if row['nativePlaying'] or (phase!='configured' and row['pending']):
+                            if (decoded and not eligible_decoded_checkpoint(row)) or row['nativePlaying'] or (phase!='configured' and row['pending']):
                                 raise ValueError('Refusing heap before actual playback drain')
                             entry.update(capture_heap(row['pid'],out/(phase+'-heap.txt')))
                         except (OSError,ValueError,subprocess.SubprocessError) as error:entry['error']=repr(error)
@@ -153,7 +185,7 @@ def collect(arm, count, directory):
             result['testExitCode']=proc.returncode
             try:
                 rows=[json.loads(x) for x in (out/'rows.jsonl').read_text().splitlines()]
-                result['observation']=validate_rows(rows,arm=='candidate',count)
+                result['observation']=validate_decoded_rows(rows,arm=='candidate') if decoded else validate_rows(rows,arm=='candidate',count)
                 for name,sha in {**identity['sourceHashes'],**identity['binaryHashes']}.items():
                     if digest(ROOT/name)!=sha:raise ValueError('Source/binary changed: '+name)
             except (OSError,ValueError,KeyError,TypeError) as error:result['errors'].append(repr(error))
@@ -164,4 +196,5 @@ def collect(arm, count, directory):
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('arm',choices=['legacy','candidate']);parser.add_argument('buffers',type=int,choices=[1000,2000]);parser.add_argument('directory',type=Path)
-    args=parser.parse_args();sys.exit(0 if collect(args.arm,args.buffers,args.directory) else 1)
+    parser.add_argument('--decoded-eof', action='store_true', help='Use the finite decoded file; buffers is ignored')
+    args=parser.parse_args();sys.exit(0 if collect(args.arm,args.buffers,args.directory,decoded=args.decoded_eof) else 1)
