@@ -286,3 +286,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-10-08：完成cf094a7修复后版本的独立节点长播/资源复测，源码/二进制/素材与645/645套件身份完全一致，无实现改动。candidate无heap长播241采样/1200.300s/57840640帧，顺序错误与内部零帧0、最终回调一致、释放后ledger0，闭合最终版本长播身份缺口。独立资源两组frame/order仍失败，legacy中段heap8秒超时，7/8份有效快照；失败/超时保留，资源和正式准入均未通过。下一项优先采样干扰/超时的可验证取证方法，完整P08、物理音画/设备/最低系统及整体资源上界保持开放，见[报告](../reports/2026-09-26-remaining-08-performance-release.md)。
 
 2026-10-09：P08完成自然EOF后资源采样方法：legacy/candidate各1000和2000块四组均帧序完整、0内部零帧，12/12heap在原8秒限额内有效。排空后legacy完成回调对象1000/2000，candidate未单独识别；不能据此推出播放中整体资源有界。暂停采样假设在无heap回归中失败并已废弃，证据保留。音频66/66、最终Python9/9、夹具4/4通过；复审发现部分表格误收，RED→GREEN补齐总节点/字节核对并离线重验全部原始输出。生产未改、候选默认关闭；下一项真实解码有限长片无heap连续观察，live-heap干扰、物理音画/设备/最低系统、整体上界及完整P08仍开放，见[报告](../reports/2026-09-26-remaining-08-performance-release.md)。
+
+2026-10-09：P08推进真实解码连续观察，短程发现静音AAC首PCM PTS−21000µs触发现有兼容回退，实际rendered提交0，不能用submissionAnchor=true冒充候选。修复观测器三项复审问题并保留两次失败：音频67/67、Python8/8、夹具4/4通过，但候选短程门禁未通过，20分钟长程未执行。下一项处理真实AAC负起始PTS/预滚与候选兼容，再短程→长程；不修改生产开关，不宣称物理音画或完整P08通过，见[报告](../reports/2026-09-26-remaining-08-performance-release.md)。

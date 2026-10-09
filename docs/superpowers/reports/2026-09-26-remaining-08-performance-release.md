@@ -1325,3 +1325,17 @@ legacy原采集器已记录TimeoutExpired；4次阶段调用不等于4份有效�
 本项无生产或共享iOS修改，仅运行受影响音频类与工具/夹具检查；未重跑全macOS、iOS编译或20分钟长播，先前结果继续绑定各自版本。保留既有编译/链接警告，不宣称零警告。defaultEnabled/productionAdmission/downstreamBoundProven均false。
 
 下一项优先把无播放中heap的观察方法用于真实解码有限长片的连续播放与音画时钟检查，先固定素材身份、采样与判定范围。仍缺播放中heap干扰/超时的解决证据、物理音画/真实路由、最低系统/其他设备和整体资源上界；旧live-heap失败及8秒超时仍然有效，完整P08 Task1/2保持开放。
+
+### 2026-10-09 真实解码连续观察：负起始 PTS 阻塞候选长播
+
+执行上一项后的真实解码切片，新增[冻结协议及短程门禁](../../../tool/playback_benchmark/decoded-continuity-protocol.md)。复用自有1260秒320×180/24fps AVC、48kHz双声道静音AAC素材，真实本地demux、系统AAC转换器、hardwareRequired VT、音频输出、媒体时钟、帧调度器和系统显示节拍；纹理出口只计发布次数，混音器静音，不验证物理屏幕/扬声器。测试内部显式开启候选，生产实现与默认开关均未修改。
+
+计划先30秒短程，只有同源码/二进制/素材短程通过才执行至少1200秒；保持5秒采样、最大7.5秒间隔、90–110%进度、累计漂移5秒约束。新增内部视频选择滞后及选择年龄100ms观察门槛，不能解释为物理音画SLO。positionUs是最近一次视频帧被选中时传入调度器的媒体位置，与采样当时音频时间比较；不是独立物理呈现时间或同一时刻的第二只时钟。流式JSONL及所有失败前缀保留。
+
+首次构建短程XCTest1/1通过，但正式v1短程采集器失败。数据表明全部音频提交是playedBack、rendered提交始终0；usesSubmissionAnchor仍true，不能用它证明候选输出模式。独立审查确认3项Important：该标志不随兼容回退清零；首次视频帧有一次绕过调度器的直接发布；释放时入队竞争可能增加drop，不能与播放期质量混为一谈。已补实际模式计数门禁、独立直接发布计数、播放期drop判定；2项Minor也处理为明确选择时刻/年龄以及CLI强制匹配短程证据。回归实际RED→GREEN，最终Python8/8、夹具4/4、发现iOS678/macOS648一致。
+
+观测修正后音频类67/67、0失败/0跳过。随后独立短程诊断保留最终版本身份；这次用于定位回退，不是重试抹去v1失败。真实提交的前三块PCM均Float32 planar、48kHz、双声道、1024帧、21333µs，PTS依次−21000、0、21000µs。独立ffprobe也显示首AAC包−21ms。该首PCM违反现有isTerminalPCM的ptsUs>=0检查，调用terminal.abandon()；之后同代兼容输出为playedBack，submissionAnchor标志仍保留以维持时钟职责。因此即便帧调度和音频进度继续前进，也不能作为候选连续播放通过。
+
+最终短程采集仍明确失败于“Actual output used legacy mode before EOF”，未执行20分钟长程。音频单元类通过只说明观测代码与现有行为回归通过，不等于候选门禁通过。首次直接发布单独记录为1，播放期drop0，释放后drop变化原样保留；这些修正没有放宽实际输出模式要求。最终源码/二进制/素材身份及失败结果见[完整证据](../../../tool/playback_benchmark/macos-decoded-continuity-observations.json)。先前合成PCM长播证据继续保留，不能移用于此真实AAC输入。
+
+下一项明确AAC负起始PTS/编码预滚的处理：保证裁剪、时钟锚点和首段连续性后，让符合范围的真实输入进入候选路径；不能仅关闭负PTS检查或改素材时间戳制造通过。修复后先重跑短程，再按冻结门槛执行长程。当前正式准入/defaultEnabled/downstreamBoundProven仍false，生产未改；物理音画、真实路由、最低系统/其他设备、live-heap干扰与整体资源上界继续开放。未重跑全macOS/iOS或声称完整P08完成；既有编译/链接警告保留。

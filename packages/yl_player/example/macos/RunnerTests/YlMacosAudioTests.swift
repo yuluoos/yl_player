@@ -256,6 +256,7 @@ final class YlMacosAudioTests: XCTestCase {
   }
   private final class IntegrationOutput: YlAudioOutputDriving {
     let system: YlSystemAudioOutput
+    var onSubmit: ((YlScheduledAudioBuffer) -> Void)?
     private let lock = NSLock()
     private var counts = ["renderedSubmissions": 0, "playedSubmissions": 0, "renderedCallbacks": 0, "playedCallbacks": 0]
     var snapshot: [String: Int] { lock.withLock { counts } }
@@ -268,12 +269,14 @@ final class YlMacosAudioTests: XCTestCase {
     func configure(sampleRate: Double, channelCount: Int) throws { try system.configure(sampleRate: sampleRate, channelCount: channelCount) }
     func configure(format: AVAudioFormat) throws { try system.configure(format: format) }
     func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void) {
+      onSubmit?(buffer)
       lock.withLock { counts["playedSubmissions", default: 0] += 1 }
       system.schedule(buffer) { [weak self] in
         self?.lock.withLock { self?.counts["playedCallbacks", default: 0] += 1 }; completion()
       }
     }
     func schedule(_ buffer: YlScheduledAudioBuffer, mode: YlAudioOutputCompletionMode, callbacks: YlAudioOutputCallbacks) {
+      onSubmit?(buffer)
       lock.withLock { counts[mode == .renderedResource ? "renderedSubmissions" : "playedSubmissions", default: 0] += 1 }
       system.schedule(buffer, mode: mode, callbacks: .init(resourcesReleased: { [weak self] in
         self?.lock.withLock { self?.counts["renderedCallbacks", default: 0] += 1 }; callbacks.resourcesReleased()
@@ -285,6 +288,144 @@ final class YlMacosAudioTests: XCTestCase {
     func pause() { system.pause() }
     func reset() { system.reset() }
     func dispose() { system.dispose() }
+  }
+
+  private final class DecodedAudioFactory: YlAudioRendererMaking {
+    let engine = AVAudioEngine()
+    lazy var output = IntegrationOutput(engine: engine)
+    private let lock = NSLock()
+    private var prefix: [[String: Any]] = []
+    var submittedPrefix: [[String: Any]] { lock.withLock { prefix } }
+    var renderers: [YlAudioRenderer] = []
+    func makeRenderer(bufferBudget: YlFallbackBufferBudget) -> YlAudioRenderer {
+      engine.mainMixerNode.outputVolume = 0
+      output.onSubmit = { [weak self] buffer in
+        guard let self, let pcm = buffer.payload as? AVAudioPCMBuffer else { return }
+        self.lock.withLock {
+          if self.prefix.count < 3 {
+            self.prefix.append(["ptsUs": buffer.ptsUs, "durationUs": buffer.durationUs,
+              "frames": Int(pcm.frameLength), "sampleRate": pcm.format.sampleRate,
+              "channels": Int(pcm.format.channelCount), "float32": pcm.format.commonFormat == .pcmFormatFloat32,
+              "interleaved": pcm.format.isInterleaved])
+          }
+        }
+      }
+      let renderer = YlAudioRenderer(bufferBudget: bufferBudget, output: output)
+      renderers.append(renderer)
+      return renderer
+    }
+    var nativePlaying: Bool { engine.attachedNodes.compactMap { $0 as? AVAudioPlayerNode }.contains { $0.isPlaying } }
+  }
+  private final class DecodedScheduler: YlPresentationScheduling {
+    let actual = YlFrameScheduler()
+    var videoFrames = 0, orderErrors = 0
+    var awaitingPublish = false
+    var selectedUptime: Double = 0
+    var maxLagUs: Int64 = 0, positionUs: Int64 = 0, videoPTS: Int64 = -1
+    var lateFrameDropCount: Int { actual.lateFrameDropCount }
+    var pendingPTS: [Int64] { actual.pendingPTS }
+    var bufferedDurationUs: Int64 { actual.bufferedDurationUs }
+    func configureBounded(_ plan: YlBoundedBufferPlan?) { actual.configureBounded(plan) }
+    func setRate(_ rate: Double) { actual.setRate(rate) }
+    func enqueue(_ frame: YlFrameEnvelope) -> Bool { actual.enqueue(frame) }
+    func frame(at positionUs: Int64, generation: UInt64) -> YlFrameEnvelope? {
+      let frame = actual.frame(at: positionUs, generation: generation)
+      if let frame {
+        if frame.ptsUs <= videoPTS || frame.ptsUs > positionUs || frame.generation != generation { orderErrors += 1 }
+        awaitingPublish = true; selectedUptime = ProcessInfo.processInfo.systemUptime
+        videoPTS = frame.ptsUs; self.positionUs = positionUs
+        maxLagUs = max(maxLagUs, positionUs - frame.ptsUs); videoFrames += 1
+      }
+      return frame
+    }
+    func flush(generation: UInt64) { actual.flush(generation: generation) }
+    func dispose() { actual.dispose() }
+  }
+  private final class DecodedTexture: YlTextureOutput {
+    let textureId: Int64 = 731
+    let scheduler: DecodedScheduler
+    init(scheduler: DecodedScheduler) { self.scheduler = scheduler }
+    var published = 0, directPublished = 0
+    func publish(_ pixelBuffer: CVPixelBuffer?) {
+      guard pixelBuffer != nil else { return }
+      published += 1
+      if scheduler.awaitingPublish { scheduler.awaitingPublish = false }
+      else { directPublished += 1 }
+    }
+    func resize(width: Int, height: Int) {}
+    func clear() {}
+    func dispose() {}
+  }
+
+  @MainActor
+  func testActualDecodedTerminalContinuousObservation() async throws {
+    let env = ProcessInfo.processInfo.environment
+    let seconds = env["YL_DECODED_PROBE_KIND"] == "long" ? 1200.0 : 30.0
+    XCTAssertNil(env["MallocStackLogging"]); XCTAssertNil(env["MallocStackLoggingNoCompact"])
+    let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+      .deletingLastPathComponent().deletingLastPathComponent()
+      .appendingPathComponent("assets/test_media/format_matrix/continuous-avc-aac.mkv")
+    let ledger = YlManagedBufferLedger(), scope = try ledger.makeScope(maxBytes: nil)
+    let prepared = try YlPreparedFallback(source: .init(uri: fixture.absoluteString, kind: .file,
+      formatHint: .matroska, bufferScope: scope), requireHardwareProbe: true)
+    let factory = DecodedAudioFactory(), scheduler = DecodedScheduler()
+    let output = DecodedTexture(scheduler: scheduler)
+    let eventLock = NSLock(); var failures: [String] = []
+    let instance = try YlManagedPlaybackSession(playerId: 731,
+      services: .init(platform: .macos, textureOutput: output, makeDisplayDriver: { YlDisplayTimer(onTick: $0) }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 17,
+      audioRendererFactory: factory, presentationScheduler: scheduler,
+      emit: { callback in
+        if case let .failure(error) = callback.event { eventLock.withLock { failures.append(error.code) } }
+      }, audioTerminalCandidateEnabled: true)
+    defer { instance.dispose() }
+    let renderer = try XCTUnwrap(factory.renderers.first)
+    var records: [[String: Any]] = []
+    func observe(_ phase: String) throws {
+      let audio = renderer.renderedAudioTime
+      let audioUs = audio.map { Int64(Double($0.sampleTime) * 1_000_000 / $0.sampleRate) }
+      let row: [String: Any] = ["phase": phase, "pid": ProcessInfo.processInfo.processIdentifier,
+        "generation": 17, "uptime": ProcessInfo.processInfo.systemUptime,
+        "audioUs": audioUs as Any? ?? NSNull(), "positionUs": scheduler.positionUs,
+        "videoPTS": scheduler.videoPTS, "videoFrames": scheduler.videoFrames, "published": output.published,
+        "directPublished": output.directPublished, "submittedPrefix": factory.submittedPrefix,
+        "frameAgeUs": Int64((ProcessInfo.processInfo.systemUptime - scheduler.selectedUptime) * 1_000_000),
+        "maxLagUs": scheduler.maxLagUs, "orderErrors": scheduler.orderErrors, "dropped": scheduler.lateFrameDropCount,
+        "failures": eventLock.withLock { failures }, "candidate": renderer.usesSubmissionAnchor,
+        "nativePlaying": factory.nativePlaying, "rendererCount": factory.renderers.count,
+        "ledgerBytes": ledger.snapshot.currentBytes, "ledgerPeak": ledger.snapshot.peakBytes,
+        "audioOwnedBytes": renderer.scheduledBytes, "pending": renderer.hasPendingPlayback,
+        "modes": factory.output.snapshot, "thermalState": ProcessInfo.processInfo.thermalState.rawValue]
+      records.append(row)
+      if let directory = env["YL_DECODED_PROBE_DIRECTORY"] {
+        let path = URL(fileURLWithPath: directory).appendingPathComponent("rows.jsonl")
+        if !FileManager.default.fileExists(atPath: path.path) { FileManager.default.createFile(atPath: path.path, contents: nil) }
+        let handle = try FileHandle(forWritingTo: path); defer { try? handle.close() }
+        try handle.seekToEnd(); try handle.write(contentsOf: JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10]))
+      }
+    }
+    try instance.activate(); try instance.play()
+    let warmup = ProcessInfo.processInfo.systemUptime
+    while (scheduler.videoFrames < 24 || scheduler.positionUs < 2_000_000) && ProcessInfo.processInfo.systemUptime - warmup < 10 {
+      try await Task.sleep(nanoseconds: 10_000_000)
+    }
+    XCTAssertGreaterThanOrEqual(scheduler.videoFrames, 24); XCTAssertGreaterThanOrEqual(scheduler.positionUs, 2_000_000)
+    let start = ProcessInfo.processInfo.systemUptime
+    repeat {
+      try observe("playing")
+      if ProcessInfo.processInfo.systemUptime - start >= seconds { break }
+      if !eventLock.withLock({ failures.isEmpty }) || !factory.nativePlaying { break }
+      try await Task.sleep(nanoseconds: 5_000_000_000)
+    } while true
+    XCTAssertTrue(eventLock.withLock { failures.isEmpty })
+    XCTAssertTrue(renderer.usesSubmissionAnchor, "Submission anchoring unexpectedly unavailable (actual modes validated separately)")
+    XCTAssertEqual(scheduler.orderErrors, 0); XCTAssertEqual(scheduler.lateFrameDropCount, 0)
+    XCTAssertLessThanOrEqual(scheduler.maxLagUs, 100_000)
+    instance.dispose(); try observe("disposed")
+    try await Task.sleep(nanoseconds: 2_000_000_000); try observe("disposedLater")
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0); XCTAssertFalse(renderer.hasPendingPlayback)
+    let attachment = XCTAttachment(data: try JSONSerialization.data(withJSONObject: records, options: [.sortedKeys]), uniformTypeIdentifier: "public.json")
+    attachment.name = "decoded-continuity"; attachment.lifetime = .keepAlways; add(attachment)
   }
 
   func testActualTerminalAdapterFrameSequenceMatrix() throws {

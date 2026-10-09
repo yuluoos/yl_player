@@ -298,3 +298,14 @@ AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 o
 - [x] 归档原始证据、更新报告/总览；不修改生产或开放准入。
 
 四组帧序完整、顺序错误/内部零帧均0，12/12heap均在8秒内完成；排空后legacy完成回调对象随长度为1000/2000，candidate未单独识别。此次仅闭合排空后采证方法，未闭合旧live-heap干扰/超时、物理音画或整体资源有界。最终完整性校验是采后Python修复，原始四组采集身份保留；不重复原生或长播。下一项真实解码有限长片的无heap连续播放/时钟观察，详见[P08报告](../reports/2026-09-26-remaining-08-performance-release.md)及[证据](../../../tool/playback_benchmark/macos-audio-postdrain-resources-observations.json)。
+
+### 后续验证：真实解码短程门禁与长程阻塞（2026-10-09）
+
+- [x] 冻结真实AVC/AAC素材及内部时钟/视频选择观测范围，新增短程与条件长程入口。
+- [x] 执行30秒短程；保留v1采集失败和观测修正后的独立诊断失败。
+- [x] 修复复审3项Important与2项Minor，音频67/67、Python8/8、夹具4/4通过。
+- [x] 实测确认首PCM负PTS−21000µs触发兼容回退；归档源码、二进制、素材、原始数据和报告。
+- [ ] 候选真实解码短程通过：当前实际全部playedBack，rendered0。
+- [ ] 1200秒真实解码候选长程：被短程门禁阻塞，未运行。
+
+下一项处理AAC负起始PTS/编码预滚，维持裁剪/首段连续性/时钟正确性后重新短程验收，再启动长程。当前生产无修改，准入仍关闭。详见[报告](../reports/2026-09-26-remaining-08-performance-release.md)与[证据](../../../tool/playback_benchmark/macos-decoded-continuity-observations.json)。
