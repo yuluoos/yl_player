@@ -1181,3 +1181,17 @@ Dart 用量先下降后上升，容量和 externalUsage 精确值全部保留。
 真实native场景为48kHz双声道、每块1024帧、输出音量0；通过四秒有界XCTest观察分别接收普通资源、末尾资源与末尾播放通知，并禁止普通播放通知。没有依赖sleep推定播放成功，也不把软件通知当成物理输出/音画同步。既有renderer类主体与基线逐字节一致，生产仍用旧调度；未运行全macOS套件、iOS、最低OS或长播，未测整体内存改善。
 
 [完整证据](../../../tool/playback_benchmark/macos-audio-output-modes-observations.json)归档16份原文，包括RED骨架源码、失败native详情、最终实际41项身份及两阶段源码/日志。原始日志保留既有Swift/XCTest链接警告、RED构建中的“exit code0但无进一步输出”诊断和系统QoS警告；实际XCTest结果单独核对，不能据此宣称整个构建无警告或最低系统通过。下一项为真实预算接管、提交时钟与最终排空；productionAdmission/downstreamBoundProven继续false，完整P08保持开放。
+
+## 2026-10-08：音频尾部接入 Task 3 — 预算所有权、提交时钟与最终排空
+
+基于 `638ae61` 实现内部显式候选 renderer。独立状态拥有一块真实尾部与最多24个在途资源，受原字节/时长限额约束；保留未提交PCM预算，不新增第二账本。转换器协议声明是否已预留输出，system与已预留自定义路径接管token；其他自定义转换器继续转换前计费。现有token timing/mediaEpoch保持原优先级。普通rendered核验模式后清空PCM再退还token，末尾实际playedBack与剩余资源共同控制排空，重复/乱序/错误类型通知不能替代其他缓冲。
+
+回调仅将ticket/mode投递到每renderer惰性串行队列，随后进入operations；无逐缓冲锁或timer。旧代先fence、停止原生输出返回后才释放PCM；提交重入reset不能重启旧输出。时钟与资源数量分开，held不建立锚点，实际首次提交才发generation/PCM PTS事件；pause冻结位置，rendered不推进媒体时间或假报完成，末尾时钟不替代播放通知。session仍未注入上下文或接收新锚点，默认播放行为保留。
+
+预估容量不足且仅有held时，先将该块以playedBack提交并兼容，等待真实通知再试；格式/帧数/时间异常和变速同代单向兼容。转换后实际容量超过保守估计明确走policy.unsupported，不将已消耗包当作未消费重试；自持预算转换器内部的容量失败仍保持原错误链。100ms观察接口已实现但本项不安装timer；无法据此保证无人调用时自动回退。实际bounded plan/scope timeline和不支持两类通知的驱动均排除候选。
+
+新增15项回归：核心held/首次提交/EOF/预算/错误通知、乱序末尾、暂停/末尾节点时钟、单块容量回退、空/单输入与阈值、stop持有和旧代、格式/时间矩阵、已预留token、同步通知重入、held输出计数、真实bounded scope、重入reset、暂停窗口/变速单向、真实AAC转换器。缺接口编译失败后，核心行为1/1实际失败；首轮50/50通过。随后三项边界分别产生实际失败：held误作已输出导致underrun0而非1、旧提交reset后多启动一次、真实scope timeline未拒绝；修复后最终 **56/56**，零失败/跳过。夹具 **4/4**，镜像及发现iOS669/macOS628核对；发现总数不代表完整套件运行。
+
+真实 `benchmark_sdr.mkv` 的48kHz双声道AAC通过原FFmpeg取包与system converter，首块音频预算8192B，EOF真实PCM尾部经可控通知退还；自定义已预留路径在8192B总限额下也通过，无第二次预留。测试使用可控输出，未证明真实扬声器、session音画或下游资源边界。此前默认路径真实引擎测试亦在56项中回归，但不等于候选真实输出全链通过。
+
+[验证证据](../../../tool/playback_benchmark/macos-audio-terminal-owner-observations.json)归档17份原文、全部运行日志/结果、最终实际方法身份及最终源码，并记录真实素材哈希；中间源码快照未逐次归档，不宣称每个中间版本可完整重放。原生已有编译/链接警告保留。未重跑未涉及的完整macOS/iOS、最低系统、设备或长播；未报告内存改善/整体有界，productionAdmission/downstreamBoundProven保持false。下一项Task4补session来源事实、首次提交事件接收、自动观察与控制/路由生命周期；完整P08保持开放。

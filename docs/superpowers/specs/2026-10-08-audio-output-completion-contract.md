@@ -117,3 +117,11 @@ EOF 将保留的真实末尾 PCM 以 playedBack 提交，整个 generation 只�
 接入计划 Task 2 新增 `YlAudioOutputCompletionMode` 和 `schedule(_:mode:callbacks:)`。旧输出默认 `supportsTerminalCompletion=false`，新增入口转交原 callbacks 接口；system 驱动声明具备两种通知能力，明确模式分别选择 dataRendered→resourcesReleased 和 dataPlayedBack→playedBack。标志只描述驱动支持，不表示来源/PCM合格、实际图有效或生产准入。新接口拒绝未配置、已释放或非PCM输入时只释放资源，不制造播放完成；原单回调入口行为不变。
 
 生产 renderer 仍调用原 `schedule(_:callbacks:)`，因此 §6 的保守预算、时钟和逐缓冲播放完成语义保持。新接口不添加回调锁/等待/计时器，在系统线程交付；Task 3/4 仍需实现调用方串行交接、代际隔离、输出失效失败链和真实PCM检查。同步fake与真实两个PCM模式回归只证明接口边界，不替代那些未实现的控制/预算集成。
+
+## 12. 内部 renderer 尾部所有权适配已实现
+
+Task3新增内部显式上下文启用路径，默认nil仍走§6。候选保留一块计费PCM，资源集合最多24项并受原字节/时长限额约束；转换器声明自行预留时接管已有token，其余仍预先reserve。资源通知按实际提交模式与epoch/ordinal核验，先清空PCM再释放token；不同类型、重复或旧代通知无效。末尾playedBack与全部资源退还独立，不能从字节归零、时长归零或节点时钟越过末尾直接判完成。
+
+所有候选通知通过一条惰性串行队列异步取得operations，不在原生回调线程等待控制锁。reset/dispose先fence旧代，再停输出，停止返回后退还所有者；提交途中发生reset时不得继续锚定或重启旧输出。首次实际PCM提交发一次代际事件，held不建立时钟或冒充已提交音频；普通资源退还不推进位置，暂停冻结。pipeline尚未消费该事件。
+
+真实格式变化、无效时间、显式变速/abandon和100ms观察触发当前代单向兼容；预准入容量不足且仅held时主动提交该块，等待真实通知。若转换已消耗输入后才发现输出估计越界，明确失败而非丢弃后重试；转换器内部预算错误仍走既有失败链。实际bounded plan/scope时间账本、未声明支持的输出均排除候选。自动观察timer、session/路由集成以及长播仍在后续；当前默认不会启用，整体内存有界及生产准入未证明。

@@ -10,7 +10,7 @@
 
 **Spec:** [输出完成契约 §10](../specs/2026-10-08-audio-output-completion-contract.md)、[需求基线](../specs/2026-09-20-playback-expansion-requirements.md)、[P08](2026-09-26-remaining-08-performance-release.md)。
 
-起点 `9c5967a`。Task 1–2 已实现并验证；Task 3–5 尚未执行。既有工具通过不能替代生产验收。
+起点 `9c5967a`。Task 1–3 已实现并验证；Task 4–5 尚未执行。既有工具通过不能替代生产验收。
 
 ## Global Constraints
 
@@ -155,7 +155,7 @@ func abandonTerminalCandidate() // 单向提交 held 尾部并切回 playedBack
 
 `YlAudioTerminalState` 仅由 renderer 的 `operations` 串行操作。资源 owner 保存唯一可清空 PCM+token；ticket 含 completionGeneration 和 ordinal，资源集合仅包含尚未收到真实释放通知的项目；最多一块未提交尾部。外部回调捕获 owner/ticket，不额外复制带 PCM 的 buffer。renderer 原有 `hasPendingPlayback` 接口保留，但候选分支按 EOF/fence/剩余资源判定，不能继续从资源数量直接推导。
 
-- [ ] 用 `LifetimePCMConverter` 与支持明确模式的 fake 添加以下 RED：首块接纳返回 `.buffered`，输出空且 `renderedAudioTime == nil`；第二块接纳提交第一块；`finishInput()` 提交第二块作为 playedBack。记录提交 PTS，断言只有首个实际 PCM 触发一次锚点。
+- [x] 用 `LifetimePCMConverter` 与支持明确模式的 fake 添加以下 RED：首块接纳返回 `.buffered`，输出空且 `renderedAudioTime == nil`；第二块接纳提交第一块；`finishInput()` 提交第二块作为 playedBack。记录提交 PTS，断言只有首个实际 PCM 触发一次锚点。
 
 ```swift
 XCTAssertNil(renderer.renderedAudioTime) // 第一块仅 held 时
@@ -168,11 +168,11 @@ XCTAssertFalse(renderer.hasPendingPlayback)
 ```
 
 每段断言放在对应动作之后；测试不能直接修改 renderer 内部计数。补空输入、单 PCM、EOF 后入队拒绝、重复/乱序/错误类型通知及最后 legacy 块先完成后 EOF。
-- [ ] 补系统 converter 已持 token 与自定义 converter 由 renderer reserve 两条链的账本断言：单块 8192B，不是 16384B；尾部一直计费；真实释放后 PCM weak 引用为空且字节/时间只退还一次。保留 `carryTiming`/codec trim 形成的媒体范围，不能再次覆盖时间或 reserve。
-- [ ] 实现分离状态。资源预算恢复不推进位置；提交时更新已提交起止/节点锚点；位置依赖节点时间且上限为已提交 PCM 末尾，pause 时冻结，EOF 等 fence 时不能因资源为零返回空时钟。只保留有限资源与常量级时钟/最终 ticket 元数据，不保留所有已渲染历史。
-- [ ] 运行实际 PCM 格式检查：不是 48kHz、双声道、Float32 planar 或帧数不在 1…1024 时，先提交旧尾部、单向兼容后处理新 PCM；不丢新包、不重新解码。缺失/不合理 PTS 或时长同样兼容。容量不足且唯一资源是 held 尾部时先提交它走兼容，待真实通知后重试；绝不循环等待不可能到来的 rendered。
-- [ ] 回调通过每 renderer 一个串行交接队列异步进入 `operations`；读取状态沿用 state lock。output 调用期间不持 state lock，回调不在原生线程同步取 operations；停止前 fence 旧 generation，停止返回前不清除仍在输出使用的 owner。测试使用 expectation 确认异步交付完成，不用立即读值假定执行完毕。
-- [ ] 补暂停在途通知、node time 已越过末尾但 fence 未到、zero duration 兼容、同步重入、stop 迟到、reset 后旧通知、dispose 持有释放；音频类与镜像检查通过后提交 `feat: add gated audio terminal ownership state`。
+- [x] 补系统 converter 已持 token 与自定义 converter 由 renderer reserve 两条链的账本断言：单块 8192B，不是 16384B；尾部一直计费；真实释放后 PCM weak 引用为空且字节/时间只退还一次。保留 `carryTiming`/codec trim 形成的媒体范围，不能再次覆盖时间或 reserve。
+- [x] 实现分离状态。资源预算恢复不推进位置；提交时更新已提交起止/节点锚点；位置依赖节点时间且上限为已提交 PCM 末尾，pause 时冻结，EOF 等 fence 时不能因资源为零返回空时钟。只保留有限资源与常量级时钟/最终 ticket 元数据，不保留所有已渲染历史。
+- [x] 运行实际 PCM 格式检查：不是 48kHz、双声道、Float32 planar 或帧数不在 1…1024 时，先提交旧尾部、单向兼容后处理新 PCM；不丢新包、不重新解码。缺失/不合理 PTS 或时长同样兼容。容量不足且唯一资源是 held 尾部时先提交它走兼容，待真实通知后重试；绝不循环等待不可能到来的 rendered。
+- [x] 回调通过每 renderer 一个串行交接队列异步进入 `operations`；读取状态沿用 state lock。output 调用期间不持 state lock，回调不在原生线程同步取 operations；停止前 fence 旧 generation，停止返回前不清除仍在输出使用的 owner。测试使用 expectation 确认异步交付完成，不用立即读值假定执行完毕。
+- [x] 补暂停在途通知、node time 已越过末尾但 fence 未到、zero duration 兼容、同步重入、stop 迟到、reset 后旧通知、dispose 持有释放；音频类与镜像检查通过后提交 `feat: add gated audio terminal ownership state`。
 
 ### Task 4：接入首次提交锚点、观察定时器与控制生命周期
 
@@ -226,7 +226,7 @@ renderer.observeTailWait(playing: true, nowUs: 100_000)
 
 2026-10-08 文档自审：准入与 bounded 排除→Task 1/4；通知来源→Task 2；既有 token/所有权与输出排空→Task 3；时钟/控制/定时器→Task 4；独立长播及未准入状态→Task 5。新接口均由前序任务定义，默认 factory 签名保持不变；测试路径按仓库实际镜像核查。历史 §4/7 的否决不被新计划改写。
 
-规划提交 `184531f` 只包含文档。后续 Task 1–2 已完成下述接口与验证，下一执行项为 Task 3；沿用用户已授权的本会话实现与本地提交，不推送远端。
+规划提交 `184531f` 只包含文档。后续 Task 1–3 已完成下述接口与验证，下一执行项为 Task 4；沿用用户已授权的本会话实现与本地提交，不推送远端。
 
 ### 2026-10-08 Task 1 执行记录
 
@@ -241,3 +241,13 @@ renderer.observeTailWait(playing: true, nowUs: 100_000)
 缺接口编译RED后，兼容桥接骨架39通过/2失败；真实native失败详情确认 rendered 误触发 inverted playedBack expectation，拒绝输入也误发播放通知。实现后音频41/41、夹具4/4通过，镜像发现669/613核对。新增五项覆盖旧接口延迟/重复回调、真实双PCM模式、三种拒绝状态×两模式、同步重入、renderer reset内旧回调。真实native为静音48kHz双声道、每块1024帧、4秒有界观察；不验证物理音画或资源增长。
 
 [完整证据](../../../tool/playback_benchmark/macos-audio-output-modes-observations.json)保留初始编译、行为失败、最终结果与源码。既有renderer类主体逐字节未改，生产调用尚未选择新模式；能力标志不等于候选准入，Task 3必须检查输出能力并实现所有权/最终排空。未运行完整macOS/iOS/最低系统或长播；下一项 Task 3。
+
+### 2026-10-08 Task 3 执行记录
+
+完成内部显式启用的 renderer 状态接入：一块真实 held PCM、最多24个在途所有者、既有字节/时长上限、按资源通知归还上游预算、独立末尾播放通知。每代 ticket 包含 epoch/ordinal；回调仅将标量投递到每renderer一条惰性串行队列，在 operations 下核验代际/类型并一次性退还。旧输出停止返回后才清空旧PCM，迟到通知不能影响新代。默认上下文nil，session未注入；没有公开开关或观察timer。
+
+转换器协议补充 `reservesOutputBuffers`（默认false、system为true），接管转换器已有token而非重复reserve；自定义不自行预留者仍在转换前保守计费。真实benchmark_sdr.mkv的AAC转换器输出和自定义已预留路径均确认一块8192B音频预算。真实转换测试用可控输出，不能据此称真实终端输出或全session验证。已持有的mediaEpoch/timing不重新覆盖；实际bounded plan或scope timeline均不允许候选。
+
+首块held不锚定或计作已提交，实际提交才发一次generation/PTS事件；时钟受已提交末尾限制，rendered不推进位置，暂停冻结，EOF必须等末尾通知及所有资源。格式/帧数/PTS异常先单向兼容，保持原PCM；预准入容量不足且只有held尾部时先提交它，等待真实回调再试。转换完成后才发现估计不足则沿现有policy.unsupported失败链，不把已消耗输入当可安全重试；自持预算转换器内部发生容量错误也保留原错误。100ms观察接口只由显式调用驱动，自动定时观察仍属Task4。
+
+新增15项回归，缺接口失败后核心行为实际RED；首轮50/50通过后，复核的held/underrun、真实bounded scope、调度重入reset三项分别实际RED→GREEN。最终音频56/56、夹具4/4通过，镜像发现669/628一致；源码与全部结果见[证据](../../../tool/playback_benchmark/macos-audio-terminal-owner-observations.json)。未运行全macOS/iOS、长播或物理音画；旧兼容路径的系统对象保留限制仍在。下一项Task4负责session来源事实、首次提交锚点接收、定时器、路由及完整控制交接。

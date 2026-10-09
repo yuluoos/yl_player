@@ -221,6 +221,369 @@ final class YlMacosAudioTests: XCTestCase {
     XCTAssertEqual(ledger.snapshot.currentBytes, 0)
   }
 
+
+  private final class TerminalOutput: YlAudioOutputDriving {
+    var supportsTerminalCompletion = true
+    var volume: Float = 1
+    var rate: Float = 1
+    var renderedAudioTime: YlRenderedAudioTime?
+    var modes: [YlAudioOutputCompletionMode] = []
+    var timestamps: [Int64] = []
+    var callbacks: [YlAudioOutputCallbacks] = []
+    var onReset: (() -> Void)?
+    var synchronouslyComplete = false
+    var onSchedule: (() -> Void)?
+    var playCount = 0
+    func configure(sampleRate: Double, channelCount: Int) throws {}
+    func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void) {
+      completion()
+    }
+    func schedule(_ buffer: YlScheduledAudioBuffer, mode: YlAudioOutputCompletionMode,
+                  callbacks: YlAudioOutputCallbacks) {
+      modes.append(mode); timestamps.append(buffer.ptsUs); self.callbacks.append(callbacks)
+      onSchedule?()
+      if synchronouslyComplete {
+        switch mode {
+        case .renderedResource: callbacks.resourcesReleased()
+        case .playedBack: callbacks.playedBack()
+        }
+      }
+    }
+    func play() throws { playCount += 1 }
+    func pause() {}
+    func reset() { onReset?() }
+    func dispose() { reset() }
+  }
+
+  private func terminalRenderer(_ output: TerminalOutput, _ converter: LifetimePCMConverter,
+    _ scope: YlManagedBufferScope, bytes: Int = 32768) throws -> YlAudioRenderer {
+    let renderer = YlAudioRenderer(maxScheduledBytes: bytes, bufferScope: scope,
+      converter: converter, output: output)
+    renderer.setCompletionContext(terminalContext())
+    try renderer.configure(stream: .init(codec: .aac, sampleRate: 48000,
+      channelCount: 2, magicCookie: Data(), generation: 1))
+    return renderer
+  }
+
+  private func enqueueTerminal(_ renderer: YlAudioRenderer, _ index: Int,
+                               generation: UInt64 = 1) throws -> YlAudioEnqueueResult {
+    try renderer.enqueue(packet: .init(data: Data(), ptsUs: Int64(index) * 21333,
+      durationUs: 21333, generation: generation))
+  }
+
+  private func awaitTerminal(_ condition: @escaping () -> Bool,
+                            file: StaticString = #filePath, line: UInt = #line) {
+    let done = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in condition() }, object: nil)
+    XCTAssertEqual(XCTWaiter.wait(for: [done], timeout: 3), .completed, file: file, line: line)
+  }
+
+  func testTerminalRendererHoldsTailAnchorsSubmissionAndWaitsForFence() throws {
+    let ledger = YlManagedBufferLedger(); let scope = try ledger.makeScope(maxBytes: nil)
+    let converter = LifetimePCMConverter(); let output = TerminalOutput()
+    let renderer = try terminalRenderer(output, converter, scope)
+    defer { renderer.dispose() }
+    let anchored = expectation(description: "First actual PCM submitted")
+    renderer.onFirstPCMSubmitted = { generation, pts in
+      XCTAssertEqual(generation, 1); XCTAssertEqual(pts, 21333); anchored.fulfill()
+    }
+    XCTAssertTrue(renderer.usesSubmissionAnchor)
+    XCTAssertEqual(try enqueueTerminal(renderer, 1), .buffered)
+    XCTAssertEqual(output.timestamps, [])
+    XCTAssertNil(renderer.renderedAudioTime)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 8192)
+    XCTAssertTrue(renderer.hasPendingPlayback)
+    XCTAssertEqual(try enqueueTerminal(renderer, 2), .scheduled)
+    wait(for: [anchored], timeout: 3)
+    XCTAssertEqual(output.timestamps, [21333])
+    XCTAssertEqual(output.modes, [.renderedResource])
+    renderer.finishInput()
+    XCTAssertEqual(output.modes, [.renderedResource, .playedBack])
+    XCTAssertEqual(try enqueueTerminal(renderer, 3), .staleGeneration)
+    guard output.callbacks.count == 2 else { return XCTFail("Both real PCM submissions required") }
+    output.callbacks[1].resourcesReleased() // Wrong type cannot retire the fence.
+    output.callbacks[0].playedBack() // Wrong type cannot retire ordinary PCM.
+    output.callbacks[0].resourcesReleased(); output.callbacks[0].resourcesReleased()
+    awaitTerminal { renderer.scheduledBytes == 8192 }
+    XCTAssertNil(converter.buffers[0].value)
+    XCTAssertNotNil(converter.buffers[1].value)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 8192)
+    XCTAssertTrue(renderer.hasPendingPlayback)
+    output.callbacks[1].playedBack(); output.callbacks[1].playedBack()
+    awaitTerminal { !renderer.hasPendingPlayback }
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+    XCTAssertNil(converter.buffers[1].value)
+  }
+
+  func testTerminalRendererOutOfOrderFenceDoesNotHideOutstandingResources() throws {
+    let ledger = YlManagedBufferLedger(); let output = TerminalOutput()
+    let renderer = try terminalRenderer(output, LifetimePCMConverter(), ledger.makeScope(maxBytes: nil))
+    defer { renderer.dispose() }
+    _ = try enqueueTerminal(renderer, 0); _ = try enqueueTerminal(renderer, 1)
+    renderer.finishInput()
+    output.callbacks[1].playedBack()
+    awaitTerminal { renderer.scheduledBytes == 8192 }
+    XCTAssertTrue(renderer.hasPendingPlayback)
+    output.callbacks[0].resourcesReleased()
+    awaitTerminal { !renderer.hasPendingPlayback }
+  }
+
+  func testTerminalRendererPauseAndNodeTimeCannotCompletePlayback() throws {
+    let ledger = YlManagedBufferLedger(); let output = TerminalOutput()
+    output.renderedAudioTime = .init(sampleTime: 0, sampleRate: 1_000_000)
+    let renderer = try terminalRenderer(output, LifetimePCMConverter(), ledger.makeScope(maxBytes: nil))
+    defer { renderer.dispose() }
+    _ = try enqueueTerminal(renderer, 0); _ = try enqueueTerminal(renderer, 1)
+    renderer.finishInput(); try renderer.play()
+    output.renderedAudioTime = .init(sampleTime: 42666, sampleRate: 1_000_000)
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 42666)
+    XCTAssertTrue(renderer.hasPendingPlayback)
+    renderer.pause()
+    output.renderedAudioTime = .init(sampleTime: 999999, sampleRate: 1_000_000)
+    output.callbacks[0].resourcesReleased()
+    awaitTerminal { renderer.scheduledBytes == 8192 }
+    XCTAssertEqual(renderer.renderedAudioTime?.sampleTime, 42666)
+    XCTAssertTrue(renderer.hasPendingPlayback)
+    output.callbacks[1].playedBack()
+    awaitTerminal { !renderer.hasPendingPlayback }
+  }
+
+  func testTerminalRendererCapacityFallbackAndEOFAlreadyPlayed() throws {
+    let ledger = YlManagedBufferLedger(); let output = TerminalOutput()
+    let renderer = try terminalRenderer(output, LifetimePCMConverter(), ledger.makeScope(maxBytes: nil), bytes: 8192)
+    defer { renderer.dispose() }
+    XCTAssertEqual(try enqueueTerminal(renderer, 0), .buffered)
+    XCTAssertEqual(try enqueueTerminal(renderer, 1), .wouldExceedBytes)
+    XCTAssertEqual(output.modes, [.playedBack])
+    XCTAssertEqual(ledger.snapshot.currentBytes, 8192)
+    output.callbacks[0].playedBack()
+    awaitTerminal { renderer.scheduledBytes == 0 }
+    XCTAssertEqual(try enqueueTerminal(renderer, 1), .scheduled)
+    XCTAssertEqual(output.modes, [.playedBack, .playedBack])
+    output.callbacks[1].playedBack()
+    awaitTerminal { !renderer.hasPendingPlayback }
+    renderer.finishInput()
+    XCTAssertFalse(renderer.hasPendingPlayback)
+  }
+
+  func testTerminalRendererEmptySingleAndTimedFallback() throws {
+    let ledger = YlManagedBufferLedger(); let output = TerminalOutput()
+    let renderer = try terminalRenderer(output, LifetimePCMConverter(), ledger.makeScope(maxBytes: nil))
+    defer { renderer.dispose() }
+    renderer.finishInput(); XCTAssertFalse(renderer.hasPendingPlayback)
+    renderer.reset(generation: 2)
+    XCTAssertEqual(try enqueueTerminal(renderer, 0, generation: 2), .buffered)
+    renderer.observeTailWait(playing: true, nowUs: 0)
+    renderer.observeTailWait(playing: true, nowUs: 99999)
+    XCTAssertTrue(output.modes.isEmpty)
+    renderer.observeTailWait(playing: true, nowUs: 100000)
+    XCTAssertEqual(output.modes, [.playedBack])
+    renderer.finishInput(); XCTAssertTrue(renderer.hasPendingPlayback)
+    output.callbacks[0].playedBack()
+    awaitTerminal { !renderer.hasPendingPlayback }
+  }
+
+  func testTerminalRendererStopRetainsPCMUntilOutputStopsAndIsolatesOldCallbacks() throws {
+    let ledger = YlManagedBufferLedger(); let output = TerminalOutput()
+    let converter = LifetimePCMConverter()
+    let renderer = try terminalRenderer(output, converter, ledger.makeScope(maxBytes: nil))
+    _ = try enqueueTerminal(renderer, 0); _ = try enqueueTerminal(renderer, 1)
+    let old = output.callbacks[0]
+    output.onReset = {
+      XCTAssertEqual(ledger.snapshot.currentBytes, 16384)
+      XCTAssertNotNil(converter.buffers[0].value)
+      old.resourcesReleased() // Must return without waiting for operations.
+    }
+    renderer.reset(generation: 2)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+    XCTAssertEqual(try enqueueTerminal(renderer, 0, generation: 2), .buffered)
+    old.playedBack(); old.resourcesReleased()
+    output.onReset = nil
+    renderer.finishInput()
+    output.callbacks.last!.playedBack()
+    awaitTerminal { !renderer.hasPendingPlayback }
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+    renderer.dispose()
+  }
+
+  func testTerminalRendererFormatChangeFallsBackWithoutLosingPCM() throws {
+    for duration: Int64 in [0, 21333] {
+      let ledger = YlManagedBufferLedger(); let output = TerminalOutput()
+      let converter = LifetimePCMConverter()
+      let renderer = try terminalRenderer(output, converter, ledger.makeScope(maxBytes: nil))
+      defer { renderer.dispose() }
+      _ = try enqueueTerminal(renderer, 0)
+      converter.outputDuration = duration
+      converter.outputFrames = duration == 0 ? 1024 : 2048
+      XCTAssertEqual(try enqueueTerminal(renderer, 1), .scheduled)
+      XCTAssertEqual(output.timestamps, [0, 21333])
+      XCTAssertEqual(output.modes, [.playedBack, .playedBack])
+      renderer.finishInput()
+      output.callbacks[0].playedBack(); output.callbacks[1].playedBack()
+      awaitTerminal { !renderer.hasPendingPlayback }
+    }
+  }
+
+  func testTerminalRendererAdoptsConverterReservationWithoutDoubleCharging() throws {
+    let ledger = YlManagedBufferLedger(); let scope = try ledger.makeScope(maxBytes: 8192)
+    let converter = LifetimePCMConverter(); converter.reservedScope = scope
+    let output = TerminalOutput(); let renderer = try terminalRenderer(output, converter, scope)
+    defer { renderer.dispose() }
+    XCTAssertEqual(try enqueueTerminal(renderer, 0), .buffered)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 8192)
+    XCTAssertEqual(ledger.snapshot.peakBytes, 8192)
+    renderer.finishInput(); output.callbacks[0].playedBack()
+    awaitTerminal { !renderer.hasPendingPlayback }
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+  }
+
+  func testTerminalRendererSynchronousCallbacksCanReenterControls() throws {
+    let ledger = YlManagedBufferLedger(); let output = TerminalOutput()
+    output.synchronouslyComplete = true
+    let renderer = try terminalRenderer(output, LifetimePCMConverter(), ledger.makeScope(maxBytes: nil))
+    defer { renderer.dispose() }
+    let anchored = expectation(description: "Anchor delivered outside renderer locks")
+    renderer.onFirstPCMSubmitted = { _, _ in renderer.pause(); anchored.fulfill() }
+    _ = try enqueueTerminal(renderer, 0); _ = try enqueueTerminal(renderer, 1)
+    renderer.finishInput()
+    wait(for: [anchored], timeout: 3)
+    awaitTerminal { !renderer.hasPendingPlayback }
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+  }
+
+
+  func testTerminalRendererHeldPCMDoesNotCountAsSubmittedAudio() throws {
+    let ledger = YlManagedBufferLedger(); let output = TerminalOutput()
+    let renderer = try terminalRenderer(output, LifetimePCMConverter(), ledger.makeScope(maxBytes: nil))
+    defer { renderer.dispose() }
+    _ = try enqueueTerminal(renderer, 0)
+    try renderer.play()
+    XCTAssertNil(renderer.renderedAudioTime)
+    XCTAssertEqual(renderer.underrunCount, 1)
+    XCTAssertTrue(output.timestamps.isEmpty)
+    renderer.finishInput()
+    XCTAssertEqual(output.modes, [.playedBack])
+    output.callbacks[0].playedBack()
+    awaitTerminal { !renderer.hasPendingPlayback }
+  }
+
+  func testTerminalRendererRejectsBoundedTimelineAndUnsupportedOutput() throws {
+    for bounded in [false, true] {
+      let ledger = YlManagedBufferLedger(); let scope = try ledger.makeScope(maxBytes: nil)
+      let output = TerminalOutput(); output.supportsTerminalCompletion = bounded
+      if bounded {
+        scope.configureTimeline(try .init(minDurationMs: 0, maxDurationMs: 500, maxBytes: 4 * 1024 * 1024))
+      }
+      let renderer = try terminalRenderer(output, LifetimePCMConverter(), scope)
+      defer { renderer.dispose() }
+      XCTAssertFalse(renderer.usesSubmissionAnchor)
+    }
+  }
+
+  func testTerminalRendererReentrantResetCannotRestartStaleOutput() throws {
+    let ledger = YlManagedBufferLedger(); let output = TerminalOutput()
+    let renderer = try terminalRenderer(output, LifetimePCMConverter(), ledger.makeScope(maxBytes: nil))
+    defer { renderer.dispose() }
+    try renderer.play()
+    XCTAssertEqual(output.playCount, 1)
+    _ = try enqueueTerminal(renderer, 0)
+    output.onSchedule = { renderer.reset(generation: 2) }
+    _ = try enqueueTerminal(renderer, 1)
+    XCTAssertEqual(output.playCount, 1, "The old submission cannot restart output after reset")
+    XCTAssertFalse(renderer.hasPendingPlayback)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+  }
+
+  func testTerminalRendererPauseResetsTailWaitAndRateFallbackIsOneWay() throws {
+    let ledger = YlManagedBufferLedger(); let output = TerminalOutput()
+    let renderer = try terminalRenderer(output, LifetimePCMConverter(), ledger.makeScope(maxBytes: nil))
+    defer { renderer.dispose() }
+    _ = try enqueueTerminal(renderer, 0)
+    renderer.observeTailWait(playing: true, nowUs: 0)
+    renderer.pause()
+    renderer.observeTailWait(playing: true, nowUs: 100000)
+    XCTAssertTrue(output.modes.isEmpty)
+    renderer.setRate(2)
+    XCTAssertEqual(output.modes, [.playedBack])
+    renderer.setRate(1)
+    _ = try enqueueTerminal(renderer, 1)
+    XCTAssertEqual(output.modes, [.playedBack, .playedBack])
+    renderer.finishInput()
+    output.callbacks.forEach { $0.playedBack() }
+    awaitTerminal { !renderer.hasPendingPlayback }
+  }
+
+  func testTerminalRendererFormatAndTimestampMatrixFallsBack() throws {
+    let formats = [
+      AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 44100, channels: 2, interleaved: false)!,
+      AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 48000, channels: 1, interleaved: false)!,
+      AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 48000, channels: 2, interleaved: true)!,
+      AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 48000, channels: 2, interleaved: false)!
+    ]
+    for format in formats {
+      let ledger = YlManagedBufferLedger(); let output = TerminalOutput()
+      let converter = LifetimePCMConverter()
+      let renderer = try terminalRenderer(output, converter, ledger.makeScope(maxBytes: nil))
+      _ = try enqueueTerminal(renderer, 0)
+      converter.format = format
+      _ = try enqueueTerminal(renderer, 1)
+      XCTAssertEqual(output.modes, [.playedBack, .playedBack])
+      renderer.dispose()
+      XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+    }
+    for pts in [Int64.min, Int64(-1), Int64.max] {
+      let ledger = YlManagedBufferLedger(); let output = TerminalOutput()
+      let renderer = try terminalRenderer(output, LifetimePCMConverter(), ledger.makeScope(maxBytes: nil))
+      _ = try renderer.enqueue(packet: .init(data: Data(), ptsUs: pts, durationUs: 21333, generation: 1))
+      XCTAssertEqual(output.modes, [.playedBack])
+      renderer.dispose()
+    }
+  }
+
+  func testTerminalRendererRealConverterKeepsOneReservation() throws {
+    let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+      .deletingLastPathComponent().deletingLastPathComponent()
+      .appendingPathComponent("assets/test_media/benchmark_sdr.mkv")
+    var context: YLFMediaContextRef?; var info = YLFMediaInfo()
+    XCTAssertEqual(fixture.withUnsafeFileSystemRepresentation { ylf_open_local($0, &context, &info) }, Int32(YLFResultOK))
+    let opened = try XCTUnwrap(context)
+    defer { ylf_close(&context) }
+    var audio: YLFStreamInfo?
+    for index in 0..<info.stream_count {
+      var stream = YLFStreamInfo()
+      if ylf_copy_stream_info(opened, index, &stream) == 0,
+         Int(stream.kind) == YLFStreamAudio, Int(stream.codec) == YLFCodecAAC { audio = stream; break }
+    }
+    let stream = try XCTUnwrap(audio)
+    XCTAssertEqual(stream.sample_rate, 48000); XCTAssertEqual(stream.channel_count, 2)
+    var cookie = [UInt8](repeating: 0, count: ylf_stream_codec_config_size(opened, stream.index))
+    XCTAssertEqual(ylf_copy_stream_codec_config(opened, stream.index, &cookie, cookie.count), 0)
+    let ledger = YlManagedBufferLedger(); let scope = try ledger.makeScope(maxBytes: nil)
+    let output = TerminalOutput(); let converter = YlAppleCompressedAudioConverter()
+    let renderer = YlAudioRenderer(bufferScope: scope, converter: converter, output: output)
+    defer { renderer.dispose() }
+    renderer.setCompletionContext(terminalContext())
+    try renderer.configure(stream: .init(codec: .aac, sampleRate: 48000,
+      channelCount: 2, magicCookie: Data(cookie), generation: 1))
+    for _ in 0..<256 {
+      var packet: YLFPacketRef?
+      guard ylf_read_packet(opened, &packet) == Int32(YLFResultOK), let item = packet else { break }
+      defer { ylf_packet_release(&packet) }
+      guard ylf_packet_stream_index(item) == stream.index, let bytes = ylf_packet_data(item) else { continue }
+      _ = try renderer.enqueue(packet: .init(data: Data(bytes: bytes, count: ylf_packet_size(item)),
+        ptsUs: ylf_packet_pts_us(item), durationUs: ylf_packet_duration_us(item), generation: 1))
+      if renderer.scheduledBytes > 0 { break }
+    }
+    XCTAssertTrue(renderer.usesSubmissionAnchor)
+    XCTAssertEqual(renderer.scheduledBytes, 8192)
+    XCTAssertEqual(ledger.snapshot.categories[.scheduledAudio], 8192)
+    XCTAssertTrue(output.modes.isEmpty, "Real converter output is held and charged once")
+    renderer.finishInput()
+    guard let completed = output.callbacks.first else { return XCTFail("Missing terminal PCM") }
+    completed.playedBack()
+    awaitTerminal { !renderer.hasPendingPlayback }
+    XCTAssertEqual(ledger.snapshot.categories[.scheduledAudio] ?? 0, 0)
+  }
+
   private final class WeakCompletionPayload {
     weak var value: NSObject?
     init(_ value: NSObject) { self.value = value }
@@ -599,23 +962,29 @@ final class YlMacosAudioTests: XCTestCase {
     init(_ value: AVAudioPCMBuffer) { self.value = value }
   }
   private final class LifetimePCMConverter: YlAudioPacketConverting {
-    let format = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 48000,
+    var reservedScope: YlManagedBufferScope?
+    var reservesOutputBuffers: Bool { reservedScope != nil }
+    var outputFrames: AVAudioFrameCount = 1024
+    var outputDuration: Int64 = 21333
+    var format = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 48000,
       channels: 2, interleaved: YlAudioFormatPolicy.usesInterleavedPCM)!
     var buffers: [WeakPCM] = []
     var pcmFormat: AVAudioFormat? { format }
     func configure(stream: YlAudioStreamConfiguration) throws {}
     func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate {
-      .init(durationUs: 21333, byteCount: 8192)
+      .init(durationUs: outputDuration, byteCount: Int(outputFrames) * 8)
     }
     func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
-      let pcm = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 1024)!
-      pcm.frameLength = 1024
+      let pcm = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: outputFrames)!
+      pcm.frameLength = outputFrames
       for buffer in UnsafeMutableAudioBufferListPointer(pcm.mutableAudioBufferList) {
         if let bytes = buffer.mData { memset(bytes, 0, Int(buffer.mDataByteSize)) }
       }
       buffers.append(WeakPCM(pcm))
-      return .init(payload: pcm, ptsUs: packet.ptsUs, durationUs: 21333,
-        byteCount: 8192, generation: packet.generation)
+      let token = try reservedScope?.require(category: .scheduledAudio, bytes: Int(outputFrames) * 8)
+      _ = token?.carryTiming(ptsUs: packet.ptsUs, durationUs: outputDuration)
+      return .init(reservation: token, payload: pcm, ptsUs: packet.ptsUs, durationUs: outputDuration,
+        byteCount: Int(outputFrames) * 8, generation: packet.generation)
     }
   }
 

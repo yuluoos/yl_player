@@ -143,6 +143,7 @@ enum YlAudioEnqueueResult: Equatable {
 }
 
 protocol YlAudioPacketConverting: AnyObject {
+  var reservesOutputBuffers: Bool { get }
   var pcmFormat: AVAudioFormat? { get }
   func configure(stream: YlAudioStreamConfiguration) throws
   func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate
@@ -151,6 +152,7 @@ protocol YlAudioPacketConverting: AnyObject {
 }
 
 extension YlAudioPacketConverting {
+  var reservesOutputBuffers: Bool { false }
   var pcmFormat: AVAudioFormat? { nil }
   func reset() {}
 }
@@ -204,6 +206,41 @@ protocol YlAudioRendering: AnyObject {
 }
 
 final class YlAudioRenderer: YlAudioRendering {
+  private var completionContext: YlAudioCompletionContext?
+  private var configuredStream: YlAudioStreamConfiguration?
+  private var terminal: YlAudioTerminalState?
+  private lazy var terminalQueue = DispatchQueue(label: "yl.audio.terminal-completions")
+  // Snapshot fields below use the state lock; terminal itself uses operations.
+  private var submissionAnchorEnabled = false
+  private var terminalPending = false
+  private var firstSubmissionSent = false
+  private var firstSubmissionHandler: ((UInt64, Int64) -> Void)?
+
+  var usesSubmissionAnchor: Bool { lock.withLock { submissionAnchorEnabled } }
+  var onFirstPCMSubmitted: ((UInt64, Int64) -> Void)? {
+    get { lock.withLock { firstSubmissionHandler } }
+    set { lock.withLock { firstSubmissionHandler = newValue } }
+  }
+
+  func setCompletionContext(_ context: YlAudioCompletionContext?) {
+    operations.lock(); defer { operations.unlock() }
+    completionContext = context // Takes effect only at configure/reset.
+  }
+
+  func observeTailWait(playing: Bool, nowUs: UInt64) {
+    operations.lock(); defer { operations.unlock() }
+    guard let terminal else { return }
+    // Explicit observations also support deterministic tests; Task 4 owns polling.
+    let submissions = terminal.observe(playing: playing, nowUs: nowUs)
+    try? submitTerminal(submissions) // startOutput already reports native failures.
+  }
+
+  func abandonTerminalCandidate() {
+    operations.lock(); defer { operations.unlock() }
+    guard let terminal else { return }
+    try? submitTerminal(terminal.abandon())
+  }
+
   var onOutputFailure: ((NativePlayerError) -> Void)?
   private static let targetScheduledWallClockDurationUs: Int64 = 1_000_000
   private let lock = NSLock()
@@ -276,7 +313,11 @@ final class YlAudioRenderer: YlAudioRendering {
   // Output completion is independent of duration statistics and render progress.
   // Flush/dispose invalidate this generation before clearing its pending count.
   var hasPendingPlayback: Bool {
-    lock.withLock { scheduledBufferCount > 0 }
+    lock.withLock { pendingPlaybackLocked }
+  }
+
+  private var pendingPlaybackLocked: Bool {
+    submissionAnchorEnabled ? terminalPending : scheduledBufferCount > 0
   }
 
   var scheduledBytes: Int {
@@ -293,7 +334,7 @@ final class YlAudioRenderer: YlAudioRendering {
     let nodeUs = Self.nodeMicroseconds(output.renderedAudioTime)
     return lock.withLock {
       guard !disposed, playedPositionUs != nil,
-            !(inputFinished && scheduledBufferCount == 0) else { return nil }
+            !(inputFinished && !pendingPlaybackLocked) else { return nil }
       if completionGeneration == generation {
         updatePlayedPosition(nodeUs: nodeUs)
       }
@@ -310,7 +351,7 @@ final class YlAudioRenderer: YlAudioRendering {
   // Caller holds lock. Player sample time already accounts for speed and pause.
   private func updatePlayedPosition(nodeUs: Double?) {
     if let nodeUs { lastNodeUs = nodeUs }
-    guard playbackRequested, scheduledBufferCount > 0,
+    guard playbackRequested, pendingPlaybackLocked,
           let nodeUs, let renderAnchor, let scheduledEndUs else { return }
     let elapsed = max(0, nodeUs - renderAnchor.nodeUs)
     let remaining = max(0, scheduledEndUs - renderAnchor.mediaUs)
@@ -320,7 +361,9 @@ final class YlAudioRenderer: YlAudioRendering {
   }
 
   func finishInput() {
+    operations.lock(); defer { operations.unlock() }
     lock.withLock { inputFinished = true }
+    if let terminal { try? submitTerminal(terminal.finishInput()) }
   }
 
   // An audio gap or video-only tail must not block demux behind a full video
@@ -328,7 +371,7 @@ final class YlAudioRenderer: YlAudioRendering {
   func advanceSilence(through videoPTS: Int64?, atHostTimeUs now: Int64) {
     lock.withLock {
       defer { silenceHostTimeUs = playbackRequested ? now : nil }
-      guard !disposed, playbackRequested, scheduledBufferCount == 0,
+      guard !disposed, playbackRequested, !pendingPlaybackLocked,
             let previousHost = silenceHostTimeUs, let videoPTS,
             let position = playedPositionUs, videoPTS > position else { return }
       let elapsed = max(0, now - previousHost)
@@ -371,11 +414,14 @@ final class YlAudioRenderer: YlAudioRendering {
     configuredGeneration = stream.generation
     configuredCodec = stream.codec
     lock.unlock()
+    configuredStream = stream
+    resetTerminalEligibility()
   }
 
   func enqueue(packet: YlCompressedAudioPacket) throws -> YlAudioEnqueueResult {
     operations.lock()
     defer { operations.unlock() }
+    if terminal?.inputFinished == true { return .staleGeneration }
     let estimate = converter.estimateOutput(for: packet)
     lock.lock()
     guard !disposed, configuredGeneration == packet.generation else {
@@ -390,13 +436,20 @@ final class YlAudioRenderer: YlAudioRendering {
     if let boundedPlan, estimate.durationUs > boundedPlan.maxDurationUs || estimate.byteCount > boundedPlan.maxBytes {
       throw YlManagedBufferLedger.unsupported()
     }
-    guard estimatedCapacity == .scheduled else { return estimatedCapacity }
+    guard estimatedCapacity == .scheduled else {
+      if terminal?.onlyHeldTail == true { abandonTerminalCandidate() }
+      return estimatedCapacity
+    }
+    if let terminal, terminal.count >= 24 { return .wouldExceedDuration }
 
     // System converter accounts exact allocations itself. Test/custom converters
     // use their declared conservative estimate before entering conversion.
-    let reservation = converter is YlAppleCompressedAudioConverter ? nil
+    let reservation = converter.reservesOutputBuffers ? nil
       : bufferScope?.reserve(category: .scheduledAudio, bytes: max(0, estimate.byteCount))
-    if !(converter is YlAppleCompressedAudioConverter), bufferScope != nil, reservation == nil { return .wouldExceedBytes }
+    if !converter.reservesOutputBuffers, bufferScope != nil, reservation == nil {
+      if terminal?.onlyHeldTail == true { abandonTerminalCandidate() }
+      return .wouldExceedBytes
+    }
     var buffer: YlScheduledAudioBuffer
     do {
       guard let converted = try converter.convert(packet: packet) else {
@@ -421,7 +474,20 @@ final class YlAudioRenderer: YlAudioRendering {
     guard buffer.reservation?.mediaEpoch != nil || (buffer.reservation?.carryTiming(ptsUs: buffer.ptsUs, durationUs: buffer.durationUs, from: packet.reservation) ?? true) else {
       throw YlManagedBufferLedger.unsupported()
     }
-    if !(converter is YlAppleCompressedAudioConverter) { packet.reservation?.endQueuedTiming() }
+    if !converter.reservesOutputBuffers { packet.reservation?.endQueuedTiming() }
+    if let terminal {
+      let bytes = max(buffer.byteCount, buffer.reservation?.bytes ?? 0)
+      let capacity = lock.withLock { capacityResult(durationUs: buffer.durationUs, byteCount: bytes) }
+      // Conversion has consumed input. An underestimated output cannot be silently
+      // dropped and retried as if the compressed packet were still unconsumed.
+      guard capacity == .scheduled else { throw YlManagedBufferLedger.unsupported() }
+      if !Self.isTerminalPCM(buffer) { try submitTerminal(terminal.abandon()) }
+      guard self.terminal === terminal else { return .staleGeneration }
+      let submissions = terminal.accept(buffer)
+      publishTerminalSnapshot()
+      try submitTerminal(submissions)
+      return submissions.isEmpty ? .buffered : .scheduled
+    }
     let nodeUs = Self.nodeMicroseconds(output.renderedAudioTime)
     lock.lock()
     guard !disposed, configuredGeneration == packet.generation else {
@@ -492,7 +558,9 @@ final class YlAudioRenderer: YlAudioRendering {
       return
     }
     playbackRequested = true
-    if scheduledBufferCount == 0, !waitingForAudio || !YlAppleCompatibility.current.batchesAudioInput {
+    let hasSubmittedAudio = submissionAnchorEnabled
+      ? playedPositionUs != nil && terminalPending : scheduledBufferCount > 0
+    if !hasSubmittedAudio, !waitingForAudio || !YlAppleCompatibility.current.batchesAudioInput {
       underruns += 1
       waitingForAudio = true
     }
@@ -526,6 +594,7 @@ final class YlAudioRenderer: YlAudioRendering {
       waitingForAudio = false
       silenceHostTimeUs = nil
     }
+    terminal?.pause()
     output.pause()
   }
 
@@ -546,6 +615,7 @@ final class YlAudioRenderer: YlAudioRendering {
     operations.lock()
     defer { operations.unlock() }
     let clampedRate = min(max(rate, 0.25), 4)
+    if clampedRate != 1 { abandonTerminalCandidate() }
     lock.withLock { playbackRate = clampedRate }
     output.rate = clampedRate
   }
@@ -558,7 +628,11 @@ final class YlAudioRenderer: YlAudioRendering {
       lock.unlock()
       return
     }
+    let oldTerminal = terminal
     completionGeneration &+= 1
+    terminalPending = false
+    submissionAnchorEnabled = false
+    firstSubmissionSent = false
     scheduledDuration = 0
     scheduledByteCount = 0
     scheduledBufferCount = 0
@@ -570,8 +644,16 @@ final class YlAudioRenderer: YlAudioRendering {
     inputFinished = false
     waitingForAudio = playbackRequested
     lock.unlock()
-    converter.reset()
-    output.reset()
+    if oldTerminal != nil {
+      output.reset()
+      oldTerminal?.retireAfterStop()
+      converter.reset()
+    } else {
+      converter.reset()
+      output.reset()
+    }
+    terminal = nil
+    resetTerminalEligibility()
   }
 
   func reset(generation: UInt64) {
@@ -591,7 +673,10 @@ final class YlAudioRenderer: YlAudioRendering {
       lock.unlock()
       return
     }
+    let oldTerminal = terminal
     disposed = true
+    terminalPending = false
+    submissionAnchorEnabled = false
     configuredGeneration = nil
     configuredCodec = nil
     completionGeneration &+= 1
@@ -608,6 +693,106 @@ final class YlAudioRenderer: YlAudioRendering {
     waitingForAudio = false
     lock.unlock()
     output.dispose()
+    oldTerminal?.retireAfterStop()
+    terminal = nil
+  }
+
+  // Operations lock held; never inspect terminal state under only the state lock.
+  private func resetTerminalEligibility() {
+    let enabled = lock.withLock { !disposed && playbackRate == 1 }
+    guard enabled, boundedPlan == nil, bufferScope?.hasBoundedTimeline != true,
+          output.supportsTerminalCompletion,
+          let context = completionContext, let stream = configuredStream,
+          YlAudioCompletionPolicy.select(context) == .terminalCandidate,
+          stream.codec == .aac, stream.sampleRate == 48000, stream.channelCount == 2 else {
+      terminal = nil
+      lock.withLock { submissionAnchorEnabled = false; terminalPending = false }
+      return
+    }
+    terminal = YlAudioTerminalState(epoch: lock.withLock { completionGeneration })
+    lock.withLock { submissionAnchorEnabled = true; terminalPending = false }
+  }
+
+  private static func isTerminalPCM(_ buffer: YlScheduledAudioBuffer) -> Bool {
+    guard let pcm = buffer.payload as? AVAudioPCMBuffer,
+          pcm.format.commonFormat == .pcmFormatFloat32, !pcm.format.isInterleaved,
+          pcm.format.sampleRate == 48000, pcm.format.channelCount == 2,
+          pcm.frameLength > 0, pcm.frameLength <= 1024,
+          buffer.ptsUs >= 0, buffer.durationUs > 0,
+          !buffer.ptsUs.addingReportingOverflow(buffer.durationUs).overflow else { return false }
+    return true
+  }
+
+  private func publishTerminalSnapshot() {
+    guard let terminal else { return }
+    lock.withLock {
+      scheduledByteCount = terminal.bytes
+      scheduledDuration = terminal.durationUs
+      scheduledBufferCount = terminal.count
+      terminalPending = terminal.pendingPlayback
+    }
+  }
+
+  private func submitTerminal(_ submissions: [YlAudioTerminalState.Resource]) throws {
+    for resource in submissions {
+      guard let buffer = resource.buffer, let mode = resource.mode,
+            lock.withLock({ !disposed && completionGeneration == resource.epoch &&
+              configuredGeneration == buffer.generation }) else { continue }
+      let nodeUs = Self.nodeMicroseconds(output.renderedAudioTime)
+      let snapshot = lock.withLock { () -> (UInt64, UInt64?, Bool, Bool) in
+        updatePlayedPosition(nodeUs: nodeUs)
+        let start = max(0, resource.ptsUs)
+        let end = start.addingReportingOverflow(resource.durationUs)
+        var exhausted = renderAnchor == nil
+        if let anchor = renderAnchor, let end = scheduledEndUs {
+          exhausted = lastNodeUs - anchor.nodeUs >= Double(end - anchor.mediaUs)
+        }
+        if exhausted { renderAnchor = (nodeUs ?? lastNodeUs, start); scheduledEndUs = start }
+        scheduledEndUs = max(scheduledEndUs ?? start, end.overflow ? Int64.max : end.partialValue)
+        if playedPositionUs == nil { playedPositionUs = start }
+        let first = !firstSubmissionSent
+        firstSubmissionSent = true
+        if playbackRequested { waitingForAudio = false }
+        return (completionGeneration, configuredGeneration, first, playbackRequested && exhausted)
+      }
+      let epoch = snapshot.0
+      let ticket = resource.ordinal
+      let queue = terminalQueue
+      let notify: (YlAudioOutputCompletionMode) -> Void = { [weak self] event in
+        queue.async { [weak self] in self?.receiveTerminal(ticket, event: event, epoch: epoch) }
+      }
+      output.schedule(buffer, mode: mode, callbacks: .init(
+        resourcesReleased: { notify(.renderedResource) }, playedBack: { notify(.playedBack) }))
+      guard lock.withLock({ !disposed && completionGeneration == epoch }) else { continue }
+      if snapshot.2, let generation = snapshot.1 {
+        let pts = resource.ptsUs
+        queue.async { [weak self] in
+          guard let self else { return }
+          let handler = self.lock.withLock {
+            !self.disposed && self.completionGeneration == epoch ? self.firstSubmissionHandler : nil
+          }
+          // Pipeline must recheck installation/generation on its own executor.
+          handler?(generation, pts)
+        }
+      }
+      if snapshot.3 { try startOutput() }
+    }
+  }
+
+  private func receiveTerminal(_ ticket: UInt64, event: YlAudioOutputCompletionMode, epoch: UInt64) {
+    operations.lock(); defer { operations.unlock() }
+    guard lock.withLock({ !disposed && completionGeneration == epoch }),
+          let terminal, let resource = terminal.complete(ticket, mode: event) else { return }
+    guard self.terminal === terminal,
+          lock.withLock({ !disposed && completionGeneration == epoch }) else { return }
+    publishTerminalSnapshot()
+    lock.withLock {
+      if event == .playedBack { updatePositionAfterPlayback(ptsUs: resource.ptsUs, durationUs: resource.durationUs) }
+      if !terminalPending {
+        silenceHostTimeUs = nil
+        if playbackRequested, !waitingForAudio { underruns += 1; waitingForAudio = true }
+      }
+    }
   }
 
   private func capacityResult(
@@ -693,6 +878,7 @@ final class YlAudioRenderer: YlAudioRendering {
 }
 
 final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
+  var reservesOutputBuffers: Bool { true }
   private var dtsConverter: YlDtsAudioConverter?
   private var opusConverter: YlOpusAudioConverter?
   private var vorbisConverter: YlVorbisAudioConverter?

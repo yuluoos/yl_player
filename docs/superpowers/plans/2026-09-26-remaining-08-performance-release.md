@@ -182,3 +182,5 @@ p50 采用常规 median（偶数取中间均值），p95 采用 nearest-rank；�
 2026-10-08：音频尾部候选接入子计划 Task 1 已完成内部纯准入策略，四项新增回归实际RED→GREEN，音频36/36、夹具4/4、镜像发现669/608核对。尚无生产调用点，默认播放未变；来源元数据/PCM/输出检查和正式准入仍待后续验证。下一项为[子计划 Task 2](2026-10-08-apple-audio-terminal-integration.md)输出通知模式，完整P08保持开放。
 
 2026-10-08：音频尾部候选接入 Task 2 完成明确输出模式与默认兼容桥接，实际双PCM rendered/playedBack及拒绝输入两项RED→GREEN，音频41/41、夹具4/4、镜像669/613核对。renderer仍用旧入口，候选未启用，无内存/物理音画结论；下一项为[子计划 Task 3](2026-10-08-apple-audio-terminal-integration.md)真实预算/最终排空。完整P08保持开放。
+
+2026-10-08：音频尾部接入 Task3完成内部显式renderer预算接管、提交时钟与最终排空；默认上下文nil。新增15项，核心及三处边界实际RED→GREEN，最终音频56/56、夹具4/4、镜像669/628核对；真实AAC转换器单块8192B仅计费一次，输出为可控通知。session/自动timer/路由和长播尚未接入或验收，不计生产准入/整体有界；下一项[Task4](2026-10-08-apple-audio-terminal-integration.md)，完整P08开放。
