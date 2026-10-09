@@ -6,7 +6,7 @@ from pathlib import Path
 import plistlib
 import subprocess
 import sys
-from decoded_continuity import validate
+from decoded_continuity import validate, diagnose_drops
 from run_audio_integration_resources import ROOT, digest, freeze
 from run_resources import run_logged
 
@@ -31,6 +31,9 @@ def collect(kind, directory, short_evidence=None):
         identity=freeze(out,products)
         for relative in ['tool/playback_benchmark/decoded-continuity-protocol.md',
                          'tool/playback_benchmark/aac-preroll-protocol.md',
+                         'tool/playback_benchmark/video-drop-diagnostics-protocol.md',
+                         'packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlFrameScheduler.swift',
+                         'packages/yl_player/example/macos/RunnerTests/YlMacosVideoTests.swift',
                          'tool/playback_benchmark/decoded_continuity.py','tool/playback_benchmark/test_decoded_continuity.py',
                          'tool/playback_benchmark/run_decoded_continuity.py',
                          'tool/playback_benchmark/run_resources.py','tool/run_with_display_awake.py',
@@ -67,6 +70,7 @@ def collect(kind, directory, short_evidence=None):
         try:result['exitCode']=run_logged(command,ROOT,out/'xcode.log',1500 if kind=='long' else 180)
         except subprocess.TimeoutExpired as error:result['exitCode']=None;result['errors'].append(repr(error))
         rows=[json.loads(line) for line in (out/'rows.jsonl').read_text().splitlines()]
+        result['dropDiagnostics']=diagnose_drops(rows)
         result['summary']=validate(rows,1200 if kind=='long' else 30)
     except (OSError,ValueError,KeyError,TypeError,subprocess.SubprocessError) as error:
         result['errors'].append(repr(error))

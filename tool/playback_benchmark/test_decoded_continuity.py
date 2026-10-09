@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from decoded_continuity import validate
+from decoded_continuity import validate, diagnose_drops
 
 
 def rows():
@@ -21,6 +21,35 @@ def rows():
 
 
 class DecodedContinuityTests(unittest.TestCase):
+    def test_drop_report_keeps_cause_even_when_strict_gate_fails(self):
+        r=rows()
+        counts={k:0 for k in ('lateArrival','durationLimit','enqueueTimeout','lateAfterCapacity','capacityEviction','catchUp')}
+        for row in r:row['dropDiagnostics']=dict(total=0,counts=counts.copy(),events=[])
+        event=dict(reason='catchUp',count=1,total=1,uptime=21,generation=17,firstPTS=7000000,
+                   lastPTS=7000000,queueCount=3,positionUs=7050000,selectedPTS=7041000,
+                   previousPositionUs=6990000,previousTickUptime=20.94,enqueueWaitSeconds=0)
+        for row in r[3:]:
+            row['dropped']=1;row['dropDiagnostics']['total']=1
+            row['dropDiagnostics']['counts']['catchUp']=1;row['dropDiagnostics']['events']=[event.copy()]
+        report=diagnose_drops(r)
+        self.assertEqual(report['counts']['catchUp'],1)
+        self.assertEqual(len(report['events']),1)
+        self.assertAlmostEqual(report['events'][0]['tickGapSeconds'],.06)
+        self.assertEqual(report['events'][0]['mediaAdvanceUs'],60000)
+        with self.assertRaises(ValueError):validate(r,30)
+        for field,value in [('reason','enqueueTimeout'),('previousTickUptime',22)]:
+            bad=copy.deepcopy(r)
+            for row in bad[3:]:row['dropDiagnostics']['events'][0][field]=value
+            with self.subTest(field=field),self.assertRaises(ValueError):diagnose_drops(bad)
+
+    def test_drop_report_rejects_missing_or_inconsistent_diagnostics(self):
+        with self.assertRaises(ValueError):diagnose_drops(rows())
+        r=rows();counts={k:0 for k in ('lateArrival','durationLimit','enqueueTimeout','lateAfterCapacity','capacityEviction','catchUp')}
+        for row in r:row['dropDiagnostics']=dict(total=0,counts=counts.copy(),events=[])
+        self.assertEqual(diagnose_drops(r)['events'],[])
+        r[2]['dropDiagnostics']['counts']['catchUp']=1
+        with self.assertRaises(ValueError):diagnose_drops(r)
+
     def test_long_requires_matching_successful_short_evidence(self):
         from run_decoded_continuity import require_short_gate
         with tempfile.TemporaryDirectory() as tmp:

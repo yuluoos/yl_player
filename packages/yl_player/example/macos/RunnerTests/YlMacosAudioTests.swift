@@ -317,12 +317,24 @@ final class YlMacosAudioTests: XCTestCase {
     var nativePlaying: Bool { engine.attachedNodes.compactMap { $0 as? AVAudioPlayerNode }.contains { $0.isPlaying } }
   }
   private final class DecodedScheduler: YlPresentationScheduling {
-    let actual = YlFrameScheduler()
+    let actual = YlFrameScheduler(collectDropDiagnostics: true)
     var videoFrames = 0, orderErrors = 0
     var awaitingPublish = false
     var selectedUptime: Double = 0
     var maxLagUs: Int64 = 0, positionUs: Int64 = 0, videoPTS: Int64 = -1
     var lateFrameDropCount: Int { actual.lateFrameDropCount }
+    var dropDiagnostics: [String: Any] {
+      let snapshot = actual.dropDiagnostics
+      return ["total": snapshot.total, "waitingEnqueues": snapshot.waitingEnqueues, "counts": Dictionary(uniqueKeysWithValues: YlFrameDropReason.allCases.map { ($0.rawValue, snapshot.counts[$0] ?? 0) }),
+        "events": snapshot.events.map { event -> [String: Any] in
+          ["reason": event.reason.rawValue, "count": event.count, "total": event.total,
+           "uptime": event.uptime, "generation": event.generation, "firstPTS": event.firstPTS,
+           "lastPTS": event.lastPTS, "queueCount": event.queueCount,
+           "positionUs": event.positionUs as Any? ?? NSNull(), "selectedPTS": event.selectedPTS as Any? ?? NSNull(),
+           "previousPositionUs": event.previousPositionUs as Any? ?? NSNull(),
+           "previousTickUptime": event.previousTickUptime as Any? ?? NSNull(), "enqueueWaitSeconds": event.enqueueWaitSeconds]
+        }]
+    }
     var pendingPTS: [Int64] { actual.pendingPTS }
     var bufferedDurationUs: Int64 { actual.bufferedDurationUs }
     func configureBounded(_ plan: YlBoundedBufferPlan?) { actual.configureBounded(plan) }
@@ -382,6 +394,7 @@ final class YlMacosAudioTests: XCTestCase {
     let renderer = try XCTUnwrap(factory.renderers.first)
     var records: [[String: Any]] = []
     func observe(_ phase: String) throws {
+      let diagnostics = scheduler.dropDiagnostics
       let audio = renderer.renderedAudioTime
       let audioUs = audio.map { Int64(Double($0.sampleTime) * 1_000_000 / $0.sampleRate) }
       let row: [String: Any] = ["phase": phase, "pid": ProcessInfo.processInfo.processIdentifier,
@@ -390,7 +403,8 @@ final class YlMacosAudioTests: XCTestCase {
         "videoPTS": scheduler.videoPTS, "videoFrames": scheduler.videoFrames, "published": output.published,
         "directPublished": output.directPublished, "submittedPrefix": factory.submittedPrefix,
         "frameAgeUs": Int64((ProcessInfo.processInfo.systemUptime - scheduler.selectedUptime) * 1_000_000),
-        "maxLagUs": scheduler.maxLagUs, "orderErrors": scheduler.orderErrors, "dropped": scheduler.lateFrameDropCount,
+        "maxLagUs": scheduler.maxLagUs, "orderErrors": scheduler.orderErrors, "dropped": diagnostics["total"]!,
+        "dropDiagnostics": diagnostics,
         "failures": eventLock.withLock { failures }, "candidate": renderer.usesSubmissionAnchor,
         "nativePlaying": factory.nativePlaying, "rendererCount": factory.renderers.count,
         "ledgerBytes": ledger.snapshot.currentBytes, "ledgerPeak": ledger.snapshot.peakBytes,

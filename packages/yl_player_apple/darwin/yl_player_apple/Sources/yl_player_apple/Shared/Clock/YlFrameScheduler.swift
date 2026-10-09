@@ -9,6 +9,33 @@ struct YlFrameEnvelope {
   let generation: UInt64
 }
 
+enum YlFrameDropReason: String, CaseIterable {
+  case lateArrival, durationLimit, enqueueTimeout, lateAfterCapacity, capacityEviction, catchUp
+}
+
+struct YlFrameDropEvent {
+  let reason: YlFrameDropReason
+  let count: Int
+  let total: Int
+  let uptime: TimeInterval
+  let generation: UInt64
+  let firstPTS: Int64
+  let lastPTS: Int64
+  let queueCount: Int
+  let positionUs: Int64?
+  let selectedPTS: Int64?
+  let previousPositionUs: Int64?
+  let previousTickUptime: TimeInterval?
+  let enqueueWaitSeconds: TimeInterval
+}
+
+struct YlFrameDropDiagnostics {
+  let total: Int
+  let waitingEnqueues: Int
+  let counts: [YlFrameDropReason: Int]
+  let events: [YlFrameDropEvent]
+}
+
 final class YlFrameScheduler {
   private let lock = NSCondition()
   private let compatibility: YlAppleCompatibility
@@ -20,12 +47,18 @@ final class YlFrameScheduler {
   private var lastPresentedPTS: Int64?
   private var disposed = false
   private var droppedFrames = 0
+  private let collectDropDiagnostics: Bool
+  private var waitingEnqueues = 0
+  private var dropCounts: [YlFrameDropReason: Int] = [:]
+  private var dropEvents: [YlFrameDropEvent] = []
+  private var previousTick: (uptime: TimeInterval, positionUs: Int64)?
   private var boundedPlan: YlBoundedBufferPlan?
 
   init(
     compatibility: YlAppleCompatibility = .current,
     maxFrames: Int = 3,
-    enqueueWaitTimeout: TimeInterval = 0.25
+    enqueueWaitTimeout: TimeInterval = 0.25,
+    collectDropDiagnostics: Bool = false
   ) {
     precondition(maxFrames > 0)
     precondition(enqueueWaitTimeout >= 0)
@@ -33,6 +66,7 @@ final class YlFrameScheduler {
     self.maxFrames = maxFrames
     self.frameLimit = maxFrames
     self.enqueueWaitTimeout = enqueueWaitTimeout
+    self.collectDropDiagnostics = collectDropDiagnostics
   }
 
   func setRate(_ rate: Double) {
@@ -61,6 +95,35 @@ final class YlFrameScheduler {
     lock.withLock { droppedFrames }
   }
 
+  var dropDiagnostics: YlFrameDropDiagnostics {
+    lock.withLock { .init(total: droppedFrames, waitingEnqueues: waitingEnqueues, counts: dropCounts, events: dropEvents) }
+  }
+
+  // Condition lock held. Scalar-only, opt-in diagnostics cannot retain payloads
+  // or reservations; lifetime totals survive flush/disposal like droppedFrames.
+  private func recordDrop(_ reason: YlFrameDropReason, first: YlFrameEnvelope,
+                          lastPTS: Int64? = nil, count: Int = 1,
+                          positionUs: Int64? = nil, selectedPTS: Int64? = nil,
+                          waitStarted: TimeInterval? = nil) {
+    droppedFrames += count
+    guard collectDropDiagnostics else { return }
+    let now = ProcessInfo.processInfo.systemUptime
+    dropCounts[reason, default: 0] += count
+    if dropEvents.count == 16 { dropEvents.removeFirst() }
+    dropEvents.append(.init(reason: reason, count: count, total: droppedFrames,
+      uptime: now, generation: first.generation, firstPTS: first.ptsUs,
+      lastPTS: lastPTS ?? first.ptsUs, queueCount: frames.count,
+      positionUs: positionUs, selectedPTS: selectedPTS,
+      previousPositionUs: previousTick?.positionUs, previousTickUptime: previousTick?.uptime,
+      enqueueWaitSeconds: waitStarted.map { max(0, now - $0) } ?? 0))
+  }
+
+  private func recordTick(positionUs: Int64) {
+    if collectDropDiagnostics {
+      previousTick = (ProcessInfo.processInfo.systemUptime, positionUs)
+    }
+  }
+
   @discardableResult
   func enqueue(_ frame: YlFrameEnvelope) -> Bool {
     lock.lock()
@@ -70,7 +133,7 @@ final class YlFrameScheduler {
       return false
     }
     if compatibility.usesBackpressure, let lastPresentedPTS, frame.ptsUs <= lastPresentedPTS {
-      droppedFrames += 1
+      recordDrop(.lateArrival, first: frame)
       lock.unlock()
       return false
     }
@@ -80,19 +143,22 @@ final class YlFrameScheduler {
       let end = frame.ptsUs.addingReportingOverflow(max(0, frame.durationUs))
       let span = end.partialValue.subtractingReportingOverflow(start)
       guard !end.overflow, !span.overflow, span.partialValue <= boundedPlan.maxDurationUs else {
-        droppedFrames += 1; lock.unlock(); return false
+        recordDrop(.durationLimit, first: frame); lock.unlock(); return false
       }
     }
+    let waitStarted = collectDropDiagnostics ? ProcessInfo.processInfo.systemUptime : nil
     let deadline = Date(timeIntervalSinceNow: enqueueWaitTimeout)
     while boundedPlan == nil && compatibility.usesBackpressure && frames.count >= frameLimit {
+      if collectDropDiagnostics { waitingEnqueues += 1 }
       let signalled = lock.wait(until: deadline)
+      if collectDropDiagnostics { waitingEnqueues -= 1 }
       guard !disposed,
             activeGeneration == nil || activeGeneration == frame.generation else {
         lock.unlock()
         return false
       }
       guard signalled else {
-        droppedFrames += 1
+        recordDrop(.enqueueTimeout, first: frame, waitStarted: waitStarted)
         lock.unlock()
         return false
       }
@@ -100,7 +166,7 @@ final class YlFrameScheduler {
 
     // Presentation can advance while the producer waits for capacity.
     if let lastPresentedPTS, frame.ptsUs <= lastPresentedPTS {
-      droppedFrames += 1
+      recordDrop(.lateAfterCapacity, first: frame, waitStarted: waitStarted)
       lock.unlock()
       return false
     }
@@ -110,8 +176,8 @@ final class YlFrameScheduler {
     frames.insert(frame, at: insertionIndex)
     var releasedFrame: YlFrameEnvelope?
     if boundedPlan == nil && !compatibility.usesBackpressure && frames.count > maxFrames {
+      recordDrop(.capacityEviction, first: frames[0])
       releasedFrame = frames.removeFirst()
-      droppedFrames += 1
     }
     lock.unlock()
     withExtendedLifetime(releasedFrame) {}
@@ -132,6 +198,7 @@ final class YlFrameScheduler {
     }
     guard frames.first?.ptsUs ?? .max <= positionUs else {
       if !staleFrames.isEmpty { lock.broadcast() }
+      recordTick(positionUs: positionUs)
       lock.unlock()
       withExtendedLifetime(staleFrames) {}
       return nil
@@ -141,11 +208,13 @@ final class YlFrameScheduler {
     let catchUpDropCount = max(0, dueCount - 1)
     let droppedDueFrames = Array(frames.prefix(catchUpDropCount))
     if catchUpDropCount > 0 {
+      recordDrop(.catchUp, first: frames[0], lastPTS: frames[catchUpDropCount - 1].ptsUs,
+        count: catchUpDropCount, positionUs: positionUs, selectedPTS: frames[catchUpDropCount].ptsUs)
       frames.removeFirst(catchUpDropCount)
-      droppedFrames += catchUpDropCount
     }
     let selectedFrame = frames.removeFirst()
     lastPresentedPTS = selectedFrame.ptsUs
+    recordTick(positionUs: positionUs)
     lock.broadcast()
     lock.unlock()
     withExtendedLifetime(staleFrames) {}
@@ -157,6 +226,7 @@ final class YlFrameScheduler {
     lock.lock()
     activeGeneration = generation
     lastPresentedPTS = nil
+    previousTick = nil
     let releasedFrames = frames
     frames.removeAll(keepingCapacity: true)
     lock.broadcast()
@@ -172,6 +242,7 @@ final class YlFrameScheduler {
     }
     disposed = true
     lastPresentedPTS = nil
+    previousTick = nil
     let releasedFrames = frames
     frames.removeAll(keepingCapacity: false)
     lock.broadcast()

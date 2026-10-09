@@ -45,3 +45,51 @@ def validate(rows, minimum_seconds):
     return dict(durationSeconds=duration,ticks=len(ticks),audioClockDriftSeconds=drift,
         maximumSelectionLagUs=max(r['maxLagUs'] for r in rows),videoFrames=ticks[-1]['videoFrames'],
         physicalOutputVerified=False,productionAdmission=False,downstreamBoundProven=False)
+
+
+def diagnose_drops(rows):
+    """Describe bounded scheduler evidence even when the zero-drop gate fails."""
+    reasons = ('lateArrival','durationLimit','enqueueTimeout','lateAfterCapacity','capacityEviction','catchUp')
+    previous = dict.fromkeys(reasons, 0)
+    events = {}
+    def require(ok, message):
+        if not ok: raise ValueError(message)
+    require(bool(rows), 'Missing drop diagnostics')
+    for row in rows:
+        snapshot = row.get('dropDiagnostics', {})
+        counts = snapshot.get('counts', {})
+        require(set(counts) == set(reasons) and
+                all(type(counts[k]) is int and counts[k] >= previous[k] for k in reasons), 'Invalid drop counters')
+        require(type(snapshot.get('total')) is int and snapshot['total'] == row['dropped'] == sum(counts.values()), 'Inconsistent drop total')
+        retained = snapshot.get('events')
+        require(isinstance(retained, list) and len(retained) <= 16, 'Invalid drop event bound')
+        require(bool(retained) == (snapshot['total'] > 0), 'Missing drop event')
+        last_total = 0
+        for event in retained:
+            require(event['reason'] in reasons and type(event['count']) is int and event['count'] > 0 and
+                    type(event['total']) is int and last_total < event['total'] <= snapshot['total'] and
+                    event['count'] <= event['total'], 'Invalid drop event counters')
+            require(event['generation'] == row['generation'] and
+                    math.isfinite(event['uptime']) and event['uptime'] <= row['uptime'], 'Invalid drop event identity/clock')
+            require(event['previousTickUptime'] is None or
+                    (math.isfinite(event['previousTickUptime']) and event['previousTickUptime'] <= event['uptime']), 'Invalid previous tick')
+            require(0 <= event['enqueueWaitSeconds'] and math.isfinite(event['enqueueWaitSeconds']), 'Invalid enqueue elapsed time')
+            prior = events.get(event['total'])
+            require(prior is None or prior == event, 'Changed retained drop event')
+            events[event['total']] = event.copy(); last_total = event['total']
+        if retained: require(last_total == snapshot['total'], 'Missing latest drop event')
+        observed = dict.fromkeys(reasons, 0)
+        for event in events.values(): observed[event['reason']] += event['count']
+        require(all(observed[k] <= counts[k] for k in reasons), 'Event reason exceeds counter')
+        if sum(observed.values()) == snapshot['total']:
+            require(observed == counts, 'Event reasons disagree with counters')
+        previous = counts.copy()
+    described = []
+    for event in events.values():
+        value = event.copy()
+        previous_tick = event['previousTickUptime']
+        value['tickGapSeconds'] = None if previous_tick is None else event['uptime'] - previous_tick
+        value['mediaAdvanceUs'] = None if event['positionUs'] is None or event['previousPositionUs'] is None else event['positionUs'] - event['previousPositionUs']
+        described.append(value)
+    return dict(counts=previous, events=described, diagnosticOnly=True,
+                physicalOutputVerified=False, productionAdmission=False)

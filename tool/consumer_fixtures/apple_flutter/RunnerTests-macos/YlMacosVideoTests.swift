@@ -7,6 +7,94 @@ import XCTest
 import YlFFmpegBridge
 
 final class YlMacosVideoTests: XCTestCase {
+  private func diagnosticFrame(_ pts: Int64, generation: UInt64 = 1, payload: AnyObject = NSObject()) -> YlFrameEnvelope {
+    .init(payload: payload, ptsUs: pts, durationUs: 40_000, keyframe: false, generation: generation)
+  }
+
+  func testDropDiagnosticsDescribeCatchUpWithoutRetainingFrames() throws {
+    let scheduler = YlFrameScheduler(collectDropDiagnostics: true)
+    scheduler.enqueue(diagnosticFrame(0))
+    XCTAssertEqual(scheduler.frame(at: 0, generation: 1)?.ptsUs, 0)
+    weak var payload: NSObject?
+    do {
+      let object = NSObject(); payload = object
+      scheduler.enqueue(diagnosticFrame(40_000, payload: object))
+    }
+    scheduler.enqueue(diagnosticFrame(80_000)); scheduler.enqueue(diagnosticFrame(120_000))
+    XCTAssertEqual(scheduler.frame(at: 125_000, generation: 1)?.ptsUs, 120_000)
+    XCTAssertNil(payload)
+    XCTAssertEqual(scheduler.lateFrameDropCount, 2)
+    let snapshot = scheduler.dropDiagnostics
+    XCTAssertEqual(snapshot.total, 2)
+    XCTAssertEqual(snapshot.counts[.catchUp], 2)
+    let event = try XCTUnwrap(snapshot.events.first)
+    XCTAssertEqual(event.reason, .catchUp); XCTAssertEqual(event.count, 2); XCTAssertEqual(event.total, 2)
+    XCTAssertEqual(event.firstPTS, 40_000); XCTAssertEqual(event.lastPTS, 80_000)
+    XCTAssertEqual(event.queueCount, 3); XCTAssertEqual(event.generation, 1)
+    XCTAssertEqual(event.positionUs, 125_000); XCTAssertEqual(event.selectedPTS, 120_000)
+    XCTAssertEqual(event.previousPositionUs, 0)
+    XCTAssertLessThanOrEqual(try XCTUnwrap(event.previousTickUptime), event.uptime)
+  }
+
+  func testDropDiagnosticsClassifyRejectionsAndStayBoundedAcrossFlush() throws {
+    let scheduler = YlFrameScheduler(maxFrames: 1, enqueueWaitTimeout: 0, collectDropDiagnostics: true)
+    scheduler.enqueue(diagnosticFrame(0))
+    XCTAssertFalse(scheduler.enqueue(diagnosticFrame(40_000)))
+    XCTAssertEqual(scheduler.frame(at: 0, generation: 1)?.ptsUs, 0)
+    for _ in 0..<20 { XCTAssertFalse(scheduler.enqueue(diagnosticFrame(0))) }
+    scheduler.configureBounded(try .init(minDurationMs: 0, maxDurationMs: 20, maxBytes: 4_000_000))
+    XCTAssertFalse(scheduler.enqueue(diagnosticFrame(80_000)))
+    let snapshot = scheduler.dropDiagnostics
+    XCTAssertEqual(snapshot.counts[.enqueueTimeout], 1)
+    XCTAssertEqual(snapshot.counts[.lateArrival], 20)
+    XCTAssertEqual(snapshot.counts[.durationLimit], 1)
+    XCTAssertEqual(snapshot.counts.values.reduce(0, +), scheduler.lateFrameDropCount)
+    XCTAssertEqual(snapshot.events.count, 16)
+    XCTAssertEqual(snapshot.events.first?.total, 7); XCTAssertEqual(snapshot.events.last?.total, 22)
+    XCTAssertEqual(snapshot.events.last?.reason, .durationLimit)
+    scheduler.flush(generation: 2); scheduler.configureBounded(nil)
+    scheduler.enqueue(diagnosticFrame(0, generation: 2))
+    XCTAssertFalse(scheduler.enqueue(diagnosticFrame(40_000, generation: 2)))
+    let event = try XCTUnwrap(scheduler.dropDiagnostics.events.last)
+    XCTAssertEqual(event.generation, 2); XCTAssertNil(event.previousPositionUs); XCTAssertNil(event.previousTickUptime)
+    XCTAssertGreaterThanOrEqual(event.enqueueWaitSeconds, 0)
+    scheduler.dispose()
+    XCTAssertEqual(scheduler.dropDiagnostics.events.last?.total, 23)
+  }
+
+  func testDropDiagnosticsDisabledPreservesDropBehaviorWithoutEvents() {
+    let scheduler = YlFrameScheduler()
+    scheduler.enqueue(diagnosticFrame(0)); scheduler.enqueue(diagnosticFrame(40_000))
+    XCTAssertEqual(scheduler.frame(at: 40_000, generation: 1)?.ptsUs, 40_000)
+    XCTAssertEqual(scheduler.lateFrameDropCount, 1)
+    XCTAssertEqual(scheduler.dropDiagnostics.total, 1)
+    XCTAssertTrue(scheduler.dropDiagnostics.events.isEmpty)
+    XCTAssertTrue(scheduler.dropDiagnostics.counts.isEmpty)
+  }
+
+  func testDropDiagnosticsSeparateCatchUpFromProducerOvertakenDuringWait() throws {
+    let scheduler = YlFrameScheduler(maxFrames: 1, enqueueWaitTimeout: 2, collectDropDiagnostics: true)
+    scheduler.enqueue(diagnosticFrame(40_000))
+    let completed = DispatchSemaphore(value: 0)
+    DispatchQueue.global().async {
+      XCTAssertFalse(scheduler.enqueue(self.diagnosticFrame(20_000)))
+      completed.signal()
+    }
+    let deadline = ProcessInfo.processInfo.systemUptime + 1
+    while scheduler.dropDiagnostics.waitingEnqueues == 0 && ProcessInfo.processInfo.systemUptime < deadline {
+      Thread.sleep(forTimeInterval: 0.001)
+    }
+    XCTAssertEqual(scheduler.dropDiagnostics.waitingEnqueues, 1)
+    XCTAssertEqual(scheduler.frame(at: 40_000, generation: 1)?.ptsUs, 40_000)
+    XCTAssertEqual(completed.wait(timeout: .now() + 1), .success)
+    XCTAssertEqual(scheduler.dropDiagnostics.waitingEnqueues, 0)
+    XCTAssertEqual(scheduler.dropDiagnostics.counts[.lateAfterCapacity], 1)
+    XCTAssertEqual(scheduler.lateFrameDropCount, 1)
+    let event = try XCTUnwrap(scheduler.dropDiagnostics.events.last)
+    XCTAssertEqual(event.firstPTS, 20_000)
+    XCTAssertGreaterThan(event.enqueueWaitSeconds, 0)
+  }
+
   func testPendingVideoReservationCountIsBoundedEvenForEmptyPackets() throws {
     let budget = YlVideoDecodeBudget(maxBytes: 100, maxFrames: 1, maxPendingFrames: 2)
     let first = try XCTUnwrap(budget.reservePending(byteCount: 0, timeout: 0))

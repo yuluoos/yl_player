@@ -320,3 +320,14 @@ AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 o
 - [ ] 真实解码候选长程零丢帧验收：仍未通过，下一项细分drop路径及调度原因。
 
 窗口860.818–865.827s中drop从0增至1，原生与严格校验均失败。没有重试覆盖或放宽阈值；资源释放后ledger0不代表整体资源有界或完整文件EOF通过。详见[报告](../reports/2026-09-26-remaining-08-performance-release.md)和[证据](../../../tool/playback_benchmark/macos-aac-preroll-observations.json)。正式准入继续关闭。
+
+### 后续定位：视频丢帧分类与调度窗口（2026-10-09）
+
+- [x] 默认关闭、最多16事件的标量诊断，原子记录总量/六类原因/等待生产者数；不修改调度行为。
+- [x] 原生RED3失败/1通过→最终macOS655/655；iOS arm64编译、Python10/10、夹具4/4；复审竞态及错误记录校验均已修正。
+- [x] 同版本30.025s短程通过；播放drop0，释放阶段单独记录1次容量等待超时。
+- [x] 执行一次目标1200s长程并归档实际870.888s失败前缀：10次enqueueTimeout、媒体/音频时钟停滞，随后render.audio_engine_failed。
+- [ ] 音频停滞根因：下一项保留完整安全错误详情及配置失效/启动失败分支时序，区分底层失败原因后修复。
+- [ ] 最终长程验收与候选准入：仍未通过，本次未达到1200s；不得推断上轮单次drop原因相同。
+
+详细证据与限制见[报告](../reports/2026-09-26-remaining-08-performance-release.md)及[归档](../../../tool/playback_benchmark/macos-video-drop-diagnostics-observations.json)。生产准入和默认启用保持关闭。

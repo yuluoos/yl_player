@@ -290,3 +290,5 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-10-09：P08推进真实解码连续观察，短程发现静音AAC首PCM PTS−21000µs触发现有兼容回退，实际rendered提交0，不能用submissionAnchor=true冒充候选。修复观测器三项复审问题并保留两次失败：音频67/67、Python8/8、夹具4/4通过，但候选短程门禁未通过，20分钟长程未执行。下一项处理真实AAC负起始PTS/预滚与候选兼容，再短程→长程；不修改生产开关，不宣称物理音画或完整P08通过，见[报告](../reports/2026-09-26-remaining-08-performance-release.md)。
 
 2026-10-09：P08修复候选AAC一次初始预滚：按样本裁去负时间部分，保留正时间样本和分配预算，默认legacy/iOS/bounded不变。初始及复审问题实际RED→GREEN；最终macOS651/651、iOS arm64编译、Python8/8和夹具4/4通过。同版本真实短程30.027s通过；长程1201.131s/241点无候选回退，但在860.818–865.827s窗口发生1次视频drop，XCTest/严格门禁均失败，未重试或放宽。下一项细分drop路径与调度证据，完整P08及正式准入仍开放，见[报告](../reports/2026-09-26-remaining-08-performance-release.md)。
+
+2026-10-09视频drop诊断推进：六类原因及最多16条标量事件已完成，最终macOS655/655、iOS arm64编译、Python10/10、夹具4/4；同版本短程30.025s通过。目标1200s长程在870.888s因音频引擎错误提前失败，10次drop全为队列等待超时，事件期间调度仍在调用而媒体位置不动。下一项采集音频错误完整安全详情及配置失效/启动失败分支时序，定位时钟停滞根因。长程验收和候选准入仍未完成，不能倒推上轮单次drop原因。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)与[证据](../../../tool/playback_benchmark/macos-video-drop-diagnostics-observations.json)。

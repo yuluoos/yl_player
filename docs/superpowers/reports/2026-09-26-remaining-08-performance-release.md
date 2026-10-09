@@ -1359,3 +1359,24 @@ legacy原采集器已记录TimeoutExpired；4次阶段调用不等于4份有效�
 [证据归档](../../../tool/playback_benchmark/macos-aac-preroll-observations.json)保留158份带长度/SHA256的原始记录：初始RED、首轮音频GREEN、复审RED、最终全套/iOS编译、短程通过及长程失败、所有JSONL/附件/结果包文件hash、修复前后源码/协议与素材身份。短程和长程冻结身份完全相同，最终源码及二进制/素材仍一致，全套运行源码快照也匹配。
 
 下一项优先细分视频drop的发生路径并补采样窗口内的调度证据，再验证长程零丢帧；不能调宽门槛或将一次计数直接归因给系统。defaultEnabled/productionAdmission/downstreamBoundProven均保持false，物理音画/真实路由、最低系统/Intel/iOS运行、live-heap干扰及整体资源上界仍开放，完整P08未完成。
+
+### 视频丢帧路径诊断（2026-10-09，base06f95a7）
+
+为既有调度器增加默认关闭的标量诊断：lateArrival、durationLimit、enqueueTimeout、lateAfterCapacity、capacityEviction、catchUp六类累计计数，以及最后16条事件。记录丢弃PTS范围、队列长度、上一调度调用时间/媒体位置、追帧选中PTS和入队等待耗时；不持有帧/预算令牌，不改变调度策略或阈值。总量/原因/事件/等待生产者数量在同一锁内快照，flush清除前次tick但保留生命周期累计统计。原生探针显式开启，默认产品路径保持关闭。
+
+验证证据：新增原生回归真实RED为4项中3失败/1通过，覆盖追帧内容与释放、超时/过期/跨度拒绝、16条历史边界/reset、默认关闭及等待期间被超越。独立复审修复固定50ms等待造成的竞态，改为同步到实际容量等待；补充事件原因一致性/前次tick时钟校验，两个错误记录负例先RED再GREEN。最终macOS完整原生655/655、0失败/0跳过；iOS arm64 simulator build-for-testing exit0（未运行iOS测试）；Python10/10、夹具4/4、发现iOS678/macOS656及运行655核对通过。保留复审前655/655结果，最终声明以复审后结果包为准。
+
+正式30.025s短程通过，7个播放采样、播放drop0、orderErrors0、音频时钟偏差+0.037181s、最大选帧滞后38000us。释放阶段另记录1次enqueueTimeout（约251.021ms）；这是既定协议允许单独记录的shutdown行为，不能把最终累计1解释为短程播放丢帧。账本释放后为0，无待播放音频。
+
+同源码/二进制/夹具/协议身份启动一次1200s长程，实际在870.888s、175个播放采样后因`render.audio_engine_failed`提前结束，**未达到1200s，也未通过长程验收**。原生1测试失败、exit65，严格采集器保留`Sticky error or frame violation`；未重试覆盖、未放宽零丢帧及其他门限。
+
+- 最后健康采样：播放观测860.795s，audioUs863935125、positionUs863923500、drop0，rendered提交40518/回调40496。
+- 第861.997500–864.275989s出现10次丢帧，全部为enqueueTimeout，每次等待约250.766–251.045ms、队列均为3；没有catchUp或其他原因计数。各事件的前次调度tick仍向前推进，前次媒体位置却固定864888375us；事件距最近调度tick约1.168–16.332ms。这些值证明采集到的超时期间仍有调度调用，不能将本次失败简单归为显示回调停止。
+- 第865.802s采样audioUs/positionUs同为864888375、videoPTS864875000；最近选帧已老化4.056s。音频rendered提交40564/回调40541，nativePlaying仍true。下一采样audioUs变nil、candidate/nativePlaying变false，出现音频引擎错误，视频位置仍停滞。
+- 全程playedBack提交/回调均0；停止后rendered提交/回调40587/40587。两次释放采样ledger0、pendingfalse。末次播放帧年龄9.142s，不能以最大历史选帧滞后仅23125us代替实时帧新鲜度。末次音频时钟已缺失，因此没有有效的全程音频漂移值。
+
+结论边界：本次已确定“媒体/音频时钟停滞 → 视频队列容量等待超时”的可观察链路，随后出现音频失败；不能据此认定底层音频根因，也不能倒推上轮仅1次丢帧的原因。`render.audio_engine_failed`同时用于配置失效和启动失败，而当前探针只保留错误码；结果包无可用console日志。开跑前和失败后的音频设备快照均为内置扬声器44100Hz，快照相同不能排除期间瞬态配置变化。
+
+下一项：补齐音频错误message/diagnostic及配置失效/启动失败分支的时序证据，定位停滞源头，再制定对应回归和修复；不得直接调整视频超时阈值掩盖问题。候选默认启用、productionAdmission、downstreamBoundProven继续false；物理音画输出、完整文件EOF和整体资源有界不在本轮证明范围。
+
+协议：[video-drop-diagnostics-protocol.md](../../../tool/playback_benchmark/video-drop-diagnostics-protocol.md)。原始证据：[macos-video-drop-diagnostics-observations.json](../../../tool/playback_benchmark/macos-video-drop-diagnostics-observations.json)，包含165份gzip+base64原始文件、SHA256/长度校验、失败前缀、XCTest附件/结果包文件哈希和源码/二进制/夹具身份；旧AAC预滚长程失败证据保持不变。
