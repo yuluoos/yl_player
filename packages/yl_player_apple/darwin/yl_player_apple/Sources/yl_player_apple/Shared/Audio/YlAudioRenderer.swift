@@ -1334,13 +1334,14 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
   func setInvalidationHandler(_ handler: (() -> Void)?) {
     invalidationLock.withLock { invalidationHandler = handler }
   }
-  private let engine = AVAudioEngine()
+  private let engine: AVAudioEngine
   private let player = AVAudioPlayerNode()
   private let timePitch = AVAudioUnitTimePitch()
   private var configured = false
   private var disposed = false
 
-  init() {
+  init(engine: AVAudioEngine = AVAudioEngine()) {
+    self.engine = engine
     configurationObserver = NotificationCenter.default.addObserver(
       forName: .AVAudioEngineConfigurationChange, object: engine, queue: nil
     ) { [weak self] _ in
@@ -1369,7 +1370,8 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
   }
 
   var renderedAudioTime: YlRenderedAudioTime? {
-    guard let nodeTime = player.lastRenderTime,
+    guard configured, !disposed,
+          let nodeTime = player.lastRenderTime,
           let playerTime = player.playerTime(forNodeTime: nodeTime),
           playerTime.sampleRate > 0 else {
       return nil

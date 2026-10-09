@@ -10,7 +10,7 @@
 
 **Spec:** [输出完成契约 §10](../specs/2026-10-08-audio-output-completion-contract.md)、[需求基线](../specs/2026-09-20-playback-expansion-requirements.md)、[P08](2026-09-26-remaining-08-performance-release.md)。
 
-起点 `9c5967a`。Task 1–4 已实现并验证；Task 5 尚未执行。既有工具通过不能替代生产验收。
+起点 `9c5967a`。Task 1–5 已实现并执行验证；资源采样帧断言失败如实保留，默认准入仍关闭。既有工具通过不能替代生产验收。
 
 ## Global Constraints
 
@@ -214,19 +214,19 @@ renderer.observeTailWait(playing: true, nowUs: 100_000)
 
 **Interfaces:** Consumes：Task 4 的内部显式注入、现有原生 XCTest runner、`main_example_tests.py` 实际发现检查。Produces：报告明确列出 `adapterImplemented`、`defaultEnabled=false`、`productionAdmission=false`、`downstreamBoundProven`（只由独立证据决定）；局部通过不能修改默认值。
 
-- [ ] 在真实运行之前冻结素材哈希、源码/编译身份、系统设备/路由、电源/热状态、同条件 legacy/candidate 对照、计划数量与失败保留规则。最小集：0/1/3/2000 PCM、300ms 断供、在途 pause/EOF、seek/切轨/rate/graph invalidation；真实 converter 与 session 必须各有记录，不能只运行工具模型。
-- [ ] 新增实际 adapter 的节点 tap 回归，检查所有输入帧只交付一次且顺序正确；沿用工具的有限短序列 Float32 marker，第一声道 tap 与最终 mixer 静音必须标明。正常 2000 块零内部零帧；断供组完整保留 gap 并验证单向回退，不称连续无间断。记录提交/回调 mode、generation、时钟锚点及 ledger 峰值；EOF 只在最终通知/资源清空后出现。
-- [ ] 用 fake callback 丢失及旧 generation 通知确认不会伪造 completed；用真实故障记录现有安全错误字段，不记录 URL/headers/原生异常原文到公开诊断。
-- [ ] 运行一次完整 macOS 原生套件与实际发现检查，保留 xcresult 身份、失败与跳过；共享代码需要 iOS 编译检查，未运行的 iOS/最低系统/Intel 行明确未验收。只有工具校验器改动时才运行对应 Python 回归，不因文档变更重跑全套。
-- [ ] 独立冻结并执行同会话至少 1200s 的无 MSL、播放中无 heap 连续性观察；另开资源取证运行，不能把 heap 干扰组算作连续性通过。复用 P08 已冻结进度/失败规则，记录 RSS/footprint/owned PCM/回调外壳与 timer 的前中后变化和释放后值；协议在执行前写清新增指标的阈值依据，不能事后以观测最大值定合格线。若下游总体边界证据仍不足，保留 `downstreamBoundProven=false`，输出资源变化原值。
-- [ ] 分开汇总：定向行为、真实节点、长播连续性、独立资源、物理音画、设备/最低 OS。兼容回退恢复逐缓冲对象保留是已知限制，不能从稳态组外推所有来源。缺设备或物理证据记录具体缺口，继续能完成的范围。
-- [ ] 提交 `test: validate gated audio terminal integration`。这五项完成只代表测试适配与证据完成；默认启用需另一个有明确支持矩阵与资源/音画结论的发布切片。完整 P08 Task 1/2 不随本子计划自动勾选。
+- [x] 在真实运行之前冻结素材哈希、源码/编译身份、系统设备/路由、电源/热状态、同条件 legacy/candidate 对照、计划数量与失败保留规则。最小集：0/1/3/2000 PCM、300ms 断供、在途 pause/EOF、seek/切轨/rate/graph invalidation；真实 converter 与 session 必须各有记录，不能只运行工具模型。
+- [x] 新增实际 adapter 的节点 tap 回归，检查所有输入帧只交付一次且顺序正确；沿用工具的有限短序列 Float32 marker，第一声道 tap 与最终 mixer 静音必须标明。正常 2000 块零内部零帧；断供组完整保留 gap 并验证单向回退，不称连续无间断。记录提交/回调 mode、generation、时钟锚点及 ledger 峰值；EOF 只在最终通知/资源清空后出现。
+- [x] 用 fake callback 丢失及旧 generation 通知确认不会伪造 completed；用真实故障记录现有安全错误字段，不记录 URL/headers/原生异常原文到公开诊断。
+- [x] 运行一次完整 macOS 原生套件与实际发现检查，保留 xcresult 身份、失败与跳过；共享代码需要 iOS 编译检查，未运行的 iOS/最低系统/Intel 行明确未验收。只有工具校验器改动时才运行对应 Python 回归，不因文档变更重跑全套。
+- [x] 独立冻结并执行同会话至少 1200s 的无 MSL、播放中无 heap 连续性观察；另开资源取证运行，不能把 heap 干扰组算作连续性通过。复用 P08 已冻结进度/失败规则，记录 RSS/footprint/owned PCM/回调外壳与 timer 的前中后变化和释放后值；协议在执行前写清新增指标的阈值依据，不能事后以观测最大值定合格线。若下游总体边界证据仍不足，保留 `downstreamBoundProven=false`，输出资源变化原值。
+- [x] 分开汇总：定向行为、真实节点、长播连续性、独立资源、物理音画、设备/最低 OS。兼容回退恢复逐缓冲对象保留是已知限制，不能从稳态组外推所有来源。缺设备或物理证据记录具体缺口，继续能完成的范围。
+- [x] 提交 `test: validate gated audio terminal integration`。这五项完成只代表测试适配与证据完成；默认启用需另一个有明确支持矩阵与资源/音画结论的发布切片。完整 P08 Task 1/2 不随本子计划自动勾选。
 
 ## 自审与交付边界
 
 2026-10-08 文档自审：准入与 bounded 排除→Task 1/4；通知来源→Task 2；既有 token/所有权与输出排空→Task 3；时钟/控制/定时器→Task 4；独立长播及未准入状态→Task 5。新接口均由前序任务定义，默认 factory 签名保持不变；测试路径按仓库实际镜像核查。历史 §4/7 的否决不被新计划改写。
 
-规划提交 `184531f` 只包含文档。后续 Task 1–4 已完成下述接口与验证，下一执行项为 Task 5；沿用用户已授权的本会话实现与本地提交，不推送远端。
+规划提交 `184531f` 只包含文档。后续 Task 1–5 已完成下述接口、验证执行与证据分类；沿用用户已授权的本会话实现与本地提交，不推送远端。
 
 ### 2026-10-08 Task 1 执行记录
 
@@ -264,3 +264,12 @@ AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 o
 新增4项音频与7项共享 session 回归：timer 缺失、失效后静默 play、清理钩子占用 state lock 三个边界均保留实际 RED→GREEN；最终两类113/113通过（音频60、session53；0失败/0跳过），夹具4/4、发现iOS676/macOS639核对。真实 demux 的 opus_switch 素材经受控 PCM/video 截止点覆盖音频/视频分别先结束，完整 session 到达 completed；该组不是物理音画或真实解码连续性验收。来源默认/本地/bounded/network、trim 锚点、EOF/watchdog、同 owner 旧代、实际 seek/切轨与图失效链均有回归。
 
 [证据](../../../tool/playback_benchmark/macos-audio-terminal-integration-controls-observations.json)保留运行日志、结果/方法身份、观察附件、最终源码及素材哈希；中间源码未逐版归档。既有编译/链接/QoS警告保留，未运行完整macOS、iOS、最低系统/Intel或长播。下一项 Task5 负责真实节点集成、完整套件、独立长播/资源采证和全计划复审；defaultEnabled/productionAdmission/downstreamBoundProven 仍为 false，完整P08开放。
+
+
+### 2026-10-08 Task 5 执行记录
+
+完成真实renderer/system节点短序列矩阵、实际converter/session控制与EOF、安全失败及回调丢失检查。资源采样发现既有释放后clock读取原生崩溃，新增独立回归实际RED1/1→GREEN1/1并最小guard修复。最终完整macOS644/644、实际发现核对通过，iOS arm64模拟器编译通过；未运行iOS/最低OS/Intel设备验收。
+
+无heap独立长播241采样/1200.317s通过：57840640帧，顺序错误和内部零帧0，56484rendered+1playedBack提交/回调一致，ledger峰值196608B，释放与2秒后0。独立paired资源组四阶段均采齐，但两组在播放中heap之后均出现tap帧丢失/顺序断言失败，退出65原样保留，不放宽断言、不算连续性通过。该项勾选表示实现、执行与准入报告完成，绝不表示所有实验通过。
+
+完整数据、失败归因边界及协议偏差见[P08报告](../reports/2026-09-26-remaining-08-performance-release.md)和[证据](../../../tool/playback_benchmark/macos-audio-integration-observations.json)。adapterImplemented=true，defaultEnabled/productionAdmission/downstreamBoundProven=false；物理音画、真实路由切换、其他设备/最低系统及整体资源上界待后续发布切片，完整P08保持开放。

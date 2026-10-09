@@ -1208,3 +1208,31 @@ pipeline首次提交在main/session上下文复核renderer身份及audioGenerati
 新增11项覆盖默认/显式本地/bounded/network recipe、trim后首块锚定、EOF/watchdog入口、同owner旧代、实际session seek/音轨替换、图失效与旧通知、暂停EOF和弱引用销毁。完整EOF以现有opus_switch真实demux驱动session，音频/视频分别先结束使用受控转换器和解码输出截止点，均检查最终completed；不冒充真实声音连续性或物理音画验证。
 
 [证据](../../../tool/playback_benchmark/macos-audio-terminal-integration-controls-observations.json)归档原始日志、运行结果/方法身份、观察附件、最终源码及素材哈希；中间源码未全部保存，不能声称逐版可重放。既有编译/链接/QoS警告仍在。真实候选输出节点、设备配置切换、全macOS/iOS/最低OS/Intel、独立1200s无heap连续性及资源取证未在本项执行，下一项Task5负责；defaultEnabled/productionAdmission/downstreamBoundProven仍为false，完整P08不勾选。
+
+
+### 2026-10-08 音频尾部接入 Task 5：真实路径取证与不准入结论
+
+使用实际 YlAudioRenderer → YlSystemAudioOutput → AVAudioPlayerNode；注入 AVAudioEngine 仅用于观察既有节点，调度不改成工具模型。第一声道 tap 位于 time pitch/mixer/设备之前，最终 mixer 静音。短序列包括 paired legacy/candidate 的0/1/3/2000块、300ms断供与在途pause/EOF；真实AAC转换及真实demux/转换器/system输出的session控制与EOF另有记录，视频为受控输出。图变化为注入原生通知，不是物理切换设备。
+
+最终完整macOS原生套件644/644通过，0失败/0跳过，实际方法身份核对一致；源码发现iOS678/macOS645中的一项受平台条件排除。iOS arm64模拟器编译通过，未执行iOS测试。泛用双架构构建先在Flutter解包阶段失败，显式arm64后通过，没有提高iOS15/macOS12部署下限。首次完整套件643/643后，资源释放采样发现既有system输出的时钟getter访问已detach节点会抛原生异常；独立回归实际RED1/1→GREEN1/1，最小修复在未配置/已dispose时返回nil，因此重新执行完整套件。
+
+最终短序列两组2000块各收到2048000帧，顺序错误/内部零帧均为0；candidate为1999次rendered+1次playedBack，legacy为2000次playedBack，上游ledger峰值均196608B，末尾排空。故意断供组保留gap，不写为连续性通过。丢失playedBack回调不伪造completed；实际已dispose系统输出启动失败保持render.audio_engine_failed安全字段。
+
+独立heap组使用同一最终二进制、各2000块，四个阶段均有heap原始表。两组XCTest都失败：legacy最终tap2028776帧/1005568顺序错误，candidate2025991帧/1005568顺序错误，目标均2048000；偏差出现在播放中heap采样之后。未放宽断言、未将退出65改记通过；资源记录完整不等于音频验收通过。更早legacy采样另有三阶段后时钟崩溃，原样保留。
+
+| heap类型（全进程） | legacy 配置/中段/排空/释放 | candidate 配置/中段/排空/释放 |
+|---|---|---|
+| dispatch_source_t | 216 / 1211 / 2194 / 215 | 215 / 212 / 211 / 213 |
+| LifecycleCompletion | 未单独识别 / 1018 / 1982 / 未单独识别 | 四阶段均未单独识别 |
+| AVAudioPCMBuffer | 未单独识别 / 25 / 1 / 未单独识别 | 未单独识别 / 25 / 1 / 未单独识别 |
+| candidate Resource | 四阶段均未单独识别 | 未单独识别 / 24 / 未单独识别 / 未单独识别 |
+
+未单独识别不能填0；dispatch源是整个测试进程，不能逐个归属renderer timer。两组上游ledger峰值196608B，释放与2秒后均0；RSS/footprint原值保留，不设事后阈值、不据此判定泄漏修复或下游总体有界。legacy恢复逐缓冲保留的限制仍在，候选稳态不能外推兼容回退。
+
+独立无MSL/无heap/无并发构建的候选长播XCTest1/1通过：同一PID/代际，241个播放中采样，有效观察1200.317065583s，最大间隔5.004106208s，累计媒体时钟偏差−0.608690583s，逐段媒体时钟/帧进度均在90–110%门槛内。57840640帧全部按序，顺序错误/内部零帧/原生播放停止/错误回调均0；56484次rendered与1次playedBack的提交和回调数量分别一致。ledger峰值196608B，释放及2秒后均0。该结果独立于heap失败组；没有legacy长播对照，不报告长播性能比值。
+
+[机器可读证据](../../../tool/playback_benchmark/macos-audio-integration-observations.json)包含协议、脚本、实际素材/源码/二进制身份、原始日志、xcresult身份/方法/附件、JSONL、heap表和失败详情；每个原始文件用SHA-256校验及gzip保存。完整xcresult仍在本机/private/tmp，归档保留其文件hash清单和导出结果，未内嵌整个二进制bundle。
+
+证据完整性：最初matrix测试在移除已detach节点tap时失败，修复测试清理顺序后通过；macOS生成配置原指向旧Flutter benchmark，保留该次日志并恢复lib/main.dart后重新验证。早期运行前快照漏存素材hash，不能事后声称已预先冻结；当前素材与Task4已提交hash一致，后续最终套件/资源/长播均在运行前保存素材及源码/二进制hash。全部失败、旧快照和协议修订保留。
+
+`adapterImplemented=true`，`defaultEnabled=false`、`productionAdmission=false`、`downstreamBoundProven=false`。未验证物理音画同步、真实设备路由切换、Intel、最低macOS/iOS、iOS运行及其他来源/格式；这些缺口继续开放，完整P08 Task1/2不随子计划勾选。

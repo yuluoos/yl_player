@@ -276,3 +276,6 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 
 
 2026-10-08：音频尾部接入 Task4完成默认关闭的内部session来源准入、首次PCM提交锚点、独立10ms目标timer及配置失效失败链。新增11项；最终音频60+session53共113/113、夹具4/4、发现676/639核对。timer缺失、失效后静默play和钩子锁顺序均实际RED→GREEN；受控音频/视频尾部完成不等于物理输出验收。[下一项Task5](2026-10-08-apple-audio-terminal-integration.md)补真实节点、完整套件、独立长播/资源和全计划复审；默认未启用、整体有界未证明，完整P08开放。
+
+
+2026-10-08：音频尾部候选接入Task5完成真实节点/实际converter与session验证和不准入报告。最终macOS644/644、iOS arm64编译通过；无heap长播1200.317s/57840640帧/0顺序错误及内部零帧通过，释放后ledger0。独立heap两组四阶段采齐但tap帧断言失败，原始失败保留；释放后clock崩溃实际RED→GREEN修复。子计划完成不代表全部实验通过或正式准入：默认关闭、下游整体有界未证明，物理音画/设备/最低OS继续开放，详见[报告](../reports/2026-09-26-remaining-08-performance-release.md)。

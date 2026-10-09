@@ -343,6 +343,76 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     XCTAssertEqual(latest?.error?.code, "network.cancelled")
   }
 
+  private final class RealTerminalFactory: YlAudioRendererMaking {
+    var renderers: [YlAudioRenderer] = []
+    func makeRenderer(bufferBudget: YlFallbackBufferBudget) -> YlAudioRenderer {
+      let engine = AVAudioEngine()
+      let output = YlSystemAudioOutput(engine: engine)
+      engine.mainMixerNode.outputVolume = 0
+      let renderer = YlAudioRenderer(bufferBudget: bufferBudget, output: output)
+      renderers.append(renderer)
+      return renderer
+    }
+  }
+
+  func testTerminalSessionRealConverterOutputControlsAndEOF() async throws {
+    let (prepared, _) = try terminalPrepared(); let streams = prepared.audioStreams
+    let factory = RealTerminalFactory(), video = Factory(), display = BoundedDisplay()
+    video.automaticFrames = true
+    var completed = false; var failures: [String] = []; var maxPosition: Int64 = 0
+    let instance = try YlManagedPlaybackSession(playerId: 731,
+      services: .init(platform: .current, textureOutput: Output(), makeDisplayDriver: { display.tick = $0; return display }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 17,
+      videoSessionFactory: video, audioRendererFactory: factory, emit: {
+        if case let .state(state) = $0.event { completed = state.status == "completed"; maxPosition = max(maxPosition, state.positionMs) }
+        if case let .delta(delta) = $0.event { maxPosition = max(maxPosition, delta.positionMs) }
+        if case let .failure(error) = $0.event { failures.append(error.code) }
+      }, audioTerminalCandidateEnabled: true)
+    defer { instance.dispose() }
+    try instance.activate(); try instance.play()
+    for _ in 0..<200 where maxPosition < 500 && failures.isEmpty {
+      try await Task.sleep(nanoseconds: 10_000_000); display.advance()
+    }
+    XCTAssertGreaterThanOrEqual(maxPosition, 500)
+    try instance.pause()
+    try instance.seek(toMs: 750, cancellationToken: nil)
+    try instance.selectAudioTrack("audio-\(streams[1].index)", cancellationToken: nil)
+    XCTAssertFalse(factory.renderers.last!.usesSubmissionAnchor)
+    try instance.selectAudioTrack("audio-\(streams[0].index)", cancellationToken: nil)
+    try instance.setPlaybackSpeed(2); try instance.setPlaybackSpeed(1)
+    try instance.seek(toMs: 0, cancellationToken: nil)
+    XCTAssertEqual(factory.renderers.last!.usesSubmissionAnchor, YlApplePlatform.current == .macos)
+    try instance.play()
+    for _ in 0..<700 where !completed && failures.isEmpty {
+      try await Task.sleep(nanoseconds: 10_000_000); display.advance()
+    }
+    let attachment = XCTAttachment(string: "realDemux=true; realAACConverter=true; realSystemOutput=true; controlledVideo=true; mutedMixer=true; completed=\(completed); maxPositionMs=\(maxPosition); renderers=\(factory.renderers.count); failures=\(failures)")
+    attachment.lifetime = .keepAlways; add(attachment)
+    XCTAssertTrue(completed); XCTAssertTrue(failures.isEmpty)
+  }
+
+  func testTerminalSessionLostPlaybackCallbackNeverSynthesizesCompleted() async throws {
+    let (prepared, _) = try terminalPrepared()
+    let factory = TerminalFactory(), video = Factory(), display = BoundedDisplay()
+    video.automaticFrames = true
+    var completed = false; var failures: [String] = []
+    let instance = try YlManagedPlaybackSession(playerId: 731,
+      services: .init(platform: .macos, textureOutput: Output(), makeDisplayDriver: { display.tick = $0; return display }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 17,
+      videoSessionFactory: video, audioRendererFactory: factory, emit: {
+        if case let .state(state) = $0.event { completed = state.status == "completed" }
+        if case let .failure(error) = $0.event { failures.append(error.code) }
+      }, audioTerminalCandidateEnabled: true)
+    defer { instance.dispose() }
+    try instance.activate(); try instance.play()
+    for _ in 0..<600 {
+      try await Task.sleep(nanoseconds: 10_000_000); display.advance()
+    }
+    XCTAssertTrue(factory.outputs[0].modes.contains(.playedBack))
+    XCTAssertTrue(factory.renderers[0].hasPendingPlayback)
+    XCTAssertFalse(completed); XCTAssertTrue(failures.isEmpty)
+  }
+
   private final class TerminalPCM: YlAudioPacketConverting {
     let pcmFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 48000, channels: 2, interleaved: false)
     var trimUs: Int64 = 0

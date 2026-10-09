@@ -2,6 +2,7 @@
 import AppKit
 import AVFAudio
 import Foundation
+import Darwin
 import VideoToolbox
 import XCTest
 import YlFFmpegBridge
@@ -221,6 +222,245 @@ final class YlMacosAudioTests: XCTestCase {
     XCTAssertEqual(ledger.snapshot.currentBytes, 0)
   }
 
+
+  private final class IntegrationMarkers {
+    private let lock = NSLock()
+    private var frames = 0, zeros = 0, gaps = 0, errors = 0
+    func consume(_ pcm: AVAudioPCMBuffer) {
+      lock.withLock {
+        guard let channel = pcm.floatChannelData?[0] else { errors += 1; return }
+        for index in 0..<Int(pcm.frameLength) {
+          let value = channel[index]
+          if value == 0 { if frames > 0 { zeros += 1 }; continue }
+          let expected = Float(frames % 2097152 + 1) / 4194304
+          if value != expected { errors += 1 }
+          frames += 1; gaps += zeros; zeros = 0
+        }
+      }
+    }
+    var snapshot: [String: Int] { lock.withLock { ["frames": frames, "interiorZeroFrames": gaps, "errors": errors] } }
+  }
+  private final class IntegrationPCM: YlAudioPacketConverting {
+    let pcmFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 48000, channels: 2, interleaved: false)
+    func configure(stream: YlAudioStreamConfiguration) throws {}
+    func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate { .init(durationUs: 21334, byteCount: 8192) }
+    func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
+      let ordinal = Int(packet.data.withUnsafeBytes { $0.loadUnaligned(as: Int64.self) })
+      let pcm = AVAudioPCMBuffer(pcmFormat: pcmFormat!, frameCapacity: 1024)!
+      pcm.frameLength = 1024
+      for channel in 0..<2 { for frame in 0..<1024 {
+        pcm.floatChannelData![channel][frame] = Float((ordinal * 1024 + frame) % 2097152 + 1) / 4194304
+      } }
+      return .init(payload: pcm, ptsUs: packet.ptsUs, durationUs: 21334, byteCount: 8192, generation: packet.generation)
+    }
+  }
+  private final class IntegrationOutput: YlAudioOutputDriving {
+    let system: YlSystemAudioOutput
+    private let lock = NSLock()
+    private var counts = ["renderedSubmissions": 0, "playedSubmissions": 0, "renderedCallbacks": 0, "playedCallbacks": 0]
+    var snapshot: [String: Int] { lock.withLock { counts } }
+    let supportsTerminalCompletion = true
+    init(engine: AVAudioEngine) { system = YlSystemAudioOutput(engine: engine) }
+    var volume: Float { get { system.volume } set { system.volume = newValue } }
+    var rate: Float { get { system.rate } set { system.rate = newValue } }
+    var renderedAudioTime: YlRenderedAudioTime? { system.renderedAudioTime }
+    func setInvalidationHandler(_ handler: (() -> Void)?) { system.setInvalidationHandler(handler) }
+    func configure(sampleRate: Double, channelCount: Int) throws { try system.configure(sampleRate: sampleRate, channelCount: channelCount) }
+    func configure(format: AVAudioFormat) throws { try system.configure(format: format) }
+    func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void) {
+      lock.withLock { counts["playedSubmissions", default: 0] += 1 }
+      system.schedule(buffer) { [weak self] in
+        self?.lock.withLock { self?.counts["playedCallbacks", default: 0] += 1 }; completion()
+      }
+    }
+    func schedule(_ buffer: YlScheduledAudioBuffer, mode: YlAudioOutputCompletionMode, callbacks: YlAudioOutputCallbacks) {
+      lock.withLock { counts[mode == .renderedResource ? "renderedSubmissions" : "playedSubmissions", default: 0] += 1 }
+      system.schedule(buffer, mode: mode, callbacks: .init(resourcesReleased: { [weak self] in
+        self?.lock.withLock { self?.counts["renderedCallbacks", default: 0] += 1 }; callbacks.resourcesReleased()
+      }, playedBack: { [weak self] in
+        self?.lock.withLock { self?.counts["playedCallbacks", default: 0] += 1 }; callbacks.playedBack()
+      }))
+    }
+    func play() throws { try system.play() }
+    func pause() { system.pause() }
+    func reset() { system.reset() }
+    func dispose() { system.dispose() }
+  }
+
+  func testActualTerminalAdapterFrameSequenceMatrix() throws {
+    for candidate in [false, true] {
+      for count in [0, 1, 3, 2000] { try runActualAdapter(count: count, candidate: candidate) }
+      try runActualAdapter(count: 100, candidate: candidate, starvation: true)
+      try runActualAdapter(count: 3, candidate: candidate, pausedEOF: true)
+    }
+  }
+
+  func testActualTerminalAdapterContinuousObservation() throws {
+    let env = ProcessInfo.processInfo.environment
+    let kind = env["YL_AUDIO_PROBE_KIND"] ?? "short"
+    XCTAssertNil(env["MallocStackLogging"]); XCTAssertNil(env["MallocStackLoggingNoCompact"])
+    let count = kind == "long" ? 56485 : kind == "resource" ? 2000 : 8
+    try runActualAdapter(count: count, candidate: env["YL_AUDIO_PROBE_ARM"] != "legacy",
+      probeDirectory: env["YL_AUDIO_PROBE_DIRECTORY"], resourceProbe: kind == "resource")
+  }
+
+  func testActualSystemOutputClockAfterDisposeIsUnavailable() throws {
+    let output = YlSystemAudioOutput()
+    XCTAssertNil(output.renderedAudioTime)
+    try output.configure(sampleRate: 48000, channelCount: 2)
+    output.dispose()
+    XCTAssertNil(output.renderedAudioTime)
+    output.dispose()
+    XCTAssertNil(output.renderedAudioTime)
+  }
+
+  func testActualTerminalAdapterGraphNotificationAndNativeStartFailure() throws {
+    let engine = AVAudioEngine(), output = IntegrationOutput(engine: AVAudioEngine())
+    let driver = IntegrationOutput(engine: engine), ledger = YlManagedBufferLedger()
+    let renderer = YlAudioRenderer(bufferScope: try ledger.makeScope(maxBytes: nil), converter: IntegrationPCM(), output: driver)
+    renderer.setCompletionContext(terminalContext())
+    try renderer.configure(stream: .init(codec: .aac, sampleRate: 48000, channelCount: 2, magicCookie: Data(), generation: 1))
+    engine.mainMixerNode.outputVolume = 0
+    let failed = expectation(description: "Native graph notification enters renderer failure chain")
+    renderer.onOutputFailure = { XCTAssertEqual($0.code, "render.audio_engine_failed"); failed.fulfill() }
+    NotificationCenter.default.post(name: .AVAudioEngineConfigurationChange, object: engine)
+    wait(for: [failed], timeout: 3)
+    renderer.onOutputFailure = nil
+    XCTAssertThrowsError(try renderer.play()) { XCTAssertEqual(($0 as? NativePlayerError)?.code, "render.audio_engine_failed") }
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+    // This is an actual system adapter in an invalid native lifecycle, not a fake throw.
+    let unavailable = YlAudioRenderer(converter: IntegrationPCM(), output: output)
+    try unavailable.configure(stream: .init(codec: .aac, sampleRate: 48000, channelCount: 2, magicCookie: Data(), generation: 1))
+    output.dispose()
+    XCTAssertThrowsError(try unavailable.play()) { error in
+      XCTAssertEqual((error as? NativePlayerError)?.code, "render.audio_engine_failed")
+      let attachment = XCTAttachment(string: "category=render; code=render.audio_engine_failed; nativeOutputDisposed=true")
+      attachment.lifetime = .keepAlways; self.add(attachment)
+    }
+    unavailable.dispose(); renderer.dispose()
+  }
+
+  @discardableResult
+  private func runActualAdapter(count: Int, candidate: Bool, starvation: Bool = false,
+                                pausedEOF: Bool = false, probeDirectory: String? = nil, resourceProbe: Bool = false) throws -> [String: Any] {
+    let ledger = YlManagedBufferLedger(maxBytes: 196608), engine = AVAudioEngine()
+    let output = IntegrationOutput(engine: engine), converter = IntegrationPCM(), markers = IntegrationMarkers()
+    let renderer = YlAudioRenderer(maxScheduledDurationUs: 512016, maxScheduledBytes: 196608,
+      bufferScope: try ledger.makeScope(maxBytes: 196608), converter: converter, output: output)
+    renderer.setCompletionContext(terminalContext(enabled: candidate))
+    try renderer.configure(stream: .init(codec: .aac, sampleRate: 48000, channelCount: 2, magicCookie: Data(), generation: 1))
+    let player = try XCTUnwrap(engine.attachedNodes.compactMap { $0 as? AVAudioPlayerNode }.first)
+    engine.mainMixerNode.outputVolume = 0
+    player.installTap(onBus: 0, bufferSize: 1024, format: converter.pcmFormat) { pcm, _ in markers.consume(pcm) }
+    var tapInstalled = true
+    defer { if tapInstalled { player.removeTap(onBus: 0) }; renderer.dispose() }
+    let eventsLock = NSLock(); var failures: [String] = []; var anchors: [[Int64]] = []
+    renderer.onOutputFailure = { error in eventsLock.withLock { failures.append(error.code) } }
+    renderer.onFirstPCMSubmitted = { generation, pts in eventsLock.withLock { anchors.append([Int64(generation), pts]) } }
+    var accepted = 0, finished = false, resumed = false
+    var stalledAt: TimeInterval?
+    let probeURL = probeDirectory.map { URL(fileURLWithPath: $0) }
+    var nextSampleAt = ProcessInfo.processInfo.systemUptime + 2
+    var recordedMidpoint = false
+    var lostNativePlayback = false
+    var resourcePhase = "configured"
+    func probe(_ phase: String, waitForCollector: Bool = false) throws {
+      guard let probeURL else { return }
+      var info = task_vm_info_data_t()
+      var size = mach_msg_type_number_t(MemoryLayout<task_vm_info_data_t>.size / MemoryLayout<integer_t>.size)
+      let status = withUnsafeMutablePointer(to: &info) { pointer in
+        pointer.withMemoryRebound(to: integer_t.self, capacity: Int(size)) {
+          task_info(mach_task_self_, task_flavor_t(TASK_VM_INFO), $0, &size)
+        }
+      }
+      let row: [String: Any] = ["phase": phase, "uptime": ProcessInfo.processInfo.systemUptime,
+        "pid": ProcessInfo.processInfo.processIdentifier, "generation": 1, "candidate": candidate,
+        "accepted": accepted, "marker": markers.snapshot, "modes": output.snapshot,
+        "pending": renderer.hasPendingPlayback, "nativePlaying": player.isPlaying, "engineRunning": engine.isRunning,
+        "ownedBytes": renderer.scheduledBytes,
+        "ledgerBytes": ledger.snapshot.currentBytes, "ledgerPeak": ledger.snapshot.peakBytes,
+        "mediaUs": renderer.renderedAudioTime?.sampleTime as Any? ?? NSNull(),
+        "failures": eventsLock.withLock { failures }, "anchors": eventsLock.withLock { anchors },
+        "thermalState": ProcessInfo.processInfo.thermalState.rawValue,
+        "rssBytes": status == KERN_SUCCESS ? info.resident_size as Any : NSNull(),
+        "footprintBytes": status == KERN_SUCCESS ? info.phys_footprint as Any : NSNull()]
+      let file = probeURL.appendingPathComponent("rows.jsonl")
+      if !FileManager.default.fileExists(atPath: file.path) { FileManager.default.createFile(atPath: file.path, contents: nil) }
+      let handle = try FileHandle(forWritingTo: file); defer { try? handle.close() }
+      try handle.seekToEnd(); try handle.write(contentsOf: JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10]))
+      if waitForCollector {
+        let deadline = ProcessInfo.processInfo.systemUptime + 30
+        let ack = probeURL.appendingPathComponent(phase + ".ack")
+        while !FileManager.default.fileExists(atPath: ack.path) && ProcessInfo.processInfo.systemUptime < deadline {
+          RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.01))
+        }
+        XCTAssertTrue(FileManager.default.fileExists(atPath: ack.path), "Missing resource collector acknowledgement: \(phase)")
+      }
+    }
+    try probe("configured", waitForCollector: resourceProbe)
+    func pump(_ limit: Int) throws {
+      while accepted < limit {
+        var ordinal = Int64(accepted)
+        let bytes = withUnsafeBytes(of: &ordinal) { Data($0) }
+        let result = try autoreleasepool { try renderer.enqueue(packet: .init(data: bytes,
+          ptsUs: Int64(accepted) * 1024 * 1_000_000 / 48000, durationUs: 21334, generation: 1)) }
+        if result == .wouldExceedBytes || result == .wouldExceedDuration { break }
+        XCTAssertTrue(result == .scheduled || result == .buffered); accepted += 1
+      }
+    }
+    try pump(starvation ? 40 : count)
+    try renderer.play()
+    if pausedEOF {
+      RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.01))
+      renderer.pause(); renderer.finishInput(); finished = true
+      RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.15))
+      XCTAssertTrue(renderer.hasPendingPlayback)
+      try renderer.play()
+    }
+    let start = ProcessInfo.processInfo.systemUptime
+    nextSampleAt = start + 2
+    repeat {
+      let now = ProcessInfo.processInfo.systemUptime
+      if !lostNativePlayback && (!player.isPlaying || !engine.isRunning) {
+        lostNativePlayback = true
+        eventsLock.withLock { failures.append("probe.native_playback_stopped") }
+      }
+      if starvation && accepted == 40 && renderer.scheduledBytes <= 8192 && stalledAt == nil { stalledAt = now }
+      if let stalledAt, now - stalledAt >= 0.3 { resumed = true }
+      try pump(starvation && !resumed ? 40 : count)
+      if resourceProbe && accepted >= count / 2 && !recordedMidpoint {
+        recordedMidpoint = true; resourcePhase = "mid"; try probe(resourcePhase)
+      }
+      if now >= nextSampleAt { try probe("playing"); nextSampleAt = now + 5 }
+      if accepted == count && !finished { renderer.finishInput(); finished = true }
+      RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.002))
+    } while ProcessInfo.processInfo.systemUptime - start < Double(count * 1024) / 48000 + 10
+      && (!finished || renderer.hasPendingPlayback || markers.snapshot["frames"]! < count * 1024)
+    renderer.pause()
+    try probe("drained", waitForCollector: resourceProbe)
+    let row: [String: Any] = ["candidate": candidate, "buffers": count, "starvation": starvation,
+      "pausedEOF": pausedEOF, "marker": markers.snapshot, "modes": output.snapshot,
+      "anchors": eventsLock.withLock { anchors }, "failures": eventsLock.withLock { failures },
+      "peakBytes": ledger.snapshot.peakBytes, "pending": renderer.hasPendingPlayback,
+      "timerMaximumGapUs": renderer.tailObservationGapUs, "elapsedSeconds": ProcessInfo.processInfo.systemUptime - start]
+    let attachment = XCTAttachment(data: try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]), uniformTypeIdentifier: "public.json")
+    attachment.lifetime = .keepAlways; add(attachment)
+    XCTAssertEqual(accepted, count); XCTAssertEqual(markers.snapshot["frames"], count * 1024)
+    XCTAssertEqual(markers.snapshot["errors"], 0)
+    if !starvation && !pausedEOF && !resourceProbe { XCTAssertEqual(markers.snapshot["interiorZeroFrames"], 0) }
+    XCTAssertFalse(renderer.hasPendingPlayback); XCTAssertTrue(eventsLock.withLock { failures.isEmpty })
+    XCTAssertLessThanOrEqual(ledger.snapshot.peakBytes, 196608)
+    if candidate && !starvation && !resourceProbe {
+      XCTAssertEqual(output.snapshot["playedSubmissions"], count == 0 ? 0 : 1)
+      XCTAssertEqual(output.snapshot["renderedSubmissions"], max(0, count - 1))
+    }
+    if candidate && starvation { XCTAssertGreaterThan(output.snapshot["playedSubmissions"]!, 1) }
+    player.removeTap(onBus: 0); tapInstalled = false
+    renderer.dispose(); XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+    try probe("disposed", waitForCollector: resourceProbe)
+    if probeURL != nil { RunLoop.current.run(until: Date(timeIntervalSinceNow: 2)); try probe("disposedLater") }
+    return row
+  }
 
   private final class TerminalOutput: YlAudioOutputDriving {
     var supportsTerminalCompletion = true
