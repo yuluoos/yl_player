@@ -1276,3 +1276,27 @@ pipeline首次提交在main/session上下文复核renderer身份及audioGenerati
 | 保持本地分支，不merge/push | 沿用用户授权；远端及发布状态未改变 |
 
 Deferred minors：无。
+
+
+### 2026-10-08 修复后版本cf094a7的独立长播/资源复测
+
+按[复测冻结协议](../../../tool/playback_benchmark/audio-final-revalidation-protocol.md)，在运行前验证源码、二进制及素材hash全部匹配复审后645/645完整原生套件快照，采集/校验脚本也与已提交归档一致。沿用该完整套件与iOS arm64编译结论，本项不重复构建或重跑全套；三个测量运行按candidate长播、legacy资源、candidate资源顺序独立执行。生产、测试和采集器实现均未修改。
+
+修复后版本candidate长播XCTest1/1及原冻结校验器通过：241个播放中采样，有效观察1200.299628792s，最大采样间隔5.007151500s，累计媒体时钟偏差−0.602857792s；逐段时钟/帧进度在原90–110%门槛内。57840640帧全部按序，顺序错误/内部零帧/播放停止/错误回调均0；56484rendered+1playedBack的提交和回调分别一致。上游ledger峰值196608B，释放与2秒后均0；热状态全为nominal。它是合成PCM经真实renderer/system节点的长播，不是完整解码长片或物理音画验收。
+
+两组独立资源XCTest均exit65，原frame/order校验同样失败；并未改断言或重试覆盖失败：
+
+| 运行 | 目标/实际tap帧 | 顺序错误 | 内部零帧 | 有效heap阶段 |
+|---|---:|---:|---:|---|
+| legacy | 2048000 / 2022681 | 1007828 | 0 | 3/4：中段8秒超时、空文件 |
+| candidate | 2048000 / 2025130 | 996352 | 557 | 4/4 |
+
+legacy原采集器已记录TimeoutExpired；4次阶段调用不等于4份有效证据，中段整份缺失不能解释为对象数量0或某类型不存在。原始资源脚本未修改，后续文件核验额外明确每个slot的退出/超时/文件长度/表头状态。候选资源组虽采证完整，帧序列失败仍是失败，不能当连续性通过。
+
+可识别全进程dispatch_source_t：legacy配置214→中段缺失→排空2188→释放214，LifecycleCompletion排空1977；candidate为215/212/211/214，LifecycleCompletion未单独识别，Resource中段24，AVAudioPCMBuffer中段25。未单独识别不填0，dispatch类型不能逐个归属renderer timer。两组ledger峰值196608B，释放及后续采样0；完整RSS/footprint和heap原值归档，不判定全局平台期或下游有界。
+
+[独立证据归档](../../../tool/playback_benchmark/macos-audio-final-revalidation-observations.json)保存运行前manifest、未改动的协议/采集脚本、三次源码/二进制/素材身份、全部JSONL、XCTest导出及结果包文件hash、heap原表/超时/断言失败。已验证三次运行与先前645/645套件的全部101源码、5二进制、5素材hash一致，测量后仍一致；旧长播未被冒充新版本结果。
+
+最终修复版本的无heap节点长播身份缺口已闭合；资源组无损输出未通过且legacy中段取证不完整，保持未解决。下一项应先处理采样干扰/超时的可验证取证方法与协议，再复测受影响项，不能重复同一失败采样后放宽门槛或将资源采集完成当播放通过。
+
+本项只补最终修复版本的测量身份缺口，不替代物理音画/真实路由、Intel/最低系统/iOS运行证据。defaultEnabled/productionAdmission/downstreamBoundProven均保持false，完整P08仍开放。历史421103c及更早失败记录不覆盖；不从debug节点tap、全进程heap类型或一次长播推出整体资源有界、泄漏消除或性能百分比。

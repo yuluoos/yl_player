@@ -281,3 +281,6 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-10-08：音频尾部候选接入Task5完成真实节点/实际converter与session验证和不准入报告。复审前macOS644/644、iOS arm64编译通过；无heap长播1200.317s/57840640帧/0顺序错误及内部零帧通过，释放后ledger0。独立heap两组四阶段采齐但tap帧断言失败，原始失败保留；释放后clock崩溃实际RED→GREEN修复。子计划完成不代表全部实验通过或正式准入：默认关闭、下游整体有界未证明，物理音画/设备/最低OS继续开放，详见[报告](../reports/2026-09-26-remaining-08-performance-release.md)。
 
 2026-10-08：五项音频接入子计划完成一次独立复审，唯一Important暂停重入问题实际RED→GREEN修复；修复后完整macOS645/645、0失败/0跳过及iOS arm64编译通过，无deferred minor。长播/heap仍明确绑定复审前421103c版本，未宣称修复后二进制重新测量；正式准入保持关闭，完整P08仍开放。
+
+
+2026-10-08：完成cf094a7修复后版本的独立节点长播/资源复测，源码/二进制/素材与645/645套件身份完全一致，无实现改动。candidate无heap长播241采样/1200.300s/57840640帧，顺序错误与内部零帧0、最终回调一致、释放后ledger0，闭合最终版本长播身份缺口。独立资源两组frame/order仍失败，legacy中段heap8秒超时，7/8份有效快照；失败/超时保留，资源和正式准入均未通过。下一项优先采样干扰/超时的可验证取证方法，完整P08、物理音画/设备/最低系统及整体资源上界保持开放，见[报告](../reports/2026-09-26-remaining-08-performance-release.md)。
