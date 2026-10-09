@@ -113,7 +113,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     demuxControl: any YlDemuxControlling = YlOpenedMediaControl(),
     loadRequestId: String? = nil,
     channelIdentity: UInt64? = nil,
-    emit: @escaping (YlNativeBackendCallback) -> Void
+    emit: @escaping (YlNativeBackendCallback) -> Void,
+    audioTerminalCandidateEnabled: Bool = false
   ) throws {
     guard !YlHDRVideoPolicy.isHDR(prepared.videoFormat) || services.nativeViewType != nil else {
       throw NativePlayerError(category: "unsupported", code: "render.hdr_surface_unavailable",
@@ -139,7 +140,12 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     self.video = prepared.takePreparedVideo() ?? YlVideoPipeline(format: prepared.videoFormat, bufferBudget: bufferBudget,
       factory: videoSessionFactory ?? YlHardwareVTSessionFactory(policy: prepared.decoderFactoryPolicy), policy: prepared.decoderPolicy,
       felConfiguration: prepared.felConfiguration)
-    self.audio = YlAudioPipeline(bufferBudget: bufferBudget, lock: stateLock, generation: generation, factory: audioRendererFactory)
+    let localSource: Bool
+    if case .local = prepared.sourceRecipe { localSource = true } else { localSource = false }
+    self.audio = YlAudioPipeline(bufferBudget: bufferBudget, lock: stateLock, generation: generation, factory: audioRendererFactory,
+      completionContext: .init(enabled: audioTerminalCandidateEnabled, platform: services.platform,
+        localFiniteSeekable: localSource && !prepared.policy.isLive && demux.isSeekable && demux.mediaInfo.duration_us > 0,
+        hasBoundedPlan: prepared.boundedPlan != nil, codec: .unsupported, sampleRate: 0, channels: 0, rate: 1))
     self.audio.beforeOutput = services.beforeAudioOutput
     self.presentation = YlPresentationCoordinator(services: services, lock: stateLock,
       openedAt: openStartedAt, positionEventIntervalMs: configuration.positionEventIntervalMs, scheduler: presentationScheduler)
@@ -1346,6 +1352,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     let reselectedAudio = preferredAudioIndex.flatMap { preferredIndex in
       supportedAudio.first { $0.index == preferredIndex }
     } ?? supportedAudio.first
+    audio.updateSourceEligibility(localFiniteSeekable: false) // Live/network reconnects cannot enter the local candidate.
     let newAudioRenderer = try audio.prepareReconnect(stream: reselectedAudio,
       generation: reconnectGeneration, cookies: copiedAudioCookies,
       onCreated: { resource in candidateAudio = resource })
@@ -1398,6 +1405,10 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       ? video.prepareCurrent()
       : video.prepare(context: validContext, streamIndex: demux.videoStream.index,
           rewind: { try demux.seek(reopenedMedia, toMediaTimeUs: 0) })
+    let localSource: Bool
+    if case .local = demux.sourceRecipe { localSource = true } else { localSource = false }
+    audio.updateSourceEligibility(localFiniteSeekable: localSource && !demux.mediaPolicy.isLive
+      && demux.isSeekable && reopenedMedia.supportsRandomAccess && reopenedMedia.info.duration_us > 0)
     let renderer = try audio.prepareRebuild(stream: demux.selectedAudioStream, cookies: demux.audioCookies,
       onCreated: { resource in candidateAudio = resource })
     if positionUs > 0 {

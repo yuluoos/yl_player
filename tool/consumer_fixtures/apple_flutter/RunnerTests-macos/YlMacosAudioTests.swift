@@ -231,6 +231,9 @@ final class YlMacosAudioTests: XCTestCase {
     var timestamps: [Int64] = []
     var callbacks: [YlAudioOutputCallbacks] = []
     var onReset: (() -> Void)?
+    var invalidation: (() -> Void)?
+    var onInvalidationChange: (() -> Void)?
+    func setInvalidationHandler(_ handler: (() -> Void)?) { invalidation = handler; onInvalidationChange?() }
     var synchronouslyComplete = false
     var onSchedule: (() -> Void)?
     var playCount = 0
@@ -275,6 +278,99 @@ final class YlMacosAudioTests: XCTestCase {
                             file: StaticString = #filePath, line: UInt = #line) {
     let done = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in condition() }, object: nil)
     XCTAssertEqual(XCTWaiter.wait(for: [done], timeout: 3), .completed, file: file, line: line)
+  }
+
+  func testTerminalTimerSubmitsTailWithoutDisplayTicksAndCancelsOnPause() throws {
+    let ledger = YlManagedBufferLedger(); let output = TerminalOutput()
+    let renderer = try terminalRenderer(output, LifetimePCMConverter(), ledger.makeScope(maxBytes: nil))
+    defer { renderer.dispose() }
+    _ = try enqueueTerminal(renderer, 0)
+    try renderer.play(); renderer.pause()
+    let paused = expectation(description: "Pause holds the tail")
+    paused.isInverted = true
+    output.onSchedule = { paused.fulfill() }
+    wait(for: [paused], timeout: 0.16)
+    output.onSchedule = nil
+    XCTAssertTrue(output.modes.isEmpty)
+    let submitted = expectation(description: "Timer submits without display tick")
+    let started = DispatchTime.now().uptimeNanoseconds
+    output.onSchedule = {
+      XCTAssertGreaterThanOrEqual(DispatchTime.now().uptimeNanoseconds - started, 100_000_000)
+      submitted.fulfill()
+    }
+    try renderer.play()
+    wait(for: [submitted], timeout: 3)
+    renderer.pause() // Serializes with the timer before reading the fake output.
+    XCTAssertEqual(output.modes, [.playedBack])
+    XCTAssertGreaterThan(renderer.tailObservationGapUs, 0)
+    let observation = XCTAttachment(string: "maximumTailObservationGapUs=\(renderer.tailObservationGapUs); targetIntervalUs=10000; thresholdUs=100000; noDisplayTicks=true")
+    observation.lifetime = .keepAlways; add(observation)
+    XCTAssertTrue(renderer.hasPendingPlayback)
+    output.callbacks.first?.playedBack()
+    awaitTerminal { !renderer.hasPendingPlayback }
+  }
+
+  func testTerminalEOFDuringPauseSubmitsWithoutStartingAndWaitsForPlayback() throws {
+    let output = TerminalOutput(), ledger = YlManagedBufferLedger()
+    let renderer = try terminalRenderer(output, LifetimePCMConverter(), ledger.makeScope(maxBytes: nil))
+    defer { renderer.dispose() }
+    _ = try enqueueTerminal(renderer, 0)
+    try renderer.play(); renderer.pause()
+    let starts = output.playCount
+    renderer.finishInput()
+    XCTAssertEqual(output.modes, [.playedBack]); XCTAssertEqual(output.playCount, starts)
+    output.callbacks[0].resourcesReleased()
+    XCTAssertTrue(renderer.hasPendingPlayback)
+    try renderer.play()
+    output.callbacks[0].playedBack()
+    awaitTerminal { !renderer.hasPendingPlayback }
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+  }
+
+  func testTerminalTimerDoesNotRetainRendererAndDisposalReleasesHeldPCM() throws {
+    let output = TerminalOutput(), ledger = YlManagedBufferLedger()
+    var renderer: YlAudioRenderer? = try terminalRenderer(output, LifetimePCMConverter(), ledger.makeScope(maxBytes: nil))
+    weak var weakRenderer = renderer
+    _ = try enqueueTerminal(renderer!, 0); try renderer!.play()
+    renderer = nil
+    XCTAssertNil(weakRenderer); XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+    let unexpected = expectation(description: "Disposed timer cannot submit")
+    unexpected.isInverted = true
+    output.onSchedule = { unexpected.fulfill() }
+    wait(for: [unexpected], timeout: 0.15)
+  }
+
+  func testTerminalInvalidationStopsBeforeReleaseAndCannotSilentlyPlayAgain() throws {
+    let output = TerminalOutput(), ledger = YlManagedBufferLedger()
+    let renderer = try terminalRenderer(output, LifetimePCMConverter(), ledger.makeScope(maxBytes: nil))
+    defer { renderer.dispose() }
+    _ = try enqueueTerminal(renderer, 0); _ = try enqueueTerminal(renderer, 1)
+    let oldCallbacks = output.callbacks
+    output.onInvalidationChange = { [weak renderer] in
+      let read = DispatchSemaphore(value: 0)
+      DispatchQueue.global().async { _ = renderer?.hasPendingPlayback; read.signal() }
+      XCTAssertEqual(read.wait(timeout: .now() + 0.2), .success,
+        "Output hooks must run outside the renderer state lock")
+    }
+    let stopped = expectation(description: "Invalid graph stopped with owners retained")
+    output.onReset = {
+      XCTAssertEqual(ledger.snapshot.currentBytes, 16384)
+      stopped.fulfill()
+    }
+    let failed = expectation(description: "Invalid graph reports existing failure")
+    renderer.onOutputFailure = { error in
+      XCTAssertEqual(error.code, "render.audio_engine_failed")
+      failed.fulfill()
+    }
+    try XCTUnwrap(output.invalidation)()
+    wait(for: [stopped, failed], timeout: 3)
+    output.onReset = nil
+    renderer.onOutputFailure = nil
+    XCTAssertEqual(output.modes, [.renderedResource], "Never submit held PCM on a broken graph")
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+    XCTAssertThrowsError(try renderer.play()) { XCTAssertEqual(($0 as? NativePlayerError)?.code, "render.audio_engine_failed") }
+    oldCallbacks.forEach { $0.resourcesReleased(); $0.playedBack() }
+    XCTAssertFalse(renderer.hasPendingPlayback)
   }
 
   func testTerminalRendererHoldsTailAnchorsSubmissionAndWaitsForFence() throws {

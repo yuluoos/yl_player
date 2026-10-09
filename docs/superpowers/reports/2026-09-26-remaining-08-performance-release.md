@@ -1195,3 +1195,16 @@ Dart 用量先下降后上升，容量和 externalUsage 精确值全部保留。
 真实 `benchmark_sdr.mkv` 的48kHz双声道AAC通过原FFmpeg取包与system converter，首块音频预算8192B，EOF真实PCM尾部经可控通知退还；自定义已预留路径在8192B总限额下也通过，无第二次预留。测试使用可控输出，未证明真实扬声器、session音画或下游资源边界。此前默认路径真实引擎测试亦在56项中回归，但不等于候选真实输出全链通过。
 
 [验证证据](../../../tool/playback_benchmark/macos-audio-terminal-owner-observations.json)归档17份原文、全部运行日志/结果、最终实际方法身份及最终源码，并记录真实素材哈希；中间源码快照未逐次归档，不宣称每个中间版本可完整重放。原生已有编译/链接警告保留。未重跑未涉及的完整macOS/iOS、最低系统、设备或长播；未报告内存改善/整体有界，productionAdmission/downstreamBoundProven保持false。下一项Task4补session来源事实、首次提交事件接收、自动观察与控制/路由生命周期；完整P08保持开放。
+
+
+## 2026-10-08：音频尾部接入 Task 4 — session、提交锚点与控制交接
+
+本项完成内部默认关闭的 session 开关与实际来源准入：local recipe、非直播、可seek及正时长共同成立，再按每次实际音轨/期望速率进入既有格式检查；bounded及network/live排除。重新打开输入通过只读demux资源接口提供当前随机访问能力和时长。没有公开开关或默认候选启用。
+
+pipeline首次提交在main/session上下文复核renderer身份及audioGeneration，用已trim的PCM PTS锚定一次。普通入队、held、下一压缩包及旧代不能代替该通知。EOF/watchdog共用该入口；暂停/seek/切轨/变速与原生命周期衔接。每renderer最多一个10ms目标timer，单调微秒判断连续100000µs仅尾部等待；取消与重启窗口有身份隔离，弱引用不会保留renderer。本次无display tick回归最大观察gap为10826µs，附件保留原值；这只是单次调度观测，无硬实时承诺。
+
+配置失效通知不在原生线程取得renderer控制锁；异步按epoch隔离后停止失效输出再退还owner，沿既有render.audio_engine_failed报告。失效图不提交held兼容尾部，后续play明确抛同一安全错误。初始timer缺失回归RED1/1，核心107项通过；后续失效play的RED1/1及输出钩子锁顺序RED1/1均修复。最终准确源码两类共113通过（60音频+53session），0失败/0跳过；镜像/发现iOS676/macOS639及4项夹具回归通过。未将发现计数当成全套执行计数。
+
+新增11项覆盖默认/显式本地/bounded/network recipe、trim后首块锚定、EOF/watchdog入口、同owner旧代、实际session seek/音轨替换、图失效与旧通知、暂停EOF和弱引用销毁。完整EOF以现有opus_switch真实demux驱动session，音频/视频分别先结束使用受控转换器和解码输出截止点，均检查最终completed；不冒充真实声音连续性或物理音画验证。
+
+[证据](../../../tool/playback_benchmark/macos-audio-terminal-integration-controls-observations.json)归档原始日志、运行结果/方法身份、观察附件、最终源码及素材哈希；中间源码未全部保存，不能声称逐版可重放。既有编译/链接/QoS警告仍在。真实候选输出节点、设备配置切换、全macOS/iOS/最低OS/Intel、独立1200s无heap连续性及资源取证未在本项执行，下一项Task5负责；defaultEnabled/productionAdmission/downstreamBoundProven仍为false，完整P08不勾选。

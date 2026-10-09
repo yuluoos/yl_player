@@ -10,7 +10,7 @@
 
 **Spec:** [输出完成契约 §10](../specs/2026-10-08-audio-output-completion-contract.md)、[需求基线](../specs/2026-09-20-playback-expansion-requirements.md)、[P08](2026-09-26-remaining-08-performance-release.md)。
 
-起点 `9c5967a`。Task 1–3 已实现并验证；Task 4–5 尚未执行。既有工具通过不能替代生产验收。
+起点 `9c5967a`。Task 1–4 已实现并验证；Task 5 尚未执行。既有工具通过不能替代生产验收。
 
 ## Global Constraints
 
@@ -176,15 +176,15 @@ XCTAssertFalse(renderer.hasPendingPlayback)
 
 ### Task 4：接入首次提交锚点、观察定时器与控制生命周期
 
-**Files:** 修改源码 `Audio/YlAudioRenderer.swift`、`Audio/YlAudioPipeline.swift`、`Session/YlManagedPlaybackSession.swift`；修改上述 macOS 音频测试及镜像；修改以下共享测试及发现登记：
+**Files:** 补充 `FFmpeg/YlDemuxPipeline.swift` 的只读实际随机访问能力转交；修改源码 `Audio/YlAudioRenderer.swift`、`Audio/YlAudioPipeline.swift`、`Session/YlManagedPlaybackSession.swift`；修改上述 macOS 音频测试及镜像；修改以下共享测试及发现登记：
 - `packages/yl_player/example/macos/RunnerTests/YlManagedFallbackCharacterizationTests.swift`
 - `packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift`
 - `tool/consumer_fixtures/apple_flutter/RunnerTests/YlManagedFallbackCharacterizationTests.swift`
 
 **Interfaces:** Consumes：Task 3；`YlAudioTimeline.anchorAudio(ptsUs: Int64, sampleTime: Int64)`、既有 renderer factory。Produces：在 session initializer 末尾新增 `audioTerminalCandidateEnabled: Bool = false`；pipeline initializer 增加 `completionContext: YlAudioCompletionContext? = nil`，以 source 条件为基础在每次具体 stream/rate 配置时重建上下文。
 
-- [ ] 写 session 真实注入回归：默认不开、显式开本地有限候选、同素材加 bounded 仍旧模式、伪装本地后缀的 network recipe 仍旧模式。`localFiniteSeekable` 只可由 `.local` + `!prepared.policy.isLive` + `demux.isSeekable` + 正的实际 duration 共同成立；不可由 URL 判断。新 track/rebuild 不沿用旧格式结论。
-- [ ] 实现 pipeline `makeRenderer` 安装首次提交通知；在 main/session 所在执行上下文重新检查 renderer 身份及 audioGeneration 后才锚定。候选（包括同代回退）不走旧 enqueue 的压缩包锚点。legacy 保留原方法。
+- [x] 写 session 真实注入回归：默认不开、显式开本地有限候选、同素材加 bounded 仍旧模式、伪装本地后缀的 network recipe 仍旧模式。`localFiniteSeekable` 只可由 `.local` + `!prepared.policy.isLive` + `demux.isSeekable` + 正的实际 duration 共同成立；不可由 URL 判断。新 track/rebuild 不沿用旧格式结论。
+- [x] 实现 pipeline `makeRenderer` 安装首次提交通知；在 main/session 所在执行上下文重新检查 renderer 身份及 audioGeneration 后才锚定。候选（包括同代回退）不走旧 enqueue 的压缩包锚点。legacy 保留原方法。
 
 ```swift
 // 处理通过身份/代际检查的首个提交事件时：
@@ -193,7 +193,7 @@ timeline?.anchorAudio(ptsUs: max(0, ptsUs), sampleTime: ptsUs)
 ```
 
 不得在 renderer 的 state/operations 锁内同步取得 session lock；已 detach/seek 旧通知直接忽略。首块经 EOF 或 watchdog 提交也必须到达同一事件入口。添加首包 PTS 与第二包 PTS 不同、codec trim、迟到事件、视频在第一块 held 时不提前锚定的断言。
-- [ ] 每 renderer 最多一个 DispatchSourceTimer，目标 10ms，以 uptime 微秒调用 `observeTailWait`，独立于 display tick。只在有效候选播放时观察；暂停取消连续窗口，dispose/切回 legacy 取消 timer；闭包弱持 renderer。持续仅有尾部达到 100000µs 才回退；记录实际 gap，缺少 tick 不假报 100ms 硬实时保证。
+- [x] 每 renderer 最多一个 DispatchSourceTimer，目标 10ms，以 uptime 微秒调用 `observeTailWait`，独立于 display tick。只在有效候选播放时观察；暂停取消连续窗口，dispose/切回 legacy 取消 timer；闭包弱持 renderer。持续仅有尾部达到 100000µs 才回退；记录实际 gap，缺少 tick 不假报 100ms 硬实时保证。
 
 ```swift
 // 在 fake 时钟/输出已建立“仅有尾部且 playing”的测试中：
@@ -204,9 +204,9 @@ renderer.observeTailWait(playing: true, nowUs: 100_000)
 // 输出提交一次 playedBack 尾部；预算仍持有直到真实通知。
 ```
 
-- [ ] `setRate` 在改变原生 rate 前单向兼容；格式变化同 Task 3；graph/route 配置失效立即 fence 并沿现有失败/重建链处理，不能把已失效的图当仍可安全回退。不新增公开 route 错误码或静默吞错。seek/reset/切轨按停止后释放旧 owner、新代重新评估，普通 rendered 回调在兼容后仍按原类型处理。
-- [ ] 调整 silence/underrun：held 或 rendered 资源刚退还不等于音频空闲。等待尾部/fence 期间禁止静音补时；最终 playedBack 已确认且资源清空后可沿既有视频尾部逻辑补时。断供后的兼容路径须经过真实播放完成才恢复原有 gap 行为。保留 `buffer.bounded` 的原暂停判定。
-- [ ] 覆盖播放中暂停尾部、暂停期 EOF、恢复后窗口重置、无 display tick、切速后再回到 1 不重启候选、seek/切轨/graph 失效旧回调、视频长于音频、音频长于视频；用现有 session fixture 驱动完整 EOF completed，不能仅检查 renderer 的布尔。运行音频及 session 两类、镜像/发现检查后提交 `feat: integrate gated terminal audio clock and controls`。
+- [x] `setRate` 在改变原生 rate 前单向兼容；格式变化同 Task 3；graph/route 配置失效立即 fence 并沿现有失败/重建链处理，不能把已失效的图当仍可安全回退。不新增公开 route 错误码或静默吞错。seek/reset/切轨按停止后释放旧 owner、新代重新评估，普通 rendered 回调在兼容后仍按原类型处理。
+- [x] 调整 silence/underrun：held 或 rendered 资源刚退还不等于音频空闲。等待尾部/fence 期间禁止静音补时；最终 playedBack 已确认且资源清空后可沿既有视频尾部逻辑补时。断供后的兼容路径须经过真实播放完成才恢复原有 gap 行为。保留 `buffer.bounded` 的原暂停判定。
+- [x] 覆盖播放中暂停尾部、暂停期 EOF、恢复后窗口重置、无 display tick、切速后再回到 1 不重启候选、seek/切轨/graph 失效旧回调、视频长于音频、音频长于视频；用现有 session fixture 驱动完整 EOF completed，不能仅检查 renderer 的布尔。运行音频及 session 两类、镜像/发现检查后提交 `feat: integrate gated terminal audio clock and controls`。
 
 ### Task 5：真实生产路径验收与准入报告
 
@@ -226,7 +226,7 @@ renderer.observeTailWait(playing: true, nowUs: 100_000)
 
 2026-10-08 文档自审：准入与 bounded 排除→Task 1/4；通知来源→Task 2；既有 token/所有权与输出排空→Task 3；时钟/控制/定时器→Task 4；独立长播及未准入状态→Task 5。新接口均由前序任务定义，默认 factory 签名保持不变；测试路径按仓库实际镜像核查。历史 §4/7 的否决不被新计划改写。
 
-规划提交 `184531f` 只包含文档。后续 Task 1–3 已完成下述接口与验证，下一执行项为 Task 4；沿用用户已授权的本会话实现与本地提交，不推送远端。
+规划提交 `184531f` 只包含文档。后续 Task 1–4 已完成下述接口与验证，下一执行项为 Task 5；沿用用户已授权的本会话实现与本地提交，不推送远端。
 
 ### 2026-10-08 Task 1 执行记录
 
@@ -251,3 +251,16 @@ renderer.observeTailWait(playing: true, nowUs: 100_000)
 首块held不锚定或计作已提交，实际提交才发一次generation/PTS事件；时钟受已提交末尾限制，rendered不推进位置，暂停冻结，EOF必须等末尾通知及所有资源。格式/帧数/PTS异常先单向兼容，保持原PCM；预准入容量不足且只有held尾部时先提交它，等待真实回调再试。转换完成后才发现估计不足则沿现有policy.unsupported失败链，不把已消耗输入当可安全重试；自持预算转换器内部发生容量错误也保留原错误。100ms观察接口只由显式调用驱动，自动定时观察仍属Task4。
 
 新增15项回归，缺接口失败后核心行为实际RED；首轮50/50通过后，复核的held/underrun、真实bounded scope、调度重入reset三项分别实际RED→GREEN。最终音频56/56、夹具4/4通过，镜像发现669/628一致；源码与全部结果见[证据](../../../tool/playback_benchmark/macos-audio-terminal-owner-observations.json)。未运行全macOS/iOS、长播或物理音画；旧兼容路径的系统对象保留限制仍在。下一项Task4负责session来源事实、首次提交锚点接收、定时器、路由及完整控制交接。
+
+
+### 2026-10-08 Task 4 执行记录
+
+内部 session 新增默认 false 的候选开关，pipeline 接收来源上下文，并按每次实际 stream/desiredRate 配置。来源准入使用 recipe、非直播策略、seekability 与实际正时长；重建额外读取重新打开输入的随机访问能力与时长，network/live reconnect 明确排除。本项没有新增公开配置，也未启用默认业务路径。
+
+首块真正提交后，pipeline 在 main/session 锁下复核 renderer 身份与 audioGeneration，再以 trim 后 PCM 的 PTS 锚定一次；同代兼容回退继续使用该入口。每 renderer 一条串行队列、最多一个 10ms 目标观察 timer，以 uptime 微秒检测连续 100000µs 的仅尾部等待；暂停取消窗口，EOF/兼容/reset/dispose 取消观察，弱引用不延长 renderer 生命周期。本次无 display tick 回归的最大观察 gap 为10826µs（10.826ms），仅为该次观测，不将目标间隔写成硬实时承诺。
+
+AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 owner，沿既有 render.audio_engine_failed 链报告，不向失效图提交暂存尾部；失效后的 play 明确抛出同一安全错误。所有输出钩子均在 state lock 外调用。此次没有新增 route 公开错误码。
+
+新增4项音频与7项共享 session 回归：timer 缺失、失效后静默 play、清理钩子占用 state lock 三个边界均保留实际 RED→GREEN；最终两类113/113通过（音频60、session53；0失败/0跳过），夹具4/4、发现iOS676/macOS639核对。真实 demux 的 opus_switch 素材经受控 PCM/video 截止点覆盖音频/视频分别先结束，完整 session 到达 completed；该组不是物理音画或真实解码连续性验收。来源默认/本地/bounded/network、trim 锚点、EOF/watchdog、同 owner 旧代、实际 seek/切轨与图失效链均有回归。
+
+[证据](../../../tool/playback_benchmark/macos-audio-terminal-integration-controls-observations.json)保留运行日志、结果/方法身份、观察附件、最终源码及素材哈希；中间源码未逐版归档。既有编译/链接/QoS警告保留，未运行完整macOS、iOS、最低系统/Intel或长播。下一项 Task5 负责真实节点集成、完整套件、独立长播/资源采证和全计划复审；defaultEnabled/productionAdmission/downstreamBoundProven 仍为 false，完整P08开放。

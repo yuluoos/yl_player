@@ -120,8 +120,21 @@ EOF 将保留的真实末尾 PCM 以 playedBack 提交，整个 generation 只�
 
 ## 12. 内部 renderer 尾部所有权适配已实现
 
+本节保留 Task3 完成时的边界；Task4 接入进展见 §13。
+
 Task3新增内部显式上下文启用路径，默认nil仍走§6。候选保留一块计费PCM，资源集合最多24项并受原字节/时长限额约束；转换器声明自行预留时接管已有token，其余仍预先reserve。资源通知按实际提交模式与epoch/ordinal核验，先清空PCM再释放token；不同类型、重复或旧代通知无效。末尾playedBack与全部资源退还独立，不能从字节归零、时长归零或节点时钟越过末尾直接判完成。
 
 所有候选通知通过一条惰性串行队列异步取得operations，不在原生回调线程等待控制锁。reset/dispose先fence旧代，再停输出，停止返回后退还所有者；提交途中发生reset时不得继续锚定或重启旧输出。首次实际PCM提交发一次代际事件，held不建立时钟或冒充已提交音频；普通资源退还不推进位置，暂停冻结。pipeline尚未消费该事件。
 
 真实格式变化、无效时间、显式变速/abandon和100ms观察触发当前代单向兼容；预准入容量不足且仅held时主动提交该块，等待真实通知。若转换已消耗输入后才发现输出估计越界，明确失败而非丢弃后重试；转换器内部预算错误仍走既有失败链。实际bounded plan/scope时间账本、未声明支持的输出均排除候选。自动观察timer、session/路由集成以及长播仍在后续；当前默认不会启用，整体内存有界及生产准入未证明。
+
+
+## 13. 默认关闭的 session、时钟与控制接入
+
+Task4 已接入内部 `audioTerminalCandidateEnabled=false` 开关。只有实际 local recipe、非直播、可 seek 且实际正时长才可继续格式准入；每个 renderer 配置重新使用实际 stream 与 desiredRate，bounded 仍排除。首次实际 PCM 提交通知经 main/session 身份及代际复核后锚定，held、触发提交的下一压缩包与旧 owner/旧代事件不能替代首块 trim 后 PTS；EOF 和 watchdog 走同一入口。
+
+每 renderer 使用一条串行队列及最多一个弱引用 timer，目标10ms，以单调 uptime 判断连续仅尾部100000µs后单向兼容。暂停重置等待，EOF/兼容/重置/销毁停止观察；实际调度 gap 留存为观测值，不构成100ms硬实时输出保证。普通资源回调仍不构成最终播放完成，候选 pending 阻止静音补时；真实 playedBack 与资源清空后恢复原有视频尾部时钟行为。
+
+配置失效按输出 epoch 异步处理，fence→停止图→释放所有者，再用既有 `render.audio_engine_failed` 失败链通知。不得将失效图视作可兼容续播；随后 play 也抛出保留的安全错误。输出钩子清理位于 renderer state lock 外，原生通知线程不等待 renderer/session 锁。
+
+定向音频/session113项通过、夹具4项通过，来源/控制/完整EOF覆盖使用真实demux与受控转换/输出。真实输出节点、设备路由切换、1200s独立连续性与资源采证、物理音画及iOS/最低系统仍留Task5；默认业务行为仍为§6，不据此声明生产准入或下游总体有界。

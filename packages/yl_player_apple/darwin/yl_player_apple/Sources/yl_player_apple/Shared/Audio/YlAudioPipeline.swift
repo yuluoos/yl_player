@@ -50,6 +50,7 @@ final class YlAudioPipeline {
   private let lock: NSLock
   private let bufferBudget: YlFallbackBufferBudget
   private let factory: any YlAudioRendererMaking
+  private var completionContext: YlAudioCompletionContext?
   weak var output: (any YlAudioPipelineOutput)?
   weak var timeline: (any YlAudioTimeline)?
   private var audioRenderer: YlAudioRenderer!
@@ -64,10 +65,12 @@ final class YlAudioPipeline {
   private var currentAudioRenderer: YlAudioRenderer? { lock.withLock { audioRenderer } }
 
   init(bufferBudget: YlFallbackBufferBudget, lock: NSLock, generation: UInt64,
-       factory: any YlAudioRendererMaking = YlPlatformAudioRendererFactory()) {
+       factory: any YlAudioRendererMaking = YlPlatformAudioRendererFactory(),
+       completionContext: YlAudioCompletionContext? = nil) {
     self.bufferBudget = bufferBudget
     self.lock = lock
     self.factory = factory
+    self.completionContext = completionContext
     self.audioGeneration = generation
   }
 
@@ -81,7 +84,33 @@ final class YlAudioPipeline {
         self.output?.fail(error)
       }
     }
+    renderer.onFirstPCMSubmitted = { [weak self, weak renderer] generation, ptsUs in
+      DispatchQueue.main.async { [weak self, weak renderer] in
+        guard let self, let renderer else { return }
+        self.lock.withLock {
+          guard self.audioRenderer === renderer, self.audioGeneration == generation,
+                !self.audioAnchored else { return }
+          self.audioAnchored = true
+          self.timeline?.anchorAudio(ptsUs: max(0, ptsUs), sampleTime: ptsUs)
+        }
+      }
+    }
     return renderer
+  }
+
+  func updateSourceEligibility(localFiniteSeekable: Bool) {
+    guard let context = completionContext else { return }
+    completionContext = .init(enabled: context.enabled, platform: context.platform,
+      localFiniteSeekable: localFiniteSeekable, hasBoundedPlan: context.hasBoundedPlan,
+      codec: context.codec, sampleRate: context.sampleRate, channels: context.channels, rate: desiredRate)
+  }
+
+  private func configureCompletion(_ renderer: YlAudioRenderer, stream: YLFStreamInfo) {
+    guard let context = completionContext else { return }
+    renderer.setCompletionContext(.init(enabled: context.enabled, platform: context.platform,
+      localFiniteSeekable: context.localFiniteSeekable, hasBoundedPlan: bufferBudget.boundedPlan != nil || context.hasBoundedPlan,
+      codec: YlAudioCodec(bridgeCodec: stream.codec), sampleRate: Double(stream.sample_rate),
+      channels: Int(stream.channel_count), rate: desiredRate))
   }
 
   func setVolume(_ volume: Float, hasAudio: Bool) {
@@ -98,6 +127,7 @@ final class YlAudioPipeline {
   var currentResource: Resource? { currentAudioRenderer.map(Resource.init) }
   func initializeRenderer() { audioRenderer = makeRenderer() }
   func configureInitial(stream: YLFStreamInfo, cookies: [Int32: Data]) throws {
+    configureCompletion(audioRenderer, stream: stream)
     try audioRenderer.configure(stream: configuration(for: stream, generation: audioGeneration, audioCookies: cookies))
   }
   func discardRenderer() { audioRenderer?.dispose(); audioRenderer = nil }
@@ -132,6 +162,7 @@ final class YlAudioPipeline {
                     cookies: [Int32: Data]) throws -> Resource {
     let candidate = makeRenderer()
     do {
+      configureCompletion(candidate, stream: stream)
       try candidate.configure(stream: configuration(for: stream, generation: generation, audioCookies: cookies))
       candidate.setVolume(desiredVolume)
       candidate.setRate(desiredRate)
@@ -146,6 +177,7 @@ final class YlAudioPipeline {
     let resource = Resource(renderer: renderer)
     onCreated(resource)
     if let stream {
+      configureCompletion(renderer, stream: stream)
       try renderer.configure(stream: configuration(for: stream, generation: audioGeneration, audioCookies: cookies))
       renderer.setVolume(desiredVolume)
       renderer.setRate(desiredRate)
@@ -158,6 +190,7 @@ final class YlAudioPipeline {
     let resource = Resource(renderer: renderer)
     onCreated(resource)
     if let stream {
+      configureCompletion(renderer, stream: stream)
       try renderer.configure(stream: reconnectConfiguration(for: stream, generation: generation, copiedAudioCookies: cookies))
       renderer.setVolume(desiredVolume)
       renderer.setRate(desiredRate)
@@ -238,7 +271,7 @@ final class YlAudioPipeline {
   }
 
   func anchorAudioIfNeeded(_ packet: YlCompressedAudioPacket) {
-    guard !audioAnchored else { return }
+    guard !audioAnchored, currentAudioRenderer?.usesSubmissionAnchor != true else { return }
     audioAnchored = true
     // Renderer time is normalized to media microseconds and starts at the
     // first scheduled PCM, after codec delay and presentation-target trimming.

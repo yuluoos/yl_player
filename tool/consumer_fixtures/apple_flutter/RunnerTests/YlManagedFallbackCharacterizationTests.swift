@@ -17,6 +17,7 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     let output: (YlVTDecodedImage) -> Void
     let lock = NSLock()
     var automaticFrames = false
+    var automaticFrameLimitUs: Int64?
     var submitted: [UInt64] = []
     var invalidations = 0
     var onInvalidate: (() -> Void)?
@@ -24,7 +25,8 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     func decode(_ sample: CMSampleBuffer, generation: UInt64,
                 reservation: YlVideoDecodeReservation?) -> OSStatus {
       lock.withLock { submitted.append(generation) }
-      if automaticFrames {
+      let ptsUs = CMTimeConvertScale(CMSampleBufferGetPresentationTimeStamp(sample), timescale: 1_000_000, method: .default).value
+      if automaticFrames && (automaticFrameLimitUs == nil || ptsUs <= automaticFrameLimitUs!) {
         var pixel: CVPixelBuffer?
         let status = CVPixelBufferCreate(kCFAllocatorDefault, 320, 180, kCVPixelFormatType_32BGRA, nil, &pixel)
         guard status == kCVReturnSuccess else { return status }
@@ -49,6 +51,7 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
   }
   private final class Factory: YlVTSessionFactory {
     var automaticFrames = false
+    var automaticFrameLimitUs: Int64?
     var evidence = YlHardwareDecoderEvidence(mode: .hardware)
     var sessions = [Session]()
     var onCreate: (() -> Void)?
@@ -56,6 +59,7 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     func makeSession(formatDescription: CMVideoFormatDescription,
                      output: @escaping (YlVTDecodedImage) -> Void) throws -> YlVTSession {
       let session = Session(output: output); session.automaticFrames = automaticFrames; session.onInvalidate = onInvalidate
+      session.automaticFrameLimitUs = automaticFrameLimitUs
       session.hardwareEvidence = evidence
       sessions.append(session); onCreate?(); return session
     }
@@ -337,6 +341,217 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     instance.emitState()
     XCTAssertFalse(instance.isActive, "A interrupted cursor cannot resume with old decoder history")
     XCTAssertEqual(latest?.error?.code, "network.cancelled")
+  }
+
+  private final class TerminalPCM: YlAudioPacketConverting {
+    let pcmFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 48000, channels: 2, interleaved: false)
+    var trimUs: Int64 = 0
+    var limitUs: Int64?
+    func configure(stream: YlAudioStreamConfiguration) throws {}
+    func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate { .init(durationUs: 21333, byteCount: 8192) }
+    func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
+      if let limitUs, packet.ptsUs > limitUs { return nil }
+      let pcm = AVAudioPCMBuffer(pcmFormat: pcmFormat!, frameCapacity: 1024)!
+      pcm.frameLength = 1024
+      return .init(payload: pcm, ptsUs: max(0, packet.ptsUs + trimUs), durationUs: 21333,
+        byteCount: 8192, generation: packet.generation)
+    }
+  }
+  private final class TerminalDriver: YlAudioOutputDriving {
+    let supportsTerminalCompletion = true
+    var volume: Float = 1; var rate: Float = 1
+    private let lock = NSLock()
+    private var entries: [(YlAudioOutputCompletionMode, YlAudioOutputCallbacks)] = []
+    private var position: Int64 = 0
+    private var invalidation: (() -> Void)?
+    var modes: [YlAudioOutputCompletionMode] { lock.withLock { entries.map { $0.0 } } }
+    var renderedAudioTime: YlRenderedAudioTime? { lock.withLock { .init(sampleTime: position, sampleRate: 1_000_000) } }
+    func configure(sampleRate: Double, channelCount: Int) throws {}
+    func setInvalidationHandler(_ handler: (() -> Void)?) { lock.withLock { invalidation = handler } }
+    func invalidationCallback() -> (() -> Void)? { lock.withLock { invalidation } }
+    func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void) { completion() }
+    func schedule(_ buffer: YlScheduledAudioBuffer, mode: YlAudioOutputCompletionMode, callbacks: YlAudioOutputCallbacks) {
+      lock.withLock { entries.append((mode, callbacks)); position = buffer.ptsUs + buffer.durationUs }
+      if mode == .renderedResource { callbacks.resourcesReleased() }
+    }
+    func completeAll() {
+      let callbacks = lock.withLock { entries.map { $0.1 } }
+      callbacks.forEach { $0.playedBack() }
+    }
+    func play() throws {}
+    func pause() {}
+    func reset() {}
+    func dispose() {}
+  }
+  private final class TerminalFactory: YlAudioRendererMaking {
+    var renderers: [YlAudioRenderer] = []; var outputs: [TerminalDriver] = []
+    let converter = TerminalPCM()
+    func makeRenderer(bufferBudget: YlFallbackBufferBudget) -> YlAudioRenderer {
+      let output = TerminalDriver()
+      let renderer = YlAudioRenderer(bufferBudget: bufferBudget, converter: converter, output: output)
+      outputs.append(output); renderers.append(renderer)
+      return renderer
+    }
+  }
+  private final class TerminalTimeline: YlAudioTimeline, YlAudioPipelineOutput {
+    var anchors: [(Int64, Int64)] = []
+    func anchorAudio(ptsUs: Int64, sampleTime: Int64) { anchors.append((ptsUs, sampleTime)) }
+    func setDemuxPumping(_ value: Bool) {}
+    func requestAudioPump() {}
+    func requestAudioPump(after delay: TimeInterval) {}
+    func fail(_ error: NativePlayerError) { XCTFail(error.code) }
+  }
+  private func terminalPrepared(network: Bool = false, bounded: Bool = false) throws -> (YlPreparedFallback, ReactivationMediaServer?) {
+    let fixture = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "opus_switch", withExtension: "mkv"))
+    let server = network ? try ReactivationMediaServer(data: Data(contentsOf: fixture)) : nil
+    let plan = bounded ? try YlBoundedBufferPlan(minDurationMs: 0, maxDurationMs: 2000, maxBytes: 16 * 1024 * 1024) : nil
+    let source = YlAppleSourceDescriptor(uri: (server?.url ?? fixture).absoluteString,
+      kind: network ? .network : .file, formatHint: .matroska, boundedPlan: plan)
+    return (try YlPreparedFallback(source: source, requireHardwareProbe: false), server)
+  }
+
+  func testTerminalSessionEligibilityUsesRecipeAndDefaultOptOut() throws {
+    for (enabled, bounded, network) in [(false, false, false), (true, false, false), (true, true, false), (true, false, true)] {
+      let (prepared, server) = try terminalPrepared(network: network, bounded: bounded)
+      defer { server?.close() }
+      let factory = TerminalFactory()
+      let instance = try YlManagedPlaybackSession(playerId: 731,
+        services: .init(platform: .current, textureOutput: Output(), makeDisplayDriver: { _ in Display() }),
+        configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 17,
+        videoSessionFactory: Factory(), audioRendererFactory: factory, emit: { _ in },
+        audioTerminalCandidateEnabled: enabled)
+      XCTAssertEqual(factory.renderers[0].usesSubmissionAnchor, enabled && !bounded && !network && YlApplePlatform.current == .macos)
+      instance.dispose()
+    }
+  }
+
+  func testTerminalPipelineAnchorsTrimmedFirstSubmissionAndIgnoresDetachedGeneration() async throws {
+    let factory = TerminalFactory(); factory.converter.trimUs = 500
+    let pipeline = YlAudioPipeline(bufferBudget: try .make(configuration: .init(map: [:])), lock: NSLock(), generation: 7,
+      factory: factory, completionContext: .init(enabled: true, platform: .macos, localFiniteSeekable: true,
+        hasBoundedPlan: false, codec: .aac, sampleRate: 48000, channels: 2, rate: 1))
+    let timeline = TerminalTimeline(); pipeline.timeline = timeline; pipeline.output = timeline
+    var stream = YLFStreamInfo(); stream.codec = Int32(YLFCodecAAC); stream.sample_rate = 48000; stream.channel_count = 2
+    pipeline.initializeRenderer(); try pipeline.configureInitial(stream: stream, cookies: [:])
+    defer { pipeline.discardRenderer() }
+    _ = pipeline.enqueue(.init(data: Data(), ptsUs: 1000, durationUs: 21333, generation: 7), codecName: "AAC", onBackpressure: { _ in XCTFail() })
+    XCTAssertTrue(timeline.anchors.isEmpty, "Held PCM cannot anchor video")
+    _ = pipeline.enqueue(.init(data: Data(), ptsUs: 50000, durationUs: 21333, generation: 7), codecName: "AAC", onBackpressure: { _ in XCTFail() })
+    for _ in 0..<100 where timeline.anchors.isEmpty { try await Task.sleep(nanoseconds: 1_000_000) }
+    XCTAssertEqual(timeline.anchors.first?.0, 1500); XCTAssertEqual(timeline.anchors.first?.1, 1500)
+    let oldCallback = try XCTUnwrap(factory.renderers[0].onFirstPCMSubmitted)
+    let old = pipeline.detach(); pipeline.adoptGeneration(8); pipeline.resetAnchor()
+    pipeline.install(try pipeline.prepareTrack(stream: stream, generation: 8, cookies: [:]))
+    oldCallback(7, 999999); old?.dispose()
+    _ = pipeline.enqueue(.init(data: Data(), ptsUs: 70000, durationUs: 21333, generation: 8), codecName: "AAC", onBackpressure: { _ in XCTFail() })
+    pipeline.finishInput() // EOF must use the same trimmed first-submission event.
+    for _ in 0..<100 where timeline.anchors.count < 2 { try await Task.sleep(nanoseconds: 1_000_000) }
+    XCTAssertEqual(timeline.anchors.map { $0.0 }, [1500, 70500])
+    let sameOwnerCallback = try XCTUnwrap(factory.renderers.last!.onFirstPCMSubmitted)
+    pipeline.prepareReset(generation: 9).perform(); pipeline.resetAnchor()
+    sameOwnerCallback(8, 999999)
+    try await Task.sleep(nanoseconds: 10_000_000)
+    XCTAssertEqual(timeline.anchors.count, 2)
+    _ = pipeline.enqueue(.init(data: Data(), ptsUs: 80000, durationUs: 21333, generation: 9), codecName: "AAC", onBackpressure: { _ in XCTFail() })
+    try pipeline.playInstalled() // The watchdog also enters the same trimmed anchor path.
+    for _ in 0..<100 where timeline.anchors.count < 3 { try await Task.sleep(nanoseconds: 5_000_000) }
+    XCTAssertEqual(timeline.anchors.map { $0.0 }, [1500, 70500, 80500])
+    pipeline.setRate(2, hasAudio: true, updateTimeline: {})
+    let third = try pipeline.prepareTrack(stream: stream, generation: 9, cookies: [:])
+    let previous = pipeline.install(third); previous?.dispose()
+    XCTAssertFalse(factory.renderers.last!.usesSubmissionAnchor, "Rebuild must use desired rate")
+    pipeline.setRate(1, hasAudio: true, updateTimeline: {})
+    stream.sample_rate = 44100
+    let fourth = try pipeline.prepareTrack(stream: stream, generation: 10, cookies: [:])
+    pipeline.install(fourth)?.dispose()
+    XCTAssertFalse(factory.renderers.last!.usesSubmissionAnchor, "New track must use its actual format")
+  }
+
+  func testTerminalSessionDefaultAndTrackReplacementReevaluateEligibility() async throws {
+    let (defaultPrepared, _) = try terminalPrepared()
+    let defaultFactory = TerminalFactory()
+    let defaultSession = try YlManagedPlaybackSession(playerId: 731,
+      services: .init(platform: .current, textureOutput: Output(), makeDisplayDriver: { _ in Display() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: defaultPrepared, generation: 17,
+      videoSessionFactory: Factory(), audioRendererFactory: defaultFactory, emit: { _ in })
+    XCTAssertFalse(defaultFactory.renderers[0].usesSubmissionAnchor)
+    defaultSession.dispose()
+    let (prepared, _) = try terminalPrepared(); let streams = prepared.audioStreams
+    let factory = TerminalFactory(); var failures: [String] = []
+    let instance = try YlManagedPlaybackSession(playerId: 731,
+      services: .init(platform: .macos, textureOutput: Output(), makeDisplayDriver: { _ in Display() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 17,
+      videoSessionFactory: Factory(), audioRendererFactory: factory,
+      emit: { if case let .failure(error) = $0.event { failures.append(error.code) } }, audioTerminalCandidateEnabled: true)
+    defer { instance.dispose() }
+    try instance.activate()
+    let retiredInvalidation = try XCTUnwrap(factory.outputs[0].invalidationCallback())
+    try instance.selectAudioTrack("audio-\(streams[1].index)", cancellationToken: nil)
+    XCTAssertFalse(factory.renderers.last!.usesSubmissionAnchor)
+    retiredInvalidation()
+    try instance.selectAudioTrack("audio-\(streams[0].index)", cancellationToken: nil)
+    XCTAssertTrue(factory.renderers.last!.usesSubmissionAnchor)
+    try await Task.sleep(nanoseconds: 20_000_000)
+    XCTAssertTrue(failures.isEmpty)
+  }
+
+  func testTerminalSessionGraphInvalidationFailsOnceAndOldCallbackAfterSeekIsIgnored() async throws {
+    let (prepared, _) = try terminalPrepared()
+    let factory = TerminalFactory(); var failures: [String] = []
+    let instance = try YlManagedPlaybackSession(playerId: 731,
+      services: .init(platform: .macos, textureOutput: Output(), makeDisplayDriver: { _ in Display() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 17,
+      videoSessionFactory: Factory(), audioRendererFactory: factory, emit: { if case let .failure(error) = $0.event { failures.append(error.code) } },
+      audioTerminalCandidateEnabled: true)
+    defer { instance.dispose() }
+    try instance.activate()
+    let old = try XCTUnwrap(factory.outputs[0].invalidationCallback())
+    try instance.seek(toMs: 100, cancellationToken: nil)
+    old()
+    try await Task.sleep(nanoseconds: 20_000_000)
+    XCTAssertTrue(failures.isEmpty)
+    let current = try XCTUnwrap(factory.outputs[0].invalidationCallback())
+    current(); current()
+    for _ in 0..<100 where failures.isEmpty { try await Task.sleep(nanoseconds: 1_000_000) }
+    XCTAssertEqual(failures, ["render.audio_engine_failed"])
+    XCTAssertFalse(factory.renderers[0].hasPendingPlayback)
+  }
+
+  func testTerminalSessionEOFWaitsForAudioFenceThenCompletes() async throws {
+    try await runTerminalEOF()
+  }
+  func testTerminalSessionCompletesWhenDecodedVideoOutlastsAudio() async throws {
+    try await runTerminalEOF(audioLimitUs: 500000)
+  }
+  func testTerminalSessionCompletesWhenDecodedAudioOutlastsVideo() async throws {
+    try await runTerminalEOF(videoLimitUs: 500000)
+  }
+  private func runTerminalEOF(audioLimitUs: Int64? = nil, videoLimitUs: Int64? = nil) async throws {
+    let (prepared, _) = try terminalPrepared()
+    let factory = TerminalFactory(), video = Factory(), display = BoundedDisplay(), output = Output()
+    video.automaticFrames = true; video.automaticFrameLimitUs = videoLimitUs
+    factory.converter.limitUs = audioLimitUs
+    var completed = false; var failures: [String] = []
+    let instance = try YlManagedPlaybackSession(playerId: 731,
+      services: .init(platform: .macos, textureOutput: output, makeDisplayDriver: { display.tick = $0; return display }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 17,
+      videoSessionFactory: video, audioRendererFactory: factory, emit: {
+        if case let .state(state) = $0.event { completed = state.status == "completed" }
+        if case let .failure(error) = $0.event { failures.append(error.code) }
+      }, audioTerminalCandidateEnabled: true)
+    defer { instance.dispose() }
+    try instance.activate(); try instance.play()
+    for _ in 0..<1000 where !factory.outputs[0].modes.contains(.playedBack) {
+      try await Task.sleep(nanoseconds: 5_000_000); display.advance()
+    }
+    XCTAssertTrue(factory.outputs[0].modes.contains(.playedBack))
+    XCTAssertFalse(completed, "Rendered-resource returns cannot complete the session")
+    for _ in 0..<1000 where !completed && failures.isEmpty {
+      factory.outputs[0].completeAll()
+      try await Task.sleep(nanoseconds: 5_000_000); display.advance()
+    }
+    XCTAssertTrue(failures.isEmpty, "\(failures)")
+    XCTAssertTrue(completed); XCTAssertGreaterThan(output.published, 0)
   }
 
   private func prepared(_ token: YlOpenCancellationToken? = nil, policy: YlDecoderPolicy? = nil) throws -> YlPreparedFallback {

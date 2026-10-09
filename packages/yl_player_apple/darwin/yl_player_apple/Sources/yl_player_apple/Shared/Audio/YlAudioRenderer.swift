@@ -159,6 +159,7 @@ extension YlAudioPacketConverting {
 
 protocol YlAudioOutputDriving: AnyObject {
   var supportsTerminalCompletion: Bool { get }
+  func setInvalidationHandler(_ handler: (() -> Void)?)
   var volume: Float { get set }
   var rate: Float { get set }
   var renderedAudioTime: YlRenderedAudioTime? { get }
@@ -177,6 +178,7 @@ protocol YlAudioOutputDriving: AnyObject {
 extension YlAudioOutputDriving {
   // A legacy driver cannot supply independent rendered/terminal notifications.
   var supportsTerminalCompletion: Bool { false }
+  func setInvalidationHandler(_ handler: (() -> Void)?) {}
 
   func schedule(_ buffer: YlScheduledAudioBuffer, mode: YlAudioOutputCompletionMode,
                 callbacks: YlAudioOutputCallbacks) {
@@ -209,7 +211,64 @@ final class YlAudioRenderer: YlAudioRendering {
   private var completionContext: YlAudioCompletionContext?
   private var configuredStream: YlAudioStreamConfiguration?
   private var terminal: YlAudioTerminalState?
-  private lazy var terminalQueue = DispatchQueue(label: "yl.audio.terminal-completions")
+  private let terminalQueue = DispatchQueue(label: "yl.audio.terminal-completions")
+  private var tailTimer: DispatchSourceTimer?
+  private var tailTimerIdentity: UInt64 = 0
+  private var lastTailObservationUs: UInt64?
+  private var maximumTailObservationGapUs: UInt64 = 0
+  var tailObservationGapUs: UInt64 { lock.withLock { maximumTailObservationGapUs } }
+
+  // Operations owns the timer. Cancellation plus the identity check fences an
+  // already queued observation when pause/reset creates a new observation window.
+  private func updateTailTimer() {
+    guard let terminal, !terminal.isLegacy, !terminal.inputFinished,
+          lock.withLock({ !disposed && playbackRequested }) else { cancelTailTimer(); return }
+    guard tailTimer == nil else { return }
+    let timer = DispatchSource.makeTimerSource(queue: terminalQueue)
+    tailTimer = timer
+    timer.schedule(deadline: .now() + .milliseconds(10), repeating: .milliseconds(10), leeway: .milliseconds(1))
+    tailTimerIdentity &+= 1
+    let identity = tailTimerIdentity
+    timer.setEventHandler { [weak self] in
+      guard let self else { return }
+      self.operations.lock(); defer { self.operations.unlock() }
+      guard self.tailTimer != nil, self.tailTimerIdentity == identity else { return }
+      let now = DispatchTime.now().uptimeNanoseconds / 1000
+      if let last = self.lastTailObservationUs {
+        self.lock.withLock { self.maximumTailObservationGapUs = max(self.maximumTailObservationGapUs, now - last) }
+      }
+      self.lastTailObservationUs = now
+      self.observeTailWait(playing: true, nowUs: now)
+    }
+    timer.resume()
+  }
+
+  private func cancelTailTimer() {
+    tailTimer?.setEventHandler {}
+    tailTimer?.cancel()
+    tailTimer = nil
+    lastTailObservationUs = nil
+  }
+
+  private func installOutputInvalidation() {
+    let epoch = lock.withLock { completionGeneration }
+    output.setInvalidationHandler { [weak self] in
+      self?.terminalQueue.async { [weak self] in
+        guard let self else { return }
+        self.operations.lock(); defer { self.operations.unlock() }
+        guard self.terminal != nil,
+              self.lock.withLock({ !self.disposed && self.completionGeneration == epoch }) else { return }
+        // The graph is no longer usable: fence and stop before retiring owners.
+        // Never submit the held tail to an invalidated graph as a fallback.
+        let failure = NativePlayerError(category: "render", code: "render.audio_engine_failed",
+          message: "The native audio output configuration changed; playback must be rebuilt.")
+        self.lock.withLock { self.outputInvalidationFailure = failure }
+        self.dispose()
+        self.onOutputFailure?(failure)
+      }
+    }
+  }
+
   // Snapshot fields below use the state lock; terminal itself uses operations.
   private var submissionAnchorEnabled = false
   private var terminalPending = false
@@ -230,7 +289,7 @@ final class YlAudioRenderer: YlAudioRendering {
   func observeTailWait(playing: Bool, nowUs: UInt64) {
     operations.lock(); defer { operations.unlock() }
     guard let terminal else { return }
-    // Explicit observations also support deterministic tests; Task 4 owns polling.
+    // Explicit observations also support deterministic tests.
     let submissions = terminal.observe(playing: playing, nowUs: nowUs)
     try? submitTerminal(submissions) // startOutput already reports native failures.
   }
@@ -258,6 +317,7 @@ final class YlAudioRenderer: YlAudioRendering {
   private var completionGeneration: UInt64 = 0
   private var scheduledBufferCount = 0
   private var disposed = false
+  private var outputInvalidationFailure: NativePlayerError?
   private var scheduledDuration = Int64(0)
   private var scheduledByteCount = 0
   private var underruns = 0
@@ -391,6 +451,7 @@ final class YlAudioRenderer: YlAudioRendering {
         message: "A disposed audio renderer cannot be configured."
       )
     }
+    output.setInvalidationHandler(nil)
     do {
       try converter.configure(stream: stream)
       if let format = converter.pcmFormat {
@@ -552,6 +613,10 @@ final class YlAudioRenderer: YlAudioRendering {
   func play() throws {
     operations.lock()
     defer { operations.unlock() }
+    if let failure = lock.withLock({ outputInvalidationFailure }) {
+      onOutputFailure?(failure)
+      throw failure
+    }
     lock.lock()
     guard !disposed else {
       lock.unlock()
@@ -566,6 +631,7 @@ final class YlAudioRenderer: YlAudioRendering {
     }
     lock.unlock()
     try startOutput()
+    updateTailTimer()
   }
 
   private func startOutput() throws {
@@ -595,6 +661,7 @@ final class YlAudioRenderer: YlAudioRendering {
       silenceHostTimeUs = nil
     }
     terminal?.pause()
+    cancelTailTimer()
     output.pause()
   }
 
@@ -617,12 +684,19 @@ final class YlAudioRenderer: YlAudioRendering {
     let clampedRate = min(max(rate, 0.25), 4)
     if clampedRate != 1 { abandonTerminalCandidate() }
     lock.withLock { playbackRate = clampedRate }
+    if let context = completionContext {
+      completionContext = .init(enabled: context.enabled, platform: context.platform,
+        localFiniteSeekable: context.localFiniteSeekable, hasBoundedPlan: context.hasBoundedPlan,
+        codec: context.codec, sampleRate: context.sampleRate, channels: context.channels, rate: clampedRate)
+    }
     output.rate = clampedRate
   }
 
   func flush() {
     operations.lock()
     defer { operations.unlock() }
+    cancelTailTimer()
+    output.setInvalidationHandler(nil)
     lock.lock()
     guard !disposed else {
       lock.unlock()
@@ -668,6 +742,8 @@ final class YlAudioRenderer: YlAudioRendering {
   func dispose() {
     operations.lock()
     defer { operations.unlock() }
+    cancelTailTimer()
+    output.setInvalidationHandler(nil)
     lock.lock()
     guard !disposed else {
       lock.unlock()
@@ -706,11 +782,15 @@ final class YlAudioRenderer: YlAudioRendering {
           YlAudioCompletionPolicy.select(context) == .terminalCandidate,
           stream.codec == .aac, stream.sampleRate == 48000, stream.channelCount == 2 else {
       terminal = nil
+      cancelTailTimer()
+      output.setInvalidationHandler(nil)
       lock.withLock { submissionAnchorEnabled = false; terminalPending = false }
       return
     }
     terminal = YlAudioTerminalState(epoch: lock.withLock { completionGeneration })
-    lock.withLock { submissionAnchorEnabled = true; terminalPending = false }
+    lock.withLock { submissionAnchorEnabled = true; terminalPending = false; maximumTailObservationGapUs = 0 }
+    installOutputInvalidation()
+    updateTailTimer()
   }
 
   private static func isTerminalPCM(_ buffer: YlScheduledAudioBuffer) -> Bool {
@@ -734,6 +814,7 @@ final class YlAudioRenderer: YlAudioRendering {
   }
 
   private func submitTerminal(_ submissions: [YlAudioTerminalState.Resource]) throws {
+    defer { updateTailTimer() }
     for resource in submissions {
       guard let buffer = resource.buffer, let mode = resource.mode,
             lock.withLock({ !disposed && completionGeneration == resource.epoch &&
@@ -1247,6 +1328,12 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
 
 final class YlSystemAudioOutput: YlAudioOutputDriving {
   var supportsTerminalCompletion: Bool { true }
+  private let invalidationLock = NSLock()
+  private var invalidationHandler: (() -> Void)?
+  private var configurationObserver: NSObjectProtocol?
+  func setInvalidationHandler(_ handler: (() -> Void)?) {
+    invalidationLock.withLock { invalidationHandler = handler }
+  }
   private let engine = AVAudioEngine()
   private let player = AVAudioPlayerNode()
   private let timePitch = AVAudioUnitTimePitch()
@@ -1254,6 +1341,12 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
   private var disposed = false
 
   init() {
+    configurationObserver = NotificationCenter.default.addObserver(
+      forName: .AVAudioEngineConfigurationChange, object: engine, queue: nil
+    ) { [weak self] _ in
+      let handler = self?.invalidationLock.withLock { self?.invalidationHandler }
+      handler?()
+    }
     engine.attach(player)
     engine.attach(timePitch)
     if YlAppleCompatibility.current.batchesAudioInput {
@@ -1378,6 +1471,7 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
   }
 
   deinit {
+    if let configurationObserver { NotificationCenter.default.removeObserver(configurationObserver) }
     dispose()
   }
 }

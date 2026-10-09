@@ -54,6 +54,7 @@ final class YlDemuxPipeline {
     fileprivate init(_ media: YlOpenedMedia) { self.media = media }
     var context: YLFMediaContextRef? { media.context }
     var info: YLFMediaInfo { media.info }
+    var supportsRandomAccess: Bool { media.supportsRandomAccess }
     var lastInputError: NativePlayerError? { media.lastInputError }
     func close() { media.close() }
     func cancelInput() { media.cancelInput() }
