@@ -86,6 +86,8 @@ abstract final class YlSafeDiagnostics {
     'container.mpegts_live_unsupported' =>
       'Standalone MPEG-TS currently supports on-demand playback only. Use a supported live stream format.',
 
+    'render.audio_engine_failed' =>
+      'Audio output is unavailable. Check the selected audio device and reload the media to rebuild playback.',
     'source.seek_failed' =>
       'The playback position could not be restored. Reload the source to continue.',
     'policy.video_selection_unsupported' =>

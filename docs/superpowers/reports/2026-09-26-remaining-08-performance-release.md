@@ -1398,3 +1398,16 @@ legacy原采集器已记录TimeoutExpired；4次阶段调用不等于4份有效�
 本轮未再跑1200s长程：已恢复的系统日志和定向回归足以完成本项归因，旧870.888s失败及更早1201s单drop失败均保留。下一项建议优先补齐配置失效的明确用户提示与重新加载指引（保留既有错误码和安全发布边界，不自动恢复失效图），随后在持续记录路由事件的条件下完成长程与恢复验收。生产准入、候选默认启用、下游整体有界证明继续false；实际路由恢复/重载续播、物理音画及新长程通过尚未证明。
 
 协议：[audio-failure-cause-protocol.md](../../../tool/playback_benchmark/audio-failure-cause-protocol.md)。证据：[macos-audio-failure-cause-observations.json](../../../tool/playback_benchmark/macos-audio-failure-cause-observations.json)，108份可校验原始/脱敏文件，含RED/GREEN/最终结果包导出、失败分支附件、短程身份及选取的系统日志；原完整日志只保留指纹，不归档设备标识。
+
+
+### 音频输出错误提示与重载指引（2026-10-09，base15b7459）
+
+既有`render.audio_engine_failed`虽在Swift允许列表内，却缺少公开文案；Swift降为“未知原因”，Dart转换又降为通用操作失败。本轮在两层固定映射中补齐一致提示：“Audio output is unavailable. Check the selected audio device and reload the media to rebuild playback.” 该码同时用于启动失败和配置失效，提示不断言设备切换原因；不读取任意原生错误正文、设备标识或diagnostic。render分类、retryable=false、失效旧图停止/释放策略保持不变，无自动恢复实现。
+
+[接入指引](../../diagnostics.md)说明检查系统输出设备后，由用户显式重新Load源并使用新session；处理新的Load/play失败，必要时显式提供点播startPosition，不依赖失败旧session续播或自动保留轨道/位置。
+
+验证：Dart公开错误转换新增项先RED（其余19项通过），原生既有发布/重复Pigeon桥接测试先RED1，均因通用提示不符合预期而失败。最终macOS定向**9/9、0失败/0跳过**，包括全部发布测试与真实配置通知/启动失败、失效后停止释放且禁止再次play回归。iOS arm64 simulator build-for-testing exit0，未执行iOS运行。Dart Apple全套**112/112**、平台接口**123/123**，修改文件格式/静态分析通过。标准夹具及两个镜像同步，夹具**4/4**、发现iOS678/macOS657核对通过，未新增原生测试方法。
+
+过程中Apple Dart首次从包目录运行导致既有schema测试相对路径失败；从仓库根目录重跑完整112项通过，未修改该测试。夹具校验及独立复审发现标准夹具遗漏，同步后重新校验通过；未放宽检查。此固定提示变更无需重跑全套原生或1200s长程，不能将此前656/656或短程记录当作本轮新结果。
+
+下一项：显式Load重建恢复验收，检查新session/输出可用、旧图不可复活、重载失败仍安全传播；随后进行带路由事件记录的长程。实际设备切换恢复、物理音画、长程零丢帧及整体资源有界仍未证明，历史失败保持原状，defaultEnabled/productionAdmission/downstreamBoundProven继续false。

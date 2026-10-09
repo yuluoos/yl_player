@@ -26,6 +26,7 @@ or `internal`.
 | `network.http_forbidden` | The media server returned HTTP 403; check credentials and request configuration |
 | `container.unsupported` | No supported container route |
 | `decoder.unsupported` / `decoder.unavailable` | Unsupported media or unavailable required decoder |
+| `render.audio_engine_failed` | Apple native audio output could not start or became invalid; check the output device and reload the media |
 | `resource.exhausted` | A bounded native resource could not be acquired |
 | `protocol.mismatch` | Native/Dart state or transport violated the SPI contract |
 | `platform.failure` / `internal.failure` | Safe fallback identities for platform/internal faults |
@@ -83,6 +84,30 @@ There is no public method that exposes raw native diagnostics. Do not document
 or depend on implementation methods, Pigeon messages, platform channels, or
 private native logs as an application API. `toString()` redacts sensitive model
 fields and unsafe metadata, but explicit safe-field logging remains preferred.
+
+## Apple audio output failure and reload
+
+`render.audio_engine_failed` has category `render` and is not automatically
+retryable. Its fixed public message is: “Audio output is unavailable. Check the
+selected audio device and reload the media to rebuild playback.” This code
+covers both engine startup failure and output configuration invalidation; it
+does not by itself prove that the user changed devices.
+
+For a session failure, show a **Reload media** action after the user checks the
+selected system audio output. On explicit activation, call
+`player.load(source, options: options)` with the application's retained source
+and intended load options, then use the returned session handle and observe its
+`ready`/play Futures. A successful replacement invalidates the old handle. Do
+not loop on the failed session's `play()` or automatically retry a failed Load:
+the invalidated native output graph has been stopped and cannot resume.
+
+If resuming a seekable VOD, retain the last known position and request it via
+Load's start-position option; do not assume that reloading restores position,
+track choices, or playback intent automatically. Observe any new load/play
+failure and display its safe message. An application may localize the message
+by stable code (for example: “音频输出不可用，请检查所选音频设备并重新加载媒体。”).
+Actual device-change recovery and long-duration playback remain separate
+acceptance items; this guidance does not establish that they passed.
 
 ## Optional script resolver errors
 

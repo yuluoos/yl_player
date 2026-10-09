@@ -294,3 +294,6 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 2026-10-09视频drop诊断推进：六类原因及最多16条标量事件已完成，最终macOS655/655、iOS arm64编译、Python10/10、夹具4/4；同版本短程30.025s通过。目标1200s长程在870.888s因音频引擎错误提前失败，10次drop全为队列等待超时，事件期间调度仍在调用而媒体位置不动。下一项采集音频错误完整安全详情及配置失效/启动失败分支时序，定位时钟停滞根因。长程验收和候选准入仍未完成，不能倒推上轮单次drop原因。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)与[证据](../../../tool/playback_benchmark/macos-video-drop-diagnostics-observations.json)。
 
 2026-10-09音频归因完成：限定进程系统日志证实上轮870.888s失败由默认音频输出路由变化引起IO中断及引擎配置失效；保留12条脱敏记录，不推断更早单drop原因。测试探针已补齐32条有界分支/安全错误详情、启动失败前缀、原生节点时钟；最终macOS656/656、Python13/13、夹具4/4，冻结30.025s短程通过。下一项为明确输出配置失效提示及重新加载指引，随后验收带路由监测的长程/实际恢复；本轮未更改生产行为或重跑长程，候选准入仍关闭。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)及[证据](../../../tool/playback_benchmark/macos-audio-failure-cause-observations.json)。
+
+
+2026-10-09音频提示完成：Swift/Dart为render.audio_engine_failed统一提供检查音频设备并重新加载媒体的固定指引，保持render分类、retryable=false和旧图停止策略。公开边界RED→GREEN，定向原生9/9、Dart Apple112/112/接口123/123、夹具4/4、iOS arm64编译通过；本轮未重跑完整原生或长程验收。下一项验证显式Load重建恢复及旧图隔离，再完成带路由记录的1200s长程；候选默认和准入继续关闭。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)。

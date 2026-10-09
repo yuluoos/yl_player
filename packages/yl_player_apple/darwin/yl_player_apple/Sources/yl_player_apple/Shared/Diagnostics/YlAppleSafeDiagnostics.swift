@@ -165,6 +165,7 @@ enum YlAppleSafeDiagnostics {
     "container.dash_segment_base_unsupported": "DASH SegmentBase addressing is not supported by this playback path. Choose a compatible SegmentTemplate or SegmentList source.",
     "resource.dash_manifest_too_large": "The DASH manifest exceeds the 2 MiB input limit. Ask the provider for a smaller manifest.",
 
+    "render.audio_engine_failed": "Audio output is unavailable. Check the selected audio device and reload the media to rebuild playback.",
     "source.seek_failed": "The playback position could not be restored. Reload the source to continue.",
     "policy.video_selection_unsupported": "The requested video quality is unavailable for this source.",
     "policy.video_constraints_reload_required": "Reload the DASH source with new video constraints to change or clear the limits.",

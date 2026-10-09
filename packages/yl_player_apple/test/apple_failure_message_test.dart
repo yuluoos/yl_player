@@ -9,6 +9,8 @@ void main() {
   const hostile =
       'https://user:secret@private.test/media?token=secret Authorization: Bearer secret';
   const messages = {
+    'render.audio_engine_failed':
+        'Audio output is unavailable. Check the selected audio device and reload the media to rebuild playback.',
     'container.dash_manifest_invalid':
         'The DASH manifest could not be parsed. Ask the provider for a valid UTF-8 MPD.',
     'container.dash_dynamic_unsupported':
@@ -52,7 +54,9 @@ void main() {
       'known ${entry.key} gives safe guidance at native and adapter boundaries',
       () {
         final wire = AppleFailureMessage(
-          category: AppleFailureCategory.network,
+          category: entry.key == 'render.audio_engine_failed'
+              ? AppleFailureCategory.render
+              : AppleFailureCategory.network,
           code: entry.key,
           message: hostile,
           retryable: false,
@@ -62,6 +66,9 @@ void main() {
         final failure = AppleCodec.failure(wire);
         expect(failure.message, entry.value);
         expect(failure.code, entry.key);
+        if (entry.key == 'render.audio_engine_failed') {
+          expect(failure.category, YlFailureCategory.render);
+        }
         expect(failure.retryable, isFalse);
         expect(failure.scope, YlFailureScope.session);
         expect(failure.diagnosticId, 'native-test-1');
@@ -78,6 +85,7 @@ void main() {
   test('unknown codes never promote native text or infer a known cause', () {
     for (final code in [
       'custom.unknown',
+      'render.audio_engine_failed.extra',
       'network.http_forbidden.extra',
       'network.rtmp_stream_unavailable.extra',
       hostile,

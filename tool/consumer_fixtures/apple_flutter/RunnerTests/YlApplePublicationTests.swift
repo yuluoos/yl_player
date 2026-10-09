@@ -94,6 +94,21 @@ final class YlApplePublicationTests: XCTestCase {
     XCTAssertEqual(repeated.message, "The media server refused the request. Check access credentials and request configuration.")
     XCTAssertFalse(repeated.retryable)
     XCTAssertEqual(repeated.scope, .player)
+    // Both output invalidation and startup failure share this code. Never use
+    // source-derived error text to choose a cause or imply an automatic retry.
+    let audio = YlAppleSafeDiagnostics.failure(NativePlayerError(category: "render",
+      code: "render.audio_engine_failed",
+      message: "https://user:secret@private.test/audio?token=secret",
+      diagnostic: "/private/device/secret"), scope: .session)
+    for failure in [audio, YlAppleSafeDiagnostics.failure(PigeonError(code: audio.code,
+      message: "Authorization: Bearer secret", details: audio), scope: .command)] {
+      XCTAssertEqual(failure.code, "render.audio_engine_failed")
+      XCTAssertEqual(failure.category, .render)
+      XCTAssertEqual(failure.message, "Audio output is unavailable. Check the selected audio device and reload the media to rebuild playback.")
+      XCTAssertFalse(failure.retryable)
+      XCTAssertFalse(failure.diagnosticId.contains("secret"))
+    }
+
   }
 
   private func server() throws -> RollbackHlsServer {
