@@ -1214,7 +1214,7 @@ pipeline首次提交在main/session上下文复核renderer身份及audioGenerati
 
 使用实际 YlAudioRenderer → YlSystemAudioOutput → AVAudioPlayerNode；注入 AVAudioEngine 仅用于观察既有节点，调度不改成工具模型。第一声道 tap 位于 time pitch/mixer/设备之前，最终 mixer 静音。短序列包括 paired legacy/candidate 的0/1/3/2000块、300ms断供与在途pause/EOF；真实AAC转换及真实demux/转换器/system输出的session控制与EOF另有记录，视频为受控输出。图变化为注入原生通知，不是物理切换设备。
 
-最终完整macOS原生套件644/644通过，0失败/0跳过，实际方法身份核对一致；源码发现iOS678/macOS645中的一项受平台条件排除。iOS arm64模拟器编译通过，未执行iOS测试。泛用双架构构建先在Flutter解包阶段失败，显式arm64后通过，没有提高iOS15/macOS12部署下限。首次完整套件643/643后，资源释放采样发现既有system输出的时钟getter访问已detach节点会抛原生异常；独立回归实际RED1/1→GREEN1/1，最小修复在未配置/已dispose时返回nil，因此重新执行完整套件。
+复审前完整macOS原生套件644/644通过，0失败/0跳过，实际方法身份核对一致；源码发现iOS678/macOS645中的一项受平台条件排除。iOS arm64模拟器编译通过，未执行iOS测试。泛用双架构构建先在Flutter解包阶段失败，显式arm64后通过，没有提高iOS15/macOS12部署下限。首次完整套件643/643后，资源释放采样发现既有system输出的时钟getter访问已detach节点会抛原生异常；独立回归实际RED1/1→GREEN1/1，最小修复在未配置/已dispose时返回nil，因此重新执行完整套件。
 
 最终短序列两组2000块各收到2048000帧，顺序错误/内部零帧均为0；candidate为1999次rendered+1次playedBack，legacy为2000次playedBack，上游ledger峰值均196608B，末尾排空。故意断供组保留gap，不写为连续性通过。丢失playedBack回调不伪造completed；实际已dispose系统输出启动失败保持render.audio_engine_failed安全字段。
 
@@ -1236,3 +1236,43 @@ pipeline首次提交在main/session上下文复核renderer身份及audioGenerati
 证据完整性：最初matrix测试在移除已detach节点tap时失败，修复测试清理顺序后通过；macOS生成配置原指向旧Flutter benchmark，保留该次日志并恢复lib/main.dart后重新验证。早期运行前快照漏存素材hash，不能事后声称已预先冻结；当前素材与Task4已提交hash一致，后续最终套件/资源/长播均在运行前保存素材及源码/二进制hash。全部失败、旧快照和协议修订保留。
 
 `adapterImplemented=true`，`defaultEnabled=false`、`productionAdmission=false`、`downstreamBoundProven=false`。未验证物理音画同步、真实设备路由切换、Intel、最低macOS/iOS、iOS运行及其他来源/格式；这些缺口继续开放，完整P08 Task1/2不随子计划勾选。
+
+
+#### 全子计划独立复审与执行决策
+
+一次fresh-context复审覆盖184531f..421103c，发现1个Important/P2、无Critical/Minor：candidate在output.schedule同步重入pause后，仍可能按旧playbackRequested重启输出。独立测试实际失败（启动次数2而非1），修复为startOutput前重新核对playbackRequested/disposed/generation；复审后完整macOS套件645/645通过、0失败/0跳过，实际方法身份核对一致，iOS arm64模拟器编译通过，夹具4/4和发现678/646核对通过。未再次派发复审；同一轮修复由回归和完整套件验证。
+
+长播与paired heap测量绑定421103c的源码/二进制身份。暂停修复改变了二进制，未再运行1200s/heap测量；长播协议明确禁止暂停，此修复针对同步暂停重入，最终完整套件覆盖该边界及真实短矩阵。旧长播结果仍只证明旧测量版本，不能称为修复后二进制的长播通过；后续正式准入需要复测最终发布版本。
+
+以下决策按执行顺序列出；完整原始ledger也保存在证据中：
+
+| 决策 | 理由与判断错误的代价 |
+|---|---|
+| 按“下一项”逐项执行，复用已授权分支，最后统一独立复审 | 保持用户节奏；跨项问题可能较晚发现 |
+| Task1只验证来源布尔值，真实来源构造留Task4 | 避免重复false冒充三个集成场景；Task1单独不能证明来源分类 |
+| 增加小型机器可读证据归档 | /tmp清理后仍可核查；增加仓库体积 |
+| Task1记录已通过的最终结果，不为task-done记账重跑 | 没有代码变化；若版本绑定错误会误用旧结果 |
+| 新输出入口拒绝输入时只释放资源，不伪造playedBack | 维持完成契约；调用方必须处理失效 |
+| reservesOutputBuffers默认false、system为true | 避免真实转换器双重计费；能力标志错误会影响预算 |
+| candidate最多24个owner，估算不足走既有错误链 | 沿用测试上界且不重解已消费输入；可能保守失败 |
+| void观察/finish沿onOutputFailure报错 | 复用已有链；session未接收时不能靠抛错补救 |
+| 增加重开Resource随机访问能力只读入口，开关只在内部session | 使用真实重开来源事实；仍需调用方正确刷新 |
+| graph通知异步交接后fence | 避免通知线程等待锁；真实设备失效时序仍未验证 |
+| Task4复用最终精确源码套件结果记账 | 无变化不重复运行；依赖身份核查正确 |
+| system输出增加默认保持不变的engine注入 | 观察真正既有节点；测试注入并非业务设备行为证明 |
+| 长播仅candidate，legacy对照限短矩阵及独立资源组 | 验证绝对连续性；不能比较长播性能 |
+| 修正旧Flutter测试host配置并保留原结果 | 消除无关benchmark干扰；跨host结果不能直接比资源 |
+| 早期素材hash快照遗漏如实保留 | 与旧已提交hash一致只能补充佐证；早期运行身份较弱 |
+| 释放后时钟返回nil的最小生产修复 | 避免访问detach节点原生异常；新增生命周期行为需回归 |
+| heap采样完整与frame/order失败分别报告 | 不降低原断言；这些资源实验不能当连续性通过 |
+| 复审范围为当前五项子计划 | 集中检查本次变更；未复审更早无关功能 |
+| Task5勾选表示执行与不准入报告完成 | 保留失败而非隐去；不能把完成标记当发布批准 |
+| Task5复用已跑完整套件/长播结果，不仅为ledger重跑 | 减少重复验证；绑定错误会误报，故保留身份 |
+| 复审暂不判断物理音画/真实路由 | 无相应测量；继续缺少物理输出准入证据 |
+| 复审暂不判断Intel/最低OS/iOS运行 | 缺设备/执行证据；对应支持矩阵仍未验收 |
+| 复审暂不判断整体下游上界及其他来源/格式 | 这些能力未准入；不能扩大候选适用范围 |
+| 复审暂不判断184531f之前功能 | 不属本次范围；历史问题可能仍在 |
+| 暂停修复后不复用旧长播身份作最终版本通过 | 只补完整回归，不扩大测量结论；发布前还需最终版本长播 |
+| 保持本地分支，不merge/push | 沿用用户授权；远端及发布状态未改变 |
+
+Deferred minors：无。

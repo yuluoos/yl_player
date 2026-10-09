@@ -856,7 +856,11 @@ final class YlAudioRenderer: YlAudioRendering {
           handler?(generation, pts)
         }
       }
-      if snapshot.3 { try startOutput() }
+      if snapshot.3, lock.withLock({
+        !disposed && playbackRequested && completionGeneration == epoch
+      }) {
+        try startOutput()
+      }
     }
   }
 

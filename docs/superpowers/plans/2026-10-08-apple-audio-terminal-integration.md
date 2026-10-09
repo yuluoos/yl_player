@@ -268,8 +268,11 @@ AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 o
 
 ### 2026-10-08 Task 5 执行记录
 
-完成真实renderer/system节点短序列矩阵、实际converter/session控制与EOF、安全失败及回调丢失检查。资源采样发现既有释放后clock读取原生崩溃，新增独立回归实际RED1/1→GREEN1/1并最小guard修复。最终完整macOS644/644、实际发现核对通过，iOS arm64模拟器编译通过；未运行iOS/最低OS/Intel设备验收。
+完成真实renderer/system节点短序列矩阵、实际converter/session控制与EOF、安全失败及回调丢失检查。资源采样发现既有释放后clock读取原生崩溃，新增独立回归实际RED1/1→GREEN1/1并最小guard修复。复审前完整macOS644/644、实际发现核对通过，iOS arm64模拟器编译通过；未运行iOS/最低OS/Intel设备验收。
 
 无heap独立长播241采样/1200.317s通过：57840640帧，顺序错误和内部零帧0，56484rendered+1playedBack提交/回调一致，ledger峰值196608B，释放与2秒后0。独立paired资源组四阶段均采齐，但两组在播放中heap之后均出现tap帧丢失/顺序断言失败，退出65原样保留，不放宽断言、不算连续性通过。该项勾选表示实现、执行与准入报告完成，绝不表示所有实验通过。
 
 完整数据、失败归因边界及协议偏差见[P08报告](../reports/2026-09-26-remaining-08-performance-release.md)和[证据](../../../tool/playback_benchmark/macos-audio-integration-observations.json)。adapterImplemented=true，defaultEnabled/productionAdmission/downstreamBoundProven=false；物理音画、真实路由切换、其他设备/最低系统及整体资源上界待后续发布切片，完整P08保持开放。
+
+
+全子计划fresh复审覆盖184531f..421103c，1个Important/P2、无Critical/Minor：同步调度重入pause可能按旧状态重启。新增回归实际RED1/1，再于startOutput前复核当前playbackRequested/disposed/generation；最终完整macOS645/645、0失败/0跳过，实际发现、iOS arm64编译和夹具4/4均通过。未再派发复审。长播与heap保留421103c的测量身份，未对复审修复后二进制重新执行；最终发布前仍需复测，不能借用旧测量身份。所有执行决策、代价与未判断项见P08报告，默认及正式准入保持关闭。

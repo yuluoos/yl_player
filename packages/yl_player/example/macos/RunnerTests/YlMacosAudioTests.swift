@@ -815,6 +815,23 @@ final class YlMacosAudioTests: XCTestCase {
     }
   }
 
+  func testTerminalRendererReentrantPauseCancelsAutomaticRestart() throws {
+    let ledger = YlManagedBufferLedger(); let output = TerminalOutput()
+    let renderer = try terminalRenderer(output, LifetimePCMConverter(), ledger.makeScope(maxBytes: nil))
+    defer { renderer.dispose() }
+    try renderer.play()
+    XCTAssertEqual(output.playCount, 1)
+    _ = try enqueueTerminal(renderer, 0)
+    output.onSchedule = { renderer.pause() }
+    _ = try enqueueTerminal(renderer, 1)
+    XCTAssertEqual(output.playCount, 1, "A completed pause must cancel the candidate automatic restart")
+    XCTAssertTrue(renderer.hasPendingPlayback)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 16384, "Pause retains both owned PCM buffers")
+    output.onSchedule = nil
+    try renderer.play()
+    XCTAssertEqual(output.playCount, 2, "Only explicit resume can start output again")
+  }
+
   func testTerminalRendererReentrantResetCannotRestartStaleOutput() throws {
     let ledger = YlManagedBufferLedger(); let output = TerminalOutput()
     let renderer = try terminalRenderer(output, LifetimePCMConverter(), ledger.makeScope(maxBytes: nil))
