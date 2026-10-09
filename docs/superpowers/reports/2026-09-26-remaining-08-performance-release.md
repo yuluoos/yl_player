@@ -1424,3 +1424,18 @@ legacy原采集器已记录TimeoutExpired；4次阶段调用不等于4份有效�
 最终macOS完整原生**658/658、0失败/0跳过**，运行清单与发现iOS678/macOS659核对，夹具4/4通过。全套内恢复附件记录：直接重载创建2个输出，新会话媒体位置从1003推进至1212ms；先拒绝再重载创建3个输出，新会话从1049推进至1328ms。旧输出均只有1次configurationInvalidated；被拒候选有1次playFailed；成功输出均有真实playSucceeded。每个输出最终dispose，关闭后账本均为0。iOS arm64 simulator build-for-testing exit0；未运行iOS测试，也未重跑Dart或1200s长程。
 
 [协议](../../../tool/playback_benchmark/audio-reload-recovery-protocol.md)限定证据口径，[归档](../../../tool/playback_benchmark/macos-audio-reload-recovery-observations.json)保留失败尝试日志、定向/最终结果包导出、音频分支附件及源码/素材身份。真实系统设备切换未执行，进程内通知不能冒充物理路由切换。下一项为带路由记录的1200s长程；实际设备恢复、物理音画、完整文件EOF及整体资源上界仍未完成，候选默认、productionAdmission、downstreamBoundProven继续false。
+
+
+### 带音频配置事件记录的真实解码长程通过（2026-10-09，basef5e626b）
+
+本轮没有生产/测试实现或门槛改动。在既有658/658原生回归版本上执行一次同版本短程门禁和一次正式1200s长程；短程与长程的源码、二进制、素材、协议指纹完全一致，前后校验未变化。采集器Python13/13通过。未重跑完整原生/iOS套件，旧658/658与iOS编译仍绑定其原始归档，不冒充本轮新覆盖。
+
+短程30.028434s、7个播放点、播放drop0/orderErrors0，音频时钟偏差+0.033816s、最大选帧滞后23750µs。长程**1201.179056s、241个播放点、28915个调度视频帧**，播放drop0/orderErrors0，XCTest1/1、exit0及严格采集器均通过。音频累计时钟偏差+1.555069s，满足既有±5s门槛；最大选帧滞后23125µs，满足100000µs门槛。前后各项逐采样进度/帧新鲜度/音频与媒体时钟关系/顺序/所有者释放检查均沿用原校验器，未放宽或选择性删点。
+
+长程活动播放末次rendered提交56494，playedBack提交/回调始终0；候选标志与实际提交模式共同证明没有悄然进入逐块playedBack兼容路径。音频诊断记录两次playAttempt均playSucceeded，configurationInvalidated、playFailed、startupFailure、rendererFailure均0。全程没有触发配置失效通知，不等于证明切换真实设备后能够恢复。
+
+短/长程释放阶段各独立留下1次enqueueTimeout；长程约251.045ms，位于最后播放采样之后。按已有活动播放/释放边界原样保留，不能把最终累计drop1误写成播放丢帧，也不能隐藏该事件。两个释放采样（立即与至少2秒后）均ledger0、pendingfalse、nativePlayingfalse。主动停止在1260s素材EOF之前完成，因此没有证明自然EOF、尾部playedBack与最终completed顺序或整体下游资源有界。
+
+本次越过以往860s附近故障窗口并通过，但没有改写更早1201s单drop失败或870.888s音频路由失效失败；单次通过不说明这些历史失败不存在，也不替代真实设备切换、物理音画和支持矩阵验收。[证据归档](../../../tool/playback_benchmark/macos-route-monitored-long-observations.json)保留短/长程结果、全部JSONL/音频和丢帧诊断、XCTest附件/结果包文件hash及冻结身份。
+
+下一项：真实解码自然EOF与尾部排空验收。真实设备恢复、物理音画、最低系统/Intel/iOS运行与整体资源上界继续开放，候选默认和正式准入仍关闭；完整P08尚未完成。

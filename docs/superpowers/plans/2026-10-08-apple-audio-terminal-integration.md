@@ -10,6 +10,8 @@
 
 **Spec:** [输出完成契约 §10](../specs/2026-10-08-audio-output-completion-contract.md)、[需求基线](../specs/2026-09-20-playback-expansion-requirements.md)、[P08](2026-09-26-remaining-08-performance-release.md)。
 
+最新状态（2026-10-09）：真实解码长程零丢帧门禁已通过，下一项为自然EOF与尾部排空验收。下方历史执行记录保留当时的失败/未完成状态，当前进度以最后一节为准；正式准入仍关闭。
+
 起点 `9c5967a`。Task 1–5 已实现并执行验证；资源采样帧断言失败如实保留，默认准入仍关闭。既有工具通过不能替代生产验收。
 
 ## Global Constraints
@@ -349,7 +351,7 @@ AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 o
 - [x] 接入文档说明由用户显式调用`player.load`重建并使用新session；失败旧图不能反复play，不承诺自动保留位置/轨道。
 - [x] 原生发布边界RED1→GREEN；最终定向9/9（含配置通知/启动失败及停止后禁止重播）、Dart Apple112/112、平台接口123/123、夹具4/4、发现678/657；iOS arm64编译通过，未运行iOS测试。
 - [x] 显式Load重建后的受控恢复验收：真实解码/音频输出、新session、旧图隔离及失败Load安全传播两场景通过，详见后续记录。实际设备切换恢复仍未证明。
-- [ ] 下一项：执行带路由事件记录的1200s长程；保留此前失败和零丢帧门槛，实际设备切换恢复单独验收。
+- [x] 带音频配置事件记录的1200s长程：本轮1201.179s/241点通过，播放drop0；历史失败保留，实际设备切换恢复仍单独验收。
 
 本项只改变固定公开提示并完善接入指引，不改变输出生命周期或启用候选。本轮不重复完整macOS套件及短/长程播放；历史长程失败和正式准入关闭保持不变。
 
@@ -361,3 +363,14 @@ AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 o
 - [x] 最终macOS完整原生658/658、0失败/0跳过；发现iOS678/macOS659及运行清单核对、夹具4/4；iOS arm64编译exit0（未运行iOS测试）。
 
 作用域为向自有engine发布配置通知及使候选原生output在play前失效，不变更系统音频设备。短程物理音画、真实设备切换、长程零丢帧与整体有界均不能由本项推导。详见[协议](../../../tool/playback_benchmark/audio-reload-recovery-protocol.md)、[证据](../../../tool/playback_benchmark/macos-audio-reload-recovery-observations.json)和[报告](../reports/2026-09-26-remaining-08-performance-release.md)。
+
+### 后续长程：携带音频配置事件的连续性验收（2026-10-09）
+
+- [x] 现有采集器13/13回归；同版本30.028s短程门禁通过，源码/二进制/素材/协议身份冻结且与长程一致。
+- [x] 正式长程1201.179s、241采样、28915个调度视频帧；播放drop0、orderErrors0，无候选回退或音频配置失效/启动失败，XCTest与严格采集器均通过。
+- [x] 音频时钟累计偏差+1.555069s（原门限±5s）、最大选帧滞后23125µs（原门限100000µs）；未调整判定标准。
+- [x] 释放阶段单独记录1次enqueueTimeout约251.045ms；立即及2秒后均ledger0、pendingfalse、nativePlayingfalse。该计数不混入活动播放。
+- [x] 短/长程原始JSONL、结果包导出、音频/drop事件、源码/二进制/素材指纹已归档。无生产改动，无完整原生/iOS重复执行声明。
+- [ ] 下一项：真实解码自然EOF与尾部排空验收，验证最终playedBack/资源释放和completed时序，不能用本次主动停止代替EOF。
+
+本次配置失效通知为0，证明本次记录中未发生该事件，不能据此宣称真实设备切换恢复已通过。物理音画、实际设备切换、最低系统/Intel/iOS运行及整体资源上界仍开放，defaultEnabled/productionAdmission/downstreamBoundProven均为false。历史单drop与路由失效失败原档保持不变。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)与[证据](../../../tool/playback_benchmark/macos-route-monitored-long-observations.json)。

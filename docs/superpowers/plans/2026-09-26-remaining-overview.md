@@ -300,3 +300,6 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 
 
 2026-10-09显式重载恢复完成：默认false的内部音频注入贯通typed Host Load，真实解码/原生输出两场景覆盖配置失效→新session重载，以及启动失败使首次重载被拒→后续显式重载成功；旧图和迟到回调隔离、旧命令拒绝、新音频时钟/首帧/位置恢复、最终账本0均验证。最终macOS658/658、0失败/0跳过、夹具4/4、发现678/659和iOS arm64编译通过。本项为进程内受控通知/原生失效输出，真实设备切换未验收。下一项带路由记录的1200s长程，历史失败与候选准入关闭不变；见[报告](../reports/2026-09-26-remaining-08-performance-release.md)与[证据](../../../tool/playback_benchmark/macos-audio-reload-recovery-observations.json)。
+
+
+2026-10-09真实解码长程门禁通过：冻结同版本短程30.028s后执行正式1201.179s/241点长程，播放drop0/orderErrors0、无候选回退或配置失效；音频累计偏差+1.555s、最大选帧滞后23125µs，XCTest和原严格采集器均通过。释放阶段独立保留一次队列超时，释放后两点ledger0/pendingfalse。未重复全套原生/iOS，历史失败证据保持不变。下一项自然EOF与尾部排空，实际设备切换、物理音画、平台矩阵及整体资源上界仍开放；准入继续关闭。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)与[证据](../../../tool/playback_benchmark/macos-route-monitored-long-observations.json)。
