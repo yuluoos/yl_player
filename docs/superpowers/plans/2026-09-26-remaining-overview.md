@@ -312,3 +312,6 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 
 
 2026-10-09真实解码EOF资源长度矩阵完成：同源4/30/60s前缀、两路径六独立进程正式6/6通过、18/18 heap在原8s内有效；提交188/1407/2813，两路径一致。初次三组中两组因configured在途ACK事件使collector失败，保留后修复为采样前等待ACK清空，以新身份重跑完整矩阵，未放宽空记录/heap期限。定向4/4、资源27/27、矩阵3/3、夹具4/4、发现678/663通过，372份证据归档。默认EOF堆增量随长度增大，候选较小；各组单次且加载基线不同，不推断整体有界或统计性改善。close后账本均0。下一项对象级归因音频回调/框架/测试保留量，其他设备及平台验收独立开放，候选准入关闭。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)及[证据](../../../tool/playback_benchmark/macos-decoded-resource-length-observations.json)。
+
+
+2026-10-09真实解码EOF堆类型级归因完成：复用已提交18份heap，严格身份/hash/长度/PID/全表守恒；保留重复标签、空TYPE与缺失类型null。默认LifecycleCompletion识别188/1407/2778，candidate未单独识别；扣各自configured基线后，60s相对4s默认增1,631,664B，其中四类回调相关标签1,032,096B，candidate对应192B（总增169,216B）。通用闭包包含测试包装，non-object仍大，不能据此确定全部所有者或根因。冻结源码确认完成容器会清空资源捕获；容器存活不等于PCM未释放。复审三个校验缺口已修复，离线10/10、资源27/27、矩阵3/3通过；没有新原生/heap/iOS/长程运行。下一项透明转交回调对照，精确持有链及生产/测试成本分离仍开放，准入保持关闭。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)和[派生证据](../../../tool/playback_benchmark/macos-decoded-heap-attribution-observations.json)。

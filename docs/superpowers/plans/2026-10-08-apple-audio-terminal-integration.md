@@ -10,7 +10,7 @@
 
 **Spec:** [输出完成契约 §10](../specs/2026-10-08-audio-output-completion-contract.md)、[需求基线](../specs/2026-09-20-playback-expansion-requirements.md)、[P08](2026-09-26-remaining-08-performance-release.md)。
 
-最新状态（2026-10-09）：真实解码长程、自然EOF及4/30/60s独立资源对照矩阵已完成；下一项为资源保留增长的对象级归因，整体有界仍未证明。下方历史执行记录保留当时的失败/未完成状态，当前进度以最后一节为准；正式准入仍关闭。
+最新状态（2026-10-09）：真实解码长程、自然EOF、长度矩阵及堆类型级归因已完成；具体持有链与测试包装成本仍未分离，下一项为透明转交回调对照，整体有界未证明。下方历史执行记录保留当时的失败/未完成状态，当前进度以最后一节为准；正式准入仍关闭。
 
 起点 `9c5967a`。Task 1–5 已实现并执行验证；资源采样帧断言失败如实保留，默认准入仍关闭。既有工具通过不能替代生产验收。
 
@@ -413,6 +413,21 @@ AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 o
 - [x] 自然完成时音频owned0/pendingfalse，总ledger92944；close后立即及>=2s均ledger0/输出停止，保留public事件10、progress/order数组0。
 - [x] 默认drained−configured随长度为96,832/1,089,408/1,728,496字节；候选24,400/207,648/193,616字节。保存全部原始量，不能把单次较小增量升级为整体有界或统计性改善。
 - [x] 372份原始文件归档，初次失败与最终通过均保留；只改测试/工具/文档，无生产修改，不重跑完整套件、iOS或1200s长程。
-- [ ] 下一项：对EOF后保留增长做对象级归因，区分音频输出回调、框架和测试记录开销，再确定是否需要生产修复；保持物理音画/真实设备/平台矩阵独立验收。
+- [x] 完成EOF后增长的类型级归因与冻结源码核对；已定位可识别容器和通用分配类别，精确持有链与测试包装贡献尚待后续对照，不据此确定生产修复。
 
 详见[矩阵协议](../../../tool/playback_benchmark/decoded-resource-length-protocol.md)、[证据](../../../tool/playback_benchmark/macos-decoded-resource-length-observations.json)及[报告](../reports/2026-09-26-remaining-08-performance-release.md)。defaultEnabled/productionAdmission/downstreamBoundProven均false。
+
+
+### 后续归因：离线堆类型核算与源码边界（2026-10-09）
+
+本轮先复用既有18份最终heap完成类型级归因；未取得新的对象地址、分配栈或retainer graph，因此不把这一子步骤写成精确所有者/完整因果归因已完成。
+
+- [x] 离线分析直接读取已提交长度矩阵archive，核对六组身份、18份gzip长度/hash/PID/完整表与汇总；不依赖临时进程或重新播放。
+- [x] 保留CLASS_NAME/TYPE/BINARY联合标签及重复行，正确处理named malloc空TYPE；未单独识别保持null，不填0；全表及阶段差额数量/字节守恒。
+- [x] 默认EOF后LifecycleCompletion为188/1407/2778（12032/90048/177792B）；候选及全部disposed快照未单独识别此类型。默认dispatch/Block/Closure类别随长度增加，候选无相同趋势。
+- [x] 60s相对4s且扣除各自configured基线：默认净增1,631,664B，其中四类记录1,032,096B、non-object647,648B、其他−48,080B；候选169,216B=192+260,688−91,664B，保留负贡献。
+- [x] 冻结源码核对：默认逐提交创建完成容器，回调清空资源/播放闭包；候选使用不同提交路径；测试IntegrationOutput额外包裹回调。因此容器计数不等同PCM存活量，通用闭包不能全部算作生产成本。
+- [x] 复审修复重复/冲突Process头、顶层与cell身份不符、probe字节长度不符三个校验缺口，均有RED→GREEN负例；离线归因10/10、既有资源27/27、矩阵3/3通过。
+- [ ] 下一项：在保持原回调语义的前提下，增加测试适配器透明转交回调的对照，量化包装闭包对保留量的影响；随后再决定是否需要更细的持有链或生产修复实验。
+
+本轮无生产/原生测试代码修改，没有新native/iOS/长程或heap/MSL运行。defaultEnabled/productionAdmission/downstreamBoundProven继续false。见[协议](../../../tool/playback_benchmark/decoded-heap-attribution-protocol.md)、[派生证据](../../../tool/playback_benchmark/macos-decoded-heap-attribution-observations.json)和[报告](../reports/2026-09-26-remaining-08-performance-release.md)。

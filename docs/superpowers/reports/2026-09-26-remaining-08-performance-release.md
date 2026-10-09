@@ -1504,3 +1504,47 @@ legacy原采集器已记录TimeoutExpired；4次阶段调用不等于4份有效�
 [协议](../../../tool/playback_benchmark/decoded-resource-length-protocol.md)与[372份原始证据](../../../tool/playback_benchmark/macos-decoded-resource-length-observations.json)保留初次三组、最终六组、定向结果、原始heap/JSONL、素材与完整冻结身份。本轮只修改测试/工具/文档，未重复完整原生套件、iOS或1200s长程。历史失败继续保留。
 
 下一项：对EOF后的资源增长做对象级归因，区分音频回调、框架和测试开销，再决定生产修复范围。活动播放整体资源上界、实际设备切换恢复、物理音画及最低系统/Intel/iOS运行仍开放；defaultEnabled/productionAdmission/downstreamBoundProven保持false，完整P08未完成。
+
+
+### 真实解码 EOF 后堆类型级归因（2026-10-09，分析base4513667）
+
+本轮复用已提交长度矩阵中的18份正式heap，不启动进程、不重新采heap、不启用MSL。测量仍属于上一轮冻结版本；此次新增的是可复现的离线核算工具和解释。分析器核对六组共同身份、顶层归档身份、gzip原始长度及SHA与manifest/probe一致、唯一PID头、完整表和All zones总计。完整CLASS_NAME/TYPE/BINARY标签作为统计键；相同标签可能对应多条合法行，全部保留后汇总。named malloc的TYPE列可空。标签是展示分组，不是对象地址或唯一运行时类型。
+
+最初解析器错误地拒绝重复标签和named malloc空TYPE；依据真实表补回归后修正，未删行凑总数。复审另发现Process头只检查“存在匹配”、顶层identity未绑定cell、probe字节长度未比对，三项负例均观察RED后修复。最终离线归因10/10、既有资源27/27、矩阵3/3通过；全部18表数量/字节总计及阶段差额守恒。输出保留原测量身份、输入archive hash和分析工具/依赖/协议hash，与原始结果分开。
+
+| 标称长度/路径 | LifecycleCompletion（个/字节） | dispatch source配置/排空/释放 | 排空Block数 | 排空Closure context数 |
+| --- | ---: | --- | ---: | ---: |
+| 4s/默认 | 188/12032 | 242/486/241 | 1523 | 1103 |
+| 4s/候选 | 未单独识别 | 240/300/260 | 1152 | 553 |
+| 30s/默认 | 1407/90048 | 239/1708/219 | 3967 | 4771 |
+| 30s/候选 | 未单独识别 | 243/293/222 | 1155 | 541 |
+| 60s/默认 | 2778/177792 | 247/3070/220 | 6687 | 8857 |
+| 60s/候选 | 未单独识别 | 241/301/261 | 1152 | 557 |
+
+LifecycleCompletion在各configured及disposed中也均未单独识别。这里“未单独识别”保存为null，不等于实际对象数0。60秒默认路径提交及完成回调是2813，表中识别2778个容器；不能宣称每次提交恰好永久保留一个，也不能把数量差解释为少回调。AVAudioPCMBuffer在18表中都没有单独列出，这同样不能证明下游PCM为零；上一轮ledger/owned计数是另一条有限作用域证据。
+
+对60s与4s先分别计算drained−configured，再相减，以减轻进程起点偏差。所有数值均为字节，各项是互斥表格标签的贡献，含负值：
+
+| 差额类别 | 默认 | 候选 |
+| --- | ---: | ---: |
+| LifecycleCompletion记录 | 165,760 | 0（该标签均未列出） |
+| dispatch_source_t记录 | 330,112 | 0 |
+| __NSMallocBlock__记录 | 246,912 | 64 |
+| Closure context记录 | 289,312 | 128 |
+| 上述四类合计 | 1,032,096 | 192 |
+| non-object | 647,648 | 260,688 |
+| 其他已列记录净额 | −48,080 | −91,664 |
+| 总差额 | 1,631,664 | 169,216 |
+
+表中零仅用于“已列条目”的差额运算，原端点保持null。工具也输出未经基线调整的60−4差额、每阶段top20增减项和余项合计，避免只挑增长项而漏掉下降项。non-object数量较大，不能按名字直接分配给播放器、系统或测试框架。基线调整也不能消除所有缓存、加载时机和进程差异；这仍是每单元一次观察，不能证明统计显著性或渐近资源上界。
+
+冻结源码校验与测量hash一致，可支持以下实现层解释：
+
+- `YlAudioRenderer`默认路径逐缓冲调用`YlAudioCompletionGroup.makeCallbacks`，返回闭包捕获一个LifecycleCompletion；`finishPlayback`在锁内清空资源/播放闭包，随后在锁外调用。因此已执行回调的容器继续存活，不等于它仍捕获PCM。
+- `YlSystemAudioOutput`把完成闭包交给原生scheduleBuffer；dispose会stop、停止引擎及detach。已识别容器在disposed不再列出，与此前系统回调保留模式一致，但这次表格没有提供具体原生持有链，不能单独证明因果或逐对象释放。
+- 候选提交路径不创建同一种LifecycleCompletion，因此其未被单独列出符合实现差异；不能进一步推导没有其他容器或原生保留。
+- `IntegrationOutput`测试适配器在两条路径都增加完成闭包包装。高频progress数组虽已清空，这些包装仍可能贡献通用Closure/Block数量。dispatch_source_t也是全进程类型，不能把全部增量归为音频计时器。
+
+上述“类型计数”“源码机制”与“可能持有者”分开记录：本轮完成可识别类型的核算和增长定位，**精确retainer、分配栈、生产与测试包装各自的因果贡献尚未完成**。不足以据此改变生产EOF生命周期或启用候选。
+
+[协议](../../../tool/playback_benchmark/decoded-heap-attribution-protocol.md)与[派生证据](../../../tool/playback_benchmark/macos-decoded-heap-attribution-observations.json)可从原提交archive重建，原始失败/通过证据均未改写。本轮仅Python工具/文档/派生数据，没有新的原生、iOS、长程或活动播放内存验证。下一项增加测试适配器透明转交回调对照，先量化包装成本，再确定更细的持有链或生产修复实验。defaultEnabled/productionAdmission/downstreamBoundProven仍false，完整P08继续开放。
