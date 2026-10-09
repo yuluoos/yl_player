@@ -31,3 +31,9 @@ enum YlAudioCompletionPolicy: Equatable {
     return .terminalCandidate
   }
 }
+
+/// The callback identifies either resource retirement or the playback boundary.
+enum YlAudioOutputCompletionMode {
+  case renderedResource
+  case playedBack
+}

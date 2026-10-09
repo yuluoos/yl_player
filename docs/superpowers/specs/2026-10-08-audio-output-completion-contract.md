@@ -111,3 +111,9 @@ EOF 将保留的真实末尾 PCM 以 playedBack 提交，整个 generation 只�
 一个 renderer 最多一个生命周期受控的观察 timer，目标 10ms，独立于 display tick；连续播放且仅有 held 尾部达到 100ms 时单向兼容。暂停重置连续窗口，取消/释放停止观察；实际 gap 必须记录，100ms 不是硬实时或物理输出保证。只有尾部而无法容纳 lookahead 时主动提交尾部走兼容，等待真实通知后再试，不能永久背压。rate/格式变化在改变输出前提交旧尾部并兼容；失效 graph/route 则 fence 并走既有失败/重建流程，不假定失效图仍可播放。seek/切轨/rebuild 停止并重新评估新代；同代恢复 rate=1 不重新启用候选。
 
 真实 adapter/媒体时钟/控制回归、独立无 heap 长播、下游工作集与物理音画/最低系统是分开的验收行。实现这些内部接口不代表默认启用；兼容回退仍恢复已知系统对象保留。`productionAdmission=false` 继续成立，`downstreamBoundProven=false` 在独立证据足够前不得改变；此前失败的期限与分组方案结论继续有效。
+
+## 11. 输出模式接口已实现，候选调度尚未接入
+
+接入计划 Task 2 新增 `YlAudioOutputCompletionMode` 和 `schedule(_:mode:callbacks:)`。旧输出默认 `supportsTerminalCompletion=false`，新增入口转交原 callbacks 接口；system 驱动声明具备两种通知能力，明确模式分别选择 dataRendered→resourcesReleased 和 dataPlayedBack→playedBack。标志只描述驱动支持，不表示来源/PCM合格、实际图有效或生产准入。新接口拒绝未配置、已释放或非PCM输入时只释放资源，不制造播放完成；原单回调入口行为不变。
+
+生产 renderer 仍调用原 `schedule(_:callbacks:)`，因此 §6 的保守预算、时钟和逐缓冲播放完成语义保持。新接口不添加回调锁/等待/计时器，在系统线程交付；Task 3/4 仍需实现调用方串行交接、代际隔离、输出失效失败链和真实PCM检查。同步fake与真实两个PCM模式回归只证明接口边界，不替代那些未实现的控制/预算集成。

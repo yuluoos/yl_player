@@ -156,6 +156,7 @@ extension YlAudioPacketConverting {
 }
 
 protocol YlAudioOutputDriving: AnyObject {
+  var supportsTerminalCompletion: Bool { get }
   var volume: Float { get set }
   var rate: Float { get set }
   var renderedAudioTime: YlRenderedAudioTime? { get }
@@ -163,6 +164,8 @@ protocol YlAudioOutputDriving: AnyObject {
   func configure(format: AVAudioFormat) throws
   func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void)
   func schedule(_ buffer: YlScheduledAudioBuffer, callbacks: YlAudioOutputCallbacks)
+  func schedule(_ buffer: YlScheduledAudioBuffer, mode: YlAudioOutputCompletionMode,
+                callbacks: YlAudioOutputCallbacks)
   func play() throws
   func pause()
   func reset()
@@ -170,6 +173,14 @@ protocol YlAudioOutputDriving: AnyObject {
 }
 
 extension YlAudioOutputDriving {
+  // A legacy driver cannot supply independent rendered/terminal notifications.
+  var supportsTerminalCompletion: Bool { false }
+
+  func schedule(_ buffer: YlScheduledAudioBuffer, mode: YlAudioOutputCompletionMode,
+                callbacks: YlAudioOutputCallbacks) {
+    schedule(buffer, callbacks: callbacks)
+  }
+
   // Existing outputs still signal both phases from their played-back callback.
   func schedule(_ buffer: YlScheduledAudioBuffer, callbacks: YlAudioOutputCallbacks) {
     schedule(buffer, completion: callbacks.playedBack)
@@ -1049,6 +1060,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
 }
 
 final class YlSystemAudioOutput: YlAudioOutputDriving {
+  var supportsTerminalCompletion: Bool { true }
   private let engine = AVAudioEngine()
   private let player = AVAudioPlayerNode()
   private let timePitch = AVAudioUnitTimePitch()
@@ -1120,6 +1132,31 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
       return
     }
     player.scheduleBuffer(pcm, completionCallbackType: .dataPlayedBack) { _ in
+      completion()
+    }
+  }
+
+  func schedule(_ buffer: YlScheduledAudioBuffer, mode: YlAudioOutputCompletionMode,
+                callbacks: YlAudioOutputCallbacks) {
+    guard configured, !disposed, let pcm = buffer.payload as? AVAudioPCMBuffer else {
+      // Nothing was submitted: retire the owner without inventing playback.
+      // Candidate callers must fence invalidated output separately.
+      callbacks.resourcesReleased()
+      return
+    }
+    let callbackType: AVAudioPlayerNodeCompletionCallbackType
+    let completion: () -> Void
+    switch mode {
+    case .renderedResource:
+      callbackType = .dataRendered
+      completion = callbacks.resourcesReleased
+    case .playedBack:
+      callbackType = .dataPlayedBack
+      completion = callbacks.playedBack
+    }
+    // Forward on the native callback thread. The caller owns serialization;
+    // this adapter must not synchronously wait for renderer/control locks.
+    player.scheduleBuffer(pcm, completionCallbackType: callbackType) { _ in
       completion()
     }
   }

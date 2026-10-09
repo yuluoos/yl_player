@@ -71,6 +71,156 @@ final class YlMacosAudioTests: XCTestCase {
       rate: .nan)), .legacy(.format))
   }
 
+
+  func testDefaultOutputBridgeRemainsPlayedBack() {
+    for mode: YlAudioOutputCompletionMode in [.renderedResource, .playedBack] {
+      let output = TestAudioOutput()
+      let driver: any YlAudioOutputDriving = output
+      XCTAssertFalse(driver.supportsTerminalCompletion)
+      let group = YlAudioCompletionGroup()
+      var released = 0
+      var played = 0
+      let buffer = YlScheduledAudioBuffer(payload: NSObject(), ptsUs: 0,
+        durationUs: 21333, byteCount: 8192, generation: 1)
+      driver.schedule(buffer, mode: mode, callbacks: group.makeCallbacks(
+        releaseResources: { released += 1 }, completePlayback: { played += 1 }))
+      XCTAssertEqual(released, 0)
+      XCTAssertEqual(played, 0)
+      let completion = output.retainedCompletion(at: 0)
+      completion()
+      completion()
+      XCTAssertEqual(released, 1)
+      XCTAssertEqual(played, 1)
+    }
+  }
+
+  func testRenderedOutputNeverSendsPlayedBack() throws {
+    let output = YlSystemAudioOutput()
+    let driver: any YlAudioOutputDriving = output
+    defer { driver.dispose() }
+    XCTAssertTrue(driver.supportsTerminalCompletion)
+    let converter = LifetimePCMConverter()
+    try driver.configure(format: converter.format)
+    driver.rate = 1
+    driver.volume = 0
+    let first = try XCTUnwrap(converter.convert(packet: .init(data: Data(),
+      ptsUs: 0, durationUs: 21333, generation: 1)))
+    let last = try XCTUnwrap(converter.convert(packet: .init(data: Data(),
+      ptsUs: 21333, durationUs: 21333, generation: 1)))
+    let rendered = expectation(description: "Ordinary PCM resources released")
+    let lastReleased = expectation(description: "Terminal PCM resources released")
+    let played = expectation(description: "Terminal PCM actually played back")
+    let ordinaryPlayed = expectation(description: "Rendered notification must not complete playback")
+    ordinaryPlayed.isInverted = true
+    let group = YlAudioCompletionGroup()
+    driver.schedule(first, mode: .renderedResource, callbacks: group.makeCallbacks(
+      releaseResources: { rendered.fulfill() }, completePlayback: { ordinaryPlayed.fulfill() }))
+    driver.schedule(last, mode: .playedBack, callbacks: group.makeCallbacks(
+      releaseResources: { lastReleased.fulfill() }, completePlayback: { played.fulfill() }))
+    try driver.play()
+    wait(for: [rendered, lastReleased, played, ordinaryPlayed], timeout: 4)
+  }
+
+  func testExplicitOutputRejectionOnlyReleasesResources() throws {
+    let converter = LifetimePCMConverter()
+    let pcm = try XCTUnwrap(converter.convert(packet: .init(data: Data(),
+      ptsUs: 0, durationUs: 21333, generation: 1)))
+    let invalid = YlScheduledAudioBuffer(payload: NSObject(), ptsUs: 0,
+      durationUs: 21333, byteCount: 8192, generation: 1)
+    for mode: YlAudioOutputCompletionMode in [.renderedResource, .playedBack] {
+      let driver: any YlAudioOutputDriving = YlSystemAudioOutput()
+      defer { driver.dispose() }
+      let group = YlAudioCompletionGroup()
+      var released = 0
+      var played = 0
+      func schedule(_ buffer: YlScheduledAudioBuffer) {
+        driver.schedule(buffer, mode: mode, callbacks: group.makeCallbacks(
+          releaseResources: { released += 1 }, completePlayback: { played += 1 }))
+      }
+      schedule(pcm) // Unconfigured.
+      XCTAssertEqual(released, 1)
+      XCTAssertEqual(played, 0)
+      try driver.configure(format: converter.format)
+      schedule(invalid)
+      XCTAssertEqual(released, 2)
+      XCTAssertEqual(played, 0)
+      driver.dispose()
+      schedule(pcm)
+      XCTAssertEqual(released, 3)
+      XCTAssertEqual(played, 0)
+    }
+  }
+
+  private final class InlineCompletionOutput: YlAudioOutputDriving {
+    var volume: Float = 1
+    var rate: Float = 1
+    var renderedAudioTime: YlRenderedAudioTime?
+    var completesOnSchedule = true
+    var callbacks: [() -> Void] = []
+    func configure(sampleRate: Double, channelCount: Int) throws {}
+    func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void) {
+      callbacks.append(completion)
+      if completesOnSchedule { completion(); completion() }
+    }
+    func play() throws {}
+    func pause() {}
+    func reset() {
+      let old = callbacks
+      callbacks.removeAll()
+      for callback in old { callback(); callback() }
+    }
+    func dispose() { reset() }
+  }
+
+  func testOutputBridgeAllowsSynchronousCompletionReentry() {
+    let finished = expectation(description: "Synchronous scheduling/reset reentry finishes")
+    DispatchQueue.global().async {
+      let output = InlineCompletionOutput()
+      let driver: any YlAudioOutputDriving = output
+      let group = YlAudioCompletionGroup()
+      let buffer = YlScheduledAudioBuffer(payload: NSObject(), ptsUs: 0,
+        durationUs: 1, byteCount: 1, generation: 1)
+      var releases = 0
+      var plays = 0
+      driver.schedule(buffer, mode: .renderedResource, callbacks: group.makeCallbacks(
+        releaseResources: { releases += 1; driver.reset() },
+        completePlayback: {
+          plays += 1
+          driver.schedule(buffer, mode: .playedBack, callbacks: group.makeCallbacks(
+            releaseResources: { releases += 1 }, completePlayback: { plays += 1 }))
+        }))
+      driver.reset()
+      XCTAssertEqual(releases, 2)
+      XCTAssertEqual(plays, 2)
+      finished.fulfill()
+    }
+    wait(for: [finished], timeout: 5)
+  }
+
+  func testRendererResetAcceptsSynchronousOldOutputCallbacks() throws {
+    let output = InlineCompletionOutput()
+    output.completesOnSchedule = false
+    let ledger = YlManagedBufferLedger()
+    let renderer = YlAudioRenderer(bufferScope: try ledger.makeScope(maxBytes: nil),
+      converter: TestAudioConverter(), output: output)
+    defer { renderer.dispose() }
+    try renderer.configure(stream: .init(codec: .aac, sampleRate: 48000,
+      channelCount: 2, magicCookie: Data(), generation: 1))
+    XCTAssertEqual(try renderer.enqueue(packet: .init(data: Data(), ptsUs: 0,
+      durationUs: 250000, generation: 1)), .scheduled)
+    let old = try XCTUnwrap(output.callbacks.first)
+    renderer.reset(generation: 2) // Output delivers the old callbacks inside reset.
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+    XCTAssertFalse(renderer.hasPendingPlayback)
+    XCTAssertEqual(try renderer.enqueue(packet: .init(data: Data(), ptsUs: 250000,
+      durationUs: 250000, generation: 2)), .scheduled)
+    old(); old()
+    XCTAssertEqual(ledger.snapshot.currentBytes, 1000)
+    XCTAssertTrue(renderer.hasPendingPlayback)
+    renderer.dispose()
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+  }
+
   private final class WeakCompletionPayload {
     weak var value: NSObject?
     init(_ value: NSObject) { self.value = value }

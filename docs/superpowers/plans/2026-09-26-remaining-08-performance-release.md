@@ -180,3 +180,5 @@ p50 采用常规 median（偶数取中间均值），p95 采用 nearest-rank；�
 2026-10-08：P08完成默认关闭的音频尾部候选接入设计，拆为准入策略、输出通知、renderer 预算/排空、时钟/控制、真实验收五项，见[实施计划](2026-10-08-apple-audio-terminal-integration.md)。首阶段仅 macOS 本地有限可 seek 点播，明确排除 buffer.bounded，保留其硬约束与原播放路径；默认 legacy、不接入商业 SDK。已核查生产 token、首次 PCM 提交锚点、回调锁序与无 display tick 定时观察边界。本项仅文档自审与路径核验，未改生产或执行测试，不计内存修复/正式准入；下一项执行子计划 Task 1，完整 P08 Task1/2 仍开放。
 
 2026-10-08：音频尾部候选接入子计划 Task 1 已完成内部纯准入策略，四项新增回归实际RED→GREEN，音频36/36、夹具4/4、镜像发现669/608核对。尚无生产调用点，默认播放未变；来源元数据/PCM/输出检查和正式准入仍待后续验证。下一项为[子计划 Task 2](2026-10-08-apple-audio-terminal-integration.md)输出通知模式，完整P08保持开放。
+
+2026-10-08：音频尾部候选接入 Task 2 完成明确输出模式与默认兼容桥接，实际双PCM rendered/playedBack及拒绝输入两项RED→GREEN，音频41/41、夹具4/4、镜像669/613核对。renderer仍用旧入口，候选未启用，无内存/物理音画结论；下一项为[子计划 Task 3](2026-10-08-apple-audio-terminal-integration.md)真实预算/最终排空。完整P08保持开放。

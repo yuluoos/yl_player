@@ -10,7 +10,7 @@
 
 **Spec:** [输出完成契约 §10](../specs/2026-10-08-audio-output-completion-contract.md)、[需求基线](../specs/2026-09-20-playback-expansion-requirements.md)、[P08](2026-09-26-remaining-08-performance-release.md)。
 
-起点 `9c5967a`。Task 1 已实现并验证；Task 2–5 尚未执行。既有工具通过不能替代生产验收。
+起点 `9c5967a`。Task 1–2 已实现并验证；Task 3–5 尚未执行。既有工具通过不能替代生产验收。
 
 ## Global Constraints
 
@@ -123,8 +123,8 @@ func schedule(_ buffer: YlScheduledAudioBuffer,
               callbacks: YlAudioOutputCallbacks)
 ```
 
-- [ ] 写 `testDefaultOutputBridgeRemainsPlayedBack`：旧 TestAudioOutput 走新增入口仍只在原 completion 时触发资源与播放工作；不支持 candidate 的输出不得被准入。先运行 RED。
-- [ ] 实现默认方法转发到既有 `schedule(_:callbacks:)`。system output 用 `.dataRendered` 仅调用 `resourcesReleased`；`.dataPlayedBack` 调用 `playedBack`。复用现有一次性完成容器，禁止每缓冲新锁或 timer。
+- [x] 写 `testDefaultOutputBridgeRemainsPlayedBack`：旧 TestAudioOutput 走新增入口仍只在原 completion 时触发资源与播放工作；不支持 candidate 的输出不得被准入。先运行 RED。
+- [x] 实现默认方法转发到既有 `schedule(_:callbacks:)`。system output 用 `.dataRendered` 仅调用 `resourcesReleased`；`.dataPlayedBack` 调用 `playedBack`。复用现有一次性完成容器，禁止每缓冲新锁或 timer。
 
 ```swift
 // 原生通知闭包只交付通知；不在 AVAudioEngine 线程同步等待 renderer operations。
@@ -134,9 +134,9 @@ case .playedBack: callbacks.playedBack()
 }
 ```
 
-- [ ] 写 `testRenderedOutputNeverSendsPlayedBack`，分别显式交付资源/播放通知并断言工作计数；增加实际 engine 2 块 PCM 的 rendered/playedBack smoke，记录真实回调而非 sleep 后推定。
-- [ ] 用同步调用回调的 fake 和 reset 中调用旧回调的 fake 检查入口不会等待 renderer 锁；运行音频类及发现检查。此任务尚不改变 renderer 的默认调度模式。
-- [ ] 提交 `refactor: expose explicit audio output completion modes`。
+- [x] 写 `testRenderedOutputNeverSendsPlayedBack`，分别显式交付资源/播放通知并断言工作计数；增加实际 engine 2 块 PCM 的 rendered/playedBack smoke，记录真实回调而非 sleep 后推定。
+- [x] 用同步调用回调的 fake 和 reset 中调用旧回调的 fake 检查入口不会等待 renderer 锁；运行音频类及发现检查。此任务尚不改变 renderer 的默认调度模式。
+- [x] 提交 `refactor: expose explicit audio output completion modes`。
 
 ### Task 3：renderer 接管已有预算并分开提交、资源与最终排空
 
@@ -226,10 +226,18 @@ renderer.observeTailWait(playing: true, nowUs: 100_000)
 
 2026-10-08 文档自审：准入与 bounded 排除→Task 1/4；通知来源→Task 2；既有 token/所有权与输出排空→Task 3；时钟/控制/定时器→Task 4；独立长播及未准入状态→Task 5。新接口均由前序任务定义，默认 factory 签名保持不变；测试路径按仓库实际镜像核查。历史 §4/7 的否决不被新计划改写。
 
-规划提交 `184531f` 只包含文档。后续 Task 1 已实现下述纯策略，下一执行项为 Task 2；沿用用户已授权的本会话实现与本地提交，不推送远端。
+规划提交 `184531f` 只包含文档。后续 Task 1–2 已完成下述接口与验证，下一执行项为 Task 3；沿用用户已授权的本会话实现与本地提交，不推送远端。
 
 ### 2026-10-08 Task 1 执行记录
 
 新增内部纯选择器与稳定排除原因；四项回归覆盖显式开关、平台/来源/bounded、非 AAC、采样率/声道、倍速及非有限数值、多条件排除优先级。先缺接口编译失败，再以恒定 legacy(disabled) 骨架观察四项行为失败（原32项通过）；最终音频36/36、夹具4/4通过，发现清单iOS669/macOS608核对。
 
 来源资格在当前接口是单一布尔值，本项只验证 false 被排除；network/未知时长/不可seek 的实际事实构造在 Task 4 验证，不将重复同一 false 输入写成三个集成通过。实际 PCM 帧数/布局与输出支持仍在 Task 3/4。未连接 renderer 或新增公开配置，不改变生产调度，也不报告内存改善；完整原生/iOS/物理设备与长播未在本项执行。原始结果和源码身份见[证据](../../../tool/playback_benchmark/macos-audio-policy-observations.json)。
+
+### 2026-10-08 Task 2 执行记录
+
+新增明确模式和输出能力标志，旧驱动默认 false 并转交既有 callbacks 入口；system 新入口分别采用 dataRendered/resource-only 与 dataPlayedBack/playback 通知。拒绝未配置、已dispose或非PCM输入时，新入口只退还资源，不能假报已播放；旧入口保持兼容。回调直接在系统线程交付，串行交接由 Task 3 调用者实现，不新增锁或 timer。
+
+缺接口编译RED后，兼容桥接骨架39通过/2失败；真实native失败详情确认 rendered 误触发 inverted playedBack expectation，拒绝输入也误发播放通知。实现后音频41/41、夹具4/4通过，镜像发现669/613核对。新增五项覆盖旧接口延迟/重复回调、真实双PCM模式、三种拒绝状态×两模式、同步重入、renderer reset内旧回调。真实native为静音48kHz双声道、每块1024帧、4秒有界观察；不验证物理音画或资源增长。
+
+[完整证据](../../../tool/playback_benchmark/macos-audio-output-modes-observations.json)保留初始编译、行为失败、最终结果与源码。既有renderer类主体逐字节未改，生产调用尚未选择新模式；能力标志不等于候选准入，Task 3必须检查输出能力并实现所有权/最终排空。未运行完整macOS/iOS/最低系统或长播；下一项 Task 3。
