@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from decoded_continuity import validate, diagnose_drops
+from decoded_continuity import validate, diagnose_drops, diagnose_audio
 
 
 def rows():
@@ -21,6 +21,44 @@ def rows():
 
 
 class DecodedContinuityTests(unittest.TestCase):
+    def test_audio_report_preserves_configuration_or_start_failure(self):
+        for kind,reason in [('configurationInvalidated','configurationChanged'),('playFailed','startFailed')]:
+            r=rows()
+            events=[dict(sequence=1,kind=kind,uptime=9),dict(sequence=2,kind='rendererFailure',uptime=9.5,
+                code='render.audio_engine_failed',reason=reason,message='safe package message',diagnostic='Playback operation failed.')]
+            for row in r:
+                row['audioDiagnostics']=dict(total=2,counts={kind:1,'rendererFailure':1},events=copy.deepcopy(events))
+                row['failures']=['render.audio_engine_failed']
+            report=diagnose_audio(r)
+            self.assertEqual(report['rendererFailureReasons'],[reason])
+            self.assertEqual(report['configurationInvalidations'],1 if reason=='configurationChanged' else 0)
+            self.assertEqual(report['startFailures'],1 if reason=='startFailed' else 0)
+            self.assertEqual(len(report['events']),2)
+            with self.assertRaises(ValueError):validate(r,30)
+            for row in r:
+                first,last=row['audioDiagnostics']['events']
+                first['sequence'],last['sequence']=2,1
+                first['uptime'],last['uptime']=9.5,9
+                row['audioDiagnostics']['events']=[last,first]
+            with self.subTest(reason=reason),self.assertRaises(ValueError):diagnose_audio(r)
+
+    def test_audio_report_accepts_evicted_prior_cause(self):
+        r=rows()
+        events=[dict(sequence=i,kind='playAttempt',uptime=8+i/100) for i in range(4,35)]
+        events.append(dict(sequence=35,kind='rendererFailure',uptime=9,reason='startFailed'))
+        for row in r:row['audioDiagnostics']=dict(total=35,counts={'playFailed':1,'playAttempt':33,'rendererFailure':1},events=copy.deepcopy(events))
+        self.assertEqual(diagnose_audio(r)['rendererFailureReasons'],['startFailed'])
+
+    def test_audio_report_rejects_missing_changed_or_invalid_events(self):
+        with self.assertRaises(ValueError):diagnose_audio(rows())
+        r=rows()
+        for row in r:row['audioDiagnostics']=dict(total=1,counts={'playSucceeded':1},events=[dict(sequence=1,kind='playSucceeded',uptime=9)])
+        self.assertEqual(diagnose_audio(r)['rendererFailureReasons'],[])
+        for mutate in [lambda x:x['events'][0].update(uptime=99),lambda x:x['counts'].update(playSucceeded=2),
+                       lambda x:x['events'][0].update(kind='playFailed'),lambda x:x['events'][0].update(sequence=2)]:
+            bad=copy.deepcopy(r);mutate(bad[3]['audioDiagnostics'])
+            with self.assertRaises(ValueError):diagnose_audio(bad)
+
     def test_drop_report_keeps_cause_even_when_strict_gate_fails(self):
         r=rows()
         counts={k:0 for k in ('lateArrival','durationLimit','enqueueTimeout','lateAfterCapacity','capacityEviction','catchUp')}

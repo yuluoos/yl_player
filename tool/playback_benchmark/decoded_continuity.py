@@ -93,3 +93,48 @@ def diagnose_drops(rows):
         described.append(value)
     return dict(counts=previous, events=described, diagnosticOnly=True,
                 physicalOutputVerified=False, productionAdmission=False)
+
+
+def diagnose_audio(rows):
+    """Preserve failure-branch evidence independently of the passing-play gate."""
+    kinds = ('playAttempt','playSucceeded','playFailed','configurationInvalidated','disposed','rendererFailure','startupFailure')
+    previous = {}; events = {}
+    def require(ok, message):
+        if not ok: raise ValueError(message)
+    require(bool(rows), 'Missing audio diagnostics')
+    for row in rows:
+        snapshot = row.get('audioDiagnostics', {})
+        counts = snapshot.get('counts', {})
+        require(set(counts).issubset(kinds) and all(type(v) is int and v >= 0 for v in counts.values()) and
+                all(counts.get(k,0) >= previous.get(k,0) for k in kinds), 'Invalid audio counters')
+        total = snapshot.get('total'); retained = snapshot.get('events')
+        require(type(total) is int and total == sum(counts.values()) and
+                isinstance(retained,list) and len(retained) == min(total,32), 'Invalid audio history bound')
+        require([e['sequence'] for e in retained] == list(range(max(1,total-31),total+1)), 'Missing audio event sequence')
+        for event in retained:
+            seq = event['sequence']; kind = event['kind']
+            require(kind in kinds and type(event['uptime']) in (int,float) and math.isfinite(event['uptime']) and
+                    event['uptime'] <= row['uptime'], 'Invalid audio event identity/clock')
+            require(seq not in events or events[seq] == event, 'Changed retained audio event')
+            if kind in ('rendererFailure','startupFailure'):
+                reason = event['reason']
+                require(reason in ('configurationChanged','startFailed','unclassified'), 'Invalid audio failure reason')
+                cause = {'configurationChanged':'configurationInvalidated','startFailed':'playFailed'}.get(reason)
+                if cause:
+                    # Retained history is a contiguous suffix; any omitted cause
+                    # count is in the evicted prefix, before this failure.
+                    later = sum(e['kind']==cause and e['sequence']>=seq for e in retained)
+                    require(counts.get(cause,0)>later, 'Missing preceding audio failure cause')
+            events[seq] = event.copy()
+        observed = dict.fromkeys(kinds,0)
+        for event in events.values(): observed[event['kind']] += 1
+        require(all(observed[k] <= counts.get(k,0) for k in kinds), 'Audio event exceeds counter')
+        ordered = sorted(events)
+        require(all(events[b]['uptime'] >= events[a]['uptime'] for a,b in zip(ordered,ordered[1:])), 'Nonmonotonic audio event clock')
+        previous = counts.copy()
+    recorded = [events[k] for k in sorted(events)]
+    return dict(counts=previous,events=recorded,
+                configurationInvalidations=previous.get('configurationInvalidated',0),
+                startFailures=previous.get('playFailed',0),startupFailures=previous.get('startupFailure',0),
+                rendererFailureReasons=[e['reason'] for e in recorded if e['kind']=='rendererFailure'],
+                diagnosticOnly=True,productionAdmission=False)

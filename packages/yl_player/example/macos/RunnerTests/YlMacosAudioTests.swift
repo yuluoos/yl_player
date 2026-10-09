@@ -254,6 +254,54 @@ final class YlMacosAudioTests: XCTestCase {
       return .init(payload: pcm, ptsUs: packet.ptsUs, durationUs: 21334, byteCount: 8192, generation: packet.generation)
     }
   }
+  // Test-only, bounded scalar trace. Never retain Error/engine/buffer objects
+  // or publish arbitrary NSError text, domain, userInfo or source strings.
+  private final class AudioFailureProbe {
+    private let lock = NSLock()
+    private var total = 0
+    private var counts: [String: Int] = [:]
+    private var events: [[String: Any]] = []
+    func record(_ kind: String, error: Error? = nil) {
+      lock.withLock {
+        total += 1; counts[kind, default: 0] += 1
+        var event: [String: Any] = ["sequence": total, "kind": kind,
+          "uptime": ProcessInfo.processInfo.systemUptime]
+        if let error {
+          if kind == "rendererFailure" || kind == "startupFailure" {
+            let native = error as? NativePlayerError
+            let messages = [
+              "The native audio output configuration changed; playback must be rebuilt.": "configurationChanged",
+              "The native audio engine could not start.": "startFailed"]
+            let reason = native?.code == "render.audio_engine_failed" ? messages[native?.message ?? ""] : nil
+            event["code"] = native?.code == "render.audio_engine_failed" ? "render.audio_engine_failed" : "platform.failure"
+            event["reason"] = reason ?? "unclassified"
+            event["message"] = reason == nil ? "Playback operation failed." : native!.message
+            event["diagnostic"] = YlAppleSafeDiagnostics.diagnostic(error)
+          } else {
+            let native = error as NSError
+            event["nativeDomain"] = [NSOSStatusErrorDomain, NSCocoaErrorDomain, "AVFoundationErrorDomain"].contains(native.domain) ? native.domain : "other"
+            event["nativeCode"] = native.code
+          }
+        }
+        if events.count == 32 { events.removeFirst() }
+        events.append(event)
+      }
+    }
+    var snapshot: [String: Any] { lock.withLock { ["total": total, "counts": counts, "events": events] } }
+  }
+  private func startObservedPlayback(probe: AudioFailureProbe, start: () throws -> Void,
+                                     cleanup: () -> Void, observe: (String) throws -> Void) throws {
+    do { try start() }
+    catch {
+      probe.record("startupFailure", error: error)
+      do { try observe("startupFailure") }
+      catch { cleanup(); throw error }
+      cleanup()
+      try observe("disposed")
+      throw error
+    }
+  }
+
   private final class IntegrationOutput: YlAudioOutputDriving {
     let system: YlSystemAudioOutput
     var onSubmit: ((YlScheduledAudioBuffer) -> Void)?
@@ -261,11 +309,20 @@ final class YlMacosAudioTests: XCTestCase {
     private var counts = ["renderedSubmissions": 0, "playedSubmissions": 0, "renderedCallbacks": 0, "playedCallbacks": 0]
     var snapshot: [String: Int] { lock.withLock { counts } }
     let supportsTerminalCompletion = true
-    init(engine: AVAudioEngine) { system = YlSystemAudioOutput(engine: engine) }
+    private let failureProbe: AudioFailureProbe?
+    init(engine: AVAudioEngine, failureProbe: AudioFailureProbe? = nil) {
+      self.failureProbe = failureProbe; system = YlSystemAudioOutput(engine: engine)
+    }
     var volume: Float { get { system.volume } set { system.volume = newValue } }
     var rate: Float { get { system.rate } set { system.rate = newValue } }
     var renderedAudioTime: YlRenderedAudioTime? { system.renderedAudioTime }
-    func setInvalidationHandler(_ handler: (() -> Void)?) { system.setInvalidationHandler(handler) }
+    func setInvalidationHandler(_ handler: (() -> Void)?) {
+      guard let handler else { system.setInvalidationHandler(nil); return }
+      let probe = failureProbe
+      system.setInvalidationHandler { [weak probe] in
+        probe?.record("configurationInvalidated"); handler()
+      }
+    }
     func configure(sampleRate: Double, channelCount: Int) throws { try system.configure(sampleRate: sampleRate, channelCount: channelCount) }
     func configure(format: AVAudioFormat) throws { try system.configure(format: format) }
     func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void) {
@@ -284,15 +341,20 @@ final class YlMacosAudioTests: XCTestCase {
         self?.lock.withLock { self?.counts["playedCallbacks", default: 0] += 1 }; callbacks.playedBack()
       }))
     }
-    func play() throws { try system.play() }
+    func play() throws {
+      failureProbe?.record("playAttempt")
+      do { try system.play(); failureProbe?.record("playSucceeded") }
+      catch { failureProbe?.record("playFailed", error: error); throw error }
+    }
     func pause() { system.pause() }
     func reset() { system.reset() }
-    func dispose() { system.dispose() }
+    func dispose() { failureProbe?.record("disposed"); system.dispose() }
   }
 
   private final class DecodedAudioFactory: YlAudioRendererMaking {
     let engine = AVAudioEngine()
-    lazy var output = IntegrationOutput(engine: engine)
+    let failureProbe = AudioFailureProbe()
+    lazy var output = IntegrationOutput(engine: engine, failureProbe: failureProbe)
     private let lock = NSLock()
     private var prefix: [[String: Any]] = []
     var submittedPrefix: [[String: Any]] { lock.withLock { prefix } }
@@ -388,13 +450,18 @@ final class YlMacosAudioTests: XCTestCase {
       configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 17,
       audioRendererFactory: factory, presentationScheduler: scheduler,
       emit: { callback in
-        if case let .failure(error) = callback.event { eventLock.withLock { failures.append(error.code) } }
+        if case let .failure(error) = callback.event {
+          eventLock.withLock { factory.failureProbe.record("rendererFailure", error: error); failures.append(error.code) }
+        }
       }, audioTerminalCandidateEnabled: true)
     defer { instance.dispose() }
     let renderer = try XCTUnwrap(factory.renderers.first)
     var records: [[String: Any]] = []
     func observe(_ phase: String) throws {
       let diagnostics = scheduler.dropDiagnostics
+      let failureState = eventLock.withLock { (failures, factory.failureProbe.snapshot) }
+      let nativeAudio = factory.output.renderedAudioTime
+      let nativeAudioUs = nativeAudio.map { Int64(Double($0.sampleTime) * 1_000_000 / $0.sampleRate) }
       let audio = renderer.renderedAudioTime
       let audioUs = audio.map { Int64(Double($0.sampleTime) * 1_000_000 / $0.sampleRate) }
       let row: [String: Any] = ["phase": phase, "pid": ProcessInfo.processInfo.processIdentifier,
@@ -405,7 +472,9 @@ final class YlMacosAudioTests: XCTestCase {
         "frameAgeUs": Int64((ProcessInfo.processInfo.systemUptime - scheduler.selectedUptime) * 1_000_000),
         "maxLagUs": scheduler.maxLagUs, "orderErrors": scheduler.orderErrors, "dropped": diagnostics["total"]!,
         "dropDiagnostics": diagnostics,
-        "failures": eventLock.withLock { failures }, "candidate": renderer.usesSubmissionAnchor,
+        "failures": failureState.0, "audioDiagnostics": failureState.1,
+        "engineRunning": factory.engine.isRunning, "nativeAudioUs": nativeAudioUs as Any? ?? NSNull(),
+        "candidate": renderer.usesSubmissionAnchor,
         "nativePlaying": factory.nativePlaying, "rendererCount": factory.renderers.count,
         "ledgerBytes": ledger.snapshot.currentBytes, "ledgerPeak": ledger.snapshot.peakBytes,
         "audioOwnedBytes": renderer.scheduledBytes, "pending": renderer.hasPendingPlayback,
@@ -418,7 +487,9 @@ final class YlMacosAudioTests: XCTestCase {
         try handle.seekToEnd(); try handle.write(contentsOf: JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10]))
       }
     }
-    try instance.activate(); try instance.play()
+    try startObservedPlayback(probe: factory.failureProbe,
+      start: { try instance.activate(); try instance.play() },
+      cleanup: { instance.dispose() }, observe: observe)
     let warmup = ProcessInfo.processInfo.systemUptime
     while (scheduler.videoFrames < 24 || scheduler.positionUs < 2_000_000) && ProcessInfo.processInfo.systemUptime - warmup < 10 {
       try await Task.sleep(nanoseconds: 10_000_000)
@@ -483,14 +554,15 @@ final class YlMacosAudioTests: XCTestCase {
   }
 
   func testActualTerminalAdapterGraphNotificationAndNativeStartFailure() throws {
-    let engine = AVAudioEngine(), output = IntegrationOutput(engine: AVAudioEngine())
-    let driver = IntegrationOutput(engine: engine), ledger = YlManagedBufferLedger()
+    let graphProbe = AudioFailureProbe(), startProbe = AudioFailureProbe()
+    let engine = AVAudioEngine(), output = IntegrationOutput(engine: AVAudioEngine(), failureProbe: startProbe)
+    let driver = IntegrationOutput(engine: engine, failureProbe: graphProbe), ledger = YlManagedBufferLedger()
     let renderer = YlAudioRenderer(bufferScope: try ledger.makeScope(maxBytes: nil), converter: IntegrationPCM(), output: driver)
     renderer.setCompletionContext(terminalContext())
     try renderer.configure(stream: .init(codec: .aac, sampleRate: 48000, channelCount: 2, magicCookie: Data(), generation: 1))
     engine.mainMixerNode.outputVolume = 0
     let failed = expectation(description: "Native graph notification enters renderer failure chain")
-    renderer.onOutputFailure = { XCTAssertEqual($0.code, "render.audio_engine_failed"); failed.fulfill() }
+    renderer.onOutputFailure = { graphProbe.record("rendererFailure", error: $0); XCTAssertEqual($0.code, "render.audio_engine_failed"); failed.fulfill() }
     NotificationCenter.default.post(name: .AVAudioEngineConfigurationChange, object: engine)
     wait(for: [failed], timeout: 3)
     renderer.onOutputFailure = nil
@@ -500,12 +572,59 @@ final class YlMacosAudioTests: XCTestCase {
     let unavailable = YlAudioRenderer(converter: IntegrationPCM(), output: output)
     try unavailable.configure(stream: .init(codec: .aac, sampleRate: 48000, channelCount: 2, magicCookie: Data(), generation: 1))
     output.dispose()
-    XCTAssertThrowsError(try unavailable.play()) { error in
+    unavailable.onOutputFailure = { startProbe.record("rendererFailure", error: $0) }
+    var startupRows: [[String: Any]] = []
+    XCTAssertThrowsError(try startObservedPlayback(probe: startProbe, start: { try unavailable.play() },
+      cleanup: { unavailable.dispose() }, observe: { phase in
+        startupRows.append(["phase": phase, "audioDiagnostics": startProbe.snapshot])
+      })) { error in
       XCTAssertEqual((error as? NativePlayerError)?.code, "render.audio_engine_failed")
       let attachment = XCTAttachment(string: "category=render; code=render.audio_engine_failed; nativeOutputDisposed=true")
       attachment.lifetime = .keepAlways; self.add(attachment)
     }
+    XCTAssertEqual(startupRows.compactMap { $0["phase"] as? String }, ["startupFailure", "disposed"])
+    let savedStartup = try XCTUnwrap(startupRows.first?["audioDiagnostics"] as? [String: Any])
+    let savedEvents = try XCTUnwrap(savedStartup["events"] as? [[String: Any]])
+    XCTAssertEqual(savedEvents.last?["kind"] as? String, "startupFailure")
+    XCTAssertEqual(savedEvents.last?["reason"] as? String, "startFailed")
     unavailable.dispose(); renderer.dispose()
+    let graphEvents = try XCTUnwrap(graphProbe.snapshot["events"] as? [[String: Any]])
+    let startEvents = try XCTUnwrap(startProbe.snapshot["events"] as? [[String: Any]])
+    XCTAssertNotNil(graphEvents.first { $0["kind"] as? String == "configurationInvalidated" })
+    XCTAssertFalse(graphEvents.contains { $0["kind"] as? String == "playFailed" })
+    let graphFailure = try XCTUnwrap(graphEvents.first { $0["kind"] as? String == "rendererFailure" })
+    let startFailure = try XCTUnwrap(startEvents.first { $0["kind"] as? String == "rendererFailure" })
+    XCTAssertEqual(graphFailure["reason"] as? String, "configurationChanged")
+    XCTAssertEqual(startFailure["reason"] as? String, "startFailed")
+    XCTAssertNotEqual(graphFailure["message"] as? String, startFailure["message"] as? String)
+    let notified = try XCTUnwrap(graphEvents.first { $0["kind"] as? String == "configurationInvalidated" })
+    XCTAssertLessThan(try XCTUnwrap(notified["sequence"] as? Int), try XCTUnwrap(graphFailure["sequence"] as? Int))
+    let failedStart = try XCTUnwrap(startEvents.first { $0["kind"] as? String == "playFailed" })
+    XCTAssertLessThan(try XCTUnwrap(failedStart["sequence"] as? Int), try XCTUnwrap(startFailure["sequence"] as? Int))
+    XCTAssertFalse(startEvents.contains { $0["kind"] as? String == "configurationInvalidated" })
+    let data = try JSONSerialization.data(withJSONObject: ["configuration": graphProbe.snapshot, "start": startProbe.snapshot], options: [.sortedKeys])
+    let detail = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+    detail.name = "audio-failure-branches"; detail.lifetime = .keepAlways; add(detail)
+  }
+
+  func testAudioFailureProbeBoundsHistoryAndDoesNotPublishUntrustedErrorText() throws {
+    let probe = AudioFailureProbe()
+    for _ in 0..<40 { probe.record("playAttempt") }
+    probe.record("playFailed", error: NSError(domain: "https://secret.invalid/token", code: -50,
+      userInfo: [NSLocalizedDescriptionKey: "password-secret"]))
+    probe.record("rendererFailure", error: NativePlayerError(category: "render", code: "render.audio_engine_failed",
+      message: "https://secret.invalid/token", diagnostic: "password-secret"))
+    let snapshot = probe.snapshot
+    let events = try XCTUnwrap(snapshot["events"] as? [[String: Any]])
+    XCTAssertEqual(snapshot["total"] as? Int, 42)
+    XCTAssertEqual((snapshot["counts"] as? [String: Int])?["playAttempt"], 40)
+    XCTAssertEqual(events.count, 32); XCTAssertEqual(events.first?["sequence"] as? Int, 11)
+    XCTAssertEqual(events.last?["sequence"] as? Int, 42)
+    XCTAssertEqual(events.last?["reason"] as? String, "unclassified")
+    XCTAssertEqual(events.dropLast().last?["nativeDomain"] as? String, "other")
+    XCTAssertEqual(events.dropLast().last?["nativeCode"] as? Int, -50)
+    let text = String(decoding: try JSONSerialization.data(withJSONObject: snapshot), as: UTF8.self)
+    XCTAssertFalse(text.contains("secret")); XCTAssertFalse(text.contains("password"))
   }
 
   @discardableResult

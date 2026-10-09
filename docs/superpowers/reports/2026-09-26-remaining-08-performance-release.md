@@ -1380,3 +1380,21 @@ legacy原采集器已记录TimeoutExpired；4次阶段调用不等于4份有效�
 下一项：补齐音频错误message/diagnostic及配置失效/启动失败分支的时序证据，定位停滞源头，再制定对应回归和修复；不得直接调整视频超时阈值掩盖问题。候选默认启用、productionAdmission、downstreamBoundProven继续false；物理音画输出、完整文件EOF和整体资源有界不在本轮证明范围。
 
 协议：[video-drop-diagnostics-protocol.md](../../../tool/playback_benchmark/video-drop-diagnostics-protocol.md)。原始证据：[macos-video-drop-diagnostics-observations.json](../../../tool/playback_benchmark/macos-video-drop-diagnostics-observations.json)，包含165份gzip+base64原始文件、SHA256/长度校验、失败前缀、XCTest附件/结果包文件哈希和源码/二进制/夹具身份；旧AAC预滚长程失败证据保持不变。
+
+### 音频失败归因与分支证据补强（2026-10-09，base4df1aa5）
+
+补充读取上轮自有测试进程43219的系统统一日志，范围限定本地02:01:45–02:02:20，共89条；保留12条相关音频生命周期记录，去除内存地址/设备标识，记录原日志SHA256、长度、查询进程和时间窗口。未切换系统设备，未采集其他进程日志；未经脱敏的原日志不进入仓库归档。
+
+新证据明确上轮870.888s失败的触发链：02:01:55.271563收到HAL默认输出设备变化通知，02:01:55.320687原生音频单元请求切换设备；02:01:55.372706音频IO传输停止，02:01:59.406056 AVAudioEngine记录“iounit configuration changed > stopping the engine”，02:01:59.537665随后发布配置变化通知。这与原探针的音频时钟停滞、10次视频容量等待超时及随后render.audio_engine_failed相符；上轮错误可归因于输出路由变化后的引擎配置失效。设备切换发起者未知，不能倒推更早一次单帧drop的原因。
+
+既有完成合同§13要求配置失效后fence、停止旧图、释放所有者并报告错误，禁止在失效图上静默续播。本轮保持该产品行为；没有把失败改记为长程通过，也没有改变音频设备、视频超时或零丢帧门限。此前“前后均内置扬声器44100Hz”的快照不足以排除瞬态切换，现已由进程级时序日志补齐。
+
+测试工具新增最多32条标量事件和累计计数：playAttempt、playSucceeded、playFailed、configurationInvalidated、rendererFailure、startupFailure、disposed，包含序号及单调时间。错误详情仅保留固定包内message/reason、安全diagnostic、允许的NSError domain及数值code；不持有Error/音频对象，不输出任意localizedDescription、userInfo、路径或设备标识。正常观测另记录engineRunning和原生节点时钟，便于区别节点本身停滞与映射问题。启动同步抛错会先保存startupFailure及清理后的disposed前缀，再传播失败，不冒充有效播放观测。
+
+定向真实原生回归覆盖进程内配置通知及已失效原生adapter启动失败，两项实际RED2→GREEN2；新增历史上限/错误文本脱敏测试。复审发现并修正两项P2：启动失败尚未采样就退出导致证据丢失（实际RED1），以及原因事件晚于失败仍被接受（配置/启动两种倒序负例均RED）。原因校验现要求事件先于失败，并允许有界历史中已被淘汰的合法前缀原因。
+
+最终macOS完整原生**656/656，0失败/0跳过**，发现iOS678/macOS657及运行656核对；Python13/13、夹具4/4。共享生产代码和iOS测试未修改，本轮未重复iOS构建/运行，不能将旧结果当作本轮新覆盖。最终冻结版本30.024688s真实解码短程通过：7点、播放drop0、orderErrors0、音频时钟偏差+0.049187s、最大选帧滞后23750us；记录两次playAttempt均playSucceeded，configurationInvalidated/playFailed/rendererFailure/startupFailure均0。释放阶段单独记录一次约250.156ms enqueueTimeout，遵循原有播放/释放边界；释放后两点账本0、pendingfalse。
+
+本轮未再跑1200s长程：已恢复的系统日志和定向回归足以完成本项归因，旧870.888s失败及更早1201s单drop失败均保留。下一项建议优先补齐配置失效的明确用户提示与重新加载指引（保留既有错误码和安全发布边界，不自动恢复失效图），随后在持续记录路由事件的条件下完成长程与恢复验收。生产准入、候选默认启用、下游整体有界证明继续false；实际路由恢复/重载续播、物理音画及新长程通过尚未证明。
+
+协议：[audio-failure-cause-protocol.md](../../../tool/playback_benchmark/audio-failure-cause-protocol.md)。证据：[macos-audio-failure-cause-observations.json](../../../tool/playback_benchmark/macos-audio-failure-cause-observations.json)，108份可校验原始/脱敏文件，含RED/GREEN/最终结果包导出、失败分支附件、短程身份及选取的系统日志；原完整日志只保留指纹，不归档设备标识。
