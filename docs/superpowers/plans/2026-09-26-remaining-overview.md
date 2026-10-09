@@ -303,3 +303,6 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 
 
 2026-10-09真实解码长程门禁通过：冻结同版本短程30.028s后执行正式1201.179s/241点长程，播放drop0/orderErrors0、无候选回退或配置失效；音频累计偏差+1.555s、最大选帧滞后23125µs，XCTest和原严格采集器均通过。释放阶段独立保留一次队列超时，释放后两点ledger0/pendingfalse。未重复全套原生/iOS，历史失败证据保持不变。下一项自然EOF与尾部排空，实际设备切换、物理音画、平台矩阵及整体资源上界仍开放；准入继续关闭。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)与[证据](../../../tool/playback_benchmark/macos-route-monitored-long-observations.json)。
+
+
+2026-10-09真实解码自然EOF通过：4.021s AVC/AAC文件从起点播放至自然完成；正常与真实尾回调受控暂停两场景均验证188次rendered退还、1次尾部playedBack、音频资源归零后公开completed且只发布一次，迟到回调/close后事件隔离有效。复审覆盖缺口已修正，最终音频及受控EOF79/79、夹具4/4、发现678/661通过，43份证据归档。本轮无生产修改、不重跑iOS/长程；下一项真实解码EOF后独立资源对照，实际设备/物理音画/平台矩阵及整体资源上界继续开放，准入保持关闭。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)和[证据](../../../tool/playback_benchmark/macos-decoded-natural-eof-observations.json)。

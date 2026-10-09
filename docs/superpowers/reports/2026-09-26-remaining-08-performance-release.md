@@ -1439,3 +1439,16 @@ legacy原采集器已记录TimeoutExpired；4次阶段调用不等于4份有效�
 本次越过以往860s附近故障窗口并通过，但没有改写更早1201s单drop失败或870.888s音频路由失效失败；单次通过不说明这些历史失败不存在，也不替代真实设备切换、物理音画和支持矩阵验收。[证据归档](../../../tool/playback_benchmark/macos-route-monitored-long-observations.json)保留短/长程结果、全部JSONL/音频和丢帧诊断、XCTest附件/结果包文件hash及冻结身份。
 
 下一项：真实解码自然EOF与尾部排空验收。真实设备恢复、物理音画、最低系统/Intel/iOS运行与整体资源上界继续开放，候选默认和正式准入仍关闭；完整P08尚未完成。
+
+
+### 真实解码自然 EOF 与尾部排空通过（2026-10-09，base778fd7f）
+
+使用已有4.021s本地mkv-avc-aac素材（AVC、AAC 48kHz双声道），从文件起点经typed Host Load、真实demux/解码器、AVAudioEngine和纹理发布直至自然完成，再关闭Host。两项验收分别为未经延迟的原生尾回调，以及持有一个系统实际发出的playedBack回调后，在paused状态转交、排空、resume。没有伪造原生“已播放”，没有以主动Stop/Dispose代替EOF；mixer静音，未声称物理可听输出。
+
+两项初次运行均通过；复审指出重复旧回调仅比较输出计数不足，因为直接转交到renderer绕过该计数。现已补查renderer pending/bytes、host completed及failure状态；close后先稳定再记录全部六类公开回调计数，重放旧回调后逐项比较。问题已复审关闭，生产实现无需修改。
+
+最终**79/79、0失败/0跳过**（macOS音频类及既有等长/视频更长/音频更长的三项受控session EOF测试），夹具4/4、发现iOS678/macOS661通过。两个真实解码场景均记录188次rendered提交/回调、恰好1次尾部playedBack提交/原生回调；公开completed观察时，所有rendered资源已退还，renderer owned bytes0/pendingfalse，原生→转交→公开完成观察时间顺序正确，完成状态只发布一次。自然组转交到观察完成约15.079ms；受控组原生尾回调持有154.170ms，转交到观察完成174.421ms（包含paused等待后resume），这些是观测值，不是实时性承诺。
+
+受控组持有期间pendingtrue且owned bytes>0，无completed；paused后转交使音频排空，但保持paused且未完成，显式play后才completed。重复迟到回调不改变完成/资源状态；Host关闭后全部六类事件计数保持不变，输出引擎停止且ledger0。[协议](../../../tool/playback_benchmark/decoded-natural-eof-protocol.md)与[43份可校验原始证据](../../../tool/playback_benchmark/macos-decoded-natural-eof-observations.json)包含初次/最终结果包导出、完整完成快照、前后事件计数、素材probe和源码/二进制/素材指纹。
+
+本轮只改测试与证据工具，未重跑完整原生套件、iOS或1200s长程；先前长程通过仍绑定其原版本，不将本轮测试二进制视为重新长测。真实长短尾部格式组合、实际设备切换、物理音画、平台矩阵及整体资源上界仍开放。下一项为真实解码自然EOF后的独立资源对照取证；defaultEnabled/productionAdmission/downstreamBoundProven继续false，完整P08仍未完成。

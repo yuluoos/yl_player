@@ -10,7 +10,7 @@
 
 **Spec:** [输出完成契约 §10](../specs/2026-10-08-audio-output-completion-contract.md)、[需求基线](../specs/2026-09-20-playback-expansion-requirements.md)、[P08](2026-09-26-remaining-08-performance-release.md)。
 
-最新状态（2026-10-09）：真实解码长程零丢帧门禁已通过，下一项为自然EOF与尾部排空验收。下方历史执行记录保留当时的失败/未完成状态，当前进度以最后一节为准；正式准入仍关闭。
+最新状态（2026-10-09）：真实解码长程零丢帧门禁及自然EOF验收已通过；下一项为真实解码EOF后的独立资源对照取证。下方历史执行记录保留当时的失败/未完成状态，当前进度以最后一节为准；正式准入仍关闭。
 
 起点 `9c5967a`。Task 1–5 已实现并执行验证；资源采样帧断言失败如实保留，默认准入仍关闭。既有工具通过不能替代生产验收。
 
@@ -371,6 +371,17 @@ AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 o
 - [x] 音频时钟累计偏差+1.555069s（原门限±5s）、最大选帧滞后23125µs（原门限100000µs）；未调整判定标准。
 - [x] 释放阶段单独记录1次enqueueTimeout约251.045ms；立即及2秒后均ledger0、pendingfalse、nativePlayingfalse。该计数不混入活动播放。
 - [x] 短/长程原始JSONL、结果包导出、音频/drop事件、源码/二进制/素材指纹已归档。无生产改动，无完整原生/iOS重复执行声明。
-- [ ] 下一项：真实解码自然EOF与尾部排空验收，验证最终playedBack/资源释放和completed时序，不能用本次主动停止代替EOF。
+- [x] 真实解码自然EOF与尾部排空验收：后续79/79回归通过，最终playedBack/资源释放与公开completed时序已验证；长程主动停止证据仍不冒充EOF。
 
 本次配置失效通知为0，证明本次记录中未发生该事件，不能据此宣称真实设备切换恢复已通过。物理音画、实际设备切换、最低系统/Intel/iOS运行及整体资源上界仍开放，defaultEnabled/productionAdmission/downstreamBoundProven均为false。历史单drop与路由失效失败原档保持不变。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)与[证据](../../../tool/playback_benchmark/macos-route-monitored-long-observations.json)。
+
+### 后续 EOF：真实解码尾部完成与暂停边界（2026-10-09）
+
+- [x] 使用已有4.021s AVC/AAC、48kHz双声道本地文件，真实Host Load/解码/原生音频输出，正常到达EOF后才关闭。
+- [x] 两项定向验收初次通过：自然转交原生尾回调；持有真实playedBack回调，暂停后转交，排空仍保持paused，resume后才发布completed。
+- [x] 完成时检查普通rendered资源回调齐全、恰好一次尾部playedBack、原生→转交→公开完成时序及音频bytes0/pendingfalse。
+- [x] 复审补齐迟到回调断言：重复转交后检查renderer/host状态；close后比对全部公开事件计数，镜像同步。
+- [x] 最终音频类及三项受控EOF回归79/79、0失败/0跳过；夹具4/4、发现iOS678/macOS661核对；43份带hash原始证据归档。
+- [ ] 下一项：真实解码路径的独立资源对照取证；在自然EOF后采集，保持播放连续性与资源测量互不替代。
+
+本轮只修改测试/证据工具，生产默认关闭策略不变。不重跑iOS或20分钟长程，已有结果保持原版本身份。真实设备切换、物理音画、平台矩阵及整体资源上界继续开放。详见[协议](../../../tool/playback_benchmark/decoded-natural-eof-protocol.md)、[证据](../../../tool/playback_benchmark/macos-decoded-natural-eof-observations.json)和[报告](../reports/2026-09-26-remaining-08-performance-release.md)。

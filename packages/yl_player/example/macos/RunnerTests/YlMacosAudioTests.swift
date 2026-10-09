@@ -302,6 +302,37 @@ final class YlMacosAudioTests: XCTestCase {
     }
   }
 
+  private final class NaturalEOFProbe {
+    private let lock = NSLock()
+    let hold: Bool
+    private var pending: (() -> Void)?
+    private var nativeTimes: [Double] = []
+    private var forwardedTimes: [Double] = []
+    init(hold: Bool) { self.hold = hold }
+    func receive(_ callback: @escaping () -> Void) {
+      let retained = lock.withLock { () -> Bool in
+        if nativeTimes.count < 2 { nativeTimes.append(ProcessInfo.processInfo.systemUptime) }
+        if hold && pending == nil && forwardedTimes.isEmpty { pending = callback; return true }
+        if forwardedTimes.count < 2 { forwardedTimes.append(ProcessInfo.processInfo.systemUptime) }
+        return false
+      }
+      if !retained { callback() }
+    }
+    func release() -> (() -> Void)? {
+      let callback = lock.withLock { () -> (() -> Void)? in
+        guard let callback = pending else { return nil }
+        pending = nil; forwardedTimes.append(ProcessInfo.processInfo.systemUptime)
+        return callback
+      }
+      callback?()
+      return callback
+    }
+    var snapshot: [String: Any] { lock.withLock {
+      ["nativePlayedTimes": nativeTimes, "forwardedPlayedTimes": forwardedTimes, "held": pending != nil]
+    } }
+    var hasHeldCallback: Bool { lock.withLock { pending != nil } }
+  }
+
   private final class IntegrationOutput: YlAudioOutputDriving {
     let system: YlSystemAudioOutput
     var onSubmit: ((YlScheduledAudioBuffer) -> Void)?
@@ -311,6 +342,7 @@ final class YlMacosAudioTests: XCTestCase {
     let supportsTerminalCompletion = true
     private let failureProbe: AudioFailureProbe?
     var invalidateOnPlay = false
+    var eofProbe: NaturalEOFProbe?
     init(engine: AVAudioEngine, failureProbe: AudioFailureProbe? = nil) {
       self.failureProbe = failureProbe; system = YlSystemAudioOutput(engine: engine)
     }
@@ -339,7 +371,8 @@ final class YlMacosAudioTests: XCTestCase {
       system.schedule(buffer, mode: mode, callbacks: .init(resourcesReleased: { [weak self] in
         self?.lock.withLock { self?.counts["renderedCallbacks", default: 0] += 1 }; callbacks.resourcesReleased()
       }, playedBack: { [weak self] in
-        self?.lock.withLock { self?.counts["playedCallbacks", default: 0] += 1 }; callbacks.playedBack()
+        self?.lock.withLock { self?.counts["playedCallbacks", default: 0] += 1 }
+        if let probe = self?.eofProbe { probe.receive(callbacks.playedBack) } else { callbacks.playedBack() }
       }))
     }
     func play() throws {
@@ -558,13 +591,123 @@ final class YlMacosAudioTests: XCTestCase {
   private final class ReloadAudioFactory: YlAudioRendererMaking {
     var entries: [DecodedAudioFactory] = []
     var invalidateNextPlay = false
+    var eofProbe: NaturalEOFProbe?
     func makeRenderer(bufferBudget: YlFallbackBufferBudget) -> YlAudioRenderer {
       let entry = DecodedAudioFactory()
+      entry.output.eofProbe = eofProbe
       entry.output.invalidateOnPlay = invalidateNextPlay
       invalidateNextPlay = false
       entries.append(entry)
       return entry.makeRenderer(bufferBudget: bufferBudget)
     }
+  }
+
+  @MainActor
+  func testActualDecodedNaturalEOFFollowsNativeTailAndResourceRelease() async throws {
+    try await verifyNaturalEOF(holdTail: false)
+  }
+
+  @MainActor
+  func testActualDecodedEOFWaitsForHeldTailAndPausedResume() async throws {
+    try await verifyNaturalEOF(holdTail: true)
+  }
+
+  @MainActor
+  private func verifyNaturalEOF(holdTail: Bool) async throws {
+    let probe = NaturalEOFProbe(hold: holdTail), factory = ReloadAudioFactory()
+    factory.eofProbe = probe
+    let ledger = YlManagedBufferLedger(), registry = ApplePublicationRegistry(), callbacks = AppleRecordingCallbacks()
+    let host = YlApplePlayerHost(playerId: 741, suffix: "natural-eof-741",
+      options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 50),
+      services: registry.services(), callbacks: callbacks, bufferLedger: ledger,
+      audioRendererFactory: factory, audioTerminalCandidateEnabled: true)
+    var atCompletion: [String: Any]?
+    callbacks.acknowledge = { [weak callbacks, weak factory] in
+      guard atCompletion == nil, callbacks?.states.last?.status == .completed,
+            let entry = factory?.entries.first, let renderer = entry.renderers.first else { return }
+      atCompletion = ["uptime": ProcessInfo.processInfo.systemUptime,
+        "audioOwnedBytes": renderer.scheduledBytes, "pending": renderer.hasPendingPlayback,
+        "modes": entry.output.snapshot, "tail": probe.snapshot]
+    }
+    defer { callbacks.acknowledge = nil; host.close() }
+    try host.attach(); try host.setVolume(volume: 0)
+    let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+      .deletingLastPathComponent().deletingLastPathComponent()
+      .appendingPathComponent("assets/test_media/format_matrix/mkv-avc-aac.mkv")
+    var request = AppleHostFixture.request("natural-eof", url: fixture.path, format: .matroska, autoplay: true)
+    request.source.kind = .file
+    let session = try await host.load(request: request)
+    let entry = try XCTUnwrap(factory.entries.first), renderer = try XCTUnwrap(entry.renderers.first)
+    XCTAssertTrue(renderer.usesSubmissionAnchor)
+    var late: (() -> Void)?
+    if holdTail {
+      try await AppleHostCharacterizations.waitFor({ probe.hasHeldCallback }, timeout: 10)
+      XCTAssertEqual(entry.output.snapshot["playedSubmissions"], 1)
+      XCTAssertEqual(entry.output.snapshot["playedCallbacks"], 1, "Tail was actually played natively before gating")
+      try await Task.sleep(nanoseconds: 150_000_000)
+      XCTAssertTrue(renderer.hasPendingPlayback)
+      XCTAssertGreaterThan(renderer.scheduledBytes, 0)
+      XCTAssertFalse(callbacks.states.contains { $0.status == .completed })
+      try host.pause(command: .init(sessionId: session.sessionId))
+      late = try XCTUnwrap(probe.release())
+      try await AppleHostCharacterizations.waitFor({ !renderer.hasPendingPlayback })
+      try await Task.sleep(nanoseconds: 150_000_000)
+      XCTAssertEqual(renderer.scheduledBytes, 0)
+      XCTAssertEqual(host.initialState.status, .paused)
+      XCTAssertFalse(callbacks.states.contains { $0.status == .completed }, "Drain while paused must not invent completion")
+      try await host.play(command: .init(sessionId: session.sessionId))
+    }
+    try await AppleHostCharacterizations.waitFor({ atCompletion != nil }, timeout: 10)
+    let completed = try XCTUnwrap(atCompletion)
+    let modes = try XCTUnwrap(completed["modes"] as? [String: Int])
+    XCTAssertGreaterThan(modes["renderedSubmissions", default: 0], 1)
+    XCTAssertEqual(modes["renderedCallbacks"], modes["renderedSubmissions"])
+    XCTAssertEqual(modes["playedSubmissions"], 1)
+    XCTAssertEqual(modes["playedCallbacks"], 1)
+    XCTAssertEqual(completed["audioOwnedBytes"] as? Int, 0)
+    XCTAssertEqual(completed["pending"] as? Bool, false)
+    let tail = try XCTUnwrap(completed["tail"] as? [String: Any])
+    let nativeTimes = try XCTUnwrap(tail["nativePlayedTimes"] as? [Double])
+    let forwarded = try XCTUnwrap(tail["forwardedPlayedTimes"] as? [Double])
+    XCTAssertEqual(nativeTimes.count, 1); XCTAssertEqual(forwarded.count, 1)
+    XCTAssertLessThanOrEqual(try XCTUnwrap(nativeTimes.first), try XCTUnwrap(forwarded.first))
+    XCTAssertLessThanOrEqual(try XCTUnwrap(forwarded.first), try XCTUnwrap(completed["uptime"] as? Double))
+    XCTAssertEqual(callbacks.states.filter { $0.status == .completed }.count, 1)
+    XCTAssertEqual(callbacks.frames.filter { $0.sessionId == session.sessionId }.count, 1)
+    XCTAssertTrue(callbacks.failures.isEmpty)
+    XCTAssertTrue(renderer.usesSubmissionAnchor)
+    XCTAssertEqual(host.initialState.status, .completed)
+    let afterCompletion = entry.output.snapshot
+    late?(); late?()
+    try await Task.sleep(nanoseconds: 150_000_000)
+    XCTAssertEqual(callbacks.states.filter { $0.status == .completed }.count, 1)
+    XCTAssertEqual(entry.output.snapshot, afterCompletion)
+    XCTAssertFalse(renderer.hasPendingPlayback)
+    XCTAssertEqual(renderer.scheduledBytes, 0)
+    XCTAssertEqual(host.initialState.status, .completed)
+    XCTAssertTrue(callbacks.failures.isEmpty)
+    host.close()
+    try await Task.sleep(nanoseconds: 150_000_000)
+    func publicationCounts() -> [Int] {
+      [callbacks.states.count, callbacks.deltas.count, callbacks.frames.count,
+       callbacks.retries.count, callbacks.engines.count, callbacks.failures.count]
+    }
+    let closedPublications = publicationCounts()
+    late?()
+    try await Task.sleep(nanoseconds: 150_000_000)
+    XCTAssertEqual(publicationCounts(), closedPublications, "Retired callback must not publish after close")
+    XCTAssertTrue(host.disposed)
+    XCTAssertEqual(renderer.scheduledBytes, 0)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+    XCTAssertFalse(renderer.hasPendingPlayback)
+    XCTAssertFalse(entry.engine.isRunning)
+    let data = try JSONSerialization.data(withJSONObject: ["holdTail": holdTail,
+      "completion": completed, "completedPublications": callbacks.states.filter { $0.status == .completed }.count,
+      "ledgerAfterClose": ledger.snapshot.currentBytes,
+      "publicationsBeforeRetiredCallback": closedPublications, "publicationsAfterRetiredCallback": publicationCounts(),
+      "audioDiagnostics": entry.failureProbe.snapshot], options: [.sortedKeys])
+    let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+    attachment.name = "decoded-natural-eof"; attachment.lifetime = .keepAlways; add(attachment)
   }
 
   @MainActor
