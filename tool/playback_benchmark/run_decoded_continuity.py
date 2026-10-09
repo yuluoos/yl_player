@@ -30,6 +30,7 @@ def collect(kind, directory, short_evidence=None):
         products=ROOT/'packages/yl_player/example/build/native-macos-tests/Build/Products'
         identity=freeze(out,products)
         for relative in ['tool/playback_benchmark/decoded-continuity-protocol.md',
+                         'tool/playback_benchmark/aac-preroll-protocol.md',
                          'tool/playback_benchmark/decoded_continuity.py','tool/playback_benchmark/test_decoded_continuity.py',
                          'tool/playback_benchmark/run_decoded_continuity.py',
                          'tool/playback_benchmark/run_resources.py','tool/run_with_display_awake.py',

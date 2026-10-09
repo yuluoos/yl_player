@@ -211,6 +211,7 @@ final class YlAudioRenderer: YlAudioRendering {
   private var completionContext: YlAudioCompletionContext?
   private var configuredStream: YlAudioStreamConfiguration?
   private var terminal: YlAudioTerminalState?
+  private var terminalPrerollConsumed = false
   private let terminalQueue = DispatchQueue(label: "yl.audio.terminal-completions")
   private var tailTimer: DispatchSourceTimer?
   private var tailTimerIdentity: UInt64 = 0
@@ -532,6 +533,33 @@ final class YlAudioRenderer: YlAudioRendering {
       )
     }
 
+    // Decode the initial AAC preroll, but do not present samples before media
+    // zero. Limit this to one valid candidate PCM block before any accepted
+    // output; later/malformed negative timestamps retain compatibility fallback.
+    if let terminal, !terminal.isLegacy, !terminalPrerollConsumed, terminal.count == 0,
+       !lock.withLock({ firstSubmissionSent }), buffer.ptsUs < 0,
+       Self.isTerminalPCMFormat(buffer), let pcm = buffer.payload as? AVAudioPCMBuffer,
+       buffer.ptsUs >= -(Int64(pcm.frameLength) * 1_000_000 + 47999) / 48000,
+       let channels = pcm.floatChannelData {
+      terminalPrerollConsumed = true
+      let skipped = Int((-buffer.ptsUs * 48000 + 999999) / 1_000_000)
+      let retained = Int(pcm.frameLength) - skipped
+      if retained <= 0 {
+        buffer.reservation?.release()
+        packet.reservation?.endQueuedTiming()
+        return .buffered
+      }
+      for channel in 0..<2 {
+        memmove(channels[channel], channels[channel].advanced(by: skipped), retained * MemoryLayout<Float>.size)
+      }
+      pcm.frameLength = AVAudioFrameCount(retained)
+      buffer = .init(reservation: buffer.reservation, payload: pcm,
+        ptsUs: buffer.ptsUs + Int64(skipped) * 1_000_000 / 48000,
+        durationUs: Int64(retained) * 1_000_000 / 48000,
+        byteCount: buffer.byteCount, generation: buffer.generation)
+      // Capacity and reservation bytes still cover the original allocation.
+    }
+
     guard buffer.reservation?.mediaEpoch != nil || (buffer.reservation?.carryTiming(ptsUs: buffer.ptsUs, durationUs: buffer.durationUs, from: packet.reservation) ?? true) else {
       throw YlManagedBufferLedger.unsupported()
     }
@@ -775,6 +803,7 @@ final class YlAudioRenderer: YlAudioRendering {
 
   // Operations lock held; never inspect terminal state under only the state lock.
   private func resetTerminalEligibility() {
+    terminalPrerollConsumed = false
     let enabled = lock.withLock { !disposed && playbackRate == 1 }
     guard enabled, boundedPlan == nil, bufferScope?.hasBoundedTimeline != true,
           output.supportsTerminalCompletion,
@@ -794,11 +823,15 @@ final class YlAudioRenderer: YlAudioRendering {
   }
 
   private static func isTerminalPCM(_ buffer: YlScheduledAudioBuffer) -> Bool {
+    buffer.ptsUs >= 0 && isTerminalPCMFormat(buffer)
+  }
+
+  private static func isTerminalPCMFormat(_ buffer: YlScheduledAudioBuffer) -> Bool {
     guard let pcm = buffer.payload as? AVAudioPCMBuffer,
           pcm.format.commonFormat == .pcmFormatFloat32, !pcm.format.isInterleaved,
           pcm.format.sampleRate == 48000, pcm.format.channelCount == 2,
           pcm.frameLength > 0, pcm.frameLength <= 1024,
-          buffer.ptsUs >= 0, buffer.durationUs > 0,
+          buffer.durationUs > 0,
           !buffer.ptsUs.addingReportingOverflow(buffer.durationUs).overflow else { return false }
     return true
   }

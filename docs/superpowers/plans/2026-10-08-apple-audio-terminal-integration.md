@@ -309,3 +309,14 @@ AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 o
 - [ ] 1200秒真实解码候选长程：被短程门禁阻塞，未运行。
 
 下一项处理AAC负起始PTS/编码预滚，维持裁剪/首段连续性/时钟正确性后重新短程验收，再启动长程。当前生产无修改，准入仍关闭。详见[报告](../reports/2026-09-26-remaining-08-performance-release.md)与[证据](../../../tool/playback_benchmark/macos-decoded-continuity-observations.json)。
+
+### 后续修复：限定 AAC 初始预滚（2026-10-09）
+
+- [x] 按采样帧裁剪一次初始负前缀，保留后续样本与原分配预算；未改变默认路径。
+- [x] 四项内容/预算/锚点/兼容回归RED→GREEN，复审重复裁剪问题RED→GREEN并验证reset。
+- [x] 最终macOS651/651、iOS arm64编译、Python8/8、夹具4/4及发现678/652核对。
+- [x] 同版本真实解码短程30.027s通过，无兼容回退。
+- [x] 执行1201.131s长程并归档失败：241点、无音频回退，1次视频drop。
+- [ ] 真实解码候选长程零丢帧验收：仍未通过，下一项细分drop路径及调度原因。
+
+窗口860.818–865.827s中drop从0增至1，原生与严格校验均失败。没有重试覆盖或放宽阈值；资源释放后ledger0不代表整体资源有界或完整文件EOF通过。详见[报告](../reports/2026-09-26-remaining-08-performance-release.md)和[证据](../../../tool/playback_benchmark/macos-aac-preroll-observations.json)。正式准入继续关闭。
