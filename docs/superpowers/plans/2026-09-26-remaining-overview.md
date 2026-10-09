@@ -315,3 +315,6 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 
 
 2026-10-09真实解码EOF堆类型级归因完成：复用已提交18份heap，严格身份/hash/长度/PID/全表守恒；保留重复标签、空TYPE与缺失类型null。默认LifecycleCompletion识别188/1407/2778，candidate未单独识别；扣各自configured基线后，60s相对4s默认增1,631,664B，其中四类回调相关标签1,032,096B，candidate对应192B（总增169,216B）。通用闭包包含测试包装，non-object仍大，不能据此确定全部所有者或根因。冻结源码确认完成容器会清空资源捕获；容器存活不等于PCM未释放。复审三个校验缺口已修复，离线10/10、资源27/27、矩阵3/3通过；没有新原生/heap/iOS/长程运行。下一项透明转交回调对照，精确持有链及生产/测试成本分离仍开放，准入保持关闭。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)和[派生证据](../../../tool/playback_benchmark/macos-decoded-heap-attribution-observations.json)。
+
+
+2026-10-09测试回调透明转交对照完成：同版本默认/候选×包装/透明四独立进程正式4/4、12/12 heap有效，每组2813提交且自然EOF/关闭后释放通过。透明callback计数为unobserved/null；默认透明仍识别2813完成容器和3108 dispatch source，通用Closure context减少5624，说明包装影响部分类型计数但不能解释全部保留。两项复审P2经RED→GREEN修复，定向4/4、工具45/45、夹具4/4、发现678/663，194份证据归档；无生产改动，无完整native/iOS/长程重跑。下一项定位透明默认路径stop/图拆除释放边界，精确成本/持有链/整体有界及其他平台设备验收仍开放，准入保持关闭。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)及[证据](../../../tool/playback_benchmark/macos-callback-wrapper-observations.json)。

@@ -61,3 +61,23 @@ class DecodedEOFResourcesTests(unittest.TestCase):
                        retainedDeltaCount=0, retainedOrderCount=0, retainedEventCount=8)
         self.assertEqual(validate_decoded_rows(r, True, expected_seconds=30,
                          expected_fixture='decoded-30.mkv')['playbackElapsedSeconds'],30)
+
+    def test_transparent_callbacks_are_unobserved_not_zero(self):
+        for candidate in (False,True):
+            r=rows(candidate)
+            for row in r:
+                row.update(callbackWrapping='transparent',callbackObservation='unobserved')
+                row['modes']['playedCallbacks']=None;row['modes']['renderedCallbacks']=None
+            result=validate_decoded_rows(r,candidate,callback_wrapping='transparent')
+            self.assertFalse(result['nativeCallbackCountsObserved'])
+            for change in ('numeric','wrong-mode'):
+                import copy
+                bad=copy.deepcopy(r)
+                if change=='numeric':bad[1]['modes']['playedCallbacks']=0
+                else:bad[1]['callbackWrapping']='wrapped'
+                with self.assertRaises(ValueError):validate_decoded_rows(bad,candidate,callback_wrapping='transparent')
+
+    def test_wrapped_rejects_explicitly_unobserved_callbacks(self):
+        r=rows()
+        for row in r:row['callbackObservation']='unobserved'
+        with self.assertRaises(ValueError):validate_decoded_rows(r,True)

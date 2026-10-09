@@ -335,6 +335,7 @@ final class YlMacosAudioTests: XCTestCase {
 
   private final class IntegrationOutput: YlAudioOutputDriving {
     let system: YlSystemAudioOutput
+    let wrapsCallbacks: Bool
     var onSubmit: ((YlScheduledAudioBuffer) -> Void)?
     private let lock = NSLock()
     private var counts = ["renderedSubmissions": 0, "playedSubmissions": 0, "renderedCallbacks": 0, "playedCallbacks": 0]
@@ -343,7 +344,8 @@ final class YlMacosAudioTests: XCTestCase {
     private let failureProbe: AudioFailureProbe?
     var invalidateOnPlay = false
     var eofProbe: NaturalEOFProbe?
-    init(engine: AVAudioEngine, failureProbe: AudioFailureProbe? = nil) {
+    init(engine: AVAudioEngine, failureProbe: AudioFailureProbe? = nil, wrapsCallbacks: Bool = true) {
+      self.wrapsCallbacks = wrapsCallbacks
       self.failureProbe = failureProbe; system = YlSystemAudioOutput(engine: engine)
     }
     var volume: Float { get { system.volume } set { system.volume = newValue } }
@@ -361,6 +363,7 @@ final class YlMacosAudioTests: XCTestCase {
     func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void) {
       onSubmit?(buffer)
       lock.withLock { counts["playedSubmissions", default: 0] += 1 }
+      if !wrapsCallbacks { system.schedule(buffer, completion: completion); return }
       system.schedule(buffer) { [weak self] in
         self?.lock.withLock { self?.counts["playedCallbacks", default: 0] += 1 }; completion()
       }
@@ -368,6 +371,7 @@ final class YlMacosAudioTests: XCTestCase {
     func schedule(_ buffer: YlScheduledAudioBuffer, mode: YlAudioOutputCompletionMode, callbacks: YlAudioOutputCallbacks) {
       onSubmit?(buffer)
       lock.withLock { counts[mode == .renderedResource ? "renderedSubmissions" : "playedSubmissions", default: 0] += 1 }
+      if !wrapsCallbacks { system.schedule(buffer, mode: mode, callbacks: callbacks); return }
       system.schedule(buffer, mode: mode, callbacks: .init(resourcesReleased: { [weak self] in
         self?.lock.withLock { self?.counts["renderedCallbacks", default: 0] += 1 }; callbacks.resourcesReleased()
       }, playedBack: { [weak self] in
@@ -389,7 +393,9 @@ final class YlMacosAudioTests: XCTestCase {
   private final class DecodedAudioFactory: YlAudioRendererMaking {
     let engine = AVAudioEngine()
     let failureProbe = AudioFailureProbe()
-    lazy var output = IntegrationOutput(engine: engine, failureProbe: failureProbe)
+    let wrapsCallbacks: Bool
+    init(wrapsCallbacks: Bool = true) { self.wrapsCallbacks = wrapsCallbacks }
+    lazy var output = IntegrationOutput(engine: engine, failureProbe: failureProbe, wrapsCallbacks: wrapsCallbacks)
     private let lock = NSLock()
     private var prefix: [[String: Any]] = []
     var submittedPrefix: [[String: Any]] { lock.withLock { prefix } }
@@ -589,11 +595,12 @@ final class YlMacosAudioTests: XCTestCase {
   }
 
   private final class ReloadAudioFactory: YlAudioRendererMaking {
+    var wrapsCallbacks = true
     var entries: [DecodedAudioFactory] = []
     var invalidateNextPlay = false
     var eofProbe: NaturalEOFProbe?
     func makeRenderer(bufferBudget: YlFallbackBufferBudget) -> YlAudioRenderer {
-      let entry = DecodedAudioFactory()
+      let entry = DecodedAudioFactory(wrapsCallbacks: wrapsCallbacks)
       entry.output.eofProbe = eofProbe
       entry.output.invalidateOnPlay = invalidateNextPlay
       invalidateNextPlay = false
@@ -635,8 +642,11 @@ final class YlMacosAudioTests: XCTestCase {
     let arms = directory == nil ? [false, true] : [env["YL_AUDIO_PROBE_ARM"] != "legacy"]
     let expectedSeconds = try XCTUnwrap(Double(env["YL_AUDIO_PROBE_SECONDS"] ?? "4.021"))
     guard expectedSeconds > 0 && expectedSeconds <= 60 else { throw ResourceProbeError.invalidFixtureDuration }
+    let wrappers = directory == nil ? [true, false] : [env["YL_AUDIO_PROBE_CALLBACK_WRAPPING"] != "transparent"]
+    for wrapCallbacks in wrappers {
     for candidate in arms {
       let factory = ReloadAudioFactory(), ledger = YlManagedBufferLedger()
+      factory.wrapsCallbacks = wrapCallbacks
       let registry = ApplePublicationRegistry(), callbacks = AppleRecordingCallbacks()
       var publicDeltaCount = 0
       // Count frequent progress events without retaining a history proportional to duration.
@@ -681,7 +691,13 @@ final class YlMacosAudioTests: XCTestCase {
             task_info(mach_task_self_, task_flavor_t(TASK_VM_INFO), $0, &size)
           }
         }
+        var observedModes: [String: Any] = entry.output.snapshot.mapValues { $0 as Any }
+        if !wrapCallbacks {
+          observedModes["renderedCallbacks"] = NSNull(); observedModes["playedCallbacks"] = NSNull()
+        }
         let row: [String: Any] = ["phase": phase, "uptime": ProcessInfo.processInfo.systemUptime,
+          "callbackWrapping": wrapCallbacks ? "wrapped" : "transparent",
+          "callbackObservation": wrapCallbacks ? "native-wrapped" : "unobserved",
           "fixtureName": fixture.lastPathComponent, "playbackElapsedSeconds": playbackElapsed,
           "publicDeltaCount": publicDeltaCount, "retainedDeltaCount": callbacks.deltas.count,
           "retainedOrderCount": callbacks.order.count,
@@ -690,7 +706,7 @@ final class YlMacosAudioTests: XCTestCase {
           "candidate": candidate, "submissionAnchor": renderer.usesSubmissionAnchor, "pending": renderer.hasPendingPlayback,
           "nativePlaying": entry.nativePlaying, "engineRunning": entry.engine.isRunning,
           "ownedBytes": renderer.scheduledBytes, "ledgerBytes": ledger.snapshot.currentBytes,
-          "ledgerPeak": ledger.snapshot.peakBytes, "modes": entry.output.snapshot,
+          "ledgerPeak": ledger.snapshot.peakBytes, "modes": observedModes,
           "completed": callbacks.states.filter { $0.status == .completed }.count,
           "firstFrames": callbacks.frames.filter { $0.sessionId == session.sessionId }.count,
           "failures": callbacks.failures.map { $0.failure.code }, "audioDiagnostics": entry.failureProbe.snapshot,
@@ -718,13 +734,18 @@ final class YlMacosAudioTests: XCTestCase {
       XCTAssertTrue(callbacks.failures.isEmpty)
       XCTAssertFalse(renderer.hasPendingPlayback); XCTAssertEqual(renderer.scheduledBytes, 0)
       let modes = entry.output.snapshot
-      XCTAssertEqual(modes["renderedSubmissions"], modes["renderedCallbacks"])
-      XCTAssertEqual(modes["playedSubmissions"], modes["playedCallbacks"])
+      if wrapCallbacks {
+        XCTAssertEqual(modes["renderedSubmissions"], modes["renderedCallbacks"])
+        XCTAssertEqual(modes["playedSubmissions"], modes["playedCallbacks"])
+      } else {
+        // Counters must not run in transparent mode; no claim of zero native callbacks.
+        XCTAssertEqual(modes["renderedCallbacks"], 0); XCTAssertEqual(modes["playedCallbacks"], 0)
+      }
       XCTAssertEqual(callbacks.frames.filter { $0.sessionId == session.sessionId }.count, 1)
       if candidate {
-        XCTAssertEqual(modes["playedCallbacks"], 1); XCTAssertGreaterThan(modes["renderedCallbacks", default: 0], 1)
+        XCTAssertEqual(modes["playedSubmissions"], 1); XCTAssertGreaterThan(modes["renderedSubmissions", default: 0], 1)
       } else {
-        XCTAssertEqual(modes["renderedCallbacks"], 0); XCTAssertGreaterThan(modes["playedCallbacks", default: 0], 1)
+        XCTAssertEqual(modes["renderedSubmissions"], 0); XCTAssertGreaterThan(modes["playedSubmissions", default: 0], 1)
       }
       try await probe("completed")
       // Quiesce only after natural completion; retain the graph for the drained heap.
@@ -738,6 +759,7 @@ final class YlMacosAudioTests: XCTestCase {
       XCTAssertEqual(ledger.snapshot.currentBytes, 0); XCTAssertTrue(callbacks.failures.isEmpty)
       try await probe("disposedLater")
     }
+  }
   }
 
   @MainActor

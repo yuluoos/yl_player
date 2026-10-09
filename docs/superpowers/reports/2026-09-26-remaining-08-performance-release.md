@@ -1548,3 +1548,25 @@ LifecycleCompletion在各configured及disposed中也均未单独识别。这里�
 上述“类型计数”“源码机制”与“可能持有者”分开记录：本轮完成可识别类型的核算和增长定位，**精确retainer、分配栈、生产与测试包装各自的因果贡献尚未完成**。不足以据此改变生产EOF生命周期或启用候选。
 
 [协议](../../../tool/playback_benchmark/decoded-heap-attribution-protocol.md)与[派生证据](../../../tool/playback_benchmark/macos-decoded-heap-attribution-observations.json)可从原提交archive重建，原始失败/通过证据均未改写。本轮仅Python工具/文档/派生数据，没有新的原生、iOS、长程或活动播放内存验证。下一项增加测试适配器透明转交回调对照，先量化包装成本，再确定更细的持有链或生产修复实验。defaultEnabled/productionAdmission/downstreamBoundProven仍false，完整P08继续开放。
+
+
+### 测试回调包装与透明转交对照（2026-10-09，base ca939ce）
+
+四组使用同一冻结源码/二进制及既有60.229s AVC/AAC文件，按默认包装、默认透明、候选包装、候选透明顺序在四个不同进程执行，uptime窗口不重叠。透明版本仅移除IntegrationOutput逐缓冲完成闭包包装，直接转交原completion/callback struct，保留提交计数、最多三条PCM前缀、错误探针、进度记录清理和完整EOF/释放检查。生产代码未改。透明回调次数明确标记unobserved并存为null；只验证其内部计数器未运行，不声称观察到零次回调。
+
+正式4/4进程通过，12/12完整heap通过PID、字节/hash及全表汇总验证，耗时2.149–3.561s，原8s期限不变；30s ACK、5s记录清空、180s native、240s parent均未放宽。四组各提交2813块；默认全部playedBack，候选2812 rendered加1 playedBack。包装版本逐类回调次数等于提交；透明版本以一次firstFrame/completed、owned0/pendingfalse、无failure/回退、关闭后计数不变及输出停止/ledger0验证有限范围内的完成与释放。所有组close后立即和>=2s均满足这些状态，completed/drained账本92944、关闭后0。
+
+| 路径/回调转交 | configured heap | drained heap | drained增量 | disposed heap | Lifecycle容器 | Closure context数 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 默认/包装 | 21,730,561 | 23,887,457 | +2,156,896 | 22,955,969 | 2813 | 8,974 |
+| 默认/透明 | 20,687,073 | 22,170,401 | +1,483,328 | 21,642,273 | 2813 | 3,350 |
+| 候选/包装 | 20,666,129 | 20,861,025 | +194,896 | 22,162,353 | 未单独识别 | 547 |
+| 候选/透明 | 20,661,969 | 20,846,433 | +184,464 | 22,149,345 | 未单独识别 | 556 |
+
+以上字节均为全进程All zones，缺少类型条目保持null。默认路径去掉测试包装后，LifecycleCompletion仍识别2813个（180032B），dispatch_source_t排空时仍为3108个；Closure context由8974降至3350。说明此前默认路径的闭包计数确实混有测试包装影响，去掉它仍未消除完成容器及dispatch类型保留。所有disposed中LifecycleCompletion均未单独识别，但现有关闭操作同时包含stop、engine stop、disconnect及detach，尚不能定位具体释放动作。AVAudioPCMBuffer未单独识别不等于其实际存活数为零。
+
+分别扣除configured后，包装减透明的总堆差为默认+673,568B、候选+10,432B。这里只报告本轮单次干预观察；加载基线、系统缓存、其他框架及non-object分配均可能贡献差异。不能把总差或某通用标签直接当作每缓冲包装成本、统计性改善、原生retainer证明或整体资源上界。透明版本也不提供独立的原生回调次数证据。
+
+复审补齐四组不同PID/非重叠窗口、wrapped声明与实际观测一致两项P2校验；两个新负例实际RED→GREEN并经独立复核关闭。定向原生4/4、资源工具29/29、包装对照3/3、矩阵3/3、堆归因10/10、夹具4/4通过，发现iOS678/macOS663。未重跑完整原生、iOS或1200s长程。见[协议](../../../tool/playback_benchmark/decoded-callback-wrapper-protocol.md)和[194份原始文件及对照证据](../../../tool/playback_benchmark/macos-callback-wrapper-observations.json)。
+
+下一项：对透明回调默认路径增加原生 stop 前后的独立快照，区分自然排空后的保留与停止/图拆除释放边界；先冻结协议与测试隔离，再决定生产修改，不能把干预结果写成精确原生持有链。 真实设备切换、物理音画、最低系统/Intel/iOS运行与整体有界仍开放，defaultEnabled/productionAdmission/downstreamBoundProven继续false，完整P08未完成。

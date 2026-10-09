@@ -10,7 +10,7 @@
 
 **Spec:** [输出完成契约 §10](../specs/2026-10-08-audio-output-completion-contract.md)、[需求基线](../specs/2026-09-20-playback-expansion-requirements.md)、[P08](2026-09-26-remaining-08-performance-release.md)。
 
-最新状态（2026-10-09）：真实解码长程、自然EOF、长度矩阵及堆类型级归因已完成；具体持有链与测试包装成本仍未分离，下一项为透明转交回调对照，整体有界未证明。下方历史执行记录保留当时的失败/未完成状态，当前进度以最后一节为准；正式准入仍关闭。
+最新状态（2026-10-09）：真实解码长程、自然EOF、长度矩阵、类型归因及透明回调对照已完成；去掉测试包装后默认完成容器仍保留，下一项定位stop/图拆除释放边界，精确持有链与整体有界未证明。下方历史执行记录保留当时的失败/未完成状态，当前进度以最后一节为准；正式准入仍关闭。
 
 起点 `9c5967a`。Task 1–5 已实现并执行验证；资源采样帧断言失败如实保留，默认准入仍关闭。既有工具通过不能替代生产验收。
 
@@ -428,6 +428,18 @@ AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 o
 - [x] 60s相对4s且扣除各自configured基线：默认净增1,631,664B，其中四类记录1,032,096B、non-object647,648B、其他−48,080B；候选169,216B=192+260,688−91,664B，保留负贡献。
 - [x] 冻结源码核对：默认逐提交创建完成容器，回调清空资源/播放闭包；候选使用不同提交路径；测试IntegrationOutput额外包裹回调。因此容器计数不等同PCM存活量，通用闭包不能全部算作生产成本。
 - [x] 复审修复重复/冲突Process头、顶层与cell身份不符、probe字节长度不符三个校验缺口，均有RED→GREEN负例；离线归因10/10、既有资源27/27、矩阵3/3通过。
-- [ ] 下一项：在保持原回调语义的前提下，增加测试适配器透明转交回调的对照，量化包装闭包对保留量的影响；随后再决定是否需要更细的持有链或生产修复实验。
+- [x] 测试适配器透明转交对照完成：四组同版本独立进程，观察包装相关差异与仍存在的容器保留；单次结果不认定精确包装成本，见后续记录。
 
 本轮无生产/原生测试代码修改，没有新native/iOS/长程或heap/MSL运行。defaultEnabled/productionAdmission/downstreamBoundProven继续false。见[协议](../../../tool/playback_benchmark/decoded-heap-attribution-protocol.md)、[派生证据](../../../tool/playback_benchmark/macos-decoded-heap-attribution-observations.json)和[报告](../reports/2026-09-26-remaining-08-performance-release.md)。
+
+
+### 后续干预：测试回调透明转交对照（2026-10-09）
+
+- [x] 仅测试适配器新增透明转交，保留提交/状态/资源检查；原生callback次数标记unobserved/null，不伪造为0或提交次数。
+- [x] 默认/候选×包装/透明四组同源码/二进制、四独立进程串行；60s素材每组2813提交、自然EOF及关闭后两点释放通过，12/12 heap在8s内有效。
+- [x] 默认透明仍识别2813个LifecycleCompletion和3108个dispatch source，Closure context相对包装减少5624；不能把测试包装当作全部保留的原因。
+- [x] 分别扣基线后的包装减透明总堆差默认+673,568B、候选+10,432B；仅单次观察，不证明精确成本、统计改善、原生持有链或整体有界。
+- [x] 复审两个P2校验修复并实际RED→GREEN；原生4/4、Python45/45、夹具4/4、发现678/663，194份原始文件归档。无生产改动，不重跑完整native/iOS/长程。
+- [ ] 下一项：对透明回调默认路径增加原生 stop 前后的独立快照，区分自然排空后的保留与停止/图拆除释放边界；先冻结协议与测试隔离，再决定生产修改，不能把干预结果写成精确原生持有链。
+
+见[协议](../../../tool/playback_benchmark/decoded-callback-wrapper-protocol.md)、[证据](../../../tool/playback_benchmark/macos-callback-wrapper-observations.json)和[报告](../reports/2026-09-26-remaining-08-performance-release.md)。候选默认/正式准入/整体有界三项仍false。
