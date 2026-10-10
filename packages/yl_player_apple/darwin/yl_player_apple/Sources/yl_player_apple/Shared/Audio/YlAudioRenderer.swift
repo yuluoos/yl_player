@@ -316,6 +316,7 @@ final class YlAudioRenderer: YlAudioRendering {
   private var configuredGeneration: UInt64?
   private var configuredCodec: YlAudioCodec?
   private var completionGeneration: UInt64 = 0
+  private var clockControlVersion: UInt64 = 0
   private var scheduledBufferCount = 0
   private var disposed = false
   private var outputInvalidationFailure: NativePlayerError?
@@ -387,6 +388,46 @@ final class YlAudioRenderer: YlAudioRendering {
 
   var underrunCount: Int {
     lock.withLock { underruns }
+  }
+
+  func clockObservation(expectedGeneration: UInt64) -> YlAudioClockObservation {
+    lock.lock()
+    guard !disposed, configuredGeneration == expectedGeneration, outputInvalidationFailure == nil else {
+      lock.unlock(); return .invalid
+    }
+    guard let position = playedPositionUs else { lock.unlock(); return .waiting }
+    guard playbackRequested else { lock.unlock(); return .paused(positionUs: position) }
+    if inputFinished && !pendingPlaybackLocked {
+      lock.unlock()
+      return .ended(positionUs: position, hostTimeUs: Int64(ProcessInfo.processInfo.systemUptime * 1_000_000))
+    }
+    if !pendingPlaybackLocked, let host = silenceHostTimeUs {
+      let sample = YlAudioClockSample(generation: expectedGeneration, positionUs: position,
+        hostTimeUs: host, lowerBoundUs: position, upperBoundUs: position, rate: Double(playbackRate))
+      lock.unlock(); return .silence(sample)
+    }
+    let epoch = completionGeneration, version = clockControlVersion
+    let anchor = renderAnchor, end = scheduledEndUs, rate = playbackRate
+    lock.unlock()
+    let raw = output.renderedAudioTime // Never under renderer/session/snapshot lock.
+    return lock.withLock {
+      guard !disposed, configuredGeneration == expectedGeneration, completionGeneration == epoch,
+            clockControlVersion == version, playedPositionUs == position,
+            renderAnchor?.nodeUs == anchor?.nodeUs, renderAnchor?.mediaUs == anchor?.mediaUs,
+            scheduledEndUs == end, playbackRate == rate else { return .invalid }
+      guard let raw else { return .waiting }
+      guard raw.sampleRate.isFinite, raw.sampleRate > 0, let host = raw.hostTimeUs, host >= 0,
+            let node = Self.nodeMicroseconds(raw), let anchor, let end,
+            node >= anchor.nodeUs, end >= anchor.mediaUs else { return .invalid }
+      let elapsed = min(Double(end) - Double(anchor.mediaUs), node - anchor.nodeUs)
+      let mapped = Double(anchor.mediaUs) + elapsed
+      guard mapped.isFinite, mapped >= 0, mapped < Double(Int64.max) else { return .invalid }
+      let media = Int64(mapped.rounded(.towardZero))
+      // Completion/other reads may already have moved the timeline beyond this raw observation.
+      guard media >= position else { return .invalid }
+      return .running(.init(generation: expectedGeneration, positionUs: media, hostTimeUs: host,
+        lowerBoundUs: anchor.mediaUs, upperBoundUs: end, rate: Double(rate)))
+    }
   }
 
   var renderedAudioTime: YlRenderedAudioTime? {
@@ -650,6 +691,7 @@ final class YlAudioRenderer: YlAudioRendering {
       lock.unlock()
       return
     }
+    clockControlVersion &+= 1
     playbackRequested = true
     let hasSubmittedAudio = submissionAnchorEnabled
       ? playedPositionUs != nil && terminalPending : scheduledBufferCount > 0
@@ -684,6 +726,7 @@ final class YlAudioRenderer: YlAudioRendering {
     let nodeUs = Self.nodeMicroseconds(output.renderedAudioTime)
     lock.withLock {
       updatePlayedPosition(nodeUs: nodeUs)
+      clockControlVersion &+= 1
       playbackRequested = false
       waitingForAudio = false
       silenceHostTimeUs = nil
@@ -711,7 +754,7 @@ final class YlAudioRenderer: YlAudioRendering {
     defer { operations.unlock() }
     let clampedRate = min(max(rate, 0.25), 4)
     if clampedRate != 1 { abandonTerminalCandidate() }
-    lock.withLock { playbackRate = clampedRate }
+    lock.withLock { clockControlVersion &+= 1; playbackRate = clampedRate }
     if let context = completionContext {
       completionContext = .init(enabled: context.enabled, platform: context.platform,
         localFiniteSeekable: context.localFiniteSeekable, hasBoundedPlan: context.hasBoundedPlan,
@@ -1415,8 +1458,15 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
     }
     return YlRenderedAudioTime(
       sampleTime: playerTime.sampleTime,
-      sampleRate: playerTime.sampleRate
+      sampleRate: playerTime.sampleRate,
+      hostTimeUs: playerTime.isHostTimeValid ? Self.hostMicroseconds(playerTime.hostTime) : nil
     )
+  }
+
+  private static func hostMicroseconds(_ value: UInt64) -> Int64? {
+    let us = AVAudioTime.seconds(forHostTime: value) * 1_000_000
+    guard us.isFinite, us >= 0, us < Double(Int64.max) else { return nil }
+    return Int64(us)
   }
 
   func configure(sampleRate: Double, channelCount: Int) throws {

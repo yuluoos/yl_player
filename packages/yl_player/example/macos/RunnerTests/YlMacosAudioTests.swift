@@ -4,11 +4,82 @@ import AVFoundation
 import AVFAudio
 import Foundation
 import Darwin
+import MachO
 import VideoToolbox
 import XCTest
 import YlFFmpegBridge
 
 final class YlMacosAudioTests: XCTestCase {
+
+
+  func testTimestampedAudioUsesSignedHostDelta() {
+    func sample(_ rate: Double = 1, lower: Int64 = 1_000_000, upper: Int64 = 1_100_000) -> YlAudioClockSample {
+      .init(generation: 1, positionUs: 1_020_000, hostTimeUs: 1_020_000,
+        lowerBoundUs: lower, upperBoundUs: upper, rate: rate)
+    }
+    XCTAssertEqual(sample().position(atHostTimeUs: 1_000_000), 1_000_000)
+    XCTAssertEqual(sample().position(atHostTimeUs: 1_040_000), 1_040_000)
+    XCTAssertEqual(sample(2).position(atHostTimeUs: 1_040_000), 1_060_000)
+    XCTAssertEqual(sample().position(atHostTimeUs: .max), 1_100_000)
+    XCTAssertEqual(sample().position(atHostTimeUs: .min), 1_000_000)
+    XCTAssertNil(sample(.nan).position(atHostTimeUs: 0))
+    XCTAssertNil(sample(.infinity).position(atHostTimeUs: 0))
+    XCTAssertNil(sample(lower: 2, upper: 1).position(atHostTimeUs: 0))
+  }
+
+  private func clockRenderer(_ output: TestAudioOutput) throws -> YlAudioRenderer {
+    let renderer = YlAudioRenderer(converter: TestAudioConverter(), output: output)
+    try renderer.configure(stream: .init(codec: .aac, sampleRate: 48000, channelCount: 2,
+      magicCookie: Data(), generation: 1))
+    _ = try renderer.enqueue(packet: .init(data: Data([1]), ptsUs: 1_000_000,
+      durationUs: 250_000, generation: 1))
+    try renderer.play()
+    return renderer
+  }
+
+  func testAudioObservationDistinguishesWaitingPausedAndEnded() throws {
+    let output = TestAudioOutput(), renderer = try clockRenderer(output)
+    defer { renderer.dispose() }
+    XCTAssertEqual(renderer.clockObservation(expectedGeneration: 1), .waiting)
+    output.renderedAudioTime = .init(sampleTime: 960, sampleRate: 48000, hostTimeUs: 1_020_000)
+    guard case let .running(sample) = renderer.clockObservation(expectedGeneration: 1) else { return XCTFail("Expected timestamped running observation") }
+    XCTAssertEqual(sample.positionUs, 1_020_000); XCTAssertEqual(sample.hostTimeUs, 1_020_000)
+    XCTAssertEqual(sample.lowerBoundUs, 1_000_000); XCTAssertEqual(sample.upperBoundUs, 1_250_000)
+    output.renderedAudioTime = .init(sampleTime: 960, sampleRate: 48000)
+    XCTAssertEqual(renderer.clockObservation(expectedGeneration: 1), .invalid)
+    renderer.pause()
+    guard case .paused = renderer.clockObservation(expectedGeneration: 1) else { return XCTFail("Expected paused") }
+    try renderer.play(); renderer.finishInput()
+    XCTAssertNotEqual(renderer.clockObservation(expectedGeneration: 1), .ended(positionUs: 1_250_000, hostTimeUs: 0))
+    output.completeNextBuffer()
+    guard case let .ended(position, _) = renderer.clockObservation(expectedGeneration: 1) else { return XCTFail("Expected ended only after playback completion") }
+    XCTAssertEqual(position, 1_250_000)
+  }
+
+  func testAudioObservationRejectsReadAcrossReset() throws {
+    try checkClockReadRace(reset: true)
+  }
+
+  func testAudioObservationDoesNotPairOldRawWithNewPlayedPosition() throws {
+    try checkClockReadRace(reset: false)
+  }
+
+  private func checkClockReadRace(reset: Bool) throws {
+    let output = TestAudioOutput(), renderer = try clockRenderer(output)
+    defer { renderer.dispose() }
+    let entered = DispatchSemaphore(value: 0), release = DispatchSemaphore(value: 0)
+    output.clockRead = { entered.signal(); _ = release.wait(timeout: .now() + 2)
+      return .init(sampleTime: 960, sampleRate: 48000, hostTimeUs: 1_020_000) }
+    let finished = expectation(description: "stale clock read finishes")
+    DispatchQueue.global().async {
+      XCTAssertEqual(renderer.clockObservation(expectedGeneration: 1), .invalid)
+      finished.fulfill()
+    }
+    XCTAssertEqual(entered.wait(timeout: .now() + 1), .success)
+    if reset { renderer.reset(generation: 2) } else { output.completeNextBuffer() }
+    release.signal()
+    wait(for: [finished], timeout: 3)
+  }
 
   private func terminalContext(
     enabled: Bool = true, platform: YlApplePlatform = .macos,
@@ -767,6 +838,12 @@ final class YlMacosAudioTests: XCTestCase {
     let env = ProcessInfo.processInfo.environment
     let candidate = env["YL_TIMED_CANDIDATE"] != "0"
     let diagnostics = env["YL_TIMED_DIAGNOSTICS"] == "1"
+    let images = (0..<_dyld_image_count()).compactMap { index -> String? in
+      guard let name = _dyld_get_image_name(index) else { return nil }
+      return URL(fileURLWithPath: String(cString: name)).lastPathComponent
+    }
+    let runtimeDiagnostics = ["threadPerformanceCheckerLoaded": images.contains("libRPAC.dylib"),
+      "mainThreadCheckerLoaded": images.contains("libMainThreadChecker.dylib")]
     let views = YlMacosVideoViewFactory(), registry = ApplePublicationRegistry()
     let output = YlMacosTextureOutput(textures: registry, nativeViews: views)
     output.collectTimedDiagnostics = diagnostics
@@ -795,12 +872,21 @@ final class YlMacosAudioTests: XCTestCase {
       }
     }
     defer { observers.forEach(NotificationCenter.default.removeObserver) }
+    let workspaceCenter = NSWorkspace.shared.notificationCenter
+    let workspaceObservers = [NSWorkspace.activeSpaceDidChangeNotification, NSWorkspace.screensDidSleepNotification,
+      NSWorkspace.screensDidWakeNotification, NSWorkspace.willSleepNotification, NSWorkspace.didWakeNotification].map { name in
+      workspaceCenter.addObserver(forName: name, object: nil, queue: .main) { _ in
+        activations.append(["name": name.rawValue, "uptime": ProcessInfo.processInfo.systemUptime])
+        if activations.count > 32 { activations.removeFirst() }
+      }
+    }
+    defer { workspaceObservers.forEach(workspaceCenter.removeObserver) }
     let instance = try YlManagedPlaybackSession(playerId: 942,
       services: YlPlatformServices(platform: .macos, textureOutput: output, makeDisplayDriver: { YlDisplayTimer(view: view, onTick: $0) }).borrowing(lease),
       configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 31,
       presentationScheduler: scheduler,
       emit: { if case let .failure(error) = $0.event { failures.append(error.code) } },
-      timedVideoCandidateEnabled: candidate)
+      timedVideoCandidateEnabled: candidate, timedVideoDiagnosticsEnabled: diagnostics)
     defer { instance.dispose() }
     instance.setVolume(0); try instance.activate(); try instance.play()
     try await Task.sleep(nanoseconds: 2_000_000_000)
@@ -815,6 +901,7 @@ final class YlMacosAudioTests: XCTestCase {
       let stats = instance.timedVideoStatistics, drops = scheduler.dropDiagnostics
       let row: [String: Any] = ["phase": phase, "uptime": ProcessInfo.processInfo.systemUptime,
         "pid": ProcessInfo.processInfo.processIdentifier, "candidateRequested": candidate,
+        "runtimeDiagnostics": runtimeDiagnostics,
         "diagnosticsEnabled": diagnostics, "nativeDiagnostics": (diagnostics ? output.timedDiagnostics : nil) as Any? ?? NSNull(),
         "applicationActive": NSApp.isActive, "windowVisible": window.isVisible,
         "windowOcclusionVisible": window.occlusionState.contains(.visible),
@@ -829,6 +916,7 @@ final class YlMacosAudioTests: XCTestCase {
         "dropEvents": drops.events.map { ["uptime": $0.uptime, "count": $0.count, "reason": $0.reason.rawValue] as [String: Any] },
         "systemMetrics": system as Any? ?? NSNull(),
         "workerMaxGapSeconds": stats?.maxWorkerGapSeconds as Any? ?? NSNull(),
+        "workerDiagnostics": stats?.diagnostics as Any? ?? NSNull(),
         "activationEvents": activations, "failures": failures,
         "ledgerBytes": ledger.snapshot.currentBytes, "ledgerPeak": ledger.snapshot.peakBytes,
         "pending": stats?.pending ?? false]
@@ -839,6 +927,15 @@ final class YlMacosAudioTests: XCTestCase {
         let handle = try FileHandle(forWritingTo: path); defer { try? handle.close() }
         try handle.seekToEnd(); try handle.write(contentsOf: JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10]))
       }
+    }
+    func progress(_ phase: String) throws {
+      guard let directory = env["YL_TIMED_DIRECTORY"] else { return }
+      let path = URL(fileURLWithPath: directory).appendingPathComponent("lifecycle.jsonl")
+      if !FileManager.default.fileExists(atPath: path.path) { FileManager.default.createFile(atPath: path.path, contents: nil) }
+      let handle = try FileHandle(forWritingTo: path); defer { try? handle.close() }
+      let record: [String: Any] = ["phase": phase, "uptime": ProcessInfo.processInfo.systemUptime,
+        "pid": ProcessInfo.processInfo.processIdentifier]
+      try handle.seekToEnd(); try handle.write(contentsOf: JSONSerialization.data(withJSONObject: record, options: [.sortedKeys]) + Data([10]))
     }
     let before = await metrics(); try observe("playing", system: before)
     let start = ProcessInfo.processInfo.systemUptime
@@ -863,10 +960,19 @@ final class YlMacosAudioTests: XCTestCase {
     }
     let after = await metrics(); try observe("activeEnd", system: after)
     let activeDrops = scheduler.lateFrameDropCount
-    try instance.pause(); try await Task.sleep(nanoseconds: 100_000_000)
+    try progress("pause.begin")
+    try instance.pause()
+    try progress("pause.end")
+    try await Task.sleep(nanoseconds: 100_000_000)
+    try progress("pixel.begin")
     let pausedPixel = renderer.displayedPixelBuffer()
+    try progress("pixel.end")
     let pixelPresent = pausedPixel != nil
-    instance.dispose(); owner.dispose()
+    try progress("dispose.begin")
+    instance.dispose()
+    try progress("dispose.end")
+    owner.dispose()
+    try progress("ownerDispose.end")
     try await AppleHostCharacterizations.waitFor({ ledger.snapshot.currentBytes == 0 }, timeout: 3)
     try observe("disposed", system: nil)
     try await Task.sleep(nanoseconds: 100_000_000); try observe("disposedLater", system: nil)
@@ -3351,7 +3457,12 @@ final class YlMacosAudioTests: XCTestCase {
   private final class TestAudioOutput: YlAudioOutputDriving {
     var volume: Float = 1
     var rate: Float = 1
-    var renderedAudioTime: YlRenderedAudioTime? = nil
+    var rawClock: YlRenderedAudioTime?
+    var clockRead: (() -> YlRenderedAudioTime?)?
+    var renderedAudioTime: YlRenderedAudioTime? {
+      get { clockRead?() ?? rawClock }
+      set { rawClock = newValue }
+    }
     private(set) var playCount = 0
     private(set) var isPlaying = false
     var onSchedule: (() -> Void)?

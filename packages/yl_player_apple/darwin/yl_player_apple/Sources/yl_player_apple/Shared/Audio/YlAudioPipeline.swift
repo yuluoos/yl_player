@@ -44,6 +44,9 @@ final class YlAudioPipeline {
     var scheduledBytes: Int { renderer.scheduledBytes }
     var underrunCount: Int { renderer.underrunCount }
     var renderedAudioTime: YlRenderedAudioTime? { renderer.renderedAudioTime }
+    func clockObservation(expectedGeneration: UInt64) -> YlAudioClockObservation {
+      renderer.clockObservation(expectedGeneration: expectedGeneration)
+    }
   }
   struct Reset {
     private let resource: Resource?

@@ -3,6 +3,10 @@ import Foundation
 struct YlRenderedAudioTime: Equatable {
   let sampleTime: Int64
   let sampleRate: Double
+  let hostTimeUs: Int64?
+  init(sampleTime: Int64, sampleRate: Double, hostTimeUs: Int64? = nil) {
+    self.sampleTime = sampleTime; self.sampleRate = sampleRate; self.hostTimeUs = hostTimeUs
+  }
 }
 
 final class YlMediaClock {
