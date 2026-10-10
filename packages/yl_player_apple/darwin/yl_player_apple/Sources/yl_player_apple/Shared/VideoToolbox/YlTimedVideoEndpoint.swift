@@ -10,8 +10,11 @@ extension YlTimedVideoEndpoint {
   var isRetired: Bool { false }
 }
 protocol YlTimedVideoOutput: AnyObject {
+  var supportsTimedVideo: Bool { get }
   func makeTimedVideoEndpoint() -> (any YlTimedVideoEndpoint)?
 }
+
+extension YlTimedVideoOutput { var supportsTimedVideo: Bool { false } }
 
 /// Revocable data-plane authority. Control-plane owners never wait for a native
 /// enqueue while holding a session lock: the last admitted call starts retirement.

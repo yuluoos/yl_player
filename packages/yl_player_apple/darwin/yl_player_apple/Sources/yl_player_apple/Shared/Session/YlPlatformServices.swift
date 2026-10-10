@@ -111,6 +111,7 @@ extension YlPlatformServices {
 /// Host ownership is independent from an engine's retained output resources.
 /// Each candidate borrows a private lease; only the committed lease can publish.
 final class YlAppleTextureOwner {
+  fileprivate var supportsTimedVideo: Bool { (output as? YlTimedVideoOutput)?.supportsTimedVideo ?? false }
   private let output: any YlTextureOutput
   private var current: YlAppleTextureLease?
   private let leases = NSHashTable<YlAppleTextureLease>.weakObjects()
@@ -248,6 +249,7 @@ final class YlAppleTextureLease: YlRetainedVideoOutput, YlTimedVideoOutput {
   func publish(_ pixelBuffer: CVPixelBuffer, retaining reservation: AnyObject?) {
     owner?.publish(pixelBuffer, retaining: reservation, from: self)
   }
+  var supportsTimedVideo: Bool { owner?.supportsTimedVideo ?? false }
   func makeTimedVideoEndpoint() -> (any YlTimedVideoEndpoint)? { owner?.makeTimedEndpoint(self) }
   func resize(width: Int, height: Int) {}
   func clear() { owner?.clear(self) }

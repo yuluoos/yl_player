@@ -103,7 +103,7 @@ final class YlPresentationCoordinator: YlAudioTimeline {
   private var usesTimedPresentation: Bool { timedLock.withLock { timedSelected } }
   func configureTimedCandidate(enabled: Bool, requiresAudioAnchor: Bool, diagnosticsEnabled: Bool = false) {
     timedLock.withLock {
-      timedCandidateEnabled = enabled
+      timedCandidateEnabled = enabled && (services.textureOutput as? YlTimedVideoOutput)?.supportsTimedVideo == true
       timedDiagnosticsEnabled = diagnosticsEnabled
       timedRequiresAudioAnchor = requiresAudioAnchor
       timedAudioReady = !requiresAudioAnchor

@@ -103,6 +103,57 @@ final class YlMacosAudioTests: XCTestCase {
     renderer.dispose()
   }
 
+  private final class ClockOwnerFactory: YlAudioRendererMaking {
+    var failNext = false
+    func makeRenderer(bufferBudget: YlFallbackBufferBudget) -> YlAudioRenderer {
+      let output = TestAudioOutput(); output.failConfigure = failNext; failNext = false
+      return YlAudioRenderer(bufferBudget: bufferBudget, converter: TestAudioConverter(), output: output)
+    }
+  }
+
+  func testUninstalledAudioCandidatesCannotRevokeInstalledClock() throws {
+    let factory = ClockOwnerFactory(), sessionLock = NSLock()
+    let pipeline = YlAudioPipeline(bufferBudget: try .make(configuration: .init(map: [:])),
+      lock: sessionLock, generation: 1, factory: factory)
+    let clock = YlMediaClock()
+    clock.enableIsolatedAudioClock(read: { generation in
+      let host = Int64(ProcessInfo.processInfo.systemUptime * 1_000_000)
+      return .running(.init(generation: generation, positionUs: host, hostTimeUs: host,
+        lowerBoundUs: 0, upperBoundUs: .max, rate: 1))
+    }, generation: 1)
+    defer { clock.stopIsolatedAudioClock(); pipeline.discardRenderer() }
+    pipeline.beforeClockControl = { clock.invalidateIsolatedAudioClock() }
+    pipeline.initializeRenderer()
+    var stream = YLFStreamInfo(); stream.codec = Int32(YLFCodecAAC); stream.sample_rate = 48000; stream.channel_count = 2
+    try pipeline.configureInitial(stream: stream, cookies: [:])
+    func resume() {
+      clock.play(atHostTimeUs: Int64(ProcessInfo.processInfo.systemUptime * 1_000_000))
+      let deadline = Date().addingTimeInterval(1)
+      while !clock.presentationSnapshot(atHostTimeUs: Int64(ProcessInfo.processInfo.systemUptime * 1_000_000)).playing && Date() < deadline { Thread.sleep(forTimeInterval: 0.001) }
+    }
+    func assertStillPlaying() {
+      let now = Int64(ProcessInfo.processInfo.systemUptime * 1_000_000)
+      XCTAssertTrue(clock.presentationSnapshot(atHostTimeUs: now).playing)
+      let first = clock.position(atHostTimeUs: now)
+      Thread.sleep(forTimeInterval: 0.02)
+      XCTAssertGreaterThan(clock.position(atHostTimeUs: Int64(ProcessInfo.processInfo.systemUptime * 1_000_000)), first)
+    }
+    resume()
+    factory.failNext = true
+    XCTAssertThrowsError(try pipeline.prepareTrack(stream: stream, generation: 2, cookies: [:]))
+    assertStillPlaying() // Configuration failure never reached installation/rollback.
+    let candidate = try pipeline.prepareTrack(stream: stream, generation: 2, cookies: [:])
+    resume() // Cancellation rollback restores the installed owner before deferred candidate disposal.
+    candidate.dispose()
+    assertStillPlaying()
+    let replacement = try pipeline.prepareTrack(stream: stream, generation: 2, cookies: [:])
+    let retired = pipeline.install(replacement)
+    resume(); retired?.dispose(); assertStillPlaying()
+    // Session-controlled methods may already own sessionLock. Callback must not reacquire it.
+    try sessionLock.withLock { try pipeline.playInstalled() }
+    XCTAssertFalse(clock.presentationSnapshot(atHostTimeUs: Int64(ProcessInfo.processInfo.systemUptime * 1_000_000)).playing)
+  }
+
   private func terminalContext(
     enabled: Bool = true, platform: YlApplePlatform = .macos,
     localFiniteSeekable: Bool = true, hasBoundedPlan: Bool = false,
@@ -3520,6 +3571,7 @@ final class YlMacosAudioTests: XCTestCase {
   private final class TestAudioOutput: YlAudioOutputDriving {
     var volume: Float = 1
     var rate: Float = 1
+    var failConfigure = false
     var clockInvalidation: (() -> Void)?
     func setClockInvalidationHandler(_ handler: (() -> Void)?) { clockInvalidation = handler }
     var rawClock: YlRenderedAudioTime?
@@ -3533,7 +3585,9 @@ final class YlMacosAudioTests: XCTestCase {
     var onSchedule: (() -> Void)?
     private var completions: [() -> Void] = []
 
-    func configure(sampleRate: Double, channelCount: Int) throws {}
+    func configure(sampleRate: Double, channelCount: Int) throws {
+      if failConfigure { throw NSError(domain: "ClockOwnerTest", code: 1) }
+    }
     func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void) {
       completions.append(completion)
       onSchedule?()

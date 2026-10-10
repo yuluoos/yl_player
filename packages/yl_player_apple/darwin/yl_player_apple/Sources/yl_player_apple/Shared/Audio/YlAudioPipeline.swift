@@ -62,7 +62,18 @@ final class YlAudioPipeline {
   private var completionContext: YlAudioCompletionContext?
   weak var output: (any YlAudioPipelineOutput)?
   weak var timeline: (any YlAudioTimeline)?
-  private var audioRenderer: YlAudioRenderer!
+  // Separate from session lock: native controls may start while that lock is held.
+  // Revocation only touches the bounded clock cache, never native output.
+  private let clockOwnerLock = NSLock()
+  private weak var clockOwner: YlAudioRenderer?
+  private var audioRenderer: YlAudioRenderer! {
+    didSet {
+      clockOwnerLock.withLock {
+        clockOwner = audioRenderer
+        beforeClockControl?()
+      }
+    }
+  }
   private(set) var audioGeneration: UInt64
   private var desiredVolume: Float = 1
   private var desiredRate: Float = 1
@@ -87,7 +98,15 @@ final class YlAudioPipeline {
 
   private func makeRenderer() -> YlAudioRenderer {
     let renderer = factory.makeRenderer(bufferBudget: bufferBudget)
-    renderer.onClockControlBegin = beforeClockControl
+    if beforeClockControl != nil {
+      renderer.onClockControlBegin = { [weak self, weak renderer] in
+        guard let self, let renderer else { return }
+        self.clockOwnerLock.withLock {
+          guard self.clockOwner === renderer else { return }
+          self.beforeClockControl?()
+        }
+      }
+    }
     renderer.onOutputFailure = { [weak self, weak renderer] error in
       // Output can fail while a renderer operation or session state lock is held.
       // Publish later, only if this exact renderer still owns installed output.

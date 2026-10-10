@@ -411,6 +411,7 @@ final class YlMacosPresentationTests: XCTestCase {
     func retire(removingImage: Bool, completion: @escaping () -> Void) { retirement = completion }
   }
   private final class RecordingTimedOutput: YlTextureOutput, YlTimedVideoOutput {
+    var supportsTimedVideo = true
     let textureId: Int64 = 91
     var endpoints: [RecordingTimedEndpoint] = []
     func makeTimedVideoEndpoint() -> (any YlTimedVideoEndpoint)? {
@@ -420,6 +421,24 @@ final class YlMacosPresentationTests: XCTestCase {
     func resize(width: Int, height: Int) {}
     func clear() {}
     func dispose() {}
+  }
+
+  func testUnsupportedTimedOutputKeepsLegacyAudioClock() {
+    let output = RecordingTimedOutput(); output.supportsTimedVideo = false
+    let services = YlPlatformServices(platform: .macos, textureOutput: output,
+      makeDisplayDriver: { _ in fatalError("Clock-only test must not install display") })
+    let coordinator = YlPresentationCoordinator(services: services, lock: NSLock(), openedAt: 0, positionEventIntervalMs: 100)
+    var legacyReads = 0
+    coordinator.configureClock(nil, audioTime: { legacyReads += 1; return nil })
+    coordinator.configureTimedCandidate(enabled: true, requiresAudioAnchor: true)
+    XCTAssertFalse(coordinator.configureIsolatedAudioClock(generation: 1, read: { _ in
+      XCTFail("Unsupported output must not sample a candidate clock"); return .waiting
+    }))
+    coordinator.play(atHostTimeUs: 1000)
+    XCTAssertEqual(coordinator.position(atHostTimeUs: 2000), 1000)
+    XCTAssertGreaterThan(legacyReads, 0)
+    XCTAssertNil(coordinator.isolatedAudioClockStatistics)
+    coordinator.disposeFrames()
   }
 
   @MainActor

@@ -43,6 +43,11 @@ final class YlMacosTextureOutput: NSObject, FlutterTexture, YlTextureOutput, YlN
     renderer.detach(layer)
   }
 
+  var supportsTimedVideo: Bool {
+    if #available(macOS 14.0, *) { return nativeViews != nil }
+    return false
+  }
+
   func makeTimedVideoEndpoint() -> (any YlTimedVideoEndpoint)? {
     precondition(Thread.isMainThread)
     guard #available(macOS 14.0, *), nativeViews != nil, textureId >= 0,
