@@ -116,6 +116,10 @@ final class YlAppleTextureOwner {
   private let leases = NSHashTable<YlAppleTextureLease>.weakObjects()
   private var disposed = false
   private let onFrame: (YlAppleSessionIdentity) -> Void
+  private let timedLock = NSLock()
+  private var timedEpoch: UInt64 = 0
+  private var creatingTimedEndpoint = false
+  private var retiringTimedEndpoint: YlTimedVideoLeaseEndpoint?
   init(output: any YlTextureOutput, onFailure: ((YlAppleSessionIdentity, NativePlayerError) -> Void)? = nil, onFrame: @escaping (YlAppleSessionIdentity) -> Void) {
     self.output = output
     self.onFrame = onFrame
@@ -134,6 +138,7 @@ final class YlAppleTextureOwner {
   func commit(_ lease: YlAppleTextureLease) {
     guard !disposed, !lease.invalidated else { return }
     if let current, current !== lease {
+      retireTimedEndpoint(current)
       current.pendingFrame = nil
       current.invalidated = true
       if (output as? YlNativeVideoSurfaceOutput)?.nativeViewType != nil { output.clear() }
@@ -154,12 +159,50 @@ final class YlAppleTextureOwner {
     ylPublishVideoFrame(frame, retaining: reservation, to: output)
     onFrame(lease.identity)
   }
+  fileprivate func makeTimedEndpoint(_ lease: YlAppleTextureLease) -> (any YlTimedVideoEndpoint)? {
+    guard !disposed, !lease.invalidated, current === lease else { return nil }
+    timedLock.lock()
+    if let existing = lease.timedEndpoint { timedLock.unlock(); return existing }
+    guard retiringTimedEndpoint == nil, !creatingTimedEndpoint else { timedLock.unlock(); return nil }
+    creatingTimedEndpoint = true
+    let epoch = timedEpoch
+    timedLock.unlock()
+    let endpoint = (output as? YlTimedVideoOutput)?.makeTimedVideoEndpoint().map(YlTimedVideoLeaseEndpoint.init)
+    timedLock.lock()
+    creatingTimedEndpoint = false
+    let valid = timedEpoch == epoch && !disposed && !lease.invalidated && current === lease
+    if valid { lease.timedEndpoint = endpoint }
+    else if let endpoint { retiringTimedEndpoint = endpoint }
+    timedLock.unlock()
+    if !valid, let endpoint { finishTimedRetirement(endpoint) }
+    return valid ? endpoint : nil
+  }
+  private func retireTimedEndpoint(_ lease: YlAppleTextureLease) {
+    let endpoint = timedLock.withLock { () -> YlTimedVideoLeaseEndpoint? in
+      timedEpoch &+= 1
+      let endpoint = lease.timedEndpoint
+      lease.timedEndpoint = nil
+      if let endpoint { retiringTimedEndpoint = endpoint }
+      return endpoint
+    }
+    if let endpoint { finishTimedRetirement(endpoint) }
+  }
+  private func finishTimedRetirement(_ endpoint: YlTimedVideoLeaseEndpoint) {
+    endpoint.retire(removingImage: true) { [weak self, weak endpoint] in
+      guard let self, let endpoint else { return }
+      self.timedLock.withLock {
+        if self.retiringTimedEndpoint === endpoint { self.retiringTimedEndpoint = nil }
+      }
+    }
+  }
   fileprivate func clear(_ lease: YlAppleTextureLease) {
+    retireTimedEndpoint(lease)
     lease.pendingFrame = nil
     if current === lease, !disposed { output.clear() }
   }
   private func invalidateLeases() {
     for lease in leases.allObjects {
+      retireTimedEndpoint(lease)
       lease.pendingFrame = nil
       lease.invalidated = true
     }
@@ -178,11 +221,12 @@ final class YlAppleTextureOwner {
   }
 }
 
-final class YlAppleTextureLease: YlRetainedVideoOutput {
+final class YlAppleTextureLease: YlRetainedVideoOutput, YlTimedVideoOutput {
   fileprivate weak var owner: YlAppleTextureOwner?
   let identity: YlAppleSessionIdentity
   fileprivate var pendingFrame: (pixelBuffer: CVPixelBuffer, reservation: AnyObject?)?
   fileprivate var invalidated = false
+  fileprivate var timedEndpoint: YlTimedVideoLeaseEndpoint?
   fileprivate init(owner: YlAppleTextureOwner, identity: YlAppleSessionIdentity) {
     self.owner = owner
     self.identity = identity
@@ -192,6 +236,7 @@ final class YlAppleTextureLease: YlRetainedVideoOutput {
   func publish(_ pixelBuffer: CVPixelBuffer, retaining reservation: AnyObject?) {
     owner?.publish(pixelBuffer, retaining: reservation, from: self)
   }
+  func makeTimedVideoEndpoint() -> (any YlTimedVideoEndpoint)? { owner?.makeTimedEndpoint(self) }
   func resize(width: Int, height: Int) {}
   func clear() { owner?.clear(self) }
   func dispose() { clear(); invalidated = true }

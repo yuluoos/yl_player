@@ -8,6 +8,8 @@ struct YlAppleSessionIdentity: Equatable {
   let loadRequestId: String
 }
 struct NativePlayerError: Error {}
+struct YlPresentationClockSnapshot {}
+struct YlFrameEnvelope {}
 
 final class RetentionOutput: YlRetainedVideoOutput, YlNativeVideoSurfaceOutput {
   let textureId: Int64 = 42

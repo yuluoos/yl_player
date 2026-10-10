@@ -10,7 +10,7 @@
 
 **Spec:** [已获用户确认的设计](../specs/2026-10-10-macos-timed-presentation-design.md)。
 
-状态：用户于2026-10-10确认“确认计划，连续执行”；Task 1已完成（原生RED 10通过/4失败 → GREEN 14/14）；Task 2–5待执行。原路径Debug和Profile失败基线已具备，但真实原生层的失败验证尚需Task 4补齐。
+状态：用户于2026-10-10确认“确认计划，连续执行”；Task 1已完成（原生RED 10通过/4失败 → GREEN 14/14）；Task 2已完成（RED 14通过/3失败 → GREEN 31/31）；Task 3–5待执行。原路径Debug和Profile失败基线已具备，但真实原生层的失败验证尚需Task 4补齐。
 
 ## Global Constraints
 
@@ -115,7 +115,7 @@ protocol YlTimedVideoOutput: AnyObject {
 }
 ```
 
-- [ ] 写失败测试：`testTimedLeaseRejectsBeforeCommitAndAfterReplacement`、`testLateTimedFlushCannotClearNewLease`、`testTimedLeaseCloseDoesNotWaitUnderSessionLock`。使用测试`RecordingTimedEndpoint: YlTimedVideoEndpoint`保存frame.ptsUs和retire completion；其三个方法只记录参数，不模拟显示。通过真正owner/lease执行以下序列：
+- [x] 写失败测试：`testTimedLeaseRejectsBeforeCommitAndAfterReplacement`、`testLateTimedFlushCannotClearNewLease`、`testTimedLeaseCloseDoesNotWaitUnderSessionLock`。使用测试`RecordingTimedEndpoint: YlTimedVideoEndpoint`保存frame.ptsUs和retire completion；其三个方法只记录参数，不模拟显示。通过真正owner/lease执行以下序列：
 
 ```text
 makeLease A → A.makeTimedVideoEndpoint：没有可提交权限
@@ -125,9 +125,9 @@ makeLease B / commit B → endpoint A.enqueue(old frame)：false
 owner.dispose两次 → B权限撤销；任何晚到enqueue均false
 ```
 
-- [ ] 运行RED，然后实现owner/lease的线程安全权限令牌：检查身份与权限必须跟提交操作有明确串行顺序。owner先撤销权限，再发清理；不持锁执行系统enqueue/flush或用户callback。旧endpoint异步退役完成前不开放替代endpoint，不创建无界退役列表。
-- [ ] 普通publish、待commit的一帧缓存与AVPlayer binding保持原行为；只有显式请求定时endpoint的lease进入新路径。以`lease.makeTimedVideoEndpoint()`进入，禁止协调器直接取底层真实输出。
-- [ ] GREEN运行lease工具与presentation测试、镜像检查；提交`feat: fence timed video output by session lease`。
+- [x] 运行RED，然后实现owner/lease的线程安全权限令牌：检查身份与权限必须跟提交操作有明确串行顺序。owner先撤销权限，再发清理；不持锁执行系统enqueue/flush或用户callback。旧endpoint异步退役完成前不开放替代endpoint，不创建无界退役列表。
+- [x] 普通publish、待commit的一帧缓存与AVPlayer binding保持原行为；只有显式请求定时endpoint的lease进入新路径。以`lease.makeTimedVideoEndpoint()`进入，禁止协调器直接取底层真实输出。
+- [x] GREEN运行lease工具与presentation测试、镜像检查；提交`feat: fence timed video output by session lease`。
 
 ### Task 3: macOS系统renderer与worker生命周期
 

@@ -7,6 +7,100 @@ import XCTest
 import YlFFmpegBridge
 
 final class YlMacosPresentationTests: XCTestCase {
+  private final class RecordingTimedEndpoint: YlTimedVideoEndpoint {
+    var pts: [Int64] = []
+    var retirement: (() -> Void)?
+    var beforeEnqueue: (() -> Void)?
+    func update(_ snapshot: YlPresentationClockSnapshot, generation: UInt64) {}
+    func enqueue(_ frame: YlFrameEnvelope) -> Bool {
+      beforeEnqueue?(); pts.append(frame.ptsUs); return true
+    }
+    func retire(removingImage: Bool, completion: @escaping () -> Void) { retirement = completion }
+  }
+  private final class RecordingTimedOutput: YlTextureOutput, YlTimedVideoOutput {
+    let textureId: Int64 = 91
+    var endpoints: [RecordingTimedEndpoint] = []
+    func makeTimedVideoEndpoint() -> (any YlTimedVideoEndpoint)? {
+      let endpoint = RecordingTimedEndpoint(); endpoints.append(endpoint); return endpoint
+    }
+    func publish(_ pixelBuffer: CVPixelBuffer?) {}
+    func resize(width: Int, height: Int) {}
+    func clear() {}
+    func dispose() {}
+  }
+
+  @MainActor
+  func testTimedLeaseRejectsBeforeCommitAndAfterReplacement() async throws {
+    let output = RecordingTimedOutput()
+    // Use one real owner throughout the lifecycle; the output only records the system boundary.
+    let actual = YlAppleTextureOwner(output: output, onFrame: { _ in })
+    defer { actual.dispose() }
+    let a = actual.makeLease(identity: .init(sessionId: "a", loadRequestId: "a"))
+    XCTAssertNil(a.makeTimedVideoEndpoint())
+    actual.commit(a)
+    let endpoint = try XCTUnwrap(a.makeTimedVideoEndpoint())
+    let raw = try XCTUnwrap(output.endpoints.last)
+    let frame = YlFrameEnvelope(payload: NSObject(), ptsUs: 1, durationUs: 1, keyframe: true, generation: 1)
+    XCTAssertTrue(endpoint.enqueue(frame))
+    let b = actual.makeLease(identity: .init(sessionId: "b", loadRequestId: "b"))
+    actual.commit(b)
+    XCTAssertFalse(endpoint.enqueue(frame))
+    XCTAssertEqual(raw.pts, [1])
+    XCTAssertNil(b.makeTimedVideoEndpoint(), "New output must wait for the old native flush")
+    try XCTUnwrap(raw.retirement)()
+    await Task.yield()
+    let replacement = try XCTUnwrap(b.makeTimedVideoEndpoint())
+    XCTAssertTrue(replacement.enqueue(frame))
+    actual.dispose(); actual.dispose()
+    XCTAssertFalse(replacement.enqueue(frame))
+    output.endpoints.last?.retirement?()
+  }
+
+  @MainActor
+  func testLateTimedFlushCannotClearNewLease() async throws {
+    let output = RecordingTimedOutput()
+    let actual = YlAppleTextureOwner(output: output, onFrame: { _ in })
+    defer { actual.dispose() }
+    let a = actual.makeLease(identity: .init(sessionId: "a", loadRequestId: "a")); actual.commit(a)
+    _ = try XCTUnwrap(a.makeTimedVideoEndpoint()); let first = try XCTUnwrap(output.endpoints.last)
+    a.clear()
+    let b = actual.makeLease(identity: .init(sessionId: "b", loadRequestId: "b")); actual.commit(b)
+    let c = actual.makeLease(identity: .init(sessionId: "c", loadRequestId: "c")); actual.commit(c)
+    XCTAssertNil(b.makeTimedVideoEndpoint()); XCTAssertNil(c.makeTimedVideoEndpoint())
+    let oldFlush = try XCTUnwrap(first.retirement); oldFlush()
+    await Task.yield()
+    let latest = try XCTUnwrap(c.makeTimedVideoEndpoint())
+    oldFlush() // A duplicate system completion must not reopen any old permission.
+    XCTAssertNil(a.makeTimedVideoEndpoint()); XCTAssertNil(b.makeTimedVideoEndpoint())
+    XCTAssertTrue(latest.enqueue(.init(payload: NSObject(), ptsUs: 2, durationUs: 1, keyframe: true, generation: 2)))
+    actual.dispose(); output.endpoints.last?.retirement?()
+  }
+
+  @MainActor
+  func testTimedLeaseCloseDoesNotWaitUnderSessionLock() async throws {
+    let output = RecordingTimedOutput()
+    let owner = YlAppleTextureOwner(output: output, onFrame: { _ in })
+    let a = owner.makeLease(identity: .init(sessionId: "a", loadRequestId: "a")); owner.commit(a)
+    let endpoint = try XCTUnwrap(a.makeTimedVideoEndpoint()), raw = try XCTUnwrap(output.endpoints.last)
+    let entered = expectation(description: "native enqueue entered")
+    let ended = expectation(description: "in-flight enqueue finished")
+    let release = DispatchSemaphore(value: 0)
+    raw.beforeEnqueue = { entered.fulfill(); _ = release.wait(timeout: .now() + 2) }
+    DispatchQueue.global().async {
+      _ = endpoint.enqueue(.init(payload: NSObject(), ptsUs: 1, durationUs: 1, keyframe: true, generation: 1))
+      ended.fulfill()
+    }
+    await fulfillment(of: [entered], timeout: 1)
+    owner.dispose()
+    XCTAssertNil(raw.retirement, "Retire cannot flush while an admitted system enqueue is in flight")
+    release.signal()
+    await fulfillment(of: [ended], timeout: 1)
+    XCTAssertNotNil(raw.retirement)
+    raw.beforeEnqueue = nil
+    XCTAssertFalse(endpoint.enqueue(.init(payload: NSObject(), ptsUs: 2, durationUs: 1, keyframe: true, generation: 1)))
+    raw.retirement?()
+  }
+
   func testTimedWindowDoesNotExceedLeadOrCount() {
     let window = YlTimedVideoWindow()
     window.reset(generation: 1)

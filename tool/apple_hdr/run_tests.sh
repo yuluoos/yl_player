@@ -18,6 +18,7 @@ xcrun swiftc -module-cache-path "$scratch/cache" \
   "$root/tool/apple_hdr/sample_tests.swift" -o "$scratch/sample"
 "$scratch/sample"
 xcrun swiftc -module-cache-path "$scratch/cache" \
+  "$native/Shared/VideoToolbox/YlTimedVideoEndpoint.swift" \
   "$native/Shared/Session/YlPlatformServices.swift" \
   "$root/tool/apple_hdr/lease_tests.swift" -o "$scratch/lease"
 "$scratch/lease"
