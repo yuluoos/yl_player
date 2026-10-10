@@ -10,7 +10,7 @@
 
 **Spec:** [已获用户确认的设计](../specs/2026-10-10-macos-timed-presentation-design.md)。
 
-状态：用户于2026-10-10确认“确认计划，连续执行”；Task 1已完成（原生RED 10通过/4失败 → GREEN 14/14）；Task 2已完成（RED 14通过/3失败 → GREEN 31/31）；Task 3主体已完成（生命周期37/37、HDR工具通过）；Task 4–5待执行。EOF replay与不等长音画尾部纳入Task 5集中生命周期补测。原路径Debug和Profile失败基线已具备，但真实原生层的失败验证尚需Task 4补齐。
+状态：用户确认后已连续执行五项流程；实现、一次完整审查、集中回归、短测矩阵与单次20分钟长播已完成。最终准入拒绝：长播系统丢11帧、worker空档146.753ms、一条不可见记录，退出阶段超时且无资源归零证据。候选默认关闭，原始卡顿全部根因与退出阻塞仍开放。详见[最终验收报告](../reports/2026-10-10-macos-timed-presentation-acceptance.md)。
 
 ## Global Constraints
 
@@ -187,8 +187,8 @@ invalid_records = [
 
 **Interfaces:** 复用Task 4记录/collector；将已有归档内的NSWorkspace唯一PID/bundle激活helper纳入runner，保持已有同进程复用与超时清理检查，不操作其他应用。
 
-- [ ] runner先测试失败：缺少实际激活通知、返回不同PID、源码/二进制身份变化、无最终disposed记录、native非零退出，都必须保存原始输出并判失败。测试的subprocess替身仅用于这些进程边界；真实输出验收不能用替身。
-- [ ] Debug旧/候选、Profile旧/候选四组串行30s真实激活，固定10s请求、同一素材、无Instruments。分析按request uptime分开前后丢帧：
+- [x] runner先测试失败：缺少实际激活通知、返回不同PID、源码/二进制身份变化、无最终disposed记录、native非零退出，都必须保存原始输出并判失败。测试的subprocess替身仅用于这些进程边界；真实输出验收不能用替身。
+- [x] Debug旧/候选、Profile旧/候选四组串行30s真实激活，固定10s请求、同一素材、无Instruments。分析按request uptime分开前后丢帧：
 
 ```python
 before = sum(event['count'] for event in events if event['uptime'] < requested)
@@ -196,9 +196,9 @@ after = sum(event['count'] for event in events if event['uptime'] >= requested)
 assert before + after == active_dropped  # history截断则不能作完整分类
 ```
 
-- [ ] 对worker最大延迟与系统指标分别判定；若候选仅减少main依赖但系统仍丢帧，保持失败结论并定位剩余供给瓶颈。禁止降低现有100ms门限或将cleanup计数抵消活动失败。
-- [ ] 在最终身份运行相关完整macOS回归；共享lease/时钟变化在iPhone18 Pro Max跑对应回归；最后仅一次候选20分钟长播。保存源与二进制hash、退出码、跳过条件、owned进程清理、资源释放。新问题引发补测有明确理由；不每项重复全套。
-- [ ] 复算portable archive并检查报告全部数字与链接。候选保持默认关闭，单列本机显示连续性、A5资源边界与R4物理设备限制。完成一次最终代码审查；提交`test: record timed presentation activation acceptance`。不push、不合并、不把整个P08自动标完成。
+- [x] 对worker最大延迟与系统指标分别判定；若候选仅减少main依赖但系统仍丢帧，保持失败结论并定位剩余供给瓶颈。禁止降低现有100ms门限或将cleanup计数抵消活动失败。执行结果：失败已保留；精确瓶颈尚未定位，后续需补分段耗时与退出进度。
+- [x] 集中运行完整macOS回归；共享lease/时钟变化在iPhone18 Pro Max跑对应回归；最后仅一次候选20分钟长播。保存源与二进制hash、退出码、跳过条件、owned进程清理、资源释放。新问题引发补测有明确理由；不每项重复全套。执行身份说明：完整macOS695及iOS93通过/1条件跳过属于490ba51；后续macOS诊断/窗口协议身份a3f4712跑相关43项，未宣称全套重新运行；长播超时释放未验证。
+- [x] 复算portable archive并检查报告全部数字与链接。候选保持默认关闭，单列本机显示连续性、A5资源边界与R4物理设备限制。完成一次最终代码审查；提交`test: record timed presentation activation acceptance`。不push、不合并、不把整个P08自动标完成。
 
 ## 计划自检
 

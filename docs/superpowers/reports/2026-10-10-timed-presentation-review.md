@@ -1,6 +1,6 @@
 # 定时显示候选完整代码审查
 
-独立只读审查范围：`7d0d4c5..cb4a952`及Task5当时未提交的采集器/测试。使用执行技能要求的一次fresh-context审查；在正式激活矩阵和长播前完成，以便修正后冻结源码身份。无Critical、Minor；四项Important必须修正后验证。
+独立只读审查范围：`7d0d4c5..cb4a952`及Task5当时未提交的采集器/测试。使用执行技能要求的一次fresh-context审查；在正式激活矩阵和长播前完成，以便修正后冻结源码身份。无Critical、Minor；四项Important已修正：EOF屏障、horizon回退和paused seek原生RED0/3，paused detach原生RED0/1；修复后相关原生42/42，采集器含异常入口10/10通过。完整集中回归另行执行。
 
 | 发现 | 已复现的失败 | 修正方向 |
 | --- | --- | --- |
