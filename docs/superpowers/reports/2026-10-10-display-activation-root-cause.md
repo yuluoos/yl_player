@@ -2,6 +2,8 @@
 
 基线 `90a14ed`。本轮把“回调进入前的延迟”推进到可触发的具体路径：**macOS Flutter Debug 测试宿主首次进入前台时，AppKit 激活、Flutter 生命周期/JIT 和文本输入系统初始化占用主线程；同一主线程上的 CADisplayLink 无法按时交付，视频队列随后 catch-up 丢帧。**
 
+后续在`3f41cb0`相同源码的Profile/AOT构建也复现失败（活动12帧，请求前1、后11），见[Profile对照](2026-10-10-display-profile-activation.md)。因此不能将问题限定为Debug JIT。已获用户确认的[定时显示设计](../specs/2026-10-10-macos-timed-presentation-design.md)与[五项实施计划](../plans/2026-10-10-macos-timed-presentation.md)接续本任务；原生显示层修复尚未实现。
+
 原始失败的同期系统日志与受控复现相符；去掉 Instruments 后仍复现。因此“首次激活期间主线程工作阻塞显示供给”有受控实验支持，历史失败归因到该路径有很强证据。但历史55秒事件没有完整同期调用栈，不能还原其中每个函数的确切耗时，不能把新采样栈冒充历史栈。
 
 ## 原始失败的同期证据
