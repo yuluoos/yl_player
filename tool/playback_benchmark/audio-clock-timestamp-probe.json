@@ -1,0 +1,120 @@
+{
+  "purpose": "Design evidence only; no player behavior change or physical-output proof",
+  "xcode": "27.1 (27A9275)",
+  "source": "import AVFoundation\nimport Foundation\nlet engine = AVAudioEngine(), player = AVAudioPlayerNode(), pitch = AVAudioUnitTimePitch()\nengine.attach(player); engine.attach(pitch)\nlet format = AVAudioFormat(standardFormatWithSampleRate: 48_000, channels: 2)!\nengine.connect(player, to: pitch, format: format)\nengine.connect(pitch, to: engine.mainMixerNode, format: format)\nlet buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 96_000)!\nbuffer.frameLength = 96_000\nfor channel in 0..<2 { memset(buffer.floatChannelData![channel], 0, 96_000 * MemoryLayout<Float>.size) }\nplayer.volume = 0\nplayer.scheduleBuffer(buffer)\ntry engine.start(); player.play()\nfor _ in 0..<10 {\n Thread.sleep(forTimeInterval: 0.05)\n let before = ProcessInfo.processInfo.systemUptime\n if let node = player.lastRenderTime, let time = player.playerTime(forNodeTime: node) {\n  let after = ProcessInfo.processInfo.systemUptime\n  let row: [String: Any] = [\"before\":before,\"after\":after,\"nodeHostValid\":node.isHostTimeValid,\"playerHostValid\":time.isHostTimeValid,\"nodeSample\":node.sampleTime,\"playerSample\":time.sampleTime,\"sampleRate\":time.sampleRate,\"nodeHostSeconds\":AVAudioTime.seconds(forHostTime: node.hostTime),\"playerHostSeconds\":AVAudioTime.seconds(forHostTime: time.hostTime)]\n  print(String(data: try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]), encoding:.utf8)!)\n }\n}\nplayer.stop(); engine.stop()\n",
+  "sourceSHA256": "f70cfe3b411e1c17f754089af08baadb049408174b9791450827484e1f458c8a",
+  "rows": [
+    {
+      "after": 36234.228020208335,
+      "before": 36234.228011125,
+      "nodeHostSeconds": 36234.245407333336,
+      "nodeHostValid": true,
+      "nodeSample": 2790,
+      "playerHostSeconds": 36234.245407333336,
+      "playerHostValid": true,
+      "playerSample": 1116,
+      "sampleRate": 48000
+    },
+    {
+      "after": 36234.280631375004,
+      "before": 36234.28061904167,
+      "nodeHostSeconds": 36234.30353233334,
+      "nodeHostValid": true,
+      "nodeSample": 5580,
+      "playerHostSeconds": 36234.30353233334,
+      "playerHostValid": true,
+      "playerSample": 3906,
+      "sampleRate": 48000
+    },
+    {
+      "after": 36234.33437466667,
+      "before": 36234.33435808334,
+      "nodeHostSeconds": 36234.350032333336,
+      "nodeHostValid": true,
+      "nodeSample": 7812,
+      "playerHostSeconds": 36234.350032333336,
+      "playerHostValid": true,
+      "playerSample": 6138,
+      "sampleRate": 48000
+    },
+    {
+      "after": 36234.389598875,
+      "before": 36234.38958104167,
+      "nodeHostSeconds": 36234.40815733334,
+      "nodeHostValid": true,
+      "nodeSample": 10602,
+      "playerHostSeconds": 36234.40815733334,
+      "playerHostValid": true,
+      "playerSample": 8928,
+      "sampleRate": 48000
+    },
+    {
+      "after": 36234.44493116667,
+      "before": 36234.44491983334,
+      "nodeHostSeconds": 36234.466282333335,
+      "nodeHostValid": true,
+      "nodeSample": 13392,
+      "playerHostSeconds": 36234.466282333335,
+      "playerHostValid": true,
+      "playerSample": 11718,
+      "sampleRate": 48000
+    },
+    {
+      "after": 36234.4979085,
+      "before": 36234.49789841667,
+      "nodeHostSeconds": 36234.51278233334,
+      "nodeHostValid": true,
+      "nodeSample": 15624,
+      "playerHostSeconds": 36234.51278233334,
+      "playerHostValid": true,
+      "playerSample": 13950,
+      "sampleRate": 48000
+    },
+    {
+      "after": 36234.55302683334,
+      "before": 36234.553017583334,
+      "nodeHostSeconds": 36234.570907333335,
+      "nodeHostValid": true,
+      "nodeSample": 18414,
+      "playerHostSeconds": 36234.570907333335,
+      "playerHostValid": true,
+      "playerSample": 16740,
+      "sampleRate": 48000
+    },
+    {
+      "after": 36234.6081485,
+      "before": 36234.60813741667,
+      "nodeHostSeconds": 36234.62903233334,
+      "nodeHostValid": true,
+      "nodeSample": 21204,
+      "playerHostSeconds": 36234.62903233334,
+      "playerHostValid": true,
+      "playerSample": 19530,
+      "sampleRate": 48000
+    },
+    {
+      "after": 36234.66329141667,
+      "before": 36234.66328183334,
+      "nodeHostSeconds": 36234.687157333334,
+      "nodeHostValid": true,
+      "nodeSample": 23994,
+      "playerHostSeconds": 36234.687157333334,
+      "playerHostValid": true,
+      "playerSample": 22320,
+      "sampleRate": 48000
+    },
+    {
+      "after": 36234.718431500005,
+      "before": 36234.718417875,
+      "nodeHostSeconds": 36234.73365733334,
+      "nodeHostValid": true,
+      "nodeSample": 26226,
+      "playerHostSeconds": 36234.73365733334,
+      "playerHostValid": true,
+      "playerSample": 24552,
+      "sampleRate": 48000
+    }
+  ],
+  "minimumFutureHostMs": 14.873833337333053,
+  "maximumFutureHostMs": 23.865916664362885
+}
