@@ -447,8 +447,10 @@ final class YlAudioRenderer: YlAudioRendering {
       let mapped = Double(anchor.mediaUs) + elapsed
       guard mapped.isFinite, mapped >= 0, mapped < Double(Int64.max) else { return .invalid }
       let media = Int64(mapped.rounded(.towardZero))
-      // Completion/other reads may already have moved the timeline beyond this raw observation.
-      guard media >= position else { return .invalid }
+      // Completion position describes a different instant from this native pair.
+      // A later callback can legitimately be ahead; neither reject this pair nor
+      // combine its host time with the callback's position. The checks above
+      // still discard observations if mapping state changed during the read.
       return .running(.init(generation: expectedGeneration, positionUs: media, hostTimeUs: host,
         lowerBoundUs: anchor.mediaUs, upperBoundUs: end, rate: Double(rate)))
     }

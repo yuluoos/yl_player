@@ -56,6 +56,25 @@ final class YlMacosAudioTests: XCTestCase {
     XCTAssertEqual(position, 1_250_000)
   }
 
+  func testTimestampedObservationMayPrecedeCompletedBufferPosition() throws {
+    let output = TestAudioOutput(), renderer = try clockRenderer(output)
+    defer { renderer.dispose() }
+    _ = try renderer.enqueue(packet: .init(data: Data([2]), ptsUs: 1_250_000,
+      durationUs: 250_000, generation: 1))
+    output.completeNextBuffer() // Completion reports 1.250s at a later instant.
+    // A valid native observation at 1.240s is not a rollback of that callback.
+    // Preserve its media/host pair; never clamp it to the callback's 1.250s.
+    output.renderedAudioTime = .init(sampleTime: 11_520, sampleRate: 48_000, hostTimeUs: 1_240_000)
+    guard case let .running(sample) = renderer.clockObservation(expectedGeneration: 1) else {
+      return XCTFail("A stable timestamped sample must not be rejected against a later completion position")
+    }
+    XCTAssertEqual(sample.positionUs, 1_240_000)
+    XCTAssertEqual(sample.hostTimeUs, 1_240_000)
+    XCTAssertEqual(sample.position(atHostTimeUs: 1_260_000), 1_260_000)
+    XCTAssertEqual(sample.lowerBoundUs, 1_000_000)
+    XCTAssertEqual(sample.upperBoundUs, 1_500_000)
+  }
+
   func testAudioObservationRejectsReadAcrossReset() throws {
     try checkClockReadRace(reset: true)
   }
