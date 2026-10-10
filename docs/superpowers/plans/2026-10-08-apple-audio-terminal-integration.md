@@ -503,6 +503,17 @@ AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 o
 - [x] 保留现有EOF流程；不增加同步/后台自动stop，不启用候选；既有显式控制与失效重载语义不变。
 - [x] 将九类门槛映射到证据、版本范围及缺口；历史1201.179s通过、完整658项与当前定向4项分开，发现665不冒充当前完整通过。
 - [x] 后续工作收敛为R1恢复行为、R2生命周期资源、R3资源准入结论、R4设备/平台、R5最终版本回归；外部资源缺口不阻塞本机可执行项。
-- [ ] 下一项R1：自然EOF后不注入原生stop的seek/重播与后台恢复；先核对Host生命周期契约，默认和候选分别覆盖。
+- [x] R1自然EOF后不注入原生stop的seek/重播与Host后台恢复已验证，默认/候选均覆盖，见下方记录。
 
 唯一当前矩阵：[EOF回收与候选准入](../reports/2026-10-09-audio-eof-admission.md)。旧章节的“下一项”是历史记录，以此入口为准。此次仅文档/源码与证据核查，无新原生/heap/长程运行，不修改生产；完整P08及候选准入仍开放。
+
+
+### R1：正常EOF重播与Host生命周期恢复（2026-10-09，base c98daef）
+
+- [x] 新增默认/候选无手动stop的三轮播放，覆盖seek0/2000、真实音频sample/公开位置/视频推进、完成1/2/3及首帧一次；共用helper保留手动stop对照，非stop记录manualStop=false/stopSeconds=null。
+- [x] 新增默认/候选EOF后重复suspend/resume：遵守既有Host契约，同session释放旧图并重建一次output，不强迫旧节点跨后台存活；完成态不自动重播。
+- [x] 旧完成回调在暂停、播放及close后注入；显式seek0/play能恢复，重复close和close后resume不产生晚到公开事件/纹理；释放后ledger0、所有engine停止/player脱离。
+- [x] 六项原生首次6/6、0跳过，夹具4/4、发现iOS678/macOS669，独立复审无P1/P2；18份原始证据及最终source/binaryhash归档，未修改生产。
+- [ ] 下一项R2：按当前准入矩阵冻结重复生命周期资源观察协议，再执行默认/候选seek/replay与Load/close测量。
+
+范围仅4.021s本地AVC/AAC和直接Host生命周期调用，不证明实际OS后台、设备路由、物理音画或长程/整体资源边界。没有重跑完整native或iOS。见[协议](../../../tool/playback_benchmark/decoded-eof-lifecycle-protocol.md)、[原始归档](../../../tool/playback_benchmark/macos-eof-lifecycle-observations.json)及[当前准入矩阵](../reports/2026-10-09-audio-eof-admission.md)。候选默认、正式准入、整体有界仍false。

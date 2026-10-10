@@ -333,3 +333,6 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 
 
 2026-10-09 EOF策略已收敛：保留presentation时钟/显示节拍暂停，不新增自动stop或开放候选。[当前准入矩阵](../reports/2026-10-09-audio-eof-admission.md)明确九类证据边界、R1–R5执行顺序及设备依赖；下一项R1是无手动stop的自然EOF重播与后台恢复。本次仅文档核查，完整P08仍开放。
+
+
+2026-10-09 R1已完成：默认/候选无手动stop的自然EOF seek/重播及Host suspend/resume，六项原生首次通过、夹具4项、发现678/669；同session重建输出且完成态不自动重播，旧回调与关闭隔离通过。只改测试，无物理后台/长程/资源有界声明。下一项R2是重复生命周期资源观察，见[当前准入矩阵](../reports/2026-10-09-audio-eof-admission.md)。

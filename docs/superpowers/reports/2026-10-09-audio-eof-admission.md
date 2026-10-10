@@ -18,11 +18,11 @@
 | --- | --- | --- | --- |
 | A1 | 内部资格、所有权、通知与代际 | 接入Task1–4；真实adapter控制及自然EOF回归 | 已实现，候选默认关闭。后续变更需对应回归，不能从测试开关推断实际使用候选 |
 | A2 | 自然EOF、真实尾部与暂停完成 | [自然EOF归档](../../../tool/playback_benchmark/macos-decoded-natural-eof-observations.json)：正常尾部和持有真实尾回调的暂停/恢复 | 局部通过；普通rendered不能代替最终playedBack，缺通知仍不能completed |
-| A3 | EOF后显式stop再seek/重播 | [重播归档](../../../tool/playback_benchmark/macos-stop-replay-observations.json)：首次2项失败，修复后4/4；默认/候选各三轮，旧回调隔离 | `bcd547b`约4s素材局部通过。生产不注入stop路径、EOF后后台/前台恢复尚需当前版本独立验证 |
+| A3 | EOF后显式stop再seek/重播 | [重播归档](../../../tool/playback_benchmark/macos-stop-replay-observations.json)：首次2项失败，修复后4/4；默认/候选各三轮，旧回调隔离 | `bcd547b`约4s素材局部通过；R1已补齐不注入stop及直接Host suspend/resume，见下方更新。真实OS后台/设备切换仍未验证 |
 | A4 | 无heap连续长播 | [路由事件长播归档](../../../tool/playback_benchmark/macos-route-monitored-long-observations.json)：1201.179s、241点、活动播放drop/order均0，无回退 | 旧冻结版本局部通过；不是当前重播修复的长程验收，不是完整文件EOF。历史单drop、870.888s失败保留；最终发布身份还需一次独立复测 |
 | A5 | 独立资源与停止边界 | [停止路径归档](../../../tool/playback_benchmark/macos-stop-paths-observations.json)：两进程、8份heap；默认2813 played，候选2812 rendered+1 played | 局部类型/时延观察通过；整体有界、重复生命周期累计保留、兼容回退后的增长仍未闭合。单次类型消失不能准入自动stop |
 | A6 | 音频配置失效与恢复 | [显式重载归档](../../../tool/playback_benchmark/macos-audio-reload-recovery-observations.json)：受控配置通知、启动失败与新session重载 | 受控路径通过，不能代替实际设备切换。需记录真实切换前后设备/格式、错误或恢复、旧图/旧会话隔离 |
-| A7 | 平台与版本回归 | 历史完整macOS658/658和iOS编译；当前重播定向4/4，发现iOS678/macOS665 | 历史完整套件不等于当前全套。最终源码需完整macOS运行清单、共享iOS构建/适用运行；发现数量不是通过数量 |
+| A7 | 平台与版本回归 | 历史完整macOS658/658和iOS编译；bcd547b重播定向4/4，本轮R1定向6/6，发现iOS678/macOS669 | 历史完整套件不等于当前全套。最终源码需完整macOS运行清单、共享iOS构建/适用运行；发现数量不是通过数量 |
 | A8 | 物理输出与支持设备 | 现有静音输出、节点tap及内部时钟证据 | 未证明物理音画同步、实际外设、最低macOS12或Intel运行。需相应设备与预先冻结测量方法；模拟器/Rosetta/编译不能冒充真机或最低OS |
 | A9 | 发布准入与范围 | 资格限制、失败保留、原门限已有文档 | 以上必要门槛与资源风险未闭合，不开放默认。精确retainer研究可按具体假设进行，不能反复无目标采样，也不把缺少retainer当作唯一阻塞项 |
 
@@ -34,7 +34,7 @@
 
 | 顺序 | 工作与入口 | 可交付完成条件 | 依赖/停止条件 |
 | --- | --- | --- | --- |
-| R1（下一项） | 在现有macOS音频测试及镜像补齐**不注入原生stop**的自然EOF→seek0/2000→play，以及EOF后host suspend/resume | 默认/候选均检查同session预期、实际节点模式、音频/公开时钟和真实画面推进、完成一次/轮、首帧一次/session；后台恢复不得自行重播completed内容；显式play/seek恢复及旧事件隔离、重复close通过 | 现有本地短素材可执行；若后台恢复设计要求新session，以现有Host契约为准，先核对并明确记录，不能为保留同session断言改业务语义 |
+| R1（局部验收已完成） | 在现有macOS音频测试及镜像补齐**不注入原生stop**的自然EOF→seek0/2000→play，以及EOF后host suspend/resume | 默认/候选均检查同session预期、实际节点模式、音频/公开时钟和真实画面推进、完成一次/轮、首帧一次/session；后台恢复不得自行重播completed内容；显式play/seek恢复及旧事件隔离、重复close通过 | 现有本地短素材可执行；若后台恢复设计要求新session，以现有Host契约为准，先核对并明确记录，不能为保留同session断言改业务语义 |
 | R2 | 默认/候选重复seek/replay与显式Load/close生命周期资源观察 | 先冻结固定轮数、身份、阶段及原生超时，再执行；核对释放、代际、计数与模式；在停止播放的检查点采heap，独立报告原值和净变化 | 不与连续性测量混跑；协议预先定义资源结论依据，不能事后用最大值定“有界”；无法证明则明确保持false并记录具体未闭合项 |
 | R3 | 候选资源准入结论 | 汇总R2与既有长度/回退证据，给出可验证的工作集边界或明确不准入；若需新架构，先说明具体缺口和替代方案，避免继续调大经验参数 | 下游队列/系统对象边界不足时保持候选关闭；精确持有链只针对能改变决策的问题采集 |
 | R4 | 实际路由、物理音画、最低系统/Intel与共享iOS兼容 | 每个支持格有设备/版本、素材、测量方法、通过或失败记录；路由需真实切换，不能由注入通知代替 | 设备/测量条件待盘点，当前未有可引用通过证据；缺资源只阻塞对应格，继续其他格 |
@@ -45,3 +45,12 @@ R1/R2可在现有工程推进；R4所需外设/最低OS/Intel/物理测量配置
 ## 本轮核查边界
 
 本轮只修改决策和计划文档；读取现有源码、归档字段并核对本地引用，不运行新原生测试、长播、heap或改变系统音频设备。表内数字是历史证据引用。当前实现核查点为`YlManagedPlaybackSession.completeIfDrained/play`及Host/Coordinator/Session三层默认false参数。未引入商业SDK或扩大任何格式能力。
+
+
+## R1执行更新（2026-10-09，base c98daef）
+
+R1六项定向原生测试首次全部通过、0跳过：新增默认/候选不手动stop重播两项、EOF后Host suspend/resume两项，另回归共用helper的既有手动stop两项。未修改生产源码。无手动stop的三轮完成数1/2/3，实际音频与视频/位置继续推进，首帧一次；后台路径保持同session、输出由1个变2个，旧图释放后不再使用，重复resume不多建输出。默认/候选前台暂停位置分别4017/4026ms，与各自EOF位置相同；明确seek0/play后再次完成，视频帧97→193，关闭账本0。旧回调在暂停、播放及关闭后注入均隔离。
+
+证据：[R1原始归档](../../../tool/playback_benchmark/macos-eof-lifecycle-observations.json)，[测量协议](../../../tool/playback_benchmark/decoded-eof-lifecycle-protocol.md)。本次为4.021s本地素材、直接Host生命周期调用；不是OS真正睡眠/后台切换、实际音频路由、物理音画或长程验证。夹具4/4、发现678/669；6项通过不代表669项全跑。矩阵A7中的历史构建边界不变，默认/正式准入/整体有界仍false。
+
+**下一项R2：重复seek/replay及显式Load/close的生命周期资源观察。** 执行前冻结固定轮数、版本身份、无播放heap检查点、原超时和结论规则；帧连续性、资源条目和全进程边界分别判断，不从本次功能通过外推资源准入。

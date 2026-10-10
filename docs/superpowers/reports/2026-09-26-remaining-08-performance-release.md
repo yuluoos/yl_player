@@ -1695,3 +1695,12 @@ intervened−drained全进程堆变化为hold -229,680B、stop +612,848B，stop�
 [当前决策矩阵](2026-10-09-audio-eof-admission.md)已统一九类证据与五项后续工作。自然EOF保留presentation时钟/显示节拍暂停，不新增原生自动stop；测试直接操作player的结果不等于生产行为。默认同步stop单次10.895s仍不支持直接主线程接入，候选0.053s也不是上界。已有重播修复、长播、堆类型、受控重载分别保留各自构建范围。
 
 下一项R1补齐不注入stop的正常EOF恢复及后台/前台语义；之后按R2资源生命周期、R3资源准入结论、R4设备平台、R5最终版本回归推进。当前仅文档核查，无新测试或物理设备声明，默认/正式准入/整体有界均false。完整P08不因本决策文档完成而关闭。
+
+
+### R1：无手动stop重播与Host后台恢复（2026-10-09，base c98daef）
+
+新增四项macOS真实解码/AVAudioEngine测试，默认和候选各覆盖自然EOF后seek0/2000重播，以及EOF后重复suspend/resume再显式seek0/play。既有两项手动stop重播共用helper也回归；首次6/6通过、0跳过，未修改生产。非stop组没有直接操作原生pause/stop；生产seek/suspend/close自身仍按原规则停止或释放输出。
+
+无stop三轮同session/output，完成1/2/3、首帧一次、实际模式/anchor、时钟与视频推进通过。后台组同session，旧图销毁、只重建一个新output；默认/候选回前台暂停位置4017/4026ms保持各自EOF位置，原生节点不播放。显式重播后两路视频均97→193，完成数2，首帧仍1。真实旧回调在暂停/播放/关闭阶段重复注入没有提前完成/错误/晚到事件；close后resume无效、ledger0、所有engine停止/player脱离。
+
+夹具4/4、发现678/669、复审无P1/P2；[18份原始归档](../../../tool/playback_benchmark/macos-eof-lifecycle-observations.json)含XCTest摘要/附件、源码/二进制/素材hash。见[协议](../../../tool/playback_benchmark/decoded-eof-lifecycle-protocol.md)与[当前矩阵](2026-10-09-audio-eof-admission.md)。调用Host suspend/resume不等于真实OS后台/睡眠或物理路由；4s功能验证不替代资源/长程/平台验证，完整native和iOS未重跑。下一项R2冻结并执行重复生命周期资源观察；候选保持关闭，整体有界未证明。
