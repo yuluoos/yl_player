@@ -550,3 +550,13 @@ AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 o
 - [ ] 下一项R5本机验收：冻结最终身份并完成完整macOS原生清单、无heap短门禁与>=1200s长播，整理发布结论；身份不变时复用R4 iOS证据，资源A5仍不准入。
 
 [当前矩阵](../reports/2026-10-09-audio-eof-admission.md)、[盘点](../../../tool/playback_benchmark/apple-device-inventory-observations.json)、[协议](../../../tool/playback_benchmark/apple-platform-inventory-protocol.md)、[测试证据](../../../tool/playback_benchmark/apple-local-platform-validation-observations.json)。未切换系统设备/采样率或安装真机应用，未提高部署下限，未启用候选。完整P08仍未完成。
+
+
+### R5：首轮完整回归与失败保留
+
+- [x] 完整macOS规范670项逐身份匹配，667通过/3失败/0跳过；R4相关375哈希一致，复用iOS历史674通过/3跳过。
+- [x] 纠正执行器误用默认60s预算的两项矩阵测试：相同二进制180s定向2/2、0跳过；初轮失败保留，不计新的全套通过。
+- [x] 归档30.024849s连续性失败：活动drop5（catchUp4+lateAfterCapacity1），关闭后另增1；约154–160ms调度窗口，根因尚未定位。
+- [ ] 调度延迟归因、当前完整套件通过、独立短门禁及>=1200s长播仍待完成；本轮未启动短/长播。
+
+下一项是有界调度延迟归因，随后重新评估R5前置条件；不盲目重跑。后续iOS优先iPhone18，具体可用型号执行前确认。见[当前记录](../reports/2026-10-09-audio-eof-admission.md)；候选关闭，P08仍开放。

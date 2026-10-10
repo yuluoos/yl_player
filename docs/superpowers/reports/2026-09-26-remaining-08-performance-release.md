@@ -1740,3 +1740,10 @@ intervened−drained全进程堆变化为hold -229,680B、stop +612,848B，stop�
 首轮完整iOS运行673通过、1失败、3跳过；规范身份677全部执行，源码678含macOS-only一项。失败来自RTMP恢复测试把socket accept+150ms等同解码器准备完成；测试factory注入300ms延迟后定向RED0/1重现，改为原2s总期限内等待实际创建，保留线程/预算/stop检查。仅修改三份镜像测试，无生产变更。最终iOS 674通过、0失败、3原条件硬件跳过，逐身份/原因/能力附件核验通过；macOS相关4/4，夹具4/4，发现678/671。375冻结文件匹配，初轮/RED/最终共81份测试记录归档；警告保留，不把跳过或模拟器结果算真机通过。
 
 见[设备盘点](../../../tool/playback_benchmark/apple-device-inventory-observations.json)、[测试归档](../../../tool/playback_benchmark/apple-local-platform-validation-observations.json)及[当前矩阵](2026-10-09-audio-eof-admission.md)。R4本机部分完成，设备格仍开放；下一项R5本机完整macOS及独立无heap短/长程，相关身份不变时复用本轮iOS结果。R3/A5不准入、候选关闭、完整P08开放。
+
+
+### R5：完整macOS首轮与调度延迟缺口
+
+当前规范670项667通过/3失败/0跳过，每身份一次；源码671中一项只在iOS编译。两项矩阵被执行器默认60s错误截断，纠正为既有180s后相同二进制定向2/2通过；不覆盖初轮失败或冒充新全套。真实连续性失败保留：30.024849s内catchUp4+lateAfterCapacity1，共5个活动drop，dispose另增enqueueTimeout1。两次调度间隔159.598/154.077ms，另一次41.473ms；音频漂移+37.401ms、最大选择落后45.5ms、关闭账本0，无音频配置失效/启动失败记录，但根因尚未确定。
+
+独立短播和>=1200s长播未启动；下一项先归因显示回调/主线程/调度耗时。R4相关375哈希一致，复用iPhone18 Pro历史674通过/3条件跳过，不新增iOS运行；用户以后优先iPhone18偏好已记录。见[协议](../../../tool/playback_benchmark/apple-final-local-verification-protocol.md)、[归档](../../../tool/playback_benchmark/apple-final-local-verification-observations.json)、[当前矩阵](2026-10-09-audio-eof-admission.md)。无生产改动；候选关闭，R5/P08及资源A5仍未完成。
