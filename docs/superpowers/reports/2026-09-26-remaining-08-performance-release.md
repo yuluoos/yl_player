@@ -1747,3 +1747,10 @@ intervened−drained全进程堆变化为hold -229,680B、stop +612,848B，stop�
 当前规范670项667通过/3失败/0跳过，每身份一次；源码671中一项只在iOS编译。两项矩阵被执行器默认60s错误截断，纠正为既有180s后相同二进制定向2/2通过；不覆盖初轮失败或冒充新全套。真实连续性失败保留：30.024849s内catchUp4+lateAfterCapacity1，共5个活动drop，dispose另增enqueueTimeout1。两次调度间隔159.598/154.077ms，另一次41.473ms；音频漂移+37.401ms、最大选择落后45.5ms、关闭账本0，无音频配置失效/启动失败记录，但根因尚未确定。
 
 独立短播和>=1200s长播未启动；下一项先归因显示回调/主线程/调度耗时。R4相关375哈希一致，复用iPhone18 Pro历史674通过/3条件跳过，不新增iOS运行；用户以后优先iPhone18偏好已记录。见[协议](../../../tool/playback_benchmark/apple-final-local-verification-protocol.md)、[归档](../../../tool/playback_benchmark/apple-final-local-verification-observations.json)、[当前矩阵](2026-10-09-audio-eof-admission.md)。无生产改动；候选关闭，R5/P08及资源A5仍未完成。
+
+
+### R5调度时序诊断：本次未复现，不解除原失败
+
+测试专用记录器默认关闭，显式启用时记录tick进入/执行和单待处理主队列探针，32条标量历史、累计计数及stop隔离；生产未改。原生RED→GREEN2/2、工具204/204、夹具4/4；一次诊断1/1，30.027486s、7点、770帧，活动drop/order0、音频漂移+34.764ms、最大落后25.375ms；关闭后另增enqueueTimeout1。最大tick工作2.710ms/间隔33.920ms，mainQueue136.453ms在首个playing采样前，不能用于归因旧活动丢帧。178源码和5二进制hash冻结，94份原始记录保留初始RED测试错误及工具沙箱权限失败。
+
+[协议](../../../tool/playback_benchmark/display-timing-diagnostics-protocol.md)、[归档](../../../tool/playback_benchmark/macos-display-timing-observations.json)、[当前矩阵](2026-10-09-audio-eof-admission.md)。下一项在完整套件上下文中诊断；没有完整回归/长播通过声明，没有重新执行iOS。以后优先iPhone18 Pro Max已确认。根因、资源A5及设备格仍开放，候选关闭。

@@ -485,9 +485,138 @@ final class YlMacosAudioTests: XCTestCase {
     func dispose() {}
   }
 
+  func testDisplayTimingSeparatesTickGapFromWorkAndCapsHistory() throws {
+    var now = 1.0
+    let probe = DisplayTimingProbe(enabled: true, clock: { now })
+    probe.tick { now = 1.01 }
+    now = 1.20
+    probe.tick { now = 1.24 }
+    let first = probe.snapshot
+    let events = try XCTUnwrap(first["events"] as? [[String: Any]])
+    XCTAssertEqual(events.compactMap { $0["kind"] as? String }, ["tickGap", "tickWork"])
+    XCTAssertEqual(try XCTUnwrap(events.first?["seconds"] as? Double), 0.20, accuracy: 0.000001)
+    XCTAssertEqual(try XCTUnwrap(events.last?["seconds"] as? Double), 0.04, accuracy: 0.000001)
+    for _ in 0..<40 { now += 0.2; probe.tick {} }
+    let bounded = probe.snapshot
+    XCTAssertEqual(bounded["total"] as? Int, 42)
+    XCTAssertEqual((bounded["events"] as? [[String: Any]])?.count, 32)
+    XCTAssertEqual(bounded["tickCalls"] as? Int, 42)
+    XCTAssertEqual((bounded["counts"] as? [String: Int])?["tickGap"], 41)
+  }
+
+  func testDisplayTimingLimitsPendingProbeAndFencesStop() throws {
+    var now = 1.0, queued: [() -> Void] = []
+    let probe = DisplayTimingProbe(enabled: true, clock: { now }, dispatchMain: { queued.append($0) })
+    probe.pulse()
+    now = 1.05; probe.pulse()
+    XCTAssertEqual(queued.count, 1)
+    now = 1.16; let delivered = try XCTUnwrap(queued.first); queued.removeFirst(); delivered()
+    let row = probe.snapshot
+    XCTAssertEqual(row["probeSent"] as? Int, 1)
+    XCTAssertEqual(row["probeCompleted"] as? Int, 1)
+    XCTAssertEqual(row["probeSkipped"] as? Int, 1)
+    let event = try XCTUnwrap((row["events"] as? [[String: Any]])?.last)
+    XCTAssertEqual(event["kind"] as? String, "mainQueue")
+    XCTAssertEqual(try XCTUnwrap(event["seconds"] as? Double), 0.16, accuracy: 0.000001)
+    now = 1.20; probe.pulse() // producer gap must be independently visible
+    probe.stop()
+    let stopped = try JSONSerialization.data(withJSONObject: probe.snapshot, options: [.sortedKeys])
+    now = 2; let retired = try XCTUnwrap(queued.first); queued.removeFirst(); retired(); probe.pulse(); probe.tick {}
+    XCTAssertEqual(try JSONSerialization.data(withJSONObject: probe.snapshot, options: [.sortedKeys]), stopped)
+    XCTAssertEqual((probe.snapshot["counts"] as? [String: Int])?["producerGap"], 1)
+    var forwarded = false
+    let disabled = DisplayTimingProbe(enabled: false, clock: { now }, dispatchMain: { _ in XCTFail("Disabled probe scheduled work") })
+    disabled.start(); disabled.pulse(); disabled.tick { forwarded = true }; disabled.stop()
+    XCTAssertTrue(forwarded)
+    XCTAssertEqual(disabled.snapshot["total"] as? Int, 0)
+    XCTAssertEqual(disabled.snapshot["tickCalls"] as? Int, 0)
+  }
+
+  // Test-only observer. No frame payloads and at most one outstanding main-queue probe.
+  private final class DisplayTimingProbe {
+    private let enabled: Bool, clock: () -> Double
+    private let dispatchMain: (@escaping () -> Void) -> Void
+    private let lock = NSLock()
+    private var timer: DispatchSourceTimer?
+    private var stopped = false
+    private var lastTick: Double?, lastPulse: Double?, pending: Double?
+    private var total = 0, tickCalls = 0, sent = 0, completed = 0, skipped = 0, cancelled = 0
+    private var counts = ["tickGap": 0, "tickWork": 0, "mainQueue": 0, "producerGap": 0]
+    private var maxima = ["tickGap": 0.0, "tickWork": 0.0, "mainQueue": 0.0, "producerGap": 0.0]
+    private var events: [[String: Any]] = []
+    init(enabled: Bool, clock: @escaping () -> Double = { ProcessInfo.processInfo.systemUptime },
+         dispatchMain: @escaping (@escaping () -> Void) -> Void = { DispatchQueue.main.async(execute: $0) }) {
+      self.enabled = enabled; self.clock = clock; self.dispatchMain = dispatchMain
+    }
+    // Called only while holding lock, with times from the same monotonic clock.
+    private func record(_ kind: String, start: Double, end: Double) {
+      let seconds = end - start
+      maxima[kind] = max(maxima[kind, default: 0], seconds)
+      guard seconds >= (kind == "producerGap" ? 0.1 : 0.03) else { return }
+      total += 1; counts[kind, default: 0] += 1
+      events.append(["sequence": total, "kind": kind, "start": start, "end": end, "seconds": seconds])
+      if events.count > 32 { events.removeFirst() }
+    }
+    func start() {
+      lock.withLock {
+        guard enabled, !stopped, timer == nil else { return }
+        let source = DispatchSource.makeTimerSource(queue: DispatchQueue(label: "yl.tests.display-timing", qos: .utility))
+        source.schedule(deadline: .now() + .milliseconds(50), repeating: .milliseconds(50))
+        source.setEventHandler { [weak self] in self?.pulse() }
+        timer = source; source.resume()
+      }
+    }
+    func pulse() {
+      let request: Double? = lock.withLock {
+        guard enabled, !stopped else { return nil }
+        let now = clock()
+        if let lastPulse { record("producerGap", start: lastPulse, end: now) }
+        lastPulse = now
+        guard pending == nil else { skipped += 1; return nil }
+        pending = now; sent += 1; return now
+      }
+      guard let request else { return }
+      dispatchMain { [weak self] in
+        guard let self else { return }
+        self.lock.withLock {
+          guard !self.stopped, self.pending == request else { return }
+          self.record("mainQueue", start: request, end: self.clock())
+          self.pending = nil; self.completed += 1
+        }
+      }
+    }
+    func tick(_ action: () -> Void) {
+      let start: Double? = lock.withLock {
+        guard enabled, !stopped else { return nil }
+        let now = clock()
+        if let lastTick { record("tickGap", start: lastTick, end: now) }
+        lastTick = now; tickCalls += 1; return now
+      }
+      action()
+      if let start { lock.withLock { if !stopped { record("tickWork", start: start, end: clock()) } } }
+    }
+    func stop() {
+      lock.withLock {
+        stopped = true; timer?.cancel(); timer = nil
+        if pending != nil { pending = nil; cancelled += 1 }
+      }
+    }
+    var snapshot: [String: Any] {
+      lock.withLock {
+        ["enabled": enabled, "stopped": stopped, "total": total, "counts": counts, "maxima": maxima,
+         "events": events, "tickCalls": tickCalls, "probeSent": sent, "probeCompleted": completed,
+         "probeSkipped": skipped, "probeCancelled": cancelled, "probePending": pending != nil]
+      }
+    }
+    deinit { timer?.cancel() }
+  }
+
+
   @MainActor
   func testActualDecodedTerminalContinuousObservation() async throws {
     let env = ProcessInfo.processInfo.environment
+    let timing = DisplayTimingProbe(enabled: env["YL_DECODED_TIMING_DIAGNOSTICS"] == "1")
+    timing.start(); defer { timing.stop() }
     let seconds = env["YL_DECODED_PROBE_KIND"] == "long" ? 1200.0 : 30.0
     XCTAssertNil(env["MallocStackLogging"]); XCTAssertNil(env["MallocStackLoggingNoCompact"])
     let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
@@ -500,7 +629,7 @@ final class YlMacosAudioTests: XCTestCase {
     let output = DecodedTexture(scheduler: scheduler)
     let eventLock = NSLock(); var failures: [String] = []
     let instance = try YlManagedPlaybackSession(playerId: 731,
-      services: .init(platform: .macos, textureOutput: output, makeDisplayDriver: { YlDisplayTimer(onTick: $0) }),
+      services: .init(platform: .macos, textureOutput: output, makeDisplayDriver: { onTick in YlDisplayTimer { timing.tick(onTick) } }),
       configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 17,
       audioRendererFactory: factory, presentationScheduler: scheduler,
       emit: { callback in
@@ -525,7 +654,7 @@ final class YlMacosAudioTests: XCTestCase {
         "directPublished": output.directPublished, "submittedPrefix": factory.submittedPrefix,
         "frameAgeUs": Int64((ProcessInfo.processInfo.systemUptime - scheduler.selectedUptime) * 1_000_000),
         "maxLagUs": scheduler.maxLagUs, "orderErrors": scheduler.orderErrors, "dropped": diagnostics["total"]!,
-        "dropDiagnostics": diagnostics,
+        "dropDiagnostics": diagnostics, "timingDiagnostics": timing.snapshot,
         "failures": failureState.0, "audioDiagnostics": failureState.1,
         "engineRunning": factory.engine.isRunning, "nativeAudioUs": nativeAudioUs as Any? ?? NSNull(),
         "candidate": renderer.usesSubmissionAnchor,
@@ -543,7 +672,7 @@ final class YlMacosAudioTests: XCTestCase {
     }
     try startObservedPlayback(probe: factory.failureProbe,
       start: { try instance.activate(); try instance.play() },
-      cleanup: { instance.dispose() }, observe: observe)
+      cleanup: { instance.dispose(); timing.stop() }, observe: observe)
     let warmup = ProcessInfo.processInfo.systemUptime
     while (scheduler.videoFrames < 24 || scheduler.positionUs < 2_000_000) && ProcessInfo.processInfo.systemUptime - warmup < 10 {
       try await Task.sleep(nanoseconds: 10_000_000)
@@ -560,7 +689,7 @@ final class YlMacosAudioTests: XCTestCase {
     XCTAssertTrue(renderer.usesSubmissionAnchor, "Submission anchoring unexpectedly unavailable (actual modes validated separately)")
     XCTAssertEqual(scheduler.orderErrors, 0); XCTAssertEqual(scheduler.lateFrameDropCount, 0)
     XCTAssertLessThanOrEqual(scheduler.maxLagUs, 100_000)
-    instance.dispose(); try observe("disposed")
+    instance.dispose(); timing.stop(); try observe("disposed")
     try await Task.sleep(nanoseconds: 2_000_000_000); try observe("disposedLater")
     XCTAssertEqual(ledger.snapshot.currentBytes, 0); XCTAssertFalse(renderer.hasPendingPlayback)
     let attachment = XCTAttachment(data: try JSONSerialization.data(withJSONObject: records, options: [.sortedKeys]), uniformTypeIdentifier: "public.json")

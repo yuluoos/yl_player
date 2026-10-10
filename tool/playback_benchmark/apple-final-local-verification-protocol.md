@@ -15,7 +15,7 @@
 
 ## 后续 iOS 目标偏好
 
-用户要求以后 iOS 测试使用 iPhone18。本机设备类型仅提供 iPhone18 Pro/Pro Max，无标准型号；询问是否选Pro后的回复为“iphone”，没有明确Pro型号。记录原偏好，后续新iOS执行前确认可用的具体型号，不用iPhone16或iPad替代，也不将现有Pro历史结果重标为标准iPhone18。本轮R5不新增iOS运行，不因此阻塞macOS验证。
+用户现已明确：以后 iOS 测试优先使用 **iPhone 18 Pro Max**。此前“iphone”回复的型号歧义已解除；后续执行优先选择本机该型号并记录实际系统版本。现有R4的iPhone18 Pro历史结果保留原型号。本轮R5诊断仅涉及macOS，不新增iOS运行。
 
 ## 初轮结果与执行器纠正
 

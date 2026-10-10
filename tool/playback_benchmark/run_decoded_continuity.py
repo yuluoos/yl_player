@@ -7,6 +7,7 @@ import plistlib
 import subprocess
 import sys
 from decoded_continuity import validate, diagnose_drops, diagnose_audio
+from display_timing import diagnose_timing
 from run_audio_integration_resources import ROOT, digest, freeze
 from run_resources import run_logged
 
@@ -15,6 +16,7 @@ def require_short_gate(directory, identity):
     if directory is None:raise ValueError('Long arm requires short evidence')
     directory=Path(directory)
     prior=json.loads((directory/'result.json').read_text())
+    if prior.get('timingDiagnostics',False):raise ValueError('Diagnostic short cannot admit uninstrumented long')
     if prior.get('complete') is not True or prior.get('kind')!='short' or prior.get('exitCode')!=0:
         raise ValueError('Short gate did not pass')
     if json.loads((directory/'identity.json').read_text())!=identity:
@@ -22,14 +24,17 @@ def require_short_gate(directory, identity):
     validate([json.loads(line) for line in (directory/'rows.jsonl').read_text().splitlines()],30)
 
 
-def collect(kind, directory, short_evidence=None):
+def collect(kind, directory, short_evidence=None, timing_diagnostics=False):
+    if timing_diagnostics and kind!='short':raise ValueError('Timing diagnosis is short-only')
     out=Path(directory).resolve();out.mkdir(parents=True,exist_ok=False)
-    result=dict(complete=False,kind=kind,errors=[],productionAdmission=False,downstreamBoundProven=False)
+    result=dict(complete=False,kind=kind,timingDiagnostics=timing_diagnostics,errors=[],productionAdmission=False,downstreamBoundProven=False)
     identity=None
     try:
         products=ROOT/'packages/yl_player/example/build/native-macos-tests/Build/Products'
         identity=freeze(out,products)
-        for relative in ['tool/playback_benchmark/decoded-continuity-protocol.md',
+        for relative in ['tool/playback_benchmark/display-timing-diagnostics-protocol.md',
+                         'tool/playback_benchmark/display_timing.py','tool/playback_benchmark/test_display_timing.py',
+                         'tool/playback_benchmark/decoded-continuity-protocol.md',
                          'tool/playback_benchmark/aac-preroll-protocol.md',
                          'tool/playback_benchmark/video-drop-diagnostics-protocol.md',
                          'tool/playback_benchmark/audio-failure-cause-protocol.md',
@@ -61,6 +66,8 @@ def collect(kind, directory, short_evidence=None):
         for env in (os.environ,target.get('EnvironmentVariables',{}),target.get('TestingEnvironmentVariables',{})):
             if any(k.startswith('MallocStackLogging') for k in env):raise ValueError('MSL must be absent')
         target.setdefault('EnvironmentVariables',{}).update(YL_DECODED_PROBE_KIND=kind,YL_DECODED_PROBE_DIRECTORY=str(out))
+        # Set explicitly so inherited diagnostic environment cannot contaminate an ordinary gate.
+        target['EnvironmentVariables']['YL_DECODED_TIMING_DIAGNOSTICS']='1' if timing_diagnostics else '0'
         manifest=out/'probe.xctestrun';manifest.write_bytes(plistlib.dumps(config))
         command=[sys.executable,'-B',str(ROOT/'tool/run_with_display_awake.py'),'xcodebuild','test-without-building','-quiet',
             '-xctestrun',str(manifest),'-destination','platform=macOS,arch=arm64','-parallel-testing-enabled','NO',
@@ -73,6 +80,7 @@ def collect(kind, directory, short_evidence=None):
         rows=[json.loads(line) for line in (out/'rows.jsonl').read_text().splitlines()]
         result['dropDiagnostics']=diagnose_drops(rows)
         result['audioDiagnostics']=diagnose_audio(rows)
+        if timing_diagnostics:result['displayTiming']=diagnose_timing(rows)
         result['summary']=validate(rows,1200 if kind=='long' else 30)
     except (OSError,ValueError,KeyError,TypeError,subprocess.SubprocessError) as error:
         result['errors'].append(repr(error))
@@ -89,4 +97,5 @@ def collect(kind, directory, short_evidence=None):
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('kind',choices=['short','long']);parser.add_argument('directory',type=Path)
     parser.add_argument('--short-evidence',type=Path)
-    args=parser.parse_args();result=collect(args.kind,args.directory,args.short_evidence);print(json.dumps(result,indent=2));sys.exit(0 if result['complete'] else 1)
+    parser.add_argument('--timing-diagnostics',action='store_true')
+    args=parser.parse_args();result=collect(args.kind,args.directory,args.short_evidence,args.timing_diagnostics);print(json.dumps(result,indent=2));sys.exit(0 if result['complete'] else 1)

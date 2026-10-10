@@ -19,7 +19,7 @@
 | A1 | 内部资格、所有权、通知与代际 | 接入Task1–4；真实adapter控制及自然EOF回归 | 已实现，候选默认关闭。后续变更需对应回归，不能从测试开关推断实际使用候选 |
 | A2 | 自然EOF、真实尾部与暂停完成 | [自然EOF归档](../../../tool/playback_benchmark/macos-decoded-natural-eof-observations.json)：正常尾部和持有真实尾回调的暂停/恢复 | 局部通过；普通rendered不能代替最终playedBack，缺通知仍不能completed |
 | A3 | EOF后显式stop再seek/重播 | [重播归档](../../../tool/playback_benchmark/macos-stop-replay-observations.json)：首次2项失败，修复后4/4；默认/候选各三轮，旧回调隔离 | `bcd547b`约4s素材局部通过；R1已补齐不注入stop及直接Host suspend/resume，见下方更新。真实OS后台/设备切换仍未验证 |
-| A4 | 无heap连续长播 | [路由事件长播归档](../../../tool/playback_benchmark/macos-route-monitored-long-observations.json)：1201.179s、241点、活动播放drop/order均0，无回退 | 旧冻结版本局部通过；不是当前重播修复的长程验收，不是完整文件EOF。历史单drop、870.888s失败保留；R5初轮30s播放活动阶段丢5帧；完整门禁失败，独立短/长播未启动，需先归因，见R5记录 |
+| A4 | 无heap连续长播 | [路由事件长播归档](../../../tool/playback_benchmark/macos-route-monitored-long-observations.json)：1201.179s、241点、活动播放drop/order均0，无回退 | 旧冻结版本局部通过；不是当前重播修复的长程验收，不是完整文件EOF。历史单drop、870.888s失败保留；R5初轮30s播放活动阶段丢5帧；完整门禁失败；后续带探针30.027s未复现但不是普通短门禁，独立无探针短/长播仍待验，见R5记录 |
 | A5 | 独立资源与停止边界 | [停止路径归档](../../../tool/playback_benchmark/macos-stop-paths-observations.json)：两进程、8份heap；默认2813 played，候选2812 rendered+1 played | 局部类型/时延观察通过；R2已补六轮生命周期观察；R3判定资源准入未通过，见下方结论。整体有界、长序列累计保留和兼容回退后的增长仍未闭合；单次类型消失不能准入自动stop |
 | A6 | 音频配置失效与恢复 | [显式重载归档](../../../tool/playback_benchmark/macos-audio-reload-recovery-observations.json)：受控配置通知、启动失败与新session重载 | 受控路径通过，不能代替实际设备切换。需记录真实切换前后设备/格式、错误或恢复、旧图/旧会话隔离 |
 | A7 | 平台与版本回归 | 历史完整macOS658/658和iOS编译；bcd547b重播定向4/4，R1定向6/6；R2最终定向2/2及正式四组4/4，当前发现iOS678/macOS671；R4 iOS实际677项（674通过/3条件跳过），macOS定向4/4 | R5完整macOS规范670项实际667通过/3失败/0跳过；两项外层预算配置错误、一项真实丢帧，见R5。R4 iOS相关375文件一致，复用674通过/3跳过；当前完整macOS仍未通过 |
@@ -157,3 +157,18 @@ Runner目标列表中，macOS工程将iOS设备列为platformMismatch、iOS工�
 [协议及执行器纠正](../../../tool/playback_benchmark/apple-final-local-verification-protocol.md)、[原始归档](../../../tool/playback_benchmark/apple-final-local-verification-observations.json)保留初轮与定向复核、逐项清单、原始连续性行和重算诊断、命令、源码哈希与复核前后二进制哈希。初轮二进制未在运行前hash，首次hash是在初轮结束后、定向复核前；不声明已取得最终连续长播构建身份。没有生产改动、heap或MSL采样。
 
 用户新增后续iOS优先iPhone18的要求已记录；本机仅有iPhone18 Pro/Pro Max，具体型号待后续新iOS执行前确认。本轮复用的Pro结果保留准确型号，不能改记为标准iPhone18。
+
+
+## R5后续：有界显示调度诊断（2026-10-09，base e923bb8）
+
+仅在macOS测试和工具中新增显式启用的诊断：包装既有display onTick，分别记进入间隔/同步执行耗时；50ms后台探针至多投递一个待执行主队列任务，后台间隔>100ms独立记录。异常历史最多32条标量，累计计数/最大值保持；停止后迟到任务无效。默认不启动探针。生产显示驱动、调度、容量、音频时钟和零丢帧门限均未改变。
+
+两项原生记录器测试RED→GREEN 2/2、0跳过，覆盖慢tick、历史淘汰、探针背压、stop隔离及关闭状态；首次RED的测试自身空数组取值崩溃已改为XCTUnwrap并保留，随后无崩溃RED仍0/2。Python校验补齐时间/计数/最大值/停止冻结、事件一致性和阶段关联；带探针短播被明确禁止用于普通长播准入。工具套件204/204；首次沙箱3项本机HTTP端口绑定权限错误及随后宿主成功日志分别保留。夹具4/4、发现iOS678/macOS673；没有重跑完整macOS或新增iOS测试。
+
+执行前冻结178项源码/测试/协议/素材与5项二进制hash，独立诊断仅运行一次：**30.027486s、7个playing采样，原生1/1，活动drop/order均0，770帧，音频累计漂移+34.764ms，最大选择落后25.375ms**。关闭后额外enqueueTimeout1与播放阶段分开，账本0且pending=false。诊断结果：最大onTick工作2.710ms，最大tick进入间隔33.920ms；一次mainQueue延迟136.453ms发生在第一个playing行之前，属于首次采样前启动/预热窗口，不能说是再次捕获了原失败。后台最大间隔89.549ms，无>100ms producerGap。最终probeSent643=completed642+cancelled1，停止后pending=false；disposed与disposedLater诊断快照一致。
+
+本次没有复现原先活动5帧丢弃，**根因仍未证明**。计时入口在生产refreshCadence之后，不是硬件vsync；最大值覆盖启动至关闭，不能全部解释为活动播放延迟。诊断开销和有限覆盖不支持用“无事件”证明某组件无问题。没有再次尝试取得通过，也没有启动>=1200s长播；该短播不能充当普通长播门禁。R5完整回归失败与资源A5/R4设备缺口继续保留，候选关闭。
+
+下一项在正确180s用例预算的完整macOS套件上下文中启用同一有界诊断，检查之前丢帧是否与套件上下文相关；预先冻结一次执行、原零丢帧/时钟门限和失败保留规则。即使该上下文未复现，也不能从两次不同上下文的短观察推出根因已修复，之后仍需独立无探针短门禁与最终长播。
+
+[诊断协议](../../../tool/playback_benchmark/display-timing-diagnostics-protocol.md)、[94份原始归档](../../../tool/playback_benchmark/macos-display-timing-observations.json)包含RED/修正RED/GREEN、一次观察、原始行/时序关联、工具权限失败/成功及最终身份；源码/二进制结束后匹配，离线重算诊断与原始验收保持一致。用户已明确以后iOS测试优先 **iPhone 18 Pro Max**，此前具体型号待定已解除；不修改历史Pro结果的设备标签。
