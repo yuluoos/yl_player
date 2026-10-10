@@ -766,10 +766,18 @@ final class YlMacosAudioTests: XCTestCase {
     guard #available(macOS 14.4, *) else { throw XCTSkip("Native performance metrics require macOS 14.4") }
     let env = ProcessInfo.processInfo.environment
     let candidate = env["YL_TIMED_CANDIDATE"] != "0"
+    let diagnostics = env["YL_TIMED_DIAGNOSTICS"] == "1"
     let views = YlMacosVideoViewFactory(), registry = ApplePublicationRegistry()
     let output = YlMacosTextureOutput(textures: registry, nativeViews: views)
+    output.collectTimedDiagnostics = diagnostics
     let view = views.create(withViewIdentifier: 942, arguments: ["textureId": NSNumber(value: output.textureId)])
     let window = NSWindow(contentRect: NSRect(x: 100, y: 100, width: 256, height: 144), styleMask: [.titled], backing: .buffered, defer: false)
+    // Keep the measured layer visible when NSWorkspace selects the Flutter
+    // host's other window/Space. No application activation is performed here.
+    if env["YL_TIMED_ALLOW_OCCLUSION"] != "1" {
+      window.level = .floating
+      window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+    }
     window.isReleasedWhenClosed = false; window.contentView = view; window.orderFront(nil)
     defer { window.close() }
     let owner = YlAppleTextureOwner(output: output, onFrame: { _ in }); defer { owner.dispose() }
@@ -780,7 +788,7 @@ final class YlMacosAudioTests: XCTestCase {
     let prepared = try YlPreparedFallback(source: .init(uri: fixture.absoluteString, kind: .file, formatHint: .matroska, bufferScope: scope), requireHardwareProbe: true)
     let scheduler = YlFrameScheduler(collectDropDiagnostics: true)
     var failures: [String] = [], activations: [[String: Any]] = [], rows: [[String: Any]] = []
-    let observers = [NSApplication.didBecomeActiveNotification, NSWindow.didBecomeKeyNotification].map { name in
+    let observers = [NSApplication.didBecomeActiveNotification, NSApplication.didResignActiveNotification, NSWindow.didBecomeKeyNotification, NSWindow.didResignKeyNotification].map { name in
       NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { _ in
         activations.append(["name": name.rawValue, "uptime": ProcessInfo.processInfo.systemUptime])
         if activations.count > 16 { activations.removeFirst() }
@@ -807,6 +815,14 @@ final class YlMacosAudioTests: XCTestCase {
       let stats = instance.timedVideoStatistics, drops = scheduler.dropDiagnostics
       let row: [String: Any] = ["phase": phase, "uptime": ProcessInfo.processInfo.systemUptime,
         "pid": ProcessInfo.processInfo.processIdentifier, "candidateRequested": candidate,
+        "diagnosticsEnabled": diagnostics, "nativeDiagnostics": (diagnostics ? output.timedDiagnostics : nil) as Any? ?? NSNull(),
+        "applicationActive": NSApp.isActive, "windowVisible": window.isVisible,
+        "windowOcclusionVisible": window.occlusionState.contains(.visible),
+        "testWindowNumber": window.windowNumber, "onActiveSpace": window.isOnActiveSpace,
+        "visibleWindowProtocol": env["YL_TIMED_ALLOW_OCCLUSION"] != "1",
+        "ownedWindows": NSApp.windows.map { ["number": $0.windowNumber, "key": $0.isKeyWindow,
+          "main": $0.isMainWindow, "frame": NSStringFromRect($0.frame), "level": $0.level.rawValue,
+          "visible": $0.occlusionState.contains(.visible)] as [String: Any] },
         "candidateActuallyUsed": stats != nil && layer.controlTimebase != nil,
         "submitted": stats?.submitted as Any? ?? NSNull(), "rejected": stats?.rejected as Any? ?? NSNull(),
         "applicationDrops": drops.total,
@@ -836,9 +852,13 @@ final class YlMacosAudioTests: XCTestCase {
       try await Task.sleep(nanoseconds: 1_000_000_000)
     } else {
       let seconds = env["YL_TIMED_LONG"] == "1" ? 1200.0 : 30.0
+      var revealed = false
       repeat {
         try await Task.sleep(nanoseconds: 1_000_000_000)
-        try observe("playing", system: nil)
+        if env["YL_TIMED_REVEAL"] == "1", !revealed, ProcessInfo.processInfo.systemUptime - start >= 20 {
+          window.makeKeyAndOrderFront(nil); revealed = true
+        }
+        try observe("playing", system: diagnostics ? await metrics() : nil)
       } while ProcessInfo.processInfo.systemUptime - start < seconds && failures.isEmpty
     }
     let after = await metrics(); try observe("activeEnd", system: after)

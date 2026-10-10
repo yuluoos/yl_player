@@ -11,6 +11,11 @@ final class YlMacosTextureOutput: NSObject, FlutterTexture, YlTextureOutput, YlN
   private let renderer = YlSampleBufferVideoRenderer()
   private weak var attachedContainer: CALayer?
   private let timedLock = NSLock()
+  var collectTimedDiagnostics = false // Internal opt-in observation; no public setting.
+  var timedDiagnostics: [String: Any]? {
+    guard #available(macOS 14.0, *) else { return nil }
+    return (timedLock.withLock { timedEndpoint } as? YlMacosTimedVideoEndpoint)?.diagnostics
+  }
   private var timedEndpoint: (any YlTimedVideoEndpoint)?
   private var timedRetiring = false
   private var timedEpoch: UInt64 = 0
@@ -49,7 +54,7 @@ final class YlMacosTextureOutput: NSObject, FlutterTexture, YlTextureOutput, YlN
     guard let epoch else { return nil }
     renderer.detach(container)
     do {
-      let endpoint = try YlMacosTimedVideoEndpoint(container: container) { [weak self] error in
+      let endpoint = try YlMacosTimedVideoEndpoint(container: container, collectDiagnostics: collectTimedDiagnostics) { [weak self] error in
         guard let self, self.timedLock.withLock({ self.timedEpoch == epoch }) else { return }
         let native = error as NSError
         self.onRenderFailure?(NativePlayerError(category: "render", code: "render.video_surface_failed",

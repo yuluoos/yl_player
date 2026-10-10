@@ -23,8 +23,21 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
   private var retirementFinished = false
   private var retirementCallbacks: [() -> Void] = []
   private let onFailure: (Error) -> Void
+  private let collectDiagnostics: Bool
+  private var diagnosticUpdates = 0, diagnosticEnqueues = 0, lateEnqueues = 0
+  private var maximumForwardCorrectionUs = 0.0, maximumBackwardCorrectionUs = 0.0
+  private var minimumLeadUs: Double?, maximumLeadUs: Double?
+  private var diagnosticEvents: [[String: Double]] = []
+  var diagnostics: [String: Any]? {
+    queue.sync {
+      guard collectDiagnostics else { return nil }
+      return ["updates": diagnosticUpdates, "enqueues": diagnosticEnqueues, "lateEnqueues": lateEnqueues,
+        "maximumForwardCorrectionUs": maximumForwardCorrectionUs, "maximumBackwardCorrectionUs": maximumBackwardCorrectionUs,
+        "minimumLeadUs": minimumLeadUs as Any? ?? NSNull(), "maximumLeadUs": maximumLeadUs as Any? ?? NSNull(), "events": diagnosticEvents]
+    }
+  }
 
-  init(container: CALayer, onFailure: @escaping (Error) -> Void) throws {
+  init(container: CALayer, collectDiagnostics: Bool = false, onFailure: @escaping (Error) -> Void) throws {
     precondition(Thread.isMainThread)
     var base: CMTimebase?
     let status = CMTimebaseCreateWithSourceClock(allocator: kCFAllocatorDefault,
@@ -32,6 +45,7 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
     guard status == noErr, let base else { throw NSError(domain: NSOSStatusErrorDomain, code: Int(status)) }
     self.timebase = base
     self.onFailure = onFailure
+    self.collectDiagnostics = collectDiagnostics
     layer = AVSampleBufferDisplayLayer()
     renderer = layer.sampleBufferRenderer
     CMTimebaseSetRate(base, rate: 0)
@@ -55,6 +69,21 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
   func update(_ snapshot: YlPresentationClockSnapshot, generation: UInt64) {
     queue.sync {
       guard !isRetired, !failed, self.generation == nil || self.generation == generation else { return }
+      if collectDiagnostics {
+        diagnosticUpdates += 1
+        if clockSnapshot != nil {
+          let host = CMTimeGetSeconds(CMClockGetTime(CMClockGetHostTimeClock())) * 1_000_000
+          let current = CMTimeGetSeconds(CMTimebaseGetTime(timebase)) * 1_000_000
+          let target = Double(snapshot.positionUs) + (snapshot.playing ? max(0, host - Double(snapshot.hostTimeUs)) * snapshot.rate : 0)
+          let correction = target - current
+          maximumForwardCorrectionUs = max(maximumForwardCorrectionUs, correction)
+          maximumBackwardCorrectionUs = max(maximumBackwardCorrectionUs, -correction)
+          if abs(correction) > 5_000 {
+            diagnosticEvents.append(["uptime": ProcessInfo.processInfo.systemUptime, "correctionUs": correction])
+            if diagnosticEvents.count > 32 { diagnosticEvents.removeFirst() }
+          }
+        }
+      }
       self.generation = generation
       clockSnapshot = snapshot
       prunePreviewFrames()
@@ -91,7 +120,14 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
         let timing = CMSampleTimingInfo(
           duration: frame.durationUs > 0 ? CMTime(value: frame.durationUs, timescale: 1_000_000) : .invalid,
           presentationTimeStamp: CMTime(value: frame.ptsUs, timescale: 1_000_000), decodeTimeStamp: .invalid)
-        renderer.enqueue(try YlSampleBufferVideoRenderer.makeSample(pixel, retaining: frame.reservation, timing: timing))
+        let sample = try YlSampleBufferVideoRenderer.makeSample(pixel, retaining: frame.reservation, timing: timing)
+        if collectDiagnostics {
+          let lead = Double(frame.ptsUs) - CMTimeGetSeconds(CMTimebaseGetTime(timebase)) * 1_000_000
+          diagnosticEnqueues += 1
+          minimumLeadUs = min(minimumLeadUs ?? lead, lead); maximumLeadUs = max(maximumLeadUs ?? lead, lead)
+          if lead < 0 { lateEnqueues += 1 }
+        }
+        renderer.enqueue(sample)
         previewFrames.append(frame); prunePreviewFrames()
         return true
       } catch { fail(error); return false }

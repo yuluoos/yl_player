@@ -9,7 +9,7 @@ def observation():
         return dict(phase=phase, uptime=1.0, candidateActuallyUsed=True, submitted=total,
                     applicationDrops=drops, rejected=0, workerMaxGapSeconds=.01,
                     systemMetrics=dict(total=total, dropped=0, corrupted=0, accumulatedDelay=.01*total),
-                    failures=[], ledgerBytes=0, pending=False)
+                    failures=[], ledgerBytes=0, pending=False, windowOcclusionVisible=True)
     return dict(rows=[row('playing', 30), row('activeEnd', 60), row('disposed', 60), row('disposedLater', 60)],
                 pausedPixelPresent=True, stallSeconds=.251, submittedDuringStall=7)
 
@@ -41,6 +41,11 @@ class EvidenceTests(unittest.TestCase):
             sample=observation(); sample[key]=value
             self.assertTrue(evaluate(sample)['failures'])
         sample=observation(); sample['rows'].pop(); self.assertTrue(evaluate(sample)['failures'])
+
+    def test_occluded_or_unobserved_window_is_not_display_evidence(self):
+        for visible in [False, None]:
+            value=observation();value['rows'][1]['windowOcclusionVisible']=visible
+            self.assertTrue(evaluate(value)['failures'])
 
     def test_nonfinite_is_not_evidence(self):
         for number in [float('nan'),float('inf'), True, None, -1]:

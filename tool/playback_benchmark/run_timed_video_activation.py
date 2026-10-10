@@ -78,12 +78,12 @@ def collect(args):
     manifests=list(products.glob('*.xctestrun'))
     if len(manifests)!=1: raise ValueError('Require exactly one arm64 test manifest')
     config=plistlib.loads(manifests[0].read_bytes().replace(b'__TESTROOT__',str(products).encode()))
-    config['RunnerTests']['EnvironmentVariables'].update(YL_TIMED_CANDIDATE='1' if args.candidate else '0',YL_TIMED_DIRECTORY=str(out),YL_TIMED_LONG='1' if args.long else '0')
+    config['RunnerTests']['EnvironmentVariables'].update(YL_TIMED_CANDIDATE='1' if args.candidate else '0',YL_TIMED_DIRECTORY=str(out),YL_TIMED_LONG='1' if args.long else '0',YL_TIMED_DIAGNOSTICS='1' if getattr(args,'diagnostics',False) else '0',YL_TIMED_REVEAL='1' if getattr(args,'reveal',False) else '0',YL_TIMED_ALLOW_OCCLUSION='1' if getattr(args,'allow_occlusion',False) else '0')
     manifest=out/'probe.xctestrun';manifest.write_bytes(plistlib.dumps(config))
     limit=1320 if args.long else 180
     cmd=[sys.executable,'-B',str(root/'tool/run_with_display_awake.py'),'xcodebuild','test-without-building','-quiet','-xctestrun',str(manifest),'-destination','platform=macOS,arch=arm64','-parallel-testing-enabled','NO','-only-testing:RunnerTests/YlMacosAudioTests/testActualTimedNativeActivationObservation','-test-timeouts-enabled','YES','-default-test-execution-time-allowance',str(limit-30),'-maximum-test-execution-time-allowance',str(limit-30),'-resultBundlePath',str(out)+'.xcresult']
     (out/'command.json').write_text(json.dumps(cmd,indent=2))
-    (out/'protocol.json').write_text(json.dumps(dict(configuration=args.configuration,candidate=args.candidate,seconds=1200 if args.long else 30,activationAtSeconds=10,instruments=False,physicalOutputProven=False,productionAdmission=False),indent=2))
+    (out/'protocol.json').write_text(json.dumps(dict(configuration=args.configuration,candidate=args.candidate,diagnostics=getattr(args,'diagnostics',False),revealAt20Seconds=getattr(args,'reveal',False),visibleWindowProtocol=not getattr(args,'allow_occlusion',False),seconds=1200 if args.long else 30,activationAtSeconds=10,instruments=False,physicalOutputProven=False,productionAdmission=False),indent=2))
     activation={}; owned_pid=None; reason='native completion';start=time.monotonic();first_seen=None; code=-1; errors=[]
     with (out/'xcode.log').open('w') as log:
         process=subprocess.Popen(cmd,cwd=root,stdout=log,stderr=log)
@@ -147,6 +147,9 @@ def main():
     parser.add_argument('--directory',type=Path,required=True)
     parser.add_argument('--candidate',action='store_true')
     parser.add_argument('--long',action='store_true')
+    parser.add_argument('--allow-occlusion',action='store_true',help='Diagnostic legacy normal-window placement only')
+    parser.add_argument('--reveal',action='store_true',help='Diagnostic intervention: raise the owned video test window at20s')
+    parser.add_argument('--diagnostics',action='store_true',help='Per-second system metrics and bounded timing samples; diagnostic only')
     return 0 if collect(parser.parse_args()) else 1
 
 if __name__=='__main__': raise SystemExit(main())

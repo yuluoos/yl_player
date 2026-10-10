@@ -15,6 +15,8 @@ def evaluate(observation, *, require_stall=True, require_candidate=True):
     initial=next((r for r in rows if r.get('phase')=='playing'), {})
     final=next((r for r in reversed(rows) if r.get('phase')=='activeEnd'), {})
     if not initial or not final: failures.append('missing measurement boundaries')
+    if any(r.get('windowOcclusionVisible') is not True for r in rows if r.get('phase') in ['playing','activeEnd']):
+        failures.append('native window occluded or visibility unobserved')
     delta={}
     for name, row in [('start', initial), ('end', final)]:
         if require_candidate and row.get('candidateActuallyUsed') is not True: failures.append(f'{name}: timed endpoint not used')
