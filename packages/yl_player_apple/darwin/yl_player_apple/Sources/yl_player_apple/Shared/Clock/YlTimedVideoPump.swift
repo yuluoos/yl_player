@@ -80,8 +80,16 @@ final class YlTimedVideoPump {
       // Bound work as well as retained samples. A malformed input cannot spin.
       for _ in 0..<3 {
         guard !isStopped, window.pendingFrames.count < 3 else { break }
-        if held == nil { held = scheduler.nextFrame(upTo: horizon, generation: generation) }
+        if held == nil {
+          // Publish ownership before the scheduler releases it: EOF must never
+          // observe both queues empty while a native enqueue is in flight.
+          stateLock.withLock { observed.pending = true }
+          held = scheduler.nextFrame(upTo: horizon, generation: generation)
+        }
         guard let frame = held else { break }
+        // A rate reduction or clock rollback can move an already-held frame
+        // outside the current lead. Keep the one bounded frame until due.
+        if frame.generation == generation, frame.ptsUs > horizon { break }
         guard frame.generation == generation, window.canSubmit(ptsUs: frame.ptsUs, snapshot: snapshot) else {
           held = nil
           stateLock.withLock { observed.rejected += 1 }

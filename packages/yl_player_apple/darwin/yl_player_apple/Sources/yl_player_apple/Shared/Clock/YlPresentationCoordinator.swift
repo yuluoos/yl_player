@@ -115,7 +115,7 @@ final class YlPresentationCoordinator: YlAudioTimeline {
   }
   private func stopTimedPresentation(clearOutput: Bool = true) {
     let old = timedLock.withLock { () -> YlTimedVideoPump? in
-      let old = timedPump; timedPump = nil; timedEpoch &+= 1; timedNoticeScheduled = false
+      let old = timedPump; timedPump = nil; timedSelected = false; timedEpoch &+= 1; timedNoticeScheduled = false
       return old
     }
     guard let old else { return }
@@ -126,8 +126,8 @@ final class YlPresentationCoordinator: YlAudioTimeline {
     let state = timedLock.withLock { (timedCandidateEnabled, timedAudioReady, timedGeneration, timedPump) }
     guard state.0, state.1, let output, output.acceptsPresentationFrame(generation: state.2) else { return }
     if let pump = state.3, !pump.isStopped { return }
+    if state.3 != nil { stopTimedPresentation(clearOutput: false) }
     guard mediaClock.presentationSnapshot(atHostTimeUs: Self.hostTimeUs()).playing else { return }
-    if state.3 != nil { stopTimedPresentation() }
     guard let endpoint = (services.textureOutput as? YlTimedVideoOutput)?.makeTimedVideoEndpoint(),
           !endpoint.isRetired else { return }
     let epoch = timedLock.withLock { () -> UInt64 in timedEpoch &+= 1; return timedEpoch }

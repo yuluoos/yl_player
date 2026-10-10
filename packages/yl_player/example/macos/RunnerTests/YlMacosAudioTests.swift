@@ -711,6 +711,52 @@ final class YlMacosAudioTests: XCTestCase {
 
 
   @MainActor
+  func testActualTimedNativeActivationObservation() async throws {
+    try await runTimedSurfaceObservation(stall: false)
+  }
+
+  @MainActor
+  func testTimedUnequalTailsAndEOFReplay() async throws {
+    guard #available(macOS 14.0, *) else { throw XCTSkip("Timed candidate requires macOS 14") }
+    for name in ["timed-audio-short.mkv", "timed-video-short.mkv"] {
+      let views = YlMacosVideoViewFactory()
+      let native = YlMacosTextureOutput(textures: ApplePublicationRegistry(), nativeViews: views)
+      let view = views.create(withViewIdentifier: 943, arguments: ["textureId": NSNumber(value: native.textureId)])
+      let window = NSWindow(contentRect: NSRect(x: 100, y: 100, width: 256, height: 144), styleMask: [.titled], backing: .buffered, defer: false)
+      window.isReleasedWhenClosed = false; window.contentView = view; window.orderFront(nil)
+      defer { window.close() }
+      let owner = YlAppleTextureOwner(output: native, onFrame: { _ in }); defer { owner.dispose() }
+      let lease = owner.makeLease(identity: .init(sessionId: name, loadRequestId: name)); owner.commit(lease)
+      let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        .appendingPathComponent("assets/test_media/format_matrix/\(name)")
+      let ledger = YlManagedBufferLedger(), scope = try ledger.makeScope(maxBytes: nil)
+      let prepared = try YlPreparedFallback(source: .init(uri: fixture.absoluteString, kind: .file, formatHint: .matroska, bufferScope: scope), requireHardwareProbe: true)
+      var completions = 0, errors: [String] = []
+      let instance = try YlManagedPlaybackSession(playerId: 943,
+        services: YlPlatformServices(platform: .macos, textureOutput: native, makeDisplayDriver: { YlDisplayTimer(view: view, onTick: $0) }).borrowing(lease),
+        configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 1,
+        emit: { callback in
+          if case let .state(state) = callback.event, state.status == "completed" { completions += 1 }
+          if case let .failure(error) = callback.event { errors.append(error.code) }
+        }, timedVideoCandidateEnabled: true)
+      defer { instance.dispose() }
+      instance.setVolume(0); try instance.activate()
+      for pass in 1...2 {
+        if pass == 2 { try instance.seek(toMs: 0, cancellationToken: nil) }
+        let start = ProcessInfo.processInfo.systemUptime
+        try instance.play()
+        try await AppleHostCharacterizations.waitFor({ (instance.timedVideoStatistics?.submitted ?? 0) >= 12 }, timeout: 4)
+        try await AppleHostCharacterizations.waitFor({ completions == pass }, timeout: 8)
+        XCTAssertGreaterThan(ProcessInfo.processInfo.systemUptime - start, 3.5, "Must wait for the longer stream: \(name)")
+        XCTAssertFalse(instance.timedVideoStatistics?.pending ?? true)
+      }
+      XCTAssertTrue(errors.isEmpty)
+      instance.dispose(); owner.dispose()
+      try await AppleHostCharacterizations.waitFor({ ledger.snapshot.currentBytes == 0 }, timeout: 3)
+    }
+  }
+
+  @MainActor
   func testActualTimedSurfaceSurvivesMainThreadStall() async throws {
     try await runTimedSurfaceObservation(stall: true)
   }
@@ -860,6 +906,13 @@ final class YlMacosAudioTests: XCTestCase {
     let paused = instance.timedVideoStatistics?.submitted
     try await Task.sleep(nanoseconds: 100_000_000)
     XCTAssertEqual(instance.timedVideoStatistics?.submitted, paused)
+    if #available(macOS 14.4, *) {
+      try instance.seek(toMs: 1000, cancellationToken: nil)
+      try await Task.sleep(nanoseconds: 300_000_000)
+      let preview = view.layer?.sublayers?.compactMap { $0 as? AVSampleBufferDisplayLayer }.last
+      XCTAssertNotNil(preview?.sampleBufferRenderer.displayedPixelBuffer(), "Paused seek must display the new generation without play")
+      XCTAssertNil(instance.timedVideoStatistics)
+    }
     for rate: Float in [0.25, 1, 2, 4] {
       try instance.setPlaybackSpeed(rate)
       let before = instance.timedVideoStatistics?.submitted ?? 0

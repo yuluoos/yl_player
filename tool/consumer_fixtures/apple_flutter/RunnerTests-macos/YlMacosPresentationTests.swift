@@ -9,6 +9,39 @@ import YlFFmpegBridge
 
 final class YlMacosPresentationTests: XCTestCase {
   @MainActor
+  func testPausedTimedReattachPreservesCurrentPixel() async throws {
+    guard #available(macOS 14.4, *) else { throw XCTSkip("Native pixel readback requires macOS 14.4") }
+    let views = YlMacosVideoViewFactory()
+    let output = YlMacosTextureOutput(textures: ApplePublicationRegistry(), nativeViews: views)
+    defer { output.dispose() }
+    let view = views.create(withViewIdentifier: 944, arguments: ["textureId": NSNumber(value: output.textureId)])
+    let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 64, height: 64), styleMask: [.titled], backing: .buffered, defer: false)
+    window.isReleasedWhenClosed = false; window.contentView = view; window.orderFront(nil)
+    defer { window.close() }
+    var buffer: CVPixelBuffer?
+    XCTAssertEqual(CVPixelBufferCreate(kCFAllocatorDefault, 16, 16, kCVPixelFormatType_32BGRA,
+      [kCVPixelBufferIOSurfacePropertiesKey: [:]] as CFDictionary, &buffer), kCVReturnSuccess)
+    let pixel = try XCTUnwrap(buffer)
+    CVPixelBufferLockBaseAddress(pixel, [])
+    memset(CVPixelBufferGetBaseAddress(pixel), 200, CVPixelBufferGetDataSize(pixel))
+    CVPixelBufferUnlockBaseAddress(pixel, [])
+    let endpoint = try XCTUnwrap(output.makeTimedVideoEndpoint())
+    endpoint.update(.init(positionUs: 1_000_000, hostTimeUs: YlPresentationCoordinator.hostTimeUs(), rate: 1, playing: false), generation: 1)
+    XCTAssertTrue(endpoint.enqueue(.init(payload: pixel, ptsUs: 1_000_000, durationUs: 40_000, keyframe: true, generation: 1)))
+    try await Task.sleep(nanoseconds: 100_000_000)
+    let container = try XCTUnwrap(view.layer)
+    output.detach(container)
+    try await Task.sleep(nanoseconds: 100_000_000)
+    output.attach(container)
+    try await Task.sleep(nanoseconds: 100_000_000)
+    let layer = try XCTUnwrap(container.sublayers?.last as? AVSampleBufferDisplayLayer)
+    let displayed = try XCTUnwrap(layer.sampleBufferRenderer.displayedPixelBuffer(), "Paused reattach must retain the current timed picture")
+    CVPixelBufferLockBaseAddress(displayed, .readOnly)
+    XCTAssertEqual(CVPixelBufferGetBaseAddress(displayed)?.assumingMemoryBound(to: UInt8.self)[1], 200)
+    CVPixelBufferUnlockBaseAddress(displayed, .readOnly)
+  }
+
+  @MainActor
   func testTimedPausedPixelBelongsToCurrentGeneration() async throws {
     guard #available(macOS 14.4, *) else { throw XCTSkip("Displayed pixel readback requires macOS 14.4") }
     let view = NSView(frame: NSRect(x: 0, y: 0, width: 64, height: 64)); view.wantsLayer = true
@@ -79,12 +112,14 @@ final class YlMacosPresentationTests: XCTestCase {
   private final class PumpOutput: YlTimedVideoEndpoint {
     let lock = NSLock()
     var ready = true
+    var onEnqueue: (() -> Void)?
     var closed = false
     private var values: [Int64] = []
     var pts: [Int64] { lock.withLock { values } }
     func update(_ snapshot: YlPresentationClockSnapshot, generation: UInt64) {}
     func enqueue(_ frame: YlFrameEnvelope) -> Bool {
-      lock.withLock { guard ready && !closed else { return false }; values.append(frame.ptsUs); return true }
+      onEnqueue?()
+      return lock.withLock { guard ready && !closed else { return false }; values.append(frame.ptsUs); return true }
     }
     func retire(removingImage: Bool, completion: @escaping () -> Void) {
       lock.withLock { closed = true }; completion()
@@ -97,6 +132,39 @@ final class YlMacosPresentationTests: XCTestCase {
     func set(_ position: Int64, playing: Bool) {
       lock.withLock { value = .init(positionUs: position, hostTimeUs: position, rate: 1, playing: playing) }
     }
+  }
+
+  func testTimedPendingCoversInFlightEnqueue() {
+    let scheduler = YlFrameScheduler(), endpoint = PumpOutput(), clock = TimedClockBox()
+    let queue = DispatchQueue(label: "test.timed.eof-race")
+    let entered = DispatchSemaphore(value: 0), release = DispatchSemaphore(value: 0)
+    endpoint.onEnqueue = { entered.signal(); _ = release.wait(timeout: .now() + 2) }
+    clock.set(0, playing: true)
+    XCTAssertTrue(scheduler.enqueue(.init(payload: NSObject(), ptsUs: 40_000, durationUs: 40_000, keyframe: true, generation: 1)))
+    let pump = YlTimedVideoPump(scheduler: scheduler, endpoint: endpoint, clockSnapshot: clock.snapshot, generation: 1, queue: queue)
+    pump.synchronize()
+    XCTAssertEqual(entered.wait(timeout: .now() + 1), .success)
+    XCTAssertTrue(scheduler.pendingPTS.isEmpty)
+    XCTAssertTrue(pump.hasPendingPresentation, "EOF must see the frame between scheduler removal and native enqueue completion")
+    release.signal(); queue.sync {}; pump.stop {}; queue.sync {}
+  }
+
+  func testTimedBackpressurePreservesFrameOutsideRevisedHorizon() {
+    let scheduler = YlFrameScheduler(), endpoint = PumpOutput(), clock = TimedClockBox()
+    let queue = DispatchQueue(label: "test.timed.revised-horizon")
+    endpoint.ready = false; clock.set(100_000, playing: true)
+    XCTAssertTrue(scheduler.enqueue(.init(payload: NSObject(), ptsUs: 140_000, durationUs: 40_000, keyframe: true, generation: 1)))
+    let pump = YlTimedVideoPump(scheduler: scheduler, endpoint: endpoint, clockSnapshot: clock.snapshot, generation: 1, queue: queue)
+    defer { pump.stop {}; queue.sync {} }
+    pump.synchronize(); queue.sync {}
+    XCTAssertTrue(pump.hasPendingPresentation)
+    // A backward audio clock observation shrinks the lead horizon around a held frame.
+    clock.set(0, playing: true); pump.synchronize(); queue.sync {}
+    XCTAssertTrue(pump.hasPendingPresentation)
+    XCTAssertEqual(pump.statistics.rejected, 0)
+    endpoint.lock.withLock { endpoint.ready = true }
+    clock.set(100_000, playing: true); pump.synchronize(); queue.sync {}
+    XCTAssertEqual(endpoint.pts, [140_000])
   }
 
   func testTimedPumpStopsAdmissionOnPause() {

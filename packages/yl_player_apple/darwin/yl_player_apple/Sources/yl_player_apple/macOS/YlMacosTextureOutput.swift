@@ -22,7 +22,7 @@ final class YlMacosTextureOutput: NSObject, FlutterTexture, YlTextureOutput, YlN
   var onRenderFailure: ((NativePlayerError) -> Void)?
   func attach(_ layer: CALayer) {
     guard textureId >= 0 else { return }
-    retireTimedEndpoint()
+    retireTimedEndpoint(preservingPausedPreview: true)
     attachedContainer = layer
     renderer.attach(layer)
   }
@@ -34,7 +34,7 @@ final class YlMacosTextureOutput: NSObject, FlutterTexture, YlTextureOutput, YlN
     renderer.layout()
   }
   func detach(_ layer: CALayer) {
-    if attachedContainer === layer { retireTimedEndpoint(); attachedContainer = nil }
+    if attachedContainer === layer { retireTimedEndpoint(preservingPausedPreview: true); attachedContainer = nil }
     renderer.detach(layer)
   }
 
@@ -68,7 +68,7 @@ final class YlMacosTextureOutput: NSObject, FlutterTexture, YlTextureOutput, YlN
     }
   }
 
-  private func retireTimedEndpoint() {
+  private func retireTimedEndpoint(preservingPausedPreview: Bool = false) {
     let endpoint = timedLock.withLock { () -> (any YlTimedVideoEndpoint)? in
       timedEpoch &+= 1
       guard !timedRetiring, let timedEndpoint else { return nil }
@@ -76,6 +76,11 @@ final class YlMacosTextureOutput: NSObject, FlutterTexture, YlTextureOutput, YlN
       return timedEndpoint
     }
     guard let endpoint else { return }
+    if preservingPausedPreview, #available(macOS 14.0, *),
+       let frame = (endpoint as? YlMacosTimedVideoEndpoint)?.pausedPreview {
+      precondition(Thread.isMainThread)
+      renderer.publish(unsafeBitCast(frame.payload, to: CVPixelBuffer.self), retaining: frame.reservation)
+    }
     endpoint.retire(removingImage: true) { [weak self] in
       guard let self else { return }
       self.timedLock.withLock {

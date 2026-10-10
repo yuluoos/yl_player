@@ -13,6 +13,10 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
   private let stateLock = NSLock()
   private var closed = false
   private var generation: UInt64?
+  private var clockSnapshot: YlPresentationClockSnapshot?
+  // Share the same reservations: one current image plus at most three future
+  // images permits paused surface reattachment without a stale preview.
+  private var previewFrames: [YlFrameEnvelope] = []
   private var requesting = false
   private var failed = false
   private var retirementStarted = false
@@ -52,6 +56,8 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
     queue.sync {
       guard !isRetired, !failed, self.generation == nil || self.generation == generation else { return }
       self.generation = generation
+      clockSnapshot = snapshot
+      prunePreviewFrames()
       guard snapshot.rate.isFinite, snapshot.rate >= 0.25, snapshot.rate <= 4 else {
         fail(NSError(domain: "YLTimedVideoClock", code: -1)); return
       }
@@ -86,9 +92,25 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
           duration: frame.durationUs > 0 ? CMTime(value: frame.durationUs, timescale: 1_000_000) : .invalid,
           presentationTimeStamp: CMTime(value: frame.ptsUs, timescale: 1_000_000), decodeTimeStamp: .invalid)
         renderer.enqueue(try YlSampleBufferVideoRenderer.makeSample(pixel, retaining: frame.reservation, timing: timing))
+        previewFrames.append(frame); prunePreviewFrames()
         return true
       } catch { fail(error); return false }
     }
+  }
+
+  var pausedPreview: YlFrameEnvelope? {
+    queue.sync {
+      guard !isRetired, let snapshot = clockSnapshot, !snapshot.playing else { return nil }
+      return previewFrames.last { $0.ptsUs <= snapshot.positionUs }
+    }
+  }
+
+  private func prunePreviewFrames() {
+    guard let snapshot = clockSnapshot else { return }
+    let current = previewFrames.last { $0.ptsUs <= snapshot.positionUs }
+    let future = previewFrames.filter { $0.ptsUs > snapshot.positionUs }.suffix(3)
+    previewFrames = current.map { [$0] } ?? []
+    previewFrames.append(contentsOf: future)
   }
 
   private func fail(_ error: Error) {
@@ -115,6 +137,7 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
         DispatchQueue.main.async { [self] in
           layer.removeFromSuperlayer()
           queue.async { [self] in
+            previewFrames.removeAll(); clockSnapshot = nil
             retirementFinished = true
             let callbacks = retirementCallbacks; retirementCallbacks.removeAll()
             callbacks.forEach { $0() }
