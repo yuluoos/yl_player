@@ -1688,3 +1688,10 @@ intervened−drained全进程堆变化为hold -229,680B、stop +612,848B，stop�
 夹具4/4、发现iOS678/macOS665、独立复审无P1/P2；24份原始文件归档含失败和成功XCTest摘要/附件、初始源码/线程采样、最终源码及二进制hash。初始失败构建未事先冻结binary hash，该缺口明确保留，不冒充两构建的性能对照。未运行完整native/音频套件、iOS、长程或物理音画验收。协议：[同会话重播](../../../tool/playback_benchmark/decoded-stop-replay-protocol.md)；证据：[失败与修复归档](../../../tool/playback_benchmark/macos-stop-replay-observations.json)。
 
 当前策略仍保留自然EOF暂停；既有默认stop约10.9s的单次观测阻止直接增加主线程自动stop。本轮修复恢复语义，不构成自动回收或候选生产准入。下一项收敛EOF回收策略与剩余验收矩阵；defaultEnabled/productionAdmission/downstreamBoundProven仍false。
+
+
+### EOF策略收敛与剩余准入（2026-10-09，base bcd547b）
+
+[当前决策矩阵](2026-10-09-audio-eof-admission.md)已统一九类证据与五项后续工作。自然EOF保留presentation时钟/显示节拍暂停，不新增原生自动stop；测试直接操作player的结果不等于生产行为。默认同步stop单次10.895s仍不支持直接主线程接入，候选0.053s也不是上界。已有重播修复、长播、堆类型、受控重载分别保留各自构建范围。
+
+下一项R1补齐不注入stop的正常EOF恢复及后台/前台语义；之后按R2资源生命周期、R3资源准入结论、R4设备平台、R5最终版本回归推进。当前仅文档核查，无新测试或物理设备声明，默认/正式准入/整体有界均false。完整P08不因本决策文档完成而关闭。

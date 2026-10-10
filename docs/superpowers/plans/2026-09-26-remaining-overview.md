@@ -330,3 +330,6 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 
 
 2026-10-09 后续：同会话EOF停止后的seek/重播验收发现默认/候选共用的显示节拍恢复缺陷，已以真实2项失败→4项定向通过修复；三轮时钟/画面/完成及旧回调隔离通过。夹具4项、发现678/665，失败与成功24份证据保留。当前EOF继续暂停、不自动stop，候选关闭；下一项收敛回收策略与剩余准入矩阵。详见[最新接入记录](2026-10-08-apple-audio-terminal-integration.md)与[P08报告](../reports/2026-09-26-remaining-08-performance-release.md)。
+
+
+2026-10-09 EOF策略已收敛：保留presentation时钟/显示节拍暂停，不新增自动stop或开放候选。[当前准入矩阵](../reports/2026-10-09-audio-eof-admission.md)明确九类证据边界、R1–R5执行顺序及设备依赖；下一项R1是无手动stop的自然EOF重播与后台恢复。本次仅文档核查，完整P08仍开放。

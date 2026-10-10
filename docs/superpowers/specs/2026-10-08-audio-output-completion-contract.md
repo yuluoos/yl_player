@@ -144,3 +144,11 @@ Task4 已接入内部 `audioTerminalCandidateEnabled=false` 开关。只有实�
 默认关闭的候选路径允许在首次接受/提交PCM之前，处理一次不超过当前PCM块长度的负起始前缀。仅AAC、48kHz、双声道、Float32 planar、1–1024帧；先正常解码，再按ceil(-PTS×48000/1000000)裁去两声道中时间零点之前的样本，不只修改时间戳。完整负时间块释放后返回buffered，不提交或锚定；部分块保留所有非负样本，重算PTS/时长。原frameCapacity与reservation字节仍计费，不按较短payload虚报释放。
 
 该处理每个资格代次最多一次，flush/reset重新建立资格时重置；已接受PCM、已处理预滚、更大负前缀或不合格格式仍走原兼容回退。没有改动默认legacy、iOS或bounded路由。包时间戳的毫秒量化保持原值，不虚构统一平移或编码延迟元数据；该规则不等于对所有AAC预滚格式的支持。
+
+## 14. EOF回收决策与当前准入入口（2026-10-09）
+
+截至`bcd547b`，§10–13的内部候选已经实现并积累局部验证，但默认与正式准入仍关闭。前文“尚未接入/留Task5”等表述保留对应历史阶段，最新证据范围、缺口及执行顺序统一见[EOF回收与准入矩阵](../reports/2026-10-09-audio-eof-admission.md)。
+
+自然EOF继续在真实软件排空后暂停presentation时钟和display tick并发布一次completed；不在该路径新增原生player.stop/reset或后台停止。既有显式seek/reset/close仍完成自身代际隔离与资源释放。`bcd547b`修复play恢复display tick，使显式seek/重播能继续画面、进度和完成判断；这不表示自动重播或自动回收已准入。
+
+同版本默认stop约10.895s、候选约0.053s只是单次观测，不是上界。所选堆类型条目消失、PCM预算归零、整体资源有界分别判定。物理输出、实际路由切换、平台矩阵、最终版本回归及下游边界仍是独立门槛，`defaultEnabled/productionAdmission/downstreamBoundProven`继续false，不通过放宽阈值或扩大支持范围来关闭缺口。
