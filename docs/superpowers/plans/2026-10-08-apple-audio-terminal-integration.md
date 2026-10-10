@@ -10,7 +10,7 @@
 
 **Spec:** [输出完成契约 §10](../specs/2026-10-08-audio-output-completion-contract.md)、[需求基线](../specs/2026-09-20-playback-expansion-requirements.md)、[P08](2026-09-26-remaining-08-performance-release.md)。
 
-最新状态（2026-10-09）：真实解码长程、自然EOF、长度矩阵、类型归因及透明回调对照已完成；去掉测试包装后默认完成容器仍保留，stop对照已在图拆除前观察到完成容器条目消失，随后完成分段计时与30s纯等待覆盖对照，默认同步stop本轮12.146s；同版本默认/候选stop对照已完成（10.895s/0.053s），下一项验证同session停止后的seek/重播；精确持有链与整体有界未证明。下方历史执行记录保留当时的失败/未完成状态，当前进度以最后一节为准；正式准入仍关闭。
+最新状态（2026-10-09）：真实解码长程、自然EOF、长度矩阵、类型归因及透明回调对照已完成；去掉测试包装后默认完成容器仍保留，stop对照已在图拆除前观察到完成容器条目消失，随后完成分段计时与30s纯等待覆盖对照，默认同步stop本轮12.146s；同版本默认/候选stop对照已完成（10.895s/0.053s），同session停止后的seek/重播已完成，并修复EOF后重播未恢复显示节拍导致进度/画面/完成停滞的问题；精确持有链与整体有界未证明。下方历史执行记录保留当时的失败/未完成状态，当前进度以最后一节为准；正式准入仍关闭。
 
 起点 `9c5967a`。Task 1–5 已实现并执行验证；资源采样帧断言失败如实保留，默认准入仍关闭。既有工具通过不能替代生产验收。
 
@@ -480,6 +480,18 @@ AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 o
 - [x] 正式两独立进程、同源码/二进制/60s素材，透明回调且均等待2s；默认2813played，候选2812rendered+1played，候选至intervened无回退。
 - [x] 两组2/2、8/8heap有效；默认stop10.895413s、候选0.053060s，仅单次路径观察，不冒充一般上界或统计收益。
 - [x] EOF/图/关闭后两点资源与事件检查通过；定向4/4、工具56/56、夹具4/4、发现678/663，独立复审无P1/P2，157份文件归档。
-- [ ] 下一项：验证同一session在自然EOF并停止原生player后seek到起点/中段再播放，检查音频时钟、首帧/完成事件及重复关闭/迟到事件隔离；默认和候选均覆盖，再决定EOF回收策略，不直接打开生产候选。
+- [x] 同一session在自然EOF并停止原生player后seek到起点/中段再播放，默认和候选均已验证；发现并修复显示节拍恢复缺口，见后续记录。
 
 无生产修改，无完整native/iOS/长程重跑。见[协议](../../../tool/playback_benchmark/decoded-stop-paths-protocol.md)、[证据](../../../tool/playback_benchmark/macos-stop-paths-observations.json)与[报告](../reports/2026-09-26-remaining-08-performance-release.md)。准入与整体有界仍false。
+
+
+### 后续恢复：EOF停止后的同会话seek/重播（2026-10-09，base195e0d4）
+
+- [x] 两条真实默认/候选路径各三轮：首次播放、EOF+stop后seek0、再次EOF+stop后seek2000；始终同host/session/output及节点集合。
+- [x] 首次原生2/2失败：音频sample继续增加，但公开位置停在0/2156ms，完成数始终1。保留失败附件和源码，不计通过。
+- [x] 根因是自然EOF暂停display ticks，play未恢复；在共享play成功路径恢复既有display，不重建音频、不自动stop、不启用候选。
+- [x] 修复后定向4/4、0跳过；默认/候选完成数1→2→3，视频帧97→193→241，sample/公开位置推进；首帧每session一次，实际提交模式和候选anchor持续成立。
+- [x] 原代真实完成回调在seek后暂停/播放中/重复close后注入；无提前完成/错误/迟到发布，关闭后账本0、engine停止、player脱离。镜像/夹具4/4，发现iOS678/macOS665，复审无P1/P2。
+- [ ] 下一项：收敛EOF回收策略与候选剩余准入矩阵；本轮继续保留自然EOF暂停策略，自动同步stop不进入生产，后续按缺失的设备/生命周期证据推进。
+
+执行裁定：已有失败证明共享重播缺陷，因此本轮从测试扩展到最小生产修复。定向4项覆盖故障和相邻自然EOF/尾部暂停语义，不重复完整原生/音频套件；共享iOS路径本轮未运行。仅4.021s本地AVC/AAC，不是长程、延迟或heap实验；为注入而有界保留一个完成闭包，不提供内存归因证据。见[协议](../../../tool/playback_benchmark/decoded-stop-replay-protocol.md)、[24份原始证据](../../../tool/playback_benchmark/macos-stop-replay-observations.json)与[P08报告](../reports/2026-09-26-remaining-08-performance-release.md)。候选默认/正式准入/整体有界仍false。

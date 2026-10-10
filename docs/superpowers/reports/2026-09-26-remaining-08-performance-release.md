@@ -1673,3 +1673,18 @@ intervened−drained全进程堆变化为hold -229,680B、stop +612,848B，stop�
 新增路径校验实际RED→GREEN，拒绝候选回退/错误模式、错误profile/构建、进程复用/重叠和缺heap。定向原生4/4（资源测试包含新增候选stop，方法数未增）、工具56/56、夹具4/4、发现iOS678/macOS663；独立复审与归档核验完成。未重跑完整native、iOS或1200s长程。见[协议](../../../tool/playback_benchmark/decoded-stop-paths-protocol.md)和[157份原始证据](../../../tool/playback_benchmark/macos-stop-paths-observations.json)。
 
 下一项：验证同一session在自然EOF并停止原生player后seek到起点/中段再播放，检查音频时钟、首帧/完成事件及重复关闭/迟到事件隔离；默认和候选均覆盖，再决定EOF回收策略，不直接打开生产候选。 defaultEnabled/productionAdmission/downstreamBoundProven继续false；物理音画、设备切换、最低系统/Intel/iOS运行及完整P08仍开放。
+
+
+### EOF停止后的同会话seek/重播修复（2026-10-09，base195e0d4）
+
+本轮使用约4.021s本地AVC/AAC，默认和候选分别在同一host/session/renderer/engine中执行首次播放、EOF+原生stop后seek0重播、再EOF+stop后seek2000播放。两方法串行，复用同一新构建，不是独立进程性能对照，也不重新采heap。
+
+新增测试首次2/2失败：原生音频sample持续增加，但公开位置在重播时停于0ms、中段seek后停于2156ms；两路最终完成事件均停在1。源码与线程采样定位到自然EOF的completeIfDrained暂停display tick，而play没有恢复tick；音频仍播放，但视频消费、进度发布和再次排空判断失去驱动。共享YlManagedPlaybackSession.play现恢复既有display tick，保留原播放状态与bounded门控，不重建图、不增加自动stop。
+
+修复后4/4定向原生测试通过、0跳过，包括两条新重播用例及既有自然EOF/受控尾部暂停恢复用例。两路三轮完成数均1/2/3，真实视频帧累计均97/193/241，原生sample和公开位置均推进；公开首帧每session仍1次。候选三轮playedBack均1，rendered分别188/187/93；默认playedBack分别188/188/94，rendered均0。首次计数从load返回后的观察边界开始，不能用不同臂首轮差1反推总解码数或资源差异。
+
+有界捕获原代一个真实完成回调，在seek后暂停时重复、播放时一次及重复close后重复注入。无提前完成、错误或关闭后事件/纹理增长；同session、单output及原节点集合保持，EOF音频owned0/pendingfalse，关闭后ledger0且engine停止/player脱离。正常原生回调透明转交，次数仍unobserved；刻意保留回调的测试不用于内存归因或延迟比较。
+
+夹具4/4、发现iOS678/macOS665、独立复审无P1/P2；24份原始文件归档含失败和成功XCTest摘要/附件、初始源码/线程采样、最终源码及二进制hash。初始失败构建未事先冻结binary hash，该缺口明确保留，不冒充两构建的性能对照。未运行完整native/音频套件、iOS、长程或物理音画验收。协议：[同会话重播](../../../tool/playback_benchmark/decoded-stop-replay-protocol.md)；证据：[失败与修复归档](../../../tool/playback_benchmark/macos-stop-replay-observations.json)。
+
+当前策略仍保留自然EOF暂停；既有默认stop约10.9s的单次观测阻止直接增加主线程自动stop。本轮修复恢复语义，不构成自动回收或候选生产准入。下一项收敛EOF回收策略与剩余验收矩阵；defaultEnabled/productionAdmission/downstreamBoundProven仍false。

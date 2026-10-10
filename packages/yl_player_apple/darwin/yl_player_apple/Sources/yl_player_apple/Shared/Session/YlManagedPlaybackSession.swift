@@ -438,6 +438,9 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         return pending
       }
       if let resume { demux.performAsync(resume) }
+      // Natural EOF pauses display ticks. Seeking resets the media generation,
+      // but replay also needs ticks for video, progress and drain completion.
+      presentation.setDisplayPaused(false)
       status = "playing"
       emitState()
       requestPump()

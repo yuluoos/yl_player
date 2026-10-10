@@ -327,3 +327,6 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 
 
 2026-10-09默认/候选同步stop同版本对照完成：两独立60s透明路径正式2/2、8/8heap通过，默认2813played/候选2812rendered+1played且未回退。默认stop10.895413s、候选0.053060s，仅单次结果不推断一般上界/统计收益；定向4/4、工具56/56、夹具4/4、发现678/663，157份文件归档。生产与准入未变；下一项同session EOF停止后的seek/重播及事件隔离，随后评估回收策略，整体有界与其他设备平台验收仍开放。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)及[证据](../../../tool/playback_benchmark/macos-stop-paths-observations.json)。
+
+
+2026-10-09 后续：同会话EOF停止后的seek/重播验收发现默认/候选共用的显示节拍恢复缺陷，已以真实2项失败→4项定向通过修复；三轮时钟/画面/完成及旧回调隔离通过。夹具4项、发现678/665，失败与成功24份证据保留。当前EOF继续暂停、不自动stop，候选关闭；下一项收敛回收策略与剩余准入矩阵。详见[最新接入记录](2026-10-08-apple-audio-terminal-integration.md)与[P08报告](../reports/2026-09-26-remaining-08-performance-release.md)。

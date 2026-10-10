@@ -337,6 +337,9 @@ final class YlMacosAudioTests: XCTestCase {
     let system: YlSystemAudioOutput
     let wrapsCallbacks: Bool
     var onSubmit: ((YlScheduledAudioBuffer) -> Void)?
+    // Bounded test-only capture for replaying one retired generation callback.
+    var captureNextPlayedCompletion = false
+    var capturedPlayedCompletion: (() -> Void)?
     private let lock = NSLock()
     private var counts = ["renderedSubmissions": 0, "playedSubmissions": 0, "renderedCallbacks": 0, "playedCallbacks": 0]
     var snapshot: [String: Int] { lock.withLock { counts } }
@@ -362,6 +365,9 @@ final class YlMacosAudioTests: XCTestCase {
     func configure(format: AVAudioFormat) throws { try system.configure(format: format) }
     func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void) {
       onSubmit?(buffer)
+      if captureNextPlayedCompletion {
+        captureNextPlayedCompletion = false; capturedPlayedCompletion = completion
+      }
       lock.withLock { counts["playedSubmissions", default: 0] += 1 }
       if !wrapsCallbacks { system.schedule(buffer, completion: completion); return }
       system.schedule(buffer) { [weak self] in
@@ -370,6 +376,10 @@ final class YlMacosAudioTests: XCTestCase {
     }
     func schedule(_ buffer: YlScheduledAudioBuffer, mode: YlAudioOutputCompletionMode, callbacks: YlAudioOutputCallbacks) {
       onSubmit?(buffer)
+      if captureNextPlayedCompletion && mode == .playedBack {
+        captureNextPlayedCompletion = false
+        capturedPlayedCompletion = { callbacks.resourcesReleased(); callbacks.playedBack() }
+      }
       lock.withLock { counts[mode == .renderedResource ? "renderedSubmissions" : "playedSubmissions", default: 0] += 1 }
       if !wrapsCallbacks { system.schedule(buffer, mode: mode, callbacks: callbacks); return }
       system.schedule(buffer, mode: mode, callbacks: .init(resourcesReleased: { [weak self] in
@@ -810,6 +820,125 @@ final class YlMacosAudioTests: XCTestCase {
       XCTAssertEqual(ledger.snapshot.currentBytes, 0); XCTAssertTrue(callbacks.failures.isEmpty)
       try await probe("disposedLater")
     }
+  }
+
+  @MainActor
+  func testActualDecodedLegacyEOFStopSeekReplay() async throws {
+    try await verifyEOFStopSeekReplay(candidate: false)
+  }
+
+  @MainActor
+  func testActualDecodedCandidateEOFStopSeekReplay() async throws {
+    try await verifyEOFStopSeekReplay(candidate: true)
+  }
+
+  @MainActor
+  private func verifyEOFStopSeekReplay(candidate: Bool) async throws {
+    let factory = ReloadAudioFactory(), ledger = YlManagedBufferLedger()
+    factory.wrapsCallbacks = false
+    let registry = ApplePublicationRegistry(), callbacks = AppleRecordingCallbacks()
+    let host = YlApplePlayerHost(playerId: 745, suffix: "eof-replay-745",
+      options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 50),
+      services: registry.services(), callbacks: callbacks, bufferLedger: ledger,
+      audioRendererFactory: factory, audioTerminalCandidateEnabled: candidate)
+    defer { host.close(); factory.entries.forEach { $0.output.capturedPlayedCompletion = nil } }
+    try host.attach(); try host.setVolume(volume: 0)
+    let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+      .deletingLastPathComponent().deletingLastPathComponent()
+      .appendingPathComponent("assets/test_media/format_matrix/mkv-avc-aac.mkv")
+    var request = AppleHostFixture.request("eof-replay", url: fixture.path, format: .matroska, autoplay: false)
+    request.source.kind = .file
+    let session = try await host.load(request: request)
+    let entry = try XCTUnwrap(factory.entries.first), renderer = try XCTUnwrap(entry.renderers.first)
+    let nodes = entry.engine.attachedNodes
+    let players = nodes.compactMap { $0 as? AVAudioPlayerNode }
+    XCTAssertEqual(players.count, 1)
+    let native = try XCTUnwrap(players.first)
+    entry.output.captureNextPlayedCompletion = true
+    var observations: [[String: Any]] = []
+    var completedCount = 0
+    func completions() -> Int { callbacks.states.filter { $0.status == .completed }.count }
+    for (cycle, target) in [Int64(0), 0, 2000].enumerated() {
+      let before = entry.output.snapshot
+      let framesBefore = registry.positivePublicFrames
+      if cycle > 0 {
+        let stopStart = ProcessInfo.processInfo.systemUptime
+        native.stop()
+        let stopSeconds = ProcessInfo.processInfo.systemUptime - stopStart
+        XCTAssertEqual(entry.engine.attachedNodes, nodes); XCTAssertTrue(entry.engine.isRunning)
+        XCTAssertFalse(native.isPlaying)
+        try host.seekTo(command: .init(sessionId: session.sessionId, positionMs: target))
+        XCTAssertEqual(host.initialState.status, .paused)
+        let late = try XCTUnwrap(entry.output.capturedPlayedCompletion)
+        late(); late()
+        try await Task.sleep(nanoseconds: 150_000_000)
+        XCTAssertEqual(completions(), completedCount)
+        XCTAssertEqual(host.initialState.status, .paused)
+        XCTAssertTrue(callbacks.failures.isEmpty)
+        observations.append(["phase": "seek", "cycle": cycle, "targetMs": target,
+          "stopSeconds": stopSeconds, "completedAfterRetiredCallback": completions()])
+      }
+      try await host.play(command: .init(sessionId: session.sessionId))
+      try await AppleHostCharacterizations.waitFor({
+        (entry.output.renderedAudioTime?.sampleTime ?? 0) > 0 &&
+          host.initialState.timeline.positionMs >= target + 200
+      }, timeout: 5)
+      let position = host.initialState.timeline.positionMs
+      let audioTime = try XCTUnwrap(entry.output.renderedAudioTime).sampleTime
+      if cycle > 0 { entry.output.capturedPlayedCompletion?() }
+      try await AppleHostCharacterizations.waitFor({ host.initialState.timeline.positionMs >= position + 200 }, timeout: 3)
+      let advancedAudioTime = try XCTUnwrap(entry.output.renderedAudioTime).sampleTime
+      XCTAssertGreaterThan(advancedAudioTime, audioTime)
+      XCTAssertGreaterThan(registry.positivePublicFrames, framesBefore, "Replay must publish real video frames")
+      XCTAssertEqual(completions(), completedCount)
+      XCTAssertEqual(host.initialState.status, .playing)
+      XCTAssertEqual(host.sessionId, session.sessionId)
+      XCTAssertEqual(factory.entries.count, 1, "Seek/replay must reuse the same native output")
+      XCTAssertEqual(entry.engine.attachedNodes, nodes)
+      XCTAssertEqual(renderer.usesSubmissionAnchor, candidate)
+      try await AppleHostCharacterizations.waitFor({ host.initialState.status == .completed }, timeout: 10)
+      completedCount += 1
+      XCTAssertEqual(completions(), completedCount)
+      XCTAssertEqual(callbacks.frames.filter { $0.sessionId == session.sessionId }.count, 1,
+        "First-frame publication is once per session, including replay")
+      XCTAssertTrue(callbacks.failures.isEmpty)
+      XCTAssertFalse(renderer.hasPendingPlayback); XCTAssertEqual(renderer.scheduledBytes, 0)
+      XCTAssertEqual(renderer.usesSubmissionAnchor, candidate)
+      let after = entry.output.snapshot
+      let played = after["playedSubmissions", default: 0] - before["playedSubmissions", default: 0]
+      let rendered = after["renderedSubmissions", default: 0] - before["renderedSubmissions", default: 0]
+      if candidate { XCTAssertEqual(played, 1); XCTAssertGreaterThan(rendered, 1) }
+      else { XCTAssertGreaterThan(played, 1); XCTAssertEqual(rendered, 0) }
+      observations.append(["phase": "completed", "cycle": cycle, "targetMs": target,
+        "positionBeforeMs": position, "positionAfterMs": host.initialState.timeline.positionMs,
+        "videoFramesBefore": framesBefore, "videoFramesAfter": registry.positivePublicFrames,
+        "audioSampleBefore": audioTime, "audioSampleAfter": advancedAudioTime,
+        "playedSubmissions": played, "renderedSubmissions": rendered,
+        "completed": completions(), "firstFrames": callbacks.frames.count,
+        "submissionAnchor": renderer.usesSubmissionAnchor, "ownedBytes": renderer.scheduledBytes,
+        "pending": renderer.hasPendingPlayback])
+    }
+    host.close(); host.close()
+    try await Task.sleep(nanoseconds: 150_000_000)
+    func counts() -> [Int] { [callbacks.states.count, callbacks.deltas.count, callbacks.frames.count,
+                            callbacks.failures.count, callbacks.engines.count, callbacks.retries.count] }
+    let closedCounts = counts(), closedModes = entry.output.snapshot
+    let closedFrames = registry.positivePublicFrames
+    entry.output.capturedPlayedCompletion?(); entry.output.capturedPlayedCompletion?()
+    try await Task.sleep(nanoseconds: 150_000_000)
+    XCTAssertEqual(counts(), closedCounts); XCTAssertEqual(entry.output.snapshot, closedModes)
+    XCTAssertEqual(registry.positivePublicFrames, closedFrames)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0); XCTAssertEqual(renderer.scheduledBytes, 0)
+    XCTAssertFalse(renderer.hasPendingPlayback); XCTAssertFalse(entry.engine.isRunning)
+    XCTAssertFalse(entry.engine.attachedNodes.contains(native)); XCTAssertTrue(host.disposed)
+    let data = try JSONSerialization.data(withJSONObject: ["candidate": candidate,
+      "sessionId": session.sessionId, "outputsCreated": factory.entries.count,
+      "observations": observations, "ledgerAfterClose": ledger.snapshot.currentBytes,
+      "publicationsBeforeLateCallback": closedCounts, "publicationsAfterLateCallback": counts(),
+      "callbackObservation": "unobserved", "productionAdmission": false,
+      "audioDiagnostics": entry.failureProbe.snapshot], options: [.sortedKeys])
+    let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+    attachment.name = "decoded-eof-stop-replay-\(candidate)"; attachment.lifetime = .keepAlways; add(attachment)
   }
 
   @MainActor
