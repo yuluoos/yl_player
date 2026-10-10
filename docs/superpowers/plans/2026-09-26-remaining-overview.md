@@ -321,3 +321,6 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 
 
 2026-10-09自然EOF后stop边界对照完成：默认透明hold/stop两独立进程正式2/2、8/8 heap有效，均先自然EOF和等待>=2s；stop中间快照保持engine运行与原四节点附着。hold仍列出2813完成容器，stop后不再列出且dispatch3110→221；本次变化发生于完整图拆除之前，不等于零存活/精确原生持有链。定向4/4、工具50/50、夹具4/4、发现678/663，独立复审无P1/P2，140份证据归档；无生产修改。最终复审发现实际观察间隔hold4.998s/stop18.620s，显式sleep虽均约2s，尚不能排除额外等待效应。下一项分段测量stop前后延迟并补覆盖更长间隔的纯等待对照，然后再验证重播/seek及评估回收策略。候选准入、整体有界和其他设备平台验收仍开放。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)与[证据](../../../tool/playback_benchmark/macos-stop-boundary-observations.json)。
+
+
+2026-10-09分段stop计时及更长纯等待对照完成：首次hold的2份heap超时、stop未启动，保留失败后以同身份/原门限复测；默认透明hold30s/stop2s最终2/2、8/8heap，实际行/ACK后/heap开始窗口均被hold覆盖；本轮同步stop直接测得12.145656s，不回填旧轮精确值或宣称一般上界。定向4/4、工具53/53、夹具4/4、发现678/663，199份证据归档；生产未改。下一项核查候选路径停止耗时，随后评估EOF回收及重播/seek；不会直接引入生产主线程同步stop，准入及整体有界仍开放。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)和[证据](../../../tool/playback_benchmark/macos-stop-timing-observations.json)。

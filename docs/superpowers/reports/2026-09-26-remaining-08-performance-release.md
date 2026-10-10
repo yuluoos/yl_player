@@ -1598,3 +1598,49 @@ intervened−drained全进程堆变化为hold -229,680B、stop +612,848B，stop�
 新校验负例先RED后GREEN：拒绝错误/提前stop、提前拆图、引擎提前停止、缺阶段/等待、改变提交/事件、身份/进程复用或重叠、缺heap等。最终定向原生4/4（其中资源测试含原四配置与新增hold/stop）、工具50/50、夹具4/4、发现iOS678/macOS663；独立复审无P1/P2。未重跑完整原生、iOS或1200s长程。见[协议](../../../tool/playback_benchmark/decoded-stop-boundary-protocol.md)及[140份原始文件/类型对照](../../../tool/playback_benchmark/macos-stop-boundary-observations.json)。
 
 下一项：先分段测量player.stop调用及其前后等待/采样的耗时，再加入覆盖stop组实际观察间隔的纯等待对照，区分时间效应与stop干预；随后验证同session重播/seek，尚不引入生产回收策略。 defaultEnabled/productionAdmission/downstreamBoundProven仍false；物理音画、真实设备切换、最低系统/Intel/iOS运行及完整P08继续开放。
+
+
+### stop分段计时与更长纯等待对照（2026-10-09，base 2f9b63f）
+
+上一轮实际观察窗口不等，未排除额外等待效应。本轮预先固定默认透明回调hold组在drained ACK后等待30s，stop组等待2s后仅停止player；同一源码/二进制/60.229s素材，两个独立进程串行。8s heap、5s记录清空、30s ACK、180s native、240s parent及全部EOF/图/账本检查未调整，生产代码未改。短程原生回归仍使用2s等待，不冒充正式30s控制。
+
+首次hold的原生1/1通过，但drained/disposed两次heap超过原8s限制且无输出；configured/intervened有效。调度器以失败退出，stop组未启动。原始失败和环境记录保留，原因未进一步确定；未改代码或门限，以相同冻结身份仅复测一次完整配对。以下均为复测数据。
+
+复测正式2/2进程、8/8 heap及定向原生4/4通过；两组各2813次playedBack提交，透明callback为unobserved/null。自然完成/关闭后两点检查通过；intervened仍保持原四附着节点和engine运行。三种实际时间窗口的hold均覆盖stop，不能只凭计划的sleep时长认定这一点。
+
+| 组别 | drained→intervened行 | ACK返回→行 | 两次heap开始间隔 | 同步stop调用 |
+| --- | ---: | ---: | ---: | ---: |
+| hold | 35.405864s | 30.100647s | 35.420787s | 未调用 |
+| stop | 19.236644s | 14.154985s | 19.393243s | 12.145656s |
+
+时间戳从drained ACK返回至intervened行生成分段记录，之前为空、之后固定不变。下表按相邻时间戳相减，总和等于drained行到intervened行间隔。actionStartedToactionFinished仅stop组调用同步player.stop；hold未调用stop，其微小空动作区间单列，nativeStopSeconds为null。recorderSettledToMemoryReadFinished还包含检查点断言，不冒充单独task_info成本。
+
+| 时间分段 | hold（秒） | stop（秒） |
+| --- | ---: | ---: |
+| drainedRowToackReturned | 5.305217 | 5.081659 |
+| ackReturnedTosleepStarted | 0.000070 | 0.000119 |
+| sleepStartedTosleepFinished | 30.087023 | 2.003294 |
+| sleepFinishedToactionStarted | 0.000069 | 0.000016 |
+| actionStartedToactionFinished | 0.000022 | 12.145656 |
+| actionFinishedToassertionsFinished | 0.010305 | 0.004771 |
+| assertionsFinishedToprobeEntered | 0.000695 | 0.000175 |
+| probeEnteredTorecorderSettled | 0.000335 | 0.000323 |
+| recorderSettledTomemoryReadFinished | 0.001525 | 0.000314 |
+| memoryReadFinishedTorowCaptured | 0.000602 | 0.000317 |
+
+本轮同步stop测得12.145656s，分段数据可定位本轮调用延迟；这是默认路径单次实测，不是普遍上界，也不能回填为上一轮未分段时的精确stop耗时。测试在MainActor上执行该调用，这一观测意味着不能直接将同样的EOF同步stop加入生产主线程。
+
+| 组别 | 阶段 | heap字节 | LifecycleCompletion | dispatch source | Closure context |
+| --- | --- | ---: | ---: | ---: | ---: |
+| hold | drained | 23,604,129 | 2813 | 3098 | 3341 |
+| hold | intervened | 23,257,377 | 2813 | 3028 | 3203 |
+| hold | disposed | 22,923,377 | 未单独识别 | 216 | 370 |
+| stop | drained | 25,313,305 | 2813 | 3119 | 3365 |
+| stop | intervened | 25,859,673 | 未单独识别 | 238 | 410 |
+| stop | disposed | 24,532,825 | 未单独识别 | 237 | 390 |
+
+更长纯等待与stop的类型差异须结合上述已覆盖窗口解释。即使stop之后条目不再单独识别，也不等于零存活或精确原生retainer证明；总堆、non-object及框架缓存另列，不以选定类型下降宣称整体内存改善。各组仍只有一次测量，保留统计与物理音画/设备/平台限制。
+
+计时校验负例实际RED→GREEN，覆盖缺字段、非有限/倒序时刻、行时间不符、后续快照改写、错误profile/等待和未覆盖控制；未覆盖时明确false。工具53/53、夹具4/4、发现iOS678/macOS663；独立复审与归档校验完成。未重跑完整原生、iOS或1200s长程。见[协议](../../../tool/playback_benchmark/decoded-stop-timing-protocol.md)及[199份原始证据](../../../tool/playback_benchmark/macos-stop-timing-observations.json)。
+
+下一项：对照候选尾部完成路径的同步stop耗时与资源保留，使用同素材/同版本独立进程明确其是否也存在停止延迟，再决定EOF回收与重播/seek验收方案；不直接在生产主线程增加自动stop。 候选默认/生产准入/整体有界仍false，完整P08开放。

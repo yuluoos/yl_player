@@ -153,6 +153,9 @@ def freeze(out, products, extra_files=()):
         'tool/playback_benchmark/decoded-stop-boundary-protocol.md',
         'tool/playback_benchmark/summarize_stop_boundary.py',
         'tool/playback_benchmark/test_stop_boundary.py',
+        'tool/playback_benchmark/decoded-stop-timing-protocol.md',
+        'tool/playback_benchmark/summarize_stop_timing.py',
+        'tool/playback_benchmark/test_stop_timing.py',
         'tool/playback_benchmark/decoded-eof-resources-protocol.md',
         'packages/yl_player/example/assets/test_media/format_matrix/mkv-avc-aac.mkv')]
     files.extend(extra_files)
@@ -172,7 +175,8 @@ def freeze(out, products, extra_files=()):
     return identity
 
 
-def collect(arm, count, directory, decoded=False, decoded_seconds=None, callback_wrapping='wrapped', boundary_mode=None):
+def collect(arm, count, directory, decoded=False, decoded_seconds=None, callback_wrapping='wrapped', boundary_mode=None, stop_timing=False):
+    if stop_timing and boundary_mode is None:raise ValueError('Timing requires stop-boundary mode')
     if boundary_mode is not None and (boundary_mode not in ('hold','stop') or arm!='legacy' or callback_wrapping!='transparent' or not decoded or decoded_seconds!=60):
         raise ValueError('Stop boundary requires legacy transparent decoded60s')
     phases=('configured','drained','intervened','disposed') if boundary_mode else PHASES
@@ -203,7 +207,7 @@ def collect(arm, count, directory, decoded=False, decoded_seconds=None, callback
     config=absolute(plistlib.loads(originals[0].read_bytes()));target=config['RunnerTests']
     for env in (os.environ,target.get('EnvironmentVariables',{}),target.get('TestingEnvironmentVariables',{})):
         if any(k.startswith('MallocStackLogging') for k in env):raise ValueError('MSL must be disabled')
-    target.setdefault('EnvironmentVariables',{}).update(YL_AUDIO_PROBE_KIND='decoded-eof' if decoded else 'resource-drained-'+str(count),YL_AUDIO_PROBE_ARM=arm,YL_AUDIO_PROBE_DIRECTORY=str(out),YL_AUDIO_PROBE_CALLBACK_WRAPPING=callback_wrapping,YL_AUDIO_PROBE_STOP_BOUNDARY=boundary_mode or 'none')
+    target.setdefault('EnvironmentVariables',{}).update(YL_AUDIO_PROBE_KIND='decoded-eof' if decoded else 'resource-drained-'+str(count),YL_AUDIO_PROBE_ARM=arm,YL_AUDIO_PROBE_DIRECTORY=str(out),YL_AUDIO_PROBE_CALLBACK_WRAPPING=callback_wrapping,YL_AUDIO_PROBE_STOP_BOUNDARY=boundary_mode or 'none',YL_AUDIO_PROBE_STOP_TIMING='1' if stop_timing else '0')
     if fixture is not None:
         target['EnvironmentVariables'].update(YL_AUDIO_PROBE_FIXTURE=str(fixture), YL_AUDIO_PROBE_SECONDS=str(decoded_seconds))
     custom=out/'probe.xctestrun';custom.write_bytes(plistlib.dumps(config))
@@ -213,7 +217,7 @@ def collect(arm, count, directory, decoded=False, decoded_seconds=None, callback
              '-test-timeouts-enabled','YES','-maximum-test-execution-time-allowance','180',
              '-default-test-execution-time-allowance','180','-resultBundlePath',str(out)+'.xcresult']
     (out/'command.json').write_text(json.dumps(command,indent=2)+'\n')
-    result=dict(complete=False,arm=arm,buffers=None if decoded else count,decoded=decoded,decodedSeconds=decoded_seconds,callbackWrapping=callback_wrapping,boundaryMode=boundary_mode,probes=[],errors=[],productionAdmission=False,downstreamBoundProven=False)
+    result=dict(complete=False,arm=arm,buffers=None if decoded else count,decoded=decoded,decodedSeconds=decoded_seconds,callbackWrapping=callback_wrapping,boundaryMode=boundary_mode,stopTiming=stop_timing,probes=[],errors=[],productionAdmission=False,downstreamBoundProven=False)
     def save():(out/'result.json').write_text(json.dumps(result,indent=2)+'\n')
     save();seen=set();offset=0;started=time.monotonic()
     with (out/'xcode.log').open('w') as log:
@@ -252,6 +256,9 @@ def collect(arm, count, directory, decoded=False, decoded_seconds=None, callback
             try:
                 rows=[json.loads(x) for x in (out/'rows.jsonl').read_text().splitlines()]
                 result['observation']=validate_stop_rows(rows,boundary_mode,decoded_seconds,fixture.name) if boundary_mode else validate_decoded_rows(rows,arm=='candidate',decoded_seconds,fixture.name if fixture else None,callback_wrapping) if decoded else validate_rows(rows,arm=='candidate',count)
+                if stop_timing:
+                    from summarize_stop_timing import validate_timing_rows
+                    result['timing']=validate_timing_rows(rows,boundary_mode)
                 for name,sha in {**identity['sourceHashes'],**identity['binaryHashes']}.items():
                     if digest(ROOT/name)!=sha:raise ValueError('Source/binary changed: '+name)
             except (OSError,ValueError,KeyError,TypeError) as error:result['errors'].append(repr(error))
@@ -266,4 +273,5 @@ if __name__=='__main__':
     parser.add_argument('--decoded-seconds', type=int, choices=[4,30,60], help='Use generated length-control fixture')
     parser.add_argument('--callback-wrapping', choices=['wrapped','transparent'], default='wrapped')
     parser.add_argument('--stop-boundary',choices=['hold','stop'])
-    args=parser.parse_args();sys.exit(0 if collect(args.arm,args.buffers,args.directory,decoded=args.decoded_eof,decoded_seconds=args.decoded_seconds,callback_wrapping=args.callback_wrapping,boundary_mode=args.stop_boundary) else 1)
+    parser.add_argument('--stop-timing',action='store_true')
+    args=parser.parse_args();sys.exit(0 if collect(args.arm,args.buffers,args.directory,decoded=args.decoded_eof,decoded_seconds=args.decoded_seconds,callback_wrapping=args.callback_wrapping,boundary_mode=args.stop_boundary,stop_timing=args.stop_timing) else 1)

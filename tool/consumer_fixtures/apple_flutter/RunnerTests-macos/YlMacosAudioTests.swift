@@ -655,6 +655,9 @@ final class YlMacosAudioTests: XCTestCase {
       let candidate = configuration.candidate, wrapCallbacks = configuration.wraps
       let boundaryMode = configuration.boundary
       if boundaryMode != "none" { XCTAssertFalse(candidate); XCTAssertFalse(wrapCallbacks) }
+      let longHold = env["YL_AUDIO_PROBE_STOP_TIMING"] == "1"
+      let holdSeconds: UInt64 = longHold && boundaryMode == "hold" ? 30 : 2
+      var boundaryTiming: [String: TimeInterval] = [:]
       var playerStopCalls = 0
       var interventionWaitSeconds: TimeInterval = 0
       let factory = ReloadAudioFactory(), ledger = YlManagedBufferLedger()
@@ -690,9 +693,11 @@ final class YlMacosAudioTests: XCTestCase {
       XCTAssertEqual(players.count, 1)
       let nativePlayer = try XCTUnwrap(players.first)
       func probe(_ phase: String, checkpoint: Bool = false) async throws {
+        if phase == "intervened" { boundaryTiming["probeEntered"] = ProcessInfo.processInfo.systemUptime }
         // onState appends before its async acknowledgement; let that in-flight
         // acknowledgement finish before freezing the resource observation.
         try await waitForResourceAcknowledgement({ callbacks.deltas.isEmpty && callbacks.order.isEmpty }, timeout: 5)
+        if phase == "intervened" { boundaryTiming["recorderSettled"] = ProcessInfo.processInfo.systemUptime }
         if checkpoint {
           XCTAssertFalse(entry.nativePlaying)
           if phase != "configured" {
@@ -707,11 +712,15 @@ final class YlMacosAudioTests: XCTestCase {
             task_info(mach_task_self_, task_flavor_t(TASK_VM_INFO), $0, &size)
           }
         }
+        if phase == "intervened" { boundaryTiming["memoryReadFinished"] = ProcessInfo.processInfo.systemUptime }
         var observedModes: [String: Any] = entry.output.snapshot.mapValues { $0 as Any }
         if !wrapCallbacks {
           observedModes["renderedCallbacks"] = NSNull(); observedModes["playedCallbacks"] = NSNull()
         }
-        let row: [String: Any] = ["phase": phase, "uptime": ProcessInfo.processInfo.systemUptime,
+        let rowUptime = ProcessInfo.processInfo.systemUptime
+        if phase == "intervened" { boundaryTiming["rowCaptured"] = rowUptime }
+        let row: [String: Any] = ["phase": phase, "uptime": rowUptime,
+          "timingProfile": longHold ? "long-hold-v1" : "short-hold-v1", "boundaryTiming": boundaryTiming,
           "boundaryMode": boundaryMode, "playerStopCalls": playerStopCalls,
           "interventionWaitSeconds": interventionWaitSeconds,
           "attachedNodeCount": entry.engine.attachedNodes.count,
@@ -773,15 +782,23 @@ final class YlMacosAudioTests: XCTestCase {
       renderer.pause()
       try await probe("drained", checkpoint: true)
       if boundaryMode != "none" {
+        boundaryTiming["ackReturned"] = ProcessInfo.processInfo.systemUptime
         let waitStarted = ProcessInfo.processInfo.systemUptime
-        try await Task.sleep(nanoseconds: 2_000_000_000)
-        interventionWaitSeconds = ProcessInfo.processInfo.systemUptime - waitStarted
-        if boundaryMode == "stop" { nativePlayer.stop(); playerStopCalls += 1 }
+        boundaryTiming["sleepStarted"] = waitStarted
+        try await Task.sleep(nanoseconds: holdSeconds * 1_000_000_000)
+        let waitFinished = ProcessInfo.processInfo.systemUptime
+        boundaryTiming["sleepFinished"] = waitFinished
+        interventionWaitSeconds = waitFinished - waitStarted
+        boundaryTiming["actionStarted"] = ProcessInfo.processInfo.systemUptime
+        if boundaryMode == "stop" { nativePlayer.stop() }
+        boundaryTiming["actionFinished"] = ProcessInfo.processInfo.systemUptime
+        if boundaryMode == "stop" { playerStopCalls += 1 }
         XCTAssertEqual(playerStopCalls, boundaryMode == "stop" ? 1 : 0)
         XCTAssertTrue(entry.engine.isRunning)
         XCTAssertEqual(entry.engine.attachedNodes, originalNodes)
         XCTAssertEqual(entry.output.snapshot, modes)
         XCTAssertFalse(renderer.hasPendingPlayback); XCTAssertEqual(renderer.scheduledBytes, 0)
+        boundaryTiming["assertionsFinished"] = ProcessInfo.processInfo.systemUptime
         try await probe("intervened", checkpoint: true)
       }
       host.close()
