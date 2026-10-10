@@ -45,6 +45,7 @@ final class YlFrameScheduler {
   private var frames = [YlFrameEnvelope]()
   private var activeGeneration: UInt64?
   private var lastPresentedPTS: Int64?
+  private var lastSubmittedPTS: Int64?
   private var disposed = false
   private var droppedFrames = 0
   private let collectDropDiagnostics: Bool
@@ -132,7 +133,9 @@ final class YlFrameScheduler {
       lock.unlock()
       return false
     }
-    if compatibility.usesBackpressure, let lastPresentedPTS, frame.ptsUs <= lastPresentedPTS {
+    if compatibility.usesBackpressure,
+       (lastPresentedPTS.map({ frame.ptsUs <= $0 }) ?? false)
+        || (lastSubmittedPTS.map({ frame.ptsUs <= $0 }) ?? false) {
       recordDrop(.lateArrival, first: frame)
       lock.unlock()
       return false
@@ -165,7 +168,8 @@ final class YlFrameScheduler {
     }
 
     // Presentation can advance while the producer waits for capacity.
-    if let lastPresentedPTS, frame.ptsUs <= lastPresentedPTS {
+    if (lastPresentedPTS.map({ frame.ptsUs <= $0 }) ?? false)
+        || (lastSubmittedPTS.map({ frame.ptsUs <= $0 }) ?? false) {
       recordDrop(.lateAfterCapacity, first: frame, waitStarted: waitStarted)
       lock.unlock()
       return false
@@ -182,6 +186,27 @@ final class YlFrameScheduler {
     lock.unlock()
     withExtendedLifetime(releasedFrame) {}
     return true
+  }
+
+  func nextFrame(upTo positionUs: Int64, generation: UInt64) -> YlFrameEnvelope? {
+    lock.lock()
+    guard !disposed, activeGeneration == nil || activeGeneration == generation else {
+      lock.unlock(); return nil
+    }
+    let stale = frames.filter { $0.generation != generation }
+    frames.removeAll { $0.generation != generation }
+    guard let first = frames.first, first.ptsUs <= positionUs else {
+      if !stale.isEmpty { lock.broadcast() }
+      lock.unlock()
+      withExtendedLifetime(stale) {}
+      return nil
+    }
+    let selected = frames.removeFirst()
+    lastSubmittedPTS = selected.ptsUs
+    lock.broadcast()
+    lock.unlock()
+    withExtendedLifetime(stale) {}
+    return selected
   }
 
   func frame(at positionUs: Int64, generation: UInt64) -> YlFrameEnvelope? {
@@ -226,6 +251,7 @@ final class YlFrameScheduler {
     lock.lock()
     activeGeneration = generation
     lastPresentedPTS = nil
+    lastSubmittedPTS = nil
     previousTick = nil
     let releasedFrames = frames
     frames.removeAll(keepingCapacity: true)
@@ -242,6 +268,7 @@ final class YlFrameScheduler {
     }
     disposed = true
     lastPresentedPTS = nil
+    lastSubmittedPTS = nil
     previousTick = nil
     let releasedFrames = frames
     frames.removeAll(keepingCapacity: false)

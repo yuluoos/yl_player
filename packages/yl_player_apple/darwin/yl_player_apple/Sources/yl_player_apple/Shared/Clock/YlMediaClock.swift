@@ -98,6 +98,14 @@ final class YlMediaClock {
     lock.unlock()
   }
 
+  func presentationSnapshot(atHostTimeUs hostTimeUs: Int64) -> YlPresentationClockSnapshot {
+    let renderedAudioTime = audioTime?()
+    lock.lock()
+    defer { lock.unlock() }
+    return .init(positionUs: positionLocked(atHostTimeUs: hostTimeUs, renderedAudioTime: renderedAudioTime),
+      hostTimeUs: hostTimeUs, rate: rate, playing: playing)
+  }
+
   func position(atHostTimeUs hostTimeUs: Int64) -> Int64 {
     let renderedAudioTime = audioTime?()
     lock.lock()

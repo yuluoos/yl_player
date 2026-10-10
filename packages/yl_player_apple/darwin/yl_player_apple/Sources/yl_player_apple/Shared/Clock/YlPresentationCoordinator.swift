@@ -10,12 +10,14 @@ protocol YlPresentationScheduling: AnyObject {
   func configureBounded(_ plan: YlBoundedBufferPlan?)
   func setRate(_ rate: Double)
   func enqueue(_ frame: YlFrameEnvelope) -> Bool
+  func nextFrame(upTo positionUs: Int64, generation: UInt64) -> YlFrameEnvelope?
   func frame(at positionUs: Int64, generation: UInt64) -> YlFrameEnvelope?
   func flush(generation: UInt64)
   func dispose()
 }
 extension YlPresentationScheduling {
   var bufferedDurationUs: Int64 { 0 }
+  func nextFrame(upTo positionUs: Int64, generation: UInt64) -> YlFrameEnvelope? { nil }
   func configureBounded(_ plan: YlBoundedBufferPlan?) {}
   func setRate(_ rate: Double) {}
 }

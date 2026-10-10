@@ -7,6 +7,82 @@ import XCTest
 import YlFFmpegBridge
 
 final class YlMacosPresentationTests: XCTestCase {
+  func testTimedWindowDoesNotExceedLeadOrCount() {
+    let window = YlTimedVideoWindow()
+    window.reset(generation: 1)
+    let snapshot = YlPresentationClockSnapshot(positionUs: 1_000_000, hostTimeUs: 10_000_000, rate: 1, playing: true)
+    XCTAssertTrue(window.canSubmit(ptsUs: 1_050_000, snapshot: snapshot))
+    XCTAssertFalse(window.canSubmit(ptsUs: 1_050_001, snapshot: snapshot))
+    for pts: Int64 in [1_010_000, 1_020_000, 1_030_000] {
+      window.didSubmit(.init(payload: NSObject(), ptsUs: pts, durationUs: 10_000, keyframe: true, generation: 1))
+    }
+    XCTAssertFalse(window.canSubmit(ptsUs: 1_040_000, snapshot: snapshot))
+    window.advance(to: 1_010_000)
+    XCTAssertTrue(window.canSubmit(ptsUs: 1_040_000, snapshot: snapshot))
+    XCTAssertFalse(window.canSubmit(ptsUs: 1_030_000, snapshot: snapshot), "Duplicate submitted PTS must remain rejected after capacity frees")
+    window.advance(to: 0)
+    XCTAssertEqual(window.pendingFrames.map(\.ptsUs), [1_020_000, 1_030_000])
+    window.reset(generation: 2)
+    XCTAssertTrue(window.pendingFrames.isEmpty)
+    window.didSubmit(.init(payload: NSObject(), ptsUs: 1, durationUs: 0, keyframe: true, generation: 1))
+    XCTAssertTrue(window.pendingFrames.isEmpty, "An old generation cannot refill the new window")
+  }
+
+  func testTimedWindowHandlesPauseRateAndOverflow() {
+    let window = YlTimedVideoWindow(); window.reset(generation: 1)
+    for (rate, last): (Double, Int64) in [(0.25, 1_012_500), (4, 1_200_000)] {
+      let s = YlPresentationClockSnapshot(positionUs: 1_000_000, hostTimeUs: 0, rate: rate, playing: true)
+      XCTAssertTrue(window.canSubmit(ptsUs: last, snapshot: s))
+      XCTAssertFalse(window.canSubmit(ptsUs: last + 1, snapshot: s))
+    }
+    XCTAssertFalse(window.canSubmit(ptsUs: 0, snapshot: .init(positionUs: 0, hostTimeUs: 0, rate: 1, playing: false)))
+    XCTAssertFalse(window.canSubmit(ptsUs: -1, snapshot: .init(positionUs: 0, hostTimeUs: 0, rate: 1, playing: true)))
+    for rate in [Double.nan, .infinity, -1, 0] {
+      XCTAssertFalse(window.canSubmit(ptsUs: 0, snapshot: .init(positionUs: 0, hostTimeUs: 0, rate: rate, playing: true)))
+    }
+    XCTAssertTrue(window.canSubmit(ptsUs: .max, snapshot: .init(positionUs: .max - 1, hostTimeUs: 0, rate: 4, playing: true)))
+  }
+
+  func testTimedSchedulerDoesNotCatchUpFutureFrames() {
+    let scheduler = YlFrameScheduler(collectDropDiagnostics: true)
+    scheduler.flush(generation: 1)
+    for pts: Int64 in [30_000, 10_000, 20_000] {
+      XCTAssertTrue(scheduler.enqueue(.init(payload: NSObject(), ptsUs: pts, durationUs: 10_000, keyframe: true, generation: 1)))
+    }
+    XCTAssertNil(scheduler.nextFrame(upTo: 50_000, generation: 2))
+    XCTAssertEqual(scheduler.nextFrame(upTo: 50_000, generation: 1)?.ptsUs, 10_000)
+    XCTAssertEqual(scheduler.nextFrame(upTo: 50_000, generation: 1)?.ptsUs, 20_000)
+    XCTAssertEqual(scheduler.nextFrame(upTo: 50_000, generation: 1)?.ptsUs, 30_000)
+    XCTAssertEqual(scheduler.lateFrameDropCount, 0)
+    XCTAssertFalse(scheduler.enqueue(.init(payload: NSObject(), ptsUs: 20_000, durationUs: 0, keyframe: true, generation: 1)))
+    scheduler.flush(generation: 2)
+    XCTAssertTrue(scheduler.enqueue(.init(payload: NSObject(), ptsUs: 1, durationUs: 0, keyframe: true, generation: 2)))
+    XCTAssertNil(scheduler.nextFrame(upTo: 0, generation: 2))
+    XCTAssertEqual(scheduler.nextFrame(upTo: 1, generation: 2)?.ptsUs, 1)
+    scheduler.dispose()
+    XCTAssertNil(scheduler.nextFrame(upTo: .max, generation: 2))
+  }
+
+  func testTimedClockSnapshotPreservesPauseAndRate() {
+    var audio: YlRenderedAudioTime? = .init(sampleTime: 0, sampleRate: 48_000)
+    let clock = YlMediaClock(audioTime: { audio })
+    clock.play(atHostTimeUs: 1_000_000)
+    audio = .init(sampleTime: 24_000, sampleRate: 48_000)
+    let playing = clock.presentationSnapshot(atHostTimeUs: 1_500_000)
+    XCTAssertEqual(playing.positionUs, 500_000)
+    XCTAssertEqual(playing.hostTimeUs, 1_500_000)
+    XCTAssertTrue(playing.playing)
+    clock.pause(atHostTimeUs: 1_500_000)
+    audio = .init(sampleTime: 48_000, sampleRate: 48_000)
+    let paused = clock.presentationSnapshot(atHostTimeUs: 2_000_000)
+    XCTAssertEqual(paused.positionUs, 500_000); XCTAssertFalse(paused.playing)
+    clock.setRate(2, atHostTimeUs: 2_000_000)
+    XCTAssertEqual(clock.presentationSnapshot(atHostTimeUs: 2_000_000).rate, 2)
+    audio = nil
+    clock.play(atHostTimeUs: 2_000_000)
+    XCTAssertEqual(clock.presentationSnapshot(atHostTimeUs: 2_250_000).positionUs, 1_000_000)
+  }
+
   private final class DisplayTestWindow: NSWindow {
     var selectedScreen: NSScreen?
     override var screen: NSScreen? { selectedScreen }

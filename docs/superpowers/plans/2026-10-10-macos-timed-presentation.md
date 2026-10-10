@@ -10,7 +10,7 @@
 
 **Spec:** [已获用户确认的设计](../specs/2026-10-10-macos-timed-presentation-design.md)。
 
-状态：用户于2026-10-10确认“确认计划，连续执行”；Task 1–5均未开始。原路径Debug和Profile失败基线已具备，但真实原生层的失败验证尚需Task 4补齐。
+状态：用户于2026-10-10确认“确认计划，连续执行”；Task 1已完成（原生RED 10通过/4失败 → GREEN 14/14）；Task 2–5待执行。原路径Debug和Profile失败基线已具备，但真实原生层的失败验证尚需Task 4补齐。
 
 ## Global Constraints
 
@@ -78,7 +78,7 @@ final class YlTimedVideoWindow {
 }
 ```
 
-- [ ] 写`testTimedWindowDoesNotExceedLeadOrCount`、`testTimedSchedulerDoesNotCatchUpFutureFrames`、`testTimedClockSnapshotPreservesPauseAndRate`。使用现有frame helper构造frame，新增窗口测试核心断言如下；frame创建沿用`YlFrameEnvelope(reservation:payload:ptsUs:durationUs:keyframe:generation:)`，payload用`NSObject()`即可。
+- [x] 写`testTimedWindowDoesNotExceedLeadOrCount`、`testTimedSchedulerDoesNotCatchUpFutureFrames`、`testTimedClockSnapshotPreservesPauseAndRate`。使用现有frame helper构造frame，新增窗口测试核心断言如下；frame创建沿用`YlFrameEnvelope(reservation:payload:ptsUs:durationUs:keyframe:generation:)`，payload用`NSObject()`即可。
 
 ```swift
 let window = YlTimedVideoWindow()
@@ -94,9 +94,9 @@ window.advance(to: 1_010_000)
 XCTAssertTrue(window.canSubmit(ptsUs: 1_040_000, snapshot: s))
 ```
 
-- [ ] 运行RED；额外覆盖PTS接近Int64.max、重复PTS、duration=0、rate 0.25/4、暂停与音频回退。不能出现整数trap、NaN转换或回退释放未来帧。
-- [ ] 实现时钟一致快照、按序取最早帧、独立lastSubmittedPTS和窗口限制。以checked arithmetic计算`position + floor(50_000 * rate)`；溢出时饱和到Int64.max。旧`frame(at:)`和丢帧诊断语义保持。窗口释放应用引用不提前释放CMSampleBuffer持有的reservation。
-- [ ] GREEN运行上述命令并检查旧调度/时钟测试，更新镜像与登记；提交`feat: add bounded timed video scheduling primitives`。
+- [x] 运行RED；额外覆盖PTS接近Int64.max、重复PTS、duration=0、rate 0.25/4、暂停与音频回退。不能出现整数trap、NaN转换或回退释放未来帧。
+- [x] 实现时钟一致快照、按序取最早帧、独立lastSubmittedPTS和窗口限制。以checked arithmetic计算`position + floor(50_000 * rate)`；溢出时饱和到Int64.max。旧`frame(at:)`和丢帧诊断语义保持。窗口释放应用引用不提前释放CMSampleBuffer持有的reservation。
+- [x] GREEN运行上述命令并检查旧调度/时钟测试，更新镜像与登记；提交`feat: add bounded timed video scheduling primitives`。
 
 ### Task 2: 可撤销的定时输出租约
 
