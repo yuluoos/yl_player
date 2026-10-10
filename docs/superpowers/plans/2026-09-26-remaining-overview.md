@@ -318,3 +318,6 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 
 
 2026-10-09测试回调透明转交对照完成：同版本默认/候选×包装/透明四独立进程正式4/4、12/12 heap有效，每组2813提交且自然EOF/关闭后释放通过。透明callback计数为unobserved/null；默认透明仍识别2813完成容器和3108 dispatch source，通用Closure context减少5624，说明包装影响部分类型计数但不能解释全部保留。两项复审P2经RED→GREEN修复，定向4/4、工具45/45、夹具4/4、发现678/663，194份证据归档；无生产改动，无完整native/iOS/长程重跑。下一项定位透明默认路径stop/图拆除释放边界，精确成本/持有链/整体有界及其他平台设备验收仍开放，准入保持关闭。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)及[证据](../../../tool/playback_benchmark/macos-callback-wrapper-observations.json)。
+
+
+2026-10-09自然EOF后stop边界对照完成：默认透明hold/stop两独立进程正式2/2、8/8 heap有效，均先自然EOF和等待>=2s；stop中间快照保持engine运行与原四节点附着。hold仍列出2813完成容器，stop后不再列出且dispatch3110→221；本次变化发生于完整图拆除之前，不等于零存活/精确原生持有链。定向4/4、工具50/50、夹具4/4、发现678/663，独立复审无P1/P2，140份证据归档；无生产修改。最终复审发现实际观察间隔hold4.998s/stop18.620s，显式sleep虽均约2s，尚不能排除额外等待效应。下一项分段测量stop前后延迟并补覆盖更长间隔的纯等待对照，然后再验证重播/seek及评估回收策略。候选准入、整体有界和其他设备平台验收仍开放。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)与[证据](../../../tool/playback_benchmark/macos-stop-boundary-observations.json)。

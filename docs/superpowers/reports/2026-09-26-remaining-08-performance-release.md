@@ -1570,3 +1570,31 @@ LifecycleCompletion在各configured及disposed中也均未单独识别。这里�
 复审补齐四组不同PID/非重叠窗口、wrapped声明与实际观测一致两项P2校验；两个新负例实际RED→GREEN并经独立复核关闭。定向原生4/4、资源工具29/29、包装对照3/3、矩阵3/3、堆归因10/10、夹具4/4通过，发现iOS678/macOS663。未重跑完整原生、iOS或1200s长程。见[协议](../../../tool/playback_benchmark/decoded-callback-wrapper-protocol.md)和[194份原始文件及对照证据](../../../tool/playback_benchmark/macos-callback-wrapper-observations.json)。
 
 下一项：对透明回调默认路径增加原生 stop 前后的独立快照，区分自然排空后的保留与停止/图拆除释放边界；先冻结协议与测试隔离，再决定生产修改，不能把干预结果写成精确原生持有链。 真实设备切换、物理音画、最低系统/Intel/iOS运行与整体有界仍开放，defaultEnabled/productionAdmission/downstreamBoundProven继续false，完整P08未完成。
+
+
+### 自然EOF后 player.stop 释放边界（2026-10-09，base da98d40）
+
+默认透明回调路径使用同一冻结源码/二进制和60.229s AVC/AAC素材，hold/stop两个独立进程串行。两组自然完成后pause并采drained heap，收到ACK后均额外等待至少2s；hold不操作，stop只调用现有唯一AVAudioPlayerNode.stop一次。playerStopCalls仅计测试主动干预，不统计configure/dispose内部的stop；graphUnchanged表示附着节点集合相等。intervened快照中引擎仍运行、四个原始节点仍附着、节点集合未变，然后才正常Host.close。测试保留原节点集合/原player引用直到结束，两组保持相同；因此本项定位相对于stop的类型保留变化，不以节点析构为前提。生产代码没有改动。
+
+正式**2/2通过，8/8完整heap有效**，耗时2.250–4.983s，保持原8s heap、5s记录清空、30s ACK、180s native与240s parent限制。实测播放hold/stop为60.286/60.273s，各2813次playedBack提交；透明callback仍unobserved/null。两组仅一次firstFrame/completed，无failure；EOF之后音频owned0/pendingfalse、提交与公开事件计数不变。关闭后立即及>=2s均ledger0、引擎停止、player已脱离引擎。四个采heap阶段以外的completed/disposedLater只观察，不在播放期间采堆。
+
+| 组别 | 阶段 | 全进程heap字节 | LifecycleCompletion | dispatch source | Closure context |
+| --- | --- | ---: | ---: | ---: | ---: |
+| hold | configured | 21,682,817 | 未单独识别 | 245 | 433 |
+| hold | drained | 23,690,241 | 2,813 | 3,109 | 3,356 |
+| hold | intervened | 23,460,561 | 2,813 | 3,031 | 3,202 |
+| hold | disposed | 22,972,177 | 未单独识别 | 219 | 369 |
+| stop | configured | 21,708,577 | 未单独识别 | 238 | 419 |
+| stop | drained | 23,701,521 | 2,813 | 3,110 | 3,358 |
+| stop | intervened | 24,314,369 | 未单独识别 | 221 | 389 |
+| stop | disposed | 22,988,913 | 未单独识别 | 220 | 369 |
+
+hold额外等待后仍识别2813个LifecycleCompletion；stop后该类型不再单独列出，同时dispatch source由3110降至221、Closure context由3358降至389，且engine/节点图尚未拆除。该对照支持：在本次暂停且已自然排空的默认路径中，不必等到完整图拆除即可在player.stop之后观察到这些保留条目的消失/减少。它不证明具体原生retainer或逐对象释放，也不把未列类型写成零存活，更不证明PCM或整个进程没有其他保留。
+
+intervened−drained全进程堆变化为hold -229,680B、stop +612,848B，stop−hold差额为+842,528B；已列LifecycleCompletion贡献为−180032B。总堆在stop后反而增加，类型条目减少不能写成全进程内存改善。完整类型端点及差额均保留，缺失类型保持null。两组各一次，heap/ACK延迟、加载基线与系统缓存不同；总差额不能当作精确释放成本、统计收益或整体有界证据。该实验不评价活动播放中stop，也未验证生产EOF后自动stop是否保持重播/seek语义。
+
+最终复审另核对到时间不对称：drained行到intervened行的间隔hold为4.998s、stop为18.620s；扣除drained heap结束以前的时间后，仍为2.024s与16.124s。两组显式sleep分别2.016/2.027s，额外延迟尚未被分段记录，不能直接归为stop调用耗时。故本轮只完成stop后、图拆除前的观察边界，**时间效应与stop的因果贡献尚未分离**；现有短等待hold不足以排除更长自然等待的影响，生产回收与重播策略评估顺延。
+
+新校验负例先RED后GREEN：拒绝错误/提前stop、提前拆图、引擎提前停止、缺阶段/等待、改变提交/事件、身份/进程复用或重叠、缺heap等。最终定向原生4/4（其中资源测试含原四配置与新增hold/stop）、工具50/50、夹具4/4、发现iOS678/macOS663；独立复审无P1/P2。未重跑完整原生、iOS或1200s长程。见[协议](../../../tool/playback_benchmark/decoded-stop-boundary-protocol.md)及[140份原始文件/类型对照](../../../tool/playback_benchmark/macos-stop-boundary-observations.json)。
+
+下一项：先分段测量player.stop调用及其前后等待/采样的耗时，再加入覆盖stop组实际观察间隔的纯等待对照，区分时间效应与stop干预；随后验证同session重播/seek，尚不引入生产回收策略。 defaultEnabled/productionAdmission/downstreamBoundProven仍false；物理音画、真实设备切换、最低系统/Intel/iOS运行及完整P08继续开放。

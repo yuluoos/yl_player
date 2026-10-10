@@ -71,7 +71,7 @@ def validate_rows(rows, candidate, count=2000):
 
 def eligible_decoded_checkpoint(row):
     phase = row['phase']
-    return (phase in PHASES and not row['nativePlaying'] and
+    return (phase in (*PHASES, 'intervened') and not row['nativePlaying'] and
             (phase == 'configured' or (row['completed'] == 1 and
              not row['pending'] and row['ownedBytes'] == 0)))
 
@@ -115,6 +115,29 @@ def validate_decoded_rows(rows, candidate, expected_seconds=None, expected_fixtu
                 continuousLongPlaybackProof=False, downstreamBoundProven=False)
 
 
+def validate_stop_rows(rows, mode, seconds, fixture):
+    def require(ok,message):
+        if not ok:raise ValueError(message)
+    require(mode in ('hold','stop'), 'Unknown stop intervention')
+    require([r['phase'] for r in rows]==['configured','completed','drained','intervened','disposed','disposedLater'], 'Wrong stop phases')
+    observation=validate_decoded_rows([r for r in rows if r['phase']!='intervened'],False,seconds,fixture,'transparent')
+    require(all(b['uptime']>a['uptime'] for a,b in zip(rows,rows[1:])), 'Nonmonotonic stop observations')
+    require(all(r['boundaryMode']==mode for r in rows), 'Wrong stop mode')
+    require(all(r['playerStopCalls']==(1 if mode=='stop' and i>=3 else 0) for i,r in enumerate(rows)), 'Wrong stop call count')
+    require(all(r['playerAttached'] and r['graphUnchanged'] and r['attachedNodeCount']==rows[0]['attachedNodeCount'] for r in rows[:4]), 'Early graph teardown')
+    require(rows[0]['attachedNodeCount']>=2, 'Missing graph')
+    require(all(r['engineRunning'] for r in rows[2:4]), 'Engine stopped before close')
+    require(all(not r['playerAttached'] for r in rows[4:]), 'Player not detached')
+    require(all(r['interventionWaitSeconds']>=2 for r in rows[3:]) and rows[3]['uptime']-rows[2]['uptime']>=2, 'Missing matched wait')
+    middle=rows[3]
+    require(eligible_decoded_checkpoint(middle) and middle['completed']==1 and middle['firstFrames']==1 and not middle['failures'], 'Unsafe intervention checkpoint')
+    require(all(middle[k]==rows[2][k] for k in ('pid','sessionId','candidate','submissionAnchor','callbackWrapping','callbackObservation','fixtureName','modes')), 'Intervention identity/modes changed')
+    require(all(r['modes']==rows[1]['modes'] and r['publicDeltaCount']==rows[2]['publicDeltaCount'] and r['retainedEventCount']==rows[2]['retainedEventCount'] for r in rows[2:]), 'Post EOF publication/submission changed')
+    require(middle['retainedDeltaCount']==middle['retainedOrderCount']==0, 'Unbounded intervention recorder')
+    require(seconds!=60 or observation['modes']['playedSubmissions']==2813, 'Wrong formal fixture submission count')
+    return observation
+
+
 def freeze(out, products, extra_files=()):
     shared = ROOT/'packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared'
     files = list(shared.rglob('*.swift')) + list((ROOT/'packages/yl_player/example/macos/RunnerTests').rglob('*.swift')) + [ROOT/p for p in (
@@ -127,6 +150,9 @@ def freeze(out, products, extra_files=()):
         'tool/playback_benchmark/summarize_callback_wrappers.py',
         'tool/playback_benchmark/test_callback_wrappers.py',
         'tool/playback_benchmark/attribute_decoded_heap.py',
+        'tool/playback_benchmark/decoded-stop-boundary-protocol.md',
+        'tool/playback_benchmark/summarize_stop_boundary.py',
+        'tool/playback_benchmark/test_stop_boundary.py',
         'tool/playback_benchmark/decoded-eof-resources-protocol.md',
         'packages/yl_player/example/assets/test_media/format_matrix/mkv-avc-aac.mkv')]
     files.extend(extra_files)
@@ -146,7 +172,10 @@ def freeze(out, products, extra_files=()):
     return identity
 
 
-def collect(arm, count, directory, decoded=False, decoded_seconds=None, callback_wrapping='wrapped'):
+def collect(arm, count, directory, decoded=False, decoded_seconds=None, callback_wrapping='wrapped', boundary_mode=None):
+    if boundary_mode is not None and (boundary_mode not in ('hold','stop') or arm!='legacy' or callback_wrapping!='transparent' or not decoded or decoded_seconds!=60):
+        raise ValueError('Stop boundary requires legacy transparent decoded60s')
+    phases=('configured','drained','intervened','disposed') if boundary_mode else PHASES
     if callback_wrapping not in ('wrapped','transparent') or (callback_wrapping=='transparent' and not decoded):
         raise ValueError('Transparent callbacks require decoded playback')
     out=Path(directory).resolve();out.mkdir(parents=True,exist_ok=False)
@@ -174,7 +203,7 @@ def collect(arm, count, directory, decoded=False, decoded_seconds=None, callback
     config=absolute(plistlib.loads(originals[0].read_bytes()));target=config['RunnerTests']
     for env in (os.environ,target.get('EnvironmentVariables',{}),target.get('TestingEnvironmentVariables',{})):
         if any(k.startswith('MallocStackLogging') for k in env):raise ValueError('MSL must be disabled')
-    target.setdefault('EnvironmentVariables',{}).update(YL_AUDIO_PROBE_KIND='decoded-eof' if decoded else 'resource-drained-'+str(count),YL_AUDIO_PROBE_ARM=arm,YL_AUDIO_PROBE_DIRECTORY=str(out),YL_AUDIO_PROBE_CALLBACK_WRAPPING=callback_wrapping)
+    target.setdefault('EnvironmentVariables',{}).update(YL_AUDIO_PROBE_KIND='decoded-eof' if decoded else 'resource-drained-'+str(count),YL_AUDIO_PROBE_ARM=arm,YL_AUDIO_PROBE_DIRECTORY=str(out),YL_AUDIO_PROBE_CALLBACK_WRAPPING=callback_wrapping,YL_AUDIO_PROBE_STOP_BOUNDARY=boundary_mode or 'none')
     if fixture is not None:
         target['EnvironmentVariables'].update(YL_AUDIO_PROBE_FIXTURE=str(fixture), YL_AUDIO_PROBE_SECONDS=str(decoded_seconds))
     custom=out/'probe.xctestrun';custom.write_bytes(plistlib.dumps(config))
@@ -184,7 +213,7 @@ def collect(arm, count, directory, decoded=False, decoded_seconds=None, callback
              '-test-timeouts-enabled','YES','-maximum-test-execution-time-allowance','180',
              '-default-test-execution-time-allowance','180','-resultBundlePath',str(out)+'.xcresult']
     (out/'command.json').write_text(json.dumps(command,indent=2)+'\n')
-    result=dict(complete=False,arm=arm,buffers=None if decoded else count,decoded=decoded,decodedSeconds=decoded_seconds,callbackWrapping=callback_wrapping,probes=[],errors=[],productionAdmission=False,downstreamBoundProven=False)
+    result=dict(complete=False,arm=arm,buffers=None if decoded else count,decoded=decoded,decodedSeconds=decoded_seconds,callbackWrapping=callback_wrapping,boundaryMode=boundary_mode,probes=[],errors=[],productionAdmission=False,downstreamBoundProven=False)
     def save():(out/'result.json').write_text(json.dumps(result,indent=2)+'\n')
     save();seen=set();offset=0;started=time.monotonic()
     with (out/'xcode.log').open('w') as log:
@@ -198,7 +227,7 @@ def collect(arm, count, directory, decoded=False, decoded_seconds=None, callback
                         try:row=json.loads(line)
                         except json.JSONDecodeError:break
                         offset+=1;phase=row['phase']
-                        if phase not in PHASES or phase in seen:continue
+                        if phase not in phases or phase in seen:continue
                         seen.add(phase);entry=dict(phase=phase,pid=row['pid'],valid=False)
                         try:
                             actual=subprocess.check_output(['/bin/ps','-p',str(row['pid']),'-o','comm='],text=True,timeout=2).strip()
@@ -222,11 +251,11 @@ def collect(arm, count, directory, decoded=False, decoded_seconds=None, callback
             result['testExitCode']=proc.returncode
             try:
                 rows=[json.loads(x) for x in (out/'rows.jsonl').read_text().splitlines()]
-                result['observation']=validate_decoded_rows(rows,arm=='candidate',decoded_seconds,fixture.name if fixture else None,callback_wrapping) if decoded else validate_rows(rows,arm=='candidate',count)
+                result['observation']=validate_stop_rows(rows,boundary_mode,decoded_seconds,fixture.name) if boundary_mode else validate_decoded_rows(rows,arm=='candidate',decoded_seconds,fixture.name if fixture else None,callback_wrapping) if decoded else validate_rows(rows,arm=='candidate',count)
                 for name,sha in {**identity['sourceHashes'],**identity['binaryHashes']}.items():
                     if digest(ROOT/name)!=sha:raise ValueError('Source/binary changed: '+name)
             except (OSError,ValueError,KeyError,TypeError) as error:result['errors'].append(repr(error))
-            result['complete']=proc.returncode==0 and not result['errors'] and [p['phase'] for p in result['probes']]==list(PHASES) and all(p['valid'] for p in result['probes'])
+            result['complete']=proc.returncode==0 and not result['errors'] and [p['phase'] for p in result['probes']]==list(phases) and all(p['valid'] for p in result['probes'])
             save()
     return result['complete']
 
@@ -236,4 +265,5 @@ if __name__=='__main__':
     parser.add_argument('--decoded-eof', action='store_true', help='Use the finite decoded file; buffers is ignored')
     parser.add_argument('--decoded-seconds', type=int, choices=[4,30,60], help='Use generated length-control fixture')
     parser.add_argument('--callback-wrapping', choices=['wrapped','transparent'], default='wrapped')
-    args=parser.parse_args();sys.exit(0 if collect(args.arm,args.buffers,args.directory,decoded=args.decoded_eof,decoded_seconds=args.decoded_seconds,callback_wrapping=args.callback_wrapping) else 1)
+    parser.add_argument('--stop-boundary',choices=['hold','stop'])
+    args=parser.parse_args();sys.exit(0 if collect(args.arm,args.buffers,args.directory,decoded=args.decoded_eof,decoded_seconds=args.decoded_seconds,callback_wrapping=args.callback_wrapping,boundary_mode=args.stop_boundary) else 1)

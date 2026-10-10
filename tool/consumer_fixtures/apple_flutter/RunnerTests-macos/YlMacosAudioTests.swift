@@ -609,7 +609,7 @@ final class YlMacosAudioTests: XCTestCase {
     }
   }
 
-  private enum ResourceProbeError: Error { case acknowledgementTimedOut, invalidFixtureDuration }
+  private enum ResourceProbeError: Error { case acknowledgementTimedOut, invalidFixtureDuration, invalidBoundaryMode }
 
   @MainActor
   private func waitForResourceAcknowledgement(_ exists: () -> Bool, timeout: TimeInterval = 30) async throws {
@@ -642,9 +642,21 @@ final class YlMacosAudioTests: XCTestCase {
     let arms = directory == nil ? [false, true] : [env["YL_AUDIO_PROBE_ARM"] != "legacy"]
     let expectedSeconds = try XCTUnwrap(Double(env["YL_AUDIO_PROBE_SECONDS"] ?? "4.021"))
     guard expectedSeconds > 0 && expectedSeconds <= 60 else { throw ResourceProbeError.invalidFixtureDuration }
-    let wrappers = directory == nil ? [true, false] : [env["YL_AUDIO_PROBE_CALLBACK_WRAPPING"] != "transparent"]
-    for wrapCallbacks in wrappers {
-    for candidate in arms {
+    let boundary = env["YL_AUDIO_PROBE_STOP_BOUNDARY"] ?? "none"
+    guard ["none", "hold", "stop"].contains(boundary) else { throw ResourceProbeError.invalidBoundaryMode }
+    var configurations: [(candidate: Bool, wraps: Bool, boundary: String)]
+    if directory == nil {
+      configurations = [true, false].flatMap { wraps in arms.map { ($0, wraps, "none") } }
+      configurations += [(false, false, "hold"), (false, false, "stop")]
+    } else {
+      configurations = [(arms[0], env["YL_AUDIO_PROBE_CALLBACK_WRAPPING"] != "transparent", boundary)]
+    }
+    for configuration in configurations {
+      let candidate = configuration.candidate, wrapCallbacks = configuration.wraps
+      let boundaryMode = configuration.boundary
+      if boundaryMode != "none" { XCTAssertFalse(candidate); XCTAssertFalse(wrapCallbacks) }
+      var playerStopCalls = 0
+      var interventionWaitSeconds: TimeInterval = 0
       let factory = ReloadAudioFactory(), ledger = YlManagedBufferLedger()
       factory.wrapsCallbacks = wrapCallbacks
       let registry = ApplePublicationRegistry(), callbacks = AppleRecordingCallbacks()
@@ -673,6 +685,10 @@ final class YlMacosAudioTests: XCTestCase {
       let session = try await host.load(request: request)
       let entry = try XCTUnwrap(factory.entries.first), renderer = try XCTUnwrap(entry.renderers.first)
       XCTAssertEqual(renderer.usesSubmissionAnchor, candidate)
+      let originalNodes = entry.engine.attachedNodes
+      let players = originalNodes.compactMap { $0 as? AVAudioPlayerNode }
+      XCTAssertEqual(players.count, 1)
+      let nativePlayer = try XCTUnwrap(players.first)
       func probe(_ phase: String, checkpoint: Bool = false) async throws {
         // onState appends before its async acknowledgement; let that in-flight
         // acknowledgement finish before freezing the resource observation.
@@ -696,6 +712,11 @@ final class YlMacosAudioTests: XCTestCase {
           observedModes["renderedCallbacks"] = NSNull(); observedModes["playedCallbacks"] = NSNull()
         }
         let row: [String: Any] = ["phase": phase, "uptime": ProcessInfo.processInfo.systemUptime,
+          "boundaryMode": boundaryMode, "playerStopCalls": playerStopCalls,
+          "interventionWaitSeconds": interventionWaitSeconds,
+          "attachedNodeCount": entry.engine.attachedNodes.count,
+          "playerAttached": entry.engine.attachedNodes.contains(nativePlayer),
+          "graphUnchanged": entry.engine.attachedNodes == originalNodes,
           "callbackWrapping": wrapCallbacks ? "wrapped" : "transparent",
           "callbackObservation": wrapCallbacks ? "native-wrapped" : "unobserved",
           "fixtureName": fixture.lastPathComponent, "playbackElapsedSeconds": playbackElapsed,
@@ -751,7 +772,20 @@ final class YlMacosAudioTests: XCTestCase {
       // Quiesce only after natural completion; retain the graph for the drained heap.
       renderer.pause()
       try await probe("drained", checkpoint: true)
+      if boundaryMode != "none" {
+        let waitStarted = ProcessInfo.processInfo.systemUptime
+        try await Task.sleep(nanoseconds: 2_000_000_000)
+        interventionWaitSeconds = ProcessInfo.processInfo.systemUptime - waitStarted
+        if boundaryMode == "stop" { nativePlayer.stop(); playerStopCalls += 1 }
+        XCTAssertEqual(playerStopCalls, boundaryMode == "stop" ? 1 : 0)
+        XCTAssertTrue(entry.engine.isRunning)
+        XCTAssertEqual(entry.engine.attachedNodes, originalNodes)
+        XCTAssertEqual(entry.output.snapshot, modes)
+        XCTAssertFalse(renderer.hasPendingPlayback); XCTAssertEqual(renderer.scheduledBytes, 0)
+        try await probe("intervened", checkpoint: true)
+      }
       host.close()
+      XCTAssertFalse(entry.engine.attachedNodes.contains(nativePlayer))
       XCTAssertFalse(entry.engine.isRunning); XCTAssertEqual(ledger.snapshot.currentBytes, 0)
       try await probe("disposed", checkpoint: true)
       try await Task.sleep(nanoseconds: 2_000_000_000)
@@ -759,7 +793,6 @@ final class YlMacosAudioTests: XCTestCase {
       XCTAssertEqual(ledger.snapshot.currentBytes, 0); XCTAssertTrue(callbacks.failures.isEmpty)
       try await probe("disposedLater")
     }
-  }
   }
 
   @MainActor

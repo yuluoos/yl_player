@@ -10,7 +10,7 @@
 
 **Spec:** [输出完成契约 §10](../specs/2026-10-08-audio-output-completion-contract.md)、[需求基线](../specs/2026-09-20-playback-expansion-requirements.md)、[P08](2026-09-26-remaining-08-performance-release.md)。
 
-最新状态（2026-10-09）：真实解码长程、自然EOF、长度矩阵、类型归因及透明回调对照已完成；去掉测试包装后默认完成容器仍保留，下一项定位stop/图拆除释放边界，精确持有链与整体有界未证明。下方历史执行记录保留当时的失败/未完成状态，当前进度以最后一节为准；正式准入仍关闭。
+最新状态（2026-10-09）：真实解码长程、自然EOF、长度矩阵、类型归因及透明回调对照已完成；去掉测试包装后默认完成容器仍保留，stop对照已在图拆除前观察到完成容器条目消失，但实际观察间隔不等，下一项分段测量stop与等待耗时并补更长纯等待对照；因果贡献、精确持有链与整体有界未证明。下方历史执行记录保留当时的失败/未完成状态，当前进度以最后一节为准；正式准入仍关闭。
 
 起点 `9c5967a`。Task 1–5 已实现并执行验证；资源采样帧断言失败如实保留，默认准入仍关闭。既有工具通过不能替代生产验收。
 
@@ -440,6 +440,20 @@ AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 o
 - [x] 默认透明仍识别2813个LifecycleCompletion和3108个dispatch source，Closure context相对包装减少5624；不能把测试包装当作全部保留的原因。
 - [x] 分别扣基线后的包装减透明总堆差默认+673,568B、候选+10,432B；仅单次观察，不证明精确成本、统计改善、原生持有链或整体有界。
 - [x] 复审两个P2校验修复并实际RED→GREEN；原生4/4、Python45/45、夹具4/4、发现678/663，194份原始文件归档。无生产改动，不重跑完整native/iOS/长程。
-- [ ] 下一项：对透明回调默认路径增加原生 stop 前后的独立快照，区分自然排空后的保留与停止/图拆除释放边界；先冻结协议与测试隔离，再决定生产修改，不能把干预结果写成精确原生持有链。
+- [x] 默认透明路径hold/stop独立对照完成：stop之后、图拆除之前观察到容器条目消失；没有精确原生持有链结论，见后续记录。
 
 见[协议](../../../tool/playback_benchmark/decoded-callback-wrapper-protocol.md)、[证据](../../../tool/playback_benchmark/macos-callback-wrapper-observations.json)和[报告](../reports/2026-09-26-remaining-08-performance-release.md)。候选默认/正式准入/整体有界三项仍false。
+
+本项执行裁定（2026-10-09）：复用当前codex/fel-integration工作目录与原生消费工程。采用默认透明回调hold/stop两独立进程；两者drained ACK后等时等待2s，仅stop组直接调用唯一原生player.stop，保持engine及附着节点集不变，随后采intervened heap再关闭。加入等时hold控制采样等待影响。维持原超时/释放门限；无生产代码修改。先校验负例与定向回归，再冻结正式两组、复审/归档/本地提交。
+
+
+### 后续边界：自然EOF后保持暂停与仅stop对照（2026-10-09）
+
+- [x] 仅测试直接操作唯一原生player，hold/stop均drained ACK后等待>=2s；intervened保持原四节点集合与engine运行，之后才完整close。
+- [x] 同源码/二进制/60s素材两独立串行进程2/2通过，各2813提交；8/8 heap在原8s内有效，透明callback继续null，EOF及关闭后两点资源/事件检查通过。
+- [x] hold中2813完成容器保持列出，stop后不再单独识别；dispatch3110→221，closure3358→389。支持本次变化发生在图拆除前的stop边界，不声明零存活或精确retainer。
+- [x] 负例RED→GREEN；定向原生4/4、工具50/50、夹具4/4、发现678/663，独立复审无P1/P2，140份文件归档。无生产修改，无完整native/iOS/长程重跑。
+- [x] 最终复审披露hold/stop观察间隔4.998/18.620s（显式sleep均约2s）；额外延迟来源未分段测量，未完成时间效应与stop因果贡献分离。
+- [ ] 下一项：先分段测量player.stop调用及其前后等待/采样的耗时，再加入覆盖stop组实际观察间隔的纯等待对照，区分时间效应与stop干预；随后验证同session重播/seek，尚不引入生产回收策略。
+
+见[协议](../../../tool/playback_benchmark/decoded-stop-boundary-protocol.md)、[证据](../../../tool/playback_benchmark/macos-stop-boundary-observations.json)与[报告](../reports/2026-09-26-remaining-08-performance-release.md)。候选默认、正式准入及整体有界仍false。
