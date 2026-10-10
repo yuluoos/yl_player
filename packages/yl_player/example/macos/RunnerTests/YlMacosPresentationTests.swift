@@ -110,6 +110,68 @@ final class YlMacosPresentationTests: XCTestCase {
   }
 
 
+
+  func testCandidatePositionAndWorkerNeverReadNativeAudioSynchronously() {
+    let lock = NSLock(), entered = DispatchSemaphore(value: 0), release = DispatchSemaphore(value: 0)
+    var legacyReads = 0
+    let clock = YlMediaClock(audioTime: { lock.withLock { legacyReads += 1 }; return nil })
+    clock.enableIsolatedAudioClock(read: { _ in
+      entered.signal(); _ = release.wait(timeout: .now() + 2); return .waiting
+    }, generation: 1)
+    clock.seek(to: 1_000_000); clock.play(atHostTimeUs: YlPresentationCoordinator.hostTimeUs())
+    defer { clock.stopIsolatedAudioClock(); release.signal() }
+    XCTAssertEqual(entered.wait(timeout: .now() + 1), .success)
+    _ = clock.position(atHostTimeUs: YlPresentationCoordinator.hostTimeUs())
+    _ = clock.presentationSnapshot(atHostTimeUs: YlPresentationCoordinator.hostTimeUs())
+    XCTAssertEqual(lock.withLock { legacyReads }, 0)
+    XCTAssertNotNil(clock.isolatedAudioClockStatistics)
+  }
+
+  func testCandidatePauseRevokesBeforeNativePauseCompletes() {
+    let entered = DispatchSemaphore(value: 0), release = DispatchSemaphore(value: 0)
+    let clock = YlMediaClock()
+    clock.enableIsolatedAudioClock(read: { _ in
+      entered.signal(); _ = release.wait(timeout: .now() + 2)
+      return .running(.init(generation: 1, positionUs: 1_000_000,
+        hostTimeUs: YlPresentationCoordinator.hostTimeUs(), lowerBoundUs: 0, upperBoundUs: 2_000_000, rate: 1))
+    }, generation: 1)
+    let now = YlPresentationCoordinator.hostTimeUs()
+    clock.seek(to: 700_000); clock.play(atHostTimeUs: now)
+    XCTAssertEqual(entered.wait(timeout: .now() + 1), .success)
+    clock.invalidateIsolatedAudioClock()
+    XCTAssertFalse(clock.presentationSnapshot(atHostTimeUs: now).playing)
+    clock.pause(atHostTimeUs: now)
+    release.signal()
+    XCTAssertFalse(clock.presentationSnapshot(atHostTimeUs: now + 50_000).playing)
+    XCTAssertEqual(clock.position(atHostTimeUs: now + 50_000), 700_000)
+    clock.stopIsolatedAudioClock()
+  }
+
+  func testCandidateClockEOFAndSilenceRemainDistinct() {
+    let lock = NSLock(), read = DispatchSemaphore(value: 0)
+    let now = YlPresentationCoordinator.hostTimeUs()
+    var value = YlAudioClockObservation.silence(.init(generation: 1, positionUs: 1_250_000,
+      hostTimeUs: now, lowerBoundUs: 1_250_000, upperBoundUs: 1_250_000, rate: 1))
+    let clock = YlMediaClock()
+    clock.enableIsolatedAudioClock(read: { _ in
+      let result = lock.withLock { value }; read.signal(); return result
+    }, generation: 1)
+    defer { clock.stopIsolatedAudioClock() }
+    clock.play(atHostTimeUs: now)
+    XCTAssertEqual(read.wait(timeout: .now() + 1), .success)
+    // Wait for publication rather than assuming the callback already returned.
+    let deadline = ProcessInfo.processInfo.systemUptime + 1
+    while (clock.isolatedAudioClockStatistics?.samples ?? 0) < 1 && ProcessInfo.processInfo.systemUptime < deadline { Thread.sleep(forTimeInterval: 0.001) }
+    XCTAssertEqual(clock.position(atHostTimeUs: now + 50_000), 1_250_000)
+    lock.withLock { value = .waiting }
+    XCTAssertFalse(clock.presentationSnapshot(atHostTimeUs: now + 200_000).playing)
+    lock.withLock { value = .ended(positionUs: 1_500_000, hostTimeUs: now) }
+    let after = (clock.isolatedAudioClockStatistics?.samples ?? 0)
+    let end = ProcessInfo.processInfo.systemUptime + 1
+    while (clock.isolatedAudioClockStatistics?.samples ?? 0) <= after && ProcessInfo.processInfo.systemUptime < end { Thread.sleep(forTimeInterval: 0.001) }
+    XCTAssertEqual(clock.position(atHostTimeUs: now + 500_000), 2_000_000)
+  }
+
   private final class AudioClockProbe {
     let lock = NSLock(), entered = DispatchSemaphore(value: 0), release = DispatchSemaphore(value: 0)
     var now: Int64 = 1_000_000

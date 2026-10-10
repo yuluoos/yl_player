@@ -85,6 +85,7 @@ final class YlPresentationCoordinator: YlAudioTimeline {
   private var lastStateEmitAt = CFTimeInterval(0)
   private let timedLock = NSLock()
   private var timedCandidateEnabled = false
+  private var timedDiagnosticsEnabled = false
   private var timedRequiresAudioAnchor = false
   private var timedAudioReady = false
   private var timedGeneration: UInt64 = 0
@@ -100,9 +101,10 @@ final class YlPresentationCoordinator: YlAudioTimeline {
     timedLock.withLock { timedPump }?.hasPendingPresentation ?? false
   }
   private var usesTimedPresentation: Bool { timedLock.withLock { timedSelected } }
-  func configureTimedCandidate(enabled: Bool, requiresAudioAnchor: Bool) {
+  func configureTimedCandidate(enabled: Bool, requiresAudioAnchor: Bool, diagnosticsEnabled: Bool = false) {
     timedLock.withLock {
       timedCandidateEnabled = enabled
+      timedDiagnosticsEnabled = diagnosticsEnabled
       timedRequiresAudioAnchor = requiresAudioAnchor
       timedAudioReady = !requiresAudioAnchor
     }
@@ -134,7 +136,8 @@ final class YlPresentationCoordinator: YlAudioTimeline {
     let generation = state.2 // Do not capture the tuple's retired pump in the new callback.
     let pump = YlTimedVideoPump(scheduler: frameScheduler, endpoint: endpoint,
       clockSnapshot: { [mediaClock] in mediaClock!.presentationSnapshot(atHostTimeUs: Self.hostTimeUs()) },
-      generation: generation, onSubmitted: { [weak self] in self?.timedFrameSubmitted(generation: generation, epoch: epoch) })
+      generation: generation, onSubmitted: { [weak self] in self?.timedFrameSubmitted(generation: generation, epoch: epoch) },
+      collectDiagnostics: timedLock.withLock { timedDiagnosticsEnabled })
     timedLock.withLock { timedPump = pump; timedSelected = true }
     pump.synchronize()
   }
@@ -172,6 +175,16 @@ final class YlPresentationCoordinator: YlAudioTimeline {
   func configureClock(_ provided: YlMediaClock?, audioTime: @escaping () -> YlRenderedAudioTime?) {
     mediaClock = provided ?? YlMediaClock(audioTime: audioTime)
   }
+  @discardableResult
+  func configureIsolatedAudioClock(generation: UInt64, read: @escaping (UInt64) -> YlAudioClockObservation) -> Bool {
+    guard timedLock.withLock({ timedCandidateEnabled && timedRequiresAudioAnchor }) else { return false }
+    mediaClock.enableIsolatedAudioClock(read: read, generation: generation)
+    return true
+  }
+  func invalidateAudioClock() { mediaClock.invalidateIsolatedAudioClock(); synchronizeTimedPresentation() }
+  func setAudioClockGeneration(_ generation: UInt64) { mediaClock.setAudioClockGeneration(generation) }
+  func stopAudioClock() { mediaClock.stopIsolatedAudioClock() }
+  var isolatedAudioClockStatistics: YlIsolatedAudioClockStatistics? { mediaClock.isolatedAudioClockStatistics }
   func anchorAudio(ptsUs: Int64, sampleTime: Int64) {
     mediaClock.anchorAudio(ptsUs: ptsUs, sampleTime: sampleTime); markTimedAudioReady()
   }
@@ -196,11 +209,11 @@ final class YlPresentationCoordinator: YlAudioTimeline {
     timedLock.withLock { timedGeneration = generation; timedAudioReady = !timedRequiresAudioAnchor }
     frameScheduler.flush(generation: generation)
   }
-  func disposeFrames() { stopTimedPresentation(); frameScheduler.dispose() }
+  func disposeFrames() { stopAudioClock(); stopTimedPresentation(); frameScheduler.dispose() }
   func clearFrame() { currentPixelBuffer = nil }
   func clearFrameAndTexture() { currentPixelBuffer = nil; clearOutput(); currentFrameReservation = nil }
   func setDisplayPaused(_ paused: Bool) { displayLink?.isPaused = paused }
-  func retireDisplay() { displayLink?.invalidate(); displayLink = nil; stopTimedPresentation() }
+  func retireDisplay() { invalidateAudioClock(); displayLink?.invalidate(); displayLink = nil; stopTimedPresentation() }
   func resetMilestones() { firstFrameDurationMs = nil; firstFrameSent = false }
 
   func clearOutput() { stopTimedPresentation(clearOutput: false); services.textureOutput.clear(); currentFrameReservation = nil }

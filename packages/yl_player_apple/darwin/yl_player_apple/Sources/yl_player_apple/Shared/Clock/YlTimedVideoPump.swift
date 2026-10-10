@@ -4,6 +4,7 @@ struct YlTimedVideoStatistics {
   var submitted = 0
   var rejected = 0
   var maxWorkerGapSeconds: TimeInterval = 0
+  var diagnostics: [String: Any]?
   var pending = false
 }
 
@@ -25,15 +26,20 @@ final class YlTimedVideoPump {
   private var lastEndUs: Int64?
   private var lastTick: TimeInterval?
   private var timerRunning = true
+  private let collectDiagnostics: Bool
+  private var lastFinished: TimeInterval?
+  private var phaseMaxima: [String: Double] = [:]
+  private var slowTicks: [[String: Double]] = []
   private let onSubmitted: (() -> Void)?
 
   init(scheduler: any YlPresentationScheduling, endpoint: any YlTimedVideoEndpoint,
        clockSnapshot: @escaping () -> YlPresentationClockSnapshot, generation: UInt64,
-       onSubmitted: (() -> Void)? = nil,
+       onSubmitted: (() -> Void)? = nil, collectDiagnostics: Bool = false,
        queue: DispatchQueue = DispatchQueue(label: "dev.ylplayer.timed-video", qos: .userInitiated)) {
     self.scheduler = scheduler; self.endpoint = endpoint
     self.clockSnapshot = clockSnapshot; self.generation = generation; self.queue = queue
     self.onSubmitted = onSubmitted
+    self.collectDiagnostics = collectDiagnostics
     window.reset(generation: generation)
     timer = DispatchSource.makeTimerSource(queue: queue)
     timer.schedule(deadline: .now() + .milliseconds(10), repeating: .milliseconds(10), leeway: .milliseconds(1))
@@ -61,9 +67,34 @@ final class YlTimedVideoPump {
   private func tick() {
     guard !isStopped else { return }
     if endpoint.isRetired { stop {}; return }
+    let started = collectDiagnostics ? ProcessInfo.processInfo.systemUptime : 0
     let snapshot = clockSnapshot()
     let now = ProcessInfo.processInfo.systemUptime
-    if snapshot.playing {
+    var phases: [String: Double] = [:]
+    if collectDiagnostics {
+      phases["clockSeconds"] = now - started
+      phases["idleSeconds"] = lastFinished.map { max(0, started - $0) } ?? 0
+    }
+    defer {
+      if collectDiagnostics {
+        let finished = ProcessInfo.processInfo.systemUptime
+        phases["tickSeconds"] = finished - started
+        if !snapshot.playing { phases["idleSeconds"] = 0 }
+        for (key, value) in phases { phaseMaxima[key] = max(phaseMaxima[key] ?? 0, value) }
+        if phases.values.contains(where: { $0 >= 0.04 }) {
+          phases["uptime"] = started
+          slowTicks.append(phases)
+          if slowTicks.count > 32 { slowTicks.removeFirst() }
+        }
+        lastFinished = snapshot.playing ? finished : nil
+        stateLock.withLock {
+          var values = phaseMaxima.mapValues { $0 as Any }
+          values["slowTicks"] = slowTicks
+          observed.diagnostics = values
+        }
+      }
+    }
+    if snapshot.playing || snapshot.waitingForClock {
       if let lastTick { stateLock.withLock { observed.maxWorkerGapSeconds = max(observed.maxWorkerGapSeconds, now - lastTick) } }
       lastTick = now
       if !timerRunning {
@@ -74,7 +105,9 @@ final class YlTimedVideoPump {
       lastTick = nil // An intentional pause is not worker starvation.
       if timerRunning { timer.schedule(deadline: .distantFuture); timerRunning = false }
     }
+    let updateStarted = collectDiagnostics ? ProcessInfo.processInfo.systemUptime : 0
     endpoint.update(snapshot, generation: generation)
+    if collectDiagnostics { phases["updateSeconds"] = ProcessInfo.processInfo.systemUptime - updateStarted }
     window.advance(to: snapshot.positionUs)
     if let horizon = snapshot.submissionHorizonUs {
       // Bound work as well as retained samples. A malformed input cannot spin.
@@ -84,7 +117,9 @@ final class YlTimedVideoPump {
           // Publish ownership before the scheduler releases it: EOF must never
           // observe both queues empty while a native enqueue is in flight.
           stateLock.withLock { observed.pending = true }
+          let popStarted = collectDiagnostics ? ProcessInfo.processInfo.systemUptime : 0
           held = scheduler.nextFrame(upTo: horizon, generation: generation)
+          if collectDiagnostics { phases["schedulerSeconds"] = max(phases["schedulerSeconds"] ?? 0, ProcessInfo.processInfo.systemUptime - popStarted) }
         }
         guard let frame = held else { break }
         // A rate reduction or clock rollback can move an already-held frame
@@ -95,7 +130,10 @@ final class YlTimedVideoPump {
           stateLock.withLock { observed.rejected += 1 }
           continue
         }
-        guard endpoint.enqueue(frame) else { break }
+        let enqueueStarted = collectDiagnostics ? ProcessInfo.processInfo.systemUptime : 0
+        let accepted = endpoint.enqueue(frame)
+        if collectDiagnostics { phases["enqueueSeconds"] = max(phases["enqueueSeconds"] ?? 0, ProcessInfo.processInfo.systemUptime - enqueueStarted) }
+        guard accepted else { break }
         frame.reservation?.endQueuedTiming()
         window.didSubmit(frame)
         let end = frame.ptsUs.addingReportingOverflow(max(1, frame.durationUs))

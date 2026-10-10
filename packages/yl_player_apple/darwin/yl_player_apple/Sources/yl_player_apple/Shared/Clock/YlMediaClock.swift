@@ -19,10 +19,41 @@ final class YlMediaClock {
   private var rate: Double = 1
   private var playing = false
   private var paused = false
+  private var isolated: YlIsolatedAudioClock?
+  private var audioGeneration: UInt64 = 0
 
   init(audioTime: (() -> YlRenderedAudioTime?)? = nil) {
     self.audioTime = audioTime
   }
+
+  func enableIsolatedAudioClock(read: @escaping (UInt64) -> YlAudioClockObservation, generation: UInt64) {
+    lock.withLock {
+      guard isolated == nil else { return }
+      audioGeneration = generation
+      isolated = YlIsolatedAudioClock(read: read, hostTimeUs: {
+        Int64(ProcessInfo.processInfo.systemUptime * 1_000_000)
+      })
+      configureIsolatedLocked()
+    }
+  }
+  private func configureIsolatedLocked() {
+    isolated?.configure(generation: audioGeneration, positionUs: mediaAnchorUs, rate: rate, playing: playing)
+  }
+  func invalidateIsolatedAudioClock() {
+    lock.withLock {
+      guard let isolated else { return }
+      mediaAnchorUs = isolated.snapshot(atHostTimeUs: Int64(ProcessInfo.processInfo.systemUptime * 1_000_000)).positionUs
+      isolated.invalidate()
+    }
+  }
+  func setAudioClockGeneration(_ generation: UInt64) {
+    lock.withLock { audioGeneration = generation; isolated?.invalidate() }
+  }
+  func stopIsolatedAudioClock() { lock.withLock { isolated?.stop() } }
+  var isolatedAudioClockStatistics: YlIsolatedAudioClockStatistics? {
+    lock.withLock { isolated?.statistics }
+  }
+  private var isolatedClock: YlIsolatedAudioClock? { lock.withLock { isolated } }
 
   func anchorAudio(ptsUs: Int64, sampleTime: Int64) {
     anchorAudio(ptsUs: ptsUs, sampleTime: sampleTime, preservingPause: false)
@@ -45,9 +76,9 @@ final class YlMediaClock {
   }
 
   func play(atHostTimeUs hostTimeUs: Int64) {
-    let renderedAudioTime = audioTime?()
+    let renderedAudioTime = isolatedClock == nil ? audioTime?() : nil
     lock.lock()
-    guard !playing else {
+    guard !playing || isolated != nil else {
       lock.unlock()
       return
     }
@@ -56,17 +87,18 @@ final class YlMediaClock {
     lastAudioPosition = nil
     playing = true
     paused = false
+    configureIsolatedLocked()
     lock.unlock()
   }
 
   func pause(atHostTimeUs hostTimeUs: Int64) {
-    let renderedAudioTime = audioTime?()
+    let renderedAudioTime = isolatedClock == nil ? audioTime?() : nil
     lock.lock()
     guard playing else {
       lock.unlock()
       return
     }
-    mediaAnchorUs = positionLocked(
+    mediaAnchorUs = isolated?.snapshot(atHostTimeUs: hostTimeUs).positionUs ?? positionLocked(
       atHostTimeUs: hostTimeUs,
       renderedAudioTime: renderedAudioTime
     )
@@ -75,6 +107,7 @@ final class YlMediaClock {
     lastAudioPosition = nil
     playing = false
     paused = true
+    configureIsolatedLocked()
     lock.unlock()
   }
 
@@ -84,13 +117,14 @@ final class YlMediaClock {
     paused = false
     audioSampleAnchor = nil
     lastAudioPosition = nil
+    configureIsolatedLocked()
     lock.unlock()
   }
 
   func setRate(_ value: Double, atHostTimeUs hostTimeUs: Int64) {
-    let renderedAudioTime = audioTime?()
+    let renderedAudioTime = isolatedClock == nil ? audioTime?() : nil
     lock.lock()
-    let position = positionLocked(
+    let position = isolated?.snapshot(atHostTimeUs: hostTimeUs).positionUs ?? positionLocked(
       atHostTimeUs: hostTimeUs,
       renderedAudioTime: renderedAudioTime
     )
@@ -99,21 +133,24 @@ final class YlMediaClock {
     audioSampleAnchor = renderedAudioTime?.sampleTime
     lastAudioPosition = nil
     rate = min(max(value, 0.25), 4)
+    configureIsolatedLocked()
     lock.unlock()
   }
 
   func presentationSnapshot(atHostTimeUs hostTimeUs: Int64) -> YlPresentationClockSnapshot {
-    let renderedAudioTime = audioTime?()
+    let renderedAudioTime = isolatedClock == nil ? audioTime?() : nil
     lock.lock()
     defer { lock.unlock() }
+    if let isolated { return isolated.snapshot(atHostTimeUs: hostTimeUs) }
     return .init(positionUs: positionLocked(atHostTimeUs: hostTimeUs, renderedAudioTime: renderedAudioTime),
       hostTimeUs: hostTimeUs, rate: rate, playing: playing)
   }
 
   func position(atHostTimeUs hostTimeUs: Int64) -> Int64 {
-    let renderedAudioTime = audioTime?()
+    let renderedAudioTime = isolatedClock == nil ? audioTime?() : nil
     lock.lock()
     defer { lock.unlock() }
+    if let isolated { return isolated.snapshot(atHostTimeUs: hostTimeUs).positionUs }
     return positionLocked(
       atHostTimeUs: hostTimeUs,
       renderedAudioTime: renderedAudioTime

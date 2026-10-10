@@ -67,6 +67,8 @@ final class YlAudioPipeline {
   private var desiredVolume: Float = 1
   private var desiredRate: Float = 1
   private var audioAnchored = false
+  var beforeClockControl: (() -> Void)?
+  var onClockGenerationChanged: ((UInt64) -> Void)?
   var beforeOutput: () throws -> Void = {}
   func prepareForPlayback() throws { try beforeOutput() }
   private var pendingAudioPacket: YlCompressedAudioPacket?
@@ -85,6 +87,7 @@ final class YlAudioPipeline {
 
   private func makeRenderer() -> YlAudioRenderer {
     let renderer = factory.makeRenderer(bufferBudget: bufferBudget)
+    renderer.onClockControlBegin = beforeClockControl
     renderer.onOutputFailure = { [weak self, weak renderer] error in
       // Output can fail while a renderer operation or session state lock is held.
       // Publish later, only if this exact renderer still owns installed output.
@@ -140,8 +143,8 @@ final class YlAudioPipeline {
     try audioRenderer.configure(stream: configuration(for: stream, generation: audioGeneration, audioCookies: cookies))
   }
   func discardRenderer() { audioRenderer?.dispose(); audioRenderer = nil }
-  func advanceGeneration() { audioGeneration &+= 1 }
-  func adoptGeneration(_ generation: UInt64) { audioGeneration = generation }
+  func advanceGeneration() { audioGeneration &+= 1; onClockGenerationChanged?(audioGeneration) }
+  func adoptGeneration(_ generation: UInt64) { audioGeneration = generation; onClockGenerationChanged?(generation) }
   func nextGeneration() -> UInt64 { audioGeneration &+ 1 }
   func discardPendingPacket() { pendingAudioPacket = nil }
   func resetAnchor() { audioAnchored = false }
@@ -158,14 +161,15 @@ final class YlAudioPipeline {
     return old.map(Resource.init)
   }
   func prepareReset(generation: UInt64) -> Reset {
-    audioGeneration = generation
+    adoptGeneration(generation)
     return Reset(resource: audioRenderer.map(Resource.init), generation: generation)
   }
   func playInstalled() throws { try audioRenderer.play() }
   func setRate(_ rate: Float, hasAudio: Bool, updateTimeline: () -> Void) {
     desiredRate = rate
-    updateTimeline()
+    if beforeClockControl == nil { updateTimeline() }
     if hasAudio { currentAudioRenderer?.setRate(rate) }
+    if beforeClockControl != nil { updateTimeline() }
   }
   func prepareTrack(stream: YLFStreamInfo, generation: UInt64,
                     cookies: [Int32: Data]) throws -> Resource {

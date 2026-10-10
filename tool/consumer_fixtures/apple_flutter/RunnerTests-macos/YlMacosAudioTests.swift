@@ -81,6 +81,28 @@ final class YlMacosAudioTests: XCTestCase {
     wait(for: [finished], timeout: 3)
   }
 
+  func testNativeControlRevokesBeforeBlockingClockReadAndDeviceInvalidation() throws {
+    let output = TestAudioOutput(), renderer = try clockRenderer(output)
+    let lock = NSLock(); var revoked = 0
+    renderer.onClockControlBegin = { lock.withLock { revoked += 1 } }
+    let entered = DispatchSemaphore(value: 0), release = DispatchSemaphore(value: 0)
+    output.clockRead = {
+      XCTAssertGreaterThan(lock.withLock { revoked }, 0)
+      entered.signal(); _ = release.wait(timeout: .now() + 2); return nil
+    }
+    let paused = expectation(description: "native pause returns")
+    DispatchQueue.global().async { renderer.pause(); paused.fulfill() }
+    XCTAssertEqual(entered.wait(timeout: .now() + 1), .success)
+    XCTAssertEqual(lock.withLock { revoked }, 1)
+    release.signal(); wait(for: [paused], timeout: 3)
+    output.clockRead = nil
+    renderer.setRate(2); XCTAssertEqual(lock.withLock { revoked }, 2)
+    output.clockInvalidation?()
+    XCTAssertEqual(lock.withLock { revoked }, 3)
+    XCTAssertEqual(renderer.clockObservation(expectedGeneration: 1), .invalid)
+    renderer.dispose()
+  }
+
   private func terminalContext(
     enabled: Bool = true, platform: YlApplePlatform = .macos,
     localFiniteSeekable: Bool = true, hasBoundedPlan: Bool = false,
@@ -899,7 +921,13 @@ final class YlMacosAudioTests: XCTestCase {
     }
     func observe(_ phase: String, system: [String: Any]?) throws {
       let stats = instance.timedVideoStatistics, drops = scheduler.dropDiagnostics
-      let row: [String: Any] = ["phase": phase, "uptime": ProcessInfo.processInfo.systemUptime,
+      let clock = instance.isolatedAudioClockStatistics
+      let clockRecord: [String: Any] = ["required": candidate && !prepared.audioStreams.isEmpty, "isolated": clock != nil,
+        "samples": clock?.samples as Any? ?? NSNull(), "staleEvents": clock?.staleEvents as Any? ?? NSNull(),
+        "rejectedObservations": clock?.rejectedObservations as Any? ?? NSNull(),
+        "maximumReadSeconds": clock?.maximumReadSeconds as Any? ?? NSNull(),
+        "maximumAgeSeconds": clock?.maximumAgeSeconds as Any? ?? NSNull()]
+      let row: [String: Any] = ["audioClock": clockRecord, "phase": phase, "uptime": ProcessInfo.processInfo.systemUptime,
         "pid": ProcessInfo.processInfo.processIdentifier, "candidateRequested": candidate,
         "runtimeDiagnostics": runtimeDiagnostics,
         "diagnosticsEnabled": diagnostics, "nativeDiagnostics": (diagnostics ? output.timedDiagnostics : nil) as Any? ?? NSNull(),
@@ -976,7 +1004,7 @@ final class YlMacosAudioTests: XCTestCase {
     try await AppleHostCharacterizations.waitFor({ ledger.snapshot.currentBytes == 0 }, timeout: 3)
     try observe("disposed", system: nil)
     try await Task.sleep(nanoseconds: 100_000_000); try observe("disposedLater", system: nil)
-    let record: [String: Any] = ["rows": rows, "stallSeconds": stallSeconds, "submittedDuringStall": submittedDuringStall,
+    let record: [String: Any] = ["audioClockProtocol": 1, "audioClockRequired": candidate && !prepared.audioStreams.isEmpty, "rows": rows, "stallSeconds": stallSeconds, "submittedDuringStall": submittedDuringStall,
       "pausedPixelPresent": pixelPresent]
     let data = try JSONSerialization.data(withJSONObject: record, options: [.sortedKeys])
     let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
@@ -1043,7 +1071,7 @@ final class YlMacosAudioTests: XCTestCase {
       try instance.setPlaybackSpeed(rate)
       let before = instance.timedVideoStatistics?.submitted ?? 0
       try instance.play()
-      try await AppleHostCharacterizations.waitFor({ (instance.timedVideoStatistics?.submitted ?? 0) >= before + 3 })
+    try await AppleHostCharacterizations.waitFor({ (instance.timedVideoStatistics?.submitted ?? 0) >= before + 3 })
       try instance.pause()
     }
     try instance.setPlaybackSpeed(1); try instance.play()
@@ -1193,6 +1221,41 @@ final class YlMacosAudioTests: XCTestCase {
       XCTAssertEqual((row["marker"] as? [String: Int])?["frames"], 65536)
       XCTAssertEqual((row["marker"] as? [String: Int])?["errors"], 0)
     }
+  }
+
+  func testActualTimestampedAudioClockAcrossRatesAndControls() throws {
+    let output = YlSystemAudioOutput()
+    defer { output.dispose() }
+    let format = try XCTUnwrap(AVAudioFormat(standardFormatWithSampleRate: 48_000, channels: 2))
+    try output.configure(format: format); output.volume = 0
+    var rows: [[String: Any]] = []
+    func submit() throws {
+      let pcm = try XCTUnwrap(AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 96_000))
+      pcm.frameLength = 96_000
+      for channel in 0..<2 { memset(pcm.floatChannelData![channel], 0, 96_000 * MemoryLayout<Float>.size) }
+      output.schedule(.init(payload: pcm, ptsUs: 0, durationUs: 2_000_000, byteCount: 768_000, generation: 1), completion: {})
+    }
+    for rate: Float in [0.25, 1, 2, 4] {
+      output.reset(); output.rate = rate; try submit(); try output.play()
+      for phase in ["playing", "resumed"] {
+        Thread.sleep(forTimeInterval: 0.1)
+        let before = ProcessInfo.processInfo.systemUptime
+        let raw = try XCTUnwrap(output.presentationAudioTime)
+        let after = ProcessInfo.processInfo.systemUptime
+        let host = try XCTUnwrap(raw.hostTimeUs)
+        XCTAssertTrue(raw.sampleRate.isFinite); XCTAssertGreaterThan(raw.sampleRate, 0)
+        XCTAssertLessThan(abs(Double(host) / 1_000_000 - after), 0.1)
+        rows.append(["rate": rate, "phase": phase, "before": before, "after": after,
+          "hostTimeUs": host, "sampleTime": raw.sampleTime, "sampleRate": raw.sampleRate])
+        output.pause()
+        XCTAssertNil(output.presentationAudioTime)
+        if phase == "playing" { try output.play() }
+      }
+    }
+    output.reset(); XCTAssertNil(output.presentationAudioTime)
+    output.dispose(); XCTAssertNil(output.presentationAudioTime)
+    let attachment = XCTAttachment(data: try JSONSerialization.data(withJSONObject: rows, options: [.sortedKeys]), uniformTypeIdentifier: "public.json")
+    attachment.name = "audio-clock-rates-controls"; attachment.lifetime = .keepAlways; add(attachment)
   }
 
   func testActualSystemOutputClockAfterDisposeIsUnavailable() throws {
@@ -3457,6 +3520,8 @@ final class YlMacosAudioTests: XCTestCase {
   private final class TestAudioOutput: YlAudioOutputDriving {
     var volume: Float = 1
     var rate: Float = 1
+    var clockInvalidation: (() -> Void)?
+    func setClockInvalidationHandler(_ handler: (() -> Void)?) { clockInvalidation = handler }
     var rawClock: YlRenderedAudioTime?
     var clockRead: (() -> YlRenderedAudioTime?)?
     var renderedAudioTime: YlRenderedAudioTime? {

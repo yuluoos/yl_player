@@ -11,6 +11,7 @@ import YlFFmpegBridge
 final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPipelineOutput, YlPresentationOutput, YlRecoverySession, YlDemuxOutput {
   let playerId: Int64
   var textureId: Int64 { services.textureOutput.textureId }
+  var isolatedAudioClockStatistics: YlIsolatedAudioClockStatistics? { presentation.isolatedAudioClockStatistics }
   var timedVideoStatistics: YlTimedVideoStatistics? { presentation.timedVideoStatistics }
   var isActive: Bool { stateLock.withLock { active } }
   var playbackIntent: Bool { stateLock.withLock { playing } }
@@ -116,7 +117,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     channelIdentity: UInt64? = nil,
     emit: @escaping (YlNativeBackendCallback) -> Void,
     audioTerminalCandidateEnabled: Bool = false,
-    timedVideoCandidateEnabled: Bool = false
+    timedVideoCandidateEnabled: Bool = false,
+    timedVideoDiagnosticsEnabled: Bool = false
   ) throws {
     guard !YlHDRVideoPolicy.isHDR(prepared.videoFormat) || services.nativeViewType != nil else {
       throw NativePlayerError(category: "unsupported", code: "render.hdr_surface_unavailable",
@@ -164,13 +166,20 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     presentation.configureTimedCandidate(enabled: timedVideoCandidateEnabled && services.platform == .macos
       && services.nativeViewType != nil && localSource && !prepared.policy.isLive
       && demux.isSeekable && demux.mediaInfo.duration_us > 0 && prepared.boundedPlan == nil,
-      requiresAudioAnchor: demux.selectedAudioStream != nil)
-    audio.initializeRenderer()
+      requiresAudioAnchor: demux.selectedAudioStream != nil, diagnosticsEnabled: timedVideoDiagnosticsEnabled)
     self.presentation.configureClock(providedMediaClock, audioTime: { [weak self] in
       guard let self else { return nil }
       let renderer = self.audio.currentResource
       return renderer?.renderedAudioTime
     })
+    if presentation.configureIsolatedAudioClock(generation: audio.audioGeneration, read: { [weak self] generation in
+      guard let resource = self?.audio.currentResource else { return .waiting }
+      return resource.clockObservation(expectedGeneration: generation)
+    }) {
+      audio.beforeClockControl = { [weak presentation] in presentation?.invalidateAudioClock() }
+      audio.onClockGenerationChanged = { [weak presentation] generation in presentation?.setAudioClockGeneration(generation) }
+    }
+    audio.initializeRenderer()
     demux.output = self
     recovery.session = self
     presentation.output = self
@@ -599,6 +608,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     stateLock.unlock()
     recovery.cancelBudget()
     reconnectToCancel?.cancel()
+    presentation.stopAudioClock()
     presentation.retireDisplay()
     YlFallbackTeardownTransaction(
       cancelInput: { [self] in
