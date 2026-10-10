@@ -109,6 +109,92 @@ final class YlMacosPresentationTests: XCTestCase {
     XCTAssertFalse(endpoint.enqueue(.init(payload: NSObject(), ptsUs: 1, durationUs: 1, keyframe: true, generation: 9)))
   }
 
+
+  private final class AudioClockProbe {
+    let lock = NSLock(), entered = DispatchSemaphore(value: 0), release = DispatchSemaphore(value: 0)
+    var now: Int64 = 1_000_000
+    var sourceHost: Int64 = 1_000_000
+    var block = false
+    func host() -> Int64 { lock.withLock { now } }
+    func setNow(_ value: Int64) { lock.withLock { now = value } }
+    func read(_ generation: UInt64) -> YlAudioClockObservation {
+      let values = lock.withLock { (block, sourceHost) }
+      if values.0 { entered.signal(); _ = release.wait(timeout: .now() + 2) }
+      return .running(.init(generation: generation, positionUs: 1_000_000,
+        hostTimeUs: values.1, lowerBoundUs: 0, upperBoundUs: 2_000_000, rate: 1))
+    }
+  }
+
+  func testIsolatedClockSuppliesWhileAudioReadIsBlocked() {
+    let probe = AudioClockProbe(), queue = DispatchQueue(label: "test.isolated.block")
+    let clock = YlIsolatedAudioClock(read: probe.read, hostTimeUs: probe.host, queue: queue)
+    clock.configure(generation: 1, positionUs: 1_000_000, rate: 1, playing: true)
+    queue.sync {}
+    probe.lock.withLock { probe.block = true }
+    defer { clock.stop(); probe.release.signal(); queue.sync {} }
+    XCTAssertEqual(probe.entered.wait(timeout: .now() + 1), .success)
+    let snapshot = clock.snapshot(atHostTimeUs: 1_050_000)
+    XCTAssertTrue(snapshot.playing); XCTAssertEqual(snapshot.positionUs, 1_050_000)
+    let scheduler = YlFrameScheduler(), output = PumpOutput()
+    XCTAssertTrue(scheduler.enqueue(.init(payload: NSObject(), ptsUs: 1_070_000,
+      durationUs: 40_000, keyframe: true, generation: 1)))
+    let worker = DispatchQueue(label: "test.isolated.video")
+    let pump = YlTimedVideoPump(scheduler: scheduler, endpoint: output,
+      clockSnapshot: { clock.snapshot(atHostTimeUs: 1_050_000) }, generation: 1, queue: worker)
+    pump.synchronize(); worker.sync {}; pump.stop {}; worker.sync {}
+    XCTAssertEqual(output.pts, [1_070_000])
+  }
+
+  func testIsolatedClockExpiresWithoutHostFallback() {
+    let probe = AudioClockProbe(), queue = DispatchQueue(label: "test.isolated.expire")
+    let clock = YlIsolatedAudioClock(read: probe.read, hostTimeUs: probe.host, queue: queue)
+    defer { clock.stop() }
+    clock.configure(generation: 1, positionUs: 1_000_000, rate: 1, playing: true); queue.sync {}
+    XCTAssertEqual(clock.snapshot(atHostTimeUs: 1_050_000).positionUs, 1_050_000)
+    let expired = clock.snapshot(atHostTimeUs: 1_100_001)
+    XCTAssertFalse(expired.playing)
+    XCTAssertEqual(clock.snapshot(atHostTimeUs: 2_000_000).positionUs, expired.positionUs)
+    XCTAssertEqual(clock.statistics.staleEvents, 1)
+    clock.configure(generation: 2, positionUs: 1_000_000, rate: 1, playing: true); queue.sync {}
+    XCTAssertTrue(clock.snapshot(atHostTimeUs: 1_000_000).playing)
+    XCTAssertEqual(clock.statistics.staleEvents, 1)
+  }
+
+  func testRepeatedOldObservationCannotRenewFreshness() {
+    let probe = AudioClockProbe(), queue = DispatchQueue(label: "test.isolated.old")
+    let clock = YlIsolatedAudioClock(read: probe.read, hostTimeUs: probe.host, queue: queue)
+    defer { clock.stop() }
+    probe.setNow(1_200_000)
+    clock.configure(generation: 1, positionUs: 1_000_000, rate: 1, playing: true); queue.sync {}
+    XCTAssertFalse(clock.snapshot(atHostTimeUs: 1_200_000).playing)
+    XCTAssertEqual(clock.statistics.staleEvents, 1)
+    probe.lock.withLock { probe.sourceHost = 1_020_000; probe.now = 1_000_000 }
+    clock.configure(generation: 2, positionUs: 0, rate: 1, playing: true); queue.sync {}
+    XCTAssertEqual(clock.snapshot(atHostTimeUs: 1_000_000).positionUs, 980_000)
+  }
+
+  func testBlockedSampleCannotSurviveControlVersionChange() {
+    for operation in 0..<4 {
+      let probe = AudioClockProbe(), queue = DispatchQueue(label: "test.isolated.control")
+      probe.block = true
+      let clock = YlIsolatedAudioClock(read: probe.read, hostTimeUs: probe.host, queue: queue)
+      clock.configure(generation: 1, positionUs: 1_000_000, rate: 1, playing: true)
+      XCTAssertEqual(probe.entered.wait(timeout: .now() + 1), .success)
+      switch operation {
+      case 0: clock.configure(generation: 1, positionUs: 700_000, rate: 1, playing: false)
+      case 1: for g: UInt64 in 2...101 { clock.configure(generation: g, positionUs: 700_000, rate: 1, playing: false) }
+      case 2: clock.configure(generation: 1, positionUs: 700_000, rate: 2, playing: false)
+      default: clock.stop()
+      }
+      XCTAssertFalse(clock.snapshot(atHostTimeUs: 1_010_000).playing)
+      probe.release.signal(); queue.sync {}
+      XCTAssertFalse(clock.snapshot(atHostTimeUs: 1_010_000).playing)
+      XCTAssertGreaterThanOrEqual(clock.statistics.rejectedObservations, 1)
+      if operation < 3 { XCTAssertEqual(clock.snapshot(atHostTimeUs: 1_010_000).positionUs, 700_000) }
+      clock.stop()
+    }
+  }
+
   private final class PumpOutput: YlTimedVideoEndpoint {
     let lock = NSLock()
     var ready = true
@@ -132,6 +218,24 @@ final class YlMacosPresentationTests: XCTestCase {
     func set(_ position: Int64, playing: Bool) {
       lock.withLock { value = .init(positionUs: position, hostTimeUs: position, rate: 1, playing: playing) }
     }
+  }
+
+  func testTimedDiagnosticsSeparateClockReadFromIdleGap() throws {
+    let queue = DispatchQueue(label: "test.timed.diagnostic")
+    let pump = YlTimedVideoPump(scheduler: YlFrameScheduler(), endpoint: PumpOutput(), clockSnapshot: {
+      Thread.sleep(forTimeInterval: 0.12)
+      return .init(positionUs: 0, hostTimeUs: 0, rate: 1, playing: true)
+    }, generation: 1, collectDiagnostics: true, queue: queue)
+    pump.synchronize(); queue.sync {}
+    pump.stop {}; queue.sync {}
+    let diagnostic = try XCTUnwrap(pump.statistics.diagnostics)
+    XCTAssertGreaterThanOrEqual(try XCTUnwrap(diagnostic["clockSeconds"] as? Double), 0.1)
+    XCTAssertLessThan(try XCTUnwrap(diagnostic["updateSeconds"] as? Double), 0.05)
+    XCTAssertFalse(try XCTUnwrap(diagnostic["slowTicks"] as? [[String: Double]]).isEmpty)
+    let disabled = YlTimedVideoPump(scheduler: YlFrameScheduler(), endpoint: PumpOutput(),
+      clockSnapshot: { .init(positionUs: 0, hostTimeUs: 0, rate: 1, playing: false) }, generation: 1, queue: queue)
+    disabled.synchronize(); queue.sync {}; disabled.stop {}; queue.sync {}
+    XCTAssertNil(disabled.statistics.diagnostics)
   }
 
   func testTimedPendingCoversInFlightEnqueue() {

@@ -7,6 +7,7 @@ struct YlPresentationClockSnapshot {
   let hostTimeUs: Int64
   let rate: Double
   let playing: Bool
+  var waitingForClock: Bool = false
 
   var submissionHorizonUs: Int64? {
     guard playing, rate.isFinite, rate >= 0.25, rate <= 4 else { return nil }
