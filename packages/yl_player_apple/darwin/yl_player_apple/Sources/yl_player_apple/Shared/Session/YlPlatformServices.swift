@@ -162,12 +162,24 @@ final class YlAppleTextureOwner {
   fileprivate func makeTimedEndpoint(_ lease: YlAppleTextureLease) -> (any YlTimedVideoEndpoint)? {
     guard !disposed, !lease.invalidated, current === lease else { return nil }
     timedLock.lock()
-    if let existing = lease.timedEndpoint { timedLock.unlock(); return existing }
+    if let existing = lease.timedEndpoint {
+      timedLock.unlock()
+      if existing.isRetired { retireTimedEndpoint(lease); return nil }
+      return existing
+    }
     guard retiringTimedEndpoint == nil, !creatingTimedEndpoint else { timedLock.unlock(); return nil }
     creatingTimedEndpoint = true
     let epoch = timedEpoch
     timedLock.unlock()
-    let endpoint = (output as? YlTimedVideoOutput)?.makeTimedVideoEndpoint().map(YlTimedVideoLeaseEndpoint.init)
+    let endpoint = (output as? YlTimedVideoOutput)?.makeTimedVideoEndpoint().map { native in
+      YlTimedVideoLeaseEndpoint(native, onFirstEnqueue: { [weak self, weak lease] in
+        let deliver = { [weak self, weak lease] in
+          guard let self, let lease, !self.disposed, !lease.invalidated, self.current === lease else { return }
+          self.onFrame(lease.identity)
+        }
+        if Thread.isMainThread { deliver() } else { DispatchQueue.main.async(execute: deliver) }
+      })
+    }
     timedLock.lock()
     creatingTimedEndpoint = false
     let valid = timedEpoch == epoch && !disposed && !lease.invalidated && current === lease

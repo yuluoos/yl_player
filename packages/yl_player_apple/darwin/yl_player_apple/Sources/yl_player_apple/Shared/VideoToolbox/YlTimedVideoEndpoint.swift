@@ -1,9 +1,13 @@
 import Foundation
 
 protocol YlTimedVideoEndpoint: AnyObject {
+  var isRetired: Bool { get }
   func update(_ snapshot: YlPresentationClockSnapshot, generation: UInt64)
   func enqueue(_ frame: YlFrameEnvelope) -> Bool
   func retire(removingImage: Bool, completion: @escaping () -> Void)
+}
+extension YlTimedVideoEndpoint {
+  var isRetired: Bool { false }
 }
 protocol YlTimedVideoOutput: AnyObject {
   func makeTimedVideoEndpoint() -> (any YlTimedVideoEndpoint)?
@@ -20,8 +24,17 @@ final class YlTimedVideoLeaseEndpoint: YlTimedVideoEndpoint {
   private var retirementFinished = false
   private var removeImage = false
   private var completions: [() -> Void] = []
+  private let onFirstEnqueue: (() -> Void)?
+  private var notified = false
 
-  init(_ endpoint: any YlTimedVideoEndpoint) { self.endpoint = endpoint }
+  init(_ endpoint: any YlTimedVideoEndpoint, onFirstEnqueue: (() -> Void)? = nil) {
+    self.endpoint = endpoint; self.onFirstEnqueue = onFirstEnqueue
+  }
+
+  var isRetired: Bool {
+    let current = lock.withLock { closed ? nil : endpoint }
+    return current?.isRetired ?? true
+  }
 
   private func acquire() -> (any YlTimedVideoEndpoint)? {
     lock.withLock {
@@ -40,6 +53,11 @@ final class YlTimedVideoLeaseEndpoint: YlTimedVideoEndpoint {
   func enqueue(_ frame: YlFrameEnvelope) -> Bool {
     guard let endpoint = acquire() else { return false }
     let accepted = endpoint.enqueue(frame)
+    let notify = lock.withLock { () -> Bool in
+      guard accepted, !closed, !notified else { return false }
+      notified = true; return true
+    }
+    if notify { onFirstEnqueue?() }
     release()
     return accepted
   }

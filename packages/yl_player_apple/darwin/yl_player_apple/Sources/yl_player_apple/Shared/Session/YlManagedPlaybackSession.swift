@@ -11,6 +11,7 @@ import YlFFmpegBridge
 final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPipelineOutput, YlPresentationOutput, YlRecoverySession, YlDemuxOutput {
   let playerId: Int64
   var textureId: Int64 { services.textureOutput.textureId }
+  var timedVideoStatistics: YlTimedVideoStatistics? { presentation.timedVideoStatistics }
   var isActive: Bool { stateLock.withLock { active } }
   var playbackIntent: Bool { stateLock.withLock { playing } }
   var requiresAsyncActivation: Bool {
@@ -114,7 +115,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     loadRequestId: String? = nil,
     channelIdentity: UInt64? = nil,
     emit: @escaping (YlNativeBackendCallback) -> Void,
-    audioTerminalCandidateEnabled: Bool = false
+    audioTerminalCandidateEnabled: Bool = false,
+    timedVideoCandidateEnabled: Bool = false
   ) throws {
     guard !YlHDRVideoPolicy.isHDR(prepared.videoFormat) || services.nativeViewType != nil else {
       throw NativePlayerError(category: "unsupported", code: "render.hdr_surface_unavailable",
@@ -159,6 +161,10 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       DispatchQueue.main.async { [weak self] in self?.requestPump() }
     }
     presentation.configureBounded(prepared.boundedPlan)
+    presentation.configureTimedCandidate(enabled: timedVideoCandidateEnabled && services.platform == .macos
+      && services.nativeViewType != nil && localSource && !prepared.policy.isLive
+      && demux.isSeekable && demux.mediaInfo.duration_us > 0 && prepared.boundedPlan == nil,
+      requiresAudioAnchor: demux.selectedAudioStream != nil)
     audio.initializeRenderer()
     self.presentation.configureClock(providedMediaClock, audioTime: { [weak self] in
       guard let self else { return nil }
@@ -1454,7 +1460,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         && !audio.hasPendingPacket
     }
     guard shouldComplete, video.isDrained,
-          presentation.pendingFrames.isEmpty,
+          presentation.pendingFrames.isEmpty, !presentation.hasPendingTimedPresentation,
           !(currentAudioRenderer?.hasPendingPlayback ?? false) else { return }
     stateLock.withLock {
       guard !completionSent else { return }

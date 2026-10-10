@@ -114,14 +114,15 @@ final class YlSampleBufferVideoRenderer {
     onFailure?(error)
   }
 
-  static func makeSample(_ pixelBuffer: CVPixelBuffer, retaining reservation: AnyObject? = nil) throws -> CMSampleBuffer {
+  static func makeSample(_ pixelBuffer: CVPixelBuffer, retaining reservation: AnyObject? = nil,
+                         timing suppliedTiming: CMSampleTimingInfo? = nil) throws -> CMSampleBuffer {
     var format: CMVideoFormatDescription?
     var status = CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault,
       imageBuffer: pixelBuffer, formatDescriptionOut: &format)
     guard status == noErr, let format else {
       throw NSError(domain: NSOSStatusErrorDomain, code: Int(status))
     }
-    var timing = CMSampleTimingInfo(duration: .invalid,
+    var timing = suppliedTiming ?? CMSampleTimingInfo(duration: .invalid,
       presentationTimeStamp: .zero, decodeTimeStamp: .invalid)
     var sample: CMSampleBuffer?
     status = CMSampleBufferCreateReadyWithImageBuffer(allocator: kCFAllocatorDefault,
@@ -130,7 +131,7 @@ final class YlSampleBufferVideoRenderer {
     guard status == noErr, let sample else {
       throw NSError(domain: NSOSStatusErrorDomain, code: Int(status))
     }
-    if let attachments = CMSampleBufferGetSampleAttachmentsArray(sample,
+    if suppliedTiming == nil, let attachments = CMSampleBufferGetSampleAttachmentsArray(sample,
       createIfNecessary: true) as? [NSMutableDictionary], let first = attachments.first {
       first[kCMSampleAttachmentKey_DisplayImmediately] = true
     }

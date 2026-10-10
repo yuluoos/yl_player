@@ -710,6 +710,68 @@ final class YlMacosAudioTests: XCTestCase {
 
 
   @MainActor
+  func testActualTimedNativeSessionPauseSeekEOFAndClose() async throws {
+    guard #available(macOS 14.0, *) else { throw XCTSkip("Timed native candidate requires macOS 14") }
+    let views = YlMacosVideoViewFactory(), registry = ApplePublicationRegistry()
+    let output = YlMacosTextureOutput(textures: registry, nativeViews: views)
+    let view = views.create(withViewIdentifier: 941, arguments: ["textureId": NSNumber(value: output.textureId)])
+    let window = NSWindow(contentRect: NSRect(x: 100, y: 100, width: 256, height: 144), styleMask: [.titled], backing: .buffered, defer: false)
+    window.isReleasedWhenClosed = false; window.contentView = view; window.orderFront(nil)
+    defer { window.close() }
+    let owner = YlAppleTextureOwner(output: output, onFrame: { _ in })
+    defer { owner.dispose() }
+    let lease = owner.makeLease(identity: .init(sessionId: "timed", loadRequestId: "timed")); owner.commit(lease)
+    let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+      .deletingLastPathComponent().deletingLastPathComponent()
+      .appendingPathComponent("assets/test_media/format_matrix/mkv-avc-aac.mkv")
+    let ledger = YlManagedBufferLedger(), scope = try ledger.makeScope(maxBytes: nil)
+    let prepared = try YlPreparedFallback(source: .init(uri: fixture.absoluteString, kind: .file, formatHint: .matroska, bufferScope: scope), requireHardwareProbe: true)
+    let services = YlPlatformServices(platform: .macos, textureOutput: output,
+      makeDisplayDriver: { YlDisplayTimer(view: view, onTick: $0) }).borrowing(lease)
+    var errors: [String] = [], completions = 0, firstFrames = 0
+    let instance = try YlManagedPlaybackSession(playerId: 941, services: services,
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 1,
+      emit: { callback in
+        if case let .failure(error) = callback.event { errors.append(error.code) }
+        if case let .state(state) = callback.event, state.status == "completed" { completions += 1 }
+        if case .firstFrame = callback.event { firstFrames += 1 }
+      }, timedVideoCandidateEnabled: true)
+    defer { instance.dispose() }
+    instance.setVolume(0); try instance.activate()
+    try await AppleHostCharacterizations.waitFor({ firstFrames == 1 })
+    XCTAssertNil(instance.timedVideoStatistics, "An initially paused preview must not be replaced with an empty timed layer")
+    try instance.play()
+    try await AppleHostCharacterizations.waitFor({ (instance.timedVideoStatistics?.submitted ?? 0) >= 12 }, timeout: 5)
+    try instance.pause()
+    try await Task.sleep(nanoseconds: 100_000_000)
+    let paused = instance.timedVideoStatistics?.submitted
+    try await Task.sleep(nanoseconds: 100_000_000)
+    XCTAssertEqual(instance.timedVideoStatistics?.submitted, paused)
+    for rate: Float in [0.25, 1, 2, 4] {
+      try instance.setPlaybackSpeed(rate)
+      let before = instance.timedVideoStatistics?.submitted ?? 0
+      try instance.play()
+      try await AppleHostCharacterizations.waitFor({ (instance.timedVideoStatistics?.submitted ?? 0) >= before + 3 })
+      try instance.pause()
+    }
+    try instance.setPlaybackSpeed(1); try instance.play()
+    let layer = try XCTUnwrap(view.layer)
+    output.detach(layer)
+    try await Task.sleep(nanoseconds: 50_000_000)
+    output.attach(layer)
+    try await AppleHostCharacterizations.waitFor({ (instance.timedVideoStatistics?.submitted ?? 0) >= 3 })
+    try instance.seek(toMs: 2000, cancellationToken: nil)
+    try instance.play()
+    try await AppleHostCharacterizations.waitFor({ (instance.timedVideoStatistics?.submitted ?? 0) >= 12 })
+    try await AppleHostCharacterizations.waitFor({ completions == 1 }, timeout: 8)
+    XCTAssertEqual(firstFrames, 1); XCTAssertTrue(errors.isEmpty)
+    XCTAssertFalse(instance.timedVideoStatistics?.pending ?? true)
+    instance.dispose(); owner.dispose()
+    try await AppleHostCharacterizations.waitFor({ ledger.snapshot.currentBytes == 0 }, timeout: 3)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+  }
+
+  @MainActor
   func testActualDecodedTerminalContinuousObservation() async throws {
     let env = ProcessInfo.processInfo.environment
     let timing = DisplayTimingProbe(enabled: env["YL_DECODED_TIMING_DIAGNOSTICS"] == "1")

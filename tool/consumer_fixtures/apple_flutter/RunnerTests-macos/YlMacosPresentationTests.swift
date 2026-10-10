@@ -1,12 +1,126 @@
 @testable import yl_player_apple
 import AppKit
 import AVFAudio
+import AVFoundation
 import Foundation
 import VideoToolbox
 import XCTest
 import YlFFmpegBridge
 
 final class YlMacosPresentationTests: XCTestCase {
+  @MainActor
+  func testNativeTimedEndpointFreezesAndRetires() async throws {
+    guard #available(macOS 14.0, *) else { throw XCTSkip("Timed endpoint requires macOS 14") }
+    let container = CALayer(); container.bounds = CGRect(x: 0, y: 0, width: 32, height: 32)
+    let endpoint = try YlMacosTimedVideoEndpoint(container: container, onFailure: { _ in XCTFail("Unexpected native renderer error") })
+    let layer = try XCTUnwrap(container.sublayers?.first as? AVSampleBufferDisplayLayer)
+    let timebase = try XCTUnwrap(layer.controlTimebase)
+    XCTAssertEqual(CMTimebaseGetRate(timebase), 0)
+    let now = YlPresentationCoordinator.hostTimeUs()
+    endpoint.update(.init(positionUs: 1_000_000, hostTimeUs: now, rate: 2, playing: true), generation: 9)
+    XCTAssertEqual(CMTimebaseGetRate(timebase), 2)
+    endpoint.update(.init(positionUs: 1_200_000, hostTimeUs: now, rate: 2, playing: false), generation: 9)
+    XCTAssertEqual(CMTimebaseGetRate(timebase), 0)
+    XCTAssertEqual(CMTimeGetSeconds(CMTimebaseGetTime(timebase)), 1.2, accuracy: 0.001)
+    XCTAssertFalse(endpoint.enqueue(.init(payload: NSObject(), ptsUs: 1, durationUs: 1, keyframe: true, generation: 8)), "Stale generation is rejected before interpreting the payload")
+    let retired = expectation(description: "native layer retired")
+    endpoint.retire(removingImage: true) { retired.fulfill() }
+    XCTAssertTrue(endpoint.isRetired)
+    await fulfillment(of: [retired], timeout: 2)
+    XCTAssertTrue(container.sublayers?.isEmpty ?? true)
+    XCTAssertFalse(endpoint.enqueue(.init(payload: NSObject(), ptsUs: 1, durationUs: 1, keyframe: true, generation: 9)))
+  }
+
+  private final class PumpOutput: YlTimedVideoEndpoint {
+    let lock = NSLock()
+    var ready = true
+    var closed = false
+    private var values: [Int64] = []
+    var pts: [Int64] { lock.withLock { values } }
+    func update(_ snapshot: YlPresentationClockSnapshot, generation: UInt64) {}
+    func enqueue(_ frame: YlFrameEnvelope) -> Bool {
+      lock.withLock { guard ready && !closed else { return false }; values.append(frame.ptsUs); return true }
+    }
+    func retire(removingImage: Bool, completion: @escaping () -> Void) {
+      lock.withLock { closed = true }; completion()
+    }
+  }
+  private final class TimedClockBox {
+    let lock = NSLock()
+    var value = YlPresentationClockSnapshot(positionUs: 0, hostTimeUs: 0, rate: 1, playing: false)
+    func snapshot() -> YlPresentationClockSnapshot { lock.withLock { value } }
+    func set(_ position: Int64, playing: Bool) {
+      lock.withLock { value = .init(positionUs: position, hostTimeUs: position, rate: 1, playing: playing) }
+    }
+  }
+
+  func testTimedPumpStopsAdmissionOnPause() {
+    let scheduler = YlFrameScheduler(), endpoint = PumpOutput(), clock = TimedClockBox()
+    let queue = DispatchQueue(label: "test.timed.pause")
+    for pts: Int64 in [0, 40_000, 80_000] {
+      XCTAssertTrue(scheduler.enqueue(.init(payload: NSObject(), ptsUs: pts, durationUs: 40_000, keyframe: true, generation: 1)))
+    }
+    let pump = YlTimedVideoPump(scheduler: scheduler, endpoint: endpoint, clockSnapshot: clock.snapshot, generation: 1, queue: queue)
+    defer { pump.stop {}; queue.sync {} }
+    pump.synchronize(); queue.sync {}
+    XCTAssertTrue(endpoint.pts.isEmpty)
+    clock.set(0, playing: true); pump.synchronize(); queue.sync {}
+    XCTAssertEqual(endpoint.pts, [0, 40_000])
+    clock.set(10_000, playing: false); pump.synchronize(); queue.sync {}
+    XCTAssertEqual(endpoint.pts, [0, 40_000])
+    clock.set(100_000, playing: true); pump.synchronize(); queue.sync {}
+    XCTAssertEqual(endpoint.pts, [0, 40_000, 80_000])
+  }
+
+  func testTimedPumpCloseFencesReadyCallback() {
+    let scheduler = YlFrameScheduler(), endpoint = PumpOutput(), clock = TimedClockBox()
+    endpoint.ready = false; clock.set(0, playing: true)
+    let queue = DispatchQueue(label: "test.timed.close")
+    var payload: NSObject? = NSObject(); weak var retained = payload
+    XCTAssertTrue(scheduler.enqueue(.init(payload: payload!, ptsUs: 0, durationUs: 1, keyframe: true, generation: 1)))
+    payload = nil
+    let pump = YlTimedVideoPump(scheduler: scheduler, endpoint: endpoint, clockSnapshot: clock.snapshot, generation: 1, queue: queue)
+    pump.synchronize(); queue.sync {}
+    XCTAssertTrue(pump.hasPendingPresentation); XCTAssertNotNil(retained)
+    pump.stop {}; queue.sync {}
+    endpoint.lock.withLock { endpoint.ready = true }
+    pump.synchronize(); queue.sync {}
+    XCTAssertTrue(endpoint.pts.isEmpty); XCTAssertFalse(pump.hasPendingPresentation)
+    XCTAssertNil(retained, "Closing releases a frame waiting for native capacity")
+    pump.stop {}; queue.sync {}
+  }
+
+  func testTimedEOFKeepsFutureVideoPending() {
+    let scheduler = YlFrameScheduler(), endpoint = PumpOutput(), clock = TimedClockBox()
+    let queue = DispatchQueue(label: "test.timed.eof")
+    clock.set(0, playing: true)
+    XCTAssertTrue(scheduler.enqueue(.init(payload: NSObject(), ptsUs: 40_000, durationUs: 40_000, keyframe: true, generation: 1)))
+    let pump = YlTimedVideoPump(scheduler: scheduler, endpoint: endpoint, clockSnapshot: clock.snapshot, generation: 1, queue: queue)
+    defer { pump.stop {}; queue.sync {} }
+    pump.synchronize(); queue.sync {}
+    XCTAssertTrue(scheduler.pendingPTS.isEmpty); XCTAssertTrue(pump.hasPendingPresentation)
+    clock.set(50_000, playing: true); pump.synchronize(); queue.sync {}
+    XCTAssertTrue(pump.hasPendingPresentation, "Last frame duration remains pending after its PTS")
+    clock.set(80_000, playing: true); pump.synchronize(); queue.sync {}
+    XCTAssertFalse(pump.hasPendingPresentation)
+  }
+
+  func testTimedSamplesCarryPTSWithoutImmediateDisplay() throws {
+    var pixel: CVPixelBuffer?
+    XCTAssertEqual(CVPixelBufferCreate(kCFAllocatorDefault, 2, 2, kCVPixelFormatType_32BGRA, nil, &pixel), kCVReturnSuccess)
+    var token: NSObject? = NSObject(); weak var held = token
+    var sample: CMSampleBuffer? = try YlSampleBufferVideoRenderer.makeSample(try XCTUnwrap(pixel), retaining: token,
+      timing: .init(duration: CMTime(value: 40_000, timescale: 1_000_000), presentationTimeStamp: CMTime(value: 7_000_000, timescale: 1_000_000), decodeTimeStamp: .invalid))
+    token = nil
+    XCTAssertEqual(CMSampleBufferGetPresentationTimeStamp(try XCTUnwrap(sample)), CMTime(value: 7, timescale: 1))
+    XCTAssertEqual(CMSampleBufferGetDuration(try XCTUnwrap(sample)), CMTime(value: 4, timescale: 100))
+    let attachments = CMSampleBufferGetSampleAttachmentsArray(try XCTUnwrap(sample), createIfNecessary: false) as? [NSDictionary]
+    XCTAssertNotEqual(attachments?.first?[kCMSampleAttachmentKey_DisplayImmediately] as? Bool, true)
+    XCTAssertNotNil(held)
+    sample = nil
+    XCTAssertNil(held)
+  }
+
   private final class RecordingTimedEndpoint: YlTimedVideoEndpoint {
     var pts: [Int64] = []
     var retirement: (() -> Void)?
@@ -33,7 +147,8 @@ final class YlMacosPresentationTests: XCTestCase {
   func testTimedLeaseRejectsBeforeCommitAndAfterReplacement() async throws {
     let output = RecordingTimedOutput()
     // Use one real owner throughout the lifecycle; the output only records the system boundary.
-    let actual = YlAppleTextureOwner(output: output, onFrame: { _ in })
+    var publications: [String] = []
+    let actual = YlAppleTextureOwner(output: output, onFrame: { publications.append($0.sessionId) })
     defer { actual.dispose() }
     let a = actual.makeLease(identity: .init(sessionId: "a", loadRequestId: "a"))
     XCTAssertNil(a.makeTimedVideoEndpoint())
@@ -42,6 +157,8 @@ final class YlMacosPresentationTests: XCTestCase {
     let raw = try XCTUnwrap(output.endpoints.last)
     let frame = YlFrameEnvelope(payload: NSObject(), ptsUs: 1, durationUs: 1, keyframe: true, generation: 1)
     XCTAssertTrue(endpoint.enqueue(frame))
+    await Task.yield()
+    XCTAssertEqual(publications, ["a"], "Timed publication must reach the real host first-frame gate")
     let b = actual.makeLease(identity: .init(sessionId: "b", loadRequestId: "b"))
     actual.commit(b)
     XCTAssertFalse(endpoint.enqueue(frame))

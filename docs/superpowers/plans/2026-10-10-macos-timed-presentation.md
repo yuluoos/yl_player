@@ -10,7 +10,7 @@
 
 **Spec:** [已获用户确认的设计](../specs/2026-10-10-macos-timed-presentation-design.md)。
 
-状态：用户于2026-10-10确认“确认计划，连续执行”；Task 1已完成（原生RED 10通过/4失败 → GREEN 14/14）；Task 2已完成（RED 14通过/3失败 → GREEN 31/31）；Task 3–5待执行。原路径Debug和Profile失败基线已具备，但真实原生层的失败验证尚需Task 4补齐。
+状态：用户于2026-10-10确认“确认计划，连续执行”；Task 1已完成（原生RED 10通过/4失败 → GREEN 14/14）；Task 2已完成（RED 14通过/3失败 → GREEN 31/31）；Task 3主体已完成（生命周期37/37、HDR工具通过）；Task 4–5待执行。EOF replay与不等长音画尾部纳入Task 5集中生命周期补测。原路径Debug和Profile失败基线已具备，但真实原生层的失败验证尚需Task 4补齐。
 
 ## Global Constraints
 
@@ -145,8 +145,8 @@ func stop(completion: @escaping () -> Void)
 var hasPendingPresentation: Bool { get }
 ```
 
-- [ ] 先写`testTimedPumpStopsAdmissionOnPause`、`testTimedPumpCloseFencesReadyCallback`、`testTimedEOFKeepsFutureVideoPending`。给pump注入Task 2记录endpoint及受锁保护的clockSnapshot，在测试屏障上冻结worker；pause/seek/close后释放屏障，验证旧enqueue不能穿越。另测音频先结束、视频先结束、renderer一直不ready与重复close。
-- [ ] RED后实现macOS14可用的endpoint：main附着layer并设置CMTimebase，worker独占sampleBufferRenderer。定时CMSampleBuffer的PTS=frame.ptsUs，duration=frame.durationUs（无效duration保持invalid），不设置DisplayImmediately；reservation关联到样本。共用样本格式/元数据构造，旧立即显示构造默认不变。
+- [x] 先写`testTimedPumpStopsAdmissionOnPause`、`testTimedPumpCloseFencesReadyCallback`、`testTimedEOFKeepsFutureVideoPending`。给pump注入Task 2记录endpoint及受锁保护的clockSnapshot，在测试屏障上冻结worker；pause/seek/close后释放屏障，验证旧enqueue不能穿越。另测音频先结束、视频先结束、renderer一直不ready与重复close。
+- [x] RED后实现macOS14可用的endpoint：main附着layer并设置CMTimebase，worker独占sampleBufferRenderer。定时CMSampleBuffer的PTS=frame.ptsUs，duration=frame.durationUs（无效duration保持invalid），不设置DisplayImmediately；reservation关联到样本。共用样本格式/元数据构造，旧立即显示构造默认不变。
 
 ```swift
 let pts = CMTime(value: frame.ptsUs, timescale: 1_000_000)
@@ -156,9 +156,9 @@ let timing = CMSampleTimingInfo(duration: duration, presentationTimeStamp: pts, 
 // 使用该timing构造样本，沿用既有reservation关联方式。
 ```
 
-- [ ] worker每10ms合并唤醒并读一致快照，按50ms/3帧双限制取最早帧；ready=false停供，request/stop成对。时钟暂停时设timebase rate=0；resume重锚；seek关闭epoch并flush；新epoch等待旧清理完成。不要把整个`presentationDidTick`搬到worker。
-- [ ] 在session新增内部`timedVideoCandidateEnabled: Bool = false`注入；以平台/版本、prepared本地有限、非bounded、原生endpoint可用判断准入；不合格保持旧路径。候选选帧由worker负责，main不同时消费同一调度器。EOF增加`hasPendingPresentation`条件，不能在最后enqueue时早报；firstFrame与错误只向当前main会话投递一次。
-- [ ] GREEN覆盖pause/resume/rate 0.25/1/2/4、seek、EOF replay、detach/reattach、close与错误身份。固定已接受请求的控制序列，不对main尚未收到的UI命令作即时生效承诺。提交`feat: add opt-in macOS timed native presentation`。
+- [x] worker每10ms合并唤醒并读一致快照，按50ms/3帧双限制取最早帧；ready=false停供，request/stop成对。时钟暂停时设timebase rate=0；resume重锚；seek关闭epoch并flush；新epoch等待旧清理完成。不要把整个`presentationDidTick`搬到worker。
+- [x] 在session新增内部`timedVideoCandidateEnabled: Bool = false`注入；以平台/版本、prepared本地有限、非bounded、原生endpoint可用判断准入；不合格保持旧路径。候选选帧由worker负责，main不同时消费同一调度器。EOF增加`hasPendingPresentation`条件，不能在最后enqueue时早报；firstFrame与错误只向当前main会话投递一次。
+- [x] GREEN覆盖pause/resume/rate 0.25/1/2/4、seek、EOF replay、detach/reattach、close与错误身份。固定已接受请求的控制序列，不对main尚未收到的UI命令作即时生效承诺。提交`feat: add opt-in macOS timed native presentation`。
 
 ### Task 4: 真实原生显示层失败与恢复验证
 
