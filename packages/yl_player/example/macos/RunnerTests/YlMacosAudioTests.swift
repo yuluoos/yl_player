@@ -647,14 +647,14 @@ final class YlMacosAudioTests: XCTestCase {
     var configurations: [(candidate: Bool, wraps: Bool, boundary: String)]
     if directory == nil {
       configurations = [true, false].flatMap { wraps in arms.map { ($0, wraps, "none") } }
-      configurations += [(false, false, "hold"), (false, false, "stop")]
+      configurations += [(false, false, "hold"), (false, false, "stop"), (true, false, "stop")]
     } else {
       configurations = [(arms[0], env["YL_AUDIO_PROBE_CALLBACK_WRAPPING"] != "transparent", boundary)]
     }
     for configuration in configurations {
       let candidate = configuration.candidate, wrapCallbacks = configuration.wraps
       let boundaryMode = configuration.boundary
-      if boundaryMode != "none" { XCTAssertFalse(candidate); XCTAssertFalse(wrapCallbacks) }
+      if boundaryMode != "none" { XCTAssertFalse(wrapCallbacks) }
       let longHold = env["YL_AUDIO_PROBE_STOP_TIMING"] == "1"
       let holdSeconds: UInt64 = longHold && boundaryMode == "hold" ? 30 : 2
       var boundaryTiming: [String: TimeInterval] = [:]

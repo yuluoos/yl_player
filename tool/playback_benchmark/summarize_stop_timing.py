@@ -11,8 +11,8 @@ KEYS=('ackReturned','sleepStarted','sleepFinished','actionStarted','actionFinish
       'assertionsFinished','probeEntered','recorderSettled','memoryReadFinished','rowCaptured')
 
 
-def validate_timing_rows(rows, mode):
-    validate_stop_rows(rows,mode,60,'decoded-60.mkv')
+def validate_timing_rows(rows, mode, candidate=False):
+    validate_stop_rows(rows,mode,60,'decoded-60.mkv',candidate=candidate)
     def require(ok,message):
         if not ok:raise ValueError(message)
     require(all(r['timingProfile']=='long-hold-v1' for r in rows), 'Wrong timing profile')
@@ -35,18 +35,21 @@ def validate_timing_rows(rows, mode):
         afterAckSeconds=t['rowCaptured']-t['ackReturned'])
 
 
+def validate_timing_cell(c, candidate=False):
+    if c['result'].get('stopTiming') is not True:raise ValueError('Missing timing collection flag')
+    timing=validate_timing_rows(c['rows'],c['result']['boundaryMode'],candidate=candidate)
+    probes={p['phase']:p for p in c['result']['probes']}
+    for phase,p in probes.items():
+        row=next(r for r in c['rows'] if r['phase']==phase)
+        if not (math.isfinite(p['startedUptime']) and math.isfinite(p['endedUptime']) and row['uptime']<=p['startedUptime']<=p['endedUptime']):raise ValueError('Wrong heap timing')
+    if probes['drained']['endedUptime']>c['rows'][3]['boundaryTiming']['ackReturned']:raise ValueError('ACK preceded heap end')
+    timing['heapStartIntervalSeconds']=probes['intervened']['startedUptime']-probes['drained']['startedUptime']
+    return timing
+
+
 def validate_timing_pair(cells):
-    comparison=validate_pair(cells);timings=[]
-    for c in cells:
-        if c['result'].get('stopTiming') is not True:raise ValueError('Missing timing collection flag')
-        timing=validate_timing_rows(c['rows'],c['result']['boundaryMode'])
-        probes={p['phase']:p for p in c['result']['probes']}
-        for phase,p in probes.items():
-            row=next(r for r in c['rows'] if r['phase']==phase)
-            if not (math.isfinite(p['startedUptime']) and math.isfinite(p['endedUptime']) and row['uptime']<=p['startedUptime']<=p['endedUptime']):raise ValueError('Wrong heap timing')
-        if probes['drained']['endedUptime']>c['rows'][3]['boundaryTiming']['ackReturned']:raise ValueError('ACK preceded heap end')
-        timing['heapStartIntervalSeconds']=probes['intervened']['startedUptime']-probes['drained']['startedUptime']
-        timings.append(timing)
+    comparison=validate_pair(cells)
+    timings=[validate_timing_cell(c) for c in cells]
     hold=next(t for t in timings if t['boundaryMode']=='hold');stop=next(t for t in timings if t['boundaryMode']=='stop')
     coverage={k:hold[k]>=stop[k] for k in ('totalSeconds','afterAckSeconds','heapStartIntervalSeconds')}
     return dict(comparison=comparison,timings=timings,coverage=coverage,longerWaitControlCoversStop=all(coverage.values()),

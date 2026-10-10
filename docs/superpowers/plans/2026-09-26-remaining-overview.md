@@ -324,3 +324,6 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 
 
 2026-10-09分段stop计时及更长纯等待对照完成：首次hold的2份heap超时、stop未启动，保留失败后以同身份/原门限复测；默认透明hold30s/stop2s最终2/2、8/8heap，实际行/ACK后/heap开始窗口均被hold覆盖；本轮同步stop直接测得12.145656s，不回填旧轮精确值或宣称一般上界。定向4/4、工具53/53、夹具4/4、发现678/663，199份证据归档；生产未改。下一项核查候选路径停止耗时，随后评估EOF回收及重播/seek；不会直接引入生产主线程同步stop，准入及整体有界仍开放。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)和[证据](../../../tool/playback_benchmark/macos-stop-timing-observations.json)。
+
+
+2026-10-09默认/候选同步stop同版本对照完成：两独立60s透明路径正式2/2、8/8heap通过，默认2813played/候选2812rendered+1played且未回退。默认stop10.895413s、候选0.053060s，仅单次结果不推断一般上界/统计收益；定向4/4、工具56/56、夹具4/4、发现678/663，157份文件归档。生产与准入未变；下一项同session EOF停止后的seek/重播及事件隔离，随后评估回收策略，整体有界与其他设备平台验收仍开放。见[报告](../reports/2026-09-26-remaining-08-performance-release.md)及[证据](../../../tool/playback_benchmark/macos-stop-paths-observations.json)。

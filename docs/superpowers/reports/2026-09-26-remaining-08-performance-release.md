@@ -1644,3 +1644,32 @@ intervened−drained全进程堆变化为hold -229,680B、stop +612,848B，stop�
 计时校验负例实际RED→GREEN，覆盖缺字段、非有限/倒序时刻、行时间不符、后续快照改写、错误profile/等待和未覆盖控制；未覆盖时明确false。工具53/53、夹具4/4、发现iOS678/macOS663；独立复审与归档校验完成。未重跑完整原生、iOS或1200s长程。见[协议](../../../tool/playback_benchmark/decoded-stop-timing-protocol.md)及[199份原始证据](../../../tool/playback_benchmark/macos-stop-timing-observations.json)。
 
 下一项：对照候选尾部完成路径的同步stop耗时与资源保留，使用同素材/同版本独立进程明确其是否也存在停止延迟，再决定EOF回收与重播/seek验收方案；不直接在生产主线程增加自动stop。 候选默认/生产准入/整体有界仍false，完整P08开放。
+
+
+### 默认/候选同版本停止耗时对照（2026-10-09，base03f0744）
+
+两组使用同一新构建与60.229s AVC/AAC文件，默认透明stop后候选透明stop，独立进程串行。均自然EOF后pause并采drained heap，ACK后等待>=2s，再同步调用唯一原生player.stop；intervened时engine运行且原四节点附着，随后正常close。没有把历史构建12.15s直接与本轮候选混比，也没有新增长等待结论。测试和工具扩展了候选路径，生产代码与准入不变。
+
+正式2/2进程、8/8完整heap通过，采集耗时2.297–3.538s，原8s heap/5s记录清空/30s ACK/180s native/240s parent限制不变。每组总提交2813；候选必须2812 rendered+1尾部playedBack并保持submissionAnchor至intervened，不能靠配置标志冒充实际路径。透明native callback仍为unobserved/null。EOF/资源/事件隔离检查通过，close后立即与>=2s均ledger0、engine停止、player脱离。
+
+| 路径 | playedBack/rendered提交 | 同步stop | ACK后到快照 | drained→intervened |
+| --- | --- | ---: | ---: | ---: |
+| legacy | 2813/0 | 10.895413s | 12.903497s | 15.475183s |
+| candidate | 1/2812 | 0.053060s | 2.055546s | 5.235733s |
+
+本轮默认同步stop为10.895413s，候选为0.053060s，候选减默认为-10.842353s。候选本次测量耗时较小，但各路径只观察一次，不形成统计性改善、普遍延迟上界或生产准入结论。完整分段时刻/各段差额保留，所有检查在同一冻结身份下完成。仍不能据此直接在生产主线程增加EOF同步stop，尤其默认路径需要保留其实际阻塞风险。
+
+| 路径 | 阶段 | heap字节 | LifecycleCompletion | dispatch source | Closure context |
+| --- | --- | ---: | ---: | ---: | ---: |
+| legacy | drained | 22,096,513 | 2813 | 3108 | 3362 |
+| legacy | intervened | 22,720,657 | 未单独识别 | 218 | 391 |
+| legacy | disposed | 21,397,937 | 未单独识别 | 217 | 371 |
+| candidate | drained | 20,809,793 | 未单独识别 | 290 | 544 |
+| candidate | intervened | 23,272,209 | 未单独识别 | 218 | 394 |
+| candidate | disposed | 21,948,129 | 未单独识别 | 217 | 370 |
+
+类型缺失继续记null，不当作零存活。全进程heap同时包含其他框架/缓存及未分类分配，不能用选定类型或单次总量宣称整体有界。此项只比较已自然排空的stop调用，不验证自动回收、继续播放/seek语义、线程迁移或物理输出。
+
+新增路径校验实际RED→GREEN，拒绝候选回退/错误模式、错误profile/构建、进程复用/重叠和缺heap。定向原生4/4（资源测试包含新增候选stop，方法数未增）、工具56/56、夹具4/4、发现iOS678/macOS663；独立复审与归档核验完成。未重跑完整native、iOS或1200s长程。见[协议](../../../tool/playback_benchmark/decoded-stop-paths-protocol.md)和[157份原始证据](../../../tool/playback_benchmark/macos-stop-paths-observations.json)。
+
+下一项：验证同一session在自然EOF并停止原生player后seek到起点/中段再播放，检查音频时钟、首帧/完成事件及重复关闭/迟到事件隔离；默认和候选均覆盖，再决定EOF回收策略，不直接打开生产候选。 defaultEnabled/productionAdmission/downstreamBoundProven继续false；物理音画、设备切换、最低系统/Intel/iOS运行及完整P08仍开放。

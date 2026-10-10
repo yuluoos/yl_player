@@ -115,12 +115,12 @@ def validate_decoded_rows(rows, candidate, expected_seconds=None, expected_fixtu
                 continuousLongPlaybackProof=False, downstreamBoundProven=False)
 
 
-def validate_stop_rows(rows, mode, seconds, fixture):
+def validate_stop_rows(rows, mode, seconds, fixture, candidate=False):
     def require(ok,message):
         if not ok:raise ValueError(message)
     require(mode in ('hold','stop'), 'Unknown stop intervention')
     require([r['phase'] for r in rows]==['configured','completed','drained','intervened','disposed','disposedLater'], 'Wrong stop phases')
-    observation=validate_decoded_rows([r for r in rows if r['phase']!='intervened'],False,seconds,fixture,'transparent')
+    observation=validate_decoded_rows([r for r in rows if r['phase']!='intervened'],candidate,seconds,fixture,'transparent')
     require(all(b['uptime']>a['uptime'] for a,b in zip(rows,rows[1:])), 'Nonmonotonic stop observations')
     require(all(r['boundaryMode']==mode for r in rows), 'Wrong stop mode')
     require(all(r['playerStopCalls']==(1 if mode=='stop' and i>=3 else 0) for i,r in enumerate(rows)), 'Wrong stop call count')
@@ -134,7 +134,7 @@ def validate_stop_rows(rows, mode, seconds, fixture):
     require(all(middle[k]==rows[2][k] for k in ('pid','sessionId','candidate','submissionAnchor','callbackWrapping','callbackObservation','fixtureName','modes')), 'Intervention identity/modes changed')
     require(all(r['modes']==rows[1]['modes'] and r['publicDeltaCount']==rows[2]['publicDeltaCount'] and r['retainedEventCount']==rows[2]['retainedEventCount'] for r in rows[2:]), 'Post EOF publication/submission changed')
     require(middle['retainedDeltaCount']==middle['retainedOrderCount']==0, 'Unbounded intervention recorder')
-    require(seconds!=60 or observation['modes']['playedSubmissions']==2813, 'Wrong formal fixture submission count')
+    require(seconds!=60 or observation['modes']['playedSubmissions']+observation['modes']['renderedSubmissions']==2813, 'Wrong formal fixture submission count')
     return observation
 
 
@@ -156,6 +156,9 @@ def freeze(out, products, extra_files=()):
         'tool/playback_benchmark/decoded-stop-timing-protocol.md',
         'tool/playback_benchmark/summarize_stop_timing.py',
         'tool/playback_benchmark/test_stop_timing.py',
+        'tool/playback_benchmark/decoded-stop-paths-protocol.md',
+        'tool/playback_benchmark/summarize_stop_paths.py',
+        'tool/playback_benchmark/test_stop_paths.py',
         'tool/playback_benchmark/decoded-eof-resources-protocol.md',
         'packages/yl_player/example/assets/test_media/format_matrix/mkv-avc-aac.mkv')]
     files.extend(extra_files)
@@ -177,8 +180,10 @@ def freeze(out, products, extra_files=()):
 
 def collect(arm, count, directory, decoded=False, decoded_seconds=None, callback_wrapping='wrapped', boundary_mode=None, stop_timing=False):
     if stop_timing and boundary_mode is None:raise ValueError('Timing requires stop-boundary mode')
-    if boundary_mode is not None and (boundary_mode not in ('hold','stop') or arm!='legacy' or callback_wrapping!='transparent' or not decoded or decoded_seconds!=60):
-        raise ValueError('Stop boundary requires legacy transparent decoded60s')
+    if boundary_mode is not None and (boundary_mode not in ('hold','stop') or arm not in ('legacy','candidate') or callback_wrapping!='transparent' or not decoded or decoded_seconds!=60):
+        raise ValueError('Stop boundary requires transparent decoded60s')
+    if boundary_mode is not None and arm=='candidate' and (boundary_mode!='stop' or not stop_timing):
+        raise ValueError('Candidate boundary requires timed stop')
     phases=('configured','drained','intervened','disposed') if boundary_mode else PHASES
     if callback_wrapping not in ('wrapped','transparent') or (callback_wrapping=='transparent' and not decoded):
         raise ValueError('Transparent callbacks require decoded playback')
@@ -255,10 +260,10 @@ def collect(arm, count, directory, decoded=False, decoded_seconds=None, callback
             result['testExitCode']=proc.returncode
             try:
                 rows=[json.loads(x) for x in (out/'rows.jsonl').read_text().splitlines()]
-                result['observation']=validate_stop_rows(rows,boundary_mode,decoded_seconds,fixture.name) if boundary_mode else validate_decoded_rows(rows,arm=='candidate',decoded_seconds,fixture.name if fixture else None,callback_wrapping) if decoded else validate_rows(rows,arm=='candidate',count)
+                result['observation']=validate_stop_rows(rows,boundary_mode,decoded_seconds,fixture.name,candidate=arm=='candidate') if boundary_mode else validate_decoded_rows(rows,arm=='candidate',decoded_seconds,fixture.name if fixture else None,callback_wrapping) if decoded else validate_rows(rows,arm=='candidate',count)
                 if stop_timing:
                     from summarize_stop_timing import validate_timing_rows
-                    result['timing']=validate_timing_rows(rows,boundary_mode)
+                    result['timing']=validate_timing_rows(rows,boundary_mode,candidate=arm=='candidate')
                 for name,sha in {**identity['sourceHashes'],**identity['binaryHashes']}.items():
                     if digest(ROOT/name)!=sha:raise ValueError('Source/binary changed: '+name)
             except (OSError,ValueError,KeyError,TypeError) as error:result['errors'].append(repr(error))
