@@ -9,6 +9,51 @@ import YlFFmpegBridge
 
 final class YlMacosPresentationTests: XCTestCase {
   @MainActor
+  func testTimedPausedPixelBelongsToCurrentGeneration() async throws {
+    guard #available(macOS 14.4, *) else { throw XCTSkip("Displayed pixel readback requires macOS 14.4") }
+    let view = NSView(frame: NSRect(x: 0, y: 0, width: 64, height: 64)); view.wantsLayer = true
+    let window = NSWindow(contentRect: view.bounds, styleMask: [.titled], backing: .buffered, defer: false)
+    window.isReleasedWhenClosed = false; window.contentView = view; window.orderFront(nil)
+    defer { window.close() }
+    let container = try XCTUnwrap(view.layer)
+    func pixel(_ green: UInt8) throws -> CVPixelBuffer {
+      var buffer: CVPixelBuffer?
+      XCTAssertEqual(CVPixelBufferCreate(kCFAllocatorDefault, 16, 16, kCVPixelFormatType_32BGRA,
+        [kCVPixelBufferIOSurfacePropertiesKey: [:]] as CFDictionary, &buffer), kCVReturnSuccess)
+      let result = try XCTUnwrap(buffer)
+      CVPixelBufferLockBaseAddress(result, [])
+      let base = try XCTUnwrap(CVPixelBufferGetBaseAddress(result)).assumingMemoryBound(to: UInt8.self)
+      for y in 0..<16 { for x in 0..<16 {
+        let i = y * CVPixelBufferGetBytesPerRow(result) + 4*x
+        base[i] = 0; base[i+1] = green; base[i+2] = 0; base[i+3] = 255
+      } }
+      CVPixelBufferUnlockBaseAddress(result, []); return result
+    }
+    for generation: UInt64 in [1, 2] {
+      let endpoint = try YlMacosTimedVideoEndpoint(container: container, onFailure: { _ in XCTFail("Native pixel failure") })
+      let layer = try XCTUnwrap(container.sublayers?.last as? AVSampleBufferDisplayLayer)
+      let pts: Int64 = generation == 1 ? 0 : 2_000_000
+      endpoint.update(.init(positionUs: pts, hostTimeUs: YlPresentationCoordinator.hostTimeUs(), rate: 1, playing: false), generation: generation)
+      let shade: UInt8 = generation == 1 ? 32 : 200
+      XCTAssertTrue(endpoint.enqueue(.init(payload: try pixel(shade), ptsUs: pts, durationUs: 40_000, keyframe: true, generation: generation)))
+      if generation == 2 {
+        XCTAssertFalse(endpoint.enqueue(.init(payload: try pixel(32), ptsUs: 0, durationUs: 40_000, keyframe: true, generation: 1)))
+      }
+      try await Task.sleep(nanoseconds: 200_000_000)
+      let displayed = try XCTUnwrap(layer.sampleBufferRenderer.displayedPixelBuffer())
+      XCTAssertEqual(CVPixelBufferGetPixelFormatType(displayed), kCVPixelFormatType_32BGRA)
+      CVPixelBufferLockBaseAddress(displayed, .readOnly)
+      let bytes = try XCTUnwrap(CVPixelBufferGetBaseAddress(displayed)).assumingMemoryBound(to: UInt8.self)
+      XCTAssertEqual(Double(bytes[1]), Double(shade), accuracy: 2)
+      CVPixelBufferUnlockBaseAddress(displayed, .readOnly)
+      let retired = expectation(description: "pixel epoch retired")
+      endpoint.retire(removingImage: true) { retired.fulfill() }
+      await fulfillment(of: [retired], timeout: 2)
+      XCTAssertTrue(container.sublayers?.isEmpty ?? true)
+    }
+  }
+
+  @MainActor
   func testNativeTimedEndpointFreezesAndRetires() async throws {
     guard #available(macOS 14.0, *) else { throw XCTSkip("Timed endpoint requires macOS 14") }
     let container = CALayer(); container.bounds = CGRect(x: 0, y: 0, width: 32, height: 32)

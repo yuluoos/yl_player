@@ -166,8 +166,8 @@ let timing = CMSampleTimingInfo(duration: duration, presentationTimeStamp: pts, 
 
 **Interfaces:** 同一真实source→managed session→owner→lease→附着原生endpoint；观察记录分列`submitted`、`applicationDrops`、`systemMetrics`、`workerMaxGapSeconds`、`candidateActuallyUsed`。`systemMetrics`缺失为null，不默认0。
 
-- [ ] 写`testActualTimedSurfaceSurvivesMainThreadStall`。以现有实际AVC/AAC素材和真实macOS输出创建测试窗口，等待稳定播放；通过main上的250ms阻塞与worker时间戳屏障证明发生了干预。先旧路径RED，再候选GREEN。两者共享媒体与测量区间，使用同一测试实现的两种注入值。
-- [ ] collector先写RED，要求以下坏记录均拒绝：
+- [x] 写`testActualTimedSurfaceSurvivesMainThreadStall`。以现有实际AVC/AAC素材和真实macOS输出创建测试窗口，等待稳定播放；通过main上的250ms阻塞与worker时间戳屏障证明发生了干预。先旧路径RED，再候选GREEN。两者共享媒体与测量区间，使用同一测试实现的两种注入值。
+- [x] collector先写RED，要求以下坏记录均拒绝：
 
 ```python
 invalid_records = [
@@ -178,8 +178,8 @@ invalid_records = [
 # 每项必须产生明确的门禁失败，不能由submitted>0转为通过。
 ```
 
-- [ ] 接入macOS14.4+公开性能指标，保存原始total/dropped/corrupted/accumulated delay及测量起止差；检查非零总帧数、单调计数与真实candidate启用。系统返回nil时明确“不可验收”，不能重复等待直到碰巧有数据。对暂停末帧使用`copyDisplayedPixelBuffer`验证可辨识像素，播放中不能调用它推断连续性。
-- [ ] 执行确定性main阻塞的前后对照、暂停末帧与seek新代检查；关闭后验证ledger回零且没有晚到画面/事件。同步记录worker空档，若主线程独立但worker也饿死，记录失败并定位，不扩容掩盖。提交`test: verify timed native output under main-thread stalls`。
+- [x] 接入macOS14.4+公开性能指标，保存原始total/dropped/corrupted/accumulated delay及测量起止差；检查非零总帧数、单调计数与真实candidate启用。系统返回nil时明确“不可验收”，不能重复等待直到碰巧有数据。对暂停末帧使用`copyDisplayedPixelBuffer`验证可辨识像素，播放中不能调用它推断连续性。
+- [x] 执行确定性main阻塞的前后对照、暂停末帧与seek新代检查；关闭后验证ledger回零且没有晚到画面/事件。同步记录worker空档，若主线程独立但worker也饿死，记录失败并定位，不扩容掩盖。提交`test: verify timed native output under main-thread stalls`。
 
 ### Task 5: 真实激活、集中回归与准入结论
 

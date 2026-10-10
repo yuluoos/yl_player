@@ -1,5 +1,6 @@
 @testable import yl_player_apple
 import AppKit
+import AVFoundation
 import AVFAudio
 import Foundation
 import Darwin
@@ -708,6 +709,118 @@ final class YlMacosAudioTests: XCTestCase {
     }
   }
 
+
+  @MainActor
+  func testActualTimedSurfaceSurvivesMainThreadStall() async throws {
+    try await runTimedSurfaceObservation(stall: true)
+  }
+
+  @MainActor
+  private func runTimedSurfaceObservation(stall: Bool) async throws {
+    guard #available(macOS 14.4, *) else { throw XCTSkip("Native performance metrics require macOS 14.4") }
+    let env = ProcessInfo.processInfo.environment
+    let candidate = env["YL_TIMED_CANDIDATE"] != "0"
+    let views = YlMacosVideoViewFactory(), registry = ApplePublicationRegistry()
+    let output = YlMacosTextureOutput(textures: registry, nativeViews: views)
+    let view = views.create(withViewIdentifier: 942, arguments: ["textureId": NSNumber(value: output.textureId)])
+    let window = NSWindow(contentRect: NSRect(x: 100, y: 100, width: 256, height: 144), styleMask: [.titled], backing: .buffered, defer: false)
+    window.isReleasedWhenClosed = false; window.contentView = view; window.orderFront(nil)
+    defer { window.close() }
+    let owner = YlAppleTextureOwner(output: output, onFrame: { _ in }); defer { owner.dispose() }
+    let lease = owner.makeLease(identity: .init(sessionId: "native-observation", loadRequestId: "native-observation")); owner.commit(lease)
+    let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+      .appendingPathComponent("assets/test_media/format_matrix/continuous-avc-aac.mkv")
+    let ledger = YlManagedBufferLedger(), scope = try ledger.makeScope(maxBytes: nil)
+    let prepared = try YlPreparedFallback(source: .init(uri: fixture.absoluteString, kind: .file, formatHint: .matroska, bufferScope: scope), requireHardwareProbe: true)
+    let scheduler = YlFrameScheduler(collectDropDiagnostics: true)
+    var failures: [String] = [], activations: [[String: Any]] = [], rows: [[String: Any]] = []
+    let observers = [NSApplication.didBecomeActiveNotification, NSWindow.didBecomeKeyNotification].map { name in
+      NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { _ in
+        activations.append(["name": name.rawValue, "uptime": ProcessInfo.processInfo.systemUptime])
+        if activations.count > 16 { activations.removeFirst() }
+      }
+    }
+    defer { observers.forEach(NotificationCenter.default.removeObserver) }
+    let instance = try YlManagedPlaybackSession(playerId: 942,
+      services: YlPlatformServices(platform: .macos, textureOutput: output, makeDisplayDriver: { YlDisplayTimer(view: view, onTick: $0) }).borrowing(lease),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 31,
+      presentationScheduler: scheduler,
+      emit: { if case let .failure(error) = $0.event { failures.append(error.code) } },
+      timedVideoCandidateEnabled: candidate)
+    defer { instance.dispose() }
+    instance.setVolume(0); try instance.activate(); try instance.play()
+    try await Task.sleep(nanoseconds: 2_000_000_000)
+    let layer = try XCTUnwrap(view.layer?.sublayers?.compactMap { $0 as? AVSampleBufferDisplayLayer }.last)
+    let renderer = layer.sampleBufferRenderer
+    func metrics() async -> [String: Any]? {
+      guard let m = await renderer.videoPerformanceMetrics else { return nil }
+      return ["total": m.totalNumberOfFrames, "dropped": m.numberOfDroppedFrames,
+        "corrupted": m.numberOfCorruptedFrames, "accumulatedDelay": m.totalAccumulatedFrameDelay]
+    }
+    func observe(_ phase: String, system: [String: Any]?) throws {
+      let stats = instance.timedVideoStatistics, drops = scheduler.dropDiagnostics
+      let row: [String: Any] = ["phase": phase, "uptime": ProcessInfo.processInfo.systemUptime,
+        "pid": ProcessInfo.processInfo.processIdentifier, "candidateRequested": candidate,
+        "candidateActuallyUsed": stats != nil && layer.controlTimebase != nil,
+        "submitted": stats?.submitted as Any? ?? NSNull(), "rejected": stats?.rejected as Any? ?? NSNull(),
+        "applicationDrops": drops.total,
+        "dropEvents": drops.events.map { ["uptime": $0.uptime, "count": $0.count, "reason": $0.reason.rawValue] as [String: Any] },
+        "systemMetrics": system as Any? ?? NSNull(),
+        "workerMaxGapSeconds": stats?.maxWorkerGapSeconds as Any? ?? NSNull(),
+        "activationEvents": activations, "failures": failures,
+        "ledgerBytes": ledger.snapshot.currentBytes, "ledgerPeak": ledger.snapshot.peakBytes,
+        "pending": stats?.pending ?? false]
+      rows.append(row)
+      if let directory = env["YL_TIMED_DIRECTORY"] {
+        let path = URL(fileURLWithPath: directory).appendingPathComponent("rows.jsonl")
+        if !FileManager.default.fileExists(atPath: path.path) { FileManager.default.createFile(atPath: path.path, contents: nil) }
+        let handle = try FileHandle(forWritingTo: path); defer { try? handle.close() }
+        try handle.seekToEnd(); try handle.write(contentsOf: JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10]))
+      }
+    }
+    let before = await metrics(); try observe("playing", system: before)
+    let start = ProcessInfo.processInfo.systemUptime
+    var stallSeconds = 0.0, submittedDuringStall = 0
+    if stall {
+      let submitted = instance.timedVideoStatistics?.submitted ?? 0
+      // Deliberately block the UI thread only; decoder and timed worker remain runnable.
+      usleep(250_000)
+      stallSeconds = ProcessInfo.processInfo.systemUptime - start
+      submittedDuringStall = (instance.timedVideoStatistics?.submitted ?? 0) - submitted
+      try await Task.sleep(nanoseconds: 1_000_000_000)
+    } else {
+      let seconds = env["YL_TIMED_LONG"] == "1" ? 1200.0 : 30.0
+      repeat {
+        try await Task.sleep(nanoseconds: 1_000_000_000)
+        try observe("playing", system: nil)
+      } while ProcessInfo.processInfo.systemUptime - start < seconds && failures.isEmpty
+    }
+    let after = await metrics(); try observe("activeEnd", system: after)
+    let activeDrops = scheduler.lateFrameDropCount
+    try instance.pause(); try await Task.sleep(nanoseconds: 100_000_000)
+    let pausedPixel = renderer.displayedPixelBuffer()
+    let pixelPresent = pausedPixel != nil
+    instance.dispose(); owner.dispose()
+    try await AppleHostCharacterizations.waitFor({ ledger.snapshot.currentBytes == 0 }, timeout: 3)
+    try observe("disposed", system: nil)
+    try await Task.sleep(nanoseconds: 100_000_000); try observe("disposedLater", system: nil)
+    let record: [String: Any] = ["rows": rows, "stallSeconds": stallSeconds, "submittedDuringStall": submittedDuringStall,
+      "pausedPixelPresent": pixelPresent]
+    let data = try JSONSerialization.data(withJSONObject: record, options: [.sortedKeys])
+    let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+    attachment.name = "timed-native-observation"; attachment.lifetime = .keepAlways; add(attachment)
+    if let directory = env["YL_TIMED_DIRECTORY"] { try data.write(to: URL(fileURLWithPath: directory).appendingPathComponent("observation.json")) }
+    XCTAssertTrue(failures.isEmpty); XCTAssertTrue(pixelPresent)
+    XCTAssertNotNil(before); XCTAssertNotNil(after)
+    XCTAssertGreaterThan((after?["total"] as? Int ?? 0) - (before?["total"] as? Int ?? 0), 0)
+    XCTAssertEqual((after?["dropped"] as? Int ?? -1) - (before?["dropped"] as? Int ?? 0), 0)
+    XCTAssertEqual(activeDrops, 0)
+    if stall {
+      XCTAssertGreaterThanOrEqual(stallSeconds, 0.25)
+      XCTAssertGreaterThanOrEqual(submittedDuringStall, 4)
+    }
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+  }
 
   @MainActor
   func testActualTimedNativeSessionPauseSeekEOFAndClose() async throws {
