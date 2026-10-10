@@ -741,6 +741,18 @@ final class YlMacosAudioTests: XCTestCase {
     defer { instance.dispose() }
     let renderer = try XCTUnwrap(factory.renderers.first)
     var records: [[String: Any]] = []
+    // Passive, bounded observation only; the external diagnostic owns activation.
+    var activationEvents: [[String: Any]] = []
+    let activationObservers = env["YL_DECODED_ACTIVATION_DIAGNOSTICS"] != "1" ? [] : [
+      NSApplication.didBecomeActiveNotification, NSApplication.didResignActiveNotification,
+      NSWindow.didBecomeKeyNotification, NSWindow.didResignKeyNotification,
+    ].map { name in
+      NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { _ in
+        activationEvents.append(["name": name.rawValue, "uptime": ProcessInfo.processInfo.systemUptime])
+        if activationEvents.count > 16 { activationEvents.removeFirst() }
+      }
+    }
+    defer { activationObservers.forEach(NotificationCenter.default.removeObserver) }
     func observe(_ phase: String) throws {
       let diagnostics = scheduler.dropDiagnostics
       let failureState = eventLock.withLock { (failures, factory.failureProbe.snapshot) }
@@ -749,6 +761,8 @@ final class YlMacosAudioTests: XCTestCase {
       let audio = renderer.renderedAudioTime
       let audioUs = audio.map { Int64(Double($0.sampleTime) * 1_000_000 / $0.sampleRate) }
       let row: [String: Any] = ["phase": phase, "pid": ProcessInfo.processInfo.processIdentifier,
+        "activationEvents": activationEvents,
+        "applicationActive": NSApp.isActive, "activationPolicy": NSApp.activationPolicy().rawValue,
         "generation": 17, "uptime": ProcessInfo.processInfo.systemUptime,
         "audioUs": audioUs as Any? ?? NSNull(), "positionUs": scheduler.positionUs,
         "videoPTS": scheduler.videoPTS, "videoFrames": scheduler.videoFrames, "published": output.published,

@@ -1,6 +1,6 @@
 # Apple 音频最终尾部候选接入 Implementation Plan
 
-当前状态（2026-10-10）：R5本机完整回归与独立短/长门禁已完成，详见[最新显示调度及验收记录](../reports/2026-10-10-display-cadence-latency.md)。历史调度失败的具体根因、A5整体资源边界和R4设备/物理输出格仍开放。下文按阶段保留历史执行结果，不把后续通过回填为早期失败已修复。
+当前状态（2026-10-10）：R5本机完整回归与独立短/长门禁已完成，详见[最新显示调度及验收记录](../reports/2026-10-10-display-cadence-latency.md)。首次激活阻塞主线程的触发路径已定位，见[新根因记录](../reports/2026-10-10-display-activation-root-cause.md)；激活卡顿的渲染修复、A5整体资源边界和R4设备/物理输出格仍开放。下文按阶段保留历史执行结果，不把后续通过回填为早期失败已修复。
 
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking. 延续当前会话自行执行方式；本计划不自动启动子代理。
