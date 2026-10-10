@@ -108,8 +108,6 @@ def run(command):
                         "-d",
                         "-i",
                         "-u",
-                        "-t",
-                        "240",
                         "-w",
                         str(process.pid),
                     ]

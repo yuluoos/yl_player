@@ -1,5 +1,8 @@
 # Apple 音频最终尾部候选接入 Implementation Plan
 
+当前状态（2026-10-10）：R5本机完整回归与独立短/长门禁已完成，详见[最新显示调度及验收记录](../reports/2026-10-10-display-cadence-latency.md)。历史调度失败的具体根因、A5整体资源边界和R4设备/物理输出格仍开放。下文按阶段保留历史执行结果，不把后续通过回填为早期失败已修复。
+
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking. 延续当前会话自行执行方式；本计划不自动启动子代理。
 
 **Goal:** 将已验证的工具策略接入默认关闭的 macOS 本地有限点播测试路径，验证真实 renderer、账本、媒体时钟和控制操作，形成可审计的生产准入结论。
@@ -583,3 +586,13 @@ AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 o
 - [ ] A5整体资源边界和R4设备/物理输出格仍开放，完整P08未关闭。
 
 详见[当前R5记录及准入矩阵](../reports/2026-10-09-audio-eof-admission.md)、[失败后诊断协议](../../../tool/playback_benchmark/display-stall-followup-protocol.md)与[原始归档](../../../tool/playback_benchmark/apple-audio-final-local-observations.json)。
+
+### R5显示回调边界与长播环境修正（2026-10-10，base 2235024）
+
+- [x] 补齐原生cadence入口、refresh、body及主运行循环活动的有界、默认关闭诊断。120.106s/310.398s均未复现活动drop；所见慢间隔位于回调进入之前，原55s丢帧的具体根因仍未证明。
+- [x] 实测发现并修正唤醒工具240s到期缺陷；保护跟随owned进程生命周期，跨240s仍有效，退出无残留，不修改系统睡眠设置。
+- [x] 保留首次全套674/1/0；修正EOF观察等待内部状态而未等公开异步回调的竞态，原期限及恰好一次断言不变。定向1/1后新完整套件675/675，零跳过，462源码/5二进制身份保持。
+- [x] 新同版本无探针short30.029463s、770帧、活动drop/order0、最大落后23.125ms，释放检查通过。关闭阶段额外enqueueTimeout1单列。
+- [x] 同版本无探针长播已通过：1201.167654s、28,915帧，活动drop/order0，最大落后48.250ms，关闭后释放检查通过；同一462项输入/5份二进制身份核对一致。
+
+详见[显示调度记录](../reports/2026-10-10-display-cadence-latency.md)。A5不准入、R4设备条件和原失败根因仍保持各自边界；不把局部验证当作完整P08完成。

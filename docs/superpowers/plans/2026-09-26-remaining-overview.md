@@ -360,3 +360,7 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 ### 2026-10-10 暂停修正与最终回归通过，长播仍失败
 
 唯一最终复审P2暂停锚点覆盖问题以确定性RED→GREEN修正；最终macOS674/674、iPhone18 Pro Max676通过/3原硬件条件跳过，同身份独立30.031s短播通过。long在55s采样时已有9帧丢弃/199.375ms最大落后，后来线程采样的6帧额外drop单列；失败前缀于340s后中断，不计1200s或关闭通过。一轮有界时序诊断复现1帧，与64.599ms tickGap相关，但根因未证明。R5及当前任务线仍未全部完成，下一项定位回调入口/refreshCadence区间；候选关闭，A5和外部设备格开放。见[当前矩阵](../reports/2026-10-09-audio-eof-admission.md)与[418份原始归档](../../../tool/playback_benchmark/apple-audio-final-local-observations.json)。
+
+### 当前任务线更新：显示回调边界与验证环境
+
+2026-10-10从2235024继续：已补cadence/refresh/body/运行循环诊断，修复测试唤醒保护240s提前到期及EOF观察竞态；初次全套674/1失败保留，新macOS675/675、无探针短播通过。同版本无探针长播已通过：1201.167654s、28,915帧，活动drop/order0，最大落后48.250ms，关闭后释放检查通过。R5本机功能及连续性门禁完成。原55s调度丢帧的具体根因仍未证明，候选保持不准入，完整P08及设备/资源边界不关闭。详情与后续结果以[显示调度记录](../reports/2026-10-10-display-cadence-latency.md)为准。

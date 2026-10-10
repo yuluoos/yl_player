@@ -1787,3 +1787,7 @@ iOS的MCP等待在300s超时，但原始xcodebuild继续完成同一轮并输出
 [上下文协议](../../../tool/playback_benchmark/display-suite-context-protocol.md)、[复审修正协议](../../../tool/playback_benchmark/paused-submission-anchor-protocol.md)、[失败后有界诊断协议](../../../tool/playback_benchmark/display-stall-followup-protocol.md)、[418份原始归档](../../../tool/playback_benchmark/apple-audio-final-local-observations.json)保留通过、失败、中断、干预时点、身份和复审裁定。每份解压字节/hash、规范身份、普通短门禁及失败前缀/诊断关联均已核对。
 
 **暂停修复、两平台完整回归和本轮有界调查已交付；R5长播门禁仍未通过，当前任务线不能全部标记完成。** 下一项应针对显示回调进入之前及refreshCadence区间补齐可区分的时序证据，先冻结诊断条件；不再无变化重跑长播求通过。R3/A5整体资源/累计保留/兼容回退边界与R4最低OS、Intel、真实路由、物理iOS、校准物理音画格继续开放。defaultEnabled、productionAdmission、downstreamBoundProven均false；不提高最低版本、不接入商业SDK、不自动EOF stop。完整P08与其他计划未完成。
+
+### 显示调度后续与本机门禁（2026-10-10）
+
+新增有界cadence入口/refresh/body与运行循环诊断，当前未复现原55s丢帧，不宣称系统根因已修复。已实测修正验证工具240s提前释放显示保护的问题，并修复EOF观察测试未等异步公开完成事件的竞态，原期限及事件次数断言保留。初次全套674/1失败单独保留；修正后的完整macOS675/675、新无探针短播通过，同版本无探针长播已通过：1201.167654s、28,915帧，活动drop/order0，最大落后48.250ms，关闭后释放检查通过。R5本机功能及连续性门禁完成。见[完整记录](2026-10-10-display-cadence-latency.md)。无新增物理输出或iOS执行证明，A5和R4缺条件格保持开放，候选默认关闭。

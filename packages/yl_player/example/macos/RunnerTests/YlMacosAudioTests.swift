@@ -532,6 +532,41 @@ final class YlMacosAudioTests: XCTestCase {
     XCTAssertEqual(disabled.snapshot["tickCalls"] as? Int, 0)
   }
 
+  func testDisplayTimingAttributesCadenceRefreshAndBodySeparately() throws {
+    var now = 1.0, queued: [() -> Void] = []
+    let probe = DisplayTimingProbe(enabled: true, clock: { now }, dispatchMain: { queued.append($0) })
+    probe.cadence { now = 1.002; probe.tick { now = 1.005 } }
+    now = 1.01; probe.runLoop(activity: CFRunLoopActivity.beforeWaiting.rawValue)
+    now = 1.02; probe.pulse()
+    now = 1.021; try XCTUnwrap(queued.first)(); queued.removeFirst()
+    now = 1.079; probe.runLoop(activity: CFRunLoopActivity.afterWaiting.rawValue)
+    now = 1.08
+    probe.cadence { now = 1.12; probe.tick { now = 1.125 } }
+    let boundary = try XCTUnwrap(probe.snapshot["cadenceBoundary"] as? [String: Any])
+    let event = try XCTUnwrap((boundary["events"] as? [[String: Any]])?.last)
+    XCTAssertEqual(try XCTUnwrap(event["entryGap"] as? Double), 0.08, accuracy: 0.000001)
+    XCTAssertEqual(try XCTUnwrap(event["refreshWork"] as? Double), 0.04, accuracy: 0.000001)
+    XCTAssertEqual(try XCTUnwrap(event["bodyWork"] as? Double), 0.005, accuracy: 0.000001)
+    let loop = try XCTUnwrap(event["runLoop"] as? [[String: Any]])
+    XCTAssertEqual(loop.count, 2)
+    XCTAssertEqual(try XCTUnwrap(loop.first?["uptime"] as? Double), 1.01, accuracy: 0.000001)
+    XCTAssertEqual(try XCTUnwrap(loop.last?["uptime"] as? Double), 1.079, accuracy: 0.000001)
+    let response = try XCTUnwrap((event["mainResponses"] as? [[String: Double]])?.first)
+    XCTAssertEqual(try XCTUnwrap(response["requested"]), 1.02, accuracy: 0.000001)
+    XCTAssertEqual(try XCTUnwrap(response["delivered"]), 1.021, accuracy: 0.000001)
+    for _ in 0..<40 { now += 0.1; probe.cadence { probe.tick {} } }
+    XCTAssertEqual(((probe.snapshot["cadenceBoundary"] as? [String: Any])?["events"] as? [[String: Any]])?.count, 32)
+    probe.stop()
+    let frozen = try JSONSerialization.data(withJSONObject: probe.snapshot, options: [.sortedKeys])
+    now += 1; probe.cadence { probe.tick {} }
+    XCTAssertEqual(try JSONSerialization.data(withJSONObject: probe.snapshot, options: [.sortedKeys]), frozen)
+    let disabled = DisplayTimingProbe(enabled: false)
+    var forwarded = false
+    disabled.cadence { disabled.tick { forwarded = true } }
+    XCTAssertTrue(forwarded)
+    XCTAssertEqual((disabled.snapshot["cadenceBoundary"] as? [String: Any])?["calls"] as? Int, 0)
+  }
+
   // Test-only observer. No frame payloads and at most one outstanding main-queue probe.
   private final class DisplayTimingProbe {
     private let enabled: Bool, clock: () -> Double
@@ -544,6 +579,13 @@ final class YlMacosAudioTests: XCTestCase {
     private var counts = ["tickGap": 0, "tickWork": 0, "mainQueue": 0, "producerGap": 0]
     private var maxima = ["tickGap": 0.0, "tickWork": 0.0, "mainQueue": 0.0, "producerGap": 0.0]
     private var events: [[String: Any]] = []
+    private var cadenceStart: Double?, cadenceBody: Double?, previousCadence: Double?
+    private var cadenceCalls = 0, cadenceTotal = 0
+    private var cadenceMaxima = ["entryGap": 0.0, "refreshWork": 0.0, "bodyWork": 0.0]
+    private var cadenceEvents: [[String: Any]] = []
+    private var mainResponses: [[String: Double]] = []
+    private var runLoopObserver: CFRunLoopObserver?
+    private var runLoopEvents: [[String: Any]] = []
     init(enabled: Bool, clock: @escaping () -> Double = { ProcessInfo.processInfo.systemUptime },
          dispatchMain: @escaping (@escaping () -> Void) -> Void = { DispatchQueue.main.async(execute: $0) }) {
       self.enabled = enabled; self.clock = clock; self.dispatchMain = dispatchMain
@@ -564,6 +606,12 @@ final class YlMacosAudioTests: XCTestCase {
         source.schedule(deadline: .now() + .milliseconds(50), repeating: .milliseconds(50))
         source.setEventHandler { [weak self] in self?.pulse() }
         timer = source; source.resume()
+        let observer = CFRunLoopObserverCreateWithHandler(kCFAllocatorDefault,
+          CFRunLoopActivity.allActivities.rawValue, true, 0) { [weak self] _, activity in
+            self?.runLoop(activity: activity.rawValue)
+          }
+        runLoopObserver = observer
+        CFRunLoopAddObserver(CFRunLoopGetMain(), observer, .commonModes)
       }
     }
     func pulse() {
@@ -580,15 +628,57 @@ final class YlMacosAudioTests: XCTestCase {
         guard let self else { return }
         self.lock.withLock {
           guard !self.stopped, self.pending == request else { return }
-          self.record("mainQueue", start: request, end: self.clock())
+          let delivered = self.clock()
+          self.record("mainQueue", start: request, end: delivered)
+          self.mainResponses.append(["requested": request, "delivered": delivered])
+          if self.mainResponses.count > 16 { self.mainResponses.removeFirst() }
           self.pending = nil; self.completed += 1
         }
+      }
+    }
+    // Wrap the real cadence factory's callback, before YlDisplayTimer refreshes its screen.
+    func runLoop(activity: CFOptionFlags) {
+      lock.withLock {
+        guard enabled, !stopped else { return }
+        runLoopEvents.append(["uptime": clock(), "activity": activity])
+        if runLoopEvents.count > 256 { runLoopEvents.removeFirst() }
+      }
+    }
+    func cadence(_ action: () -> Void) {
+      let entry: (Double, Double?)? = lock.withLock {
+        guard enabled, !stopped else { return nil }
+        let now = clock(), previous = previousCadence
+        previousCadence = now; cadenceStart = now; cadenceBody = nil; cadenceCalls += 1
+        return (now, previous)
+      }
+      action()
+      guard let (start, previous) = entry else { return }
+      lock.withLock {
+        defer { cadenceStart = nil; cadenceBody = nil }
+        guard !stopped, let body = cadenceBody else { return }
+        let end = clock(), gap = previous.map { start - $0 } ?? 0
+        let refresh = body - start, work = end - body
+        for (key, value) in [("entryGap", gap), ("refreshWork", refresh), ("bodyWork", work)] {
+          cadenceMaxima[key] = max(cadenceMaxima[key, default: 0], value)
+        }
+        guard max(gap, refresh, work) >= 0.03 else { return }
+        cadenceTotal += 1
+        let since = previous ?? start
+        let priorIndex = runLoopEvents.lastIndex { ($0["uptime"] as? Double ?? 0) < since } ?? 0
+        let loop = Array(runLoopEvents.suffix(from: priorIndex))
+        cadenceEvents.append(["sequence": cadenceTotal, "previousEntry": previous as Any? ?? NSNull(),
+          "entry": start, "body": body, "end": end, "entryGap": gap,
+          "refreshWork": refresh, "bodyWork": work,
+          "runLoop": loop, "runLoopHistoryTruncated": (loop.first?["uptime"] as? Double ?? since) > since,
+          "mainResponses": mainResponses.filter { $0["delivered", default: 0] >= (previous ?? start) }])
+        if cadenceEvents.count > 32 { cadenceEvents.removeFirst() }
       }
     }
     func tick(_ action: () -> Void) {
       let start: Double? = lock.withLock {
         guard enabled, !stopped else { return nil }
         let now = clock()
+        if cadenceStart != nil { cadenceBody = now }
         if let lastTick { record("tickGap", start: lastTick, end: now) }
         lastTick = now; tickCalls += 1; return now
       }
@@ -598,6 +688,8 @@ final class YlMacosAudioTests: XCTestCase {
     func stop() {
       lock.withLock {
         stopped = true; timer?.cancel(); timer = nil
+        if let observer = runLoopObserver { CFRunLoopRemoveObserver(CFRunLoopGetMain(), observer, .commonModes) }
+        runLoopObserver = nil
         if pending != nil { pending = nil; cancelled += 1 }
       }
     }
@@ -605,10 +697,15 @@ final class YlMacosAudioTests: XCTestCase {
       lock.withLock {
         ["enabled": enabled, "stopped": stopped, "total": total, "counts": counts, "maxima": maxima,
          "events": events, "tickCalls": tickCalls, "probeSent": sent, "probeCompleted": completed,
-         "probeSkipped": skipped, "probeCancelled": cancelled, "probePending": pending != nil]
+         "probeSkipped": skipped, "probeCancelled": cancelled, "probePending": pending != nil,
+         "cadenceBoundary": ["calls": cadenceCalls, "total": cadenceTotal,
+           "maxima": cadenceMaxima, "events": cadenceEvents]]
       }
     }
-    deinit { timer?.cancel() }
+    deinit {
+      timer?.cancel()
+      if let observer = runLoopObserver { CFRunLoopRemoveObserver(CFRunLoopGetMain(), observer, .commonModes) }
+    }
   }
 
 
@@ -629,7 +726,11 @@ final class YlMacosAudioTests: XCTestCase {
     let output = DecodedTexture(scheduler: scheduler)
     let eventLock = NSLock(); var failures: [String] = []
     let instance = try YlManagedPlaybackSession(playerId: 731,
-      services: .init(platform: .macos, textureOutput: output, makeDisplayDriver: { onTick in YlDisplayTimer { timing.tick(onTick) } }),
+      services: .init(platform: .macos, textureOutput: output, makeDisplayDriver: { onTick in
+        YlDisplayTimer(cadenceFactory: { screen, fps, callback in
+          YlSystemDisplayCadence(screen: screen, fallbackFramesPerSecond: fps) { timing.cadence(callback) }
+        }) { timing.tick(onTick) }
+      }),
       configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 17,
       audioRendererFactory: factory, presentationScheduler: scheduler,
       emit: { callback in
@@ -902,7 +1003,11 @@ final class YlMacosAudioTests: XCTestCase {
       try await probe("configured", checkpoint: true)
       playbackStarted = ProcessInfo.processInfo.systemUptime
       try await host.play(command: .init(sessionId: session.sessionId))
-      try await AppleHostCharacterizations.waitFor({ host.initialState.status == .completed }, timeout: expectedSeconds + 10)
+      // Reducer completion precedes the asynchronously queued public state.
+      // Keep the original deadline while waiting for the boundary asserted below.
+      try await AppleHostCharacterizations.waitFor({
+        host.initialState.status == .completed && callbacks.states.contains { $0.status == .completed }
+      }, timeout: expectedSeconds + 10)
       playbackElapsed = ProcessInfo.processInfo.systemUptime - (playbackStarted ?? 0)
       XCTAssertEqual(callbacks.states.filter { $0.status == .completed }.count, 1)
       XCTAssertTrue(callbacks.failures.isEmpty)

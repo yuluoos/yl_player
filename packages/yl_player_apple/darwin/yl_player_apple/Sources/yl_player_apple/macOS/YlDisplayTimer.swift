@@ -89,7 +89,7 @@ final class YlDisplayTimer: YlDisplayDriving {
   deinit { invalidate() }
 }
 
-private final class YlSystemDisplayCadence: YlDisplayCadence {
+final class YlSystemDisplayCadence: YlDisplayCadence {
   private let tickTarget: YlDisplayTickTarget
   private var displayLink: NSObject?
   private var fallbackTimer: Timer?
