@@ -14,17 +14,30 @@ final class YlMediaClock {
   private var lastAudioPosition: (positionUs: Int64, hostTimeUs: Int64)?
   private var rate: Double = 1
   private var playing = false
+  private var paused = false
 
   init(audioTime: (() -> YlRenderedAudioTime?)? = nil) {
     self.audioTime = audioTime
   }
 
   func anchorAudio(ptsUs: Int64, sampleTime: Int64) {
+    anchorAudio(ptsUs: ptsUs, sampleTime: sampleTime, preservingPause: false)
+  }
+
+  func anchorSubmittedAudio(ptsUs: Int64, sampleTime: Int64) {
+    anchorAudio(ptsUs: ptsUs, sampleTime: sampleTime, preservingPause: true)
+  }
+
+  private func anchorAudio(ptsUs: Int64, sampleTime: Int64, preservingPause: Bool) {
     lock.lock()
+    defer { lock.unlock() }
+    // A submission notification can arrive after pause froze the position.
+    // Resume samples the renderer again; replacing this position would lose
+    // the audio already consumed before pause. Initial/seek anchors still apply.
+    guard !preservingPause || !paused else { return }
     mediaAnchorUs = max(0, ptsUs)
     audioSampleAnchor = sampleTime
     lastAudioPosition = nil
-    lock.unlock()
   }
 
   func play(atHostTimeUs hostTimeUs: Int64) {
@@ -38,6 +51,7 @@ final class YlMediaClock {
     audioSampleAnchor = renderedAudioTime?.sampleTime
     lastAudioPosition = nil
     playing = true
+    paused = false
     lock.unlock()
   }
 
@@ -56,12 +70,14 @@ final class YlMediaClock {
     audioSampleAnchor = renderedAudioTime?.sampleTime
     lastAudioPosition = nil
     playing = false
+    paused = true
     lock.unlock()
   }
 
   func seek(to positionUs: Int64) {
     lock.lock()
     mediaAnchorUs = max(0, positionUs)
+    paused = false
     audioSampleAnchor = nil
     lastAudioPosition = nil
     lock.unlock()

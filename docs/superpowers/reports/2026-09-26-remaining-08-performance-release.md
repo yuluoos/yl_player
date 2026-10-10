@@ -1754,3 +1754,36 @@ intervened−drained全进程堆变化为hold -229,680B、stop +612,848B，stop�
 测试专用记录器默认关闭，显式启用时记录tick进入/执行和单待处理主队列探针，32条标量历史、累计计数及stop隔离；生产未改。原生RED→GREEN2/2、工具204/204、夹具4/4；一次诊断1/1，30.027486s、7点、770帧，活动drop/order0、音频漂移+34.764ms、最大落后25.375ms；关闭后另增enqueueTimeout1。最大tick工作2.710ms/间隔33.920ms，mainQueue136.453ms在首个playing采样前，不能用于归因旧活动丢帧。178源码和5二进制hash冻结，94份原始记录保留初始RED测试错误及工具沙箱权限失败。
 
 [协议](../../../tool/playback_benchmark/display-timing-diagnostics-protocol.md)、[归档](../../../tool/playback_benchmark/macos-display-timing-observations.json)、[当前矩阵](2026-10-09-audio-eof-admission.md)。下一项在完整套件上下文中诊断；没有完整回归/长播通过声明，没有重新执行iOS。以后优先iPhone18 Pro Max已确认。根因、资源A5及设备格仍开放，候选关闭。
+
+
+## R5最终回归与暂停修正：长播仍未通过（2026-10-10收尾，base3364768）
+
+正确180s默认/最大预算的完整上下文诊断先通过672/672，456源码/配置/素材与5二进制hash不变；30.032544s活动观察0drop/order、771帧、音频累计偏差+29.706ms、最大选择落后23.125ms。关闭后另增enqueueTimeout1单列。诊断未复现此前5帧失败，不构成根因修复。
+
+整条任务线唯一最终复审发现P2：首次PCM提交事件经main异步送达，若pause先冻结时钟，迟到锚点会覆盖冻结位置；resume以当前sample重设基准，丢失此前已消费区间。真实pipeline→presentation→media clock确定性交错在0/非零PTS均复现；RED为1失败/1初始与seek对照通过（4条位置断言失败）。修正将候选首次提交锚点与普通同步锚点分开：明确暂停时保持冻结位置，resume仍用实际renderer sample，初始/seek后的新映射正常且旧generation隔离。普通同步锚点、资格及默认开关不变。修复后相邻两类67/67通过、0跳过；唯一复审P2已修正，没有新增复审轮。
+
+| 最终检查 | 结果 | 范围 |
+| --- | --- | --- |
+| iOS完整规范套件 | 679项：676通过、0失败、3原硬件条件跳过 | **iPhone18 Pro Max / iOS27.0 / arm64**，本次新执行；457源码hash前后匹配，8二进制hash在运行后捕获 |
+| macOS完整规范套件 | 674/674通过、0跳过 | M1/macOS27.0.1；无时序探针/heap/MSL，180s默认/最大与1200s父预算；457源码+5二进制预先冻结、结束匹配 |
+| 独立无探针short | 30.030762s、7点、770帧；活动drop/order0 | 音频累计偏差+43.113ms、最大选择落后23.125ms，关闭及+2s账本0/pending=false；与完整套件相关源码和5二进制一致 |
+| 同身份long | **失败，未完成1200s** | 首次失败在55.060s采样行出现：9帧丢弃、最大选择落后199.375ms，已违反原零drop/100ms门限；详见下文 |
+| 夹具与发现 | 夹具4/4、source parity1/1；发现iOS680/macOS675 | 每个平台各排除一项仅对侧编译的方法；发现数不冒充运行数 |
+
+iOS的MCP等待在300s超时，但原始xcodebuild继续完成同一轮并输出TEST EXECUTE SUCCEEDED，没有重跑。工具超时收据、原进程结束记录、完整日志和逐身份结果均保留；3项跳过按原Simulator/H264硬件条件逐项校验，不计实际硬件通过，不将旧Pro证据重标Pro Max。既有编译、音频和QoS警告未宣称解决。
+
+### 长播失败与干预边界
+
+普通短门禁先通过才启动一次long，二者178源码hash与5二进制完全一致，沿用原1380s原生/1500s父预算。首次丢帧窗口包含291.249ms、210.449ms显示调度间隔，累计catchUp6、lateAfterCapacity2、enqueueTimeout1；无顺序错误、音频配置失效、启动失败或renderer failure。到220.220s前45条无探针playing行仍累计9帧，已经足以判定不通过，不能用其他指标正常抵消。
+
+仅在失败之后约220s才追加一次30s、5ms间隔的专属测试进程线程采样；期间另增6帧，**采样尾段不能当成无探针证据，也不能用来证明先前9帧的根因**。聚合主线程栈主要在runloop等待，未锁定最初延迟来源。约340.357s最后采样点后向已核对的本轮xcodebuild发SIGINT结束，保留exit75、XCTest中断失败及全部原始行；没有声称达到1200s、自然结束或完成dispose检查。采集器返回complete=false / Missing disposal是中断的附加结果，首次零丢帧和选择落后失败发生在中断之前。源码和二进制未变。
+
+### 一次有界时序诊断
+
+沿用同一二进制，显式打开已验证的tickGap/tickWork/mainQueue/producerGap探针，预先规定最多120s或首次活动drop后一条采样到达就中断，父预算240s，不再线程/heap/MSL采样，不并行构建。该轮在15.010s采样行观察到1次catchUp，补一条后于20.014s诊断前缀结束；原生0通过/1故意中断失败，不计普通短播或长播通过。
+
+活动drop与tickGap **64.599ms**重叠；最大tickWork **4.083ms**。唯一mainQueue **223.586ms**事件结束于第一个playing行之前，属于启动窗口，与活动丢帧不相关；后台最大间隔65.907ms，没有达到100ms producerGap记录阈值。5条原始行、32条有界历史的计数/时间/探针账目及drop关联均离线重算一致。此证据将问题缩小到tick到达/计时窗口，但**不能排除未覆盖区间、refreshCadence、主队列短延迟或系统调度，根因仍未证明**；不据此猜测性修改生产调度或放宽门限。
+
+[上下文协议](../../../tool/playback_benchmark/display-suite-context-protocol.md)、[复审修正协议](../../../tool/playback_benchmark/paused-submission-anchor-protocol.md)、[失败后有界诊断协议](../../../tool/playback_benchmark/display-stall-followup-protocol.md)、[418份原始归档](../../../tool/playback_benchmark/apple-audio-final-local-observations.json)保留通过、失败、中断、干预时点、身份和复审裁定。每份解压字节/hash、规范身份、普通短门禁及失败前缀/诊断关联均已核对。
+
+**暂停修复、两平台完整回归和本轮有界调查已交付；R5长播门禁仍未通过，当前任务线不能全部标记完成。** 下一项应针对显示回调进入之前及refreshCadence区间补齐可区分的时序证据，先冻结诊断条件；不再无变化重跑长播求通过。R3/A5整体资源/累计保留/兼容回退边界与R4最低OS、Intel、真实路由、物理iOS、校准物理音画格继续开放。defaultEnabled、productionAdmission、downstreamBoundProven均false；不提高最低版本、不接入商业SDK、不自动EOF stop。完整P08与其他计划未完成。

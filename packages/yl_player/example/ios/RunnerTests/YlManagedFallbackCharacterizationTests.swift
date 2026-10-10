@@ -495,6 +495,73 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     }
   }
 
+  func testTerminalSubmissionAnchorPreservesPausedPresentationAndResume() async throws {
+    for initialPTS: Int64 in [0, 5_000_000] {
+      let factory = TerminalFactory()
+      let stateLock = NSLock()
+      let pipeline = YlAudioPipeline(bufferBudget: try .make(configuration: .init(map: [:])),
+        lock: stateLock, generation: 7, factory: factory)
+      var rendered = YlRenderedAudioTime(sampleTime: initialPTS, sampleRate: 1_000_000)
+      let presentation = YlPresentationCoordinator(
+        services: .init(platform: .current, textureOutput: Output(), makeDisplayDriver: { _ in Display() }),
+        lock: stateLock, openedAt: 0, positionEventIntervalMs: 100)
+      presentation.configureClock(nil, audioTime: { rendered })
+      pipeline.timeline = presentation
+      pipeline.initializeRenderer()
+      defer { pipeline.discardRenderer() }
+      presentation.seek(to: initialPTS)
+      presentation.play(atHostTimeUs: 0)
+      // The first submission has occurred, but its main-queue delivery is still
+      // pending. MainActor keeps pause ahead of that already-enqueued handler.
+      let callback = try XCTUnwrap(factory.renderers[0].onFirstPCMSubmitted)
+      callback(7, initialPTS)
+      rendered = .init(sampleTime: initialPTS + 20_000, sampleRate: 1_000_000)
+      presentation.pause(atHostTimeUs: 20_000)
+      XCTAssertEqual(presentation.position(atHostTimeUs: 20_000), initialPTS + 20_000)
+      let delivered = expectation(description: "first submission delivered after pause")
+      DispatchQueue.main.async { delivered.fulfill() }
+      await fulfillment(of: [delivered], timeout: 1)
+      XCTAssertEqual(presentation.position(atHostTimeUs: 1_000_000), initialPTS + 20_000,
+        "A late submission must not overwrite the frozen position")
+      presentation.play(atHostTimeUs: 1_000_000)
+      rendered = .init(sampleTime: initialPTS + 40_000, sampleRate: 1_000_000)
+      XCTAssertEqual(presentation.position(atHostTimeUs: 1_020_000), initialPTS + 40_000,
+        "Resume rebases to the current renderer without losing consumed audio")
+    }
+  }
+
+  func testTerminalSubmissionAnchorStillMapsInitialAndSeekedPlayback() async throws {
+    let factory = TerminalFactory()
+    let pipeline = YlAudioPipeline(bufferBudget: try .make(configuration: .init(map: [:])),
+      lock: NSLock(), generation: 7, factory: factory)
+    var rendered = YlRenderedAudioTime(sampleTime: 5_000_000, sampleRate: 1_000_000)
+    let clock = YlMediaClock(audioTime: { rendered })
+    pipeline.timeline = clock
+    pipeline.initializeRenderer()
+    defer { pipeline.discardRenderer() }
+    let callback = try XCTUnwrap(factory.renderers[0].onFirstPCMSubmitted)
+    callback(7, 5_000_000)
+    let initial = expectation(description: "initial anchor delivered before play")
+    DispatchQueue.main.async { initial.fulfill() }
+    await fulfillment(of: [initial], timeout: 1)
+    XCTAssertEqual(clock.position(atHostTimeUs: 0), 5_000_000)
+    clock.play(atHostTimeUs: 0)
+    rendered = .init(sampleTime: 5_020_000, sampleRate: 1_000_000)
+    clock.pause(atHostTimeUs: 20_000)
+    clock.seek(to: 8_000_000)
+    pipeline.adoptGeneration(8); pipeline.resetAnchor()
+    rendered = .init(sampleTime: 8_001_000, sampleRate: 1_000_000)
+    callback(7, 99_000_000) // A stale anchor still cannot replace a seek.
+    callback(8, 8_001_000)
+    let seeked = expectation(description: "new generation anchor delivered")
+    DispatchQueue.main.async { seeked.fulfill() }
+    await fulfillment(of: [seeked], timeout: 1)
+    XCTAssertEqual(clock.position(atHostTimeUs: 1_000_000), 8_001_000)
+    clock.play(atHostTimeUs: 1_000_000)
+    rendered = .init(sampleTime: 8_021_000, sampleRate: 1_000_000)
+    XCTAssertEqual(clock.position(atHostTimeUs: 1_020_000), 8_021_000)
+  }
+
   func testTerminalPipelineAnchorsTrimmedFirstSubmissionAndIgnoresDetachedGeneration() async throws {
     let factory = TerminalFactory(); factory.converter.trimUs = 500
     let pipeline = YlAudioPipeline(bufferBudget: try .make(configuration: .init(map: [:])), lock: NSLock(), generation: 7,

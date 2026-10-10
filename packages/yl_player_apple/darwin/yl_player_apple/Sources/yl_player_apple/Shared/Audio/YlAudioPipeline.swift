@@ -11,6 +11,12 @@ struct YlPlatformAudioRendererFactory: YlAudioRendererMaking {
 }
 protocol YlAudioTimeline: AnyObject {
   func anchorAudio(ptsUs: Int64, sampleTime: Int64)
+  func anchorSubmittedAudio(ptsUs: Int64, sampleTime: Int64)
+}
+extension YlAudioTimeline {
+  func anchorSubmittedAudio(ptsUs: Int64, sampleTime: Int64) {
+    anchorAudio(ptsUs: ptsUs, sampleTime: sampleTime)
+  }
 }
 extension YlMediaClock: YlAudioTimeline {}
 protocol YlAudioPipelineOutput: AnyObject {
@@ -91,7 +97,7 @@ final class YlAudioPipeline {
           guard self.audioRenderer === renderer, self.audioGeneration == generation,
                 !self.audioAnchored else { return }
           self.audioAnchored = true
-          self.timeline?.anchorAudio(ptsUs: max(0, ptsUs), sampleTime: ptsUs)
+          self.timeline?.anchorSubmittedAudio(ptsUs: max(0, ptsUs), sampleTime: ptsUs)
         }
       }
     }

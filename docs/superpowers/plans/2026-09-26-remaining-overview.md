@@ -355,3 +355,8 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 ### 2026-10-09 R5调度诊断接入
 
 已补测试专用有界tick/主队列/后台探针诊断，原生2/2、工具204/204、夹具4/4；一次30.027486s诊断播放未丢帧，不覆盖此前全套中的5帧失败。启动/预热采样前mainQueue136.453ms单列，活动根因未定位；带探针短播不得用作普通长播门禁。下一项在正确180s预算的完整套件上下文诊断，完整R5/P08仍开放。iOS目标偏好明确为 **iPhone 18 Pro Max**。见[当前矩阵](../reports/2026-10-09-audio-eof-admission.md)。
+
+
+### 2026-10-10 暂停修正与最终回归通过，长播仍失败
+
+唯一最终复审P2暂停锚点覆盖问题以确定性RED→GREEN修正；最终macOS674/674、iPhone18 Pro Max676通过/3原硬件条件跳过，同身份独立30.031s短播通过。long在55s采样时已有9帧丢弃/199.375ms最大落后，后来线程采样的6帧额外drop单列；失败前缀于340s后中断，不计1200s或关闭通过。一轮有界时序诊断复现1帧，与64.599ms tickGap相关，但根因未证明。R5及当前任务线仍未全部完成，下一项定位回调入口/refreshCadence区间；候选关闭，A5和外部设备格开放。见[当前矩阵](../reports/2026-10-09-audio-eof-admission.md)与[418份原始归档](../../../tool/playback_benchmark/apple-audio-final-local-observations.json)。

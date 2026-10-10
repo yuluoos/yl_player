@@ -102,6 +102,9 @@ final class YlPresentationCoordinator: YlAudioTimeline {
     mediaClock = provided ?? YlMediaClock(audioTime: audioTime)
   }
   func anchorAudio(ptsUs: Int64, sampleTime: Int64) { mediaClock.anchorAudio(ptsUs: ptsUs, sampleTime: sampleTime) }
+  func anchorSubmittedAudio(ptsUs: Int64, sampleTime: Int64) {
+    mediaClock.anchorSubmittedAudio(ptsUs: ptsUs, sampleTime: sampleTime)
+  }
   func position(atHostTimeUs time: Int64) -> Int64 { mediaClock.position(atHostTimeUs: time) }
   func play(atHostTimeUs time: Int64) { mediaClock.play(atHostTimeUs: time) }
   func pause(atHostTimeUs time: Int64) { mediaClock.pause(atHostTimeUs: time) }
