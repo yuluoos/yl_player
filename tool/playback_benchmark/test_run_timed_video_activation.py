@@ -6,7 +6,7 @@ import subprocess
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch, MagicMock
-from run_timed_video_activation import validate_run, collect
+from run_timed_video_activation import validate_run, collect, remove_thread_performance_checker
 from test_collect_timed_video import observation
 
 
@@ -18,6 +18,17 @@ def sample():
 
 
 class RunnerValidationTests(unittest.TestCase):
+    def test_remove_only_thread_checker_from_owned_manifest(self):
+        config = {'RunnerTests': {
+            'EnvironmentVariables': {'DYLD_INSERT_LIBRARIES': '/usr/lib/libRPAC.dylib', 'PERFC_ENABLE_PROFILE_MODE': '1', 'OTHER': 'kept'},
+            'TestingEnvironmentVariables': {'DYLD_INSERT_LIBRARIES': '/a/libXCTestBundleInject.dylib:/b/libMainThreadChecker.dylib:/usr/lib/libRPAC.dylib', 'PERFC_SUPPRESS_SYSTEM_REPORTS': '1'}}}
+        remove_thread_performance_checker(config)
+        self.assertEqual(config['RunnerTests']['EnvironmentVariables'], {'OTHER': 'kept'})
+        self.assertEqual(config['RunnerTests']['TestingEnvironmentVariables'], {'DYLD_INSERT_LIBRARIES': '/a/libXCTestBundleInject.dylib:/b/libMainThreadChecker.dylib'})
+        original = copy.deepcopy(config)
+        remove_thread_performance_checker(config)
+        self.assertEqual(config, original)
+
     def test_helper_timeout_preserves_failure_and_cleanup(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory); products=root/'products'; products.mkdir()
@@ -33,13 +44,27 @@ class RunnerValidationTests(unittest.TestCase):
             with patch('run_timed_video_activation.identities',return_value={'sourceHashes':{},'binaryHashes':{}}), \
                  patch('run_timed_video_activation.subprocess.run',side_effect=run), \
                  patch('run_timed_video_activation.subprocess.Popen',return_value=process), \
-                 patch('run_timed_video_activation.read_rows',return_value=[{'phase':'playing','pid':123}]), \
-                 patch('run_timed_video_activation.time.monotonic',side_effect=[0,1,12,13]):
+                 patch('run_timed_video_activation.read_rows',return_value=[{'phase':'playing','pid':123}]) as reads, \
+                 patch('run_timed_video_activation.time.monotonic',side_effect=[0,1,2,3,12,13]):
                 self.assertFalse(collect(args))
             self.assertTrue((args.directory/'run.json').exists())
             self.assertTrue((args.directory/'result.json').exists())
             self.assertTrue((args.directory/'activation.json').exists())
             process.terminate.assert_called_once()
+            self.assertEqual(reads.call_count, 2, "Read initial ownership once, then final failure evidence; never reparse growing history while polling")
+
+    def test_checker_removal_requires_runtime_proof(self):
+        for value in [None, True]:
+            o,a,r=sample();r['threadPerformanceCheckerRemoved']=True
+            o['rows'][0]['runtimeDiagnostics']={'threadPerformanceCheckerLoaded': value}
+            self.assertFalse(validate_run(o,a,r)['passed'])
+        o,a,r=sample();r['threadPerformanceCheckerRemoved']=True
+        for row in o['rows']: row['runtimeDiagnostics']={'threadPerformanceCheckerLoaded': False}
+        self.assertTrue(validate_run(o,a,r)['passed'])
+
+    def test_new_runs_cannot_use_legacy_missing_clock_evidence(self):
+        o,a,r=sample(); r['audioClockProtocolRequired']=True
+        self.assertFalse(validate_run(o,a,r)['passed'])
 
     def test_valid(self):
         o,a,r=sample();self.assertTrue(validate_run(o,a,r)['passed'])

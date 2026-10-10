@@ -9,9 +9,30 @@ def number(value):
     return type(value) in (int, float) and math.isfinite(value) and value >= 0
 
 
-def evaluate(observation, *, require_stall=True, require_candidate=True):
+def evaluate(observation, *, require_stall=True, require_candidate=True, require_audio_clock=False):
     failures=[]
     rows=observation.get('rows', [])
+    protocol = observation.get('audioClockProtocol')
+    if require_audio_clock and protocol != 1:
+        failures.append('isolated audio clock protocol missing')
+    if protocol == 1 or require_audio_clock:
+        required = observation.get('audioClockRequired')
+        if type(required) is not bool: failures.append('audio track requirement unavailable')
+        for index, row in enumerate(rows):
+            clock = row.get('audioClock')
+            if not isinstance(clock, dict) or clock.get('required') is not required:
+                failures.append(f'row {index}: audio clock requirement missing or inconsistent'); continue
+            if required is True:
+                if clock.get('isolated') is not True: failures.append(f'row {index}: audio clock not isolated')
+                counts = ['samples', 'staleEvents', 'rejectedObservations']
+                if any(type(clock.get(k)) is not int or clock[k] < 0 for k in counts):
+                    failures.append(f'row {index}: audio clock counts invalid')
+                elif clock['samples'] == 0 or clock['staleEvents'] != 0:
+                    failures.append(f'row {index}: audio clock absent or stale')
+                if any(not number(clock.get(k)) for k in ['maximumReadSeconds', 'maximumAgeSeconds']):
+                    failures.append(f'row {index}: audio clock timings invalid')
+                elif clock['maximumAgeSeconds'] > .1:
+                    failures.append(f'row {index}: audio clock age exceeds 100ms')
     initial=next((r for r in rows if r.get('phase')=='playing'), {})
     final=next((r for r in reversed(rows) if r.get('phase')=='activeEnd'), {})
     if not initial or not final: failures.append('missing measurement boundaries')

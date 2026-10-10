@@ -14,13 +14,15 @@ from collect_timed_video import evaluate, number
 
 
 def validate_run(observation, activation, run, *, candidate=True):
-    result=evaluate(observation, require_stall=False, require_candidate=candidate)
+    result=evaluate(observation, require_stall=False, require_candidate=candidate, require_audio_clock=run.get("audioClockProtocolRequired") is True)
     errors=result['failures']
     if run.get('exceptions'): errors.append('runner exception preserved')
     if run.get('exitCode')!=0: errors.append('native process failed')
     if run.get('unchanged') is not True: errors.append('source/binary identity changed')
     if run.get('ownedProcessExited') is not True: errors.append('owned process cleanup incomplete')
     rows=observation.get('rows', [])
+    if run.get('threadPerformanceCheckerRemoved') is True and (not rows or any(row.get('runtimeDiagnostics',{}).get('threadPerformanceCheckerLoaded') is not False for row in rows)):
+        errors.append('thread checker removal lacks runtime proof')
     first=next((r for r in rows if r.get('phase')=='playing'), {})
     final=next((r for r in rows if r.get('phase')=='activeEnd'), {})
     requested=activation.get('requested')
@@ -68,6 +70,18 @@ def read_rows(path):
     return rows
 
 
+def remove_thread_performance_checker(config):
+    # Mutate only this invocation's copied manifest, preserving XCTest injection
+    # and Main Thread Checker. The project/scheme keeps its diagnostic defaults.
+    for key in ['EnvironmentVariables', 'TestingEnvironmentVariables']:
+        env = config['RunnerTests'].get(key, {})
+        libraries = env.get('DYLD_INSERT_LIBRARIES', '').split(':')
+        remaining = [path for path in libraries if path and Path(path).name != 'libRPAC.dylib']
+        if remaining: env['DYLD_INSERT_LIBRARIES'] = ':'.join(remaining)
+        else: env.pop('DYLD_INSERT_LIBRARIES', None)
+        for name in list(env):
+            if name.startswith('PERFC_'): del env[name]
+
 def collect(args):
     root=Path(__file__).resolve().parents[2]; out=args.directory.resolve();out.mkdir(parents=True,exist_ok=False)
     products=args.products.resolve();app=products/args.configuration/'yl_player_example.app'
@@ -79,26 +93,28 @@ def collect(args):
     if len(manifests)!=1: raise ValueError('Require exactly one arm64 test manifest')
     config=plistlib.loads(manifests[0].read_bytes().replace(b'__TESTROOT__',str(products).encode()))
     config['RunnerTests']['EnvironmentVariables'].update(YL_TIMED_CANDIDATE='1' if args.candidate else '0',YL_TIMED_DIRECTORY=str(out),YL_TIMED_LONG='1' if args.long else '0',YL_TIMED_DIAGNOSTICS='1' if getattr(args,'diagnostics',False) else '0',YL_TIMED_REVEAL='1' if getattr(args,'reveal',False) else '0',YL_TIMED_ALLOW_OCCLUSION='1' if getattr(args,'allow_occlusion',False) else '0')
+    if getattr(args,'without_thread_checker',False): remove_thread_performance_checker(config)
     manifest=out/'probe.xctestrun';manifest.write_bytes(plistlib.dumps(config))
     limit=1320 if args.long else 180
     cmd=[sys.executable,'-B',str(root/'tool/run_with_display_awake.py'),'xcodebuild','test-without-building','-quiet','-xctestrun',str(manifest),'-destination','platform=macOS,arch=arm64','-parallel-testing-enabled','NO','-only-testing:RunnerTests/YlMacosAudioTests/testActualTimedNativeActivationObservation','-test-timeouts-enabled','YES','-default-test-execution-time-allowance',str(limit-30),'-maximum-test-execution-time-allowance',str(limit-30),'-resultBundlePath',str(out)+'.xcresult']
     (out/'command.json').write_text(json.dumps(cmd,indent=2))
-    (out/'protocol.json').write_text(json.dumps(dict(configuration=args.configuration,candidate=args.candidate,diagnostics=getattr(args,'diagnostics',False),revealAt20Seconds=getattr(args,'reveal',False),visibleWindowProtocol=not getattr(args,'allow_occlusion',False),seconds=1200 if args.long else 30,activationAtSeconds=10,instruments=False,physicalOutputProven=False,productionAdmission=False),indent=2))
+    (out/'protocol.json').write_text(json.dumps(dict(audioClockProtocolRequired=True,configuration=args.configuration,candidate=args.candidate,diagnostics=getattr(args,'diagnostics',False),revealAt20Seconds=getattr(args,'reveal',False),visibleWindowProtocol=not getattr(args,'allow_occlusion',False),seconds=1200 if args.long else 30,activationAtSeconds=10,instruments=False,threadPerformanceCheckerRemoved=getattr(args,'without_thread_checker',False),physicalOutputProven=False,productionAdmission=False),indent=2))
     activation={}; owned_pid=None; reason='native completion';start=time.monotonic();first_seen=None; code=-1; errors=[]
     with (out/'xcode.log').open('w') as log:
         process=subprocess.Popen(cmd,cwd=root,stdout=log,stderr=log)
         try:
             while process.poll() is None:
-                rows=read_rows(out/'rows.jsonl');playing=[r for r in rows if r['phase']=='playing']
-                if playing:
-                    owned_pid=playing[0]['pid']
-                    if first_seen is None: first_seen=time.monotonic()
-                    if not activation and time.monotonic()-first_seen>=10:
-                        receipt=subprocess.run([str(helper),str(owned_pid),str(app)],capture_output=True,text=True,timeout=10)
-                        activation=dict(exitCode=receipt.returncode,stdout=receipt.stdout,stderr=receipt.stderr)
-                        match=re.search(r'pid=(\d+) requested=([\d.]+) returned=([\d.]+).*active=(true|false) sameOwnedPID=(true|false)',receipt.stdout)
-                        if match: activation.update(returnedPID=int(match[1]),requested=float(match[2]),returned=float(match[3]),active=match[4]=='true',sameOwnedPID=match[5]=='true')
-                        (out/'activation.json').write_text(json.dumps(activation,indent=2))
+                if first_seen is None:
+                    rows=read_rows(out/'rows.jsonl');playing=[r for r in rows if r['phase']=='playing']
+                    if playing:
+                        owned_pid=playing[0]['pid']
+                        first_seen=time.monotonic()
+                if first_seen is not None and not activation and time.monotonic()-first_seen>=10:
+                    receipt=subprocess.run([str(helper),str(owned_pid),str(app)],capture_output=True,text=True,timeout=10)
+                    activation=dict(exitCode=receipt.returncode,stdout=receipt.stdout,stderr=receipt.stderr)
+                    match=re.search(r'pid=(\d+) requested=([\d.]+) returned=([\d.]+).*active=(true|false) sameOwnedPID=(true|false)',receipt.stdout)
+                    if match: activation.update(returnedPID=int(match[1]),requested=float(match[2]),returned=float(match[3]),active=match[4]=='true',sameOwnedPID=match[5]=='true')
+                    (out/'activation.json').write_text(json.dumps(activation,indent=2))
                 if time.monotonic()-start>limit:
                     reason='parent timeout';process.terminate();break
                 time.sleep(.2)
@@ -128,7 +144,7 @@ def collect(args):
     except Exception as error:
         errors.append(repr(error));process_command='cleanup unverified'
     changed=[name for name,sha in {**identity['sourceHashes'],**identity['binaryHashes']}.items() if not (root/name).is_file() or digest(root/name)!=sha]
-    run=dict(exitCode=code,unchanged=not changed,changed=changed,ownedPID=owned_pid,ownedProcessExited=owned_pid is not None and not process_command,reason=reason,exceptions=errors,elapsed=time.monotonic()-start)
+    run=dict(audioClockProtocolRequired=True,exitCode=code,unchanged=not changed,changed=changed,ownedPID=owned_pid,ownedProcessExited=owned_pid is not None and not process_command,reason=reason,exceptions=errors,threadPerformanceCheckerRemoved=getattr(args,'without_thread_checker',False),elapsed=time.monotonic()-start)
     (out/'run.json').write_text(json.dumps(run,indent=2))
     try:
         observation=json.loads((out/'observation.json').read_text()) if (out/'observation.json').exists() else dict(rows=read_rows(out/'rows.jsonl'))
@@ -149,6 +165,7 @@ def main():
     parser.add_argument('--long',action='store_true')
     parser.add_argument('--allow-occlusion',action='store_true',help='Diagnostic legacy normal-window placement only')
     parser.add_argument('--reveal',action='store_true',help='Diagnostic intervention: raise the owned video test window at20s')
+    parser.add_argument('--without-thread-checker',action='store_true',help='Controlled measurement without injected Thread Performance Checker; retains other diagnostics')
     parser.add_argument('--diagnostics',action='store_true',help='Per-second system metrics and bounded timing samples; diagnostic only')
     return 0 if collect(parser.parse_args()) else 1
 

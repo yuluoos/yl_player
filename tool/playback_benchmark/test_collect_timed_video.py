@@ -18,6 +18,22 @@ class EvidenceTests(unittest.TestCase):
     def test_valid_real_output(self):
         self.assertEqual(evaluate(observation())['failures'], [])
 
+    def test_required_audio_clock_fails_closed(self):
+        valid = dict(required=True, isolated=True, samples=10, staleEvents=0,
+                     rejectedObservations=0, maximumReadSeconds=.01, maximumAgeSeconds=.02)
+        for patch in [None, dict(isolated=False), dict(samples=None), dict(samples=0),
+                      dict(staleEvents=1), dict(maximumAgeSeconds=.101), dict(samples=True),
+                      dict(maximumReadSeconds=float('nan')), dict(required=False)]:
+            sample = observation(); sample['audioClockProtocol'] = 1
+            for row in sample['rows']: row['audioClock'] = dict(valid)
+            sample['audioClockRequired'] = True
+            if patch is None: sample['rows'][1].pop('audioClock')
+            else: sample['rows'][1]['audioClock'].update(patch)
+            with self.subTest(patch=patch): self.assertFalse(evaluate(sample)['passed'])
+        sample = observation(); sample['audioClockProtocol'] = 1; sample['audioClockRequired'] = True
+        for row in sample['rows']: row['audioClock'] = dict(valid)
+        self.assertTrue(evaluate(sample)['passed'])
+
     def test_reject_missing_or_fake_metrics(self):
         for patch in [dict(candidateActuallyUsed=False), dict(systemMetrics=None),
                       dict(systemMetrics=dict(total=0, dropped=0, corrupted=0, accumulatedDelay=0))]:
