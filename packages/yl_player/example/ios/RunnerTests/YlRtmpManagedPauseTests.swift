@@ -59,7 +59,7 @@ final class YlRtmpManagedPauseTests: XCTestCase {
     })
     let source=try XCTUnwrap(input)
     var observed:[String]=[]
-    let factory=PauseVTFactory()
+    let factory=PauseVTFactory(recoveryPreparationDelay:0.3)
     let session=try YlManagedPlaybackSession(playerId:94,
       services:.init(platform:.current,textureOutput:AppleTestTexture(),makeDisplayDriver:{AppleClockDisplay(onTick:$0)}),
       configuration:.init(map:["audioPolicy":"appManaged"]),prepared:prepared,generation:1,
@@ -79,7 +79,9 @@ final class YlRtmpManagedPauseTests: XCTestCase {
     let reopenDeadline=Date().addingTimeInterval(2)
     while peer.acceptCount<2 && Date()<reopenDeadline {try await Task.sleep(nanoseconds:5_000_000)}
     XCTAssertEqual(peer.acceptCount,2);XCTAssertEqual(descriptor.rtmpRecovery.attempts,1)
-    try await Task.sleep(nanoseconds:150_000_000)
+    // Socket acceptance does not imply that asynchronous decoder preparation finished.
+    // Keep the same overall reopen deadline instead of relying on a fixed delay.
+    while factory.creationThreads.count<2 && Date()<reopenDeadline {try await Task.sleep(nanoseconds:5_000_000)}
     XCTAssertGreaterThanOrEqual(factory.creationThreads.count,2)
     XCTAssertEqual(factory.creationThreads.last,false,"resumed recovery must prepare off main")
     peer.disconnectCurrent()
@@ -137,8 +139,13 @@ final class YlRtmpManagedPauseTests: XCTestCase {
 private final class PauseVTFactory:YlVTSessionFactory {
   private let lock=NSLock()
   private var threads:[Bool]=[]
+  private let recoveryPreparationDelay: TimeInterval
+  init(recoveryPreparationDelay: TimeInterval = 0) { self.recoveryPreparationDelay = recoveryPreparationDelay }
   var creationThreads:[Bool] {lock.lock();defer {lock.unlock()};return threads}
   func makeSession(formatDescription:CMVideoFormatDescription,output:@escaping(YlVTDecodedImage)->Void)throws->YlVTSession {
+    lock.lock(); let recovering = !threads.isEmpty; lock.unlock()
+    // Accepting the socket is earlier than preparing its decoder. Exercise that gap.
+    if recovering && recoveryPreparationDelay > 0 { Thread.sleep(forTimeInterval: recoveryPreparationDelay) }
     lock.lock();threads.append(Thread.isMainThread);lock.unlock();return PauseVTSession()
   }
 }

@@ -1,0 +1,686 @@
+{
+  "schemaVersion": 1,
+  "scope": "R4 read-only host/device/destination inventory; not runtime acceptance",
+  "baseCommit": "6bc2bf321983cbb60a5da3d22eba50d615b1ba78",
+  "observedAtUTC": "2026-10-10T05:36:44.046160+00:00",
+  "hardware": [
+    {
+      "chip_type": "Apple M1",
+      "machine_model": "MacBookPro17,1",
+      "physical_memory": "16 GB"
+    }
+  ],
+  "software": [
+    {
+      "os_version": "macOS 27.0.1 (26A434)",
+      "kernel_version": "Darwin 27.0.0"
+    }
+  ],
+  "xcode": "Xcode 27.0\nBuild version 27A266a",
+  "processArchitecture": "arm64",
+  "audio": [
+    {
+      "label": "audio-1",
+      "coreaudio_default_audio_input_device": "spaudio_yes",
+      "coreaudio_device_input": 1,
+      "coreaudio_device_manufacturer": "Apple Inc.",
+      "coreaudio_device_srate": 44100,
+      "coreaudio_device_transport": "coreaudio_device_type_builtin"
+    },
+    {
+      "label": "audio-2",
+      "coreaudio_default_audio_output_device": "spaudio_yes",
+      "coreaudio_default_audio_system_device": "spaudio_yes",
+      "coreaudio_device_output": 2,
+      "coreaudio_device_manufacturer": "Apple Inc.",
+      "coreaudio_device_srate": 44100,
+      "coreaudio_device_transport": "coreaudio_device_type_builtin"
+    }
+  ],
+  "displays": [
+    {
+      "label": "display-1",
+      "spdisplays_main": "spdisplays_yes",
+      "spdisplays_online": "spdisplays_yes",
+      "spdisplays_connection_type": "spdisplays_internal",
+      "spdisplays_display_type": "spdisplays_built-in_retinaLCD"
+    },
+    {
+      "label": "display-2",
+      "spdisplays_resolution": "1920 x 1080 @ 60.00Hz",
+      "spdisplays_online": "spdisplays_yes"
+    }
+  ],
+  "devices": [
+    {
+      "label": "device-1",
+      "simulator": true,
+      "modelName": "iPhone 18 Pro Max",
+      "operatingSystemVersion": "27.0 (24A434)",
+      "architecture": "arm64",
+      "available": true,
+      "platform": "com.apple.platform.iphonesimulator"
+    },
+    {
+      "label": "device-2",
+      "simulator": false,
+      "modelName": "MacBook Pro",
+      "operatingSystemVersion": "27.0.1 (26A434)",
+      "architecture": "arm64e",
+      "available": true,
+      "platform": "com.apple.platform.macosx"
+    },
+    {
+      "label": "device-3",
+      "simulator": true,
+      "modelName": "iPhone 18 Pro",
+      "operatingSystemVersion": "27.0 (24A434)",
+      "architecture": "arm64",
+      "available": true,
+      "platform": "com.apple.platform.iphonesimulator"
+    },
+    {
+      "label": "device-4",
+      "simulator": false,
+      "modelName": "iPhone 16",
+      "operatingSystemVersion": "27.0 (24A437)",
+      "architecture": "arm64e",
+      "available": true,
+      "platform": "com.apple.platform.iphoneos"
+    },
+    {
+      "label": "device-5",
+      "simulator": true,
+      "modelName": "iPad Pro 11-inch (M5)",
+      "operatingSystemVersion": "27.0 (24A434)",
+      "architecture": "arm64",
+      "available": true,
+      "platform": "com.apple.platform.iphonesimulator"
+    }
+  ],
+  "simulatorRuntimes": [
+    {
+      "name": "iOS 27.0",
+      "version": "27.0",
+      "isAvailable": true,
+      "buildversion": "24A434"
+    }
+  ],
+  "simulatorCounts": [
+    {
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-27-0",
+      "available": 3,
+      "booted": 1
+    }
+  ],
+  "destinations": {
+    "ios": [
+      {
+        "platform": "macOS",
+        "architecture": "arm64",
+        "os": null,
+        "variant": "Designed for iPad/iPhone",
+        "genericPlaceholder": false,
+        "matchesEnumeratedDevices": [
+          "device-2"
+        ],
+        "eligible": true,
+        "reason": null
+      },
+      {
+        "platform": "iOS",
+        "architecture": "arm64",
+        "os": null,
+        "variant": null,
+        "genericPlaceholder": false,
+        "matchesEnumeratedDevices": [
+          "device-4"
+        ],
+        "eligible": true,
+        "reason": null
+      },
+      {
+        "platform": "iOS",
+        "architecture": null,
+        "os": null,
+        "variant": null,
+        "genericPlaceholder": true,
+        "matchesEnumeratedDevices": [],
+        "eligible": true,
+        "reason": null
+      },
+      {
+        "platform": "iOS Simulator",
+        "architecture": null,
+        "os": null,
+        "variant": null,
+        "genericPlaceholder": true,
+        "matchesEnumeratedDevices": [],
+        "eligible": true,
+        "reason": null
+      },
+      {
+        "platform": "iOS Simulator",
+        "architecture": "arm64",
+        "os": "27.0",
+        "variant": null,
+        "genericPlaceholder": false,
+        "matchesEnumeratedDevices": [
+          "device-5"
+        ],
+        "eligible": true,
+        "reason": null
+      },
+      {
+        "platform": "iOS Simulator",
+        "architecture": "arm64",
+        "os": "27.0",
+        "variant": null,
+        "genericPlaceholder": false,
+        "matchesEnumeratedDevices": [
+          "device-3"
+        ],
+        "eligible": true,
+        "reason": null
+      },
+      {
+        "platform": "iOS Simulator",
+        "architecture": "arm64",
+        "os": "27.0",
+        "variant": null,
+        "genericPlaceholder": false,
+        "matchesEnumeratedDevices": [
+          "device-1"
+        ],
+        "eligible": true,
+        "reason": null
+      },
+      {
+        "platform": "macOS",
+        "architecture": "arm64e",
+        "os": null,
+        "variant": null,
+        "genericPlaceholder": false,
+        "matchesEnumeratedDevices": [
+          "device-2"
+        ],
+        "eligible": false,
+        "reason": "platformMismatch"
+      }
+    ],
+    "macos": [
+      {
+        "platform": "macOS",
+        "architecture": "arm64",
+        "os": null,
+        "variant": null,
+        "genericPlaceholder": false,
+        "matchesEnumeratedDevices": [
+          "device-2"
+        ],
+        "eligible": true,
+        "reason": null
+      },
+      {
+        "platform": "macOS",
+        "architecture": null,
+        "os": null,
+        "variant": null,
+        "genericPlaceholder": true,
+        "matchesEnumeratedDevices": [],
+        "eligible": true,
+        "reason": null
+      },
+      {
+        "platform": "iOS",
+        "architecture": "arm64e",
+        "os": null,
+        "variant": null,
+        "genericPlaceholder": false,
+        "matchesEnumeratedDevices": [
+          "device-4"
+        ],
+        "eligible": false,
+        "reason": "platformMismatch"
+      },
+      {
+        "platform": "iOS Simulator",
+        "architecture": "arm64",
+        "os": "27.0",
+        "variant": null,
+        "genericPlaceholder": false,
+        "matchesEnumeratedDevices": [
+          "device-5"
+        ],
+        "eligible": false,
+        "reason": "platformMismatch"
+      },
+      {
+        "platform": "iOS Simulator",
+        "architecture": "arm64",
+        "os": "27.0",
+        "variant": null,
+        "genericPlaceholder": false,
+        "matchesEnumeratedDevices": [
+          "device-3"
+        ],
+        "eligible": false,
+        "reason": "platformMismatch"
+      },
+      {
+        "platform": "iOS Simulator",
+        "architecture": "arm64",
+        "os": "27.0",
+        "variant": null,
+        "genericPlaceholder": false,
+        "matchesEnumeratedDevices": [
+          "device-1"
+        ],
+        "eligible": false,
+        "reason": "platformMismatch"
+      }
+    ]
+  },
+  "declaredMinimumOS": {
+    "ios": "15.0",
+    "macos": "12.0"
+  },
+  "bridgeSlices": [
+    {
+      "LibraryIdentifier": "ios-arm64",
+      "SupportedArchitectures": [
+        "arm64"
+      ],
+      "SupportedPlatform": "ios"
+    },
+    {
+      "LibraryIdentifier": "ios-arm64_x86_64-simulator",
+      "SupportedArchitectures": [
+        "arm64",
+        "x86_64"
+      ],
+      "SupportedPlatform": "ios",
+      "SupportedPlatformVariant": "simulator"
+    },
+    {
+      "LibraryIdentifier": "macos-arm64_x86_64",
+      "SupportedArchitectures": [
+        "arm64",
+        "x86_64"
+      ],
+      "SupportedPlatform": "macos"
+    }
+  ],
+  "sourceHashes": {
+    "packages/yl_player_apple/darwin/yl_player_apple.podspec": "c4f6685a4486caf641d2703ba84d5ec41f7b191d64c30fab88ea24cf4b7bcff3",
+    "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/Info.plist": "ca81b15b1b3a63e168749a4264517398d1a4e848d211dc5b9234fd269b52b552",
+    "packages/yl_player/example/ios/Runner.xcodeproj/project.pbxproj": "c1f55b591d482dd6d6514bb244e1bbde858a0f85a9b22dcf27fca2cd6171cab7",
+    "packages/yl_player/example/macos/Runner.xcodeproj/project.pbxproj": "5603e2b4b39c6a3e9fd1999a08d12f0b1556cc00654af72edb6e909792cc0fb9"
+  },
+  "queries": [
+    {
+      "command": [
+        "system_profiler",
+        "SPAudioDataType",
+        "-json"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 1056,
+      "stderrBytes": 0,
+      "key": "audio-host",
+      "executionContext": "host",
+      "outputs": {
+        "stdout": {
+          "bytes": 1056,
+          "sha256": "47d7959e2ba4acb041e1a5217ea8888f4aabc6b92bfe377b09d28155f39ef8c3"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "rawArchived": false
+    },
+    {
+      "command": [
+        "system_profiler",
+        "SPAudioDataType",
+        "-json"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 107,
+      "stderrBytes": 0,
+      "key": "audio",
+      "executionContext": "sandbox",
+      "outputs": {
+        "stdout": {
+          "bytes": 107,
+          "sha256": "e9b924324ff304983791a55d58ecd70f2e0f62f51a066feb21db1f34088d5512"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "rawArchived": false
+    },
+    {
+      "command": [
+        "xcrun",
+        "xcdevice",
+        "list",
+        "--timeout",
+        "10"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 2140,
+      "stderrBytes": 0,
+      "key": "devices-host",
+      "executionContext": "host",
+      "outputs": {
+        "stdout": {
+          "bytes": 2140,
+          "sha256": "7083c16bbdb6e4e3742b74c099d6bfd055f7156abc99cd79229dbf9eb6bbf6ef"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "rawArchived": false
+    },
+    {
+      "command": [
+        "xcrun",
+        "xcdevice",
+        "list",
+        "--timeout",
+        "10"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 398,
+      "stderrBytes": 2904,
+      "key": "devices",
+      "executionContext": "sandbox",
+      "outputs": {
+        "stdout": {
+          "bytes": 398,
+          "sha256": "26f395b8098430d2ed52fee085a6db773d928eb571fc9afc07342a1fe74a5b52"
+        },
+        "stderr": {
+          "bytes": 2904,
+          "sha256": "068b76ac137b071f52d0bd6455562afdfa7d4316a5ec1598e2bf1ec38c0b4037"
+        }
+      },
+      "rawArchived": false,
+      "diagnosticCategories": [
+        "coreSimulatorService",
+        "connectionInvalid",
+        "permissionDenied"
+      ]
+    },
+    {
+      "command": [
+        "system_profiler",
+        "SPDisplaysDataType",
+        "-json"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 1993,
+      "stderrBytes": 0,
+      "key": "displays-host",
+      "executionContext": "host",
+      "outputs": {
+        "stdout": {
+          "bytes": 1993,
+          "sha256": "8b982d04d91633cc367a653d3aad045e94715a3c5b547693d984d75c495a68e2"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "rawArchived": false
+    },
+    {
+      "command": [
+        "system_profiler",
+        "SPDisplaysDataType",
+        "-json"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 330,
+      "stderrBytes": 0,
+      "key": "displays",
+      "executionContext": "sandbox",
+      "outputs": {
+        "stdout": {
+          "bytes": 330,
+          "sha256": "ecdf2f8367c0f07752447297a11266b740e680cd2ad03e1fd01d0afd1e2d4903"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "rawArchived": false
+    },
+    {
+      "command": [
+        "system_profiler",
+        "SPHardwareDataType",
+        "SPSoftwareDataType",
+        "-json"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 1025,
+      "stderrBytes": 0,
+      "key": "hardware-host",
+      "executionContext": "host",
+      "outputs": {
+        "stdout": {
+          "bytes": 1025,
+          "sha256": "d3f68fddbc8bfa68d8c8a3c28c0016b0c1adc20d88723d606b99fd775165b4e2"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "rawArchived": false
+    },
+    {
+      "command": [
+        "system_profiler",
+        "SPHardwareDataType",
+        "SPSoftwareDataType",
+        "-json"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 897,
+      "stderrBytes": 110,
+      "key": "hardware",
+      "executionContext": "sandbox",
+      "outputs": {
+        "stdout": {
+          "bytes": 897,
+          "sha256": "4b696aee79b1226dd8003354cfd3e777e4b88b64e0efde8f084d19d25408523f"
+        },
+        "stderr": {
+          "bytes": 110,
+          "sha256": "a3eb4c62906c3de87d1b36e512dc1be917f0435d40046fa1df26c3e56e9cde3a"
+        }
+      },
+      "rawArchived": false
+    },
+    {
+      "command": [
+        "xcodebuild",
+        "-workspace",
+        "packages/yl_player/example/ios/Runner.xcworkspace",
+        "-scheme",
+        "Runner",
+        "-showdestinations"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 1997,
+      "stderrBytes": 0,
+      "key": "ios-destinations",
+      "executionContext": "host",
+      "outputs": {
+        "stdout": {
+          "bytes": 1997,
+          "sha256": "f16c694bd25807eceec238430a39dbcd54a4b8205fb85d306640b09852715660"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "rawArchived": false
+    },
+    {
+      "command": [
+        "xcodebuild",
+        "-workspace",
+        "packages/yl_player/example/macos/Runner.xcworkspace",
+        "-scheme",
+        "Runner",
+        "-showdestinations"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 2213,
+      "stderrBytes": 0,
+      "key": "macos-destinations",
+      "executionContext": "host",
+      "outputs": {
+        "stdout": {
+          "bytes": 2213,
+          "sha256": "8bfa43beaea1ccc8ca6c09c88a0f3deb209b94eb5fba7b7ed052b60d1ca46cd3"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "rawArchived": false
+    },
+    {
+      "command": [
+        "uname",
+        "-m"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 6,
+      "stderrBytes": 0,
+      "key": "platform",
+      "executionContext": "sandbox",
+      "outputs": {
+        "stdout": {
+          "bytes": 6,
+          "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "rawArchived": false
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "list",
+        "--json"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 86225,
+      "stderrBytes": 0,
+      "key": "simulators-host",
+      "executionContext": "host",
+      "outputs": {
+        "stdout": {
+          "bytes": 86225,
+          "sha256": "bc1076d3a0a81d91dcde20c4d2912687bd0994862887e95c7a75f6d2e87bb29c"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "rawArchived": false
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "list",
+        "--json"
+      ],
+      "exitCode": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 2880,
+      "key": "simulators",
+      "executionContext": "sandbox",
+      "outputs": {
+        "stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 2880,
+          "sha256": "cf115b6ad63a1901f3aa1fdb442af68ec5dc31c20555f5f0042e6706047bc8f8"
+        }
+      },
+      "rawArchived": false,
+      "diagnosticCategories": [
+        "coreSimulatorService",
+        "connectionInvalid",
+        "permissionDenied"
+      ]
+    },
+    {
+      "command": [
+        "xcodebuild",
+        "-version"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 33,
+      "stderrBytes": 0,
+      "key": "xcode",
+      "executionContext": "sandbox",
+      "outputs": {
+        "stdout": {
+          "bytes": 33,
+          "sha256": "694b44731d0b415c5b11d844151e466d7f5e200a95627efda377f232f1a6ab77"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "rawArchived": false
+    }
+  ],
+  "externalEquipmentConfirmation": "User: no additional equipment; complete locally executable verification. Attached iPhone remains observed; no minimum-OS/Intel/calibrated capture equipment supplied.",
+  "actions": {
+    "routeChanged": false,
+    "sampleRateChanged": false,
+    "simulatorBootedByThisTask": false,
+    "appInstalled": false,
+    "nativeTestsRun": false,
+    "physicalAVMeasured": false
+  },
+  "productionAdmission": false,
+  "defaultEnabled": false,
+  "downstreamBoundProven": false,
+  "limitations": [
+    "Available/destination listing is not build, signing, install, runtime or playback success",
+    "Only attached/visible devices at observation time; does not establish absence of external equipment",
+    "Host inventory after sandbox service errors; empty sandbox audio list not used as absence evidence",
+    "Built-in microphone does not establish a calibrated audio/visual capture system",
+    "Bridge slices and declared deployment targets do not prove lowest-OS or Intel execution",
+    "Device names, identifiers, serials, display product identities and paths omitted; raw local query outputs not embedded; hashes identify them but cannot reconstruct them"
+  ]
+}
