@@ -998,6 +998,7 @@ final class YlMacosAudioTests: XCTestCase {
         "workerDiagnostics": stats?.diagnostics as Any? ?? NSNull(),
         "activationEvents": activations, "failures": failures,
         "ledgerBytes": ledger.snapshot.currentBytes, "ledgerPeak": ledger.snapshot.peakBytes,
+        "ledgerCategories": Dictionary(uniqueKeysWithValues: ledger.snapshot.categories.map { (String(describing: $0.key), $0.value) }),
         "pending": stats?.pending ?? false]
       rows.append(row)
       if let directory = env["YL_TIMED_DIRECTORY"] {
@@ -1208,6 +1209,7 @@ final class YlMacosAudioTests: XCTestCase {
         "candidate": renderer.usesSubmissionAnchor,
         "nativePlaying": factory.nativePlaying, "rendererCount": factory.renderers.count,
         "ledgerBytes": ledger.snapshot.currentBytes, "ledgerPeak": ledger.snapshot.peakBytes,
+        "ledgerCategories": Dictionary(uniqueKeysWithValues: ledger.snapshot.categories.map { (String(describing: $0.key), $0.value) }),
         "audioOwnedBytes": renderer.scheduledBytes, "pending": renderer.hasPendingPlayback,
         "modes": factory.output.snapshot, "thermalState": ProcessInfo.processInfo.thermalState.rawValue]
       records.append(row)
@@ -2283,6 +2285,7 @@ final class YlMacosAudioTests: XCTestCase {
         "pending": renderer.hasPendingPlayback, "nativePlaying": player.isPlaying, "engineRunning": engine.isRunning,
         "ownedBytes": renderer.scheduledBytes,
         "ledgerBytes": ledger.snapshot.currentBytes, "ledgerPeak": ledger.snapshot.peakBytes,
+        "ledgerCategories": Dictionary(uniqueKeysWithValues: ledger.snapshot.categories.map { (String(describing: $0.key), $0.value) }),
         "mediaUs": renderer.renderedAudioTime?.sampleTime as Any? ?? NSNull(),
         "failures": eventsLock.withLock { failures }, "anchors": eventsLock.withLock { anchors },
         "thermalState": ProcessInfo.processInfo.thermalState.rawValue,
