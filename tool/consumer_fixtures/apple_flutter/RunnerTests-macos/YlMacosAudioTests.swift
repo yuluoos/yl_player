@@ -337,6 +337,7 @@ final class YlMacosAudioTests: XCTestCase {
     let system: YlSystemAudioOutput
     let wrapsCallbacks: Bool
     var onSubmit: ((YlScheduledAudioBuffer) -> Void)?
+    var onSubmissionMode: ((YlAudioOutputCompletionMode) -> Void)?
     // Bounded test-only capture for replaying one retired generation callback.
     var captureNextPlayedCompletion = false
     var capturedPlayedCompletion: (() -> Void)?
@@ -365,6 +366,7 @@ final class YlMacosAudioTests: XCTestCase {
     func configure(format: AVAudioFormat) throws { try system.configure(format: format) }
     func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void) {
       onSubmit?(buffer)
+      onSubmissionMode?(.playedBack)
       if captureNextPlayedCompletion {
         captureNextPlayedCompletion = false; capturedPlayedCompletion = completion
       }
@@ -376,6 +378,7 @@ final class YlMacosAudioTests: XCTestCase {
     }
     func schedule(_ buffer: YlScheduledAudioBuffer, mode: YlAudioOutputCompletionMode, callbacks: YlAudioOutputCallbacks) {
       onSubmit?(buffer)
+      onSubmissionMode?(mode)
       if captureNextPlayedCompletion && mode == .playedBack {
         captureNextPlayedCompletion = false
         capturedPlayedCompletion = { callbacks.resourcesReleased(); callbacks.playedBack() }
@@ -606,12 +609,14 @@ final class YlMacosAudioTests: XCTestCase {
 
   private final class ReloadAudioFactory: YlAudioRendererMaking {
     var wrapsCallbacks = true
+    var onSubmissionMode: ((YlAudioOutputCompletionMode) -> Void)?
     var entries: [DecodedAudioFactory] = []
     var invalidateNextPlay = false
     var eofProbe: NaturalEOFProbe?
     func makeRenderer(bufferBudget: YlFallbackBufferBudget) -> YlAudioRenderer {
       let entry = DecodedAudioFactory(wrapsCallbacks: wrapsCallbacks)
       entry.output.eofProbe = eofProbe
+      entry.output.onSubmissionMode = onSubmissionMode
       entry.output.invalidateOnPlay = invalidateNextPlay
       invalidateNextPlay = false
       entries.append(entry)
@@ -820,6 +825,150 @@ final class YlMacosAudioTests: XCTestCase {
       XCTAssertEqual(ledger.snapshot.currentBytes, 0); XCTAssertTrue(callbacks.failures.isEmpty)
       try await probe("disposedLater")
     }
+  }
+
+  private final class LifecycleCounters: ApplePlayerFlutterApiProtocol {
+    private let lock = NSLock()
+    private var counts: [String: Int] = [:]
+    func record(_ key: String) { lock.withLock { counts[key, default: 0] += 1 } }
+    var snapshot: [String: Int] { lock.withLock { counts } }
+    func onState(state: AppleStateMessage) async throws { record("publications"); if state.status == .completed { record("completed") } }
+    func onStateDelta(delta: AppleStateDeltaMessage) async throws { record("publications") }
+    func onFirstFrame(event: AppleFirstFrameMessage) async throws { record("publications"); record("firstFrames") }
+    func onRetryScheduled(event: AppleRetryScheduledMessage) async throws { record("publications"); record("retries") }
+    func onEngineChanged(event: AppleEngineChangedMessage) async throws { record("publications") }
+    func onPlaybackFailed(event: ApplePlaybackFailedMessage) async throws { record("publications"); record("failures") }
+  }
+
+  @MainActor
+  func testLifecycleCheckpointReadsCountersAfterLateEvents() async throws {
+    let counters = LifecycleCounters()
+    let before = counters.snapshot
+    let late = Task { @MainActor in
+      try await Task.sleep(nanoseconds: 10_000_000)
+      for key in ["completed", "firstFrames", "failures", "playedSubmissions", "renderedSubmissions", "publications"] { counters.record(key) }
+    }
+    try await late.value
+    let after = counters.snapshot
+    for key in ["completed", "firstFrames", "failures", "playedSubmissions", "renderedSubmissions", "publications"] {
+      XCTAssertEqual(before[key, default: 0], 0)
+      XCTAssertEqual(after[key, default: 0], 1, "A post-settlement read must see late \(key)")
+    }
+  }
+
+  @MainActor
+  func testActualDecodedRepeatedLifecycleResources() async throws {
+    let env = ProcessInfo.processInfo.environment
+    XCTAssertNil(env["MallocStackLogging"]); XCTAssertNil(env["MallocStackLoggingNoCompact"])
+    let directory = env["YL_AUDIO_PROBE_DIRECTORY"].map { URL(fileURLWithPath: $0) }
+    let arms = directory == nil ? [false, true] : [env["YL_AUDIO_PROBE_ARM"] == "candidate"]
+    let kinds = directory == nil ? ["seek", "load-close"] : [env["YL_AUDIO_LIFECYCLE_KIND"] ?? "invalid"]
+    let rounds = directory == nil ? 2 : 6
+    let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+      .deletingLastPathComponent().deletingLastPathComponent()
+      .appendingPathComponent("assets/test_media/format_matrix/mkv-avc-aac.mkv")
+    for candidate in arms { for kind in kinds {
+      guard ["seek", "load-close"].contains(kind) else { throw ResourceProbeError.invalidBoundaryMode }
+      let ledger = YlManagedBufferLedger()
+      let counters = LifecycleCounters(), registry = ApplePublicationRegistry()
+      var sessions = 0
+      weak var retiredEntry: DecodedAudioFactory?
+      func observe(_ phase: String, cycle: Int, entry: DecodedAudioFactory? = nil) async throws {
+        let before = counters.snapshot, framesBefore = registry.positivePublicFrames
+        try await Task.sleep(nanoseconds: 2_000_000_000)
+        let renderer = entry?.renderers.first
+        let live = counters.snapshot
+        for key in ["completed", "firstFrames", "failures", "retries", "playedSubmissions", "renderedSubmissions"] {
+          XCTAssertEqual(live[key, default: 0], before[key, default: 0], "Late event during settlement: \(key)")
+        }
+        XCTAssertEqual(registry.positivePublicFrames, framesBefore)
+        XCTAssertFalse(entry?.nativePlaying ?? false)
+        XCTAssertFalse(renderer?.hasPendingPlayback ?? false)
+        XCTAssertEqual(renderer?.scheduledBytes ?? 0, 0)
+        if entry == nil { XCTAssertNil(retiredEntry); XCTAssertEqual(ledger.snapshot.currentBytes, 0) }
+        let row: [String: Any] = ["phase": phase, "cycle": cycle, "rounds": rounds,
+          "pid": ProcessInfo.processInfo.processIdentifier, "uptime": ProcessInfo.processInfo.systemUptime,
+          "candidate": candidate, "kind": kind, "completed": live["completed", default: 0], "firstFrames": live["firstFrames", default: 0],
+          "sessions": sessions, "playedSubmissions": live["playedSubmissions", default: 0], "renderedSubmissions": live["renderedSubmissions", default: 0],
+          "videoFrames": registry.positivePublicFrames, "failures": live["failures", default: 0],
+          "publications": live["publications", default: 0], "retries": live["retries", default: 0],
+          "callbackObservation": "unobserved", "playedCallbacks": NSNull(), "renderedCallbacks": NSNull(),
+          "nativePlaying": entry?.nativePlaying ?? false, "pending": renderer?.hasPendingPlayback ?? false,
+          "ownedBytes": renderer?.scheduledBytes ?? 0, "ledgerBytes": ledger.snapshot.currentBytes,
+          "retiredEntryAlive": retiredEntry != nil, "activeGraph": entry != nil,
+          "attachedNodes": entry?.engine.attachedNodes.count ?? 0,
+          "engineRunning": entry?.engine.isRunning ?? false,
+          "submissionAnchor": renderer?.usesSubmissionAnchor ?? false]
+        let data = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
+        let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+        attachment.name = "lifecycle-resource-\(candidate)-\(kind)-\(phase)"; attachment.lifetime = .keepAlways; add(attachment)
+        guard let directory else { return }
+        let file = directory.appendingPathComponent("rows.jsonl")
+        if !FileManager.default.fileExists(atPath: file.path) { FileManager.default.createFile(atPath: file.path, contents: nil) }
+        let handle = try FileHandle(forWritingTo: file)
+        try handle.seekToEnd(); try handle.write(contentsOf: data + Data([10])); try handle.close()
+        if ["baseline", "cycle1", "cycle3", "cycle6", "disposed"].contains(phase) {
+          try await waitForResourceAcknowledgement({ FileManager.default.fileExists(atPath: directory.appendingPathComponent(phase + ".ack").path) })
+        }
+      }
+      func playHost(passes: Int, firstCycle: Int) async throws {
+        let factory = ReloadAudioFactory(); factory.wrapsCallbacks = false
+        factory.onSubmissionMode = { mode in
+          counters.record(mode == .playedBack ? "playedSubmissions" : "renderedSubmissions")
+        }
+        let host = YlApplePlayerHost(playerId: Int64(751 + firstCycle), suffix: "lifecycle-resource-\(firstCycle)",
+          options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 50),
+          services: registry.services(), callbacks: counters, bufferLedger: ledger,
+          audioRendererFactory: factory, audioTerminalCandidateEnabled: candidate)
+        defer { host.close() }
+        try host.attach(); try host.setVolume(volume: 0)
+        var request = AppleHostFixture.request("lifecycle-resource", url: fixture.path, format: .matroska, autoplay: false)
+        request.source.kind = .file
+        let session = try await host.load(request: request); sessions += 1
+        let entry = try XCTUnwrap(factory.entries.first), renderer = try XCTUnwrap(entry.renderers.first)
+        let nodes = entry.engine.attachedNodes
+        let native = try XCTUnwrap(nodes.compactMap { $0 as? AVAudioPlayerNode }.first)
+        for pass in 0..<passes {
+          let cycle = firstCycle + pass
+          if pass > 0 { try host.seekTo(command: .init(sessionId: session.sessionId, positionMs: 0)) }
+          let previousFrames = registry.positivePublicFrames
+          try await host.play(command: .init(sessionId: session.sessionId))
+          try await AppleHostCharacterizations.waitFor({
+            host.initialState.timeline.positionMs >= 200 && (entry.output.renderedAudioTime?.sampleTime ?? 0) > 0
+          }, timeout: 5)
+          try await AppleHostCharacterizations.waitFor({ host.initialState.status == .completed }, timeout: 10)
+          try await waitForResourceAcknowledgement({ counters.snapshot["completed", default: 0] == cycle }, timeout: 5)
+          XCTAssertEqual(counters.snapshot["firstFrames", default: 0], sessions)
+          XCTAssertGreaterThan(registry.positivePublicFrames, previousFrames)
+          XCTAssertEqual(counters.snapshot["failures", default: 0], 0)
+          XCTAssertFalse(renderer.hasPendingPlayback); XCTAssertEqual(renderer.scheduledBytes, 0)
+          XCTAssertEqual(renderer.usesSubmissionAnchor, candidate)
+          let modes = entry.output.snapshot
+          let expectedPlayed = candidate ? pass + 1 : modes["playedSubmissions", default: 0]
+          XCTAssertEqual(modes["playedSubmissions"], expectedPlayed)
+          if candidate { XCTAssertGreaterThan(modes["renderedSubmissions", default: 0], pass + 1) }
+          else { XCTAssertEqual(modes["renderedSubmissions"], 0); XCTAssertGreaterThan(expectedPlayed, 1) }
+          native.pause() // Sampling-only intervention after software drain, no direct stop.
+          XCTAssertEqual(host.sessionId, session.sessionId); XCTAssertEqual(factory.entries.count, 1)
+          XCTAssertEqual(entry.engine.attachedNodes, nodes)
+          if kind == "seek" { try await observe("cycle\(cycle)", cycle: cycle, entry: entry) }
+        }
+        host.close(); host.close()
+        XCTAssertEqual(ledger.snapshot.currentBytes, 0); XCTAssertFalse(entry.engine.isRunning)
+        XCTAssertFalse(entry.engine.attachedNodes.contains(native))
+        retiredEntry = entry
+      }
+      try await observe("baseline", cycle: 0)
+      if kind == "seek" { try await playHost(passes: rounds, firstCycle: 1) }
+      else {
+        for cycle in 1...rounds {
+          try await playHost(passes: 1, firstCycle: cycle)
+          try await observe("cycle\(cycle)", cycle: cycle)
+        }
+      }
+      try await observe("disposed", cycle: rounds)
+      try await observe("disposedLater", cycle: rounds)
+    } }
   }
 
   @MainActor

@@ -514,6 +514,17 @@ AVAudioEngine 配置失效通知按 epoch 异步 fence、停止输出后退还 o
 - [x] 新增默认/候选EOF后重复suspend/resume：遵守既有Host契约，同session释放旧图并重建一次output，不强迫旧节点跨后台存活；完成态不自动重播。
 - [x] 旧完成回调在暂停、播放及close后注入；显式seek0/play能恢复，重复close和close后resume不产生晚到公开事件/纹理；释放后ledger0、所有engine停止/player脱离。
 - [x] 六项原生首次6/6、0跳过，夹具4/4、发现iOS678/macOS669，独立复审无P1/P2；18份原始证据及最终source/binaryhash归档，未修改生产。
-- [ ] 下一项R2：按当前准入矩阵冻结重复生命周期资源观察协议，再执行默认/候选seek/replay与Load/close测量。
+- [x] R2固定协议及默认/候选重复生命周期资源观察完成，见下方记录；测量完成不等于整体有界。
 
 范围仅4.021s本地AVC/AAC和直接Host生命周期调用，不证明实际OS后台、设备路由、物理音画或长程/整体资源边界。没有重跑完整native或iOS。见[协议](../../../tool/playback_benchmark/decoded-eof-lifecycle-protocol.md)、[原始归档](../../../tool/playback_benchmark/macos-eof-lifecycle-observations.json)及[当前准入矩阵](../reports/2026-10-09-audio-eof-admission.md)。候选默认、正式准入、整体有界仍false。
+
+
+### R2：六轮seek/replay与独立host Load/close（2026-10-09，base1cc539e）
+
+- [x] 执行前冻结四独立进程×6轮、5个heap阶段、原8s heap/30s ACK/180s native/240s parent限制；后EOF原生pause采样干预与生产行为分开。
+- [x] 复审P2冻结计数缺陷已以原生RED6断言→GREEN修复，实时标量sink/纹理观察不保留旧graph；初始通过不冒充正式证据。
+- [x] 最终原生2/2（四配置门禁）、正式4/4、20/20heap、工具5/5、夹具4/4；发现678/671。首次候选seek两份heap超时保留，仅一次同身份/同门限完整复测通过，生产未改。
+- [x] 四组实际模式/完成/首帧/资源和图释放通过；总堆正负差额及类型缺失null如实保留，407份原始文件可离线复核。
+- [ ] 下一项R3：结合长度/兼容回退/重复生命周期证据明确资源准入结论与未闭合边界；不能从六轮稳定或类型缺失直接开放候选。
+
+见[协议](../../../tool/playback_benchmark/decoded-lifecycle-resources-protocol.md)、[证据](../../../tool/playback_benchmark/macos-lifecycle-resources-observations.json)、[P08数值报告](../reports/2026-09-26-remaining-08-performance-release.md)。Load-close为每轮独立host，非同host替换Load；当前仅短素材与采样干预结果，非长程/物理输出/整体有界。候选关闭。

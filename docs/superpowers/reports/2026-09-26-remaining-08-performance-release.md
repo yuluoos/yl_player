@@ -1704,3 +1704,23 @@ intervened−drained全进程堆变化为hold -229,680B、stop +612,848B，stop�
 无stop三轮同session/output，完成1/2/3、首帧一次、实际模式/anchor、时钟与视频推进通过。后台组同session，旧图销毁、只重建一个新output；默认/候选回前台暂停位置4017/4026ms保持各自EOF位置，原生节点不播放。显式重播后两路视频均97→193，完成数2，首帧仍1。真实旧回调在暂停/播放/关闭阶段重复注入没有提前完成/错误/晚到事件；close后resume无效、ledger0、所有engine停止/player脱离。
 
 夹具4/4、发现678/669、复审无P1/P2；[18份原始归档](../../../tool/playback_benchmark/macos-eof-lifecycle-observations.json)含XCTest摘要/附件、源码/二进制/素材hash。见[协议](../../../tool/playback_benchmark/decoded-eof-lifecycle-protocol.md)与[当前矩阵](2026-10-09-audio-eof-admission.md)。调用Host suspend/resume不等于真实OS后台/睡眠或物理路由；4s功能验证不替代资源/长程/平台验证，完整native和iOS未重跑。下一项R2冻结并执行重复生命周期资源观察；候选保持关闭，整体有界未证明。
+
+
+### R2：重复生命周期资源观察（2026-10-09，base1cc539e）
+
+四个独立进程串行，默认/候选×seek/load-close，每组6轮4.021s本地AVC/AAC。seek复用一个host/session/output，每轮自然EOF后测试显式pause原生节点再采样；这是采样干预，不是生产EOF策略。load-close每轮创建独立host、Load一次、播放至EOF、close两次后释放引用；不冒充同host替换Load测试。baseline、第1/3/6轮、最终disposed各采一份heap，另有disposedLater释放观察。
+
+初版原生短程1/1（四配置）虽通过，复审P2发现采样计数冻结于等待之前，可能漏记晚到事件，因此没有据此启动正式测量。修复使用事件/提交到达即更新的有锁标量sink，采样等待后读取；共享纹理registry只保留活动纹理，旧factory弱引用必须消失。晚到计数原生回归RED6断言→GREEN，关闭后publication/retry Python负例RED2→GREEN。正常输出完成回调依然透明转交，无旧回调人为保留。
+
+最终原生2/2（含四配置两轮门禁）、正式4/4、20/20heap有效；工具5/5、夹具4/4、发现iOS678/macOS671。首次正式默认seek通过，候选seek原生通过但第3/6轮heap均8s超时且0bytes，Load-close未启动；按冻结规则仅一次同身份/同门限完整复测，最终四组通过。外部超时原因未解决，无生产代码修改。各组完成6次；seek首帧/session各1，load-close各6；实际提交模式、音频/视频进度、EOF排空和图状态均通过。每次最终释放及>=2s后ledger0、无pending/owned音频、无活动图/测试持有旧factory，发布和提交总数保持不变。
+
+| 路径 | 生命周期 | baseline堆B | 第1轮堆B | 第3轮堆B | 第6轮堆B | disposed堆B | 第6−第1轮B |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| legacy | seek | 18,470,097 | 20,290,001 | 22,992,961 | 23,014,097 | 21,384,689 | 2,724,096 |
+| candidate | seek | 18,506,289 | 20,496,929 | 23,344,849 | 23,387,089 | 21,836,929 | 2,890,160 |
+| legacy | load-close | 18,478,465 | 21,675,201 | 21,876,545 | 21,955,153 | 21,349,233 | 279,952 |
+| candidate | load-close | 18,505,281 | 21,710,273 | 21,890,337 | 21,958,513 | 21,780,129 | 248,240 |
+
+上表为完整All zones原值，变化保留正负，不设事后“噪声豁免”。完成容器类型在第1/3/6轮/disposed的条目数依次为：legacy/seek：189 / 188 / 188 / 未单独识别；candidate/seek：未单独识别 / 未单独识别 / 未单独识别 / 未单独识别；legacy/load-close：未单独识别 / 未单独识别 / 未单独识别 / 未单独识别；candidate/load-close：未单独识别 / 未单独识别 / 未单独识别 / 未单独识别。类型缺失保持null，不等于系统对象零存活。详细dispatch/closure/PCM类型及扣baseline差额见归档，不能用选定类型或短序列走势推导整体资源上界。
+
+共407份原始文件带字节数/哈希归档，包含首次短程、计数RED、最终门禁、首次正式失败及完整复测四组rows/heap/XCTest/冻结身份；离线重新解析heap并复现四组比较。协议：[R2固定轮数](../../../tool/playback_benchmark/decoded-lifecycle-resources-protocol.md)；证据：[生命周期资源归档](../../../tool/playback_benchmark/macos-lifecycle-resources-observations.json)。本轮不提供统计收益、长程、物理输出、真实OS后台/路由或iOS/最低OS/Intel验收，未重跑完整native。下一项R3汇总资源准入结论；候选默认、正式准入、整体有界仍false。

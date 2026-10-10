@@ -336,3 +336,6 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 
 
 2026-10-09 R1已完成：默认/候选无手动stop的自然EOF seek/重播及Host suspend/resume，六项原生首次通过、夹具4项、发现678/669；同session重建输出且完成态不自动重播，旧回调与关闭隔离通过。只改测试，无物理后台/长程/资源有界声明。下一项R2是重复生命周期资源观察，见[当前准入矩阵](../reports/2026-10-09-audio-eof-admission.md)。
+
+
+2026-10-09 R2已完成：默认/候选×seek/独立host Load-close各6轮，正式4/4、20/20heap、最终原生2/2，工具5项/夹具4项、发现678/671。修复采样计数漏掉晚到事件的P2后才正式测量；总堆变化和类型缺失如实归档，未认定整体有界。下一项R3是资源准入结论，见[当前矩阵](../reports/2026-10-09-audio-eof-admission.md)。
