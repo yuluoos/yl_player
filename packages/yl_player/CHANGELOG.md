@@ -1,5 +1,10 @@
 ## 0.2.0-dev.2
 
+- Add opt-in local Matroska embedded UTF8/ASS/SSA discovery from the committed
+  source, stable TrackUID selection and shared media-time rendering. External
+  and embedded catalogs preserve one another and share resource budgets.
+  Network/other containers/native callbacks remain outside this slice.
+
 - Add opt-in external VobSub DVD subtitles using explicit .sub/.idx pairs,
   managed loading/cancellation, index language selection, PS/SPU assembly,
   two-field RLE and timed palette/contrast/position changes. Shares bounded

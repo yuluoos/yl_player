@@ -1,0 +1,47 @@
+00:00 +0: loading /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart
+00:00 +0: same-language tracks use UID independent of order and TrackNumber
+00:00 +1: UID supports the entire unsigned 64-bit range
+00:00 +2: unknown Segment and non-default scale, signed block time, CodecDelay
+00:00 +3: SimpleBlock requires and uses DefaultDuration in nanoseconds
+00:00 +4: Cluster timestamp may follow blocks
+00:00 +5: ASS uses private styles, packet ReadOrder, exact times and commas
+00:00 +6: SSA uses private styles, packet ReadOrder, exact times and commas
+00:00 +7: UTF8 block content cannot inject file-level cues
+00:00 +8: rejects duplicate TrackUID
+00:00 +9: rejects duplicate TrackNumber
+00:00 +10: rejects truncated block
+00:00 +11: rejects missing track
+00:00 +12: rejects negative presentation
+00:00 +13: rejects zero duration
+00:00 +14: rejects duplicate timestamp
+00:00 +15: rejects oversized child
+00:00 +16: rejects unsupported codec
+00:00 +17: rejects unsupported compressed track
+00:00 +18: rejects unsupported missing duration
+00:00 +19: rejects unsupported lacing
+00:00 +20: rejects unsupported invisible subtitle
+00:00 +21: rejects unsupported block additions
+00:00 +22: rejects unsupported codec state
+00:00 +23: rejects unsupported nonneutral track scale
+00:00 +24: limits cue payload before reading it
+00:00 +25: limits catalog tracks
+00:00 +26: cancellation fences pending reads
+00:00 +27: video BlockGroups may have multiple references and huge skipped payload
+00:00 +27 -1: video BlockGroups may have multiple references and huge skipped payload [E]
+  SubtitleParseException(malformed)
+  package:yl_player/src/subtitles/matroska_subtitles.dart 21:7    MatroskaSubtitles._bad
+  package:yl_player/src/subtitles/matroska_subtitles.dart 108:41  MatroskaSubtitles._fields
+  
+00:00 +27 -1: catalog integration external replace/clear preserves embedded selection and offset
+00:00 +28 -1: catalog integration rediscovery preserves external selection and removes only embedded
+00:00 +29 -1: catalog integration missing UID clears selection rather than remapping same language
+00:00 +30 -1: catalog integration both directions of ID collision preserve the old catalog
+00:00 +31 -1: catalog integration malformed discovery is atomic and sanitized
+00:00 +32 -1: catalog integration unsupported network source makes no network request
+00:00 +33 -1: catalog integration missing file does not disclose path
+00:00 +34 -1: catalog integration queued scans are cancelled by external replacement
+00:00 +35 -1: catalog integration runtime reset cancels discovery with no late catalog
+00:00 +36 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: video BlockGroups may have multiple references and huge skipped payload

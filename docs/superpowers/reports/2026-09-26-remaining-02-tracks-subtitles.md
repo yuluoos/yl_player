@@ -236,3 +236,54 @@ owned Ahem 样本在固定媒体时点手工推导像素框，验证9锚点、�
 仓库根执行 `flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test`：**890/890、0失败、exit0**（135接口/560播放器/113 Apple/82 Android），本项新增73。播放器与接口lib/test静态分析 **No issues found、exit0**。未放宽任何既有门限。
 
 [证据清单](evidence/2026-10-11-subtitle-vobsub/manifest.json)保留完整原始日志、三张PNG、制品审计、复审裁定及源码/文档/依赖指纹。12份候选源码与隔离验证副本逐字节一致；独立Git index及HEAD比较更新仅提交本项文件与自身总览/CHANGELOG段，保留另一会话未提交内容。完整Task3/P02仍未完成，执行账本继续保留。
+
+## 2026-10-11 本地 Matroska 内嵌字幕发现、选择与渲染
+
+继续已授权 P02 字幕切片，在 `enableTextSubtitles: true` 下新增
+`session.discoverEmbeddedSubtitles()`，从**当前已提交会话的本地 MKV** 实际读取
+UTF8/SRT、ASS/SSA 轨道，使用 `mkv:<TrackUID>` 选择并由既有 `YlPlayerView` 合成。
+这是首个内嵌容器切片；网络、其他容器/内嵌位图、原生字幕回调仍未实现，不能据此
+关闭完整 P02/CAP-SUB。精确边界见[内嵌契约](../specs/2026-10-11-subtitle-embedded.md)。
+
+### 行为与裁定
+
+- 读取器按元素边界随机访问，跳过音视频载荷，严格验证父边界、TrackUID/TrackNumber
+  唯一性、时间戳与资源预算。支持未知长度 Segment，拒绝未知长度子元素；最多128条
+  总轨道、32条启用字幕、5万 Cluster、200万元素、64MiB读取量及30秒协作式I/O期限。
+- 容器时间戳、BlockDuration/DefaultDuration、CodecDelay 决定 cue 时段；保留微秒精度。
+  UTF8直接形成cue，避免文本注入伪SRT事件；ASS/SSA复用已有样式解析与合成，按ReadOrder
+  排序并使用精确容器时刻，不把时间舍入回ASS文件的百分秒。
+- 外挂替换/清空保留内嵌项，重新发现保留外挂项；同源原子发布、跨来源ID冲突拒绝。
+  选择依据UID，消失后关闭，不按同语言另选。内嵌与外挂共用4MiB输入、1万cue、2万run和
+  64MiB位图目录预算。取消后旧扫描不能发布，文件扫描串行释放描述符；新Load、seek、
+  off、Stop与Dispose沿用字幕媒体时钟门禁。
+- 范围裁定：通过现有Dart owner先完成本地MKV文本链路；没有添加原生桥接/解码路径。
+  代价是网络/其他容器和native字幕通道需继续实现；启用但不支持的codec会拒绝整个候选，
+  保留旧目录，不静默声称支持。字幕错误独立于视频状态，PD-03不在此决定。
+
+### 验证与复审
+
+真实文件入口先0/1失败（缺发现方法），接入后1/1；容器扩展36通过/1失败，修复普通
+视频BlockGroup的重复ReferenceBlock后通过。独立host FFmpeg封装的owned小型MKV含实际
+MPEG-4视频与双SRT轨，ffprobe记录真实包时刻/语言/forced标记；该CLI仅用于夹具生成，
+不加入运行时依赖。Flutter widget使用真实提取结果验证显示、off/seek清屏和卸载，
+视频平台状态由fake backend驱动，**不是实机播放或native字幕同步认证**。
+
+新Dart能力导致原生枚举对等测试先73通过/4失败，更新Dart-only排除集合后定向86/86；
+没有扩大原生广告能力或改动Pigeon。首次完整四包940/940，分析清洁。
+
+一次独立只读复审提出1 Important：显式ReferencePriority=0被误拒绝，依据RFC默认值
+接受零并继续拒绝非零。另1 Minor是32条启用字幕后出现禁用项仍触发上限，按已承诺的
+启用轨道计数规则重新定级为需修复。两项回归实际52通过/2失败，一次修复后**54/54**。
+无遗留minor，无第二轮复审；全部未判断范围、裁定及代价见[复审记录](evidence/2026-10-11-subtitle-embedded/review.md)。
+
+最终隔离候选基线 `38732230f4adbbd76e5ac6aec6298930a7965d9e`，只覆盖本项17份源码/测试/二进制
+夹具；此前基线新增的其他会话提交仅文档/证据，已核对无源码交集并同步。根目录执行
+`flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test`
+为 **944/944、exit0**（135接口/614播放器/113 Apple/82 Android，新增54项）。播放器和接口
+lib/test在隔离候选中的分析 **No issues found、exit0**。未放宽既有测试门限。
+
+[证据清单](evidence/2026-10-11-subtitle-embedded/manifest.json)保存成功/失败日志、ffprobe、制品审计、
+复审裁定及指纹；17份候选与验证副本逐字节一致。六份生产原生二进制、两份配方和两份
+FFmpeg锁与VobSub提交一致；无native构建/设备/长播放/弱网ABR运行。独立Git index与HEAD
+比较更新仅提交本项文件及自身总览/CHANGELOG段。整个P02仍开放，执行账本保留。

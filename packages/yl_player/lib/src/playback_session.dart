@@ -32,6 +32,19 @@ final class YlPlaybackSession {
     return _player._backend.selectAudioTrack(id, trackId);
   });
 
+  /// Discovers supported text tracks in the committed local Matroska source.
+  /// Requires enableTextSubtitles. Discovery is atomic, preserves external
+  /// entries and a still-present selection. New sessions start off.
+  /// Network/other containers reject without I/O.
+  Future<void> discoverEmbeddedSubtitles() => _command(() {
+    final runtime = _player._textSubtitles;
+    final source = _player._subtitleSource;
+    if (runtime == null || source == null) {
+      throw _exception(YlFailureCodes.policyUnsupported);
+    }
+    return _textSubtitleCommand(() => runtime.discover(source));
+  });
+
   /// Atomically replaces external subtitles; [] clears external entries.
   /// Backends without explicit support reject rather than ignoring resources.
   Future<void> replaceExternalSubtitles(List<YlExternalSubtitle> subtitles) =>

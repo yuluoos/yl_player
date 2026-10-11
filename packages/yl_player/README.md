@@ -210,8 +210,31 @@ field RLE, RGB palettes, contrast, positioning and timed control updates, sharin
 the 64 MiB bitmap catalog budget with PGS. Unsupported effects fail explicitly.
 See the [VobSub subset contract](../../docs/superpowers/specs/2026-10-11-subtitle-vobsub.md).
 
-This opt-in owns the external catalog and cannot be combined with a native
-subtitle SPI. It does not support embedded tracks,
-WebVTT CSS/regions/karaoke, or protected video overlays. HDR subtitle brightness
+This opt-in owns the subtitle catalog and cannot be combined with a native
+subtitle SPI. Embedded support is limited to the local Matroska text route below.
+It does not support WebVTT CSS/regions/karaoke or protected video overlays. HDR subtitle brightness
 and native-device synchronization remain unqualified. Without the opt-in, the
 existing native capability/SPI gates continue to apply.
+
+### Local Matroska embedded subtitles
+
+With the same `enableTextSubtitles: true` controller, discover text tracks from
+its committed local Matroska source, then select a returned identity:
+
+```dart
+final session = await player.load(YlFileSource('/media/movie.mkv'));
+await session.discoverEmbeddedSubtitles();
+final tracks = player.state.subtitles.tracks.where((t) => !t.isExternal);
+if (tracks.isNotEmpty) await session.selectSubtitleTrack(tracks.first.id);
+```
+
+`YlPlayerView` renders supported UTF8/SRT and ASS/SSA tracks using media time.
+Discovery is explicit and bounded; TrackUID identifies a track within the
+session. Replacing/clearing external subtitles preserves embedded entries;
+rediscovery preserves external entries and a still-present selection. A new
+session starts with subtitles off. Unsupported codecs/effects fail atomically.
+
+This route reads local stable MKV files only. Network/MP4/HLS/DASH, embedded
+bitmap/WebVTT/TTML and native subtitle callbacks remain unsupported. No additional
+native subtitle capability or physical-device acceptance is claimed. See the
+[embedded subset contract](../../docs/superpowers/specs/2026-10-11-subtitle-embedded.md).

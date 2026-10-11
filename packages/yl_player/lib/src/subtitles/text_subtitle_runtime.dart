@@ -2,6 +2,7 @@ import 'package:flutter/painting.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'subtitle_document.dart';
 import 'subtitle_resource.dart';
+import 'embedded_subtitle_resource.dart';
 
 final class TextSubtitleCue {
   const TextSubtitleCue(this.cue, this.text, {this.elapsed = Duration.zero});
@@ -14,6 +15,7 @@ final class _Document {
   _Document(this.document, this.text);
   final SubtitleDocument document;
   final List<TextSpan> text;
+  int get runs => text.fold<int>(0, (n, span) => n + span.children!.length);
 }
 
 /// Internal single-owner catalog. Publication happens only after complete I/O,
@@ -22,6 +24,7 @@ final class TextSubtitleRuntime {
   YlSubtitleState state = YlSubtitleState();
   Map<String, _Document> _documents = {};
   SubtitleCancellation? _pending;
+  Future<void> _scanTail = Future.value();
   void cancel() {
     _pending?.cancel();
     _pending = null;
@@ -44,11 +47,23 @@ final class TextSubtitleRuntime {
     }
     final token = SubtitleCancellation();
     _pending = token;
-    final documents = <String, _Document>{};
-    var bytesLeft = 4 * 1024 * 1024;
-    var cuesLeft = 10000;
-    var runsLeft = 20000;
-    var bitmapBytesLeft = 64 * 1024 * 1024;
+    final retained = state.tracks.where((t) => !t.isExternal).toList();
+    final documents = {for (final t in retained) t.id: _documents[t.id]!};
+    if (sources.any((s) => documents.containsKey(s.id))) {
+      _pending = null;
+      token.cancel();
+      throw subtitleFailure(YlFailureCodes.sourceInvalid);
+    }
+    var bytesLeft =
+        4 * 1024 * 1024 -
+        documents.values.fold<int>(0, (n, d) => n + d.document.inputBytes);
+    var cuesLeft =
+        10000 -
+        documents.values.fold<int>(0, (n, d) => n + d.document.cues.length);
+    var runsLeft = 20000 - documents.values.fold<int>(0, (n, d) => n + d.runs);
+    var bitmapBytesLeft =
+        64 * 1024 * 1024 -
+        documents.values.fold<int>(0, (n, d) => n + d.document.pgsBitmapBytes);
     try {
       for (final source in sources) {
         final index = source.companionSource == null
@@ -95,58 +110,15 @@ final class TextSubtitleRuntime {
         if (cuesLeft < 0) {
           throw subtitleFailure(YlFailureCodes.subtitleTooLarge);
         }
-        final text = <TextSpan>[];
-        for (final cue in doc.cues) {
-          final span = cue.pgs != null
-              ? const TextSpan(children: [])
-              : cue.ass != null
-              ? TextSpan(
-                  children: [
-                    for (final run in cue.ass!.runs)
-                      TextSpan(
-                        text: run.text,
-                        style: TextStyle(
-                          fontWeight: run.style.bold
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                        ),
-                      ),
-                  ],
-                )
-              : cue.textRuns == null
-              ? parseSubtitleText(cue.payload)
-              : TextSpan(
-                  children: [
-                    for (final run in cue.textRuns!)
-                      TextSpan(
-                        text: run.text,
-                        style: TextStyle(
-                          fontWeight: run.bold
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                          fontStyle: run.italic
-                              ? FontStyle.italic
-                              : FontStyle.normal,
-                          decoration: run.underline
-                              ? TextDecoration.underline
-                              : TextDecoration.none,
-                          color: Color(run.color),
-                        ),
-                      ),
-                  ],
-                );
-          runsLeft -= span.children!.length;
-          if (runsLeft < 0) {
-            throw subtitleFailure(YlFailureCodes.subtitleTooLarge);
-          }
-          text.add(span);
-        }
-        documents[source.id] = _Document(doc, text);
+        final rendered = _renderDocument(doc, runsLeft);
+        runsLeft -= rendered.runs;
+        documents[source.id] = rendered;
       }
       token.check();
       _documents = documents;
       state = state.copyWith(
         tracks: [
+          ...retained,
           for (final source in sources)
             YlSubtitleTrack(
               id: source.id,
@@ -174,6 +146,78 @@ final class TextSubtitleRuntime {
     }
   }
 
+  /// Serial file scans prevent rapid cancellation/retry from retaining many
+  /// open media descriptors. The latest catalog operation wins publication.
+  Future<void> discover(YlMediaSource source) {
+    cancel();
+    final token = SubtitleCancellation();
+    _pending = token;
+    final prior = _scanTail;
+    final work = () async {
+      try {
+        await prior;
+        token.check();
+        final data = await readEmbeddedSubtitles(source, token);
+        token.check();
+        final retained = state.tracks.where((t) => t.isExternal).toList();
+        final documents = {for (final t in retained) t.id: _documents[t.id]!};
+        var bytesLeft =
+            4 * 1024 * 1024 -
+            documents.values.fold<int>(0, (n, d) => n + d.document.inputBytes);
+        var cuesLeft =
+            10000 -
+            documents.values.fold<int>(0, (n, d) => n + d.document.cues.length);
+        var runsLeft =
+            20000 - documents.values.fold<int>(0, (n, d) => n + d.runs);
+        for (final entry in data) {
+          token.check();
+          if (documents.containsKey(entry.track.id)) {
+            throw subtitleFailure(YlFailureCodes.sourceInvalid);
+          }
+          // Zero remaining budget still allows an empty track; parse with the
+          // hard ceiling then check aggregate before any publication.
+          final doc = SubtitleDocument.fromEmbeddedPackets(
+            entry.packets,
+            format: switch (entry.track.format) {
+              YlSubtitleFormat.ass => SubtitleFormat.ass,
+              YlSubtitleFormat.ssa => SubtitleFormat.ssa,
+              _ => SubtitleFormat.srt,
+            },
+            codecPrivate: entry.codecPrivate,
+            limits: SubtitleLimits(maxAssRuns: runsLeft),
+          );
+          bytesLeft -= doc.inputBytes;
+          cuesLeft -= doc.cues.length;
+          if (bytesLeft < 0 || cuesLeft < 0) {
+            throw subtitleFailure(YlFailureCodes.subtitleTooLarge);
+          }
+          final rendered = _renderDocument(doc, runsLeft);
+          runsLeft -= rendered.runs;
+          documents[entry.track.id] = rendered;
+        }
+        token.check();
+        _documents = documents;
+        state = state.copyWith(
+          tracks: [...data.map((d) => d.track), ...retained],
+          selectedTrackId: documents.containsKey(state.selectedTrackId)
+              ? state.selectedTrackId
+              : null,
+        );
+      } on SubtitleParseException catch (error) {
+        throw subtitleFailure(switch (error.reason) {
+          SubtitleParseReason.malformed => YlFailureCodes.subtitleMalformed,
+          SubtitleParseReason.unsupported => YlFailureCodes.subtitleUnsupported,
+          SubtitleParseReason.limitExceeded => YlFailureCodes.subtitleTooLarge,
+        });
+      } finally {
+        if (identical(_pending, token)) _pending = null;
+        token.cancel();
+      }
+    }();
+    _scanTail = work.then<void>((_) {}, onError: (Object _, StackTrace _) {});
+    return work;
+  }
+
   void select(String? id) {
     if (id != null && !_documents.containsKey(id)) {
       throw subtitleFailure(YlFailureCodes.sourceInvalid);
@@ -194,6 +238,52 @@ final class TextSubtitleRuntime {
         ),
     ];
   }
+}
+
+_Document _renderDocument(SubtitleDocument doc, int runsLeft) {
+  final text = <TextSpan>[];
+  for (final cue in doc.cues) {
+    final span = cue.pgs != null
+        ? const TextSpan(children: [])
+        : cue.ass != null
+        ? TextSpan(
+            children: [
+              for (final run in cue.ass!.runs)
+                TextSpan(
+                  text: run.text,
+                  style: TextStyle(
+                    fontWeight: run.style.bold
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                  ),
+                ),
+            ],
+          )
+        : cue.textRuns == null
+        ? parseSubtitleText(cue.payload)
+        : TextSpan(
+            children: [
+              for (final run in cue.textRuns!)
+                TextSpan(
+                  text: run.text,
+                  style: TextStyle(
+                    fontWeight: run.bold ? FontWeight.bold : FontWeight.normal,
+                    fontStyle: run.italic ? FontStyle.italic : FontStyle.normal,
+                    decoration: run.underline
+                        ? TextDecoration.underline
+                        : TextDecoration.none,
+                    color: Color(run.color),
+                  ),
+                ),
+            ],
+          );
+    runsLeft -= span.children!.length;
+    if (runsLeft < 0) {
+      throw subtitleFailure(YlFailureCodes.subtitleTooLarge);
+    }
+    text.add(span);
+  }
+  return _Document(doc, text);
 }
 
 /// A deliberately closed markup subset. Never treats payload as HTML or loads

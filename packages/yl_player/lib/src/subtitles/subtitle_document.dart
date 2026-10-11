@@ -5,6 +5,7 @@ import 'package:xml/xml.dart' show XmlDefaultEntityMapping, XmlException;
 import 'package:xml/xml_events.dart';
 
 part 'ttml_parser.dart';
+part 'embedded_subtitle_document.dart';
 part 'ass_parser.dart';
 part 'pgs_parser.dart';
 part 'vobsub_parser.dart';
@@ -118,6 +119,13 @@ final class SubtitleDocument {
   int get pgsBitmapBytes =>
       cues.fold(0, (n, c) => n + (c.pgs?.byteLength ?? 0));
   final _CueNode? _index;
+
+  static SubtitleDocument fromEmbeddedPackets(
+    List<EmbeddedSubtitlePacket> packets, {
+    required SubtitleFormat format,
+    String? codecPrivate,
+    SubtitleLimits limits = const SubtitleLimits(),
+  }) => _embeddedDocument(packets, format, codecPrivate, limits);
 
   /// Explicit paired VobSub resources; shared RGBA budget is historical PGS name.
   static SubtitleDocument parseVobSub(

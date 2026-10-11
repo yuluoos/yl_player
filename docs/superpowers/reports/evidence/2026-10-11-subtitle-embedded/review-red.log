@@ -1,0 +1,71 @@
+00:00 +0: loading /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart
+00:00 +0: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: same-language tracks use UID independent of order and TrackNumber
+00:00 +1: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: UID supports the entire unsigned 64-bit range
+00:00 +2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: unknown Segment and non-default scale, signed block time, CodecDelay
+00:00 +3: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: SimpleBlock requires and uses DefaultDuration in nanoseconds
+00:00 +4: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: Cluster timestamp may follow blocks
+00:00 +5: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: ASS uses private styles, packet ReadOrder, exact times and commas
+00:00 +6: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: SSA uses private styles, packet ReadOrder, exact times and commas
+00:00 +7: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: UTF8 block content cannot inject file-level cues
+00:00 +8: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: rejects duplicate TrackUID
+00:00 +9: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: rejects duplicate TrackNumber
+00:00 +10: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: rejects truncated block
+00:00 +11: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: rejects missing track
+00:00 +12: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: rejects negative presentation
+00:00 +13: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: rejects zero duration
+00:00 +14: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: rejects duplicate timestamp
+00:00 +15: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: rejects oversized child
+00:00 +16: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported codec
+00:00 +17: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported compressed track
+00:00 +18: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported missing duration
+00:00 +19: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported lacing
+00:00 +20: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported invisible subtitle
+00:00 +21: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported block additions
+00:00 +22: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported codec state
+00:00 +23: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported nonneutral track scale
+00:00 +24: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: limits cue payload before reading it
+00:00 +25: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: limits catalog tracks
+00:00 +26: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: cancellation fences pending reads
+00:00 +27: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: video BlockGroups may have multiple references and huge skipped payload
+00:00 +28: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: independently muxed owned MKV exposes two real subtitle streams
+00:00 +29: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: container timing enforces overlap budget
+00:00 +30: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: ASS header cannot inject separately timed events
+00:00 +31: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: ASS duplicate ReadOrder rejects ambiguous ordering
+00:00 +32: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: every truncated prefix rejects without raw bounds errors
+00:00 +33: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: explicit default ReferencePriority zero preserves subtitle semantics
+00:00 +33 -1: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: explicit default ReferencePriority zero preserves subtitle semantics [E]
+  SubtitleParseException(unsupported)
+  package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+  package:yl_player/src/subtitles/matroska_subtitles.dart 295:51  MatroskaSubtitles._block
+  
+00:00 +33 -1: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: nonzero ReferencePriority remains an explicit unsupported boundary
+00:00 +34 -1: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: 32 enabled tracks plus disabled entries, disabled first=false
+00:00 +34 -2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: 32 enabled tracks plus disabled entries, disabled first=false [E]
+  SubtitleParseException(limitExceeded)
+  package:yl_player/src/subtitles/matroska_subtitles.dart 25:7    MatroskaSubtitles._limit
+  package:yl_player/src/subtitles/matroska_subtitles.dart 199:31  MatroskaSubtitles._track
+  
+00:00 +34 -2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: 32 enabled tracks plus disabled entries, disabled first=true
+00:00 +35 -2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration external replace/clear preserves embedded selection and offset
+00:00 +36 -2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration rediscovery preserves external selection and removes only embedded
+00:00 +37 -2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration missing UID clears selection rather than remapping same language
+00:00 +38 -2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration both directions of ID collision preserve the old catalog
+00:00 +39 -2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration malformed discovery is atomic and sanitized
+00:00 +40 -2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration unsupported network source makes no network request
+00:00 +41 -2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration missing file does not disclose path
+00:00 +42 -2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration embedded and external catalogs share the 4 MiB input budget
+00:01 +43 -2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration queued scans are cancelled by external replacement
+00:01 +44 -2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration runtime reset cancels discovery with no late catalog
+00:01 +45 -2: loading /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_session_test.dart
+00:01 +45 -2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_session_test.dart: discover the committed MKV, select its UID and render on media clock
+00:02 +46 -2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_session_test.dart: session lifecycle offset and seek clear/requery the actual container cue
+00:02 +47 -2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_session_test.dart: session lifecycle new Load starts off and stale discovery cannot publish
+00:02 +48 -2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_session_test.dart: session lifecycle Stop cancels discovery and removes old track/selection
+00:02 +49 -2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_session_test.dart: session lifecycle Dispose cancels pending scan
+00:02 +50 -2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_session_test.dart: session lifecycle YlPlayerView renders discovered text and clears off/seek/unmount
+00:02 +51 -2: /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_session_test.dart: default controller rejects discovery without opted-in ownership
+00:02 +52 -2: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: 32 enabled tracks plus disabled entries, disabled first=false
+  /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_test.dart: explicit default ReferencePriority zero preserves subtitle semantics

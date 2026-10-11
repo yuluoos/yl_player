@@ -8,6 +8,7 @@ import 'support/android_fakes.dart';
 // These optional Dart operations are not part of the current native schema.
 const _dartOnlyOperations = {
   YlPlayerOperation.externalSubtitles,
+  YlPlayerOperation.embeddedSubtitles,
   YlPlayerOperation.subtitleTrackSelection,
   YlPlayerOperation.subtitleOffset,
   YlPlayerOperation.livePlaybackMode,

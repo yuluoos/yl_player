@@ -14,8 +14,8 @@ final class YlPlayerController implements Listenable {
   static Future<YlPlayerController> create({
     YlPlayerOptions options = const YlPlayerOptions(),
     YlPlayerPlatform? platform,
-    // Explicit external text and PGS/VobSub bitmap subtitle ownership. Native subtitle SPI remains the
-    // default; a controller cannot negotiate both subtitle owners.
+    // Own external text/bitmap and local Matroska text subtitles in Dart.
+    // Native subtitle SPI remains the default; only one owner is allowed.
     bool enableTextSubtitles = false,
   }) async {
     validateYlPlayerOptions(options);
@@ -115,6 +115,7 @@ final class YlPlayerController implements Listenable {
   bool _subtitleSeeking = false;
   bool _subtitleAwaitingPosition = false;
   bool _subtitleProtectedSource = false;
+  YlMediaSource? _subtitleSource;
   final _notifier = _PlayerNotifier();
   final ValueNotifier<int?> _texture;
   final _states = StreamController<YlPlayerState>.broadcast(sync: true);
@@ -136,6 +137,7 @@ final class YlPlayerController implements Listenable {
           supportedOperations: {
             ..._backend.capabilities.supportedOperations,
             YlPlayerOperation.externalSubtitles,
+            YlPlayerOperation.embeddedSubtitles,
             YlPlayerOperation.subtitleTrackSelection,
             YlPlayerOperation.subtitleOffset,
           }.toList(),
@@ -294,6 +296,7 @@ final class YlPlayerController implements Listenable {
         throw _exception(YlFailureCodes.protocolMismatch);
       }
       _record(state);
+      _subtitleSource = source;
       _subtitleProtectedSource =
           source is YlNetworkSource && source.drm != null;
       final milestones = _milestones!;
@@ -333,6 +336,7 @@ final class YlPlayerController implements Listenable {
       if (next.sessionId != state.sessionId ||
           next.status == YlPlaybackStatus.idle) {
         _textSubtitles.reset();
+        _subtitleSource = null;
         _subtitleSeekSerial++;
         _subtitleSeeking = false;
         _subtitleProtectedSource = false;
@@ -453,6 +457,7 @@ final class YlPlayerController implements Listenable {
       _milestones = null;
       if (_textSubtitles != null) {
         _textSubtitles.reset();
+        _subtitleSource = null;
         _subtitleSeekSerial++;
         _subtitleSeeking = false;
         _subtitleAwaitingPosition = false;
@@ -465,6 +470,7 @@ final class YlPlayerController implements Listenable {
   Future<void> dispose() => _disposeFuture ??= _dispose();
   Future<void> _dispose() async {
     _textSubtitles?.reset();
+    _subtitleSource = null;
     if (_textSubtitles != null) {
       _state = state.copyWith(
         revision: state.revision + 1,

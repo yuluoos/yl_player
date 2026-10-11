@@ -150,7 +150,7 @@ final class _AssParser {
     sealed = true;
   }
 
-  SubtitleDocument parse(String input, int bytes) {
+  SubtitleDocument parse(String input, int bytes, {bool headerOnly = false}) {
     // Bound line objects before splitting; CRLF is one line ending.
     var breaks = 0;
     for (var i = 0; i < input.length; i++) {
@@ -239,6 +239,7 @@ final class _AssParser {
             );
             if (eventFormat.last != 'text') _unsupported();
           } else if (key == 'dialogue' && eventFormat != null) {
+            if (headerOnly) _unsupported();
             if (cues.length >= limits.maxCues) _limit();
             if (value.length > limits.maxCueCodeUnits + 4096) _limit();
             dialogue(_assRow(eventFormat, value, text: true));
@@ -252,7 +253,9 @@ final class _AssParser {
       }
     }
     seal();
-    if (eventFormat == null || styleFormat == null || styles.isEmpty) {
+    if ((!headerOnly && eventFormat == null) ||
+        styleFormat == null ||
+        styles.isEmpty) {
       _malformed();
     }
     return SubtitleDocument._finish(cues, bytes, limits);
@@ -303,7 +306,11 @@ final class _AssParser {
     );
   }
 
-  void dialogue(Map<String, String> r) {
+  void dialogue(
+    Map<String, String> r, {
+    Duration? startOverride,
+    Duration? endOverride,
+  }) {
     if (r['effect']!.isNotEmpty) _unsupported();
     if (ssa &&
         !RegExp(
@@ -313,7 +320,8 @@ final class _AssParser {
       _malformed();
     }
     final layer = ssa ? 0 : _assInteger(r['layer']!, max: 65535);
-    final start = _assTime(r['start']!), end = _assTime(r['end']!);
+    final start = startOverride ?? _assTime(r['start']!),
+        end = endOverride ?? _assTime(r['end']!);
     if (end <= start) _malformed();
     final base = styles[r['style']!];
     if (base == null) _malformed();

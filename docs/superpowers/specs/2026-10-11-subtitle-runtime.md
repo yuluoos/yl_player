@@ -83,3 +83,13 @@ one cancellation token and the shared encoded/expanded catalog budgets. The
 PGS compositor also draws these immutable RGBA frames. Public metadata and native
 protocols are unchanged; one entry selects one index substream. Advanced DVD/HD,
 embedded, HDR/protected output and physical-device acceptance remain open.
+
+
+## Embedded local Matroska extension (2026-10-11)
+
+The same opt-in owner now supports explicit `discoverEmbeddedSubtitles()` for
+its committed local Matroska source, covering UTF8/ASS/SSA with stable TrackUID
+identities and existing rendering/lifecycle. Catalog operations preserve the
+other origin and share aggregate budgets. See [the exact embedded contract](2026-10-11-subtitle-embedded.md).
+Earlier embedded exclusions above describe prior slices; other containers,
+network/bitmap embedded streams and native subtitle callbacks remain open.

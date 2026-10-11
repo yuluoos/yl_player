@@ -581,7 +581,7 @@ does not imply that AV1-capable Apple devices lack a decoder. The product route
 is unchanged; no Apple AV1 software budget is measured or admitted. See the
 [P03 report](superpowers/reports/2026-09-26-remaining-03-formats-decoding.md).
 
-## External subtitles (Dart opt-in)
+## Subtitles (Dart opt-in)
 
 `YlPlayerController.create(enableTextSubtitles: true)` enables a bounded external
 SRT/WebVTT/TTML/ASS/SSA text and PGS/VobSub bitmap runtime with an ordinary-video `YlPlayerView` overlay. This is Dart-owned;
@@ -597,7 +597,8 @@ current native adapters still do not advertise a native subtitle SPI.
 | ASS/SSA text subset | Explicit script resolution/WrapStyle 1 or 2, styles/outline/shadow/position/layers/move/fad; real file/managed HTTP and Ahem fixed-time pixel tests; no libass/font-metric equivalence |
 | PGS external SUP subset | Binary framing/RLE, palettes/clear, cropped/windowed objects; file/managed HTTP, manual pixel grids, late-image disposal and bounded asynchronous decode tests |
 | VobSub external DVD subset | Explicit idx/sub pair, language/substream matching, PS/SPU fragments, two-field RLE, timed palette/alpha/clear; real paired I/O and owned full-pixel grids |
-| Embedded tracks, advanced TTML/ASS/SSA/PGS/VobSub and advanced WebVTT | Not implemented by this runtime |
+| Local Matroska embedded UTF8/ASS/SSA | Explicit committed-source discovery, TrackUID selection and shared overlay; owned EBML plus independent muxer/ffprobe and Flutter lifecycle tests |
+| Other embedded containers/codecs, network embedded subtitles, advanced TTML/ASS/SSA/PGS/VobSub and advanced WebVTT | Not implemented by this runtime |
 | Protected output, HDR brightness and physical-device subtitle sync | Not accepted; protected surfaces reject subtitle commands |
 
 The ordinary Flutter path is available to Android/iOS/macOS consumers, but this

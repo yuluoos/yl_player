@@ -1,0 +1,17 @@
+Analyzing lib, embedded_subtitle_test.dart, embedded_subtitle_session_test.dart, matroska_fixture.dart, lib...
+
+   info - packages/yl_player/lib/src/subtitles/embedded_subtitle_document.dart:25:5 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/embedded_subtitle_document.dart:32:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/embedded_subtitle_document.dart:38:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/embedded_subtitle_document.dart:77:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/matroska_subtitles.dart:120:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/matroska_subtitles.dart:192:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/matroska_subtitles.dart:210:9 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/matroska_subtitles.dart:223:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/matroska_subtitles.dart:303:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/matroska_subtitles.dart:312:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/text_subtitle_runtime.dart:173:13 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/text_subtitle_runtime.dart:189:13 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/test/embedded_subtitle_session_test.dart:4:8 - The import of 'package:yl_player_platform_interface/yl_player_platform_interface.dart' is unnecessary because all of the used elements are also provided by the import of 'package:yl_player/yl_player.dart'. Try removing the import directive. - unnecessary_import
+
+13 issues found.

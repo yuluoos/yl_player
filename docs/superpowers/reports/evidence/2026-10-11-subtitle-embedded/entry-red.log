@@ -1,0 +1,13 @@
+00:00 +0: loading /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_session_test.dart
+00:00 +0: discover the committed MKV, select its UID and render on media clock
+00:00 +0 -1: discover the committed MKV, select its UID and render on media clock [E]
+  NoSuchMethodError: Class 'YlPlaybackSession' has no instance method 'discoverEmbeddedSubtitles'.
+  Receiver: Instance of 'YlPlaybackSession'
+  Tried calling: discoverEmbeddedSubtitles()
+  dart:core                                                          Object.noSuchMethod
+  packages/yl_player/test/embedded_subtitle_session_test.dart 20:30  main.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-embedded-validation-t18i1kng/packages/yl_player/test/embedded_subtitle_session_test.dart: discover the committed MKV, select its UID and render on media clock
