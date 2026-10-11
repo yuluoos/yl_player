@@ -246,6 +246,7 @@ final class YlMacosVideoTests: XCTestCase {
     frameExpectation.assertForOverFulfill = false
     let outputLock = NSLock()
     var outputPixelFormat: OSType?
+    var outputSurfaceDiagnostics: [String: Any]?
     let decoder: YlVideoToolboxDecoder
     do {
       decoder = try YlVideoToolboxDecoder(
@@ -253,6 +254,20 @@ final class YlMacosVideoTests: XCTestCase {
         onFrame: { frame in
           outputLock.withLock {
             outputPixelFormat = CVPixelBufferGetPixelFormatType(frame.pixelBuffer)
+            let buffer = frame.pixelBuffer
+            outputSurfaceDiagnostics = [
+              "coreAnimationCompatible": CVPixelBufferIsCompatibleWithAttributes(
+                buffer,
+                [kCVPixelBufferIOSurfaceCoreAnimationCompatibilityKey: true] as CFDictionary
+              ),
+              "pixelFormat": CVPixelBufferGetPixelFormatType(buffer),
+              "width": CVPixelBufferGetWidth(buffer),
+              "height": CVPixelBufferGetHeight(buffer),
+              "dataSize": CVPixelBufferGetDataSize(buffer),
+              "planeStrides": (0..<CVPixelBufferGetPlaneCount(buffer)).map {
+                CVPixelBufferGetBytesPerRowOfPlane(buffer, $0)
+              },
+            ]
           }
           frameExpectation.fulfill()
         },
@@ -300,6 +315,15 @@ final class YlMacosVideoTests: XCTestCase {
     }
     decoder.drain()
     wait(for: [frameExpectation], timeout: 2)
+    // Copy only scalar evidence: diagnostics must not retain a decoded buffer
+    // or serialize the creation dictionary's native callback/address values.
+    let surfaceDiagnostics = try XCTUnwrap(outputLock.withLock { outputSurfaceDiagnostics })
+    let attachment = XCTAttachment(data: try JSONSerialization.data(
+      withJSONObject: surfaceDiagnostics, options: [.sortedKeys]
+    ), uniformTypeIdentifier: "public.json")
+    attachment.name = "decoded-pixel-surface-compatibility"
+    attachment.lifetime = .keepAlways
+    add(attachment)
 
     XCTAssertEqual(
       outputLock.withLock { outputPixelFormat },
