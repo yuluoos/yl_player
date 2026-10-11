@@ -144,4 +144,13 @@ class CompleteIntervalTests(unittest.TestCase):
         self.assertEqual(command[command.index('--notify-tracing-started')+1],'run-token')
         self.assertEqual(command[command.index('--window')+1],'10s')
 
+    def test_thread_activity_preserves_gate_and_complete_window_without_extra_agents(self):
+        command=trace.recording_command(41,'run-token',Path('/tmp/test.trace'),1320,False,thread_activity_only=True)
+        self.assertEqual(command[command.index('--template')+1],'Blank')
+        self.assertEqual([command[i+1] for i,x in enumerate(command) if x=='--instrument'],['Thread Activity'])
+        self.assertEqual(command[command.index('--attach')+1],'41')
+        self.assertEqual(command[command.index('--notify-tracing-started')+1],'run-token')
+        self.assertEqual(command[command.index('--window')+1],'10s')
+        self.assertEqual(command[command.index('--time-limit')+1],'1320s')
+
 if __name__=='__main__':unittest.main()

@@ -83,9 +83,11 @@ def capture_tail_complete(trigger,row,now):
     return now-trigger.get('tailStartedUptime',trigger['detectedUptime'])>=.25
 
 
-def recording_command(pid, name, trace, duration, system_trace_only, *, all_processes=False):
-    command=['xcrun','xctrace','record','--template','System Trace']
-    if not system_trace_only:
+def recording_command(pid, name, trace, duration, system_trace_only, *, all_processes=False, thread_activity_only=False):
+    command=['xcrun','xctrace','record','--template','Blank' if thread_activity_only else 'System Trace']
+    if thread_activity_only:
+        command.extend(['--instrument','Thread Activity'])
+    elif not system_trace_only:
         command.extend(['--instrument','Core Animation Server','--instrument','Display'])
     command.extend(['--all-processes'] if all_processes else ['--attach',str(pid)])
     command.extend(['--notify-tracing-started',name,'--time-limit',str(duration)+'s','--output',str(trace),'--window','10s'])
@@ -141,7 +143,9 @@ def main():
     p.add_argument('--products',type=Path,required=True)
     p.add_argument('--directory',type=Path,required=True)
     p.add_argument('--long',action='store_true')
-    p.add_argument('--system-trace-only',action='store_true',help='Capture threads without extra Core Animation Server/Display agents')
+    profile=p.add_mutually_exclusive_group()
+    profile.add_argument('--system-trace-only',action='store_true',help='Capture threads without extra Core Animation Server/Display agents')
+    profile.add_argument('--thread-activity-only',action='store_true',help='Use Blank + Thread Activity; validate exported thread coverage before interpreting results')
     p.add_argument('--all-processes',action='store_true',help='Record system-wide instead of attaching to the owned player; retain the owned-player playback gate')
     p.add_argument('--ready-threshold-ms',type=positive_milliseconds,default=60,help='Diagnostic capture trigger only; does not change playback or acceptance limits')
     p.add_argument('--capture-system-drops',action='store_true',help='Also retain a system-drop window; defer stopping while the latest observed snapshot reports pending ready recovery')
@@ -159,7 +163,7 @@ def main():
          '--products',str(args.products.resolve()),'--configuration','Profile','--directory',str(bench),
          '--app-name',args.app_name,'--candidate','--without-thread-checker','--diagnostics','--transport-diagnostics','--trace-gate-token',token]
     if args.long: cmd.append('--long')
-    receipt=dict(captureSystemDrops=args.capture_system_drops,systemTraceOnly=args.system_trace_only,allProcesses=args.all_processes,readyThresholdMs=args.ready_threshold_ms,diagnosticOnly=True,formalAcceptance=False,productionAdmission=False,benchmarkCommand=cmd,token=token,notificationName=name)
+    receipt=dict(captureSystemDrops=args.capture_system_drops,systemTraceOnly=args.system_trace_only,threadActivityOnly=args.thread_activity_only,allProcesses=args.all_processes,readyThresholdMs=args.ready_threshold_ms,diagnosticOnly=True,formalAcceptance=False,productionAdmission=False,benchmarkCommand=cmd,token=token,notificationName=name)
     b=None;t=None;stop_sent=False;trigger=None;errors=[];start=time.monotonic()
     tail=RowTail(bench/'rows.jsonl'); drop_detector=SystemDropTrigger(); pending_drop=None
     try:
@@ -176,7 +180,7 @@ def main():
                     if req['token']!=token or not isinstance(pid,int) or pid<=0: raise RuntimeError('wrong gate identity')
                     actual=subprocess.check_output(['ps','-p',str(pid),'-o','comm='],text=True).strip()
                     if Path(actual).resolve()!=app.resolve(): raise RuntimeError('gate PID is not the owned player')
-                    tc=recording_command(pid,name,trace,duration,args.system_trace_only,all_processes=args.all_processes)
+                    tc=recording_command(pid,name,trace,duration,args.system_trace_only,all_processes=args.all_processes,thread_activity_only=args.thread_activity_only)
                     receipt.update(ownedPID=pid,traceCommand=tc,traceRequestedUptime=now)
                     t=subprocess.Popen(tc,stdout=tlog,stderr=tlog);receipt['tracePID']=t.pid
                     trace_deadline=now+60
