@@ -36,3 +36,29 @@
 [证据清单](evidence/2026-10-11-subtitle-parser/manifest.json)记录源码/测试/契约 SHA-256、命令和原始日志哈希，红灯及最终结果一并保留。下一步仍是 Task 1 的字幕公开命令/身份契约，再接媒体会话和画面；PD-03 仅限制故障恢复决策。
 
 用户随后明确要求 commit 后继续；提交前核对三个源码/契约指纹与四份原始日志一致，147 项与静态分析证据有效。本提交只包含 P02 文件；P04 已独立提交为 b8a83c9。
+
+## 2026-10-11：Task 1A 字幕公开 Dart 契约
+
+解析切片已提交 `a8acb0b`；通用日志忽略规则排除的四份原始证据另补提交 `fd24126`。以 `fd24126` 为本切片起点，沿用当前 checkout；并行会话后续提交的 `a50767b` 和未提交 ABR 改动不属于本项。
+
+### 交付和决定
+
+新增公开 YlExternalSubtitle/YlSubtitleTrack/YlSubtitleState/YlSubtitleFormat，包含请求策略、语言/role/内容身份、VobSub 成对资源和有限目录校验。YlPlayerState 默认关闭字幕，copyWith/equality/hash 包含字幕快照。现有音视频轨道 ordinal 不变；Dart capability 末尾追加三项，可选 SPI 与 capability 双门禁保护旧适配器。
+
+会话增加 replaceExternalSubtitles、selectSubtitleTrack(null 即关闭)、setSubtitleOffset。列表在派发前复制；成功或失败回包后重新检查会话，切源、Stop、Dispose 后不能返回旧会话成功。命令不乐观发布字幕状态，格式身份不构成播放支持声明。详见[公开契约](../specs/2026-09-26-subtitle-contract.md)。
+
+Task 1A 只完成 Dart 合约，native schema/生成文件保持不变，且当前原生适配器不广告三项字幕能力。后续才能落实下载取消、同会话命令顺序、原子替换、实际 cue/画面合成。多音轨真实选择和 PD-03 没有被此契约决定；Task 1 整体与 CAP-SUB 仍开放。
+
+### 失败与回归
+
+- 新合约与会话用例均先实际 RED（缺失 API），随后定向 9/9 和 23/23；再补公开导出和权威状态/失败回滚检查。
+- 平台接口首轮130通过/2失败，原因输出为旧 conformance.timeout（原门限80ms）；保持用例/门限不变的串行运行132/132。保留首轮失败，不将其称作确定的根因修复。
+- Apple 首轮109通过/3失败，其中两项是旧“全 Dart/native enum 对等”假设，另一项是执行目录不符合 schema 文件相对路径。Android 首轮79通过/2失败，同为枚举预期。
+- 兼容测试改为精确原生子集，仅排除三项尚未进入 native 的字幕能力，并新增“原生不广告字幕、状态默认关闭”的断言。从仓库根正确入口执行，Apple113/113、Android82/82；播放器171/171。
+- 静态分析最终 No issues found。Pigeon schema/生成物 git diff 为空；为避免共享生成/原生构建冲突，本轮不重生成、不运行原生构建或设备。此项不冒充新的 Pigeon-generation/native gate。
+
+一次独立复审无 Important/Critical。非阻断建议暂缓：session 测试 matcher 检查 code/scope，尚未额外锁定 unsupported category/retryable=false；实现通过既有 _exception 正确返回这两项。后续可补强化断言。
+
+最终集中验收和源码指纹见下方追加记录；初轮失败保留，不以最终成功抹去。下一项为可用适配器的字幕加载/取消与媒体时钟渲染接入，期间继续推进 TTML 和 Task 1 音轨身份。
+
+最终冻结源码的集中命令：从仓库根运行 `flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test`，**498/498、0失败、exit 0**。原80ms/30ms测试门限未修改；静态检查无问题。四个包覆盖数为132/171/113/82。[契约证据清单](evidence/2026-10-11-subtitle-contract/manifest.json)保存15份源码/测试/规范指纹与7份原始日志；本切片将独立提交，不包含并行网络工具与example验收改动。

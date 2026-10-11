@@ -1,0 +1,366 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/subtitle_contract_test.dart
+test/subtitle_contract_test.dart:4:1: Error: Type 'YlExternalSubtitle' not found.
+YlExternalSubtitle external({String id = 's', YlMediaSource? source,
+^^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:5:3: Error: Type 'YlSubtitleFormat' not found.
+  YlSubtitleFormat format = YlSubtitleFormat.srt, YlMediaSource? companion}) =>
+  ^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:9:54: Error: Undefined name 'YlSubtitleFormat'.
+const track = YlSubtitleTrack(id: 'en-main', format: YlSubtitleFormat.webvtt,
+                                                     ^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:9:15: Error: Method not found: 'YlSubtitleTrack'.
+const track = YlSubtitleTrack(id: 'en-main', format: YlSubtitleFormat.webvtt,
+              ^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:5:3: Error: 'YlSubtitleFormat' isn't a type.
+  YlSubtitleFormat format = YlSubtitleFormat.srt, YlMediaSource? companion}) =>
+  ^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:5:29: Error: Undefined name 'YlSubtitleFormat'.
+  YlSubtitleFormat format = YlSubtitleFormat.srt, YlMediaSource? companion}) =>
+                            ^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:6:5: Error: Method not found: 'YlExternalSubtitle'.
+    YlExternalSubtitle(id: id, source: source ?? const YlFileSource('/sub.srt'),
+    ^^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:14:17: Error: Method not found: 'YlSubtitleState'.
+    final off = YlSubtitleState();
+                ^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:16:20: Error: Method not found: 'YlSubtitleState'.
+    final active = YlSubtitleState(tracks: [track], selectedTrackId: track.id,
+                   ^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:19:41: Error: No named parameter with the name 'subtitles'.
+        status: YlPlaybackStatus.ready, subtitles: active);
+                                        ^^^^^^^^^
+lib/src/model/player_state.dart:17:3: Context: Found this candidate, but the arguments don't match.
+  YlPlayerState({
+  ^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:31:69: Error: Undefined name 'YlSubtitleFormat'.
+    const commentary = YlSubtitleTrack(id: 'en-commentary', format: YlSubtitleFormat.webvtt,
+                                                                    ^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:31:24: Error: Method not found: 'YlSubtitleTrack'.
+    const commentary = YlSubtitleTrack(id: 'en-commentary', format: YlSubtitleFormat.webvtt,
+                       ^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:34:19: Error: Method not found: 'YlSubtitleState'.
+    final state = YlSubtitleState(tracks: tracks, selectedTrackId: commentary.id);
+                  ^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:36:5: Error: Method not found: 'validateYlSubtitleState'.
+    validateYlSubtitleState(state);
+    ^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:40:64: Error: Undefined name 'YlSubtitleFormat'.
+    expect(track, const YlSubtitleTrack(id: 'en-main', format: YlSubtitleFormat.webvtt,
+                                                               ^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:40:25: Error: Couldn't find constructor 'YlSubtitleTrack'.
+    expect(track, const YlSubtitleTrack(id: 'en-main', format: YlSubtitleFormat.webvtt,
+                        ^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:45:26: Error: Method not found: 'YlSubtitleState'.
+    for (final state in [YlSubtitleState(tracks: [track, track]),
+                         ^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:46:7: Error: Method not found: 'YlSubtitleState'.
+      YlSubtitleState(tracks: [track], selectedTrackId: 'missing'),
+      ^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:47:7: Error: Method not found: 'YlSubtitleState'.
+      YlSubtitleState(selectedTrackId: ''),
+      ^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:49:29: Error: Undefined name 'YlSubtitleFormat'.
+          id: '$i', format: YlSubtitleFormat.srt)))]) {
+                            ^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:48:57: Error: Method not found: 'YlSubtitleTrack'.
+      YlSubtitleState(tracks: List.generate(129, (i) => YlSubtitleTrack(
+                                                        ^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:48:7: Error: Method not found: 'YlSubtitleState'.
+      YlSubtitleState(tracks: List.generate(129, (i) => YlSubtitleTrack(
+      ^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:50:20: Error: Method not found: 'validateYlSubtitleState'.
+      expect(() => validateYlSubtitleState(state), throwsArgumentError);
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:52:65: Error: Method not found: 'YlSubtitleState'.
+    expect(() => validateYlPlayerState(YlPlayerState(subtitles: YlSubtitleState(tracks: [track]))), throwsArgumentError);
+                                                                ^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:52:54: Error: No named parameter with the name 'subtitles'.
+    expect(() => validateYlPlayerState(YlPlayerState(subtitles: YlSubtitleState(tracks: [track]))), throwsArgumentError);
+                                                     ^^^^^^^^^
+lib/src/model/player_state.dart:17:3: Context: Found this candidate, but the arguments don't match.
+  YlPlayerState({
+  ^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:53:65: Error: Method not found: 'YlSubtitleState'.
+    expect(() => validateYlPlayerState(YlPlayerState(subtitles: YlSubtitleState(offset: const Duration(seconds: 1)))), throwsArgumentError);
+                                                                ^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:53:54: Error: No named parameter with the name 'subtitles'.
+    expect(() => validateYlPlayerState(YlPlayerState(subtitles: YlSubtitleState(offset: const Duration(seconds: 1)))), throwsArgumentError);
+                                                     ^^^^^^^^^
+lib/src/model/player_state.dart:17:3: Context: Found this candidate, but the arguments don't match.
+  YlPlayerState({
+  ^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:58:20: Error: Method not found: 'validateYlSubtitleTrackId'.
+      expect(() => validateYlSubtitleTrackId(id), throwsArgumentError);
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:62:42: Error: Undefined name 'YlSubtitleFormat'.
+        YlSubtitleTrack(id: 'a', format: YlSubtitleFormat.srt, language: field)])), throwsArgumentError);
+                                         ^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:62:9: Error: Method not found: 'YlSubtitleTrack'.
+        YlSubtitleTrack(id: 'a', format: YlSubtitleFormat.srt, language: field)])), throwsArgumentError);
+        ^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:61:44: Error: Method not found: 'YlSubtitleState'.
+      expect(() => validateYlSubtitleState(YlSubtitleState(tracks: [
+                                           ^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:61:20: Error: Method not found: 'validateYlSubtitleState'.
+      expect(() => validateYlSubtitleState(YlSubtitleState(tracks: [
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:66:20: Error: Method not found: 'validateYlSubtitleOffset'.
+      expect(() => validateYlSubtitleOffset(offset), throwsArgumentError);
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:69:7: Error: Method not found: 'validateYlSubtitleOffset'.
+      validateYlSubtitleOffset(offset);
+      ^^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:78:5: Error: Method not found: 'validateYlExternalSubtitles'.
+    validateYlExternalSubtitles([value]);
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:83:5: Error: Method not found: 'validateYlExternalSubtitles'.
+    validateYlExternalSubtitles([external()]);
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:97:20: Error: Method not found: 'validateYlExternalSubtitles'.
+      expect(() => validateYlExternalSubtitles([external(source: source)]), throwsArgumentError);
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:102:51: Error: Undefined name 'YlSubtitleFormat'.
+    validateYlExternalSubtitles([external(format: YlSubtitleFormat.vobsub,
+                                                  ^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:102:5: Error: Method not found: 'validateYlExternalSubtitles'.
+    validateYlExternalSubtitles([external(format: YlSubtitleFormat.vobsub,
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:104:64: Error: Undefined name 'YlSubtitleFormat'.
+    expect(() => validateYlExternalSubtitles([external(format: YlSubtitleFormat.vobsub)]), throwsArgumentError);
+                                                               ^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:104:18: Error: Method not found: 'validateYlExternalSubtitles'.
+    expect(() => validateYlExternalSubtitles([external(format: YlSubtitleFormat.vobsub)]), throwsArgumentError);
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:105:18: Error: Method not found: 'validateYlExternalSubtitles'.
+    expect(() => validateYlExternalSubtitles([external(companion: const YlFileSource('/sub.idx'))]), throwsArgumentError);
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:106:64: Error: Undefined name 'YlSubtitleFormat'.
+    expect(() => validateYlExternalSubtitles([external(format: YlSubtitleFormat.vobsub,
+                                                               ^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:106:18: Error: Method not found: 'validateYlExternalSubtitles'.
+    expect(() => validateYlExternalSubtitles([external(format: YlSubtitleFormat.vobsub,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:111:18: Error: Method not found: 'validateYlExternalSubtitles'.
+    expect(() => validateYlExternalSubtitles([external(), external()]), throwsArgumentError);
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:112:18: Error: Method not found: 'validateYlExternalSubtitles'.
+    expect(() => validateYlExternalSubtitles(List.generate(33, (i) => external(id: '$i'))), throwsArgumentError);
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:113:73: Error: Undefined name 'YlSubtitleFormat'.
+    final secretTrack = const YlSubtitleTrack(id: 'private-id', format: YlSubtitleFormat.srt,
+                                                                        ^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:113:31: Error: Couldn't find constructor 'YlSubtitleTrack'.
+    final secretTrack = const YlSubtitleTrack(id: 'private-id', format: YlSubtitleFormat.srt,
+                              ^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:115:19: Error: Method not found: 'YlSubtitleState'.
+    final state = YlSubtitleState(tracks: [secretTrack], selectedTrackId: secretTrack.id);
+                  ^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:116:49: Error: No named parameter with the name 'subtitles'.
+    expect('$secretTrack $state ${YlPlayerState(subtitles: state)}', isNot(contains('private')));
+                                                ^^^^^^^^^
+lib/src/model/player_state.dart:17:3: Context: Found this candidate, but the arguments don't match.
+  YlPlayerState({
+  ^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:118:7: Error: Method not found: 'validateYlExternalSubtitles'.
+      validateYlExternalSubtitles([external(id: 'secret\n')]);
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:126:30: Error: Member not found: 'externalSubtitles'.
+    expect(YlPlayerOperation.externalSubtitles.index, 8);
+                             ^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:127:30: Error: Member not found: 'subtitleTrackSelection'.
+    expect(YlPlayerOperation.subtitleTrackSelection.index, 9);
+                             ^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:128:30: Error: Member not found: 'subtitleOffset'.
+    expect(YlPlayerOperation.subtitleOffset.index, 10);
+                             ^^^^^^^^^^^^^^
+test/subtitle_contract_test.dart:15:28: Error: The getter 'subtitles' isn't defined for the type 'YlPlayerState'.
+ - 'YlPlayerState' is from 'package:yl_player_platform_interface/src/model/player_state.dart' ('lib/src/model/player_state.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'subtitles'.
+    expect(YlPlayerState().subtitles, off);
+                           ^^^^^^^^^
+00:00 +0 -1: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/subtitle_contract_test.dart [E]
+  Failed to load "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/subtitle_contract_test.dart":
+  Compilation failed for testPath=/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: test/subtitle_contract_test.dart:4:1: Error: Type 'YlExternalSubtitle' not found.
+  YlExternalSubtitle external({String id = 's', YlMediaSource? source,
+  ^^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:5:3: Error: Type 'YlSubtitleFormat' not found.
+    YlSubtitleFormat format = YlSubtitleFormat.srt, YlMediaSource? companion}) =>
+    ^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:9:54: Error: Undefined name 'YlSubtitleFormat'.
+  const track = YlSubtitleTrack(id: 'en-main', format: YlSubtitleFormat.webvtt,
+                                                       ^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:9:15: Error: Method not found: 'YlSubtitleTrack'.
+  const track = YlSubtitleTrack(id: 'en-main', format: YlSubtitleFormat.webvtt,
+                ^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:5:3: Error: 'YlSubtitleFormat' isn't a type.
+    YlSubtitleFormat format = YlSubtitleFormat.srt, YlMediaSource? companion}) =>
+    ^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:5:29: Error: Undefined name 'YlSubtitleFormat'.
+    YlSubtitleFormat format = YlSubtitleFormat.srt, YlMediaSource? companion}) =>
+                              ^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:6:5: Error: Method not found: 'YlExternalSubtitle'.
+      YlExternalSubtitle(id: id, source: source ?? const YlFileSource('/sub.srt'),
+      ^^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:14:17: Error: Method not found: 'YlSubtitleState'.
+      final off = YlSubtitleState();
+                  ^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:16:20: Error: Method not found: 'YlSubtitleState'.
+      final active = YlSubtitleState(tracks: [track], selectedTrackId: track.id,
+                     ^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:19:41: Error: No named parameter with the name 'subtitles'.
+          status: YlPlaybackStatus.ready, subtitles: active);
+                                          ^^^^^^^^^
+  lib/src/model/player_state.dart:17:3: Context: Found this candidate, but the arguments don't match.
+    YlPlayerState({
+    ^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:31:69: Error: Undefined name 'YlSubtitleFormat'.
+      const commentary = YlSubtitleTrack(id: 'en-commentary', format: YlSubtitleFormat.webvtt,
+                                                                      ^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:31:24: Error: Method not found: 'YlSubtitleTrack'.
+      const commentary = YlSubtitleTrack(id: 'en-commentary', format: YlSubtitleFormat.webvtt,
+                         ^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:34:19: Error: Method not found: 'YlSubtitleState'.
+      final state = YlSubtitleState(tracks: tracks, selectedTrackId: commentary.id);
+                    ^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:36:5: Error: Method not found: 'validateYlSubtitleState'.
+      validateYlSubtitleState(state);
+      ^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:40:64: Error: Undefined name 'YlSubtitleFormat'.
+      expect(track, const YlSubtitleTrack(id: 'en-main', format: YlSubtitleFormat.webvtt,
+                                                                 ^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:40:25: Error: Couldn't find constructor 'YlSubtitleTrack'.
+      expect(track, const YlSubtitleTrack(id: 'en-main', format: YlSubtitleFormat.webvtt,
+                          ^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:45:26: Error: Method not found: 'YlSubtitleState'.
+      for (final state in [YlSubtitleState(tracks: [track, track]),
+                           ^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:46:7: Error: Method not found: 'YlSubtitleState'.
+        YlSubtitleState(tracks: [track], selectedTrackId: 'missing'),
+        ^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:47:7: Error: Method not found: 'YlSubtitleState'.
+        YlSubtitleState(selectedTrackId: ''),
+        ^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:49:29: Error: Undefined name 'YlSubtitleFormat'.
+            id: '$i', format: YlSubtitleFormat.srt)))]) {
+                              ^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:48:57: Error: Method not found: 'YlSubtitleTrack'.
+        YlSubtitleState(tracks: List.generate(129, (i) => YlSubtitleTrack(
+                                                          ^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:48:7: Error: Method not found: 'YlSubtitleState'.
+        YlSubtitleState(tracks: List.generate(129, (i) => YlSubtitleTrack(
+        ^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:50:20: Error: Method not found: 'validateYlSubtitleState'.
+        expect(() => validateYlSubtitleState(state), throwsArgumentError);
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:52:65: Error: Method not found: 'YlSubtitleState'.
+      expect(() => validateYlPlayerState(YlPlayerState(subtitles: YlSubtitleState(tracks: [track]))), throwsArgumentError);
+                                                                  ^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:52:54: Error: No named parameter with the name 'subtitles'.
+      expect(() => validateYlPlayerState(YlPlayerState(subtitles: YlSubtitleState(tracks: [track]))), throwsArgumentError);
+                                                       ^^^^^^^^^
+  lib/src/model/player_state.dart:17:3: Context: Found this candidate, but the arguments don't match.
+    YlPlayerState({
+    ^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:53:65: Error: Method not found: 'YlSubtitleState'.
+      expect(() => validateYlPlayerState(YlPlayerState(subtitles: YlSubtitleState(offset: const Duration(seconds: 1)))), throwsArgumentError);
+                                                                  ^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:53:54: Error: No named parameter with the name 'subtitles'.
+      expect(() => validateYlPlayerState(YlPlayerState(subtitles: YlSubtitleState(offset: const Duration(seconds: 1)))), throwsArgumentError);
+                                                       ^^^^^^^^^
+  lib/src/model/player_state.dart:17:3: Context: Found this candidate, but the arguments don't match.
+    YlPlayerState({
+    ^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:58:20: Error: Method not found: 'validateYlSubtitleTrackId'.
+        expect(() => validateYlSubtitleTrackId(id), throwsArgumentError);
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:62:42: Error: Undefined name 'YlSubtitleFormat'.
+          YlSubtitleTrack(id: 'a', format: YlSubtitleFormat.srt, language: field)])), throwsArgumentError);
+                                           ^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:62:9: Error: Method not found: 'YlSubtitleTrack'.
+          YlSubtitleTrack(id: 'a', format: YlSubtitleFormat.srt, language: field)])), throwsArgumentError);
+          ^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:61:44: Error: Method not found: 'YlSubtitleState'.
+        expect(() => validateYlSubtitleState(YlSubtitleState(tracks: [
+                                             ^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:61:20: Error: Method not found: 'validateYlSubtitleState'.
+        expect(() => validateYlSubtitleState(YlSubtitleState(tracks: [
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:66:20: Error: Method not found: 'validateYlSubtitleOffset'.
+        expect(() => validateYlSubtitleOffset(offset), throwsArgumentError);
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:69:7: Error: Method not found: 'validateYlSubtitleOffset'.
+        validateYlSubtitleOffset(offset);
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:78:5: Error: Method not found: 'validateYlExternalSubtitles'.
+      validateYlExternalSubtitles([value]);
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:83:5: Error: Method not found: 'validateYlExternalSubtitles'.
+      validateYlExternalSubtitles([external()]);
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:97:20: Error: Method not found: 'validateYlExternalSubtitles'.
+        expect(() => validateYlExternalSubtitles([external(source: source)]), throwsArgumentError);
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:102:51: Error: Undefined name 'YlSubtitleFormat'.
+      validateYlExternalSubtitles([external(format: YlSubtitleFormat.vobsub,
+                                                    ^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:102:5: Error: Method not found: 'validateYlExternalSubtitles'.
+      validateYlExternalSubtitles([external(format: YlSubtitleFormat.vobsub,
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:104:64: Error: Undefined name 'YlSubtitleFormat'.
+      expect(() => validateYlExternalSubtitles([external(format: YlSubtitleFormat.vobsub)]), throwsArgumentError);
+                                                                 ^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:104:18: Error: Method not found: 'validateYlExternalSubtitles'.
+      expect(() => validateYlExternalSubtitles([external(format: YlSubtitleFormat.vobsub)]), throwsArgumentError);
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:105:18: Error: Method not found: 'validateYlExternalSubtitles'.
+      expect(() => validateYlExternalSubtitles([external(companion: const YlFileSource('/sub.idx'))]), throwsArgumentError);
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:106:64: Error: Undefined name 'YlSubtitleFormat'.
+      expect(() => validateYlExternalSubtitles([external(format: YlSubtitleFormat.vobsub,
+                                                                 ^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:106:18: Error: Method not found: 'validateYlExternalSubtitles'.
+      expect(() => validateYlExternalSubtitles([external(format: YlSubtitleFormat.vobsub,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:111:18: Error: Method not found: 'validateYlExternalSubtitles'.
+      expect(() => validateYlExternalSubtitles([external(), external()]), throwsArgumentError);
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:112:18: Error: Method not found: 'validateYlExternalSubtitles'.
+      expect(() => validateYlExternalSubtitles(List.generate(33, (i) => external(id: '$i'))), throwsArgumentError);
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:113:73: Error: Undefined name 'YlSubtitleFormat'.
+      final secretTrack = const YlSubtitleTrack(id: 'private-id', format: YlSubtitleFormat.srt,
+                                                                          ^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:113:31: Error: Couldn't find constructor 'YlSubtitleTrack'.
+      final secretTrack = const YlSubtitleTrack(id: 'private-id', format: YlSubtitleFormat.srt,
+                                ^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:115:19: Error: Method not found: 'YlSubtitleState'.
+      final state = YlSubtitleState(tracks: [secretTrack], selectedTrackId: secretTrack.id);
+                    ^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:116:49: Error: No named parameter with the name 'subtitles'.
+      expect('$secretTrack $state ${YlPlayerState(subtitles: state)}', isNot(contains('private')));
+                                                  ^^^^^^^^^
+  lib/src/model/player_state.dart:17:3: Context: Found this candidate, but the arguments don't match.
+    YlPlayerState({
+    ^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:118:7: Error: Method not found: 'validateYlExternalSubtitles'.
+        validateYlExternalSubtitles([external(id: 'secret\n')]);
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:126:30: Error: Member not found: 'externalSubtitles'.
+      expect(YlPlayerOperation.externalSubtitles.index, 8);
+                               ^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:127:30: Error: Member not found: 'subtitleTrackSelection'.
+      expect(YlPlayerOperation.subtitleTrackSelection.index, 9);
+                               ^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:128:30: Error: Member not found: 'subtitleOffset'.
+      expect(YlPlayerOperation.subtitleOffset.index, 10);
+                               ^^^^^^^^^^^^^^
+  test/subtitle_contract_test.dart:15:28: Error: The getter 'subtitles' isn't defined for the type 'YlPlayerState'.
+   - 'YlPlayerState' is from 'package:yl_player_platform_interface/src/model/player_state.dart' ('lib/src/model/player_state.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'subtitles'.
+      expect(YlPlayerState().subtitles, off);
+                             ^^^^^^^^^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/subtitle_contract_test.dart

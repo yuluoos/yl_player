@@ -372,3 +372,7 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 ### 2026-10-11 P02 独立字幕解析切片
 
 在长播放复验和弱网网络工具由其他会话推进期间，新增内部 SRT/WebVTT 有界解析及媒体时间重叠/偏移/关闭查询。NOTE 吞字幕复审问题经三项真实 RED→GREEN 修复，最终 yl_player Dart 147/147、静态分析无问题；未运行原生或设备测试，未改 HEAD。公开字幕 API、多轨身份、TTML、网络/会话和画面合成仍开放，不计 Task 1/2 或 CAP-SUB 完成。详见[P02 报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)及其源码/原始日志清单。
+
+### 2026-10-11 P02 Task 1A 字幕公开契约
+
+解析切片已提交a8acb0b/fd24126，随后完成字幕来源/目录/关闭/偏移值、可选SPI/能力双门禁、默认关闭状态及迟到ACK隔离。四包Dart集中498/498、静态检查无问题，原生schema/生成物不变，未跑设备；旧适配器明确拒绝新命令。多音轨真实选择、下载/渲染/TTML与CAP-SUB继续开放。详见[P02报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)。

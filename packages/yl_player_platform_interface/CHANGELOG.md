@@ -1,5 +1,8 @@
 ## 0.2.0-dev.2
 
+- Add an optional subtitle SPI, bounded source/catalog validation, and default-off
+  subtitle state. Existing track and operation ordinals are preserved; native
+  subtitle support is not advertised by this contract change.
 - Add an optional media-clock position metric for observing playback progress
   independently from live-window timeline coordinates.
 

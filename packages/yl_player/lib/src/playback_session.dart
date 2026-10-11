@@ -28,6 +28,55 @@ final class YlPlaybackSession {
     validateYlTrackId(trackId);
     return _player._backend.selectAudioTrack(id, trackId);
   });
+
+  /// Atomically replaces external subtitles; [] clears external entries.
+  /// Backends without explicit support reject rather than ignoring resources.
+  Future<void> replaceExternalSubtitles(List<YlExternalSubtitle> subtitles) =>
+      _command(() {
+        validateYlExternalSubtitles(subtitles);
+        final snapshot = List<YlExternalSubtitle>.unmodifiable(subtitles);
+        return _subtitleCommand(
+          YlPlayerOperation.externalSubtitles,
+          (backend) => backend.replaceExternalSubtitles(id, snapshot),
+        );
+      });
+
+  /// Null turns subtitles off. Does not select a same-language replacement.
+  Future<void> selectSubtitleTrack(String? trackId) => _command(() {
+    if (trackId != null) validateYlSubtitleTrackId(trackId);
+    return _subtitleCommand(
+      YlPlayerOperation.subtitleTrackSelection,
+      (backend) => backend.selectSubtitleTrack(id, trackId),
+    );
+  });
+
+  /// Positive values delay display. Offset must be whole milliseconds ±7 days.
+  Future<void> setSubtitleOffset(Duration offset) => _command(() {
+    validateYlSubtitleOffset(offset);
+    return _subtitleCommand(
+      YlPlayerOperation.subtitleOffset,
+      (backend) => backend.setSubtitleOffset(id, offset),
+    );
+  });
+
+  Future<void> _subtitleCommand(
+    YlPlayerOperation operation,
+    Future<void> Function(YlSubtitlePlatformPlayer backend) action,
+  ) async {
+    final backend = _player._backend;
+    if (backend is! YlSubtitlePlatformPlayer ||
+        !backend.capabilities.supportedOperations.contains(operation)) {
+      throw _exception(YlFailureCodes.policyUnsupported);
+    }
+    try {
+      await action(backend as YlSubtitlePlatformPlayer);
+    } catch (_) {
+      _player._checkSession(id);
+      rethrow;
+    }
+    _player._checkSession(id);
+  }
+
   Future<void> selectVideoTrack(String? trackId) => _command(() {
     if (trackId != null) validateYlTrackId(trackId);
     final backend = _player._backend;

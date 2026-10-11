@@ -1,0 +1,262 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart
+test/subtitle_session_test.dart:18:61: Error: Type 'YlSubtitlePlatformPlayer' not found.
+class SubtitleBackend extends FakePlatformPlayer implements YlSubtitlePlatformPlayer {
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:25:8: Error: Type 'YlExternalSubtitle' not found.
+  List<YlExternalSubtitle>? received;
+       ^^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:30:70: Error: Type 'YlExternalSubtitle' not found.
+  Future<void> replaceExternalSubtitles(YlPlaybackSessionId id, List<YlExternalSubtitle> subtitles) async {
+                                                                     ^^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:12:89: Error: Undefined name 'YlSubtitleFormat'.
+const subtitle = YlExternalSubtitle(id: 'en', source: YlFileSource('/sub.srt'), format: YlSubtitleFormat.srt);
+                                                                                        ^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:12:18: Error: Method not found: 'YlExternalSubtitle'.
+const subtitle = YlExternalSubtitle(id: 'en', source: YlFileSource('/sub.srt'), format: YlSubtitleFormat.srt);
+                 ^^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:24:69: Error: Member not found: 'subtitleOffset'.
+        YlPlayerOperation.subtitleTrackSelection, YlPlayerOperation.subtitleOffset] : []);
+                                                                    ^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:24:27: Error: Member not found: 'subtitleTrackSelection'.
+        YlPlayerOperation.subtitleTrackSelection, YlPlayerOperation.subtitleOffset] : []);
+                          ^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:23:59: Error: Member not found: 'externalSubtitles'.
+      supportedOperations: advertise ? [YlPlayerOperation.externalSubtitles,
+                                                          ^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:25:8: Error: 'YlExternalSubtitle' isn't a type.
+  List<YlExternalSubtitle>? received;
+       ^^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:30:70: Error: 'YlExternalSubtitle' isn't a type.
+  Future<void> replaceExternalSubtitles(YlPlaybackSessionId id, List<YlExternalSubtitle> subtitles) async {
+                                                                     ^^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:53:69: Error: Member not found: 'subtitleOffset'.
+        YlPlayerOperation.subtitleTrackSelection, YlPlayerOperation.subtitleOffset]);
+                                                                    ^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:53:27: Error: Member not found: 'subtitleTrackSelection'.
+        YlPlayerOperation.subtitleTrackSelection, YlPlayerOperation.subtitleOffset]);
+                          ^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:52:47: Error: Member not found: 'externalSubtitles'.
+      supportedOperations: [YlPlayerOperation.externalSubtitles,
+                                              ^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:140:42: Error: Method not found: 'YlSubtitleState'.
+          expect(player.state.subtitles, YlSubtitleState());
+                                         ^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:73:33: Error: The method 'replaceExternalSubtitles' isn't defined for the type 'YlPlaybackSession'.
+ - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'replaceExternalSubtitles'.
+      await expectLater(session.replaceExternalSubtitles([subtitle]), failure(YlFailureCodes.policyUnsupported));
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:74:33: Error: The method 'selectSubtitleTrack' isn't defined for the type 'YlPlaybackSession'.
+ - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'selectSubtitleTrack'.
+      await expectLater(session.selectSubtitleTrack(null), failure(YlFailureCodes.policyUnsupported));
+                                ^^^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:75:33: Error: The method 'setSubtitleOffset' isn't defined for the type 'YlPlaybackSession'.
+ - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'setSubtitleOffset'.
+      await expectLater(session.setSubtitleOffset(Duration.zero), failure(YlFailureCodes.policyUnsupported));
+                                ^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:87:29: Error: The method 'replaceExternalSubtitles' isn't defined for the type 'YlPlaybackSession'.
+ - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'replaceExternalSubtitles'.
+    final pending = session.replaceExternalSubtitles(list).then((_) => done = true);
+                            ^^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:96:19: Error: The method 'selectSubtitleTrack' isn't defined for the type 'YlPlaybackSession'.
+ - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'selectSubtitleTrack'.
+    await session.selectSubtitleTrack('en');
+                  ^^^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:98:19: Error: The method 'selectSubtitleTrack' isn't defined for the type 'YlPlaybackSession'.
+ - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'selectSubtitleTrack'.
+    await session.selectSubtitleTrack(null);
+                  ^^^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:100:19: Error: The method 'setSubtitleOffset' isn't defined for the type 'YlPlaybackSession'.
+ - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'setSubtitleOffset'.
+    await session.setSubtitleOffset(const Duration(milliseconds: -500));
+                  ^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:104:31: Error: The method 'selectSubtitleTrack' isn't defined for the type 'YlPlaybackSession'.
+ - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'selectSubtitleTrack'.
+    await expectLater(session.selectSubtitleTrack(''), throwsArgumentError);
+                              ^^^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:105:31: Error: The method 'replaceExternalSubtitles' isn't defined for the type 'YlPlaybackSession'.
+ - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'replaceExternalSubtitles'.
+    await expectLater(session.replaceExternalSubtitles([subtitle, subtitle]), throwsArgumentError);
+                              ^^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:106:31: Error: The method 'setSubtitleOffset' isn't defined for the type 'YlPlaybackSession'.
+ - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'setSubtitleOffset'.
+    await expectLater(session.setSubtitleOffset(const Duration(microseconds: 1)), throwsArgumentError);
+                              ^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:118:34: Error: The method 'replaceExternalSubtitles' isn't defined for the type 'YlPlaybackSession'.
+ - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'replaceExternalSubtitles'.
+            'replace' => session.replaceExternalSubtitles([subtitle]),
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:119:33: Error: The method 'selectSubtitleTrack' isn't defined for the type 'YlPlaybackSession'.
+ - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'selectSubtitleTrack'.
+            'select' => session.selectSubtitleTrack('en'),
+                                ^^^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:120:26: Error: The method 'setSubtitleOffset' isn't defined for the type 'YlPlaybackSession'.
+ - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'setSubtitleOffset'.
+            _ => session.setSubtitleOffset(Duration.zero),
+                         ^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:140:31: Error: The getter 'subtitles' isn't defined for the type 'YlPlayerState'.
+ - 'YlPlayerState' is from 'package:yl_player_platform_interface/src/model/player_state.dart' ('../yl_player_platform_interface/lib/src/model/player_state.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'subtitles'.
+          expect(player.state.subtitles, YlSubtitleState());
+                              ^^^^^^^^^
+test/subtitle_session_test.dart:151:31: Error: The method 'selectSubtitleTrack' isn't defined for the type 'YlPlaybackSession'.
+ - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'selectSubtitleTrack'.
+    await expectLater(session.selectSubtitleTrack(''), failure(YlFailureCodes.sessionStale));
+                              ^^^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:152:31: Error: The method 'replaceExternalSubtitles' isn't defined for the type 'YlPlaybackSession'.
+ - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'replaceExternalSubtitles'.
+    await expectLater(session.replaceExternalSubtitles([subtitle]), failure(YlFailureCodes.sessionStale));
+                              ^^^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_session_test.dart:153:31: Error: The method 'setSubtitleOffset' isn't defined for the type 'YlPlaybackSession'.
+ - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'setSubtitleOffset'.
+    await expectLater(session.setSubtitleOffset(Duration.zero), failure(YlFailureCodes.sessionStale));
+                              ^^^^^^^^^^^^^^^^^
+00:00 +0 -1: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart [E]
+  Failed to load "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart":
+  Compilation failed for testPath=/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: test/subtitle_session_test.dart:18:61: Error: Type 'YlSubtitlePlatformPlayer' not found.
+  class SubtitleBackend extends FakePlatformPlayer implements YlSubtitlePlatformPlayer {
+                                                              ^^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:25:8: Error: Type 'YlExternalSubtitle' not found.
+    List<YlExternalSubtitle>? received;
+         ^^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:30:70: Error: Type 'YlExternalSubtitle' not found.
+    Future<void> replaceExternalSubtitles(YlPlaybackSessionId id, List<YlExternalSubtitle> subtitles) async {
+                                                                       ^^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:12:89: Error: Undefined name 'YlSubtitleFormat'.
+  const subtitle = YlExternalSubtitle(id: 'en', source: YlFileSource('/sub.srt'), format: YlSubtitleFormat.srt);
+                                                                                          ^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:12:18: Error: Method not found: 'YlExternalSubtitle'.
+  const subtitle = YlExternalSubtitle(id: 'en', source: YlFileSource('/sub.srt'), format: YlSubtitleFormat.srt);
+                   ^^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:24:69: Error: Member not found: 'subtitleOffset'.
+          YlPlayerOperation.subtitleTrackSelection, YlPlayerOperation.subtitleOffset] : []);
+                                                                      ^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:24:27: Error: Member not found: 'subtitleTrackSelection'.
+          YlPlayerOperation.subtitleTrackSelection, YlPlayerOperation.subtitleOffset] : []);
+                            ^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:23:59: Error: Member not found: 'externalSubtitles'.
+        supportedOperations: advertise ? [YlPlayerOperation.externalSubtitles,
+                                                            ^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:25:8: Error: 'YlExternalSubtitle' isn't a type.
+    List<YlExternalSubtitle>? received;
+         ^^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:30:70: Error: 'YlExternalSubtitle' isn't a type.
+    Future<void> replaceExternalSubtitles(YlPlaybackSessionId id, List<YlExternalSubtitle> subtitles) async {
+                                                                       ^^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:53:69: Error: Member not found: 'subtitleOffset'.
+          YlPlayerOperation.subtitleTrackSelection, YlPlayerOperation.subtitleOffset]);
+                                                                      ^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:53:27: Error: Member not found: 'subtitleTrackSelection'.
+          YlPlayerOperation.subtitleTrackSelection, YlPlayerOperation.subtitleOffset]);
+                            ^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:52:47: Error: Member not found: 'externalSubtitles'.
+        supportedOperations: [YlPlayerOperation.externalSubtitles,
+                                                ^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:140:42: Error: Method not found: 'YlSubtitleState'.
+            expect(player.state.subtitles, YlSubtitleState());
+                                           ^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:73:33: Error: The method 'replaceExternalSubtitles' isn't defined for the type 'YlPlaybackSession'.
+   - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'replaceExternalSubtitles'.
+        await expectLater(session.replaceExternalSubtitles([subtitle]), failure(YlFailureCodes.policyUnsupported));
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:74:33: Error: The method 'selectSubtitleTrack' isn't defined for the type 'YlPlaybackSession'.
+   - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'selectSubtitleTrack'.
+        await expectLater(session.selectSubtitleTrack(null), failure(YlFailureCodes.policyUnsupported));
+                                  ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:75:33: Error: The method 'setSubtitleOffset' isn't defined for the type 'YlPlaybackSession'.
+   - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'setSubtitleOffset'.
+        await expectLater(session.setSubtitleOffset(Duration.zero), failure(YlFailureCodes.policyUnsupported));
+                                  ^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:87:29: Error: The method 'replaceExternalSubtitles' isn't defined for the type 'YlPlaybackSession'.
+   - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'replaceExternalSubtitles'.
+      final pending = session.replaceExternalSubtitles(list).then((_) => done = true);
+                              ^^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:96:19: Error: The method 'selectSubtitleTrack' isn't defined for the type 'YlPlaybackSession'.
+   - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'selectSubtitleTrack'.
+      await session.selectSubtitleTrack('en');
+                    ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:98:19: Error: The method 'selectSubtitleTrack' isn't defined for the type 'YlPlaybackSession'.
+   - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'selectSubtitleTrack'.
+      await session.selectSubtitleTrack(null);
+                    ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:100:19: Error: The method 'setSubtitleOffset' isn't defined for the type 'YlPlaybackSession'.
+   - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'setSubtitleOffset'.
+      await session.setSubtitleOffset(const Duration(milliseconds: -500));
+                    ^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:104:31: Error: The method 'selectSubtitleTrack' isn't defined for the type 'YlPlaybackSession'.
+   - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'selectSubtitleTrack'.
+      await expectLater(session.selectSubtitleTrack(''), throwsArgumentError);
+                                ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:105:31: Error: The method 'replaceExternalSubtitles' isn't defined for the type 'YlPlaybackSession'.
+   - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'replaceExternalSubtitles'.
+      await expectLater(session.replaceExternalSubtitles([subtitle, subtitle]), throwsArgumentError);
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:106:31: Error: The method 'setSubtitleOffset' isn't defined for the type 'YlPlaybackSession'.
+   - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'setSubtitleOffset'.
+      await expectLater(session.setSubtitleOffset(const Duration(microseconds: 1)), throwsArgumentError);
+                                ^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:118:34: Error: The method 'replaceExternalSubtitles' isn't defined for the type 'YlPlaybackSession'.
+   - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'replaceExternalSubtitles'.
+              'replace' => session.replaceExternalSubtitles([subtitle]),
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:119:33: Error: The method 'selectSubtitleTrack' isn't defined for the type 'YlPlaybackSession'.
+   - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'selectSubtitleTrack'.
+              'select' => session.selectSubtitleTrack('en'),
+                                  ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:120:26: Error: The method 'setSubtitleOffset' isn't defined for the type 'YlPlaybackSession'.
+   - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'setSubtitleOffset'.
+              _ => session.setSubtitleOffset(Duration.zero),
+                           ^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:140:31: Error: The getter 'subtitles' isn't defined for the type 'YlPlayerState'.
+   - 'YlPlayerState' is from 'package:yl_player_platform_interface/src/model/player_state.dart' ('../yl_player_platform_interface/lib/src/model/player_state.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'subtitles'.
+            expect(player.state.subtitles, YlSubtitleState());
+                                ^^^^^^^^^
+  test/subtitle_session_test.dart:151:31: Error: The method 'selectSubtitleTrack' isn't defined for the type 'YlPlaybackSession'.
+   - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'selectSubtitleTrack'.
+      await expectLater(session.selectSubtitleTrack(''), failure(YlFailureCodes.sessionStale));
+                                ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:152:31: Error: The method 'replaceExternalSubtitles' isn't defined for the type 'YlPlaybackSession'.
+   - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'replaceExternalSubtitles'.
+      await expectLater(session.replaceExternalSubtitles([subtitle]), failure(YlFailureCodes.sessionStale));
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_session_test.dart:153:31: Error: The method 'setSubtitleOffset' isn't defined for the type 'YlPlaybackSession'.
+   - 'YlPlaybackSession' is from 'package:yl_player/src/player_controller.dart' ('lib/src/player_controller.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'setSubtitleOffset'.
+      await expectLater(session.setSubtitleOffset(Duration.zero), failure(YlFailureCodes.sessionStale));
+                                ^^^^^^^^^^^^^^^^^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart

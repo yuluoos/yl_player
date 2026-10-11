@@ -15,6 +15,17 @@ void main() {
     expect(YlHttpRequest().credentials, isEmpty);
     expect(YlPlayerState().timeline, const YlTimeline());
     expect(const YlPlaybackSessionId('s').value, 's');
+    const subtitle = YlExternalSubtitle(
+      id: 'en',
+      source: YlFileSource('/sub.srt'),
+      format: YlSubtitleFormat.srt,
+    );
+    expect(subtitle.id, 'en');
+    expect(YlPlayerState().subtitles, YlSubtitleState());
+    expect(
+      const YlSubtitleTrack(id: 'en', format: YlSubtitleFormat.srt).isExternal,
+      isFalse,
+    );
     expect(
       YlPlayerCapabilities(deviceProfile: 'test').decoderEvidence,
       YlDecoderEvidence.none,

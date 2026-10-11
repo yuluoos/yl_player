@@ -1,0 +1,195 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/transport_invariants_test.dart
+00:00 +0: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/transport_invariants_test.dart: Apple periodic callback stays typed, lossless, and below 768 bytes
+APPLE_MAX_CALLBACK_BYTES=223
+00:00 +1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/transport_invariants_test.dart: Apple callback codec preserves explicit nullable clears
+00:00 +2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/transport_invariants_test.dart: Apple periodic schema cannot carry static or media payload data
+00:00 +2 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/transport_invariants_test.dart: Apple periodic schema cannot carry static or media payload data [E]
+  PathNotFoundException: Cannot open file, path = 'packages/yl_player_apple/pigeons/yl_player_apple.dart' (OS Error: No such file or directory, errno = 2)
+  dart:io                                    _File.readAsStringSync
+  test/transport_invariants_test.dart 114:7  main.<fn>
+  
+00:00 +2 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: Apple exposes the optional video selection operation
+00:00 +3 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: native video surface requires explicit native advertisement
+00:00 +4 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: invalid native surface advertisements reject and release native ownership
+00:00 +5 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: replacement Stop cancellation and late replies retain bounded authority
+00:00 +6 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: replacement Stop cancellation and late replies retain bounded authority
+00:00 +7 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: replacement Stop cancellation and late replies retain bounded authority
+00:00 +8 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: replacement Stop cancellation and late replies retain bounded authority
+00:00 +9 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: replacement Stop cancellation and late replies retain bounded authority
+00:00 +10 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: replacement Stop cancellation and late replies retain bounded authority
+00:00 +11 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: replacement Stop cancellation and late replies retain bounded authority
+00:00 +12 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: replacement Stop cancellation and late replies retain bounded authority
+00:00 +13 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: replacement Stop cancellation and late replies retain bounded authority
+00:00 +14 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: replacement Stop cancellation and late replies retain bounded authority
+00:00 +15 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: replacement Stop cancellation and late replies retain bounded authority
+00:00 +16 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: replacement Stop cancellation and late replies retain bounded authority
+00:00 +17 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: replacement Stop cancellation and late replies retain bounded authority
+00:00 +18 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +19 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +20 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +21 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +22 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +23 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +24 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +25 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +26 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +27 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +28 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +29 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +30 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +31 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +32 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +33 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +34 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +35 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +36 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +37 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +38 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +39 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +40 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +41 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +42 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +43 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +44 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +45 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +46 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +47 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +48 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +49 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +50 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +51 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +52 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +53 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +54 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +55 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +56 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +57 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +58 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +59 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +60 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +61 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +62 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +63 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +64 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +65 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +66 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A failed state and event cannot cancel newer B
+00:00 +67 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: late errors from cancelled assessment and Load do not terminate the newer session
+00:00 +68 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: stale buffered full state failure cannot cancel matching Load
+00:00 +69 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: stale duplicate delta payload cannot count as structurally invalid
+00:00 +70 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: mismatched echoed request cannot pair or revive a Load
+00:00 +71 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: known-session retry and engine events map independently from state watermark
+00:00 +72 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: terminal transport reaches revision-filtering consumers before hung native cleanup; max=false
+00:00 +73 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: terminal transport reaches revision-filtering consumers before hung native cleanup; max=true
+00:00 +74 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: creation owns native identity before validation; attaches after callback setup
+00:00 +75 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: callback setup and attach failures clean native ownership and preserve safe error
+00:00 +76 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: Load pairs both halves before immediate Play; stateFirst=false
+00:00 +77 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: five-second pair deadline starts at either half; stateFirst=false
+00:00 +78 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: Load pairs both halves before immediate Play; stateFirst=true
+00:00 +79 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: five-second pair deadline starts at either half; stateFirst=true
+00:00 +80 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: state/delta ordering ignores stale callbacks and milestones survive newer state revisions
+00:00 +81 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: loading BUFFERING stays loading until READY evidence; injected callbacks are isolated
+00:00 +82 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: only repeated malformed callbacks terminate; stale traffic never increments failures
+00:00 +83 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: new Load cancels assessment and old pair continuations without reopening
+00:00 +84 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: new Load retires buffered state from superseded Load and ignores its late reply
+00:00 +85 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: accepted Stop fences captured session before idle and cannot invalidate newer Load
+00:00 +86 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: rejected Stop preserves usable session and cancels a pending Load
+00:00 +87 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: terminal transport failure settles all commands and ignores late failures
+00:00 +88 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: hung failed-create cleanup is bounded and preserves original failure
+00:00 +89 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: dispose shares Future, cancels commands, unregisters before paused observers drain
+00:01 +90 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated codec preserves the complete Apple v2 transport
+00:01 +91 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:01 +92 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:01 +93 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:01 +94 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:01 +95 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:01 +96 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:01 +97 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:01 +98 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:01 +98 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:01 +98 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: all complete enum counterparts retain exact set parity [E]
+  Expected: Set:[
+              'seek',
+              'seekToLiveEdge',
+              'playbackSpeed',
+              'audioTrackSelection',
+              'videoConstraints',
+              'volume',
+              'stop',
+              'videoTrackSelection',
+              'externalSubtitles',
+              'subtitleTrackSelection',
+              'subtitleOffset'
+            ]
+    Actual: Set:[
+              'seek',
+              'seekToLiveEdge',
+              'playbackSpeed',
+              'audioTrackSelection',
+              'videoConstraints',
+              'volume',
+              'stop',
+              'videoTrackSelection'
+            ]
+     Which: does not contain 'externalSubtitles'
+  ApplePlayerOperation must match its entire public counterpart
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/apple_codec_test.dart 174:7                    main.<fn>
+  
+00:01 +99 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:01 +100 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:01 +101 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:01 +102 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:01 +103 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:01 +103 -3: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:01 +103 -3: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: inbound enums cover statuses, engines, decoder evidence/mode, tracks, operations and failures [E]
+  Expected: MappedListIterable<YlPlayerOperation, String>:[
+              'seek',
+              'seekToLiveEdge',
+              'playbackSpeed',
+              'audioTrackSelection',
+              'videoConstraints',
+              'volume',
+              'stop',
+              'videoTrackSelection',
+              'externalSubtitles',
+              'subtitleTrackSelection',
+              'subtitleOffset'
+            ]
+    Actual: MappedListIterable<YlPlayerOperation, String>:[
+              'seek',
+              'seekToLiveEdge',
+              'playbackSpeed',
+              'audioTrackSelection',
+              'videoConstraints',
+              'volume',
+              'stop',
+              'videoTrackSelection'
+            ]
+     Which: at location [8] is MappedListIterable<YlPlayerOperation, String>:[
+              'seek',
+              'seekToLiveEdge',
+              'playbackSpeed',
+              'audioTrackSelection',
+              'videoConstraints',
+              'volume',
+              'stop',
+              'videoTrackSelection'
+            ] which shorter than expected
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/apple_codec_test.dart 497:9                    main.<fn>
+  
+00:01 +104 -3: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:01 +105 -3: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:01 +106 -3: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:01 +107 -3: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:01 +108 -3: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:02 +109 -3: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: all complete enum counterparts retain exact set parity
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: inbound enums cover statuses, engines, decoder evidence/mode, tracks, operations and failures
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/transport_invariants_test.dart: Apple periodic schema cannot carry static or media payload data

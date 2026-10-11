@@ -1,0 +1,45 @@
+{
+  "baseCommit": "fd2412607b1fb038dd380f8117431bacddf8c138",
+  "sourceSha256": {
+    "packages/yl_player_platform_interface/lib/src/model/subtitles.dart": "c3a63f859b42893fbb91db894ded10bac6468f4f055f0629950d2a9d439a2b9d",
+    "packages/yl_player_platform_interface/lib/src/validation/subtitle_validation.dart": "e96723041113be76ad3cc28775e49625da61bac995db5b80ad65b47c2a83fa36",
+    "packages/yl_player_platform_interface/lib/src/model/capabilities.dart": "d3036bb2e9045e2025f52bfb3d45182ec19758ca232442a40e0af35df9b953af",
+    "packages/yl_player_platform_interface/lib/src/model/player_state.dart": "75813256088a698fee88fa35e6d2192f88842ed109c7f4f145948569771d75f5",
+    "packages/yl_player_platform_interface/lib/src/validation/state_validation.dart": "8e526b4d0892726aa7a517c77ffd8147bcdba80c1a646877035e25ff4c9f53d5",
+    "packages/yl_player_platform_interface/lib/src/platform/platform_player.dart": "94c3fb7d2cf68d0b3fd119efe7af2b368f0f261a72713ecad12ddb413f97daa8",
+    "packages/yl_player_platform_interface/lib/yl_player_platform_interface.dart": "ffe404bbc1267f4440d52d7b5033a8c19730fae491164566f321de9cd250f27a",
+    "packages/yl_player_platform_interface/test/subtitle_contract_test.dart": "e2b0739a91b4dfc67ba3bd84339e75fe3b36073c0bcf7b82f1d0c2082bf39a4a",
+    "packages/yl_player/lib/src/playback_session.dart": "24da914823e824084565d6101ea6dd4782faedddbb0ae4eb928d8cb686c81ac3",
+    "packages/yl_player/lib/yl_player.dart": "799d84e7bff23bb0be66d993fd2e9aab8cd63d588db9ce774da3b9a4fde53981",
+    "packages/yl_player/test/subtitle_session_test.dart": "51caca8998c4aa2bc9f3138805a3eb10b16ca60c7c8422050b40c5597bc5318a",
+    "packages/yl_player/test/public_api_test.dart": "5ecf9265abfc4b62e90126fe0b95d4647f879c2a79fc468e6d524eb7a9956391",
+    "packages/yl_player_apple/test/apple_codec_test.dart": "5357b8f5c3a27120d1c5624a1a8567854bc696e918bec010e0c6c126a50634a8",
+    "packages/yl_player_android/test/android_codec_test.dart": "22fd6a9d2c5864d7a75fa99533bb5885862effd95afd71f9500a3b2bc68e88f8",
+    "docs/superpowers/specs/2026-09-26-subtitle-contract.md": "9408c3b6f346f7dee1e11742d9d0ead6db602301dd058b6734eab8e5e99c6b92"
+  },
+  "logSha256": {
+    "contract-red.log": "c33f8028e93dd70b63582aa21378d784a103203eccc5303909409fa46768bcd3",
+    "session-red.log": "754e79f12a646ff46119ade6931b13f18e010567e566a260aef5b933a30e16ce",
+    "contract-full.log": "c66eb50916135ce98a7bdea5490e18a20f7d07c214c173c74110df722b08b258",
+    "apple-contract-regression.log": "69189accc6490318a29f0d6c8961cefe4c682b56083625df5e2546c967266904",
+    "android-contract-regression.log": "04b345d0312d43fa333cacc5ceb1cdbfb86a99df8c420d5e8ff237f7df0a37e2",
+    "contract-final-all.log": "6a23770540fa5174306ac1656cd5909de83adb271fa9c5dc357e06734803af7e",
+    "contract-final-analyze.log": "909c314318849692598c687590bce9cb179ab9d372156b3a16224bbc288704b7"
+  },
+  "final": {
+    "command": "flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test",
+    "cwd": "repository root",
+    "passed": 498,
+    "failed": 0,
+    "exitCode": 0,
+    "analyzer": "No issues found",
+    "nativeTestsRun": false,
+    "pigeonRegenerated": false,
+    "scope": "Dart subtitle contract; CAP-SUB incomplete"
+  },
+  "review": {
+    "important": 0,
+    "critical": 0,
+    "deferredMinor": "Pin unsupported failure category and retryable in session matcher; implementation currently correct"
+  }
+}

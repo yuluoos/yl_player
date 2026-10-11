@@ -9,6 +9,7 @@ import '../model/source_assessment.dart';
 import '../model/timeline.dart';
 import '../model/video_geometry.dart';
 import '../model/video_selection.dart';
+import 'subtitle_validation.dart';
 
 const _maxSigned64 = 0x7fffffffffffffff;
 final _safeMetadata = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$');
@@ -145,6 +146,13 @@ void validateYlPlayerState(YlPlayerState state) {
     throw ArgumentError('Playback state has an invalid session association.');
   }
   validateYlTimeline(state.timeline);
+  validateYlSubtitleState(state.subtitles);
+  if (state.status == YlPlaybackStatus.idle &&
+      (state.subtitles.tracks.isNotEmpty ||
+          state.subtitles.selectedTrackId != null ||
+          state.subtitles.offset != Duration.zero)) {
+    throw ArgumentError('Idle player cannot retain subtitle state.');
+  }
   validateYlPlaybackMetrics(state.metrics);
   final geometry = state.videoGeometry;
   if (geometry != null) validateYlVideoGeometry(geometry);

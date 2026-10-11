@@ -5,7 +5,27 @@ import 'package:yl_player_android/src/pigeon/yl_player_android.g.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'support/android_fakes.dart';
 
+// These optional Dart operations are not part of the current native schema.
+const _subtitleOperations = {
+  YlPlayerOperation.externalSubtitles,
+  YlPlayerOperation.subtitleTrackSelection,
+  YlPlayerOperation.subtitleOffset,
+};
+final _nativeOperations = YlPlayerOperation.values
+    .where((operation) => !_subtitleOperations.contains(operation))
+    .toList();
+
 void main() {
+  test('native capabilities do not advertise Dart-only subtitle commands', () {
+    final capabilities = AndroidCodec.capabilities(wireCreate().capabilities);
+    expect(
+      capabilities.supportedOperations.toSet().intersection(
+        _subtitleOperations,
+      ),
+      isEmpty,
+    );
+    expect(AndroidCodec.state(wireState()).subtitles, YlSubtitleState());
+  });
   test('schema 4 full state requires selection and delta retains it', () {
     final wire = wireState(session: 's1', revision: 4);
     wire.videoSelection = null;
@@ -169,7 +189,7 @@ void main() {
       (AndroidBufferKind.values, YlBufferStrategyKind.values),
       (AndroidPlaybackStatus.values, YlPlaybackStatus.values),
       (AndroidTrackKind.values, YlTrackKind.values),
-      (AndroidPlayerOperation.values, YlPlayerOperation.values),
+      (AndroidPlayerOperation.values, _nativeOperations),
       (AndroidDecoderMode.values, YlDecoderMode.values),
       (AndroidDecoderEvidence.values, YlDecoderEvidence.values),
       (AndroidFailureCategory.values, YlFailureCategory.values),
@@ -502,7 +522,7 @@ void main() {
         expect(decoded.decoderEvidence.name, evidence.name);
         expect(
           decoded.supportedOperations.map((v) => v.name),
-          YlPlayerOperation.values
+          _nativeOperations
               .where((value) => value != YlPlayerOperation.videoTrackSelection)
               .map((v) => v.name),
         );

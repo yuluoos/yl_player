@@ -1,5 +1,8 @@
 ## 0.2.0-dev.2
 
+- Add subtitle source/catalog values and optional session commands for replacing
+  external subtitles, selection/off, and signed time offsets. Current native
+  adapters explicitly reject these commands until rendering support is added.
 - Expose media-clock progress metrics and update the synchronized endorsed
   Android and Apple implementations with live-playback stability fixes.
 

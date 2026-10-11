@@ -5,7 +5,27 @@ import 'package:yl_player_apple/src/pigeon/yl_player_apple.g.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'support/apple_fakes.dart';
 
+// These optional Dart operations are not part of the current native schema.
+const _subtitleOperations = {
+  YlPlayerOperation.externalSubtitles,
+  YlPlayerOperation.subtitleTrackSelection,
+  YlPlayerOperation.subtitleOffset,
+};
+final _nativeOperations = YlPlayerOperation.values
+    .where((operation) => !_subtitleOperations.contains(operation))
+    .toList();
+
 void main() {
+  test('native capabilities do not advertise Dart-only subtitle commands', () {
+    final capabilities = AppleCodec.capabilities(wireCreate().capabilities);
+    expect(
+      capabilities.supportedOperations.toSet().intersection(
+        _subtitleOperations,
+      ),
+      isEmpty,
+    );
+    expect(AppleCodec.state(wireState()).subtitles, YlSubtitleState());
+  });
   test('schema 4 selection is mandatory, validated and retained by deltas', () {
     final wire = wireState(session: 's1', revision: 4, sequence: 10)
       ..videoTracks = [
@@ -164,7 +184,7 @@ void main() {
       (AppleBufferKind.values, YlBufferStrategyKind.values),
       (ApplePlaybackStatus.values, YlPlaybackStatus.values),
       (AppleTrackKind.values, YlTrackKind.values),
-      (ApplePlayerOperation.values, YlPlayerOperation.values),
+      (ApplePlayerOperation.values, _nativeOperations),
       (AppleDecoderMode.values, YlDecoderMode.values),
       (AppleDecoderEvidence.values, YlDecoderEvidence.values),
       (AppleFailureScope.values, YlFailureScope.values),
@@ -496,7 +516,7 @@ void main() {
         expect(decoded.decoderEvidence.name, evidence.name);
         expect(
           decoded.supportedOperations.map((v) => v.name),
-          YlPlayerOperation.values.map((v) => v.name),
+          _nativeOperations.map((v) => v.name),
         );
       }
       for (final kind in AppleTrackKind.values) {

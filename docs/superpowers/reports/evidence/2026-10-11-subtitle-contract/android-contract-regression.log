@@ -1,0 +1,155 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/transport_invariants_test.dart
+00:00 +0: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/transport_invariants_test.dart: Android periodic callback stays typed, lossless, and below 768 bytes
+ANDROID_MAX_CALLBACK_BYTES=228
+00:00 +1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/transport_invariants_test.dart: Android callback codec preserves explicit nullable clears
+00:00 +2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/transport_invariants_test.dart: Android periodic schema cannot carry static or media payload data
+00:00 +3: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known network.protocol_unsupported gives safe guidance at native and adapter boundaries
+00:00 +4: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known network.rtmp_handshake_failed gives safe guidance at native and adapter boundaries
+00:00 +5: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known network.rtmp_stream_unavailable gives safe guidance at native and adapter boundaries
+00:00 +6: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known network.rtmp_disconnected gives safe guidance at native and adapter boundaries
+00:00 +7: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known network.dns_failed gives safe guidance at native and adapter boundaries
+00:00 +8: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known network.http_forbidden gives safe guidance at native and adapter boundaries
+00:00 +9: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known network.retry_exhausted gives safe guidance at native and adapter boundaries
+00:00 +10: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known load.cancelled gives safe guidance at native and adapter boundaries
+00:00 +11: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known container.rtmp_track_layout_changed gives safe guidance at native and adapter boundaries
+00:00 +12: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known container.unsupported gives safe guidance at native and adapter boundaries
+00:00 +13: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known policy.unsupported gives safe guidance at native and adapter boundaries
+00:00 +14: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/yl_player_android_test.dart: registerWith installs v2 implementation
+00:00 +15: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/yl_player_android_test.dart: registerWith installs v2 implementation
+00:00 +16: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/yl_player_android_test.dart: production Pigeon wrappers create, route every command and remove suffix callbacks
+00:00 +17: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/yl_player_android_test.dart: production typed native rejection is safe; missing host is terminal
+00:00 +18: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: video command sends nullable auto ID without asserting a state change
+00:00 +19: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: completion-window deltas use the latest authoritative state
+00:00 +20: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: former session failure notifies A without cancelling B: event=false assessment=false
+00:00 +21: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: former session failure notifies A without cancelling B: event=false assessment=true
+00:00 +22: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: player-scoped retained-session failure still terminates B: event=false
+00:00 +23: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: former session failure notifies A without cancelling B: event=true assessment=false
+00:00 +24: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: former session failure notifies A without cancelling B: event=true assessment=true
+00:00 +25: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: player-scoped retained-session failure still terminates B: event=true
+00:00 +26: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: state-first Load preserves onState then first-frame then delta before reply
+00:00 +27: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: failed candidate state cancels barrier immediately before reply while retaining former state
+00:00 +28: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: state-first READY evidence survives later BUFFERING before reply
+00:00 +29: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:00 +30: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: unknown stale A failed state and event cannot cancel newer B
+00:00 +31: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: late errors from cancelled assessment and Load do not terminate the newer session
+00:00 +32: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: stale buffered full state failure cannot cancel matching Load
+00:00 +33: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: stale duplicate delta payload cannot count as structurally invalid
+00:00 +34: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: mismatched echoed request cannot pair or revive a Load
+00:00 +35: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: known-session retry and engine events map independently from state watermark
+00:00 +36: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: terminal transport reaches revision-filtering consumers before hung native cleanup; max=false
+00:00 +37: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: terminal transport reaches revision-filtering consumers before hung native cleanup; max=true
+00:00 +38: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: creation owns native identity before validation; attaches after callback setup
+00:00 +39: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: callback setup and attach failures clean native ownership and preserve safe error
+00:00 +40: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: Load pairs both halves before immediate Play; stateFirst=false
+00:00 +41: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: five-second pair deadline starts at either half; stateFirst=false
+00:00 +42: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: Load pairs both halves before immediate Play; stateFirst=true
+00:00 +43: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: five-second pair deadline starts at either half; stateFirst=true
+00:00 +44: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: state/delta ordering ignores stale callbacks and milestones survive newer state revisions
+00:00 +45: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: loading BUFFERING stays loading until READY evidence; injected callbacks are isolated
+00:00 +46: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: only repeated malformed callbacks terminate; stale traffic never increments failures
+00:00 +47: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: new Load cancels assessment and old pair continuations without reopening
+00:00 +48: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: new Load retires buffered state from superseded Load and ignores its late reply
+00:00 +49: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: accepted Stop fences captured session before idle and cannot invalidate newer Load
+00:00 +50: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: rejected Stop preserves usable session and cancels a pending Load
+00:00 +51: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: terminal transport failure settles all commands and ignores late failures
+00:00 +52: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: hung failed-create cleanup is bounded and preserves original failure
+00:00 +53: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: dispose shares Future, cancels commands, unregisters before paused observers drain
+00:00 +54: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +55: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +56: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +57: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +58: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +59: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +60: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +61: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +61 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:00 +62 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:00 +62 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: all complete enum counterparts retain exact set parity [E]
+  Expected: Set:[
+              'seek',
+              'seekToLiveEdge',
+              'playbackSpeed',
+              'audioTrackSelection',
+              'videoConstraints',
+              'volume',
+              'stop',
+              'videoTrackSelection',
+              'externalSubtitles',
+              'subtitleTrackSelection',
+              'subtitleOffset'
+            ]
+    Actual: Set:[
+              'seek',
+              'seekToLiveEdge',
+              'playbackSpeed',
+              'audioTrackSelection',
+              'videoConstraints',
+              'volume',
+              'stop',
+              'videoTrackSelection'
+            ]
+     Which: does not contain 'externalSubtitles'
+  AndroidPlayerOperation must match its entire public counterpart
+  
+  package:matcher                                                expect
+  package:flutter_test/src/widget_tester.dart 473:18             expect
+  packages/yl_player_android/test/android_codec_test.dart 180:7  main.<fn>
+  
+00:01 +63 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:01 +64 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:01 +65 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:01 +66 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:01 +67 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:01 +68 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:01 +69 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:01 +70 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:01 +70 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:01 +71 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:01 +71 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: inbound enums cover statuses, engines, decoder evidence/mode, tracks, operations and failures [E]
+  Expected: MappedIterable<YlPlayerOperation, String>:[
+              'seek',
+              'seekToLiveEdge',
+              'playbackSpeed',
+              'audioTrackSelection',
+              'videoConstraints',
+              'volume',
+              'stop',
+              'externalSubtitles',
+              'subtitleTrackSelection',
+              'subtitleOffset'
+            ]
+    Actual: MappedListIterable<YlPlayerOperation, String>:[
+              'seek',
+              'seekToLiveEdge',
+              'playbackSpeed',
+              'audioTrackSelection',
+              'videoConstraints',
+              'volume',
+              'stop'
+            ]
+     Which: at location [7] is MappedListIterable<YlPlayerOperation, String>:[
+              'seek',
+              'seekToLiveEdge',
+              'playbackSpeed',
+              'audioTrackSelection',
+              'videoConstraints',
+              'volume',
+              'stop'
+            ] which shorter than expected
+  
+  package:matcher                                                expect
+  package:flutter_test/src/widget_tester.dart 473:18             expect
+  packages/yl_player_android/test/android_codec_test.dart 503:9  main.<fn>
+  
+00:01 +72 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:01 +73 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:01 +74 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:01 +75 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:01 +76 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:01 +77 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:01 +78 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:02 +79 -2: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: all complete enum counterparts retain exact set parity
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: inbound enums cover statuses, engines, decoder evidence/mode, tracks, operations and failures

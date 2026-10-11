@@ -5,6 +5,7 @@ import '../model/identifiers.dart';
 import '../model/player_event.dart';
 import '../model/player_state.dart';
 import '../model/source_assessment.dart';
+import '../model/subtitles.dart';
 import '../options/load_options.dart';
 import '../options/video_constraints.dart';
 import '../source/media_source.dart';
@@ -49,6 +50,24 @@ abstract interface class YlPlatformPlayer {
 /// Optional SPI for backends that can enforce one exact video track.
 abstract interface class YlVideoTrackSelectionPlatformPlayer {
   Future<void> selectVideoTrack(YlPlaybackSessionId sessionId, String? trackId);
+}
+
+/// Optional subtitle SPI. Each method requires its matching capability.
+/// Success acknowledges a committed command, not first subtitle presentation.
+/// Implementations own resource cancellation and same-session command ordering.
+abstract interface class YlSubtitlePlatformPlayer {
+  Future<void> replaceExternalSubtitles(
+    YlPlaybackSessionId sessionId,
+    List<YlExternalSubtitle> subtitles,
+  );
+  Future<void> selectSubtitleTrack(
+    YlPlaybackSessionId sessionId,
+    String? trackId,
+  );
+  Future<void> setSubtitleOffset(
+    YlPlaybackSessionId sessionId,
+    Duration offset,
+  );
 }
 
 /// Optional DRM configuration admission, not evidence of DRM/security support.

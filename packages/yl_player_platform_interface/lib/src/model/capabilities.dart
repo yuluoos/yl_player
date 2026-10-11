@@ -29,6 +29,9 @@ enum YlPlayerOperation {
   volume,
   stop,
   videoTrackSelection,
+  externalSubtitles,
+  subtitleTrackSelection,
+  subtitleOffset,
 }
 
 const _absent = Object();

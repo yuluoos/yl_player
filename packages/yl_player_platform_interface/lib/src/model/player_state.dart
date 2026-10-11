@@ -9,6 +9,7 @@ import 'timeline.dart';
 import 'value_helpers.dart';
 import 'video_geometry.dart';
 import 'video_selection.dart';
+import 'subtitles.dart';
 
 const _absent = Object();
 
@@ -23,13 +24,15 @@ final class YlPlayerState {
     List<YlMediaTrack> audioTracks = const [],
     List<YlMediaTrack> videoTracks = const [],
     this.videoSelection = const YlVideoSelection(),
+    YlSubtitleState? subtitles,
     this.engine = YlPlaybackEngine.unknown,
     this.decoderMode = YlDecoderMode.unknown,
     this.decoderIdentity,
     this.metrics = const YlPlaybackMetrics(),
     this.failure,
   }) : audioTracks = List.unmodifiable(audioTracks),
-       videoTracks = List.unmodifiable(videoTracks);
+       videoTracks = List.unmodifiable(videoTracks),
+       subtitles = subtitles ?? YlSubtitleState();
 
   final int revision;
 
@@ -46,6 +49,8 @@ final class YlPlayerState {
   final List<YlMediaTrack> videoTracks;
 
   final YlVideoSelection videoSelection;
+
+  final YlSubtitleState subtitles;
 
   final YlPlaybackEngine engine;
 
@@ -67,6 +72,7 @@ final class YlPlayerState {
     List<YlMediaTrack>? audioTracks,
     List<YlMediaTrack>? videoTracks,
     YlVideoSelection? videoSelection,
+    YlSubtitleState? subtitles,
     YlPlaybackEngine? engine,
     YlDecoderMode? decoderMode,
     Object? decoderIdentity = _absent,
@@ -85,6 +91,7 @@ final class YlPlayerState {
     audioTracks: audioTracks ?? this.audioTracks,
     videoTracks: videoTracks ?? this.videoTracks,
     videoSelection: videoSelection ?? this.videoSelection,
+    subtitles: subtitles ?? this.subtitles,
     engine: engine ?? this.engine,
     decoderMode: decoderMode ?? this.decoderMode,
     decoderIdentity: identical(decoderIdentity, _absent)
@@ -109,6 +116,7 @@ final class YlPlayerState {
         listEquals(audioTracks, other.audioTracks) &&
         listEquals(videoTracks, other.videoTracks) &&
         videoSelection == other.videoSelection &&
+        subtitles == other.subtitles &&
         engine == other.engine &&
         decoderMode == other.decoderMode &&
         decoderIdentity == other.decoderIdentity &&
@@ -126,6 +134,7 @@ final class YlPlayerState {
     Object.hashAll(audioTracks),
     Object.hashAll(videoTracks),
     videoSelection,
+    subtitles,
     engine,
     decoderMode,
     decoderIdentity,
@@ -135,5 +144,5 @@ final class YlPlayerState {
 
   @override
   String toString() =>
-      'YlPlayerState(revision: $revision, sessionId: $sessionId, status: $status, timeline: $timeline, videoGeometry: $videoGeometry, audioTracks: $audioTracks, videoTracks: $videoTracks, videoSelection: $videoSelection, engine: $engine, decoderMode: $decoderMode, decoderIdentity: <redacted>, metrics: $metrics, failure: $failure)';
+      'YlPlayerState(revision: $revision, sessionId: $sessionId, status: $status, timeline: $timeline, videoGeometry: $videoGeometry, audioTracks: $audioTracks, videoTracks: $videoTracks, videoSelection: $videoSelection, subtitles: $subtitles, engine: $engine, decoderMode: $decoderMode, decoderIdentity: <redacted>, metrics: $metrics, failure: $failure)';
 }
