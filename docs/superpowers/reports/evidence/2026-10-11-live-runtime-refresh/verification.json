@@ -1,0 +1,96 @@
+{
+  "scope": "Existing runtime-error-triggered script re-resolution: cancellation isolation, bounded failures, backup and explicit retry",
+  "tvs": {
+    "baseline": "056e0056f87171085a32a54a7f599260f6b61bc5",
+    "commit": "7b04b962d086b43a50e820ac19380b7ac19571bc"
+  },
+  "player_dependency_commit": "9b62610bd17fc3493e5e64fae1977d7dc8bb5374",
+  "snapshot": "/private/tmp/yl-business-47qwyahs/tvs",
+  "snapshot_method": "TVS baseline archive plus one test file; five player packages archived at fixed commit; remapped existing locked package config/graph. No dependency resolution or generation.",
+  "sha256": {
+    "test/modules/live/features/live_source_resolution_test.dart": "8db67bceb8a5385643fa51795dfde5750d92e0b24c155ca66f3113de66887b83",
+    "lib/providers/live_player_provider.dart": "73b8cc6baa6f4243da45d44a72c7b85cdb878d659612a8e5fd29d073c61111cc",
+    "lib/providers/live_player_provider.g.dart": "56eded7c2c9965ff2381f718b7f9d3c06269f98fc1365ee40265a47a16392967",
+    "lib/utils/live_player_controller.dart": "317c031d0c4ba9ddcd548de0f86c75f53b5e18105c436dca3b983c5101342f2c",
+    "pubspec.yaml": "5c65155869260385a02cd9c9f192880148690c39e293ea2c5ce1db07d3ca33e4",
+    "pubspec.lock": "8bc7656782e9070a7c308c0d03d3ae6f2d7c4ccd8d94181cb6a0c8f7c76f84e8"
+  },
+  "identity_check": "Six test/production-input/manifest entries byte-match TVS commit, worktree and verified snapshot. Mutated production files restored before final verification.",
+  "new_tests": 12,
+  "production_changes": false,
+  "verification": [
+    {
+      "log": "initial",
+      "exit_code": 1,
+      "passed": 9,
+      "failed": 3,
+      "reason": "Incorrect test expectation omitted existing script. error-code namespace; no production defect claimed."
+    },
+    {
+      "log": "green",
+      "exit_code": 0,
+      "passed": 12,
+      "failed": 0
+    },
+    {
+      "log": "mutation-budget",
+      "exit_code": 1,
+      "failed": 1,
+      "reason": "Snapshot-only two-to-three business retry mutation produced4requests instead of3; restored in finally."
+    },
+    {
+      "log": "mutation-expiry",
+      "exit_code": 1,
+      "failed": 1,
+      "reason": "Snapshot-only disabled expiry guard allowed early successful load, produced2requests instead of3; restored in finally."
+    },
+    {
+      "log": "related",
+      "exit_code": 0,
+      "passed": 104,
+      "failed": 0
+    },
+    {
+      "log": "analyze",
+      "exit_code": 1,
+      "reason": "One test curly-brace lint; fixed without changing behavior/assertions."
+    },
+    {
+      "log": "related-final",
+      "command": "flutter test --no-pub --concurrency=1 test/modules/live/features/live_source_resolution_test.dart test/modules/live/features/live_player_notifier_test.dart test/modules/live/features/live_player_session_ownership_test.dart test/modules/live/features/live_player_stall_recovery_test.dart test/modules/live/features/live_attempt_diagnostics_test.dart test/modules/player/features/playback_source_subscriptions_test.dart",
+      "exit_code": 0,
+      "passed": 104,
+      "failed": 0
+    },
+    {
+      "log": "analyze-final",
+      "command": "flutter analyze --no-pub",
+      "exit_code": 0,
+      "result": "No issues found!"
+    },
+    {
+      "command": "dart format --output=none --set-exit-if-changed (changed test); git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "sdk": "/Users/yy2021_8689/flutter/bin/flutter",
+  "environment": {
+    "physical_devices": false,
+    "simulators": false,
+    "native_media_playback": false,
+    "external_test_services": false,
+    "fixtures": "Flutter host runner, fake media backend, owned loopback HTTP/script/proxy services"
+  },
+  "review": {
+    "reviewer": "/root/review_runtime_refresh",
+    "verdict": "Ready; no Critical/Important. Routine curly-brace lint noted and fixed; final analyze confirmed by executor. No deferred findings.",
+    "method": "Fresh read-only source/log review; no test execution or independent hash recomputation."
+  },
+  "limits": [
+    "Late-callback observation bounded to50ms after controlled server response closed, followed by successful new play; not proof of VM/HTTP/device resource termination",
+    "No proactive expiry timer; existing runtime-error-triggered re-resolution only",
+    "No complete P05/three-platform/online nine-script/media compatibility/archive durability claim",
+    "No new subscription/remote proxy acceptance or complete aggregate-diagnostics claim"
+  ],
+  "raw_logs_sha256": "5cfd208061b76e7f3db671ef438f195377279ba66100683a94706b4878ec67dc"
+}

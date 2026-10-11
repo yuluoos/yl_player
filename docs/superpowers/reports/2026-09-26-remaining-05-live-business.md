@@ -165,3 +165,23 @@ Provider 按项目要求生成并在复审修复后重新生成。工具提示 `
 [verification.json](evidence/2026-10-11-live-proxy-routing/verification.json) 保存跨仓版本、三份改动及 pubspec/lock 指纹、命令、失败与最终结果；[raw-logs.json](evidence/2026-10-11-live-proxy-routing/raw-logs.json) 保留完整 RED/GREEN、复审修复、生成警告和分析日志。实际 TVS commit、工作区与最终验证副本五份文件逐字节一致。复审者阅读源码和日志，没有独立运行测试或重算副本哈希；这些验证由执行者完成。
 
 本轮使用 Flutter 本机 runner、fake 媒体后端和自有回环 HTTP/脚本/代理服务，未占用设备、模拟器、原生媒体播放或外部测试服务。完整 P05、原生脚本终止、线上九脚本、归档和真实设备等验收维持原状态，本项不替代这些证据。
+
+## 2026-10-11：Task 3 运行时脚本重新解析的取消与失败恢复
+
+TVS 提交 **`7b04b962d086b43a50e820ac19380b7ac19571bc`**，基线 `056e005`；依赖固定播放器 **`9b62610`**（含已提交 VobSub），隔离并行内嵌字幕与长播放工作。本轮补齐已有业务行为的回归覆盖，只修改原有源路由测试，没有生产代码、依赖或生成输入变更。
+
+新增 **12 项**通过真实 notifier/controller/resolver 链路验证：已成功播放的脚本 HTTP 源发生运行时错误，在重新下载脚本的慢响应阶段停止、切台或释放 Provider，迟到成功/报错均不能加载旧源、覆盖当前状态或消耗下一次重试；失败的旧 fake 媒体实例已释放，后续明确播放仍可成功。另覆盖重新解析返回明确过期结果、HTTP403 和脚本 reported_error，每类分别测试有/无备用源：保留现有两次业务重连上限，非法结果不创建媒体实例，备用 RTMP 接管或进入安全失败状态，显式再次播放重新解析原始引用。过期仅使用明确 expiresAt，403 不推断过期；错误保留重连阶段、脚本 code/diagnosticId，并拒绝原 URL/token/任意报错正文。
+
+首轮 **9 passed / 3 failed** 来自测试错误码预期漏写既有 `script.` 前缀，修正测试后 **12/12**；不是生产缺陷或实现 RED→GREEN。为证明新增预算/过期守卫能发现回归，仅在隔离副本分别临时将业务重连上限 2 改为 3、禁用 expiry 校验，两次测试均按预期失败：应有 3 次解析请求，分别实际 4 次和 2 次。每次注入均在 finally 中逐字节恢复，恢复后与已提交生产文件核对一致，没有将故意错误带入 TVS 或最终验证。
+
+相关六文件 **104/104**；首轮全项目分析发现测试一处 if 缺少大括号，补齐后最终同版本仍为 **104/104**，全项目分析无问题，格式和 diff 检查通过。未改 Provider/Model，无需生成。独立只读复审 Ready，无 Critical/Important；其指出的同一格式提示已消除，没有遗留项。复审者读源码和日志，未重复运行测试或重算指纹。
+
+```sh
+# 固定临时 TVS 副本，使用 /Users/yy2021_8689/flutter/bin/flutter：
+flutter test --no-pub --concurrency=1 test/modules/live/features/live_source_resolution_test.dart test/modules/live/features/live_player_notifier_test.dart test/modules/live/features/live_player_session_ownership_test.dart test/modules/live/features/live_player_stall_recovery_test.dart test/modules/live/features/live_attempt_diagnostics_test.dart test/modules/player/features/playback_source_subscriptions_test.dart
+flutter analyze --no-pub
+```
+
+[verification.json](evidence/2026-10-11-live-runtime-refresh/verification.json) 保存跨仓版本、测试/直接生产输入及 pubspec/lock 六份指纹和真实退出码；[raw-logs.json](evidence/2026-10-11-live-runtime-refresh/raw-logs.json) 保留预期错误、两次故意回归、最终测试及分析日志。实际 TVS commit、工作区和最终副本逐字节一致。
+
+验证只使用本机 Flutter runner、fake 媒体后端与自有回环服务，没有设备、模拟器、原生媒体播放或外部测试服务。取消后的负断言是在受控服务响应关闭后观察 50ms，再验证新播放可成功，是有界业务状态证据，不证明原生 VM/HTTP/设备资源彻底释放。范围是现有运行时失败触发的重新解析，不新增主动到期定时器；完整 P05、三端、九脚本线上/归档、真实媒体、完整订阅/代理和全部失败汇总验收保持原状态。
