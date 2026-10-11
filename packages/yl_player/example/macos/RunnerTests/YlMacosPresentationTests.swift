@@ -9,6 +9,47 @@ import YlFFmpegBridge
 
 final class YlMacosPresentationTests: XCTestCase {
   @MainActor
+  func testNativeReadyEvidenceSeparatesChecksAndCallback() async throws {
+    guard #available(macOS 14.0, *) else { throw XCTSkip("Timed endpoint requires macOS 14") }
+    let container = CALayer()
+    let endpoint = try YlMacosTimedVideoEndpoint(container: container, collectDiagnostics: true,
+      onFailure: { _ in XCTFail("Unexpected renderer failure") })
+    defer { endpoint.retire(removingImage: true) {} }
+    let layer = try XCTUnwrap(container.sublayers?.first as? AVSampleBufferDisplayLayer)
+    endpoint.update(.init(positionUs: 0, hostTimeUs: YlPresentationCoordinator.hostTimeUs(), rate: 1, playing: false), generation: 1)
+    var buffer: CVPixelBuffer?
+    XCTAssertEqual(CVPixelBufferCreate(kCFAllocatorDefault, 16, 16, kCVPixelFormatType_32BGRA,
+      [kCVPixelBufferIOSurfacePropertiesKey: [:]] as CFDictionary, &buffer), kCVReturnSuccess)
+    let pixel = try XCTUnwrap(buffer)
+    let callback = expectation(description: "native ready callback after queue flush")
+    endpoint.setReadyHandler { callback.fulfill() }
+    var rejected: YlFrameEnvelope?
+    // Characterize the diagnostic boundary with a deliberately full, paused
+    // native queue. This does not reproduce the historical playback fault.
+    for index in 0..<256 {
+      let frame = YlFrameEnvelope(payload: pixel, ptsUs: 10_000_000 + Int64(index) * 40_000,
+        durationUs: 40_000, keyframe: true, generation: 1)
+      if !endpoint.enqueue(frame) { rejected = frame; break }
+    }
+    let frame = try XCTUnwrap(rejected, "Paused native queue must exercise actual backpressure")
+    let pending = try XCTUnwrap(endpoint.diagnostics?["readyChecks"] as? [String: Double])
+    XCTAssertEqual(pending["check0Ready"], 0)
+    XCTAssertGreaterThan(try XCTUnwrap(pending["check0ThreadID"]), 0)
+    layer.sampleBufferRenderer.flush()
+    await fulfillment(of: [callback], timeout: 3)
+    XCTAssertTrue(endpoint.enqueue(frame))
+    let events = try XCTUnwrap(endpoint.diagnostics?["backpressureEvents"] as? [[String: Double]])
+    let event = try XCTUnwrap(events.last)
+    XCTAssertEqual(event["ptsUs"], Double(frame.ptsUs))
+    XCTAssertEqual(event["lastCheckReady"], 1)
+    XCTAssertEqual(event["firstRejectedUptime"], event["check0Returned"])
+    XCTAssertGreaterThanOrEqual(try XCTUnwrap(event["check0Entered"]), try XCTUnwrap(event["check0Requested"]))
+    XCTAssertGreaterThanOrEqual(try XCTUnwrap(event["callbackEntered"]), try XCTUnwrap(event["registrationReturned"]))
+    XCTAssertGreaterThanOrEqual(try XCTUnwrap(event["enqueueReturnedUptime"]), try XCTUnwrap(event["lastCheckReturned"]))
+    XCTAssertTrue(endpoint.diagnostics?["readyChecks"] is NSNull, "Completed evidence must detach from next frame")
+  }
+
+  @MainActor
   func testPausedTimedReattachPreservesCurrentPixel() async throws {
     guard #available(macOS 14.4, *) else { throw XCTSkip("Native pixel readback requires macOS 14.4") }
     let views = YlMacosVideoViewFactory()

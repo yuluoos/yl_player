@@ -1,6 +1,7 @@
 #if os(macOS)
 import AVFoundation
 import AppKit
+import Darwin
 
 /// Layer hierarchy belongs to main. Renderer and timebase operations belong to
 /// queue; no sample is bounced through the main run loop.
@@ -24,6 +25,7 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
   private var blockedPTS: Int64?, blockedSince: TimeInterval?, readyAt: TimeInterval?
   private var blockedAttempts = 0
   private var readyAtCallback: Bool?
+  private var readinessTrace: YlTimedVideoReadinessTrace?
   private var backpressureEvents: [[String: Double]] = []
   private var failed = false
   private var retirementStarted = false
@@ -40,7 +42,7 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
   var diagnostics: [String: Any]? {
     queue.sync {
       guard collectDiagnostics else { return nil }
-      return ["backpressureEvents": backpressureEvents, "blockedPTS": blockedPTS as Any? ?? NSNull(), "blockedSince": blockedSince as Any? ?? NSNull(), "blockedAttempts": blockedAttempts, "anchors": diagnosticAnchors, "lifetime": lifetimeDiagnostics?.snapshot as Any? ?? NSNull(), "updates": diagnosticUpdates, "enqueues": diagnosticEnqueues, "lateEnqueues": lateEnqueues,
+      return ["backpressureEvents": backpressureEvents, "readyChecks": readinessTrace?.values as Any? ?? NSNull(), "blockedPTS": blockedPTS as Any? ?? NSNull(), "blockedSince": blockedSince as Any? ?? NSNull(), "blockedAttempts": blockedAttempts, "anchors": diagnosticAnchors, "lifetime": lifetimeDiagnostics?.snapshot as Any? ?? NSNull(), "updates": diagnosticUpdates, "enqueues": diagnosticEnqueues, "lateEnqueues": lateEnqueues,
         "maximumForwardCorrectionUs": maximumForwardCorrectionUs, "maximumBackwardCorrectionUs": maximumBackwardCorrectionUs,
         "minimumLeadUs": minimumLeadUs as Any? ?? NSNull(), "maximumLeadUs": maximumLeadUs as Any? ?? NSNull(), "events": diagnosticEvents]
     }
@@ -129,31 +131,53 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
   }
 
   func enqueue(_ frame: YlFrameEnvelope) -> Bool {
-    queue.sync {
+    let requested = collectDiagnostics ? ProcessInfo.processInfo.systemUptime : 0
+    return queue.sync {
+      let entered = collectDiagnostics ? ProcessInfo.processInfo.systemUptime : 0
       guard !isRetired, !failed, generation == frame.generation else { return false }
       guard renderer.status != .failed else {
         fail(renderer.error ?? NSError(domain: "YLTimedVideoRenderer", code: -1)); return false
       }
-      guard renderer.isReadyForMoreMediaData else {
+      let checkBegan = collectDiagnostics ? ProcessInfo.processInfo.systemUptime : 0
+      let ready = renderer.isReadyForMoreMediaData
+      let checkReturned = collectDiagnostics ? ProcessInfo.processInfo.systemUptime : 0
+      if collectDiagnostics, !ready || (blockedSince != nil && blockedPTS == frame.ptsUs) {
+        if !ready, blockedSince == nil || blockedPTS != frame.ptsUs {
+          readinessTrace = YlTimedVideoReadinessTrace()
+        }
+        readinessTrace?.recordCheck(requested: requested, entered: entered,
+          began: checkBegan, returned: checkReturned, ready: ready, threadID: diagnosticThreadID())
+      }
+      guard ready else {
         if collectDiagnostics {
           if blockedSince == nil || blockedPTS != frame.ptsUs {
-            blockedPTS = frame.ptsUs; blockedSince = ProcessInfo.processInfo.systemUptime
+            blockedPTS = frame.ptsUs; blockedSince = checkReturned
             blockedAttempts = 0; readyAt = nil; readyAtCallback = nil
           }
           blockedAttempts += 1
         }
         if !requesting {
           requesting = true
+          let registrationBegan = collectDiagnostics ? ProcessInfo.processInfo.systemUptime : 0
           renderer.requestMediaDataWhenReady(on: queue) { [weak self] in
             guard let self, self.requesting, !self.isRetired, !self.failed else { return }
+            let callbackEntered = self.collectDiagnostics ? ProcessInfo.processInfo.systemUptime : 0
             self.renderer.stopRequestingMediaData()
+            let stopReturned = self.collectDiagnostics ? ProcessInfo.processInfo.systemUptime : 0
             self.requesting = false
             if self.collectDiagnostics, self.blockedSince != nil {
               // Callback execution is not the exact instant native ready flipped.
               self.readyAt = ProcessInfo.processInfo.systemUptime
               self.readyAtCallback = self.renderer.isReadyForMoreMediaData
+              self.readinessTrace?.recordCallback(entered: callbackEntered, stopReturned: stopReturned,
+                readyReturned: ProcessInfo.processInfo.systemUptime, ready: self.readyAtCallback == true,
+                threadID: self.diagnosticThreadID())
             }
             self.readyHandler?()
+          }
+          if collectDiagnostics {
+            readinessTrace?.recordRegistration(began: registrationBegan,
+              returned: ProcessInfo.processInfo.systemUptime, threadID: diagnosticThreadID())
           }
         }
         return false
@@ -173,6 +197,7 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
           if let blockedSince, let blockedPTS {
             var event: [String: Double] = ["ptsUs": Double(blockedPTS),
               "firstRejectedUptime": blockedSince, "attempts": Double(blockedAttempts)]
+            if let readinessTrace { event.merge(readinessTrace.values) { _, new in new } }
             if blockedPTS == frame.ptsUs {
               event["enqueueBeganUptime"] = ProcessInfo.processInfo.systemUptime
               event["leadAtEnqueueUs"] = lead
@@ -185,6 +210,7 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
               appendBackpressureEvent(event)
             }
             self.blockedSince = nil; self.blockedPTS = nil; self.readyAt = nil
+            readinessTrace = nil
             readyAtCallback = nil; blockedAttempts = 0
           }
         }
@@ -203,6 +229,12 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
   private func appendBackpressureEvent(_ event: [String: Double]) {
     backpressureEvents.append(event)
     if backpressureEvents.count > 16 { backpressureEvents.removeFirst() }
+  }
+
+  private func diagnosticThreadID() -> UInt64 {
+    var identifier: UInt64 = 0
+    pthread_threadid_np(nil, &identifier)
+    return identifier
   }
 
   var pausedPreview: YlFrameEnvelope? {

@@ -54,6 +54,51 @@ class RecorderLifecycleTests(unittest.TestCase):
         check_recorder(0, now=10, started=5, settled=True, stop_sent=True, duration=45)
         check_recorder(None, now=10, started=5, settled=False, stop_sent=False, duration=45)
 
+class SystemDropTriggerTests(unittest.TestCase):
+    def test_drop_without_ready_wait_preserves_previous_and_current_rows(self):
+        detector=trace.SystemDropTrigger()
+        before={'phase':'playing','uptime':10,'systemMetrics':{'dropped':3}}
+        after={'phase':'playing','uptime':11,'systemMetrics':{'dropped':4}}
+        self.assertIsNone(detector.observe(before))
+        event=detector.observe(after)
+        self.assertEqual(event,{'before':before,'after':after,'count':1})
+        self.assertIsNone(detector.observe(after))
+
+    def test_missing_reset_and_disposal_metrics_do_not_invent_a_drop(self):
+        detector=trace.SystemDropTrigger()
+        for row in ({'phase':'playing'},
+                    {'phase':'playing','systemMetrics':{'dropped':2}},
+                    {'phase':'disposed','systemMetrics':{'dropped':10}},
+                    {'phase':'playing','systemMetrics':{'dropped':0}},
+                    {'phase':'playing','systemMetrics':{'dropped':float('nan')}},
+                    {'phase':'playing','systemMetrics':{'dropped':-1}}):
+            self.assertIsNone(detector.observe(row))
+        self.assertEqual(detector.observe({'phase':'playing','systemMetrics':{'dropped':1}})['count'],1)
+
+    def test_system_drop_does_not_truncate_ready_recovery(self):
+        row={'nativeDiagnostics':{'blockedSince':10,'backpressureEvents':[]}}
+        drop={'count':1}
+        self.assertIsNone(trace.capture_event(row,.06,drop))
+        event={'firstRejectedUptime':10,'enqueueBeganUptime':10.119,'enqueueReturnedUptime':10.1191}
+        row['nativeDiagnostics']['blockedSince']=None
+        row['nativeDiagnostics']['backpressureEvents']=[event]
+        self.assertEqual(trace.capture_event(row,.06,drop),{'kind':'completedReadyWait','event':event,'systemDrop':drop})
+        row['nativeDiagnostics']['backpressureEvents']=[]
+        self.assertEqual(trace.capture_event(row,.06,drop),{'kind':'systemDrop','systemDrop':drop})
+        self.assertIsNone(trace.capture_event({},.06,drop))
+        self.assertIsNone(trace.capture_event(row,.06))
+
+    def test_new_pending_wait_during_drop_tail_restarts_tail_after_recovery(self):
+        trigger={'kind':'systemDrop','detectedUptime':10}
+        ready={'nativeDiagnostics':{'blockedSince':None}}
+        blocked={'nativeDiagnostics':{'blockedSince':10.1}}
+        self.assertFalse(trace.capture_tail_complete(trigger,ready,10.1))
+        self.assertFalse(trace.capture_tail_complete(trigger,blocked,10.3))
+        self.assertFalse(trace.capture_tail_complete(trigger,ready,10.5))
+        self.assertFalse(trace.capture_tail_complete(trigger,ready,10.7))
+        self.assertTrue(trace.capture_tail_complete(trigger,ready,10.76))
+        self.assertFalse(trace.capture_tail_complete(trigger,{},11))
+
 class CompleteIntervalTests(unittest.TestCase):
     def test_lower_diagnostic_threshold_keeps_complete_event_requirement(self):
         event={'firstRejectedUptime':10,'enqueueBeganUptime':10.035,'enqueueReturnedUptime':10.0351}

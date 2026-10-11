@@ -47,6 +47,42 @@ def completed_ready_event(row, *, threshold_seconds=.06):
                  and event['enqueueBeganUptime']-event['firstRejectedUptime'] >= threshold_seconds),None)
 
 
+class SystemDropTrigger:
+    def __init__(self): self.previous=None
+
+    def observe(self,row):
+        if row.get('phase')!='playing': return None
+        count=(row.get('systemMetrics') or {}).get('dropped')
+        if type(count) not in (int,float) or not math.isfinite(count) or count<0: return None
+        previous=self.previous; self.previous=row
+        if previous is None: return None
+        delta=count-previous['systemMetrics']['dropped']
+        return dict(before=previous,after=row,count=delta) if delta>0 else None
+
+
+def capture_event(row, threshold_seconds, drop_event=None):
+    event=completed_ready_event(row,threshold_seconds=threshold_seconds)
+    if event is not None:
+        result=dict(kind='completedReadyWait',event=event)
+        if drop_event is not None: result['systemDrop']=drop_event
+        return result
+    native=row.get('nativeDiagnostics') or {}
+    # A system drop must not cut an in-progress ready wait's recovery out of the trace.
+    if drop_event is not None and 'blockedSince' in native and native['blockedSince'] is None:
+        return dict(kind='systemDrop',systemDrop=drop_event)
+    return None
+
+
+def capture_tail_complete(trigger,row,now):
+    if trigger['kind']=='systemDrop':
+        native=(row or {}).get('nativeDiagnostics') or {}
+        if 'blockedSince' not in native or native['blockedSince'] is not None:
+            trigger['tailPendingRecovery']=True
+            return False
+        if trigger.pop('tailPendingRecovery',False): trigger['tailStartedUptime']=now
+    return now-trigger.get('tailStartedUptime',trigger['detectedUptime'])>=.25
+
+
 def recording_command(pid, name, trace, duration, system_trace_only, *, all_processes=False):
     command=['xcrun','xctrace','record','--template','System Trace']
     if not system_trace_only:
@@ -108,6 +144,7 @@ def main():
     p.add_argument('--system-trace-only',action='store_true',help='Capture threads without extra Core Animation Server/Display agents')
     p.add_argument('--all-processes',action='store_true',help='Record system-wide instead of attaching to the owned player; retain the owned-player playback gate')
     p.add_argument('--ready-threshold-ms',type=positive_milliseconds,default=60,help='Diagnostic capture trigger only; does not change playback or acceptance limits')
+    p.add_argument('--capture-system-drops',action='store_true',help='Also retain a system-drop window; defer stopping while the latest observed snapshot reports pending ready recovery')
     p.add_argument('--app-name',default='yl_player_example.app')
     args=p.parse_args()
     root=Path(__file__).resolve().parents[2]; out=args.directory.resolve()
@@ -122,9 +159,9 @@ def main():
          '--products',str(args.products.resolve()),'--configuration','Profile','--directory',str(bench),
          '--app-name',args.app_name,'--candidate','--without-thread-checker','--diagnostics','--transport-diagnostics','--trace-gate-token',token]
     if args.long: cmd.append('--long')
-    receipt=dict(systemTraceOnly=args.system_trace_only,allProcesses=args.all_processes,readyThresholdMs=args.ready_threshold_ms,diagnosticOnly=True,formalAcceptance=False,productionAdmission=False,benchmarkCommand=cmd,token=token,notificationName=name)
+    receipt=dict(captureSystemDrops=args.capture_system_drops,systemTraceOnly=args.system_trace_only,allProcesses=args.all_processes,readyThresholdMs=args.ready_threshold_ms,diagnosticOnly=True,formalAcceptance=False,productionAdmission=False,benchmarkCommand=cmd,token=token,notificationName=name)
     b=None;t=None;stop_sent=False;trigger=None;errors=[];start=time.monotonic()
-    tail=RowTail(bench/'rows.jsonl')
+    tail=RowTail(bench/'rows.jsonl'); drop_detector=SystemDropTrigger(); pending_drop=None
     try:
         with (out/'benchmark.log').open('w') as blog, (out/'trace.log').open('w') as tlog:
             b=subprocess.Popen(cmd,cwd=root,stdout=blog,stderr=blog)
@@ -170,14 +207,16 @@ def main():
                     elif args.long:
                         row=tail.poll()
                         if row and trigger is None:
-                            event=completed_ready_event(row,threshold_seconds=args.ready_threshold_ms/1000)
+                            if args.capture_system_drops:
+                                observed_drop=drop_detector.observe(row)
+                                if pending_drop is None: pending_drop=observed_drop
+                            event=capture_event(row,args.ready_threshold_ms/1000,pending_drop)
                             if event:
-                                trigger=dict(detectedUptime=now,event=event,row=row);receipt['trigger']=trigger
-                                print('Completed ready wait captured; recording a 250 ms tail after detection',flush=True)
-                        if trigger and now-trigger['detectedUptime']>=.25:
+                                trigger=dict(detectedUptime=now,row=row,**event);receipt['trigger']=trigger
+                                print(('Completed ready wait' if event['kind']=='completedReadyWait' else 'System drop')+' captured; recording a 250 ms tail after detection',flush=True)
+                        if trigger and capture_tail_complete(trigger,row,now):
                             t.send_signal(signal.SIGINT);stop_sent=True;receipt['traceStopRequestedUptime']=now
-                remaining=.25-(time.monotonic()-trigger['detectedUptime']) if trigger and not stop_sent else .2
-                time.sleep(max(.001,min(.2,remaining)))
+                time.sleep(.2)
             receipt['benchmarkExitCode']=b.returncode
     except (Exception,KeyboardInterrupt) as error:
         errors.append(repr(error))
