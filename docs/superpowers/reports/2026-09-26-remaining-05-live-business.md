@@ -120,3 +120,23 @@ dart run build_runner build --build-filter=lib/providers/live_source_provider.g.
 [verification.json](evidence/2026-10-11-live-subscription-errors/verification.json) 保存跨仓版本、全部七文件及依赖清单的 SHA-256、退出码和范围；[raw-logs.json](evidence/2026-10-11-live-subscription-errors/raw-logs.json) 保留 RED、生成警告、分析和最终通过日志。最终源码、实际 TVS commit 与测试副本逐字节一致；复审只读，命令和哈希核验由执行者完成。
 
 未将本轮证据扩展为完整 P05/Task 2 通过：JS/点播订阅、HTML/空列表事务、代理初始化/源路由、原生脚本终止与代际、播放尝试汇总、九脚本线上/归档运行及真实设备各自保持原状态。现有重命名等其他本地操作的诊断路径也不包含在下载分类承诺中。
+
+## 2026-10-11：Task 2 HTML / 空列表刷新事务
+
+TVS 提交 **`a8e5e639c16dab3f3d21801f0fd6960a6d43ab18`**，基线 `b4f4888`；验证依赖固定已提交播放器 **`1a20e5d`**，隔离并行 PGS 与长播放修改。范围为 LiveSource 直播订阅刷新及其共用本地存储路径，Task 2/P05 整体仍开放。
+
+刷新先判定可识别的 HTML，再解析频道；网页、空白、空列表或无法解析出频道的响应均在保存前失败，原频道和存储文件原始字节保留。复用原解析器的 HTML 开头规则，含 BOM、前导注释；不是完整 HTML 解析器。内容失败使用安全 AppError，区分 html/noChannels 和 parse 阶段，仅描述本次响应，不猜永久失效或过期，不显示原 URL、响应体或任意异常。修复 M3U 空显示名仍遗留 pendingName、生成无名频道绕过空表检查的问题；混合 JSON 仍提交有效相邻频道。
+
+共用保存路径先编码，再在目标目录的唯一暂存子目录中写入并 flush，完成后通过同文件系统 rename 替换正式文件；写入中途失败不会截断旧文件。FileSystemException 转为安全 persist/write 提示，暂存清理日志不携带原始路径/异常；提交后的清理失败不伪报刷新失败。批量刷新仍按源提交，HTML/空列表失败源保留原频道，其他成功源正常更新，并准确汇总成功/失败。初次添加空订阅的既有行为保留；不承诺跨源回滚、跨进程隔离或断电持久性。
+
+新增 **13 项**回归：12 项事务测试和 1 项真实 provider/manager 批量测试，覆盖拒绝内容、旧数据逐字节保留及重新读取、失败后有效刷新、有效邻居、部分写入失败与批量部分成功。初次 RED 是 IOOverrides 子类缺少 final 的夹具编译问题，修正后行为 RED **9 passed / 11 failed**；首次 GREEN 20/20。补充空名 M3U 回归先观察 **1 failed**，修复后最终相关 **73/73**，全项目静态分析无问题，改动文件格式化及 diff 检查通过。
+
+```sh
+# 固定临时 TVS 副本，使用 /Users/yy2021_8689/flutter/bin/flutter：
+flutter test --no-pub --concurrency=1 test/modules/live/features/live_source_refresh_transaction_test.dart test/modules/live/features/live_subscription_errors_test.dart test/modules/live/features/live_subscription_feedback_test.dart test/modules/live/features/live_source_notifier_test.dart test/modules/live/features/live_source_parser_test.dart test/modules/live/features/live_source_management_layout_test.dart test/modules/subscription/features/source_name_edit_test.dart
+flutter analyze --no-pub
+```
+
+[verification.json](evidence/2026-10-11-live-refresh-transaction/verification.json) 记录跨仓版本、全部五份改动文件及 pubspec/lock 指纹、退出码与范围；[raw-logs.json](evidence/2026-10-11-live-refresh-transaction/raw-logs.json) 保留夹具失败、行为 RED、GREEN、最终测试和分析输出。最终实际 TVS commit、工作区与验证副本七份文件逐字节一致。本轮没有 Model/Provider 生成输入改动，无需代码生成，也未解析或升级依赖。
+
+独立只读复审通过，无 Critical/Important/Minor；复审者读取最终日志并独立核对五份改动文件与副本一致，未运行测试。所有验证使用本机 Flutter runner、fake 适配器与临时文件，没有设备、模拟器、原生播放或外部测试服务。代理初始化/源路由、JS/点播订阅、原生终止与真实设备等剩余任务保持开放；本证据不验证另一会话的 PGS 或长播放改动。

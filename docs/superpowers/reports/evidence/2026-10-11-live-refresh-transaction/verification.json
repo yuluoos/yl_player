@@ -1,0 +1,87 @@
+{
+  "scope": "LiveSource HTML/empty subscription refresh retention and staged persistence",
+  "tvs": {
+    "baseline": "b4f4888a8840451ee133b8fad40df24c3480a004",
+    "commit": "a8e5e639c16dab3f3d21801f0fd6960a6d43ab18",
+    "root": "/Users/yy2021_8689/Desktop/GIt/tvs"
+  },
+  "player_dependency_commit": "1a20e5dc488b0f4a129db8ab4b26b5f7e3f5f16c",
+  "snapshot": "/private/tmp/yl-business-5ptze89m/tvs",
+  "snapshot_method": "TVS baseline archive plus five changed files; five player packages archived at fixed commit; existing locked dependency cache and remapped package_config/package_graph. No dependency resolution or code generation.",
+  "sha256": {
+    "lib/utils/live_source_manager.dart": "11ad83b8f184a7800fdac8854c906921d9fb2927ad4d35f32c77e9c0219d968d",
+    "lib/utils/live_source_error.dart": "99b03b39f240dde9ed57851abb82bb713ecb53857aca807ab31ebc63466e5bb4",
+    "lib/utils/live_source_parser.dart": "7490411dbfe5f9c41814334103a79e56c1ea11f281fb068983638b704d3f95ca",
+    "test/modules/live/features/live_source_refresh_transaction_test.dart": "e753977f9c6a01a8294bf8c4c95ee205a5060d2ab4e5336eab1f119ae588b76a",
+    "test/modules/live/features/live_subscription_errors_test.dart": "299ada85be1cf23eb73f03a89c950f0462126cc55d811e3c8c5eeebcd38fff9d",
+    "pubspec.yaml": "5c65155869260385a02cd9c9f192880148690c39e293ea2c5ce1db07d3ca33e4",
+    "pubspec.lock": "8bc7656782e9070a7c308c0d03d3ae6f2d7c4ccd8d94181cb6a0c8f7c76f84e8"
+  },
+  "identity_check": "All seven entries byte-matched final TVS commit, working tree and verified snapshot.",
+  "sdk": "/Users/yy2021_8689/flutter/bin/flutter",
+  "verification": [
+    {
+      "log": "red",
+      "exit_code": 1,
+      "result": "Fixture compilation failure: IOOverrides subclass requires final/base/sealed. Corrected fixture before behavioral RED."
+    },
+    {
+      "log": "semantic-red",
+      "exit_code": 1,
+      "passed": 9,
+      "failed": 11
+    },
+    {
+      "log": "green",
+      "exit_code": 0,
+      "passed": 20,
+      "failed": 0
+    },
+    {
+      "log": "empty-name-red",
+      "exit_code": 1,
+      "passed": 0,
+      "failed": 1,
+      "result": "Empty M3U display name bypassed zero-channel guard."
+    },
+    {
+      "log": "related",
+      "command": "flutter test --no-pub --concurrency=1 test/modules/live/features/live_source_refresh_transaction_test.dart test/modules/live/features/live_subscription_errors_test.dart test/modules/live/features/live_subscription_feedback_test.dart test/modules/live/features/live_source_notifier_test.dart test/modules/live/features/live_source_parser_test.dart test/modules/live/features/live_source_management_layout_test.dart test/modules/subscription/features/source_name_edit_test.dart",
+      "exit_code": 0,
+      "passed": 73,
+      "failed": 0
+    },
+    {
+      "log": "analyze",
+      "command": "flutter analyze --no-pub",
+      "exit_code": 0,
+      "result": "No issues found!"
+    },
+    {
+      "command": "dart format (five changed Dart files); git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "new_tests": 13,
+  "environment": {
+    "physical_devices": false,
+    "simulators": false,
+    "native_playback": false,
+    "external_test_services": false,
+    "fixtures": "Local Flutter test runner, fake adapters and temporary files"
+  },
+  "review": {
+    "reviewer": "/root/review_refresh_transaction",
+    "verdict": "Pass; no Critical/Important/Minor findings",
+    "method": "Fresh independent read-only review; read final logs and independently byte-compared five changed source/test files with snapshot; did not run tests."
+  },
+  "limitations": [
+    "Initial add empty-list behavior unchanged",
+    "Batch commits per source, no cross-source rollback",
+    "No cross-process isolation or power-loss durability claim",
+    "HTML preamble classification is not general HTML parsing",
+    "Nonempty parsed channel list does not prove media playability",
+    "No native/device or full Task 2/P05 acceptance"
+  ],
+  "raw_logs_sha256": "d74e0c36dfe8a3d60f8ed989ecbd8fd8935e2a6322925ef870b2f6cf8b17f2c8"
+}
