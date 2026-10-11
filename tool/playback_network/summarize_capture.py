@@ -137,8 +137,13 @@ def summarize(result, samples, requests, *, exit_code, server_summary=None):
 
 def read_capture(path):
     require(Path(path).stat().st_size <= 16*1024*1024)
+    return parse_capture(Path(path).read_text())
+
+
+def parse_capture(text):
+    """Parse already bounded capture bytes without reopening an archive file."""
     samples, results = [], []
-    for line in Path(path).read_text().splitlines():
+    for line in text.splitlines():
         for marker,target in [('YL_ABR_SAMPLE=',samples),('YL_ABR_RESULT=',results)]:
             if marker in line:
                 target.append(json.loads(line.split(marker,1)[1]))

@@ -373,6 +373,14 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 
 在长播放复验和弱网网络工具由其他会话推进期间，新增内部 SRT/WebVTT 有界解析及媒体时间重叠/偏移/关闭查询。NOTE 吞字幕复审问题经三项真实 RED→GREEN 修复，最终 yl_player Dart 147/147、静态分析无问题；未运行原生或设备测试，未改 HEAD。公开字幕 API、多轨身份、TTML、网络/会话和画面合成仍开放，不计 Task 1/2 或 CAP-SUB 完成。详见[P02 报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)及其源码/原始日志清单。
 
+### 2026-10-11 P04基线采集准备
+
+Task1A已按用户要求提交b8a83c9；Task1B补齐首次GET启动/身份预检、auto/caps/fixed公开采集入口和离线汇总。Python31/31、Dart定向17/17及静态分析通过，复审两项ACK漏判/预检socket关闭均RED→GREEN修正。仅工具与采集准备，未运行原生弱网播放；不同源时钟不相减、不推导适配或端到端延迟。Task1数值基线和P04整体仍开放。见[P04报告](../reports/2026-09-26-remaining-04-abr-live.md)与[采集协议](../../../tool/playback_network/capture-protocol.md)。
+
 ### 2026-10-11 P02 Task 1A 字幕公开契约
 
 解析切片已提交a8acb0b/fd24126，随后完成字幕来源/目录/关闭/偏移值、可选SPI/能力双门禁、默认关闭状态及迟到ACK隔离。四包Dart集中498/498、静态检查无问题，原生schema/生成物不变，未跑设备；旧适配器明确拒绝新命令。多音轨真实选择、下载/渲染/TTML与CAP-SUB继续开放。详见[P02报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)。
+
+### 2026-10-11 P04多轮离线汇总准备
+
+Task4A新增预登记试验矩阵、归档SHA256校验、单轮重算及按模式/缓存分组p50/p95，保留失败、超时与未运行分母。仅执行文件级离线回归，不占用另一会话长播放环境。环境/缓存声明不构成验证；真实重复测量、SLO和P04整体验收继续开放。见[P04报告](../reports/2026-09-26-remaining-04-abr-live.md)与[离线协议](../../../tool/playback_network/experiment-protocol.md)。

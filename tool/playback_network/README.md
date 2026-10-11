@@ -97,3 +97,7 @@ repeated HTTP downloads as continuous media playback. HTTP-FLV live timing and R
 shaping are not implemented here. Real TCP RTT and end-to-end live latency remain
 unavailable, as do P08-derived device SLOs until measured and frozen. This tool
 does not establish CAP-ABR, CAP-LIVE, mode switching or three-platform acceptance.
+
+Repeated measurements can be predeclared and summarized without a test environment
+using [the offline experiment protocol](experiment-protocol.md). It groups results
+by mode/cache state and preserves every planned, failed and timed-out attempt.
