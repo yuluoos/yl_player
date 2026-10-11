@@ -5,6 +5,7 @@ export 'src/diagnostics/safe_diagnostics.dart';
 export 'src/model/capabilities.dart';
 export 'src/model/failure.dart';
 export 'src/model/identifiers.dart';
+export 'src/model/live_playback.dart';
 export 'src/model/media_track.dart';
 export 'src/model/subtitles.dart';
 export 'src/model/playback_metrics.dart';

@@ -101,6 +101,41 @@ final class YlPlaybackSession {
     _player._checkSession(id);
   }
 
+  /// Switches an explicitly supported live session's playback goal.
+  /// Success acknowledges the backend's committed state barrier, not measured
+  /// latency, first frame or drained buffers. Old adapters reject this command.
+  Future<void> setLivePlaybackMode(YlLivePlaybackMode mode) =>
+      _command(() async {
+        final backend = _player._backend;
+        final state = _player.state;
+        if (backend is! YlLivePlaybackPlatformPlayer ||
+            !backend.capabilities.supportedOperations.contains(
+              YlPlayerOperation.livePlaybackMode,
+            ) ||
+            !state.timeline.isLive ||
+            !(state.livePlayback?.switchableModes.contains(mode) ?? false)) {
+          throw _exception(YlFailureCodes.policyUnsupported);
+        }
+        if (_player._pendingLivePlaybackCommands >= 32) {
+          throw _exception(YlFailureCodes.resourceExhausted);
+        }
+        _player._pendingLivePlaybackCommands++;
+        try {
+          try {
+            await (backend as YlLivePlaybackPlatformPlayer).setLivePlaybackMode(
+              id,
+              mode,
+            );
+          } catch (_) {
+            _player._checkSession(id, allowFailed: true);
+            rethrow;
+          }
+          _player._checkSession(id, allowFailed: true);
+        } finally {
+          _player._pendingLivePlaybackCommands--;
+        }
+      });
+
   Future<void> selectVideoTrack(String? trackId) => _command(() {
     if (trackId != null) validateYlTrackId(trackId);
     final backend = _player._backend;

@@ -147,6 +147,14 @@ void validateYlPlayerState(YlPlayerState state) {
   }
   validateYlTimeline(state.timeline);
   validateYlSubtitleState(state.subtitles);
+  if (state.livePlayback != null &&
+      (sessionId == null ||
+          state.status == YlPlaybackStatus.idle ||
+          !state.timeline.isLive)) {
+    throw ArgumentError(
+      'A committed live mode requires an active live session.',
+    );
+  }
   if (state.status == YlPlaybackStatus.idle &&
       (state.subtitles.tracks.isNotEmpty ||
           state.subtitles.selectedTrackId != null ||

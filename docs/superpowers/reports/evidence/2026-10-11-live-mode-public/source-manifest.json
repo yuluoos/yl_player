@@ -1,0 +1,42 @@
+{
+  "path": "/private/tmp/yl-live-public-mq74ffns/yl_player",
+  "baseline": "8ab86d0",
+  "overlays": [
+    "packages/yl_player/lib/src/playback_session.dart",
+    "packages/yl_player/lib/src/player_controller.dart",
+    "packages/yl_player/lib/yl_player.dart",
+    "packages/yl_player/test/live_playback_session_test.dart",
+    "packages/yl_player_platform_interface/lib/src/model/live_playback.dart",
+    "packages/yl_player_platform_interface/lib/src/model/player_state.dart",
+    "packages/yl_player_platform_interface/lib/src/model/capabilities.dart",
+    "packages/yl_player_platform_interface/lib/src/platform/platform_player.dart",
+    "packages/yl_player_platform_interface/lib/src/validation/state_validation.dart",
+    "packages/yl_player_platform_interface/lib/yl_player_platform_interface.dart",
+    "packages/yl_player_platform_interface/test/live_playback_contract_test.dart",
+    "packages/yl_player_apple/test/apple_codec_test.dart",
+    "packages/yl_player_android/test/android_codec_test.dart"
+  ],
+  "trackedFiles": 130,
+  "pathCorrection": "Preserve repository basename for pre-existing DRM TLS fixture locator; canonical path for Flutter package identity",
+  "additionalBaselineFiles": [
+    "packages/yl_player_apple/darwin/yl_player_apple.podspec",
+    "packages/yl_player_apple/darwin/yl_player_apple/Package.swift"
+  ],
+  "overlaySha256": {
+    "packages/yl_player/lib/src/playback_session.dart": "a66034c34bf5d98ec0cfa96a0f5b56de26cfc60be2b04add287ab80870c2753a",
+    "packages/yl_player/lib/src/player_controller.dart": "2c3e12a8d8b01cdc9b377f73484b6f0f639e655246cbba7526659f9ce6a72e67",
+    "packages/yl_player/lib/yl_player.dart": "193015928bbc606b2e1ad223e3f009cc71ade00775ce88c6f14b49348a319923",
+    "packages/yl_player/test/live_playback_session_test.dart": "7e07edff2067b3c661ea11776a36800b067f2b8338bb11e32d8a1fe24f8e2aa8",
+    "packages/yl_player_platform_interface/lib/src/model/live_playback.dart": "e3ce7828359c55313fa2ad58781c379ffd307729ccf79f7e69c4ecf8ef138b89",
+    "packages/yl_player_platform_interface/lib/src/model/player_state.dart": "25d6c511f2b7bb04292802f8a7e8baeb8a625853e762473b71e8183eb6ab10e6",
+    "packages/yl_player_platform_interface/lib/src/model/capabilities.dart": "f3edd6cfc472e91619c6a85e2b9493ba776ba585a4c94388d2041acf9ff65fbf",
+    "packages/yl_player_platform_interface/lib/src/platform/platform_player.dart": "772d1466d197f9a1f71f311fe17485f854eb495027928d1c329d34f7cdc0cdf7",
+    "packages/yl_player_platform_interface/lib/src/validation/state_validation.dart": "4e79cd03eaea956bfbdc6f994e69456a82f58a0382beb2661d203a2012831c84",
+    "packages/yl_player_platform_interface/lib/yl_player_platform_interface.dart": "2e38f2e0c6bfda357a1150e86c7d7fd535c0618b2b89c27ace320db8cf6f5356",
+    "packages/yl_player_platform_interface/test/live_playback_contract_test.dart": "8807ff07ff61365bc3e77018a3226aac892afe8830019570a0ffa44dd68e8ac5",
+    "packages/yl_player_apple/test/apple_codec_test.dart": "141cbbfcbd424ae400a44a8acb50b8709ddb16efd01aa17d08349c7699fa0bde",
+    "packages/yl_player_android/test/android_codec_test.dart": "f0be9436e3b50f9b4e5372288e1096b022b19f220fe422ad67c7628702032587"
+  },
+  "baselineCommit": "8ab86d0e2fc5f305bd35c5978f01e8e098aff67f",
+  "isolation": "Pinned Git archive of lib/test/pigeons/pubspecs and listed native metadata;13 code/test overlays. Four package roots use isolated canonical directory. SDK/pub-cache reused. No native builds."
+}

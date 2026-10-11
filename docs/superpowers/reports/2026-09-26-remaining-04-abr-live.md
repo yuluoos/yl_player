@@ -144,3 +144,37 @@ fixed/caps、DRM和网络约束不得被模式覆盖。每player最多32条未�
 Task3首项设计完成，公共契约代码、原生三协议运行时切换、弱网数值和整个CAP-LIVE
 仍未完成。下一项Task3B可做契约/可控后端测试，修改共享session/controller前应重新
 核对并行字幕提交，避免覆盖另一会话。
+
+## 2026-10-11：Task 3B 直播模式公共契约
+
+基线`8ab86d0`（字幕运行时已提交），按用户要求继续不依赖设备/外部测试环境的
+代码工作。新增`YlLivePlaybackMode`、不可变`YlLivePlaybackState`、可空
+`YlPlayerState.livePlayback`和可选`YlLivePlaybackPlatformPlayer`，导出公共值并在
+operation末尾追加能力位。状态copy/equality/hash包含新字段；无证据保持null，
+idle或非live状态不准发布已提交模式。
+
+`YlPlaybackSession.setLivePlaybackMode`检查SPI、player能力和当前会话可切模式，
+同模式也不绕过准入；最多32条未结算命令，溢出返回resource类错误且不进入后端。
+成功/失败结算后再次核对身份，stop/replacement/dispose不会被迟到回包覆盖。
+同会话failed只禁止新命令，不替换在途命令的原始终止错误，也不撤销已提交ACK。
+controller不乐观更新模式、播放意图或策略；后端仍负责有序事务、状态屏障、幂等与回滚。
+
+**当前Apple/Android适配器未实现新SPI、未声明此能力**；没有新增Pigeon/schema、
+原生setter、live automatic默认迁移或协议执行。因此现有真实播放器对此命令明确拒绝，
+不能把本轮公共合约测试算作HLS/HTTP-FLV/RTMP切换通过。
+
+验证采用已提交基线加本轮13个Dart源码/测试文件的临时副本，避免并行字幕网络修改。
+首轮共享目录完整回归的4项字幕失败原样保留；接口包首次全套有既有80ms conformance
+超时，单并发复验通过。临时目录首次包身份匹配失败、随后TLS夹具路径依赖失败均
+保留；仅修正临时目录配置/布局，不改生产实现或放宽断言。最终各包结果、实际命令、
+源码哈希与全部相关失败日志见
+[验证归档](evidence/2026-10-11-live-mode-public/verification.json)。
+
+最终固定源码完整回归 **570/570**：platform_interface135、yl_player240、Apple113、
+Android82；四包完整lib/test静态分析无问题。两端codec测试明确排除当前原生schema
+之外的新Dart能力，并断言能力不误报、旧snapshot的livePlayback为null。临时副本早期
+缺少原生metadata读取夹具及example资产的检查错误已单独保留，未计通过。
+
+一次独立只读复审发现同会话failed会覆盖原错误/已提交ACK；两项定向RED复现后修正，
+后续以完整套件验证，没有再次声称独立复审。设备、原生构建、真实弱网或直播源均未用；
+既有Dart网络测试使用自有回环夹具。Task3C双端桥接/事务及默认迁移、三协议实测仍开放。

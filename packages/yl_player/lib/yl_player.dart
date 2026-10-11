@@ -49,6 +49,8 @@ export 'package:yl_player_platform_interface/yl_player_platform_interface.dart'
         YlExternalSubtitle,
         YlSubtitleTrack,
         YlSubtitleState,
+        YlLivePlaybackMode,
+        YlLivePlaybackState,
         YlPlaybackMetrics,
         YlPlaybackSessionId,
         YlSourceAssessment,

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../model/capabilities.dart';
 import '../model/identifiers.dart';
+import '../model/live_playback.dart';
 import '../model/player_event.dart';
 import '../model/player_state.dart';
 import '../model/source_assessment.dart';
@@ -75,4 +76,19 @@ abstract interface class YlSubtitlePlatformPlayer {
 /// protected session path is implemented. Per-source capability checks remain required.
 abstract interface class YlPlatformDrmSourceSupport {
   int get drmContractVersion;
+}
+
+/// Optional runtime live-mode SPI; requires the operation and session mode gates.
+/// Implementations serialize mode commits with session commands and own rollback,
+/// cancellation, resource budgets and same-mode idempotence. Success occurs only
+/// after the matching committed snapshot crosses the state barrier, even when a
+/// subsequent command already changed the latest mode. A property setter or a
+/// native reply alone is not an ACK. Failed candidates preserve the prior mode,
+/// or publish session failure if safe rollback is impossible. Never reset retry
+/// budgets, relax fixed/caps/hardware/bounded policies or change playback intent.
+abstract interface class YlLivePlaybackPlatformPlayer {
+  Future<void> setLivePlaybackMode(
+    YlPlaybackSessionId sessionId,
+    YlLivePlaybackMode mode,
+  );
 }

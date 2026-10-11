@@ -76,6 +76,8 @@
 
 ### Task 3：直播模式运行时事务
 
+2026-10-11 Task3B公共契约切片：新增Dart状态/可选SPI和Session入口，三重门禁、32条待结算上限及旧会话完成隔离。现有原生adapter未声明能力，默认映射和桥接schema不变；后端命令排序/状态屏障/回滚仍属Task3C，不能把可控后端测试当作原生事务验收。
+
 - [x] 审计当前 load 策略映射，冻结新增运行时命令：有效 session、smooth 默认、能力拒绝、命令确认时机、失败回滚、多个命令先后次序；buffer.bounded 独立边界不得被模式切换覆盖。2026-10-11 Task3A交付[源码审计与未来契约](../specs/2026-10-11-live-mode-runtime-contract.md)，24份固定提交源码/49处锚点；新API、桥接与运行时行为尚未实现，本项勾选仅表示设计交付。
 - [ ] 对 HLS、HTTP-FLV、RTMP 分别写失败测试：smooth→lowLatency→smooth、切换中断流、后台恢复、快速切台、stop/dispose；不得将 live 时间 seek 偷换成 seekToLiveEdge。
 - [ ] 实现协议对应目标缓存/追帧和安全追实时条件；必要重开必须有代际隔离、恢复预算与可观察缓冲，不能无限刷新连接。

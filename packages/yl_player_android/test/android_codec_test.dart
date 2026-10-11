@@ -6,25 +6,27 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'support/android_fakes.dart';
 
 // These optional Dart operations are not part of the current native schema.
-const _subtitleOperations = {
+const _dartOnlyOperations = {
   YlPlayerOperation.externalSubtitles,
   YlPlayerOperation.subtitleTrackSelection,
   YlPlayerOperation.subtitleOffset,
+  YlPlayerOperation.livePlaybackMode,
 };
 final _nativeOperations = YlPlayerOperation.values
-    .where((operation) => !_subtitleOperations.contains(operation))
+    .where((operation) => !_dartOnlyOperations.contains(operation))
     .toList();
 
 void main() {
-  test('native capabilities do not advertise Dart-only subtitle commands', () {
+  test('native capabilities do not advertise Dart-only subtitle and live-mode commands', () {
     final capabilities = AndroidCodec.capabilities(wireCreate().capabilities);
     expect(
       capabilities.supportedOperations.toSet().intersection(
-        _subtitleOperations,
+        _dartOnlyOperations,
       ),
       isEmpty,
     );
     expect(AndroidCodec.state(wireState()).subtitles, YlSubtitleState());
+    expect(AndroidCodec.state(wireState()).livePlayback, isNull);
   });
   test('schema 4 full state requires selection and delta retains it', () {
     final wire = wireState(session: 's1', revision: 4);

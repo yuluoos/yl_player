@@ -110,6 +110,7 @@ final class YlPlayerController implements Listenable {
   final YlPlatformPlayer _backend;
   final TextSubtitleRuntime? _textSubtitles;
   int _backendRevision;
+  int _pendingLivePlaybackCommands = 0;
   int _subtitleSeekSerial = 0;
   bool _subtitleSeeking = false;
   bool _subtitleAwaitingPosition = false;
@@ -225,12 +226,12 @@ final class YlPlayerController implements Listenable {
     if (_disposed) throw _exception(YlFailureCodes.playerDisposed);
   }
 
-  void _checkSession(YlPlaybackSessionId id) {
+  void _checkSession(YlPlaybackSessionId id, {bool allowFailed = false}) {
     _check();
     if (_stoppedSession == id ||
         state.sessionId != id ||
         state.status == YlPlaybackStatus.idle ||
-        state.status == YlPlaybackStatus.failed) {
+        (!allowFailed && state.status == YlPlaybackStatus.failed)) {
       throw _exception(YlFailureCodes.sessionStale);
     }
   }
@@ -498,6 +499,7 @@ YlPlayerException _exception(String code) => YlPlayerException(
     category: switch (code) {
       YlFailureCodes.loadCancelled => YlFailureCategory.cancelled,
       YlFailureCodes.policyUnsupported => YlFailureCategory.unsupported,
+      YlFailureCodes.resourceExhausted => YlFailureCategory.resource,
       _ => YlFailureCategory.platform,
     },
     code: code,

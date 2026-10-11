@@ -1,0 +1,307 @@
+{
+  "schemaVersion": 1,
+  "baselineCommit": "8ab86d0e2fc5f305bd35c5978f01e8e098aff67f",
+  "scope": "P04 Task3B public Dart contract only",
+  "capabilityAccepted": false,
+  "finalRuns": [
+    {
+      "package": "yl_player_platform_interface",
+      "stage": "test",
+      "command": [
+        "/Users/yy2021_8689/flutter/bin/flutter",
+        "test",
+        "--no-pub",
+        "--concurrency=1"
+      ],
+      "exitCode": 0,
+      "log": "final-live-yl_player_platform_interface-test.log"
+    },
+    {
+      "package": "yl_player",
+      "stage": "test",
+      "command": [
+        "/Users/yy2021_8689/flutter/bin/flutter",
+        "test",
+        "--no-pub",
+        "--concurrency=1"
+      ],
+      "exitCode": 0,
+      "log": "final-live-yl_player-test.log"
+    },
+    {
+      "package": "yl_player_platform_interface",
+      "stage": "analyze",
+      "command": [
+        "/Users/yy2021_8689/flutter/bin/flutter",
+        "analyze",
+        "--no-pub",
+        "packages/yl_player_platform_interface/lib",
+        "packages/yl_player_platform_interface/test"
+      ],
+      "exitCode": 0,
+      "log": "verified-live-yl_player_platform_interface-analyze.log"
+    },
+    {
+      "package": "yl_player",
+      "stage": "analyze",
+      "command": [
+        "/Users/yy2021_8689/flutter/bin/flutter",
+        "analyze",
+        "--no-pub",
+        "packages/yl_player/lib",
+        "packages/yl_player/test"
+      ],
+      "exitCode": 0,
+      "log": "verified-live-yl_player-analyze.log"
+    },
+    {
+      "package": "yl_player_apple",
+      "stage": "test",
+      "command": [
+        "/Users/yy2021_8689/flutter/bin/flutter",
+        "test",
+        "--no-pub",
+        "--concurrency=1",
+        "packages/yl_player_apple/test"
+      ],
+      "exitCode": 0,
+      "log": "verified-live-yl_player_apple-test.log"
+    },
+    {
+      "package": "yl_player_apple",
+      "stage": "analyze",
+      "command": [
+        "/Users/yy2021_8689/flutter/bin/flutter",
+        "analyze",
+        "--no-pub",
+        "packages/yl_player_apple/lib",
+        "packages/yl_player_apple/test"
+      ],
+      "exitCode": 0,
+      "log": "verified-live-yl_player_apple-analyze.log"
+    },
+    {
+      "package": "yl_player_android",
+      "stage": "test",
+      "command": [
+        "/Users/yy2021_8689/flutter/bin/flutter",
+        "test",
+        "--no-pub",
+        "--concurrency=1",
+        "packages/yl_player_android/test"
+      ],
+      "exitCode": 0,
+      "log": "verified-live-yl_player_android-test.log"
+    },
+    {
+      "package": "yl_player_android",
+      "stage": "analyze",
+      "command": [
+        "/Users/yy2021_8689/flutter/bin/flutter",
+        "analyze",
+        "--no-pub",
+        "packages/yl_player_android/lib",
+        "packages/yl_player_android/test"
+      ],
+      "exitCode": 0,
+      "log": "verified-live-yl_player_android-analyze.log"
+    }
+  ],
+  "passedByPackage": {
+    "yl_player_platform_interface": 135,
+    "yl_player": 240,
+    "yl_player_apple": 113,
+    "yl_player_android": 82
+  },
+  "passedTotal": 570,
+  "failedFinal": 0,
+  "skippedFinal": 0,
+  "staticAnalysis": "Complete lib and test directories of all four packages; clean",
+  "sourceManifest": "source-manifest.json",
+  "rawLogs": [
+    {
+      "path": "raw-logs.json",
+      "sha256": "8db3b26bcb1a4dbcb0de9c051c5056820f1274124aa2070927958d810e6b3420",
+      "key": "final-live-yl_player-analyze.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "6f5c6fe992666302197dbfe1a1fbf6ac2947a9f94f5108053a4e97a8c96e1907",
+      "key": "final-live-yl_player-test.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "25fd1ae0e08f4af610938ca4842d44b7d8719a61f6f103b99eaf2bb07ccf4a13",
+      "key": "final-live-yl_player_android-analyze.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "8e1a27805de2a8f8db80a49f1766c10bd377c48bc4e229238f256889701e7ad1",
+      "key": "final-live-yl_player_android-test.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "7c65a238aa9006f8cf52bce6de3b770e14e0a498d1e49ff98f5b645c1df63003",
+      "key": "final-live-yl_player_apple-analyze.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "cb4e7c1c02e2c031fc75484e8913a2865e8af08fd8b1705044ae5785f9e01d11",
+      "key": "final-live-yl_player_apple-test.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "1559dda081098f1b1b876f00373c671309d0a5e6c36bef26b43ca1860771ce4d",
+      "key": "final-live-yl_player_platform_interface-analyze.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "6ed858f4a2328d5b8ba11a21aa7cdc1f42c375e62398c00ffce926a5936011c7",
+      "key": "final-live-yl_player_platform_interface-test.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "aa04e6358be23a88c61a81690a7b28f72a84e6677232fdd8594ecb955fd9d776",
+      "key": "format-live-final.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "7d4bdd7f85424e229e556660e0ef602f774cca1892db98a9a295377c556f4813",
+      "key": "format-live.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "1d1ea4a76dd4db36dd587006068cda9dc67be8c4828b8265df7ca35e0b37fa87",
+      "key": "full-live-interface-serial.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "309c948cf94d4659fb2606c887727eb5c23a4d24f07575d4ab960b0a54fea499",
+      "key": "full-live-interface.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "05bfc4cd5a54f6f914d8799e27d3a50ddaf8847bd8da7f8e257738bdb3404d2b",
+      "key": "full-live-player-isolated-final.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "1a8697d855c2cb1186a994d092389ef2bfe78058d3cd18dd6f51e2366dbbf2dc",
+      "key": "full-live-player-isolated.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "cd8199160123d30458f94c4f5f5776e030d1d18e50d8d4e5d110bcbb48fe08c7",
+      "key": "full-live-player.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "43132475ede9d9440cb980d41fe96b9f7b7ad4c1de68f5f57955a9b996cd2c08",
+      "key": "green-live-contract.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "d6ab9961497be708a6d16e0bf71460cc768cdb4b146d44e55d1cddcdb25c9b73",
+      "key": "green-live-session-final.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "c5036c691133996db4e0cf8baf34c12ef6a607506459184503728dc1a167edac",
+      "key": "green-live-session.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "87bf3a7240cbda40a9f85a1207afc69d41e56de11f165848e2d63f2c22a52993",
+      "key": "red-live-contract-api.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "e29f9e2ff6d882857d2a5e55375328fd5d4b6d1d5a2e1c455b257726aeb2ec98",
+      "key": "red-live-contract.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "74a9d6d4234e9b277414dbb7ad5936508a0b2b61cb575fd5a1904ead14f5b281",
+      "key": "red-live-resource-category.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "bdcf4f38e5531c90dab6eae50137dc7baf7bb604b9995b5b3838c516a634054e",
+      "key": "red-live-session.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "edda074fd64db9aa52b98ecb4f6103c9efdf4a52d7fcdd800d344697022fba24",
+      "key": "red-live-settlement.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "590807ac9f73713a7cde89a364411090262b446c9cc58b4a936d6a94b7571fde",
+      "key": "verified-live-yl_player-analyze.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "6abfa3737f1e080d705c9f40eeb9b9bbb47b5b94efb3eb0e1e3028e5ad096e3f",
+      "key": "verified-live-yl_player_android-analyze.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "4cf6582a581ac1d6248eb9cca5ff7d1029970dc3e41c8ef5d83c4c2f7ff36edf",
+      "key": "verified-live-yl_player_android-test.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "a893841acc0cb62493e29338eacd9a767e68c0f485faba171bee5410b82d5f89",
+      "key": "verified-live-yl_player_apple-analyze.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "020e539baf166319167630e7f9a8d0635417fafd371277e3b3074025edf32bb5",
+      "key": "verified-live-yl_player_apple-test.log"
+    },
+    {
+      "path": "raw-logs.json",
+      "sha256": "6abfa3737f1e080d705c9f40eeb9b9bbb47b5b94efb3eb0e1e3028e5ad096e3f",
+      "key": "verified-live-yl_player_platform_interface-analyze.log"
+    }
+  ],
+  "review": {
+    "mode": "one independent read-only gpt-6-astra review",
+    "findings": [
+      {
+        "severity": "P2",
+        "issue": "Same-session failed status masked original rejection or committed ACK as stale",
+        "resolution": "Two semantic RED cases; identity-only settlement permits failed status, new admission stays strict; final full regressions pass"
+      }
+    ],
+    "secondReview": false,
+    "deferredMinors": []
+  },
+  "retainedFailures": [
+    "Missing API compile RED (two new test files)",
+    "SDK cache sandbox denial; permitted test retry",
+    "Initial dispose-null expectation corrected to existing frozen-snapshot semantics (2 tests)",
+    "Resource category assertion RED then fixed",
+    "Same-session terminal failure settlement RED (2 tests) then fixed",
+    "Shared interface run134pass/1 existing80ms conformance timeout; serial135pass",
+    "Shared player run244pass/4 failures while concurrent subtitle networking changed; not used as final evidence",
+    "Isolated Flutter package URI mismatch; canonical paths corrected",
+    "Isolated TLS fixture basename dependency; snapshot root layout corrected",
+    "Isolated analyzer26 missing example-media asset warnings; final checks explicitly scope complete lib/test",
+    "Adapter enum parity expectations updated to exclude new Dart-only operation; explicit no-advertisement/null-state assertions",
+    "Isolated metadata/schema read failures; pinned podspec/Package.swift added and adapter suites run from repository root"
+  ],
+  "rulings": [
+    "Native backends own order/idempotence/commit state barriers; do not compare latest mode with a superseded command target. No native implementation/default migration claimed.",
+    "Dispose preserves prior snapshot; late completions must leave it unchanged.",
+    "Fixed baseline plus13 overlays separates current work from parallel subtitle network changes; result is not acceptance of the entire dirty checkout.",
+    "Reviewer-declined native transaction, cancellation/cleanup, real policy behavior, latency and CAP judgments remain open."
+  ],
+  "limitations": [
+    "No Pigeon/native schema changes or runtime capability advertisement",
+    "Current native adapters reject the new command",
+    "Live automatic default migration not implemented",
+    "No device/native build/external media-source tests; existing Dart tests use owned loopback fixtures",
+    "No numeric live/weak-network acceptance"
+  ]
+}

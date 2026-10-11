@@ -10,6 +10,7 @@ import 'value_helpers.dart';
 import 'video_geometry.dart';
 import 'video_selection.dart';
 import 'subtitles.dart';
+import 'live_playback.dart';
 
 const _absent = Object();
 
@@ -24,6 +25,7 @@ final class YlPlayerState {
     List<YlMediaTrack> audioTracks = const [],
     List<YlMediaTrack> videoTracks = const [],
     this.videoSelection = const YlVideoSelection(),
+    this.livePlayback,
     YlSubtitleState? subtitles,
     this.engine = YlPlaybackEngine.unknown,
     this.decoderMode = YlDecoderMode.unknown,
@@ -52,6 +54,9 @@ final class YlPlayerState {
 
   final YlSubtitleState subtitles;
 
+  /// Null when no committed live-mode evidence is available.
+  final YlLivePlaybackState? livePlayback;
+
   final YlPlaybackEngine engine;
 
   final YlDecoderMode decoderMode;
@@ -73,6 +78,7 @@ final class YlPlayerState {
     List<YlMediaTrack>? videoTracks,
     YlVideoSelection? videoSelection,
     YlSubtitleState? subtitles,
+    Object? livePlayback = _absent,
     YlPlaybackEngine? engine,
     YlDecoderMode? decoderMode,
     Object? decoderIdentity = _absent,
@@ -92,6 +98,9 @@ final class YlPlayerState {
     videoTracks: videoTracks ?? this.videoTracks,
     videoSelection: videoSelection ?? this.videoSelection,
     subtitles: subtitles ?? this.subtitles,
+    livePlayback: identical(livePlayback, _absent)
+        ? this.livePlayback
+        : ylNullableValue<YlLivePlaybackState>(livePlayback),
     engine: engine ?? this.engine,
     decoderMode: decoderMode ?? this.decoderMode,
     decoderIdentity: identical(decoderIdentity, _absent)
@@ -117,6 +126,7 @@ final class YlPlayerState {
         listEquals(videoTracks, other.videoTracks) &&
         videoSelection == other.videoSelection &&
         subtitles == other.subtitles &&
+        livePlayback == other.livePlayback &&
         engine == other.engine &&
         decoderMode == other.decoderMode &&
         decoderIdentity == other.decoderIdentity &&
@@ -135,6 +145,7 @@ final class YlPlayerState {
     Object.hashAll(videoTracks),
     videoSelection,
     subtitles,
+    livePlayback,
     engine,
     decoderMode,
     decoderIdentity,
@@ -144,5 +155,5 @@ final class YlPlayerState {
 
   @override
   String toString() =>
-      'YlPlayerState(revision: $revision, sessionId: $sessionId, status: $status, timeline: $timeline, videoGeometry: $videoGeometry, audioTracks: $audioTracks, videoTracks: $videoTracks, videoSelection: $videoSelection, subtitles: $subtitles, engine: $engine, decoderMode: $decoderMode, decoderIdentity: <redacted>, metrics: $metrics, failure: $failure)';
+      'YlPlayerState(revision: $revision, sessionId: $sessionId, status: $status, timeline: $timeline, videoGeometry: $videoGeometry, audioTracks: $audioTracks, videoTracks: $videoTracks, videoSelection: $videoSelection, subtitles: $subtitles, livePlayback: $livePlayback, engine: $engine, decoderMode: $decoderMode, decoderIdentity: <redacted>, metrics: $metrics, failure: $failure)';
 }

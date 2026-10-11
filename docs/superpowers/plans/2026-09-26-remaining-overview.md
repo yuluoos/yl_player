@@ -392,3 +392,7 @@ Task3A完成24份固定提交源码/49处锚点审计，明确当前Load策略�
 ### 2026-10-11 P02 外挂文本字幕运行切片
 
 已接通显式 `enableTextSubtitles` 的文件/HTTP SRT/WebVTT 加载、原子目录/取消、公开状态和 `YlPlayerView` 媒体位置叠层。基础标记/position/align、seek/off/offset、PAR/旋转/裁切/RTL均有本机测试；事件 revision 使用交付时公开快照。managed 字幕网络、内嵌/TTML/ASS/图形字幕、HDR/保护输出与真机同步仍开放，未关闭整个 CAP-SUB。最终集中结果、失败记录、复审修复与源码指纹见[P02报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)及其 subtitle-runtime 证据清单；未改动并行长播放/弱网ABR文件。
+
+### 2026-10-11 P04直播模式公共契约
+
+Task3B已交付模式值、可空已提交状态、可选SPI和Session三重门禁，32条待结算上限及旧会话回包隔离；同会话终止错误与已提交ACK不被误标stale。当前原生适配器仍拒绝新能力，未改变默认策略/Pigeon。验证使用8ab86d0加本轮改动的固定临时副本，隔离并行字幕工作；三协议原生事务和CAP-LIVE仍开放，详见[P04报告](../reports/2026-09-26-remaining-04-abr-live.md)。
