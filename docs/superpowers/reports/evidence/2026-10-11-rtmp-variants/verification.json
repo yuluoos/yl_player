@@ -1,0 +1,136 @@
+{
+  "verified_at_utc": "2026-10-11T16:27:20.933797+00:00",
+  "baseline": "d0feaafca7c22307a7ecaed03b803a1e948eb8ca",
+  "method": "Read-only git-show byte comparisons and SHA-256; local document links and upstream reference inclusion; author source review, not executable protocol tests",
+  "local_inputs": [
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlRtmpSourcePolicy.kt",
+      "sha256": "4ac1a4604c1fa5e7a8907e1f08dd62b6bb0c230539cfa18d7de5b33e19625d90",
+      "bytes": 3355,
+      "matches_baseline": true
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlRtmpTransport.kt",
+      "sha256": "7df55859d7989290a63cd44f9419f1be15c00e5920b31fcf260f07b5de3bc9e7",
+      "bytes": 13337,
+      "matches_baseline": true
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlRtmpFlvStream.kt",
+      "sha256": "8bc4bf5e5fc2c76c70131ebc3370490bf5ac9e0f0de7dcbd20676dfdd3c24a89",
+      "bytes": 4897,
+      "matches_baseline": true
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/RTMP/YlRtmpPolicy.swift",
+      "sha256": "a37422061269094ed7358edb595fc1bf29f36905d9930ec2b1a1ea3290e6bc48",
+      "bytes": 5286,
+      "matches_baseline": true
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/RTMP/YlRtmpProtocol.swift",
+      "sha256": "c186e76dda9e877387fac461b06f0b2c23cb0fadd5556988c9ca0625377e63ff",
+      "bytes": 12369,
+      "matches_baseline": true
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/RTMP/YlRtmpByteSource.swift",
+      "sha256": "b78e994ca98fc3e8e8b875512dd043db739b933bdbbd44aed3e4bc54e1af6d1f",
+      "bytes": 16809,
+      "matches_baseline": true
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift",
+      "sha256": "625eafcc0390bbf082906d10c1603d94dd46b03306abb9d12b543e997559d154",
+      "bytes": 21283,
+      "matches_baseline": true
+    },
+    {
+      "path": "packages/yl_player_source_resolver/lib/src/script_models.dart",
+      "sha256": "0c638e858f6a86adfaaf430dc0ee9e60db55c4f5d290ad2424856b1b3d5609bb",
+      "bytes": 10836,
+      "matches_baseline": true
+    },
+    {
+      "path": "packages/yl_player_apple/tool/apple_ffmpeg/build_xcframework.sh",
+      "sha256": "3f70d3970e33e148e19d96cddad6b7aed4791f1d467e77381f85ff44ed05e8a8",
+      "bytes": 16915,
+      "matches_baseline": true
+    },
+    {
+      "path": "packages/yl_player_apple/tool/apple_ffmpeg/ffmpeg-9.0.1.lock",
+      "sha256": "80af0e63635f1ee913cbb4aded6380d2d56f9eaa014d19e34f3ef16ddef38e30",
+      "bytes": 451,
+      "matches_baseline": true
+    },
+    {
+      "path": "packages/yl_player_android/android/build.gradle.kts",
+      "sha256": "c67e7c51d5188d34267cbe5d7ba65d16be8415f01809066b2ec63c267e5a83b9",
+      "bytes": 2258,
+      "matches_baseline": true
+    },
+    {
+      "path": "docs/platform-support.md",
+      "sha256": "03bbae0f1da76b61b262258fcaac743249f66f37e97243164961203d644420f8",
+      "bytes": 47561,
+      "matches_baseline": true
+    },
+    {
+      "path": "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlRtmpAdmissionTest.kt",
+      "sha256": "a80a03812ed007509fc5f6167129af5a0f2f9989832b2fe3009aa4d7359bfc46",
+      "bytes": 3649,
+      "matches_baseline": true
+    },
+    {
+      "path": "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlRtmpProtocolTest.kt",
+      "sha256": "50e2f50537e9278c4454fd6655d98fa7a305edfb8463acc06810502a4926eee2",
+      "bytes": 8603,
+      "matches_baseline": true
+    },
+    {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpRouteTests.swift",
+      "sha256": "00c6d9e9b49a4d48b30b99e42aefc5408b897a8d64cb0df438f6f5442041b847",
+      "bytes": 7227,
+      "matches_baseline": true
+    },
+    {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpProtocolTests.swift",
+      "sha256": "7a19508116180b5dcd88e04e752f80a5544e60c503c408d04bd3bf5685164a27",
+      "bytes": 7992,
+      "matches_baseline": true
+    },
+    {
+      "path": "packages/yl_player_platform_interface/test/validation_test.dart",
+      "sha256": "01e519cd3d22d16b3e8aad0d697f46c560ad39fb81eeeba904e8f3c68a173818",
+      "bytes": 6794,
+      "matches_baseline": true
+    },
+    {
+      "path": "docs/superpowers/reports/2026-09-22-rtmp-foundation.md",
+      "sha256": "77282f45f54e4c2e6d124b6cab2dfd54c72646dfcf4827380497089b4dfa3bc8",
+      "bytes": 22831,
+      "matches_baseline": true
+    }
+  ],
+  "sources_sha256": "cf1265879cd2b968f60477c1cc694244675740bea42ade3e2a6dd1eb9dc6324f",
+  "checks": {
+    "input_files_match_baseline": 18,
+    "local_links_exist_excluding_this_receipt": 8,
+    "official_references_in_report": 6,
+    "status": "PASS"
+  },
+  "not_run": [
+    "Flutter/JVM/Swift tests",
+    "native builds",
+    "RTMP/TLS/codec interoperability",
+    "devices or simulators",
+    "media playback",
+    "external subscription or test services"
+  ],
+  "limitations": [
+    "No extension has been enabled or scope frozen",
+    "Existing test source and historical results are not new runtime evidence",
+    "Cost and preferred candidate are architecture judgments, not measured performance or estimates",
+    "Mutable external documents were read but not archived or pinned to an upstream commit"
+  ]
+}

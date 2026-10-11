@@ -1,0 +1,44 @@
+{
+  "checked_on": "2026-10-11",
+  "method": "web open/search of official documentation and versioned source; no package download or service connection",
+  "sources": [
+    {
+      "id": "enhanced-v2",
+      "url": "https://github.com/veovera/enhanced-rtmp/blob/main/docs/enhanced/enhanced-rtmp-v2.md",
+      "authority": "Veovera protocol specification",
+      "scope": "FourCC and enhanced audio/video packets, multitrack, metadata and reconnect extensions; protocol definition, not implemented player capability",
+      "version": "v2 document on main; mutable URL, no immutable upstream revision frozen"
+    },
+    {
+      "id": "android-tls",
+      "url": "https://developer.android.com/reference/javax/net/ssl/SSLParameters#setEndpointIdentificationAlgorithm(java.lang.String)",
+      "authority": "Android API reference",
+      "scope": "Endpoint identification during TLS handshaking; API24; candidate system API only"
+    },
+    {
+      "id": "apple-tls",
+      "url": "https://developer.apple.com/videos/play/wwdc2019/713/",
+      "authority": "Apple WWDC19 transcript",
+      "scope": "Network.framework TLS options with NWParameters(tls:tcp:); candidate system API only"
+    },
+    {
+      "id": "media3-flv-1.11.0",
+      "url": "https://raw.githubusercontent.com/androidx/media/1.11.0/libraries/extractor/src/main/java/androidx/media3/extractor/flv/VideoTagPayloadReader.java",
+      "authority": "AndroidX source at version tag",
+      "scope": "FLV video reader accepts AVC codec ID7; generic decoder support does not establish enhanced FLV support",
+      "version": "1.11.0"
+    },
+    {
+      "id": "media3-formats",
+      "url": "https://developer.android.com/media/media3/exoplayer/supported-formats",
+      "authority": "Android official documentation",
+      "scope": "Container and sample/decoder support are separate layers; actual device decoders matter"
+    },
+    {
+      "id": "ffmpeg-protocols",
+      "url": "https://ffmpeg.org/ffmpeg-protocols.html",
+      "authority": "FFmpeg upstream documentation",
+      "scope": "RTMPS/librtmp/TLS exist upstream; exact build and TLS backend verification semantics require audit; no assertion about bundled artifact networking"
+    }
+  ]
+}

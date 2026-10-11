@@ -305,3 +305,39 @@ python3 docs/superpowers/reports/evidence/2026-10-11-tvs-build-inventory/verify.
 ```
 
 独立只读复审通过，无Critical/Important/Minor；复审者独立运行复核脚本，并另行核对52项插件版本与锁、Apple路由集合、runner、原生制品纳入/忽略状态和报告配置声明。实际构建兼容性、有效AGP/Kotlin解析、签名、全新依赖复现、原生架构/符号与真实媒体未作判断，仍是明确待验项；未审查或修改并行字幕工作。
+
+
+## 2026-10-11：Task 4 RTMPS／增强 RTMP 可行性与验收缺口
+
+本项完成计划要求的**可行性核查**，不扩展已承诺支持范围。源码基线 **`d0feaafca7c22307a7ecaed03b803a1e948eb8ca`**；未修改播放器、TVS、依赖或支持矩阵。RTMPS、增强RTMP、其他RTMP编码和纯音频继续保持不支持；历史普通RTMP受控验收见 [基础阶段报告](2026-09-22-rtmp-foundation.md)，本轮不重计为新测试。
+
+核查分为传输、RTMP/FLV封装和媒体解码三层：TLS可承载经典或增强包，**RTMPS与增强RTMP是独立维度**。上游E-RTMP v2描述FourCC、多音视频轨、扩展元数据和重连通知；不能从“支持HEVC解码”推得“支持增强RTMP”。本次只将它作为候选协议参考，没有冻结全部v2能力为产品范围。[Veovera规范](https://github.com/veovera/enhanced-rtmp/blob/main/docs/enhanced/enhanced-rtmp-v2.md)
+
+| 组合 | 当前实现与不支持原因 | 可行路径及相对成本（工程判断，非工期承诺） | 解除缺口所需输入／证据 |
+| --- | --- | --- | --- |
+| TCP RTMP + classic AVC/H.264 + 可选AAC | 已有有界自有接收器；Android送Media3 FLV，Apple送custom AVIO/FLV与既有解码路径。并非所有AVC/AAC profile都已验。 | 既有基线，维护成本；不因本表扩大HTTP策略、bounded、VOD或seek支持。 | 三端当前版本、最低系统/物理设备、真实授权源、AV同步及长播放继续验收；历史受控证据不代替本轮运行。 |
+| RTMPS + 同一classic子集 | Android地址策略及Apple validate拒绝secure源，返回 `network.protocol_unsupported`；传输分别为普通Socket、NWConnection `.tcp`。公共Dart URI可表示RTMPS，但resolver媒体转换仍拒绝。 | **优先候选：系统TLS包裹既有RTMP字节传输**。中等成本：主机身份、信任、超时/取消、状态/错误映射及重连都须接入；保留现有解码器，不需要仅为TLS替换FFmpeg。 | 授权RTMPS播放端点（不能只给推流地址）、实际端口/SNI/信任条件；有效证书、过期/错误主机/不可信证书、握手挂起/取消、断流恢复和三端输出证据。 |
+| 单视频增强RTMP，FourCC AVC/HEVC/AV1/VP9等 | 两端视频门限要求classic codec ID7且拒绝扩展头位；AVC专用配置/NAL校验、关键帧启动及消费者也依赖旧布局。连FourCC AVC都不能当classic AVC放行。 | 高成本：分版本解析/协商、配置与时间戳转换、原生解封装接入；按单一codec/profile逐项冻结。仅删除门限会把未知包交给不匹配消费者。 | 独立发送端及服务器的**播放输出**样本，FourCC/配置/帧/时间戳收据；每种codec的硬解可用性、无可用解码器失败、取消/重连及输出质量。AV1/VP9不从HEVC路径推定。 |
+| 增强音频或classic非AAC（如MP3）；视频仍可为AVC | 两端只接受音频SoundFormat10及限定AAC配置；MP3或增强音频先触发 `container.unsupported`。其他容器可播同编码不能绕过这里。 | 中高成本：新增音频封装/配置解析、时钟与格式切换、平台音频解码能力；增强AAC与classic AAC也要分开。 | 对每个纳入的音频codec分别准备配置和包样本、声道/采样率/延迟、AV同步、格式变化、缺失解码能力验证。 |
+| audio-only RTMP（包括classic AAC） | FLV header要求视频配置，传输启动还等待视频关键帧；Apple fallback也要求视频。不是只改一个音频codec判断。合法AAC纯音频可能走启动等待/期限失败，**不承诺已在准入阶段得到专用纯音频错误**。 | 中高成本：无视频就绪语义、音频时钟、无视频首帧/租约处理、暂停/恢复/完成与UI状态；两端单独验证。 | 持续音频、延迟/始终无视频、晚到视频、stop/替换、无声与可听输出用例；明确Ready不等于VideoFirstFrame。 |
+| E-RTMP多轨、ModEx/HDR元数据、重连通知等扩展 | 当前classic adapter只有启动时视频/可选音频配置，后续轨道配置变化会拒绝；不支持完整扩展语义。 | 很高成本：轨道身份/选择、时间基、颜色信息、协商与资源预算；服务器重连通知另需目的地/凭据范围策略。不自动把广播多轨变成播放ABR。 | 先冻结v2具体子集，再给独立互操作样本；未知包、超大包、跨轨时间戳、轨道增删、重定向与预算耗尽负例，HDR另验元数据及实际显示。 |
+
+当前拒绝的源码依据为 [Android策略](../../../packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlRtmpSourcePolicy.kt)、[FLV适配](../../../packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlRtmpFlvStream.kt)、[传输](../../../packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlRtmpTransport.kt)，以及 [Apple策略](../../../packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/RTMP/YlRtmpPolicy.swift)、[FLV协议](../../../packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/RTMP/YlRtmpProtocol.swift)、[传输](../../../packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/RTMP/YlRtmpByteSource.swift)；上述未来输入均为待办，没有连接真实订阅或测试服务器。
+
+候选方案比较：
+
+| 候选 | 适用层与依据 | 集成成本和安全边界 |
+| --- | --- | --- |
+| Android SSLSocket/SSLParameters；Apple Network.framework TLS | 系统传输候选。Android从API24提供端点身份验证配置；Apple提供TLS选项与TCP组合。它们不是RTMP播放器。见[Android官方API](https://developer.android.com/reference/javax/net/ssl/SSLParameters#setEndpointIdentificationAlgorithm(java.lang.String))、[Apple官方说明](https://developer.apple.com/videos/play/wwdc2019/713/)。 | 对classic RTMPS改动范围相对小，建议先独立评估。保留原始主机用于SNI和身份验证，不能因先解析IP而丢失主机；明确受信任CA、主机匹配、TLS失败永久/瞬态分类。禁止信任全部证书、关验证或自动降级明文。 |
+| 自有增强解析 + Media3／Apple既有媒体管线 | 复用现有媒体管线的开源/系统组合。锁定Media3 **1.11.0** 的FLV视频reader仍只接受AVC codec ID7，不能把官方“FLV支持”理解为增强FLV支持。见[版本化源码](https://raw.githubusercontent.com/androidx/media/1.11.0/libraries/extractor/src/main/java/androidx/media3/extractor/flv/VideoTagPayloadReader.java)、[格式层次说明](https://developer.android.com/media/media3/exoplayer/supported-formats)。 | 需要扩展/替换对应extractor或提供有界样本接口，并审查Apple桥能传递的codec/config/时间戳。保持hardwareRequired与HDR既有约束，不能以软件降级或丢元数据换取“能播”；所选codec/profile必须独立验收。 |
+| FFmpeg原生RTMPS／librtmp；或仅评估FFmpeg增强FLV demux | 上游提供RTMPS/TLS和可选librtmp路线；可作为协议/解封装候选，**不代表当前应用已集成**。见[官方协议文档](https://ffmpeg.org/ffmpeg-protocols.html)。 | 当前Apple FFmpeg9.0.1构建明确 `--disable-network`、仅file协议，RTMP靠自有custom AVIO。若启用FFmpeg网络或librtmp，需要重新冻结制品/依赖、平台切片、许可清单、包体与取消/重连/请求范围；不是改URL即可。TLS后端的主机校验能力需单独审查，不能只依赖“验证证书”开关。仅复用demux也需证明本制品与桥覆盖所选增强包，不能据上游整体能力推定。 |
+
+以上相对成本是基于当前架构的推断，没有做性能基准或排期估算。建议先将 **classic AVC/AAC over RTMPS** 与其负例单独冻结，再评估单codec增强方案；这是未来实施建议，本次不启用能力、不替用户作范围承诺。RTMPT/RTMPE、发布、userinfo认证、DVR、服务器跳转也不随TLS自动获得支持。
+
+安全与验收约束沿用既有契约：TLS握手须纳入单次准备的绝对期限并可由stop/replace取消，恢复共享会话原预算，成功连上不能补充次数；HTTP头、HTTP managed策略和严格bounded不得静默映射。服务器地址/查询、凭据、证书私密材料和原始服务端错误不进入公共提示。增强包的长度、轨道数量、内存、配置变化和未知扩展须有界且明确拒绝；TLS加密不使媒体包可信。真实源样本只记录受控编号/哈希和必要格式元数据，不公开签名播放地址。
+
+本轮仅阅读源码、现有测试和上游一手资料，复核输入指纹与链接；**没有执行Flutter/JVM/Swift测试、原生构建、媒体、TLS互操作或设备测试**。既有Android/Apple拒绝用例只是源码证据，本次不报告为通过。外部网页核查于2026-10-11，版本化Media3源固定为1.11.0；其他可变网页不是已冻结的上游源码快照，未来实施须重新固定版本。[sources.json](evidence/2026-10-11-rtmp-variants/sources.json) 记录资料与用途，[verification.json](evidence/2026-10-11-rtmp-variants/verification.json) 记录本地基线、指纹和范围。可行性表完成，协议实现、真实样本、三端兼容/安全/媒体与完整P05仍开放。
+
+本轮最终资料校验：18份本地源码/配置/历史证据输入逐字节匹配基线，SHA-256已记录；8个既有本地引用目标存在，6份官方资料均在报告对应论断处引用，新增验证收据存在，限定文档diff检查通过。此处PASS仅为资料一致性，不是协议或播放测试通过。
+
+独立只读复审Ready，无Critical/Important/Minor；复审者重新核对18份基线字节/指纹、9个本地链接（含验证收据）、6份官方引用和文档diff，均通过。协议运行、TLS互操作、解码输出、真实源、三端/设备、制品实际能力、性能/工期及完整P05未作判断；上述限制保持开放。未审查并行字幕与benchmark改动。

@@ -489,3 +489,8 @@ TVS `60d838f` 在逐源摘要中补齐中文阶段、已知原因、手动建议
 ### 2026-10-11 P02 MP4 内嵌 TTML 字幕
 
 接入本地/HTTP(S) 非分片 MP4 stpp 的发现、Track ID选择和现有 TTML 样式/百分比区域合成；文档使用轨道composition时间，裁切sample并应用简单编辑，原始XML与外挂共享目录预算。网络复用 managed Range、ETag/If-Match、重试/重定向/凭据和取消；真实文件/HTTP/Flutter验证见 [P02报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md) 与 [stpp契约](../specs/2026-10-11-subtitle-mp4-ttml.md)。高级TTML/IMSC、辅助图片、fMP4和设备验收仍开放；不涉及长播放/弱网ABR。
+
+
+### 2026-10-11 P05 RTMPS／增强RTMP可行性
+
+完成RTMPS、增强视频/音频、纯音频与多轨扩展的现状、候选、成本和验收缺口表。系统TLS包裹既有classic RTMP为优先评估建议；Media3 1.11.0 FLV限制、Apple禁用网络FFmpeg制品和纯音频视频启动依赖分别保留。仅核对源码与官方资料，未启用新能力或使用设备；扩展范围、真实样本、三端实现与完整P05仍开放，见[P05报告](../reports/2026-09-26-remaining-05-live-business.md)。

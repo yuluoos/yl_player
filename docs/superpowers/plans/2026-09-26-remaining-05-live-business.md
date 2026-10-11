@@ -96,7 +96,7 @@ cd /Users/yy2021_8689/Desktop/GIt/tvs
 - [ ] 构建采用对应项目实际配置：Android debug APK、iOS simulator/签名真机、macOS app。命令和签名限制写报告；缺 runner 或签名记为外部/工程缺口，不能以 mocked widget tests 代替。
 - [ ] 在 owned M3U + 九脚本受控服务 + owned RTMP 上跑真实 TVS 首帧/音频/快速切台/断流/刷新/停止；服务日志、session IDs 和业务 UI 关联，测试名写入 `integration_test/live_subscription_playback_test.dart`。
 - [ ] 对用户已给订阅仅按可用性抽验，记录时间、响应类型和哈希，不在公共日志打印内容中的签名地址。受地区/服务变动影响的失败单独记录，不修改夹具使其通过。
-- [ ] RTMPS/增强变体输出可行性表：现有不支持原因、系统/开源候选、成本/安全边界、真实样本缺口。未冻结扩展范围前保留明确不支持，不假称所有 RTMP 家族完成。
+- [x] 2026-10-11 完成RTMPS/增强变体可行性表：基线 `d0feaaf`，分TLS、封装、解码核查当前拒绝原因，列系统TLS/Media3/FFmpeg候选、相对成本、安全边界及真实样本缺口。仅源码/一手资料核查，未运行设备、互操作或媒体测试；扩展范围未冻结，全部扩展能力仍不支持。见P05报告 rtmp-variants 证据。
 - [ ] 提交业务验收报告与跨仓版本对应关系；P04 模式完成后补其实际 TVS 切换证据，交 P08 持续播放验收。
 
 ## 交付与检查
