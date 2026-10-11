@@ -1,0 +1,88 @@
+{
+  "baseline": "0c2cd0a",
+  "headAtFreeze": "989999a219b9a7dc5681336304a615d76bd5b518",
+  "createdAtUtc": "2026-10-11T09:40:35.610859+00:00",
+  "environment": {
+    "host": "Darwin",
+    "architecture": "arm64",
+    "flutter": "3.44.0",
+    "dart": "3.12.0",
+    "nativeBuildOrDevice": false,
+    "pixelFont": "Flutter Ahem"
+  },
+  "finalVerification": [
+    {
+      "command": "flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test",
+      "log": "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/full-final.log",
+      "exitCode": 0,
+      "passed": 549,
+      "perPackage": [
+        132,
+        222,
+        113,
+        82
+      ]
+    },
+    {
+      "command": "dart analyze --suppress-analytics packages/yl_player/lib packages/yl_player/test packages/yl_player_platform_interface/lib packages/yl_player_platform_interface/test",
+      "log": "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/analyze-final.log",
+      "exitCode": 0,
+      "result": "No issues found"
+    }
+  ],
+  "notes": [
+    "red.log includes missing API and a fixture parameter typo.",
+    "lifecycle.log uses the Flutter HTTP400 fake; lifecycle-real-io.log has disposal RED and a fixture timing bug.",
+    "lifecycle-render.log was interrupted at engine image read; render-pixels.log passed using tester.runAsync.",
+    "strict-red.log, event-red.log, supersession-red.log and rtl-red.log are intentional failure reproductions.",
+    "full-first.log passed542 before strictness/review fixes; fixes-green.log passed51.",
+    "Final launch initially failed before log creation due transient disk full; successful retry captured in full-final.log.",
+    "Original raw logs retained without whitespace normalization."
+  ],
+  "ownedSourceAndDocs": {
+    "packages/yl_player/lib/src/player_controller.dart": "35d2e28ab597213d9d9e0900ba143ddf687ec0bcd454c0108ffb1b14063e9a95",
+    "packages/yl_player/lib/src/playback_session.dart": "49262e0af05a9d551403ef0bcacac1a7ec543c7d11a79581cf64fefdf86e0abe",
+    "packages/yl_player/lib/src/player_view.dart": "7fbcbb89c8c47c6c5498280d46ab5fe1dc6c4a5054a411c6d891f423659f5c19",
+    "packages/yl_player/lib/src/subtitles/subtitle_resource.dart": "533fa8466be7159be4625e8c56353d684044b43ca51314a6d92bbcc9175a4564",
+    "packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart": "a7030747ded2ef3eb1fc6f163c42c75228f4de98ee96021b4992879cd1c89713",
+    "packages/yl_player/lib/src/subtitles/subtitle_resource_stub.dart": "a81ce3d5f9b949257b4b5124c7435fd8e830d05964a548d297b07ec3e3b65b17",
+    "packages/yl_player/lib/src/subtitles/text_subtitle_runtime.dart": "d96e4a675f54a38643a7394f13d28fa8c2e0048a53bffb2e2558eda5bd61ed1e",
+    "packages/yl_player/lib/src/subtitles/text_subtitle_overlay.dart": "edc06ea834e6165ba6369bbc2b67fa3389db7dff87515e3be3da0d1b4b52e979",
+    "packages/yl_player/test/subtitle_resource_test.dart": "8a871c04ded4182def2f55326a1ebcf903c199ba20d48be73bf33a753497831c",
+    "packages/yl_player/test/subtitle_text_test.dart": "6f94a7ec9d4fd161a239ea820d7dce1ffca203f1c29cd0601fda89097d08ddbb",
+    "packages/yl_player/test/text_subtitle_overlay_test.dart": "258406dc25c98933bcc11800f388e3b6aa5a9c5c03188539ffca762b4427eb8f",
+    "packages/yl_player/test/text_subtitle_runtime_test.dart": "8da5ec6ea4d8da533f51e0b27623199ea78d3559179ca4e36bd493fb4dbfa204",
+    "packages/yl_player_platform_interface/lib/src/model/failure.dart": "d089e8cc52f250b337e513b3f2fd23a34be18f23b8d9bbb4ddc0240a76a40804",
+    "packages/yl_player/README.md": "380bc2b7f7935c9c472ae18c1f33692582f0f113b9396afc29a330c851501cc2",
+    "packages/yl_player/CHANGELOG.md": "20cee1f1db1c55633f3e3fa2e64dc148019a1496863e0bdab4e3e3cb9c8410c9",
+    "docs/platform-support.md": "0b226b8cf9ce215e21c9168583eb579b14d48b2dfac053b3387a5ec85e8cd353",
+    "docs/superpowers/specs/2026-10-11-subtitle-runtime.md": "fe74816f3040851f1c345306af79f9c50c36e31ef64a7a86f9043143436e5345",
+    "docs/superpowers/reports/2026-09-26-remaining-02-tracks-subtitles.md": "924992707cc396ed6bb37531d826acb60fba7a288c03a5dc90245e9ebae6408a"
+  },
+  "referenceDependencies": {
+    "packages/yl_player/lib/src/subtitles/subtitle_document.dart": "eaa79a9847617c68813316f38581e979650c159fc608a7bb8d4fbc30ca7ab4b8",
+    "docs/superpowers/specs/2026-09-26-subtitle-contract.md": "9408c3b6f346f7dee1e11742d9d0ead6db602301dd058b6734eab8e5e99c6b92"
+  },
+  "evidence": {
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/analyze-final.log": "7cf9b717cd0ae36cad727808630a9a929c04f0d5a041238ce9f70ec6fb4bd475",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/analyze-first.log": "144966d454bc65f5f0e3cdb8c1eed055d4d36d782c6c8d27099a4f3e4c1ecb1e",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/event-red.log": "35229469b78472e8563684166fe6b1b4424055d58db62c2877b345df257e0e10",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/fixes-green.log": "d87a7c42c2fca0a8d96f80c4d2a2194ebee29e0fb65e562a067a6dcee59fc9ff",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/full-final.log": "0cbda5e8d4982d924d686bcf9f74f2c5823e98a0d66b156c8da0908a4e3fea56",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/full-first.log": "419e00ea7bb5d8605d67b2624a026e616b438caf7b796f7f45eee92f9de70145",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/initial-green.log": "eeef2e1cbab62dfd530cdd2d4305eb7d2f80ad0dd30deaef637ca611e2670879",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/io-text.log": "fced8fe5124e2954a2ab0b4026730731eb9ca28ee384ae84149ae194b5614d4b",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/lifecycle-real-io.log": "33f9496b8867c5ced6e30fc27e29f51c834be20db2ec5922c8fd8d49bbfa43af",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/lifecycle-render.log": "3c39d9ee30de7682a9bc366b28790115739c3d7054e7a885b4f2ab8f251dfa01",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/lifecycle.log": "05a84d8355003b8f5eb15f8bac956e809c783882a49eda6df5df9ec59522db4b",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/red.log": "7cb5864122fa8d125dff2f469aac8f7370b004c639023f5240c544917abf7864",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/render-pixels.log": "38d2a71e9e159d5f14b1e238579b46220978ab7441c1f19a06c86fa5e9ece2f0",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/rtl-red.log": "55cc4bcdd3c73acfaa57c53d89584c5bdc6106f71a47da0581eb83af27783b15",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/strict-red.log": "ed0d676ba18ee5619a4db1a316ce1cff164e57b1ab1c4a22e2e9acd13adb448b",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/supersession-red.log": "73ac2871ca6cbe4bda0408b013f6a00c197a087ae4a8f3d8e36a8ee6713689e2",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/contain.png": "2d6f81ef7e83c083c433a452b5b929667380076d8bff6a2e1291358109342dd2",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/cover.png": "01d22433c831f65317ac79837dbbe7ec372951080a703de764c43b2176a37798",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/rotated-par.png": "3cb8c1df359eccc37e44c648a617b05f66a5ac1a011d843471e42213b4a54c0f",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-runtime/top-left.png": "4855e40c10f4112e1acf1c5f5051360d66ecc21dad8c3244cee80b6fb349c71c"
+  }
+}

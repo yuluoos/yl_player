@@ -1,0 +1,14 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart
+00:00 +0: events share the public revision domain after subtitle publications
+00:00 +0 -1: events share the public revision domain after subtitle publications [E]
+  Expected: <3>
+    Actual: <1>
+  
+  package:matcher                                                expect
+  package:flutter_test/src/widget_tester.dart 473:18             expect
+  packages/yl_player/test/text_subtitle_runtime_test.dart 164:5  main.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: events share the public revision domain after subtitle publications

@@ -1,0 +1,596 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart
+00:00 +0: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart: media clock metric retains null, observed zero, copy and validation
+00:00 +1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart: capability video MIME families remain safe and generic metadata stays strict
+00:00 +2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart: independently allocated snapshots use structural equality and hash
+00:00 +3: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart: state copy clears every nullable field and preserves unrelated state
+00:00 +4: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart: tracks and state own immutable collections with structural equality
+00:00 +5: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart: geometry applies PAR then unapplied rotation and rejects invalid const values
+00:00 +6: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart: timeline validates nonnegative time and ordered DVR without requiring buffered >= position
+00:00 +7: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart: all common metrics preserve unknown versus measured zero and clear independently
+00:00 +8: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart: capabilities copy collections, preserve unknown limits and validate safe metadata
+00:00 +9: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart: assessment IDs preserve exact core and extension wire values without diagnostics leakage
+00:00 +10: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart: assessments enforce rejection exactly for incompatible and copy lists
+00:00 +11: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart: events correlate with a monotonic epoch and compare complete payloads
+00:00 +12: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart: publication boundaries reject invalid revisions, event timestamps and retries
+00:00 +13: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart: nullable copy input errors redact arbitrary runtime values
+00:00 +14: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart: publication accepts player-scoped pre-load failure and rejects session mismatch
+00:00 +15: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart: state equality distinguishes each semantic field
+00:00 +16: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart: common metrics and playback state exclude obsolete capability and platform fields
+00:00 +17: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart: event equality distinguishes session, revision, epoch and subclass payload
+00:00 +18: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/state_models_test.dart: capability null clearing preserves evidence and limits independently
+00:00 +19: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/validation_test.dart
+00:01 +19: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/validation_test.dart: RTMP and RTMPS admit complete app/playpath and retain supplied URI
+00:01 +20: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/validation_test.dart: RTMP incompatible valid policies reach native assessment unchanged
+00:01 +21: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/validation_test.dart: RTMP rejects unsafe or incomplete serialized URIs without identities
+00:01 +22: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/validation_test.dart: RTMP retains opaque percent-encoded app playpath and query bytes
+00:01 +23: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/validation_test.dart: RTMP validates raw serialized escapes and explicit port syntax
+00:01 +24: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/validation_test.dart: RTMP URI limit counts serialized UTF-8 bytes and accepts 8192
+00:01 +25: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/validation_test.dart: public input validation runs in release-compatible functions
+00:01 +26: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/models_test.dart
+00:02 +26: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/models_test.dart: landed network failure codes are public and stable
+00:02 +27: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/models_test.dart: network source snapshots request headers and records live intent
+00:02 +28: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/models_test.dart: file and content sources retain their distinct identities
+00:02 +29: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/models_test.dart: state copy preserves fields and explicitly clears nullable values
+00:02 +30: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/models_test.dart: track and capability lists are immutable snapshots
+00:02 +31: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/models_test.dart: metrics preserve omitted and clear explicit nullable values
+00:02 +32: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/player_platform_test.dart
+00:03 +32: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/player_platform_test.dart: registered verified platform becomes the singleton instance
+00:03 +33: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/player_platform_test.dart: unverified implementation cannot replace the singleton
+00:03 +34: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/drm_contract_test.dart
+00:04 +34: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/drm_contract_test.dart: native DRM errors preserve categories and actionable safe messages
+00:04 +35: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/drm_contract_test.dart: DRM binary values copy, compare and redact
+00:04 +36: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/drm_contract_test.dart: license endpoint validates policy without exposing URI/headers
+00:04 +37: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/drm_contract_test.dart: DRM configuration requires format, certificate and opaque content id
+00:04 +38: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/drm_contract_test.dart: platform and encryption limits are explicit without changing enums
+00:04 +39: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/video_selection_test.dart
+00:05 +39: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/video_selection_test.dart: selection defaults to automatic and redacts a fixed ID
+00:05 +40: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/video_selection_test.dart: fixed state requires a reported video track and user reason
+00:05 +41: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart
+00:06 +41: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: request snapshots preserve spelling and keep credentials separate
+00:06 +42: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: request equality ignores key casing and insertion order only
+00:06 +43: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: rejects collisions within either map and across both maps
+00:06 +44: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: reserved transport headers are forbidden in both maps
+00:06 +45: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: recognizable credentials must use the credential map
+00:06 +46: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: rejects malformed header names and unsafe values in either map
+00:06 +47: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: network URIs reject unsupported schemes, missing hosts and userinfo
+00:06 +48: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: files require absolute valid paths and expose no path in diagnostics
+00:06 +49: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: content sources require an authority and content scheme
+00:06 +50: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: sensitive validation errors carry no rejected argument
+00:06 +51: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: source identity includes every relevant option
+00:06 +52: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: default policies validate without silently requesting managed support
+00:06 +53: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: managed policy uses signed32 bounds and coherent retry delays
+00:06 +54: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: bounded buffers require ordered nonnegative durations and positive budget
+00:06 +55: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: video constraints validate for load and runtime and can clear limits
+00:06 +56: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: constraint copyWith rejects noninteger and nonfinite inputs safely
+00:06 +57: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: exact policy durations cannot be truncated to whole milliseconds
+00:06 +58: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: player sampling interval must fit positive native milliseconds
+00:06 +59: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: timeline allows long media positions but rejects negative submilliseconds
+00:06 +60: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: volume and speed reject nonfinite and out of range controls
+00:06 +61: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: track ids are opaque nonempty values and errors do not expose them
+00:06 +62: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/source_and_policy_test.dart: policy and option values compare structurally with matching hashes
+00:06 +63: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart
+00:07 +63: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: reply-before-idle adapter passes with immediate stopped identity fence
+00:07 +64: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: missing idle fails even when stopped identity is fenced
+00:08 +65: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: delayed idle cannot mask missing immediate stopped identity fence
+00:08 +66: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: conformant buffering adapter passes all observable cases
+00:08 +67: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: non-seekable live source uses a valid first-frame progress command
+00:08 +68: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: DVR first-frame progress stays inside a window starting after zero
+00:08 +69: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: network source with ordinary short header values is conformant
+00:08 +70: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: bare distinctive credential value fails public string conformance
+00:08 +71: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: bare distinctive ordinary header value remains detectable
+00:08 +72: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects stale
+00:08 +73: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects revision
+00:08 +74: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects barrier
+00:08 +75: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects identity
+00:08 +76: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects cancellation
+00:08 +77: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects stop
+00:08 +78: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects stopHeld
+00:08 +79: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects disposeHeld
+00:09 +80: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects firstFrame
+00:09 +81: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects terminal
+00:09 +82: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects rejectEverything
+00:09 +83: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects rejectStrict
+00:09 +84: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects ready
+00:09 +85: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects acceptUnsupported
+00:09 +86: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects unsafe
+00:09 +87: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects unsafeMessage
+00:09 +88: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects major
+00:09 +89: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects doubleDispose
+00:09 +90: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: honest strict-policy rejection with supported defaults is conformant
+00:09 +91: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: policy fixtures cannot omit known supported evidence
+00:09 +92: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: invalid deadlines fail before creating a player
+00:09 +93: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: public case values have structural equality and safe strings
+00:09 +94: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: a hung create times out and its late player is released and disposed
+00:09 +95: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: late create, command and cleanup errors are consumed while later cases run
+00:09 +96: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: release and disposal failures cannot skip disposal or later cases
+00:09 +97: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/platform_conformance_test.dart: a never completing disposal is bounded and later cases execute
+00:09 +98: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/subtitle_contract_test.dart
+00:10 +98: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: defaults, state copy and value semantics preserve old snapshots
+00:10 +99: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: snapshots copy their lists and preserve same-language distinct roles
+00:10 +100: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: duplicate ids, missing selected ids and idle subtitles are rejected
+00:10 +101: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: metadata and offset boundaries have release-safe validation
+00:10 +102: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: external file/http sources retain declared request policy and equality
+00:10 +103: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: unsupported media semantics and unsafe requests are rejected before dispatch
+00:10 +104: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: VobSub pair is explicit, bounded and independently validated
+00:10 +105: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: external ids, list limit and all diagnostic strings are safe
+00:10 +106: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: new capabilities append without changing existing enum ordinals
+00:10 +107: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/v2_player_platform_test.dart
+00:10 +107: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/v2_player_platform_test.dart: unregistered v2 platform returns a typed unavailable failure
+00:10 +108: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/v2_player_platform_test.dart: registration accepts token subclasses and explicit platform mocks
+00:10 +109: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/v2_player_platform_test.dart: registration rejects a foreign implements-only platform
+00:10 +110: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/v2_player_platform_test.dart: implementation and load identities compare structurally and redact metadata
+00:10 +111: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart
+00:11 +111: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: VP9 failures distinguish unsupported frames from strict policy
+00:11 +112: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: Opus failures distinguish codec, malformed packet and policy limits
+00:11 +113: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: AVI failures provide fixed recovery guidance
+00:11 +114: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: MPEG-TS failures explain the failing operation and recovery
+00:11 +115: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: DASH cap failures provide actionable fixed public guidance
+00:11 +116: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: session ids and failures use structural equality
+00:11 +117: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: session ids have a redacted string and release validation
+00:11 +118: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: public strings never expose sensitive input
+00:11 +119: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: failure strings expose only safe failure metadata
+00:11 +120: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: failure strings redact hostile code and diagnostic identifiers
+00:11 +121: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: credential assignments never reach diagnostics or failure strings
+00:11 +122: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: failure strings hide ordinary structured metadata fields
+00:11 +123: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: redaction removes URL, query, header, and bearer shapes
+00:11 +124: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: redaction handles case-insensitive sensitive headers
+00:11 +125: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: redaction handles sensitive headers without optional whitespace
+00:11 +126: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: HTTP token header names share detection and redaction grammar
+00:11 +127: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: generic URI schemes are replaced before path redaction
+00:11 +128: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: generic URI schemes without authority are fully replaced
+00:11 +129: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: redaction removes file paths and standalone query fragments
+00:11 +130: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: public messages replace unsafe diagnostic shapes
+00:11 +131: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: redacted diagnostics are capped after sensitive data is removed
+00:11 +132: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/android_player_controller_test.dart
+00:12 +132: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/android_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: AndroidPlaybackStatus.buffering frameBeforeReady=false
+00:12 +133: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/android_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: AndroidPlaybackStatus.buffering frameBeforeReady=true
+00:12 +134: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/android_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: AndroidPlaybackStatus.paused frameBeforeReady=false
+00:12 +135: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/android_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: AndroidPlaybackStatus.paused frameBeforeReady=true
+00:12 +136: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/android_player_controller_test.dart: controller newLoad from replay listener cancels the owned completion turn
+00:12 +137: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/android_player_controller_test.dart: controller stop from replay listener cancels the owned completion turn
+00:12 +138: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/android_player_controller_test.dart: controller dispose from replay listener cancels the owned completion turn
+00:12 +139: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/android_player_controller_test.dart: real controller does not infer READY from initial BUFFERING
+00:12 +140: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_controller_test.dart
+00:12 +140: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_controller_test.dart: explicit creation exposes capabilities and attaches streams
+00:12 +141: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_controller_test.dart: equal and older revisions notify nobody and disposed callbacks stay inert
+00:12 +142: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_controller_test.dart: create returns failures and disposes incompatible backend
+00:12 +143: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_controller_test.dart: invalid initial state disposes backend
+00:12 +144: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_controller_test.dart: volume without session, identical disposal, texture null on cleanup failure
+00:12 +145: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_controller_test.dart: presentation cache accepts one delayed current-session milestone and resets on replacement
+00:12 +146: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_controller_test.dart: failed current session clears presentation cache
+00:12 +147: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_controller_test.dart: disposal clears presentation cache with one notification
+00:12 +148: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_controller_test.dart: accepted Stop clears presentation but rejected Stop preserves it
+00:12 +149: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_admission_test.dart
+00:13 +149: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_admission_test.dart: old SPI adapter cannot silently assess DRM as clear media
+00:13 +150: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_admission_test.dart: DRM rejection must happen before native load and cancellation of a pending clear load
+00:13 +151: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart
+00:14 +151: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: explicit nonidentity encoding request is rejected, never overwritten
+00:14 +152: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: actual GET preserves headers and same-origin credentials
+00:14 +153: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: cross-origin redirect strips credentials permanently including return
+00:14 +154: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: bounded HTTP body declared=true
+00:14 +155: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: bounded HTTP body declared=false
+00:14 +156: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: redirect budget stops a loop after five hops
+00:14 +157: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: HTTP errors are sanitized and never retried
+00:14 +158: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: managed policy rejects before network access
+00:14 +159: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: encoded responses reject rather than bypassing decompressed budget
+00:14 +160: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: cancellation closes stalled headers
+00:14 +161: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: cancellation closes stalled body
+00:14 +162: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: cancellation owns and closes a stalled TLS handshake socket
+00:14 +163: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: file streams enforce input limit and missing paths are sanitized
+00:14 +164: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_android_bridge_test.dart
+00:14 +164: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_android_bridge_test.dart: generated challenge reaches real POST and first frame waits for matching view ACK
+00:14 +165: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/apple_player_controller_test.dart
+00:15 +165: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/apple_player_controller_test.dart: Apple session reports unsupported video selection
+00:15 +166: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/apple_player_controller_test.dart: public session pairs Load reply and READY in both orders: stateFirst=false
+00:15 +167: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/apple_player_controller_test.dart: public session pairs Load reply and READY in both orders: stateFirst=true
+00:15 +168: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/apple_player_controller_test.dart: prepared state and geometry do not resolve firstFrame before its native publication callback
+00:15 +169: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/apple_player_controller_test.dart: controller firstFrame is settled by stop and late callbacks cannot revive it
+00:15 +170: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/apple_player_controller_test.dart: controller firstFrame is settled by dispose and late callbacks cannot revive it
+00:15 +171: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/apple_player_controller_test.dart: controller firstFrame is settled by replace and late callbacks cannot revive it
+00:15 +172: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/apple_player_controller_test.dart: controller firstFrame is settled by failure and late callbacks cannot revive it
+00:15 +173: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/apple_player_controller_test.dart: real controller settles terminal firstFrame before blocked disposal: maximum=false
+00:15 +174: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/apple_player_controller_test.dart: real controller settles terminal firstFrame before blocked disposal: maximum=true
+00:15 +175: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/apple_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: ApplePlaybackStatus.buffering frameBeforeReady=false
+00:15 +176: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/apple_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: ApplePlaybackStatus.buffering frameBeforeReady=true
+00:15 +177: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/apple_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: ApplePlaybackStatus.paused frameBeforeReady=false
+00:15 +178: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/apple_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: ApplePlaybackStatus.paused frameBeforeReady=true
+00:15 +179: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/apple_player_controller_test.dart: controller newLoad from replay listener cancels the owned completion turn
+00:15 +180: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/apple_player_controller_test.dart: controller stop from replay listener cancels the owned completion turn
+00:15 +181: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/apple_player_controller_test.dart: controller dispose from replay listener cancels the owned completion turn
+00:15 +182: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/apple_player_controller_test.dart: real controller does not infer READY from initial BUFFERING
+00:15 +183: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart
+00:16 +183: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: protected Android mounts explicit hybrid before first frame without texture or opacity
+00:16 +184: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: protected Apple view mounts before first frame on TargetPlatform.iOS
+00:16 +185: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: protected Apple view mounts before first frame on TargetPlatform.macOS
+00:16 +186: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: negotiated native view mounts before current FirstFrame and retains identity on TargetPlatform.iOS
+00:16 +187: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: native surface applies pixel aspect ratio rotation cover and alignment on TargetPlatform.iOS
+00:16 +188: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: disposed native output unmounts the surface and restores placeholder on TargetPlatform.iOS
+00:16 +189: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: native output requires authoritative geometry even after FirstFrame on TargetPlatform.iOS
+00:17 +190: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: negotiated native view mounts before current FirstFrame and retains identity on TargetPlatform.macOS
+00:17 +191: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: native surface applies pixel aspect ratio rotation cover and alignment on TargetPlatform.macOS
+00:17 +192: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: disposed native output unmounts the surface and restores placeholder on TargetPlatform.macOS
+00:17 +193: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: native output requires authoritative geometry even after FirstFrame on TargetPlatform.macOS
+00:17 +194: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: macOS retains Texture without a matching advertisement: capability=false
+00:17 +195: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: macOS retains Texture without a matching advertisement: capability=true
+00:17 +196: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: keeps placeholder until current session first frame
+00:17 +197: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: uses first frame received before load completion and view mount
+00:17 +198: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: replacement hides old frame until replacement first frame
+00:17 +199: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: contain uses authoritative display geometry and default bars
+00:17 +200: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: applies pixel aspect ratio exactly once before rotation
+00:17 +201: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: cover crops and top-left alignment controls placement
+00:17 +202: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: forwards background and texture filter quality
+00:17 +203: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: missing geometry keeps placeholder after first frame signal
+00:17 +204: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: contains rendering only and no interactive or platform views
+00:17 +205: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/public_api_test.dart
+00:17 +205: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/public_api_test.dart: application values are available from the application barrel
+00:17 +206: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/public_api_test.dart: platform registration does not escape the app barrel
+00:18 +207: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart
+00:19 +207: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: malformed NOTE cannot swallow a cue: 304160519
+00:19 +208: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: malformed NOTE cannot swallow a cue: 126143280
+00:19 +209: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: malformed NOTE cannot swallow a cue: 532906529
+00:19 +210: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: interval index matches a reference scan across overlaps and seeks
+00:19 +211: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: microsecond boundaries and extreme query operands remain safe
+00:19 +212: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: hard line and metadata budgets reject amplification
+00:19 +213: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: byte lists cannot mask values outside the unsigned byte range
+00:19 +214: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: valid prefix followed by damaged cue never yields a partial document
+00:19 +215: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: overlap, exact half-open boundaries, seek and off are stateless
+00:19 +216: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: BOM, Unicode and multiline payload with [10]
+00:19 +217: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: BOM, Unicode and multiline payload with [13, 10]
+00:19 +218: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: BOM, Unicode and multiline payload with [13]
+00:19 +219: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: SRT identifiers are optional and not treated as globally unique
+00:19 +220: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: SRT out-of-order cues retain file order on lookup
+00:19 +221: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: document and query result cannot be mutated
+00:19 +222: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: WebVTT signature, identifiers, NOTE, short and hour timestamps
+00:19 +223: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: WebVTT position and alignment survive parsing
+00:19 +224: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: raw markup is retained for a future renderer, never interpreted
+00:19 +225: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject malformed WebVTT 1
+00:19 +226: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject malformed WebVTT 921497047
+00:19 +227: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject malformed WebVTT 262865390
+00:19 +228: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject malformed WebVTT 750017156
+00:19 +229: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject malformed WebVTT 769588573
+00:19 +230: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject malformed WebVTT 373134498
+00:19 +231: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: empty valid documents are supported
+00:19 +232: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:60:00,000 --> 00:61:00,000
+00:19 +233: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:60,000 --> 00:01:02,000
+00:19 +234: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:02,000 --> 00:00:01,000
+00:19 +235: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:01,000 --> 00:00:01,000
+00:19 +236: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing -1:00:01,000 --> 00:00:02,000
+00:19 +237: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:01.000 --> 00:00:02.000
+00:19 +238: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:01,00 --> 00:00:02,000
+00:19 +239: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:01,000-->00:00:02,000
+00:19 +240: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:01,000 --> 00:00:02,000 trailing
+00:19 +241: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject malformed SRT block 778888771
+00:19 +242: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject malformed SRT block 655221060
+00:19 +243: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject malformed SRT block 732609353
+00:19 +244: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject malformed SRT block 407300547
+00:19 +245: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting position:101%
+00:19 +246: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting position:-1%
+00:19 +247: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting position:NaN%
+00:19 +248: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting position:2%,unknown
+00:19 +249: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting align:middle
+00:19 +250: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting align:start align:end
+00:19 +251: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting align:
+00:19 +252: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: unsupported semantics are explicit 219808513
+00:19 +253: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: unsupported semantics are explicit 234889834
+00:19 +254: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: unsupported semantics are explicit 623810531
+00:19 +255: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: unsupported semantics are explicit 542852965
+00:19 +256: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: invalid UTF-8 and errors do not disclose input
+00:19 +257: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: byte limit is checked before UTF-8 decoding
+00:19 +258: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: cue count and per-cue UTF-16 limits are exact
+00:19 +259: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: overlap budget counts end before start at equal timestamps
+00:19 +260: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: timestamps beyond seven days fail without integer overflow
+00:19 +261: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: invalid limits fail in release mode too
+00:19 +262: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_apple_bridge_test.dart
+00:19 +262: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_apple_bridge_test.dart: generated challenge reaches real POST and first frame waits for matching view ACK
+00:20 +263: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_overlay_test.dart
+00:20 +263: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_overlay_test.dart: RTL start anchors match text direction
+00:20 +264: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_overlay_test.dart: RTL end anchors match text direction
+00:20 +265: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_overlay_test.dart: painted pixels and upright text remain in contain aperture
+00:20 +266: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_overlay_test.dart: painted pixels and upright text remain in top-left aperture
+00:20 +267: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_overlay_test.dart: painted pixels and upright text remain in cover aperture
+00:20 +268: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_overlay_test.dart: painted pixels and upright text remain in rotated-par aperture
+00:20 +269: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart
+00:21 +269: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: real file catalog, selection, offset and native revision coexist
+00:21 +270: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: bad replacement is atomic and sanitized
+00:21 +271: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: events share the public revision domain after subtitle publications
+00:21 +272: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: unsupported newer format replacement still cancels previous pending catalog
+00:21 +273: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: unsupported newer policy replacement still cancels previous pending catalog
+00:21 +274: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: session replacement clears catalog and offset
+00:21 +275: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: native subtitle owner and protected output cannot silently use text overlay
+00:21 +276: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by replace without late publication
+00:21 +277: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by load without late publication
+00:21 +278: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by stop without late publication
+00:21 +279: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by dispose without late publication
+00:21 +280: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: selection and offset during pending replacement are preserved at atomic commit
+00:21 +281: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: aggregate bytes and cue counts reject whole catalog
+00:22 +282: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: unsupported format and managed policy do not replace current catalog
+00:22 +283: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: paused and buffering use media position without wall-clock advance
+00:22 +284: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending seek and post-ACK snapshot cannot expose pre-seek cues
+00:22 +285: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: actual overlay follows position, offset, off and seek
+00:22 +286: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/playback_session_test.dart
+00:23 +286: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/playback_session_test.dart: optional video selection rejects unsupported and stale sessions
+00:23 +287: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/playback_session_test.dart: paused app observer cannot delay public dispose completion
+00:23 +288: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/playback_session_test.dart: transport error settles committed loading milestones without playback failure
+00:23 +289: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/playback_session_test.dart: transport close settles committed loading milestones without playback failure
+00:23 +290: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/playback_session_test.dart: commit, Ready and First Frame are separate; replacement makes old commands stale
+00:23 +291: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/playback_session_test.dart: early milestones and older same-session event revision survive load reply gap
+00:23 +292: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/playback_session_test.dart: new Load promptly cancels older unresolved caller; late result cannot replace
+00:23 +293: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/playback_session_test.dart: precommit failure preserves old pending Ready and command authority
+00:23 +294: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/playback_session_test.dart: postcommit native failure completes pending milestones once; command failure changes nothing
+00:23 +295: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/playback_session_test.dart: stop invalidates milestones and rejects old handle locally
+00:23 +296: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/playback_session_test.dart: successful Stop invalidates commands before delayed idle delivery
+00:23 +297: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/playback_session_test.dart: rejected Stop preserves healthy handle and pending milestones
+00:23 +298: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/playback_session_test.dart: successful Stop ignores late events before idle and late reply cannot invalidate newer session
+00:23 +299: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/playback_session_test.dart: unused milestone failures produce no uncaught zone errors
+00:23 +300: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart
+00:23 +300: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: legacy/interface/capability gates 1057108979
+00:23 +301: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: legacy/interface/capability gates 296996559
+00:23 +302: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: legacy/interface/capability gates 941087736
+00:23 +303: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: supported commands validate, snapshot input, await ACK and do not invent state
+00:23 +304: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: authoritative subtitle state is preserved and current command failures propagate
+00:23 +305: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: replace late ACK after replace is stale
+00:23 +306: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: replace late failure after replace is stale
+00:23 +307: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: replace late ACK after stop is stale
+00:24 +308: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: replace late failure after stop is stale
+00:24 +309: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: replace late ACK after dispose is stale
+00:24 +310: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: replace late failure after dispose is stale
+00:24 +311: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: select late ACK after replace is stale
+00:24 +312: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: select late failure after replace is stale
+00:24 +313: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: select late ACK after stop is stale
+00:24 +314: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: select late failure after stop is stale
+00:24 +315: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: select late ACK after dispose is stale
+00:24 +316: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: select late failure after dispose is stale
+00:24 +317: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: offset late ACK after replace is stale
+00:24 +318: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: offset late failure after replace is stale
+00:24 +319: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: offset late ACK after stop is stale
+00:24 +320: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: offset late failure after stop is stale
+00:24 +321: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: offset late ACK after dispose is stale
+00:24 +322: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: offset late failure after dispose is stale
+00:24 +323: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_session_test.dart: stale session rejects before argument validation or platform dispatch
+00:24 +324: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_license_client_test.dart
+00:24 +324: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_license_client_test.dart: real POST sends opaque bytes once and returns copied bytes
+00:24 +325: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_license_client_test.dart: 403 denial, 410 and 503 never invent expiry or retry by default
+00:24 +326: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_license_client_test.dart: only explicit idempotency permits a bounded retry
+00:24 +327: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_license_client_test.dart: cross origin never receives credentials OR challenge, even when redirects allowed
+00:24 +328: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_license_client_test.dart: same origin 307 is explicit, preserves POST and credentials
+00:24 +329: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_license_client_test.dart: oversize challenge makes no request; chunked response is bounded
+00:24 +330: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_license_client_test.dart: deadline includes body and cancellation discards late response
+00:24 +331: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_license_client_test.dart: connection loss after POST does not trigger an implicit replay
+00:24 +332: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_license_client_test.dart: four requests bound concurrency and close cancels all pending requests
+00:24 +333: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_license_client_test.dart: redirect loop and method-changing redirect are rejected
+00:24 +334: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_license_client_test.dart: HTTPS verifies certificates and preserves a large binary POST
+00:25 +335: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_license_client_test.dart: stalled TLS timeout closes the peer socket
+00:26 +336: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_license_client_test.dart: stalled TLS cancellation closes the peer socket
+00:26 +337: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/drm_license_client_test.dart: empty response rejected and closed client cannot send
+00:26 +338: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/documentation_examples_test.dart
+00:26 +338: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/documentation_examples_test.dart: README lifecycle runs through replacement, Stop, and Dispose
+00:27 +339: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart
+00:27 +339: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: ASS overrides embedded in SRT are explicitly unsupported
+00:27 +340: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: safe nested styles and escaped Unicode remain plain text
+00:27 +341: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects <b>bad
+00:27 +342: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects </b>bad
+00:27 +343: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects <i><b>x</i></b>
+00:27 +344: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects bad <
+00:27 +345: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects &#0;
+00:27 +346: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects &#xD800;
+00:27 +347: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects &#x110000;
+00:27 +348: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <script>secret</script>
+00:27 +349: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <font color="red">x</font>
+00:27 +350: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <v speaker>x</v>
+00:27 +351: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <ruby>x</ruby>
+00:27 +352: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject &unknown;
+00:27 +353: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: style depth and span count bounded independently
+00:27 +354: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/transport_invariants_test.dart
+00:27 +354: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/transport_invariants_test.dart: Apple periodic callback stays typed, lossless, and below 768 bytes
+APPLE_MAX_CALLBACK_BYTES=223
+00:28 +355: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/transport_invariants_test.dart: Apple callback codec preserves explicit nullable clears
+00:28 +356: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/transport_invariants_test.dart: Apple periodic schema cannot carry static or media payload data
+00:28 +357: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart
+00:28 +357: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: Apple exposes the optional video selection operation
+00:28 +358: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: native video surface requires explicit native advertisement
+00:28 +359: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: invalid native surface advertisements reject and release native ownership
+00:28 +360: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: replacement Stop cancellation and late replies retain bounded authority
+00:28 +361: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: long lived retry dedup is bounded and older First Frame remains one shot
+00:28 +362: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: create exposes ApplePlatform.ios capabilities without property-read calls
+00:28 +363: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: create exposes ApplePlatform.macos capabilities without property-read calls
+00:28 +364: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: native enforcing authority rejects unsupported managed assessment and Load
+00:28 +365: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: native enforcing authority rejects unsupported bounded assessment and Load
+00:28 +366: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: native enforcing authority rejects unsupported hardwareOverride assessment and Load
+00:28 +367: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: native enforcing authority rejects unsupported hardwareDefault assessment and Load
+00:28 +368: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: per-load non-strict override of hardwareRequired default reaches native assessment
+00:28 +369: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: completion-window deltas use the latest authoritative state
+00:28 +370: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: former session failure notifies A without cancelling B: event=false assessment=false
+00:28 +371: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: former session failure notifies A without cancelling B: event=false assessment=true
+00:28 +372: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: player-scoped retained-session failure still terminates B: event=false
+00:28 +373: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: former session failure notifies A without cancelling B: event=true assessment=false
+00:28 +374: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: former session failure notifies A without cancelling B: event=true assessment=true
+00:28 +375: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: player-scoped retained-session failure still terminates B: event=true
+00:28 +376: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: state-first Load preserves onState then first-frame then delta before reply
+00:28 +377: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: failed candidate state cancels barrier immediately before reply while retaining former state
+00:28 +378: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: state-first READY evidence survives later BUFFERING before reply
+00:28 +379: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:29 +380: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A failed state and event cannot cancel newer B
+00:29 +381: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: late errors from cancelled assessment and Load do not terminate the newer session
+00:29 +382: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: stale buffered full state failure cannot cancel matching Load
+00:29 +383: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: stale duplicate delta payload cannot count as structurally invalid
+00:29 +384: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: mismatched echoed request cannot pair or revive a Load
+00:29 +385: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: known-session retry and engine events map independently from state watermark
+00:29 +386: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: terminal transport reaches revision-filtering consumers before hung native cleanup; max=false
+00:29 +387: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: terminal transport reaches revision-filtering consumers before hung native cleanup; max=true
+00:29 +388: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: creation owns native identity before validation; attaches after callback setup
+00:29 +389: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: callback setup and attach failures clean native ownership and preserve safe error
+00:29 +390: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: Load pairs both halves before immediate Play; stateFirst=false
+00:29 +391: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: five-second pair deadline starts at either half; stateFirst=false
+00:29 +392: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: Load pairs both halves before immediate Play; stateFirst=true
+00:29 +393: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: five-second pair deadline starts at either half; stateFirst=true
+00:29 +394: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: state/delta ordering ignores stale callbacks and milestones survive newer state revisions
+00:29 +395: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: loading BUFFERING stays loading until READY evidence; injected callbacks are isolated
+00:29 +396: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: only repeated malformed callbacks terminate; stale traffic never increments failures
+00:29 +397: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: new Load cancels assessment and old pair continuations without reopening
+00:29 +398: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: new Load retires buffered state from superseded Load and ignores its late reply
+00:29 +399: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: accepted Stop fences captured session before idle and cannot invalidate newer Load
+00:29 +400: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: rejected Stop preserves usable session and cancels a pending Load
+00:29 +401: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: terminal transport failure settles all commands and ignores late failures
+00:29 +402: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: hung failed-create cleanup is bounded and preserves original failure
+00:29 +403: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_player_test.dart: dispose shares Future, cancels commands, unregisters before paused observers drain
+00:29 +404: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/yl_player_apple_test.dart
+00:29 +404: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/yl_player_apple_test.dart: constraints transport awaits native completion and propagates failure
+00:29 +405: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/yl_player_apple_test.dart: video selection transport awaits native installation and safe late failure
+00:29 +406: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/yl_player_apple_test.dart: enforcing generated transport commits managed bounded YlMediaFormat.matroska replyFirst=true
+00:29 +407: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/yl_player_apple_test.dart: enforcing generated transport commits managed bounded YlMediaFormat.matroska replyFirst=false
+00:29 +408: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/yl_player_apple_test.dart: enforcing generated transport commits managed bounded YlMediaFormat.flv replyFirst=true
+00:29 +409: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/yl_player_apple_test.dart: enforcing generated transport commits managed bounded YlMediaFormat.flv replyFirst=false
+00:29 +410: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/yl_player_apple_test.dart: registerWith installs v2 implementation
+00:29 +411: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/yl_player_apple_test.dart: production Pigeon wrappers create, route every command and remove suffix callbacks
+00:29 +412: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/yl_player_apple_test.dart: production typed native rejection is safe; missing host is terminal
+00:29 +413: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/yl_player_apple_test.dart: pubspec registers one shared implementation for iOS and macOS
+00:29 +414: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/yl_player_apple_test.dart: podspec exposes the shared artifact with platform-scoped metadata
+00:29 +415: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/yl_player_apple_test.dart: SwiftPM manifest declares the shared product and binary bridge
+00:29 +416: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart
+00:30 +416: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: newer frame before delayed attach ACK remains ready
+00:30 +417: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: older frame feedback cannot withdraw a newer acknowledged frame
+00:30 +418: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:30 +419: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement timeout is ignored
+00:30 +420: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach unmount failure is ignored
+00:30 +421: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach unmount timeout is ignored
+00:30 +422: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: same view retry fences previous success and failure but current failure is published
+00:30 +423: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: wrong owner and duplicate challenge never issue another license POST
+00:30 +424: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_bridge_test.dart: cancel fences a late non-cancellable license response
+00:30 +425: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart
+00:30 +425: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: known render.audio_engine_failed gives safe guidance at native and adapter boundaries
+00:30 +426: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: known container.dash_manifest_invalid gives safe guidance at native and adapter boundaries
+00:30 +427: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: known container.dash_dynamic_unsupported gives safe guidance at native and adapter boundaries
+00:30 +428: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: known container.dash_protection_unsupported gives safe guidance at native and adapter boundaries
+00:30 +429: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: known container.dash_segment_base_unsupported gives safe guidance at native and adapter boundaries
+00:30 +430: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: known resource.dash_manifest_too_large gives safe guidance at native and adapter boundaries
+00:30 +431: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: known source.seek_failed gives safe guidance at native and adapter boundaries
+00:30 +432: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: known policy.video_selection_unsupported gives safe guidance at native and adapter boundaries
+00:30 +433: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.protocol_unsupported gives safe guidance at native and adapter boundaries
+00:30 +434: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.rtmp_handshake_failed gives safe guidance at native and adapter boundaries
+00:30 +435: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.rtmp_stream_unavailable gives safe guidance at native and adapter boundaries
+00:30 +436: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: known container.rtmp_track_layout_changed gives safe guidance at native and adapter boundaries
+00:30 +437: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.rtmp_disconnected gives safe guidance at native and adapter boundaries
+00:30 +438: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.dns_failed gives safe guidance at native and adapter boundaries
+00:30 +439: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.http_forbidden gives safe guidance at native and adapter boundaries
+00:30 +440: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.retry_exhausted gives safe guidance at native and adapter boundaries
+00:30 +441: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: known load.cancelled gives safe guidance at native and adapter boundaries
+00:30 +442: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: known container.unsupported gives safe guidance at native and adapter boundaries
+00:30 +443: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: known policy.unsupported gives safe guidance at native and adapter boundaries
+00:30 +444: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_failure_message_test.dart: unknown codes never promote native text or infer a known cause
+00:30 +445: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart
+00:31 +445: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated codec preserves the complete Apple v2 transport
+00:31 +446: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:33 +447: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart
+00:33 +447: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: native capabilities do not advertise Dart-only subtitle commands
+00:33 +448: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: schema 4 selection is mandatory, validated and retained by deltas
+00:33 +449: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: DASH appends wire ordinal ten without changing old formats
+00:33 +450: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: AVPlayer decoder remains unknown and fallback retains evidenced modes
+00:33 +451: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: private renamed failure categories preserve public ordinals and names
+00:33 +452: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: native hardware decoder failure retains the public failure code
+00:33 +453: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: actual Apple capability and assessment decoding accepts native MIME and policy identifiers
+00:33 +454: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: all complete enum counterparts retain exact set parity
+00:33 +455: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: Apple engines are the explicit public subset and source kinds cover all variants
+00:33 +456: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: metrics deltas distinguish every absent, set and cleared field
+00:33 +457: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: source metadata and load choices retain values across encoding
+00:33 +458: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: timeline preserves nullable live metadata and rejects inverted DVR ranges
+00:33 +459: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: outbound enums preserve every policy, format, intent and source kind
+00:33 +460: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: inbound enums cover statuses, engines, decoder evidence/mode, tracks, operations and failures
+00:33 +461: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: assessment maps outcomes and rejects inconsistent rejection or unsafe identifiers
+00:33 +462: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: assessment preserves all built-in and safe extension IDs distinctly
+00:33 +463: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: failure prose is fixed and transport errors never expose native details
+00:33 +464: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: nullable metrics, clamp only live offset and preserve display geometry
+00:33 +465: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/apple_codec_test.dart: validate raw millisecond bounds before Duration overflow and nullable deltas
+00:33 +466: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_codec_test.dart
+00:34 +466: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_codec_test.dart: schema5 keeps FairPlay binary configuration and rejects Widevine
+00:34 +467: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/transport_invariants_test.dart
+00:34 +467: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/transport_invariants_test.dart: Android periodic callback stays typed, lossless, and below 768 bytes
+ANDROID_MAX_CALLBACK_BYTES=228
+00:34 +468: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/transport_invariants_test.dart: Android callback codec preserves explicit nullable clears
+00:34 +469: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/transport_invariants_test.dart: Android periodic schema cannot carry static or media payload data
+00:34 +470: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/yl_player_android_test.dart
+00:34 +470: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/yl_player_android_test.dart: registerWith installs v2 implementation
+00:34 +471: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/yl_player_android_test.dart: production Pigeon wrappers create, route every command and remove suffix callbacks
+00:34 +472: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/yl_player_android_test.dart: production typed native rejection is safe; missing host is terminal
+00:34 +473: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart
+00:35 +473: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known network.protocol_unsupported gives safe guidance at native and adapter boundaries
+00:35 +474: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known network.rtmp_handshake_failed gives safe guidance at native and adapter boundaries
+00:35 +475: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known network.rtmp_stream_unavailable gives safe guidance at native and adapter boundaries
+00:35 +476: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known network.rtmp_disconnected gives safe guidance at native and adapter boundaries
+00:35 +477: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known network.dns_failed gives safe guidance at native and adapter boundaries
+00:35 +478: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known network.http_forbidden gives safe guidance at native and adapter boundaries
+00:35 +479: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known network.retry_exhausted gives safe guidance at native and adapter boundaries
+00:35 +480: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known load.cancelled gives safe guidance at native and adapter boundaries
+00:35 +481: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known container.rtmp_track_layout_changed gives safe guidance at native and adapter boundaries
+00:35 +482: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known container.unsupported gives safe guidance at native and adapter boundaries
+00:35 +483: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: known policy.unsupported gives safe guidance at native and adapter boundaries
+00:35 +484: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_failure_message_test.dart: unknown codes never promote native text or infer a known cause
+00:35 +485: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart
+00:35 +485: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: video command sends nullable auto ID without asserting a state change
+00:35 +486: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: completion-window deltas use the latest authoritative state
+00:35 +487: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: former session failure notifies A without cancelling B: event=false assessment=false
+00:35 +488: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: former session failure notifies A without cancelling B: event=false assessment=true
+00:35 +489: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: player-scoped retained-session failure still terminates B: event=false
+00:35 +490: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: former session failure notifies A without cancelling B: event=true assessment=false
+00:35 +491: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: former session failure notifies A without cancelling B: event=true assessment=true
+00:35 +492: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: player-scoped retained-session failure still terminates B: event=true
+00:35 +493: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: state-first Load preserves onState then first-frame then delta before reply
+00:35 +494: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: failed candidate state cancels barrier immediately before reply while retaining former state
+00:35 +495: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: state-first READY evidence survives later BUFFERING before reply
+00:35 +496: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:36 +497: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: unknown stale A failed state and event cannot cancel newer B
+00:36 +498: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: late errors from cancelled assessment and Load do not terminate the newer session
+00:36 +499: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: stale buffered full state failure cannot cancel matching Load
+00:36 +500: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: stale duplicate delta payload cannot count as structurally invalid
+00:36 +501: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: mismatched echoed request cannot pair or revive a Load
+00:36 +502: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: known-session retry and engine events map independently from state watermark
+00:36 +503: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: terminal transport reaches revision-filtering consumers before hung native cleanup; max=false
+00:36 +504: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: terminal transport reaches revision-filtering consumers before hung native cleanup; max=true
+00:36 +505: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: creation owns native identity before validation; attaches after callback setup
+00:36 +506: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: callback setup and attach failures clean native ownership and preserve safe error
+00:36 +507: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: Load pairs both halves before immediate Play; stateFirst=false
+00:36 +508: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: five-second pair deadline starts at either half; stateFirst=false
+00:36 +509: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: Load pairs both halves before immediate Play; stateFirst=true
+00:36 +510: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: five-second pair deadline starts at either half; stateFirst=true
+00:36 +511: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: state/delta ordering ignores stale callbacks and milestones survive newer state revisions
+00:36 +512: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: loading BUFFERING stays loading until READY evidence; injected callbacks are isolated
+00:36 +513: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: only repeated malformed callbacks terminate; stale traffic never increments failures
+00:36 +514: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: new Load cancels assessment and old pair continuations without reopening
+00:36 +515: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: new Load retires buffered state from superseded Load and ignores its late reply
+00:36 +516: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: accepted Stop fences captured session before idle and cannot invalidate newer Load
+00:36 +517: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: rejected Stop preserves usable session and cancels a pending Load
+00:36 +518: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: terminal transport failure settles all commands and ignores late failures
+00:36 +519: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: hung failed-create cleanup is bounded and preserves original failure
+00:36 +520: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_player_test.dart: dispose shares Future, cancels commands, unregisters before paused observers drain
+00:36 +521: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_bridge_test.dart
+00:36 +521: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:36 +522: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_bridge_test.dart: stale attach replacement timeout is ignored
+00:36 +523: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_bridge_test.dart: stale attach unmount failure is ignored
+00:36 +524: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_bridge_test.dart: stale attach unmount timeout is ignored
+00:36 +525: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_bridge_test.dart: same view retry fences previous success and failure but current failure is published
+00:36 +526: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_bridge_test.dart: wrong owner and duplicate challenge never issue another license POST
+00:36 +527: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_bridge_test.dart: cancel fences a late non-cancellable license response
+00:36 +528: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart
+00:37 +528: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: schema 3 and 4 factory requests retain committed codec tags
+00:37 +529: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated messages preserve the complete v2 transport shape
+00:37 +530: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:39 +531: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart
+00:40 +531: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: native capabilities do not advertise Dart-only subtitle commands
+00:40 +532: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: schema 4 full state requires selection and delta retains it
+00:40 +533: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: fixed selection survives generated state roundtrip with matching track
+00:40 +534: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: DASH appends wire ordinal ten without changing old formats
+00:40 +535: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: media clock survives full snapshots and absent, set, cleared deltas
+00:40 +536: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: actual Android capability and assessment decoding accepts native MIME and policy identifiers
+00:40 +537: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: all complete enum counterparts retain exact set parity
+00:40 +538: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: Android engines are the explicit public subset and source kinds cover all variants
+00:40 +539: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: metrics deltas distinguish every absent, set and cleared field
+00:40 +540: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: source metadata and load choices retain values across encoding
+00:40 +541: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: timeline preserves nullable live metadata and rejects inverted DVR ranges
+00:40 +542: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: outbound enums preserve every policy, format, intent and source kind
+00:40 +543: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: inbound enums cover statuses, engines, decoder evidence/mode, tracks, operations and failures
+00:40 +544: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: assessment maps outcomes and rejects inconsistent rejection or unsafe identifiers
+00:40 +545: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: failure prose is fixed and transport errors never expose native details
+00:40 +546: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: nullable metrics, clamp only live offset and preserve display geometry
+00:40 +547: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/android_codec_test.dart: validate raw millisecond bounds before Duration overflow and nullable deltas
+00:40 +548: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_codec_test.dart
+00:41 +548: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_codec_test.dart: Widevine configuration survives encoding without license endpoint secrets
+00:41 +549: All tests passed!

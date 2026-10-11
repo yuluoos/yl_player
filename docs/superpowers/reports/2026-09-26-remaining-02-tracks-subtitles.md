@@ -62,3 +62,30 @@ Task 1A 只完成 Dart 合约，native schema/生成文件保持不变，且当�
 最终集中验收和源码指纹见下方追加记录；初轮失败保留，不以最终成功抹去。下一项为可用适配器的字幕加载/取消与媒体时钟渲染接入，期间继续推进 TTML 和 Task 1 音轨身份。
 
 最终冻结源码的集中命令：从仓库根运行 `flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test`，**498/498、0失败、exit 0**。原80ms/30ms测试门限未修改；静态检查无问题。四个包覆盖数为132/171/113/82。[契约证据清单](evidence/2026-10-11-subtitle-contract/manifest.json)保存15份源码/测试/规范指纹与7份原始日志；本切片将独立提交，不包含并行网络工具与example验收改动。
+
+## 2026-10-11：Task 2 外挂文本字幕加载与渲染
+
+起点为 `0c2cd0a`，并行 P04 提交和长播放工作不属于此切片。沿用已授权 P02 计划，接通真实文件/HTTP 读取、字幕目录、媒体位置查询和 `YlPlayerView` 叠层。启用方式是 `YlPlayerController.create(enableTextSubtitles: true)`；现有默认 native SPI 门禁保留，不能同时启用两个字幕所有者。示例见包 README。
+
+### 范围与实施决定
+
+- 外挂 SRT/WebVTT 支持 UTF-8、纯文本、平衡 b/i/u、常用/数值实体以及水平 position/align。未知 HTML、字体/voice/ruby、ASS 控制标记明确拒绝。start/end 与视图 Directionality 一致；未宣称实现所有 WebVTT 排版算法。
+- 文件/HTTP 流式读取；目录合计最多4MiB、10,000 cue、20,000 span，每 cue 最多512 span/16层标签。原子替换期间旧目录和新目录可共存，预算最多各一份。较新替换（包括不支持格式/策略）、load、stop、dispose 取消旧读取；失败不发布损坏目录。
+- platformDefault HTTP 采用30秒总截止、5次重定向、无重试、系统证书信任、identity编码；跨域后凭据永久剥离。TLS 握手期间持有底层 socket 并可关闭。显式非identity请求及 managed policy 拒绝，不能静默改写要求。此选择的代价是 managed 字幕网络仍待实现。
+- 本地字幕状态与 native revision 分别管理，公开 state revision 单调。启用时，event revision 指向交付时可观察的公开快照，session/occurredAt 保持原值；不声称是事件起源的 native revision，也不维护无限增长的历史映射。默认路径语义不变。
+- 查询仅使用已发布媒体位置，不推测墙钟；暂停/缓冲不会自行前进，seek 立即隐藏并等待 ACK 后的位置快照。代价是显示精度受 `positionUpdateInterval` 限制，不能宣称逐帧同步。
+- 字幕在可见视频区域内保持直立，处理 fit/crop/PAR/旋转，忽略指针输入。首次呈现前、结束/失败/stop/dispose 后不显示。受保护源/输出拒绝字幕命令，不读取保护视频像素。
+
+上述裁定冻结于[运行契约](../specs/2026-10-11-subtitle-runtime.md)。独立错误是命令级、脱敏的拒绝；未替 PD-03 决定未来字幕运行故障是否终止视频。TTML、内嵌字幕、ASS/SSA、PGS/VobSub、HDR亮度及三端真机同步仍开放，Task 2 全部和 CAP-SUB 未标完成。
+
+### 验证、失败和复审
+
+新增测试从公开 opt-in/API 缺失的 RED 开始；首轮同时暴露测试夹具 `codedSize` 应为 `encodedSize`，修正后实现基础链路。4/4 文件/控制器/叠层，26/26 真实 loopback I/O 与文本标记用例通过。
+
+扩展生命周期测试首次被 Flutter binding 的 HTTP400 伪响应阻挡；在该测试文件中明确恢复真实 HttpClient，保留失败日志。随后13项中两项失败：dispose 后公开目录未清空（真实缺陷，已修复），预算夹具字符串替换造成零长cue（夹具缺陷，改为直接生成独立时标）。修正后13/13。像素读取首次未置于 tester.runAsync 导致等待；中断该次运行并修正夹具后，四种几何的真实绘制像素通过。四张PNG使用 Flutter Ahem 测试字体，因此显示矩形字形；用于位置/裁切证据，不作为字体审美或真机截图。
+
+首次集中四包回归542/542。一次独立只读复审无Critical，提出两项Important：event/native revision 域错配，以及较新不支持请求未取消旧读取。两项均先用新增用例实际 RED 后修复。RTL start/end 原列Minor，按已声明对齐功能提升为必须修复，两个方向用例 RED→GREEN。另自行补充非identity请求不可被覆盖、SRT内ASS标记不可原样漏出的 RED→GREEN。没有遗留复审项。修复后全部51项定向字幕用例通过；最终集中回归结果和哈希见后续冻结记录。
+
+最终集中命令曾在启动前被磁盘空间耗尽阻挡（shell重定向与here-document均报 no space left on device，未启动测试）。确认恢复约100MiB空间后重试；未删除其他任务数据。全程未启动原生构建、设备、长播放或弱网 ABR；没有更改其源文件、验收门限和工作成果。公开宿主框架渲染与物理设备播放证据严格分开。
+
+最终冻结源码：从仓库根运行 `flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test`，**549/549、0失败、exit 0**（132/222/113/82）；播放器新增51项。最后一版用例额外确认迟到FirstFrame的原始时间与四类事件 payload 保留。静态分析 `yl_player` 与 platform_interface 的 lib/test 全部 **No issues found、exit 0**。未修改既有测试门限。源码、规范、报告及原始日志/PNG指纹见[证据清单](evidence/2026-10-11-subtitle-runtime/manifest.json)。本项使用独立 Git index 和比较更新提交引用，仅包含字幕切片及自身总览追加段，保留其他会话暂存内容。

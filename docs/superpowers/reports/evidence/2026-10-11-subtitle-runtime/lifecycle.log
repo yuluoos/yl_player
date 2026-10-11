@@ -1,0 +1,58 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart
+00:00 +0: real file catalog, selection, offset and native revision coexist
+00:00 +1: bad replacement is atomic and sanitized
+00:00 +2: session replacement clears catalog and offset
+00:00 +3: pending HTTP catalog is cancelled by replace without late publication
+00:00 +3 -1: pending HTTP catalog is cancelled by replace without late publication [E]
+  Expected: throws <Instance of 'YlPlayerException'> with `code`: 'load.cancelled' and `scope`: YlFailureScope:<YlFailureScope.command> and `retryable`: <false>
+    Actual: <Instance of 'Future<void>'>
+     Which: threw YlPlayerException:<YlFailure(category: network, code: network.failed, retryable: false, scope: command, diagnosticId: text-subtitle)>
+            stack dart:async                                                        _Completer.completeError
+                  package:yl_player/src/subtitles/subtitle_resource_io.dart 34:12   read.fail
+                  package:yl_player/src/subtitles/subtitle_resource_io.dart 142:11  read.run
+                  ===== asynchronous gap ===========================
+                  dart:async                                                        _CustomZone.registerUnaryCallback
+                  package:yl_player/src/subtitles/subtitle_resource_io.dart 101:25  read.run
+                  package:yl_player/src/subtitles/subtitle_resource_io.dart 184:5   read
+                  package:yl_player/src/subtitles/subtitle_resource.dart 42:16      readSubtitleResource
+                  package:yl_player/src/subtitles/text_subtitle_runtime.dart 57:29  TextSubtitleRuntime.replace
+                  package:yl_player/src/playback_session.dart 42:53                 YlPlaybackSession.replaceExternalSubtitles.<fn>.<fn>
+                  package:yl_player/src/playback_session.dart 77:19                 YlPlaybackSession._textSubtitleCommand
+                  package:yl_player/src/playback_session.dart 42:18                 YlPlaybackSession.replaceExternalSubtitles.<fn>
+                  package:yl_player/src/playback_session.dart 12:17                 YlPlaybackSession._command
+                  package:yl_player/src/playback_session.dart 38:7                  YlPlaybackSession.replaceExternalSubtitles
+                  packages/yl_player/test/text_subtitle_runtime_test.dart 131:31    main.<fn>
+                  ===== asynchronous gap ===========================
+                  dart:async                                                        _CustomZone.registerUnaryCallback
+                  packages/yl_player/test/text_subtitle_runtime_test.dart 124:7     main.<fn>
+                  
+            which has `code` with value 'network.failed' which is different.
+                  Expected: load.cance ...
+                    Actual: network.fa ...
+                            ^
+                   Differ at offset 0
+  
+  package:matcher                                                 expectLater
+  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+  packages/yl_player/test/text_subtitle_runtime_test.dart 133:23  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                      _CustomZone.registerUnaryCallback
+  packages/yl_player/test/text_subtitle_runtime_test.dart 124:7   main.<fn>
+  
+Warning: At least one test in this suite creates an HttpClient. When running a test suite that uses
+TestWidgetsFlutterBinding, all HTTP requests will return status code 400, and no network request
+will actually be made. Any test expecting a real network connection and status code will fail.
+To test code that needs an HttpClient, provide your own HttpClient implementation to the code under
+test, so that your test can consistently provide a testable response to the code under test.
+00:14 +3 -2: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart [E]
+  Bad state: Cannot close sink while adding stream.
+  package:stream_channel/src/guarantee_channel.dart 180:7      _GuaranteeSink.close
+  package:flutter_tools/src/test/flutter_platform.dart 766:43  FlutterPlatform._startTest
+  
+One or more uncaught errors occurred shutting down:
+  Bad state: Cannot add event while adding stream.
+00:14 +3 -2: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by replace without late publication

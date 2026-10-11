@@ -16,10 +16,13 @@ final class YlPlaybackSession {
   Future<void> pause() => _command(() => _player._backend.pause(id));
   Future<void> seekTo(Duration position) => _command(() {
     validateYlSeekPosition(position);
-    return _player._backend.seekTo(id, position);
+    return _player._seekWithSubtitles(
+      () => _player._backend.seekTo(id, position),
+    );
   });
-  Future<void> seekToLiveEdge() =>
-      _command(() => _player._backend.seekToLiveEdge(id));
+  Future<void> seekToLiveEdge() => _command(
+    () => _player._seekWithSubtitles(() => _player._backend.seekToLiveEdge(id)),
+  );
   Future<void> setPlaybackSpeed(double speed) => _command(() {
     validateYlPlaybackSpeed(speed);
     return _player._backend.setPlaybackSpeed(id, speed);
@@ -35,6 +38,9 @@ final class YlPlaybackSession {
       _command(() {
         validateYlExternalSubtitles(subtitles);
         final snapshot = List<YlExternalSubtitle>.unmodifiable(subtitles);
+        if (_player._textSubtitles case final runtime?) {
+          return _textSubtitleCommand(() => runtime.replace(snapshot));
+        }
         return _subtitleCommand(
           YlPlayerOperation.externalSubtitles,
           (backend) => backend.replaceExternalSubtitles(id, snapshot),
@@ -44,6 +50,9 @@ final class YlPlaybackSession {
   /// Null turns subtitles off. Does not select a same-language replacement.
   Future<void> selectSubtitleTrack(String? trackId) => _command(() {
     if (trackId != null) validateYlSubtitleTrackId(trackId);
+    if (_player._textSubtitles case final runtime?) {
+      return _textSubtitleCommand(() async => runtime.select(trackId));
+    }
     return _subtitleCommand(
       YlPlayerOperation.subtitleTrackSelection,
       (backend) => backend.selectSubtitleTrack(id, trackId),
@@ -53,11 +62,26 @@ final class YlPlaybackSession {
   /// Positive values delay display. Offset must be whole milliseconds ±7 days.
   Future<void> setSubtitleOffset(Duration offset) => _command(() {
     validateYlSubtitleOffset(offset);
+    if (_player._textSubtitles case final runtime?) {
+      return _textSubtitleCommand(() async => runtime.offset(offset));
+    }
     return _subtitleCommand(
       YlPlayerOperation.subtitleOffset,
       (backend) => backend.setSubtitleOffset(id, offset),
     );
   });
+
+  Future<void> _textSubtitleCommand(Future<void> Function() action) async {
+    _player._checkTextSubtitleAdmission();
+    try {
+      await action();
+    } catch (_) {
+      _player._checkSession(id);
+      rethrow;
+    }
+    _player._checkSession(id);
+    _player._publishSubtitles();
+  }
 
   Future<void> _subtitleCommand(
     YlPlayerOperation operation,

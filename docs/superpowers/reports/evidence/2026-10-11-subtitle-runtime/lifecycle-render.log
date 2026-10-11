@@ -1,0 +1,29 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart
+00:00 +0: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: real file catalog, selection, offset and native revision coexist
+00:00 +1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: bad replacement is atomic and sanitized
+00:00 +2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: session replacement clears catalog and offset
+00:00 +3: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by replace without late publication
+00:00 +4: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by load without late publication
+00:00 +5: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by stop without late publication
+00:00 +6: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by dispose without late publication
+00:00 +7: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: selection and offset during pending replacement are preserved at atomic commit
+00:00 +8: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: aggregate bytes and cue counts reject whole catalog
+00:00 +9: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: unsupported format and managed policy do not replace current catalog
+00:00 +10: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: paused and buffering use media position without wall-clock advance
+00:00 +11: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: out-of-order seek ACK cannot expose pre-seek cues
+00:00 +12: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: actual overlay follows position, offset, off and seek
+00:00 +13: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_overlay_test.dart
+00:01 +13: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_overlay_test.dart: painted pixels and upright text remain in contain aperture
+00:26 +13 -1: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_overlay_test.dart [E]
+  Bad state: Cannot close sink while adding stream.
+  package:stream_channel/src/guarantee_channel.dart 180:7      _GuaranteeSink.close
+  package:flutter_tools/src/test/flutter_platform.dart 766:43  FlutterPlatform._startTest
+  
+One or more uncaught errors occurred shutting down:
+  Bad state: Cannot add event while adding stream.
+00:26 +13 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_overlay_test.dart: painted pixels and upright text remain in contain aperture - did not complete [E]
+00:26 +13 -1: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_overlay_test.dart: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_overlay_test.dart
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_overlay_test.dart: painted pixels and upright text remain in contain aperture (did not complete)

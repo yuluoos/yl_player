@@ -1,0 +1,53 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart
+00:00 +0: real file catalog, selection, offset and native revision coexist
+00:00 +1: bad replacement is atomic and sanitized
+00:00 +2: session replacement clears catalog and offset
+00:00 +3: pending HTTP catalog is cancelled by replace without late publication
+00:00 +4: pending HTTP catalog is cancelled by load without late publication
+00:00 +5: pending HTTP catalog is cancelled by stop without late publication
+00:00 +6: pending HTTP catalog is cancelled by dispose without late publication
+00:00 +6 -1: pending HTTP catalog is cancelled by dispose without late publication [E]
+  Expected: empty
+    Actual: MappedListIterable<YlSubtitleTrack, String>:['en']
+  
+  package:matcher                                                expect
+  package:flutter_test/src/widget_tester.dart 473:18             expect
+  packages/yl_player/test/text_subtitle_runtime_test.dart 154:7  main.<fn>
+  
+00:00 +6 -1: selection and offset during pending replacement are preserved at atomic commit
+00:00 +7 -1: aggregate bytes and cue counts reject whole catalog
+00:00 +7 -2: aggregate bytes and cue counts reject whole catalog [E]
+  Expected: throws <Instance of 'YlPlayerException'> with `code`: 'subtitle.too_large' and `scope`: YlFailureScope:<YlFailureScope.command> and `retryable`: <false>
+    Actual: <Instance of 'Future<void>'>
+     Which: threw YlPlayerException:<YlFailure(category: source, code: subtitle.malformed, retryable: false, scope: command, diagnosticId: text-subtitle)>
+            stack package:yl_player/src/subtitles/text_subtitle_runtime.dart 103:7  TextSubtitleRuntime.replace
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                   expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8                 expectLater
+                  packages/yl_player/test/text_subtitle_runtime_test.dart 192:11    main.<fn>
+                  ===== asynchronous gap ===========================
+                  dart:async                                                        _CustomZone.registerUnaryCallback
+                  packages/yl_player/test/text_subtitle_runtime_test.dart 183:5     main.<fn>
+                  
+            which has `code` with value 'subtitle.malformed' which is different.
+                  Expected: subtitle.too_large
+                    Actual: subtitle.malformed
+                                     ^
+                   Differ at offset 9
+  
+  package:matcher                                                 expectLater
+  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+  packages/yl_player/test/text_subtitle_runtime_test.dart 192:11  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                      _CustomZone.registerUnaryCallback
+  packages/yl_player/test/text_subtitle_runtime_test.dart 183:5   main.<fn>
+  
+00:00 +7 -2: unsupported format and managed policy do not replace current catalog
+00:00 +8 -2: paused and buffering use media position without wall-clock advance
+00:00 +9 -2: out-of-order seek ACK cannot expose pre-seek cues
+00:00 +10 -2: actual overlay follows position, offset, off and seek
+00:00 +11 -2: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: aggregate bytes and cue counts reject whole catalog
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by dispose without late publication

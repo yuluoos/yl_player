@@ -1,0 +1,38 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart
+packages/yl_player/test/text_subtitle_runtime_test.dart:33:46: Error: No named parameter with the name 'codedSize'.
+        videoGeometry: const YlVideoGeometry(codedSize: YlPixelSize(1920, 1080),
+                                             ^^^^^^^^^
+packages/yl_player_platform_interface/lib/src/model/video_geometry.dart:5:9: Context: Found this candidate, but the arguments don't match.
+  const YlVideoGeometry({
+        ^^^^^^^^^^^^^^^
+packages/yl_player/test/text_subtitle_runtime_test.dart:41:9: Error: No named parameter with the name 'enableTextSubtitles'.
+        enableTextSubtitles: true);
+        ^^^^^^^^^^^^^^^^^^^
+packages/yl_player/lib/src/player_controller.dart:12:37: Context: Found this candidate, but the arguments don't match.
+  static Future<YlPlayerController> create({
+                                    ^^^^^^
+packages/yl_player/test/text_subtitle_runtime_test.dart:74:32: Error: Member not found: 'subtitleMalformed'.
+        failure(YlFailureCodes.subtitleMalformed));
+                               ^^^^^^^^^^^^^^^^^
+00:00 +0 -1: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart [E]
+  Failed to load "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart":
+  Compilation failed for testPath=/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: packages/yl_player/test/text_subtitle_runtime_test.dart:33:46: Error: No named parameter with the name 'codedSize'.
+          videoGeometry: const YlVideoGeometry(codedSize: YlPixelSize(1920, 1080),
+                                               ^^^^^^^^^
+  packages/yl_player_platform_interface/lib/src/model/video_geometry.dart:5:9: Context: Found this candidate, but the arguments don't match.
+    const YlVideoGeometry({
+          ^^^^^^^^^^^^^^^
+  packages/yl_player/test/text_subtitle_runtime_test.dart:41:9: Error: No named parameter with the name 'enableTextSubtitles'.
+          enableTextSubtitles: true);
+          ^^^^^^^^^^^^^^^^^^^
+  packages/yl_player/lib/src/player_controller.dart:12:37: Context: Found this candidate, but the arguments don't match.
+    static Future<YlPlayerController> create({
+                                      ^^^^^^
+  packages/yl_player/test/text_subtitle_runtime_test.dart:74:32: Error: Member not found: 'subtitleMalformed'.
+          failure(YlFailureCodes.subtitleMalformed));
+                                 ^^^^^^^^^^^^^^^^^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart

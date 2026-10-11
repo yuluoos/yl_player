@@ -1,0 +1,29 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart
+00:00 +0: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: actual GET preserves headers and same-origin credentials
+00:00 +1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: cross-origin redirect strips credentials permanently including return
+00:00 +2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: bounded HTTP body declared=true
+00:00 +3: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: bounded HTTP body declared=false
+00:00 +4: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: redirect budget stops a loop after five hops
+00:00 +5: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: HTTP errors are sanitized and never retried
+00:00 +6: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: managed policy rejects before network access
+00:00 +7: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: encoded responses reject rather than bypassing decompressed budget
+00:00 +8: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: cancellation closes stalled headers
+00:00 +9: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: cancellation closes stalled body
+00:00 +10: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: cancellation owns and closes a stalled TLS handshake socket
+00:00 +11: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: file streams enforce input limit and missing paths are sanitized
+00:00 +12: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart
+00:02 +12: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: safe nested styles and escaped Unicode remain plain text
+00:02 +13: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects <b>bad
+00:02 +14: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects </b>bad
+00:02 +15: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects <i><b>x</i></b>
+00:02 +16: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects bad <
+00:02 +17: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects &#0;
+00:02 +18: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects &#xD800;
+00:02 +19: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects &#x110000;
+00:02 +20: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <script>secret</script>
+00:02 +21: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <font color="red">x</font>
+00:02 +22: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <v speaker>x</v>
+00:02 +23: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <ruby>x</ruby>
+00:02 +24: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject &unknown;
+00:02 +25: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: style depth and span count bounded independently
+00:02 +26: All tests passed!

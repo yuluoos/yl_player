@@ -1,5 +1,9 @@
 ## 0.2.0-dev.2
 
+- Add opt-in external SRT/WebVTT loading from bounded files and HTTP(S), atomic
+  catalog replacement/cancellation, and media-position-driven text overlays in
+  `YlPlayerView`. Enable with `create(enableTextSubtitles: true)`. Managed HTTP,
+  advanced subtitle formats and protected-video overlays remain unsupported.
 - Add subtitle source/catalog values and optional session commands for replacing
   external subtitles, selection/off, and signed time offsets. Current native
   adapters explicitly reject these commands until rendering support is added.

@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 import 'player_controller.dart';
+import 'subtitles/text_subtitle_overlay.dart';
 
 /// Displays current-session video using the negotiated presentation surface.
 final class YlPlayerView extends StatelessWidget {
@@ -143,7 +144,25 @@ final class YlPlayerView extends StatelessWidget {
         }
         return ColoredBox(
           color: backgroundColor,
-          child: ClipRect(child: content),
+          child: ClipRect(
+            child:
+                controller.textSubtitleCues.isEmpty ||
+                    geometry == null ||
+                    textureId == null
+                ? content
+                : Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      content,
+                      TextSubtitleOverlay(
+                        cues: controller.textSubtitleCues,
+                        geometry: geometry,
+                        fit: fit,
+                        alignment: alignment,
+                      ),
+                    ],
+                  ),
+          ),
         );
       },
     ),

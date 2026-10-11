@@ -388,3 +388,7 @@ Task4A新增预登记试验矩阵、归档SHA256校验、单轮重算及按模�
 ### 2026-10-11 P04直播模式审计与契约
 
 Task3A完成24份固定提交源码/49处锚点审计，明确当前Load策略与运行时缺口，交付可选SPI、默认live流畅迁移、状态ACK屏障、回滚/代际隔离及预算保留契约。仅设计交付，无产品代码或设备验收变更；三协议运行时实现和CAP-LIVE保持开放。详见[契约](../specs/2026-10-11-live-mode-runtime-contract.md)与[P04报告](../reports/2026-09-26-remaining-04-abr-live.md)。
+
+### 2026-10-11 P02 外挂文本字幕运行切片
+
+已接通显式 `enableTextSubtitles` 的文件/HTTP SRT/WebVTT 加载、原子目录/取消、公开状态和 `YlPlayerView` 媒体位置叠层。基础标记/position/align、seek/off/offset、PAR/旋转/裁切/RTL均有本机测试；事件 revision 使用交付时公开快照。managed 字幕网络、内嵌/TTML/ASS/图形字幕、HDR/保护输出与真机同步仍开放，未关闭整个 CAP-SUB。最终集中结果、失败记录、复审修复与源码指纹见[P02报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)及其 subtitle-runtime 证据清单；未改动并行长播放/弱网ABR文件。

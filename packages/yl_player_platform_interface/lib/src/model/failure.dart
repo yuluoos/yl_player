@@ -24,6 +24,9 @@ enum YlFailureCategory {
 enum YlFailureScope { command, session, player }
 
 abstract final class YlFailureCodes {
+  static const subtitleMalformed = 'subtitle.malformed';
+  static const subtitleUnsupported = 'subtitle.unsupported';
+  static const subtitleTooLarge = 'subtitle.too_large';
   static const drmConfigInvalid = 'drm.config_invalid';
   static const drmUnsupported = 'drm.unsupported';
   static const drmSchemeMismatch = 'drm.scheme_mismatch';

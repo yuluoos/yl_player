@@ -1,0 +1,67 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart
+00:00 +0: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: explicit nonidentity encoding request is rejected, never overwritten
+00:00 +0 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: explicit nonidentity encoding request is rejected, never overwritten [E]
+  Expected: throws <Instance of 'YlPlayerException'> with `code`: 'policy.unsupported' and `scope`: YlFailureScope:<YlFailureScope.command> and `retryable`: <false>
+    Actual: <Instance of 'Future<List<int>>'>
+     Which: threw YlPlayerException:<YlFailure(category: network, code: network.failed, retryable: false, scope: command, diagnosticId: text-subtitle)>
+            stack dart:async                                                        _Completer.completeError
+                  package:yl_player/src/subtitles/subtitle_resource_io.dart 34:12   read.fail
+                  package:yl_player/src/subtitles/subtitle_resource_io.dart 186:7   read.<fn>
+                  ===== asynchronous gap ===========================
+                  dart:async                                                        Future.catchError
+                  package:yl_player/src/subtitles/subtitle_resource_io.dart 185:11  read
+                  package:yl_player/src/subtitles/subtitle_resource.dart 42:16      readSubtitleResource
+                  packages/yl_player/test/subtitle_resource_test.dart 21:23         main.<fn>
+                  
+            which has `code` with value 'network.failed' which is different.
+                  Expected: policy.uns ...
+                    Actual: network.fa ...
+                            ^
+                   Differ at offset 0
+  
+  package:matcher                                            expectLater
+  package:flutter_test/src/widget_tester.dart 507:8          expectLater
+  packages/yl_player/test/subtitle_resource_test.dart 21:11  main.<fn>
+  
+00:00 +0 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: actual GET preserves headers and same-origin credentials
+00:00 +1 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: cross-origin redirect strips credentials permanently including return
+00:00 +2 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: bounded HTTP body declared=true
+00:00 +3 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: bounded HTTP body declared=false
+00:00 +4 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: redirect budget stops a loop after five hops
+00:00 +5 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: HTTP errors are sanitized and never retried
+00:00 +6 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: managed policy rejects before network access
+00:00 +7 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: encoded responses reject rather than bypassing decompressed budget
+00:00 +8 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: cancellation closes stalled headers
+00:00 +9 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: cancellation closes stalled body
+00:00 +10 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: cancellation owns and closes a stalled TLS handshake socket
+00:00 +11 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: file streams enforce input limit and missing paths are sanitized
+00:00 +12 -1: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart
+00:02 +12 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: ASS overrides embedded in SRT are explicitly unsupported
+00:02 +12 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: ASS overrides embedded in SRT are explicitly unsupported [E]
+  Expected: throws <Instance of 'YlPlayerException'> with `code`: 'subtitle.unsupported'
+    Actual: <Closure: () => TextSpan>
+     Which: returned TextSpan:<TextSpan>
+  
+  package:matcher                                      expect
+  package:flutter_test/src/widget_tester.dart 473:18   expect
+  packages/yl_player/test/subtitle_text_test.dart 8:5  main.<fn>
+  
+00:03 +12 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: safe nested styles and escaped Unicode remain plain text
+00:03 +13 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects <b>bad
+00:03 +14 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects </b>bad
+00:03 +15 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects <i><b>x</i></b>
+00:03 +16 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects bad <
+00:03 +17 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects &#0;
+00:03 +18 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects &#xD800;
+00:03 +19 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects &#x110000;
+00:03 +20 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <script>secret</script>
+00:03 +21 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <font color="red">x</font>
+00:03 +22 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <v speaker>x</v>
+00:03 +23 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <ruby>x</ruby>
+00:03 +24 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject &unknown;
+00:03 +25 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: style depth and span count bounded independently
+00:03 +26 -2: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: explicit nonidentity encoding request is rejected, never overwritten
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_text_test.dart: ASS overrides embedded in SRT are explicitly unsupported

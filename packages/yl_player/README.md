@@ -117,3 +117,56 @@ Public asynchronous failures are `YlPlayerException` values carrying a
 `YlFailure`. Branch on stable category, code, retryability, and scope. Log the
 opaque diagnostic ID for correlation. Do not log source locators or request
 metadata. See [diagnostics](../../docs/diagnostics.md).
+
+## External text subtitles (opt-in)
+
+Create the controller with `enableTextSubtitles: true` to use the Dart-owned
+external SRT/WebVTT runtime on Android, iOS or macOS. `YlPlayerView` then draws
+selected subtitles over ordinary video without an extra widget:
+
+```dart
+final player = await YlPlayerController.create(enableTextSubtitles: true);
+final session = await player.load(const YlFileSource('/absolute/video.mp4'));
+await session.replaceExternalSubtitles([
+  const YlExternalSubtitle(
+    id: 'english',
+    source: YlFileSource('/absolute/english.srt'),
+    format: YlSubtitleFormat.srt,
+    language: 'en',
+  ),
+]);
+await session.selectSubtitleTrack('english');
+await session.setSubtitleOffset(const Duration(milliseconds: 500)); // Delay.
+// Build YlPlayerView(controller: player) in the widget tree.
+await session.selectSubtitleTrack(null); // Immediately hide subtitles.
+// Dispose the controller when its owning widget is removed.
+```
+
+Use `YlNetworkSource` for HTTP(S), including separately scoped credentials.
+Only `platformDefault` network policy is currently supported: a 30-second total
+read deadline, five redirects and no automatic retries. Cross-origin redirects
+permanently strip credentials, including a later return to the original origin.
+Managed policy is explicitly rejected. File/HTTP input is streamed within a
+4 MiB aggregate catalog budget, with at most 10,000 cues and bounded text spans.
+
+Replacing the catalog is atomic; a failed download or parse leaves the previous
+catalog usable and reports a sanitized `YlPlayerException`. A newer replacement,
+load, stop or dispose cancels pending I/O. New sessions reset subtitles and offset.
+In this opt-in mode, event `revision` identifies the public snapshot at delivery;
+`occurredAt` retains the original event time. This avoids mixing native revisions
+with locally published subtitle state.
+Selection starts off; `[]` removes all external entries. Same-ID replacement
+updates content while preserving current selection. Positive offsets delay cues.
+
+Rendering supports plain UTF-8 text, balanced `b`/`i`/`u` markup, common entities,
+and horizontal WebVTT position/align settings. Unsupported markup is rejected.
+Cue timing follows published media positions, so precision depends on
+`YlPlayerOptions.positionUpdateInterval`; no independent timer advances captions
+while paused or buffering. Seek hides text until a post-ACK position snapshot.
+Text stays upright in the visible video aperture after fit, crop, PAR and rotation.
+
+This opt-in owns the external catalog and cannot be combined with a native
+subtitle SPI. It does not support embedded tracks, TTML, ASS/SSA, PGS/VobSub,
+WebVTT CSS/regions/karaoke, or protected video overlays. HDR subtitle brightness
+and native-device synchronization remain unqualified. Without the opt-in, the
+existing native capability/SPI gates continue to apply.

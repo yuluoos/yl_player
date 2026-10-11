@@ -1,0 +1,32 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart
+00:00 +0: unsupported newer format replacement still cancels previous pending catalog
+00:00 +0 -1: unsupported newer format replacement still cancels previous pending catalog [E]
+  Expected: throws <Instance of 'YlPlayerException'> with `code`: 'load.cancelled' and `scope`: YlFailureScope:<YlFailureScope.command> and `retryable`: <false>
+    Actual: <Instance of 'Future<void>'>
+     Which: emitted <null>
+  
+  package:matcher                                                 expectLater
+  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+  packages/yl_player/test/text_subtitle_runtime_test.dart 185:23  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                      _CustomZone.registerUnaryCallback
+  packages/yl_player/test/text_subtitle_runtime_test.dart 178:7   main.<fn>
+  
+00:00 +0 -1: unsupported newer policy replacement still cancels previous pending catalog
+00:00 +0 -2: unsupported newer policy replacement still cancels previous pending catalog [E]
+  Expected: throws <Instance of 'YlPlayerException'> with `code`: 'load.cancelled' and `scope`: YlFailureScope:<YlFailureScope.command> and `retryable`: <false>
+    Actual: <Instance of 'Future<void>'>
+     Which: emitted <null>
+  
+  package:matcher                                                 expectLater
+  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+  packages/yl_player/test/text_subtitle_runtime_test.dart 185:23  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                      _CustomZone.registerUnaryCallback
+  packages/yl_player/test/text_subtitle_runtime_test.dart 178:7   main.<fn>
+  
+00:00 +0 -2: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: unsupported newer format replacement still cancels previous pending catalog
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: unsupported newer policy replacement still cancels previous pending catalog

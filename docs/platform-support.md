@@ -580,3 +580,24 @@ while its AVC control fully decodes in hardware. This is device-specific and
 does not imply that AV1-capable Apple devices lack a decoder. The product route
 is unchanged; no Apple AV1 software budget is measured or admitted. See the
 [P03 report](superpowers/reports/2026-09-26-remaining-03-formats-decoding.md).
+
+## External text subtitles (Dart opt-in)
+
+`YlPlayerController.create(enableTextSubtitles: true)` enables a bounded external
+SRT/WebVTT runtime and ordinary-video `YlPlayerView` overlay. This is Dart-owned;
+current native adapters still do not advertise a native subtitle SPI.
+
+| Scope | Implementation / evidence |
+|---|---|
+| External file and HTTP(S) text | Streamed, bounded, cancellable; owned files and loopback GET tests |
+| Text, b/i/u, entities, horizontal WebVTT position/align | Parsed and painted; Flutter widget and Ahem pixel tests, including crop/PAR/rotation/RTL |
+| Selection/off/offset, replacement and seek | Public session API; atomic catalog and media-position-driven overlay tests |
+| Strict managed HTTP policy | Explicitly rejected; platformDefault only in this slice |
+| Embedded/TTML/ASS/SSA/PGS/VobSub and advanced WebVTT | Not implemented by this runtime |
+| Protected output, HDR brightness and physical-device subtitle sync | Not accepted; protected surfaces reject subtitle commands |
+
+The ordinary Flutter path is available to Android/iOS/macOS consumers, but this
+slice's acceptance is local Dart/Flutter testing, not a native-device playback
+matrix. Synchronization follows the configured position update cadence. See the
+[P02 report](superpowers/reports/2026-09-26-remaining-02-tracks-subtitles.md) and
+[runtime contract](superpowers/specs/2026-10-11-subtitle-runtime.md).

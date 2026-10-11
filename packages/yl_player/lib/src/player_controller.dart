@@ -1,17 +1,22 @@
 import 'dart:async';
 import 'drm/license_client.dart';
+import 'subtitles/text_subtitle_runtime.dart';
 import 'package:flutter/foundation.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 part 'playback_session.dart';
 
 /// Explicitly owns one native player and its replaceable playback sessions.
 final class YlPlayerController implements Listenable {
-  YlPlayerController._(this._backend)
+  YlPlayerController._(this._backend, this._textSubtitles)
     : _state = _backend.state,
+      _backendRevision = _backend.state.revision,
       _texture = ValueNotifier(_backend.textureId.value);
   static Future<YlPlayerController> create({
     YlPlayerOptions options = const YlPlayerOptions(),
     YlPlayerPlatform? platform,
+    // Explicit external SRT/WebVTT ownership. Native subtitle SPI remains the
+    // default; a controller cannot negotiate both subtitle owners.
+    bool enableTextSubtitles = false,
   }) async {
     validateYlPlayerOptions(options);
     final backend = await (platform ?? YlPlayerPlatform.instance).createPlayer(
@@ -24,7 +29,16 @@ final class YlPlayerController implements Listenable {
       }
       validateYlPlayerCapabilities(backend.capabilities);
       validateYlPlayerState(backend.state);
-      player = YlPlayerController._(backend);
+      if (enableTextSubtitles &&
+          (kIsWeb ||
+              backend is YlSubtitlePlatformPlayer ||
+              backend.state.subtitles.tracks.isNotEmpty)) {
+        throw _exception(YlFailureCodes.policyUnsupported);
+      }
+      player = YlPlayerController._(
+        backend,
+        enableTextSubtitles ? TextSubtitleRuntime() : null,
+      );
       if (backend is YlPlatformDrmLicenseTransport) {
         (backend as YlPlatformDrmLicenseTransport).setDrmLicenseExchange(
           player._exchangeLicense,
@@ -94,6 +108,12 @@ final class YlPlayerController implements Listenable {
       .detachProtectedView(surface, viewId);
 
   final YlPlatformPlayer _backend;
+  final TextSubtitleRuntime? _textSubtitles;
+  int _backendRevision;
+  int _subtitleSeekSerial = 0;
+  bool _subtitleSeeking = false;
+  bool _subtitleAwaitingPosition = false;
+  bool _subtitleProtectedSource = false;
   final _notifier = _PlayerNotifier();
   final ValueNotifier<int?> _texture;
   final _states = StreamController<YlPlayerState>.broadcast(sync: true);
@@ -109,7 +129,16 @@ final class YlPlayerController implements Listenable {
   Future<void>? _disposeFuture;
   String get implementationName => _backend.implementation.name;
   String get implementationVersion => _backend.implementation.version;
-  YlPlayerCapabilities get capabilities => _backend.capabilities;
+  YlPlayerCapabilities get capabilities => _textSubtitles == null
+      ? _backend.capabilities
+      : _backend.capabilities.copyWith(
+          supportedOperations: {
+            ..._backend.capabilities.supportedOperations,
+            YlPlayerOperation.externalSubtitles,
+            YlPlayerOperation.subtitleTrackSelection,
+            YlPlayerOperation.subtitleOffset,
+          }.toList(),
+        );
   YlPlayerState get state => _state;
   bool get isCurrentFramePresented =>
       _milestones?.isFirstFramePresented ?? false;
@@ -125,6 +154,68 @@ final class YlPlayerController implements Listenable {
 
   Stream<YlPlayerState> get states => _states.stream;
   Stream<YlPlayerEvent> get events => _events.stream;
+
+  /// Internal rendering projection, synchronized to authoritative media time.
+  @internal
+  List<TextSubtitleCue> get textSubtitleCues {
+    if (_disposed ||
+        _subtitleSeeking ||
+        _subtitleAwaitingPosition ||
+        _subtitleProtectedSource ||
+        protectedVideoSurface != null ||
+        !isCurrentFramePresented ||
+        _stoppedSession == state.sessionId ||
+        ![
+          YlPlaybackStatus.ready,
+          YlPlaybackStatus.playing,
+          YlPlaybackStatus.paused,
+          YlPlaybackStatus.buffering,
+        ].contains(state.status)) {
+      return const [];
+    }
+    return _textSubtitles?.cuesAt(state.timeline.position) ?? const [];
+  }
+
+  void _checkTextSubtitleAdmission() {
+    if (_subtitleProtectedSource || protectedVideoSurface != null) {
+      throw _exception(YlFailureCodes.policyUnsupported);
+    }
+  }
+
+  void _publishSubtitles() {
+    if (_disposed) return;
+    _state = state.copyWith(
+      revision: state.revision + 1,
+      subtitles: _textSubtitles!.state,
+    );
+    _notifier.notify();
+    _states.add(state);
+  }
+
+  Future<void> _seekWithSubtitles(Future<void> Function() action) async {
+    if (_textSubtitles == null) {
+      await action();
+      return;
+    }
+    final serial = ++_subtitleSeekSerial;
+    _subtitleSeeking = true;
+    _subtitleAwaitingPosition = false;
+    _notifier.notify();
+    try {
+      await action();
+      if (!_disposed && serial == _subtitleSeekSerial) {
+        _subtitleSeeking = false;
+        _subtitleAwaitingPosition = true;
+      }
+    } catch (_) {
+      if (!_disposed && serial == _subtitleSeekSerial) {
+        _subtitleSeeking = false;
+        _notifier.notify();
+      }
+      rethrow;
+    }
+  }
+
   @override
   void addListener(VoidCallback listener) => _notifier.addListener(listener);
   @override
@@ -177,6 +268,7 @@ final class YlPlayerController implements Listenable {
       _checkDrmAdmission(source);
       validateYlLoadOptions(options);
       _cancelLoad();
+      _textSubtitles?.cancel();
       final serial = ++_loadSerial;
       final completer = Completer<YlPlaybackSession>();
       _pendingLoad = completer;
@@ -201,6 +293,8 @@ final class YlPlayerController implements Listenable {
         throw _exception(YlFailureCodes.protocolMismatch);
       }
       _record(state);
+      _subtitleProtectedSource =
+          source is YlNetworkSource && source.drm != null;
       final milestones = _milestones!;
       result.complete(
         YlPlaybackSession._(
@@ -231,12 +325,32 @@ final class YlPlayerController implements Listenable {
   }
 
   void _acceptState(YlPlayerState next) {
-    if (_disposed || next.revision <= state.revision) return;
+    if (_disposed || next.revision <= _backendRevision) return;
     validateYlPlayerState(next);
-    _state = next;
-    _record(next);
+    _backendRevision = next.revision;
+    if (_textSubtitles != null) {
+      if (next.sessionId != state.sessionId ||
+          next.status == YlPlaybackStatus.idle) {
+        _textSubtitles.reset();
+        _subtitleSeekSerial++;
+        _subtitleSeeking = false;
+        _subtitleProtectedSource = false;
+      }
+      if (next.status == YlPlaybackStatus.failed ||
+          next.status == YlPlaybackStatus.completed) {
+        _textSubtitles.cancel();
+      }
+      _subtitleAwaitingPosition = false;
+      _state = next.copyWith(
+        revision: state.revision + 1,
+        subtitles: _textSubtitles.state,
+      );
+    } else {
+      _state = next;
+    }
+    _record(state);
     _notifier.notify();
-    _states.add(next);
+    _states.add(state);
   }
 
   void _record(YlPlayerState next) {
@@ -271,6 +385,40 @@ final class YlPlayerController implements Listenable {
       return;
     }
     validateYlPlayerEvent(event);
+    if (_textSubtitles != null) {
+      // Subtitle-only states have no native revision. Correlate each event to
+      // the observable public snapshot at delivery, preserving its session and
+      // original occurrence time even for a late FirstFrame milestone. Keeping
+      // arbitrary historical native/public mappings would grow without bound.
+      event = switch (event) {
+        YlFirstFrameEvent() => YlFirstFrameEvent(
+          sessionId: event.sessionId,
+          revision: state.revision,
+          occurredAt: event.occurredAt,
+        ),
+        YlRetryScheduledEvent() => YlRetryScheduledEvent(
+          sessionId: event.sessionId,
+          revision: state.revision,
+          occurredAt: event.occurredAt,
+          retryIndex: event.retryIndex,
+          delay: event.delay,
+          failure: event.failure,
+        ),
+        YlPlaybackEngineChangedEvent() => YlPlaybackEngineChangedEvent(
+          sessionId: event.sessionId,
+          revision: state.revision,
+          occurredAt: event.occurredAt,
+          previousEngine: event.previousEngine,
+          engine: event.engine,
+        ),
+        YlPlaybackFailedEvent() => YlPlaybackFailedEvent(
+          sessionId: event.sessionId,
+          revision: state.revision,
+          occurredAt: event.occurredAt,
+          failure: event.failure,
+        ),
+      };
+    }
     if (event is YlFirstFrameEvent &&
         (_milestones?.completeFirstFrame() ?? false)) {
       _notifier.notify();
@@ -294,6 +442,7 @@ final class YlPlayerController implements Listenable {
   Future<void> stop() async {
     _check();
     _cancelLoad();
+    _textSubtitles?.cancel();
     final sessionId = state.sessionId;
     await _backend.stop();
     if (state.sessionId == sessionId) {
@@ -301,12 +450,26 @@ final class YlPlayerController implements Listenable {
       _stoppedSession = sessionId;
       _milestones?.fail(_exception(YlFailureCodes.sessionStale));
       _milestones = null;
+      if (_textSubtitles != null) {
+        _textSubtitles.reset();
+        _subtitleSeekSerial++;
+        _subtitleSeeking = false;
+        _subtitleAwaitingPosition = false;
+        _publishSubtitles();
+      }
       if (presentationChanged) _notifier.notify();
     }
   }
 
   Future<void> dispose() => _disposeFuture ??= _dispose();
   Future<void> _dispose() async {
+    _textSubtitles?.reset();
+    if (_textSubtitles != null) {
+      _state = state.copyWith(
+        revision: state.revision + 1,
+        subtitles: _textSubtitles.state,
+      );
+    }
     _licenseClient.close();
     _disposed = true;
     _cancelLoad(YlFailureCodes.playerDisposed);
