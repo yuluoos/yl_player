@@ -25,6 +25,16 @@ def validate_run(observation, activation, run, *, candidate=True):
         errors.append('thread checker removal lacks runtime proof')
     first=next((r for r in rows if r.get('phase')=='playing'), {})
     final=next((r for r in rows if r.get('phase')=='activeEnd'), {})
+    if run.get('traceGateRequired'):
+        gate=run.get('traceGate') or {}
+        times=[gate.get(k) for k in ('recordingStartedUptime','settledUptime','stableSeconds','stableMaxGapSeconds')]
+        valid=(bool(run.get('traceGateToken')) and all(number(v) for v in times)
+            and gate.get('pid')==final.get('pid')
+            and gate.get('token')==run.get('traceGateToken')
+            and 0<=times[0]<=times[1]<=first.get('uptime',-1)
+            and times[2]>=2 and times[2]<=times[1]-times[0]
+            and 0<=times[3]<=.025 and number(gate.get('stableSamples')) and gate['stableSamples']*.025>=times[2])
+        if not valid: errors.append('trace start/settling receipt missing or invalid')
     requested=activation.get('requested')
     if (activation.get('exitCode')!=0 or activation.get('returnedPID')!=final.get('pid')
         or activation.get('sameOwnedPID') is not True or activation.get('active') is not True):
@@ -41,6 +51,7 @@ def validate_run(observation, activation, run, *, candidate=True):
     complete=valid_time and before+after==final.get('applicationDrops')
     if not complete: errors.append('drop history cannot be completely classified')
     result.update(passed=not errors, dropClassification=dict(before=before,after=after,complete=complete), productionAdmission=False)
+    if run.get('traceGateRequired'): result['instrumentedDiagnosticOnly']=True
     return result
 
 
@@ -82,9 +93,19 @@ def remove_thread_performance_checker(config):
         for name in list(env):
             if name.startswith('PERFC_'): del env[name]
 
+def select_test_host(config, old_app, app, bundle_id):
+    target=config['RunnerTests']; old_id=target['TestHostBundleIdentifier']
+    target['TestHostPath']=str(app)
+    target['TestHostBundleIdentifier']=bundle_id
+    target['DependentProductPaths']=[str(app)+p[len(str(old_app)):] if p==str(old_app) or p.startswith(str(old_app)+'/') else p for p in target.get('DependentProductPaths',[])]
+    target['BundleIdentifiersForCrashReportEmphasis']=[bundle_id if value==old_id else value for value in target.get('BundleIdentifiersForCrashReportEmphasis',[])]
+
+
 def collect(args):
     root=Path(__file__).resolve().parents[2]; out=args.directory.resolve();out.mkdir(parents=True,exist_ok=False)
-    products=args.products.resolve();app=products/args.configuration/'yl_player_example.app'
+    products=args.products.resolve(); app_name=getattr(args,'app_name','yl_player_example.app')
+    if Path(app_name).name!=app_name or not app_name.endswith('.app'): raise ValueError('app-name must be one .app filename')
+    app=products/args.configuration/app_name
     identity=identities(root,app)
     (out/'identity.json').write_text(json.dumps(identity,indent=2))
     helper=out/'activate-owned'
@@ -92,18 +113,32 @@ def collect(args):
     manifests=list(products.glob('*.xctestrun'))
     if len(manifests)!=1: raise ValueError('Require exactly one arm64 test manifest')
     config=plistlib.loads(manifests[0].read_bytes().replace(b'__TESTROOT__',str(products).encode()))
+    if app_name!='yl_player_example.app':
+        info=plistlib.loads((app/'Contents/Info.plist').read_bytes())
+        select_test_host(config,products/args.configuration/'yl_player_example.app',app,info['CFBundleIdentifier'])
     config['RunnerTests']['EnvironmentVariables'].update(YL_TIMED_TRANSPORT_DIAGNOSTICS='1' if getattr(args,'transport_diagnostics',False) else '0',YL_TIMED_CANDIDATE='1' if args.candidate else '0',YL_TIMED_DIRECTORY=str(out),YL_TIMED_LONG='1' if args.long else '0',YL_TIMED_DIAGNOSTICS='1' if getattr(args,'diagnostics',False) else '0',YL_TIMED_REVEAL='1' if getattr(args,'reveal',False) else '0',YL_TIMED_ALLOW_OCCLUSION='1' if getattr(args,'allow_occlusion',False) else '0')
+    trace_token=getattr(args,'trace_gate_token',None)
+    if trace_token: config['RunnerTests']['EnvironmentVariables']['YL_TIMED_TRACE_TOKEN']=trace_token
     if getattr(args,'without_thread_checker',False): remove_thread_performance_checker(config)
     manifest=out/'probe.xctestrun';manifest.write_bytes(plistlib.dumps(config))
-    limit=1320 if args.long else 180
+    limit=(1320 if args.long else 180)+(90 if trace_token else 0)
     cmd=[sys.executable,'-B',str(root/'tool/run_with_display_awake.py'),'xcodebuild','test-without-building','-quiet','-xctestrun',str(manifest),'-destination','platform=macOS,arch=arm64','-parallel-testing-enabled','NO','-only-testing:RunnerTests/YlMacosAudioTests/testActualTimedNativeActivationObservation','-test-timeouts-enabled','YES','-default-test-execution-time-allowance',str(limit-30),'-maximum-test-execution-time-allowance',str(limit-30),'-resultBundlePath',str(out)+'.xcresult']
     (out/'command.json').write_text(json.dumps(cmd,indent=2))
-    (out/'protocol.json').write_text(json.dumps(dict(audioClockProtocolRequired=True,configuration=args.configuration,candidate=args.candidate,diagnostics=getattr(args,'diagnostics',False),transportDiagnostics=getattr(args,'transport_diagnostics',False),revealAt20Seconds=getattr(args,'reveal',False),visibleWindowProtocol=not getattr(args,'allow_occlusion',False),seconds=1200 if args.long else 30,activationAtSeconds=10,instruments=False,threadPerformanceCheckerRemoved=getattr(args,'without_thread_checker',False),physicalOutputProven=False,productionAdmission=False),indent=2))
+    (out/'protocol.json').write_text(json.dumps(dict(audioClockProtocolRequired=True,configuration=args.configuration,candidate=args.candidate,diagnostics=getattr(args,'diagnostics',False),transportDiagnostics=getattr(args,'transport_diagnostics',False),revealAt20Seconds=getattr(args,'reveal',False),visibleWindowProtocol=not getattr(args,'allow_occlusion',False),seconds=1200 if args.long else 30,activationAtSeconds=10,instruments=bool(trace_token),traceGateRequired=bool(trace_token),threadPerformanceCheckerRemoved=getattr(args,'without_thread_checker',False),physicalOutputProven=False,productionAdmission=False),indent=2))
     activation={}; owned_pid=None; reason='native completion';start=time.monotonic();first_seen=None; code=-1; errors=[]
     with (out/'xcode.log').open('w') as log:
         process=subprocess.Popen(cmd,cwd=root,stdout=log,stderr=log)
         try:
             while process.poll() is None:
+                if owned_pid is None and trace_token and (out/'trace-request.json').exists():
+                    request=json.loads((out/'trace-request.json').read_text())
+                    pid=request.get('pid')
+                    if request.get('token')!=trace_token or type(pid) is not int or pid<=0:
+                        raise ValueError('invalid trace request identity')
+                    actual=subprocess.run(['ps','-p',str(pid),'-o','comm='],capture_output=True,text=True,timeout=5).stdout.strip()
+                    if actual and Path(actual).resolve()!=(app/'Contents/MacOS/yl_player_example').resolve():
+                        raise ValueError('trace request PID belongs to another executable')
+                    if actual: owned_pid=pid
                 if first_seen is None:
                     rows=read_rows(out/'rows.jsonl');playing=[r for r in rows if r['phase']=='playing']
                     if playing:
@@ -145,6 +180,10 @@ def collect(args):
         errors.append(repr(error));process_command='cleanup unverified'
     changed=[name for name,sha in {**identity['sourceHashes'],**identity['binaryHashes']}.items() if not (root/name).is_file() or digest(root/name)!=sha]
     run=dict(audioClockProtocolRequired=True,exitCode=code,unchanged=not changed,changed=changed,ownedPID=owned_pid,ownedProcessExited=owned_pid is not None and not process_command,reason=reason,exceptions=errors,threadPerformanceCheckerRemoved=getattr(args,'without_thread_checker',False),elapsed=time.monotonic()-start)
+    if trace_token:
+        run.update(traceGateRequired=True,traceGateToken=trace_token)
+        try: run['traceGate']=json.loads((out/'trace-settled.json').read_text())
+        except (OSError,ValueError) as error: run['exceptions'].append('trace gate receipt: '+repr(error))
     (out/'run.json').write_text(json.dumps(run,indent=2))
     try:
         observation=json.loads((out/'observation.json').read_text()) if (out/'observation.json').exists() else dict(rows=read_rows(out/'rows.jsonl'))
@@ -159,10 +198,12 @@ def collect(args):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--products',type=Path,required=True)
+    parser.add_argument('--app-name',default='yl_player_example.app',help='Owned diagnostic copy, including .app suffix')
     parser.add_argument('--configuration',choices=['Debug','Profile'],required=True)
     parser.add_argument('--directory',type=Path,required=True)
     parser.add_argument('--candidate',action='store_true')
     parser.add_argument('--long',action='store_true')
+    parser.add_argument('--trace-gate-token',help='Diagnostic only: require matching recorder-start and stable preplay receipt')
     parser.add_argument('--allow-occlusion',action='store_true',help='Diagnostic legacy normal-window placement only')
     parser.add_argument('--reveal',action='store_true',help='Diagnostic intervention: raise the owned video test window at20s')
     parser.add_argument('--without-thread-checker',action='store_true',help='Controlled measurement without injected Thread Performance Checker; retains other diagnostics')

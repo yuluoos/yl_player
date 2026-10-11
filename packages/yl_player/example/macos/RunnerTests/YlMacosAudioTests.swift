@@ -12,6 +12,101 @@ import YlFFmpegBridge
 final class YlMacosAudioTests: XCTestCase {
 
 
+  @MainActor
+  func testTraceGateRejectsAnotherProcessAndRun() async throws {
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    for receipt in [["pid": -1, "token": "this-run"], ["pid": Int(ProcessInfo.processInfo.processIdentifier), "token": "other-run"]] as [[String: Any]] {
+      var value = receipt
+      value["recordingStartedUptime"] = ProcessInfo.processInfo.systemUptime
+      try JSONSerialization.data(withJSONObject: value).write(to: directory.appendingPathComponent("trace-started.json"), options: .atomic)
+      do {
+        try await awaitTimedTraceGate(directory: directory, token: "this-run", timeout: 0.05, quietPeriod: 0.01)
+        XCTFail("Playback must not pass a mismatched trace receipt")
+      } catch { }
+    }
+  }
+
+  @MainActor
+  func testTraceGateRequiresNotificationAndWritesSettledReceipt() async throws {
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    do {
+      try await awaitTimedTraceGate(directory: directory, token: "this-run", timeout: 0.03, quietPeriod: 0.01)
+      XCTFail("No notification must time out")
+    } catch { }
+    let started = ProcessInfo.processInfo.systemUptime
+    let receipt: [String: Any] = ["pid": ProcessInfo.processInfo.processIdentifier, "token": "this-run", "recordingStartedUptime": started]
+    try JSONSerialization.data(withJSONObject: receipt).write(to: directory.appendingPathComponent("trace-started.json"), options: .atomic)
+    try await awaitTimedTraceGate(directory: directory, token: "this-run", timeout: 1, quietPeriod: 0.03)
+    let settled = try JSONSerialization.jsonObject(with: Data(contentsOf: directory.appendingPathComponent("trace-settled.json"))) as! [String: Any]
+    XCTAssertEqual(settled["token"] as? String, "this-run")
+    XCTAssertGreaterThanOrEqual(try XCTUnwrap(settled["settledUptime"] as? Double) - started, 0.03)
+    XCTAssertGreaterThanOrEqual(settled["stableSamples"] as? Int ?? 0, 3)
+    try Data("recorder stopped".utf8).write(to: directory.appendingPathComponent("trace-aborted.json"), options: .atomic)
+    do {
+      try await awaitTimedTraceGate(directory: directory, token: "this-run", timeout: 1, quietPeriod: 0.03)
+      XCTFail("An aborted recorder must revoke playback even with a valid start receipt")
+    } catch { }
+
+  }
+
+  @MainActor
+  private func awaitTimedTraceGate(directory: URL, token: String, timeout: TimeInterval = 90,
+                                  quietPeriod: TimeInterval = 2) async throws {
+    let pid = Int(ProcessInfo.processInfo.processIdentifier)
+    let requested = ProcessInfo.processInfo.systemUptime
+    func save(_ value: [String: Any], _ name: String) throws {
+      try JSONSerialization.data(withJSONObject: value, options: [.sortedKeys])
+        .write(to: directory.appendingPathComponent(name), options: .atomic)
+    }
+    func failure(_ message: String) -> NSError {
+      NSError(domain: "YLTimedTraceGate", code: 1, userInfo: [NSLocalizedDescriptionKey: message])
+    }
+    guard !token.isEmpty else { throw failure("Missing trace run identity") }
+    try save(["pid": pid, "token": token, "requestedUptime": requested], "trace-request.json")
+    let deadline = requested + timeout
+    var notificationTime: TimeInterval?
+    var stableSince = requested, last = requested, stableMaxGap = 0.0
+    var maximumGap = 0.0, stableSamples = 0, resets = 0
+    while true {
+      let now = ProcessInfo.processInfo.systemUptime
+      guard now < deadline else { throw failure("Trace notification/settling timed out before playback") }
+      guard !FileManager.default.fileExists(atPath: directory.appendingPathComponent("trace-aborted.json").path) else {
+        throw failure("Recorder stopped before playback; trace gate revoked")
+      }
+      if notificationTime == nil {
+        let path = directory.appendingPathComponent("trace-started.json")
+        if FileManager.default.fileExists(atPath: path.path) {
+          let record = try JSONSerialization.jsonObject(with: Data(contentsOf: path)) as? [String: Any]
+          guard record?["pid"] as? Int == pid, record?["token"] as? String == token,
+                let started = record?["recordingStartedUptime"] as? Double,
+                started.isFinite, started >= 0, started <= now else {
+            throw failure("Trace notification belongs to another process/run or has an invalid timestamp")
+          }
+          notificationTime = started; stableSince = now; last = now
+        }
+      } else {
+        let gap = now - last
+        maximumGap = max(maximumGap, gap)
+        if gap > 0.025 { stableSince = now; stableMaxGap = 0; stableSamples = 0; resets += 1 }
+        else { stableSamples += 1; stableMaxGap = max(stableMaxGap, gap) }
+        last = now
+        if now - stableSince >= quietPeriod {
+          try save(["pid": pid, "token": token, "recordingStartedUptime": notificationTime!,
+            "settledUptime": now, "stableSeconds": now - stableSince,
+            "stableSamples": stableSamples, "stableMaxGapSeconds": stableMaxGap,
+            "maximumGapSeconds": maximumGap, "settlingResets": resets], "trace-settled.json")
+          return
+        }
+      }
+      // Yield main instead of blocking it; a common process stop resets settling.
+      try await Task.sleep(nanoseconds: 10_000_000)
+    }
+  }
+
   func testTimestampedAudioUsesSignedHostDelta() {
     func sample(_ rate: Double = 1, lower: Int64 = 1_000_000, upper: Int64 = 1_100_000) -> YlAudioClockSample {
       .init(generation: 1, positionUs: 1_020_000, hostTimeUs: 1_020_000,
@@ -1208,7 +1303,12 @@ final class YlMacosAudioTests: XCTestCase {
       },
       timedVideoCandidateEnabled: candidate, timedVideoDiagnosticsEnabled: diagnostics)
     defer { instance.dispose() }
-    instance.setVolume(0); try instance.activate(); try instance.play()
+    instance.setVolume(0); try instance.activate()
+    if let token = env["YL_TIMED_TRACE_TOKEN"] {
+      let directory = URL(fileURLWithPath: try XCTUnwrap(env["YL_TIMED_DIRECTORY"]))
+      try await awaitTimedTraceGate(directory: directory, token: token)
+    }
+    try instance.play()
     try await Task.sleep(nanoseconds: 2_000_000_000)
     let layer = try XCTUnwrap(view.layer?.sublayers?.compactMap { $0 as? AVSampleBufferDisplayLayer }.last)
     let renderer = layer.sampleBufferRenderer

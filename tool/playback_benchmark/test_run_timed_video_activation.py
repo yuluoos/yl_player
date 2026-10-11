@@ -6,7 +6,7 @@ import subprocess
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch, MagicMock
-from run_timed_video_activation import validate_run, collect, remove_thread_performance_checker
+from run_timed_video_activation import validate_run, collect, remove_thread_performance_checker, select_test_host
 from test_collect_timed_video import observation
 
 
@@ -18,6 +18,23 @@ def sample():
 
 
 class RunnerValidationTests(unittest.TestCase):
+    def test_isolated_host_changes_only_host_paths_and_identity(self):
+        original={'RunnerTests': {'TestHostPath':'/p/Profile/yl_player_example.app',
+            'TestBundlePath':'__TESTHOST__/Contents/PlugIns/RunnerTests.xctest',
+            'TestHostBundleIdentifier':'old.id',
+            'BundleIdentifiersForCrashReportEmphasis':['old.id','old.id.RunnerTests'],
+            'DependentProductPaths':['/p/Profile/yl_player_example.app','/p/Profile/yl_player_example.app/Contents/PlugIns/RunnerTests.xctest'],
+            'EnvironmentVariables': {'KEEP':'yes'}}}
+        config=copy.deepcopy(original)
+        select_test_host(config,Path('/p/Profile/yl_player_example.app'),Path('/p/Profile/YLTimedProbe.app'),'owned.id')
+        r=config['RunnerTests']
+        self.assertEqual(r['TestHostPath'],'/p/Profile/YLTimedProbe.app')
+        self.assertEqual(r['TestHostBundleIdentifier'],'owned.id')
+        self.assertEqual(r['DependentProductPaths'],['/p/Profile/YLTimedProbe.app','/p/Profile/YLTimedProbe.app/Contents/PlugIns/RunnerTests.xctest'])
+        self.assertEqual(r['BundleIdentifiersForCrashReportEmphasis'],['owned.id','old.id.RunnerTests'])
+        self.assertEqual(r['EnvironmentVariables'],{'KEEP':'yes'})
+        self.assertEqual(r['TestBundlePath'],original['RunnerTests']['TestBundlePath'])
+
     def test_remove_only_thread_checker_from_owned_manifest(self):
         config = {'RunnerTests': {
             'EnvironmentVariables': {'DYLD_INSERT_LIBRARIES': '/usr/lib/libRPAC.dylib', 'PERFC_ENABLE_PROFILE_MODE': '1', 'OTHER': 'kept'},
@@ -65,6 +82,18 @@ class RunnerValidationTests(unittest.TestCase):
     def test_new_runs_cannot_use_legacy_missing_clock_evidence(self):
         o,a,r=sample(); r['audioClockProtocolRequired']=True
         self.assertFalse(validate_run(o,a,r)['passed'])
+
+    def test_trace_gate_requires_matching_preplay_receipt(self):
+        o,a,r=sample()
+        r.update(traceGateRequired=True,traceGateToken='this-run')
+        self.assertFalse(validate_run(o,a,r)['passed'])
+        valid=dict(pid=123,token='this-run',recordingStartedUptime=5.,settledUptime=8.,stableSeconds=2.1,stableSamples=200,stableMaxGapSeconds=.012)
+        r['traceGate']=valid
+        self.assertTrue(validate_run(o,a,r)['passed'])
+        for key,value in [('pid',999),('token','other-run'),('recordingStartedUptime',9.),('settledUptime',11.),('stableSeconds',1.),('stableMaxGapSeconds',.04),('stableSamples',0),('stableSamples',2)]:
+            with self.subTest(key=key):
+                r['traceGate']={**valid,key:value}
+                self.assertFalse(validate_run(o,a,r)['passed'])
 
     def test_valid(self):
         o,a,r=sample();self.assertTrue(validate_run(o,a,r)['passed'])
