@@ -422,3 +422,7 @@ TVS `6ef7601` 通过离线包解析仅对齐XML7.0.1和必要的dbus0.7.15；实
 ### 2026-10-11 P02 ASS/SSA 文本加载与渲染
 
 按用户指示继续字幕切片：外挂 UTF-8 ASS/SSA 经 managed loader 进入原子目录，Flutter 合成样式/描边/阴影、脚本坐标定位与层级、媒体时钟驱动 move/fad；支持显式 WrapStyle 1/2，复杂特效和字体附件等明确拒绝。独立复审修正了分配前片段预算、零时标移动、命名样式默认值和 CRLF 计数，像素测试同时修正淡出与阴影描边合成。验证和限制见 [P02 执行报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md) 与 [ASS/SSA 契约](../specs/2026-10-11-subtitle-ass.md)。无新增原生制品/依赖；完整 libass/三端真机效果、PGS/VobSub、HDR/DRM/PD-03 与整个 P02/CAP-SUB 仍开放。另一边长播放/弱网 ABR 工作未纳入此切片。
+
+### 2026-10-11 P05 订阅内容解析
+
+TVS `f7a93e9` 修复 JSON 单条畸形拖垮整表、M3U 属性逗号/显示名边界及 JSON/TXT/HTML 格式误判。复审发现的括号 TXT 回归和带注释 HTML 漏判已 RED→GREEN；最终相关61/61、全项目分析通过。验证固定播放器 `ffc4682`，隔离并行 ASS/长播且未占设备；HTTP403/DNS、安全阶段提示、代理和刷新事务等 Task2/P05 剩余项继续开放，见[P05报告](../reports/2026-09-26-remaining-05-live-business.md)。

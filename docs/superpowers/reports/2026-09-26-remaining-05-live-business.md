@@ -72,3 +72,21 @@ flutter analyze --no-pub
 [verification.json](evidence/2026-10-11-ttml-tvs-compatibility/verification.json) 保存跨仓提交、实际源指纹、变更依赖和退出码；[raw-logs.json](evidence/2026-10-11-ttml-tvs-compatibility/raw-logs.json) 保留初始 XML 编译 RED、解析结果、夹具修正前失败及最终全部输出。pub 工具提示的其他可更新包及既有插件 Swift Package Manager 警告原样保留，未扩大为无关依赖升级。
 
 独立只读复审无 Critical/Important/Minor。设备解码/原生输出、Linux DBus 服务运行及完整 TTML 标准符合性均不由本轮证明；这些范围仍需各自环境与验收。此次兼容修复没有关闭 P05/P02 的其余功能与真实设备任务。
+
+## 2026-10-11：Task 2 订阅内容解析
+
+TVS 提交 **`f7a93e95beed98715433f7c43a8158b4438f14ea`**，基线 `6ef7601`；播放器依赖固定已提交 **`ffc4682`**（包含当前 TTML 与 XML 7 约束）。仅修改 TVS `live_source_parser.dart` 和原有解析测试；未改依赖、源路由、重试或播放策略。Task 2/P05 整体仍开放。
+
+JSON 现在逐组、逐条检查类型：畸形频道或分组不会丢掉相邻有效频道；可选 group/logo 类型错误按缺失处理，必填 name/url 空白或类型错误跳过。有效 JSON 中的 `,#genre#` 不再触发 TXT 解析；解码失败时只有存在真正的 TXT 分组行才按 TXT 处理，保留 `[News]`、`{News}` 分组名。M3U 以双引号属性外的逗号分隔显示名，属性只从分隔符之前提取；未闭合属性仅丢弃该条。可识别的 HTML 文档开头（含前导注释）返回空结果，不导入其中的 TXT 示例。原 URL 拆分与无频道/无法识别内容的空结果契约保留；此处不是完整 HTML 语法验证器，也未新增下载错误分类。
+
+新增 13 项解析回归，最终解析文件 29 项。首轮新增 9 项在旧实现上共 **17 passed / 8 failed**，修复后 25/25；初次相关回归 57/57。独立只读复审发现括号 TXT 分组误判（Important）和 HTML 前导注释漏判（Minor）。执行者按导入网页频道并持久化的实际影响，将后者也纳入 Important 修复：新增 4 项（含畸形 JSON 不误回退的守卫），观察 **26 passed / 3 failed**，一轮修复后相关回归 **61/61**，全项目静态分析无问题；仅格式化改动文件，diff 检查通过。没有遗留 Minor，也没有将复审后的修复描述为再次独立复审通过。
+
+```sh
+# 固定临时 TVS 副本中，以 /Users/yy2021_8689/flutter/bin/flutter 执行：
+flutter test --no-pub --concurrency=1 test/modules/live/features/live_source_parser_test.dart test/modules/live/features/live_source_notifier_test.dart test/modules/live/features/live_source_resolution_test.dart test/modules/player/features/playback_source_subscriptions_test.dart
+flutter analyze --no-pub
+```
+
+副本由 TVS 基线归档加本轮两文件、播放器五包固定归档构成；复用已有锁定依赖缓存并重映射临时 package config、复制 package graph，隔离其他会话尚未提交的 ASS 与长播放改动。最终两文件及 pubspec/lock 已与实际 TVS 提交和验证副本逐字节核对。[verification.json](evidence/2026-10-11-live-subscription-parser/verification.json) 保存跨仓版本、指纹、命令与退出码；[raw-logs.json](evidence/2026-10-11-live-subscription-parser/raw-logs.json) 保留初始和复审 RED、全部 GREEN 与分析输出。
+
+本轮只使用本机测试 runner、fake 与自有夹具，未启动设备、模拟器、原生播放或外部测试服务。复审未运行命令或独立核对副本哈希，由执行者完成这些核验。HTTP403/DNS、安全阶段提示、代理依赖与刷新事务仍需后续业务实现/回归；原生取消和资源释放、真机、线上订阅/九脚本仍需各自验收。空结果仍可能由现有 manager 写入刷新结果，本轮不承诺保留此前频道；已通过的内容解析测试不关闭这些任务，也不验证并行未提交功能。

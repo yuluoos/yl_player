@@ -1,0 +1,99 @@
+{
+  "date": "2026-10-11",
+  "scope": "P05 Task 2 content parsing slice; full Task 2/P05 remain open",
+  "tvs_base": "6ef7601be76f4a408543a6d9a942a710e557e692",
+  "tvs_commit": "f7a93e95beed98715433f7c43a8158b4438f14ea",
+  "player_dependency_commit": "ffc46826d0fbfc955bd94530b430ae777625e4fa",
+  "environment": {
+    "devices_used": false,
+    "simulators_started": false,
+    "external_services_used": false,
+    "flutter": "/Users/yy2021_8689/flutter/bin/flutter",
+    "test_root": "/private/tmp/yl-business-n7fbec3d/tvs"
+  },
+  "snapshot": {
+    "method": "git archive TVS lib/test/manifests/analysis at base plus changed parser/test; five player packages and manifests at pinned commit; existing locked package config remapped to snapshot and package_graph copied; assets/packages symlinked to existing TVS paths",
+    "player_packages": [
+      "yl_player",
+      "yl_player_platform_interface",
+      "yl_player_source_resolver",
+      "yl_player_apple",
+      "yl_player_android"
+    ],
+    "reason": "Preserve concurrent uncommitted ASS/long-play work; this snapshot includes committed TTML and TVS XML7 lock",
+    "verified_source_matches_commit_and_snapshot": true
+  },
+  "source_sha256": {
+    "lib/utils/live_source_parser.dart": "58b7ef8e224cb587a5df24f7982cd018c89fbebbce2025861d61f100b154b64c",
+    "test/modules/live/features/live_source_parser_test.dart": "6865160578f087f822e5920503fffaacace07d0d7a99927b208819bd128ed93e",
+    "pubspec.yaml": "5c65155869260385a02cd9c9f192880148690c39e293ea2c5ce1db07d3ca33e4",
+    "pubspec.lock": "8bc7656782e9070a7c308c0d03d3ae6f2d7c4ccd8d94181cb6a0c8f7c76f84e8"
+  },
+  "commands": {
+    "parser": "flutter test --no-pub --concurrency=1 test/modules/live/features/live_source_parser_test.dart",
+    "related": "flutter test --no-pub --concurrency=1 test/modules/live/features/live_source_parser_test.dart test/modules/live/features/live_source_notifier_test.dart test/modules/live/features/live_source_resolution_test.dart test/modules/player/features/playback_source_subscriptions_test.dart",
+    "analyze": "flutter analyze --no-pub",
+    "format": "dart format lib/utils/live_source_parser.dart test/modules/live/features/live_source_parser_test.dart",
+    "diff": "git diff --check"
+  },
+  "results": {
+    "initial_red": {
+      "passed": 17,
+      "failed": 8,
+      "exit_code": 1
+    },
+    "initial_green": {
+      "passed": 25,
+      "exit_code": 0
+    },
+    "initial_related": {
+      "passed": 57,
+      "exit_code": 0
+    },
+    "initial_full_analyze": {
+      "issues": 0,
+      "exit_code": 0
+    },
+    "review_red": {
+      "passed": 26,
+      "failed": 3,
+      "exit_code": 1
+    },
+    "final_related": {
+      "passed": 61,
+      "parser_tests": 29,
+      "new_parser_tests": 13,
+      "exit_code": 0
+    },
+    "final_full_analyze": {
+      "issues": 0,
+      "exit_code": 0
+    },
+    "format": {
+      "changed": 0,
+      "exit_code": 0
+    },
+    "diff_check": {
+      "exit_code": 0
+    }
+  },
+  "review": {
+    "reviewer": "review_subscription_parser",
+    "mode": "read-only",
+    "critical": 0,
+    "important": 1,
+    "minor": 1,
+    "executor_regrading": "HTML leading-comment bypass also treated as Important because refreshing may persist webpage examples as channels",
+    "fixes": "TXT bracket/brace groups and HTML leading comments reproduced (3 failures), fixed in one pass, final related61/61 and full analyze clean",
+    "deferred_minors": []
+  },
+  "remaining": [
+    "HTTP403/DNS and stage-specific safe error presentation",
+    "Proxy initialization dependencies",
+    "Transactional refresh semantics",
+    "Native cancellation/resource release and device playback",
+    "Online script/subscription availability",
+    "Uncommitted concurrent ASS/long-play changes not verified by this snapshot"
+  ],
+  "raw_logs_sha256": "7977902f3c7f09659471e47aee69c65f10e97eae958a8ef5e112e5751eec5b30"
+}
