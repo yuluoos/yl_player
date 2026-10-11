@@ -112,13 +112,56 @@ final class YlMacosAudioTests: XCTestCase {
       return .init(sampleTime: 960, sampleRate: 48000, hostTimeUs: 1_020_000) }
     let finished = expectation(description: "stale clock read finishes")
     DispatchQueue.global().async {
-      XCTAssertEqual(renderer.clockObservation(expectedGeneration: 1), .invalid)
+      let observation = renderer.clockObservation(expectedGeneration: 1)
+      if reset { XCTAssertEqual(observation, .invalid) }
+      else if case let .running(sample) = observation {
+        XCTAssertEqual(sample.positionUs, 1_020_000, "Never pair the old raw host with the callback's new position")
+        XCTAssertEqual(sample.hostTimeUs, 1_020_000)
+        XCTAssertEqual(sample.lowerBoundUs, 1_000_000)
+        XCTAssertEqual(sample.upperBoundUs, 1_250_000)
+      } else { XCTFail("A completion that preserves the mapping must not invalidate its native pair") }
       finished.fulfill()
     }
     XCTAssertEqual(entered.wait(timeout: .now() + 1), .success)
     if reset { renderer.reset(generation: 2) } else { output.completeNextBuffer() }
     release.signal()
     wait(for: [finished], timeout: 3)
+  }
+
+  func testAudioObservationKeepsCapturedBoundAcrossAppend() throws {
+    let output = TestAudioOutput(), renderer = try clockRenderer(output)
+    defer { renderer.dispose() }
+    let raw = YlRenderedAudioTime(sampleTime: 960, sampleRate: 48_000, hostTimeUs: 1_020_000)
+    output.rawClock = raw
+    output.clockRead = {
+      output.clockRead = nil
+      do {
+        let result = try renderer.enqueue(packet: .init(data: Data([2]), ptsUs: 1_250_000,
+          durationUs: 250_000, generation: 1))
+        XCTAssertEqual(result, .scheduled)
+      } catch { XCTFail("Unexpected append failure: \(error)") }
+      return raw
+    }
+    guard case let .running(sample) = renderer.clockObservation(expectedGeneration: 1) else {
+      return XCTFail("Appending within the same mapping must preserve the native observation")
+    }
+    XCTAssertEqual(sample.positionUs, 1_020_000)
+    XCTAssertEqual(sample.hostTimeUs, 1_020_000)
+    XCTAssertEqual(sample.lowerBoundUs, 1_000_000)
+    XCTAssertEqual(sample.upperBoundUs, 1_250_000, "Do not combine a captured pair with a later expanded bound")
+    XCTAssertEqual(sample.position(atHostTimeUs: 2_000_000), 1_250_000)
+    // Exhaustion plus refill creates a new mapping, which must still fence the read.
+    output.clockRead = {
+      output.clockRead = nil
+      output.completeNextBuffer(); output.completeNextBuffer()
+      do {
+        let result = try renderer.enqueue(packet: .init(data: Data([3]), ptsUs: 2_000_000,
+          durationUs: 250_000, generation: 1))
+        XCTAssertEqual(result, .scheduled)
+      } catch { XCTFail("Unexpected refill failure: \(error)") }
+      return raw
+    }
+    XCTAssertEqual(renderer.clockObservation(expectedGeneration: 1), .invalid)
   }
 
   func testNativeControlRevokesBeforeBlockingClockReadAndDeviceInvalidation() throws {
@@ -2095,8 +2138,13 @@ final class YlMacosAudioTests: XCTestCase {
       XCTAssertEqual(factory.entries.count, 1, "Seek/replay must reuse the same native output")
       XCTAssertEqual(entry.engine.attachedNodes, nodes)
       XCTAssertEqual(renderer.usesSubmissionAnchor, candidate)
-      try await AppleHostCharacterizations.waitFor({ host.initialState.status == .completed }, timeout: 10)
-      completedCount += 1
+      let expectedCompletedCount = completedCount + 1
+      // The state snapshot updates before the outbound MainActor callback runs.
+      // Wait for both under the same deadline; missing/duplicate events still fail.
+      try await AppleHostCharacterizations.waitFor({
+        host.initialState.status == .completed && completions() == expectedCompletedCount
+      }, timeout: 10)
+      completedCount = expectedCompletedCount
       XCTAssertEqual(completions(), completedCount)
       XCTAssertEqual(callbacks.frames.filter { $0.sessionId == session.sessionId }.count, 1,
         "First-frame publication is once per session, including replay")

@@ -444,12 +444,13 @@ final class YlAudioRenderer: YlAudioRendering {
     let raw = renderedOutputTime // Never under renderer/session/snapshot lock.
     return lock.withLock {
       guard !disposed, configuredGeneration == expectedGeneration, completionGeneration == epoch,
-            clockControlVersion == version, playedPositionUs == position,
+            clockControlVersion == version,
             renderAnchor?.nodeUs == anchor?.nodeUs, renderAnchor?.mediaUs == anchor?.mediaUs,
-            scheduledEndUs == end, playbackRate == rate else { return .invalid }
+            let end, let currentEnd = scheduledEndUs, currentEnd >= end,
+            playbackRate == rate else { return .invalid }
       guard let raw else { return .waiting }
       guard raw.sampleRate.isFinite, raw.sampleRate > 0, let host = raw.hostTimeUs, host >= 0,
-            let node = Self.nodeMicroseconds(raw), let anchor, let end,
+            let node = Self.nodeMicroseconds(raw), let anchor,
             node >= anchor.nodeUs, end >= anchor.mediaUs else { return .invalid }
       let elapsed = min(Double(end) - Double(anchor.mediaUs), node - anchor.nodeUs)
       let mapped = Double(anchor.mediaUs) + elapsed
@@ -459,6 +460,8 @@ final class YlAudioRenderer: YlAudioRendering {
       // A later callback can legitimately be ahead; neither reject this pair nor
       // combine its host time with the callback's position. The checks above
       // still discard observations if mapping state changed during the read.
+      // Normal completion/append can advance position or extend coverage without
+      // changing that mapping. Keep the captured end; never mix in a later bound.
       return .running(.init(generation: expectedGeneration, positionUs: media, hostTimeUs: host,
         lowerBoundUs: anchor.mediaUs, upperBoundUs: end, rate: Double(rate)))
     }
