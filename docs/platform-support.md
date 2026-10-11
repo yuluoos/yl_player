@@ -592,7 +592,7 @@ current native adapters still do not advertise a native subtitle SPI.
 | External file and HTTP(S) text | Streamed, bounded, cancellable; owned files and loopback GET tests |
 | Text, b/i/u, entities, horizontal WebVTT position/align | Parsed and painted; Flutter widget and Ahem pixel tests, including crop/PAR/rotation/RTL |
 | Selection/off/offset, replacement and seek | Public session API; atomic catalog and media-position-driven overlay tests |
-| Strict managed HTTP policy | Explicitly rejected; platformDefault only in this slice |
+| Strict managed HTTP policy | Per-hop header/read deadlines, bounded retries/Retry-After and shared redirect budget; loopback/TLS cancellation tests |
 | Embedded/TTML/ASS/SSA/PGS/VobSub and advanced WebVTT | Not implemented by this runtime |
 | Protected output, HDR brightness and physical-device subtitle sync | Not accepted; protected surfaces reject subtitle commands |
 

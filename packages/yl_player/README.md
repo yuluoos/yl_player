@@ -143,10 +143,18 @@ await session.selectSubtitleTrack(null); // Immediately hide subtitles.
 ```
 
 Use `YlNetworkSource` for HTTP(S), including separately scoped credentials.
-Only `platformDefault` network policy is currently supported: a 30-second total
-read deadline, five redirects and no automatic retries. Cross-origin redirects
-permanently strip credentials, including a later return to the original origin.
-Managed policy is explicitly rejected. File/HTTP input is streamed within a
+Both network policies are supported. `platformDefault` uses a 30-second total
+read deadline, five redirects and no automatic retries. For
+`networkPolicy: const YlNetworkPolicy.managed()`, the defaults are 10 seconds
+through response headers, 15 seconds of body inactivity, three retries,
+500 ms exponential backoff capped at 8 seconds, and five redirects across all
+attempts. Nonempty body chunks reset only the read deadline; managed requests
+have no total-call timeout. Valid `Retry-After` seconds or HTTP dates override
+backoff within its cap; excessive values stop retries. TLS/certificate errors,
+permanent HTTP errors, unsupported encodings, oversized input and parse errors
+are never retried. Cancelling a session or replacement also cancels backoff.
+Cross-origin redirects permanently strip credentials, including retries and a
+later return to the original origin. File/HTTP input is streamed within a
 4 MiB aggregate catalog budget, with at most 10,000 cues and bounded text spans.
 
 Replacing the catalog is atomic; a failed download or parse leaves the previous

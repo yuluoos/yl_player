@@ -1,0 +1,80 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_retry_policy_test.dart
+packages/yl_player/test/subtitle_retry_policy_test.dart:10:14: Error: Method not found: 'subtitleRetryDelay'.
+      expect(subtitleRetryDelay(policy, index, null, now), Duration(milliseconds: ms));
+             ^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/subtitle_retry_policy_test.dart:12:12: Error: Method not found: 'subtitleRetryDelay'.
+    expect(subtitleRetryDelay(const YlNetworkPolicy.managed(baseRetryDelay: Duration.zero), 2147483647, null, now), Duration.zero);
+           ^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/subtitle_retry_policy_test.dart:13:12: Error: Method not found: 'subtitleRetryDelay'.
+    expect(subtitleRetryDelay(const YlNetworkPolicy.managed(maxRetryDelay: Duration.zero), 1, null, now), Duration.zero);
+           ^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/subtitle_retry_policy_test.dart:16:12: Error: Method not found: 'subtitleRetryDelay'.
+    expect(subtitleRetryDelay(policy, 1, '0', now), Duration.zero);
+           ^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/subtitle_retry_policy_test.dart:17:12: Error: Method not found: 'subtitleRetryDelay'.
+    expect(subtitleRetryDelay(policy, 1, ' 2 ', now), const Duration(seconds: 2));
+           ^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/subtitle_retry_policy_test.dart:18:12: Error: Method not found: 'subtitleRetryDelay'.
+    expect(subtitleRetryDelay(policy, 1, '0008', now), const Duration(seconds: 8));
+           ^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/subtitle_retry_policy_test.dart:19:12: Error: Method not found: 'subtitleRetryDelay'.
+    expect(subtitleRetryDelay(policy, 1, '9', now), isNull);
+           ^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/subtitle_retry_policy_test.dart:20:12: Error: Method not found: 'subtitleRetryDelay'.
+    expect(subtitleRetryDelay(policy, 1, '9' * 100, now), isNull);
+           ^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/subtitle_retry_policy_test.dart:23:12: Error: Method not found: 'subtitleRetryDelay'.
+    expect(subtitleRetryDelay(policy, 1, 'Sun, 11 Oct 2026 12:00:05 GMT', now), const Duration(seconds: 5));
+           ^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/subtitle_retry_policy_test.dart:24:12: Error: Method not found: 'subtitleRetryDelay'.
+    expect(subtitleRetryDelay(policy, 1, 'Sun, 11 Oct 2026 11:59:59 GMT', now), Duration.zero);
+           ^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/subtitle_retry_policy_test.dart:25:12: Error: Method not found: 'subtitleRetryDelay'.
+    expect(subtitleRetryDelay(policy, 1, 'Sun, 11 Oct 2026 12:00:09 GMT', now), isNull);
+           ^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/subtitle_retry_policy_test.dart:29:14: Error: Method not found: 'subtitleRetryDelay'.
+      expect(subtitleRetryDelay(policy, 2, value, now), const Duration(seconds: 1));
+             ^^^^^^^^^^^^^^^^^^
+00:00 +0 -1: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_retry_policy_test.dart [E]
+  Failed to load "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_retry_policy_test.dart":
+  Compilation failed for testPath=/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_retry_policy_test.dart: packages/yl_player/test/subtitle_retry_policy_test.dart:10:14: Error: Method not found: 'subtitleRetryDelay'.
+        expect(subtitleRetryDelay(policy, index, null, now), Duration(milliseconds: ms));
+               ^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/subtitle_retry_policy_test.dart:12:12: Error: Method not found: 'subtitleRetryDelay'.
+      expect(subtitleRetryDelay(const YlNetworkPolicy.managed(baseRetryDelay: Duration.zero), 2147483647, null, now), Duration.zero);
+             ^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/subtitle_retry_policy_test.dart:13:12: Error: Method not found: 'subtitleRetryDelay'.
+      expect(subtitleRetryDelay(const YlNetworkPolicy.managed(maxRetryDelay: Duration.zero), 1, null, now), Duration.zero);
+             ^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/subtitle_retry_policy_test.dart:16:12: Error: Method not found: 'subtitleRetryDelay'.
+      expect(subtitleRetryDelay(policy, 1, '0', now), Duration.zero);
+             ^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/subtitle_retry_policy_test.dart:17:12: Error: Method not found: 'subtitleRetryDelay'.
+      expect(subtitleRetryDelay(policy, 1, ' 2 ', now), const Duration(seconds: 2));
+             ^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/subtitle_retry_policy_test.dart:18:12: Error: Method not found: 'subtitleRetryDelay'.
+      expect(subtitleRetryDelay(policy, 1, '0008', now), const Duration(seconds: 8));
+             ^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/subtitle_retry_policy_test.dart:19:12: Error: Method not found: 'subtitleRetryDelay'.
+      expect(subtitleRetryDelay(policy, 1, '9', now), isNull);
+             ^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/subtitle_retry_policy_test.dart:20:12: Error: Method not found: 'subtitleRetryDelay'.
+      expect(subtitleRetryDelay(policy, 1, '9' * 100, now), isNull);
+             ^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/subtitle_retry_policy_test.dart:23:12: Error: Method not found: 'subtitleRetryDelay'.
+      expect(subtitleRetryDelay(policy, 1, 'Sun, 11 Oct 2026 12:00:05 GMT', now), const Duration(seconds: 5));
+             ^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/subtitle_retry_policy_test.dart:24:12: Error: Method not found: 'subtitleRetryDelay'.
+      expect(subtitleRetryDelay(policy, 1, 'Sun, 11 Oct 2026 11:59:59 GMT', now), Duration.zero);
+             ^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/subtitle_retry_policy_test.dart:25:12: Error: Method not found: 'subtitleRetryDelay'.
+      expect(subtitleRetryDelay(policy, 1, 'Sun, 11 Oct 2026 12:00:09 GMT', now), isNull);
+             ^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/subtitle_retry_policy_test.dart:29:14: Error: Method not found: 'subtitleRetryDelay'.
+        expect(subtitleRetryDelay(policy, 2, value, now), const Duration(seconds: 1));
+               ^^^^^^^^^^^^^^^^^^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_retry_policy_test.dart: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_retry_policy_test.dart

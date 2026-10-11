@@ -1,0 +1,947 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:281:35: Error: Can't find ')' to match '('.
+  return second == 60 ? parsed.add(const Dura
+                                  ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:3: Error: Can't have modifier 'final' here.
+Try removing 'final'.
+  final {
+  ^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:9: Error: Expected an identifier, but got '{'.
+Try inserting an identifier before '{'.
+  final {
+        ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:9: Error: A method declaration needs an explicit list of parameters.
+Try adding a parameter list to the method declaration.
+  final {
+        ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:278:64: Error: Expected ')' before this.
+  if (parsed.year != year || parsed.month != month || parsed.d {
+                                                               ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:24: Error: Expected an identifier, but got ':'.
+Try inserting an identifier before ':'.
+    }tion(seconds: 1)) : parsed;
+                       ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:22: Error: Expected ';' after this.
+    }tion(seconds: 1)) : parsed;
+                     ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:24: Error: Unexpected token ';'.
+    }tion(seconds: 1)) : parsed;
+                       ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:278:62: Error: The getter 'd' isn't defined for the type 'DateTime'.
+ - 'DateTime' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'd'.
+  if (parsed.year != year || parsed.month != month || parsed.d {
+                                                             ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:317:5: Error: The setter '_remove' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing setter, or defining a setter or field named '_remove'.
+    _remove = token.listen(
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:331:23: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+  bool get active => !_result.isCompleted;
+                      ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:345:5: Error: The method '_remove' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing method, or defining a method named '_remove'.
+    _remove();
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:348:26: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+    for (final cancel in _connecting.toList()) {
+                         ^^^^^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:351:5: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+    _connecting.clear();
+    ^^^^^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:352:5: Error: The getter '_client' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_client'.
+    _client?.close(force: true);
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:357:5: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    _result.completeError(error);
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:363:5: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    _result.complete(reply);
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:369:12: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    return _result.future.whenComplete(_cleanup);
+           ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:383:12: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    return _result.future.whenComplete(_cleanup);
+           ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:455:6: Error: Expected ',' before this.
+    }ll,
+     ^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:448:15: Error: Too many positional arguments: 1 allowed, but 3 found.
+Try removing the extra positional arguments.
+        _Reply(
+              ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:305:9: Context: Found this candidate, but the arguments don't match.
+  const _Reply(this.status, {this.bytes, this.location, this.retryAfter});
+        ^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:393:5: Error: The setter '_client' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing setter, or defining a setter or field named '_client'.
+    _client = http;
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:406:7: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+      _connecting.add(close);
+      ^^^^^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:425:11: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+          _connecting.remove(close);
+          ^^^^^^^^^^^
+00:00 +0 -1: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart [E]
+  Failed to load "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart":
+  Compilation failed for testPath=/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:281:35: Error: Can't find ')' to match '('.
+    return second == 60 ? parsed.add(const Dura
+                                    ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:3: Error: Can't have modifier 'final' here.
+  Try removing 'final'.
+    final {
+    ^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:9: Error: Expected an identifier, but got '{'.
+  Try inserting an identifier before '{'.
+    final {
+          ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:9: Error: A method declaration needs an explicit list of parameters.
+  Try adding a parameter list to the method declaration.
+    final {
+          ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:278:64: Error: Expected ')' before this.
+    if (parsed.year != year || parsed.month != month || parsed.d {
+                                                                 ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:24: Error: Expected an identifier, but got ':'.
+  Try inserting an identifier before ':'.
+      }tion(seconds: 1)) : parsed;
+                         ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:22: Error: Expected ';' after this.
+      }tion(seconds: 1)) : parsed;
+                       ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:24: Error: Unexpected token ';'.
+      }tion(seconds: 1)) : parsed;
+                         ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:278:62: Error: The getter 'd' isn't defined for the type 'DateTime'.
+   - 'DateTime' is from 'dart:core'.
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'd'.
+    if (parsed.year != year || parsed.month != month || parsed.d {
+                                                               ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:317:5: Error: The setter '_remove' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing setter, or defining a setter or field named '_remove'.
+      _remove = token.listen(
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:331:23: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    bool get active => !_result.isCompleted;
+                        ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:345:5: Error: The method '_remove' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing method, or defining a method named '_remove'.
+      _remove();
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:348:26: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+      for (final cancel in _connecting.toList()) {
+                           ^^^^^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:351:5: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+      _connecting.clear();
+      ^^^^^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:352:5: Error: The getter '_client' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_client'.
+      _client?.close(force: true);
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:357:5: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+      _result.completeError(error);
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:363:5: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+      _result.complete(reply);
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:369:12: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+      return _result.future.whenComplete(_cleanup);
+             ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:383:12: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+      return _result.future.whenComplete(_cleanup);
+             ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:455:6: Error: Expected ',' before this.
+      }ll,
+       ^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:448:15: Error: Too many positional arguments: 1 allowed, but 3 found.
+  Try removing the extra positional arguments.
+          _Reply(
+                ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:305:9: Context: Found this candidate, but the arguments don't match.
+    const _Reply(this.status, {this.bytes, this.location, this.retryAfter});
+          ^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:393:5: Error: The setter '_client' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing setter, or defining a setter or field named '_client'.
+      _client = http;
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:406:7: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+        _connecting.add(close);
+        ^^^^^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:425:11: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+            _connecting.remove(close);
+            ^^^^^^^^^^^
+  .
+00:00 +0 -1: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_retry_policy_test.dart
+00:00 +0 -1: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 1009:11   DefaultResidentCompiler._compile.<fn>
+  dart:async/zone_root.dart 48:47                  _rootRunUnary
+  dart:async/zone.dart 733:19                      _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone_root.dart 35:13                  _rootRun
+  dart:async/zone.dart 726:19                      _CustomZone.run
+  dart:async/zone.dart 625:7                       _CustomZone.runGuarded
+  dart:async/zone.dart 666:23                      _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 193:5      _RawReceivePort._handleMessage
+  
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:281:35: Error: Can't find ')' to match '('.
+  return second == 60 ? parsed.add(const Dura
+                                  ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:3: Error: Can't have modifier 'final' here.
+Try removing 'final'.
+  final {
+  ^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:9: Error: Expected an identifier, but got '{'.
+Try inserting an identifier before '{'.
+  final {
+        ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:9: Error: A method declaration needs an explicit list of parameters.
+Try adding a parameter list to the method declaration.
+  final {
+        ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:278:64: Error: Expected ')' before this.
+  if (parsed.year != year || parsed.month != month || parsed.d {
+                                                               ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:24: Error: Expected an identifier, but got ':'.
+Try inserting an identifier before ':'.
+    }tion(seconds: 1)) : parsed;
+                       ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:22: Error: Expected ';' after this.
+    }tion(seconds: 1)) : parsed;
+                     ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:24: Error: Unexpected token ';'.
+    }tion(seconds: 1)) : parsed;
+                       ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:278:62: Error: The getter 'd' isn't defined for the type 'DateTime'.
+ - 'DateTime' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'd'.
+  if (parsed.year != year || parsed.month != month || parsed.d {
+                                                             ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:317:5: Error: The setter '_remove' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing setter, or defining a setter or field named '_remove'.
+    _remove = token.listen(
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:331:23: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+  bool get active => !_result.isCompleted;
+                      ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:345:5: Error: The method '_remove' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing method, or defining a method named '_remove'.
+    _remove();
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:348:26: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+    for (final cancel in _connecting.toList()) {
+                         ^^^^^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:351:5: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+    _connecting.clear();
+    ^^^^^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:352:5: Error: The getter '_client' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_client'.
+    _client?.close(force: true);
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:357:5: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    _result.completeError(error);
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:363:5: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    _result.complete(reply);
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:369:12: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    return _result.future.whenComplete(_cleanup);
+           ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:383:12: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    return _result.future.whenComplete(_cleanup);
+           ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:455:6: Error: Expected ',' before this.
+    }ll,
+     ^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:448:15: Error: Too many positional arguments: 1 allowed, but 3 found.
+Try removing the extra positional arguments.
+        _Reply(
+              ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:305:9: Context: Found this candidate, but the arguments don't match.
+  const _Reply(this.status, {this.bytes, this.location, this.retryAfter});
+        ^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:393:5: Error: The setter '_client' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing setter, or defining a setter or field named '_client'.
+    _client = http;
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:406:7: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+      _connecting.add(close);
+      ^^^^^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:425:11: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+          _connecting.remove(close);
+          ^^^^^^^^^^^
+00:00 +0 -2: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_retry_policy_test.dart [E]
+  Failed to load "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_retry_policy_test.dart":
+  Compilation failed for testPath=/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_retry_policy_test.dart: packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:281:35: Error: Can't find ')' to match '('.
+    return second == 60 ? parsed.add(const Dura
+                                    ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:3: Error: Can't have modifier 'final' here.
+  Try removing 'final'.
+    final {
+    ^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:9: Error: Expected an identifier, but got '{'.
+  Try inserting an identifier before '{'.
+    final {
+          ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:9: Error: A method declaration needs an explicit list of parameters.
+  Try adding a parameter list to the method declaration.
+    final {
+          ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:278:64: Error: Expected ')' before this.
+    if (parsed.year != year || parsed.month != month || parsed.d {
+                                                                 ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:24: Error: Expected an identifier, but got ':'.
+  Try inserting an identifier before ':'.
+      }tion(seconds: 1)) : parsed;
+                         ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:22: Error: Expected ';' after this.
+      }tion(seconds: 1)) : parsed;
+                       ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:24: Error: Unexpected token ';'.
+      }tion(seconds: 1)) : parsed;
+                         ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:278:62: Error: The getter 'd' isn't defined for the type 'DateTime'.
+   - 'DateTime' is from 'dart:core'.
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'd'.
+    if (parsed.year != year || parsed.month != month || parsed.d {
+                                                               ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:317:5: Error: The setter '_remove' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing setter, or defining a setter or field named '_remove'.
+      _remove = token.listen(
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:331:23: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    bool get active => !_result.isCompleted;
+                        ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:345:5: Error: The method '_remove' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing method, or defining a method named '_remove'.
+      _remove();
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:348:26: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+      for (final cancel in _connecting.toList()) {
+                           ^^^^^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:351:5: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+      _connecting.clear();
+      ^^^^^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:352:5: Error: The getter '_client' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_client'.
+      _client?.close(force: true);
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:357:5: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+      _result.completeError(error);
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:363:5: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+      _result.complete(reply);
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:369:12: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+      return _result.future.whenComplete(_cleanup);
+             ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:383:12: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+      return _result.future.whenComplete(_cleanup);
+             ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:455:6: Error: Expected ',' before this.
+      }ll,
+       ^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:448:15: Error: Too many positional arguments: 1 allowed, but 3 found.
+  Try removing the extra positional arguments.
+          _Reply(
+                ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:305:9: Context: Found this candidate, but the arguments don't match.
+    const _Reply(this.status, {this.bytes, this.location, this.retryAfter});
+          ^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:393:5: Error: The setter '_client' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing setter, or defining a setter or field named '_client'.
+      _client = http;
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:406:7: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+        _connecting.add(close);
+        ^^^^^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:425:11: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+            _connecting.remove(close);
+            ^^^^^^^^^^^
+  .
+00:00 +0 -2: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart
+00:00 +0 -2: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 1009:11   DefaultResidentCompiler._compile.<fn>
+  dart:async/zone_root.dart 48:47                  _rootRunUnary
+  dart:async/zone.dart 733:19                      _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone_root.dart 35:13                  _rootRun
+  dart:async/zone.dart 726:19                      _CustomZone.run
+  dart:async/zone.dart 625:7                       _CustomZone.runGuarded
+  dart:async/zone.dart 666:23                      _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 193:5      _RawReceivePort._handleMessage
+  
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:281:35: Error: Can't find ')' to match '('.
+  return second == 60 ? parsed.add(const Dura
+                                  ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:3: Error: Can't have modifier 'final' here.
+Try removing 'final'.
+  final {
+  ^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:9: Error: Expected an identifier, but got '{'.
+Try inserting an identifier before '{'.
+  final {
+        ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:9: Error: A method declaration needs an explicit list of parameters.
+Try adding a parameter list to the method declaration.
+  final {
+        ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:278:64: Error: Expected ')' before this.
+  if (parsed.year != year || parsed.month != month || parsed.d {
+                                                               ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:24: Error: Expected an identifier, but got ':'.
+Try inserting an identifier before ':'.
+    }tion(seconds: 1)) : parsed;
+                       ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:22: Error: Expected ';' after this.
+    }tion(seconds: 1)) : parsed;
+                     ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:24: Error: Unexpected token ';'.
+    }tion(seconds: 1)) : parsed;
+                       ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:278:62: Error: The getter 'd' isn't defined for the type 'DateTime'.
+ - 'DateTime' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'd'.
+  if (parsed.year != year || parsed.month != month || parsed.d {
+                                                             ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:317:5: Error: The setter '_remove' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing setter, or defining a setter or field named '_remove'.
+    _remove = token.listen(
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:331:23: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+  bool get active => !_result.isCompleted;
+                      ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:345:5: Error: The method '_remove' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing method, or defining a method named '_remove'.
+    _remove();
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:348:26: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+    for (final cancel in _connecting.toList()) {
+                         ^^^^^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:351:5: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+    _connecting.clear();
+    ^^^^^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:352:5: Error: The getter '_client' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_client'.
+    _client?.close(force: true);
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:357:5: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    _result.completeError(error);
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:363:5: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    _result.complete(reply);
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:369:12: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    return _result.future.whenComplete(_cleanup);
+           ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:383:12: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    return _result.future.whenComplete(_cleanup);
+           ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:455:6: Error: Expected ',' before this.
+    }ll,
+     ^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:448:15: Error: Too many positional arguments: 1 allowed, but 3 found.
+Try removing the extra positional arguments.
+        _Reply(
+              ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:305:9: Context: Found this candidate, but the arguments don't match.
+  const _Reply(this.status, {this.bytes, this.location, this.retryAfter});
+        ^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:393:5: Error: The setter '_client' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing setter, or defining a setter or field named '_client'.
+    _client = http;
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:406:7: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+      _connecting.add(close);
+      ^^^^^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:425:11: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+          _connecting.remove(close);
+          ^^^^^^^^^^^
+00:00 +0 -3: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart [E]
+  Failed to load "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart":
+  Compilation failed for testPath=/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:281:35: Error: Can't find ')' to match '('.
+    return second == 60 ? parsed.add(const Dura
+                                    ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:3: Error: Can't have modifier 'final' here.
+  Try removing 'final'.
+    final {
+    ^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:9: Error: Expected an identifier, but got '{'.
+  Try inserting an identifier before '{'.
+    final {
+          ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:9: Error: A method declaration needs an explicit list of parameters.
+  Try adding a parameter list to the method declaration.
+    final {
+          ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:278:64: Error: Expected ')' before this.
+    if (parsed.year != year || parsed.month != month || parsed.d {
+                                                                 ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:24: Error: Expected an identifier, but got ':'.
+  Try inserting an identifier before ':'.
+      }tion(seconds: 1)) : parsed;
+                         ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:22: Error: Expected ';' after this.
+      }tion(seconds: 1)) : parsed;
+                       ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:24: Error: Unexpected token ';'.
+      }tion(seconds: 1)) : parsed;
+                         ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:278:62: Error: The getter 'd' isn't defined for the type 'DateTime'.
+   - 'DateTime' is from 'dart:core'.
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'd'.
+    if (parsed.year != year || parsed.month != month || parsed.d {
+                                                               ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:317:5: Error: The setter '_remove' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing setter, or defining a setter or field named '_remove'.
+      _remove = token.listen(
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:331:23: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    bool get active => !_result.isCompleted;
+                        ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:345:5: Error: The method '_remove' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing method, or defining a method named '_remove'.
+      _remove();
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:348:26: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+      for (final cancel in _connecting.toList()) {
+                           ^^^^^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:351:5: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+      _connecting.clear();
+      ^^^^^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:352:5: Error: The getter '_client' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_client'.
+      _client?.close(force: true);
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:357:5: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+      _result.completeError(error);
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:363:5: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+      _result.complete(reply);
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:369:12: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+      return _result.future.whenComplete(_cleanup);
+             ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:383:12: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+      return _result.future.whenComplete(_cleanup);
+             ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:455:6: Error: Expected ',' before this.
+      }ll,
+       ^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:448:15: Error: Too many positional arguments: 1 allowed, but 3 found.
+  Try removing the extra positional arguments.
+          _Reply(
+                ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:305:9: Context: Found this candidate, but the arguments don't match.
+    const _Reply(this.status, {this.bytes, this.location, this.retryAfter});
+          ^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:393:5: Error: The setter '_client' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing setter, or defining a setter or field named '_client'.
+      _client = http;
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:406:7: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+        _connecting.add(close);
+        ^^^^^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:425:11: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+            _connecting.remove(close);
+            ^^^^^^^^^^^
+  .
+00:00 +0 -3: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart
+00:00 +0 -3: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 1009:11   DefaultResidentCompiler._compile.<fn>
+  dart:async/zone_root.dart 48:47                  _rootRunUnary
+  dart:async/zone.dart 733:19                      _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone_root.dart 35:13                  _rootRun
+  dart:async/zone.dart 726:19                      _CustomZone.run
+  dart:async/zone.dart 625:7                       _CustomZone.runGuarded
+  dart:async/zone.dart 666:23                      _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 193:5      _RawReceivePort._handleMessage
+  
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:281:35: Error: Can't find ')' to match '('.
+  return second == 60 ? parsed.add(const Dura
+                                  ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:3: Error: Can't have modifier 'final' here.
+Try removing 'final'.
+  final {
+  ^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:9: Error: Expected an identifier, but got '{'.
+Try inserting an identifier before '{'.
+  final {
+        ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:9: Error: A method declaration needs an explicit list of parameters.
+Try adding a parameter list to the method declaration.
+  final {
+        ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:278:64: Error: Expected ')' before this.
+  if (parsed.year != year || parsed.month != month || parsed.d {
+                                                               ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:24: Error: Expected an identifier, but got ':'.
+Try inserting an identifier before ':'.
+    }tion(seconds: 1)) : parsed;
+                       ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:22: Error: Expected ';' after this.
+    }tion(seconds: 1)) : parsed;
+                     ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:24: Error: Unexpected token ';'.
+    }tion(seconds: 1)) : parsed;
+                       ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:278:62: Error: The getter 'd' isn't defined for the type 'DateTime'.
+ - 'DateTime' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'd'.
+  if (parsed.year != year || parsed.month != month || parsed.d {
+                                                             ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:317:5: Error: The setter '_remove' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing setter, or defining a setter or field named '_remove'.
+    _remove = token.listen(
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:331:23: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+  bool get active => !_result.isCompleted;
+                      ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:345:5: Error: The method '_remove' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing method, or defining a method named '_remove'.
+    _remove();
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:348:26: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+    for (final cancel in _connecting.toList()) {
+                         ^^^^^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:351:5: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+    _connecting.clear();
+    ^^^^^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:352:5: Error: The getter '_client' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_client'.
+    _client?.close(force: true);
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:357:5: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    _result.completeError(error);
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:363:5: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    _result.complete(reply);
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:369:12: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    return _result.future.whenComplete(_cleanup);
+           ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:383:12: Error: The getter '_result' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    return _result.future.whenComplete(_cleanup);
+           ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:455:6: Error: Expected ',' before this.
+    }ll,
+     ^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:448:15: Error: Too many positional arguments: 1 allowed, but 3 found.
+Try removing the extra positional arguments.
+        _Reply(
+              ^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:305:9: Context: Found this candidate, but the arguments don't match.
+  const _Reply(this.status, {this.bytes, this.location, this.retryAfter});
+        ^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:393:5: Error: The setter '_client' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing setter, or defining a setter or field named '_client'.
+    _client = http;
+    ^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:406:7: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+      _connecting.add(close);
+      ^^^^^^^^^^^
+packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:425:11: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+ - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+          _connecting.remove(close);
+          ^^^^^^^^^^^
+00:00 +0 -4: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart [E]
+  Failed to load "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart":
+  Compilation failed for testPath=/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:281:35: Error: Can't find ')' to match '('.
+    return second == 60 ? parsed.add(const Dura
+                                    ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:3: Error: Can't have modifier 'final' here.
+  Try removing 'final'.
+    final {
+    ^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:9: Error: Expected an identifier, but got '{'.
+  Try inserting an identifier before '{'.
+    final {
+          ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:322:9: Error: A method declaration needs an explicit list of parameters.
+  Try adding a parameter list to the method declaration.
+    final {
+          ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:278:64: Error: Expected ')' before this.
+    if (parsed.year != year || parsed.month != month || parsed.d {
+                                                                 ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:24: Error: Expected an identifier, but got ':'.
+  Try inserting an identifier before ':'.
+      }tion(seconds: 1)) : parsed;
+                         ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:22: Error: Expected ';' after this.
+      }tion(seconds: 1)) : parsed;
+                       ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:282:24: Error: Unexpected token ';'.
+      }tion(seconds: 1)) : parsed;
+                         ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:278:62: Error: The getter 'd' isn't defined for the type 'DateTime'.
+   - 'DateTime' is from 'dart:core'.
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'd'.
+    if (parsed.year != year || parsed.month != month || parsed.d {
+                                                               ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:317:5: Error: The setter '_remove' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing setter, or defining a setter or field named '_remove'.
+      _remove = token.listen(
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:331:23: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+    bool get active => !_result.isCompleted;
+                        ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:345:5: Error: The method '_remove' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing method, or defining a method named '_remove'.
+      _remove();
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:348:26: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+      for (final cancel in _connecting.toList()) {
+                           ^^^^^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:351:5: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+      _connecting.clear();
+      ^^^^^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:352:5: Error: The getter '_client' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_client'.
+      _client?.close(force: true);
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:357:5: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+      _result.completeError(error);
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:363:5: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+      _result.complete(reply);
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:369:12: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+      return _result.future.whenComplete(_cleanup);
+             ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:383:12: Error: The getter '_result' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_result'.
+      return _result.future.whenComplete(_cleanup);
+             ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:455:6: Error: Expected ',' before this.
+      }ll,
+       ^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:448:15: Error: Too many positional arguments: 1 allowed, but 3 found.
+  Try removing the extra positional arguments.
+          _Reply(
+                ^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:305:9: Context: Found this candidate, but the arguments don't match.
+    const _Reply(this.status, {this.bytes, this.location, this.retryAfter});
+          ^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:393:5: Error: The setter '_client' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing setter, or defining a setter or field named '_client'.
+      _client = http;
+      ^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:406:7: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+        _connecting.add(close);
+        ^^^^^^^^^^^
+  packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart:425:11: Error: The getter '_connecting' isn't defined for the type '_Attempt'.
+   - '_Attempt' is from 'package:yl_player/src/subtitles/subtitle_resource_io.dart' ('packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named '_connecting'.
+            _connecting.remove(close);
+            ^^^^^^^^^^^
+  .
+00:00 +0 -4: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_retry_policy_test.dart: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_retry_policy_test.dart
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart

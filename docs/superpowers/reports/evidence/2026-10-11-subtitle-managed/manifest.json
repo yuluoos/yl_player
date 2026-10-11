@@ -1,0 +1,162 @@
+{
+  "validation": {
+    "path": "/private/tmp/yl-subtitle-managed-validation-bgjnj1h0",
+    "base": "8e11db5dc4b0f88698ee8eb627cce7a603b4d2b9",
+    "files": [
+      "packages/yl_player/lib/src/subtitles/subtitle_resource.dart",
+      "packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart",
+      "packages/yl_player/lib/src/subtitles/text_subtitle_runtime.dart",
+      "packages/yl_player/test/subtitle_managed_network_test.dart",
+      "packages/yl_player/test/subtitle_retry_policy_test.dart",
+      "packages/yl_player/test/subtitle_resource_test.dart",
+      "packages/yl_player/test/text_subtitle_runtime_test.dart",
+      "packages/yl_player/lib/src/subtitles/subtitle_socket.dart"
+    ],
+    "initialBase": "8ab86d0e2fc5f305bd35c5978f01e8e098aff67f"
+  },
+  "ownedSourceAndDocs": {
+    "packages/yl_player/lib/src/subtitles/subtitle_resource.dart": "b371094c804274cd3b11eeda357d7074bfa5746a002adb95a13bec0a21a9f42c",
+    "packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart": "50a2413e73873ca86530c1001213c0d3ee30767f9b25c86b5ade2dddd8267e61",
+    "packages/yl_player/lib/src/subtitles/text_subtitle_runtime.dart": "8567933a4997a34c5b70d9a960db2238eeb63825ffed8137d4333285e66346ff",
+    "packages/yl_player/test/subtitle_managed_network_test.dart": "f4c349159d8d432954e3a7664e029fdc798c638e6d9126382523f65b75cd019b",
+    "packages/yl_player/test/subtitle_retry_policy_test.dart": "db9840f39da6e05ecedcc79c4495b41f3a70e887c2f327e172b0b184865dbd87",
+    "packages/yl_player/test/subtitle_resource_test.dart": "986bf5e461448b758ae46b0f9377a5883a96e6876b2994a0c13dcdd0e46634bc",
+    "packages/yl_player/test/text_subtitle_runtime_test.dart": "21143b03448924cb972aaccd75c598a29cf8f1daf07de1f8038a69122f47c066",
+    "packages/yl_player/lib/src/subtitles/subtitle_socket.dart": "924a5e00ff2ff41e8a8c3bfc16690252bd09682695560fe54e02d9ba318fe942",
+    "docs/platform-support.md": "0d811a4e5357eb6e51974d5811a2d301ac94c81ec0ecd3f27430b799c7fb7d97",
+    "docs/superpowers/specs/2026-10-11-subtitle-managed-network.md": "2945f895acc8107eb2eb0cd9388409d1910e272d67af25b6d945927537663974",
+    "docs/superpowers/specs/2026-10-11-subtitle-runtime.md": "757961404d5d6f6eef76e050cd0f5dce43cbbf3b41d17135c552de635add6113",
+    "packages/yl_player/README.md": "0323083dd9d4b281c45b9d76b7759e0213957e375c300d6597ce9a0e39568a2f",
+    "docs/superpowers/reports/2026-09-26-remaining-02-tracks-subtitles.md": "1713ed3522aa6c7d092192141fff7817be6e5657cd6d94a96d349808d5ee2030"
+  },
+  "referenceDependencies": {
+    "packages/yl_player/lib/src/player_controller.dart": "2c3e12a8d8b01cdc9b377f73484b6f0f639e655246cbba7526659f9ce6a72e67",
+    "packages/yl_player/lib/src/playback_session.dart": "a66034c34bf5d98ec0cfa96a0f5b56de26cfc60be2b04add287ab80870c2753a",
+    "packages/yl_player/lib/src/drm/license_secure_socket.dart": "e840dd82f87e6dd1e31bb82d84a9bdc7ec78f662610d7219ddd562344bd9cc6d",
+    "packages/yl_player/lib/src/subtitles/subtitle_document.dart": "eaa79a9847617c68813316f38581e979650c159fc608a7bb8d4fbc30ca7ab4b8",
+    "packages/yl_player/lib/src/subtitles/subtitle_resource_stub.dart": "a81ce3d5f9b949257b4b5124c7435fd8e830d05964a548d297b07ec3e3b65b17",
+    "packages/yl_player/lib/src/subtitles/text_subtitle_overlay.dart": "edc06ea834e6165ba6369bbc2b67fa3389db7dff87515e3be3da0d1b4b52e979"
+  },
+  "sharedDocumentTransforms": {
+    "overviewSectionSha256": "8ad8c78d66662b178b74c8ca0952d9cb5c1eb4e45e9de9d1c014e6b97e124155",
+    "changelogEntrySha256": "aa9f01f9d35024f515b396a7bbd9d82028d5261a94102259de8c3be08510e3ba",
+    "changelogCorrection": "Remove obsolete Managed HTTP unsupported statement from previous subtitle entry."
+  },
+  "evidence": {
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-managed/analyze-first.log": "95a28819c918db92d8f3f7dfadfc18f1248f79ab8313759391ad318fe94cf093",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-managed/analyze-review-fix.log": "95a28819c918db92d8f3f7dfadfc18f1248f79ab8313759391ad318fe94cf093",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-managed/date-century-red.log": "691192c9fa1708a797ac8c051b349ef23ef00441e6d089b744e607052caa7755",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-managed/date-red.log": "58c07e468065748d801a2a5b6dbc9842ee5528019829058538a358f75ffae726",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-managed/directed-green.log": "1ec7badc430b9274adefd4e56868c98e6c7479f978fdd4d2c0fa6a6b98570a6a",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-managed/final-analyze.log": "7cf9b717cd0ae36cad727808630a9a929c04f0d5a041238ce9f70ec6fb4bd475",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-managed/final-four-packages.log": "f91df96a6a8f9b109952e130d5b7e88d6d5e5902af94f2be2a6e7b81ab2a9c89",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-managed/initial-green.log": "e275063d95aebc329cda2865b7c0f1a3559e07ac4caa0949b4fc97326ef51622",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-managed/isolated-directed.log": "8eef34dc39b35aebc6606e785db3c540088b2ec2362979f0f29cd77090af97c4",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-managed/network-expanded.log": "abc56915f92382147361bb6d1dd2d6fbe5b6624da620dcd0944e881da1e80869",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-managed/policy-red.log": "012605c22765655b972180adba428a2c701635d054bfc21216bd98add575759a",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-managed/progress-diagnostic.log": "d39fd1268bc82196f50daa19b21a7e759953652ed886dff52c0bb6fc3e2efe24",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-managed/progress-repro.log": "0517a64d636cd4cf760184f394a76a99a9701195ea308b8341293bdaffada978",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-managed/progress-unbuffered.log": "66f2598fbe1a29a08ce2badc4bae850ca6a7617aba708228f6320d2ab6e8815f",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-managed/red.log": "e39e251f6d1ad0ca0e461c0b5bf3a521baf0f4019ac0a571006604f3eda2480c",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-managed/reset-red.log": "7c481dc84dcf890e043242b6107d93d04847bb80a51af891608d0db10a13a922",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-managed/review-fix-directed.log": "4db475fe7f10ef8e6c972cfad9df3b49398cf4937ba94066c8bd16b354372549"
+  },
+  "finalVerification": [
+    {
+      "command": "flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test",
+      "cwd": "/private/tmp/yl-subtitle-managed-validation-bgjnj1h0",
+      "exitCode": 0,
+      "passed": 615,
+      "failed": 0,
+      "packageCounts": [
+        135,
+        285,
+        113,
+        82
+      ],
+      "log": "docs/superpowers/reports/evidence/2026-10-11-subtitle-managed/final-four-packages.log"
+    },
+    {
+      "command": "dart analyze --suppress-analytics packages/yl_player/lib packages/yl_player/test packages/yl_player_platform_interface/lib packages/yl_player_platform_interface/test",
+      "cwd": "/private/tmp/yl-subtitle-managed-validation-bgjnj1h0",
+      "exitCode": 0,
+      "result": "No issues found",
+      "log": "docs/superpowers/reports/evidence/2026-10-11-subtitle-managed/final-analyze.log"
+    }
+  ],
+  "history": [
+    {
+      "log": "red.log",
+      "result": "Expected RED: managed policy unsupported; 9 failures"
+    },
+    {
+      "log": "policy-red.log",
+      "result": "Expected RED: missing retry-delay helper"
+    },
+    {
+      "log": "initial-green.log",
+      "result": "13 passed"
+    },
+    {
+      "log": "network-expanded.log",
+      "result": "57 passed, 2 failed: buffered fixture and Stop ACK ordering"
+    },
+    {
+      "log": "date-red.log",
+      "result": "4 passed, 2 failed: SDK HTTP-date behavior"
+    },
+    {
+      "log": "date-century-red.log",
+      "result": "6 passed, 1 failed: RFC850 century window"
+    },
+    {
+      "log": "progress-repro.log",
+      "result": "Buffered body fixture timeout reproduced"
+    },
+    {
+      "log": "progress-diagnostic.log",
+      "result": "Temporary type/length-only diagnostic confirms buffering"
+    },
+    {
+      "log": "progress-unbuffered.log",
+      "result": "1 passed after fixture bufferOutput=false"
+    },
+    {
+      "log": "directed-green.log",
+      "result": "Compilation failed due to concurrent local formatter/fix edit corruption; filename does not imply success"
+    },
+    {
+      "log": "isolated-directed.log",
+      "result": "74 passed on initialBase"
+    },
+    {
+      "log": "analyze-first.log",
+      "result": "No issues found on initialBase"
+    },
+    {
+      "log": "reset-red.log",
+      "result": "1 expected RED: actual TCP RST not retried"
+    },
+    {
+      "log": "review-fix-directed.log",
+      "result": "75 passed on initialBase after socket observation fix"
+    },
+    {
+      "log": "analyze-review-fix.log",
+      "result": "No issues found after review fix"
+    }
+  ],
+  "review": {
+    "importantFindings": 1,
+    "resolved": 1,
+    "remaining": 0,
+    "finding": "Header-phase TCP reset lost by Dart HttpException wrapping",
+    "fix": "Preserve owned socket transport error before wrapping; retain TLS identity; POSIX RST regression",
+    "followUp": "Independent read-only follow-up closed the finding"
+  },
+  "limitations": [
+    "No native build, device, long playback or weak-network ABR validation",
+    "Whole P02 and CAP-SUB remain open",
+    "RST fixture executes on macOS/Linux; skipped on other platforms"
+  ]
+}

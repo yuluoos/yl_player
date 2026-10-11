@@ -1,0 +1,10 @@
+00:00 +0: loading /private/tmp/yl-subtitle-managed-validation-bgjnj1h0/packages/yl_player/test/subtitle_managed_network_test.dart
+00:00 +0: TCP reset during response headers retries owned attempt
+00:00 +0 -1: TCP reset during response headers retries owned attempt [E]
+  YlFailure(category: network, code: network.failed, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 59:5  read
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-subtitle-managed-validation-bgjnj1h0/packages/yl_player/test/subtitle_managed_network_test.dart: TCP reset during response headers retries owned attempt

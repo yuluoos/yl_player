@@ -1,0 +1,10 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart
+00:00 +0: body progress resets read deadline after connect deadline has expired
+00:00 +0 -1: body progress resets read deadline after connect deadline has expired [E]
+  YlFailure(category: network, code: network.failed, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 59:5  read
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: body progress resets read deadline after connect deadline has expired

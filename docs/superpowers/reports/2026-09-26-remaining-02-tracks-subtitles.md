@@ -89,3 +89,26 @@ Task 1A 只完成 Dart 合约，native schema/生成文件保持不变，且当�
 最终集中命令曾在启动前被磁盘空间耗尽阻挡（shell重定向与here-document均报 no space left on device，未启动测试）。确认恢复约100MiB空间后重试；未删除其他任务数据。全程未启动原生构建、设备、长播放或弱网 ABR；没有更改其源文件、验收门限和工作成果。公开宿主框架渲染与物理设备播放证据严格分开。
 
 最终冻结源码：从仓库根运行 `flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test`，**549/549、0失败、exit 0**（132/222/113/82）；播放器新增51项。最后一版用例额外确认迟到FirstFrame的原始时间与四类事件 payload 保留。静态分析 `yl_player` 与 platform_interface 的 lib/test 全部 **No issues found、exit 0**。未修改既有测试门限。源码、规范、报告及原始日志/PNG指纹见[证据清单](evidence/2026-10-11-subtitle-runtime/manifest.json)。本项使用独立 Git index 和比较更新提交引用，仅包含字幕切片及自身总览追加段，保留其他会话暂存内容。
+
+## 2026-10-11：Task 2 managed 字幕网络策略
+
+用户明确要求接入 managed、验证后提交。继 `8ab86d0` 的真实字幕运行切片，复用现有 `YlNetworkPolicy.managed`，新增每跳 DNS/TCP/TLS/响应头截止、正文无进展截止、有限重试和退避。正文非空块重置 readTimeout；managed 没有总调用截止。platformDefault 的30秒总截止/5跳/零重试保持兼容。
+
+GET 仅重试 socket/timeout/提前关闭及408/429/500/502/503/504；系统信任失败、格式/编码/大小与永久HTTP错误不重试。每次尝试独占新连接及空缓冲，重试从当前URI继续；重定向次数跨尝试共用，跨origin剥离的凭据永久保持剥离。maxRetries 不含首请求。指数退避饱和于上限，Retry-After 合法秒数/HTTP日期优先但不得超过等待上限，非法值回退公式；日期支持三种标准形式并严格验证日历，处理RFC850的50年窗口/跨世纪。详见[策略契约](../specs/2026-10-11-subtitle-managed-network.md)。
+
+取消会关闭当前读取、TLS握手和退避定时器；replace/load/stop/dispose 后不再发起重试或提交过期目录。Stop未ACK时取消可先返回 load.cancelled，ACK后的命令仍是 session.stale；测试显式持有ACK验证两个阶段。终端错误继续脱敏为命令级、retryable=false，保留旧目录，不新增外层重试。
+
+### 实际失败与复审修复
+
+- 起始9项真实 RED（managed 被旧实现拒绝），退避函数用例先因函数缺失失败；初版13项通过。
+- 扩展首轮57通过/2失败：HTTP夹具未关闭 bufferOutput，flush未按块交付（类型/长度诊断确认）；另一个用例依赖Stop的微任务顺序。修正夹具并明确ACK阶段，未放宽截止门限。
+- 日期RED暴露SDK宽松日历归一化、两位年份解释以及世纪窗口，改为独立严格三格式解析。一次并发 dart fix/format 造成局部编辑损坏和编译失败，已修复并改为顺序变换；`directed-green.log` 是这次失败原始文件，其文件名不代表通过。所有失败/诊断保留。
+- 隔离基线 `8ab86d0` 加本轮源码后，74项定向通过。一次独立只读复审提出 Important：Dart将响应头期间的 SocketException 包装为 HttpException，TCP reset 漏重试。新增真实 POSIX SO_LINGER RST 夹具首先失败，再加入只观察原始错误的Socket代理，保持SecureSocket身份并限定当前attempt还原，修复后75/75。原有TLS/非法协议不重试用例继续通过。该复审项只读复核关闭，无遗留Important/Critical。
+
+### 验证隔离与边界
+
+并行会话曾修改公共控制器/SPI，故最初使用 `8ab86d0` 的临时固定副本，仅覆盖本项源码。其直播公共契约提交 `8e11db5` 后，最终副本更新到该提交，再覆盖8份字幕源码/测试；不混入其未提交长播放或弱网工作。本轮无原生构建、设备、长播/弱网ABR执行，也未改这些文件或测试门限。
+
+本切片完成的是已有SRT/WebVTT运行时的managed网络策略；TTML/内嵌/高级及图形字幕、HDR/保护输出、三端真机同步、多音轨与PD-03仍开放，不能关闭整个Task 2或CAP-SUB。最终冻结结果与原始日志指纹见[证据清单](evidence/2026-10-11-subtitle-managed/manifest.json)。
+
+最终冻结命令：从临时副本仓库根运行 `flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test`，**615/615、0失败、exit 0**（135接口/285播放器/113 Apple/82 Android）；本项新增45项。`dart analyze` 检查播放器与接口lib/test，**No issues found、exit 0**。所有8份覆盖源码在测试副本与提交候选中逐字节一致；采用独立Git index及HEAD比较更新，只提交字幕文件和自身总览/变更日志段，保留其他任务未提交内容。

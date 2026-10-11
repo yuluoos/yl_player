@@ -1,0 +1,141 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart
+00:00 +0: managed retries HTTP 408 through successful body
+00:00 +0 -1: managed retries HTTP 408 through successful body [E]
+  YlFailure(category: unsupported, code: policy.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  dart:async                                                        _Completer.completeError
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 34:12   read.fail
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 61:9    read.run
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 192:5   read
+  package:yl_player/src/subtitles/subtitle_resource.dart 42:16      readSubtitleResource
+  packages/yl_player/test/subtitle_managed_network_test.dart 35:32  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                        _CustomZone.registerUnaryCallback
+  packages/yl_player/test/subtitle_managed_network_test.dart 30:22  main.<fn>
+  
+00:00 +0 -1: managed retries HTTP 429 through successful body
+00:00 +0 -2: managed retries HTTP 429 through successful body [E]
+  YlFailure(category: unsupported, code: policy.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  dart:async                                                        _Completer.completeError
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 34:12   read.fail
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 61:9    read.run
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 192:5   read
+  package:yl_player/src/subtitles/subtitle_resource.dart 42:16      readSubtitleResource
+  packages/yl_player/test/subtitle_managed_network_test.dart 35:32  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                        _CustomZone.registerUnaryCallback
+  packages/yl_player/test/subtitle_managed_network_test.dart 30:22  main.<fn>
+  
+00:00 +0 -2: managed retries HTTP 500 through successful body
+00:00 +0 -3: managed retries HTTP 500 through successful body [E]
+  YlFailure(category: unsupported, code: policy.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  dart:async                                                        _Completer.completeError
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 34:12   read.fail
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 61:9    read.run
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 192:5   read
+  package:yl_player/src/subtitles/subtitle_resource.dart 42:16      readSubtitleResource
+  packages/yl_player/test/subtitle_managed_network_test.dart 35:32  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                        _CustomZone.registerUnaryCallback
+  packages/yl_player/test/subtitle_managed_network_test.dart 30:22  main.<fn>
+  
+00:00 +0 -3: managed retries HTTP 502 through successful body
+00:00 +0 -4: managed retries HTTP 502 through successful body [E]
+  YlFailure(category: unsupported, code: policy.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  dart:async                                                        _Completer.completeError
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 34:12   read.fail
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 61:9    read.run
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 192:5   read
+  package:yl_player/src/subtitles/subtitle_resource.dart 42:16      readSubtitleResource
+  packages/yl_player/test/subtitle_managed_network_test.dart 35:32  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                        _CustomZone.registerUnaryCallback
+  packages/yl_player/test/subtitle_managed_network_test.dart 30:22  main.<fn>
+  
+00:00 +0 -4: managed retries HTTP 503 through successful body
+00:00 +0 -5: managed retries HTTP 503 through successful body [E]
+  YlFailure(category: unsupported, code: policy.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  dart:async                                                        _Completer.completeError
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 34:12   read.fail
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 61:9    read.run
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 192:5   read
+  package:yl_player/src/subtitles/subtitle_resource.dart 42:16      readSubtitleResource
+  packages/yl_player/test/subtitle_managed_network_test.dart 35:32  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                        _CustomZone.registerUnaryCallback
+  packages/yl_player/test/subtitle_managed_network_test.dart 30:22  main.<fn>
+  
+00:00 +0 -5: managed retries HTTP 504 through successful body
+00:00 +0 -6: managed retries HTTP 504 through successful body [E]
+  YlFailure(category: unsupported, code: policy.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  dart:async                                                        _Completer.completeError
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 34:12   read.fail
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 61:9    read.run
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 192:5   read
+  package:yl_player/src/subtitles/subtitle_resource.dart 42:16      readSubtitleResource
+  packages/yl_player/test/subtitle_managed_network_test.dart 35:32  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                        _CustomZone.registerUnaryCallback
+  packages/yl_player/test/subtitle_managed_network_test.dart 30:22  main.<fn>
+  
+00:00 +0 -6: managed retry count excludes initial attempt
+00:00 +0 -7: managed retry count excludes initial attempt [E]
+  Expected: throws <Instance of 'YlPlayerException'> with `code`: 'network.failed' and `scope`: YlFailureScope:<YlFailureScope.command> and `retryable`: <false>
+    Actual: <Instance of 'Future<List<int>>'>
+     Which: threw YlPlayerException:<YlFailure(category: unsupported, code: policy.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)>
+            stack dart:async                                                        _Completer.completeError
+                  package:yl_player/src/subtitles/subtitle_resource_io.dart 34:12   read.fail
+                  package:yl_player/src/subtitles/subtitle_resource_io.dart 61:9    read.run
+                  package:yl_player/src/subtitles/subtitle_resource_io.dart 192:5   read
+                  package:yl_player/src/subtitles/subtitle_resource.dart 42:16      readSubtitleResource
+                  packages/yl_player/test/subtitle_managed_network_test.dart 42:23  main.<fn>
+                  ===== asynchronous gap ===========================
+                  dart:async                                                        _CustomZone.registerUnaryCallback
+                  packages/yl_player/test/subtitle_managed_network_test.dart 41:20  main.<fn>
+                  
+            which has `code` with value 'policy.unsupported' which is different.
+                  Expected: network.fa ...
+                    Actual: policy.uns ...
+                            ^
+                   Differ at offset 0
+  
+  package:matcher                                                   expectLater
+  package:flutter_test/src/widget_tester.dart 507:8                 expectLater
+  packages/yl_player/test/subtitle_managed_network_test.dart 42:11  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                        _CustomZone.registerUnaryCallback
+  packages/yl_player/test/subtitle_managed_network_test.dart 41:20  main.<fn>
+  
+00:00 +0 -7: response header timeout is retried and closes held request
+00:00 +0 -8: response header timeout is retried and closes held request [E]
+  YlFailure(category: unsupported, code: policy.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  dart:async                                                        _Completer.completeError
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 34:12   read.fail
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 61:9    read.run
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 192:5   read
+  package:yl_player/src/subtitles/subtitle_resource.dart 42:16      readSubtitleResource
+  packages/yl_player/test/subtitle_managed_network_test.dart 50:18  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                        _CustomZone.registerUnaryCallback
+  packages/yl_player/test/subtitle_managed_network_test.dart 47:20  main.<fn>
+  
+00:00 +0 -8: read inactivity retry discards prior attempt bytes
+00:00 +0 -9: read inactivity retry discards prior attempt bytes [E]
+  YlFailure(category: unsupported, code: policy.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  dart:async                                                        _Completer.completeError
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 34:12   read.fail
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 61:9    read.run
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 192:5   read
+  package:yl_player/src/subtitles/subtitle_resource.dart 42:16      readSubtitleResource
+  packages/yl_player/test/subtitle_managed_network_test.dart 60:30  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                        _CustomZone.registerUnaryCallback
+  packages/yl_player/test/subtitle_managed_network_test.dart 56:20  main.<fn>
+  
+00:00 +0 -9: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 408 through successful body
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 429 through successful body
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 500 through successful body
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 502 through successful body
+  ... and 5 more

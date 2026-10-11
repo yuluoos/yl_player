@@ -43,7 +43,8 @@ the catalog budget). At most one replacement read is active. Parsing/render span
 counts are bounded separately. HTTP platformDefault uses a 30-second total
 deadline, at most five redirects, no retries, system certificate validation,
 identity encoding and permanently strips credentials on origin change. Managed
-HTTP policy is explicitly rejected in this slice, not approximated. File reads
+HTTP is implemented by the [managed network extension](2026-10-11-subtitle-managed-network.md),
+with per-hop/read deadlines and explicit retry/redirect budgets. File reads
 are streamed and cancellable. Errors are sanitized command failures; they do not
 commit a damaged catalog or decide PD-03's eventual playback-failure policy.
 

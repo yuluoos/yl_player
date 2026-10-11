@@ -1,0 +1,124 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart
+00:00 +0: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 408 through successful body
+00:00 +1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 429 through successful body
+00:00 +2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 500 through successful body
+00:00 +3: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 502 through successful body
+00:00 +4: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 503 through successful body
+00:00 +5: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 504 through successful body
+00:00 +6: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: managed retry count excludes initial attempt
+00:00 +7: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: response header timeout is retried and closes held request
+00:00 +8: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: read inactivity retry discards prior attempt bytes
+00:00 +9: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: permanent HTTP 400 never retries
+00:00 +10: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: permanent HTTP 401 never retries
+00:00 +11: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: permanent HTTP 403 never retries
+00:00 +12: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: permanent HTTP 404 never retries
+00:00 +13: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: permanent HTTP 501 never retries
+00:00 +14: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: body progress resets read deadline after connect deadline has expired
+00:00 +14 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: body progress resets read deadline after connect deadline has expired [E]
+  YlFailure(category: network, code: network.failed, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/subtitle_resource_io.dart 59:5  read
+  
+00:00 +14 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: excessive valid Retry-After forbids retry: 1
+00:00 +15 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: excessive valid Retry-After forbids retry: 999999999999999999999999
+00:00 +16 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: excessive valid Retry-After forbids retry: Sun, 11 Oct 2099 12:00:00 GMT
+00:00 +17 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: Retry-After zero overrides delay and malformed values fall back
+00:01 +18 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: exponential backoff saturates in actual request scheduling
+00:01 +19 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: cancel during backoff prevents all later attempts
+00:01 +20 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: redirect counter spans retries and credentials stay stripped on return
+00:01 +21 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: zero redirect budget rejects first such response
+00:01 +22 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: zero retry budget rejects first such response
+00:01 +23 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: terminal encoding error never retries
+00:01 +24 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: terminal length error never retries
+00:01 +25 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: terminal stream error never retries
+00:01 +26 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: raw truncated body retries from empty
+00:01 +27 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: raw invalid protocol rejects
+00:01 +28 -1: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart
+00:02 +28 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: explicit nonidentity encoding request is rejected, never overwritten
+00:02 +29 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: actual GET preserves headers and same-origin credentials
+00:02 +30 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: cross-origin redirect strips credentials permanently including return
+00:02 +31 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: bounded HTTP body declared=true
+00:02 +32 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: bounded HTTP body declared=false
+00:02 +33 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: redirect budget stops a loop after five hops
+00:02 +34 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: HTTP errors are sanitized and never retried
+00:02 +35 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: managed policy now performs the request
+00:02 +36 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: encoded responses reject rather than bypassing decompressed budget
+00:02 +37 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: cancellation closes stalled headers
+00:02 +38 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: cancellation closes stalled body
+00:02 +39 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: cancellation owns and closes a stalled TLS handshake socket
+00:02 +40 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_resource_test.dart: file streams enforce input limit and missing paths are sanitized
+00:02 +41 -1: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart
+00:03 +41 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: real file catalog, selection, offset and native revision coexist
+00:03 +42 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: bad replacement is atomic and sanitized
+00:03 +43 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: events share the public revision domain after subtitle publications
+00:03 +44 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: unsupported newer format replacement still cancels previous pending catalog
+00:03 +45 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: unsupported newer encoding replacement still cancels previous pending catalog
+00:03 +46 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: session replacement clears catalog and offset
+00:03 +47 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: native subtitle owner and protected output cannot silently use text overlay
+00:03 +48 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by replace without late publication
+00:03 +49 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by load without late publication
+00:03 +50 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by stop without late publication
+00:04 +50 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by stop without late publication [E]
+  Expected: throws <Instance of 'YlPlayerException'> with `code`: 'session.stale' and `scope`: YlFailureScope:<YlFailureScope.command> and `retryable`: <false>
+    Actual: <Instance of 'Future<void>'>
+     Which: threw YlPlayerException:<YlFailure(category: cancelled, code: load.cancelled, retryable: false, scope: command, diagnosticId: text-subtitle)>
+            stack package:yl_player/src/subtitles/subtitle_resource.dart 52:22     SubtitleCancellation.check
+                  package:yl_player/src/subtitles/subtitle_resource_io.dart 57:11  read
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                  expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8                expectLater
+                  packages/yl_player/test/text_subtitle_runtime_test.dart 344:25   main.<fn>
+                  ===== asynchronous gap ===========================
+                  dart:async                                                       _CustomZone.registerUnaryCallback
+                  packages/yl_player/test/text_subtitle_runtime_test.dart 326:9    main.<fn>
+                  
+            which has `code` with value 'load.cancelled' which is different.
+                  Expected: session.st ...
+                    Actual: load.cance ...
+                            ^
+                   Differ at offset 0
+  
+  package:matcher                                                 expectLater
+  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+  packages/yl_player/test/text_subtitle_runtime_test.dart 344:25  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                      _CustomZone.registerUnaryCallback
+  packages/yl_player/test/text_subtitle_runtime_test.dart 326:9   main.<fn>
+  
+  Expected: throws <Instance of 'YlPlayerException'> with `code`: 'session.stale' and `scope`: YlFailureScope:<YlFailureScope.command> and `retryable`: <false>
+    Actual: <Instance of 'Future<void>'>
+     Which: threw YlPlayerException:<YlFailure(category: cancelled, code: load.cancelled, retryable: false, scope: command, diagnosticId: text-subtitle)>
+            stack package:yl_player/src/subtitles/subtitle_resource.dart 52:22     SubtitleCancellation.check
+                  package:yl_player/src/subtitles/subtitle_resource_io.dart 57:11  read
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                  expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8                expectLater
+                  packages/yl_player/test/text_subtitle_runtime_test.dart 344:25   main.<fn>
+                  ===== asynchronous gap ===========================
+                  dart:async                                                       _CustomZone.registerUnaryCallback
+                  packages/yl_player/test/text_subtitle_runtime_test.dart 326:9    main.<fn>
+                  
+            which has `code` with value 'load.cancelled' which is different.
+                  Expected: session.st ...
+                    Actual: load.cance ...
+                            ^
+                   Differ at offset 0
+  
+  package:matcher                                                 expectLater
+  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+  packages/yl_player/test/text_subtitle_runtime_test.dart 344:25  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                      _CustomZone.registerUnaryCallback
+  packages/yl_player/test/text_subtitle_runtime_test.dart 326:9   main.<fn>
+  
+00:04 +50 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by dispose without late publication
+00:04 +51 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: selection and offset during pending replacement are preserved at atomic commit
+00:04 +52 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: aggregate bytes and cue counts reject whole catalog
+00:04 +53 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: unsupported format and encoding do not replace current catalog
+00:04 +54 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: paused and buffering use media position without wall-clock advance
+00:04 +55 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending seek and post-ACK snapshot cannot expose pre-seek cues
+00:04 +56 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: actual overlay follows position, offset, off and seek
+00:05 +57 -2: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: body progress resets read deadline after connect deadline has expired
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by stop without late publication

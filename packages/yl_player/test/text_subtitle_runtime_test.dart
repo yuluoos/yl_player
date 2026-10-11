@@ -155,6 +155,140 @@ void main() {
   });
 
   test(
+    'managed retry reaches parser and atomically replaces selected content',
+    () async {
+      await session.replaceExternalSubtitles([sub()]);
+      await session.selectSubtitleTrack('en');
+      final before = player.state;
+      final first = Completer<void>();
+      final finalRequest = Completer<HttpRequest>();
+      final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+      addTearDown(() => server.close(force: true));
+      var count = 0;
+      server.listen((r) {
+        if (++count == 1) {
+          r.response.statusCode = 503;
+          unawaited(r.response.close());
+          first.complete();
+        } else {
+          finalRequest.complete(r);
+        }
+      });
+      final pending = session.replaceExternalSubtitles([
+        sub(
+          source: YlNetworkSource(
+            Uri.parse('http://127.0.0.1:${server.port}/sub'),
+            networkPolicy: const YlNetworkPolicy.managed(
+              maxRetries: 1,
+              baseRetryDelay: Duration.zero,
+            ),
+          ),
+        ),
+      ]);
+      await first.future;
+      expect(player.state, before);
+      final request = await finalRequest.future;
+      expect(player.state, before);
+      request.response.write(sample.replaceAll('second', 'managed fresh'));
+      await request.response.close();
+      await pending;
+      position(1600);
+      backend.emitFirstFrame(sid);
+      expect(player.state.subtitles.selectedTrackId, 'en');
+      expect(player.textSubtitleCues.last.text.toPlainText(), 'managed fresh');
+      expect(count, 2);
+    },
+  );
+
+  test(
+    'managed parse failure never retries or changes committed catalog',
+    () async {
+      await session.replaceExternalSubtitles([sub()]);
+      final before = player.state;
+      final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+      addTearDown(() => server.close(force: true));
+      var count = 0;
+      server.listen((r) {
+        count++;
+        r.response.write('malformed secret');
+        unawaited(r.response.close());
+      });
+      await expectLater(
+        session.replaceExternalSubtitles([
+          sub(
+            source: YlNetworkSource(
+              Uri.parse('http://127.0.0.1:${server.port}/sub'),
+              networkPolicy: const YlNetworkPolicy.managed(
+                baseRetryDelay: Duration.zero,
+              ),
+            ),
+          ),
+        ]),
+        failure(YlFailureCodes.subtitleMalformed),
+      );
+      expect(player.state, before);
+      expect(count, 1);
+    },
+  );
+
+  for (final action in ['replace', 'load', 'stop', 'dispose']) {
+    test(
+      'managed backoff is cancelled by $action with no later requests',
+      () async {
+        final first = Completer<void>();
+        var count = 0;
+        final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+        addTearDown(() => server.close(force: true));
+        server.listen((r) {
+          count++;
+          r.response.statusCode = 503;
+          unawaited(r.response.close());
+          if (!first.isCompleted) first.complete();
+        });
+        final pending = session.replaceExternalSubtitles([
+          sub(
+            source: YlNetworkSource(
+              Uri.parse('http://127.0.0.1:${server.port}/sub'),
+              networkPolicy: const YlNetworkPolicy.managed(
+                baseRetryDelay: Duration(milliseconds: 200),
+              ),
+            ),
+          ),
+        ]);
+        final checked = expectLater(
+          pending,
+          failure(switch (action) {
+            'load' => YlFailureCodes.sessionStale,
+            'dispose' => YlFailureCodes.playerDisposed,
+            _ => YlFailureCodes.loadCancelled,
+          }),
+        );
+        await first.future;
+        await Future<void>.delayed(const Duration(milliseconds: 40));
+        if (action == 'replace') {
+          await session.replaceExternalSubtitles([]);
+        } else if (action == 'load') {
+          final next = player.load(const YlFileSource('/next.mp4'));
+          backend.commit(const YlPlaybackSessionId('next'));
+          await next;
+        } else if (action == 'stop') {
+          backend.stopReply = Completer<void>();
+          final stopping = player.stop();
+          await checked;
+          backend.stopReply!.complete();
+          await stopping;
+        } else {
+          await player.dispose();
+        }
+        await checked.timeout(const Duration(seconds: 2));
+        await Future<void>.delayed(const Duration(milliseconds: 250));
+        expect(count, 1);
+        expect(player.state.subtitles.tracks, isEmpty);
+      },
+    );
+  }
+
+  test(
     'events share the public revision domain after subtitle publications',
     () async {
       await session.replaceExternalSubtitles([sub()]);
@@ -224,7 +358,7 @@ void main() {
     },
   );
 
-  for (final kind in ['format', 'policy']) {
+  for (final kind in ['format', 'encoding']) {
     test(
       'unsupported newer $kind replacement still cancels previous pending catalog',
       () async {
@@ -254,6 +388,9 @@ void main() {
                 : sub(
                     source: YlNetworkSource(
                       Uri.parse('https://unused.test/sub'),
+                      request: YlHttpRequest(
+                        headers: {'accept-encoding': 'gzip'},
+                      ),
                       networkPolicy: const YlNetworkPolicy.managed(),
                     ),
                   ),
@@ -341,7 +478,8 @@ void main() {
         final checked = expectLater(
           pending,
           failure(switch (action) {
-            'load' || 'stop' => YlFailureCodes.sessionStale,
+            'load' => YlFailureCodes.sessionStale,
+            'stop' => YlFailureCodes.loadCancelled,
             'dispose' => YlFailureCodes.playerDisposed,
             _ => YlFailureCodes.loadCancelled,
           }),
@@ -354,7 +492,15 @@ void main() {
           backend.commit(const YlPlaybackSessionId('next'));
           await next;
         } else if (action == 'stop') {
-          await player.stop();
+          backend.stopReply = Completer<void>();
+          final stopping = player.stop();
+          await checked; // Cancellation is observable before the Stop ACK.
+          backend.stopReply!.complete();
+          await stopping;
+          await expectLater(
+            session.selectSubtitleTrack(null),
+            failure(YlFailureCodes.sessionStale),
+          );
         } else {
           await player.dispose();
         }
@@ -447,7 +593,7 @@ void main() {
   });
 
   test(
-    'unsupported format and managed policy do not replace current catalog',
+    'unsupported format and encoding do not replace current catalog',
     () async {
       await session.replaceExternalSubtitles([sub()]);
       final before = player.state;
@@ -466,6 +612,7 @@ void main() {
           sub(
             source: YlNetworkSource(
               Uri.parse('http://127.0.0.1:1/unused'),
+              request: YlHttpRequest(headers: {'accept-encoding': 'gzip'}),
               networkPolicy: const YlNetworkPolicy.managed(),
             ),
           ),

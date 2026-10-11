@@ -1,0 +1,20 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_retry_policy_test.dart
+00:00 +0: exponential delay saturates without overflow or count-sized work
+00:00 +1: valid Retry-After seconds override and excessive values forbid retry
+00:00 +2: dates use injected wall time and past values mean zero delay
+00:00 +3: malformed values fall back to exponential delay
+00:00 +4: obsolete HTTP dates resolve two-digit years against injected clock
+00:00 +5: obsolete date window also crosses a century boundary
+00:00 +5 -1: obsolete date window also crosses a century boundary [E]
+  Expected: null
+    Actual: Duration:<0:00:00.000000>
+  
+  package:matcher                                               expect
+  package:flutter_test/src/widget_tester.dart 473:18            expect
+  packages/yl_player/test/subtitle_retry_policy_test.dart 94:5  main.<fn>
+  
+00:00 +5 -1: invalid calendar dates and truncated fields fall back rather than normalize
+00:00 +6 -1: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_retry_policy_test.dart: obsolete date window also crosses a century boundary

@@ -156,14 +156,15 @@ void main() {
     }
     expect(count, 1);
   });
-  test('managed policy rejects before network access', () async {
+  test('managed policy now performs the request', () async {
     var count = 0;
     final server = await serve((r) {
       count++;
+      r.response.write('managed');
       unawaited(r.response.close());
     });
-    await expectLater(
-      readSubtitleResource(
+    expect(
+      await readSubtitleResource(
         YlNetworkSource(
           url(server),
           networkPolicy: const YlNetworkPolicy.managed(),
@@ -171,9 +172,9 @@ void main() {
         token,
         100,
       ),
-      failure(YlFailureCodes.policyUnsupported),
+      utf8.encode('managed'),
     );
-    expect(count, 0);
+    expect(count, 1);
   });
   test(
     'encoded responses reject rather than bypassing decompressed budget',

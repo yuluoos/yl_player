@@ -40,11 +40,6 @@ final class TextSubtitleRuntime {
           source.format != YlSubtitleFormat.webvtt) {
         throw subtitleFailure(YlFailureCodes.subtitleUnsupported);
       }
-      if (source.source case YlNetworkSource(:final networkPolicy)) {
-        if (networkPolicy.kind != YlNetworkPolicyKind.platformDefault) {
-          throw subtitleFailure(YlFailureCodes.policyUnsupported);
-        }
-      }
     }
     final token = SubtitleCancellation();
     _pending = token;

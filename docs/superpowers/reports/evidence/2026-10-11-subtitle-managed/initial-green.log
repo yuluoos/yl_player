@@ -1,0 +1,16 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart
+00:00 +0: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 408 through successful body
+00:00 +1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 429 through successful body
+00:00 +2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 500 through successful body
+00:00 +3: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 502 through successful body
+00:00 +4: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 503 through successful body
+00:00 +5: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 504 through successful body
+00:00 +6: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: managed retry count excludes initial attempt
+00:00 +7: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: response header timeout is retried and closes held request
+00:00 +8: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_managed_network_test.dart: read inactivity retry discards prior attempt bytes
+00:00 +9: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_retry_policy_test.dart
+00:01 +9: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_retry_policy_test.dart: exponential delay saturates without overflow or count-sized work
+00:01 +10: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_retry_policy_test.dart: valid Retry-After seconds override and excessive values forbid retry
+00:01 +11: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_retry_policy_test.dart: dates use injected wall time and past values mean zero delay
+00:01 +12: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_retry_policy_test.dart: malformed values fall back to exponential delay
+00:01 +13: All tests passed!

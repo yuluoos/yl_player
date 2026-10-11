@@ -24,10 +24,28 @@ YlPlayerException subtitleFailure(String code) => YlPlayerException(
 
 final class SubtitleCancellation {
   final _done = Completer<void>();
+  final _listeners = <void Function()>{};
   bool get isCancelled => _done.isCompleted;
   Future<void> get cancelled => _done.future;
   void cancel() {
-    if (!isCancelled) _done.complete();
+    if (isCancelled) return;
+    _done.complete();
+    final callbacks = _listeners.toList();
+    _listeners.clear();
+    for (final callback in callbacks) {
+      callback();
+    }
+  }
+
+  /// Each attempt removes its subscription when done, so retry count does not
+  /// determine retained callbacks or sockets.
+  void Function() listen(void Function() callback) {
+    if (isCancelled) {
+      callback();
+      return () {};
+    }
+    _listeners.add(callback);
+    return () => _listeners.remove(callback);
   }
 
   void check() {
