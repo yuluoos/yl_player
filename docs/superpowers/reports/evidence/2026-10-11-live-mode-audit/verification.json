@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "scope": "documentation-only audit",
+  "baselineCommit": "e6112e15e6d70febcdc88d790b4f4bb69a2e1c6e",
+  "sourceFilesVerified": 24,
+  "sourceAnchorsVerified": 49,
+  "contractLinksVerified": 3,
+  "plannedTestCases": 11,
+  "behavioralTestsRun": 0,
+  "nativeBuilds": 0,
+  "deviceRuns": 0,
+  "networkRequests": 0,
+  "capabilityAccepted": false,
+  "review": {
+    "mode": "one independent read-only gpt-6-astra review",
+    "verdict": "Ready to commit docs-only slice; no important actionable defects",
+    "sourceBlobsAndExcerptsIndependentlyChecked": true,
+    "testsRun": false,
+    "findings": [],
+    "deferredMinors": [],
+    "declinedToJudge": [
+      "Native runtime implementation and generated bridges are not implemented",
+      "Actual audiovisual output, concurrent cancellation and cleanup need runtime evidence",
+      "Weak-network backlog, fixed rendition and buffer budget enforcement need controlled playback",
+      "End-to-end latency, performance SLOs and CAP-LIVE/P04 completion need measurements"
+    ]
+  },
+  "limitations": [
+    "No current public API or native runtime mode switch implemented",
+    "Source audit and future contract only; planned cases are not executed tests"
+  ],
+  "rulings": [
+    "Documentation contract only; concurrent product files remain owned by other chats. No implementation/capability claim.",
+    "Future live automatic maps to smooth; old automatic results cannot be relabeled; VOD and old-adapter behavior remain explicit.",
+    "Optional SPI/operation/session gates plus identity/revision barriers preserve constraints and reject unsupported modes; 32 unsettled mode commands is engineering admission, not SLO.",
+    "Reviewer-declined runtime and acceptance checks remain open; treating this audit as execution evidence would be false."
+  ],
+  "artifactSha256": {
+    "docs/superpowers/specs/2026-10-11-live-mode-runtime-contract.md": "03e2f38ef2f868e80426312a9b99f9ef3c9e37e48903c14c2d7a2ea57e31d076",
+    "docs/superpowers/reports/evidence/2026-10-11-live-mode-audit/source-audit.json": "204ed59a1afdfa87acf073e5710402db2297b13faedc3e6afe7daf77d562e84d"
+  }
+}

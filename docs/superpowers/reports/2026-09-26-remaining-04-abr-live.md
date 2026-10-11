@@ -119,3 +119,28 @@ Task1B 已提交 `b04204a`；本轮仅补 Task4 的离线准备，实际重复�
 定义首帧等指标，故不填零或丢弃记录。环境/缓存身份仅是声明且须另存原始证明；
 若把归档完整或小样本p95当作实测达标，将误报弱网性能。未同步时钟的适配/端到端
 延迟继续null。真实三端基线、ABR优化、直播运行时模式和冻结目标仍待实测推进。
+
+## 2026-10-11：Task 3A 直播模式审计与契约
+
+按用户要求继续下一项不依赖测试环境的工作。以`e6112e1`固定提交源码为基线，
+完成Task3首项前置审计，交付[运行时契约](../specs/2026-10-11-live-mode-runtime-contract.md)
+和[24份源码/49处锚点证据](evidence/2026-10-11-live-mode-audit/source-audit.json)。
+本轮为文档交付，没有产品代码、API、桥接生成物或平台通过行变化。
+
+审计确认当前仅有Load缓冲目标，没有公开模式切换。automatic与smooth不等价；
+Apple HLS等待/启动路径、managed pipeline不可变预算、Android内部loadControl与
+恢复策略、两端RTMP专属恢复与固定1000ms协议提示都需分别处理。代码中的数值
+不是实测SLO；HTTP-FLV不能假借seekable窗口，RTMP不能套用被跳过的HLS健康策略。
+
+契约明确可选SPI、operation和会话能力三重准入、提交状态/请求身份/revision屏障、
+多命令顺序、旧代际取消、失败回滚或明确session失败、暂停/后台意图和恢复预算保留。
+未来live automatic迁移为smooth但不改变VOD/旧adapter的既有语义；bounded、硬解、
+fixed/caps、DRM和网络约束不得被模式覆盖。每player最多32条未结算模式命令，
+工程上限不冒充性能目标。列出LM-01至LM-11定向用例及Task3B–E实施顺序。
+
+只做源码引用、固定blob/SHA256、文档链接和契约一致性检查，不用旧测试结果宣称
+新行为通过；未运行Flutter、原生构建、设备或服务器。独立只读复审结论与检查收据
+见[文档验证记录](evidence/2026-10-11-live-mode-audit/verification.json)。
+Task3首项设计完成，公共契约代码、原生三协议运行时切换、弱网数值和整个CAP-LIVE
+仍未完成。下一项Task3B可做契约/可控后端测试，修改共享session/controller前应重新
+核对并行字幕提交，避免覆盖另一会话。

@@ -1,0 +1,532 @@
+{
+  "schemaVersion": 1,
+  "baselineCommit": "e6112e15e6d70febcdc88d790b4f4bb69a2e1c6e",
+  "scope": "P04 Task3A source audit and future runtime contract only",
+  "sourceMode": "git show fixed commit; no worktree code is evidence",
+  "sources": [
+    {
+      "id": "P1",
+      "path": "packages/yl_player_platform_interface/lib/src/options/load_options.dart",
+      "gitBlob": "889a303ded5397b02b06a906f04301fcdf2b7cfd",
+      "sha256": "4eb98a514f6d63d20320e8b4e75ea4d4bfc7f40849ccf3b6c1fc5d985316754b",
+      "lineCount": 47,
+      "excerpts": [
+        {
+          "anchor": "this.bufferStrategy =",
+          "startLine": 10,
+          "endLine": 25,
+          "text": "    this.bufferStrategy = const YlBufferStrategy.automatic(),\n    this.videoConstraints = const YlVideoConstraints(),\n    this.decoderPolicyOverride,\n  });\n\n  final bool autoplay;\n  final Duration? startPosition;\n  final YlBufferStrategy bufferStrategy;\n  final YlVideoConstraints videoConstraints;\n  final YlDecoderPolicy? decoderPolicyOverride;\n\n  @override\n  bool operator ==(Object other) => ylValueEquals(\n    this,\n    other,\n    (other) =>"
+        }
+      ]
+    },
+    {
+      "id": "P2",
+      "path": "packages/yl_player_platform_interface/lib/src/options/policies.dart",
+      "gitBlob": "af37d88c1c0ff8480feb5179b9748711a480f6f1",
+      "sha256": "d7f15c669518f8557332978790cb4670fa9f32d3970b8a1b908261d4c242badb",
+      "lineCount": 152,
+      "excerpts": [
+        {
+          "anchor": "enum YlBufferStrategyKind",
+          "startLine": 9,
+          "endLine": 24,
+          "text": "enum YlBufferStrategyKind { automatic, lowLatency, smoothPlayback, bounded }\n\n/// Source-specific HTTP transport guarantees. Unsupported requirements must fail.\n/// RTMP has separate native transport limits and accepts only [platformDefault];\n/// [managed] is an HTTP policy and must be rejected by RTMP assessment.\n/// Policy durations must be whole signed32 milliseconds; timeouts are positive,\n/// retry delays are nonnegative, and counts are nonnegative signed32 integers.\n///\n/// For HTTP, both kinds enforce credential origin protection. [platformDefault] delegates\n/// scheduling, timeout and retry behavior without promising exact values.\n///\n/// Managed connect time is the per-hop deadline through response headers,\n/// including DNS, connection, TLS and server wait. Read time measures body\n/// inactivity after headers and resets only on progress. No total call timeout\n/// is promised. Retry only idempotent GET/HEAD on transient transport errors or\n/// HTTP 408/429/500/502/503/504, never cancellation, validation or certificate"
+        },
+        {
+          "anchor": "Built-in strategies",
+          "startLine": 96,
+          "endLine": 111,
+          "text": "/// Built-in strategies are optimization goals, not measured latency promises.\n/// RTMP does not support [bounded]; fixed transport workspace limits do not\n/// satisfy a requested buffer budget. [bounded] requires exact\n/// managed-media duration and byte admission limits, not a process RSS bound.\n/// Platforms unable to enforce the required budget must reject it. Durations\n/// are whole nonnegative signed32 milliseconds; bytes are positive signed32.\nfinal class YlBufferStrategy {\n  const YlBufferStrategy.automatic()\n    : kind = YlBufferStrategyKind.automatic,\n      minDuration = null,\n      maxDuration = null,\n      maxManagedBytes = null;\n\n  const YlBufferStrategy.lowLatency()\n    : kind = YlBufferStrategyKind.lowLatency,\n      minDuration = null,"
+        },
+        {
+          "anchor": "const YlBufferStrategy.bounded",
+          "startLine": 121,
+          "endLine": 136,
+          "text": "  const YlBufferStrategy.bounded({\n    required Duration this.minDuration,\n    required Duration this.maxDuration,\n    required int this.maxManagedBytes,\n  }) : kind = YlBufferStrategyKind.bounded;\n\n  final YlBufferStrategyKind kind;\n  final Duration? minDuration;\n  final Duration? maxDuration;\n  final int? maxManagedBytes;\n\n  @override\n  bool operator ==(Object other) => ylValueEquals(\n    this,\n    other,\n    (other) =>"
+        }
+      ]
+    },
+    {
+      "id": "P3",
+      "path": "packages/yl_player/lib/src/playback_session.dart",
+      "gitBlob": "4192c843dd1769535182d300d2b370e7fa1fde3f",
+      "sha256": "24da914823e824084565d6101ea6dd4782faedddbb0ae4eb928d8cb686c81ac3",
+      "lineCount": 99,
+      "excerpts": [
+        {
+          "anchor": "Future<void> _command",
+          "startLine": 10,
+          "endLine": 25,
+          "text": "  Future<void> _command(Future<void> Function() action) async {\n    _player._checkSession(id);\n    await action();\n  }\n\n  Future<void> play() => _command(() => _player._backend.play(id));\n  Future<void> pause() => _command(() => _player._backend.pause(id));\n  Future<void> seekTo(Duration position) => _command(() {\n    validateYlSeekPosition(position);\n    return _player._backend.seekTo(id, position);\n  });\n  Future<void> seekToLiveEdge() =>\n      _command(() => _player._backend.seekToLiveEdge(id));\n  Future<void> setPlaybackSpeed(double speed) => _command(() {\n    validateYlPlaybackSpeed(speed);\n    return _player._backend.setPlaybackSpeed(id, speed);"
+        },
+        {
+          "anchor": "Future<void> _subtitleCommand",
+          "startLine": 62,
+          "endLine": 77,
+          "text": "  Future<void> _subtitleCommand(\n    YlPlayerOperation operation,\n    Future<void> Function(YlSubtitlePlatformPlayer backend) action,\n  ) async {\n    final backend = _player._backend;\n    if (backend is! YlSubtitlePlatformPlayer ||\n        !backend.capabilities.supportedOperations.contains(operation)) {\n      throw _exception(YlFailureCodes.policyUnsupported);\n    }\n    try {\n      await action(backend as YlSubtitlePlatformPlayer);\n    } catch (_) {\n      _player._checkSession(id);\n      rethrow;\n    }\n    _player._checkSession(id);"
+        }
+      ]
+    },
+    {
+      "id": "P4",
+      "path": "packages/yl_player_platform_interface/lib/src/platform/platform_player.dart",
+      "gitBlob": "ec32db20fc8cafabcf9c81d977c4f8d24f7a5970",
+      "sha256": "94c3fb7d2cf68d0b3fd119efe7af2b368f0f261a72713ecad12ddb413f97daa8",
+      "lineCount": 78,
+      "excerpts": [
+        {
+          "anchor": "abstract interface class YlPlatformPlayer",
+          "startLine": 18,
+          "endLine": 33,
+          "text": "abstract interface class YlPlatformPlayer {\n  YlPlatformImplementationInfo get implementation;\n  YlPlayerCapabilities get capabilities;\n  ValueListenable<int?> get textureId;\n  YlPlayerState get state;\n  Stream<YlPlayerState> get states;\n  Stream<YlPlayerEvent> get events;\n  Future<YlSourceAssessment> assess(\n    YlMediaSource source, {\n    YlLoadOptions options = const YlLoadOptions(),\n  });\n\n  /// Returns only after the commit/state barrier documented by the result.\n  Future<YlPlatformLoadResult> load(\n    YlMediaSource source, {\n    YlLoadOptions options = const YlLoadOptions(),"
+        },
+        {
+          "anchor": "abstract interface class YlSubtitlePlatformPlayer",
+          "startLine": 58,
+          "endLine": 73,
+          "text": "abstract interface class YlSubtitlePlatformPlayer {\n  Future<void> replaceExternalSubtitles(\n    YlPlaybackSessionId sessionId,\n    List<YlExternalSubtitle> subtitles,\n  );\n  Future<void> selectSubtitleTrack(\n    YlPlaybackSessionId sessionId,\n    String? trackId,\n  );\n  Future<void> setSubtitleOffset(\n    YlPlaybackSessionId sessionId,\n    Duration offset,\n  );\n}\n\n/// Optional DRM configuration admission, not evidence of DRM/security support."
+        }
+      ]
+    },
+    {
+      "id": "P5",
+      "path": "packages/yl_player_platform_interface/lib/src/model/player_state.dart",
+      "gitBlob": "bb68cc5b3cf3fe9e7363ed2df47ddd89ab7f820a",
+      "sha256": "75813256088a698fee88fa35e6d2192f88842ed109c7f4f145948569771d75f5",
+      "lineCount": 148,
+      "excerpts": [
+        {
+          "anchor": "final class YlPlayerState",
+          "startLine": 17,
+          "endLine": 32,
+          "text": "final class YlPlayerState {\n  YlPlayerState({\n    this.revision = 0,\n    this.sessionId,\n    this.status = YlPlaybackStatus.idle,\n    this.timeline = const YlTimeline(),\n    this.videoGeometry,\n    List<YlMediaTrack> audioTracks = const [],\n    List<YlMediaTrack> videoTracks = const [],\n    this.videoSelection = const YlVideoSelection(),\n    YlSubtitleState? subtitles,\n    this.engine = YlPlaybackEngine.unknown,\n    this.decoderMode = YlDecoderMode.unknown,\n    this.decoderIdentity,\n    this.metrics = const YlPlaybackMetrics(),\n    this.failure,"
+        }
+      ]
+    },
+    {
+      "id": "P6",
+      "path": "packages/yl_player_platform_interface/lib/src/model/capabilities.dart",
+      "gitBlob": "bea625ff4641341886b9a323d8ee92a4348f4aff",
+      "sha256": "d3036bb2e9045e2025f52bfb3d45182ec19758ca232442a40e0af35df9b953af",
+      "lineCount": 129,
+      "excerpts": [
+        {
+          "anchor": "enum YlPlayerOperation",
+          "startLine": 23,
+          "endLine": 38,
+          "text": "enum YlPlayerOperation {\n  seek,\n  seekToLiveEdge,\n  playbackSpeed,\n  audioTrackSelection,\n  videoConstraints,\n  volume,\n  stop,\n  videoTrackSelection,\n  externalSubtitles,\n  subtitleTrackSelection,\n  subtitleOffset,\n}\n\nconst _absent = Object();\n"
+        }
+      ]
+    },
+    {
+      "id": "A1",
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/PlayerConfiguration.swift",
+      "gitBlob": "d0d9c8423b44c615b118463759811fcddf57a6ac",
+      "sha256": "3158c25b9d147cd12613ac64510e894676b1eee34a360310df000e481d0af434",
+      "lineCount": 44,
+      "excerpts": [
+        {
+          "anchor": "func forLoad",
+          "startLine": 13,
+          "endLine": 28,
+          "text": "  func forLoad(_ source: YlAppleSourceDescriptor?) -> Self {\n    guard let goal = source?.loadOptions?.bufferStrategy else { return self }\n    var result = self\n    result.bufferMode = goal == .smoothPlayback ? \"stable\" : (goal == .lowLatency ? \"lowLatency\" : \"automatic\")\n    result.preferredForwardBufferDuration = result.bufferMode == \"stable\" ? 30 : (result.bufferMode == \"lowLatency\" ? 2 : 10)\n    return result\n  }\n\n  /// Typed creation has already validated the public positive signed32 interval.\n  /// Preserve it exactly rather than applying the retired channel's local clamp.\n  init(positionEventIntervalMs: Int64) {\n    self.init(map: [\"audioPolicy\": \"appManaged\"])\n    self.positionEventIntervalMs = positionEventIntervalMs\n  }\n\n  init(map: [String: Any?]) {"
+        },
+        {
+          "anchor": "preferredForwardBufferDuration = switch",
+          "startLine": 38,
+          "endLine": 44,
+          "text": "    preferredForwardBufferDuration = switch bufferMode {\n    case \"lowLatency\": 2\n    case \"stable\": 30\n    default: 10\n    }\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "A2",
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift",
+      "gitBlob": "a188c29c981bbecc3e20c07e94347239449370e5",
+      "sha256": "b9b516e70fa809274009a7fd09675d7a7e7573a1dd3efda4b0b94732e3fbe7bc",
+      "lineCount": 1684,
+      "excerpts": [
+        {
+          "anchor": "private func startOutput",
+          "startLine": 293,
+          "endLine": 308,
+          "text": "  private func startOutput() throws {\n    try beforeAudioOutput()\n    if configuration.forLoad(lastSource).bufferMode == \"stable\", hlsResourceLoader == nil {\n      // Respect AVPlayer's buffering decision for smooth playback. Immediate\n      // playback bypasses that decision even when automatic waiting is enabled.\n      player.rate = desiredRate\n    } else {\n      player.playImmediately(atRate: desiredRate)\n    }\n  }\n\n  func play() throws {\n    try checkAlive(); guard !stopped else { return }\n    try startOutput()\n    playRequested = true\n    status = services.platform == .ios"
+        },
+        {
+          "anchor": "item.preferredForwardBufferDuration",
+          "startLine": 745,
+          "endLine": 760,
+          "text": "    item.preferredForwardBufferDuration = effectiveConfiguration.preferredForwardBufferDuration\n    player.automaticallyWaitsToMinimizeStalling = effectiveConfiguration.bufferMode != \"lowLatency\"\n    applyQualityConstraint(qualityConstraint, to: item)\n    videoOutput = makeVideoOutput([\n      kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,\n      kCVPixelBufferIOSurfacePropertiesKey as String: [:],\n    ])\n    videoOutputConfigured = services.nativeViewType == nil\n    item.add(videoOutput)\n    refreshFramePolicy()\n    player.replaceCurrentItem(with: item)\n    displayLink?.isPaused = false\n    observe(item, generation: generation)\n    // DASH Period boundaries can fall between milliseconds. Preserve the saved\n    // program time through either restoration route; ordinary sources and new\n    // Load start positions retain their existing millisecond seek contract."
+        },
+        {
+          "anchor": "func seekToLiveEdge",
+          "startLine": 1189,
+          "endLine": 1204,
+          "text": "  func seekToLiveEdge() throws {\n    try checkAlive(); guard !stopped else { return }\n    guard sourceIsLive || isIndefinite(player.currentItem?.duration) else {\n      throw NativePlayerError(\n        category: \"source\",\n        code: \"source.not_live\",\n        message: \"The current source is not live.\"\n      )\n    }\n    videoProgressProbe.reset()\n    if !active {\n      resumeAtLiveEdge = true\n      emitState()\n      return\n    }\n    guard let range = player.currentItem?.seekableTimeRanges.last?.timeRangeValue else {"
+        }
+      ]
+    },
+    {
+      "id": "A3",
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlFallbackBufferBudget.swift",
+      "gitBlob": "36c5130a9a4d875cf2a5a9b0dcf684fe8ebeb0a3",
+      "sha256": "3556c38aa58d94ce10abe9bd5a05fa503cb80d8029e8a081e95cc2c967eb98a1",
+      "lineCount": 86,
+      "excerpts": [
+        {
+          "anchor": "static func make(configuration: PlayerConfiguration, prepared:",
+          "startLine": 14,
+          "endLine": 29,
+          "text": "  static func make(configuration: PlayerConfiguration, prepared: YlPreparedFallback) throws -> Self {\n    if let plan = prepared.boundedPlan { return bounded(plan, scope: prepared.bufferScope) }\n    var result = try make(configuration: configuration); result.bufferScope = prepared.bufferScope\n    return result\n  }\n  let networkBytes: Int\n  let scheduledAudioBytes: Int\n  let inFlightPacketBytes: Int\n\n  func validateInFlightPacket(size: Int) throws {\n    guard size >= 0, size <= inFlightPacketBytes else {\n      throw NativePlayerError(\n        category: \"resource\",\n        code: \"resource.network_buffer_limit\",\n        message: \"A compressed media packet exceeded its memory budget.\"\n      )"
+        },
+        {
+          "anchor": "switch configuration.bufferMode",
+          "startLine": 35,
+          "endLine": 50,
+          "text": "    switch configuration.bufferMode {\n    case \"lowLatency\":\n      return Self(\n        networkBytes: 4 * mebibyte,\n        scheduledAudioBytes: mebibyte,\n        inFlightPacketBytes: 2 * mebibyte\n      )\n    case \"stable\":\n      return Self(\n        networkBytes: 16 * mebibyte,\n        scheduledAudioBytes: 4 * mebibyte,\n        inFlightPacketBytes: 8 * mebibyte\n      )\n    case \"custom\":\n      guard let total = configuration.maxBufferBytes else {\n        return balanced(mebibyte: mebibyte)"
+        },
+        {
+          "anchor": "private static func balanced",
+          "startLine": 75,
+          "endLine": 86,
+          "text": "  private static func balanced(mebibyte: Int) -> Self {\n    Self(\n      networkBytes: 8 * mebibyte,\n      scheduledAudioBytes: 2 * mebibyte,\n      inFlightPacketBytes: 4 * mebibyte\n    )\n  }\n\n  private static func percentage(_ value: Int, percent: Int) -> Int {\n    (value / 100) * percent + (value % 100) * percent / 100\n  }\n}"
+        }
+      ]
+    },
+    {
+      "id": "A4",
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift",
+      "gitBlob": "f842c6b10dc6cd5496109c08ca852f093b2d1b88",
+      "sha256": "24c3c78497d3529d270c823806e827992b5b760c5f30379116360c38c6ca3cc0",
+      "lineCount": 1818,
+      "excerpts": [
+        {
+          "anchor": "private let configuration",
+          "startLine": 60,
+          "endLine": 75,
+          "text": "  private let configuration: PlayerConfiguration\n  private let onEvent: (YlNativeBackendCallback) -> Void\n  private let bufferBudget: YlFallbackBufferBudget\n  private let metricsCollector: YlMetricsCollector\n  private let boundedStateLock = NSLock()\n  private var boundedStartedValue = false\n  private var boundedProducerLimitedValue = false\n  private var boundedStarted: Bool {\n    get { boundedStateLock.withLock { boundedStartedValue } }\n    set { boundedStateLock.withLock { boundedStartedValue = newValue } }\n  }\n  private var boundedProducerLimited: Bool {\n    get { boundedStateLock.withLock { boundedProducerLimitedValue } }\n    set { boundedStateLock.withLock { boundedProducerLimitedValue = newValue } }\n  }\n  private var bufferReleaseObserver: UUID?"
+        },
+        {
+          "anchor": "private let bufferBudget",
+          "startLine": 62,
+          "endLine": 77,
+          "text": "  private let bufferBudget: YlFallbackBufferBudget\n  private let metricsCollector: YlMetricsCollector\n  private let boundedStateLock = NSLock()\n  private var boundedStartedValue = false\n  private var boundedProducerLimitedValue = false\n  private var boundedStarted: Bool {\n    get { boundedStateLock.withLock { boundedStartedValue } }\n    set { boundedStateLock.withLock { boundedStartedValue = newValue } }\n  }\n  private var boundedProducerLimited: Bool {\n    get { boundedStateLock.withLock { boundedProducerLimitedValue } }\n    set { boundedStateLock.withLock { boundedProducerLimitedValue = newValue } }\n  }\n  private var bufferReleaseObserver: UUID?\n  private var qualityConstraint: YlFallbackQualityConstraint\n  private let stateLock = NSLock()"
+        },
+        {
+          "anchor": "func seekToLiveEdge",
+          "startLine": 482,
+          "endLine": 497,
+          "text": "  func seekToLiveEdge() throws {\n      if demux.sourceRecipe.isRtmp {\n        beginLiveReconnect(after: ylRtmpError(\"network.rtmp_disconnected\"),\n          packetGeneration: recoveryGeneration, explicitLiveAttempt: true)\n        return\n      }\n      if demux.mediaPolicy.isLive {\n        throw NativePlayerError(\n          category: \"network\",\n          code: \"network.range_not_supported\",\n          message: \"HTTP-FLV does not expose a seekable live window.\"\n        )\n      }\n      throw NativePlayerError(\n        category: \"source\",\n        code: \"source.not_live\","
+        }
+      ]
+    },
+    {
+      "id": "A5",
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/RTMP/YlRtmpPolicy.swift",
+      "gitBlob": "9047e7ff4af8f92bf37492119349440114b5642d",
+      "sha256": "a37422061269094ed7358edb595fc1bf29f36905d9930ec2b1a1ea3290e6bc48",
+      "lineCount": 113,
+      "excerpts": [
+        {
+          "anchor": "static func validate",
+          "startLine": 62,
+          "endLine": 77,
+          "text": "  static func validate(_ source: YlAppleSourceDescriptor) throws -> YlRtmpAddress {\n    let address = try YlRtmpAddress(source.uri)\n    guard !address.secure else { throw ylRtmpInvalid() }\n    let options = source.loadOptions ?? .init()\n    guard [.automatic, .flv].contains(source.formatHint) else { throw ylRtmpError(\"container.unsupported\") }\n    guard source.kind == .network,\n      source.intent != .onDemand, !source.hasHeaders, source.networkPolicy != .managed,\n      options.bufferStrategy != .bounded, (options.startPositionMs ?? 0) == 0 else {\n      throw ylRtmpError(\"policy.unsupported\")\n    }\n    return address\n  }\n}\n\n/// Retained by the source descriptor and recipe across managed-session reconstruction.\nfinal class YlRtmpRecoveryBudget {"
+        },
+        {
+          "anchor": "final class YlRtmpRecoveryBudget",
+          "startLine": 77,
+          "endLine": 92,
+          "text": "final class YlRtmpRecoveryBudget {\n  private let lock = NSLock()\n  private var used = 0\n  var attempts: Int { lock.lock(); defer { lock.unlock() }; return used }\n  static func isTransient(_ error: NativePlayerError) -> Bool {\n    [\"network.rtmp_handshake_failed\", \"network.rtmp_disconnected\"].contains(error.code)\n  }\n  /// The coordinator calls this only for a previously committed load. Its\n  /// original open token/waiter owns the explicit attempt and every retry.\n  func prepareRestoration<T>(token: YlOpenCancellationToken, work: () throws -> T) throws -> T {\n    let cancelled = DispatchSemaphore(value: 0)\n    token.onCancel { cancelled.signal() }\n    while true {\n      try token.throwIfCancelled()\n      do { return try work() }\n      catch let error as NativePlayerError {"
+        },
+        {
+          "anchor": "func nextDelay",
+          "startLine": 102,
+          "endLine": 113,
+          "text": "  func nextDelay(after error: NativePlayerError) -> Int64? {\n    lock.lock(); defer { lock.unlock() }\n    guard Self.isTransient(error), used < 3 else { return nil }\n    let delay: Int64 = [500, 1000, 2000][used]; used += 1; return delay\n  }\n}\n\nstruct YlRtmpRequestRecipe {\n  let address: YlRtmpAddress\n  let recovery: YlRtmpRecoveryBudget\n  let bufferScope: YlManagedBufferScope\n}"
+        }
+      ]
+    },
+    {
+      "id": "A6",
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/RTMP/YlRtmpByteSource.swift",
+      "gitBlob": "c5f4f406269560c0ee261fb874913ea5695259a4",
+      "sha256": "b78e994ca98fc3e8e8b875512dd043db739b933bdbbd44aed3e4bc54e1af6d1f",
+      "lineCount": 334,
+      "excerpts": [
+        {
+          "anchor": "buffer.rtmpBE(1000,4)",
+          "startLine": 317,
+          "endLine": 332,
+          "text": "        var buffer = Data([0,3]); buffer.rtmpBE(UInt64(stream),4); buffer.rtmpBE(1000,4)\n        try flow.write(.init(type:4,stream:0,timestamp:0,payload:buffer))\n        try command(stream,[\"play\",0.0,NSNull(),recipe.address.playpath,-1.0])\n      } else { throw ylRtmpInvalid() }\n    case \"onStatus\":\n      guard values.count >= 4, tx == 0, m.stream == stream, stage >= 2,\n        let info = values[3] as? [String: Any], let code = info[\"code\"] as? String else { throw ylRtmpInvalid() }\n      guard info[\"level\"] as? String != \"error\" else { throw ylRtmpError(\"network.rtmp_stream_unavailable\") }\n      switch code {\n      case \"NetStream.Play.Start\": stage = 3\n      case \"NetStream.Play.Reset\", \"NetStream.Data.Start\", \"NetStream.Play.PublishNotify\": break\n      default: throw ylRtmpError(\"network.rtmp_stream_unavailable\")\n      }\n    case \"onBWDone\": if m.stream != 0 { throw ylRtmpInvalid() }\n    default: throw ylRtmpInvalid()\n    }"
+        }
+      ]
+    },
+    {
+      "id": "D1",
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Engine.kt",
+      "gitBlob": "d143c9c6f17634075d9b148ef0ce5e8590b5a587",
+      "sha256": "6e28df85f440f59f650595d749863cddd80cd3a353d0eadac685170cf5e86456",
+      "lineCount": 262,
+      "excerpts": [
+        {
+          "anchor": "internal fun createMedia3Configuration",
+          "startLine": 206,
+          "endLine": 221,
+          "text": "internal fun createMedia3Configuration(\n    source: AndroidSourceMessage,\n    options: AndroidLoadOptionsMessage,\n    playerOptions: AndroidPlayerOptionsMessage,\n): PlayerConfiguration {\n    YlBoundaryValidation.player(playerOptions)\n    YlBoundaryValidation.load(source, options)\n    val policy = source.networkPolicy\n    return PlayerConfiguration(\n        bufferMode = when (options.bufferStrategy.kind) {\n            AndroidBufferKind.LOW_LATENCY -> \"lowLatency\"\n            AndroidBufferKind.SMOOTH_PLAYBACK -> \"stable\"\n            else -> \"automatic\"\n        }, decoderPolicy = (options.decoderPolicyOverride ?: playerOptions.decoderPolicy).name,\n        minBufferMs = null, maxBufferMs = null, maxBufferBytes = null,\n        positionEventIntervalMs = playerOptions.positionUpdateIntervalMs,"
+        }
+      ]
+    },
+    {
+      "id": "D2",
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlaybackPolicy.kt",
+      "gitBlob": "7a9c097a0390ff808b13f6fe530b0fc1f80e3568",
+      "sha256": "29c1f9368a4ad6ecba3a710ae2d55cc5b3f9e100bde40c843e45f061df05536f",
+      "lineCount": 155,
+      "excerpts": [
+        {
+          "anchor": "fun classifySource",
+          "startLine": 78,
+          "endLine": 93,
+          "text": "    fun classifySource(\n        kind: String,\n        isLive: Boolean,\n        formatHint: String,\n        uri: String,\n    ): YlSourceClass {\n        if (kind == \"file\" || kind == \"content\") return YlSourceClass.LOCAL\n        when (formatHint) {\n            \"hls\" -> return YlSourceClass.HLS_LIVE\n            \"httpFlv\", \"flv\" -> return YlSourceClass.HTTP_FLV_LIVE\n        }\n        val path = runCatching { URI(uri).path.orEmpty().lowercase() }.getOrDefault(\"\")\n        if (path.endsWith(\".m3u8\")) return YlSourceClass.HLS_LIVE\n        if (isLive && path.endsWith(\".flv\")) return YlSourceClass.HTTP_FLV_LIVE\n        return if (isLive) YlSourceClass.HLS_LIVE else YlSourceClass.NETWORK_VOD\n    }"
+        },
+        {
+          "anchor": "fun effectiveBufferProfile",
+          "startLine": 95,
+          "endLine": 110,
+          "text": "    fun effectiveBufferProfile(\n        tier: YlDeviceTier,\n        sourceClass: YlSourceClass,\n        request: YlBufferRequest,\n    ): YlBufferProfile {\n        val ceiling = if (tier == YlDeviceTier.CONSTRAINED) {\n            constrainedProfile(sourceClass)\n        } else {\n            val requested = requestedBase(tier, request.mode)\n            val byteCap = if (tier == YlDeviceTier.STANDARD) 64 * MIB else 96 * MIB\n            requested.copy(targetBufferBytes = min(requested.targetBufferBytes, byteCap))\n        }\n        val requested = if (tier == YlDeviceTier.CONSTRAINED && request.mode == \"automatic\") {\n            ceiling\n        } else {\n            requestedBase(tier, request.mode)"
+        },
+        {
+          "anchor": "private fun constrainedProfile",
+          "startLine": 139,
+          "endLine": 154,
+          "text": "    private fun constrainedProfile(sourceClass: YlSourceClass): YlBufferProfile = when (sourceClass) {\n        YlSourceClass.LOCAL -> YlBufferProfile(2_000, 10_000, 16 * MIB)\n        YlSourceClass.NETWORK_VOD -> YlBufferProfile(4_000, 15_000, 24 * MIB)\n        YlSourceClass.HLS_LIVE -> YlBufferProfile(6_000, 12_000, 20 * MIB)\n        YlSourceClass.HTTP_FLV_LIVE -> YlBufferProfile(2_000, 5_000, 12 * MIB)\n    }\n\n    private fun requestedBase(tier: YlDeviceTier, mode: String): YlBufferProfile = when (mode) {\n        \"lowLatency\" -> YlBufferProfile(1_000, 5_000, 24 * MIB)\n        \"stable\" -> YlBufferProfile(\n            15_000,\n            50_000,\n            if (tier == YlDeviceTier.STANDARD) 64 * MIB else 96 * MIB,\n        )\n        else -> YlBufferProfile(5_000, 20_000, 48 * MIB)\n    }"
+        },
+        {
+          "anchor": "private fun requestedBase",
+          "startLine": 146,
+          "endLine": 155,
+          "text": "    private fun requestedBase(tier: YlDeviceTier, mode: String): YlBufferProfile = when (mode) {\n        \"lowLatency\" -> YlBufferProfile(1_000, 5_000, 24 * MIB)\n        \"stable\" -> YlBufferProfile(\n            15_000,\n            50_000,\n            if (tier == YlDeviceTier.STANDARD) 64 * MIB else 96 * MIB,\n        )\n        else -> YlBufferProfile(5_000, 20_000, 48 * MIB)\n    }\n}"
+        }
+      ]
+    },
+    {
+      "id": "D3",
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAdaptiveLoadControl.kt",
+      "gitBlob": "f1cd178818f67addf5a26e60540a82d7839fc42d",
+      "sha256": "49ffc495cc49713c81d036ebf81b20f69ee8ae3eb90ee577e139155d0df69aa8",
+      "lineCount": 123,
+      "excerpts": [
+        {
+          "anchor": "Buffer targets are scheduling goals",
+          "startLine": 40,
+          "endLine": 55,
+          "text": "/** Buffer targets are scheduling goals, never an enforced hard allocation ceiling. */\ninternal class YlAdaptiveLoadControl(initialProfile: YlBufferProfile) : LoadControl {\n    private val allocator = DefaultAllocator(true, C.DEFAULT_BUFFER_SEGMENT_SIZE)\n    private var normalProfile = initialProfile\n    private var pressureReduced = false\n\n    @Volatile\n    var currentProfile: YlBufferProfile = initialProfile\n        private set\n\n    val targetBufferBytes: Int\n        get() = currentProfile.targetBufferBytes\n\n    val allocatedBytes: Int\n        get() = allocator.totalBytesAllocated\n"
+        },
+        {
+          "anchor": "fun updateProfile",
+          "startLine": 61,
+          "endLine": 76,
+          "text": "    fun updateProfile(profile: YlBufferProfile) {\n        normalProfile = profile\n        pressureReduced = false\n        applyProfile(profile)\n    }\n\n    @Synchronized\n    fun shrinkForMemoryPressure() {\n        if (pressureReduced) return\n        pressureReduced = true\n        applyProfile(YlPlaybackPolicy.shrinkForMemoryPressure(normalProfile))\n        allocator.trim()\n    }\n\n    @Synchronized\n    fun restoreProfile() {"
+        }
+      ]
+    },
+    {
+      "id": "D4",
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlaybackHealthMonitor.kt",
+      "gitBlob": "82c1d4e9973420488ef3359d213fb05b71e26fef",
+      "sha256": "38f38a771ba954db0f8743725c3a2a58bfc8cc7af06b7058e23e7236e8f2d781",
+      "lineCount": 117,
+      "excerpts": [
+        {
+          "anchor": "sample.sourceClass == YlSourceClass.HTTP_FLV_LIVE",
+          "startLine": 47,
+          "endLine": 62,
+          "text": "            sample.sourceClass == YlSourceClass.HTTP_FLV_LIVE &&\n            sample.bufferedDurationMs > sample.maxBufferMs + LIVE_RECOVERY_MARGIN_MS\n        ) {\n            return if (sample.reconnectCount >= sample.maxRetries) {\n                YlRecoveryAction.Fail(stableError(YlPlaybackFailure.LIVE_RETRY_EXHAUSTED))\n            } else {\n                YlRecoveryAction.ReconnectLiveHead\n            }\n        }\n\n        val healthAction = evaluateHealthWindow(sample)\n        if (healthAction != YlRecoveryAction.None) return healthAction\n\n        if (sample.sourceClass == YlSourceClass.HLS_LIVE && sample.liveOffsetMs != null) {\n            val forceThreshold = sample.maxBufferMs + LIVE_RECOVERY_MARGIN_MS\n            if (sample.liveOffsetMs > forceThreshold && canSeekLiveEdge(sample.nowMs)) {"
+        },
+        {
+          "anchor": "sample.sourceClass == YlSourceClass.HLS_LIVE",
+          "startLine": 60,
+          "endLine": 75,
+          "text": "        if (sample.sourceClass == YlSourceClass.HLS_LIVE && sample.liveOffsetMs != null) {\n            val forceThreshold = sample.maxBufferMs + LIVE_RECOVERY_MARGIN_MS\n            if (sample.liveOffsetMs > forceThreshold && canSeekLiveEdge(sample.nowMs)) {\n                lastLiveEdgeSeekMs = sample.nowMs\n                return YlRecoveryAction.SeekLiveEdge\n            }\n            return YlRecoveryAction.SetCatchUpSpeed(\n                if (sample.liveOffsetMs > sample.targetLiveOffsetMs) 1.03f else 1f,\n            )\n        }\n\n        return YlRecoveryAction.None\n    }\n\n    private fun evaluateHealthWindow(sample: YlHealthSample): YlRecoveryAction {\n        if (sample.elapsedMs < HEALTH_WINDOW_MS) return YlRecoveryAction.None"
+        }
+      ]
+    },
+    {
+      "id": "D5",
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt",
+      "gitBlob": "71884776925f318529c39e1b52a7906683babe80",
+      "sha256": "b1a307c94fa9ce0005908c812fc7d668437a93e6b75d764bcb72565bb274ef8f",
+      "lineCount": 1194,
+      "excerpts": [
+        {
+          "anchor": "private fun maybeEvaluateHealth",
+          "startLine": 852,
+          "endLine": 867,
+          "text": "    private fun maybeEvaluateHealth(memoryPressure: Boolean = false) {\n        if (rtmp || !hasBeenReady || status == \"error\") return\n        val nowMs = SystemClock.elapsedRealtime()\n        val startedAtMs = healthWindowStartedAtMs ?: nowMs.also(::resetHealthWindow)\n        if (!memoryPressure && nowMs - lastHealthEvaluationMs < 1_000L) return\n        lastHealthEvaluationMs = nowMs\n        val elapsedMs = max(0L, nowMs - startedAtMs)\n        val currentRebufferDuration = rebufferDurationMs +\n            (bufferingStartedAtMs?.let { nowMs - it } ?: 0L)\n        val bufferedDuration = max(0L, exoPlayer.bufferedPosition - exoPlayer.currentPosition)\n        val canDowngrade = nextLowerBitrate() != null\n        val profile = loadControl.currentProfile\n        val action = healthMonitor.record(\n            YlHealthSample(\n                nowMs = nowMs,\n                elapsedMs = elapsedMs,"
+        },
+        {
+          "anchor": "private fun applyRecoveryAction",
+          "startLine": 900,
+          "endLine": 915,
+          "text": "    private fun applyRecoveryAction(action: YlRecoveryAction) {\n        if (rtmp) return\n        when (action) {\n            YlRecoveryAction.None -> Unit\n            YlRecoveryAction.DowngradeOneStep -> {\n                val lowerBitrate = nextLowerBitrate()\n                if (lowerBitrate != null) {\n                    adaptiveBitrateCeiling = lowerBitrate\n                    adaptiveDowngradeCount += 1\n                    applyTrackConstraints()\n                }\n            }\n            YlRecoveryAction.SeekLiveEdge -> {\n                exoPlayer.setPlaybackSpeed(requestedPlaybackSpeed)\n                exoPlayer.seekToDefaultPosition()\n            }"
+        }
+      ]
+    },
+    {
+      "id": "D6",
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlRtmpSourcePolicy.kt",
+      "gitBlob": "d98b3e4d5ce26e4c8024a1b5b981a76f45049b54",
+      "sha256": "4ac1a4604c1fa5e7a8907e1f08dd62b6bb0c230539cfa18d7de5b33e19625d90",
+      "lineCount": 54,
+      "excerpts": [
+        {
+          "anchor": "fun validate",
+          "startLine": 46,
+          "endLine": 54,
+          "text": "    fun validate(source: AndroidSourceMessage, options: AndroidLoadOptionsMessage) {\n        parse(source.locator)\n        if (source.format !in setOf(AndroidMediaFormat.AUTOMATIC, AndroidMediaFormat.FLV)) throw YlBoundaryException(YlFailureKind.CONTAINER_UNSUPPORTED)\n        if (source.intent == AndroidStreamIntent.ON_DEMAND || (options.startPositionMs ?: 0) != 0L ||\n            source.request?.headers.orEmpty().isNotEmpty() || source.request?.credentials.orEmpty().isNotEmpty() ||\n            source.networkPolicy?.kind == AndroidNetworkPolicyKind.MANAGED || options.bufferStrategy.kind == AndroidBufferKind.BOUNDED)\n            throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)\n    }\n}"
+        }
+      ]
+    },
+    {
+      "id": "D7",
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlRtmpRecovery.kt",
+      "gitBlob": "662f350f01b668cce1e6053c027e8d6edacac165",
+      "sha256": "e092efc40a887ae173a397385c7627f7a473a11686a337ac9e876c6d14628db1",
+      "lineCount": 16,
+      "excerpts": [
+        {
+          "anchor": "internal class YlRtmpRecovery",
+          "startLine": 4,
+          "endLine": 16,
+          "text": "internal class YlRtmpRecovery {\n    @Volatile var committed = false\n    var attempts = 0; private set\n    var epoch = 0L; private set\n    fun invalidate(): Long = ++epoch\n    fun accepts(value: Long) = value == epoch\n    fun canRecover(kind: YlFailureKind, transient: Boolean) = committed && transient &&\n        kind in setOf(YlFailureKind.RTMP_HANDSHAKE_FAILED, YlFailureKind.RTMP_DISCONNECTED) && attempts < 3\n    fun next(kind: YlFailureKind, transient: Boolean): Long? {\n        if (!canRecover(kind, transient)) return null\n        return longArrayOf(500,1000,2000)[attempts++]\n    }\n}"
+        }
+      ]
+    },
+    {
+      "id": "D8",
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlRtmpTransport.kt",
+      "gitBlob": "f0a9d43ae95b82e3e0e5531df67dc56696cdc0cf",
+      "sha256": "7df55859d7989290a63cd44f9419f1be15c00e5920b31fcf260f07b5de3bc9e7",
+      "lineCount": 252,
+      "excerpts": [
+        {
+          "anchor": "u32(1000)",
+          "startLine": 210,
+          "endLine": 225,
+          "text": "                    control(4) { write(0); write(3); u32(streamId.toLong()); u32(1000) }\n                    command(streamId,\"play\",0.0,null,address.playpath,-1.0)\n                }\n                else -> rtmpInvalid()\n            }\n            \"onStatus\" -> {\n                if(tx!=0.0 || m.streamId!=streamId || stage<2) rtmpInvalid()\n                val info=v.getOrNull(3) as? Map<*,*> ?: rtmpInvalid()\n                val code=info[\"code\"] as? String ?: rtmpInvalid()\n                when(code) {\n                    \"NetStream.Play.Start\" -> stage=3\n                    \"NetStream.Play.Reset\", \"NetStream.Data.Start\", \"NetStream.Play.PublishNotify\" -> Unit\n                    else -> throw YlRtmpException(YlFailureKind.RTMP_STREAM_UNAVAILABLE)\n                }\n                if(info[\"level\"]==\"error\") throw YlRtmpException(YlFailureKind.RTMP_STREAM_UNAVAILABLE)\n            }"
+        }
+      ]
+    },
+    {
+      "id": "B1",
+      "path": "packages/yl_player_apple/pigeons/yl_player_apple.dart",
+      "gitBlob": "00b8eb4bcfd63cb1b973c686ffe72bc836ec122b",
+      "sha256": "bdeb11f2cb5b28b6933f4fcf1624c6651b48e749ffb693dd12f82bcdf00259e9",
+      "lineCount": 487,
+      "excerpts": [
+        {
+          "anchor": "enum ApplePlayerOperation",
+          "startLine": 58,
+          "endLine": 73,
+          "text": "enum ApplePlayerOperation {\n  seek,\n  seekToLiveEdge,\n  playbackSpeed,\n  audioTrackSelection,\n  videoConstraints,\n  volume,\n  stop,\n  videoTrackSelection,\n}\n\nenum AppleDecoderMode { unknown, hardware, software }\n\nenum AppleDecoderEvidence { none, hardwareOnly, hardwareAndSoftware }\n\nenum AppleFailureCategory {"
+        },
+        {
+          "anchor": "void seekToLiveEdge",
+          "startLine": 405,
+          "endLine": 420,
+          "text": "  void seekToLiveEdge(AppleSessionCommand command);\n  void setPlaybackSpeed(AppleSpeedCommand command);\n  @async\n  void selectAudioTrack(AppleTrackCommand command);\n  @async\n  void setVideoConstraints(AppleVideoConstraintsCommand command);\n  @async\n  void selectVideoTrack(AppleVideoTrackCommand command);\n  void setVolume(double volume);\n  @async\n  void stop();\n  @async\n  void dispose();\n}\n\n@FlutterApi()"
+        },
+        {
+          "anchor": "void selectVideoTrack",
+          "startLine": 412,
+          "endLine": 427,
+          "text": "  void selectVideoTrack(AppleVideoTrackCommand command);\n  void setVolume(double volume);\n  @async\n  void stop();\n  @async\n  void dispose();\n}\n\n@FlutterApi()\nabstract class ApplePlayerFlutterApi {\n  void onState(AppleStateMessage state);\n  void onStateDelta(AppleStateDeltaMessage delta);\n  void onFirstFrame(AppleFirstFrameMessage event);\n  void onRetryScheduled(AppleRetryScheduledMessage event);\n  void onEngineChanged(AppleEngineChangedMessage event);\n  void onPlaybackFailed(ApplePlaybackFailedMessage event);"
+        }
+      ]
+    },
+    {
+      "id": "B2",
+      "path": "packages/yl_player_android/pigeons/yl_player_android.dart",
+      "gitBlob": "f6586d7696c15339cbd629c33edb651fc138634a",
+      "sha256": "18a5c3175fb425dc27626921d50e32c0e61b0572021d7b88984dd411e04515d1",
+      "lineCount": 485,
+      "excerpts": [
+        {
+          "anchor": "enum AndroidPlayerOperation",
+          "startLine": 59,
+          "endLine": 74,
+          "text": "enum AndroidPlayerOperation {\n  seek,\n  seekToLiveEdge,\n  playbackSpeed,\n  audioTrackSelection,\n  videoConstraints,\n  volume,\n  stop,\n  videoTrackSelection,\n}\n\nenum AndroidDecoderMode { unknown, hardware, software }\n\nenum AndroidDecoderEvidence { none, hardwareOnly, hardwareAndSoftware }\n\nenum AndroidFailureCategory {"
+        },
+        {
+          "anchor": "void seekToLiveEdge",
+          "startLine": 404,
+          "endLine": 419,
+          "text": "  void seekToLiveEdge(AndroidSessionCommand command);\n  void setPlaybackSpeed(AndroidSpeedCommand command);\n  @async\n  void selectAudioTrack(AndroidTrackCommand command);\n  @async\n  void selectVideoTrack(AndroidVideoTrackCommand command);\n  @async\n  void setVideoConstraints(AndroidVideoConstraintsCommand command);\n  void setVolume(double volume);\n  @async\n  void stop();\n  @async\n  void dispose();\n}\n\n@FlutterApi()"
+        },
+        {
+          "anchor": "void selectVideoTrack",
+          "startLine": 409,
+          "endLine": 424,
+          "text": "  void selectVideoTrack(AndroidVideoTrackCommand command);\n  @async\n  void setVideoConstraints(AndroidVideoConstraintsCommand command);\n  void setVolume(double volume);\n  @async\n  void stop();\n  @async\n  void dispose();\n}\n\n@FlutterApi()\nabstract class AndroidPlayerFlutterApi {\n  void onState(AndroidStateMessage state);\n  void onStateDelta(AndroidStateDeltaMessage delta);\n  void onFirstFrame(AndroidFirstFrameMessage event);\n  void onRetryScheduled(AndroidRetryScheduledMessage event);"
+        }
+      ]
+    },
+    {
+      "id": "B3",
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift",
+      "gitBlob": "59fe246233efc47b6a04dd76ddc887997972cdef",
+      "sha256": "e03fdbc0fb988e54d36a9ebe9ee0a6bd39f5592a9b579c33c9e16d417498d9d5",
+      "lineCount": 674,
+      "excerpts": [
+        {
+          "anchor": "func selectVideoTrack",
+          "startLine": 194,
+          "endLine": 209,
+          "text": "  func selectVideoTrack(command: AppleVideoTrackCommand) async throws {\n    try await onMain { completion in\n      do {\n        try self.session(command.sessionId)\n        if command.trackId?.isEmpty == true { throw YlAppleFailureMapper.invalid() }\n        self.coordinator.execute(.videoTrack(command.trackId)) { completion($0.mapError { $0 as Error }) }\n      } catch { completion(.failure(error)) }\n    }\n  }\n  func setVideoConstraints(command: AppleVideoConstraintsCommand) async throws {\n    try await onMain { completion in\n      do {\n        try self.session(command.sessionId)\n        let constraints = try YlAppleNativeInput.constraints(command.constraints)\n        self.coordinator.execute(.constraints(constraints)) { completion($0.mapError { $0 as Error }) }\n      } catch { completion(.failure(error)) }"
+        },
+        {
+          "anchor": "private func perform",
+          "startLine": 367,
+          "endLine": 382,
+          "text": "  private func perform(sessionId: String, command: YlApplePlaybackCommand) async throws {\n    try await onMain { completion in\n      do {\n        try self.session(sessionId)\n        if case .liveEdge = command {\n          guard self.committedStreamIntent != .onDemand,\n            self.committedStreamIntent == .live || self.reducer.state.snapshot?.isLive == true else {\n            throw NativePlayerError(category: \"source\", code: \"source.not_live\", message: \"The current source is not live.\")\n          }\n        }\n        self.coordinator.execute(command) { completion($0.mapError { $0 as Error }) }\n      } catch { completion(.failure(error)) }\n    }\n  }\n  private func onMain<T>(_ operation: @escaping (@escaping (Result<T, Error>) -> Void) -> Void) async throws -> T {\n    do {"
+        }
+      ]
+    },
+    {
+      "id": "B4",
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlSessionCoordinator.kt",
+      "gitBlob": "73f6e21e4324ad0186799862df68a55ddf3bf5ba",
+      "sha256": "7f6845faf509c7c1400ce0d0b37b0fa8a3121dbfc6b00ee1d8a04b6f2f65c69d",
+      "lineCount": 811,
+      "excerpts": [
+        {
+          "anchor": "private val transaction = Mutex()",
+          "startLine": 43,
+          "endLine": 58,
+          "text": "    private val transaction = Mutex()\n    private lateinit var leases: YlDecoderLeaseCoordinator\n    private var activeLease: SessionLease? = null\n    override fun bindLeases(leases: YlDecoderLeaseCoordinator) { check(active == null); this.leases = leases }\n    private val owned = mutableSetOf<YlPlaybackEngineAdapter>()\n    private var active: YlPreparedSession? = null\n    private var pending: Deferred<AndroidLoadReply>? = null\n    private var pendingLoadRequestId: String? = null\n    private var pendingCommitted = false\n    private var autoplayPending: YlSessionIdentity? = null\n    private var pendingIdentity: YlSessionIdentity? = null\n    private var candidateEngine: YlPlaybackEngineAdapter? = null\n    private var candidateSnapshot: YlEngineSnapshot? = null\n    private var candidateFailure: YlFailureKind? = null\n    private var stopping = false\n    private var candidateFrame: YlEngineEvent.FirstFrame? = null"
+        },
+        {
+          "anchor": "override suspend fun selectVideoTrack",
+          "startLine": 659,
+          "endLine": 674,
+          "text": "    override suspend fun selectVideoTrack(command: AndroidVideoTrackCommand) = acceptedCommand(command.sessionId,\n        intent = { videoTrackIntent },\n        validate = {\n            command.trackId?.let { id ->\n                YlBoundaryValidation.identity(id)\n                if (reducer.state.videoTracks.none { it.id == id }) throw YlBoundaryException(YlFailureKind.SOURCE_MISSING)\n            }\n            if (active?.engine?.supportsVideoTrackSelection != true) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)\n        }, apply = { selectVideoTrack(command.trackId) }, remember = {\n            // Worker-required commands are already captured as semantic identity in quiesce().\n            // There is no unvalidated late video intent to replay against recreated groups.\n        }, workerRequired = true)\n    override suspend fun setVideoConstraints(command: AndroidVideoConstraintsCommand) = acceptedCommand(command.sessionId,\n        intent = { constraintsIntent }, validate = { YlBoundaryValidation.constraints(command.constraints) },\n        apply = { setVideoConstraints(command.constraints) },\n        remember = { desiredConstraints = command.constraints }, workerRequired = true)"
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "sourceFiles": 24,
+    "allAnchorsUnique": true,
+    "compiled": false,
+    "playerExecuted": false,
+    "networkUsed": false,
+    "capabilityAccepted": false
+  },
+  "limitations": [
+    "Repository behavior inspection, not SDK/vendor API research",
+    "All proposed new API and wire types unimplemented",
+    "Code constants are not measured SLOs",
+    "No runtime, physical-output, backlog or latency acceptance"
+  ]
+}

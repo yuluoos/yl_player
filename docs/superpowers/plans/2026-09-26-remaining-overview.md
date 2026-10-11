@@ -384,3 +384,7 @@ Task1A已按用户要求提交b8a83c9；Task1B补齐首次GET启动/身份预检
 ### 2026-10-11 P04多轮离线汇总准备
 
 Task4A新增预登记试验矩阵、归档SHA256校验、单轮重算及按模式/缓存分组p50/p95，保留失败、超时与未运行分母。仅执行文件级离线回归，不占用另一会话长播放环境。环境/缓存声明不构成验证；真实重复测量、SLO和P04整体验收继续开放。见[P04报告](../reports/2026-09-26-remaining-04-abr-live.md)与[离线协议](../../../tool/playback_network/experiment-protocol.md)。
+
+### 2026-10-11 P04直播模式审计与契约
+
+Task3A完成24份固定提交源码/49处锚点审计，明确当前Load策略与运行时缺口，交付可选SPI、默认live流畅迁移、状态ACK屏障、回滚/代际隔离及预算保留契约。仅设计交付，无产品代码或设备验收变更；三协议运行时实现和CAP-LIVE保持开放。详见[契约](../specs/2026-10-11-live-mode-runtime-contract.md)与[P04报告](../reports/2026-09-26-remaining-04-abr-live.md)。
