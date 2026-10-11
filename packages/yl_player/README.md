@@ -229,7 +229,7 @@ if (tracks.isNotEmpty) await session.selectSubtitleTrack(tracks.first.id);
 ```
 
 `YlPlayerView` renders Matroska UTF8/SRT and ASS/SSA, and non-fragmented MP4
-`tx3g` (mov_text) and `wvtt` (WebVTT) tracks using media time.
+`tx3g` (mov_text), `wvtt` (WebVTT) and `stpp` (TTML) tracks using media time.
 Discovery is explicit and bounded; Matroska TrackUID (`mkv:<UID>`) or MP4 Track ID
 (`mp4:<ID>`) identifies a track within the session. Replacing/clearing external subtitles preserves embedded entries;
 rediscovery preserves external entries and a still-present selection. A new
@@ -242,7 +242,7 @@ deadlines, retry/redirect budgets and credential origin restrictions apply to th
 whole discovery. Later ranges use If-Match; changed versions fail atomically.
 The scan uses a bounded cache and request/byte budgets, with no full-body fallback.
 
-Fragmented MP4, HLS/DASH, embedded bitmap/TTML and native subtitle callbacks remain
+Fragmented MP4, HLS/DASH, embedded bitmap and native subtitle callbacks remain
 unsupported. No additional native subtitle capability or physical-device
 acceptance is claimed. See the [embedded subset contract](../../docs/superpowers/specs/2026-10-11-subtitle-embedded.md)
 the [network range contract](../../docs/superpowers/specs/2026-10-11-subtitle-network-matroska.md)
@@ -260,3 +260,10 @@ clears cues. Multiple cues in one sample share its media interval, including
 edit-list timing. Unsupported CSS/regions/advanced settings and malformed boxes
 fail atomically. See the [MP4 WebVTT contract](../../docs/superpowers/specs/2026-10-11-subtitle-mp4-webvtt.md)
 for the bounded subset and validation limits.
+
+MP4 `stpp` entries use `format: ttml` and the existing bounded TTML styled-text
+and percentage-region renderer. XML times are track composition times, clipped
+to each sample and mapped through supported edits. Documents keep their own
+style/region scope, and their raw bytes count toward the shared catalog budget.
+Auxiliary images, cell/pixel font styling and advanced TTML/IMSC remain unsupported;
+see the [MP4 TTML contract](../../docs/superpowers/specs/2026-10-11-subtitle-mp4-ttml.md).

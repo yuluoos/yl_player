@@ -182,9 +182,11 @@ final class TextSubtitleRuntime {
               YlSubtitleFormat.ass => SubtitleFormat.ass,
               YlSubtitleFormat.ssa => SubtitleFormat.ssa,
               YlSubtitleFormat.webvtt => SubtitleFormat.webvtt,
+              YlSubtitleFormat.ttml => SubtitleFormat.ttml,
               _ => SubtitleFormat.srt,
             },
             codecPrivate: entry.codecPrivate,
+            sourceBytes: entry.sourceBytes,
             limits: SubtitleLimits(maxAssRuns: runsLeft),
           );
           bytesLeft -= doc.inputBytes;

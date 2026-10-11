@@ -5,6 +5,7 @@ import 'subtitle_document.dart';
 import 'subtitle_resource.dart';
 
 part 'mp4_webvtt.dart';
+part 'mp4_ttml.dart';
 
 Never _bad() =>
     throw const SubtitleParseException(SubtitleParseReason.malformed);
@@ -47,7 +48,7 @@ final class _Box {
   int get size => end - start;
 }
 
-/// Non-fragmented ISO BMFF tx3g/wvtt demux. Skips audio/video data; no external drefs.
+/// Non-fragmented ISO BMFF tx3g/wvtt/stpp demux. Skips audio/video data; no external drefs.
 final class Mp4Subtitles {
   Mp4Subtitles(this.length, this.read, this.token);
   final int length;
@@ -242,12 +243,16 @@ final class Mp4Subtitles {
     if (entries.isEmpty || _u(sdb, 4) != entries.length) _bad();
     final descriptions = <_Mp4SubtitleEntry>[];
     for (final entry in entries) {
-      if (!['tx3g', 'wvtt'].contains(entry.type)) _unsupported();
+      if (!['tx3g', 'wvtt', 'stpp'].contains(entry.type)) _unsupported();
       final b = await _body(entry, min: entry.type == 'tx3g' ? 38 : 8);
       if (b.take(6).any((v) => v != 0)) _bad();
       final ref = _u(b, 6, 2);
       if (ref < 1 || ref > refs.length) _bad();
-      descriptions.add(entry.type == 'tx3g' ? _Tx3g.parse(b) : _Wvtt.parse(b));
+      descriptions.add(switch (entry.type) {
+        'tx3g' => _Tx3g.parse(b),
+        'wvtt' => _Wvtt.parse(b),
+        _ => _Stpp.parse(b),
+      });
     }
     // The public track has one format; codec switching within a track is not supported.
     if (descriptions.any((d) => d.format != descriptions.first.format)) {
@@ -334,7 +339,7 @@ final class Mp4Subtitles {
       mapping.add((first, per, desc));
     }
     final edit = await _edit(_one(children, 'edts'), movieScale, scale);
-    var sample = 0, run = 0, dts = 0;
+    var sample = 0, run = 0, dts = 0, sourceBytes = 0;
     final packets = <EmbeddedSubtitlePacket>[];
     final extents = <(int, int)>[];
     for (var c = 1; c <= chunks; c++) {
@@ -353,6 +358,7 @@ final class Mp4Subtitles {
         _payloadBytes += size;
         if (_payloadBytes > 4 * 1024 * 1024) _limit();
         final decoded = desc.decode(await _bytes(pos, size));
+        if (desc.format == YlSubtitleFormat.ttml) sourceBytes += size;
         final startTicks = dts + offsets[sample],
             endTicks = startTicks + durations[sample];
         if (startTicks.abs() > scale * 604800 ||
@@ -372,17 +378,51 @@ final class Mp4Subtitles {
           if (durations[sample] == 0) _bad();
           if (end > start) {
             for (final cue in decoded) {
+              final ttml = cue.ttml;
+              // TTML coordinates are track composition time (14496-30:2022),
+              // not offsets from this sample. Combine edit ratios before rounding.
+              int mappedTtml(Duration time) =>
+                  ((BigInt.from(time.inMicroseconds) *
+                                  BigInt.from(scale) *
+                                  BigInt.from(movieScale) -
+                              BigInt.from(edit.mediaStart) *
+                                  BigInt.from(1000000) *
+                                  BigInt.from(movieScale) +
+                              BigInt.from(edit.delayTicks) *
+                                  BigInt.from(scale) *
+                                  BigInt.from(1000000)) ~/
+                          (BigInt.from(scale) * BigInt.from(movieScale)))
+                      .toInt();
+              final cueStart = ttml == null
+                  ? start
+                  : mappedTtml(ttml.start).clamp(start, end);
+              final cueEnd = ttml == null
+                  ? end
+                  : mappedTtml(ttml.end).clamp(start, end);
+              if (cueEnd <= cueStart) continue;
+              final region = ttml?.region;
               _runs += cue.runs?.length ?? 0;
               if (_runs > 20000 || ++_cueCount > 10000) _limit();
               packets.add(
                 EmbeddedSubtitlePacket(
-                  Duration(microseconds: start),
-                  Duration(microseconds: end),
+                  Duration(microseconds: cueStart),
+                  Duration(microseconds: cueEnd),
                   cue.text,
                   textRuns: cue.runs,
                   alignment: cue.alignment,
                   identifier: cue.identifier,
                   webvttSettings: cue.settings,
+                  // Region identifiers are document-local, even when samples overlap.
+                  region: region == null
+                      ? null
+                      : SubtitleRegion(
+                          id: '$sample:${region.id}',
+                          x: region.x,
+                          y: region.y,
+                          width: region.width,
+                          height: region.height,
+                          displayAlign: region.displayAlign,
+                        ),
                 ),
               );
             }
@@ -412,6 +452,7 @@ final class Mp4Subtitles {
       ),
       null,
       List.unmodifiable(packets),
+      sourceBytes: sourceBytes,
     );
   }
 

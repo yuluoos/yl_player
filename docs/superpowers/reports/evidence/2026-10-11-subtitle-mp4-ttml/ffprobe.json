@@ -1,0 +1,66 @@
+{
+    "packets": [
+        {
+            "codec_type": "subtitle",
+            "stream_index": 1,
+            "pts": 0,
+            "pts_time": "0.000000",
+            "dts": 0,
+            "dts_time": "0.000000",
+            "duration": 4567000,
+            "duration_time": "4.567000",
+            "size": "838",
+            "pos": "5269",
+            "flags": "K__",
+            "data": "\n00000000: 3c3f 786d 6c20 7665 7273 696f 6e3d 2231  <?xml version=\"1\n00000010: 2e30 2220 656e 636f 6469 6e67 3d22 7574  .0\" encoding=\"ut\n00000020: 662d 3822 3f3e 0a3c 7474 0a20 2078 6d6c  f-8\"?>.<tt.  xml\n00000030: 6e73 3d22 6874 7470 3a2f 2f77 7777 2e77  ns=\"http://www.w\n00000040: 332e 6f72 672f 6e73 2f74 746d 6c22 0a20  3.org/ns/ttml\". \n00000050: 2078 6d6c 6e73 3a74 746d 3d22 6874 7470   xmlns:ttm=\"http\n00000060: 3a2f 2f77 7777 2e77 332e 6f72 672f 6e73  ://www.w3.org/ns\n00000070: 2f74 746d 6c23 6d65 7461 6461 7461 220a  /ttml#metadata\".\n00000080: 2020 786d 6c6e 733a 7474 733d 2268 7474    xmlns:tts=\"htt\n00000090: 703a 2f2f 7777 772e 7733 2e6f 7267 2f6e  p://www.w3.org/n\n000000a0: 732f 7474 6d6c 2373 7479 6c69 6e67 220a  s/ttml#styling\".\n000000b0: 2020 786d 6c6e 733a 7474 703d 2268 7474    xmlns:ttp=\"htt\n000000c0: 703a 2f2f 7777 772e 7733 2e6f 7267 2f6e  p://www.w3.org/n\n000000d0: 732f 7474 6d6c 2370 6172 616d 6574 6572  s/ttml#parameter\n000000e0: 220a 2020 7474 703a 6365 6c6c 5265 736f  \".  ttp:cellReso\n000000f0: 6c75 7469 6f6e 3d22 3338 3420 3238 3822  lution=\"384 288\"\n00000100: 0a20 2078 6d6c 3a6c 616e 673d 2222 3e0a  .  xml:lang=\"\">.\n00000110: 2020 3c68 6561 643e 0a20 2020 203c 6c61    <head>.    <la\n00000120: 796f 7574 3e0a 2020 2020 2020 3c72 6567  yout>.      <reg\n00000130: 696f 6e20 786d 6c3a 6964 3d22 4465 6661  ion xml:id=\"Defa\n00000140: 756c 7422 0a20 2020 2020 2020 2074 7473  ult\".        tts\n00000150: 3a6f 7269 6769 6e3d 2233 2520 3025 220a  :origin=\"3% 0%\".\n00000160: 2020 2020 2020 2020 7474 733a 6578 7465          tts:exte\n00000170: 6e74 3d22 3937 2520 3937 2522 0a20 2020  nt=\"97% 97%\".   \n00000180: 2020 2020 2074 7473 3a64 6973 706c 6179       tts:display\n00000190: 416c 6967 6e3d 2261 6674 6572 220a 2020  Align=\"after\".  \n000001a0: 2020 2020 2020 7474 733a 7465 7874 416c        tts:textAl\n000001b0: 6967 6e3d 2263 656e 7465 7222 0a20 2020  ign=\"center\".   \n000001c0: 2020 2020 2074 7473 3a66 6f6e 7453 697a       tts:fontSiz\n000001d0: 653d 2231 3663 220a 2020 2020 2020 2020  e=\"16c\".        \n000001e0: 7474 733a 666f 6e74 4661 6d69 6c79 3d22  tts:fontFamily=\"\n000001f0: 4172 6961 6c22 0a20 2020 2020 2020 2074  Arial\".        t\n00000200: 7473 3a6f 7665 7266 6c6f 773d 2276 6973  ts:overflow=\"vis\n00000210: 6962 6c65 2220 2f3e 0a20 2020 203c 2f6c  ible\" />.    </l\n00000220: 6179 6f75 743e 0a20 203c 2f68 6561 643e  ayout>.  </head>\n00000230: 0a20 203c 626f 6479 3e0a 2020 2020 3c64  .  <body>.    <d\n00000240: 6976 3e0a 2020 2020 2020 3c70 0a20 2020  iv>.      <p.   \n00000250: 2020 2020 2062 6567 696e 3d22 3030 3a30       begin=\"00:0\n00000260: 303a 3031 2e32 3530 220a 2020 2020 2020  0:01.250\".      \n00000270: 2020 656e 643d 2230 303a 3030 3a30 322e    end=\"00:00:02.\n00000280: 3530 3022 3e3c 7370 616e 2072 6567 696f  500\"><span regio\n00000290: 6e3d 2244 6566 6175 6c74 223e 4f77 6e65  n=\"Default\">Owne\n000002a0: 6420 5454 4d4c 2026 616d 703b 20e4 b889  d TTML &amp; ...\n000002b0: 3c2f 7370 616e 3e3c 2f70 3e0a 2020 2020  </span></p>.    \n000002c0: 2020 3c70 0a20 2020 2020 2020 2062 6567    <p.        beg\n000002d0: 696e 3d22 3030 3a30 303a 3033 2e31 3233  in=\"00:00:03.123\n000002e0: 220a 2020 2020 2020 2020 656e 643d 2230  \".        end=\"0\n000002f0: 303a 3030 3a30 342e 3536 3722 3e3c 7370  0:00:04.567\"><sp\n00000300: 616e 2072 6567 696f 6e3d 2244 6566 6175  an region=\"Defau\n00000310: 6c74 223e 5365 636f 6e64 206c 696e 653c  lt\">Second line<\n00000320: 2f73 7061 6e3e 3c2f 703e 0a20 2020 203c  /span></p>.    <\n00000330: 2f64 6976 3e0a 2020 3c2f 626f 6479 3e0a  /div>.  </body>.\n00000340: 3c2f 7474 3e0a                           </tt>.\n"
+        }
+    ],
+    "streams": [
+        {
+            "index": 1,
+            "codec_name": "ttml",
+            "codec_long_name": "Timed Text Markup Language",
+            "codec_type": "subtitle",
+            "codec_tag_string": "stpp",
+            "codec_tag": "0x70707473",
+            "id": "0x2",
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/1000000",
+            "start_pts": 0,
+            "start_time": "0.000000",
+            "duration_ts": 4567000,
+            "duration": "4.567000",
+            "bit_rate": "1467",
+            "nb_frames": "1",
+            "nb_read_packets": "1",
+            "extradata": "\n00000000: 6874 7470 3a2f 2f77 7777 2e77 332e 6f72  http://www.w3.or\n00000010: 672f 6e73 2f74 746d 6c00 0000 0000 0014  g/ns/ttml.......\n00000020: 6274 7274 0000 0000 0000 05bb 0000 05bb  btrt............\n",
+            "extradata_size": 48,
+            "disposition": {
+                "default": 1,
+                "dub": 0,
+                "original": 0,
+                "comment": 0,
+                "lyrics": 0,
+                "karaoke": 0,
+                "forced": 0,
+                "hearing_impaired": 0,
+                "visual_impaired": 0,
+                "clean_effects": 0,
+                "attached_pic": 0,
+                "timed_thumbnails": 0,
+                "non_diegetic": 0,
+                "captions": 0,
+                "descriptions": 0,
+                "metadata": 0,
+                "dependent": 0,
+                "still_image": 0,
+                "multilayer": 0
+            },
+            "tags": {
+                "language": "eng",
+                "handler_name": "SubtitleHandler"
+            }
+        }
+    ]
+}

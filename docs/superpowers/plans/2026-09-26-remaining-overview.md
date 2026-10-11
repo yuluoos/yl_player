@@ -485,3 +485,7 @@ TVS `60d838f` 在逐源摘要中补齐中文阶段、已知原因、手动建议
 ### 2026-10-11 P05 TVS 三端构建依赖清单
 
 完成 Android/iOS/macOS runner、Pub本地依赖、Apple SwiftPM/Pods混合路由及原生资源离线清点：52个平台插件条目版本与锁一致，41份输入指纹，9份原生制品可见。明确AGP/Kotlin声明差异待实际解析验证、Android/iOS忽略制品需另行准备、macOS Node仅arm64；未运行构建或占用设备。仅关闭资料子项，三端实际构建、签名和完整P05继续开放，见[P05报告](../reports/2026-09-26-remaining-05-live-business.md)。
+
+### 2026-10-11 P02 MP4 内嵌 TTML 字幕
+
+接入本地/HTTP(S) 非分片 MP4 stpp 的发现、Track ID选择和现有 TTML 样式/百分比区域合成；文档使用轨道composition时间，裁切sample并应用简单编辑，原始XML与外挂共享目录预算。网络复用 managed Range、ETag/If-Match、重试/重定向/凭据和取消；真实文件/HTTP/Flutter验证见 [P02报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md) 与 [stpp契约](../specs/2026-10-11-subtitle-mp4-ttml.md)。高级TTML/IMSC、辅助图片、fMP4和设备验收仍开放；不涉及长播放/弱网ABR。

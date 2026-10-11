@@ -125,8 +125,26 @@ final class SubtitleDocument {
     List<EmbeddedSubtitlePacket> packets, {
     required SubtitleFormat format,
     String? codecPrivate,
+    int sourceBytes = 0,
     SubtitleLimits limits = const SubtitleLimits(),
-  }) => _embeddedDocument(packets, format, codecPrivate, limits);
+  }) => _embeddedDocument(packets, format, codecPrivate, limits, sourceBytes);
+
+  /// MP4 TTML document timing is absolute on the track composition timeline.
+  /// Untimed paragraphs last until the enclosing sample clips them; external
+  /// TTML keeps its existing requirement for a finite end.
+  static SubtitleDocument parseTtmlSample(List<int> bytes) {
+    const limits = SubtitleLimits(maxInputBytes: 256 * 1024);
+    if (bytes.length > limits.maxInputBytes) _limit();
+    if (bytes.any((b) => b < 0 || b > 255)) _malformed();
+    String text;
+    try {
+      text = utf8.decode(bytes, allowMalformed: false);
+    } on FormatException {
+      _malformed();
+    }
+    if (text.startsWith('\uFEFF')) text = text.substring(1);
+    return _parseTtml(text, bytes.length, limits, documentEnd: _timeBound);
+  }
 
   /// Explicit paired VobSub resources; shared RGBA budget is historical PGS name.
   static SubtitleDocument parseVobSub(

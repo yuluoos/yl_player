@@ -1,5 +1,10 @@
 ## 0.2.0-dev.2
 
+- Add local and HTTP(S) non-fragmented MP4 TTML (stpp) subtitle discovery,
+  Track ID selection and existing TTML styled-text/region rendering. Resolve
+  document composition times within sample/edit intervals, isolate document
+  regions and account raw XML in the shared catalog budget. Reuse managed ranges.
+
 - Add local and HTTP(S) non-fragmented MP4 WebVTT (wvtt) embedded subtitles
   with Track ID selection, sample-timed cues, basic markup and horizontal
   align/position rendering. Reuse managed conditional ranges and cancellation;

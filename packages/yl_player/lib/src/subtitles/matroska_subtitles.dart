@@ -348,8 +348,16 @@ final class _Track {
 }
 
 final class EmbeddedSubtitleData {
-  const EmbeddedSubtitleData(this.track, this.codecPrivate, this.packets);
+  const EmbeddedSubtitleData(
+    this.track,
+    this.codecPrivate,
+    this.packets, {
+    this.sourceBytes = 0,
+  });
   final YlSubtitleTrack track;
   final String? codecPrivate;
   final List<EmbeddedSubtitlePacket> packets;
+
+  /// Retain the encoded document budget when cues expand from container samples.
+  final int sourceBytes;
 }

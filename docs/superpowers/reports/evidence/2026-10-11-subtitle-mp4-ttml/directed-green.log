@@ -1,0 +1,74 @@
+00:00 +0: loading /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_embedded_test.dart
+00:00 +0: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_parser_test.dart: independent FFmpeg stpp with cell font styling is explicitly unsupported
+00:00 +0 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_embedded_test.dart: actual stpp file uses document track time and retains styles and region
+00:00 +0 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_parser_test.dart: independent FFmpeg stpp with cell font styling is explicitly unsupported [E]
+  PathNotFoundException: Cannot open file, path = '/private/tmp/yl-stpp-validation-lpg4rv7h/fixtures/stpp-ffmpeg-owned.mp4' (OS Error: No such file or directory, errno = 2)
+  dart:io                                              _File.readAsBytes
+  packages/yl_player/test/stpp_parser_test.dart 38:29  main.<fn>
+  
+00:01 +1 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_embedded_test.dart: actual stpp file uses document track time and retains styles and region
+00:01 +2 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:01 +3 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:01 +4 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:01 +5 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:01 +6 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:01 +7 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:01 +8 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:01 +9 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:01 +10 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:01 +11 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:01 +12 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:01 +13 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:01 +14 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +15 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +16 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +17 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +18 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +19 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +20 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +21 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +22 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +23 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +24 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +25 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +26 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +27 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +28 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +29 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +30 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +31 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +32 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +33 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +34 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +35 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +36 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +37 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +38 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +39 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:02 +40 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:03 +41 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:03 +42 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:03 +43 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:03 +44 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:03 +45 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_embedded_test.dart: retained external metadata and empty stpp XML share catalog byte budget
+00:03 +46 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_embedded_test.dart: retained external metadata and empty stpp XML share catalog byte budget
+00:03 +47 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_embedded_test.dart: retained external metadata and empty stpp XML share catalog byte budget
+00:04 +48 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_embedded_test.dart: retained external metadata and empty stpp XML share catalog byte budget
+00:04 +49 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_embedded_test.dart: retained external metadata and empty stpp XML share catalog byte budget
+00:04 +50 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_embedded_test.dart: retained external metadata and empty stpp XML share catalog byte budget
+00:04 +51 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_embedded_test.dart: retained external metadata and empty stpp XML share catalog byte budget
+00:04 +52 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_parser_test.dart: multi-document cue total is bounded across tracks
+00:04 +53 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_parser_test.dart: multi-document cue total is bounded across tracks
+00:04 +54 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: cross-origin redirect strips credentials before MP4 stpp range scan
+00:04 +55 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: cross-origin redirect strips credentials before MP4 stpp range scan
+00:05 +56 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_parser_test.dart: every truncated prefix gives classified failure
+00:05 +57 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: etag response keeps prior selected MP4 stpp catalog
+00:06 +58 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: 200 response keeps prior selected MP4 stpp catalog
+00:06 +59 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: 403 response keeps prior selected MP4 stpp catalog
+00:07 +60 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: malformed response keeps prior selected MP4 stpp catalog
+00:08 +61 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed response-header timeout terminates MP4 stpp discovery
+00:09 +62 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: explicit non-MP4 stpp format rejects before HTTP request
+00:10 +63 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_parser_test.dart: independent FFmpeg stpp with cell font styling is explicitly unsupported

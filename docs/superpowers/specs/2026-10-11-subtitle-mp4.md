@@ -54,3 +54,10 @@ The historical wvtt exclusion above is superseded by the
 non-fragmented wvtt subset. Those tracks use the existing public `webvtt` format;
 tx3g normalization remains unchanged. Retained packets now enforce the existing
 10000-cue catalog ceiling across tracks during parsing, before catalog publication.
+
+## MP4 TTML extension (2026-10-11)
+
+The earlier stpp/MP4-TTML exclusion is superseded for the non-fragmented bounded
+subset in the [MP4 TTML contract](2026-10-11-subtitle-mp4-ttml.md). Existing public
+`ttml`, styled runs/regions and managed Range loading are reused. Composition
+time, sample clipping and simple edits are explicit; advanced TTML remains rejected.

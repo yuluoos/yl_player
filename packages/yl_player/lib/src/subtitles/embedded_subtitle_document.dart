@@ -11,6 +11,7 @@ final class EmbeddedSubtitlePacket {
     this.alignment = 'center',
     this.identifier,
     this.webvttSettings,
+    this.region,
   });
   final Duration start, end;
   final String text;
@@ -18,6 +19,7 @@ final class EmbeddedSubtitlePacket {
   final String alignment;
   final String? identifier;
   final WebVttCueSettings? webvttSettings;
+  final SubtitleRegion? region;
   @override
   String toString() => 'EmbeddedSubtitlePacket(payload: <redacted>)';
 }
@@ -27,17 +29,20 @@ SubtitleDocument _embeddedDocument(
   SubtitleFormat format,
   String? header,
   SubtitleLimits limits,
+  int sourceBytes,
 ) {
   limits._validate();
   if (![
     SubtitleFormat.srt,
     SubtitleFormat.webvtt,
+    SubtitleFormat.ttml,
     SubtitleFormat.ass,
     SubtitleFormat.ssa,
   ].contains(format)) {
     _unsupported();
   }
   if (packets.length > limits.maxCues) _limit();
+  if (sourceBytes < 0 || sourceBytes > limits.maxInputBytes) _limit();
   var bytes = utf8.encode(header ?? '').length;
   for (final p in packets) {
     bytes +=
@@ -56,8 +61,15 @@ SubtitleDocument _embeddedDocument(
       _malformed();
     }
   }
-  if (format == SubtitleFormat.srt || format == SubtitleFormat.webvtt) {
+  bytes = math.max(bytes, sourceBytes);
+  if (format == SubtitleFormat.srt ||
+      format == SubtitleFormat.webvtt ||
+      format == SubtitleFormat.ttml) {
     if (header?.isNotEmpty ?? false) _unsupported();
+    if (format == SubtitleFormat.ttml &&
+        packets.any((p) => p.textRuns == null || p.region == null)) {
+      _malformed();
+    }
     final cues = <SubtitleCue>[];
     for (final p in packets) {
       if (p.text.length > limits.maxCueCodeUnits) _limit();
@@ -69,6 +81,7 @@ SubtitleDocument _embeddedDocument(
           end: p.end,
           payload: p.text.replaceAll('\r\n', '\n').replaceAll('\r', '\n'),
           textRuns: p.textRuns,
+          region: p.region,
           alignment: p.webvttSettings?.alignment ?? p.alignment,
           positionPercent: p.webvttSettings?.position,
           positionAlignment: p.webvttSettings?.positionAlignment ?? 'auto',

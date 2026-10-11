@@ -1,0 +1,41 @@
+Input #0, lavfi, from 'color=c=black:s=16x16:d=5':
+  Duration: N/A, start: 0.000000, bitrate: N/A
+  Stream #0:0: Video: wrapped_avframe, yuv420p, 16x16 [SAR 1:1 DAR 1:1], 25 fps, 25 tbr, 25 tbn
+Input #1, srt, from '/private/tmp/stpp-owned.srt':
+  Duration: N/A, bitrate: N/A
+  Stream #1:0: Subtitle: subrip (srt)
+Stream mapping:
+  Stream #0:0 -> #0:0 (wrapped_avframe (native) -> h264 (libx264))
+  Stream #1:0 -> #0:1 (subrip (srt) -> ttml (native))
+Press [q] to stop, [?] for help
+[libx264 @ 0x7b74c2d180] using SAR=1/1
+[libx264 @ 0x7b74c2d180] using cpu capabilities: ARMv8 NEON DotProd
+[libx264 @ 0x7b74c2d180] profile High, level 1.0, 4:2:0, 8-bit
+[libx264 @ 0x7b74c2d180] 264 - core 165 r3222 b35605a - H.264/MPEG-4 AVC codec - Copyleft 2003-2025 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=1 lookahead_threads=1 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=3 b_pyramid=2 b_adapt=1 b_bias=0 direct=1 weightb=1 open_gop=0 weightp=2 keyint=250 keyint_min=25 scenecut=40 intra_refresh=0 rc_lookahead=40 rc=crf mbtree=1 crf=23.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+Output #0, mp4, to '/private/tmp/stpp-owned.mp4':
+  Metadata:
+    encoder         : Lavf62.3.100
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, progressive), 16x16 [SAR 1:1 DAR 1:1], q=2-31, 25 fps, 12800 tbn
+    Metadata:
+      encoder         : Lavc62.11.100 libx264
+    Side data:
+      cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+  Stream #0:1(eng): Subtitle: ttml (stpp / 0x70707473)
+    Metadata:
+      encoder         : Lavc62.11.100 ttml
+[mp4 @ 0x7b75008500] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x7b7500c600] video:2KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:1KiB muxing overhead: 141.669964%
+frame=  125 fps=0.0 q=28.0 Lsize=       6KiB time=00:00:04.56 bitrate=  10.7kbits/s speed= 574x elapsed=0:00:00.00    
+[libx264 @ 0x7b74c2d180] frame I:1     Avg QP: 9.00  size:    19
+[libx264 @ 0x7b74c2d180] frame P:31    Avg QP: 9.23  size:    18
+[libx264 @ 0x7b74c2d180] frame B:93    Avg QP:12.67  size:    13
+[libx264 @ 0x7b74c2d180] consecutive B-frames:  0.8%  0.0%  0.0% 99.2%
+[libx264 @ 0x7b74c2d180] mb I  I16..4: 100.0%  0.0%  0.0%
+[libx264 @ 0x7b74c2d180] mb P  I16..4:  0.0%  0.0%  0.0%  P16..4:  0.0%  0.0%  0.0%  0.0%  0.0%    skip:100.0%
+[libx264 @ 0x7b74c2d180] mb B  I16..4:  0.0%  0.0%  0.0%  B16..8:  0.0%  0.0%  0.0%  direct: 0.0%  skip:100.0%
+[libx264 @ 0x7b74c2d180] 8x8 transform intra:0.0%
+[libx264 @ 0x7b74c2d180] coded y,uvDC,uvAC intra: 0.0% 0.0% 0.0% inter: 0.0% 0.0% 0.0%
+[libx264 @ 0x7b74c2d180] i16 v,h,dc,p:  0%  0% 100%  0%
+[libx264 @ 0x7b74c2d180] i8c dc,h,v,p: 100%  0%  0%  0%
+[libx264 @ 0x7b74c2d180] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x7b74c2d180] kb/s:2.80

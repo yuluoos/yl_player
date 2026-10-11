@@ -1,0 +1,197 @@
+{
+  "validation": {
+    "base": "ede8e48cd855ddc09a07e0a60bc4049e15ccca09",
+    "path": "/private/tmp/yl-stpp-validation-lpg4rv7h",
+    "files": [
+      "packages/yl_player/test/stpp_embedded_test.dart",
+      "packages/yl_player/test/support/stpp_fixture.dart",
+      "packages/yl_player/lib/src/subtitles/mp4_subtitles.dart",
+      "packages/yl_player/lib/src/subtitles/mp4_webvtt.dart",
+      "packages/yl_player/lib/src/subtitles/mp4_ttml.dart",
+      "packages/yl_player/lib/src/subtitles/matroska_subtitles.dart",
+      "packages/yl_player/lib/src/subtitles/subtitle_document.dart",
+      "packages/yl_player/lib/src/subtitles/ttml_parser.dart",
+      "packages/yl_player/lib/src/subtitles/embedded_subtitle_document.dart",
+      "packages/yl_player/lib/src/subtitles/text_subtitle_runtime.dart",
+      "packages/yl_player/test/stpp_network_test.dart",
+      "packages/yl_player/test/stpp_session_test.dart",
+      "packages/yl_player/test/stpp_parser_test.dart",
+      "packages/yl_player/test/fixtures/stpp-ffmpeg-owned.mp4"
+    ],
+    "originalBase": "896e471f69560c3a79830ebad9a59067d96f77a0"
+  },
+  "ownedSourceAndDocs": {
+    "packages/yl_player/test/stpp_embedded_test.dart": "4805f8068f465b58b01e524389adfe96af999d020e75b6c1be62309538398414",
+    "packages/yl_player/test/support/stpp_fixture.dart": "758eb64b1d35936b1b64946f6b368bce22a0853a54f911b536b2522a1edb73ae",
+    "packages/yl_player/lib/src/subtitles/mp4_subtitles.dart": "4863f7e1282a7f3010f1da49967d770ddaeee1d6d3fe96c201b7071c4cf61b4f",
+    "packages/yl_player/lib/src/subtitles/mp4_webvtt.dart": "a99c0871f1090028b0af3db9070b20c56aa703d19f88b621eaa2949d44c2b0b7",
+    "packages/yl_player/lib/src/subtitles/mp4_ttml.dart": "ff3d5ecb4d03b86fbc172ac410e1a279c13fc3dc86113033ffbb6e5b04ca4fa6",
+    "packages/yl_player/lib/src/subtitles/matroska_subtitles.dart": "03b25ba0f1dc6a461be25a64a9ec36f4fd3e3fd9b1a95f91c696f25778a9e85b",
+    "packages/yl_player/lib/src/subtitles/subtitle_document.dart": "127013e186a72f3bcebc0f6876cef1b67985f04dea187541fb2bf8ad4ad88c9b",
+    "packages/yl_player/lib/src/subtitles/ttml_parser.dart": "d7fe0db9c1c5414620f488f3d403c9fbed564333e5257183c81008b332913d26",
+    "packages/yl_player/lib/src/subtitles/embedded_subtitle_document.dart": "9385c18c5c06b6d4d7621601b2c30948e2b248b009a26f1e3df05eb1cb260078",
+    "packages/yl_player/lib/src/subtitles/text_subtitle_runtime.dart": "7ea7fbaaf3e3a85c0fc1db9757d7d8934d6626df1cfe0281b909e48ec3514f82",
+    "packages/yl_player/test/stpp_network_test.dart": "bea4d47338ef6ed193731b096517d83f1c92825441a50b0567147689964995d2",
+    "packages/yl_player/test/stpp_session_test.dart": "c468decbc1ec38f7b2ea7793c81da8a759b903893d32d7d373e5ef10f3896e37",
+    "packages/yl_player/test/stpp_parser_test.dart": "9f3931b19976cc88809a1ef635804574af96af69e5313105b0c315cda62f6c26",
+    "packages/yl_player/test/fixtures/stpp-ffmpeg-owned.mp4": "f5b321034f65b4d504b00ce599b3fa0bed93df4819f8ffe7bcd3eaf2afbfbe16",
+    "docs/platform-support.md": "03bbae0f1da76b61b262258fcaac743249f66f37e97243164961203d644420f8",
+    "docs/superpowers/specs/2026-10-11-subtitle-mp4-ttml.md": "fa43cc03e13a548c6dbb95ee001e6ed90b7997fb3bc39d6fbbb8b2edd49e0ab6",
+    "docs/superpowers/specs/2026-10-11-subtitle-mp4.md": "dd480099ddf2ac3dbd60f368a1f848aeca7fc9658cf5cc119164285c52dbe04a",
+    "docs/superpowers/specs/2026-10-11-subtitle-runtime.md": "daabf869c43569336f1470e3995593c59550e224bc36c0fd36bf698df7e7e78a",
+    "packages/yl_player/README.md": "775e4e8c3970505728b463503097f7aea8903b45148b7f79bc4b99ff1ee64e28",
+    "packages/yl_player/test/fixtures/stpp-ffmpeg-owned.md": "995702caa426fadb245c7deac6eb0dee859af3c2c32f530b5b43a24e6c08553c",
+    "docs/superpowers/reports/2026-09-26-remaining-02-tracks-subtitles.md": "3cbd1c6c78efcee285acacf253db3020c816f8425e4350a0d47b4d7638f91470"
+  },
+  "referenceDependencies": {
+    "packages/yl_player/lib/src/subtitles/subtitle_resource.dart": "b371094c804274cd3b11eeda357d7074bfa5746a002adb95a13bec0a21a9f42c",
+    "packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart": "a124219b5660d7ef1976f9037bb67807a39af94bf9b8f02e415a6b210a59f071",
+    "packages/yl_player/lib/src/subtitles/subtitle_range_reader.dart": "f9dc55afbb4246f692f5878c44cf5b939052054cf6a5936271fb0ea2b51981de",
+    "packages/yl_player/lib/src/subtitles/subtitle_socket.dart": "924a5e00ff2ff41e8a8c3bfc16690252bd09682695560fe54e02d9ba318fe942",
+    "packages/yl_player/lib/src/subtitles/embedded_subtitle_resource.dart": "252ad0aa1185528d00344ad24bce1c4e8b3919b4177d0248b077fca87551704b",
+    "packages/yl_player/lib/src/subtitles/embedded_subtitle_resource_io.dart": "cd43dc631d8e98a7cbb6265a3ce2e31cdc44f7fa910e31d38859eb69c22e32a5",
+    "packages/yl_player/lib/src/subtitles/embedded_subtitle_resource_stub.dart": "dfc84eafa4359c35c244cd706904bb3ba01a277c49a96632d2c8b8ff19ae82d9",
+    "packages/yl_player/lib/src/subtitles/text_subtitle_overlay.dart": "79ffffdc7c5be456c5495444c75654043b9ba26df504dd1db4cebaea9474d73b",
+    "packages/yl_player/lib/src/subtitles/ttml_overlay.dart": "b3cf9097d05f81c22090d4faed0130495b0df516d33fff767f92888ed01e39cd",
+    "packages/yl_player/lib/src/subtitles/ass_overlay.dart": "d7a16246e16ea4a4138e877408e07062616c9f63bfd57025df6f5b20653bc27c",
+    "packages/yl_player/lib/src/subtitles/pgs_overlay.dart": "75c40feecdb29ab098e17374b9d304e7a1d401bb721358e22ce71d24b0564f58",
+    "packages/yl_player/lib/src/drm/license_secure_socket.dart": "e840dd82f87e6dd1e31bb82d84a9bdc7ec78f662610d7219ddd562344bd9cc6d",
+    "packages/yl_player_platform_interface/lib/src/model/subtitles.dart": "c3a63f859b42893fbb91db894ded10bac6468f4f055f0629950d2a9d439a2b9d",
+    "packages/yl_player_platform_interface/lib/src/validation/subtitle_validation.dart": "e96723041113be76ad3cc28775e49625da61bac995db5b80ad65b47c2a83fa36",
+    "packages/yl_player/lib/src/player_view.dart": "7fbcbb89c8c47c6c5498280d46ab5fe1dc6c4a5054a411c6d891f423659f5c19",
+    "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
+    "packages/yl_player/pubspec.yaml": "6c6bb701de8860f7522ecc91176e01d38217a968d1ca2b3fe2d61c47ddff9461",
+    "packages/yl_player/test/support/mp4_fixture.dart": "ddcedc87be26bc017fe10fdba1f565b7f1d56ce2c8f24fc77dd9ad63c3ff8d66",
+    "packages/yl_player/test/support/range_server.dart": "8eb43065d5bd1fcc1ec0f2cac725ab641f3612eea20d33d2b701639afa102234",
+    "packages/yl_player/test/support/fake_player_platform.dart": "c257afb5c6115fb36c4506eec04c73893feb6b28995fe68ea53e11151976d066",
+    "packages/yl_player_android/android/src/main/jniLibs/armeabi-v7a/libyl_player_ffmpeg.so": "2d46d86c21d72002949bb910998deca91befe85267c787df4dc8160cc3950f9e",
+    "packages/yl_player_android/android/src/main/jniLibs/arm64-v8a/libyl_player_ffmpeg.so": "6e4bd40b3a4abf20d32acc4c5c058b5f17e749e46e2d4baf1a9ca8779bd54f01",
+    "packages/yl_player_android/android/src/main/jniLibs/x86_64/libyl_player_ffmpeg.so": "9a6d59ea1a895e4ccd974207a11ffe11643efe8876591a2e0a2a59284605ef00",
+    "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64/YlFFmpegBridge.framework/YlFFmpegBridge": "b695650db63cdd8e5dbcb43a88f15f9c29ca0a3d8a486153e8a1a2bacc200841",
+    "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/YlFFmpegBridge": "4013d588be9ef2780f96c7c0e98b82b10bff2e689bf7abc425f41a3c910a19ae",
+    "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge": "6ee6920f00e75f60d5897f943c04957a929ffc20c8868ee2bc5bfaabfb5a1c47",
+    "packages/yl_player_android/tool/android_ffmpeg/build_shared_libraries.sh": "0812cd185f651ed14e3a048e906c26e5a4cb115bfe32d415c1db1302ddc56a34",
+    "packages/yl_player_apple/tool/apple_ffmpeg/build_xcframework.sh": "3f70d3970e33e148e19d96cddad6b7aed4791f1d467e77381f85ff44ed05e8a8",
+    "packages/yl_player_android/tool/android_ffmpeg/ffmpeg-9.0.1.lock": "79783ae110c2c1bf95f457efe1f3099597dddc1c127eb38a7c1ca8c636b468a1",
+    "packages/yl_player_apple/tool/apple_ffmpeg/ffmpeg-9.0.1.lock": "80af0e63635f1ee913cbb4aded6380d2d56f9eaa014d19e34f3ef16ddef38e30",
+    "packages/yl_player/lib/src/subtitles/ass_parser.dart": "2724793b44a1dbab4a70fa94f929a25a1bb28d4e738a2446b8fa2adde76a7909",
+    "packages/yl_player/lib/src/subtitles/pgs_parser.dart": "4787eddc6c5e0250df958f3815dc2cc1923dcfff58efbf8ca386349ac4afcf06",
+    "packages/yl_player/lib/src/subtitles/vobsub_parser.dart": "0e678708336623d32593121d3b69cbf6c1bce9294dce389c00e37d9512e49817",
+    "packages/yl_player/test/support/wvtt_fixture.dart": "3f5f9fd2f5dc5e8106b355fbf105d83ed6c7a936298c8e40db0c204b8d0b895d"
+  },
+  "sharedDocumentTransforms": {
+    "overviewSectionSha256": "88da814eb02c7e28ef4035ac3d90a26d1cb5f9683bbaaa4b58e38fb2d6c102d8",
+    "changelogEntrySha256": "b43b23d75834d1e3c7062023d8053f28fde8ea133ed088c53e08fc8afe357f92"
+  },
+  "evidence": {
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/analyze-before-review.log": "a6736647d64d5475910e28f7debfa6599d697700a04e3789857811f200d5fd19",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/analyze-first.log": "7cf9b717cd0ae36cad727808630a9a929c04f0d5a041238ce9f70ec6fb4bd475",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/artifact-audit.json": "3261018ea0af1e91c22e58fb602a21f0a52368a73baeb2b1f77be4b6e0738ff9",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/directed-first.log": "d010d02d981dd0886acf518321c814d9c8b174f66c47b431c897ce22577f2dd9",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/directed-green.log": "0a1a2e5a5e5314c55177e61a9f74297aae74c9f3cc09965d80a1acf60128aaae",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/directed-ready.log": "da30ec10d8a5e8ece85e69903371588fbea6a7c9884384000fb44322d439aaf0",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/directed-second.log": "8a20972fba5c944976430b48e090a103a9be42fd56e56ff6546f7e126025cd49",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/directed-third.log": "8cd46fee31c9cf5fba923686041b8216a7be2cd5b0b53ba8d42e7773c3783133",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/entry-green.log": "267afbfbd82bb1709f6fcf9c878b472715967db76a4cea2ed1843da12a1252da",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/entry-red.log": "b852240426a5e899d72ceb56f13ca2d71838cd4cab458cbbfbf29d67e19e930d",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/ffmpeg-version.log": "8e4596249b9743ce4af9b1f54c3030938adbd91f39f41c576e8a82d9a35abaf9",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/ffmpeg.log": "84c385620c85c0769bb6a75ece41f74b052a2bb02223e400d72bf597bf56c8c8",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/ffprobe.json": "12db5c29c9c403a87dc66eeb6bb74a49837d258d331eeeef2efe0373a379e884",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/final-analyze.log": "7cf9b717cd0ae36cad727808630a9a929c04f0d5a041238ce9f70ec6fb4bd475",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/final-four-packages.log": "04c9e9fa2f5bc19b60fa4286fa0d5099a673a97ce2f9f62ca5495ad93ef33376",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/format.log": "652b71825eeaceef5095eb1e3b2bae942d76c7dd5a6c457f9fa81faded3686b8",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/four-packages-before-review.log": "e139ab5d36172a9ffedb50c9efa07e95f1251c9f7f233882dea0d23ef22d61e3",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/review-summary.json": "dc7f900d135e3622f175a805ef74795fe92d93b3fe3b8a0e029d8d6a3e54ecf6",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/review.md": "681fc6bd7e81535839de0911d90080c13df6b0dfda69ffef25cd5b5cccd931eb",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4-ttml/source.srt": "2fb5281d59a807315c0bf6dd478ee700a774ba2530795ffe764416d496a2ed5f"
+  },
+  "finalVerification": [
+    {
+      "command": "flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test",
+      "cwd": "/private/tmp/yl-stpp-validation-lpg4rv7h",
+      "exitCode": 0,
+      "passed": 1215,
+      "failed": 0,
+      "packageCounts": [
+        135,
+        885,
+        113,
+        82
+      ],
+      "newTests": 64,
+      "log": "final-four-packages.log"
+    },
+    {
+      "command": "dart analyze --suppress-analytics packages/yl_player/lib packages/yl_player/test packages/yl_player_platform_interface/lib packages/yl_player_platform_interface/test",
+      "cwd": "/private/tmp/yl-stpp-validation-lpg4rv7h",
+      "exitCode": 0,
+      "result": "No issues found",
+      "log": "final-analyze.log"
+    }
+  ],
+  "history": [
+    {
+      "log": "entry-red.log",
+      "result": "0pass/1fail stpp unsupported before implementation"
+    },
+    {
+      "log": "entry-green.log",
+      "result": "52pass/2fail: wrong existing test filename and incorrect single-run assumption in fixture"
+    },
+    {
+      "log": "directed-first.log",
+      "result": "74pass/3fail: nonexistent fixture parameter triggered2load failures, letterbox geometry assertion wrong"
+    },
+    {
+      "log": "directed-second.log",
+      "result": "115pass/2fail: literal fixture structure outside existing TTML subset, error classification expected malformed instead of existing unsupported"
+    },
+    {
+      "log": "directed-third.log",
+      "result": "120pass new stpp plus existing TTML document regressions"
+    },
+    {
+      "log": "directed-green.log",
+      "result": "63pass/1fail independent fixture file path incorrect"
+    },
+    {
+      "log": "directed-ready.log",
+      "result": "64pass"
+    },
+    {
+      "log": "four-packages-before-review.log",
+      "result": "1215pass"
+    },
+    {
+      "log": "analyze-before-review.log",
+      "result": "1curly-brace style info after formatting, corrected before final validation"
+    }
+  ],
+  "review": {
+    "critical": 0,
+    "important": 0,
+    "minorDeferred": 0,
+    "blockingRemaining": 0,
+    "method": "One fresh-context read-only review; no actionable defect, no re-review",
+    "details": "review.md"
+  },
+  "ownedFixture": {
+    "path": "packages/yl_player/test/fixtures/stpp-ffmpeg-owned.mp4",
+    "bytes": 6107,
+    "generator": "host FFmpeg8.0.1, not runtime dependency",
+    "source": "source.srt",
+    "probe": "ffprobe.json",
+    "role": "independently muxed negative compatibility fixture (cell/font/overflow outside existing TTML subset), not positive interoperability evidence"
+  },
+  "dependenciesAdded": [],
+  "limitations": [
+    "Nonfragmented local/HTTP(S) MP4 stpp using existing public ttml format and explicit discovery",
+    "ISO14496-30 Amd1:2022 composition timeline, sample clipping/simple edits; no legacy presentation-time heuristic",
+    "Existing bounded TTML styled text and percentage regions, no cell/pixelfont/images/timedspans/complexprofiles/nonmedia timebase",
+    "Managed Range reader unchanged; strong ETag/fixed length/pinned URI/If-Match/single206, no full download fallback or schema/resource fetching",
+    "Raw sample bytes including empty/edited-out XML share catalog budget; existing XML/sample/cue/run bounds, no RSS guarantee",
+    "Positive tests owned handcrafted BMFF/XML, realfile/loopbackHTTP/Flutter with fake video backend; independent FFmpeg fixture is negative only",
+    "No fMP4/HLS/DASH/native/device/HDR/DRM/PD03/wholeP02 acceptance",
+    "Concurrent long-play/weak-network ABR/readiness changes excluded"
+  ]
+}

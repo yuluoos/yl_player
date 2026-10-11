@@ -12,12 +12,14 @@ final class _Mp4Cue {
     this.runs,
     this.identifier,
     this.settings,
+    this.ttml,
     this.alignment = 'center',
   });
   final String text, alignment;
   final List<SubtitleTextRun>? runs;
   final String? identifier;
   final WebVttCueSettings? settings;
+  final SubtitleCue? ttml;
 }
 
 /// Bounded sample-local box walk; no recursive or file-level cue interpretation.

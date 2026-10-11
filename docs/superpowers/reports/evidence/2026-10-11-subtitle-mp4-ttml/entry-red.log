@@ -1,0 +1,10 @@
+00:00 +0: loading /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_embedded_test.dart
+00:00 +0: actual stpp file uses document track time and retains styles and region
+00:00 +0 -1: actual stpp file uses document track time and retains styles and region [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 208:9  TextSubtitleRuntime.discover.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_embedded_test.dart: actual stpp file uses document track time and retains styles and region

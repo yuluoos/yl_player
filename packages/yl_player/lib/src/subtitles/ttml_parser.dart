@@ -243,10 +243,11 @@ const _regionProperties = {'origin', 'extent', 'displayAlign'};
 SubtitleDocument _parseTtml(
   String input,
   int inputBytes,
-  SubtitleLimits limits,
-) {
+  SubtitleLimits limits, {
+  int? documentEnd,
+}) {
   final root = _readTtmlXml(input);
-  return _TtmlParser(limits).parse(root, inputBytes);
+  return _TtmlParser(limits).parse(root, inputBytes, documentEnd: documentEnd);
 }
 
 final class _TtmlParser {
@@ -261,7 +262,7 @@ final class _TtmlParser {
   var paragraphCount = 0;
   var totalRuns = 0;
 
-  SubtitleDocument parse(_TNode root, int bytes) {
+  SubtitleDocument parse(_TNode root, int bytes, {int? documentEnd}) {
     _validate(root, null);
     for (final head in root.elements.where((n) => n.name == 'head')) {
       for (final group in head.elements) {
@@ -306,7 +307,14 @@ final class _TtmlParser {
       }
     }
     for (final body in root.elements.where((n) => n.name == 'body')) {
-      _content(body, 0, null, const {}, null, root['xml:space'] ?? 'default');
+      _content(
+        body,
+        0,
+        documentEnd,
+        const {},
+        null,
+        root['xml:space'] ?? 'default',
+      );
     }
     return SubtitleDocument._finish(cues, bytes, limits);
   }

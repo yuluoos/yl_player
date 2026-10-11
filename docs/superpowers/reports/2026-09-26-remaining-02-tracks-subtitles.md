@@ -444,3 +444,64 @@ ABR及readiness未提交改动不纳入本次提交；不把整个Task3/P02标�
 
 最终隔离验证：四包 **1151/1151、0失败、exit0**（135/821/113/82），播放器/接口 lib/test
 静态分析 **No issues found、exit0**。复审无阻塞项，保留1项Minor和1项测试增强建议。
+
+## 2026-10-11 MP4 内嵌 TTML（stpp）
+
+继续用户指定的下一字幕项，在既有非分片 MP4 和 TTML 运行时接入stpp；本地/HTTP(S)
+来源、Track ID选择、实际文本/百分比region合成均使用当前字幕owner。公开格式复用ttml，
+不同codec可分轨共存；单轨多描述不能混用codec。网络生产读取器没有改动。
+
+### 实现与边界
+
+- stpp三项NUL结尾UTF8元数据严格有界，要求TTML namespace/空辅助资源，仅支持可选
+  btrt；schema位置不访问网络。每sample独立XML，现有DTD/实体/namespace规则继续执行，
+  外部字体/图片/辅助子样本不加载。
+- 核对2022时间修订后，明确按composition轴解析TTML，裁切sample再应用简单编辑；
+  绝不加sample起点。组合整数比例后舍入微秒，避免空白延迟和媒体起点分别舍入误差。
+  未声明end的段落受sample边界约束，外置TTML有限end要求不变。
+- 文档局部region/style/ID隔离，重叠sample中的同名region不会错误合并。纯文本runs与
+  region直接进入目录；空文档/编辑外内容的原始字节仍与外挂共享4MiB目录预算。
+  单sample256KiB、XML深度/事件/样式和现有MP4/目录cue/runs/活动cue限制继续执行。
+- managed单段206/强ETag/总长/If-Match、共享重试/重定向/凭据、超时/取消/请求与字节预算
+  复用原路径；失败原子保留旧选择/目录，换源/stop/dispose/外置操作屏蔽迟到结果。
+- 只承诺既有TTML文本/样式/百分比区域子集；cell字号/字体资源/图像/高级profile/timed
+  span/非media时间基、fMP4/HLS/DASH等仍拒绝。详见[stpp契约](../specs/2026-10-11-subtitle-mp4-ttml.md)。
+
+### 验证过程
+
+真实文件入口先0/1失败 subtitleUnsupported。首次接入回归52通过/2失败：命令误写不存在
+的ttml_parser_test，以及测试误要求已解码文字只有一个run；改正确文件名与全部run样式断言。
+扩展首次74通过/3失败，包含新测试误用fixture不存在的movieScale参数及随之产生的compiler
+加载失败，以及区域几何预期误用整个viewport而非letterboxed视频aperture。修正夹具和
+可见区域预期后115通过/2失败，均为测试未遵循既有TTML结构子集（要求body/div/p，非法
+结构分类unsupported）；保持生产解析语义，修正测试。连同既有TTML回归120/120通过。
+
+host FFmpeg8.0.1独立生成6107字节owned黑视频+两条SRT的stpp；ffprobe为Track ID2，
+XML sample0–4.567秒、文档cue1.250–2.500/3.123–4.567秒。该encoder自带cellResolution、
+16c字号和字体/overflow，超出现有TTML子集，测试明确拒绝。首次该负向测试路径定位错误
+导致63通过/1失败，修正根目录夹具定位后，本项 **64/64**（45解析边界/2文件预算/11HTTP/
+6公开会话与Flutter）。不将独立负向样本当作正向生产器互通性证据。
+
+正向覆盖手写XML/BMFF、实际文件和真实HTTP；包括非零sample绝对时间、ctts、编辑/精度、
+重复文档、无限段落裁切、空文档清屏、文档作用域、跨轨10000cue、64重叠及共享原始字节
+预算，HTTP稀疏跳读/重试/凭据/版本/200与403拒绝、实际样式及letterbox区域几何、seek/
+off/offset和取消。视频backend为fake，无native构建/设备/HDR/DRM/PD-03/长播放/弱网ABR
+验收；未增加依赖，10份原生制品/配方/lock重新hash未变。成功与失败日志均保存。
+
+初始基线896e471后另一边提交ede8e48仅6份P05文档/清单，与本项14份代码/测试/夹具无交集，
+隔离副本已同步提交内容后验证。并行工作区的benchmark脚本改动不进入候选或提交。
+最终复审和冻结证据见本节后续与[manifest](evidence/2026-10-11-subtitle-mp4-ttml/manifest.json)。
+
+### 最终复审与冻结
+
+一次fresh-context只读复审：Critical0、Important0、Minor0，无需修复的发现；
+未判断范围逐项裁定见[review.md](evidence/2026-10-11-subtitle-mp4-ttml/review.md)。
+首轮四包1215/1215通过；格式化触发的一条curly-brace提示仅补大括号，在最终候选重新验证。
+用隔离git-archive基线加所属14份代码/测试/二进制夹具逐字节对照，冻结SHA256与制品指纹，
+独立Git index仅提交本项与自身总览/CHANGELOG段；另一边未提交脚本完整保留。
+本项不关闭整个Task3/P02，执行账本继续保留。
+
+最终命令为根目录四包 flutter test --no-pub --concurrency=1（接口/播放器/Apple/Android
+四个test目录）以及播放器/接口lib/test的dart analyze --suppress-analytics。
+结果 **1215/1215、0失败、exit0**（135/885/113/82；本项新增64），分析 **No issues found、exit0**。
+基线ede8e48、所属候选、引用依赖、制品、完整日志和文档指纹见manifest，复审无遗留项。

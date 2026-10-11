@@ -1,0 +1,161 @@
+00:00 +0: loading /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_embedded_test.dart
+00:00 +0: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:00 +1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:00 +1 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:00 +1 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_parser_test.dart: literal XML sample independent of TTML fixture wrapper [E]
+  SubtitleParseException(unsupported)
+  package:yl_player/src/subtitles/subtitle_document.dart 401:5   _unsupported
+  package:yl_player/src/subtitles/ttml_parser.dart 330:60        _TtmlParser._validate
+  package:yl_player/src/subtitles/ttml_parser.dart 389:9         _TtmlParser._validate
+  package:yl_player/src/subtitles/ttml_parser.dart 389:9         _TtmlParser._validate
+  package:yl_player/src/subtitles/ttml_parser.dart 266:5         _TtmlParser.parse
+  package:yl_player/src/subtitles/ttml_parser.dart 250:30        _parseTtml
+  package:yl_player/src/subtitles/subtitle_document.dart 146:12  SubtitleDocument.parseTtmlSample
+  package:yl_player/src/subtitles/mp4_ttml.dart 40:34            _Stpp.decode
+  package:yl_player/src/subtitles/mp4_subtitles.dart 360:30      Mp4Subtitles._track
+  
+00:00 +2 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:00 +3 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:00 +4 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:00 +5 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:00 +6 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:00 +7 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:00 +8 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:00 +9 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:00 +10 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:00 +11 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:00 +12 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:00 +13 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:00 +14 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:00 +15 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:00 +16 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:00 +17 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +18 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +19 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +20 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +21 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +22 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +23 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +24 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +25 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +26 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +27 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +28 -1: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +28 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +28 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_parser_test.dart: malformed XML wrong nesting [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/subtitle_document.dart 401:5   _unsupported
+                  package:yl_player/src/subtitles/ttml_parser.dart 330:60        _TtmlParser._validate
+                  package:yl_player/src/subtitles/ttml_parser.dart 389:9         _TtmlParser._validate
+                  package:yl_player/src/subtitles/ttml_parser.dart 389:9         _TtmlParser._validate
+                  package:yl_player/src/subtitles/ttml_parser.dart 389:9         _TtmlParser._validate
+                  package:yl_player/src/subtitles/ttml_parser.dart 389:9         _TtmlParser._validate
+                  package:yl_player/src/subtitles/ttml_parser.dart 266:5         _TtmlParser.parse
+                  package:yl_player/src/subtitles/ttml_parser.dart 250:30        _parseTtml
+                  package:yl_player/src/subtitles/subtitle_document.dart 146:12  SubtitleDocument.parseTtmlSample
+                  package:yl_player/src/subtitles/mp4_ttml.dart 40:34            _Stpp.decode
+                  package:yl_player/src/subtitles/mp4_subtitles.dart 360:30      Mp4Subtitles._track
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8              expectLater
+                  packages/yl_player/test/stpp_parser_test.dart 111:80           main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                       expectLater
+  package:flutter_test/src/widget_tester.dart 507:8     expectLater
+  packages/yl_player/test/stpp_parser_test.dart 111:80  main.<fn>
+  
+00:00 +29 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +30 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +31 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +32 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +33 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +34 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +35 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +36 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +37 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +38 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +39 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +40 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +41 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +42 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +43 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:00 +44 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_parser_test.dart: every truncated prefix gives classified failure
+00:00 +45 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:00 +46 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:00 +47 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:00 +48 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:00 +49 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:00 +50 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +51 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +52 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +53 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +54 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +55 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +56 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +57 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +58 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +59 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +60 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +61 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +62 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +63 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +64 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +65 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +66 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +67 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +68 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +69 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +70 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +71 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +72 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +73 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +74 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +75 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +76 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +77 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +78 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +79 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +80 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +81 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +82 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +83 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +84 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +85 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +86 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +87 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +88 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +89 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +90 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +91 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +92 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +93 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +94 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +95 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +96 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +97 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +98 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +99 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +100 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +101 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +102 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +103 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +104 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +105 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +106 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +107 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +108 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: cross-origin redirect strips credentials before MP4 stpp range scan
+00:01 +109 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: etag response keeps prior selected MP4 stpp catalog
+00:01 +110 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: 200 response keeps prior selected MP4 stpp catalog
+00:01 +111 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: 403 response keeps prior selected MP4 stpp catalog
+00:01 +112 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: malformed response keeps prior selected MP4 stpp catalog
+00:01 +113 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: managed response-header timeout terminates MP4 stpp discovery
+00:02 +114 -2: /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_network_test.dart: explicit non-MP4 stpp format rejects before HTTP request
+00:02 +115 -2: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_parser_test.dart: literal XML sample independent of TTML fixture wrapper
+  /private/tmp/yl-stpp-validation-lpg4rv7h/packages/yl_player/test/stpp_parser_test.dart: malformed XML wrong nesting
