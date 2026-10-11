@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "baselines": {
+    "yl_player": "a66cc3abde06a3e7485cd805d2072d1fa2686564",
+    "tvs": "7b04b962d086b43a50e820ac19380b7ac19571bc"
+  },
+  "snapshot": "/private/tmp/yl-guidance-8_9j5x_g",
+  "inputs": [
+    {
+      "repository": "tvs",
+      "path": "lib/utils/live_player_controller.dart",
+      "sha256": "1fc417635ca43f46cca4289beb145dc94113e6cfe13cbb7f6e403e2456067db5"
+    },
+    {
+      "repository": "tvs",
+      "path": "lib/utils/video_playback_error.dart",
+      "sha256": "22b0572cc8b91784b27aed80f20aa4dd63476758848747d4ca737eab56beebd5"
+    },
+    {
+      "repository": "tvs",
+      "path": "test/modules/live/features/live_attempt_diagnostics_test.dart",
+      "sha256": "2ad60b890d595e1ef29e9e6c77961916a6cf8a9e165505aa0d77fa7019a0d401"
+    },
+    {
+      "repository": "tvs",
+      "path": "pubspec.yaml",
+      "sha256": "5c65155869260385a02cd9c9f192880148690c39e293ea2c5ce1db07d3ca33e4"
+    },
+    {
+      "repository": "tvs",
+      "path": "pubspec.lock",
+      "sha256": "8bc7656782e9070a7c308c0d03d3ae6f2d7c4ccd8d94181cb6a0c8f7c76f84e8"
+    },
+    {
+      "repository": "tvs",
+      "path": "lib/pages/live/widgets/live_player/live_preview.dart",
+      "sha256": "3f64a8ad2ea38b927504ddf17014ba9be8ef63c1e890e418389e94abd52abf82"
+    },
+    {
+      "repository": "tvs",
+      "path": "lib/pages/live/widgets/live_player/live_fullscreen.dart",
+      "sha256": "d43652a32de2b1adb32225263a221d050398e5e388962fae052ab406d15f4c9b"
+    },
+    {
+      "repository": "tvs",
+      "path": "lib/pages/live/widgets/live_player/live_error_message.dart",
+      "sha256": "c449d71701e1d10eae7451fc4841462a9a2f5100ab28be5a235f84f5c551d91a"
+    },
+    {
+      "repository": "tvs",
+      "path": "test/modules/live/features/live_error_message_test.dart",
+      "sha256": "ef39c47d85a147cf8fdd0b0e52b563d649b648b9768e159445b74514887c9448"
+    },
+    {
+      "repository": "yl_player",
+      "path": "pubspec.yaml",
+      "sha256": "a6fd12d7606ae8efa151b211b7317f6a6dfc73e362722d36efcd8aef1c8f81ee"
+    },
+    {
+      "repository": "yl_player",
+      "path": "pubspec.lock",
+      "sha256": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d"
+    }
+  ],
+  "devicesUsed": false,
+  "externalServicesUsed": false,
+  "commands": [
+    {
+      "name": "tests",
+      "command": [
+        "/Users/yy2021_8689/flutter/bin/flutter",
+        "test",
+        "--no-pub",
+        "--concurrency=1",
+        "test/modules/live/features/live_error_message_test.dart",
+        "test/modules/live/features/live_attempt_diagnostics_test.dart",
+        "test/modules/live/features/live_source_resolution_test.dart",
+        "test/modules/live/features/live_player_notifier_test.dart",
+        "test/modules/live/features/live_player_session_ownership_test.dart",
+        "test/modules/live/features/live_player_stall_recovery_test.dart",
+        "test/modules/live/features/live_player_view_behavior_test.dart",
+        "test/modules/live/features/live_line_swipe_test.dart",
+        "test/modules/live/features/live_redesign_test.dart",
+        "test/modules/player/features/playback_source_subscriptions_test.dart"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "analyze",
+      "command": [
+        "/Users/yy2021_8689/flutter/bin/flutter",
+        "analyze",
+        "--no-pub"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "red": {
+    "passed": 5,
+    "failed": 7
+  },
+  "focusedGreen": 12,
+  "relatedPassed": 134,
+  "newTests": 8,
+  "generatedInputsChanged": false,
+  "rawLogsSha256": "e4e147514ce67f851daf38204f7e74232ed1bad1dafdb14fbab1529cb18ea4b8",
+  "scope": "Live business error summary plus readable preview/fullscreen presentation; retry policy unchanged",
+  "review": {
+    "important": "Long summaries clipped the final guidance and IDs",
+    "fix": "Shared scrollable error surface, fixed guidance, TV arrows and fullscreen controls preserved",
+    "initialWidgetRed": {
+      "passed": 0,
+      "failed": 3
+    },
+    "additionalTvShortcutRed": {
+      "passed": 133,
+      "failed": 1
+    },
+    "finalWidgetTests": 4,
+    "secondIndependentReview": false
+  },
+  "limits": [
+    "No native media/device or online subscription acceptance.",
+    "Error-state UI now scrolls with fixed manual guidance; no new retry actions or non-error playback changes.",
+    "Only bounded existing safe diagnostic tokens are displayed; omitted invalid or missing identities are not invented."
+  ],
+  "tvsCommit": "60d838fbe0ddbc4b7088baadfd89f60331cd8cec",
+  "tvsCommitInputsVerified": true
+}

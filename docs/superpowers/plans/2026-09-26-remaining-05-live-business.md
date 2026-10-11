@@ -74,6 +74,7 @@ cd /Users/yy2021_8689/Desktop/GIt/tvs
 /Users/yy2021_8689/flutter/bin/flutter test test/modules/live/features/live_source_parser_test.dart test/modules/live/features/live_source_resolution_test.dart test/modules/player/features/playback_source_subscriptions_test.dart
 ```
 
+- [x] 2026-10-11 完成逐源失败提示：中文环节、既有已知原因、手动操作建议及校验后的参考编号；保留8条上限和重试策略。修复长摘要在预览/全屏裁切，支持触摸/TV滚动且不被换台快捷键抢占。TVS `60d838f`；新增8项、相关134/134、全项目分析通过，复审问题已修正。固定播放器 `a66cc3a`，无设备；非逐源分类、真实媒体/遥控器与完整P05未由本项关闭。
 - [ ] 提示输出失败环节、已知原因、建议和安全关联；直连无法提供代理吞吐时保留 unavailable。分别在 TVS 和播放器仓库提交本仓改动，报告准确的两个 commit。
 
 ### Task 3：刷新、竞态与失败汇总

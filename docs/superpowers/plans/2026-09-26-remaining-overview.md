@@ -475,3 +475,8 @@ TVS `7b04b96` 补齐已有重新解析行为的12项回归：慢响应期间停�
 ### 2026-10-11 P02 MP4 内嵌 WebVTT 字幕
 
 接入本地/HTTP(S) 非分片 MP4 的 wvtt 轨道发现、Track ID 选择和基础 WebVTT 合成；sample 内多 cue、vtte 清屏、标识符及水平 align/position 使用现有媒体时钟和布局。网络复用 managed Range/ETag/If-Match、重试/重定向/凭据和扫描预算；失败保留旧目录。实际文件、HTTP 与 Flutter 几何/生命周期及边界验证见 [P02 报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md) 和 [wvtt 契约](../specs/2026-10-11-subtitle-mp4-webvtt.md)。fMP4/stpp、高级 WebVTT 和设备验收仍开放；未触碰长播放/弱网 ABR。
+
+
+### 2026-10-11 P05 直播错误安全提示与可读性
+
+TVS `60d838f` 在逐源摘要中补齐中文阶段、已知原因、手动建议及安全参考编号，保持8条汇总和原重试策略。预览/全屏提供固定操作提示与可滚动详情，TV错误滚动不再被换台快捷键抢占。新增8项，最终相关134/134、全项目分析通过；复审发现的长摘要问题已修正。固定播放器 `a66cc3a`，未使用设备或外部服务；完整P05、真实媒体/遥控器和线上验收仍开放，见[P05报告](../reports/2026-09-26-remaining-05-live-business.md)。

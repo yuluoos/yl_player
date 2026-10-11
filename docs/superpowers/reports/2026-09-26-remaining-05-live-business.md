@@ -238,3 +238,28 @@ SANITIZE=1 sh packages/yl_player_source_resolver/tool/test_native.sh
 [verification.json](evidence/2026-10-11-native-resource-cleanup/verification.json) 保存基线、关键输入与新测试指纹、退出码及边界；[raw-logs.json](evidence/2026-10-11-native-resource-cleanup/raw-logs.json) 保存初次通过、故意回归及最终验证日志。没有使用设备、模拟器、原生媒体播放、真实脚本服务或外部测试环境。本机 sanitizer 和直接释放观察并非全堆无泄漏证明，未运行 LeakSanitizer；Android/iOS/其他主机、九脚本线上行为、真实媒体及长播放仍需各自验收。
 
 独立只读复审发现两项 Important 同步缺口：context 创建早于进入 main 循环，服务端 flush 早于客户端接收正文。两项均接受并在同一轮修正为上述实际执行/读取就绪观察。先在隔离副本加入就绪断言而未接入观察器，native 因就绪计数未达4失败；HTTP 因首块等待5秒超时失败，并在随后解析10秒超时中暴露预期取消的差异。接入真实观察后重新运行全部模块测试、分析和 native sanitizer 检查，结果如上。没有遗留复审项，未进行第二次独立复审；复审者只读代码和当时日志，未执行测试、重算哈希或审查后续证据文档，最终同步修正及文档核对由执行者完成。
+
+
+## 2026-10-11：Task 2 直播失败提示与长摘要可读性
+
+TVS 提交 **`60d838fbe0ddbc4b7088baadfd89f60331cd8cec`**，基线 `7b04b96`；依赖固定播放器 **`a66cc3abde06a3e7485cd805d2072d1fa2686564`**（含已提交 MP4 字幕及长播放报告）。验证使用归档副本，已有解析依赖映射到固定源码，没有升级依赖或使用设备。
+
+逐源失败摘要现在保留已知原因，并显示中文环节：地址检查、启动播放、播放中断、重新连接。可用的脚本/内核关联编号沿已知 startup/AppError 包装解包，复用既有 diagnostics 的128字符 ASCII token 校验；URL、查询串、换行（含末尾CRLF）、非ASCII、空值和超长编号不进入用户提示，缺少编号时不编造。原始错误正文、地址、请求头及脚本参数不拼入摘要，403不推断过期或永久失效，DNS保留已知解析失败原因。摘要给出检查网络/源配置、重新选择频道或其他线路的明确手动建议。
+
+保留前8条实际尝试及源序号、顺序与省略次数，诊断字符串仍单独保存。没有更改两次业务重连、RTMP不额外重连、失败分类、逐源回退或旧请求代际隔离。既有预览和全屏沿用同一状态；不是增加自动重试、自动换源或新的诊断上报。
+
+独立只读复审发现一项 Important：最多8个128字符编号会加重原有 Text 裁切，末尾建议和参考编号可能读不到。接受并在同一轮修正为共享错误展示：操作提示固定可见，完整摘要可触摸滚动和 TV 方向/Page 键滚动；预览不再由禁用的全屏焦点包装屏蔽详情，仍禁止在错误时进入播放全屏。全屏详情位于播放手势之上、控制栏/频道抽屉之下，点击仍可唤回控制栏，抽屉打开时详情退出TV焦点。补测还发现全屏原有早期上下键换台处理抢占错误滚动，错误态现交给详情与现有控件，正常播放快捷键保持。
+
+新增 **8项**（4项业务、4项 widget），并加强原有汇总/重连/脱敏断言。业务首次 RED **5 passed / 7 failed**，修复后12/12，首轮相关130/130、全项目分析通过。复审 UI RED **0 passed / 3 failed**，补入滚动后3/3；新增 TV 全屏场景再暴露快捷键问题（相关 **133 passed / 1 failed**），修复后 widget4/4。最终相同版本相关 **134/134**、全项目分析无问题、7份文件格式和 diff 检查通过。
+
+widget 测试通过真实控制器生成八条失败与最长合法编号，在360像素预览、844×390全屏和1.5倍文字缩放下检查触摸滚动与最后编号的可见坐标、固定操作提示、全屏控制栏唤回；TV预览/全屏均断言方向键使滚动位置变化且不触发换台。平台服务使用测试替身，不启动媒体、模拟器或设备。此证据不覆盖所有屏幕、字体、实际遥控器或系统辅助功能差异。
+
+```sh
+# 固定 TVS 副本，使用 /Users/yy2021_8689/flutter/bin/flutter：
+flutter test --no-pub --concurrency=1 test/modules/live/features/live_error_message_test.dart test/modules/live/features/live_attempt_diagnostics_test.dart test/modules/live/features/live_source_resolution_test.dart test/modules/live/features/live_player_notifier_test.dart test/modules/live/features/live_player_session_ownership_test.dart test/modules/live/features/live_player_stall_recovery_test.dart test/modules/live/features/live_player_view_behavior_test.dart test/modules/live/features/live_line_swipe_test.dart test/modules/live/features/live_redesign_test.dart test/modules/player/features/playback_source_subscriptions_test.dart
+flutter analyze --no-pub
+```
+
+没有修改生成输入，无须 build_runner。[verification.json](evidence/2026-10-11-live-error-guidance/verification.json) 保存两个仓库的版本、关键输入指纹、最终命令与退出码；[raw-logs.json](evidence/2026-10-11-live-error-guidance/raw-logs.json) 保留业务 RED/GREEN、复审 UI 与快捷键失败及最终结果。实际 TVS commit、工作区和最终副本逐字节一致。
+
+复审者只读代码及初轮日志，没有独立运行测试或核对哈希；其唯一 Important 已修正，无遗留项，未进行第二次独立复审。修正及证据由执行者验证。未扩展其他非逐源错误的分类，完整 P05、真实原生媒体、实际设备/遥控器、线上订阅与九脚本验收保持开放。
