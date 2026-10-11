@@ -140,3 +140,28 @@ flutter analyze --no-pub
 [verification.json](evidence/2026-10-11-live-refresh-transaction/verification.json) 记录跨仓版本、全部五份改动文件及 pubspec/lock 指纹、退出码与范围；[raw-logs.json](evidence/2026-10-11-live-refresh-transaction/raw-logs.json) 保留夹具失败、行为 RED、GREEN、最终测试和分析输出。最终实际 TVS commit、工作区与验证副本七份文件逐字节一致。本轮没有 Model/Provider 生成输入改动，无需代码生成，也未解析或升级依赖。
 
 独立只读复审通过，无 Critical/Important/Minor；复审者读取最终日志并独立核对五份改动文件与副本一致，未运行测试。所有验证使用本机 Flutter runner、fake 适配器与临时文件，没有设备、模拟器、原生播放或外部测试服务。代理初始化/源路由、JS/点播订阅、原生终止与真实设备等剩余任务保持开放；本证据不验证另一会话的 PGS 或长播放改动。
+
+## 2026-10-11：Task 2 代理初始化与直连源依赖
+
+TVS 提交 **`056e0056f87171085a32a54a7f599260f6b61bc5`**，基线 `a8e5e63`；验证依赖固定播放器 **`367c0bb`**，包含已提交 PGS，隔离并行 VobSub 与长播放修改。仅修改 LivePlayer Provider、其生成文件和既有源路由测试，P05 整体仍开放。
+
+根因是 `play()` 在识别具体源之前统一等待业务代理并创建统计会话，导致实际直连的 RTMP 与脚本解析结果也被代理失败/长期等待阻塞。现在只在现有 HTTP 媒体准备分支等待代理、准备清晰度策略并创建流量会话；两个异步等待后都检查播放代际和会话所有权，过时结果不会挂到新频道。直连 RTMP 与解析后的 HTTP/RTMP 沿用内核源及凭据作用域，不初始化未使用的业务代理；普通 HTTP 保持既有代理、HLS 选档/过滤与请求策略，没有失败后静默直连。
+
+代理初始化失败进入既有逐源错误汇总与备用源顺序，后续直连源仍可尝试，不改变重连次数。直连加载和脚本重连没有代理吞吐数据时显式 unavailable，不以零速率伪装正在统计。这里不重构应用全局初始化或代理服务自身生命周期。
+
+新增 **14 项**，加强原有脚本 HTTP 重连用例 1 项。首次源路由 RED **26 passed / 10 failed**，分别复现代理失败阻断、pending 超时、多余初始化、丢失源序号、备用源阻断及切台阻塞；首次 GREEN 36/36。补强脚本 HTTP 重连后先观察 **1 failed**（tracking 而非 unavailable），修正默认状态后相关 146/146、全项目分析通过。
+
+独立只读复审发现一项流量遗漏：代理 HTTP 已播放后恢复，流量订阅仍绑定旧代际，导致直连备用源继续显示 tracking/旧速率，代理恢复也收不到新采样。复审标为 Minor；执行者按当前用户可见统计失真及本项契约改判 Important，纳入同一轮修复。新增真实恢复链路先观察 **0 passed / 2 failed**：直连备用源状态错误、实际回环代理响应字节未更新当前 Loading。恢复现在先摘除旧流量身份/订阅，只有新的代理依赖尝试才创建当前代际会话；原停止/替换/释放保护保留。修复后相关 148/148；静态分析指出新测试缺少大括号的一项 info，补齐后最终同版本相关 **148/148**、全项目分析无问题。没有遗留复审项，未进行第二次独立复审。
+
+```sh
+# 固定临时 TVS 副本，使用 /Users/yy2021_8689/flutter/bin/flutter 及 bundled Dart：
+flutter test --no-pub --concurrency=1 test/modules/live/features/live_source_resolution_test.dart test/modules/live/features/live_player_notifier_test.dart test/modules/live/features/live_player_session_ownership_test.dart test/modules/live/features/live_player_stall_recovery_test.dart test/modules/live/features/live_attempt_diagnostics_test.dart test/modules/live/features/live_source_parser_test.dart test/modules/player/features/playback_source_subscriptions_test.dart test/modules/proxy/features/proxy_service_provider_test.dart test/modules/proxy/features/media_traffic_test.dart test/modules/proxy/features/m3u8_wrap_decision_test.dart
+flutter analyze --no-pub
+dart run build_runner build --delete-conflicting-outputs
+```
+
+Provider 按项目要求生成并在复审修复后重新生成。工具提示 `--delete-conflicting-outputs` 已移除并忽略，以及 SDK 3.12 / analyzer 3.11 版本警告，原样保留，未升级依赖。首次完整生成使两份无关生成文件与基线不同，已只在隔离副本从明确基线逐字节恢复，再运行最终分析和测试；TVS 仅同步本项生成物，第二次生成无须恢复额外文件。
+
+[verification.json](evidence/2026-10-11-live-proxy-routing/verification.json) 保存跨仓版本、三份改动及 pubspec/lock 指纹、命令、失败与最终结果；[raw-logs.json](evidence/2026-10-11-live-proxy-routing/raw-logs.json) 保留完整 RED/GREEN、复审修复、生成警告和分析日志。实际 TVS commit、工作区与最终验证副本五份文件逐字节一致。复审者阅读源码和日志，没有独立运行测试或重算副本哈希；这些验证由执行者完成。
+
+本轮使用 Flutter 本机 runner、fake 媒体后端和自有回环 HTTP/脚本/代理服务，未占用设备、模拟器、原生媒体播放或外部测试服务。完整 P05、原生脚本终止、线上九脚本、归档和真实设备等验收维持原状态，本项不替代这些证据。

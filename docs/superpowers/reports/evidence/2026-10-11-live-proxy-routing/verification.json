@@ -1,0 +1,140 @@
+{
+  "scope": "LiveSource playback proxy initialization only for proxy-dependent routes; direct RTMP and resolved script media remain independent",
+  "tvs": {
+    "baseline": "a8e5e639c16dab3f3d21801f0fd6960a6d43ab18",
+    "commit": "056e0056f87171085a32a54a7f599260f6b61bc5"
+  },
+  "player_dependency_commit": "367c0bbbbabcb58bffcae0d47be44cd4dd749ea0",
+  "snapshot": "/private/tmp/yl-business-bfzoaoug/tvs",
+  "snapshot_method": "Archived TVS baseline plus three own files and five player packages at pinned commit; remapped existing package config and graph. No dependency resolution/upgrade.",
+  "sha256": {
+    "lib/providers/live_player_provider.dart": "73b8cc6baa6f4243da45d44a72c7b85cdb878d659612a8e5fd29d073c61111cc",
+    "lib/providers/live_player_provider.g.dart": "56eded7c2c9965ff2381f718b7f9d3c06269f98fc1365ee40265a47a16392967",
+    "test/modules/live/features/live_source_resolution_test.dart": "c7ab1f501e30fc67360c4ae0622f81d303e4b5c5389da37e7072ad50061e81a9",
+    "pubspec.yaml": "5c65155869260385a02cd9c9f192880148690c39e293ea2c5ce1db07d3ca33e4",
+    "pubspec.lock": "8bc7656782e9070a7c308c0d03d3ae6f2d7c4ccd8d94181cb6a0c8f7c76f84e8"
+  },
+  "verification": [
+    {
+      "log": "red",
+      "exit_code": 1,
+      "passed": 26,
+      "failed": 10
+    },
+    {
+      "log": "green",
+      "exit_code": 0,
+      "passed": 36,
+      "failed": 0
+    },
+    {
+      "log": "recovery-red",
+      "exit_code": 1,
+      "passed": 0,
+      "failed": 1,
+      "reason": "Existing direct script HTTP recovery reported tracking rather than unavailable"
+    },
+    {
+      "log": "codegen",
+      "command": "dart run build_runner build --delete-conflicting-outputs",
+      "exit_code": 0,
+      "warnings": [
+        "Removed delete-conflicting-outputs option ignored",
+        "SDK language 3.12.0 newer than analyzer language 3.11.0"
+      ],
+      "unrelated_outputs_restored_to_baseline": [
+        "lib/models/app_error.freezed.dart",
+        "lib/providers/player_provider.g.dart"
+      ]
+    },
+    {
+      "log": "related",
+      "command": "flutter test --no-pub --concurrency=1 test/modules/live/features/live_source_resolution_test.dart test/modules/live/features/live_player_notifier_test.dart test/modules/live/features/live_player_session_ownership_test.dart test/modules/live/features/live_player_stall_recovery_test.dart test/modules/live/features/live_attempt_diagnostics_test.dart test/modules/live/features/live_source_parser_test.dart test/modules/player/features/playback_source_subscriptions_test.dart test/modules/proxy/features/proxy_service_provider_test.dart test/modules/proxy/features/media_traffic_test.dart test/modules/proxy/features/m3u8_wrap_decision_test.dart",
+      "exit_code": 0,
+      "passed": 146,
+      "failed": 0
+    },
+    {
+      "log": "analyze",
+      "command": "flutter analyze --no-pub",
+      "exit_code": 0,
+      "result": "No issues found!"
+    },
+    {
+      "command": "dart format (two changed Dart inputs); git diff --check",
+      "exit_code": 0
+    },
+    {
+      "log": "review-red",
+      "exit_code": 1,
+      "passed": 0,
+      "failed": 2,
+      "result": "Direct backup retained tracking; real local HTTP proxy traffic did not update recovery generation."
+    },
+    {
+      "log": "codegen-final",
+      "command": "dart run build_runner build --delete-conflicting-outputs",
+      "exit_code": 0,
+      "unrelated_outputs_restored_to_baseline": []
+    },
+    {
+      "log": "review-green",
+      "exit_code": 0,
+      "passed": 148,
+      "failed": 0
+    },
+    {
+      "log": "review-analyze",
+      "exit_code": 1,
+      "result": "One info: test if statement missing curly braces; fixed without changing assertions."
+    },
+    {
+      "log": "related-final",
+      "command": "flutter test --no-pub --concurrency=1 test/modules/live/features/live_source_resolution_test.dart test/modules/live/features/live_player_notifier_test.dart test/modules/live/features/live_player_session_ownership_test.dart test/modules/live/features/live_player_stall_recovery_test.dart test/modules/live/features/live_attempt_diagnostics_test.dart test/modules/live/features/live_source_parser_test.dart test/modules/player/features/playback_source_subscriptions_test.dart test/modules/proxy/features/proxy_service_provider_test.dart test/modules/proxy/features/media_traffic_test.dart test/modules/proxy/features/m3u8_wrap_decision_test.dart",
+      "exit_code": 0,
+      "passed": 148,
+      "failed": 0
+    },
+    {
+      "log": "analyze-final",
+      "command": "flutter analyze --no-pub",
+      "exit_code": 0,
+      "result": "No issues found!"
+    },
+    {
+      "command": "dart format --output=none --set-exit-if-changed (two inputs); git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "new_tests": 14,
+  "enhanced_existing_tests": 1,
+  "sdk": "/Users/yy2021_8689/flutter/bin/flutter",
+  "environment": {
+    "physical_devices": false,
+    "simulators": false,
+    "native_media_playback": false,
+    "external_test_services": false,
+    "fixtures": "Flutter host runner, fake media backend, owned loopback script/HTTP/proxy servers"
+  },
+  "review": {
+    "reviewer": "/root/review_proxy_routing",
+    "result": "One Minor; executor regraded Important because stale traffic violated direct-unavailable/current-generation behavior. Fixed in one pass with two RED tests, final related148/148. No deferred findings; no second independent review.",
+    "method": "Fresh read-only code/log review; no test execution or independent hash recomputation.",
+    "declined_to_judge": [
+      "Full P05",
+      "Subscription classifications",
+      "Native script termination",
+      "Online nine-script compatibility and archive availability",
+      "Physical-device media playback",
+      "External proxy availability"
+    ]
+  },
+  "limits": [
+    "Ordinary HTTP still requires its existing proxy policy; no new direct fallback",
+    "Proxy readiness failure affects only attempted dependent source; existing source order and retry policy retained",
+    "No application-wide proxy startup or proxy-service lifecycle redesign",
+    "No physical-device/native-media/online nine-script acceptance or complete P05 claim"
+  ],
+  "raw_logs_sha256": "5a208dbd31f0c4f1684139c39511b636eecb10a723f26ea5c9213705ca5eba90",
+  "identity_check": "All five entries byte-match final TVS commit, worktree and final verified snapshot."
+}
