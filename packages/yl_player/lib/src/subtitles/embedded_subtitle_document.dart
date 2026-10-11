@@ -9,11 +9,15 @@ final class EmbeddedSubtitlePacket {
     this.text, {
     this.textRuns,
     this.alignment = 'center',
+    this.identifier,
+    this.webvttSettings,
   });
   final Duration start, end;
   final String text;
   final List<SubtitleTextRun>? textRuns;
   final String alignment;
+  final String? identifier;
+  final WebVttCueSettings? webvttSettings;
   @override
   String toString() => 'EmbeddedSubtitlePacket(payload: <redacted>)';
 }
@@ -27,6 +31,7 @@ SubtitleDocument _embeddedDocument(
   limits._validate();
   if (![
     SubtitleFormat.srt,
+    SubtitleFormat.webvtt,
     SubtitleFormat.ass,
     SubtitleFormat.ssa,
   ].contains(format)) {
@@ -35,7 +40,10 @@ SubtitleDocument _embeddedDocument(
   if (packets.length > limits.maxCues) _limit();
   var bytes = utf8.encode(header ?? '').length;
   for (final p in packets) {
-    bytes += utf8.encode(p.text).length;
+    bytes +=
+        utf8.encode(p.text).length +
+        utf8.encode(p.identifier ?? '').length +
+        (p.webvttSettings?.inputBytes ?? 0);
     if (bytes > limits.maxInputBytes ||
         p.text.length > limits.maxCueCodeUnits + 4096) {
       _limit();
@@ -48,7 +56,7 @@ SubtitleDocument _embeddedDocument(
       _malformed();
     }
   }
-  if (format == SubtitleFormat.srt) {
+  if (format == SubtitleFormat.srt || format == SubtitleFormat.webvtt) {
     if (header?.isNotEmpty ?? false) _unsupported();
     final cues = <SubtitleCue>[];
     for (final p in packets) {
@@ -56,12 +64,14 @@ SubtitleDocument _embeddedDocument(
       cues.add(
         SubtitleCue._(
           ordinal: cues.length,
-          identifier: null,
+          identifier: p.identifier,
           start: p.start,
           end: p.end,
           payload: p.text.replaceAll('\r\n', '\n').replaceAll('\r', '\n'),
           textRuns: p.textRuns,
-          alignment: p.alignment,
+          alignment: p.webvttSettings?.alignment ?? p.alignment,
+          positionPercent: p.webvttSettings?.position,
+          positionAlignment: p.webvttSettings?.positionAlignment ?? 'auto',
         ),
       );
     }

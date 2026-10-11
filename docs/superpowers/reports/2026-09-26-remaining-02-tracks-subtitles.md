@@ -387,3 +387,60 @@ dart analyze --suppress-analytics packages/yl_player/lib packages/yl_player/test
 完整成功/失败日志、独立ffprobe/原始SRT、制品hash、复审和源码/依赖/文档hash见[manifest](evidence/2026-10-11-subtitle-mp4/manifest.json)。
 使用独立Git index和HEAD比较更新，仅提交所属文件及自身总览/CHANGELOG段，其他未提交工作保留。
 整个Task3/P02继续开放，执行账本继续保留；仅本项可提交，不据此关闭native/HDR/DRM/设备/PD-03。
+
+## 2026-10-11 MP4 内嵌 WebVTT（wvtt）
+
+继续用户授权的下一字幕项，沿用当前会话 discoverEmbeddedSubtitles/选择/Flutter overlay，
+支持本地与 HTTP(S) 非分片 MP4 wvtt。公共轨格式使用既有 webvtt；tx3g 和 wvtt 可在不同轨
+共存，同轨混合 codec 描述显式拒绝。按 Track ID 区分同语言轨，不改变公开桥接和枚举。
+具体接纳、边界和成本见 [wvtt 契约](../specs/2026-10-11-subtitle-mp4-webvtt.md)。
+
+- 必需 vttC 配置，vttc 内 payl/iden/sttg/ctim，唯一空 vtte 清屏；sample 内多 cue 保留顺序。
+  stts/ctts/elst 的媒体时间为准，ctim 不覆盖时间，同 ID 的相邻 sample 不去重。直接构建
+  cue，payload 空行/时间箭头不会注入额外事件。UTF8、CRLF、大小和重复字段均严格验证。
+- 复用基础 b/i/u/实体，外置与内嵌 WebVTT 共用水平 align/position 解析；同时验证实际
+  Flutter 文本样式和 25% 水平位置几何。高级 CSS/region/voice/class/ruby/karaoke、
+  line/size/vertical，以及 fMP4/stpp 仍不支持；不是任意合法 wvtt 的互通性保证。
+- 未修改网络读取器；所有读取仍执行 managed 单段206、强ETag/总长/If-Match、共享
+  重试/重定向/敏感头剥离、超时/取消及缓存/请求/字节预算。失败保留旧目录与选择，
+  source replace/stop/dispose/外置目录操作隔离迟到结果。
+- sample≤64 cue、每 cue/config≤8子box；payload/config≤16384码元，ID/settings/label
+  ≤1024。跨轨保留 packet≤10000；与既有样本/读取/4MiB目录输入/64活动cue限制共同执行。
+
+### 验证过程
+
+真实文件入口先0通过/1失败（原实现 subtitleUnsupported），接入后连同旧 MP4/文本解析
+回归116/116。扩展测试初次18通过/1加载失败为测试构造括号遗漏，修正后68/68；静态分析
+初次包含同一编译问题与6条风格提示，已修复并保留原日志。新增双轨10112 cue 回归实际
+0通过/1失败，暴露逐轨预算不足；改为 parser 跨轨计数，扩展定向 **70/70**。
+
+本项52解析/边界、1真实文件、11真实HTTP、6公开会话/Flutter测试，共70项。包括手算
+vttc/payl字节、编辑/ctts/同名分段、多个cue、空cue、清屏、UTF8与字段/box/配置边界、
+64活动cue和10000跨轨总量。5MB稀疏HTTP容器验证跳读，后续range重试/凭据、跨源剥离、
+版本变化、完整200/403拒绝、合法chunked206与响应头超时实测。
+
+测试数据为手写 owned fixture；没有 wvtt 独立生产器证据。原有独立FFmpeg tx3g夹具仍在
+回归中，不把它误报为 wvtt 独立互通性验证。字幕IO/解析/Flutter合成实际执行，视频后端
+为fake；无native构建、真机、HDR/DRM/PD-03、长播放或弱网ABR验收，无依赖新增。
+
+首次隔离四包 **1151/1151、0失败、exit0**（135接口/821播放器/113Apple/82Android；新增70），
+播放器及接口lib/test分析 **No issues found、exit0**。六份原生二进制、两份构建配方及两份
+FFmpeg lock逐项重新hash，与前项相同。最终复审与冻结见下文及
+[证据清单](evidence/2026-10-11-subtitle-mp4-webvtt/manifest.json)。
+
+### 最终复审与提交边界
+
+一次 fresh-context 只读复审：Critical0、Important0、Minor1。Minor 是 wvtt 内层 box
+尚未计入结构 walker 的200000汇总计数；局部子box/样本/4MiB原始输入仍使工作有界，
+未发现错误发布或无界分配。执行者保留Minor等级并按既定流程后续处理，新契约明确实际
+预算边界。另有非阻塞建议：设置接受表可加强逐项layout字段断言；已有25%位置实际几何
+证据，此诊断增强也留待后续。所有未判断范围的执行者裁定见
+[review.md](evidence/2026-10-11-subtitle-mp4-webvtt/review.md)，未安排第二轮复审。
+
+最终候选基线 `a66cc3abde06a3e7485cd805d2072d1fa2686564`；格式化后11份所属代码与测试
+逐字节匹配隔离副本。最终命令、结果、制品与源码/依赖/文档hash冻结在manifest；使用
+独立Git index和HEAD比较更新，本次总览/CHANGELOG仅加入自身段落。另一边长播放、弱网
+ABR及readiness未提交改动不纳入本次提交；不把整个Task3/P02标记完成。
+
+最终隔离验证：四包 **1151/1151、0失败、exit0**（135/821/113/82），播放器/接口 lib/test
+静态分析 **No issues found、exit0**。复审无阻塞项，保留1项Minor和1项测试增强建议。

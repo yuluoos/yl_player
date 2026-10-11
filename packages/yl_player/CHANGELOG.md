@@ -1,5 +1,10 @@
 ## 0.2.0-dev.2
 
+- Add local and HTTP(S) non-fragmented MP4 WebVTT (wvtt) embedded subtitles
+  with Track ID selection, sample-timed cues, basic markup and horizontal
+  align/position rendering. Reuse managed conditional ranges and cancellation;
+  enforce bounded boxes, payloads and cross-track cue totals before publication.
+
 - Add local and HTTP(S) non-fragmented MP4 tx3g embedded subtitle discovery,
   Track ID selection and basic styled text rendering with sample-table/edit-list
   timing. Network discovery reuses managed conditional ranges and scan budgets;

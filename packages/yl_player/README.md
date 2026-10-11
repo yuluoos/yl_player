@@ -229,7 +229,7 @@ if (tracks.isNotEmpty) await session.selectSubtitleTrack(tracks.first.id);
 ```
 
 `YlPlayerView` renders Matroska UTF8/SRT and ASS/SSA, and non-fragmented MP4
-`tx3g` (mov_text) tracks using media time.
+`tx3g` (mov_text) and `wvtt` (WebVTT) tracks using media time.
 Discovery is explicit and bounded; Matroska TrackUID (`mkv:<UID>`) or MP4 Track ID
 (`mp4:<ID>`) identifies a track within the session. Replacing/clearing external subtitles preserves embedded entries;
 rediscovery preserves external entries and a still-present selection. A new
@@ -242,14 +242,21 @@ deadlines, retry/redirect budgets and credential origin restrictions apply to th
 whole discovery. Later ranges use If-Match; changed versions fail atomically.
 The scan uses a bounded cache and request/byte budgets, with no full-body fallback.
 
-Fragmented MP4, HLS/DASH, embedded bitmap/WebVTT/TTML and native subtitle callbacks remain
+Fragmented MP4, HLS/DASH, embedded bitmap/TTML and native subtitle callbacks remain
 unsupported. No additional native subtitle capability or physical-device
 acceptance is claimed. See the [embedded subset contract](../../docs/superpowers/specs/2026-10-11-subtitle-embedded.md)
 the [network range contract](../../docs/superpowers/specs/2026-10-11-subtitle-network-matroska.md)
 and [MP4 contract](../../docs/superpowers/specs/2026-10-11-subtitle-mp4.md).
 
-MP4 text is decoded literally (UTF8 or BOM UTF16), including basic tx3g styles,
+MP4 tx3g text is decoded literally (UTF8 or BOM UTF16), including basic styles,
 font fallback, size, color and horizontal alignment. `format: srt` on its catalog
 entry denotes normalized standard text, not the encoded sample format. Complex
 edits, positioning, karaoke and per-sample forced effects are rejected. Font
 metrics, track geometry and device synchronization are not QuickTime-certified.
+
+MP4 `wvtt` entries retain `format: webvtt`. Sample-local `vttc` payloads support
+basic b/i/u markup, entities and horizontal align/position settings; `vtte`
+clears cues. Multiple cues in one sample share its media interval, including
+edit-list timing. Unsupported CSS/regions/advanced settings and malformed boxes
+fail atomically. See the [MP4 WebVTT contract](../../docs/superpowers/specs/2026-10-11-subtitle-mp4-webvtt.md)
+for the bounded subset and validation limits.

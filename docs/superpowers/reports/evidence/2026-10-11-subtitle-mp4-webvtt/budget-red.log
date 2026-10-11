@@ -1,0 +1,15 @@
+00:00 +0: loading /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart
+00:00 +0: cross-track multi-cue catalog bound before retaining more than10000 packets
+00:00 +0 -1: cross-track multi-cue catalog bound before retaining more than10000 packets [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.limitExceeded>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData', Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                       expectLater
+  package:flutter_test/src/widget_tester.dart 507:8     expectLater
+  packages/yl_player/test/wvtt_parser_test.dart 243:11  main.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: cross-track multi-cue catalog bound before retaining more than10000 packets

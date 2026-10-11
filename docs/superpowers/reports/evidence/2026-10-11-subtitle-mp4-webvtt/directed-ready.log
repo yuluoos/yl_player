@@ -1,0 +1,73 @@
+00:00 +0: loading /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_embedded_test.dart
+00:00 +0: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_embedded_test.dart: actual MP4 wvtt file discovers and renders simultaneous styled cues
+00:00 +1: loading /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart
+00:00 +1: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: literal hand-calculated vttc/payl bytes independent of box fixture
+00:00 +2: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: tx3g and wvtt tracks of same language keep independent IDs and formats
+00:00 +3: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: sample descriptions may change wvtt config with stable format
+00:00 +4: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: adjacent split cue samples do not overlap or deduplicate by identifier
+00:00 +5: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: container edit and ctts remain authoritative over ctim metadata
+00:00 +6: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: payload blank lines and timing arrows cannot inject extra cues
+00:00 +7: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: CRLF payload normalizes once while ID is metadata
+00:00 +8: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: empty payl and vtte produce no phantom cues
+00:00 +9: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: 64-bit sample-local boxes preserve payload
+00:00 +10: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: vttC BOM and comments, vlab and bitrate metadata accepted
+00:00 +11: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: supported setting align:start
+00:00 +12: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: supported setting align:center
+00:00 +13: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: supported setting align:end
+00:00 +14: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: supported setting align:left
+00:00 +15: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: supported setting align:right
+00:00 +16: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: supported setting position:0%,line-left
+00:00 +17: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: supported setting position:100%,line-right
+00:00 +18: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: supported setting position:33.3%,center
+00:00 +19: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: malformed missing vttC
+00:00 +20: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: malformed duplicate config
+00:00 +21: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: malformed bad config signature
+00:00 +22: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: malformed missing payl
+00:00 +23: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: malformed duplicate payl
+00:00 +24: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: malformed duplicate iden
+00:00 +25: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: malformed bad utf8
+00:00 +26: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: malformed NUL payload
+00:00 +27: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: malformed truncated box
+00:00 +28: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: malformed small box
+00:00 +29: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: malformed vtte body
+00:00 +30: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: malformed vtte with cue
+00:00 +31: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: malformed ID newline
+00:00 +32: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: malformed ID arrow
+00:00 +33: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: malformed ctim syntax
+00:00 +34: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: malformed setting newline
+00:00 +35: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: malformed setting duplicate
+00:00 +36: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: malformed setting out of range
+00:00 +37: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: unsupported mixed codecs in one track
+00:00 +38: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: unsupported config CSS
+00:00 +39: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: unsupported config cue injection
+00:00 +40: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: unsupported region
+00:00 +41: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: unsupported vertical
+00:00 +42: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: unsupported vtta
+00:00 +43: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: unsupported encrypted config
+00:00 +44: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: unsupported zero box size
+00:00 +45: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: bounded payload
+00:00 +46: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: bounded id
+00:00 +47: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: bounded settings
+00:00 +48: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: bounded configuration
+00:00 +49: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: bounded active cues
+00:00 +50: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_parser_test.dart: every truncated wvtt MP4 prefix gives classified error
+00:00 +51: loading /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_network_test.dart
+00:01 +51: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:01 +52: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_network_test.dart: network YlMediaFormat.mp4 sniffs content, skips media, sends conditional range and renders
+00:01 +53: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_network_test.dart: legal chunked206 MP4 wvtt discovery completes without Content-Length
+00:01 +54: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_network_test.dart: managed retries later range with credential and shared scan ledger
+00:02 +55: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_network_test.dart: cross-origin redirect strips credentials before MP4 wvtt range scan
+00:02 +56: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_network_test.dart: etag response keeps prior selected MP4 wvtt catalog
+00:02 +57: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_network_test.dart: 200 response keeps prior selected MP4 wvtt catalog
+00:02 +58: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_network_test.dart: 403 response keeps prior selected MP4 wvtt catalog
+00:02 +59: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_network_test.dart: malformed response keeps prior selected MP4 wvtt catalog
+00:02 +60: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_network_test.dart: managed response-header timeout terminates MP4 wvtt discovery
+00:02 +61: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_network_test.dart: explicit non-MP4 wvtt format rejects before HTTP request
+00:02 +62: loading /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_session_test.dart
+00:03 +62: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:03 +63: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_session_test.dart: network failure leaves playback and selected subtitle state unchanged
+00:03 +64: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_session_test.dart: held range is cancelled by replace and cannot publish late
+00:03 +65: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_session_test.dart: held range is cancelled by stop and cannot publish late
+00:03 +66: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_session_test.dart: held range is cancelled by dispose and cannot publish late
+00:03 +67: /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_session_test.dart: held range is cancelled by external and cannot publish late
+00:03 +68: All tests passed!

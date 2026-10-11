@@ -1,0 +1,14 @@
+Computing fixes in yl_player...
+Applying fixes...
+
+lib/src/subtitles/mp4_subtitles.dart
+  annotate_overrides - 1 fix
+  curly_braces_in_flow_control_structures - 1 fix
+
+lib/src/subtitles/mp4_webvtt.dart
+  curly_braces_in_flow_control_structures - 3 fixes
+
+test/wvtt_parser_test.dart
+  prefer_interpolation_to_compose_strings - 1 fix
+
+6 fixes made in 3 files.

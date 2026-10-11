@@ -181,6 +181,7 @@ final class TextSubtitleRuntime {
             format: switch (entry.track.format) {
               YlSubtitleFormat.ass => SubtitleFormat.ass,
               YlSubtitleFormat.ssa => SubtitleFormat.ssa,
+              YlSubtitleFormat.webvtt => SubtitleFormat.webvtt,
               _ => SubtitleFormat.srt,
             },
             codecPrivate: entry.codecPrivate,

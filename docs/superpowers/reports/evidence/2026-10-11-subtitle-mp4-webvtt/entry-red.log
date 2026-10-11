@@ -1,0 +1,10 @@
+00:00 +0: loading /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_embedded_test.dart
+00:00 +0: actual MP4 wvtt file discovers and renders simultaneous styled cues
+00:00 +0 -1: actual MP4 wvtt file discovers and renders simultaneous styled cues [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 207:9  TextSubtitleRuntime.discover.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-wvtt-validation-03byh17o/packages/yl_player/test/wvtt_embedded_test.dart: actual MP4 wvtt file discovers and renders simultaneous styled cues

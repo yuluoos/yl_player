@@ -46,3 +46,11 @@ fragmented MP4/mvex/moof、HLS/DASH、MOV旧text、wvtt/stpp、位图/CEA字幕�
 - [Apple tx3g display flags](https://developer.apple.com/documentation/quicktime-file-format/subtitle_sample_description/display_flags)
 - [Apple subtitle placement](https://developer.apple.com/documentation/quicktime-file-format/subtitle_track_header_size_and_placement)
 - [FFmpeg n8.0 movtext decoder](https://github.com/FFmpeg/FFmpeg/blob/n8.0/libavcodec/movtextdec.c)
+
+## WebVTT extension (2026-10-11)
+
+The historical wvtt exclusion above is superseded by the
+[MP4 WebVTT contract](2026-10-11-subtitle-mp4-webvtt.md) for the bounded
+non-fragmented wvtt subset. Those tracks use the existing public `webvtt` format;
+tx3g normalization remains unchanged. Retained packets now enforce the existing
+10000-cue catalog ceiling across tracks during parsing, before catalog publication.

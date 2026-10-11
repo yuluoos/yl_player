@@ -4,6 +4,8 @@ import 'matroska_subtitles.dart' show EmbeddedSubtitleData;
 import 'subtitle_document.dart';
 import 'subtitle_resource.dart';
 
+part 'mp4_webvtt.dart';
+
 Never _bad() =>
     throw const SubtitleParseException(SubtitleParseReason.malformed);
 Never _unsupported() =>
@@ -45,13 +47,18 @@ final class _Box {
   int get size => end - start;
 }
 
-/// Non-fragmented ISO BMFF tx3g demux. Skips audio/video data; no external drefs.
+/// Non-fragmented ISO BMFF tx3g/wvtt demux. Skips audio/video data; no external drefs.
 final class Mp4Subtitles {
   Mp4Subtitles(this.length, this.read, this.token);
   final int length;
   final Future<List<int>> Function(int, int) read;
   final SubtitleCancellation token;
-  var _boxes = 0, _readBytes = 0, _payloadBytes = 0, _samples = 0, _runs = 0;
+  var _boxes = 0,
+      _readBytes = 0,
+      _payloadBytes = 0,
+      _samples = 0,
+      _runs = 0,
+      _cueCount = 0;
   final _ids = <int>{};
   final _mdats = <_Box>[];
   Future<List<int>> _bytes(int p, int n) async {
@@ -233,14 +240,18 @@ final class Mp4Subtitles {
     _full(sdb);
     final entries = await _children(sd.start + 8, sd.end, max: 32);
     if (entries.isEmpty || _u(sdb, 4) != entries.length) _bad();
-    final descriptions = <_Tx3g>[];
+    final descriptions = <_Mp4SubtitleEntry>[];
     for (final entry in entries) {
-      if (entry.type != 'tx3g') _unsupported();
-      final b = await _body(entry, min: 38);
+      if (!['tx3g', 'wvtt'].contains(entry.type)) _unsupported();
+      final b = await _body(entry, min: entry.type == 'tx3g' ? 38 : 8);
       if (b.take(6).any((v) => v != 0)) _bad();
       final ref = _u(b, 6, 2);
       if (ref < 1 || ref > refs.length) _bad();
-      descriptions.add(_Tx3g.parse(b));
+      descriptions.add(entry.type == 'tx3g' ? _Tx3g.parse(b) : _Wvtt.parse(b));
+    }
+    // The public track has one format; codec switching within a track is not supported.
+    if (descriptions.any((d) => d.format != descriptions.first.format)) {
+      _unsupported();
     }
     final sz = _one(tables, 'stsz'), z2 = _one(tables, 'stz2');
     if ((sz == null) == (z2 == null)) _bad();
@@ -360,18 +371,21 @@ final class Mp4Subtitles {
         if (decoded.isNotEmpty) {
           if (durations[sample] == 0) _bad();
           if (end > start) {
-            _runs += decoded.length;
-            if (_runs > 20000) _limit();
-            packets.add(
-              EmbeddedSubtitlePacket(
-                Duration(microseconds: start),
-                Duration(microseconds: end),
-                decoded.map((r) => r.text).join(),
-                textRuns: decoded,
-                alignment: desc.align,
-              ),
-            );
-            if (packets.length > 10000) _limit();
+            for (final cue in decoded) {
+              _runs += cue.runs?.length ?? 0;
+              if (_runs > 20000 || ++_cueCount > 10000) _limit();
+              packets.add(
+                EmbeddedSubtitlePacket(
+                  Duration(microseconds: start),
+                  Duration(microseconds: end),
+                  cue.text,
+                  textRuns: cue.runs,
+                  alignment: cue.alignment,
+                  identifier: cue.identifier,
+                  webvttSettings: cue.settings,
+                ),
+              );
+            }
           }
         }
         dts += durations[sample];
@@ -389,7 +403,7 @@ final class Mp4Subtitles {
     return EmbeddedSubtitleData(
       YlSubtitleTrack(
         id: 'mp4:$id',
-        format: YlSubtitleFormat.srt,
+        format: descriptions.first.format,
         isExternal: false,
         label: label,
         language: language,
@@ -484,7 +498,7 @@ final class _Style {
   }
 }
 
-final class _Tx3g {
+final class _Tx3g implements _Mp4SubtitleEntry {
   _Tx3g(
     this.defaults,
     this.fonts,
@@ -495,6 +509,7 @@ final class _Tx3g {
   final _Style defaults;
   final Map<int, String> fonts;
   final String align;
+  @override
   final bool forced;
   final int backgroundColor;
   static _Tx3g parse(List<int> b) {
@@ -551,7 +566,23 @@ final class _Tx3g {
     );
   }
 
-  List<SubtitleTextRun> decode(List<int> b) {
+  @override
+  YlSubtitleFormat get format => YlSubtitleFormat.srt;
+  @override
+  List<_Mp4Cue> decode(List<int> b) {
+    final runs = _decodeText(b);
+    return runs.isEmpty
+        ? []
+        : [
+            _Mp4Cue(
+              runs.map((r) => r.text).join(),
+              runs: runs,
+              alignment: align,
+            ),
+          ];
+  }
+
+  List<SubtitleTextRun> _decodeText(List<int> b) {
     final len = _u(b, 0, 2);
     if (len > b.length - 2) _bad();
     final raw = b.sublist(2, len + 2);

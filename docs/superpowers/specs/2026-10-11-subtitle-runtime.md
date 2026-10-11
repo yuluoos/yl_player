@@ -112,3 +112,11 @@ tracks by the [MP4 contract](2026-10-11-subtitle-mp4.md). Discovery uses the sam
 catalog owner and managed range reader; styled literal text remains separate
 from external SRT markup. Fragmented/other subtitle codecs and device/native
 acceptance remain open. No runtime dependency, public enum or bridge changes.
+
+## MP4 WebVTT extension (2026-10-11)
+
+Non-fragmented MP4 wvtt now uses the same discovery/selection owner and managed
+Range reader, with existing public `webvtt` format and shared horizontal settings.
+Sample payloads become cues directly, preserving identifiers and sample clock
+intervals without serializing a WebVTT file. See the
+[bounded MP4 WebVTT contract](2026-10-11-subtitle-mp4-webvtt.md).

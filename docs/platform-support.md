@@ -600,6 +600,7 @@ current native adapters still do not advertise a native subtitle SPI.
 | Local Matroska embedded UTF8/ASS/SSA | Explicit committed-source discovery, TrackUID selection and shared overlay; owned EBML plus independent muxer/ffprobe and Flutter lifecycle tests |
 | HTTP(S) Matroska embedded UTF8/ASS/SSA | Single-range206 with pinned strong ETag/length, shared managed deadlines/retry/redirect/credential policy; bounded cache/scan and real HTTP/TLS/session/widget tests |
 | Local / HTTP(S) MP4 embedded tx3g (mov_text) | Non-fragmented sample-table discovery, Track ID selection, simple edits and basic styled literal text; same managed Range policy, independent owned FFmpeg fixture, real HTTP and Flutter lifecycle tests; no native/device acceptance |
+| Local / HTTP(S) MP4 embedded WebVTT (wvtt) | Non-fragmented vttc/vtte sample discovery, Track ID selection, basic markup and horizontal align/position; same managed Range policy, real file/HTTP and Flutter geometry/lifecycle tests; advanced WebVTT and native/device acceptance remain open |
 | Other embedded containers/codecs, advanced TTML/ASS/SSA/PGS/VobSub and advanced WebVTT | Not implemented by this runtime |
 | Protected output, HDR brightness and physical-device subtitle sync | Not accepted; protected surfaces reject subtitle commands |
 

@@ -6,6 +6,7 @@ import 'package:xml/xml_events.dart';
 
 part 'ttml_parser.dart';
 part 'embedded_subtitle_document.dart';
+part 'webvtt_settings.dart';
 part 'ass_parser.dart';
 part 'pgs_parser.dart';
 part 'vobsub_parser.dart';
@@ -244,45 +245,8 @@ final class SubtitleDocument {
         _malformed();
       }
       final settings = timing.group(3)?.trim() ?? '';
-      double? position;
-      var positionAlignment = 'auto';
-      var alignment = 'center';
-      if (settings.isNotEmpty) {
-        if (!vtt) _malformed();
-        final seen = <String>{};
-        for (final token in settings.split(RegExp(r'[ \t]+'))) {
-          final colon = token.indexOf(':');
-          if (colon < 1 || colon == token.length - 1) _malformed();
-          final key = token.substring(0, colon);
-          final value = token.substring(colon + 1);
-          if (!seen.add(key)) _malformed();
-          switch (key) {
-            case 'align':
-              if (!const [
-                'start',
-                'center',
-                'end',
-                'left',
-                'right',
-              ].contains(value)) {
-                _malformed();
-              }
-              alignment = value;
-            case 'position':
-              final match = RegExp(
-                r'^([0-9]+(?:\.[0-9]+)?)%(?:,(line-left|center|line-right))?$',
-              ).firstMatch(value);
-              if (match == null) _malformed();
-              position = double.tryParse(match.group(1)!);
-              if (position == null || !position.isFinite || position > 100) {
-                _malformed();
-              }
-              positionAlignment = match.group(2) ?? 'auto';
-            default:
-              _unsupported();
-          }
-        }
-      }
+      if (settings.isNotEmpty && !vtt) _malformed();
+      final layout = WebVttCueSettings.parse(settings);
       if (timingLine + 1 >= cursor) _malformed();
       var payloadLength = 0;
       for (var i = timingLine + 1; i < cursor; i++) {
@@ -297,9 +261,9 @@ final class SubtitleDocument {
           start: start,
           end: end,
           payload: lines.sublist(timingLine + 1, cursor).join('\n'),
-          positionPercent: position,
-          positionAlignment: positionAlignment,
-          alignment: alignment,
+          positionPercent: layout.position,
+          positionAlignment: layout.positionAlignment,
+          alignment: layout.alignment,
         ),
       );
     }

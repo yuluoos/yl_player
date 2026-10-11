@@ -471,3 +471,7 @@ TVS `7b04b96` 补齐已有重新解析行为的12项回归：慢响应期间停�
 ### 2026-10-11 P02 MP4 内嵌 tx3g 字幕
 
 接入本地和 HTTP(S) 非分片 MP4 的 tx3g/mov_text 轨道发现、按 Track ID 选择和基础样式合成；样本表与简单编辑列表提供精确媒体时间，网络复用 managed Range/ETag/If-Match 和扫描预算。真实文件、独立 FFmpeg 封装夹具、loopback HTTP 与公开会话渲染验证详见 [P02 报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md) 及 [MP4 契约](../specs/2026-10-11-subtitle-mp4.md)。fMP4/wvtt/stpp、高级布局与设备验收仍开放，长播放/弱网ABR保持原范围。
+
+### 2026-10-11 P02 MP4 内嵌 WebVTT 字幕
+
+接入本地/HTTP(S) 非分片 MP4 的 wvtt 轨道发现、Track ID 选择和基础 WebVTT 合成；sample 内多 cue、vtte 清屏、标识符及水平 align/position 使用现有媒体时钟和布局。网络复用 managed Range/ETag/If-Match、重试/重定向/凭据和扫描预算；失败保留旧目录。实际文件、HTTP 与 Flutter 几何/生命周期及边界验证见 [P02 报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md) 和 [wvtt 契约](../specs/2026-10-11-subtitle-mp4-webvtt.md)。fMP4/stpp、高级 WebVTT 和设备验收仍开放；未触碰长播放/弱网 ABR。

@@ -1,0 +1,11 @@
+Analyzing lib, test...
+
+  error - packages/yl_player/test/wvtt_parser_test.dart:28:286 - Expected to find ')'. - expected_token
+   info - packages/yl_player/lib/src/subtitles/mp4_subtitles.dart:249:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/mp4_subtitles.dart:506:14 - The member 'forced' overrides an inherited member but isn't annotated with '@override'. Try adding the '@override' annotation. - annotate_overrides
+   info - packages/yl_player/lib/src/subtitles/mp4_webvtt.dart:95:11 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/mp4_webvtt.dart:111:9 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/mp4_webvtt.dart:125:9 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/test/wvtt_parser_test.dart:81:82 - Use interpolation to compose strings and values. Try using string interpolation to build the composite string. - prefer_interpolation_to_compose_strings
+
+7 issues found.
