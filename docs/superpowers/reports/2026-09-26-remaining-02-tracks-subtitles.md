@@ -112,3 +112,35 @@ GET 仅重试 socket/timeout/提前关闭及408/429/500/502/503/504；系统信�
 本切片完成的是已有SRT/WebVTT运行时的managed网络策略；TTML/内嵌/高级及图形字幕、HDR/保护输出、三端真机同步、多音轨与PD-03仍开放，不能关闭整个Task 2或CAP-SUB。最终冻结结果与原始日志指纹见[证据清单](evidence/2026-10-11-subtitle-managed/manifest.json)。
 
 最终冻结命令：从临时副本仓库根运行 `flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test`，**615/615、0失败、exit 0**（135接口/285播放器/113 Apple/82 Android）；本项新增45项。`dart analyze` 检查播放器与接口lib/test，**No issues found、exit 0**。所有8份覆盖源码在测试副本与提交候选中逐字节一致；采用独立Git index及HEAD比较更新，只提交字幕文件和自身总览/变更日志段，保留其他任务未提交内容。
+
+## 2026-10-11：Task 2 TTML 外挂文本加载与渲染
+
+用户授权 TTML 接入、验证后 commit，继续避开长播放和弱网 ABR。以 `bdaf7bc` 为起点，按既有 Task 2 的“冻结 TTML 可实现子集”步骤完成媒体时标、namespace、基础样式和百分比region；采用现有公开 `YlSubtitleFormat.ttml` 和 `enableTextSubtitles`，没有新增 native/Pigeon 协议。具体形式及拒绝边界见[TTML契约](../specs/2026-10-11-subtitle-ttml.md)。
+
+### 实现决定与证据边界
+
+- 新增 xml7.0.1（MIT）和其 petitparser7.0.2 依赖，离线使用缓存制品，锁文件记录包hash。使用惰性XML事件，不构造无界DOM，不解析DTD/外部实体，不下载字体或样式。额外校验XML字符和实体，避免依赖的宽松原样保留行为。
+- 支持并行body/div的相对时间及父区间裁切，有限p段落和未定时span、br、默认/保留空白；有界解析继承/引用/链式基础样式。时值转换前检查整数乘法边界，避免溢出变成短字幕。
+- TTML输出是解码后的文本片段，不再通过SRT标签解析；转义尖括号和类似ASS控制文字按文本显示。百分比region映射到既有可见视频区域，区域独立流式排版并裁切溢出，保持文字直立。fontSize采用默认垂直cell、Flutter monospace回退；不声称字体度量或完整TTML/IMSC符合性。
+- 严格限制输入4MiB、事件50,000、深度32、单元素属性32/单属性4096码元、style/region各128、单引用表16/链深32；继续受目录10,000 cue/20,000 run、单cue16,384码元/512 run及活动64 cue限制。超界/损坏/不支持均脱敏，失败不发布新目录，不替PD-03决定视频存活。
+- 选择/off/offset、文件/managed HTTP、重试取消及seek/换源沿用已验收管线。高级时基、timed span、动画、竖排、自定义字体/字号等明确拒绝；内嵌、HDR/DRM和真机同步不计本次完成。该裁定的代价是这些合法高级TTML素材仍需后续切片。
+
+### 失败记录与定向验证
+
+入口3项先实际RED（TTML旧版明确unsupported）。首轮35项14通过/21失败，主要因XML依赖对未加前缀属性也附加默认namespace；按XML规则显式保持未加前缀属性无namespace，修复后35/35。损坏HTTP夹具同步补合法TTML namespace，使其准确覆盖损坏结构而非不支持namespace。
+
+扩展边界43项41通过/2失败：大h偏移整数溢出绕过上限，及精确七天父end与未指定end哨兵混用。两项修正后，与原SRT/WebVTT一并130/130通过。再补HTTP正文取消与迟到完成、解码文字不重复解释、双region独立布局和溢出裁切，新TTML套件49/49。
+
+初次静态检查19条info，括号/字符串风格修复工具已应用17处后因工作区外telemetry文件写权限返回非零；保留真实退出记录，不把该命令标作成功。手动改用XML事件value接口后，再次分析No issues found。期间一次本机命令响应变慢，未动其他任务进程，取消了本任务尚未执行的编辑命令并重跑；没有重复写入。
+
+六张owned像素图使用Flutter Ahem测试字体，呈矩形字形，证明颜色和区域位置/裁切，不是实际设备字体截图。另有两区域溢出像素检查；公开控制器测试使用fake媒体状态，文件和loopback HTTP读取真实执行。全程不运行native/设备/长播或弱网ABR，未修改其源文件/门限。
+
+### 独立复审与修复
+
+一次独立只读复审提出1 Important（XML依赖接纳不完整XML语法）与1 Minor（缓存使style-chain32层限制受声明顺序影响）。后者按实际影响提升为需修复：同一引用图不应因定义排序不同而改变接纳结果，且上限是本项明确承诺；独立128样式上限始终存在，不将此夸大为无界资源漏洞。
+
+新增20项实际失败（其余43通过）：根外文本/CDATA、嵌套或迟到声明、未引用/缺值属性、非法注释、重复/保留namespace、正文CDATA结束符、声明字段，以及顺序不同的长样式链和旧目录保留。增加事件原文的有限词法/边界校验，保留XML依赖负责tokenization/嵌套/namespace；缓存同时存储链深，任何声明顺序执行同一32层上限。修复后TTML70/70，未遗留复审问题；按一次修复规则不再派第二轮复审。
+
+复审未判断的完整TTML/IMSC、native/内嵌/跨Period音轨身份、高级字体/图形、HDR/DRM真机与PD-03仍为P02后续范围，本项不据此宣称完成。另一会话随后提交源解析器工具 `79dbfad`，最终隔离验证副本已纳入该提交，再覆盖本项12份源码/测试/依赖文件，仍排除其未提交长播/弱网内容。
+
+最终固定源码在隔离仓库根执行 `flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test`，**685/685、0失败、exit0**（135接口/355播放器/113 Apple/82 Android）；本项新增70项。播放器与接口lib/test的最终静态分析 **No issues found、exit0**。所有12份覆盖文件与工作区候选逐字节核对；完整源码/依赖/报告、失败日志和PNG指纹见[TTML证据清单](evidence/2026-10-11-subtitle-ttml/manifest.json)。独立Git index及HEAD比较更新只提交本项文件和自身总览/变更日志段，不纳入其他任务暂存或未提交成果。

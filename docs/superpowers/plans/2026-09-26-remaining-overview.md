@@ -406,3 +406,7 @@ Task3B已交付模式值、可空已提交状态、可选SPI和Session三重门�
 ### 2026-10-11 P05 九脚本归档离线复核
 
 Task 1 归档子项已推进：原始九份 137,282 字节在非临时私有工作区可取回，冻结哈希 9/9 匹配；新增只读 JSON 校验入口和生成/清理安全回归，Python 17/17 通过。没有执行脚本、生成原始字节 Dart 入口或启动设备；三端运行、VM/HTTP 释放、TVS 业务及线上可用性仍开放，见[P05报告](../reports/2026-09-26-remaining-05-live-business.md)。
+
+### 2026-10-11 P02 TTML 文本加载与渲染
+
+已有外挂字幕管线现支持TTML文本子集：namespace、媒体时标/父区间裁切、引用基础样式和百分比region排版。文件/managed HTTP、取消/原子替换、公开选择/off/offset/seek及换源已验证；修复XML宽松接纳、时间溢出与样式链顺序问题。基于已提交79dbfad的隔离副本，四包685/685、静态分析无问题，新增70项TTML测试与6张Ahem位置/颜色证据；未执行长播/弱网/native/设备。高级TTML、内嵌和真机同步等P02剩余范围仍开放，见[P02报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)及[子集契约](../specs/2026-10-11-subtitle-ttml.md)。

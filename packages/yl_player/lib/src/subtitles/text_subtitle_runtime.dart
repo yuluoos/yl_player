@@ -37,7 +37,8 @@ final class TextSubtitleRuntime {
     // Reject unsupported requests before reading any member of the catalog.
     for (final source in sources) {
       if (source.format != YlSubtitleFormat.srt &&
-          source.format != YlSubtitleFormat.webvtt) {
+          source.format != YlSubtitleFormat.webvtt &&
+          source.format != YlSubtitleFormat.ttml) {
         throw subtitleFailure(YlFailureCodes.subtitleUnsupported);
       }
     }
@@ -57,9 +58,11 @@ final class TextSubtitleRuntime {
         token.check();
         final doc = SubtitleDocument.parse(
           bytes,
-          format: source.format == YlSubtitleFormat.srt
-              ? SubtitleFormat.srt
-              : SubtitleFormat.webvtt,
+          format: switch (source.format) {
+            YlSubtitleFormat.srt => SubtitleFormat.srt,
+            YlSubtitleFormat.webvtt => SubtitleFormat.webvtt,
+            _ => SubtitleFormat.ttml,
+          },
         );
         bytesLeft -= bytes.length;
         cuesLeft -= doc.cues.length;
@@ -68,7 +71,28 @@ final class TextSubtitleRuntime {
         }
         final text = <TextSpan>[];
         for (final cue in doc.cues) {
-          final span = parseSubtitleText(cue.payload);
+          final span = cue.textRuns == null
+              ? parseSubtitleText(cue.payload)
+              : TextSpan(
+                  children: [
+                    for (final run in cue.textRuns!)
+                      TextSpan(
+                        text: run.text,
+                        style: TextStyle(
+                          fontWeight: run.bold
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          fontStyle: run.italic
+                              ? FontStyle.italic
+                              : FontStyle.normal,
+                          decoration: run.underline
+                              ? TextDecoration.underline
+                              : TextDecoration.none,
+                          color: Color(run.color),
+                        ),
+                      ),
+                  ],
+                );
           runsLeft -= span.children!.length;
           if (runsLeft < 0) {
             throw subtitleFailure(YlFailureCodes.subtitleTooLarge);

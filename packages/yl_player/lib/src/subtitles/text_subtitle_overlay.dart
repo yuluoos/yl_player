@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/widgets.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'text_subtitle_runtime.dart';
+import 'ttml_overlay.dart';
 
 /// Upright text in the visible video aperture, independent of texture rotation.
 final class TextSubtitleOverlay extends StatelessWidget {
@@ -42,45 +43,57 @@ final class TextSubtitleOverlay extends StatelessWidget {
             .inscribe(sizes.destination, Offset.zero & output)
             .intersect(Offset.zero & output);
         if (rect.isEmpty) return const SizedBox.shrink();
+        final standardCues = cues.where((c) => c.cue.region == null).toList();
+        final ttmlGroups = <String, List<TextSubtitleCue>>{};
+        for (final cue in cues.where((c) => c.cue.region != null)) {
+          (ttmlGroups[cue.cue.region!.id] ??= []).add(cue);
+        }
         final fontSize = (rect.height * .055).clamp(12.0, 28.0);
         return Stack(
           children: [
             Positioned.fromRect(
               rect: rect,
               child: ClipRect(
-                child: CustomMultiChildLayout(
-                  delegate: _CueLayout(
-                    cues,
-                    Directionality.maybeOf(context) ?? TextDirection.ltr,
-                  ),
+                child: Stack(
                   children: [
-                    for (var i = 0; i < cues.length; i++)
-                      LayoutId(
-                        id: i,
-                        child: RichText(
-                          text: TextSpan(
-                            style: TextStyle(
-                              color: const Color(0xffffffff),
-                              fontSize: fontSize,
-                              height: 1.25,
-                              backgroundColor: const Color(0xb3000000),
-                            ),
-                            children: [cues[i].text],
-                          ),
-                          textAlign: switch (cues[i].cue.alignment) {
-                            'start' => TextAlign.start,
-                            'end' => TextAlign.end,
-                            'left' => TextAlign.left,
-                            'right' => TextAlign.right,
-                            _ => TextAlign.center,
-                          },
-                          textDirection:
-                              Directionality.maybeOf(context) ??
-                              TextDirection.ltr,
-                          textScaler: TextScaler.noScaling,
-                          overflow: TextOverflow.clip,
-                        ),
+                    CustomMultiChildLayout(
+                      delegate: _CueLayout(
+                        standardCues,
+                        Directionality.maybeOf(context) ?? TextDirection.ltr,
                       ),
+                      children: [
+                        for (var i = 0; i < standardCues.length; i++)
+                          LayoutId(
+                            id: i,
+                            child: RichText(
+                              text: TextSpan(
+                                style: TextStyle(
+                                  color: const Color(0xffffffff),
+                                  fontSize: fontSize,
+                                  height: 1.25,
+                                  backgroundColor: const Color(0xb3000000),
+                                ),
+                                children: [standardCues[i].text],
+                              ),
+                              textAlign:
+                                  switch (standardCues[i].cue.alignment) {
+                                    'start' => TextAlign.start,
+                                    'end' => TextAlign.end,
+                                    'left' => TextAlign.left,
+                                    'right' => TextAlign.right,
+                                    _ => TextAlign.center,
+                                  },
+                              textDirection:
+                                  Directionality.maybeOf(context) ??
+                                  TextDirection.ltr,
+                              textScaler: TextScaler.noScaling,
+                              overflow: TextOverflow.clip,
+                            ),
+                          ),
+                      ],
+                    ),
+                    for (final group in ttmlGroups.values)
+                      TtmlRegionOverlay(cues: group, aperture: rect.size),
                   ],
                 ),
               ),

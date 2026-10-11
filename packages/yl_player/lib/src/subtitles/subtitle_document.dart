@@ -1,8 +1,12 @@
 import 'dart:convert';
 import 'dart:math' as math;
+import 'package:xml/xml.dart' show XmlDefaultEntityMapping, XmlException;
+import 'package:xml/xml_events.dart';
+
+part 'ttml_parser.dart';
 
 /// Internal parsing foundation; not a public subtitle loading/rendering API.
-enum SubtitleFormat { srt, webvtt }
+enum SubtitleFormat { srt, webvtt, ttml }
 
 enum SubtitleParseReason { malformed, unsupported, limitExceeded }
 
@@ -53,6 +57,8 @@ final class SubtitleCue {
     required this.start,
     required this.end,
     required this.payload,
+    this.textRuns,
+    this.region,
     this.positionPercent,
     this.positionAlignment = 'auto',
     this.alignment = 'center',
@@ -63,6 +69,8 @@ final class SubtitleCue {
   final Duration start;
   final Duration end;
   final String payload;
+  final List<SubtitleTextRun>? textRuns;
+  final SubtitleRegion? region;
   final double? positionPercent;
   final String positionAlignment;
   final String alignment;
@@ -108,6 +116,9 @@ final class SubtitleDocument {
     }
     if (text.startsWith('\uFEFF')) text = text.substring(1);
     if (text.contains('\u0000')) _malformed();
+    if (format == SubtitleFormat.ttml) {
+      return _parseTtml(text, bytes.length, limits);
+    }
     // Bound line objects as well as payload bytes before allocating the list.
     var lineBreaks = 0;
     for (var i = 0; i < text.length; i++) {
@@ -238,6 +249,14 @@ final class SubtitleDocument {
         ),
       );
     }
+    return _finish(cues, bytes.length, limits);
+  }
+
+  static SubtitleDocument _finish(
+    List<SubtitleCue> cues,
+    int inputBytes,
+    SubtitleLimits limits,
+  ) {
     // End events sort before start events: intervals are [start, end).
     final events =
         <(int, int)>[
@@ -253,7 +272,7 @@ final class SubtitleDocument {
       active += event.$2;
       if (active > limits.maxActiveCues) _limit();
     }
-    return SubtitleDocument._(cues, bytes.length);
+    return SubtitleDocument._(cues, inputBytes);
   }
 
   /// Pure media-time query: positive offset delays display. No wall clock,

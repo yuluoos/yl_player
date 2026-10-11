@@ -1,0 +1,415 @@
+00:00 +0: loading /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart
+00:00 +0: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: namespace prefixes, BOM, decimal clocks and media offsets
+00:00 +1: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: parent relative timing, duration and clipping
+00:00 +1 -1: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: parent relative timing, duration and clipping [E]
+  SubtitleParseException(unsupported)
+  package:yl_player/src/subtitles/subtitle_document.dart 364:5   _unsupported
+  package:yl_player/src/subtitles/ttml_parser.dart 112:18        _readTtmlXml
+  package:yl_player/src/subtitles/ttml_parser.dart 165:16        _parseTtml
+  package:yl_player/src/subtitles/subtitle_document.dart 120:14  SubtitleDocument.parse
+  packages/yl_player/test/ttml_document_test.dart 11:24          parse
+  packages/yl_player/test/ttml_document_test.dart 41:17          main.<fn>
+  
+00:00 +1 -1: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: default whitespace across span boundaries, br and XML entities
+00:00 +1 -2: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: default whitespace across span boundaries, br and XML entities [E]
+  SubtitleParseException(unsupported)
+  package:yl_player/src/subtitles/subtitle_document.dart 364:5   _unsupported
+  package:yl_player/src/subtitles/ttml_parser.dart 112:18        _readTtmlXml
+  package:yl_player/src/subtitles/ttml_parser.dart 165:16        _parseTtml
+  package:yl_player/src/subtitles/subtitle_document.dart 120:14  SubtitleDocument.parse
+  packages/yl_player/test/ttml_document_test.dart 11:24          parse
+  packages/yl_player/test/ttml_document_test.dart 51:17          main.<fn>
+  
+00:00 +1 -2: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: xml space preserve inherits and CDATA remains plain text
+00:00 +1 -3: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: xml space preserve inherits and CDATA remains plain text [E]
+  SubtitleParseException(unsupported)
+  package:yl_player/src/subtitles/subtitle_document.dart 364:5   _unsupported
+  package:yl_player/src/subtitles/ttml_parser.dart 112:18        _readTtmlXml
+  package:yl_player/src/subtitles/ttml_parser.dart 165:16        _parseTtml
+  package:yl_player/src/subtitles/subtitle_document.dart 120:14  SubtitleDocument.parse
+  packages/yl_player/test/ttml_document_test.dart 11:24          parse
+  packages/yl_player/test/ttml_document_test.dart 59:17          main.<fn>
+  
+00:00 +1 -3: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: referenced style chain and inline normal override inherit
+00:00 +1 -4: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: referenced style chain and inline normal override inherit [E]
+  SubtitleParseException(unsupported)
+  package:yl_player/src/subtitles/subtitle_document.dart 364:5   _unsupported
+  package:yl_player/src/subtitles/ttml_parser.dart 112:18        _readTtmlXml
+  package:yl_player/src/subtitles/ttml_parser.dart 165:16        _parseTtml
+  package:yl_player/src/subtitles/subtitle_document.dart 120:14  SubtitleDocument.parse
+  packages/yl_player/test/ttml_document_test.dart 11:24          parse
+  packages/yl_player/test/ttml_document_test.dart 67:17          main.<fn>
+  
+00:00 +1 -4: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: region geometry alignment and inherited style
+00:00 +1 -5: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: region geometry alignment and inherited style [E]
+  SubtitleParseException(unsupported)
+  package:yl_player/src/subtitles/subtitle_document.dart 364:5   _unsupported
+  package:yl_player/src/subtitles/ttml_parser.dart 112:18        _readTtmlXml
+  package:yl_player/src/subtitles/ttml_parser.dart 165:16        _parseTtml
+  package:yl_player/src/subtitles/subtitle_document.dart 120:14  SubtitleDocument.parse
+  packages/yl_player/test/ttml_document_test.dart 11:24          parse
+  packages/yl_player/test/ttml_document_test.dart 84:17          main.<fn>
+  
+00:00 +1 -5: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 776514566
+00:00 +2 -5: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 597182961
+00:00 +2 -6: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 597182961 [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/subtitle_document.dart 364:5   _unsupported
+                  package:yl_player/src/subtitles/ttml_parser.dart 112:18        _readTtmlXml
+                  package:yl_player/src/subtitles/ttml_parser.dart 165:16        _parseTtml
+                  package:yl_player/src/subtitles/subtitle_document.dart 120:14  SubtitleDocument.parse
+                  packages/yl_player/test/ttml_document_test.dart 11:24          parse
+                  packages/yl_player/test/ttml_document_test.dart 123:26         main.<fn>.<fn>
+                  package:matcher                                                expect
+                  package:flutter_test/src/widget_tester.dart 473:18             expect
+                  packages/yl_player/test/ttml_document_test.dart 123:13         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                         expect
+  package:flutter_test/src/widget_tester.dart 473:18      expect
+  packages/yl_player/test/ttml_document_test.dart 123:13  main.<fn>
+  
+00:00 +2 -6: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 1026477303
+00:00 +2 -7: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 1026477303 [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/subtitle_document.dart 364:5   _unsupported
+                  package:yl_player/src/subtitles/ttml_parser.dart 112:18        _readTtmlXml
+                  package:yl_player/src/subtitles/ttml_parser.dart 165:16        _parseTtml
+                  package:yl_player/src/subtitles/subtitle_document.dart 120:14  SubtitleDocument.parse
+                  packages/yl_player/test/ttml_document_test.dart 11:24          parse
+                  packages/yl_player/test/ttml_document_test.dart 123:26         main.<fn>.<fn>
+                  package:matcher                                                expect
+                  package:flutter_test/src/widget_tester.dart 473:18             expect
+                  packages/yl_player/test/ttml_document_test.dart 123:13         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                         expect
+  package:flutter_test/src/widget_tester.dart 473:18      expect
+  packages/yl_player/test/ttml_document_test.dart 123:13  main.<fn>
+  
+00:00 +2 -7: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 346541764
+00:00 +2 -8: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 346541764 [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/subtitle_document.dart 364:5   _unsupported
+                  package:yl_player/src/subtitles/ttml_parser.dart 112:18        _readTtmlXml
+                  package:yl_player/src/subtitles/ttml_parser.dart 165:16        _parseTtml
+                  package:yl_player/src/subtitles/subtitle_document.dart 120:14  SubtitleDocument.parse
+                  packages/yl_player/test/ttml_document_test.dart 11:24          parse
+                  packages/yl_player/test/ttml_document_test.dart 123:26         main.<fn>.<fn>
+                  package:matcher                                                expect
+                  package:flutter_test/src/widget_tester.dart 473:18             expect
+                  packages/yl_player/test/ttml_document_test.dart 123:13         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                         expect
+  package:flutter_test/src/widget_tester.dart 473:18      expect
+  packages/yl_player/test/ttml_document_test.dart 123:13  main.<fn>
+  
+00:00 +2 -8: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 412995810
+00:00 +2 -9: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 412995810 [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/subtitle_document.dart 364:5   _unsupported
+                  package:yl_player/src/subtitles/ttml_parser.dart 112:18        _readTtmlXml
+                  package:yl_player/src/subtitles/ttml_parser.dart 165:16        _parseTtml
+                  package:yl_player/src/subtitles/subtitle_document.dart 120:14  SubtitleDocument.parse
+                  packages/yl_player/test/ttml_document_test.dart 11:24          parse
+                  packages/yl_player/test/ttml_document_test.dart 123:26         main.<fn>.<fn>
+                  package:matcher                                                expect
+                  package:flutter_test/src/widget_tester.dart 473:18             expect
+                  packages/yl_player/test/ttml_document_test.dart 123:13         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                         expect
+  package:flutter_test/src/widget_tester.dart 473:18      expect
+  packages/yl_player/test/ttml_document_test.dart 123:13  main.<fn>
+  
+00:00 +2 -9: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 353458147
+00:00 +2 -10: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 353458147 [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/subtitle_document.dart 364:5   _unsupported
+                  package:yl_player/src/subtitles/ttml_parser.dart 112:18        _readTtmlXml
+                  package:yl_player/src/subtitles/ttml_parser.dart 165:16        _parseTtml
+                  package:yl_player/src/subtitles/subtitle_document.dart 120:14  SubtitleDocument.parse
+                  packages/yl_player/test/ttml_document_test.dart 11:24          parse
+                  packages/yl_player/test/ttml_document_test.dart 123:26         main.<fn>.<fn>
+                  package:matcher                                                expect
+                  package:flutter_test/src/widget_tester.dart 473:18             expect
+                  packages/yl_player/test/ttml_document_test.dart 123:13         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                         expect
+  package:flutter_test/src/widget_tester.dart 473:18      expect
+  packages/yl_player/test/ttml_document_test.dart 123:13  main.<fn>
+  
+00:00 +2 -10: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 42056563
+00:00 +2 -11: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 42056563 [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/subtitle_document.dart 364:5   _unsupported
+                  package:yl_player/src/subtitles/ttml_parser.dart 112:18        _readTtmlXml
+                  package:yl_player/src/subtitles/ttml_parser.dart 165:16        _parseTtml
+                  package:yl_player/src/subtitles/subtitle_document.dart 120:14  SubtitleDocument.parse
+                  packages/yl_player/test/ttml_document_test.dart 11:24          parse
+                  packages/yl_player/test/ttml_document_test.dart 123:26         main.<fn>.<fn>
+                  package:matcher                                                expect
+                  package:flutter_test/src/widget_tester.dart 473:18             expect
+                  packages/yl_player/test/ttml_document_test.dart 123:13         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                         expect
+  package:flutter_test/src/widget_tester.dart 473:18      expect
+  packages/yl_player/test/ttml_document_test.dart 123:13  main.<fn>
+  
+00:00 +2 -11: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 272605008
+00:00 +2 -12: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 272605008 [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/subtitle_document.dart 364:5   _unsupported
+                  package:yl_player/src/subtitles/ttml_parser.dart 112:18        _readTtmlXml
+                  package:yl_player/src/subtitles/ttml_parser.dart 165:16        _parseTtml
+                  package:yl_player/src/subtitles/subtitle_document.dart 120:14  SubtitleDocument.parse
+                  packages/yl_player/test/ttml_document_test.dart 11:24          parse
+                  packages/yl_player/test/ttml_document_test.dart 123:26         main.<fn>.<fn>
+                  package:matcher                                                expect
+                  package:flutter_test/src/widget_tester.dart 473:18             expect
+                  packages/yl_player/test/ttml_document_test.dart 123:13         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                         expect
+  package:flutter_test/src/widget_tester.dart 473:18      expect
+  packages/yl_player/test/ttml_document_test.dart 123:13  main.<fn>
+  
+00:00 +2 -12: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 1001207239
+00:00 +2 -13: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 1001207239 [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/subtitle_document.dart 364:5   _unsupported
+                  package:yl_player/src/subtitles/ttml_parser.dart 112:18        _readTtmlXml
+                  package:yl_player/src/subtitles/ttml_parser.dart 165:16        _parseTtml
+                  package:yl_player/src/subtitles/subtitle_document.dart 120:14  SubtitleDocument.parse
+                  packages/yl_player/test/ttml_document_test.dart 11:24          parse
+                  packages/yl_player/test/ttml_document_test.dart 123:26         main.<fn>.<fn>
+                  package:matcher                                                expect
+                  package:flutter_test/src/widget_tester.dart 473:18             expect
+                  packages/yl_player/test/ttml_document_test.dart 123:13         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                         expect
+  package:flutter_test/src/widget_tester.dart 473:18      expect
+  packages/yl_player/test/ttml_document_test.dart 123:13  main.<fn>
+  
+00:00 +2 -13: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 599128920
+00:00 +2 -14: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 599128920 [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/subtitle_document.dart 364:5   _unsupported
+                  package:yl_player/src/subtitles/ttml_parser.dart 112:18        _readTtmlXml
+                  package:yl_player/src/subtitles/ttml_parser.dart 165:16        _parseTtml
+                  package:yl_player/src/subtitles/subtitle_document.dart 120:14  SubtitleDocument.parse
+                  packages/yl_player/test/ttml_document_test.dart 11:24          parse
+                  packages/yl_player/test/ttml_document_test.dart 123:26         main.<fn>.<fn>
+                  package:matcher                                                expect
+                  package:flutter_test/src/widget_tester.dart 473:18             expect
+                  packages/yl_player/test/ttml_document_test.dart 123:13         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                         expect
+  package:flutter_test/src/widget_tester.dart 473:18      expect
+  packages/yl_player/test/ttml_document_test.dart 123:13  main.<fn>
+  
+00:00 +2 -14: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 1037092636
+00:00 +2 -15: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 1037092636 [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/subtitle_document.dart 364:5   _unsupported
+                  package:yl_player/src/subtitles/ttml_parser.dart 112:18        _readTtmlXml
+                  package:yl_player/src/subtitles/ttml_parser.dart 165:16        _parseTtml
+                  package:yl_player/src/subtitles/subtitle_document.dart 120:14  SubtitleDocument.parse
+                  packages/yl_player/test/ttml_document_test.dart 11:24          parse
+                  packages/yl_player/test/ttml_document_test.dart 123:26         main.<fn>.<fn>
+                  package:matcher                                                expect
+                  package:flutter_test/src/widget_tester.dart 473:18             expect
+                  packages/yl_player/test/ttml_document_test.dart 123:13         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                         expect
+  package:flutter_test/src/widget_tester.dart 473:18      expect
+  packages/yl_player/test/ttml_document_test.dart 123:13  main.<fn>
+  
+00:00 +2 -15: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 125826032
+00:00 +2 -16: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject malformed 125826032 [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/subtitle_document.dart 364:5   _unsupported
+                  package:yl_player/src/subtitles/ttml_parser.dart 112:18        _readTtmlXml
+                  package:yl_player/src/subtitles/ttml_parser.dart 165:16        _parseTtml
+                  package:yl_player/src/subtitles/subtitle_document.dart 120:14  SubtitleDocument.parse
+                  packages/yl_player/test/ttml_document_test.dart 11:24          parse
+                  packages/yl_player/test/ttml_document_test.dart 123:26         main.<fn>.<fn>
+                  package:matcher                                                expect
+                  package:flutter_test/src/widget_tester.dart 473:18             expect
+                  packages/yl_player/test/ttml_document_test.dart 123:13         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                         expect
+  package:flutter_test/src/widget_tester.dart 473:18      expect
+  packages/yl_player/test/ttml_document_test.dart 123:13  main.<fn>
+  
+00:00 +2 -16: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject unsupported 517369050
+00:00 +3 -16: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject unsupported 572279468
+00:00 +4 -16: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject unsupported 168101366
+00:00 +5 -16: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject unsupported 615659418
+00:00 +6 -16: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject unsupported 676934106
+00:00 +7 -16: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject unsupported 620551040
+00:00 +8 -16: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject unsupported 628334318
+00:00 +9 -16: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject unsupported 199018245
+00:00 +10 -16: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject unsupported 412204382
+00:00 +11 -16: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject unsupported 1045919420
+00:00 +12 -16: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: reject unsupported 984518183
+00:00 +13 -16: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: bounded cues and active intervals
+00:00 +13 -17: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: bounded cues and active intervals [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.limitExceeded>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/subtitle_document.dart 364:5   _unsupported
+                  package:yl_player/src/subtitles/ttml_parser.dart 112:18        _readTtmlXml
+                  package:yl_player/src/subtitles/ttml_parser.dart 165:16        _parseTtml
+                  package:yl_player/src/subtitles/subtitle_document.dart 120:14  SubtitleDocument.parse
+                  packages/yl_player/test/ttml_document_test.dart 11:24          parse
+                  packages/yl_player/test/ttml_document_test.dart 159:13         main.<fn>.<fn>
+                  package:matcher                                                expect
+                  package:flutter_test/src/widget_tester.dart 473:18             expect
+                  packages/yl_player/test/ttml_document_test.dart 158:5          main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                        expect
+  package:flutter_test/src/widget_tester.dart 473:18     expect
+  packages/yl_player/test/ttml_document_test.dart 158:5  main.<fn>
+  
+00:00 +13 -17: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: bounded nesting and payload before rendering
+00:00 +13 -18: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: bounded nesting and payload before rendering [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.limitExceeded>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/subtitle_document.dart 364:5   _unsupported
+                  package:yl_player/src/subtitles/ttml_parser.dart 112:18        _readTtmlXml
+                  package:yl_player/src/subtitles/ttml_parser.dart 165:16        _parseTtml
+                  package:yl_player/src/subtitles/subtitle_document.dart 120:14  SubtitleDocument.parse
+                  packages/yl_player/test/ttml_document_test.dart 11:24          parse
+                  packages/yl_player/test/ttml_document_test.dart 169:13         main.<fn>.<fn>
+                  package:matcher                                                expect
+                  package:flutter_test/src/widget_tester.dart 473:18             expect
+                  packages/yl_player/test/ttml_document_test.dart 168:5          main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                        expect
+  package:flutter_test/src/widget_tester.dart 473:18     expect
+  packages/yl_player/test/ttml_document_test.dart 168:5  main.<fn>
+  
+00:00 +13 -18: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: diagnostic never reveals XML text
+00:00 +14 -18: loading /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_runtime_test.dart
+00:01 +14 -18: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_runtime_test.dart: TTML file commits styled overlapping cues with offset and off
+00:01 +14 -19: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_runtime_test.dart: TTML file commits styled overlapping cues with offset and off [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 124:7  TextSubtitleRuntime.replace
+  
+00:01 +14 -19: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_runtime_test.dart: TTML managed HTTP retries then commits; malformed keeps old catalog
+00:01 +14 -20: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_runtime_test.dart: TTML managed HTTP retries then commits; malformed keeps old catalog [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 124:7  TextSubtitleRuntime.replace
+  
+00:01 +14 -20: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_runtime_test.dart: public TTML load renders and follows seek, off and source reset
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following YlPlayerException was thrown while running async test code:
+YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command,
+diagnosticId: text-subtitle)
+
+When the exception was thrown, this was the stack:
+#0      TextSubtitleRuntime.replace (package:yl_player/src/subtitles/text_subtitle_runtime.dart:124:7)
+<asynchronous suspension>
+#1      YlPlaybackSession._textSubtitleCommand (package:yl_player/src/playback_session.dart:77:7)
+<asynchronous suspension>
+#2      YlPlaybackSession._command (package:yl_player/src/playback_session.dart:12:5)
+<asynchronous suspension>
+<asynchronous suspension>
+#4      main.<anonymous closure> (file:///private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_runtime_test.dart:121:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 2 frames from dart:async and package:stack_trace)
+
+The exception was caught asynchronously.
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following YlPlayerException was thrown running a test:
+YlFailure(category: source, code: source.invalid, retryable: false, scope: command, diagnosticId:
+text-subtitle)
+
+When the exception was thrown, this was the stack:
+#0      TextSubtitleRuntime.select (package:yl_player/src/subtitles/text_subtitle_runtime.dart:137:7)
+#1      YlPlaybackSession.selectSubtitleTrack.<anonymous closure>.<anonymous closure> (package:yl_player/src/playback_session.dart:54:55)
+#2      YlPlaybackSession._textSubtitleCommand (package:yl_player/src/playback_session.dart:77:19)
+#3      YlPlaybackSession.selectSubtitleTrack.<anonymous closure> (package:yl_player/src/playback_session.dart:54:14)
+#4      YlPlaybackSession._command (package:yl_player/src/playback_session.dart:12:17)
+#5      YlPlaybackSession.selectSubtitleTrack (package:yl_player/src/playback_session.dart:51:56)
+#6      main.<anonymous closure> (file:///private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_runtime_test.dart:122:19)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  public TTML load renders and follows seek, off and source reset
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following message was thrown:
+Multiple exceptions (2) were detected during the running of the current test, and at least one was
+unexpected.
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +14 -21: /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_runtime_test.dart: public TTML load renders and follows seek, off and source reset [E]
+  Test failed. See exception logs above.
+  The test description was: public TTML load renders and follows seek, off and source reset
+  
+00:01 +14 -21: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: bounded cues and active intervals
+  /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: bounded nesting and payload before rendering
+  /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: default whitespace across span boundaries, br and XML entities
+  /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_document_test.dart: parent relative timing, duration and clipping
+  ... and 17 more

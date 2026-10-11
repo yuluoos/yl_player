@@ -1,5 +1,8 @@
 ## 0.2.0-dev.2
 
+- Add external TTML text loading/rendering with bounded namespace-aware XML,
+  media timing, referenced basic styles and clipped percentage regions, using
+  the existing file/managed HTTP and atomic subtitle catalog pipeline.
 - Enforce managed HTTP policy for external subtitles: per-hop header and body
   inactivity timeouts, bounded retries/Retry-After, shared redirect budgets and
   cancellable backoff with permanent cross-origin credential stripping.

@@ -1,0 +1,183 @@
+{
+  "validation": {
+    "path": "/private/tmp/yl-ttml-validation-kbre8_ob",
+    "base": "79dbfad54765ed9f36c71187acd95b935cbbf2d9",
+    "files": [
+      "packages/yl_player/lib/src/subtitles/subtitle_document.dart",
+      "packages/yl_player/lib/src/subtitles/ttml_parser.dart",
+      "packages/yl_player/lib/src/subtitles/text_subtitle_runtime.dart",
+      "packages/yl_player/lib/src/subtitles/text_subtitle_overlay.dart",
+      "packages/yl_player/lib/src/subtitles/ttml_overlay.dart",
+      "packages/yl_player/test/ttml_document_test.dart",
+      "packages/yl_player/test/ttml_runtime_test.dart",
+      "packages/yl_player/pubspec.yaml",
+      "packages/yl_player/test/ttml_overlay_test.dart",
+      "packages/yl_player/test/text_subtitle_runtime_test.dart",
+      "packages/yl_player/lib/src/player_controller.dart",
+      "pubspec.lock"
+    ],
+    "initialBase": "bdaf7bccf6a42e00af2568cbb787ffed6d0b0a6a"
+  },
+  "ownedSourceAndDocs": {
+    "packages/yl_player/lib/src/subtitles/subtitle_document.dart": "ecec89b7174162eed1f66b171eb348f39bf56246ed9a3bfe51049bbb91699913",
+    "packages/yl_player/lib/src/subtitles/ttml_parser.dart": "ee173411e11a45090d0e42efff0625b8a50fef6722c27f6bcfbd6ea20f9a90bd",
+    "packages/yl_player/lib/src/subtitles/text_subtitle_runtime.dart": "f30c8935528d4d0b5db0498f89fc523ab803e51a4a6b5b4d89e095e8ad0344ea",
+    "packages/yl_player/lib/src/subtitles/text_subtitle_overlay.dart": "3fbb7ab943e31fe9f1047cc5d26e70d77a04e9d472f7277d77cd675ed375941b",
+    "packages/yl_player/lib/src/subtitles/ttml_overlay.dart": "b3cf9097d05f81c22090d4faed0130495b0df516d33fff767f92888ed01e39cd",
+    "packages/yl_player/test/ttml_document_test.dart": "6ceea8669507dd1d54acf258c207f301e69853270786b0bfedf9ab0501fd6971",
+    "packages/yl_player/test/ttml_runtime_test.dart": "d100311cd47dfacb42cb1b4e61b29190fcfad3bd5feb636d1b20056893551b7e",
+    "packages/yl_player/pubspec.yaml": "6c6bb701de8860f7522ecc91176e01d38217a968d1ca2b3fe2d61c47ddff9461",
+    "packages/yl_player/test/ttml_overlay_test.dart": "588ac3cedcf7e8eb8ad077a11074933a5d03e8822bac4278c115c7631d0c3ce4",
+    "packages/yl_player/test/text_subtitle_runtime_test.dart": "a78def85b4b80d2718efa86c48dabe8ded55bda8c75cfb566c68d3909b4a26c9",
+    "packages/yl_player/lib/src/player_controller.dart": "bdb92c3e50455978c84be44aaea6cdcace97933fdf253474b545003eff66f882",
+    "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
+    "docs/platform-support.md": "2206d827385db9f608f581d3b18397f1526d51ed967017a8171235bc879d395e",
+    "docs/superpowers/specs/2026-10-11-subtitle-ttml.md": "8af6346af174aaeb7d04b10b61f6339b0566e7709f51719ea200ddb785e59652",
+    "docs/superpowers/specs/2026-10-11-subtitle-runtime.md": "aca9c324ad7299ab354458f5acdd345cab1f0cd12b788e1c9324041e86cd0126",
+    "packages/yl_player/README.md": "a53428b15795fd1de321a4d8fd3ae8d02d9c5aae6f068fe3a8255c13f1b45ca4",
+    "docs/superpowers/reports/2026-09-26-remaining-02-tracks-subtitles.md": "fcd9c57b78221ee1e42f87b2ba8eed6375bbae9c8687e941fa6ae491071da2fa"
+  },
+  "referenceDependencies": {
+    "packages/yl_player/lib/src/playback_session.dart": "a66034c34bf5d98ec0cfa96a0f5b56de26cfc60be2b04add287ab80870c2753a",
+    "packages/yl_player/lib/src/subtitles/subtitle_resource.dart": "b371094c804274cd3b11eeda357d7074bfa5746a002adb95a13bec0a21a9f42c",
+    "packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart": "50a2413e73873ca86530c1001213c0d3ee30767f9b25c86b5ade2dddd8267e61",
+    "packages/yl_player/lib/src/subtitles/subtitle_socket.dart": "924a5e00ff2ff41e8a8c3bfc16690252bd09682695560fe54e02d9ba318fe942",
+    "packages/yl_player_platform_interface/lib/src/model/subtitles.dart": "c3a63f859b42893fbb91db894ded10bac6468f4f055f0629950d2a9d439a2b9d",
+    "packages/yl_player_platform_interface/lib/src/validation/subtitle_validation.dart": "e96723041113be76ad3cc28775e49625da61bac995db5b80ad65b47c2a83fa36"
+  },
+  "sharedDocumentTransforms": {
+    "overviewSectionSha256": "699fabe250b0df7f1274be9a5230a259160748df132382da6673355f57e423a8",
+    "changelogEntrySha256": "c032ca7b922928a22409af43d67d5e2c46e2bd3ae162efff4e2dc7fc673f88c6"
+  },
+  "dependencies": {
+    "xml": "7.0.1 (MIT)",
+    "petitparser": "7.0.2 (MIT)",
+    "installation": "flutter pub get --offline in isolated snapshot",
+    "integrity": "pubspec.lock contains cached package SHA256"
+  },
+  "evidence": {
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/analyze-clean.log": "95a28819c918db92d8f3f7dfadfc18f1248f79ab8313759391ad318fe94cf093",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/analyze-first.log": "0d3c67162ae4435921e07aad207b358329ad818817a9c0dcbb35ec5a3314cbd7",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/analyze-review.log": "7140c570f8fb6e0380163d9525fe771429ae11e937b02df42da397942b2a5e19",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/boundaries-red.log": "8eb527f2f2aa30f3a40768ef278a3e589512b4e75d8dd3a42d58924ed6eab06a",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/contain-after.png": "e64abd441f934304ec95ff6711bbac9fe2d21f1fcd7ebf4dcdd6eb08f3b43eae",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/contain-before.png": "e20115457f1fa92472af8421f822ce99c919e8e37e1c0852c163e389f942a9ef",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/contain-center.png": "1b89ebd44a335579f47a35fe87a87a264249345d002e226a34990cb84d957bf6",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/directed-green.log": "4a72a90e9e1c047e319879bdf2b32b9b5a3632c150837347874c8652cc1ed75e",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/expanded-green.log": "bd9f518260df493171131b2fc3f9a3d797430a419d13682e2acbfa397f43ec6f",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/final-analyze.log": "7cf9b717cd0ae36cad727808630a9a929c04f0d5a041238ce9f70ec6fb4bd475",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/final-four-packages.log": "d78ed9fb72cb3b50189f3b46321ca36e8ca4de54eb3b158d15881ef08db696e4",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/first-directed.log": "b5395be3bc6f961b31ea6437f21b0e063a333c8d6a836b2ac1234820285baca2",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/four-packages-first.log": "ed565aac2b9f7716032255daca8ce0e9d8d9210b3b6520941e2f387de0748f70",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/lint-fix.log": "1c084b8ffc6993ec3adcf466c6c6568de08420151b1326e1f667f022fadb506f",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/namespace-fix.log": "11bd9d3a00b9daf70225c501bb3c7e349003cd323568763c81d8808ada164cae",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/pub-get.log": "af3a9a7719efe6073de15afa44a28d00f11b39f08b29c80cc774704545ae65e4",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/review-green.log": "966a3648390b21c7742298f50d21bc21127248bd4767ce7afc64023c85ce61c3",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/review-red.log": "f66721ab7355c0f2996f425cb769cc4cd3a33711d52a77f657b7f1a99bd42409",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/rotated-par-after.png": "1c4ce27866d62e3a286d324ed4d54fae9444c72ffe35c502a7e264308b323b36",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/rotated-par-before.png": "aa76661cdd5c8376ccf2221a93fb6bf672cbc910c387bb4ac0fb599d06907f46",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/rotated-par-center.png": "7248a25a5ef330579b3a360efc9f6ae87ab77354bac284631601965977e42da4",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/runtime-red.log": "ffd267446888bf9df747c37aa1df0b8f5d78bebf57b44cf3943591f96b3146be"
+  },
+  "finalVerification": [
+    {
+      "command": "YL_TTML_EVIDENCE_DIR=<repository>/docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test",
+      "cwd": "/private/tmp/yl-ttml-validation-kbre8_ob",
+      "exitCode": 0,
+      "passed": 685,
+      "failed": 0,
+      "packageCounts": [
+        135,
+        355,
+        113,
+        82
+      ],
+      "newTests": 70,
+      "log": "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/final-four-packages.log"
+    },
+    {
+      "command": "dart analyze --suppress-analytics packages/yl_player/lib packages/yl_player/test packages/yl_player_platform_interface/lib packages/yl_player_platform_interface/test",
+      "cwd": "/private/tmp/yl-ttml-validation-kbre8_ob",
+      "exitCode": 0,
+      "result": "No issues found",
+      "log": "docs/superpowers/reports/evidence/2026-10-11-subtitle-ttml/final-analyze.log"
+    }
+  ],
+  "history": [
+    {
+      "log": "runtime-red.log",
+      "result": "0 passed /3 failed: previous runtime rejected TTML"
+    },
+    {
+      "log": "pub-get.log",
+      "result": "Exit0; 2 cached dependencies added offline; advisory native migration warnings, no migration performed"
+    },
+    {
+      "log": "first-directed.log",
+      "result": "14 passed /21 failed: default namespace annotation on unprefixed attributes"
+    },
+    {
+      "log": "namespace-fix.log",
+      "result": "35 passed"
+    },
+    {
+      "log": "boundaries-red.log",
+      "result": "41 passed /2 failed: integer h overflow and seven-day finite-parent sentinel"
+    },
+    {
+      "log": "directed-green.log",
+      "result": "130 passed including legacy subtitles"
+    },
+    {
+      "log": "analyze-first.log",
+      "result": "19 info diagnostics"
+    },
+    {
+      "log": "lint-fix.log",
+      "result": "17 edits applied then exit1 due telemetry file sandbox denial; not marked successful"
+    },
+    {
+      "log": "expanded-green.log",
+      "result": "49 TTML passed"
+    },
+    {
+      "log": "analyze-clean.log",
+      "result": "No issues found before review"
+    },
+    {
+      "log": "four-packages-first.log",
+      "result": "664 passed before review fixes"
+    },
+    {
+      "log": "review-red.log",
+      "result": "43 passed /20 failed: XML syntax/atomicity and style depth order"
+    },
+    {
+      "log": "review-green.log",
+      "result": "70 TTML passed"
+    },
+    {
+      "log": "analyze-review.log",
+      "result": "6 brace-style info diagnostics fixed before final verification"
+    }
+  ],
+  "review": {
+    "originalImportant": 1,
+    "originalMinor": 1,
+    "regradedMinorToImportant": 1,
+    "fixed": 2,
+    "remaining": 0,
+    "method": "One independent read-only review, one RED/GREEN fix pass; no re-review",
+    "findings": [
+      "Malformed XML accepted by permissive dependency",
+      "Cached style-chain depth depends on declaration order"
+    ]
+  },
+  "limitations": [
+    "Strict external TTML text subset; not full TTML/IMSC conformance",
+    "Ahem pixel fixtures measure position/color/clipping; not real-device font appearance",
+    "Public media lifecycle uses fake platform state; file and loopback HTTP I/O are real",
+    "No native/device/long-play/weak-network ABR validation",
+    "Whole P02/CAP-SUB, advanced/embedded/HDR/DRM/PD03 remain open"
+  ]
+}

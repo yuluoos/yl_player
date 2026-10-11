@@ -50,3 +50,11 @@ commit a damaged catalog or decide PD-03's eventual playback-failure policy.
 
 Validation uses owned local files, loopback HTTP and Flutter widget rendering.
 It does not claim native-device playback, HDR or DRM visual acceptance.
+
+## TTML extension (2026-10-11)
+
+The subsequent [TTML text subset](2026-10-11-subtitle-ttml.md) adds explicitly
+selected `YlSubtitleFormat.ttml` to the same resource/catalog/clock pipeline.
+The earlier SRT/WebVTT markup and layout rules remain format-specific; TTML
+uses already decoded styled runs and clipped percentage regions. Advanced
+TTML and full native/device format acceptance remain outside this extension.

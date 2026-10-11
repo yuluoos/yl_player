@@ -121,7 +121,7 @@ metadata. See [diagnostics](../../docs/diagnostics.md).
 ## External text subtitles (opt-in)
 
 Create the controller with `enableTextSubtitles: true` to use the Dart-owned
-external SRT/WebVTT runtime on Android, iOS or macOS. `YlPlayerView` then draws
+external SRT/WebVTT/TTML text runtime on Android, iOS or macOS. `YlPlayerView` then draws
 selected subtitles over ordinary video without an extra widget:
 
 ```dart
@@ -166,15 +166,27 @@ with locally published subtitle state.
 Selection starts off; `[]` removes all external entries. Same-ID replacement
 updates content while preserving current selection. Positive offsets delay cues.
 
-Rendering supports plain UTF-8 text, balanced `b`/`i`/`u` markup, common entities,
+SRT/WebVTT rendering supports plain UTF-8 text, balanced `b`/`i`/`u` markup, common entities,
 and horizontal WebVTT position/align settings. Unsupported markup is rejected.
 Cue timing follows published media positions, so precision depends on
 `YlPlayerOptions.positionUpdateInterval`; no independent timer advances captions
 while paused or buffering. Seek hides text until a post-ACK position snapshot.
 Text stays upright in the visible video aperture after fit, crop, PAR and rotation.
 
+For TTML, set `format: YlSubtitleFormat.ttml` with a file or network source.
+The supported TTML1 subset uses the `http://www.w3.org/ns/ttml` namespace,
+media clock or h/m/s/ms timing, parallel body/div containers and finite paragraph
+intervals. It renders nested untimed spans, line breaks, inherited/referenced
+bold/italic/underline/color/text alignment, and percentage regions with
+before/center/after vertical alignment. XML whitespace and entities are decoded
+once; text resembling HTML is displayed literally. Regions are clipped to the
+visible video aperture. DTD, external references, timed spans, sequential/frame
+or tick timing, custom fonts/sizing, animation, vertical text and unsupported
+properties are rejected explicitly. See the [TTML subset contract](../../docs/superpowers/specs/2026-10-11-subtitle-ttml.md)
+for precise limits; this is not a full TTML/IMSC conformance claim.
+
 This opt-in owns the external catalog and cannot be combined with a native
-subtitle SPI. It does not support embedded tracks, TTML, ASS/SSA, PGS/VobSub,
+subtitle SPI. It does not support embedded tracks, ASS/SSA, PGS/VobSub,
 WebVTT CSS/regions/karaoke, or protected video overlays. HDR subtitle brightness
 and native-device synchronization remain unqualified. Without the opt-in, the
 existing native capability/SPI gates continue to apply.

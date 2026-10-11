@@ -1,0 +1,80 @@
+00:00 +0: loading /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_runtime_test.dart
+00:00 +0: TTML file commits styled overlapping cues with offset and off
+00:00 +0 -1: TTML file commits styled overlapping cues with offset and off [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 41:9  TextSubtitleRuntime.replace
+  packages/yl_player/test/ttml_runtime_test.dart 44:19             main.<fn>
+  
+00:00 +0 -1: TTML managed HTTP retries then commits; malformed keeps old catalog
+00:00 +0 -2: TTML managed HTTP retries then commits; malformed keeps old catalog [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 41:9  TextSubtitleRuntime.replace
+  packages/yl_player/test/ttml_runtime_test.dart 68:19             main.<fn>
+  
+00:00 +0 -2: public TTML load renders and follows seek, off and source reset
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following YlPlayerException was thrown while running async test code:
+YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command,
+diagnosticId: text-subtitle)
+
+When the exception was thrown, this was the stack:
+#0      TextSubtitleRuntime.replace (package:yl_player/src/subtitles/text_subtitle_runtime.dart:41:9)
+#1      YlPlaybackSession.replaceExternalSubtitles.<anonymous closure>.<anonymous closure> (package:yl_player/src/playback_session.dart:42:53)
+#2      YlPlaybackSession._textSubtitleCommand (package:yl_player/src/playback_session.dart:77:19)
+#3      YlPlaybackSession.replaceExternalSubtitles.<anonymous closure> (package:yl_player/src/playback_session.dart:42:18)
+#4      YlPlaybackSession._command (package:yl_player/src/playback_session.dart:12:17)
+#5      YlPlaybackSession.replaceExternalSubtitles (package:yl_player/src/playback_session.dart:38:7)
+#6      main.<anonymous closure>.<anonymous closure> (file:///private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_runtime_test.dart:86:41)
+#7      AutomatedTestWidgetsFlutterBinding.runAsync.<anonymous closure> (package:flutter_test/src/binding.dart:2307:17)
+#10     AutomatedTestWidgetsFlutterBinding.runAsync (package:flutter_test/src/binding.dart:2303:26)
+#11     WidgetTester.runAsync (package:flutter_test/src/widget_tester.dart:838:17)
+#12     main.<anonymous closure> (file:///private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_runtime_test.dart:86:18)
+<asynchronous suspension>
+#13     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#14     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 3 frames from dart:async and package:stack_trace)
+
+The exception was caught asynchronously.
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following YlPlayerException was thrown running a test:
+YlFailure(category: source, code: source.invalid, retryable: false, scope: command, diagnosticId:
+text-subtitle)
+
+When the exception was thrown, this was the stack:
+#0      TextSubtitleRuntime.select (package:yl_player/src/subtitles/text_subtitle_runtime.dart:113:7)
+#1      YlPlaybackSession.selectSubtitleTrack.<anonymous closure>.<anonymous closure> (package:yl_player/src/playback_session.dart:54:55)
+#2      YlPlaybackSession._textSubtitleCommand (package:yl_player/src/playback_session.dart:77:19)
+#3      YlPlaybackSession.selectSubtitleTrack.<anonymous closure> (package:yl_player/src/playback_session.dart:54:14)
+#4      YlPlaybackSession._command (package:yl_player/src/playback_session.dart:12:17)
+#5      YlPlaybackSession.selectSubtitleTrack (package:yl_player/src/playback_session.dart:51:56)
+#6      main.<anonymous closure> (file:///private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_runtime_test.dart:87:19)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  public TTML load renders and follows seek, off and source reset
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following message was thrown:
+Multiple exceptions (2) were detected during the running of the current test, and at least one was
+unexpected.
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -3: public TTML load renders and follows seek, off and source reset [E]
+  Test failed. See exception logs above.
+  The test description was: public TTML load renders and follows seek, off and source reset
+  
+00:00 +0 -3: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_runtime_test.dart: TTML file commits styled overlapping cues with offset and off
+  /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_runtime_test.dart: TTML managed HTTP retries then commits; malformed keeps old catalog
+  /private/tmp/yl-ttml-validation-kbre8_ob/packages/yl_player/test/ttml_runtime_test.dart: public TTML load renders and follows seek, off and source reset

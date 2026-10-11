@@ -383,7 +383,7 @@ void main() {
                 ? YlExternalSubtitle(
                     id: 'new',
                     source: YlFileSource(file.path),
-                    format: YlSubtitleFormat.ttml,
+                    format: YlSubtitleFormat.ass,
                   )
                 : sub(
                     source: YlNetworkSource(
@@ -600,9 +600,9 @@ void main() {
       await expectLater(
         session.replaceExternalSubtitles([
           YlExternalSubtitle(
-            id: 'ttml',
+            id: 'ass',
             source: YlFileSource(file.path),
-            format: YlSubtitleFormat.ttml,
+            format: YlSubtitleFormat.ass,
           ),
         ]),
         failure(YlFailureCodes.subtitleUnsupported),
