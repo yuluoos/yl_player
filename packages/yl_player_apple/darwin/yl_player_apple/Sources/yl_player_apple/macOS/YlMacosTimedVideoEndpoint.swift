@@ -19,6 +19,12 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
   // images permits paused surface reattachment without a stale preview.
   private var previewFrames: [YlFrameEnvelope] = []
   private var requesting = false
+  private var readyHandler: (() -> Void)?
+  // Bounded scalar evidence only; diagnostics never retain a rejected frame.
+  private var blockedPTS: Int64?, blockedSince: TimeInterval?, readyAt: TimeInterval?
+  private var blockedAttempts = 0
+  private var readyAtCallback: Bool?
+  private var backpressureEvents: [[String: Double]] = []
   private var failed = false
   private var retirementStarted = false
   private var retirementFinished = false
@@ -34,7 +40,7 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
   var diagnostics: [String: Any]? {
     queue.sync {
       guard collectDiagnostics else { return nil }
-      return ["anchors": diagnosticAnchors, "lifetime": lifetimeDiagnostics?.snapshot as Any? ?? NSNull(), "updates": diagnosticUpdates, "enqueues": diagnosticEnqueues, "lateEnqueues": lateEnqueues,
+      return ["backpressureEvents": backpressureEvents, "blockedPTS": blockedPTS as Any? ?? NSNull(), "blockedSince": blockedSince as Any? ?? NSNull(), "blockedAttempts": blockedAttempts, "anchors": diagnosticAnchors, "lifetime": lifetimeDiagnostics?.snapshot as Any? ?? NSNull(), "updates": diagnosticUpdates, "enqueues": diagnosticEnqueues, "lateEnqueues": lateEnqueues,
         "maximumForwardCorrectionUs": maximumForwardCorrectionUs, "maximumBackwardCorrectionUs": maximumBackwardCorrectionUs,
         "minimumLeadUs": minimumLeadUs as Any? ?? NSNull(), "maximumLeadUs": maximumLeadUs as Any? ?? NSNull(), "events": diagnosticEvents]
     }
@@ -115,6 +121,13 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
     }
   }
 
+  func setReadyHandler(_ handler: @escaping () -> Void) {
+    queue.sync {
+      guard !isRetired, !failed else { return }
+      readyHandler = handler
+    }
+  }
+
   func enqueue(_ frame: YlFrameEnvelope) -> Bool {
     queue.sync {
       guard !isRetired, !failed, generation == frame.generation else { return false }
@@ -122,12 +135,25 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
         fail(renderer.error ?? NSError(domain: "YLTimedVideoRenderer", code: -1)); return false
       }
       guard renderer.isReadyForMoreMediaData else {
+        if collectDiagnostics {
+          if blockedSince == nil || blockedPTS != frame.ptsUs {
+            blockedPTS = frame.ptsUs; blockedSince = ProcessInfo.processInfo.systemUptime
+            blockedAttempts = 0; readyAt = nil; readyAtCallback = nil
+          }
+          blockedAttempts += 1
+        }
         if !requesting {
           requesting = true
           renderer.requestMediaDataWhenReady(on: queue) { [weak self] in
-            guard let self, self.requesting else { return }
+            guard let self, self.requesting, !self.isRetired, !self.failed else { return }
             self.renderer.stopRequestingMediaData()
             self.requesting = false
+            if self.collectDiagnostics, self.blockedSince != nil {
+              // Callback execution is not the exact instant native ready flipped.
+              self.readyAt = ProcessInfo.processInfo.systemUptime
+              self.readyAtCallback = self.renderer.isReadyForMoreMediaData
+            }
+            self.readyHandler?()
           }
         }
         return false
@@ -138,18 +164,45 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
           duration: frame.durationUs > 0 ? CMTime(value: frame.durationUs, timescale: 1_000_000) : .invalid,
           presentationTimeStamp: CMTime(value: frame.ptsUs, timescale: 1_000_000), decodeTimeStamp: .invalid)
         let sample = try YlSampleBufferVideoRenderer.makeSample(pixel, retaining: frame.reservation, timing: timing)
+        var backpressureEvent: [String: Double]?
         if collectDiagnostics {
           let lead = Double(frame.ptsUs) - CMTimeGetSeconds(CMTimebaseGetTime(timebase)) * 1_000_000
           diagnosticEnqueues += 1
           minimumLeadUs = min(minimumLeadUs ?? lead, lead); maximumLeadUs = max(maximumLeadUs ?? lead, lead)
           if lead < 0 { lateEnqueues += 1 }
+          if let blockedSince, let blockedPTS {
+            var event: [String: Double] = ["ptsUs": Double(blockedPTS),
+              "firstRejectedUptime": blockedSince, "attempts": Double(blockedAttempts)]
+            if blockedPTS == frame.ptsUs {
+              event["enqueueBeganUptime"] = ProcessInfo.processInfo.systemUptime
+              event["leadAtEnqueueUs"] = lead
+              if let readyAt { event["lastReadyCallbackUptime"] = readyAt }
+              if let readyAtCallback { event["readyAtCallback"] = readyAtCallback ? 1 : 0 }
+              backpressureEvent = event
+            } else {
+              event["replacedByPTSUs"] = Double(frame.ptsUs)
+              event["endedUptime"] = ProcessInfo.processInfo.systemUptime
+              appendBackpressureEvent(event)
+            }
+            self.blockedSince = nil; self.blockedPTS = nil; self.readyAt = nil
+            readyAtCallback = nil; blockedAttempts = 0
+          }
         }
         lifetimeDiagnostics?.track(sample: sample, frame: frame)
         renderer.enqueue(sample)
+        if var event = backpressureEvent {
+          event["enqueueReturnedUptime"] = ProcessInfo.processInfo.systemUptime
+          appendBackpressureEvent(event)
+        }
         previewFrames.append(frame); prunePreviewFrames()
         return true
       } catch { fail(error); return false }
     }
+  }
+
+  private func appendBackpressureEvent(_ event: [String: Double]) {
+    backpressureEvents.append(event)
+    if backpressureEvents.count > 16 { backpressureEvents.removeFirst() }
   }
 
   var pausedPreview: YlFrameEnvelope? {
@@ -186,6 +239,7 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
       retirementCallbacks.append(completion)
       guard !retirementStarted else { return }
       retirementStarted = true
+      readyHandler = nil
       lifetimeDiagnostics?.record("flush.begin")
       if requesting { renderer.stopRequestingMediaData(); requesting = false }
       CMTimebaseSetRate(timebase, rate: 0)

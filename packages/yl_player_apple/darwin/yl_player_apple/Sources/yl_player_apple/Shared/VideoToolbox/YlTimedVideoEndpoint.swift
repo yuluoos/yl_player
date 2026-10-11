@@ -4,10 +4,12 @@ protocol YlTimedVideoEndpoint: AnyObject {
   var isRetired: Bool { get }
   func update(_ snapshot: YlPresentationClockSnapshot, generation: UInt64)
   func enqueue(_ frame: YlFrameEnvelope) -> Bool
+  func setReadyHandler(_ handler: @escaping () -> Void)
   func retire(removingImage: Bool, completion: @escaping () -> Void)
 }
 extension YlTimedVideoEndpoint {
   var isRetired: Bool { false }
+  func setReadyHandler(_ handler: @escaping () -> Void) {}
 }
 protocol YlTimedVideoOutput: AnyObject {
   var supportsTimedVideo: Bool { get }
@@ -50,6 +52,15 @@ final class YlTimedVideoLeaseEndpoint: YlTimedVideoEndpoint {
   func update(_ snapshot: YlPresentationClockSnapshot, generation: UInt64) {
     guard let endpoint = acquire() else { return }
     endpoint.update(snapshot, generation: generation)
+    release()
+  }
+
+  func setReadyHandler(_ handler: @escaping () -> Void) {
+    guard let endpoint = acquire() else { return }
+    endpoint.setReadyHandler { [weak self] in
+      guard let self, !self.isRetired else { return }
+      handler()
+    }
     release()
   }
 

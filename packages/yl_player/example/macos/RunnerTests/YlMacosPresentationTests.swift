@@ -349,6 +349,8 @@ final class YlMacosPresentationTests: XCTestCase {
     let lock = NSLock()
     var ready = true
     var onEnqueue: (() -> Void)?
+    var onReady: (() -> Void)?
+    func setReadyHandler(_ handler: @escaping () -> Void) { onReady = handler }
     var closed = false
     private var values: [Int64] = []
     var pts: [Int64] { lock.withLock { values } }
@@ -368,6 +370,37 @@ final class YlMacosPresentationTests: XCTestCase {
     func set(_ position: Int64, playing: Bool) {
       lock.withLock { value = .init(positionUs: position, hostTimeUs: position, rate: 1, playing: playing) }
     }
+  }
+
+  func testTimedReadyNotificationResumesHeldFrameAndCoalesces() throws {
+    let scheduler = YlFrameScheduler(), raw = PumpOutput(), clock = TimedClockBox()
+    let endpoint = YlTimedVideoLeaseEndpoint(raw)
+    let queue = DispatchQueue(label: "test.timed.ready-wake")
+    let readsLock = NSLock(); var reads = 0
+    raw.ready = false; clock.set(0, playing: true)
+    XCTAssertTrue(scheduler.enqueue(.init(payload: NSObject(), ptsUs: 40_000,
+      durationUs: 40_000, keyframe: true, generation: 1)))
+    // No timer can rescue missing native readiness notifications in this test.
+    let pump = YlTimedVideoPump(scheduler: scheduler, endpoint: endpoint, clockSnapshot: {
+      readsLock.withLock { reads += 1 }; return clock.snapshot()
+    }, generation: 1, pollInterval: .seconds(3600), queue: queue)
+    defer { pump.stop {}; queue.sync {} }
+    pump.synchronize(); queue.sync {}
+    XCTAssertTrue(pump.hasPendingPresentation); XCTAssertTrue(raw.pts.isEmpty)
+    let ready = try XCTUnwrap(raw.onReady, "Native readiness must reach the worker through its revocable lease")
+    let before = readsLock.withLock { reads }
+    let entered = DispatchSemaphore(value: 0), release = DispatchSemaphore(value: 0)
+    queue.async { entered.signal(); release.wait() }
+    XCTAssertEqual(entered.wait(timeout: .now() + 1), .success)
+    raw.lock.withLock { raw.ready = true }
+    for _ in 0..<1000 { ready() }
+    release.signal(); queue.sync {}
+    XCTAssertEqual(raw.pts, [40_000], "Ready recovery must submit without waiting for timer or UI")
+    XCTAssertEqual(readsLock.withLock { reads }, before + 1, "Ready bursts must coalesce into one asynchronous tick")
+    pump.stop {}; queue.sync {}
+    let stoppedReads = readsLock.withLock { reads }
+    ready(); queue.sync {}
+    XCTAssertEqual(readsLock.withLock { reads }, stoppedReads, "A retired callback cannot wake the old epoch")
   }
 
   func testTimedDiagnosticsSeparateClockReadFromIdleGap() throws {

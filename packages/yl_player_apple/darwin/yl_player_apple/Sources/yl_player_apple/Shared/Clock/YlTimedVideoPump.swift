@@ -16,6 +16,7 @@ final class YlTimedVideoPump {
   private let generation: UInt64
   private let queue: DispatchQueue
   private let timer: DispatchSourceTimer
+  private let pollInterval: DispatchTimeInterval
   private let stateLock = NSLock()
   private var stopped = false
   private var wakePending = false
@@ -35,15 +36,20 @@ final class YlTimedVideoPump {
   init(scheduler: any YlPresentationScheduling, endpoint: any YlTimedVideoEndpoint,
        clockSnapshot: @escaping () -> YlPresentationClockSnapshot, generation: UInt64,
        onSubmitted: (() -> Void)? = nil, collectDiagnostics: Bool = false,
+       pollInterval: DispatchTimeInterval = .milliseconds(10),
        queue: DispatchQueue = DispatchQueue(label: "dev.ylplayer.timed-video", qos: .userInitiated)) {
     self.scheduler = scheduler; self.endpoint = endpoint
     self.clockSnapshot = clockSnapshot; self.generation = generation; self.queue = queue
     self.onSubmitted = onSubmitted
     self.collectDiagnostics = collectDiagnostics
+    self.pollInterval = pollInterval
     window.reset(generation: generation)
     timer = DispatchSource.makeTimerSource(queue: queue)
-    timer.schedule(deadline: .now() + .milliseconds(10), repeating: .milliseconds(10), leeway: .milliseconds(1))
+    timer.schedule(deadline: .now() + pollInterval, repeating: pollInterval, leeway: .milliseconds(1))
     timer.setEventHandler { [weak self] in self?.tick() }
+    // Native callbacks only schedule a coalesced tick. Never call tick inline:
+    // it synchronously enters the endpoint's own serial queue.
+    endpoint.setReadyHandler { [weak self] in self?.synchronize() }
     timer.resume()
   }
 
@@ -98,7 +104,7 @@ final class YlTimedVideoPump {
       if let lastTick { stateLock.withLock { observed.maxWorkerGapSeconds = max(observed.maxWorkerGapSeconds, now - lastTick) } }
       lastTick = now
       if !timerRunning {
-        timer.schedule(deadline: .now() + .milliseconds(10), repeating: .milliseconds(10), leeway: .milliseconds(1))
+        timer.schedule(deadline: .now() + pollInterval, repeating: pollInterval, leeway: .milliseconds(1))
         timerRunning = true
       }
     } else {
