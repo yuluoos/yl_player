@@ -2,6 +2,7 @@
 import argparse
 import ctypes
 import json
+import math
 import os
 from pathlib import Path
 import select
@@ -26,6 +27,33 @@ class RowTail:
         for line in lines:
             if line: self.latest=json.loads(line)
         return self.latest
+
+
+def positive_milliseconds(value):
+    try: number=float(value)
+    except ValueError: raise argparse.ArgumentTypeError('threshold must be positive finite milliseconds')
+    if not math.isfinite(number) or number<=0:
+        raise argparse.ArgumentTypeError('threshold must be positive finite milliseconds')
+    return number
+
+
+def completed_ready_event(row, *, threshold_seconds=.06):
+    # Stopping on blockedSince can cut off the recovery we are trying to explain.
+    # Require the same frame's enqueue to have returned before requesting a tail.
+    native=row.get('nativeDiagnostics') or {}
+    return next((event for event in native.get('backpressureEvents',[])
+                 if 'enqueueBeganUptime' in event and 'enqueueReturnedUptime' in event
+                 and event['enqueueReturnedUptime'] >= event['enqueueBeganUptime']
+                 and event['enqueueBeganUptime']-event['firstRejectedUptime'] >= threshold_seconds),None)
+
+
+def recording_command(pid, name, trace, duration, system_trace_only, *, all_processes=False):
+    command=['xcrun','xctrace','record','--template','System Trace']
+    if not system_trace_only:
+        command.extend(['--instrument','Core Animation Server','--instrument','Display'])
+    command.extend(['--all-processes'] if all_processes else ['--attach',str(pid)])
+    command.extend(['--notify-tracing-started',name,'--time-limit',str(duration)+'s','--output',str(trace),'--window','10s'])
+    return command
 
 
 def check_recorder(code, *, now, started, settled, stop_sent, duration):
@@ -77,6 +105,9 @@ def main():
     p.add_argument('--products',type=Path,required=True)
     p.add_argument('--directory',type=Path,required=True)
     p.add_argument('--long',action='store_true')
+    p.add_argument('--system-trace-only',action='store_true',help='Capture threads without extra Core Animation Server/Display agents')
+    p.add_argument('--all-processes',action='store_true',help='Record system-wide instead of attaching to the owned player; retain the owned-player playback gate')
+    p.add_argument('--ready-threshold-ms',type=positive_milliseconds,default=60,help='Diagnostic capture trigger only; does not change playback or acceptance limits')
     p.add_argument('--app-name',default='yl_player_example.app')
     args=p.parse_args()
     root=Path(__file__).resolve().parents[2]; out=args.directory.resolve()
@@ -91,7 +122,7 @@ def main():
          '--products',str(args.products.resolve()),'--configuration','Profile','--directory',str(bench),
          '--app-name',args.app_name,'--candidate','--without-thread-checker','--diagnostics','--transport-diagnostics','--trace-gate-token',token]
     if args.long: cmd.append('--long')
-    receipt=dict(diagnosticOnly=True,formalAcceptance=False,productionAdmission=False,benchmarkCommand=cmd,token=token,notificationName=name)
+    receipt=dict(systemTraceOnly=args.system_trace_only,allProcesses=args.all_processes,readyThresholdMs=args.ready_threshold_ms,diagnosticOnly=True,formalAcceptance=False,productionAdmission=False,benchmarkCommand=cmd,token=token,notificationName=name)
     b=None;t=None;stop_sent=False;trigger=None;errors=[];start=time.monotonic()
     tail=RowTail(bench/'rows.jsonl')
     try:
@@ -108,9 +139,7 @@ def main():
                     if req['token']!=token or not isinstance(pid,int) or pid<=0: raise RuntimeError('wrong gate identity')
                     actual=subprocess.check_output(['ps','-p',str(pid),'-o','comm='],text=True).strip()
                     if Path(actual).resolve()!=app.resolve(): raise RuntimeError('gate PID is not the owned player')
-                    tc=['xcrun','xctrace','record','--template','System Trace','--instrument','Core Animation Server','--instrument','Display',
-                        '--attach',str(pid),'--notify-tracing-started',name,'--time-limit','1320s' if args.long else '45s','--output',str(trace)]
-                    tc.extend(['--window','10s'])
+                    tc=recording_command(pid,name,trace,duration,args.system_trace_only,all_processes=args.all_processes)
                     receipt.update(ownedPID=pid,traceCommand=tc,traceRequestedUptime=now)
                     t=subprocess.Popen(tc,stdout=tlog,stderr=tlog);receipt['tracePID']=t.pid
                     trace_deadline=now+60
@@ -141,13 +170,10 @@ def main():
                     elif args.long:
                         row=tail.poll()
                         if row and trigger is None:
-                            native=row.get('nativeDiagnostics') or {}
-                            events=native.get('backpressureEvents',[])
-                            event=next((e for e in events if e.get('enqueueBeganUptime',e.get('endedUptime',0))-e['firstRejectedUptime']>=.06),None)
-                            since=native.get('blockedSince')
-                            if event or (isinstance(since,(int,float)) and row['uptime']-since>=.06):
+                            event=completed_ready_event(row,threshold_seconds=args.ready_threshold_ms/1000)
+                            if event:
                                 trigger=dict(detectedUptime=now,event=event,row=row);receipt['trigger']=trigger
-                                print('Ready wait trigger captured; recording a 250 ms tail after detection',flush=True)
+                                print('Completed ready wait captured; recording a 250 ms tail after detection',flush=True)
                         if trigger and now-trigger['detectedUptime']>=.25:
                             t.send_signal(signal.SIGINT);stop_sent=True;receipt['traceStopRequestedUptime']=now
                 remaining=.25-(time.monotonic()-trigger['detectedUptime']) if trigger and not stop_sent else .2
