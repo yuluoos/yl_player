@@ -1,0 +1,52 @@
+00:00 +0: loading /private/tmp/yl-network-mkv-validation-gbh11xo8/packages/yl_player/test/network_matroska_test.dart
+00:00 +0: managed HTTP discovers actual Matroska tracks and media-clock cues
+00:00 +1: range and policy sparse scan skips a large media-like payload and pins later ranges
+00:00 +2: range and policy network ASS retains styles, text and exact clock
+00:00 +3: range and policy network SSA retains styles, text and exact clock
+00:00 +4: range and policy valid CodecPrivate above 64 KiB spans range windows
+00:00 +5: range and policy rejects invalid range response 200 without retry or publication
+00:00 +6: range and policy rejects invalid range response missing-etag without retry or publication
+00:00 +7: range and policy rejects invalid range response weak-etag without retry or publication
+00:00 +8: range and policy rejects invalid range response bad-etag without retry or publication
+00:00 +9: range and policy rejects invalid range response missing-range without retry or publication
+00:00 +10: range and policy rejects invalid range response wrong-start without retry or publication
+00:00 +11: range and policy rejects invalid range response wrong-end without retry or publication
+00:00 +12: range and policy rejects invalid range response unknown-total without retry or publication
+00:00 +13: range and policy rejects invalid range response compressed without retry or publication
+00:00 +14: range and policy rejects invalid range response multipart without retry or publication
+00:00 +15: range and policy rejects invalid range response short-body without retry or publication
+00:00 +16: range and policy rejects invalid range response extra-body without retry or publication
+00:00 +17: range and policy later etag invalidates candidate and keeps old selected catalog
+00:00 +18: range and policy later length invalidates candidate and keeps old selected catalog
+00:00 +19: range and policy later 412 invalidates candidate and keeps old selected catalog
+00:00 +20: range and policy later redirect invalidates candidate and keeps old selected catalog
+00:00 +21: range and policy cross-origin credentials stay stripped on retry and later windows
+00:00 +22: range and policy retry budget is shared across distinct range windows
+00:00 +23: range and policy redirect budget spans retries before representation is pinned
+00:00 +24: range and policy retryable HTTP 408 retains requested byte interval
+00:00 +25: range and policy retryable HTTP 429 retains requested byte interval
+00:00 +26: range and policy retryable HTTP 500 retains requested byte interval
+00:00 +27: range and policy retryable HTTP 502 retains requested byte interval
+00:00 +28: range and policy retryable HTTP 503 retains requested byte interval
+00:00 +29: range and policy retryable HTTP 504 retains requested byte interval
+00:00 +30: range and policy permanent HTTP 400 does not retry
+00:00 +31: range and policy permanent HTTP 401 does not retry
+00:00 +32: range and policy permanent HTTP 403 does not retry
+00:00 +33: range and policy permanent HTTP 404 does not retry
+00:00 +34: range and policy permanent HTTP 412 does not retry
+00:00 +35: range and policy permanent HTTP 416 does not retry
+00:00 +36: range and policy permanent HTTP 501 does not retry
+00:00 +37: range and policy excessive Retry-After is terminal and cancellation interrupts backoff
+00:00 +38: range and policy header deadline retries the same range
+00:00 +39: range and policy body inactivity retries from scratch and drops partial bytes
+00:00 +40: range and policy body progress resets inactivity after header deadline
+00:00 +41: range and policy platformDefault supports range but does not retry
+00:00 +42: range and policy conflicting If-Match is rejected before I/O
+00:00 +43: range and policy conflicting If-Range is rejected before I/O
+00:00 +44: range and policy conflicting If-None-Match is rejected before I/O
+00:00 +45: range and policy conflicting If-Modified-Since is rejected before I/O
+00:00 +46: range and policy conflicting If-Unmodified-Since is rejected before I/O
+00:00 +47: range and policy conflicting Accept-Encoding is rejected before I/O
+00:00 +48: range and policy LRU cache is bounded and refetch preserves If-Match
+00:01 +49: range and policy cancelling held later range keeps published catalog and disposes candidate
+00:01 +50: All tests passed!

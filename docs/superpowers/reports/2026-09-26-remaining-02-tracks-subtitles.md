@@ -287,3 +287,28 @@ lib/test在隔离候选中的分析 **No issues found、exit0**。未放宽既�
 复审裁定及指纹；17份候选与验证副本逐字节一致。六份生产原生二进制、两份配方和两份
 FFmpeg锁与VobSub提交一致；无native构建/设备/长播放/弱网ABR运行。独立Git index与HEAD
 比较更新仅提交本项文件及自身总览/CHANGELOG段。整个P02仍开放，执行账本保留。
+
+## 2026-10-11 网络 Matroska 内嵌字幕与 managed 策略
+
+沿用 `discoverEmbeddedSubtitles()`，当前 HTTP(S) MKV 可发现 UTF8/ASS/SSA，按 TrackUID 选择并复用既有 Flutter 渲染。既有本地与外挂行为保留；失败或取消不替换旧目录。完整接纳规则见[网络 Matroska 契约](../specs/2026-10-11-subtitle-network-matroska.md)。本项不改原生桥接、依赖、长播放或弱网 ABR。
+
+### 传输与资源边界
+
+- 元素读取器通过16KiB对齐窗口访问远端，128窗口 LRU（2MiB）；跳过音视频载荷，不进行完整文件回退。严格单段206、Content-Range、固定已知总长和强ETag；首个完整响应固定最终URI，后续 If-Match 并再次核对标识/总长，资源变化、multipart、压缩、短体/多体均拒绝。
+- 复用 managed socket/逐跳超时/读取空闲超时/重试日期语义；一次扫描共享重试和重定向额度，跨源剥离凭据不可恢复。请求次数≤4096、实际响应进度≤64MiB，重试及部分响应也消费额度。单次拼接≤256KiB以兼容合法 CodecPrivate。原有解析与目录预算继续生效。
+- managed 无额外总期限；platformDefault 保留30秒扫描期限与不重试行为。换源、Stop、Dispose、外挂替换取消所属网络扫描并清理缓存；错误脱敏，字幕失败不进入视频失败状态。
+- 服务器无强ETag或Range支持明确拒绝；条件请求头冲突在I/O前拒绝。版本固定只保证字幕扫描内部一致，不能保证另一路native视频请求的版本。预算可能限制大文件/稠密文件，本项不是任意容器、完整Matroska认证或总RSS保证。
+
+### 验证与复审
+
+入口实际 RED 0/1（原先拒绝网络）→首轮 GREEN 40/40（含既有managed/retry回归）。扩展48通过/2失败定位合法大CodecPrivate与multipart接纳，修复后50/50；公开生命周期和TLS加入后58/58，4096真实请求限额加入后新增测试合计**59/59**。
+
+51项传输/容器覆盖真实loopback HTTP、稀疏5MB跳读、ASS/SSA样式、强校验器变化、缓存淘汰、各重试状态/终止状态、共享重试/重定向额度、跨源凭据、超时/取消及请求硬限。6项公开会话测试验证发现、选择、forced/off、偏移/seek渲染与换源/停止/销毁等取消；2项实际TLS验证不可信证书不重试、可信HTTPS发现及拒绝降级。成功TLS仅在该测试文件隔离VM信任owned证书，生产信任策略未改。视频事件采用fake backend，网络与字幕读取/合成实际执行，不是设备播放认证。
+
+一次独立只读复审**无Critical/Important**；1条Minor建议补合法chunked206正向成功用例，按计划保留后续，现有短体/超长体拒绝已覆盖。无生产缺陷修复或第二轮复审；全部未判断范围、裁定和代价见[复审记录](evidence/2026-10-11-subtitle-network-matroska/review.md)。
+
+最终四包在隔离副本执行 `flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test`：**1003/1003、0失败、exit0**（135接口/673播放器/113 Apple/82 Android，新增59）。播放器与接口lib/test分析 **No issues found、exit0**。未放宽既有测试时间门限。
+
+测试基线 `305af43f48fbfa50f4af2ebd7b0960fc91bb7e14`；提交前另一会话推进至 `f1406eca3b2989491376e1b6ff671f8220cc828b`，差异仅P05文档/证据，已核对无源码交集并同步到隔离副本，不重复整套验证。9份候选源码/测试与已验证副本逐字节一致。六份生产二进制、两份配方、两份FFmpeg锁未变。
+
+[证据清单](evidence/2026-10-11-subtitle-network-matroska/manifest.json)保存完整成功/失败日志、制品审计、复审记录与候选/依赖指纹。独立Git index与HEAD比较更新仅提交所属文件与自身总览/CHANGELOG段，保留另一会话所有未提交内容。完整Task3/P02仍开放，执行账本保留；本次无native构建、设备、长播或弱网ABR验证。

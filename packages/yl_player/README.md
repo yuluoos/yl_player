@@ -211,15 +211,15 @@ the 64 MiB bitmap catalog budget with PGS. Unsupported effects fail explicitly.
 See the [VobSub subset contract](../../docs/superpowers/specs/2026-10-11-subtitle-vobsub.md).
 
 This opt-in owns the subtitle catalog and cannot be combined with a native
-subtitle SPI. Embedded support is limited to the local Matroska text route below.
+subtitle SPI. Embedded support is limited to the Matroska text route below.
 It does not support WebVTT CSS/regions/karaoke or protected video overlays. HDR subtitle brightness
 and native-device synchronization remain unqualified. Without the opt-in, the
 existing native capability/SPI gates continue to apply.
 
-### Local Matroska embedded subtitles
+### Matroska embedded subtitles
 
 With the same `enableTextSubtitles: true` controller, discover text tracks from
-its committed local Matroska source, then select a returned identity:
+its committed file or HTTP(S) Matroska source, then select a returned identity:
 
 ```dart
 final session = await player.load(YlFileSource('/media/movie.mkv'));
@@ -234,7 +234,14 @@ session. Replacing/clearing external subtitles preserves embedded entries;
 rediscovery preserves external entries and a still-present selection. A new
 session starts with subtitles off. Unsupported codecs/effects fail atomically.
 
-This route reads local stable MKV files only. Network/MP4/HLS/DASH, embedded
-bitmap/WebVTT/TTML and native subtitle callbacks remain unsupported. No additional
-native subtitle capability or physical-device acceptance is claimed. See the
-[embedded subset contract](../../docs/superpowers/specs/2026-10-11-subtitle-embedded.md).
+For a network MKV, load a `YlNetworkSource` with its request metadata and network
+policy, then call the same discovery method. HTTP(S) servers must return single
+206 byte ranges with a stable strong ETag and total length. Managed connect/read
+deadlines, retry/redirect budgets and credential origin restrictions apply to the
+whole discovery. Later ranges use If-Match; changed versions fail atomically.
+The scan uses a bounded cache and request/byte budgets, with no full-body fallback.
+
+MP4/HLS/DASH, embedded bitmap/WebVTT/TTML and native subtitle callbacks remain
+unsupported. No additional native subtitle capability or physical-device
+acceptance is claimed. See the [embedded subset contract](../../docs/superpowers/specs/2026-10-11-subtitle-embedded.md)
+and [network Matroska contract](../../docs/superpowers/specs/2026-10-11-subtitle-network-matroska.md).

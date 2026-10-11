@@ -93,3 +93,14 @@ identities and existing rendering/lifecycle. Catalog operations preserve the
 other origin and share aggregate budgets. See [the exact embedded contract](2026-10-11-subtitle-embedded.md).
 Earlier embedded exclusions above describe prior slices; other containers,
 network/bitmap embedded streams and native subtitle callbacks remain open.
+
+
+## Network Matroska extension (2026-10-11)
+
+The same discovery command now supports committed HTTP(S) Matroska UTF8/ASS/SSA
+sources through the existing managed HTTP transport. Require single byte-range
+206, stable strong ETag/length and If-Match; bounded windows/scan share policy
+counters and credential scope. Earlier network-embedded exclusions describe the
+local slice; [the network contract](2026-10-11-subtitle-network-matroska.md) defines
+current boundaries. Other containers, embedded bitmap codecs, native callbacks,
+HDR/protected and physical-device qualification remain open.

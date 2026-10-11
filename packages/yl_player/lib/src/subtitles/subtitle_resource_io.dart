@@ -6,6 +6,8 @@ import '../drm/license_secure_socket.dart';
 import 'subtitle_resource.dart';
 import 'subtitle_socket.dart';
 
+part 'subtitle_range_reader.dart';
+
 Future<List<int>> read(
   YlMediaSource source,
   SubtitleCancellation token,
@@ -36,7 +38,11 @@ Future<List<int>> read(
       )) {
         throw subtitleFailure(YlFailureCodes.policyUnsupported);
       }
-      operation = _network(source, owned, maxBytes);
+      operation = _network(
+        source,
+        owned,
+        maxBytes,
+      ).then((reply) => reply.bytes!);
     } else {
       throw subtitleFailure(YlFailureCodes.subtitleUnsupported);
     }
@@ -71,35 +77,66 @@ Future<List<int>> read(
 const _redirects = {301, 302, 303, 307, 308};
 const _retryStatuses = {408, 429, 500, 502, 503, 504};
 
-Future<List<int>> _network(
+// A range scan shares these counters and the final credential scope across all
+// windows; an external subtitle uses a fresh ledger for its single resource.
+final class _NetworkLedger {
+  _NetworkLedger(this.uri, {this.rangeScan = false});
+  Uri uri;
+  final bool rangeScan;
+  bool stripped = false;
+  int redirects = 0, retries = 0, attempts = 0, bodyBytes = 0;
+  void attempt() {
+    if (rangeScan && ++attempts > 4096) {
+      throw subtitleFailure(YlFailureCodes.subtitleTooLarge);
+    }
+  }
+
+  void progress(int count) {
+    if (!rangeScan) return;
+    if (count > 64 * 1024 * 1024 - bodyBytes) {
+      throw subtitleFailure(YlFailureCodes.subtitleTooLarge);
+    }
+    bodyBytes += count;
+  }
+}
+
+Future<_Reply> _network(
   YlNetworkSource source,
   SubtitleCancellation token,
-  int maxBytes,
-) async {
+  int maxBytes, {
+  _NetworkLedger? shared,
+  _RangeRequest? range,
+}) async {
   final policy = source.networkPolicy;
   final managed = policy.kind == YlNetworkPolicyKind.managed;
-  var uri = source.uri;
-  var stripped = false;
-  var redirects = 0;
-  var retries = 0;
+  final ledger = shared ?? _NetworkLedger(source.uri);
   while (true) {
     token.check();
+    ledger.attempt();
     _Reply reply;
     try {
-      reply = await _Attempt(token, maxBytes).get(
-        uri,
-        source.request,
-        stripped,
-        managed ? policy.connectTimeout : null,
-        managed ? policy.readTimeout : null,
-      );
+      reply =
+          await _Attempt(
+            token,
+            maxBytes,
+            range: range,
+            progress: ledger.progress,
+          ).get(
+            ledger.uri,
+            source.request,
+            ledger.stripped,
+            managed ? policy.connectTimeout : null,
+            managed ? policy.readTimeout : null,
+          );
     } catch (error) {
       token.check();
-      if (!managed || !_transient(error) || retries >= policy.maxRetries!) {
+      if (!managed ||
+          !_transient(error) ||
+          ledger.retries >= policy.maxRetries!) {
         rethrow;
       }
       await _wait(
-        subtitleRetryDelay(policy, ++retries, null, DateTime.now())!,
+        subtitleRetryDelay(policy, ++ledger.retries, null, DateTime.now())!,
         token,
       );
       continue;
@@ -109,10 +146,15 @@ Future<List<int>> _network(
       final location = reply.location;
       if (location == null ||
           location.length > 8192 ||
-          redirects >= (managed ? policy.maxRedirects! : 5)) {
+          ledger.redirects >= (managed ? policy.maxRedirects! : 5)) {
         throw subtitleFailure(YlFailureCodes.networkFailed);
       }
-      final next = uri.resolve(location);
+      // Strong validators are scoped to one resource URI. Do not combine a
+      // later redirected resource with already cached bytes, even with same tag.
+      if (range?.expectedTag != null) {
+        throw subtitleFailure(YlFailureCodes.subtitleUnsupported);
+      }
+      final next = ledger.uri.resolve(location);
       validateYlExternalSubtitles([
         YlExternalSubtitle(
           id: 'redirect',
@@ -120,31 +162,31 @@ Future<List<int>> _network(
           source: YlNetworkSource(next),
         ),
       ]);
-      if (uri.scheme == 'https' && next.scheme != 'https') {
+      if (ledger.uri.scheme == 'https' && next.scheme != 'https') {
         throw subtitleFailure(YlFailureCodes.networkFailed);
       }
-      stripped |=
-          next.scheme != uri.scheme ||
-          next.host != uri.host ||
-          next.port != uri.port;
-      redirects++;
-      uri = next;
+      ledger.stripped |=
+          next.scheme != ledger.uri.scheme ||
+          next.host != ledger.uri.host ||
+          next.port != ledger.uri.port;
+      ledger.redirects++;
+      ledger.uri = next;
       continue;
     }
-    if (reply.bytes != null) return reply.bytes!;
+    if (reply.bytes != null) return reply;
     if (!managed ||
         !_retryStatuses.contains(reply.status) ||
-        retries >= policy.maxRetries!) {
+        ledger.retries >= policy.maxRetries!) {
       throw subtitleFailure(YlFailureCodes.networkFailed);
     }
     final delay = subtitleRetryDelay(
       policy,
-      retries + 1,
+      ledger.retries + 1,
       reply.retryAfter,
       DateTime.now(),
     );
     if (delay == null) throw subtitleFailure(YlFailureCodes.networkFailed);
-    retries++;
+    ledger.retries++;
     await _wait(delay, token);
   }
 }
@@ -313,12 +355,19 @@ final class _Reply {
 /// replay from consuming retries outside our ledger. Every partial buffer dies
 /// with its attempt; timed-out callbacks cannot touch the next attempt.
 final class _Attempt {
-  _Attempt(SubtitleCancellation token, this.maxBytes) {
+  _Attempt(
+    SubtitleCancellation token,
+    this.maxBytes, {
+    this.range,
+    this.progress,
+  }) {
     _remove = token.listen(
       () => _fail(subtitleFailure(YlFailureCodes.loadCancelled)),
     );
   }
   final int maxBytes;
+  final _RangeRequest? range;
+  final void Function(int count)? progress;
   final _result = Completer<_Reply>();
   final _connecting = <void Function()>{};
   void Function() _remove = () {};
@@ -449,10 +498,19 @@ final class _Attempt {
     metadata.headers.forEach(request.headers.set);
     if (!stripped) metadata.credentials.forEach(request.headers.set);
     request.headers.set(HttpHeaders.acceptEncodingHeader, 'identity');
+    if (range case final r?) {
+      request.headers.set('range', 'bytes=${r.start}-${r.end}');
+      if (r.expectedTag != null) {
+        request.headers.set('if-match', r.expectedTag!);
+      }
+    }
     final response = await request.close();
     if (!active) return;
     _deadline?.cancel();
-    if (response.statusCode != 200) {
+    if (range != null && response.statusCode == 200) {
+      throw subtitleFailure(YlFailureCodes.subtitleUnsupported);
+    }
+    if (response.statusCode != (range == null ? 200 : 206)) {
       final retryAfter = response.headers['retry-after'];
       _complete(
         _Reply(
@@ -469,6 +527,7 @@ final class _Attempt {
     if (encoding != null && encoding.toLowerCase() != 'identity') {
       throw subtitleFailure(YlFailureCodes.subtitleUnsupported);
     }
+    range?.accept(response);
     if (response.contentLength > maxBytes) {
       throw subtitleFailure(YlFailureCodes.subtitleTooLarge);
     }
@@ -481,6 +540,12 @@ final class _Attempt {
     _body = stream.listen(
       (chunk) {
         if (!active || chunk.isEmpty) return;
+        try {
+          progress?.call(chunk.length);
+        } catch (error) {
+          _fail(error);
+          return;
+        }
         if (chunk.length > maxBytes - bytes.length) {
           _fail(subtitleFailure(YlFailureCodes.subtitleTooLarge));
           return;
@@ -489,7 +554,13 @@ final class _Attempt {
         _arm(readTimeout);
       },
       onError: _fail,
-      onDone: () => _complete(_Reply(200, bytes: bytes.takeBytes())),
+      onDone: () {
+        if (range != null && bytes.length != range!.receivedLength) {
+          _fail(subtitleFailure(YlFailureCodes.networkFailed));
+          return;
+        }
+        _complete(_Reply(range == null ? 200 : 206, bytes: bytes.takeBytes()));
+      },
     );
   }
 }

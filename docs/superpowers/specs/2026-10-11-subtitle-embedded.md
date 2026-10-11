@@ -84,3 +84,11 @@ Long-play and weak-network ABR files/workloads are excluded.
 
 Only format facts were consulted. No external subtitle/media content or source
 code was copied. Fixture text is authored for this repository.
+
+
+## Subsequent network extension
+
+The local-only scope above records this slice's original acceptance. HTTP(S)
+Matroska text discovery is subsequently implemented under [the network
+contract](2026-10-11-subtitle-network-matroska.md), using managed single-range reads
+with stable strong ETag/length and bounded caching. Other exclusions remain.

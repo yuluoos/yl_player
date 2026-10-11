@@ -1,5 +1,10 @@
 ## 0.2.0-dev.2
 
+- Add HTTP(S) Matroska embedded UTF8/ASS/SSA discovery through managed range
+  reads, with strong ETag/length consistency, If-Match, scan-wide retry/redirect
+  and credential rules, bounded caching and cancellation. Requires single-range
+  206 responses; network failures preserve the prior subtitle catalog.
+
 - Add opt-in local Matroska embedded UTF8/ASS/SSA discovery from the committed
   source, stable TrackUID selection and shared media-time rendering. External
   and embedded catalogs preserve one another and share resource budgets.

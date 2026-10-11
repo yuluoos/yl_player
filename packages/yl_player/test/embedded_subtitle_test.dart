@@ -492,10 +492,13 @@ void main() {
       expect(runtime.state, old);
       expect(runtime.cuesAt(const Duration(seconds: 1)), hasLength(1));
     });
-    test('unsupported network source makes no network request', () async {
+    test('unsupported network container makes no network request', () async {
       await expectLater(
         runtime.discover(
-          YlNetworkSource(Uri.parse('http://secret.invalid/media.mkv')),
+          YlNetworkSource(
+            Uri.parse('http://secret.invalid/media.m3u8'),
+            format: YlMediaFormat.hls,
+          ),
         ),
         failure(YlFailureCodes.subtitleUnsupported),
       );

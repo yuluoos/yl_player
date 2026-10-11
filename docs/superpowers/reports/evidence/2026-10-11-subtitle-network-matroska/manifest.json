@@ -1,0 +1,160 @@
+{
+  "validation": {
+    "base": "f1406eca3b2989491376e1b6ff671f8220cc828b",
+    "path": "/private/tmp/yl-network-mkv-validation-gbh11xo8",
+    "files": [
+      "packages/yl_player/lib/src/playback_session.dart",
+      "packages/yl_player/lib/src/subtitles/embedded_subtitle_resource_io.dart",
+      "packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart",
+      "packages/yl_player/lib/src/subtitles/subtitle_range_reader.dart",
+      "packages/yl_player/test/network_matroska_test.dart",
+      "packages/yl_player/test/network_matroska_session_test.dart",
+      "packages/yl_player/test/embedded_subtitle_test.dart",
+      "packages/yl_player/test/support/range_server.dart",
+      "packages/yl_player/test/network_matroska_tls_test.dart"
+    ],
+    "testedBase": "305af43f48fbfa50f4af2ebd7b0960fc91bb7e14",
+    "documentationOnlyRefresh": [
+      "docs/superpowers/plans/2026-09-26-remaining-05-live-business.md",
+      "docs/superpowers/plans/2026-09-26-remaining-overview.md",
+      "docs/superpowers/reports/2026-09-26-remaining-05-live-business.md",
+      "docs/superpowers/reports/evidence/2026-10-11-nine-script-contracts/archive.json",
+      "docs/superpowers/reports/evidence/2026-10-11-nine-script-contracts/contracts.json",
+      "docs/superpowers/reports/evidence/2026-10-11-nine-script-contracts/verification.json"
+    ]
+  },
+  "ownedSourceAndDocs": {
+    "packages/yl_player/lib/src/playback_session.dart": "ee6e93afc0350a90c25d902bbbd96c73a1737b01ee26cb32cdf2bb06398f9792",
+    "packages/yl_player/lib/src/subtitles/embedded_subtitle_resource_io.dart": "0d999b74b9b532756bfc411f351dafe5481a2346737f4b9441e0bf216c10e883",
+    "packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart": "a124219b5660d7ef1976f9037bb67807a39af94bf9b8f02e415a6b210a59f071",
+    "packages/yl_player/lib/src/subtitles/subtitle_range_reader.dart": "f9dc55afbb4246f692f5878c44cf5b939052054cf6a5936271fb0ea2b51981de",
+    "packages/yl_player/test/network_matroska_test.dart": "4c4d3696177c0752f35a4db508c4f8af574c95e9f56b34bbdf1d10fba0f7d8d0",
+    "packages/yl_player/test/network_matroska_session_test.dart": "130823979909477fca7703998f2cc638f3502c6a9938e4a9ee815abfed63de44",
+    "packages/yl_player/test/embedded_subtitle_test.dart": "0fbb1adde1de4d243d03ac025f703b3253200968015eb4e46d48523203f7cd95",
+    "packages/yl_player/test/support/range_server.dart": "8eb43065d5bd1fcc1ec0f2cac725ab641f3612eea20d33d2b701639afa102234",
+    "packages/yl_player/test/network_matroska_tls_test.dart": "3e46edd4dc2ea5610f1dbfd48c8dcf2857589a379767be7504ba081c4c521d2e",
+    "docs/platform-support.md": "92e784e740f9f9c7cb83d56fd75a2cb3e3dfb2c1128f89d2df2af5e0a39a6bf9",
+    "docs/superpowers/specs/2026-10-11-subtitle-network-matroska.md": "591b87ab3d92875ef13b3deb6e93bddd3ed2fbdea0908ba30db4db40b5d53a6a",
+    "docs/superpowers/specs/2026-10-11-subtitle-embedded.md": "e5628ba58d7d6cb1e8179fad511da795f917556c002a210bc09574f937f1cef6",
+    "docs/superpowers/specs/2026-10-11-subtitle-runtime.md": "43c7d8712bff32d252c2a7db4585014b47b7f42aaa7fffd362ab1769344aff5e",
+    "packages/yl_player/README.md": "d3c1d35f4fc02dc9305baddcbe6e12a3432fc6b95d797bf6cc5925444e63c0ea",
+    "docs/superpowers/reports/2026-09-26-remaining-02-tracks-subtitles.md": "87eb577912919a6648bc5f98ccd95c88daba4b9a05d8dcf3e958fb5ff534f4a4"
+  },
+  "referenceDependencies": {
+    "packages/yl_player/lib/src/subtitles/subtitle_resource.dart": "b371094c804274cd3b11eeda357d7074bfa5746a002adb95a13bec0a21a9f42c",
+    "packages/yl_player/lib/src/subtitles/subtitle_socket.dart": "924a5e00ff2ff41e8a8c3bfc16690252bd09682695560fe54e02d9ba318fe942",
+    "packages/yl_player/lib/src/subtitles/matroska_subtitles.dart": "97796738d6ab066ac3f10611418a7868403f9e16ed611451ed711a331cd95a0b",
+    "packages/yl_player/lib/src/subtitles/subtitle_document.dart": "2752bc3b78326e68a12fadf3a54cd47d8c2a9b74ed8a6a7d0b98191e3c305934",
+    "packages/yl_player/lib/src/subtitles/embedded_subtitle_document.dart": "cd36f2404d1ebbb13c3ce0d6ab5beed0abd1351a9c9c407e1811ba4939c28982",
+    "packages/yl_player/lib/src/subtitles/text_subtitle_runtime.dart": "018dc09280806bc7ded3702a9b4559d98482a99f6d04fa44488835e49db0f908",
+    "packages/yl_player/lib/src/subtitles/ass_parser.dart": "2724793b44a1dbab4a70fa94f929a25a1bb28d4e738a2446b8fa2adde76a7909",
+    "packages/yl_player/lib/src/subtitles/text_subtitle_overlay.dart": "79ffffdc7c5be456c5495444c75654043b9ba26df504dd1db4cebaea9474d73b",
+    "packages/yl_player/lib/src/subtitles/pgs_overlay.dart": "75c40feecdb29ab098e17374b9d304e7a1d401bb721358e22ce71d24b0564f58",
+    "packages/yl_player/lib/src/drm/license_secure_socket.dart": "e840dd82f87e6dd1e31bb82d84a9bdc7ec78f662610d7219ddd562344bd9cc6d",
+    "packages/yl_player_platform_interface/lib/src/model/subtitles.dart": "c3a63f859b42893fbb91db894ded10bac6468f4f055f0629950d2a9d439a2b9d",
+    "packages/yl_player_platform_interface/lib/src/validation/subtitle_validation.dart": "e96723041113be76ad3cc28775e49625da61bac995db5b80ad65b47c2a83fa36",
+    "packages/yl_player/lib/src/player_view.dart": "7fbcbb89c8c47c6c5498280d46ab5fe1dc6c4a5054a411c6d891f423659f5c19",
+    "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
+    "packages/yl_player/pubspec.yaml": "6c6bb701de8860f7522ecc91176e01d38217a968d1ca2b3fe2d61c47ddff9461",
+    "packages/yl_player_android/android/src/main/jniLibs/armeabi-v7a/libyl_player_ffmpeg.so": "2d46d86c21d72002949bb910998deca91befe85267c787df4dc8160cc3950f9e",
+    "packages/yl_player_android/android/src/main/jniLibs/arm64-v8a/libyl_player_ffmpeg.so": "6e4bd40b3a4abf20d32acc4c5c058b5f17e749e46e2d4baf1a9ca8779bd54f01",
+    "packages/yl_player_android/android/src/main/jniLibs/x86_64/libyl_player_ffmpeg.so": "9a6d59ea1a895e4ccd974207a11ffe11643efe8876591a2e0a2a59284605ef00",
+    "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64/YlFFmpegBridge.framework/YlFFmpegBridge": "b695650db63cdd8e5dbcb43a88f15f9c29ca0a3d8a486153e8a1a2bacc200841",
+    "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/YlFFmpegBridge": "4013d588be9ef2780f96c7c0e98b82b10bff2e689bf7abc425f41a3c910a19ae",
+    "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge": "6ee6920f00e75f60d5897f943c04957a929ffc20c8868ee2bc5bfaabfb5a1c47",
+    "packages/yl_player_android/tool/android_ffmpeg/build_shared_libraries.sh": "0812cd185f651ed14e3a048e906c26e5a4cb115bfe32d415c1db1302ddc56a34",
+    "packages/yl_player_apple/tool/apple_ffmpeg/build_xcframework.sh": "3f70d3970e33e148e19d96cddad6b7aed4791f1d467e77381f85ff44ed05e8a8",
+    "packages/yl_player_android/tool/android_ffmpeg/ffmpeg-9.0.1.lock": "79783ae110c2c1bf95f457efe1f3099597dddc1c127eb38a7c1ca8c636b468a1",
+    "packages/yl_player_apple/tool/apple_ffmpeg/ffmpeg-9.0.1.lock": "80af0e63635f1ee913cbb4aded6380d2d56f9eaa014d19e34f3ef16ddef38e30"
+  },
+  "sharedDocumentTransforms": {
+    "overviewSectionSha256": "edcc07158632c7d12017f014448cfc010b190b510c49c2118850ab90a2173016",
+    "changelogEntrySha256": "769c9f1e45a47273e3e4e1a29c509f51770d60b4e3d51c3f854ee5e218b496f3"
+  },
+  "evidence": {
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-network-matroska/analyze-expanded.log": "2a7a9aa2e5e226f16b19818c6aac2385b363acc310b5f4e2770e6ff5e43b6fb0",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-network-matroska/analyze-first.log": "f5d2d06e8419595e12f0ee71e774a9f2dd8aed6d875f5146fe79fe84e6071bde",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-network-matroska/analyze-ready.log": "7cf9b717cd0ae36cad727808630a9a929c04f0d5a041238ce9f70ec6fb4bd475",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-network-matroska/artifact-audit.json": "44f241eb6c407e6b7f3171a104b98ffea16531038437ec492775cb69212f8932",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-network-matroska/directed.log": "cf23c61dc0d6aff64dfc11418b8e314c4092cee31901b0de5472ceb036abbc82",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-network-matroska/entry-red.log": "c9b82e5b097a0b4b5c870d86941aadfcd4d48be9fdc0c5543bce8b41635435bb",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-network-matroska/expanded-green.log": "f96f7519c14d85d80857622729247138ba0cac2e9aad72637cc9496870c5c9e8",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-network-matroska/expanded-red.log": "7ae61d4f06f7b3c46bccddbb3057abaed708816b0da341d8680175e449af24f2",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-network-matroska/final-analyze.log": "7cf9b717cd0ae36cad727808630a9a929c04f0d5a041238ce9f70ec6fb4bd475",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-network-matroska/final-four-packages.log": "c226b600168f6189343cb8ebeedab5b0cb75f745845cd24cc6364f42cc2e0e38",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-network-matroska/first-green.log": "8ee41a08d99520c169efde8abbb61c0d5f04705f65396c789076ed78d7529269",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-network-matroska/lint-fix.log": "65f3ec5898e3fba46c0c849905c204e7d872228375d545cbd108e009bee7a190",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-network-matroska/lint-test-fix.log": "78a856654aa4c00aa13fe451a9c9224e986133ffc03fcd1a5a8499d70c1fc204",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-network-matroska/ready.log": "7d82c02be7a2bd07c1f9a26c05ea12adc9700ae09cee85b6ca037ee43c44d80c",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-network-matroska/review.md": "69ede1fbefac6fb6814c7aabc7c874b3ab4d8aaf0931ffcba6357f9cbbe5d0b5"
+  },
+  "finalVerification": [
+    {
+      "command": "flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test",
+      "cwd": "/private/tmp/yl-network-mkv-validation-gbh11xo8",
+      "exitCode": 0,
+      "passed": 1003,
+      "failed": 0,
+      "packageCounts": [
+        135,
+        673,
+        113,
+        82
+      ],
+      "newTests": 59,
+      "log": "final-four-packages.log"
+    },
+    {
+      "command": "dart analyze --suppress-analytics packages/yl_player/lib packages/yl_player/test packages/yl_player_platform_interface/lib packages/yl_player_platform_interface/test",
+      "cwd": "/private/tmp/yl-network-mkv-validation-gbh11xo8",
+      "exitCode": 0,
+      "result": "No issues found",
+      "log": "final-analyze.log"
+    }
+  ],
+  "history": [
+    {
+      "log": "entry-red.log",
+      "result": "0pass/1fail network discovery unsupported"
+    },
+    {
+      "log": "first-green.log",
+      "result": "40pass: network entry plus existing managed and retry policy"
+    },
+    {
+      "log": "expanded-red.log",
+      "result": "48pass/2fail valid large CodecPrivate and multipart admission"
+    },
+    {
+      "log": "expanded-green.log",
+      "result": "50pass"
+    },
+    {
+      "log": "directed.log",
+      "result": "58pass including public session and real TLS"
+    },
+    {
+      "log": "ready.log",
+      "result": "59pass including real 4096-request cap"
+    }
+  ],
+  "review": {
+    "critical": 0,
+    "important": 0,
+    "minorDeferred": 1,
+    "blockingRemaining": 0,
+    "method": "One fresh-context read-only review; no defect fix or re-review",
+    "details": "review.md",
+    "deferred": "Dedicated positive legal chunked206 success test; rejection cases covered"
+  },
+  "dependenciesAdded": [],
+  "limitations": [
+    "HTTP(S) Matroska UTF8/ASS/SSA; explicit opt-in discovery on current session",
+    "Single-range206, strong ETag, stable known length and pinned final URI required; no full-body fallback",
+    "16KiB windows/128-window LRU, 4096 attempts and64MiB scan progress; dense or large files may exceed budgets",
+    "Managed policy reused with scan-wide ledger and no extra total deadline; platformDefault30sec",
+    "Consistency applies to subtitle discovery requests, not independent native video HTTP",
+    "Actual loopbackHTTP/TLS, fake media backend for Flutter selection/render lifecycle; no native/device/long-play/weak-network ABR validation",
+    "Other containers/embedded bitmap/native callbacks/HDR/protected/PD03/fullP02 remain open"
+  ]
+}

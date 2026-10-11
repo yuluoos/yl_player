@@ -598,7 +598,8 @@ current native adapters still do not advertise a native subtitle SPI.
 | PGS external SUP subset | Binary framing/RLE, palettes/clear, cropped/windowed objects; file/managed HTTP, manual pixel grids, late-image disposal and bounded asynchronous decode tests |
 | VobSub external DVD subset | Explicit idx/sub pair, language/substream matching, PS/SPU fragments, two-field RLE, timed palette/alpha/clear; real paired I/O and owned full-pixel grids |
 | Local Matroska embedded UTF8/ASS/SSA | Explicit committed-source discovery, TrackUID selection and shared overlay; owned EBML plus independent muxer/ffprobe and Flutter lifecycle tests |
-| Other embedded containers/codecs, network embedded subtitles, advanced TTML/ASS/SSA/PGS/VobSub and advanced WebVTT | Not implemented by this runtime |
+| HTTP(S) Matroska embedded UTF8/ASS/SSA | Single-range206 with pinned strong ETag/length, shared managed deadlines/retry/redirect/credential policy; bounded cache/scan and real HTTP/TLS/session/widget tests |
+| Other embedded containers/codecs, advanced TTML/ASS/SSA/PGS/VobSub and advanced WebVTT | Not implemented by this runtime |
 | Protected output, HDR brightness and physical-device subtitle sync | Not accepted; protected surfaces reject subtitle commands |
 
 The ordinary Flutter path is available to Android/iOS/macOS consumers, but this
