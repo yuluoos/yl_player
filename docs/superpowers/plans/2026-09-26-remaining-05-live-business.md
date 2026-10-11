@@ -90,6 +90,8 @@ cd /Users/yy2021_8689/Desktop/GIt/tvs
 
 ### Task 4：完整 App 和实际订阅验收
 
+- [x] 2026-10-11 完成三端构建入口与依赖离线清单：TVS `60d838f`、播放器 `896e471`，确认三个 runner、52个平台插件条目与锁一致、Apple混合路由及9份原生制品指纹，41份输入核对。生成状态/忽略制品与固定提交分开记录；AGP/Kotlin有效解析、签名和实际构建仍未验，无设备。见P05报告 tvs-build-inventory 证据。
+
 - [ ] 记录 TVS 声明的平台入口、插件版本/锁文件/本地依赖，分别构建其实际支持的平台；播放器独立 example 继续承担三端覆盖，不能假设 TVS 已有三端 runner。
 - [ ] 构建采用对应项目实际配置：Android debug APK、iOS simulator/签名真机、macOS app。命令和签名限制写报告；缺 runner 或签名记为外部/工程缺口，不能以 mocked widget tests 代替。
 - [ ] 在 owned M3U + 九脚本受控服务 + owned RTMP 上跑真实 TVS 首帧/音频/快速切台/断流/刷新/停止；服务日志、session IDs 和业务 UI 关联，测试名写入 `integration_test/live_subscription_playback_test.dart`。

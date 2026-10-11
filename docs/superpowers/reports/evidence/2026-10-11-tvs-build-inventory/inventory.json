@@ -1,0 +1,1009 @@
+{
+  "captured_at_utc": "2026-10-11T16:06:18.139508+00:00",
+  "scope": "Read-only filesystem inventory; no native binaries executed, no dependency resolution, builds, devices, simulators or services",
+  "baselines": {
+    "player": "896e471f69560c3a79830ebad9a59067d96f77a0",
+    "tvs": "60d838fbe0ddbc4b7088baadfd89f60331cd8cec"
+  },
+  "app": {
+    "version": "1.2.1+6",
+    "environment": {
+      "sdk": ">=3.12.0 <4.0.0",
+      "flutter": ">=3.44.0"
+    }
+  },
+  "local_path_dependencies": [
+    {
+      "name": "yl_player",
+      "version": "0.2.0-dev.2",
+      "path": "packages/yl_player"
+    },
+    {
+      "name": "yl_player_android",
+      "version": "0.2.0-dev.2",
+      "path": "packages/yl_player_android"
+    },
+    {
+      "name": "yl_player_apple",
+      "version": "0.2.0-dev.2",
+      "path": "packages/yl_player_apple"
+    },
+    {
+      "name": "yl_player_platform_interface",
+      "version": "0.2.0-dev.2",
+      "path": "packages/yl_player_platform_interface"
+    },
+    {
+      "name": "yl_player_source_resolver",
+      "version": "0.1.0-dev.1",
+      "path": "packages/yl_player_source_resolver"
+    }
+  ],
+  "sdk": {
+    "frameworkVersion": "3.44.0",
+    "channel": "stable",
+    "repositoryUrl": "https://github.com/flutter/flutter.git",
+    "frameworkRevision": "559ffa3f75e7402d65a8def9c28389a9b2e6fe42",
+    "frameworkCommitDate": "2026-05-15 14:13:13 -0700",
+    "engineRevision": "4c525dac5ebe5971c5708ef73558ed8edcf4a362",
+    "engineCommitDate": "2026-05-15 19:00:04.000Z",
+    "engineContentHash": "fcf463a2242790d1fdcd9d044f533080f5022e18",
+    "engineBuildDate": "2026-05-15 12:35:11.586",
+    "dartSdkVersion": "3.12.0",
+    "devToolsVersion": "2.57.0",
+    "flutterVersion": "3.44.0"
+  },
+  "generated_metadata_flutter_version": "3.44.0",
+  "swift_package_manager_enabled": {
+    "ios": true,
+    "macos": true
+  },
+  "platforms": {
+    "android": {
+      "runner_present": true,
+      "plugins": [
+        {
+          "name": "android_id",
+          "locked_version": "0.5.2+1",
+          "installed_pubspec_sha256": "e6b36e063560c31a1bf9898676a1c69f305c250496f7973efca015496fd6f8da",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "Gradle"
+        },
+        {
+          "name": "audio_service",
+          "locked_version": "0.18.19",
+          "installed_pubspec_sha256": "9a4d230fb2e0ab22bd0a887056b3896831897a45d4ffc22e5f48bca5c52a60ed",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "Gradle"
+        },
+        {
+          "name": "audio_session",
+          "locked_version": "0.2.4",
+          "installed_pubspec_sha256": "79903e1bbc0beb2437661debdea2f84d8e9cf6e3a6977d7220e4074caee94366",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "Gradle"
+        },
+        {
+          "name": "connectivity_plus",
+          "locked_version": "7.3.1",
+          "installed_pubspec_sha256": "d1d519fa5032a236a4e0141ef31d5fb6e03e5e6a7c3d493de0dc289d8d26c7df",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "Gradle"
+        },
+        {
+          "name": "device_info_plus",
+          "locked_version": "12.4.0",
+          "installed_pubspec_sha256": "75ed50a8d7955b148475cfb2bab31be60b1dfc0e689fb51060d03aaf3d09a8b0",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "Gradle"
+        },
+        {
+          "name": "flutter_secure_storage",
+          "locked_version": "10.3.1",
+          "installed_pubspec_sha256": "eabf6c28a4173445e84ae682993170536e8dc294dd9cf2816e986c52f8169780",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "Gradle"
+        },
+        {
+          "name": "isar_community_flutter_libs",
+          "locked_version": "3.3.2",
+          "installed_pubspec_sha256": "212830a07a328db6ec406edac2b47332e675977d0ca53a2413607d7c699c03e6",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "Gradle"
+        },
+        {
+          "name": "jni",
+          "locked_version": "1.0.3",
+          "installed_pubspec_sha256": "6a3d1e82323e5dede5f8d62a4a450e5ce74a64564e65ccbdd62f4e07819d23dd",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "Gradle"
+        },
+        {
+          "name": "jni_flutter",
+          "locked_version": "1.0.2",
+          "installed_pubspec_sha256": "f3a1ec611eb0e6ee495bb94ae95543b249fe039f9bc75fedbf552aa1d17ce2e5",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "Gradle"
+        },
+        {
+          "name": "just_audio",
+          "locked_version": "0.10.6",
+          "installed_pubspec_sha256": "51acb247dc1685214f65c8fab4825a9132a95921fd6ae9d61eef3b9af7ee1f28",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "Gradle"
+        },
+        {
+          "name": "package_info_plus",
+          "locked_version": "9.0.1",
+          "installed_pubspec_sha256": "abc5e6390f847f096fc824968d7f8fa86375046fd1453e69d175afd001eae902",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "Gradle"
+        },
+        {
+          "name": "path_provider_android",
+          "locked_version": "2.3.1",
+          "installed_pubspec_sha256": "b80824aedcb8e0ea192403de0dc01c501b22dc2f627588dffb78093f5064dc89",
+          "installed_version_matches_lock": true,
+          "native_build": false,
+          "integration": "Dart only (native_build=false)"
+        },
+        {
+          "name": "permission_handler_android",
+          "locked_version": "13.0.1",
+          "installed_pubspec_sha256": "df859673aa22aa16bae95eb7b62defc0a2806ca030525a9693c1cec9ee358b92",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "Gradle"
+        },
+        {
+          "name": "screen_brightness_android",
+          "locked_version": "1.0.1",
+          "installed_pubspec_sha256": "6912ee2e5671127333f73a5052f7d231c61a5ce682d1c0c1dd0218dc6b029102",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "Gradle"
+        },
+        {
+          "name": "share_plus",
+          "locked_version": "12.0.2",
+          "installed_pubspec_sha256": "5641db6d0699da562409c4850a0b8b4ef89941add96bb4974f6a3814619d3ce6",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "Gradle"
+        },
+        {
+          "name": "sqflite_android",
+          "locked_version": "2.4.3",
+          "installed_pubspec_sha256": "f885702f81e8d932ff21bc96d329ec01c186efbb7af7ff26bc669dde0713016e",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "Gradle"
+        },
+        {
+          "name": "url_launcher_android",
+          "locked_version": "6.3.32",
+          "installed_pubspec_sha256": "292260e741dc6887d9076e9afa53569bdf98980b2607796c1c772aecb22f7e51",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "Gradle"
+        },
+        {
+          "name": "volume_controller",
+          "locked_version": "2.0.8",
+          "installed_pubspec_sha256": "30ee53721534b03dbd9b47f1e4e8c3255460dcaa028f2d999d77c668da8db76a",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "Gradle"
+        },
+        {
+          "name": "wakelock_plus",
+          "locked_version": "1.5.2",
+          "installed_pubspec_sha256": "c150a7062345bde2151e332b92bca2058f35be3e4ed9fd3195e0663772c85ec1",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "Gradle"
+        },
+        {
+          "name": "yl_player_android",
+          "locked_version": "0.2.0-dev.2",
+          "installed_pubspec_sha256": "655803deb76ce1beb2d8ae9c0a33fe484e41fea101125b9e064c4e14ae433cb8",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "Gradle"
+        }
+      ],
+      "swiftpm_plugins": [],
+      "cocoapods_plugins": [],
+      "actual_build": "NOT_RUN"
+    },
+    "ios": {
+      "runner_present": true,
+      "plugins": [
+        {
+          "name": "audio_service",
+          "locked_version": "0.18.19",
+          "installed_pubspec_sha256": "9a4d230fb2e0ab22bd0a887056b3896831897a45d4ffc22e5f48bca5c52a60ed",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "audio_session",
+          "locked_version": "0.2.4",
+          "installed_pubspec_sha256": "79903e1bbc0beb2437661debdea2f84d8e9cf6e3a6977d7220e4074caee94366",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "connectivity_plus",
+          "locked_version": "7.3.1",
+          "installed_pubspec_sha256": "d1d519fa5032a236a4e0141ef31d5fb6e03e5e6a7c3d493de0dc289d8d26c7df",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "device_info_plus",
+          "locked_version": "12.4.0",
+          "installed_pubspec_sha256": "75ed50a8d7955b148475cfb2bab31be60b1dfc0e689fb51060d03aaf3d09a8b0",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "flutter_secure_storage_darwin",
+          "locked_version": "0.3.2",
+          "installed_pubspec_sha256": "bc1ef9320909be1adcad418c9d6cc2d5dc42eebf6e34d9fc64581682622fd996",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "isar_community_flutter_libs",
+          "locked_version": "3.3.2",
+          "installed_pubspec_sha256": "212830a07a328db6ec406edac2b47332e675977d0ca53a2413607d7c699c03e6",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "CocoaPods"
+        },
+        {
+          "name": "just_audio",
+          "locked_version": "0.10.6",
+          "installed_pubspec_sha256": "51acb247dc1685214f65c8fab4825a9132a95921fd6ae9d61eef3b9af7ee1f28",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "package_info_plus",
+          "locked_version": "9.0.1",
+          "installed_pubspec_sha256": "abc5e6390f847f096fc824968d7f8fa86375046fd1453e69d175afd001eae902",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "path_provider_foundation",
+          "locked_version": "2.6.0",
+          "installed_pubspec_sha256": "2453954d9201ce4a90a5d26705c4b089c3997a9b943e1c7dc7a95893c262c75d",
+          "installed_version_matches_lock": true,
+          "native_build": false,
+          "integration": "Dart only (native_build=false)"
+        },
+        {
+          "name": "permission_handler_apple",
+          "locked_version": "9.6.1",
+          "installed_pubspec_sha256": "97f816caf668875203237df349e60e8ebb34864f1ba9a317354ddd463262224f",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "screen_brightness_ios",
+          "locked_version": "1.0.1",
+          "installed_pubspec_sha256": "13e938121427b6fee825eec936804608888da44913685d15f110a421679b2d83",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "CocoaPods"
+        },
+        {
+          "name": "share_plus",
+          "locked_version": "12.0.2",
+          "installed_pubspec_sha256": "5641db6d0699da562409c4850a0b8b4ef89941add96bb4974f6a3814619d3ce6",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "sqflite_darwin",
+          "locked_version": "2.4.3+1",
+          "installed_pubspec_sha256": "0299596958beda03406eed312658232b66d55b22495300081bcd12b3624a56dc",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "url_launcher_ios",
+          "locked_version": "6.4.1",
+          "installed_pubspec_sha256": "391a5d4ed9bd1670dcffe7654f72b19b16cb1e7f3f67360d0968d78a18c82d9e",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "volume_controller",
+          "locked_version": "2.0.8",
+          "installed_pubspec_sha256": "30ee53721534b03dbd9b47f1e4e8c3255460dcaa028f2d999d77c668da8db76a",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "CocoaPods"
+        },
+        {
+          "name": "wakelock_plus",
+          "locked_version": "1.5.2",
+          "installed_pubspec_sha256": "c150a7062345bde2151e332b92bca2058f35be3e4ed9fd3195e0663772c85ec1",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "yl_player_apple",
+          "locked_version": "0.2.0-dev.2",
+          "installed_pubspec_sha256": "c85c4a6f24443bc2f5fc4c4928ad39aa586ce4eed18241c10fffbd66bffa3539",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        }
+      ],
+      "swiftpm_plugins": [
+        "yl_player_apple",
+        "wakelock_plus",
+        "package_info_plus",
+        "url_launcher_ios",
+        "flutter_secure_storage_darwin",
+        "device_info_plus",
+        "share_plus",
+        "permission_handler_apple",
+        "just_audio",
+        "audio_session",
+        "connectivity_plus",
+        "sqflite_darwin",
+        "audio_service"
+      ],
+      "cocoapods_plugins": [
+        "isar_community_flutter_libs",
+        "screen_brightness_ios",
+        "volume_controller"
+      ],
+      "actual_build": "NOT_RUN"
+    },
+    "macos": {
+      "runner_present": true,
+      "plugins": [
+        {
+          "name": "audio_service",
+          "locked_version": "0.18.19",
+          "installed_pubspec_sha256": "9a4d230fb2e0ab22bd0a887056b3896831897a45d4ffc22e5f48bca5c52a60ed",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "audio_session",
+          "locked_version": "0.2.4",
+          "installed_pubspec_sha256": "79903e1bbc0beb2437661debdea2f84d8e9cf6e3a6977d7220e4074caee94366",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "connectivity_plus",
+          "locked_version": "7.3.1",
+          "installed_pubspec_sha256": "d1d519fa5032a236a4e0141ef31d5fb6e03e5e6a7c3d493de0dc289d8d26c7df",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "device_info_plus",
+          "locked_version": "12.4.0",
+          "installed_pubspec_sha256": "75ed50a8d7955b148475cfb2bab31be60b1dfc0e689fb51060d03aaf3d09a8b0",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "flutter_secure_storage_darwin",
+          "locked_version": "0.3.2",
+          "installed_pubspec_sha256": "bc1ef9320909be1adcad418c9d6cc2d5dc42eebf6e34d9fc64581682622fd996",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "isar_community_flutter_libs",
+          "locked_version": "3.3.2",
+          "installed_pubspec_sha256": "212830a07a328db6ec406edac2b47332e675977d0ca53a2413607d7c699c03e6",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "CocoaPods"
+        },
+        {
+          "name": "just_audio",
+          "locked_version": "0.10.6",
+          "installed_pubspec_sha256": "51acb247dc1685214f65c8fab4825a9132a95921fd6ae9d61eef3b9af7ee1f28",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "package_info_plus",
+          "locked_version": "9.0.1",
+          "installed_pubspec_sha256": "abc5e6390f847f096fc824968d7f8fa86375046fd1453e69d175afd001eae902",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "path_provider_foundation",
+          "locked_version": "2.6.0",
+          "installed_pubspec_sha256": "2453954d9201ce4a90a5d26705c4b089c3997a9b943e1c7dc7a95893c262c75d",
+          "installed_version_matches_lock": true,
+          "native_build": false,
+          "integration": "Dart only (native_build=false)"
+        },
+        {
+          "name": "screen_brightness_macos",
+          "locked_version": "1.0.1",
+          "installed_pubspec_sha256": "a04811e04797546ab5cfed97a2f545ca00770fdb83b3d488ab54d01041e809e5",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "CocoaPods"
+        },
+        {
+          "name": "share_plus",
+          "locked_version": "12.0.2",
+          "installed_pubspec_sha256": "5641db6d0699da562409c4850a0b8b4ef89941add96bb4974f6a3814619d3ce6",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "sqflite_darwin",
+          "locked_version": "2.4.3+1",
+          "installed_pubspec_sha256": "0299596958beda03406eed312658232b66d55b22495300081bcd12b3624a56dc",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "url_launcher_macos",
+          "locked_version": "3.2.5",
+          "installed_pubspec_sha256": "f7126738872122c5424c4e5e8afc7e101b5c24e3d3fd806397776fe6a6a85af6",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "wakelock_plus",
+          "locked_version": "1.5.2",
+          "installed_pubspec_sha256": "c150a7062345bde2151e332b92bca2058f35be3e4ed9fd3195e0663772c85ec1",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        },
+        {
+          "name": "yl_player_apple",
+          "locked_version": "0.2.0-dev.2",
+          "installed_pubspec_sha256": "c85c4a6f24443bc2f5fc4c4928ad39aa586ce4eed18241c10fffbd66bffa3539",
+          "installed_version_matches_lock": true,
+          "native_build": true,
+          "integration": "SwiftPM"
+        }
+      ],
+      "swiftpm_plugins": [
+        "yl_player_apple",
+        "wakelock_plus",
+        "package_info_plus",
+        "url_launcher_macos",
+        "flutter_secure_storage_darwin",
+        "device_info_plus",
+        "share_plus",
+        "just_audio",
+        "audio_session",
+        "connectivity_plus",
+        "sqflite_darwin",
+        "audio_service"
+      ],
+      "cocoapods_plugins": [
+        "isar_community_flutter_libs",
+        "screen_brightness_macos"
+      ],
+      "actual_build": "NOT_RUN"
+    }
+  },
+  "absent_runner_directories": [
+    "linux",
+    "windows",
+    "web"
+  ],
+  "native_artifacts": [
+    {
+      "repository": "tvs",
+      "path": "android/libnode/arm64-v8a/libnode.so",
+      "bytes": 62475584,
+      "sha256": "7c907316beb6e78e34495926c9ac1befe079369b14650d508ea812929258250c",
+      "tracked": false,
+      "provenance": "local untracked/generated/ignored input; availability is not clone reproducibility"
+    },
+    {
+      "repository": "tvs",
+      "path": "android/libnode/armeabi-v7a/libnode.so",
+      "bytes": 58720948,
+      "sha256": "d60451f64718354b1a3d4857d20fbe56cc3a3dbe2c319c2911342aea2bbef92d",
+      "tracked": false,
+      "provenance": "local untracked/generated/ignored input; availability is not clone reproducibility"
+    },
+    {
+      "repository": "tvs",
+      "path": "android/libnode/x86_64/libnode.so",
+      "bytes": 65361944,
+      "sha256": "9acba7e26a1e864f13b78f1b7121773643f3f33a4c6a2fe7d4f63eb06d4d3af1",
+      "tracked": false,
+      "provenance": "local untracked/generated/ignored input; availability is not clone reproducibility"
+    },
+    {
+      "repository": "tvs",
+      "path": "ios/NodeMobile.xcframework/ios-arm64/NodeMobile.framework/NodeMobile",
+      "bytes": 54959120,
+      "sha256": "ce90de875343c8e956e7927cfb40fd51acc63a43e434e4d996ea421718c3d870",
+      "tracked": false,
+      "provenance": "local untracked/generated/ignored input; availability is not clone reproducibility",
+      "declared_slice": {
+        "BinaryPath": "NodeMobile.framework/NodeMobile",
+        "LibraryIdentifier": "ios-arm64",
+        "LibraryPath": "NodeMobile.framework",
+        "SupportedArchitectures": [
+          "arm64"
+        ],
+        "SupportedPlatform": "ios"
+      }
+    },
+    {
+      "repository": "tvs",
+      "path": "ios/NodeMobile.xcframework/ios-arm64_x86_64-simulator/NodeMobile.framework/NodeMobile",
+      "bytes": 115463536,
+      "sha256": "fd0d5f0e759757e676c1f6381c0705652e393b7ba8572b95fcf1234217992219",
+      "tracked": false,
+      "provenance": "local untracked/generated/ignored input; availability is not clone reproducibility",
+      "declared_slice": {
+        "BinaryPath": "NodeMobile.framework/NodeMobile",
+        "LibraryIdentifier": "ios-arm64_x86_64-simulator",
+        "LibraryPath": "NodeMobile.framework",
+        "SupportedArchitectures": [
+          "arm64",
+          "x86_64"
+        ],
+        "SupportedPlatform": "ios",
+        "SupportedPlatformVariant": "simulator"
+      }
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64/YlFFmpegBridge.framework/YlFFmpegBridge",
+      "bytes": 2447184,
+      "sha256": "b695650db63cdd8e5dbcb43a88f15f9c29ca0a3d8a486153e8a1a2bacc200841",
+      "tracked": true,
+      "matches_commit": true,
+      "declared_slice": {
+        "BinaryPath": "YlFFmpegBridge.framework/YlFFmpegBridge",
+        "LibraryIdentifier": "ios-arm64",
+        "LibraryPath": "YlFFmpegBridge.framework",
+        "SupportedArchitectures": [
+          "arm64"
+        ],
+        "SupportedPlatform": "ios"
+      }
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/YlFFmpegBridge",
+      "bytes": 4927264,
+      "sha256": "4013d588be9ef2780f96c7c0e98b82b10bff2e689bf7abc425f41a3c910a19ae",
+      "tracked": true,
+      "matches_commit": true,
+      "declared_slice": {
+        "BinaryPath": "YlFFmpegBridge.framework/YlFFmpegBridge",
+        "LibraryIdentifier": "ios-arm64_x86_64-simulator",
+        "LibraryPath": "YlFFmpegBridge.framework",
+        "SupportedArchitectures": [
+          "arm64",
+          "x86_64"
+        ],
+        "SupportedPlatform": "ios",
+        "SupportedPlatformVariant": "simulator"
+      }
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge",
+      "bytes": 4939984,
+      "sha256": "6ee6920f00e75f60d5897f943c04957a929ffc20c8868ee2bc5bfaabfb5a1c47",
+      "tracked": true,
+      "matches_commit": true,
+      "declared_slice": {
+        "BinaryPath": "YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge",
+        "LibraryIdentifier": "macos-arm64_x86_64",
+        "LibraryPath": "YlFFmpegBridge.framework",
+        "SupportedArchitectures": [
+          "arm64",
+          "x86_64"
+        ],
+        "SupportedPlatform": "macos"
+      }
+    },
+    {
+      "repository": "tvs",
+      "path": "macos/NodeRuntime/node-v22.15.1-darwin-arm64.tar.xz",
+      "bytes": 24580512,
+      "sha256": "da2ce4f4616f5adae82de433481e00af86c7e6624a07e5a3c3fdaa1d8a6028fa",
+      "tracked": true,
+      "matches_commit": true
+    }
+  ],
+  "files": [
+    {
+      "repository": "tvs",
+      "path": "pubspec.yaml",
+      "bytes": 2180,
+      "sha256": "5c65155869260385a02cd9c9f192880148690c39e293ea2c5ce1db07d3ca33e4",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "tvs",
+      "path": "pubspec.lock",
+      "bytes": 48732,
+      "sha256": "8bc7656782e9070a7c308c0d03d3ae6f2d7c4ccd8d94181cb6a0c8f7c76f84e8",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "tvs",
+      "path": ".gitignore",
+      "bytes": 924,
+      "sha256": "9f9239a36212f44958b06f2c7a5d028f390ebd1d0c03bd373555558fc7bca86f",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "tvs",
+      "path": "android/settings.gradle.kts",
+      "bytes": 772,
+      "sha256": "a9b5756048f668d4ebf355116678fd334cd5f2169b7d4518ad19b8df14d3af36",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "tvs",
+      "path": "android/app/build.gradle.kts",
+      "bytes": 1948,
+      "sha256": "c65b3c08845841ed69fde6d77e42bad603447e15e94c663ebf3d122243e219f4",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "tvs",
+      "path": "android/gradle/wrapper/gradle-wrapper.properties",
+      "bytes": 201,
+      "sha256": "297c9e63b6fa6e7e8b221900fa1787c1a0e38869d8957da66389fd0f6b00f78e",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "tvs",
+      "path": "android/app/src/main/cpp/CMakeLists.txt",
+      "bytes": 703,
+      "sha256": "bc91cd4a2015fea8c77617044fc6dd24268cadef13aa32fff28715746e90d6c7",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "tvs",
+      "path": "ios/Podfile",
+      "bytes": 2315,
+      "sha256": "43ea2eb4828dc92d11334cc99047f1392ee2ea5cad07e222fa7a12f695d5c7a3",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "tvs",
+      "path": "ios/Podfile.lock",
+      "bytes": 1107,
+      "sha256": "fdedf0d060788a52c0f401239451bce76eb063c0f24b99e423dad6c9f4488aab",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "tvs",
+      "path": "ios/Runner.xcodeproj/project.pbxproj",
+      "bytes": 30870,
+      "sha256": "b72839ff09d3a5a3701f42f56ba83cb46ba182456d3560680f3bb9a2c7ef5ba8",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "tvs",
+      "path": "macos/Podfile",
+      "bytes": 1635,
+      "sha256": "e7fd1481d41163771ac47b057a127ce134633dc1dfc488b73eda0064ce2ac053",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "tvs",
+      "path": "macos/Podfile.lock",
+      "bytes": 993,
+      "sha256": "f9a5c62cf2b1610118b16aff9956ca9df25bfe2fe1dc63849ea00309f657d703",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "tvs",
+      "path": "macos/Runner.xcodeproj/project.pbxproj",
+      "bytes": 36349,
+      "sha256": "b036764413be387b88244feb067695614c62197505ce8a89f844177993909ed4",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "tvs",
+      "path": "macos/prepare_node_runtime.sh",
+      "bytes": 1550,
+      "sha256": "0d2e8400871929312c228a0d45ffee33d66bde749ac75b6923ebc639b9e983de",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "tvs",
+      "path": "macos/Runner/NodeRuntime.entitlements",
+      "bytes": 341,
+      "sha256": "99802915fdba421972ba5fc94e0fffd31ea9931152570f35ccf7e05ecc9660bc",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "tvs",
+      "path": ".flutter-plugins-dependencies",
+      "bytes": 18216,
+      "sha256": "bdbb2225e927ff7702e944f5307c5b3b3c99ba92422ee6b2b675b06888b4d004",
+      "tracked": false,
+      "provenance": "local untracked/generated/ignored input; availability is not clone reproducibility"
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_android/android/build.gradle.kts",
+      "bytes": 2258,
+      "sha256": "c67e7c51d5188d34267cbe5d7ba65d16be8415f01809066b2ec63c267e5a83b9",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Package.swift",
+      "bytes": 742,
+      "sha256": "89a4b510b1e648401f39ca53d2050a7ed96d8cb7d69be35135a439f178979852",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_apple/darwin/yl_player_apple.podspec",
+      "bytes": 1137,
+      "sha256": "c4f6685a4486caf641d2703ba84d5ec41f7b191d64c30fab88ea24cf4b7bcff3",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_source_resolver/hook/build.dart",
+      "bytes": 1157,
+      "sha256": "26f4ced63b2f398c08a69d8ff6890ecee5c4470ba5be2c6bce1d9a7f3adc2c4b",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "sdk",
+      "path": "bin/cache/flutter.version.json",
+      "bytes": 559,
+      "sha256": "cda73799d95736a94512702ed2d09bda77bf8674dd26f6c0f1bd30fb5196a264",
+      "tracked": false,
+      "provenance": "local SDK"
+    },
+    {
+      "repository": "sdk",
+      "path": "packages/flutter_tools/gradle/src/main/kotlin/FlutterExtension.kt",
+      "bytes": 3279,
+      "sha256": "a8ca02d55798c200d766e245dae9df20565cb9d638d4887b51bf617abac938a1",
+      "tracked": false,
+      "provenance": "local SDK"
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player/pubspec.yaml",
+      "bytes": 830,
+      "sha256": "6c6bb701de8860f7522ecc91176e01d38217a968d1ca2b3fe2d61c47ddff9461",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_android/pubspec.yaml",
+      "bytes": 767,
+      "sha256": "655803deb76ce1beb2d8ae9c0a33fe484e41fea101125b9e064c4e14ae433cb8",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_apple/pubspec.yaml",
+      "bytes": 787,
+      "sha256": "c85c4a6f24443bc2f5fc4c4928ad39aa586ce4eed18241c10fffbd66bffa3539",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_platform_interface/pubspec.yaml",
+      "bytes": 525,
+      "sha256": "70d228bb3b7effdc546207a3708a35762083f3eeb8183fcd9825e5e9a4501a07",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_source_resolver/pubspec.yaml",
+      "bytes": 486,
+      "sha256": "49ad1606a438b321d219685f27e5becd4a16cdfce251b1765606b66c2f88e1c1",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "tvs",
+      "path": "ios/Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage/Package.swift",
+      "bytes": 2999,
+      "sha256": "431e69f332e079337488c658fb57567d2bd2cfda11d3ac883249ba5420c5d3f0",
+      "tracked": false,
+      "provenance": "local untracked/generated/ignored input; availability is not clone reproducibility"
+    },
+    {
+      "repository": "tvs",
+      "path": "macos/Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage/Package.swift",
+      "bytes": 2808,
+      "sha256": "b9924e17b538718d714f1850fdb0d93de1ccca75b039cfa8c5a18df997074aae",
+      "tracked": false,
+      "provenance": "local untracked/generated/ignored input; availability is not clone reproducibility"
+    },
+    {
+      "repository": "tvs",
+      "path": "android/libnode/arm64-v8a/libnode.so",
+      "bytes": 62475584,
+      "sha256": "7c907316beb6e78e34495926c9ac1befe079369b14650d508ea812929258250c",
+      "tracked": false,
+      "provenance": "local untracked/generated/ignored input; availability is not clone reproducibility"
+    },
+    {
+      "repository": "tvs",
+      "path": "android/libnode/armeabi-v7a/libnode.so",
+      "bytes": 58720948,
+      "sha256": "d60451f64718354b1a3d4857d20fbe56cc3a3dbe2c319c2911342aea2bbef92d",
+      "tracked": false,
+      "provenance": "local untracked/generated/ignored input; availability is not clone reproducibility"
+    },
+    {
+      "repository": "tvs",
+      "path": "android/libnode/x86_64/libnode.so",
+      "bytes": 65361944,
+      "sha256": "9acba7e26a1e864f13b78f1b7121773643f3f33a4c6a2fe7d4f63eb06d4d3af1",
+      "tracked": false,
+      "provenance": "local untracked/generated/ignored input; availability is not clone reproducibility"
+    },
+    {
+      "repository": "tvs",
+      "path": "android/libnode/include/node_version.h",
+      "bytes": 3938,
+      "sha256": "7420b5654d2e03f1ac682f95859cb6a73c2740a5666a080c8b8cff9da545b2fb",
+      "tracked": false,
+      "provenance": "local untracked/generated/ignored input; availability is not clone reproducibility"
+    },
+    {
+      "repository": "tvs",
+      "path": "ios/NodeMobile.xcframework/Info.plist",
+      "bytes": 1202,
+      "sha256": "0bba7f16ccd5f12107ff6256048df0078a28b7ec9a7dc87b9159cca2b057bd5a",
+      "tracked": false,
+      "provenance": "local untracked/generated/ignored input; availability is not clone reproducibility"
+    },
+    {
+      "repository": "tvs",
+      "path": "ios/NodeMobile.xcframework/ios-arm64/NodeMobile.framework/NodeMobile",
+      "bytes": 54959120,
+      "sha256": "ce90de875343c8e956e7927cfb40fd51acc63a43e434e4d996ea421718c3d870",
+      "tracked": false,
+      "provenance": "local untracked/generated/ignored input; availability is not clone reproducibility"
+    },
+    {
+      "repository": "tvs",
+      "path": "ios/NodeMobile.xcframework/ios-arm64_x86_64-simulator/NodeMobile.framework/NodeMobile",
+      "bytes": 115463536,
+      "sha256": "fd0d5f0e759757e676c1f6381c0705652e393b7ba8572b95fcf1234217992219",
+      "tracked": false,
+      "provenance": "local untracked/generated/ignored input; availability is not clone reproducibility"
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/Info.plist",
+      "bytes": 1656,
+      "sha256": "ca81b15b1b3a63e168749a4264517398d1a4e848d211dc5b9234fd269b52b552",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64/YlFFmpegBridge.framework/YlFFmpegBridge",
+      "bytes": 2447184,
+      "sha256": "b695650db63cdd8e5dbcb43a88f15f9c29ca0a3d8a486153e8a1a2bacc200841",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/YlFFmpegBridge",
+      "bytes": 4927264,
+      "sha256": "4013d588be9ef2780f96c7c0e98b82b10bff2e689bf7abc425f41a3c910a19ae",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge",
+      "bytes": 4939984,
+      "sha256": "6ee6920f00e75f60d5897f943c04957a929ffc20c8868ee2bc5bfaabfb5a1c47",
+      "tracked": true,
+      "matches_commit": true
+    },
+    {
+      "repository": "tvs",
+      "path": "macos/NodeRuntime/node-v22.15.1-darwin-arm64.tar.xz",
+      "bytes": 24580512,
+      "sha256": "da2ce4f4616f5adae82de433481e00af86c7e6624a07e5a3c3fdaa1d8a6028fa",
+      "tracked": true,
+      "matches_commit": true
+    }
+  ],
+  "checks": {
+    "tracked_inputs_match_baseline": true,
+    "plugin_installed_versions_match_lock": true,
+    "apple_native_plugin_route_sets_match": true,
+    "macos_node_archive_matches_pinned_sha256": true,
+    "heads_unchanged_during_collection": true
+  },
+  "limits": [
+    "XCFramework architectures are Info.plist declarations, not binary architecture/link compatibility checks",
+    "Native binary hashes are observations, not provenance/authenticity assertions except the macOS archive comparison against its tracked pin",
+    "Generated metadata and installed plugins describe this workspace only; fresh dependency resolution was not run",
+    "AGP/Kotlin effective resolution and all platform builds remain unverified"
+  ]
+}

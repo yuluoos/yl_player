@@ -263,3 +263,45 @@ flutter analyze --no-pub
 没有修改生成输入，无须 build_runner。[verification.json](evidence/2026-10-11-live-error-guidance/verification.json) 保存两个仓库的版本、关键输入指纹、最终命令与退出码；[raw-logs.json](evidence/2026-10-11-live-error-guidance/raw-logs.json) 保留业务 RED/GREEN、复审 UI 与快捷键失败及最终结果。实际 TVS commit、工作区和最终副本逐字节一致。
 
 复审者只读代码及初轮日志，没有独立运行测试或核对哈希；其唯一 Important 已修正，无遗留项，未进行第二次独立复审。修正及证据由执行者验证。未扩展其他非逐源错误的分类，完整 P05、真实原生媒体、实际设备/遥控器、线上订阅与九脚本验收保持开放。
+
+
+## 2026-10-11：Task 4 TVS 三端入口与构建依赖离线清单
+
+固定播放器 **`896e471f69560c3a79830ebad9a59067d96f77a0`**、TVS **`60d838fbe0ddbc4b7088baadfd89f60331cd8cec`**。本项完成三端构建前的资料核对，未运行构建、依赖解析、设备或模拟器。本仓仅更新验收文档和证据，TVS 没有新提交；下列配置只代表这两个版本和当前本地生成状态。
+
+TVS `1.2.1+6` 声明 Dart `>=3.12.0 <4.0.0`、Flutter `>=3.44.0`；当前本地 SDK 文件为 Flutter3.44.0 / Dart3.12.0，SDK 源码指纹另行记录。仓库确有 **android、ios、macos** runner，未有 linux/windows/web 目录；生成插件清单中的其他平台条目不能作为 TVS 支持那些平台的证据。
+
+`pubspec.lock` 的五个本地 path 包均指向当前播放器工作区：`yl_player`、`yl_player_android`、`yl_player_apple`、`yl_player_platform_interface` 为0.2.0-dev.2，`yl_player_source_resolver` 为0.1.0-dev.1；其中 Android/Apple/interface 通过 overrides 接入。XML7.0.1/dbus0.7.15 保持原锁。绝对 path 是本机路径，不是可移植的发布依赖；换工作区须重新映射并重新核对锁及生成状态。
+
+| 平台 | 当前入口和声明配置 | 原生依赖与待验边界 |
+| --- | --- | --- |
+| Android | Gradle wrapper8.14；TVS AGP8.11.1 / Kotlin2.2.20；Java/Kotlin17。app 的 compile/min/target/NDK 继承 Flutter；本轮读取的 SDK 默认分别36/24/36/28.2.13676358，并非 app 自行固定值。ABI 为 arm64-v8a、armeabi-v7a、x86_64。 | 本地播放器插件声明 AGP9.0.1 / Kotlin2.3.20、compile36/min24、Media3 1.11.0、coroutines1.7.1。两处 AGP/Kotlin 声明不同，**有效解析版本及兼容性尚未构建确认**，不能仅凭文本宣布冲突。CMake 引用 `android/libnode/<ABI>/libnode.so`，三份均存在；头文件声明 Node18.20.4，不据此宣称二进制同版本。 |
+| iOS | Runner 与 Podfile 最低15.0；Runner Debug/Profile/Release 手动签名、team为空。项目链接并嵌入 NodeMobile.xcframework。 | NodeMobile 本地存在，Info.plist 声明 ios-arm64 和 ios-arm64_x86_64-simulator；播放器 Apple 包最低iOS15/macOS12。模拟器与设备签名构建均未执行；team为空说明仓库未给出签名团队，不代表已探测本机证书或签名能力。 |
+| macOS | Runner/Podfile 最低12.0；项目 Release/Profile 明确 ARCHS=arm64 且排除x86_64，Debug 使用 ONLY_ACTIVE_ARCH，不能称所有配置均显式限定arm64。 | 打包脚本固定 Node22.15.1 darwin-arm64 归档，SHA-256 与当前归档一致；打包时提取、strip 并按构建签名设置签名。Node运行时仅arm64，不能据播放器通用架构桥宣称 TVS 支持Intel。应用构建、签名和运行仍待验。 |
+
+Apple 两端当前开启 **SwiftPM + CocoaPods**。逐项将 `.flutter-plugins-dependencies` 的 native_build 条目与生成 Package.swift、Podfile.lock 对照：iOS17个插件中13个走SwiftPM、3个走Pods、1个 Dart-only；macOS15个中12个走SwiftPM、2个走Pods、1个 Dart-only；Android20个中19个 native_build、1个 Dart-only。全部52个平台条目的已安装 pubspec 版本与 Pub 锁一致（跨平台重复包分别核对）。Pod锁中的插件 podspec 版本可能不同于 Dart 包版本，不混为一谈。两个 Pod锁均记录 CocoaPods1.16.2，这不证明当前已安装的 CocoaPods 版本。
+
+生成 SwiftPM 聚合包声明的 iOS13/macOS10.15 不替代 app 与播放器要求的 iOS15/macOS12。播放器 `yl_player_apple` 出现在生成 SwiftPM 包内，因此不能因 Podfile.lock 没列它就判断依赖遗漏。**上述生成文件是本机观察值，未重新生成或证明全新解析可复现。** 独立 resolver 通过 native code asset hook 编译 QuickJS，仅允许 Android/iOS/macOS，不属于 Flutter 插件注册表或 Pod；旧 `libfastdev_quickjs_runtime.so` 不能替代它的构建验证。
+
+原生资源清点包括 Android三个 libnode、iOS两个 NodeMobile slice、播放器三个 YlFFmpegBridge slice、macOS一个 Node归档，共 **9份二进制/归档**，均记录字节数和SHA-256。XCFramework 的架构是 Info.plist 声明，本轮没有执行二进制架构、符号或链接兼容性检查。Android `libnode/` 和 iOS `NodeMobile.xcframework/` 被 TVS Git 忽略，当前存在不代表全新 clone 可取得；应按项目可信制品来源另行准备并核对。macOS Node归档与播放器桥二进制有Git跟踪且当前字节匹配固定提交；除macOS归档的仓库固定哈希比对外，其余哈希是本轮观察指纹，不是外部来源真实性证明。
+
+实际构建待验清单（**以下命令未运行**，cwd 为 TVS，使用对应 Flutter SDK）：
+
+```sh
+flutter build apk --debug --no-pub
+flutter build ios --simulator --debug --no-pub
+flutter build ios --debug --no-codesign --no-pub
+flutter build macos --debug --no-pub
+```
+
+Android 先准备 SDK/NDK/JDK/CMake 与三ABI Node资源，构建时保存实际 AGP/Kotlin 解析结果；release 当前使用 debug signing，不构成发行签名证明。iOS 先准备 Xcode、NodeMobile、混合依赖缓存；无签名设备目标构建只验编译链接，后续仍需配置团队/profile并单独验签名构建。macOS 先准备 Xcode、混合依赖缓存及归档，核对目标架构与打包签名步骤。`--no-pub` 只跳过 Pub，不保证 Gradle/Pods/SwiftPM 不联网；本轮没有检查工具安装完整性或这些缓存。实际构建可以在后续隔离环境执行，本清单不把它们计为已通过。
+
+本轮离线核对记录 **41份输入文件**指纹；所有有Git跟踪的输入均匹配固定提交，Apple插件路由集合与 native_build 清单一致，52个平台插件版本一致，macOS Node固定哈希匹配，采集期间两个仓库HEAD未变。逐项数据及检查边界见 [inventory.json](evidence/2026-10-11-tvs-build-inventory/inventory.json)；最终指纹复核见 [verification.json](evidence/2026-10-11-tvs-build-inventory/verification.json)。这是资料子项，未修改业务源码或依赖，也未重跑 Flutter 测试。完整 Task4、三端构建、实际订阅/九脚本和真实媒体/长播放仍保持开放。
+
+可用 [verify.py](evidence/2026-10-11-tvs-build-inventory/verify.py) 在原环境复核输入、已安装插件 pubspec 与固定提交的字节一致性（不执行 Flutter 或原生工具）；缺少或改变输入会失败，换路径后生成清单中的绝对插件路径也须重新采集。本轮复核退出0：41份输入、其中29份Git基线输入、52份平台插件pubspec全部匹配。
+
+```sh
+python3 docs/superpowers/reports/evidence/2026-10-11-tvs-build-inventory/verify.py --player /Users/yy2021_8689/Desktop/Flutter/yl_player --tvs /Users/yy2021_8689/Desktop/GIt/tvs --sdk /Users/yy2021_8689/flutter
+```
+
+独立只读复审通过，无Critical/Important/Minor；复审者独立运行复核脚本，并另行核对52项插件版本与锁、Apple路由集合、runner、原生制品纳入/忽略状态和报告配置声明。实际构建兼容性、有效AGP/Kotlin解析、签名、全新依赖复现、原生架构/符号与真实媒体未作判断，仍是明确待验项；未审查或修改并行字幕工作。
