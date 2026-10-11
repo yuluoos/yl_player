@@ -496,8 +496,11 @@ final class YlAudioRenderer: YlAudioRendering {
 
   // An audio gap or video-only tail must not block demux behind a full video
   // queue. Fill only time covered by decoded video, never unbounded device time.
-  func advanceSilence(through videoPTS: Int64?, atHostTimeUs now: Int64) {
+  func advanceSilence(through videoPTS: Int64?, atHostTimeUs now: Int64, expectedGeneration: UInt64? = nil) {
     lock.withLock {
+      // An old sampler can meet a newly installed renderer. Reject it before
+      // changing either the position or the silence host anchor.
+      guard expectedGeneration == nil || configuredGeneration == expectedGeneration else { return }
       defer { silenceHostTimeUs = playbackRequested ? now : nil }
       guard !disposed, playbackRequested, !pendingPlaybackLocked,
             let previousHost = silenceHostTimeUs, let videoPTS,

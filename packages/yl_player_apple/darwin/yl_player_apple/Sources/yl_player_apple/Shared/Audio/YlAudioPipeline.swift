@@ -35,8 +35,8 @@ final class YlAudioPipeline {
     fileprivate let renderer: YlAudioRenderer
     func dispose() { renderer.dispose() }
     func pause() { renderer.pause() }
-    func advanceSilence(through videoPTS: Int64?, atHostTimeUs now: Int64) {
-      renderer.advanceSilence(through: videoPTS, atHostTimeUs: now)
+    func advanceSilence(through videoPTS: Int64?, atHostTimeUs now: Int64, expectedGeneration: UInt64? = nil) {
+      renderer.advanceSilence(through: videoPTS, atHostTimeUs: now, expectedGeneration: expectedGeneration)
     }
     func play() throws { try renderer.play() }
     var scheduledDurationUs: Int64 { renderer.scheduledDurationUs }

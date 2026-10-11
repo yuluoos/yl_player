@@ -173,7 +173,12 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       return renderer?.renderedAudioTime
     })
     if presentation.configureIsolatedAudioClock(generation: audio.audioGeneration, read: { [weak self] generation in
-      guard let resource = self?.audio.currentResource else { return .waiting }
+      guard let self, let resource = self.audio.currentResource else { return .waiting }
+      // A finite audio gap must not freeze the independent video worker when
+      // AppKit stops delivering display ticks. Advance only through decoded
+      // video, on the same sampler that reads the audio clock; never via UI.
+      resource.advanceSilence(through: self.presentation.pendingFrames.last,
+        atHostTimeUs: Self.hostTimeUs(), expectedGeneration: generation)
       return resource.clockObservation(expectedGeneration: generation)
     }) {
       audio.beforeClockControl = { [weak presentation] in presentation?.invalidateAudioClock() }
@@ -657,7 +662,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   }
 
   func presentationDidTick(atHostTimeUs value: Int64) {
-    if stateLock.withLock({ active && playing && !reconfiguring && !disposed }) {
+    if presentation.isolatedAudioClockStatistics == nil,
+       stateLock.withLock({ active && playing && !reconfiguring && !disposed }) {
       currentAudioRenderer?.advanceSilence(
         through: presentation.pendingFrames.last, atHostTimeUs: value
       )

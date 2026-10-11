@@ -37,6 +37,27 @@ final class YlMacosAudioTests: XCTestCase {
     return renderer
   }
 
+  func testSilenceSamplerCannotAdvanceAnotherGenerationOrPause() throws {
+    let output = TestAudioOutput(), renderer = try clockRenderer(output)
+    defer { renderer.dispose() }
+    output.completeNextBuffer()
+    renderer.advanceSilence(through: 3_000_000, atHostTimeUs: 1_000_000, expectedGeneration: 1)
+    renderer.advanceSilence(through: 3_000_000, atHostTimeUs: 2_000_000, expectedGeneration: 2)
+    guard case let .silence(stale) = renderer.clockObservation(expectedGeneration: 1) else {
+      return XCTFail("Expected a bounded silence observation")
+    }
+    XCTAssertEqual(stale.positionUs, 1_250_000)
+    XCTAssertEqual(stale.hostTimeUs, 1_000_000, "A stale sampler must not replace the gap's host anchor")
+    renderer.advanceSilence(through: 3_000_000, atHostTimeUs: 2_000_000, expectedGeneration: 1)
+    guard case let .silence(current) = renderer.clockObservation(expectedGeneration: 1) else {
+      return XCTFail("Expected current generation to advance")
+    }
+    XCTAssertEqual(current.positionUs, 2_250_000)
+    renderer.pause()
+    renderer.advanceSilence(through: 3_000_000, atHostTimeUs: 3_000_000, expectedGeneration: 1)
+    XCTAssertEqual(renderer.clockObservation(expectedGeneration: 1), .paused(positionUs: 2_250_000))
+  }
+
   func testAudioObservationDistinguishesWaitingPausedAndEnded() throws {
     let output = TestAudioOutput(), renderer = try clockRenderer(output)
     defer { renderer.dispose() }
@@ -920,8 +941,61 @@ final class YlMacosAudioTests: XCTestCase {
   }
 
   @MainActor
+  func testTimedVideoTailAdvancesWithoutUIDisplayTicks() async throws {
+    guard #available(macOS 14.0, *) else { throw XCTSkip("Timed candidate requires macOS 14") }
+    let views = YlMacosVideoViewFactory()
+    let native = YlMacosTextureOutput(textures: ApplePublicationRegistry(), nativeViews: views)
+    let view = views.create(withViewIdentifier: 944, arguments: ["textureId": NSNumber(value: native.textureId)])
+    let window = NSWindow(contentRect: NSRect(x: 100, y: 100, width: 256, height: 144), styleMask: [.titled], backing: .buffered, defer: false)
+    window.isReleasedWhenClosed = false; window.contentView = view; window.orderFront(nil)
+    defer { window.close() }
+    let owner = YlAppleTextureOwner(output: native, onFrame: { _ in }); defer { owner.dispose() }
+    let lease = owner.makeLease(identity: .init(sessionId: "no-ui-tail", loadRequestId: "no-ui-tail")); owner.commit(lease)
+    let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+      .appendingPathComponent("assets/test_media/video_tail_60fps_h264_aac.mkv")
+    let ledger = YlManagedBufferLedger(), scope = try ledger.makeScope(maxBytes: nil)
+    let prepared = try YlPreparedFallback(source: .init(uri: fixture.absoluteString, kind: .file, formatHint: .matroska, bufferScope: scope), requireHardwareProbe: true)
+    let clock = YlMediaClock()
+    var display: AppleClockDisplay?
+    var ticks = 0, errors: [String] = []
+    let instance = try YlManagedPlaybackSession(playerId: 944,
+      services: YlPlatformServices(platform: .macos, textureOutput: native, makeDisplayDriver: { tick in
+        let value = AppleClockDisplay(onTick: { ticks += 1; tick() }); display = value; return value
+      }).borrowing(lease),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 1,
+      mediaClock: clock,
+      emit: { if case let .failure(error) = $0.event { errors.append(error.code) } },
+      timedVideoCandidateEnabled: true)
+    defer { instance.dispose() }
+    instance.setVolume(0); try instance.activate(); try instance.play()
+    try await AppleHostCharacterizations.waitFor({ (instance.timedVideoStatistics?.submitted ?? 0) >= 12 }, timeout: 4)
+    display?.isPaused = true
+    let stoppedAt = ticks
+    try await Task.sleep(nanoseconds: 5_000_000_000)
+    let position = clock.position(atHostTimeUs: Int64(ProcessInfo.processInfo.systemUptime * 1_000_000))
+    let submitted = instance.timedVideoStatistics?.submitted ?? 0
+    let observation = XCTAttachment(string: "uiTicksBefore=\(stoppedAt);uiTicksAfter=\(ticks);positionUs=\(position);submitted=\(submitted)")
+    observation.lifetime = .keepAlways; add(observation)
+    XCTAssertEqual(ticks, stoppedAt, "Only UI cadence was stopped; main remained available")
+    XCTAssertGreaterThan(position, 3_500_000, "Audio starvation must not require a UI tick to advance the decoded video tail")
+    XCTAssertGreaterThan(submitted, 80)
+    XCTAssertTrue(errors.isEmpty)
+    instance.dispose(); owner.dispose()
+    try await AppleHostCharacterizations.waitFor({ ledger.snapshot.currentBytes == 0 }, timeout: 3)
+  }
+
+  @MainActor
   func testActualTimedSurfaceSurvivesMainThreadStall() async throws {
     try await runTimedSurfaceObservation(stall: true)
+  }
+
+  private final class TimedObservationAudioFactory: YlAudioRendererMaking {
+    weak var renderer: YlAudioRenderer?
+    func makeRenderer(bufferBudget: YlFallbackBufferBudget) -> YlAudioRenderer {
+      let value = YlAudioRenderer(bufferBudget: bufferBudget)
+      renderer = value
+      return value
+    }
   }
 
   @MainActor
@@ -930,6 +1004,7 @@ final class YlMacosAudioTests: XCTestCase {
     let env = ProcessInfo.processInfo.environment
     let candidate = env["YL_TIMED_CANDIDATE"] != "0"
     let diagnostics = env["YL_TIMED_DIAGNOSTICS"] == "1"
+    let transportDiagnostics = env["YL_TIMED_TRANSPORT_DIAGNOSTICS"] == "1"
     let images = (0..<_dyld_image_count()).compactMap { index -> String? in
       guard let name = _dyld_get_image_name(index) else { return nil }
       return URL(fileURLWithPath: String(cString: name)).lastPathComponent
@@ -973,11 +1048,31 @@ final class YlMacosAudioTests: XCTestCase {
       }
     }
     defer { workspaceObservers.forEach(workspaceCenter.removeObserver) }
+    let observationClock = transportDiagnostics && candidate ? YlMediaClock() : nil
+    let observationAudio = transportDiagnostics ? TimedObservationAudioFactory() : nil
+    let audioFactory: any YlAudioRendererMaking
+    if let observationAudio { audioFactory = observationAudio }
+    else { audioFactory = YlPlatformAudioRendererFactory() }
+    var timelineEvents = 0
+    var timelinePositionMs: Int64?
+    var timelineUptime: TimeInterval?
     let instance = try YlManagedPlaybackSession(playerId: 942,
       services: YlPlatformServices(platform: .macos, textureOutput: output, makeDisplayDriver: { YlDisplayTimer(view: view, onTick: $0) }).borrowing(lease),
       configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 31,
+      mediaClock: observationClock, audioRendererFactory: audioFactory,
       presentationScheduler: scheduler,
-      emit: { if case let .failure(error) = $0.event { failures.append(error.code) } },
+      emit: {
+        switch $0.event {
+        case let .failure(error): failures.append(error.code)
+        case let .state(state) where transportDiagnostics:
+          timelineEvents += 1; timelinePositionMs = state.positionMs
+          timelineUptime = ProcessInfo.processInfo.systemUptime
+        case let .delta(delta) where transportDiagnostics:
+          timelineEvents += 1; timelinePositionMs = delta.positionMs
+          timelineUptime = ProcessInfo.processInfo.systemUptime
+        default: break
+        }
+      },
       timedVideoCandidateEnabled: candidate, timedVideoDiagnosticsEnabled: diagnostics)
     defer { instance.dispose() }
     instance.setVolume(0); try instance.activate(); try instance.play()
@@ -997,10 +1092,29 @@ final class YlMacosAudioTests: XCTestCase {
         "rejectedObservations": clock?.rejectedObservations as Any? ?? NSNull(),
         "maximumReadSeconds": clock?.maximumReadSeconds as Any? ?? NSNull(),
         "maximumAgeSeconds": clock?.maximumAgeSeconds as Any? ?? NSNull()]
-      let row: [String: Any] = ["audioClock": clockRecord, "phase": phase, "uptime": ProcessInfo.processInfo.systemUptime,
+      var transport: [String: Any] = [:]
+      if transportDiagnostics {
+        let host = Int64(ProcessInfo.processInfo.systemUptime * 1_000_000)
+        let snapshot = observationClock?.presentationSnapshot(atHostTimeUs: host)
+        transport = ["positionUs": snapshot?.positionUs as Any? ?? NSNull(),
+          "playing": snapshot?.playing as Any? ?? NSNull(),
+          "waitingForClock": snapshot?.waitingForClock as Any? ?? NSNull(),
+          "pendingPTS": scheduler.pendingPTS,
+          "nativeTimeSeconds": layer.controlTimebase.map { CMTimeGetSeconds(CMTimebaseGetTime($0)) } as Any? ?? NSNull(),
+          "nativeRate": layer.controlTimebase.map { CMTimebaseGetRate($0) } as Any? ?? NSNull(),
+          "rendererStatus": renderer.status.rawValue,
+          "rendererReady": renderer.isReadyForMoreMediaData,
+          "requiresFlush": renderer.requiresFlushToResumeDecoding,
+          "audioPending": observationAudio?.renderer?.hasPendingPlayback as Any? ?? NSNull(),
+          "audioDurationUs": observationAudio?.renderer?.scheduledDurationUs as Any? ?? NSNull(),
+          "audioBytes": observationAudio?.renderer?.scheduledBytes as Any? ?? NSNull(),
+          "timelineEvents": timelineEvents, "timelinePositionMs": timelinePositionMs as Any? ?? NSNull(),
+          "timelineUptime": timelineUptime as Any? ?? NSNull()]
+      }
+      let row: [String: Any] = ["transport": transport, "audioClock": clockRecord, "phase": phase, "uptime": ProcessInfo.processInfo.systemUptime,
         "pid": ProcessInfo.processInfo.processIdentifier, "candidateRequested": candidate,
         "runtimeDiagnostics": runtimeDiagnostics,
-        "diagnosticsEnabled": diagnostics, "nativeDiagnostics": (diagnostics ? output.timedDiagnostics : nil) as Any? ?? NSNull(),
+        "transportDiagnosticsEnabled": transportDiagnostics, "diagnosticsEnabled": diagnostics, "nativeDiagnostics": (diagnostics ? output.timedDiagnostics : nil) as Any? ?? NSNull(),
         "applicationActive": NSApp.isActive, "windowVisible": window.isVisible,
         "windowOcclusionVisible": window.occlusionState.contains(.visible),
         "testWindowNumber": window.windowNumber, "onActiveSpace": window.isOnActiveSpace,
