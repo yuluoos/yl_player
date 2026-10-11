@@ -1,0 +1,35 @@
+{
+  "baseCommit": "fee2518875bb77ff2b437a989712938709aff939",
+  "date": "2026-10-11",
+  "scope": "P02 internal SRT/WebVTT parsing only",
+  "dart": "3.12.0 macos_arm64",
+  "sourceSha256": {
+    "packages/yl_player/lib/src/subtitles/subtitle_document.dart": "eaa79a9847617c68813316f38581e979650c159fc608a7bb8d4fbc30ca7ab4b8",
+    "packages/yl_player/test/subtitle_document_test.dart": "e15ef47e5674ecddfe539acfc952ac41aec5e209768952d1522c1432a836c8d8",
+    "docs/superpowers/specs/2026-10-11-subtitle-parsing-contract.md": "fc548d1c59eb653c9b91d8f9e9e2956fe01c3caf9d8fbb4c0ddef0b55876a053"
+  },
+  "logsSha256": {
+    "red.log": "da39d811e0e54d70a3bce99981b8acd5c46ce528f18ac84cf070b80828cb759d",
+    "review-red.log": "67dd0ce4bf094d0b97fb2a887c021d75133cba5c6ca4da2709ede80e30373128",
+    "final-package-tests.log": "327d9a0466f1b443699c516377c0cf31c3fbbe9e02fb4c1c063509a28f1bd0af",
+    "final-analyze.log": "eb062be21e2c6c0509e1933ce0c5ba2d4da7f7c2c15e4c1381c757b8a3193750"
+  },
+  "verification": {
+    "initialRedExit": 1,
+    "noteRegressionRedFailures": 3,
+    "finalPackageTests": 147,
+    "finalPackageExit": 0,
+    "finalAnalyzerExit": 0,
+    "finalAnalyzer": "No issues found",
+    "nativeOrDeviceTestsRun": false,
+    "CAP_SUB": "not_complete"
+  },
+  "commands": {
+    "cwd": "packages/yl_player",
+    "red": "flutter test --no-pub test/subtitle_document_test.dart",
+    "reviewRed": "flutter test --no-pub test/subtitle_document_test.dart --plain-name 'malformed NOTE'",
+    "finalTests": "flutter test --no-pub",
+    "analyzer": "dart analyze lib/src/subtitles/subtitle_document.dart test/subtitle_document_test.dart"
+  },
+  "workingTree": "uncommitted; concurrent P04 work excluded"
+}

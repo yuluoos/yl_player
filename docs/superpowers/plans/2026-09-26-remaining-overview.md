@@ -368,3 +368,7 @@ sh ../../../tool/run_android_integration.sh integration_test/format_matrix_test.
 ### 2026-10-11 P04独立工具切片
 
 另一会话继续显示长播放复验；本会话从fee2518完成P04 Task1A HTTP弱网工具、三条版本轨迹和复用原创媒体的40秒/10Period独立URL节目。虚拟时钟与回环20/20通过，独立CLI验证两份内容逐字节一致且正常退出；复审发现的慢请求头/关闭等待与URL缓存歧义已修正。只新增工具及文档，不改播放器/原生构建/设备/HEAD。Task1实播基线、真实RTT、直播协议整合与Task2–4仍开放，不计CAP-ABR/CAP-LIVE通过。详见[P04报告](../reports/2026-09-26-remaining-04-abr-live.md)。
+
+### 2026-10-11 P02 独立字幕解析切片
+
+在长播放复验和弱网网络工具由其他会话推进期间，新增内部 SRT/WebVTT 有界解析及媒体时间重叠/偏移/关闭查询。NOTE 吞字幕复审问题经三项真实 RED→GREEN 修复，最终 yl_player Dart 147/147、静态分析无问题；未运行原生或设备测试，未改 HEAD。公开字幕 API、多轨身份、TTML、网络/会话和画面合成仍开放，不计 Task 1/2 或 CAP-SUB 完成。详见[P02 报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)及其源码/原始日志清单。
