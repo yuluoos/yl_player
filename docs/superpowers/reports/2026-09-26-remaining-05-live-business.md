@@ -213,3 +213,28 @@ flutter analyze --no-pub
 这是资料与验收映射子项，无生产代码/依赖变化，按文档风险只做字段、哈希、链接和范围核对，不重复 Flutter/设备测试。P05 的原生资源释放、完整业务构建、当前九脚本线上兼容性和三端真实媒体验收仍开放。
 
 独立只读复审 Ready，无 Critical/Important/Minor。复审核对公开夹具、历史记录和表格/JSON 的一致性，认可本项只关闭资料整理行；未执行归档命令或重算哈希，也未读取私有正文。哈希与链接验证由执行者完成。
+
+
+## 2026-10-11：Task 1 本机 native / HTTP 资源释放证据
+
+固定基线 **`3eb2d391d09cfcb68d1dd1ec0f4e869e0ddc7a34`**，在归档副本加入本轮三个测试/入口文件，隔离并行字幕和长播放工作。生产代码、依赖、TVS 均未改动。本轮只关闭下面的本机证据子项，三端原生终止/媒体交接及完整 P05 继续开放。
+
+新增独立 C harness，以测试编译单元包装真实 QuickJS 创建/释放调用，计数在真实释放函数返回之后更新；生产构建没有观察器或测试开关。CPU 夹具先等待公开 main 调用中的第二次真实中断回调，确认已持续执行循环；宿主夹具先取到真实宿主请求，再分别经历 cancel/timeout，连续三轮、每批四个任务，共 **48 个终止任务**。观察 terminal 状态时检查 context/runtime 释放计数，拒绝迟到 reply，销毁 caller handle，再执行一次成功解析。合计 **60 个 context 和 60 个 runtime 创建/释放配对**（含12次新解析），重复满容量批次同时检查 admission 没有遗留占用。真实 pthread_join 沿用生产 destroy 路径；本项没有另做操作系统线程/堆对象清点。
+
+新增 **12 项** Dart 回归，交叉覆盖脚本下载/宿主 HTTP、等待响应头/未结束响应体、cancel/timeout/dispose。夹具使用 raw TCP socket，服务端保留响应与 socket；响应体场景另用仅转发真实 dart:io 请求的测试观察器，等客户端收到首个非空 chunk 后才执行取消/释放（超时用例也要求先观察该 chunk），再检查对端 EOF 或 SocketException，必须在夹具关闭之前观察到客户端断连；不把 HttpResponse.done 或取消 Future 完成当作断连。之后通过当前 resolver（dispose 后新建）执行新的真实回环宿主请求并解析成功。断连等待有5秒界限，证明该测试窗口内的传输释放，不宣称远端在取消 Future 返回前已收到 FIN。
+
+首轮12/12通过，表明已有实现符合新增断言，没有为获得 RED 重写生产代码。隔离副本故意省略 `JS_FreeRuntime`，释放计数断言失败；故意移除 HTTP abort 的请求中止与 client.close，取消在5秒内无法结束，测试失败，随后夹具收尾也达到 runner 的30秒测试超时。两种故意回归均自动恢复原字节。最初两个实验编译窗口可能重叠，因此另做原生已恢复条件下的**串行 HTTP 重跑**，仍同样失败；该串行结果才作为 HTTP 敏感性证据，首轮日志保留但不用于隔离结论。
+
+恢复后逐字节核对两个生产输入，再运行最终验证：解析模块 **53/53**，模块静态分析无问题；ASan/UBSan 下既有 native harness **183 checks**、新增 cleanup harness **438 checks**，均0 failures。Dart 格式与 diff 检查通过。第一次格式命令在完成格式检查后因沙箱阻止用户遥测状态写入而退出1；权限范围内重跑退出0，没有改动 SDK 或依赖。
+
+```sh
+# 固定归档副本，项目已有依赖配置映射到副本，不执行 pub resolve：
+SANITIZE=1 sh packages/yl_player_source_resolver/tool/test_native.sh
+# cwd: packages/yl_player_source_resolver
+/Users/yy2021_8689/flutter/bin/flutter test --no-pub --concurrency=1
+/Users/yy2021_8689/flutter/bin/flutter analyze --no-pub
+```
+
+[verification.json](evidence/2026-10-11-native-resource-cleanup/verification.json) 保存基线、关键输入与新测试指纹、退出码及边界；[raw-logs.json](evidence/2026-10-11-native-resource-cleanup/raw-logs.json) 保存初次通过、故意回归及最终验证日志。没有使用设备、模拟器、原生媒体播放、真实脚本服务或外部测试环境。本机 sanitizer 和直接释放观察并非全堆无泄漏证明，未运行 LeakSanitizer；Android/iOS/其他主机、九脚本线上行为、真实媒体及长播放仍需各自验收。
+
+独立只读复审发现两项 Important 同步缺口：context 创建早于进入 main 循环，服务端 flush 早于客户端接收正文。两项均接受并在同一轮修正为上述实际执行/读取就绪观察。先在隔离副本加入就绪断言而未接入观察器，native 因就绪计数未达4失败；HTTP 因首块等待5秒超时失败，并在随后解析10秒超时中暴露预期取消的差异。接入真实观察后重新运行全部模块测试、分析和 native sanitizer 检查，结果如上。没有遗留复审项，未进行第二次独立复审；复审者只读代码和当时日志，未执行测试、重算哈希或审查后续证据文档，最终同步修正及文档核对由执行者完成。

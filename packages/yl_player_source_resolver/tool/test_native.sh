@@ -17,3 +17,14 @@ clang "$@" -I "$package_dir/src/quickjs" \
   "$package_dir/src/quickjs/libunicode.c" \
   -o "$output_dir/harness"
 UBSAN_OPTIONS=halt_on_error=1 "$output_dir/harness"
+
+# This harness includes the runtime through test-only QuickJS observers.
+clang "$@" -I "$package_dir/src/quickjs" \
+  "$package_dir/test/native_cleanup_harness.c" \
+  "$package_dir/src/quickjs/quickjs.c" \
+  "$package_dir/src/quickjs/cutils.c" \
+  "$package_dir/src/quickjs/dtoa.c" \
+  "$package_dir/src/quickjs/libregexp.c" \
+  "$package_dir/src/quickjs/libunicode.c" \
+  -o "$output_dir/cleanup-harness"
+UBSAN_OPTIONS=halt_on_error=1 "$output_dir/cleanup-harness"

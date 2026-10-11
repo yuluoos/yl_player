@@ -1,0 +1,680 @@
+{
+  "schemaVersion": 1,
+  "baseline": "3eb2d391d09cfcb68d1dd1ec0f4e869e0ddc7a34",
+  "scope": "macOS host-only script VM and loopback HTTP cleanup; tests only",
+  "validationSnapshot": "/private/tmp/yl-cleanup-ul3sslv5",
+  "productionChanges": false,
+  "devicesUsed": false,
+  "externalServicesUsed": false,
+  "inputs": [
+    {
+      "path": "analysis_options.yaml",
+      "sha256": "54e1495aa03d52ee30a39ae2ab9e1337e28fb5c041e4cbf7721c14727be77ecb"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/.gitignore",
+      "sha256": "b3e3b41b680a71121c285a1cf7fead55d33cc3297a411821c22f7a4d49483c87"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/LICENSE",
+      "sha256": "54bac49375e118f24f71b6f59ba659775667440695a137ae1c9a399a668c2aa0"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/README.md",
+      "sha256": "1a04a87ab99dc809319cdb9483da9aa53e76787b3e2a668f55b7398c40815863"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/.gitignore",
+      "sha256": "e7ca3c01ccc95b4906d1e64cd81a0b11c05738a216617715055bef65aba9a818"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/.metadata",
+      "sha256": "fcd880e4ee86338fd4debc7d786e9f9f48c1079a9a008fd28637d479caa2c720"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/README.md",
+      "sha256": "ba2bf2b609aa0521541d61f28c8ca1118f37e6446f0b5663143a680f2f9c8efc"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/analysis_options.yaml",
+      "sha256": "e0ea485cfdbc3e12b93efb8679a5ea73ebfe20ea4ca0c473dc594fc2fb274ed5"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/.gitignore",
+      "sha256": "b027c9de1011765c015e5819bf857c0d75bfcd0886fb01721c091159012e50f1"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/app/build.gradle.kts",
+      "sha256": "69103f5ad494691cec3fcfe0823a5ee00df57dda86d7b63c638c0c46098ce5fd"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/app/src/debug/AndroidManifest.xml",
+      "sha256": "30b0832ed8b92dfbd6ae2abfa939ccf26333d37600056b1572bd4a397a18a74b"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/app/src/main/AndroidManifest.xml",
+      "sha256": "6a311fe5e61ee2db1000e92a4616fb04324cde6587815ef065e4900fec29beea"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/app/src/main/kotlin/dev/ylplayer/yl_script_resolver_example/MainActivity.kt",
+      "sha256": "8f9750b8ea2cea6b69b3178bc4e0c9c2b24b5bf4e085d3ae5e6e4c20496972db"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/app/src/main/res/drawable-v21/launch_background.xml",
+      "sha256": "7ca6d5cec2169c5a98661a119db23a6f3399c8fef2256ff04f3a642831282478"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/app/src/main/res/drawable/launch_background.xml",
+      "sha256": "94433756fe10005ddd6fc55cc5c0b1e9f3c10b66a08ceac795ece6713d34e28a"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+      "sha256": "6a7c8f0d703e3682108f9662f813302236240d3f8f638bb391e32bfb96055fef"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/app/src/main/res/mipmap-mdpi/ic_launcher.png",
+      "sha256": "c7c0c0189145e4e32a401c61c9bdc615754b0264e7afae24e834bb81049eaf81"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png",
+      "sha256": "e14aa40904929bf313fded22cf7e7ffcbf1d1aac4263b5ef1be8bfce650397aa"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+      "sha256": "4d470bf22d5c17d84edc5f82516d1ba8a1c09559cd761cefb792f86d9f52b540"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+      "sha256": "3c34e1f298d0c9ea3455d46db6b7759c8211a49e9ec6e44b635fc5c87dfb4180"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/app/src/main/res/values-night/styles.xml",
+      "sha256": "8c5bad5152f217e837519f9c15211d19f39bd45f5f67faf6dd81cb4b299e518f"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/app/src/main/res/values/styles.xml",
+      "sha256": "937d7c82f539c72eb94fd3a3773f29b3d3fef1997213c92cb632298cedf4bda9"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/app/src/profile/AndroidManifest.xml",
+      "sha256": "30b0832ed8b92dfbd6ae2abfa939ccf26333d37600056b1572bd4a397a18a74b"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/build.gradle.kts",
+      "sha256": "6a26dba2cb8dfba1e74f540b0d17a89d96c1301d3c3bfda14348bed257fddcba"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/gradle.properties",
+      "sha256": "0f82b18017fba6bb5ce3aa4b2d1a00c9382fc8aae7b1d9326e44b18abd66d80b"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/gradle/wrapper/gradle-wrapper.properties",
+      "sha256": "3221993eac1057198d652b7437105e2953ca4850d415eb0eb2b9625874fd059e"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/settings.gradle.kts",
+      "sha256": "b76d554153a63772dddbe2ee91abdf582f5f871af40698b80a2ef7b70903d96f"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/assets/PROVENANCE.md",
+      "sha256": "edb3e36384b9f670be34ff4815ba07ab348a533af4331820bd6fdae6023ea8b7"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/assets/fixture-video.mp4",
+      "sha256": "a9746f24e997dac3bf466501c71935155f887aa160131b7ecd581f519933613c"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/integration_test/rtmp_handoff_test.dart",
+      "sha256": "e238da8ada35301be19b4f8be80f3c76e8bc7b4270a3d2c2c409be0136a18266"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/integration_test/script_runtime_test.dart",
+      "sha256": "70e4f18b6fa02ad68d33de81d8f0510e132d7ee2fb320194df12a113b2fd9434"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/.gitignore",
+      "sha256": "37380775aeb2499662b7aca80f4ac4c95ae827c3ba2bfa179aa3e9af4812c623"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Flutter/AppFrameworkInfo.plist",
+      "sha256": "da12038f9b2688a8a26160fea2609fa8fcb11421448c109f09c0f573efe7698d"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Flutter/Debug.xcconfig",
+      "sha256": "a82d7765b37116ee4821d2cd1d65942febf8032353757ffb0826eabde785b4a6"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Flutter/Release.xcconfig",
+      "sha256": "a82d7765b37116ee4821d2cd1d65942febf8032353757ffb0826eabde785b4a6"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner.xcodeproj/project.pbxproj",
+      "sha256": "14b92cf9a4f6bc75f08be0671a4b5bfa4b798ca5f0cd0f74b39b5d8a235bca47"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
+      "sha256": "7f3b00b5c3fdb45242d7b87e1e5c4e25d1fa8129a16c94295ecc4e8ea2235c5f"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "sha256": "dfa0f9bb85b95ccba9c6811adadf8cb407fb5d52088e89db83ebc308ec448542"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings",
+      "sha256": "11b247bc6796892d67c9a821d18604db4dd6a880981b34f38460b9866e6b247f"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme",
+      "sha256": "9fbce429f56243561dd437a527136c9f9ed77165e3b271b923faf236cfcd0484"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner.xcworkspace/contents.xcworkspacedata",
+      "sha256": "46c3c9702ff7c5584e11c954d943cfb6e07fb26e3fbd072ddbc0f388aa352de1"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "sha256": "dfa0f9bb85b95ccba9c6811adadf8cb407fb5d52088e89db83ebc308ec448542"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings",
+      "sha256": "11b247bc6796892d67c9a821d18604db4dd6a880981b34f38460b9866e6b247f"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/AppDelegate.swift",
+      "sha256": "451c6d9ba0a2b3ff43092ea349c60fa79a91f1158b915eb29dbdd357cb95d7b8"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json",
+      "sha256": "3b1e214f466ffedff74baa5598ad5c4421130eea6bc8d57b8fe23435e8280ae4"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png",
+      "sha256": "7770183009e914112de7d8ef1d235a6a30c5834424858e0d2f8253f6b8d31926"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png",
+      "sha256": "cab10a0d391ec5bc09ef50ce49e8ad401cee7ef03707ec0923a222c5c2b3d212"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png",
+      "sha256": "b9ad02cf6576a04d1b6806ac02a2431481b448dd0c2e505ce25842d1f7c4730b"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png",
+      "sha256": "c6e6d3b215ae744a9c391f4c4d44157eff5e739d6ad6c39f9bfa5df66dddd267"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png",
+      "sha256": "5dee24dc104ac76dc162e42ae0beb163d426bf365562ee28ba7b3ad368559a60"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png",
+      "sha256": "a9b21eb6f4271385655a8771f76e29eef8c1107d7879cbcfc567e6619d1f716a"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png",
+      "sha256": "e677d701ffe4af7bc2935098d6b3984cc9ab7ace573e6900955a5535b12410cf"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png",
+      "sha256": "b9ad02cf6576a04d1b6806ac02a2431481b448dd0c2e505ce25842d1f7c4730b"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png",
+      "sha256": "7c61c42fc7b657d9cf314d32a4ec458f0647c3aaf360be1b9377857266ec2499"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png",
+      "sha256": "19be171481dc71a0b2803ebcd01dd8b0c5fd5778dee34c0a3cabc948c225f24e"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png",
+      "sha256": "19be171481dc71a0b2803ebcd01dd8b0c5fd5778dee34c0a3cabc948c225f24e"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png",
+      "sha256": "4209a49e44a92ec40a327d3455eb1b1c153ee83d75de1c2be0a12ab18b2ff9de"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png",
+      "sha256": "836c918cb613249eba0483a6b02fa3df3c1c0a89a315ee4d3b88509b83c7ab73"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png",
+      "sha256": "41c7d42f6e61f8fe7f30b1ffa2256aecbc9682be06d18c4a3062043e1a2e547c"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png",
+      "sha256": "5d7e5bdf01b93802bc973345b3a78c038907147625035952a08a115a563b7f81"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json",
+      "sha256": "ccc7950fd5f5b82067c85f667940a9d59189151460761ece8098ca78daa19469"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage.png",
+      "sha256": "93ae7d494fad0fb30cbf3ae746a39c4bc7a0f8bbf87fbb587a3f3c01f3c5ce20"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@2x.png",
+      "sha256": "93ae7d494fad0fb30cbf3ae746a39c4bc7a0f8bbf87fbb587a3f3c01f3c5ce20"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@3x.png",
+      "sha256": "93ae7d494fad0fb30cbf3ae746a39c4bc7a0f8bbf87fbb587a3f3c01f3c5ce20"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+      "sha256": "a985b626c4f7546a8ba392d135e9226c3547c8e2b46895f5f2bdf40d7b14ef9f"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Base.lproj/LaunchScreen.storyboard",
+      "sha256": "857e61203b3deafb05766d8fcda898b86a7cb6f3d5e385ecc9926c4d698215e9"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Base.lproj/Main.storyboard",
+      "sha256": "fd367b6c43006d61b730f674970dd48b9f662c8f2264e52ffc1558102a2c9f2d"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Info.plist",
+      "sha256": "4cb2e36d4229417857f6eb1fa81fbecb70aceb653421832effc4efffad166d35"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/Runner-Bridging-Header.h",
+      "sha256": "1a8d11d01d1cc92c650c9c9ed35299240052d4683a15a719a2315ef44185e074"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/SceneDelegate.swift",
+      "sha256": "add68b905971dedfcc0d0b5b7118030de5925ba8c081ad9815463699e3a444ad"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/RunnerTests/RunnerTests.swift",
+      "sha256": "902fe4e549f9eaff7ac1526d9a42cae93fcd384b4a1393bf86e1c0cff05e34e3"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/lib/demo_server.dart",
+      "sha256": "68b0c51d094ea9261ac4bd775d368bf5bcbf4593af7f5fc5d4662146b0f6991a"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/lib/main.dart",
+      "sha256": "b280bf697b3f2f98c9740aaf36e794bbc1e362ca306c3f08501bbbbb5d85e234"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/.gitignore",
+      "sha256": "ffec1a0bbd70547186b82ad4e49089bafab2de309b89de97c776d70debb179fa"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Flutter/Flutter-Debug.xcconfig",
+      "sha256": "62290ad8e938bf410206d8c7e131262696b58a6df110d39faf3399396ffe61b1"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Flutter/Flutter-Release.xcconfig",
+      "sha256": "62290ad8e938bf410206d8c7e131262696b58a6df110d39faf3399396ffe61b1"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Flutter/GeneratedPluginRegistrant.swift",
+      "sha256": "357091c83af93a37f26593ae47dbf4cc6ce71efdc9f98f6c6d96bfd6a7381f83"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner.xcodeproj/project.pbxproj",
+      "sha256": "6d61d88196a314fa96324ac237169ac940b2a0634f7ee75ca2f3a440402913c6"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "sha256": "dfa0f9bb85b95ccba9c6811adadf8cb407fb5d52088e89db83ebc308ec448542"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme",
+      "sha256": "24ed21fd7425dbdaf0793b2a806dabe92d9b2fbbf135282e983dd8c3ddc68268"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner.xcworkspace/contents.xcworkspacedata",
+      "sha256": "46c3c9702ff7c5584e11c954d943cfb6e07fb26e3fbd072ddbc0f388aa352de1"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "sha256": "dfa0f9bb85b95ccba9c6811adadf8cb407fb5d52088e89db83ebc308ec448542"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner/AppDelegate.swift",
+      "sha256": "ce9dbe45a57c59e85519da50a26c471615b9c8cdd85a8f4a39d2e480e62a4af4"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json",
+      "sha256": "bc6ba8105ca69651aeeb77358851590de295dca04681a1d58c0f449641c242f3"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_1024.png",
+      "sha256": "6232e5815af17e25e0268b2fec7aea9e068cc92ec709e9605c2b31df4ff2a313"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_128.png",
+      "sha256": "15591f03f31313af6fd644ed0512106cc04365130b8b73244f1cfa6dddfb4400"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_16.png",
+      "sha256": "cc6928b5adfc00dbf526192e2705dd9af641cdf20ab4c6c7ca7cd4936dca59f0"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_256.png",
+      "sha256": "416efd77cde932d42ef34168da24dd428a495b1f4f34bbbd125a18d2add186a2"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_32.png",
+      "sha256": "ae8c4458e41f1e28b1e851ed87d3268d4a0351ceea427fa2a84cc94ddfb6d4c5"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_512.png",
+      "sha256": "0a91c6c1bf242e54ee179e34629e9ef3e8a6d286c0fce01e302280a8be9277e6"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_64.png",
+      "sha256": "6ad229623498e5f1277800db3ab7cb11faf85eb2569e1213f7d8e55003c07b42"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner/Base.lproj/MainMenu.xib",
+      "sha256": "be9e9ef8469d3262370e0f0b855ed163cbf9c8362c59e330b2ffe63b86fa42f4"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner/Configs/AppInfo.xcconfig",
+      "sha256": "8717a882ed0ef655d1bd008710750cfe8247036c7ce04e902f644c286ede51d8"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner/Configs/Debug.xcconfig",
+      "sha256": "8067d533ef6593760baad9a9855a786a7a77470fcc3f0925ec04fe43bc1ac4b0"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner/Configs/Release.xcconfig",
+      "sha256": "7a6a4b4d973a23052fa0a0388dd261e32d311d7b66ba1bfc3b914b361808ac61"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner/Configs/Warnings.xcconfig",
+      "sha256": "0e341a392b16ad302d12890aa3dac9257a6c10ece685437604259a85341645a3"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner/DebugProfile.entitlements",
+      "sha256": "c1d8d45020d2bfa17fe3aa625eb5b7d2ea1205fe19c989bdba06b4f7f399f7fe"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner/Info.plist",
+      "sha256": "f253e89c512b3a9a81bc5cdd7a14bf932470f835f261654a808ea4549cd94aad"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner/MainFlutterWindow.swift",
+      "sha256": "65c9613c11bcedfa51416b16c975d8ba6ff12b405fc19d60db8755d92e86d9fe"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/Runner/Release.entitlements",
+      "sha256": "bcdb9a6a6319be5dfd35602ee41602bdd953e6e8ac47b99212b75b93d39fd9d6"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/macos/RunnerTests/RunnerTests.swift",
+      "sha256": "3e28a7df0a3dcb1856e9c6c7e0f4888bcecb3e736994c48f1cfcdd2651e831ae"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/pubspec.yaml",
+      "sha256": "e45d418b2992e08b240473a43a7c19e684b02eb7fd4d29215b133fcbacd2e882"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/hook/build.dart",
+      "sha256": "26f4ced63b2f398c08a69d8ff6890ecee5c4470ba5be2c6bce1d9a7f3adc2c4b"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/lib/src/native_runtime.dart",
+      "sha256": "e9074108d45a2eabcf0b79375bc763117397db05d7c8863481b1a7190f215404"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/lib/src/script_http.dart",
+      "sha256": "f90be3908e77ea969224bce2fde2b0228c720379e62ef494d596190678e91826"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/lib/src/script_models.dart",
+      "sha256": "0c638e858f6a86adfaaf430dc0ee9e60db55c4f5d290ad2424856b1b3d5609bb"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/lib/src/script_resolver.dart",
+      "sha256": "ec7f8cde35d75eeb30145824db200a7d2d91cd36b28afbec266a2691d0e39b49"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/lib/yl_player_source_resolver.dart",
+      "sha256": "32da8c3bbdf83c90d058eba0d1f5827b866bcdd9c620839bbb4ba1b0ba932231"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/pubspec.yaml",
+      "sha256": "49ad1606a438b321d219685f27e5becd4a16cdfce251b1765606b66c2f88e1c1"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/cryptojs/LICENSE",
+      "sha256": "f729d14b7e1bf8adca0dcc38b93b929d14d53fcd5db56c3d1c9b2daa7aa69396"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/cryptojs/PROVENANCE.md",
+      "sha256": "57b5a53bf89cd972c1c217efaea7cb9aaa31cac38bf0766f73336d5aa638a1a6"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/cryptojs/crypto-js.js",
+      "sha256": "ee02257ffbaf0a9b481c7039b0f3bb20c360c9674fe4be8b38ae709b2ea59bbe"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/cryptojs/crypto_js.inc",
+      "sha256": "616cb8d6223e62c36e2fef1340d36c5b164621300cc164a64faeb9bbab1832c0"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/quickjs/LICENSE",
+      "sha256": "598fd7fc928e4350abce36e337ba5a1346923c5c692f5be92c3d8e29ddd7c18d"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/quickjs/PROVENANCE.md",
+      "sha256": "eef5a10d9caa4300a89a418b0166e66f19942d0bf98015eccb694731adb9541c"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/quickjs/SHA256SUMS",
+      "sha256": "6fde057a0a8262aa2fd405efbff1f3fc108a1ddc3327f5bedcb8fb0e76896dc7"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/quickjs/VERSION",
+      "sha256": "234057c4079458cba9862d4bbb6f8a059ac2e4a194947673da0ad38ca16a37fd"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/quickjs/cutils.c",
+      "sha256": "b73a403a59da30726257ddbdf5e399298941c1def997782ee0d4d33f796a80a2"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/quickjs/cutils.h",
+      "sha256": "d2da6d06a75b9e6c116c82b7a41df6bcc170c8b1779f374fa953ecf688eda647"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/quickjs/dtoa.c",
+      "sha256": "af5abd68fa9806d1a19bdd5f2daef00d5fd0990ae56311382dfed4700343f074"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/quickjs/dtoa.h",
+      "sha256": "462070f7678a894b9f3612422f280f4dce412eb360a5cc585a513f407fc23114"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/quickjs/libregexp-opcode.h",
+      "sha256": "2a98d646089f3a72f25480116297c5fdb5b28fd9f815447273951f4ade4a115e"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/quickjs/libregexp.c",
+      "sha256": "fdfcf86167029ab2c39c35730d4ae6875b7bbeb9406a0fcc886de4e9b1f5e2ac"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/quickjs/libregexp.h",
+      "sha256": "f5c5ef1899f224dcc718422a22c789ef9d8b5b837b622818fcfaf681ae793446"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/quickjs/libunicode-table.h",
+      "sha256": "cf782bc7a07549e976f606bd3cb8555858482b279574554dcb8d46412986006c"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/quickjs/libunicode.c",
+      "sha256": "26203ae888c0582e7d0e2113f13db0c9b39dc7b0b3836d68fa308c54f7a0898c"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/quickjs/libunicode.h",
+      "sha256": "ce310152bc80d7415dcb657e23abd9a40bf83e393c0d05d325dae384bb01d259"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/quickjs/list.h",
+      "sha256": "181c6b25d9d0e4853315d36a6e6fab3b2c3554271693d898a439384ba0f67c2b"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/quickjs/quickjs-atom.h",
+      "sha256": "342194359417664e652f54e7d682ee2ef91dd982e91f74decbde992a2c848236"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/quickjs/quickjs-opcode.h",
+      "sha256": "a9c60a8c9366820733d9d2acbb805f48b2e9e2778df526e6bcb845fdb6b47834"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/quickjs/quickjs.c",
+      "sha256": "a00762d2eee42316cecbc9c15efc4549b715ec500461845cd91b2a6c38190d08"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/quickjs/quickjs.h",
+      "sha256": "2165f47772af9faee1798999a599fa9de850d1bf0259502dade1c25d4a588316"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/yl_script_runtime.c",
+      "sha256": "e2e10c4af72007af9b2591b8f987b34db7da61b01cf806831e2c1622737d658b"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/src/yl_script_runtime.h",
+      "sha256": "069de46ab00702b306b000995d8af9240e36dda20012002f7b9bdd2e35b2dfb4"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/test/crypto_runtime_test.dart",
+      "sha256": "8f33202b188fe6f9c1274f7a7dd04d09b49ef4cf8c73090e1b2fe5e59c574ab7"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/test/native_runtime_harness.c",
+      "sha256": "d136bdb2837beded8ab9a4c27eebeca4bf0b330490eb73aafcf96b30b86d9792"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/test/native_runtime_test.dart",
+      "sha256": "3e24d24fa1b1c9184515703aeac9c4accaf611caebfb399c4f694378253a25e3"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/test/script_http_test.dart",
+      "sha256": "86ffe766e5e55d27ba3d35bba1d13f885adfff5d1019b8d786e4429630e8722c"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/test/script_models_test.dart",
+      "sha256": "edf0d4f8c86fd1cff585b42853f813b4636c6472fd2335c8f78355c72f8aa4a0"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/test/script_resolver_test.dart",
+      "sha256": "5c2e7311db4d317abe0849dd7a95d8219177f58024f5c6d99afd5d7b6fbb939e"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/test/support/controlled_contract.dart",
+      "sha256": "38668e3f88a003fac03dbe15d551e8d3cb52a96470a6f11899ded692a093cfab"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/tool/generate_controlled_integration.py",
+      "sha256": "377950a0a586d8c17ce8fdb28141922df85197fbcb45d71fc0bd70f80bcd612c"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/tool/test_generate_controlled_integration.py",
+      "sha256": "a918f8da64ca75345567af4d667a766ab3b179d84daee4c3ffbe00a2e1baa84d"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/tool/test_native.sh",
+      "sha256": "1ebbe67a7b7f3ce514423c3ceb6b3c8a9a881abcb467ef6ddd5a10a90541b500"
+    },
+    {
+      "path": "pubspec.lock",
+      "sha256": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d"
+    },
+    {
+      "path": "pubspec.yaml",
+      "sha256": "a6fd12d7606ae8efa151b211b7317f6a6dfc73e362722d36efcd8aef1c8f81ee"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/test/native_cleanup_harness.c",
+      "sha256": "548cd43d758519655b53c549cdc8986e08bfcab2f1ff5ba949e35706fe240dae"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/test/resource_cleanup_test.dart",
+      "sha256": "db58d2aaf53e9fe52d5307442c678e5c0a64a158b6a2b45678d3f009a7eab537"
+    }
+  ],
+  "changedFiles": [
+    "packages/yl_player_source_resolver/test/native_cleanup_harness.c",
+    "packages/yl_player_source_resolver/test/resource_cleanup_test.dart",
+    "packages/yl_player_source_resolver/tool/test_native.sh"
+  ],
+  "snapshotProductionComparedBytewiseToBaseline": true,
+  "checks": [
+    {
+      "command": "SANITIZE=1 sh packages/yl_player_source_resolver/tool/test_native.sh",
+      "exitCode": 0,
+      "existingChecks": 183,
+      "cleanupChecks": 438,
+      "terminatedJobs": 48,
+      "freshJobs": 12,
+      "contextsCreatedAndFreed": 60,
+      "runtimesCreatedAndFreed": 60
+    },
+    {
+      "name": "tests",
+      "command": [
+        "/Users/yy2021_8689/flutter/bin/flutter",
+        "test",
+        "--no-pub",
+        "--concurrency=1"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "analyze",
+      "command": [
+        "/Users/yy2021_8689/flutter/bin/flutter",
+        "analyze",
+        "--no-pub"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": "dart format --output=none --set-exit-if-changed packages/yl_player_source_resolver/test/resource_cleanup_test.dart",
+      "exitCode": 0
+    }
+  ],
+  "flutterTestsPassed": 53,
+  "newHttpTests": 12,
+  "mutations": [
+    {
+      "name": "skip JS_FreeRuntime in runtime source",
+      "exitCode": 1,
+      "detectedBy": "real-runtime-free count assertion",
+      "restoredBytewise": true
+    },
+    {
+      "name": "remove request.abort and client.close from ScriptHttp.abort",
+      "exitCode": 1,
+      "detectedBy": "5-second cancellation wait; runner also times out at30seconds during failed-test settlement",
+      "serialRepeatAfterNativeRestored": true,
+      "restoredBytewise": true
+    }
+  ],
+  "initialExperiments": "First HTTP mutation overlapped a native source mutation build; retained for transparency, not used for isolated HTTP attribution. Serial HTTP repeat is authoritative.",
+  "formatInitialAttempt": "Formatting completed unchanged, then sandbox blocked telemetry session timestamp write (exit1); rerun exited0.",
+  "limits": [
+    "Observes real QuickJS destruction calls and TCP EOF/reset within bounded host tests; no complete heap or OS-thread census.",
+    "ASan/UBSan only; no LeakSanitizer run.",
+    "Does not prove peer EOF precedes cancellation Future completion.",
+    "No Android/iOS/device, real media, nine-script online, or long-play acceptance."
+  ],
+  "review": {
+    "findings": "Two Important readiness gaps, both accepted and fixed in one pass",
+    "readinessRedExitCodes": [
+      1,
+      1
+    ],
+    "finalValidationAfterFix": true,
+    "secondIndependentReview": false,
+    "reviewerReadOnly": true
+  },
+  "rawLogsSha256": "f972eadc17f162340cc8ab216bdfc44315757e897420c42417f2757ea95109df"
+}
