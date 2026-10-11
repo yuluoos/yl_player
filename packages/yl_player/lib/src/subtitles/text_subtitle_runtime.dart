@@ -273,6 +273,11 @@ _Document _renderDocument(SubtitleDocument doc, int runsLeft) {
                         ? TextDecoration.underline
                         : TextDecoration.none,
                     color: Color(run.color),
+                    fontSize: run.fontSize,
+                    fontFamily: run.fontFamily,
+                    backgroundColor: run.backgroundColor == null
+                        ? null
+                        : Color(run.backgroundColor!),
                   ),
                 ),
             ],

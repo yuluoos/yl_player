@@ -467,3 +467,7 @@ TVS `7b04b96` 补齐已有重新解析行为的12项回归：慢响应期间停�
 ### 2026-10-11 P05 本机脚本资源释放
 
 补齐取消/超时后的真实QuickJS释放观察与HTTP对端断连回归：48个终止任务加12次新解析，各60个context/runtime创建释放配对；下载/宿主、响应头/响应体、取消/超时/释放共12项回环测试。模块53/53、模块分析无问题，ASan/UBSan183+438 checks通过；两项隔离故意回归被检出并恢复。无生产改动、无设备或外部服务；三端、全堆无泄漏、真实媒体和完整P05仍开放，见[P05报告](../reports/2026-09-26-remaining-05-live-business.md)。
+
+### 2026-10-11 P02 MP4 内嵌 tx3g 字幕
+
+接入本地和 HTTP(S) 非分片 MP4 的 tx3g/mov_text 轨道发现、按 Track ID 选择和基础样式合成；样本表与简单编辑列表提供精确媒体时间，网络复用 managed Range/ETag/If-Match 和扫描预算。真实文件、独立 FFmpeg 封装夹具、loopback HTTP 与公开会话渲染验证详见 [P02 报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md) 及 [MP4 契约](../specs/2026-10-11-subtitle-mp4.md)。fMP4/wvtt/stpp、高级布局与设备验收仍开放，长播放/弱网ABR保持原范围。

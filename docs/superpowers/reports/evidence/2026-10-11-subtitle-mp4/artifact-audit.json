@@ -1,0 +1,56 @@
+{
+  "artifacts": [
+    {
+      "path": "packages/yl_player_android/android/src/main/jniLibs/armeabi-v7a/libyl_player_ffmpeg.so",
+      "bytes": 3174244,
+      "sha256": "2d46d86c21d72002949bb910998deca91befe85267c787df4dc8160cc3950f9e"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/jniLibs/arm64-v8a/libyl_player_ffmpeg.so",
+      "bytes": 4722112,
+      "sha256": "6e4bd40b3a4abf20d32acc4c5c058b5f17e749e46e2d4baf1a9ca8779bd54f01"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/jniLibs/x86_64/libyl_player_ffmpeg.so",
+      "bytes": 4979784,
+      "sha256": "9a6d59ea1a895e4ccd974207a11ffe11643efe8876591a2e0a2a59284605ef00"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64/YlFFmpegBridge.framework/YlFFmpegBridge",
+      "bytes": 2447184,
+      "sha256": "b695650db63cdd8e5dbcb43a88f15f9c29ca0a3d8a486153e8a1a2bacc200841"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/YlFFmpegBridge",
+      "bytes": 4927264,
+      "sha256": "4013d588be9ef2780f96c7c0e98b82b10bff2e689bf7abc425f41a3c910a19ae"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge",
+      "bytes": 4939984,
+      "sha256": "6ee6920f00e75f60d5897f943c04957a929ffc20c8868ee2bc5bfaabfb5a1c47"
+    },
+    {
+      "path": "packages/yl_player_android/tool/android_ffmpeg/build_shared_libraries.sh",
+      "bytes": 7799,
+      "sha256": "0812cd185f651ed14e3a048e906c26e5a4cb115bfe32d415c1db1302ddc56a34"
+    },
+    {
+      "path": "packages/yl_player_apple/tool/apple_ffmpeg/build_xcframework.sh",
+      "bytes": 16915,
+      "sha256": "3f70d3970e33e148e19d96cddad6b7aed4791f1d467e77381f85ff44ed05e8a8"
+    },
+    {
+      "path": "packages/yl_player_android/tool/android_ffmpeg/ffmpeg-9.0.1.lock",
+      "bytes": 448,
+      "sha256": "79783ae110c2c1bf95f457efe1f3099597dddc1c127eb38a7c1ca8c636b468a1"
+    },
+    {
+      "path": "packages/yl_player_apple/tool/apple_ffmpeg/ffmpeg-9.0.1.lock",
+      "bytes": 451,
+      "sha256": "80af0e63635f1ee913cbb4aded6380d2d56f9eaa014d19e34f3ef16ddef38e30"
+    }
+  ],
+  "comparison": "Unchanged from network Matroska commit3eb2d39; no native/dependency change in MP4 slice",
+  "nativeDeviceValidation": false
+}

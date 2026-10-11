@@ -1,0 +1,16 @@
+00:00 +0: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart
+00:00 +0: unsupported some forced only
+00:00 +0 -1: unsupported some forced only [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.unsupported>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/mp4_parser_test.dart 481:13  main.<fn>
+  
+00:00 +0 -1: unsupported all forced without present
+00:00 +1 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported some forced only

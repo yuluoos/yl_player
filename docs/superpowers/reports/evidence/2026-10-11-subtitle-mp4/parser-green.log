@@ -1,0 +1,50 @@
+00:00 +0: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart
+00:00 +0: independent FFmpeg muxed video and tx3g sample timing/styles
+00:00 +1: moov after mdat; track identity independent of order and enabled flag
+00:00 +2: moov before mdat; track identity independent of order and enabled flag
+00:00 +3: co64 and stsz retain exact media times
+00:00 +4: co64 and stz2 retain exact media times
+00:00 +5: edit v0 leading gap, trim and duration clipping
+00:00 +6: edit v1 leading gap, trim and duration clipping
+00:00 +7: signed composition offsets clip before media start
+00:00 +8: style offsets count Unicode scalars and preserve literal markup
+00:00 +9: strict UTF16 BE BOM with surrogate pair
+00:00 +10: strict UTF16 LE BOM with surrogate pair
+00:00 +11: empty terminal sample with zero duration creates no cue
+00:00 +12: empty subtitle track is discovered
+00:00 +13: audio/video data and sparse free payload are not read
+00:00 +14: reject duplicate IDs
+00:00 +15: reject zero ID
+00:00 +16: reject zero timescale
+00:00 +17: reject stts sample mismatch
+00:00 +18: reject stsc first chunk gap
+00:00 +19: reject stsc description missing
+00:00 +20: reject chunk outside mdat
+00:00 +21: reject sample crosses mdat
+00:00 +22: reject truncated text
+00:00 +23: reject invalid UTF8
+00:00 +24: reject invalid UTF16 surrogate
+00:00 +25: reject odd UTF16
+00:00 +26: reject NUL
+00:00 +27: reject zero duration text
+00:00 +28: reject style range outside text
+00:00 +29: reject overlapping styles
+00:00 +30: reject duplicate stts
+00:00 +31: reject trailing malformed atom
+00:00 +32: reject duplicate moov
+00:00 +33: reject table flags
+00:00 +34: unsupported fragmented
+00:00 +35: unsupported fragment root
+00:00 +36: unsupported encrypted entry
+00:00 +37: unsupported external data reference
+00:00 +38: unsupported dwell rate
+00:00 +39: unsupported repeated edits
+00:00 +40: unsupported advanced karaoke
+00:00 +41: unsupported nonbottom alignment
+00:00 +42: unsupported unknown font
+00:00 +43: unsupported encrypted sinf
+00:00 +44: sample count budget before table allocation
+00:00 +45: cue text bound before run allocation
+00:00 +46: every truncated prefix rejects with sanitized parser error
+00:00 +47: cancel during read rejects before publication
+00:00 +48: All tests passed!

@@ -1,0 +1,105 @@
+00:00 +0: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_embedded_test.dart
+00:00 +0: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_embedded_test.dart: real MP4 tx3g file discovers Track ID and renders literal text at sample time
+00:00 +1: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart
+00:00 +1: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: independent FFmpeg muxed video and tx3g sample timing/styles
+00:00 +2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: moov after mdat; track identity independent of order and enabled flag
+00:00 +3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: moov before mdat; track identity independent of order and enabled flag
+00:00 +4: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: co64 and stsz retain exact media times
+00:00 +5: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: co64 and stz2 retain exact media times
+00:00 +6: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: edit v0 leading gap, trim and duration clipping
+00:00 +7: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: edit v1 leading gap, trim and duration clipping
+00:00 +8: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: signed composition offsets clip before media start
+00:00 +9: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: style offsets count Unicode scalars and preserve literal markup
+00:00 +10: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: strict UTF16 BE BOM with surrogate pair
+00:00 +11: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: strict UTF16 LE BOM with surrogate pair
+00:00 +12: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: empty terminal sample with zero duration creates no cue
+00:00 +13: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: empty subtitle track is discovered
+00:00 +14: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: audio/video data and sparse free payload are not read
+00:00 +15: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: chunk mapping changes sample count and description
+00:00 +16: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: compact sample sizes 4 bits including odd nibble
+00:00 +17: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: compact sample sizes 8 bits including odd nibble
+00:00 +18: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: constant stsz size decodes all samples
+00:00 +19: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: edit subtraction preserves exact tick before microsecond conversion
+00:00 +19 -1: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: edit subtraction preserves exact tick before microsecond conversion [E]
+  Expected: <333333>
+    Actual: <333334>
+  
+  package:matcher                                       expect
+  package:flutter_test/src/widget_tester.dart 473:18    expect
+  packages/yl_player/test/mp4_parser_test.dart 260:139  main.<fn>
+  
+00:00 +19 -1: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: invalid sync sample table is rejected
+00:00 +19 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: invalid sync sample table is rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/mp4_parser_test.dart 263:11  main.<fn>
+  
+00:00 +19 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: 64bit top-level box size and EOF mdat work
+00:00 +19 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: 64bit top-level box size and EOF mdat work [E]
+  SubtitleParseException(malformed)
+  package:yl_player/src/subtitles/mp4_subtitles.dart 8:5     _bad
+  package:yl_player/src/subtitles/mp4_subtitles.dart 327:11  Mp4Subtitles._track
+  
+00:00 +19 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject duplicate IDs
+00:00 +20 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject zero ID
+00:00 +21 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject zero timescale
+00:00 +22 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject stts sample mismatch
+00:00 +23 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject stsc first chunk gap
+00:00 +24 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject stsc description missing
+00:00 +25 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject chunk outside mdat
+00:00 +26 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject sample crosses mdat
+00:00 +27 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject truncated text
+00:00 +28 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject invalid UTF8
+00:00 +29 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject invalid UTF16 surrogate
+00:00 +30 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject odd UTF16
+00:00 +31 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject NUL
+00:00 +32 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject zero duration text
+00:00 +33 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject style range outside text
+00:00 +34 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject overlapping styles
+00:00 +35 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject duplicate stts
+00:00 +36 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject trailing malformed atom
+00:00 +37 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject duplicate moov
+00:00 +38 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject table flags
+00:00 +39 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported fragmented
+00:00 +40 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported fragment root
+00:00 +41 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported encrypted entry
+00:00 +42 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported external data reference
+00:00 +43 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported dwell rate
+00:00 +44 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported repeated edits
+00:00 +45 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported advanced karaoke
+00:00 +46 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported nonbottom alignment
+00:00 +47 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported unknown font
+00:00 +48 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported encrypted sinf
+00:00 +49 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: sample count budget before table allocation
+00:00 +50 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: cue text bound before run allocation
+00:00 +51 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: every truncated prefix rejects with sanitized parser error
+00:00 +52 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: cancel during read rejects before publication
+00:00 +53 -3: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart
+00:01 +53 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:01 +54 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: network YlMediaFormat.mp4 sniffs content, skips media, sends conditional range and renders
+00:01 +55 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: legal chunked206 MP4 discovery completes without Content-Length
+00:01 +56 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: managed retries later range with credential and shared scan ledger
+00:02 +57 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: cross-origin redirect strips credentials before MP4 range scan
+00:02 +58 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: etag response keeps prior selected MP4 catalog
+00:02 +59 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: 200 response keeps prior selected MP4 catalog
+00:02 +60 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: 403 response keeps prior selected MP4 catalog
+00:02 +61 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: malformed response keeps prior selected MP4 catalog
+00:02 +62 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: managed response-header timeout terminates MP4 discovery
+00:02 +63 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: explicit non-MP4 format rejects before HTTP request
+00:02 +64 -3: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart
+00:03 +64 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:03 +65 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart: network failure leaves playback and selected subtitle state unchanged
+00:03 +66 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart: held range is cancelled by replace and cannot publish late
+00:03 +67 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart: held range is cancelled by stop and cannot publish late
+00:03 +68 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart: held range is cancelled by dispose and cannot publish late
+00:03 +69 -3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart: held range is cancelled by external and cannot publish late
+00:03 +70 -3: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: 64bit top-level box size and EOF mdat work
+  /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: edit subtraction preserves exact tick before microsecond conversion
+  /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: invalid sync sample table is rejected

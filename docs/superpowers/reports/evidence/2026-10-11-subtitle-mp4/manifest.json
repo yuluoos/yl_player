@@ -1,0 +1,210 @@
+{
+  "validation": {
+    "base": "27b0a4117b085c350d9a2231cba6f5448abdea49",
+    "path": "/private/tmp/yl-mp4-validation-_ht6dahh",
+    "files": [
+      "packages/yl_player/test/mp4_embedded_test.dart",
+      "packages/yl_player/test/support/mp4_fixture.dart",
+      "packages/yl_player/lib/src/subtitles/mp4_subtitles.dart",
+      "packages/yl_player/lib/src/subtitles/embedded_subtitle_document.dart",
+      "packages/yl_player/lib/src/subtitles/ttml_parser.dart",
+      "packages/yl_player/lib/src/subtitles/text_subtitle_runtime.dart",
+      "packages/yl_player/lib/src/subtitles/embedded_subtitle_resource_io.dart",
+      "packages/yl_player/test/mp4_parser_test.dart",
+      "packages/yl_player/test/fixtures/embedded-owned.mp4",
+      "packages/yl_player/test/mp4_session_test.dart",
+      "packages/yl_player/test/mp4_network_test.dart",
+      "packages/yl_player/lib/src/playback_session.dart"
+    ],
+    "testedBase": "3eb2d391d09cfcb68d1dd1ec0f4e869e0ddc7a34",
+    "unrelatedTestDocumentationRefresh": [
+      "docs/superpowers/plans/2026-09-26-remaining-05-live-business.md",
+      "docs/superpowers/plans/2026-09-26-remaining-overview.md",
+      "docs/superpowers/reports/2026-09-26-remaining-05-live-business.md",
+      "docs/superpowers/reports/evidence/2026-10-11-native-resource-cleanup/raw-logs.json",
+      "docs/superpowers/reports/evidence/2026-10-11-native-resource-cleanup/verification.json",
+      "packages/yl_player_source_resolver/test/native_cleanup_harness.c",
+      "packages/yl_player_source_resolver/test/resource_cleanup_test.dart",
+      "packages/yl_player_source_resolver/tool/test_native.sh"
+    ]
+  },
+  "ownedSourceAndDocs": {
+    "packages/yl_player/test/mp4_embedded_test.dart": "4fcc81a9938add547cee8d25ac144ff01042248427aa6916b9ccf642cf2d5f40",
+    "packages/yl_player/test/support/mp4_fixture.dart": "ddcedc87be26bc017fe10fdba1f565b7f1d56ce2c8f24fc77dd9ad63c3ff8d66",
+    "packages/yl_player/lib/src/subtitles/mp4_subtitles.dart": "5d5e316040fc8025e13064e9dde979a3fa05f82d09d58f50a3bb8a584c969cf7",
+    "packages/yl_player/lib/src/subtitles/embedded_subtitle_document.dart": "9a528cf8923110c4023e45f7b25f34b4405d44f32c4f55efc2afcad0183ee067",
+    "packages/yl_player/lib/src/subtitles/ttml_parser.dart": "568fbe29e8d4a86db00486f7064d5eb4032f8a5f0ae1fae38f91f15d0795b3df",
+    "packages/yl_player/lib/src/subtitles/text_subtitle_runtime.dart": "a2fe5c4d31ae69532bc52d1cdfebb53428c759ceb771d09b91556db53531d1df",
+    "packages/yl_player/lib/src/subtitles/embedded_subtitle_resource_io.dart": "cd43dc631d8e98a7cbb6265a3ce2e31cdc44f7fa910e31d38859eb69c22e32a5",
+    "packages/yl_player/test/mp4_parser_test.dart": "dcc01ebee1afff874ee0b8b273640186d4b8d44a4da6eaf3ebbbbb28e804f39f",
+    "packages/yl_player/test/fixtures/embedded-owned.mp4": "f99eb0ecf3a2fb37eb37e2bbbe0c61ca7f3eed6d5710a70d3bcdeb4a2078fd01",
+    "packages/yl_player/test/mp4_session_test.dart": "50e09f3428335d68fd1f6a8a515ddf7dad6d09c48dfabd94c2e55b3b0a2dcc7b",
+    "packages/yl_player/test/mp4_network_test.dart": "edf4a3dd88961b8ea631eb17d4182091db289633bb713049ee29b738f01e77a6",
+    "packages/yl_player/lib/src/playback_session.dart": "62ef55794197a3e772abac3d7327097e682fe448dd0b1ab6f7ff1770e90dd32e",
+    "docs/platform-support.md": "bba9efe87bc02abecee05e042b5858d4e5aaf1467fed4529997ca9889c2b2eda",
+    "docs/superpowers/specs/2026-10-11-subtitle-mp4.md": "31c7308d0401fcf79be860df677328d75be743c097872e1c03758795496be92d",
+    "docs/superpowers/specs/2026-10-11-subtitle-runtime.md": "b6fb19731fc25ced0c343753d3d69da8d2b91e6508b4dbeafc6f76550229d663",
+    "packages/yl_player/README.md": "147163b525d13445e686da3552352931f453b4b8ebba550df96ea7e2a33bcbc6",
+    "packages/yl_player/test/fixtures/mp4-owned.md": "b03fa2b55dc4c1277be34ffff9b236fe680c8edc3c3cddbaccfe795f72c19560",
+    "docs/superpowers/reports/2026-09-26-remaining-02-tracks-subtitles.md": "b610e04017ee228cbdee09c1f61c469e137fbbcb54c503732af23c870a58c91e"
+  },
+  "referenceDependencies": {
+    "packages/yl_player/lib/src/subtitles/subtitle_resource.dart": "b371094c804274cd3b11eeda357d7074bfa5746a002adb95a13bec0a21a9f42c",
+    "packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart": "a124219b5660d7ef1976f9037bb67807a39af94bf9b8f02e415a6b210a59f071",
+    "packages/yl_player/lib/src/subtitles/subtitle_range_reader.dart": "f9dc55afbb4246f692f5878c44cf5b939052054cf6a5936271fb0ea2b51981de",
+    "packages/yl_player/lib/src/subtitles/subtitle_socket.dart": "924a5e00ff2ff41e8a8c3bfc16690252bd09682695560fe54e02d9ba318fe942",
+    "packages/yl_player/lib/src/subtitles/matroska_subtitles.dart": "97796738d6ab066ac3f10611418a7868403f9e16ed611451ed711a331cd95a0b",
+    "packages/yl_player/lib/src/subtitles/subtitle_document.dart": "2752bc3b78326e68a12fadf3a54cd47d8c2a9b74ed8a6a7d0b98191e3c305934",
+    "packages/yl_player/lib/src/subtitles/embedded_subtitle_resource.dart": "252ad0aa1185528d00344ad24bce1c4e8b3919b4177d0248b077fca87551704b",
+    "packages/yl_player/lib/src/subtitles/embedded_subtitle_resource_stub.dart": "dfc84eafa4359c35c244cd706904bb3ba01a277c49a96632d2c8b8ff19ae82d9",
+    "packages/yl_player/lib/src/subtitles/text_subtitle_overlay.dart": "79ffffdc7c5be456c5495444c75654043b9ba26df504dd1db4cebaea9474d73b",
+    "packages/yl_player/lib/src/subtitles/ttml_overlay.dart": "b3cf9097d05f81c22090d4faed0130495b0df516d33fff767f92888ed01e39cd",
+    "packages/yl_player/lib/src/subtitles/ass_overlay.dart": "d7a16246e16ea4a4138e877408e07062616c9f63bfd57025df6f5b20653bc27c",
+    "packages/yl_player/lib/src/subtitles/pgs_overlay.dart": "75c40feecdb29ab098e17374b9d304e7a1d401bb721358e22ce71d24b0564f58",
+    "packages/yl_player/lib/src/drm/license_secure_socket.dart": "e840dd82f87e6dd1e31bb82d84a9bdc7ec78f662610d7219ddd562344bd9cc6d",
+    "packages/yl_player_platform_interface/lib/src/model/subtitles.dart": "c3a63f859b42893fbb91db894ded10bac6468f4f055f0629950d2a9d439a2b9d",
+    "packages/yl_player_platform_interface/lib/src/validation/subtitle_validation.dart": "e96723041113be76ad3cc28775e49625da61bac995db5b80ad65b47c2a83fa36",
+    "packages/yl_player/lib/src/player_view.dart": "7fbcbb89c8c47c6c5498280d46ab5fe1dc6c4a5054a411c6d891f423659f5c19",
+    "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
+    "packages/yl_player/pubspec.yaml": "6c6bb701de8860f7522ecc91176e01d38217a968d1ca2b3fe2d61c47ddff9461",
+    "packages/yl_player_android/android/src/main/jniLibs/armeabi-v7a/libyl_player_ffmpeg.so": "2d46d86c21d72002949bb910998deca91befe85267c787df4dc8160cc3950f9e",
+    "packages/yl_player_android/android/src/main/jniLibs/arm64-v8a/libyl_player_ffmpeg.so": "6e4bd40b3a4abf20d32acc4c5c058b5f17e749e46e2d4baf1a9ca8779bd54f01",
+    "packages/yl_player_android/android/src/main/jniLibs/x86_64/libyl_player_ffmpeg.so": "9a6d59ea1a895e4ccd974207a11ffe11643efe8876591a2e0a2a59284605ef00",
+    "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64/YlFFmpegBridge.framework/YlFFmpegBridge": "b695650db63cdd8e5dbcb43a88f15f9c29ca0a3d8a486153e8a1a2bacc200841",
+    "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/YlFFmpegBridge": "4013d588be9ef2780f96c7c0e98b82b10bff2e689bf7abc425f41a3c910a19ae",
+    "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge": "6ee6920f00e75f60d5897f943c04957a929ffc20c8868ee2bc5bfaabfb5a1c47",
+    "packages/yl_player_android/tool/android_ffmpeg/build_shared_libraries.sh": "0812cd185f651ed14e3a048e906c26e5a4cb115bfe32d415c1db1302ddc56a34",
+    "packages/yl_player_apple/tool/apple_ffmpeg/build_xcframework.sh": "3f70d3970e33e148e19d96cddad6b7aed4791f1d467e77381f85ff44ed05e8a8",
+    "packages/yl_player_android/tool/android_ffmpeg/ffmpeg-9.0.1.lock": "79783ae110c2c1bf95f457efe1f3099597dddc1c127eb38a7c1ca8c636b468a1",
+    "packages/yl_player_apple/tool/apple_ffmpeg/ffmpeg-9.0.1.lock": "80af0e63635f1ee913cbb4aded6380d2d56f9eaa014d19e34f3ef16ddef38e30"
+  },
+  "sharedDocumentTransforms": {
+    "overviewSectionSha256": "92c6d2556dee082f3ff9b13154e3a155125b02b20fe876e264459574c09f3677",
+    "changelogEntrySha256": "39682319a8975f85955259deb267481347d2b42c5688f115b56d780fe1de67b0"
+  },
+  "evidence": {
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/analyze-before-review.log": "7cf9b717cd0ae36cad727808630a9a929c04f0d5a041238ce9f70ec6fb4bd475",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/analyze-first.log": "a195f3ca360f139f44c8b36c5c4290fdeb069f9d22b3a08356fe80cf50ace397",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/analyze-ready.log": "eca27bbbe888c9b4432af3370d8317b842b08176c739f072e35cee9ddc72f036",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/artifact-audit.json": "116d33c93d3a564061148483f5dce5481ed651df142e8bd2a424ad4f96a21d69",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/directed-first.log": "eeb4bafa09c0f5d61990682dd31b560c52a3aa31bc3d8b3d348c80539f34fcf5",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/entry-green.log": "b0acdb494aafff5b2c922f59f80ae07bfd837719d2f36241c0152bb95f5ce9d7",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/entry-red.log": "8ca9c6830c3f599fcfe6371c9906e91fe008e90deec541da13bf5736cd7aa3ca",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/expanded-green.log": "9de3dec4431efba4371078d229cbcfc671e6160f4c195ef709150deb90a99649",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/expanded-red.log": "b74b7b67c417318cdfdee6915edcfcadb808ad8aa9f64e9d5c58d3d9b7592b51",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/ffprobe.json": "55c68aba9ad3f3bcc9098af819beb4d02c5dc7727ce70f763a7e3722a1a4ec17",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/final-analyze.log": "7cf9b717cd0ae36cad727808630a9a929c04f0d5a041238ce9f70ec6fb4bd475",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/final-four-packages.log": "88286afe5795566aae37164339a90478d3d19f78f3c7221f2f88a59c72d78424",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/forced-red.log": "36729ef2fd85d43878dd1984d297187f4df10b8c5d67de01ae2d5f3bfd1d4255",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/four-packages-before-review.log": "afbbefcb2d947a1fbeb7c267f1d300db006294eca99d8f13888aa67cc2fe851c",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/lint-fix.log": "7b08d2200f9652570be9e045488ac5549e68fb2c1912b9b8969a73ab26f489c8",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/parser-first.log": "3c78b4b173b6393a2f4b692860a485940d77bec0d15a0835a0ed19282eee2fb1",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/parser-green.log": "2118690c5ed7fc84ff495e7645ed06982741e2ce17d6169bc1b133519cd9af3d",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/review-fixture-compile.log": "8ead59e514f127c96695c2ad0fd63e36f65777012189d53cd7308a2cbd1e9a33",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/review-green.log": "370f68931ce45c97a4c95bf4f12875749a168cbb1457c23bbe558f999e9cd5ed",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/review-red.log": "377c7b749f8b6b0b2574de45011e1a32f9feb7041bfbd83796fa740a376bf6f0",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/review.md": "b00ef99d92b50561d212ddad4250e5974abf00e10982d8608988dc1b86d96289",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-mp4/source.srt": "f0238e3d72be409df47560c5aa10156daec21e2b7713dc3675356e07d0030b61"
+  },
+  "finalVerification": [
+    {
+      "command": "flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test",
+      "cwd": "/private/tmp/yl-mp4-validation-_ht6dahh",
+      "exitCode": 0,
+      "passed": 1081,
+      "failed": 0,
+      "packageCounts": [
+        135,
+        751,
+        113,
+        82
+      ],
+      "newTests": 78,
+      "log": "final-four-packages.log"
+    },
+    {
+      "command": "dart analyze --suppress-analytics packages/yl_player/lib packages/yl_player/test packages/yl_player_platform_interface/lib packages/yl_player_platform_interface/test",
+      "cwd": "/private/tmp/yl-mp4-validation-_ht6dahh",
+      "exitCode": 0,
+      "result": "No issues found",
+      "log": "final-analyze.log"
+    }
+  ],
+  "history": [
+    {
+      "log": "entry-red.log",
+      "result": "0pass/1fail unsupported MP4"
+    },
+    {
+      "log": "entry-green.log",
+      "result": "1pass real file after fixing fixed-length byte buffer slicing"
+    },
+    {
+      "log": "parser-first.log",
+      "result": "47pass/1fail independent muxer default background"
+    },
+    {
+      "log": "parser-green.log",
+      "result": "48pass after background support"
+    },
+    {
+      "log": "directed-first.log",
+      "result": "55pass/2load failures caused by fixture parameter typo"
+    },
+    {
+      "log": "expanded-red.log",
+      "result": "70pass/3fail edit precision, sync table, EOF fixture offset"
+    },
+    {
+      "log": "expanded-green.log",
+      "result": "73pass"
+    },
+    {
+      "log": "forced-red.log",
+      "result": "1pass/1fail some-forced incorrectly admitted; authoritative flag fix before first full suite"
+    },
+    {
+      "log": "four-packages-before-review.log",
+      "result": "1078pass"
+    },
+    {
+      "log": "review-fixture-compile.log",
+      "result": "fixture string generation escaping compilation failure, corrected before meaningful RED"
+    },
+    {
+      "log": "review-red.log",
+      "result": "1pass/2fail CRLF at style boundaries"
+    },
+    {
+      "log": "review-green.log",
+      "result": "78pass new directed"
+    }
+  ],
+  "review": {
+    "critical": 0,
+    "important": 1,
+    "fixed": 1,
+    "minorDeferred": 0,
+    "blockingRemaining": 0,
+    "method": "One fresh-context read-only review; one RED-GREEN fix pass; no re-review",
+    "details": "review.md"
+  },
+  "ownedFixture": {
+    "path": "packages/yl_player/test/fixtures/embedded-owned.mp4",
+    "bytes": 1734,
+    "generator": "host FFmpeg8.0.1; not runtime dependency",
+    "probe": "ffprobe.json",
+    "authoredSource": "source.srt"
+  },
+  "dependenciesAdded": [],
+  "limitations": [
+    "Nonfragmented local/HTTP(S) MP4 tx3g/mov_text, explicit discovery on current session",
+    "Normalized public format srt, literal internal runs; no public codec/native bridge change",
+    "Simple1x edits, bounded tables/samples/metadata; dense or large files may exceed explicit budgets",
+    "Basic styles/logical fontsize/local font fallback/run background only; not full native text-box or matrix equivalence",
+    "Managed range reader reused unchanged: strong ETag/fixed length/pinned URI/If-Match/single206; no full download fallback",
+    "Actual file/loopbackHTTP and independent owned FFmpeg fixture; fake media backend for Flutter rendering/lifecycle",
+    "fMP4/wvtt/stpp/MOV text/encrypted/bitmap/CEA/advanced effects unsupported; no native/device/HDR/protected/PD03/wholeP02 closure",
+    "Foreign source-resolver/long-play/weak-network ABR changes excluded"
+  ]
+}

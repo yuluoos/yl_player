@@ -3,6 +3,7 @@ import 'subtitle_resource_io.dart' show SubtitleRangeReader;
 import 'subtitle_document.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'matroska_subtitles.dart';
+import 'mp4_subtitles.dart';
 import 'subtitle_resource.dart';
 
 Future<List<EmbeddedSubtitleData>> readEmbedded(
@@ -14,6 +15,7 @@ Future<List<EmbeddedSubtitleData>> readEmbedded(
       ![
         YlMediaFormat.automatic,
         YlMediaFormat.matroska,
+        YlMediaFormat.mp4,
       ].contains(source.format)) {
     throw subtitleFailure(YlFailureCodes.subtitleUnsupported);
   }
@@ -29,14 +31,14 @@ Future<List<EmbeddedSubtitleData>> readEmbedded(
     file = await File(source.path).open();
     final handle = file;
     final length = await handle.length();
-    return await MatroskaSubtitles(length, (offset, count) async {
+    return await _parse(source.format, length, (offset, count) async {
       token.check();
       if (clock.elapsed > const Duration(seconds: 30)) {
         throw subtitleFailure(YlFailureCodes.subtitleTooLarge);
       }
       await handle.setPosition(offset);
       return handle.read(count);
-    }, token).parse();
+    }, token);
   } on FileSystemException {
     token.check();
     throw subtitleFailure(YlFailureCodes.sourceInvalid);
@@ -62,6 +64,7 @@ Future<List<EmbeddedSubtitleData>> _networkEmbedded(
       ![
         YlMediaFormat.automatic,
         YlMediaFormat.matroska,
+        YlMediaFormat.mp4,
       ].contains(source.format)) {
     throw subtitleFailure(YlFailureCodes.subtitleUnsupported);
   }
@@ -71,7 +74,7 @@ Future<List<EmbeddedSubtitleData>> _networkEmbedded(
   Future<List<EmbeddedSubtitleData>> scan() async {
     reader = await SubtitleRangeReader.open(source, owned);
     owned.check();
-    return MatroskaSubtitles(reader!.length, reader!.read, owned).parse();
+    return _parse(source.format, reader!.length, reader!.read, owned);
   }
 
   try {
@@ -94,4 +97,36 @@ Future<List<EmbeddedSubtitleData>> _networkEmbedded(
     owned.cancel();
     reader?.clear();
   }
+}
+
+Future<List<EmbeddedSubtitleData>> _parse(
+  YlMediaFormat format,
+  int length,
+  Future<List<int>> Function(int, int) read,
+  SubtitleCancellation token,
+) async {
+  token.check();
+  if (format == YlMediaFormat.automatic) {
+    if (length < 8) {
+      throw const SubtitleParseException(SubtitleParseReason.malformed);
+    }
+    final signature = await read(0, 8);
+    token.check();
+    if (signature.length != 8) {
+      throw const SubtitleParseException(SubtitleParseReason.malformed);
+    }
+    if (signature[0] == 0x1a &&
+        signature[1] == 0x45 &&
+        signature[2] == 0xdf &&
+        signature[3] == 0xa3) {
+      format = YlMediaFormat.matroska;
+    } else if (String.fromCharCodes(signature.sublist(4)) == 'ftyp') {
+      format = YlMediaFormat.mp4;
+    } else {
+      throw const SubtitleParseException(SubtitleParseReason.unsupported);
+    }
+  }
+  return format == YlMediaFormat.mp4
+      ? Mp4Subtitles(length, read, token).parse()
+      : MatroskaSubtitles(length, read, token).parse();
 }

@@ -104,3 +104,11 @@ counters and credential scope. Earlier network-embedded exclusions describe the
 local slice; [the network contract](2026-10-11-subtitle-network-matroska.md) defines
 current boundaries. Other containers, embedded bitmap codecs, native callbacks,
 HDR/protected and physical-device qualification remain open.
+
+## MP4 tx3g extension (2026-10-11)
+
+The earlier MP4 exclusion is superseded for non-fragmented local / HTTP(S) tx3g
+tracks by the [MP4 contract](2026-10-11-subtitle-mp4.md). Discovery uses the same
+catalog owner and managed range reader; styled literal text remains separate
+from external SRT markup. Fragmented/other subtitle codecs and device/native
+acceptance remain open. No runtime dependency, public enum or bridge changes.

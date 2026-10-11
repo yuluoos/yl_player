@@ -8,10 +8,16 @@ final class SubtitleTextRun {
     this.italic = false,
     this.underline = false,
     this.color = 0xffffffff,
+    this.fontSize,
+    this.fontFamily,
+    this.backgroundColor,
   });
   final String text;
   final bool bold, italic, underline;
   final int color;
+  final double? fontSize;
+  final String? fontFamily;
+  final int? backgroundColor;
 }
 
 final class SubtitleRegion {

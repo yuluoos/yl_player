@@ -1,0 +1,59 @@
+00:00 +0: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart
+00:00 +0: independent FFmpeg muxed video and tx3g sample timing/styles
+00:00 +0 -1: independent FFmpeg muxed video and tx3g sample timing/styles [E]
+  SubtitleParseException(unsupported)
+  package:yl_player/src/subtitles/mp4_subtitles.dart 10:5    _unsupported
+  package:yl_player/src/subtitles/mp4_subtitles.dart 465:7   _Tx3g.parse
+  package:yl_player/src/subtitles/mp4_subtitles.dart 237:30  Mp4Subtitles._track
+  
+00:00 +0 -1: moov after mdat; track identity independent of order and enabled flag
+00:00 +1 -1: moov before mdat; track identity independent of order and enabled flag
+00:00 +2 -1: co64 and stsz retain exact media times
+00:00 +3 -1: co64 and stz2 retain exact media times
+00:00 +4 -1: edit v0 leading gap, trim and duration clipping
+00:00 +5 -1: edit v1 leading gap, trim and duration clipping
+00:00 +6 -1: signed composition offsets clip before media start
+00:00 +7 -1: style offsets count Unicode scalars and preserve literal markup
+00:00 +8 -1: strict UTF16 BE BOM with surrogate pair
+00:00 +9 -1: strict UTF16 LE BOM with surrogate pair
+00:00 +10 -1: empty terminal sample with zero duration creates no cue
+00:00 +11 -1: empty subtitle track is discovered
+00:00 +12 -1: audio/video data and sparse free payload are not read
+00:00 +13 -1: reject duplicate IDs
+00:00 +14 -1: reject zero ID
+00:00 +15 -1: reject zero timescale
+00:00 +16 -1: reject stts sample mismatch
+00:00 +17 -1: reject stsc first chunk gap
+00:00 +18 -1: reject stsc description missing
+00:00 +19 -1: reject chunk outside mdat
+00:00 +20 -1: reject sample crosses mdat
+00:00 +21 -1: reject truncated text
+00:00 +22 -1: reject invalid UTF8
+00:00 +23 -1: reject invalid UTF16 surrogate
+00:00 +24 -1: reject odd UTF16
+00:00 +25 -1: reject NUL
+00:00 +26 -1: reject zero duration text
+00:00 +27 -1: reject style range outside text
+00:00 +28 -1: reject overlapping styles
+00:00 +29 -1: reject duplicate stts
+00:00 +30 -1: reject trailing malformed atom
+00:00 +31 -1: reject duplicate moov
+00:00 +32 -1: reject table flags
+00:00 +33 -1: unsupported fragmented
+00:00 +34 -1: unsupported fragment root
+00:00 +35 -1: unsupported encrypted entry
+00:00 +36 -1: unsupported external data reference
+00:00 +37 -1: unsupported dwell rate
+00:00 +38 -1: unsupported repeated edits
+00:00 +39 -1: unsupported advanced karaoke
+00:00 +40 -1: unsupported nonbottom alignment
+00:00 +41 -1: unsupported unknown font
+00:00 +42 -1: unsupported encrypted sinf
+00:00 +43 -1: sample count budget before table allocation
+00:00 +44 -1: cue text bound before run allocation
+00:00 +45 -1: every truncated prefix rejects with sanitized parser error
+00:00 +46 -1: cancel during read rejects before publication
+00:00 +47 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: independent FFmpeg muxed video and tx3g sample timing/styles

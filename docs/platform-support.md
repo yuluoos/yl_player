@@ -599,6 +599,7 @@ current native adapters still do not advertise a native subtitle SPI.
 | VobSub external DVD subset | Explicit idx/sub pair, language/substream matching, PS/SPU fragments, two-field RLE, timed palette/alpha/clear; real paired I/O and owned full-pixel grids |
 | Local Matroska embedded UTF8/ASS/SSA | Explicit committed-source discovery, TrackUID selection and shared overlay; owned EBML plus independent muxer/ffprobe and Flutter lifecycle tests |
 | HTTP(S) Matroska embedded UTF8/ASS/SSA | Single-range206 with pinned strong ETag/length, shared managed deadlines/retry/redirect/credential policy; bounded cache/scan and real HTTP/TLS/session/widget tests |
+| Local / HTTP(S) MP4 embedded tx3g (mov_text) | Non-fragmented sample-table discovery, Track ID selection, simple edits and basic styled literal text; same managed Range policy, independent owned FFmpeg fixture, real HTTP and Flutter lifecycle tests; no native/device acceptance |
 | Other embedded containers/codecs, advanced TTML/ASS/SSA/PGS/VobSub and advanced WebVTT | Not implemented by this runtime |
 | Protected output, HDR brightness and physical-device subtitle sync | Not accepted; protected surfaces reject subtitle commands |
 

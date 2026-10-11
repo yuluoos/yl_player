@@ -32,7 +32,7 @@ final class YlPlaybackSession {
     return _player._backend.selectAudioTrack(id, trackId);
   });
 
-  /// Discovers supported text tracks in the committed file or HTTP(S) Matroska source.
+  /// Discovers supported text tracks in the committed file or HTTP(S) Matroska/MP4 source.
   /// Requires enableTextSubtitles. Discovery is atomic, preserves external
   /// entries and a still-present selection. New sessions start off.
   /// HTTP requires byte ranges and a stable strong ETag; source policy applies.

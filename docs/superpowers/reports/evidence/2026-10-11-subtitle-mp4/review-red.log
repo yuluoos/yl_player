@@ -1,0 +1,41 @@
+00:00 +0: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart
+00:00 +0: CRLF content is independent of style boundary null
+00:00 +1: CRLF content is independent of style boundary (0, 2)
+00:00 +1 -1: CRLF content is independent of style boundary (0, 2) [E]
+  Expected: 'a\n'
+              'b'
+    Actual: 'a\n'
+              '\n'
+              'b'
+     Which: is different.
+            Expected: a\nb
+              Actual: a\n\nb
+                         ^
+             Differ at offset 3
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/mp4_parser_test.dart 347:7  main.<fn>
+  
+00:00 +1 -1: CRLF content is independent of style boundary (2, 3)
+00:00 +1 -2: CRLF content is independent of style boundary (2, 3) [E]
+  Expected: 'a\n'
+              'b'
+    Actual: 'a\n'
+              '\n'
+              'b'
+     Which: is different.
+            Expected: a\nb
+              Actual: a\n\nb
+                         ^
+             Differ at offset 3
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/mp4_parser_test.dart 347:7  main.<fn>
+  
+00:00 +1 -2: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: CRLF content is independent of style boundary (0, 2)
+  /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: CRLF content is independent of style boundary (2, 3)

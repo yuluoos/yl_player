@@ -3,9 +3,17 @@ part of 'subtitle_document.dart';
 /// One decoded container block. Container timing is authoritative, including
 /// sub-centisecond ASS times; packet content cannot inject file-level events.
 final class EmbeddedSubtitlePacket {
-  const EmbeddedSubtitlePacket(this.start, this.end, this.text);
+  const EmbeddedSubtitlePacket(
+    this.start,
+    this.end,
+    this.text, {
+    this.textRuns,
+    this.alignment = 'center',
+  });
   final Duration start, end;
   final String text;
+  final List<SubtitleTextRun>? textRuns;
+  final String alignment;
   @override
   String toString() => 'EmbeddedSubtitlePacket(payload: <redacted>)';
 }
@@ -52,6 +60,8 @@ SubtitleDocument _embeddedDocument(
           start: p.start,
           end: p.end,
           payload: p.text.replaceAll('\r\n', '\n').replaceAll('\r', '\n'),
+          textRuns: p.textRuns,
+          alignment: p.alignment,
         ),
       );
     }

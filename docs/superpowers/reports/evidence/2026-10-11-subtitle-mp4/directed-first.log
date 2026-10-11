@@ -1,0 +1,96 @@
+00:00 +0: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_embedded_test.dart
+packages/yl_player/test/mp4_network_test.dart:157:13: Error: No named parameter with the name 'responseHeaderTimeout'.
+            responseHeaderTimeout: Duration(milliseconds: 50),
+            ^^^^^^^^^^^^^^^^^^^^^
+packages/yl_player_platform_interface/lib/src/options/policies.dart:46:9: Context: Found this candidate, but the arguments don't match.
+  const YlNetworkPolicy.managed({
+        ^^^^^^^^^^^^^^^^^^^^^^^
+00:00 +0 -1: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart [E]
+  Failed to load "/private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart":
+  Compilation failed for testPath=/private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: packages/yl_player/test/mp4_network_test.dart:157:13: Error: No named parameter with the name 'responseHeaderTimeout'.
+              responseHeaderTimeout: Duration(milliseconds: 50),
+              ^^^^^^^^^^^^^^^^^^^^^
+  packages/yl_player_platform_interface/lib/src/options/policies.dart:46:9: Context: Found this candidate, but the arguments don't match.
+    const YlNetworkPolicy.managed({
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  .
+00:00 +0 -2: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_embedded_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 1009:11   DefaultResidentCompiler._compile.<fn>
+  dart:async/zone_root.dart 48:47                  _rootRunUnary
+  dart:async/zone.dart 733:19                      _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone_root.dart 35:13                  _rootRun
+  dart:async/zone.dart 726:19                      _CustomZone.run
+  dart:async/zone.dart 625:7                       _CustomZone.runGuarded
+  dart:async/zone.dart 666:23                      _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 193:5      _RawReceivePort._handleMessage
+  
+00:00 +0 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_embedded_test.dart: real MP4 tx3g file discovers Track ID and renders literal text at sample time
+00:00 +1 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: independent FFmpeg muxed video and tx3g sample timing/styles
+00:00 +2 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: moov after mdat; track identity independent of order and enabled flag
+00:00 +3 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: moov before mdat; track identity independent of order and enabled flag
+00:00 +4 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: co64 and stsz retain exact media times
+00:00 +5 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: co64 and stz2 retain exact media times
+00:00 +6 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: edit v0 leading gap, trim and duration clipping
+00:00 +7 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: edit v1 leading gap, trim and duration clipping
+00:00 +8 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: signed composition offsets clip before media start
+00:00 +9 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: style offsets count Unicode scalars and preserve literal markup
+00:00 +10 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: strict UTF16 BE BOM with surrogate pair
+00:00 +11 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: strict UTF16 LE BOM with surrogate pair
+00:00 +12 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: empty terminal sample with zero duration creates no cue
+00:00 +13 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: empty subtitle track is discovered
+00:00 +14 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: audio/video data and sparse free payload are not read
+00:00 +15 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject duplicate IDs
+00:00 +16 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject zero ID
+00:00 +17 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject zero timescale
+00:00 +18 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject stts sample mismatch
+00:00 +19 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject stsc first chunk gap
+00:00 +20 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject stsc description missing
+00:00 +21 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject chunk outside mdat
+00:00 +22 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject sample crosses mdat
+00:00 +23 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject truncated text
+00:00 +24 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject invalid UTF8
+00:00 +25 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject invalid UTF16 surrogate
+00:00 +26 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject odd UTF16
+00:00 +27 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject NUL
+00:00 +28 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject zero duration text
+00:00 +29 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject style range outside text
+00:00 +30 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject overlapping styles
+00:00 +31 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject duplicate stts
+00:00 +32 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject trailing malformed atom
+00:00 +33 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject duplicate moov
+00:00 +34 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject table flags
+00:00 +35 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported fragmented
+00:00 +36 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported fragment root
+00:00 +37 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported encrypted entry
+00:00 +38 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported external data reference
+00:00 +39 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported dwell rate
+00:00 +40 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported repeated edits
+00:00 +41 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported advanced karaoke
+00:00 +42 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported nonbottom alignment
+00:00 +43 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported unknown font
+00:00 +44 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported encrypted sinf
+00:00 +45 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: sample count budget before table allocation
+00:00 +46 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: cue text bound before run allocation
+00:00 +47 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: every truncated prefix rejects with sanitized parser error
+00:00 +48 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: cancel during read rejects before publication
+00:00 +49 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:01 +50 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart: network failure leaves playback and selected subtitle state unchanged
+00:01 +51 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart: held range is cancelled by replace and cannot publish late
+00:01 +52 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart: held range is cancelled by stop and cannot publish late
+00:01 +53 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart: held range is cancelled by dispose and cannot publish late
+00:01 +54 -2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart: held range is cancelled by external and cannot publish late
+00:01 +55 -2: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_embedded_test.dart: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_embedded_test.dart
+  /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart

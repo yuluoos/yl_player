@@ -312,3 +312,78 @@ FFmpeg锁与VobSub提交一致；无native构建/设备/长播放/弱网ABR运�
 测试基线 `305af43f48fbfa50f4af2ebd7b0960fc91bb7e14`；提交前另一会话推进至 `f1406eca3b2989491376e1b6ff671f8220cc828b`，差异仅P05文档/证据，已核对无源码交集并同步到隔离副本，不重复整套验证。9份候选源码/测试与已验证副本逐字节一致。六份生产二进制、两份配方、两份FFmpeg锁未变。
 
 [证据清单](evidence/2026-10-11-subtitle-network-matroska/manifest.json)保存完整成功/失败日志、制品审计、复审记录与候选/依赖指纹。独立Git index与HEAD比较更新仅提交所属文件与自身总览/CHANGELOG段，保留另一会话所有未提交内容。完整Task3/P02仍开放，执行账本保留；本次无native构建、设备、长播或弱网ABR验证。
+
+## 2026-10-11 MP4 内嵌 tx3g 发现、选择与渲染
+
+继续用户指定 P02 切片，当前文件或 HTTP(S) MP4 通过同一个 `discoverEmbeddedSubtitles()`
+发现 `tx3g / mov_text`，以 `mp4:<Track ID>` 选择并在 Flutter 字幕层合成。选择/off/偏移、
+seek和换源门禁沿用现有 owner，失败保留旧目录/选择且不改变视频失败状态。严格范围见
+[MP4 契约](../specs/2026-10-11-subtitle-mp4.md)。本次不改原生桥接/公开enum，不占用长播放、
+弱网ABR或并行source-resolver清理工作。
+
+### 实现与范围裁定
+
+- 非分片 MP4 的 moov/mdat 可前后排列；32/64位box、stco/co64、stsz/stz2、stsc多chunk/描述、
+  stts/ctts和简单elst编辑列表决定样本时刻。样本必须在本文件mdat内，重复ID、表数量不符、
+  越界/重叠引用拒绝。媒体时间用整数比例组合后换算微秒，空文本间隙不生成cue。
+- 严格UTF8或带BOM的UTF16，纯文本runs防止HTML/SRT/ASS二次解释；默认/styl的b/i/u、
+  RGBA、字体回退和字号、水平对齐合成。字号为Flutter logical pixel，背景作为文本底色，
+  不宣称QuickTime字体/轨道几何一致。按Apple定义，仅0xC0000000标记整轨forced；不会自动选轨。
+- 公共format使用既有srt表示归一化标准文本，不声称原始tx3g编码是SRT；具体容器身份为mp4。
+  本切片选择Dart解复用而非新增原生桥接，代价是fMP4、wvtt/stpp、旧MOV text、加密/CEA、
+  per-sample forced/高级布局和复杂编辑仍待实现。未完成整个P02/CAP-SUB、PD03或设备验收。
+- 所有网络读取复用既有managed Range读取器；强ETag/固定总长、If-Match、单段206、共享
+  重试/重定向/凭据规则、超时/取消/字节及请求上限实际执行。不能扩大原生视频的managed
+  支持范围；字幕扫描一致性不代表独立视频HTTP请求版本一致。
+- box≤200000、总轨≤128/字幕≤32/每轨描述≤32、样本/chunks/time rows≤20000；单次读取
+  ≤256KiB、总读取≤64MiB、原始字幕样本≤4MiB、每cue≤16384码元、每sample≤1024style，
+  保留runs≤20000。目录既有4MiB归一化输入/10000cue/20000runs/64重叠限制继续执行；
+  不是进程RSS或任意大型MP4保证。
+
+### 验证过程
+
+实际文件入口先0/1失败（subtitleUnsupported），接入时真实文件读出的固定长度List不能
+removeLast，改为有界截取后1/1。首轮解析47通过/1失败：独立FFmpeg样本带默认不透明黑背景，
+过严接纳条件暴露缺口；补实际run背景色后48/48。扩展70通过/3失败包含编辑时间1微秒误差、
+stss遗漏验证及EOF测试夹具写错size位置；修复前两项和夹具后73/73。
+
+网络测试首次写错参数名responseHeaderTimeout，触发测试编译失败与关联compiler退出；改用
+已有connectTimeout，生产网络策略没有改动。Apple官方flags核对发现初始夹具把some-forced
+误当all-forced；先观察该误判的失败用例，再修复为0xC0000000并拒绝不完整flags组合。
+格式化后首次分析13条style info、后续2条，均已修正；原始日志如实保存，未放宽既有超时门限。
+
+本项75项测试：57解析/边界，1真实文件入口，11真实HTTP managed/故障/稀疏跳读，6公开会话
+选择/渲染/偏移/seek/取消。5MB稀疏容器不会完整下载；支持合法chunked206（补上此前网络
+Matroska复审建议的共用读取器正向证据）。独立host FFmpeg用自有黑视频与SRT封装1734字节
+MP4，ffprobe记录Track ID2、语言eng及1.000–2.500/3.123–4.567秒，样式由源文本手工确定。
+该CLI仅用于生成夹具，没有加入运行时依赖；字幕读取和Flutter合成实际执行，视频backend为fake。
+
+首次四包隔离回归 **1078/1078、0失败、exit0**（135接口/748播放器/113Apple/82Android），
+播放器与接口lib/test静态分析 **No issues found、exit0**。六份生产二进制、两份配方与两份
+FFmpeg lock指纹与网络Matroska阶段相同。本次无native构建、设备、长播放或弱网ABR验证。
+
+最终复审裁定、冻结候选与提交证据记录在本节后续及[证据清单](evidence/2026-10-11-subtitle-mp4/manifest.json)。
+
+### 最终复审修复与冻结验证
+
+一次fresh-context只读复审：Critical0、Important1、Minor0。发现CRLF在样式边界分开后被
+各段重复归一化，多出空白行；执行者回归实际1通过/2失败，改为保留原scalar下标并跨run折叠
+CRLF后，新增MP4 **78/78**（60解析/1文件/11网络/6公开生命周期）。无遗留Minor，无第二轮复审；
+复审未判断范围的全部裁定与代价见[review.md](evidence/2026-10-11-subtitle-mp4/review.md)。
+
+最终隔离候选基线 `27b0a4117b085c350d9a2231cba6f5448abdea49`：原基线3eb2d39后另一会话
+提交仅P05文档和独立source-resolver测试/脚本，核对与12份所属源码/测试/二进制夹具无交集，
+已同步基线后执行最终验证。根目录命令：
+
+```
+flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test
+dart analyze --suppress-analytics packages/yl_player/lib packages/yl_player/test packages/yl_player_platform_interface/lib packages/yl_player_platform_interface/test
+```
+
+最终 **1081/1081、0失败、exit0**（135/751/113/82；本项新增78），分析 **No issues found、exit0**。
+12份所属候选与实际测试副本逐字节匹配；source MP4由host FFmpeg8.0.1生成，六份生产原生二进制、
+两份配方及两份FFmpeg9.0.1 lock未变。没有依赖新增，不混淆host生成器和生产制品版本。
+
+完整成功/失败日志、独立ffprobe/原始SRT、制品hash、复审和源码/依赖/文档hash见[manifest](evidence/2026-10-11-subtitle-mp4/manifest.json)。
+使用独立Git index和HEAD比较更新，仅提交所属文件及自身总览/CHANGELOG段，其他未提交工作保留。
+整个Task3/P02继续开放，执行账本继续保留；仅本项可提交，不据此关闭native/HDR/DRM/设备/PD-03。

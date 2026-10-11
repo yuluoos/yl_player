@@ -1,0 +1,103 @@
+{
+    "packets": [
+        {
+            "codec_type": "subtitle",
+            "stream_index": 1,
+            "pts": 0,
+            "pts_time": "0.000000",
+            "dts": 0,
+            "dts_time": "0.000000",
+            "duration": 1000000,
+            "duration_time": "1.000000",
+            "size": "2",
+            "pos": "74",
+            "flags": "K__"
+        },
+        {
+            "codec_type": "subtitle",
+            "stream_index": 1,
+            "pts": 1000000,
+            "pts_time": "1.000000",
+            "dts": 1000000,
+            "dts_time": "1.000000",
+            "duration": 1500000,
+            "duration_time": "1.500000",
+            "size": "39",
+            "pos": "98",
+            "flags": "K__"
+        },
+        {
+            "codec_type": "subtitle",
+            "stream_index": 1,
+            "pts": 2500000,
+            "pts_time": "2.500000",
+            "dts": 2500000,
+            "dts_time": "2.500000",
+            "duration": 623000,
+            "duration_time": "0.623000",
+            "size": "2",
+            "pos": "181",
+            "flags": "K__"
+        },
+        {
+            "codec_type": "subtitle",
+            "stream_index": 1,
+            "pts": 3123000,
+            "pts_time": "3.123000",
+            "dts": 3123000,
+            "dts_time": "3.123000",
+            "duration": 1444000,
+            "duration_time": "1.444000",
+            "size": "8",
+            "pos": "183",
+            "flags": "K__"
+        }
+    ],
+    "streams": [
+        {
+            "index": 1,
+            "codec_name": "mov_text",
+            "codec_long_name": "MOV text",
+            "codec_type": "subtitle",
+            "codec_tag_string": "tx3g",
+            "codec_tag": "0x67337874",
+            "id": "0x2",
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/1000000",
+            "start_pts": 0,
+            "start_time": "0.000000",
+            "duration_ts": 4567000,
+            "duration": "4.567000",
+            "bit_rate": "92",
+            "nb_frames": "5",
+            "nb_read_packets": "4",
+            "extradata_size": 68,
+            "disposition": {
+                "default": 1,
+                "dub": 0,
+                "original": 0,
+                "comment": 0,
+                "lyrics": 0,
+                "karaoke": 0,
+                "forced": 0,
+                "hearing_impaired": 0,
+                "visual_impaired": 0,
+                "clean_effects": 0,
+                "attached_pic": 0,
+                "timed_thumbnails": 0,
+                "non_diegetic": 0,
+                "captions": 0,
+                "descriptions": 0,
+                "metadata": 0,
+                "dependent": 0,
+                "still_image": 0,
+                "multilayer": 0
+            },
+            "tags": {
+                "language": "eng",
+                "handler_name": "SubtitleHandler"
+            }
+        }
+    ]
+}

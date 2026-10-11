@@ -1,0 +1,1150 @@
+00:00 +0: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart
+00:00 +0: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart: media clock metric retains null, observed zero, copy and validation
+00:00 +1: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart: capability video MIME families remain safe and generic metadata stays strict
+00:00 +2: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart: independently allocated snapshots use structural equality and hash
+00:00 +3: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart: state copy clears every nullable field and preserves unrelated state
+00:00 +4: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart: tracks and state own immutable collections with structural equality
+00:00 +5: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart: geometry applies PAR then unapplied rotation and rejects invalid const values
+00:00 +6: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart: timeline validates nonnegative time and ordered DVR without requiring buffered >= position
+00:00 +7: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart: all common metrics preserve unknown versus measured zero and clear independently
+00:00 +8: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart: capabilities copy collections, preserve unknown limits and validate safe metadata
+00:00 +9: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart: assessment IDs preserve exact core and extension wire values without diagnostics leakage
+00:00 +10: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart: assessments enforce rejection exactly for incompatible and copy lists
+00:00 +11: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart: events correlate with a monotonic epoch and compare complete payloads
+00:00 +12: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart: publication boundaries reject invalid revisions, event timestamps and retries
+00:00 +13: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart: nullable copy input errors redact arbitrary runtime values
+00:00 +14: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart: publication accepts player-scoped pre-load failure and rejects session mismatch
+00:00 +15: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart: state equality distinguishes each semantic field
+00:00 +16: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart: common metrics and playback state exclude obsolete capability and platform fields
+00:00 +17: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart: event equality distinguishes session, revision, epoch and subclass payload
+00:00 +18: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/state_models_test.dart: capability null clearing preserves evidence and limits independently
+00:00 +19: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/validation_test.dart
+00:00 +19: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/validation_test.dart: RTMP and RTMPS admit complete app/playpath and retain supplied URI
+00:00 +20: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/validation_test.dart: RTMP incompatible valid policies reach native assessment unchanged
+00:00 +21: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/validation_test.dart: RTMP rejects unsafe or incomplete serialized URIs without identities
+00:00 +22: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/validation_test.dart: RTMP retains opaque percent-encoded app playpath and query bytes
+00:00 +23: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/validation_test.dart: RTMP validates raw serialized escapes and explicit port syntax
+00:00 +24: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/validation_test.dart: RTMP URI limit counts serialized UTF-8 bytes and accepts 8192
+00:00 +25: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/validation_test.dart: public input validation runs in release-compatible functions
+00:00 +26: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/models_test.dart
+00:01 +26: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/models_test.dart: landed network failure codes are public and stable
+00:01 +27: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/models_test.dart: network source snapshots request headers and records live intent
+00:01 +28: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/models_test.dart: file and content sources retain their distinct identities
+00:01 +29: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/models_test.dart: state copy preserves fields and explicitly clears nullable values
+00:01 +30: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/models_test.dart: track and capability lists are immutable snapshots
+00:01 +31: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/models_test.dart: metrics preserve omitted and clear explicit nullable values
+00:01 +32: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/player_platform_test.dart
+00:01 +32: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/player_platform_test.dart: registered verified platform becomes the singleton instance
+00:01 +33: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/player_platform_test.dart: unverified implementation cannot replace the singleton
+00:01 +34: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/drm_contract_test.dart
+00:02 +34: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/drm_contract_test.dart: native DRM errors preserve categories and actionable safe messages
+00:02 +35: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/drm_contract_test.dart: DRM binary values copy, compare and redact
+00:02 +36: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/drm_contract_test.dart: license endpoint validates policy without exposing URI/headers
+00:02 +37: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/drm_contract_test.dart: DRM configuration requires format, certificate and opaque content id
+00:02 +38: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/drm_contract_test.dart: platform and encryption limits are explicit without changing enums
+00:02 +39: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/video_selection_test.dart
+00:02 +39: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/video_selection_test.dart: selection defaults to automatic and redacts a fixed ID
+00:02 +40: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/video_selection_test.dart: fixed state requires a reported video track and user reason
+00:02 +41: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/live_playback_contract_test.dart
+00:03 +41: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/live_playback_contract_test.dart: live state snapshots are immutable and nullable without inventing defaults
+00:03 +42: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/live_playback_contract_test.dart: duplicate modes are rejected but a known non-switchable mode is valid
+00:03 +43: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/live_playback_contract_test.dart: idle and non-live snapshots cannot claim a committed live mode
+00:03 +44: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart
+00:03 +44: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: request snapshots preserve spelling and keep credentials separate
+00:03 +45: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: request equality ignores key casing and insertion order only
+00:03 +46: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: rejects collisions within either map and across both maps
+00:03 +47: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: reserved transport headers are forbidden in both maps
+00:03 +48: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: recognizable credentials must use the credential map
+00:03 +49: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: rejects malformed header names and unsafe values in either map
+00:03 +50: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: network URIs reject unsupported schemes, missing hosts and userinfo
+00:03 +51: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: files require absolute valid paths and expose no path in diagnostics
+00:03 +52: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: content sources require an authority and content scheme
+00:03 +53: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: sensitive validation errors carry no rejected argument
+00:03 +54: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: source identity includes every relevant option
+00:03 +55: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: default policies validate without silently requesting managed support
+00:03 +56: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: managed policy uses signed32 bounds and coherent retry delays
+00:03 +57: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: bounded buffers require ordered nonnegative durations and positive budget
+00:03 +58: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: video constraints validate for load and runtime and can clear limits
+00:03 +59: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: constraint copyWith rejects noninteger and nonfinite inputs safely
+00:03 +60: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: exact policy durations cannot be truncated to whole milliseconds
+00:03 +61: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: player sampling interval must fit positive native milliseconds
+00:03 +62: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: timeline allows long media positions but rejects negative submilliseconds
+00:03 +63: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: volume and speed reject nonfinite and out of range controls
+00:03 +64: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: track ids are opaque nonempty values and errors do not expose them
+00:03 +65: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/source_and_policy_test.dart: policy and option values compare structurally with matching hashes
+00:03 +66: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart
+00:04 +66: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: reply-before-idle adapter passes with immediate stopped identity fence
+00:04 +67: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: missing idle fails even when stopped identity is fenced
+00:04 +68: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: delayed idle cannot mask missing immediate stopped identity fence
+00:04 +69: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: conformant buffering adapter passes all observable cases
+00:04 +70: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: non-seekable live source uses a valid first-frame progress command
+00:04 +71: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: DVR first-frame progress stays inside a window starting after zero
+00:04 +72: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: network source with ordinary short header values is conformant
+00:04 +73: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: bare distinctive credential value fails public string conformance
+00:04 +74: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: bare distinctive ordinary header value remains detectable
+00:04 +75: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects stale
+00:04 +76: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects revision
+00:04 +77: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects barrier
+00:04 +78: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects identity
+00:04 +79: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects cancellation
+00:04 +80: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects stop
+00:04 +81: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects stopHeld
+00:04 +82: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects disposeHeld
+00:05 +83: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects firstFrame
+00:05 +84: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects terminal
+00:05 +85: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects rejectEverything
+00:05 +86: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects rejectStrict
+00:05 +87: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects ready
+00:05 +88: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects acceptUnsupported
+00:05 +89: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects unsafe
+00:05 +90: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects unsafeMessage
+00:05 +91: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects major
+00:05 +92: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects doubleDispose
+00:05 +93: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: honest strict-policy rejection with supported defaults is conformant
+00:05 +94: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: policy fixtures cannot omit known supported evidence
+00:05 +95: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: invalid deadlines fail before creating a player
+00:05 +96: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: public case values have structural equality and safe strings
+00:05 +97: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: a hung create times out and its late player is released and disposed
+00:05 +98: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: late create, command and cleanup errors are consumed while later cases run
+00:05 +99: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: release and disposal failures cannot skip disposal or later cases
+00:05 +100: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/platform_conformance_test.dart: a never completing disposal is bounded and later cases execute
+00:05 +101: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/subtitle_contract_test.dart
+00:06 +101: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: defaults, state copy and value semantics preserve old snapshots
+00:06 +102: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: snapshots copy their lists and preserve same-language distinct roles
+00:06 +103: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: duplicate ids, missing selected ids and idle subtitles are rejected
+00:06 +104: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: metadata and offset boundaries have release-safe validation
+00:06 +105: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: external file/http sources retain declared request policy and equality
+00:06 +106: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: unsupported media semantics and unsafe requests are rejected before dispatch
+00:06 +107: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: VobSub pair is explicit, bounded and independently validated
+00:06 +108: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: external ids, list limit and all diagnostic strings are safe
+00:06 +109: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: new capabilities append without changing existing enum ordinals
+00:06 +110: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/v2_player_platform_test.dart
+00:06 +110: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/v2_player_platform_test.dart: unregistered v2 platform returns a typed unavailable failure
+00:06 +111: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/v2_player_platform_test.dart: registration accepts token subclasses and explicit platform mocks
+00:06 +112: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/v2_player_platform_test.dart: registration rejects a foreign implements-only platform
+00:06 +113: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/v2_player_platform_test.dart: implementation and load identities compare structurally and redact metadata
+00:06 +114: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart
+00:06 +114: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: VP9 failures distinguish unsupported frames from strict policy
+00:06 +115: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: Opus failures distinguish codec, malformed packet and policy limits
+00:06 +116: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: AVI failures provide fixed recovery guidance
+00:06 +117: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: MPEG-TS failures explain the failing operation and recovery
+00:06 +118: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: DASH cap failures provide actionable fixed public guidance
+00:06 +119: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: session ids and failures use structural equality
+00:06 +120: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: session ids have a redacted string and release validation
+00:06 +121: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: public strings never expose sensitive input
+00:06 +122: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: failure strings expose only safe failure metadata
+00:06 +123: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: failure strings redact hostile code and diagnostic identifiers
+00:06 +124: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: credential assignments never reach diagnostics or failure strings
+00:06 +125: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: failure strings hide ordinary structured metadata fields
+00:06 +126: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: redaction removes URL, query, header, and bearer shapes
+00:06 +127: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: redaction handles case-insensitive sensitive headers
+00:06 +128: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: redaction handles sensitive headers without optional whitespace
+00:06 +129: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: HTTP token header names share detection and redaction grammar
+00:06 +130: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: generic URI schemes are replaced before path redaction
+00:06 +131: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: generic URI schemes without authority are fully replaced
+00:06 +132: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: redaction removes file paths and standalone query fragments
+00:06 +133: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: public messages replace unsafe diagnostic shapes
+00:06 +134: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_platform_interface/test/failure_test.dart: redacted diagnostics are capped after sensitive data is removed
+00:06 +135: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/android_player_controller_test.dart
+00:07 +135: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/android_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: AndroidPlaybackStatus.buffering frameBeforeReady=false
+00:07 +136: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/android_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: AndroidPlaybackStatus.buffering frameBeforeReady=true
+00:07 +137: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/android_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: AndroidPlaybackStatus.paused frameBeforeReady=false
+00:07 +138: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/android_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: AndroidPlaybackStatus.paused frameBeforeReady=true
+00:07 +139: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/android_player_controller_test.dart: controller newLoad from replay listener cancels the owned completion turn
+00:07 +140: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/android_player_controller_test.dart: controller stop from replay listener cancels the owned completion turn
+00:07 +141: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/android_player_controller_test.dart: controller dispose from replay listener cancels the owned completion turn
+00:07 +142: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/android_player_controller_test.dart: real controller does not infer READY from initial BUFFERING
+00:07 +143: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart
+00:08 +143: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:08 +144: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart: network failure leaves playback and selected subtitle state unchanged
+00:08 +145: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart: held range is cancelled by replace and cannot publish late
+00:08 +146: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart: held range is cancelled by stop and cannot publish late
+00:08 +147: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart: held range is cancelled by dispose and cannot publish late
+00:08 +148: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_session_test.dart: held range is cancelled by external and cannot publish late
+00:08 +149: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_controller_test.dart
+00:08 +149: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_controller_test.dart: explicit creation exposes capabilities and attaches streams
+00:08 +150: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_controller_test.dart: equal and older revisions notify nobody and disposed callbacks stay inert
+00:08 +151: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_controller_test.dart: create returns failures and disposes incompatible backend
+00:08 +152: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_controller_test.dart: invalid initial state disposes backend
+00:08 +153: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_controller_test.dart: volume without session, identical disposal, texture null on cleanup failure
+00:08 +154: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_controller_test.dart: presentation cache accepts one delayed current-session milestone and resets on replacement
+00:08 +155: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_controller_test.dart: failed current session clears presentation cache
+00:08 +156: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_controller_test.dart: disposal clears presentation cache with one notification
+00:08 +157: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_controller_test.dart: accepted Stop clears presentation but rejected Stop preserves it
+00:08 +158: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_admission_test.dart
+00:09 +158: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_admission_test.dart: old SPI adapter cannot silently assess DRM as clear media
+00:09 +159: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_admission_test.dart: DRM rejection must happen before native load and cancellation of a pending clear load
+00:09 +160: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_resource_test.dart
+00:09 +160: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_resource_test.dart: explicit nonidentity encoding request is rejected, never overwritten
+00:09 +161: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_resource_test.dart: actual GET preserves headers and same-origin credentials
+00:09 +162: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_resource_test.dart: cross-origin redirect strips credentials permanently including return
+00:09 +163: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_resource_test.dart: bounded HTTP body declared=true
+00:09 +164: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_resource_test.dart: bounded HTTP body declared=false
+00:09 +165: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_resource_test.dart: redirect budget stops a loop after five hops
+00:09 +166: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_resource_test.dart: HTTP errors are sanitized and never retried
+00:09 +167: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_resource_test.dart: managed policy now performs the request
+00:09 +168: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_resource_test.dart: encoded responses reject rather than bypassing decompressed budget
+00:09 +169: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_resource_test.dart: cancellation closes stalled headers
+00:09 +170: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_resource_test.dart: cancellation closes stalled body
+00:09 +171: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_resource_test.dart: cancellation owns and closes a stalled TLS handshake socket
+00:09 +172: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_resource_test.dart: file streams enforce input limit and missing paths are sanitized
+00:09 +173: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_android_bridge_test.dart
+00:10 +173: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_android_bridge_test.dart: generated challenge reaches real POST and first frame waits for matching view ACK
+00:10 +174: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/apple_player_controller_test.dart
+00:10 +174: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/apple_player_controller_test.dart: Apple session reports unsupported video selection
+00:10 +175: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/apple_player_controller_test.dart: public session pairs Load reply and READY in both orders: stateFirst=false
+00:10 +176: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/apple_player_controller_test.dart: public session pairs Load reply and READY in both orders: stateFirst=true
+00:10 +177: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/apple_player_controller_test.dart: prepared state and geometry do not resolve firstFrame before its native publication callback
+00:10 +178: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/apple_player_controller_test.dart: controller firstFrame is settled by stop and late callbacks cannot revive it
+00:10 +179: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/apple_player_controller_test.dart: controller firstFrame is settled by dispose and late callbacks cannot revive it
+00:10 +180: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/apple_player_controller_test.dart: controller firstFrame is settled by replace and late callbacks cannot revive it
+00:10 +181: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/apple_player_controller_test.dart: controller firstFrame is settled by failure and late callbacks cannot revive it
+00:10 +182: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/apple_player_controller_test.dart: real controller settles terminal firstFrame before blocked disposal: maximum=false
+00:10 +183: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/apple_player_controller_test.dart: real controller settles terminal firstFrame before blocked disposal: maximum=true
+00:10 +184: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/apple_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: ApplePlaybackStatus.buffering frameBeforeReady=false
+00:10 +185: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/apple_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: ApplePlaybackStatus.buffering frameBeforeReady=true
+00:10 +186: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/apple_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: ApplePlaybackStatus.paused frameBeforeReady=false
+00:10 +187: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/apple_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: ApplePlaybackStatus.paused frameBeforeReady=true
+00:10 +188: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/apple_player_controller_test.dart: controller newLoad from replay listener cancels the owned completion turn
+00:10 +189: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/apple_player_controller_test.dart: controller stop from replay listener cancels the owned completion turn
+00:10 +190: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/apple_player_controller_test.dart: controller dispose from replay listener cancels the owned completion turn
+00:10 +191: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/apple_player_controller_test.dart: real controller does not infer READY from initial BUFFERING
+00:10 +192: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart
+00:11 +192: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: binary framing, palette update and clear make nonoverlapping media cues
+00:11 +193: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: decoded premultiplied RGBA, partial palette versions preserve old cues
+00:11 +194: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: palette-only PCS placeholder does not move or clear existing plane
+00:11 +195: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: last display persists until bounded timeline/session termination
+00:11 +196: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: fragmented ODS checks version/length and assembles before publication
+00:11 +197: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: all RLE run forms and transparent defaults decode exact rows
+00:11 +198: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: crop source and window clipping produce exact pixels and destination
+00:11 +199: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: two object references retain paint order
+00:11 +200: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: same PTS replaces previous frame without zero-length cue
+00:11 +201: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: PCS 32-bit rollover unwraps while segment DTS is not subtitle time
+00:11 +202: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: epoch reset cannot resolve stale objects, palettes or windows
+00:11 +203: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: epoch dimension change with fresh state is valid
+00:11 +204: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: all strict first-display truncations reject with sanitized failure
+00:11 +205: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed magic
+00:11 +206: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed byte range
+00:11 +207: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed duplicate PCS
+00:11 +208: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed orphan END
+00:11 +209: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed END payload
+00:11 +210: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed incomplete ODS
+00:11 +211: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed orphan continuation
+00:11 +212: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed fragment mismatch
+00:11 +213: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed declared undersize
+00:11 +214: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed row overflow
+00:11 +215: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed short row
+00:11 +216: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed no final EOL
+00:11 +217: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed zero run
+00:11 +218: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed truncated run
+00:11 +219: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed extra row
+00:11 +220: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed missing palette
+00:11 +221: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed missing object
+00:11 +222: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed bad palette length
+00:11 +223: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed duplicate palette entry
+00:11 +224: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed bad window
+00:11 +225: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed missing window
+00:11 +226: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed crop outside object
+00:11 +227: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: malformed backward PCS
+00:11 +228: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: unsupported reserved state
+00:11 +229: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: unsupported unknown segment
+00:11 +230: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: unsupported cache-only redraw
+00:11 +231: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: unsupported palette-only ODS
+00:11 +232: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: unsupported dimension change within epoch
+00:11 +233: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: preallocation bitmap budget counts all palette-expanded frames
+00:11 +234: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: dimension/product checks precede RLE allocation
+00:11 +235: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_document_test.dart: object reference budget and cue budget
+00:11 +236: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart
+00:12 +236: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: same-language tracks use UID independent of order and TrackNumber
+00:12 +237: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: UID supports the entire unsigned 64-bit range
+00:12 +238: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: unknown Segment and non-default scale, signed block time, CodecDelay
+00:12 +239: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: SimpleBlock requires and uses DefaultDuration in nanoseconds
+00:12 +240: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: Cluster timestamp may follow blocks
+00:12 +241: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: ASS uses private styles, packet ReadOrder, exact times and commas
+00:12 +242: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: SSA uses private styles, packet ReadOrder, exact times and commas
+00:12 +243: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: UTF8 block content cannot inject file-level cues
+00:12 +244: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: rejects duplicate TrackUID
+00:12 +245: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: rejects duplicate TrackNumber
+00:12 +246: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: rejects truncated block
+00:12 +247: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: rejects missing track
+00:12 +248: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: rejects negative presentation
+00:12 +249: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: rejects zero duration
+00:12 +250: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: rejects duplicate timestamp
+00:12 +251: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: rejects oversized child
+00:12 +252: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported codec
+00:12 +253: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported compressed track
+00:12 +254: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported missing duration
+00:12 +255: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported lacing
+00:12 +256: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported invisible subtitle
+00:12 +257: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported block additions
+00:12 +258: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported codec state
+00:12 +259: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported nonneutral track scale
+00:12 +260: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: limits cue payload before reading it
+00:12 +261: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: limits catalog tracks
+00:12 +262: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: cancellation fences pending reads
+00:12 +263: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: video BlockGroups may have multiple references and huge skipped payload
+00:12 +264: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: independently muxed owned MKV exposes two real subtitle streams
+00:12 +265: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: container timing enforces overlap budget
+00:12 +266: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: ASS header cannot inject separately timed events
+00:12 +267: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: ASS duplicate ReadOrder rejects ambiguous ordering
+00:12 +268: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: every truncated prefix rejects without raw bounds errors
+00:12 +269: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: explicit default ReferencePriority zero preserves subtitle semantics
+00:12 +270: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: nonzero ReferencePriority remains an explicit unsupported boundary
+00:12 +271: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: 32 enabled tracks plus disabled entries, disabled first=false
+00:12 +272: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: 32 enabled tracks plus disabled entries, disabled first=true
+00:12 +273: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration external replace/clear preserves embedded selection and offset
+00:12 +274: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration rediscovery preserves external selection and removes only embedded
+00:12 +275: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration missing UID clears selection rather than remapping same language
+00:12 +276: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration both directions of ID collision preserve the old catalog
+00:12 +277: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration malformed discovery is atomic and sanitized
+00:12 +278: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration unsupported network container makes no network request
+00:12 +279: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration missing file does not disclose path
+00:12 +280: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration embedded and external catalogs share the 4 MiB input budget
+00:13 +281: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration queued scans are cancelled by external replacement
+00:13 +282: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration runtime reset cancels discovery with no late catalog
+00:13 +283: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart
+00:13 +283: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 408 through successful body
+00:13 +284: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 429 through successful body
+00:13 +285: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 500 through successful body
+00:13 +286: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 502 through successful body
+00:13 +287: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 503 through successful body
+00:13 +288: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 504 through successful body
+00:13 +289: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: managed retry count excludes initial attempt
+00:13 +290: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: response header timeout is retried and closes held request
+00:13 +291: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: read inactivity retry discards prior attempt bytes
+00:14 +292: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: permanent HTTP 400 never retries
+00:14 +293: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: permanent HTTP 401 never retries
+00:14 +294: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: permanent HTTP 403 never retries
+00:14 +295: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: permanent HTTP 404 never retries
+00:14 +296: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: permanent HTTP 501 never retries
+00:14 +297: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: body progress resets read deadline after connect deadline has expired
+00:14 +298: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: excessive valid Retry-After forbids retry: 1
+00:14 +299: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: excessive valid Retry-After forbids retry: 999999999999999999999999
+00:14 +300: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: excessive valid Retry-After forbids retry: Sun, 11 Oct 2099 12:00:00 GMT
+00:14 +301: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: Retry-After zero overrides delay and malformed values fall back
+00:14 +302: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: exponential backoff saturates in actual request scheduling
+00:15 +303: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: cancel during backoff prevents all later attempts
+00:15 +304: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: redirect counter spans retries and credentials stay stripped on return
+00:15 +305: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: zero redirect budget rejects first such response
+00:15 +306: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: zero retry budget rejects first such response
+00:15 +307: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: terminal encoding error never retries
+00:15 +308: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: terminal length error never retries
+00:15 +309: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: terminal stream error never retries
+00:15 +310: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: TCP reset during response headers retries owned attempt
+00:15 +311: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: raw truncated body retries from empty
+00:15 +312: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: raw invalid protocol rejects
+00:15 +313: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: TLS header timeout owns and closes every handshake before retry
+00:15 +314: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_managed_network_test.dart: certificate failure is terminal even with remaining retry budget
+00:15 +315: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_embedded_test.dart
+00:16 +315: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_embedded_test.dart: real MP4 tx3g file discovers Track ID and renders literal text at sample time
+00:16 +316: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart
+00:16 +316: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: document run ceiling rejects before runtime span construction
+00:16 +317: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: explicit zero movement times mean full cue duration
+00:16 +318: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: named reset supplies defaults for argumentless tags; bare reset restores original
+00:16 +319: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: CRLF and LF share the same 50000-line budget
+00:16 +320: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: mixed per-run shadow offsets reject instead of painting wrong outline shadow
+00:16 +321: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: ASS time, colors, text and nine anchors
+00:16 +322: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: SSA time, colors, text and nine anchors
+00:16 +323: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: runs preserve style, BGR/alpha and reset without reparsing text
+00:16 +324: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: line-wide motion/fade follows explicit relative times
+00:16 +325: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: format columns reorder while dialogue commas remain text
+00:16 +326: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: SSA legacy top/center alignment and signed color
+00:16 +327: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: unsupported effect \p1 rejects atomically
+00:16 +328: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: unsupported effect \k20 rejects atomically
+00:16 +329: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: unsupported effect \t(0,500,\fs40) rejects atomically
+00:16 +330: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: unsupported effect \clip(0,0,1,1) rejects atomically
+00:16 +331: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: unsupported effect \blur2 rejects atomically
+00:16 +332: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: unsupported effect \frz90 rejects atomically
+00:16 +333: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: unsupported effect \q0 rejects atomically
+00:16 +334: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: unsupported effect \q3 rejects atomically
+00:16 +335: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: unsupported effect \pos(1,2)\move(1,2,3,4) rejects atomically
+00:16 +336: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: unsupported effect \fad(1500,1500) rejects atomically
+00:16 +337: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: bad time
+00:16 +338: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: reversed time
+00:16 +339: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: unknown style
+00:16 +340: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: duplicate header
+00:16 +341: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: duplicate style
+00:16 +342: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: wrong version
+00:16 +343: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: bad color
+00:16 +344: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: malformed payload {\pos(NaN,1)}a
+00:16 +345: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: malformed payload {\move(1,2,3)}a
+00:16 +346: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: malformed payload {\b1a
+00:16 +347: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: malformed payload a}
+00:16 +348: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: malformed payload {\fs0}a
+00:16 +349: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: size budget
+00:16 +350: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: outline budget
+00:16 +351: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: coords budget
+00:16 +352: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: time budget
+00:16 +353: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: runs budget
+00:16 +354: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: payload budget
+00:16 +355: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: font budget
+00:16 +356: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: active cue limit includes overlap but not adjacent boundaries
+00:16 +357: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: smart wrap 0 unsupported
+00:16 +358: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: smart wrap 3 unsupported
+00:16 +359: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: attachments rejected; no font resource access
+00:16 +360: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: font identity budget includes overridden fonts
+00:16 +361: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_document_test.dart: SSA BackColour supplies outline and legacy shadow alpha
+00:16 +362: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart
+00:17 +362: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: protected Android mounts explicit hybrid before first frame without texture or opacity
+00:17 +363: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: protected Apple view mounts before first frame on TargetPlatform.iOS
+00:17 +364: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: protected Apple view mounts before first frame on TargetPlatform.macOS
+00:17 +365: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: negotiated native view mounts before current FirstFrame and retains identity on TargetPlatform.iOS
+00:17 +366: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: native surface applies pixel aspect ratio rotation cover and alignment on TargetPlatform.iOS
+00:17 +367: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: disposed native output unmounts the surface and restores placeholder on TargetPlatform.iOS
+00:17 +368: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: native output requires authoritative geometry even after FirstFrame on TargetPlatform.iOS
+00:17 +369: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: negotiated native view mounts before current FirstFrame and retains identity on TargetPlatform.macOS
+00:17 +370: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: native surface applies pixel aspect ratio rotation cover and alignment on TargetPlatform.macOS
+00:17 +371: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: disposed native output unmounts the surface and restores placeholder on TargetPlatform.macOS
+00:17 +372: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: native output requires authoritative geometry even after FirstFrame on TargetPlatform.macOS
+00:17 +373: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: macOS retains Texture without a matching advertisement: capability=false
+00:17 +374: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: macOS retains Texture without a matching advertisement: capability=true
+00:17 +375: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: keeps placeholder until current session first frame
+00:17 +376: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: uses first frame received before load completion and view mount
+00:17 +377: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: replacement hides old frame until replacement first frame
+00:17 +378: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: contain uses authoritative display geometry and default bars
+00:17 +379: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: applies pixel aspect ratio exactly once before rotation
+00:17 +380: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: cover crops and top-left alignment controls placement
+00:17 +381: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: forwards background and texture filter quality
+00:17 +382: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: missing geometry keeps placeholder after first frame signal
+00:17 +383: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/player_view_test.dart: contains rendering only and no interactive or platform views
+00:17 +384: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/public_api_test.dart
+00:18 +384: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/public_api_test.dart: application values are available from the application barrel
+00:18 +385: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/public_api_test.dart: platform registration does not escape the app barrel
+00:18 +386: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart
+00:19 +386: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: malformed NOTE cannot swallow a cue: 304160519
+00:19 +387: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: malformed NOTE cannot swallow a cue: 126143280
+00:19 +388: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: malformed NOTE cannot swallow a cue: 532906529
+00:19 +389: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: interval index matches a reference scan across overlaps and seeks
+00:19 +390: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: microsecond boundaries and extreme query operands remain safe
+00:19 +391: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: hard line and metadata budgets reject amplification
+00:19 +392: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: byte lists cannot mask values outside the unsigned byte range
+00:19 +393: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: valid prefix followed by damaged cue never yields a partial document
+00:19 +394: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: overlap, exact half-open boundaries, seek and off are stateless
+00:19 +395: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: BOM, Unicode and multiline payload with [10]
+00:19 +396: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: BOM, Unicode and multiline payload with [13, 10]
+00:19 +397: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: BOM, Unicode and multiline payload with [13]
+00:19 +398: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: SRT identifiers are optional and not treated as globally unique
+00:19 +399: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: SRT out-of-order cues retain file order on lookup
+00:19 +400: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: document and query result cannot be mutated
+00:19 +401: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: WebVTT signature, identifiers, NOTE, short and hour timestamps
+00:19 +402: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: WebVTT position and alignment survive parsing
+00:19 +403: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: raw markup is retained for a future renderer, never interpreted
+00:19 +404: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject malformed WebVTT 1
+00:19 +405: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject malformed WebVTT 921497047
+00:19 +406: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject malformed WebVTT 262865390
+00:19 +407: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject malformed WebVTT 750017156
+00:19 +408: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject malformed WebVTT 769588573
+00:19 +409: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject malformed WebVTT 373134498
+00:19 +410: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: empty valid documents are supported
+00:19 +411: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:60:00,000 --> 00:61:00,000
+00:19 +412: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:60,000 --> 00:01:02,000
+00:19 +413: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:02,000 --> 00:00:01,000
+00:19 +414: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:01,000 --> 00:00:01,000
+00:19 +415: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing -1:00:01,000 --> 00:00:02,000
+00:19 +416: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:01.000 --> 00:00:02.000
+00:19 +417: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:01,00 --> 00:00:02,000
+00:19 +418: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:01,000-->00:00:02,000
+00:19 +419: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:01,000 --> 00:00:02,000 trailing
+00:19 +420: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject malformed SRT block 778888771
+00:19 +421: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject malformed SRT block 655221060
+00:19 +422: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject malformed SRT block 732609353
+00:19 +423: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject malformed SRT block 407300547
+00:19 +424: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting position:101%
+00:19 +425: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting position:-1%
+00:19 +426: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting position:NaN%
+00:19 +427: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting position:2%,unknown
+00:19 +428: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting align:middle
+00:19 +429: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting align:start align:end
+00:19 +430: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting align:
+00:19 +431: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: unsupported semantics are explicit 219808513
+00:19 +432: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: unsupported semantics are explicit 234889834
+00:19 +433: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: unsupported semantics are explicit 623810531
+00:19 +434: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: unsupported semantics are explicit 542852965
+00:19 +435: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: invalid UTF-8 and errors do not disclose input
+00:19 +436: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: byte limit is checked before UTF-8 decoding
+00:19 +437: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: cue count and per-cue UTF-16 limits are exact
+00:19 +438: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: overlap budget counts end before start at equal timestamps
+00:19 +439: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: timestamps beyond seven days fail without integer overflow
+00:19 +440: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_document_test.dart: invalid limits fail in release mode too
+00:19 +441: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_apple_bridge_test.dart
+00:19 +441: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_apple_bridge_test.dart: generated challenge reaches real POST and first frame waits for matching view ACK
+00:19 +442: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_runtime_test.dart
+00:20 +442: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_runtime_test.dart: binary SUP file loads, updates palette, clears and follows offsets
+00:20 +443: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_runtime_test.dart: expanded bitmap budget is shared across external catalog documents
+00:20 +444: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_runtime_test.dart: managed binary HTTP retries and malformed replacement preserves catalog
+00:20 +445: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_runtime_test.dart: replacement cancels held binary response and cannot publish late data
+00:20 +446: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_session_test.dart
+00:20 +446: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_session_test.dart: discover the committed MKV, select its UID and render on media clock
+00:20 +447: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_session_test.dart: session lifecycle offset and seek clear/requery the actual container cue
+00:20 +448: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_session_test.dart: session lifecycle new Load starts off and stale discovery cannot publish
+00:20 +449: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_session_test.dart: session lifecycle Stop cancels discovery and removes old track/selection
+00:20 +450: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_session_test.dart: session lifecycle Dispose cancels pending scan
+00:21 +451: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_session_test.dart: session lifecycle YlPlayerView renders discovered text and clears off/seek/unmount
+00:21 +452: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/embedded_subtitle_session_test.dart: default controller rejects discovery without opted-in ownership
+00:21 +453: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_overlay_test.dart
+00:21 +453: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_overlay_test.dart: two TTML regions flow independently and clip overflowing paragraphs
+00:21 +454: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_overlay_test.dart: TTML contain region before has exact box and clipped red pixels
+00:21 +455: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_overlay_test.dart: TTML contain region center has exact box and clipped red pixels
+00:21 +456: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_overlay_test.dart: TTML contain region after has exact box and clipped red pixels
+00:21 +457: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_overlay_test.dart: TTML rotated-par region before has exact box and clipped red pixels
+00:21 +458: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_overlay_test.dart: TTML rotated-par region center has exact box and clipped red pixels
+00:21 +459: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_overlay_test.dart: TTML rotated-par region after has exact box and clipped red pixels
+00:21 +460: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_runtime_test.dart
+00:22 +460: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_runtime_test.dart: catalog aggregate run overflow keeps the selected catalog
+00:22 +461: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_runtime_test.dart: ASS file commits styled overlapping cues with offset and off
+00:22 +462: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_runtime_test.dart: SSA file uses the same catalog and renders decoded text
+00:22 +463: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_runtime_test.dart: ASS managed HTTP retries then commits; malformed keeps old catalog
+00:22 +464: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_runtime_test.dart: new ASS replacement cancels held HTTP body and rejects late completion
+00:22 +465: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart
+00:22 +465: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: managed HTTP discovers actual Matroska tracks and media-clock cues
+00:22 +466: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy sparse scan skips a large media-like payload and pins later ranges
+00:23 +467: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy network ASS retains styles, text and exact clock
+00:23 +468: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy network SSA retains styles, text and exact clock
+00:23 +469: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy valid CodecPrivate above 64 KiB spans range windows
+00:23 +470: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy rejects invalid range response 200 without retry or publication
+00:23 +471: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy rejects invalid range response missing-etag without retry or publication
+00:23 +472: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy rejects invalid range response weak-etag without retry or publication
+00:23 +473: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy rejects invalid range response bad-etag without retry or publication
+00:23 +474: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy rejects invalid range response missing-range without retry or publication
+00:23 +475: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy rejects invalid range response wrong-start without retry or publication
+00:23 +476: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy rejects invalid range response wrong-end without retry or publication
+00:23 +477: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy rejects invalid range response unknown-total without retry or publication
+00:23 +478: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy rejects invalid range response compressed without retry or publication
+00:23 +479: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy rejects invalid range response multipart without retry or publication
+00:23 +480: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy rejects invalid range response short-body without retry or publication
+00:23 +481: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy rejects invalid range response extra-body without retry or publication
+00:23 +482: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy later etag invalidates candidate and keeps old selected catalog
+00:23 +483: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy later length invalidates candidate and keeps old selected catalog
+00:23 +484: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy later 412 invalidates candidate and keeps old selected catalog
+00:23 +485: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy later redirect invalidates candidate and keeps old selected catalog
+00:23 +486: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy cross-origin credentials stay stripped on retry and later windows
+00:23 +487: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy retry budget is shared across distinct range windows
+00:23 +488: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy redirect budget spans retries before representation is pinned
+00:23 +489: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy retryable HTTP 408 retains requested byte interval
+00:23 +490: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy retryable HTTP 429 retains requested byte interval
+00:23 +491: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy retryable HTTP 500 retains requested byte interval
+00:23 +492: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy retryable HTTP 502 retains requested byte interval
+00:23 +493: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy retryable HTTP 503 retains requested byte interval
+00:23 +494: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy retryable HTTP 504 retains requested byte interval
+00:23 +495: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy permanent HTTP 400 does not retry
+00:23 +496: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy permanent HTTP 401 does not retry
+00:23 +497: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy permanent HTTP 403 does not retry
+00:23 +498: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy permanent HTTP 404 does not retry
+00:23 +499: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy permanent HTTP 412 does not retry
+00:23 +500: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy permanent HTTP 416 does not retry
+00:23 +501: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy permanent HTTP 501 does not retry
+00:23 +502: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy excessive Retry-After is terminal and cancellation interrupts backoff
+00:23 +503: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy header deadline retries the same range
+00:23 +504: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy body inactivity retries from scratch and drops partial bytes
+00:23 +505: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy body progress resets inactivity after header deadline
+00:23 +506: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy platformDefault supports range but does not retry
+00:23 +507: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy conflicting If-Match is rejected before I/O
+00:23 +508: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy conflicting If-Range is rejected before I/O
+00:23 +509: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy conflicting If-None-Match is rejected before I/O
+00:23 +510: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy conflicting If-Modified-Since is rejected before I/O
+00:23 +511: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy conflicting If-Unmodified-Since is rejected before I/O
+00:23 +512: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy conflicting Accept-Encoding is rejected before I/O
+00:23 +513: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy LRU cache is bounded and refetch preserves If-Match
+00:23 +514: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy 4096 HTTP-attempt cap bounds a repeated cache-thrashing scan
+00:29 +515: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_test.dart: range and policy cancelling held later range keeps published catalog and disposes candidate
+00:29 +516: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_overlay_test.dart
+00:29 +516: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_overlay_test.dart: VobSub manual field/color/alpha grid at 1000 ms
+00:30 +517: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_overlay_test.dart: VobSub manual field/color/alpha grid at 1512 ms
+00:30 +518: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_overlay_test.dart: VobSub manual field/color/alpha grid at 2024 ms
+00:30 +519: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_overlay_test.dart: VobSub reuses cropped bitmap geometry
+00:30 +520: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_overlay_test.dart: public VobSub pair: first frame/offset/seek/off/source reset release images
+00:31 +521: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_overlay_test.dart
+00:31 +521: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_overlay_test.dart: RTL start anchors match text direction
+00:31 +522: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_overlay_test.dart: RTL end anchors match text direction
+00:31 +523: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_overlay_test.dart: painted pixels and upright text remain in contain aperture
+00:31 +524: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_overlay_test.dart: painted pixels and upright text remain in top-left aperture
+00:31 +525: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_overlay_test.dart: painted pixels and upright text remain in cover aperture
+00:31 +526: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_overlay_test.dart: painted pixels and upright text remain in rotated-par aperture
+00:31 +527: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_session_test.dart
+00:32 +527: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:32 +528: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_session_test.dart: network failure leaves playback and selected subtitle state unchanged
+00:32 +529: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_session_test.dart: held range is cancelled by replace and cannot publish late
+00:32 +530: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_session_test.dart: held range is cancelled by stop and cannot publish late
+00:32 +531: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_session_test.dart: held range is cancelled by dispose and cannot publish late
+00:32 +532: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_session_test.dart: held range is cancelled by external and cannot publish late
+00:33 +533: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart
+00:33 +533: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart: ASS media-time move/fade outlined box at 0 ms
+00:33 +534: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart: ASS media-time move/fade outlined box at 1000 ms
+00:33 +535: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart: ASS media-time move/fade outlined box at 1750 ms
+00:33 +536: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart: layer paints higher cue on top, file order breaks ties
+00:33 +537: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart: unpositioned overlapping events stack without overlap
+00:33 +538: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart: ASS contain scales and clips to aperture
+00:33 +539: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart: ASS rotate-par scales and clips to aperture
+00:33 +540: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart: unknown font falls back and remains in clipped aperture
+00:33 +541: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 1 matches manually derived box
+00:34 +542: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 2 matches manually derived box
+00:34 +543: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 3 matches manually derived box
+00:34 +544: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 4 matches manually derived box
+00:34 +545: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 5 matches manually derived box
+00:34 +546: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 6 matches manually derived box
+00:34 +547: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 7 matches manually derived box
+00:34 +548: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 8 matches manually derived box
+00:34 +549: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 9 matches manually derived box
+00:34 +550: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart: ASS colored shadow extends beyond fill and outline
+00:34 +551: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ass_overlay_test.dart: public ASS first-frame, pause/offset, seek, off and source reset
+00:34 +552: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart
+00:34 +552: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: DVD fields, RGB palette and 4-bit alpha are premultiplied exactly
+00:34 +553: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: control updates split frames and stop on exact 1024/90000 clock
+00:34 +554: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: forced-start is retained without implicit filtering
+00:34 +555: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: fragment assembly works at every legal first-fragment split
+00:34 +556: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: default stream and caller language choose independently of multiplex order
+00:34 +557: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: interleaved fragments stay associated with their own substream
+00:34 +558: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: IDX times override structural PES PTS; exact PES filepos also works
+00:34 +559: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: delay plus public offset, negative clip and missing stop next entry bound
+00:34 +560: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: UTF8 BOM and CR-only index with conventional neutral settings
+00:34 +561: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: nibble RLE width 1 including fill and byte padding
+00:34 +562: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: nibble RLE width 4 including fill and byte padding
+00:34 +563: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: nibble RLE width 16 including fill and byte padding
+00:34 +564: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: nibble RLE width 64 including fill and byte padding
+00:34 +565: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: nibble RLE width 100 including fill and byte padding
+00:34 +566: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed idx signature
+00:34 +567: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed idx missing size
+00:34 +568: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed idx bad palette
+00:34 +569: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed idx duplicate size
+00:34 +570: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed idx timestamp without stream
+00:34 +571: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed idx invalid minute
+00:34 +572: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed idx out of range filepos
+00:34 +573: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed idx middle of packet offset
+00:34 +574: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed idx wrong substream
+00:34 +575: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed idx duplicate timestamp
+00:34 +576: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed idx duplicate stream
+00:34 +577: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed idx absent default stream
+00:34 +578: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: unsupported effect scale: 90%, 100%
+00:34 +579: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: unsupported effect custom colors: ON, tridx: 0000
+00:34 +580: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: unsupported effect forced subs: ON
+00:34 +581: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: unsupported effect alpha: 50%
+00:34 +582: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: unsupported effect unknown: external
+00:34 +583: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: strict packet prefixes reject every truncation
+00:34 +584: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed PS magic
+00:34 +585: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed pack marker
+00:34 +586: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed PES declared length
+00:34 +587: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed PTS marker
+00:34 +588: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed SPU control before bitmap
+00:34 +589: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed SPU backward link
+00:34 +590: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed SPU missing terminator
+00:34 +591: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed SPU backward date
+00:34 +592: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed SPU field points into control
+00:34 +593: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed SPU row overflow
+00:34 +594: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed SPU nibble padding
+00:34 +595: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: CHG_COLCON fails explicitly
+00:34 +596: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: bitmap and combined input limits reject before expansion
+00:34 +597: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: canvas, time and line limits are enforced
+00:34 +598: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: invalid byte values and UTF8 do not leak inputs
+00:34 +599: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: oversized bitmap rejects before tiny RLE can allocate
+00:34 +600: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: two field offsets may be in reverse physical order
+00:34 +601: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: pack stuffing, system and padding packets do not alter offsets
+00:34 +602: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: PTS+DTS fields and absent PTS are structural, not cue timing
+00:34 +603: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: same-language ambiguity is explicit, default selection still valid
+00:34 +604: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: MPEG1, HD SPU and unrelated private stream reject explicitly
+00:34 +605: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: signature line obeys the same preallocation line budget
+00:34 +606: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: ordinary producer P-STD extension preserves bitmap and timing
+00:34 +607: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: ordinary producer SPU terminal alignment byte is accepted
+00:34 +608: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed P-STD extension [30]
+00:34 +609: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed P-STD extension [30, 96]
+00:34 +610: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed P-STD extension [30, 224, 58]
+00:34 +611: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: malformed P-STD extension [30, 96, 58, 0]
+00:34 +612: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_document_test.dart: SPU padding cannot hide extra commands or arbitrary bytes
+00:34 +613: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/live_playback_session_test.dart
+00:35 +613: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/live_playback_session_test.dart: rejects legacy before backend dispatch
+00:35 +614: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/live_playback_session_test.dart: rejects operation without SPI before backend dispatch
+00:35 +615: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/live_playback_session_test.dart: rejects SPI without operation before backend dispatch
+00:35 +616: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/live_playback_session_test.dart: session admission rejects vod without dispatch
+00:35 +617: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/live_playback_session_test.dart: session admission rejects unknown without dispatch
+00:35 +618: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/live_playback_session_test.dart: session admission rejects unsupported without dispatch
+00:35 +619: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/live_playback_session_test.dart: session admission rejects same-mode-unsupported without dispatch
+00:35 +620: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/live_playback_session_test.dart: awaits backend commit without optimistic state or changing pause intent
+00:35 +621: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/live_playback_session_test.dart: current rejection preserves state and releases pending admission
+00:35 +622: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/live_playback_session_test.dart: 32 unsettled commands are bounded and a settled slot is reusable
+00:35 +623: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/live_playback_session_test.dart: late ACK after replace cannot succeed on new session
+00:35 +624: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/live_playback_session_test.dart: late error after replace cannot succeed on new session
+00:35 +625: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/live_playback_session_test.dart: late ACK after stop cannot succeed on new session
+00:35 +626: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/live_playback_session_test.dart: late error after stop cannot succeed on new session
+00:35 +627: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/live_playback_session_test.dart: late ACK after dispose cannot succeed on new session
+00:35 +628: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/live_playback_session_test.dart: late error after dispose cannot succeed on new session
+00:35 +629: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/live_playback_session_test.dart: same-session stream failure preserves committed ACK
+00:35 +630: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/live_playback_session_test.dart: same-session stream failure preserves rejection
+00:35 +631: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_runtime_test.dart
+00:35 +631: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_runtime_test.dart: TTML file commits styled overlapping cues with offset and off
+00:35 +632: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_runtime_test.dart: TTML managed HTTP retries then commits; malformed keeps old catalog
+00:35 +633: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_runtime_test.dart: new TTML replacement cancels held HTTP body and rejects late completion
+00:35 +634: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_runtime_test.dart: decoded TTML control-like text is never reparsed as SRT markup
+00:35 +635: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_runtime_test.dart: malformed XML syntax cannot publish over a selected catalog
+00:35 +636: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_runtime_test.dart: public TTML load renders and follows seek, off and source reset
+00:35 +637: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_runtime_test.dart
+00:36 +637: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_runtime_test.dart: paired files render media-timed bitmap and offset/off
+00:36 +638: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_runtime_test.dart: both managed resources load, binary retries, bad pair preserves catalog
+00:36 +639: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_runtime_test.dart: replacement cancels held idx resource and ignores late completion
+00:36 +640: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_runtime_test.dart: replacement cancels held sub resource and ignores late completion
+00:36 +641: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_runtime_test.dart: pair input sizes share the encoded catalog allowance
+00:36 +642: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_runtime_test.dart: missing companion preserves current catalog
+00:36 +643: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/vobsub_runtime_test.dart: VobSub documents share preallocation RGBA catalog allowance
+00:36 +644: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_retry_policy_test.dart
+00:37 +644: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_retry_policy_test.dart: exponential delay saturates without overflow or count-sized work
+00:37 +645: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_retry_policy_test.dart: valid Retry-After seconds override and excessive values forbid retry
+00:37 +646: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_retry_policy_test.dart: dates use injected wall time and past values mean zero delay
+00:37 +647: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_retry_policy_test.dart: malformed values fall back to exponential delay
+00:37 +648: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_retry_policy_test.dart: obsolete HTTP dates resolve two-digit years against injected clock
+00:37 +649: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_retry_policy_test.dart: obsolete date window also crosses a century boundary
+00:37 +650: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_retry_policy_test.dart: invalid calendar dates and truncated fields fall back rather than normalize
+00:37 +651: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart
+00:37 +651: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:37 +652: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: network YlMediaFormat.mp4 sniffs content, skips media, sends conditional range and renders
+00:37 +653: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: legal chunked206 MP4 discovery completes without Content-Length
+00:37 +654: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: managed retries later range with credential and shared scan ledger
+00:38 +655: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: cross-origin redirect strips credentials before MP4 range scan
+00:38 +656: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: etag response keeps prior selected MP4 catalog
+00:38 +657: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: 200 response keeps prior selected MP4 catalog
+00:38 +658: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: 403 response keeps prior selected MP4 catalog
+00:38 +659: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: malformed response keeps prior selected MP4 catalog
+00:38 +660: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: managed response-header timeout terminates MP4 discovery
+00:39 +661: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_network_test.dart: explicit non-MP4 format rejects before HTTP request
+00:39 +662: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart
+00:39 +662: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: real file catalog, selection, offset and native revision coexist
+00:39 +663: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: bad replacement is atomic and sanitized
+00:39 +664: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: managed retry reaches parser and atomically replaces selected content
+00:39 +665: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: managed parse failure never retries or changes committed catalog
+00:39 +666: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:39 +667: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by load with no later requests
+00:40 +668: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by stop with no later requests
+00:40 +669: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by dispose with no later requests
+00:40 +670: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: events share the public revision domain after subtitle publications
+00:40 +671: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: unsupported newer content replacement still cancels previous pending catalog
+00:40 +672: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: unsupported newer encoding replacement still cancels previous pending catalog
+00:40 +673: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: session replacement clears catalog and offset
+00:40 +674: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: native subtitle owner and protected output cannot silently use text overlay
+00:40 +675: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by replace without late publication
+00:40 +676: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by load without late publication
+00:40 +677: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by stop without late publication
+00:40 +678: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by dispose without late publication
+00:40 +679: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: selection and offset during pending replacement are preserved at atomic commit
+00:40 +680: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: aggregate bytes and cue counts reject whole catalog
+00:41 +681: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: unsupported content and encoding do not replace current catalog
+00:41 +682: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: paused and buffering use media position without wall-clock advance
+00:41 +683: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: pending seek and post-ACK snapshot cannot expose pre-seek cues
+00:41 +684: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/text_subtitle_runtime_test.dart: actual overlay follows position, offset, off and seek
+00:41 +685: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/playback_session_test.dart
+00:41 +685: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/playback_session_test.dart: optional video selection rejects unsupported and stale sessions
+00:41 +686: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/playback_session_test.dart: paused app observer cannot delay public dispose completion
+00:41 +687: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/playback_session_test.dart: transport error settles committed loading milestones without playback failure
+00:41 +688: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/playback_session_test.dart: transport close settles committed loading milestones without playback failure
+00:41 +689: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/playback_session_test.dart: commit, Ready and First Frame are separate; replacement makes old commands stale
+00:41 +690: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/playback_session_test.dart: early milestones and older same-session event revision survive load reply gap
+00:41 +691: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/playback_session_test.dart: new Load promptly cancels older unresolved caller; late result cannot replace
+00:41 +692: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/playback_session_test.dart: precommit failure preserves old pending Ready and command authority
+00:41 +693: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/playback_session_test.dart: postcommit native failure completes pending milestones once; command failure changes nothing
+00:41 +694: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/playback_session_test.dart: stop invalidates milestones and rejects old handle locally
+00:41 +695: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/playback_session_test.dart: successful Stop invalidates commands before delayed idle delivery
+00:41 +696: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/playback_session_test.dart: rejected Stop preserves healthy handle and pending milestones
+00:41 +697: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/playback_session_test.dart: successful Stop ignores late events before idle and late reply cannot invalidate newer session
+00:41 +698: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/playback_session_test.dart: unused milestone failures produce no uncaught zone errors
+00:41 +699: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart
+00:42 +699: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: legacy/interface/capability gates 1057108979
+00:42 +700: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: legacy/interface/capability gates 296996559
+00:42 +701: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: legacy/interface/capability gates 716185825
+00:42 +702: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: supported commands validate, snapshot input, await ACK and do not invent state
+00:42 +703: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: authoritative subtitle state is preserved and current command failures propagate
+00:42 +704: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: replace late ACK after replace is stale
+00:42 +705: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: replace late failure after replace is stale
+00:42 +706: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: replace late ACK after stop is stale
+00:42 +707: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: replace late failure after stop is stale
+00:42 +708: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: replace late ACK after dispose is stale
+00:42 +709: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: replace late failure after dispose is stale
+00:42 +710: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: select late ACK after replace is stale
+00:42 +711: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: select late failure after replace is stale
+00:42 +712: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: select late ACK after stop is stale
+00:42 +713: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: select late failure after stop is stale
+00:42 +714: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: select late ACK after dispose is stale
+00:42 +715: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: select late failure after dispose is stale
+00:42 +716: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: offset late ACK after replace is stale
+00:42 +717: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: offset late failure after replace is stale
+00:42 +718: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: offset late ACK after stop is stale
+00:42 +719: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: offset late failure after stop is stale
+00:42 +720: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: offset late ACK after dispose is stale
+00:42 +721: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: offset late failure after dispose is stale
+00:42 +722: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_session_test.dart: stale session rejects before argument validation or platform dispatch
+00:42 +723: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_overlay_test.dart
+00:42 +723: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_overlay_test.dart: PGS exact palette/alpha/clear pixel grid at 1000 ms
+00:43 +724: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_overlay_test.dart: PGS exact palette/alpha/clear pixel grid at 2000 ms
+00:43 +725: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_overlay_test.dart: PGS exact palette/alpha/clear pixel grid at 3000 ms
+00:43 +726: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_overlay_test.dart: PGS cover follows actual source crop, not squeezed full plane
+00:43 +727: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_overlay_test.dart: PGS partially offscreen right alignment preserves video scale
+00:43 +728: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_overlay_test.dart: PGS partially offscreen left alignment preserves video scale
+00:43 +729: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_overlay_test.dart: PGS partially offscreen bottom alignment preserves video scale
+00:43 +730: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_overlay_test.dart: PGS partially offscreen top alignment preserves video scale
+00:44 +731: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_overlay_test.dart: PGS rotation/PAR remains upright in the fitted aperture
+00:44 +732: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_overlay_test.dart: late decoding is disposed and global jobs coalesce at two
+00:44 +733: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_overlay_test.dart: partial decode failure releases first image and sanitizes error
+00:44 +734: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_overlay_test.dart: overlapping objects preserve paint order and alpha
+00:44 +735: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_overlay_test.dart: same-frame rebuild reuses handles; switch/off/unmount releases all
+00:44 +736: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/pgs_overlay_test.dart: public PGS file: first frame/offset/seek/off/source reset release images
+00:45 +737: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_tls_test.dart
+00:45 +737: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_tls_test.dart: untrusted HTTPS certificate never consumes retries
+00:45 +738: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/network_matroska_tls_test.dart: trusted HTTPS range discovery works; downgrade never contacts HTTP target
+00:45 +739: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart
+00:46 +739: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: independent FFmpeg muxed video and tx3g sample timing/styles
+00:46 +740: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: moov after mdat; track identity independent of order and enabled flag
+00:46 +741: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: moov before mdat; track identity independent of order and enabled flag
+00:46 +742: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: co64 and stsz retain exact media times
+00:46 +743: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: co64 and stz2 retain exact media times
+00:46 +744: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: edit v0 leading gap, trim and duration clipping
+00:46 +745: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: edit v1 leading gap, trim and duration clipping
+00:46 +746: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: signed composition offsets clip before media start
+00:46 +747: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: style offsets count Unicode scalars and preserve literal markup
+00:46 +748: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: strict UTF16 BE BOM with surrogate pair
+00:46 +749: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: strict UTF16 LE BOM with surrogate pair
+00:46 +750: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: empty terminal sample with zero duration creates no cue
+00:46 +751: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: empty subtitle track is discovered
+00:46 +752: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: audio/video data and sparse free payload are not read
+00:46 +753: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: chunk mapping changes sample count and description
+00:46 +754: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: compact sample sizes 4 bits including odd nibble
+00:46 +755: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: compact sample sizes 8 bits including odd nibble
+00:46 +756: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: constant stsz size decodes all samples
+00:46 +757: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: edit subtraction preserves exact tick before microsecond conversion
+00:46 +758: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: invalid sync sample table is rejected
+00:46 +759: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: 64bit top-level box size and EOF mdat work
+00:46 +760: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject duplicate IDs
+00:46 +761: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject zero ID
+00:46 +762: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject zero timescale
+00:46 +763: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject stts sample mismatch
+00:46 +764: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject stsc first chunk gap
+00:46 +765: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject stsc description missing
+00:46 +766: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject chunk outside mdat
+00:46 +767: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject sample crosses mdat
+00:46 +768: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject truncated text
+00:46 +769: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject invalid UTF8
+00:46 +770: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject invalid UTF16 surrogate
+00:46 +771: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject odd UTF16
+00:46 +772: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject NUL
+00:46 +773: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject zero duration text
+00:46 +774: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject style range outside text
+00:46 +775: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject overlapping styles
+00:46 +776: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject duplicate stts
+00:46 +777: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject trailing malformed atom
+00:46 +778: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject duplicate moov
+00:46 +779: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: reject table flags
+00:46 +780: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported some forced only
+00:46 +781: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported all forced without present
+00:46 +782: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported fragmented
+00:46 +783: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported fragment root
+00:46 +784: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported encrypted entry
+00:46 +785: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported external data reference
+00:46 +786: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported dwell rate
+00:46 +787: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported repeated edits
+00:46 +788: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported advanced karaoke
+00:46 +789: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported nonbottom alignment
+00:46 +790: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported unknown font
+00:46 +791: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: unsupported encrypted sinf
+00:46 +792: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: sample count budget before table allocation
+00:46 +793: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: cue text bound before run allocation
+00:46 +794: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: every truncated prefix rejects with sanitized parser error
+00:46 +795: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: cancel during read rejects before publication
+00:46 +796: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_license_client_test.dart
+00:46 +796: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_license_client_test.dart: real POST sends opaque bytes once and returns copied bytes
+00:47 +797: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_license_client_test.dart: 403 denial, 410 and 503 never invent expiry or retry by default
+00:47 +798: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_license_client_test.dart: only explicit idempotency permits a bounded retry
+00:47 +799: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_license_client_test.dart: cross origin never receives credentials OR challenge, even when redirects allowed
+00:47 +800: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_license_client_test.dart: same origin 307 is explicit, preserves POST and credentials
+00:47 +801: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_license_client_test.dart: oversize challenge makes no request; chunked response is bounded
+00:47 +802: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_license_client_test.dart: deadline includes body and cancellation discards late response
+00:47 +803: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_license_client_test.dart: connection loss after POST does not trigger an implicit replay
+00:47 +804: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_license_client_test.dart: four requests bound concurrency and close cancels all pending requests
+00:47 +805: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_license_client_test.dart: redirect loop and method-changing redirect are rejected
+00:47 +806: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_license_client_test.dart: HTTPS verifies certificates and preserves a large binary POST
+00:47 +807: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_license_client_test.dart: stalled TLS timeout closes the peer socket
+00:49 +808: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_license_client_test.dart: stalled TLS cancellation closes the peer socket
+00:49 +809: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/drm_license_client_test.dart: empty response rejected and closed client cannot send
+00:49 +810: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/documentation_examples_test.dart
+00:49 +810: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/documentation_examples_test.dart: README lifecycle runs through replacement, Stop, and Dispose
+00:50 +811: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_text_test.dart
+00:50 +811: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_text_test.dart: ASS overrides embedded in SRT are explicitly unsupported
+00:50 +812: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_text_test.dart: safe nested styles and escaped Unicode remain plain text
+00:50 +813: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects <b>bad
+00:50 +814: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects </b>bad
+00:50 +815: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects <i><b>x</i></b>
+00:50 +816: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects bad <
+00:50 +817: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects &#0;
+00:50 +818: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects &#xD800;
+00:50 +819: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects &#x110000;
+00:50 +820: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <script>secret</script>
+00:50 +821: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <font color="red">x</font>
+00:50 +822: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <v speaker>x</v>
+00:50 +823: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <ruby>x</ruby>
+00:50 +824: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject &unknown;
+00:50 +825: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/subtitle_text_test.dart: style depth and span count bounded independently
+00:50 +826: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart
+00:50 +826: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: namespace prefixes, BOM, decimal clocks and media offsets
+00:50 +827: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: parent relative timing, duration and clipping
+00:50 +828: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: default whitespace across span boundaries, br and XML entities
+00:50 +829: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: xml space preserve inherits and CDATA remains plain text
+00:50 +830: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: referenced style chain and inline normal override inherit
+00:50 +831: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: region geometry alignment and inherited style
+00:50 +832: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject malformed 776514566
+00:50 +833: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject malformed 597182961
+00:50 +834: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject malformed 1026477303
+00:50 +835: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject malformed 346541764
+00:50 +836: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject malformed 412995810
+00:50 +837: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject malformed 353458147
+00:50 +838: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject malformed 42056563
+00:50 +839: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject malformed 272605008
+00:50 +840: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject malformed 1001207239
+00:50 +841: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject malformed 599128920
+00:50 +842: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject malformed 1037092636
+00:50 +843: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject malformed 125826032
+00:50 +844: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject unsupported 517369050
+00:50 +845: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject unsupported 572279468
+00:50 +846: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject unsupported 168101366
+00:50 +847: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject unsupported 615659418
+00:50 +848: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject unsupported 676934106
+00:50 +849: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject unsupported 620551040
+00:50 +850: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject unsupported 628334318
+00:50 +851: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject unsupported 199018245
+00:50 +852: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject unsupported 412204382
+00:50 +853: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject unsupported 1045919420
+00:50 +854: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: reject unsupported 984518183
+00:50 +855: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: bounded cues and active intervals
+00:50 +856: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: bounded nesting and payload before rendering
+00:50 +857: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: large offset cannot overflow into admitted media interval
+00:50 +858: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: finite ancestor at seven-day boundary supplies paragraph end
+00:50 +859: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: unprefixed attributes stay unqualified with a default namespace
+00:50 +860: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: limits style count, chain depth and per-cue rendered runs
+00:50 +861: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: empty or clipped content still rejects bad style references
+00:50 +862: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: strict XML rejects leading text
+00:50 +863: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: strict XML rejects trailing text
+00:50 +864: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: strict XML rejects outside cdata
+00:50 +865: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: strict XML rejects nested declaration
+00:50 +866: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: strict XML rejects late declaration
+00:50 +867: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: strict XML rejects unquoted attribute
+00:50 +868: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: strict XML rejects missing attribute value
+00:50 +869: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: strict XML rejects less than in attribute
+00:50 +870: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: strict XML rejects double hyphen comment
+00:50 +871: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: strict XML rejects trailing hyphen comment
+00:50 +872: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: strict XML rejects duplicate namespace
+00:50 +873: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: strict XML rejects reserved prefix
+00:50 +874: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: strict XML rejects reserved namespace alias
+00:50 +875: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: strict XML rejects empty prefixed namespace
+00:50 +876: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: strict XML rejects cdata closing in text
+00:51 +877: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: strict XML rejects missing declaration version
+00:51 +878: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: strict XML rejects duplicate declaration version
+00:51 +879: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: strict XML rejects wrong standalone
+00:51 +880: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: XML comments and declarations at legal boundaries remain usable
+00:51 +881: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: style-chain budget is independent of declaration order and cache
+00:51 +882: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/ttml_document_test.dart: diagnostic never reveals XML text
+00:51 +883: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/transport_invariants_test.dart
+00:51 +883: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/transport_invariants_test.dart: Apple periodic callback stays typed, lossless, and below 768 bytes
+APPLE_MAX_CALLBACK_BYTES=223
+00:51 +884: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/transport_invariants_test.dart: Apple callback codec preserves explicit nullable clears
+00:51 +885: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/transport_invariants_test.dart: Apple periodic schema cannot carry static or media payload data
+00:51 +886: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart
+00:51 +886: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: Apple exposes the optional video selection operation
+00:51 +887: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: native video surface requires explicit native advertisement
+00:51 +888: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: invalid native surface advertisements reject and release native ownership
+00:51 +889: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: replacement Stop cancellation and late replies retain bounded authority
+00:52 +890: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: long lived retry dedup is bounded and older First Frame remains one shot
+00:52 +891: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: create exposes ApplePlatform.ios capabilities without property-read calls
+00:52 +892: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: create exposes ApplePlatform.macos capabilities without property-read calls
+00:52 +893: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: native enforcing authority rejects unsupported managed assessment and Load
+00:52 +894: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: native enforcing authority rejects unsupported bounded assessment and Load
+00:52 +895: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: native enforcing authority rejects unsupported hardwareOverride assessment and Load
+00:52 +896: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: native enforcing authority rejects unsupported hardwareDefault assessment and Load
+00:52 +897: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: per-load non-strict override of hardwareRequired default reaches native assessment
+00:52 +898: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: completion-window deltas use the latest authoritative state
+00:52 +899: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: former session failure notifies A without cancelling B: event=false assessment=false
+00:52 +900: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: former session failure notifies A without cancelling B: event=false assessment=true
+00:52 +901: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: player-scoped retained-session failure still terminates B: event=false
+00:52 +902: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: former session failure notifies A without cancelling B: event=true assessment=false
+00:52 +903: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: former session failure notifies A without cancelling B: event=true assessment=true
+00:52 +904: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: player-scoped retained-session failure still terminates B: event=true
+00:52 +905: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: state-first Load preserves onState then first-frame then delta before reply
+00:52 +906: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: failed candidate state cancels barrier immediately before reply while retaining former state
+00:52 +907: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: state-first READY evidence survives later BUFFERING before reply
+00:52 +908: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:52 +909: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A failed state and event cannot cancel newer B
+00:52 +910: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: late errors from cancelled assessment and Load do not terminate the newer session
+00:52 +911: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: stale buffered full state failure cannot cancel matching Load
+00:52 +912: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: stale duplicate delta payload cannot count as structurally invalid
+00:52 +913: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: mismatched echoed request cannot pair or revive a Load
+00:52 +914: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: known-session retry and engine events map independently from state watermark
+00:52 +915: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: terminal transport reaches revision-filtering consumers before hung native cleanup; max=false
+00:52 +916: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: terminal transport reaches revision-filtering consumers before hung native cleanup; max=true
+00:52 +917: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: creation owns native identity before validation; attaches after callback setup
+00:52 +918: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: callback setup and attach failures clean native ownership and preserve safe error
+00:52 +919: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: Load pairs both halves before immediate Play; stateFirst=false
+00:52 +920: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: five-second pair deadline starts at either half; stateFirst=false
+00:52 +921: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: Load pairs both halves before immediate Play; stateFirst=true
+00:52 +922: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: five-second pair deadline starts at either half; stateFirst=true
+00:52 +923: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: state/delta ordering ignores stale callbacks and milestones survive newer state revisions
+00:52 +924: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: loading BUFFERING stays loading until READY evidence; injected callbacks are isolated
+00:52 +925: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: only repeated malformed callbacks terminate; stale traffic never increments failures
+00:52 +926: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: new Load cancels assessment and old pair continuations without reopening
+00:52 +927: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: new Load retires buffered state from superseded Load and ignores its late reply
+00:52 +928: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: accepted Stop fences captured session before idle and cannot invalidate newer Load
+00:52 +929: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: rejected Stop preserves usable session and cancels a pending Load
+00:52 +930: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: terminal transport failure settles all commands and ignores late failures
+00:52 +931: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: hung failed-create cleanup is bounded and preserves original failure
+00:52 +932: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_player_test.dart: dispose shares Future, cancels commands, unregisters before paused observers drain
+00:52 +933: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/yl_player_apple_test.dart
+00:53 +933: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/yl_player_apple_test.dart: constraints transport awaits native completion and propagates failure
+00:53 +934: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/yl_player_apple_test.dart: video selection transport awaits native installation and safe late failure
+00:53 +935: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/yl_player_apple_test.dart: enforcing generated transport commits managed bounded YlMediaFormat.matroska replyFirst=true
+00:53 +936: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/yl_player_apple_test.dart: enforcing generated transport commits managed bounded YlMediaFormat.matroska replyFirst=false
+00:53 +937: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/yl_player_apple_test.dart: enforcing generated transport commits managed bounded YlMediaFormat.flv replyFirst=true
+00:53 +938: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/yl_player_apple_test.dart: enforcing generated transport commits managed bounded YlMediaFormat.flv replyFirst=false
+00:53 +939: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/yl_player_apple_test.dart: registerWith installs v2 implementation
+00:53 +940: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/yl_player_apple_test.dart: production Pigeon wrappers create, route every command and remove suffix callbacks
+00:53 +941: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/yl_player_apple_test.dart: production typed native rejection is safe; missing host is terminal
+00:53 +942: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/yl_player_apple_test.dart: pubspec registers one shared implementation for iOS and macOS
+00:53 +943: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/yl_player_apple_test.dart: podspec exposes the shared artifact with platform-scoped metadata
+00:53 +944: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/yl_player_apple_test.dart: SwiftPM manifest declares the shared product and binary bridge
+00:53 +945: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/drm_bridge_test.dart
+00:53 +945: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/drm_bridge_test.dart: newer frame before delayed attach ACK remains ready
+00:53 +946: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/drm_bridge_test.dart: older frame feedback cannot withdraw a newer acknowledged frame
+00:53 +947: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:53 +948: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement timeout is ignored
+00:53 +949: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach unmount failure is ignored
+00:53 +950: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach unmount timeout is ignored
+00:53 +951: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/drm_bridge_test.dart: same view retry fences previous success and failure but current failure is published
+00:53 +952: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/drm_bridge_test.dart: wrong owner and duplicate challenge never issue another license POST
+00:53 +953: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/drm_bridge_test.dart: cancel fences a late non-cancellable license response
+00:53 +954: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart
+00:54 +954: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: known render.audio_engine_failed gives safe guidance at native and adapter boundaries
+00:54 +955: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: known container.dash_manifest_invalid gives safe guidance at native and adapter boundaries
+00:54 +956: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: known container.dash_dynamic_unsupported gives safe guidance at native and adapter boundaries
+00:54 +957: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: known container.dash_protection_unsupported gives safe guidance at native and adapter boundaries
+00:54 +958: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: known container.dash_segment_base_unsupported gives safe guidance at native and adapter boundaries
+00:54 +959: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: known resource.dash_manifest_too_large gives safe guidance at native and adapter boundaries
+00:54 +960: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: known source.seek_failed gives safe guidance at native and adapter boundaries
+00:54 +961: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: known policy.video_selection_unsupported gives safe guidance at native and adapter boundaries
+00:54 +962: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.protocol_unsupported gives safe guidance at native and adapter boundaries
+00:54 +963: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.rtmp_handshake_failed gives safe guidance at native and adapter boundaries
+00:54 +964: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.rtmp_stream_unavailable gives safe guidance at native and adapter boundaries
+00:54 +965: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: known container.rtmp_track_layout_changed gives safe guidance at native and adapter boundaries
+00:54 +966: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.rtmp_disconnected gives safe guidance at native and adapter boundaries
+00:54 +967: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.dns_failed gives safe guidance at native and adapter boundaries
+00:54 +968: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.http_forbidden gives safe guidance at native and adapter boundaries
+00:54 +969: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.retry_exhausted gives safe guidance at native and adapter boundaries
+00:54 +970: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: known load.cancelled gives safe guidance at native and adapter boundaries
+00:54 +971: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: known container.unsupported gives safe guidance at native and adapter boundaries
+00:54 +972: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: known policy.unsupported gives safe guidance at native and adapter boundaries
+00:54 +973: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_failure_message_test.dart: unknown codes never promote native text or infer a known cause
+00:54 +974: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/pigeon_schema_test.dart
+00:54 +974: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/pigeon_schema_test.dart: generated codec preserves the complete Apple v2 transport
+00:54 +975: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:56 +976: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart
+00:57 +976: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart: native capabilities do not advertise Dart-only subtitle and live-mode commands
+00:57 +977: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart: schema 4 selection is mandatory, validated and retained by deltas
+00:57 +978: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart: DASH appends wire ordinal ten without changing old formats
+00:57 +979: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart: AVPlayer decoder remains unknown and fallback retains evidenced modes
+00:57 +980: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart: private renamed failure categories preserve public ordinals and names
+00:57 +981: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart: native hardware decoder failure retains the public failure code
+00:57 +982: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart: actual Apple capability and assessment decoding accepts native MIME and policy identifiers
+00:57 +983: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart: all complete enum counterparts retain exact set parity
+00:57 +984: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart: Apple engines are the explicit public subset and source kinds cover all variants
+00:57 +985: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart: metrics deltas distinguish every absent, set and cleared field
+00:57 +986: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart: source metadata and load choices retain values across encoding
+00:57 +987: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart: timeline preserves nullable live metadata and rejects inverted DVR ranges
+00:57 +988: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart: outbound enums preserve every policy, format, intent and source kind
+00:57 +989: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart: inbound enums cover statuses, engines, decoder evidence/mode, tracks, operations and failures
+00:57 +990: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart: assessment maps outcomes and rejects inconsistent rejection or unsafe identifiers
+00:57 +991: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart: assessment preserves all built-in and safe extension IDs distinctly
+00:57 +992: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart: failure prose is fixed and transport errors never expose native details
+00:57 +993: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart: nullable metrics, clamp only live offset and preserve display geometry
+00:57 +994: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/apple_codec_test.dart: validate raw millisecond bounds before Duration overflow and nullable deltas
+00:57 +995: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/drm_codec_test.dart
+00:57 +995: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_apple/test/drm_codec_test.dart: schema5 keeps FairPlay binary configuration and rejects Widevine
+00:57 +996: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/transport_invariants_test.dart
+00:57 +996: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/transport_invariants_test.dart: Android periodic callback stays typed, lossless, and below 768 bytes
+ANDROID_MAX_CALLBACK_BYTES=228
+00:57 +997: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/transport_invariants_test.dart: Android callback codec preserves explicit nullable clears
+00:57 +998: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/transport_invariants_test.dart: Android periodic schema cannot carry static or media payload data
+00:57 +999: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/yl_player_android_test.dart
+00:58 +999: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/yl_player_android_test.dart: registerWith installs v2 implementation
+00:58 +1000: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/yl_player_android_test.dart: production Pigeon wrappers create, route every command and remove suffix callbacks
+00:58 +1001: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/yl_player_android_test.dart: production typed native rejection is safe; missing host is terminal
+00:58 +1002: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_failure_message_test.dart
+00:58 +1002: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_failure_message_test.dart: known network.protocol_unsupported gives safe guidance at native and adapter boundaries
+00:58 +1003: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_failure_message_test.dart: known network.rtmp_handshake_failed gives safe guidance at native and adapter boundaries
+00:58 +1004: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_failure_message_test.dart: known network.rtmp_stream_unavailable gives safe guidance at native and adapter boundaries
+00:58 +1005: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_failure_message_test.dart: known network.rtmp_disconnected gives safe guidance at native and adapter boundaries
+00:58 +1006: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_failure_message_test.dart: known network.dns_failed gives safe guidance at native and adapter boundaries
+00:58 +1007: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_failure_message_test.dart: known network.http_forbidden gives safe guidance at native and adapter boundaries
+00:58 +1008: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_failure_message_test.dart: known network.retry_exhausted gives safe guidance at native and adapter boundaries
+00:58 +1009: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_failure_message_test.dart: known load.cancelled gives safe guidance at native and adapter boundaries
+00:58 +1010: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_failure_message_test.dart: known container.rtmp_track_layout_changed gives safe guidance at native and adapter boundaries
+00:58 +1011: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_failure_message_test.dart: known container.unsupported gives safe guidance at native and adapter boundaries
+00:58 +1012: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_failure_message_test.dart: known policy.unsupported gives safe guidance at native and adapter boundaries
+00:58 +1013: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_failure_message_test.dart: unknown codes never promote native text or infer a known cause
+00:58 +1014: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart
+00:59 +1014: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: video command sends nullable auto ID without asserting a state change
+00:59 +1015: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: completion-window deltas use the latest authoritative state
+00:59 +1016: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: former session failure notifies A without cancelling B: event=false assessment=false
+00:59 +1017: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: former session failure notifies A without cancelling B: event=false assessment=true
+00:59 +1018: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: player-scoped retained-session failure still terminates B: event=false
+00:59 +1019: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: former session failure notifies A without cancelling B: event=true assessment=false
+00:59 +1020: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: former session failure notifies A without cancelling B: event=true assessment=true
+00:59 +1021: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: player-scoped retained-session failure still terminates B: event=true
+00:59 +1022: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: state-first Load preserves onState then first-frame then delta before reply
+00:59 +1023: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: failed candidate state cancels barrier immediately before reply while retaining former state
+00:59 +1024: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: state-first READY evidence survives later BUFFERING before reply
+00:59 +1025: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:59 +1026: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: unknown stale A failed state and event cannot cancel newer B
+00:59 +1027: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: late errors from cancelled assessment and Load do not terminate the newer session
+00:59 +1028: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: stale buffered full state failure cannot cancel matching Load
+00:59 +1029: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: stale duplicate delta payload cannot count as structurally invalid
+00:59 +1030: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: mismatched echoed request cannot pair or revive a Load
+00:59 +1031: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: known-session retry and engine events map independently from state watermark
+00:59 +1032: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: terminal transport reaches revision-filtering consumers before hung native cleanup; max=false
+00:59 +1033: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: terminal transport reaches revision-filtering consumers before hung native cleanup; max=true
+00:59 +1034: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: creation owns native identity before validation; attaches after callback setup
+00:59 +1035: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: callback setup and attach failures clean native ownership and preserve safe error
+00:59 +1036: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: Load pairs both halves before immediate Play; stateFirst=false
+00:59 +1037: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: five-second pair deadline starts at either half; stateFirst=false
+00:59 +1038: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: Load pairs both halves before immediate Play; stateFirst=true
+00:59 +1039: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: five-second pair deadline starts at either half; stateFirst=true
+00:59 +1040: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: state/delta ordering ignores stale callbacks and milestones survive newer state revisions
+00:59 +1041: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: loading BUFFERING stays loading until READY evidence; injected callbacks are isolated
+00:59 +1042: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: only repeated malformed callbacks terminate; stale traffic never increments failures
+00:59 +1043: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: new Load cancels assessment and old pair continuations without reopening
+00:59 +1044: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: new Load retires buffered state from superseded Load and ignores its late reply
+00:59 +1045: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: accepted Stop fences captured session before idle and cannot invalidate newer Load
+00:59 +1046: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: rejected Stop preserves usable session and cancels a pending Load
+00:59 +1047: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: terminal transport failure settles all commands and ignores late failures
+00:59 +1048: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: hung failed-create cleanup is bounded and preserves original failure
+00:59 +1049: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_player_test.dart: dispose shares Future, cancels commands, unregisters before paused observers drain
+00:59 +1050: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/drm_bridge_test.dart
+00:59 +1050: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:59 +1051: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/drm_bridge_test.dart: stale attach replacement timeout is ignored
+00:59 +1052: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/drm_bridge_test.dart: stale attach unmount failure is ignored
+00:59 +1053: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/drm_bridge_test.dart: stale attach unmount timeout is ignored
+00:59 +1054: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/drm_bridge_test.dart: same view retry fences previous success and failure but current failure is published
+00:59 +1055: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/drm_bridge_test.dart: wrong owner and duplicate challenge never issue another license POST
+00:59 +1056: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/drm_bridge_test.dart: cancel fences a late non-cancellable license response
+00:59 +1057: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/pigeon_schema_test.dart
+01:00 +1057: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/pigeon_schema_test.dart: schema 3 and 4 factory requests retain committed codec tags
+01:00 +1058: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/pigeon_schema_test.dart: generated messages preserve the complete v2 transport shape
+01:00 +1059: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+01:02 +1060: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_codec_test.dart
+01:03 +1060: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_codec_test.dart: native capabilities do not advertise Dart-only subtitle and live-mode commands
+01:03 +1061: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_codec_test.dart: schema 4 full state requires selection and delta retains it
+01:03 +1062: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_codec_test.dart: fixed selection survives generated state roundtrip with matching track
+01:03 +1063: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_codec_test.dart: DASH appends wire ordinal ten without changing old formats
+01:03 +1064: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_codec_test.dart: media clock survives full snapshots and absent, set, cleared deltas
+01:03 +1065: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_codec_test.dart: actual Android capability and assessment decoding accepts native MIME and policy identifiers
+01:03 +1066: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_codec_test.dart: all complete enum counterparts retain exact set parity
+01:03 +1067: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_codec_test.dart: Android engines are the explicit public subset and source kinds cover all variants
+01:03 +1068: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_codec_test.dart: metrics deltas distinguish every absent, set and cleared field
+01:03 +1069: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_codec_test.dart: source metadata and load choices retain values across encoding
+01:03 +1070: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_codec_test.dart: timeline preserves nullable live metadata and rejects inverted DVR ranges
+01:03 +1071: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_codec_test.dart: outbound enums preserve every policy, format, intent and source kind
+01:03 +1072: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_codec_test.dart: inbound enums cover statuses, engines, decoder evidence/mode, tracks, operations and failures
+01:03 +1073: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_codec_test.dart: assessment maps outcomes and rejects inconsistent rejection or unsafe identifiers
+01:03 +1074: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_codec_test.dart: failure prose is fixed and transport errors never expose native details
+01:03 +1075: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_codec_test.dart: nullable metrics, clamp only live offset and preserve display geometry
+01:03 +1076: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/android_codec_test.dart: validate raw millisecond bounds before Duration overflow and nullable deltas
+01:03 +1077: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/drm_codec_test.dart
+01:03 +1077: /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player_android/test/drm_codec_test.dart: Widevine configuration survives encoding without license endpoint secrets
+01:03 +1078: All tests passed!

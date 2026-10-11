@@ -1,5 +1,10 @@
 ## 0.2.0-dev.2
 
+- Add local and HTTP(S) non-fragmented MP4 tx3g embedded subtitle discovery,
+  Track ID selection and basic styled text rendering with sample-table/edit-list
+  timing. Network discovery reuses managed conditional ranges and scan budgets;
+  unsupported codecs/effects and malformed indexes preserve the old catalog.
+
 - Add HTTP(S) Matroska embedded UTF8/ASS/SSA discovery through managed range
   reads, with strong ETag/length consistency, If-Match, scan-wide retry/redirect
   and credential rules, bounded caching and cancellation. Requires single-range

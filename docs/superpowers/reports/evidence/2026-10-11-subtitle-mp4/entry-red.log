@@ -1,0 +1,12 @@
+00:00 +0: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_embedded_test.dart
+00:00 +0: real MP4 tx3g file discovers Track ID and renders literal text at sample time
+00:00 +0 -1: real MP4 tx3g file discovers Track ID and renders literal text at sample time [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/embedded_subtitle_resource_io.dart 18:5  readEmbedded
+  package:yl_player/src/subtitles/embedded_subtitle_resource.dart 11:16    readEmbeddedSubtitles
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 160:28        TextSubtitleRuntime.discover.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_embedded_test.dart: real MP4 tx3g file discovers Track ID and renders literal text at sample time

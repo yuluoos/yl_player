@@ -1,0 +1,240 @@
+00:00 +0: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart
+packages/yl_player/test/mp4_parser_test.dart:344:71: Error: String starting with ' must end with '.
+      final data=await parse(mp4(tracks:[Mp4Track(samples:[textSample('a
+                                                                      ^^
+packages/yl_player/test/mp4_parser_test.dart:345:71: Error: A '$' has special meaning inside a string, and must be followed by an identifier or an expression in curly braces ({}).
+Try adding a backslash (\) to escape the '$'.
+b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+                                                                      ^
+packages/yl_player/test/mp4_parser_test.dart:345:84: Error: A '$' has special meaning inside a string, and must be followed by an identifier or an expression in curly braces ({}).
+Try adding a backslash (\) to escape the '$'.
+b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+                                                                                   ^
+packages/yl_player/test/mp4_parser_test.dart:345:84: Error: String starting with ' must end with '.
+b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+                                                                                   ^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/mp4_parser_test.dart:347:24: Error: String starting with ' must end with '.
+      expect(c.payload,'a
+                       ^^
+packages/yl_player/test/mp4_parser_test.dart:348:2: Error: String starting with ' must end with '.
+b');
+ ^^^
+packages/yl_player/test/mp4_parser_test.dart:349:50: Error: String starting with ' must end with '.
+      expect(c.textRuns!.map((r)=>r.text).join(),'a
+                                                 ^^
+packages/yl_player/test/mp4_parser_test.dart:350:2: Error: String starting with ' must end with '.
+b');
+ ^^^
+packages/yl_player/test/mp4_parser_test.dart:349:13: Error: Can't find ')' to match '('.
+      expect(c.textRuns!.map((r)=>r.text).join(),'a
+            ^
+packages/yl_player/test/mp4_parser_test.dart:347:13: Error: Can't find ')' to match '('.
+      expect(c.payload,'a
+            ^
+packages/yl_player/test/mp4_parser_test.dart:344:70: Error: Can't find ')' to match '('.
+      final data=await parse(mp4(tracks:[Mp4Track(samples:[textSample('a
+                                                                     ^
+packages/yl_player/test/mp4_parser_test.dart:344:59: Error: Can't find ']' to match '['.
+      final data=await parse(mp4(tracks:[Mp4Track(samples:[textSample('a
+                                                          ^
+packages/yl_player/test/mp4_parser_test.dart:344:50: Error: Can't find ')' to match '('.
+      final data=await parse(mp4(tracks:[Mp4Track(samples:[textSample('a
+                                                 ^
+packages/yl_player/test/mp4_parser_test.dart:344:41: Error: Can't find ']' to match '['.
+      final data=await parse(mp4(tracks:[Mp4Track(samples:[textSample('a
+                                        ^
+packages/yl_player/test/mp4_parser_test.dart:344:33: Error: Can't find ')' to match '('.
+      final data=await parse(mp4(tracks:[Mp4Track(samples:[textSample('a
+                                ^
+packages/yl_player/test/mp4_parser_test.dart:344:29: Error: Can't find ')' to match '('.
+      final data=await parse(mp4(tracks:[Mp4Track(samples:[textSample('a
+                            ^
+packages/yl_player/test/mp4_parser_test.dart:345:1: Error: Expected ',' before this.
+b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+^
+packages/yl_player/test/mp4_parser_test.dart:345:1: Error: Undefined name 'b'.
+b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+^
+packages/yl_player/test/mp4_parser_test.dart:345:2: Error: Expected ',' before this.
+b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/mp4_parser_test.dart:345:30: Error: Expected ',' before this.
+b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+                             ^^^^
+packages/yl_player/test/mp4_parser_test.dart:345:30: Error: Undefined name 'styl'.
+b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+                             ^^^^
+packages/yl_player/test/mp4_parser_test.dart:345:34: Error: Expected ',' before this.
+b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/mp4_parser_test.dart:344:70: Error: Too many positional arguments: 1 allowed, but 5 found.
+Try removing the extra positional arguments.
+      final data=await parse(mp4(tracks:[Mp4Track(samples:[textSample('a
+                                                                     ^
+packages/yl_player/test/support/mp4_fixture.dart:14:11: Context: Found this candidate, but the arguments don't match.
+List<int> textSample(String text, {List<int> extra = const []}) {
+          ^^^^^^^^^^
+packages/yl_player/test/mp4_parser_test.dart:345:84: Error: Expected ';' after this.
+b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+                                                                                   ^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/mp4_parser_test.dart:348:1: Error: Expected ',' before this.
+b');
+^
+packages/yl_player/test/mp4_parser_test.dart:348:1: Error: Undefined name 'b'.
+b');
+^
+packages/yl_player/test/mp4_parser_test.dart:348:2: Error: Expected ',' before this.
+b');
+ ^^^
+packages/yl_player/test/mp4_parser_test.dart:349:7: Error: Expected ',' before this.
+      expect(c.textRuns!.map((r)=>r.text).join(),'a
+      ^^^^^^
+packages/yl_player/test/mp4_parser_test.dart:350:1: Error: Expected ',' before this.
+b');
+^
+packages/yl_player/test/mp4_parser_test.dart:350:1: Error: Undefined name 'b'.
+b');
+^
+packages/yl_player/test/mp4_parser_test.dart:350:2: Error: Expected ',' before this.
+b');
+ ^^^
+packages/yl_player/test/mp4_parser_test.dart:349:13: Error: Too many positional arguments: 2 allowed, but 4 found.
+Try removing the extra positional arguments.
+      expect(c.textRuns!.map((r)=>r.text).join(),'a
+            ^
+/Users/yy2021_8689/flutter/packages/flutter_test/lib/src/widget_tester.dart:466:6: Context: Found this candidate, but the arguments don't match.
+void expect(
+     ^^^^^^
+packages/yl_player/test/mp4_parser_test.dart:347:13: Error: Too many positional arguments: 2 allowed, but 5 found.
+Try removing the extra positional arguments.
+      expect(c.payload,'a
+            ^
+/Users/yy2021_8689/flutter/packages/flutter_test/lib/src/widget_tester.dart:466:6: Context: Found this candidate, but the arguments don't match.
+void expect(
+     ^^^^^^
+packages/yl_player/test/mp4_parser_test.dart:350:2: Error: Expected ';' after this.
+b');
+ ^^^
+00:00 +0 -1: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart [E]
+  Failed to load "/private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart":
+  Compilation failed for testPath=/private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: packages/yl_player/test/mp4_parser_test.dart:344:71: Error: String starting with ' must end with '.
+        final data=await parse(mp4(tracks:[Mp4Track(samples:[textSample('a
+                                                                        ^^
+  packages/yl_player/test/mp4_parser_test.dart:345:71: Error: A '$' has special meaning inside a string, and must be followed by an identifier or an expression in curly braces ({}).
+  Try adding a backslash (\) to escape the '$'.
+  b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+                                                                        ^
+  packages/yl_player/test/mp4_parser_test.dart:345:84: Error: A '$' has special meaning inside a string, and must be followed by an identifier or an expression in curly braces ({}).
+  Try adding a backslash (\) to escape the '$'.
+  b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+                                                                                     ^
+  packages/yl_player/test/mp4_parser_test.dart:345:84: Error: String starting with ' must end with '.
+  b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+                                                                                     ^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/mp4_parser_test.dart:347:24: Error: String starting with ' must end with '.
+        expect(c.payload,'a
+                         ^^
+  packages/yl_player/test/mp4_parser_test.dart:348:2: Error: String starting with ' must end with '.
+  b');
+   ^^^
+  packages/yl_player/test/mp4_parser_test.dart:349:50: Error: String starting with ' must end with '.
+        expect(c.textRuns!.map((r)=>r.text).join(),'a
+                                                   ^^
+  packages/yl_player/test/mp4_parser_test.dart:350:2: Error: String starting with ' must end with '.
+  b');
+   ^^^
+  packages/yl_player/test/mp4_parser_test.dart:349:13: Error: Can't find ')' to match '('.
+        expect(c.textRuns!.map((r)=>r.text).join(),'a
+              ^
+  packages/yl_player/test/mp4_parser_test.dart:347:13: Error: Can't find ')' to match '('.
+        expect(c.payload,'a
+              ^
+  packages/yl_player/test/mp4_parser_test.dart:344:70: Error: Can't find ')' to match '('.
+        final data=await parse(mp4(tracks:[Mp4Track(samples:[textSample('a
+                                                                       ^
+  packages/yl_player/test/mp4_parser_test.dart:344:59: Error: Can't find ']' to match '['.
+        final data=await parse(mp4(tracks:[Mp4Track(samples:[textSample('a
+                                                            ^
+  packages/yl_player/test/mp4_parser_test.dart:344:50: Error: Can't find ')' to match '('.
+        final data=await parse(mp4(tracks:[Mp4Track(samples:[textSample('a
+                                                   ^
+  packages/yl_player/test/mp4_parser_test.dart:344:41: Error: Can't find ']' to match '['.
+        final data=await parse(mp4(tracks:[Mp4Track(samples:[textSample('a
+                                          ^
+  packages/yl_player/test/mp4_parser_test.dart:344:33: Error: Can't find ')' to match '('.
+        final data=await parse(mp4(tracks:[Mp4Track(samples:[textSample('a
+                                  ^
+  packages/yl_player/test/mp4_parser_test.dart:344:29: Error: Can't find ')' to match '('.
+        final data=await parse(mp4(tracks:[Mp4Track(samples:[textSample('a
+                              ^
+  packages/yl_player/test/mp4_parser_test.dart:345:1: Error: Expected ',' before this.
+  b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+  ^
+  packages/yl_player/test/mp4_parser_test.dart:345:1: Error: Undefined name 'b'.
+  b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+  ^
+  packages/yl_player/test/mp4_parser_test.dart:345:2: Error: Expected ',' before this.
+  b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/mp4_parser_test.dart:345:30: Error: Expected ',' before this.
+  b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+                               ^^^^
+  packages/yl_player/test/mp4_parser_test.dart:345:30: Error: Undefined name 'styl'.
+  b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+                               ^^^^
+  packages/yl_player/test/mp4_parser_test.dart:345:34: Error: Expected ',' before this.
+  b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/mp4_parser_test.dart:344:70: Error: Too many positional arguments: 1 allowed, but 5 found.
+  Try removing the extra positional arguments.
+        final data=await parse(mp4(tracks:[Mp4Track(samples:[textSample('a
+                                                                       ^
+  packages/yl_player/test/support/mp4_fixture.dart:14:11: Context: Found this candidate, but the arguments don't match.
+  List<int> textSample(String text, {List<int> extra = const []}) {
+            ^^^^^^^^^^
+  packages/yl_player/test/mp4_parser_test.dart:345:84: Error: Expected ';' after this.
+  b',extra:range==null?[]:box('styl',[...num(1,2),...style(start:range.$1,end:range.$2,face:1)]))])]));
+                                                                                     ^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/mp4_parser_test.dart:348:1: Error: Expected ',' before this.
+  b');
+  ^
+  packages/yl_player/test/mp4_parser_test.dart:348:1: Error: Undefined name 'b'.
+  b');
+  ^
+  packages/yl_player/test/mp4_parser_test.dart:348:2: Error: Expected ',' before this.
+  b');
+   ^^^
+  packages/yl_player/test/mp4_parser_test.dart:349:7: Error: Expected ',' before this.
+        expect(c.textRuns!.map((r)=>r.text).join(),'a
+        ^^^^^^
+  packages/yl_player/test/mp4_parser_test.dart:350:1: Error: Expected ',' before this.
+  b');
+  ^
+  packages/yl_player/test/mp4_parser_test.dart:350:1: Error: Undefined name 'b'.
+  b');
+  ^
+  packages/yl_player/test/mp4_parser_test.dart:350:2: Error: Expected ',' before this.
+  b');
+   ^^^
+  packages/yl_player/test/mp4_parser_test.dart:349:13: Error: Too many positional arguments: 2 allowed, but 4 found.
+  Try removing the extra positional arguments.
+        expect(c.textRuns!.map((r)=>r.text).join(),'a
+              ^
+  /Users/yy2021_8689/flutter/packages/flutter_test/lib/src/widget_tester.dart:466:6: Context: Found this candidate, but the arguments don't match.
+  void expect(
+       ^^^^^^
+  packages/yl_player/test/mp4_parser_test.dart:347:13: Error: Too many positional arguments: 2 allowed, but 5 found.
+  Try removing the extra positional arguments.
+        expect(c.payload,'a
+              ^
+  /Users/yy2021_8689/flutter/packages/flutter_test/lib/src/widget_tester.dart:466:6: Context: Found this candidate, but the arguments don't match.
+  void expect(
+       ^^^^^^
+  packages/yl_player/test/mp4_parser_test.dart:350:2: Error: Expected ';' after this.
+  b');
+   ^^^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart: loading /private/tmp/yl-mp4-validation-_ht6dahh/packages/yl_player/test/mp4_parser_test.dart
