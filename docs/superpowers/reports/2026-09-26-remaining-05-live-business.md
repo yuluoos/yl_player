@@ -48,6 +48,27 @@ flutter analyze --no-pub lib/utils/live_player_controller.dart lib/utils/video_p
 
 实际 SDK `/Users/yy2021_8689/flutter/bin/flutter`。临时 TVS 副本由基线提交加三文件改动构成，播放器五包由 `79dbfad` 归档；复用 TVS 现有锁定依赖图和缓存，只在临时 package config 重映射包根路径。所有最终源文件与实际 TVS 提交逐字节一致。源指纹、跨仓提交、命令与原始结果见 [verification.json](evidence/2026-10-11-live-attempt-diagnostics/verification.json) 和 [raw-logs.json](evidence/2026-10-11-live-attempt-diagnostics/raw-logs.json)。
 
-保留两次准备失败：直接在 TVS 上跑时，并行 TTML 代码使用 TVS XML 6.6.1 不具备的 `parseEvents.validateNamespace` 参数，未运行到用例；第一次临时副本遗漏已有 package_graph.json，补齐后才得到上述语义 RED。两者均未通过修改锁文件、放宽断言或改动另一会话源码绕过。**本轮未验证最新 TTML 与 TVS 锁定依赖的集成**，后续仍须对齐该依赖并复验。
+保留两次准备失败：直接在 TVS 上跑时，并行 TTML 代码使用 TVS XML 6.6.1 不具备的 `parseEvents.validateNamespace` 参数，未运行到用例；第一次临时副本遗漏已有 package_graph.json，补齐后才得到上述语义 RED。两者均未通过修改锁文件、放宽断言或改动另一会话源码绕过。**当时未验证最新 TTML 与 TVS 锁定依赖的集成**；后续已在下节完成对齐与实际消费者复验，该历史失败记录保留。
 
 独立只读复审无 Critical/Important/Minor；执行者随后确认完整测试与静态分析实际输出。仅推进 Task 3 的汇总子项，Task 3/P05 整体未关闭：订阅 HTML/403/DNS 与代理依赖、原生取消后 VM/HTTP 真正释放、到期刷新完整行为、三端交接/TVS 真机、线上源可用性仍分别需要对应证据；本地业务回归不替代这些验收。
+
+## 2026-10-11：最新 TTML 与 TVS 依赖兼容修复
+
+TVS 修复提交 **`6ef7601`**，起点 `b81524b`；验证直接在实际 TVS 工作区执行，播放器源码为本仓 **`5772bc1`**（TTML 实现 `8cc69e3`），不再使用旧播放器快照。已解除上一节的 XML 依赖兼容限制；没有占用测试设备。
+
+根因是 TVS 锁文件和 package config 仍选 XML 6.6.1，而当前 `yl_player` 已声明 `xml: ^7.0.1`，TTML 需要 7.x 的 `parseEvents(validateNamespace/withNamespace)` 接口。另外锁定的 dbus 0.7.14 仍约束 XML 6.x。用户授权修复兼容后执行 `flutter pub get --offline`，包管理器只更新 **XML 6.6.1 → 7.0.1、dbus 0.7.14 → 0.7.15** 及哈希；后者允许 XML 6/7。pubspec、SDK、overrides 和其他依赖未改，未手工编辑 lockfile，也未放宽 TTML 命名空间验证。
+
+新增 `test/modules/player/features/ttml_dependency_compatibility_test.dart` 的 4 项消费者回归通过真实公共控制器和 `YlPlayerView` 执行 TTML：带前缀的元素/样式、实体解码与显示/off、未声明元素/属性前缀的严格拒绝及原目录保留、TTML 换 SRT。平台 fake 仅提供状态和展示表面，未替代字幕解析。首次修复后 3/4 通过，渲染项发现 TVS fake 默认没有 textureId；补齐已有 fake 的纹理标识后重跑，不修改生产渲染或降低断言。
+
+最终同一次运行覆盖上述 4 项与前节 76 项业务回归，**80/80 通过**；TVS **全项目** `flutter analyze --no-pub` 无问题。`flutter pub get --offline --enforce-lockfile` 返回 0，锁文件没有再次变动。所有测试使用本机 Flutter test runner、fake 与自有本地夹具，未启动模拟器、连接物理设备或真实播放。
+
+```sh
+# 在 TVS 根目录，以 /Users/yy2021_8689/flutter/bin/flutter 执行：
+flutter pub get --offline --enforce-lockfile
+flutter test --no-pub --concurrency=1 test/modules/player/features/ttml_dependency_compatibility_test.dart test/modules/live/features/live_attempt_diagnostics_test.dart test/modules/live/features/live_player_notifier_test.dart test/modules/live/features/live_player_session_ownership_test.dart test/modules/live/features/live_player_stall_recovery_test.dart test/modules/live/features/live_source_resolution_test.dart
+flutter analyze --no-pub
+```
+
+[verification.json](evidence/2026-10-11-ttml-tvs-compatibility/verification.json) 保存跨仓提交、实际源指纹、变更依赖和退出码；[raw-logs.json](evidence/2026-10-11-ttml-tvs-compatibility/raw-logs.json) 保留初始 XML 编译 RED、解析结果、夹具修正前失败及最终全部输出。pub 工具提示的其他可更新包及既有插件 Swift Package Manager 警告原样保留，未扩大为无关依赖升级。
+
+独立只读复审无 Critical/Important/Minor。设备解码/原生输出、Linux DBus 服务运行及完整 TTML 标准符合性均不由本轮证明；这些范围仍需各自环境与验收。此次兼容修复没有关闭 P05/P02 的其余功能与真实设备任务。

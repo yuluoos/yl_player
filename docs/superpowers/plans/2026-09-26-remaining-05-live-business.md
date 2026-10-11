@@ -77,6 +77,7 @@ cd /Users/yy2021_8689/Desktop/GIt/tvs
 - [x] 核查业务已有上限为前 8 条、保留顺序并附省略次数；保留既有换源行为、HTTP 两次业务重连与 RTMP 不额外重连规则，未新增重试策略。2026-10-11 TVS `b81524b`。
 - [x] 汇总保留真正尝试/跳过的源；`LivePlayerError.diagnostics` 独立保存安全阶段、已有分类与 diagnosticId，用户原因仍在 message。新增 source=1/10 脚本与 source=2/10 RTMP、元数据脱敏、旧请求 replace/stop/dispose 回归。
 - [x] 2026-10-11 本地业务回归 76/76（含新增 8 项）、变更静态分析通过；固定播放器 `79dbfad` 验证，隔离并行 TTML 与 TVS XML 依赖差异。此结果不替代原生资源释放/真机验收。
+- [x] 随后完成 TTML/TVS 依赖对齐：TVS `6ef7601` 仅更新 XML 7.0.1、dbus 0.7.15；当前 TTML 实际消费者与业务回归 80/80、全项目分析及严格离线锁复现通过，解除上一项的旧播放器快照限制。未占用设备。
 - [ ] 跑 session ownership/stall recovery 测试，检查真实取消与预算，不因 error.retryable 自动无界重试；提交生命周期及错误闭环。
 
 ### Task 4：完整 App 和实际订阅验收

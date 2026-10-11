@@ -1,0 +1,138 @@
+{
+  "playerBaseline": "5772bc1",
+  "ttmlImplementation": "8cc69e3",
+  "tvsBaseline": "b81524b",
+  "scope": "Actual TVS checkout with current TTML; no prior-player snapshot",
+  "changedDependencies": {
+    "dbus": {
+      "before": "0.7.14",
+      "after": "0.7.15"
+    },
+    "xml": {
+      "before": "6.6.1",
+      "after": "7.0.1"
+    }
+  },
+  "sources": [
+    {
+      "repository": "player",
+      "path": "packages/yl_player/pubspec.yaml",
+      "sha256": "6c6bb701de8860f7522ecc91176e01d38217a968d1ca2b3fe2d61c47ddff9461"
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player/lib/src/player_controller.dart",
+      "sha256": "bdb92c3e50455978c84be44aaea6cdcace97933fdf253474b545003eff66f882"
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player/lib/src/player_view.dart",
+      "sha256": "7fbcbb89c8c47c6c5498280d46ab5fe1dc6c4a5054a411c6d891f423659f5c19"
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player/lib/src/subtitles/subtitle_document.dart",
+      "sha256": "ecec89b7174162eed1f66b171eb348f39bf56246ed9a3bfe51049bbb91699913"
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player/lib/src/subtitles/ttml_parser.dart",
+      "sha256": "ee173411e11a45090d0e42efff0625b8a50fef6722c27f6bcfbd6ea20f9a90bd"
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player/lib/src/subtitles/ttml_overlay.dart",
+      "sha256": "b3cf9097d05f81c22090d4faed0130495b0df516d33fff767f92888ed01e39cd"
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player/lib/src/subtitles/text_subtitle_runtime.dart",
+      "sha256": "f30c8935528d4d0b5db0498f89fc523ab803e51a4a6b5b4d89e095e8ad0344ea"
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player/lib/src/subtitles/text_subtitle_overlay.dart",
+      "sha256": "3fbb7ab943e31fe9f1047cc5d26e70d77a04e9d472f7277d77cd675ed375941b"
+    },
+    {
+      "repository": "tvs",
+      "path": "pubspec.yaml",
+      "sha256": "5c65155869260385a02cd9c9f192880148690c39e293ea2c5ce1db07d3ca33e4"
+    },
+    {
+      "repository": "tvs",
+      "path": "pubspec.lock",
+      "sha256": "8bc7656782e9070a7c308c0d03d3ae6f2d7c4ccd8d94181cb6a0c8f7c76f84e8"
+    },
+    {
+      "repository": "tvs",
+      "path": "test/modules/player/features/ttml_dependency_compatibility_test.dart",
+      "sha256": "df477fb92a9b0197af91502213b13dfb30a6f45c358a7d7f091eeed16582f511"
+    },
+    {
+      "repository": "tvs",
+      "path": "test/support/fake_yl_player.dart",
+      "sha256": "33299b56a47b814ba71425b856fd9b929f0b160fc6f9b9fc09650100c4f83c53"
+    }
+  ],
+  "results": [
+    {
+      "kind": "RED compilation",
+      "exitCode": 1,
+      "log": "raw-logs.json#red",
+      "reason": "Old XML6.6.1 lacks validateNamespace; no tests executed"
+    },
+    {
+      "kind": "offline dependency resolution",
+      "exitCode": 0,
+      "changedDependencies": 2,
+      "log": "raw-logs.json#pub-get"
+    },
+    {
+      "kind": "first consumer run",
+      "passed": 3,
+      "failed": 1,
+      "exitCode": 1,
+      "log": "raw-logs.json#green",
+      "reason": "TVS fake starts with null textureId; initialize fake presentation surface, no production rendering changes"
+    },
+    {
+      "kind": "final related regression suite",
+      "passed": 80,
+      "failed": 0,
+      "exitCode": 0,
+      "log": "raw-logs.json#suite"
+    },
+    {
+      "kind": "full-project final analyze",
+      "issues": 0,
+      "exitCode": 0,
+      "log": "raw-logs.json#analyze-final"
+    },
+    {
+      "kind": "offline enforce-lockfile",
+      "exitCode": 0,
+      "changedDependencies": 0,
+      "log": "raw-logs.json#lock-check"
+    }
+  ],
+  "commands": {
+    "resolve": "flutter pub get --offline",
+    "reproduce": "flutter pub get --offline --enforce-lockfile",
+    "test": "flutter test --no-pub --concurrency=1 test/modules/player/features/ttml_dependency_compatibility_test.dart test/modules/live/features/live_attempt_diagnostics_test.dart test/modules/live/features/live_player_notifier_test.dart test/modules/live/features/live_player_session_ownership_test.dart test/modules/live/features/live_player_stall_recovery_test.dart test/modules/live/features/live_source_resolution_test.dart",
+    "analyze": "flutter analyze --no-pub"
+  },
+  "limitations": [
+    "No simulator, physical device, native playback or Linux D-Bus service execution",
+    "Existing package-update availability and Swift Package Manager warnings preserved in raw pub output; no unrelated dependency updates"
+  ],
+  "tvsCommit": "6ef7601be76f4a408543a6d9a942a710e557e692",
+  "review": {
+    "reviewer": "review_ttml_tvs_compat",
+    "verdict": "ready",
+    "critical": 0,
+    "important": 0,
+    "minor": 0,
+    "mode": "read-only review; final suite and analysis logs read"
+  }
+}
