@@ -305,7 +305,7 @@ void main() {
       await tester.pump();
       expect(count, 2);
       expect(first.debugDisposed, true);
-      expect(tester.takeException().toString(), 'PGS image creation failed.');
+      expect(tester.takeException().toString(), 'Subtitle image creation failed.');
       await tester.pumpWidget(const SizedBox());
     },
   );

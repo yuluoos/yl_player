@@ -2,6 +2,7 @@ part of 'subtitle_document.dart';
 
 /// Immutable, premultiplied-alpha RGBA pixels. Only the active overlay creates
 /// engine images; catalog parsing never creates a GPU/native image handle.
+/// Shared with DVD VobSub; the historical internal type name is retained.
 final class PgsBitmap {
   PgsBitmap._(
     this.x,

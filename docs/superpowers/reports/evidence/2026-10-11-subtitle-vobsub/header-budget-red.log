@@ -1,0 +1,15 @@
+00:00 +0: loading /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart
+00:00 +0: signature line obeys the same preallocation line budget
+00:00 +0 -1: signature line obeys the same preallocation line budget [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.limitExceeded> and `sanitized`: <false>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: returned SubtitleDocument:<SubtitleDocument(cues: 1, inputBytes: 2369)>
+  
+  package:matcher                                          expect
+  package:flutter_test/src/widget_tester.dart 473:18       expect
+  packages/yl_player/test/vobsub_document_test.dart 456:5  main.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: signature line obeys the same preallocation line budget

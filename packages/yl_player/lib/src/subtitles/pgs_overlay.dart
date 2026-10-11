@@ -124,7 +124,7 @@ final class _PgsSubtitleOverlayState extends State<PgsSubtitleOverlay> {
       if (result == null) {
         FlutterError.reportError(
           FlutterErrorDetails(
-            exception: FlutterError('PGS image creation failed.'),
+            exception: FlutterError('Subtitle image creation failed.'),
             library: 'yl_player',
           ),
         );

@@ -35,15 +35,11 @@ final class TextSubtitleRuntime {
 
   Future<void> replace(List<YlExternalSubtitle> sources) async {
     cancel();
-    // Reject unsupported requests before reading any member of the catalog.
+    // Pair shape is also checked here for internal callers before I/O.
     for (final source in sources) {
-      if (source.format != YlSubtitleFormat.srt &&
-          source.format != YlSubtitleFormat.webvtt &&
-          source.format != YlSubtitleFormat.ttml &&
-          source.format != YlSubtitleFormat.ass &&
-          source.format != YlSubtitleFormat.ssa &&
-          source.format != YlSubtitleFormat.pgs) {
-        throw subtitleFailure(YlFailureCodes.subtitleUnsupported);
+      if ((source.format == YlSubtitleFormat.vobsub) !=
+          (source.companionSource != null)) {
+        throw subtitleFailure(YlFailureCodes.subtitleMalformed);
       }
     }
     final token = SubtitleCancellation();
@@ -55,27 +51,44 @@ final class TextSubtitleRuntime {
     var bitmapBytesLeft = 64 * 1024 * 1024;
     try {
       for (final source in sources) {
+        final index = source.companionSource == null
+            ? null
+            : await readSubtitleResource(
+                source.companionSource!,
+                token,
+                bytesLeft,
+              );
+        if (index != null) bytesLeft -= index.length;
+        token.check();
         final bytes = await readSubtitleResource(
           source.source,
           token,
           bytesLeft,
         );
         token.check();
-        final doc = SubtitleDocument.parse(
-          bytes,
-          limits: SubtitleLimits(
-            maxAssRuns: runsLeft,
-            maxPgsBitmapBytes: bitmapBytesLeft,
-          ),
-          format: switch (source.format) {
-            YlSubtitleFormat.srt => SubtitleFormat.srt,
-            YlSubtitleFormat.webvtt => SubtitleFormat.webvtt,
-            YlSubtitleFormat.ass => SubtitleFormat.ass,
-            YlSubtitleFormat.ssa => SubtitleFormat.ssa,
-            YlSubtitleFormat.pgs => SubtitleFormat.pgs,
-            _ => SubtitleFormat.ttml,
-          },
+        final limits = SubtitleLimits(
+          maxAssRuns: runsLeft,
+          maxPgsBitmapBytes: bitmapBytesLeft,
         );
+        final doc = index != null
+            ? SubtitleDocument.parseVobSub(
+                bytes,
+                index,
+                limits: limits,
+                language: source.language,
+              )
+            : SubtitleDocument.parse(
+                bytes,
+                limits: limits,
+                format: switch (source.format) {
+                  YlSubtitleFormat.srt => SubtitleFormat.srt,
+                  YlSubtitleFormat.webvtt => SubtitleFormat.webvtt,
+                  YlSubtitleFormat.ass => SubtitleFormat.ass,
+                  YlSubtitleFormat.ssa => SubtitleFormat.ssa,
+                  YlSubtitleFormat.pgs => SubtitleFormat.pgs,
+                  _ => SubtitleFormat.ttml,
+                },
+              );
         bitmapBytesLeft -= doc.pgsBitmapBytes;
         bytesLeft -= bytes.length;
         cuesLeft -= doc.cues.length;

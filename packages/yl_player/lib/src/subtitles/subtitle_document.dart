@@ -7,6 +7,7 @@ import 'package:xml/xml_events.dart';
 part 'ttml_parser.dart';
 part 'ass_parser.dart';
 part 'pgs_parser.dart';
+part 'vobsub_parser.dart';
 
 /// Internal parsing foundation; not a public subtitle loading/rendering API.
 enum SubtitleFormat { srt, webvtt, ttml, ass, ssa, pgs }
@@ -117,6 +118,21 @@ final class SubtitleDocument {
   int get pgsBitmapBytes =>
       cues.fold(0, (n, c) => n + (c.pgs?.byteLength ?? 0));
   final _CueNode? _index;
+
+  /// Explicit paired VobSub resources; shared RGBA budget is historical PGS name.
+  static SubtitleDocument parseVobSub(
+    List<int> sub,
+    List<int> idx, {
+    SubtitleLimits limits = const SubtitleLimits(),
+    String? language,
+  }) {
+    limits._validate();
+    if (sub.length + idx.length > limits.maxInputBytes) _limit();
+    if ([sub, idx].any((bytes) => bytes.any((b) => b < 0 || b > 255))) {
+      _malformed();
+    }
+    return _parseVobSub(sub, idx, limits, language);
+  }
 
   /// Strict UTF-8 and strict supported syntax: malformed documents are rejected
   /// atomically rather than silently dropping a damaged cue.

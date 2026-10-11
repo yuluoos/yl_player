@@ -442,3 +442,7 @@ TVS `a8e5e63` 在刷新保存前拒绝 HTML 和零频道结果，保留旧频道
 ### 2026-10-11 P05 代理初始化与直连源路由
 
 TVS `056e005` 只在依赖业务代理的媒体分支等待初始化，RTMP 与脚本直连 HTTP/RTMP 不再被代理失败或 pending 阻断，普通 HTTP 策略保持。代理失败参与逐源回退；加载/恢复无代理统计时显示 unavailable，代际变化清理旧流量身份。新增14项并加强1项，最终相关148/148、全项目分析和生成通过；复审发现的旧代际流量遗漏已 RED→GREEN 修复。固定播放器 `367c0bb`，未占设备，完整 P05 仍开放，见[P05报告](../reports/2026-09-26-remaining-05-live-business.md)。
+
+### 2026-10-11 P02 VobSub 配对加载与渲染
+
+接入显式 idx/sub 配对文件和 managed HTTP，解析 MPEG-2 PS/DVD SPU 分片、双场 RLE、RGB palette/contrast、定位与时序变化；按语言或索引默认选择子流，复用 PGS 的 RGBA 渲染和生命周期。两份资源共同受 encoded/expanded 目录预算及取消门禁约束。验证、复审与边界见 [P02 执行报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md) 和 [VobSub 契约](../specs/2026-10-11-subtitle-vobsub.md)。高级区域特效、HD/MPEG1、内嵌、HDR/DRM、原生/真机同步和 PD-03/整个 P02 仍开放。未纳入另一会话的长播放/弱网 ABR。

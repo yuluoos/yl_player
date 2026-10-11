@@ -7,6 +7,7 @@ import 'package:yl_player/yl_player.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 import 'support/fake_player_platform.dart';
+import 'support/vobsub_fixture.dart';
 
 const sid = YlPlaybackSessionId('text');
 const sample =
@@ -67,6 +68,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late Directory dir;
   late File file;
+  late File unsupportedIndex;
   late FakePlatformPlayer backend;
   late YlPlayerController player;
   late YlPlaybackSession session;
@@ -100,6 +102,9 @@ void main() {
         null; // Owned loopback I/O, not Flutter's HTTP 400 fake.
     dir = await Directory.systemTemp.createTemp('yl-subtitles-');
     file = await File('${dir.path}/owned.srt').writeAsString(sample);
+    unsupportedIndex = await File(
+      '${dir.path}/unsupported.idx',
+    ).writeAsString(vobIdxText(settings: 'custom colors: ON'));
     backend = FakePlatformPlayer();
     player = await YlPlayerController.create(
       platform: FakePlayerPlatform(backend),
@@ -358,7 +363,7 @@ void main() {
     },
   );
 
-  for (final kind in ['format', 'encoding']) {
+  for (final kind in ['content', 'encoding']) {
     test(
       'unsupported newer $kind replacement still cancels previous pending catalog',
       () async {
@@ -379,12 +384,12 @@ void main() {
         final request = await arrived.future;
         await expectLater(
           session.replaceExternalSubtitles([
-            kind == 'format'
+            kind == 'content'
                 ? YlExternalSubtitle(
                     id: 'new',
                     source: YlFileSource(file.path),
                     format: YlSubtitleFormat.vobsub,
-                    companionSource: YlFileSource(file.path),
+                    companionSource: YlFileSource(unsupportedIndex.path),
                   )
                 : sub(
                     source: YlNetworkSource(
@@ -397,7 +402,7 @@ void main() {
                   ),
           ]),
           failure(
-            kind == 'format'
+            kind == 'content'
                 ? YlFailureCodes.subtitleUnsupported
                 : YlFailureCodes.policyUnsupported,
           ),
@@ -594,7 +599,7 @@ void main() {
   });
 
   test(
-    'unsupported format and encoding do not replace current catalog',
+    'unsupported content and encoding do not replace current catalog',
     () async {
       await session.replaceExternalSubtitles([sub()]);
       final before = player.state;
@@ -604,7 +609,7 @@ void main() {
             id: 'ass',
             source: YlFileSource(file.path),
             format: YlSubtitleFormat.vobsub,
-            companionSource: YlFileSource(file.path),
+            companionSource: YlFileSource(unsupportedIndex.path),
           ),
         ]),
         failure(YlFailureCodes.subtitleUnsupported),

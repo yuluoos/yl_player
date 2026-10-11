@@ -1,0 +1,77 @@
+00:00 +0: loading /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart
+00:00 +0: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: DVD fields, RGB palette and 4-bit alpha are premultiplied exactly
+00:00 +1: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: control updates split frames and stop on exact 1024/90000 clock
+00:00 +2: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: forced-start is retained without implicit filtering
+00:00 +3: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: fragment assembly works at every legal first-fragment split
+00:00 +4: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: default stream and caller language choose independently of multiplex order
+00:00 +5: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: interleaved fragments stay associated with their own substream
+00:00 +6: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: IDX times override structural PES PTS; exact PES filepos also works
+00:00 +7: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: delay plus public offset, negative clip and missing stop next entry bound
+00:00 +8: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: UTF8 BOM and CR-only index with conventional neutral settings
+00:00 +9: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: nibble RLE width 1 including fill and byte padding
+00:00 +10: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: nibble RLE width 4 including fill and byte padding
+00:00 +11: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: nibble RLE width 16 including fill and byte padding
+00:00 +12: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: nibble RLE width 64 including fill and byte padding
+00:00 +13: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: nibble RLE width 100 including fill and byte padding
+00:00 +14: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed idx signature
+00:00 +15: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed idx missing size
+00:00 +16: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed idx bad palette
+00:00 +17: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed idx duplicate size
+00:00 +18: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed idx timestamp without stream
+00:00 +19: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed idx invalid minute
+00:00 +20: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed idx out of range filepos
+00:00 +21: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed idx middle of packet offset
+00:00 +22: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed idx wrong substream
+00:00 +23: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed idx duplicate timestamp
+00:00 +24: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed idx duplicate stream
+00:00 +25: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed idx absent default stream
+00:00 +26: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: unsupported effect scale: 90%, 100%
+00:00 +27: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: unsupported effect custom colors: ON, tridx: 0000
+00:00 +28: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: unsupported effect forced subs: ON
+00:00 +29: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: unsupported effect alpha: 50%
+00:00 +30: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: unsupported effect unknown: external
+00:00 +31: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: strict packet prefixes reject every truncation
+00:00 +32: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed PS magic
+00:00 +33: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed pack marker
+00:00 +34: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed PES declared length
+00:00 +35: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed PTS marker
+00:00 +36: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed SPU control before bitmap
+00:00 +37: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed SPU backward link
+00:00 +38: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed SPU missing terminator
+00:00 +39: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed SPU backward date
+00:00 +40: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed SPU field points into control
+00:00 +41: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed SPU row overflow
+00:00 +42: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed SPU nibble padding
+00:00 +43: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: CHG_COLCON fails explicitly
+00:00 +44: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: bitmap and combined input limits reject before expansion
+00:00 +45: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: canvas, time and line limits are enforced
+00:00 +46: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: invalid byte values and UTF8 do not leak inputs
+00:00 +47: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: oversized bitmap rejects before tiny RLE can allocate
+00:00 +48: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: two field offsets may be in reverse physical order
+00:00 +49: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: pack stuffing, system and padding packets do not alter offsets
+00:00 +50: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: PTS+DTS fields and absent PTS are structural, not cue timing
+00:00 +51: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: same-language ambiguity is explicit, default selection still valid
+00:00 +52: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: MPEG1, HD SPU and unrelated private stream reject explicitly
+00:00 +53: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: signature line obeys the same preallocation line budget
+00:00 +54: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: ordinary producer P-STD extension preserves bitmap and timing
+00:00 +55: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: ordinary producer SPU terminal alignment byte is accepted
+00:00 +56: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed P-STD extension [30]
+00:00 +57: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed P-STD extension [30, 96]
+00:00 +58: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed P-STD extension [30, 224, 58]
+00:00 +59: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed P-STD extension [30, 96, 58, 0]
+00:00 +60: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: SPU padding cannot hide extra commands or arbitrary bytes
+00:00 +61: loading /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_runtime_test.dart
+00:00 +61: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_runtime_test.dart: paired files render media-timed bitmap and offset/off
+00:00 +62: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_runtime_test.dart: both managed resources load, binary retries, bad pair preserves catalog
+00:00 +63: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_runtime_test.dart: replacement cancels held idx resource and ignores late completion
+00:00 +64: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_runtime_test.dart: replacement cancels held sub resource and ignores late completion
+00:00 +65: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_runtime_test.dart: pair input sizes share the encoded catalog allowance
+00:00 +66: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_runtime_test.dart: missing companion preserves current catalog
+00:00 +67: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_runtime_test.dart: VobSub documents share preallocation RGBA catalog allowance
+00:01 +68: loading /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_overlay_test.dart
+00:01 +68: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_overlay_test.dart: VobSub manual field/color/alpha grid at 1000 ms
+00:01 +69: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_overlay_test.dart: VobSub manual field/color/alpha grid at 1512 ms
+00:02 +70: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_overlay_test.dart: VobSub manual field/color/alpha grid at 2024 ms
+00:02 +71: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_overlay_test.dart: VobSub reuses cropped bitmap geometry
+00:02 +72: /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_overlay_test.dart: public VobSub pair: first frame/offset/seek/off/source reset release images
+00:02 +73: All tests passed!

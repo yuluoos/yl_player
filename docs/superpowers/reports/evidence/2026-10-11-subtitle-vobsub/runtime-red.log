@@ -1,0 +1,18 @@
+00:00 +0: loading /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_runtime_test.dart
+00:00 +0: paired files render media-timed bitmap and offset/off
+00:00 +0 -1: paired files render media-timed bitmap and offset/off [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 46:9  TextSubtitleRuntime.replace
+  packages/yl_player/test/vobsub_runtime_test.dart 23:46           main.<fn>
+  
+00:00 +0 -1: both managed resources load, binary retries, bad pair preserves catalog
+00:00 +0 -2: both managed resources load, binary retries, bad pair preserves catalog [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 46:9  TextSubtitleRuntime.replace
+  packages/yl_player/test/vobsub_runtime_test.dart 46:13           main.<fn>
+  
+00:00 +0 -2: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_runtime_test.dart: both managed resources load, binary retries, bad pair preserves catalog
+  /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_runtime_test.dart: paired files render media-timed bitmap and offset/off

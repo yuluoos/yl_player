@@ -1,0 +1,177 @@
+00:00 +0: loading /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart
+00:00 +0: DVD fields, RGB palette and 4-bit alpha are premultiplied exactly
+00:00 +1: control updates split frames and stop on exact 1024/90000 clock
+00:00 +2: forced-start is retained without implicit filtering
+00:00 +3: fragment assembly works at every legal first-fragment split
+00:00 +4: default stream and caller language choose independently of multiplex order
+00:00 +5: interleaved fragments stay associated with their own substream
+00:00 +6: IDX times override structural PES PTS; exact PES filepos also works
+00:00 +7: delay plus public offset, negative clip and missing stop next entry bound
+00:00 +8: UTF8 BOM and CR-only index with conventional neutral settings
+00:00 +9: nibble RLE width 1 including fill and byte padding
+00:00 +10: nibble RLE width 4 including fill and byte padding
+00:00 +11: nibble RLE width 16 including fill and byte padding
+00:00 +12: nibble RLE width 64 including fill and byte padding
+00:00 +13: nibble RLE width 100 including fill and byte padding
+00:00 +14: malformed idx signature
+00:00 +15: malformed idx missing size
+00:00 +16: malformed idx bad palette
+00:00 +17: malformed idx duplicate size
+00:00 +18: malformed idx timestamp without stream
+00:00 +19: malformed idx invalid minute
+00:00 +20: malformed idx out of range filepos
+00:00 +21: malformed idx middle of packet offset
+00:00 +22: malformed idx wrong substream
+00:00 +23: malformed idx duplicate timestamp
+00:00 +24: malformed idx duplicate stream
+00:00 +25: malformed idx absent default stream
+00:00 +26: unsupported effect scale: 90%, 100%
+00:00 +27: unsupported effect custom colors: ON, tridx: 0000
+00:00 +28: unsupported effect forced subs: ON
+00:00 +29: unsupported effect alpha: 50%
+00:00 +30: unsupported effect unknown: external
+00:00 +31: strict packet prefixes reject every truncation
+00:00 +32: malformed PS magic
+00:00 +33: malformed pack marker
+00:00 +34: malformed PES declared length
+00:00 +35: malformed PTS marker
+00:00 +36: malformed SPU control before bitmap
+00:00 +37: malformed SPU backward link
+00:00 +38: malformed SPU missing terminator
+00:00 +39: malformed SPU backward date
+00:00 +40: malformed SPU field points into control
+00:00 +41: malformed SPU row overflow
+00:00 +42: malformed SPU nibble padding
+00:00 +43: CHG_COLCON fails explicitly
+00:00 +44: bitmap and combined input limits reject before expansion
+00:00 +45: canvas, time and line limits are enforced
+00:00 +46: invalid byte values and UTF8 do not leak inputs
+00:00 +47: oversized bitmap rejects before tiny RLE can allocate
+00:00 +48: two field offsets may be in reverse physical order
+00:00 +49: pack stuffing, system and padding packets do not alter offsets
+00:00 +50: PTS+DTS fields and absent PTS are structural, not cue timing
+00:00 +51: same-language ambiguity is explicit, default selection still valid
+00:00 +52: MPEG1, HD SPU and unrelated private stream reject explicitly
+00:00 +53: signature line obeys the same preallocation line budget
+00:00 +53 -1: signature line obeys the same preallocation line budget [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.limitExceeded> and `sanitized`: <false>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: returned SubtitleDocument:<SubtitleDocument(cues: 1, inputBytes: 2369)>
+  
+  package:matcher                                          expect
+  package:flutter_test/src/widget_tester.dart 473:18       expect
+  packages/yl_player/test/vobsub_document_test.dart 456:5  main.<fn>
+  
+00:00 +53 -1: ordinary producer P-STD extension preserves bitmap and timing
+00:00 +53 -2: ordinary producer P-STD extension preserves bitmap and timing [E]
+  SubtitleParseException(unsupported)
+  package:yl_player/src/subtitles/subtitle_document.dart 411:5   _unsupported
+  package:yl_player/src/subtitles/vobsub_parser.dart 204:50      _vobPackets
+  package:yl_player/src/subtitles/vobsub_parser.dart 453:43      _parseVobSub
+  package:yl_player/src/subtitles/subtitle_document.dart 134:12  SubtitleDocument.parseVobSub
+  packages/yl_player/test/vobsub_document_test.dart 11:24        parse
+  packages/yl_player/test/vobsub_document_test.dart 459:15       main.<fn>
+  
+00:00 +53 -2: ordinary producer SPU terminal alignment byte is accepted
+00:00 +53 -3: ordinary producer SPU terminal alignment byte is accepted [E]
+  SubtitleParseException(malformed)
+  package:yl_player/src/subtitles/subtitle_document.dart 407:5   _malformed
+  package:yl_player/src/subtitles/vobsub_parser.dart 344:9       _VobDecoder.packet
+  package:yl_player/src/subtitles/vobsub_parser.dart 464:13      _parseVobSub
+  package:yl_player/src/subtitles/subtitle_document.dart 134:12  SubtitleDocument.parseVobSub
+  packages/yl_player/test/vobsub_document_test.dart 11:24        parse
+  packages/yl_player/test/vobsub_document_test.dart 471:15       main.<fn>
+  
+00:00 +53 -3: malformed P-STD extension [30]
+00:00 +53 -4: malformed P-STD extension [30] [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed> and `sanitized`: <false>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/subtitle_document.dart 411:5   _unsupported
+                  package:yl_player/src/subtitles/vobsub_parser.dart 204:50      _vobPackets
+                  package:yl_player/src/subtitles/vobsub_parser.dart 453:43      _parseVobSub
+                  package:yl_player/src/subtitles/subtitle_document.dart 134:12  SubtitleDocument.parseVobSub
+                  packages/yl_player/test/vobsub_document_test.dart 11:24        parse
+                  packages/yl_player/test/vobsub_document_test.dart 483:15       main.<fn>.<fn>
+                  package:matcher                                                expect
+                  package:flutter_test/src/widget_tester.dart 473:18             expect
+                  packages/yl_player/test/vobsub_document_test.dart 482:7        main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                          expect
+  package:flutter_test/src/widget_tester.dart 473:18       expect
+  packages/yl_player/test/vobsub_document_test.dart 482:7  main.<fn>
+  
+00:00 +53 -4: malformed P-STD extension [30, 96]
+00:00 +53 -5: malformed P-STD extension [30, 96] [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed> and `sanitized`: <false>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/subtitle_document.dart 411:5   _unsupported
+                  package:yl_player/src/subtitles/vobsub_parser.dart 204:50      _vobPackets
+                  package:yl_player/src/subtitles/vobsub_parser.dart 453:43      _parseVobSub
+                  package:yl_player/src/subtitles/subtitle_document.dart 134:12  SubtitleDocument.parseVobSub
+                  packages/yl_player/test/vobsub_document_test.dart 11:24        parse
+                  packages/yl_player/test/vobsub_document_test.dart 483:15       main.<fn>.<fn>
+                  package:matcher                                                expect
+                  package:flutter_test/src/widget_tester.dart 473:18             expect
+                  packages/yl_player/test/vobsub_document_test.dart 482:7        main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                          expect
+  package:flutter_test/src/widget_tester.dart 473:18       expect
+  packages/yl_player/test/vobsub_document_test.dart 482:7  main.<fn>
+  
+00:00 +53 -5: malformed P-STD extension [30, 224, 58]
+00:00 +53 -6: malformed P-STD extension [30, 224, 58] [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed> and `sanitized`: <false>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/subtitle_document.dart 411:5   _unsupported
+                  package:yl_player/src/subtitles/vobsub_parser.dart 204:50      _vobPackets
+                  package:yl_player/src/subtitles/vobsub_parser.dart 453:43      _parseVobSub
+                  package:yl_player/src/subtitles/subtitle_document.dart 134:12  SubtitleDocument.parseVobSub
+                  packages/yl_player/test/vobsub_document_test.dart 11:24        parse
+                  packages/yl_player/test/vobsub_document_test.dart 483:15       main.<fn>.<fn>
+                  package:matcher                                                expect
+                  package:flutter_test/src/widget_tester.dart 473:18             expect
+                  packages/yl_player/test/vobsub_document_test.dart 482:7        main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                          expect
+  package:flutter_test/src/widget_tester.dart 473:18       expect
+  packages/yl_player/test/vobsub_document_test.dart 482:7  main.<fn>
+  
+00:00 +53 -6: malformed P-STD extension [30, 96, 58, 0]
+00:00 +53 -7: malformed P-STD extension [30, 96, 58, 0] [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed> and `sanitized`: <false>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/subtitle_document.dart 411:5   _unsupported
+                  package:yl_player/src/subtitles/vobsub_parser.dart 204:50      _vobPackets
+                  package:yl_player/src/subtitles/vobsub_parser.dart 453:43      _parseVobSub
+                  package:yl_player/src/subtitles/subtitle_document.dart 134:12  SubtitleDocument.parseVobSub
+                  packages/yl_player/test/vobsub_document_test.dart 11:24        parse
+                  packages/yl_player/test/vobsub_document_test.dart 483:15       main.<fn>.<fn>
+                  package:matcher                                                expect
+                  package:flutter_test/src/widget_tester.dart 473:18             expect
+                  packages/yl_player/test/vobsub_document_test.dart 482:7        main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                          expect
+  package:flutter_test/src/widget_tester.dart 473:18       expect
+  packages/yl_player/test/vobsub_document_test.dart 482:7  main.<fn>
+  
+00:00 +53 -7: SPU padding cannot hide extra commands or arbitrary bytes
+00:00 +54 -7: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed P-STD extension [30, 224, 58]
+  /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed P-STD extension [30, 96, 58, 0]
+  /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed P-STD extension [30, 96]
+  /private/tmp/yl-vobsub-validation-jx1_4ldr/packages/yl_player/test/vobsub_document_test.dart: malformed P-STD extension [30]
+  ... and 3 more

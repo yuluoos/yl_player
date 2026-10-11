@@ -1,5 +1,11 @@
 ## 0.2.0-dev.2
 
+- Add opt-in external VobSub DVD subtitles using explicit .sub/.idx pairs,
+  managed loading/cancellation, index language selection, PS/SPU assembly,
+  two-field RLE and timed palette/contrast/position changes. Shares bounded
+  RGBA storage and active-image rendering with PGS; advanced DVD/HD effects
+  and native-device acceptance remain outside this subset.
+
 - Add opt-in external PGS/SUP bitmap subtitles through the managed loader,
   with bounded RLE/palette decoding, cropped/windowed composition, palette
   updates and media-time clearing. Active images use a bounded asynchronous

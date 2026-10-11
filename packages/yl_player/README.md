@@ -121,7 +121,7 @@ metadata. See [diagnostics](../../docs/diagnostics.md).
 ## External subtitles (opt-in)
 
 Create the controller with `enableTextSubtitles: true` to use the Dart-owned
-external SRT/WebVTT/TTML/ASS/SSA text and PGS bitmap runtime on Android, iOS or macOS. `YlPlayerView` then draws
+external SRT/WebVTT/TTML/ASS/SSA text and PGS/VobSub bitmap runtime on Android, iOS or macOS. `YlPlayerView` then draws
 selected subtitles over ordinary video without an extra widget:
 
 ```dart
@@ -202,8 +202,16 @@ Expanded bitmap data is capped at 64 MiB per catalog; only active frames create
 engine images, with late asynchronous results disposed after a switch or reset.
 Unsupported segment/plane semantics fail explicitly. See the [PGS subset contract](../../docs/superpowers/specs/2026-10-11-subtitle-pgs.md).
 
+For VobSub, set `format: YlSubtitleFormat.vobsub`, `source` to the `.sub`
+binary and `companionSource` to its `.idx` index. Each resource uses its own file
+or managed HTTP policy. A unique matching `language` selects a substream;
+otherwise the index default (or first stream) is used. The DVD subset renders
+field RLE, RGB palettes, contrast, positioning and timed control updates, sharing
+the 64 MiB bitmap catalog budget with PGS. Unsupported effects fail explicitly.
+See the [VobSub subset contract](../../docs/superpowers/specs/2026-10-11-subtitle-vobsub.md).
+
 This opt-in owns the external catalog and cannot be combined with a native
-subtitle SPI. It does not support embedded tracks, VobSub,
+subtitle SPI. It does not support embedded tracks,
 WebVTT CSS/regions/karaoke, or protected video overlays. HDR subtitle brightness
 and native-device synchronization remain unqualified. Without the opt-in, the
 existing native capability/SPI gates continue to apply.

@@ -584,7 +584,7 @@ is unchanged; no Apple AV1 software budget is measured or admitted. See the
 ## External subtitles (Dart opt-in)
 
 `YlPlayerController.create(enableTextSubtitles: true)` enables a bounded external
-SRT/WebVTT/TTML/ASS/SSA text and PGS bitmap runtime with an ordinary-video `YlPlayerView` overlay. This is Dart-owned;
+SRT/WebVTT/TTML/ASS/SSA text and PGS/VobSub bitmap runtime with an ordinary-video `YlPlayerView` overlay. This is Dart-owned;
 current native adapters still do not advertise a native subtitle SPI.
 
 | Scope | Implementation / evidence |
@@ -596,7 +596,8 @@ current native adapters still do not advertise a native subtitle SPI.
 | TTML1 text subset | Namespace-aware media timing, referenced basic styles and percentage regions; file/managed HTTP, lifecycle, region rectangles and clipped color-pixel tests |
 | ASS/SSA text subset | Explicit script resolution/WrapStyle 1 or 2, styles/outline/shadow/position/layers/move/fad; real file/managed HTTP and Ahem fixed-time pixel tests; no libass/font-metric equivalence |
 | PGS external SUP subset | Binary framing/RLE, palettes/clear, cropped/windowed objects; file/managed HTTP, manual pixel grids, late-image disposal and bounded asynchronous decode tests |
-| Embedded tracks, advanced TTML/ASS/SSA/PGS, VobSub and advanced WebVTT | Not implemented by this runtime |
+| VobSub external DVD subset | Explicit idx/sub pair, language/substream matching, PS/SPU fragments, two-field RLE, timed palette/alpha/clear; real paired I/O and owned full-pixel grids |
+| Embedded tracks, advanced TTML/ASS/SSA/PGS/VobSub and advanced WebVTT | Not implemented by this runtime |
 | Protected output, HDR brightness and physical-device subtitle sync | Not accepted; protected surfaces reject subtitle commands |
 
 The ordinary Flutter path is available to Android/iOS/macOS consumers, but this

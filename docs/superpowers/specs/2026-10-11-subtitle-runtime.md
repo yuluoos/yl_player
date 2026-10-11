@@ -74,3 +74,12 @@ text decoding. A separate 64 MiB expanded catalog budget precedes allocation;
 only active frames create images, with a two-job asynchronous decode queue and
 late-result disposal. Cover fit follows source cropping. VobSub, embedded PGS,
 HDR/protected output and physical-device acceptance remain open.
+
+## VobSub extension (2026-10-11)
+
+The [VobSub DVD subset](2026-10-11-subtitle-vobsub.md) adds explicitly paired
+.sub/source and .idx/companion resources, with per-source managed policies under
+one cancellation token and the shared encoded/expanded catalog budgets. The
+PGS compositor also draws these immutable RGBA frames. Public metadata and native
+protocols are unchanged; one entry selects one index substream. Advanced DVD/HD,
+embedded, HDR/protected output and physical-device acceptance remain open.

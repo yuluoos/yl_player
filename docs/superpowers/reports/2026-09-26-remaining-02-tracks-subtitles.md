@@ -202,3 +202,37 @@ owned Ahem 样本在固定媒体时点手工推导像素框，验证9锚点、�
 基线 `1a20e5dc488b0f4a129db8ab4b26b5f7e3f5f16c`，隔离副本覆盖本项11份源码/测试，排除另一会话未提交内容。仓库根执行 `flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test`：**817/817、0失败、exit0**（135接口/487播放器/113 Apple/82 Android），本项新增62项；播放器与接口lib/test的最终静态分析 **No issues found、exit0**。修正旧格式夹具后的23项 runtime 兼容性测试也全部通过。
 
 [证据清单](evidence/2026-10-11-subtitle-pgs/manifest.json)保留源码/依赖/文档指纹、完整成功/失败日志、三张像素图、制品审计与复审裁定。所有11份候选源码与验证副本逐字节一致；独立Git index及HEAD比较更新只提交字幕切片和自身总览/CHANGELOG段，不夹带另一会话修改。无遗留复审问题；完整 Task3/P02 尚未完成，继续保留执行账本。
+
+## 2026-10-11 VobSub 外挂配对加载与渲染
+
+按用户指示继续 Task3C：`enableTextSubtitles: true` 与既有 `YlSubtitleFormat.vobsub` 接入真实配对加载、DVD 位图解析和 Flutter 合成；`source` 明确为 .sub，`companionSource` 为 .idx。不猜文件名或获取外部隐式资源。精确支持边界见 [VobSub 契约](../specs/2026-10-11-subtitle-vobsub.md)。当前原生/Pigeon/SPI 与依赖不变，不触碰长播放/弱网 ABR。
+
+### 实现、预算与范围裁定
+
+- 严格 UTF-8 v7 索引、size/16项RGB palette、id/index、timestamp/filepos、delay/default language。一个公开目录项按调用方语言唯一匹配或 langidx/首项选择一个子流；有歧义或找不到显式语言时明确拒绝。索引时间为主时钟，不采用 PES PTS 改写时间。
+- MPEG-2 pack/PES、结构性PTS/DTS、填充/系统包、private stream 子流分片重组；一个线性扫描建立包位置映射，验证所列子流引用。DVD双场1..4nibble RLE、行尾填充/字节对齐、奇数高度、反向存放的场地址、palette/4bit contrast、坐标和start/forced/stop控制。palette/alpha/position的后续控制块按媒体时刻拆分画面。
+- 共享 PGS 已验收的不可变 RGBA 表示、几何裁剪与异步图片队列，保留内部历史类型名，错误消息改为通用 Subtitle image。无额外 GPU 目录缓存、定时器或独立解码队列。首帧、暂停、偏移、seek/off/换源的门禁沿用现有 owner。
+- `.idx` 和 `.sub` 各自执行其来源的 managed 策略，共用取消令牌与4MiB encoded目录额度，任一失败不发布。PGS/VobSub共用64MiB展开RGBA，分配前消费剩余额度；bitmap≤4,194,304像素、canvas≤8192、SPU≤65535 bytes、索引≤50,000行/每行2048码元、条目≤10,000、PS≤50,000 segments、控制命令≤50,000/每SPU≤256序列。旧/候选目录独立有界；这不是总RSS或多view图像总量保证。
+- 本次选择原始 Dart 路线；MPEG1/rawSPU/HD、压缩包、区域CHG_COLCON与非中性索引效果等拒绝。缺失stop时只保持到下一索引项或七天界限，负delay裁到零。代价：部分合法高级DVD素材和大轨道仍需后续实现；不将这些限制默认为完整VobSub/光盘认证。
+
+### 审计与定向证据
+
+[制品审计](evidence/2026-10-11-subtitle-vobsub/artifact-audit.json)重新核对六份Android/Apple二进制、两份构建脚本和两份FFmpeg9.0.1 lock，指纹与PGS阶段一致。当前配方没有DVD字幕codec，本切片不依赖该原生功能；无新增库或借用样本。FFmpeg n8.0 mpeg.c/dvdsubdec.c用于格式对照，未复制链接代码或资产。
+
+入口先0通过/2失败（既有runtime拒绝VobSub），接入后2/2；解析边界首轮49/49。再加入两份资源取消、配对输入预算、手工全图像素、公开生命周期及共享渲染回归，95/95（含既有23 runtime与14 PGS overlay）。扩展PS结构/巨大bitmap/语言歧义/字段顺序/跨文件RGBA后，新VobSub定向65/65。另在隔离副本暂时移除剩余预算传递，跨文件测试实际RED，恢复候选后才进入最终验证。初次分析17条括号风格info、扩展测试另1条，均已修正，真实日志保留。
+
+三张PNG按1000/1512/2024ms捕获，owned 4×3 DVD样本的顶/底场、RGB/alpha与位置均手工推导并全像素比较；并非真机截图或光盘符合性认证。实际文件和loopbackHTTP执行；公共媒体事件用fake平台。没有native构建、设备、长播或弱网ABR；HDR/DRM、内嵌、外接重连、PD-03及整个Task3/P02仍开放。
+
+### 独立复审与一次修复
+
+一次 fresh-context 只读复审指出2 Important：常规dvdauthor输出的P-STD PES扩展、SPU奇数字节长度末尾的单个0xff对齐。两项均据实际producer代码确认，补精确结构支持，仍拒绝扩展截断/错误marker/任意尾随字节。另有首行跳过2048码元限制的Minor，按本项资源契约一致性提升为需修复；原4MiB总限一直有效，不夸大为无界内存问题。
+
+首行独立测试0通过/1失败；合并回归54通过/7失败，随后一次修正三项。复审未判断范围及裁定代价完整记录在[复审记录](evidence/2026-10-11-subtitle-vobsub/review.md)，并把共享RLE场、PXD间隙、同一pack同子流多个完整SPU等严格接纳限制写入契约。没有遗留minor或第二轮复审。
+
+### 最终冻结验证
+
+复审修复后新VobSub **73/73**（61解析/7实际I/O与资源/5画面及公开生命周期），无遗留问题。最终隔离基线 `1a4c674fafb82c308c2e6cc94a75057c8131a6cf`，只覆盖本项12份源码/测试；另一会话新提交仅文档/证据已纳入基线，未提交长播/ABR仍排除。
+
+仓库根执行 `flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test`：**890/890、0失败、exit0**（135接口/560播放器/113 Apple/82 Android），本项新增73。播放器与接口lib/test静态分析 **No issues found、exit0**。未放宽任何既有门限。
+
+[证据清单](evidence/2026-10-11-subtitle-vobsub/manifest.json)保留完整原始日志、三张PNG、制品审计、复审裁定及源码/文档/依赖指纹。12份候选源码与隔离验证副本逐字节一致；独立Git index及HEAD比较更新仅提交本项文件与自身总览/CHANGELOG段，保留另一会话未提交内容。完整Task3/P02仍未完成，执行账本继续保留。
