@@ -2,7 +2,7 @@
 
 ## 2026-10-11：Task 1 归档离线复核与生成工具
 
-基线 `bdaf7bc`。本批仅交付不依赖设备、原生构建或外部服务的归档复现子项；P05 Task 1 的运行时终止与三端媒体交接复验，以及 Task 2–4 仍未完成。
+基线 `bdaf7bc`。本批仅交付不依赖设备、原生构建或外部服务的归档复现子项；P05 Task 1 的运行时终止与三端媒体交接复验，以及 Task 2–4 整体仍未完成。后续 Task 3 业务诊断子项见下节。
 
 保存在工作区忽略目录 `.superpowers/sdd/2026-09-22-script-resolver/controlled-samples/` 的九份原始脚本仍可读取，不需要重新下载或改变版本。归档目录 0700，原始文件 0600；按共享 `controlled_contract.dart` 冻结哈希检查，**9/9、共 137,282 字节匹配**。它们已经离开历史 `/private/tmp` 临时目录；这仅证明当前本机工作区可取回，不代表存在异机备份。迁移或删除工作区前仍需另行保留受限归档。原始正文、来源清单和实际地址均不提交。
 
@@ -28,3 +28,26 @@ python3 -B packages/yl_player_source_resolver/tool/generate_controlled_integrati
 沿用现有受限归档，做可重复只读复核及生成器回归；不重复恢复相同字节，也不生成设备入口。理由是归档已在非临时工作区且本轮无需设备；代价是本轮不提供异机备份或新的运行时兼容证据。
 
 独立只读复审结论 Ready，无 Critical/Important/Minor 问题；核对了 17/17 GREEN、源文件哈希、安全收据和范围标注，未读取私有正文。复审未评估的订阅错误/代理路由/业务代际及汇总、VM/HTTP 释放/三端交接、线上服务、异机备份和恶意并发进程隔离均继续保持未验证或明确非承诺范围；分别仍需业务回归、运行时证据、在线抽验、独立备份及可信工作区条件。
+
+## 2026-10-11：Task 3 有界业务失败诊断
+
+TVS 实现提交 **`b81524b1829501b6c7a07ab14accef4ea138f855`**，基线 `b96ddbd5d27fe0f23f2d291228c89c16bb358fc5`；播放器验证依赖固定 **`79dbfad`**。本仓库本次提交保存计划状态与验证证据，生产改动只在 TVS 的 `live_player_controller.dart`、`video_playback_error.dart`，新增 `live_attempt_diagnostics_test.dart`。未修改依赖、Provider、生成模型或播放器核心。
+
+既有 `_LiveAttemptFailures` 已有前 **8 条**上限，超过部分只增加省略计数；本轮保留这项规则及原顺序。`LivePlayerError.message` 继续保存面向用户的原因，新增 `diagnostics` 保存相同实际失败/跳过源的序号与 `validation/opening/playback/reconnecting` 阶段。播放器错误保留 code/category/scope/retryable/diagnosticId；脚本错误保留其实际提供的 code/phase/scope/retryable/diagnosticId，不臆造脚本 category。未知异常只记 `code=unknown`。任意异常正文、URL、请求头、参数、原生堆栈不进入新诊断字段；元数据仅接受最长 128 字符的既定安全字符集，否则固定脱敏。
+
+保留原有 HTTP 至多两次业务重连、RTMP 核心耗尽后不另建同源重连的预算。测试覆盖 1/10 脚本失败和 2/10 RTMP 建连失败、前 8 条与省略 2 条、跳过与实际 open 区别、原始异常包装解包、元数据脱敏，以及 replace/stop/dispose 后迟到旧失败不替换当前状态或额外 stop。
+
+### 验证与限制
+
+新增 8 项：旧实现 **6 failed / 2 passed**，失败均为缺少 diagnostics；实现后 **8/8**。随后在固定临时副本运行以下五个测试文件，共 **76/76**，包含新增 8 项；变更三文件 `flutter analyze --no-pub` 无问题，格式化与 diff 检查通过。
+
+```sh
+flutter test --no-pub --concurrency=1 test/modules/live/features/live_attempt_diagnostics_test.dart test/modules/live/features/live_player_notifier_test.dart test/modules/live/features/live_player_session_ownership_test.dart test/modules/live/features/live_player_stall_recovery_test.dart test/modules/live/features/live_source_resolution_test.dart
+flutter analyze --no-pub lib/utils/live_player_controller.dart lib/utils/video_playback_error.dart test/modules/live/features/live_attempt_diagnostics_test.dart
+```
+
+实际 SDK `/Users/yy2021_8689/flutter/bin/flutter`。临时 TVS 副本由基线提交加三文件改动构成，播放器五包由 `79dbfad` 归档；复用 TVS 现有锁定依赖图和缓存，只在临时 package config 重映射包根路径。所有最终源文件与实际 TVS 提交逐字节一致。源指纹、跨仓提交、命令与原始结果见 [verification.json](evidence/2026-10-11-live-attempt-diagnostics/verification.json) 和 [raw-logs.json](evidence/2026-10-11-live-attempt-diagnostics/raw-logs.json)。
+
+保留两次准备失败：直接在 TVS 上跑时，并行 TTML 代码使用 TVS XML 6.6.1 不具备的 `parseEvents.validateNamespace` 参数，未运行到用例；第一次临时副本遗漏已有 package_graph.json，补齐后才得到上述语义 RED。两者均未通过修改锁文件、放宽断言或改动另一会话源码绕过。**本轮未验证最新 TTML 与 TVS 锁定依赖的集成**，后续仍须对齐该依赖并复验。
+
+独立只读复审无 Critical/Important/Minor；执行者随后确认完整测试与静态分析实际输出。仅推进 Task 3 的汇总子项，Task 3/P05 整体未关闭：订阅 HTML/403/DNS 与代理依赖、原生取消后 VM/HTTP 真正释放、到期刷新完整行为、三端交接/TVS 真机、线上源可用性仍分别需要对应证据；本地业务回归不替代这些验收。

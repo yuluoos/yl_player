@@ -1,0 +1,113 @@
+{
+  "playerBaseline": "79dbfad",
+  "tvsBaseline": "b96ddbd5d27fe0f23f2d291228c89c16bb358fc5",
+  "scope": "P05 Task 3 bounded attempt diagnostic aggregation; no retry policy changes",
+  "validationSnapshot": "TVS baseline tracked lib/test/pubspec/lock plus three changed files; player five packages pinned to 79dbfad; existing dependency graph and cache reused; package roots remapped in temporary copy only",
+  "sourceSha256": [
+    {
+      "path": "lib/utils/live_player_controller.dart",
+      "sha256": "317c031d0c4ba9ddcd548de0f86c75f53b5e18105c436dca3b983c5101342f2c"
+    },
+    {
+      "path": "lib/utils/video_playback_error.dart",
+      "sha256": "65746be8d408e6ddd525a568ae3af2b17c2d5134f80279e2a905f2465fd35b24"
+    },
+    {
+      "path": "test/modules/live/features/live_attempt_diagnostics_test.dart",
+      "sha256": "13f81bf620cfad0469c2365783ab06d673ae18dd5583ff899e3e4e3633ba1d02"
+    },
+    {
+      "path": "lib/models/app_error.dart",
+      "sha256": "a8a201021c7f978273aacf319ae14ee689d9914c5a56f0efd572d8f7b71362b3"
+    },
+    {
+      "path": "lib/providers/live_player_provider.dart",
+      "sha256": "7030944ef10b9f740559a867f9ca4bd38fd195196629476f9f4e0abd6fd39fb8"
+    },
+    {
+      "path": "pubspec.yaml",
+      "sha256": "5c65155869260385a02cd9c9f192880148690c39e293ea2c5ce1db07d3ca33e4"
+    },
+    {
+      "path": "pubspec.lock",
+      "sha256": "89c40cc7154982cc3e23dece5bfcf7086c86dd410929bd863c30a220dd16216d"
+    },
+    {
+      "path": "test/modules/live/features/live_player_notifier_test.dart",
+      "sha256": "985372da453a9cea572cc9a0d3807ccc4e986ccdda104ecd8e23b3b0f5c2dc40"
+    },
+    {
+      "path": "test/modules/live/features/live_player_session_ownership_test.dart",
+      "sha256": "4e52f9bf2e09fb70f71fb45b8f108f6dc5bfaf7b65c0485062e879896e090b86"
+    },
+    {
+      "path": "test/modules/live/features/live_player_stall_recovery_test.dart",
+      "sha256": "fc7990814e621ecf46c81b1754383d991660a8e9af0d4f62852979e4c0d83be8"
+    },
+    {
+      "path": "test/modules/live/features/live_source_resolution_test.dart",
+      "sha256": "9c3306e9028476476833bcf9ac35beea88db5db58a4c85e518d6d0149d06222f"
+    }
+  ],
+  "results": [
+    {
+      "kind": "initial working-checkout attempt",
+      "exitCode": 1,
+      "reason": "Concurrent TTML code requires XML parseEvents.validateNamespace absent from TVS locked XML 6.6.1; no tests ran",
+      "log": "raw-logs.json#red"
+    },
+    {
+      "kind": "snapshot setup attempt",
+      "exitCode": 1,
+      "reason": "Missing copied package_graph.json; restored existing dependency graph without resolving new versions",
+      "log": "raw-logs.json#red-isolated"
+    },
+    {
+      "kind": "semantic RED",
+      "tests": 8,
+      "passed": 2,
+      "failed": 6,
+      "exitCode": 1,
+      "reason": "LivePlayerError has no diagnostics getter",
+      "log": "raw-logs.json#red-isolated2"
+    },
+    {
+      "kind": "focused GREEN",
+      "tests": 8,
+      "passed": 8,
+      "exitCode": 0,
+      "log": "raw-logs.json#green"
+    },
+    {
+      "kind": "related regression suite",
+      "tests": 76,
+      "passed": 76,
+      "exitCode": 0,
+      "log": "raw-logs.json#suite"
+    },
+    {
+      "kind": "analyze changed source and tests",
+      "issues": 0,
+      "exitCode": 0,
+      "log": "raw-logs.json#analyze"
+    }
+  ],
+  "commands": {
+    "tests": "flutter test --no-pub --concurrency=1 test/modules/live/features/live_attempt_diagnostics_test.dart test/modules/live/features/live_player_notifier_test.dart test/modules/live/features/live_player_session_ownership_test.dart test/modules/live/features/live_player_stall_recovery_test.dart test/modules/live/features/live_source_resolution_test.dart",
+    "analyze": "flutter analyze --no-pub lib/utils/live_player_controller.dart lib/utils/video_playback_error.dart test/modules/live/features/live_attempt_diagnostics_test.dart"
+  },
+  "limitations": [
+    "Current TVS lock intentionally unchanged; concurrent TTML integration not validated",
+    "No device, real subscription, long playback or native VM/HTTP resource-release acceptance",
+    "No changes to source switching or retry budgets"
+  ],
+  "tvsCommit": "b81524b1829501b6c7a07ab14accef4ea138f855",
+  "review": {
+    "reviewer": "review_live_diagnostics",
+    "readOnly": true,
+    "critical": 0,
+    "important": 0,
+    "minor": 0,
+    "verdict": "code acceptable; tests and analysis confirmed by executor"
+  }
+}
