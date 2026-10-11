@@ -185,3 +185,31 @@ flutter analyze --no-pub
 [verification.json](evidence/2026-10-11-live-runtime-refresh/verification.json) 保存跨仓版本、测试/直接生产输入及 pubspec/lock 六份指纹和真实退出码；[raw-logs.json](evidence/2026-10-11-live-runtime-refresh/raw-logs.json) 保留预期错误、两次故意回归、最终测试及分析日志。实际 TVS commit、工作区和最终副本逐字节一致。
 
 验证只使用本机 Flutter runner、fake 媒体后端与自有回环服务，没有设备、模拟器、原生媒体播放或外部测试服务。取消后的负断言是在受控服务响应关闭后观察 50ms，再验证新播放可成功，是有界业务状态证据，不证明原生 VM/HTTP/设备资源彻底释放。范围是现有运行时失败触发的重新解析，不新增主动到期定时器；完整 P05、三端、九脚本线上/归档、真实媒体、完整订阅/代理和全部失败汇总验收保持原状态。
+
+## 2026-10-11：Task 1 九脚本逐项契约表
+
+本轮基线 **`305af43`**。将分散在共享受控夹具和历史执行记录中的参数、宿主调用、请求要求、有效期与刷新语义合并为下表，并关联每份冻结原始字节。此次只做离线资料核对和归档哈希验证，没有重新执行 JavaScript、下载真实源、生成设备入口或运行播放器。历史运行观察来自 [2026-09-22 验收记录](2026-09-22-script-resolver.md#冻结脚本验收表)，不是新的三端通过结论。
+
+“同步/异步”区分三个界面：八份联网样本使用同步 mytv 宿主调用，Dart 异步提供传输并通过 Future 交付解析结果；JS-09 无宿主网络等待。历史记录未逐份保存 main 是否为 async/Promise，统一明确记为**未单独取证**，不能由同步宿主调用或 Dart Future 推断入口形式。历史观察的成功返回表示均为 JSON 字符串；这也不能证明入口一定同步。
+
+| 标识 | 裸查询参数 | 成功宿主调用 / 请求 | 已验证的请求与结果要求 | 同步/异步界面 | 有效期 / 刷新 |
+|---|---|---|---|---|---|
+| JS-01 | `id=bjws4k` | mytv.get ×1 / GET | GET；正文含 data.video_stream[].stream_url；error 优先于 url。 | 同步宿主；Dart Future | 未知；显式再次解析 |
+| JS-02 | `id=cctv1` | mytv.request ×1 / GET | GET；受控响应依据 x-emas-gw-t 时间戳构造 AES-CBC/PKCS7 密文；需 parseItems。 | 同步宿主；Dart Future | 未知；显式再次解析 |
+| JS-03 | `id=zhonghe` | mytv.get ×1 / GET | GET；Host 必须匹配初始 authority，验证后由传输层逐跳生成；正文含 data[].httpUrl。 | 同步宿主；Dart Future | 未知；显式再次解析 |
+| JS-04 | `id=ch01` | mytv.fetch ×1 / GET | GET；JSON stream_url。 | 同步宿主；Dart Future | 未知；显式再次解析 |
+| JS-05 | `id=hnws` | mytv.get ×1 / GET | GET；需 parseItems；JSON resultSet[].url；结果含播放请求头。 | 同步宿主；Dart Future | 未知；显式再次解析 |
+| JS-06 | `id=dfws` | mytv.post ×1 / POST | POST；请求正文严格为两个 UTF-8 字节 `{}`；JSON dt[] 匹配频道。 | 同步宿主；Dart Future | 未知；显式再次解析 |
+| JS-07 | `id=szws` | mytv.get ×1 / GET | GET；需 parseItems；结果请求头中的同值重复 Referer 合并；仅验证生成路径摘要、签名和时间字段结构。 | 同步宿主；Dart Future | 未知；显式再次解析 |
+| JS-08 | `id=xjws` | mytv.fetch ×1 / GET | GET；JSON data[] 通过 Id 匹配频道并读取 PlayStreamUrl。 | 同步宿主；Dart Future | 未知；显式再次解析 |
+| JS-09 | `id=01` | 无 / 无 | 无宿主网络请求；仅验证生成路径摘要和 auth_key 结构，网络失败夹具不适用。 | 无宿主请求；Dart Future | 未知；显式再次解析 |
+
+所有“请求要求”均为冻结样本的受控契约，非线上服务完整协议或所有请求头清单。表中频道参数来自已提交安全夹具；不公开原始脚本、实际服务地址、凭据、密钥或签名值。JS-07/09 的真实返回地址只按摘要/结构验证；本表不暗示可直接访问这些媒体。JS-05/07 的结果含播放请求头，其余受控结果不含；传入内核时仍按既有来源凭据作用域处理。
+
+共享夹具对每份样本连续解析两次并断言 `expiresAt == null`；联网样本合计宿主调用 2 次，JS-09 为 0 次。刷新是再次解析同一原始引用/参数，**不是自动续期**；没有明确 expiry 就保持未知，不从 URL/token/签名时间字段猜有效期。主机失败夹具对八份联网样本各断言一次调用和安全 host 阶段错误，JS-09 不适用。上述执行结果沿用历史记录，当前只核对夹具断言及其原始字节身份。
+
+本次只读归档复核 **9/9、137,282 字节匹配**，`executed: false`；九行参数与 SHA-256 和共享清单一致。完整逐项数据见 [contracts.json](evidence/2026-10-11-nine-script-contracts/contracts.json)，原始字节收据见 [archive.json](evidence/2026-10-11-nine-script-contracts/archive.json)，输入资料指纹与检查范围见 [verification.json](evidence/2026-10-11-nine-script-contracts/verification.json)。归档仍只证明当前工作区可取回，不证明异机备份或未来持久性。
+
+这是资料与验收映射子项，无生产代码/依赖变化，按文档风险只做字段、哈希、链接和范围核对，不重复 Flutter/设备测试。P05 的原生资源释放、完整业务构建、当前九脚本线上兼容性和三端真实媒体验收仍开放。
+
+独立只读复审 Ready，无 Critical/Important/Minor。复审核对公开夹具、历史记录和表格/JSON 的一致性，认可本项只关闭资料整理行；未执行归档命令或重算哈希，也未读取私有正文。哈希与链接验证由执行者完成。

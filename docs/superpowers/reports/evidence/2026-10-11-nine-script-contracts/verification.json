@@ -1,0 +1,46 @@
+{
+  "baseline": "305af43f48fbfa50f4af2ebd7b0960fc91bb7e14",
+  "scope": "Consolidate nine frozen-script per-input/host/request/expiry/refresh contracts; offline original-byte audit only",
+  "sourceSha256": {
+    "packages/yl_player_source_resolver/test/support/controlled_contract.dart": "38668e3f88a003fac03dbe15d551e8d3cb52a96470a6f11899ded692a093cfab",
+    "packages/yl_player_source_resolver/tool/generate_controlled_integration.py": "377950a0a586d8c17ce8fdb28141922df85197fbcb45d71fc0bd70f80bcd612c",
+    "packages/yl_player_source_resolver/README.md": "1a04a87ab99dc809319cdb9483da9aa53e76787b3e2a668f55b7398c40815863",
+    "docs/superpowers/reports/2026-09-22-script-resolver.md": "c214a3c7170926eacee611f7624f9e8fa4d13ea9493bddcbf41aec627946d096"
+  },
+  "verification": [
+    {
+      "command": "python3 -B packages/yl_player_source_resolver/tool/generate_controlled_integration.py --archive .superpowers/sdd/2026-09-22-script-resolver/controlled-samples --verify-only",
+      "exit_code": 0,
+      "verified": 9,
+      "bytes": 137282,
+      "executed": false
+    },
+    {
+      "check": "Nine unique IDs, input/hash match shared manifest, observed archive hash matches each frozen hash, receipt contractSha256 matches shared source",
+      "result": "passed"
+    },
+    {
+      "check": "Report9row/input parity, field consistency, source/artifact hashes, added relative links and git diff --check",
+      "result": "passed"
+    }
+  ],
+  "review": {
+    "reviewer": "/root/review_script_contract_inventory",
+    "verdict": "Ready; no Critical/Important/Minor findings",
+    "method": "Independent read-only check against public fixture/history and current report/JSON; did not execute archive command/tests, recalculate hashes or read private bodies."
+  },
+  "physicalDevices": false,
+  "simulators": false,
+  "scriptExecution": false,
+  "externalNetwork": false,
+  "limitations": [
+    "Per-script main sync/Promise kind was not separately recorded; do not infer it from synchronous host APIs or Dart Future",
+    "No current runtime/platform/online-service/media acceptance",
+    "No independent archive backup guarantee",
+    "No proactive expiry scheduling or token-derived expiry"
+  ],
+  "artifactSha256": {
+    "archive.json": "69d26ffd24041464897099da164fddca695f3a63e21124501ec6eb2a61978478",
+    "contracts.json": "c84f6d4ebae56f36a463657efaa7539d5bfb355812e86ed5f6a00da7f037041d"
+  }
+}
