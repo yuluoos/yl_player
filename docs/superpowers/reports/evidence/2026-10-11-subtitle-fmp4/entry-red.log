@@ -1,0 +1,10 @@
+00:00 +0: loading /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_embedded_test.dart
+00:00 +0: actual fragmented MP4 discovers selects and renders WebVTT and TTML across fragments
+00:00 +0 -1: actual fragmented MP4 discovers selects and renders WebVTT and TTML across fragments [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 210:9  TextSubtitleRuntime.discover.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_embedded_test.dart: actual fragmented MP4 discovers selects and renders WebVTT and TTML across fragments

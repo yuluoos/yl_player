@@ -32,3 +32,11 @@
 
 - [Shaka MP4 WebVTT parser](https://shaka-project.github.io/shaka-player/docs/api/lib_text_mp4_vtt_parser.js.html)：vttc/payl/iden/sttg 与 sample 媒体时间。
 - [W3C WebVTT](https://www.w3.org/TR/webvtt1/)：文本和 cue settings；实现只承诺上述有界子集。
+
+## fMP4 extension (2026-10-11)
+
+The earlier fragmented-MP4 exclusion is superseded for the bounded wvtt/stpp
+subset in the [fMP4 contract](2026-10-11-subtitle-fmp4.md): initialization and
+fragments in one complete file or stable HTTP resource, shared managed Range
+loading and existing render subsets. Separate segment URLs, manifests/live
+polling, fragmented tx3g and native/device acceptance remain outside scope.

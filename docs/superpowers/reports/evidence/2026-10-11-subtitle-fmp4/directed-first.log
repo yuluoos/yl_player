@@ -1,0 +1,89 @@
+00:00 +0: loading /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart
+00:00 +0: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: legal is_leading=0 sample flags
+00:00 +1: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: legal is_leading=1 sample flags
+00:00 +2: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: legal is_leading=2 sample flags
+00:00 +3: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: legal is_leading=3 sample flags
+00:00 +4: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: moof base with 32-bit boxes and negative data offset
+00:00 +5: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: moof base with 64-bit boxes and negative data offset
+00:00 +6: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: explicit base with 32-bit boxes and negative data offset
+00:00 +7: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: explicit base with 64-bit boxes and negative data offset
+00:00 +8: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: implicit base with 32-bit boxes and negative data offset
+00:00 +9: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: implicit base with 64-bit boxes and negative data offset
+00:00 +10: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: trex defaults inherited, tfhd overrides, then per-sample overrides
+00:00 +11: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: multiple truns continue byte cursor, composition offsets remain independent of dts
+00:00 +12: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: unsigned v0 composition offset and v0 decode time
+00:00 +13: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: 64-bit tfdt exceeds uint32 without losing precision
+00:00 +14: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: TTML composition clock clipped then edited once; edit duration 0
+00:00 +15: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: TTML composition clock clipped then edited once; edit duration 1500
+00:00 +16: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: decode gaps and sequence gaps retain absolute time
+00:00 +17: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: audio traf payload skipped; following subtitle has explicit moof base
+00:00 +18: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: initialization only and empty duration fragment yield empty catalog track
+00:00 +19: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: selected sample description overrides trex without changing public codec
+00:00 +20: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: empty WebVTT sample clears interval and TTML empty XML still counts raw bytes
+00:00 +21: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate trex
+00:00 +22: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed unknown trex track
+00:00 +23: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed zero trex description
+00:00 +24: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate mfhd
+00:00 +25: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed unknown tfhd track
+00:00 +26: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate tfhd
+00:00 +27: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate tfdt
+00:00 +28: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed conflicting bases
+00:00 +29: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed description out of range
+00:00 +30: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed zero size override does not inherit
+00:00 +31: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed zero duration override does not inherit
+00:00 +32: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed empty duration with samples
+00:00 +33: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed both first and per sample flags
+00:00 +34: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed reserved flags
+00:00 +35: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed reserved depends on
+00:00 +36: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed reserved depended on
+00:00 +37: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed reserved redundancy
+00:00 +38: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed data points to moof
+00:00 +39: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate sequence
+00:00 +40: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed overlapping decode timeline
+00:00 +41: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed wrong tfdt length
+00:00 +42: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed wrong trun length
+00:00 +43: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed mdat byte extent overflow
+00:00 +44: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed no traf
+00:00 +45: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed missing trex for subtitle
+00:00 +46: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported missing tfdt
+00:00 +47: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported unknown tfhd flags
+00:00 +48: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported unknown trun flags
+00:00 +49: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported unsupported trun version
+00:00 +50: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported unsupported tfdt version
+00:00 +51: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported encrypted samples
+00:00 +52: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported subsample table
+00:00 +53: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported hybrid subtitle samples
+00:00 +54: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported fragmented tx3g
+00:00 +55: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported implicit base after audio
+00:00 +56: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: bounded sample count
+00:00 +57: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: bounded decode time
+00:00 +58: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: bounded composition time
+00:00 +59: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: bounded top level fragments
+00:00 +60: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: overlapping byte extents between subtitle trafs reject
+00:00 +61: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: sample flags default can be replaced by first sample override
+00:00 +62: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: empty TTML raw samples enforce shared four MiB budget
+00:00 +63: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: global sample budget spans fragments
+00:00 +64: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: all truncated prefixes reject without untyped errors
+00:01 +65: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: cancellation is checked between fragment reads
+00:01 +66: loading /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_embedded_test.dart
+00:01 +66: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_embedded_test.dart: actual fragmented MP4 discovers selects and renders WebVTT and TTML across fragments
+00:01 +67: loading /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_network_test.dart
+00:02 +67: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:02 +68: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_network_test.dart: network YlMediaFormat.mp4 sniffs content, skips media, sends conditional range and renders
+00:02 +69: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_network_test.dart: legal chunked206 fMP4 discovery completes without Content-Length
+00:02 +70: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_network_test.dart: managed retries later range with credential and shared scan ledger
+00:03 +71: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_network_test.dart: cross-origin redirect strips credentials before fMP4 range scan
+00:03 +72: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_network_test.dart: etag response keeps prior selected fMP4 catalog
+00:03 +73: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_network_test.dart: 200 response keeps prior selected fMP4 catalog
+00:03 +74: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_network_test.dart: 403 response keeps prior selected fMP4 catalog
+00:03 +75: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_network_test.dart: malformed response keeps prior selected fMP4 catalog
+00:03 +76: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_network_test.dart: managed response-header timeout terminates fMP4 discovery
+00:03 +77: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_network_test.dart: explicit non-fMP4 format rejects before HTTP request
+00:03 +78: loading /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_session_test.dart
+00:04 +78: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:04 +79: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_session_test.dart: network failure leaves playback and selected subtitle state unchanged
+00:04 +80: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_session_test.dart: held later fragment range is cancelled by replace and cannot publish late
+00:04 +81: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_session_test.dart: held later fragment range is cancelled by stop and cannot publish late
+00:04 +82: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_session_test.dart: held later fragment range is cancelled by dispose and cannot publish late
+00:04 +83: /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_session_test.dart: held later fragment range is cancelled by external and cannot publish late
+00:04 +84: All tests passed!

@@ -494,3 +494,7 @@ TVS `60d838f` 在逐源摘要中补齐中文阶段、已知原因、手动建议
 ### 2026-10-11 P05 RTMPS／增强RTMP可行性
 
 完成RTMPS、增强视频/音频、纯音频与多轨扩展的现状、候选、成本和验收缺口表。系统TLS包裹既有classic RTMP为优先评估建议；Media3 1.11.0 FLV限制、Apple禁用网络FFmpeg制品和纯音频视频启动依赖分别保留。仅核对源码与官方资料，未启用新能力或使用设备；扩展范围、真实样本、三端实现与完整P05仍开放，见[P05报告](../reports/2026-09-26-remaining-05-live-business.md)。
+
+### 2026-10-11 P02 分片 MP4 内嵌字幕
+
+接入同一完整本地/HTTP(S)资源中初始化段与moof/mdat的wvtt/stpp发现、Track ID选择和既有文本/区域渲染；解析trex/tfhd/tfdt/trun，沿用managed Range和原子目录更新。见[fMP4契约](../specs/2026-10-11-subtitle-fmp4.md)与[P02报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)。独立segment URL、HLS/DASH字幕清单、直播增量/native/device仍开放；未改长播放/弱网ABR。

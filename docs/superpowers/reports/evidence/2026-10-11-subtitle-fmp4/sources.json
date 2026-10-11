@@ -1,0 +1,17 @@
+{
+  "sources": [
+    {
+      "url": "https://www.w3.org/TR/mse-byte-stream-format-isobmff/",
+      "use": "Initialization/media fragments, tfdt, moof relative addressing and duration-zero edit semantics; primary W3C note"
+    },
+    {
+      "url": "https://shaka-project.github.io/shaka-player/docs/api/lib_text_mp4_vtt_parser.js.html",
+      "use": "Primary implementation reference for MP4 WebVTT; no source copied"
+    },
+    {
+      "url": "https://www.standards.iteh.ai/catalog/standards/iso/c559486e-2191-4975-ad44-9f061b600281/iso-iec-14496-30-2018-amd-1-2022",
+      "use": "Previously verified ISO amendment composition-time/sample clipping TTML semantics"
+    }
+  ],
+  "fixture": "Owned handwritten BMFF/XML builder with explicit expected timings; actual temporary file and loopbackHTTP; no independent producer/device interoperability claim"
+}

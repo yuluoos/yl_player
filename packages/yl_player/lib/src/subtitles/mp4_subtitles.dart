@@ -6,6 +6,7 @@ import 'subtitle_resource.dart';
 
 part 'mp4_webvtt.dart';
 part 'mp4_ttml.dart';
+part 'mp4_fragments.dart';
 
 Never _bad() =>
     throw const SubtitleParseException(SubtitleParseReason.malformed);
@@ -42,13 +43,15 @@ String _utf8(List<int> b) {
 }
 
 final class _Box {
-  const _Box(this.type, this.start, this.end);
+  const _Box(this.type, this.start, this.end, {this.headerSize = 8});
   final String type;
-  final int start, end;
+  final int start, end, headerSize;
+  int get offset => start - headerSize;
   int get size => end - start;
 }
 
-/// Non-fragmented ISO BMFF tx3g/wvtt/stpp demux. Skips audio/video data; no external drefs.
+/// Bounded ISO BMFF subtitle demux, including fragmented wvtt/stpp.
+/// Skips audio/video payloads; no external drefs or segment URL fetching.
 final class Mp4Subtitles {
   Mp4Subtitles(this.length, this.read, this.token);
   final int length;
@@ -60,6 +63,8 @@ final class Mp4Subtitles {
       _samples = 0,
       _runs = 0,
       _cueCount = 0;
+  bool _fragmented = false;
+  final _fragmentTracks = <int, _Mp4TrackSamples>{};
   final _ids = <int>{};
   final _mdats = <_Box>[];
   Future<List<int>> _bytes(int p, int n) async {
@@ -88,7 +93,7 @@ final class Mp4Subtitles {
       size = end - p;
     }
     if (size < header || size > end - p) _bad();
-    return _Box(_type(b, 4), p + header, p + size);
+    return _Box(_type(b, 4), p + header, p + size, headerSize: header);
   }
 
   Future<List<_Box>> _children(
@@ -151,11 +156,15 @@ final class Mp4Subtitles {
     ].any((i) => accepted.contains(_type(brands, i)))) {
       _unsupported();
     }
-    if (root.any((b) => b.type == 'moof')) _unsupported();
     _mdats.addAll(root.where((b) => b.type == 'mdat'));
     final moov = _one(root, 'moov', required: true)!;
     final children = await _children(moov.start, moov.end);
-    if (children.any((b) => ['mvex', 'cmov'].contains(b.type))) _unsupported();
+    if (children.any((b) => b.type == 'cmov')) _unsupported();
+    final mvex = _one(children, 'mvex');
+    _fragmented = mvex != null;
+    final fragments = root.where((b) => b.type == 'moof').toList();
+    if (!_fragmented && fragments.isNotEmpty) _unsupported();
+    if (fragments.any((b) => b.offset < moov.end)) _unsupported();
     final mvhd = await _body(_one(children, 'mvhd', required: true)!, min: 20);
     _full(mvhd, versions: [0, 1]);
     final movieScale = _u(mvhd, mvhd[0] == 0 ? 12 : 20);
@@ -169,6 +178,10 @@ final class Mp4Subtitles {
         if (out.length >= 32) _limit();
         out.add(data);
       }
+    }
+    if (mvex != null) {
+      await _readFragments(mvex, fragments);
+      return [for (final track in _fragmentTracks.values) track.data()];
     }
     return out;
   }
@@ -264,6 +277,10 @@ final class Mp4Subtitles {
     final b = await _body((sz ?? z2)!, min: 12);
     _full(b);
     final count = _u(b, 8);
+    if (_fragmented &&
+        (count != 0 || descriptions.first.format == YlSubtitleFormat.srt)) {
+      _unsupported();
+    }
     _samples += count;
     if (_samples > 20000) _limit();
     if (sz != null) {
@@ -339,8 +356,23 @@ final class Mp4Subtitles {
       mapping.add((first, per, desc));
     }
     final edit = await _edit(_one(children, 'edts'), movieScale, scale);
-    var sample = 0, run = 0, dts = 0, sourceBytes = 0;
-    final packets = <EmbeddedSubtitlePacket>[];
+    final track = _Mp4TrackSamples(
+      YlSubtitleTrack(
+        id: 'mp4:$id',
+        format: descriptions.first.format,
+        isExternal: false,
+        label: label,
+        language: language,
+        role: descriptions.every((d) => d.forced) ? 'forced' : null,
+        contentId: '$id',
+      ),
+      descriptions,
+      scale,
+      movieScale,
+      edit,
+    );
+    if (_fragmented) _fragmentTracks[id] = track;
+    var sample = 0, run = 0, dts = 0;
     final extents = <(int, int)>[];
     for (var c = 1; c <= chunks; c++) {
       if (run + 1 < mapping.length && mapping[run + 1].$1 == c) run++;
@@ -350,84 +382,14 @@ final class Mp4Subtitles {
       for (var k = 0; k < mapping[run].$2; k++) {
         if (sample >= count) _bad();
         final size = sizes[sample];
-        if (!_mdats.any(
-          (m) => pos >= m.start && pos <= m.end && size <= m.end - pos,
-        )) {
-          _bad();
-        }
-        _payloadBytes += size;
-        if (_payloadBytes > 4 * 1024 * 1024) _limit();
-        final decoded = desc.decode(await _bytes(pos, size));
-        if (desc.format == YlSubtitleFormat.ttml) sourceBytes += size;
-        final startTicks = dts + offsets[sample],
-            endTicks = startTicks + durations[sample];
-        if (startTicks.abs() > scale * 604800 ||
-            endTicks.abs() > scale * 604800) {
-          _limit();
-        }
-        int mapped(int ticks) =>
-            ((BigInt.from(ticks - edit.mediaStart) * BigInt.from(movieScale) +
-                        BigInt.from(edit.delayTicks) * BigInt.from(scale)) *
-                    BigInt.from(1000000) ~/
-                    (BigInt.from(scale) * BigInt.from(movieScale)))
-                .toInt();
-        final startUs = mapped(startTicks), endUs = mapped(endTicks);
-        final start = startUs.clamp(edit.delay, edit.end),
-            end = endUs.clamp(edit.delay, edit.end);
-        if (decoded.isNotEmpty) {
-          if (durations[sample] == 0) _bad();
-          if (end > start) {
-            for (final cue in decoded) {
-              final ttml = cue.ttml;
-              // TTML coordinates are track composition time (14496-30:2022),
-              // not offsets from this sample. Combine edit ratios before rounding.
-              int mappedTtml(Duration time) =>
-                  ((BigInt.from(time.inMicroseconds) *
-                                  BigInt.from(scale) *
-                                  BigInt.from(movieScale) -
-                              BigInt.from(edit.mediaStart) *
-                                  BigInt.from(1000000) *
-                                  BigInt.from(movieScale) +
-                              BigInt.from(edit.delayTicks) *
-                                  BigInt.from(scale) *
-                                  BigInt.from(1000000)) ~/
-                          (BigInt.from(scale) * BigInt.from(movieScale)))
-                      .toInt();
-              final cueStart = ttml == null
-                  ? start
-                  : mappedTtml(ttml.start).clamp(start, end);
-              final cueEnd = ttml == null
-                  ? end
-                  : mappedTtml(ttml.end).clamp(start, end);
-              if (cueEnd <= cueStart) continue;
-              final region = ttml?.region;
-              _runs += cue.runs?.length ?? 0;
-              if (_runs > 20000 || ++_cueCount > 10000) _limit();
-              packets.add(
-                EmbeddedSubtitlePacket(
-                  Duration(microseconds: cueStart),
-                  Duration(microseconds: cueEnd),
-                  cue.text,
-                  textRuns: cue.runs,
-                  alignment: cue.alignment,
-                  identifier: cue.identifier,
-                  webvttSettings: cue.settings,
-                  // Region identifiers are document-local, even when samples overlap.
-                  region: region == null
-                      ? null
-                      : SubtitleRegion(
-                          id: '$sample:${region.id}',
-                          x: region.x,
-                          y: region.y,
-                          width: region.width,
-                          height: region.height,
-                          displayAlign: region.displayAlign,
-                        ),
-                ),
-              );
-            }
-          }
-        }
+        await _appendSample(
+          track,
+          desc,
+          pos,
+          size,
+          dts + offsets[sample],
+          durations[sample],
+        );
         dts += durations[sample];
         if (dts > scale * 604800) _limit();
         pos += size;
@@ -440,20 +402,96 @@ final class Mp4Subtitles {
     for (var i = 1; i < extents.length; i++) {
       if (extents[i].$1 < extents[i - 1].$2) _bad();
     }
-    return EmbeddedSubtitleData(
-      YlSubtitleTrack(
-        id: 'mp4:$id',
-        format: descriptions.first.format,
-        isExternal: false,
-        label: label,
-        language: language,
-        role: descriptions.every((d) => d.forced) ? 'forced' : null,
-        contentId: '$id',
-      ),
-      null,
-      List.unmodifiable(packets),
-      sourceBytes: sourceBytes,
-    );
+    return track.data();
+  }
+
+  Future<void> _appendSample(
+    _Mp4TrackSamples track,
+    _Mp4SubtitleEntry desc,
+    int pos,
+    int size,
+    int startTicks,
+    int duration,
+  ) async {
+    final scale = track.scale, movieScale = track.movieScale, edit = track.edit;
+    final packets = track.packets, sample = track.ordinal++;
+    if (size < 2) _bad();
+    if (!_mdats.any(
+      (m) => pos >= m.start && pos <= m.end && size <= m.end - pos,
+    )) {
+      _bad();
+    }
+    _payloadBytes += size;
+    if (_payloadBytes > 4 * 1024 * 1024) _limit();
+    final decoded = desc.decode(await _bytes(pos, size));
+    if (desc.format == YlSubtitleFormat.ttml) track.sourceBytes += size;
+    final endTicks = startTicks + duration;
+    if (startTicks.abs() > scale * 604800 || endTicks.abs() > scale * 604800) {
+      _limit();
+    }
+    int mapped(int ticks) =>
+        ((BigInt.from(ticks - edit.mediaStart) * BigInt.from(movieScale) +
+                    BigInt.from(edit.delayTicks) * BigInt.from(scale)) *
+                BigInt.from(1000000) ~/
+                (BigInt.from(scale) * BigInt.from(movieScale)))
+            .toInt();
+    final startUs = mapped(startTicks), endUs = mapped(endTicks);
+    final start = startUs.clamp(edit.delay, edit.end),
+        end = endUs.clamp(edit.delay, edit.end);
+    if (decoded.isNotEmpty) {
+      if (duration == 0) _bad();
+      if (end > start) {
+        for (final cue in decoded) {
+          final ttml = cue.ttml;
+          // TTML coordinates are track composition time (14496-30:2022),
+          // not offsets from this sample. Combine edit ratios before rounding.
+          int mappedTtml(Duration time) =>
+              ((BigInt.from(time.inMicroseconds) *
+                              BigInt.from(scale) *
+                              BigInt.from(movieScale) -
+                          BigInt.from(edit.mediaStart) *
+                              BigInt.from(1000000) *
+                              BigInt.from(movieScale) +
+                          BigInt.from(edit.delayTicks) *
+                              BigInt.from(scale) *
+                              BigInt.from(1000000)) ~/
+                      (BigInt.from(scale) * BigInt.from(movieScale)))
+                  .toInt();
+          final cueStart = ttml == null
+              ? start
+              : mappedTtml(ttml.start).clamp(start, end);
+          final cueEnd = ttml == null
+              ? end
+              : mappedTtml(ttml.end).clamp(start, end);
+          if (cueEnd <= cueStart) continue;
+          final region = ttml?.region;
+          _runs += cue.runs?.length ?? 0;
+          if (_runs > 20000 || ++_cueCount > 10000) _limit();
+          packets.add(
+            EmbeddedSubtitlePacket(
+              Duration(microseconds: cueStart),
+              Duration(microseconds: cueEnd),
+              cue.text,
+              textRuns: cue.runs,
+              alignment: cue.alignment,
+              identifier: cue.identifier,
+              webvttSettings: cue.settings,
+              // Region identifiers are document-local, even when samples overlap.
+              region: region == null
+                  ? null
+                  : SubtitleRegion(
+                      id: '$sample:${region.id}',
+                      x: region.x,
+                      y: region.y,
+                      width: region.width,
+                      height: region.height,
+                      displayAlign: region.displayAlign,
+                    ),
+            ),
+          );
+        }
+      }
+    }
   }
 
   int _micros(int t, int scale) =>
@@ -513,7 +551,9 @@ final class Mp4Subtitles {
         if (media < 0 || (i == 0 && n == 2)) _unsupported();
         if (media > scale * 604800) _limit();
         mediaStart = media;
-        end = _micros(delayTicks + duration, movieScale);
+        end = _fragmented && duration == 0
+            ? 604800000000
+            : _micros(delayTicks + duration, movieScale);
       }
     }
     if (end > 604800000000) _limit();

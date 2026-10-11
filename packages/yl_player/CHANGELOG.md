@@ -1,5 +1,9 @@
 ## 0.2.0-dev.2
 
+- Add single-resource fragmented MP4 WebVTT/TTML subtitle discovery, Track ID
+  selection and existing text/region rendering. Resolve fragment sample defaults,
+  offsets and composition timing through the existing bounded managed Range path.
+
 - Add local and HTTP(S) non-fragmented MP4 TTML (stpp) subtitle discovery,
   Track ID selection and existing TTML styled-text/region rendering. Resolve
   document composition times within sample/edit intervals, isolate document

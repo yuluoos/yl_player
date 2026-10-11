@@ -1,0 +1,470 @@
+00:00 +0: loading /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart
+packages/yl_player/test/fmp4_parser_test.dart:48:68: Error: Can't find '}' to match '{'.
+  test('decode gaps and sequence gaps retain absolute time',()async{
+                                                                   ^
+packages/yl_player/test/fmp4_parser_test.dart:51:4: Error: Expected a declaration, but got ')'.
+  });
+   ^
+packages/yl_player/test/fmp4_parser_test.dart:51:5: Error: Unexpected token ';'.
+  });
+    ^
+packages/yl_player/test/fmp4_parser_test.dart:52:8: Error: Expected an identifier, but got ''audio traf payload skipped; following subtitle has explicit moof base''.
+Try inserting an identifier before ''audio traf payload skipped; following subtitle has explicit moof base''.
+  test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/fmp4_parser_test.dart:52:80: Error: Expected an identifier, but got '('.
+Try inserting an identifier before '('.
+  test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+                                                                               ^
+packages/yl_player/test/fmp4_parser_test.dart:52:82: Error: Expected ')' before this.
+  test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+                                                                                 ^^^^^
+packages/yl_player/test/fmp4_parser_test.dart:55:5: Error: Expected a function body or '=>'.
+Try adding {}.
+  });
+    ^
+packages/yl_player/test/fmp4_parser_test.dart:56:8: Error: Expected an identifier, but got ''initialization only and empty duration fragment yield empty catalog track''.
+Try inserting an identifier before ''initialization only and empty duration fragment yield empty catalog track''.
+  test('initialization only and empty duration fragment yield empty catalog track',()async{
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/fmp4_parser_test.dart:56:84: Error: Expected an identifier, but got '('.
+Try inserting an identifier before '('.
+  test('initialization only and empty duration fragment yield empty catalog track',()async{
+                                                                                   ^
+packages/yl_player/test/fmp4_parser_test.dart:56:86: Error: Expected ')' before this.
+  test('initialization only and empty duration fragment yield empty catalog track',()async{
+                                                                                     ^^^^^
+packages/yl_player/test/fmp4_parser_test.dart:60:5: Error: Expected a function body or '=>'.
+Try adding {}.
+  });
+    ^
+packages/yl_player/test/fmp4_parser_test.dart:61:8: Error: Expected an identifier, but got ''selected sample description overrides trex without changing public codec''.
+Try inserting an identifier before ''selected sample description overrides trex without changing public codec''.
+  test('selected sample description overrides trex without changing public codec',()async{
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/fmp4_parser_test.dart:61:83: Error: Expected an identifier, but got '('.
+Try inserting an identifier before '('.
+  test('selected sample description overrides trex without changing public codec',()async{
+                                                                                  ^
+packages/yl_player/test/fmp4_parser_test.dart:61:85: Error: Expected ')' before this.
+  test('selected sample description overrides trex without changing public codec',()async{
+                                                                                    ^^^^^
+packages/yl_player/test/fmp4_parser_test.dart:64:5: Error: Expected a function body or '=>'.
+Try adding {}.
+  });
+    ^
+packages/yl_player/test/fmp4_parser_test.dart:65:8: Error: Expected an identifier, but got ''empty WebVTT sample clears interval and TTML empty XML still counts raw bytes''.
+Try inserting an identifier before ''empty WebVTT sample clears interval and TTML empty XML still counts raw bytes''.
+  test('empty WebVTT sample clears interval and TTML empty XML still counts raw bytes',()async{
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/fmp4_parser_test.dart:65:88: Error: Expected an identifier, but got '('.
+Try inserting an identifier before '('.
+  test('empty WebVTT sample clears interval and TTML empty XML still counts raw bytes',()async{
+                                                                                       ^
+packages/yl_player/test/fmp4_parser_test.dart:65:90: Error: Expected ')' before this.
+  test('empty WebVTT sample clears interval and TTML empty XML still counts raw bytes',()async{
+                                                                                         ^^^^^
+packages/yl_player/test/fmp4_parser_test.dart:71:5: Error: Expected a function body or '=>'.
+Try adding {}.
+  });
+    ^
+packages/yl_player/test/fmp4_parser_test.dart:99:3: Error: 'for' can't be used as an identifier because it's a keyword.
+Try renaming this to be an identifier that isn't a keyword.
+  for(final e in malformed.entries)test('reject malformed ${e.key}',()async=>expectLater(parse(e.value),bad()));
+  ^^^
+packages/yl_player/test/fmp4_parser_test.dart:99:15: Error: Expected ')' before this.
+  for(final e in malformed.entries)test('reject malformed ${e.key}',()async=>expectLater(parse(e.value),bad()));
+              ^^
+packages/yl_player/test/fmp4_parser_test.dart:99:36: Error: Expected '{' before this.
+  for(final e in malformed.entries)test('reject malformed ${e.key}',()async=>expectLater(parse(e.value),bad()));
+                                   ^^^^
+packages/yl_player/test/fmp4_parser_test.dart:99:41: Error: Expected an identifier, but got ''reject malformed '.
+Try inserting an identifier before ''reject malformed '.
+  for(final e in malformed.entries)test('reject malformed ${e.key}',()async=>expectLater(parse(e.value),bad()));
+                                        ^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/fmp4_parser_test.dart:99:59: Error: Expected ')' before this.
+  for(final e in malformed.entries)test('reject malformed ${e.key}',()async=>expectLater(parse(e.value),bad()));
+                                                          ^^
+packages/yl_player/test/fmp4_parser_test.dart:99:112: Error: Expected a function body or '=>'.
+Try adding {}.
+  for(final e in malformed.entries)test('reject malformed ${e.key}',()async=>expectLater(parse(e.value),bad()));
+                                                                                          ^
+packages/yl_player/test/fmp4_parser_test.dart:112:3: Error: 'for' can't be used as an identifier because it's a keyword.
+Try renaming this to be an identifier that isn't a keyword.
+  for(final e in unsupported.entries)test('reject unsupported ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.unsupported)));
+  ^^^
+packages/yl_player/test/fmp4_parser_test.dart:112:15: Error: Expected ')' before this.
+  for(final e in unsupported.entries)test('reject unsupported ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.unsupported)));
+              ^^
+packages/yl_player/test/fmp4_parser_test.dart:112:38: Error: Expected '{' before this.
+  for(final e in unsupported.entries)test('reject unsupported ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.unsupported)));
+                                     ^^^^
+packages/yl_player/test/fmp4_parser_test.dart:112:43: Error: Expected an identifier, but got ''reject unsupported '.
+Try inserting an identifier before ''reject unsupported '.
+  for(final e in unsupported.entries)test('reject unsupported ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.unsupported)));
+                                          ^^^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/fmp4_parser_test.dart:112:63: Error: Expected ')' before this.
+  for(final e in unsupported.entries)test('reject unsupported ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.unsupported)));
+                                                              ^^
+packages/yl_player/test/fmp4_parser_test.dart:112:147: Error: Expected a function body or '=>'.
+Try adding {}.
+  for(final e in unsupported.entries)test('reject unsupported ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.unsupported)));
+                                                                                          ^
+packages/yl_player/test/fmp4_parser_test.dart:113:3: Error: 'for' can't be used as an identifier because it's a keyword.
+Try renaming this to be an identifier that isn't a keyword.
+  for(final e in <String,List<int>>{
+  ^^^
+packages/yl_player/test/fmp4_parser_test.dart:113:15: Error: Expected ')' before this.
+  for(final e in <String,List<int>>{
+              ^^
+packages/yl_player/test/fmp4_parser_test.dart:118:13: Error: Expected '{' before this.
+  }.entries)test('bounded ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.limitExceeded)));
+            ^^^^
+packages/yl_player/test/fmp4_parser_test.dart:118:18: Error: Expected an identifier, but got ''bounded '.
+Try inserting an identifier before ''bounded '.
+  }.entries)test('bounded ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.limitExceeded)));
+                 ^^^^^^^^^
+packages/yl_player/test/fmp4_parser_test.dart:118:27: Error: Expected ')' before this.
+  }.entries)test('bounded ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.limitExceeded)));
+                          ^^
+packages/yl_player/test/fmp4_parser_test.dart:118:113: Error: Expected a function body or '=>'.
+Try adding {}.
+  }.entries)test('bounded ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.limitExceeded)));
+                                                                                          ^
+packages/yl_player/test/fmp4_parser_test.dart:119:8: Error: Expected an identifier, but got ''all truncated prefixes reject without untyped errors''.
+Try inserting an identifier before ''all truncated prefixes reject without untyped errors''.
+  test('all truncated prefixes reject without untyped errors',()async{
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/fmp4_parser_test.dart:119:63: Error: Expected an identifier, but got '('.
+Try inserting an identifier before '('.
+  test('all truncated prefixes reject without untyped errors',()async{
+                                                              ^
+packages/yl_player/test/fmp4_parser_test.dart:119:65: Error: Expected ')' before this.
+  test('all truncated prefixes reject without untyped errors',()async{
+                                                                ^^^^^
+packages/yl_player/test/fmp4_parser_test.dart:126:5: Error: Expected a function body or '=>'.
+Try adding {}.
+  });
+    ^
+packages/yl_player/test/fmp4_parser_test.dart:127:8: Error: Expected an identifier, but got ''cancellation is checked between fragment reads''.
+Try inserting an identifier before ''cancellation is checked between fragment reads''.
+  test('cancellation is checked between fragment reads',()async{
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+packages/yl_player/test/fmp4_parser_test.dart:127:57: Error: Expected an identifier, but got '('.
+Try inserting an identifier before '('.
+  test('cancellation is checked between fragment reads',()async{
+                                                        ^
+packages/yl_player/test/fmp4_parser_test.dart:127:59: Error: Expected ')' before this.
+  test('cancellation is checked between fragment reads',()async{
+                                                          ^^^^^
+packages/yl_player/test/fmp4_parser_test.dart:130:5: Error: Expected a function body or '=>'.
+Try adding {}.
+  });
+    ^
+packages/yl_player/test/fmp4_parser_test.dart:131:1: Error: Expected a declaration, but got '}'.
+}
+^
+packages/yl_player/test/fmp4_parser_test.dart:56:3: Error: 'test' is already declared in this scope.
+  test('initialization only and empty duration fragment yield empty catalog track',()async{
+  ^^^^
+packages/yl_player/test/fmp4_parser_test.dart:52:3: Context: Previous declaration of 'test'.
+  test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+  ^^^^
+packages/yl_player/test/fmp4_parser_test.dart:61:3: Error: 'test' is already declared in this scope.
+  test('selected sample description overrides trex without changing public codec',()async{
+  ^^^^
+packages/yl_player/test/fmp4_parser_test.dart:52:3: Context: Previous declaration of 'test'.
+  test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+  ^^^^
+packages/yl_player/test/fmp4_parser_test.dart:65:3: Error: 'test' is already declared in this scope.
+  test('empty WebVTT sample clears interval and TTML empty XML still counts raw bytes',()async{
+  ^^^^
+packages/yl_player/test/fmp4_parser_test.dart:52:3: Context: Previous declaration of 'test'.
+  test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+  ^^^^
+packages/yl_player/test/fmp4_parser_test.dart:99:36: Error: 'test' is already declared in this scope.
+  for(final e in malformed.entries)test('reject malformed ${e.key}',()async=>expectLater(parse(e.value),bad()));
+                                   ^^^^
+packages/yl_player/test/fmp4_parser_test.dart:52:3: Context: Previous declaration of 'test'.
+  test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+  ^^^^
+packages/yl_player/test/fmp4_parser_test.dart:112:38: Error: 'test' is already declared in this scope.
+  for(final e in unsupported.entries)test('reject unsupported ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.unsupported)));
+                                     ^^^^
+packages/yl_player/test/fmp4_parser_test.dart:52:3: Context: Previous declaration of 'test'.
+  test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+  ^^^^
+packages/yl_player/test/fmp4_parser_test.dart:118:13: Error: 'test' is already declared in this scope.
+  }.entries)test('bounded ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.limitExceeded)));
+            ^^^^
+packages/yl_player/test/fmp4_parser_test.dart:52:3: Context: Previous declaration of 'test'.
+  test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+  ^^^^
+packages/yl_player/test/fmp4_parser_test.dart:119:3: Error: 'test' is already declared in this scope.
+  test('all truncated prefixes reject without untyped errors',()async{
+  ^^^^
+packages/yl_player/test/fmp4_parser_test.dart:52:3: Context: Previous declaration of 'test'.
+  test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+  ^^^^
+packages/yl_player/test/fmp4_parser_test.dart:127:3: Error: 'test' is already declared in this scope.
+  test('cancellation is checked between fragment reads',()async{
+  ^^^^
+packages/yl_player/test/fmp4_parser_test.dart:52:3: Context: Previous declaration of 'test'.
+  test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+  ^^^^
+packages/yl_player/test/fmp4_parser_test.dart:112:3: Error: 'for' is already declared in this scope.
+  for(final e in unsupported.entries)test('reject unsupported ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.unsupported)));
+  ^^^
+packages/yl_player/test/fmp4_parser_test.dart:99:3: Context: Previous declaration of 'for'.
+  for(final e in malformed.entries)test('reject malformed ${e.key}',()async=>expectLater(parse(e.value),bad()));
+  ^^^
+packages/yl_player/test/fmp4_parser_test.dart:113:3: Error: 'for' is already declared in this scope.
+  for(final e in <String,List<int>>{
+  ^^^
+packages/yl_player/test/fmp4_parser_test.dart:99:3: Context: Previous declaration of 'for'.
+  for(final e in malformed.entries)test('reject malformed ${e.key}',()async=>expectLater(parse(e.value),bad()));
+  ^^^
+packages/yl_player/test/fmp4_parser_test.dart:49:116: Error: Expected ';' after this.
+    final d=(await parse(fragmented(fragments:[Fragment(),Fragment(sequence:3,tracks:[FragmentTrack(time:5000)])])))).single;
+                                                                                          ^
+packages/yl_player/test/fmp4_parser_test.dart:50:12: Error: Undefined name 'd'.
+    expect(d.packets.map((p)=>p.start.inMilliseconds),[0,5000]);
+           ^
+00:00 +0 -1: loading /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart [E]
+  Failed to load "/private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart":
+  Compilation failed for testPath=/private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: packages/yl_player/test/fmp4_parser_test.dart:48:68: Error: Can't find '}' to match '{'.
+    test('decode gaps and sequence gaps retain absolute time',()async{
+                                                                     ^
+  packages/yl_player/test/fmp4_parser_test.dart:51:4: Error: Expected a declaration, but got ')'.
+    });
+     ^
+  packages/yl_player/test/fmp4_parser_test.dart:51:5: Error: Unexpected token ';'.
+    });
+      ^
+  packages/yl_player/test/fmp4_parser_test.dart:52:8: Error: Expected an identifier, but got ''audio traf payload skipped; following subtitle has explicit moof base''.
+  Try inserting an identifier before ''audio traf payload skipped; following subtitle has explicit moof base''.
+    test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:52:80: Error: Expected an identifier, but got '('.
+  Try inserting an identifier before '('.
+    test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+                                                                                 ^
+  packages/yl_player/test/fmp4_parser_test.dart:52:82: Error: Expected ')' before this.
+    test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+                                                                                   ^^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:55:5: Error: Expected a function body or '=>'.
+  Try adding {}.
+    });
+      ^
+  packages/yl_player/test/fmp4_parser_test.dart:56:8: Error: Expected an identifier, but got ''initialization only and empty duration fragment yield empty catalog track''.
+  Try inserting an identifier before ''initialization only and empty duration fragment yield empty catalog track''.
+    test('initialization only and empty duration fragment yield empty catalog track',()async{
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:56:84: Error: Expected an identifier, but got '('.
+  Try inserting an identifier before '('.
+    test('initialization only and empty duration fragment yield empty catalog track',()async{
+                                                                                     ^
+  packages/yl_player/test/fmp4_parser_test.dart:56:86: Error: Expected ')' before this.
+    test('initialization only and empty duration fragment yield empty catalog track',()async{
+                                                                                       ^^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:60:5: Error: Expected a function body or '=>'.
+  Try adding {}.
+    });
+      ^
+  packages/yl_player/test/fmp4_parser_test.dart:61:8: Error: Expected an identifier, but got ''selected sample description overrides trex without changing public codec''.
+  Try inserting an identifier before ''selected sample description overrides trex without changing public codec''.
+    test('selected sample description overrides trex without changing public codec',()async{
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:61:83: Error: Expected an identifier, but got '('.
+  Try inserting an identifier before '('.
+    test('selected sample description overrides trex without changing public codec',()async{
+                                                                                    ^
+  packages/yl_player/test/fmp4_parser_test.dart:61:85: Error: Expected ')' before this.
+    test('selected sample description overrides trex without changing public codec',()async{
+                                                                                      ^^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:64:5: Error: Expected a function body or '=>'.
+  Try adding {}.
+    });
+      ^
+  packages/yl_player/test/fmp4_parser_test.dart:65:8: Error: Expected an identifier, but got ''empty WebVTT sample clears interval and TTML empty XML still counts raw bytes''.
+  Try inserting an identifier before ''empty WebVTT sample clears interval and TTML empty XML still counts raw bytes''.
+    test('empty WebVTT sample clears interval and TTML empty XML still counts raw bytes',()async{
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:65:88: Error: Expected an identifier, but got '('.
+  Try inserting an identifier before '('.
+    test('empty WebVTT sample clears interval and TTML empty XML still counts raw bytes',()async{
+                                                                                         ^
+  packages/yl_player/test/fmp4_parser_test.dart:65:90: Error: Expected ')' before this.
+    test('empty WebVTT sample clears interval and TTML empty XML still counts raw bytes',()async{
+                                                                                           ^^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:71:5: Error: Expected a function body or '=>'.
+  Try adding {}.
+    });
+      ^
+  packages/yl_player/test/fmp4_parser_test.dart:99:3: Error: 'for' can't be used as an identifier because it's a keyword.
+  Try renaming this to be an identifier that isn't a keyword.
+    for(final e in malformed.entries)test('reject malformed ${e.key}',()async=>expectLater(parse(e.value),bad()));
+    ^^^
+  packages/yl_player/test/fmp4_parser_test.dart:99:15: Error: Expected ')' before this.
+    for(final e in malformed.entries)test('reject malformed ${e.key}',()async=>expectLater(parse(e.value),bad()));
+                ^^
+  packages/yl_player/test/fmp4_parser_test.dart:99:36: Error: Expected '{' before this.
+    for(final e in malformed.entries)test('reject malformed ${e.key}',()async=>expectLater(parse(e.value),bad()));
+                                     ^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:99:41: Error: Expected an identifier, but got ''reject malformed '.
+  Try inserting an identifier before ''reject malformed '.
+    for(final e in malformed.entries)test('reject malformed ${e.key}',()async=>expectLater(parse(e.value),bad()));
+                                          ^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:99:59: Error: Expected ')' before this.
+    for(final e in malformed.entries)test('reject malformed ${e.key}',()async=>expectLater(parse(e.value),bad()));
+                                                            ^^
+  packages/yl_player/test/fmp4_parser_test.dart:99:112: Error: Expected a function body or '=>'.
+  Try adding {}.
+    for(final e in malformed.entries)test('reject malformed ${e.key}',()async=>expectLater(parse(e.value),bad()));
+                                                                                                                 ^
+  packages/yl_player/test/fmp4_parser_test.dart:112:3: Error: 'for' can't be used as an identifier because it's a keyword.
+  Try renaming this to be an identifier that isn't a keyword.
+    for(final e in unsupported.entries)test('reject unsupported ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.unsupported)));
+    ^^^
+  packages/yl_player/test/fmp4_parser_test.dart:112:15: Error: Expected ')' before this.
+    for(final e in unsupported.entries)test('reject unsupported ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.unsupported)));
+                ^^
+  packages/yl_player/test/fmp4_parser_test.dart:112:38: Error: Expected '{' before this.
+    for(final e in unsupported.entries)test('reject unsupported ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.unsupported)));
+                                       ^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:112:43: Error: Expected an identifier, but got ''reject unsupported '.
+  Try inserting an identifier before ''reject unsupported '.
+    for(final e in unsupported.entries)test('reject unsupported ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.unsupported)));
+                                            ^^^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:112:63: Error: Expected ')' before this.
+    for(final e in unsupported.entries)test('reject unsupported ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.unsupported)));
+                                                                ^^
+  packages/yl_player/test/fmp4_parser_test.dart:112:147: Error: Expected a function body or '=>'.
+  Try adding {}.
+    for(final e in unsupported.entries)test('reject unsupported ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.unsupported)));
+                                                                                                                                                    ^
+  packages/yl_player/test/fmp4_parser_test.dart:113:3: Error: 'for' can't be used as an identifier because it's a keyword.
+  Try renaming this to be an identifier that isn't a keyword.
+    for(final e in <String,List<int>>{
+    ^^^
+  packages/yl_player/test/fmp4_parser_test.dart:113:15: Error: Expected ')' before this.
+    for(final e in <String,List<int>>{
+                ^^
+  packages/yl_player/test/fmp4_parser_test.dart:118:13: Error: Expected '{' before this.
+    }.entries)test('bounded ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.limitExceeded)));
+              ^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:118:18: Error: Expected an identifier, but got ''bounded '.
+  Try inserting an identifier before ''bounded '.
+    }.entries)test('bounded ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.limitExceeded)));
+                   ^^^^^^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:118:27: Error: Expected ')' before this.
+    }.entries)test('bounded ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.limitExceeded)));
+                            ^^
+  packages/yl_player/test/fmp4_parser_test.dart:118:113: Error: Expected a function body or '=>'.
+  Try adding {}.
+    }.entries)test('bounded ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.limitExceeded)));
+                                                                                                                  ^
+  packages/yl_player/test/fmp4_parser_test.dart:119:8: Error: Expected an identifier, but got ''all truncated prefixes reject without untyped errors''.
+  Try inserting an identifier before ''all truncated prefixes reject without untyped errors''.
+    test('all truncated prefixes reject without untyped errors',()async{
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:119:63: Error: Expected an identifier, but got '('.
+  Try inserting an identifier before '('.
+    test('all truncated prefixes reject without untyped errors',()async{
+                                                                ^
+  packages/yl_player/test/fmp4_parser_test.dart:119:65: Error: Expected ')' before this.
+    test('all truncated prefixes reject without untyped errors',()async{
+                                                                  ^^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:126:5: Error: Expected a function body or '=>'.
+  Try adding {}.
+    });
+      ^
+  packages/yl_player/test/fmp4_parser_test.dart:127:8: Error: Expected an identifier, but got ''cancellation is checked between fragment reads''.
+  Try inserting an identifier before ''cancellation is checked between fragment reads''.
+    test('cancellation is checked between fragment reads',()async{
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:127:57: Error: Expected an identifier, but got '('.
+  Try inserting an identifier before '('.
+    test('cancellation is checked between fragment reads',()async{
+                                                          ^
+  packages/yl_player/test/fmp4_parser_test.dart:127:59: Error: Expected ')' before this.
+    test('cancellation is checked between fragment reads',()async{
+                                                            ^^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:130:5: Error: Expected a function body or '=>'.
+  Try adding {}.
+    });
+      ^
+  packages/yl_player/test/fmp4_parser_test.dart:131:1: Error: Expected a declaration, but got '}'.
+  }
+  ^
+  packages/yl_player/test/fmp4_parser_test.dart:56:3: Error: 'test' is already declared in this scope.
+    test('initialization only and empty duration fragment yield empty catalog track',()async{
+    ^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:52:3: Context: Previous declaration of 'test'.
+    test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+    ^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:61:3: Error: 'test' is already declared in this scope.
+    test('selected sample description overrides trex without changing public codec',()async{
+    ^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:52:3: Context: Previous declaration of 'test'.
+    test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+    ^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:65:3: Error: 'test' is already declared in this scope.
+    test('empty WebVTT sample clears interval and TTML empty XML still counts raw bytes',()async{
+    ^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:52:3: Context: Previous declaration of 'test'.
+    test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+    ^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:99:36: Error: 'test' is already declared in this scope.
+    for(final e in malformed.entries)test('reject malformed ${e.key}',()async=>expectLater(parse(e.value),bad()));
+                                     ^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:52:3: Context: Previous declaration of 'test'.
+    test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+    ^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:112:38: Error: 'test' is already declared in this scope.
+    for(final e in unsupported.entries)test('reject unsupported ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.unsupported)));
+                                       ^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:52:3: Context: Previous declaration of 'test'.
+    test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+    ^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:118:13: Error: 'test' is already declared in this scope.
+    }.entries)test('bounded ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.limitExceeded)));
+              ^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:52:3: Context: Previous declaration of 'test'.
+    test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+    ^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:119:3: Error: 'test' is already declared in this scope.
+    test('all truncated prefixes reject without untyped errors',()async{
+    ^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:52:3: Context: Previous declaration of 'test'.
+    test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+    ^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:127:3: Error: 'test' is already declared in this scope.
+    test('cancellation is checked between fragment reads',()async{
+    ^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:52:3: Context: Previous declaration of 'test'.
+    test('audio traf payload skipped; following subtitle has explicit moof base',()async{
+    ^^^^
+  packages/yl_player/test/fmp4_parser_test.dart:112:3: Error: 'for' is already declared in this scope.
+    for(final e in unsupported.entries)test('reject unsupported ${e.key}',()async=>expectLater(parse(e.value),bad(SubtitleParseReason.unsupported)));
+    ^^^
+  packages/yl_player/test/fmp4_parser_test.dart:99:3: Context: Previous declaration of 'for'.
+    for(final e in malformed.entries)test('reject malformed ${e.key}',()async=>expectLater(parse(e.value),bad()));
+    ^^^
+  packages/yl_player/test/fmp4_parser_test.dart:113:3: Error: 'for' is already declared in this scope.
+    for(final e in <String,List<int>>{
+    ^^^
+  packages/yl_player/test/fmp4_parser_test.dart:99:3: Context: Previous declaration of 'for'.
+    for(final e in malformed.entries)test('reject malformed ${e.key}',()async=>expectLater(parse(e.value),bad()));
+    ^^^
+  packages/yl_player/test/fmp4_parser_test.dart:49:116: Error: Expected ';' after this.
+      final d=(await parse(fragmented(fragments:[Fragment(),Fragment(sequence:3,tracks:[FragmentTrack(time:5000)])])))).single;
+                                                                                                                     ^
+  packages/yl_player/test/fmp4_parser_test.dart:50:12: Error: Undefined name 'd'.
+      expect(d.packets.map((p)=>p.start.inMilliseconds),[0,5000]);
+             ^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: loading /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart

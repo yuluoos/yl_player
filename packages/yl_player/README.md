@@ -230,6 +230,8 @@ if (tracks.isNotEmpty) await session.selectSubtitleTrack(tracks.first.id);
 
 `YlPlayerView` renders Matroska UTF8/SRT and ASS/SSA, and non-fragmented MP4
 `tx3g` (mov_text), `wvtt` (WebVTT) and `stpp` (TTML) tracks using media time.
+Fragmented MP4 also supports `wvtt`/`stpp` when initialization and fragments
+are in the same complete file or stable HTTP resource.
 Discovery is explicit and bounded; Matroska TrackUID (`mkv:<UID>`) or MP4 Track ID
 (`mp4:<ID>`) identifies a track within the session. Replacing/clearing external subtitles preserves embedded entries;
 rediscovery preserves external entries and a still-present selection. A new
@@ -242,7 +244,7 @@ deadlines, retry/redirect budgets and credential origin restrictions apply to th
 whole discovery. Later ranges use If-Match; changed versions fail atomically.
 The scan uses a bounded cache and request/byte budgets, with no full-body fallback.
 
-Fragmented MP4, HLS/DASH, embedded bitmap and native subtitle callbacks remain
+Separate initialization/media segment URLs, HLS/DASH, embedded bitmap and native subtitle callbacks remain
 unsupported. No additional native subtitle capability or physical-device
 acceptance is claimed. See the [embedded subset contract](../../docs/superpowers/specs/2026-10-11-subtitle-embedded.md)
 the [network range contract](../../docs/superpowers/specs/2026-10-11-subtitle-network-matroska.md)
@@ -267,3 +269,9 @@ to each sample and mapped through supported edits. Documents keep their own
 style/region scope, and their raw bytes count toward the shared catalog budget.
 Auxiliary images, cell/pixel font styling and advanced TTML/IMSC remain unsupported;
 see the [MP4 TTML contract](../../docs/superpowers/specs/2026-10-11-subtitle-mp4-ttml.md).
+
+For fMP4, `trex`/`tfhd`/`tfdt`/`trun` supply bounded sample locations and timing.
+The same track selection, WebVTT/TTML rendering and managed range rules apply.
+This is explicit discovery of a complete resource, not live segment polling.
+See the [fMP4 contract](../../docs/superpowers/specs/2026-10-11-subtitle-fmp4.md)
+for defaults, addressing, edits and unsupported layouts.

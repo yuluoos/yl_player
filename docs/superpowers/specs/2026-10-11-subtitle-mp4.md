@@ -61,3 +61,11 @@ The earlier stpp/MP4-TTML exclusion is superseded for the non-fragmented bounded
 subset in the [MP4 TTML contract](2026-10-11-subtitle-mp4-ttml.md). Existing public
 `ttml`, styled runs/regions and managed Range loading are reused. Composition
 time, sample clipping and simple edits are explicit; advanced TTML remains rejected.
+
+## fMP4 extension (2026-10-11)
+
+The earlier fragmented-MP4 exclusion is superseded for the bounded wvtt/stpp
+subset in the [fMP4 contract](2026-10-11-subtitle-fmp4.md): initialization and
+fragments in one complete file or stable HTTP resource, shared managed Range
+loading and existing render subsets. Separate segment URLs, manifests/live
+polling, fragmented tx3g and native/device acceptance remain outside scope.

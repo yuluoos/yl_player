@@ -27,3 +27,11 @@
 - [ISO/IEC14496-30:2018/Amd1:2022](https://www.standards.iteh.ai/catalog/standards/iso/c559486e-2191-4975-ad44-9f061b600281/iso-iec-14496-30-2018-amd-1-2022)：修订文的composition时间和sample裁切。
 - [Shaka MP4 TTML parser](https://shaka-project.github.io/shaka-player/docs/api/lib_text_mp4_ttml_parser.js.html)：每sample XML与各自时间窗口；仅作对照，本项不实现其分片/图像支持。
 - [GPAC subtitling](https://github.com/gpac/gpac/wiki/Subtitling-with-GPAC)：stpp XML subtitle sample entry与namespace。
+
+## fMP4 extension (2026-10-11)
+
+The earlier fragmented-MP4 exclusion is superseded for the bounded wvtt/stpp
+subset in the [fMP4 contract](2026-10-11-subtitle-fmp4.md): initialization and
+fragments in one complete file or stable HTTP resource, shared managed Range
+loading and existing render subsets. Separate segment URLs, manifests/live
+polling, fragmented tx3g and native/device acceptance remain outside scope.

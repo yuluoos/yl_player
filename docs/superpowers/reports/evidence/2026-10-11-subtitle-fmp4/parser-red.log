@@ -1,0 +1,90 @@
+00:00 +0: loading /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart
+00:00 +0: legal is_leading=0 sample flags
+00:00 +1: legal is_leading=1 sample flags
+00:00 +2: legal is_leading=2 sample flags
+00:00 +3: legal is_leading=3 sample flags
+00:00 +3 -1: legal is_leading=3 sample flags [E]
+  SubtitleParseException(malformed)
+  package:yl_player/src/subtitles/mp4_subtitles.dart 12:5    _bad
+  package:yl_player/src/subtitles/mp4_fragments.dart 108:83  _FragmentReader._readFragments
+  
+00:00 +3 -1: moof base with 32-bit boxes and negative data offset
+00:00 +4 -1: moof base with 64-bit boxes and negative data offset
+00:00 +5 -1: explicit base with 32-bit boxes and negative data offset
+00:00 +6 -1: explicit base with 64-bit boxes and negative data offset
+00:00 +7 -1: implicit base with 32-bit boxes and negative data offset
+00:00 +8 -1: implicit base with 64-bit boxes and negative data offset
+00:00 +9 -1: trex defaults inherited, tfhd overrides, then per-sample overrides
+00:00 +10 -1: multiple truns continue byte cursor, composition offsets remain independent of dts
+00:00 +11 -1: unsigned v0 composition offset and v0 decode time
+00:00 +12 -1: 64-bit tfdt exceeds uint32 without losing precision
+00:00 +13 -1: TTML composition clock clipped then edited once; edit duration 0
+00:00 +14 -1: TTML composition clock clipped then edited once; edit duration 1500
+00:00 +15 -1: decode gaps and sequence gaps retain absolute time
+00:00 +16 -1: audio traf payload skipped; following subtitle has explicit moof base
+00:00 +17 -1: initialization only and empty duration fragment yield empty catalog track
+00:00 +18 -1: selected sample description overrides trex without changing public codec
+00:00 +19 -1: empty WebVTT sample clears interval and TTML empty XML still counts raw bytes
+00:00 +20 -1: reject malformed duplicate trex
+00:00 +21 -1: reject malformed unknown trex track
+00:00 +22 -1: reject malformed zero trex description
+00:00 +23 -1: reject malformed duplicate mfhd
+00:00 +24 -1: reject malformed unknown tfhd track
+00:00 +25 -1: reject malformed duplicate tfhd
+00:00 +26 -1: reject malformed duplicate tfdt
+00:00 +27 -1: reject malformed conflicting bases
+00:00 +28 -1: reject malformed description out of range
+00:00 +29 -1: reject malformed zero size override does not inherit
+00:00 +30 -1: reject malformed zero duration override does not inherit
+00:00 +31 -1: reject malformed empty duration with samples
+00:00 +32 -1: reject malformed both first and per sample flags
+00:00 +33 -1: reject malformed reserved flags
+00:00 +34 -1: reject malformed reserved depends on
+00:00 +35 -1: reject malformed reserved depended on
+00:00 +36 -1: reject malformed reserved redundancy
+00:00 +37 -1: reject malformed data points to moof
+00:00 +38 -1: reject malformed duplicate sequence
+00:00 +39 -1: reject malformed overlapping decode timeline
+00:00 +40 -1: reject malformed truncated tfdt
+00:00 +40 -2: reject malformed truncated tfdt [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/mp4_subtitles.dart 14:5   _unsupported
+                  package:yl_player/src/subtitles/mp4_subtitles.dart 92:17  Mp4Subtitles._box
+                  ===== asynchronous gap ===========================
+                  package:matcher                                           expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8         expectLater
+                  packages/yl_player/test/fmp4_parser_test.dart 100:78      main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                       expectLater
+  package:flutter_test/src/widget_tester.dart 507:8     expectLater
+  packages/yl_player/test/fmp4_parser_test.dart 100:78  main.<fn>
+  
+00:00 +40 -2: reject malformed wrong trun length
+00:00 +41 -2: reject malformed mdat byte extent overflow
+00:00 +42 -2: reject malformed no traf
+00:00 +43 -2: reject malformed missing trex for subtitle
+00:00 +44 -2: reject unsupported missing tfdt
+00:00 +45 -2: reject unsupported unknown tfhd flags
+00:00 +46 -2: reject unsupported unknown trun flags
+00:00 +47 -2: reject unsupported unsupported trun version
+00:00 +48 -2: reject unsupported unsupported tfdt version
+00:00 +49 -2: reject unsupported encrypted samples
+00:00 +50 -2: reject unsupported subsample table
+00:00 +51 -2: reject unsupported hybrid subtitle samples
+00:00 +52 -2: reject unsupported fragmented tx3g
+00:00 +53 -2: reject unsupported implicit base after audio
+00:00 +54 -2: bounded sample count
+00:00 +55 -2: bounded decode time
+00:00 +56 -2: bounded composition time
+00:00 +57 -2: bounded top level fragments
+00:00 +58 -2: all truncated prefixes reject without untyped errors
+00:00 +59 -2: cancellation is checked between fragment reads
+00:00 +60 -2: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: legal is_leading=3 sample flags
+  /private/tmp/yl-fmp4-validation-q48wmlve/packages/yl_player/test/fmp4_parser_test.dart: reject malformed truncated tfdt

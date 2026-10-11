@@ -505,3 +505,47 @@ off/offset和取消。视频backend为fake，无native构建/设备/HDR/DRM/PD-0
 四个test目录）以及播放器/接口lib/test的dart analyze --suppress-analytics。
 结果 **1215/1215、0失败、exit0**（135/885/113/82；本项新增64），分析 **No issues found、exit0**。
 基线ede8e48、所属候选、引用依赖、制品、完整日志和文档指纹见manifest，复审无遗留项。
+
+## 2026-10-11 分片 MP4（fMP4）内嵌 WebVTT / TTML
+
+按用户指定下一项，在既有 MP4 runtime 接入同一完整文件/稳定 HTTP(S) 资源的初始化信息与
+moof/mdat。公开 discovery、Track ID 选择、WebVTT/TTML 样式/区域渲染和 managed 网络接口
+不变，无新增依赖或 native 声明。具体语义与拒绝成本见 [fMP4 契约](../specs/2026-10-11-subtitle-fmp4.md)。
+
+- trex → tfhd → trun 默认值覆盖；显式零值保持零。tfdt 32/64位、trun signed/unsigned
+  composition offset、多个run/traf、64位box、显式/moof/首traf隐式基址和负data offset。
+- 字幕sample必须位于mdat payload，不接受字幕字节重叠、decode时间倒退、重复序号或损坏结构。
+  音视频payload跳过，不推测后续traf的隐式基址。结构/样本/cue/run/XML/读取预算跨片累计。
+- WebVTT使用sample区间；TTML使用composition文档时间，经sample裁切与简单edit映射一次。
+  分片的播放edit duration=0按后续媒体处理，仍保留7天上限；不改变非分片行为。
+- 沿用强ETag/If-Match/总长/最终URI固定、单段206和managed retry/redirect/credentials/
+  connect/read超时；无全量下载回退。后续分片取消/失败不发布部分目录。
+- 单资源范围不包含独立init/media URL、HLS/DASH字幕清单、直播增长发现、fragmentedtx3g、
+  hybrid字幕初始化sample、加密/辅助资源或高级WebVTT/TTML；对应成本是这些素材明确拒绝，
+  不将本项外推为全部fMP4/设备或整个P02验收。
+
+起点d0feaaf。真实文件入口先0通过/1失败（subtitleUnsupported），接入后包含既有MP4/STPP
+回归106/106。扩展parser第一轮夹具括号/类型拼写导致加载失败，修正后60通过/2失败：
+合法is_leading=3被错误视为reserved、truncated tfdt夹具造成后继box unsupported分类。
+前者修正依赖flag字段校验；后者改为精确version/length冲突。补充全局预算/byte重叠后，
+新增84/84通过（66parser、1实际文件、11真实HTTP、6公开会话/Flutter测试）。
+
+真实HTTP验证自动/显式MP4嗅探、跳过5MB媒体区、If-Match、chunked206、重试与凭据剥离、
+失败保留旧目录；会话测试验证实际TTML region矩形/粗体与WebVTT切换、off/offset/seek，以及
+后续分片请求被换源/stop/dispose/外置目录操作取消后不能迟到发布。使用owned BMFF/XML
+夹具与fake视频backend；无独立生产器正向互通、native构建、真机/HDR/DRM/PD-03验证。
+
+另一会话提交abf1eab，仅5项P05文档/证据；隔离候选已刷新这些提交，未纳入其未提交
+benchmark变更。四包初轮1299/1299（135接口/969播放器/113Apple/82Android）。首次分析
+15项braces风格info，经自动及嵌套循环手动修正；没有静默丢弃初轮日志。独立复审、最终
+冻结验证和commit证据在下方追加及 [manifest](evidence/2026-10-11-subtitle-fmp4/manifest.json)。
+
+最终独立只读复审：新增Critical0/Important0/Minor0；没有阻塞修复或第二轮复审。十项
+未判断范围及执行者裁定逐项记录于[review.md](evidence/2026-10-11-subtitle-fmp4/review.md)。
+此前wvtt嵌套box全局计数Minor继续按已记录边界延期，未发现新增影响。
+
+最终隔离副本基线abf1eab，七份代码/测试文件与候选逐字节一致；四包**1299/1299、0失败、
+exit0**，新增84项，包计数135/969/113/82。播放器与接口lib/test静态分析**No issues found、
+exit0**。十项既有native/构建制品独立重新计算SHA256均不变。最终源文件/引用依赖/原始日志/
+报告指纹冻结到[manifest](evidence/2026-10-11-subtitle-fmp4/manifest.json)，用独立Git index
+仅提交本项文件及自己的总览/CHANGELOG段；另一会话未提交benchmark不纳入。
