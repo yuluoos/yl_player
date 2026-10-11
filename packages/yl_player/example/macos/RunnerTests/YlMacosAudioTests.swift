@@ -985,6 +985,96 @@ final class YlMacosAudioTests: XCTestCase {
   }
 
   @MainActor
+  func testTimedClockRecoversAfterNativeReadDelay() async throws {
+    guard #available(macOS 14.0, *) else { throw XCTSkip("Timed candidate requires macOS 14") }
+    let views = YlMacosVideoViewFactory()
+    let native = YlMacosTextureOutput(textures: ApplePublicationRegistry(), nativeViews: views)
+    let view = views.create(withViewIdentifier: 944, arguments: ["textureId": NSNumber(value: native.textureId)])
+    let window = NSWindow(contentRect: NSRect(x: 100, y: 100, width: 256, height: 144), styleMask: [.titled], backing: .buffered, defer: false)
+    window.isReleasedWhenClosed = false; window.contentView = view; window.orderFront(nil)
+    defer { window.close() }
+    let owner = YlAppleTextureOwner(output: native, onFrame: { _ in }); defer { owner.dispose() }
+    let lease = owner.makeLease(identity: .init(sessionId: "read-delay", loadRequestId: "read-delay")); owner.commit(lease)
+    let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+      .appendingPathComponent("assets/test_media/format_matrix/continuous-avc-aac.mkv")
+    let ledger = YlManagedBufferLedger(), scope = try ledger.makeScope(maxBytes: nil)
+    let prepared = try YlPreparedFallback(source: .init(uri: fixture.absoluteString, kind: .file, formatHint: .matroska, bufferScope: scope), requireHardwareProbe: true)
+    let clock = YlMediaClock()
+    let factory = DelayedClockAudioFactory()
+    var errors: [String] = []
+    let instance = try YlManagedPlaybackSession(playerId: 944,
+      services: YlPlatformServices(platform: .macos, textureOutput: native, makeDisplayDriver: { YlDisplayTimer(view: view, onTick: $0) }).borrowing(lease),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 1,
+      mediaClock: clock, audioRendererFactory: factory,
+      emit: { if case let .failure(error) = $0.event { errors.append(error.code) } },
+      timedVideoCandidateEnabled: true)
+    defer { instance.dispose() }
+    instance.setVolume(0); try instance.activate(); try instance.play()
+    try await AppleHostCharacterizations.waitFor({ (instance.timedVideoStatistics?.submitted ?? 0) >= 12 }, timeout: 4)
+    let before = instance.timedVideoStatistics?.submitted ?? 0
+    let positionBefore = clock.position(atHostTimeUs: Int64(ProcessInfo.processInfo.systemUptime * 1_000_000))
+    factory.output.arm()
+    try await Task.sleep(nanoseconds: 5_000_000_000)
+    let position = clock.position(atHostTimeUs: Int64(ProcessInfo.processInfo.systemUptime * 1_000_000))
+    let submitted = instance.timedVideoStatistics?.submitted ?? 0
+    let stats = try XCTUnwrap(instance.isolatedAudioClockStatistics)
+    let observation = XCTAttachment(string: "injected=\(factory.output.injected);positionBefore=\(positionBefore);positionAfter=\(position);submittedBefore=\(before);submittedAfter=\(submitted);stale=\(stats.staleEvents);read=\(stats.maximumReadSeconds);audioPending=\(factory.renderer?.hasPendingPlayback as Any);audioDuration=\(factory.renderer?.scheduledDurationUs as Any);clock=\(factory.renderer?.clockObservation(expectedGeneration: 1) as Any)")
+    observation.lifetime = .keepAlways; add(observation)
+    XCTAssertEqual(factory.output.injected, 1)
+    XCTAssertGreaterThanOrEqual(stats.staleEvents, 1, "The test must cross the actual stale-clock gate")
+    XCTAssertGreaterThan(position - positionBefore, 4_000_000, "A resumed native read must restore media progress")
+    XCTAssertGreaterThan(submitted - before, 80, "Display submission must recover after a stale observation")
+    XCTAssertTrue(errors.isEmpty)
+    instance.dispose(); owner.dispose()
+    try await AppleHostCharacterizations.waitFor({ ledger.snapshot.currentBytes == 0 }, timeout: 3)
+  }
+
+  private final class DelayedClockAudioFactory: YlAudioRendererMaking {
+    let output = DelayedClockOutput()
+    weak var renderer: YlAudioRenderer?
+    func makeRenderer(bufferBudget: YlFallbackBufferBudget) -> YlAudioRenderer {
+      let value = YlAudioRenderer(bufferBudget: bufferBudget, output: output)
+      renderer = value; return value
+    }
+  }
+
+  private final class DelayedClockOutput: YlAudioOutputDriving {
+    private let base = YlSystemAudioOutput()
+    private let lock = NSLock()
+    private var armed = false
+    private var count = 0
+    func arm() { lock.withLock { armed = true } }
+    var injected: Int { lock.withLock { count } }
+    var presentationAudioTime: YlRenderedAudioTime? {
+      let value = base.presentationAudioTime
+      let isSamplerRead = lock.withLock { armed } && Thread.callStackSymbols.contains { $0.contains("clockObservation") }
+      let delay = lock.withLock { () -> Bool in
+        guard armed, isSamplerRead else { return false }; armed = false; count += 1; return true
+      }
+      // The real engine keeps playing; no renderer, main, or sampler state lock is held.
+      if delay { Thread.sleep(forTimeInterval: 0.25) }
+      return value
+    }
+    var renderedAudioTime: YlRenderedAudioTime? { base.renderedAudioTime }
+    var supportsTerminalCompletion: Bool { base.supportsTerminalCompletion }
+    var volume: Float { get { base.volume } set { base.volume = newValue } }
+    var rate: Float { get { base.rate } set { base.rate = newValue } }
+    func setClockInvalidationHandler(_ handler: (() -> Void)?) { base.setClockInvalidationHandler(handler) }
+    func setInvalidationHandler(_ handler: (() -> Void)?) { base.setInvalidationHandler(handler) }
+    func configure(sampleRate: Double, channelCount: Int) throws { try base.configure(sampleRate: sampleRate, channelCount: channelCount) }
+    func configure(format: AVAudioFormat) throws { try base.configure(format: format) }
+    func configure(format: AVAudioFormat, aligningClockDomains: Bool) throws { try base.configure(format: format, aligningClockDomains: aligningClockDomains) }
+    func configure(sampleRate: Double, channelCount: Int, aligningClockDomains: Bool) throws { try base.configure(sampleRate: sampleRate, channelCount: channelCount, aligningClockDomains: aligningClockDomains) }
+    func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void) { base.schedule(buffer, completion: completion) }
+    func schedule(_ buffer: YlScheduledAudioBuffer, callbacks: YlAudioOutputCallbacks) { base.schedule(buffer, callbacks: callbacks) }
+    func schedule(_ buffer: YlScheduledAudioBuffer, mode: YlAudioOutputCompletionMode, callbacks: YlAudioOutputCallbacks) { base.schedule(buffer, mode: mode, callbacks: callbacks) }
+    func play() throws { try base.play() }
+    func pause() { base.pause() }
+    func reset() { base.reset() }
+    func dispose() { base.dispose() }
+  }
+
+  @MainActor
   func testActualTimedSurfaceSurvivesMainThreadStall() async throws {
     try await runTimedSurfaceObservation(stall: true)
   }
@@ -1091,12 +1181,16 @@ final class YlMacosAudioTests: XCTestCase {
         "samples": clock?.samples as Any? ?? NSNull(), "staleEvents": clock?.staleEvents as Any? ?? NSNull(),
         "rejectedObservations": clock?.rejectedObservations as Any? ?? NSNull(),
         "maximumReadSeconds": clock?.maximumReadSeconds as Any? ?? NSNull(),
-        "maximumAgeSeconds": clock?.maximumAgeSeconds as Any? ?? NSNull()]
+        "maximumAgeSeconds": clock?.maximumAgeSeconds as Any? ?? NSNull(),
+        "lastObservation": clock?.lastObservation.map { String(describing: $0) } as Any? ?? NSNull(),
+        "lastReadHostTimeUs": clock?.lastReadHostTimeUs as Any? ?? NSNull()]
       var transport: [String: Any] = [:]
       if transportDiagnostics {
         let host = Int64(ProcessInfo.processInfo.systemUptime * 1_000_000)
         let snapshot = observationClock?.presentationSnapshot(atHostTimeUs: host)
-        transport = ["positionUs": snapshot?.positionUs as Any? ?? NSNull(),
+        transport = ["audioObservation": clock?.lastObservation.map { String(describing: $0) } as Any? ?? NSNull(),
+          "audioReadHostTimeUs": clock?.lastReadHostTimeUs as Any? ?? NSNull(),
+          "positionUs": snapshot?.positionUs as Any? ?? NSNull(),
           "playing": snapshot?.playing as Any? ?? NSNull(),
           "waitingForClock": snapshot?.waitingForClock as Any? ?? NSNull(),
           "pendingPTS": scheduler.pendingPTS,
@@ -1409,11 +1503,105 @@ final class YlMacosAudioTests: XCTestCase {
     }
   }
 
+  func testActualAudioGraphClockDomains() throws {
+    var allRows: [[String: Double]] = []
+    for normalized in [false, true] {
+      let engine = AVAudioEngine()
+      let rows: [[String: Double]] = try autoreleasepool {
+        let output = YlSystemAudioOutput(engine: engine)
+        defer { output.dispose() }
+        let format = try XCTUnwrap(AVAudioFormat(standardFormatWithSampleRate: 48_000, channels: 2))
+        try output.configure(format: format, aligningClockDomains: normalized); output.volume = 0; output.rate = 1
+        let player = try autoreleasepool { try XCTUnwrap(engine.attachedNodes.compactMap { $0 as? AVAudioPlayerNode }.first) }
+        // A single exact PCM interval eliminates container timestamps, packet duration rounding,
+        // refills, and completion delivery from the native timeline comparison.
+        let frames: AVAudioFrameCount = 48_000 * 75
+        let pcm = try XCTUnwrap(AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frames))
+        pcm.frameLength = frames
+        for channel in 0..<2 { memset(pcm.floatChannelData![channel], 0, Int(frames) * MemoryLayout<Float>.size) }
+        output.schedule(.init(payload: pcm, ptsUs: 0, durationUs: 75_000_000,
+          byteCount: Int(frames) * 8, generation: 1), completion: {})
+        try output.play()
+        var rows: [[String: Double]] = []
+        for index in 0...30 {
+          Thread.sleep(forTimeInterval: 1)
+          let node = try XCTUnwrap(player.lastRenderTime)
+          XCTAssertTrue(node.isHostTimeValid); XCTAssertTrue(node.isSampleTimeValid)
+          let full = try XCTUnwrap(player.playerTime(forNodeTime: node))
+          let hostOnly = try XCTUnwrap(player.playerTime(forNodeTime: AVAudioTime(hostTime: node.hostTime)))
+          let out = try XCTUnwrap(engine.outputNode.lastRenderTime)
+          let production = try XCTUnwrap(output.presentationAudioTime)
+          let fullUs = Double(full.sampleTime) * 1_000_000 / full.sampleRate
+          let hostOnlyUs = Double(hostOnly.sampleTime) * 1_000_000 / hostOnly.sampleRate
+          let nodeHostUs = AVAudioTime.seconds(forHostTime: node.hostTime) * 1_000_000
+          let productionHostUs = Double(try XCTUnwrap(production.hostTimeUs))
+          let expectedAtProductionHost = fullUs + productionHostUs - nodeHostUs
+          let row: [String: Double] = ["normalized": normalized ? 1 : 0, "index": Double(index),
+            "outputInputRate": engine.outputNode.inputFormat(forBus: 0).sampleRate,
+            "outputHardwareRate": engine.outputNode.outputFormat(forBus: 0).sampleRate, "uptime": ProcessInfo.processInfo.systemUptime,
+            "nodeSample": Double(node.sampleTime), "nodeRate": node.sampleRate, "nodeHostUs": nodeHostUs,
+            "outputSample": Double(out.sampleTime), "outputRate": out.sampleRate,
+            "outputHostUs": AVAudioTime.seconds(forHostTime: out.hostTime) * 1_000_000,
+            "fullPlayerUs": fullUs, "hostOnlyPlayerUs": hostOnlyUs, "fullMinusHostOnlyUs": fullUs - hostOnlyUs,
+            "productionUs": Double(production.sampleTime) * 1_000_000 / production.sampleRate,
+            "productionHostUs": productionHostUs,
+            "productionMinusLocalAnchorUs": Double(production.sampleTime) * 1_000_000 / production.sampleRate - expectedAtProductionHost]
+          rows.append(row)
+        }
+        return rows
+      }
+      // Drain autoreleased attached-node collections before destroying the engine.
+      withExtendedLifetime(engine) {}
+      allRows.append(contentsOf: rows)
+      if normalized {
+        let first = try XCTUnwrap(rows.first), last = try XCTUnwrap(rows.last)
+        let drift = (last["nodeHostUs"]! - last["outputHostUs"]!) - (first["nodeHostUs"]! - first["outputHostUs"]!)
+        XCTAssertLessThan(abs(drift), 20_000, "A common graph format must keep the native node timelines aligned")
+      }
+    }
+    let attachment = XCTAttachment(data: try JSONSerialization.data(withJSONObject: allRows, options: [.sortedKeys]), uniformTypeIdentifier: "public.json")
+    attachment.name = "audio-graph-clock-domains"; attachment.lifetime = .keepAlways; add(attachment)
+  }
+
+  func testNativeClockAlignmentPreservesChannelsAndRestoresDefault() throws {
+    for enabled in [false, true] {
+      let driver = TestAudioOutput()
+      let renderer = YlAudioRenderer(converter: TestAudioConverter(), output: driver)
+      if enabled { renderer.onClockControlBegin = {} }
+      try renderer.configure(stream: .init(codec: .dts, sampleRate: 48_000, channelCount: 6,
+        magicCookie: Data(), generation: 1))
+      XCTAssertEqual(driver.clockAlignmentRequests, [enabled], "Fallback format must receive the isolated clock policy")
+      XCTAssertEqual(driver.configuredChannels, 2, "DTS keeps its established stereo output policy")
+      renderer.dispose()
+    }
+    let engine = AVAudioEngine()
+    try autoreleasepool {
+      let output = YlSystemAudioOutput(engine: engine)
+      defer { output.dispose() }
+      let hardware = engine.outputNode.outputFormat(forBus: 0)
+      for channels: AVAudioChannelCount in [1, 2] {
+        let format = try XCTUnwrap(AVAudioFormat(standardFormatWithSampleRate: 48_000, channels: channels))
+        try output.configure(format: format, aligningClockDomains: true)
+        XCTAssertEqual(engine.outputNode.inputFormat(forBus: 0).sampleRate, 48_000)
+        XCTAssertEqual(engine.outputNode.inputFormat(forBus: 0).channelCount, hardware.channelCount)
+        XCTAssertEqual(engine.outputNode.outputFormat(forBus: 0), hardware)
+        try output.configure(sampleRate: 48_000, channelCount: Int(channels), aligningClockDomains: true)
+        XCTAssertEqual(engine.outputNode.inputFormat(forBus: 0).sampleRate, 48_000)
+        XCTAssertEqual(engine.outputNode.inputFormat(forBus: 0).channelCount, hardware.channelCount)
+        XCTAssertEqual(engine.outputNode.outputFormat(forBus: 0), hardware)
+        try output.configure(format: format)
+        XCTAssertEqual(engine.outputNode.inputFormat(forBus: 0).sampleRate, hardware.sampleRate)
+        XCTAssertEqual(engine.outputNode.inputFormat(forBus: 0).channelCount, hardware.channelCount)
+      }
+    }
+    withExtendedLifetime(engine) {}
+  }
+
   func testActualTimestampedAudioClockAcrossRatesAndControls() throws {
     let output = YlSystemAudioOutput()
     defer { output.dispose() }
     let format = try XCTUnwrap(AVAudioFormat(standardFormatWithSampleRate: 48_000, channels: 2))
-    try output.configure(format: format); output.volume = 0
+    try output.configure(format: format, aligningClockDomains: true); output.volume = 0
     var rows: [[String: Any]] = []
     func submit() throws {
       let pcm = try XCTUnwrap(AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 96_000))
@@ -3708,6 +3896,12 @@ final class YlMacosAudioTests: XCTestCase {
     var volume: Float = 1
     var rate: Float = 1
     var failConfigure = false
+    var clockAlignmentRequests: [Bool] = []
+    var configuredChannels = 0
+    func configure(sampleRate: Double, channelCount: Int, aligningClockDomains: Bool) throws {
+      clockAlignmentRequests.append(aligningClockDomains)
+      try configure(sampleRate: sampleRate, channelCount: channelCount)
+    }
     var clockInvalidation: (() -> Void)?
     func setClockInvalidationHandler(_ handler: (() -> Void)?) { clockInvalidation = handler }
     var rawClock: YlRenderedAudioTime?
@@ -3722,6 +3916,7 @@ final class YlMacosAudioTests: XCTestCase {
     private var completions: [() -> Void] = []
 
     func configure(sampleRate: Double, channelCount: Int) throws {
+      configuredChannels = channelCount
       if failConfigure { throw NSError(domain: "ClockOwnerTest", code: 1) }
     }
     func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void) {

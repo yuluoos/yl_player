@@ -166,7 +166,9 @@ protocol YlAudioOutputDriving: AnyObject {
   var presentationAudioTime: YlRenderedAudioTime? { get }
   var renderedAudioTime: YlRenderedAudioTime? { get }
   func configure(sampleRate: Double, channelCount: Int) throws
+  func configure(sampleRate: Double, channelCount: Int, aligningClockDomains: Bool) throws
   func configure(format: AVAudioFormat) throws
+  func configure(format: AVAudioFormat, aligningClockDomains: Bool) throws
   func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void)
   func schedule(_ buffer: YlScheduledAudioBuffer, callbacks: YlAudioOutputCallbacks)
   func schedule(_ buffer: YlScheduledAudioBuffer, mode: YlAudioOutputCompletionMode,
@@ -178,6 +180,12 @@ protocol YlAudioOutputDriving: AnyObject {
 }
 
 extension YlAudioOutputDriving {
+  func configure(sampleRate: Double, channelCount: Int, aligningClockDomains: Bool) throws {
+    try configure(sampleRate: sampleRate, channelCount: channelCount)
+  }
+  func configure(format: AVAudioFormat, aligningClockDomains: Bool) throws {
+    try configure(format: format)
+  }
   var presentationAudioTime: YlRenderedAudioTime? { renderedAudioTime }
   // A legacy driver cannot supply independent rendered/terminal notifications.
   var supportsTerminalCompletion: Bool { false }
@@ -527,11 +535,12 @@ final class YlAudioRenderer: YlAudioRendering {
     do {
       try converter.configure(stream: stream)
       if let format = converter.pcmFormat {
-        try output.configure(format: format)
+        try output.configure(format: format, aligningClockDomains: onClockControlBegin != nil)
       } else {
         try output.configure(
           sampleRate: stream.sampleRate,
-          channelCount: stream.codec == .dts ? 2 : stream.channelCount
+          channelCount: stream.codec == .dts ? 2 : stream.channelCount,
+          aligningClockDomains: onClockControlBegin != nil
         )
       }
     } catch {
@@ -1459,6 +1468,7 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
   private let timePitch = AVAudioUnitTimePitch()
   private var configured = false
   private var disposed = false
+  private var outputClockAligned = false
 
   init(engine: AVAudioEngine = AVAudioEngine()) {
     self.engine = engine
@@ -1524,6 +1534,10 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
   }
 
   func configure(sampleRate: Double, channelCount: Int) throws {
+    try configure(sampleRate: sampleRate, channelCount: channelCount, aligningClockDomains: false)
+  }
+
+  func configure(sampleRate: Double, channelCount: Int, aligningClockDomains: Bool) throws {
     guard !disposed,
           let format = AVAudioFormat(
             commonFormat: .pcmFormatFloat32,
@@ -1533,10 +1547,14 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
           ) else {
       throw YlAudioImplementationError.invalidConfiguration
     }
-    try configure(format: format)
+    try configure(format: format, aligningClockDomains: aligningClockDomains)
   }
 
   func configure(format: AVAudioFormat) throws {
+    try configure(format: format, aligningClockDomains: false)
+  }
+
+  func configure(format: AVAudioFormat, aligningClockDomains: Bool) throws {
     guard !disposed else { throw YlAudioImplementationError.invalidConfiguration }
     engine.stop()
     player.stop()
@@ -1544,6 +1562,29 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
     engine.disconnectNodeOutput(timePitch)
     engine.connect(player, to: timePitch, format: format)
     engine.connect(timePitch, to: engine.mainMixerNode, format: format)
+    if aligningClockDomains || outputClockAligned {
+      // Keep the candidate's player/mixer client rate in one graph domain.
+      // Fractional SRC blocks between the mixer and output can otherwise make
+      // node host timestamps diverge over long playback (48 kHz -> 44.1 kHz).
+      // The output unit still converts to the unchanged hardware rate/layout.
+      let hardware = engine.outputNode.outputFormat(forBus: 0)
+      let graphFormat: AVAudioFormat?
+      if aligningClockDomains {
+        if let layout = hardware.channelLayout {
+          graphFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32,
+            sampleRate: format.sampleRate, interleaved: false, channelLayout: layout)
+        } else {
+          graphFormat = AVAudioFormat(standardFormatWithSampleRate: format.sampleRate,
+            channels: hardware.channelCount)
+        }
+      } else {
+        graphFormat = hardware
+      }
+      guard let graphFormat else { throw YlAudioImplementationError.invalidConfiguration }
+      engine.disconnectNodeOutput(engine.mainMixerNode)
+      engine.connect(engine.mainMixerNode, to: engine.outputNode, format: graphFormat)
+      outputClockAligned = aligningClockDomains
+    }
     engine.prepare()
     configured = true
   }

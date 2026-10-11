@@ -6,6 +6,9 @@ struct YlIsolatedAudioClockStatistics {
   var rejectedObservations = 0
   var maximumReadSeconds: Double = 0
   var maximumAgeSeconds: Double = 0
+  // Scalar-only latest read: distinguish a fresh clamped clock from a blocked read.
+  var lastObservation: YlAudioClockObservation?
+  var lastReadHostTimeUs: Int64?
 }
 
 /// The only native reader for the candidate presentation clock. A blocked read
@@ -75,6 +78,7 @@ final class YlIsolatedAudioClock {
       guard !stopped, permitted, generation == permit.0, version == permit.1 else {
         observed.rejectedObservations += 1; return
       }
+      observed.lastObservation = value; observed.lastReadHostTimeUs = now
       switch value {
       case let .running(sample), let .silence(sample):
         guard sample.generation == generation, sample.rate == rate,
