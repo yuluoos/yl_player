@@ -14,6 +14,7 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
   private var closed = false
   private var generation: UInt64?
   private var clockSnapshot: YlPresentationClockSnapshot?
+  private var timebaseAnchor: YlPresentationClockSnapshot?
   // Share the same reservations: one current image plus at most three future
   // images permits paused surface reattachment without a stale preview.
   private var previewFrames: [YlFrameEnvelope] = []
@@ -25,13 +26,15 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
   private let onFailure: (Error) -> Void
   private let collectDiagnostics: Bool
   private var diagnosticUpdates = 0, diagnosticEnqueues = 0, lateEnqueues = 0
+  private var diagnosticAnchors = 0
+  let lifetimeDiagnostics: YlTimedVideoLifetimeDiagnostics?
   private var maximumForwardCorrectionUs = 0.0, maximumBackwardCorrectionUs = 0.0
   private var minimumLeadUs: Double?, maximumLeadUs: Double?
   private var diagnosticEvents: [[String: Double]] = []
   var diagnostics: [String: Any]? {
     queue.sync {
       guard collectDiagnostics else { return nil }
-      return ["updates": diagnosticUpdates, "enqueues": diagnosticEnqueues, "lateEnqueues": lateEnqueues,
+      return ["anchors": diagnosticAnchors, "lifetime": lifetimeDiagnostics?.snapshot as Any? ?? NSNull(), "updates": diagnosticUpdates, "enqueues": diagnosticEnqueues, "lateEnqueues": lateEnqueues,
         "maximumForwardCorrectionUs": maximumForwardCorrectionUs, "maximumBackwardCorrectionUs": maximumBackwardCorrectionUs,
         "minimumLeadUs": minimumLeadUs as Any? ?? NSNull(), "maximumLeadUs": maximumLeadUs as Any? ?? NSNull(), "events": diagnosticEvents]
     }
@@ -46,6 +49,7 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
     self.timebase = base
     self.onFailure = onFailure
     self.collectDiagnostics = collectDiagnostics
+    self.lifetimeDiagnostics = collectDiagnostics ? YlTimedVideoLifetimeDiagnostics() : nil
     layer = AVSampleBufferDisplayLayer()
     renderer = layer.sampleBufferRenderer
     CMTimebaseSetRate(base, rate: 0)
@@ -90,10 +94,23 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
       guard snapshot.rate.isFinite, snapshot.rate >= 0.25, snapshot.rate <= 4 else {
         fail(NSError(domain: "YLTimedVideoClock", code: -1)); return
       }
-      let status = CMTimebaseSetRateAndAnchorTime(timebase, rate: snapshot.playing ? snapshot.rate : 0,
-        anchorTime: CMTime(value: snapshot.positionUs, timescale: 1_000_000),
-        immediateSourceTime: CMTime(value: snapshot.hostTimeUs, timescale: 1_000_000))
-      if status != noErr { fail(NSError(domain: NSOSStatusErrorDomain, code: Int(status))) }
+      // SetRateAndAnchorTime always emits TimeJumped, even for equivalent
+      // observations. Preserve the native timeline through sub-ms source jitter.
+      // Compare with the last APPLIED anchor so small drift cannot accumulate.
+      let continuous = timebaseAnchor.map { anchor in
+        let expected = Double(anchor.positionUs) + (anchor.playing
+          ? (Double(snapshot.hostTimeUs) - Double(anchor.hostTimeUs)) * anchor.rate : 0)
+        return anchor.playing == snapshot.playing && anchor.rate == snapshot.rate
+          && snapshot.playing && abs(Double(snapshot.positionUs) - expected) <= 1_000 * snapshot.rate
+      } ?? false
+      if !continuous {
+        let status = CMTimebaseSetRateAndAnchorTime(timebase, rate: snapshot.playing ? snapshot.rate : 0,
+          anchorTime: CMTime(value: snapshot.positionUs, timescale: 1_000_000),
+          immediateSourceTime: CMTime(value: snapshot.hostTimeUs, timescale: 1_000_000))
+        if status != noErr { fail(NSError(domain: NSOSStatusErrorDomain, code: Int(status))); return }
+        timebaseAnchor = snapshot
+        if collectDiagnostics { diagnosticAnchors += 1 }
+      }
       if renderer.status == .failed { fail(renderer.error ?? NSError(domain: "YLTimedVideoRenderer", code: -1)) }
     }
   }
@@ -127,6 +144,7 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
           minimumLeadUs = min(minimumLeadUs ?? lead, lead); maximumLeadUs = max(maximumLeadUs ?? lead, lead)
           if lead < 0 { lateEnqueues += 1 }
         }
+        lifetimeDiagnostics?.track(sample: sample, frame: frame)
         renderer.enqueue(sample)
         previewFrames.append(frame); prunePreviewFrames()
         return true
@@ -160,6 +178,7 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
 
   func retire(removingImage: Bool, completion: @escaping () -> Void) {
     stateLock.withLock { closed = true }
+    lifetimeDiagnostics?.record("retire.requested")
     if Thread.isMainThread { layer.removeFromSuperlayer() }
     else { DispatchQueue.main.async { [layer] in layer.removeFromSuperlayer() } }
     queue.async { [self] in
@@ -167,19 +186,54 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
       retirementCallbacks.append(completion)
       guard !retirementStarted else { return }
       retirementStarted = true
+      lifetimeDiagnostics?.record("flush.begin")
       if requesting { renderer.stopRequestingMediaData(); requesting = false }
       CMTimebaseSetRate(timebase, rate: 0)
       renderer.flush(removingDisplayedImage: removingImage) { [self] in
+        lifetimeDiagnostics?.record("flush.completed")
         DispatchQueue.main.async { [self] in
           layer.removeFromSuperlayer()
+          lifetimeDiagnostics?.record("layer.removed")
           queue.async { [self] in
-            previewFrames.removeAll(); clockSnapshot = nil
+            previewFrames.removeAll(); clockSnapshot = nil; timebaseAnchor = nil
+            lifetimeDiagnostics?.record("preview.cleared")
             retirementFinished = true
             let callbacks = retirementCallbacks; retirementCallbacks.removeAll()
             callbacks.forEach { $0() }
           }
         }
       }
+    }
+  }
+}
+/// Diagnostic metadata only: weak references cannot prolong a sample or receipt.
+@available(macOS 14.0, *)
+final class YlTimedVideoLifetimeDiagnostics {
+  private struct Probe {
+    weak var sample: AnyObject?
+    weak var reservation: YlManagedBufferLedger.Token?
+    let pts: Int64
+  }
+  private let lock = NSLock()
+  private var probes: [Probe] = []
+  private var events: [[String: Any]] = []
+  func track(sample: CMSampleBuffer, frame: YlFrameEnvelope) {
+    lock.withLock {
+      probes.append(.init(sample: sample, reservation: frame.reservation, pts: frame.ptsUs))
+      if probes.count > 8 { probes.removeFirst() }
+    }
+  }
+  func record(_ phase: String) {
+    lock.withLock {
+      events.append(["phase": phase, "uptime": ProcessInfo.processInfo.systemUptime])
+      if events.count > 16 { events.removeFirst() }
+    }
+  }
+  var snapshot: [String: Any] {
+    lock.withLock {
+      ["events": events, "samples": probes.map {
+        ["pts": $0.pts, "sampleAlive": $0.sample != nil, "reservationAlive": $0.reservation != nil] as [String: Any]
+      }]
     }
   }
 }

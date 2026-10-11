@@ -11,10 +11,13 @@ final class YlMacosTextureOutput: NSObject, FlutterTexture, YlTextureOutput, YlN
   private let renderer = YlSampleBufferVideoRenderer()
   private weak var attachedContainer: CALayer?
   private let timedLock = NSLock()
+  private var lastTimedLifetimeDiagnostics: AnyObject?
   var collectTimedDiagnostics = false // Internal opt-in observation; no public setting.
   var timedDiagnostics: [String: Any]? {
     guard #available(macOS 14.0, *) else { return nil }
-    return (timedLock.withLock { timedEndpoint } as? YlMacosTimedVideoEndpoint)?.diagnostics
+    let state = timedLock.withLock { (timedEndpoint, lastTimedLifetimeDiagnostics) }
+    return (state.0 as? YlMacosTimedVideoEndpoint)?.diagnostics
+      ?? (state.1 as? YlTimedVideoLifetimeDiagnostics).map { ["lifetime": $0.snapshot] }
   }
   private var timedEndpoint: (any YlTimedVideoEndpoint)?
   private var timedRetiring = false
@@ -66,7 +69,7 @@ final class YlMacosTextureOutput: NSObject, FlutterTexture, YlTextureOutput, YlN
           message: "The native video surface could not display the frame.",
           diagnostic: "timed AVSampleBufferVideoRenderer domain=\(native.domain) code=\(native.code)"))
       }
-      timedLock.withLock { timedEndpoint = endpoint }
+      timedLock.withLock { timedEndpoint = endpoint; lastTimedLifetimeDiagnostics = endpoint.lifetimeDiagnostics }
       return endpoint
     } catch {
       renderer.attach(container)

@@ -228,6 +228,7 @@ final class YlPresentationCoordinator: YlAudioTimeline {
   func receive(_ frame: YlVideoFrame) {
     guard let output, output.acceptsPresentationFrame(generation: frame.generation),
           postSeekGate.acceptsVideo(ptsUs: frame.ptsUs) else { return }
+    let timedAtAdmission = usesTimedPresentation
     let accepted = frameScheduler.enqueue(YlFrameEnvelope(
       reservation: frame.reservation,
       payload: frame.pixelBuffer,
@@ -239,6 +240,10 @@ final class YlPresentationCoordinator: YlAudioTimeline {
     guard accepted else { return }
     output.didAcceptPresentationFrame(generation: frame.generation)
     synchronizeTimedPresentation()
+    // Timed publication already has a coalesced, metadata-only notice. Do not
+    // retain its decoded frame in a legacy UI closure while main is unavailable.
+    // Keep the admission decision if the endpoint retires during enqueue.
+    guard !timedAtAdmission, !usesTimedPresentation else { return }
     DispatchQueue.main.async { [weak self] in
       guard let self, !self.firstFrameSent, !self.usesTimedPresentation,
             let output = self.output, output.acceptsPresentationFrame(generation: frame.generation)

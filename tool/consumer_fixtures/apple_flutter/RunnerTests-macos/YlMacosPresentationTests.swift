@@ -87,6 +87,94 @@ final class YlMacosPresentationTests: XCTestCase {
   }
 
   @MainActor
+  func testContinuousClockObservationsDoNotAnnounceTimeJumps() async throws {
+    guard #available(macOS 14.0, *) else { throw XCTSkip("Timed endpoint requires macOS 14") }
+    let container = CALayer()
+    let endpoint = try YlMacosTimedVideoEndpoint(container: container, onFailure: { _ in XCTFail("Clock failure") })
+    let layer = try XCTUnwrap(container.sublayers?.first as? AVSampleBufferDisplayLayer)
+    let base = try XCTUnwrap(layer.controlTimebase)
+    let host = YlPresentationCoordinator.hostTimeUs()
+    endpoint.update(.init(positionUs: 1_000_000, hostTimeUs: host, rate: 1, playing: true), generation: 1)
+    CMTimebaseNotificationBarrier(base)
+    let lock = NSLock()
+    var jumps = 0
+    let observer = NotificationCenter.default.addObserver(
+      forName: NSNotification.Name(kCMTimebaseNotification_TimeJumped as String), object: base, queue: nil
+    ) { _ in lock.withLock { jumps += 1 } }
+    defer { NotificationCenter.default.removeObserver(observer); endpoint.retire(removingImage: true) {} }
+    for index in 1...20 {
+      let now = YlPresentationCoordinator.hostTimeUs()
+      // Paired readings represent one continuous timeline with sub-ms source jitter.
+      endpoint.update(.init(positionUs: 1_000_000 + now - host + (index.isMultiple(of: 2) ? 200 : -200),
+        hostTimeUs: now, rate: 1, playing: true), generation: 1)
+    }
+    CMTimebaseNotificationBarrier(base)
+    XCTAssertEqual(lock.withLock { jumps }, 0, "Polling a continuous audio clock must not repeatedly announce a discontinuity to the renderer")
+    let now = YlPresentationCoordinator.hostTimeUs()
+    XCTAssertEqual(CMTimeGetSeconds(CMTimebaseGetTime(base)), 1 + Double(now - host) / 1_000_000, accuracy: 0.001)
+    // Every increment is below tolerance, but their accumulated phase exceeds
+    // it. Comparing only consecutive observations would incorrectly ignore all.
+    for step in 1...4 {
+      let observedHost = YlPresentationCoordinator.hostTimeUs()
+      endpoint.update(.init(positionUs: 1_000_000 + observedHost - host + Int64(step * 600),
+        hostTimeUs: observedHost, rate: 1, playing: true), generation: 1)
+    }
+    let accumulatedHost = YlPresentationCoordinator.hostTimeUs()
+    XCTAssertEqual(CMTimeGetSeconds(CMTimebaseGetTime(base)),
+      1.0024 + Double(accumulatedHost - host) / 1_000_000, accuracy: 0.001)
+    endpoint.update(.init(positionUs: 1_010_000 + now - host, hostTimeUs: now, rate: 1, playing: true), generation: 1)
+    CMTimebaseNotificationBarrier(base)
+    XCTAssertGreaterThan(lock.withLock { jumps }, 0, "Accumulated drift must be corrected against the applied anchor")
+    let checkHost = YlPresentationCoordinator.hostTimeUs()
+    XCTAssertEqual(CMTimeGetSeconds(CMTimebaseGetTime(base)), 1.01 + Double(checkHost - host) / 1_000_000, accuracy: 0.001)
+    let beforePause = lock.withLock { jumps }
+    endpoint.update(.init(positionUs: 2_000_000, hostTimeUs: now, rate: 1, playing: false), generation: 1)
+    CMTimebaseNotificationBarrier(base)
+    XCTAssertGreaterThan(lock.withLock { jumps }, beforePause, "A real control discontinuity must still reach the native timebase")
+    XCTAssertEqual(CMTimebaseGetRate(base), 0)
+    XCTAssertEqual(CMTimeGetSeconds(CMTimebaseGetTime(base)), 2, accuracy: 0.000001)
+  }
+
+  @MainActor
+  func testRetiredTimedSampleDoesNotWaitForCallerAutoreleasePool() async throws {
+    guard #available(macOS 14.0, *) else { throw XCTSkip("Timed endpoint requires macOS 14") }
+    let container = CALayer()
+    let endpoint = try YlMacosTimedVideoEndpoint(container: container, collectDiagnostics: true, onFailure: { _ in XCTFail("Sample failure") })
+    endpoint.update(.init(positionUs: 0, hostTimeUs: YlPresentationCoordinator.hostTimeUs(), rate: 1, playing: false), generation: 1)
+    let ledger = YlManagedBufferLedger()
+    let submitted = expectation(description: "sample submitted")
+    let release = DispatchSemaphore(value: 0)
+    let done = expectation(description: "caller pool drained")
+    // This helper's strong frame/token locals die before the caller stays idle.
+    @Sendable func submit() {
+      var pixel: CVPixelBuffer?
+      XCTAssertEqual(CVPixelBufferCreate(kCFAllocatorDefault, 16, 16, kCVPixelFormatType_32BGRA,
+        [kCVPixelBufferIOSurfacePropertiesKey: [:]] as CFDictionary, &pixel), kCVReturnSuccess)
+      guard let pixel, let token = ledger.reserve(category: .queuedVideoFrames, bytes: 1024, generation: 1) else {
+        XCTFail("Could not allocate sample"); return
+      }
+      XCTAssertTrue(endpoint.enqueue(.init(reservation: token, payload: pixel, ptsUs: 0, durationUs: 40_000, keyframe: true, generation: 1)))
+    }
+    DispatchQueue(label: "test.timed.caller-pool").async {
+      autoreleasepool {
+        submit(); submitted.fulfill()
+        _ = release.wait(timeout: .now() + 10)
+      }
+      done.fulfill()
+    }
+    await fulfillment(of: [submitted], timeout: 2)
+    let retired = expectation(description: "native flush completed")
+    endpoint.retire(removingImage: true) { retired.fulfill() }
+    await fulfillment(of: [retired], timeout: 2)
+    try await AppleHostCharacterizations.waitFor({ ledger.snapshot.currentBytes == 0 }, timeout: 0.5)
+    let bytesBeforeCallerPoolDrain = ledger.snapshot.currentBytes
+    release.signal()
+    await fulfillment(of: [done], timeout: 2)
+    XCTAssertEqual(bytesBeforeCallerPoolDrain, 0, "A flushed sample must not stay charged until an unrelated caller pool drains")
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+  }
+
+  @MainActor
   func testNativeTimedEndpointFreezesAndRetires() async throws {
     guard #available(macOS 14.0, *) else { throw XCTSkip("Timed endpoint requires macOS 14") }
     let container = CALayer(); container.bounds = CGRect(x: 0, y: 0, width: 32, height: 32)
@@ -421,6 +509,56 @@ final class YlMacosPresentationTests: XCTestCase {
     func resize(width: Int, height: Int) {}
     func clear() {}
     func dispose() {}
+  }
+
+  private final class CandidatePresentationSink: YlPresentationOutput {
+    var presentationGeneration: UInt64 = 1
+    var allowsBoundedPresentation = false
+    func acceptsPresentationFrame(generation: UInt64) -> Bool { generation == presentationGeneration }
+    func didAcceptPresentationFrame(generation: UInt64) {}
+    func didPublishFirstPresentationFrame() {}
+    func presentationDidTick(atHostTimeUs: Int64) {}
+    func emitPresentationDelta() {}
+  }
+
+  @MainActor
+  func testTimedDecodeDoesNotRetainFrameInLegacyMainQueueNotice() throws {
+    let texture = RecordingTimedOutput(), sink = CandidatePresentationSink(), scheduler = YlFrameScheduler()
+    var tick: (() -> Void)?
+    let services = YlPlatformServices(platform: .macos, textureOutput: texture,
+      makeDisplayDriver: { tick = $0; return AppleTestDisplay() })
+    let coordinator = YlPresentationCoordinator(services: services, lock: NSLock(), openedAt: 0,
+      positionEventIntervalMs: 100, scheduler: scheduler)
+    coordinator.output = sink
+    coordinator.configureClock(nil, audioTime: { nil })
+    coordinator.configureTimedCandidate(enabled: true, requiresAudioAnchor: false)
+    coordinator.flushFrames(generation: 1)
+    coordinator.play(atHostTimeUs: YlPresentationCoordinator.hostTimeUs())
+    coordinator.installDisplayLink(paused: false)
+    try XCTUnwrap(tick)()
+    XCTAssertNotNil(coordinator.timedVideoStatistics)
+    let ledger = YlManagedBufferLedger(), done = DispatchSemaphore(value: 0)
+    @Sendable func decodeOneFrame() {
+      var pixel: CVPixelBuffer?
+      XCTAssertEqual(CVPixelBufferCreate(kCFAllocatorDefault, 16, 16, kCVPixelFormatType_32BGRA, nil, &pixel), kCVReturnSuccess)
+      guard let pixel, let token = ledger.reserve(category: .queuedVideoFrames, bytes: 1024, generation: 1) else {
+        XCTFail("No decoded frame"); return
+      }
+      coordinator.receive(.init(pixelBuffer: pixel, ptsUs: 10_000_000, durationUs: 40_000,
+        keyframe: true, generation: 1, ownershipToken: nil, reservation: token))
+    }
+    DispatchQueue.global().async {
+      decodeOneFrame()
+      // The far-future frame never entered the timed endpoint. The scheduler
+      // relinquishes it, while this test deliberately keeps main unavailable.
+      scheduler.dispose()
+      done.signal()
+    }
+    XCTAssertEqual(done.wait(timeout: .now() + 2), .success)
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0, "A selected timed surface must not retain decoded media in an unused legacy UI notice")
+    sink.presentationGeneration = 2
+    coordinator.retireDisplay(); coordinator.disposeFrames()
+    texture.endpoints.forEach { $0.retirement?() }
   }
 
   func testUnsupportedTimedOutputKeepsLegacyAudioClock() {
