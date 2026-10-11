@@ -65,3 +65,12 @@ The subsequent [ASS/SSA text subset](2026-10-11-subtitle-ass.md) adds external
 UTF-8 styled text, position/layers and media-time move/fad using the same managed
 loader, catalog and lifecycle gates. It has explicit rendering/budget limits;
 full libass equivalence, smart wrapping and native/device acceptance remain open.
+
+## PGS extension (2026-10-11)
+
+The subsequent [PGS binary SUP subset](2026-10-11-subtitle-pgs.md) adds external
+bitmap loading through the same owner and managed loader. Binary payloads bypass
+text decoding. A separate 64 MiB expanded catalog budget precedes allocation;
+only active frames create images, with a two-job asynchronous decode queue and
+late-result disposal. Cover fit follows source cropping. VobSub, embedded PGS,
+HDR/protected output and physical-device acceptance remain open.

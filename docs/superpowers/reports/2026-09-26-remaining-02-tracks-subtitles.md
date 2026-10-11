@@ -170,3 +170,35 @@ owned Ahem 样本在固定媒体时点手工推导像素框，验证9锚点、�
 最终基线 `ffc46826d0fbfc955bd94530b430ae777625e4fa`，隔离副本只覆盖本项11份源码/测试；排除另一会话未提交内容。仓库根运行 `flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test`：**755/755、0失败、exit0**（135接口/425播放器/113 Apple/82 Android），本项新增70项。播放器和接口lib/test静态分析 **No issues found、exit0**；所有候选代码与验证副本逐字节核对。
 
 [证据清单](evidence/2026-10-11-subtitle-ass/manifest.json)保留原始成功/失败日志、PNG、审计/复审和源码文档指纹。使用独立Git index及HEAD比较更新，仅提交本项与自身总览/CHANGELOG段，不夹带另一会话已暂存或未提交内容。
+
+## 2026-10-11 PGS 外挂位图加载与渲染
+
+按用户指示继续 Task 3B，复用 `enableTextSubtitles: true` 和 `YlSubtitleFormat.pgs`，接入实际 SUP 文件/managed HTTP(S) 加载与 Flutter 位图合成。具体支持与拒绝边界见 [PGS 契约](../specs/2026-10-11-subtitle-pgs.md)。不改公开 SPI、Pigeon、原生实现或依赖，不触碰长播放/弱网 ABR。
+
+### 实现与裁定
+
+- 二进制绕过 UTF-8/文本标签。解析 SUP framing、90 kHz PCS PTS/32-bit rollover、完整 display set、分段 ODS 与严格逐行 RLE；部分 palette 更新保持其他颜色，输出 premultiplied RGBA。窗口/源裁剪、双对象顺序重叠、清屏及同 PTS 替换均有测试。
+- 沿用媒体位置减偏移查询；最终非空 display 保持到下一次清屏/变化或 session 结束，受既有七天上限约束。强制标志保留，选中轨道时显示其全部对象。普通视频 fit/PAR/rotation 保持字幕直立，cover 使用实际可见源区域；不通过 OCR 或文字替代图形。
+- 4 MiB encoded / 10,000 cue / 20,000 text run 的既有目录限制保留；PGS 独立限制每目录 64 MiB 展开 RGBA，剩余额度逐文件传入并在分配前检查。每文档 50,000 segment，单对象 4,194,304 像素、epoch indexed cache 16 MiB、64对象/8调色板/2窗口/2引用。老目录和候选各有预算，失败替换保持老目录。
+- 仅当前画面创建最多两张引擎图片；跨 view 的异步在途任务最多两个，排队任务随替换合并，迟到结果释放。稳定时间/几何重建复用图片，seek/off/换源/卸载释放所属 handle。多个挂载 view 各自持有图片；不把这些字节预算表述为总 RSS 上限。
+- 接纳显式 WDS 重绘、空 PCS 清屏和 palette-only 重着色；cache-only 非空重绘、palette-only ODS/WDS 等语义明确拒绝。裁定代价：部分合法高级 SUP 仍需后续 decoder 语义；超预算大轨道需要未来流式/预算扩展。本项不是完整 Blu-ray/native 认证。
+
+### 审计、失败记录与验证范围
+
+[制品审计](evidence/2026-10-11-subtitle-pgs/artifact-audit.json)逐一复核前次六份 Android/Apple 二进制、两份构建脚本与两份 FFmpeg 9.0.1 lock 的 SHA256 均未变。构建配方未启用 SUP/PGS 模块；此切片为原始 Dart parser 与 Flutter compositor，不将上游支持冒充现有 native 能力，没有新增包、借用样本或许可负担。
+
+入口先 0通过/3失败（旧 runtime 拒绝 PGS）。首轮验证发现 RGBA 需要预乘 alpha；后续 Skia 像素测试发现同步 raw-image API 虽存在但未实现，改用可移植 ImageDescriptor/Codec 异步路径，并增加在途上限和迟到释放测试。夹具同时修正：客户端取消后的服务器关闭等待、601整数取整/旋转采样坐标、双对象异步回调间的 widget pump、资源错误码名称。未放宽既有测试时间门限。
+
+定向 58/58：44解析、4实际 I/O/目录资源、10像素与生命周期。三张固定时点 PNG 使用 owned 小型 SUP 与手工推导坐标/颜色，全图检查调色板/半透明/清屏；另验 cover/PAR/rotation、双对象 alpha 重叠、句柄复用/释放、引擎失败脱敏和频繁重挂载的两个在途任务上限。公开控制器生命周期用 fake 媒体事件，文件及 loopback HTTP 真正执行。没有原生/设备/长播/弱网 ABR 验证，HDR/DRM、内嵌、VobSub、PD-03 与 P02/CAP-SUB 仍开放。
+
+### 独立复审与兼容性修复
+
+一次 fresh-context 只读复审提出 1 Important、无 Critical/Minor：有效 Alignment 将视频部分移出视口时，位图源区域未对应 destination 裁切，造成压缩。左/右/上/下四项像素回归先实际 0通过/4失败，改为保留完整拟合 destination、再将相交区域映射回 source，PGS 定向 **62/62**。仅一次修复，无第二轮复审；所有未判断范围与裁定代价见[复审记录](evidence/2026-10-11-subtitle-pgs/review.md)。
+
+四包首轮在既有 runtime 的“不支持格式仍取消旧请求”用例暴露夹具遗漏：PGS 变为支持后换成 VobSub，但缺少契约要求的 companionSource，故在参数校验阶段返回 ArgumentError 而非进入 runtime。补齐 idx/sub 配对，使它继续测试原有不支持能力取消逻辑；未改公共校验或生产取消行为。首轮失败及主动中止后的 Flutter sink shutdown 错误如实保留在 four-packages-first.log，最终重新运行固定候选。
+
+### 最终冻结验证
+
+基线 `1a20e5dc488b0f4a129db8ab4b26b5f7e3f5f16c`，隔离副本覆盖本项11份源码/测试，排除另一会话未提交内容。仓库根执行 `flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test`：**817/817、0失败、exit0**（135接口/487播放器/113 Apple/82 Android），本项新增62项；播放器与接口lib/test的最终静态分析 **No issues found、exit0**。修正旧格式夹具后的23项 runtime 兼容性测试也全部通过。
+
+[证据清单](evidence/2026-10-11-subtitle-pgs/manifest.json)保留源码/依赖/文档指纹、完整成功/失败日志、三张像素图、制品审计与复审裁定。所有11份候选源码与验证副本逐字节一致；独立Git index及HEAD比较更新只提交字幕切片和自身总览/CHANGELOG段，不夹带另一会话修改。无遗留复审问题；完整 Task3/P02 尚未完成，继续保留执行账本。

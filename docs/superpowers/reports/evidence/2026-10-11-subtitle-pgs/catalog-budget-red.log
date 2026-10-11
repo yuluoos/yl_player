@@ -1,0 +1,18 @@
+00:00 +0: loading /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_runtime_test.dart
+00:00 +0: expanded bitmap budget is shared across external catalog documents
+00:00 +0 -1: expanded bitmap budget is shared across external catalog documents [E]
+  Expected: throws <Instance of 'YlPlayerException'> with `code`: 'subtitle.too_large' and `scope`: YlFailureScope:<YlFailureScope.command>
+    Actual: <Instance of 'Future<void>'>
+     Which: emitted <null>
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/pgs_runtime_test.dart 80:13  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                           _CustomZone.registerUnaryCallback
+  packages/yl_player/test/pgs_runtime_test.dart 58:21  main.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_runtime_test.dart: expanded bitmap budget is shared across external catalog documents

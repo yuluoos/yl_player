@@ -1,0 +1,112 @@
+00:00 +0: loading /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart
+00:00 +0: PGS partially offscreen right alignment preserves video scale
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: [255, 255, 255]
+  Actual: [0, 0, 255]
+   Which: at location [0] is <0> instead of <255>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart:200:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart line 200
+The test description was:
+  PGS partially offscreen right alignment preserves video scale
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -1: PGS partially offscreen right alignment preserves video scale [E]
+  Test failed. See exception logs above.
+  The test description was: PGS partially offscreen right alignment preserves video scale
+  
+00:00 +0 -1: PGS partially offscreen left alignment preserves video scale
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: [255, 255, 255]
+  Actual: [0, 0, 255]
+   Which: at location [0] is <0> instead of <255>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart:200:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart line 200
+The test description was:
+  PGS partially offscreen left alignment preserves video scale
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -2: PGS partially offscreen left alignment preserves video scale [E]
+  Test failed. See exception logs above.
+  The test description was: PGS partially offscreen left alignment preserves video scale
+  
+00:00 +0 -2: PGS partially offscreen bottom alignment preserves video scale
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: [255, 255, 255]
+  Actual: [0, 0, 255]
+   Which: at location [0] is <0> instead of <255>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart:200:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart line 200
+The test description was:
+  PGS partially offscreen bottom alignment preserves video scale
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -3: PGS partially offscreen bottom alignment preserves video scale [E]
+  Test failed. See exception logs above.
+  The test description was: PGS partially offscreen bottom alignment preserves video scale
+  
+00:00 +0 -3: PGS partially offscreen top alignment preserves video scale
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: [255, 255, 255]
+  Actual: [0, 0, 255]
+   Which: at location [0] is <0> instead of <255>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart:200:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart line 200
+The test description was:
+  PGS partially offscreen top alignment preserves video scale
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -4: PGS partially offscreen top alignment preserves video scale [E]
+  Test failed. See exception logs above.
+  The test description was: PGS partially offscreen top alignment preserves video scale
+  
+00:00 +0 -4: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: PGS partially offscreen bottom alignment preserves video scale
+  /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: PGS partially offscreen left alignment preserves video scale
+  /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: PGS partially offscreen right alignment preserves video scale
+  /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: PGS partially offscreen top alignment preserves video scale

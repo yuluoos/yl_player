@@ -41,7 +41,8 @@ final class TextSubtitleRuntime {
           source.format != YlSubtitleFormat.webvtt &&
           source.format != YlSubtitleFormat.ttml &&
           source.format != YlSubtitleFormat.ass &&
-          source.format != YlSubtitleFormat.ssa) {
+          source.format != YlSubtitleFormat.ssa &&
+          source.format != YlSubtitleFormat.pgs) {
         throw subtitleFailure(YlFailureCodes.subtitleUnsupported);
       }
     }
@@ -51,6 +52,7 @@ final class TextSubtitleRuntime {
     var bytesLeft = 4 * 1024 * 1024;
     var cuesLeft = 10000;
     var runsLeft = 20000;
+    var bitmapBytesLeft = 64 * 1024 * 1024;
     try {
       for (final source in sources) {
         final bytes = await readSubtitleResource(
@@ -61,15 +63,20 @@ final class TextSubtitleRuntime {
         token.check();
         final doc = SubtitleDocument.parse(
           bytes,
-          limits: SubtitleLimits(maxAssRuns: runsLeft),
+          limits: SubtitleLimits(
+            maxAssRuns: runsLeft,
+            maxPgsBitmapBytes: bitmapBytesLeft,
+          ),
           format: switch (source.format) {
             YlSubtitleFormat.srt => SubtitleFormat.srt,
             YlSubtitleFormat.webvtt => SubtitleFormat.webvtt,
             YlSubtitleFormat.ass => SubtitleFormat.ass,
             YlSubtitleFormat.ssa => SubtitleFormat.ssa,
+            YlSubtitleFormat.pgs => SubtitleFormat.pgs,
             _ => SubtitleFormat.ttml,
           },
         );
+        bitmapBytesLeft -= doc.pgsBitmapBytes;
         bytesLeft -= bytes.length;
         cuesLeft -= doc.cues.length;
         if (cuesLeft < 0) {
@@ -77,7 +84,9 @@ final class TextSubtitleRuntime {
         }
         final text = <TextSpan>[];
         for (final cue in doc.cues) {
-          final span = cue.ass != null
+          final span = cue.pgs != null
+              ? const TextSpan(children: [])
+              : cue.ass != null
               ? TextSpan(
                   children: [
                     for (final run in cue.ass!.runs)

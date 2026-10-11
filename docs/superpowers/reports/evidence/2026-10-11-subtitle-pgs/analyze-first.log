@@ -1,0 +1,14 @@
+Analyzing subtitles, pgs_document_test.dart, pgs_runtime_test.dart, pgs_overlay_test.dart...
+
+   info - packages/yl_player/lib/src/subtitles/pgs_parser.dart:142:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/pgs_parser.dart:198:9 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/pgs_parser.dart:250:9 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/pgs_parser.dart:255:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/pgs_parser.dart:314:9 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/test/pgs_runtime_test.dart:114:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - packages/yl_player/test/pgs_runtime_test.dart:116:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - packages/yl_player/test/pgs_runtime_test.dart:118:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - packages/yl_player/test/pgs_runtime_test.dart:120:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - packages/yl_player/test/pgs_runtime_test.dart:123:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+
+10 issues found.

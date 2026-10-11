@@ -1,0 +1,198 @@
+{
+  "validation": {
+    "base": "1a20e5dc488b0f4a129db8ab4b26b5f7e3f5f16c",
+    "path": "/private/tmp/yl-pgs-validation-rctzxpj1",
+    "files": [
+      "packages/yl_player/lib/src/subtitles/subtitle_document.dart",
+      "packages/yl_player/lib/src/subtitles/pgs_parser.dart",
+      "packages/yl_player/lib/src/subtitles/pgs_overlay.dart",
+      "packages/yl_player/lib/src/subtitles/text_subtitle_runtime.dart",
+      "packages/yl_player/lib/src/subtitles/text_subtitle_overlay.dart",
+      "packages/yl_player/test/pgs_document_test.dart",
+      "packages/yl_player/test/pgs_runtime_test.dart",
+      "packages/yl_player/test/pgs_overlay_test.dart",
+      "packages/yl_player/test/support/pgs_fixture.dart",
+      "packages/yl_player/test/text_subtitle_runtime_test.dart",
+      "packages/yl_player/lib/src/player_controller.dart"
+    ]
+  },
+  "ownedSourceAndDocs": {
+    "packages/yl_player/lib/src/subtitles/subtitle_document.dart": "d7509e7302d5a3e1946dd9c9979f26243795f27c81f4ee131d32ba9b16d47517",
+    "packages/yl_player/lib/src/subtitles/pgs_parser.dart": "c7170fe592f8dac11727b00e1b0850373c56b617cf4ff7e0ec9591e870aac056",
+    "packages/yl_player/lib/src/subtitles/pgs_overlay.dart": "ec03f4a89d75a53ef43b54446c683a8e5702c523688766678767bafe1bbf68d8",
+    "packages/yl_player/lib/src/subtitles/text_subtitle_runtime.dart": "704c0920509fa9f22adc26ebc175cc861364b8f6d43db106fc3d2371868f7ca0",
+    "packages/yl_player/lib/src/subtitles/text_subtitle_overlay.dart": "79ffffdc7c5be456c5495444c75654043b9ba26df504dd1db4cebaea9474d73b",
+    "packages/yl_player/test/pgs_document_test.dart": "c5b1df43202272508132cc58aa4df1f89d657eaa8f887fa26c42bfeb0983b67c",
+    "packages/yl_player/test/pgs_runtime_test.dart": "08e05e8330236a9868096e5b117210fff9f7708cf02efe8f6c388fb20c51691c",
+    "packages/yl_player/test/pgs_overlay_test.dart": "57ea2e1ba55021052eecd538f60ac0de511f393d3b7a52b5add3d260c26ce3bc",
+    "packages/yl_player/test/support/pgs_fixture.dart": "0fb98a02766cd35b017fe2d36554755a1ed4486c7b48abfe340592cb1608d306",
+    "packages/yl_player/test/text_subtitle_runtime_test.dart": "879407df9122220536ee506c6ddb941bb48bb20ceda81fa264ba27081b169bd5",
+    "packages/yl_player/lib/src/player_controller.dart": "adc7ec5d28e1dbc20c912fe7fa9c601eaaac28c8716dca4fee5a0afdd9f5435f",
+    "docs/platform-support.md": "3a811e2d80be0f32aeeeeacaaa96d97e2080ed08a99d0d341a8ed3cb8fc4c086",
+    "docs/superpowers/specs/2026-10-11-subtitle-pgs.md": "c19a3699f713953055f7a358a94bc8196812165d1879ea98485efc7554ea9592",
+    "docs/superpowers/specs/2026-10-11-subtitle-runtime.md": "714b24146e0cbbc26e42fb845ffde26c78360cbbaf902ae219c0feeeb20217dd",
+    "packages/yl_player/README.md": "efec31f0830be4d931045dfec0011d5267a2da625e5bdecf9aea039319c2093b",
+    "docs/superpowers/reports/2026-09-26-remaining-02-tracks-subtitles.md": "3213e53c15307ebaf1be96110c8469dfba7b2215a155c23f52b647d361286da3"
+  },
+  "referenceDependencies": {
+    "packages/yl_player/lib/src/playback_session.dart": "a66034c34bf5d98ec0cfa96a0f5b56de26cfc60be2b04add287ab80870c2753a",
+    "packages/yl_player/lib/src/subtitles/subtitle_resource.dart": "b371094c804274cd3b11eeda357d7074bfa5746a002adb95a13bec0a21a9f42c",
+    "packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart": "50a2413e73873ca86530c1001213c0d3ee30767f9b25c86b5ade2dddd8267e61",
+    "packages/yl_player/lib/src/subtitles/subtitle_socket.dart": "924a5e00ff2ff41e8a8c3bfc16690252bd09682695560fe54e02d9ba318fe942",
+    "packages/yl_player_platform_interface/lib/src/model/subtitles.dart": "c3a63f859b42893fbb91db894ded10bac6468f4f055f0629950d2a9d439a2b9d",
+    "packages/yl_player_platform_interface/lib/src/validation/subtitle_validation.dart": "e96723041113be76ad3cc28775e49625da61bac995db5b80ad65b47c2a83fa36",
+    "packages/yl_player/lib/src/subtitles/ttml_parser.dart": "ee173411e11a45090d0e42efff0625b8a50fef6722c27f6bcfbd6ea20f9a90bd",
+    "packages/yl_player/lib/src/subtitles/ass_parser.dart": "4466249fb2536f44a57da30c33029e8b471f175ac91e1b52c0b79b2b000aab06",
+    "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
+    "packages/yl_player/pubspec.yaml": "6c6bb701de8860f7522ecc91176e01d38217a968d1ca2b3fe2d61c47ddff9461"
+  },
+  "sharedDocumentTransforms": {
+    "overviewSectionSha256": "9e842ff4d2bc61f26e1689e4f26fc0e2a9e7569ac96cbf225c12b5ebe93c8cc6",
+    "changelogEntrySha256": "2f4afdfa6ea840be047bffe2569ca2668c8562ecc3f4bf5055dfc39a0957f61e"
+  },
+  "evidence": {
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/analyze-expanded.log": "3747081d543000697699f022cbcd36f6a1cd2c68365fc5a0c4fc822cba98be19",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/analyze-first.log": "97290e049f840e6d24a7b61c28485afd0a709a05e01c47ebcfca01c8cba510d6",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/analyze-ready.log": "7cf9b717cd0ae36cad727808630a9a929c04f0d5a041238ce9f70ec6fb4bd475",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/artifact-audit.json": "677acd6e0d5dddc54b39c627ac417d927dad8f2f403a0f8dd5469d6c9c27f3d0",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/async-lifecycle.log": "3a8c8ed8330fea3fd81c1de14fc9f445f9b28a6a65e38fa05e22b9b285dd8a74",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/cancel-diagnostic.log": "f8201a5f4a7bf45c30bab2735384a4821122cbd4d5c389053c97f9dab87b5cb3",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/catalog-budget-red.log": "6dc7b0a4eabc473064ab7b3aaf8020c679d430797d8524a6f139d8d05ccf9e09",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/compatibility-green.log": "fa01216cb06739a228db559c33fdd97b739c6af0cecb0004d42d3089128a551c",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/directed-complete.log": "15f33a8cbc8495e9473c9e8e9b7556ac955e27592b8dd7f1e2e5ed3848e11d0d",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/directed-green.log": "d3f0aacb36e8a77be163807a8085db1370a81ca5555eb94035ed04b05da1da33",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/final-analyze.log": "7cf9b717cd0ae36cad727808630a9a929c04f0d5a041238ce9f70ec6fb4bd475",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/final-four-packages.log": "de116731ed9d5382683d8900b7db460062756f0e22094e52775295b96c1b417d",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/first-directed.log": "1de8ad592d3f2ba02d82be8e31e1d92520b5edc607ff124c057686cb2b62effe",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/four-packages-first.log": "2db517080ae192439bac7a10476a42d0fdcaa328e5718472cd2ba406f89c4b06",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/lint-fix.log": "5186f9f858c15fe8e36a9fefd72d5c52ad391771b0cd7c5ab533964107b3908b",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/overlap-isolated.log": "d74a7e4c2ce5d49c24d684b69f7b52309528a3de61f7525eec94204df8bb2256",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/palette-1000.png": "d0e3745730c628025b409373d6328387fff5c33b32620764b61a574cba4f769e",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/palette-2000.png": "4fcc67424f2fedebe590fa7ae141b9dd60d8b29a3d824aa9f8fd05bad0ab2467",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/palette-3000.png": "6e4588272447cec91f0a5ad7de897517ba88f07bf14559c9ae426100c694a0cd",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/portable-renderer.log": "e41c7ccbdec0d83597a5ac9cbfa3588b3a2f2f8f3dc0662f731cbaf36ed6a2db",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/review-four-edges-red.log": "fccd3109c2bdfb366a7f1fe86e72ddba33aeebb6a844e50a4e848ca070a9fbb7",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/review-green.log": "3c935be745e977ae108ed29646890dd9f42b713ff1013fe19992310dddbe4b2d",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/review-red.log": "84d7c2909914602e0b1370a90bb328be73e17ab5829e151a6dcdd56b3342af76",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/review.md": "23858c8888365236ba0d825e529c511c688c3b13cff0baee57296b39ecdf2c8a",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/runtime-red.log": "6cf8409aa0cd8acd3cbe795556a639efd72b2feb6a5d862d2dcb8e0ed87129ed",
+    "docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs/visual-first.log": "f147e7e47593529f30d296b35e3b979cb9fb0eaa79f65d1cfba19fc75104539b"
+  },
+  "finalVerification": [
+    {
+      "command": "YL_PGS_EVIDENCE_DIR=<repository>/docs/superpowers/reports/evidence/2026-10-11-subtitle-pgs flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test",
+      "cwd": "/private/tmp/yl-pgs-validation-rctzxpj1",
+      "exitCode": 0,
+      "passed": 817,
+      "failed": 0,
+      "packageCounts": [
+        135,
+        487,
+        113,
+        82
+      ],
+      "newTests": 62,
+      "log": "final-four-packages.log"
+    },
+    {
+      "command": "dart analyze --suppress-analytics packages/yl_player/lib packages/yl_player/test packages/yl_player_platform_interface/lib packages/yl_player_platform_interface/test",
+      "cwd": "/private/tmp/yl-pgs-validation-rctzxpj1",
+      "exitCode": 0,
+      "result": "No issues found",
+      "log": "final-analyze.log"
+    }
+  ],
+  "history": [
+    {
+      "log": "runtime-red.log",
+      "result": "0 pass/3 fail: previous runtime rejected PGS"
+    },
+    {
+      "log": "first-directed.log",
+      "result": "44 pass/3 fail: premultiplied alpha and cancellation fixture server close timeout"
+    },
+    {
+      "log": "cancel-diagnostic.log",
+      "result": "product cancellation/replacement completed; server close after client disconnect timed out"
+    },
+    {
+      "log": "visual-first.log",
+      "result": "43 pass/8 fail: rounding expectation and synchronous raw image API unimplemented on Skia"
+    },
+    {
+      "log": "analyze-first.log",
+      "result": "10 info diagnostics including temporary diagnostic prints"
+    },
+    {
+      "log": "lint-fix.log",
+      "result": "5 brace-style fixes applied; prints removed after diagnostic"
+    },
+    {
+      "log": "portable-renderer.log",
+      "result": "53 pass/1 fail: rotated fixture sampled red region instead of white"
+    },
+    {
+      "log": "async-lifecycle.log",
+      "result": "9 pass/1 fail: sequential engine callbacks require intervening widget pumps"
+    },
+    {
+      "log": "overlap-isolated.log",
+      "result": "same missing second-object decode completion reproduced in isolation"
+    },
+    {
+      "log": "directed-green.log",
+      "result": "54 pass/1 load failure: aggregate-budget test used wrong constant name"
+    },
+    {
+      "log": "analyze-expanded.log",
+      "result": "same undefined test constant; corrected to subtitleTooLarge"
+    },
+    {
+      "log": "directed-complete.log",
+      "result": "58 pass"
+    },
+    {
+      "log": "catalog-budget-red.log",
+      "result": "0 pass/1 fail after removing remaining-bitmap-budget argument only in isolated snapshot; restored candidate before final run"
+    },
+    {
+      "log": "analyze-ready.log",
+      "result": "No issues found"
+    },
+    {
+      "log": "review-red.log",
+      "result": "0 pass/3 fail: partial destination clipping compressed bitmaps"
+    },
+    {
+      "log": "review-four-edges-red.log",
+      "result": "0 pass/4 fail: all four clipping directions reproduce"
+    },
+    {
+      "log": "review-green.log",
+      "result": "62 pass after mapping destination clipping to source"
+    },
+    {
+      "log": "four-packages-first.log",
+      "result": "469 passed then invalid VobSub test fixture rejected by companion-source validation; interrupted run emitted Flutter sink shutdown errors"
+    },
+    {
+      "log": "compatibility-green.log",
+      "result": "23 runtime compatibility tests pass after adding required companion source to unsupported-format fixture"
+    }
+  ],
+  "review": {
+    "important": 1,
+    "minor": 0,
+    "fixed": 1,
+    "remaining": 0,
+    "method": "One fresh-context read-only review, one regression/fix pass, no re-review",
+    "details": "review.md"
+  },
+  "dependenciesAdded": [],
+  "limitations": [
+    "External bounded SUP subset; cache-only redraw and palette-only ODS/WDS unsupported",
+    "64 MiB catalog expansion and two concurrent jobs do not guarantee whole-process RSS",
+    "Owned manual pixel fixtures; file/loopback HTTP real, public lifecycle fake platform",
+    "No native/device/long-play/weak-network ABR validation; P02/CAP-SUB, VobSub, embedded, HDR/protected, native identities and PD03 remain open"
+  ]
+}

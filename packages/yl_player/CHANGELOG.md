@@ -1,5 +1,11 @@
 ## 0.2.0-dev.2
 
+- Add opt-in external PGS/SUP bitmap subtitles through the managed loader,
+  with bounded RLE/palette decoding, cropped/windowed composition, palette
+  updates and media-time clearing. Active images use a bounded asynchronous
+  decode queue with late-result disposal; full disc/native-device subtitle
+  qualification and VobSub remain outside this subset.
+
 - Add opt-in external ASS/SSA UTF-8 text subtitles through the managed loader,
   with bounded styles, outline/shadow, script-space positioning/layers and
   media-clock movement/fades. Supports explicit WrapStyle 1/2; unsupported

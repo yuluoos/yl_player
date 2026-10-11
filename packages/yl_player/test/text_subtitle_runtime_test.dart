@@ -383,7 +383,8 @@ void main() {
                 ? YlExternalSubtitle(
                     id: 'new',
                     source: YlFileSource(file.path),
-                    format: YlSubtitleFormat.pgs,
+                    format: YlSubtitleFormat.vobsub,
+                    companionSource: YlFileSource(file.path),
                   )
                 : sub(
                     source: YlNetworkSource(
@@ -602,7 +603,8 @@ void main() {
           YlExternalSubtitle(
             id: 'ass',
             source: YlFileSource(file.path),
-            format: YlSubtitleFormat.pgs,
+            format: YlSubtitleFormat.vobsub,
+            companionSource: YlFileSource(file.path),
           ),
         ]),
         failure(YlFailureCodes.subtitleUnsupported),

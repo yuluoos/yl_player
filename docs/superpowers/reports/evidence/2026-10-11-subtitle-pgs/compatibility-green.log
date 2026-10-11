@@ -1,0 +1,25 @@
+00:00 +0: loading /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/text_subtitle_runtime_test.dart
+00:00 +0: real file catalog, selection, offset and native revision coexist
+00:00 +1: bad replacement is atomic and sanitized
+00:00 +2: managed retry reaches parser and atomically replaces selected content
+00:00 +3: managed parse failure never retries or changes committed catalog
+00:00 +4: managed backoff is cancelled by replace with no later requests
+00:00 +5: managed backoff is cancelled by load with no later requests
+00:00 +6: managed backoff is cancelled by stop with no later requests
+00:01 +7: managed backoff is cancelled by dispose with no later requests
+00:01 +8: events share the public revision domain after subtitle publications
+00:01 +9: unsupported newer format replacement still cancels previous pending catalog
+00:01 +10: unsupported newer encoding replacement still cancels previous pending catalog
+00:01 +11: session replacement clears catalog and offset
+00:01 +12: native subtitle owner and protected output cannot silently use text overlay
+00:01 +13: pending HTTP catalog is cancelled by replace without late publication
+00:01 +14: pending HTTP catalog is cancelled by load without late publication
+00:01 +15: pending HTTP catalog is cancelled by stop without late publication
+00:01 +16: pending HTTP catalog is cancelled by dispose without late publication
+00:01 +17: selection and offset during pending replacement are preserved at atomic commit
+00:01 +18: aggregate bytes and cue counts reject whole catalog
+00:02 +19: unsupported format and encoding do not replace current catalog
+00:02 +20: paused and buffering use media position without wall-clock advance
+00:02 +21: pending seek and post-ACK snapshot cannot expose pre-seek cues
+00:02 +22: actual overlay follows position, offset, off and seek
+00:02 +23: All tests passed!

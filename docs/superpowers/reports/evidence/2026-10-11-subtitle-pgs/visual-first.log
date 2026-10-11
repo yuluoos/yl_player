@@ -1,0 +1,748 @@
+00:00 +0: loading /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart
+00:00 +0: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: binary framing, palette update and clear make nonoverlapping media cues
+00:00 +1: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: decoded premultiplied RGBA, partial palette versions preserve old cues
+00:00 +1 -1: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: decoded premultiplied RGBA, partial palette versions preserve old cues [E]
+  Expected: [128, 0, 0, 128]
+    Actual: [127, 0, 0, 128]
+     Which: at location [0] is <127> instead of <128>
+  
+  package:matcher                                      expect
+  package:flutter_test/src/widget_tester.dart 473:18   expect
+  packages/yl_player/test/pgs_document_test.dart 56:7  main.<fn>
+  
+00:00 +1 -1: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: palette-only PCS placeholder does not move or clear existing plane
+00:00 +2 -1: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: last display persists until bounded timeline/session termination
+00:00 +3 -1: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: fragmented ODS checks version/length and assembles before publication
+00:00 +4 -1: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: all RLE run forms and transparent defaults decode exact rows
+00:00 +5 -1: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: crop source and window clipping produce exact pixels and destination
+00:00 +5 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: crop source and window clipping produce exact pixels and destination [E]
+  Expected: [128, 0, 0, 128, 128, 0, 0, 128]
+    Actual: [127, 0, 0, 128, 127, 0, 0, 128]
+     Which: at location [0] is <127> instead of <128>
+  
+  package:matcher                                       expect
+  package:flutter_test/src/widget_tester.dart 473:18    expect
+  packages/yl_player/test/pgs_document_test.dart 134:7  main.<fn>
+  
+00:00 +5 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: two object references retain paint order
+00:00 +6 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: same PTS replaces previous frame without zero-length cue
+00:00 +7 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: PCS 32-bit rollover unwraps while segment DTS is not subtitle time
+00:00 +8 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: epoch reset cannot resolve stale objects, palettes or windows
+00:00 +9 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: epoch dimension change with fresh state is valid
+00:00 +10 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: all strict first-display truncations reject with sanitized failure
+00:00 +11 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed magic
+00:00 +12 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed byte range
+00:00 +13 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed duplicate PCS
+00:00 +14 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed orphan END
+00:00 +15 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed END payload
+00:00 +16 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed incomplete ODS
+00:00 +17 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed orphan continuation
+00:00 +18 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed fragment mismatch
+00:00 +19 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed declared undersize
+00:00 +20 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed row overflow
+00:00 +21 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed short row
+00:00 +22 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed no final EOL
+00:00 +23 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed zero run
+00:00 +24 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed truncated run
+00:00 +25 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed extra row
+00:00 +26 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed missing palette
+00:00 +27 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed missing object
+00:00 +28 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed bad palette length
+00:00 +29 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed duplicate palette entry
+00:00 +30 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed bad window
+00:00 +31 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed missing window
+00:00 +32 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed crop outside object
+00:00 +33 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed backward PCS
+00:00 +34 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: unsupported reserved state
+00:00 +35 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: unsupported unknown segment
+00:00 +36 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: unsupported cache-only redraw
+00:00 +37 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: unsupported palette-only ODS
+00:00 +38 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: unsupported dimension change within epoch
+00:00 +39 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: preallocation bitmap budget counts all palette-expanded frames
+00:00 +40 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: dimension/product checks precede RLE allocation
+00:00 +41 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: object reference budget and cue budget
+00:00 +42 -2: loading /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart
+00:00 +42 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: PGS exact palette/alpha/clear pixel grid at 1000 ms
+══╡ EXCEPTION CAUGHT BY WIDGETS LIBRARY ╞═══════════════════════════════════════════════════════════
+The following message was thrown building Positioned(left: 50.0, top: 0.0, width: 200.0, height:
+200.0):
+decodeImageFromPixelsSync is not implemented on Skia.
+
+The relevant error-causing widget was:
+  Positioned
+  Positioned:file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/lib/src/subtitles/text_subtitle_overlay.dart:63:24
+
+When the exception was thrown, this was the stack:
+#0      _decodeImageFromPixelsSync (dart:ui/painting.dart)
+#1      decodeImageFromPixelsSync (dart:ui/painting.dart:2775:3)
+#2      _PgsSubtitleOverlayState.decode (package:yl_player/src/subtitles/pgs_overlay.dart:28:14)
+#3      _PgsSubtitleOverlayState.initState (package:yl_player/src/subtitles/pgs_overlay.dart:45:5)
+#4      StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5950:55)
+#5      ComponentElement.mount (package:flutter/src/widgets/framework.dart:5793:5)
+#6      Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#7      MultiChildRenderObjectElement.inflateWidget (package:flutter/src/widgets/framework.dart:7264:36)
+#8      MultiChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7279:32)
+...     Normal element mounting (10 frames)
+#18     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#19     MultiChildRenderObjectElement.inflateWidget (package:flutter/src/widgets/framework.dart:7264:36)
+#20     MultiChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7279:32)
+#21     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#22     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+#23     _LayoutBuilderElement._rebuildWithConstraints.updateChildCallback (package:flutter/src/widgets/layout_builder.dart:247:18)
+#24     BuildOwner.buildScope (package:flutter/src/widgets/framework.dart:3101:19)
+#25     _LayoutBuilderElement._rebuildWithConstraints (package:flutter/src/widgets/layout_builder.dart:270:12)
+#26     RenderAbstractLayoutBuilderMixin.layoutCallback (package:flutter/src/widgets/layout_builder.dart:333:38)
+#27     RenderObjectWithLayoutCallbackMixin.runLayoutCallback.<anonymous closure> (package:flutter/src/rendering/object.dart:4302:33)
+#28     RenderObject.invokeLayoutCallback.<anonymous closure> (package:flutter/src/rendering/object.dart:3026:17)
+#29     PipelineOwner._enableMutationsToDirtySubtrees (package:flutter/src/rendering/object.dart:1223:15)
+#30     RenderObject.invokeLayoutCallback (package:flutter/src/rendering/object.dart:3025:14)
+#31     RenderObjectWithLayoutCallbackMixin.runLayoutCallback (package:flutter/src/rendering/object.dart:4302:5)
+#32     _RenderLayoutBuilder.performLayout (package:flutter/src/widgets/layout_builder.dart:447:5)
+#33     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#34     RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#35     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#36     RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#37     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#38     RenderConstrainedBox.performLayout (package:flutter/src/rendering/proxy_box.dart:296:14)
+#39     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#40     RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#41     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#42     RenderPositionedBox.performLayout (package:flutter/src/rendering/shifted_box.dart:484:14)
+#43     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#44     RenderView.performLayout (package:flutter/src/rendering/view.dart:292:12)
+#45     RenderObject._layoutWithoutResize (package:flutter/src/rendering/object.dart:2755:7)
+#46     PipelineOwner.flushLayout (package:flutter/src/rendering/object.dart:1174:18)
+#47     PipelineOwner.flushLayout (package:flutter/src/rendering/object.dart:1187:15)
+#48     AutomatedTestWidgetsFlutterBinding.drawFrame (package:flutter_test/src/binding.dart:2433:27)
+#49     RendererBinding._handlePersistentFrameCallback (package:flutter/src/rendering/binding.dart:509:5)
+#50     SchedulerBinding._invokeFrameCallback (package:flutter/src/scheduler/binding.dart:1430:15)
+#51     SchedulerBinding.handleDrawFrame (package:flutter/src/scheduler/binding.dart:1345:9)
+#52     AutomatedTestWidgetsFlutterBinding.pump.<anonymous closure> (package:flutter_test/src/binding.dart:2260:9)
+#55     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#56     AutomatedTestWidgetsFlutterBinding.pump (package:flutter_test/src/binding.dart:2249:27)
+#57     WidgetTester.pumpWidget.<anonymous closure> (package:flutter_test/src/widget_tester.dart:598:22)
+#60     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#61     WidgetTester.pumpWidget (package:flutter_test/src/widget_tester.dart:595:27)
+#62     main.<anonymous closure> (file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart:75:20)
+#63     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#64     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 5 frames from dart:async and package:stack_trace)
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: [0, 0, 255]
+  Actual: [48, 48, 226]
+   Which: at location [0] is <48> instead of <0>
+pixel (49,0)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart:91:13)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart line 91
+The test description was:
+  PGS exact palette/alpha/clear pixel grid at 1000 ms
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following message was thrown:
+Multiple exceptions (2) were detected during the running of the current test, and at least one was
+unexpected.
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +42 -3: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: PGS exact palette/alpha/clear pixel grid at 1000 ms [E]
+  Test failed. See exception logs above.
+  The test description was: PGS exact palette/alpha/clear pixel grid at 1000 ms
+  
+00:00 +42 -3: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: PGS exact palette/alpha/clear pixel grid at 2000 ms
+══╡ EXCEPTION CAUGHT BY WIDGETS LIBRARY ╞═══════════════════════════════════════════════════════════
+The following message was thrown building Positioned(left: 50.0, top: 0.0, width: 200.0, height:
+200.0):
+decodeImageFromPixelsSync is not implemented on Skia.
+
+The relevant error-causing widget was:
+  Positioned
+  Positioned:file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/lib/src/subtitles/text_subtitle_overlay.dart:63:24
+
+When the exception was thrown, this was the stack:
+#0      _decodeImageFromPixelsSync (dart:ui/painting.dart)
+#1      decodeImageFromPixelsSync (dart:ui/painting.dart:2775:3)
+#2      _PgsSubtitleOverlayState.decode (package:yl_player/src/subtitles/pgs_overlay.dart:28:14)
+#3      _PgsSubtitleOverlayState.initState (package:yl_player/src/subtitles/pgs_overlay.dart:45:5)
+#4      StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5950:55)
+#5      ComponentElement.mount (package:flutter/src/widgets/framework.dart:5793:5)
+#6      Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#7      MultiChildRenderObjectElement.inflateWidget (package:flutter/src/widgets/framework.dart:7264:36)
+#8      MultiChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7279:32)
+...     Normal element mounting (10 frames)
+#18     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#19     MultiChildRenderObjectElement.inflateWidget (package:flutter/src/widgets/framework.dart:7264:36)
+#20     MultiChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7279:32)
+#21     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#22     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+#23     _LayoutBuilderElement._rebuildWithConstraints.updateChildCallback (package:flutter/src/widgets/layout_builder.dart:247:18)
+#24     BuildOwner.buildScope (package:flutter/src/widgets/framework.dart:3101:19)
+#25     _LayoutBuilderElement._rebuildWithConstraints (package:flutter/src/widgets/layout_builder.dart:270:12)
+#26     RenderAbstractLayoutBuilderMixin.layoutCallback (package:flutter/src/widgets/layout_builder.dart:333:38)
+#27     RenderObjectWithLayoutCallbackMixin.runLayoutCallback.<anonymous closure> (package:flutter/src/rendering/object.dart:4302:33)
+#28     RenderObject.invokeLayoutCallback.<anonymous closure> (package:flutter/src/rendering/object.dart:3026:17)
+#29     PipelineOwner._enableMutationsToDirtySubtrees (package:flutter/src/rendering/object.dart:1223:15)
+#30     RenderObject.invokeLayoutCallback (package:flutter/src/rendering/object.dart:3025:14)
+#31     RenderObjectWithLayoutCallbackMixin.runLayoutCallback (package:flutter/src/rendering/object.dart:4302:5)
+#32     _RenderLayoutBuilder.performLayout (package:flutter/src/widgets/layout_builder.dart:447:5)
+#33     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#34     RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#35     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#36     RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#37     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#38     RenderConstrainedBox.performLayout (package:flutter/src/rendering/proxy_box.dart:296:14)
+#39     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#40     RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#41     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#42     RenderPositionedBox.performLayout (package:flutter/src/rendering/shifted_box.dart:484:14)
+#43     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#44     RenderView.performLayout (package:flutter/src/rendering/view.dart:292:12)
+#45     RenderObject._layoutWithoutResize (package:flutter/src/rendering/object.dart:2755:7)
+#46     PipelineOwner.flushLayout (package:flutter/src/rendering/object.dart:1174:18)
+#47     PipelineOwner.flushLayout (package:flutter/src/rendering/object.dart:1187:15)
+#48     AutomatedTestWidgetsFlutterBinding.drawFrame (package:flutter_test/src/binding.dart:2433:27)
+#49     RendererBinding._handlePersistentFrameCallback (package:flutter/src/rendering/binding.dart:509:5)
+#50     SchedulerBinding._invokeFrameCallback (package:flutter/src/scheduler/binding.dart:1430:15)
+#51     SchedulerBinding.handleDrawFrame (package:flutter/src/scheduler/binding.dart:1345:9)
+#52     AutomatedTestWidgetsFlutterBinding.pump.<anonymous closure> (package:flutter_test/src/binding.dart:2260:9)
+#55     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#56     AutomatedTestWidgetsFlutterBinding.pump (package:flutter_test/src/binding.dart:2249:27)
+#57     WidgetTester.pumpWidget.<anonymous closure> (package:flutter_test/src/widget_tester.dart:598:22)
+#60     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#61     WidgetTester.pumpWidget (package:flutter_test/src/widget_tester.dart:595:27)
+#62     main.<anonymous closure> (file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart:75:20)
+#63     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#64     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 5 frames from dart:async and package:stack_trace)
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: [0, 0, 255]
+  Actual: [48, 48, 226]
+   Which: at location [0] is <48> instead of <0>
+pixel (49,0)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart:91:13)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart line 91
+The test description was:
+  PGS exact palette/alpha/clear pixel grid at 2000 ms
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following message was thrown:
+Multiple exceptions (2) were detected during the running of the current test, and at least one was
+unexpected.
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +42 -4: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: PGS exact palette/alpha/clear pixel grid at 2000 ms [E]
+  Test failed. See exception logs above.
+  The test description was: PGS exact palette/alpha/clear pixel grid at 2000 ms
+  
+00:00 +42 -4: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: PGS exact palette/alpha/clear pixel grid at 3000 ms
+00:00 +43 -4: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: PGS cover follows actual source crop, not squeezed full plane
+══╡ EXCEPTION CAUGHT BY WIDGETS LIBRARY ╞═══════════════════════════════════════════════════════════
+The following message was thrown building Positioned(left: 0.0, top: 0.0, width: 300.0, height:
+200.0):
+decodeImageFromPixelsSync is not implemented on Skia.
+
+The relevant error-causing widget was:
+  Positioned
+  Positioned:file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/lib/src/subtitles/text_subtitle_overlay.dart:63:24
+
+When the exception was thrown, this was the stack:
+#0      _decodeImageFromPixelsSync (dart:ui/painting.dart)
+#1      decodeImageFromPixelsSync (dart:ui/painting.dart:2775:3)
+#2      _PgsSubtitleOverlayState.decode (package:yl_player/src/subtitles/pgs_overlay.dart:28:14)
+#3      _PgsSubtitleOverlayState.initState (package:yl_player/src/subtitles/pgs_overlay.dart:45:5)
+#4      StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5950:55)
+#5      ComponentElement.mount (package:flutter/src/widgets/framework.dart:5793:5)
+#6      Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#7      MultiChildRenderObjectElement.inflateWidget (package:flutter/src/widgets/framework.dart:7264:36)
+#8      MultiChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7279:32)
+...     Normal element mounting (10 frames)
+#18     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#19     MultiChildRenderObjectElement.inflateWidget (package:flutter/src/widgets/framework.dart:7264:36)
+#20     MultiChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7279:32)
+#21     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#22     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+#23     _LayoutBuilderElement._rebuildWithConstraints.updateChildCallback (package:flutter/src/widgets/layout_builder.dart:247:18)
+#24     BuildOwner.buildScope (package:flutter/src/widgets/framework.dart:3101:19)
+#25     _LayoutBuilderElement._rebuildWithConstraints (package:flutter/src/widgets/layout_builder.dart:270:12)
+#26     RenderAbstractLayoutBuilderMixin.layoutCallback (package:flutter/src/widgets/layout_builder.dart:333:38)
+#27     RenderObjectWithLayoutCallbackMixin.runLayoutCallback.<anonymous closure> (package:flutter/src/rendering/object.dart:4302:33)
+#28     RenderObject.invokeLayoutCallback.<anonymous closure> (package:flutter/src/rendering/object.dart:3026:17)
+#29     PipelineOwner._enableMutationsToDirtySubtrees (package:flutter/src/rendering/object.dart:1223:15)
+#30     RenderObject.invokeLayoutCallback (package:flutter/src/rendering/object.dart:3025:14)
+#31     RenderObjectWithLayoutCallbackMixin.runLayoutCallback (package:flutter/src/rendering/object.dart:4302:5)
+#32     _RenderLayoutBuilder.performLayout (package:flutter/src/widgets/layout_builder.dart:447:5)
+#33     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#34     RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#35     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#36     RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#37     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#38     RenderConstrainedBox.performLayout (package:flutter/src/rendering/proxy_box.dart:296:14)
+#39     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#40     RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#41     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#42     RenderPositionedBox.performLayout (package:flutter/src/rendering/shifted_box.dart:484:14)
+#43     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#44     RenderView.performLayout (package:flutter/src/rendering/view.dart:292:12)
+#45     RenderObject._layoutWithoutResize (package:flutter/src/rendering/object.dart:2755:7)
+#46     PipelineOwner.flushLayout (package:flutter/src/rendering/object.dart:1174:18)
+#47     PipelineOwner.flushLayout (package:flutter/src/rendering/object.dart:1187:15)
+#48     AutomatedTestWidgetsFlutterBinding.drawFrame (package:flutter_test/src/binding.dart:2433:27)
+#49     RendererBinding._handlePersistentFrameCallback (package:flutter/src/rendering/binding.dart:509:5)
+#50     SchedulerBinding._invokeFrameCallback (package:flutter/src/scheduler/binding.dart:1430:15)
+#51     SchedulerBinding.handleDrawFrame (package:flutter/src/scheduler/binding.dart:1345:9)
+#52     AutomatedTestWidgetsFlutterBinding.pump.<anonymous closure> (package:flutter_test/src/binding.dart:2260:9)
+#55     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#56     AutomatedTestWidgetsFlutterBinding.pump (package:flutter_test/src/binding.dart:2249:27)
+#57     WidgetTester.pumpWidget.<anonymous closure> (package:flutter_test/src/widget_tester.dart:598:22)
+#60     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#61     WidgetTester.pumpWidget (package:flutter_test/src/widget_tester.dart:595:27)
+#62     main.<anonymous closure> (file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart:112:18)
+#63     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#64     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 5 frames from dart:async and package:stack_trace)
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: [255, 255, 255]
+  Actual: [136, 0, 15]
+   Which: at location [0] is <136> instead of <255>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart:116:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart line 116
+The test description was:
+  PGS cover follows actual source crop, not squeezed full plane
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following message was thrown:
+Multiple exceptions (2) were detected during the running of the current test, and at least one was
+unexpected.
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +43 -5: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: PGS cover follows actual source crop, not squeezed full plane [E]
+  Test failed. See exception logs above.
+  The test description was: PGS cover follows actual source crop, not squeezed full plane
+  
+00:00 +43 -5: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: PGS rotation/PAR remains upright in the fitted aperture
+══╡ EXCEPTION CAUGHT BY WIDGETS LIBRARY ╞═══════════════════════════════════════════════════════════
+The following message was thrown building Positioned(left: 116.7, top: 0.0, width: 66.7, height:
+200.0):
+decodeImageFromPixelsSync is not implemented on Skia.
+
+The relevant error-causing widget was:
+  Positioned
+  Positioned:file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/lib/src/subtitles/text_subtitle_overlay.dart:63:24
+
+When the exception was thrown, this was the stack:
+#0      _decodeImageFromPixelsSync (dart:ui/painting.dart)
+#1      decodeImageFromPixelsSync (dart:ui/painting.dart:2775:3)
+#2      _PgsSubtitleOverlayState.decode (package:yl_player/src/subtitles/pgs_overlay.dart:28:14)
+#3      _PgsSubtitleOverlayState.initState (package:yl_player/src/subtitles/pgs_overlay.dart:45:5)
+#4      StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5950:55)
+#5      ComponentElement.mount (package:flutter/src/widgets/framework.dart:5793:5)
+#6      Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#7      MultiChildRenderObjectElement.inflateWidget (package:flutter/src/widgets/framework.dart:7264:36)
+#8      MultiChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7279:32)
+...     Normal element mounting (10 frames)
+#18     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#19     MultiChildRenderObjectElement.inflateWidget (package:flutter/src/widgets/framework.dart:7264:36)
+#20     MultiChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7279:32)
+#21     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#22     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+#23     _LayoutBuilderElement._rebuildWithConstraints.updateChildCallback (package:flutter/src/widgets/layout_builder.dart:247:18)
+#24     BuildOwner.buildScope (package:flutter/src/widgets/framework.dart:3101:19)
+#25     _LayoutBuilderElement._rebuildWithConstraints (package:flutter/src/widgets/layout_builder.dart:270:12)
+#26     RenderAbstractLayoutBuilderMixin.layoutCallback (package:flutter/src/widgets/layout_builder.dart:333:38)
+#27     RenderObjectWithLayoutCallbackMixin.runLayoutCallback.<anonymous closure> (package:flutter/src/rendering/object.dart:4302:33)
+#28     RenderObject.invokeLayoutCallback.<anonymous closure> (package:flutter/src/rendering/object.dart:3026:17)
+#29     PipelineOwner._enableMutationsToDirtySubtrees (package:flutter/src/rendering/object.dart:1223:15)
+#30     RenderObject.invokeLayoutCallback (package:flutter/src/rendering/object.dart:3025:14)
+#31     RenderObjectWithLayoutCallbackMixin.runLayoutCallback (package:flutter/src/rendering/object.dart:4302:5)
+#32     _RenderLayoutBuilder.performLayout (package:flutter/src/widgets/layout_builder.dart:447:5)
+#33     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#34     RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#35     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#36     RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#37     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#38     RenderConstrainedBox.performLayout (package:flutter/src/rendering/proxy_box.dart:296:14)
+#39     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#40     RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#41     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#42     RenderPositionedBox.performLayout (package:flutter/src/rendering/shifted_box.dart:484:14)
+#43     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#44     RenderView.performLayout (package:flutter/src/rendering/view.dart:292:12)
+#45     RenderObject._layoutWithoutResize (package:flutter/src/rendering/object.dart:2755:7)
+#46     PipelineOwner.flushLayout (package:flutter/src/rendering/object.dart:1174:18)
+#47     PipelineOwner.flushLayout (package:flutter/src/rendering/object.dart:1187:15)
+#48     AutomatedTestWidgetsFlutterBinding.drawFrame (package:flutter_test/src/binding.dart:2433:27)
+#49     RendererBinding._handlePersistentFrameCallback (package:flutter/src/rendering/binding.dart:509:5)
+#50     SchedulerBinding._invokeFrameCallback (package:flutter/src/scheduler/binding.dart:1430:15)
+#51     SchedulerBinding.handleDrawFrame (package:flutter/src/scheduler/binding.dart:1345:9)
+#52     AutomatedTestWidgetsFlutterBinding.pump.<anonymous closure> (package:flutter_test/src/binding.dart:2260:9)
+#55     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#56     AutomatedTestWidgetsFlutterBinding.pump (package:flutter_test/src/binding.dart:2249:27)
+#57     WidgetTester.pumpWidget.<anonymous closure> (package:flutter_test/src/widget_tester.dart:598:22)
+#60     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#61     WidgetTester.pumpWidget (package:flutter_test/src/widget_tester.dart:595:27)
+#62     main.<anonymous closure> (file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart:127:18)
+#63     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#64     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 5 frames from dart:async and package:stack_trace)
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: [255, 255, 255]
+  Actual: [255, 255, 102]
+   Which: at location [2] is <102> instead of <255>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart:140:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart line 140
+The test description was:
+  PGS rotation/PAR remains upright in the fitted aperture
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following message was thrown:
+Multiple exceptions (2) were detected during the running of the current test, and at least one was
+unexpected.
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +43 -6: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: PGS rotation/PAR remains upright in the fitted aperture [E]
+  Test failed. See exception logs above.
+  The test description was: PGS rotation/PAR remains upright in the fitted aperture
+  
+00:00 +43 -6: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: same-frame rebuild reuses handles; switch/off/unmount releases all
+══╡ EXCEPTION CAUGHT BY WIDGETS LIBRARY ╞═══════════════════════════════════════════════════════════
+The following message was thrown building Positioned(left: 50.0, top: 0.0, width: 200.0, height:
+200.0):
+decodeImageFromPixelsSync is not implemented on Skia.
+
+The relevant error-causing widget was:
+  Positioned
+  Positioned:file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/lib/src/subtitles/text_subtitle_overlay.dart:63:24
+
+When the exception was thrown, this was the stack:
+#0      _decodeImageFromPixelsSync (dart:ui/painting.dart)
+#1      decodeImageFromPixelsSync (dart:ui/painting.dart:2775:3)
+#2      _PgsSubtitleOverlayState.decode (package:yl_player/src/subtitles/pgs_overlay.dart:28:14)
+#3      _PgsSubtitleOverlayState.initState (package:yl_player/src/subtitles/pgs_overlay.dart:45:5)
+#4      StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5950:55)
+#5      ComponentElement.mount (package:flutter/src/widgets/framework.dart:5793:5)
+#6      Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#7      MultiChildRenderObjectElement.inflateWidget (package:flutter/src/widgets/framework.dart:7264:36)
+#8      MultiChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7279:32)
+...     Normal element mounting (10 frames)
+#18     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#19     MultiChildRenderObjectElement.inflateWidget (package:flutter/src/widgets/framework.dart:7264:36)
+#20     MultiChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7279:32)
+#21     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#22     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+#23     _LayoutBuilderElement._rebuildWithConstraints.updateChildCallback (package:flutter/src/widgets/layout_builder.dart:247:18)
+#24     BuildOwner.buildScope (package:flutter/src/widgets/framework.dart:3101:19)
+#25     _LayoutBuilderElement._rebuildWithConstraints (package:flutter/src/widgets/layout_builder.dart:270:12)
+#26     RenderAbstractLayoutBuilderMixin.layoutCallback (package:flutter/src/widgets/layout_builder.dart:333:38)
+#27     RenderObjectWithLayoutCallbackMixin.runLayoutCallback.<anonymous closure> (package:flutter/src/rendering/object.dart:4302:33)
+#28     RenderObject.invokeLayoutCallback.<anonymous closure> (package:flutter/src/rendering/object.dart:3026:17)
+#29     PipelineOwner._enableMutationsToDirtySubtrees (package:flutter/src/rendering/object.dart:1223:15)
+#30     RenderObject.invokeLayoutCallback (package:flutter/src/rendering/object.dart:3025:14)
+#31     RenderObjectWithLayoutCallbackMixin.runLayoutCallback (package:flutter/src/rendering/object.dart:4302:5)
+#32     _RenderLayoutBuilder.performLayout (package:flutter/src/widgets/layout_builder.dart:447:5)
+#33     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#34     RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#35     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#36     RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#37     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#38     RenderConstrainedBox.performLayout (package:flutter/src/rendering/proxy_box.dart:296:14)
+#39     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#40     RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#41     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#42     RenderPositionedBox.performLayout (package:flutter/src/rendering/shifted_box.dart:484:14)
+#43     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#44     RenderView.performLayout (package:flutter/src/rendering/view.dart:292:12)
+#45     RenderObject._layoutWithoutResize (package:flutter/src/rendering/object.dart:2755:7)
+#46     PipelineOwner.flushLayout (package:flutter/src/rendering/object.dart:1174:18)
+#47     PipelineOwner.flushLayout (package:flutter/src/rendering/object.dart:1187:15)
+#48     AutomatedTestWidgetsFlutterBinding.drawFrame (package:flutter_test/src/binding.dart:2433:27)
+#49     RendererBinding._handlePersistentFrameCallback (package:flutter/src/rendering/binding.dart:509:5)
+#50     SchedulerBinding._invokeFrameCallback (package:flutter/src/scheduler/binding.dart:1430:15)
+#51     SchedulerBinding.handleDrawFrame (package:flutter/src/scheduler/binding.dart:1345:9)
+#52     AutomatedTestWidgetsFlutterBinding.pump.<anonymous closure> (package:flutter_test/src/binding.dart:2260:9)
+#55     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#56     AutomatedTestWidgetsFlutterBinding.pump (package:flutter_test/src/binding.dart:2249:27)
+#57     WidgetTester.pumpWidget.<anonymous closure> (package:flutter_test/src/widget_tester.dart:598:22)
+#60     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#61     WidgetTester.pumpWidget (package:flutter_test/src/widget_tester.dart:595:27)
+#62     main.<anonymous closure> (file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart:158:20)
+#63     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#64     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 5 frames from dart:async and package:stack_trace)
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY WIDGETS LIBRARY ╞═══════════════════════════════════════════════════════════
+The following message was thrown building Positioned(left: 0.0, top: 0.0, width: 300.0, height:
+200.0):
+decodeImageFromPixelsSync is not implemented on Skia.
+
+The relevant error-causing widget was:
+  Positioned
+  Positioned:file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/lib/src/subtitles/text_subtitle_overlay.dart:63:24
+
+When the exception was thrown, this was the stack:
+#0      _decodeImageFromPixelsSync (dart:ui/painting.dart)
+#1      decodeImageFromPixelsSync (dart:ui/painting.dart:2775:3)
+#2      _PgsSubtitleOverlayState.decode (package:yl_player/src/subtitles/pgs_overlay.dart:28:14)
+#3      _PgsSubtitleOverlayState.initState (package:yl_player/src/subtitles/pgs_overlay.dart:45:5)
+#4      StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5950:55)
+#5      ComponentElement.mount (package:flutter/src/widgets/framework.dart:5793:5)
+#6      Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#7      MultiChildRenderObjectElement.inflateWidget (package:flutter/src/widgets/framework.dart:7264:36)
+#8      MultiChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7279:32)
+...     Normal element mounting (4 frames)
+#12     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#13     Element.updateChild (package:flutter/src/widgets/framework.dart:4053:20)
+#14     ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5841:16)
+#15     Element.rebuild (package:flutter/src/widgets/framework.dart:5529:7)
+#16     ProxyElement.update (package:flutter/src/widgets/framework.dart:6149:5)
+#17     Element.updateChild (package:flutter/src/widgets/framework.dart:4037:15)
+#18     Element.updateChildren (package:flutter/src/widgets/framework.dart:4191:32)
+#19     MultiChildRenderObjectElement.update (package:flutter/src/widgets/framework.dart:7295:17)
+#20     Element.updateChild (package:flutter/src/widgets/framework.dart:4037:15)
+#21     _LayoutBuilderElement._rebuildWithConstraints.updateChildCallback (package:flutter/src/widgets/layout_builder.dart:247:18)
+#22     BuildOwner.buildScope (package:flutter/src/widgets/framework.dart:3101:19)
+#23     _LayoutBuilderElement._rebuildWithConstraints (package:flutter/src/widgets/layout_builder.dart:270:12)
+#24     RenderAbstractLayoutBuilderMixin.layoutCallback (package:flutter/src/widgets/layout_builder.dart:333:38)
+#25     RenderObjectWithLayoutCallbackMixin.runLayoutCallback.<anonymous closure> (package:flutter/src/rendering/object.dart:4302:33)
+#26     RenderObject.invokeLayoutCallback.<anonymous closure> (package:flutter/src/rendering/object.dart:3026:17)
+#27     PipelineOwner._enableMutationsToDirtySubtrees (package:flutter/src/rendering/object.dart:1223:15)
+#28     RenderObject.invokeLayoutCallback (package:flutter/src/rendering/object.dart:3025:14)
+#29     RenderObjectWithLayoutCallbackMixin.runLayoutCallback (package:flutter/src/rendering/object.dart:4302:5)
+#30     _RenderLayoutBuilder.performLayout (package:flutter/src/widgets/layout_builder.dart:447:5)
+#31     RenderObject._layoutWithoutResize (package:flutter/src/rendering/object.dart:2755:7)
+#32     PipelineOwner.flushLayout (package:flutter/src/rendering/object.dart:1174:18)
+#33     PipelineOwner.flushLayout (package:flutter/src/rendering/object.dart:1187:15)
+#34     AutomatedTestWidgetsFlutterBinding.drawFrame (package:flutter_test/src/binding.dart:2433:27)
+#35     RendererBinding._handlePersistentFrameCallback (package:flutter/src/rendering/binding.dart:509:5)
+#36     SchedulerBinding._invokeFrameCallback (package:flutter/src/scheduler/binding.dart:1430:15)
+#37     SchedulerBinding.handleDrawFrame (package:flutter/src/scheduler/binding.dart:1345:9)
+#38     AutomatedTestWidgetsFlutterBinding.pump.<anonymous closure> (package:flutter_test/src/binding.dart:2260:9)
+#41     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#42     AutomatedTestWidgetsFlutterBinding.pump (package:flutter_test/src/binding.dart:2249:27)
+#43     WidgetTester.pumpWidget.<anonymous closure> (package:flutter_test/src/widget_tester.dart:598:22)
+#46     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#47     WidgetTester.pumpWidget (package:flutter_test/src/widget_tester.dart:595:27)
+#48     main.<anonymous closure> (file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart:161:20)
+<asynchronous suspension>
+#49     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#50     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 5 frames from dart:async and package:stack_trace)
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following NoSuchMethodError was thrown running a test:
+The method '_getNativeField' was called on null.
+Receiver: null
+Tried calling: _getNativeField()
+
+When the exception was thrown, this was the stack:
+#0      _getNativeField (dart:nativewrappers)
+#1      _Image.width (dart:ui/painting.dart)
+#2      _Image.toString (dart:ui/painting.dart:2269:27)
+#3      Image.toString (dart:ui/painting.dart:2209:31)
+#4      prettyPrint.prettyPrintImpl (package:matcher/src/pretty_print.dart:96:26)
+#5      prettyPrint.prettyPrintImpl.pp (package:matcher/src/pretty_print.dart:35:33)
+#6      prettyPrint.prettyPrintImpl (package:matcher/src/pretty_print.dart:48:21)
+#7      prettyPrint (package:matcher/src/pretty_print.dart:121:10)
+#8      StringDescription.addDescriptionOf (package:matcher/src/description.dart:49:11)
+#9      prettyPrint (package:matcher/src/expect/util/pretty_print.dart:32:25)
+#10     formatFailure (package:matcher/src/expect/expect.dart:199:25)
+#11     _expect.<anonymous closure> (package:matcher/src/expect/expect.dart:107:12)
+#12     _expect (package:matcher/src/expect/expect.dart:182:17)
+#13     expect (package:matcher/src/expect/expect.dart:65:3)
+#14     expect (package:flutter_test/src/widget_tester.dart:473:18)
+#15     main.<anonymous closure> (file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart:162:7)
+<asynchronous suspension>
+#16     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#17     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  same-frame rebuild reuses handles; switch/off/unmount releases all
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following message was thrown:
+Multiple exceptions (3) were detected during the running of the current test, and at least one was
+unexpected.
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +43 -7: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: same-frame rebuild reuses handles; switch/off/unmount releases all [E]
+  Test failed. See exception logs above.
+  The test description was: same-frame rebuild reuses handles; switch/off/unmount releases all
+  
+00:01 +43 -7: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: public PGS file: first frame/offset/seek/off/source reset release images
+══╡ EXCEPTION CAUGHT BY WIDGETS LIBRARY ╞═══════════════════════════════════════════════════════════
+The following message was thrown building Positioned(left: 100.0, top: 0.0, width: 600.0, height:
+600.0):
+decodeImageFromPixelsSync is not implemented on Skia.
+
+The relevant error-causing widget was:
+  Positioned
+  Positioned:file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/lib/src/subtitles/text_subtitle_overlay.dart:63:24
+
+When the exception was thrown, this was the stack:
+#0      _decodeImageFromPixelsSync (dart:ui/painting.dart)
+#1      decodeImageFromPixelsSync (dart:ui/painting.dart:2775:3)
+#2      _PgsSubtitleOverlayState.decode (package:yl_player/src/subtitles/pgs_overlay.dart:28:14)
+#3      _PgsSubtitleOverlayState.initState (package:yl_player/src/subtitles/pgs_overlay.dart:45:5)
+#4      StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5950:55)
+#5      ComponentElement.mount (package:flutter/src/widgets/framework.dart:5793:5)
+#6      Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#7      MultiChildRenderObjectElement.inflateWidget (package:flutter/src/widgets/framework.dart:7264:36)
+#8      MultiChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7279:32)
+...     Normal element mounting (10 frames)
+#18     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#19     MultiChildRenderObjectElement.inflateWidget (package:flutter/src/widgets/framework.dart:7264:36)
+#20     MultiChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7279:32)
+#21     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4587:20)
+#22     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+#23     _LayoutBuilderElement._rebuildWithConstraints.updateChildCallback (package:flutter/src/widgets/layout_builder.dart:247:18)
+#24     BuildOwner.buildScope (package:flutter/src/widgets/framework.dart:3101:19)
+#25     _LayoutBuilderElement._rebuildWithConstraints (package:flutter/src/widgets/layout_builder.dart:270:12)
+#26     RenderAbstractLayoutBuilderMixin.layoutCallback (package:flutter/src/widgets/layout_builder.dart:333:38)
+#27     RenderObjectWithLayoutCallbackMixin.runLayoutCallback.<anonymous closure> (package:flutter/src/rendering/object.dart:4302:33)
+#28     RenderObject.invokeLayoutCallback.<anonymous closure> (package:flutter/src/rendering/object.dart:3026:17)
+#29     PipelineOwner._enableMutationsToDirtySubtrees (package:flutter/src/rendering/object.dart:1223:15)
+#30     RenderObject.invokeLayoutCallback (package:flutter/src/rendering/object.dart:3025:14)
+#31     RenderObjectWithLayoutCallbackMixin.runLayoutCallback (package:flutter/src/rendering/object.dart:4302:5)
+#32     _RenderLayoutBuilder.performLayout (package:flutter/src/widgets/layout_builder.dart:447:5)
+#33     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#34     RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#35     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#36     ChildLayoutHelper.layoutChild (package:flutter/src/rendering/layout_helper.dart:62:11)
+#37     RenderStack._computeSize (package:flutter/src/rendering/stack.dart:647:43)
+#38     RenderStack.performLayout (package:flutter/src/rendering/stack.dart:682:12)
+#39     RenderObject.layout (package:flutter/src/rendering/object.dart:2907:7)
+#40     RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#41     _RenderCustomClip.performLayout (package:flutter/src/rendering/proxy_box.dart:1549:11)
+#42     RenderObject._layoutWithoutResize (package:flutter/src/rendering/object.dart:2755:7)
+#43     PipelineOwner.flushLayout (package:flutter/src/rendering/object.dart:1174:18)
+#44     PipelineOwner.flushLayout (package:flutter/src/rendering/object.dart:1187:15)
+#45     AutomatedTestWidgetsFlutterBinding.drawFrame (package:flutter_test/src/binding.dart:2433:27)
+#46     RendererBinding._handlePersistentFrameCallback (package:flutter/src/rendering/binding.dart:509:5)
+#47     SchedulerBinding._invokeFrameCallback (package:flutter/src/scheduler/binding.dart:1430:15)
+#48     SchedulerBinding.handleDrawFrame (package:flutter/src/scheduler/binding.dart:1345:9)
+#49     AutomatedTestWidgetsFlutterBinding.pump.<anonymous closure> (package:flutter_test/src/binding.dart:2260:9)
+#52     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#53     AutomatedTestWidgetsFlutterBinding.pump (package:flutter_test/src/binding.dart:2249:27)
+#54     WidgetTester.pump.<anonymous closure> (package:flutter_test/src/widget_tester.dart:652:53)
+#57     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#58     WidgetTester.pump (package:flutter_test/src/widget_tester.dart:652:27)
+#59     main.<anonymous closure> (file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart:229:20)
+<asynchronous suspension>
+#60     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#61     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 5 frames from dart:async and package:stack_trace)
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _TypeWidgetFinder:<Found 0 widgets with type "PgsSubtitleOverlay": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart:230:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart line 230
+The test description was:
+  public PGS file: first frame/offset/seek/off/source reset release images
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following message was thrown:
+Multiple exceptions (2) were detected during the running of the current test, and at least one was
+unexpected.
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +43 -8: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: public PGS file: first frame/offset/seek/off/source reset release images [E]
+  Test failed. See exception logs above.
+  The test description was: public PGS file: first frame/offset/seek/off/source reset release images
+  
+00:01 +43 -8: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: crop source and window clipping produce exact pixels and destination
+  /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: decoded premultiplied RGBA, partial palette versions preserve old cues
+  /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: PGS cover follows actual source crop, not squeezed full plane
+  /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: PGS exact palette/alpha/clear pixel grid at 1000 ms
+  ... and 4 more

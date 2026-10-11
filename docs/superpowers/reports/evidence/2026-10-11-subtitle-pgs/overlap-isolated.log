@@ -1,0 +1,31 @@
+00:00 +0: loading /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart
+00:00 +0: overlapping objects preserve paint order and alpha
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: [254, 127, 127]
+  Actual: [0, 0, 255]
+   Which: at location [0] is <0> instead of <254>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart:254:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart line 254
+The test description was:
+  overlapping objects preserve paint order and alpha
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -1: overlapping objects preserve paint order and alpha [E]
+  Test failed. See exception logs above.
+  The test description was: overlapping objects preserve paint order and alpha
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_overlay_test.dart: overlapping objects preserve paint order and alpha

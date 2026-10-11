@@ -1,0 +1,14 @@
+00:00 +0: loading /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_runtime_test.dart
+00:00 +0: replacement cancels held binary response and cannot publish late data
+PGS cancellation: waiting for held request
+PGS cancellation: held request received
+PGS cancellation: replacement committed
+PGS cancellation: rejected observed
+00:30 +0 -1: replacement cancels held binary response and cannot publish late data [E]
+  TimeoutException after 0:00:30.000000: Test timed out after 30 seconds. See https://pub.dev/packages/test#timeouts
+  dart:isolate  _RawReceivePort._handleMessage
+  
+00:30 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_runtime_test.dart: replacement cancels held binary response and cannot publish late data

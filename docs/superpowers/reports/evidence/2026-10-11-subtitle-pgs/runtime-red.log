@@ -1,0 +1,25 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/pgs_runtime_test.dart
+00:00 +0: binary SUP file loads, updates palette, clears and follows offsets
+00:00 +0 -1: binary SUP file loads, updates palette, clears and follows offsets [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 45:9  TextSubtitleRuntime.replace
+  packages/yl_player/test/pgs_runtime_test.dart 15:41              main.<fn>
+  
+00:00 +0 -1: managed binary HTTP retries and malformed replacement preserves catalog
+00:00 +0 -2: managed binary HTTP retries and malformed replacement preserves catalog [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 45:9  TextSubtitleRuntime.replace
+  packages/yl_player/test/pgs_runtime_test.dart 27:41              main.<fn>
+  
+00:00 +0 -2: replacement cancels held binary response and cannot publish late data
+00:00 +0 -3: replacement cancels held binary response and cannot publish late data [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 45:9  TextSubtitleRuntime.replace
+  packages/yl_player/test/pgs_runtime_test.dart 31:41              main.<fn>
+  
+00:00 +0 -3: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/pgs_runtime_test.dart: binary SUP file loads, updates palette, clears and follows offsets
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/pgs_runtime_test.dart: managed binary HTTP retries and malformed replacement preserves catalog
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/pgs_runtime_test.dart: replacement cancels held binary response and cannot publish late data

@@ -118,10 +118,10 @@ Public asynchronous failures are `YlPlayerException` values carrying a
 opaque diagnostic ID for correlation. Do not log source locators or request
 metadata. See [diagnostics](../../docs/diagnostics.md).
 
-## External text subtitles (opt-in)
+## External subtitles (opt-in)
 
 Create the controller with `enableTextSubtitles: true` to use the Dart-owned
-external SRT/WebVTT/TTML text runtime on Android, iOS or macOS. `YlPlayerView` then draws
+external SRT/WebVTT/TTML/ASS/SSA text and PGS bitmap runtime on Android, iOS or macOS. `YlPlayerView` then draws
 selected subtitles over ordinary video without an extra widget:
 
 ```dart
@@ -194,8 +194,16 @@ style fields fail explicitly. This Flutter renderer does not promise libass
 font-metric or pixel equivalence. See the [ASS/SSA subset contract](../../docs/superpowers/specs/2026-10-11-subtitle-ass.md)
 for accepted tags and budgets.
 
+For PGS, set `format: YlSubtitleFormat.pgs` with a local `.sup` file or HTTP(S)
+source. The bounded binary SUP subset renders palettes, partial palette updates,
+fragmented RLE objects, cropping, windows, overlap and clear events. Selection,
+offset and seeking use media time; ordinary-video fit and source cropping apply.
+Expanded bitmap data is capped at 64 MiB per catalog; only active frames create
+engine images, with late asynchronous results disposed after a switch or reset.
+Unsupported segment/plane semantics fail explicitly. See the [PGS subset contract](../../docs/superpowers/specs/2026-10-11-subtitle-pgs.md).
+
 This opt-in owns the external catalog and cannot be combined with a native
-subtitle SPI. It does not support embedded tracks, PGS/VobSub,
+subtitle SPI. It does not support embedded tracks, VobSub,
 WebVTT CSS/regions/karaoke, or protected video overlays. HDR subtitle brightness
 and native-device synchronization remain unqualified. Without the opt-in, the
 existing native capability/SPI gates continue to apply.

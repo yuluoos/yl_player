@@ -4,6 +4,7 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'text_subtitle_runtime.dart';
 import 'ttml_overlay.dart';
 import 'ass_overlay.dart';
+import 'pgs_overlay.dart';
 
 /// Upright text in the visible video aperture, independent of texture rotation.
 final class TextSubtitleOverlay extends StatelessWidget {
@@ -40,17 +41,41 @@ final class TextSubtitleOverlay extends StatelessWidget {
         final resolved = alignment.resolve(
           Directionality.maybeOf(context) ?? TextDirection.ltr,
         );
-        final rect = resolved
-            .inscribe(sizes.destination, Offset.zero & output)
-            .intersect(Offset.zero & output);
+        final destination = resolved.inscribe(
+          sizes.destination,
+          Offset.zero & output,
+        );
+        final rect = destination.intersect(Offset.zero & output);
         if (rect.isEmpty) return const SizedBox.shrink();
         final standardCues = cues
-            .where((c) => c.cue.region == null && c.cue.ass == null)
+            .where(
+              (c) =>
+                  c.cue.region == null &&
+                  c.cue.ass == null &&
+                  c.cue.pgs == null,
+            )
             .toList();
         final ttmlGroups = <String, List<TextSubtitleCue>>{};
         for (final cue in cues.where((c) => c.cue.region != null)) {
           (ttmlGroups[cue.cue.region!.id] ??= []).add(cue);
         }
+        final sourceRect = resolved.inscribe(sizes.source, Offset.zero & input);
+        // Alignment may place part of a contained video outside the viewport.
+        // Map that clipping back into source space to preserve bitmap scale.
+        final pgsSource = Rect.fromLTWH(
+          (sourceRect.left +
+                  (rect.left - destination.left) /
+                      destination.width *
+                      sourceRect.width) /
+              input.width,
+          (sourceRect.top +
+                  (rect.top - destination.top) /
+                      destination.height *
+                      sourceRect.height) /
+              input.height,
+          rect.width / destination.width * sourceRect.width / input.width,
+          rect.height / destination.height * sourceRect.height / input.height,
+        );
         final fontSize = (rect.height * .055).clamp(12.0, 28.0);
         return Stack(
           children: [
@@ -98,6 +123,11 @@ final class TextSubtitleOverlay extends StatelessWidget {
                     if (cues.any((c) => c.cue.ass != null))
                       AssSubtitleOverlay(
                         cues: cues.where((c) => c.cue.ass != null).toList(),
+                      ),
+                    for (final cue in cues.where((c) => c.cue.pgs != null))
+                      PgsSubtitleOverlay(
+                        frame: cue.cue.pgs!,
+                        source: pgsSource,
                       ),
                     for (final group in ttmlGroups.values)
                       TtmlRegionOverlay(cues: group, aperture: rect.size),

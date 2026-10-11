@@ -1,13 +1,15 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'dart:math' as math;
 import 'package:xml/xml.dart' show XmlDefaultEntityMapping, XmlException;
 import 'package:xml/xml_events.dart';
 
 part 'ttml_parser.dart';
 part 'ass_parser.dart';
+part 'pgs_parser.dart';
 
 /// Internal parsing foundation; not a public subtitle loading/rendering API.
-enum SubtitleFormat { srt, webvtt, ttml, ass, ssa }
+enum SubtitleFormat { srt, webvtt, ttml, ass, ssa, pgs }
 
 enum SubtitleParseReason { malformed, unsupported, limitExceeded }
 
@@ -29,6 +31,7 @@ final class SubtitleLimits {
     this.maxCueCodeUnits = 16384,
     this.maxActiveCues = 64,
     this.maxAssRuns = 20000,
+    this.maxPgsBitmapBytes = 64 * 1024 * 1024,
   });
 
   final int maxInputBytes;
@@ -38,8 +41,12 @@ final class SubtitleLimits {
 
   /// Remaining ASS/SSA catalog budget, enforced before run allocation.
   final int maxAssRuns;
+  final int maxPgsBitmapBytes;
 
   void _validate() {
+    if (maxPgsBitmapBytes < 0 || maxPgsBitmapBytes > 64 * 1024 * 1024) {
+      throw ArgumentError('PGS bitmap budget is outside its allowed range');
+    }
     if (maxAssRuns < 0 || maxAssRuns > 20000) {
       throw ArgumentError('ASS run budget is outside its allowed range');
     }
@@ -68,6 +75,7 @@ final class SubtitleCue {
     this.textRuns,
     this.region,
     this.ass,
+    this.pgs,
     this.positionPercent,
     this.positionAlignment = 'auto',
     this.alignment = 'center',
@@ -81,6 +89,7 @@ final class SubtitleCue {
   final List<SubtitleTextRun>? textRuns;
   final SubtitleRegion? region;
   final AssCueLayout? ass;
+  final PgsFrame? pgs;
   final double? positionPercent;
   final String positionAlignment;
   final String alignment;
@@ -105,6 +114,8 @@ final class SubtitleDocument {
 
   final List<SubtitleCue> cues;
   final int inputBytes;
+  int get pgsBitmapBytes =>
+      cues.fold(0, (n, c) => n + (c.pgs?.byteLength ?? 0));
   final _CueNode? _index;
 
   /// Strict UTF-8 and strict supported syntax: malformed documents are rejected
@@ -118,6 +129,7 @@ final class SubtitleDocument {
     if (bytes.length > limits.maxInputBytes) _limit();
     // The List<int> boundary must not silently mask non-byte integers.
     if (bytes.any((byte) => byte < 0 || byte > 255)) _malformed();
+    if (format == SubtitleFormat.pgs) return _parsePgs(bytes, limits);
     String text;
     try {
       text = utf8.decode(bytes, allowMalformed: false);

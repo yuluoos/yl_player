@@ -1,0 +1,77 @@
+00:00 +0: loading /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart
+00:00 +0: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: binary framing, palette update and clear make nonoverlapping media cues
+00:00 +1: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: decoded premultiplied RGBA, partial palette versions preserve old cues
+00:00 +1 -1: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: decoded premultiplied RGBA, partial palette versions preserve old cues [E]
+  Expected: [128, 0, 0, 128]
+    Actual: [254, 0, 0, 128]
+     Which: at location [0] is <254> instead of <128>
+  
+  package:matcher                                      expect
+  package:flutter_test/src/widget_tester.dart 473:18   expect
+  packages/yl_player/test/pgs_document_test.dart 56:7  main.<fn>
+  
+00:00 +1 -1: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: palette-only PCS placeholder does not move or clear existing plane
+00:00 +2 -1: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: last display persists until bounded timeline/session termination
+00:00 +3 -1: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: fragmented ODS checks version/length and assembles before publication
+00:00 +4 -1: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: all RLE run forms and transparent defaults decode exact rows
+00:00 +5 -1: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: crop source and window clipping produce exact pixels and destination
+00:00 +5 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: crop source and window clipping produce exact pixels and destination [E]
+  Expected: [128, 0, 0, 128, 128, 0, 0, 128]
+    Actual: [254, 0, 0, 128, 254, 0, 0, 128]
+     Which: at location [0] is <254> instead of <128>
+  
+  package:matcher                                       expect
+  package:flutter_test/src/widget_tester.dart 473:18    expect
+  packages/yl_player/test/pgs_document_test.dart 134:7  main.<fn>
+  
+00:00 +5 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: two object references retain paint order
+00:00 +6 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: same PTS replaces previous frame without zero-length cue
+00:00 +7 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: PCS 32-bit rollover unwraps while segment DTS is not subtitle time
+00:00 +8 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: epoch reset cannot resolve stale objects, palettes or windows
+00:00 +9 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: epoch dimension change with fresh state is valid
+00:00 +10 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: all strict first-display truncations reject with sanitized failure
+00:00 +11 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed magic
+00:00 +12 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed byte range
+00:00 +13 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed duplicate PCS
+00:00 +14 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed orphan END
+00:00 +15 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed END payload
+00:00 +16 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed incomplete ODS
+00:00 +17 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed orphan continuation
+00:00 +18 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed fragment mismatch
+00:00 +19 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed declared undersize
+00:00 +20 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed row overflow
+00:00 +21 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed short row
+00:00 +22 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed no final EOL
+00:00 +23 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed zero run
+00:00 +24 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed truncated run
+00:00 +25 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed extra row
+00:00 +26 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed missing palette
+00:00 +27 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed missing object
+00:00 +28 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed bad palette length
+00:00 +29 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed duplicate palette entry
+00:00 +30 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed bad window
+00:00 +31 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed missing window
+00:00 +32 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed crop outside object
+00:00 +33 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: malformed backward PCS
+00:00 +34 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: unsupported reserved state
+00:00 +35 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: unsupported unknown segment
+00:00 +36 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: unsupported cache-only redraw
+00:00 +37 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: unsupported palette-only ODS
+00:00 +38 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: unsupported dimension change within epoch
+00:00 +39 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: preallocation bitmap budget counts all palette-expanded frames
+00:00 +40 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: dimension/product checks precede RLE allocation
+00:00 +41 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: object reference budget and cue budget
+00:00 +42 -2: loading /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_runtime_test.dart
+00:01 +42 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_runtime_test.dart: binary SUP file loads, updates palette, clears and follows offsets
+00:01 +43 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_runtime_test.dart: managed binary HTTP retries and malformed replacement preserves catalog
+00:01 +44 -2: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_runtime_test.dart: replacement cancels held binary response and cannot publish late data
+00:31 +44 -3: /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_runtime_test.dart: replacement cancels held binary response and cannot publish late data [E]
+  TimeoutException after 0:00:30.000000: Test timed out after 30 seconds. See https://pub.dev/packages/test#timeouts
+  dart:isolate  _RawReceivePort._handleMessage
+  
+00:31 +44 -3: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: crop source and window clipping produce exact pixels and destination
+  /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_document_test.dart: decoded premultiplied RGBA, partial palette versions preserve old cues
+  /private/tmp/yl-pgs-validation-rctzxpj1/packages/yl_player/test/pgs_runtime_test.dart: replacement cancels held binary response and cannot publish late data
