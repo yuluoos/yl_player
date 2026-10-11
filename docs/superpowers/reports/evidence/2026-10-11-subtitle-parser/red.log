@@ -1,0 +1,318 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart
+test/subtitle_document_test.dart:4:8: Error: Error when reading 'lib/src/subtitles/subtitle_document.dart': No such file or directory
+import 'package:yl_player/src/subtitles/subtitle_document.dart';
+       ^
+test/subtitle_document_test.dart:9:1: Error: Type 'SubtitleDocument' not found.
+SubtitleDocument parse(String source, {SubtitleFormat format = SubtitleFormat.srt,
+^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:9:40: Error: Type 'SubtitleFormat' not found.
+SubtitleDocument parse(String source, {SubtitleFormat format = SubtitleFormat.srt,
+                                       ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:10:3: Error: Type 'SubtitleLimits' not found.
+  SubtitleLimits limits = const SubtitleLimits()}) =>
+  ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:13:15: Error: Type 'SubtitleParseReason' not found.
+Matcher fails(SubtitleParseReason reason) => throwsA(
+              ^^^^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:9:40: Error: 'SubtitleFormat' isn't a type.
+SubtitleDocument parse(String source, {SubtitleFormat format = SubtitleFormat.srt,
+                                       ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:9:64: Error: Undefined name 'SubtitleFormat'.
+SubtitleDocument parse(String source, {SubtitleFormat format = SubtitleFormat.srt,
+                                                               ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:10:3: Error: 'SubtitleLimits' isn't a type.
+  SubtitleLimits limits = const SubtitleLimits()}) =>
+  ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:10:33: Error: Couldn't find constructor 'SubtitleLimits'.
+  SubtitleLimits limits = const SubtitleLimits()}) =>
+                                ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:11:5: Error: Undefined name 'SubtitleDocument'.
+    SubtitleDocument.parse(utf8.encode(source), format: format, limits: limits);
+    ^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:13:15: Error: 'SubtitleParseReason' isn't a type.
+Matcher fails(SubtitleParseReason reason) => throwsA(
+              ^^^^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:14:7: Error: 'SubtitleParseException' isn't a type.
+  isA<SubtitleParseException>().having((e) => e.reason, 'reason', reason),
+      ^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:14:49: Error: The getter 'reason' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'reason'.
+  isA<SubtitleParseException>().having((e) => e.reason, 'reason', reason),
+                                                ^^^^^^
+test/subtitle_document_test.dart:71:57: Error: Undefined name 'SubtitleFormat'.
+        '00:00:02.000 --> 00:00:03.000\nworld', format: SubtitleFormat.webvtt);
+                                                        ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:80:17: Error: Undefined name 'SubtitleFormat'.
+        format: SubtitleFormat.webvtt).cues.single;
+                ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:85:17: Error: Undefined name 'SubtitleFormat'.
+        format: SubtitleFormat.webvtt).cues.single;
+                ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:94:17: Error: Undefined name 'SubtitleFormat'.
+        format: SubtitleFormat.webvtt).cues.single;
+                ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:102:42: Error: Undefined name 'SubtitleFormat'.
+      expect(() => parse(source, format: SubtitleFormat.webvtt),
+                                         ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:103:17: Error: Undefined name 'SubtitleParseReason'.
+          fails(SubtitleParseReason.malformed));
+                ^^^^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:109:38: Error: Undefined name 'SubtitleFormat'.
+    expect(parse('WEBVTT\n', format: SubtitleFormat.webvtt).cues, isEmpty);
+                                     ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:118:55: Error: Undefined name 'SubtitleParseReason'.
+      expect(() => parse('1\n$timing\nsecret'), fails(SubtitleParseReason.malformed));
+                                                      ^^^^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:127:41: Error: Undefined name 'SubtitleParseReason'.
+      expect(() => parse(source), fails(SubtitleParseReason.malformed));
+                                        ^^^^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:135:19: Error: Undefined name 'SubtitleFormat'.
+          format: SubtitleFormat.webvtt), fails(SubtitleParseReason.malformed));
+                  ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:135:49: Error: Undefined name 'SubtitleParseReason'.
+          format: SubtitleFormat.webvtt), fails(SubtitleParseReason.malformed));
+                                                ^^^^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:144:42: Error: Undefined name 'SubtitleFormat'.
+      expect(() => parse(source, format: SubtitleFormat.webvtt),
+                                         ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:145:17: Error: Undefined name 'SubtitleParseReason'.
+          fails(SubtitleParseReason.unsupported));
+                ^^^^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:150:57: Error: Undefined name 'SubtitleFormat'.
+    expect(() => SubtitleDocument.parse([0xff], format: SubtitleFormat.srt),
+                                                        ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:150:18: Error: Undefined name 'SubtitleDocument'.
+    expect(() => SubtitleDocument.parse([0xff], format: SubtitleFormat.srt),
+                 ^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:151:15: Error: Undefined name 'SubtitleParseReason'.
+        fails(SubtitleParseReason.malformed));
+              ^^^^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:155:10: Error: 'SubtitleParseException' isn't a type.
+    } on SubtitleParseException catch (error) {
+         ^^^^^^^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:163:63: Error: Undefined name 'SubtitleFormat'.
+    expect(() => SubtitleDocument.parse([0xff, 0xff], format: SubtitleFormat.srt,
+                                                              ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:164:23: Error: Couldn't find constructor 'SubtitleLimits'.
+        limits: const SubtitleLimits(maxInputBytes: 1)),
+                      ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:163:18: Error: Undefined name 'SubtitleDocument'.
+    expect(() => SubtitleDocument.parse([0xff, 0xff], format: SubtitleFormat.srt,
+                 ^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:165:15: Error: Undefined name 'SubtitleParseReason'.
+        fails(SubtitleParseReason.limitExceeded));
+              ^^^^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:167:32: Error: Method not found: 'SubtitleLimits'.
+    expect(parse(_srt, limits: SubtitleLimits(maxInputBytes: length)).cues, hasLength(2));
+                               ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:168:38: Error: Method not found: 'SubtitleLimits'.
+    expect(() => parse(_srt, limits: SubtitleLimits(maxInputBytes: length - 1)),
+                                     ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:169:15: Error: Undefined name 'SubtitleParseReason'.
+        fails(SubtitleParseReason.limitExceeded));
+              ^^^^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:173:44: Error: Couldn't find constructor 'SubtitleLimits'.
+    expect(() => parse(_srt, limits: const SubtitleLimits(maxCues: 1)),
+                                           ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:174:15: Error: Undefined name 'SubtitleParseReason'.
+        fails(SubtitleParseReason.limitExceeded));
+              ^^^^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:175:38: Error: Couldn't find constructor 'SubtitleLimits'.
+    expect(parse(_srt, limits: const SubtitleLimits(maxCues: 2, maxCueCodeUnits: 3)).cues, hasLength(2));
+                                     ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:176:44: Error: Couldn't find constructor 'SubtitleLimits'.
+    expect(() => parse(_srt, limits: const SubtitleLimits(maxCueCodeUnits: 2)),
+                                           ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:177:15: Error: Undefined name 'SubtitleParseReason'.
+        fails(SubtitleParseReason.limitExceeded));
+              ^^^^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:181:44: Error: Couldn't find constructor 'SubtitleLimits'.
+    expect(() => parse(_srt, limits: const SubtitleLimits(maxActiveCues: 1)),
+                                           ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:182:15: Error: Undefined name 'SubtitleParseReason'.
+        fails(SubtitleParseReason.limitExceeded));
+              ^^^^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:184:23: Error: Couldn't find constructor 'SubtitleLimits'.
+        limits: const SubtitleLimits(maxActiveCues: 1)).cues, hasLength(2));
+                      ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:189:54: Error: Undefined name 'SubtitleParseReason'.
+        '999999999999999999999:00:01,000\na'), fails(SubtitleParseReason.limitExceeded));
+                                                     ^^^^^^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:193:33: Error: Couldn't find constructor 'SubtitleLimits'.
+    for (final limits in [const SubtitleLimits(maxInputBytes: 0),
+                                ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:194:13: Error: Couldn't find constructor 'SubtitleLimits'.
+      const SubtitleLimits(maxCues: -1), const SubtitleLimits(maxCueCodeUnits: 0),
+            ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:194:48: Error: Couldn't find constructor 'SubtitleLimits'.
+      const SubtitleLimits(maxCues: -1), const SubtitleLimits(maxCueCodeUnits: 0),
+                                               ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:195:13: Error: Couldn't find constructor 'SubtitleLimits'.
+      const SubtitleLimits(maxActiveCues: 0), const SubtitleLimits(maxInputBytes: 4194305)]) {
+            ^^^^^^^^^^^^^^
+test/subtitle_document_test.dart:195:53: Error: Couldn't find constructor 'SubtitleLimits'.
+      const SubtitleLimits(maxActiveCues: 0), const SubtitleLimits(maxInputBytes: 4194305)]) {
+                                                    ^^^^^^^^^^^^^^
+00:00 +0 -1: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart [E]
+  Failed to load "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart":
+  Compilation failed for testPath=/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: test/subtitle_document_test.dart:4:8: Error: Error when reading 'lib/src/subtitles/subtitle_document.dart': No such file or directory
+  import 'package:yl_player/src/subtitles/subtitle_document.dart';
+         ^
+  test/subtitle_document_test.dart:9:1: Error: Type 'SubtitleDocument' not found.
+  SubtitleDocument parse(String source, {SubtitleFormat format = SubtitleFormat.srt,
+  ^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:9:40: Error: Type 'SubtitleFormat' not found.
+  SubtitleDocument parse(String source, {SubtitleFormat format = SubtitleFormat.srt,
+                                         ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:10:3: Error: Type 'SubtitleLimits' not found.
+    SubtitleLimits limits = const SubtitleLimits()}) =>
+    ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:13:15: Error: Type 'SubtitleParseReason' not found.
+  Matcher fails(SubtitleParseReason reason) => throwsA(
+                ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:9:40: Error: 'SubtitleFormat' isn't a type.
+  SubtitleDocument parse(String source, {SubtitleFormat format = SubtitleFormat.srt,
+                                         ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:9:64: Error: Undefined name 'SubtitleFormat'.
+  SubtitleDocument parse(String source, {SubtitleFormat format = SubtitleFormat.srt,
+                                                                 ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:10:3: Error: 'SubtitleLimits' isn't a type.
+    SubtitleLimits limits = const SubtitleLimits()}) =>
+    ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:10:33: Error: Couldn't find constructor 'SubtitleLimits'.
+    SubtitleLimits limits = const SubtitleLimits()}) =>
+                                  ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:11:5: Error: Undefined name 'SubtitleDocument'.
+      SubtitleDocument.parse(utf8.encode(source), format: format, limits: limits);
+      ^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:13:15: Error: 'SubtitleParseReason' isn't a type.
+  Matcher fails(SubtitleParseReason reason) => throwsA(
+                ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:14:7: Error: 'SubtitleParseException' isn't a type.
+    isA<SubtitleParseException>().having((e) => e.reason, 'reason', reason),
+        ^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:14:49: Error: The getter 'reason' isn't defined for the type 'Object?'.
+   - 'Object' is from 'dart:core'.
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'reason'.
+    isA<SubtitleParseException>().having((e) => e.reason, 'reason', reason),
+                                                  ^^^^^^
+  test/subtitle_document_test.dart:71:57: Error: Undefined name 'SubtitleFormat'.
+          '00:00:02.000 --> 00:00:03.000\nworld', format: SubtitleFormat.webvtt);
+                                                          ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:80:17: Error: Undefined name 'SubtitleFormat'.
+          format: SubtitleFormat.webvtt).cues.single;
+                  ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:85:17: Error: Undefined name 'SubtitleFormat'.
+          format: SubtitleFormat.webvtt).cues.single;
+                  ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:94:17: Error: Undefined name 'SubtitleFormat'.
+          format: SubtitleFormat.webvtt).cues.single;
+                  ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:102:42: Error: Undefined name 'SubtitleFormat'.
+        expect(() => parse(source, format: SubtitleFormat.webvtt),
+                                           ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:103:17: Error: Undefined name 'SubtitleParseReason'.
+            fails(SubtitleParseReason.malformed));
+                  ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:109:38: Error: Undefined name 'SubtitleFormat'.
+      expect(parse('WEBVTT\n', format: SubtitleFormat.webvtt).cues, isEmpty);
+                                       ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:118:55: Error: Undefined name 'SubtitleParseReason'.
+        expect(() => parse('1\n$timing\nsecret'), fails(SubtitleParseReason.malformed));
+                                                        ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:127:41: Error: Undefined name 'SubtitleParseReason'.
+        expect(() => parse(source), fails(SubtitleParseReason.malformed));
+                                          ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:135:19: Error: Undefined name 'SubtitleFormat'.
+            format: SubtitleFormat.webvtt), fails(SubtitleParseReason.malformed));
+                    ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:135:49: Error: Undefined name 'SubtitleParseReason'.
+            format: SubtitleFormat.webvtt), fails(SubtitleParseReason.malformed));
+                                                  ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:144:42: Error: Undefined name 'SubtitleFormat'.
+        expect(() => parse(source, format: SubtitleFormat.webvtt),
+                                           ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:145:17: Error: Undefined name 'SubtitleParseReason'.
+            fails(SubtitleParseReason.unsupported));
+                  ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:150:57: Error: Undefined name 'SubtitleFormat'.
+      expect(() => SubtitleDocument.parse([0xff], format: SubtitleFormat.srt),
+                                                          ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:150:18: Error: Undefined name 'SubtitleDocument'.
+      expect(() => SubtitleDocument.parse([0xff], format: SubtitleFormat.srt),
+                   ^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:151:15: Error: Undefined name 'SubtitleParseReason'.
+          fails(SubtitleParseReason.malformed));
+                ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:155:10: Error: 'SubtitleParseException' isn't a type.
+      } on SubtitleParseException catch (error) {
+           ^^^^^^^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:163:63: Error: Undefined name 'SubtitleFormat'.
+      expect(() => SubtitleDocument.parse([0xff, 0xff], format: SubtitleFormat.srt,
+                                                                ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:164:23: Error: Couldn't find constructor 'SubtitleLimits'.
+          limits: const SubtitleLimits(maxInputBytes: 1)),
+                        ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:163:18: Error: Undefined name 'SubtitleDocument'.
+      expect(() => SubtitleDocument.parse([0xff, 0xff], format: SubtitleFormat.srt,
+                   ^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:165:15: Error: Undefined name 'SubtitleParseReason'.
+          fails(SubtitleParseReason.limitExceeded));
+                ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:167:32: Error: Method not found: 'SubtitleLimits'.
+      expect(parse(_srt, limits: SubtitleLimits(maxInputBytes: length)).cues, hasLength(2));
+                                 ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:168:38: Error: Method not found: 'SubtitleLimits'.
+      expect(() => parse(_srt, limits: SubtitleLimits(maxInputBytes: length - 1)),
+                                       ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:169:15: Error: Undefined name 'SubtitleParseReason'.
+          fails(SubtitleParseReason.limitExceeded));
+                ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:173:44: Error: Couldn't find constructor 'SubtitleLimits'.
+      expect(() => parse(_srt, limits: const SubtitleLimits(maxCues: 1)),
+                                             ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:174:15: Error: Undefined name 'SubtitleParseReason'.
+          fails(SubtitleParseReason.limitExceeded));
+                ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:175:38: Error: Couldn't find constructor 'SubtitleLimits'.
+      expect(parse(_srt, limits: const SubtitleLimits(maxCues: 2, maxCueCodeUnits: 3)).cues, hasLength(2));
+                                       ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:176:44: Error: Couldn't find constructor 'SubtitleLimits'.
+      expect(() => parse(_srt, limits: const SubtitleLimits(maxCueCodeUnits: 2)),
+                                             ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:177:15: Error: Undefined name 'SubtitleParseReason'.
+          fails(SubtitleParseReason.limitExceeded));
+                ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:181:44: Error: Couldn't find constructor 'SubtitleLimits'.
+      expect(() => parse(_srt, limits: const SubtitleLimits(maxActiveCues: 1)),
+                                             ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:182:15: Error: Undefined name 'SubtitleParseReason'.
+          fails(SubtitleParseReason.limitExceeded));
+                ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:184:23: Error: Couldn't find constructor 'SubtitleLimits'.
+          limits: const SubtitleLimits(maxActiveCues: 1)).cues, hasLength(2));
+                        ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:189:54: Error: Undefined name 'SubtitleParseReason'.
+          '999999999999999999999:00:01,000\na'), fails(SubtitleParseReason.limitExceeded));
+                                                       ^^^^^^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:193:33: Error: Couldn't find constructor 'SubtitleLimits'.
+      for (final limits in [const SubtitleLimits(maxInputBytes: 0),
+                                  ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:194:13: Error: Couldn't find constructor 'SubtitleLimits'.
+        const SubtitleLimits(maxCues: -1), const SubtitleLimits(maxCueCodeUnits: 0),
+              ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:194:48: Error: Couldn't find constructor 'SubtitleLimits'.
+        const SubtitleLimits(maxCues: -1), const SubtitleLimits(maxCueCodeUnits: 0),
+                                                 ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:195:13: Error: Couldn't find constructor 'SubtitleLimits'.
+        const SubtitleLimits(maxActiveCues: 0), const SubtitleLimits(maxInputBytes: 4194305)]) {
+              ^^^^^^^^^^^^^^
+  test/subtitle_document_test.dart:195:53: Error: Couldn't find constructor 'SubtitleLimits'.
+        const SubtitleLimits(maxActiveCues: 0), const SubtitleLimits(maxInputBytes: 4194305)]) {
+                                                      ^^^^^^^^^^^^^^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart

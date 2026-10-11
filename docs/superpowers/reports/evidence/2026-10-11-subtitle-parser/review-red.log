@@ -1,0 +1,37 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart
+00:00 +0: malformed NOTE cannot swallow a cue: 304160519
+00:00 +0 -1: malformed NOTE cannot swallow a cue: 304160519 [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: returned SubtitleDocument:<SubtitleDocument(cues: 0, inputBytes: 24)>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/subtitle_document_test.dart 32:9               main.<fn>
+  
+00:00 +0 -1: malformed NOTE cannot swallow a cue: 126143280
+00:00 +0 -2: malformed NOTE cannot swallow a cue: 126143280 [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: returned SubtitleDocument:<SubtitleDocument(cues: 0, inputBytes: 50)>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/subtitle_document_test.dart 32:9               main.<fn>
+  
+00:00 +0 -2: malformed NOTE cannot swallow a cue: 532906529
+00:00 +0 -3: malformed NOTE cannot swallow a cue: 532906529 [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: returned SubtitleDocument:<SubtitleDocument(cues: 0, inputBytes: 32)>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/subtitle_document_test.dart 32:9               main.<fn>
+  
+00:00 +0 -3: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: malformed NOTE cannot swallow a cue: 126143280
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: malformed NOTE cannot swallow a cue: 304160519
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/subtitle_document_test.dart: malformed NOTE cannot swallow a cue: 532906529
