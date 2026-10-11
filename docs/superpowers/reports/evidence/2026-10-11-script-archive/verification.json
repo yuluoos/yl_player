@@ -1,0 +1,54 @@
+{
+  "baseline": "bdaf7bc",
+  "scope": "P05 Task 1 offline archive verification and fixture generator only",
+  "commands": [
+    {
+      "command": "python3 -B -m unittest discover -s packages/yl_player_source_resolver/tool -p 'test_*.py' -v",
+      "tests": 17,
+      "passed": 17,
+      "exitCode": 0,
+      "rawLog": "raw-logs.json#green"
+    },
+    {
+      "command": "python3 -B packages/yl_player_source_resolver/tool/generate_controlled_integration.py --archive <restricted-archive> --verify-only",
+      "scripts": 9,
+      "verified": 9,
+      "bytes": 137282,
+      "exitCode": 0,
+      "receipt": "archive.json"
+    }
+  ],
+  "sources": [
+    {
+      "path": "packages/yl_player_source_resolver/tool/generate_controlled_integration.py",
+      "sha256": "377950a0a586d8c17ce8fdb28141922df85197fbcb45d71fc0bd70f80bcd612c"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/tool/test_generate_controlled_integration.py",
+      "sha256": "a918f8da64ca75345567af4d667a766ab3b179d84daee4c3ffbe00a2e1baa84d"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/test/support/controlled_contract.dart",
+      "sha256": "38668e3f88a003fac03dbe15d551e8d3cb52a96470a6f11899ded692a093cfab"
+    }
+  ],
+  "limitations": [
+    "No script execution or generated device entry",
+    "No native builds, device, VM/HTTP release or TVS tests",
+    "Current local retrieval does not establish off-machine backup or online availability"
+  ],
+  "review": {
+    "reviewer": "review_script_archive",
+    "mode": "independent read-only, no tests or private script contents",
+    "verdict": "ready",
+    "critical": 0,
+    "important": 0,
+    "minor": 0
+  },
+  "finalChecks": [
+    "git diff --check passed for task files",
+    "source/log SHA-256 matched",
+    "report links exist",
+    "no generated private device entry"
+  ]
+}

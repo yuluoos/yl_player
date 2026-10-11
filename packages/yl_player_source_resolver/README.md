@@ -112,6 +112,7 @@ The exact nine-original acceptance entry is generated only when the restricted
 archive is available. From this package directory:
 
 ```sh
+python3 -B tool/generate_controlled_integration.py --archive /absolute/restricted/archive --verify-only
 python3 tool/generate_controlled_integration.py --archive /absolute/restricted/archive
 cd example
 flutter test --no-pub integration_test/generated/controlled_runtime_test.dart -d DEVICE
@@ -123,6 +124,30 @@ The generator validates each original-byte hash against the shared safe manifest
 refuses an unignored output, and writes the complete entry with mode 0600 inside a
 0700 directory. Do not commit the generated entry or retain build artifacts that
 embed originals. The source archive itself remains restricted and unchanged.
+`--verify-only` enforces a 512 KiB source limit and emits a JSON receipt with all
+nine IDs, expected/observed SHA-256, byte counts and fixed verification statuses.
+It does not generate a Dart entry, run JavaScript, download anything or use a
+device. A missing or changed script remains a failed row; any failure exits 1.
+The archive directory and script files must have no group/other permission bits
+(normally 0700/0600); symlinks and non-regular inputs are rejected. Generation
+validates all nine originals before atomically replacing the ignored entry.
+Output path components cannot be symlinks, and tracked output is refused.
+`--remove` follows the same output-path checks and never removes the source archive.
+This tool assumes a trusted local checkout; it is not a sandbox against another
+process changing the repository or its permissions concurrently.
+
+Run the offline generator regressions from the repository root:
+
+```sh
+python3 -B -m unittest discover -s packages/yl_player_source_resolver/tool -p 'test_*.py' -v
+```
+
+These tests use owned synthetic scripts, include parity against the frozen
+historical ledger, and require only Python and Git. The private archive is not
+needed. A successful audit proves current byte retrieval; keep a separate
+restricted backup when moving or removing this checkout. It does not establish
+runtime compatibility or current downstream service availability.
+
 The generated entry reuses `test/support/controlled_contract.dart`; every host
 exchange is intercepted by controlled fixtures, and real returned downstream URLs
 are inspected only through safe predicates/digests, never fetched or logged.

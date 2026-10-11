@@ -100,6 +100,8 @@
 ```sh
 export PATH="/Users/yy2021_8689/flutter/bin:$PATH"
 # Dart 合约：在受影响包目录运行 flutter test，新增文件必须被发现。
+# P05 九脚本归档工具：纯 Python/Git，自有合成脚本，不运行设备或原生构建。
+python3 -B -m unittest discover -s packages/yl_player_source_resolver/tool -p 'test_*.py' -v
 cd /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface
 flutter test
 cd /Users/yy2021_8689/Desktop/Flutter/yl_player
@@ -400,3 +402,7 @@ Task3B已交付模式值、可空已提交状态、可选SPI和Session三重门�
 ### 2026-10-11 P02 managed 字幕网络策略
 
 已接入每跳响应头/正文无进展截止、有限重试/Retry-After、共享重定向预算与可取消退避；原始socket分类修复TCP reset漏重试，TLS/协议/解析错误不重试，跨origin凭据永久剥离。隔离副本基于已提交8e11db5加本项8份源码/测试，四包615/615、静态分析无问题，复审项已关闭；未改动并行长播放/弱网ABR文件。高级/内嵌字幕与真机同步等P02剩余项仍开放，见[P02报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)及managed证据清单。
+
+### 2026-10-11 P05 九脚本归档离线复核
+
+Task 1 归档子项已推进：原始九份 137,282 字节在非临时私有工作区可取回，冻结哈希 9/9 匹配；新增只读 JSON 校验入口和生成/清理安全回归，Python 17/17 通过。没有执行脚本、生成原始字节 Dart 入口或启动设备；三端运行、VM/HTTP 释放、TVS 业务及线上可用性仍开放，见[P05报告](../reports/2026-09-26-remaining-05-live-business.md)。
