@@ -341,3 +341,24 @@ python3 docs/superpowers/reports/evidence/2026-10-11-tvs-build-inventory/verify.
 本轮最终资料校验：18份本地源码/配置/历史证据输入逐字节匹配基线，SHA-256已记录；8个既有本地引用目标存在，6份官方资料均在报告对应论断处引用，新增验证收据存在，限定文档diff检查通过。此处PASS仅为资料一致性，不是协议或播放测试通过。
 
 独立只读复审Ready，无Critical/Important/Minor；复审者重新核对18份基线字节/指纹、9个本地链接（含验证收据）、6份官方引用和文档diff，均通过。协议运行、TLS互操作、解码输出、真实源、三端/设备、制品实际能力、性能/工期及完整P05未作判断；上述限制保持开放。未审查并行字幕与benchmark改动。
+
+
+## 2026-10-11：Task 2 首次添加无效订阅不落盘
+
+TVS提交 **`6749e233fb3dd3e35d9bb1eba96715b632d76c11`**，基线 `60d838f`；验证固定播放器 **`4e13f07c7529a8c6e16871ca172a64264869c9c0`**。此项补齐前次HTML/空列表刷新事务明确留下的首次添加路径，不扩大到并发写入或跨进程事务。
+
+原先 `LiveSourceManager.add` 直接保存解析结果，即使网页或无有效频道也会创建空订阅，之后同URL重试还会被重复检查阻止。本次在写入前复用已有HTML识别及零频道校验；失败时既有订阅文件逐字节保留，首次空目录不创建文件或暂存目录，同URL获得有效内容后可以正常再次添加。部分有效JSON继续只保存有效频道，不拒绝整个混合列表。
+
+共享内容错误工厂沿用 `html`／`noChannels`、`phase=parse`、`retryable=false` 与安全参考编号，按操作显示“添加订阅失败／未添加订阅”或既有“刷新订阅失败／未更新频道”。不把网页解释为永久失效或token过期，正文、URL与凭据不进入提示或诊断；既有 `safeLiveSourceOperationError` 保留这些安全错误。Provider、UI、生成输入和依赖未改变，未运行build_runner。
+
+新增 **11项**：HTML含伪装TXT频道、空正文、空M3U、畸形JSON、空频道名，分别覆盖无存储和已有存储，并检查安全错误、重新打开、同URL成功重试；另有混合JSON成功添加与旧源保留。首次RED **1 passed / 10 failed**，失败均观察到不应发生的持久化；修复后11/11。完整相关套件最终 **75/75**、全项目静态分析无问题、3份文件格式与限定diff检查通过。初次分析发现一处字符串插值冗余花括号，修正后重跑相同75项及分析通过。
+
+```sh
+# 固定TVS归档副本中运行；既有package_config映射到固定播放器源码，不执行pub resolve。
+flutter test --no-pub --concurrency=1 test/modules/live/features/live_source_add_transaction_test.dart test/modules/live/features/live_source_refresh_transaction_test.dart test/modules/live/features/live_source_notifier_test.dart test/modules/live/features/live_source_parser_test.dart test/modules/live/features/live_subscription_feedback_test.dart test/modules/live/features/live_subscription_errors_test.dart test/modules/player/features/playback_source_subscriptions_test.dart
+flutter analyze --no-pub
+```
+
+[verification.json](evidence/2026-10-11-live-source-add/verification.json) 保存两仓版本、命令与15份输入指纹；[raw-logs.json](evidence/2026-10-11-live-source-add/raw-logs.json) 保存RED、GREEN、初次lint及最终结果。第一次RED包装命令在测试结束后误用了zsh只读变量，随后用Python子进程在未修改源码条件下重跑确认退出1；证据采用后者。三份提交文件及其相关输入与实际测试副本逐字节一致，TVS提交后工作区干净。
+
+独立只读复审无未解决问题：确认写入前拒绝、原数据保留、失败后重试及既有反馈安全错误通路；复审者读取75项通过日志，未执行测试，最终分析及指纹由执行者确认。测试替换下载边界，使用真实解析和临时文件，不连接设备、模拟器、原生媒体或外部服务。并发写入、其他CRUD错误转换、实际订阅/媒体与完整P05继续开放；并行字幕和长播放改动保留。

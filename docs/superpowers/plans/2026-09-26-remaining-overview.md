@@ -498,3 +498,8 @@ TVS `60d838f` 在逐源摘要中补齐中文阶段、已知原因、手动建议
 ### 2026-10-11 P02 分片 MP4 内嵌字幕
 
 接入同一完整本地/HTTP(S)资源中初始化段与moof/mdat的wvtt/stpp发现、Track ID选择和既有文本/区域渲染；解析trex/tfhd/tfdt/trun，沿用managed Range和原子目录更新。见[fMP4契约](../specs/2026-10-11-subtitle-fmp4.md)与[P02报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)。独立segment URL、HLS/DASH字幕清单、直播增量/native/device仍开放；未改长播放/弱网ABR。
+
+
+### 2026-10-11 P05 首次添加无效订阅事务
+
+TVS `6749e23` 补齐首次添加HTML/零频道写入前拒绝，保留旧数据且不占用失败URL，安全错误明确未添加；有效混合JSON仍可导入。新增11项RED→GREEN，最终相关75/75、全项目分析及独立复审通过，固定播放器 `4e13f07`。未使用设备/外部测试环境；并发写入、真实订阅/媒体与完整P05仍开放，见[P05报告](../reports/2026-09-26-remaining-05-live-business.md)。

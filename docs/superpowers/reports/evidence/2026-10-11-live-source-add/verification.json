@@ -1,0 +1,149 @@
+{
+  "tvs_base": "60d838fbe0ddbc4b7088baadfd89f60331cd8cec",
+  "tvs_commit": "6749e233fb3dd3e35d9bb1eba96715b632d76c11",
+  "player_commit": "4e13f07c7529a8c6e16871ca172a64264869c9c0",
+  "isolation": "Both repositories archived at recorded commits; existing package_config local player paths redirected to archive, no pub resolution. Only three own files overlaid. No devices, simulator, native media or external test services. Downloader test double; parsing and disk persistence real.",
+  "added_tests": 11,
+  "red": {
+    "passed": 1,
+    "failed": 10,
+    "command": {
+      "command": [
+        "/Users/yy2021_8689/flutter/bin/flutter",
+        "test",
+        "--no-pub",
+        "--concurrency=1",
+        "test/modules/live/features/live_source_add_transaction_test.dart"
+      ],
+      "exit_code": 1
+    }
+  },
+  "focused_green": {
+    "passed": 11,
+    "command": {
+      "command": [
+        "/Users/yy2021_8689/flutter/bin/flutter",
+        "test",
+        "--no-pub",
+        "--concurrency=1",
+        "test/modules/live/features/live_source_add_transaction_test.dart"
+      ],
+      "exit_code": 0
+    }
+  },
+  "final_passed": 75,
+  "commands": [
+    {
+      "name": "tests",
+      "command": [
+        "/Users/yy2021_8689/flutter/bin/flutter",
+        "test",
+        "--no-pub",
+        "--concurrency=1",
+        "test/modules/live/features/live_source_add_transaction_test.dart",
+        "test/modules/live/features/live_source_refresh_transaction_test.dart",
+        "test/modules/live/features/live_source_notifier_test.dart",
+        "test/modules/live/features/live_source_parser_test.dart",
+        "test/modules/live/features/live_subscription_feedback_test.dart",
+        "test/modules/live/features/live_subscription_errors_test.dart",
+        "test/modules/player/features/playback_source_subscriptions_test.dart"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "analyze",
+      "command": [
+        "/Users/yy2021_8689/flutter/bin/flutter",
+        "analyze",
+        "--no-pub"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "initial_analyze": "one unnecessary_brace_in_string_interps lint fixed; final analyze clean",
+  "initial_wrapper_note": "First RED test log also showed1pass10fail; shell wrapper then hit read-only zsh status variable. Re-ran unchanged tests using Python subprocess to confirm exit1; confirmed log retained.",
+  "inputs": [
+    {
+      "path": "lib/utils/live_source_manager.dart",
+      "sha256": "f672476b8f0a72f19247d8067ec37bb07d939c2f7d5eabbcd6170e886bb2f277",
+      "matches_tested_snapshot_and_tvs_commit": true
+    },
+    {
+      "path": "lib/utils/live_source_error.dart",
+      "sha256": "7e88001902d2e4ff51377b24b7fdfad8d8dc2a68ed455019e8035b95007868cc",
+      "matches_tested_snapshot_and_tvs_commit": true
+    },
+    {
+      "path": "lib/utils/live_source_parser.dart",
+      "sha256": "7490411dbfe5f9c41814334103a79e56c1ea11f281fb068983638b704d3f95ca",
+      "matches_tested_snapshot_and_tvs_commit": true
+    },
+    {
+      "path": "lib/providers/live_source_provider.dart",
+      "sha256": "5fd02b947320aa379f72f8ebc0600d8000c1b1aad8453d1fd4d9dda1f874e5be",
+      "matches_tested_snapshot_and_tvs_commit": true
+    },
+    {
+      "path": "lib/models/app_error.dart",
+      "sha256": "a8a201021c7f978273aacf319ae14ee689d9914c5a56f0efd572d8f7b71362b3",
+      "matches_tested_snapshot_and_tvs_commit": true
+    },
+    {
+      "path": "lib/models/live_source.dart",
+      "sha256": "564cb7fd634d1cd87f8b2fd9bb74b4db11d4699c054582c0a6e20fcbc6866d5c",
+      "matches_tested_snapshot_and_tvs_commit": true
+    },
+    {
+      "path": "pubspec.yaml",
+      "sha256": "5c65155869260385a02cd9c9f192880148690c39e293ea2c5ce1db07d3ca33e4",
+      "matches_tested_snapshot_and_tvs_commit": true
+    },
+    {
+      "path": "pubspec.lock",
+      "sha256": "8bc7656782e9070a7c308c0d03d3ae6f2d7c4ccd8d94181cb6a0c8f7c76f84e8",
+      "matches_tested_snapshot_and_tvs_commit": true
+    },
+    {
+      "path": "test/modules/live/features/live_source_add_transaction_test.dart",
+      "sha256": "50f90034c678975bf90315ae1f314e081f9b127d67cf5b5b56f8c85fadb52672",
+      "matches_tested_snapshot_and_tvs_commit": true
+    },
+    {
+      "path": "test/modules/live/features/live_source_refresh_transaction_test.dart",
+      "sha256": "e753977f9c6a01a8294bf8c4c95ee205a5060d2ab4e5336eab1f119ae588b76a",
+      "matches_tested_snapshot_and_tvs_commit": true
+    },
+    {
+      "path": "test/modules/live/features/live_source_notifier_test.dart",
+      "sha256": "4a8730ffb5afc67ace79f7e310f382dd69e5bcc97f0bd153589887b2073df64e",
+      "matches_tested_snapshot_and_tvs_commit": true
+    },
+    {
+      "path": "test/modules/live/features/live_source_parser_test.dart",
+      "sha256": "6865160578f087f822e5920503fffaacace07d0d7a99927b208819bd128ed93e",
+      "matches_tested_snapshot_and_tvs_commit": true
+    },
+    {
+      "path": "test/modules/live/features/live_subscription_feedback_test.dart",
+      "sha256": "661819bad99817badce6c4a3247bb3e03611e5773654212da3a6f10d1ccf0027",
+      "matches_tested_snapshot_and_tvs_commit": true
+    },
+    {
+      "path": "test/modules/live/features/live_subscription_errors_test.dart",
+      "sha256": "299ada85be1cf23eb73f03a89c950f0462126cc55d811e3c8c5eeebcd38fff9d",
+      "matches_tested_snapshot_and_tvs_commit": true
+    },
+    {
+      "path": "test/modules/player/features/playback_source_subscriptions_test.dart",
+      "sha256": "d0f2fa4f7c309789455de15804f81d77f2e94b522333dc6e89f12d49eb4e7438",
+      "matches_tested_snapshot_and_tvs_commit": true
+    }
+  ],
+  "raw_logs_sha256": "892833f5a83b1c47103f4314ba00e1bf3b7addcf1c606c1bd9f23c509ea65c2d",
+  "review": "One fresh read-only review: no unresolved findings; reviewer read75/75 log and code, did not execute tests. Executor confirmed final repaired analyze and fingerprints.",
+  "limits": [
+    "Concurrent writers/cross-process transactions not covered",
+    "Actual subscription endpoints/native playback/devices not exercised",
+    "Other CRUD exception conversion and full P05 remain outside this slice"
+  ]
+}
