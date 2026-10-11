@@ -117,10 +117,10 @@ class ServerTests(unittest.TestCase):
             hashlib.sha256(self.payload).hexdigest() + '  ./segment.m4s\n')
         self.log = io.StringIO()
 
-    def start(self, steps=None, clock=None):
+    def start(self, steps=None, clock=None, **options):
         p = net.Profile(profile(*(steps or [step(rate=1000000)])))
         kwargs = {} if clock is None else dict(now=clock.now, sleep=clock.sleep)
-        self.server = net.make_server(self.root, p, self.log, port=0, **kwargs)
+        self.server = net.make_server(self.root, p, self.log, port=0, **kwargs, **options)
         self.thread = threading.Thread(target=self.server.serve_forever,
                                        kwargs={'poll_interval': .01})
         self.thread.start()
@@ -271,6 +271,24 @@ class ServerTests(unittest.TestCase):
             'packages/yl_player/example/assets/test_media/dash_variants')
         self.assertIn('manifest.mpd', assets)
         self.assertIn('period1/init-2.m4s', assets)
+
+    def test_deferred_clock_arms_once_and_head_identifies_run_without_starting(self):
+        clock = Clock()
+        self.start(clock=clock, start_on_first_get=True, run_id='capture-1')
+        clock.value = 60
+        _, headers, _ = self.request(method='HEAD')
+        self.assertEqual(headers['X-Yl-Timeline-State'], 'pending')
+        self.assertEqual(headers['X-Yl-Run-Id'], 'capture-1')
+        self.assertEqual(headers['X-Yl-Asset-Sha256'], hashlib.sha256(self.payload).hexdigest())
+        self.assertEqual(clock.value, 60)
+        self.request()
+        clock.value = 62
+        self.request()
+        rows = self.records()
+        self.assertIsNone(rows[0]['startMs'])
+        self.assertEqual(rows[1]['startMs'], 0)
+        self.assertEqual(rows[2]['startMs'], 2000)
+        self.assertTrue(all(r['runId'] == 'capture-1' for r in rows))
 
 
 if __name__ == '__main__':

@@ -54,3 +54,37 @@ Flutter、设备播放或长程，以保持另一边复验条件；工具自测�
 裁定：延续已批准总览，在当前 checkout 仅新增独立工具；不触碰另一边源码、
 设备或 HEAD。复用原创媒体且每 Period 地址独立，避免编码负载与缓存混淆。
 应用层延迟与真实 RTT、工具验证与真实播放必须分列；若混同会产生错误性能结论。
+
+## 2026-10-11：Task 1B 公开基线采集准备
+
+用户要求“commit 后继续下一项”。先按路径和总览段落隔离提交 Task 1A 为
+`b8a83c9`，保留另一会话字幕工作。随后完成本节采集准备；**未运行原生/设备
+弱网播放，Task 1 数值基线和整个 P04 仍未完成**。并行会话仍负责显示调度跟踪。
+
+- 服务增加首次已知素材 GET 启动的可选时间线，HEAD 不启动；提供 run ID、
+  profile/asset SHA256 和 pending 状态供预检，防止编译时间耗尽轨迹或混用记录。
+- 新增 `abr_network_profile_test.dart`：每次只运行 auto/caps/fixed 之一；caps 在
+  Load 时设置，fixed 从实际目录选取唯一高档。保存本会话首帧、250ms状态采样、
+  自然完成/超时/失败及释放结果。采样有1024条上限，缺失指标保留null。
+- 离线汇总检查会话/run/hash、样本数量、请求ID连续性、服务关闭计数及进程退出。
+  caps检查请求和状态，fixed检查ACK后自动模式及高档确认后的降档。原生缓冲
+  计数缺失或倒退不计算差值；提前下载完不会被解释为经历网络恢复。
+- 服务首次GET与客户端Load时钟未经校准，适配延迟/端到端延迟保持null。
+  所有报告继续 `baselineComparable=false`、`capabilityAccepted=false`。
+
+验证：**Python全工具31/31；Dart采集、首帧与资源所有权17/17；五个新增Dart
+文件静态分析无问题**。CLI往返及缺行拒绝使用合成采集记录验证，不是实际播放。
+初始缺实现、Flutter SDK缓存权限、首次空安全分析失败等原始输出保留，不计通过。
+没有重复原生全套、Flutter设备集成或长播放。源码与日志见
+[capture-validation.json](../../../tool/playback_network/capture-validation.json)。
+
+一次独立只读复审指出：固定ACK后首次高档前的自动回退漏判、HTTP预检外层
+Future.timeout未真正关闭socket。两项均定向RED→GREEN：前者新增ACK时间检查，
+后者把timeout放入HttpClient持有者的try/finally，并由真实回环socket断开验证。
+修正后运行上述完整定向套件；未声称再次独立复审。无延期小项。
+
+裁定：只交付采集准备，不用模拟数据代替原生结果；ACK后自动状态属于观察到的
+契约问题，不推断其原生原因；不同源时钟不相减。若错误放宽这些边界，会误报
+策略通过或适配速度。下一步依[采集协议](../../../tool/playback_network/capture-protocol.md)
+在空闲测试环境运行40秒节目和三种模式，记录P08设备/构建身份，再评估实际
+请求是否覆盖弱网阶段；新入口连续播放、跨Period及三端覆盖仍未验证。

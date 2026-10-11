@@ -183,7 +183,9 @@ class FixtureServer(ThreadingHTTPServer):
     daemon_threads = False
     request_queue_size = 8
 
-    def __init__(self, root, profile, log, port, now, sleep):
+    def __init__(self, root, profile, log, port, now, sleep, start_on_first_get, run_id):
+        if run_id is not None and not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]{0,79}', run_id):
+            raise ValueError('invalid run id')
         self.assets = load_assets(root)
         self.shaper = Shaper(profile, now, sleep)
         self.log = log
@@ -195,6 +197,9 @@ class FixtureServer(ThreadingHTTPServer):
         self.next_record_id = 0
         self.connection_timeout = 120
         self.active_sockets = set()
+        self.run_id = run_id
+        self.timeline_mode = 'first-get' if start_on_first_get else 'server-start'
+        self.started = not start_on_first_get
         super().__init__(('127.0.0.1', port), Handler)
 
     def process_request(self, request, client_address):
@@ -269,20 +274,28 @@ class Handler(BaseHTTPRequestHandler):
 
     def serve(self, head):
         s = self.server.shaper
+        try:
+            name = unquote(urlsplit(self.path).path).removeprefix('/')
+        except ValueError:
+            name = ''
+        body = self.server.assets.get(name)
+        with self.server.handlers:
+            if not head and body is not None and not self.server.started:
+                s.origin = s.now()
+                self.server.started = True
+            active = self.server.started
         started = s.elapsed()
         row = dict(schemaVersion=1, profile=s.profile.id,
+                   runId=self.server.run_id, timelineMode=self.server.timeline_mode,
+                   timelineState='active' if active else 'pending',
                    profileSha256=s.profile.sha256, asset=None,
-                   startMs=round(started * 1000, 6), method='HEAD' if head else 'GET',
+                   startMs=round(started * 1000, 6) if active else None,
+                   method='HEAD' if head else 'GET',
                    status=None, bodyBytesWritten=0, outcome='complete')
         with self.server.records_lock:
             self.server.next_record_id += 1
             row['requestId'] = self.server.next_record_id
         try:
-            try:
-                name = unquote(urlsplit(self.path).path).removeprefix('/')
-            except ValueError:
-                name = ''
-            body = self.server.assets.get(name)
             status, start, end = 200, 0, len(body) if body is not None else 0
             if body is None:
                 status = 404
@@ -299,13 +312,22 @@ class Handler(BaseHTTPRequestHandler):
                 except ValueError:
                     status, start, end = 416, 0, 0
             deadline = started + 120
-            s.begin(deadline)
+            if active:
+                s.begin(deadline)
             row.update(status=status, rangeStart=start, rangeEndExclusive=end)
             self.send_response(status)
             self.send_header('Content-Length', str(end - start))
             self.send_header('Accept-Ranges', 'bytes')
             self.send_header('Cache-Control', 'no-store')
             self.send_header('Connection', 'close')
+            self.send_header('X-Yl-Timeline-Mode', self.server.timeline_mode)
+            self.send_header('X-Yl-Timeline-State', 'active' if active else 'pending')
+            self.send_header('X-Yl-Profile-Id', s.profile.id)
+            self.send_header('X-Yl-Profile-Sha256', s.profile.sha256)
+            if self.server.run_id is not None:
+                self.send_header('X-Yl-Run-Id', self.server.run_id)
+            if body is not None:
+                self.send_header('X-Yl-Asset-Sha256', row['assetSha256'])
             self.send_header('Content-Type', 'application/dash+xml' if name.endswith('.mpd')
                              else 'application/octet-stream')
             if status == 206:
@@ -326,15 +348,16 @@ class Handler(BaseHTTPRequestHandler):
         except OSError:
             row['outcome'] = 'client_io_error'
         finally:
-            row['endMs'] = round(s.elapsed() * 1000, 6)
+            row['endMs'] = round(s.elapsed() * 1000, 6) if active else None
             with self.server.records_lock:
                 self.server.log.write(json.dumps(row, sort_keys=True) + '\n')
                 self.server.log.flush()
             self.close_connection = True
 
 
-def make_server(root, profile, log, port=0, now=time.monotonic, sleep=time.sleep):
-    return FixtureServer(root, profile, log, port, now, sleep)
+def make_server(root, profile, log, port=0, now=time.monotonic, sleep=time.sleep,
+                start_on_first_get=False, run_id=None):
+    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id)
 
 
 def main():
@@ -345,14 +368,18 @@ def main():
     parser.add_argument('--profile', default='down-and-recover-v1')
     parser.add_argument('--port', type=int, default=18779)
     parser.add_argument('--log', type=Path, required=True)
+    parser.add_argument('--start-on-first-get', action='store_true')
+    parser.add_argument('--run-id')
     args = parser.parse_args()
     profiles = load_profiles(args.profiles)
     if args.profile not in profiles:
         parser.error('unknown profile')
     with args.log.open('x') as log:
-        server = make_server(args.root, profiles[args.profile], log, args.port)
+        server = make_server(args.root, profiles[args.profile], log, args.port,
+                             start_on_first_get=args.start_on_first_get, run_id=args.run_id)
         print(json.dumps(dict(url=f'http://127.0.0.1:{server.server_port}/manifest.mpd',
                               profile=args.profile,
+                              runId=server.run_id, timelineMode=server.timeline_mode,
                               profileSha256=server.shaper.profile.sha256,
                               assetCount=len(server.assets))), flush=True)
         try:

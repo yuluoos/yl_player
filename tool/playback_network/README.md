@@ -30,6 +30,11 @@ Save stdout alongside JSONL for a complete run. Restart the server for each run.
 The timeline begins when the server is constructed, just before binding; times
 in the trace share that monotonic origin, not the player's load/first-frame time.
 
+For public-player runs use the opt-in `--start-on-first-get --run-id RUN_ID`
+mode and [capture protocol](capture-protocol.md). That mode defers the origin
+until the first GET of a known asset, so compiling the app cannot consume the
+network profile. HEAD preflight exposes run/profile/asset hashes without arming.
+
 ## Semantics
 
 `profiles.json` uses schemaVersion 1. Each named, versioned profile has ascending
