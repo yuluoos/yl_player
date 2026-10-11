@@ -418,3 +418,7 @@ TVS `b81524b` 保留前8条/省略次数及既有重试规则，新增独立安�
 ### 2026-10-11 TTML / TVS 消费者依赖兼容
 
 TVS `6ef7601` 通过离线包解析仅对齐XML7.0.1和必要的dbus0.7.15；实际TVS工作区加载最新TTML，新增4项消费者回归与既有业务合计80/80，全项目分析及严格离线锁复现通过。未改TTML校验或生产播放逻辑，未使用旧播放器快照、未占设备；原生/设备/Linux DBus运行仍不在本轮证据内，详见[P05报告](../reports/2026-09-26-remaining-05-live-business.md)。
+
+### 2026-10-11 P02 ASS/SSA 文本加载与渲染
+
+按用户指示继续字幕切片：外挂 UTF-8 ASS/SSA 经 managed loader 进入原子目录，Flutter 合成样式/描边/阴影、脚本坐标定位与层级、媒体时钟驱动 move/fad；支持显式 WrapStyle 1/2，复杂特效和字体附件等明确拒绝。独立复审修正了分配前片段预算、零时标移动、命名样式默认值和 CRLF 计数，像素测试同时修正淡出与阴影描边合成。验证和限制见 [P02 执行报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md) 与 [ASS/SSA 契约](../specs/2026-10-11-subtitle-ass.md)。无新增原生制品/依赖；完整 libass/三端真机效果、PGS/VobSub、HDR/DRM/PD-03 与整个 P02/CAP-SUB 仍开放。另一边长播放/弱网 ABR 工作未纳入此切片。

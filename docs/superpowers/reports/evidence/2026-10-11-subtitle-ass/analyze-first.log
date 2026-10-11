@@ -1,0 +1,15 @@
+Analyzing subtitles, ass_document_test.dart, ass_runtime_test.dart...
+
+   info - packages/yl_player/lib/src/subtitles/ass_overlay.dart:141:25 - Instances of 'Color' should be created using an 8-digit hexadecimal integer (such as '0xFFFFFFFF'). - use_full_hex_values_for_flutter_colors
+   info - packages/yl_player/lib/src/subtitles/ass_parser.dart:147:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/ass_parser.dart:154:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/ass_parser.dart:171:11 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/ass_parser.dart:202:13 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/ass_parser.dart:245:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/ass_parser.dart:256:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/ass_parser.dart:297:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/ass_parser.dart:350:19 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/ass_parser.dart:376:19 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/ass_parser.dart:539:5 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+
+11 issues found.

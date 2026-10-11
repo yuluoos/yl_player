@@ -144,3 +144,29 @@ GET 仅重试 socket/timeout/提前关闭及408/429/500/502/503/504；系统信�
 复审未判断的完整TTML/IMSC、native/内嵌/跨Period音轨身份、高级字体/图形、HDR/DRM真机与PD-03仍为P02后续范围，本项不据此宣称完成。另一会话随后提交源解析器工具 `79dbfad`，最终隔离验证副本已纳入该提交，再覆盖本项12份源码/测试/依赖文件，仍排除其未提交长播/弱网内容。
 
 最终固定源码在隔离仓库根执行 `flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test`，**685/685、0失败、exit0**（135接口/355播放器/113 Apple/82 Android）；本项新增70项。播放器与接口lib/test的最终静态分析 **No issues found、exit0**。所有12份覆盖文件与工作区候选逐字节核对；完整源码/依赖/报告、失败日志和PNG指纹见[TTML证据清单](evidence/2026-10-11-subtitle-ttml/manifest.json)。独立Git index及HEAD比较更新只提交本项文件和自身总览/变更日志段，不纳入其他任务暂存或未提交成果。
+
+## 2026-10-11 ASS/SSA 外挂文本加载与渲染
+
+用户明确要求继续 ASS/SSA、验证后 commit，并避开另一会话的长播放与弱网 ABR。本次交付 [Task 3A 有界文本切片](../specs/2026-10-11-subtitle-ass.md)，不将完整 Task 3 或 P02/CAP-SUB 标为完成。
+
+- 接入现有 `YlSubtitleFormat.ass/ssa` 和 opt-in 文本 owner，复用实际 file/HTTP(S)/managed 网络、取消、原子目录、选择/关闭/偏移与媒体状态门禁。
+- 支持 UTF-8 ASS v4.00+ / SSA v4.00、显式 PlayRes/WrapStyle 1 或 2、Format 列映射、SSA 对齐与颜色；字体回退/字号/基础样式、颜色与透明度、描边/阴影、脚本坐标及九锚点、Layer 和默认碰撞避让；pos/move/fad 使用媒体位置减字幕偏移，不设动画计时器。
+- 字体附件、矢量/clip、卡拉 OK/复杂变换、smart wrapping 0/3、混合同 cue 阴影偏移等明确拒绝。裁定代价：这部分合法高级脚本仍需后续实现，不降级成貌似成功的错误画面。Flutter 字体度量不是 libass/VSFilter 像素符合性承诺。
+- 4 MiB、10,000 cue、活动64、单cue16,384码元/512 run及目录20,000 run；ASS parser在创建 run 前消费剩余目录额度。样式/字体身份各128，字号256、描边/阴影16、坐标/分辨率8192与七天时间上限。每cue最多四个随paint释放的TextPainter；fade临时layer裁在可见cue范围，无新增字体/位图常驻缓存。
+
+### 制品、许可与验证范围
+
+[制品审计](evidence/2026-10-11-subtitle-ass/artifact-audit.json)记录6份实际 Android/Apple 二进制、两份构建脚本与两份 FFmpeg 9.0.1 lock 的 SHA256；脚本均禁用自动探测/avfilter且未启用libass，仅显式列出音视频模块。libass（ISC许可）作为后续完整渲染候选，参考0.17.4解析行为；本切片未新增该库或其他包/原生依赖。不会把上游能力记为现有制品能力。
+
+owned Ahem 样本在固定媒体时点手工推导像素框，验证9锚点、移动/淡出、独立颜色描边/阴影、层级/重叠、旋转/PAR/aperture裁切、字体回退。三张PNG证明坐标/颜色/透明度，不是真机字体外观认证。文件和loopback managed HTTP是真实I/O；首帧/暂停/偏移/seek/off/换源使用现有fake平台。未运行原生构建、设备、长播或弱网ABR；HDR/DRM、内嵌、PGS/VobSub、三端实际字体效果及PD-03仍开放。
+
+### 失败、复审与最终证据
+
+1. 入口4项RED均因旧runtime拒绝ASS/SSA；首轮44通过/1失败，修正clip被误认成颜色标签后的错误分类。
+2. 画面首轮53通过/1失败：分别淡出fill/outline造成边缘透色。改为cue级淡出合成后54通过，第一次四包739通过（此次为共享工作目录；最终下述验证在隔离副本完成）。
+3. 补9锚点与阴影后18通过/1失败：Flutter默认阴影没有描边扩张。显式shadow outline/fill绘制并限制同cue统一偏移，保持四个painter上限。
+4. 一次独立只读复审提出3 Important（run预算分配后才检查、move零/零时标、命名reset默认值）及1 Minor（CRLF双计）。CRLF按输入预算契约提升为需修复；5项RED（含混合shadow拒绝）后统一修正，定向70/70。剩余目录预算测试另在隔离副本移除传递参数，真实RED证明它可区分分配前拒绝和晚发现不支持内容；恢复最终代码后进入全套验证。[复审记录](evidence/2026-10-11-subtitle-ass/review.md)无遗留问题，不再进行第二次复审。
+
+最终基线 `ffc46826d0fbfc955bd94530b430ae777625e4fa`，隔离副本只覆盖本项11份源码/测试；排除另一会话未提交内容。仓库根运行 `flutter test --no-pub --concurrency=1 packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_apple/test packages/yl_player_android/test`：**755/755、0失败、exit0**（135接口/425播放器/113 Apple/82 Android），本项新增70项。播放器和接口lib/test静态分析 **No issues found、exit0**；所有候选代码与验证副本逐字节核对。
+
+[证据清单](evidence/2026-10-11-subtitle-ass/manifest.json)保留原始成功/失败日志、PNG、审计/复审和源码文档指纹。使用独立Git index及HEAD比较更新，仅提交本项与自身总览/CHANGELOG段，不夹带另一会话已暂存或未提交内容。

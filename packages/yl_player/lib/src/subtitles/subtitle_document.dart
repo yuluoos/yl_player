@@ -4,9 +4,10 @@ import 'package:xml/xml.dart' show XmlDefaultEntityMapping, XmlException;
 import 'package:xml/xml_events.dart';
 
 part 'ttml_parser.dart';
+part 'ass_parser.dart';
 
 /// Internal parsing foundation; not a public subtitle loading/rendering API.
-enum SubtitleFormat { srt, webvtt, ttml }
+enum SubtitleFormat { srt, webvtt, ttml, ass, ssa }
 
 enum SubtitleParseReason { malformed, unsupported, limitExceeded }
 
@@ -27,6 +28,7 @@ final class SubtitleLimits {
     this.maxCues = 10000,
     this.maxCueCodeUnits = 16384,
     this.maxActiveCues = 64,
+    this.maxAssRuns = 20000,
   });
 
   final int maxInputBytes;
@@ -34,7 +36,13 @@ final class SubtitleLimits {
   final int maxCueCodeUnits;
   final int maxActiveCues;
 
+  /// Remaining ASS/SSA catalog budget, enforced before run allocation.
+  final int maxAssRuns;
+
   void _validate() {
+    if (maxAssRuns < 0 || maxAssRuns > 20000) {
+      throw ArgumentError('ASS run budget is outside its allowed range');
+    }
     for (final (value, ceiling) in [
       (maxInputBytes, 4 * 1024 * 1024),
       (maxCues, 10000),
@@ -59,6 +67,7 @@ final class SubtitleCue {
     required this.payload,
     this.textRuns,
     this.region,
+    this.ass,
     this.positionPercent,
     this.positionAlignment = 'auto',
     this.alignment = 'center',
@@ -71,6 +80,7 @@ final class SubtitleCue {
   final String payload;
   final List<SubtitleTextRun>? textRuns;
   final SubtitleRegion? region;
+  final AssCueLayout? ass;
   final double? positionPercent;
   final String positionAlignment;
   final String alignment;
@@ -118,6 +128,14 @@ final class SubtitleDocument {
     if (text.contains('\u0000')) _malformed();
     if (format == SubtitleFormat.ttml) {
       return _parseTtml(text, bytes.length, limits);
+    }
+    if (format == SubtitleFormat.ass || format == SubtitleFormat.ssa) {
+      return _parseAss(
+        text,
+        bytes.length,
+        limits,
+        format == SubtitleFormat.ssa,
+      );
     }
     // Bound line objects as well as payload bytes before allocating the list.
     var lineBreaks = 0;

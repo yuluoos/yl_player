@@ -1,5 +1,10 @@
 ## 0.2.0-dev.2
 
+- Add opt-in external ASS/SSA UTF-8 text subtitles through the managed loader,
+  with bounded styles, outline/shadow, script-space positioning/layers and
+  media-clock movement/fades. Supports explicit WrapStyle 1/2; unsupported
+  effects and attachments fail explicitly. This is a Flutter text subset,
+  not full libass or native-device subtitle qualification.
 - Add external TTML text loading/rendering with bounded namespace-aware XML,
   media timing, referenced basic styles and clipped percentage regions, using
   the existing file/managed HTTP and atomic subtitle catalog pipeline.

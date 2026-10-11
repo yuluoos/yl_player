@@ -1,0 +1,812 @@
+00:00 +0: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart
+00:00 +0: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart: media clock metric retains null, observed zero, copy and validation
+00:00 +1: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart: capability video MIME families remain safe and generic metadata stays strict
+00:00 +2: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart: independently allocated snapshots use structural equality and hash
+00:00 +3: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart: state copy clears every nullable field and preserves unrelated state
+00:00 +4: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart: tracks and state own immutable collections with structural equality
+00:00 +5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart: geometry applies PAR then unapplied rotation and rejects invalid const values
+00:00 +6: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart: timeline validates nonnegative time and ordered DVR without requiring buffered >= position
+00:00 +7: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart: all common metrics preserve unknown versus measured zero and clear independently
+00:00 +8: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart: capabilities copy collections, preserve unknown limits and validate safe metadata
+00:00 +9: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart: assessment IDs preserve exact core and extension wire values without diagnostics leakage
+00:00 +10: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart: assessments enforce rejection exactly for incompatible and copy lists
+00:00 +11: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart: events correlate with a monotonic epoch and compare complete payloads
+00:00 +12: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart: publication boundaries reject invalid revisions, event timestamps and retries
+00:00 +13: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart: nullable copy input errors redact arbitrary runtime values
+00:00 +14: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart: publication accepts player-scoped pre-load failure and rejects session mismatch
+00:00 +15: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart: state equality distinguishes each semantic field
+00:00 +16: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart: common metrics and playback state exclude obsolete capability and platform fields
+00:00 +17: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart: event equality distinguishes session, revision, epoch and subclass payload
+00:00 +18: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/state_models_test.dart: capability null clearing preserves evidence and limits independently
+00:00 +19: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/validation_test.dart
+00:00 +19: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/validation_test.dart: RTMP and RTMPS admit complete app/playpath and retain supplied URI
+00:01 +20: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/validation_test.dart: RTMP incompatible valid policies reach native assessment unchanged
+00:01 +21: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/validation_test.dart: RTMP rejects unsafe or incomplete serialized URIs without identities
+00:01 +22: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/validation_test.dart: RTMP retains opaque percent-encoded app playpath and query bytes
+00:01 +23: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/validation_test.dart: RTMP validates raw serialized escapes and explicit port syntax
+00:01 +24: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/validation_test.dart: RTMP URI limit counts serialized UTF-8 bytes and accepts 8192
+00:01 +25: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/validation_test.dart: public input validation runs in release-compatible functions
+00:01 +26: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/models_test.dart
+00:01 +26: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/models_test.dart: landed network failure codes are public and stable
+00:01 +27: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/models_test.dart: network source snapshots request headers and records live intent
+00:01 +28: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/models_test.dart: file and content sources retain their distinct identities
+00:01 +29: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/models_test.dart: state copy preserves fields and explicitly clears nullable values
+00:01 +30: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/models_test.dart: track and capability lists are immutable snapshots
+00:01 +31: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/models_test.dart: metrics preserve omitted and clear explicit nullable values
+00:01 +32: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/player_platform_test.dart
+00:01 +32: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/player_platform_test.dart: registered verified platform becomes the singleton instance
+00:01 +33: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/player_platform_test.dart: unverified implementation cannot replace the singleton
+00:01 +34: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/drm_contract_test.dart
+00:02 +34: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/drm_contract_test.dart: native DRM errors preserve categories and actionable safe messages
+00:02 +35: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/drm_contract_test.dart: DRM binary values copy, compare and redact
+00:02 +36: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/drm_contract_test.dart: license endpoint validates policy without exposing URI/headers
+00:02 +37: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/drm_contract_test.dart: DRM configuration requires format, certificate and opaque content id
+00:02 +38: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/drm_contract_test.dart: platform and encryption limits are explicit without changing enums
+00:02 +39: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/video_selection_test.dart
+00:02 +39: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/video_selection_test.dart: selection defaults to automatic and redacts a fixed ID
+00:02 +40: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/video_selection_test.dart: fixed state requires a reported video track and user reason
+00:02 +41: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/live_playback_contract_test.dart
+00:03 +41: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/live_playback_contract_test.dart: live state snapshots are immutable and nullable without inventing defaults
+00:03 +42: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/live_playback_contract_test.dart: duplicate modes are rejected but a known non-switchable mode is valid
+00:03 +43: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/live_playback_contract_test.dart: idle and non-live snapshots cannot claim a committed live mode
+00:03 +44: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart
+00:03 +44: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: request snapshots preserve spelling and keep credentials separate
+00:03 +45: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: request equality ignores key casing and insertion order only
+00:03 +46: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: rejects collisions within either map and across both maps
+00:03 +47: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: reserved transport headers are forbidden in both maps
+00:03 +48: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: recognizable credentials must use the credential map
+00:03 +49: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: rejects malformed header names and unsafe values in either map
+00:03 +50: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: network URIs reject unsupported schemes, missing hosts and userinfo
+00:03 +51: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: files require absolute valid paths and expose no path in diagnostics
+00:03 +52: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: content sources require an authority and content scheme
+00:03 +53: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: sensitive validation errors carry no rejected argument
+00:03 +54: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: source identity includes every relevant option
+00:03 +55: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: default policies validate without silently requesting managed support
+00:03 +56: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: managed policy uses signed32 bounds and coherent retry delays
+00:03 +57: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: bounded buffers require ordered nonnegative durations and positive budget
+00:03 +58: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: video constraints validate for load and runtime and can clear limits
+00:03 +59: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: constraint copyWith rejects noninteger and nonfinite inputs safely
+00:03 +60: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: exact policy durations cannot be truncated to whole milliseconds
+00:03 +61: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: player sampling interval must fit positive native milliseconds
+00:03 +62: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: timeline allows long media positions but rejects negative submilliseconds
+00:03 +63: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: volume and speed reject nonfinite and out of range controls
+00:03 +64: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: track ids are opaque nonempty values and errors do not expose them
+00:03 +65: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/source_and_policy_test.dart: policy and option values compare structurally with matching hashes
+00:03 +66: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart
+00:03 +66: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: reply-before-idle adapter passes with immediate stopped identity fence
+00:03 +67: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: missing idle fails even when stopped identity is fenced
+00:04 +68: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: delayed idle cannot mask missing immediate stopped identity fence
+00:04 +69: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: conformant buffering adapter passes all observable cases
+00:04 +70: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: non-seekable live source uses a valid first-frame progress command
+00:04 +71: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: DVR first-frame progress stays inside a window starting after zero
+00:04 +72: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: network source with ordinary short header values is conformant
+00:04 +73: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: bare distinctive credential value fails public string conformance
+00:04 +74: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: bare distinctive ordinary header value remains detectable
+00:04 +75: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects stale
+00:04 +76: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects revision
+00:04 +77: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects barrier
+00:04 +78: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects identity
+00:04 +79: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects cancellation
+00:04 +80: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects stop
+00:04 +81: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects stopHeld
+00:04 +82: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects disposeHeld
+00:04 +83: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects firstFrame
+00:04 +84: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects terminal
+00:04 +85: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects rejectEverything
+00:04 +86: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects rejectStrict
+00:04 +87: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects ready
+00:04 +88: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects acceptUnsupported
+00:04 +89: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects unsafe
+00:04 +90: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects unsafeMessage
+00:04 +91: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects major
+00:04 +92: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: runner detects doubleDispose
+00:04 +93: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: honest strict-policy rejection with supported defaults is conformant
+00:04 +94: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: policy fixtures cannot omit known supported evidence
+00:04 +95: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: invalid deadlines fail before creating a player
+00:04 +96: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: public case values have structural equality and safe strings
+00:04 +97: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: a hung create times out and its late player is released and disposed
+00:05 +98: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: late create, command and cleanup errors are consumed while later cases run
+00:05 +99: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: release and disposal failures cannot skip disposal or later cases
+00:05 +100: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/platform_conformance_test.dart: a never completing disposal is bounded and later cases execute
+00:05 +101: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/subtitle_contract_test.dart
+00:05 +101: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: defaults, state copy and value semantics preserve old snapshots
+00:05 +102: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: snapshots copy their lists and preserve same-language distinct roles
+00:05 +103: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: duplicate ids, missing selected ids and idle subtitles are rejected
+00:05 +104: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: metadata and offset boundaries have release-safe validation
+00:05 +105: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: external file/http sources retain declared request policy and equality
+00:05 +106: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: unsupported media semantics and unsafe requests are rejected before dispatch
+00:05 +107: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: VobSub pair is explicit, bounded and independently validated
+00:05 +108: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: external ids, list limit and all diagnostic strings are safe
+00:05 +109: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/subtitle_contract_test.dart: new capabilities append without changing existing enum ordinals
+00:05 +110: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/v2_player_platform_test.dart
+00:06 +110: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/v2_player_platform_test.dart: unregistered v2 platform returns a typed unavailable failure
+00:06 +111: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/v2_player_platform_test.dart: registration accepts token subclasses and explicit platform mocks
+00:06 +112: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/v2_player_platform_test.dart: registration rejects a foreign implements-only platform
+00:06 +113: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/v2_player_platform_test.dart: implementation and load identities compare structurally and redact metadata
+00:06 +114: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart
+00:06 +114: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: VP9 failures distinguish unsupported frames from strict policy
+00:06 +115: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: Opus failures distinguish codec, malformed packet and policy limits
+00:06 +116: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: AVI failures provide fixed recovery guidance
+00:06 +117: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: MPEG-TS failures explain the failing operation and recovery
+00:06 +118: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: DASH cap failures provide actionable fixed public guidance
+00:06 +119: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: session ids and failures use structural equality
+00:06 +120: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: session ids have a redacted string and release validation
+00:06 +121: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: public strings never expose sensitive input
+00:06 +122: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: failure strings expose only safe failure metadata
+00:06 +123: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: failure strings redact hostile code and diagnostic identifiers
+00:06 +124: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: credential assignments never reach diagnostics or failure strings
+00:06 +125: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: failure strings hide ordinary structured metadata fields
+00:06 +126: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: redaction removes URL, query, header, and bearer shapes
+00:06 +127: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: redaction handles case-insensitive sensitive headers
+00:06 +128: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: redaction handles sensitive headers without optional whitespace
+00:06 +129: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: HTTP token header names share detection and redaction grammar
+00:06 +130: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: generic URI schemes are replaced before path redaction
+00:06 +131: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: generic URI schemes without authority are fully replaced
+00:06 +132: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: redaction removes file paths and standalone query fragments
+00:06 +133: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: public messages replace unsafe diagnostic shapes
+00:06 +134: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_platform_interface/test/failure_test.dart: redacted diagnostics are capped after sensitive data is removed
+00:06 +135: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/android_player_controller_test.dart
+00:06 +135: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/android_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: AndroidPlaybackStatus.buffering frameBeforeReady=false
+00:06 +136: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/android_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: AndroidPlaybackStatus.buffering frameBeforeReady=true
+00:06 +137: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/android_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: AndroidPlaybackStatus.paused frameBeforeReady=false
+00:06 +138: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/android_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: AndroidPlaybackStatus.paused frameBeforeReady=true
+00:06 +139: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/android_player_controller_test.dart: controller newLoad from replay listener cancels the owned completion turn
+00:06 +140: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/android_player_controller_test.dart: controller stop from replay listener cancels the owned completion turn
+00:06 +141: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/android_player_controller_test.dart: controller dispose from replay listener cancels the owned completion turn
+00:06 +142: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/android_player_controller_test.dart: real controller does not infer READY from initial BUFFERING
+00:06 +143: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_controller_test.dart
+00:07 +143: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_controller_test.dart: explicit creation exposes capabilities and attaches streams
+00:07 +144: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_controller_test.dart: equal and older revisions notify nobody and disposed callbacks stay inert
+00:07 +145: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_controller_test.dart: create returns failures and disposes incompatible backend
+00:07 +146: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_controller_test.dart: invalid initial state disposes backend
+00:07 +147: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_controller_test.dart: volume without session, identical disposal, texture null on cleanup failure
+00:07 +148: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_controller_test.dart: presentation cache accepts one delayed current-session milestone and resets on replacement
+00:07 +149: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_controller_test.dart: failed current session clears presentation cache
+00:07 +150: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_controller_test.dart: disposal clears presentation cache with one notification
+00:07 +151: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_controller_test.dart: accepted Stop clears presentation but rejected Stop preserves it
+00:07 +152: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_admission_test.dart
+00:07 +152: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_admission_test.dart: old SPI adapter cannot silently assess DRM as clear media
+00:07 +153: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_admission_test.dart: DRM rejection must happen before native load and cancellation of a pending clear load
+00:07 +154: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_resource_test.dart
+00:08 +154: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_resource_test.dart: explicit nonidentity encoding request is rejected, never overwritten
+00:08 +155: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_resource_test.dart: actual GET preserves headers and same-origin credentials
+00:08 +156: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_resource_test.dart: cross-origin redirect strips credentials permanently including return
+00:08 +157: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_resource_test.dart: bounded HTTP body declared=true
+00:08 +158: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_resource_test.dart: bounded HTTP body declared=false
+00:08 +159: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_resource_test.dart: redirect budget stops a loop after five hops
+00:08 +160: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_resource_test.dart: HTTP errors are sanitized and never retried
+00:08 +161: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_resource_test.dart: managed policy now performs the request
+00:08 +162: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_resource_test.dart: encoded responses reject rather than bypassing decompressed budget
+00:08 +163: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_resource_test.dart: cancellation closes stalled headers
+00:08 +164: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_resource_test.dart: cancellation closes stalled body
+00:08 +165: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_resource_test.dart: cancellation owns and closes a stalled TLS handshake socket
+00:08 +166: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_resource_test.dart: file streams enforce input limit and missing paths are sanitized
+00:08 +167: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_android_bridge_test.dart
+00:08 +167: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_android_bridge_test.dart: generated challenge reaches real POST and first frame waits for matching view ACK
+00:08 +168: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/apple_player_controller_test.dart
+00:09 +168: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/apple_player_controller_test.dart: Apple session reports unsupported video selection
+00:09 +169: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/apple_player_controller_test.dart: public session pairs Load reply and READY in both orders: stateFirst=false
+00:09 +170: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/apple_player_controller_test.dart: public session pairs Load reply and READY in both orders: stateFirst=true
+00:09 +171: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/apple_player_controller_test.dart: prepared state and geometry do not resolve firstFrame before its native publication callback
+00:09 +172: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/apple_player_controller_test.dart: controller firstFrame is settled by stop and late callbacks cannot revive it
+00:09 +173: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/apple_player_controller_test.dart: controller firstFrame is settled by dispose and late callbacks cannot revive it
+00:09 +174: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/apple_player_controller_test.dart: controller firstFrame is settled by replace and late callbacks cannot revive it
+00:09 +175: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/apple_player_controller_test.dart: controller firstFrame is settled by failure and late callbacks cannot revive it
+00:09 +176: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/apple_player_controller_test.dart: real controller settles terminal firstFrame before blocked disposal: maximum=false
+00:09 +177: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/apple_player_controller_test.dart: real controller settles terminal firstFrame before blocked disposal: maximum=true
+00:09 +178: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/apple_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: ApplePlaybackStatus.buffering frameBeforeReady=false
+00:09 +179: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/apple_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: ApplePlaybackStatus.buffering frameBeforeReady=true
+00:09 +180: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/apple_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: ApplePlaybackStatus.paused frameBeforeReady=false
+00:09 +181: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/apple_player_controller_test.dart: real controller receives retained READY with null metrics and ordered callbacks: ApplePlaybackStatus.paused frameBeforeReady=true
+00:09 +182: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/apple_player_controller_test.dart: controller newLoad from replay listener cancels the owned completion turn
+00:09 +183: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/apple_player_controller_test.dart: controller stop from replay listener cancels the owned completion turn
+00:09 +184: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/apple_player_controller_test.dart: controller dispose from replay listener cancels the owned completion turn
+00:09 +185: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/apple_player_controller_test.dart: real controller does not infer READY from initial BUFFERING
+00:09 +186: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart
+00:09 +186: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 408 through successful body
+00:09 +187: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 429 through successful body
+00:09 +188: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 500 through successful body
+00:09 +189: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 502 through successful body
+00:09 +190: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 503 through successful body
+00:09 +191: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: managed retries HTTP 504 through successful body
+00:09 +192: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: managed retry count excludes initial attempt
+00:09 +193: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: response header timeout is retried and closes held request
+00:09 +194: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: read inactivity retry discards prior attempt bytes
+00:09 +195: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: permanent HTTP 400 never retries
+00:09 +196: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: permanent HTTP 401 never retries
+00:09 +197: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: permanent HTTP 403 never retries
+00:09 +198: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: permanent HTTP 404 never retries
+00:10 +199: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: permanent HTTP 501 never retries
+00:10 +200: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: body progress resets read deadline after connect deadline has expired
+00:10 +201: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: excessive valid Retry-After forbids retry: 1
+00:10 +202: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: excessive valid Retry-After forbids retry: 999999999999999999999999
+00:10 +203: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: excessive valid Retry-After forbids retry: Sun, 11 Oct 2099 12:00:00 GMT
+00:10 +204: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: Retry-After zero overrides delay and malformed values fall back
+00:10 +205: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: exponential backoff saturates in actual request scheduling
+00:11 +206: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: cancel during backoff prevents all later attempts
+00:11 +207: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: redirect counter spans retries and credentials stay stripped on return
+00:11 +208: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: zero redirect budget rejects first such response
+00:11 +209: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: zero retry budget rejects first such response
+00:11 +210: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: terminal encoding error never retries
+00:11 +211: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: terminal length error never retries
+00:11 +212: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: terminal stream error never retries
+00:11 +213: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: TCP reset during response headers retries owned attempt
+00:11 +214: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: raw truncated body retries from empty
+00:11 +215: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: raw invalid protocol rejects
+00:11 +216: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: TLS header timeout owns and closes every handshake before retry
+00:11 +217: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_managed_network_test.dart: certificate failure is terminal even with remaining retry budget
+00:11 +218: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart
+00:12 +218: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: document run ceiling rejects before runtime span construction
+00:12 +219: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: explicit zero movement times mean full cue duration
+00:12 +220: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: named reset supplies defaults for argumentless tags; bare reset restores original
+00:12 +221: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: CRLF and LF share the same 50000-line budget
+00:12 +222: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: mixed per-run shadow offsets reject instead of painting wrong outline shadow
+00:12 +223: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: ASS time, colors, text and nine anchors
+00:12 +224: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: SSA time, colors, text and nine anchors
+00:12 +225: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: runs preserve style, BGR/alpha and reset without reparsing text
+00:12 +226: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: line-wide motion/fade follows explicit relative times
+00:12 +227: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: format columns reorder while dialogue commas remain text
+00:12 +228: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: SSA legacy top/center alignment and signed color
+00:12 +229: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \p1 rejects atomically
+00:12 +230: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \k20 rejects atomically
+00:12 +231: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \t(0,500,\fs40) rejects atomically
+00:12 +232: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \clip(0,0,1,1) rejects atomically
+00:12 +233: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \blur2 rejects atomically
+00:12 +234: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \frz90 rejects atomically
+00:12 +235: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \q0 rejects atomically
+00:12 +236: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \q3 rejects atomically
+00:12 +237: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \pos(1,2)\move(1,2,3,4) rejects atomically
+00:12 +238: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \fad(1500,1500) rejects atomically
+00:12 +239: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: bad time
+00:12 +240: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: reversed time
+00:12 +241: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unknown style
+00:12 +242: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: duplicate header
+00:12 +243: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: duplicate style
+00:12 +244: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: wrong version
+00:12 +245: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: bad color
+00:12 +246: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: malformed payload {\pos(NaN,1)}a
+00:12 +247: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: malformed payload {\move(1,2,3)}a
+00:12 +248: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: malformed payload {\b1a
+00:12 +249: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: malformed payload a}
+00:12 +250: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: malformed payload {\fs0}a
+00:12 +251: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: size budget
+00:12 +252: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: outline budget
+00:12 +253: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: coords budget
+00:12 +254: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: time budget
+00:12 +255: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: runs budget
+00:12 +256: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: payload budget
+00:12 +257: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: font budget
+00:12 +258: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: active cue limit includes overlap but not adjacent boundaries
+00:12 +259: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: smart wrap 0 unsupported
+00:12 +260: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: smart wrap 3 unsupported
+00:12 +261: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: attachments rejected; no font resource access
+00:12 +262: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: font identity budget includes overridden fonts
+00:12 +263: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: SSA BackColour supplies outline and legacy shadow alpha
+00:12 +264: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart
+00:12 +264: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: protected Android mounts explicit hybrid before first frame without texture or opacity
+00:12 +265: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: protected Apple view mounts before first frame on TargetPlatform.iOS
+00:12 +266: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: protected Apple view mounts before first frame on TargetPlatform.macOS
+00:12 +267: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: negotiated native view mounts before current FirstFrame and retains identity on TargetPlatform.iOS
+00:12 +268: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: native surface applies pixel aspect ratio rotation cover and alignment on TargetPlatform.iOS
+00:12 +269: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: disposed native output unmounts the surface and restores placeholder on TargetPlatform.iOS
+00:12 +270: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: native output requires authoritative geometry even after FirstFrame on TargetPlatform.iOS
+00:12 +271: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: negotiated native view mounts before current FirstFrame and retains identity on TargetPlatform.macOS
+00:12 +272: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: native surface applies pixel aspect ratio rotation cover and alignment on TargetPlatform.macOS
+00:12 +273: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: disposed native output unmounts the surface and restores placeholder on TargetPlatform.macOS
+00:12 +274: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: native output requires authoritative geometry even after FirstFrame on TargetPlatform.macOS
+00:12 +275: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: macOS retains Texture without a matching advertisement: capability=false
+00:12 +276: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: macOS retains Texture without a matching advertisement: capability=true
+00:12 +277: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: keeps placeholder until current session first frame
+00:13 +278: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: uses first frame received before load completion and view mount
+00:13 +279: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: replacement hides old frame until replacement first frame
+00:13 +280: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: contain uses authoritative display geometry and default bars
+00:13 +281: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: applies pixel aspect ratio exactly once before rotation
+00:13 +282: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: cover crops and top-left alignment controls placement
+00:13 +283: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: forwards background and texture filter quality
+00:13 +284: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: missing geometry keeps placeholder after first frame signal
+00:13 +285: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/player_view_test.dart: contains rendering only and no interactive or platform views
+00:13 +286: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/public_api_test.dart
+00:13 +286: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/public_api_test.dart: application values are available from the application barrel
+00:13 +287: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/public_api_test.dart: platform registration does not escape the app barrel
+00:14 +288: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart
+00:14 +288: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: malformed NOTE cannot swallow a cue: 304160519
+00:14 +289: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: malformed NOTE cannot swallow a cue: 126143280
+00:14 +290: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: malformed NOTE cannot swallow a cue: 532906529
+00:14 +291: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: interval index matches a reference scan across overlaps and seeks
+00:14 +292: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: microsecond boundaries and extreme query operands remain safe
+00:14 +293: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: hard line and metadata budgets reject amplification
+00:14 +294: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: byte lists cannot mask values outside the unsigned byte range
+00:14 +295: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: valid prefix followed by damaged cue never yields a partial document
+00:14 +296: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: overlap, exact half-open boundaries, seek and off are stateless
+00:14 +297: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: BOM, Unicode and multiline payload with [10]
+00:14 +298: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: BOM, Unicode and multiline payload with [13, 10]
+00:14 +299: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: BOM, Unicode and multiline payload with [13]
+00:14 +300: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: SRT identifiers are optional and not treated as globally unique
+00:14 +301: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: SRT out-of-order cues retain file order on lookup
+00:14 +302: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: document and query result cannot be mutated
+00:14 +303: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: WebVTT signature, identifiers, NOTE, short and hour timestamps
+00:14 +304: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: WebVTT position and alignment survive parsing
+00:14 +305: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: raw markup is retained for a future renderer, never interpreted
+00:14 +306: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject malformed WebVTT 1
+00:14 +307: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject malformed WebVTT 921497047
+00:14 +308: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject malformed WebVTT 262865390
+00:14 +309: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject malformed WebVTT 750017156
+00:14 +310: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject malformed WebVTT 769588573
+00:14 +311: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject malformed WebVTT 373134498
+00:14 +312: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: empty valid documents are supported
+00:14 +313: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:60:00,000 --> 00:61:00,000
+00:14 +314: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:60,000 --> 00:01:02,000
+00:14 +315: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:02,000 --> 00:00:01,000
+00:14 +316: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:01,000 --> 00:00:01,000
+00:14 +317: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing -1:00:01,000 --> 00:00:02,000
+00:14 +318: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:01.000 --> 00:00:02.000
+00:14 +319: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:01,00 --> 00:00:02,000
+00:14 +320: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:01,000-->00:00:02,000
+00:14 +321: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject invalid SRT timing 00:00:01,000 --> 00:00:02,000 trailing
+00:14 +322: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject malformed SRT block 778888771
+00:14 +323: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject malformed SRT block 655221060
+00:14 +324: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject malformed SRT block 732609353
+00:14 +325: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject malformed SRT block 407300547
+00:14 +326: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting position:101%
+00:14 +327: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting position:-1%
+00:14 +328: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting position:NaN%
+00:14 +329: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting position:2%,unknown
+00:14 +330: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting align:middle
+00:14 +331: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting align:start align:end
+00:14 +332: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: reject malformed setting align:
+00:14 +333: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: unsupported semantics are explicit 219808513
+00:14 +334: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: unsupported semantics are explicit 234889834
+00:14 +335: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: unsupported semantics are explicit 623810531
+00:14 +336: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: unsupported semantics are explicit 542852965
+00:14 +337: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: invalid UTF-8 and errors do not disclose input
+00:14 +338: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: byte limit is checked before UTF-8 decoding
+00:14 +339: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: cue count and per-cue UTF-16 limits are exact
+00:14 +340: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: overlap budget counts end before start at equal timestamps
+00:14 +341: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: timestamps beyond seven days fail without integer overflow
+00:14 +342: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_document_test.dart: invalid limits fail in release mode too
+00:14 +343: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_apple_bridge_test.dart
+00:14 +343: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_apple_bridge_test.dart: generated challenge reaches real POST and first frame waits for matching view ACK
+00:15 +344: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_overlay_test.dart
+00:15 +344: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_overlay_test.dart: two TTML regions flow independently and clip overflowing paragraphs
+00:15 +345: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_overlay_test.dart: TTML contain region before has exact box and clipped red pixels
+00:15 +346: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_overlay_test.dart: TTML contain region center has exact box and clipped red pixels
+00:15 +347: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_overlay_test.dart: TTML contain region after has exact box and clipped red pixels
+00:15 +348: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_overlay_test.dart: TTML rotated-par region before has exact box and clipped red pixels
+00:15 +349: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_overlay_test.dart: TTML rotated-par region center has exact box and clipped red pixels
+00:15 +350: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_overlay_test.dart: TTML rotated-par region after has exact box and clipped red pixels
+00:15 +351: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_runtime_test.dart
+00:16 +351: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_runtime_test.dart: catalog aggregate run overflow keeps the selected catalog
+00:16 +352: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_runtime_test.dart: ASS file commits styled overlapping cues with offset and off
+00:16 +353: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_runtime_test.dart: SSA file uses the same catalog and renders decoded text
+00:16 +354: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_runtime_test.dart: ASS managed HTTP retries then commits; malformed keeps old catalog
+00:16 +355: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_runtime_test.dart: new ASS replacement cancels held HTTP body and rejects late completion
+00:16 +356: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_overlay_test.dart
+00:16 +356: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_overlay_test.dart: RTL start anchors match text direction
+00:16 +357: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_overlay_test.dart: RTL end anchors match text direction
+00:16 +358: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_overlay_test.dart: painted pixels and upright text remain in contain aperture
+00:16 +359: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_overlay_test.dart: painted pixels and upright text remain in top-left aperture
+00:16 +360: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_overlay_test.dart: painted pixels and upright text remain in cover aperture
+00:16 +361: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_overlay_test.dart: painted pixels and upright text remain in rotated-par aperture
+00:16 +362: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart
+00:17 +362: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: ASS media-time move/fade outlined box at 0 ms
+00:17 +363: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: ASS media-time move/fade outlined box at 1000 ms
+00:17 +364: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: ASS media-time move/fade outlined box at 1750 ms
+00:17 +365: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: layer paints higher cue on top, file order breaks ties
+00:17 +366: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: unpositioned overlapping events stack without overlap
+00:17 +367: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: ASS contain scales and clips to aperture
+00:17 +368: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: ASS rotate-par scales and clips to aperture
+00:17 +369: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: unknown font falls back and remains in clipped aperture
+00:17 +370: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 1 matches manually derived box
+00:17 +371: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 2 matches manually derived box
+00:17 +372: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 3 matches manually derived box
+00:17 +373: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 4 matches manually derived box
+00:17 +374: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 5 matches manually derived box
+00:17 +375: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 6 matches manually derived box
+00:17 +376: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 7 matches manually derived box
+00:17 +377: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 8 matches manually derived box
+00:17 +378: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 9 matches manually derived box
+00:17 +379: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: ASS colored shadow extends beyond fill and outline
+00:17 +380: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: public ASS first-frame, pause/offset, seek, off and source reset
+00:17 +381: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/live_playback_session_test.dart
+00:18 +381: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/live_playback_session_test.dart: rejects legacy before backend dispatch
+00:18 +382: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/live_playback_session_test.dart: rejects operation without SPI before backend dispatch
+00:18 +383: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/live_playback_session_test.dart: rejects SPI without operation before backend dispatch
+00:18 +384: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/live_playback_session_test.dart: session admission rejects vod without dispatch
+00:18 +385: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/live_playback_session_test.dart: session admission rejects unknown without dispatch
+00:18 +386: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/live_playback_session_test.dart: session admission rejects unsupported without dispatch
+00:18 +387: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/live_playback_session_test.dart: session admission rejects same-mode-unsupported without dispatch
+00:18 +388: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/live_playback_session_test.dart: awaits backend commit without optimistic state or changing pause intent
+00:18 +389: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/live_playback_session_test.dart: current rejection preserves state and releases pending admission
+00:18 +390: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/live_playback_session_test.dart: 32 unsettled commands are bounded and a settled slot is reusable
+00:18 +391: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/live_playback_session_test.dart: late ACK after replace cannot succeed on new session
+00:18 +392: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/live_playback_session_test.dart: late error after replace cannot succeed on new session
+00:18 +393: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/live_playback_session_test.dart: late ACK after stop cannot succeed on new session
+00:18 +394: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/live_playback_session_test.dart: late error after stop cannot succeed on new session
+00:18 +395: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/live_playback_session_test.dart: late ACK after dispose cannot succeed on new session
+00:18 +396: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/live_playback_session_test.dart: late error after dispose cannot succeed on new session
+00:18 +397: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/live_playback_session_test.dart: same-session stream failure preserves committed ACK
+00:18 +398: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/live_playback_session_test.dart: same-session stream failure preserves rejection
+00:18 +399: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_runtime_test.dart
+00:18 +399: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_runtime_test.dart: TTML file commits styled overlapping cues with offset and off
+00:18 +400: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_runtime_test.dart: TTML managed HTTP retries then commits; malformed keeps old catalog
+00:18 +401: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_runtime_test.dart: new TTML replacement cancels held HTTP body and rejects late completion
+00:18 +402: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_runtime_test.dart: decoded TTML control-like text is never reparsed as SRT markup
+00:18 +403: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_runtime_test.dart: malformed XML syntax cannot publish over a selected catalog
+00:18 +404: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_runtime_test.dart: public TTML load renders and follows seek, off and source reset
+00:18 +405: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_retry_policy_test.dart
+00:19 +405: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_retry_policy_test.dart: exponential delay saturates without overflow or count-sized work
+00:19 +406: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_retry_policy_test.dart: valid Retry-After seconds override and excessive values forbid retry
+00:19 +407: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_retry_policy_test.dart: dates use injected wall time and past values mean zero delay
+00:19 +408: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_retry_policy_test.dart: malformed values fall back to exponential delay
+00:19 +409: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_retry_policy_test.dart: obsolete HTTP dates resolve two-digit years against injected clock
+00:19 +410: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_retry_policy_test.dart: obsolete date window also crosses a century boundary
+00:19 +411: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_retry_policy_test.dart: invalid calendar dates and truncated fields fall back rather than normalize
+00:19 +412: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart
+00:19 +412: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: real file catalog, selection, offset and native revision coexist
+00:19 +413: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: bad replacement is atomic and sanitized
+00:19 +414: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: managed retry reaches parser and atomically replaces selected content
+00:19 +415: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: managed parse failure never retries or changes committed catalog
+00:19 +416: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:20 +417: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by load with no later requests
+00:20 +418: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by stop with no later requests
+00:20 +419: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by dispose with no later requests
+00:20 +420: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: events share the public revision domain after subtitle publications
+00:20 +421: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: unsupported newer format replacement still cancels previous pending catalog
+00:20 +422: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: unsupported newer encoding replacement still cancels previous pending catalog
+00:20 +423: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: session replacement clears catalog and offset
+00:20 +424: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: native subtitle owner and protected output cannot silently use text overlay
+00:20 +425: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by replace without late publication
+00:21 +426: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by load without late publication
+00:21 +427: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by stop without late publication
+00:21 +428: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by dispose without late publication
+00:21 +429: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: selection and offset during pending replacement are preserved at atomic commit
+00:21 +430: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: aggregate bytes and cue counts reject whole catalog
+00:21 +431: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: unsupported format and encoding do not replace current catalog
+00:21 +432: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: paused and buffering use media position without wall-clock advance
+00:21 +433: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: pending seek and post-ACK snapshot cannot expose pre-seek cues
+00:21 +434: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/text_subtitle_runtime_test.dart: actual overlay follows position, offset, off and seek
+00:21 +435: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/playback_session_test.dart
+00:21 +435: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/playback_session_test.dart: optional video selection rejects unsupported and stale sessions
+00:21 +436: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/playback_session_test.dart: paused app observer cannot delay public dispose completion
+00:21 +437: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/playback_session_test.dart: transport error settles committed loading milestones without playback failure
+00:21 +438: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/playback_session_test.dart: transport close settles committed loading milestones without playback failure
+00:21 +439: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/playback_session_test.dart: commit, Ready and First Frame are separate; replacement makes old commands stale
+00:21 +440: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/playback_session_test.dart: early milestones and older same-session event revision survive load reply gap
+00:21 +441: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/playback_session_test.dart: new Load promptly cancels older unresolved caller; late result cannot replace
+00:21 +442: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/playback_session_test.dart: precommit failure preserves old pending Ready and command authority
+00:21 +443: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/playback_session_test.dart: postcommit native failure completes pending milestones once; command failure changes nothing
+00:21 +444: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/playback_session_test.dart: stop invalidates milestones and rejects old handle locally
+00:21 +445: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/playback_session_test.dart: successful Stop invalidates commands before delayed idle delivery
+00:21 +446: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/playback_session_test.dart: rejected Stop preserves healthy handle and pending milestones
+00:21 +447: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/playback_session_test.dart: successful Stop ignores late events before idle and late reply cannot invalidate newer session
+00:21 +448: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/playback_session_test.dart: unused milestone failures produce no uncaught zone errors
+00:21 +449: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart
+00:22 +449: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: legacy/interface/capability gates 1057108979
+00:22 +450: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: legacy/interface/capability gates 296996559
+00:22 +451: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: legacy/interface/capability gates 523270726
+00:22 +452: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: supported commands validate, snapshot input, await ACK and do not invent state
+00:22 +453: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: authoritative subtitle state is preserved and current command failures propagate
+00:22 +454: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: replace late ACK after replace is stale
+00:22 +455: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: replace late failure after replace is stale
+00:22 +456: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: replace late ACK after stop is stale
+00:22 +457: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: replace late failure after stop is stale
+00:22 +458: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: replace late ACK after dispose is stale
+00:22 +459: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: replace late failure after dispose is stale
+00:22 +460: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: select late ACK after replace is stale
+00:22 +461: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: select late failure after replace is stale
+00:22 +462: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: select late ACK after stop is stale
+00:22 +463: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: select late failure after stop is stale
+00:22 +464: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: select late ACK after dispose is stale
+00:22 +465: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: select late failure after dispose is stale
+00:22 +466: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: offset late ACK after replace is stale
+00:22 +467: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: offset late failure after replace is stale
+00:22 +468: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: offset late ACK after stop is stale
+00:22 +469: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: offset late failure after stop is stale
+00:22 +470: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: offset late ACK after dispose is stale
+00:22 +471: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: offset late failure after dispose is stale
+00:22 +472: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_session_test.dart: stale session rejects before argument validation or platform dispatch
+00:22 +473: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_license_client_test.dart
+00:22 +473: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_license_client_test.dart: real POST sends opaque bytes once and returns copied bytes
+00:22 +474: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_license_client_test.dart: 403 denial, 410 and 503 never invent expiry or retry by default
+00:22 +475: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_license_client_test.dart: only explicit idempotency permits a bounded retry
+00:22 +476: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_license_client_test.dart: cross origin never receives credentials OR challenge, even when redirects allowed
+00:22 +477: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_license_client_test.dart: same origin 307 is explicit, preserves POST and credentials
+00:22 +478: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_license_client_test.dart: oversize challenge makes no request; chunked response is bounded
+00:22 +479: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_license_client_test.dart: deadline includes body and cancellation discards late response
+00:22 +480: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_license_client_test.dart: connection loss after POST does not trigger an implicit replay
+00:22 +481: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_license_client_test.dart: four requests bound concurrency and close cancels all pending requests
+00:22 +482: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_license_client_test.dart: redirect loop and method-changing redirect are rejected
+00:22 +483: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_license_client_test.dart: HTTPS verifies certificates and preserves a large binary POST
+00:23 +484: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_license_client_test.dart: stalled TLS timeout closes the peer socket
+00:24 +485: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_license_client_test.dart: stalled TLS cancellation closes the peer socket
+00:24 +486: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/drm_license_client_test.dart: empty response rejected and closed client cannot send
+00:24 +487: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/documentation_examples_test.dart
+00:25 +487: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/documentation_examples_test.dart: README lifecycle runs through replacement, Stop, and Dispose
+00:25 +488: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_text_test.dart
+00:25 +488: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_text_test.dart: ASS overrides embedded in SRT are explicitly unsupported
+00:25 +489: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_text_test.dart: safe nested styles and escaped Unicode remain plain text
+00:25 +490: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects <b>bad
+00:25 +491: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects </b>bad
+00:25 +492: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects <i><b>x</i></b>
+00:25 +493: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects bad <
+00:25 +494: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects &#0;
+00:25 +495: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects &#xD800;
+00:25 +496: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_text_test.dart: malformed markup rejects &#x110000;
+00:25 +497: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <script>secret</script>
+00:25 +498: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <font color="red">x</font>
+00:25 +499: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <v speaker>x</v>
+00:25 +500: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject <ruby>x</ruby>
+00:25 +501: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_text_test.dart: unsupported effects reject &unknown;
+00:25 +502: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/subtitle_text_test.dart: style depth and span count bounded independently
+00:25 +503: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart
+00:25 +503: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: namespace prefixes, BOM, decimal clocks and media offsets
+00:25 +504: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: parent relative timing, duration and clipping
+00:25 +505: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: default whitespace across span boundaries, br and XML entities
+00:25 +506: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: xml space preserve inherits and CDATA remains plain text
+00:25 +507: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: referenced style chain and inline normal override inherit
+00:25 +508: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: region geometry alignment and inherited style
+00:25 +509: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject malformed 776514566
+00:25 +510: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject malformed 597182961
+00:25 +511: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject malformed 1026477303
+00:25 +512: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject malformed 346541764
+00:25 +513: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject malformed 412995810
+00:25 +514: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject malformed 353458147
+00:25 +515: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject malformed 42056563
+00:25 +516: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject malformed 272605008
+00:26 +517: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject malformed 1001207239
+00:26 +518: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject malformed 599128920
+00:26 +519: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject malformed 1037092636
+00:26 +520: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject malformed 125826032
+00:26 +521: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject unsupported 517369050
+00:26 +522: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject unsupported 572279468
+00:26 +523: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject unsupported 168101366
+00:26 +524: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject unsupported 615659418
+00:26 +525: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject unsupported 676934106
+00:26 +526: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject unsupported 620551040
+00:26 +527: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject unsupported 628334318
+00:26 +528: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject unsupported 199018245
+00:26 +529: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject unsupported 412204382
+00:26 +530: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject unsupported 1045919420
+00:26 +531: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: reject unsupported 984518183
+00:26 +532: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: bounded cues and active intervals
+00:26 +533: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: bounded nesting and payload before rendering
+00:26 +534: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: large offset cannot overflow into admitted media interval
+00:26 +535: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: finite ancestor at seven-day boundary supplies paragraph end
+00:26 +536: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: unprefixed attributes stay unqualified with a default namespace
+00:26 +537: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: limits style count, chain depth and per-cue rendered runs
+00:26 +538: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: empty or clipped content still rejects bad style references
+00:26 +539: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: strict XML rejects leading text
+00:26 +540: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: strict XML rejects trailing text
+00:26 +541: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: strict XML rejects outside cdata
+00:26 +542: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: strict XML rejects nested declaration
+00:26 +543: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: strict XML rejects late declaration
+00:26 +544: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: strict XML rejects unquoted attribute
+00:26 +545: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: strict XML rejects missing attribute value
+00:26 +546: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: strict XML rejects less than in attribute
+00:26 +547: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: strict XML rejects double hyphen comment
+00:26 +548: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: strict XML rejects trailing hyphen comment
+00:26 +549: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: strict XML rejects duplicate namespace
+00:26 +550: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: strict XML rejects reserved prefix
+00:26 +551: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: strict XML rejects reserved namespace alias
+00:26 +552: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: strict XML rejects empty prefixed namespace
+00:26 +553: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: strict XML rejects cdata closing in text
+00:26 +554: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: strict XML rejects missing declaration version
+00:26 +555: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: strict XML rejects duplicate declaration version
+00:26 +556: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: strict XML rejects wrong standalone
+00:26 +557: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: XML comments and declarations at legal boundaries remain usable
+00:26 +558: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: style-chain budget is independent of declaration order and cache
+00:26 +559: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ttml_document_test.dart: diagnostic never reveals XML text
+00:26 +560: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/transport_invariants_test.dart
+00:26 +560: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/transport_invariants_test.dart: Apple periodic callback stays typed, lossless, and below 768 bytes
+APPLE_MAX_CALLBACK_BYTES=223
+00:26 +561: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/transport_invariants_test.dart: Apple callback codec preserves explicit nullable clears
+00:26 +562: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/transport_invariants_test.dart: Apple periodic schema cannot carry static or media payload data
+00:26 +563: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart
+00:26 +563: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: Apple exposes the optional video selection operation
+00:26 +564: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: native video surface requires explicit native advertisement
+00:26 +565: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: invalid native surface advertisements reject and release native ownership
+00:26 +566: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: replacement Stop cancellation and late replies retain bounded authority
+00:27 +567: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: long lived retry dedup is bounded and older First Frame remains one shot
+00:27 +568: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: create exposes ApplePlatform.ios capabilities without property-read calls
+00:27 +569: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: create exposes ApplePlatform.macos capabilities without property-read calls
+00:27 +570: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: native enforcing authority rejects unsupported managed assessment and Load
+00:27 +571: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: native enforcing authority rejects unsupported bounded assessment and Load
+00:27 +572: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: native enforcing authority rejects unsupported hardwareOverride assessment and Load
+00:27 +573: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: native enforcing authority rejects unsupported hardwareDefault assessment and Load
+00:27 +574: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: per-load non-strict override of hardwareRequired default reaches native assessment
+00:27 +575: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: completion-window deltas use the latest authoritative state
+00:27 +576: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: former session failure notifies A without cancelling B: event=false assessment=false
+00:27 +577: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: former session failure notifies A without cancelling B: event=false assessment=true
+00:27 +578: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: player-scoped retained-session failure still terminates B: event=false
+00:27 +579: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: former session failure notifies A without cancelling B: event=true assessment=false
+00:27 +580: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: former session failure notifies A without cancelling B: event=true assessment=true
+00:27 +581: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: player-scoped retained-session failure still terminates B: event=true
+00:27 +582: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: state-first Load preserves onState then first-frame then delta before reply
+00:27 +583: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: failed candidate state cancels barrier immediately before reply while retaining former state
+00:27 +584: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: state-first READY evidence survives later BUFFERING before reply
+00:27 +585: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:27 +586: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: unknown stale A failed state and event cannot cancel newer B
+00:27 +587: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: late errors from cancelled assessment and Load do not terminate the newer session
+00:27 +588: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: stale buffered full state failure cannot cancel matching Load
+00:27 +589: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: stale duplicate delta payload cannot count as structurally invalid
+00:27 +590: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: mismatched echoed request cannot pair or revive a Load
+00:27 +591: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: known-session retry and engine events map independently from state watermark
+00:27 +592: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: terminal transport reaches revision-filtering consumers before hung native cleanup; max=false
+00:27 +593: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: terminal transport reaches revision-filtering consumers before hung native cleanup; max=true
+00:27 +594: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: creation owns native identity before validation; attaches after callback setup
+00:27 +595: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: callback setup and attach failures clean native ownership and preserve safe error
+00:27 +596: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: Load pairs both halves before immediate Play; stateFirst=false
+00:27 +597: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: five-second pair deadline starts at either half; stateFirst=false
+00:27 +598: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: Load pairs both halves before immediate Play; stateFirst=true
+00:27 +599: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: five-second pair deadline starts at either half; stateFirst=true
+00:27 +600: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: state/delta ordering ignores stale callbacks and milestones survive newer state revisions
+00:27 +601: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: loading BUFFERING stays loading until READY evidence; injected callbacks are isolated
+00:27 +602: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: only repeated malformed callbacks terminate; stale traffic never increments failures
+00:27 +603: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: new Load cancels assessment and old pair continuations without reopening
+00:27 +604: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: new Load retires buffered state from superseded Load and ignores its late reply
+00:27 +605: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: accepted Stop fences captured session before idle and cannot invalidate newer Load
+00:27 +606: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: rejected Stop preserves usable session and cancels a pending Load
+00:27 +607: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: terminal transport failure settles all commands and ignores late failures
+00:27 +608: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: hung failed-create cleanup is bounded and preserves original failure
+00:27 +609: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_player_test.dart: dispose shares Future, cancels commands, unregisters before paused observers drain
+00:27 +610: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/yl_player_apple_test.dart
+00:27 +610: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/yl_player_apple_test.dart: constraints transport awaits native completion and propagates failure
+00:27 +611: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/yl_player_apple_test.dart: video selection transport awaits native installation and safe late failure
+00:27 +612: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/yl_player_apple_test.dart: enforcing generated transport commits managed bounded YlMediaFormat.matroska replyFirst=true
+00:27 +613: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/yl_player_apple_test.dart: enforcing generated transport commits managed bounded YlMediaFormat.matroska replyFirst=false
+00:27 +614: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/yl_player_apple_test.dart: enforcing generated transport commits managed bounded YlMediaFormat.flv replyFirst=true
+00:27 +615: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/yl_player_apple_test.dart: enforcing generated transport commits managed bounded YlMediaFormat.flv replyFirst=false
+00:27 +616: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/yl_player_apple_test.dart: registerWith installs v2 implementation
+00:27 +617: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/yl_player_apple_test.dart: production Pigeon wrappers create, route every command and remove suffix callbacks
+00:27 +618: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/yl_player_apple_test.dart: production typed native rejection is safe; missing host is terminal
+00:27 +619: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/yl_player_apple_test.dart: pubspec registers one shared implementation for iOS and macOS
+00:27 +620: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/yl_player_apple_test.dart: podspec exposes the shared artifact with platform-scoped metadata
+00:27 +621: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/yl_player_apple_test.dart: SwiftPM manifest declares the shared product and binary bridge
+00:27 +622: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/drm_bridge_test.dart
+00:28 +622: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/drm_bridge_test.dart: newer frame before delayed attach ACK remains ready
+00:28 +623: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/drm_bridge_test.dart: older frame feedback cannot withdraw a newer acknowledged frame
+00:28 +624: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:28 +625: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach replacement timeout is ignored
+00:28 +626: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach unmount failure is ignored
+00:28 +627: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/drm_bridge_test.dart: stale attach unmount timeout is ignored
+00:28 +628: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/drm_bridge_test.dart: same view retry fences previous success and failure but current failure is published
+00:28 +629: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/drm_bridge_test.dart: wrong owner and duplicate challenge never issue another license POST
+00:28 +630: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/drm_bridge_test.dart: cancel fences a late non-cancellable license response
+00:28 +631: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart
+00:28 +631: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: known render.audio_engine_failed gives safe guidance at native and adapter boundaries
+00:28 +632: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: known container.dash_manifest_invalid gives safe guidance at native and adapter boundaries
+00:28 +633: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: known container.dash_dynamic_unsupported gives safe guidance at native and adapter boundaries
+00:28 +634: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: known container.dash_protection_unsupported gives safe guidance at native and adapter boundaries
+00:28 +635: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: known container.dash_segment_base_unsupported gives safe guidance at native and adapter boundaries
+00:28 +636: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: known resource.dash_manifest_too_large gives safe guidance at native and adapter boundaries
+00:28 +637: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: known source.seek_failed gives safe guidance at native and adapter boundaries
+00:28 +638: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: known policy.video_selection_unsupported gives safe guidance at native and adapter boundaries
+00:28 +639: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.protocol_unsupported gives safe guidance at native and adapter boundaries
+00:28 +640: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.rtmp_handshake_failed gives safe guidance at native and adapter boundaries
+00:28 +641: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.rtmp_stream_unavailable gives safe guidance at native and adapter boundaries
+00:28 +642: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: known container.rtmp_track_layout_changed gives safe guidance at native and adapter boundaries
+00:28 +643: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.rtmp_disconnected gives safe guidance at native and adapter boundaries
+00:28 +644: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.dns_failed gives safe guidance at native and adapter boundaries
+00:28 +645: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.http_forbidden gives safe guidance at native and adapter boundaries
+00:28 +646: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: known network.retry_exhausted gives safe guidance at native and adapter boundaries
+00:28 +647: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: known load.cancelled gives safe guidance at native and adapter boundaries
+00:28 +648: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: known container.unsupported gives safe guidance at native and adapter boundaries
+00:28 +649: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: known policy.unsupported gives safe guidance at native and adapter boundaries
+00:28 +650: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_failure_message_test.dart: unknown codes never promote native text or infer a known cause
+00:28 +651: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/pigeon_schema_test.dart
+00:29 +651: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/pigeon_schema_test.dart: generated codec preserves the complete Apple v2 transport
+00:29 +652: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/pigeon_schema_test.dart: generated Apple types remain private to implementation libraries
+00:30 +653: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart
+00:30 +653: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart: native capabilities do not advertise Dart-only subtitle and live-mode commands
+00:30 +654: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart: schema 4 selection is mandatory, validated and retained by deltas
+00:30 +655: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart: DASH appends wire ordinal ten without changing old formats
+00:30 +656: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart: AVPlayer decoder remains unknown and fallback retains evidenced modes
+00:30 +657: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart: private renamed failure categories preserve public ordinals and names
+00:30 +658: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart: native hardware decoder failure retains the public failure code
+00:30 +659: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart: actual Apple capability and assessment decoding accepts native MIME and policy identifiers
+00:30 +660: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart: all complete enum counterparts retain exact set parity
+00:30 +661: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart: Apple engines are the explicit public subset and source kinds cover all variants
+00:30 +662: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart: metrics deltas distinguish every absent, set and cleared field
+00:30 +663: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart: source metadata and load choices retain values across encoding
+00:30 +664: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart: timeline preserves nullable live metadata and rejects inverted DVR ranges
+00:30 +665: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart: outbound enums preserve every policy, format, intent and source kind
+00:30 +666: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart: inbound enums cover statuses, engines, decoder evidence/mode, tracks, operations and failures
+00:30 +667: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart: assessment maps outcomes and rejects inconsistent rejection or unsafe identifiers
+00:30 +668: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart: assessment preserves all built-in and safe extension IDs distinctly
+00:30 +669: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart: failure prose is fixed and transport errors never expose native details
+00:30 +670: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart: nullable metrics, clamp only live offset and preserve display geometry
+00:30 +671: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/apple_codec_test.dart: validate raw millisecond bounds before Duration overflow and nullable deltas
+00:30 +672: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/drm_codec_test.dart
+00:31 +672: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_apple/test/drm_codec_test.dart: schema5 keeps FairPlay binary configuration and rejects Widevine
+00:31 +673: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/transport_invariants_test.dart
+00:31 +673: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/transport_invariants_test.dart: Android periodic callback stays typed, lossless, and below 768 bytes
+ANDROID_MAX_CALLBACK_BYTES=228
+00:31 +674: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/transport_invariants_test.dart: Android callback codec preserves explicit nullable clears
+00:31 +675: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/transport_invariants_test.dart: Android periodic schema cannot carry static or media payload data
+00:31 +676: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/yl_player_android_test.dart
+00:32 +676: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/yl_player_android_test.dart: registerWith installs v2 implementation
+00:32 +677: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/yl_player_android_test.dart: production Pigeon wrappers create, route every command and remove suffix callbacks
+00:32 +678: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/yl_player_android_test.dart: production typed native rejection is safe; missing host is terminal
+00:32 +679: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_failure_message_test.dart
+00:32 +679: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_failure_message_test.dart: known network.protocol_unsupported gives safe guidance at native and adapter boundaries
+00:32 +680: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_failure_message_test.dart: known network.rtmp_handshake_failed gives safe guidance at native and adapter boundaries
+00:32 +681: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_failure_message_test.dart: known network.rtmp_stream_unavailable gives safe guidance at native and adapter boundaries
+00:32 +682: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_failure_message_test.dart: known network.rtmp_disconnected gives safe guidance at native and adapter boundaries
+00:32 +683: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_failure_message_test.dart: known network.dns_failed gives safe guidance at native and adapter boundaries
+00:32 +684: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_failure_message_test.dart: known network.http_forbidden gives safe guidance at native and adapter boundaries
+00:32 +685: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_failure_message_test.dart: known network.retry_exhausted gives safe guidance at native and adapter boundaries
+00:32 +686: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_failure_message_test.dart: known load.cancelled gives safe guidance at native and adapter boundaries
+00:32 +687: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_failure_message_test.dart: known container.rtmp_track_layout_changed gives safe guidance at native and adapter boundaries
+00:32 +688: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_failure_message_test.dart: known container.unsupported gives safe guidance at native and adapter boundaries
+00:32 +689: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_failure_message_test.dart: known policy.unsupported gives safe guidance at native and adapter boundaries
+00:32 +690: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_failure_message_test.dart: unknown codes never promote native text or infer a known cause
+00:32 +691: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart
+00:33 +691: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: video command sends nullable auto ID without asserting a state change
+00:33 +692: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: completion-window deltas use the latest authoritative state
+00:33 +693: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: former session failure notifies A without cancelling B: event=false assessment=false
+00:33 +694: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: former session failure notifies A without cancelling B: event=false assessment=true
+00:33 +695: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: player-scoped retained-session failure still terminates B: event=false
+00:33 +696: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: former session failure notifies A without cancelling B: event=true assessment=false
+00:33 +697: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: former session failure notifies A without cancelling B: event=true assessment=true
+00:33 +698: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: player-scoped retained-session failure still terminates B: event=true
+00:33 +699: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: state-first Load preserves onState then first-frame then delta before reply
+00:33 +700: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: failed candidate state cancels barrier immediately before reply while retaining former state
+00:33 +701: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: state-first READY evidence survives later BUFFERING before reply
+00:33 +702: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: unknown stale A state cannot start newer B pair deadline
+00:33 +703: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: unknown stale A failed state and event cannot cancel newer B
+00:33 +704: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: late errors from cancelled assessment and Load do not terminate the newer session
+00:33 +705: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: stale buffered full state failure cannot cancel matching Load
+00:33 +706: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: stale duplicate delta payload cannot count as structurally invalid
+00:33 +707: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: mismatched echoed request cannot pair or revive a Load
+00:33 +708: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: known-session retry and engine events map independently from state watermark
+00:33 +709: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: terminal transport reaches revision-filtering consumers before hung native cleanup; max=false
+00:33 +710: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: terminal transport reaches revision-filtering consumers before hung native cleanup; max=true
+00:33 +711: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: creation owns native identity before validation; attaches after callback setup
+00:33 +712: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: callback setup and attach failures clean native ownership and preserve safe error
+00:33 +713: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: Load pairs both halves before immediate Play; stateFirst=false
+00:33 +714: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: five-second pair deadline starts at either half; stateFirst=false
+00:33 +715: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: Load pairs both halves before immediate Play; stateFirst=true
+00:33 +716: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: five-second pair deadline starts at either half; stateFirst=true
+00:33 +717: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: state/delta ordering ignores stale callbacks and milestones survive newer state revisions
+00:33 +718: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: loading BUFFERING stays loading until READY evidence; injected callbacks are isolated
+00:33 +719: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: only repeated malformed callbacks terminate; stale traffic never increments failures
+00:33 +720: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: new Load cancels assessment and old pair continuations without reopening
+00:33 +721: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: new Load retires buffered state from superseded Load and ignores its late reply
+00:33 +722: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: accepted Stop fences captured session before idle and cannot invalidate newer Load
+00:33 +723: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: rejected Stop preserves usable session and cancels a pending Load
+00:33 +724: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: terminal transport failure settles all commands and ignores late failures
+00:33 +725: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: hung failed-create cleanup is bounded and preserves original failure
+00:33 +726: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_player_test.dart: dispose shares Future, cancels commands, unregisters before paused observers drain
+00:33 +727: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/drm_bridge_test.dart
+00:33 +727: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/drm_bridge_test.dart: stale attach replacement failure is ignored
+00:33 +728: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/drm_bridge_test.dart: stale attach replacement timeout is ignored
+00:33 +729: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/drm_bridge_test.dart: stale attach unmount failure is ignored
+00:33 +730: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/drm_bridge_test.dart: stale attach unmount timeout is ignored
+00:33 +731: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/drm_bridge_test.dart: same view retry fences previous success and failure but current failure is published
+00:33 +732: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/drm_bridge_test.dart: wrong owner and duplicate challenge never issue another license POST
+00:33 +733: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/drm_bridge_test.dart: cancel fences a late non-cancellable license response
+00:33 +734: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/pigeon_schema_test.dart
+00:34 +734: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/pigeon_schema_test.dart: schema 3 and 4 factory requests retain committed codec tags
+00:34 +735: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/pigeon_schema_test.dart: generated messages preserve the complete v2 transport shape
+00:34 +736: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/pigeon_schema_test.dart: generated Android types remain private to implementation libraries
+00:35 +737: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_codec_test.dart
+00:36 +737: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_codec_test.dart: native capabilities do not advertise Dart-only subtitle and live-mode commands
+00:36 +738: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_codec_test.dart: schema 4 full state requires selection and delta retains it
+00:36 +739: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_codec_test.dart: fixed selection survives generated state roundtrip with matching track
+00:36 +740: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_codec_test.dart: DASH appends wire ordinal ten without changing old formats
+00:36 +741: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_codec_test.dart: media clock survives full snapshots and absent, set, cleared deltas
+00:36 +742: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_codec_test.dart: actual Android capability and assessment decoding accepts native MIME and policy identifiers
+00:36 +743: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_codec_test.dart: all complete enum counterparts retain exact set parity
+00:36 +744: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_codec_test.dart: Android engines are the explicit public subset and source kinds cover all variants
+00:36 +745: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_codec_test.dart: metrics deltas distinguish every absent, set and cleared field
+00:36 +746: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_codec_test.dart: source metadata and load choices retain values across encoding
+00:36 +747: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_codec_test.dart: timeline preserves nullable live metadata and rejects inverted DVR ranges
+00:36 +748: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_codec_test.dart: outbound enums preserve every policy, format, intent and source kind
+00:36 +749: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_codec_test.dart: inbound enums cover statuses, engines, decoder evidence/mode, tracks, operations and failures
+00:36 +750: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_codec_test.dart: assessment maps outcomes and rejects inconsistent rejection or unsafe identifiers
+00:36 +751: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_codec_test.dart: failure prose is fixed and transport errors never expose native details
+00:36 +752: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_codec_test.dart: nullable metrics, clamp only live offset and preserve display geometry
+00:36 +753: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/android_codec_test.dart: validate raw millisecond bounds before Duration overflow and nullable deltas
+00:36 +754: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/drm_codec_test.dart
+00:37 +754: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player_android/test/drm_codec_test.dart: Widevine configuration survives encoding without license endpoint secrets
+00:37 +755: All tests passed!

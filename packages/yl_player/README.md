@@ -185,8 +185,17 @@ or tick timing, custom fonts/sizing, animation, vertical text and unsupported
 properties are rejected explicitly. See the [TTML subset contract](../../docs/superpowers/specs/2026-10-11-subtitle-ttml.md)
 for precise limits; this is not a full TTML/IMSC conformance claim.
 
+For ASS/SSA, set `format: YlSubtitleFormat.ass` or `.ssa`. The UTF-8 text
+subset requires explicit PlayResX/Y and WrapStyle 1 or 2. It renders font
+fallback, basic styles/colors, outline/shadow, margins/alignment, positioned
+text, layers, movement and fade driven by media time. Smart wrapping 0/3,
+font attachments, vector drawing/clips, karaoke, transformations and unsupported
+style fields fail explicitly. This Flutter renderer does not promise libass
+font-metric or pixel equivalence. See the [ASS/SSA subset contract](../../docs/superpowers/specs/2026-10-11-subtitle-ass.md)
+for accepted tags and budgets.
+
 This opt-in owns the external catalog and cannot be combined with a native
-subtitle SPI. It does not support embedded tracks, ASS/SSA, PGS/VobSub,
+subtitle SPI. It does not support embedded tracks, PGS/VobSub,
 WebVTT CSS/regions/karaoke, or protected video overlays. HDR subtitle brightness
 and native-device synchronization remain unqualified. Without the opt-in, the
 existing native capability/SPI gates continue to apply.

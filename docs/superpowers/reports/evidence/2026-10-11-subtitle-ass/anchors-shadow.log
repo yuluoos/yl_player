@@ -1,0 +1,50 @@
+00:00 +0: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart
+00:00 +0: ASS media-time move/fade outlined box at 0 ms
+00:00 +1: ASS media-time move/fade outlined box at 1000 ms
+00:00 +2: ASS media-time move/fade outlined box at 1750 ms
+00:00 +3: layer paints higher cue on top, file order breaks ties
+00:00 +4: unpositioned overlapping events stack without overlap
+00:00 +5: ASS contain scales and clips to aperture
+00:00 +6: ASS rotate-par scales and clips to aperture
+00:00 +7: unknown font falls back and remains in clipped aperture
+00:00 +8: ASS anchor 1 matches manually derived box
+00:00 +9: ASS anchor 2 matches manually derived box
+00:00 +10: ASS anchor 3 matches manually derived box
+00:00 +11: ASS anchor 4 matches manually derived box
+00:00 +12: ASS anchor 5 matches manually derived box
+00:00 +13: ASS anchor 6 matches manually derived box
+00:00 +14: ASS anchor 7 matches manually derived box
+00:00 +15: ASS anchor 8 matches manually derived box
+00:00 +16: ASS anchor 9 matches manually derived box
+00:00 +17: ASS colored shadow extends beyond fill and outline
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: a numeric value within <1.0> of <53.0>
+  Actual: <55.0>
+   Which:  differs by <2.0>
+
+When the exception was thrown, this was the stack:
+#4      boxNear (file:///private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart:102:5)
+#5      main.<anonymous closure> (file:///private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart:239:5)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart line 102
+The test description was:
+  ASS colored shadow extends beyond fill and outline
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +17 -1: ASS colored shadow extends beyond fill and outline [E]
+  Test failed. See exception logs above.
+  The test description was: ASS colored shadow extends beyond fill and outline
+  
+00:00 +17 -1: public ASS first-frame, pause/offset, seek, off and source reset
+00:00 +18 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_overlay_test.dart: ASS colored shadow extends beyond fill and outline

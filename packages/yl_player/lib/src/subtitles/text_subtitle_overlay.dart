@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'text_subtitle_runtime.dart';
 import 'ttml_overlay.dart';
+import 'ass_overlay.dart';
 
 /// Upright text in the visible video aperture, independent of texture rotation.
 final class TextSubtitleOverlay extends StatelessWidget {
@@ -43,7 +44,9 @@ final class TextSubtitleOverlay extends StatelessWidget {
             .inscribe(sizes.destination, Offset.zero & output)
             .intersect(Offset.zero & output);
         if (rect.isEmpty) return const SizedBox.shrink();
-        final standardCues = cues.where((c) => c.cue.region == null).toList();
+        final standardCues = cues
+            .where((c) => c.cue.region == null && c.cue.ass == null)
+            .toList();
         final ttmlGroups = <String, List<TextSubtitleCue>>{};
         for (final cue in cues.where((c) => c.cue.region != null)) {
           (ttmlGroups[cue.cue.region!.id] ??= []).add(cue);
@@ -92,6 +95,10 @@ final class TextSubtitleOverlay extends StatelessWidget {
                           ),
                       ],
                     ),
+                    if (cues.any((c) => c.cue.ass != null))
+                      AssSubtitleOverlay(
+                        cues: cues.where((c) => c.cue.ass != null).toList(),
+                      ),
                     for (final group in ttmlGroups.values)
                       TtmlRegionOverlay(cues: group, aperture: rect.size),
                   ],

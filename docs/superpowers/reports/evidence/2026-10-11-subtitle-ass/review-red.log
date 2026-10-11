@@ -1,0 +1,129 @@
+00:00 +0: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart
+00:00 +0: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: document run ceiling rejects before runtime span construction
+00:00 +0 -1: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: document run ceiling rejects before runtime span construction [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.limitExceeded>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: returned SubtitleDocument:<SubtitleDocument(cues: 41, inputBytes: 125518)>
+  
+  package:matcher                                      expect
+  package:flutter_test/src/widget_tester.dart 473:18   expect
+  packages/yl_player/test/ass_document_test.dart 21:5  main.<fn>
+  
+00:00 +0 -1: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: explicit zero movement times mean full cue duration
+00:00 +0 -2: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: explicit zero movement times mean full cue duration [E]
+  Expected: (int, int):<(10, 20)>
+    Actual: (double, double):<(110.0, 120.0)>
+  
+  package:matcher                                      expect
+  package:flutter_test/src/widget_tester.dart 473:18   expect
+  packages/yl_player/test/ass_document_test.dart 31:5  main.<fn>
+  
+00:00 +0 -2: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: named reset supplies defaults for argumentless tags; bare reset restores original
+00:00 +0 -3: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: named reset supplies defaults for argumentless tags; bare reset restores original [E]
+  Expected: [
+              30.0,
+              'Missing',
+              true,
+              true,
+              true,
+              true,
+              4.0,
+              0.0,
+              2130771712,
+              3221159936,
+              3741319423
+            ]
+    Actual: [
+              20.0,
+              'Ahem',
+              false,
+              false,
+              false,
+              false,
+              2.0,
+              0.0,
+              4294901760,
+              4278190080,
+              4278190080
+            ]
+     Which: at location [0] is <20.0> instead of <30.0>
+  
+  package:matcher                                      expect
+  package:flutter_test/src/widget_tester.dart 473:18   expect
+  packages/yl_player/test/ass_document_test.dart 46:7  main.<fn>
+  
+00:00 +0 -3: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: CRLF and LF share the same 50000-line budget
+00:00 +0 -4: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: CRLF and LF share the same 50000-line budget [E]
+  SubtitleParseException(limitExceeded)
+  package:yl_player/src/subtitles/subtitle_document.dart 374:5   _limit
+  package:yl_player/src/subtitles/ass_parser.dart 156:7          _AssParser.parse
+  package:yl_player/src/subtitles/ass_parser.dart 114:30         _parseAss
+  package:yl_player/src/subtitles/subtitle_document.dart 126:14  SubtitleDocument.parse
+  packages/yl_player/test/ass_document_test.dart 10:24           parse
+  packages/yl_player/test/ass_document_test.dart 83:12           main.<fn>
+  
+00:00 +0 -4: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: mixed per-run shadow offsets reject instead of painting wrong outline shadow
+00:00 +0 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: mixed per-run shadow offsets reject instead of painting wrong outline shadow [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.unsupported>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: returned SubtitleDocument:<SubtitleDocument(cues: 1, inputBytes: 616)>
+  
+  package:matcher                                      expect
+  package:flutter_test/src/widget_tester.dart 473:18   expect
+  packages/yl_player/test/ass_document_test.dart 88:7  main.<fn>
+  
+00:00 +0 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: ASS time, colors, text and nine anchors
+00:00 +1 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: SSA time, colors, text and nine anchors
+00:00 +2 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: runs preserve style, BGR/alpha and reset without reparsing text
+00:00 +3 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: line-wide motion/fade follows explicit relative times
+00:00 +4 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: format columns reorder while dialogue commas remain text
+00:00 +5 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: SSA legacy top/center alignment and signed color
+00:00 +6 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \p1 rejects atomically
+00:00 +7 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \k20 rejects atomically
+00:00 +8 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \t(0,500,\fs40) rejects atomically
+00:00 +9 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \clip(0,0,1,1) rejects atomically
+00:00 +10 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \blur2 rejects atomically
+00:00 +11 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \frz90 rejects atomically
+00:00 +12 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \q0 rejects atomically
+00:00 +13 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \q3 rejects atomically
+00:00 +14 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \pos(1,2)\move(1,2,3,4) rejects atomically
+00:00 +15 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unsupported effect \fad(1500,1500) rejects atomically
+00:00 +16 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: bad time
+00:00 +17 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: reversed time
+00:00 +18 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: unknown style
+00:00 +19 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: duplicate header
+00:00 +20 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: duplicate style
+00:00 +21 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: wrong version
+00:00 +22 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: bad color
+00:00 +23 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: malformed payload {\pos(NaN,1)}a
+00:00 +24 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: malformed payload {\move(1,2,3)}a
+00:00 +25 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: malformed payload {\b1a
+00:00 +26 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: malformed payload a}
+00:00 +27 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: malformed payload {\fs0}a
+00:00 +28 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: size budget
+00:00 +29 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: outline budget
+00:00 +30 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: coords budget
+00:00 +31 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: time budget
+00:00 +32 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: runs budget
+00:00 +33 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: payload budget
+00:00 +34 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: font budget
+00:00 +35 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: active cue limit includes overlap but not adjacent boundaries
+00:00 +36 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: smart wrap 0 unsupported
+00:00 +37 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: smart wrap 3 unsupported
+00:00 +38 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: attachments rejected; no font resource access
+00:00 +39 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: font identity budget includes overridden fonts
+00:00 +40 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: SSA BackColour supplies outline and legacy shadow alpha
+00:00 +41 -5: loading /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_runtime_test.dart
+00:00 +41 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_runtime_test.dart: catalog aggregate run overflow keeps the selected catalog
+00:00 +42 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_runtime_test.dart: ASS file commits styled overlapping cues with offset and off
+00:00 +43 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_runtime_test.dart: SSA file uses the same catalog and renders decoded text
+00:00 +44 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_runtime_test.dart: ASS managed HTTP retries then commits; malformed keeps old catalog
+00:00 +45 -5: /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_runtime_test.dart: new ASS replacement cancels held HTTP body and rejects late completion
+00:00 +46 -5: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: CRLF and LF share the same 50000-line budget
+  /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: document run ceiling rejects before runtime span construction
+  /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: explicit zero movement times mean full cue duration
+  /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: mixed per-run shadow offsets reject instead of painting wrong outline shadow
+  /private/tmp/yl-ass-validation-wr6vsfh9/packages/yl_player/test/ass_document_test.dart: named reset supplies defaults for argumentless tags; bare reset restores original

@@ -1,0 +1,32 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_runtime_test.dart
+00:00 +0: ASS file commits styled overlapping cues with offset and off
+00:00 +0 -1: ASS file commits styled overlapping cues with offset and off [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 42:9  TextSubtitleRuntime.replace
+  packages/yl_player/test/ass_runtime_test.dart 42:21              main.<fn>
+  
+00:00 +0 -1: SSA file uses the same catalog and renders decoded text
+00:00 +0 -2: SSA file uses the same catalog and renders decoded text [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 42:9  TextSubtitleRuntime.replace
+  packages/yl_player/test/ass_runtime_test.dart 63:19              main.<fn>
+  
+00:00 +0 -2: ASS managed HTTP retries then commits; malformed keeps old catalog
+00:00 +0 -3: ASS managed HTTP retries then commits; malformed keeps old catalog [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 42:9  TextSubtitleRuntime.replace
+  packages/yl_player/test/ass_runtime_test.dart 92:21              main.<fn>
+  
+00:00 +0 -3: new ASS replacement cancels held HTTP body and rejects late completion
+00:00 +0 -4: new ASS replacement cancels held HTTP body and rejects late completion [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 42:9  TextSubtitleRuntime.replace
+  packages/yl_player/test/ass_runtime_test.dart 110:21             main.<fn>
+  
+00:00 +0 -4: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_runtime_test.dart: ASS file commits styled overlapping cues with offset and off
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_runtime_test.dart: ASS managed HTTP retries then commits; malformed keeps old catalog
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_runtime_test.dart: SSA file uses the same catalog and renders decoded text
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_runtime_test.dart: new ASS replacement cancels held HTTP body and rejects late completion

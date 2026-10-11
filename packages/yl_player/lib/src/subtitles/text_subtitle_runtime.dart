@@ -4,7 +4,8 @@ import 'subtitle_document.dart';
 import 'subtitle_resource.dart';
 
 final class TextSubtitleCue {
-  const TextSubtitleCue(this.cue, this.text);
+  const TextSubtitleCue(this.cue, this.text, {this.elapsed = Duration.zero});
+  final Duration elapsed;
   final SubtitleCue cue;
   final TextSpan text;
 }
@@ -38,7 +39,9 @@ final class TextSubtitleRuntime {
     for (final source in sources) {
       if (source.format != YlSubtitleFormat.srt &&
           source.format != YlSubtitleFormat.webvtt &&
-          source.format != YlSubtitleFormat.ttml) {
+          source.format != YlSubtitleFormat.ttml &&
+          source.format != YlSubtitleFormat.ass &&
+          source.format != YlSubtitleFormat.ssa) {
         throw subtitleFailure(YlFailureCodes.subtitleUnsupported);
       }
     }
@@ -58,9 +61,12 @@ final class TextSubtitleRuntime {
         token.check();
         final doc = SubtitleDocument.parse(
           bytes,
+          limits: SubtitleLimits(maxAssRuns: runsLeft),
           format: switch (source.format) {
             YlSubtitleFormat.srt => SubtitleFormat.srt,
             YlSubtitleFormat.webvtt => SubtitleFormat.webvtt,
+            YlSubtitleFormat.ass => SubtitleFormat.ass,
+            YlSubtitleFormat.ssa => SubtitleFormat.ssa,
             _ => SubtitleFormat.ttml,
           },
         );
@@ -71,7 +77,21 @@ final class TextSubtitleRuntime {
         }
         final text = <TextSpan>[];
         for (final cue in doc.cues) {
-          final span = cue.textRuns == null
+          final span = cue.ass != null
+              ? TextSpan(
+                  children: [
+                    for (final run in cue.ass!.runs)
+                      TextSpan(
+                        text: run.text,
+                        style: TextStyle(
+                          fontWeight: run.style.bold
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
+                      ),
+                  ],
+                )
+              : cue.textRuns == null
               ? parseSubtitleText(cue.payload)
               : TextSpan(
                   children: [
@@ -145,7 +165,11 @@ final class TextSubtitleRuntime {
     if (doc == null) return const [];
     return [
       for (final cue in doc.document.cuesAt(position, offset: state.offset))
-        TextSubtitleCue(cue, doc.text[cue.ordinal]),
+        TextSubtitleCue(
+          cue,
+          doc.text[cue.ordinal],
+          elapsed: position - state.offset - cue.start,
+        ),
     ];
   }
 }

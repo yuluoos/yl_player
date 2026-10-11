@@ -58,3 +58,10 @@ selected `YlSubtitleFormat.ttml` to the same resource/catalog/clock pipeline.
 The earlier SRT/WebVTT markup and layout rules remain format-specific; TTML
 uses already decoded styled runs and clipped percentage regions. Advanced
 TTML and full native/device format acceptance remain outside this extension.
+
+## ASS/SSA extension (2026-10-11)
+
+The subsequent [ASS/SSA text subset](2026-10-11-subtitle-ass.md) adds external
+UTF-8 styled text, position/layers and media-time move/fad using the same managed
+loader, catalog and lifecycle gates. It has explicit rendering/budget limits;
+full libass equivalence, smart wrapping and native/device acceptance remain open.

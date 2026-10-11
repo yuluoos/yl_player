@@ -584,7 +584,7 @@ is unchanged; no Apple AV1 software budget is measured or admitted. See the
 ## External text subtitles (Dart opt-in)
 
 `YlPlayerController.create(enableTextSubtitles: true)` enables a bounded external
-SRT/WebVTT/TTML text runtime and ordinary-video `YlPlayerView` overlay. This is Dart-owned;
+SRT/WebVTT/TTML/ASS/SSA text runtime and ordinary-video `YlPlayerView` overlay. This is Dart-owned;
 current native adapters still do not advertise a native subtitle SPI.
 
 | Scope | Implementation / evidence |
@@ -594,7 +594,8 @@ current native adapters still do not advertise a native subtitle SPI.
 | Selection/off/offset, replacement and seek | Public session API; atomic catalog and media-position-driven overlay tests |
 | Strict managed HTTP policy | Per-hop header/read deadlines, bounded retries/Retry-After and shared redirect budget; loopback/TLS cancellation tests |
 | TTML1 text subset | Namespace-aware media timing, referenced basic styles and percentage regions; file/managed HTTP, lifecycle, region rectangles and clipped color-pixel tests |
-| Embedded/advanced TTML/ASS/SSA/PGS/VobSub and advanced WebVTT | Not implemented by this runtime |
+| ASS/SSA text subset | Explicit script resolution/WrapStyle 1 or 2, styles/outline/shadow/position/layers/move/fad; real file/managed HTTP and Ahem fixed-time pixel tests; no libass/font-metric equivalence |
+| Embedded tracks, advanced TTML/ASS/SSA, PGS/VobSub and advanced WebVTT | Not implemented by this runtime |
 | Protected output, HDR brightness and physical-device subtitle sync | Not accepted; protected surfaces reject subtitle commands |
 
 The ordinary Flutter path is available to Android/iOS/macOS consumers, but this

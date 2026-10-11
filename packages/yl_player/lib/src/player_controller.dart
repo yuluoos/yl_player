@@ -14,7 +14,7 @@ final class YlPlayerController implements Listenable {
   static Future<YlPlayerController> create({
     YlPlayerOptions options = const YlPlayerOptions(),
     YlPlayerPlatform? platform,
-    // Explicit external SRT/WebVTT/TTML text ownership. Native subtitle SPI remains the
+    // Explicit external SRT/WebVTT/TTML/ASS/SSA text ownership. Native subtitle SPI remains the
     // default; a controller cannot negotiate both subtitle owners.
     bool enableTextSubtitles = false,
   }) async {
