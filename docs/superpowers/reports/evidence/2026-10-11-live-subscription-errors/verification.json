@@ -1,0 +1,113 @@
+{
+  "date": "2026-10-11",
+  "scope": "P05 Task2 LiveSource HTTP403/DNS download classification and safe feedback; complete P05/Task2 remain open",
+  "tvs_base": "f7a93e95beed98715433f7c43a8158b4438f14ea",
+  "tvs_commit": "b4f4888a8840451ee133b8fad40df24c3480a004",
+  "player_dependency_commit": "9445637df7e97133f618c39291c716a633da9856",
+  "environment": {
+    "flutter": "/Users/yy2021_8689/flutter/bin/flutter",
+    "devices_used": false,
+    "simulators_started": false,
+    "external_network_used": false,
+    "owned_loopback_used": true,
+    "test_root": "/private/tmp/yl-business-ycd1emhr/tvs"
+  },
+  "snapshot": {
+    "method": "TVS git archive f7a93e9 + seven changed files; player five packages git archive9445637; existing locked package config remapped and graph copied; assets/packages reuse existing paths",
+    "isolation": "Concurrent PGS and long-play changes excluded",
+    "source_matches_actual_commit_and_snapshot": true
+  },
+  "source_sha256": {
+    "lib/utils/live_source_error.dart": "f2dfdb2668370bd92618dd60a0e861354568d9b4bd2920b1a1e52656a9fe7ac2",
+    "lib/providers/live_source_provider.dart": "5fd02b947320aa379f72f8ebc0600d8000c1b1aad8453d1fd4d9dda1f874e5be",
+    "lib/providers/live_source_provider.g.dart": "ee1448b784e64bb8fa9789f0f4c0137ded43b78f91caa6344c8c67ede107baf9",
+    "lib/pages/live_source/page.dart": "cb5875fd061dd4ecfd5cc913daafed05866398ec03f8c2ded73dfab792e06528",
+    "lib/session/doh_resolver.dart": "65e2f902af212ac7429b4e20497945c12f0412fe9e86e62c5b6c8d33b1e37eb6",
+    "test/modules/live/features/live_subscription_errors_test.dart": "bf41b61b162c0c82a4cb998a27e791a0e1f2b9cd7126d76dc48f6bb7d4be6ea0",
+    "test/modules/live/features/live_subscription_feedback_test.dart": "661819bad99817badce6c4a3247bb3e03611e5773654212da3a6f10d1ccf0027",
+    "pubspec.yaml": "5c65155869260385a02cd9c9f192880148690c39e293ea2c5ce1db07d3ca33e4",
+    "pubspec.lock": "8bc7656782e9070a7c308c0d03d3ae6f2d7c4ccd8d94181cb6a0c8f7c76f84e8"
+  },
+  "commands": {
+    "tests": "flutter test --no-pub --concurrency=1 test/modules/live/features/live_subscription_errors_test.dart test/modules/live/features/live_subscription_feedback_test.dart test/modules/live/features/live_source_notifier_test.dart test/modules/live/features/live_source_parser_test.dart test/modules/live/features/live_source_management_layout_test.dart test/modules/subscription/features/source_name_edit_test.dart test/modules/network/features/network_service_test.dart test/modules/network/features/doh_resolver_test.dart test/modules/network/features/outbound_http_test.dart",
+    "analysis": "flutter analyze --no-pub",
+    "codegen": "dart run build_runner build --build-filter=lib/providers/live_source_provider.g.dart",
+    "review_red": "flutter test --no-pub test/modules/live/features/live_subscription_feedback_test.dart --plain-name 'a distinct action during pending refresh gets explicit busy feedback'",
+    "diff": "git diff --check"
+  },
+  "results": {
+    "initial_provider_red": {
+      "passed": 0,
+      "failed": 8,
+      "exit_code": 1
+    },
+    "initial_feedback_red": {
+      "passed": 0,
+      "failed": 3,
+      "exit_code": 1,
+      "note": "First failure proves raw exception text displayed; later two missing-toast failures followed incomplete cleanup of failed first test"
+    },
+    "initial_focused_green": {
+      "passed": 11,
+      "exit_code": 0
+    },
+    "first_related": {
+      "passed": 85,
+      "exit_code": 0
+    },
+    "first_analyze": {
+      "issues": 3,
+      "exit_code": 1,
+      "note": "Test-only unnecessary import and deprecated loading checks fixed"
+    },
+    "focused_after_lint_fix": {
+      "passed": 13,
+      "exit_code": 0
+    },
+    "review_red": {
+      "failed": 1,
+      "exit_code": 1
+    },
+    "review_fix_first_suite": {
+      "passed": 85,
+      "failed": 1,
+      "exit_code": 1,
+      "note": "Busy guidance and retry assertions passed; Widget toast queue left timer at teardown; fixture cleanup fixed without changing production or weakening assertions"
+    },
+    "final_related": {
+      "passed": 86,
+      "new_tests": 14,
+      "exit_code": 0
+    },
+    "final_full_analyze": {
+      "issues": 0,
+      "exit_code": 0
+    },
+    "codegen": {
+      "exit_code": 0,
+      "warning": "SDK language3.12 newer than analyzer3.11; no dependency upgrade",
+      "unrelated_generated_files_restored": 63,
+      "second_run": "In snapshot; copy target provider result and restore unrelated snapshot generated files"
+    },
+    "diff_check": {
+      "exit_code": 0
+    }
+  },
+  "review": {
+    "reviewer": "review_subscription_errors",
+    "read_only": true,
+    "critical": 0,
+    "important": 1,
+    "minor": 0,
+    "finding": "Distinct action silently discarded during pending feedback operation",
+    "resolution": "Explicit busy/retry guidance, no second action executed; later retry succeeds. RED1 -> final86/86, one fix pass, no re-review"
+  },
+  "rulings": [
+    "AppError carries only a locally constructed safe diagnostic, not raw exception/request/body/stack",
+    "DNS requires SocketException plus Dart native resolver prefix; unfamiliar failure shapes stay unknown or connection",
+    "LiveSource only; JS/VoD subscriptions and HTML/empty-result transaction policy remain separate",
+    "No proxy initialization/routing or native/device/online acceptance claim",
+    "Executor verified results and exact source hashes; reviewer did not rerun tests"
+  ],
+  "raw_logs_sha256": "053bc48d53fb34e1436946a46318bf60f29ab466f51ff96e26dc4b61ab237c4a"
+}

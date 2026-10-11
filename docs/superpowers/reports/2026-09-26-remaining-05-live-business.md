@@ -90,3 +90,33 @@ flutter analyze --no-pub
 副本由 TVS 基线归档加本轮两文件、播放器五包固定归档构成；复用已有锁定依赖缓存并重映射临时 package config、复制 package graph，隔离其他会话尚未提交的 ASS 与长播放改动。最终两文件及 pubspec/lock 已与实际 TVS 提交和验证副本逐字节核对。[verification.json](evidence/2026-10-11-live-subscription-parser/verification.json) 保存跨仓版本、指纹、命令与退出码；[raw-logs.json](evidence/2026-10-11-live-subscription-parser/raw-logs.json) 保留初始和复审 RED、全部 GREEN 与分析输出。
 
 本轮只使用本机测试 runner、fake 与自有夹具，未启动设备、模拟器、原生播放或外部测试服务。复审未运行命令或独立核对副本哈希，由执行者完成这些核验。HTTP403/DNS、安全阶段提示、代理依赖与刷新事务仍需后续业务实现/回归；原生取消和资源释放、真机、线上订阅/九脚本仍需各自验收。空结果仍可能由现有 manager 写入刷新结果，本轮不承诺保留此前频道；已通过的内容解析测试不关闭这些任务，也不验证并行未提交功能。
+
+## 2026-10-11：Task 2 HTTP403 / DNS 分类与安全提示
+
+TVS 提交 **`b4f4888a8840451ee133b8fad40df24c3480a004`**，基线 `f7a93e9`；最终验证依赖固定播放器 **`9445637`**，包含已提交的 ASS，隔离另一会话正在进行的 PGS 与长播放改动。范围是上一节的 **LiveSource 直播订阅**，不含独立 JS/点播订阅路径。
+
+下载边界现在抛 `AppError.subscription`，携带本地生成的安全诊断：code/category/scope/phase/retryable 和随机参考编号。HTTP403 明确表示服务器拒绝本次访问，建议确认订阅访问权限或稍后重试，不断言永久失效或 token 过期；DNS 建议检查网络/DNS 设置。DNS 只识别底层 `SocketException` 的 Dart 原生 resolver `Failed host lookup:` 前缀（已核查本机 SDK 和锁定 Dio 5.11.0 的异常包装），不以普通 connectionError 文本或跨平台含义不同的 errno 猜测。普通 Socket 连接错误、超时、其他 HTTP 状态和未知错误分别保持保守提示；retryable 仅为诊断，不新增自动重试。
+
+请求沿用 NetworkService 代理/DoH 配置，以纯文本交给已有订阅解析器，复用 `privateFile` 开关关闭该请求的原始 HTTP 日志。诊断不保存或输出 URL、凭据、响应体、任意异常正文或堆栈；DoH 的三处日志也去掉主机/IP/原始异常，只保留事件结果和 TTL。代价是无法从新诊断恢复原始敏感上下文，排查使用安全分类和参考编号。
+
+页面的添加、单个刷新、批量刷新及删除调用 notifier 的反馈入口，未知异常使用固定安全提示；加载错误也不再拼接任意异常。下载失败不覆盖已保存频道。批量刷新继续处理后续源，结束时保留成功/失败总数及首个安全原因，避免吞掉失败后显示全成功；这是有界汇总，不携带原始源名称或地址。HTML/空列表是否应保留旧频道的事务策略仍未改动。
+
+独立只读复审发现一项 Important：复用正在进行的 Future 会静默丢弃不同操作，且 loading 可通过 Back 关闭，用户确实能够再次提交。确定性回归先观察缺少忙碌提示的失败，再改为明确提示等待当前操作完成后重试；第二项不执行、不排队，原请求完成后可正常重试。没有遗留 Minor，也未额外启动第二次复审。
+
+### 本地验证
+
+新增 **14 项**（8 项真实 provider/manager/Dio 边界，6 项 Widget 提示与忙碌交互），最终九文件 **86/86**；全项目 `flutter analyze --no-pub` 无问题。所有新增外部下载失败由适配器固定注入，相关网络旧回归仅使用自有回环服务；没有设备、模拟器、原生播放或线上 DNS/订阅请求。
+
+```sh
+flutter test --no-pub --concurrency=1 test/modules/live/features/live_subscription_errors_test.dart test/modules/live/features/live_subscription_feedback_test.dart test/modules/live/features/live_source_notifier_test.dart test/modules/live/features/live_source_parser_test.dart test/modules/live/features/live_source_management_layout_test.dart test/modules/subscription/features/source_name_edit_test.dart test/modules/network/features/network_service_test.dart test/modules/network/features/doh_resolver_test.dart test/modules/network/features/outbound_http_test.dart
+flutter analyze --no-pub
+dart run build_runner build --build-filter=lib/providers/live_source_provider.g.dart
+```
+
+实际 SDK 为 `/Users/yy2021_8689/flutter/bin/flutter` 及其 bundled Dart。Provider 按项目要求生成，最终生成物已同步。第一次定向 build_runner 清理了过滤范围外的 63 份原本无改动生成文件，已从明确基线逐字节恢复；修复后的生成改在隔离副本执行，只同步本项 Provider 结果。保留其 SDK 3.12 / analyzer 3.11 语言版本警告，未升级依赖。
+
+证据如实保留：最初 provider **8 failed**；最初 Widget **3 failed**，第一项复现原始异常泄漏，后两项受前一项失败后 toast 未清理影响；初次修复 11/11、相关 85/85。首轮分析的 3 项测试导入/弃用 API 提示已消除。复审 RED **1 failed** 后，首次修复回归为 **85 passed / 1 failed**：业务断言通过，新测试 teardown 遗留 toast 队列定时器；修正夹具清理，未放宽断言或再改产品，最终 86/86。
+
+[verification.json](evidence/2026-10-11-live-subscription-errors/verification.json) 保存跨仓版本、全部七文件及依赖清单的 SHA-256、退出码和范围；[raw-logs.json](evidence/2026-10-11-live-subscription-errors/raw-logs.json) 保留 RED、生成警告、分析和最终通过日志。最终源码、实际 TVS commit 与测试副本逐字节一致；复审只读，命令和哈希核验由执行者完成。
+
+未将本轮证据扩展为完整 P05/Task 2 通过：JS/点播订阅、HTML/空列表事务、代理初始化/源路由、原生脚本终止与代际、播放尝试汇总、九脚本线上/归档运行及真实设备各自保持原状态。现有重命名等其他本地操作的诊断路径也不包含在下载分类承诺中。
