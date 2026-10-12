@@ -549,3 +549,35 @@ exit0**，新增84项，包计数135/969/113/82。播放器与接口lib/test静�
 exit0**。十项既有native/构建制品独立重新计算SHA256均不变。最终源文件/引用依赖/原始日志/
 报告指纹冻结到[manifest](evidence/2026-10-11-subtitle-fmp4/manifest.json)，用独立Git index
 仅提交本项文件及自己的总览/CHANGELOG段；另一会话未提交benchmark不纳入。
+
+## 2026-10-11 分片 MP4 tx3g（mov_text）
+
+按“继续下一项”补齐上一切片已明确的fragmentedtx3g缺口。唯一生产行为扩展为移除分片
+模式下tx3g格式拒绝，保留空初始化字幕表要求；已有trex/tfhd/tfdt/trun解复用与tx3g解码/
+样式渲染组合，无API/native/网络reader改动。公开格式仍为归一化srt，编码是tx3g；契约与
+后续范围见[tx3g延续契约](../specs/2026-10-11-subtitle-fmp4-tx3g.md)。未修改另一边长播放/弱网ABR。
+
+基线47908dd，先记录真实文件入口0通过/1失败（subtitleUnsupported）。开放门禁后入口与
+既有MP4/fMP4回归128/128；旧“拒绝fragmentedtx3g”测试改为拒绝未知codec。新增**43/43**
+通过：24解析、2真实文件/独立封装、11HTTP、6公开会话/Flutter，静态分析No issues found。
+验证继承duration/size、默认description样式切换、Unicode/UTF16/CRLF、整轨forced身份、
+有符号composition offset与edit、空文本/终端零时长、非法样式及跨片4MiB预算。HTTP验证
+managed Range/If-Match/重试/重定向凭据/失败目录保留；Flutter验证字体/字号/粗体/颜色、
+切轨/off/seek/正负偏移和后续分片取消的迟到隔离。
+
+hostFFmpeg8.0.1独立封装自有64×64黑视频+SRT，以empty_moov+frag_keyframe+
+default_base_moof输出；TrackID2、mov_text、eng、微秒timebase，验证文字/粗体和精确区间。
+首条文本实际容器区间为1–3.123s，虽然输入SRT结束2.5s；断言依据ffprobe容器样本，不将
+muxer结果误报为parser时间缺陷。夹具/原始输入/探测结果与哈希收录于
+[证据目录](evidence/2026-10-11-subtitle-fmp4-tx3g/manifest.json)。
+
+仍不支持独立init/mediaURL、清单/直播增长、hybrid初始化样本、高级tx3g、加密/辅助资源。
+视频后端使用fake，FFmpeg夹具是单生产器正向证据，未作native/真机/HDR/DRM/外接设备/
+PD-03或完整P02验收。最终四包结果、独立复审和冻结提交核对如下方记录。
+
+最终四包**1342/1342、0失败、exit0**（135接口/1012播放器/113Apple/82Android）；最终
+lib/test分析**No issues found、exit0**。七份源/测试/二进制夹具与隔离候选逐字节一致，
+十项native/构建制品SHA256重新核验不变。独立只读复审Critical0/Important0/Minor0新增，
+无修复轮次；八项范围/验证裁定及已有wvttMinor延续见[review.md](evidence/2026-10-11-subtitle-fmp4-tx3g/review.md)。
+正式仓库证据保留原始RED/GREEN、独立FFmpeg输入/ffprobe和最终日志，见[manifest](evidence/2026-10-11-subtitle-fmp4-tx3g/manifest.json)。
+采用独立index只提交本项文件及自己的总览/CHANGELOG段，不含另一会话任务。

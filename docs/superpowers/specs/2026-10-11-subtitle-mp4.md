@@ -69,3 +69,10 @@ subset in the [fMP4 contract](2026-10-11-subtitle-fmp4.md): initialization and
 fragments in one complete file or stable HTTP resource, shared managed Range
 loading and existing render subsets. Separate segment URLs, manifests/live
 polling, fragmented tx3g and native/device acceptance remain outside scope.
+
+## Fragmented tx3g extension (2026-10-11)
+
+The earlier fragmented-tx3g exclusion is superseded by the [fMP4 tx3g contract](2026-10-11-subtitle-fmp4-tx3g.md).
+Same-resource initialization and fragments reuse existing tx3g styles/normalized
+`srt` catalog entries, fragment timing and managed Range; all other stated scope
+limits remain in force.

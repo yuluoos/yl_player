@@ -230,7 +230,7 @@ if (tracks.isNotEmpty) await session.selectSubtitleTrack(tracks.first.id);
 
 `YlPlayerView` renders Matroska UTF8/SRT and ASS/SSA, and non-fragmented MP4
 `tx3g` (mov_text), `wvtt` (WebVTT) and `stpp` (TTML) tracks using media time.
-Fragmented MP4 also supports `wvtt`/`stpp` when initialization and fragments
+Fragmented MP4 also supports `tx3g`/`wvtt`/`stpp` when initialization and fragments
 are in the same complete file or stable HTTP resource.
 Discovery is explicit and bounded; Matroska TrackUID (`mkv:<UID>`) or MP4 Track ID
 (`mp4:<ID>`) identifies a track within the session. Replacing/clearing external subtitles preserves embedded entries;
@@ -271,7 +271,11 @@ Auxiliary images, cell/pixel font styling and advanced TTML/IMSC remain unsuppor
 see the [MP4 TTML contract](../../docs/superpowers/specs/2026-10-11-subtitle-mp4-ttml.md).
 
 For fMP4, `trex`/`tfhd`/`tfdt`/`trun` supply bounded sample locations and timing.
-The same track selection, WebVTT/TTML rendering and managed range rules apply.
+The same track selection, tx3g/WebVTT/TTML rendering and managed range rules apply.
 This is explicit discovery of a complete resource, not live segment polling.
 See the [fMP4 contract](../../docs/superpowers/specs/2026-10-11-subtitle-fmp4.md)
 for defaults, addressing, edits and unsupported layouts.
+
+Fragmented `tx3g` uses the same literal styled text and normalized `srt` catalog
+format as non-fragmented MP4; sample-description changes update default styles.
+See the [fMP4 tx3g contract](../../docs/superpowers/specs/2026-10-11-subtitle-fmp4-tx3g.md).

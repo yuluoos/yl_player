@@ -1,0 +1,48 @@
+00:00 +0: loading /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_test.dart
+00:00 +0: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_test.dart: independent FFmpeg fragmented tx3g sample timeline and style
+00:00 +1: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_test.dart: actual fMP4 tx3g discovers selects and renders literal styled text
+00:00 +2: loading /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart
+00:00 +2: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented UTF16 BE preserves surrogate pairs
+00:00 +3: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented UTF16 LE preserves surrogate pairs
+00:00 +4: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: sample-local styl uses Unicode scalar offsets and literal text
+00:00 +5: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: tfhd description switch changes default style without stale state
+00:00 +6: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: tx3g sample size/duration inherited from trex
+00:00 +7: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: tx3g sample size/duration inherited from tfhd
+00:00 +8: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragment tx3g signed CTO and edit duration=0
+00:00 +9: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragment tx3g signed CTO and edit duration=1500
+00:00 +10: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: empty terminal zero-duration sample and sparse fragment gap clear text
+00:00 +11: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: forced metadata and shared-language identities survive reordered trafs
+00:00 +12: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: CRLF across tx3g styles (0, 2) in fragment remains one newline
+00:00 +13: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: CRLF across tx3g styles (0, 3) in fragment remains one newline
+00:00 +14: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented malformed short string payload
+00:00 +15: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented malformed bad UTF8
+00:00 +16: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented malformed isolated UTF16 surrogate
+00:00 +17: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented malformed style outside text
+00:00 +18: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented malformed zero visible duration
+00:00 +19: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented unsupported karaoke
+00:00 +20: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented unsupported per-sample forced
+00:00 +21: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented unsupported unknown font
+00:00 +22: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: hybrid tx3g initial sample table still rejected
+00:00 +23: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: same track cannot switch tx3g to WebVTT description
+00:00 +24: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented tx3g text bound is enforced
+00:00 +25: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_parser_test.dart: raw tx3g bytes share four MiB budget across fragments
+00:00 +26: loading /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_network_test.dart
+00:01 +26: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:01 +27: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_network_test.dart: network YlMediaFormat.mp4 sniffs content, skips media, sends conditional range and renders
+00:01 +28: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_network_test.dart: legal chunked206 fMP4 tx3g discovery completes without Content-Length
+00:01 +29: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_network_test.dart: managed retries later range with credential and shared scan ledger
+00:02 +30: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_network_test.dart: cross-origin redirect strips credentials before fMP4 tx3g range scan
+00:02 +31: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_network_test.dart: etag response keeps prior selected fMP4 tx3g catalog
+00:02 +32: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_network_test.dart: 200 response keeps prior selected fMP4 tx3g catalog
+00:02 +33: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_network_test.dart: 403 response keeps prior selected fMP4 tx3g catalog
+00:02 +34: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_network_test.dart: malformed response keeps prior selected fMP4 tx3g catalog
+00:03 +35: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_network_test.dart: managed response-header timeout terminates fMP4 tx3g discovery
+00:03 +36: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_network_test.dart: explicit non-fMP4 tx3g format rejects before HTTP request
+00:03 +37: loading /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_session_test.dart
+00:03 +37: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:03 +38: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_session_test.dart: network failure leaves playback and selected subtitle state unchanged
+00:04 +39: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_session_test.dart: held later fragment range is cancelled by replace and cannot publish late
+00:04 +40: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_session_test.dart: held later fragment range is cancelled by stop and cannot publish late
+00:04 +41: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_session_test.dart: held later fragment range is cancelled by dispose and cannot publish late
+00:04 +42: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_session_test.dart: held later fragment range is cancelled by external and cannot publish late
+00:04 +43: All tests passed!

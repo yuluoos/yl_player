@@ -1,0 +1,4 @@
+Host FFmpeg 8.0.1; owned synthetic source.srt and blackvideo, no runtime dependency.
+ffmpeg -hide_banner -loglevel error -f lavfi -i color=c=black:s=64x64:r=5:d=5 -i source.srt -map 0:v -map 1:s -c:v libx264 -g 5 -bf 0 -c:s mov_text -movflags empty_moov+frag_keyframe+default_base_moof -metadata:s:s:0 language=eng fmp4-tx3g-owned.mp4
+ffprobe -v error -select_streams s -show_streams -show_packets -of json fmp4-tx3g-owned.mp4
+Generated container sample times, rather than input SRT timing, define parser assertions; first cue encodedend3.123s.

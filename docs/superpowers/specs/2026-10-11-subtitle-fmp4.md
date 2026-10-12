@@ -1,19 +1,19 @@
-# 分片 MP4 内嵌 WebVTT / TTML 契约
+# 分片 MP4 内嵌 tx3g / WebVTT / TTML 契约
 
-继续既有 P02 字幕切片：当前已提交的本地文件或 HTTP(S) 来源，显式 `discoverEmbeddedSubtitles()` 后按 `mp4:<Track ID>` 选择。复用公开 `webvtt` / `ttml` 格式和现有字幕 owner/Flutter overlay，不新增 API、网络入口、原生桥或依赖。长播放和弱网 ABR 由另一会话负责。
+继续既有 P02 字幕切片：当前已提交的本地文件或 HTTP(S) 来源，显式 `discoverEmbeddedSubtitles()` 后按 `mp4:<Track ID>` 选择。复用公开归一化 `srt`（tx3g）/ `webvtt` / `ttml` 格式和现有字幕 owner/Flutter overlay，不新增 API、网络入口、原生桥或依赖。长播放和弱网 ABR 由另一会话负责。
 
 ## 单资源范围
 
-- 一个完整资源包含 `ftyp`、单个 `moov/mvex` 初始化信息和其后的 `moof/mdat`；字幕初始化样本表为空。初始化信息本身可返回空轨道。wvtt/stpp 可以分轨共存；每轨样本描述必须是同一 codec。
+- 一个完整资源包含 `ftyp`、单个 `moov/mvex` 初始化信息和其后的 `moof/mdat`；字幕初始化样本表为空。初始化信息本身可返回空轨道。tx3g/wvtt/stpp 可以分轨共存；每轨样本描述必须是同一 codec。
 - 读取 `trex` 默认值，`tfhd` 覆盖 track/sample description、duration、size、flags，`trun` 再覆盖逐样本值。显式零值不回退到默认值。支持多个 run、多个 traf、32/64 位 box 长度。
 - 字节基址支持显式 `base_data_offset`、`default-base-is-moof` 和首个 traf 的隐式 moof 基址。`data_offset` 是有符号32位，允许同资源中位于 moof 前的 mdat。后续 run 缺少 offset 时接着上一个 run；不根据被跳过的音视频负载推算后续 traf 基址，后续字幕 traf 须显式指定基址或 default-base-is-moof。
 - 样本字节必须完整落在顶层 mdat 的 payload 中；字幕样本之间不得重叠。音视频 payload 不解码、不复制；有界窗口网络缓存可能读到相邻字节。
-- 每个字幕 traf 必须有 `tfdt` v0/v1，`trun` v0/v1 支持 unsigned/signed composition offset。decode 时间不倒退/重叠，可留空隙；mfhd 序号严格递增，可不连续。duration-is-empty 不得携带样本。未知/加密/子样本布局、缺 tfdt、混合初始化字幕样本、fragmented tx3g 明确拒绝。
+- 每个字幕 traf 必须有 `tfdt` v0/v1，`trun` v0/v1 支持 unsigned/signed composition offset。decode 时间不倒退/重叠，可留空隙；mfhd 序号严格递增，可不连续。duration-is-empty 不得携带样本。未知/加密/子样本布局、缺 tfdt、混合初始化字幕样本明确拒绝。
 - 不读取独立 `.m4s` 与另一个初始化 URL；不解析 HLS/DASH 清单，不追踪直播增长或跨 Period 轨道，也不自动加载 segment URL。不是所有合法 fMP4 的兼容性承诺。
 
 ## 时间、显示与预算
 
-WebVTT 使用 `(tfdt + preceding durations + composition offset)` 的 sample 区间。TTML 文档时间沿用 ISO14496-30:2018/Amd1:2022 的 composition 时间，不重复加 sample 起点；先裁切 sample 再做简单 rate1 edit。两种格式均支持既有单一播放编辑/可选前导空白；分片模式的播放 edit duration=0 表示后续媒体，仍受7天上限限制。计算采用整数比例至微秒，区间为 `[start,end)`。
+tx3g 和 WebVTT 使用 `(tfdt + preceding durations + composition offset)` 的 sample 区间。TTML 文档时间沿用 ISO14496-30:2018/Amd1:2022 的 composition 时间，不重复加 sample 起点；先裁切 sample 再做简单 rate1 edit。三种格式均支持既有单一播放编辑/可选前导空白；分片模式的播放 edit duration=0 表示后续媒体，仍受7天上限限制。计算采用整数比例至微秒，区间为 `[start,end)`。
 
 沿用 [wvtt 子集](2026-10-11-subtitle-mp4-webvtt.md) 和 [stpp 子集](2026-10-11-subtitle-mp4-ttml.md)：基本样式、水平 WebVTT position/align、TTML 百分比 region。每个 XML sample 的样式和 region 身份独立。高级 CSS/TTML、字体或图形资源等未扩大接纳范围。
 
@@ -32,3 +32,10 @@ Owned手写BMFF/XML、真实临时文件和loopbackHTTP验证解析和managed请
 - [W3C ISO BMFF byte stream format](https://www.w3.org/TR/mse-byte-stream-format-isobmff/)：初始化/分片结构、tfdt、moof相对寻址和零duration编辑语义；本项是完整文件读取，不宣称完整MSE实现。
 - [Shaka MP4 WebVTT parser](https://shaka-project.github.io/shaka-player/docs/api/lib_text_mp4_vtt_parser.js.html)：分片sample时间及vttc/vtte对照，未复制代码。
 - [ISO14496-30:2018/Amd1:2022](https://www.standards.iteh.ai/catalog/standards/iso/c559486e-2191-4975-ad44-9f061b600281/iso-iec-14496-30-2018-amd-1-2022)：TTML composition时间及sample裁切（此前stpp切片采用）。
+
+## tx3g extension (2026-10-11)
+
+The former fragmented-tx3g exclusion is superseded by the [tx3g continuation](2026-10-11-subtitle-fmp4-tx3g.md).
+Existing literal styled text and normalized `srt` catalog entries now share this
+fragment reader. The original WebVTT/TTML positive fixtures remain owned builders;
+tx3g additionally has an independently muxed FFmpeg positive fixture.

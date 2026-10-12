@@ -1,5 +1,9 @@
 ## 0.2.0-dev.2
 
+- Add single-resource fragmented MP4 tx3g (mov_text) subtitle discovery and
+  selection with existing literal styled-text rendering, fragment timing and
+  managed ranges; validate with an independently muxed FFmpeg fixture.
+
 - Add single-resource fragmented MP4 WebVTT/TTML subtitle discovery, Track ID
   selection and existing text/region rendering. Resolve fragment sample defaults,
   offsets and composition timing through the existing bounded managed Range path.

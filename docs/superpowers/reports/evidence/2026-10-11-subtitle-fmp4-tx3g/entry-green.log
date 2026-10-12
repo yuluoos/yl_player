@@ -1,0 +1,132 @@
+00:00 +0: loading /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_test.dart
+00:00 +0: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_test.dart: independent FFmpeg fragmented tx3g sample timeline and style
+00:00 +1: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_test.dart: actual fMP4 tx3g discovers selects and renders literal styled text
+00:00 +2: loading /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart
+00:00 +2: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: legal is_leading=0 sample flags
+00:00 +3: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: legal is_leading=1 sample flags
+00:00 +4: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: legal is_leading=2 sample flags
+00:00 +5: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: legal is_leading=3 sample flags
+00:00 +6: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: moof base with 32-bit boxes and negative data offset
+00:00 +7: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: moof base with 64-bit boxes and negative data offset
+00:00 +8: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: explicit base with 32-bit boxes and negative data offset
+00:00 +9: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: explicit base with 64-bit boxes and negative data offset
+00:00 +10: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: implicit base with 32-bit boxes and negative data offset
+00:00 +11: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: implicit base with 64-bit boxes and negative data offset
+00:00 +12: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: trex defaults inherited, tfhd overrides, then per-sample overrides
+00:00 +13: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: multiple truns continue byte cursor, composition offsets remain independent of dts
+00:00 +14: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: unsigned v0 composition offset and v0 decode time
+00:00 +15: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: 64-bit tfdt exceeds uint32 without losing precision
+00:00 +16: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: TTML composition clock clipped then edited once; edit duration 0
+00:00 +17: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: TTML composition clock clipped then edited once; edit duration 1500
+00:00 +18: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: decode gaps and sequence gaps retain absolute time
+00:00 +19: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: audio traf payload skipped; following subtitle has explicit moof base
+00:00 +20: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: initialization only and empty duration fragment yield empty catalog track
+00:00 +21: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: selected sample description overrides trex without changing public codec
+00:00 +22: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: empty WebVTT sample clears interval and TTML empty XML still counts raw bytes
+00:00 +23: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate trex
+00:00 +24: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed unknown trex track
+00:00 +25: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed zero trex description
+00:00 +26: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate mfhd
+00:00 +27: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed unknown tfhd track
+00:00 +28: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate tfhd
+00:00 +29: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate tfdt
+00:00 +30: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed conflicting bases
+00:00 +31: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed description out of range
+00:00 +32: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed zero size override does not inherit
+00:00 +33: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed zero duration override does not inherit
+00:00 +34: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed empty duration with samples
+00:00 +35: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed both first and per sample flags
+00:00 +36: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed reserved flags
+00:00 +37: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed reserved depends on
+00:00 +38: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed reserved depended on
+00:00 +39: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed reserved redundancy
+00:00 +40: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed data points to moof
+00:00 +41: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate sequence
+00:00 +42: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed overlapping decode timeline
+00:00 +43: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed wrong tfdt length
+00:00 +44: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed wrong trun length
+00:00 +45: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed mdat byte extent overflow
+00:00 +46: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed no traf
+00:00 +47: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject malformed missing trex for subtitle
+00:00 +48: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported missing tfdt
+00:00 +49: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported unknown tfhd flags
+00:00 +50: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported unknown trun flags
+00:00 +51: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported unsupported trun version
+00:00 +52: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported unsupported tfdt version
+00:00 +53: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported encrypted samples
+00:00 +54: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported subsample table
+00:00 +55: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported hybrid subtitle samples
+00:00 +56: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported fragmented unknown codec
+00:00 +57: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported implicit base after audio
+00:00 +58: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: bounded sample count
+00:00 +59: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: bounded decode time
+00:00 +60: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: bounded composition time
+00:00 +61: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: bounded top level fragments
+00:00 +62: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: overlapping byte extents between subtitle trafs reject
+00:00 +63: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: sample flags default can be replaced by first sample override
+00:00 +64: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: empty TTML raw samples enforce shared four MiB budget
+00:01 +65: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: global sample budget spans fragments
+00:01 +66: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: all truncated prefixes reject without untyped errors
+00:01 +67: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_parser_test.dart: cancellation is checked between fragment reads
+00:01 +68: loading /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart
+00:01 +68: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: independent FFmpeg muxed video and tx3g sample timing/styles
+00:01 +69: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: moov after mdat; track identity independent of order and enabled flag
+00:01 +70: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: moov before mdat; track identity independent of order and enabled flag
+00:01 +71: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: co64 and stsz retain exact media times
+00:01 +72: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: co64 and stz2 retain exact media times
+00:01 +73: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: edit v0 leading gap, trim and duration clipping
+00:01 +74: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: edit v1 leading gap, trim and duration clipping
+00:01 +75: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: signed composition offsets clip before media start
+00:01 +76: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: style offsets count Unicode scalars and preserve literal markup
+00:01 +77: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: strict UTF16 BE BOM with surrogate pair
+00:01 +78: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: strict UTF16 LE BOM with surrogate pair
+00:01 +79: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: empty terminal sample with zero duration creates no cue
+00:01 +80: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: empty subtitle track is discovered
+00:01 +81: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: audio/video data and sparse free payload are not read
+00:02 +82: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: chunk mapping changes sample count and description
+00:02 +83: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: compact sample sizes 4 bits including odd nibble
+00:02 +84: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: compact sample sizes 8 bits including odd nibble
+00:02 +85: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: constant stsz size decodes all samples
+00:02 +86: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: edit subtraction preserves exact tick before microsecond conversion
+00:02 +87: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: invalid sync sample table is rejected
+00:02 +88: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: 64bit top-level box size and EOF mdat work
+00:02 +89: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: CRLF content is independent of style boundary null
+00:02 +90: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: CRLF content is independent of style boundary (0, 2)
+00:02 +91: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: CRLF content is independent of style boundary (2, 3)
+00:02 +92: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject duplicate IDs
+00:02 +93: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject zero ID
+00:02 +94: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject zero timescale
+00:02 +95: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject stts sample mismatch
+00:02 +96: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject stsc first chunk gap
+00:02 +97: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject stsc description missing
+00:02 +98: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject chunk outside mdat
+00:02 +99: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject sample crosses mdat
+00:02 +100: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject truncated text
+00:02 +101: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject invalid UTF8
+00:02 +102: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject invalid UTF16 surrogate
+00:02 +103: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject odd UTF16
+00:02 +104: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject NUL
+00:02 +105: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject zero duration text
+00:02 +106: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject style range outside text
+00:02 +107: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject overlapping styles
+00:02 +108: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject duplicate stts
+00:02 +109: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject trailing malformed atom
+00:02 +110: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject duplicate moov
+00:02 +111: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: reject table flags
+00:02 +112: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: unsupported some forced only
+00:02 +113: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: unsupported all forced without present
+00:02 +114: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: unsupported fragmented
+00:02 +115: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: unsupported fragment root
+00:02 +116: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: unsupported encrypted entry
+00:02 +117: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: unsupported external data reference
+00:02 +118: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: unsupported dwell rate
+00:02 +119: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: unsupported repeated edits
+00:02 +120: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: unsupported advanced karaoke
+00:02 +121: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: unsupported nonbottom alignment
+00:02 +122: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: unsupported unknown font
+00:02 +123: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: unsupported encrypted sinf
+00:02 +124: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: sample count budget before table allocation
+00:02 +125: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: cue text bound before run allocation
+00:02 +126: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: every truncated prefix rejects with sanitized parser error
+00:02 +127: /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/mp4_parser_test.dart: cancel during read rejects before publication
+00:02 +128: All tests passed!

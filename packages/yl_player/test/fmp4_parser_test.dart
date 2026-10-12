@@ -348,7 +348,9 @@ void main() {
         Mp4Track(entry: wvttEntry(), samples: [vttCue('x')]),
       ],
     ),
-    'fragmented tx3g': fragmented(tracks: [init(entry: description())]),
+    'fragmented unknown codec': fragmented(
+      tracks: [init(entry: description(codec: 'text'))],
+    ),
     'implicit base after audio': fragmented(
       tracks: [
         init(),

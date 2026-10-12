@@ -1,0 +1,10 @@
+00:00 +0: loading /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_test.dart
+00:00 +0: actual fMP4 tx3g discovers selects and renders literal styled text
+00:00 +0 -1: actual fMP4 tx3g discovers selects and renders literal styled text [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 210:9  TextSubtitleRuntime.discover.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-ftx-validation-4rrzj4ht/packages/yl_player/test/fmp4_tx3g_test.dart: actual fMP4 tx3g discovers selects and renders literal styled text

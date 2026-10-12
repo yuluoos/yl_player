@@ -50,7 +50,7 @@ final class _Box {
   int get size => end - start;
 }
 
-/// Bounded ISO BMFF subtitle demux, including fragmented wvtt/stpp.
+/// Bounded ISO BMFF subtitle demux, including fragmented tx3g/wvtt/stpp.
 /// Skips audio/video payloads; no external drefs or segment URL fetching.
 final class Mp4Subtitles {
   Mp4Subtitles(this.length, this.read, this.token);
@@ -277,8 +277,7 @@ final class Mp4Subtitles {
     final b = await _body((sz ?? z2)!, min: 12);
     _full(b);
     final count = _u(b, 8);
-    if (_fragmented &&
-        (count != 0 || descriptions.first.format == YlSubtitleFormat.srt)) {
+    if (_fragmented && count != 0) {
       _unsupported();
     }
     _samples += count;
