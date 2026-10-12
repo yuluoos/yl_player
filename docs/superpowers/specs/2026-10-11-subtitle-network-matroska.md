@@ -74,3 +74,11 @@ local embedded behavior must remain covered by the full regression suite.
 
 Reference: RFC 9110 sections 8.8.3, 13.1.1, 14 and 15.3.7:
 https://www.rfc-editor.org/rfc/rfc9110.html . No source code or media copied.
+
+## Matroska WebVTT extension (2026-10-12)
+
+The same file/managed HTTP discovery route now admits S_TEXT/WEBVTT and Matroska
+D_WEBVTT/SUBTITLES or CAPTIONS. The two metadata layouts are decoded separately;
+raw header/comment bytes remain charged to the shared catalog budget. Existing
+WebVTT rendering and lifecycle constraints apply; no WebM DocType or native
+capability expansion. See [contract](2026-10-12-subtitle-matroska-webvtt.md).

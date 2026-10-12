@@ -4,6 +4,8 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'subtitle_document.dart';
 import 'subtitle_resource.dart';
 
+part 'matroska_webvtt.dart';
+
 /// Bounded random-access demux; media payloads are skipped, never decoded here.
 /// Unknown-size Segment is accepted; unknown-size children are not supported.
 final class MatroskaSubtitles {
@@ -171,6 +173,7 @@ final class MatroskaSubtitles {
             t.track,
             t.private,
             List.unmodifiable(t.packets),
+            sourceBytes: t.sourceBytes,
           ),
       ];
     }
@@ -203,10 +206,16 @@ final class MatroskaSubtitles {
       'S_TEXT/UTF8' => YlSubtitleFormat.srt,
       'S_TEXT/ASS' => YlSubtitleFormat.ass,
       'S_TEXT/SSA' => YlSubtitleFormat.ssa,
+      'S_TEXT/WEBVTT' ||
+      'D_WEBVTT/SUBTITLES' ||
+      'D_WEBVTT/CAPTIONS' => YlSubtitleFormat.webvtt,
       _ => _unsupported(),
     };
     if ([0x6d80, 0x6fab, 0x6624, 0x41e4].any(f.containsKey)) _unsupported();
-    if (f[0x537f] != null && await _uint(f[0x537f]!) != 0) _unsupported();
+    if (f[0x537f] != null &&
+        await _uint(f[0x537f]!) > (codec == 'S_TEXT/WEBVTT' ? 1 : 0)) {
+      _unsupported();
+    }
     if (f[0x23314f] case final scale?) {
       if (scale.size != 4 && scale.size != 8) _bad();
       final bytes = Uint8List.fromList(await _bytes(scale.start, scale.size));
@@ -228,6 +237,14 @@ final class MatroskaSubtitles {
     if (format == YlSubtitleFormat.srt && (private?.isNotEmpty ?? false)) {
       _unsupported();
     }
+    if (format == YlSubtitleFormat.webvtt) {
+      if (codec == 'S_TEXT/WEBVTT') {
+        if (private == null) _bad();
+        _webVttHeader(private);
+      } else if (private?.isNotEmpty ?? false) {
+        _unsupported();
+      }
+    }
     final lang = f[0x22b59d] ?? f[0x22b59c];
     final forced = f[0x55aa] == null ? 0 : await _uint(f[0x55aa]!);
     if (forced > 1) _bad();
@@ -239,9 +256,13 @@ final class MatroskaSubtitles {
         language: lang == null ? 'eng' : await _string(lang, 128),
         role: forced == 1 ? 'forced' : 'main',
       ),
-      private,
+      format == YlSubtitleFormat.webvtt ? null : private,
       f[0x23e383] == null ? null : await _uint(f[0x23e383]!),
       f[0x56aa] == null ? 0 : await _uint(f[0x56aa]!),
+      webVttInBlock: codec.startsWith('D_WEBVTT/'),
+      sourceBytes: format == YlSubtitleFormat.webvtt
+          ? (f[0x63a2]?.size ?? 0)
+          : 0,
     );
   }
 
@@ -270,8 +291,9 @@ final class MatroskaSubtitles {
           f[0xa1]!,
           time,
           duration,
-          [0x75a1, 0xa4, 0x75a2, 0x8e, 0xfd].any(f.containsKey) ||
+          [0xa4, 0x75a2, 0x8e, 0xfd].any(f.containsKey) ||
               (f[0xfa] != null && await _uint(f[0xfa]!) != 0),
+          additions: f[0x75a1],
         );
       }
     }
@@ -281,8 +303,9 @@ final class MatroskaSubtitles {
     _Element e,
     int cluster,
     int? duration,
-    bool effects,
-  ) async {
+    bool effects, {
+    _Element? additions,
+  }) async {
     final prefix = await _bytes(e.start, e.size.clamp(0, 11));
     if (prefix.isEmpty) _bad();
     final width = _width(prefix[0], 8);
@@ -294,6 +317,9 @@ final class MatroskaSubtitles {
     final t = _tracks[number];
     if (t == null) return;
     if (effects || prefix[width + 2] & 0x0f != 0) _unsupported();
+    final webVtt = t.track.format == YlSubtitleFormat.webvtt;
+    if (webVtt && duration == null) _unsupported();
+    if (additions != null && (!webVtt || t.webVttInBlock)) _unsupported();
     var relative = prefix[width] * 256 + prefix[width + 1];
     if (relative >= 32768) relative -= 65536;
     final ticks = cluster + relative;
@@ -328,7 +354,35 @@ final class MatroskaSubtitles {
     }
     if (text.isEmpty || text.contains('\u0000')) _bad();
     if (text.length > 16384 + 4096) _limit();
-    t.packets.add(EmbeddedSubtitlePacket(start, end, text));
+    if (webVtt) {
+      t.sourceBytes += size;
+      String? metadata;
+      if (additions != null) {
+        final more = (await _children(
+          additions,
+        )).where((e) => e.id != 0xec && e.id != 0xbf).toList();
+        if (more.isEmpty) _bad();
+        if (more.length != 1 || more.single.id != 0xa6) _unsupported();
+        final fields = await _fields(more.single);
+        if (fields.keys.any((id) => id != 0xee && id != 0xa5)) _unsupported();
+        if (fields[0xee] != null && await _uint(fields[0xee]!) != 1) {
+          _unsupported();
+        }
+        final data = fields[0xa5];
+        if (data == null) _bad();
+        _payloadBytes += data.size;
+        if (data.size > 64 * 1024 || _payloadBytes > 4 * 1024 * 1024) _limit();
+        t.sourceBytes += data.size;
+        try {
+          metadata = utf8.decode(await _bytes(data.start, data.size));
+        } on FormatException {
+          _bad();
+        }
+      }
+      t.packets.add(_webVttPacket(start, end, text, metadata, t.webVttInBlock));
+    } else {
+      t.packets.add(EmbeddedSubtitlePacket(start, end, text));
+    }
   }
 }
 
@@ -339,7 +393,16 @@ final class _Element {
 }
 
 final class _Track {
-  _Track(this.track, this.private, this.defaultDuration, this.delay);
+  _Track(
+    this.track,
+    this.private,
+    this.defaultDuration,
+    this.delay, {
+    this.webVttInBlock = false,
+    this.sourceBytes = 0,
+  });
+  final bool webVttInBlock;
+  int sourceBytes;
   final YlSubtitleTrack track;
   final String? private;
   final int? defaultDuration;

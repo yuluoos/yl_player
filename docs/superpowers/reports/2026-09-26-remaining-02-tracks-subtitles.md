@@ -617,3 +617,36 @@ lib/test分析**No issues found、exit0**。九份代码/测试/独立二进制�
 Minor0新增，无修复轮次；逐项范围裁定与已有wvttMinor延续见[review.md](evidence/2026-10-12-subtitle-hybrid-mp4/review.md)。
 源码/引用依赖/文档/原始失败与最终日志指纹见[manifest](evidence/2026-10-12-subtitle-hybrid-mp4/manifest.json)。
 用独立Git index仅提交本项和自身总览/CHANGELOG段，不涉及长播放或弱网ABR。
+
+## 2026-10-12 Matroska WebVTT 字幕
+
+按“继续下一项”扩展同一 file/managed HTTP 字幕发现入口：标准 S_TEXT/WEBVTT 和
+FFmpeg 实际生成的 D_WEBVTT/SUBTITLES/CAPTIONS 分别解析，以 TrackUID 选择并进入
+现有 WebVTT renderer。S 映射验证 CodecPrivate 与 BlockAdditional ID1，D 映射读取
+Block 中 identifier/settings 前缀；二者要求显式 BlockDuration。无公开API、原生、
+managed reader 或 renderer 变更；[范围契约](../specs/2026-10-12-subtitle-matroska-webvtt.md)。
+
+所有头和注释原始字节保留到 sourceBytes，参与扫描和共享目录4MiB预算。未知addition、
+无效元数据/UTF8、cue注入和高级WebVTT均拒绝，目录失败不替换旧选择。保留既有文档/
+结构/时长/字符/并发cue限额。该范围不包括WebM DocType、字幕清单、直播或跨Period。
+
+基线ba64b1c。实现前入口集12通过/22失败（原有codec门禁），实现后81/81含旧Matroska
+回归。新增55/55：38解析/真实文件/预算，11真实HTTP，6session/Flutter。HTTP覆盖
+单段206/If-Match、鉴权、重试、跨源凭据剥离、版本错误、超时与目录保留；Flutter
+覆盖同语言main/forced两映射切换、粗体/25%横向位置、正负offset、seek/off与迟到取消。
+
+自有subtitle-only MKV由host FFmpeg8.0.1独立封装D_WEBVTT，按ffprobe0.503–1.707s验证；
+S_TEXT映射使用自有EBML样本，无独立生产器互通声明。输入/命令/probe保存在
+[证据目录](evidence/2026-10-12-subtitle-matroska-webvtt/manifest.json)。
+
+在隔离副本暂时删除sourceBytes传递，两项“先内嵌/先外挂”累计超限测试均从应拒绝变为
+错误接纳（0通过/2失败），证明注释不能绕过目录预算；恢复候选后进行最终验证。
+完整P02、HDR/DRM/外接设备与PD-03仍开放，视频backend为fake，不等价实机播放验收。
+
+最终隔离四包**1437/1437、0失败、exit0**（135接口/1107播放器/113Apple/82Android），
+lib/test分析**No issues found、exit0**。七份源/测试/二进制夹具与测试副本逐字节一致；
+十项native/构建制品SHA256重新核验不变。一次独立只读复审Critical0/Important0/新Minor0，
+无修复轮次/重复复审；九项范围裁定与旧WVTT Minor延续见
+[review.md](evidence/2026-10-12-subtitle-matroska-webvtt/review.md)。
+证据、引用依赖和提交文件指纹冻结于manifest，独立Git index仅提交本项及自身总览/
+CHANGELOG段；长播放与弱网ABR无改动。

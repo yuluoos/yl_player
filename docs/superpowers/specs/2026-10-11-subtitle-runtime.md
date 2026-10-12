@@ -150,3 +150,11 @@ The earlier empty-initial-subtitle-table requirement is superseded by the
 later moof samples now share track state, decode continuity, subtitle extents
 and budgets in one complete resource; existing codecs, managed loading and
 rendering subsets remain in force.
+
+## Matroska WebVTT extension (2026-10-12)
+
+The same file/managed HTTP discovery route now admits S_TEXT/WEBVTT and Matroska
+D_WEBVTT/SUBTITLES or CAPTIONS. The two metadata layouts are decoded separately;
+raw header/comment bytes remain charged to the shared catalog budget. Existing
+WebVTT rendering and lifecycle constraints apply; no WebM DocType or native
+capability expansion. See [contract](2026-10-12-subtitle-matroska-webvtt.md).

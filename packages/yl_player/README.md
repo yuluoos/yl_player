@@ -228,7 +228,7 @@ final tracks = player.state.subtitles.tracks.where((t) => !t.isExternal);
 if (tracks.isNotEmpty) await session.selectSubtitleTrack(tracks.first.id);
 ```
 
-`YlPlayerView` renders Matroska UTF8/SRT and ASS/SSA, and non-fragmented MP4
+`YlPlayerView` renders Matroska UTF8/SRT, ASS/SSA and WebVTT, and non-fragmented MP4
 `tx3g` (mov_text), `wvtt` (WebVTT) and `stpp` (TTML) tracks using media time.
 Fragmented MP4 also supports `tx3g`/`wvtt`/`stpp` when initialization and fragments
 are in the same complete file or stable HTTP resource.
@@ -284,3 +284,10 @@ MP4 tracks can also combine initial sample-table subtitles and later fragments.
 Discovery joins them by Track ID, checks decode continuity and subtitle byte
 extents across both portions, and publishes the catalog atomically.
 See the [hybrid MP4 contract](../../docs/superpowers/specs/2026-10-12-subtitle-hybrid-mp4.md).
+
+Matroska WebVTT supports `S_TEXT/WEBVTT` and the FFmpeg-compatible
+`D_WEBVTT/SUBTITLES` / `D_WEBVTT/CAPTIONS` mappings through the same file/managed
+HTTP discovery API. Cue text, identifier and horizontal position/alignment are
+rendered using the existing strict WebVTT subset. Global headers and NOTE blocks
+are validated and budgeted. Advanced CSS/regions/inline timestamps and WebM
+DocType remain unsupported; see the [bounded contract](../../docs/superpowers/specs/2026-10-12-subtitle-matroska-webvtt.md).

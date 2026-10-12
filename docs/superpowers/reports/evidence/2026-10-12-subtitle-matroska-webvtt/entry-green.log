@@ -1,0 +1,83 @@
+00:00 +0: loading /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart
+00:00 +0: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: same-language tracks use UID independent of order and TrackNumber
+00:00 +1: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: Matroska WebVTT header, cue text and additions stay separate
+00:00 +2: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: UID supports the entire unsigned 64-bit range
+00:00 +3: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: UID supports the entire unsigned 64-bit range
+00:00 +4: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: D_WEBVTT/CAPTIONS uses identifier then settings inside Block
+00:00 +5: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: unknown Segment and non-default scale, signed block time, CodecDelay
+00:00 +6: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: no additions uses empty settings; default BlockAddID is one
+00:00 +7: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: SimpleBlock requires and uses DefaultDuration in nanoseconds
+00:00 +8: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: explicit MaxBlockAdditionID one and final identifier without LF
+00:00 +9: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: explicit MaxBlockAdditionID one and final identifier without LF
+00:00 +10: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: ASS uses private styles, packet ReadOrder, exact times and commas
+00:00 +11: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: ASS uses private styles, packet ReadOrder, exact times and commas
+00:00 +12: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed missing private
+00:00 +13: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: SSA uses private styles, packet ReadOrder, exact times and commas
+00:00 +14: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: SSA uses private styles, packet ReadOrder, exact times and commas
+00:00 +15: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed empty additions
+00:00 +16: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: UTF8 block content cannot inject file-level cues
+00:00 +17: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed missing data
+00:00 +18: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: rejects duplicate TrackUID
+00:00 +19: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: rejects duplicate TrackUID
+00:00 +20: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed missing metadata line
+00:00 +21: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: rejects duplicate TrackNumber
+00:00 +22: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed invalid identifier
+00:00 +23: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: rejects truncated block
+00:00 +24: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed NUL note
+00:00 +25: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed NUL note
+00:00 +26: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: rejects negative presentation
+00:00 +27: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed invalid UTF8 metadata
+00:00 +28: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: rejects zero duration
+00:00 +29: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed bad settings
+00:00 +30: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: rejects duplicate timestamp
+00:00 +31: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed D missing prefix
+00:00 +32: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: rejects oversized child
+00:00 +33: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed D missing payload
+00:00 +34: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported codec
+00:00 +35: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported header style
+00:00 +36: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported header style
+00:00 +37: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported missing duration
+00:00 +38: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported header cues
+00:00 +39: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported lacing
+00:00 +40: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported note cues
+00:00 +41: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported invisible subtitle
+00:00 +42: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported note style
+00:00 +43: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported block additions
+00:00 +44: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported vertical setting
+00:00 +45: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported codec state
+00:00 +46: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported other addition ID
+00:00 +47: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: rejects unsupported nonneutral track scale
+00:00 +48: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported multiple additions
+00:00 +49: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: limits cue payload before reading it
+00:00 +50: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: limits cue payload before reading it
+00:00 +51: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: limits cue payload before reading it
+00:00 +52: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: limits cue payload before reading it
+00:00 +53: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported missing BlockDuration
+00:00 +54: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: limits catalog tracks
+00:00 +55: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: limits catalog tracks
+00:00 +56: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: limits catalog tracks
+00:00 +57: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: limits catalog tracks
+00:00 +58: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: raw ignored comments are retained in document input budget
+00:00 +59: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: raw ignored comments are retained in document input budget
+00:00 +60: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: video BlockGroups may have multiple references and huge skipped payload
+00:00 +61: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: video BlockGroups may have multiple references and huge skipped payload
+00:00 +62: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: independently muxed owned MKV exposes two real subtitle streams
+00:00 +63: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: container timing enforces overlap budget
+00:00 +64: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: ASS header cannot inject separately timed events
+00:00 +65: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: ASS duplicate ReadOrder rejects ambiguous ordering
+00:00 +66: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: every truncated prefix rejects without raw bounds errors
+00:00 +67: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: explicit default ReferencePriority zero preserves subtitle semantics
+00:00 +68: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: nonzero ReferencePriority remains an explicit unsupported boundary
+00:00 +69: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: 32 enabled tracks plus disabled entries, disabled first=false
+00:00 +70: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: 32 enabled tracks plus disabled entries, disabled first=true
+00:00 +71: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration external replace/clear preserves embedded selection and offset
+00:00 +72: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration rediscovery preserves external selection and removes only embedded
+00:00 +73: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration missing UID clears selection rather than remapping same language
+00:00 +74: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration both directions of ID collision preserve the old catalog
+00:00 +75: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration malformed discovery is atomic and sanitized
+00:00 +76: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration unsupported network container makes no network request
+00:00 +77: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration missing file does not disclose path
+00:00 +78: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration embedded and external catalogs share the 4 MiB input budget
+00:01 +79: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration queued scans are cancelled by external replacement
+00:01 +80: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/embedded_subtitle_test.dart: catalog integration runtime reset cancels discovery with no late catalog
+00:01 +81: All tests passed!

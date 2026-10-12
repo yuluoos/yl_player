@@ -1,5 +1,8 @@
 ## 0.2.0-dev.2
 
+- Add bounded Matroska WebVTT subtitle discovery for S_TEXT/WEBVTT and
+  D_WEBVTT/SUBTITLES/CAPTIONS, with cue ID/placement, raw metadata accounting,
+  existing managed Range policy and shared subtitle rendering/lifecycle.
 - Support hybrid MP4 subtitle tracks combining initial sample tables with later
   fragments for tx3g, WebVTT and TTML. Preserve per-track decode continuity and
   validate subtitle byte extents and budgets across both portions.

@@ -1,0 +1,320 @@
+00:00 +0: loading /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart
+00:00 +0: Matroska WebVTT header, cue text and additions stay separate
+00:00 +0 -1: Matroska WebVTT header, cue text and additions stay separate [E]
+  SubtitleParseException(unsupported)
+  package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+  
+00:00 +0 -1: D_WEBVTT/SUBTITLES uses identifier then settings inside Block
+00:00 +0 -2: D_WEBVTT/SUBTITLES uses identifier then settings inside Block [E]
+  SubtitleParseException(unsupported)
+  package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+  
+00:00 +0 -2: D_WEBVTT/CAPTIONS uses identifier then settings inside Block
+00:00 +0 -3: D_WEBVTT/CAPTIONS uses identifier then settings inside Block [E]
+  SubtitleParseException(unsupported)
+  package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+  
+00:00 +0 -3: no additions uses empty settings; default BlockAddID is one
+00:00 +0 -4: no additions uses empty settings; default BlockAddID is one [E]
+  SubtitleParseException(unsupported)
+  package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+  
+00:00 +0 -4: explicit MaxBlockAdditionID one and final identifier without LF
+00:00 +0 -5: explicit MaxBlockAdditionID one and final identifier without LF [E]
+  SubtitleParseException(unsupported)
+  package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+  
+00:00 +0 -5: CRLF metadata and payload normalize independently
+00:00 +0 -6: CRLF metadata and payload normalize independently [E]
+  SubtitleParseException(unsupported)
+  package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+  
+00:00 +0 -6: rejects malformed missing private
+00:00 +0 -7: rejects malformed missing private [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+                  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                 expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+                  packages/yl_player/test/matroska_webvtt_test.dart 65:80         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                          expectLater
+  package:flutter_test/src/widget_tester.dart 507:8        expectLater
+  packages/yl_player/test/matroska_webvtt_test.dart 65:80  main.<fn>
+  
+00:00 +0 -7: rejects malformed invalid private
+00:00 +0 -8: rejects malformed invalid private [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+                  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                 expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+                  packages/yl_player/test/matroska_webvtt_test.dart 65:80         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                          expectLater
+  package:flutter_test/src/widget_tester.dart 507:8        expectLater
+  packages/yl_player/test/matroska_webvtt_test.dart 65:80  main.<fn>
+  
+00:00 +0 -8: rejects malformed empty additions
+00:00 +0 -9: rejects malformed empty additions [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+                  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                 expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+                  packages/yl_player/test/matroska_webvtt_test.dart 65:80         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                          expectLater
+  package:flutter_test/src/widget_tester.dart 507:8        expectLater
+  packages/yl_player/test/matroska_webvtt_test.dart 65:80  main.<fn>
+  
+00:00 +0 -9: rejects malformed missing data
+00:00 +0 -10: rejects malformed missing data [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+                  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                 expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+                  packages/yl_player/test/matroska_webvtt_test.dart 65:80         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                          expectLater
+  package:flutter_test/src/widget_tester.dart 507:8        expectLater
+  packages/yl_player/test/matroska_webvtt_test.dart 65:80  main.<fn>
+  
+00:00 +0 -10: rejects malformed duplicate data
+00:00 +0 -11: rejects malformed duplicate data [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+                  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                 expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+                  packages/yl_player/test/matroska_webvtt_test.dart 65:80         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                          expectLater
+  package:flutter_test/src/widget_tester.dart 507:8        expectLater
+  packages/yl_player/test/matroska_webvtt_test.dart 65:80  main.<fn>
+  
+00:00 +0 -11: rejects malformed missing metadata line
+00:00 +0 -12: rejects malformed missing metadata line [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+                  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                 expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+                  packages/yl_player/test/matroska_webvtt_test.dart 65:80         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                          expectLater
+  package:flutter_test/src/widget_tester.dart 507:8        expectLater
+  packages/yl_player/test/matroska_webvtt_test.dart 65:80  main.<fn>
+  
+00:00 +0 -12: rejects malformed invalid identifier
+00:00 +0 -13: rejects malformed invalid identifier [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+                  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                 expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+                  packages/yl_player/test/matroska_webvtt_test.dart 65:80         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                          expectLater
+  package:flutter_test/src/widget_tester.dart 507:8        expectLater
+  packages/yl_player/test/matroska_webvtt_test.dart 65:80  main.<fn>
+  
+00:00 +0 -13: rejects malformed NUL note
+00:00 +0 -14: rejects malformed NUL note [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+                  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                 expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+                  packages/yl_player/test/matroska_webvtt_test.dart 65:80         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                          expectLater
+  package:flutter_test/src/widget_tester.dart 507:8        expectLater
+  packages/yl_player/test/matroska_webvtt_test.dart 65:80  main.<fn>
+  
+00:00 +0 -14: rejects malformed invalid UTF8 metadata
+00:00 +0 -15: rejects malformed invalid UTF8 metadata [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+                  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                 expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+                  packages/yl_player/test/matroska_webvtt_test.dart 65:80         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                          expectLater
+  package:flutter_test/src/widget_tester.dart 507:8        expectLater
+  packages/yl_player/test/matroska_webvtt_test.dart 65:80  main.<fn>
+  
+00:00 +0 -15: rejects malformed bad settings
+00:00 +0 -16: rejects malformed bad settings [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+                  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                 expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+                  packages/yl_player/test/matroska_webvtt_test.dart 65:80         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                          expectLater
+  package:flutter_test/src/widget_tester.dart 507:8        expectLater
+  packages/yl_player/test/matroska_webvtt_test.dart 65:80  main.<fn>
+  
+00:00 +0 -16: rejects malformed D missing prefix
+00:00 +0 -17: rejects malformed D missing prefix [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+                  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                 expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+                  packages/yl_player/test/matroska_webvtt_test.dart 65:80         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                          expectLater
+  package:flutter_test/src/widget_tester.dart 507:8        expectLater
+  packages/yl_player/test/matroska_webvtt_test.dart 65:80  main.<fn>
+  
+00:00 +0 -17: rejects malformed D missing payload
+00:00 +0 -18: rejects malformed D missing payload [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+                  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                 expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+                  packages/yl_player/test/matroska_webvtt_test.dart 65:80         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                          expectLater
+  package:flutter_test/src/widget_tester.dart 507:8        expectLater
+  packages/yl_player/test/matroska_webvtt_test.dart 65:80  main.<fn>
+  
+00:00 +0 -18: rejects unsupported header style
+00:00 +1 -18: rejects unsupported header cues
+00:00 +2 -18: rejects unsupported note cues
+00:00 +3 -18: rejects unsupported note style
+00:00 +4 -18: rejects unsupported vertical setting
+00:00 +5 -18: rejects unsupported other addition ID
+00:00 +6 -18: rejects unsupported multiple additions
+00:00 +7 -18: rejects unsupported max addition ID
+00:00 +8 -18: rejects unsupported D private
+00:00 +9 -18: rejects unsupported D additions
+00:00 +10 -18: rejects unsupported missing BlockDuration
+00:00 +11 -18: rejects unsupported metadata track
+00:00 +12 -18: metadata limits checked before oversized payload read
+00:00 +12 -19: metadata limits checked before oversized payload read [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.limitExceeded>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+                  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                 expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+                  packages/yl_player/test/matroska_webvtt_test.dart 83:9          main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                         expectLater
+  package:flutter_test/src/widget_tester.dart 507:8       expectLater
+  packages/yl_player/test/matroska_webvtt_test.dart 83:9  main.<fn>
+  
+00:00 +12 -19: identifier limit is independent of total metadata bytes
+00:00 +12 -20: identifier limit is independent of total metadata bytes [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.limitExceeded>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: threw SubtitleParseException:<SubtitleParseException(unsupported)>
+            stack package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+                  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                 expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8               expectLater
+                  packages/yl_player/test/matroska_webvtt_test.dart 86:74         main.<fn>
+                  
+            which has `reason` with value SubtitleParseReason:<SubtitleParseReason.unsupported>
+  
+  package:matcher                                          expectLater
+  package:flutter_test/src/widget_tester.dart 507:8        expectLater
+  packages/yl_player/test/matroska_webvtt_test.dart 86:74  main.<fn>
+  
+00:00 +12 -20: raw ignored comments are retained in document input budget
+00:00 +12 -21: raw ignored comments are retained in document input budget [E]
+  SubtitleParseException(unsupported)
+  package:yl_player/src/subtitles/matroska_subtitles.dart 23:7    MatroskaSubtitles._unsupported
+  package:yl_player/src/subtitles/matroska_subtitles.dart 206:12  MatroskaSubtitles._track
+  
+00:00 +12 -21: independently muxed FFmpeg WebVTT discovers and renders exact times
+00:00 +12 -22: independently muxed FFmpeg WebVTT discovers and renders exact times [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 210:9  TextSubtitleRuntime.discover.<fn>
+  
+00:00 +12 -22: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: CRLF metadata and payload normalize independently
+  /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: D_WEBVTT/CAPTIONS uses identifier then settings inside Block
+  /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: D_WEBVTT/SUBTITLES uses identifier then settings inside Block
+  /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: Matroska WebVTT header, cue text and additions stay separate
+  ... and 18 more

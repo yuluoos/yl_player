@@ -597,8 +597,8 @@ current native adapters still do not advertise a native subtitle SPI.
 | ASS/SSA text subset | Explicit script resolution/WrapStyle 1 or 2, styles/outline/shadow/position/layers/move/fad; real file/managed HTTP and Ahem fixed-time pixel tests; no libass/font-metric equivalence |
 | PGS external SUP subset | Binary framing/RLE, palettes/clear, cropped/windowed objects; file/managed HTTP, manual pixel grids, late-image disposal and bounded asynchronous decode tests |
 | VobSub external DVD subset | Explicit idx/sub pair, language/substream matching, PS/SPU fragments, two-field RLE, timed palette/alpha/clear; real paired I/O and owned full-pixel grids |
-| Local Matroska embedded UTF8/ASS/SSA | Explicit committed-source discovery, TrackUID selection and shared overlay; owned EBML plus independent muxer/ffprobe and Flutter lifecycle tests |
-| HTTP(S) Matroska embedded UTF8/ASS/SSA | Single-range206 with pinned strong ETag/length, shared managed deadlines/retry/redirect/credential policy; bounded cache/scan and real HTTP/TLS/session/widget tests |
+| Local Matroska embedded UTF8/ASS/SSA/WebVTT | Explicit committed-source discovery, TrackUID selection and shared overlay; owned EBML plus independent muxer/ffprobe and Flutter lifecycle tests |
+| HTTP(S) Matroska embedded UTF8/ASS/SSA/WebVTT | Single-range206 with pinned strong ETag/length, shared managed deadlines/retry/redirect/credential policy; bounded cache/scan and real HTTP/TLS/session/widget tests |
 | Local / HTTP(S) MP4 embedded tx3g (mov_text) | Non-fragmented sample tables and single-resource fMP4 fragments, Track ID selection, simple edits and basic styled literal text; same managed Range policy, independent owned FFmpeg fixtures, real HTTP and Flutter lifecycle tests; no native/device acceptance |
 | Local / HTTP(S) MP4 embedded WebVTT (wvtt) | Non-fragmented vttc/vtte sample discovery, Track ID selection, basic markup and horizontal align/position; same managed Range policy, real file/HTTP and Flutter geometry/lifecycle tests; advanced WebVTT and native/device acceptance remain open |
 | Local / HTTP(S) MP4 embedded TTML (stpp) | Non-fragmented discovery/selection, sample-clipped TTML composition times and simple edits, existing styled text/percentage regions; managed Range policy and raw XML catalog budget; actual file/HTTP/Flutter validation, no device or full TTML/IMSC claim |
@@ -612,3 +612,11 @@ slice's acceptance is local Dart/Flutter testing, not a native-device playback
 matrix. Synchronization follows the configured position update cadence. See the
 [P02 report](superpowers/reports/2026-09-26-remaining-02-tracks-subtitles.md) and
 [runtime contract](superpowers/specs/2026-10-11-subtitle-runtime.md).
+
+### Matroska WebVTT overlay extension (2026-10-12)
+
+S_TEXT/WEBVTT and Matroska D_WEBVTT/SUBTITLES/CAPTIONS now feed the shared Dart
+WebVTT renderer with TrackUID selection. Existing managed Range transport is
+unchanged. Owned standard-mapping fixtures, a host-FFmpeg legacy-mapping MKV,
+HTTP and fake-backend widget tests are the evidence boundary. No native/device,
+WebM DocType, advanced WebVTT or whole-P02 completion claim.

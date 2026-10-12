@@ -511,3 +511,12 @@ TVS `6749e23` 补齐首次添加HTML/零频道写入前拒绝，保留旧数据�
 ### 2026-10-12 P02 混合 MP4 字幕
 
 接入tx3g/wvtt/stpp初始样本表与后续moof接续，按Track ID共享decode时间边界、样本字节区间和累计预算，managed网络与原子发布沿用既有实现。独立FFmpeg混合tx3g和三codec文件/HTTP/Flutter验证见[混合MP4契约](../specs/2026-10-12-subtitle-hybrid-mp4.md)及[P02报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)。独立URL/清单/直播/native/device仍开放；未改长播放和弱网ABR。
+
+### 2026-10-12 P02 Matroska WebVTT 字幕
+
+完成 file/managed HTTP Matroska S_TEXT/WEBVTT 与 D_WEBVTT/SUBTITLES/CAPTIONS
+发现、TrackUID选择和既有WebVTT渲染。两映射分别解析，头/NOTE原始字节计共享预算，
+显式BlockDuration，目录原子发布。55新增定向用例与FFmpeg自有MKV验证；全部证据见
+[报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)和
+[契约](../specs/2026-10-12-subtitle-matroska-webvtt.md)。WebM/高级效果/直播/设备与整个P02
+仍开放，长播放和弱网ABR未涉及。

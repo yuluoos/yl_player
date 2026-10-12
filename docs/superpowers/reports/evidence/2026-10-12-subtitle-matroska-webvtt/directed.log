@@ -1,0 +1,59 @@
+00:00 +0: loading /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart
+00:00 +0: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: Matroska WebVTT header, cue text and additions stay separate
+00:00 +1: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: D_WEBVTT/SUBTITLES uses identifier then settings inside Block
+00:00 +2: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: D_WEBVTT/CAPTIONS uses identifier then settings inside Block
+00:00 +3: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: no additions uses empty settings; default BlockAddID is one
+00:00 +4: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: explicit MaxBlockAdditionID one and final identifier without LF
+00:00 +5: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: CRLF metadata and payload normalize independently
+00:00 +6: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed missing private
+00:00 +7: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed invalid private
+00:00 +8: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed empty additions
+00:00 +9: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed missing data
+00:00 +10: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed duplicate data
+00:00 +11: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed missing metadata line
+00:00 +12: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed invalid identifier
+00:00 +13: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed NUL note
+00:00 +14: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed invalid UTF8 metadata
+00:00 +15: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed bad settings
+00:00 +16: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed D missing prefix
+00:00 +17: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects malformed D missing payload
+00:00 +18: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported header style
+00:00 +19: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported header cues
+00:00 +20: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported note cues
+00:00 +21: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported note style
+00:00 +22: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported vertical setting
+00:00 +23: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported other addition ID
+00:00 +24: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported multiple additions
+00:00 +25: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported max addition ID
+00:00 +26: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported D private
+00:00 +27: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported D additions
+00:00 +28: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported missing BlockDuration
+00:00 +29: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: rejects unsupported metadata track
+00:00 +30: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: metadata limits checked before oversized payload read
+00:00 +31: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: identifier limit is independent of total metadata bytes
+00:00 +32: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: raw ignored comments are retained in document input budget
+00:00 +33: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: independently muxed FFmpeg WebVTT discovers and renders exact times
+00:00 +34: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: BlockAdditional totals cannot bypass the scan input limit
+00:00 +35: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: ignored metadata shares external catalog budget embeddedFirst=true
+00:00 +36: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: ignored metadata shares external catalog budget embeddedFirst=false
+00:01 +37: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: render-time advanced markup fails atomically without replacing catalog
+00:01 +38: loading /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_network_test.dart
+00:01 +38: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:01 +39: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_network_test.dart: network YlMediaFormat.matroska sniffs content, skips media, sends conditional range and renders
+00:01 +40: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_network_test.dart: legal chunked206 Matroska WebVTT discovery completes without Content-Length
+00:02 +41: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_network_test.dart: managed retries later range with credential and shared scan ledger
+00:02 +42: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_network_test.dart: cross-origin redirect strips credentials before Matroska WebVTT range scan
+00:02 +43: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_network_test.dart: etag response keeps prior selected Matroska WebVTT catalog
+00:02 +44: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_network_test.dart: 200 response keeps prior selected Matroska WebVTT catalog
+00:03 +45: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_network_test.dart: 403 response keeps prior selected Matroska WebVTT catalog
+00:03 +46: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_network_test.dart: malformed response keeps prior selected Matroska WebVTT catalog
+00:03 +47: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_network_test.dart: managed response-header timeout terminates Matroska WebVTT discovery
+00:03 +48: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_network_test.dart: explicit non-Matroska WebVTT format rejects before HTTP request
+00:03 +49: loading /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_session_test.dart
+00:04 +49: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:04 +50: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_session_test.dart: network failure leaves playback and selected subtitle state unchanged
+00:04 +51: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_session_test.dart: held range is cancelled by replace and cannot publish late
+00:04 +52: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_session_test.dart: held range is cancelled by stop and cannot publish late
+00:04 +53: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_session_test.dart: held range is cancelled by dispose and cannot publish late
+00:04 +54: /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_session_test.dart: held range is cancelled by external and cannot publish late
+00:04 +55: All tests passed!

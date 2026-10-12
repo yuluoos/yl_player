@@ -1,0 +1,32 @@
+00:00 +0: loading /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart
+00:00 +0: ignored metadata shares external catalog budget embeddedFirst=true
+00:00 +0 -1: ignored metadata shares external catalog budget embeddedFirst=true [E]
+  Expected: throws <Instance of 'YlPlayerException'> with `code`: 'subtitle.too_large'
+    Actual: <Instance of 'Future<void>'>
+     Which: emitted <null>
+  
+  package:matcher                                           expectLater
+  package:flutter_test/src/widget_tester.dart 507:8         expectLater
+  packages/yl_player/test/matroska_webvtt_test.dart 283:15  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                _CustomZone.registerUnaryCallback
+  packages/yl_player/test/matroska_webvtt_test.dart 253:21  main.<fn>
+  
+00:00 +0 -1: ignored metadata shares external catalog budget embeddedFirst=false
+00:00 +0 -2: ignored metadata shares external catalog budget embeddedFirst=false [E]
+  Expected: throws <Instance of 'YlPlayerException'> with `code`: 'subtitle.too_large'
+    Actual: <Instance of 'Future<Null>'>
+     Which: emitted <null>
+  
+  package:matcher                                           expectLater
+  package:flutter_test/src/widget_tester.dart 507:8         expectLater
+  packages/yl_player/test/matroska_webvtt_test.dart 283:15  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                _CustomZone.registerUnaryCallback
+  packages/yl_player/test/matroska_webvtt_test.dart 253:21  main.<fn>
+  
+00:00 +0 -2: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: ignored metadata shares external catalog budget embeddedFirst=false
+  /private/tmp/yl-mwv-validation-7f2tza34/packages/yl_player/test/matroska_webvtt_test.dart: ignored metadata shares external catalog budget embeddedFirst=true

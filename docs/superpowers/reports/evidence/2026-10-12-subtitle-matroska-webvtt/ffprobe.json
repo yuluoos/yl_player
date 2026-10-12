@@ -1,0 +1,71 @@
+{
+    "packets": [
+        {
+            "codec_type": "subtitle",
+            "stream_index": 0,
+            "pts": 503,
+            "pts_time": "0.503000",
+            "dts": 503,
+            "dts_time": "0.503000",
+            "duration": 1204,
+            "duration_time": "1.204000",
+            "size": "28",
+            "pos": "482",
+            "flags": "K__",
+            "data": "\n00000000: 3c62 3e4f 776e 6564 204d 6174 726f 736b  <b>Owned Matrosk\n00000010: 6120 5765 6256 5454 3c2f 623e            a WebVTT</b>\n",
+            "side_data_list": [
+                {
+                    "side_data_type": "WebVTT ID",
+                    "data": "\n00000000: 6f77 6e65 642d 6964                      owned-id\n"
+                },
+                {
+                    "side_data_type": "WebVTT Settings",
+                    "data": "\n00000000: 706f 7369 7469 6f6e 3a32 3525 2c6c 696e  position:25%,lin\n00000010: 652d 6c65 6674 2061 6c69 676e 3a73 7461  e-left align:sta\n00000020: 7274                                     rt\n"
+                }
+            ]
+        }
+    ],
+    "streams": [
+        {
+            "index": 0,
+            "codec_name": "webvtt",
+            "codec_long_name": "WebVTT subtitle",
+            "codec_type": "subtitle",
+            "codec_tag_string": "[0][0][0][0]",
+            "codec_tag": "0x0000",
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/1000",
+            "start_pts": 503,
+            "start_time": "0.503000",
+            "duration_ts": 1707,
+            "duration": "1.707000",
+            "nb_read_packets": "1",
+            "extradata": "\n",
+            "disposition": {
+                "default": 0,
+                "dub": 0,
+                "original": 0,
+                "comment": 0,
+                "lyrics": 0,
+                "karaoke": 0,
+                "forced": 0,
+                "hearing_impaired": 0,
+                "visual_impaired": 0,
+                "clean_effects": 0,
+                "attached_pic": 0,
+                "timed_thumbnails": 0,
+                "non_diegetic": 0,
+                "captions": 0,
+                "descriptions": 0,
+                "metadata": 0,
+                "dependent": 0,
+                "still_image": 0,
+                "multilayer": 0
+            },
+            "tags": {
+                "DURATION": "00:00:01.707000000"
+            }
+        }
+    ]
+}
