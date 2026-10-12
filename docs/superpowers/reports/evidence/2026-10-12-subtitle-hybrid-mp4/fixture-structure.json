@@ -1,0 +1,79 @@
+{
+  "path": "packages/yl_player/test/fixtures/hybrid-mp4-owned.mp4",
+  "sha256": "5742f377d8f267420ef217a8abfc743ac447f81431a57f6894e22199b4e923d7",
+  "bytes": 3424,
+  "roots": [
+    {
+      "type": "ftyp",
+      "offset": 0,
+      "bytes": 28
+    },
+    {
+      "type": "moov",
+      "offset": 28,
+      "bytes": 1325
+    },
+    {
+      "type": "mdat",
+      "offset": 1353,
+      "bytes": 775
+    },
+    {
+      "type": "moof",
+      "offset": 2128,
+      "bytes": 124
+    },
+    {
+      "type": "mdat",
+      "offset": 2252,
+      "bytes": 112
+    },
+    {
+      "type": "moof",
+      "offset": 2364,
+      "bytes": 124
+    },
+    {
+      "type": "mdat",
+      "offset": 2488,
+      "bytes": 112
+    },
+    {
+      "type": "moof",
+      "offset": 2600,
+      "bytes": 200
+    },
+    {
+      "type": "mdat",
+      "offset": 2800,
+      "bytes": 120
+    },
+    {
+      "type": "moof",
+      "offset": 2920,
+      "bytes": 204
+    },
+    {
+      "type": "mdat",
+      "offset": 3124,
+      "bytes": 114
+    },
+    {
+      "type": "mfra",
+      "offset": 3238,
+      "bytes": 186
+    }
+  ],
+  "tracks": [
+    {
+      "id": 1,
+      "handler": "vide",
+      "initialSampleCount": 5
+    },
+    {
+      "id": 2,
+      "handler": "sbtl",
+      "initialSampleCount": 1
+    }
+  ]
+}

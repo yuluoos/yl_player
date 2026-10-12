@@ -1,0 +1,108 @@
+00:00 +0: loading /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/hybrid_mp4_test.dart
+00:00 +0: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/hybrid_mp4_test.dart: FFmpeg hybrid tx3g sample tables and later fragments
+00:00 +0 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/hybrid_mp4_test.dart: FFmpeg hybrid tx3g sample tables and later fragments [E]
+  Expected: [2500000, 4567000]
+    Actual: MappedListIterable<EmbeddedSubtitlePacket, int>:[3123000, 4567000]
+     Which: at location [0] is <3123000> instead of <2500000>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/hybrid_mp4_test.dart 22:5   main.<fn>
+  
+00:00 +0 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/hybrid_mp4_test.dart: real hybrid MP4 joins initial and fragmented subtitles in all three codecs
+00:00 +1 -1: loading /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart
+00:00 +1 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: legal is_leading=0 sample flags
+00:00 +2 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: legal is_leading=1 sample flags
+00:00 +3 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: legal is_leading=2 sample flags
+00:00 +4 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: legal is_leading=3 sample flags
+00:00 +5 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: moof base with 32-bit boxes and negative data offset
+00:00 +6 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: moof base with 64-bit boxes and negative data offset
+00:00 +7 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: explicit base with 32-bit boxes and negative data offset
+00:00 +8 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: explicit base with 64-bit boxes and negative data offset
+00:00 +9 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: implicit base with 32-bit boxes and negative data offset
+00:00 +10 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: implicit base with 64-bit boxes and negative data offset
+00:00 +11 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: trex defaults inherited, tfhd overrides, then per-sample overrides
+00:00 +12 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: multiple truns continue byte cursor, composition offsets remain independent of dts
+00:00 +13 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: unsigned v0 composition offset and v0 decode time
+00:00 +14 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: 64-bit tfdt exceeds uint32 without losing precision
+00:00 +15 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: TTML composition clock clipped then edited once; edit duration 0
+00:00 +16 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: TTML composition clock clipped then edited once; edit duration 1500
+00:00 +17 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: decode gaps and sequence gaps retain absolute time
+00:00 +18 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: audio traf payload skipped; following subtitle has explicit moof base
+00:00 +19 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: initialization only and empty duration fragment yield empty catalog track
+00:00 +20 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: selected sample description overrides trex without changing public codec
+00:00 +21 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: empty WebVTT sample clears interval and TTML empty XML still counts raw bytes
+00:00 +22 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed fragment overlaps initial decode interval
+00:00 +23 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate trex
+00:00 +24 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed unknown trex track
+00:00 +25 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed zero trex description
+00:00 +26 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate mfhd
+00:00 +27 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed unknown tfhd track
+00:00 +28 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate tfhd
+00:00 +29 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate tfdt
+00:00 +30 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed conflicting bases
+00:00 +31 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed description out of range
+00:00 +32 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed zero size override does not inherit
+00:00 +33 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed zero duration override does not inherit
+00:00 +34 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed empty duration with samples
+00:00 +35 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed both first and per sample flags
+00:00 +36 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed reserved flags
+00:00 +37 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed reserved depends on
+00:00 +38 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed reserved depended on
+00:00 +39 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed reserved redundancy
+00:00 +40 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed data points to moof
+00:00 +41 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate sequence
+00:00 +42 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed overlapping decode timeline
+00:00 +43 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed wrong tfdt length
+00:00 +44 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed wrong trun length
+00:00 +45 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed mdat byte extent overflow
+00:00 +46 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed no traf
+00:00 +47 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject malformed missing trex for subtitle
+00:00 +48 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported missing tfdt
+00:00 +49 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported unknown tfhd flags
+00:00 +50 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported unknown trun flags
+00:00 +51 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported unsupported trun version
+00:00 +52 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported unsupported tfdt version
+00:00 +53 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported encrypted samples
+00:00 +54 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported subsample table
+00:00 +55 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported fragmented unknown codec
+00:00 +56 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported implicit base after audio
+00:00 +57 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: bounded sample count
+00:00 +58 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: bounded decode time
+00:00 +59 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: bounded composition time
+00:00 +60 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: bounded top level fragments
+00:00 +61 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: overlapping byte extents between subtitle trafs reject
+00:00 +62 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: sample flags default can be replaced by first sample override
+00:00 +63 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: empty TTML raw samples enforce shared four MiB budget
+00:01 +64 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: global sample budget spans fragments
+00:01 +65 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: all truncated prefixes reject without untyped errors
+00:01 +66 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_parser_test.dart: cancellation is checked between fragment reads
+00:01 +67 -1: loading /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart
+00:02 +67 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented UTF16 BE preserves surrogate pairs
+00:02 +68 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented UTF16 LE preserves surrogate pairs
+00:02 +69 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: sample-local styl uses Unicode scalar offsets and literal text
+00:02 +70 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: tfhd description switch changes default style without stale state
+00:02 +71 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: tx3g sample size/duration inherited from trex
+00:02 +72 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: tx3g sample size/duration inherited from tfhd
+00:02 +73 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragment tx3g signed CTO and edit duration=0
+00:02 +74 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragment tx3g signed CTO and edit duration=1500
+00:02 +75 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: empty terminal zero-duration sample and sparse fragment gap clear text
+00:02 +76 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: forced metadata and shared-language identities survive reordered trafs
+00:02 +77 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: CRLF across tx3g styles (0, 2) in fragment remains one newline
+00:02 +78 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: CRLF across tx3g styles (0, 3) in fragment remains one newline
+00:02 +79 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented malformed short string payload
+00:02 +80 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented malformed bad UTF8
+00:02 +81 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented malformed isolated UTF16 surrogate
+00:02 +82 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented malformed style outside text
+00:02 +83 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented malformed zero visible duration
+00:02 +84 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented unsupported karaoke
+00:02 +85 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented unsupported per-sample forced
+00:02 +86 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented unsupported unknown font
+00:02 +87 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented tx3g cannot overlap initial decode interval
+00:02 +88 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: same track cannot switch tx3g to WebVTT description
+00:02 +89 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: fragmented tx3g text bound is enforced
+00:02 +90 -1: /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/fmp4_tx3g_parser_test.dart: raw tx3g bytes share four MiB budget across fragments
+00:02 +91 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/hybrid_mp4_test.dart: FFmpeg hybrid tx3g sample tables and later fragments

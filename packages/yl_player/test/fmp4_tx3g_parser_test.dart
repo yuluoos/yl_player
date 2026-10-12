@@ -272,11 +272,8 @@ void main() {
       ),
     );
   }
-  test('hybrid tx3g initial sample table still rejected', () async {
-    await expectLater(
-      parse(fragmented(tracks: [Mp4Track()])),
-      bad(SubtitleParseReason.unsupported),
-    );
+  test('fragmented tx3g cannot overlap initial decode interval', () async {
+    await expectLater(parse(fragmented(tracks: [Mp4Track()])), bad());
   });
   test('same track cannot switch tx3g to WebVTT description', () async {
     await expectLater(

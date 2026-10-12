@@ -581,3 +581,39 @@ lib/test分析**No issues found、exit0**。七份源/测试/二进制夹具与�
 无修复轮次；八项范围/验证裁定及已有wvttMinor延续见[review.md](evidence/2026-10-11-subtitle-fmp4-tx3g/review.md)。
 正式仓库证据保留原始RED/GREEN、独立FFmpeg输入/ffprobe和最终日志，见[manifest](evidence/2026-10-11-subtitle-fmp4-tx3g/manifest.json)。
 采用独立index只提交本项文件及自己的总览/CHANGELOG段，不含另一会话任务。
+
+## 2026-10-12 混合 MP4 字幕（初始样本表 + 后续分片）
+
+按“继续下一项”补齐hybrid MP4缺口；tx3g/wvtt/stpp可先读取普通stbl，再接续moof。
+没有公开API/native/依赖/managed reader或renderer变更，仍使用Track ID与同一字幕owner；
+[契约](../specs/2026-10-12-subtitle-hybrid-mp4.md)明确这是完整文件支持，不是MSE初始化声明。
+
+删除非空初始化样本表的格式门禁；用每轨stts累计decode终点初始化后续tfdt下界，不受ctts、
+edit或空/裁掉的cue影响。初始和后续共享packet/ordinal/TTML原始字节及预算；分片模式下
+在发布前对所有字幕sample的byte extent统一检查重叠。保留所有原有codec/edit/寻址限制，
+允许合法composition重叠和decode空隙；不同轨道的下界相互独立。
+
+基线a9673dc。真实文件三codec入口先0通过/1失败（unsupported）；实现后旧分片回归与
+入口91通过/1失败，仅独立FFmpeg样本断言误用了输入SRT终点2.5s，而ffprobe输出实际容器
+终点3.123s。修正断言后parser/文件23/23；新增整套40/40（21parser、2file/producer、
+11真实HTTP、6session/Flutter）。旧hybrid拒绝项替换成初始/后续decode重叠拒绝项，未删测试。
+
+另在隔离副本临时移除decode下界，2项测试均从应拒绝变为错误接纳；移除全局extent计费，
+2项字节重叠测试也均失败。两项mutation都恢复到原候选后才执行最终分析和四包验证，
+原始失败日志保留。网络测试验证三codec前后内容、managed请求、版本/凭据/重试和目录
+保留；Flutter验证初始文字切至后续区域文字、样式、选择/off/offset/seek与迟到取消。
+
+hostFFmpeg8.0.1以frag_keyframe+default_base_moof封装自有黑视频/SRT，初始字幕stsz有
+可见文字，后续moof有第二条；结构审计和ffprobe均保留于[证据目录](evidence/2026-10-12-subtitle-hybrid-mp4/manifest.json)。
+字幕解码按容器0–3.123s、3.123–4.567s及粗体样式验证；不声称修正muxer输入时间。
+三codec自有夹具、实际文件/HTTP和fake视频backend的Flutter验证不等价native/设备验收。
+
+独立segment URL、字幕清单/直播、跨Period、高级效果、HDR/DRM/外接设备与PD-03及整个P02
+继续开放。另一边长播放/弱网ABR未修改；最终复审/四包证据如下方追加。
+
+最终四包**1382/1382、0失败、exit0**（135接口/1052播放器/113Apple/82Android），最终
+lib/test分析**No issues found、exit0**。九份代码/测试/独立二进制夹具与隔离候选逐字节
+一致；十项native/构建制品SHA256重新核验不变。一次独立只读复审Critical0/Important0/
+Minor0新增，无修复轮次；逐项范围裁定与已有wvttMinor延续见[review.md](evidence/2026-10-12-subtitle-hybrid-mp4/review.md)。
+源码/引用依赖/文档/原始失败与最终日志指纹见[manifest](evidence/2026-10-12-subtitle-hybrid-mp4/manifest.json)。
+用独立Git index仅提交本项和自身总览/CHANGELOG段，不涉及长播放或弱网ABR。

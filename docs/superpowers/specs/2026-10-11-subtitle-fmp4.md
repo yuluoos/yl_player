@@ -4,11 +4,11 @@
 
 ## 单资源范围
 
-- 一个完整资源包含 `ftyp`、单个 `moov/mvex` 初始化信息和其后的 `moof/mdat`；字幕初始化样本表为空。初始化信息本身可返回空轨道。tx3g/wvtt/stpp 可以分轨共存；每轨样本描述必须是同一 codec。
+- 一个完整资源包含 `ftyp`、单个 `moov/mvex` 初始化信息和其后的 `moof/mdat`；字幕初始化样本表可以为空或包含初始样本，随后与分片接续。初始化信息本身可返回空轨道。tx3g/wvtt/stpp 可以分轨共存；每轨样本描述必须是同一 codec。
 - 读取 `trex` 默认值，`tfhd` 覆盖 track/sample description、duration、size、flags，`trun` 再覆盖逐样本值。显式零值不回退到默认值。支持多个 run、多个 traf、32/64 位 box 长度。
 - 字节基址支持显式 `base_data_offset`、`default-base-is-moof` 和首个 traf 的隐式 moof 基址。`data_offset` 是有符号32位，允许同资源中位于 moof 前的 mdat。后续 run 缺少 offset 时接着上一个 run；不根据被跳过的音视频负载推算后续 traf 基址，后续字幕 traf 须显式指定基址或 default-base-is-moof。
 - 样本字节必须完整落在顶层 mdat 的 payload 中；字幕样本之间不得重叠。音视频 payload 不解码、不复制；有界窗口网络缓存可能读到相邻字节。
-- 每个字幕 traf 必须有 `tfdt` v0/v1，`trun` v0/v1 支持 unsigned/signed composition offset。decode 时间不倒退/重叠，可留空隙；mfhd 序号严格递增，可不连续。duration-is-empty 不得携带样本。未知/加密/子样本布局、缺 tfdt、混合初始化字幕样本明确拒绝。
+- 每个字幕 traf 必须有 `tfdt` v0/v1，`trun` v0/v1 支持 unsigned/signed composition offset。decode 时间不倒退/重叠，可留空隙；mfhd 序号严格递增，可不连续。duration-is-empty 不得携带样本。未知/加密/子样本布局、缺 tfdt 明确拒绝。
 - 不读取独立 `.m4s` 与另一个初始化 URL；不解析 HLS/DASH 清单，不追踪直播增长或跨 Period 轨道，也不自动加载 segment URL。不是所有合法 fMP4 的兼容性承诺。
 
 ## 时间、显示与预算
@@ -39,3 +39,11 @@ The former fragmented-tx3g exclusion is superseded by the [tx3g continuation](20
 Existing literal styled text and normalized `srt` catalog entries now share this
 fragment reader. The original WebVTT/TTML positive fixtures remain owned builders;
 tx3g additionally has an independently muxed FFmpeg positive fixture.
+
+## Hybrid MP4 extension (2026-10-12)
+
+The earlier empty-initial-subtitle-table requirement is superseded by the
+[hybrid MP4 contract](2026-10-12-subtitle-hybrid-mp4.md). Initial stbl samples and
+later moof samples now share track state, decode continuity, subtitle extents
+and budgets in one complete resource; existing codecs, managed loading and
+rendering subsets remain in force.

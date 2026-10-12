@@ -61,7 +61,7 @@ extension _FragmentReader on Mp4Subtitles {
     if (defaults.isEmpty) _unsupported();
     if (_fragmentTracks.keys.any((id) => !defaults.containsKey(id))) _bad();
     var sequence = -1;
-    final extents = <(int, int)>[];
+    final extents = _fragmentExtents;
     for (final moof in fragments) {
       token.check();
       final boxes = await _children(moof.start, moof.end);
@@ -170,7 +170,6 @@ extension _FragmentReader on Mp4Subtitles {
               dts + cto,
               delta,
             );
-            extents.add((pos, pos + length));
             pos += length;
             dts += delta;
             if (dts > track.scale * 604800) _limit();

@@ -507,3 +507,7 @@ TVS `6749e23` 补齐首次添加HTML/零频道写入前拒绝，保留旧数据�
 ### 2026-10-11 P02 分片 MP4 tx3g 字幕
 
 补齐同一完整本地/HTTP(S)资源中fMP4 tx3g（mov_text）的发现、Track ID选择与既有样式渲染；沿用managed Range与分片时间/预算/原子目录，支持正负偏移和清屏。独立FFmpeg样本、文件/HTTP/Flutter验证见[tx3g延续契约](../specs/2026-10-11-subtitle-fmp4-tx3g.md)与[P02报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)。独立segment URL/字幕清单/直播/native/device仍开放；长播放/弱网ABR未改。
+
+### 2026-10-12 P02 混合 MP4 字幕
+
+接入tx3g/wvtt/stpp初始样本表与后续moof接续，按Track ID共享decode时间边界、样本字节区间和累计预算，managed网络与原子发布沿用既有实现。独立FFmpeg混合tx3g和三codec文件/HTTP/Flutter验证见[混合MP4契约](../specs/2026-10-12-subtitle-hybrid-mp4.md)及[P02报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)。独立URL/清单/直播/native/device仍开放；未改长播放和弱网ABR。

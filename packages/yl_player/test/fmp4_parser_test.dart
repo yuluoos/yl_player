@@ -281,6 +281,12 @@ void main() {
     },
   );
   final malformed = <String, List<int>>{
+    'fragment overlaps initial decode interval': fragmented(
+      tracks: [
+        Mp4Track(entry: wvttEntry(), samples: [vttCue('x')]),
+      ],
+    ),
+
     'duplicate trex': fragmented(trex: [...defaults(), ...defaults()]),
     'unknown trex track': fragmented(trex: defaults(id: 9)),
     'zero trex description': fragmented(trex: defaults(description: 0)),
@@ -343,11 +349,6 @@ void main() {
     'unsupported tfdt version': one(FragmentTrack(timeVersion: 2)),
     'encrypted samples': one(FragmentTrack(extra: box('senc', []))),
     'subsample table': one(FragmentTrack(extra: box('subs', []))),
-    'hybrid subtitle samples': fragmented(
-      tracks: [
-        Mp4Track(entry: wvttEntry(), samples: [vttCue('x')]),
-      ],
-    ),
     'fragmented unknown codec': fragmented(
       tracks: [init(entry: description(codec: 'text'))],
     ),

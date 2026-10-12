@@ -142,3 +142,11 @@ The earlier fragmented-tx3g exclusion is superseded by the [fMP4 tx3g contract](
 Same-resource initialization and fragments reuse existing tx3g styles/normalized
 `srt` catalog entries, fragment timing and managed Range; all other stated scope
 limits remain in force.
+
+## Hybrid MP4 extension (2026-10-12)
+
+The earlier empty-initial-subtitle-table requirement is superseded by the
+[hybrid MP4 contract](2026-10-12-subtitle-hybrid-mp4.md). Initial stbl samples and
+later moof samples now share track state, decode continuity, subtitle extents
+and budgets in one complete resource; existing codecs, managed loading and
+rendering subsets remain in force.

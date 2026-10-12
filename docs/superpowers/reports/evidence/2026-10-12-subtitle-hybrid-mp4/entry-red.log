@@ -1,0 +1,10 @@
+00:00 +0: loading /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/hybrid_mp4_test.dart
+00:00 +0: real hybrid MP4 joins initial and fragmented subtitles in all three codecs
+00:00 +0 -1: real hybrid MP4 joins initial and fragmented subtitles in all three codecs [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 210:9  TextSubtitleRuntime.discover.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/hybrid_mp4_test.dart: real hybrid MP4 joins initial and fragmented subtitles in all three codecs

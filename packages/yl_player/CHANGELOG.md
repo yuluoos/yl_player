@@ -1,5 +1,9 @@
 ## 0.2.0-dev.2
 
+- Support hybrid MP4 subtitle tracks combining initial sample tables with later
+  fragments for tx3g, WebVTT and TTML. Preserve per-track decode continuity and
+  validate subtitle byte extents and budgets across both portions.
+
 - Add single-resource fragmented MP4 tx3g (mov_text) subtitle discovery and
   selection with existing literal styled-text rendering, fragment timing and
   managed ranges; validate with an independently muxed FFmpeg fixture.

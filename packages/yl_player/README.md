@@ -279,3 +279,8 @@ for defaults, addressing, edits and unsupported layouts.
 Fragmented `tx3g` uses the same literal styled text and normalized `srt` catalog
 format as non-fragmented MP4; sample-description changes update default styles.
 See the [fMP4 tx3g contract](../../docs/superpowers/specs/2026-10-11-subtitle-fmp4-tx3g.md).
+
+MP4 tracks can also combine initial sample-table subtitles and later fragments.
+Discovery joins them by Track ID, checks decode continuity and subtitle byte
+extents across both portions, and publishes the catalog atomically.
+See the [hybrid MP4 contract](../../docs/superpowers/specs/2026-10-12-subtitle-hybrid-mp4.md).

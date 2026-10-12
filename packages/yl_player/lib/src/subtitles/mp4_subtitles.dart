@@ -64,6 +64,8 @@ final class Mp4Subtitles {
       _runs = 0,
       _cueCount = 0;
   bool _fragmented = false;
+  // Shared by initial sample tables and later fragments in the same resource.
+  final _fragmentExtents = <(int, int)>[];
   final _fragmentTracks = <int, _Mp4TrackSamples>{};
   final _ids = <int>{};
   final _mdats = <_Box>[];
@@ -277,9 +279,6 @@ final class Mp4Subtitles {
     final b = await _body((sz ?? z2)!, min: 12);
     _full(b);
     final count = _u(b, 8);
-    if (_fragmented && count != 0) {
-      _unsupported();
-    }
     _samples += count;
     if (_samples > 20000) _limit();
     if (sz != null) {
@@ -397,6 +396,8 @@ final class Mp4Subtitles {
       extents.add((chunkStart, pos));
     }
     if (sample != count) _bad();
+    // Fragment tfdt continues decode time, independently of ctts or edit clipping.
+    if (_fragmented) track.decodeEnd = dts;
     extents.sort((a, b) => a.$1.compareTo(b.$1));
     for (var i = 1; i < extents.length; i++) {
       if (extents[i].$1 < extents[i - 1].$2) _bad();
@@ -420,6 +421,7 @@ final class Mp4Subtitles {
     )) {
       _bad();
     }
+    if (_fragmented) _fragmentExtents.add((pos, pos + size));
     _payloadBytes += size;
     if (_payloadBytes > 4 * 1024 * 1024) _limit();
     final decoded = desc.decode(await _bytes(pos, size));

@@ -1,0 +1,26 @@
+00:00 +0: loading /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/hybrid_mp4_parser_test.dart
+00:00 +0: fragment cannot reuse initial sample bytes
+00:00 +0 -1: fragment cannot reuse initial sample bytes [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                             expectLater
+  package:flutter_test/src/widget_tester.dart 507:8           expectLater
+  packages/yl_player/test/hybrid_mp4_parser_test.dart 182:11  main.<fn>
+  
+00:00 +0 -1: initial subtitle byte extents cannot overlap across tracks
+00:00 +0 -2: initial subtitle byte extents cannot overlap across tracks [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData', Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                             expectLater
+  package:flutter_test/src/widget_tester.dart 507:8           expectLater
+  packages/yl_player/test/hybrid_mp4_parser_test.dart 200:11  main.<fn>
+  
+00:00 +0 -2: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/hybrid_mp4_parser_test.dart: fragment cannot reuse initial sample bytes
+  /private/tmp/yl-hmp-validation-10id8b9p/packages/yl_player/test/hybrid_mp4_parser_test.dart: initial subtitle byte extents cannot overlap across tracks

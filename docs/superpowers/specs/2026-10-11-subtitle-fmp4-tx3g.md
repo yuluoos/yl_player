@@ -25,3 +25,11 @@ UTF8、BOM UTF16、Unicode scalar 样式范围、默认样式和 styl、粗斜�
 此样本首条非空sample结束于3.123s而输入文本为2.5s。测试证明读取容器时间正确，没有声称修正muxer。
 样本足以验证一条生产器路径，不是任意合法fMP4互通/字体像素等价或三端真机验收。
 整个P02、native/HDR/DRM/外接设备和PD-03仍开放。
+
+## Hybrid MP4 extension (2026-10-12)
+
+The earlier empty-initial-subtitle-table requirement is superseded by the
+[hybrid MP4 contract](2026-10-12-subtitle-hybrid-mp4.md). Initial stbl samples and
+later moof samples now share track state, decode continuity, subtitle extents
+and budgets in one complete resource; existing codecs, managed loading and
+rendering subsets remain in force.
