@@ -642,3 +642,12 @@ allowance across tracks, sample descriptions and initial/fragmented samples.
 Font entries and style records retain their separate existing bounds.
 Exact-boundary parser tests and file/managed HTTP failure-preservation tests
 cover this Dart path. No new native or physical-device acceptance is claimed.
+
+### Matroska subtitle compression chains (2026-10-13)
+
+Up to four zlib/header-stripping stages restore blocks and/or CodecPrivate in
+reverse encoding order, with unique orders and independent scope filtering.
+Stored, intermediate and final bytes share parser/catalog budgets. Codec matrix,
+Python compression goldens, actual file/managed HTTP and widget tests cover the
+Dart path. Next scopes, encryption and WebM compression remain unsupported;
+no independent muxer, native or physical-device acceptance is claimed.

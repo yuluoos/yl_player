@@ -36,9 +36,10 @@ final class YlPlaybackSession {
   /// Matroska/WebM/MP4 source. Supported codecs depend on the container.
   /// PGS and VobSub bitmap tracks are supported in Matroska only; embedded
   /// VobSub uses CodecPrivate and raw SPU blocks, without external IDX/SUB files.
-  /// Matroska accepts one zlib/header-stripping encoding for blocks, CodecPrivate
-  /// or both, restoring bytes within shared budgets before codec parsing.
-  /// Encrypted, chained and next-encoding scopes reject.
+  /// Matroska accepts up to four zlib/header-stripping stages for blocks,
+  /// CodecPrivate or both, decoded in descending encoding order. Stored,
+  /// intermediate and final bytes share budgets before codec parsing.
+  /// Encrypted and next-encoding scopes reject.
   /// MP4 discovery shares a 200,000-box limit across container structures and
   /// tx3g/WebVTT/TTML configuration and tx3g/WebVTT sample boxes across
   /// tracks and fragments. Font/style records have their own separate limits.

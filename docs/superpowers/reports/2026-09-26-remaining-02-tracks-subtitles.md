@@ -864,3 +864,27 @@ platform-support.md末尾三列独立pipe行没有加入现有两列表格，信
 无问题；23项新增测试。一次独立复审0Critical/0Important/0Minor，9项不判定范围
 已逐项裁定；无复审后代码修正。5候选与测试副本一致，10项原生/构建制品哈希保持。
 上次支持文档排版Minor已关闭，完整P02仍未完成。
+
+## 2026-10-13 Matroska 压缩链
+
+接入最多4层zlib/header stripping，按唯一Order降序、分别按Block/Private作用域恢复；
+允许Order空隙和非零单层。Next/加密/WebM/未知算法仍拒绝。逐层256KiB、最终codec
+上限和4MiB共享额度覆盖settings、stored/intermediate/final；目录保留中间字节，空轨和
+外挂替换不可绕过总量。补齐API注释，无依赖/native/网络传输/渲染器语义改动。
+
+基线0a4e70b；入口0/2 unsupported，初轮含旧压缩回归82/82。新增定向首轮79通过2失败：
+混合作用域sourceBytes预期遗漏正文5字节；大中间流夹具先撞文本字符上限，改用VobSub
+原始包测试该边界（只测demux，不声称该无效SPU可渲染）。首次修正替换位置偏差使后者
+再次失败，定位夹具后修正。最终81/81（60parser/4file与预算/11HTTP/6session）通过。
+初始分析10项warning/info已消除，最终无问题。Python双层zlib金标通过实际文件恢复。
+
+[契约](../specs/2026-10-13-subtitle-compression-chain.md)、
+[夹具来源](../../../packages/yl_player/test/fixtures/subtitle-chain-owned.md)、
+[验证证据](evidence/2026-10-13-subtitle-compression-chain/manifest.json)。整个P02仍开放，
+长播放和弱网ABR未改。
+
+最终隔离四包1876/1876（interface135/player1546/Apple113/Android82）通过，静态分析
+无问题。仅隔离副本漏算中间保留字节时，embedded-first/external-first/empty-track三项
+预算测试全部失败，恢复候选后才运行最终全套。一次独立复审0Critical/0Important/0Minor，
+10项不判定范围已逐项裁定；10候选字节与验证副本一致，10项原生/构建制品哈希未变。
+无复审后代码修正；证据manifest及提交范围由执行者冻结核对。

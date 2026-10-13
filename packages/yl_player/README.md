@@ -315,13 +315,13 @@ atomic catalogs and shared encoded/RGBA budgets apply. See the
 [VobSub container contract](../../docs/superpowers/specs/2026-10-12-subtitle-embedded-vobsub.md).
 
 
-Matroska subtitle tracks may carry one `ContentEncoding` for blocks,
+Matroska subtitle tracks may carry up to four ordered `ContentEncoding` stages for blocks,
 CodecPrivate, or both: zlib or header stripping. Restoration precedes the existing text/bitmap decoder, with
 strict zlib framing/checksum validation and bounded output. Stored compressed
-bytes/settings and restored content both count toward the shared input budget,
-including later external subtitle replacements. Encryption, chained encodings,
+bytes/settings, every intermediate output and final content count toward the shared input budget,
+including later external subtitle replacements. Encryption,
 next-encoding scope and WebM compression remain unsupported. See the
-[compression contract](../../docs/superpowers/specs/2026-10-12-subtitle-compression.md).
+[compression-chain contract](../../docs/superpowers/specs/2026-10-13-subtitle-compression-chain.md).
 
 
 Compressed CodecPrivate is restored before UTF-8 and codec-specific header

@@ -1,0 +1,14 @@
+Analyzing lib, test, lib, test...
+
+warning - packages/yl_player/test/chain_subtitle_parser_test.dart:5:8 - Unused import: 'package:yl_player/src/subtitles/matroska_subtitles.dart'. Try removing the import directive. - unused_import
+warning - packages/yl_player/test/chain_subtitle_parser_test.dart:6:8 - Unused import: 'package:yl_player/src/subtitles/subtitle_resource.dart'. Try removing the import directive. - unused_import
+   info - packages/yl_player/lib/src/subtitles/matroska_subtitles.dart:324:9 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/test/chain_subtitle_network_test.dart:7:8 - The import of 'support/matroska_fixture.dart' is unnecessary because all of the used elements are also provided by the import of 'support/chain_subtitle_fixture.dart'. Try removing the import directive. - unnecessary_import
+   info - packages/yl_player/test/chain_subtitle_network_test.dart:9:8 - The import of 'support/embedded_vobsub_fixture.dart' is unnecessary because all of the used elements are also provided by the import of 'support/chain_subtitle_fixture.dart'. Try removing the import directive. - unnecessary_import
+   info - packages/yl_player/test/chain_subtitle_parser_test.dart:8:8 - The import of 'support/matroska_fixture.dart' is unnecessary because all of the used elements are also provided by the import of 'support/chain_subtitle_fixture.dart'. Try removing the import directive. - unnecessary_import
+   info - packages/yl_player/test/chain_subtitle_session_test.dart:7:8 - The import of 'support/matroska_fixture.dart' is unnecessary because all of the used elements are also provided by the import of 'support/chain_subtitle_fixture.dart'. Try removing the import directive. - unnecessary_import
+   info - packages/yl_player/test/chain_subtitle_session_test.dart:9:8 - The import of 'support/embedded_vobsub_fixture.dart' is unnecessary because all of the used elements are also provided by the import of 'support/chain_subtitle_fixture.dart'. Try removing the import directive. - unnecessary_import
+   info - packages/yl_player/test/chain_subtitle_test.dart:68:11 - Use interpolation to compose strings and values. Try using string interpolation to build the composite string. - prefer_interpolation_to_compose_strings
+   info - packages/yl_player/test/chain_subtitle_test.dart:99:11 - Use interpolation to compose strings and values. Try using string interpolation to build the composite string. - prefer_interpolation_to_compose_strings
+
+10 issues found.

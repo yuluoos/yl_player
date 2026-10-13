@@ -1,5 +1,8 @@
 # Matroska 压缩字幕
 
+> 2026-10-13：以下首版单层/链式拒绝边界已由[多层压缩契约](2026-10-13-subtitle-compression-chain.md)
+> 扩展为最多4层、有序且独立筛选Block/Private作用域；Next/加密/WebM限制保留。
+
 延续P02独立字幕切片，接入现有发现/选择/渲染链路的 ContentCompression：单一
 ContentEncoding、Order0、Scope1（Block）、Type0，支持Algo0 zlib与Algo3 header stripping。
 字段省略时采用标准默认值；拒绝多层、CodecPrivate/Next scope、加密、未知算法、非空zlib

@@ -240,19 +240,21 @@ final class MatroskaSubtitles {
       }
     }
     final compression = f[0x6d80] == null
-        ? null
+        ? <_Compression>[]
         : await _compression(f[0x6d80]!);
     String? private;
     var privateBytes = 0, compressedPrivateBytes = 0;
-    final restorePrivate = compression != null && compression.scope & 2 != 0;
+    final privateChain = compression.where((c) => c.scope & 2 != 0).toList();
+    final restorePrivate = privateChain.isNotEmpty;
     if (restorePrivate && f[0x63a2] == null) _bad();
     if (f[0x63a2] case final p?) {
       _payloadBytes += p.size;
       if (p.size > 256 * 1024 || _payloadBytes > 4 * 1024 * 1024) _limit();
       var bytes = await _bytes(p.start, p.size);
       if (restorePrivate) {
-        compressedPrivateBytes = p.size;
-        bytes = _restore(bytes, compression, 256 * 1024);
+        final restored = _restoreChain(bytes, privateChain, 256 * 1024);
+        bytes = restored.$1;
+        compressedPrivateBytes = restored.$2;
       }
       privateBytes = bytes.length;
       try {
@@ -293,46 +295,58 @@ final class MatroskaSubtitles {
       f[0x56aa] == null ? 0 : await _uint(f[0x56aa]!),
       compression: compression,
       compressionBytes:
-          (compression?.header.length ?? 0) + compressedPrivateBytes,
+          compression.fold<int>(0, (n, c) => n + c.header.length) +
+          compressedPrivateBytes,
       webVttInBlock: codec.startsWith('D_WEBVTT/'),
       sourceBytes: format == YlSubtitleFormat.webvtt ? privateBytes : 0,
     );
   }
 
-  Future<_Compression> _compression(_Element e) async {
+  Future<List<_Compression>> _compression(_Element e) async {
     if (_webm) _unsupported();
     final entries = (await _children(
       e,
     )).where((c) => c.id != 0xec && c.id != 0xbf).toList();
-    if (entries.length != 1 || entries.single.id != 0x6240) _unsupported();
-    final f = await _fields(entries.single);
-    if (f.keys.any((id) => ![0x5031, 0x5032, 0x5033, 0x5034].contains(id))) {
-      _unsupported();
+    if (entries.isEmpty || entries.any((e) => e.id != 0x6240)) _unsupported();
+    if (entries.length > 4) _limit();
+    final orders = <int>{};
+    final chain = <_Compression>[];
+    for (final entry in entries) {
+      final f = await _fields(entry);
+      if (f.keys.any((id) => ![0x5031, 0x5032, 0x5033, 0x5034].contains(id))) {
+        _unsupported();
+      }
+      final order = f[0x5031] == null ? 0 : await _uint(f[0x5031]!);
+      if (!orders.add(order)) _bad();
+      final scope = f[0x5032] == null ? 1 : await _uint(f[0x5032]!);
+      if (![1, 2, 3].contains(scope) ||
+          (f[0x5033] != null && await _uint(f[0x5033]!) != 0)) {
+        _unsupported();
+      }
+      if (f[0x5034] == null) _bad();
+      final c = await _fields(f[0x5034]!);
+      if (c.keys.any((id) => id != 0x4254 && id != 0x4255)) _unsupported();
+      final algorithm = c[0x4254] == null ? 0 : await _uint(c[0x4254]!);
+      if (algorithm != 0 && algorithm != 3) _unsupported();
+      final settings = c[0x4255];
+      if (algorithm == 0 && settings != null && settings.size != 0) {
+        _unsupported();
+      }
+      if (algorithm == 3 && settings == null) _bad();
+      final size = settings?.size ?? 0;
+      _payloadBytes += size;
+      if (size > 256 * 1024 || _payloadBytes > 4 * 1024 * 1024) _limit();
+      chain.add(
+        _Compression(
+          order,
+          algorithm,
+          scope,
+          settings == null ? const [] : await _bytes(settings.start, size),
+        ),
+      );
     }
-    final scope = f[0x5032] == null ? 1 : await _uint(f[0x5032]!);
-    if ((f[0x5031] != null && await _uint(f[0x5031]!) != 0) ||
-        ![1, 2, 3].contains(scope) ||
-        (f[0x5033] != null && await _uint(f[0x5033]!) != 0)) {
-      _unsupported();
-    }
-    if (f[0x5034] == null) _bad();
-    final c = await _fields(f[0x5034]!);
-    if (c.keys.any((id) => id != 0x4254 && id != 0x4255)) _unsupported();
-    final algorithm = c[0x4254] == null ? 0 : await _uint(c[0x4254]!);
-    if (algorithm != 0 && algorithm != 3) _unsupported();
-    final settings = c[0x4255];
-    if (algorithm == 0 && settings != null && settings.size != 0) {
-      _unsupported();
-    }
-    if (algorithm == 3 && settings == null) _bad();
-    final size = settings?.size ?? 0;
-    _payloadBytes += size;
-    if (size > 256 * 1024 || _payloadBytes > 4 * 1024 * 1024) _limit();
-    return _Compression(
-      algorithm,
-      scope,
-      settings == null ? const [] : await _bytes(settings.start, size),
-    );
+    // Encoding order is independent of EBML element order and may have gaps.
+    return chain..sort((a, b) => b.order.compareTo(a.order));
   }
 
   Future<List<int>> _payload(
@@ -342,16 +356,35 @@ final class MatroskaSubtitles {
     int limit,
   ) async {
     final size = e.size - offset;
-    final compression = t.compression?.scope == 2 ? null : t.compression;
+    final compression = t.compression.where((c) => c.scope & 1 != 0).toList();
     _payloadBytes += size;
-    if (size > (compression == null ? limit : 256 * 1024) ||
+    if (size > (compression.isEmpty ? limit : 256 * 1024) ||
         _payloadBytes > 4 * 1024 * 1024) {
       _limit();
     }
     final bytes = await _bytes(e.start + offset, size);
-    if (compression == null) return bytes;
-    t.compressionBytes += size;
-    return _restore(bytes, compression, limit);
+    if (compression.isEmpty) return bytes;
+    final restored = _restoreChain(bytes, compression, limit);
+    t.compressionBytes += restored.$2;
+    return restored.$1;
+  }
+
+  /// Retain stored and intermediate bytes; final output is charged by its codec.
+  (List<int>, int) _restoreChain(
+    List<int> bytes,
+    List<_Compression> chain,
+    int finalLimit,
+  ) {
+    var extra = 0;
+    for (var i = 0; i < chain.length; i++) {
+      extra += bytes.length;
+      bytes = _restore(
+        bytes,
+        chain[i],
+        i == chain.length - 1 ? finalLimit : 256 * 1024,
+      );
+    }
+    return (bytes, extra);
   }
 
   /// Stored bytes/settings were charged by the caller; charge restoration once.
@@ -521,12 +554,12 @@ final class _Track {
     this.private,
     this.defaultDuration,
     this.delay, {
-    this.compression,
+    this.compression = const [],
     this.compressionBytes = 0,
     this.webVttInBlock = false,
     this.sourceBytes = 0,
   });
-  final _Compression? compression;
+  final List<_Compression> compression;
   int compressionBytes;
   final bool webVttInBlock;
   int sourceBytes;
@@ -550,7 +583,7 @@ final class EmbeddedSubtitleData {
     this.compressionBytes = 0,
   });
 
-  /// Stored compressed block/private bytes and settings charged in addition
+  /// Stored and intermediate compressed block/private bytes and settings charged in addition
   /// to reconstructed content, including empty tracks.
   final int compressionBytes;
   final List<EmbeddedPgsPacket> pgsPackets;
@@ -564,7 +597,7 @@ final class EmbeddedSubtitleData {
 }
 
 final class _Compression {
-  const _Compression(this.algorithm, this.scope, this.header);
-  final int algorithm, scope;
+  const _Compression(this.order, this.algorithm, this.scope, this.header);
+  final int order, algorithm, scope;
   final List<int> header;
 }

@@ -145,13 +145,9 @@ void main() {
     'scope8': compressionEncoding(scope: 8),
     'scope4': compressionEncoding(scope: 4),
     'type': compressionEncoding(type: 1),
-    'order': compressionEncoding(order: 1),
+    'algorithm2': compressionEncoding(algo: 2),
     'zlib settings': compressionEncoding(settings: [1]),
     'encryption': compressionEncoding(extra: element(0x5035, [])),
-    'chain': element(0x6d80, [
-      ...element(0x6240, element(0x5034, [])),
-      ...element(0x6240, element(0x5034, [])),
-    ]),
   }.entries) {
     test(
       'unsupported encoding ${entry.key}',
@@ -161,6 +157,22 @@ void main() {
       ),
     );
   }
+  test(
+    'duplicate default encoding order is malformed',
+    () => expectLater(
+      parse(
+        mkv(
+          tracks: track(
+            extra: element(0x6d80, [
+              ...element(0x6240, element(0x5034, [])),
+              ...element(0x6240, element(0x5034, [])),
+            ]),
+          ),
+        ),
+      ),
+      reason(SubtitleParseReason.malformed),
+    ),
+  );
   test(
     'stripping requires settings',
     () => expectLater(

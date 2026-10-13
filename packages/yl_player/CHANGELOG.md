@@ -1,5 +1,8 @@
 ## 0.2.0-dev.2
 
+- Restore up to four ordered Matroska subtitle compression stages, filtering
+  block/private scopes independently and retaining intermediate-byte budgets.
+  Clarify the API boundary; Next scopes, encryption and WebM remain unsupported.
 - Include tx3g font/bitrate configuration and sample style boxes in the shared
   MP4 structural budget, preserving selected subtitles on discovery overflow.
   Clarify API limits and correct support-document formatting.

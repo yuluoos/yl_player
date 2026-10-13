@@ -1,0 +1,18 @@
+00:00 +0: loading /private/tmp/yl-chain-validation-9204njaf/packages/yl_player/test/chain_subtitle_parser_test.dart
+00:00 +0: two-stage zlib follows declared order (reversed=false)
+00:00 +0 -1: two-stage zlib follows declared order (reversed=false) [E]
+  SubtitleParseException(unsupported)
+  package:yl_player/src/subtitles/matroska_subtitles.dart 28:7    MatroskaSubtitles._unsupported
+  package:yl_player/src/subtitles/matroska_subtitles.dart 307:61  MatroskaSubtitles._compression
+  
+00:00 +0 -1: two-stage zlib follows declared order (reversed=true)
+00:00 +0 -2: two-stage zlib follows declared order (reversed=true) [E]
+  SubtitleParseException(unsupported)
+  package:yl_player/src/subtitles/matroska_subtitles.dart 28:7    MatroskaSubtitles._unsupported
+  package:yl_player/src/subtitles/matroska_subtitles.dart 307:61  MatroskaSubtitles._compression
+  
+00:00 +0 -2: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-chain-validation-9204njaf/packages/yl_player/test/chain_subtitle_parser_test.dart: two-stage zlib follows declared order (reversed=false)
+  /private/tmp/yl-chain-validation-9204njaf/packages/yl_player/test/chain_subtitle_parser_test.dart: two-stage zlib follows declared order (reversed=true)

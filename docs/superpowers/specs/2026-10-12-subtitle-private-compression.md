@@ -1,5 +1,8 @@
 # Matroska CodecPrivate 压缩恢复
 
+> 2026-10-13：以下首版单层/链式拒绝边界已由[多层压缩契约](2026-10-13-subtitle-compression-chain.md)
+> 扩展为最多4层、有序且独立筛选Block/Private作用域；Next/加密/WebM限制保留。
+
 延续既有 P02 与单层字幕压缩切片，支持 Scope2（仅CodecPrivate）及 Scope3（Block与
 CodecPrivate）。保持 Order0/Type0、zlib/header stripping 算法和严格有界恢复器。
 Scope1原行为保持；Scope0、Next bit、未知位、链式、加密与WebM压缩仍拒绝。

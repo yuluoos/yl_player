@@ -598,3 +598,11 @@ tx3g配置/样本修饰box纳入共享200000额度，覆盖跨轨/描述及初�
 字体条目和样式记录的独立计量。补齐API注释，修复支持文档排版Minor。23项新测试及
 验证证据见[报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)。整个P02仍开放；
 长播放/弱网ABR未改。
+
+### 2026-10-13 P02 Matroska 字幕压缩链
+
+支持最多4层zlib/header stripping，独立Block/Private作用域，按唯一Order降序恢复。
+中间输出同样计入解析及目录预算，API注释同步。81项新测试及金标/文件/managed HTTP/
+widget证据见[报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)和
+[契约](../specs/2026-10-13-subtitle-compression-chain.md)。Next/加密/WebM及整个P02仍开放；
+长播放/弱网ABR未改。
