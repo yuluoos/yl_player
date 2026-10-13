@@ -1,5 +1,16 @@
 part of 'subtitle_document.dart';
 
+/// A complete Matroska DVD SPU, without PS/PES framing or an IDX file offset.
+final class EmbeddedVobSubPacket {
+  EmbeddedVobSubPacket(this.start, List<int> bytes, {this.end})
+    : bytes = Uint8List.fromList(bytes).asUnmodifiableView();
+  final Duration start;
+  final Duration? end;
+  final Uint8List bytes;
+  @override
+  String toString() => 'EmbeddedVobSubPacket(payload: <redacted>)';
+}
+
 final class _VobEntry {
   const _VobEntry(this.time, this.position);
   final int time, position; // Microseconds and byte offset, not PES PTS.
@@ -19,7 +30,7 @@ final class _VobIndex {
   int? preferred;
   static const horizon = 7 * 24 * 60 * 60 * 1000000;
 
-  _VobIndex(List<int> bytes) {
+  _VobIndex(List<int> bytes, {bool embedded = false}) {
     String text;
     try {
       text = utf8.decode(bytes);
@@ -38,14 +49,17 @@ final class _VobIndex {
     }
     final rows = const LineSplitter().convert(text);
     if (rows.isNotEmpty && rows.first.length > 2048) _limit();
-    if (rows.isEmpty ||
-        !RegExp(r'^# VobSub index file, v7(?:\s|$)').hasMatch(rows.first)) {
+    if (!embedded &&
+        (rows.isEmpty ||
+            !RegExp(
+              r'^# VobSub index file, v7(?:\s|$)',
+            ).hasMatch(rows.first))) {
       _malformed();
     }
     _VobStream? current;
     var delay = 0, entries = 0;
     final settings = <String>{};
-    for (final raw in rows.skip(1)) {
+    for (final raw in embedded ? rows : rows.skip(1)) {
       if (raw.length > 2048) _limit();
       final line = raw.trim();
       if (line.isEmpty || line.startsWith('#')) continue;
@@ -54,6 +68,11 @@ final class _VobIndex {
       if (colon < 1) _malformed();
       final key = line.substring(0, colon).toLowerCase(),
           value = line.substring(colon + 1).trim();
+      // Matroska owns stream identity and timing. Old IDX timestamps must
+      // never override the edited container timeline or cause sidecar I/O.
+      if (embedded && ['id', 'langidx', 'timestamp', 'alt'].contains(key)) {
+        continue;
+      }
       switch (key) {
         case 'size':
           if (!settings.add(key) || current != null) _malformed();
@@ -98,6 +117,7 @@ final class _VobIndex {
           current.entries.add(_VobEntry(time, pos));
         case 'delay':
           delay = clock(value, signed: true);
+          if (embedded && delay != 0) _unsupported();
         case 'langidx':
           if (!settings.add(key) || !RegExp(r'^\d{1,2}$').hasMatch(value)) {
             _malformed();
@@ -126,7 +146,9 @@ final class _VobIndex {
           if (!neutral) _unsupported();
       }
     }
-    if (width == 0 || palette == null || streams.isEmpty || entries == 0) {
+    if (width == 0 ||
+        palette == null ||
+        (!embedded && (streams.isEmpty || entries == 0))) {
       _malformed();
     }
     if (preferred != null && !streams.containsKey(preferred)) _malformed();
@@ -496,4 +518,41 @@ SubtitleDocument _parseVobSub(
     sub.length + idx.length,
     limits,
   );
+}
+
+SubtitleDocument _parseEmbeddedVobSub(
+  List<EmbeddedVobSubPacket> packets,
+  String codecPrivate,
+  SubtitleLimits limits,
+) {
+  final header = utf8.encode(codecPrivate);
+  if (header.length > 256 * 1024 || packets.length > 10000) _limit();
+  var input = header.length;
+  var previous = -1;
+  for (final packet in packets) {
+    input += packet.bytes.length;
+    if (input > limits.maxInputBytes || packet.bytes.length > 65535) _limit();
+    final start = packet.start.inMicroseconds, end = packet.end?.inMicroseconds;
+    if (start < 0 ||
+        start < previous ||
+        start >= _VobIndex.horizon ||
+        (end != null && (end <= start || end > _VobIndex.horizon))) {
+      _malformed();
+    }
+    previous = start;
+  }
+  if (input > limits.maxInputBytes) _limit();
+  final decoder = _VobDecoder(_VobIndex(header, embedded: true), limits);
+  for (var i = 0; i < packets.length; i++) {
+    final packet = packets[i];
+    final next = i + 1 < packets.length
+        ? packets[i + 1].start.inMicroseconds
+        : _VobIndex.horizon;
+    decoder.packet(
+      packet.bytes,
+      packet.start.inMicroseconds,
+      math.min(packet.end?.inMicroseconds ?? _VobIndex.horizon, next),
+    );
+  }
+  return SubtitleDocument._finish(decoder.cues, input, limits);
 }

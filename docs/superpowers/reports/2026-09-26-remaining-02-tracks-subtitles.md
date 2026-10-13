@@ -714,3 +714,39 @@ lib/test分析**No issues found、exit0**。12份源/测试/夹具与已测副�
 [review.md](evidence/2026-10-12-subtitle-embedded-pgs/review.md)。
 冻结源码/引用依赖/文档/日志/夹具指纹，使用独立Git index只提交本项和自己的总览/
 CHANGELOG段。无长播放/弱网ABR改动，无push。
+
+
+## 2026-10-12 Matroska 内嵌 VobSub
+
+接入本地及 managed HTTP(S) `S_VOBSUB`：CodecPrivate 的 size/palette 经共享 IDX 设置解析，
+Block 的原始 SPU 经既有 DVD 解码与 bitmap overlay。保留 TrackUID/语言/forced 元数据；
+目录原子发布，外置/内嵌仍共享 4MiB 输入和 64MiB RGBA 预算，分配前传递剩余额度。
+遗留 IDX timestamp/id/langidx 不影响容器身份与时钟。BlockDuration/DefaultDuration、下一包
+和 SPU 显隐共同裁剪区间，保持微秒精度。参见
+[契约](../specs/2026-10-12-subtitle-embedded-vobsub.md)。
+
+API 注释同时补齐 discoverEmbeddedSubtitles 的 VobSub 范围，以及 create 的 managed
+网络、Matroska/WebM/MP4 和位图含义，删除已过时的“本地 Matroska 文本”注释。
+
+基线01e6582；入口RED0/1 unsupported。首次实现回归87通过/1失败为测试错选白色像素，
+按原始RLE/alpha布局改断言为发生透明度变化的红色像素；扩展测试的 companionSource
+参数拼写错误修正后，新增69/69通过（46parser/6file与预算/11真实HTTP/6session与Flutter）。
+独立FFmpeg8.0.1封装自有IDX/SUB：raw46byte SPU，PTS1s，alpha1.512s，stop2.024s，
+CodecPrivate不含IDX轨道/时间行。测试验证实际容器字节与像素，无新依赖或原生变更。
+
+隔离副本删除剩余RGBA额度传递时，外挂先加载/两条内嵌测试均失败（错误接受超预算），
+恢复精确候选后才执行完整验证。初始分析1unused import警告及5格式提示已修正。
+受控HTTP覆盖Range/ETag/If-Match/重试/跨域凭据剥离/超时/原子失败；公开会话Flutter验证
+4x3对象映射到8x6像素区、透明度更新、首帧门禁、文本切换、正负offset、seek/off清理、
+图片释放与换源/stop/dispose/外挂替换取消迟到请求。
+
+证据：[manifest](evidence/2026-10-12-subtitle-embedded-vobsub/manifest.json)。
+高级DVD效果/菜单、所有合法VobSub、其他容器bitmap、设备/HDR/protected/外接显示、
+manifest/live/跨Period及PD03/整个P02仍开放；本次不声称原生设备认证，长播放/弱网ABR未改。
+
+最终隔离四包 **1594/1594、0失败、exit0**（135接口/1264播放器/113Apple/82Android），
+静态分析 **No issues found、exit0**。12份候选源/测试/夹具与已测副本一致；十项native/
+构建制品重新核验SHA256不变。一次独立复审Critical0/Important0/新增Minor0，无修复或
+重复复审；全部十项范围裁定与旧WVTT Minor延续见
+[review.md](evidence/2026-10-12-subtitle-embedded-vobsub/review.md)。
+冻结源/引用依赖/文档/证据后使用独立index限定提交范围；总览与CHANGELOG只带本项段落。

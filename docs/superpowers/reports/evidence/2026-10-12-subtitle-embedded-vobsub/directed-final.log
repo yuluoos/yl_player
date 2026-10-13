@@ -1,0 +1,74 @@
+00:00 +0: loading /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_test.dart
+00:00 +0: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_test.dart: actual Matroska VobSub discovers, selects, animates and clears
+00:00 +1: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_test.dart: independent FFmpeg remux keeps raw SPU timing and header without IDX rows
+00:00 +2: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_test.dart: malformed SPU cannot replace a selected valid catalog
+00:00 +3: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_test.dart: 64MiB expanded VobSub catalog embedded-first rejects before publication
+00:00 +4: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_test.dart: 64MiB expanded VobSub catalog external-first rejects before publication
+00:00 +5: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_test.dart: 64MiB expanded VobSub catalog two-embedded rejects before publication
+00:00 +6: loading /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart
+00:01 +6: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: private header without v7 comment and legacy IDX metadata uses container time
+00:01 +7: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: scale and CodecDelay preserve microseconds with explicit clipping
+00:01 +8: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: duration absent simple=true uses SPU stop and track default caps it
+00:01 +9: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: duration absent simple=false uses SPU stop and track default caps it
+00:01 +10: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: SPU start delay and forced bit survive container timing
+00:01 +11: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: next packet caps preceding SPU and explicit longer duration
+00:01 +12: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: equal timestamps replace previous packet
+00:01 +13: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: no stop or duration ends at horizon without 32bit clock conversion
+00:01 +14: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: container cap before delayed start yields empty track
+00:01 +15: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: empty track retains valid palette and encoded header budget
+00:01 +16: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: raw packet immutable and diagnostics redact payload
+00:01 +17: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: malformed header missing size
+00:01 +18: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: malformed header missing palette
+00:01 +19: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: malformed header duplicate size
+00:01 +20: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: malformed header bad colors
+00:01 +21: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: malformed header control
+00:01 +22: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: unsupported header scale: 50%, 100%
+00:01 +23: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: unsupported header delay: +00:00:01:000
+00:01 +24: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: unsupported header fadein/out: 50, 50
+00:01 +25: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: unsupported header forced subs: ON
+00:01 +26: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: unsupported header unknown: 1
+00:01 +27: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: raw SPU truncated rejected
+00:01 +28: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: raw SPU multiple rejected
+00:01 +29: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: raw SPU PS rejected
+00:01 +30: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: raw SPU broken RLE rejected
+00:01 +31: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: advanced DVD command rejects explicitly
+00:01 +32: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: invalid packet time -0:00:00.000001/null
+00:01 +33: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: invalid packet time 0:00:01.000000/0:00:01.000000
+00:01 +34: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: invalid packet time 0:00:01.000000/168:00:00.000001
+00:01 +35: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: invalid packet time 168:00:00.000000/null
+00:01 +36: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: decreasing timestamps reject before decoding
+00:01 +37: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: expanded bitmap budget enforced before RGBA allocation
+00:01 +38: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: input budget includes CodecPrivate
+00:01 +39: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: header size bound applies even for empty track
+00:01 +40: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: packet count bounded before decoding
+00:01 +41: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: container rejects webm
+00:01 +42: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: container rejects compressed
+00:01 +43: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: container rejects additions
+00:01 +44: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: container rejects laced
+00:01 +45: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: container rejects missing-private
+00:01 +46: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: container rejects empty-private
+00:01 +47: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: container rejects zero-duration
+00:01 +48: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: large SPU rejects before payload read
+00:01 +49: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: VobSub metadata and text retain independent UID identity
+00:01 +50: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: global text and VobSub packet cap enforced across tracks
+00:02 +51: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_parser_test.dart: global encoded budget charged across VobSub tracks
+00:02 +52: loading /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_network_test.dart
+00:03 +52: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:03 +53: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_network_test.dart: network YlMediaFormat.matroska sniffs content, skips media, sends conditional range and renders
+00:03 +54: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_network_test.dart: legal chunked206 Matroska VobSub discovery completes without Content-Length
+00:03 +55: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_network_test.dart: managed retries later range with credential and shared scan ledger
+00:04 +56: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_network_test.dart: cross-origin redirect strips credentials before Matroska VobSub range scan
+00:04 +57: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_network_test.dart: etag response keeps prior selected Matroska VobSub catalog
+00:04 +58: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_network_test.dart: 200 response keeps prior selected Matroska VobSub catalog
+00:04 +59: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_network_test.dart: 403 response keeps prior selected Matroska VobSub catalog
+00:04 +60: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_network_test.dart: malformed response keeps prior selected Matroska VobSub catalog
+00:05 +61: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_network_test.dart: managed response-header timeout terminates Matroska VobSub discovery
+00:05 +62: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_network_test.dart: explicit non-Matroska VobSub format rejects before HTTP request
+00:05 +63: loading /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_session_test.dart
+00:05 +63: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_session_test.dart: VobSub public session renders pixel geometry, recolors and clears lifecycle
+00:06 +64: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_session_test.dart: network failure leaves playback and selected subtitle state unchanged
+00:06 +65: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_session_test.dart: held range is cancelled by replace and cannot publish late
+00:06 +66: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_session_test.dart: held range is cancelled by stop and cannot publish late
+00:06 +67: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_session_test.dart: held range is cancelled by dispose and cannot publish late
+00:06 +68: /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_session_test.dart: held range is cancelled by external and cannot publish late
+00:06 +69: All tests passed!

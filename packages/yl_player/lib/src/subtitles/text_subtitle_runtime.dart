@@ -191,6 +191,12 @@ final class TextSubtitleRuntime {
                   entry.pgsPackets,
                   limits: limits,
                 )
+              : entry.track.format == YlSubtitleFormat.vobsub
+              ? SubtitleDocument.fromEmbeddedVobSub(
+                  entry.vobSubPackets,
+                  codecPrivate: entry.codecPrivate!,
+                  limits: limits,
+                )
               : SubtitleDocument.fromEmbeddedPackets(
                   entry.packets,
                   format: switch (entry.track.format) {

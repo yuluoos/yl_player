@@ -1,0 +1,63 @@
+{
+    "packets": [
+        {
+            "codec_type": "subtitle",
+            "stream_index": 0,
+            "pts": 1000,
+            "pts_time": "1.000000",
+            "dts": 1000,
+            "dts_time": "1.000000",
+            "size": "46",
+            "pos": "621",
+            "flags": "K__",
+            "data": "\n00000000: 002e 0008 9a00 0311 0000 0020 0332 1004  ........... .2..\n00000010: f8f0 0501 4017 01e0 2006 0004 0007 01ff  ....@... .......\n00000020: 002d 0028 04f0 f0ff 005a 0028 02ff       .-.(.....Z.(..\n"
+        }
+    ],
+    "streams": [
+        {
+            "index": 0,
+            "codec_name": "dvd_subtitle",
+            "codec_long_name": "DVD subtitles",
+            "codec_type": "subtitle",
+            "codec_tag_string": "[0][0][0][0]",
+            "codec_tag": "0x0000",
+            "width": 100,
+            "height": 100,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/1000",
+            "start_pts": 1000,
+            "start_time": "1.000000",
+            "duration_ts": 1000,
+            "duration": "1.000000",
+            "nb_read_packets": "1",
+            "extradata": "\n00000000: 7369 7a65 3a20 3130 3078 3130 300a 7061  size: 100x100.pa\n00000010: 6c65 7474 653a 2030 3030 3030 302c 2066  lette: 000000, f\n00000020: 6666 6666 662c 2066 6630 3030 302c 2030  fffff, ff0000, 0\n00000030: 3066 6630 302c 2030 3030 3030 302c 2030  0ff00, 000000, 0\n00000040: 3030 3030 302c 2030 3030 3030 302c 2030  00000, 000000, 0\n00000050: 3030 3030 302c 2030 3030 3030 302c 2030  00000, 000000, 0\n00000060: 3030 3030 302c 2030 3030 3030 302c 2030  00000, 000000, 0\n00000070: 3030 3030 302c 2030 3030 3030 302c 2030  00000, 000000, 0\n00000080: 3030 3030 302c 2030 3030 3030 302c 2030  00000, 000000, 0\n00000090: 3030 3030 300a                           00000.\n",
+            "extradata_size": 150,
+            "disposition": {
+                "default": 1,
+                "dub": 0,
+                "original": 0,
+                "comment": 0,
+                "lyrics": 0,
+                "karaoke": 0,
+                "forced": 0,
+                "hearing_impaired": 0,
+                "visual_impaired": 0,
+                "clean_effects": 0,
+                "attached_pic": 0,
+                "timed_thumbnails": 0,
+                "non_diegetic": 0,
+                "captions": 0,
+                "descriptions": 0,
+                "metadata": 0,
+                "dependent": 0,
+                "still_image": 0,
+                "multilayer": 0
+            },
+            "tags": {
+                "language": "en",
+                "DURATION": "00:00:01.000000000"
+            }
+        }
+    ]
+}

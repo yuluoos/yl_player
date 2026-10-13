@@ -32,8 +32,10 @@ final class YlPlaybackSession {
     return _player._backend.selectAudioTrack(id, trackId);
   });
 
-  /// Discovers supported text and PGS tracks in the committed file or HTTP(S)
+  /// Discovers supported text, PGS and VobSub tracks in the committed file or HTTP(S)
   /// Matroska/WebM/MP4 source. Supported codecs depend on the container.
+  /// PGS and VobSub bitmap tracks are supported in Matroska only; embedded
+  /// VobSub uses CodecPrivate and raw SPU blocks, without external IDX/SUB files.
   /// Explicit Matroska/WebM format declarations must match the file DocType.
   /// Requires enableTextSubtitles. Discovery is atomic, preserves external
   /// entries and a still-present selection. New sessions start off.

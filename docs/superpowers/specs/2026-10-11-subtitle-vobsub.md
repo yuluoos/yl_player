@@ -65,3 +65,12 @@ Primary format references consulted 2026-10-11 (no source/assets vendored):
 Existing FFmpeg9.0.1 distribution hashes are rechecked against the PGS audit.
 Original Dart/Flutter implementation adds no codec/library/license payload and
 does not claim native DVD subtitle capability from upstream FFmpeg support.
+
+
+## 2026-10-12 Matroska VobSub 扩展
+
+此前未覆盖的 Matroska `S_VOBSUB` 已接入本地文件和 managed HTTP(S) 发现、选择与位图渲染。
+CodecPrivate 全局设置及原始 SPU 使用容器时间，不请求 IDX/SUB 旁路文件；复用既有 DVD
+控制/RLE/透明度解码与共享位图预算。本文原先内嵌 VobSub 的排除项由
+[内嵌 VobSub 契约](2026-10-12-subtitle-embedded-vobsub.md)限定替代；高级效果、设备、
+清单/直播和其他容器仍不在此范围。

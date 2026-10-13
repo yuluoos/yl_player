@@ -218,7 +218,7 @@ existing native capability/SPI gates continue to apply.
 
 ### Matroska, WebM and MP4 embedded subtitles
 
-With the same `enableTextSubtitles: true` controller, discover text tracks from
+With the same `enableTextSubtitles: true` controller, discover supported text and bitmap tracks from
 its committed file or HTTP(S) Matroska/WebM/MP4 source, then select a returned identity:
 
 ```dart
@@ -228,7 +228,7 @@ final tracks = player.state.subtitles.tracks.where((t) => !t.isExternal);
 if (tracks.isNotEmpty) await session.selectSubtitleTrack(tracks.first.id);
 ```
 
-`YlPlayerView` renders Matroska UTF8/SRT, ASS/SSA, WebVTT and PGS, and non-fragmented MP4
+`YlPlayerView` renders Matroska UTF8/SRT, ASS/SSA, WebVTT, PGS and VobSub, and non-fragmented MP4
 `tx3g` (mov_text), `wvtt` (WebVTT) and `stpp` (TTML) tracks using media time.
 Fragmented MP4 also supports `tx3g`/`wvtt`/`stpp` when initialization and fragments
 are in the same complete file or stable HTTP resource.
@@ -244,7 +244,7 @@ deadlines, retry/redirect budgets and credential origin restrictions apply to th
 whole discovery. Later ranges use If-Match; changed versions fail atomically.
 The scan uses a bounded cache and request/byte budgets, with no full-body fallback.
 
-Separate initialization/media segment URLs, HLS/DASH, embedded VobSub and native subtitle callbacks remain
+Separate initialization/media segment URLs, HLS/DASH and native subtitle callbacks remain
 unsupported. No additional native subtitle capability or physical-device
 acceptance is claimed. See the [embedded subset contract](../../docs/superpowers/specs/2026-10-11-subtitle-embedded.md)
 the [network range contract](../../docs/superpowers/specs/2026-10-11-subtitle-network-matroska.md)
@@ -305,3 +305,11 @@ Matroska `S_HDMV/PGS` bitmap tracks also use `discoverEmbeddedSubtitles()` and
 and optional duration caps; palette updates and clear displays reuse the PGS
 overlay. Embedded and external tracks share the 4MiB encoded / 64MiB RGBA catalog
 budgets. See the [PGS container contract](../../docs/superpowers/specs/2026-10-12-subtitle-embedded-pgs.md).
+
+
+Matroska `S_VOBSUB` bitmap tracks use the same discovery/selection API. The
+container carries global IDX size/palette settings and raw DVD SPU blocks, so no
+external IDX/SUB pair is needed. Container time and duration caps constrain SPU
+start/stop and alpha updates. Existing two-field RLE rendering, managed ranges,
+atomic catalogs and shared encoded/RGBA budgets apply. See the
+[VobSub container contract](../../docs/superpowers/specs/2026-10-12-subtitle-embedded-vobsub.md).

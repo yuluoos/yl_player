@@ -1,0 +1,10 @@
+Analyzing lib, test, lib, test...
+
+warning - packages/yl_player/test/embedded_vobsub_parser_test.dart:3:8 - Unused import: 'package:yl_player/yl_player.dart'. Try removing the import directive. - unused_import
+   info - packages/yl_player/lib/src/subtitles/matroska_subtitles.dart:256:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/test/embedded_vobsub_parser_test.dart:41:11 - Use interpolation to compose strings and values. Try using string interpolation to build the composite string. - prefer_interpolation_to_compose_strings
+   info - packages/yl_player/test/embedded_vobsub_parser_test.dart:150:23 - Use interpolation to compose strings and values. Try using string interpolation to build the composite string. - prefer_interpolation_to_compose_strings
+   info - packages/yl_player/test/embedded_vobsub_parser_test.dart:152:16 - Use interpolation to compose strings and values. Try using string interpolation to build the composite string. - prefer_interpolation_to_compose_strings
+   info - packages/yl_player/test/embedded_vobsub_parser_test.dart:172:39 - Use interpolation to compose strings and values. Try using string interpolation to build the composite string. - prefer_interpolation_to_compose_strings
+
+6 issues found.

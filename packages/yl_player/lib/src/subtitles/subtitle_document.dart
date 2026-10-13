@@ -129,12 +129,24 @@ final class SubtitleDocument {
     SubtitleLimits limits = const SubtitleLimits(),
   }) => _embeddedDocument(packets, format, codecPrivate, limits, sourceBytes);
 
+  /// Raw Matroska PGS segments with container timestamps and optional end caps.
   static SubtitleDocument fromEmbeddedPgs(
     List<EmbeddedPgsPacket> packets, {
     SubtitleLimits limits = const SubtitleLimits(),
   }) {
     limits._validate();
     return _PgsParser(limits).parseEmbedded(packets);
+  }
+
+  /// Matroska VobSub uses global IDX settings and complete raw DVD SPU blocks.
+  /// Container time is the base for SPU control delays; no paired resource is read.
+  static SubtitleDocument fromEmbeddedVobSub(
+    List<EmbeddedVobSubPacket> packets, {
+    required String codecPrivate,
+    SubtitleLimits limits = const SubtitleLimits(),
+  }) {
+    limits._validate();
+    return _parseEmbeddedVobSub(packets, codecPrivate, limits);
   }
 
   /// MP4 TTML document timing is absolute on the track composition timeline.

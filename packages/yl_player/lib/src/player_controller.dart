@@ -11,11 +11,18 @@ final class YlPlayerController implements Listenable {
     : _state = _backend.state,
       _backendRevision = _backend.state.revision,
       _texture = ValueNotifier(_backend.textureId.value);
+
+  /// Creates a player with one subtitle owner.
+  ///
+  /// [enableTextSubtitles] enables the Dart text/bitmap runtime for external
+  /// resources and supported embedded tracks in file or managed HTTP(S)
+  /// Matroska/WebM/MP4 sources. PGS/VobSub embedded tracks require Matroska.
+  /// Discover them through [YlPlaybackSession.discoverEmbeddedSubtitles].
+  /// The historical option name includes bitmap subtitles; the default uses
+  /// the native subtitle SPI and cannot be combined with a second owner.
   static Future<YlPlayerController> create({
     YlPlayerOptions options = const YlPlayerOptions(),
     YlPlayerPlatform? platform,
-    // Own external text/bitmap and local Matroska text subtitles in Dart.
-    // Native subtitle SPI remains the default; only one owner is allowed.
     bool enableTextSubtitles = false,
   }) async {
     validateYlPlayerOptions(options);

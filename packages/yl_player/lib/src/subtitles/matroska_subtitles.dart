@@ -181,6 +181,7 @@ final class MatroskaSubtitles {
             List.unmodifiable(t.packets),
             sourceBytes: t.sourceBytes,
             pgsPackets: List.unmodifiable(t.pgsPackets),
+            vobSubPackets: List.unmodifiable(t.vobSubPackets),
           ),
       ];
     }
@@ -217,6 +218,7 @@ final class MatroskaSubtitles {
       'S_TEXT/ASS' => YlSubtitleFormat.ass,
       'S_TEXT/SSA' => YlSubtitleFormat.ssa,
       'S_HDMV/PGS' => YlSubtitleFormat.pgs,
+      'S_VOBSUB' => YlSubtitleFormat.vobsub,
       'S_TEXT/WEBVTT' ||
       'D_WEBVTT/SUBTITLES' ||
       'D_WEBVTT/CAPTIONS' => YlSubtitleFormat.webvtt,
@@ -248,6 +250,10 @@ final class MatroskaSubtitles {
     if ((format == YlSubtitleFormat.srt || format == YlSubtitleFormat.pgs) &&
         (private?.isNotEmpty ?? false)) {
       _unsupported();
+    }
+    if (format == YlSubtitleFormat.vobsub &&
+        (private == null || private.isEmpty)) {
+      _bad();
     }
     if (format == YlSubtitleFormat.webvtt) {
       if (codec == 'S_TEXT/WEBVTT') {
@@ -338,22 +344,24 @@ final class MatroskaSubtitles {
     if (ticks < 0 || ticks > 604800000000000 ~/ _scale) _bad();
     final startNs = ticks * _scale - t.delay;
     final pgs = t.track.format == YlSubtitleFormat.pgs;
+    final vobSub = t.track.format == YlSubtitleFormat.vobsub;
+    final bitmap = pgs || vobSub;
     if (startNs < 0) _bad();
     final durationNs = duration == null
         ? t.defaultDuration
         : duration <= 604800000000000 ~/ _scale
         ? duration * _scale
         : null;
-    if (durationNs == null && (!pgs || duration != null)) _unsupported();
-    if (pgs) {
+    if (durationNs == null && (!bitmap || duration != null)) _unsupported();
+    if (bitmap) {
       if (durationNs != null &&
           (durationNs <= 0 || startNs + durationNs > 604800000000000)) {
         _bad();
       }
       final size = e.size - width - 3;
       _payloadBytes += size;
-      if (++_pgsPacketCount > 50000 ||
-          size > 256 * 1024 ||
+      if ((pgs ? ++_pgsPacketCount > 50000 : ++_packetCount > 10000) ||
+          size > (pgs ? 256 * 1024 : 65535) ||
           _payloadBytes > 4 * 1024 * 1024) {
         _limit();
       }
@@ -363,13 +371,12 @@ final class MatroskaSubtitles {
           ? null
           : Duration(microseconds: (startNs + durationNs) ~/ 1000);
       if (end != null && end <= start) _unsupported();
-      t.pgsPackets.add(
-        EmbeddedPgsPacket(
-          start,
-          await _bytes(e.start + width + 3, size),
-          end: end,
-        ),
-      );
+      final bytes = await _bytes(e.start + width + 3, size);
+      if (pgs) {
+        t.pgsPackets.add(EmbeddedPgsPacket(start, bytes, end: end));
+      } else {
+        t.vobSubPackets.add(EmbeddedVobSubPacket(start, bytes, end: end));
+      }
       return;
     }
     if (durationNs == null) _unsupported();
@@ -451,6 +458,7 @@ final class _Track {
   final int delay;
   final packets = <EmbeddedSubtitlePacket>[];
   final pgsPackets = <EmbeddedPgsPacket>[];
+  final vobSubPackets = <EmbeddedVobSubPacket>[];
 }
 
 final class EmbeddedSubtitleData {
@@ -460,8 +468,10 @@ final class EmbeddedSubtitleData {
     this.packets, {
     this.sourceBytes = 0,
     this.pgsPackets = const [],
+    this.vobSubPackets = const [],
   });
   final List<EmbeddedPgsPacket> pgsPackets;
+  final List<EmbeddedVobSubPacket> vobSubPackets;
   final YlSubtitleTrack track;
   final String? codecPrivate;
   final List<EmbeddedSubtitlePacket> packets;

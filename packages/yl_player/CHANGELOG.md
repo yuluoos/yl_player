@@ -1,5 +1,9 @@
 ## 0.2.0-dev.2
 
+- Add file and managed HTTP Matroska embedded VobSub discovery, selection and
+  bitmap rendering from CodecPrivate/raw SPU, preserving container timing,
+  DVD control/alpha updates and shared bitmap budgets. Complete controller and
+  discovery API comments for supported network containers and bitmap subtitles.
 - Add Matroska embedded PGS bitmap discovery and rendering for files and managed
   HTTP, preserving container timing, duration caps and shared bitmap budgets.
   Clarify WebM and per-container text/PGS support in the discovery API docs.

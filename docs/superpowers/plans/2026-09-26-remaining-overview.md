@@ -536,3 +536,13 @@ automatic按内容识别，显式WebM/Matroska声明严格匹配DocType；非字
 49新增用例、独立FFmpeg封装与像素/生命周期证据见[报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)
 及[契约](../specs/2026-10-12-subtitle-embedded-pgs.md)。内嵌VobSub/高级效果/实机与整个P02
 仍开放，长播放和弱网ABR未涉及。
+
+
+### 2026-10-12 P02 Matroska 内嵌 VobSub
+
+完成本地/managed HTTP S_VOBSUB 轨道发现、TrackUID选择和位图渲染，复用现有DVD SPU
+控制/RLE/透明度和共享预算。容器时钟取代IDX时间，支持明确duration及下一包裁剪。
+create/discovery API注释同步补齐容器、网络及位图范围。69新增用例及独立FFmpeg样本见
+[报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)和
+[契约](../specs/2026-10-12-subtitle-embedded-vobsub.md)。高级效果/设备/直播与整个P02仍开放；
+长播放和弱网ABR未改动。

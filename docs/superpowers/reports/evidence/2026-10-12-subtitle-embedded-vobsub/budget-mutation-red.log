@@ -1,0 +1,32 @@
+00:00 +0: loading /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_test.dart
+00:00 +0: 64MiB expanded VobSub catalog external-first rejects before publication
+00:00 +0 -1: 64MiB expanded VobSub catalog external-first rejects before publication [E]
+  Expected: throws <Instance of 'YlPlayerException'> with `code`: 'subtitle.too_large'
+    Actual: <Instance of 'Future<Null>'>
+     Which: emitted <null>
+  
+  package:matcher                                           expectLater
+  package:flutter_test/src/widget_tester.dart 507:8         expectLater
+  packages/yl_player/test/embedded_vobsub_test.dart 191:15  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                _CustomZone.registerUnaryCallback
+  packages/yl_player/test/embedded_vobsub_test.dart 118:21  main.<fn>
+  
+00:00 +0 -1: 64MiB expanded VobSub catalog two-embedded rejects before publication
+00:00 +0 -2: 64MiB expanded VobSub catalog two-embedded rejects before publication [E]
+  Expected: throws <Instance of 'YlPlayerException'> with `code`: 'subtitle.too_large'
+    Actual: <Instance of 'Future<Null>'>
+     Which: emitted <null>
+  
+  package:matcher                                           expectLater
+  package:flutter_test/src/widget_tester.dart 507:8         expectLater
+  packages/yl_player/test/embedded_vobsub_test.dart 191:15  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                _CustomZone.registerUnaryCallback
+  packages/yl_player/test/embedded_vobsub_test.dart 118:21  main.<fn>
+  
+00:00 +0 -2: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_test.dart: 64MiB expanded VobSub catalog external-first rejects before publication
+  /private/tmp/yl-evob-validation-qbb9dzds/packages/yl_player/test/embedded_vobsub_test.dart: 64MiB expanded VobSub catalog two-embedded rejects before publication
