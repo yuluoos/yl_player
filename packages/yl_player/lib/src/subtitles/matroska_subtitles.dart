@@ -243,11 +243,20 @@ final class MatroskaSubtitles {
         ? null
         : await _compression(f[0x6d80]!);
     String? private;
+    var privateBytes = 0, compressedPrivateBytes = 0;
+    final restorePrivate = compression != null && compression.scope & 2 != 0;
+    if (restorePrivate && f[0x63a2] == null) _bad();
     if (f[0x63a2] case final p?) {
       _payloadBytes += p.size;
       if (p.size > 256 * 1024 || _payloadBytes > 4 * 1024 * 1024) _limit();
+      var bytes = await _bytes(p.start, p.size);
+      if (restorePrivate) {
+        compressedPrivateBytes = p.size;
+        bytes = _restore(bytes, compression, 256 * 1024);
+      }
+      privateBytes = bytes.length;
       try {
-        private = utf8.decode(await _bytes(p.start, p.size));
+        private = utf8.decode(bytes);
       } on FormatException {
         _bad();
       }
@@ -283,11 +292,10 @@ final class MatroskaSubtitles {
       f[0x23e383] == null ? null : await _uint(f[0x23e383]!),
       f[0x56aa] == null ? 0 : await _uint(f[0x56aa]!),
       compression: compression,
-      compressionBytes: compression?.header.length ?? 0,
+      compressionBytes:
+          (compression?.header.length ?? 0) + compressedPrivateBytes,
       webVttInBlock: codec.startsWith('D_WEBVTT/'),
-      sourceBytes: format == YlSubtitleFormat.webvtt
-          ? (f[0x63a2]?.size ?? 0)
-          : 0,
+      sourceBytes: format == YlSubtitleFormat.webvtt ? privateBytes : 0,
     );
   }
 
@@ -301,8 +309,9 @@ final class MatroskaSubtitles {
     if (f.keys.any((id) => ![0x5031, 0x5032, 0x5033, 0x5034].contains(id))) {
       _unsupported();
     }
+    final scope = f[0x5032] == null ? 1 : await _uint(f[0x5032]!);
     if ((f[0x5031] != null && await _uint(f[0x5031]!) != 0) ||
-        (f[0x5032] != null && await _uint(f[0x5032]!) != 1) ||
+        ![1, 2, 3].contains(scope) ||
         (f[0x5033] != null && await _uint(f[0x5033]!) != 0)) {
       _unsupported();
     }
@@ -321,6 +330,7 @@ final class MatroskaSubtitles {
     if (size > 256 * 1024 || _payloadBytes > 4 * 1024 * 1024) _limit();
     return _Compression(
       algorithm,
+      scope,
       settings == null ? const [] : await _bytes(settings.start, size),
     );
   }
@@ -332,7 +342,7 @@ final class MatroskaSubtitles {
     int limit,
   ) async {
     final size = e.size - offset;
-    final compression = t.compression;
+    final compression = t.compression?.scope == 2 ? null : t.compression;
     _payloadBytes += size;
     if (size > (compression == null ? limit : 256 * 1024) ||
         _payloadBytes > 4 * 1024 * 1024) {
@@ -341,6 +351,11 @@ final class MatroskaSubtitles {
     final bytes = await _bytes(e.start + offset, size);
     if (compression == null) return bytes;
     t.compressionBytes += size;
+    return _restore(bytes, compression, limit);
+  }
+
+  /// Stored bytes/settings were charged by the caller; charge restoration once.
+  List<int> _restore(List<int> bytes, _Compression compression, int limit) {
     final left = (4 * 1024 * 1024 - _payloadBytes).clamp(0, limit);
     final List<int> decoded;
     if (compression.algorithm == 0) {
@@ -535,7 +550,8 @@ final class EmbeddedSubtitleData {
     this.compressionBytes = 0,
   });
 
-  /// Stored block bytes/settings charged in addition to reconstructed content.
+  /// Stored compressed block/private bytes and settings charged in addition
+  /// to reconstructed content, including empty tracks.
   final int compressionBytes;
   final List<EmbeddedPgsPacket> pgsPackets;
   final List<EmbeddedVobSubPacket> vobSubPackets;
@@ -548,7 +564,7 @@ final class EmbeddedSubtitleData {
 }
 
 final class _Compression {
-  const _Compression(this.algorithm, this.header);
-  final int algorithm;
+  const _Compression(this.algorithm, this.scope, this.header);
+  final int algorithm, scope;
   final List<int> header;
 }

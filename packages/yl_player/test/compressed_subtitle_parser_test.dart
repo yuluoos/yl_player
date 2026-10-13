@@ -141,8 +141,8 @@ void main() {
   for (final entry in <String, List<int>>{
     'algorithm': compressionEncoding(algo: 1),
     'scope0': compressionEncoding(scope: 0),
-    'scope2': compressionEncoding(scope: 2),
-    'scope3': compressionEncoding(scope: 3),
+    'scope5': compressionEncoding(scope: 5),
+    'scope8': compressionEncoding(scope: 8),
     'scope4': compressionEncoding(scope: 4),
     'type': compressionEncoding(type: 1),
     'order': compressionEncoding(order: 1),

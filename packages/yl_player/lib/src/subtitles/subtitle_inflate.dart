@@ -6,7 +6,7 @@ Never _bad() =>
 Never _limit() =>
     throw const SubtitleParseException(SubtitleParseReason.limitExceeded);
 
-/// Strict single RFC1950 stream for a bounded Matroska subtitle block.
+/// Strict single RFC1950 stream for a Matroska subtitle block or CodecPrivate.
 /// No preset dictionaries, gzip, concatenated streams or trailing bytes.
 /// Checks every literal/copy before growing output; never inflates then truncates.
 Uint8List inflateSubtitle(List<int> bytes, int maxOutput) {

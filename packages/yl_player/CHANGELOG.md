@@ -1,5 +1,8 @@
 ## 0.2.0-dev.2
 
+- Restore compressed Matroska CodecPrivate for private-only or combined
+  block/private scope before codec validation. Preserve stored/restored header
+  budgets across empty tracks and catalog updates, and clarify the API scope.
 - Restore Matroska subtitle blocks with single block-only zlib or header
   stripping before existing text/bitmap decoding. Enforce strict zlib framing,
   output limits and persisted stored/restored byte budgets; document supported

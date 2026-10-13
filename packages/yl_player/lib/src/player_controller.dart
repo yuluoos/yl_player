@@ -17,7 +17,8 @@ final class YlPlayerController implements Listenable {
   /// [enableTextSubtitles] enables the Dart text/bitmap runtime for external
   /// resources and supported embedded tracks in file or managed HTTP(S)
   /// Matroska/WebM/MP4 sources. PGS/VobSub embedded tracks require Matroska.
-  /// Supported Matroska tracks include bounded block-only zlib/header stripping.
+  /// Supported Matroska tracks include bounded zlib/header stripping of blocks,
+  /// CodecPrivate or both, using one content encoding per track.
   /// Discover them through [YlPlaybackSession.discoverEmbeddedSubtitles].
   /// The historical option name includes bitmap subtitles; the default uses
   /// the native subtitle SPI and cannot be combined with a second owner.

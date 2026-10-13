@@ -555,3 +555,13 @@ create/discovery API注释同步补齐容器、网络及位图范围。69新增�
 create/discover API注释同步，验证见[报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)
 和[契约](../specs/2026-10-12-subtitle-compression.md)。多层/私有头/WebM压缩、高级效果、
 设备与整个P02仍开放；长播放和弱网ABR未改。
+
+
+### 2026-10-12 P02 Matroska 私有头压缩
+
+补齐CodecPrivate-only和Block+CodecPrivate压缩恢复，保留单层zlib/header stripping边界。
+在UTF8/codec校验前恢复私有头，原始与恢复字节共同计量，空轨和外挂替换也保留额度。
+API注释同步；67项新增测试、独立Python压缩金标及managedHTTP/Flutter证据见
+[报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)与
+[契约](../specs/2026-10-12-subtitle-private-compression.md)。链式/Next/WebM压缩、设备和
+整个P02仍开放；长播放与弱网ABR未改。

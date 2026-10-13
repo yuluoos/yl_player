@@ -607,6 +607,7 @@ current native adapters still do not advertise a native subtitle SPI.
 | Local / managed HTTP(S) Matroska embedded PGS | TrackUID discovery/selection, raw binary segments, container timing/duration, existing palette/RLE overlay and shared encoded/RGBA budgets; owned plus independent FFmpeg fixture, HTTP and pixel/lifecycle tests; no native/device claim |
 | Local / managed HTTP(S) Matroska embedded VobSub | TrackUID discovery/selection, IDX global CodecPrivate, raw SPU with container timing/caps, shared DVD RLE/alpha overlay and encoded/RGBA budgets; independent FFmpeg fixture, actual HTTP and Flutter pixel/lifecycle tests; no native/device claim |
 | Matroska subtitle block compression | Single block-only zlib/header stripping before supported text/PGS/VobSub decode; strict framing, bounded restoration and persisted stored-byte budgets; Python zlib golden streams, file/managed HTTP and widget tests; no native/device claim |
+| Matroska subtitle CodecPrivate compression | Single zlib/header stripping for Private or Block+Private scope, before UTF8 and existing ASS/SSA/WebVTT/VobSub header parsing; stored/restored header limits and retained empty-track/catalog budgets; owned Python compression goldens, file/managed HTTP and widget tests |
 | Other embedded containers/codecs, advanced TTML/ASS/SSA/PGS/VobSub and advanced WebVTT | Not implemented by this runtime |
 | Protected output, HDR brightness and physical-device subtitle sync | Not accepted; protected surfaces reject subtitle commands |
 

@@ -1,0 +1,73 @@
+00:00 +0: loading /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/private_subtitle_test.dart
+00:00 +0: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/private_subtitle_test.dart: actual file private compression scope 2 discovers and renders
+00:00 +1: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/private_subtitle_test.dart: actual file private compression scope 3 discovers and renders
+00:00 +2: loading /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart
+00:00 +2: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 0 restores S_TEXT/UTF8 before existing decoder
+00:00 +3: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 0 restores S_TEXT/ASS before existing decoder
+00:00 +4: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 0 restores S_TEXT/SSA before existing decoder
+00:00 +5: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 0 restores S_TEXT/WEBVTT before existing decoder
+00:00 +6: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 0 restores D_WEBVTT/SUBTITLES before existing decoder
+00:00 +7: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 0 restores S_HDMV/PGS before existing decoder
+00:00 +8: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 0 restores S_VOBSUB before existing decoder
+00:00 +9: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 3 restores S_TEXT/UTF8 before existing decoder
+00:00 +10: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 3 restores S_TEXT/ASS before existing decoder
+00:00 +11: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 3 restores S_TEXT/SSA before existing decoder
+00:00 +12: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 3 restores S_TEXT/WEBVTT before existing decoder
+00:00 +13: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 3 restores D_WEBVTT/SUBTITLES before existing decoder
+00:00 +14: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 3 restores S_HDMV/PGS before existing decoder
+00:00 +15: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 3 restores S_VOBSUB before existing decoder
+00:00 +16: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: default algorithm/scope/type/order mean zlib block
+00:00 +17: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: header-only block may have no stored payload
+00:00 +18: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: empty stripping header restores unchanged block
+00:00 +19: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding algorithm
+00:00 +20: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding scope0
+00:00 +21: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding scope5
+00:00 +22: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding scope8
+00:00 +23: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding scope4
+00:00 +24: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding type
+00:00 +25: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding order
+00:00 +26: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding zlib settings
+00:00 +27: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding encryption
+00:00 +28: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding chain
+00:00 +29: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: stripping requires settings
+00:00 +30: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: encoding requires compression element
+00:00 +31: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: WebM compression remains unsupported
+00:00 +32: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: non-subtitle compressed media does not allocate or decode
+00:00 +33: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: restored text per-block limit algorithm 0
+00:00 +34: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: restored text per-block limit algorithm 3
+00:00 +35: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: stored compressed block capped before payload read
+00:00 +36: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: restored bytes count globally even with tiny stored compressed payload
+00:00 +37: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: stored plus restored bytes share global budget
+00:00 +38: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/compressed_subtitle_parser_test.dart: cancelled demux cannot publish decoded packets
+00:00 +39: loading /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart
+00:01 +39: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: strict inflate agrees with SDK encoder level 0
+00:01 +40: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: strict inflate agrees with SDK encoder level 1
+00:01 +41: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: strict inflate agrees with SDK encoder level 6
+00:01 +42: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: strict inflate agrees with SDK encoder level 9
+00:01 +43: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: strict inflate accepts independent strategy 4
+00:01 +44: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: strict inflate accepts independent strategy 2
+00:01 +45: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: strict inflate accepts independent strategy 3
+00:01 +46: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: exact output ceiling succeeds and one byte less rejects
+00:01 +47: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: high-ratio bomb stopped before declared output bound
+00:01 +48: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: every truncated prefix of a valid stream rejects
+00:01 +49: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: checksum mismatch rejects
+00:01 +50: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: trailing bytes with copied valid checksum reject
+00:01 +51: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: concatenated identical streams reject
+00:01 +52: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: gzip is not Matroska zlib
+00:01 +53: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: invalid header checkbits reject
+00:01 +54: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: preset dictionary rejected explicitly
+00:01 +55: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: reserved DEFLATE block rejects
+00:01 +56: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: stored length complement rejects
+00:01 +57: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: empty dynamic Huffman alphabet rejects
+00:01 +58: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: missing end-of-block rejects
+00:01 +59: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: invalid output bound -1
+00:01 +60: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: invalid output bound 262145
+00:01 +61: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: Python zlib golden streams restore exact independent bytes
+00:01 +62: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: oversubscribed dynamic code-length alphabet rejects
+00:01 +63: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: repeat previous length before any length rejects
+00:01 +64: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: repeat zero lengths beyond declared alphabets rejects
+00:01 +65: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: fixed length cannot refer before beginning of output
+00:01 +66: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: reserved fixed literal code rejects
+00:01 +67: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: reserved fixed distance code rejects
+00:01 +68: /private/tmp/yl-private-validation-wbehmrdq/packages/yl_player/test/subtitle_inflate_test.dart: DEFLATE empty block storm is bounded independently of output
+00:01 +69: All tests passed!

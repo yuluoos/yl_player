@@ -786,3 +786,33 @@ HDR/DRM/外接、Period/PD03/整个P02仍开放；长播放/弱网ABR未改。
 八项范围裁定、独立压缩证据而非muxer证明和旧WVTT Minor延续见
 [review](evidence/2026-10-12-subtitle-compression/review.md)。冻结证据后用独立index
 限定范围commit，总览与CHANGELOG只纳入本项段落；无长播放/弱网ABR或push。
+
+
+## 2026-10-12 Matroska CodecPrivate 压缩
+
+扩展上一项单层ContentEncoding为Scope2（Private）和Scope3（Block+Private），原Scope1
+保持。zlib/header stripping分别独立恢复私有头/块，私有头先恢复再UTF8和既有codec校验；
+Scope2不改Block，BlockAdditional保持原样。要求Private scope有CodecPrivate元素，空存储
+元素可以由header stripping恢复；无私有头codec仍要求恢复内容为空。
+
+每个原始/恢复私有头≤256KiB，共享4MiB仍在恢复前传递剩余预算。压缩私有头字节加入
+compressionBytes，WebVTT sourceBytes使用恢复头长度，避免漏算或重复计压缩头。
+目录保留机制覆盖空轨、外挂替换和rediscovery；RGBA/managed请求/生命周期维持原行为。
+create/discover及解码辅助注释同步，严格inflater没有语义变更，无依赖或native变更。
+
+基线866afa0；入口RED0/2unsupported，首轮69/69含原block压缩/inflate回归。新增定向
+62/62后67/67（43parser/7file与预算/11HTTP/6session），格式化阶段发现新测试括号错误，
+在测试执行前修正。独立Python压缩WEBVTT头/体字节通过实际文件发现与渲染。
+隔离副本临时漏算compressedPrivateBytes时，保留目录/空轨两项预算用例均失败（错误接受），
+恢复精确候选后才执行最终验证。首次静态分析即无问题。
+
+[契约](../specs/2026-10-12-subtitle-private-compression.md)、
+[独立压缩金标](../../../packages/yl_player/test/fixtures/subtitle-private-owned.md)、
+[验证证据](evidence/2026-10-12-subtitle-private-compression/manifest.json)。
+不声称独立Matroska muxer、native/device/HDR/DRM/外接验收；Next/链式/WebM压缩、高级
+字幕、Period/PD03/整个P02仍开放。长播放/弱网ABR代码未改。
+
+最终隔离四包 **1750/1750**（interface135/player1420/Apple113/Android82）通过，
+最终analyzer无问题。一次独立复审Critical/Important/Minor均0；10项不判定范围已逐项
+裁定并记录，未扩大设备或互操作声明。11项候选与验证副本一致，10项原生/构建制品哈希
+保持。无复审后代码修正，新增67项测试；本项已完成，整个P02仍开放。

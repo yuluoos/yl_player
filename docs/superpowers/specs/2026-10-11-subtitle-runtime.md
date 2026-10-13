@@ -189,3 +189,12 @@ CodecPrivate 全局设置及原始 SPU 使用容器时间，不请求 IDX/SUB �
 header stripping，恢复后的Block复用已有字幕codec解码。压缩输入/settings和恢复内容共同
 计入预算，并跨目录更新保留。其他算法、私有头/链式编码、加密及WebM压缩仍拒绝；见
 [压缩字幕契约](2026-10-12-subtitle-compression.md)。
+
+
+## 2026-10-12 CodecPrivate 压缩扩展
+
+此前仅Block scope的限制扩展为Scope1/2/3：单层zlib/header stripping可以作用于CodecPrivate
+或同时作用于Block和CodecPrivate。私有头先恢复后UTF8/codec验证，原始与恢复字节共同
+计量并保留到目录；旧“私有头压缩不支持”由
+[私有头压缩契约](2026-10-12-subtitle-private-compression.md)限定替代。
+Next/链式/加密/WebM和其他未实现范围保持不变。
