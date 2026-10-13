@@ -816,3 +816,29 @@ create/discover及解码辅助注释同步，严格inflater没有语义变更，
 最终analyzer无问题。一次独立复审Critical/Important/Minor均0；10项不判定范围已逐项
 裁定并记录，未扩大设备或互操作声明。11项候选与验证副本一致，10项原生/构建制品哈希
 保持。无复审后代码修正，新增67项测试；本项已完成，整个P02仍开放。
+
+## 2026-10-12 MP4 WebVTT 结构预算
+
+补齐旧wvtt复审留下的内层box汇总计数Minor：配置、样本和cue子box在解析前计入
+Mp4Subtitles的200000共享额度。外层索引、所有轨道、样本描述和初始/后续分片不重置
+额度。共用局部walker的stpp配置box同时纳入；tx3g内部字段仍保留既有局部/字节限制。
+补充discover API注释，不改变codec、时钟、managed传输或渲染规则。
+
+新增22项测试（20parser、2实际文件/HTTP）：三个布局的超限、精确200000通过/
+200001失败、配置/外层联合计量、跨轨/分片/样本描述、混合TTML配置及失败后原选择/
+样式保留和后续恢复。空payl夹具避免先触发cue上限，期望计数由fixture结构手工计算；
+没有独立生产者或native/device验收声明。
+
+入口RED三个用例均错误接受超限文件。首次GREEN运行有一个编译接线遗漏：stpp同样
+调用局部walker，补入必需计数回调后，定向161/161通过，analyzer无问题。
+隔离基线从51b3aa9刷新到89cc246（仅另一边五项P05文档，代码相同）。
+最终验证和复审见[证据](evidence/2026-10-12-subtitle-structure-budget/manifest.json)。
+整个P02仍开放，长播放和弱网ABR代码未改。
+
+最终四包1772/1772（interface135/player1442/Apple113/Android82）通过，最终analyzer
+无问题。四包运行于根工作区；定向/变异/analyzer在隔离副本，冻结时核对所有四包已跟踪
+Dart lib/test文件与隔离副本一致。仅隔离副本撤去stpp配置计数时，该边界测试0通过1失败，
+候选恢复后才做最终验证。7候选一致，10原生/构建制品哈希不变。
+一次独立复审0Critical/0Important/1Minor，旧wvtt汇总计数Minor已关闭。新Minor待后续：
+platform-support.md末尾三列独立pipe行没有加入现有两列表格，信息可读但排版未完成；
+按既定单次复审流程记录，不进行非阻塞修正。9项不判定范围逐项记录于review.md。

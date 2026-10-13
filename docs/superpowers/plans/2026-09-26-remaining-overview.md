@@ -574,3 +574,10 @@ API注释同步；67项新增测试、独立Python压缩金标及managedHTTP/Flu
 相关85/85、全项目分析与独立复审通过。见[P05报告](../reports/2026-09-26-remaining-05-live-business.md)
 和[验证收据](../reports/evidence/2026-10-12-live-source-rename/verification.json)。
 未占用设备；直接CRUD（含预设导入）、跨实例/进程写入、真实播放与完整P05仍开放。
+
+### 2026-10-12 P02 MP4 字幕结构预算
+
+关闭wvtt内层box汇总计数的既有Minor；容器索引、WebVTT配置/样本/cue与TTML配置
+共享200000上限，跨轨/描述/初始样本/后续分片累计。补齐API注释，22项新边界/实际
+文件/managed HTTP用例，证据见[报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)。
+保持原失败原子性及正常渲染；整个P02和设备验收仍开放，长播放/弱网ABR未改。

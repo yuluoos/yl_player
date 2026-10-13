@@ -1,0 +1,167 @@
+00:00 +0: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart
+00:00 +0: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: ordinary rejects aggregate nested boxes above resource limit
+00:00 +1: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: fragmented rejects aggregate nested boxes above resource limit
+00:00 +2: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: hybrid rejects aggregate nested boxes above resource limit
+00:00 +3: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: ordinary admits exactly 200000 boxes without phantom cues
+00:00 +4: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: ordinary rejects the first box over the exact boundary
+00:00 +5: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: ordinary counts extra configuration children in shared allowance
+00:00 +6: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: ordinary shares outer container and sample box allowance
+00:01 +7: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: fragmented admits exactly 200000 boxes without phantom cues
+00:01 +8: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: fragmented rejects the first box over the exact boundary
+00:01 +9: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: fragmented counts extra configuration children in shared allowance
+00:01 +10: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: fragmented shares outer container and sample box allowance
+00:01 +11: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: hybrid admits exactly 200000 boxes without phantom cues
+00:01 +12: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: hybrid rejects the first box over the exact boundary
+00:02 +13: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: hybrid counts extra configuration children in shared allowance
+00:02 +14: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: hybrid shares outer container and sample box allowance
+00:02 +15: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: all tracks share nested box allowance
+00:02 +16: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: separate fragments share nested box allowance
+00:02 +17: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: changing sample descriptions does not reset nested box allowance
+00:02 +18: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: TTML configuration shares resource allowance (extra=false)
+00:02 +19: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: TTML configuration shares resource allowance (extra=true)
+00:03 +20: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_runtime_test.dart
+00:03 +20: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_runtime_test.dart: file overflow preserves selected cues and permits recovery
+00:03 +21: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_runtime_test.dart: managed HTTP overflow preserves selected cues and permits recovery
+00:04 +22: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart
+00:04 +22: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: literal hand-calculated vttc/payl bytes independent of box fixture
+00:04 +23: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: tx3g and wvtt tracks of same language keep independent IDs and formats
+00:04 +24: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: sample descriptions may change wvtt config with stable format
+00:04 +25: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: adjacent split cue samples do not overlap or deduplicate by identifier
+00:04 +26: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: container edit and ctts remain authoritative over ctim metadata
+00:04 +27: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: payload blank lines and timing arrows cannot inject extra cues
+00:04 +28: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: CRLF payload normalizes once while ID is metadata
+00:04 +29: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: empty payl and vtte produce no phantom cues
+00:04 +30: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: 64-bit sample-local boxes preserve payload
+00:04 +31: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: vttC BOM and comments, vlab and bitrate metadata accepted
+00:04 +32: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: supported setting align:start
+00:04 +33: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: supported setting align:center
+00:04 +34: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: supported setting align:end
+00:04 +35: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: supported setting align:left
+00:04 +36: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: supported setting align:right
+00:04 +37: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: supported setting position:0%,line-left
+00:04 +38: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: supported setting position:100%,line-right
+00:04 +39: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: supported setting position:33.3%,center
+00:04 +40: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: 64 simultaneous cues retain sample order at exact boundary
+00:04 +41: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: cross-track multi-cue catalog bound before retaining more than10000 packets
+00:04 +42: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: malformed missing vttC
+00:04 +43: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: malformed duplicate config
+00:04 +44: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: malformed bad config signature
+00:04 +45: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: malformed missing payl
+00:04 +46: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: malformed duplicate payl
+00:04 +47: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: malformed duplicate iden
+00:04 +48: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: malformed bad utf8
+00:04 +49: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: malformed NUL payload
+00:04 +50: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: malformed truncated box
+00:04 +51: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: malformed small box
+00:04 +52: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: malformed vtte body
+00:04 +53: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: malformed vtte with cue
+00:04 +54: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: malformed ID newline
+00:04 +55: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: malformed ID arrow
+00:04 +56: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: malformed ctim syntax
+00:04 +57: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: malformed setting newline
+00:04 +58: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: malformed setting duplicate
+00:04 +59: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: malformed setting out of range
+00:04 +60: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: unsupported mixed codecs in one track
+00:04 +61: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: unsupported config CSS
+00:04 +62: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: unsupported config cue injection
+00:04 +63: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: unsupported region
+00:04 +64: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: unsupported vertical
+00:04 +65: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: unsupported vtta
+00:04 +66: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: unsupported encrypted config
+00:04 +67: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: unsupported zero box size
+00:04 +68: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: bounded payload
+00:04 +69: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: bounded id
+00:04 +70: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: bounded settings
+00:04 +71: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: bounded configuration
+00:04 +72: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: bounded active cues
+00:04 +73: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: every truncated wvtt MP4 prefix gives classified error
+00:04 +74: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart
+00:05 +74: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: legal is_leading=0 sample flags
+00:05 +75: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: legal is_leading=1 sample flags
+00:05 +76: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: legal is_leading=2 sample flags
+00:05 +77: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: legal is_leading=3 sample flags
+00:05 +78: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: moof base with 32-bit boxes and negative data offset
+00:05 +79: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: moof base with 64-bit boxes and negative data offset
+00:05 +80: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: explicit base with 32-bit boxes and negative data offset
+00:05 +81: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: explicit base with 64-bit boxes and negative data offset
+00:05 +82: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: implicit base with 32-bit boxes and negative data offset
+00:05 +83: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: implicit base with 64-bit boxes and negative data offset
+00:05 +84: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: trex defaults inherited, tfhd overrides, then per-sample overrides
+00:05 +85: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: multiple truns continue byte cursor, composition offsets remain independent of dts
+00:05 +86: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: unsigned v0 composition offset and v0 decode time
+00:05 +87: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: 64-bit tfdt exceeds uint32 without losing precision
+00:05 +88: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: TTML composition clock clipped then edited once; edit duration 0
+00:05 +89: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: TTML composition clock clipped then edited once; edit duration 1500
+00:05 +90: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: decode gaps and sequence gaps retain absolute time
+00:05 +91: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: audio traf payload skipped; following subtitle has explicit moof base
+00:05 +92: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: initialization only and empty duration fragment yield empty catalog track
+00:05 +93: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: selected sample description overrides trex without changing public codec
+00:05 +94: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: empty WebVTT sample clears interval and TTML empty XML still counts raw bytes
+00:05 +95: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed fragment overlaps initial decode interval
+00:05 +96: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate trex
+00:05 +97: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed unknown trex track
+00:05 +98: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed zero trex description
+00:05 +99: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate mfhd
+00:05 +100: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed unknown tfhd track
+00:05 +101: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate tfhd
+00:05 +102: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate tfdt
+00:05 +103: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed conflicting bases
+00:05 +104: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed description out of range
+00:05 +105: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed zero size override does not inherit
+00:05 +106: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed zero duration override does not inherit
+00:05 +107: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed empty duration with samples
+00:05 +108: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed both first and per sample flags
+00:05 +109: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed reserved flags
+00:05 +110: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed reserved depends on
+00:05 +111: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed reserved depended on
+00:05 +112: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed reserved redundancy
+00:05 +113: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed data points to moof
+00:05 +114: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed duplicate sequence
+00:05 +115: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed overlapping decode timeline
+00:05 +116: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed wrong tfdt length
+00:05 +117: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed wrong trun length
+00:05 +118: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed mdat byte extent overflow
+00:05 +119: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed no traf
+00:05 +120: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject malformed missing trex for subtitle
+00:05 +121: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported missing tfdt
+00:05 +122: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported unknown tfhd flags
+00:05 +123: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported unknown trun flags
+00:05 +124: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported unsupported trun version
+00:05 +125: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported unsupported tfdt version
+00:05 +126: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported encrypted samples
+00:05 +127: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported subsample table
+00:05 +128: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported fragmented unknown codec
+00:05 +129: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: reject unsupported implicit base after audio
+00:05 +130: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: bounded sample count
+00:05 +131: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: bounded decode time
+00:05 +132: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: bounded composition time
+00:05 +133: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: bounded top level fragments
+00:05 +134: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: overlapping byte extents between subtitle trafs reject
+00:05 +135: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: sample flags default can be replaced by first sample override
+00:05 +136: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: empty TTML raw samples enforce shared four MiB budget
+00:05 +137: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: global sample budget spans fragments
+00:06 +138: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: all truncated prefixes reject without untyped errors
+00:06 +139: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: cancellation is checked between fragment reads
+00:06 +140: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart
+00:06 +140: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: tx3g initial-only mvex track remains available
+00:06 +141: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: wvtt initial-only mvex track remains available
+00:06 +142: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: stpp initial-only mvex track remains available
+00:06 +143: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: initial ctts=-500 does not define fragment decode floor
+00:06 +144: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: initial ctts=10000 does not define fragment decode floor
+00:06 +145: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: reject decode overlap even when initial presentation shortened
+00:06 +146: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: reject decode overlap even when initial edited out
+00:06 +147: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: edit duration=0 maps both portions once and retains gap
+00:06 +148: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: edit duration=1000 maps both portions once and retains gap
+00:06 +149: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: trex/tfhd description selects different style than initial stsc
+00:06 +150: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: TTML region ids and raw bytes remain distinct across both portions
+00:06 +151: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: empty initial sample still advances decode floor
+00:06 +152: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: zero-duration empty initial sample permits fragment at zero
+00:06 +153: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: fragment cannot reuse initial sample bytes
+00:06 +154: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: initial subtitle byte extents cannot overlap across tracks
+00:06 +155: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: nonoverlapping initial and fragment extents remain accepted
+00:06 +156: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: subtitle tracks with different initial durations keep separate decode floors
+00:06 +157: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: sample count budget accumulates initial and fragment samples
+00:07 +158: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: cue budget accumulates initial and fragment samples
+00:07 +159: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: raw XML budget counts empty initial and fragmented documents
+00:07 +160: /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: bad initial text cannot be hidden by an edit before valid fragments
+00:07 +161: All tests passed!

@@ -1,5 +1,8 @@
 ## 0.2.0-dev.2
 
+- Count MP4 WebVTT configuration, sample and cue boxes plus TTML configuration
+  boxes against the shared structural limit across tracks and fragments.
+  Preserve the selected subtitle catalog on overflow and clarify API limits.
 - Restore compressed Matroska CodecPrivate for private-only or combined
   block/private scope before codec validation. Preserve stored/restored header
   budgets across empty tracks and catalog updates, and clarify the API scope.

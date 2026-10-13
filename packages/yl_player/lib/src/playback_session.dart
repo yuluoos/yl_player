@@ -39,6 +39,8 @@ final class YlPlaybackSession {
   /// Matroska accepts one zlib/header-stripping encoding for blocks, CodecPrivate
   /// or both, restoring bytes within shared budgets before codec parsing.
   /// Encrypted, chained and next-encoding scopes reject.
+  /// MP4 discovery shares a 200,000-box limit across container structures and
+  /// WebVTT/TTML configuration and WebVTT cue boxes across tracks/fragments.
   /// Explicit Matroska/WebM format declarations must match the file DocType.
   /// Requires enableTextSubtitles. Discovery is atomic, preserves external
   /// entries and a still-present selection. New sessions start off.

@@ -7,7 +7,7 @@ final class _Stpp implements _Mp4SubtitleEntry {
   @override
   bool get forced => false;
 
-  static _Stpp parse(List<int> b) {
+  static _Stpp parse(List<int> b, void Function() countBox) {
     var at = 8;
     String field() {
       final start = at;
@@ -27,7 +27,7 @@ final class _Stpp implements _Mp4SubtitleEntry {
     if (namespace != 'http://www.w3.org/ns/ttml' || auxiliary.isNotEmpty) {
       _unsupported();
     }
-    final extra = _vttBoxes(b, at, b.length, limit: 8);
+    final extra = _vttBoxes(b, at, b.length, countBox: countBox, limit: 8);
     if (extra.length > 1) _bad();
     for (final box in extra) {
       if (box.type != 'btrt') _unsupported();

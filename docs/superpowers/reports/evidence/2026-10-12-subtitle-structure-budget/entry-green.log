@@ -1,0 +1,131 @@
+00:00 +0: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart
+packages/yl_player/lib/src/subtitles/mp4_ttml.dart:30:28: Error: Required named parameter 'countBox' must be provided.
+    final extra = _vttBoxes(b, at, b.length, limit: 8);
+                           ^
+packages/yl_player/lib/src/subtitles/mp4_webvtt.dart:26:12: Context: Found this candidate, but the arguments don't match.
+List<_Box> _vttBoxes(
+           ^^^^^^^^^
+00:00 +0 -1: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart [E]
+  Failed to load "/private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart":
+  Compilation failed for testPath=/private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: packages/yl_player/lib/src/subtitles/mp4_ttml.dart:30:28: Error: Required named parameter 'countBox' must be provided.
+      final extra = _vttBoxes(b, at, b.length, limit: 8);
+                             ^
+  packages/yl_player/lib/src/subtitles/mp4_webvtt.dart:26:12: Context: Found this candidate, but the arguments don't match.
+  List<_Box> _vttBoxes(
+             ^^^^^^^^^
+  .
+00:00 +0 -1: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart
+00:00 +0 -1: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 1009:11   DefaultResidentCompiler._compile.<fn>
+  dart:async/zone_root.dart 48:47                  _rootRunUnary
+  dart:async/zone.dart 733:19                      _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone_root.dart 35:13                  _rootRun
+  dart:async/zone.dart 726:19                      _CustomZone.run
+  dart:async/zone.dart 625:7                       _CustomZone.runGuarded
+  dart:async/zone.dart 666:23                      _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 193:5      _RawReceivePort._handleMessage
+  
+packages/yl_player/lib/src/subtitles/mp4_ttml.dart:30:28: Error: Required named parameter 'countBox' must be provided.
+    final extra = _vttBoxes(b, at, b.length, limit: 8);
+                           ^
+packages/yl_player/lib/src/subtitles/mp4_webvtt.dart:26:12: Context: Found this candidate, but the arguments don't match.
+List<_Box> _vttBoxes(
+           ^^^^^^^^^
+00:00 +0 -2: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart [E]
+  Failed to load "/private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart":
+  Compilation failed for testPath=/private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: packages/yl_player/lib/src/subtitles/mp4_ttml.dart:30:28: Error: Required named parameter 'countBox' must be provided.
+      final extra = _vttBoxes(b, at, b.length, limit: 8);
+                             ^
+  packages/yl_player/lib/src/subtitles/mp4_webvtt.dart:26:12: Context: Found this candidate, but the arguments don't match.
+  List<_Box> _vttBoxes(
+             ^^^^^^^^^
+  .
+00:00 +0 -2: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart
+00:00 +0 -2: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 1009:11   DefaultResidentCompiler._compile.<fn>
+  dart:async/zone_root.dart 48:47                  _rootRunUnary
+  dart:async/zone.dart 733:19                      _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone_root.dart 35:13                  _rootRun
+  dart:async/zone.dart 726:19                      _CustomZone.run
+  dart:async/zone.dart 625:7                       _CustomZone.runGuarded
+  dart:async/zone.dart 666:23                      _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 193:5      _RawReceivePort._handleMessage
+  
+packages/yl_player/lib/src/subtitles/mp4_ttml.dart:30:28: Error: Required named parameter 'countBox' must be provided.
+    final extra = _vttBoxes(b, at, b.length, limit: 8);
+                           ^
+packages/yl_player/lib/src/subtitles/mp4_webvtt.dart:26:12: Context: Found this candidate, but the arguments don't match.
+List<_Box> _vttBoxes(
+           ^^^^^^^^^
+00:00 +0 -3: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart [E]
+  Failed to load "/private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart":
+  Compilation failed for testPath=/private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: packages/yl_player/lib/src/subtitles/mp4_ttml.dart:30:28: Error: Required named parameter 'countBox' must be provided.
+      final extra = _vttBoxes(b, at, b.length, limit: 8);
+                             ^
+  packages/yl_player/lib/src/subtitles/mp4_webvtt.dart:26:12: Context: Found this candidate, but the arguments don't match.
+  List<_Box> _vttBoxes(
+             ^^^^^^^^^
+  .
+00:00 +0 -3: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart
+00:00 +0 -3: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 1009:11   DefaultResidentCompiler._compile.<fn>
+  dart:async/zone_root.dart 48:47                  _rootRunUnary
+  dart:async/zone.dart 733:19                      _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone_root.dart 35:13                  _rootRun
+  dart:async/zone.dart 726:19                      _CustomZone.run
+  dart:async/zone.dart 625:7                       _CustomZone.runGuarded
+  dart:async/zone.dart 666:23                      _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 193:5      _RawReceivePort._handleMessage
+  
+packages/yl_player/lib/src/subtitles/mp4_ttml.dart:30:28: Error: Required named parameter 'countBox' must be provided.
+    final extra = _vttBoxes(b, at, b.length, limit: 8);
+                           ^
+packages/yl_player/lib/src/subtitles/mp4_webvtt.dart:26:12: Context: Found this candidate, but the arguments don't match.
+List<_Box> _vttBoxes(
+           ^^^^^^^^^
+00:00 +0 -4: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart [E]
+  Failed to load "/private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart":
+  Compilation failed for testPath=/private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: packages/yl_player/lib/src/subtitles/mp4_ttml.dart:30:28: Error: Required named parameter 'countBox' must be provided.
+      final extra = _vttBoxes(b, at, b.length, limit: 8);
+                             ^
+  packages/yl_player/lib/src/subtitles/mp4_webvtt.dart:26:12: Context: Found this candidate, but the arguments don't match.
+  List<_Box> _vttBoxes(
+             ^^^^^^^^^
+  .
+00:00 +0 -4: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/fmp4_parser_test.dart
+  /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/hybrid_mp4_parser_test.dart
+  /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_parser_test.dart
+  /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart

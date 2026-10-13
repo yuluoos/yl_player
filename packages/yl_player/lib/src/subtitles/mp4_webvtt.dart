@@ -22,11 +22,18 @@ final class _Mp4Cue {
   final SubtitleCue? ttml;
 }
 
-/// Bounded sample-local box walk; no recursive or file-level cue interpretation.
-List<_Box> _vttBoxes(List<int> b, int start, int end, {int limit = 64}) {
+/// Local child caps and the owning resource budget both apply before parsing.
+List<_Box> _vttBoxes(
+  List<int> b,
+  int start,
+  int end, {
+  required void Function() countBox,
+  int limit = 64,
+}) {
   final boxes = <_Box>[];
   for (var p = start; p < end;) {
     if (boxes.length >= limit) _limit();
+    countBox();
     if (end - p < 8) _bad();
     var size = _u(b, p), header = 8;
     if (size == 1) {
@@ -50,14 +57,15 @@ String _vttString(List<int> b, _Box box, int limit) {
 }
 
 final class _Wvtt implements _Mp4SubtitleEntry {
-  const _Wvtt();
+  const _Wvtt(this._countBox);
+  final void Function() _countBox;
   @override
   YlSubtitleFormat get format => YlSubtitleFormat.webvtt;
   @override
   bool get forced => false;
-  static _Wvtt parse(List<int> b) {
+  static _Wvtt parse(List<int> b, void Function() countBox) {
     final fields = <String>{};
-    for (final box in _vttBoxes(b, 8, b.length, limit: 8)) {
+    for (final box in _vttBoxes(b, 8, b.length, countBox: countBox, limit: 8)) {
       if (!fields.add(box.type)) _bad();
       switch (box.type) {
         case 'vttC':
@@ -77,12 +85,12 @@ final class _Wvtt implements _Mp4SubtitleEntry {
       }
     }
     if (!fields.contains('vttC')) _bad();
-    return const _Wvtt();
+    return _Wvtt(countBox);
   }
 
   @override
   List<_Mp4Cue> decode(List<int> b) {
-    final boxes = _vttBoxes(b, 0, b.length);
+    final boxes = _vttBoxes(b, 0, b.length, countBox: _countBox);
     if (boxes.isEmpty) _bad();
     final result = <_Mp4Cue>[];
     for (final box in boxes) {
@@ -92,7 +100,13 @@ final class _Wvtt implements _Mp4SubtitleEntry {
       }
       if (box.type != 'vttc') _unsupported();
       final fields = <String, _Box>{};
-      for (final child in _vttBoxes(b, box.start, box.end, limit: 8)) {
+      for (final child in _vttBoxes(
+        b,
+        box.start,
+        box.end,
+        countBox: _countBox,
+        limit: 8,
+      )) {
         if (!['payl', 'iden', 'sttg', 'ctim'].contains(child.type)) {
           _unsupported();
         }

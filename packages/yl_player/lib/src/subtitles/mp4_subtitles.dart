@@ -80,8 +80,13 @@ final class Mp4Subtitles {
     return b;
   }
 
-  Future<_Box> _box(int p, int end, {bool top = false}) async {
+  /// One resource-wide allowance, including WebVTT/TTML configuration and WebVTT cue boxes.
+  void _countBox() {
     if (++_boxes > 200000) _limit();
+  }
+
+  Future<_Box> _box(int p, int end, {bool top = false}) async {
+    _countBox();
     if (end - p < 8) _bad();
     final b = await _bytes(p, 8);
     var size = _u(b, 0), header = 8;
@@ -265,8 +270,8 @@ final class Mp4Subtitles {
       if (ref < 1 || ref > refs.length) _bad();
       descriptions.add(switch (entry.type) {
         'tx3g' => _Tx3g.parse(b),
-        'wvtt' => _Wvtt.parse(b),
-        _ => _Stpp.parse(b),
+        'wvtt' => _Wvtt.parse(b, _countBox),
+        _ => _Stpp.parse(b, _countBox),
       });
     }
     // The public track has one format; codec switching within a track is not supported.

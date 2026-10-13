@@ -1,0 +1,37 @@
+00:00 +0: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart
+00:00 +0: ordinary rejects aggregate nested boxes above resource limit
+00:00 +0 -1: ordinary rejects aggregate nested boxes above resource limit [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.limitExceeded>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                        expectLater
+  package:flutter_test/src/widget_tester.dart 507:8      expectLater
+  packages/yl_player/test/wvtt_structure_test.dart 9:13  main.<fn>
+  
+00:00 +0 -1: fragmented rejects aggregate nested boxes above resource limit
+00:00 +0 -2: fragmented rejects aggregate nested boxes above resource limit [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.limitExceeded>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                        expectLater
+  package:flutter_test/src/widget_tester.dart 507:8      expectLater
+  packages/yl_player/test/wvtt_structure_test.dart 9:13  main.<fn>
+  
+00:00 +0 -2: hybrid rejects aggregate nested boxes above resource limit
+00:00 +0 -3: hybrid rejects aggregate nested boxes above resource limit [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.limitExceeded>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                        expectLater
+  package:flutter_test/src/widget_tester.dart 507:8      expectLater
+  packages/yl_player/test/wvtt_structure_test.dart 9:13  main.<fn>
+  
+00:00 +0 -3: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: fragmented rejects aggregate nested boxes above resource limit
+  /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: hybrid rejects aggregate nested boxes above resource limit
+  /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: ordinary rejects aggregate nested boxes above resource limit

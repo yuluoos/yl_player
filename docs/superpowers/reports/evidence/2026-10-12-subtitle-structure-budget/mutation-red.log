@@ -1,0 +1,15 @@
+00:00 +0: loading /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart
+00:00 +0: TTML configuration shares resource allowance (extra=true)
+00:00 +0 -1: TTML configuration shares resource allowance (extra=true) [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.limitExceeded>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData', Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                          expectLater
+  package:flutter_test/src/widget_tester.dart 507:8        expectLater
+  packages/yl_player/test/wvtt_structure_test.dart 149:17  main.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-structure-validation-7rlzf5sd/packages/yl_player/test/wvtt_structure_test.dart: TTML configuration shares resource allowance (extra=true)
