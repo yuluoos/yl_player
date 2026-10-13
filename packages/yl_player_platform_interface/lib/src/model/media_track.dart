@@ -18,14 +18,20 @@ final class YlMediaTrack {
     this.height,
   });
 
+  /// Opaque selection key in the publishing session, independent of display
+  /// order. Re-read the catalog after loading another source; IDs are not a
+  /// cross-engine or cross-session persistence contract.
   final String id;
 
   final YlTrackKind kind;
 
+  /// Whether the backend currently reports this track as selected.
   final bool isSelected;
 
+  /// Display label; may distinguish roles or content with the same language.
   final String? label;
 
+  /// Optional language metadata, not a unique track identity.
   final String? language;
 
   final String? codec;

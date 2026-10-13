@@ -914,3 +914,39 @@ HDR/DRM/外接验收，不扩大 MOV 或跨 Period 范围。整个 P02 仍开放
 独立 fresh-context 只读复审：0 Critical / 0 Important / 0 Minor，无修复项；
 逐项范围裁定及原始报告保存在 review-summary.json / review-raw.md。候选源码、
 四包所有 tracked Dart 输入及证据按 SHA-256 冻结，提交树再核验，未新增依赖。
+
+## 2026-10-13 多音轨身份与 Apple DASH
+
+Apple 静态明文 DASH 接入最多16条 AAC-LC audio AdaptationSet，每条保持单
+Representation。语义身份由内容ID、规范小写语言、排序去重role和编码配置组成，
+不依赖 XML/Representation 顺序、码率、URL或显示标签。同语言main/commentary
+可单独选择；缺语言不猜测。每Period保留同一完整身份集合，乱序稳定，重复、
+新增、丢失及编码变化在发布前拒绝。每音轨独立 HLS rendition，带宽计算取音频
+备选最大值；主音轨优先且仅一个默认自动选择。内部loader沿用既有资源/凭据边界。
+
+AVPlayer以编译器NAME元数据精确映射DASH身份；普通选项使用系统propertyList
+恢复，移除身份不复用。质量重建、暂停恢复和既有直播重连保留选择；无法恢复时
+明确`track.not_found`，新Load重置。没有显式DASH音频组时保留原asset音频路径。
+补齐`YlMediaTrack`和`selectAudioTrack`注释，未修改Dart/Pigeon schema。
+
+最终验证：macOS原生167/167、iOS模拟器168/168，均0跳过；两端实际AVPlayer
+公开集成各1/1，覆盖同语言选轨、跨Period seek、目录清空后质量重建保留选择、
+非法ID不改变选择及实际媒体请求凭据。四包Dart1954/1954，静态分析无问题。
+新增16项原生用例，另1项公开集成跑两端；原生结果核对精确用例身份。独立host
+FFmpeg解码既有fixture确认440Hz/660Hz输入不同，不等同于播放器物理声音输出测量。
+
+RED记录包括多音轨编译拒绝、非法语言扩展、实际清晰度重建丢失选轨。首次公开
+fixture误用严格managed配置被既有准入拒绝，后改为已支持的默认网络策略；未扩大
+准入。原生回归还暴露空显式目录误拒绝in-band音频，已修正。fresh-context只读
+复审2 Important均接受，在一次修复流程内补齐重连保留与缺组错误；新增真实backend
+生命周期测试均先失败。修复中发现错误被封装为avplayer.1，现保留track.not_found；
+新Load对照等待实际目录发布，避免瞬时ready状态导致误判。无Critical/Minor。
+
+范围裁定：各Period完整音轨集合必须不变，不引入猜测回退；仅检查语言语法，不查
+注册表。严格managed DASH仍policy.unsupported，不增加音频ABR/混音/codec/动态MPD。
+未验收真机物理声音、最低系统、HDR/DRM/外接、字幕生命周期及PD-03；整个P02仍开放。
+长播放、弱网ABR及P05未修改。三处macOS全量fixture正文漂移与HEAD相同，完整镜像
+门禁仍未通过；本次compiler三份镜像匹配，选定测试身份单独通过核对。
+
+源码、依赖输入、日志和复审裁定见[evidence manifest](evidence/2026-10-13-dash-audio-identity/manifest.json)。
+最终证据由执行者冻结核验，复审者未重新评判后续验证。未增加依赖或改动原生二进制制品。

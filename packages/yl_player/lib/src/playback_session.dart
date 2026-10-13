@@ -27,6 +27,14 @@ final class YlPlaybackSession {
     validateYlPlaybackSpeed(speed);
     return _player._backend.setPlaybackSpeed(id, speed);
   });
+
+  /// Selects one audio track using its opaque ID from the current session's
+  /// audioTracks catalog. IDs must not be inferred from list order or language:
+  /// multiple tracks may share a language and differ by role or content.
+  /// An unavailable ID rejects the command without selecting a replacement.
+  /// Apple static DASH keeps semantic IDs across reordered Periods and video
+  /// quality rebuilds; a changing audio identity set is currently unsupported.
+  /// Completion acknowledges selection; it does not measure audible output.
   Future<void> selectAudioTrack(String trackId) => _command(() {
     validateYlTrackId(trackId);
     return _player._backend.selectAudioTrack(id, trackId);

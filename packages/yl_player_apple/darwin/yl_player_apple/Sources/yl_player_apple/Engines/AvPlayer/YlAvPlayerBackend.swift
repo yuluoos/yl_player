@@ -147,6 +147,8 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   private var endObserver: NSObjectProtocol?
   private var failedObserver: NSObjectProtocol?
   private var audioOptions: [String: AVMediaSelectionOption] = [:]
+  private var audioIdentityRegistry = YlAudioSelectionIdentityRegistry()
+  private var dashAudioCatalog: [YlNativeTrack]?
   private var audioTracks: [YlNativeTrack] = []
   private var videoTracks: [YlNativeTrack] = []
   private var dashVideoCatalog: YlDashVideoCatalog?
@@ -614,7 +616,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     active = false
     playRequested = false
     player.pause()
-    removeCurrentItem(releaseReplacement: !retainingHlsForReplacement, preserveDashCatalog: true)
+    removeCurrentItem(releaseReplacement: !retainingHlsForReplacement, preserveDashCatalog: true, preserveAudioIdentity: true)
     if status != "error" && status != "completed" && status != "idle" {
       status = "paused"
     }
@@ -656,7 +658,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     stopped = false
     cancelLiveReconnect()
     liveReconnectController = YlLiveReconnectController(configuration: configuration.network)
-    removeCurrentItem()
+    removeCurrentItem(preserveAudioIdentity: resume)
     lastSource = source
     let loadOptions = source.loadOptions
     if !resume, source.loadOptions != nil {
@@ -733,6 +735,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
 
   private func installItem(asset: AVURLAsset, positionMs: Int64, resumePositionUs: Int64? = nil, anchorRuntimeResume: Bool = false, forceResumeSeek: Bool = false) {
     dashVideoCatalog = hlsResourceLoader?.videoCatalog
+    // Empty explicit catalog retains the legacy AV asset-audio path (including
+    // in-band audio). Only declared alternate renditions require NAME matching.
+    dashAudioCatalog = hlsResourceLoader?.audioCatalog.flatMap { $0.isEmpty ? nil : $0 }
     // A pending or retired item's edge intent cannot override static DASH time.
     if dashVideoCatalog != nil { resumeAtLiveEdge = false }
     itemGeneration &+= 1
@@ -874,6 +879,18 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     let failureGeneration = generation ?? itemGeneration
     guard failureGate.begin(generation: failureGeneration) else { return }
     stallWatchdog.cancel()
+    // Identity restoration is a player contract error, not an AVFoundation
+    // NSError. Preserve its public code instead of bridging it to avplayer.1.
+    if let selectionError = error as? NativePlayerError, selectionError.code == "track.not_found" {
+      guard failureGate.finish(generation: failureGeneration, currentGeneration: itemGeneration),
+            !disposed, active else { return }
+      failureGate.markTerminal(generation: failureGeneration)
+      status = "error"
+      currentError = selectionError
+      emit(.failure(selectionError))
+      emitState(error: selectionError)
+      return
+    }
     if !services.compatibility.reconnectsAvPlayer {
       finishFailure(error as NSError?, log: nil, generation: failureGeneration)
       return
@@ -1228,7 +1245,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       return
     }
     item.select(option, in: group)
-    rebuildAudioTracks(item)
+    try rebuildAudioTracks(item)
     emitState()
   }
 
@@ -1341,7 +1358,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
         try Task.checkCancellation()
         guard self.isCurrent(item, generation: generation) else { return }
         self.audioGroup = group
-        self.rebuildAudioTracks(item)
+        try self.rebuildAudioTracks(item)
         self.emitState()
       } catch {
         guard !Task.isCancelled, let self,
@@ -1356,26 +1373,46 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     videoTracks = tracks
   }
 
-  private func rebuildAudioTracks(_ item: AVPlayerItem) {
-    audioOptions.removeAll()
-    if let group = audioGroup {
-      group.options.enumerated().forEach { index, option in
-        let id = "audio-\(index)"
-        audioOptions[id] = option
+  private func rebuildAudioTracks(_ item: AVPlayerItem) throws {
+    guard let group = audioGroup else {
+      guard selectedAudioTrackId == nil else {
+        throw NativePlayerError(category: "source", code: "track.not_found", message: "The requested audio track is unavailable.")
       }
-      if let selectedAudioTrackId, let option = audioOptions[selectedAudioTrackId] {
-        item.select(option, in: group)
-      }
-      audioTracks = group.options.enumerated().map { index, option in
-        let id = "audio-\(index)"
-        return YlNativeTrack(id: id, kind: .audio,
-          label: option.displayName, language: option.locale?.identifier,
-          isSelected: item.currentMediaSelection.selectedMediaOption(in: group) == option)
-      }
-    } else {
-      audioTracks = []
+      guard dashAudioCatalog?.isEmpty != false else { throw YlDashBounds.unsupported }
+      audioOptions = [:]; audioTracks = []
+      emit(.tracksChanged(audio: audioTracks, video: videoTracks)); return
     }
-
+    let options = group.options
+    guard options.count <= 128 else { throw YlDashBounds.unsupported }
+    let ids: [String]
+    if let catalog = dashAudioCatalog {
+      // HLS NAME is exposed through common title metadata. displayName is only
+      // an exact-token fallback, never a language or localized-label heuristic.
+      let names = options.map { option in
+        [option.displayName] + option.commonMetadata.filter { $0.commonKey == .commonKeyTitle }.compactMap(\.stringValue)
+      }
+      ids = try YlDashAudioOptionMapping.identities(names: names, catalog: catalog)
+    } else {
+      ids = try audioIdentityRegistry.identities(options: options,
+        restore: { group.mediaSelectionOption(withPropertyList: $0) },
+        encode: { $0.propertyList() })
+    }
+    let mapped = Dictionary(uniqueKeysWithValues: zip(ids, options))
+    if let selectedAudioTrackId {
+      guard let option = mapped[selectedAudioTrackId] else {
+        throw NativePlayerError(category: "source", code: "track.not_found", message: "The requested audio track is unavailable.")
+      }
+      item.select(option, in: group)
+    }
+    let selected = item.currentMediaSelection.selectedMediaOption(in: group)
+    let tracks = zip(ids, options).map { id, option -> YlNativeTrack in
+      var track = dashAudioCatalog?.first { $0.id == id } ?? YlNativeTrack(id: id, kind: .audio,
+        label: option.displayName, language: option.extendedLanguageTag ?? option.locale?.identifier)
+      track.isSelected = selected == option
+      return track
+    }
+    audioOptions = mapped
+    audioTracks = dashAudioCatalog == nil ? tracks : tracks.sorted { $0.id < $1.id }
     emit(.tracksChanged(audio: audioTracks, video: videoTracks))
   }
 
@@ -1526,13 +1563,17 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     failedObserver = nil
   }
 
-  private func removeCurrentItem(releaseReplacement: Bool = true, clearOutput: Bool = true, preserveDashCatalog: Bool = false) {
+  private func removeCurrentItem(releaseReplacement: Bool = true, clearOutput: Bool = true, preserveDashCatalog: Bool = false, preserveAudioIdentity: Bool = false) {
     automaticDashCandidate?.discard(); automaticDashCandidate = nil
     fixedRecoveryDeadline?.cancel(); fixedRecoveryDeadline = nil
     unconfirmedFixedLanding = false
     pendingRuntimeResume = nil
     pendingUserSeek = nil
-    if !preserveDashCatalog { dashVideoCatalog = nil }
+    if !preserveDashCatalog { dashVideoCatalog = nil; dashAudioCatalog = nil }
+    if !preserveAudioIdentity {
+      audioIdentityRegistry.reset()
+      selectedAudioTrackId = nil
+    }
     framePolicyLock.lock(); framePolicy = nil; framePolicyLock.unlock()
     videoProgressProbe.reset()
     metadataTask?.cancel()
@@ -1565,7 +1606,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     currentError = nil
     // Reconnect the same live source without flashing an empty texture between
     // items. The next frame replaces it; stop and source changes still clear it.
-    removeCurrentItem(clearOutput: false)
+    removeCurrentItem(clearOutput: false, preserveAudioIdentity: true)
     let expectedGeneration = itemGeneration
     let reconnect = DispatchWorkItem { [weak self] in
       guard let self, !self.disposed, self.active,
@@ -1680,5 +1721,51 @@ private extension CMTime {
       value: CMTimeValue(milliseconds) * CMTimeValue(preferredTimescale) / 1_000,
       timescale: preferredTimescale
     )
+  }
+}
+
+
+/// Session-local option identities restored by the platform's property-list API.
+/// New options never inherit a removed option's array-index identity.
+struct YlAudioSelectionIdentityRegistry {
+  private var records: [(String, Any)] = []
+  private var next = 0
+  mutating func reset() { records.removeAll() }
+  mutating func identities<Option: Equatable>(options: [Option], restore: (Any) -> Option?, encode: (Option) -> Any) throws -> [String] {
+    guard options.count <= 128 else { throw YlDashBounds.unsupported }
+    let restored = records.compactMap { record -> (String, Option)? in
+      restore(record.1).map { (record.0, $0) }
+    }
+    var used = Set<String>()
+    var candidate: [(String, Any)] = []
+    for option in options {
+      let matches = restored.filter { $0.1 == option }
+      guard matches.count <= 1 else { throw YlDashBounds.unsupported }
+      let id: String
+      if let match = matches.first { id = match.0 }
+      else {
+        guard next < Int.max else { throw YlDashBounds.unsupported }
+        id = "audio-\(next)"; next += 1
+      }
+      guard used.insert(id).inserted else { throw YlDashBounds.unsupported }
+      candidate.append((id, encode(option)))
+    }
+    records = candidate
+    return candidate.map { $0.0 }
+  }
+}
+
+/// Resolves compiler-owned NAME tokens without relying on AV option ordering.
+enum YlDashAudioOptionMapping {
+  static func identities(names: [[String]], catalog: [YlNativeTrack]) throws -> [String] {
+    guard names.count == catalog.count else { throw YlDashBounds.unsupported }
+    let expected = Set(catalog.map(\.id))
+    guard expected.count == catalog.count else { throw YlDashBounds.unsupported }
+    var used = Set<String>()
+    return try names.map { values in
+      let matches = Set(values).intersection(expected)
+      guard matches.count == 1, let id = matches.first, used.insert(id).inserted else { throw YlDashBounds.unsupported }
+      return id
+    }
   }
 }

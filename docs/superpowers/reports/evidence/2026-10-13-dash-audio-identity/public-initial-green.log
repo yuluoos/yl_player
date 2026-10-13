@@ -1,0 +1,102 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/apple_dash_audio_tracks_test.dart
+Building macOS application...                                   
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift:139:55: warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 137 |     pixelBufferAttributes: [
+ 138 |       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+ 139 |       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
+     |                                                       `- warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 140 |     ]
+ 141 |   )
+
+1 | @available(*, unavailable)
+2 | extension AnyHashable : Sendable {
+3 | }
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DRM/YlFairPlayView.swift:14:8: warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+12 |   let registry: YlFairPlayViewRegistry
+13 |   init(registry: YlFairPlayViewRegistry) { self.registry = registry }
+14 |   func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol { FlutterStandardMessageCodec.sharedInstance() }
+   |        `- warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+15 |   private func record(_ args: Any?) -> YlFairPlayViewRecord? {
+16 |     guard let values = args as? [String: Any],
+
+35 |  */
+36 | @optional
+37 | - (nullable NSObject<FlutterMessageCodec>*)createArgsCodec;
+38 | @end
+39 | 
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/macOS/YlMacosVideoView.swift:14:8: warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+12 |   }
+13 |   func unregister(_ identity: Int64) { outputs.removeObject(forKey: NSNumber(value: identity)) }
+14 |   func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol { FlutterStandardMessageCodec.sharedInstance() }
+   |        `- warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+15 |   func create(withViewIdentifier viewId: Int64, arguments args: Any?) -> NSView {
+16 |     let identity = (args as? [String: Any])?["textureId"] as? NSNumber
+
+35 |  */
+36 | @optional
+37 | - (nullable NSObject<FlutterMessageCodec>*)createArgsCodec;
+38 | @end
+39 | 
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlHardwareDecoderEvidence.swift:23:88: warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.
+ 21 |   typealias Copy = (VTSession, CFString, inout CFTypeRef?) -> OSStatus
+ 22 |   var copy: Copy = { session, key, value in
+ 23 |     VTSessionCopyProperty(session, key: key, allocator: kCFAllocatorDefault, valueOut: &value)
+    |                                                                                        `- warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.
+ 24 |   }
+ 25 |   func evidence(for session: VTSession) -> YlHardwareDecoderEvidence {
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift:139:55: warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 137 |     pixelBufferAttributes: [
+ 138 |       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+ 139 |       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
+     |                                                       `- warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 140 |     ]
+ 141 |   )
+
+1 | @available(*, unavailable)
+2 | extension AnyHashable : Sendable {
+3 | }
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift:593:34: warning: 'weak' ownership of capture 'fallback' differs from implicitly-captured strong reference in outer scope [#ImplicitStrongCapture]
+ 590 |       }
+ 591 |       commandCoordinator.begin(
+ 592 |         operation: { token in
+ 593 |           token.onCancel { [weak fallback] in fallback?.interruptControlOperation() }
+     |                                  |- warning: 'weak' ownership of capture 'fallback' differs from implicitly-captured strong reference in outer scope [#ImplicitStrongCapture]
+ 594 |           defer { fallback.resumeControlOperation() }
+ 595 |           try token.throwIfCancelled()
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift:139:55: warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 137 |     pixelBufferAttributes: [
+ 138 |       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+ 139 |       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
+     |                                                       `- warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 140 |     ]
+ 141 |   )
+
+1 | @available(*, unavailable)
+2 | extension AnyHashable : Sendable {
+3 | }
+
+[#ImplicitStrongCapture]: <https://docs.swift.org/compiler/documentation/diagnostics/implicit-strong-capture>
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift:235:34: warning: capture of 'self' with non-Sendable type 'YlApplePlayerHost' in a '@Sendable' closure [#SendableClosureCaptures]
+  4 | /// Only this boundary projects private Pigeon records to native compatibility
+  5 | /// commands and encodes native measurements back to generated callback records.
+  6 | final class YlApplePlayerHost: ApplePlayerHostApi {
+  7 |   let playerId: Int64
+  8 |   let suffix: String
+    :
+233 |   func dispose() async throws {
+234 |     await withCheckedContinuation { continuation in
+235 |       DispatchQueue.main.async { self.close(); continuation.resume() }
+    |                                  `- warning: capture of 'self' with non-Sendable type 'YlApplePlayerHost' in a '@Sendable' closure [#SendableClosureCaptures]
+236 |     }
+237 |   }
+
+[#SendableClosureCaptures]: <https://docs.swift.org/compiler/documentation/diagnostics/sendable-closure-captures>
+✓ Built build/macos/Build/Products/Debug/yl_player_example.app
+Failed to foreground app; open returned 1
+00:00 +0: same-language DASH audio identities select, survive seek and quality rebuild
+00:01 +1: (tearDownAll)
+00:01 +1: All tests passed!

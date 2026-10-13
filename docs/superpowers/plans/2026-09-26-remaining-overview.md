@@ -624,3 +624,11 @@ widget证据见[报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)�
 实际文件/managed HTTP/公开 widget 验证，整个 P02 仍开放。详见
 [契约](../specs/2026-10-13-subtitle-extended-language.md)及
 [验证报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)。
+
+### 2026-10-13 P02 Apple DASH 多音轨身份
+
+完成最多16条AAC-LC音轨的语义身份、独立HLS音频rendition、公开选轨和同会话质量重建保留选择；
+同语言不同role可区分，跨Period乱序稳定，完整身份集合变化明确拒绝。普通AVPlayer改用
+系统propertyList恢复身份，修复重连保留与所选音轨组丢失报错。补齐API注释。
+证据与边界见[P02报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)。
+未扩展严格managed DASH准入、音频ABR或物理声音验收；P02仍开放。

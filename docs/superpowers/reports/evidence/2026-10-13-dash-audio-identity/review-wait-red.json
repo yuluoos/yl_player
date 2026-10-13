@@ -1,0 +1,56 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "00008103-000571C03CD9001E",
+        "deviceName" : "My Mac",
+        "modelName" : "MacBook Pro",
+        "osBuildNumber" : "26A434",
+        "osVersion" : "27.0.1",
+        "platform" : "macOS"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 166,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "Runner · Built with macOS 27.0.1",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1791880670.193,
+  "passedTests" : 166,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1791880633.417,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "XCTAssertTrue failed - Expected native condition before deadline",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 59,
+      "testIdentifierString" : "YlDashHlsCompilerTests/testLiveReconnectRetainsSelectedAudioIdentityWhenGroupDisappears()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashHlsCompilerTests/testLiveReconnectRetainsSelectedAudioIdentityWhenGroupDisappears",
+      "testName" : "testLiveReconnectRetainsSelectedAudioIdentityWhenGroupDisappears()"
+    }
+  ],
+  "title" : "Test - Runner",
+  "topInsights" : [
+    {
+      "category" : "Longest Test Runs",
+      "impact" : "62% of duration",
+      "text" : "2 longest test runs with outlier durations exceeding 1.93s (three standard deviations)"
+    }
+  ],
+  "totalTestCount" : 167
+}

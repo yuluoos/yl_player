@@ -1,0 +1,43 @@
+{
+  "devicesAndConfigurations": [
+    {
+      "device": {
+        "architecture": "arm64",
+        "deviceId": "00008103-000571C03CD9001E",
+        "deviceName": "My Mac",
+        "modelName": "MacBook Pro",
+        "osBuildNumber": "26A434",
+        "osVersion": "27.0.1",
+        "platform": "macOS"
+      },
+      "expectedFailures": 0,
+      "failedTests": 0,
+      "passedTests": 167,
+      "skippedTests": 0,
+      "testPlanConfiguration": {
+        "configurationId": "1",
+        "configurationName": "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription": "Runner \u00b7 Built with macOS 27.0.1",
+  "expectedFailures": 0,
+  "failedTests": 0,
+  "finishTime": 1791880779.538,
+  "passedTests": 167,
+  "result": "Passed",
+  "runtimeWarnings": [],
+  "skippedTests": 0,
+  "startTime": 1791880748.12,
+  "statistics": [],
+  "testFailures": [],
+  "title": "Test - Runner",
+  "topInsights": [
+    {
+      "category": "Longest Test Runs",
+      "impact": "42% of duration",
+      "text": "1 longest test run with outlier durations exceeding 1.35s (three standard deviations)"
+    }
+  ],
+  "totalTestCount": 167
+}

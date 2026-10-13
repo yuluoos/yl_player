@@ -184,7 +184,8 @@ result, not a general stream/device matrix; see the [implementation report](supe
 now routes explicit DASH and automatic `.mpd` network VOD to an inspected private
 HLS adapter and AVPlayer. The original DASH identity is retained. Its initial
 subset accepts one video AdaptationSet with up to 16 compatible AVC representations
-and optional shared AAC-LC audio per Period, with at most 256 total representations
+and up to 16 AAC-LC audio AdaptationSets per Period (one Representation each),
+with at most 256 total representations
 including audio. Multiple video renditions must share codec/roles and exactly
 aligned segment boundaries. The original identical-ladder and singleton routes
 remain supported. The automatic route also accepts compatible ladders that add
@@ -194,7 +195,7 @@ bounded complete-program paths, independent of representation ID or XML order;
 this mapping is neither a fixed selection nor a quality ceiling. The changing
 route requires the same declared AVC codec/Profile and role, equal display
 ratio, consistent normalized frame rate, absent or 1:1 SAR, and, when present,
-a compatible shared AAC track with consistent presence. It rejects declared color/range,
+a compatible complete AAC audio identity set with consistent presence. It rejects declared color/range,
 SupplementalProperty and unsupported high-bit-depth profiles. These are MPD
 declaration checks, not inspection of arbitrary encoded media bytes. Periods
 remain contiguous and finite from zero. The aligned-offset extension below
@@ -236,7 +237,8 @@ offline decoded markers, direct HLS experiments and public player evidence.
 
 Local/live DASH, dynamic or encrypted MPD, unsupported SegmentBase forms, unaligned or independently shifted rendition offsets, gaps or
 overlaps, incompatible changing ladders, multiple video AdaptationSets, multiple
-audio representations and track/codec changes remain rejected by the Apple subset.
+audio Representations within one AdaptationSet and audio identity/codec changes
+remain rejected by the Apple subset.
 Managed network, bounded buffer and hardware-required requests
 remain `policy.unsupported`; parser/registry budgets do not enforce those media
 policies. The route does not use FFmpeg or add a commercial SDK.
@@ -661,3 +663,20 @@ stable. Invalid metadata rejects atomically, with existing file/managed HTTP loa
 and selection preserved. Validation covers owned fixtures and fake-backend widgets,
 not independent muxer interoperability or native/device display acceptance.
 [Contract](superpowers/specs/2026-10-13-subtitle-extended-language.md).
+
+### Apple DASH audio selection
+
+Each supported audio AdaptationSet becomes an independent HLS AUDIO rendition.
+Audio IDs use declared content ID, language, roles and encoding configuration;
+Period/Representation order, representation IDs, bitrate and URL do not define
+identity. Same-language commentary stays independently selectable. Every Period
+must retain the same complete identity set; duplicates, additions, removals and
+encoding changes reject before publication. Missing language is not guessed.
+The private loader retains its existing credential and resource limits; explicit
+strict managed admission remains unsupported. This adds no audio ABR or mixing.
+
+Selection survives same-session DASH quality replacement. Generic AVPlayer
+options use system property-list restoration, not array positions or labels. A
+selected identity that cannot be restored reports `track.not_found`. New loads
+reset selection. See the [P02 report](superpowers/reports/2026-09-26-remaining-02-tracks-subtitles.md)
+for tested platforms and the separate physical-audio acceptance boundary.

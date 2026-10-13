@@ -1,0 +1,45 @@
+{
+  "reviewer": "/root/dash_audio_final_review",
+  "freshReadOnly": true,
+  "critical": 0,
+  "important": 2,
+  "minor": 0,
+  "rulings": [
+    {
+      "finding": "same-session reconnect resets selected audio",
+      "grade": "Important accepted",
+      "action": "Preserve generic registry and selected ID during reconnect; real backend notification regression with selected audio removed in replacement distinguishes explicit error from silent default"
+    },
+    {
+      "finding": "nil audio group bypasses selected identity failure",
+      "grade": "Important accepted",
+      "action": "Throw track.not_found when a retained selection has no group; restoration regression and fresh-load control"
+    },
+    {
+      "declined": "Final iOS/public and fingerprint evidence",
+      "ruling": "Executor verifies final result bundles, real public integration logs and frozen source/tree hashes; reviewer did not witness final verification"
+    },
+    {
+      "declined": "Physical audio, minimum OS, devices, longplay, weak ABR",
+      "ruling": "Outside this slice; no acceptance claim. Offline distinct AAC tones and actual AVPlayer option selection are separate evidence, not physical audible proof"
+    },
+    {
+      "declined": "Subtitle lifecycle, resource/render budgets, HDR/DRM/external and PD03",
+      "ruling": "Outside changed audio code; retain existing acceptance boundaries and P02 remains open"
+    },
+    {
+      "declined": "Full P02/cross-platform and prior fixture drift",
+      "ruling": "No completion claim. Existing three macOS canonical body drifts equal HEAD; owned compiler mirrors and selected case identities checked directly"
+    }
+  ],
+  "fixPasses": 1,
+  "newReviewRegressionTests": 2,
+  "redEvidence": "review-red-summary.json",
+  "finalEvidence": "native-macos/summary.json and native-ios/summary.json",
+  "fixVerificationNotes": [
+    "Behavioral RED2/2 failed after fixing async test compile syntax",
+    "First correction exposed native error bridging to avplayer.1; preserve identity error code",
+    "Fresh-load control now waits for ready AVPlayerItem plus actual track publication, not transient backend ready state",
+    "Final macOS167/167 and iOS168/168 include both regressions; no second review requested"
+  ]
+}

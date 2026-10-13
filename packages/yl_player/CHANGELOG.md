@@ -1,5 +1,9 @@
 ## 0.2.0-dev.2
 
+- Add stable audio identities and Apple DASH multi-audio selection for up to 16
+  AAC-LC AdaptationSets, retaining the selected track across quality replacement
+  and same-session restoration. Reject ambiguous or changing Period audio sets;
+  clarify audio-track API identity and acknowledgment semantics.
 - Preserve bounded BCP 47 `elng` metadata for embedded MP4 tx3g/wvtt/stpp subtitles, including fragmented/hybrid resources; retain track identity and atomic managed loading.
 - Restore up to four ordered Matroska subtitle compression stages, filtering
   block/private scopes independently and retaining intermediate-byte budgets.

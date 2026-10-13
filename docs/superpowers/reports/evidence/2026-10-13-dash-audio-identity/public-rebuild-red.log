@@ -1,0 +1,39 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/apple_dash_audio_tracks_test.dart
+Building macOS application...                                   
+✓ Built build/macos/Build/Products/Debug/yl_player_example.app
+Failed to foreground app; open returned 1
+00:00 +0: same-language DASH audio identities select, survive seek and quality rebuild
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'dash-audio-a4f24cfb85651ba881030eb652fbf9f552c9004110b415d303d2e07225d531fc'
+  Actual: 'dash-audio-082d67e18cdeabd069d17f360d7c9f0ad90e96ab84fba3d8aadd87e3e605ffc4'
+   Which: is different.
+          Expected: ... ash-audio-a4f24cfb85 ...
+            Actual: ... ash-audio-082d67e18c ...
+                                  ^
+           Differ at offset 11
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/apple_dash_audio_tracks_test.dart:107:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/apple_dash_audio_tracks_test.dart line 107
+The test description was:
+  same-language DASH audio identities select, survive seek and quality rebuild
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -1: same-language DASH audio identities select, survive seek and quality rebuild [E]
+  Test failed. See exception logs above.
+  The test description was: same-language DASH audio identities select, survive seek and quality rebuild
+  
+00:01 +0 -1: (tearDownAll)
+00:01 +0 -1: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/apple_dash_audio_tracks_test.dart: same-language DASH audio identities select, survive seek and quality rebuild

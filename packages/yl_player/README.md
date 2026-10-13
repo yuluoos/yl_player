@@ -347,3 +347,17 @@ malformed metadata rejects discovery atomically. Existing `mdhd` validation stil
 applies. This performs syntax checking, without registry validation, canonicalization
 or automatic language selection. File and managed HTTP use the existing bounded
 loader. See the [contract](../../docs/superpowers/specs/2026-10-13-subtitle-extended-language.md).
+
+## Audio track identity and Apple DASH
+
+Select audio using an ID from the current session's `audioTracks` catalog and
+`selectAudioTrack(id)`. Treat IDs as opaque: labels and languages may repeat,
+including main and commentary tracks in the same language. Command completion
+acknowledges selection; it does not prove physical audible output.
+
+The Apple static clear DASH subset supports up to 16 AAC-LC audio AdaptationSets
+with one Representation each. Every Period must keep the same complete semantic
+identity set; ordering may change. Same-session quality replacement retains the
+chosen track. Ordinary AVPlayer restoration uses system option identities and
+reports `track.not_found` if the chosen option disappears. New loads reset the
+choice. This does not add audio ABR, mixing or strict managed DASH admission.

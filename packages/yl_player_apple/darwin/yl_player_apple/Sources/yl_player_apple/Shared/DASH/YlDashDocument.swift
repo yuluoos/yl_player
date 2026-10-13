@@ -1,4 +1,5 @@
 import Foundation
+import CryptoKit
 
 /// Deliberately bounded, network-free XML tree. No XML text reaches diagnostics.
 final class YlDashNode {
@@ -45,6 +46,7 @@ enum YlDashAdmissionError: Error {
 enum YlDashBounds {
   static let maxDocument = 2 * 1024 * 1024
   static let maxSegments = 100_000
+  static let maxAudioTracks = 16
   static let maxVideoVariants = 16
   static let maxRepresentations = 256
   static let maxURI = 8192
@@ -52,6 +54,39 @@ enum YlDashBounds {
   static var unsupported: NativePlayerError {
     NativePlayerError(category: "container", code: "container.unsupported",
       message: "The DASH presentation is unsupported.")
+  }
+  /// RFC 5646 well-formedness only; no registry lookup or canonicalization.
+  static func audioLanguage(_ value: String) -> Bool {
+    guard !value.isEmpty, value.utf8.count <= 128, value.utf8.allSatisfy({ $0 < 128 }) else { return false }
+    let lower = value.lowercased()
+    let grandfathered: Set<String> = ["en-gb-oed", "i-ami", "i-bnn", "i-default", "i-enochian", "i-hak", "i-klingon", "i-lux", "i-mingo", "i-navajo", "i-pwn", "i-tao", "i-tay", "i-tsu", "sgn-be-fr", "sgn-be-nl", "sgn-ch-de", "art-lojban", "cel-gaulish", "no-bok", "no-nyn", "zh-guoyu", "zh-hakka", "zh-min", "zh-min-nan", "zh-xiang"]
+    if grandfathered.contains(lower) { return true }
+    let parts = lower.components(separatedBy: "-")
+    func alpha(_ p: String) -> Bool { !p.isEmpty && p.utf8.allSatisfy { (97...122).contains($0) } }
+    func digit(_ p: String) -> Bool { !p.isEmpty && p.utf8.allSatisfy { (48...57).contains($0) } }
+    guard parts.allSatisfy({ !$0.isEmpty && $0.utf8.count <= 8 && $0.utf8.allSatisfy { (97...122).contains($0) || (48...57).contains($0) } }) else { return false }
+    if parts[0] == "x" { return parts.count > 1 }
+    guard parts[0].count >= 2, alpha(parts[0]) else { return false }
+    var at = 1
+    if parts[0].count <= 3 {
+      var count = 0
+      while at < parts.count && count < 3 && parts[at].count == 3 && alpha(parts[at]) { at += 1; count += 1 }
+    }
+    if at < parts.count && parts[at].count == 4 && alpha(parts[at]) { at += 1 }
+    if at < parts.count && ((parts[at].count == 2 && alpha(parts[at])) || (parts[at].count == 3 && digit(parts[at]))) { at += 1 }
+    var variants = Set<String>()
+    while at < parts.count && (parts[at].count >= 5 || (parts[at].count == 4 && digit(String(parts[at].prefix(1))))) {
+      guard variants.insert(parts[at]).inserted else { return false }; at += 1
+    }
+    var singletons = Set<String>()
+    while at < parts.count && parts[at].count == 1 && parts[at] != "x" {
+      guard singletons.insert(parts[at]).inserted else { return false }; at += 1
+      let start = at
+      while at < parts.count && parts[at].count >= 2 { at += 1 }
+      if start == at { return false }
+    }
+    if at < parts.count && parts[at] == "x" { return at + 1 < parts.count }
+    return at == parts.count
   }
   static func add(_ a: Int64, _ b: Int64) throws -> Int64 {
     let r = a.addingReportingOverflow(b)
@@ -225,6 +260,17 @@ struct YlDashMediaOrigin: Equatable {
   }
 }
 struct YlDashTrack {
+  let contentId: String
+  let language: String?
+  /// A content/configuration identity, independent of URLs and XML ordering.
+  var audioIdentity: String {
+    let fields = [contentId, language?.lowercased() ?? "", roles.joined(separator: ","), codec, String(samplingRate), channels]
+    let key = fields.map { "\($0.utf8.count):\($0)" }.joined()
+    return "dash-audio-" + SHA256.hash(data: Data(key.utf8)).map { String(format: "%02x", $0) }.joined()
+  }
+  var audioLabel: String {
+    ([language ?? "Audio"] + roles + (contentId.isEmpty ? [] : [contentId])).joined(separator: " · ")
+  }
   let mediaOrigin: YlDashMediaOrigin
   let codec: String
   let width: Int64
@@ -247,7 +293,7 @@ struct YlDashPeriod {
   let startUs: Int64
   let endUs: Int64
   let videos: [YlDashTrack]
-  let audio: YlDashTrack?
+  let audios: [YlDashTrack]
 }
 
 final class YlDashDocument {
@@ -340,7 +386,8 @@ final class YlDashDocument {
       guard duration > 0 else { throw YlDashBounds.unsupported }
       end = try YlDashBounds.add(start, duration)
       let periodBase = try base(period, roots)
-      var videos: [YlDashTrack] = []; var audio: YlDashTrack?
+      var videos: [YlDashTrack] = []; var audios: [YlDashTrack] = []
+      var audioContentIds = Set<String>()
       for adaptation in period.nodes("AdaptationSet") {
         let representations = adaptation.nodes("Representation")
         guard !representations.isEmpty,
@@ -373,13 +420,18 @@ final class YlDashDocument {
           guard videos.isEmpty else { throw YlDashBounds.unsupported }
           videos = tracks
         } else {
-          guard audio == nil, tracks.count == 1 else { throw YlDashBounds.unsupported }
-          audio = tracks[0]
+          guard tracks.count == 1, audios.count < YlDashBounds.maxAudioTracks else { throw YlDashBounds.unsupported }
+          let audio = tracks[0]
+          if !audio.contentId.isEmpty {
+            guard audioContentIds.insert(audio.contentId).inserted else { throw YlDashBounds.unsupported }
+          }
+          guard !audios.contains(where: { $0.audioIdentity == audio.audioIdentity }) else { throw YlDashBounds.unsupported }
+          audios.append(audio)
         }
       }
       guard let firstVideo = videos.first,
         videos.allSatisfy({ $0.mediaOrigin == firstVideo.mediaOrigin }),
-        audio == nil || audio!.mediaOrigin == firstVideo.mediaOrigin else { throw YlDashBounds.unsupported }
+        audios.allSatisfy({ $0.mediaOrigin == firstVideo.mediaOrigin }) else { throw YlDashBounds.unsupported }
       if videos.count > 1 {
         let first = videos[0]
         for (index, track) in videos.enumerated() {
@@ -392,10 +444,15 @@ final class YlDashDocument {
         videos.sort { ($0.width, $0.height, $0.bandwidth) < ($1.width, $1.height, $1.bandwidth) }
       }
       if let previous = result.last {
-        guard (audio == nil) == (previous.audio == nil),
-              audio == nil || audio!.matches(previous.audio!) else { throw YlDashBounds.unsupported }
+        guard Set(audios.map(\.audioIdentity)) == Set(previous.audios.map(\.audioIdentity)) else { throw YlDashBounds.unsupported }
       }
-      result.append(YlDashPeriod(startUs: start, endUs: end, videos: videos, audio: audio))
+      // Main first, then a stable identity order. Reordered Periods never swap audio.
+      audios.sort {
+        let left = $0.roles.isEmpty || $0.roles.contains("main")
+        let right = $1.roles.isEmpty || $1.roles.contains("main")
+        return left != right ? left : $0.audioIdentity < $1.audioIdentity
+      }
+      result.append(YlDashPeriod(startUs: start, endUs: end, videos: videos, audios: audios))
     }
     guard total == nil || total == end else { throw YlDashBounds.unsupported }
     return (result, end)
@@ -598,8 +655,15 @@ final class YlDashDocument {
         segments.append(YlDashSegment(resource: try resource(node.attributes["media"], node.attributes["mediaRange"], location), ticks: samples[i].1, scale: scale))
       }
     }
-    return YlDashTrack(mediaOrigin: .init(ticks: offset, scale: scale), codec: codec, width: width, height: height, samplingRate: rate,
-      channels: channels, roles: roles.sorted(), bandwidth: bandwidth,
+    let contentId = kind == "audio" ? ancestors[2].attributes["id", default: ""] : ""
+    let language = kind == "audio" ? attrs["lang"] : nil
+    guard contentId.utf8.count <= 128,
+      !contentId.unicodeScalars.contains(where: { $0.value < 32 || $0.value == 127 }) else { throw YlDashBounds.unsupported }
+    if let language {
+      guard YlDashBounds.audioLanguage(language) else { throw YlDashBounds.unsupported }
+    }
+    return YlDashTrack(contentId: contentId, language: language, mediaOrigin: .init(ticks: offset, scale: scale), codec: codec, width: width, height: height, samplingRate: rate,
+      channels: channels, roles: kind == "audio" ? Array(Set(roles)).sorted() : roles.sorted(), bandwidth: bandwidth,
       frameRate: attrs["frameRate"],
       squarePixels: ancestors.allSatisfy { $0.attributes["sar"] == nil || $0.attributes["sar"] == "1:1" },
       hasRangeDeclaration: ancestors.contains { node in

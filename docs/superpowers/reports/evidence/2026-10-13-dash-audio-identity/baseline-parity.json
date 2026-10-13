@@ -1,0 +1,22 @@
+{
+  "baselineDrift": {
+    "packages/yl_player/example/macos/RunnerTests/AppleHostCharacterizations.swift": {
+      "headIdentical": true,
+      "sha256": "286ca1a505e39bc27a9506fd74eb5bd9ba324ff97fe2896833aa7d2a8aeda38b"
+    },
+    "packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift": {
+      "headIdentical": true,
+      "sha256": "edf4b71f909b62542d1fb9a1af2f2a4cd129c34915969548efd54cfa0ca0e442"
+    },
+    "packages/yl_player/example/macos/RunnerTests/YlMacosPresentationTests.swift": {
+      "headIdentical": true,
+      "sha256": "889ddc5e9d06d6e51488c54d0313a9c1749ab5c7c468d26ec41f81fa60e7e32d"
+    }
+  },
+  "ownedCompilerMirrorsMatch": true,
+  "canonicalCaseCounts": {
+    "ios": 696,
+    "macos": 741
+  },
+  "gateOutput": "macos example tests differ from accepted fixtures: missing=[], extra=[], changed=['AppleHostCharacterizations.swift', 'YlDashResourceLoaderTests.swift', 'YlMacosPresentationTests.swift']\n"
+}

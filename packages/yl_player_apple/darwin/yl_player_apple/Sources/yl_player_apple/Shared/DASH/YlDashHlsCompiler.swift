@@ -6,6 +6,7 @@ struct YlDashHlsPresentation {
   let strippedResources: Set<String>
   let durationUs: Int64
   let videoCatalog: YlDashVideoCatalog
+  let audioCatalog: [YlNativeTrack]
 }
 
 /// Declared available qualities, not AVPlayer's current adaptive selection.
@@ -64,7 +65,7 @@ enum YlDashHlsCompiler {
               && (videoConstraints.maxBitrate.map { track.bandwidth <= Int64($0) } ?? true)
           }
           guard !videos.isEmpty else { throw ProjectionError.noEligibleVideo }
-          return YlDashPeriod(startUs: period.startUs, endUs: period.endUs, videos: videos, audio: period.audio)
+          return YlDashPeriod(startUs: period.startUs, endUs: period.endUs, videos: videos, audios: period.audios)
         }
       } else { periods = originalPeriods }
       var mediaPeriods = periods
@@ -80,13 +81,21 @@ enum YlDashHlsCompiler {
           let matches = allowed.videos.filter { identity($0) == fixedTrackId }
           guard originals.isEmpty || matches.count == 1 else { throw ProjectionError.noEligibleVideo }
           return YlDashPeriod(startUs: allowed.startUs, endUs: allowed.endUs,
-            videos: matches.isEmpty ? allowed.videos : matches, audio: allowed.audio)
+            videos: matches.isEmpty ? allowed.videos : matches, audios: allowed.audios)
         }
       }
       let videoPaths = try YlDashVideoPaths.plan(mediaPeriods)
       let videoNames = videoPaths.count == 1 ? ["video"]
         : videoPaths.indices.map { "video-\($0)" }
-      let names = ["master"] + videoNames + (periods[0].audio == nil ? [] : ["audio"])
+      let audios = periods[0].audios
+      let audioNames = audios.count == 1 ? ["audio"] : audios.indices.map { "audio-\($0)" }
+      let audioPaths = try audios.map { audio in
+        try periods.map { period -> YlDashTrack in
+          guard let match = period.audios.first(where: { $0.audioIdentity == audio.audioIdentity }) else { throw YlDashBounds.unsupported }
+          return match
+        }
+      }
+      let names = ["master"] + videoNames + audioNames
       var identities: [String: URL] = [:]
       for name in names {
         let url = try YlDashBounds.url(manifestURL(name).absoluteString)
@@ -113,7 +122,7 @@ enum YlDashHlsCompiler {
       }
       for name in names where name != "master" {
         let videoIndex = videoNames.firstIndex(of: name)
-        let tracks = videoIndex.map { videoPaths[$0] } ?? periods.map { $0.audio! }
+        let tracks = videoIndex.map { videoPaths[$0] } ?? audioPaths[audioNames.firstIndex(of: name)!]
         var target: Int64 = 1
         for track in tracks {
           for segment in track.segments {
@@ -136,24 +145,35 @@ enum YlDashHlsCompiler {
         try append("#EXT-X-ENDLIST\n", to: &playlist)
         try store(name, playlist)
       }
-      let audio = periods[0].audio
       var master = "#EXTM3U\n#EXT-X-VERSION:7\n"
-      if let audioID = identities["audio"] {
-        let audioURL = try YlHlsURLCodec.encode(audioID, kind: .manifest).absoluteString
-        try append("#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"audio\",NAME=\"Audio\",DEFAULT=YES,AUTOSELECT=YES,URI=\"\(audioURL)\"\n", to: &master)
+      for (index, name) in audioNames.enumerated() {
+        let audio = audios[index]
+        let audioURL = try YlHlsURLCodec.encode(identities[name]!, kind: .manifest).absoluteString
+        let language = audio.language.map { ",LANGUAGE=\"\($0)\"" } ?? ""
+        let channels = audio.channels.isEmpty ? "" : ",CHANNELS=\"\(audio.channels)\""
+        let characteristics = audio.roles.contains("description") ? ",CHARACTERISTICS=\"public.accessibility.describes-video\"" : ""
+        // Only the deterministic default auto-selects: commentary/duplicate languages
+        // remain user choices and never compete with a system-language preference.
+        let automatic = index == 0 ? "YES" : "NO"
+        try append("#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"audio\",NAME=\"\(audio.audioIdentity)\",DEFAULT=\(automatic),AUTOSELECT=\(automatic)\(language)\(channels)\(characteristics),URI=\"\(audioURL)\"\n", to: &master)
       }
       for (index, name) in videoNames.enumerated() {
         let path = videoPaths[index]
         let video = path.max { ($0.width, $0.height) < ($1.width, $1.height) }!
         let videoURL = try YlHlsURLCodec.encode(identities[name]!, kind: .manifest).absoluteString
-        let bandwidth = zip(path, periods).map { $0.bandwidth + ($1.audio?.bandwidth ?? 0) }.max()!
-        let codecs = video.codec + (audio.map { "," + $0.codec } ?? "")
-        let group = audio == nil ? "" : ",AUDIO=\"audio\""
+        let bandwidth = zip(path, periods).map { $0.bandwidth + ($1.audios.map(\.bandwidth).max() ?? 0) }.max()!
+        let codecs = video.codec + (audios.first.map { "," + $0.codec } ?? "")
+        let group = audios.isEmpty ? "" : ",AUDIO=\"audio\""
         try append("#EXT-X-STREAM-INF:BANDWIDTH=\(bandwidth),CODECS=\"\(codecs)\",RESOLUTION=\(video.width)x\(video.height)\(group)\n\(videoURL)\n", to: &master)
       }
       try store("master", master)
       return YlDashHlsPresentation(rootURL: identities["master"]!, manifests: registry,
-        strippedResources: document.stripped, durationUs: duration, videoCatalog: YlDashVideoCatalog(periods: periods))
+        strippedResources: document.stripped, durationUs: duration, videoCatalog: YlDashVideoCatalog(periods: periods),
+        audioCatalog: audios.map { audio in
+          YlNativeTrack(id: audio.audioIdentity, kind: .audio, label: audio.audioLabel,
+            language: audio.language, codec: audio.codec,
+            bitrate: Int(periods.flatMap(\.audios).filter { $0.audioIdentity == audio.audioIdentity }.map(\.bandwidth).max()!))
+        })
     } catch let error as YlDashAdmissionError {
       throw error.nativeError
     } catch ProjectionError.invalidSelection {

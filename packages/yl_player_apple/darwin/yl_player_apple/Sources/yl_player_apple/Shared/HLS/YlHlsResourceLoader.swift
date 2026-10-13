@@ -270,6 +270,9 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     stateLock.withLock { acceptedDashSnapshot }
   }
 
+  var audioCatalog: [YlNativeTrack]? {
+    stateLock.withLock { dashPresentation?.audioCatalog }
+  }
   var videoCatalog: YlDashVideoCatalog? {
     stateLock.withLock { dashPresentation?.videoCatalog }
   }

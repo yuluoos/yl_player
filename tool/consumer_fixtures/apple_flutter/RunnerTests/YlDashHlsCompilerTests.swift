@@ -1,7 +1,190 @@
 @testable import yl_player_apple
 import XCTest
+import AVFoundation
 
 final class YlDashHlsCompilerTests: XCTestCase {
+  @MainActor
+  private func exerciseMissingAudioGroup(reconnect: Bool) async throws {
+    let media = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mp4"))
+    let asset = AVURLAsset(url: media)
+    let videos = try await asset.loadTracks(withMediaType: .video)
+    let video = try XCTUnwrap(videos.first)
+    let videoOnly = AVMutableComposition()
+    let track = try XCTUnwrap(videoOnly.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid))
+    try track.insertTimeRange(try await video.load(.timeRange), of: video, at: .zero)
+    let emptyGroup = try await videoOnly.loadMediaSelectionGroup(for: .audible)
+    XCTAssertNil(emptyGroup)
+    let player = AVPlayer()
+    var removeAudio = false
+    var states: [YlNativeState] = []
+    var failures: [NativePlayerError] = []
+    var trackPublications = 0
+    let backend = YlAvPlayerBackend(playerId: 991,
+      services: .init(platform: .ios, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player,
+      makePlayerItem: { _ in removeAudio ? AVPlayerItem(asset: videoOnly) : AVPlayerItem(url: media) },
+      emit: {
+        if case .state(let state) = $0.event { states.append(state) }
+        if case .failure(let error) = $0.event { failures.append(error) }
+        if case .tracksChanged = $0.event { trackPublications += 1 }
+      })
+    defer { backend.dispose() }
+    let source = YlAppleSourceDescriptor(uri: "https://example.test/live.m3u8", kind: .network, formatHint: .hls, intent: .live)
+    try backend.open(source)
+    try await AppleHostCharacterizations.waitFor { states.last?.audioTracks.isEmpty == false }
+    let id = try XCTUnwrap(states.last?.audioTracks.first?.id)
+    try backend.selectAudioTrack(id)
+    removeAudio = true
+    if reconnect {
+      try backend.play()
+      let item = try XCTUnwrap(player.currentItem)
+      NotificationCenter.default.post(name: .AVPlayerItemFailedToPlayToEndTime, object: item,
+        userInfo: [AVPlayerItemFailedToPlayToEndTimeErrorKey: NSError(domain: NSURLErrorDomain, code: NSURLErrorNetworkConnectionLost)])
+      XCTAssertNil(player.currentItem, "The real live reconnect path must replace the item")
+    } else {
+      backend.deactivate()
+      try backend.activate()
+    }
+    try await AppleHostCharacterizations.waitFor { !failures.isEmpty || states.last?.status == "ready" }
+    XCTAssertEqual(failures.map(\.code), ["track.not_found"], "A missing selected identity must not silently choose the platform default")
+    // A new load has no retained choice and still accepts a video-only asset.
+    failures.removeAll()
+    let publications = trackPublications
+    try backend.open(source)
+    try await AppleHostCharacterizations.waitFor { player.currentItem?.status == .readyToPlay && trackPublications > publications }
+    XCTAssertTrue(failures.isEmpty)
+    XCTAssertTrue(states.last?.audioTracks.isEmpty == true)
+  }
+
+  @MainActor
+  func testLiveReconnectRetainsSelectedAudioIdentityWhenGroupDisappears() async throws {
+    try await exerciseMissingAudioGroup(reconnect: true)
+  }
+
+  @MainActor
+  func testRestorationRejectsMissingSelectedAudioGroupButFreshLoadAllowsIt() async throws {
+    try await exerciseMissingAudioGroup(reconnect: false)
+  }
+
+  private func sound(_ id: String, language: String = "en", role: String = "main", rate: String = "48000", bandwidth: Int = 64000) -> String {
+    """
+    <AdaptationSet id="\(id)" contentType="audio" lang="\(language)" codecs="mp4a.40.2" audioSamplingRate="\(rate)"><Role schemeIdUri="urn:mpeg:dash:role:2011" value="\(role)"/><AudioChannelConfiguration schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011" value="2"/><Representation id="rep-\(id)" bandwidth="\(bandwidth)"><SegmentTemplate duration="2" initialization="\(id)-init.mp4" media="\(id)-$Number$.m4s"/></Representation></AdaptationSet>
+    """
+  }
+  private func withSounds(_ sounds: String, start: Int = 0) -> String {
+    period(start: start).replacingOccurrences(of: "</Period>", with: sounds + "</Period>")
+  }
+  func testMultipleAudioRenditionsCompileIndependently() throws {
+    let result = try compile(mpd(withSounds(sound("english") + sound("french", language: "fr", bandwidth: 96000))))
+    let master = String(data: result.manifests[result.rootURL]!, encoding: .utf8)!
+    XCTAssertEqual(master.components(separatedBy: "#EXT-X-MEDIA:TYPE=AUDIO").count - 1, 2)
+    XCTAssertEqual(master.components(separatedBy: "DEFAULT=YES").count - 1, 1)
+    XCTAssertTrue(master.contains("LANGUAGE=\"en\""))
+    XCTAssertTrue(master.contains("LANGUAGE=\"fr\""))
+    XCTAssertTrue(master.contains("BANDWIDTH=446000"))
+    let playlists = result.manifests.values.compactMap { String(data: $0, encoding: .utf8) }.filter { $0.contains("#EXT-X-MAP:") && !$0.contains("RESOLUTION=") }
+    XCTAssertEqual(playlists.count, 3)
+    XCTAssertEqual(playlists.filter { $0.contains("english-init") }.count, 1)
+    XCTAssertEqual(playlists.filter { $0.contains("french-init") }.count, 1)
+    XCTAssertFalse(playlists.contains { $0.contains("english-init") && $0.contains("french-init") })
+  }
+  func testAudioReorderAcrossPeriodsDoesNotSwapContent() throws {
+    let a = sound("main"), b = sound("comment", role: "commentary")
+    let result = try compile(mpd(withSounds(a + b) + withSounds(b + a, start: 4), duration: 8))
+    let audio = result.manifests.values.compactMap { String(data: $0, encoding: .utf8) }.filter { $0.contains("main-init") || $0.contains("comment-init") }
+    XCTAssertEqual(audio.count, 2)
+    XCTAssertTrue(audio.allSatisfy { $0.components(separatedBy: "#EXT-X-DISCONTINUITY").count == 2 })
+    XCTAssertFalse(audio.contains { $0.contains("main-init") && $0.contains("comment-init") })
+  }
+  func testDuplicateAudioIdentityRejectsBeforeEmission() {
+    reject(mpd(withSounds(sound("same") + sound("same"))))
+  }
+  func testMissingOrChangedAudioIdentityRejectsBeforeEmission() {
+    let a = sound("main"), b = sound("comment", role: "commentary")
+    for changed in [a, a + sound("changed", role: "commentary"), a + sound("comment", language: "fr", role: "commentary"), a + sound("comment", role: "commentary", rate: "44100")] {
+      reject(mpd(withSounds(a + b) + withSounds(changed, start: 4), duration: 8))
+    }
+  }
+  func testTooManyAudioTracksRejectBeforeEmission() {
+    reject(mpd(withSounds((0..<17).map { sound("a\($0)") }.joined())))
+  }
+  func testAudioCatalogIdentityIgnoresRepresentationIdsBandwidthAndOrder() throws {
+    let a = sound("main"), b = sound("comment", role: "commentary")
+    let original = try compile(mpd(withSounds(a + b))).audioCatalog
+    let changed = (b + a).replacingOccurrences(of: "rep-", with: "renamed-").replacingOccurrences(of: "64000", with: "96000")
+    let updated = try compile(mpd(withSounds(changed))).audioCatalog
+    XCTAssertEqual(Set(original.map(\.id)), Set(updated.map(\.id)))
+    XCTAssertEqual(original.map(\.language), ["en", "en"])
+    XCTAssertTrue(original.allSatisfy { $0.id.hasPrefix("dash-audio-") && $0.codec == "mp4a.40.2" })
+    XCTAssertEqual(updated.map(\.bitrate), [96000, 96000])
+    XCTAssertEqual(Set(original.compactMap(\.label)).count, 2)
+  }
+  func testSameLanguageAndRoleCanUseDistinctContentIds() throws {
+    let tracks = try compile(mpd(withSounds(sound("one") + sound("two")))).audioCatalog
+    XCTAssertEqual(Set(tracks.map(\.id)).count, 2)
+    reject(mpd(withSounds(sound("one") + sound("one", language: "fr"))))
+  }
+  func testMissingLanguageAndIdsDoNotBecomeArrayIdentity() throws {
+    let a = sound("one").replacingOccurrences(of: " id=\"one\"", with: "").replacingOccurrences(of: " lang=\"en\"", with: "")
+    let b = sound("two", role: "commentary").replacingOccurrences(of: " id=\"two\"", with: "").replacingOccurrences(of: " lang=\"en\"", with: "")
+    let catalog = try compile(mpd(withSounds(a + b))).audioCatalog
+    XCTAssertTrue(catalog.allSatisfy { $0.language == nil })
+    XCTAssertEqual(Set(catalog.map(\.id)), Set(try compile(mpd(withSounds(b + a))).audioCatalog.map(\.id)))
+    reject(mpd(withSounds(a + a)))
+  }
+  func testAudioLanguageCaseAndRepeatedRolesNormalizeIdentity() throws {
+    let a = sound("main", language: "en-US")
+    let b = a.replacingOccurrences(of: "en-US", with: "EN-us").replacingOccurrences(of: "<AudioChannelConfiguration", with: "<Role value=\"main\"/><AudioChannelConfiguration")
+    XCTAssertEqual(try compile(mpd(withSounds(a))).audioCatalog.map(\.id), try compile(mpd(withSounds(b))).audioCatalog.map(\.id))
+  }
+  func testAudioLimitsAndInjectionRejection() throws {
+    XCTAssertEqual(try compile(mpd(withSounds((0..<16).map { sound("a\($0)") }.joined()))).audioCatalog.count, 16)
+    for language in ["", "en_XX", "en-a", "en-variant-variant", "en-a-abc-A-def", "en&amp;X", "en&#10;X", "en&#10;", "en-K", "en&quot;X", String(repeating: "a", count: 129)] {
+      reject(mpd(withSounds(sound("main", language: language))))
+    }
+    reject(mpd(withSounds(sound(String(repeating: "a", count: 129)))))
+    for language in ["zh-Hant-TW", "es-419", "sl-rozaj-biske-1994", "zh-cmn-Hans", "en-a-abc-x-local", "x-private", "i-klingon", "sgn-BE-FR"] {
+      XCTAssertEqual(try compile(mpd(withSounds(sound("main", language: language)))).audioCatalog.first?.language, language)
+    }
+  }
+  func testAudioCodecAndAlignmentStillValidatedBeforeCaps() throws {
+    let invalid = sound("bad").replacingOccurrences(of: "mp4a.40.2", with: "mp4a.40.5")
+    reject(mpd(withSounds(sound("good") + invalid)))
+    let shifted = sound("shifted").replacingOccurrences(of: "duration=\"2\"", with: "presentationTimeOffset=\"2\" duration=\"2\"")
+    reject(mpd(withSounds(sound("good") + shifted)))
+  }
+  func testAllAudioResourceOriginsParticipateInCredentialFiltering() throws {
+    let cross = sound("cross").replacingOccurrences(of: "<Representation", with: "<BaseURL>https://cdn.test/audio/</BaseURL><Representation")
+    var reads: [(URL, Bool)] = []
+    _ = try compile(mpd(withSounds(sound("local") + cross)), seen: { reads.append(($0, $1)) })
+    XCTAssertTrue(reads.contains { $0.0.host == "cdn.test" })
+    XCTAssertTrue(reads.filter { $0.0.host == "cdn.test" }.allSatisfy { $0.1 })
+    XCTAssertTrue(reads.filter { $0.0.host == "origin.test" }.allSatisfy { !$0.1 })
+  }
+  func testDashOptionMappingUsesTokensNotOrderOrLanguage() throws {
+    let catalog = try compile(mpd(withSounds(sound("main") + sound("comment", role: "commentary")))).audioCatalog
+    let ids = catalog.map(\.id)
+    XCTAssertEqual(try YlDashAudioOptionMapping.identities(names: [["English", ids[1]], ["English", ids[0]]], catalog: catalog), Array(ids.reversed()))
+    for names in [[["English"], ["English"]], [[ids[0]], [ids[0]]], [[ids[0], ids[1]], [ids[1]]], [[ids[0]]]] {
+      XCTAssertThrowsError(try YlDashAudioOptionMapping.identities(names: names, catalog: catalog))
+    }
+  }
+  func testGenericAudioIdentitySurvivesReorderingWithoutReusingRemovedIds() throws {
+    var registry = YlAudioSelectionIdentityRegistry()
+    func ids(_ options: [String]) throws -> [String] {
+      try registry.identities(options: options, restore: { value in
+        (value as? String).flatMap { options.contains($0) ? $0 : nil }
+      }, encode: { $0 })
+    }
+    let initial = try ids(["main", "comment"])
+    XCTAssertEqual(try ids(["comment", "main"]), Array(initial.reversed()))
+    XCTAssertEqual(try ids(["comment"]), [initial[1]])
+    let restored = try ids(["comment", "new"])
+    XCTAssertEqual(restored[0], initial[1]); XCTAssertFalse(initial.contains(restored[1]))
+    registry.reset()
+    XCTAssertFalse(initial.contains(try ids(["main"])[0]))
+    XCTAssertThrowsError(try ids((0..<129).map { "option-\($0)" }))
+  }
   private let source = URL(string: "https://origin.test/dash/manifest.mpd")!
   private func period(_ inner: String? = nil, base: String = "", start: Int = 0) -> String {
     """
