@@ -1,0 +1,210 @@
+{
+  "completedDate": "2026-10-13",
+  "scope": "P05 same-notifier direct mutation admission",
+  "tvsBase": "c991032104bea2f14963dcb1b48ebac0fe28469c",
+  "tvsCommit": "dafccb0ab532eaf97373acc8e80c8b237112e72d",
+  "playerSnapshot": "89cc246dc741cedb4c74e7214dcdddb0143ea966",
+  "ownedFiles": [
+    "lib/providers/live_source_provider.dart",
+    "lib/providers/live_source_provider.g.dart",
+    "lib/utils/live_source_error.dart",
+    "test/modules/live/features/live_source_mutation_test.dart",
+    "test/modules/live/features/live_source_rename_feedback_test.dart"
+  ],
+  "verifiedCommittedInputs": [
+    {
+      "path": "lib/providers/live_source_provider.dart",
+      "sha256": "871f7d859fd97b1807471af1a4f5876128a9573b88e0c185ea19fc1593eedf19"
+    },
+    {
+      "path": "lib/providers/live_source_provider.g.dart",
+      "sha256": "e81f29a848591af6c065ea2b5ec22d784343c1458703fb187fc5ec0728fc1fdf"
+    },
+    {
+      "path": "lib/utils/live_source_error.dart",
+      "sha256": "1e8e52485216d6b90799c22547d1212f84e85316f0dc6499552f310efcb97b20"
+    },
+    {
+      "path": "test/modules/live/features/live_source_mutation_test.dart",
+      "sha256": "68ce1a23cc2d7f78f742d7d0002d5c522d206286f59f558cac092bb004300908"
+    },
+    {
+      "path": "test/modules/live/features/live_source_rename_feedback_test.dart",
+      "sha256": "7c4860b12d9bc3a70aa3cb614b5a247568b384bd710e435d9ad9edb5d35f2bd3"
+    },
+    {
+      "path": "test/modules/live/features/live_subscription_feedback_test.dart",
+      "sha256": "661819bad99817badce6c4a3247bb3e03611e5773654212da3a6f10d1ccf0027"
+    },
+    {
+      "path": "test/modules/live/features/live_subscription_errors_test.dart",
+      "sha256": "299ada85be1cf23eb73f03a89c950f0462126cc55d811e3c8c5eeebcd38fff9d"
+    },
+    {
+      "path": "test/modules/live/features/live_source_notifier_test.dart",
+      "sha256": "4a8730ffb5afc67ace79f7e310f382dd69e5bcc97f0bd153589887b2073df64e"
+    },
+    {
+      "path": "test/modules/live/features/live_source_add_transaction_test.dart",
+      "sha256": "50f90034c678975bf90315ae1f314e081f9b127d67cf5b5b56f8c85fadb52672"
+    },
+    {
+      "path": "test/modules/live/features/live_source_refresh_transaction_test.dart",
+      "sha256": "e753977f9c6a01a8294bf8c4c95ee205a5060d2ab4e5336eab1f119ae588b76a"
+    },
+    {
+      "path": "test/modules/live/features/live_source_parser_test.dart",
+      "sha256": "6865160578f087f822e5920503fffaacace07d0d7a99927b208819bd128ed93e"
+    },
+    {
+      "path": "test/modules/subscription/features/source_name_edit_test.dart",
+      "sha256": "7273e0d43bd79be5c55d506ddffe926cd92929b68c7926d6056ba9c406e59740"
+    },
+    {
+      "path": "test/modules/player/features/playback_source_subscriptions_test.dart",
+      "sha256": "d0f2fa4f7c309789455de15804f81d77f2e94b522333dc6e89f12d49eb4e7438"
+    },
+    {
+      "path": "test/modules/settings/features/preset_import_provider_test.dart",
+      "sha256": "f1104ac12ab68bb46e2ad60ad6fa229ce5e88632954a3ee42543c7295ec364a6"
+    },
+    {
+      "path": "lib/pages/settings/preset_import_provider.dart",
+      "sha256": "5fe6daf4ccae3fd13e1f1d08ff8878cbd4995636f313704ba68159e2417e3269"
+    },
+    {
+      "path": "lib/pages/settings/preset_import_provider.g.dart",
+      "sha256": "2f7be53d2f015584f5e33cc93f57541be5b28a563c784ff6e4bfb4a0f39b0c31"
+    },
+    {
+      "path": "lib/utils/live_source_manager.dart",
+      "sha256": "f672476b8f0a72f19247d8067ec37bb07d939c2f7d5eabbcd6170e886bb2f277"
+    },
+    {
+      "path": "lib/utils/live_source_parser.dart",
+      "sha256": "7490411dbfe5f9c41814334103a79e56c1ea11f281fb068983638b704d3f95ca"
+    },
+    {
+      "path": "lib/models/app_error.dart",
+      "sha256": "a8a201021c7f978273aacf319ae14ee689d9914c5a56f0efd572d8f7b71362b3"
+    },
+    {
+      "path": "lib/models/app_error.freezed.dart",
+      "sha256": "435fb374b4dff2f855391f6f16929001b7f8de6e447cb8f4fda8dd9941a32d09"
+    },
+    {
+      "path": "lib/models/live_source.dart",
+      "sha256": "564cb7fd634d1cd87f8b2fd9bb74b4db11d4699c054582c0a6e20fcbc6866d5c"
+    },
+    {
+      "path": "lib/models/live_source.freezed.dart",
+      "sha256": "095e7f2a46186136682f73609c2de63496e2c73809114edc9b8b2d004959ff87"
+    },
+    {
+      "path": "lib/models/live_source.g.dart",
+      "sha256": "e061f13db9247b65b8a04f85e98dc61f27eead894acda19d65bf17b76191ed4a"
+    },
+    {
+      "path": "lib/session/network_service.dart",
+      "sha256": "8daff1588cf011c037157559b6e92a3d1beee687aa5c1039805240c814b2421a"
+    },
+    {
+      "path": "lib/session/outbound_http.dart",
+      "sha256": "e5b48cc2d87b5f328b811255761cd72e10ce48c7abc742a8c8b4297f42af9c37"
+    },
+    {
+      "path": "pubspec.yaml",
+      "sha256": "5c65155869260385a02cd9c9f192880148690c39e293ea2c5ce1db07d3ca33e4"
+    },
+    {
+      "path": "pubspec.lock",
+      "sha256": "8bc7656782e9070a7c308c0d03d3ae6f2d7c4ccd8d94181cb6a0c8f7c76f84e8"
+    }
+  ],
+  "snapshot": "git archive; existing package config roots remapped to archives, existing package graph copied; no dependency resolution",
+  "commands": {
+    "tests": [
+      "flutter",
+      "test",
+      "--no-pub",
+      "test/modules/live/features/live_source_mutation_test.dart",
+      "test/modules/live/features/live_source_rename_feedback_test.dart",
+      "test/modules/live/features/live_subscription_feedback_test.dart",
+      "test/modules/live/features/live_subscription_errors_test.dart",
+      "test/modules/live/features/live_source_notifier_test.dart",
+      "test/modules/live/features/live_source_add_transaction_test.dart",
+      "test/modules/live/features/live_source_refresh_transaction_test.dart",
+      "test/modules/live/features/live_source_parser_test.dart",
+      "test/modules/subscription/features/source_name_edit_test.dart",
+      "test/modules/player/features/playback_source_subscriptions_test.dart",
+      "test/modules/settings/features/preset_import_provider_test.dart",
+      "--reporter",
+      "expanded"
+    ],
+    "analyze": "flutter analyze --no-pub",
+    "format": [
+      "dart",
+      "format",
+      "--output=none",
+      "--set-exit-if-changed",
+      "lib/providers/live_source_provider.dart",
+      "lib/providers/live_source_provider.g.dart",
+      "lib/utils/live_source_error.dart",
+      "test/modules/live/features/live_source_mutation_test.dart",
+      "test/modules/live/features/live_source_rename_feedback_test.dart"
+    ],
+    "generate": "dart --packages=.dart_tool/package_config.json /Users/yy2021_8689/.pub-cache/hosted/pub.dev/build_runner-2.15.1/bin/build_runner.dart build --delete-conflicting-outputs --build-filter=lib/providers/live_source_provider.g.dart"
+  },
+  "results": {
+    "newTests": 20,
+    "baselineRed": {
+      "passed": 9,
+      "failed": 16,
+      "explanation": "16 new admission cases fail; 4 new failure-release characterization cases and 5 prior widget cases pass"
+    },
+    "targetedGreen": 25,
+    "relatedPassed": 108,
+    "failed": 0,
+    "skipped": 0,
+    "analyze": "No issues found",
+    "format": "5 files, 0 changed",
+    "diffCheck": true
+  },
+  "generation": {
+    "unrelatedBaselineGeneratedFilesRestored": 63,
+    "notes": [
+      "Filtered first generation deletes unrelated generated outputs; all omitted baseline outputs and unrelated model whitespace changes restored before validation.",
+      "Existing ignored --delete-conflicting-outputs option and SDK3.12/analyzer3.11 language warning retained; no upgrade."
+    ]
+  },
+  "intermediateFailures": [
+    {
+      "log": "red",
+      "sha256": "130f0f5135a5766d841dd193c361c778212d04583a32ede9897a9db50fa165d1",
+      "reason": "Initial test matcher incorrectly assumed AppError implements Exception; fixed matcher then baseline RED rerun."
+    },
+    {
+      "log": "green",
+      "sha256": "f1bfcc68806672319ded9d1c187a6639b3837721369e2a5433b8c6896437bbbb",
+      "reason": "24 passed/1 failed: immediate busy feedback could leave loading; moved busy check ahead of loading and final25/25."
+    },
+    {
+      "log": "final-analyze",
+      "sha256": "f2d8cbe5a3deabb516c221fdaa2a4adb7e5195a15cbd4309ce8869fa7d89e499",
+      "reason": "One test curly-braces lint; fixed, final analysis clean."
+    }
+  ],
+  "review": {
+    "agent": "review_live_mutation",
+    "verdict": "Ready, no Critical/Important/Minor",
+    "mode": "read-only code and logs; reviewer did not execute tests",
+    "secondReview": false
+  },
+  "limitations": [
+    "One live-source notifier only: no direct manager, multiple notifier/container/isolate/process locking.",
+    "Busy requests are rejected for manual retry, never queued or automatically retried.",
+    "Preset VOD/live remains partly successful parallel import; VOD is a test substitute here, no cross-module transaction claim.",
+    "Other existing non-busy CRUD error normalization unchanged.",
+    "No real subscriptions/devices/native app builds/playback or full P05 acceptance."
+  ]
+}

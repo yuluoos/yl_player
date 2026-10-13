@@ -581,3 +581,13 @@ API注释同步；67项新增测试、独立Python压缩金标及managedHTTP/Flu
 共享200000上限，跨轨/描述/初始样本/后续分片累计。补齐API注释，22项新边界/实际
 文件/managed HTTP用例，证据见[报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)。
 保持原失败原子性及正常渲染；整个P02和设备验收仍开放，长播放/弱网ABR未改。
+
+
+### 2026-10-13 P05 直接订阅变更准入
+
+同一LiveSourceNotifier的直接增删刷新与重命名反馈共用操作保护，覆盖预设导入的直播
+调用；繁忙安全报错，反馈在loading前拒绝，成功/失败后可手动重试。TVS `dafccb0`，
+固定播放器 `89cc246`，新增20项、相关108/108、分析/格式/独立复审通过，未占设备。
+见[P05报告](../reports/2026-09-26-remaining-05-live-business.md)和
+[验证收据](../reports/evidence/2026-10-13-live-source-mutation/verification.json)。
+跨实例/进程、预设VOD/live整体事务、实际媒体与完整P05继续开放。
