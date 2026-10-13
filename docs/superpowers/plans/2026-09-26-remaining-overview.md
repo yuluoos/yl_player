@@ -606,3 +606,13 @@ tx3g配置/样本修饰box纳入共享200000额度，覆盖跨轨/描述及初�
 widget证据见[报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)和
 [契约](../specs/2026-10-13-subtitle-compression-chain.md)。Next/加密/WebM及整个P02仍开放；
 长播放/弱网ABR未改。
+
+
+### 2026-10-13 P05 本地订阅存储错误
+
+本地文件IO/内容损坏与重复/缺失/空改名统一为安全分类，坏文件阻止后续CRUD并保留原样；
+首次加载页显示恢复建议。TVS `0530bd7`，固定播放器 `0a4e70b`；新增19项、最终127/127，
+分析/格式通过。独立复审数值溢出疑点在当前SDK实测排除并保留回归，见
+[P05报告](../reports/2026-09-26-remaining-05-live-business.md)与
+[验证收据](../reports/evidence/2026-10-13-live-source-storage/verification.json)。
+未占设备；无自动修复/备份恢复功能、跨实例并发或完整P05验收承诺。
