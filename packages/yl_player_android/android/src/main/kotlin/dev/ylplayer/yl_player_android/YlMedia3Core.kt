@@ -11,7 +11,6 @@ import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
-import androidx.media3.common.TrackSelectionOverride
 import androidx.media3.common.Tracks
 import androidx.media3.common.Timeline
 import androidx.media3.common.VideoSize
@@ -68,7 +67,9 @@ internal class YlMedia3Core(
         ),
     )
     private lateinit var exoPlayer: ExoPlayer
-    private val audioSelections = mutableMapOf<String, AudioSelection>()
+    private var audioIntent: YlAudioIntent? = null
+    private val dashAudio = source.format == AndroidMediaFormat.DASH ||
+        source.locator.substringBefore('?').substringBefore('#').lowercase().endsWith(".mpd")
     private var sourceIsLive = false
     private var sourceClass = YlSourceClass.NETWORK_VOD
     private var stopped = false
@@ -206,13 +207,15 @@ internal class YlMedia3Core(
     }
     fun snapshotRestorePoint() = YlEngineRestorePoint(if (active) max(0L, exoPlayer.currentPosition) else savedPositionMs,
         resumeAtLiveEdge || (normalizedLiveOffset()?.let { it <= 2_000L } == true), lifecycle.state.playbackIntended,
-        audioTracks.firstOrNull { it.isSelected }?.id, videoTracks.filter { it.isSelected }.map { it.id },
+        audioIntent?.id, videoTracks.filter { it.isSelected }.map { it.id },
         requestedPlaybackSpeed.toDouble(), exoPlayer.volume.toDouble(),
         hostQualityConstraint.maxWidth?.toLong(), hostQualityConstraint.maxHeight?.toLong(), hostQualityConstraint.maxBitrate?.toLong(), videoSelection)
     fun restore(point: YlEngineRestorePoint) {
         savedPositionMs = if (rtmp) 0 else point.positionMs; resumeAtLiveEdge = rtmp || point.liveEdge
         setPlaybackSpeed(point.speed)
         setVolume(point.volume)
+        audioIntent = point.selectedAudioTrack?.let { YlAudioIntent(it, dashAudio) }
+        trackSelector.audioIntent = audioIntent
         videoSelection = point.videoSelection
         setVideoConstraints(AndroidVideoConstraintsMessage(point.maxWidth, point.maxHeight, point.maxBitrate))
         lifecycle.reduce(if (point.playbackIntended) YlLifecycleEvent.USER_PLAY else YlLifecycleEvent.USER_PAUSE)
@@ -354,7 +357,8 @@ internal class YlMedia3Core(
         healthWindowStartedAtMs = null
         lastHealthEvaluationMs = 0L
         currentError = null
-        audioSelections.clear()
+        audioIntent = null
+        trackSelector.audioIntent = null
         audioTracks = emptyList()
         videoTracks = emptyList()
         videoSelection = YlFixedVideoState()
@@ -423,7 +427,8 @@ internal class YlMedia3Core(
         healthWindowStartedAtMs = null
         lastHealthEvaluationMs = 0L
         currentError = null
-        audioSelections.clear()
+        audioIntent = null
+        trackSelector.audioIntent = null
         audioTracks = emptyList()
         videoTracks = emptyList()
         videoSelection = YlFixedVideoState()
@@ -475,12 +480,10 @@ internal class YlMedia3Core(
     }
 
     fun selectAudioTrack(trackId: String) {
-        val selection = audioSelections[trackId]
-            ?: throw YlBoundaryException(YlFailureKind.SOURCE_MISSING)
-        trackSelector.parameters = trackSelector.buildUponParameters()
-            .clearOverridesOfType(C.TRACK_TYPE_AUDIO)
-            .addOverride(TrackSelectionOverride(selection.group.mediaTrackGroup, selection.trackIndex))
-            .build()
+        if (disposed || stopped) throw YlBoundaryException(YlFailureKind.SESSION_STALE)
+        YlAudioSelectionPolicy.resolve(YlAudioSelectionPolicy.candidates(exoPlayer.currentTracks, dashAudio), trackId)
+        audioIntent = YlAudioIntent(trackId, dashAudio)
+        trackSelector.audioIntent = audioIntent
     }
 
     fun selectVideoTrack(trackId: String?) {
@@ -653,9 +656,12 @@ internal class YlMedia3Core(
         val eventPeriod = eventTime.mediaPeriodId
         if (eventPeriod != null && !currentTimeline.isEmpty &&
             currentTimeline.getUidOfPeriod(exoPlayer.currentPeriodIndex) != eventPeriod.periodUid) return
-        if (tracks.groups.isEmpty() && videoSelection.quality != null) { emitState(); return }
+        if (tracks.groups.isEmpty() && (videoSelection.quality != null || audioIntent != null)) { emitState(); return }
+        val audioCatalog: List<YlAudioCandidate>
         val nextSelection = try {
             if (protectedDrm != null) requireProtectedTracks(tracks)
+            audioCatalog = YlAudioSelectionPolicy.candidates(tracks, dashAudio)
+            audioIntent?.let { YlAudioSelectionPolicy.resolve(audioCatalog, it.id) }
             YlVideoSelectionPolicy.reconcile(tracks, videoSelection, hostQualityConstraint, deviceProfile.videoEnvelope)
         } catch (error: YlBoundaryException) {
             status = "error"; currentError = error.kind; lastFailure = error.kind
@@ -670,27 +676,24 @@ internal class YlMedia3Core(
         if (!currentTimeline.isEmpty) {
             pendingVideoGeometry.keys.removeAll { currentTimeline.getIndexOfPeriod(it) <= exoPlayer.currentPeriodIndex }
         }
-        audioSelections.clear()
-        val audio = mutableListOf<AndroidTrackMessage>()
+        val audio = audioCatalog.map { candidate ->
+            val group = tracks.groups.single { it.mediaTrackGroup === candidate.group }
+            val observed = (0 until group.length).firstOrNull { group.isTrackSelected(it) }
+            val index = observed ?: candidate.supportedIndices.firstOrNull() ?: 0
+            val format = group.getTrackFormat(index)
+            AndroidTrackMessage(candidate.id, AndroidTrackKind.AUDIO,
+                YlAudioSelectionPolicy.label(format), format.language, format.codecs ?: format.sampleMimeType,
+                format.bitrate.valueOrNull()?.toLong(), isSelected = observed != null)
+        }
         val video = mutableListOf<AndroidTrackMessage>()
         tracks.groups.forEachIndexed { groupIndex, group ->
-            for (trackIndex in 0 until group.length) {
+            if (group.type == C.TRACK_TYPE_VIDEO) for (trackIndex in 0 until group.length) {
                 val format = group.getTrackFormat(trackIndex)
-                val type = group.type
-                if (type != C.TRACK_TYPE_AUDIO && type != C.TRACK_TYPE_VIDEO) continue
-                val kind = if (type == C.TRACK_TYPE_AUDIO) "audio" else "video"
-                val id = format.id?.takeIf(String::isNotBlank) ?: "$kind-$groupIndex-$trackIndex"
-                val mapped = AndroidTrackMessage(id,
-                    if (type == C.TRACK_TYPE_AUDIO) AndroidTrackKind.AUDIO else AndroidTrackKind.VIDEO,
+                val id = format.id?.takeIf(String::isNotBlank) ?: "video-$groupIndex-$trackIndex"
+                video += AndroidTrackMessage(id, AndroidTrackKind.VIDEO,
                     format.label, format.language, format.codecs ?: format.sampleMimeType,
                     format.bitrate.valueOrNull()?.toLong(), format.width.valueOrNull()?.toLong(),
                     format.height.valueOrNull()?.toLong(), group.isTrackSelected(trackIndex))
-                if (type == C.TRACK_TYPE_AUDIO) {
-                    audio += mapped
-                    audioSelections[id] = AudioSelection(group, trackIndex)
-                } else {
-                    video += mapped
-                }
             }
         }
         audioTracks = audio
@@ -812,7 +815,7 @@ internal class YlMedia3Core(
         decoderName = null; isHardwareDecoding = false
         firstFrameRendered = false; hasBeenReady = false
         currentError = null; lastFailure = null; status = "opening"
-        audioSelections.clear(); audioTracks = emptyList()
+        audioTracks = emptyList()
         if (videoSelection.quality == null) videoTracks = emptyList()
         resetDecoderGate()
         val item = MediaItem.Builder().setMediaId(identity.sessionId).setUri(Uri.parse(source.locator))

@@ -1,0 +1,14 @@
+{
+  "androidPigeon": {
+    "command": "sh tool/check_pigeon.sh",
+    "cwd": "packages/yl_player_android",
+    "exitCode": 0,
+    "generatedDiff": false
+  },
+  "applePigeon": {
+    "command": "sh tool/check_pigeon.sh",
+    "cwd": "packages/yl_player_apple",
+    "exitCode": 0,
+    "generatedDiff": false
+  }
+}

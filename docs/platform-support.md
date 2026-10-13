@@ -680,3 +680,24 @@ options use system property-list restoration, not array positions or labels. A
 selected identity that cannot be restored reports `track.not_found`. New loads
 reset selection. See the [P02 report](superpowers/reports/2026-09-26-remaining-02-tracks-subtitles.md)
 for tested platforms and the separate physical-audio acceptance boundary.
+
+### Android audio content identity
+
+Media3 publishes one audio choice per content group, with opaque IDs independent
+of group order and rendition bitrate. For DASH, identity includes the declared
+AdaptationSet ID plus normalized language, roles and encoding-family metadata;
+Representation IDs and generated `unset:<index>` group IDs do not define content.
+Other formats use the available Format IDs plus semantic metadata; changing these
+IDs does not promise continuity. Missing IDs never become public array indices;
+indistinguishable groups reject `policy.unsupported`. Identity work is bounded to
+128 audio groups, 4096 formats and 1024 characters per identity string.
+
+Explicit audio selection captures intent independently of observed selection. It
+is restored before preparation and enforced by the playback-thread selector for
+reading-ahead Periods. A missing chosen group reports `track.not_found`, including
+during prebuffering before a boundary; it does not use video PD-01 fallback. Empty
+transient public callbacks retain intent, while Stop/new preparation resets it.
+Manual selection picks one supported rendition inside the chosen group; automatic
+Media3 adaptation and managed networking retain their existing policies. See the
+[P02 report](superpowers/reports/2026-09-26-remaining-02-tracks-subtitles.md) for
+exact tests and separate device/physical-audio limitations.

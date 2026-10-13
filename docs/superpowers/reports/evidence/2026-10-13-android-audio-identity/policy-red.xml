@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest" tests="10" skipped="0" failures="2" errors="0" timestamp="2026-10-13T09:06:36.137Z" hostname="MacBook-Pro.local" time="1.013">
+  <properties/>
+  <testcase name="identity allocation is bounded by group format and text limits()" classname="dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest" time="0.715"/>
+  <testcase name="accepted audio intent invalidates real selector even without parameter changes()" classname="dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest" time="0.22">
+    <failure message="java.lang.IllegalStateException" type="java.lang.IllegalStateException">java.lang.IllegalStateException
+	at com.google.common.base.Preconditions.checkState(Preconditions.java:497)
+	at androidx.media3.exoplayer.trackselection.TrackSelector.init(TrackSelector.java:164)
+	at androidx.media3.exoplayer.trackselection.DefaultTrackSelector.init(DefaultTrackSelector.java:2549)
+	at dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest.accepted_audio_intent_invalidates_real_selector_even_without_parameter_changes$lambda$0(YlAudioSelectionPolicyTest.kt:130)
+	at dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest.android(YlAudioSelectionPolicyTest.kt:33)
+	at dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest.accepted audio intent invalidates real selector even without parameter changes(YlAudioSelectionPolicyTest.kt:127)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+</failure>
+  </testcase>
+  <testcase name="generic content keys are nested length framed not delimiter concatenations()" classname="dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest" time="0.004">
+    <failure message="org.opentest4j.AssertionFailedError: expected: not equal but was: &lt;audio-c31d836f25bcacb886666e6ad3bce8ec976105cc6fba77e029db324f89cca3c9&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: expected: not equal but was: &lt;audio-c31d836f25bcacb886666e6ad3bce8ec976105cc6fba77e029db324f89cca3c9&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:152)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertNotEquals.failEqual(AssertNotEquals.java:277)
+	at app//org.junit.jupiter.api.AssertNotEquals.assertNotEquals(AssertNotEquals.java:263)
+	at app//org.junit.jupiter.api.Assertions.assertNotEquals(Assertions.java:2832)
+	at app//kotlin.test.junit5.JUnit5Asserter.assertNotEquals(JUnitSupport.kt:36)
+	at app//kotlin.test.AssertionsKt__AssertionsKt.assertNotEquals(Assertions.kt:80)
+	at app//kotlin.test.AssertionsKt.assertNotEquals(Unknown Source)
+	at app//kotlin.test.AssertionsKt__AssertionsKt.assertNotEquals$default(Assertions.kt:79)
+	at app//kotlin.test.AssertionsKt.assertNotEquals$default(Unknown Source)
+	at app//dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest.generic_content_keys_are_nested_length_framed_not_delimiter_concatenations$lambda$0(YlAudioSelectionPolicyTest.kt:74)
+	at app//dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest.android(YlAudioSelectionPolicyTest.kt:33)
+	at app//dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest.generic content keys are nested length framed not delimiter concatenations(YlAudioSelectionPolicyTest.kt:71)
+	at java.base@17.0.19/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base@17.0.19/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base@17.0.19/java.util.ArrayList.forEach(ArrayList.java:1511)
+</failure>
+  </testcase>
+  <testcase name="DASH declared content separates repeated representation ids and follows reordered groups()" classname="dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest" time="0.001"/>
+  <testcase name="DASH representation rename bitrate label and rendition order do not define audio identity()" classname="dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest" time="0.004"/>
+  <testcase name="unset DASH group positions cannot identify missing metadata and duplicate semantics reject()" classname="dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest" time="0.002"/>
+  <testcase name="real Media3 selection binds next Period before output and never mixes groups()" classname="dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest" time="0.044"/>
+  <testcase name="unsupported chosen rendition rejects and actual missing group has track code()" classname="dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest" time="0.002"/>
+  <testcase name="language case normalizes but content role codec rate and channel changes do not match()" classname="dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest" time="0.004"/>
+  <testcase name="real Media3 lookahead missing choice fails before automatic output and preserves error code()" classname="dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest" time="0.011"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

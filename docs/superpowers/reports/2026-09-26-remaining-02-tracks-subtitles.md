@@ -950,3 +950,26 @@ fixture误用严格managed配置被既有准入拒绝，后改为已支持的默
 
 源码、依赖输入、日志和复审裁定见[evidence manifest](evidence/2026-10-13-dash-audio-identity/manifest.json)。
 最终证据由执行者冻结核验，复审者未重新评判后续验证。未增加依赖或改动原生二进制制品。
+
+
+### 2026-10-13 Android 多音轨身份与跨 Period 选择保持
+
+本轮补齐 Android 路线：每个 Media3 音频内容组公开一个逻辑音轨，公共 ID 由声明的内容身份与语言、角色、编码信息生成。DASH 使用声明的数字 AdaptationSet ID，忽略 Media3 的 `unset:<index>`、Representation ID、码率、标签和顺序；普通格式使用可用 Format ID 与语义元数据，无法区分的重复身份明确拒绝。嵌套及外层均使用长度编码后摘要，防止包含分隔符的内容碰撞。上限为 128 个音频组、4096 个 Format、每个身份字符串 1024 字符。
+
+显式选择先根据当前真实目录校验，再保存独立于观察值的不可变意图。恢复点保存已接受的意图；恢复准备前与 playback-thread 的预读 Period 选择阶段都会应用该意图。丢失内容返回 `track.not_found`，没有受支持 rendition 或身份歧义返回 `policy.unsupported`；不会猜测相同语言的替代音轨。公共瞬时空目录不清除选择，Stop/new prepare 清除选择。手动选择仍固定一个受支持 rendition，自动 Media3 适配与 managed 网络策略沿用原行为；不新增音频 ABR。
+
+实现依据核对了固定版本 [Media3 1.11.0 DashMediaPeriod](https://raw.githubusercontent.com/androidx/media/1.11.0/libraries/exoplayer_dash/src/main/java/androidx/media3/exoplayer/dash/DashMediaPeriod.java) 的 group ID 规则与 [DefaultTrackSelector](https://raw.githubusercontent.com/androidx/media/1.11.0/libraries/exoplayer/src/main/java/androidx/media3/exoplayer/trackselection/DefaultTrackSelector.java) 的预填充选择路径；fresh reviewer 另用缓存字节码检查该定义不会被 super 的自动音轨选择覆盖。未增加依赖或修改 Pigeon schema。
+
+验证：
+
+- 最终 Android JVM：476 项，**473 通过、3 跳过、0 失败**。跳过的是已有独立 MediaMTX RTMP 服务用例，本轮未启动该服务，不算通过。保存全部 case identity。
+- 新增 16 项 JVM 用例：身份重排、同 ID 异角色、缺 ID、DASH Representation 改名、碰撞、预算、真实 selector 缺轨、失效通知、接受先于观察、恢复/停止和旧 Period 回调隔离；相关音视频定向集 32/32。
+- Android API 36 TV arm64 模拟器公开集成 **2/2**：真实 Media3，managed 凭据请求，同语言 main/commentary 切换，第二 Period 重排与 Representation 改名，自然跨段及双向 seek，视频 caps 更新，非法 ID 不改变选择，下一段丢轨报错。丢轨可以在预缓冲阶段提前触发。
+- 隔离 archive+overlay 中四包 Dart **1954/1954**（135/1624/113/82），静态分析 No issues；两处 Dart 格式检查 0 改动。Android/Apple Pigeon 检查均 exit 0，生成代码无漂移。
+- fresh final read-only review：0 Critical、0 Important、0 Minor；逐项范围裁定见证据。复审后仅对齐一项测试模拟的错误种类并重跑 JVM，没有生产代码更改。
+
+过程证据保留真实 RED：先前嵌套 Mockito 初始化错误不算行为 RED；修正夹具并恢复原 Core 后，两项稳定身份断言确实失败，再恢复实现通过。扩展集发现嵌套分隔符碰撞并修复。公开测试曾暴露 Coordinator 仍返回 `source.missing`，现与 Core 统一；最后 JVM 的模拟引擎还主动抛旧错误，同步夹具后全量通过。首次模拟器快照遗留 VM service 地址使测试无法启动，冷启动同一自有 AVD 后正常执行；已关闭本轮启动的模拟器，不保存快照。Android local.properties 无遗留测试 target。
+
+独立 FFmpeg 对既有 440/660 Hz AAC 输入的证据沿用上一轮，**不代表物理扬声器声音验证**；模拟器以 `-no-audio` 运行。没有最低系统/真机、多 codec 音频 ABR 或通用 Format ID 改名连续性承诺。全 P02、长播放、弱网 ABR、P05、字幕生命周期与 HDR/DRM/外屏综合验收仍开放；本轮未改这些功能。
+
+[本轮冻结证据](evidence/2026-10-13-android-audio-identity/manifest.json)包括最终日志、原生 case identities、review、候选/依赖哈希；Dart 测试运行在隔离副本，原生与公开集成运行在共享工作区并校验最终输入。仅本轮文件限定提交，无 push。

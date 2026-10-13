@@ -34,6 +34,10 @@ final class YlPlaybackSession {
   /// An unavailable ID rejects the command without selecting a replacement.
   /// Apple static DASH keeps semantic IDs across reordered Periods and video
   /// quality rebuilds; a changing audio identity set is currently unsupported.
+  /// Android publishes one content choice per audio group and retains explicit
+  /// selection across Periods and restoration while its semantic identity exists.
+  /// Missing selected content reports `track.not_found`; it does not silently
+  /// select another language or role. IDs remain platform-specific.
   /// Completion acknowledges selection; it does not measure audible output.
   Future<void> selectAudioTrack(String trackId) => _command(() {
     validateYlTrackId(trackId);

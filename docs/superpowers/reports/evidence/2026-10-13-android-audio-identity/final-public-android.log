@@ -1,0 +1,8 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/android_audio_tracks_test.dart
+Running Gradle task 'assembleDebug'...                             15.4s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...        2,293ms
+00:00 +0: Android same-language audio remains selected across reordered Periods, seeks and caps
+00:04 +1: Android reports selected audio missing in prepared next Period
+00:05 +2: (tearDownAll)
+00:05 +2: All tests passed!

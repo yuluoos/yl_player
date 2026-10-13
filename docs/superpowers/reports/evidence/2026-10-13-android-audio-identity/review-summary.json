@@ -1,0 +1,43 @@
+{
+  "reviewer": "/root/android_audio_final_review",
+  "freshReadOnly": true,
+  "critical": 0,
+  "important": 0,
+  "minor": 0,
+  "fixPasses": 0,
+  "rulings": [
+    {
+      "scope": "physical audio output",
+      "ruling": "Not claimed; emulator used -no-audio. Owned distinct 440/660 Hz AAC inputs and actual Media3 selected catalogs/segment requests are separate evidence."
+    },
+    {
+      "scope": "device and minimum OS",
+      "ruling": "Not claimed; one Android API 36 TV arm64 emulator only."
+    },
+    {
+      "scope": "long playback, weak-network ABR and P05",
+      "ruling": "Explicitly excluded and unchanged."
+    },
+    {
+      "scope": "full P02 acceptance",
+      "ruling": "Remains open; this closes only Android audio identity and selection continuity."
+    },
+    {
+      "scope": "subtitle clearing and resource failure isolation",
+      "ruling": "Outside changed audio slice; no new acceptance claim."
+    },
+    {
+      "scope": "rendering bounds",
+      "ruling": "Outside slice; audio identity has separately verified 128/4096/1024 bounds."
+    },
+    {
+      "scope": "HDR, DRM and external displays",
+      "ruling": "Outside slice; JVM regression is not device coverage."
+    },
+    {
+      "scope": "final runtime and fingerprints",
+      "ruling": "Executor checked exact native case identities, final public result, four-package results and committed-tree fingerprints."
+    }
+  ],
+  "afterReview": "Final JVM exposed a stale fake worker error input (SOURCE_MISSING versus expected TRACK_NOT_FOUND). Only that fixture input was aligned; full JVM rerun passed. No production change after review."
+}

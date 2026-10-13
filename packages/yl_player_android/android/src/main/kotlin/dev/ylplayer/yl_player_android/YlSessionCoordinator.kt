@@ -654,7 +654,7 @@ internal class YlSessionCoordinator(
         intent = { trackIntent },
         validate = {
             YlBoundaryValidation.identity(command.trackId)
-            if (reducer.state.audioTracks.none { it.id == command.trackId }) throw YlBoundaryException(YlFailureKind.SOURCE_MISSING)
+            if (reducer.state.audioTracks.none { it.id == command.trackId }) throw YlBoundaryException(YlFailureKind.TRACK_NOT_FOUND)
         }, apply = { selectAudioTrack(command.trackId) }, remember = { desiredTrack = command.trackId })
     override suspend fun selectVideoTrack(command: AndroidVideoTrackCommand) = acceptedCommand(command.sessionId,
         intent = { videoTrackIntent },

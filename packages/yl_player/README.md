@@ -361,3 +361,12 @@ identity set; ordering may change. Same-session quality replacement retains the
 chosen track. Ordinary AVPlayer restoration uses system option identities and
 reports `track.not_found` if the chosen option disappears. New loads reset the
 choice. This does not add audio ABR, mixing or strict managed DASH admission.
+
+Android exposes one logical audio choice per Media3 group. DASH choices use
+declared AdaptationSet identity and semantic metadata, so Representation rename,
+bitrate changes and group reordering do not redirect a selection. Other formats
+require stable available Format IDs and metadata; missing IDs are not replaced
+by array positions, and ambiguous content is rejected. Explicit selection
+survives same-session restoration and is applied to reading-ahead Periods. If the
+chosen content disappears, `track.not_found` can arrive before the Period boundary
+during prebuffering. Transient empty catalogs preserve intent; new loads reset it.

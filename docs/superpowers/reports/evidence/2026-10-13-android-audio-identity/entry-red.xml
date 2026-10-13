@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest" tests="2" skipped="0" failures="2" errors="0" timestamp="2026-10-13T09:02:04.207Z" hostname="MacBook-Pro.local" time="1.578">
+  <properties/>
+  <testcase name="same declared id with different audio roles never collides()" classname="dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest" time="1.561">
+    <failure message="org.opentest4j.AssertionFailedError: expected: &lt;2&gt; but was: &lt;1&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: expected: &lt;2&gt; but was: &lt;1&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+	at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1156)
+	at app//kotlin.test.junit5.JUnit5Asserter.assertEquals(JUnitSupport.kt:32)
+	at app//kotlin.test.AssertionsKt__AssertionsKt.assertEquals(Assertions.kt:63)
+	at app//kotlin.test.AssertionsKt.assertEquals(Unknown Source)
+	at app//kotlin.test.AssertionsKt__AssertionsKt.assertEquals$default(Assertions.kt:62)
+	at app//kotlin.test.AssertionsKt.assertEquals$default(Unknown Source)
+	at app//dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest.same_declared_id_with_different_audio_roles_never_collides$lambda$0(YlMedia3AudioIdentityTest.kt:23)
+	at app//dev.ylplayer.yl_player_android.YlMetricsCollectorTestKt.withCore(YlMetricsCollectorTest.kt:204)
+	at app//dev.ylplayer.yl_player_android.YlMetricsCollectorTestKt.withCore$default(YlMetricsCollectorTest.kt:171)
+	at app//dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest.same declared id with different audio roles never collides(YlMedia3AudioIdentityTest.kt:17)
+	at java.base@17.0.19/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base@17.0.19/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base@17.0.19/java.util.ArrayList.forEach(ArrayList.java:1511)
+</failure>
+  </testcase>
+  <testcase name="missing format ids follow role when groups reorder()" classname="dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest" time="0.015">
+    <failure message="org.opentest4j.AssertionFailedError: expected: &lt;[audio-1-0, audio-0-0]&gt; but was: &lt;[audio-0-0, audio-1-0]&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: expected: &lt;[audio-1-0, audio-0-0]&gt; but was: &lt;[audio-0-0, audio-1-0]&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+	at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1156)
+	at app//kotlin.test.junit5.JUnit5Asserter.assertEquals(JUnitSupport.kt:32)
+	at app//kotlin.test.AssertionsKt__AssertionsKt.assertEquals(Assertions.kt:63)
+	at app//kotlin.test.AssertionsKt.assertEquals(Unknown Source)
+	at app//kotlin.test.AssertionsKt__AssertionsKt.assertEquals$default(Assertions.kt:62)
+	at app//kotlin.test.AssertionsKt.assertEquals$default(Unknown Source)
+	at app//dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest.missing_format_ids_follow_role_when_groups_reorder$lambda$0(YlMedia3AudioIdentityTest.kt:34)
+	at app//dev.ylplayer.yl_player_android.YlMetricsCollectorTestKt.withCore(YlMetricsCollectorTest.kt:204)
+	at app//dev.ylplayer.yl_player_android.YlMetricsCollectorTestKt.withCore$default(YlMetricsCollectorTest.kt:171)
+	at app//dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest.missing format ids follow role when groups reorder(YlMedia3AudioIdentityTest.kt:25)
+	at java.base@17.0.19/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base@17.0.19/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base@17.0.19/java.util.ArrayList.forEach(ArrayList.java:1511)
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

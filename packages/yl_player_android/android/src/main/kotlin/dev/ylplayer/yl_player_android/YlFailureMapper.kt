@@ -37,6 +37,7 @@ internal enum class YlFailureKind(
     SESSION_STALE(AndroidFailureCategory.CANCELLED, "session.stale", "The playback session is no longer current."),
     POLICY_UNSUPPORTED(AndroidFailureCategory.UNSUPPORTED, "policy.unsupported", "The requested playback policy is unsupported."),
     SOURCE_INVALID(AndroidFailureCategory.SOURCE, "source.invalid", "The playback source is invalid."),
+    TRACK_NOT_FOUND(AndroidFailureCategory.SOURCE, "track.not_found", "The requested audio track is unavailable."),
     SOURCE_MISSING(AndroidFailureCategory.SOURCE, "source.missing", "The playback source is unavailable."),
     NETWORK_FAILED(AndroidFailureCategory.NETWORK, "network.failed", "The network request failed.", true),
     NETWORK_DNS_FAILED(AndroidFailureCategory.NETWORK, "network.dns_failed", "The media host could not be resolved. Check the network connection and source host configuration.", true),

@@ -1,0 +1,102 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/android_audio_tracks_test.dart
+Running Gradle task 'assembleDebug'...                             25.0s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...           3.3s
+00:00 +0: Android same-language audio remains selected across reordered Periods, seeks and caps
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: throws <Instance of 'YlPlayerException'> with `code`: 'track.not_found'
+  Actual: <Instance of 'Future<void>'>
+   Which: threw YlPlayerException:<YlFailure(category: source, code: source.missing, retryable:
+false, scope: command, diagnosticId: 0e6ecbf5-d8c5-4e20-891f-4d03808031fe)>
+          stack dart:async
+_Completer.completeError
+                package:yl_player_android/src/android_player.dart 261:51
+AndroidPlayer._run.<fn>
+                ===== asynchronous gap ===========================
+                dart:async
+Future.then
+                package:yl_player_android/src/android_player.dart 243:28
+AndroidPlayer._run
+                package:yl_player_android/src/android_player.dart 603:11
+AndroidPlayer._sessionCommand
+                package:yl_player_android/src/android_player.dart 657:11
+AndroidPlayer.selectAudioTrack
+                package:yl_player/src/playback_session.dart 44:29
+YlPlaybackSession.selectAudioTrack.<fn>
+                package:yl_player/src/playback_session.dart 12:17
+YlPlaybackSession._command
+                package:yl_player/src/playback_session.dart 42:52
+YlPlaybackSession.selectAudioTrack
+                Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/android_audio_tracks_test.dart
+127:17  main.<fn>
+                ===== asynchronous gap ===========================
+                dart:async
+_CustomZone.registerUnaryCallback
+                Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/android_audio_tracks_test.dart
+59:27   main.<fn>
+                package:flutter_test/src/widget_tester.dart 192:29
+testWidgets.<fn>.<fn>
+                ===== asynchronous gap ===========================
+                dart:async
+_CustomZone.registerUnaryCallback
+                package:flutter_test/src/widget_tester.dart 189:25
+testWidgets.<fn>.<fn>
+                package:flutter_test/src/binding.dart 1952:19
+TestWidgetsFlutterBinding._runTestBody
+                ===== asynchronous gap ===========================
+                dart:async
+_CustomZone.registerUnaryCallback
+                package:flutter_test/src/binding.dart 1941:5
+TestWidgetsFlutterBinding._runTestBody
+                dart:async
+_CustomZone.runBinary
+                package:flutter_test/src/binding.dart 1926:10
+TestWidgetsFlutterBinding._runTest
+                package:flutter_test/src/binding.dart 3059:12
+LiveTestWidgetsFlutterBinding.runTest
+                package:integration_test/integration_test.dart 237:17
+IntegrationTestWidgetsFlutterBinding.runTest
+                package:flutter_test/src/widget_tester.dart 184:24
+testWidgets.<fn>
+                ===== asynchronous gap ===========================
+                package:stream_channel
+_GuaranteeSink.add
+                var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/flutter_tools.jcOtBF/flutter_test_listener.2CDuXC/listener.dart
+56:22          main.<fn>
+
+          which has `code` with value 'source.missing' which is different.
+                Expected: track.not_ ...
+                  Actual: source.mis ...
+                          ^
+                 Differ at offset 0
+
+When the exception was thrown, this was the stack:
+#0      fail (package:matcher/src/expect/expect.dart:187:31)
+#1      _expect.<anonymous closure> (package:matcher/src/expect/expect.dart:155:13)
+<asynchronous suspension>
+<asynchronous suspension>
+#8      expectLater.<anonymous closure> (package:flutter_test/src/widget_tester.dart:508:19)
+<asynchronous suspension>
+#9      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/android_audio_tracks_test.dart:126:7)
+<asynchronous suspension>
+#10     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#11     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 7 frames from dart:async and package:stack_trace)
+
+The test description was:
+  Android same-language audio remains selected across reordered Periods, seeks and caps
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:06 +0 -1: Android same-language audio remains selected across reordered Periods, seeks and caps [E]
+  Test failed. See exception logs above.
+  The test description was: Android same-language audio remains selected across reordered Periods, seeks and caps
+  
+00:06 +0 -1: Android reports selected audio missing in prepared next Period
+00:06 +1 -1: (tearDownAll)
+00:07 +1 -1: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/android_audio_tracks_test.dart: Android same-language audio remains selected across reordered Periods, seeks and caps

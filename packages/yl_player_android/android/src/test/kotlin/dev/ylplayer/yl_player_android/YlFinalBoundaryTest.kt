@@ -68,7 +68,7 @@ class YlFinalBoundaryTest {
                 audioTracks = listOf(AndroidTrackMessage("advertised", AndroidTrackKind.AUDIO, isSelected = false)))))
             val acknowledged = CompletableDeferred<Unit>()
             engine.commandAcknowledgement = acknowledged
-            engine.commandError = YlBoundaryException(YlFailureKind.SOURCE_MISSING)
+            engine.commandError = YlBoundaryException(YlFailureKind.TRACK_NOT_FOUND)
             val replies = mutableListOf<List<*>>()
             val message = AndroidPlayerHostApi.codec.encodeMessage(listOf(AndroidTrackCommand(session.sessionId, "advertised")))!!.apply { flip() }
             fixture.handlers.getValue(fixture.channel(player.channelSuffix, "selectAudioTrack")).onMessage(message) {
@@ -76,7 +76,7 @@ class YlFinalBoundaryTest {
             }
             runCurrent(); assertTrue(replies.isEmpty())
             acknowledged.complete(Unit); runCurrent()
-            assertEquals(1, replies.size); assertEquals("source.missing", replies.single()[0])
+            assertEquals(1, replies.size); assertEquals("track.not_found", replies.single()[0])
             assertEquals(AndroidPlaybackStatus.READY, f.coordinator.initialState.status)
             f.coordinator.onBackground(); runCurrent(); f.coordinator.onForeground(); runCurrent()
             assertNull(engine.currentTrack)
@@ -136,9 +136,11 @@ class YlFinalBoundaryTest {
         } finally { fixture.registry.detach(); runCurrent(); Dispatchers.resetMain(); clock.close() }
     }
 
-    @Test fun `actual core rejects absent track and nonlive edge before mutating restore inputs`() = withCore { core, _, _ ->
+    @Test fun `actual core rejects absent track and nonlive edge before mutating restore inputs`() = withCore { core, player, _ ->
+        val emptyTracks = androidx.media3.common.Tracks.EMPTY
+        `when`(player.currentTracks).thenReturn(emptyTracks)
         val prior = core.snapshotRestorePoint()
-        assertEquals(YlFailureKind.SOURCE_MISSING, assertFailsWith<YlBoundaryException> { core.selectAudioTrack("missing-but-nonempty") }.kind)
+        assertEquals(YlFailureKind.TRACK_NOT_FOUND, assertFailsWith<YlBoundaryException> { core.selectAudioTrack("missing-but-nonempty") }.kind)
         assertEquals(YlFailureKind.POLICY_UNSUPPORTED, assertFailsWith<YlBoundaryException> { core.seekToLiveEdge() }.kind)
         assertEquals(prior, core.snapshotRestorePoint())
         for (limit in listOf(1L, Int.MAX_VALUE.toLong())) {
@@ -301,7 +303,7 @@ class YlFinalBoundaryTest {
             val engine = f.engines.single()
             engine.commandError = YlBoundaryException(YlFailureKind.SOURCE_MISSING)
             for ((method, argument, code) in listOf(
-                Triple("selectAudioTrack", AndroidTrackCommand(id, "missing-but-nonempty"), "source.missing"),
+                Triple("selectAudioTrack", AndroidTrackCommand(id, "missing-but-nonempty"), "track.not_found"),
                 Triple("seekToLiveEdge", AndroidSessionCommand(id), "policy.unsupported"))) {
                 val response = fixture.invoke(fixture.handlers.getValue(fixture.channel(player.channelSuffix, method)), listOf(argument))
                 runCurrent()

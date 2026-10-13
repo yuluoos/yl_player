@@ -1,5 +1,8 @@
 ## 0.2.0-dev.2
 
+- Preserve explicit Android audio content selection across reordered DASH Periods
+  and session restoration. Publish semantic group identities, reject ambiguous
+  groups, and report missing selected content as `track.not_found`.
 - Add stable audio identities and Apple DASH multi-audio selection for up to 16
   AAC-LC AdaptationSets, retaining the selected track across quality replacement
   and same-session restoration. Reject ambiguous or changing Period audio sets;

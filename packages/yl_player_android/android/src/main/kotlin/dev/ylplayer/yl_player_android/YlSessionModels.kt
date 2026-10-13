@@ -10,6 +10,8 @@ internal interface YlSessionVideoOutput {
     val identity: YlOutputIdentity
     fun release()
 }
+/** Captures accepted audio intent even when the observed selection callback is still pending.
+ * Null leaves automatic audio selection to Media3; identities are scoped to this source session. */
 internal data class YlEngineRestorePoint(val positionMs: Long, val liveEdge: Boolean, val playbackIntended: Boolean,
     val selectedAudioTrack: String? = null, val selectedVideoTracks: List<String> = emptyList(),
     val speed: Double = 1.0, val volume: Double = 1.0,

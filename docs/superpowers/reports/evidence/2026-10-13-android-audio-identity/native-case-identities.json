@@ -1,0 +1,2385 @@
+[
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest",
+    "name": "new source profile replaces pressure state()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest",
+    "name": "loading stops at maximum duration()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest",
+    "name": "loading continues below minimum while byte budget remains()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest",
+    "name": "pinned Media3 selected tracks callback retains explicit buffer target()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest",
+    "name": "memory shrink is idempotent until restore()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest",
+    "name": "pinned Media3 prepare callback is implemented without changing adaptive profile()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest",
+    "name": "playback start uses bounded initial and rebuffer thresholds()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest",
+    "name": "loading continues between duration limits while bytes remain()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest",
+    "name": "playback speed reduces playout duration()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest",
+    "name": "byte ceiling wins over additional buffer time()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAndroidAudioFocusDriverTest",
+    "name": "API26 uses media attributes explicit duck callbacks no delayed focus and same request for abandon()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAndroidAudioFocusDriverTest",
+    "name": "real callbacks pause modern duck requests and duck legacy requests on main handler()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAndroidAudioFocusDriverTest",
+    "name": "API24 honors real grant result and abandons only granted legacy request()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAndroidAudioFocusDriverTest",
+    "name": "one application noisy receiver delivers only matching action then unregisters once()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAudioFocusCoordinatorTest",
+    "name": "denied acquisition never owns focus or receiver and a later play can retry()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAudioFocusCoordinatorTest",
+    "name": "permanent loss retires its request immediately and stale gain cannot authorize a denied new request()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAudioFocusCoordinatorTest",
+    "name": "first play acquires once and final participant alone releases focus and noisy()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAudioFocusCoordinatorTest",
+    "name": "transient loss does not authorize new or repeated play until actual gain()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAudioFocusCoordinatorTest",
+    "name": "focus and noisy reach all current participants and stale released listener is ignored()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAudioFocusCoordinatorTest",
+    "name": "framework cleanup failure cannot throw across irrevocable session handoff and still abandons owned focus()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest",
+    "name": "identity allocation is bounded by group format and text limits()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest",
+    "name": "accepted audio intent invalidates real selector even without parameter changes()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest",
+    "name": "generic content keys are nested length framed not delimiter concatenations()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest",
+    "name": "DASH declared content separates repeated representation ids and follows reordered groups()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest",
+    "name": "DASH representation rename bitrate label and rendition order do not define audio identity()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest",
+    "name": "unset DASH group positions cannot identify missing metadata and duplicate semantics reject()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest",
+    "name": "real Media3 selection binds next Period before output and never mixes groups()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest",
+    "name": "unsupported chosen rendition rejects and actual missing group has track code()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest",
+    "name": "language case normalizes but content role codec rate and channel changes do not match()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest",
+    "name": "real Media3 lookahead missing choice fails before automatic output and preserves error code()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCallbackDispatcherTest",
+    "name": "five second acknowledgement deadline is terminal()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCallbackDispatcherTest",
+    "name": "snapshot copies caller owned track lists and keeps original load identity()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCallbackDispatcherTest",
+    "name": "callback error terminates once and never skips the failed milestone()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCallbackDispatcherTest",
+    "name": "detach invalidates in flight acknowledgement and queued items()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCallbackDispatcherTest",
+    "name": "attach gates all methods and each acknowledgement permits exactly one following item()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCallbackDispatcherTest",
+    "name": "all six generated callback methods share one acknowledged queue and suffix()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest",
+    "name": "background during actual public replacement retains current unreleased output for foreground()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest",
+    "name": "foreground during recreate install gap never attaches a released wrapper()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest",
+    "name": "rollback retains private resources on unacknowledged detach()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest",
+    "name": "acknowledged detach revokes render eligibility while retaining owned resources()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest",
+    "name": "worker accepted old frame crossing rebuild cannot consume main public milestone()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest",
+    "name": "strict reacquisition keeps public surface private until new evidence and acknowledged handoff()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest",
+    "name": "configuration replacement during strict inspection cannot publish the new public surface()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest",
+    "name": "private resource releases only after successful public output acknowledgement()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest",
+    "name": "new rejected suspended requests do not take ownership from older valid requests()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest",
+    "name": "worker rejection settles quiescence without losing a newer accepted suspended track()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest",
+    "name": "track and timeline acceptance remain independent across peer quiescence()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest",
+    "name": "new worker rejection does not replace the earlier successfully accepted track()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest",
+    "name": "reviewer probe older active track cannot replace newer accepted suspended track()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest",
+    "name": "older active live edge cannot replace newer suspended position()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest",
+    "name": "stop while peer waits for former command settlement fences every late result()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest",
+    "name": "peer rollback cannot publish before its former players old worker has settled()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest",
+    "name": "host invalidation cancels its worker and settles peer quiescence before late acknowledgement()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest",
+    "name": "pending position yields only to successfully accepted newer timeline intent()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest",
+    "name": "accepted position survives quiescence while its worker is active or queued behind track()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDashManifestParserTest",
+    "name": "template child requests inherit same origin and unknown paths stay stripped()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDashManifestParserTest",
+    "name": "multiple relative base URLs register their own children()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDashManifestParserTest",
+    "name": "timeline list and single file index register actual request URLs()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDashManifestParserTest",
+    "name": "unused sibling BaseURL fanout is bounded before downstream copies()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDashManifestParserTest",
+    "name": "long BaseURL and finite segment expansion obey retained URI budget()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDashManifestParserTest",
+    "name": "manifest byte and representation admission bounds reject before exposure()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDashManifestParserTest",
+    "name": "template expansion and numeric padding are bounded before Media3 formatting()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDashManifestParserTest",
+    "name": "individual expanded BaseURL rejects before retained children()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDashManifestParserTest",
+    "name": "cross origin BaseURL followed by absolute return origin never restores credentials()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDashManifestParserTest",
+    "name": "redirected manifest root taints all returned child requests()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDashManifestParserTest",
+    "name": "dynamic protected and excessive timeline manifests fail before child requests()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest",
+    "name": "prepare failure does not touch prior owner()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest",
+    "name": "new request waits for safe candidate release then rollback before ownership transfer()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest",
+    "name": "quiesce deadline waits for acknowledgement then restores without activation()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest",
+    "name": "commit precedes prior deactivation and same player old engine participates()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest",
+    "name": "restore deadline quarantines release and late success cannot change ownership()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest",
+    "name": "independent nonexclusive activation commits while first awaits acknowledgement()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest",
+    "name": "nonexclusive replacements quiesce their own former without touching video peer()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest",
+    "name": "same player successors retain one gate through cancelled nonexclusive release()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest",
+    "name": "quiesce failure disposes candidate without changing owner()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest",
+    "name": "activation and commit failure restore exactly once after candidate release()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest",
+    "name": "detach releases previous and candidate without restoring()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest",
+    "name": "activation deadline releases candidate and observes asynchronous restore()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest",
+    "name": "known audio progresses during exclusive quarantine and retiring video owner()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest",
+    "name": "unknown candidate proven nonexclusive restores prior before audio commit()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest",
+    "name": "nonexclusive retirement blocks same player only and detach owns every pending participant()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest",
+    "name": "restore failure clears resource ownership and reports prior terminal failure()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmBridgeTest",
+    "name": "redirect rejection retains its actionable failure code()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmBridgeTest",
+    "name": "coordinator routes DRM through protected factory and license bridge then returns descriptor()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmBridgeTest",
+    "name": "cancelled native request sends cancellation and never installs late reply()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmBridgeTest",
+    "name": "view ACK waits for worker attachment and rejects wrong owner()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmBridgeTest",
+    "name": "cancelling exact pending load preserves current session and cannot cancel a newer request()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmBridgeTest",
+    "name": "binary reply must match complete exchange identity and standard errors retain meaning()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmKeySessionTest",
+    "name": "challenge copies and diagnostics never print binary data()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmKeySessionTest",
+    "name": "pending then key-required starts a renewal without waiting for usable()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmKeySessionTest",
+    "name": "oversize response and system output restriction fail closed()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmKeySessionTest",
+    "name": "denial is not expiry and explicit system expiry is distinguished()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmKeySessionTest",
+    "name": "queued renewal challenge failure completes failure instead of losing its deadline()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmKeySessionTest",
+    "name": "failed candidate cannot revoke another session and open failure releases driver()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmKeySessionTest",
+    "name": "synchronous install callbacks are processed after successful installation only()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmKeySessionTest",
+    "name": "pending status revokes usable state and cannot wait forever()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmKeySessionTest",
+    "name": "renewal coalesces repeated events and dispose discards late results()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmKeySessionTest",
+    "name": "timeout cancels transport and late result cannot install even before dispose()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmKeySessionTest",
+    "name": "background cancels old callbacks and foreground owns a new driver()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmKeySessionTest",
+    "name": "queued initial key request cannot publish readiness before renewal finishes()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmKeySessionTest",
+    "name": "deadline includes waiting for system usable keys()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlDrmKeySessionTest",
+    "name": "HTTP success is not usable keys and duplicate response cannot install twice()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFailureMapperTest",
+    "name": "known failures have stable codes and unknown FlutterErrors cannot bypass sanitization()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFailureMapperTest",
+    "name": "structured http 403 crosses mapper media and Flutter boundaries without retry()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFailureMapperTest",
+    "name": "media cancellation outranks competing dns evidence()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFailureMapperTest",
+    "name": "explicit policy and cancellation classifications outrank nested network evidence()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFailureMapperTest",
+    "name": "non 403 http status remains conservative()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFailureMapperTest",
+    "name": "dns failures are classified from bounded cause chain without leaking prose()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFailureMapperTest",
+    "name": "public failures and local diagnostics never contain untrusted exception prose()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFailureMapperTest",
+    "name": "logging failure cannot escape the safe boundary()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFailureMapperTest",
+    "name": "media playback preserves structured dns cause()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFallbackRoutingPolicyTest",
+    "name": "container and decoder failures route once to native fallback()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFallbackRoutingPolicyTest",
+    "name": "network source policy and resource failures never route to decoder fallback()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFallbackRoutingPolicyTest",
+    "name": "first frame timeout routes only with progressing input and video packets()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFinalBoundaryTest",
+    "name": "actual core rejects absent track and nonlive edge before mutating restore inputs()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFinalBoundaryTest",
+    "name": "all managed native integer fields preserve min max and reject one past before acceptance()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFinalBoundaryTest",
+    "name": "newer position intent wins over live edge captured by held rollback track application()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFinalBoundaryTest",
+    "name": "real host waits for worker rejection and returns exactly once without storing rejected intent()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFinalBoundaryTest",
+    "name": "real queued host replies reject missing track and VOD live edge without failing playback()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFinalBoundaryTest",
+    "name": "production create rejects invalid intervals before texture allocation()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFinalBoundaryTest",
+    "name": "core measured live offset preserves unknown and clamps negative for timeline metrics and restore()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFinalBoundaryTest",
+    "name": "worker completion after stop or replacement cannot store intent in the new session()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFinalBoundaryTest",
+    "name": "accepted track and live edge during held restoration apply after its captured restore point()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFinalBoundaryTest",
+    "name": "real host detach settles a pending asynchronous command once and ignores late worker result()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFinalBoundaryTest",
+    "name": "managed delays validate signed32 and ordering in actual assess and load()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFinalBoundaryTest",
+    "name": "runtime malformed commands leave healthy session and restore inputs unchanged()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFinalBoundaryTest",
+    "name": "load constraint ranges reject before cancelling pending load or creating engine()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFinalBoundaryTest",
+    "name": "two proven audio coordinators restore independently while first worker is held()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFirstFrameGateTest",
+    "name": "only first current-generation callback is accepted()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlFirstFrameGateTest",
+    "name": "new source generation admits one new first frame()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest",
+    "name": "legacy software codec names are rejected()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest",
+    "name": "strict gate waits for initialized evidence and admits audio without video callback()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest",
+    "name": "positive evidence belongs to initialized codec and unavailable on API28 names()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest",
+    "name": "audio codecs pass through normal Media3 selection()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest",
+    "name": "HEVC requires an explicit accepted hardware candidate()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest",
+    "name": "constrained envelope is capped at 1080p30()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest",
+    "name": "strict selector accepts only API29 records and refuses name-only API28 candidates()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest",
+    "name": "known vendor codec names are accepted()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest",
+    "name": "platform software flag wins over a vendor-looking name()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest",
+    "name": "host limits can only tighten an envelope()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest",
+    "name": "v2 selector preserves default order and preferred software fallback()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest",
+    "name": "landscape display does not reject portrait video by encoded height()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest",
+    "name": "production inventory reports deduplicated video MIME families excluding software audio and encoders()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest",
+    "name": "canonical aliases prove only consistent exact initialized codec metadata()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest",
+    "name": "display resolution is a viewport preference and tier limits remain hard()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest",
+    "name": "portrait display does not reject landscape video by encoded width()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHlsPlaylistParserTest",
+    "name": "aes128 without explicit iv derives it from media sequence()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHlsPlaylistParserTest",
+    "name": "parses live media sequence init map byte ranges and aes128 key()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHlsPlaylistParserTest",
+    "name": "selects the highest master variant within software envelope()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlHlsPlaylistParserTest",
+    "name": "endlist marks vod and sample aes is rejected()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlLifecyclePolicyTest",
+    "name": "focus grace expiry releases and later gain rebuilds()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlLifecyclePolicyTest",
+    "name": "dispose is emitted exactly once()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlLifecyclePolicyTest",
+    "name": "explicit pause is never undone by focus gain()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlLifecyclePolicyTest",
+    "name": "focus gain inside grace resumes only focus-paused playback()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlLifecyclePolicyTest",
+    "name": "foreground rebuilds a paused source without starting playback()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlLifecyclePolicyTest",
+    "name": "surface and memory events map to bounded actions()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlLifecyclePolicyTest",
+    "name": "surface generation rejects stale source and surface callbacks()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlLifecyclePolicyTest",
+    "name": "background release is idempotent()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest",
+    "name": "fixed selection delegates and blocks incompatible fallback until authoritative auto snapshot()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest",
+    "name": "rejected constraints do not poison later fallback policy()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest",
+    "name": "DASH disabled fallback preserves terminal prepare and asynchronous failures()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest",
+    "name": "already completed release remains successful with immediate dispatch()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest",
+    "name": "explicit auto reason survives fallback snapshots and restoration until stop()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest",
+    "name": "failed borrower release still waits for every other owned release()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest",
+    "name": "decoder failure during activation switches once and restores controls()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest",
+    "name": "track unavailable reason survives fallback snapshots and restoration until stop()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest",
+    "name": "decoder failure during preparation publishes the backend switch()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest",
+    "name": "disposal acknowledgement waits for owned release and completes without self cancellation()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "resumed framing mismatch fails before delivering bytes beyond the validated range()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "mismatching resume and cancellation cannot produce concatenated body or extra retry()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "managed requests disable transparent gzip and unsafe encoded resume()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "connected server header stall expires and body timeout starts only after headers()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "chunked shortened range cannot leak wrong bytes inside the original resource length()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "actual HLS parser propagates master media key segment and return-origin provenance for both policies()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "OkHttp status recovery cannot bypass zero managed retry budget()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "both policies keep same origin headers and permanently strip custom credentials across redirects()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "chunked full remaining range overrun fails before completing a capped caller read()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "managed status retry count and events are exact()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "chunked final span EOF probe preserves inactivity retry and cancellation()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "managed rejects mismatched initial range and body retry header changes()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "chunked premature EOF cannot reset an exhausted retry budget()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "chunked short EOF and valid shortened spans resume inside the original retry budget()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "injected clock schedules one retry and fresh hop deadlines while preserving counters()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "partial body resumes exactly with same budget and strong validator()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "nonretryable 421 stays visible and no retry event is emitted()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "premature fixed length disconnect resumes with same strong representation()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "307 and 308 retain method body and redirect counter survives retries()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "cancellation while body resume retry is scheduled prevents reopening()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest",
+    "name": "header deadline settles while DNS is still blocked and late lookup cannot consume another budget()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRetryPolicyTest",
+    "name": "Retry After valid date and seconds replace backoff but excessive value refuses retry()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRetryPolicyTest",
+    "name": "retry count excludes initial and exponential delay saturates without jitter()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlManagedRetryPolicyTest",
+    "name": "only idempotent requests and specified statuses or transient errors retry()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3AcknowledgementTest",
+    "name": "throwing native operation remains unsafe and successful operation is acknowledged()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3AcknowledgementTest",
+    "name": "successful output operation cannot clear earlier unknown release()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3AcknowledgementTest",
+    "name": "normal native return with synchronous timeout callback is not acknowledged()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest",
+    "name": "same declared id with different audio roles never collides()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest",
+    "name": "missing format ids follow role when groups reorder()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest",
+    "name": "accepted choice survives stale observed selection and invalid command()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest",
+    "name": "DASH restore rebinds declared content despite representation names and array order()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest",
+    "name": "actual missing audio in nonempty Period reports error instead of replacing choice()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest",
+    "name": "lookahead and late Period catalogs never replace public audio directory()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3ConfigurationTest",
+    "name": "shared transient pause keeps play intent and existing three second resource grace()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3ConfigurationTest",
+    "name": "both actual ExoPlayer audio ownership flags are disabled for both policies()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3ConfigurationTest",
+    "name": "typed load strategies map to preserved adaptive profiles with automatic audio ownership disabled()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest",
+    "name": "bounded key wait maps timeout and never claims expired()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest",
+    "name": "clear and incompatible encryption do not open driver or send license()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest",
+    "name": "changed Period initialization has independent session and bounded concurrency()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest",
+    "name": "last release cancels license and discards late response and callback()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest",
+    "name": "format bytes copied and ambiguous or oversized init never creates session()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest",
+    "name": "dispose before scheduled start allocates nothing and bad close cannot escape coroutine()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest",
+    "name": "DASH capability probe accepts missing manifest PSSH but acquisition still requires init bytes()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest",
+    "name": "event subscriptions balance duplicate acquires and late subscriber receives current state()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest",
+    "name": "reference counts retain decoder borrowed keys through manager release and system failure()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest",
+    "name": "last release closes CDM and clears challenge before playback looper can quit()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest",
+    "name": "candidate waits for usable system keys and failure ends readiness wait()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest",
+    "name": "Media3 cannot decode until system keys usable and pending revokes usability()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest",
+    "name": "restore carries semantic fixed intent and rebinds recreated tracks before publication()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest",
+    "name": "fixed cap conflict leaves policy and restore point unchanged and health cannot downgrade()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest",
+    "name": "queued earlier output must not borrow the latest input coded format()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest",
+    "name": "output coded metadata changes even when cropped VideoSize is unchanged()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest",
+    "name": "same Period explicit quality change publishes output size without waiting for new tracks()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest",
+    "name": "output generations fence queued frames and deduplicate without losing reset recovery()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest",
+    "name": "lookahead and delayed prior Period callbacks cannot release fixed mode and stop fences old callbacks()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest",
+    "name": "read ahead input and scheduled future size stay pending until current Period mode changes()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest",
+    "name": "core preserves fixed and catalog across transient emptiness then publishes PD01 and sticky reason()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3SelectedVideoTest",
+    "name": "ready video with an unselected declared audio track requests audio fallback()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3SelectedVideoTest",
+    "name": "ready audio with unselected declared video is a decoder fallback signal()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3SelectedVideoTest",
+    "name": "audio only and selected video remain valid()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3StatePolicyTest",
+    "name": "terminal error survives later ready and idle callbacks()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMedia3StatePolicyTest",
+    "name": "initial buffering does not establish readiness()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMetricsCollectorTest",
+    "name": "real analytics callbacks map bandwidth and observed counters while selected bitrate stays on track()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMetricsCollectorTest",
+    "name": "selected representation bitrate is not a bandwidth estimate()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMetricsCollectorTest",
+    "name": "timestamped observations exclude initial buffering and preserve immutable snapshots()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMetricsCollectorTest",
+    "name": "public texture resizes to renderer dimensions without coded rotation or PAR()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMetricsCollectorTest",
+    "name": "live clock preserves real progress behind the sliding window without inventing pause progress()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMetricsCollectorTest",
+    "name": "three times speed with sustained frame drops keeps a fixed video playing()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMetricsCollectorTest",
+    "name": "measured zero counters and bandwidth remain distinct from unknown and allocator bytes()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMetricsCollectorTest",
+    "name": "real core fresh metrics do not claim unobserved zero or managed allocator bytes()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMetricsCollectorTest",
+    "name": "real core keeps PAR out of rendered dimensions and uses coded format dimensions()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlMetricsCollectorTest",
+    "name": "periodic metrics delta does not repeat static video geometry()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest",
+    "name": "rejects software video above 1080p or 30fps()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest",
+    "name": "rejects software codecs outside approved h264 and hevc scope()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest",
+    "name": "uses software for 1080p HEVC when device decoders reject its profile level()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest",
+    "name": "uses software for unsupported h264 or hevc configuration within bounded envelope()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest",
+    "name": "audio clock interpolates between coarse hardware timestamps()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest",
+    "name": "non blocking pcm write retains partial data for a later scheduler turn()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest",
+    "name": "software video pacing uses decoded frame time instead of reordered packet time()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest",
+    "name": "normal speed does not install muting playback parameters()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest",
+    "name": "uses hardware after FFmpeg demux when codec configuration is supported()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest",
+    "name": "audio clock interpolation never advances beyond written pcm()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest",
+    "name": "full video queue waits for presentation time instead of rendering a burst()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest",
+    "name": "pcm flush discards bytes that were not accepted by audio track()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest",
+    "name": "main10 level 62 remains software when hardware configuration probe rejects its level()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest",
+    "name": "downgrade cooldown is sixty seconds and never emits upgrade()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest",
+    "name": "HLS forced live edge recovery is rate limited()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest",
+    "name": "HTTP FLV severe backlog reconnects and then exhausts()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest",
+    "name": "running low memory downgrades adaptive streams but keeps fixed streams alive()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest",
+    "name": "two unhealthy windows downgrade one step()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest",
+    "name": "sustained frame drops cannot terminate a fixed rendition()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest",
+    "name": "rebuffer statistics alone cannot declare a fixed rendition unsupported()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest",
+    "name": "drop ratio and rebuffer thresholds mark a window unhealthy()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest",
+    "name": "HLS catches up gently and resets speed inside target()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackPolicyTest",
+    "name": "running low target is reduced by exactly 25 percent()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackPolicyTest",
+    "name": "constrained requests are clamped but smaller custom values survive()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackPolicyTest",
+    "name": "standard and capable modes retain bounded existing behavior()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackPolicyTest",
+    "name": "any constrained boundary wins()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackPolicyTest",
+    "name": "Android 7 1_5GB 32-bit is constrained()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackPolicyTest",
+    "name": "automatic live suffix and unknown live are deterministic()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackPolicyTest",
+    "name": "constrained automatic profiles match TVBox ceilings()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackPolicyTest",
+    "name": "explicit hint wins and query is ignored()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackPolicyTest",
+    "name": "local sources are classified before URL inspection()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackPolicyTest",
+    "name": "memory signals map to bounded actions()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackPolicyTest",
+    "name": "capable requires every capable signal()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackStallWatchdogTest",
+    "name": "repeated refresh keeps original first frame deadline()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackStallWatchdogTest",
+    "name": "first frame timeout reports network failure()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackStallWatchdogTest",
+    "name": "rebuffer timeout reports network failure after first frame()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackStallWatchdogTest",
+    "name": "playback recovery cancels pending rebuffer failure()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlaybackStallWatchdogTest",
+    "name": "play intent cancellation suppresses pending timeout()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerErrorPolicyTest",
+    "name": "resource and live recovery errors are stable()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerErrorPolicyTest",
+    "name": "missing hardware decoder has a stable public error()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerErrorPolicyTest",
+    "name": "codec diagnostic cannot contain a URL or headers()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerErrorPolicyTest",
+    "name": "adaptive decoder initialization can retry only once()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerErrorPolicyTest",
+    "name": "capability and decoder failures keep distinct codes()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "real factories across registries retain one application focus owner until final registry detaches()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "dispose unregisters and releases once even when called twice()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "factory or handler setup failure rolls back allocated resources()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "real production binding creates idle session and incompatible schema allocates nothing()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "plugin registers only the generated factory and removes its lifecycle registrations()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "real factory accepts explicit managed audio without idle ownership or allocation()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "load reply preserves request identity and mismatches fail safely()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "create registers one unique monotonic suffix per texture and attach is once only()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "all generated command handlers sanitize thrown session errors()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "texture allocation failure is typed and creates no session()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "delivery failure cancels pending load and releases the instance()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "committed schema 3 bytes reach schema 4 factory version gate()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "failed texture id read releases every allocated resource()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "timeout and engine detach settle pending load and ignore late acknowledgement()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "foreign protected view registration fails attachment without host admission()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "detach invalidates every host immediately and owns independent cleanup until acknowledged()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "a transient handler removal failure is retried while all other handlers are removed()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "new player inherits registry background state()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "engine detach releases all hosts when a session teardown throws()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "lifecycle forwarding isolates a failed host and keeps other sessions alive()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "host catches session exception before generated fallback and attach failure closes instance()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlPlayerRegistryTest",
+    "name": "dispose waits asynchronously for safe session release before releasing texture()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlProtectedCodecSelectorTest",
+    "name": "missing secure or actual hardware evidence fails closed()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlProtectedCodecSelectorTest",
+    "name": "Media3 insecure retry still queries secure codecs and filters false evidence()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlProtectedCodecSelectorTest",
+    "name": "audio secure requirement is preserved and cannot select unprotected audio()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlProtectedOutputTest",
+    "name": "frame arriving before attach acknowledgement reveals only after acknowledgement()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlProtectedOutputTest",
+    "name": "coordinator publishes protected frame identity and failed replacement restores old session()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlProtectedOutputTest",
+    "name": "holder destruction and retirement detach before returning with attach held()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlProtectedOutputTest",
+    "name": "uncommitted unknown and duplicate view cannot borrow another candidate()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlProtectedOutputTest",
+    "name": "destroy waits for worker detach and queued attach rechecks revision()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlProtectedOutputTest",
+    "name": "protected replacement rejects inactive and inspection branches()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlProtectedOutputTest",
+    "name": "failed candidate does not retire current and commit fences previous owner()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlProtectedOutputTest",
+    "name": "declared protected source cannot silently commit clear selected video()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlProtectedOutputTest",
+    "name": "protected primary never invokes clear native fallback on decoder failure()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlProtectedOutputTest",
+    "name": "protected core rejects ordinary output before attaching decoder()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlProtectedOutputTest",
+    "name": "late attachment ACK and frame are fenced across holder recreation and retire()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlProtectedOutputTest",
+    "name": "protected output rejects insecure switch and inspection before touching decoder()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlProtectedOutputTest",
+    "name": "native old frame cannot acquire new revision when same surface is rebound()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlProtectedViewTest",
+    "name": "native fit preserves display aspect ratio within portrait and landscape bounds()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlProtectedViewTest",
+    "name": "factory secures holder before attaching view and invalid identity remains black()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRedirectCredentialPolicyTest",
+    "name": "HLS reload query and cached graph edges cannot restore stripped credentials()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRedirectCredentialPolicyTest",
+    "name": "HLS ancestry graph is skipped when requests contain no sensitive credentials()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRedirectCredentialPolicyTest",
+    "name": "effective port change strips every credential()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRedirectCredentialPolicyTest",
+    "name": "same origin keeps caller credentials including implicit https port()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRedirectCredentialPolicyTest",
+    "name": "HLS ancestry graph is retained for every supported credential source()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRedirectCredentialPolicyTest",
+    "name": "host change strips every credential but keeps ordinary headers()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRedirectCredentialPolicyTest",
+    "name": "scheme downgrade strips every credential()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRedirectCredentialPolicyTest",
+    "name": "same origin keeps credentials with implicit http port()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRedirectCredentialPolicyTest",
+    "name": "credentials removed on first hop cannot reappear on second hop()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpAdmissionTest",
+    "name": "rtmp routes before HTTP conversion()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpAdmissionTest",
+    "name": "nested errors map safe phase codes and preserve permanent handshake rejection()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpAdmissionTest",
+    "name": "unsupported protocol and policies have stable rejection()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpAdmissionTest",
+    "name": "opaque app playpath query and port preserve lexical identity()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpAdmissionTest",
+    "name": "malformed and decoded control values rejected()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpControlTest",
+    "name": "ping replies retain timestamp and config chatter cannot prevent media timeout()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpControlTest",
+    "name": "audio and controls alone cannot complete video setup even when paused()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpControlTest",
+    "name": "Core pause freezes an already blocked loader read and resumes same connection()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpControlTest",
+    "name": "pause preserves elapsed inactivity instead of granting a new full allowance()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpControlTest",
+    "name": "Core pause before registration is inherited and Stop cancels blocked read()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpControlTest",
+    "name": "server denial is permanent and contains no remote prose()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpControlTest",
+    "name": "close cancels established blocked media read promptly()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpControlTest",
+    "name": "wrong transaction is protocol failure instead of false setup success()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpControlTest",
+    "name": "acknowledgement crosses a receive window during incomplete video message()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpControlTest",
+    "name": "consumer backpressure longer than inactivity does not expire a healthy stream()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpExtractorTest",
+    "name": "independent MediaMTX peer feeds AVC AAC samples to pinned extractor()",
+    "status": "skipped",
+    "reason": "Assumption failed: Optional independent owned loopback peer is not running"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpExtractorTest",
+    "name": "independent video-only peer formats every declared track()",
+    "status": "skipped",
+    "reason": "Assumption failed: Optional independent owned loopback peer is not running"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpExtractorTest",
+    "name": "real AVC AAC fixture passes owned FLV adapter into pinned Media3 extractor()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpExtractorTest",
+    "name": "independent peer transfers more than three negotiated ACK windows()",
+    "status": "skipped",
+    "reason": "Assumption failed: Optional independent owned loopback peer is not running"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpFlowControlTest",
+    "name": "hard soft dynamic bandwidth bounds outstanding bytes and ACK drains pending bytes()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpFlowControlTest",
+    "name": "pending output is capped before allocation and clear releases queued contents()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpFlowControlTest",
+    "name": "ACK unsigned wrap is accepted and future ACK is invalid()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpLifecycleTest",
+    "name": "coordinator preserves unsupported protocol before creating engine()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpLifecycleTest",
+    "name": "runtime time seek rejects zero and nonzero before changing intent()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpLifecycleTest",
+    "name": "Stop discards unreserved paused recovery and play does not resurrect it()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpLifecycleTest",
+    "name": "Core pause retains reserved backoff and rapid play cannot lose or double debit continuation()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpLifecycleTest",
+    "name": "Core defers transient failure while paused without reserving and Stop discards it()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpLifecycleTest",
+    "name": "Core keeps permanent and exhausted failures terminal while paused()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpLifecycleTest",
+    "name": "fresh epochs fence stale callbacks and preserve spent automatic budget()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpProtocolTest",
+    "name": "timestamp resets are per track and force a fresh epoch()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpProtocolTest",
+    "name": "declared codec configurations are immutable within a demux epoch()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpProtocolTest",
+    "name": "late AAC after video-only header rejects explicitly before tag output()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpProtocolTest",
+    "name": "AMF real object vectors preserve types and enforce recursion entries and strings()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpProtocolTest",
+    "name": "fmt zero one two three timestamps inherit and advance()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpProtocolTest",
+    "name": "chunk stream count and aggregate reassembly bytes are bounded()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpProtocolTest",
+    "name": "recovery only after commit and has one lifetime budget()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpProtocolTest",
+    "name": "AVC AAC preserve payload composition and timestamp but reject enhanced codecs()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpProtocolTest",
+    "name": "chunk reader handles partial input extended timestamp and multi chunks()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpProtocolTest",
+    "name": "bounds reject before allocation and abort releases accounting()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpProtocolTest",
+    "name": "valid config reset takes epoch precedence but malformed reset stays permanent()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpProtocolTest",
+    "name": "new fmt3 after fmt0 inherits nonzero timestamp as delta including extended values()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpProtocolTest",
+    "name": "interleaved chunks reassemble independently and abort drops pending buffer()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpReadinessTest",
+    "name": "terminal failure after an automatic epoch reaches original operation waiter()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpReadinessTest",
+    "name": "automatic epoch replacement resolves existing restore waiter with fresh decoder evidence()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpReadinessTest",
+    "name": "completed epoch never supplies readiness to the next epoch()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpReadinessTest",
+    "name": "committed coordinator foreground restore completes through automatic recovery epoch()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpTransportTest",
+    "name": "close interrupts a published connecting socket()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpTransportTest",
+    "name": "silent and trickling peers cannot extend absolute setup deadline()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpTransportTest",
+    "name": "DNS admission remains held after cancellation until actual OS lookup exit()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpTransportTest",
+    "name": "close interrupts a blocked socket write()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpTransportTest",
+    "name": "close wakes blocked handshake without waiting for setup()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionAudioTest",
+    "name": "failed same player handoff preserves ownership and ducked latest volume on rollback()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionAudioTest",
+    "name": "transient gain never overrides later explicit pause or stop()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionAudioTest",
+    "name": "participant joining an already ducked request inherits multiplier before play and volume edits()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionAudioTest",
+    "name": "noisy and permanent loss pause all participants and late gain cannot restart them()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionAudioTest",
+    "name": "last participant release resets shared duck policy without waiting for gain()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionAudioTest",
+    "name": "permanent loss then play before queued pause acquires a fresh request without stale gain()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionAudioTest",
+    "name": "two managed players share focus and close of one does not release the other()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionAudioTest",
+    "name": "app managed play pause background stop and close never touch shared driver()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionAudioTest",
+    "name": "denied autoplay reports failure after commit without starting engine()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionAudioTest",
+    "name": "same player successful autoplay handoff retains ownership and nonautoplay replacement releases it()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionAudioTest",
+    "name": "cross player candidate failure keeps acquired focus throughout quiesce and rollback()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionAudioTest",
+    "name": "candidate prepare is silent and denied direct play never starts engine()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionAudioTest",
+    "name": "focus resumes intended current player and duck composes latest volume()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionAudioTest",
+    "name": "managed explicit play awaiting volume preserves intent through background without playing hidden()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionAudioTest",
+    "name": "permanent loss across volume acknowledgement retains newer play and retires old request()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionAudioTest",
+    "name": "focus gain awaiting volume cannot replay into a pending background quiesce()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionAudioTest",
+    "name": "background waits for quiesce and release acknowledgement then foreground reacquires()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "new load in retained background waits without allocation or autoplay()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "pending retry events replay once after initial or replacement commit before live retries()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "held background release survives stop close and caller cancellation before safe cleanup()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "background during held foreground restore retains unapplied explicit play()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "committed failure emits failed state and exactly one session failure()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "commit publishes correlated loading and uses player local monotonic identity()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "candidate failure callback before commit keeps former authoritative()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "volume changed after worker assignment follows committed player()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "background at committed loading keeps reply and saves not yet dispatched autoplay()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "rollback uses current position after earlier seek has advanced()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "safe exceptional close waits for other retired engine release before freeing output()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "play and pause while backgrounded only change foreground playback intention()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "old session command is stale and stop cancels candidate while preserving output()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "candidate preparation failure leaves former decoder untouched()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "failed and stopped candidates discard provisional retries()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "play during held predecessor quiesce cannot bypass shared lease()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "play queued during failed quiesce cannot reactivate failed resources()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "foreground publishes snapshot observed during held restoration only after acknowledgement()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "managed credentials share assessment and load route without interim rejection()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "pause of playing background session remains paused after lease restoration()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "replacement waits captured background release and cannot lose new lease to its continuation()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "safe cleanup error does not touch former or replace original preparation failure()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "private frame does not consume public gate and late output frames are ignored()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "strict activation deadline reports decoder unavailable and restores former session()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "caller cancellation retains completed quiesce snapshot for rollback()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "activation failure restores same player old engine before returning()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "controls changed while peer activation fails survive rollback()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "foreground waits held background quiesce before restoring original play intent()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "real managed wrapper stop succeeds for active and pending replacement while load cancels()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "background cancels held first load before it can autoplay()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "close remains pending until every engine safely releases and main keeps running()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "foreground background bounce preserves explicit play until applied()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "two nonexclusive sessions suspend on background and retain independent intent()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "managed close preserves output until every borrower acknowledges even after failure()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "validation and prepare failure retain old session with no new state()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "background shares held peer quiesce and completes before candidate disposal()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "memory notification reaches candidate held in decoder activation()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "stop and close retain lease until acknowledged disposal while stop fences presentation()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "background cancels held replacement and foreground restores only saved intent()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "stop cancels candidate without waiting for old restoration()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "peer retains metadata and reacquires lease on play()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "background release stays independent of unacknowledged candidate cleanup()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "network on demand activation may continue beyond the live deadline()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "quiesce failure cannot retain a false playing state()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "held restore cannot acknowledge constraints without worker application()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "second load cancels uncommitted candidate and ignores its late callback()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "worker rejection does not replace remembered video constraints()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "video command rejects unimplemented engine without changing mode()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "fixed commands require worker acknowledgement and reject held restoration()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "fixed semantic restore point survives replacement rollback and old session cannot affect replacement or stop()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSessionCoordinatorTest",
+    "name": "synchronous publication failure closes accepted session without restoring former()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSourceAssessmentTest",
+    "name": "known local content progressive and managed HLS have real routes()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSourceAssessmentTest",
+    "name": "automatic DASH path is a known route despite query()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSourceAssessmentTest",
+    "name": "malformed descriptors and unimplemented hard buffers reject()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSourceAssessmentTest",
+    "name": "unknown containers and attainable strict evidence require inspection()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlSourceAssessmentTest",
+    "name": "invalid ports and HTTP header values fail before native allocation()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlStateReducerTest",
+    "name": "failures and public frame milestones deduplicate independently of state revisions()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlStateReducerTest",
+    "name": "failure shares the monotonic epoch of rendered frame and retry()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlStateReducerTest",
+    "name": "timeline metadata changes publish full state and metrics only snapshots use delta()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlStateReducerTest",
+    "name": "output replacement rejects old public output without consuming the milestone()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlStateReducerTest",
+    "name": "initial buffering remains loading and later buffering retains reached Ready()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlStateReducerTest",
+    "name": "semantic changes and timeline deltas each own consecutive revisions and sequences()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlStopPolicyTest",
+    "name": "stopClearsSessionAndAdvancesGenerationWithoutDisposingIdentity()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest",
+    "name": "absence returns auto and clears override while transient empty groups retain fixed intent()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest",
+    "name": "selection boundary fixes recreated group before next Period prebuffer without changing public intent()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest",
+    "name": "unsupported decoder cap conflict unknown constrained metadata and HDR fail safely()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest",
+    "name": "fixed override contains exactly requested track and survives changed IDs and order()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest",
+    "name": "explicit high bitdepth AVC metadata is incompatible even when codec profile claims SDR()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest",
+    "name": "auto explicit choice and reset have separate stable reasons()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest",
+    "name": "same resolution is not identity and duplicate semantic identity is rejected()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlWidevineDriverTest",
+    "name": "session requests hardware protection and releases exactly once()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlWidevineDriverTest",
+    "name": "lower protection or unknown API capability never falls back()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlWidevineDriverTest",
+    "name": "provisioning is explicit and close failure still releases object()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlWidevineDriverTest",
+    "name": "only current nonempty all-usable statuses are usable and closed callbacks are ignored()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlWidevineDriverTest",
+    "name": "denied response never maps to expired and streaming has no default URL transport()",
+    "status": "passed"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlWidevineDriverTest",
+    "name": "Media3 receives copied secure session handle only while driver is open()",
+    "status": "passed"
+  }
+]

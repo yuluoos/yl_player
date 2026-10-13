@@ -632,3 +632,11 @@ widget证据见[报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)�
 系统propertyList恢复身份，修复重连保留与所选音轨组丢失报错。补齐API注释。
 证据与边界见[P02报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)。
 未扩展严格managed DASH准入、音频ABR或物理声音验收；P02仍开放。
+
+### 2026-10-13 P02 Android 多音轨身份与跨 Period 选择
+
+Media3目录按音频内容组生成稳定身份，DASH使用声明AdaptationSetID和语义元数据，
+忽略RepresentationID/码率/顺序；缺ID不退回下标，身份歧义明确拒绝。显式选择在预读
+下一Period前绑定，恢复点保留已接受意图；丢轨track.not_found，Stop/new prepare清除。
+API注释及验证见[P02报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)。
+未修改长播放/弱网ABR/P05；设备/物理声音和完整P02仍开放。

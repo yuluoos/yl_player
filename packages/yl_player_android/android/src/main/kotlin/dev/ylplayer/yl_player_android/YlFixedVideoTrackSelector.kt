@@ -8,7 +8,8 @@ import androidx.media3.exoplayer.RendererCapabilities
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.exoplayer.trackselection.ExoTrackSelection
 
-/** DefaultTrackSelector selects reading-ahead Periods on ExoPlayer's playback thread. A group-only
+/** Audio content intent and fixed video quality are enforced on reading-ahead Periods.
+ * DefaultTrackSelector runs on ExoPlayer's playback thread. A group-only
  * override cannot cover recreated groups, so enforce the immutable quality before ABR definitions
  * are built. Public mode is changed only by Core's current-Period observation, never by lookahead. */
 internal class YlFixedVideoTrackSelector : DefaultTrackSelector {
@@ -16,6 +17,12 @@ internal class YlFixedVideoTrackSelector : DefaultTrackSelector {
     constructor(context: Context, parameters: Parameters) : super(context, parameters)
     // Identity and independent limits travel together. Exo's queued parameters may still
     // contain a superseded health ceiling when a valid explicit fixed command arrives.
+    @Volatile var audioIntent: YlAudioIntent? = null
+        set(value) {
+            if (field == value) return
+            field = value
+            invalidate(/* parameters */ null)
+        }
     @Volatile var fixedIntent: YlFixedVideoIntent? = null
 
     override fun selectAllTracks(
@@ -25,6 +32,35 @@ internal class YlFixedVideoTrackSelector : DefaultTrackSelector {
         rendererMixedMimeTypeAdaptationSupports: IntArray,
         params: Parameters,
     ) {
+        audioIntent?.let { audio ->
+            try {
+                val groups = mutableListOf<Pair<androidx.media3.common.TrackGroup, List<Int>>>()
+                val owners = mutableListOf<Int>()
+                for (renderer in 0 until mappedTrackInfo.rendererCount) {
+                    if (mappedTrackInfo.getRendererType(renderer) != C.TRACK_TYPE_AUDIO) continue
+                    val audioGroups = mappedTrackInfo.getTrackGroups(renderer)
+                    for (index in 0 until audioGroups.length) {
+                        val group = audioGroups[index]
+                        groups += group to (0 until group.length).filter {
+                            RendererCapabilities.getFormatSupport(rendererFormatSupports[renderer][index][it]) == C.FORMAT_HANDLED
+                        }
+                        owners += renderer
+                    }
+                }
+                val unmapped = mappedTrackInfo.unmappedTrackGroups
+                for (index in 0 until unmapped.length) if (unmapped[index].type == C.TRACK_TYPE_AUDIO) {
+                    groups += unmapped[index] to emptyList<Int>(); owners += -1
+                }
+                val catalog = YlAudioSelectionPolicy.candidates(groups, audio.dash)
+                val chosen = YlAudioSelectionPolicy.resolve(catalog, audio.id)
+                for (renderer in definitions.indices) {
+                    if (mappedTrackInfo.getRendererType(renderer) == C.TRACK_TYPE_AUDIO) definitions[renderer] = null
+                }
+                definitions[owners[catalog.indexOf(chosen)]] = ExoTrackSelection.Definition(chosen.group, chosen.selectedIndex())
+            } catch (error: YlBoundaryException) {
+                throw ExoPlaybackException.createForUnexpected(error, PlaybackException.ERROR_CODE_FAILED_RUNTIME_CHECK)
+            }
+        }
         val intent = fixedIntent
         if (intent != null) {
             try {
