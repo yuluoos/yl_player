@@ -1,0 +1,91 @@
+00:00 +0: loading /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_test.dart
+00:00 +0: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_test.dart: actual file compressed Matroska algorithm 0 discovers and renders
+00:00 +1: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_test.dart: actual file compressed Matroska algorithm 3 discovers and renders
+00:00 +2: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_test.dart: stored compressed bytes remain charged in catalog embedded-first
+00:00 +3: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_test.dart: stored compressed bytes remain charged in catalog external-first
+00:00 +4: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_test.dart: damaged compressed stream leaves prior selected catalog intact
+00:00 +5: loading /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart
+00:01 +5: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 0 restores S_TEXT/UTF8 before existing decoder
+00:01 +6: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 0 restores S_TEXT/ASS before existing decoder
+00:01 +7: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 0 restores S_TEXT/SSA before existing decoder
+00:01 +8: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 0 restores S_TEXT/WEBVTT before existing decoder
+00:01 +9: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 0 restores D_WEBVTT/SUBTITLES before existing decoder
+00:01 +10: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 0 restores S_HDMV/PGS before existing decoder
+00:01 +11: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 0 restores S_VOBSUB before existing decoder
+00:01 +12: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 3 restores S_TEXT/UTF8 before existing decoder
+00:01 +13: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 3 restores S_TEXT/ASS before existing decoder
+00:01 +14: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 3 restores S_TEXT/SSA before existing decoder
+00:01 +15: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 3 restores S_TEXT/WEBVTT before existing decoder
+00:01 +16: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 3 restores D_WEBVTT/SUBTITLES before existing decoder
+00:01 +17: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 3 restores S_HDMV/PGS before existing decoder
+00:01 +18: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: algorithm 3 restores S_VOBSUB before existing decoder
+00:01 +19: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: default algorithm/scope/type/order mean zlib block
+00:01 +20: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: header-only block may have no stored payload
+00:01 +21: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: empty stripping header restores unchanged block
+00:01 +22: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding algorithm
+00:01 +23: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding scope0
+00:01 +24: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding scope2
+00:01 +25: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding scope3
+00:01 +26: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding scope4
+00:01 +27: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding type
+00:01 +28: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding order
+00:01 +29: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding zlib settings
+00:01 +30: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding encryption
+00:01 +31: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: unsupported encoding chain
+00:01 +32: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: stripping requires settings
+00:01 +33: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: encoding requires compression element
+00:01 +34: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: WebM compression remains unsupported
+00:01 +35: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: non-subtitle compressed media does not allocate or decode
+00:01 +36: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: restored text per-block limit algorithm 0
+00:01 +37: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: restored text per-block limit algorithm 3
+00:01 +38: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: stored compressed block capped before payload read
+00:01 +39: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: restored bytes count globally even with tiny stored compressed payload
+00:01 +40: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: stored plus restored bytes share global budget
+00:01 +41: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_parser_test.dart: cancelled demux cannot publish decoded packets
+00:01 +42: loading /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_network_test.dart
+00:02 +42: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:02 +43: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_network_test.dart: network YlMediaFormat.matroska sniffs content, skips media, sends conditional range and renders
+00:02 +44: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_network_test.dart: legal chunked206 Matroska WebVTT discovery completes without Content-Length
+00:02 +45: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_network_test.dart: managed retries later range with credential and shared scan ledger
+00:03 +46: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_network_test.dart: cross-origin redirect strips credentials before Matroska WebVTT range scan
+00:03 +47: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_network_test.dart: etag response keeps prior selected Matroska WebVTT catalog
+00:03 +48: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_network_test.dart: 200 response keeps prior selected Matroska WebVTT catalog
+00:03 +49: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_network_test.dart: 403 response keeps prior selected Matroska WebVTT catalog
+00:03 +50: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_network_test.dart: malformed response keeps prior selected Matroska WebVTT catalog
+00:03 +51: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_network_test.dart: managed response-header timeout terminates Matroska WebVTT discovery
+00:04 +52: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_network_test.dart: explicit non-Matroska WebVTT format rejects before HTTP request
+00:04 +53: loading /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_session_test.dart
+00:04 +53: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:04 +54: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_session_test.dart: network failure leaves playback and selected subtitle state unchanged
+00:04 +55: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_session_test.dart: held range is cancelled by replace and cannot publish late
+00:04 +56: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_session_test.dart: held range is cancelled by stop and cannot publish late
+00:04 +57: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_session_test.dart: held range is cancelled by dispose and cannot publish late
+00:04 +58: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_session_test.dart: held range is cancelled by external and cannot publish late
+00:04 +59: loading /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart
+00:05 +59: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: strict inflate agrees with SDK encoder level 0
+00:05 +60: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: strict inflate agrees with SDK encoder level 1
+00:05 +61: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: strict inflate agrees with SDK encoder level 6
+00:05 +62: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: strict inflate agrees with SDK encoder level 9
+00:05 +63: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: strict inflate accepts independent strategy 4
+00:05 +64: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: strict inflate accepts independent strategy 2
+00:05 +65: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: strict inflate accepts independent strategy 3
+00:05 +66: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: exact output ceiling succeeds and one byte less rejects
+00:05 +67: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: high-ratio bomb stopped before declared output bound
+00:05 +68: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: every truncated prefix of a valid stream rejects
+00:05 +69: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: checksum mismatch rejects
+00:05 +70: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: trailing bytes with copied valid checksum reject
+00:05 +71: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: concatenated identical streams reject
+00:05 +72: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: gzip is not Matroska zlib
+00:05 +73: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: invalid header checkbits reject
+00:05 +74: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: preset dictionary rejected explicitly
+00:05 +75: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: reserved DEFLATE block rejects
+00:05 +76: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: stored length complement rejects
+00:05 +77: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: empty dynamic Huffman alphabet rejects
+00:05 +78: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: missing end-of-block rejects
+00:05 +79: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: invalid output bound -1
+00:05 +80: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: invalid output bound 262145
+00:05 +81: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: Python zlib golden streams restore exact independent bytes
+00:05 +82: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: oversubscribed dynamic code-length alphabet rejects
+00:05 +83: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: repeat previous length before any length rejects
+00:05 +84: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart: repeat zero lengths beyond declared alphabets rejects
+00:05 +85: All tests passed!

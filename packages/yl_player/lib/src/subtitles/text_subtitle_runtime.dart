@@ -12,7 +12,9 @@ final class TextSubtitleCue {
 }
 
 final class _Document {
-  _Document(this.document, this.text);
+  _Document(this.document, this.text, {this.extraInputBytes = 0});
+  final int extraInputBytes;
+  int get inputBytes => document.inputBytes + extraInputBytes;
   final SubtitleDocument document;
   final List<TextSpan> text;
   int get runs => text.fold<int>(0, (n, span) => n + span.children!.length);
@@ -56,7 +58,7 @@ final class TextSubtitleRuntime {
     }
     var bytesLeft =
         4 * 1024 * 1024 -
-        documents.values.fold<int>(0, (n, d) => n + d.document.inputBytes);
+        documents.values.fold<int>(0, (n, d) => n + d.inputBytes);
     var cuesLeft =
         10000 -
         documents.values.fold<int>(0, (n, d) => n + d.document.cues.length);
@@ -163,7 +165,7 @@ final class TextSubtitleRuntime {
         final documents = {for (final t in retained) t.id: _documents[t.id]!};
         var bytesLeft =
             4 * 1024 * 1024 -
-            documents.values.fold<int>(0, (n, d) => n + d.document.inputBytes);
+            documents.values.fold<int>(0, (n, d) => n + d.inputBytes);
         var cuesLeft =
             10000 -
             documents.values.fold<int>(0, (n, d) => n + d.document.cues.length);
@@ -211,12 +213,16 @@ final class TextSubtitleRuntime {
                   limits: limits,
                 );
           bitmapBytesLeft -= doc.pgsBitmapBytes;
-          bytesLeft -= doc.inputBytes;
+          bytesLeft -= doc.inputBytes + entry.compressionBytes;
           cuesLeft -= doc.cues.length;
           if (bytesLeft < 0 || cuesLeft < 0) {
             throw subtitleFailure(YlFailureCodes.subtitleTooLarge);
           }
-          final rendered = _renderDocument(doc, runsLeft);
+          final rendered = _renderDocument(
+            doc,
+            runsLeft,
+            extraInputBytes: entry.compressionBytes,
+          );
           runsLeft -= rendered.runs;
           documents[entry.track.id] = rendered;
         }
@@ -265,7 +271,11 @@ final class TextSubtitleRuntime {
   }
 }
 
-_Document _renderDocument(SubtitleDocument doc, int runsLeft) {
+_Document _renderDocument(
+  SubtitleDocument doc,
+  int runsLeft, {
+  int extraInputBytes = 0,
+}) {
   final text = <TextSpan>[];
   for (final cue in doc.cues) {
     final span = cue.pgs != null
@@ -313,7 +323,7 @@ _Document _renderDocument(SubtitleDocument doc, int runsLeft) {
     }
     text.add(span);
   }
-  return _Document(doc, text);
+  return _Document(doc, text, extraInputBytes: extraInputBytes);
 }
 
 /// A deliberately closed markup subset. Never treats payload as HTML or loads

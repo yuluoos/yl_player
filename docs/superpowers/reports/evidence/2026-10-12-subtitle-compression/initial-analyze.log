@@ -1,0 +1,15 @@
+Analyzing lib, test, lib, test...
+
+   info - packages/yl_player/lib/src/subtitles/matroska_subtitles.dart:302:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/matroska_subtitles.dart:306:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/matroska_subtitles.dart:314:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/matroska_subtitles.dart:336:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/subtitle_inflate.dart:41:35 - Statements in a for should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/subtitle_inflate.dart:83:36 - Statements in a for should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/lib/src/subtitles/subtitle_inflate.dart:161:7 - Statements in a for should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/test/compressed_subtitle_test.dart:47:9 - Use interpolation to compose strings and values. Try using string interpolation to build the composite string. - prefer_interpolation_to_compose_strings
+   info - packages/yl_player/test/subtitle_inflate_test.dart:168:33 - Statements in a for should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/test/subtitle_inflate_test.dart:181:35 - Statements in a for should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - packages/yl_player/test/subtitle_inflate_test.dart:195:35 - Statements in a for should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+
+11 issues found.

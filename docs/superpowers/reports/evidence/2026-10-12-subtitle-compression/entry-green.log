@@ -1,0 +1,78 @@
+00:00 +0: loading /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_test.dart
+00:00 +0: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_test.dart: actual file compressed Matroska algorithm 0 discovers and renders
+00:00 +1: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_test.dart: actual file compressed Matroska algorithm 3 discovers and renders
+00:00 +2: loading /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart
+00:00 +2: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: private header without v7 comment and legacy IDX metadata uses container time
+00:00 +3: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: scale and CodecDelay preserve microseconds with explicit clipping
+00:00 +4: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: duration absent simple=true uses SPU stop and track default caps it
+00:00 +5: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: duration absent simple=false uses SPU stop and track default caps it
+00:00 +6: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: SPU start delay and forced bit survive container timing
+00:00 +7: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: next packet caps preceding SPU and explicit longer duration
+00:00 +8: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: equal timestamps replace previous packet
+00:00 +9: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: no stop or duration ends at horizon without 32bit clock conversion
+00:00 +10: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: container cap before delayed start yields empty track
+00:00 +11: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: empty track retains valid palette and encoded header budget
+00:00 +12: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: raw packet immutable and diagnostics redact payload
+00:00 +13: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: malformed header missing size
+00:00 +14: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: malformed header missing palette
+00:00 +15: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: malformed header duplicate size
+00:00 +16: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: malformed header bad colors
+00:00 +17: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: malformed header control
+00:00 +18: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: unsupported header scale: 50%, 100%
+00:00 +19: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: unsupported header delay: +00:00:01:000
+00:00 +20: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: unsupported header fadein/out: 50, 50
+00:00 +21: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: unsupported header forced subs: ON
+00:00 +22: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: unsupported header unknown: 1
+00:00 +23: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: raw SPU truncated rejected
+00:00 +24: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: raw SPU multiple rejected
+00:00 +25: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: raw SPU PS rejected
+00:00 +26: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: raw SPU broken RLE rejected
+00:00 +27: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: advanced DVD command rejects explicitly
+00:00 +28: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: invalid packet time -0:00:00.000001/null
+00:00 +29: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: invalid packet time 0:00:01.000000/0:00:01.000000
+00:00 +30: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: invalid packet time 0:00:01.000000/168:00:00.000001
+00:00 +31: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: invalid packet time 168:00:00.000000/null
+00:00 +32: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: decreasing timestamps reject before decoding
+00:00 +33: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: expanded bitmap budget enforced before RGBA allocation
+00:00 +34: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: input budget includes CodecPrivate
+00:00 +35: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: header size bound applies even for empty track
+00:00 +36: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: packet count bounded before decoding
+00:00 +37: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: container rejects webm
+00:00 +38: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: container rejects compressed
+00:00 +39: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: container rejects additions
+00:00 +40: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: container rejects laced
+00:00 +41: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: container rejects missing-private
+00:00 +42: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: container rejects empty-private
+00:00 +43: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: container rejects zero-duration
+00:00 +44: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: large SPU rejects before payload read
+00:00 +45: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: VobSub metadata and text retain independent UID identity
+00:00 +46: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: global text and VobSub packet cap enforced across tracks
+00:01 +47: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_vobsub_parser_test.dart: global encoded budget charged across VobSub tracks
+00:01 +48: loading /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart
+00:02 +48: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: container nanosecond scale and CodecDelay preserve microseconds
+00:02 +49: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: explicit duration caps a display before next presentation
+00:02 +50: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: following presentation caps a longer explicit duration
+00:02 +51: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: duration on END packet also clips split display
+00:02 +52: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: container timing beyond SUP wrap does not round through 90kHz
+00:02 +53: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: equal time displays replace instead of overlaying stale frame
+00:02 +54: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: empty track is a valid empty document
+00:02 +55: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: malformed truncated segment
+00:02 +56: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: malformed orphan END
+00:02 +57: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: malformed incomplete display
+00:02 +58: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: malformed backwards PCS
+00:02 +59: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: malformed zero duration
+00:02 +60: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: malformed negative start
+00:02 +61: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: malformed seven day start
+00:02 +62: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: malformed expired split display
+00:02 +63: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: unknown binary segment remains unsupported
+00:02 +64: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: expanded limit 0 checks before bitmap allocation
+00:02 +65: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: expanded limit 31 checks before bitmap allocation
+00:02 +66: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: encoded document budget includes all binary segments
+00:02 +67: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: segment count is bounded independently of packet count
+00:02 +68: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: large raw Matroska block rejected before payload read
+00:02 +69: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: unsupported private track
+00:02 +70: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: unsupported compressed track
+00:02 +71: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: unsupported WebM track
+00:02 +72: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: PGS block additions are still unsupported
+00:02 +73: /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/embedded_pgs_parser_test.dart: text and PGS tracks share stable UID catalog
+00:02 +74: All tests passed!

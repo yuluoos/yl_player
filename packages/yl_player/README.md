@@ -313,3 +313,12 @@ external IDX/SUB pair is needed. Container time and duration caps constrain SPU
 start/stop and alpha updates. Existing two-field RLE rendering, managed ranges,
 atomic catalogs and shared encoded/RGBA budgets apply. See the
 [VobSub container contract](../../docs/superpowers/specs/2026-10-12-subtitle-embedded-vobsub.md).
+
+
+Matroska subtitle tracks may carry one block-only `ContentEncoding`: zlib or
+header stripping. Restoration precedes the existing text/bitmap decoder, with
+strict zlib framing/checksum validation and bounded output. Stored compressed
+bytes/settings and restored content both count toward the shared input budget,
+including later external subtitle replacements. Encryption, chained encodings,
+CodecPrivate compression and WebM compression remain unsupported. See the
+[compression contract](../../docs/superpowers/specs/2026-10-12-subtitle-compression.md).

@@ -1,0 +1,16 @@
+00:00 +0: loading /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_test.dart
+00:00 +0: actual file compressed Matroska algorithm 0 discovers and renders
+00:00 +0 -1: actual file compressed Matroska algorithm 0 discovers and renders [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 232:9  TextSubtitleRuntime.discover.<fn>
+  
+00:00 +0 -1: actual file compressed Matroska algorithm 3 discovers and renders
+00:00 +0 -2: actual file compressed Matroska algorithm 3 discovers and renders [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 232:9  TextSubtitleRuntime.discover.<fn>
+  
+00:00 +0 -2: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_test.dart: actual file compressed Matroska algorithm 0 discovers and renders
+  /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_test.dart: actual file compressed Matroska algorithm 3 discovers and renders

@@ -109,3 +109,11 @@ CodecPrivate 全局设置及原始 SPU 使用容器时间，不请求 IDX/SUB �
 控制/RLE/透明度解码与共享位图预算。本文原先内嵌 VobSub 的排除项由
 [内嵌 VobSub 契约](2026-10-12-subtitle-embedded-vobsub.md)限定替代；高级效果、设备、
 清单/直播和其他容器仍不在此范围。
+
+
+## 2026-10-12 Matroska 压缩字幕扩展
+
+此前一概拒绝ContentEncodings的范围缩减：Matroska支持单层Order0/Scope1/Type0的zlib或
+header stripping，恢复后的Block复用已有字幕codec解码。压缩输入/settings和恢复内容共同
+计入预算，并跨目录更新保留。其他算法、私有头/链式编码、加密及WebM压缩仍拒绝；见
+[压缩字幕契约](2026-10-12-subtitle-compression.md)。

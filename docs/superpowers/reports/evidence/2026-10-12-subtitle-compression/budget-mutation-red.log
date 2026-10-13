@@ -1,0 +1,18 @@
+00:00 +0: loading /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_test.dart
+00:00 +0: stored compressed bytes remain charged in catalog embedded-first
+00:00 +0 -1: stored compressed bytes remain charged in catalog embedded-first [E]
+  Expected: throws <Instance of 'YlPlayerException'> with `code`: 'subtitle.too_large'
+    Actual: <Instance of 'Future<void>'>
+     Which: emitted <null>
+  
+  package:matcher                                              expectLater
+  package:flutter_test/src/widget_tester.dart 507:8            expectLater
+  packages/yl_player/test/compressed_subtitle_test.dart 62:13  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                   _CustomZone.registerUnaryCallback
+  packages/yl_player/test/compressed_subtitle_test.dart 34:19  main.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/compressed_subtitle_test.dart: stored compressed bytes remain charged in catalog embedded-first

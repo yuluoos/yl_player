@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'subtitle_document.dart';
 import 'subtitle_resource.dart';
+import 'subtitle_inflate.dart';
 
 part 'matroska_webvtt.dart';
 
@@ -180,6 +181,7 @@ final class MatroskaSubtitles {
             t.private,
             List.unmodifiable(t.packets),
             sourceBytes: t.sourceBytes,
+            compressionBytes: t.compressionBytes,
             pgsPackets: List.unmodifiable(t.pgsPackets),
             vobSubPackets: List.unmodifiable(t.vobSubPackets),
           ),
@@ -224,7 +226,7 @@ final class MatroskaSubtitles {
       'D_WEBVTT/CAPTIONS' => YlSubtitleFormat.webvtt,
       _ => _unsupported(),
     };
-    if ([0x6d80, 0x6fab, 0x6624, 0x41e4].any(f.containsKey)) _unsupported();
+    if ([0x6fab, 0x6624, 0x41e4].any(f.containsKey)) _unsupported();
     if (f[0x537f] != null &&
         await _uint(f[0x537f]!) > (codec == 'S_TEXT/WEBVTT' ? 1 : 0)) {
       _unsupported();
@@ -237,6 +239,9 @@ final class MatroskaSubtitles {
         _unsupported();
       }
     }
+    final compression = f[0x6d80] == null
+        ? null
+        : await _compression(f[0x6d80]!);
     String? private;
     if (f[0x63a2] case final p?) {
       _payloadBytes += p.size;
@@ -277,11 +282,76 @@ final class MatroskaSubtitles {
       format == YlSubtitleFormat.webvtt ? null : private,
       f[0x23e383] == null ? null : await _uint(f[0x23e383]!),
       f[0x56aa] == null ? 0 : await _uint(f[0x56aa]!),
+      compression: compression,
+      compressionBytes: compression?.header.length ?? 0,
       webVttInBlock: codec.startsWith('D_WEBVTT/'),
       sourceBytes: format == YlSubtitleFormat.webvtt
           ? (f[0x63a2]?.size ?? 0)
           : 0,
     );
+  }
+
+  Future<_Compression> _compression(_Element e) async {
+    if (_webm) _unsupported();
+    final entries = (await _children(
+      e,
+    )).where((c) => c.id != 0xec && c.id != 0xbf).toList();
+    if (entries.length != 1 || entries.single.id != 0x6240) _unsupported();
+    final f = await _fields(entries.single);
+    if (f.keys.any((id) => ![0x5031, 0x5032, 0x5033, 0x5034].contains(id))) {
+      _unsupported();
+    }
+    if ((f[0x5031] != null && await _uint(f[0x5031]!) != 0) ||
+        (f[0x5032] != null && await _uint(f[0x5032]!) != 1) ||
+        (f[0x5033] != null && await _uint(f[0x5033]!) != 0)) {
+      _unsupported();
+    }
+    if (f[0x5034] == null) _bad();
+    final c = await _fields(f[0x5034]!);
+    if (c.keys.any((id) => id != 0x4254 && id != 0x4255)) _unsupported();
+    final algorithm = c[0x4254] == null ? 0 : await _uint(c[0x4254]!);
+    if (algorithm != 0 && algorithm != 3) _unsupported();
+    final settings = c[0x4255];
+    if (algorithm == 0 && settings != null && settings.size != 0) {
+      _unsupported();
+    }
+    if (algorithm == 3 && settings == null) _bad();
+    final size = settings?.size ?? 0;
+    _payloadBytes += size;
+    if (size > 256 * 1024 || _payloadBytes > 4 * 1024 * 1024) _limit();
+    return _Compression(
+      algorithm,
+      settings == null ? const [] : await _bytes(settings.start, size),
+    );
+  }
+
+  Future<List<int>> _payload(
+    _Element e,
+    int offset,
+    _Track t,
+    int limit,
+  ) async {
+    final size = e.size - offset;
+    final compression = t.compression;
+    _payloadBytes += size;
+    if (size > (compression == null ? limit : 256 * 1024) ||
+        _payloadBytes > 4 * 1024 * 1024) {
+      _limit();
+    }
+    final bytes = await _bytes(e.start + offset, size);
+    if (compression == null) return bytes;
+    t.compressionBytes += size;
+    final left = (4 * 1024 * 1024 - _payloadBytes).clamp(0, limit);
+    final List<int> decoded;
+    if (compression.algorithm == 0) {
+      decoded = inflateSubtitle(bytes, left);
+    } else {
+      if (compression.header.length + bytes.length > left) _limit();
+      decoded = [...compression.header, ...bytes];
+    }
+    _payloadBytes += decoded.length;
+    token.check();
+    return decoded;
   }
 
   Future<void> _cluster(_Element e) async {
@@ -358,20 +428,14 @@ final class MatroskaSubtitles {
           (durationNs <= 0 || startNs + durationNs > 604800000000000)) {
         _bad();
       }
-      final size = e.size - width - 3;
-      _payloadBytes += size;
-      if ((pgs ? ++_pgsPacketCount > 50000 : ++_packetCount > 10000) ||
-          size > (pgs ? 256 * 1024 : 65535) ||
-          _payloadBytes > 4 * 1024 * 1024) {
-        _limit();
-      }
-      if (size == 0) _bad();
+      if (pgs ? ++_pgsPacketCount > 50000 : ++_packetCount > 10000) _limit();
       final start = Duration(microseconds: startNs ~/ 1000);
       final end = durationNs == null
           ? null
           : Duration(microseconds: (startNs + durationNs) ~/ 1000);
       if (end != null && end <= start) _unsupported();
-      final bytes = await _bytes(e.start + width + 3, size);
+      final bytes = await _payload(e, width + 3, t, pgs ? 256 * 1024 : 65535);
+      if (bytes.isEmpty) _bad();
       if (pgs) {
         t.pgsPackets.add(EmbeddedPgsPacket(start, bytes, end: end));
       } else {
@@ -388,23 +452,18 @@ final class MatroskaSubtitles {
     final start = Duration(microseconds: startNs ~/ 1000),
         end = Duration(microseconds: (startNs + durationNs) ~/ 1000);
     if (end <= start) _unsupported();
-    final size = e.size - width - 3;
-    _payloadBytes += size;
-    if (++_packetCount > 10000 ||
-        size > 64 * 1024 ||
-        _payloadBytes > 4 * 1024 * 1024) {
-      _limit();
-    }
+    if (++_packetCount > 10000) _limit();
+    final bytes = await _payload(e, width + 3, t, 64 * 1024);
     String text;
     try {
-      text = utf8.decode(await _bytes(e.start + width + 3, size));
+      text = utf8.decode(bytes);
     } on FormatException {
       _bad();
     }
     if (text.isEmpty || text.contains('\u0000')) _bad();
     if (text.length > 16384 + 4096) _limit();
     if (webVtt) {
-      t.sourceBytes += size;
+      t.sourceBytes += bytes.length;
       String? metadata;
       if (additions != null) {
         final more = (await _children(
@@ -447,9 +506,13 @@ final class _Track {
     this.private,
     this.defaultDuration,
     this.delay, {
+    this.compression,
+    this.compressionBytes = 0,
     this.webVttInBlock = false,
     this.sourceBytes = 0,
   });
+  final _Compression? compression;
+  int compressionBytes;
   final bool webVttInBlock;
   int sourceBytes;
   final YlSubtitleTrack track;
@@ -469,7 +532,11 @@ final class EmbeddedSubtitleData {
     this.sourceBytes = 0,
     this.pgsPackets = const [],
     this.vobSubPackets = const [],
+    this.compressionBytes = 0,
   });
+
+  /// Stored block bytes/settings charged in addition to reconstructed content.
+  final int compressionBytes;
   final List<EmbeddedPgsPacket> pgsPackets;
   final List<EmbeddedVobSubPacket> vobSubPackets;
   final YlSubtitleTrack track;
@@ -478,4 +545,10 @@ final class EmbeddedSubtitleData {
 
   /// Retain the encoded document budget when cues expand from container samples.
   final int sourceBytes;
+}
+
+final class _Compression {
+  const _Compression(this.algorithm, this.header);
+  final int algorithm;
+  final List<int> header;
 }

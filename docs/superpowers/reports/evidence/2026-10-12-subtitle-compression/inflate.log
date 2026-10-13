@@ -1,0 +1,24 @@
+00:00 +0: loading /private/tmp/yl-comp-validation-2wp14ir0/packages/yl_player/test/subtitle_inflate_test.dart
+00:00 +0: strict inflate agrees with SDK encoder level 0
+00:00 +1: strict inflate agrees with SDK encoder level 1
+00:00 +2: strict inflate agrees with SDK encoder level 6
+00:00 +3: strict inflate agrees with SDK encoder level 9
+00:00 +4: strict inflate accepts independent strategy 4
+00:00 +5: strict inflate accepts independent strategy 2
+00:00 +6: strict inflate accepts independent strategy 3
+00:00 +7: exact output ceiling succeeds and one byte less rejects
+00:00 +8: high-ratio bomb stopped before declared output bound
+00:00 +9: every truncated prefix of a valid stream rejects
+00:00 +10: checksum mismatch rejects
+00:00 +11: trailing bytes with copied valid checksum reject
+00:00 +12: concatenated identical streams reject
+00:00 +13: gzip is not Matroska zlib
+00:00 +14: invalid header checkbits reject
+00:00 +15: preset dictionary rejected explicitly
+00:00 +16: reserved DEFLATE block rejects
+00:00 +17: stored length complement rejects
+00:00 +18: empty dynamic Huffman alphabet rejects
+00:00 +19: missing end-of-block rejects
+00:00 +20: invalid output bound -1
+00:00 +21: invalid output bound 262145
+00:00 +22: All tests passed!

@@ -750,3 +750,39 @@ manifest/live/跨Period及PD03/整个P02仍开放；本次不声称原生设备�
 重复复审；全部十项范围裁定与旧WVTT Minor延续见
 [review.md](evidence/2026-10-12-subtitle-embedded-vobsub/review.md)。
 冻结源/引用依赖/文档/证据后使用独立index限定提交范围；总览与CHANGELOG只带本项段落。
+
+
+## 2026-10-12 Matroska 压缩字幕
+
+在已支持文本/PGS/VobSub的Block路径上增加单层Order0/Scope1/Type0 ContentCompression：
+Algo0 zlib和Algo3 header stripping。容器时间、TrackUID、managed范围请求、字幕选择与
+渲染不变；BlockAdditional仍按未压缩数据处理。create/discover API注释同步说明能力范围。
+
+每包压缩输入≤256KiB，恢复文本≤64KiB/PGS≤256KiB/VobSub≤65535字节；全容器4MiB
+计压缩数据/settings/恢复内容/private/附加内容，运行时保留压缩额外额度，后续外挂替换不能
+漏算。RGBA64MiB和原有轨道/cue/请求预算不变。
+
+SDK probe确认默认zlib.decode对截断/尾随/拼接/gzip均可能返回成功，因此使用内部严格
+RFC1950/1951恢复器，支持stored/fixed/dynamicHuffman、窗口与重叠copy，检查Adler32、
+完整结束位置；每次分配/复制前检查输出预算，最多10000个DEFLATE块。无依赖或原生变更。
+独立Pythonzlib存储/固定/动态金标、SDK多等级多策略、手工损坏Huffman/距离/空块风暴、
+全部截断前缀、gzip/dictionary/尾随/拼接/超高压缩比均有测试。
+
+基线2e3c964；入口RED0/2unsupported后74/74含旧PGS/VobSub解析回归；新增定向先78/78，
+后85/85，再将4个无效fixed代码/距离/空块风暴用例纳入完整验证。初始11样式提示修正。
+隔离副本临时漏算保留目录的compressed额外字节后，外挂替换超预算测试失败（错误接受），
+恢复精确候选后才进行最终验证。真实HTTP和公开会话验证ETag/Range/重试/凭据/取消、
+两算法轨道切换、样式/几何、offset/seek/off与原子失败。
+
+独立金标：[fixture](../../../packages/yl_player/test/fixtures/subtitle-zlib-owned.md)；
+证据：[manifest](evidence/2026-10-12-subtitle-compression/manifest.json)。
+这不是通用压缩库或native/device认证。其他算法、链式/私有头压缩、WebM压缩、高级字幕、
+HDR/DRM/外接、Period/PD03/整个P02仍开放；长播放/弱网ABR未改。
+
+最终四包 **1683/1683、0失败、exit0**（135接口/1353播放器/113Apple/82Android），
+新增89项（37容器parser/5文件预算/11HTTP/6会话视图/30inflate）。静态分析
+**No issues found、exit0**。12份候选源/测试/夹具与隔离已测副本一致，十项native/构建
+制品哈希不变；一次独立复审Critical0/Important0/Minor0，无修复或重复复审。
+八项范围裁定、独立压缩证据而非muxer证明和旧WVTT Minor延续见
+[review](evidence/2026-10-12-subtitle-compression/review.md)。冻结证据后用独立index
+限定范围commit，总览与CHANGELOG只纳入本项段落；无长播放/弱网ABR或push。

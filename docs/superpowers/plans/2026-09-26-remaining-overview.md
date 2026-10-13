@@ -546,3 +546,12 @@ create/discovery API注释同步补齐容器、网络及位图范围。69新增�
 [报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)和
 [契约](../specs/2026-10-12-subtitle-embedded-vobsub.md)。高级效果/设备/直播与整个P02仍开放；
 长播放和弱网ABR未改动。
+
+
+### 2026-10-12 P02 Matroska 压缩字幕
+
+接入单层block-only zlib/header stripping，恢复文本/PGS/VobSub原始Block后复用既有
+发现、选择与渲染。严格有界zlib解码验证结束/校验和，压缩与恢复字节共同计量且跨目录保留。
+create/discover API注释同步，验证见[报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)
+和[契约](../specs/2026-10-12-subtitle-compression.md)。多层/私有头/WebM压缩、高级效果、
+设备与整个P02仍开放；长播放和弱网ABR未改。

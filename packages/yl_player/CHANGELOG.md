@@ -1,5 +1,9 @@
 ## 0.2.0-dev.2
 
+- Restore Matroska subtitle blocks with single block-only zlib or header
+  stripping before existing text/bitmap decoding. Enforce strict zlib framing,
+  output limits and persisted stored/restored byte budgets; document supported
+  compression in controller and discovery APIs.
 - Add file and managed HTTP Matroska embedded VobSub discovery, selection and
   bitmap rendering from CodecPrivate/raw SPU, preserving container timing,
   DVD control/alpha updates and shared bitmap budgets. Complete controller and
