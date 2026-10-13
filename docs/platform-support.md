@@ -651,3 +651,13 @@ Stored, intermediate and final bytes share parser/catalog budgets. Codec matrix,
 Python compression goldens, actual file/managed HTTP and widget tests cover the
 Dart path. Next scopes, encryption and WebM compression remain unsupported;
 no independent muxer, native or physical-device acceptance is claimed.
+
+### MP4 extended subtitle language (2026-10-13)
+
+The Dart subtitle path supports a single `mdia/elng` on tx3g/wvtt/stpp tracks in
+ordinary, fragmented and hybrid MP4. Well-formed BCP 47 tags (up to 128 ASCII
+characters) override packed `mdhd` metadata and retain spelling; track IDs remain
+stable. Invalid metadata rejects atomically, with existing file/managed HTTP loading
+and selection preserved. Validation covers owned fixtures and fake-backend widgets,
+not independent muxer interoperability or native/device display acceptance.
+[Contract](superpowers/specs/2026-10-13-subtitle-extended-language.md).

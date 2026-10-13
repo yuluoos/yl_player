@@ -7,6 +7,7 @@ import 'subtitle_resource.dart';
 part 'mp4_webvtt.dart';
 part 'mp4_ttml.dart';
 part 'mp4_fragments.dart';
+part 'mp4_language.dart';
 
 Never _bad() =>
     throw const SubtitleParseException(SubtitleParseReason.malformed);
@@ -218,7 +219,22 @@ final class Mp4Subtitles {
     final lang = _u(mdhd, mdhd[0] == 0 ? 20 : 32, 2);
     final codes = [(lang >> 10) & 31, (lang >> 5) & 31, lang & 31];
     if (lang & 0x8000 != 0 || codes.any((c) => c < 1 || c > 26)) _unsupported();
-    final language = String.fromCharCodes(codes.map((c) => c + 96));
+    var language = String.fromCharCodes(codes.map((c) => c + 96));
+    final extendedLanguage = _one(media, 'elng');
+    if (extendedLanguage != null) {
+      // Four FullBox bytes, at most 128 ASCII characters and one terminator.
+      // Check before requesting the body from a managed range source.
+      if (extendedLanguage.size > 133) _limit();
+      final bytes = await _body(extendedLanguage, min: 6);
+      _full(bytes);
+      if (bytes.last != 0 ||
+          bytes.skip(4).take(bytes.length - 5).any((b) => b == 0 || b > 127)) {
+        _bad();
+      }
+      final tag = String.fromCharCodes(bytes.sublist(4, bytes.length - 1));
+      if (!_wellFormedLanguage(tag)) _bad();
+      language = tag;
+    }
     final minf = _one(media, 'minf', required: true)!;
     final info = await _children(minf.start, minf.end);
     final dinf = _one(info, 'dinf', required: true)!;

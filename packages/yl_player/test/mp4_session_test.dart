@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player/yl_player.dart';
 import 'support/mp4_fixture.dart';
+import 'elng_parser_test.dart' show elng;
 import 'support/range_server.dart';
 import 'support/fake_player_platform.dart';
 
@@ -24,11 +25,15 @@ void main() {
         tracks: [
           Mp4Track(
             id: 101,
+            language: 'zho',
+            mediaExtra: elng('zh-Hans'),
             samples: [textSample(''), textSample('normal')],
             durations: [1000, 1000],
           ),
           Mp4Track(
             id: 102,
+            language: 'zho',
+            mediaExtra: elng('zh-Hant'),
             entry: description(display: 0xc0000000),
             samples: [textSample(''), textSample('forced')],
             durations: [1000, 1000],
@@ -74,6 +79,10 @@ void main() {
       expect(player.state.subtitles.tracks.map((t) => t.id), [
         'mp4:101',
         'mp4:102',
+      ]);
+      expect(player.state.subtitles.tracks.map((t) => t.language), [
+        'zh-Hans',
+        'zh-Hant',
       ]);
       for (final q in server.requests) {
         expect(q.headers.value('authorization'), 'owned secret');

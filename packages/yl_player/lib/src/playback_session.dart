@@ -43,6 +43,11 @@ final class YlPlaybackSession {
   /// MP4 discovery shares a 200,000-box limit across container structures and
   /// tx3g/WebVTT/TTML configuration and tx3g/WebVTT sample boxes across
   /// tracks and fragments. Font/style records have their own separate limits.
+  /// MP4 elng overrides the packed mdhd language with a well-formed BCP 47
+  /// tag (up to 128 ASCII characters), preserving spelling. No registry lookup,
+  /// canonicalization or automatic language selection is performed. A missing
+  /// elng retains mdhd; malformed tags reject discovery atomically. Track IDs
+  /// remain independent of language. Existing mdhd validation still applies.
   /// Explicit Matroska/WebM format declarations must match the file DocType.
   /// Requires enableTextSubtitles. Discovery is atomic, preserves external
   /// entries and a still-present selection. New sessions start off.

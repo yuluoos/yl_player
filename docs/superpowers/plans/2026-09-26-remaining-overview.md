@@ -616,3 +616,11 @@ widget证据见[报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)�
 [P05报告](../reports/2026-09-26-remaining-05-live-business.md)与
 [验证收据](../reports/evidence/2026-10-13-live-source-storage/verification.json)。
 未占设备；无自动修复/备份恢复功能、跨实例并发或完整P05验收承诺。
+
+### 2026-10-13 P02 MP4 字幕扩展语言标签
+
+接入 mdia/elng，支持 tx3g/wvtt/stpp 普通、分片及混合 MP4 的 BCP 47 标签，
+保留大小写和 track ID 选轨，补齐 API 注释。128 ASCII 字符预算、严格语法与原子失败；
+实际文件/managed HTTP/公开 widget 验证，整个 P02 仍开放。详见
+[契约](../specs/2026-10-13-subtitle-extended-language.md)及
+[验证报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)。

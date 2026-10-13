@@ -65,6 +65,7 @@ class Mp4Track {
     this.compact = false,
     this.extra = const [],
     this.stblExtra = const [],
+    this.mediaExtra = const [],
     this.enabled = true,
     this.chunkSizes,
     this.descriptionIndices,
@@ -83,7 +84,7 @@ class Mp4Track {
   final List<List<int>>? entries;
   final int sizeBits;
   final int? commonSize;
-  final List<int> extra, stblExtra;
+  final List<int> extra, stblExtra, mediaExtra;
   List<int> build(int offset) {
     final lang = language.codeUnits.fold(0, (v, c) => (v << 5) | (c - 0x60));
     final chunks = chunkSizes ?? (samples.isEmpty ? <int>[] : [samples.length]);
@@ -118,6 +119,7 @@ class Mp4Track {
           0,
           0,
         ]),
+        ...mediaExtra,
         ...full('hdlr', [
           ...num(0),
           ...ascii.encode(handler),

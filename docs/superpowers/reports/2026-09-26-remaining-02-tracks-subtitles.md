@@ -888,3 +888,29 @@ platform-support.md末尾三列独立pipe行没有加入现有两列表格，信
 预算测试全部失败，恢复候选后才运行最终全套。一次独立复审0Critical/0Important/0Minor，
 10项不判定范围已逐项裁定；10候选字节与验证副本一致，10项原生/构建制品哈希未变。
 无复审后代码修正；证据manifest及提交范围由执行者冻结核对。
+
+## 2026-10-13 MP4 内嵌字幕扩展语言标签
+
+接入单个 mdia/elng FullBox，支持 tx3g/wvtt/stpp 的普通、分片和混合 MP4。
+BCP 47 well-formed 标签保留大小写并覆盖 mdhd；缺失时维持原值，选轨身份仍是
+track ID。长度限制 128 ASCII 字符，正文超过上限在读取前拒绝；语法错误、重复
+box 和非法 NUL 原子失败，version/flags 不支持则明确拒绝。补齐公开发现 API 注释。
+
+新增 78 项（60 parser、18 实际文件/managed HTTP），另增强既有公开 widget 链路，
+验证同 packed language 的简繁标签不会合并选轨，渲染/关闭/偏移/seek 不变。
+定向 84/84；最终四包 1954/1954（interface 135、player 1624、Apple 113、Android 82）；
+Dart analyze 无问题。运行于 git archive 基线加候选文件的隔离快照，避免测试与并行任务混跑。
+RED 为旧实现 3 通过/57 失败，其中边界 fixture 原写成 127 字符，后修正为 128；
+初次 GREEN 59/60，混合 stpp fixture 的 fragment cue 应为 1..2 秒，已修正。
+初次 analyze 的四项大括号提示已清理；最终输出和候选哈希见
+[evidence](evidence/2026-10-13-subtitle-extended-language/manifest.json)。
+
+Ruling：继续校验 mdhd，非法 elng 严格拒绝，不做容错忽略；代价是部分可挽救文件
+会拒绝字幕发现。这里只验证语法，不做 IANA 注册表验证、规范化或语言自动选择。
+fixture 为项目构造，widget 使用 fake backend；不声称独立 muxer/native/device/
+HDR/DRM/外接验收，不扩大 MOV 或跨 Period 范围。整个 P02 仍开放，长播放、弱网 ABR
+及 P05 文档/工具/证据未修改。最终独立复审结果在同目录 review-summary.json 中记录。
+
+独立 fresh-context 只读复审：0 Critical / 0 Important / 0 Minor，无修复项；
+逐项范围裁定及原始报告保存在 review-summary.json / review-raw.md。候选源码、
+四包所有 tracked Dart 输入及证据按 SHA-256 冻结，提交树再核验，未新增依赖。

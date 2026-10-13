@@ -336,3 +336,14 @@ configuration/sample/cue boxes and TTML configuration boxes. Tracks, sample-desc
 use the same allowance. Exceeding it reports `subtitleTooLarge` atomically,
 retaining the previous subtitle catalog and selection. Existing local child,
 payload and cue limits also apply; this is not a whole-process memory bound.
+
+### MP4 extended subtitle language
+
+Embedded tx3g/wvtt/stpp tracks in ordinary, fragmented and hybrid MP4 now read
+`elng` as a well-formed BCP 47 tag, preserving its spelling and overriding the
+packed `mdhd` language. Missing `elng` retains the packed language. Track identity
+and selection remain based on track ID. Tags are limited to 128 ASCII characters;
+malformed metadata rejects discovery atomically. Existing `mdhd` validation still
+applies. This performs syntax checking, without registry validation, canonicalization
+or automatic language selection. File and managed HTTP use the existing bounded
+loader. See the [contract](../../docs/superpowers/specs/2026-10-13-subtitle-extended-language.md).

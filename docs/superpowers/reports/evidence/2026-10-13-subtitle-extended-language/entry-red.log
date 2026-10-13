@@ -1,0 +1,689 @@
+00:00 +0: loading /private/tmp/yl-elng-validation-n608pn27/packages/yl_player/test/elng_parser_test.dart
+00:00 +0: tx3g ordinary preserves extended script tag and cue identity
+00:00 +0 -1: tx3g ordinary preserves extended script tag and cue identity [E]
+  Expected: 'zh-Hant-TW'
+    Actual: 'zho'
+     Which: is different.
+            Expected: zh-Hant-TW
+              Actual: zho
+                        ^
+             Differ at offset 2
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 31:9  main.<fn>
+  
+00:00 +0 -1: tx3g fragmented preserves extended script tag and cue identity
+00:00 +0 -2: tx3g fragmented preserves extended script tag and cue identity [E]
+  Expected: 'zh-Hant-TW'
+    Actual: 'zho'
+     Which: is different.
+            Expected: zh-Hant-TW
+              Actual: zho
+                        ^
+             Differ at offset 2
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 31:9  main.<fn>
+  
+00:00 +0 -2: tx3g hybrid preserves extended script tag and cue identity
+00:00 +0 -3: tx3g hybrid preserves extended script tag and cue identity [E]
+  Expected: 'zh-Hant-TW'
+    Actual: 'zho'
+     Which: is different.
+            Expected: zh-Hant-TW
+              Actual: zho
+                        ^
+             Differ at offset 2
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 31:9  main.<fn>
+  
+00:00 +0 -3: wvtt ordinary preserves extended script tag and cue identity
+00:00 +0 -4: wvtt ordinary preserves extended script tag and cue identity [E]
+  Expected: 'zh-Hant-TW'
+    Actual: 'zho'
+     Which: is different.
+            Expected: zh-Hant-TW
+              Actual: zho
+                        ^
+             Differ at offset 2
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 31:9  main.<fn>
+  
+00:00 +0 -4: wvtt fragmented preserves extended script tag and cue identity
+00:00 +0 -5: wvtt fragmented preserves extended script tag and cue identity [E]
+  Expected: 'zh-Hant-TW'
+    Actual: 'zho'
+     Which: is different.
+            Expected: zh-Hant-TW
+              Actual: zho
+                        ^
+             Differ at offset 2
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 31:9  main.<fn>
+  
+00:00 +0 -5: wvtt hybrid preserves extended script tag and cue identity
+00:00 +0 -6: wvtt hybrid preserves extended script tag and cue identity [E]
+  Expected: 'zh-Hant-TW'
+    Actual: 'zho'
+     Which: is different.
+            Expected: zh-Hant-TW
+              Actual: zho
+                        ^
+             Differ at offset 2
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 31:9  main.<fn>
+  
+00:00 +0 -6: stpp ordinary preserves extended script tag and cue identity
+00:00 +0 -7: stpp ordinary preserves extended script tag and cue identity [E]
+  Expected: 'zh-Hant-TW'
+    Actual: 'zho'
+     Which: is different.
+            Expected: zh-Hant-TW
+              Actual: zho
+                        ^
+             Differ at offset 2
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 31:9  main.<fn>
+  
+00:00 +0 -7: stpp fragmented preserves extended script tag and cue identity
+00:00 +0 -8: stpp fragmented preserves extended script tag and cue identity [E]
+  Expected: 'zh-Hant-TW'
+    Actual: 'zho'
+     Which: is different.
+            Expected: zh-Hant-TW
+              Actual: zho
+                        ^
+             Differ at offset 2
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 31:9  main.<fn>
+  
+00:00 +0 -8: stpp hybrid preserves extended script tag and cue identity
+00:00 +0 -9: stpp hybrid preserves extended script tag and cue identity [E]
+  Expected: 'zh-Hant-TW'
+    Actual: 'zho'
+     Which: is different.
+            Expected: zh-Hant-TW
+              Actual: zho
+                        ^
+             Differ at offset 2
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 31:9  main.<fn>
+  
+00:00 +0 -9: well formed en preserved verbatim
+00:00 +0 -10: well formed en preserved verbatim [E]
+  Expected: 'en'
+    Actual: 'zho'
+     Which: is different.
+            Expected: en
+              Actual: zho
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 39:7  main.<fn>
+  
+00:00 +0 -10: well formed en-US preserved verbatim
+00:00 +0 -11: well formed en-US preserved verbatim [E]
+  Expected: 'en-US'
+    Actual: 'zho'
+     Which: is different.
+            Expected: en-US
+              Actual: zho
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 39:7  main.<fn>
+  
+00:00 +0 -11: well formed zh-Hans preserved verbatim
+00:00 +0 -12: well formed zh-Hans preserved verbatim [E]
+  Expected: 'zh-Hans'
+    Actual: 'zho'
+     Which: is different.
+            Expected: zh-Hans
+              Actual: zho
+                        ^
+             Differ at offset 2
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 39:7  main.<fn>
+  
+00:00 +0 -12: well formed MN-cYRL-mn preserved verbatim
+00:00 +0 -13: well formed MN-cYRL-mn preserved verbatim [E]
+  Expected: 'MN-cYRL-mn'
+    Actual: 'zho'
+     Which: is different.
+            Expected: MN-cYRL-mn ...
+              Actual: zho
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 39:7  main.<fn>
+  
+00:00 +0 -13: well formed es-419 preserved verbatim
+00:00 +0 -14: well formed es-419 preserved verbatim [E]
+  Expected: 'es-419'
+    Actual: 'zho'
+     Which: is different.
+            Expected: es-419
+              Actual: zho
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 39:7  main.<fn>
+  
+00:00 +0 -14: well formed zh-cmn-Hans-CN preserved verbatim
+00:00 +0 -15: well formed zh-cmn-Hans-CN preserved verbatim [E]
+  Expected: 'zh-cmn-Hans-CN'
+    Actual: 'zho'
+     Which: is different.
+            Expected: zh-cmn-Hans- ...
+              Actual: zho
+                        ^
+             Differ at offset 2
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 39:7  main.<fn>
+  
+00:00 +0 -15: well formed abcd preserved verbatim
+00:00 +0 -16: well formed abcd preserved verbatim [E]
+  Expected: 'abcd'
+    Actual: 'zho'
+     Which: is different.
+            Expected: abcd
+              Actual: zho
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 39:7  main.<fn>
+  
+00:00 +0 -16: well formed abcdefgh preserved verbatim
+00:00 +0 -17: well formed abcdefgh preserved verbatim [E]
+  Expected: 'abcdefgh'
+    Actual: 'zho'
+     Which: is different.
+            Expected: abcdefgh
+              Actual: zho
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 39:7  main.<fn>
+  
+00:00 +0 -17: well formed sl-rozaj-biske-1994 preserved verbatim
+00:00 +0 -18: well formed sl-rozaj-biske-1994 preserved verbatim [E]
+  Expected: 'sl-rozaj-biske-1994'
+    Actual: 'zho'
+     Which: is different.
+            Expected: sl-rozaj-b ...
+              Actual: zho
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 39:7  main.<fn>
+  
+00:00 +0 -18: well formed de-CH-1901 preserved verbatim
+00:00 +0 -19: well formed de-CH-1901 preserved verbatim [E]
+  Expected: 'de-CH-1901'
+    Actual: 'zho'
+     Which: is different.
+            Expected: de-CH-1901 ...
+              Actual: zho
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 39:7  main.<fn>
+  
+00:00 +0 -19: well formed en-a-abc-b-def-x-private preserved verbatim
+00:00 +0 -20: well formed en-a-abc-b-def-x-private preserved verbatim [E]
+  Expected: 'en-a-abc-b-def-x-private'
+    Actual: 'zho'
+     Which: is different.
+            Expected: en-a-abc-b ...
+              Actual: zho
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 39:7  main.<fn>
+  
+00:00 +0 -20: well formed en-0-ab preserved verbatim
+00:00 +0 -21: well formed en-0-ab preserved verbatim [E]
+  Expected: 'en-0-ab'
+    Actual: 'zho'
+     Which: is different.
+            Expected: en-0-ab
+              Actual: zho
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 39:7  main.<fn>
+  
+00:00 +0 -21: well formed x-local preserved verbatim
+00:00 +0 -22: well formed x-local preserved verbatim [E]
+  Expected: 'x-local'
+    Actual: 'zho'
+     Which: is different.
+            Expected: x-local
+              Actual: zho
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 39:7  main.<fn>
+  
+00:00 +0 -22: well formed i-klingon preserved verbatim
+00:00 +0 -23: well formed i-klingon preserved verbatim [E]
+  Expected: 'i-klingon'
+    Actual: 'zho'
+     Which: is different.
+            Expected: i-klingon
+              Actual: zho
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 39:7  main.<fn>
+  
+00:00 +0 -23: well formed sgn-BE-FR preserved verbatim
+00:00 +0 -24: well formed sgn-BE-FR preserved verbatim [E]
+  Expected: 'sgn-BE-FR'
+    Actual: 'zho'
+     Which: is different.
+            Expected: sgn-BE-FR
+              Actual: zho
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 39:7  main.<fn>
+  
+00:00 +0 -24: well formed en-GB-oed preserved verbatim
+00:00 +0 -25: well formed en-GB-oed preserved verbatim [E]
+  Expected: 'en-GB-oed'
+    Actual: 'zho'
+     Which: is different.
+            Expected: en-GB-oed
+              Actual: zho
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 39:7  main.<fn>
+  
+00:00 +0 -25: well formed zh-min-nan preserved verbatim
+00:00 +0 -26: well formed zh-min-nan preserved verbatim [E]
+  Expected: 'zh-min-nan'
+    Actual: 'zho'
+     Which: is different.
+            Expected: zh-min-nan
+              Actual: zho
+                        ^
+             Differ at offset 2
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 39:7  main.<fn>
+  
+00:00 +0 -26: well formed x-a-a preserved verbatim
+00:00 +0 -27: well formed x-a-a preserved verbatim [E]
+  Expected: 'x-a-a'
+    Actual: 'zho'
+     Which: is different.
+            Expected: x-a-a
+              Actual: zho
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 39:7  main.<fn>
+  
+00:00 +0 -27: absent extended tag retains packed language
+00:00 +1 -27: malformed tag "" rejected
+00:00 +1 -28: malformed tag "" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -28: malformed tag "e" rejected
+00:00 +1 -29: malformed tag "e" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -29: malformed tag "en_" rejected
+00:00 +1 -30: malformed tag "en_" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -30: malformed tag "en_US" rejected
+00:00 +1 -31: malformed tag "en_US" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -31: malformed tag "en--US" rejected
+00:00 +1 -32: malformed tag "en--US" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -32: malformed tag "-en" rejected
+00:00 +1 -33: malformed tag "-en" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -33: malformed tag "en-" rejected
+00:00 +1 -34: malformed tag "en-" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -34: malformed tag "en US" rejected
+00:00 +1 -35: malformed tag "en US" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -35: malformed tag "en\n" rejected
+00:00 +1 -36: malformed tag "en\n" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -36: malformed tag "中文" rejected
+00:00 +1 -37: malformed tag "中文" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -37: malformed tag "en-abcdefghi" rejected
+00:00 +1 -38: malformed tag "en-abcdefghi" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -38: malformed tag "en-a" rejected
+00:00 +1 -39: malformed tag "en-a" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -39: malformed tag "en-x" rejected
+00:00 +1 -40: malformed tag "en-x" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -40: malformed tag "x" rejected
+00:00 +1 -41: malformed tag "x" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -41: malformed tag "en-12" rejected
+00:00 +1 -42: malformed tag "en-12" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -42: malformed tag "123" rejected
+00:00 +1 -43: malformed tag "123" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -43: malformed tag "en-Latn-Latn" rejected
+00:00 +1 -44: malformed tag "en-Latn-Latn" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -44: malformed tag "en-variant-VARIANT" rejected
+00:00 +1 -45: malformed tag "en-variant-VARIANT" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -45: malformed tag "en-a-ab-A-cd" rejected
+00:00 +1 -46: malformed tag "en-a-ab-A-cd" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -46: malformed tag "en-x-ab-abcdefghi" rejected
+00:00 +1 -47: malformed tag "en-x-ab-abcdefghi" rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 47:13  main.<fn>
+  
+00:00 +1 -47: malformed framing [0, 0, 0, 14, 101, 108, 110, 103, 0, 0, 0, 0, 101, 110] rejected
+00:00 +1 -48: malformed framing [0, 0, 0, 14, 101, 108, 110, 103, 0, 0, 0, 0, 101, 110] rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 52:13  main.<fn>
+  
+00:00 +1 -48: malformed framing [0, 0, 0, 16, 101, 108, 110, 103, 0, 0, 0, 0, 101, 110, 0, 0] rejected
+00:00 +1 -49: malformed framing [0, 0, 0, 16, 101, 108, 110, 103, 0, 0, 0, 0, 101, 110, 0, 0] rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 52:13  main.<fn>
+  
+00:00 +1 -49: malformed framing [0, 0, 0, 13, 101, 108, 110, 103, 0, 0, 0, 0, 0] rejected
+00:00 +1 -50: malformed framing [0, 0, 0, 13, 101, 108, 110, 103, 0, 0, 0, 0, 0] rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 52:13  main.<fn>
+  
+00:00 +1 -50: malformed framing [0, 0, 0, 12, 101, 108, 110, 103, 0, 0, 0, 0] rejected
+00:00 +1 -51: malformed framing [0, 0, 0, 12, 101, 108, 110, 103, 0, 0, 0, 0] rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 52:13  main.<fn>
+  
+00:00 +1 -51: malformed framing [0, 0, 0, 11, 101, 108, 110, 103, 0, 0, 0] rejected
+00:00 +1 -52: malformed framing [0, 0, 0, 11, 101, 108, 110, 103, 0, 0, 0] rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 52:13  main.<fn>
+  
+00:00 +1 -52: malformed framing [0, 0, 0, 15, 101, 108, 110, 103, 0, 0, 0, 0, 101, 110, 0, 0, 0, 0, 15, 101, 108, 110, 103, 0, 0, 0, 0, 102, 114, 0] rejected
+00:00 +1 -53: malformed framing [0, 0, 0, 15, 101, 108, 110, 103, 0, 0, 0, 0, 101, 110, 0, 0, 0, 0, 15, 101, 108, 110, 103, 0, 0, 0, 0, 102, 114, 0] rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.malformed>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 52:13  main.<fn>
+  
+00:00 +1 -53: unsupported fullbox [0, 0, 0, 15, 101, 108, 110, 103, 1, 0, 0, 0, 101, 110, 0] rejected
+00:00 +1 -54: unsupported fullbox [0, 0, 0, 15, 101, 108, 110, 103, 1, 0, 0, 0, 101, 110, 0] rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.unsupported>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 57:13  main.<fn>
+  
+00:00 +1 -54: unsupported fullbox [0, 0, 0, 15, 101, 108, 110, 103, 0, 0, 0, 1, 101, 110, 0] rejected
+00:00 +1 -55: unsupported fullbox [0, 0, 0, 15, 101, 108, 110, 103, 0, 0, 0, 1, 101, 110, 0] rejected [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.unsupported>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 57:13  main.<fn>
+  
+00:00 +1 -55: 128 ASCII characters accepted without truncation
+00:00 +1 -56: 128 ASCII characters accepted without truncation [E]
+  Expected: <128>
+    Actual: <127>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  packages/yl_player/test/elng_parser_test.dart 62:5  main.<fn>
+  
+00:00 +1 -56: oversized elng rejected before body read
+00:00 +1 -57: oversized elng rejected before body read [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.limitExceeded>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                      expectLater
+  package:flutter_test/src/widget_tester.dart 507:8    expectLater
+  packages/yl_player/test/elng_parser_test.dart 69:11  main.<fn>
+  
+00:00 +1 -57: valid elng does not bypass invalid mdhd language
+00:00 +2 -57: non subtitle elng is not interpreted
+00:00 +3 -57: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-elng-validation-n608pn27/packages/yl_player/test/elng_parser_test.dart: 128 ASCII characters accepted without truncation
+  /private/tmp/yl-elng-validation-n608pn27/packages/yl_player/test/elng_parser_test.dart: malformed framing [0, 0, 0, 11, 101, 108, 110, 103, 0, 0, 0] rejected
+  /private/tmp/yl-elng-validation-n608pn27/packages/yl_player/test/elng_parser_test.dart: malformed framing [0, 0, 0, 12, 101, 108, 110, 103, 0, 0, 0, 0] rejected
+  /private/tmp/yl-elng-validation-n608pn27/packages/yl_player/test/elng_parser_test.dart: malformed framing [0, 0, 0, 13, 101, 108, 110, 103, 0, 0, 0, 0, 0] rejected
+  ... and 53 more

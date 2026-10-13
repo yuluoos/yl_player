@@ -1,0 +1,24 @@
+{
+  "reviewer": "elng_final_review",
+  "model": "gpt-6-astra",
+  "reasoning": "high",
+  "mode": "fresh read-only",
+  "critical": 0,
+  "important": 0,
+  "minor": 0,
+  "fixesRequired": false,
+  "raw": "review-raw.md",
+  "declinedToJudgeRulings": [
+    "Independent muxer interoperability remains unclaimed: owned fixtures prove this contract, not arbitrary producer compatibility; cost is unknown external-corpus interoperability.",
+    "Native playback/device rendering remains unclaimed: no native code changed; cost is requiring later device acceptance.",
+    "HDR/DRM/external/protected composition remains outside this slice: pipeline unchanged; cost is later output-specific acceptance.",
+    "Font/bitmap/ASS resource and animation behavior remains unchanged: language field is bounded and has no resource loading; cost is no new acceptance for these effects.",
+    "Cross-Period identity/role reconciliation remains open: existing track ID semantics retained; cost is no new cross-Period guarantee.",
+    "Full QuickTime/MOV and salvage excluded: retain accepted brands, mdhd validation and strict malformed-elng rejection; cost is rejection of some salvageable metadata.",
+    "Registry, extension semantics, canonicalization and automatic selection excluded: syntax-only is documented; cost is accepting syntactically well-formed but unregistered tags.",
+    "Longplay/weakABR/P05 excluded: explicit user ownership boundary; cost is those results remain with the other task.",
+    "Final manifest consistency owned by executor: freeze every source/reference/evidence hash and verify commit tree; cost if wrong is invalid evidence attribution.",
+    "Whole P02 remains open: this metadata slice does not fulfill all remaining subtitle requirements; cost is later work still required."
+  ],
+  "finalFreeze": "executor checks in manifest and commit"
+}

@@ -1,0 +1,74 @@
+00:00 +0: loading /private/tmp/yl-elng-validation-n608pn27/packages/yl_player/test/elng_parser_test.dart
+00:00 +0: tx3g ordinary preserves extended script tag and cue identity
+00:00 +1: tx3g fragmented preserves extended script tag and cue identity
+00:00 +2: tx3g hybrid preserves extended script tag and cue identity
+00:00 +3: wvtt ordinary preserves extended script tag and cue identity
+00:00 +4: wvtt fragmented preserves extended script tag and cue identity
+00:00 +5: wvtt hybrid preserves extended script tag and cue identity
+00:00 +6: stpp ordinary preserves extended script tag and cue identity
+00:00 +7: stpp fragmented preserves extended script tag and cue identity
+00:00 +8: stpp hybrid preserves extended script tag and cue identity
+00:00 +8 -1: stpp hybrid preserves extended script tag and cue identity [E]
+  Expected: an object with length of <2>
+    Actual: [EmbeddedSubtitlePacket:EmbeddedSubtitlePacket(payload: <redacted>)]
+     Which: has length of <1>
+  
+  package:matcher                                      expect
+  package:flutter_test/src/widget_tester.dart 473:18   expect
+  packages/yl_player/test/elng_parser_test.dart 59:11  main.<fn>
+  
+00:00 +8 -1: well formed en preserved verbatim
+00:00 +9 -1: well formed en-US preserved verbatim
+00:00 +10 -1: well formed zh-Hans preserved verbatim
+00:00 +11 -1: well formed MN-cYRL-mn preserved verbatim
+00:00 +12 -1: well formed es-419 preserved verbatim
+00:00 +13 -1: well formed zh-cmn-Hans-CN preserved verbatim
+00:00 +14 -1: well formed abcd preserved verbatim
+00:00 +15 -1: well formed abcdefgh preserved verbatim
+00:00 +16 -1: well formed sl-rozaj-biske-1994 preserved verbatim
+00:00 +17 -1: well formed de-CH-1901 preserved verbatim
+00:00 +18 -1: well formed en-a-abc-b-def-x-private preserved verbatim
+00:00 +19 -1: well formed en-0-ab preserved verbatim
+00:00 +20 -1: well formed x-local preserved verbatim
+00:00 +21 -1: well formed i-klingon preserved verbatim
+00:00 +22 -1: well formed sgn-BE-FR preserved verbatim
+00:00 +23 -1: well formed en-GB-oed preserved verbatim
+00:00 +24 -1: well formed zh-min-nan preserved verbatim
+00:00 +25 -1: well formed x-a-a preserved verbatim
+00:00 +26 -1: absent extended tag retains packed language
+00:00 +27 -1: malformed tag "" rejected
+00:00 +28 -1: malformed tag "e" rejected
+00:00 +29 -1: malformed tag "en_" rejected
+00:00 +30 -1: malformed tag "en_US" rejected
+00:00 +31 -1: malformed tag "en--US" rejected
+00:00 +32 -1: malformed tag "-en" rejected
+00:00 +33 -1: malformed tag "en-" rejected
+00:00 +34 -1: malformed tag "en US" rejected
+00:00 +35 -1: malformed tag "en\n" rejected
+00:00 +36 -1: malformed tag "中文" rejected
+00:00 +37 -1: malformed tag "en-abcdefghi" rejected
+00:00 +38 -1: malformed tag "en-a" rejected
+00:00 +39 -1: malformed tag "en-x" rejected
+00:00 +40 -1: malformed tag "x" rejected
+00:00 +41 -1: malformed tag "en-12" rejected
+00:00 +42 -1: malformed tag "123" rejected
+00:00 +43 -1: malformed tag "en-Latn-Latn" rejected
+00:00 +44 -1: malformed tag "en-variant-VARIANT" rejected
+00:00 +45 -1: malformed tag "en-a-ab-A-cd" rejected
+00:00 +46 -1: malformed tag "en-x-ab-abcdefghi" rejected
+00:00 +47 -1: malformed framing [0, 0, 0, 14, 101, 108, 110, 103, 0, 0, 0, 0, 101, 110] rejected
+00:00 +48 -1: malformed framing [0, 0, 0, 16, 101, 108, 110, 103, 0, 0, 0, 0, 101, 110, 0, 0] rejected
+00:00 +49 -1: malformed framing [0, 0, 0, 13, 101, 108, 110, 103, 0, 0, 0, 0, 0] rejected
+00:00 +50 -1: malformed framing [0, 0, 0, 12, 101, 108, 110, 103, 0, 0, 0, 0] rejected
+00:00 +51 -1: malformed framing [0, 0, 0, 11, 101, 108, 110, 103, 0, 0, 0] rejected
+00:00 +52 -1: malformed framing [0, 0, 0, 15, 101, 108, 110, 103, 0, 0, 0, 0, 101, 110, 0, 0, 0, 0, 15, 101, 108, 110, 103, 0, 0, 0, 0, 102, 114, 0] rejected
+00:00 +53 -1: unsupported fullbox [0, 0, 0, 15, 101, 108, 110, 103, 1, 0, 0, 0, 101, 110, 0] rejected
+00:00 +54 -1: unsupported fullbox [0, 0, 0, 15, 101, 108, 110, 103, 0, 0, 0, 1, 101, 110, 0] rejected
+00:00 +55 -1: 128 ASCII characters accepted without truncation
+00:00 +56 -1: oversized elng rejected before body read
+00:00 +57 -1: valid elng does not bypass invalid mdhd language
+00:00 +58 -1: non subtitle elng is not interpreted
+00:00 +59 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-elng-validation-n608pn27/packages/yl_player/test/elng_parser_test.dart: stpp hybrid preserves extended script tag and cue identity

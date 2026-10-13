@@ -1,5 +1,6 @@
 ## 0.2.0-dev.2
 
+- Preserve bounded BCP 47 `elng` metadata for embedded MP4 tx3g/wvtt/stpp subtitles, including fragmented/hybrid resources; retain track identity and atomic managed loading.
 - Restore up to four ordered Matroska subtitle compression stages, filtering
   block/private scopes independently and retaining intermediate-byte budgets.
   Clarify the API boundary; Next scopes, encryption and WebM remain unsupported.
