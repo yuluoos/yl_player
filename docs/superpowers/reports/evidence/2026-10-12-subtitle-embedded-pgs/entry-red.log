@@ -1,0 +1,16 @@
+00:00 +0: loading /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_test.dart
+00:00 +0: actual Matroska PGS merged=false discovers, recolors and clears
+00:00 +0 -1: actual Matroska PGS merged=false discovers, recolors and clears [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 210:9  TextSubtitleRuntime.discover.<fn>
+  
+00:00 +0 -1: actual Matroska PGS merged=true discovers, recolors and clears
+00:00 +0 -2: actual Matroska PGS merged=true discovers, recolors and clears [E]
+  YlFailure(category: unsupported, code: subtitle.unsupported, retryable: false, scope: command, diagnosticId: text-subtitle)
+  package:yl_player/src/subtitles/text_subtitle_runtime.dart 210:9  TextSubtitleRuntime.discover.<fn>
+  
+00:00 +0 -2: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_test.dart: actual Matroska PGS merged=false discovers, recolors and clears
+  /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_test.dart: actual Matroska PGS merged=true discovers, recolors and clears

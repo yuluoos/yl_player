@@ -164,3 +164,11 @@ capability expansion. See [contract](2026-10-12-subtitle-matroska-webvtt.md).
 The previous WebM DocType exclusion is superseded by the [WebM contract](2026-10-12-subtitle-webm.md).
 Automatic content detection and explicit webm now accept D_WEBVTT subtitle/caption
 tracks; explicit Matroska/WebM hints are checked against DocType. Other constraints remain.
+
+## Matroska PGS continuation (2026-10-12)
+
+The previous embedded-PGS exclusion is superseded by the
+[Matroska PGS contract](2026-10-12-subtitle-embedded-pgs.md). File/managed HTTP
+S_HDMV/PGS uses container-timed binary packets and the existing bitmap renderer;
+encoded and expanded catalog budgets are shared with external subtitles.
+Other format/effect/native/device boundaries remain.

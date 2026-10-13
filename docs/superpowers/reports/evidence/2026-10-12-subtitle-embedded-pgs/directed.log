@@ -1,0 +1,54 @@
+00:00 +0: loading /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_test.dart
+00:00 +0: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_test.dart: actual Matroska PGS merged=false discovers, recolors and clears
+00:00 +1: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_test.dart: actual Matroska PGS merged=true discovers, recolors and clears
+00:00 +2: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_test.dart: independent FFmpeg remux uses actual container zero-based PTS
+00:00 +3: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_test.dart: 64MiB expanded catalog budget embedded-first preserves prior catalog
+00:00 +4: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_test.dart: 64MiB expanded catalog budget external-first preserves prior catalog
+00:00 +5: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_test.dart: 64MiB expanded catalog budget two-embedded preserves prior catalog
+00:00 +6: loading /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart
+00:00 +6: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: container nanosecond scale and CodecDelay preserve microseconds
+00:01 +7: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: explicit duration caps a display before next presentation
+00:01 +8: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: following presentation caps a longer explicit duration
+00:01 +9: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: duration on END packet also clips split display
+00:01 +10: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: container timing beyond SUP wrap does not round through 90kHz
+00:01 +11: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: equal time displays replace instead of overlaying stale frame
+00:01 +12: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: empty track is a valid empty document
+00:01 +13: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: malformed truncated segment
+00:01 +14: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: malformed orphan END
+00:01 +15: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: malformed incomplete display
+00:01 +16: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: malformed backwards PCS
+00:01 +17: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: malformed zero duration
+00:01 +18: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: malformed negative start
+00:01 +19: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: malformed seven day start
+00:01 +20: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: malformed expired split display
+00:01 +21: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: unknown binary segment remains unsupported
+00:01 +22: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: expanded limit 0 checks before bitmap allocation
+00:01 +23: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: expanded limit 31 checks before bitmap allocation
+00:01 +24: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: encoded document budget includes all binary segments
+00:01 +25: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: segment count is bounded independently of packet count
+00:01 +26: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: large raw Matroska block rejected before payload read
+00:01 +27: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: unsupported private track
+00:01 +28: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: unsupported compressed track
+00:01 +29: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: unsupported WebM track
+00:01 +30: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: PGS block additions are still unsupported
+00:01 +31: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_parser_test.dart: text and PGS tracks share stable UID catalog
+00:01 +32: loading /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_network_test.dart
+00:01 +32: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:01 +33: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_network_test.dart: network YlMediaFormat.matroska sniffs content, skips media, sends conditional range and renders
+00:01 +34: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_network_test.dart: legal chunked206 Matroska PGS discovery completes without Content-Length
+00:02 +35: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_network_test.dart: managed retries later range with credential and shared scan ledger
+00:02 +36: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_network_test.dart: cross-origin redirect strips credentials before Matroska PGS range scan
+00:02 +37: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_network_test.dart: etag response keeps prior selected Matroska PGS catalog
+00:02 +38: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_network_test.dart: 200 response keeps prior selected Matroska PGS catalog
+00:03 +39: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_network_test.dart: 403 response keeps prior selected Matroska PGS catalog
+00:03 +40: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_network_test.dart: malformed response keeps prior selected Matroska PGS catalog
+00:03 +41: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_network_test.dart: managed response-header timeout terminates Matroska PGS discovery
+00:03 +42: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_network_test.dart: explicit non-Matroska PGS format rejects before HTTP request
+00:03 +43: loading /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_session_test.dart
+00:03 +43: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_session_test.dart: PGS public session renders pixel geometry, recolors and clears lifecycle
+00:04 +44: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_session_test.dart: network failure leaves playback and selected subtitle state unchanged
+00:05 +45: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_session_test.dart: held range is cancelled by replace and cannot publish late
+00:05 +46: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_session_test.dart: held range is cancelled by stop and cannot publish late
+00:05 +47: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_session_test.dart: held range is cancelled by dispose and cannot publish late
+00:05 +48: /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_session_test.dart: held range is cancelled by external and cannot publish late
+00:05 +49: All tests passed!

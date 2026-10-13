@@ -1,0 +1,18 @@
+{
+  "base": "779622b73669f14a68a9fe1e5bbc82b9a6f405e9",
+  "path": "/private/tmp/yl-epgs-validation-t9p6tm8c",
+  "files": [
+    "packages/yl_player/test/support/embedded_pgs_fixture.dart",
+    "packages/yl_player/test/embedded_pgs_test.dart",
+    "packages/yl_player/lib/src/subtitles/matroska_subtitles.dart",
+    "packages/yl_player/lib/src/subtitles/subtitle_document.dart",
+    "packages/yl_player/lib/src/subtitles/pgs_parser.dart",
+    "packages/yl_player/lib/src/subtitles/text_subtitle_runtime.dart",
+    "packages/yl_player/lib/src/playback_session.dart",
+    "packages/yl_player/test/embedded_subtitle_test.dart",
+    "packages/yl_player/test/fixtures/embedded-pgs-owned.mkv",
+    "packages/yl_player/test/embedded_pgs_parser_test.dart",
+    "packages/yl_player/test/embedded_pgs_network_test.dart",
+    "packages/yl_player/test/embedded_pgs_session_test.dart"
+  ]
+}

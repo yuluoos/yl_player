@@ -604,6 +604,7 @@ current native adapters still do not advertise a native subtitle SPI.
 | Local / HTTP(S) MP4 embedded TTML (stpp) | Non-fragmented discovery/selection, sample-clipped TTML composition times and simple edits, existing styled text/percentage regions; managed Range policy and raw XML catalog budget; actual file/HTTP/Flutter validation, no device or full TTML/IMSC claim |
 | Local / HTTP(S) fMP4 embedded WebVTT / TTML | Same-resource initialization + moof/mdat discovery; trex/tfhd/trun defaults, tfdt/composition times, sample clipping/edits; managed Range, real file/HTTP and Flutter selection/region/lifecycle tests; no separate segment URLs, manifests/live polling or device acceptance |
 | Hybrid MP4 embedded tx3g / WebVTT / TTML | Initial sample tables plus later fragments in one resource; per-track decode continuity, shared byte extents/budgets and atomic managed loading; owned three-codec fixtures, independent FFmpeg tx3g, real HTTP/Flutter validation; no native/device claim |
+| Local / managed HTTP(S) Matroska embedded PGS | TrackUID discovery/selection, raw binary segments, container timing/duration, existing palette/RLE overlay and shared encoded/RGBA budgets; owned plus independent FFmpeg fixture, HTTP and pixel/lifecycle tests; no native/device claim |
 | Other embedded containers/codecs, advanced TTML/ASS/SSA/PGS/VobSub and advanced WebVTT | Not implemented by this runtime |
 | Protected output, HDR brightness and physical-device subtitle sync | Not accepted; protected surfaces reject subtitle commands |
 

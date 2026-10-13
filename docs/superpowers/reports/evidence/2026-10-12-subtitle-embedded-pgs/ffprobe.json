@@ -1,0 +1,83 @@
+{
+    "packets": [
+        {
+            "codec_type": "subtitle",
+            "stream_index": 0,
+            "pts": 0,
+            "pts_time": "0.000000",
+            "dts": 0,
+            "dts_time": "0.000000",
+            "size": "83",
+            "pos": "472",
+            "flags": "K__",
+            "data": "\n00000000: 1600 1300 6400 6410 0000 8000 0001 0001  ....d.d.........\n00000010: 0000 0014 001e 1700 0a01 0000 0000 0000  ................\n00000020: 6400 6414 0011 0000 0010 8080 0001 eb80  d.d.............\n00000030: 80ff 0251 f05a 8015 0016 0001 00c0 0000  ...Q.Z..........\n00000040: 0f00 0400 0201 0102 0200 0000 8401 0000  ................\n00000050: 8000 00                                  ...\n"
+        },
+        {
+            "codec_type": "subtitle",
+            "stream_index": 0,
+            "pts": 1000,
+            "pts_time": "1.000000",
+            "dts": 1000,
+            "dts_time": "1.000000",
+            "size": "35",
+            "pos": "561",
+            "flags": "K__",
+            "data": "\n00000000: 1600 1300 6400 6410 0001 0080 0001 0001  ....d.d.........\n00000010: 0000 0014 001e 1400 0700 0101 1080 80ff  ................\n00000020: 8000 00                                  ...\n"
+        },
+        {
+            "codec_type": "subtitle",
+            "stream_index": 0,
+            "pts": 2000,
+            "pts_time": "2.000000",
+            "dts": 2000,
+            "dts_time": "2.000000",
+            "size": "17",
+            "pos": "602",
+            "flags": "K__",
+            "data": "\n00000000: 1600 0b00 6400 6410 0002 0000 0000 8000  ....d.d.........\n00000010: 00                                       .\n"
+        }
+    ],
+    "streams": [
+        {
+            "index": 0,
+            "codec_name": "hdmv_pgs_subtitle",
+            "codec_long_name": "HDMV Presentation Graphic Stream subtitles",
+            "codec_type": "subtitle",
+            "codec_tag_string": "[0][0][0][0]",
+            "codec_tag": "0x0000",
+            "width": 100,
+            "height": 100,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/1000",
+            "start_pts": 0,
+            "start_time": "0.000000",
+            "nb_read_packets": "3",
+            "extradata": "\n",
+            "disposition": {
+                "default": 0,
+                "dub": 0,
+                "original": 0,
+                "comment": 0,
+                "lyrics": 0,
+                "karaoke": 0,
+                "forced": 0,
+                "hearing_impaired": 0,
+                "visual_impaired": 0,
+                "clean_effects": 0,
+                "attached_pic": 0,
+                "timed_thumbnails": 0,
+                "non_diegetic": 0,
+                "captions": 0,
+                "descriptions": 0,
+                "metadata": 0,
+                "dependent": 0,
+                "still_image": 0,
+                "multilayer": 0
+            },
+            "tags": {
+                "DURATION": "00:00:02.000000000"
+            }
+        }
+    ]
+}

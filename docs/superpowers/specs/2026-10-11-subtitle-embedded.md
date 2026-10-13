@@ -92,3 +92,11 @@ The local-only scope above records this slice's original acceptance. HTTP(S)
 Matroska text discovery is subsequently implemented under [the network
 contract](2026-10-11-subtitle-network-matroska.md), using managed single-range reads
 with stable strong ETag/length and bounded caching. Other exclusions remain.
+
+## Matroska PGS continuation (2026-10-12)
+
+The previous embedded-PGS exclusion is superseded by the
+[Matroska PGS contract](2026-10-12-subtitle-embedded-pgs.md). File/managed HTTP
+S_HDMV/PGS uses container-timed binary packets and the existing bitmap renderer;
+encoded and expanded catalog budgets are shared with external subtitles.
+Other format/effect/native/device boundaries remain.

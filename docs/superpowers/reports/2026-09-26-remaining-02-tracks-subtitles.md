@@ -677,3 +677,40 @@ native/构建制品SHA256重新核验不变。一次独立只读复审Critical0/
 README/本项契约已准确。旧WVTT结构计数Minor继续保留，九项范围裁定见
 [review.md](evidence/2026-10-12-subtitle-webm/review.md)。无修复轮次/二次复审。
 证据与引用依赖冻结到manifest，独立Git index仅提交本项及自己的总览/CHANGELOG段。
+
+## 2026-10-12 Matroska 内嵌 PGS
+
+接入file/managed HTTP Matroska S_HDMV/PGS二进制轨道，沿用TrackUID选择、PGS状态机与
+位图overlay。容器PCS直接以微秒计时，不经SUP90kHz回绕；显式/默认时长约束可见区间，
+下一显示集或空PCS切换/清屏。发现传递剩余RGBA预算，内嵌/外挂/多内嵌目录共享4MiB
+encoded与64MiB expanded限制；无原生制品/依赖/视频路由改动。
+[契约](../specs/2026-10-12-subtitle-embedded-pgs.md)限定单资源和PGS已支持的图形子集。
+
+按用户要求补齐discoverEmbeddedSubtitles API注释：WebM、PGS、容器codec范围和显式
+DocType一致性，关闭上一轮WebM注释Minor；其他旧MP4WVTT结构计数Minor不在本项。
+
+基线779622b。真实文件入口RED0通过/2失败；首次GREEN96通过/1失败为旧PGS拒绝断言，
+改为尚不支持的DVB codec后123/123含旧PGS与Matroska回归。新增完整49/49：26parser、
+6真实文件/共享预算、11真实HTTP、6session/Flutter。PGS parser扩展共用段分派，原SUP
+回绕和PGS/VobSub图片合成回归保留。五处括号规范提示在最终分析前修正。
+
+真实HTTP验证Range/If-Match/ETag、重试/凭据剥离/超时/失败保留；公开会话读取PGS，
+逐像素验证4x2对象映射到8x4画面区域、颜色/透明度及调色板更新，验证切至文本、
+正负offset、seek/off/清屏和图片句柄释放，迟到HTTP取消覆盖换源/停止/释放/外挂替换。
+
+独立hostFFmpeg8.0.1将自有SUP封装为合并display-set MKV；ffprobe显示0/1/2s，测试按
+实际容器时间断言，不误用输入SUP1/2/3s。原始输入/命令/probe见
+[证据目录](evidence/2026-10-12-subtitle-embedded-pgs/manifest.json)。
+隔离副本临时移除发现的剩余RGBA传递后，“外挂先加载”和“两条内嵌”超限测试均从
+应拒绝变为错误接纳（0通过/2失败）；恢复精确候选后才进行最终完整验证。
+
+内嵌VobSub、高级PGS/Blu-ray、设备/HDR/DRM/外接显示、清单/直播/跨Period及PD03/
+整个P02仍开放。视频backend为fake，本项不等价native/实机认证；长播放/弱网ABR未改。
+
+最终隔离四包**1525/1525、0失败、exit0**（135接口/1195播放器/113Apple/82Android），
+lib/test分析**No issues found、exit0**。12份源/测试/夹具与已测副本逐字节一致，
+十项native/构建制品SHA256重新核验不变。一次独立只读复审Critical0/Important0/Minor0新增，
+无修复轮次/重复复审；七项范围裁定、API注释Minor关闭和旧WVTT Minor延续见
+[review.md](evidence/2026-10-12-subtitle-embedded-pgs/review.md)。
+冻结源码/引用依赖/文档/日志/夹具指纹，使用独立Git index只提交本项和自己的总览/
+CHANGELOG段。无长播放/弱网ABR改动，无push。

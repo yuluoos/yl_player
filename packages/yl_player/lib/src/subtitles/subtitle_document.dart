@@ -129,6 +129,14 @@ final class SubtitleDocument {
     SubtitleLimits limits = const SubtitleLimits(),
   }) => _embeddedDocument(packets, format, codecPrivate, limits, sourceBytes);
 
+  static SubtitleDocument fromEmbeddedPgs(
+    List<EmbeddedPgsPacket> packets, {
+    SubtitleLimits limits = const SubtitleLimits(),
+  }) {
+    limits._validate();
+    return _PgsParser(limits).parseEmbedded(packets);
+  }
+
   /// MP4 TTML document timing is absolute on the track composition timeline.
   /// Untimed paragraphs last until the enclosing sample clips them; external
   /// TTML keeps its existing requirement for a finite end.

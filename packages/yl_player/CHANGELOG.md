@@ -1,5 +1,8 @@
 ## 0.2.0-dev.2
 
+- Add Matroska embedded PGS bitmap discovery and rendering for files and managed
+  HTTP, preserving container timing, duration caps and shared bitmap budgets.
+  Clarify WebM and per-container text/PGS support in the discovery API docs.
 - Add file and managed HTTP WebM embedded WebVTT discovery, retaining TrackUID
   selection and shared rendering; verify explicit WebM/Matroska format declarations
   against the container DocType and keep metadata tracks out of subtitle overlays.

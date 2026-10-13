@@ -188,7 +188,7 @@ void main() {
     });
   }
   final unsupported = <String, List<int>>{
-    'codec': mkv(tracks: track(codec: 'S_HDMV/PGS')),
+    'codec': mkv(tracks: track(codec: 'S_DVBSUB')),
     'compressed track': mkv(tracks: track(extra: element(0x6d80, []))),
     'missing duration': mkv(clusters: cluster(block(duration: null))),
     'lacing': mkv(clusters: cluster(block(flags: 2))),

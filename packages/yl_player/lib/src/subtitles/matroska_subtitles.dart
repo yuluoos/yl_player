@@ -16,7 +16,7 @@ final class MatroskaSubtitles {
   final Future<List<int>> Function(int offset, int count) read;
   final SubtitleCancellation token;
   var _elements = 0, _readBytes = 0, _payloadBytes = 0, _packetCount = 0;
-  var _scale = 1000000;
+  var _scale = 1000000, _pgsPacketCount = 0;
   final _tracks = <int, _Track>{};
   final _uids = <String>{};
   final _numbers = <int>{};
@@ -180,6 +180,7 @@ final class MatroskaSubtitles {
             t.private,
             List.unmodifiable(t.packets),
             sourceBytes: t.sourceBytes,
+            pgsPackets: List.unmodifiable(t.pgsPackets),
           ),
       ];
     }
@@ -215,6 +216,7 @@ final class MatroskaSubtitles {
       'S_TEXT/UTF8' => YlSubtitleFormat.srt,
       'S_TEXT/ASS' => YlSubtitleFormat.ass,
       'S_TEXT/SSA' => YlSubtitleFormat.ssa,
+      'S_HDMV/PGS' => YlSubtitleFormat.pgs,
       'S_TEXT/WEBVTT' ||
       'D_WEBVTT/SUBTITLES' ||
       'D_WEBVTT/CAPTIONS' => YlSubtitleFormat.webvtt,
@@ -243,7 +245,8 @@ final class MatroskaSubtitles {
         _bad();
       }
     }
-    if (format == YlSubtitleFormat.srt && (private?.isNotEmpty ?? false)) {
+    if ((format == YlSubtitleFormat.srt || format == YlSubtitleFormat.pgs) &&
+        (private?.isNotEmpty ?? false)) {
       _unsupported();
     }
     if (format == YlSubtitleFormat.webvtt) {
@@ -334,11 +337,41 @@ final class MatroskaSubtitles {
     final ticks = cluster + relative;
     if (ticks < 0 || ticks > 604800000000000 ~/ _scale) _bad();
     final startNs = ticks * _scale - t.delay;
+    final pgs = t.track.format == YlSubtitleFormat.pgs;
+    if (startNs < 0) _bad();
     final durationNs = duration == null
         ? t.defaultDuration
         : duration <= 604800000000000 ~/ _scale
         ? duration * _scale
         : null;
+    if (durationNs == null && (!pgs || duration != null)) _unsupported();
+    if (pgs) {
+      if (durationNs != null &&
+          (durationNs <= 0 || startNs + durationNs > 604800000000000)) {
+        _bad();
+      }
+      final size = e.size - width - 3;
+      _payloadBytes += size;
+      if (++_pgsPacketCount > 50000 ||
+          size > 256 * 1024 ||
+          _payloadBytes > 4 * 1024 * 1024) {
+        _limit();
+      }
+      if (size == 0) _bad();
+      final start = Duration(microseconds: startNs ~/ 1000);
+      final end = durationNs == null
+          ? null
+          : Duration(microseconds: (startNs + durationNs) ~/ 1000);
+      if (end != null && end <= start) _unsupported();
+      t.pgsPackets.add(
+        EmbeddedPgsPacket(
+          start,
+          await _bytes(e.start + width + 3, size),
+          end: end,
+        ),
+      );
+      return;
+    }
     if (durationNs == null) _unsupported();
     if (durationNs <= 0 ||
         startNs < 0 ||
@@ -417,6 +450,7 @@ final class _Track {
   final int? defaultDuration;
   final int delay;
   final packets = <EmbeddedSubtitlePacket>[];
+  final pgsPackets = <EmbeddedPgsPacket>[];
 }
 
 final class EmbeddedSubtitleData {
@@ -425,7 +459,9 @@ final class EmbeddedSubtitleData {
     this.codecPrivate,
     this.packets, {
     this.sourceBytes = 0,
+    this.pgsPackets = const [],
   });
+  final List<EmbeddedPgsPacket> pgsPackets;
   final YlSubtitleTrack track;
   final String? codecPrivate;
   final List<EmbeddedSubtitlePacket> packets;

@@ -1,5 +1,16 @@
 part of 'subtitle_document.dart';
 
+/// Raw Matroska PGS segments without SUP magic/PTS/DTS framing.
+final class EmbeddedPgsPacket {
+  EmbeddedPgsPacket(this.start, List<int> bytes, {this.end})
+    : bytes = Uint8List.fromList(bytes).asUnmodifiableView();
+  final Duration start;
+  final Duration? end;
+  final Uint8List bytes;
+  @override
+  String toString() => 'EmbeddedPgsPacket(payload: <redacted>)';
+}
+
 /// Immutable, premultiplied-alpha RGBA pixels. Only the active overlay creates
 /// engine images; catalog parsing never creates a GPU/native image handle.
 /// Shared with DVD VobSub; the historical internal type name is retained.
@@ -87,6 +98,7 @@ final class _PgsParser {
   int? rawPts;
   var rollover = 0;
   PgsFrame? previous;
+  Duration? displayEnd, previousEnd;
   SubtitleDocument parse(List<int> bytes) {
     final r = _PgsReader(bytes);
     if (r.left == 0) _malformed();
@@ -97,26 +109,7 @@ final class _PgsParser {
       r.long(); // DTS is not presentation time.
       final type = r.byte(), length = r.word();
       final body = _PgsReader(r.take(length));
-      if (type == 0x16) {
-        if (inDisplay) _malformed();
-        presentation(body, timestamp);
-      } else {
-        if (!inDisplay) _malformed();
-        switch (type) {
-          case 0x14:
-            palette(body);
-          case 0x15:
-            if (paletteUpdate) _unsupported();
-            object(body);
-          case 0x17:
-            if (paletteUpdate) _unsupported();
-            window(body);
-          case 0x80:
-            finish();
-          default:
-            _unsupported();
-        }
-      }
+      segment(type, body, timestamp: timestamp);
       body.done();
     }
     if (inDisplay) _malformed();
@@ -124,16 +117,82 @@ final class _PgsParser {
     return SubtitleDocument._finish(cues, bytes.length, limits);
   }
 
-  void presentation(_PgsReader r, int timestamp) {
-    if (++displays > limits.maxCues) _limit();
-    if (rawPts != null && timestamp < rawPts!) {
-      if (rawPts! - timestamp <= 0x80000000) _malformed();
-      rollover += 0x100000000;
+  SubtitleDocument parseEmbedded(List<EmbeddedPgsPacket> packets) {
+    if (packets.length > 50000) _limit();
+    var inputBytes = 0;
+    for (final packet in packets) {
+      inputBytes += packet.bytes.length;
+      if (inputBytes > limits.maxInputBytes ||
+          packet.bytes.length > 256 * 1024) {
+        _limit();
+      }
+      if (packet.start.isNegative ||
+          packet.start >= const Duration(days: 7) ||
+          (packet.end != null &&
+              (packet.end! <= packet.start ||
+                  packet.end! > const Duration(days: 7)))) {
+        _malformed();
+      }
+      final r = _PgsReader(packet.bytes);
+      if (r.left == 0) _malformed();
+      while (r.left > 0) {
+        if (++segments > 50000) _limit();
+        final type = r.byte(), length = r.word();
+        final body = _PgsReader(r.take(length));
+        if (type == 0x16) {
+          displayEnd = packet.end;
+        } else if (packet.end != null &&
+            (displayEnd == null || packet.end! < displayEnd!)) {
+          displayEnd = packet.end;
+        }
+        segment(type, body, time: packet.start);
+        body.done();
+      }
     }
-    rawPts = timestamp;
-    final ticks = timestamp + rollover;
-    if (ticks >= 7 * 24 * 60 * 60 * 90000) _limit();
-    pts = Duration(microseconds: ticks * 1000000 ~/ 90000);
+    if (inDisplay) _malformed();
+    append(const Duration(days: 7));
+    return SubtitleDocument._finish(cues, inputBytes, limits);
+  }
+
+  void segment(int type, _PgsReader body, {int timestamp = 0, Duration? time}) {
+    if (type == 0x16) {
+      if (inDisplay) _malformed();
+      presentation(body, timestamp, time: time);
+    } else {
+      if (!inDisplay) _malformed();
+      switch (type) {
+        case 0x14:
+          palette(body);
+        case 0x15:
+          if (paletteUpdate) _unsupported();
+          object(body);
+        case 0x17:
+          if (paletteUpdate) _unsupported();
+          window(body);
+        case 0x80:
+          if (displayEnd != null && displayEnd! <= pts) _malformed();
+          finish();
+        default:
+          _unsupported();
+      }
+    }
+  }
+
+  void presentation(_PgsReader r, int timestamp, {Duration? time}) {
+    if (++displays > limits.maxCues) _limit();
+    if (time != null) {
+      if (time < lastPts) _malformed();
+      pts = time;
+    } else {
+      if (rawPts != null && timestamp < rawPts!) {
+        if (rawPts! - timestamp <= 0x80000000) _malformed();
+        rollover += 0x100000000;
+      }
+      rawPts = timestamp;
+      final ticks = timestamp + rollover;
+      if (ticks >= 7 * 24 * 60 * 60 * 90000) _limit();
+      pts = Duration(microseconds: ticks * 1000000 ~/ 90000);
+    }
     final w = r.word(), h = r.word();
     r.byte();
     r.word();
@@ -349,11 +408,13 @@ final class _PgsParser {
     }
     append(pts);
     previous = bitmaps.isEmpty ? null : PgsFrame._(width, height, bitmaps);
+    previousEnd = displayEnd;
     lastPts = pts;
     inDisplay = false;
   }
 
   void append(Duration end) {
+    if (previousEnd != null && previousEnd! < end) end = previousEnd!;
     if (previous == null || end <= lastPts) return;
     if (cues.length >= limits.maxCues) _limit();
     cues.add(

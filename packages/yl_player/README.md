@@ -216,10 +216,10 @@ It does not support WebVTT CSS/regions/karaoke or protected video overlays. HDR 
 and native-device synchronization remain unqualified. Without the opt-in, the
 existing native capability/SPI gates continue to apply.
 
-### Matroska and MP4 embedded subtitles
+### Matroska, WebM and MP4 embedded subtitles
 
 With the same `enableTextSubtitles: true` controller, discover text tracks from
-its committed file or HTTP(S) Matroska/MP4 source, then select a returned identity:
+its committed file or HTTP(S) Matroska/WebM/MP4 source, then select a returned identity:
 
 ```dart
 final session = await player.load(YlFileSource('/media/movie.mkv'));
@@ -228,7 +228,7 @@ final tracks = player.state.subtitles.tracks.where((t) => !t.isExternal);
 if (tracks.isNotEmpty) await session.selectSubtitleTrack(tracks.first.id);
 ```
 
-`YlPlayerView` renders Matroska UTF8/SRT, ASS/SSA and WebVTT, and non-fragmented MP4
+`YlPlayerView` renders Matroska UTF8/SRT, ASS/SSA, WebVTT and PGS, and non-fragmented MP4
 `tx3g` (mov_text), `wvtt` (WebVTT) and `stpp` (TTML) tracks using media time.
 Fragmented MP4 also supports `tx3g`/`wvtt`/`stpp` when initialization and fragments
 are in the same complete file or stable HTTP resource.
@@ -244,7 +244,7 @@ deadlines, retry/redirect budgets and credential origin restrictions apply to th
 whole discovery. Later ranges use If-Match; changed versions fail atomically.
 The scan uses a bounded cache and request/byte budgets, with no full-body fallback.
 
-Separate initialization/media segment URLs, HLS/DASH, embedded bitmap and native subtitle callbacks remain
+Separate initialization/media segment URLs, HLS/DASH, embedded VobSub and native subtitle callbacks remain
 unsupported. No additional native subtitle capability or physical-device
 acceptance is claimed. See the [embedded subset contract](../../docs/superpowers/specs/2026-10-11-subtitle-embedded.md)
 the [network range contract](../../docs/superpowers/specs/2026-10-11-subtitle-network-matroska.md)
@@ -299,3 +299,9 @@ Matroska and WebM hints reject mismatched content. Track identities retain the
 `mkv:<UID>` EBML namespace. The existing bounded WebVTT renderer and managed
 Range rules apply; this does not expand native video decoding support. See the
 [WebM contract](../../docs/superpowers/specs/2026-10-12-subtitle-webm.md).
+
+Matroska `S_HDMV/PGS` bitmap tracks also use `discoverEmbeddedSubtitles()` and
+`mkv:<TrackUID>` selection. Raw binary segments use container presentation times
+and optional duration caps; palette updates and clear displays reuse the PGS
+overlay. Embedded and external tracks share the 4MiB encoded / 64MiB RGBA catalog
+budgets. See the [PGS container contract](../../docs/superpowers/specs/2026-10-12-subtitle-embedded-pgs.md).

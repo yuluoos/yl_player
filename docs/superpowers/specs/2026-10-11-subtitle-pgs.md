@@ -87,3 +87,11 @@ is introduced. Owned synthetic SUP samples have manually derived time/position/
 RGBA expectations. Pixel tests and handle-release tests are local Flutter
 acceptance; public playback lifecycle uses fake platform events with real file
 and loopback HTTP loading. No long-play or weak-network ABR workload is run.
+
+## Matroska PGS continuation (2026-10-12)
+
+The previous embedded-PGS exclusion is superseded by the
+[Matroska PGS contract](2026-10-12-subtitle-embedded-pgs.md). File/managed HTTP
+S_HDMV/PGS uses container-timed binary packets and the existing bitmap renderer;
+encoded and expanded catalog budgets are shared with external subtitles.
+Other format/effect/native/device boundaries remain.

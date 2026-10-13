@@ -169,6 +169,12 @@ final class TextSubtitleRuntime {
             documents.values.fold<int>(0, (n, d) => n + d.document.cues.length);
         var runsLeft =
             20000 - documents.values.fold<int>(0, (n, d) => n + d.runs);
+        var bitmapBytesLeft =
+            64 * 1024 * 1024 -
+            documents.values.fold<int>(
+              0,
+              (n, d) => n + d.document.pgsBitmapBytes,
+            );
         for (final entry in data) {
           token.check();
           if (documents.containsKey(entry.track.id)) {
@@ -176,19 +182,29 @@ final class TextSubtitleRuntime {
           }
           // Zero remaining budget still allows an empty track; parse with the
           // hard ceiling then check aggregate before any publication.
-          final doc = SubtitleDocument.fromEmbeddedPackets(
-            entry.packets,
-            format: switch (entry.track.format) {
-              YlSubtitleFormat.ass => SubtitleFormat.ass,
-              YlSubtitleFormat.ssa => SubtitleFormat.ssa,
-              YlSubtitleFormat.webvtt => SubtitleFormat.webvtt,
-              YlSubtitleFormat.ttml => SubtitleFormat.ttml,
-              _ => SubtitleFormat.srt,
-            },
-            codecPrivate: entry.codecPrivate,
-            sourceBytes: entry.sourceBytes,
-            limits: SubtitleLimits(maxAssRuns: runsLeft),
+          final limits = SubtitleLimits(
+            maxAssRuns: runsLeft,
+            maxPgsBitmapBytes: bitmapBytesLeft,
           );
+          final doc = entry.track.format == YlSubtitleFormat.pgs
+              ? SubtitleDocument.fromEmbeddedPgs(
+                  entry.pgsPackets,
+                  limits: limits,
+                )
+              : SubtitleDocument.fromEmbeddedPackets(
+                  entry.packets,
+                  format: switch (entry.track.format) {
+                    YlSubtitleFormat.ass => SubtitleFormat.ass,
+                    YlSubtitleFormat.ssa => SubtitleFormat.ssa,
+                    YlSubtitleFormat.webvtt => SubtitleFormat.webvtt,
+                    YlSubtitleFormat.ttml => SubtitleFormat.ttml,
+                    _ => SubtitleFormat.srt,
+                  },
+                  codecPrivate: entry.codecPrivate,
+                  sourceBytes: entry.sourceBytes,
+                  limits: limits,
+                );
+          bitmapBytesLeft -= doc.pgsBitmapBytes;
           bytesLeft -= doc.inputBytes;
           cuesLeft -= doc.cues.length;
           if (bytesLeft < 0 || cuesLeft < 0) {

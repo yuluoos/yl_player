@@ -1,0 +1,32 @@
+00:00 +0: loading /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_test.dart
+00:00 +0: 64MiB expanded catalog budget external-first preserves prior catalog
+00:00 +0 -1: 64MiB expanded catalog budget external-first preserves prior catalog [E]
+  Expected: throws <Instance of 'YlPlayerException'> with `code`: 'subtitle.too_large'
+    Actual: <Instance of 'Future<Null>'>
+     Which: emitted <null>
+  
+  package:matcher                                        expectLater
+  package:flutter_test/src/widget_tester.dart 507:8      expectLater
+  packages/yl_player/test/embedded_pgs_test.dart 147:15  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                             _CustomZone.registerUnaryCallback
+  packages/yl_player/test/embedded_pgs_test.dart 88:21   main.<fn>
+  
+00:00 +0 -1: 64MiB expanded catalog budget two-embedded preserves prior catalog
+00:00 +0 -2: 64MiB expanded catalog budget two-embedded preserves prior catalog [E]
+  Expected: throws <Instance of 'YlPlayerException'> with `code`: 'subtitle.too_large'
+    Actual: <Instance of 'Future<Null>'>
+     Which: emitted <null>
+  
+  package:matcher                                        expectLater
+  package:flutter_test/src/widget_tester.dart 507:8      expectLater
+  packages/yl_player/test/embedded_pgs_test.dart 147:15  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                             _CustomZone.registerUnaryCallback
+  packages/yl_player/test/embedded_pgs_test.dart 88:21   main.<fn>
+  
+00:00 +0 -2: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_test.dart: 64MiB expanded catalog budget external-first preserves prior catalog
+  /private/tmp/yl-epgs-validation-t9p6tm8c/packages/yl_player/test/embedded_pgs_test.dart: 64MiB expanded catalog budget two-embedded preserves prior catalog

@@ -528,3 +528,11 @@ automatic按内容识别，显式WebM/Matroska声明严格匹配DocType；非字
 39新增定向用例及独立FFmpeg VP9/WebVTT样片验证；见[报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)
 和[WebM契约](../specs/2026-10-12-subtitle-webm.md)。原生视频能力/设备、高级效果、
 直播/清单与整个P02继续开放，长播放和弱网ABR未改。
+
+### 2026-10-12 P02 Matroska 内嵌 PGS
+
+完成本地/managed HTTP S_HDMV/PGS轨道发现、TrackUID选择与位图合成；容器微秒时间、
+显式时长、调色板更新/清屏以及内嵌外挂共享64MiB预算有验证。API注释已补WebM/PGS。
+49新增用例、独立FFmpeg封装与像素/生命周期证据见[报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)
+及[契约](../specs/2026-10-12-subtitle-embedded-pgs.md)。内嵌VobSub/高级效果/实机与整个P02
+仍开放，长播放和弱网ABR未涉及。
