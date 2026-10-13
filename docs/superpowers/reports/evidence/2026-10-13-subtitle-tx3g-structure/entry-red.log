@@ -1,0 +1,66 @@
+00:00 +0: loading /private/tmp/yl-tx-structure-validation-85bucj42/packages/yl_player/test/tx3g_structure_test.dart
+00:00 +0: tx3g configuration children accumulate across tracks
+00:00 +0 -1: tx3g configuration children accumulate across tracks [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.limitExceeded>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [
+                      Instance of 'EmbeddedSubtitleData',
+                      Instance of 'EmbeddedSubtitleData',
+                      Instance of 'EmbeddedSubtitleData',
+                      Instance of 'EmbeddedSubtitleData',
+                      Instance of 'EmbeddedSubtitleData',
+                      Instance of 'EmbeddedSubtitleData',
+                      Instance of 'EmbeddedSubtitleData',
+                      Instance of 'EmbeddedSubtitleData',
+                      Instance of 'EmbeddedSubtitleData',
+                      Instance of 'EmbeddedSubtitleData',
+                      Instance of 'EmbeddedSubtitleData',
+                      Instance of 'EmbeddedSubtitleData',
+                      Instance of 'EmbeddedSubtitleData',
+                      Instance of 'EmbeddedSubtitleData',
+                      Instance of 'EmbeddedSubtitleData',
+                      Instance of 'EmbeddedSubtitleData',
+                      Instance of 'EmbeddedSubtitleData'
+                    ]
+  
+  package:matcher                                        expectLater
+  package:flutter_test/src/widget_tester.dart 507:8      expectLater
+  packages/yl_player/test/tx3g_structure_test.dart 8:11  main.<fn>
+  
+00:00 +0 -1: ordinary tx3g modifiers share the WVTT resource allowance
+00:00 +0 -2: ordinary tx3g modifiers share the WVTT resource allowance [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.limitExceeded>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData', Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                         expectLater
+  package:flutter_test/src/widget_tester.dart 507:8       expectLater
+  packages/yl_player/test/tx3g_structure_test.dart 15:13  main.<fn>
+  
+00:00 +0 -2: fragmented tx3g modifiers share the WVTT resource allowance
+00:00 +0 -3: fragmented tx3g modifiers share the WVTT resource allowance [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.limitExceeded>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData', Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                         expectLater
+  package:flutter_test/src/widget_tester.dart 507:8       expectLater
+  packages/yl_player/test/tx3g_structure_test.dart 15:13  main.<fn>
+  
+00:00 +0 -3: hybrid tx3g modifiers share the WVTT resource allowance
+00:01 +0 -4: hybrid tx3g modifiers share the WVTT resource allowance [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.limitExceeded>
+    Actual: <Instance of 'Future<List<EmbeddedSubtitleData>>'>
+     Which: emitted [Instance of 'EmbeddedSubtitleData', Instance of 'EmbeddedSubtitleData']
+  
+  package:matcher                                         expectLater
+  package:flutter_test/src/widget_tester.dart 507:8       expectLater
+  packages/yl_player/test/tx3g_structure_test.dart 15:13  main.<fn>
+  
+00:01 +0 -4: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-tx-structure-validation-85bucj42/packages/yl_player/test/tx3g_structure_test.dart: fragmented tx3g modifiers share the WVTT resource allowance
+  /private/tmp/yl-tx-structure-validation-85bucj42/packages/yl_player/test/tx3g_structure_test.dart: hybrid tx3g modifiers share the WVTT resource allowance
+  /private/tmp/yl-tx-structure-validation-85bucj42/packages/yl_player/test/tx3g_structure_test.dart: ordinary tx3g modifiers share the WVTT resource allowance
+  /private/tmp/yl-tx-structure-validation-85bucj42/packages/yl_player/test/tx3g_structure_test.dart: tx3g configuration children accumulate across tracks

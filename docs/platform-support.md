@@ -634,4 +634,11 @@ rejects. Owned VP9/WebVTT FFmpeg fixture, HTTP and fake-backend rendering tests 
 the evidence boundary. Native video routes, advanced WebVTT, physical-device and
 whole-P02 acceptance are unchanged.
 
-| MP4 WebVTT结构预算 | 容器索引、wvtt配置/样本/cue和stpp配置共享200000 box；跨轨/描述/初始与后续分片累计 | Dart parser精确边界、文件/managed HTTP失败原子性；无native/device新声明 |
+### MP4 subtitle structural budget (2026-10-13)
+
+The container index, tx3g configuration/sample-modifier boxes, WebVTT
+configuration/sample/cue boxes and TTML configuration boxes share a 200,000-box
+allowance across tracks, sample descriptions and initial/fragmented samples.
+Font entries and style records retain their separate existing bounds.
+Exact-boundary parser tests and file/managed HTTP failure-preservation tests
+cover this Dart path. No new native or physical-device acceptance is claimed.

@@ -591,3 +591,10 @@ API注释同步；67项新增测试、独立Python压缩金标及managedHTTP/Flu
 见[P05报告](../reports/2026-09-26-remaining-05-live-business.md)和
 [验证收据](../reports/evidence/2026-10-13-live-source-mutation/verification.json)。
 跨实例/进程、预设VOD/live整体事务、实际媒体与完整P05继续开放。
+
+### 2026-10-13 P02 tx3g 字幕结构预算
+
+tx3g配置/样本修饰box纳入共享200000额度，覆盖跨轨/描述及初始/后续分片；保留文本、
+字体条目和样式记录的独立计量。补齐API注释，修复支持文档排版Minor。23项新测试及
+验证证据见[报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)。整个P02仍开放；
+长播放/弱网ABR未改。

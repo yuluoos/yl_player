@@ -26,7 +26,7 @@
 
 ## 预算、请求与错误
 
-- 容器索引+WebVTT配置/样本/cue+TTML配置合计≤200000个box（tx3g内部字段仍按既有局部/字节预算）、根≤4096、每个容器≤256子box；≤128总轨、≤32字幕轨、≤32样本描述、≤20000样本（包括空样本）与 chunks/time rows。
+- 容器索引+tx3g配置/样本修饰+WebVTT配置/样本/cue+TTML配置合计≤200000个box、根≤4096、每个容器≤256子box；≤128总轨、≤32字幕轨、≤32样本描述、≤20000样本（包括空样本）与 chunks/time rows。
 - 单次读取≤256KiB、总元数据/样本读取≤64MiB；字幕样本原始字节累计≤4MiB。单文本≤16384码元、单sample≤1024样式段；保留样式runs≤20000。时间线≤7天。既有目录总计4MiB归一化输入、10000 cue、20000 runs 和64同时活动 cue 继续生效。
 - 文件使用已有串行随机访问/描述符释放/30秒协作式期限。网络完全复用 [网络 Matroska 读取器](2026-10-11-subtitle-network-matroska.md)：16KiB窗口/128项LRU、4096实际HTTP尝试/64MiB body进度（含重试），单段206、强ETag/固定总长/最终URI、后续If-Match，禁止完整200回退。
 - managed 执行逐跳 connect/空闲 read 超时、共享 retry/redirect 额度、Retry-After、跨源敏感头剥离、TLS验证/拒绝HTTPS降级，不额外增加总期限；platformDefault 沿用30秒总期与不重试。MP4字幕可发现并不扩大原生视频的 managed 支持矩阵。

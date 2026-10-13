@@ -80,7 +80,7 @@ final class Mp4Subtitles {
     return b;
   }
 
-  /// One resource-wide allowance, including WebVTT/TTML configuration and WebVTT cue boxes.
+  /// One allowance for container, subtitle configuration and sample boxes.
   void _countBox() {
     if (++_boxes > 200000) _limit();
   }
@@ -269,7 +269,7 @@ final class Mp4Subtitles {
       final ref = _u(b, 6, 2);
       if (ref < 1 || ref > refs.length) _bad();
       descriptions.add(switch (entry.type) {
-        'tx3g' => _Tx3g.parse(b),
+        'tx3g' => _Tx3g.parse(b, _countBox),
         'wvtt' => _Wvtt.parse(b, _countBox),
         _ => _Stpp.parse(b, _countBox),
       });
@@ -592,6 +592,7 @@ final class _Tx3g implements _Mp4SubtitleEntry {
     this.align,
     this.forced,
     this.backgroundColor,
+    this._countBox,
   );
   final _Style defaults;
   final Map<int, String> fonts;
@@ -599,7 +600,8 @@ final class _Tx3g implements _Mp4SubtitleEntry {
   @override
   final bool forced;
   final int backgroundColor;
-  static _Tx3g parse(List<int> b) {
+  final void Function() _countBox;
+  static _Tx3g parse(List<int> b, void Function() countBox) {
     final flags = _u(b, 8);
     // All samples forced is supported; some-forced needs per-sample frcd.
     if (![0, 0xc0000000].contains(flags) ||
@@ -617,6 +619,7 @@ final class _Tx3g implements _Mp4SubtitleEntry {
     final defaults = _Style.read(b, 30);
     final fonts = <int, String>{};
     for (var p = 38; p < b.length;) {
+      countBox();
       if (b.length - p < 8) _bad();
       final size = _u(b, p);
       if (size < 8 || size > b.length - p) _bad();
@@ -650,6 +653,7 @@ final class _Tx3g implements _Mp4SubtitleEntry {
       align,
       flags == 0xc0000000,
       ((rgba & 255) << 24) | (rgba >> 8),
+      countBox,
     );
   }
 
@@ -704,6 +708,7 @@ final class _Tx3g implements _Mp4SubtitleEntry {
     final styles = <(int, int, _Style)>[];
     var stylSeen = false;
     for (var p = 2 + len; p < b.length;) {
+      _countBox();
       if (b.length - p < 8) _bad();
       final size = _u(b, p);
       if (size < 8 || size > b.length - p) _bad();

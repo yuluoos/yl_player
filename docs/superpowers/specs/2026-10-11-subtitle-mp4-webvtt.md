@@ -18,7 +18,7 @@
 
 ## 预算与网络
 
-- 保留 MP4 既有轨道/样本/读取/原始字节预算。容器索引、wvtt配置/sample/内层cue以及stpp配置的box共享200000总上限，跨轨/样本描述/初始样本/后续分片累计；解析每个box前收费，恰好上限可用，下一项报limitExceeded。此前内层计数Minor在2026-10-12结构预算切片关闭。每 sample 最多64个 box；每 cue 或配置最多8个子box。每 payl/config ≤16384码元，iden/vlab/sttg ≤1024，ctim ≤32；解码前也检查字节上限。保留 packets 跨所有轨累计≤10000，样式 runs≤20000；目录归一化输入≤4MiB和同时活动≤64继续生效，计入 ID/settings 字节。
+- 保留 MP4 既有轨道/样本/读取/原始字节预算。容器索引、tx3g配置/样本修饰、wvtt配置/sample/内层cue以及stpp配置的box共享200000总上限，跨轨/样本描述/初始样本/后续分片累计；解析每个box前收费，恰好上限可用，下一项报limitExceeded。此前内层计数Minor在2026-10-12结构预算切片关闭。每 sample 最多64个 box；每 cue 或配置最多8个子box。每 payl/config ≤16384码元，iden/vlab/sttg ≤1024，ctim ≤32；解码前也检查字节上限。保留 packets 跨所有轨累计≤10000，样式 runs≤20000；目录归一化输入≤4MiB和同时活动≤64继续生效，计入 ID/settings 字节。
 - 沿用未修改的 managed Range 读取器：单段206、稳定强ETag/总长/最终URI、后续If-Match，16KiB×128缓存、4096 HTTP尝试/64MiB响应体预算；connect/read超时、共享retry/redirect、跨源敏感凭据剥离和取消。没有完整200下载回退，也不扩大视频 managed 支持范围。
 - 仍不支持 fMP4/moof/mvex、HLS/DASH、stpp、MOV旧text、位图/CEA、外部data reference、复杂编辑及受保护视频 overlay。
 

@@ -842,3 +842,25 @@ Dart lib/test文件与隔离副本一致。仅隔离副本撤去stpp配置计数
 一次独立复审0Critical/0Important/1Minor，旧wvtt汇总计数Minor已关闭。新Minor待后续：
 platform-support.md末尾三列独立pipe行没有加入现有两列表格，信息可读但排版未完成；
 按既定单次复审流程记录，不进行非阻塞修正。9项不判定范围逐项记录于review.md。
+
+## 2026-10-13 tx3g / mov_text 结构预算
+
+将tx3g描述内ftab/btrt和样本内styl接入既有200000共享计数。描述保留同一parser回调，
+所有轨道、描述切换、初始/后续/多个分片累计；每个box解析前收费，普通文本、字体行、
+样式记录不是box，保留各自既有上限。无codec/样式/时间/managed传输/原生行为改动。
+补齐discover及helper注释，同时把上项platform-support独立pipe行改为正文，关闭排版Minor。
+
+新增23项（19parser/4实际文件与HTTP）：纯tx3g多轨配置风暴、精确上限、混合WebVTT
+共享、普通/分片/混合样式、描述切换与跨分片。17轨配置夹具分散btrt，单stsd小于256KiB，
+不会被单次读取预算预先拒绝；空cue避免cue预算预先拒绝。独立手算294配置开销，
+混合样本39/51，双描述43含styl、双分片61含styl。没有独立muxer/device声明。
+入口RED四项都错误接受超限；定向parser144/144通过（含旧MP4/fMP4/hybrid/WVTT回归）。
+
+基线4a41efd；执行中刷新为8553dc3，只有另一边P05文档变化，未改其文件。
+最终验证与独立复审见[证据](evidence/2026-10-13-subtitle-tx3g-structure/manifest.json)。
+整个P02、跨Period、PD03及设备验收保持开放；长播放/弱网ABR代码未改。
+
+最终隔离四包1795/1795（interface135/player1465/Apple113/Android82）通过，静态分析
+无问题；23项新增测试。一次独立复审0Critical/0Important/0Minor，9项不判定范围
+已逐项裁定；无复审后代码修正。5候选与测试副本一致，10项原生/构建制品哈希保持。
+上次支持文档排版Minor已关闭，完整P02仍未完成。

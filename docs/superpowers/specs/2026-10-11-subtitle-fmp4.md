@@ -17,7 +17,7 @@ tx3g 和 WebVTT 使用 `(tfdt + preceding durations + composition offset)` 的 s
 
 沿用 [wvtt 子集](2026-10-11-subtitle-mp4-webvtt.md) 和 [stpp 子集](2026-10-11-subtitle-mp4-ttml.md)：基本样式、水平 WebVTT position/align、TTML 百分比 region。每个 XML sample 的样式和 region 身份独立。高级 CSS/TTML、字体或图形资源等未扩大接纳范围。
 
-跨分片共享 MP4 的20000样本、10000发布cue、20000保留run、4MiB原始字幕payload、64MiB解析读取、200000结构box计数，以及单次读取256KiB、每容器256子box、顶层4096box、32字幕轨/128总轨和7天时间界限。TTML空/编辑外文档也计入目录原始输入预算。WebVTT配置/样本/内层cue以及TTML配置box同样共享结构计数（2026-10-12补齐），跨所有轨道和初始/后续分片，不随样本描述切换重置。这些是扫描/目录预算，不是进程 RSS 保证。
+跨分片共享 MP4 的20000样本、10000发布cue、20000保留run、4MiB原始字幕payload、64MiB解析读取、200000结构box计数，以及单次读取256KiB、每容器256子box、顶层4096box、32字幕轨/128总轨和7天时间界限。TTML空/编辑外文档也计入目录原始输入预算。tx3g配置/样本修饰（2026-10-13补齐）、WebVTT配置/样本/内层cue以及TTML配置box同样共享结构计数，跨所有轨道和初始/后续分片，不随样本描述切换重置。这些是扫描/目录预算，不是进程 RSS 保证。
 
 ## managed 网络和原子生命周期
 

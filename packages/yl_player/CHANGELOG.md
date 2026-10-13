@@ -1,5 +1,8 @@
 ## 0.2.0-dev.2
 
+- Include tx3g font/bitrate configuration and sample style boxes in the shared
+  MP4 structural budget, preserving selected subtitles on discovery overflow.
+  Clarify API limits and correct support-document formatting.
 - Count MP4 WebVTT configuration, sample and cue boxes plus TTML configuration
   boxes against the shared structural limit across tracks and fragments.
   Preserve the selected subtitle catalog on overflow and clarify API limits.

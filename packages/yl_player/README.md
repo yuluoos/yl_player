@@ -331,8 +331,8 @@ remain charged, including empty tracks and subsequent external replacements.
 See the [private-header contract](../../docs/superpowers/specs/2026-10-12-subtitle-private-compression.md).
 
 MP4 subtitle discovery shares its 200,000 structural-box allowance across the
-container index, WebVTT configuration/sample/cue boxes and TTML configuration
-boxes. Tracks, sample-description changes, initial samples and later fragments
+container index, tx3g configuration/sample-modifier boxes, WebVTT
+configuration/sample/cue boxes and TTML configuration boxes. Tracks, sample-description changes, initial samples and later fragments
 use the same allowance. Exceeding it reports `subtitleTooLarge` atomically,
 retaining the previous subtitle catalog and selection. Existing local child,
 payload and cue limits also apply; this is not a whole-process memory bound.
