@@ -650,3 +650,30 @@ lib/test分析**No issues found、exit0**。七份源/测试/二进制夹具与�
 [review.md](evidence/2026-10-12-subtitle-matroska-webvtt/review.md)。
 证据、引用依赖和提交文件指纹冻结于manifest，独立Git index仅提交本项及自身总览/
 CHANGELOG段；长播放与弱网ABR无改动。
+
+## 2026-10-12 WebM 内嵌 WebVTT
+
+按“继续下一项”接入 WebM DocType 和 YlMediaFormat.webm：automatic 根据内容识别，
+显式WebM/Matroska声明与DocType必须一致。WebM启用字幕只接纳D_WEBVTT/SUBTITLES与
+CAPTIONS，非字幕metadata轨跳过；沿用mkv:TrackUID身份、已有D映射/managed Range/
+字幕owner和overlay，无原生/依赖/视频路由变更。[契约](../specs/2026-10-12-subtitle-webm.md)。
+
+基线81079e3，新增测试先10通过/10失败（缺WebM入口），实现后105/105含旧Matroska
+回归；新增完整39/39（20解析/真实文件、13真实HTTP、6session/Flutter）。内容与声明
+不一致、错误扩展名、同语言不同role/重排、metadata跳过、受限codec与显式duration有验证；
+managed鉴权/If-Match/重试/凭据剥离/超时/失败保留和迟到取消复用既有路径。Flutter验证
+粗体/25%水平位置、切轨/off、正负offset和seek清屏。
+
+独立host FFmpeg8.0.1封装自有黑帧VP9+WebVTT，按ffprobe0.503–1.707s断言；输入/命令/
+probe和源指纹保存在[证据目录](evidence/2026-10-12-subtitle-webm/manifest.json)。
+测试使用fake视频backend，不作nativeVP9/实机播放验收声明。完整WebM音视频符合性、
+高级WebVTT、清单/直播/跨Period、HDR/DRM/外接设备、PD03与整个P02继续开放。
+长播放和弱网ABR不在此切片。
+
+最终四包**1476/1476、0失败、exit0**（135接口/1146播放器/113Apple/82Android），
+lib/test分析**No issues found、exit0**。七份源/测试/夹具与隔离候选逐字节一致；十项
+native/构建制品SHA256重新核验不变。一次独立只读复审Critical0/Important0/Minor1，
+无功能阻断；新增Minor为playback_session.dart公开API注释遗漏WebM，按流程记录待补，
+README/本项契约已准确。旧WVTT结构计数Minor继续保留，九项范围裁定见
+[review.md](evidence/2026-10-12-subtitle-webm/review.md)。无修复轮次/二次复审。
+证据与引用依赖冻结到manifest，独立Git index仅提交本项及自己的总览/CHANGELOG段。

@@ -15,6 +15,7 @@ Future<List<EmbeddedSubtitleData>> readEmbedded(
       ![
         YlMediaFormat.automatic,
         YlMediaFormat.matroska,
+        YlMediaFormat.webm,
         YlMediaFormat.mp4,
       ].contains(source.format)) {
     throw subtitleFailure(YlFailureCodes.subtitleUnsupported);
@@ -64,6 +65,7 @@ Future<List<EmbeddedSubtitleData>> _networkEmbedded(
       ![
         YlMediaFormat.automatic,
         YlMediaFormat.matroska,
+        YlMediaFormat.webm,
         YlMediaFormat.mp4,
       ].contains(source.format)) {
     throw subtitleFailure(YlFailureCodes.subtitleUnsupported);
@@ -106,6 +108,11 @@ Future<List<EmbeddedSubtitleData>> _parse(
   SubtitleCancellation token,
 ) async {
   token.check();
+  final expectedDocType = switch (format) {
+    YlMediaFormat.matroska => 'matroska',
+    YlMediaFormat.webm => 'webm',
+    _ => null,
+  };
   if (format == YlMediaFormat.automatic) {
     if (length < 8) {
       throw const SubtitleParseException(SubtitleParseReason.malformed);
@@ -128,5 +135,10 @@ Future<List<EmbeddedSubtitleData>> _parse(
   }
   return format == YlMediaFormat.mp4
       ? Mp4Subtitles(length, read, token).parse()
-      : MatroskaSubtitles(length, read, token).parse();
+      : MatroskaSubtitles(
+          length,
+          read,
+          token,
+          expectedDocType: expectedDocType,
+        ).parse();
 }

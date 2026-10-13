@@ -1,0 +1,43 @@
+00:00 +0: loading /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart
+00:00 +0: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: D_WEBVTT/SUBTITLES WebM uses UID, settings and container times
+00:00 +1: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: D_WEBVTT/CAPTIONS WebM uses UID, settings and container times
+00:00 +2: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: WebM subtitle type rejects S_TEXT/UTF8
+00:00 +3: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: WebM subtitle type rejects S_TEXT/ASS
+00:00 +4: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: WebM subtitle type rejects S_TEXT/SSA
+00:00 +5: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: WebM subtitle type rejects S_TEXT/WEBVTT
+00:00 +6: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: WebM subtitle type rejects D_WEBVTT/DESCRIPTIONS
+00:00 +7: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: WebM subtitle type rejects D_WEBVTT/METADATA
+00:00 +8: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: metadata track is skipped without parsing its arbitrary payload
+00:00 +9: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: same language main and forced selection identities survive reorder
+00:00 +10: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: unknown DocType remains unsupported
+00:00 +11: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: WebM malformed prefix is reported after container admission
+00:00 +12: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: WebM explicit duration still required
+00:00 +13: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: real file discovery YlMediaFormat.automatic detects contents independent of suffix and renders
+00:00 +14: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: real file discovery YlMediaFormat.automatic discovers independently muxed VP9/WebVTT WebM
+00:00 +15: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: real file discovery YlMediaFormat.webm detects contents independent of suffix and renders
+00:00 +16: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: real file discovery YlMediaFormat.webm discovers independently muxed VP9/WebVTT WebM
+00:00 +17: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: real file discovery WebM cannot masquerade as explicit YlMediaFormat.matroska
+00:00 +18: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: real file discovery WebM cannot masquerade as explicit YlMediaFormat.mp4
+00:00 +19: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_test.dart: real file discovery explicit WebM rejects Matroska and keeps old selection
+00:00 +20: loading /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_network_test.dart
+00:00 +20: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_network_test.dart: network YlMediaFormat.automatic sniffs content, skips media, sends conditional range and renders
+00:00 +21: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_network_test.dart: network YlMediaFormat.webm sniffs content, skips media, sends conditional range and renders
+00:00 +22: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_network_test.dart: legal chunked206 WebM WebVTT discovery completes without Content-Length
+00:01 +23: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_network_test.dart: managed retries later range with credential and shared scan ledger
+00:01 +24: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_network_test.dart: cross-origin redirect strips credentials before WebM WebVTT range scan
+00:01 +25: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_network_test.dart: etag response keeps prior selected WebM WebVTT catalog
+00:02 +26: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_network_test.dart: 200 response keeps prior selected WebM WebVTT catalog
+00:02 +27: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_network_test.dart: 403 response keeps prior selected WebM WebVTT catalog
+00:02 +28: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_network_test.dart: malformed response keeps prior selected WebM WebVTT catalog
+00:02 +29: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_network_test.dart: managed response-header timeout terminates WebM WebVTT discovery
+00:02 +30: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_network_test.dart: explicit non-WebM WebVTT format rejects before HTTP request
+00:02 +31: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_network_test.dart: explicit Matroska hint rejects WebM before publishing tracks
+00:02 +32: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_network_test.dart: explicit WebM live source rejects without HTTP
+00:02 +33: loading /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_session_test.dart
+00:03 +33: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_session_test.dart: network tracks select/render/off/offset/seek using current source metadata
+00:03 +34: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_session_test.dart: network failure leaves playback and selected subtitle state unchanged
+00:03 +35: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_session_test.dart: held range is cancelled by replace and cannot publish late
+00:03 +36: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_session_test.dart: held range is cancelled by stop and cannot publish late
+00:03 +37: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_session_test.dart: held range is cancelled by dispose and cannot publish late
+00:03 +38: /private/tmp/yl-webm-validation-kr6bp886/packages/yl_player/test/webm_subtitle_session_test.dart: held range is cancelled by external and cannot publish late
+00:03 +39: All tests passed!

@@ -158,3 +158,9 @@ D_WEBVTT/SUBTITLES or CAPTIONS. The two metadata layouts are decoded separately;
 raw header/comment bytes remain charged to the shared catalog budget. Existing
 WebVTT rendering and lifecycle constraints apply; no WebM DocType or native
 capability expansion. See [contract](2026-10-12-subtitle-matroska-webvtt.md).
+
+## WebM continuation (2026-10-12)
+
+The previous WebM DocType exclusion is superseded by the [WebM contract](2026-10-12-subtitle-webm.md).
+Automatic content detection and explicit webm now accept D_WEBVTT subtitle/caption
+tracks; explicit Matroska/WebM hints are checked against DocType. Other constraints remain.

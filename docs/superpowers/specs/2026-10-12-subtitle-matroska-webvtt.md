@@ -41,3 +41,9 @@ fake 视频 backend 验证两映射同语言 main/forced 选择、粗体与25%�
 
 参考：[Matroska codec mapping §6.4/§7](https://datatracker.ietf.org/doc/html/draft-ietf-cellar-codec-17)
 和 [WebM WebVTT mapping](https://www.webmproject.org/docs/container/#webvtt-guidelines)。
+
+## WebM continuation (2026-10-12)
+
+The previous WebM DocType exclusion is superseded by the [WebM contract](2026-10-12-subtitle-webm.md).
+Automatic content detection and explicit webm now accept D_WEBVTT subtitle/caption
+tracks; explicit Matroska/WebM hints are checked against DocType. Other constraints remain.

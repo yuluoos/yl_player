@@ -1,0 +1,4 @@
+Host FFmpeg8.0.1; owned black video and WebVTT; no downloaded media.
+ffmpeg -hide_banner -loglevel error -y -f lavfi -i color=c=black:s=16x16:r=2:d=2 -i source.vtt -map 0:v -map 1:s -c:v libvpx-vp9 -c:s webvtt webm-subtitle-owned.webm
+ffprobe -v error -select_streams s -show_streams -show_packets -show_data -of json webm-subtitle-owned.webm
+Subtitle Block start503ms duration1204ms, IDowned-id, position25%,line-left align:start. No runtime dependency.

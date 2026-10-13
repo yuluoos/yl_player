@@ -289,5 +289,13 @@ Matroska WebVTT supports `S_TEXT/WEBVTT` and the FFmpeg-compatible
 `D_WEBVTT/SUBTITLES` / `D_WEBVTT/CAPTIONS` mappings through the same file/managed
 HTTP discovery API. Cue text, identifier and horizontal position/alignment are
 rendered using the existing strict WebVTT subset. Global headers and NOTE blocks
-are validated and budgeted. Advanced CSS/regions/inline timestamps and WebM
-DocType remain unsupported; see the [bounded contract](../../docs/superpowers/specs/2026-10-12-subtitle-matroska-webvtt.md).
+are validated and budgeted. Advanced CSS/regions/inline timestamps remain
+unsupported; see the [bounded contract](../../docs/superpowers/specs/2026-10-12-subtitle-matroska-webvtt.md).
+
+WebM embedded WebVTT (`D_WEBVTT/SUBTITLES` / `CAPTIONS`) is available through
+`discoverEmbeddedSubtitles()` for files and managed HTTP(S). Use `automatic` for
+content detection or `YlMediaFormat.webm` to require a WebM DocType; explicit
+Matroska and WebM hints reject mismatched content. Track identities retain the
+`mkv:<UID>` EBML namespace. The existing bounded WebVTT renderer and managed
+Range rules apply; this does not expand native video decoding support. See the
+[WebM contract](../../docs/superpowers/specs/2026-10-12-subtitle-webm.md).

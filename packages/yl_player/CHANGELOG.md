@@ -1,5 +1,8 @@
 ## 0.2.0-dev.2
 
+- Add file and managed HTTP WebM embedded WebVTT discovery, retaining TrackUID
+  selection and shared rendering; verify explicit WebM/Matroska format declarations
+  against the container DocType and keep metadata tracks out of subtitle overlays.
 - Add bounded Matroska WebVTT subtitle discovery for S_TEXT/WEBVTT and
   D_WEBVTT/SUBTITLES/CAPTIONS, with cue ID/placement, raw metadata accounting,
   existing managed Range policy and shared subtitle rendering/lifecycle.

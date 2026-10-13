@@ -9,7 +9,9 @@ part 'matroska_webvtt.dart';
 /// Bounded random-access demux; media payloads are skipped, never decoded here.
 /// Unknown-size Segment is accepted; unknown-size children are not supported.
 final class MatroskaSubtitles {
-  MatroskaSubtitles(this.length, this.read, this.token);
+  MatroskaSubtitles(this.length, this.read, this.token, {this.expectedDocType});
+  final String? expectedDocType;
+  var _webm = false;
   final int length;
   final Future<List<int>> Function(int offset, int count) read;
   final SubtitleCancellation token;
@@ -121,9 +123,13 @@ final class MatroskaSubtitles {
     final header = await _element(0, length);
     if (header.id != 0x1a45dfa3) _unsupported();
     final h = await _fields(header);
-    if (h[0x4282] == null || await _string(h[0x4282]!, 16) != 'matroska') {
+    if (h[0x4282] == null) _unsupported();
+    final docType = await _string(h[0x4282]!, 16);
+    if (!['matroska', 'webm'].contains(docType) ||
+        (expectedDocType != null && expectedDocType != docType)) {
       _unsupported();
     }
+    _webm = docType == 'webm';
     for (final (id, max) in [
       (0x42f7, 1),
       (0x4285, 4),
@@ -202,6 +208,9 @@ final class MatroskaSubtitles {
     if (f[0xb9] != null && await _uint(f[0xb9]!) == 0) return;
     if (_tracks.length >= 32) _limit();
     final codec = await _string(f[0x86]!, 128);
+    if (_webm && !['D_WEBVTT/SUBTITLES', 'D_WEBVTT/CAPTIONS'].contains(codec)) {
+      _unsupported();
+    }
     final format = switch (codec) {
       'S_TEXT/UTF8' => YlSubtitleFormat.srt,
       'S_TEXT/ASS' => YlSubtitleFormat.ass,

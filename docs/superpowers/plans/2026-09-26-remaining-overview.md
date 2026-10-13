@@ -520,3 +520,11 @@ TVS `6749e23` 补齐首次添加HTML/零频道写入前拒绝，保留旧数据�
 [报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)和
 [契约](../specs/2026-10-12-subtitle-matroska-webvtt.md)。WebM/高级效果/直播/设备与整个P02
 仍开放，长播放和弱网ABR未涉及。
+
+### 2026-10-12 P02 WebM 内嵌字幕
+
+完成本地/managed HTTP WebM D_WEBVTT字幕与caption发现、TrackUID选择和既有渲染。
+automatic按内容识别，显式WebM/Matroska声明严格匹配DocType；非字幕metadata跳过。
+39新增定向用例及独立FFmpeg VP9/WebVTT样片验证；见[报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)
+和[WebM契约](../specs/2026-10-12-subtitle-webm.md)。原生视频能力/设备、高级效果、
+直播/清单与整个P02继续开放，长播放和弱网ABR未改。

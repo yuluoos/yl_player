@@ -75,6 +75,7 @@ List<int> mkv({
   List<int>? clusters,
   int scale = 1000000,
   bool unknownSegment = false,
+  String docType = 'matroska',
   List<int> extra = const [],
 }) {
   final body = [
@@ -84,7 +85,7 @@ List<int> mkv({
     ...(clusters ?? cluster(block())),
   ];
   return [
-    ...element(0x1a45dfa3, [...str(0x4282, 'matroska'), ...uint(0x4285, 4)]),
+    ...element(0x1a45dfa3, [...str(0x4282, docType), ...uint(0x4285, 4)]),
     ...be(0x18538067),
     if (unknownSegment) 255 else ...vint(body.length),
     ...body,

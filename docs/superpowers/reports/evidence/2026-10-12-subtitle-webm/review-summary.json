@@ -1,0 +1,15 @@
+{
+  "reviewer": "/root/webm_final_review",
+  "model": "gpt-6-astra",
+  "reasoning": "high",
+  "readOnly": true,
+  "critical": 0,
+  "important": 0,
+  "newMinor": 1,
+  "deferredMinor": "playback_session.dart:35 API comment omits WebM; README/contract correct",
+  "priorMinor": "MP4 WVTT structural accounting unchanged",
+  "scopeRulings": 9,
+  "fixPasses": 0,
+  "secondReview": false,
+  "verdict": "Ready to merge; no functional blocker"
+}

@@ -620,3 +620,12 @@ WebVTT renderer with TrackUID selection. Existing managed Range transport is
 unchanged. Owned standard-mapping fixtures, a host-FFmpeg legacy-mapping MKV,
 HTTP and fake-backend widget tests are the evidence boundary. No native/device,
 WebM DocType, advanced WebVTT or whole-P02 completion claim.
+
+### WebM subtitle overlay continuation (2026-10-12)
+
+The previous subtitle WebM DocType exclusion is now superseded: file/managed HTTP(S)
+WebM D_WEBVTT/SUBTITLES and CAPTIONS use TrackUID selection and the existing overlay.
+Automatic content detection and explicit webm are covered; explicit format mismatch
+rejects. Owned VP9/WebVTT FFmpeg fixture, HTTP and fake-backend rendering tests are
+the evidence boundary. Native video routes, advanced WebVTT, physical-device and
+whole-P02 acceptance are unchanged.
