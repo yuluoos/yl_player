@@ -565,3 +565,12 @@ API注释同步；67项新增测试、独立Python压缩金标及managedHTTP/Flu
 [报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)与
 [契约](../specs/2026-10-12-subtitle-private-compression.md)。链式/Next/WebM压缩、设备和
 整个P02仍开放；长播放与弱网ABR未改。
+
+
+### 2026-10-12 P05 订阅重命名反馈入口互斥
+
+重命名接入已有繁忙保护，避免与慢刷新、删除或重复改名交错；失败复用安全提示，
+操作结束后允许手动重试。TVS `c991032`，固定播放器 `866afa0`；新增5项逐项RED→GREEN，
+相关85/85、全项目分析与独立复审通过。见[P05报告](../reports/2026-09-26-remaining-05-live-business.md)
+和[验证收据](../reports/evidence/2026-10-12-live-source-rename/verification.json)。
+未占用设备；直接CRUD（含预设导入）、跨实例/进程写入、真实播放与完整P05仍开放。

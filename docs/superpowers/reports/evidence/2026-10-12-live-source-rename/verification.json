@@ -1,0 +1,258 @@
+{
+  "date": "2026-10-12",
+  "scope": "P05 rename feedback operation admission and safe failure guidance",
+  "tvsBase": "6749e233fb3dd3e35d9bb1eba96715b632d76c11",
+  "tvsCommit": "c991032104bea2f14963dcb1b48ebac0fe28469c",
+  "playerSnapshot": "866afa00d25ffa7f256a0d3583ae791d35683325",
+  "sourceIsolation": "git archive; existing resolved package_config root paths remapped to snapshots; package_graph copied; no dependency resolution",
+  "inputs": [
+    {
+      "path": "lib/providers/live_source_provider.dart",
+      "sha256": "df6fbca46d05cf738baa2cf2eb89c263f468a88d64ae4c6824d3c494036a4010"
+    },
+    {
+      "path": "lib/providers/live_source_provider.g.dart",
+      "sha256": "4743c9f3fcbf1a449591d611065a1ed315711f0bcd190cdd792cf8ddcc1cf7f6"
+    },
+    {
+      "path": "lib/utils/live_source_manager.dart",
+      "sha256": "f672476b8f0a72f19247d8067ec37bb07d939c2f7d5eabbcd6170e886bb2f277"
+    },
+    {
+      "path": "lib/utils/live_source_error.dart",
+      "sha256": "7e88001902d2e4ff51377b24b7fdfad8d8dc2a68ed455019e8035b95007868cc"
+    },
+    {
+      "path": "lib/utils/live_source_parser.dart",
+      "sha256": "7490411dbfe5f9c41814334103a79e56c1ea11f281fb068983638b704d3f95ca"
+    },
+    {
+      "path": "lib/models/app_error.dart",
+      "sha256": "a8a201021c7f978273aacf319ae14ee689d9914c5a56f0efd572d8f7b71362b3"
+    },
+    {
+      "path": "lib/models/app_error.freezed.dart",
+      "sha256": "435fb374b4dff2f855391f6f16929001b7f8de6e447cb8f4fda8dd9941a32d09"
+    },
+    {
+      "path": "lib/models/live_source.dart",
+      "sha256": "564cb7fd634d1cd87f8b2fd9bb74b4db11d4699c054582c0a6e20fcbc6866d5c"
+    },
+    {
+      "path": "lib/models/live_source.freezed.dart",
+      "sha256": "095e7f2a46186136682f73609c2de63496e2c73809114edc9b8b2d004959ff87"
+    },
+    {
+      "path": "lib/models/live_source.g.dart",
+      "sha256": "e061f13db9247b65b8a04f85e98dc61f27eead894acda19d65bf17b76191ed4a"
+    },
+    {
+      "path": "lib/session/network_service.dart",
+      "sha256": "8daff1588cf011c037157559b6e92a3d1beee687aa5c1039805240c814b2421a"
+    },
+    {
+      "path": "lib/session/outbound_http.dart",
+      "sha256": "e5b48cc2d87b5f328b811255761cd72e10ce48c7abc742a8c8b4297f42af9c37"
+    },
+    {
+      "path": "pubspec.yaml",
+      "sha256": "5c65155869260385a02cd9c9f192880148690c39e293ea2c5ce1db07d3ca33e4"
+    },
+    {
+      "path": "pubspec.lock",
+      "sha256": "8bc7656782e9070a7c308c0d03d3ae6f2d7c4ccd8d94181cb6a0c8f7c76f84e8"
+    },
+    {
+      "path": "test/modules/live/features/live_source_rename_feedback_test.dart",
+      "sha256": "b3c92302ffbb3b59c63e2f43d3f11cea66c62ea0a26d5bf182cde635f34d36af"
+    },
+    {
+      "path": "test/modules/live/features/live_subscription_feedback_test.dart",
+      "sha256": "661819bad99817badce6c4a3247bb3e03611e5773654212da3a6f10d1ccf0027"
+    },
+    {
+      "path": "test/modules/live/features/live_subscription_errors_test.dart",
+      "sha256": "299ada85be1cf23eb73f03a89c950f0462126cc55d811e3c8c5eeebcd38fff9d"
+    },
+    {
+      "path": "test/modules/live/features/live_source_notifier_test.dart",
+      "sha256": "4a8730ffb5afc67ace79f7e310f382dd69e5bcc97f0bd153589887b2073df64e"
+    },
+    {
+      "path": "test/modules/live/features/live_source_add_transaction_test.dart",
+      "sha256": "50f90034c678975bf90315ae1f314e081f9b127d67cf5b5b56f8c85fadb52672"
+    },
+    {
+      "path": "test/modules/live/features/live_source_refresh_transaction_test.dart",
+      "sha256": "e753977f9c6a01a8294bf8c4c95ee205a5060d2ab4e5336eab1f119ae588b76a"
+    },
+    {
+      "path": "test/modules/live/features/live_source_parser_test.dart",
+      "sha256": "6865160578f087f822e5920503fffaacace07d0d7a99927b208819bd128ed93e"
+    },
+    {
+      "path": "test/modules/subscription/features/source_name_edit_test.dart",
+      "sha256": "7273e0d43bd79be5c55d506ddffe926cd92929b68c7926d6056ba9c406e59740"
+    },
+    {
+      "path": "test/modules/player/features/playback_source_subscriptions_test.dart",
+      "sha256": "d0f2fa4f7c309789455de15804f81d77f2e94b522333dc6e89f12d49eb4e7438"
+    }
+  ],
+  "commands": {
+    "tests": [
+      "/Users/yy2021_8689/flutter/bin/flutter",
+      "test",
+      "--no-pub",
+      "test/modules/live/features/live_source_rename_feedback_test.dart",
+      "test/modules/live/features/live_subscription_feedback_test.dart",
+      "test/modules/live/features/live_subscription_errors_test.dart",
+      "test/modules/live/features/live_source_notifier_test.dart",
+      "test/modules/live/features/live_source_add_transaction_test.dart",
+      "test/modules/live/features/live_source_refresh_transaction_test.dart",
+      "test/modules/live/features/live_source_parser_test.dart",
+      "test/modules/subscription/features/source_name_edit_test.dart",
+      "test/modules/player/features/playback_source_subscriptions_test.dart",
+      "--reporter",
+      "expanded"
+    ],
+    "analyze": "flutter analyze --no-pub",
+    "format": "dart format --output=none --set-exit-if-changed lib/providers/live_source_provider.dart lib/providers/live_source_provider.g.dart test/modules/live/features/live_source_rename_feedback_test.dart",
+    "generation": "dart --packages=.dart_tool/package_config.json /Users/yy2021_8689/.pub-cache/hosted/pub.dev/build_runner-2.15.1/bin/build_runner.dart build --delete-conflicting-outputs --build-filter=lib/providers/live_source_provider.g.dart"
+  },
+  "results": {
+    "newTests": 5,
+    "baselineRed": [
+      {
+        "name": "pending refresh (200)",
+        "command": [
+          "/Users/yy2021_8689/flutter/bin/flutter",
+          "test",
+          "--no-pub",
+          "test/modules/live/features/live_source_rename_feedback_test.dart",
+          "--reporter",
+          "expanded",
+          "--plain-name",
+          "pending refresh (200)"
+        ],
+        "exitCode": 1,
+        "log": "/tmp/yl-rename-red-final-0.log"
+      },
+      {
+        "name": "pending refresh (403)",
+        "command": [
+          "/Users/yy2021_8689/flutter/bin/flutter",
+          "test",
+          "--no-pub",
+          "test/modules/live/features/live_source_rename_feedback_test.dart",
+          "--reporter",
+          "expanded",
+          "--plain-name",
+          "pending refresh (403)"
+        ],
+        "exitCode": 1,
+        "log": "/tmp/yl-rename-red-final-1.log"
+      },
+      {
+        "name": "in-flight rename rejects delete",
+        "command": [
+          "/Users/yy2021_8689/flutter/bin/flutter",
+          "test",
+          "--no-pub",
+          "test/modules/live/features/live_source_rename_feedback_test.dart",
+          "--reporter",
+          "expanded",
+          "--plain-name",
+          "in-flight rename rejects delete"
+        ],
+        "exitCode": 1,
+        "log": "/tmp/yl-rename-red-final-2.log"
+      },
+      {
+        "name": "in-flight rename rejects rename",
+        "command": [
+          "/Users/yy2021_8689/flutter/bin/flutter",
+          "test",
+          "--no-pub",
+          "test/modules/live/features/live_source_rename_feedback_test.dart",
+          "--reporter",
+          "expanded",
+          "--plain-name",
+          "in-flight rename rejects rename"
+        ],
+        "exitCode": 1,
+        "log": "/tmp/yl-rename-red-final-3.log"
+      },
+      {
+        "name": "rename read failure",
+        "command": [
+          "/Users/yy2021_8689/flutter/bin/flutter",
+          "test",
+          "--no-pub",
+          "test/modules/live/features/live_source_rename_feedback_test.dart",
+          "--reporter",
+          "expanded",
+          "--plain-name",
+          "rename read failure"
+        ],
+        "exitCode": 1,
+        "log": "/tmp/yl-rename-red-final-4.log"
+      }
+    ],
+    "relatedPassed": 85,
+    "failed": 0,
+    "skipped": 0,
+    "analysis": "No issues found",
+    "format": "3 files; 0 changed",
+    "diffCheck": true
+  },
+  "generationNotes": [
+    "Initial launcher used cached build_runner-2.15.0 entrypoint with locked package_config resolving build_runner library 2.15.1; repeated exact 2.15.1 entrypoint exits 0, no further outputs.",
+    "Existing --delete-conflicting-outputs option is ignored by this runner; initial warning: SDK language 3.12 newer than analyzer 3.11; no upgrade performed.",
+    "Initial filtered generation removed 62 unrelated tracked generated files in archive; restored exact baseline bytes. Discarded whitespace-only incidental app_error.freezed.dart generation; final validation uses baseline bytes."
+  ],
+  "failedSetupAttempts": [
+    {
+      "log": "red.log",
+      "sha256": "57245d09c59890eba95affffccc759edd40194ac02f79d2e7463d78aed094fe3",
+      "bytes": 6557,
+      "outcome": "missing snapshot package_graph.json; Flutter crash handler automatically enumerated host tools/devices; no app launched; raw details kept out of repository"
+    },
+    {
+      "log": "red-confirmed.log",
+      "sha256": "6f6135dd099348b39af79199f97b26ea6fe7fcb441f2b2b12280c7c7b32341d2",
+      "bytes": 1172,
+      "outcome": "test hung due to Dio constructed in widget fake async zone; interrupted"
+    },
+    {
+      "log": "diagnostic.log",
+      "sha256": "a9e6ab21ac59c67d23d9a2df31a5b38d3a5530364fc5fc938df688fa187a78a2",
+      "bytes": 1245,
+      "outcome": "diagnostic test confirmed adapter callback was waiting in fake async zone; interrupted"
+    },
+    {
+      "log": "related.log",
+      "sha256": "a1ea90566fae58be073b163635309a0d6ba3835d6756688ba26537dc0cf8886d",
+      "bytes": 830630,
+      "outcome": "build-filter removed unrelated generated files from temporary snapshot; 8 test-loading failures; not product evidence"
+    },
+    {
+      "log": "analyze.log",
+      "sha256": "1a76bbf85c207eec24df993e8585c7b2e0f39451f38e62db6b062ee53273f5ec",
+      "bytes": 648780,
+      "outcome": "same missing generated files: 2907 issues; not product evidence"
+    }
+  ],
+  "review": {
+    "agent": "review_live_rename",
+    "mode": "read-only code and logs, no independent test execution",
+    "verdict": "Ready; no Critical/Important/Minor code issues",
+    "evidenceCaveatResolved": "Final 5 tests individually run on baseline, each exit 1 for intended missing behavior; repaired final 85/85 and analysis repeated. No second review."
+  },
+  "limitations": [
+    "Only feedback entry points share this guard. Direct notifier/manager operations including preset import, separate providers/isolate/process writers are not serialized.",
+    "No queuing or automatic retry introduced.",
+    "No real subscriptions, native builds, device, playback, DRM or longplay validation.",
+    "P05 remains incomplete."
+  ]
+}
