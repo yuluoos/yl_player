@@ -3043,3 +3043,91 @@ extension YlDashSampleSourceNativeTests {
     }
   }
 }
+
+extension YlDashSampleSourceNativeTests {
+  /// The high-bitrate alternative carries real PQ metadata in its sample
+  /// configuration. Its coded color is only an identity fixture, not HDR QA.
+  private func verifyPQFamilyFixture() throws {
+    let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "p01-program-fixtures", withExtension: "json"))
+    let files = try JSONDecoder().decode([String: String].self, from: Data(contentsOf: url))
+    let initialization = try XCTUnwrap(Data(base64Encoded: XCTUnwrap(files["family-pq/init-0.m4s"])))
+    let fragment = try XCTUnwrap(Data(base64Encoded: XCTUnwrap(files["family-pq/chunk-0-00001.m4s"])))
+    let scope = try YlManagedBufferLedger(maxBytes: 4 * 1024 * 1024).makeScope(maxBytes: nil)
+    let source = try YlDashSampleSource(
+      initialization: .init(data: initialization, finalURL: url, credentialsStripped: false, resourceLength: nil, reservation: nil),
+      fragment: .init(data: fragment, finalURL: url, credentialsStripped: false, resourceLength: nil, reservation: nil),
+      kind: .video, cancellation: .init(), scope: scope)
+    let format = try XCTUnwrap(source.videoFormat)
+    let transfer = CMFormatDescriptionGetExtension(format, extensionKey: kCMFormatDescriptionExtension_TransferFunction) as? String
+    XCTAssertEqual(transfer, kCMFormatDescriptionTransferFunction_SMPTE_ST_2084_PQ as String)
+    guard transfer == kCMFormatDescriptionTransferFunction_SMPTE_ST_2084_PQ as String else {
+      throw NSError(domain: "OwnedPQFixtureMissingTransfer", code: 1)
+    }
+  }
+
+  private func mixedVideoFamilies(_ xml: String) -> String {
+    let period = xml.range(of: "<Period id=\"period1\"")!
+    let start = xml.range(of: "<Representation", range: period.lowerBound..<xml.endIndex)!
+    let end = xml.range(of: "</Representation>", range: start.lowerBound..<xml.endIndex)!
+    let sdr = String(xml[start.lowerBound..<end.upperBound])
+    let pq = sdr.replacingOccurrences(of: "id=\"0\"", with: "id=\"pq\"")
+      .replacingOccurrences(of: "bandwidth=\"650000\"", with: "bandwidth=\"900000\"")
+      .replacingOccurrences(of: "initialization=\"init-0.m4s\"", with: "initialization=\"../family-pq/init-0.m4s\"")
+      .replacingOccurrences(of: "media=\"chunk-0-", with: "media=\"../family-pq/chunk-0-")
+    return xml.replacingCharacters(in: end.upperBound..<end.upperBound, with: pq)
+  }
+
+  @MainActor func testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek() async throws {
+    try verifyPQFamilyFixture()
+    let harness = try DashProgramHarness("resolution", transform: mixedVideoFamilies)
+    defer { harness.close() }
+    try await harness.seek(2000)
+    harness.backend.emitState()
+    XCTAssertEqual(harness.states.last?.videoTracks.first(where: \.isSelected)?.bitrate, 650000)
+    for retirement in 0..<2 {
+      if retirement == 0 {
+        harness.backend.deactivate()
+        try harness.backend.activate()
+        try await harness.advance(until: { harness.periods.count >= 2 })
+      } else {
+        try await harness.seek(3000)
+        XCTAssertEqual(harness.states.last?.status, "completed")
+        try await harness.seek(2000)
+      }
+      harness.backend.emitState()
+      XCTAssertEqual(harness.states.last?.videoTracks.first(where: \.isSelected)?.bitrate, 650000,
+        "Pipeline retirement must retain the accepted SDR family")
+    }
+    // Prove the alternative is admitted and selectable; an unavailable PQ
+    // fixture must not let the automatic-selection assertions pass vacuously.
+    let pq = try XCTUnwrap(harness.states.last?.videoTracks.first { $0.bitrate == 900000 }?.id)
+    let backend = harness.backend!
+    try await Task.detached { try backend.selectVideoTrack(pq, cancellationToken: nil) }.value
+    backend.emitState()
+    XCTAssertEqual(harness.states.last?.videoTracks.first(where: \.isSelected)?.bitrate, 900000)
+    // A successful explicit selection becomes the new accepted family. SDR-only
+    // Period zero must then fail, without replacing the accepted PQ pipeline.
+    do { try await harness.seek(500); XCTFail("automatic seek crossed the accepted PQ family") }
+    catch { XCTAssertEqual((error as? NativePlayerError)?.code, YlAppleVideoConstraints.unsupportedOutput.code) }
+    backend.emitState()
+    XCTAssertEqual(harness.states.last?.videoTracks.first(where: \.isSelected)?.bitrate, 900000)
+  }
+
+  @MainActor func testProgramFailedCandidatePreservesVideoFamilyForRestoration() async throws {
+    try verifyPQFamilyFixture()
+    let harness = try DashProgramHarness("resolution", transform: mixedVideoFamilies)
+    defer { harness.close() }
+    try await harness.seek(2000)
+    let backend = harness.backend!
+    do {
+      try await Task.detached { try backend.selectAudioTrack("absent-content", cancellationToken: nil) }.value
+      XCTFail("missing audio candidate must fail after video preparation")
+    } catch { XCTAssertEqual((error as? NativePlayerError)?.code, "track.not_found") }
+    backend.deactivate()
+    try backend.activate()
+    try await harness.advance(until: { harness.periods.count >= 2 })
+    backend.emitState()
+    XCTAssertEqual(harness.states.last?.videoTracks.first(where: \.isSelected)?.bitrate, 650000)
+    XCTAssertEqual(harness.states.last?.audioTracks.filter(\.isSelected).count, 1)
+  }
+}

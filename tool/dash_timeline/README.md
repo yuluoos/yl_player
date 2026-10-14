@@ -73,6 +73,14 @@ Native tests play both through actual managed Range requests, seek, and test an
 without regenerating earlier media. `package_native_fixture.py` packages exact
 media bytes into the canonical and iOS/macOS test resources.
 
+`family-pq/` contains owned AVC video with explicit PQ/BT.2020 metadata for
+the Apple accepted-family lifecycle regression. The test verifies the actual
+CoreMedia transfer function before testing selection; coded yellow is only an
+identity fixture, not an HDR color-accuracy reference. Its provenance records
+the encoder command, including explicit x264 color parameters and `write_colr`.
+The [review-fix evidence](../../docs/superpowers/reports/evidence/2026-10-14-p01-review-fix/final-review.md)
+retains the initial missing-metadata attempt separately from valid lifecycle RED.
+
 ## Real composition captures
 
 `dash_subtitle_composition_test.dart` measures the rendered video marker and cue

@@ -573,7 +573,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift",
-    "sha256": "1222291603476652faac317240930e747591cab32ce8a678956b19d8c7ce3d22",
+    "sha256": "7eb606c82a44ee65752d8604b754b0b1ab97c8b7b42bb32613ed9e32e6d0e79a",
     "methods": [
       "testIndexedPreflightRequestsExactRangeAndSnapshotReprojectsWithoutNetwork",
       "testIndexedPreflightRejectsWrongRangesWholeFilesAndTruncatedBodies",
@@ -660,7 +660,9 @@
       "testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative",
       "testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime",
       "testAudioTimelineSchedulesExactBoundedSilenceAndOriginalPCM",
-      "testProgramNativeJointBaseline"
+      "testProgramNativeJointBaseline",
+      "testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek",
+      "testProgramFailedCandidatePreservesVideoFamilyForRestoration"
     ],
     "apple_dash_task2": "Current static DASH owned preflight, private registry, routing integration and lifecycle regressions; historical fixtures unchanged.",
     "fairplay_schema5_migration": {

@@ -1,0 +1,63 @@
+{
+  "validRed": {
+    "platform": "macos",
+    "result": "/private/tmp/p01-family-valid-red.xcresult",
+    "sourceRevision": "83f92d6a16a1796014608768d1bed63a14ad0026",
+    "selection": [
+      "YlDashSampleSourceNativeTests/testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek",
+      "YlDashSampleSourceNativeTests/testProgramFailedCandidatePreservesVideoFamilyForRestoration"
+    ]
+  },
+  "green": {
+    "platforms": [
+      "macos",
+      "ios simulator"
+    ],
+    "selection": [
+      "YlDashSampleSourceNativeTests",
+      "YlDashProgramNativeTests"
+    ],
+    "parallelTesting": false,
+    "settings": {
+      "CODE_SIGNING_ALLOWED": "NO",
+      "ENABLE_TESTABILITY": "YES"
+    },
+    "backendSha256": "08e6eee6156519f865b079134e7ca1b40905813078e8474a4b5b95027dc42ad0",
+    "resultPattern": "/private/tmp/p01-family-{platform}-final.xcresult",
+    "macosCommand": [
+      "xcodebuild",
+      "-workspace",
+      "packages/yl_player/example/macos/Runner.xcworkspace",
+      "-scheme",
+      "Runner",
+      "-destination",
+      "platform=macOS,arch=arm64",
+      "-derivedDataPath",
+      "packages/yl_player/example/build/native-macos-tests",
+      "-resultBundlePath",
+      "/private/tmp/p01-family-macos-final.xcresult",
+      "-parallel-testing-enabled",
+      "NO",
+      "-only-testing:RunnerTests/YlDashSampleSourceNativeTests",
+      "-only-testing:RunnerTests/YlDashProgramNativeTests",
+      "CODE_SIGNING_ALLOWED=NO",
+      "ENABLE_TESTABILITY=YES",
+      "test",
+      "-quiet"
+    ],
+    "iosTool": "XcodeBuildMCP test_sim",
+    "iosSessionDefaults": {
+      "workspacePath": "packages/yl_player/example/ios/Runner.xcworkspace",
+      "scheme": "Runner",
+      "configuration": "Debug",
+      "simulatorId": "D121C2CF-D823-48F7-816E-092BCB8A780C",
+      "derivedDataPath": "packages/yl_player/example/build/native-ios-tests"
+    }
+  },
+  "fixtureCorrection": "Explicit x264 colorprim/transfer/colormatrix plus movflags=+write_colr; native CoreMedia PQ precondition before lifecycle checks",
+  "runtimeVerification": "python3 -B verify-runtime-results.py macos (then ios), executed from repository root",
+  "regressionTools": [
+    "python3 -B -m unittest discover -s tool/dash_timeline -p test_*.py",
+    "python3 -B -m unittest discover -s tool/consumer_fixtures/apple_flutter -p test_runtime_evidence.py"
+  ]
+}

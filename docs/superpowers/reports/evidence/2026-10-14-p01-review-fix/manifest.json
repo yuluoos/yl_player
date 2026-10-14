@@ -1,0 +1,78 @@
+{
+  "reviewedHead": "83f92d6a16a1796014608768d1bed63a14ad0026",
+  "reviewBaseline": "c3e304e144f750b62983267023ae06953ead3458",
+  "fix": "Accepted Apple video family survives deactivation/end seek; only successful candidate commits update it",
+  "validRed": "macos-valid-red-summary.json",
+  "invalidFixtureAttemptsRetained": [
+    "macos-red-summary.json",
+    "macos-initial-fix-attempt-summary.json"
+  ],
+  "green": {
+    "macos": {
+      "passed": 29,
+      "failed": 0,
+      "skipped": 0
+    },
+    "ios": {
+      "passed": 29,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "frozenNativeEnvelopes": "passed on both platforms; 15 runs each",
+  "sourceAndMediaSha256": {
+    "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift": "7eb606c82a44ee65752d8604b754b0b1ab97c8b7b42bb32613ed9e32e6d0e79a",
+    "packages/yl_player/example/ios/RunnerTests/p01-program-fixtures.json": "45a9755d86d7631ac73b65d74771e4ebaa6ab5e967518079df80ac1710efcc26",
+    "packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift": "06ca201a5ae35cd3e1fe2394cfeadd99a696f0b69a41c9c55d5990f432972686",
+    "packages/yl_player/example/macos/RunnerTests/p01-program-fixtures.json": "45a9755d86d7631ac73b65d74771e4ebaa6ab5e967518079df80ac1710efcc26",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/DashProgram/YlDashProgramBackend.swift": "08e6eee6156519f865b079134e7ca1b40905813078e8474a4b5b95027dc42ad0",
+    "tool/consumer_fixtures/apple_flutter/Resources/p01-program-fixtures.json": "45a9755d86d7631ac73b65d74771e4ebaa6ab5e967518079df80ac1710efcc26",
+    "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift": "7eb606c82a44ee65752d8604b754b0b1ab97c8b7b42bb32613ed9e32e6d0e79a",
+    "tool/consumer_fixtures/apple_flutter/main_example_tests.py": "1987b8264e4fe6e5b945c50cb1df44c4a8023f0d8b155da01a7cdb2023424d9d",
+    "tool/consumer_fixtures/apple_flutter/new-tests-manifest.json": "81b51e18fddf9c31f33ca8006988f36018bebd08c5029958a66ab04c4d3dea4a",
+    "tool/dash_timeline/README.md": "1b3dc03018380f5e834dbdc52041e0c7f116baadd2b06971936c82b4a1733083",
+    "packages/yl_player/example/assets/test_media/dash_timeline/family-pq/chunk-0-00001.m4s": "693a2233d2d6c99912efd0dd52e52888deb31c68d46705bc5030cb6aac36b5ae",
+    "packages/yl_player/example/assets/test_media/dash_timeline/family-pq/provenance.json": "16590bf3aee8c5574de800bba785a1e7dbcebe012474726b2d0ffe7b76c1d577",
+    "packages/yl_player/example/assets/test_media/dash_timeline/family-pq/chunk-0-00002.m4s": "4fb3d30c6a8646a89f5c9b1204874364a68fd5a96ac46ecadc1570c949d49e51",
+    "packages/yl_player/example/assets/test_media/dash_timeline/family-pq/init-0.m4s": "f26fd9ca6276b5e1a8de767d5913d13ceff57e18d2d7fc2e3704db5e1ff70313"
+  },
+  "evidenceSha256": {
+    "macos-tests.json": "4e6d9158b7948562d581e63c3dcb62e1f69316426afc7b0e340c9510d040a91e",
+    "ios-case-identities.json": "e014fcb3505debf30e987957f8de0fb440684af8f1d5b3997875ebae5cfb6f6c",
+    "p01-family-runtime-tools.log": "ae0e567bec73f34114eb1f77411d783019d1b19c52d596e3367e7d95a07a99d4",
+    "validation-commands.json": "0cfe00c7a199c18b73451efb4aabddaf3416905e478d62d59c446e4c09a0401d",
+    "ios-rows.jsonl": "733b7354343678c9fe5cd8adac8866db8be741773e63d139fcb4ee5c815c545c",
+    "ios-tests.json": "a75c0903c16f73b99b9a9599b6d80fbf581507735fe2d23261bd74568d7c60fb",
+    "macos-red-summary.json": "d2e93cd4d96b17b821d46520476b77037ffe8bc5ad07a62509efb30a54df4967",
+    "ios-tool-result.json": "4fc22aca5c62f6bd8e97391248b5f245e8f7394272cc5428d9ebf97c326c560a",
+    "macos-rows.jsonl": "44319e7e82d6cc58a84c1456e16173f141960c98840b420a0efe9ca325276a09",
+    "media-ffprobe.json": "12803c2abb02df4b883d3d958cbc44bd2d570e2019e7560c42bd2b598d953e62",
+    "p01-family-mirror-proof.log": "898775dab3acc24bcf3f3c74960f2a7afb8953011339264bfaf82d8463e1d1b0",
+    "macos-summary.json": "bd0519c4981db0157e7626656ca689f279cdb53ae1e9e0e2780e23cfb71c161b",
+    "preexisting-mirror-differences.json": "898775dab3acc24bcf3f3c74960f2a7afb8953011339264bfaf82d8463e1d1b0",
+    "initial-media-provenance-invalid.json": "e0584b68cc30589d9fe989d6f48119f5812f819dab43c1a6571d92f3daf7f1ad",
+    "p01-family-python.log": "9fc9f1127b7c0c46ff91a3f9dafd10b7b19cbb1d0501e9abe3ea9397c2ce4ce1",
+    "ios-summary.json": "fd943739c4278103580e11737e15ff62c33537dfc279b50733ef9c8715e18b12",
+    "generate-owned-media.py": "d4e8708f7bf4ea2e899a93b1948a90ca875b6fcdf1bd571c98b9b06ddb8249db",
+    "macos-valid-red-activities.json": "884cfbaffe41be101eeab4c3c15c39977ee541fdefd9c44b51fcac59da9ced85",
+    "macos-valid-red-summary.json": "f8f51ca33998d22921fb7604684b5819435beed937f1fc75169953f5fedc78e7",
+    "ios-statistics.json": "5ab93e3c7bb472ef7261850e53b4896039dd0ca5cbf502c52db81177c6b3aed1",
+    "macos-initial-fix-attempt.log": "ca021f3f48fcc97ee633f01b6f7cecf7d3cf54bf6b3429070845676f04ce63f6",
+    "macos-final.log": "884365956b3726b278de75d7efc344e2006d5f34c516ab0412d45bc251d6093d",
+    "final-review.md": "02586486cc97862ecb2fdd651cc69933c64b9906d521852a4f73226ad250c52a",
+    "media-provenance.json": "16590bf3aee8c5574de800bba785a1e7dbcebe012474726b2d0ffe7b76c1d577",
+    "verify-runtime-results.py": "6a38ba921c145ecc6022a27caf6600f4e82af20919b7ceea24ddcf46542f5a08",
+    "macos-initial-fix-attempt-summary.json": "f094874075fc5aa224adce9a0a87098b95ffa7a5d266b1dc1a685f9258cfe4ec",
+    "macos-valid-red.log": "e67c7be4090ef5d1d9dcb8489b4f808e28e8b4e2bd8fd6ee1a5ccc6ec04e099e",
+    "macos-case-identities.json": "631d6534622e035ba5f6655e53438f066ffc23dbbf0712a903d57013b95da27a",
+    "macos-red.log": "23eed3ad99e88a6d46b256acf6a3368d8becf40d6d3e152c09e5c1af2ae66a9f",
+    "macos-statistics.json": "7ca02cf924d9b22ca956b5518f7e5ee1b84efe5cd45f003b197e737ca428d556",
+    "macos-initial-fix-attempt-activities.json": "e342b06973d73ab78fe8129bcca4aca27d7517e2a4ade98b7c166ccad991acdf"
+  },
+  "limitations": [
+    "Not physical output/HDR color fidelity",
+    "Prior consumer and Dart/JVM results predate this focused Apple state fix; affected Apple suites rerun",
+    "Pre-existing global macOS mirror gate remains failed",
+    "Default macOS lipo aggregate toolchain invocation remains failed; prior isolated consumer product checks passed"
+  ]
+}

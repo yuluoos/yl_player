@@ -37,6 +37,9 @@ final class YlDashProgramBackend: YlPlaybackBackend {
   private var outputRunning = false, pausedByCommand = false
   private var constraints: YlAppleVideoConstraints
   private var selection = YlNativeVideoSelection()
+  /// Session intent survives pipeline retirement for restoration/end seeks.
+  /// Failed preparation must never replace the last committed video family.
+  private var acceptedVideoFamily: String?
   private var explicitAudio: String?
   private var rate: Float = 1, volume: Float = 1
   private var frozenPosition: Int64 = 0
@@ -96,7 +99,10 @@ final class YlDashProgramBackend: YlPlaybackBackend {
     let restore = activation.1
     if let initial = locked({ initialPeriod }) {
       let candidate = try makePipeline(initial, epoch: locked { epoch })
-      locked { pipeline = candidate; initialPeriod = nil }
+      locked {
+        pipeline = candidate; initialPeriod = nil
+        acceptedVideoFamily = candidate.prepared.qualityFamily
+      }
       candidate.setRate(locked { rate }); candidate.setVolume(locked { volume })
     }
     displayCreated = true; display.isPaused = false
@@ -195,7 +201,7 @@ final class YlDashProgramBackend: YlPlaybackBackend {
       guard !disposed, !stopped, expectedEpoch == nil || expectedEpoch == epoch else { throw YlOpenCancellationToken.cancellationError() }
       pendingToken?.cancel(); pendingToken = newToken; command &+= 1
       return (command, epoch &+ 1, caps ?? constraints, video ?? selection,
-        audio ?? explicitAudio, pipeline?.prepared.audio?.track.id, pipeline?.prepared.qualityFamily)
+        audio ?? explicitAudio, pipeline?.prepared.audio?.track.id, acceptedVideoFamily)
     }
     defer { locked { if pendingToken === newToken { pendingToken = nil } } }
     try newToken.throwIfCancelled()
@@ -232,6 +238,7 @@ final class YlDashProgramBackend: YlPlaybackBackend {
       try newToken.throwIfCancelled()
       token.cancel()
       pipeline = candidate; token = newToken; epoch = context.1
+      if let candidate { acceptedVideoFamily = candidate.prepared.qualityFamily }
       constraints = context.2; selection = candidate?.prepared.selection ?? context.3; explicitAudio = context.4
       frozenPosition = try target.converted(to: 1_000_000, rounding: .floor)
       failure = nil; transitioning = false; completed = candidate == nil; outputRunning = false

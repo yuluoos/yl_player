@@ -1,0 +1,447 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "\n🧪 Test\n\nDiscovered 29 test(s):\n   RunnerTests/YlDashProgramNativeTests/testExactProgramParserPreservesPTOAndOverlap\n   RunnerTests/YlDashProgramNativeTests/testManagedTransportReadsExactRangeAndRetainsPayloadBudget\n   RunnerTests/YlDashProgramNativeTests/testManagedTransportRejectsWholeResponseToRangeWithoutRetry\n   RunnerTests/YlDashSampleSourceNativeTests/testActualDecodedPCMClipsExactlyThreePointFiveSecondsAndKeepsBothToneMarkers\n   RunnerTests/YlDashSampleSourceNativeTests/testAudioFragmentKeepsTwentySecondOffsetAndNegativePriming\n   RunnerTests/YlDashSampleSourceNativeTests/testAudioTimelineSchedulesExactBoundedSilenceAndOriginalPCM\n   (...and 23 more)\n\nWarnings (48):\n\n  ⚠ unknown environment variable SWIFT_DEBUG_INFORMATION_FORMAT\n\n  ⚠ unknown environment variable SWIFT_DEBUG_INFORMATION_VERSION\n\n  ⚠ conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift:139\n\n  ⚠ forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlHardwareDecoderEvidence.swift:23\n\n  ⚠ 'weak' ownership of capture 'fallback' differs from implicitly-captured strong reference in outer scope [#ImplicitStrongCapture]\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift:637\n\n  ⚠ 'init()' was deprecated in iOS 13.0: Please use +[NSURLSession sessionWithConfiguration:] or other class methods to create instances [#DeprecatedDeclaration]\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2034\n\n  ⚠ 'init()' was deprecated in iOS 13.0: Please use -[NSURLSession dataTaskWithRequest:] or other NSURLSession methods to create instances [#DeprecatedDeclaration]\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2050\n\n  ⚠ 'source' mutated after capture by sendable closure\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:1533\n\n  ⚠ capture of 'stage' with non-Sendable type 'YlHardwareEvidencePreparation' in a '@Sendable' closure [#SendableClosureCaptures]\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1226\n\n  ⚠ add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'yl_player_apple' [#AddPreconcurrencyImport]\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1\n\n  ⚠ capture of 'token' with non-Sendable type 'YlOpenCancellationToken' in a '@Sendable' closure [#SendableClosureCaptures]\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1226\n\n  ⚠ capture of 'scope' with non-Sendable type 'YlManagedBufferScope' in a '@Sendable' closure [#SendableClosureCaptures]\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1227\n\n  ⚠ capture of 'stage' with non-Sendable type 'YlHardwareEvidencePreparation' in a '@Sendable' closure [#SendableClosureCaptures]\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1243\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testMappedVideoActuallyDecodesRedFrameAtProgramZero] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2248\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:3089\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramAudioIdentitySurvivesCatalogAddition] : [Internal] Thread running at User-initiated quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    <unknown>:0\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramAudioIdentitySurvivesCatalogAddition] : [Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions\n    <unknown>:0\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramAudioIdentitySurvivesCatalogAddition] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramAudioIdentitySurvivesCatalogAddition] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramBackendClipsThreePointFiveAndSeeksOriginalClock] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2517\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramBackendIndependentPTOAndNaturalPeriods] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramBackendIndependentPTOAndNaturalPeriods] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramBackendIndependentPTOAndNaturalPeriods] : [Internal] Thread running at User-initiated quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    <unknown>:0\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramBackendIndependentPTOAndNaturalPeriods] : [Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions\n    <unknown>:0\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramBackendPlaysAndClipsActualHalfSecond] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2407\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramBackendPlaysAndClipsActualHalfSecond] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2407\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramCompletedPlayHonorsCommandCancellationDuringReload] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels] : [Internal] Thread running at User-initiated quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    unrecognised property keyunrecognised property key<unknown>:0\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels] : [Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions\n    <unknown>:0\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramFailedCandidatePreservesVideoFamilyForRestoration] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:3126\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramNativeJointBaseline] : [Internal] Thread running at User-initiated quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    <unknown>:0\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramNativeJointBaseline] : [Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions\n    <unknown>:0\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramNativeJointBaseline] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramNativeJointBaseline] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative] : [Internal] Thread running at User-initiated quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    <unknown>:0\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative] : [Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions\n    <unknown>:0\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testPublicProgramLoadCommandsAndManagedPolicy] : [Internal] Thread running at User-initiated quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    <unknown>:0\n\n  ⚠ -[RunnerTests.YlDashSampleSourceNativeTests testPublicProgramLoadCommandsAndManagedPolicy] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2616\n\n✅ 29 tests passed, 0 failed, 0 skipped (⏱️ 200.4s)\n  └ Files:\n     ├── /private/tmp/p01-family-ios-final.xcresult — Result Bundle\n     └── ~/Library/Developer/XcodeBuildMCP/workspaces/yl_player-af4e5e911369/\n         ├── logs/test_sim_2026-10-14T10-27-27-405Z_pid10777_ca212369.log — Build Logs\n         └── test-products/test_sim_2026-10-14T10-27-27-406Z_pid10777_eabbb471.xctestproducts — Test Products\n"
+    }
+  ],
+  "structuredContent": {
+    "schema": "xcodebuildmcp.output.test-result",
+    "schemaVersion": "3",
+    "didError": false,
+    "error": null,
+    "data": {
+      "summary": {
+        "status": "SUCCEEDED",
+        "durationMs": 200357,
+        "counts": {
+          "passed": 29,
+          "failed": 0,
+          "skipped": 0
+        },
+        "target": "simulator"
+      },
+      "artifacts": {
+        "buildLogPath": "~/Library/Developer/XcodeBuildMCP/workspaces/yl_player-af4e5e911369/logs/test_sim_2026-10-14T10-27-27-405Z_pid10777_ca212369.log",
+        "xcresultPath": "/private/tmp/p01-family-ios-final.xcresult",
+        "testProductsPath": "~/Library/Developer/XcodeBuildMCP/workspaces/yl_player-af4e5e911369/test-products/test_sim_2026-10-14T10-27-27-406Z_pid10777_eabbb471.xctestproducts"
+      },
+      "tests": {
+        "selected": [
+          "RunnerTests/YlDashProgramNativeTests/testExactProgramParserPreservesPTOAndOverlap",
+          "RunnerTests/YlDashProgramNativeTests/testManagedTransportReadsExactRangeAndRetainsPayloadBudget",
+          "RunnerTests/YlDashProgramNativeTests/testManagedTransportRejectsWholeResponseToRangeWithoutRetry",
+          "RunnerTests/YlDashSampleSourceNativeTests/testActualDecodedPCMClipsExactlyThreePointFiveSecondsAndKeepsBothToneMarkers",
+          "RunnerTests/YlDashSampleSourceNativeTests/testAudioFragmentKeepsTwentySecondOffsetAndNegativePriming",
+          "RunnerTests/YlDashSampleSourceNativeTests/testAudioTimelineSchedulesExactBoundedSilenceAndOriginalPCM",
+          "RunnerTests/YlDashSampleSourceNativeTests/testCancelledFragmentDoesNotYieldAnotherPacket",
+          "RunnerTests/YlDashSampleSourceNativeTests/testManagedProgramCursorLoadsIndependentPTOThroughActualTransport",
+          "RunnerTests/YlDashSampleSourceNativeTests/testMappedVideoActuallyDecodesRedFrameAtProgramZero",
+          "RunnerTests/YlDashSampleSourceNativeTests/testPCMClipPreservesSamplesAndAllocationAtFractionalBoundaries",
+          "RunnerTests/YlDashSampleSourceNativeTests/testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges",
+          "RunnerTests/YlDashSampleSourceNativeTests/testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek",
+          "RunnerTests/YlDashSampleSourceNativeTests/testProgramAudioIdentitySurvivesCatalogAddition",
+          "RunnerTests/YlDashSampleSourceNativeTests/testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime",
+          "RunnerTests/YlDashSampleSourceNativeTests/testProgramBackendClipsThreePointFiveAndSeeksOriginalClock",
+          "RunnerTests/YlDashSampleSourceNativeTests/testProgramBackendIndependentPTOAndNaturalPeriods",
+          "RunnerTests/YlDashSampleSourceNativeTests/testProgramBackendPlaysAndClipsActualHalfSecond",
+          "RunnerTests/YlDashSampleSourceNativeTests/testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput",
+          "RunnerTests/YlDashSampleSourceNativeTests/testProgramCompletedPlayHonorsCommandCancellationDuringReload",
+          "RunnerTests/YlDashSampleSourceNativeTests/testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels",
+          "RunnerTests/YlDashSampleSourceNativeTests/testProgramFailedCandidatePreservesVideoFamilyForRestoration",
+          "RunnerTests/YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack",
+          "RunnerTests/YlDashSampleSourceNativeTests/testProgramNativeJointBaseline",
+          "RunnerTests/YlDashSampleSourceNativeTests/testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative",
+          "RunnerTests/YlDashSampleSourceNativeTests/testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples",
+          "RunnerTests/YlDashSampleSourceNativeTests/testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment",
+          "RunnerTests/YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy",
+          "RunnerTests/YlDashSampleSourceNativeTests/testSparseFragmentKeepsAbsoluteOffsetsAboveFourGiBWithoutAllocatingHole",
+          "RunnerTests/YlDashSampleSourceNativeTests/testVideoFragmentKeepsOriginalTenSecondTicksAndPacketOwnership"
+        ],
+        "discovered": {
+          "total": 29,
+          "items": [
+            "RunnerTests/YlDashProgramNativeTests/testExactProgramParserPreservesPTOAndOverlap",
+            "RunnerTests/YlDashProgramNativeTests/testManagedTransportReadsExactRangeAndRetainsPayloadBudget",
+            "RunnerTests/YlDashProgramNativeTests/testManagedTransportRejectsWholeResponseToRangeWithoutRetry",
+            "RunnerTests/YlDashSampleSourceNativeTests/testActualDecodedPCMClipsExactlyThreePointFiveSecondsAndKeepsBothToneMarkers",
+            "RunnerTests/YlDashSampleSourceNativeTests/testAudioFragmentKeepsTwentySecondOffsetAndNegativePriming",
+            "RunnerTests/YlDashSampleSourceNativeTests/testAudioTimelineSchedulesExactBoundedSilenceAndOriginalPCM"
+          ]
+        }
+      },
+      "diagnostics": {
+        "warnings": [
+          {
+            "message": "unknown environment variable SWIFT_DEBUG_INFORMATION_FORMAT"
+          },
+          {
+            "message": "unknown environment variable SWIFT_DEBUG_INFORMATION_VERSION"
+          },
+          {
+            "message": "conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift:139"
+          },
+          {
+            "message": "forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlHardwareDecoderEvidence.swift:23"
+          },
+          {
+            "message": "'weak' ownership of capture 'fallback' differs from implicitly-captured strong reference in outer scope [#ImplicitStrongCapture]",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift:637"
+          },
+          {
+            "message": "'init()' was deprecated in iOS 13.0: Please use +[NSURLSession sessionWithConfiguration:] or other class methods to create instances [#DeprecatedDeclaration]",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2034"
+          },
+          {
+            "message": "'init()' was deprecated in iOS 13.0: Please use -[NSURLSession dataTaskWithRequest:] or other NSURLSession methods to create instances [#DeprecatedDeclaration]",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2050"
+          },
+          {
+            "message": "'source' mutated after capture by sendable closure",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:1533"
+          },
+          {
+            "message": "capture of 'stage' with non-Sendable type 'YlHardwareEvidencePreparation' in a '@Sendable' closure [#SendableClosureCaptures]",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1226"
+          },
+          {
+            "message": "add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'yl_player_apple' [#AddPreconcurrencyImport]",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1"
+          },
+          {
+            "message": "capture of 'token' with non-Sendable type 'YlOpenCancellationToken' in a '@Sendable' closure [#SendableClosureCaptures]",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1226"
+          },
+          {
+            "message": "capture of 'scope' with non-Sendable type 'YlManagedBufferScope' in a '@Sendable' closure [#SendableClosureCaptures]",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1227"
+          },
+          {
+            "message": "capture of 'stage' with non-Sendable type 'YlHardwareEvidencePreparation' in a '@Sendable' closure [#SendableClosureCaptures]",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1243"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testMappedVideoActuallyDecodesRedFrameAtProgramZero] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2248"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:3089"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramAudioIdentitySurvivesCatalogAddition] : [Internal] Thread running at User-initiated quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "<unknown>:0"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramAudioIdentitySurvivesCatalogAddition] : [Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+            "location": "<unknown>:0"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramAudioIdentitySurvivesCatalogAddition] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramAudioIdentitySurvivesCatalogAddition] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramBackendClipsThreePointFiveAndSeeksOriginalClock] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2517"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramBackendIndependentPTOAndNaturalPeriods] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramBackendIndependentPTOAndNaturalPeriods] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramBackendIndependentPTOAndNaturalPeriods] : [Internal] Thread running at User-initiated quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "<unknown>:0"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramBackendIndependentPTOAndNaturalPeriods] : [Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+            "location": "<unknown>:0"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramBackendPlaysAndClipsActualHalfSecond] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2407"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramBackendPlaysAndClipsActualHalfSecond] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2407"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramCompletedPlayHonorsCommandCancellationDuringReload] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels] : [Internal] Thread running at User-initiated quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "unrecognised property keyunrecognised property key<unknown>:0"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels] : [Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+            "location": "<unknown>:0"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramFailedCandidatePreservesVideoFamilyForRestoration] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:3126"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramNativeJointBaseline] : [Internal] Thread running at User-initiated quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "<unknown>:0"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramNativeJointBaseline] : [Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+            "location": "<unknown>:0"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramNativeJointBaseline] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramNativeJointBaseline] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative] : [Internal] Thread running at User-initiated quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "<unknown>:0"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative] : [Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+            "location": "<unknown>:0"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2489"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testPublicProgramLoadCommandsAndManagedPolicy] : [Internal] Thread running at User-initiated quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "<unknown>:0"
+          },
+          {
+            "message": "-[RunnerTests.YlDashSampleSourceNativeTests testPublicProgramLoadCommandsAndManagedPolicy] : [Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift:2616"
+          }
+        ],
+        "errors": [],
+        "testFailures": []
+      },
+      "testCases": [
+        {
+          "suite": "YlDashProgramNativeTests",
+          "test": "testExactProgramParserPreservesPTOAndOverlap",
+          "status": "passed",
+          "durationMs": 16
+        },
+        {
+          "suite": "YlDashProgramNativeTests",
+          "test": "testManagedTransportReadsExactRangeAndRetainsPayloadBudget",
+          "status": "passed",
+          "durationMs": 58
+        },
+        {
+          "suite": "YlDashProgramNativeTests",
+          "test": "testManagedTransportRejectsWholeResponseToRangeWithoutRetry",
+          "status": "passed",
+          "durationMs": 12
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testActualDecodedPCMClipsExactlyThreePointFiveSecondsAndKeepsBothToneMarkers",
+          "status": "passed",
+          "durationMs": 255
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testAudioFragmentKeepsTwentySecondOffsetAndNegativePriming",
+          "status": "passed",
+          "durationMs": 6
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testAudioTimelineSchedulesExactBoundedSilenceAndOriginalPCM",
+          "status": "passed",
+          "durationMs": 48
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testCancelledFragmentDoesNotYieldAnotherPacket",
+          "status": "passed",
+          "durationMs": 5
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testManagedProgramCursorLoadsIndependentPTOThroughActualTransport",
+          "status": "passed",
+          "durationMs": 11
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testMappedVideoActuallyDecodesRedFrameAtProgramZero",
+          "status": "passed",
+          "durationMs": 411
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testPCMClipPreservesSamplesAndAllocationAtFractionalBoundaries",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges",
+          "status": "passed",
+          "durationMs": 8981
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek",
+          "status": "passed",
+          "durationMs": 429
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testProgramAudioIdentitySurvivesCatalogAddition",
+          "status": "passed",
+          "durationMs": 4020
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime",
+          "status": "passed",
+          "durationMs": 10190
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testProgramBackendClipsThreePointFiveAndSeeksOriginalClock",
+          "status": "passed",
+          "durationMs": 3973
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testProgramBackendIndependentPTOAndNaturalPeriods",
+          "status": "passed",
+          "durationMs": 20592
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testProgramBackendPlaysAndClipsActualHalfSecond",
+          "status": "passed",
+          "durationMs": 885
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput",
+          "status": "passed",
+          "durationMs": 102
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testProgramCompletedPlayHonorsCommandCancellationDuringReload",
+          "status": "passed",
+          "durationMs": 870
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels",
+          "status": "passed",
+          "durationMs": 4018
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testProgramFailedCandidatePreservesVideoFamilyForRestoration",
+          "status": "passed",
+          "durationMs": 98
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack",
+          "status": "passed",
+          "durationMs": 2143
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testProgramNativeJointBaseline",
+          "status": "passed",
+          "durationMs": 83635
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative",
+          "status": "passed",
+          "durationMs": 6141
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples",
+          "status": "passed",
+          "durationMs": 620
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment",
+          "status": "passed",
+          "durationMs": 5682
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testPublicProgramLoadCommandsAndManagedPolicy",
+          "status": "passed",
+          "durationMs": 779
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testSparseFragmentKeepsAbsoluteOffsetsAboveFourGiBWithoutAllocatingHole",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "suite": "YlDashSampleSourceNativeTests",
+          "test": "testVideoFragmentKeepsOriginalTenSecondTicksAndPacketOwnership",
+          "status": "passed",
+          "durationMs": 1
+        }
+      ]
+    }
+  }
+}
