@@ -74,7 +74,7 @@ internal class YlDashProgramMediaSource(
                 // Project absolute endpoints once, so fractional Periods do not
                 // accumulate one rounding error per transition.
                 val durationUs = window.end.units(1_000_000, true) - window.start.units(1_000_000, true)
-                builder.add(ClippingMediaSource.Builder(dash).setEndPositionUs(durationUs).build())
+                builder.add(ClippingMediaSource.Builder(YlDashDeclaredWindowSource(dash, durationUs, audioPrerollUs(original))).setEndPositionUs(durationUs).build())
                 cursor = window.end
             }
             child = builder.build().also { prepareChildSource(Unit, it) }
@@ -82,6 +82,11 @@ internal class YlDashProgramMediaSource(
             failure = IOException("Unsupported DASH programme.", YlBoundaryException(YlFailureKind.CONTAINER_UNSUPPORTED))
         }
     }
+    /** Bounded audio decoder preroll. AAC includes its largest supported frame;
+     * FLAC can contain 65,535 samples. The sample sink still starts at the exact seek. */
+    private fun audioPrerollUs(period: Period): Long = period.adaptationSets.filter { it.type == C.TRACK_TYPE_AUDIO }
+        .flatMap { it.representations }.maxOfOrNull { dashAudioPrerollUs(it.format) } ?: 0
+
     override fun onLoadCanceled(loadable: ParsingLoadable<DashManifest>, elapsedRealtimeMs: Long, loadDurationMs: Long, released: Boolean) {
         policy.onLoadTaskConcluded(loadable.loadTaskId)
         createEventDispatcher(null).loadCanceled(loadInfo(loadable, elapsedRealtimeMs, loadDurationMs), C.DATA_TYPE_MANIFEST)
@@ -138,5 +143,49 @@ private class YlDashGapSource(source: MediaSource, private val groups: YlDashGap
         val period = mediaPeriod as GapPeriod
         period.registered.forEach(groups::remove)
         super.releasePeriod(period.delegate)
+    }
+}
+
+/** Static programme bounds are authoritative even if one track's first/last sample
+ * is inside them. Media3's intersection of segment availability must not shorten
+ * the window or turn a leading gap into an implicit seek. Sample timestamps stay intact. */
+@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
+private class YlDashDeclaredWindowSource(source: MediaSource, private val durationUs: Long, private val prerollUs: Long) : WrappingMediaSource(source) {
+    private class PrerollPeriod(val delegate: MediaPeriod, val prerollUs: Long) : MediaPeriod by delegate {
+        private fun start(positionUs: Long) = (positionUs - prerollUs).coerceAtLeast(0)
+        override fun prepare(callback: MediaPeriod.Callback, positionUs: Long) {
+            delegate.prepare(object : MediaPeriod.Callback {
+                override fun onPrepared(mediaPeriod: MediaPeriod) = callback.onPrepared(this@PrerollPeriod)
+                override fun onContinueLoadingRequested(source: MediaPeriod) = callback.onContinueLoadingRequested(this@PrerollPeriod)
+            }, start(positionUs))
+        }
+        override fun selectTracks(selections: Array<out androidx.media3.exoplayer.trackselection.ExoTrackSelection?>,
+            mayRetainStreamFlags: BooleanArray, streams: Array<SampleStream?>, streamResetFlags: BooleanArray, positionUs: Long): Long {
+            delegate.selectTracks(selections, mayRetainStreamFlags, streams, streamResetFlags, start(positionUs))
+            return positionUs
+        }
+        override fun seekToUs(positionUs: Long): Long { delegate.seekToUs(start(positionUs)); return positionUs }
+        override fun getAdjustedSeekPositionUs(positionUs: Long, seekParameters: androidx.media3.exoplayer.SeekParameters) = positionUs
+        override fun readDiscontinuity(): Long { delegate.readDiscontinuity(); return C.TIME_UNSET }
+    }
+    override fun createPeriod(id: MediaSource.MediaPeriodId, allocator: Allocator, startPositionUs: Long): MediaPeriod =
+        PrerollPeriod(super.createPeriod(id, allocator, (startPositionUs - prerollUs).coerceAtLeast(0)), prerollUs)
+    override fun releasePeriod(mediaPeriod: MediaPeriod) = super.releasePeriod((mediaPeriod as PrerollPeriod).delegate)
+
+    override fun onChildSourceInfoRefreshed(newTimeline: Timeline) {
+        check(newTimeline.windowCount == 1 && newTimeline.periodCount == 1)
+        refreshSourceInfo(object : ForwardingTimeline(newTimeline) {
+            override fun getWindow(index: Int, window: Timeline.Window, projectionUs: Long): Timeline.Window =
+                super.getWindow(index, window, projectionUs).also {
+                    it.positionInFirstPeriodUs = 0
+                    it.defaultPositionUs = 0
+                    it.durationUs = this@YlDashDeclaredWindowSource.durationUs
+                }
+            override fun getPeriod(index: Int, period: Timeline.Period, setIds: Boolean): Timeline.Period =
+                super.getPeriod(index, period, setIds).also {
+                    it.positionInWindowUs = 0
+                    it.durationUs = this@YlDashDeclaredWindowSource.durationUs
+                }
+        })
     }
 }

@@ -1,0 +1,47 @@
+INSTRUMENTATION_STATUS: class=dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stream=
+dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest:
+INSTRUMENTATION_STATUS: test=seekInsideAacBufferPreservesDecodedPrerollTail
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: The partial preroll tail must not be replaced with silence
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest.measure(YlDashPcmInstrumentedTest.kt:142)
+	at dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest.measure$default(YlDashPcmInstrumentedTest.kt:46)
+	at dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest.seekInsideAacBufferPreservesDecodedPrerollTail(YlDashPcmInstrumentedTest.kt:32)
+
+INSTRUMENTATION_STATUS: stream=
+Error in seekInsideAacBufferPreservesDecodedPrerollTail(dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest):
+java.lang.AssertionError: The partial preroll tail must not be replaced with silence
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest.measure(YlDashPcmInstrumentedTest.kt:142)
+	at dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest.measure$default(YlDashPcmInstrumentedTest.kt:46)
+	at dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest.seekInsideAacBufferPreservesDecodedPrerollTail(YlDashPcmInstrumentedTest.kt:32)
+
+INSTRUMENTATION_STATUS: test=seekInsideAacBufferPreservesDecodedPrerollTail
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_RESULT: stream=
+
+Time: 4.221
+There was 1 failure:
+1) seekInsideAacBufferPreservesDecodedPrerollTail(dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest)
+java.lang.AssertionError: The partial preroll tail must not be replaced with silence
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest.measure(YlDashPcmInstrumentedTest.kt:142)
+	at dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest.measure$default(YlDashPcmInstrumentedTest.kt:46)
+	at dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest.seekInsideAacBufferPreservesDecodedPrerollTail(YlDashPcmInstrumentedTest.kt:32)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+
+INSTRUMENTATION_CODE: -1

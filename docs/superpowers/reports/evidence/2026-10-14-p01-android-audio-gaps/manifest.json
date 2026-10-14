@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-14",
+  "scope": "P01 Android real PCM leading/internal/trailing gaps and AAC seek slice; video gaps and final joint gates remain pending",
+  "results": {
+    "native_pcm": {
+      "passed": 7,
+      "failed": 0,
+      "sample_rate": 48000,
+      "gap_expected_frames": 192000,
+      "red_frames": {
+        "leading": 168000,
+        "internal": 143872,
+        "trailing": 95232
+      },
+      "silence_sample_ranges": {
+        "leading": [
+          0,
+          20000
+        ],
+        "internal": [
+          52800,
+          86400
+        ],
+        "trailing": [
+          110000,
+          180000
+        ]
+      },
+      "seek": {
+        "position_ms": 500,
+        "remaining_frames": 168000,
+        "real_tone_sample_range": [
+          24000,
+          24480
+        ]
+      }
+    },
+    "android_public": {
+      "passed": 18,
+      "failed": 0
+    },
+    "jvm": {
+      "passed": 151,
+      "failed": 0
+    },
+    "static": "no issues"
+  },
+  "measurement_boundary": "Real MediaCodec PCM reaches the existing AudioTrack sink; probe asserts zero encoder delay/padding at observation, expected programme duration and ENDED. Not physical speaker or jointly measured AV-sync evidence.",
+  "limits": {
+    "silence_buffer_bytes": 32768,
+    "silence_chunk_max_ms": 100,
+    "audio_preroll_max_us": 8192000
+  },
+  "notes": [
+    "Declared window prevents Media3 availability intersection from implicitly skipping leading time or shortening the tail.",
+    "Preroll reads a bounded codec-dependent preceding window while returning the requested programme seek position. This preserves the partial decoded buffer; PCM slices the valid tail.",
+    "Codec priming is removed from content before inserting silence; partial writes preserve buffer identity; seek flush discards pending silence.",
+    "After the seven-case native pass, the preroll duration calculation was extracted unchanged into a testable helper; extreme declared rates now explicitly reject rather than silently cap required preroll. Final JVM covers that boundary; normal public fixtures remain within the bound."
+  ],
+  "sha256": {
+    "packages/yl_player/example/integration_test/dash_program_periods_test.dart": "ed4168a52ed4c08768f5dfc7d1da38cd1b42532ab2c169d4816e0ec47e253864",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashPcmInstrumentedTest.kt": "66b4feee5397c1bd5be7bae9db59dc216a26bcf3fb77e8a0ab40efd20923b78c",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashPcmAudioSink.kt": "c4c62792dd8ea3979c5c182c26ca12401beb6d8b0a79f3d94c4109d9fff2616f",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashProgramMediaSource.kt": "842efc23ce52800298a08edba4d01489883fa3d0f059c492547f4780b0e1daa1",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt": "1b378552d268069ed51ebbbdb2f56e70a28b98e54932bd2cd558fb685fed4bf1",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashPcmWindowTest.kt": "4ce66801139884abade04e0750b33834c8d3b577d5b60b7fff8af42f99415d41"
+  },
+  "logs_sha256": {
+    "p01-android-pcm-gaps-red.log": "7d1c97c5104297bf02451174efa3cece04ac70adbca4ee42688d756a08f9bb5f",
+    "p01-android-pcm-gaps-first.log": "2a58303848f9adc7a19265bbc81275cd5ac472f390f0fe6ef245bb712ce17d8c",
+    "p01-android-pcm-preroll-red.log": "dd97d42a8b8b336af9cd6a7b545663f5b0d6a0d5969d40e31b55fa6dad2169b2",
+    "p01-android-pcm-gaps-second.log": "353a0af400cdd1e926c04682f3cf474095a48f3a51e03093059b29a0d2e850ff",
+    "p01-android-pcm-priming-red.log": "1bbd9ff943e55bcb098a764cf0e234671b24af04e8f8d074f86c16bc5e40d736",
+    "p01-android-pcm-gaps-third.log": "bb96e4b0b7624341723f34a41bed35b42c68a9cbdffb8241ef81ef67546e926a",
+    "p01-android-pcm-gaps-final.log": "0e5879ddeb9aa73ead62ff7006bc4acbeb9ab6513dd09e80e911c9412e05a535",
+    "p01-android-pcm-gaps-public.log": "b1ba073aebba9126c26a51bf734dc1f1364d72f51744304f907a1e3d4c6f4662",
+    "p01-android-pcm-gaps-analyze-final.log": "4b75119805130d8752e9c489f192aa860c08a2a495760aa78ee2d372311d963f"
+  }
+}

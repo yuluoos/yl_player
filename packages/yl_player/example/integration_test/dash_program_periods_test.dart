@@ -22,6 +22,9 @@ void main() {
     'audio-added': 3000,
     'absolute-base': 4000,
     'absolute-list': 4000,
+    'audio-gap-leading': 4000,
+    'audio-gap-internal': 4000,
+    'audio-gap-trailing': 4000,
   };
   testWidgets('managed DASH fixed AVC disappears and HEVC can be fixed', (
     tester,
@@ -83,9 +86,15 @@ void main() {
   });
   for (final entry in cases.entries) {
     testWidgets('managed DASH programme ${entry.key}', (tester) async {
-      final manifest = await rootBundle.loadString(
-        'assets/test_media/dash_timeline/${entry.key}.mpd',
+      final file = entry.key.startsWith('audio-gap-')
+          ? 'independent-pto'
+          : entry.key;
+      var manifest = await rootBundle.loadString(
+        'assets/test_media/dash_timeline/$file.mpd',
       );
+      if (entry.key.startsWith('audio-gap-')) {
+        manifest = _audioGap(manifest, entry.key);
+      }
       final server = await DashServer.start(
         timelineMarkers: true,
         manifestOverride: manifest,
@@ -167,4 +176,37 @@ void main() {
       expect(player.state.status, YlPlaybackStatus.idle);
     });
   }
+}
+
+String _audioGap(String xml, String name) {
+  if (name == 'audio-gap-leading') {
+    return xml.replaceAll(
+      'presentationTimeOffset="960000"',
+      'presentationTimeOffset="936000"',
+    );
+  }
+  final audio = xml.indexOf('<AdaptationSet contentType="audio"');
+  final start = xml.indexOf('<SegmentTemplate', audio);
+  final end =
+      xml.indexOf('</SegmentTemplate>', start) + '</SegmentTemplate>'.length;
+  final entries = name == 'audio-gap-trailing'
+      ? [(1, 960000, 47104), (2, 1007104, 48128)]
+      : [
+          (1, 960000, 47104),
+          (3, 1055232, 48128),
+          (4, 1103360, 48128),
+          (5, 1151488, 512),
+        ];
+  final timeline = entries.map((e) => '<S t="${e.$2}" d="${e.$3}"/>').join();
+  final urls = entries
+      .map(
+        (e) =>
+            '<SegmentURL media="chunk-1-${e.$1.toString().padLeft(5, '0')}.m4s"/>',
+      )
+      .join();
+  return xml.replaceRange(
+    start,
+    end,
+    '<SegmentList timescale="48000" presentationTimeOffset="960000"><Initialization sourceURL="init-1.m4s"/><SegmentTimeline>$timeline</SegmentTimeline>$urls</SegmentList>',
+  );
 }

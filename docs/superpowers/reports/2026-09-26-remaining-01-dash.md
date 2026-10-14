@@ -358,3 +358,11 @@ DASH 自动选择复用原 Media3 选择算法，只筛除与已接受 SDR/PQ/HL
 真实验证：3.5 秒 168,000 帧、跨 Period 3 秒 144,000 帧、独立 PTO 4 秒 192,000 帧，3/3 通过。公开播放 15/15，相关 JVM 148/148。测量范围是送入现有 AudioTrack 的解码 PCM 且播放到 ENDED，不代表物理扬声器或音画同步：[证据](evidence/2026-10-14-p01-android-pcm-end/manifest.json)。
 
 轨道内 leading/internal/trailing gap、部分 preroll 缓冲的实际送达及联合 AV/cue 验证继续处理，P01 仍未封板。
+
+### 2026-10-14 Android 轨道内音频空缺与精确 seek
+
+前置、内部、尾部空缺现由固定 32 KiB、每次至多 100 ms 的 PCM 静音缓冲补齐，部分写入和 seek 取消保留明确所有权。声明的 Period 窗口优先于 Media3 样本可用范围，防止前置空缺变成隐式 seek、尾部被缩短。
+
+真实 AAC 包内 seek 先复现“首个有效尾部被样本队列整包丢弃”。现在有界地读取解码前窗口，公开节目位置保持请求目标，解码后只保留有效 PCM；0.5 秒 seek 后最初 10 ms 验证为真实音频，未用静音代替。音频 preroll 按 codec/采样率计算，上限 8.192 秒；超出要求的异常声明率明确拒绝。编码 priming 在插入静音前从内容中移除。
+
+验证：真实 PCM 7/7（含三类空缺，均为 4 秒、192,000 帧，指定区间全零）；公开视频 18/18；相关 JVM 151/151；静态分析无问题。[完整 RED→GREEN 证据](evidence/2026-10-14-p01-android-audio-gaps/manifest.json)。视频轨道内空缺、联合 AV/cue、最终最低版本与整体验收仍待处理。

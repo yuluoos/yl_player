@@ -81,10 +81,36 @@ internal class YlVideoOutputObserver(
 
 /** Preserves the existing factory's audio/text/etc and the pinned video Builder defaults.
  * Core uses extensions OFF, no prewarming/VideoSink/tunneling, and only configures decoder policy. */
-internal class YlOutputRenderersFactory(context: Context, private val observer: YlVideoOutputObserver) : DefaultRenderersFactory(context) {
+internal open class YlOutputRenderersFactory(context: Context, private val observer: YlVideoOutputObserver) : DefaultRenderersFactory(context) {
     override fun buildAudioSink(context: Context, enableFloatOutput: Boolean, enableAudioOutputPlaybackParams: Boolean): androidx.media3.exoplayer.audio.AudioSink? {
         val sink = super.buildAudioSink(context, enableFloatOutput, enableAudioOutputPlaybackParams) ?: return null
         return if (observer.dashVideoFamily != null) YlDashPcmAudioSink(sink) else sink
+    }
+
+    override fun buildAudioRenderers(context: Context, extensionRendererMode: Int, mediaCodecSelector: MediaCodecSelector,
+        enableDecoderFallback: Boolean, audioSink: androidx.media3.exoplayer.audio.AudioSink, eventHandler: Handler,
+        eventListener: androidx.media3.exoplayer.audio.AudioRendererEventListener, out: ArrayList<Renderer>) {
+        if (audioSink !is YlDashPcmAudioSink) {
+            super.buildAudioRenderers(context, extensionRendererMode, mediaCodecSelector, enableDecoderFallback, audioSink, eventHandler, eventListener, out)
+            return
+        }
+        check(extensionRendererMode == EXTENSION_RENDERER_MODE_OFF)
+        out.add(object : androidx.media3.exoplayer.audio.MediaCodecAudioRenderer(context, codecAdapterFactory,
+            mediaCodecSelector, enableDecoderFallback, eventHandler, eventListener, audioSink) {
+            override fun onPositionReset(positionUs: Long, joining: Boolean, sampleStreamIsResetToKeyFrame: Boolean) {
+                super.onPositionReset(positionUs, joining, sampleStreamIsResetToKeyFrame)
+                audioSink.resetPosition(positionUs)
+            }
+            override fun processOutputBuffer(positionUs: Long, elapsedRealtimeUs: Long, codec: MediaCodecAdapter?,
+                buffer: java.nio.ByteBuffer?, bufferIndex: Int, bufferFlags: Int, sampleCount: Int,
+                bufferPresentationTimeUs: Long, isDecodeOnlyBuffer: Boolean, isLastBuffer: Boolean, format: Format): Boolean {
+                val keepTail = isDecodeOnlyBuffer && buffer != null &&
+                    bufferFlags and android.media.MediaCodec.BUFFER_FLAG_CODEC_CONFIG == 0 &&
+                    audioSink.keepsPrerollTail(bufferPresentationTimeUs, buffer.remaining())
+                return super.processOutputBuffer(positionUs, elapsedRealtimeUs, codec, buffer, bufferIndex,
+                    bufferFlags, sampleCount, bufferPresentationTimeUs, isDecodeOnlyBuffer && !keepTail, isLastBuffer, format)
+            }
+        })
     }
 
     override fun buildVideoRenderers(context: Context, extensionRendererMode: Int, mediaCodecSelector: MediaCodecSelector,
