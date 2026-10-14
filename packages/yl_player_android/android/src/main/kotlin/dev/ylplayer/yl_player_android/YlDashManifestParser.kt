@@ -1,12 +1,14 @@
 package dev.ylplayer.yl_player_android
 
 import android.net.Uri
+import android.util.Pair
 import androidx.media3.common.C
 import androidx.media3.common.ParserException
 import androidx.media3.exoplayer.dash.manifest.BaseUrl
 import androidx.media3.exoplayer.dash.manifest.DashManifest
 import androidx.media3.exoplayer.dash.manifest.DashManifestParser
 import androidx.media3.exoplayer.dash.manifest.Representation
+import androidx.media3.exoplayer.dash.manifest.Period
 import androidx.media3.exoplayer.dash.manifest.SegmentBase
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.xmlpull.v1.XmlPullParser
@@ -17,10 +19,13 @@ import java.io.InputStream
 /** Static, clear DASH only. Media3 owns syntax, inheritance and segment URL expansion.
  * Every request URL inherits its exact BaseURL path before the manifest is exposed.
  * Limits bound parsing/graph allocation; they do not claim bounded media buffering. */
+@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 internal class YlDashManifestParser(private val credentials: YlOriginCredentialPolicy?) : DashManifestParser() {
     private var timelineElements = 0
     private var registeredEdges = 0
     private var uriCharacters = 0L
+    private lateinit var timing: YlDashProgramTiming
+    private var periodCursor = 0
     // Identity, not list equality: shared ancestor lists accumulate sibling fanout.
     private val baseUrlResults = java.util.IdentityHashMap<List<BaseUrl>, Int>()
 
@@ -39,8 +44,16 @@ internal class YlDashManifestParser(private val credentials: YlOriginCredentialP
             bytes.write(chunk, 0, read)
         }
         val document = bytes.toByteArray()
-        preflight(document)
-        val manifest = super.parse(uri, document.inputStream())
+        val manifest = try {
+            preflight(document)
+            timing = YlDashProgramTiming.parse(document)
+            periodCursor = 0
+            super.parse(uri, document.inputStream())
+        } catch (_: org.xmlpull.v1.XmlPullParserException) { unsupported()
+        } catch (_: ParserException) { unsupported()
+        } catch (_: IllegalArgumentException) { unsupported()
+        } catch (_: IllegalStateException) { unsupported()
+        } catch (_: ArithmeticException) { unsupported() }
         if (manifest.dynamic || manifest.durationMs == C.TIME_UNSET) unsupported()
         var representations = 0
         for (periodIndex in 0 until manifest.periodCount) {
@@ -72,7 +85,33 @@ internal class YlDashManifestParser(private val credentials: YlOriginCredentialP
                 }
             }
         }
-        return manifest
+        return YlDashProgramManifest(manifest, timing)
+    }
+
+    /** Only project programme bounds here. Media3 retains all segment parsing,
+     * inheritance, indices and URL expansion; source composition uses exact bounds. */
+    override fun parseMediaPresentationDescription(xpp: XmlPullParser, documentBaseUri: Uri): DashManifest =
+        super.parseMediaPresentationDescription(attributes(xpp, mapOf("mediaPresentationDuration" to milliseconds(timing.duration.units(1000, ceil = true)))), documentBaseUri)
+
+    override fun parsePeriod(xpp: XmlPullParser, parentBaseUrls: MutableList<BaseUrl>, defaultStartMs: Long,
+        baseUrlAvailabilityTimeOffsetUs: Long, availabilityStartTimeMs: Long, timeShiftBufferDepthMs: Long,
+        dvbProfileDeclared: Boolean): Pair<Period, Long> {
+        val window = timing.windows[periodCursor++]
+        val duration = (window.declaredEnd - window.start).units(1000, ceil = true)
+        return super.parsePeriod(attributes(xpp, mapOf("start" to milliseconds(window.start.units(1000)),
+            "duration" to milliseconds(duration))), parentBaseUrls, defaultStartMs,
+            baseUrlAvailabilityTimeOffsetUs, availabilityStartTimeMs, timeShiftBufferDepthMs, dvbProfileDeclared)
+    }
+
+    private fun milliseconds(value: Long) = "PT${value / 1000}.${(value % 1000).toString().padStart(3, '0')}S"
+    private fun attributes(parser: XmlPullParser, replacements: Map<String, String>): XmlPullParser {
+        val depth = parser.depth
+        val tag = parser.name
+        return object : XmlPullParser by parser {
+            override fun getAttributeValue(namespace: String?, name: String?): String? =
+                if (namespace.isNullOrEmpty() && parser.eventType == XmlPullParser.START_TAG && parser.depth == depth && parser.name == tag && replacements.containsKey(name)) replacements[name]
+                else parser.getAttributeValue(namespace, name)
+        }
     }
 
     override fun parseBaseUrl(xpp: XmlPullParser, parentBaseUrls: MutableList<BaseUrl>, dvbProfileDeclared: Boolean): MutableList<BaseUrl> {

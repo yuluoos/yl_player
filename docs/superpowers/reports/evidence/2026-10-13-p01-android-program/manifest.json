@@ -1,0 +1,47 @@
+{
+  "base": "184afe143b06c569bd2d505a990d4c69f3b43bee",
+  "scope": "Android bounded programme composition and corrected owned AdaptationSet IDs. P01 remains active.",
+  "validation": {
+    "android_public": "20 passed;12 programme +6 prior DASH +2 SegmentBase",
+    "jvm": "83 passed;17 parser cases rerun after API24 adjustment",
+    "python": "13 passed",
+    "apple_corrected_fixture": "macOS4 andiOS4 passed;zeroSkip",
+    "dart": "2 files analyzed;no issues",
+    "lint": "NOT PASSED:112errors/17warnings;report retained"
+  },
+  "notes": [
+    "Initial Android5/12. Numeric adaptation IDs corrected per schema; encoded media unchanged.",
+    "Real visible-gap test RED then GREEN; explicit selected audio survives gap. No silent PCM track exposed as content.",
+    "JDK22 Mockito infrastructure failure separated from JDK17 behavior RED3/14 and GREEN14/14.",
+    "Tests prove public lifecycle/timeline/catalog behaviour, not an external acoustic sync measurement or exact decoded Android PCM trim.",
+    "Core source pipeline still needs precise output observations, HDR/fixed codec tests, DASH subtitles and final consolidated review.",
+    "Full lint is not passed; no API24 device or Intel/physical iOS run is claimed."
+  ],
+  "sha256": {
+    "docs/superpowers/reports/2026-09-26-remaining-01-dash.md": "a4873dda3a1a1878276ca068e51d192d97a8a3f0ac5c89be864eee05f3a90dfd",
+    "packages/yl_player/example/assets/test_media/dash_timeline/audio-added.mpd": "8cada50620d7f82d755422f234f24cc541c56a4be8b80dc2cc80f1d804a5f70c",
+    "packages/yl_player/example/assets/test_media/dash_timeline/audio-removed.mpd": "a0913d4a10f209b3e194072931c1538186cc5047961a09298df9e235563b02a7",
+    "packages/yl_player/example/assets/test_media/dash_timeline/cross-codec.mpd": "61eff7acbc9f5e486d60e18e18ba29abb5d02638de169ace2ab5614402c6e9dc",
+    "packages/yl_player/example/assets/test_media/dash_timeline/period-fixture-provenance.json": "bcd470fa7f645a1f7f602205f6f76d417eca008ab70726c58c285e9acc6545ce",
+    "packages/yl_player/example/assets/test_media/dash_timeline/resolution.mpd": "f262aa4c51c749dbbb1e00c3c69670721ce8c1869258b9e7a4cf3fb77a5a80fe",
+    "packages/yl_player/example/integration_test/support/dash_server.dart": "05af178c069abbb9d317e4d733c0dff0e2e3054212b765ee50018c7e0b033a4d",
+    "packages/yl_player/example/ios/RunnerTests/p01-program-fixtures.json": "1188aab4508530669130e4e28355a8d631f7641d1201c3151db0ec74c073f4d2",
+    "packages/yl_player/example/macos/RunnerTests/p01-program-fixtures.json": "1188aab4508530669130e4e28355a8d631f7641d1201c3151db0ec74c073f4d2",
+    "packages/yl_player/example/pubspec.yaml": "6338891d0a24f846144dcd328cdf07ed3a80822e1893c26052f15daf1fe41769",
+    "packages/yl_player/lib/src/playback_session.dart": "07ca6fade9c3a8f145bb15137d47fb7dc3589e097b4df8267788a7b84195d1fc",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashManifestParser.kt": "e3a52f8b6d5ad0563ba3ff1ca45b3396b1888b302d36b49eeb6b651a4c7e65b8",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlFixedVideoTrackSelector.kt": "760b6de50113500b808a28fce1123dea135444f5e9228dcbcc3372eb49875136",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt": "ef7850371f5383611e80f784048867a3d184ec959b58de1a1e187ebb36e91d61",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMediaSourceFactory.kt": "030673684ceb40596cb3e2242d69e329e3eb909c7373866da041ffa4b76288ff",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashManifestParserTest.kt": "72b4c58070e65c6312ae362161962d4495a858069cd6d751c6e248e85d1af304",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlMedia3AudioIdentityTest.kt": "bbf77e0e27e31ae8ec557bcc8e5d687fdb0028c26d0028734bf60455b6d2d659",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlMetricsCollectorTest.kt": "370dbd16881a992c608c056f07b1fd0fdcb845126168e0965f622ec29b0c3115",
+    "tool/consumer_fixtures/apple_flutter/Resources/p01-program-fixtures.json": "1188aab4508530669130e4e28355a8d631f7641d1201c3151db0ec74c073f4d2",
+    "tool/dash_timeline/generate_period_fixture.py": "30915010a080e5689b0a1d3336185978aadeedec511c6bce1e1d383883dbe077",
+    "tool/dash_timeline/test_fixtures.py": "d8b66ed35bf6784a10e6d7e34145c6ccaa3c6c29657710845a85684baf8d8a22",
+    "packages/yl_player/example/integration_test/dash_program_periods_test.dart": "93a0f566a02ea1758c7d2f22d1fe4911590fd26c9cdb6c54bd5637e998de92e1",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashProgramManifest.kt": "c6596e7e8bb3cdb0ba2862a2cf68a16f0ac023bfc737a3b327ae81f254e9a1af",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashProgramTiming.kt": "8fac11ae79322413431472a2d803396246c49505c3c95069227a32a4c7c563c9",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashProgramMediaSource.kt": "e09de4946892fe3f79e7fb8a110375babf1845c21e8775eb984144824980dd6c"
+  }
+}

@@ -45,6 +45,8 @@ internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: Netwo
         credentials != null && requiresHlsCredentialAncestry(requestHeaders, requestCredentials)
     private val http = credentials?.let { YlManagedHttpClient(it, if (managed) network else null, onRetry = onRetry) }
     private val loaderPolicy = if (managed || rtmp != null) YlManagedLoadErrorPolicy() else DefaultLoadErrorHandlingPolicy()
+    private val dashGapGroups = YlDashGapGroups()
+    fun isDashGapGroup(group: androidx.media3.common.TrackGroup) = dashGapGroups.contains(group)
     fun create(context: Context, item: MediaItem): MediaSource {
         rtmp?.let { return ProgressiveMediaSource.Factory(it.factory(), ExtractorsFactory { arrayOf(FlvExtractor()) })
             .setLoadErrorHandlingPolicy(loaderPolicy).createMediaSource(item) }
@@ -55,11 +57,7 @@ internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: Netwo
             item.localConfiguration?.uri?.path?.lowercase()?.endsWith(".m3u8") == true
         val dash = item.localConfiguration?.mimeType == "application/dash+xml" ||
             item.localConfiguration?.uri?.path?.lowercase()?.endsWith(".mpd") == true
-        return if (dash) DashMediaSource.Factory(dataSources)
-            .apply { drmManager?.let { drm -> setDrmSessionManagerProvider { drm } } }
-            .setManifestParser(YlDashManifestParser(credentials))
-            .setLoadErrorHandlingPolicy(loaderPolicy)
-            .createMediaSource(item)
+        return if (dash) YlDashProgramMediaSource(item, dataSources, YlDashManifestParser(credentials), loaderPolicy, dashGapGroups)
         else if (hls) HlsMediaSource.Factory(dataSources)
             .setLoadErrorHandlingPolicy(loaderPolicy)
             .apply {

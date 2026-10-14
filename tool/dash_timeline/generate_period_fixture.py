@@ -33,8 +33,8 @@ def main():
     entries = template.findall('d:SegmentTimeline/d:S', ns)
     assert sum(int(s.attrib['d']) * (int(s.attrib.get('r', '0')) + 1) for s in entries) == 49152
     (folder / 'generated.mpd').unlink()
-    first = period(0, 0, 1.5).replace('<AdaptationSet contentType="audio"', '<AdaptationSet id="main" contentType="audio"')
-    second = period(1, 1.5, 1.5).replace('<AdaptationSet contentType="audio"', '<AdaptationSet id="main" contentType="audio"')
+    first = period(0, 0, 1.5).replace('<AdaptationSet contentType="audio"', '<AdaptationSet id="1" contentType="audio"')
+    second = period(1, 1.5, 1.5).replace('<AdaptationSet contentType="audio"', '<AdaptationSet id="1" contentType="audio"')
     hevc = second.replace('<BaseURL>period1/</BaseURL>', '<BaseURL>hevc/</BaseURL>')
     hevc = hevc.replace('codecs="avc1.42c01e" width="320" height="180" bandwidth="350000"',
                         f'codecs="{codec}" width="640" height="360" bandwidth="650000"')
@@ -51,9 +51,9 @@ def main():
     (avc_folder / 'generated.mpd').unlink()
     resolution = hevc.replace('<BaseURL>hevc/</BaseURL>', '<BaseURL>avc/</BaseURL>').replace(f'codecs="{codec}"', f'codecs="{avc_codec}"')
     (target / 'resolution.mpd').write_text(mpd([first, resolution], 3) + '\n')
-    audio_start = second.index('<AdaptationSet id="main"')
+    audio_start = second.index('<AdaptationSet id="1"')
     audio_end = second.index('</AdaptationSet>', audio_start) + len('</AdaptationSet>')
-    commentary = second[audio_start:audio_end].replace('id="main"', 'id="commentary"')
+    commentary = second[audio_start:audio_end].replace('id="1"', 'id="2"')
     commentary = commentary.replace('<Representation', '<Role schemeIdUri="urn:mpeg:dash:role:2011" value="commentary"/><Representation', 1)
     added = second.replace('</Period>', commentary + '</Period>')
     (target / 'audio-added.mpd').write_text(mpd([first, added], 3) + '\n')

@@ -122,6 +122,61 @@ class YlDashManifestParserTest {
             """<SegmentTemplate duration="2" media="${"${'$'}RepresentationID${'$'}".repeat(600)}.m4s"/>""",
         )) assertFailsWith<ParserException> { parse(manifest(segment = segment), policy()) }
     }
+    @Test fun `malformed numeric attributes are sanitized as container errors`() = android {
+        for (xml in listOf(manifest().replace("<AdaptationSet ", "<AdaptationSet id=\"private-bad-id\" "),
+            manifest().replace("bandwidth=\"100000\"", "bandwidth=\"secret-invalid\""))) {
+            val error = assertFailsWith<ParserException> { parse(xml, policy()) }
+            assertEquals(YlFailureKind.CONTAINER_UNSUPPORTED, assertIs<YlBoundaryException>(error.cause).kind)
+            assertFalse(error.toString().contains("private-bad-id"))
+            assertFalse(error.toString().contains("secret-invalid"))
+        }
+    }
+    @Test fun `finite segment endpoints infer omitted static programme duration`() = android {
+        val xml = manifest().replace(" mediaPresentationDuration=\"PT4S\"", "").replace(" duration=\"PT4S\"", "")
+            .replace(template, """<SegmentTemplate media="${'$'}Number${'$'}.m4s" timescale="3" presentationTimeOffset="30"><SegmentTimeline><S t="30" d="1"/></SegmentTimeline></SegmentTemplate>""")
+        assertEquals(334L, parse(xml, policy()).durationMs)
+    }
+    @Test fun `finite preceding Period resolves omitted following start`() = android {
+        val xml = manifest().replace(" mediaPresentationDuration=\"PT4S\"", "").replace(" duration=\"PT4S\"", "")
+            .replace(template, """<SegmentTemplate media="${'$'}Number${'$'}.m4s"><SegmentTimeline><S d="2" r="1"/></SegmentTimeline></SegmentTemplate>""")
+        val period = xml.substringAfter("<Period").substringBefore("</Period>")
+        val two = xml.replace("</MPD>", "<Period" + period.replace("start=\"PT0S\"", "duration=\"PT4S\"") + "</Period></MPD>")
+        val parsed = parse(two, policy())
+        assertEquals(2, parsed.periodCount)
+        assertEquals(4000L, parsed.getPeriod(1).startMs)
+        assertEquals(8000L, parsed.durationMs)
+    }
+    @Test fun `programme retains gaps and clips overlap independently from Media3 period durations`() = android {
+        val original = manifest()
+        val period = "<Period" + original.substringAfter("<Period").substringBefore("</Period>") + "</Period>"
+        for ((start, total, end) in listOf(Triple(5, 9, 4), Triple(3, 7, 3))) {
+            val xml = original.replace("mediaPresentationDuration=\"PT4S\"", "mediaPresentationDuration=\"PT${total}S\"")
+                .replace("</MPD>", period.replace("start=\"PT0S\"", "start=\"PT${start}S\"") + "</MPD>")
+            val parsed = parse(xml, policy()) as YlDashProgramManifest
+            assertEquals(YlDashTime.of(end.toLong()), parsed.program.windows[0].end)
+            assertEquals(YlDashTime.of(start.toLong()), parsed.program.windows[1].start)
+            assertEquals(YlDashTime.of(total.toLong()), parsed.program.duration)
+        }
+    }
+    @Test fun `unknown duration rejects disagreement infinite timelines and text-only evidence`() = android {
+        val finite = """<SegmentTemplate timescale="3" media="${'$'}Number${'$'}.m4s"><SegmentTimeline><S d="1"/></SegmentTimeline></SegmentTemplate>"""
+        val xml = manifest(segment = finite).replace(" mediaPresentationDuration=\"PT4S\"", "").replace(" duration=\"PT4S\"", "")
+        val audio = """<AdaptationSet mimeType="audio/mp4"><Representation id="a" bandwidth="1000">${finite.replace("d=\"1\"", "d=\"2\"")}</Representation></AdaptationSet>"""
+        for (invalid in listOf(xml.replace("</Period>", "$audio</Period>"), xml.replace("<S d=\"1\"", "<S r=\"-1\" d=\"1\""), xml.replace("video/mp4", "application/ttml+xml"))) {
+            assertFailsWith<ParserException> { parse(invalid, policy()) }
+        }
+    }
+    @Test fun `rational programme boundaries avoid fractional accumulation and signed rounding errors`() {
+        val third = YlDashTime.of(1, 3)
+        assertEquals(YlDashTime.of(1), third + third + third)
+        assertEquals(333333L, third.units(1_000_000))
+        assertEquals(333334L, third.units(1_000_000, true))
+        assertEquals(-333334L, YlDashTime.of(-1, 3).units(1_000_000))
+        assertEquals(-333333L, YlDashTime.of(-1, 3).units(1_000_000, true))
+        assertEquals(YlDashTime.of(1), YlDashTime.of(Long.MAX_VALUE, Long.MAX_VALUE))
+        assertFailsWith<ArithmeticException> { YlDashTime.of(Long.MAX_VALUE) + YlDashTime.of(1) }
+        assertEquals(YlDashTime.of(3500000001, 1000000000), YlDashTime.duration("PT3.500000001S"))
+    }
     companion object {
         private val template = """<SegmentTemplate timescale="1" duration="2" initialization="init-${'$'}RepresentationID${'$'}.mp4" media="${'$'}RepresentationID${'$'}-${'$'}Number${'$'}.m4s" startNumber="1"/>"""
     }

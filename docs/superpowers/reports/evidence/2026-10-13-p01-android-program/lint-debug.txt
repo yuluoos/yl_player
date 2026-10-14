@@ -1,0 +1,560 @@
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioFocusCoordinator.kt:129: Warning: Field requires API level 33 (current min is 24): android.content.Context#RECEIVER_NOT_EXPORTED [InlinedApi]
+        if (apiLevel >= 33) context.registerReceiver(next, filter, null, handler, Context.RECEIVER_NOT_EXPORTED)
+                                                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlWidevineDriver.kt:34: Warning: Field requires API level 28 (current min is 24): android.media.MediaDrm#SECURITY_LEVEL_HW_SECURE_ALL [InlinedApi]
+            val id = system.openSession(MediaDrm.SECURITY_LEVEL_HW_SECURE_ALL).also { session = it }
+                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "InlinedApi":
+   This check scans through all the Android API field references in the
+   application and flags certain constants, such as static final integers and
+   Strings, which were introduced in later versions. These will actually be
+   copied into the class files rather than being referenced, which means that
+   the value is available even when running on older devices. In some cases
+   that's fine, and in other cases it can result in a runtime crash or
+   incorrect behavior. It depends on the context, so consider the code
+   carefully and decide whether it's safe and can be suppressed or whether the
+   code needs to be guarded.
+
+   If you really want to use this API and don't need to support older devices
+   just set the minSdkVersion in your build.gradle or AndroidManifest.xml
+   files.
+
+   If your code is deliberately accessing newer APIs, and you have ensured
+   (e.g. with conditional execution) that this code will only ever be called
+   on a supported platform, then you can annotate your class or method with
+   the @TargetApi annotation specifying the local minimum SDK to apply, such
+   as @TargetApi(11), such that this check considers 11 rather than your
+   manifest file's minimum SDK as the required API level.
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioFocusCoordinator.kt:99: Error: Call requires API level 26 (current min is 24): android.media.AudioFocusRequest.Builder() [NewApi]
+        val request = if (apiLevel >= 26) AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                                                            ~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioFocusCoordinator.kt:100: Error: Call requires API level 26 (current min is 24): android.media.AudioFocusRequest.Builder#setAudioAttributes [NewApi]
+            .setAudioAttributes(AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA)
+             ~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioFocusCoordinator.kt:103: Error: Call requires API level 26 (current min is 24): android.media.AudioFocusRequest.Builder#setWillPauseWhenDucked [NewApi]
+            .setWillPauseWhenDucked(true)
+             ~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioFocusCoordinator.kt:104: Error: Call requires API level 26 (current min is 24): android.media.AudioFocusRequest.Builder#setAcceptsDelayedFocusGain [NewApi]
+            .setAcceptsDelayedFocusGain(false)
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioFocusCoordinator.kt:105: Error: Call requires API level 26 (current min is 24): android.media.AudioFocusRequest.Builder#setOnAudioFocusChangeListener [NewApi]
+            .setOnAudioFocusChangeListener(callback, handler)
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioFocusCoordinator.kt:106: Error: Call requires API level 26 (current min is 24): android.media.AudioFocusRequest.Builder#build [NewApi]
+            .build() else null
+             ~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioFocusCoordinator.kt:107: Error: Call requires API level 26 (current min is 24): android.media.AudioManager#requestAudioFocus [NewApi]
+        val granted = if (request != null) audio.requestAudioFocus(request)
+                                                 ~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioFocusCoordinator.kt:118: Error: Call requires API level 26 (current min is 24): android.media.AudioManager#abandonAudioFocusRequest [NewApi]
+        if (apiLevel >= 26 && request != null) audio?.abandonAudioFocusRequest(request)
+                                                      ~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioFocusCoordinator.kt:129: Error: Call requires API level 26 (current min is 24): android.content.Context#registerReceiver [NewApi]
+        if (apiLevel >= 33) context.registerReceiver(next, filter, null, handler, Context.RECEIVER_NOT_EXPORTED)
+                                    ~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlHardwareCodecSelector.kt:155: Error: Call requires API level 29 (current min is 24): android.media.MediaCodecInfo#getCanonicalName [NewApi]
+                    .map { YlCodecDescriptor(it.name, it.isHardwareAccelerated, it.isSoftwareOnly, it.canonicalName, it.supportedTypes.toList()) }
+                                                                                                      ~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlHardwareCodecSelector.kt:155: Error: Call requires API level 29 (current min is 24): android.media.MediaCodecInfo#isHardwareAccelerated [NewApi]
+                    .map { YlCodecDescriptor(it.name, it.isHardwareAccelerated, it.isSoftwareOnly, it.canonicalName, it.supportedTypes.toList()) }
+                                                         ~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlHardwareCodecSelector.kt:155: Error: Call requires API level 29 (current min is 24): android.media.MediaCodecInfo#isSoftwareOnly [NewApi]
+                    .map { YlCodecDescriptor(it.name, it.isHardwareAccelerated, it.isSoftwareOnly, it.canonicalName, it.supportedTypes.toList()) }
+                                                                                   ~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlWidevineDriver.kt:34: Error: Call requires API level 28 (current min is 24): android.media.MediaDrm#openSession [NewApi]
+            val id = system.openSession(MediaDrm.SECURITY_LEVEL_HW_SECURE_ALL).also { session = it }
+                            ~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlWidevineDriver.kt:35: Error: Call requires API level 28 (current min is 24): android.media.MediaDrm#getSecurityLevel [NewApi]
+            if (id.isEmpty() || system.getSecurityLevel(id) != MediaDrm.SECURITY_LEVEL_HW_SECURE_ALL) {
+                                       ~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "NewApi":
+   This check scans through all the Android API calls in the application and
+   warns about any calls that are not available on all versions targeted by
+   this application (according to its minimum SDK attribute in the manifest).
+
+   If you really want to use this API and don't need to support older devices
+   just set the minSdkVersion in your build.gradle or AndroidManifest.xml
+   files.
+
+   If your code is deliberately accessing newer APIs, and you have ensured
+   (e.g. with conditional execution) that this code will only ever be called
+   on a supported platform, then you can annotate your class or method with
+   the @TargetApi annotation specifying the local minimum SDK to apply, such
+   as @TargetApi(11), such that this check considers 11 rather than your
+   manifest file's minimum SDK as the required API level.
+
+   If you are deliberately setting android: attributes in style definitions,
+   make sure you place this in a values-vNN folder in order to avoid running
+   into runtime conflicts on certain devices where manufacturers have added
+   custom attributes whose ids conflict with the new ones on later platforms.
+
+   Similarly, you can use tools:targetApi="11" in an XML file to indicate that
+   the element will only be inflated in an adequate context.
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlPlayerRegistryTest.kt:68: Warning: any() is missing RECEIVER_EXPORTED or RECEIVER_NOT_EXPORTED flag for unprotected broadcasts registered for an IntentFilter that cannot be inspected by lint [UnspecifiedRegisterReceiverFlag]
+                    verify(app).registerReceiver(any(), any(android.content.IntentFilter::class.java), isNull(), any(android.os.Handler::class.java))
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UnspecifiedRegisterReceiverFlag":
+   In Android U, all receivers registering for non-system broadcasts are
+   required to include a flag indicating the receiver's exported state. Apps
+   registering for non-system broadcasts should use the
+   ContextCompat#registerReceiver APIs with flags set to either
+   RECEIVER_EXPORTED or RECEIVER_NOT_EXPORTED.
+
+   If you are not expecting broadcasts from other apps on the device, register
+   your receiver with RECEIVER_NOT_EXPORTED to protect your receiver on all
+   platform releases.
+
+   https://developer.android.com/reference/androidx/core/content/ContextCompat#registerReceiver(android.content.Context,android.content.BroadcastReceiver,android.content.IntentFilter,int)
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/build.gradle.kts:12: Warning: A newer version of com.android.tools.build:gradle than 9.0.1 is available: 9.4.1 [AndroidGradlePluginVersion]
+        classpath("com.android.tools.build:gradle:9.0.1")
+                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "AndroidGradlePluginVersion":
+   This detector looks for usage of the Android Gradle Plugin where the
+   version you are using is not the current stable release. Using older
+   versions is fine, and there are cases where you deliberately want to stick
+   with an older version. However, you may simply not be aware that a more
+   recent version is available, and that is what this lint check helps find.
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/build.gradle.kts:76: Warning: A newer version of androidx.media3:media3-exoplayer than 1.11.0 is available: 1.11.1 [GradleDependency]
+    implementation("androidx.media3:media3-exoplayer:$media3Version")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/build.gradle.kts:77: Warning: A newer version of androidx.media3:media3-exoplayer-hls than 1.11.0 is available: 1.11.1 [GradleDependency]
+    implementation("androidx.media3:media3-exoplayer-hls:$media3Version")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/build.gradle.kts:78: Warning: A newer version of androidx.media3:media3-exoplayer-dash than 1.11.0 is available: 1.11.1 [GradleDependency]
+    implementation("androidx.media3:media3-exoplayer-dash:$media3Version")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/build.gradle.kts:79: Warning: A newer version of androidx.media3:media3-datasource-okhttp than 1.11.0 is available: 1.11.1 [GradleDependency]
+    implementation("androidx.media3:media3-datasource-okhttp:$media3Version")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "GradleDependency":
+   This detector looks for usages of libraries where the version you are using
+   is not the current stable release. Using older versions is fine, and there
+   are cases where you deliberately want to stick with an older version.
+   However, you may simply not be aware that a more recent version is
+   available, and that is what this lint check helps find.
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/build.gradle.kts:82: Warning: A newer version of org.jetbrains.kotlinx:kotlinx-coroutines-android than 1.7.1 is available: 1.11.0 [NewerVersionAvailable]
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/build.gradle.kts:83: Warning: A newer version of org.jetbrains.kotlinx:kotlinx-coroutines-test than 1.7.1 is available: 1.11.0 [NewerVersionAvailable]
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/build.gradle.kts:86: Warning: A newer version of org.mockito:mockito-core than 5.0.0 is available: 5.24.0 [NewerVersionAvailable]
+    testImplementation("org.mockito:mockito-core:5.0.0")
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/build.gradle.kts:88: Warning: A newer version of com.squareup.okhttp3:mockwebserver than 4.12.0 is available: 5.5.0 [NewerVersionAvailable]
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "NewerVersionAvailable":
+   This detector checks with a central repository to see if there are newer
+   versions available for the dependencies used by this project. This is
+   similar to the GradleDependency check, which checks for newer versions
+   available in the Android SDK tools and libraries, but this works with any
+   MavenCentral dependency, and connects to the library every time, which
+   makes it more flexible but also much slower.
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioSelectionPolicy.kt:15: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    fun selectedIndex(): Int = supportedIndices.maxWithOrNull(compareBy<Int> { group.getFormat(it).bitrate }
+                                                                                     ~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioSelectionPolicy.kt:15: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    fun selectedIndex(): Int = supportedIndices.maxWithOrNull(compareBy<Int> { group.getFormat(it).bitrate }
+                                                                                                   ~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioSelectionPolicy.kt:16: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        .thenBy { group.getFormat(it).id.orEmpty() }) ?: throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
+                        ~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioSelectionPolicy.kt:33: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        if (groups.size > MAX_GROUPS || groups.sumOf { it.first.length.toLong() } > MAX_FORMATS) exhausted()
+                                                                ~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioSelectionPolicy.kt:56: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        val content = if (dash) text(group.id).toLongOrNull()?.takeUnless { it == -1L }?.toString().orEmpty()
+                                           ~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioSelectionPolicy.kt:57: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            else digest((0 until group.length).map { text(group.getFormat(it).id) }.distinct().sorted())
+                                       ~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioSelectionPolicy.kt:57: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            else digest((0 until group.length).map { text(group.getFormat(it).id) }.distinct().sorted())
+                                                                ~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioSelectionPolicy.kt:58: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        val signatures = (0 until group.length).map { index ->
+                                        ~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioSelectionPolicy.kt:59: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            val f = group.getFormat(index)
+                          ~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlHardwareCodecSelector.kt:61: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    if (!MimeTypes.isVideo(mimeType)) return true
+                   ~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlHardwareCodecSelector.kt:70: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+): Boolean = !MimeTypes.isVideo(mimeType) || YlDecoderEvidenceProvider(apiLevel, candidates).hardwareAttainable
+                        ~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt:1211: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    if (protected.any { (_, format) -> format.drmInitData?.let { drm ->
+                                              ~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt:1211: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    if (protected.any { (_, format) -> format.drmInitData?.let { drm ->
+                                                                 ~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt:1212: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        (0 until drm.schemeDataCount).none { drm[it].uuid == YL_WIDEVINE_UUID }
+                     ~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt:1212: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        (0 until drm.schemeDataCount).none { drm[it].uuid == YL_WIDEVINE_UUID }
+                                                ~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt:1212: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        (0 until drm.schemeDataCount).none { drm[it].uuid == YL_WIDEVINE_UUID }
+                                                     ~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3DrmSessionManager.kt:257: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+private fun sessionError(kind: YlFailureKind) = DrmSession.DrmSessionException(
+                                                           ~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:62: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        if (format.rotationDegrees == 90 || format.rotationDegrees == 270) {
+                   ~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:62: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        if (format.rotationDegrees == 90 || format.rotationDegrees == 270) {
+                                                   ~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:66: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        geometry = media3VideoGeometry(VideoSize(width, height, ratio), format)
+                                       ~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:81: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+internal class YlOutputRenderersFactory(context: Context, private val observer: YlVideoOutputObserver) : DefaultRenderersFactory(context) {
+                                                                                                         ~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:81: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+internal class YlOutputRenderersFactory(context: Context, private val observer: YlVideoOutputObserver) : DefaultRenderersFactory(context) {
+                                                                                                         ~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:82: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    override fun buildVideoRenderers(context: Context, extensionRendererMode: Int, mediaCodecSelector: MediaCodecSelector,
+                 ~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:82: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    override fun buildVideoRenderers(context: Context, extensionRendererMode: Int, mediaCodecSelector: MediaCodecSelector,
+                                                                                                       ~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:83: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        enableDecoderFallback: Boolean, eventHandler: Handler, eventListener: VideoRendererEventListener,
+                                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:84: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        allowedVideoJoiningTimeMs: Long, out: ArrayList<Renderer>) {
+                                                        ~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:85: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        check(extensionRendererMode == EXTENSION_RENDERER_MODE_OFF)
+                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:86: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        val builder = MediaCodecVideoRenderer.Builder(context)
+            ~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:86: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        val builder = MediaCodecVideoRenderer.Builder(context)
+                                              ~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:87: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            .setCodecAdapterFactory(codecAdapterFactory)
+             ~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:87: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            .setCodecAdapterFactory(codecAdapterFactory)
+                                    ~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:88: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            .setMediaCodecSelector(mediaCodecSelector)
+             ~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:89: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            .setAllowedJoiningTimeMs(allowedVideoJoiningTimeMs)
+             ~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:90: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            .setEnableDecoderFallback(enableDecoderFallback)
+             ~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:91: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            .setEventHandler(eventHandler).setEventListener(eventListener)
+             ~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:91: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            .setEventHandler(eventHandler).setEventListener(eventListener)
+                                           ~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:92: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            .setMaxDroppedFramesToNotify(MAX_DROPPED_VIDEO_FRAME_COUNT_TO_NOTIFY)
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:92: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            .setMaxDroppedFramesToNotify(MAX_DROPPED_VIDEO_FRAME_COUNT_TO_NOTIFY)
+                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:97: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+internal class YlOutputVideoRenderer(builder: Builder, private val observer: YlVideoOutputObserver) : MediaCodecVideoRenderer(builder) {
+                                              ~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:97: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+internal class YlOutputVideoRenderer(builder: Builder, private val observer: YlVideoOutputObserver) : MediaCodecVideoRenderer(builder) {
+                                                                                                      ~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:97: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+internal class YlOutputVideoRenderer(builder: Builder, private val observer: YlVideoOutputObserver) : MediaCodecVideoRenderer(builder) {
+                                                                                                      ~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:98: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    override fun onStreamChanged(formats: Array<Format>, startPositionUs: Long, offsetUs: Long, mediaPeriodId: MediaPeriodId) {
+                 ~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:98: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    override fun onStreamChanged(formats: Array<Format>, startPositionUs: Long, offsetUs: Long, mediaPeriodId: MediaPeriodId) {
+                                                                                                               ~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:99: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        observer.stream(startPositionUs, offsetUs, mediaPeriodId.periodUid)
+                                                                 ~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:100: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        super.onStreamChanged(formats, startPositionUs, offsetUs, mediaPeriodId)
+              ~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:102: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    override fun onPositionReset(positionUs: Long, joining: Boolean, sampleStreamIsResetToKeyFrame: Boolean) {
+                 ~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:103: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        super.onPositionReset(positionUs, joining, sampleStreamIsResetToKeyFrame)
+              ~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:104: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        observer.reset(outputStreamStartPositionUs, outputStreamOffsetUs, mediaPeriodId?.periodUid)
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:104: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        observer.reset(outputStreamStartPositionUs, outputStreamOffsetUs, mediaPeriodId?.periodUid)
+                                                    ~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:104: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        observer.reset(outputStreamStartPositionUs, outputStreamOffsetUs, mediaPeriodId?.periodUid)
+                                                                          ~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:104: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        observer.reset(outputStreamStartPositionUs, outputStreamOffsetUs, mediaPeriodId?.periodUid)
+                                                                                         ~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:106: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    override fun onDisabled() {
+                 ~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:108: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        super.onDisabled()
+              ~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:110: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    override fun onOutputFormatChanged(format: Format, mediaFormat: MediaFormat?) {
+                 ~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:111: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        super.onOutputFormatChanged(format, mediaFormat)
+              ~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:114: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    override fun renderOutputBuffer(codec: MediaCodecAdapter, index: Int, presentationTimeUs: Long) {
+                 ~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:114: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    override fun renderOutputBuffer(codec: MediaCodecAdapter, index: Int, presentationTimeUs: Long) {
+                                           ~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:115: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        super.renderOutputBuffer(codec, index, presentationTimeUs)
+              ~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:116: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        observer.rendered(outputStreamStartPositionUs, outputStreamOffsetUs)
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:116: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        observer.rendered(outputStreamStartPositionUs, outputStreamOffsetUs)
+                                                       ~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:118: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    override fun renderOutputBufferV21(codec: MediaCodecAdapter, index: Int, presentationTimeUs: Long, releaseTimeNs: Long) {
+                 ~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:118: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    override fun renderOutputBufferV21(codec: MediaCodecAdapter, index: Int, presentationTimeUs: Long, releaseTimeNs: Long) {
+                                              ~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:119: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        super.renderOutputBufferV21(codec, index, presentationTimeUs, releaseTimeNs)
+              ~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:120: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        observer.rendered(outputStreamStartPositionUs, outputStreamOffsetUs)
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:120: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        observer.rendered(outputStreamStartPositionUs, outputStreamOffsetUs)
+                                                       ~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:33: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    val format: Format get() = group.getFormat(index)
+                                     ~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:47: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.averageBitrate, format.peakBitrate, format.bitrate, format.frameRate,
+                   ~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:47: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.averageBitrate, format.peakBitrate, format.bitrate, format.frameRate,
+                                          ~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:47: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.averageBitrate, format.peakBitrate, format.bitrate, format.frameRate,
+                                                              ~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:48: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.roleFlags, format.selectionFlags, format.language, format.colorInfo?.colorSpace,
+                                                                             ~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:48: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.roleFlags, format.selectionFlags, format.language, format.colorInfo?.colorSpace,
+                                                                                        ~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:49: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.colorInfo?.colorRange, format.colorInfo?.colorTransfer, format.colorInfo?.lumaBitdepth, format.colorInfo?.chromaBitdepth, format.rotationDegrees, format.pixelWidthHeightRatio)
+                   ~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:49: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.colorInfo?.colorRange, format.colorInfo?.colorTransfer, format.colorInfo?.lumaBitdepth, format.colorInfo?.chromaBitdepth, format.rotationDegrees, format.pixelWidthHeightRatio)
+                              ~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:49: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.colorInfo?.colorRange, format.colorInfo?.colorTransfer, format.colorInfo?.lumaBitdepth, format.colorInfo?.chromaBitdepth, format.rotationDegrees, format.pixelWidthHeightRatio)
+                                                 ~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:49: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.colorInfo?.colorRange, format.colorInfo?.colorTransfer, format.colorInfo?.lumaBitdepth, format.colorInfo?.chromaBitdepth, format.rotationDegrees, format.pixelWidthHeightRatio)
+                                                            ~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:49: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.colorInfo?.colorRange, format.colorInfo?.colorTransfer, format.colorInfo?.lumaBitdepth, format.colorInfo?.chromaBitdepth, format.rotationDegrees, format.pixelWidthHeightRatio)
+                                                                                  ~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:49: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.colorInfo?.colorRange, format.colorInfo?.colorTransfer, format.colorInfo?.lumaBitdepth, format.colorInfo?.chromaBitdepth, format.rotationDegrees, format.pixelWidthHeightRatio)
+                                                                                             ~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:49: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.colorInfo?.colorRange, format.colorInfo?.colorTransfer, format.colorInfo?.lumaBitdepth, format.colorInfo?.chromaBitdepth, format.rotationDegrees, format.pixelWidthHeightRatio)
+                                                                                                                  ~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:49: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.colorInfo?.colorRange, format.colorInfo?.colorTransfer, format.colorInfo?.lumaBitdepth, format.colorInfo?.chromaBitdepth, format.rotationDegrees, format.pixelWidthHeightRatio)
+                                                                                                                             ~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:49: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.colorInfo?.colorRange, format.colorInfo?.colorTransfer, format.colorInfo?.lumaBitdepth, format.colorInfo?.chromaBitdepth, format.rotationDegrees, format.pixelWidthHeightRatio)
+                                                                                                                                                    ~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:58: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.colorInfo?.hdrStaticInfo != null ||
+                   ~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:58: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.colorInfo?.hdrStaticInfo != null ||
+                              ~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:59: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.colorInfo?.lumaBitdepth?.let { it != Format.NO_VALUE && it != 8 } == true ||
+                   ~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:59: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.colorInfo?.lumaBitdepth?.let { it != Format.NO_VALUE && it != 8 } == true ||
+                              ~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:60: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.colorInfo?.chromaBitdepth?.let { it != Format.NO_VALUE && it != 8 } == true ||
+                   ~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:60: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.colorInfo?.chromaBitdepth?.let { it != Format.NO_VALUE && it != 8 } == true ||
+                              ~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:61: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.colorInfo?.colorTransfer?.let { it != Format.NO_VALUE && it != C.COLOR_TRANSFER_SDR } == true) unsupported()
+                   ~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:61: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.colorInfo?.colorTransfer?.let { it != Format.NO_VALUE && it != C.COLOR_TRANSFER_SDR } == true) unsupported()
+                              ~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:61: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            format.colorInfo?.colorTransfer?.let { it != Format.NO_VALUE && it != C.COLOR_TRANSFER_SDR } == true) unsupported()
+                                                                                    ~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:103: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    fun parameters(parameters: DefaultTrackSelector.Parameters, tracks: Tracks, selection: YlFixedVideoState): DefaultTrackSelector.Parameters {
+                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:103: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    fun parameters(parameters: DefaultTrackSelector.Parameters, tracks: Tracks, selection: YlFixedVideoState): DefaultTrackSelector.Parameters {
+                                                                                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:104: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        val builder = parameters.buildUpon().clearOverridesOfType(C.TRACK_TYPE_VIDEO)
+            ~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:104: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        val builder = parameters.buildUpon().clearOverridesOfType(C.TRACK_TYPE_VIDEO)
+                                 ~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:104: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        val builder = parameters.buildUpon().clearOverridesOfType(C.TRACK_TYPE_VIDEO)
+                                             ~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:107: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+            builder.addOverride(TrackSelectionOverride(candidate.group, candidate.index))
+                    ~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt:109: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        return builder.build()
+                       ~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlWidevineDriver.kt:61: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+    override fun cryptoConfig(): androidx.media3.exoplayer.drm.FrameworkCryptoConfig = checked { _, id ->
+                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlWidevineDriver.kt:62: Error: This declaration is opt-in and its usage should be marked with @androidx.media3.common.util.UnstableApi or @OptIn(markerClass = androidx.media3.common.util.UnstableApi.class) [UnsafeOptInUsageError from androidx.annotation.experimental]
+        androidx.media3.exoplayer.drm.FrameworkCryptoConfig(YL_WIDEVINE_UUID, id.copyOf(), false)
+                                      ~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UnsafeOptInUsageError":
+   This API has been flagged as opt-in with error-level severity.
+
+   Any declaration annotated with this marker is considered part of an
+   unstable or
+   otherwise non-standard API surface and its call sites should accept the
+   opt-in
+   aspect of it by using the @OptIn annotation, using the marker annotation
+   --
+   effectively causing further propagation of the opt-in aspect -- or
+   configuring
+   the UnsafeOptInUsageError check's options for project-wide opt-in.
+
+   To configure project-wide opt-in, specify the opt-in option value in
+   lint.xml
+   as a comma-delimited list of opted-in annotations:
+
+   <lint>
+       <issue id="UnsafeOptInUsageError">
+           <option name="opt-in" value="com.foo.ExperimentalBarAnnotation" />
+       </issue>
+   </lint>
+
+   Vendor: Android Open Source Project
+   Identifier: androidx.annotation.experimental
+   Feedback: https://issuetracker.google.com/issues/new?component=459778
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt:386: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
+            .setUri(Uri.parse(uriString))
+                    ~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt:836: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
+        val item = MediaItem.Builder().setMediaId(identity.sessionId).setUri(Uri.parse(source.locator))
+                                                                             ~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeByteSource.kt:43: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
+            return YlFileByteSource(File(Uri.parse(source.locator).path ?: source.locator).inputStream().channel)
+                                         ~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeByteSource.kt:46: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
+            val descriptor = context.contentResolver.openFileDescriptor(Uri.parse(source.locator), "r")
+                                                                        ~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlRtmpDataSource.kt:51: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
+    override fun getUri():Uri? = if(transport!=null) Uri.parse(locator) else null
+                                                     ~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UseKtx":
+   The Android KTX libraries decorates the Android platform SDK as well as
+   various libraries with more convenient extension functions available from
+   Kotlin, allowing you to use default parameters, named parameters, and
+   more.
+
+   Available options:
+
+   **remove-defaults** (default is true):
+   Whether to skip arguments that match the defaults provided by the extension.
+
+   Extensions often provide default values for some of the parameters. For example:
+   ```kotlin
+   fun Path.readLines(charset: Charset = Charsets.UTF_8): List<String> { return Files.readAllLines(this, charset) }
+   ```
+   This lint check will by default automatically omit parameters that match the default, so if your code was calling
+
+   ```kotlin
+   Files.readAllLines(file, Charset.UTF_8)
+   ```
+   lint would replace this with
+   ```kotlin
+   file.readLines()
+   ```
+   rather than
+
+   ```kotlin
+   file.readLines(Charset.UTF_8
+   ```
+   You can turn this behavior off using this option.
+
+   To configure this option, use a `lint.xml` file with an <option> like this:
+
+   ```xml
+   <lint>
+       <issue id="UseKtx">
+           <option name="remove-defaults" value="true" />
+       </issue>
+   </lint>
+   ```
+
+   **require-present** (default is true):
+   Whether to only offer extensions already available.
+
+   This option lets you only have lint suggest extension replacements if those extensions are already available on the class path (in other words, you're already depending on the library containing the extension method.)
+
+   To configure this option, use a `lint.xml` file with an <option> like this:
+
+   ```xml
+   <lint>
+       <issue id="UseKtx">
+           <option name="require-present" value="true" />
+       </issue>
+   </lint>
+   ```
+
+112 errors, 17 warnings

@@ -7,6 +7,35 @@ import org.mockito.Mockito.*
 import kotlin.test.*
 
 class YlMedia3AudioIdentityTest {
+    @Test fun `owned gap hides stale video and accepts content commands without publishing silence as an audio track`() = withCore(
+        coreSource = AndroidSourceMessage(AndroidSourceKind.NETWORK, "https://example.test/media.mpd", AndroidStreamIntent.ON_DEMAND, AndroidMediaFormat.DASH)
+    ) { core, player, events ->
+        val item = MediaItem.Builder().setMediaId("test").build()
+        `when`(player.currentMediaItem).thenReturn(item)
+        val video = Format.Builder().setId("v").setSampleMimeType("video/avc").setCodecs("avc1.64001f")
+            .setWidth(320).setHeight(180).setAverageBitrate(100000).build()
+        val actual = tracks(sound("main"), video)
+        `when`(player.currentTracks).thenReturn(actual); core.onTracksChanged(event(), actual)
+        core.outputFrame(video)
+        val initial = events.lastSnapshot()
+        val id = initial.audioTracks.single().id
+        val factory = core.javaClass.getDeclaredField("sourceFactory").apply { isAccessible = true }.get(core)
+        val groups = factory.javaClass.getDeclaredField("dashGapGroups").apply { isAccessible = true }.get(factory) as YlDashGapGroups
+        val gap = TrackGroup(Format.Builder().setSampleMimeType("audio/raw").setSampleRate(44100).setChannelCount(2).setPcmEncoding(C.ENCODING_PCM_16BIT).build())
+        groups.add(gap)
+        assertFalse(groups.contains(TrackGroup(gap.getFormat(0))), "Equal untrusted formats cannot impersonate owned timing PCM")
+        val silent = Tracks(listOf(Tracks.Group(gap, false, intArrayOf(C.FORMAT_HANDLED), booleanArrayOf(true))))
+        `when`(player.currentTracks).thenReturn(silent); core.onTracksChanged(event(), silent)
+        assertNull(events.lastSnapshot().geometry)
+        assertEquals(initial.audioTracks, events.lastSnapshot().audioTracks)
+        core.selectAudioTrack(id)
+        assertEquals(id, core.snapshotRestorePoint().selectedAudioTrack)
+        assertEquals(YlFailureKind.TRACK_NOT_FOUND, assertFailsWith<YlBoundaryException> { core.selectAudioTrack("absent") }.kind)
+        assertTrue(events.filterIsInstance<YlEngineEvent.Failed>().isEmpty())
+        `when`(player.currentTracks).thenReturn(actual); core.onTracksChanged(event(), actual)
+        assertEquals(initial.geometry, events.lastSnapshot().geometry)
+        groups.remove(gap); assertFalse(groups.contains(gap))
+    }
     private fun sound(id: String?, language: String = "en", role: Int = C.ROLE_FLAG_MAIN) = Format.Builder()
         .setId(id).setSampleMimeType("audio/mp4a-latm").setCodecs("mp4a.40.2")
         .setLanguage(language).setRoleFlags(role).setSampleRate(48000).setChannelCount(2).setAverageBitrate(64000).build()

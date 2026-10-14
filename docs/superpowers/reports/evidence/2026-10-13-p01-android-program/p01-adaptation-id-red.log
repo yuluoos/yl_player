@@ -1,0 +1,14 @@
+F.......
+======================================================================
+FAIL: test_adaptation_set_ids_follow_unsigned_integer_schema (test_fixtures.TimelineFixturesTest.test_adaptation_set_ids_follow_unsigned_integer_schema)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/dash_timeline/test_fixtures.py", line 21, in test_adaptation_set_ids_follow_unsigned_integer_schema
+    self.assertTrue(value.isascii() and value.isdigit(), (file.name, value))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : ('resolution.mpd', 'main')
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.201s
+
+FAILED (failures=1)

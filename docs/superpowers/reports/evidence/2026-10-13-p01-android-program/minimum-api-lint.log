@@ -1,0 +1,204 @@
+
+> Configure project :gradle
+WARNING: Unsupported Kotlin plugin version.
+The `embedded-kotlin` and `kotlin-dsl` plugins rely on features of Kotlin `2.2.0` that might work differently than in the requested version `2.2.20`.
+
+> Task :gradle:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :gradle:compileKotlin UP-TO-DATE
+> Task :gradle:compileJava NO-SOURCE
+> Task :gradle:compileGroovy NO-SOURCE
+> Task :gradle:pluginDescriptors UP-TO-DATE
+> Task :gradle:processResources UP-TO-DATE
+> Task :gradle:classes UP-TO-DATE
+> Task :gradle:jar UP-TO-DATE
+
+> Configure project :app
+WARNING: The option setting 'android.builtInKotlin=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+WARNING: The option setting 'android.newDsl=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+w: ⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage
+The 'org.jetbrains.kotlin.android' plugin in project ':app' is no longer required for Kotlin support since AGP 9.0.
+Solution: Remove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.
+See https://kotl.in/gradle/agp-built-in-kotlin for more details.
+
+
+> Configure project :integration_test
+w: ⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage
+The 'org.jetbrains.kotlin.android' plugin in project ':integration_test' is no longer required for Kotlin support since AGP 9.0.
+Solution: Remove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.
+See https://kotl.in/gradle/agp-built-in-kotlin for more details.
+
+
+> Configure project :yl_player_android
+w: ⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage
+The 'org.jetbrains.kotlin.android' plugin in project ':yl_player_android' is no longer required for Kotlin support since AGP 9.0.
+Solution: Remove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.
+See https://kotl.in/gradle/agp-built-in-kotlin for more details.
+
+
+> Task :yl_player_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :yl_player_android:preBuild UP-TO-DATE
+> Task :yl_player_android:preDebugBuild UP-TO-DATE
+> Task :yl_player_android:generateDebugResources UP-TO-DATE
+> Task :yl_player_android:packageDebugResources UP-TO-DATE
+> Task :yl_player_android:processDebugNavigationResources UP-TO-DATE
+> Task :yl_player_android:parseDebugLocalResources UP-TO-DATE
+> Task :yl_player_android:generateDebugRFile UP-TO-DATE
+> Task :yl_player_android:javaPreCompileDebug UP-TO-DATE
+> Task :yl_player_android:preDebugUnitTestBuild UP-TO-DATE
+> Task :yl_player_android:writeDebugAarMetadata UP-TO-DATE
+> Task :yl_player_android:checkDebugUnitTestAarMetadata UP-TO-DATE
+> Task :yl_player_android:compileDebugLibraryResources UP-TO-DATE
+> Task :yl_player_android:mapDebugUnitTestSourceSetPaths UP-TO-DATE
+> Task :yl_player_android:generateDebugUnitTestResources UP-TO-DATE
+> Task :yl_player_android:mergeDebugUnitTestResources UP-TO-DATE
+> Task :yl_player_android:extractDeepLinksDebug UP-TO-DATE
+> Task :yl_player_android:processDebugManifest UP-TO-DATE
+> Task :yl_player_android:processDebugUnitTestManifest UP-TO-DATE
+> Task :yl_player_android:processDebugUnitTestResources UP-TO-DATE
+> Task :yl_player_android:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :yl_player_android:generateDebugUnitTestAssets UP-TO-DATE
+> Task :yl_player_android:generateDebugAssets UP-TO-DATE
+> Task :yl_player_android:mergeDebugAssets UP-TO-DATE
+> Task :yl_player_android:mergeDebugUnitTestAssets UP-TO-DATE
+> Task :yl_player_android:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :yl_player_android:generateDebugUnitTestConfig UP-TO-DATE
+> Task :yl_player_android:checkDebugAarMetadata UP-TO-DATE
+> Task :yl_player_android:mergeDebugJniLibFolders UP-TO-DATE
+> Task :yl_player_android:mergeDebugNativeLibs UP-TO-DATE
+> Task :yl_player_android:stripDebugDebugSymbols UP-TO-DATE
+> Task :yl_player_android:copyDebugJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :yl_player_android:extractDeepLinksForAarDebug UP-TO-DATE
+> Task :yl_player_android:prepareDebugArtProfile UP-TO-DATE
+> Task :yl_player_android:prepareLintJarForPublish UP-TO-DATE
+> Task :yl_player_android:preDebugAndroidTestBuild UP-TO-DATE
+> Task :yl_player_android:writeDebugLintModelMetadata UP-TO-DATE
+> Task :yl_player_android:extractProguardFiles UP-TO-DATE
+
+> Task :yl_player_android:compileDebugKotlin
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashProgramMediaSource.kt:41:24 'constructor<T : Any!>(p0: DataSource, p1: Uri, p2: Int, p3: ParsingLoadable.Parser<out T & Any>): ParsingLoadable<T>' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashProgramMediaSource.kt:49:37 'fun loadStarted(p0: LoadEventInfo, p1: Int): Unit' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashProgramMediaSource.kt:41:24 'constructor<T : Any!>(p0: DataSource, p1: Uri, p2: Int, p3: ParsingLoadable.Parser<out T & Any>): ParsingLoadable<T>' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashProgramMediaSource.kt:49:37 'fun loadStarted(p0: LoadEventInfo, p1: Int): Unit' is deprecated. Deprecated in Java.
+
+> Task :yl_player_android:compileDebugJavaWithJavac NO-SOURCE
+> Task :yl_player_android:processDebugJavaRes UP-TO-DATE
+> Task :yl_player_android:extractDebugAnnotations
+> Task :yl_player_android:mergeDebugGeneratedProguardFiles UP-TO-DATE
+> Task :yl_player_android:mergeDebugConsumerProguardFiles UP-TO-DATE
+> Task :yl_player_android:mergeDebugJavaResource UP-TO-DATE
+> Task :yl_player_android:bundleLibCompileToJarDebug
+> Task :yl_player_android:bundleLibRuntimeToJarDebug
+> Task :yl_player_android:syncDebugLibJars
+> Task :yl_player_android:bundleDebugLocalLintAar
+> Task :yl_player_android:createFullJarDebug
+> Task :yl_player_android:generateDebugLintReportModel
+> Task :yl_player_android:generateDebugAndroidTestLintModel
+> Task :yl_player_android:generateDebugUnitTestLintModel
+> Task :yl_player_android:lintAnalyzeDebugAndroidTest
+
+> Task :yl_player_android:compileDebugUnitTestKotlin
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashManifestParserTest.kt:110:33 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashManifestParserTest.kt:111:34 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlMetricsCollectorTest.kt:22:50 'fun set(p0: Any?, p1: Any?, p2: Int, p3: Long, p4: Long): Timeline.Period' is deprecated. Deprecated in Java.
+
+> Task :yl_player_android:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :yl_player_android:processDebugUnitTestJavaRes UP-TO-DATE
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+
+> Task :yl_player_android:testDebugUnitTest
+
+YlDashManifestParserTest > finite segment endpoints infer omitted static programme duration() PASSED
+
+YlDashManifestParserTest > unknown duration rejects disagreement infinite timelines and text-only evidence() PASSED
+
+YlDashManifestParserTest > template child requests inherit same origin and unknown paths stay stripped() PASSED
+
+YlDashManifestParserTest > multiple relative base URLs register their own children() PASSED
+
+YlDashManifestParserTest > timeline list and single file index register actual request URLs() PASSED
+
+YlDashManifestParserTest > unused sibling BaseURL fanout is bounded before downstream copies() PASSED
+
+YlDashManifestParserTest > long BaseURL and finite segment expansion obey retained URI budget() PASSED
+
+YlDashManifestParserTest > manifest byte and representation admission bounds reject before exposure() PASSED
+
+YlDashManifestParserTest > finite preceding Period resolves omitted following start() PASSED
+
+YlDashManifestParserTest > template expansion and numeric padding are bounded before Media3 formatting() PASSED
+
+YlDashManifestParserTest > individual expanded BaseURL rejects before retained children() PASSED
+
+YlDashManifestParserTest > programme retains gaps and clips overlap independently from Media3 period durations() PASSED
+
+YlDashManifestParserTest > rational programme boundaries avoid fractional accumulation and signed rounding errors() PASSED
+
+YlDashManifestParserTest > cross origin BaseURL followed by absolute return origin never restores credentials() PASSED
+
+YlDashManifestParserTest > redirected manifest root taints all returned child requests() PASSED
+
+YlDashManifestParserTest > malformed numeric attributes are sanitized as container errors() PASSED
+
+YlDashManifestParserTest > dynamic protected and excessive timeline manifests fail before child requests() PASSED
+
+> Task :yl_player_android:lintAnalyzeDebugUnitTest
+> Task :yl_player_android:lintAnalyzeDebug
+
+> Task :yl_player_android:lintReportDebug
+Wrote HTML report to file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/yl_player_android/reports/lint-results-debug.html
+Lint found 112 errors and 17 warnings. First failure:
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioFocusCoordinator.kt:99: Error: Call requires API level 26 (current min is 24): android.media.AudioFocusRequest.Builder() [NewApi]
+        val request = if (apiLevel >= 26) AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                                                            ~~~~~~~
+
+
+> Task :yl_player_android:lintDebug FAILED
+Lint found 112 errors, 17 warnings. First failure:
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioFocusCoordinator.kt:99: Error: Call requires API level 26 (current min is 24): android.media.AudioFocusRequest.Builder() [NewApi]
+        val request = if (apiLevel >= 26) AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                                                            ~~~~~~~
+
+The full lint text report is located at:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/yl_player_android/intermediates/lint_intermediate_text_report/debug/lintReportDebug/lint-results-debug.txt
+
+[Incubating] Problems report is available at: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':yl_player_android:lintDebug'.
+> Lint found errors in the project; aborting build.
+  
+  Fix the issues identified by lint, or create a baseline to see only new errors.
+  To create a baseline, run `gradlew updateLintBaseline` after adding the following to the module's build.gradle file:
+  ```
+  android {
+      lint {
+          baseline = file("lint-baseline.xml")
+      }
+  }
+  ```
+  For more details, see https://developer.android.com/studio/write/lint#snapshot
+  
+  Lint found 112 errors, 17 warnings. First failure:
+  
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioFocusCoordinator.kt:99: Error: Call requires API level 26 (current min is 24): android.media.AudioFocusRequest.Builder() [NewApi]
+          val request = if (apiLevel >= 26) AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                                                              ~~~~~~~
+  
+  The full lint text report is located at:
+    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/yl_player_android/intermediates/lint_intermediate_text_report/debug/lintReportDebug/lint-results-debug.txt
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to generate a Build Scan (Powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 18s
+57 actionable tasks: 17 executed, 40 up-to-date

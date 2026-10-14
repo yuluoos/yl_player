@@ -95,7 +95,16 @@ final class DashServer {
         : useVariants
         ? 'assets/test_media/dash_variants'
         : _assetRoot;
-    final fileNames = useVariants
+    final fileNames = timelineMarkers
+        ? (await AssetManifest.loadFromAssetBundle(rootBundle))
+              .listAssets()
+              .where(
+                (path) =>
+                    path.startsWith('$assetRoot/') && path.endsWith('.m4s'),
+              )
+              .map((path) => path.substring(assetRoot.length + 1))
+              .toList()
+        : useVariants
         ? <String>[
             for (final period in [0, 1])
               for (final track in [0, 1, 2]) ...[

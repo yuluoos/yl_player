@@ -308,3 +308,17 @@ P01 **仍未整体完成**：跨编码/分辨率与音轨目录变化、取消�
 [证据](evidence/2026-10-13-p01-audio-timeline/manifest.json)：直接解码检查恰为 192000 个 48kHz 帧，指定空缺区间为零，原有 440Hz 标记保留；iOS 原生组 23/23 通过，零跳过。macOS 同组 22/23，其中一次在多端并行负载下未捕获窄窗视频标记；只添加诊断，原断言未放宽，两项定向测试各重复三次均通过。保留首次失败，复验不等于证明所有负载下可靠，也不算外部声学同步测量。
 
 P01 继续执行：Android 时间轴语义、DASH 字幕与联合封板仍未完成。本提交不包含尚未验证完成的 Android 公开集成测试准备文件。
+
+## 2026-10-13：Android 精确节目适配（阶段提交）
+
+同一 owned 媒体首轮 12 项实播仅 5 项通过，暴露 Period 裁剪、声明空缺和有限时长推导差异。新增有理数节目边界与 Media3 资源图并存：根清单只经现有 managed transport 加载一次，真实 Period 使用冻结资源图和独立 ClippingMediaSource，声明空缺使用 Media3 的有界静音 PCM，组合为单一节目窗口。保留分段解码、请求和缓冲路线，未改弱网 ABR 算法。
+
+空缺轨道以对象身份识别，无法靠清单 ID/格式伪装；不会进入公开目录或替代显式音轨。实际 RED 发现旧帧仍可见后，空白期间发布空几何使公开 view 显示背景，下一内容段恢复。期间的选择命令引用最近内容目录，其意图在下一段读取前再次校验。解析器非法数字统一映射脱敏 container 错误。
+
+三项加载失败另属于新增夹具：AdaptationSet ID 应为 unsignedInt，已将字符串 main/commentary 改为 1/2，commentary Role 保留，所有编码媒体字节不变。对应生成器和 provenance 同步。依据 [DASH schema](https://raw.githubusercontent.com/Dash-Industry-Forum/MPEG-Conformance-and-reference-source/master/conformance/MPDValidator/schemas/DASH-MPD.xsd)，没有放宽播放器去接受该非法夹具。
+
+[证据](evidence/2026-10-13-p01-android-program/manifest.json)：Android 公开最终 20/20，包括节目 12 项、既有 DASH 6 项、SegmentBase 2 项；JVM 受影响 83/83，精确时间/API 下限调整后解析器 17/17；Python 13/13。Apple 修正夹具后 macOS/iOS 各 4/4，均零跳过。Dart 新增文件分析无问题。初次默认 JDK 22 与 Mockito 不兼容属于测试环境失败，换已有 JDK 17 才获得行为 RED/GREEN；模拟器也保存了 cold boot 前的环境故障记录。
+
+API 24 核查移除了仅 API 31 提供的 BigInteger.longValueExact，改为明确位宽检查。新增 Media3 类型补充 UnstableApi 注解。全量 lint **未通过**，最终报告仍有 112 errors / 17 warnings，涉及现有 API 门控及其他 Media3 注解；本轮改动文件无新增报告项。这不是最低 Android 系统实机运行证据。
+
+本阶段实播证明公开节目时长、空缺可见性、生命周期与目录行为；不能据此声称 Android 精确 PCM 边界或外部声学同步已经测量。后续仍须补逐样本输出、HDR 家族与固定档位跨编码边界、更多恢复/取消场景、DASH 字幕和最终联合复核。P01 仍未整体完成。

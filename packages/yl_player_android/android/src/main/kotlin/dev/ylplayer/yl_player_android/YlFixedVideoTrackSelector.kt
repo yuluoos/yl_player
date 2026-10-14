@@ -12,6 +12,7 @@ import androidx.media3.exoplayer.trackselection.ExoTrackSelection
  * DefaultTrackSelector runs on ExoPlayer's playback thread. A group-only
  * override cannot cover recreated groups, so enforce the immutable quality before ABR definitions
  * are built. Public mode is changed only by Core's current-Period observation, never by lookahead. */
+@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 internal class YlFixedVideoTrackSelector : DefaultTrackSelector {
     constructor(context: Context) : super(context)
     constructor(context: Context, parameters: Parameters) : super(context, parameters)
@@ -24,6 +25,8 @@ internal class YlFixedVideoTrackSelector : DefaultTrackSelector {
             invalidate(/* parameters */ null)
         }
     @Volatile var fixedIntent: YlFixedVideoIntent? = null
+    /** Owned gap PCM is timing, not a replacement content choice. */
+    var isDashGapGroup: (androidx.media3.common.TrackGroup) -> Boolean = { false }
 
     override fun selectAllTracks(
         definitions: Array<ExoTrackSelection.Definition?>,
@@ -32,6 +35,14 @@ internal class YlFixedVideoTrackSelector : DefaultTrackSelector {
         rendererMixedMimeTypeAdaptationSupports: IntArray,
         params: Parameters,
     ) {
+        val groups = (0 until mappedTrackInfo.rendererCount).flatMap { renderer ->
+            val available = mappedTrackInfo.getTrackGroups(renderer)
+            (0 until available.length).map { available[it] }
+        }
+        if (groups.isNotEmpty() && groups.all(isDashGapGroup)) {
+            super.selectAllTracks(definitions, mappedTrackInfo, rendererFormatSupports, rendererMixedMimeTypeAdaptationSupports, params)
+            return
+        }
         audioIntent?.let { audio ->
             try {
                 val groups = mutableListOf<Pair<androidx.media3.common.TrackGroup, List<Int>>>()

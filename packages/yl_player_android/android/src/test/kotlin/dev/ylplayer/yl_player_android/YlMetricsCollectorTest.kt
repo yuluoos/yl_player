@@ -174,6 +174,7 @@ internal fun withCore(policy: AndroidAudioPolicy = AndroidAudioPolicy.APP_MANAGE
     val player = mock(ExoPlayer::class.java)
     `when`(player.duration).thenReturn(C.TIME_UNSET)
     `when`(player.currentTimeline).thenReturn(Timeline.EMPTY)
+    `when`(player.currentTracks).thenReturn(androidx.media3.common.Tracks.EMPTY)
     `when`(player.currentLiveOffset).thenReturn(C.TIME_UNSET)
     val events = mutableListOf<YlEngineEvent>()
     val scoped = mutableListOf<AutoCloseable>()

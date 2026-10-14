@@ -58,7 +58,7 @@ internal class YlMedia3Core(
     private val sourceFactory = YlMediaSourceFactory(source, configuration.network, protectedDrm) { attempt, delayMs ->
         val occurredAtMs = SystemClock.elapsedRealtime()
         handler.post { if (!disposed && !stopped) recordRetry(attempt, delayMs, occurredAtMs) }
-    }
+    }.also { trackSelector.isDashGapGroup = it::isDashGapGroup }
     private val loadControl = YlAdaptiveLoadControl(
         YlPlaybackPolicy.effectiveBufferProfile(
             deviceProfile.tier,
@@ -117,6 +117,7 @@ internal class YlMedia3Core(
         handler.postDelayed(action, delayMs)
     }
     private var videoGeometry: AndroidVideoGeometryMessage? = null
+    private var dashContentTracks: Tracks? = null
     private val pendingVideoGeometry = mutableMapOf<Any, AndroidVideoGeometryMessage?>()
     internal val outputObserver = YlVideoOutputObserver({ work -> handler.post { work() } }, ::onVideoOutput)
     private var audioTracks: List<AndroidTrackMessage> = emptyList()
@@ -360,6 +361,7 @@ internal class YlMedia3Core(
         audioIntent = null
         trackSelector.audioIntent = null
         audioTracks = emptyList()
+        dashContentTracks = null
         videoTracks = emptyList()
         videoSelection = YlFixedVideoState()
         trackSelector.fixedIntent = null
@@ -430,6 +432,7 @@ internal class YlMedia3Core(
         audioIntent = null
         trackSelector.audioIntent = null
         audioTracks = emptyList()
+        dashContentTracks = null
         videoTracks = emptyList()
         videoSelection = YlFixedVideoState()
         trackSelector.fixedIntent = null
@@ -481,14 +484,14 @@ internal class YlMedia3Core(
 
     fun selectAudioTrack(trackId: String) {
         if (disposed || stopped) throw YlBoundaryException(YlFailureKind.SESSION_STALE)
-        YlAudioSelectionPolicy.resolve(YlAudioSelectionPolicy.candidates(exoPlayer.currentTracks, dashAudio), trackId)
+        YlAudioSelectionPolicy.resolve(YlAudioSelectionPolicy.candidates(commandTracks(), dashAudio), trackId)
         audioIntent = YlAudioIntent(trackId, dashAudio)
         trackSelector.audioIntent = audioIntent
     }
 
     fun selectVideoTrack(trackId: String?) {
         if (disposed || stopped) throw YlBoundaryException(YlFailureKind.SESSION_STALE)
-        val actual = exoPlayer.currentTracks
+        val actual = commandTracks()
         val selected = YlVideoSelectionPolicy.select(actual, trackId, hostQualityConstraint, deviceProfile.videoEnvelope)
         val parameters = YlVideoSelectionPolicy.parameters(trackSelector.parameters, actual, selected)
         videoSelection = selected
@@ -498,6 +501,13 @@ internal class YlMedia3Core(
         trackSelector.parameters = parameters
         applyTrackConstraints()
         emitState()
+    }
+
+    private fun isDashGap(tracks: Tracks) = tracks.groups.isNotEmpty() && tracks.groups.all { sourceFactory.isDashGapGroup(it.mediaTrackGroup) }
+    /** During owned blank time, commands address the last real catalog. Their
+     * immutable intent is enforced again before the next content Period reads. */
+    private fun commandTracks(): Tracks = exoPlayer.currentTracks.let {
+        if (isDashGap(it)) dashContentTracks ?: Tracks.EMPTY else it
     }
 
     fun setVideoConstraints(constraint: AndroidVideoConstraintsMessage) {
@@ -656,6 +666,9 @@ internal class YlMedia3Core(
         val eventPeriod = eventTime.mediaPeriodId
         if (eventPeriod != null && !currentTimeline.isEmpty &&
             currentTimeline.getUidOfPeriod(exoPlayer.currentPeriodIndex) != eventPeriod.periodUid) return
+        if (isDashGap(tracks)) {
+            emitState(); return
+        }
         if (tracks.groups.isEmpty() && (videoSelection.quality != null || audioIntent != null)) { emitState(); return }
         val audioCatalog: List<YlAudioCandidate>
         val nextSelection = try {
@@ -668,6 +681,7 @@ internal class YlMedia3Core(
             emit(YlEngineEvent.Failed(error.kind)); emitState(); return
         }
         videoSelection = nextSelection
+        if (dashAudio && tracks.groups.isNotEmpty()) dashContentTracks = tracks
         syncFixedVideoIntent()
         trackSelector.parameters = YlVideoSelectionPolicy.parameters(trackSelector.parameters, tracks, nextSelection)
         val currentUid = if (!currentTimeline.isEmpty) currentTimeline.getUidOfPeriod(exoPlayer.currentPeriodIndex)
@@ -816,6 +830,7 @@ internal class YlMedia3Core(
         firstFrameRendered = false; hasBeenReady = false
         currentError = null; lastFailure = null; status = "opening"
         audioTracks = emptyList()
+        dashContentTracks = null
         if (videoSelection.quality == null) videoTracks = emptyList()
         resetDecoderGate()
         val item = MediaItem.Builder().setMediaId(identity.sessionId).setUri(Uri.parse(source.locator))
@@ -1041,7 +1056,9 @@ internal class YlMedia3Core(
     fun emitState() {
         if (disposed || resetting) return
         val timeline = timeline()
-        val geometry = videoGeometry
+        // A retained texture can still hold the previous Period's final frame.
+        // Null geometry makes the public view render its blank/placeholder layer.
+        val geometry = if (isDashGap(exoPlayer.currentTracks)) null else videoGeometry
         emit(YlEngineEvent.Snapshot(YlEngineSnapshot(
             when (status) {
                 "idle" -> AndroidPlaybackStatus.IDLE

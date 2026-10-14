@@ -33,9 +33,12 @@ final class YlPlaybackSession {
   /// multiple tracks may share a language and differ by role or content.
   /// An unavailable ID rejects the command without selecting a replacement.
   /// Apple static DASH keeps semantic IDs across reordered Periods and video
-  /// quality rebuilds; a changing audio identity set is currently unsupported.
+  /// quality rebuilds. Its programme path supports added or removed tracks;
+  /// missing explicitly selected content reports `track.not_found`.
   /// Android publishes one content choice per audio group and retains explicit
   /// selection across Periods and restoration while its semantic identity exists.
+  /// Declared blank programme intervals retain the last content catalog and
+  /// selection intent; internal timing silence is not exposed as an audio track.
   /// Missing selected content reports `track.not_found`; it does not silently
   /// select another language or role. IDs remain platform-specific.
   /// Completion acknowledges selection; it does not measure audible output.

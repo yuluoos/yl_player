@@ -13,6 +13,14 @@ ROOT = Path(__file__).resolve().parents[2]
 MEDIA = ROOT / 'packages/yl_player/example/assets/test_media/dash_timeline'
 
 class TimelineFixturesTest(unittest.TestCase):
+    def test_adaptation_set_ids_follow_unsigned_integer_schema(self):
+        for file in MEDIA.glob('*.mpd'):
+            for node in ET.parse(file).iter():
+                if node.tag.split('}')[-1] == 'AdaptationSet' and 'id' in node.attrib:
+                    value = node.attrib['id']
+                    self.assertTrue(value.isascii() and value.isdigit(), (file.name, value))
+                    self.assertLessEqual(int(value), 2**32 - 1)
+
     def test_native_bundle_contains_original_media_bytes(self):
         expected = {str(p.relative_to(MEDIA)): p.read_bytes() for p in MEDIA.rglob('*')
                     if p.suffix in ('.mpd', '.m4s')}
