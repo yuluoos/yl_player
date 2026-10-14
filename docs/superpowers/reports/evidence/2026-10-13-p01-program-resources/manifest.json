@@ -1,0 +1,20 @@
+{
+  "scope": "P01 Task 2 exact MPD model and managed resources; no new production playback route",
+  "pythonTests": 7,
+  "swiftMPDChecks": 26,
+  "swiftResourceChecks": 21,
+  "swiftTimeChecks": 1518,
+  "nativePassed": 13,
+  "nativeSkipped": 0,
+  "mirrorCheck": "Existing committed macOS drift in three files remains; appended P01 tests identical in both mirrors. Not a passing check.",
+  "files": {
+    "document-expanded-red.log": "4037ed1887384d6e97fa5e22426aed9971125a84909c57cb5d771950aa4a433a",
+    "document-identity-red.log": "25f10246532112f0a56fc8c87e1869afb7607c7b2d154f64b9df1252d5d8d158",
+    "document-red.log": "b488e1206213ac0065aec18e57c276a8219c9f5a2c5fd868e9efcf4883cac004",
+    "final.log": "f5fa77f2851bbc65aa6a98b3fb98d544073857a1b55e495bb1ede5ac7d571b7c",
+    "mirror-check.log": "9bd81eae473cb165f4ffd29ea370ee4a3523d269b1e25a5d4c6836ddc9a32a73",
+    "native-summary.json": "218c97d9ee175f3289710443b763b2919bb73f01b380679fbb7bf6bc18c5787d",
+    "resource-expanded-red.log": "42cb5bf19f67054dcd93ead8baa3281e6275a55beba8459facb46636f1aca436",
+    "resource-red.log": "b5a5a34ab1321008d3bb2f2d33cdad1ab53759e33ec1bab5d2ed74eea1aa625f"
+  }
+}

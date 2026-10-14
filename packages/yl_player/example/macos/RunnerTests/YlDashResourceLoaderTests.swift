@@ -2170,3 +2170,46 @@ private final class DashCatalogTimelineItem: AVPlayerItem, @unchecked Sendable {
   override var duration: CMTime { measuredDuration }
   override var seekableTimeRanges: [NSValue] { measuredRanges }
 }
+
+final class YlDashProgramNativeTests: XCTestCase {
+  func testExactProgramParserPreservesPTOAndOverlap() throws {
+    let origin = URL(string: "https://origin.test/movie.mpd")!
+    let xml = """
+      <MPD mediaPresentationDuration="PT7S"><Period start="PT0S" duration="PT4S"><AdaptationSet mimeType="video/mp4"><Representation id="v" bandwidth="1000" width="320" height="180" codecs="avc1.42c01e"><SegmentTemplate initialization="init.mp4" media="$Time$.m4s" timescale="3" presentationTimeOffset="30"><SegmentTimeline><S t="30" d="3" r="3"/></SegmentTimeline></SegmentTemplate></Representation></AdaptationSet></Period><Period start="PT3S" duration="PT4S"><AdaptationSet mimeType="video/mp4"><Representation id="v" bandwidth="1000" width="320" height="180" codecs="avc1.42c01e"><SegmentTemplate initialization="init.mp4" media="$Number$.m4s" duration="1"/></Representation></AdaptationSet></Period></MPD>
+      """
+    let program = try YlDashProgramDocument.parse(Data(xml.utf8), source: origin, final: origin)
+    XCTAssertEqual(try program.timeline.end(of: 0), try YlDashProgramTime(3))
+    XCTAssertEqual(try program.timeline.map(sample: YlDashProgramTime(31, 3), offset: program.periods[0].tracks[0].offset, period: 0), try YlDashProgramTime(1, 3))
+    XCTAssertEqual(program.timeline.duration, try YlDashProgramTime(7))
+  }
+
+  func testManagedTransportReadsExactRangeAndRetainsPayloadBudget() throws {
+    let server = try DashHTTPServer(); defer { server.close() }
+    server.handler = { request in
+      guard request.headers["range"] == "bytes=10-12", request.headers["authorization"] == "fixture" else { return (403, [:], Data()) }
+      return (206, ["Content-Range": "bytes 10-12/100"], Data([4, 5, 6]))
+    }
+    let url = server.url("/sample"), ledger = YlManagedBufferLedger()
+    let scope = try ledger.makeScope(maxBytes: 1024 * 1024)
+    let reader = YlDashProgramResources(source: url, headers: [:], credentials: ["Authorization": "fixture"], configuration: .init(map: ["maxRetries": 0]), scope: scope)
+    let resource = YlDashProgram.Resource(candidates: [.init(url: url, credentialsStripped: false)], range: .init(start: 10, length: 3))
+    let payload = try reader.read(resource, maximumBytes: 4, cancellation: .init())
+    XCTAssertEqual(payload.data, Data([4, 5, 6])); XCTAssertEqual(payload.resourceLength, 100)
+    XCTAssertEqual(server.requests.count, 1)
+  }
+
+  func testManagedTransportRejectsWholeResponseToRangeWithoutRetry() throws {
+    let server = try DashHTTPServer(); defer { server.close() }
+    server.handler = { _ in (200, [:], Data([1, 2, 3])) }
+    let url = server.url("/sample"), ledger = YlManagedBufferLedger()
+    let scope = try ledger.makeScope(maxBytes: 1024 * 1024)
+    let reader = YlDashProgramResources(source: url, headers: [:], credentials: [:], configuration: .init(map: ["maxRetries": 2]), scope: scope)
+    let resource = YlDashProgram.Resource(candidates: [.init(url: url, credentialsStripped: false)], range: .init(start: 10, length: 3))
+    for _ in 0..<2 {
+      XCTAssertThrowsError(try reader.read(resource, maximumBytes: 4, cancellation: .init())) {
+        XCTAssertEqual(($0 as? NativePlayerError)?.code, "network.range_invalid")
+      }
+    }
+    XCTAssertEqual(server.requests.count, 1)
+  }
+}

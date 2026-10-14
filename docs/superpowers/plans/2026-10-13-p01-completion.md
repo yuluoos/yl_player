@@ -43,10 +43,10 @@
 
 **Interfaces:** 不可变 program→period→track→segment，资源为 URL 候选/Range/凭据上下文；供应器 `read(resource:cancellation:)` 返回受预算管理的字节。
 
-- [ ] 用七维真实清单定义精确资源/时间预期；mock transport 检验跨域回原域、超限、Range 错误、取消、重试总预算。
-- [ ] 原 parser 拒绝而新模型应正确解析的用例先 RED；缺权威边界必须报错。
-- [ ] 从共享有界 XML 节点构建独立模型，保留未筛选原始轨道校验；多 BaseURL 的候选身份与凭据一起保留。
-- [ ] native DASH 测试 GREEN 后提交模型/资源层；生产路由仍待真实播放。
+- [x] 用七维真实清单定义精确资源/时间预期；mock transport 检验跨域回原域、超限、Range 错误、取消、重试总预算。
+- [x] 原 parser 拒绝而新模型应正确解析的用例先 RED；缺权威边界必须报错。
+- [x] 从共享有界 XML 节点构建独立模型，保留未筛选原始轨道校验；多 BaseURL 的候选身份与凭据一起保留。
+- [x] native DASH 测试 GREEN 后提交模型/资源层；生产路由仍待真实播放。
 
 ### Task 3: Apple 分段解码与真实时标
 

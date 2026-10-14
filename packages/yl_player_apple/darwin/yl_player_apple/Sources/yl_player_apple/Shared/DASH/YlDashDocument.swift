@@ -151,7 +151,7 @@ enum YlDashBounds {
   }
 }
 
-private final class YlDashXMLReader: NSObject, XMLParserDelegate {
+final class YlDashXMLReader: NSObject, XMLParserDelegate {
   // Addressing/timing nodes are a closed subset. Validate each declaration before
   // inheritance, so an unsupported ancestor cannot disappear under an override.
   private static let segmentAttributes: [String: Set<String>] = [

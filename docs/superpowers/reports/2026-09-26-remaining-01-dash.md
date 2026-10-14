@@ -258,3 +258,12 @@ Task 3 收尾：关闭本轮启动的本地 HTTP 服务和 iOS 模拟器；四�
 先用占位行为观察实际断言 RED，再实现 GREEN；逆映射同样 RED→GREEN。最终 `python3 -B -m unittest discover -s tool/dash_timeline -p 'test_*.py'` 5/5 通过，包含生产 Swift 的 1518 项检查（24 个指定场景、1494 个 Python Fraction 独立边界/随机对照）。源码直接编译运行，无 Flutter/mock 时钟；这仍不是实际音画呈现。证据见[evidence](evidence/2026-10-13-p01-program-time/manifest.json)。
 
 P01 整体仍在执行，下一步为 MPD 资源/节目模型和真实分段播放；最终 fresh review 在联合实现后进行。另一边长播放、弱网 ABR 与 P05 未修改。
+
+
+## 2026-10-13：精确 MPD 与 managed 分段资源（Task 2）
+
+新增独立节目模型，保留各轨道 PTO、半开 Period 窗口、多 BaseURL、SegmentTemplate/List/Base 和原始格式声明；不放宽旧 HLS admission。未知时长仅接受有限音视频段一致提供的终点。新增资源供应器复用现有 managed HTTP transport、请求预算和单调凭据策略；Range、响应长度、超时、取消及 payload 生命周期均有界。
+
+验证：工具 7/7（26 项 MPD、21 项资源、1518 项时标检查及既有夹具）；macOS 原生 13/13（新增 3 项含真实 loopback transport、原 sidx 10 项），零跳过。记录见 [资源证据](evidence/2026-10-13-p01-program-resources/manifest.json)。真实行为 RED 已保存，覆盖漏继承 ID 与空 body 延长超时的修复。完整 consumer mirror 检查仍报告原有三文件 macOS drift；新增测试段在 canonical/iOS/macOS 一致，未覆盖其他工作的历史差异。
+
+Task 3 的真实单片探针显示 AVAssetReader 重置时间轴并处理 AAC 前导样本，不能作为原始时间权威；后续使用现有 FFmpeg 解复用并补原始 tick 接口。当前未接入新的公共播放路由，P01 仍未完成。
