@@ -57,7 +57,14 @@ internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: Netwo
             item.localConfiguration?.uri?.path?.lowercase()?.endsWith(".m3u8") == true
         val dash = item.localConfiguration?.mimeType == "application/dash+xml" ||
             item.localConfiguration?.uri?.path?.lowercase()?.endsWith(".mpd") == true
-        return if (dash) YlDashProgramMediaSource(item, dataSources, YlDashManifestParser(credentials), loaderPolicy, dashGapGroups)
+        // Preserve the established DRM route. The programme PCM/window adapters
+        // are for clear sources and must not replace its supplied DRM manager.
+        return if (dash && drmManager != null) DashMediaSource.Factory(dataSources)
+            .setDrmSessionManagerProvider { drmManager }
+            .setManifestParser(YlDashManifestParser(credentials))
+            .setLoadErrorHandlingPolicy(loaderPolicy)
+            .createMediaSource(item)
+        else if (dash) YlDashProgramMediaSource(item, dataSources, YlDashManifestParser(credentials), loaderPolicy, dashGapGroups)
         else if (hls) HlsMediaSource.Factory(dataSources)
             .setLoadErrorHandlingPolicy(loaderPolicy)
             .apply {

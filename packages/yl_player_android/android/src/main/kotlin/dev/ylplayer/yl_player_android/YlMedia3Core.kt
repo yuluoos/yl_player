@@ -70,7 +70,7 @@ internal class YlMedia3Core(
     private var audioIntent: YlAudioIntent? = null
     private val dashAudio = source.format == AndroidMediaFormat.DASH ||
         source.locator.substringBefore('?').substringBefore('#').lowercase().endsWith(".mpd")
-    private val dashVideoFamily = if (dashAudio) YlDashVideoFamilyPolicy() else null
+    private val dashVideoFamily = if (dashAudio && protectedDrm == null) YlDashVideoFamilyPolicy() else null
     private var sourceIsLive = false
     private var sourceClass = YlSourceClass.NETWORK_VOD
     private var stopped = false

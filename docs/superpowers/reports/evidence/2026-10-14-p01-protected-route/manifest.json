@@ -1,0 +1,14 @@
+{
+  "scope": "Restore preexisting protected DASH routing and DRM manager; no new DRM capability claim",
+  "red": 2,
+  "green": 29,
+  "sourceSha256": {
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt": "60651a35d22700904a3b2fd9019aa87e7522da1c46c228a99da67216d21aa028",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMediaSourceFactory.kt": "6e254803128b5af4e0eabd64de81a73c5d6b5b1c457e1dc1acd335144f3fccaf",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashProtectedRouteTest.kt": "310acaba79e1d8659be69c2364af1d0e543e07280f4efde0c8e0ba379dd4ef37"
+  },
+  "logs": [
+    "docs/superpowers/reports/evidence/2026-10-14-p01-protected-route/red.log",
+    "docs/superpowers/reports/evidence/2026-10-14-p01-protected-route/green.log"
+  ]
+}

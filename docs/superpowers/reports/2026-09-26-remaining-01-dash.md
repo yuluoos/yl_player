@@ -366,3 +366,7 @@ DASH 自动选择复用原 Media3 选择算法，只筛除与已接受 SDR/PQ/HL
 真实 AAC 包内 seek 先复现“首个有效尾部被样本队列整包丢弃”。现在有界地读取解码前窗口，公开节目位置保持请求目标，解码后只保留有效 PCM；0.5 秒 seek 后最初 10 ms 验证为真实音频，未用静音代替。音频 preroll 按 codec/采样率计算，上限 8.192 秒；超出要求的异常声明率明确拒绝。编码 priming 在插入静音前从内容中移除。
 
 验证：真实 PCM 7/7（含三类空缺，均为 4 秒、192,000 帧，指定区间全零）；公开视频 18/18；相关 JVM 151/151；静态分析无问题。[完整 RED→GREEN 证据](evidence/2026-10-14-p01-android-audio-gaps/manifest.json)。视频轨道内空缺、联合 AV/cue、最终最低版本与整体验收仍待处理。
+
+### 2026-10-14 受保护 DASH 路由回归
+
+恢复原 DashMediaSource 路由及 DRM manager 的传递，新的节目 PCM/视频集合处理限定为明文 DASH。新增两项测试先失败，修复后连同受保护输出回归 29/29 通过。该变更仅保留原有路由，不宣称新增 DRM 播放能力：[证据](evidence/2026-10-14-p01-protected-route/manifest.json)。
