@@ -267,3 +267,14 @@ P01 整体仍在执行，下一步为 MPD 资源/节目模型和真实分段播�
 验证：工具 7/7（26 项 MPD、21 项资源、1518 项时标检查及既有夹具）；macOS 原生 13/13（新增 3 项含真实 loopback transport、原 sidx 10 项），零跳过。记录见 [资源证据](evidence/2026-10-13-p01-program-resources/manifest.json)。真实行为 RED 已保存，覆盖漏继承 ID 与空 body 延长超时的修复。完整 consumer mirror 检查仍报告原有三文件 macOS drift；新增测试段在 canonical/iOS/macOS 一致，未覆盖其他工作的历史差异。
 
 Task 3 的真实单片探针显示 AVAssetReader 重置时间轴并处理 AAC 前导样本，不能作为原始时间权威；后续使用现有 FFmpeg 解复用并补原始 tick 接口。当前未接入新的公共播放路由，P01 仍未完成。
+
+
+## 2026-10-13：真实分片样本解复用与输出边界（Task 3 进行中）
+
+新增原始 tick bridge API，保留旧微秒 API；五目标签名构建与独立重复构建逐字节一致，更新制品锁和 accepted provenance。不可变制品契约及 5 项预期原因破坏检查通过；长度前缀回归 100 包/19 歧义前缀/零改写，释放后零包。
+
+`YlDashSampleSource` 使用现有 FFmpeg 自定义 AVIO，每次仅持初始化段/单片，保留源 PTS/DTS/时长与格式；`YlDashTrackCursor` 映射独立 PTO，资源预检复用 managed supplier，SegmentBase 候选按单一意图共享预算。PCM 边界按采样帧计算，原始保留预算跟随输出字节生命周期。
+
+实测：原生 9/9、零跳过，实际 VT 红色像素时间为节目 0；47 个 AAC 包保留负 priming，裁得 47,104 个有效 PCM 帧，频率约 440 Hz（容差 4 Hz）。独立 ffprobe 与生产内存解复用的 8 片/284 包精确时标一致。工具 9/9，同时覆盖 27 MPD /21 资源 /1518 时间 /8 裁剪检查。见 [样本证据](evidence/2026-10-13-p01-segment-samples/manifest.json)。
+
+失败证据保留：AVAssetReader 单片归零与前导处理；原制品缺 raw API；VT 拒绝不可序列化私有对象附件（-19640）。后者改由 CMBlockBuffer 持有源样本/预算后真实像素 GREEN，没有移除资源计量。已提交的是样本原型和供应基础，**Task 3 及 P01 均未封板**：公共 backend、自然跨段、3.5 秒完整输出、选择/取消/恢复、DASH 字幕及联合验收继续执行。

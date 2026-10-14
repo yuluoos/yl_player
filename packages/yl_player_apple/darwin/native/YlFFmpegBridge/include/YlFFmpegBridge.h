@@ -151,6 +151,12 @@ YLF_EXPORT int32_t ylf_seek(YLFMediaContextRef context, int64_t position_us);
 YLF_EXPORT void ylf_close(YLFMediaContextRef *context);
 
 YLF_EXPORT int32_t ylf_packet_stream_index(YLFPacketRef packet);
+// Copies original demux packet ticks, before relative-TS projection or any
+// microsecond rounding. Use the owning stream's time_base_num/time_base_den.
+// INT64_MIN denotes an absent PTS/DTS; duration is zero when unknown. Outputs
+// remain unchanged on InvalidArgument. Packet and owner must still be alive.
+YLF_EXPORT int32_t ylf_packet_raw_timestamps(YLFPacketRef packet,
+    int64_t *out_pts, int64_t *out_dts, int64_t *out_duration);
 YLF_EXPORT int64_t ylf_packet_pts_us(YLFPacketRef packet);
 YLF_EXPORT int64_t ylf_packet_dts_us(YLFPacketRef packet);
 YLF_EXPORT int64_t ylf_packet_duration_us(YLFPacketRef packet);

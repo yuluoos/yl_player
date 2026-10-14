@@ -44,6 +44,10 @@ enum YlDashProgramDocument {
   static func indexRequests(_ data: Data, source: URL, final: URL, credentialsStripped: Bool = false) throws -> [YlDashIndexRequest] {
     try Builder(source: source, indexes: [:]).indexRequests(data, final: final, credentialsStripped: credentialsStripped)
   }
+  /// One SegmentBase intent contains all BaseURL alternatives, sharing budgets.
+  static func indexResources(_ data: Data, source: URL, final: URL, credentialsStripped: Bool = false) throws -> [YlDashProgram.Resource] {
+    try Builder(source: source, indexes: [:]).indexResources(data, final: final, credentialsStripped: credentialsStripped)
+  }
   static func parse(_ data: Data, source: URL, final: URL, credentialsStripped: Bool = false,
                     indexes: [YlDashIndexRequest: YlDashResolvedIndex] = [:]) throws -> YlDashProgram {
     try Builder(source: source, indexes: indexes).parse(data, final: final, credentialsStripped: credentialsStripped)
@@ -58,13 +62,24 @@ enum YlDashProgramDocument {
     init(source: URL, indexes: [YlDashIndexRequest: YlDashResolvedIndex]) { self.source = source; self.indexes = indexes }
 
     func indexRequests(_ data: Data, final: URL, credentialsStripped: Bool) throws -> [YlDashIndexRequest] {
+      var seen = Set<YlDashIndexRequest>()
+      return try indexResources(data, final: final, credentialsStripped: credentialsStripped).flatMap { resource in
+        resource.candidates.compactMap { candidate in
+          let request = YlDashIndexRequest(url: candidate.url, start: resource.range!.start,
+            length: Int(resource.range!.length), credentialsStripped: candidate.credentialsStripped)
+          return seen.insert(request).inserted ? request : nil
+        }
+      }
+    }
+
+    func indexResources(_ data: Data, final: URL, credentialsStripped: Bool) throws -> [Resource] {
       _ = try YlDashBounds.url(source.absoluteString); _ = try YlDashBounds.url(final.absoluteString)
       let root = try YlDashXMLReader.parse(data, allowSegmentBase: true)
       guard root.attributes["type", default: "static"] == "static" else { throw YlDashAdmissionError.dynamicManifest }
       let periods = root.nodes("Period")
       guard !periods.isEmpty, periods.count <= 64 else { throw YlDashProgramError.limitExceeded }
       let locations = try bases(root, [.init(url: final, credentialsStripped: credentialsStripped || YlRequestOrigin(url: final) != YlRequestOrigin(url: source))])
-      var result: [YlDashIndexRequest] = [], seen = Set<YlDashIndexRequest>(), totalBytes = 0
+      var result: [Resource] = [], totalBytes = 0
       for period in periods {
         let periodBases = try bases(period, locations)
         for adaptation in period.nodes("AdaptationSet") {
@@ -77,13 +92,8 @@ enum YlDashProgramDocument {
             guard let rawRange = info.attributes["indexRange"], info.initialization != nil else { throw YlDashBounds.unsupported }
             let resource = try resource(nil, rawRange, bases(representation, adaptationBases))
             guard let range = resource.range, range.length <= YlDashSidx.maxIndexBytes else { throw YlDashProgramError.limitExceeded }
-            for candidate in resource.candidates {
-              let request = YlDashIndexRequest(url: candidate.url, start: range.start, length: Int(range.length), credentialsStripped: candidate.credentialsStripped)
-              if seen.insert(request).inserted {
-                guard request.length <= 4 * 1024 * 1024 - totalBytes else { throw YlDashProgramError.limitExceeded }
-                totalBytes += request.length; result.append(request)
-              }
-            }
+            guard range.length <= 4 * 1024 * 1024 - totalBytes else { throw YlDashProgramError.limitExceeded }
+            totalBytes += Int(range.length); result.append(resource)
           }
         }
       }

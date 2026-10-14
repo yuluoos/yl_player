@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_exact_sample_clipping (test_sample_window.SampleWindowTests.test_exact_sample_clipping)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/dash_timeline/test_sample_window.py", line 18, in test_exact_sample_clipping
+    self.assertTrue(all(r['passed'] for r in rows),[r for r in rows if not r['passed']])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : [{'name': 'video before end retains clipped duration', 'passed': False}, {'name': 'negative AAC priming produces only nonnegative PCM', 'passed': False}, {'name': 'PCM cuts final packet at 3.5 seconds exactly', 'passed': False}, {'name': 'fractional sample boundary never leaks a frame beyond end', 'passed': False}, {'name': 'fractional start excludes frame beginning before seek', 'passed': False}, {'name': 'entire pre-window PCM is dropped', 'passed': False}, {'name': 'overlap only clips output before new period begins', 'passed': False}]
+
+----------------------------------------------------------------------
+Ran 1 test in 2.978s
+
+FAILED (failures=1)

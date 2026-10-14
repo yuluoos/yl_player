@@ -2213,3 +2213,146 @@ final class YlDashProgramNativeTests: XCTestCase {
     XCTAssertEqual(server.requests.count, 1)
   }
 }
+
+final class YlDashSampleSourceNativeTests: XCTestCase {
+  private func source(_ name: String, kind: YlDashProgram.Track.Kind,
+                      token: YlOpenCancellationToken = .init()) throws -> YlDashSampleSource {
+    let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: name, withExtension: "mp4"))
+    let bytes = try Data(contentsOf: url)
+    let scope = try YlManagedBufferLedger(maxBytes: 4 * 1024 * 1024).makeScope(maxBytes: nil)
+    return try YlDashSampleSource(initialization: .init(data: Data(), finalURL: url, credentialsStripped: false, resourceLength: nil, reservation: nil),
+      fragment: .init(data: bytes, finalURL: url, credentialsStripped: false, resourceLength: nil, reservation: nil),
+      kind: kind, cancellation: token, scope: scope)
+  }
+  func testVideoFragmentKeepsOriginalTenSecondTicksAndPacketOwnership() throws {
+    var demux: YlDashSampleSource? = try source("p01-video-fragment", kind: .video)
+    let packet = try XCTUnwrap(demux?.next())
+    XCTAssertEqual(packet.pts, try YlDashProgramTime(10))
+    XCTAssertEqual(packet.duration, try YlDashProgramTime(1, 24))
+    let format = try XCTUnwrap(demux?.videoFormat)
+    demux = nil
+    let sample = try packet.videoSample(format: format, pts: CMTime(value: 1, timescale: 3), dts: .invalid, duration: CMTime(value: 1, timescale: 24))
+    XCTAssertEqual(CMSampleBufferGetPresentationTimeStamp(sample), CMTime(value: 1, timescale: 3))
+    XCTAssertGreaterThan(CMSampleBufferGetTotalSampleSize(sample), 0)
+  }
+  func testAudioFragmentKeepsTwentySecondOffsetAndNegativePriming() throws {
+    let demux = try source("p01-audio-fragment", kind: .audio)
+    let converter = YlAppleCompressedAudioConverter()
+    try converter.configure(stream: .init(codec: .aac, sampleRate: 48000, channelCount: 1, magicCookie: demux.codecConfiguration, generation: 1))
+    let window = try YlDashProgramTimeline.Window(start: YlDashProgramTime(0), end: YlDashProgramTime(47104, 48000))
+    var packets = 0, frames = 0, positiveCrossings = 0, previous: Float = 0
+    while let packet = try demux.next() {
+      let pts = try packet.pts.subtracting(YlDashProgramTime(20))
+      if packets == 0 { XCTAssertEqual(pts, try YlDashProgramTime(-1024, 48000)) }
+      let input = try YlCompressedAudioPacket(data: packet.audioBytes(), ptsUs: pts.converted(to: 1_000_000, rounding: .floor), durationUs: packet.duration.converted(to: 1_000_000, rounding: .floor), generation: 1)
+      if let buffer = try converter.convert(packet: input), let pcm = buffer.payload as? AVAudioPCMBuffer {
+        let trim = try YlDashSampleWindow.pcmFrames(pts: pts, sampleRate: 48000, count: Int(pcm.frameLength), window: window)
+        let channel = try XCTUnwrap(pcm.floatChannelData?[0])
+        for index in trim.skip..<(trim.skip + trim.count) {
+          let value = channel[index]
+          if previous <= 0 && value > 0 { positiveCrossings += 1 }; previous = value
+        }
+        frames += trim.count
+      }
+      packets += 1
+    }
+    XCTAssertEqual(packets, 47); XCTAssertEqual(frames, 47104)
+    XCTAssertEqual(Double(positiveCrossings) * 48000 / Double(frames), 440, accuracy: 4)
+  }
+  func testMappedVideoActuallyDecodesRedFrameAtProgramZero() throws {
+    let demux = try source("p01-video-fragment", kind: .video)
+    let packet = try XCTUnwrap(demux.next()), format = try XCTUnwrap(demux.videoFormat)
+    let done = expectation(description: "decoded original fragment")
+    let decoder = try YlVideoToolboxDecoder(formatDescription: format,
+      factory: YlHardwareVTSessionFactory(policy: .systemDefault),
+      outputPixelFormat: kCVPixelFormatType_32BGRA, onFrame: { frame in
+        XCTAssertEqual(frame.ptsUs, 0)
+        CVPixelBufferLockBaseAddress(frame.pixelBuffer, .readOnly)
+        defer { CVPixelBufferUnlockBaseAddress(frame.pixelBuffer, .readOnly) }
+        if let base = CVPixelBufferGetBaseAddress(frame.pixelBuffer) {
+          let offset = CVPixelBufferGetHeight(frame.pixelBuffer)/2 * CVPixelBufferGetBytesPerRow(frame.pixelBuffer) + CVPixelBufferGetWidth(frame.pixelBuffer)/2 * 4
+          let pixel = base.advanced(by: offset).assumingMemoryBound(to: UInt8.self)
+          XCTAssertGreaterThan(pixel[2], 240); XCTAssertLessThan(pixel[1], 10); XCTAssertLessThan(pixel[0], 10)
+        } else { XCTFail("missing actual decoded pixels") }
+        done.fulfill()
+      }, onError: { error in XCTFail(error.code + " " + (error.diagnostic ?? "no diagnostic")); done.fulfill() })
+    defer { decoder.dispose() }
+    let sample = try packet.videoSample(format: format, pts: .zero, dts: .zero, duration: CMTime(value: 1, timescale: 24))
+    decoder.decode(sample: sample, generation: 1)
+    decoder.drain()
+    wait(for: [done], timeout: 3)
+  }
+  func testCancelledFragmentDoesNotYieldAnotherPacket() throws {
+    let token = YlOpenCancellationToken()
+    let demux = try source("p01-video-fragment", kind: .video, token: token)
+    _ = try demux.next(); token.cancel()
+    XCTAssertThrowsError(try demux.next()) { XCTAssertEqual(($0 as? NativePlayerError)?.code, "network.cancelled") }
+  }
+}
+
+extension YlDashSampleSourceNativeTests {
+  func testManagedProgramCursorLoadsIndependentPTOThroughActualTransport() throws {
+    let server = try DashHTTPServer(); defer { server.close() }
+    let video = try Data(contentsOf: XCTUnwrap(Bundle(for: Self.self).url(forResource: "p01-video-fragment", withExtension: "mp4")))
+    let audio = try Data(contentsOf: XCTUnwrap(Bundle(for: Self.self).url(forResource: "p01-audio-fragment", withExtension: "mp4")))
+    let mpd = Data("""
+      <MPD mediaPresentationDuration="PT0.5S"><Period><AdaptationSet mimeType="video/mp4"><Representation id="v" codecs="avc1.42c01e" bandwidth="350000" width="320" height="180"><SegmentTemplate timescale="12288" presentationTimeOffset="122880" initialization="v-init" media="v-segment"><SegmentTimeline><S t="122880" d="12288"/></SegmentTimeline></SegmentTemplate></Representation></AdaptationSet><AdaptationSet mimeType="audio/mp4"><Representation id="a" codecs="mp4a.40.2" bandwidth="64000" audioSamplingRate="48000"><SegmentTemplate timescale="48000" presentationTimeOffset="960000" initialization="a-init" media="a-segment"><SegmentTimeline><S t="960000" d="47104"/></SegmentTimeline></SegmentTemplate></Representation></AdaptationSet></Period></MPD>
+      """.utf8)
+    func split(_ bytes: Data) -> Int {
+      var offset = 0
+      while offset + 8 <= bytes.count {
+        let size = bytes[offset..<(offset + 4)].reduce(0) { ($0 << 8) | Int($1) }
+        if String(decoding: bytes[(offset + 4)..<(offset + 8)], as: UTF8.self) == "sidx" { return offset }
+        if size < 8 { return 0 }; offset += size
+      }
+      return 0
+    }
+    let videoSplit = split(video), audioSplit = split(audio)
+    XCTAssertGreaterThan(videoSplit, 0); XCTAssertGreaterThan(audioSplit, 0)
+    server.handler = { request in
+      guard request.headers["authorization"] == "owned" else { return (403, [:], Data()) }
+      let bytes: Data
+      switch request.path {
+      case "/program.mpd": bytes = mpd
+      case "/v-init": bytes = Data(video.prefix(videoSplit))
+      case "/v-segment": bytes = Data(video.dropFirst(videoSplit))
+      case "/a-init": bytes = Data(audio.prefix(audioSplit))
+      case "/a-segment": bytes = Data(audio.dropFirst(audioSplit))
+      default: return (404, [:], Data())
+      }
+      return (200, [:], bytes)
+    }
+    let url = server.url("/program.mpd"), token = YlOpenCancellationToken()
+    let scope = try YlManagedBufferLedger(maxBytes: 32 * 1024 * 1024).makeScope(maxBytes: nil)
+    let resources = YlDashProgramResources(source: url, headers: [:], credentials: ["Authorization": "owned"], configuration: .init(map: ["maxRetries": 0]), scope: scope)
+    let program = try YlDashProgramLoader.load(url: url, resources: resources, cancellation: token)
+    XCTAssertEqual(program.timeline.duration, try YlDashProgramTime(1, 2))
+    for track in program.periods[0].tracks {
+      let cursor = try YlDashTrackCursor(track: track, window: program.timeline.windows[0], position: YlDashProgramTime(0), resources: resources, cancellation: token, scope: scope)
+      let first = try XCTUnwrap(cursor.next())
+      XCTAssertEqual(first.pts, try YlDashProgramTime(track.kind == .video ? 0 : -1024, track.kind == .video ? 1 : 48000))
+    }
+    XCTAssertEqual(server.requests.count, 5)
+  }
+}
+
+extension YlDashSampleSourceNativeTests {
+  func testPCMClipPreservesSamplesAndAllocationAtFractionalBoundaries() throws {
+    for interleaved in [false, true] {
+      let format = try XCTUnwrap(AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 48000, channels: 2, interleaved: interleaved))
+      let pcm = try XCTUnwrap(AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 1024))
+      pcm.frameLength = 1024
+      let list = UnsafeMutableAudioBufferListPointer(pcm.mutableAudioBufferList)
+      for channel in list {
+        let samples = try XCTUnwrap(channel.mData).assumingMemoryBound(to: Float.self)
+        for index in 0..<Int(channel.mDataByteSize)/4 { samples[index] = Float(index) }
+      }
+      let start = try YlDashProgramTime(167936, 48000)
+      let window = try YlDashProgramTimeline.Window(start: start.adding(YlDashProgramTime(1, 96000)), end: YlDashProgramTime(7, 2))
+      let source = YlScheduledAudioBuffer(payload: pcm, ptsUs: 0, durationUs: 0, byteCount: 8192, generation: 7)
+      let clipped = try XCTUnwrap(YlDashPCMClipper.clip(source, pts: start, window: window))
+      XCTAssertEqual(pcm.frameLength, 63); XCTAssertEqual(clipped.byteCount, 8192); XCTAssertEqual(clipped.generation, 7)
+      XCTAssertEqual(try XCTUnwrap(pcm.floatChannelData?[0])[0], interleaved ? 2 : 1)
+    }
+  }
+}

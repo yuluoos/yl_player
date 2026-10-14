@@ -1190,6 +1190,18 @@ static int64_t ylf_relative_timestamp_us(YLFPacketRef packet, int64_t timestamp)
   return relative;
 }
 
+int32_t ylf_packet_raw_timestamps(YLFPacketRef packet,
+    int64_t *out_pts, int64_t *out_dts, int64_t *out_duration) {
+  if (packet == NULL || packet->value == NULL || packet->owner == NULL ||
+      out_pts == NULL || out_dts == NULL || out_duration == NULL) {
+    return YLFResultInvalidArgument;
+  }
+  *out_pts = packet->value->pts;
+  *out_dts = packet->value->dts;
+  *out_duration = packet->value->duration;
+  return YLFResultOK;
+}
+
 int64_t ylf_packet_pts_us(YLFPacketRef packet) {
   if (packet == NULL || packet->value == NULL || packet->owner == NULL) {
     return INT64_MIN;

@@ -1,0 +1,374 @@
+[
+  {
+    "buffers" : 28,
+    "decoded" : false,
+    "directory" : "period0",
+    "end" : [
+      12288,
+      12288
+    ],
+    "first" : [
+      0,
+      12288
+    ],
+    "fragment" : 1,
+    "last" : [
+      12288,
+      12288
+    ],
+    "samples" : 24,
+    "started" : true,
+    "status" : 2,
+    "track" : 0
+  },
+  {
+    "buffers" : 24,
+    "decoded" : true,
+    "directory" : "period0",
+    "end" : [
+      0,
+      0
+    ],
+    "first" : [
+      0,
+      12288
+    ],
+    "fragment" : 1,
+    "last" : [
+      11776,
+      12288
+    ],
+    "rgb" : [
+      254,
+      0,
+      0
+    ],
+    "samples" : 24,
+    "started" : true,
+    "status" : 2,
+    "track" : 0
+  },
+  {
+    "buffers" : 28,
+    "decoded" : false,
+    "directory" : "period0",
+    "end" : [
+      12288,
+      12288
+    ],
+    "first" : [
+      0,
+      12288
+    ],
+    "fragment" : 4,
+    "last" : [
+      12288,
+      12288
+    ],
+    "samples" : 24,
+    "started" : true,
+    "status" : 2,
+    "track" : 0
+  },
+  {
+    "buffers" : 24,
+    "decoded" : true,
+    "directory" : "period0",
+    "end" : [
+      0,
+      0
+    ],
+    "first" : [
+      0,
+      12288
+    ],
+    "fragment" : 4,
+    "last" : [
+      11776,
+      12288
+    ],
+    "rgb" : [
+      255,
+      255,
+      255
+    ],
+    "samples" : 24,
+    "started" : true,
+    "status" : 2,
+    "track" : 0
+  },
+  {
+    "buffers" : 3,
+    "decoded" : false,
+    "directory" : "period0",
+    "end" : [
+      47104,
+      48000
+    ],
+    "first" : [
+      2048,
+      48000
+    ],
+    "fragment" : 1,
+    "last" : [
+      47104,
+      48000
+    ],
+    "samples" : 45,
+    "started" : true,
+    "status" : 2,
+    "track" : 1
+  },
+  {
+    "buffers" : 6,
+    "decoded" : true,
+    "directory" : "period0",
+    "end" : [
+      44992,
+      48000
+    ],
+    "first" : [
+      0,
+      48000
+    ],
+    "fragment" : 1,
+    "last" : [
+      40960,
+      48000
+    ],
+    "samples" : 44992,
+    "started" : true,
+    "status" : 2,
+    "track" : 1
+  },
+  {
+    "buffers" : 3,
+    "decoded" : false,
+    "directory" : "period0",
+    "end" : [
+      47104,
+      48000
+    ],
+    "first" : [
+      2048,
+      48000
+    ],
+    "fragment" : 4,
+    "last" : [
+      47104,
+      48000
+    ],
+    "samples" : 45,
+    "started" : true,
+    "status" : 2,
+    "track" : 1
+  },
+  {
+    "buffers" : 6,
+    "decoded" : true,
+    "directory" : "period0",
+    "end" : [
+      44992,
+      48000
+    ],
+    "first" : [
+      0,
+      48000
+    ],
+    "fragment" : 4,
+    "last" : [
+      40960,
+      48000
+    ],
+    "samples" : 44992,
+    "started" : true,
+    "status" : 2,
+    "track" : 1
+  },
+  {
+    "buffers" : 28,
+    "decoded" : false,
+    "directory" : "independent",
+    "end" : [
+      12288,
+      12288
+    ],
+    "first" : [
+      0,
+      12288
+    ],
+    "fragment" : 1,
+    "last" : [
+      12288,
+      12288
+    ],
+    "samples" : 24,
+    "started" : true,
+    "status" : 2,
+    "track" : 0
+  },
+  {
+    "buffers" : 24,
+    "decoded" : true,
+    "directory" : "independent",
+    "end" : [
+      0,
+      0
+    ],
+    "first" : [
+      0,
+      12288
+    ],
+    "fragment" : 1,
+    "last" : [
+      11776,
+      12288
+    ],
+    "rgb" : [
+      254,
+      0,
+      0
+    ],
+    "samples" : 24,
+    "started" : true,
+    "status" : 2,
+    "track" : 0
+  },
+  {
+    "buffers" : 28,
+    "decoded" : false,
+    "directory" : "independent",
+    "end" : [
+      12288,
+      12288
+    ],
+    "first" : [
+      0,
+      12288
+    ],
+    "fragment" : 4,
+    "last" : [
+      12288,
+      12288
+    ],
+    "samples" : 24,
+    "started" : true,
+    "status" : 2,
+    "track" : 0
+  },
+  {
+    "buffers" : 24,
+    "decoded" : true,
+    "directory" : "independent",
+    "end" : [
+      0,
+      0
+    ],
+    "first" : [
+      0,
+      12288
+    ],
+    "fragment" : 4,
+    "last" : [
+      11776,
+      12288
+    ],
+    "rgb" : [
+      255,
+      255,
+      255
+    ],
+    "samples" : 24,
+    "started" : true,
+    "status" : 2,
+    "track" : 0
+  },
+  {
+    "buffers" : 3,
+    "decoded" : false,
+    "directory" : "independent",
+    "end" : [
+      47104,
+      48000
+    ],
+    "first" : [
+      2048,
+      48000
+    ],
+    "fragment" : 1,
+    "last" : [
+      47104,
+      48000
+    ],
+    "samples" : 45,
+    "started" : true,
+    "status" : 2,
+    "track" : 1
+  },
+  {
+    "buffers" : 6,
+    "decoded" : true,
+    "directory" : "independent",
+    "end" : [
+      44992,
+      48000
+    ],
+    "first" : [
+      0,
+      48000
+    ],
+    "fragment" : 1,
+    "last" : [
+      40960,
+      48000
+    ],
+    "samples" : 44992,
+    "started" : true,
+    "status" : 2,
+    "track" : 1
+  },
+  {
+    "buffers" : 3,
+    "decoded" : false,
+    "directory" : "independent",
+    "end" : [
+      47104,
+      48000
+    ],
+    "first" : [
+      2048,
+      48000
+    ],
+    "fragment" : 4,
+    "last" : [
+      47104,
+      48000
+    ],
+    "samples" : 45,
+    "started" : true,
+    "status" : 2,
+    "track" : 1
+  },
+  {
+    "buffers" : 6,
+    "decoded" : true,
+    "directory" : "independent",
+    "end" : [
+      44992,
+      48000
+    ],
+    "first" : [
+      0,
+      48000
+    ],
+    "fragment" : 4,
+    "last" : [
+      40960,
+      48000
+    ],
+    "samples" : 44992,
+    "started" : true,
+    "status" : 2,
+    "track" : 1
+  }
+]

@@ -113,4 +113,9 @@ check("RepresentationID never inherits AdaptationSet id") {
   let xml = try text("independent-pto").replacingOccurrences(of: "<AdaptationSet contentType=\"video\"", with: "<AdaptationSet id=\"parent\" contentType=\"video\"").replacingOccurrences(of: "<Representation id=\"0\"", with: "<Representation").replacingOccurrences(of: "chunk-0-$Number%05d$.m4s", with: "chunk-$RepresentationID$-$Number$.m4s")
   return rejects { _ = try parse(Data(xml.utf8)) }
 }
+check("sidx alternatives are one logical resource") {
+  let xml = Data("<MPD mediaPresentationDuration=\"PT4S\"><Period><AdaptationSet mimeType=\"video/mp4\"><Representation id=\"v\"><BaseURL>https://one.example/v.mp4</BaseURL><BaseURL>https://two.example/v.mp4</BaseURL><SegmentBase indexRange=\"826-905\"><Initialization range=\"0-825\"/></SegmentBase></Representation></AdaptationSet></Period></MPD>".utf8)
+  let resources = try YlDashProgramDocument.indexResources(xml, source: origin, final: origin)
+  return resources.count == 1 && resources[0].candidates.count == 2 && resources[0].range == .init(start: 826, length: 80)
+}
 print(String(data: try JSONSerialization.data(withJSONObject: results, options: [.sortedKeys]), encoding: .utf8)!)

@@ -24,6 +24,7 @@
 		01DF178319EF10D49C1EF278 /* hevc_aac.flv in Resources */ = {isa = PBXBuildFile; fileRef = 6F135885A3F56F40C6C7F785 /* hevc_aac.flv */; };
 		0297CDE8E558DC16D82844EE /* YlApplePublicationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75630A8AD23C5386F95DD3C9 /* YlApplePublicationTests.swift */; };
 		0A09E52D8B8A29CCDC17180D /* YlFairPlayOutputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B04CFDDF3B1614FD42743EF /* YlFairPlayOutputTests.swift */; };
+		0D76904126470D6CECE52FFF /* p01-audio-fragment.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0DF36BAEE36478EE5906FAC3 /* p01-audio-fragment.mp4 */; };
 		128EE532DF3F7C4AB32BD6E9 /* YlFallbackTrackCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA4DF6E8543446084572902 /* YlFallbackTrackCatalogTests.swift */; };
 		1399747E93FC08A04A2C4C26 /* NativeBackendFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5852DE332CF67DAEE6216FE /* NativeBackendFixtures.swift */; };
 		1408C46C12ADA157AC6675E7 /* hls_key.bin in Resources */ = {isa = PBXBuildFile; fileRef = F46174D8E67323FE3A505CEC /* hls_key.bin */; };
@@ -46,6 +47,7 @@
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
 		3715C81ACB2358DB2928B9DB /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A211740DD9C25615F49813E6 /* Pods_Runner.framework */; };
 		3973B9D78981967D69457677 /* h264_mp3.flv in Resources */ = {isa = PBXBuildFile; fileRef = 27822507808069AA8F7D1B81 /* h264_mp3.flv */; };
+		3AAD6A23B91C99B110926D42 /* p01-video-fragment.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E555B3C2CEC5D9C089939697 /* p01-video-fragment.mp4 */; };
 		3E2588A1BC1F6CE2448ADCD5 /* NativeCallbackCharacterization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C290055C8B9FFBB2409465E /* NativeCallbackCharacterization.swift */; };
 		42994F34DE8B764CC1A55FE3 /* YlMacosPlatformAdapterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5066B6A5AC2AF4ABCEC96DF /* YlMacosPlatformAdapterTests.swift */; };
 		50C9997DD3468F1581BF954D /* YlRtmpRestorationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A21ADBFB4A3DDD36999D8 /* YlRtmpRestorationTests.swift */; };
@@ -131,6 +133,7 @@
 		06FAF8C98F9EFA76BF5E3893 /* YlMacosVideoTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosVideoTests.swift; sourceTree = "<group>"; };
 		08BEC84DECE9358BB2DB25A6 /* YlMacosHlsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosHlsTests.swift; sourceTree = "<group>"; };
 		0DC623098CF3B0C9CB3A171F /* YlMacosAudioTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosAudioTests.swift; sourceTree = "<group>"; };
+		0DF36BAEE36478EE5906FAC3 /* p01-audio-fragment.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = "p01-audio-fragment.mp4"; sourceTree = "<group>"; };
 		0F9645960A2FC8869FE4E674 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		147A4BAE0B3DF7169ECAFEC2 /* YlDashResourceLoaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlDashResourceLoaderTests.swift; sourceTree = "<group>"; };
 		163664CDFDA8A7FA6E87C46B /* dash-sidx-v0.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = "dash-sidx-v0.mp4"; sourceTree = "<group>"; };
@@ -210,6 +213,7 @@
 		E1974E285FC714C815AB6BF9 /* YlRtmpDemandTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlRtmpDemandTests.swift; sourceTree = "<group>"; };
 		E36B41E2C43EA3201334FA12 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		E43C33F40306C9E0359CDF71 /* YlNetworkRequestPolicyTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlNetworkRequestPolicyTests.swift; sourceTree = "<group>"; };
+		E555B3C2CEC5D9C089939697 /* p01-video-fragment.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = "p01-video-fragment.mp4"; sourceTree = "<group>"; };
 		E5852DE332CF67DAEE6216FE /* NativeBackendFixtures.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeBackendFixtures.swift; sourceTree = "<group>"; };
 		EA232D5E16F22AC9EB08B629 /* hls_encrypted_segment0.ts */ = {isa = PBXFileReference; includeInIndex = 1; path = hls_encrypted_segment0.ts; sourceTree = "<group>"; };
 		ECAB55485ABB0439C7A04F72 /* YlRtmpProtocolTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlRtmpProtocolTests.swift; sourceTree = "<group>"; };
@@ -309,6 +313,8 @@
 				8070E6E11F3656127214D0F4 /* two_audio_tracks.mkv */,
 				3DE4CCA76626E6D80436BF16 /* opus_switch.mkv */,
 				9222A10C08EA09E781058EF0 /* vorbis_switch.mkv */,
+				E555B3C2CEC5D9C089939697 /* p01-video-fragment.mp4 */,
+				0DF36BAEE36478EE5906FAC3 /* p01-audio-fragment.mp4 */,
 			);
 			path = RunnerTests;
 			sourceTree = "<group>";
@@ -525,6 +531,8 @@
 				631320C1C8CD65B03B4B6E8C /* two_audio_tracks.mkv in Resources */,
 				31F5B575A880807B063A4503 /* opus_switch.mkv in Resources */,
 				5DF21573AD8336E7E7080C0B /* vorbis_switch.mkv in Resources */,
+				3AAD6A23B91C99B110926D42 /* p01-video-fragment.mp4 in Resources */,
+				0D76904126470D6CECE52FFF /* p01-audio-fragment.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

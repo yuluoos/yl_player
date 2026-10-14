@@ -263,6 +263,7 @@ build_slice() {
     _ylf_seek \
     _ylf_close \
     _ylf_packet_stream_index \
+    _ylf_packet_raw_timestamps \
     _ylf_packet_pts_us \
     _ylf_packet_dts_us \
     _ylf_packet_duration_us \

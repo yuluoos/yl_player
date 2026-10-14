@@ -1,0 +1,34 @@
+{
+  "scope": "P01 Task 3 segment source and decode feasibility, not complete program playback",
+  "native": {
+    "passed": 9,
+    "skipped": 0,
+    "actualPixels": "red frame at program zero",
+    "actualPCMFrames": 47104,
+    "toneHzExpected": 440,
+    "toneToleranceHz": 4
+  },
+  "tools": {
+    "tests": 9,
+    "rawPackets": 284,
+    "fragments": 8,
+    "MPDChecks": 27,
+    "resourceChecks": 21,
+    "timeChecks": 1518,
+    "windowChecks": 8
+  },
+  "artifact": "independent signed five-target rebuild byte-identical, immutable contract +5negative checks passed",
+  "missing": "public backend, natural period transitions, 3.5s real output clipping, seek/cancel/reconfigure, subtitles, three-platform joint acceptance",
+  "files": {
+    "avassetreader-probe.json": "76a3df4bcc00e6f7a34a22d782644b30aa95e36ce39ac89aba58a8cc4a947128",
+    "contract-final.log": "f1ce6655d705d7942de09a4df2a34658941b78692ea008a8d80cf06f7a02a2b9",
+    "framing-final.log": "2d85418aff7bc69cd3590130ed4b2a962d4ba5970a7eb2aa345c8378d66707da",
+    "native-final.json": "270bcf8cfc103427ca0b46e056c74e4de16c82fe25c4f5fc25922abe844e2e27",
+    "native-video-red.json": "9fddf24c389179760e590593cfd822432d252424fd75eb224604a7916d2924db",
+    "raw-api-red.log": "adf488ed944279fc8b12f1d19ece2246a594fff7ed2728b60fcae9a9a8c1a562",
+    "raw-bridge-probe.json": "633e77a330991946632455902b0deb4c04b9edc744da21701d06a1933d5c5917",
+    "rebuild-receipt.log": "8174beaaf3754528169f8c06fb0d1b0b144aeca64b3f35c1b8504838a4a12175",
+    "sample-tools-final.log": "a00954fdcb9e01c8f26fa0572d48444002c04e851adba9cff6886d2db3a3cb6a",
+    "sample-window-red.log": "4a0ffb66f45db3b7e14ca62753a4fd457cba5e1895ba2a02daf2f3b97b015f09"
+  }
+}

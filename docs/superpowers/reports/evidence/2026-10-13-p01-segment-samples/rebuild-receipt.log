@@ -1,0 +1,8 @@
+ /opt/homebrew/bin/gmkdir -p '/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-apple-ffmpeg.iGTgih/build/macosx-x86_64/opus-stage/yl_opus/install/lib/pkgconfig'
+ /opt/homebrew/bin/ginstall -c -m 644 opus.pc '/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-apple-ffmpeg.iGTgih/build/macosx-x86_64/opus-stage/yl_opus/install/lib/pkgconfig'
+ /opt/homebrew/bin/gmkdir -p '/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-apple-ffmpeg.iGTgih/build/macosx-x86_64/opus-stage/yl_opus/install/include/opus'
+ /opt/homebrew/bin/ginstall -c -m 644 ../../../opus-1.6.1/include/opus.h ../../../opus-1.6.1/include/opus_multistream.h ../../../opus-1.6.1/include/opus_types.h ../../../opus-1.6.1/include/opus_defines.h ../../../opus-1.6.1/include/opus_projection.h '/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-apple-ffmpeg.iGTgih/build/macosx-x86_64/opus-stage/yl_opus/install/include/opus'
+xcframework successfully written out to: /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-apple-ffmpeg.iGTgih/YlFFmpegBridge.xcframework
+Verified 18 canonical file/symlink entries, source/configuration and toolchain; lock unchanged.
+Clean signed five-target rebuild matches every canonical artifact byte; committed output and lock unchanged.
+kept FFmpeg build directory: /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-apple-ffmpeg.iGTgih
