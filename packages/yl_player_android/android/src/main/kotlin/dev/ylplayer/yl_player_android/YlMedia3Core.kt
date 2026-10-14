@@ -70,6 +70,7 @@ internal class YlMedia3Core(
     private var audioIntent: YlAudioIntent? = null
     private val dashAudio = source.format == AndroidMediaFormat.DASH ||
         source.locator.substringBefore('?').substringBefore('#').lowercase().endsWith(".mpd")
+    private val dashVideoFamily = if (dashAudio) YlDashVideoFamilyPolicy() else null
     private var sourceIsLive = false
     private var sourceClass = YlSourceClass.NETWORK_VOD
     private var stopped = false
@@ -134,6 +135,8 @@ internal class YlMedia3Core(
 
     fun initialize() {
         if (protectedDrm != null && (!videoOutput.isProtected || source.format != AndroidMediaFormat.DASH)) throw YlBoundaryException(YlFailureKind.DRM_PROTECTION_INSUFFICIENT)
+        trackSelector.dashVideoFamily = dashVideoFamily
+        outputObserver.dashVideoFamily = dashVideoFamily
         val renderersFactory = YlOutputRenderersFactory(context, outputObserver)
             .setEnableDecoderFallback(protectedDrm == null)
             .setMediaCodecSelector(protectedSelector ?: YlPolicyCodecSelector(decoderPolicy, evidence = decoderEvidence))
@@ -210,7 +213,7 @@ internal class YlMedia3Core(
         resumeAtLiveEdge || (normalizedLiveOffset()?.let { it <= 2_000L } == true), lifecycle.state.playbackIntended,
         audioIntent?.id, videoTracks.filter { it.isSelected }.map { it.id },
         requestedPlaybackSpeed.toDouble(), exoPlayer.volume.toDouble(),
-        hostQualityConstraint.maxWidth?.toLong(), hostQualityConstraint.maxHeight?.toLong(), hostQualityConstraint.maxBitrate?.toLong(), videoSelection)
+        hostQualityConstraint.maxWidth?.toLong(), hostQualityConstraint.maxHeight?.toLong(), hostQualityConstraint.maxBitrate?.toLong(), videoSelection, dashVideoFamily?.accepted)
     fun restore(point: YlEngineRestorePoint) {
         savedPositionMs = if (rtmp) 0 else point.positionMs; resumeAtLiveEdge = rtmp || point.liveEdge
         setPlaybackSpeed(point.speed)
@@ -218,6 +221,7 @@ internal class YlMedia3Core(
         audioIntent = point.selectedAudioTrack?.let { YlAudioIntent(it, dashAudio) }
         trackSelector.audioIntent = audioIntent
         videoSelection = point.videoSelection
+        dashVideoFamily?.restore(point.dashVideoFamily)
         setVideoConstraints(AndroidVideoConstraintsMessage(point.maxWidth, point.maxHeight, point.maxBitrate))
         lifecycle.reduce(if (point.playbackIntended) YlLifecycleEvent.USER_PLAY else YlLifecycleEvent.USER_PAUSE)
         syncRtmpDemand()

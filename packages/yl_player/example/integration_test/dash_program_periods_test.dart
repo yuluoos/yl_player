@@ -23,6 +23,64 @@ void main() {
     'absolute-base': 4000,
     'absolute-list': 4000,
   };
+  testWidgets('managed DASH fixed AVC disappears and HEVC can be fixed', (
+    tester,
+  ) async {
+    // The owned encoder is 24 fps; hvcC is Main, compatibility 6, level 63, constraints 90.
+    // Fixed selection needs authoritative metadata for the device frame-rate envelope.
+    final manifest =
+        (await rootBundle.loadString(
+              'assets/test_media/dash_timeline/cross-codec.mpd',
+            ))
+            .replaceAll(' width=', ' frameRate="24" width=')
+            .replaceAll('codecs="hvc1"', 'codecs="hvc1.1.6.L63.90"');
+    final server = await DashServer.start(
+      timelineMarkers: true,
+      manifestOverride: manifest,
+    );
+    addTearDown(server.close);
+    final player = await appleController(tester);
+    final session = await player.load(
+      YlNetworkSource(server.automaticUri, networkPolicy: strictNetwork),
+    );
+    await session.ready.timeout(const Duration(seconds: 15));
+    await stateWhere(player, (s) => s.videoTracks.isNotEmpty);
+    await session.selectVideoTrack(player.state.videoTracks.first.id);
+    await readyAndPlay(player, session);
+    await stateWhere(
+      player,
+      (s) =>
+          s.timeline.position.inMilliseconds >= 1800 &&
+          s.videoGeometry?.encodedSize.width == 640,
+    );
+    expect(
+      player.state.videoSelection.reason,
+      YlVideoSelectionReason.trackUnavailable,
+    );
+    await session.pause();
+    await session.selectVideoTrack(player.state.videoTracks.first.id);
+    expect(player.state.videoSelection.isAutomatic, isFalse);
+    await session.seekTo(const Duration(milliseconds: 2100));
+    await session.play();
+    await stateWhere(player, (s) => s.timeline.position.inMilliseconds >= 2300);
+    expect(player.state.videoSelection.isAutomatic, isFalse);
+    expect(player.state.videoGeometry?.encodedSize.width, 640);
+    await session.pause();
+    await session.seekTo(const Duration(milliseconds: 500));
+    await session.play();
+    await stateWhere(
+      player,
+      (s) =>
+          s.timeline.position.inMilliseconds >= 700 &&
+          s.timeline.position.inMilliseconds < 1500,
+    );
+    expect(
+      player.state.videoSelection.reason,
+      YlVideoSelectionReason.trackUnavailable,
+    );
+    expect(player.state.failure, isNull);
+    await player.stop();
+  });
   for (final entry in cases.entries) {
     testWidgets('managed DASH programme ${entry.key}', (tester) async {
       final manifest = await rootBundle.loadString(

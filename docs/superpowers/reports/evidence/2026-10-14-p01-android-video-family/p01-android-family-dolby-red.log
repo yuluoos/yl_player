@@ -1,0 +1,122 @@
+
+> Configure project :gradle
+WARNING: Unsupported Kotlin plugin version.
+The `embedded-kotlin` and `kotlin-dsl` plugins rely on features of Kotlin `2.2.0` that might work differently than in the requested version `2.2.20`.
+
+> Task :gradle:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :gradle:compileKotlin UP-TO-DATE
+> Task :gradle:compileJava NO-SOURCE
+> Task :gradle:compileGroovy NO-SOURCE
+> Task :gradle:pluginDescriptors UP-TO-DATE
+> Task :gradle:processResources UP-TO-DATE
+> Task :gradle:classes UP-TO-DATE
+> Task :gradle:jar UP-TO-DATE
+
+> Configure project :app
+WARNING: The option setting 'android.builtInKotlin=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+WARNING: The option setting 'android.newDsl=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+w: ⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage
+The 'org.jetbrains.kotlin.android' plugin in project ':app' is no longer required for Kotlin support since AGP 9.0.
+Solution: Remove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.
+See https://kotl.in/gradle/agp-built-in-kotlin for more details.
+
+
+> Configure project :integration_test
+w: ⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage
+The 'org.jetbrains.kotlin.android' plugin in project ':integration_test' is no longer required for Kotlin support since AGP 9.0.
+Solution: Remove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.
+See https://kotl.in/gradle/agp-built-in-kotlin for more details.
+
+
+> Configure project :yl_player_android
+w: ⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage
+The 'org.jetbrains.kotlin.android' plugin in project ':yl_player_android' is no longer required for Kotlin support since AGP 9.0.
+Solution: Remove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.
+See https://kotl.in/gradle/agp-built-in-kotlin for more details.
+
+
+> Task :yl_player_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :yl_player_android:preBuild UP-TO-DATE
+> Task :yl_player_android:preDebugBuild UP-TO-DATE
+> Task :yl_player_android:generateDebugResources UP-TO-DATE
+> Task :yl_player_android:packageDebugResources UP-TO-DATE
+> Task :yl_player_android:processDebugNavigationResources UP-TO-DATE
+> Task :yl_player_android:parseDebugLocalResources UP-TO-DATE
+> Task :yl_player_android:generateDebugRFile UP-TO-DATE
+> Task :yl_player_android:compileDebugKotlin UP-TO-DATE
+> Task :yl_player_android:javaPreCompileDebug UP-TO-DATE
+> Task :yl_player_android:compileDebugJavaWithJavac NO-SOURCE
+> Task :yl_player_android:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :yl_player_android:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :yl_player_android:preDebugUnitTestBuild UP-TO-DATE
+> Task :yl_player_android:writeDebugAarMetadata UP-TO-DATE
+> Task :yl_player_android:checkDebugUnitTestAarMetadata UP-TO-DATE
+> Task :yl_player_android:compileDebugLibraryResources UP-TO-DATE
+> Task :yl_player_android:mapDebugUnitTestSourceSetPaths UP-TO-DATE
+> Task :yl_player_android:generateDebugUnitTestResources UP-TO-DATE
+> Task :yl_player_android:mergeDebugUnitTestResources UP-TO-DATE
+> Task :yl_player_android:extractDeepLinksDebug UP-TO-DATE
+> Task :yl_player_android:processDebugManifest UP-TO-DATE
+> Task :yl_player_android:processDebugUnitTestManifest UP-TO-DATE
+> Task :yl_player_android:processDebugUnitTestResources UP-TO-DATE
+> Task :yl_player_android:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :yl_player_android:generateDebugUnitTestAssets UP-TO-DATE
+> Task :yl_player_android:generateDebugAssets UP-TO-DATE
+> Task :yl_player_android:mergeDebugAssets UP-TO-DATE
+> Task :yl_player_android:mergeDebugUnitTestAssets UP-TO-DATE
+> Task :yl_player_android:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :yl_player_android:generateDebugUnitTestConfig UP-TO-DATE
+> Task :yl_player_android:processDebugJavaRes UP-TO-DATE
+> Task :yl_player_android:compileDebugUnitTestKotlin
+> Task :yl_player_android:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :yl_player_android:processDebugUnitTestJavaRes UP-TO-DATE
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+
+> Task :yl_player_android:testDebugUnitTest
+
+YlVideoSelectionPolicyTest > DASH automatic selection stays in accepted SDR family across Period and restore() PASSED
+
+YlVideoSelectionPolicyTest > absence returns auto and clears override while transient empty groups retain fixed intent() PASSED
+
+YlVideoSelectionPolicyTest > DASH Dolby family retains profile and transfer and rejects unproven FEL path() FAILED
+    org.opentest4j.AssertionFailedError at YlVideoSelectionPolicyTest.kt:203
+
+YlVideoSelectionPolicyTest > selection boundary fixes recreated group before next Period prebuffer without changing public intent() PASSED
+
+YlVideoSelectionPolicyTest > missing AVC fixed quality can fall back to supported SDR HEVC while preserving independent caps() PASSED
+
+YlVideoSelectionPolicyTest > unsupported decoder cap conflict unknown constrained metadata and HDR fail safely() PASSED
+
+YlVideoSelectionPolicyTest > DASH actual decoder color cannot contradict accepted manifest family() PASSED
+
+YlVideoSelectionPolicyTest > SDR HEVC fixed quality preserves identity across recreated Period groups() PASSED
+
+YlVideoSelectionPolicyTest > fixed override contains exactly requested track and survives changed IDs and order() PASSED
+
+YlVideoSelectionPolicyTest > explicit high bitdepth AVC metadata is incompatible even when codec profile claims SDR() PASSED
+
+YlVideoSelectionPolicyTest > auto explicit choice and reset have separate stable reasons() PASSED
+
+YlVideoSelectionPolicyTest > same resolution is not identity and duplicate semantic identity is rejected() PASSED
+
+12 tests completed, 1 failed
+
+> Task :yl_player_android:testDebugUnitTest FAILED
+
+[Incubating] Problems report is available at: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':yl_player_android:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/yl_player_android/reports/tests/testDebugUnitTest/index.html
+
+* Try:
+> Run with --scan to generate a Build Scan (Powered by Develocity).
+
+BUILD FAILED in 4s
+32 actionable tasks: 2 executed, 30 up-to-date

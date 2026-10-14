@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-14",
+  "scope": "P01 Android fixed HEVC and cross-Period video-family policy; PCM and final joint gate remain pending",
+  "results": {
+    "jvm": {
+      "passed": 100,
+      "failed": 0
+    },
+    "android_public_program": {
+      "passed": 13,
+      "failed": 0
+    },
+    "dart_analyze": "no issues"
+  },
+  "observations": [
+    "HEVC fixed selection first failed; implemented Main 8-bit SDR support, decoder support and independent limits retained.",
+    "First public test lacked frame-rate metadata; test MPD now supplies owned 24 fps and exact hvcC codec string. The second run contained an attribute-replacement typo; corrected before third pass. Media bytes unchanged.",
+    "Actual full playback found null capability array slots; replicated in JVM then corrected traversal to mapped renderer/group counts.",
+    "Dolby same profile with different transfer reproduced a policy gap; both values now participate. Profile 7 cannot prove MEL/FEL path and is rejected without BL fallback.",
+    "Unknown manifest transfer remains provisional; actual decoded output anchors and validates the family before frame release. Seek and restore retain accepted family.",
+    "The PCM probe build in the final Gradle log is separate pending work, not claimed as a PCM pass."
+  ],
+  "sha256": {
+    "packages/yl_player/example/integration_test/dash_program_periods_test.dart": "33648a0fb89a6f45cf8cbf0b583222d38cd7c6e92af12ee0f5c8769f95e70ba9",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlFixedVideoTrackSelector.kt": "30c02f5675609d6833a0198597319aee5d9b9d2375ae6d00506529df3f6118ec",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt": "ba8055245f5fa03d6c835a2327be238f897c642134f8e28f4bdd27841e331742",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt": "42d9eb3ef3acbbce0d24c28a826e654779436217c69df1505c8e36d964f2255e",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlSessionModels.kt": "0fdd16543a4d34a2fea9eb7dd385f4f37802c047c8bb2371f8c35dc61d8a4b5f",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt": "c529f52be81f401540fb4420747602e9ebc6110951209a331707e9c7e2ffb02b",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashVideoFamilyPolicy.kt": "6e48d5b49cb3d2f8a85da4003546a210f16af3072a8229697f3ce367248640af",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicyTest.kt": "a4784aedf8ff932ef1499f5106c4ad4aca8bd483d038e4b2d2c65c61888d88b8",
+    "docs/superpowers/reports/evidence/2026-10-14-p01-android-video-family/p01-android-hevc-selection-red.log": "0e89cd51050792ee218af0db3483bc316b1004241e2c5acf703e5372da4bd146",
+    "docs/superpowers/reports/evidence/2026-10-14-p01-android-video-family/p01-android-hevc-selection-green.log": "9d0eb42b0c0b1491bb5f63355bc5d6990e1e596789f8027f6523b29cddbdf004",
+    "docs/superpowers/reports/evidence/2026-10-14-p01-android-video-family/p01-android-hevc-public-first.log": "b0b1b9a8c8e355b6b3f54c77fbe880ccdafda78f42adab0911d5243bf8bf5b34",
+    "docs/superpowers/reports/evidence/2026-10-14-p01-android-video-family/p01-android-hevc-public-second.log": "288be9e5c0d475ea8244b718ecf4cf3b34078c2b350655d4e56e743d689900e6",
+    "docs/superpowers/reports/evidence/2026-10-14-p01-android-video-family/p01-android-hevc-public-third.log": "31781d0acc5c8bc4d18d5dd5a14255dba98b97058d6673d577235de98856dabb",
+    "docs/superpowers/reports/evidence/2026-10-14-p01-android-video-family/p01-android-family-red.log": "f153bee47e4a8747d381c8b73b3e3923bd35ad1b08f05e2a1b6430ae4e250820",
+    "docs/superpowers/reports/evidence/2026-10-14-p01-android-video-family/p01-android-family-null-red.log": "8233bbed88505b9aab5343fa5f75465e9bcb9073100e4af039136a7820d93cbf",
+    "docs/superpowers/reports/evidence/2026-10-14-p01-android-video-family/p01-android-family-public.log": "9b6e3bfcabfc1dd2a15ebd951424b815edc9ee8e58698d7c9465a92bef95f026",
+    "docs/superpowers/reports/evidence/2026-10-14-p01-android-video-family/p01-android-family-public-second.log": "3abb94f437f39b26198ed6ad8c9740d9f04c0dca86e20e30586cc00fb3ce45b7",
+    "docs/superpowers/reports/evidence/2026-10-14-p01-android-video-family/p01-android-family-dolby-red.log": "944739b62f4279eca0a827a5e52740d26122923a701a5985be14a50c5249b471",
+    "docs/superpowers/reports/evidence/2026-10-14-p01-android-video-family/p01-android-family-final.log": "e48da970ada1477945f4ada89289143bd79ae8f266266dea7167bff1713238ac",
+    "docs/superpowers/reports/evidence/2026-10-14-p01-android-video-family/p01-android-family-analyze.log": "2cf2074574e9dce6c2e09f0d3eee31d5cc831b2889d8c4c7c4e3a57fc0fe8709"
+  }
+}

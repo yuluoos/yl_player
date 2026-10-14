@@ -85,7 +85,7 @@ class YlVideoSelectionPolicyTest {
         assertFailsWith<YlBoundaryException> { YlVideoSelectionPolicy.select(tracks(high, supported = C.FORMAT_EXCEEDS_CAPABILITIES), "high", caps, envelope) }
         assertFailsWith<YlBoundaryException> { YlVideoSelectionPolicy.select(tracks(high.buildUpon().setFrameRate(Format.NO_VALUE.toFloat()).build()), "high", caps, envelope) }
         assertFailsWith<YlBoundaryException> { YlVideoSelectionPolicy.select(tracks(high.buildUpon().setColorInfo(ColorInfo.Builder().setColorTransfer(C.COLOR_TRANSFER_ST2084).build()).build()), "high", caps, envelope) }
-        assertFailsWith<YlBoundaryException> { YlVideoSelectionPolicy.select(tracks(high.buildUpon().setSampleMimeType("video/hevc").setCodecs("hvc1.1.6.L93").build()), "high", caps, envelope) }
+        assertFailsWith<YlBoundaryException> { YlVideoSelectionPolicy.select(tracks(high.buildUpon().setSampleMimeType("video/hevc").setCodecs("hvc1.2.4.L93").build()), "high", caps, envelope) }
     }
 
     @Test fun `selection boundary fixes recreated group before next Period prebuffer without changing public intent`() = android {
@@ -132,4 +132,78 @@ class YlVideoSelectionPolicyTest {
         assertEquals("initial", YlFixedVideoState().reason)
         assertEquals("user", YlVideoSelectionPolicy.select(Tracks.EMPTY, null, caps, envelope).reason)
     }
+    @Test fun `SDR HEVC fixed quality preserves identity across recreated Period groups`() = android {
+        val hevc = format("hevc").buildUpon().setSampleMimeType("video/hevc").setCodecs("hvc1.1.6.L93").build()
+        val selected = YlVideoSelectionPolicy.select(tracks(hevc), "hevc", caps, envelope)
+        val recreated = hevc.buildUpon().setId("next-hevc").build()
+        assertEquals("next-hevc", YlVideoSelectionPolicy.reconcile(tracks(recreated), selected, caps, envelope).fixedTrackId)
+        assertFailsWith<YlBoundaryException> { YlVideoSelectionPolicy.select(tracks(hevc, supported = C.FORMAT_EXCEEDS_CAPABILITIES), "hevc", caps, envelope) }
+    }
+
+    @Test fun `missing AVC fixed quality can fall back to supported SDR HEVC while preserving independent caps`() = android {
+        val selected = YlVideoSelectionPolicy.select(tracks(format("avc")), "avc", caps, envelope)
+        val hevc = format("hevc").buildUpon().setSampleMimeType("video/hevc").setCodecs("hvc1.1.6.L93").build()
+        val recovered = YlVideoSelectionPolicy.reconcile(tracks(hevc), selected, caps, envelope)
+        assertNull(recovered.fixedTrackId)
+        assertEquals("trackUnavailable", recovered.reason)
+        assertFailsWith<YlBoundaryException> { YlVideoSelectionPolicy.select(tracks(hevc), "hevc", AndroidQualityConstraint(maxWidth = 640), envelope) }
+    }
+
+    private fun choose(selector: YlFixedVideoTrackSelector, vararg groups: TrackGroup): ExoTrackSelection {
+        val mapped = mock(MappingTrackSelector.MappedTrackInfo::class.java)
+        `when`(mapped.rendererCount).thenReturn(1)
+        `when`(mapped.getRendererType(0)).thenReturn(C.TRACK_TYPE_VIDEO)
+        `when`(mapped.getTrackGroups(0)).thenReturn(TrackGroupArray(*groups))
+        `when`(mapped.unmappedTrackGroups).thenReturn(TrackGroupArray.EMPTY)
+        val method = DefaultTrackSelector::class.java.getDeclaredMethod("selectTracks",
+            MappingTrackSelector.MappedTrackInfo::class.java, Array<Array<IntArray>>::class.java, IntArray::class.java,
+            androidx.media3.exoplayer.source.MediaSource.MediaPeriodId::class.java, Timeline::class.java).apply { isAccessible = true }
+        @Suppress("UNCHECKED_CAST")
+        val result = method.invoke(selector, mapped,
+            // Media3 retains unused null entries in its Java backing arrays. Only
+            // mapped renderer/group counts describe valid capability entries.
+            arrayOf((groups.map { IntArray(it.length) { C.FORMAT_HANDLED } } + listOf<IntArray?>(null)).toTypedArray()), intArrayOf(0),
+            androidx.media3.exoplayer.source.MediaSource.MediaPeriodId("period"), Timeline.EMPTY) as android.util.Pair<*, Array<ExoTrackSelection?>>
+        return result.second.single()!!
+    }
+
+    @Test fun `DASH automatic selection stays in accepted SDR family across Period and restore`() = android {
+        val selector = YlFixedVideoTrackSelector(mock(android.content.Context::class.java),
+            DefaultTrackSelector.Parameters.Builder().setConstrainAudioChannelCountToDeviceCapabilities(false).build())
+        selector.dashVideoFamily = YlDashVideoFamilyPolicy()
+        selector.init(mock(androidx.media3.exoplayer.trackselection.TrackSelector.InvalidationListener::class.java),
+            mock(androidx.media3.exoplayer.upstream.BandwidthMeter::class.java))
+        choose(selector, TrackGroup("first", format("avc").buildUpon()
+            .setColorInfo(ColorInfo.Builder().setColorTransfer(C.COLOR_TRANSFER_SDR).build()).build()))
+        val accepted = selector.dashVideoFamily!!.accepted
+        val hdr = format("hdr", 1800000).buildUpon().setSampleMimeType("video/hevc").setCodecs("hvc1.2.4.L93")
+            .setColorInfo(ColorInfo.Builder().setColorTransfer(C.COLOR_TRANSFER_ST2084).build()).build()
+        val sdr = format("sdr", 200000).buildUpon().setSampleMimeType("video/hevc").setCodecs("hvc1.1.6.L93").build()
+        assertEquals("sdr", choose(selector, TrackGroup("hdr", hdr), TrackGroup("sdr", sdr)).selectedFormat.id)
+        selector.dashVideoFamily = YlDashVideoFamilyPolicy(accepted)
+        val error = assertFailsWith<java.lang.reflect.InvocationTargetException> { choose(selector, TrackGroup("only-hdr", hdr)) }
+        assertTrue(error.cause is androidx.media3.exoplayer.ExoPlaybackException)
+        assertEquals(accepted, selector.dashVideoFamily!!.accepted)
+    }
+
+    @Test fun `DASH actual decoder color cannot contradict accepted manifest family`() = android {
+        val policy = YlDashVideoFamilyPolicy()
+        policy.verifyOutput(format("avc"), C.COLOR_TRANSFER_SDR)
+        val changed = format("hidden-hdr").buildUpon().setColorInfo(ColorInfo.Builder()
+            .setColorTransfer(C.COLOR_TRANSFER_ST2084).build()).build()
+        assertFailsWith<YlBoundaryException> { policy.verifyOutput(changed, C.COLOR_TRANSFER_ST2084) }
+        policy.verifyOutput(format("sdr"), C.COLOR_TRANSFER_SDR)
+    }
+
+    @Test fun `DASH Dolby family retains profile and transfer and rejects unproven FEL path`() = android {
+        fun dolby(profile: String, transfer: Int) = format("dv").buildUpon().setSampleMimeType("video/dolby-vision")
+            .setCodecs("dvhe.$profile.06").setColorInfo(ColorInfo.Builder().setColorTransfer(transfer).build()).build()
+        val policy = YlDashVideoFamilyPolicy()
+        policy.accept(dolby("08", C.COLOR_TRANSFER_ST2084))
+        assertFalse(policy.compatible(dolby("08", C.COLOR_TRANSFER_HLG)))
+        assertFalse(policy.compatible(dolby("05", C.COLOR_TRANSFER_ST2084)))
+        assertFailsWith<YlBoundaryException> { YlDashVideoFamilyPolicy().accept(dolby("07", C.COLOR_TRANSFER_ST2084)) }
+        assertFailsWith<YlBoundaryException> { policy.restore("sdr") }
+    }
+
 }

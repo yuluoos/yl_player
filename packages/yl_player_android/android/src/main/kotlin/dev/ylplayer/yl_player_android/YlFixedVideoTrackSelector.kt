@@ -24,6 +24,12 @@ internal class YlFixedVideoTrackSelector : DefaultTrackSelector {
             field = value
             invalidate(/* parameters */ null)
         }
+    var dashVideoFamily: YlDashVideoFamilyPolicy? = null
+        set(value) {
+            field?.onAccepted = null
+            field = value
+            value?.onAccepted = { invalidate(/* parameters */ null) }
+        }
     @Volatile var fixedIntent: YlFixedVideoIntent? = null
     /** Owned gap PCM is timing, not a replacement content choice. */
     var isDashGapGroup: (androidx.media3.common.TrackGroup) -> Boolean = { false }
@@ -72,6 +78,7 @@ internal class YlFixedVideoTrackSelector : DefaultTrackSelector {
                 throw ExoPlaybackException.createForUnexpected(error, PlaybackException.ERROR_CODE_FAILED_RUNTIME_CHECK)
             }
         }
+        var fixedRenderer: Int? = null
         val intent = fixedIntent
         if (intent != null) {
             try {
@@ -99,11 +106,46 @@ internal class YlFixedVideoTrackSelector : DefaultTrackSelector {
                     }
                     val renderer = catalog.single { it.second === chosen }.first
                     definitions[renderer] = ExoTrackSelection.Definition(chosen.group, chosen.index)
+                    fixedRenderer = renderer
                 }
             } catch (error: YlBoundaryException) {
                 throw ExoPlaybackException.createForUnexpected(error, PlaybackException.ERROR_CODE_FAILED_RUNTIME_CHECK)
             }
         }
         super.selectAllTracks(definitions, mappedTrackInfo, rendererFormatSupports, rendererMixedMimeTypeAdaptationSupports, params)
+        dashVideoFamily?.let { family ->
+            try {
+                val videoRenderers = definitions.indices.filter { mappedTrackInfo.getRendererType(it) == C.TRACK_TYPE_VIDEO }
+                if (family.accepted == null) videoRenderers.firstNotNullOfOrNull { definitions[it] }?.let {
+                    family.accept(it.group.getFormat(it.tracks[0]))
+                }
+                val filtered = Array(mappedTrackInfo.rendererCount) { renderer ->
+                    Array(mappedTrackInfo.getTrackGroups(renderer).length) { group -> rendererFormatSupports[renderer][group].clone() }
+                }
+                var hasVideo = false
+                for (renderer in videoRenderers) {
+                    val available = mappedTrackInfo.getTrackGroups(renderer)
+                    for (group in 0 until available.length) for (track in 0 until available[group].length) {
+                        hasVideo = true
+                        if (!family.compatible(available[group].getFormat(track))) {
+                            filtered[renderer][group][track] = RendererCapabilities.create(C.FORMAT_UNSUPPORTED_SUBTYPE)
+                        }
+                    }
+                    // Keep a resolved fixed choice; automatic fallback uses the same selector
+                    // and ABR policy, with only incompatible formats marked unsupported.
+                    if (renderer == fixedRenderer) definitions[renderer]?.let { def ->
+                        def.tracks.forEach { family.accept(def.group.getFormat(it)) }
+                    } else definitions[renderer] = null
+                }
+                super.selectAllTracks(definitions, mappedTrackInfo, filtered, rendererMixedMimeTypeAdaptationSupports,
+                    params.buildUpon().setExceedRendererCapabilitiesIfNecessary(false).build())
+                if (hasVideo && videoRenderers.none { definitions[it] != null }) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
+                videoRenderers.forEach { renderer -> definitions[renderer]?.let { def ->
+                    def.tracks.forEach { family.accept(def.group.getFormat(it)) }
+                } }
+            } catch (error: YlBoundaryException) {
+                throw ExoPlaybackException.createForUnexpected(error, PlaybackException.ERROR_CODE_FAILED_RUNTIME_CHECK)
+            }
+        }
     }
 }

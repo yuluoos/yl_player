@@ -1,0 +1,98 @@
+Resolving dependencies in `/Users/yy2021_8689/Desktop/Flutter/yl_player`...
+Downloading packages...
+  _fe_analyzer_shared 100.0.0 (109.0.0 available)
+  analyzer 13.0.0 (14.5.0 available)
+  built_collection 5.1.1 (5.1.2 available)
+  clock 1.1.2 (1.1.3 available)
+  code_assets 1.2.1 (2.1.0 available)
+  cupertino_icons 1.0.9 (2.0.0 available)
+  dart_style 3.1.9 (3.1.13 available)
+  hooks 2.0.2 (2.2.0 available)
+  matcher 0.12.19 (0.12.20 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.0 (1.19.0 available)
+  native_toolchain_c 0.19.2 (0.19.5 available)
+  package_config 2.2.0 (3.0.0 available)
+  petitparser 7.0.2 (7.1.0 available)
+  pigeon 28.0.0 (29.0.8 available)
+  platform 3.1.6 (3.2.0 available)
+  pointycastle 3.9.1 (4.0.0 available)
+  record_use 0.6.0 (1.1.1 available)
+  stack_trace 1.12.1 (1.12.2 available)
+  test_api 0.7.11 (0.7.15 available)
+  vector_math 2.2.0 (2.4.3 available)
+  webdriver 3.1.0 (3.2.0 available)
+  xml 7.0.1 (7.1.0 available)
+Got dependencies in `/Users/yy2021_8689/Desktop/Flutter/yl_player`!
+23 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+All plugins found for macos are Swift Packages, but your project still has CocoaPods integration. Your project uses a non-standard Podfile and will need to be migrated to Swift Package Manager manually. Some steps you may need to complete include:
+  * In the macos/ directory run "pod deintegrate"
+  * Transition any Pod dependencies to Swift Package equivalents. See https://developer.apple.com/documentation/xcode/adding-package-dependencies-to-your-app
+  * Transition any custom logic
+  * Remove the include to "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig" in your macos/Flutter/Flutter-Debug.xcconfig
+  * Remove the include to "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig" in your macos/Flutter/Flutter-Release.xcconfig
+
+Removing CocoaPods integration will improve the project's build time.
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart
+Running Gradle task 'assembleDebug'...                             11.4s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...           3.1s
+00:00 +0: managed DASH fixed AVC disappears and HEVC can be fixed
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following YlPlayerException was thrown running a test:
+YlFailure(category: decoder, code: decoder.unsupported, retryable: false, scope: command,
+diagnosticId: 4fde4707-b3b6-4386-8fcb-a50defc9c3b2)
+
+When the exception was thrown, this was the stack:
+#4      AndroidPlayer._cancelLoad (package:yl_player_android/src/android_player.dart:587:24)
+#5      AndroidPlayer._load (package:yl_player_android/src/android_player.dart:381:9)
+#7      AndroidPlayer._load (package:yl_player_android/src/android_player.dart:331:26)
+#8      AndroidPlayer.load (package:yl_player_android/src/android_player.dart:322:17)
+#9      YlPlayerController._performLoad (package:yl_player/src/player_controller.dart:346:40)
+#10     YlPlayerController.load (package:yl_player/src/player_controller.dart:332:17)
+#11     main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart:35:34)
+#13     main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart:29:23)
+#14     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+#16     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:189:25)
+#17     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:19)
+#19     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1941:5)
+#22     TestWidgetsFlutterBinding._runTest (package:flutter_test/src/binding.dart:1926:10)
+#23     LiveTestWidgetsFlutterBinding.runTest (package:flutter_test/src/binding.dart:3059:12)
+#24     IntegrationTestWidgetsFlutterBinding.runTest (package:integration_test/integration_test.dart:237:17)
+#25     testWidgets.<anonymous closure> (package:flutter_test/src/widget_tester.dart:184:24)
+#26     Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:25)
+#28     Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:252:15)
+#33     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:17)
+#34     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:17)
+#39     Invoker._waitForOutstandingCallbacks (package:test_api/src/backend/invoker.dart:314:5)
+#40     Invoker._onRun.<anonymous closure>.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/invoker.dart:457:21)
+#42     Invoker._onRun.<anonymous closure>.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/invoker.dart:455:15)
+#47     Invoker._onRun.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/invoker.dart:445:11)
+#48     Invoker._guardIfGuarded (package:test_api/src/backend/invoker.dart:500:15)
+#49     Invoker._onRun.<anonymous closure> (package:test_api/src/backend/invoker.dart:444:9)
+#56     Invoker._onRun (package:test_api/src/backend/invoker.dart:442:11)
+#57     LiveTestController.run (package:test_api/src/backend/live_test_controller.dart:161:11)
+#58     RemoteListener._runLiveTest.<anonymous closure> (package:test_api/src/backend/remote_listener.dart:323:16)
+#63     RemoteListener._runLiveTest (package:test_api/src/backend/remote_listener.dart:322:5)
+#64     RemoteListener._serializeTest.<anonymous closure> (package:test_api/src/backend/remote_listener.dart:263:7)
+#82     _GuaranteeSink.add (package:stream_channel/src/guarantee_channel.dart:125:12)
+#83     new _MultiChannel.<anonymous closure> (package:stream_channel/src/multi_channel.dart:159:31)
+#85     CastStreamSubscription._onData (dart:_internal/async_cast.dart:95:11)
+#99     _GuaranteeSink.add (package:stream_channel/src/guarantee_channel.dart:125:12)
+#100    main.<anonymous closure> (file:///var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/flutter_tools.h3EzDd/flutter_test_listener.axbZHh/listener.dart:56:22)
+#103    _runExtension (dart:developer-patch/developer.dart:113:23)
+(elided 66 frames from dart:async and package:stack_trace)
+
+The test description was:
+  managed DASH fixed AVC disappears and HEVC can be fixed
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -1: managed DASH fixed AVC disappears and HEVC can be fixed [E]
+  Test failed. See exception logs above.
+  The test description was: managed DASH fixed AVC disappears and HEVC can be fixed
+  
+00:01 +0 -1: (tearDownAll)
+00:01 +0 -1: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH fixed AVC disappears and HEVC can be fixed

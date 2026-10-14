@@ -43,6 +43,10 @@ internal object YlVideoSelectionPolicy {
 
     fun identity(format: Format): YlVideoQualityIdentity {
         requireCompatible(format)
+        return uncheckedIdentity(format)
+    }
+
+    private fun uncheckedIdentity(format: Format): YlVideoQualityIdentity {
         return YlVideoQualityIdentity(format.sampleMimeType, format.codecs?.lowercase(), format.width, format.height,
             format.averageBitrate, format.peakBitrate, format.bitrate, format.frameRate,
             format.roleFlags, format.selectionFlags, format.language, format.colorInfo?.colorSpace,
@@ -52,10 +56,13 @@ internal object YlVideoSelectionPolicy {
     private fun requireCompatible(format: Format) {
         val codec = format.codecs?.lowercase()
         val profile = codec?.takeIf { Regex("avc[13]\\.[0-9a-f]{6}").matches(it) }?.substring(5, 7)
-        // AVC baseline/main/extended/high are 8-bit SDR. Missing container color metadata is
-        // accepted for this subset; explicit HDR, 10-bit AVC, or other encodings fail closed.
-        if (format.sampleMimeType != "video/avc" || profile !in setOf("42", "4d", "58", "64") ||
-            format.colorInfo?.hdrStaticInfo != null ||
+        // The initial fixed-quality path accepts 8-bit SDR AVC and HEVC Main. Codec/profile
+        // validation is independent of device support, which must also be FORMAT_HANDLED.
+        // Main10, Dolby and unknown profiles are not evidence of an SDR rendition.
+        val avc = format.sampleMimeType == "video/avc" && profile in setOf("42", "4d", "58", "64")
+        val hevc = format.sampleMimeType == "video/hevc" && codec != null &&
+            Regex("(?:hvc1|hev1)\\.1\\.[0-9a-f]{1,8}\\.[lh](?:30|60|63|90|93|120|123|150|153|156|180|183|186)(?:\\.[0-9a-f]{2}){0,6}").matches(codec)
+        if ((!avc && !hevc) || format.colorInfo?.hdrStaticInfo != null ||
             format.colorInfo?.lumaBitdepth?.let { it != Format.NO_VALUE && it != 8 } == true ||
             format.colorInfo?.chromaBitdepth?.let { it != Format.NO_VALUE && it != 8 } == true ||
             format.colorInfo?.colorTransfer?.let { it != Format.NO_VALUE && it != C.COLOR_TRANSFER_SDR } == true) unsupported()
@@ -84,9 +91,10 @@ internal object YlVideoSelectionPolicy {
      * Absence alone permits PD-01. Ambiguous, incompatible, or newly ineligible quality fails. */
     fun resolve(quality: YlVideoQualityIdentity, catalog: List<YlVideoCandidate>, caps: AndroidQualityConstraint,
         envelope: YlVideoEnvelope): YlVideoCandidate? {
-        val matches = catalog.filter { identity(it.format) == quality }
+        val matches = catalog.filter { uncheckedIdentity(it.format) == quality }
         if (matches.size > 1) unsupported()
         val candidate = matches.singleOrNull() ?: return null
+        requireCompatible(candidate.format)
         if (!candidate.supported || catalog.count { it.id == candidate.id } != 1) unsupported()
         validate(quality, caps, envelope)
         return candidate

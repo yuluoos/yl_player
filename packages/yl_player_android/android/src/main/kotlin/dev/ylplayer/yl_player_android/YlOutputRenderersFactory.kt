@@ -22,6 +22,7 @@ internal class YlVideoOutputObserver(
     private val post: (() -> Unit) -> Unit,
     private val receive: (Any?, AndroidVideoGeometryMessage?) -> Unit,
 ) {
+    var dashVideoFamily: YlDashVideoFamilyPolicy? = null
     private data class Stream(val startUs: Long, val offsetUs: Long)
     private data class Entry(val uid: Any, val generation: Long)
     private val generation = AtomicLong()
@@ -47,6 +48,8 @@ internal class YlVideoOutputObserver(
     }
 
     fun outputFormat(format: Format, mediaFormat: MediaFormat?) {
+        dashVideoFamily?.verifyOutput(format, mediaFormat?.takeIf { it.containsKey(MediaFormat.KEY_COLOR_TRANSFER) }
+            ?.getInteger(MediaFormat.KEY_COLOR_TRANSFER))
         // Same calculation as 1.11 MediaCodecVideoRenderer.onOutputFormatChanged. The Core
         // does not enable tunneling or a VideoSink; MediaFormat describes the decoded crop.
         var width = format.width
@@ -95,6 +98,13 @@ internal class YlOutputRenderersFactory(context: Context, private val observer: 
 }
 
 internal class YlOutputVideoRenderer(builder: Builder, private val observer: YlVideoOutputObserver) : MediaCodecVideoRenderer(builder) {
+    override fun getDecoderInfos(selector: MediaCodecSelector, format: Format, requiresSecureDecoder: Boolean): List<androidx.media3.exoplayer.mediacodec.MediaCodecInfo> {
+        val candidates = super.getDecoderInfos(selector, format, requiresSecureDecoder)
+        // Media3 may offer HEVC/AVC base-layer fallback for Dolby. DASH programme
+        // compatibility promises the full selected path, so do not silently downgrade it.
+        return if (observer.dashVideoFamily != null && format.sampleMimeType == "video/dolby-vision")
+            candidates.filter { it.mimeType == "video/dolby-vision" } else candidates
+    }
     override fun onStreamChanged(formats: Array<Format>, startPositionUs: Long, offsetUs: Long, mediaPeriodId: MediaPeriodId) {
         observer.stream(startPositionUs, offsetUs, mediaPeriodId.periodUid)
         super.onStreamChanged(formats, startPositionUs, offsetUs, mediaPeriodId)

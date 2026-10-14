@@ -342,3 +342,11 @@ seek/off/会话更换与目录原子发布取消旧窗口；迟到成功或错�
 - XML 引号/实体与合并同时 cue 上限、重发现/选轨竞态、失败换轨回滚、合并 128 轨道上限均保留 RED→GREEN 证据。
 
 这证明字幕功能和当前环境组件渲染，不等于物理显示/声学同步验收，也不等于 P01 全部完成。剩余 Android 精确 PCM/轨道内空缺、HDR 兼容选择、更多恢复及联合 AV/cue 标记测量、最低版本检查和最终复核继续执行；未修改另一会话的长播放或弱网 ABR。
+
+### 2026-10-14 Android 固定 HEVC 与跨 Period 色彩集合
+
+固定档位增加已验证的 8-bit SDR HEVC Main，继续核验设备支持、帧率和独立 caps。轨道身份匹配不再因目录中无关的编码而直接报错。固定 AVC 消失可按 PD-01 回自动，再固定 HEVC；向前 seek 的实际播放通过。
+
+DASH 自动选择复用原 Media3 选择算法，只筛除与已接受 SDR/PQ/HLG/Dolby profile+transfer 不兼容的轨道。清单缺色彩信息时，实际解码输出在释放画面前确定和核验集合；恢复保留该意图。此路线无法证明 Profile 7 的完整增强层处理，因此明确拒绝，保留原数据，不调用 BL 降级。
+
+验证：Android 公开节目 13/13、相关 JVM 100/100、Dart 静态分析无问题。实际播放暴露的稀疏能力数组空槽和 Dolby transfer 边界均保留 RED→GREEN 证据：[证据清单](evidence/2026-10-14-p01-android-video-family/manifest.json)。这不是 P01 封板：Android PCM 精确裁剪/轨道内空缺、联合 AV/cue 标记及最低版本等仍在继续。

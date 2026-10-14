@@ -16,7 +16,7 @@ internal data class YlEngineRestorePoint(val positionMs: Long, val liveEdge: Boo
     val selectedAudioTrack: String? = null, val selectedVideoTracks: List<String> = emptyList(),
     val speed: Double = 1.0, val volume: Double = 1.0,
     val maxWidth: Long? = null, val maxHeight: Long? = null, val maxBitrate: Long? = null,
-    val videoSelection: YlFixedVideoState = YlFixedVideoState())
+    val videoSelection: YlFixedVideoState = YlFixedVideoState(), val dashVideoFamily: String? = null)
 internal enum class YlDecoderRequirement { DEFAULT, PREFERRED, HARDWARE_REQUIRED }
 internal data class YlPreparedSession(
     val identity: YlSessionIdentity,
