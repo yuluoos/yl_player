@@ -66,8 +66,15 @@ final class YlPlaybackSession {
   /// Explicit Matroska/WebM format declarations must match the file DocType.
   /// Requires enableTextSubtitles. Discovery is atomic, preserves external
   /// entries and a still-present selection. New sessions start off.
-  /// HTTP requires byte ranges and a stable strong ETag; source policy applies.
-  /// Other containers reject without I/O.
+  /// Container HTTP discovery requires byte ranges and a stable strong ETag.
+  /// Explicit DASH or automatic .mpd sources discover clear static MPD text,
+  /// wvtt and stpp tracks without fetching their media until selection. DASH
+  /// uses bounded whole subtitle resources or exact ranges with strong ETags;
+  /// MPD, initialization and segments retain the source managed network policy.
+  /// Selected windows share the 4 MiB/10,000 cue catalog budget with external
+  /// subtitles. Cross-Period identity preserves selection, and Period/PTO
+  /// mapping clips cues to their half-open programme windows.
+  /// Other explicit containers reject without I/O.
   Future<void> discoverEmbeddedSubtitles() => _command(() {
     final runtime = _player._textSubtitles;
     final source = _player._subtitleSource;
@@ -92,11 +99,15 @@ final class YlPlaybackSession {
         );
       });
 
-  /// Null turns subtitles off. Does not select a same-language replacement.
+  /// Null turns subtitles off and cancels pending segment requests. Does not
+  /// select a same-language replacement. For DASH, awaits the selected current
+  /// and next window; malformed subtitle data rejects only this command.
   Future<void> selectSubtitleTrack(String? trackId) => _command(() {
     if (trackId != null) validateYlSubtitleTrackId(trackId);
     if (_player._textSubtitles case final runtime?) {
-      return _textSubtitleCommand(() async => runtime.select(trackId));
+      return _textSubtitleCommand(
+        () => runtime.selectAt(trackId, _player.state.timeline.position),
+      );
     }
     return _subtitleCommand(
       YlPlayerOperation.subtitleTrackSelection,

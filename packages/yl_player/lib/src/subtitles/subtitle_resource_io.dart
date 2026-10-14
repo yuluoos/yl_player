@@ -4,9 +4,11 @@ import 'dart:typed_data';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import '../drm/license_secure_socket.dart';
 import 'subtitle_resource.dart';
+import 'dash_subtitle_resource.dart';
 import 'subtitle_socket.dart';
 
 part 'subtitle_range_reader.dart';
+part 'dash_subtitle_resource_io.dart';
 
 Future<List<int>> read(
   YlMediaSource source,
@@ -80,18 +82,27 @@ const _retryStatuses = {408, 429, 500, 502, 503, 504};
 // A range scan shares these counters and the final credential scope across all
 // windows; an external subtitle uses a fresh ledger for its single resource.
 final class _NetworkLedger {
-  _NetworkLedger(this.uri, {this.rangeScan = false});
+  _NetworkLedger(
+    this.uri, {
+    this.rangeScan = false,
+    this.onAttempt,
+    this.onProgress,
+  });
   Uri uri;
   final bool rangeScan;
+  final void Function()? onAttempt;
+  final void Function(int)? onProgress;
   bool stripped = false;
   int redirects = 0, retries = 0, attempts = 0, bodyBytes = 0;
   void attempt() {
+    onAttempt?.call();
     if (rangeScan && ++attempts > 4096) {
       throw subtitleFailure(YlFailureCodes.subtitleTooLarge);
     }
   }
 
   void progress(int count) {
+    onProgress?.call(count);
     if (!rangeScan) return;
     if (count > 64 * 1024 * 1024 - bodyBytes) {
       throw subtitleFailure(YlFailureCodes.subtitleTooLarge);
@@ -106,6 +117,7 @@ Future<_Reply> _network(
   int maxBytes, {
   _NetworkLedger? shared,
   _RangeRequest? range,
+  void Function()? advanceCandidate,
 }) async {
   final policy = source.networkPolicy;
   final managed = policy.kind == YlNetworkPolicyKind.managed;
@@ -135,6 +147,7 @@ Future<_Reply> _network(
           ledger.retries >= policy.maxRetries!) {
         rethrow;
       }
+      advanceCandidate?.call();
       await _wait(
         subtitleRetryDelay(policy, ++ledger.retries, null, DateTime.now())!,
         token,
@@ -187,6 +200,7 @@ Future<_Reply> _network(
     );
     if (delay == null) throw subtitleFailure(YlFailureCodes.networkFailed);
     ledger.retries++;
+    advanceCandidate?.call();
     await _wait(delay, token);
   }
 }

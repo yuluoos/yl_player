@@ -33,7 +33,7 @@ final class YlDashProgramBackend: YlPlaybackBackend {
   private var epoch: UInt64 = 1, command: UInt64 = 0
   private var active = false, stopped = false, disposed = false, playing = false
   private var completed = false, transitioning = false
-  private var outputRunning = false
+  private var outputRunning = false, pausedByCommand = false
   private var constraints: YlAppleVideoConstraints
   private var selection = YlNativeVideoSelection()
   private var explicitAudio: String?
@@ -113,13 +113,13 @@ final class YlDashProgramBackend: YlPlaybackBackend {
     try cancellationToken?.throwIfCancelled()
     guard locked({ !disposed && !stopped }) else { return }
     try services.beforeAudioOutput(); try services.activateAudioSession()
-    locked { playing = true }
+    locked { playing = true; pausedByCommand = false }
     if !isActive { try activate(); return }
     if locked({ completed }) { try seek(toMs: 0, cancellationToken: cancellationToken); return }
     try startOutput(); emitState()
   }
   func pause() throws {
-    let current = locked { () -> YlDashPeriodPlayback? in playing = false; outputRunning = false; gapClock?.pause(atHostTimeUs: now); return pipeline }
+    let current = locked { () -> YlDashPeriodPlayback? in playing = false; pausedByCommand = true; outputRunning = false; gapClock?.pause(atHostTimeUs: now); return pipeline }
     current?.pause(); emitState()
   }
   func seek(toMs: Int64, cancellationToken: YlOpenCancellationToken?) throws {
@@ -358,15 +358,18 @@ final class YlDashProgramBackend: YlPlaybackBackend {
       let position = positionLocked()
       let tracks = current.map { prepared.program.periods[$0.index].tracks } ?? []
       let videoTrack = current?.video.track
+      let geometry = stopped || gapClock != nil ? nil : current?.firstVideo.source.videoFormat.flatMap {
+        YlVideoGeometryResolver.managed(format: $0)
+      }
       let videoTracks = tracks.filter { $0.kind == .video }.map {
         YlNativeTrack(id: $0.id, kind: .video, codec: $0.codec, bitrate: Int($0.bandwidth),
           width: Int($0.width), height: Int($0.height), isSelected: $0.id == videoTrack?.id)
       }
       let audioTracks = tracks.filter { $0.kind == .audio }.map {
-        YlNativeTrack(id: $0.id, kind: .audio, label: $0.roles.joined(separator: ","), language: $0.language,
+        YlNativeTrack(id: $0.id, kind: .audio, label: $0.roles.isEmpty ? nil : $0.roles.joined(separator: ","), language: $0.language,
           codec: $0.codec, isSelected: $0.id == current?.audio?.track.id)
       }
-      let status = stopped ? "idle" : failure != nil ? "error" : completed ? "completed" : (transitioning || (playing && !outputRunning)) ? "buffering" : playing ? "playing" : "paused"
+      let status = stopped ? "idle" : failure != nil ? "error" : completed ? "completed" : (transitioning || (playing && !outputRunning)) ? "buffering" : playing ? "playing" : pausedByCommand ? "paused" : "ready"
       return YlNativeState(status: status, positionMs: position / 1000,
         durationMs: try? prepared.program.timeline.duration.converted(to: 1000, rounding: .ceil),
         bufferedPositionMs: (pipeline?.scheduler.pendingPTS.last ?? position) / 1000,
@@ -377,7 +380,7 @@ final class YlDashProgramBackend: YlPlaybackBackend {
         metrics: .init(bufferedDurationMs: (pipeline?.scheduler.bufferedDurationUs ?? 0) / 1000,
           bufferedBytes: prepared.scope.ledger.snapshot.currentBytes,
           droppedVideoFrames: pipeline?.scheduler.lateFrameDropCount, audioUnderruns: pipeline?.audio?.underrunCount),
-        error: failure, decoderEvidence: pipeline?.video.hardwareEvidence, videoSelection: selection)
+        error: failure, decoderEvidence: pipeline?.video.hardwareEvidence, geometry: geometry, videoSelection: selection)
     }
     publish(.state(value))
   }

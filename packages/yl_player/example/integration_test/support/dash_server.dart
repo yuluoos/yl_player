@@ -81,6 +81,7 @@ final class DashServer {
     String? manifestOverride,
     int? rootStatusCode,
     bool missingMedia = false,
+    Map<String, List<int>> subtitleFiles = const {},
   }) async {
     if (offsetSegmentList && !presentationOffsets) {
       throw ArgumentError('Offset SegmentList requires presentationOffsets');
@@ -157,6 +158,12 @@ final class DashServer {
         ..addAll(indexedFiles);
     }
     if (omitFinalDuration) manifest = omitFinalDashDuration(manifest);
+    for (final entry in subtitleFiles.entries) {
+      if (!entry.key.startsWith('/') || files.containsKey(entry.key)) {
+        throw ArgumentError('Subtitle fixtures must use unique absolute paths');
+      }
+      files[entry.key] = Uint8List.fromList(entry.value);
+    }
     final primary = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
     final secondary = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
     final result = DashServer._(

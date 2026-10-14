@@ -121,6 +121,65 @@ final class SubtitleDocument {
       cues.fold(0, (n, c) => n + (c.pgs?.byteLength ?? 0));
   final _CueNode? _index;
 
+  /// Internal programme projection. Preserve parsed styles and layout; only
+  /// the authoritative clock mapping and half-open output window may change.
+  SubtitleDocument mappedWindow({
+    required Duration Function(Duration) mapStart,
+    required Duration Function(Duration) mapEnd,
+    required Duration start,
+    required Duration end,
+  }) {
+    final mapped = <SubtitleCue>[];
+    for (final cue in cues) {
+      final a = mapStart(cue.start), b = mapEnd(cue.end);
+      final from = a < start ? start : a, to = b > end ? end : b;
+      if (to <= from) continue;
+      mapped.add(_timedCue(cue, mapped.length, from, to));
+    }
+    return SubtitleDocument._(mapped, inputBytes);
+  }
+
+  /// Combine only bounded parsed windows, never an entire segmented programme.
+  static SubtitleDocument combine(
+    List<SubtitleDocument> documents, {
+    SubtitleLimits limits = const SubtitleLimits(),
+  }) {
+    limits._validate();
+    final cues = <SubtitleCue>[];
+    var bytes = 0;
+    for (final document in documents) {
+      bytes += document.inputBytes;
+      if (bytes > limits.maxInputBytes ||
+          document.cues.length > limits.maxCues - cues.length) {
+        _limit();
+      }
+      for (final cue in document.cues) {
+        cues.add(_timedCue(cue, cues.length, cue.start, cue.end));
+      }
+    }
+    return _finish(cues, bytes, limits);
+  }
+
+  static SubtitleCue _timedCue(
+    SubtitleCue cue,
+    int ordinal,
+    Duration start,
+    Duration end,
+  ) => SubtitleCue._(
+    ordinal: ordinal,
+    identifier: cue.identifier,
+    start: start,
+    end: end,
+    payload: cue.payload,
+    textRuns: cue.textRuns,
+    region: cue.region,
+    ass: cue.ass,
+    pgs: cue.pgs,
+    positionPercent: cue.positionPercent,
+    positionAlignment: cue.positionAlignment,
+    alignment: cue.alignment,
+  );
+
   static SubtitleDocument fromEmbeddedPackets(
     List<EmbeddedSubtitlePacket> packets, {
     required SubtitleFormat format,

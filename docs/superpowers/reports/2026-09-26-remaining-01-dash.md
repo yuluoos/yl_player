@@ -322,3 +322,23 @@ P01 继续执行：Android 时间轴语义、DASH 字幕与联合封板仍未完
 API 24 核查移除了仅 API 31 提供的 BigInteger.longValueExact，改为明确位宽检查。新增 Media3 类型补充 UnstableApi 注解。全量 lint **未通过**，最终报告仍有 112 errors / 17 warnings，涉及现有 API 门控及其他 Media3 注解；本轮改动文件无新增报告项。这不是最低 Android 系统实机运行证据。
 
 本阶段实播证明公开节目时长、空缺可见性、生命周期与目录行为；不能据此声称 Android 精确 PCM 边界或外部声学同步已经测量。后续仍须补逐样本输出、HDR 家族与固定档位跨编码边界、更多恢复/取消场景、DASH 字幕和最终联合复核。P01 仍未整体完成。
+
+
+## 2026-10-14：DASH 字幕目录、分段窗口与三端 Flutter 渲染（阶段提交）
+
+通过现有 `discoverEmbeddedSubtitles` 接入 clear static DASH：显式 `format: dash` 或 automatic `.mpd`，支持独立 WebVTT/TTML 以及 fMP4 wvtt/stpp。目录发现只读取有界 MPD；选轨后按权威媒体位置加载当前和下一字幕段，复用现有文本、样式及 fMP4 parser。独立 Period/PTO 使用 checked rational 映射，按半开节目窗口裁剪；空档不显示上一段，内容身份保持选轨。
+
+MPD、初始化和字幕媒体沿用原 source managed 策略。最终根 URL、BaseURL 和跳转保留粘性凭据剥离；候选共享逻辑资源请求历史，Range 需要精确 206/强 ETag，重复 seek 不重置重试计数。根 2 MiB、初始化 1 MiB，选中窗口与外部字幕共用 4 MiB/10,000 cue/20,000 text run/128 轨道上限；另有清单结构、URI、总请求和累计接收上限。8 GiB 原始字节地址通过稀疏 ISO free 区间保留，不分配孔洞。
+
+seek/off/会话更换与目录原子发布取消旧窗口；迟到成功或错误不再发布。换轨失败回滚此前接受的选择，后续分段失败产生 command 范围字幕事件而视频继续；相同失败窗口不在每次 position tick 自动重试。外部字幕更换与 DASH 目录合并保持原子性，取消清除解析缓存。
+
+真实 Flutter 联调暴露并修正 Apple 新 programme 路径的三个公共边界：未知音轨标签应为 nil；初始等待播放状态应发布 ready；从实际 CMVideoFormatDescription 发布视频几何信息，声明空档仍无几何。修正前即使 cue 已加载，Flutter 也因 geometry=nil 只显示占位层。原生测试同步增加这些断言。
+
+本阶段证据见 [DASH 字幕 evidence](evidence/2026-10-14-p01-dash-subtitles/manifest.json)：
+
+- 三端相同实际播放器 + Flutter 组件测试：Android、iOS Simulator、macOS 各 4/4，覆盖 VTT/TTML/wvtt/stpp 的跨 Period、gap、seek 和 off。
+- 受影响 Apple 分段播放原生回归：iOS 23/23、macOS 23/23，均零 skip，含实际解码帧/PCM/取消与资源释放。macOS 构建日志中 exit-0 编译诊断提示原样保留；xcodebuild 退出 0，xcresult 为 23 passed。
+- 最终 `flutter test packages/yl_player/test --timeout 2m`：1648/1648；Dart 及集成测试静态分析均无问题。先前默认 30 秒框架限制下的 4096 请求用例超时保留；相同断言延长框架限时后独立 48 秒通过，未修改产品请求预算或测试计数断言。
+- XML 引号/实体与合并同时 cue 上限、重发现/选轨竞态、失败换轨回滚、合并 128 轨道上限均保留 RED→GREEN 证据。
+
+这证明字幕功能和当前环境组件渲染，不等于物理显示/声学同步验收，也不等于 P01 全部完成。剩余 Android 精确 PCM/轨道内空缺、HDR 兼容选择、更多恢复及联合 AV/cue 标记测量、最低版本检查和最终复核继续执行；未修改另一会话的长播放或弱网 ABR。

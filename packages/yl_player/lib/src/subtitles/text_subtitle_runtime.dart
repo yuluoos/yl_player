@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'package:flutter/painting.dart';
+import 'dash_subtitles.dart';
+import 'dash_subtitle_resource.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'subtitle_document.dart';
 import 'subtitle_resource.dart';
@@ -27,15 +30,146 @@ final class TextSubtitleRuntime {
   Map<String, _Document> _documents = {};
   SubtitleCancellation? _pending;
   Future<void> _scanTail = Future.value();
+  Future<void> _windowTail = Future.value();
+  DashSubtitleWindowLoader? _dash;
+  _Document? _window;
+  String? _windowKey;
+  SubtitleCancellation? _windowToken;
+  Duration _position = Duration.zero;
+  int _selectionGeneration = 0;
+  int? _selecting;
+  void Function()? onChanged;
+  void Function(YlPlayerException)? onFailure;
+
+  /// Clear selected segmented cues immediately before a seek or owner change.
+  void suspendWindow() {
+    _selectionGeneration++;
+    _selecting = null;
+    _windowToken?.cancel();
+    _windowToken = null;
+    _windowKey = null;
+    _window = null;
+  }
+
+  /// Authoritative media positions drive prefetch; rendering remains pure.
+  void updatePosition(Duration position) {
+    _position = position;
+    if (_selecting != null) return;
+    final work = _loadWindow(position);
+    unawaited(
+      work.catchError((Object error) {
+        // The operation itself filters cancellation and stale ownership.
+      }),
+    );
+  }
+
+  Future<void> _loadWindow(Duration position, {bool command = false}) {
+    final loader = _dash, id = state.selectedTrackId;
+    if (loader == null ||
+        id == null ||
+        !loader.catalog.tracks.any((t) => t.id == id)) {
+      return Future.value();
+    }
+    final at = position - state.offset;
+    final key = loader.windowKey(id, at);
+    if (_windowKey == key) return _windowTail;
+    _windowToken?.cancel();
+    final token = SubtitleCancellation();
+    _windowToken = token;
+    _windowKey = key;
+    _window = null;
+    final prior = _windowTail;
+    final work = () async {
+      try {
+        await prior;
+        token.check();
+        final bytes =
+            4 * 1024 * 1024 -
+            _documents.values.fold<int>(0, (n, d) => n + d.inputBytes);
+        final cues =
+            10000 -
+            _documents.values.fold<int>(
+              0,
+              (n, d) => n + d.document.cues.length,
+            );
+        final runs =
+            20000 - _documents.values.fold<int>(0, (n, d) => n + d.runs);
+        final document = await loader.load(
+          id,
+          at,
+          token,
+          maxInputBytes: bytes,
+          maxCues: cues,
+        );
+        token.check();
+        _window = _renderDocument(document, runs);
+        onChanged?.call();
+      } catch (error) {
+        // check() suppresses stale errors as well as stale cue publication.
+        token.check();
+        final failure = error is YlPlayerException
+            ? error
+            : subtitleFailure(
+                error is SubtitleParseException
+                    ? switch (error.reason) {
+                        SubtitleParseReason.malformed =>
+                          YlFailureCodes.subtitleMalformed,
+                        SubtitleParseReason.unsupported =>
+                          YlFailureCodes.subtitleUnsupported,
+                        SubtitleParseReason.limitExceeded =>
+                          YlFailureCodes.subtitleTooLarge,
+                      }
+                    : YlFailureCodes.subtitleMalformed,
+              );
+        if (!command) onFailure?.call(failure);
+        throw failure;
+      } finally {
+        if (identical(_windowToken, token)) _windowToken = null;
+        token.cancel();
+      }
+    }();
+    _windowTail = work.then<void>((_) {}, onError: (Object _, StackTrace _) {});
+    return work;
+  }
+
+  Future<void> selectAt(String? id, Duration position) async {
+    final accepted = state.selectedTrackId;
+    final document = _window, key = _windowKey;
+    select(id);
+    final generation = _selectionGeneration;
+    _selecting = generation;
+    _position = position;
+    try {
+      await _loadWindow(position, command: true);
+    } catch (_) {
+      if (_selectionGeneration == generation) {
+        state = state.copyWith(selectedTrackId: accepted);
+        _window = document;
+        _windowKey = key;
+        onChanged?.call();
+      }
+      rethrow;
+    } finally {
+      if (_selecting == generation) {
+        _selecting = null;
+        if (_position != position) updatePosition(_position);
+      }
+    }
+  }
+
   void cancel() {
     _pending?.cancel();
     _pending = null;
+    suspendWindow();
+    _dash?.clear();
   }
 
   void reset() {
     cancel();
     state = YlSubtitleState();
     _documents = {};
+    _dash?.clear();
+    _dash = null;
   }
 
   Future<void> replace(List<YlExternalSubtitle> sources) async {
@@ -50,8 +184,13 @@ final class TextSubtitleRuntime {
     final token = SubtitleCancellation();
     _pending = token;
     final retained = state.tracks.where((t) => !t.isExternal).toList();
-    final documents = {for (final t in retained) t.id: _documents[t.id]!};
-    if (sources.any((s) => documents.containsKey(s.id))) {
+    if (retained.length + sources.length > 128) {
+      _pending = null;
+      token.cancel();
+      throw subtitleFailure(YlFailureCodes.subtitleTooLarge);
+    }
+    final documents = {for (final t in retained) t.id: ?_documents[t.id]};
+    if (sources.any((s) => retained.any((t) => t.id == s.id))) {
       _pending = null;
       token.cancel();
       throw subtitleFailure(YlFailureCodes.sourceInvalid);
@@ -117,6 +256,7 @@ final class TextSubtitleRuntime {
         documents[source.id] = rendered;
       }
       token.check();
+      suspendWindow();
       _documents = documents;
       state = state.copyWith(
         tracks: [
@@ -132,7 +272,9 @@ final class TextSubtitleRuntime {
               contentId: source.contentId,
             ),
         ],
-        selectedTrackId: documents.containsKey(state.selectedTrackId)
+        selectedTrackId:
+            (documents.containsKey(state.selectedTrackId) ||
+                retained.any((t) => t.id == state.selectedTrackId))
             ? state.selectedTrackId
             : null,
       );
@@ -159,9 +301,48 @@ final class TextSubtitleRuntime {
       try {
         await prior;
         token.check();
+        final isDash =
+            source.format == YlMediaFormat.dash ||
+            (source.format == YlMediaFormat.automatic &&
+                switch (source) {
+                  YlNetworkSource() => source.uri.path.toLowerCase().endsWith(
+                    '.mpd',
+                  ),
+                  YlFileSource() => source.path.toLowerCase().endsWith('.mpd'),
+                  _ => false,
+                });
+        if (isDash) {
+          final reader = createDashSubtitleReader(source);
+          final root = await reader.root(token);
+          token.check();
+          final catalog = DashSubtitleCatalog.parse(root.bytes, root.location);
+          final retained = state.tracks.where((t) => t.isExternal).toList();
+          if (catalog.tracks.length + retained.length > 128) {
+            throw subtitleFailure(YlFailureCodes.subtitleTooLarge);
+          }
+          if (catalog.tracks.any((t) => retained.any((r) => r.id == t.id))) {
+            throw subtitleFailure(YlFailureCodes.sourceInvalid);
+          }
+          final selected = state.selectedTrackId;
+          final tracks = [...catalog.tracks, ...retained];
+          suspendWindow();
+          _dash?.clear();
+          _dash = DashSubtitleWindowLoader(catalog, reader);
+          _documents = {for (final t in retained) t.id: _documents[t.id]!};
+          state = state.copyWith(
+            tracks: tracks,
+            selectedTrackId: tracks.any((t) => t.id == selected)
+                ? selected
+                : null,
+          );
+          return;
+        }
         final data = await readEmbeddedSubtitles(source, token);
         token.check();
         final retained = state.tracks.where((t) => t.isExternal).toList();
+        if (data.length + retained.length > 128) {
+          throw subtitleFailure(YlFailureCodes.subtitleTooLarge);
+        }
         final documents = {for (final t in retained) t.id: _documents[t.id]!};
         var bytesLeft =
             4 * 1024 * 1024 -
@@ -227,6 +408,9 @@ final class TextSubtitleRuntime {
           documents[entry.track.id] = rendered;
         }
         token.check();
+        suspendWindow();
+        _dash?.clear();
+        _dash = null;
         _documents = documents;
         state = state.copyWith(
           tracks: [...data.map((d) => d.track), ...retained],
@@ -250,15 +434,21 @@ final class TextSubtitleRuntime {
   }
 
   void select(String? id) {
-    if (id != null && !_documents.containsKey(id)) {
+    if (id != null && !state.tracks.any((t) => t.id == id)) {
       throw subtitleFailure(YlFailureCodes.sourceInvalid);
     }
+    suspendWindow();
     state = state.copyWith(selectedTrackId: id);
   }
 
-  void offset(Duration value) => state = state.copyWith(offset: value);
+  void offset(Duration value) {
+    suspendWindow();
+    state = state.copyWith(offset: value);
+    updatePosition(_position);
+  }
+
   List<TextSubtitleCue> cuesAt(Duration position) {
-    final doc = _documents[state.selectedTrackId];
+    final doc = _documents[state.selectedTrackId] ?? _window;
     if (doc == null) return const [];
     return [
       for (final cue in doc.document.cuesAt(position, offset: state.offset))

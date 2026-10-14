@@ -2419,7 +2419,11 @@ extension YlDashSampleSourceNativeTests {
       if case .failure(let error) = callback.event { failures.append(error) }
     })
     defer { backend.dispose() }
-    try backend.activate(); try backend.play()
+    try backend.activate()
+    XCTAssertEqual(states.last?.status, "ready")
+    XCTAssertNil(states.last?.audioTracks.first?.label)
+    XCTAssertEqual(states.last?.geometry?.encodedSize, CGSize(width: 320, height: 180))
+    try backend.play()
     for _ in 0..<250 {
       display?.fire()
       if states.last?.status == "completed" || !failures.isEmpty { break }

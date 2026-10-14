@@ -1,0 +1,83 @@
+{
+  "baseline": "421d52de7fb300709420bf6603bd6c084dcd09ee",
+  "status": "P01 stage; joint completion pending",
+  "verification": {
+    "dartPackage": {
+      "passed": 1648,
+      "timeout": "2m",
+      "previousDefaultTimeoutFailureRetained": true
+    },
+    "flutterIntegration": {
+      "Android": 4,
+      "iOSSimulator": 4,
+      "macOS": 4
+    },
+    "native": {
+      "iOSSimulator": 23,
+      "macOS": 23,
+      "skipped": 0
+    }
+  },
+  "sha256": {
+    "docs/superpowers/reports/2026-09-26-remaining-01-dash.md": "3e3ad3f54abb5a873df28e3ac5bd42b0af057ff7b07e14727e5739b526d45b7a",
+    "packages/yl_player/example/integration_test/dash_subtitle_playback_test.dart": "3bf98a5cf9ff2215f22a857edfc2458f64c3e432e81807332e90cae199e29319",
+    "packages/yl_player/example/integration_test/support/dash_server.dart": "177a3ae7fc1863d365c14990e7a44767f97cb87021b2ef3d5582e3a9e0cfb49c",
+    "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift": "c8fd9d433e73492becc1fd98539d90202e0b608e237d3a8bfcc6c9fd11432e22",
+    "packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift": "a8b8e3a57fdaf0ef03fdddd789c48555340069c7cecdd5a93bf1be77b26215b8",
+    "packages/yl_player/lib/src/playback_session.dart": "48c0a673f859aae031beead2501f8a53ce72aede7285b92e7300959c1138ff25",
+    "packages/yl_player/lib/src/player_controller.dart": "9ba1d087143b463b5cee26ae241f84ae1198a717736f491570fbf7b0a8a85d36",
+    "packages/yl_player/lib/src/subtitles/dash_subtitle_catalog.dart": "68ea8ecdc3515fba77cda235e503600a3a2b3d037dd3420b39434614d31848bc",
+    "packages/yl_player/lib/src/subtitles/dash_subtitle_resource.dart": "f6c0307e22a25fef29ad1d4e4a7d0174d7733ec08f4c6c0442a6cbc7ae891931",
+    "packages/yl_player/lib/src/subtitles/dash_subtitle_resource_io.dart": "0b3800923fc8552869ea7eca31cd45ee699e2ecad37505267be8202308cbe441",
+    "packages/yl_player/lib/src/subtitles/dash_subtitle_time.dart": "99d7660b7f5b89d4e81addbf4381f385735ffe11b8878c649f19174e9e0134d7",
+    "packages/yl_player/lib/src/subtitles/dash_subtitle_window.dart": "40e89923f6ce8a706f368e392d3603d1f4714b42841d9262dfb5171f858a9983",
+    "packages/yl_player/lib/src/subtitles/dash_subtitles.dart": "94726c7001f11e22c0eba0f9f85bdc450112b8c886e4dcf2468cc9a872353561",
+    "packages/yl_player/lib/src/subtitles/subtitle_document.dart": "710864854f7dafdcb427be5f3625bb24b5ef78f938eca803ef4f69112ee7b086",
+    "packages/yl_player/lib/src/subtitles/subtitle_resource_io.dart": "62461cfedd05ed8b10fcf4a8ae8eaa4cd2496fcade641e608158476f5b426b4d",
+    "packages/yl_player/lib/src/subtitles/subtitle_resource_stub.dart": "60df723eb13ad5e9484c966210e217d1e9942704693db785b33e237d5fbfc04f",
+    "packages/yl_player/lib/src/subtitles/text_subtitle_runtime.dart": "47e014aad22e5ee9c88908c7d1bebae667fa4e528de79c82e4d295a5af84c5f2",
+    "packages/yl_player/test/dash_subtitle_catalog_test.dart": "0c0ca9e21644a29555ea9356661f0f1c7c3139a01b773588866e3ab74af696f8",
+    "packages/yl_player/test/dash_subtitle_resource_test.dart": "1d2c44d938174431427764b63f8fd32f2aeeb11bcd5163ab7b1b2d5aa5156d96",
+    "packages/yl_player/test/dash_subtitle_runtime_test.dart": "d63d5e203d501a96b3da041727cd1015b8718a38fb4ddd2d5069ff3ed9da5e6c",
+    "packages/yl_player/test/dash_subtitle_session_test.dart": "4868b893b3e37de8902f8b9f2ddc21e36a81a5a8b74fe6db7eab92a7f40d338c",
+    "packages/yl_player/test/dash_subtitle_window_test.dart": "7735c97cd3c35972ec29fbb30b76cd8bf958fe8cdc7a688d0b0860f581a90b63",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/DashProgram/YlDashProgramBackend.swift": "2a4b965e544eb5e75ed712eeb767931be85b6e4efdcfc8f474b2fb47615ba2cd"
+  },
+  "evidenceSha256": {
+    "analyze-final.log": "526c06406fa8c21ef31f67292c808ad58659f8e2d6f1ee5a0d12de9403157251",
+    "analyze-second.log": "46e0dedde814e79d803f9ce13b589b24154396b254153d81321ac88c1e04a6dc",
+    "android-final.log": "a77ff12c5d2eaea6bbf6aef484041bdae8304c1a6292de1a3f46448e132cf359",
+    "attempt-cap-extended.log": "24d06abe0603ec3e3b327a3bc5be4783e8e8a5f79333c8cd830851fec8135e5d",
+    "attempt-cap-rerun.log": "e5e8bfd831189fc55df34d9eb000124dd28d694e7c4ff5631c6df009fa996050",
+    "bounds-green.log": "cdab32f6009914a9971904d1c29895ca8a95a9b3d6f44d6aa4f7156b60c45af4",
+    "bounds-red.log": "9bdfbdd4a8a28abf5c7a94cdc7b934854bd484bd4728006f085355a84f97503c",
+    "catalog-first.log": "af64db01e83c53060db33b5f4ea2fbfd3aea25dbfb21626469a9aceecbc68e61",
+    "catalog-race-green.log": "d5bec5feb8ee2cf24801eb703713d430742d76f7a9a754eb1e91262b78ac5944",
+    "catalog-race-red.log": "41160566d2d46d135b528e848201194ea038f4af57922ee3fb0188aeb6468ef7",
+    "catalog-red.log": "4e27cac47328b5b8e72b402e4391794a91441733139b77fd4ba8d80b8b57d490",
+    "integration-analyze-final.log": "511c35f1d66c63bcc27278579db44e88ed0064944ae2431fb945d87923201c72",
+    "ios-flutter-first.log": "773b5ff90785ba4d953476f63aec2d43b89213cdbb4df9cc6297d17f5771a365",
+    "ios-native-summary.json": "5d1b98b4d75912a5648560961baf71751ed3d3d0c47cca17b96c05e87c36a593",
+    "ios-native.log": "272e46a842b7166cb6baf69cd6e19e88291e4400a04530e313ed5c7abe24653e",
+    "macos-diagnostic.log": "655aee71784d15c8fb8c6a561ec348d37b6e0bff57314a93433273316fe39461",
+    "macos-fifth.log": "dd23b2d64402d0982f85381a5ef36b033cc814b4d43156e9828c937a616799f6",
+    "macos-first.log": "20c6e9de9405bf3edaf51c3a9c1d7023100184ea2d3a77419f0a46fa980ddaf6",
+    "macos-fourth.log": "0986b64b2a5a15340d47fffce5db0605ba8afefbe21c595d5a11ee8c32e5a717",
+    "macos-native-summary.json": "8caa3c5cb82ca4743fd0d7646dbee80e43e7a3ebc8a2641ced4b7b0fa4729544",
+    "macos-native.log": "926e3e2cd08f9b956c347400e608adb8fc08e545a259f9b2c0dd72745753e512",
+    "macos-second.log": "a42be854586afbec22bc92404b9415b99b16d3ec322475c5e3f294ebdad7676f",
+    "macos-sixth.log": "710bf9b094cc5242bd3dfa675d75fd713fdf5651bdd07830d43ec2158d2daa44",
+    "macos-third.log": "1d76e52ef4ae602566bb710e88a1d7fa6fdcc1c97c90318f5c1deb44b224f42a",
+    "package-final.log": "cbbc9385002823dda50cf7be9f8def1bc73da87c350362946d7d0c968b4feca5",
+    "package-tests.log": "4f54288248230aa1ea25eb455d2aa1924904ae0b57705544e9236d7ed49d3e26",
+    "resource-red.log": "cfbb53b292063eb1d99f90f4ee6dd204ab020c9108e970f0fa1ebf4b7d9bad6f",
+    "resource-second.log": "5e71f736a5a914c97faff8f13d39bd02da5ded8864d141faf1542f5ec052f1d0",
+    "runtime-red.log": "83198129a7a32a0193815899791b437f2c3d82ec186e5316b041dcc8155e6207",
+    "selection-green.log": "f1e099ba7496fed6992180455730c6bd8339e1d19a72c4ac4bdb565be0bfdbb7",
+    "selection-red.log": "836eeddaec7a7cc1ab8538a279dcc8514ca0b18d253b5c677adb0c4a94440588",
+    "session-first.log": "311a4dc68aa805dc00c478349eb327bf8048fa7583257ea55eca9b35fb7a0783",
+    "session-red.log": "0e2aecf7f6335961b531c051b48b236ad83646c29278e1413e6e48debc8b30ee",
+    "track-limit-green.log": "07cd26a4e5881f25d5390292934661454922b2d43f70a155401c91a91ead254c",
+    "track-limit-red.log": "d659c20e51a27e85ca16a2db9106e57bce53210e17fd00a87565d5da307e8c67"
+  }
+}

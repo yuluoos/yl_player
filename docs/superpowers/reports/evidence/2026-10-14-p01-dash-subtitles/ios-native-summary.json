@@ -1,0 +1,157 @@
+{
+  "summary": {
+    "status": "SUCCEEDED",
+    "durationMs": 204644,
+    "counts": {
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0
+    },
+    "target": "simulator"
+  },
+  "artifacts": {
+    "buildLogPath": "~/Library/Developer/XcodeBuildMCP/workspaces/yl_player-af4e5e911369/logs/test_sim_2026-10-14T06-52-59-551Z_pid10777_b5cf01ab.log",
+    "xcresultPath": "/private/tmp/p01-dash-subtitle-ios-native.xcresult",
+    "testProductsPath": "~/Library/Developer/XcodeBuildMCP/workspaces/yl_player-af4e5e911369/test-products/test_sim_2026-10-14T06-52-59-552Z_pid10777_8e1ad2eb.xctestproducts"
+  },
+  "testCases": [
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testActualDecodedPCMClipsExactlyThreePointFiveSecondsAndKeepsBothToneMarkers",
+      "status": "passed",
+      "durationMs": 490
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testAudioFragmentKeepsTwentySecondOffsetAndNegativePriming",
+      "status": "passed",
+      "durationMs": 8
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testAudioTimelineSchedulesExactBoundedSilenceAndOriginalPCM",
+      "status": "passed",
+      "durationMs": 77
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testCancelledFragmentDoesNotYieldAnotherPacket",
+      "status": "passed",
+      "durationMs": 10
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testManagedProgramCursorLoadsIndependentPTOThroughActualTransport",
+      "status": "passed",
+      "durationMs": 94
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testMappedVideoActuallyDecodesRedFrameAtProgramZero",
+      "status": "passed",
+      "durationMs": 736
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testPCMClipPreservesSamplesAndAllocationAtFractionalBoundaries",
+      "status": "passed",
+      "durationMs": 3
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges",
+      "status": "passed",
+      "durationMs": 9209
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testProgramAudioIdentitySurvivesCatalogAddition",
+      "status": "passed",
+      "durationMs": 4537
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime",
+      "status": "passed",
+      "durationMs": 11696
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testProgramBackendClipsThreePointFiveAndSeeksOriginalClock",
+      "status": "passed",
+      "durationMs": 4144
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testProgramBackendIndependentPTOAndNaturalPeriods",
+      "status": "passed",
+      "durationMs": 23837
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testProgramBackendPlaysAndClipsActualHalfSecond",
+      "status": "passed",
+      "durationMs": 987
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput",
+      "status": "passed",
+      "durationMs": 128
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testProgramCompletedPlayHonorsCommandCancellationDuringReload",
+      "status": "passed",
+      "durationMs": 975
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels",
+      "status": "passed",
+      "durationMs": 4422
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack",
+      "status": "passed",
+      "durationMs": 2290
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative",
+      "status": "passed",
+      "durationMs": 6697
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples",
+      "status": "passed",
+      "durationMs": 664
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment",
+      "status": "passed",
+      "durationMs": 5567
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testPublicProgramLoadCommandsAndManagedPolicy",
+      "status": "passed",
+      "durationMs": 1678
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testSparseFragmentKeepsAbsoluteOffsetsAboveFourGiBWithoutAllocatingHole",
+      "status": "passed",
+      "durationMs": 7
+    },
+    {
+      "suite": "YlDashSampleSourceNativeTests",
+      "test": "testVideoFragmentKeepsOriginalTenSecondTicksAndPacketOwnership",
+      "status": "passed",
+      "durationMs": 2
+    }
+  ]
+}

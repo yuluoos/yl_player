@@ -1,5 +1,6 @@
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'subtitle_resource.dart';
+import 'dash_subtitle_resource.dart';
 
 Future<List<int>> read(
   YlMediaSource source,
@@ -8,3 +9,6 @@ Future<List<int>> read(
 ) async {
   throw subtitleFailure(YlFailureCodes.policyUnsupported);
 }
+
+DashSubtitleReader createDashReader(YlMediaSource source) =>
+    throw subtitleFailure(YlFailureCodes.policyUnsupported);

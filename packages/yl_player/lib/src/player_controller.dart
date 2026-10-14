@@ -16,7 +16,10 @@ final class YlPlayerController implements Listenable {
   ///
   /// [enableTextSubtitles] enables the Dart text/bitmap runtime for external
   /// resources and supported embedded tracks in file or managed HTTP(S)
-  /// Matroska/WebM/MP4 sources. PGS/VobSub embedded tracks require Matroska.
+  /// Matroska/WebM/MP4 sources, plus clear static DASH WebVTT/TTML tracks.
+  /// DASH loads only the selected current/next subtitle segments on the media
+  /// clock; later subtitle failures emit command-scoped events and video continues.
+  /// PGS/VobSub embedded tracks require Matroska.
   /// Supported Matroska tracks include bounded zlib/header stripping of blocks,
   /// CodecPrivate or both, using up to four ordered stages per track.
   /// Discover them through [YlPlaybackSession.discoverEmbeddedSubtitles].
@@ -48,6 +51,8 @@ final class YlPlayerController implements Listenable {
         backend,
         enableTextSubtitles ? TextSubtitleRuntime() : null,
       );
+      player._textSubtitles?.onChanged = player._subtitleWindowChanged;
+      player._textSubtitles?.onFailure = player._subtitleWindowFailed;
       if (backend is YlPlatformDrmLicenseTransport) {
         (backend as YlPlatformDrmLicenseTransport).setDrmLicenseExchange(
           player._exchangeLicense,
@@ -82,6 +87,7 @@ final class YlPlayerController implements Listenable {
   }
 
   final _licenseClient = YlDrmLicenseClient();
+  final _subtitleClock = Stopwatch()..start();
   Future<YlDrmBytes> _exchangeLicense(
     YlDrmLicenseEndpoint endpoint,
     YlDrmBytes challenge,
@@ -194,12 +200,47 @@ final class YlPlayerController implements Listenable {
     }
   }
 
+  bool get _canLoadSubtitleWindow =>
+      !_disposed &&
+      !_subtitleSeeking &&
+      !_subtitleAwaitingPosition &&
+      !_subtitleProtectedSource &&
+      protectedVideoSurface == null &&
+      state.sessionId != null &&
+      _stoppedSession != state.sessionId &&
+      [
+        YlPlaybackStatus.ready,
+        YlPlaybackStatus.playing,
+        YlPlaybackStatus.paused,
+        YlPlaybackStatus.buffering,
+      ].contains(state.status);
+
+  void _subtitleWindowChanged() {
+    if (_canLoadSubtitleWindow) _notifier.notify();
+  }
+
+  void _subtitleWindowFailed(YlPlayerException error) {
+    if (!_canLoadSubtitleWindow) return;
+    _acceptEvent(
+      YlPlaybackFailedEvent(
+        sessionId: state.sessionId!,
+        revision: state.revision,
+        occurredAt: _subtitleClock.elapsed,
+        failure: error.failure,
+      ),
+    );
+    _notifier.notify();
+  }
+
   void _publishSubtitles() {
     if (_disposed) return;
     _state = state.copyWith(
       revision: state.revision + 1,
       subtitles: _textSubtitles!.state,
     );
+    if (_canLoadSubtitleWindow) {
+      _textSubtitles.updatePosition(state.timeline.position);
+    }
     _notifier.notify();
     _states.add(state);
   }
@@ -210,6 +251,7 @@ final class YlPlayerController implements Listenable {
       return;
     }
     final serial = ++_subtitleSeekSerial;
+    _textSubtitles.suspendWindow();
     _subtitleSeeking = true;
     _subtitleAwaitingPosition = false;
     _notifier.notify();
@@ -222,6 +264,9 @@ final class YlPlayerController implements Listenable {
     } catch (_) {
       if (!_disposed && serial == _subtitleSeekSerial) {
         _subtitleSeeking = false;
+        if (_canLoadSubtitleWindow) {
+          _textSubtitles.updatePosition(state.timeline.position);
+        }
         _notifier.notify();
       }
       rethrow;
@@ -363,6 +408,9 @@ final class YlPlayerController implements Listenable {
       _state = next;
     }
     _record(state);
+    if (_canLoadSubtitleWindow) {
+      _textSubtitles?.updatePosition(state.timeline.position);
+    }
     _notifier.notify();
     _states.add(state);
   }
