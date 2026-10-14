@@ -9,6 +9,7 @@ import androidx.media3.exoplayer.dash.manifest.DashManifest
 import androidx.media3.exoplayer.dash.manifest.DashManifestParser
 import androidx.media3.exoplayer.dash.manifest.Representation
 import androidx.media3.exoplayer.dash.manifest.Period
+import androidx.media3.exoplayer.dash.manifest.YlSegmentClockAccess
 import androidx.media3.exoplayer.dash.manifest.SegmentBase
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.xmlpull.v1.XmlPullParser
@@ -26,6 +27,7 @@ internal class YlDashManifestParser(private val credentials: YlOriginCredentialP
     private var uriCharacters = 0L
     private lateinit var timing: YlDashProgramTiming
     private var periodCursor = 0
+    private var coverageEntries = 0
     // Identity, not list equality: shared ancestor lists accumulate sibling fanout.
     private val baseUrlResults = java.util.IdentityHashMap<List<BaseUrl>, Int>()
 
@@ -48,6 +50,7 @@ internal class YlDashManifestParser(private val credentials: YlOriginCredentialP
             preflight(document)
             timing = YlDashProgramTiming.parse(document)
             periodCursor = 0
+            coverageEntries = 0
             super.parse(uri, document.inputStream())
         } catch (_: org.xmlpull.v1.XmlPullParserException) { unsupported()
         } catch (_: ParserException) { unsupported()
@@ -108,10 +111,24 @@ internal class YlDashManifestParser(private val credentials: YlOriginCredentialP
     override fun buildRepresentation(info: RepresentationInfo, label: String?, labels: MutableList<androidx.media3.common.Label>,
         extraDrmSchemeType: String?, extraDrmSchemeDatas: ArrayList<androidx.media3.common.DrmInitData.SchemeData>,
         extraInbandEventStreams: ArrayList<androidx.media3.exoplayer.dash.manifest.Descriptor>): Representation {
-        if (androidx.media3.common.MimeTypes.getTrackType(info.format.sampleMimeType) != C.TRACK_TYPE_AUDIO)
-            return super.buildRepresentation(info, label, labels, extraDrmSchemeType, extraDrmSchemeDatas, extraInbandEventStreams)
         val bounds = timing.windows[periodCursor - 1]
-        val entry = YlDashPcmWindow(bounds.start, bounds.end)
+        val entry: androidx.media3.common.Metadata.Entry = when (androidx.media3.common.MimeTypes.getTrackType(info.format.sampleMimeType)) {
+            C.TRACK_TYPE_AUDIO -> YlDashPcmWindow(bounds.start, bounds.end)
+            C.TRACK_TYPE_VIDEO -> {
+                val base = info.segmentBase
+                val count = YlSegmentClockAccess.count(base)
+                if (count < 0) return super.buildRepresentation(info, label, labels, extraDrmSchemeType, extraDrmSchemeDatas, extraInbandEventStreams)
+                if (count > MAX_GRAPH_EDGES - coverageEntries) unsupported()
+                coverageEntries += count
+                val scale = YlSegmentClockAccess.scale(base)
+                val pto = YlDashTime.of(YlSegmentClockAccess.pto(base), scale)
+                YlDashVideoCoverage.merge((0 until count).map { index ->
+                    val start = YlDashTime.of(YlSegmentClockAccess.start(base, index), scale) - pto
+                    YlDashVideoCoverage.Range(start, start + YlDashTime.of(YlSegmentClockAccess.duration(base, index), scale))
+                }, bounds.end - bounds.start)
+            }
+            else -> return super.buildRepresentation(info, label, labels, extraDrmSchemeType, extraDrmSchemeDatas, extraInbandEventStreams)
+        }
         val metadata = info.format.metadata?.copyWithAppendedEntries(entry) ?: androidx.media3.common.Metadata(entry)
         val format = info.format.buildUpon().setMetadata(metadata).build()
         val decorated = RepresentationInfo(format, info.baseUrls, info.segmentBase, info.drmSchemeType, info.drmSchemeDatas,

@@ -1,0 +1,71 @@
+Resolving dependencies in `/Users/yy2021_8689/Desktop/Flutter/yl_player`...
+Downloading packages...
+  _fe_analyzer_shared 100.0.0 (109.0.0 available)
+  analyzer 13.0.0 (14.5.0 available)
+  built_collection 5.1.1 (5.1.2 available)
+  clock 1.1.2 (1.1.3 available)
+  code_assets 1.2.1 (2.1.0 available)
+  cupertino_icons 1.0.9 (2.0.0 available)
+  dart_style 3.1.9 (3.1.13 available)
+  hooks 2.0.2 (2.2.0 available)
+  matcher 0.12.19 (0.12.20 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.0 (1.19.0 available)
+  native_toolchain_c 0.19.2 (0.19.5 available)
+  package_config 2.2.0 (3.0.0 available)
+  petitparser 7.0.2 (7.1.0 available)
+  pigeon 28.0.0 (29.0.8 available)
+  platform 3.1.6 (3.2.0 available)
+  pointycastle 3.9.1 (4.0.0 available)
+  record_use 0.6.0 (1.1.1 available)
+  stack_trace 1.12.1 (1.12.2 available)
+  test_api 0.7.11 (0.7.15 available)
+  vector_math 2.2.0 (2.4.3 available)
+  webdriver 3.1.0 (3.2.0 available)
+  xml 7.0.1 (7.1.0 available)
+Got dependencies in `/Users/yy2021_8689/Desktop/Flutter/yl_player`!
+23 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+All plugins found for macos are Swift Packages, but your project still has CocoaPods integration. Your project uses a non-standard Podfile and will need to be migrated to Swift Package Manager manually. Some steps you may need to complete include:
+  * In the macos/ directory run "pod deintegrate"
+  * Transition any Pod dependencies to Swift Package equivalents. See https://developer.apple.com/documentation/xcode/adding-package-dependencies-to-your-app
+  * Transition any custom logic
+  * Remove the include to "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig" in your macos/Flutter/Flutter-Debug.xcconfig
+  * Remove the include to "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig" in your macos/Flutter/Flutter-Release.xcconfig
+
+Removing CocoaPods integration will improve the project's build time.
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart
+Running Gradle task 'assembleDebug'...                             14.2s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...        2,143ms
+00:00 +0: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH fixed AVC disappears and HEVC can be fixed
+00:04 +1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH programme independent-pto
+00:09 +2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH programme clip-end
+00:14 +3: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH programme gap
+00:24 +4: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH programme overlap
+00:32 +5: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH programme unknown-middle
+00:41 +6: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH programme multiple-base
+00:46 +7: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH programme fractional-microsecond
+00:47 +8: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH programme cross-codec
+00:51 +9: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH programme resolution
+00:55 +10: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH programme audio-added
+00:59 +11: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH programme absolute-base
+01:04 +12: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH programme absolute-list
+01:08 +13: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH programme audio-gap-leading
+01:13 +14: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH programme audio-gap-internal
+01:18 +15: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH programme audio-gap-trailing
+01:23 +16: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH programme video-gap-leading
+01:28 +17: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH programme video-gap-internal
+01:33 +18: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: managed DASH programme video-gap-trailing
+01:38 +19: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/dash_program_periods_test.dart: (tearDownAll)
+01:38 +19: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/android_video_selection_test.dart
+Running Gradle task 'assembleDebug'...                             13.4s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...        1,869ms
+01:58 +19: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/android_video_selection_test.dart: fixed high video survives reordered DASH Periods
+YL_FIXED_RETAIN highId=1 firstHigh=0ms states=8:0/360/fixed-user,9:0/360/fixed-user,10:11/360/fixed-user,11:290/360/fixed-user,12:536/360/fixed-user,13:786/360/fixed-user,14:1051/360/fixed-user,15:1304/360/fixed-user,16:1554/360/fixed-user,17:1810/360/fixed-user,18:2064/360/fixed-user,19:2309/360/fixed-user,20:2563/360/fixed-user,21:2816/360/fixed-user,22:3066/360/fixed-user,23:3312/360/fixed-user,24:3567/360/fixed-user,25:3821/360/fixed-user,26:3937/360/fixed-user,27:4004/360/fixed-user,28:4065/360/fixed-user,29:4317/360/fixed-user,30:4577/360/fixed-user,31:4827/360/fixed-user,32:5069/360/fixed-user,33:5323/360/fixed-user,34:5583/360/fixed-user,35:5832/360/fixed-user,36:6082/360/fixed-user,37:6333/360/fixed-user,38:6587/360/fixed-user,39:6834/360/fixed-user,40:7081/360/fixed-user,41:7337/360/fixed-user,42:7591/360/fixed-user,43:7843/360/fixed-user,44:8000/-1/fixed-user period1HighRequests=4 completed=8000ms
+02:08 +20: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/android_video_selection_test.dart: missing high video returns to automatic low across DASH Periods
+YL_FIXED_MISSING highId=1 firstHigh=0ms states=9:0/360/fixed-user,10:0/360/fixed-user,11:77/360/fixed-user,12:343/360/fixed-user,13:600/360/fixed-user,14:850/360/fixed-user,15:1093/360/fixed-user,16:1345/360/fixed-user,17:1598/360/fixed-user,18:1851/360/fixed-user,19:2099/360/fixed-user,20:2351/360/fixed-user,21:2600/360/fixed-user,22:2850/360/fixed-user,23:3107/360/fixed-user,24:3359/360/fixed-user,25:3612/360/fixed-user,26:3853/360/fixed-user,27:3938/360/fixed-user,28:4021/180/auto-trackUnavailable,29:4099/180/auto-trackUnavailable,30:4119/180/auto-trackUnavailable,31:4648/180/auto-trackUnavailable low=180.0 seek=5513ms period1LowRequests=8
+02:14 +21: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/android_video_selection_test.dart: (tearDownAll)
+02:14 +21: 
+[Evidence stops before the separately evaluated joint pixel tests.]

@@ -1,0 +1,37 @@
+{
+  "scope": "Android declared video segment coverage, renderer reset visibility, finite public programme coordinate bounds",
+  "results": {
+    "jvmPassed": 114,
+    "publicPassed": 21,
+    "nativePcmPassed": 8,
+    "staticIssues": 0
+  },
+  "red": [
+    "Actual video gaps 3/3 failed before fix",
+    "Renderer reset retained geometry",
+    "Public batch overlap absolute completion discrepancy 301ms (direction not logged)",
+    "Public batch clip-end position3571 vs declared3500; pure unit reproduces3571",
+    "Final public coordinates clamp to declaration; native clock remains independently observable"
+  ],
+  "nativePcm": {
+    "overlapFrames": 336000,
+    "overlapEndedPositionMs": 7012,
+    "overlapDurationMs": 7000,
+    "overlapElapsedMs": 7283,
+    "ordering": "PCM probe passed before subsequent public timeline clamp; PCM production unchanged afterwards",
+    "measurement": "Submitted decoded PCM plus actual AudioTrack EOS and Media3 clock; not physical sound or joint AV sync"
+  },
+  "coverage": "Exact rational explicit SegmentTimeline/PTO from selected actual output Format; view geometry gates visible content. Joint compositor pixel tests are evaluated separately.",
+  "sourceSha256": {
+    "packages/yl_player/example/integration_test/dash_program_periods_test.dart": "6b7809d37e921ff95b8b272b00c5eff27ebfcf367f1a4b15cfe624e3760d0a7c",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashPcmInstrumentedTest.kt": "4104f9060f0eff7311a59aa477fd240a329f5df9e31c8252ccd1fd1a0e1c41b1",
+    "packages/yl_player_android/android/src/main/java/androidx/media3/exoplayer/dash/manifest/YlSegmentClockAccess.java": "7d4acc92d55b1b0b8497b4d43631335236c63b94614a68df1c95e3749e787a12",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashVideoCoverage.kt": "7ac12deedc6d26e926c68472803cbeacc4a5813a7c34adf5f12457766c8c184a",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashManifestParser.kt": "99d24c57fd6bef895bd44b19151144b38d282b7deb86f36eebbf53c8717df27a",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt": "e7f5b714b713e43b0d479570643730285d08ce1a5114cb302c16bc73ebdbcedb",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt": "4e983b1ddacceab2f68224548df5aa82b5b4e9331580b257b9b61220d7e0b39c",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashVideoCoverageTest.kt": "25a4f2fd57789d0cf7f84c3f4dbbca28b3d41e52d2bd725273f8cc6f3b75242a",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashManifestParserTest.kt": "625a1f3f67c5a9001252626c11f24b239f3a47c9b48aebc20e1c49a162aea137",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlMedia3FixedVideoTest.kt": "c1948207b2e4c46545ee0bc228956cc7a8ffe4eb0229b1e430d182dd220b8ff5"
+  }
+}

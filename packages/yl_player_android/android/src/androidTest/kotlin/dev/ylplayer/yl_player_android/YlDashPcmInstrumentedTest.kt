@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit
 class YlDashPcmInstrumentedTest {
     @Test fun clipEndHasExactlyThreeAndHalfSecondsOfPcm() = measure("clip-end", 168000)
     @Test fun independentPtoHasExactlyFourSecondsOfPcm() = measure("independent-pto", 192000)
+    @Test fun overlapHasSevenSecondsOfPcmAndConsumedClock() = measure("overlap", 336000)
     @Test fun crossPeriodHasExactlyThreeSecondsOfPcm() = measure("cross-codec", 144000)
 
     @Test fun leadingAudioGapIsRealSilence() = measure("independent-pto", 192000,
@@ -55,6 +56,9 @@ class YlDashPcmInstrumentedTest {
         val done = CountDownLatch(1)
         var error: PlaybackException? = null
         var player: ExoPlayer? = null
+        var endedPositionMs = -1L
+        var endedDurationMs = -1L
+        val startedAt = android.os.SystemClock.elapsedRealtime()
         val server = MockWebServer()
         server.dispatcher = object : Dispatcher() {
             override fun dispatch(request: RecordedRequest): MockResponse {
@@ -71,7 +75,7 @@ class YlDashPcmInstrumentedTest {
         val item = MediaItem.fromUri(server.url("/$name.mpd").toString())
         try {
             instrumentation.runOnMainSync {
-                val renderers = object : YlOutputRenderersFactory(context, YlVideoOutputObserver({ it() }) { _, _ -> }) {
+                val renderers = object : YlOutputRenderersFactory(context, YlVideoOutputObserver({ it() }) { _, _, _ -> }) {
                     override fun buildAudioSink(context: Context, enableFloatOutput: Boolean, enableAudioOutputPlaybackParams: Boolean): AudioSink {
                         val recording = object : ForwardingAudioSink(super.buildAudioSink(context, enableFloatOutput, enableAudioOutputPlaybackParams)!!) {
                             var pcm = Format.Builder().build()
@@ -117,7 +121,7 @@ class YlDashPcmInstrumentedTest {
                 }
                 player = ExoPlayer.Builder(context, renderers).build().also { exo ->
                     exo.addListener(object : Player.Listener {
-                        override fun onPlaybackStateChanged(state: Int) { if (state == Player.STATE_ENDED) done.countDown() }
+                        override fun onPlaybackStateChanged(state: Int) { if (state == Player.STATE_ENDED) { endedPositionMs = exo.currentPosition; endedDurationMs = exo.duration; done.countDown() } }
                         override fun onPlayerError(value: PlaybackException) { error = value; done.countDown() }
                     })
                     exo.setMediaSource(YlDashProgramMediaSource(item, DefaultHttpDataSource.Factory(),
@@ -134,7 +138,8 @@ class YlDashPcmInstrumentedTest {
             val samples = synchronized(observations) { observations.toList() }
             assertTrue(samples.isNotEmpty())
             assertTrue(samples.all { it.third == 48000 })
-            android.util.Log.i("P01_PCM", "case=$name buffers=${samples.size} frames=${samples.sumOf { it.second }} first=${samples.first()} last=${samples.last()}")
+            android.util.Log.i("P01_PCM", "case=$name buffers=${samples.size} frames=${samples.sumOf { it.second }} endedPositionMs=$endedPositionMs durationMs=$endedDurationMs elapsedMs=${android.os.SystemClock.elapsedRealtime() - startedAt} first=${samples.first()} last=${samples.last()}")
+            assertTrue("Consumed end clock $endedPositionMs vs $endedDurationMs", kotlin.math.abs(endedPositionMs - endedDurationMs) <= 50)
             assertEquals("Decoded PCM must cover exactly the programme window", expectedFrames, samples.sumOf { it.second })
             if (silence != null) {
                 assertEquals("Silence must consume real programme frames", silence.count(), silentFrames)

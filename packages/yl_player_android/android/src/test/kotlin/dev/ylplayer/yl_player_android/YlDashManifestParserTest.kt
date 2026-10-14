@@ -46,6 +46,19 @@ class YlDashManifestParserTest {
         assertEquals(secret, request.header("X-Key"), url)
         assertEquals("ok", request.header("X-Ordinary"))
     }
+    @Test fun `video coverage retains raw rational PTO and does not fill explicit segment holes`() = android {
+        val segment = """<SegmentTemplate timescale="3000001" presentationTimeOffset="9000003" initialization="init.mp4" media="v-${'$'}Number${'$'}.m4s"><SegmentTimeline><S t="10000003" d="1000000"/><S t="14000003" d="1000000"/></SegmentTimeline></SegmentTemplate>"""
+        val format = parse(manifest(segment = segment), policy()).getPeriod(0).adaptationSets.single().representations.single().format
+        val metadata = requireNotNull(format.metadata)
+        val coverage = (0 until metadata.length()).map { metadata[it] }.filterIsInstance<YlDashVideoCoverage>().single()
+        assertEquals(YlDashTime.of(1000000, 3000001), coverage.ranges.first().start)
+        assertFalse(coverage.contains(333333))
+        assertTrue(coverage.contains(333334))
+        assertFalse(coverage.contains(1_000_000))
+        assertTrue(coverage.contains(1_800_000))
+        assertFalse(coverage.contains(2_000_000))
+    }
+
     @Test fun `template child requests inherit same origin and unknown paths stay stripped`() = android {
         val policy = policy()
         parse(manifest(base = "<BaseURL>assets/</BaseURL>"), policy)

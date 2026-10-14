@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicLong
  * to the application handler; the atomic generation also fences already queued lifecycle work. */
 internal class YlVideoOutputObserver(
     private val post: (() -> Unit) -> Unit,
-    private val receive: (Any?, AndroidVideoGeometryMessage?) -> Unit,
+    private val receive: (Any?, AndroidVideoGeometryMessage?, YlDashVideoCoverage?) -> Unit,
 ) {
     var dashVideoFamily: YlDashVideoFamilyPolicy? = null
     private data class Stream(val startUs: Long, val offsetUs: Long)
@@ -28,7 +28,8 @@ internal class YlVideoOutputObserver(
     private val generation = AtomicLong()
     private val streams = linkedMapOf<Stream, Entry>()
     private var geometry: AndroidVideoGeometryMessage? = null
-    private var last: Pair<Entry, AndroidVideoGeometryMessage>? = null
+    private var coverage: YlDashVideoCoverage? = null
+    private var last: Triple<Entry, AndroidVideoGeometryMessage, YlDashVideoCoverage?>? = null
 
     // Application thread: do not touch playback-thread collections here.
     fun invalidate() { generation.incrementAndGet() }
@@ -44,10 +45,15 @@ internal class YlVideoOutputObserver(
         streams.clear()
         if (startUs != null && offsetUs != null && uid != null) stream(startUs, offsetUs, uid)
         last = null
-        post { if (generation.get() == epoch) receive(null, null) }
+        post { if (generation.get() == epoch) receive(null, null, null) }
     }
 
     fun outputFormat(format: Format, mediaFormat: MediaFormat?) {
+        coverage = format.metadata?.let { metadata ->
+            (0 until metadata.length()).mapNotNull { metadata[it] as? YlDashVideoCoverage }.distinct().also {
+                check(it.size <= 1) { "Conflicting DASH video coverage" }
+            }.singleOrNull()
+        }
         dashVideoFamily?.verifyOutput(format, mediaFormat?.takeIf { it.containsKey(MediaFormat.KEY_COLOR_TRANSFER) }
             ?.getInteger(MediaFormat.KEY_COLOR_TRANSFER))
         // Same calculation as 1.11 MediaCodecVideoRenderer.onOutputFormatChanged. The Core
@@ -73,9 +79,10 @@ internal class YlVideoOutputObserver(
         val stream = streams[Stream(startUs, offsetUs)] ?: return
         val value = geometry ?: return
         if (stream.generation != generation.get()) return
-        if (last?.first == stream && last?.second == value) return // No per-frame Handler work, Format/MediaFormat never cross threads.
-        last = stream to value
-        post { if (stream.generation == generation.get()) receive(stream.uid, value) }
+        if (last?.first == stream && last?.second == value && last?.third == coverage) return // No per-frame Handler work, Format/MediaFormat never cross threads.
+        val window = coverage
+        last = Triple(stream, value, window)
+        post { if (stream.generation == generation.get()) receive(stream.uid, value, window) }
     }
 }
 

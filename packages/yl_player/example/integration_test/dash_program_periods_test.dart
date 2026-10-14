@@ -25,6 +25,9 @@ void main() {
     'audio-gap-leading': 4000,
     'audio-gap-internal': 4000,
     'audio-gap-trailing': 4000,
+    'video-gap-leading': 4000,
+    'video-gap-internal': 4000,
+    'video-gap-trailing': 4000,
   };
   testWidgets('managed DASH fixed AVC disappears and HEVC can be fixed', (
     tester,
@@ -86,14 +89,15 @@ void main() {
   });
   for (final entry in cases.entries) {
     testWidgets('managed DASH programme ${entry.key}', (tester) async {
-      final file = entry.key.startsWith('audio-gap-')
-          ? 'independent-pto'
-          : entry.key;
+      final file = entry.key.contains('-gap-') ? 'independent-pto' : entry.key;
       var manifest = await rootBundle.loadString(
         'assets/test_media/dash_timeline/$file.mpd',
       );
       if (entry.key.startsWith('audio-gap-')) {
         manifest = _audioGap(manifest, entry.key);
+      }
+      if (entry.key.startsWith('video-gap-')) {
+        manifest = _videoGap(manifest, entry.key);
       }
       final server = await DashServer.start(
         timelineMarkers: true,
@@ -126,6 +130,11 @@ void main() {
       expect(
         (completed.timeline.position.inMilliseconds - entry.value).abs(),
         lessThanOrEqualTo(50),
+        reason:
+            'completed=${completed.timeline.position.inMilliseconds} '
+            'duration=${completed.timeline.duration!.inMilliseconds} '
+            'elapsed=${watch.elapsedMilliseconds} '
+            'tail=${observed.reversed.take(5).map((s) => '${s.status}:${s.timeline.position.inMilliseconds}').toList()}',
       );
       expect(
         watch.elapsedMilliseconds,
@@ -142,6 +151,34 @@ void main() {
           isTrue,
           reason: 'The declared blank interval must hide the previous picture.',
         );
+      }
+      if (entry.key.startsWith('video-gap-')) {
+        final (low, high) = switch (entry.key) {
+          'video-gap-leading' => (80, 400),
+          'video-gap-internal' => (1200, 1800),
+          _ => (2400, 3600),
+        };
+        final inGap = observed.where(
+          (s) =>
+              s.timeline.position.inMilliseconds >= low &&
+              s.timeline.position.inMilliseconds <= high,
+        );
+        expect(inGap, isNotEmpty);
+        expect(
+          inGap.every((s) => s.videoGeometry == null),
+          isTrue,
+          reason: 'No retained or early frame may be visible in a video gap.',
+        );
+        if (entry.key != 'video-gap-trailing') {
+          expect(
+            observed.any(
+              (s) =>
+                  s.timeline.position.inMilliseconds >= 2600 &&
+                  s.videoGeometry != null,
+            ),
+            isTrue,
+          );
+        }
       }
       if (entry.key == 'cross-codec' || entry.key == 'resolution') {
         expect(
@@ -208,5 +245,32 @@ String _audioGap(String xml, String name) {
     start,
     end,
     '<SegmentList timescale="48000" presentationTimeOffset="960000"><Initialization sourceURL="init-1.m4s"/><SegmentTimeline>$timeline</SegmentTimeline>$urls</SegmentList>',
+  );
+}
+
+String _videoGap(String xml, String name) {
+  if (name == 'video-gap-leading') {
+    return xml.replaceAll(
+      'presentationTimeOffset="122880"',
+      'presentationTimeOffset="116736"',
+    );
+  }
+  final start = xml.indexOf('<SegmentTemplate');
+  final end =
+      xml.indexOf('</SegmentTemplate>', start) + '</SegmentTemplate>'.length;
+  final numbers = name == 'video-gap-trailing' ? [1, 2] : [1, 3, 4];
+  final timeline = numbers
+      .map((n) => '<S t="${122880 + (n - 1) * 12288}" d="12288"/>')
+      .join();
+  final urls = numbers
+      .map(
+        (n) =>
+            '<SegmentURL media="chunk-0-${n.toString().padLeft(5, '0')}.m4s"/>',
+      )
+      .join();
+  return xml.replaceRange(
+    start,
+    end,
+    '<SegmentList timescale="12288" presentationTimeOffset="122880"><Initialization sourceURL="init-0.m4s"/><SegmentTimeline>$timeline</SegmentTimeline>$urls</SegmentList>',
   );
 }

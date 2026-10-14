@@ -104,10 +104,57 @@ class YlMedia3FixedVideoTest {
         assertEquals(AndroidSizeMessage(1280.0, 720.0), geometry.displaySize)
     }
 
+    @Test fun `finite DASH public clock cannot run beyond programme while AudioTrack drains`() = withCore(coreSource = source().copy(format = AndroidMediaFormat.DASH)) { core, player, events ->
+        core.javaClass.getDeclaredField("active").apply { isAccessible = true }.setBoolean(core, true)
+        `when`(player.duration).thenReturn(3500)
+        `when`(player.currentPosition).thenReturn(3571)
+        `when`(player.bufferedPosition).thenReturn(3600)
+        core.emitState()
+        val timeline = events.lastSnapshot().timeline
+        assertEquals(3500, timeline.durationMs)
+        assertEquals(3500, timeline.positionMs)
+        assertEquals(3500, timeline.bufferedPositionMs)
+        // Do not rewrite Media3's native clock or turn this into output timing evidence.
+        assertEquals(3571, player.currentPosition)
+    }
+
+    @Test fun `actual renderer reset hides old picture before a new output can publish`() = withCore(coreSource = source().copy(format = AndroidMediaFormat.DASH)) { core, _, events ->
+        core.outputFrame(Format.Builder().setWidth(320).setHeight(180).build())
+        assertNotNull(events.lastSnapshot().geometry)
+        core.outputObserver.reset()
+        core.emitState()
+        assertNull(events.lastSnapshot().geometry)
+    }
+
+    @Test fun `DASH output coverage follows actual format and half open period clock`() = withCore { core, player, events ->
+        val timeline = mock(Timeline::class.java)
+        `when`(timeline.isEmpty).thenReturn(false)
+        `when`(timeline.getIndexOfPeriod("p0")).thenReturn(0)
+        val period = Timeline.Period()
+        `when`(timeline.getPeriod(anyInt(), any(Timeline.Period::class.java))).thenReturn(period)
+        `when`(player.currentTimeline).thenReturn(timeline)
+        val coverage = YlDashVideoCoverage.merge(listOf(
+            YlDashVideoCoverage.Range(YlDashTime.of(1, 2), YlDashTime.of(1)),
+            YlDashVideoCoverage.Range(YlDashTime.of(2), YlDashTime.of(3))), YlDashTime.of(4))
+        val format = Format.Builder().setWidth(320).setHeight(180).setMetadata(Metadata(coverage, coverage)).build()
+        core.outputFrame(format)
+        for ((ms, visible) in listOf(0L to false, 499L to false, 500L to true, 999L to true,
+            1000L to false, 1999L to false, 2000L to true, 3000L to false)) {
+            `when`(player.currentPosition).thenReturn(ms)
+            core.emitState()
+            assertEquals(visible, events.lastSnapshot().geometry != null, "position=$ms")
+        }
+        // Reading-ahead/input format cannot overwrite the accepted output coverage.
+        val input = format.buildUpon().setMetadata(null).build()
+        `when`(player.videoFormat).thenReturn(input)
+        core.emitState()
+        assertNull(events.lastSnapshot().geometry)
+    }
+
     @Test fun `output generations fence queued frames and deduplicate without losing reset recovery`() {
         val queued = mutableListOf<() -> Unit>()
         val received = mutableListOf<Pair<Any?, AndroidVideoGeometryMessage?>>()
-        val observer = YlVideoOutputObserver(queued::add) { uid, geometry -> received.add(uid to geometry) }
+        val observer = YlVideoOutputObserver(queued::add) { uid, geometry, _ -> received.add(uid to geometry) }
         val format = Format.Builder().setWidth(1280).setHeight(720).build()
         // Nonzero renderer clock and submillisecond difference: exact integer stream keys,
         // not division of presentation timestamps or matching track IDs/format dimensions.

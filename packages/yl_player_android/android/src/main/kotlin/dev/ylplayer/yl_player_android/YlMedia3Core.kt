@@ -119,7 +119,9 @@ internal class YlMedia3Core(
     }
     private var videoGeometry: AndroidVideoGeometryMessage? = null
     private var dashContentTracks: Tracks? = null
-    private val pendingVideoGeometry = mutableMapOf<Any, AndroidVideoGeometryMessage?>()
+    private var videoCoverage: YlDashVideoCoverage? = null
+    private var publishedVideoGeometry: AndroidVideoGeometryMessage? = null
+    private val pendingVideoGeometry = mutableMapOf<Any, Pair<AndroidVideoGeometryMessage?, YlDashVideoCoverage?>>()
     internal val outputObserver = YlVideoOutputObserver({ work -> handler.post { work() } }, ::onVideoOutput)
     private var audioTracks: List<AndroidTrackMessage> = emptyList()
     private var videoTracks: List<AndroidTrackMessage> = emptyList()
@@ -370,6 +372,7 @@ internal class YlMedia3Core(
         videoSelection = YlFixedVideoState()
         trackSelector.fixedIntent = null
         videoGeometry = null
+        videoCoverage = null; publishedVideoGeometry = null
         outputObserver.invalidate()
         pendingVideoGeometry.clear()
         healthWindowDroppedFrames = 0
@@ -441,6 +444,7 @@ internal class YlMedia3Core(
         videoSelection = YlFixedVideoState()
         trackSelector.fixedIntent = null
         videoGeometry = null
+        videoCoverage = null; publishedVideoGeometry = null
         outputObserver.invalidate()
         pendingVideoGeometry.clear()
         hostQualityConstraint = AndroidQualityConstraint(loadOptions.videoConstraints.maxWidth?.toInt(),
@@ -627,20 +631,25 @@ internal class YlMedia3Core(
         refreshStallWatchdog()
     }
 
-    private fun onVideoOutput(periodUid: Any?, geometry: AndroidVideoGeometryMessage?) {
+    private fun onVideoOutput(periodUid: Any?, geometry: AndroidVideoGeometryMessage?, coverage: YlDashVideoCoverage?) {
         if (disposed || stopped || resetting) return
         // Null marks a real renderer reset/disable. A no-op seek never sends this marker.
-        if (periodUid == null) { pendingVideoGeometry.clear(); return }
+        if (periodUid == null) {
+            pendingVideoGeometry.clear()
+            if (dashVideoFamily != null) { videoGeometry = null; videoCoverage = null; emitState() }
+            return
+        }
         val timeline = exoPlayer.currentTimeline
         if (!timeline.isEmpty) {
             val index = timeline.getIndexOfPeriod(periodUid)
             if (index != exoPlayer.currentPeriodIndex) {
-                if (index > exoPlayer.currentPeriodIndex) pendingVideoGeometry[periodUid] = geometry
+                if (index > exoPlayer.currentPeriodIndex) pendingVideoGeometry[periodUid] = geometry to coverage
                 return
             }
         }
         pendingVideoGeometry.remove(periodUid)
         videoGeometry = geometry
+        videoCoverage = coverage
         emitState()
     }
 
@@ -690,7 +699,9 @@ internal class YlMedia3Core(
         trackSelector.parameters = YlVideoSelectionPolicy.parameters(trackSelector.parameters, tracks, nextSelection)
         val currentUid = if (!currentTimeline.isEmpty) currentTimeline.getUidOfPeriod(exoPlayer.currentPeriodIndex)
             else eventPeriod?.periodUid
-        if (pendingVideoGeometry.containsKey(currentUid)) videoGeometry = pendingVideoGeometry.remove(currentUid)
+        pendingVideoGeometry.remove(currentUid)?.let { (geometry, coverage) ->
+            videoGeometry = geometry; videoCoverage = coverage
+        }
         if (!currentTimeline.isEmpty) {
             pendingVideoGeometry.keys.removeAll { currentTimeline.getIndexOfPeriod(it) <= exoPlayer.currentPeriodIndex }
         }
@@ -1047,12 +1058,18 @@ internal class YlMedia3Core(
         .takeUnless { it == C.TIME_UNSET }?.coerceAtLeast(0)
 
     private fun timeline(): AndroidTimelineMessage {
-        val position = if (active) max(0L, exoPlayer.currentPosition) else savedPositionMs
+        val observedPosition = if (active) max(0L, exoPlayer.currentPosition) else savedPositionMs
         val duration = if (rtmp) null else exoPlayer.duration.takeUnless { it == C.TIME_UNSET || it < 0 }
+        // AudioTrack drain / application callback latency may let Media3's clock
+        // extrapolate past a finite declaration. Public programme coordinates stay
+        // inside that window; mediaClockPositionMs retains the native observation.
+        val end = duration.takeIf { dashVideoFamily != null }
+        val position = end?.let { minOf(observedPosition, it) } ?: observedPosition
+        val buffered = if (active) max(position, exoPlayer.bufferedPosition) else position
         val live = sourceIsLive || exoPlayer.isCurrentMediaItemLive
         val offset = normalizedLiveOffset()
         return AndroidTimelineMessage(position, duration,
-            if (active) max(position, exoPlayer.bufferedPosition) else position,
+            end?.let { minOf(buffered, it) } ?: buffered,
             !rtmp && exoPlayer.isCurrentMediaItemSeekable, live,
             if (live && offset != null) offset <= 2_000L else null, offset,
             if (live && exoPlayer.isCurrentMediaItemSeekable && duration != null) AndroidDvrWindowMessage(0, duration) else null)
@@ -1062,7 +1079,8 @@ internal class YlMedia3Core(
         val timeline = timeline()
         // A retained texture can still hold the previous Period's final frame.
         // Null geometry makes the public view render its blank/placeholder layer.
-        val geometry = if (isDashGap(exoPlayer.currentTracks)) null else videoGeometry
+        val geometry = visibleVideoGeometry()
+        publishedVideoGeometry = geometry
         emit(YlEngineEvent.Snapshot(YlEngineSnapshot(
             when (status) {
                 "idle" -> AndroidPlaybackStatus.IDLE
@@ -1076,9 +1094,20 @@ internal class YlMedia3Core(
             }, timeline, geometry, audioTracks.toList(), videoTracks.toList(),
             decoderEvidence.mode(decoderName), decoderName, metrics(timeline), hasBeenReady, videoSelection.message())))
     }
+    private fun visibleVideoGeometry(): AndroidVideoGeometryMessage? {
+        if (isDashGap(exoPlayer.currentTracks)) return null
+        val coverage = videoCoverage ?: return videoGeometry
+        val timeline = exoPlayer.currentTimeline
+        if (timeline.isEmpty) return null
+        val period = timeline.getPeriod(exoPlayer.currentPeriodIndex, Timeline.Period())
+        val positionUs = Math.multiplyExact(exoPlayer.currentPosition, 1000L) - period.positionInWindowUs
+        return videoGeometry.takeIf { coverage.contains(positionUs) }
+    }
+
     private fun emitPositionDelta() {
         if (disposed || stopped || resetting) return
         val timeline = timeline()
+        if (visibleVideoGeometry() != publishedVideoGeometry) emitState()
         emit(YlEngineEvent.Tick(timeline, metrics(timeline)))
     }
     private fun mediaClockPositionMs(): Long? {
