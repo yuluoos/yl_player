@@ -103,6 +103,22 @@ internal class YlDashManifestParser(private val credentials: YlOriginCredentialP
             baseUrlAvailabilityTimeOffsetUs, availabilityStartTimeMs, timeShiftBufferDepthMs, dvbProfileDeclared)
     }
 
+    /** Preserve exact programme endpoints through the extractor's manifest-format merge.
+     * This owned entry cannot be fabricated by a manifest or embedded metadata string. */
+    override fun buildRepresentation(info: RepresentationInfo, label: String?, labels: MutableList<androidx.media3.common.Label>,
+        extraDrmSchemeType: String?, extraDrmSchemeDatas: ArrayList<androidx.media3.common.DrmInitData.SchemeData>,
+        extraInbandEventStreams: ArrayList<androidx.media3.exoplayer.dash.manifest.Descriptor>): Representation {
+        if (androidx.media3.common.MimeTypes.getTrackType(info.format.sampleMimeType) != C.TRACK_TYPE_AUDIO)
+            return super.buildRepresentation(info, label, labels, extraDrmSchemeType, extraDrmSchemeDatas, extraInbandEventStreams)
+        val bounds = timing.windows[periodCursor - 1]
+        val entry = YlDashPcmWindow(bounds.start, bounds.end)
+        val metadata = info.format.metadata?.copyWithAppendedEntries(entry) ?: androidx.media3.common.Metadata(entry)
+        val format = info.format.buildUpon().setMetadata(metadata).build()
+        val decorated = RepresentationInfo(format, info.baseUrls, info.segmentBase, info.drmSchemeType, info.drmSchemeDatas,
+            info.inbandEventStreams, info.essentialProperties, info.supplementalProperties, info.revisionId)
+        return super.buildRepresentation(decorated, label, labels, extraDrmSchemeType, extraDrmSchemeDatas, extraInbandEventStreams)
+    }
+
     private fun milliseconds(value: Long) = "PT${value / 1000}.${(value % 1000).toString().padStart(3, '0')}S"
     private fun attributes(parser: XmlPullParser, replacements: Map<String, String>): XmlPullParser {
         val depth = parser.depth

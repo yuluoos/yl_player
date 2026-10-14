@@ -39,12 +39,17 @@ android {
         getByName("main") {
             java.srcDirs("src/main/kotlin")
         }
+        getByName("androidTest") {
+            java.srcDirs("src/androidTest/kotlin")
+            assets.srcDir("../../yl_player/example/assets/test_media/dash_timeline")
+        }
         getByName("test") {
             java.srcDirs("src/test/kotlin")
         }
     }
 
     defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         minSdk = 24
     }
 
@@ -84,6 +89,9 @@ dependencies {
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.mockito:mockito-core:5.0.0")
+    androidTestImplementation("androidx.test:runner:1.6.2")
+    androidTestImplementation("junit:junit:4.13.2")
+    androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     testImplementation("net.sf.kxml:kxml2:2.3.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 }

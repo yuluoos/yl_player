@@ -350,3 +350,11 @@ seek/off/会话更换与目录原子发布取消旧窗口；迟到成功或错�
 DASH 自动选择复用原 Media3 选择算法，只筛除与已接受 SDR/PQ/HLG/Dolby profile+transfer 不兼容的轨道。清单缺色彩信息时，实际解码输出在释放画面前确定和核验集合；恢复保留该意图。此路线无法证明 Profile 7 的完整增强层处理，因此明确拒绝，保留原数据，不调用 BL 降级。
 
 验证：Android 公开节目 13/13、相关 JVM 100/100、Dart 静态分析无问题。实际播放暴露的稀疏能力数组空槽和 Dolby transfer 边界均保留 RED→GREEN 证据：[证据清单](evidence/2026-10-14-p01-android-video-family/manifest.json)。这不是 P01 封板：Android PCM 精确裁剪/轨道内空缺、联合 AV/cue 标记及最低版本等仍在继续。
+
+### 2026-10-14 Android 解码后 PCM 尾部裁剪
+
+真实 MediaCodec/AudioTrack 探针复现：3.5 秒、48 kHz 的源原先提交 168,960 帧，比节目窗口多 960 帧（20 ms）。新增 DASH 专用 PCM sink，使用随 manifest-format 合并传递的精确 Period 端点，在解码后将最后 AAC 缓冲从 1,024 帧截为 64 帧，最终精确提交 168,000 帧；保留部分写入时的缓冲身份。此路径不提供无法逐样本裁剪的编码直通。
+
+真实验证：3.5 秒 168,000 帧、跨 Period 3 秒 144,000 帧、独立 PTO 4 秒 192,000 帧，3/3 通过。公开播放 15/15，相关 JVM 148/148。测量范围是送入现有 AudioTrack 的解码 PCM 且播放到 ENDED，不代表物理扬声器或音画同步：[证据](evidence/2026-10-14-p01-android-pcm-end/manifest.json)。
+
+轨道内 leading/internal/trailing gap、部分 preroll 缓冲的实际送达及联合 AV/cue 验证继续处理，P01 仍未封板。

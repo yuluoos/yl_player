@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-14",
+  "scope": "P01 Android decoded PCM end clipping; leading/internal/trailing gaps and partial-preroll delivery remain pending",
+  "results": {
+    "native_pcm": {
+      "passed": 3,
+      "failed": 0,
+      "sample_rate": 48000,
+      "clip_end_before_frames": 168960,
+      "clip_end_after_frames": 168000,
+      "independent_pto_frames": 192000,
+      "cross_period_frames": 144000
+    },
+    "android_public": {
+      "passed": 15,
+      "failed": 0
+    },
+    "jvm": {
+      "passed": 148,
+      "failed": 0
+    }
+  },
+  "measurement_boundary": "Real MediaCodec decoded PCM submitted to the existing AudioTrack sink, with playback reaching STATE_ENDED. Not a physical-speaker or AV-sync claim. Probe audio-only MPDs retain exact Period/PTO and media bytes; production public tests include video and managed transport.",
+  "red_green": [
+    "First probe had main-thread hostname resolution error, corrected before measuring.",
+    "Unchanged production path delivered 960 excess frames at 3.5 seconds; new PCM boundary reduces final AAC buffer from1024 to64 frames.",
+    "Duplicate manifest metadata entries bypassed clipping; partial-write test reproduced and fixed by accepting identical entries and rejecting conflicting ones."
+  ],
+  "sources_sha256": {
+    "packages/yl_player_android/android/build.gradle.kts": "78f039921e67eb85c2aaa081129a5cff358e294f8eb13646aa0037d759125eaa",
+    "packages/yl_player_android/android/src/androidTest/AndroidManifest.xml": "fdd537520d4937752e8e35c65e36db35117a61eca958a90a0e446a1cf7dab47b",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashPcmInstrumentedTest.kt": "6bd9b370555a0f671eecddfeaddab6c72234ff9e9a0e34d31a2934519cd7ab08",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashManifestParser.kt": "16d4ba3579e0d505d71cfa6ffe0ab5ab6cca9e822444c2b1ba6d38bb40be6cf4",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt": "effdfef8e9ec900186354ee64cbb459948de84032a9fc985f26b2e6768d09f0a",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashPcmAudioSink.kt": "cd69229cc341ab8aaff516044947a4be7e9b838431352bbdc7bbb3f0b2077469",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashPcmWindowTest.kt": "788dad36d55926e3f55e7dfe55cdbd8af7728d32760fdf354860965ceb22600e"
+  },
+  "logs_sha256": {
+    "p01-android-pcm-instrumented-red.log": "05a03847395b294b35a670b81459db09f542fb03bbbdf1898b8e166e7d87c5c8",
+    "p01-android-pcm-instrumented-second.log": "5f916dc0e5e01840537bccd666b9a1b1a9e9306bf94a782e626efd6cd0cdbb26",
+    "p01-android-pcm-window-red.log": "9ef51c4c9a18b0de8a6aafe77653101e403110f7ee9aba83d869d5d9349178d1",
+    "p01-android-pcm-partial-red.log": "ec9ecb10a7c2e94fda6605cd819e1c023690e0ee2fe5e80dc63536a9ccee4dea",
+    "p01-android-pcm-first-green.log": "3db9722a878e978be4829f082222311c4017c5eba518351b9e6204c83c8df06d",
+    "p01-android-pcm-three-cases.log": "9ab3e9a7df4a9f9865667cfcb7acb232169a15b91f598e302d6bd3eb74f03b42",
+    "p01-android-pcm-measurements.log": "133e46e6e2a76e9d5a1a16187522474cef5a236bff49067a05884ec9fb181efb",
+    "p01-android-pcm-second-build.log": "c87b53c48c6e55a990e59fb5374066cbc90468b46732209ff4ed3694933d0322",
+    "p01-android-pcm-unit-final.log": "83161f97816f3468e936432d3222e26d4eaf34d5e419c89c82c2ea763f6bb37c",
+    "p01-android-pcm-public.log": "89c8a423c374418b9201403d1316407502aa47e1aee91189c43cb35b35a9f713"
+  }
+}

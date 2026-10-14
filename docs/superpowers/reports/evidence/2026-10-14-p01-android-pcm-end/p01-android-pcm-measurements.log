@@ -1,0 +1,6 @@
+--------- beginning of main
+10-14 00:34:45.171 11186 11222 I P01_PCM : buffers=165 frames=168960 first=(0, 1024, 48000) last=(3498666, 1024, 48000)
+10-14 00:38:34.830 11343 11378 I P01_PCM : buffers=165 frames=168000 first=(0, 1024, 48000) last=(3498666, 64, 48000)
+10-14 00:41:24.000 11475 11509 I P01_PCM : case=clip-end buffers=165 frames=168000 first=(0, 1024, 48000) last=(3498666, 64, 48000)
+10-14 00:41:27.301 11475 11509 I P01_PCM : case=cross-codec buffers=142 frames=144000 first=(0, 1024, 48000) last=(2993333, 320, 48000)
+10-14 00:41:31.589 11475 11509 I P01_PCM : case=independent-pto buffers=188 frames=192000 first=(0, 1024, 48000) last=(3989333, 512, 48000)

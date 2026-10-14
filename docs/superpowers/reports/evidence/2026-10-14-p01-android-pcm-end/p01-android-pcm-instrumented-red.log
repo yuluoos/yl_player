@@ -1,0 +1,92 @@
+INSTRUMENTATION_STATUS: class=dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stream=
+dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest:
+INSTRUMENTATION_STATUS: test=clipEndHasExactlyThreeAndHalfSecondsOfPcm
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stack=android.os.NetworkOnMainThreadException
+	at android.os.StrictMode$AndroidBlockGuardPolicy.onNetwork(StrictMode.java:1737)
+	at java.net.Inet6AddressImpl.getHostByAddr(Inet6AddressImpl.java:162)
+	at java.net.InetAddress$1.getHostByAddr(InetAddress.java:286)
+	at java.net.InetAddress.getHostFromNameService(InetAddress.java:656)
+	at java.net.InetAddress.getCanonicalHostName(InetAddress.java:627)
+	at okhttp3.mockwebserver.MockWebServer.getHostName(MockWebServer.kt:159)
+	at okhttp3.mockwebserver.MockWebServer.url(MockWebServer.kt:234)
+	at dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest.clipEndHasExactlyThreeAndHalfSecondsOfPcm$lambda$0(YlDashPcmInstrumentedTest.kt:69)
+	at dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:524)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at android.app.Instrumentation$SyncRunnable.run(Instrumentation.java:2616)
+	at android.os.Handler.handleCallback(Handler.java:995)
+	at android.os.Handler.dispatchMessage(Handler.java:103)
+	at android.os.Looper.loopOnce(Looper.java:248)
+	at android.os.Looper.loop(Looper.java:338)
+	at android.app.ActivityThread.main(ActivityThread.java:9067)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+
+INSTRUMENTATION_STATUS: stream=
+Error in clipEndHasExactlyThreeAndHalfSecondsOfPcm(dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest):
+android.os.NetworkOnMainThreadException
+	at android.os.StrictMode$AndroidBlockGuardPolicy.onNetwork(StrictMode.java:1737)
+	at java.net.Inet6AddressImpl.getHostByAddr(Inet6AddressImpl.java:162)
+	at java.net.InetAddress$1.getHostByAddr(InetAddress.java:286)
+	at java.net.InetAddress.getHostFromNameService(InetAddress.java:656)
+	at java.net.InetAddress.getCanonicalHostName(InetAddress.java:627)
+	at okhttp3.mockwebserver.MockWebServer.getHostName(MockWebServer.kt:159)
+	at okhttp3.mockwebserver.MockWebServer.url(MockWebServer.kt:234)
+	at dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest.clipEndHasExactlyThreeAndHalfSecondsOfPcm$lambda$0(YlDashPcmInstrumentedTest.kt:69)
+	at dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:524)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at android.app.Instrumentation$SyncRunnable.run(Instrumentation.java:2616)
+	at android.os.Handler.handleCallback(Handler.java:995)
+	at android.os.Handler.dispatchMessage(Handler.java:103)
+	at android.os.Looper.loopOnce(Looper.java:248)
+	at android.os.Looper.loop(Looper.java:338)
+	at android.app.ActivityThread.main(ActivityThread.java:9067)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+
+INSTRUMENTATION_STATUS: test=clipEndHasExactlyThreeAndHalfSecondsOfPcm
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_RESULT: stream=
+
+Time: 0.143
+There was 1 failure:
+1) clipEndHasExactlyThreeAndHalfSecondsOfPcm(dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest)
+android.os.NetworkOnMainThreadException
+	at android.os.StrictMode$AndroidBlockGuardPolicy.onNetwork(StrictMode.java:1737)
+	at java.net.Inet6AddressImpl.getHostByAddr(Inet6AddressImpl.java:162)
+	at java.net.InetAddress$1.getHostByAddr(InetAddress.java:286)
+	at java.net.InetAddress.getHostFromNameService(InetAddress.java:656)
+	at java.net.InetAddress.getCanonicalHostName(InetAddress.java:627)
+	at okhttp3.mockwebserver.MockWebServer.getHostName(MockWebServer.kt:159)
+	at okhttp3.mockwebserver.MockWebServer.url(MockWebServer.kt:234)
+	at dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest.clipEndHasExactlyThreeAndHalfSecondsOfPcm$lambda$0(YlDashPcmInstrumentedTest.kt:69)
+	at dev.ylplayer.yl_player_android.YlDashPcmInstrumentedTest$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:524)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at android.app.Instrumentation$SyncRunnable.run(Instrumentation.java:2616)
+	at android.os.Handler.handleCallback(Handler.java:995)
+	at android.os.Handler.dispatchMessage(Handler.java:103)
+	at android.os.Looper.loopOnce(Looper.java:248)
+	at android.os.Looper.loop(Looper.java:338)
+	at android.app.ActivityThread.main(ActivityThread.java:9067)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+
+INSTRUMENTATION_CODE: -1

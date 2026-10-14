@@ -82,6 +82,11 @@ internal class YlVideoOutputObserver(
 /** Preserves the existing factory's audio/text/etc and the pinned video Builder defaults.
  * Core uses extensions OFF, no prewarming/VideoSink/tunneling, and only configures decoder policy. */
 internal class YlOutputRenderersFactory(context: Context, private val observer: YlVideoOutputObserver) : DefaultRenderersFactory(context) {
+    override fun buildAudioSink(context: Context, enableFloatOutput: Boolean, enableAudioOutputPlaybackParams: Boolean): androidx.media3.exoplayer.audio.AudioSink? {
+        val sink = super.buildAudioSink(context, enableFloatOutput, enableAudioOutputPlaybackParams) ?: return null
+        return if (observer.dashVideoFamily != null) YlDashPcmAudioSink(sink) else sink
+    }
+
     override fun buildVideoRenderers(context: Context, extensionRendererMode: Int, mediaCodecSelector: MediaCodecSelector,
         enableDecoderFallback: Boolean, eventHandler: Handler, eventListener: VideoRendererEventListener,
         allowedVideoJoiningTimeMs: Long, out: ArrayList<Renderer>) {
