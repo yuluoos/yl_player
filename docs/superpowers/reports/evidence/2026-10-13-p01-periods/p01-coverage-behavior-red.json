@@ -1,0 +1,46 @@
+{
+  "devicesAndConfigurations": [
+    {
+      "device": {
+        "architecture": "arm64",
+        "deviceId": "00008103-000571C03CD9001E",
+        "deviceName": "My Mac",
+        "modelName": "MacBook Pro",
+        "osBuildNumber": "26A434",
+        "osVersion": "27.0.1",
+        "platform": "macOS"
+      },
+      "expectedFailures": 0,
+      "failedTests": 1,
+      "passedTests": 0,
+      "skippedTests": 0,
+      "testPlanConfiguration": {
+        "configurationId": "1",
+        "configurationName": "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription": "Runner \u00b7 Built with macOS 27.0.1",
+  "expectedFailures": 0,
+  "failedTests": 1,
+  "finishTime": 1791954037.042,
+  "passedTests": 0,
+  "result": "Failed",
+  "runtimeWarnings": [],
+  "skippedTests": 0,
+  "startTime": 1791954007.114,
+  "statistics": [],
+  "testFailures": [
+    {
+      "failureText": "XCTAssertLessThanOrEqual failed: (\"2578\") is greater than (\"1000\")",
+      "targetName": "RunnerTests",
+      "testIdentifier": 1,
+      "testIdentifierString": "YlDashSampleSourceNativeTests/testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment",
+      "testName": "testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment()"
+    }
+  ],
+  "title": "Test - Runner",
+  "topInsights": [],
+  "totalTestCount": 1
+}

@@ -135,7 +135,9 @@ enum YlApplePlaybackCommand {
 
   func apply(to backend: YlPlaybackBackend, cancellationToken: YlOpenCancellationToken? = nil) throws {
     switch self {
-    case .play: try backend.play()
+    case .play:
+      if let dash = backend as? YlDashProgramBackend { try dash.play(cancellationToken: cancellationToken) }
+      else { try backend.play() }
     case .pause: try backend.pause()
     case .liveEdge: try backend.seekToLiveEdge()
     case .seek(let position): try backend.seek(toMs: position, cancellationToken: cancellationToken)

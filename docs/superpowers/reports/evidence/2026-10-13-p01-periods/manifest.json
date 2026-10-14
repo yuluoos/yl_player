@@ -1,0 +1,130 @@
+{
+  "base": "a9921f32caa92b8622b504de173f36f9856a1c92",
+  "scope": "Apple Period reconfiguration, actual managed Range decoding and bounded scheduling dependencies. Full P01 still in progress.",
+  "results": {
+    "p01-period-edges-red": {
+      "result": "Failed",
+      "passedTests": 3,
+      "failedTests": 1,
+      "skippedTests": 0
+    },
+    "p01-tail-green": {
+      "result": "Passed",
+      "passedTests": 1,
+      "failedTests": 0,
+      "skippedTests": 0
+    },
+    "p01-coverage-behavior-red": {
+      "result": "Failed",
+      "passedTests": 0,
+      "failedTests": 1,
+      "skippedTests": 0
+    },
+    "p01-period-macos-second": {
+      "result": "Failed",
+      "passedTests": 16,
+      "failedTests": 2,
+      "skippedTests": 0
+    },
+    "p01-period-macos-fourth": {
+      "result": "Failed",
+      "passedTests": 2,
+      "failedTests": 1,
+      "skippedTests": 0
+    },
+    "p01-range-diagnostic-red": {
+      "result": "Failed",
+      "passedTests": 0,
+      "failedTests": 1,
+      "skippedTests": 0
+    },
+    "p01-period-macos-full": {
+      "result": "Failed",
+      "passedTests": 18,
+      "failedTests": 1,
+      "skippedTests": 0
+    },
+    "p01-period-ios-full": {
+      "result": "Passed",
+      "passedTests": 19,
+      "failedTests": 0,
+      "skippedTests": 0
+    },
+    "p01-closed-gop-macos": {
+      "result": "Passed",
+      "passedTests": 2,
+      "failedTests": 0,
+      "skippedTests": 0
+    },
+    "p01-closed-gop-ios": {
+      "result": "Passed",
+      "passedTests": 2,
+      "failedTests": 0,
+      "skippedTests": 0
+    },
+    "p01-selection-macos-final": {
+      "result": "Passed",
+      "passedTests": 2,
+      "failedTests": 0,
+      "skippedTests": 0
+    },
+    "p01-selection-ios-final": {
+      "result": "Passed",
+      "passedTests": 2,
+      "failedTests": 0,
+      "skippedTests": 0
+    }
+  },
+  "interpretation": [
+    "Runs overlap; counts must not be added as distinct test coverage.",
+    "macOS full run:18 passed,1 failed due draft HEVC duplicate packet PTS; corrected closed-GOP fixture passed3iterations on Mac and fresh iOS test.",
+    "iOS core19 passed; fresh2 tests cover corrected HEVC and8GiB sparse input; final2 cover same-codec resolution/caps and natural explicit audio loss.",
+    "All final targeted runs have zero failures/skips. Source inventory counts ios720/macOS765; inventory command still reports prior committed3-filemacOSmirror drift.",
+    "Python12 tests passed before adding AVC resolution bytes; fixture subset7passed again against final assets.23resource checks include original byteoffset."
+  ],
+  "limitations": [
+    "Android and Flutter joint capture pending; no physical iOS/Intel/minimum-OS runtime evidence.",
+    "Pending final acceptance: leading/internal media gaps, restore/control races, HDR-family negative admission, joint audio/clock lifecycle and minimum deployment regression.",
+    "Native audio consumption and published decoded pixels are not acoustic/physical-screen synchronization measurements.",
+    "No changes to shared audio renderer/frame scheduler, longplay or weak-network ABR tools."
+  ],
+  "source_sha256": {
+    "packages/yl_player/example/assets/test_media/dash_timeline/absolute-base.mpd": "6c2736a116fb13ce6c3078ecdb239c405013f82b80d2389efe2a73681bef516b",
+    "packages/yl_player/example/assets/test_media/dash_timeline/absolute-list.mpd": "169fc24fbed6b67b678eb259d0e345145801e84916b5ce646d1bfeb02022f26a",
+    "packages/yl_player/example/assets/test_media/dash_timeline/absolute-range.m4s": "29203ab541d263715e67f7dfdef8ab474adc3e2d716f0ff4fe5a66435c2df117",
+    "packages/yl_player/example/assets/test_media/dash_timeline/audio-added.mpd": "b55da751a664176ce8f716641a1533c45f921cf250440cf88d78f2deaf79c700",
+    "packages/yl_player/example/assets/test_media/dash_timeline/audio-removed.mpd": "1b37106f50cdbbde77ef6450d784490f4fdcb8a63d8cc74d4e6751b58f5e14c0",
+    "packages/yl_player/example/assets/test_media/dash_timeline/avc/chunk-0-00001.m4s": "ae4b234af98b0c2bace791187c4a50a4cb69f039cd1a6028f3119a5cc2c24252",
+    "packages/yl_player/example/assets/test_media/dash_timeline/avc/chunk-0-00002.m4s": "07758bf858ce5c3a4d52f4e87faf27f307a9fa851ddeb41bbe1ccd658b57a29b",
+    "packages/yl_player/example/assets/test_media/dash_timeline/avc/chunk-0-00003.m4s": "595dbc2db91929314d6d2bb1971cb950e54e193eee7d33fb6ec5a81f8f12635b",
+    "packages/yl_player/example/assets/test_media/dash_timeline/avc/chunk-0-00004.m4s": "9b9162d12e3222b5b6d31496d3a54457032b176b05e4fc7ba252c5b2d1822e37",
+    "packages/yl_player/example/assets/test_media/dash_timeline/avc/init-0.m4s": "7bd0e3f97f2d747b3dfcc936985c268ccec87df01babd3da7ca028d9d1fae78a",
+    "packages/yl_player/example/assets/test_media/dash_timeline/cross-codec.mpd": "b42e7c353f05f3362d63e0637cec92e3a3ab3ed731a09f3c2baf577e8a7010c7",
+    "packages/yl_player/example/assets/test_media/dash_timeline/hevc/chunk-0-00001.m4s": "67534b1d2b3e477eadd81fd66a7e5e68d753924d44461d7e4332ccc73bd33580",
+    "packages/yl_player/example/assets/test_media/dash_timeline/hevc/chunk-0-00002.m4s": "617fc6456b41f17181f5b4f8dc06bee36f42bda089868ec75b928ae8e92202d7",
+    "packages/yl_player/example/assets/test_media/dash_timeline/hevc/chunk-0-00003.m4s": "89ababdc8ef360414d19a0819262218f913f0cfae837f4b5ab7f13ba3defa307",
+    "packages/yl_player/example/assets/test_media/dash_timeline/hevc/chunk-0-00004.m4s": "6028c6d928b07b61791998131494ecddd7688d5aa1768fb85eb7fb95b3eadbbd",
+    "packages/yl_player/example/assets/test_media/dash_timeline/hevc/init-0.m4s": "5a143cf58f18919c86506b207d71b39ccaafd115e983a584e79e41309284aa07",
+    "packages/yl_player/example/assets/test_media/dash_timeline/period-fixture-provenance.json": "6a9e1bd7db6c88cd0ccf544724a029160d59b1f23a6296f2d6c3c7fb3f07180e",
+    "packages/yl_player/example/assets/test_media/dash_timeline/range-fixture-provenance.json": "7402f606d0c92b183911f43857a02410ae1ecf3c00e0c91c846d7bd942261afa",
+    "packages/yl_player/example/assets/test_media/dash_timeline/resolution.mpd": "3f5a88d1c00319423d56c5d33ff5f04eeeb38af9a4351c3f350e9e4c14446d77",
+    "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift": "733179ad984fecbbd756cbb5ec09ecf0ecfb5f097b6efde4cf34d1190426d1e1",
+    "packages/yl_player/example/ios/RunnerTests/p01-program-fixtures.json": "324af3b92c6eec827362cb6f4cbe1637320578661004c060cc11ae4bf9c69358",
+    "packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift": "8b35cf85eb402352328f877900d53983d424409405fa332976d8cb3d825d8fb2",
+    "packages/yl_player/example/macos/RunnerTests/p01-program-fixtures.json": "324af3b92c6eec827362cb6f4cbe1637320578661004c060cc11ae4bf9c69358",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/DashProgram/YlDashProgramBackend.swift": "ccfbddeaa482485cfea85451868ae64e816b23ef4900ccc02c4ac9ba54d640b9",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashPeriodPlayback.swift": "cd2e1d0b19897f8003914c65b6813c3159eace6140f9e5c39bed67b9e545852e",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashProgramResources.swift": "84de4926ffcf0061c90da675cc5ec75c431895866bb7e23f03a33b1a2778aa54",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashSampleSource.swift": "5af64e99ab696344113a1c4e0e0193bb2333178a96b93843a682f16d7c56452b",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift": "2e397c97c79bebe91f584bd594ae7a1ef28d3221b5334b5119e69e0328152a00",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionModels.swift": "35d5ff523b58de51bdefa4cc749676c5390f7edaf9e582d788296b20d8544277",
+    "tool/consumer_fixtures/apple_flutter/Resources/p01-program-fixtures.json": "324af3b92c6eec827362cb6f4cbe1637320578661004c060cc11ae4bf9c69358",
+    "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift": "733179ad984fecbbd756cbb5ec09ecf0ecfb5f097b6efde4cf34d1190426d1e1",
+    "tool/consumer_fixtures/apple_flutter/main_example_tests.py": "e8f9f15d075700254ab3840552baa6c4b939dd3d8162caac5d4d82980b1e3009",
+    "tool/dash_timeline/README.md": "39619818f4bbd00895c9bde48a932d7b61850fa72b0b9ff6af15cc20a92bc914",
+    "tool/dash_timeline/generate_period_fixture.py": "e6d20ee2b465afa1abc57b972e662e8d0ecf0dd34e0d9348d435c2e165d519e3",
+    "tool/dash_timeline/generate_range_fixture.py": "210f016ceea82888ed007fc9b12d848b51a90467eb4c6f16ea30e233abaa9210",
+    "tool/dash_timeline/program_resource_tests.swift": "d4b7e738bf18e2d6744623230394ae6d4941bd5272bf3774b3bb5b70b8d14fde",
+    "tool/dash_timeline/test_fixtures.py": "c19ee5622bafdcc249fa9a65c6b7032aa8de00cec17b77d5918c7361c48e767b"
+  }
+}

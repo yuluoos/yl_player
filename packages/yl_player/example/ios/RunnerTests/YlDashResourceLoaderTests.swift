@@ -2415,13 +2415,23 @@ extension YlDashSampleSourceNativeTests {
   var video: [(Int64, UInt64, [UInt8])] = []
   var audio: [YlAudioClockSample] = []
   var periods: [(Int, Int64)] = []
-  init(_ name: String) throws {
+  init(_ name: String, transform: ((String) -> String)? = nil, beforeRequest: ((String) -> Void)? = nil) throws {
     server = try DashHTTPServer()
     let data = try Data(contentsOf: XCTUnwrap(Bundle(for: YlDashSampleSourceNativeTests.self).url(forResource: "p01-program-fixtures", withExtension: "json")))
     let encoded = try JSONDecoder().decode([String: String].self, from: data)
-    let files = encoded.compactMapValues { Data(base64Encoded: $0) }
+    var files = encoded.compactMapValues { Data(base64Encoded: $0) }
+    if let transform, let original = files[name + ".mpd"], let xml = String(data: original, encoding: .utf8) {
+      files[name + ".mpd"] = Data(transform(xml).utf8)
+    }
+    let servedFiles = files
     server.handler = { request in
-      guard let bytes = files[String(request.path.dropFirst())] else { return (404, [:], Data()) }
+      beforeRequest?(request.path)
+      guard let bytes = servedFiles[String(request.path.dropFirst())] else { return (404, [:], Data()) }
+      if let range = request.headers["range"], range.hasPrefix("bytes=") {
+        let pair = range.dropFirst(6).split(separator: "-")
+        guard pair.count == 2, let start = Int(pair[0]), let end = Int(pair[1]), start >= 0, end >= start, end < bytes.count else { return (416, [:], Data()) }
+        return (206, ["Content-Range": "bytes \(start)-\(end)/\(bytes.count)"], Data(bytes[start...end]))
+      }
       return (200, [:], bytes)
     }
     let url = server.url("/" + name + ".mpd"), token = YlOpenCancellationToken()
@@ -2590,6 +2600,14 @@ extension YlDashSampleSourceNativeTests {
       }
       let restored = texture.frames
       try await command(.play); try await frames(after: restored)
+      try await command(.seek(4000))
+      let completedFrames = texture.frames
+      try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+        coordinator.beginActivation(forcePlay: true, willCommit: { _ in }, didCommit: {}, didRollback: {},
+          completion: { continuation.resume(with: $0.mapError { $0 as Error }) })
+      }
+      try await frames(after: completedFrames)
+      XCTAssertLessThan(states.last?.positionMs ?? 4000, 4000)
       coordinator.stop(); coordinator.dispose()
     }
   }
@@ -2641,5 +2659,236 @@ extension YlDashSampleSourceNativeTests {
       XCTAssertEqual(Double(crossings[marker]) * 48000 / Double(counts[marker]), marker == 0 ? 440 : 1760, accuracy: 8)
     }
     converter.reset()
+  }
+}
+
+
+extension YlDashSampleSourceNativeTests {
+  @MainActor func testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples() async throws {
+    let harness = try DashProgramHarness("independent-pto", transform: { $0.replacingOccurrences(of: "PT4S", with: "PT5S") })
+    defer { harness.close() }
+    try await harness.seek(4500)
+    try harness.backend.play()
+    try await harness.advance(until: { harness.states.last?.status == "completed" }, seconds: 2)
+    XCTAssertEqual(harness.states.last?.positionMs, 5000)
+    XCTAssertTrue(harness.video.isEmpty)
+    XCTAssertTrue(harness.audio.isEmpty)
+    XCTAssertNil(harness.backend.copyPixelBuffer())
+  }
+
+  @MainActor func testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels() async throws {
+    let harness = try DashProgramHarness("cross-codec"); defer { harness.close() }
+    harness.backend.emitState()
+    let fixed = try XCTUnwrap(harness.states.last?.videoTracks.first?.id), backend = harness.backend!
+    try await Task.detached {
+      try backend.updateVideoConstraints(.init(maxWidth: 640, maxHeight: 360, maxBitrate: 650000), cancellationToken: nil)
+      try backend.selectVideoTrack(fixed, cancellationToken: nil)
+    }.value
+    try harness.backend.play()
+    try await harness.advance(until: { harness.states.last?.status == "completed" }, seconds: 6)
+    XCTAssertTrue(harness.states.contains { $0.videoWidth == 640 && $0.videoHeight == 360 })
+    XCTAssertNil(harness.backend.videoSelection.fixedTrackId)
+    XCTAssertEqual(harness.backend.videoSelection.reason, "trackUnavailable")
+    XCTAssertTrue(harness.video.contains { $0.0 >= 1_500_000 && $0.0 < 2_500_000 && $0.2.count == 3 && $0.2[0] > 240 && $0.2[1] > 240 && $0.2[2] < 12 })
+    XCTAssertTrue(harness.video.contains { $0.0 >= 2_500_000 && $0.2.count == 3 && $0.2[0] < 12 && $0.2[1] > 240 && $0.2[2] > 240 })
+    for target: Int64 in [500, 2000, 750] {
+      let before = harness.video.count
+      try await harness.seek(target)
+      try await harness.advance(until: { harness.video.count > before })
+      XCTAssertEqual(harness.states.last?.videoWidth, target < 1500 ? 320 : 640)
+      XCTAssertGreaterThanOrEqual(harness.video[before].0, target * 1000)
+    }
+  }
+
+  @MainActor func testProgramAudioIdentitySurvivesCatalogAddition() async throws {
+    let harness = try DashProgramHarness("audio-added"); defer { harness.close() }
+    harness.backend.emitState()
+    let first = try XCTUnwrap(harness.states.last)
+    let audio = try XCTUnwrap(first.audioTracks.first?.id)
+    let video = try XCTUnwrap(first.videoTracks.first?.id)
+    let backend = harness.backend!
+    try await Task.detached { try backend.selectAudioTrack(audio, cancellationToken: nil); try backend.selectVideoTrack(video, cancellationToken: nil) }.value
+    try harness.backend.play()
+    try await harness.advance(until: { harness.states.last?.status == "completed" })
+    XCTAssertEqual(harness.states.last?.audioTracks.count, 2)
+    XCTAssertEqual(harness.states.last?.audioTracks.first(where: \.isSelected)?.id, audio)
+    XCTAssertTrue(harness.errors.isEmpty)
+  }
+
+  @MainActor func testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack() async throws {
+    let harness = try DashProgramHarness("audio-removed"); defer { harness.close() }
+    harness.backend.emitState()
+    let audio = try XCTUnwrap(harness.states.last?.audioTracks.first?.id)
+    let backend = harness.backend!
+    try await Task.detached { try backend.selectAudioTrack(audio, cancellationToken: nil) }.value
+    do { try await harness.seek(2000); XCTFail("missing explicit audio must reject") }
+    catch { XCTAssertEqual((error as? NativePlayerError)?.code, "track.not_found") }
+    harness.backend.emitState()
+    XCTAssertEqual(harness.states.last?.audioTracks.first(where: \.isSelected)?.id, audio)
+    XCTAssertLessThan(harness.states.last?.positionMs ?? 3000, 1500)
+    try harness.backend.play()
+    try await harness.advance(until: { !harness.video.isEmpty }, seconds: 2)
+    for _ in 0..<400 {
+      harness.display?.fire()
+      if !harness.errors.isEmpty { break }
+      try await Task.sleep(nanoseconds: 10_000_000)
+    }
+    XCTAssertEqual(harness.errors.last?.code, "track.not_found")
+    XCTAssertEqual(harness.states.last?.audioTracks.first(where: \.isSelected)?.id, audio)
+  }
+}
+
+
+extension YlDashSampleSourceNativeTests {
+  @MainActor func testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment() async throws {
+    let held = expectation(description: "video fragment pending"), release = DispatchSemaphore(value: 0)
+    let harness = try DashProgramHarness("independent-pto", transform: { xml in
+      var xml = xml
+      let start = xml.range(of: "<AdaptationSet contentType=\"audio\"")!.lowerBound
+      let end = xml.range(of: "</AdaptationSet>", range: start..<xml.endIndex)!.upperBound
+      xml.removeSubrange(start..<end); return xml
+    }, beforeRequest: { path in
+      if path == "/independent/chunk-0-00002.m4s" { held.fulfill(); _ = release.wait(timeout: .now() + 6) }
+    })
+    defer { release.signal(); harness.close() }
+    try harness.backend.play()
+    try await harness.advance(until: { harness.server.requests.contains { $0.path == "/independent/chunk-0-00002.m4s" } }, seconds: 2)
+    await fulfillment(of: [held], timeout: 2)
+    for _ in 0..<150 { harness.display?.fire(); try await Task.sleep(nanoseconds: 10_000_000) }
+    harness.backend.emitState()
+    XCTAssertLessThanOrEqual(harness.states.last?.positionMs ?? .max, 1000)
+    XCTAssertEqual(harness.states.last?.status, "buffering")
+    XCTAssertNil(harness.backend.copyPixelBuffer(), "expired frame must not cover missing media")
+    release.signal()
+    try await harness.advance(until: { harness.states.last?.status == "completed" }, seconds: 5)
+    XCTAssertTrue(harness.video.contains { $0.0 >= 1_000_000 && $0.0 < 1_100_000 }, "resume cannot skip the delayed fragment")
+  }
+
+  @MainActor func testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput() async throws {
+    let held = expectation(description: "candidate pending"), release = DispatchSemaphore(value: 0)
+    let harness = try DashProgramHarness("cross-codec", beforeRequest: { path in
+      if path == "/hevc/init-0.m4s" { held.fulfill(); _ = release.wait(timeout: .now() + 5) }
+    })
+    defer { release.signal(); harness.close() }
+    let backend = harness.backend!, token = YlOpenCancellationToken()
+    let pending = Task.detached { try backend.seek(toMs: 2000, cancellationToken: token) }
+    await fulfillment(of: [held], timeout: 2)
+    token.cancel()
+    do { try await pending.value; XCTFail("cancelled seek committed") }
+    catch { XCTAssertTrue(token.isCancelled) }
+    release.signal()
+    harness.backend.emitState()
+    XCTAssertEqual(harness.states.last?.videoWidth, 320)
+    XCTAssertEqual(harness.states.last?.positionMs, 0)
+    XCTAssertTrue(harness.periods.isEmpty)
+    try harness.backend.play()
+    try await harness.advance(until: { !harness.video.isEmpty }, seconds: 2)
+    XCTAssertTrue(harness.video.allSatisfy { $0.1 == 1 })
+  }
+}
+
+
+extension YlDashSampleSourceNativeTests {
+  @MainActor func testProgramCompletedPlayHonorsCommandCancellationDuringReload() async throws {
+    let harness = try DashProgramHarness("independent-pto", transform: { $0.replacingOccurrences(of: "PT4S", with: "PT0.5S") })
+    let release = DispatchSemaphore(value: 0)
+    defer { release.signal(); harness.close() }
+    try harness.backend.play()
+    try await harness.advance(until: { harness.states.last?.status == "completed" }, seconds: 2)
+    let held = expectation(description: "restart pending"), original = harness.server.handler!
+    harness.server.handler = { request in
+      if request.path == "/independent/init-0.m4s" { held.fulfill(); _ = release.wait(timeout: .now() + 4) }
+      return original(request)
+    }
+    let backend = harness.backend!, token = YlOpenCancellationToken()
+    let pending = Task.detached { try YlApplePlaybackCommand.play.apply(to: backend, cancellationToken: token) }
+    await fulfillment(of: [held], timeout: 2)
+    token.cancel(); release.signal()
+    do { try await pending.value; XCTFail("restart ignored command cancellation") }
+    catch { XCTAssertTrue(token.isCancelled) }
+    harness.backend.emitState()
+    XCTAssertEqual(harness.states.last?.status, "completed")
+    XCTAssertEqual(harness.states.last?.positionMs, 500)
+  }
+}
+
+
+extension YlDashSampleSourceNativeTests {
+  @MainActor func testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges() async throws {
+    for name in ["absolute-base", "absolute-list"] {
+      let harness: DashProgramHarness
+      do { harness = try DashProgramHarness(name) }
+      catch let error as NativePlayerError { XCTFail("\(name): \(error.code): \(error.message)"); throw error }
+      defer { harness.close() }
+      try harness.backend.play()
+      try await harness.advance(until: { harness.states.last?.status == "completed" }, seconds: 6)
+      XCTAssertEqual(harness.states.last?.positionMs, 4000)
+      XCTAssertTrue(harness.video.contains { $0.0 < 1_000_000 && $0.2.count == 3 && $0.2[0] > 240 && $0.2[1] < 12 })
+      for target: Int64 in [500, 2500] {
+        let before = harness.video.count
+        try await harness.seek(target)
+        try await harness.advance(until: { harness.video.count > before })
+        XCTAssertGreaterThanOrEqual(harness.video[before].0, target * 1000)
+      }
+      XCTAssertTrue(harness.server.requests.filter { $0.path == "/absolute-range.m4s" }.allSatisfy { $0.headers["range"] != nil })
+    }
+  }
+}
+
+
+extension YlDashSampleSourceNativeTests {
+  func testSparseFragmentKeepsAbsoluteOffsetsAboveFourGiBWithoutAllocatingHole() throws {
+    let encoded = try JSONDecoder().decode([String: String].self, from: Data(contentsOf: XCTUnwrap(Bundle(for: Self.self).url(forResource: "p01-program-fixtures", withExtension: "json"))))
+    let files = encoded.compactMapValues { Data(base64Encoded: $0) }
+    let initialization = try XCTUnwrap(files["period0/init-0.m4s"]), packed = try XCTUnwrap(files["absolute-range.m4s"])
+    func word(_ start: Int) -> Int { packed[start..<(start + 4)].reduce(0) { ($0 << 8) | Int($1) } }
+    let start = initialization.count + 80 + 4096, length = word(initialization.count + 32)
+    var fragment = Data(packed[start..<(start + length)])
+    let field = try XCTUnwrap(fragment.range(of: Data("tfhd".utf8))).lowerBound + 12
+    let original = fragment[field..<(field + 8)].reduce(UInt64(0)) { ($0 << 8) | UInt64($1) }
+    let delta: UInt64 = 1 << 33
+    var absolute = (original + delta).bigEndian
+    fragment.replaceSubrange(field..<(field + 8), with: withUnsafeBytes(of: &absolute) { Data($0) })
+    let scope = try YlManagedBufferLedger(maxBytes: 4 * 1024 * 1024).makeScope(maxBytes: nil)
+    let url = URL(string: "https://owned.example/sparse")!
+    let source = try YlDashSampleSource(initialization: .init(data: initialization, finalURL: url, credentialsStripped: false, resourceLength: nil, reservation: nil),
+      fragment: .init(data: fragment, finalURL: url, credentialsStripped: false, resourceLength: nil, reservation: nil, sourceOffset: Int64(start) + Int64(delta)),
+      kind: .video, cancellation: .init(), scope: scope)
+    var clocks: [Int64] = []
+    while let packet = try source.next() { clocks.append(try packet.pts.converted(to: 12288, rounding: .floor)) }
+    XCTAssertEqual(clocks, (0..<24).map { Int64($0 * 512) })
+    XCTAssertLessThan(scope.ledger.snapshot.currentBytes, 1024 * 1024)
+  }
+}
+
+
+extension YlDashSampleSourceNativeTests {
+  @MainActor func testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative() async throws {
+    for width in [640, 320] {
+      let harness = try DashProgramHarness("resolution"); defer { harness.close() }
+      harness.backend.emitState()
+      let fixed = try XCTUnwrap(harness.states.last?.videoTracks.first?.id), backend = harness.backend!
+      try await Task.detached {
+        try backend.updateVideoConstraints(.init(maxWidth: width, maxHeight: nil, maxBitrate: nil), cancellationToken: nil)
+        try backend.selectVideoTrack(fixed, cancellationToken: nil)
+      }.value
+      try harness.backend.play()
+      if width == 640 {
+        try await harness.advance(until: { harness.states.last?.status == "completed" })
+        XCTAssertEqual(harness.states.last?.videoWidth, 640)
+        XCTAssertNil(harness.backend.videoSelection.fixedTrackId)
+        XCTAssertEqual(harness.backend.videoSelection.reason, "trackUnavailable")
+        XCTAssertTrue(harness.video.contains { $0.0 >= 1_500_000 && $0.2.count == 3 && $0.2[0] > 240 && $0.2[1] > 240 && $0.2[2] < 12 })
+      } else {
+        for _ in 0..<400 {
+          harness.display?.fire()
+          if !harness.errors.isEmpty { break }
+          try await Task.sleep(nanoseconds: 10_000_000)
+        }
+        XCTAssertEqual(harness.errors.last?.code, YlAppleVideoConstraints.unsupportedOutput.code)
+        XCTAssertFalse(harness.states.contains { ($0.videoWidth ?? 0) > width })
+        XCTAssertFalse(harness.video.contains { $0.0 >= 1_500_000 })
+      }
+    }
   }
 }

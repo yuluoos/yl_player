@@ -23,6 +23,8 @@ final class YlDashPeriodPlayback {
   private let timingLock = NSLock()
   private struct DisplayTime { let start: Int64; let duration: Int64 }
   private var pendingTimes: [Int64: DisplayTime?] = [:]
+  private var drainedVideo = false, drainedAudio = false
+  private var decodedVideoEnd: Int64 = 0
   private var disposed = false
   private let onError: (NativePlayerError) -> Void
 
@@ -40,14 +42,23 @@ final class YlDashPeriodPlayback {
         converter: converter, output: audioOutput ?? YlSystemAudioOutput())
       let stream = first.source.stream
       let codec = YlAudioCodec(bridgeCodec: stream.codec)
-      guard codec != .unsupported else { throw Self.invalid() }
+      guard codec != .unsupported else { throw Self.invalid("unsupported audio codec") }
       try renderer.configure(stream: .init(codec: codec, sampleRate: Double(stream.sample_rate),
         channelCount: Int(stream.channel_count), magicCookie: first.source.codecConfiguration,
         generation: generation, channelMask: stream.channel_layout_mask))
       renderer.onOutputFailure = onError
       audio = renderer; audioConverter = converter
-      clock.enableIsolatedAudioClock(read: { [weak renderer] generation in
-        renderer?.clockObservation(expectedGeneration: generation) ?? .invalid
+      clock.enableIsolatedAudioClock(read: { [weak self, weak renderer] generation in
+        guard let self, let renderer else { return .invalid }
+        let observation = renderer.clockObservation(expectedGeneration: generation)
+        self.timingLock.lock(); let exhausted = self.drainedAudio; self.timingLock.unlock()
+        // A seek can clip every decoded PCM frame. The renderer then has no
+        // consumption anchor; only confirmed input EOF permits a silent tail.
+        if exhausted, observation == .waiting, renderer.scheduledBytes == 0 {
+          return .ended(positionUs: (try? self.prepared.position.converted(to: 1_000_000, rounding: .floor)) ?? 0,
+            hostTimeUs: Self.now)
+        }
+        return observation
       }, generation: generation)
     } else { audio = nil; audioConverter = nil; audioEnded = true }
     scheduler.flush(generation: generation)
@@ -68,13 +79,13 @@ final class YlDashPeriodPlayback {
          // Finish the current compressed fragment beyond the clipped window.
          // Otherwise discarded PCM freezes the clock before the lookahead can
          // reach EOF, leaving converter-delayed tail samples stranded.
-         (try item.pts >= outputWindow.end || item.pts <= Time(position + 500_000, 1_000_000)) {
+         (try item.pts >= outputWindow.end || item.pts <= Time(position, 1_000_000).adding(Time(1, 2))) {
         if pendingAudio == nil {
           guard let original = prepared.firstAudio,
                 item.source.stream.codec == original.source.stream.codec,
                 item.source.stream.sample_rate == original.source.stream.sample_rate,
                 item.source.stream.channel_count == original.source.stream.channel_count,
-                item.source.codecConfiguration == original.source.codecConfiguration else { throw Self.invalid() }
+                item.source.codecConfiguration == original.source.codecConfiguration else { throw Self.invalid("audio configuration") }
           let bytes = try item.packet.audioBytes()
           let reservation = try scope.require(category: .compressedPackets, bytes: bytes.count)
           pendingAudio = try .init(reservation: reservation, data: bytes,
@@ -86,16 +97,20 @@ final class YlDashPeriodPlayback {
         switch try audio.enqueue(packet: packet) {
         case .scheduled, .buffered:
           pendingAudio = nil; nextAudio = try prepared.audio?.next(); progress = true
-          if nextAudio == nil { audioEnded = true; audio.finishInput() }
+          if nextAudio == nil {
+            audioEnded = true; audio.finishInput()
+            timingLock.lock(); drainedAudio = true; timingLock.unlock()
+          }
         case .staleGeneration: throw YlOpenCancellationToken.cancellationError()
         case .wouldExceedBytes, .wouldExceedDuration: break
         }
       }
       timingLock.lock(); let pendingCount = pendingTimes.count; timingLock.unlock()
       if !videoEnded, let item = nextVideo, scheduler.pendingPTS.count < 4, pendingCount < 4,
-         (item.dts ?? item.pts) <= (try Time(position + 250_000, 1_000_000)) {
+         (try scheduler.pendingPTS.isEmpty && pendingCount == 0 ||
+           (item.dts ?? item.pts) <= Time(position, 1_000_000).adding(Time(1, 4))) {
         guard let format = item.source.videoFormat,
-              CMFormatDescriptionEqual(format, otherFormatDescription: prepared.firstVideo.source.videoFormat!) else { throw Self.invalid() }
+              CMFormatDescriptionEqual(format, otherFormatDescription: prepared.firstVideo.source.videoFormat!) else { throw Self.invalid("video configuration") }
         let interval = try YlDashSampleWindow.intersection(pts: item.pts, duration: item.packet.duration, window: outputWindow)
         let pts = try Self.cmTime(item.pts)
         let key = CMTimeConvertScale(pts, timescale: 1_000_000, method: .default).value
@@ -106,7 +121,7 @@ final class YlDashPeriodPlayback {
           display = .init(start: start, duration: max(0, end - start))
         } else { display = nil }
         timingLock.lock()
-        if pendingTimes.keys.contains(key) { timingLock.unlock(); throw Self.invalid() }
+        if pendingTimes.keys.contains(key) { timingLock.unlock(); throw Self.invalid("duplicate presentation time") }
         pendingTimes[key] = .some(display); timingLock.unlock()
         let sample = try item.packet.videoSample(format: format, pts: pts,
           dts: item.dts.map(Self.cmTime) ?? .invalid, duration: Self.cmTime(item.packet.duration))
@@ -114,10 +129,26 @@ final class YlDashPeriodPlayback {
           shouldCancel: { cancellation.isCancelled }) else { throw YlOpenCancellationToken.cancellationError() }
         video.decode(sample: sample, generation: generation, reservation: reservation)
         nextVideo = try prepared.video.next(); progress = true
-        if nextVideo == nil { videoEnded = true; video.drain() }
+        if nextVideo == nil {
+          videoEnded = true; video.drain()
+          timingLock.lock(); drainedVideo = true; timingLock.unlock()
+        }
       }
       if !progress { return }
     }
+  }
+
+  /// True only after every video callback has drained; no fabricated frame is
+  /// needed to start a declared blank tail after a seek beyond available media.
+  var videoInputDrained: Bool {
+    timingLock.lock(); defer { timingLock.unlock() }; return drainedVideo && pendingTimes.isEmpty
+  }
+
+  /// Highest admitted decoded frame end. EOF separately authorizes declared
+  /// blank tails; an unfinished network read never counts as known coverage.
+  var videoCoverageEnd: Int64 {
+    timingLock.lock(); defer { timingLock.unlock() }
+    return max(decodedVideoEnd, (try? prepared.position.converted(to: 1_000_000, rounding: .floor)) ?? 0)
   }
 
   private func receive(_ frame: YlVideoFrame) {
@@ -126,8 +157,11 @@ final class YlDashPeriodPlayback {
     let accepted = !disposed && frame.generation == generation
     timingLock.unlock()
     guard accepted, let wrapped = value, let display = wrapped else { return }
-    _ = scheduler.enqueue(.init(reservation: frame.reservation, payload: frame.pixelBuffer,
+    let admitted = scheduler.enqueue(.init(reservation: frame.reservation, payload: frame.pixelBuffer,
       ptsUs: display.start, durationUs: display.duration, keyframe: frame.keyframe, generation: generation))
+    if admitted {
+      timingLock.lock(); decodedVideoEnd = max(decodedVideoEnd, display.start + display.duration); timingLock.unlock()
+    }
   }
   func play() throws { try audio?.play(); clock.play(atHostTimeUs: Self.now) }
   func pause() { clock.pause(atHostTimeUs: Self.now); audio?.pause() }
@@ -148,8 +182,8 @@ final class YlDashPeriodPlayback {
     if let scale = Int32(exactly: time.denominator) { return CMTime(value: time.numerator, timescale: scale) }
     return CMTime(value: try time.converted(to: 1_000_000_000, rounding: .floor), timescale: 1_000_000_000)
   }
-  private static func invalid() -> NativePlayerError {
+  private static func invalid(_ reason: String) -> NativePlayerError {
     NativePlayerError(category: "decoder", code: "decoder.dash_reconfiguration_required",
-      message: "The DASH sample configuration changed outside a declared Period boundary.")
+      message: "The DASH sample changed outside a declared Period boundary (\(reason)).")
   }
 }

@@ -42,7 +42,7 @@ check("exact Range request and response") {
     receive(.headers(response(request.url!, 206, ["Content-Range": "bytes 10-12/100", "Content-Length": "3"]))); receive(.body(Data([4,5,6]))); receive(.complete(nil))
   } }
   let value = try r.read(resource(range: .init(start: 10, length: 3)), maximumBytes: 4, cancellation: .init())
-  return value.data == Data([4,5,6]) && value.resourceLength == 100
+  return value.sourceOffset == 10 && value.data == Data([4,5,6]) && value.resourceLength == 100
 }
 check("Range cannot accept full file") {
   let r = reader { request, receive in Hop { receive(.headers(response(request.url!, 200))); receive(.body(Data([1]))); receive(.complete(nil)) } }

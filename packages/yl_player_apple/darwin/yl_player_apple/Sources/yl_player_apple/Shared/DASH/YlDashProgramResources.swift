@@ -12,10 +12,12 @@ final class YlDashProgramResources {
     let finalURL: URL
     let credentialsStripped: Bool
     let resourceLength: Int64?
+    /// Byte origin within the returned resource, retained for absolute MP4 offsets.
+    let sourceOffset: Int64
     private let reservation: AnyObject?
-    init(data: Data, finalURL: URL, credentialsStripped: Bool, resourceLength: Int64?, reservation: AnyObject?) {
+    init(data: Data, finalURL: URL, credentialsStripped: Bool, resourceLength: Int64?, reservation: AnyObject?, sourceOffset: Int64 = 0) {
       self.data = data; self.finalURL = finalURL; self.credentialsStripped = credentialsStripped
-      self.resourceLength = resourceLength; self.reservation = reservation
+      self.resourceLength = resourceLength; self.reservation = reservation; self.sourceOffset = sourceOffset
     }
   }
   private let context: YlManagedRequestContext?
@@ -124,7 +126,7 @@ final class YlDashProgramResources {
             let bytes = waiter.data.withUnsafeBytes { Data($0) }
             return Payload(data: bytes, finalURL: url,
               credentialsStripped: !context.credentialsAllowed,
-              resourceLength: waiter.resourceLength, reservation: reservation)
+              resourceLength: waiter.resourceLength, reservation: reservation, sourceOffset: resource.range?.start ?? 0)
           }
           failure = Self.error(status == 401 ? "network.unauthorized" : status == 403 ? "network.forbidden" : "network.http_status")
         }

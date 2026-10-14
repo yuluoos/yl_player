@@ -72,6 +72,8 @@
 - [ ] 实际自然跨段、前后 seek、重配中 cancel、后台恢复与重复释放；Android 用同媒体验证。
 - [ ] 通过后提交，并逐项保留不具备解码硬件的外部条件记录。
 
+Apple 阶段已交付并保存证据：同编码分辨率变化、AVC/HEVC、音轨增删、缺固定档位与 caps、候选取消、完成后重启、无样本尾段、视频覆盖范围以及绝对 Range。Task 4 仍保持未完成：Android 同媒体语义及联合生命周期验证继续执行。
+
 ### Task 5: DASH 字幕与错误隔离
 
 **Files:** Dart `lib/src/subtitles/dash_subtitles.dart`、subtitle runtime 与资源层；测试 MPD text、wvtt/stpp、外部 VTT/TTML 和跨段 widget/public。

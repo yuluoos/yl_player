@@ -68,10 +68,13 @@ final class YlDashProgramBackend: YlPlaybackBackend {
   var playbackIntent: Bool { locked { playing } }
   var requiresAsyncActivation: Bool { locked { pipeline == nil && initialPeriod == nil && !completed && !stopped && !disposed } }
   var requiresExternalRollbackActivation: Bool { requiresAsyncActivation }
+  func needsAsyncActivation(forcePlay: Bool) -> Bool {
+    requiresAsyncActivation || locked { forcePlay && completed && !disposed && !stopped }
+  }
   /// Restores the accepted programme on the command worker before main activation.
-  func prepareActivation(positionMs: Int64?, constraints: YlAppleVideoConstraints,
+  func prepareActivation(positionMs: Int64?, constraints: YlAppleVideoConstraints, forcePlay: Bool = false,
                          cancellation: YlOpenCancellationToken) throws {
-    let position = locked { positionMs.map { min($0, Int64.max / 1000) * 1000 } ?? frozenPosition }
+    let position = locked { positionMs.map { min($0, Int64.max / 1000) * 1000 } ?? (forcePlay && completed ? 0 : frozenPosition) }
     try replace(at: Time(position, 1_000_000), cancellation: cancellation, caps: constraints)
   }
   func reportRestorationFailure(_ error: NativePlayerError) { fail(error, epoch: locked { epoch }) }
@@ -105,12 +108,14 @@ final class YlDashProgramBackend: YlPlaybackBackend {
     }
     publish(.engineActivated(.managedFallback)); emitState()
   }
-  func play() throws {
+  func play() throws { try play(cancellationToken: nil) }
+  func play(cancellationToken: YlOpenCancellationToken?) throws {
+    try cancellationToken?.throwIfCancelled()
     guard locked({ !disposed && !stopped }) else { return }
     try services.beforeAudioOutput(); try services.activateAudioSession()
     locked { playing = true }
     if !isActive { try activate(); return }
-    if locked({ completed }) { try seek(toMs: 0, cancellationToken: nil); return }
+    if locked({ completed }) { try seek(toMs: 0, cancellationToken: cancellationToken); return }
     try startOutput(); emitState()
   }
   func pause() throws {
@@ -258,10 +263,11 @@ final class YlDashProgramBackend: YlPlaybackBackend {
       guard active, playing, !disposed, !stopped, !completed, !outputRunning else { return nil }
       if let gapClock { gapClock.play(atHostTimeUs: now); outputRunning = true; return nil }
       guard let pipeline else { return nil }
+      if pipeline.audio == nil && !pipeline.videoInputDrained && pipeline.videoCoverageEnd <= pipeline.clock.position(atHostTimeUs: now) { return nil }
       // Keep the native clock paused until the seek/preroll has produced a
       // visible frame. The first displayed sample must not be dropped simply
       // because codec startup consumed wall time before presentation began.
-      guard frame != nil || !pipeline.scheduler.pendingPTS.isEmpty || pipeline.prepared.firstVideo.pts > pipeline.prepared.position else { return nil }
+      guard frame != nil || pipeline.videoInputDrained || !pipeline.scheduler.pendingPTS.isEmpty || pipeline.prepared.firstVideo.pts > pipeline.prepared.position else { return nil }
       outputRunning = true
       return pipeline
     }
@@ -297,10 +303,19 @@ final class YlDashProgramBackend: YlPlaybackBackend {
     }
     guard let (current, position, expected, inGap) = snapshot else { return }
     if let current, !inGap {
+      if current.audio == nil && !current.videoInputDrained && current.clock.position(atHostTimeUs: now) >= current.videoCoverageEnd {
+        current.pause(); current.clock.seek(to: current.videoCoverageEnd)
+        locked { if epoch == expected { outputRunning = false } }
+      }
+      let expired = locked { () -> Bool in
+        guard epoch == expected, let frame, position >= frame.ptsUs + frame.durationUs else { return false }
+        self.frame = nil; return true
+      }
+      if expired { services.textureOutput.clear() }
       if position >= (try? current.prepared.window.end.converted(to: 1_000_000, rounding: .floor)) ?? .max {
         finishPeriod(current, epoch: expected); return
       }
-      if let next = current.scheduler.frame(at: position, generation: expected) {
+      if let next = current.scheduler.frame(at: position, generation: expected), position < next.ptsUs + next.durationUs {
         let buffer = next.payload as! CVPixelBuffer
         let publishFrame = locked { () -> Bool in
           guard epoch == expected, active, !disposed else { return false }
@@ -401,7 +416,9 @@ final class YlDashProgramBackend: YlPlaybackBackend {
   }
   private func positionLocked() -> Int64 {
     if transitioning || completed || pipeline == nil { return frozenPosition }
-    return gapClock?.position(atHostTimeUs: now) ?? pipeline!.clock.position(atHostTimeUs: now)
+    if let gapClock { return gapClock.position(atHostTimeUs: now) }
+    let current = pipeline!, value = current.clock.position(atHostTimeUs: now)
+    return current.audio == nil && !current.videoInputDrained ? min(value, current.videoCoverageEnd) : value
   }
   private var now: Int64 { YlDashPeriodPlayback.now }
   private func locked<T>(_ operation: () throws -> T) rethrows -> T {

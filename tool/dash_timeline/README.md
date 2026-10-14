@@ -25,7 +25,7 @@ claiming all packets start at zero. Encoded audio extends to 4 seconds.
 
 `manifest.mpd` and `large-exact.mpd` address identical original bytes. The latter
 scales MPD ticks and timescales by 10^9 without changing their rational values.
-`matrix.json` records seven still-rejected dimensions and exact expected clocks.
+`matrix.json` preserves the seven dimensions rejected by the original HLS-only path and their exact expected clocks. Its `productionAcceptance` values are historical; the new native programme route has separate evidence in the P01 completion reports.
 Fractional media has eight frames / 12288 timescale / 4096 total ticks. Independent
 PTO uses **offline test copies** with video tfdt/sidx shifted 10 seconds and audio
 20 seconds; init and encoded payload bytes are identical. Tests verify both
@@ -54,3 +54,21 @@ production clipping technique**. Baseline / independent playlists are also
 experiment inputs, not compiler output. Only `player.load` integration tests
 exercise the actual production DASH path. See the P01 execution report for
 measured outcomes and remaining architecture work.
+
+## Programme reconfiguration and Range regression media
+
+`generate_period_fixture.py` adds three-second AVC→HEVC and AVC→AVC 320→640
+programmes plus audio catalog addition/removal. Both new encoders use closed GOPs
+with three B frames; each fragment has 24 packets and the four fragments have 96
+unique PTS values. This is checked with ffprobe independently of playback. An
+initial open-GOP HEVC draft produced duplicate muxed PTS and was replaced before
+commit; its failed native runs remain in the evidence.
+
+`generate_range_fixture.py` preserves original AVC sample payloads, adds absolute
+`tfhd.base_data_offset` addresses, and places a 4096-byte free box between the
+global index and media. SegmentBase and SegmentList reference identical bytes.
+Native tests play both through actual managed Range requests, seek, and test an
+8 GiB virtual offset with less than 1 MiB of assigned decoder workspace. No
+8 GiB file or allocation is created. Separate provenance files pin these additions
+without regenerating earlier media. `package_native_fixture.py` packages exact
+media bytes into the canonical and iOS/macOS test resources.

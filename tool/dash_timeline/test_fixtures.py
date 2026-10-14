@@ -3,6 +3,8 @@ import hashlib
 import json
 from fractions import Fraction
 import struct
+import subprocess
+import tempfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
 import unittest
@@ -19,6 +21,38 @@ class TimelineFixturesTest(unittest.TestCase):
                        'packages/yl_player/example/macos/RunnerTests'):
             encoded = json.loads((ROOT / folder / 'p01-program-fixtures.json').read_text())
             self.assertEqual({k: base64.b64decode(v) for k, v in encoded.items()}, expected)
+
+    def test_period_and_absolute_range_media_are_pinned_and_decodable(self):
+        for name in ['period-fixture-provenance.json', 'range-fixture-provenance.json']:
+            for file, digest in json.loads((MEDIA / name).read_text())['files'].items():
+                self.assertEqual(hashlib.sha256((MEDIA / file).read_bytes()).hexdigest(), digest)
+        def payloads(data):
+            result, offset = [], 0
+            while offset < len(data):
+                size, kind = struct.unpack_from('>I4s', data, offset)
+                self.assertGreaterEqual(size, 8)
+                if kind == b'mdat': result.append(data[offset+8:offset+size])
+                offset += size
+            self.assertEqual(offset, len(data))
+            return result
+        actual = payloads((MEDIA / 'absolute-range.m4s').read_bytes())
+        expected = [body for i in range(1, 5) for body in payloads((MEDIA / f'period0/chunk-0-{i:05}.m4s').read_bytes())]
+        self.assertEqual(actual, expected)
+        probe = json.loads(subprocess.check_output(['ffprobe', '-v', 'error', '-show_entries',
+            'stream=codec_name,width,height,duration', '-of', 'json', str(MEDIA / 'absolute-range.m4s')]))['streams'][0]
+        self.assertEqual((probe['codec_name'], probe['width'], probe['height'], probe['duration']), ('h264', 320, 180, '4.000000'))
+
+    def test_hevc_reconfiguration_fixture_has_independent_gops_and_unique_packet_clocks(self):
+        clocks = []
+        with tempfile.TemporaryDirectory() as folder:
+            file = Path(folder) / 'hevc.mp4'
+            for fragment in sorted((MEDIA / 'hevc').glob('chunk*.m4s')):
+                file.write_bytes((MEDIA / 'hevc/init-0.m4s').read_bytes() + fragment.read_bytes())
+                packets = json.loads(subprocess.check_output(['ffprobe', '-v', 'error', '-show_packets', '-of', 'json', str(file)]))['packets']
+                self.assertIn('K', packets[0]['flags'])
+                self.assertEqual(len(packets), 24)
+                clocks.extend(p['pts'] for p in packets)
+        self.assertEqual(sorted(clocks), list(range(0, 49152, 512)))
 
     def test_seven_dimensions_have_raw_media_and_rational_expected_clocks(self):
         rows = json.loads((MEDIA/'matrix.json').read_text())

@@ -402,25 +402,31 @@ final class YlAppleSessionCoordinator: NSObject {
       completion(.failure(YlOpenCancellationToken.cancellationError()))
       return
     }
-    if let dash = slot.current as? YlDashProgramBackend, dash.requiresAsyncActivation {
-      let position = pendingSeekIntent?.positionMs, constraints = lastQualityConstraint
+    if let dash = slot.current as? YlDashProgramBackend, dash.needsAsyncActivation(forcePlay: forcePlay) {
+      let seek = pendingSeekIntent, pause = pendingPauseIntent, constraints = lastQualityConstraint
       willCommit(true)
-      commandCoordinator.begin(operation: { token in
-        try dash.prepareActivation(positionMs: position, constraints: constraints, cancellation: token)
+      commandCoordinator.begin(operation: { [weak self, weak dash] token in
+        guard let self, let dash else { throw YlOpenCancellationToken.cancellationError() }
+        try dash.prepareActivation(positionMs: seek?.positionMs, constraints: constraints, forcePlay: forcePlay, cancellation: token)
+        // Activation belongs to the same FIFO operation as preparation. A later
+        // seek/pause cannot run between worker completion and main activation.
+        try DispatchQueue.main.sync {
+          try token.throwIfCancelled()
+          guard !self.disposed, self.slot.current === dash, self.identity == identity else { throw YlOpenCancellationToken.cancellationError() }
+          self.applyPersistentPlaybackControls(to: dash)
+          if pause != nil && !forcePlay { try dash.pause() }
+          try dash.activate()
+          if forcePlay { try dash.play(cancellationToken: token) }
+          if self.pendingSeekIntent?.revision == seek?.revision { self.pendingSeekIntent = nil }
+          if self.pendingPauseIntent == pause { self.pendingPauseIntent = nil }
+        }
       }, completion: { [weak self, weak dash] result in
         guard let self, let dash, !self.disposed, self.slot.current === dash, self.identity == identity else {
           didRollback(); completion(.failure(YlOpenCancellationToken.cancellationError())); return
         }
-        do {
-          try result.get()
-          self.applyPersistentPlaybackControls(to: dash)
-          if self.pendingPauseIntent != nil && !forcePlay { try dash.pause() }
-          try dash.activate()
-          if forcePlay { try dash.play() }
-          self.pendingSeekIntent = nil; self.pendingPauseIntent = nil
-          didCommit(); completion(.success(()))
-        } catch {
-          didRollback(); completion(.failure(Self.commandError(error)))
+        switch result {
+        case .success: didCommit(); completion(.success(()))
+        case .failure(let error): didRollback(); completion(.failure(error))
         }
       })
       return

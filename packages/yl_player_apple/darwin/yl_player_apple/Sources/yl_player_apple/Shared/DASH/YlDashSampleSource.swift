@@ -89,7 +89,7 @@ final class YlDashSampleSource {
     try cancellation.throwIfCancelled()
     self.scope = scope
     workspace = try scope.require(category: .compressedPackets, bytes: 512 * 1024)
-    input = Input(initialization, fragment, cancellation)
+    input = try Input(initialization, fragment, cancellation)
     var opened: YLFMediaContextRef?, info = YLFMediaInfo()
     let result = ylf_open_callbacks(Unmanaged.passUnretained(input).toOpaque(), dashRead, dashSeek, dashCancel, &opened, &info)
     guard result == 0, let opened else { try cancellation.throwIfCancelled(); throw Self.invalid() }
@@ -155,22 +155,53 @@ final class YlDashSampleSource {
     let initialization: YlDashProgramResources.Payload
     let fragment: YlDashProgramResources.Payload
     let cancellation: YlOpenCancellationToken
-    var cursor = 0
-    var length: Int { initialization.data.count + fragment.data.count }
-    init(_ initialization: YlDashProgramResources.Payload, _ fragment: YlDashProgramResources.Payload, _ cancellation: YlOpenCancellationToken) {
+    private struct Span {
+      let start: Int64
+      let length: Int64
+      let bytes: Data?
+      var end: Int64 { start + length }
+    }
+    private var spans: [Span] = []
+    private var cursor: Int64 = 0
+    private(set) var length: Int64 = 0
+    init(_ initialization: YlDashProgramResources.Payload, _ fragment: YlDashProgramResources.Payload, _ cancellation: YlOpenCancellationToken) throws {
       self.initialization = initialization; self.fragment = fragment; self.cancellation = cancellation
+      try append(initialization.data, at: initialization.sourceOffset)
+      try append(fragment.data, at: fragment.sourceOffset == 0 ? length : fragment.sourceOffset)
+    }
+    /// Missing ranges are a virtual ISO free box. This preserves absolute tfhd
+    /// addresses without fetching or allocating the preceding media/index bytes.
+    private func append(_ bytes: Data, at offset: Int64) throws {
+      guard offset >= length else { throw YlDashSampleSource.invalid() }
+      let (end, overflow) = offset.addingReportingOverflow(Int64(bytes.count))
+      guard !overflow else { throw YlDashSampleSource.invalid() }
+      let gap = offset - length
+      if gap > 0 {
+        guard gap >= 8 else { throw YlDashSampleSource.invalid() }
+        var size = UInt32(gap <= Int64(UInt32.max) ? gap : 1).bigEndian
+        var header = withUnsafeBytes(of: &size) { Data($0) }
+        header.append(contentsOf: [0x66, 0x72, 0x65, 0x65])
+        if gap > Int64(UInt32.max) {
+          var extended = UInt64(gap).bigEndian
+          header.append(withUnsafeBytes(of: &extended) { Data($0) })
+        }
+        spans.append(.init(start: length, length: Int64(header.count), bytes: header))
+        if gap > header.count { spans.append(.init(start: length + Int64(header.count), length: gap - Int64(header.count), bytes: nil)) }
+      }
+      if !bytes.isEmpty { spans.append(.init(start: offset, length: Int64(bytes.count), bytes: bytes)) }
+      length = end
     }
     func read(_ destination: UnsafeMutablePointer<UInt8>, _ capacity: Int) -> Int32 {
       if cancellation.isCancelled { return Int32(YLFCallbackCancelled) }
       guard capacity > 0, cursor < length else { return 0 }
-      let first = cursor < initialization.data.count
-      let bytes = first ? initialization.data : fragment.data
-      let offset = first ? cursor : cursor - initialization.data.count
-      let count = min(capacity, bytes.count - offset)
-      bytes.withUnsafeBytes { memory in
-        destination.update(from: memory.baseAddress!.advanced(by: offset).assumingMemoryBound(to: UInt8.self), count: count)
-      }
-      cursor += count; return Int32(count)
+      guard let span = spans.first(where: { cursor >= $0.start && cursor < $0.end }) else { return Int32(YLFCallbackError) }
+      let offset = cursor - span.start, count = Int(min(Int64(capacity), span.length - offset))
+      if let bytes = span.bytes {
+        bytes.withUnsafeBytes { memory in
+          destination.update(from: memory.baseAddress!.advanced(by: Int(offset)).assumingMemoryBound(to: UInt8.self), count: count)
+        }
+      } else { destination.update(repeating: 0, count: count) }
+      cursor += Int64(count); return Int32(count)
     }
     func seek(_ offset: Int64, _ whence: Int32) -> Int64 {
       if cancellation.isCancelled { return Int64(YLFCallbackCancelled) }
@@ -179,7 +210,7 @@ final class YlDashSampleSource {
       switch whence & ~0x20000 { case 0: base = 0; case 1: base = Int64(cursor); case 2: base = Int64(length); default: return Int64(YLFCallbackSeekUnsupported) }
       let (target, overflow) = base.addingReportingOverflow(offset)
       guard !overflow, target >= 0, target <= Int64(length) else { return Int64(YLFCallbackError) }
-      cursor = Int(target); return target
+      cursor = target; return target
     }
   }
 }
