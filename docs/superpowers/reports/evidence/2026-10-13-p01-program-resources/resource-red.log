@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_managed_program_resources (test_program_resources.ProgramResourceTests.test_managed_program_resources)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/dash_timeline/test_program_resources.py", line 28, in test_managed_program_resources
+    self.assertTrue(all(r['passed'] for r in rows), [r for r in rows if not r['passed']])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : [{'error': 'unresolvedPeriod', 'name': 'exact response preserves credentials and bytes', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'exact Range request and response', 'passed': False}, {'name': 'Range cannot accept full file', 'passed': False}, {'name': 'wrong Range is rejected', 'passed': False}, {'name': 'oversized body rejected before retention', 'passed': False}, {'name': 'truncated advertised payload rejected', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'cross origin returning to origin stays stripped', 'passed': False}, {'name': 'alternative spends shared retry budget', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'successful alternative never restores credentials', 'passed': False}, {'name': 'authentication failure is not retried', 'passed': False}, {'name': 'redirect limit spans all hops', 'passed': False}, {'name': 'cancel before request performs no IO', 'passed': False}, {'name': 'cancel active hop terminates reader', 'passed': False}, {'name': 'connect timeout terminates stalled hop', 'passed': False}, {'name': 'read timeout terminates stalled body', 'passed': False}, {'name': 'invalid Range overflow rejected before request', 'passed': False}]
+
+----------------------------------------------------------------------
+Ran 1 test in 5.229s
+
+FAILED (failures=1)

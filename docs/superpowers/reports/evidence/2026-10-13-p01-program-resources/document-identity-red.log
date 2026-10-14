@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_real_program_documents (test_program_document.ProgramDocumentTests.test_real_program_documents)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/dash_timeline/test_program_document.py", line 28, in test_real_program_documents
+    self.assertTrue(all(r['passed'] for r in rows), [r for r in rows if not r['passed']])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : [{'name': 'RepresentationID never inherits AdaptationSet id', 'passed': False}]
+
+----------------------------------------------------------------------
+Ran 1 test in 4.437s
+
+FAILED (failures=1)

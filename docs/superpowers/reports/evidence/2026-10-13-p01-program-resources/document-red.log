@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_real_program_documents (test_program_document.ProgramDocumentTests.test_real_program_documents)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/dash_timeline/test_program_document.py", line 28, in test_real_program_documents
+    self.assertTrue(all(r['passed'] for r in rows), [r for r in rows if not r['passed']])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : [{'error': 'unresolvedPeriod', 'name': 'real fixture independent-pto', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'real fixture clip-end', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'real fixture gap', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'real fixture overlap', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'real fixture unknown-middle', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'real fixture multiple-base', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'real fixture fractional-microsecond', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'independent offsets stay on each track', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'clip does not rewrite source segment duration', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'multiple BaseURL preserves declaration order', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'cross origin then same origin stays stripped', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'fractional MPD duration keeps exact digits', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'template paths expand exact integer tick values', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'added audio does not invalidate programme model', 'passed': False}]
+
+----------------------------------------------------------------------
+Ran 1 test in 4.207s
+
+FAILED (failures=1)
