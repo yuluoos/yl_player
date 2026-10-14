@@ -158,6 +158,9 @@ remux or whole-programme download is used.
 | MPD VTT/TTML/wvtt/stpp | Managed discovery/selection, programme cues, actual Flutter composition | Same Dart runtime; actual native-window plus Flutter composition |
 
 Automatic video selection stays inside compatible HDR/SDR/Dolby families.
+The accepted Apple family survives background deactivation and pipeline-free
+completion/end seeks. Only a successful candidate commit updates it; failed
+preparation preserves the accepted family.
 Unsupported Dolby paths reject explicitly; full FEL information is preserved and
 this route does not silently fall back to the base layer. This is not a claim
 that every P03 codec or Dolby display path is implemented. A missing fixed video
@@ -434,6 +437,10 @@ Active caps for the bounded static Apple DASH subset are described below.
 
 ## Apple DASH Load video caps
 
+This section records the retained AVPlayer/HLS adapter. The exact programme
+route above applies caps to each prepared candidate and reports its actual
+selected rendition; its lifecycle behavior is described in the P01 report.
+
 For static clear AVC/AAC DASH on Apple, `YlLoadOptions.videoConstraints` can
 set `maxWidth`, `maxHeight`, and `maxBitrate` independently or together. Explicit
 DASH and automatic `.mpd` loads use the same path. A constrained load keeps only
@@ -471,6 +478,9 @@ for the original Load behavior, and the [runtime caps report](superpowers/report
 for active changes and their test scope.
 
 ## Apple DASH current-Period video catalog
+
+This section describes the retained AVPlayer/HLS adapter catalog. The owned
+programme backend reports the selected video rendition directly.
 
 For an accepted Apple DASH Load, `state.videoTracks` lists the declared video
 Representations available in the **current playback Period**, after the

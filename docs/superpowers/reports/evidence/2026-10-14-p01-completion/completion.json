@@ -1,0 +1,56 @@
+{
+  "baseline": "c3e304e144f750b62983267023ae06953ead3458",
+  "implementationHead": "cbf4f8638da6839ff5fa2554b8e8b4e50a6756ab",
+  "branch": "codex/fel-integration",
+  "push": false,
+  "approvedScopeComplete": true,
+  "finalReview": {
+    "critical": 0,
+    "important": 1,
+    "importantFixed": 1,
+    "minor": 0,
+    "reviews": 1
+  },
+  "affectedAppleNative": {
+    "ios": {
+      "pass": 29,
+      "skip": 0
+    },
+    "macos": {
+      "pass": 29,
+      "skip": 0
+    }
+  },
+  "regressionTools": {
+    "dash": 20,
+    "runtimeIdentity": 9
+  },
+  "sourceDocumentsSha256": {
+    "docs/platform-support.md": "baa391290e00d3b5179b004c984ca1ae34c0edae8664f5a39408e991540dc9f5",
+    "docs/superpowers/plans/2026-09-26-remaining-01-dash.md": "32a2660357d1019688d5402c4113d35dbc25034ccd1f4af71585e5a79cc2ba95",
+    "docs/superpowers/plans/2026-09-26-remaining-overview.md": "5009e4d376579c6bccdf2298eee50f62f34c28f2f3a36f3ce2cd9781c6bc8649",
+    "docs/superpowers/plans/2026-10-13-p01-completion.md": "dd7dfb60b1db3c48480ba3fe894cfc245eb83cd7d9850955f07c0ff13ea768d1",
+    "docs/superpowers/reports/2026-09-26-remaining-01-dash.md": "62d6c4b496ae52703b5b9f71fe9defaed7d0c2a90d436b3fb8378da8180a1538",
+    "tool/dash_timeline/README.md": "1b3dc03018380f5e834dbdc52041e0c7f116baadd2b06971936c82b4a1733083"
+  },
+  "ledgerSha256": "5a34685b653998055e06a008d81ae3eae236ecaa00d74d6143d289de241f4d8f",
+  "rulings": 17,
+  "deferredMinors": [],
+  "knownUnpassedGlobalGates": [
+    "Three pre-existing macOS mirror differences",
+    "Installed lipo multi-architecture verify invocation; isolated consumers passed per-architecture verification"
+  ],
+  "unverifiedRuntime": [
+    "physical iOS",
+    "minimum OS",
+    "Intel",
+    "physical speaker/display"
+  ],
+  "excludedWork": [
+    "long-play",
+    "weak-network ABR",
+    "P05",
+    "full DRM/Dolby display",
+    "additional P03 codecs"
+  ]
+}
