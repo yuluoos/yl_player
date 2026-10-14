@@ -53,6 +53,13 @@ void main() {
   }
   for (final (name, fit, alignment, geometry, expected) in [
     (
+      'video-gap viewport',
+      BoxFit.contain,
+      Alignment.center,
+      null,
+      const Rect.fromLTWH(0, 0, 300, 300),
+    ),
+    (
       'contain',
       BoxFit.contain,
       Alignment.center,

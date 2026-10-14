@@ -145,10 +145,7 @@ final class YlPlayerView extends StatelessWidget {
         return ColoredBox(
           color: backgroundColor,
           child: ClipRect(
-            child:
-                controller.textSubtitleCues.isEmpty ||
-                    geometry == null ||
-                    textureId == null
+            child: controller.textSubtitleCues.isEmpty || textureId == null
                 ? content
                 : Stack(
                     fit: StackFit.expand,

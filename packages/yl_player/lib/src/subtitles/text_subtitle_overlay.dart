@@ -6,7 +6,8 @@ import 'ttml_overlay.dart';
 import 'ass_overlay.dart';
 import 'pgs_overlay.dart';
 
-/// Upright text in the visible video aperture, independent of texture rotation.
+/// Upright text in the video aperture, or the viewport during a video gap.
+/// Cue validity follows programme time independently of video sample coverage.
 final class TextSubtitleOverlay extends StatelessWidget {
   const TextSubtitleOverlay({
     required this.cues,
@@ -16,7 +17,9 @@ final class TextSubtitleOverlay extends StatelessWidget {
     super.key,
   });
   final List<TextSubtitleCue> cues;
-  final YlVideoGeometry geometry;
+
+  /// Null means no current video aperture; use the bounded viewport.
+  final YlVideoGeometry? geometry;
   final BoxFit fit;
   final AlignmentGeometry alignment;
 
@@ -29,11 +32,15 @@ final class TextSubtitleOverlay extends StatelessWidget {
             constraints.biggest.isEmpty) {
           return const SizedBox.shrink();
         }
-        var input = Size(
-          geometry.displaySize.width * geometry.pixelAspectRatio,
-          geometry.displaySize.height,
-        );
-        if (geometry.rotationDegrees == 90 || geometry.rotationDegrees == 270) {
+        final geometry = this.geometry;
+        var input = geometry == null
+            ? constraints.biggest
+            : Size(
+                geometry.displaySize.width * geometry.pixelAspectRatio,
+                geometry.displaySize.height,
+              );
+        if (geometry?.rotationDegrees == 90 ||
+            geometry?.rotationDegrees == 270) {
           input = Size(input.height, input.width);
         }
         final output = constraints.biggest;

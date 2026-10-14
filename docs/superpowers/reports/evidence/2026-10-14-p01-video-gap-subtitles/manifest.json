@@ -1,0 +1,20 @@
+{
+  "scope": "Valid programme cues remain visible during video-only leading/internal/trailing gaps",
+  "results": {
+    "androidGapsAndFormatsPassed": 7,
+    "iosGapsFormatsCandidatesPassed": 10,
+    "macosGapsPassed": 3,
+    "macosFormatsSeparateRerunPassed": 4,
+    "widgetPassed": 30
+  },
+  "red": "All three Android gaps hid valid cues because videoGeometry=null suppressed overlay",
+  "change": "Null video aperture uses bounded current viewport for valid subtitles. Video remains blank; no stale video geometry or pixels restored.",
+  "platformDifference": "Apple native layer clears actual frames while retaining authoritative format geometry. Geometry-null is not a cross-platform blank-output assertion. Both paths verified through actual black pixels and glyphs.",
+  "failures": "macOS first batch second application failed to launch before test assertions; unchanged isolated four-format rerun passed",
+  "sources": {
+    "packages/yl_player/lib/src/player_view.dart": "095994e9c3e7fc06b8a99015f4595fe137d5348d6d0bc26ebae11102506da2df",
+    "packages/yl_player/lib/src/subtitles/text_subtitle_overlay.dart": "b3122aff2934cb573bf3ef357bd48270488dd61d4237ff7f1d367461e87f3f5d",
+    "packages/yl_player/test/text_subtitle_overlay_test.dart": "de14336cfe2f05bfe3ce75d1e3a235ac797760d5bcb0e1462a27c3c96c008a7f",
+    "packages/yl_player/example/integration_test/dash_video_gap_subtitle_test.dart": "c2c1c777abbcff067b0caaf3c6ac846d801cdecfee8c6ee10c34b129004b8e9e"
+  }
+}
