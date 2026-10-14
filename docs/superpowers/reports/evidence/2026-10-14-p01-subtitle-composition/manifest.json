@@ -1,0 +1,87 @@
+{
+  "scope": "Paused seek composition of actual video and Flutter subtitle glyphs; not consumed-audio sync",
+  "results": {
+    "androidFormats": 4,
+    "iosFormats": 4,
+    "macosFormats": 4,
+    "markersPerPlatform": 20,
+    "staticIssues": 0
+  },
+  "positionsMs": [
+    500,
+    2500,
+    4500,
+    5500,
+    7500
+  ],
+  "formats": [
+    "vtt",
+    "ttml",
+    "wvtt",
+    "stpp"
+  ],
+  "measurement": [
+    "Apple hybrid layers require full owned app window/simulator screenshot; Android external texture is included in Flutter composition",
+    "Raw RGB retained. Untagged AVC markers classified into disjoint solid color categories, not colorimetric accuracy",
+    "Glyph pixels sampled in actual rendered cue bounds; gap marker black; subtitle-off clears widget",
+    "Final Android capture guards async seek layout changes within unchanged4s timeout; Apple successful logs precede that guard-only harness change",
+    "Capture duration includes screenshot/PNG decode and is not a measured seek latency"
+  ],
+  "failuresRetained": [
+    "p01-dash-joint-macos.log",
+    "p01-dash-joint-macos-window.log",
+    "p01-dash-joint-macos-window-diagnostic.log",
+    "p01-dash-joint-macos-main-window.log",
+    "p01-android-candidates-joint-public.log"
+  ],
+  "sources": {
+    "packages/yl_player/example/integration_test/dash_subtitle_playback_test.dart": "3e0fbff83b2665e94d22e652038900fdb154a1ceffa712352297829a3cbd5ce7",
+    "packages/yl_player/example/integration_test/dash_subtitle_composition_test.dart": "38e72b44ee5ba0855b8617c14df9a0ca449bbca940bf755221a5058699dc9ee3",
+    "packages/yl_player/example/integration_test/support/capture_composition.dart": "d1c8701662b5bc5789838b9469f4c350cdc5b3efb6aebd2a43bc047f8dd9776c",
+    "tool/dash_timeline/capture_composition.py": "0b9a24a565a3c562450905a0ae7739bfe5051d054fba38a5552e6fe795595099",
+    "tool/dash_timeline/capture_window.swift": "576e55d23a718b20885202b93431eea08a9635a93c38794edb9494c11214f7fd",
+    "tool/dash_timeline/README.md": "2979d48909dfb8eada318f9296078cc6ada9cdf4ec9e8891957a6f7d5d58fff4"
+  },
+  "screenshots": {
+    "macos/016.png": "39302be88b46edd3da6c7d699398e205831a9d11bd41499412be9836f3915c7f",
+    "macos/017.png": "a9cecdd741c47015c41ac0abc72ae99176828740b706dea6d0fc6050c18a9737",
+    "macos/029.png": "d9db3dca8b63b6221cac6964ae7126462cf4ae64167352cfb8ab59bddacd0f2b",
+    "macos/028.png": "e45f7d98f306b0882dd5050898bf979f8fa184dd44438c6ea8e3844db458bb3c",
+    "macos/023.png": "e45f7d98f306b0882dd5050898bf979f8fa184dd44438c6ea8e3844db458bb3c",
+    "macos/022.png": "6a2f825fabe69abf5c3607d98e982d3e1ff71a447c82b7601f1401d70328818a",
+    "macos/034.png": "e5e04311b28303a22a97f7a4a364689e15e80496c926e6c7765066b73d8561d9",
+    "macos/020.png": "1ac806ad48bef0bdb042de1dbbd71cdeb69127d8348d4525d9afe9b15e257e5a",
+    "macos/021.png": "8300080b5098c70bc44772b8ab709b34b41bddcfaa2f67bfdc6de63c07d3a902",
+    "macos/035.png": "0c2263ab8c885a6ecdbc2322c79a75fcd697251ff89523c999fc7368662570ba",
+    "macos/031.png": "8300080b5098c70bc44772b8ab709b34b41bddcfaa2f67bfdc6de63c07d3a902",
+    "macos/025.png": "0c2263ab8c885a6ecdbc2322c79a75fcd697251ff89523c999fc7368662570ba",
+    "macos/019.png": "d9db3dca8b63b6221cac6964ae7126462cf4ae64167352cfb8ab59bddacd0f2b",
+    "macos/018.png": "e45f7d98f306b0882dd5050898bf979f8fa184dd44438c6ea8e3844db458bb3c",
+    "macos/024.png": "e5e04311b28303a22a97f7a4a364689e15e80496c926e6c7765066b73d8561d9",
+    "macos/030.png": "1ac806ad48bef0bdb042de1dbbd71cdeb69127d8348d4525d9afe9b15e257e5a",
+    "macos/026.png": "39302be88b46edd3da6c7d699398e205831a9d11bd41499412be9836f3915c7f",
+    "macos/032.png": "6a2f825fabe69abf5c3607d98e982d3e1ff71a447c82b7601f1401d70328818a",
+    "macos/033.png": "e45f7d98f306b0882dd5050898bf979f8fa184dd44438c6ea8e3844db458bb3c",
+    "macos/027.png": "a9cecdd741c47015c41ac0abc72ae99176828740b706dea6d0fc6050c18a9737",
+    "ios/002.png": "68ec50fc069adc21c2d5428e01c2394eac8120cff9e1ff3f911724d11cac24d1",
+    "ios/016.png": "92e20dddba889104323e19a9dc1a6a07b70baeabbaf897622d33bf5f7e64a20b",
+    "ios/017.png": "1c3a8bb98185c717e37d5aacb5c4e71277007bd0b46229d6a8ea5a9996d2437d",
+    "ios/003.png": "885a3ea7dd6320158c54c99eb2adf1ba365902df73c12b93ba1f9c18de1c41b6",
+    "ios/015.png": "0d3b90c96532c63813df1f85da2e32cd775b267d542924328f91a4d9ed2c22ef",
+    "ios/001.png": "34a71be004ad6f855e4894d77599092a77e16fba8a6450c56eed487b5e976f8c",
+    "ios/014.png": "b6287f5c0f577837340fc84c9bff5e4fcef7bf089c4741ad9c2a8e9d9ae552d8",
+    "ios/010.png": "efa7d9f5fbb73d24e5864c8f23582b47ad4bc310e1580b390fdcec93ee493868",
+    "ios/004.png": "b6287f5c0f577837340fc84c9bff5e4fcef7bf089c4741ad9c2a8e9d9ae552d8",
+    "ios/005.png": "0d3b90c96532c63813df1f85da2e32cd775b267d542924328f91a4d9ed2c22ef",
+    "ios/011.png": "34a71be004ad6f855e4894d77599092a77e16fba8a6450c56eed487b5e976f8c",
+    "ios/007.png": "1c3a8bb98185c717e37d5aacb5c4e71277007bd0b46229d6a8ea5a9996d2437d",
+    "ios/013.png": "885a3ea7dd6320158c54c99eb2adf1ba365902df73c12b93ba1f9c18de1c41b6",
+    "ios/012.png": "68ec50fc069adc21c2d5428e01c2394eac8120cff9e1ff3f911724d11cac24d1",
+    "ios/006.png": "92e20dddba889104323e19a9dc1a6a07b70baeabbaf897622d33bf5f7e64a20b",
+    "ios/008.png": "885a3ea7dd6320158c54c99eb2adf1ba365902df73c12b93ba1f9c18de1c41b6",
+    "ios/020.png": "efa7d9f5fbb73d24e5864c8f23582b47ad4bc310e1580b390fdcec93ee493868",
+    "ios/009.png": "9a33fa30bc4f8f6677eb1ab1e9dd12140f8fdd35a706010ad4440d20e377e773",
+    "ios/019.png": "9a33fa30bc4f8f6677eb1ab1e9dd12140f8fdd35a706010ad4440d20e377e773",
+    "ios/018.png": "885a3ea7dd6320158c54c99eb2adf1ba365902df73c12b93ba1f9c18de1c41b6"
+  }
+}

@@ -72,3 +72,29 @@ Native tests play both through actual managed Range requests, seek, and test an
 8 GiB file or allocation is created. Separate provenance files pin these additions
 without regenerating earlier media. `package_native_fixture.py` packages exact
 media bytes into the canonical and iOS/macOS test resources.
+
+## Real composition captures
+
+`dash_subtitle_composition_test.dart` measures the rendered video marker and cue
+pixels at paused programme positions. Android reads the actual Flutter external
+texture composition. Apple uses native hybrid views; a RepaintBoundary snapshot
+excludes their video layer and must not be treated as black-output evidence.
+Start the loopback-only helper for the example window or the named simulator:
+
+```sh
+swiftc tool/dash_timeline/capture_window.swift -o /tmp/p01-capture-window
+python3 tool/dash_timeline/capture_composition.py --platform macos --window-helper /tmp/p01-capture-window --output /tmp/p01-macos-captures
+# Alternatively: --platform ios --simulator <UDID> --output /tmp/p01-ios-captures
+# From packages/yl_player/example, use the token URL printed by that process:
+flutter test integration_test/dash_subtitle_composition_test.dart -d macos --dart-define=P01_CAPTURE_URL=<printed-loopback-URL> --timeout 2m
+```
+
+The macOS helper requires existing screen-capture permission. It selects only the
+unique largest window belonging to `dev.ylplayer.ylPlayerExample`; it does not
+capture the whole desktop or another application. Captures are bounded and saved
+as numbered PNG files. Stop the helper after the measurement. Frame capture cost
+is reported separately and is not a seek latency measurement. The AVC fixtures
+lack CICP metadata, so the assertion classifies nonoverlapping solid color
+markers and retains raw RGB; this is timing/content identity evidence, not an
+exact color reproduction test. The iOS screenshots use the explicitly named
+simulator; simulator results do not stand in for physical display measurements.
