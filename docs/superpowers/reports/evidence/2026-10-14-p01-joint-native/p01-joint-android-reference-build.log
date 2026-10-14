@@ -1,0 +1,106 @@
+
+> Configure project :gradle
+WARNING: Unsupported Kotlin plugin version.
+The `embedded-kotlin` and `kotlin-dsl` plugins rely on features of Kotlin `2.2.0` that might work differently than in the requested version `2.2.20`.
+
+> Task :gradle:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :gradle:compileKotlin UP-TO-DATE
+> Task :gradle:compileJava NO-SOURCE
+> Task :gradle:compileGroovy NO-SOURCE
+> Task :gradle:pluginDescriptors UP-TO-DATE
+> Task :gradle:processResources UP-TO-DATE
+> Task :gradle:classes UP-TO-DATE
+> Task :gradle:jar UP-TO-DATE
+
+> Configure project :app
+WARNING: The option setting 'android.builtInKotlin=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+WARNING: The option setting 'android.newDsl=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+w: ⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage
+The 'org.jetbrains.kotlin.android' plugin in project ':app' is no longer required for Kotlin support since AGP 9.0.
+Solution: Remove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.
+See https://kotl.in/gradle/agp-built-in-kotlin for more details.
+
+
+> Configure project :integration_test
+w: ⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage
+The 'org.jetbrains.kotlin.android' plugin in project ':integration_test' is no longer required for Kotlin support since AGP 9.0.
+Solution: Remove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.
+See https://kotl.in/gradle/agp-built-in-kotlin for more details.
+
+
+> Configure project :yl_player_android
+w: ⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage
+The 'org.jetbrains.kotlin.android' plugin in project ':yl_player_android' is no longer required for Kotlin support since AGP 9.0.
+Solution: Remove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.
+See https://kotl.in/gradle/agp-built-in-kotlin for more details.
+
+
+> Task :yl_player_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :yl_player_android:preBuild UP-TO-DATE
+> Task :yl_player_android:preDebugBuild UP-TO-DATE
+> Task :yl_player_android:generateDebugResources UP-TO-DATE
+> Task :yl_player_android:packageDebugResources UP-TO-DATE
+> Task :yl_player_android:processDebugNavigationResources UP-TO-DATE
+> Task :yl_player_android:parseDebugLocalResources UP-TO-DATE
+> Task :yl_player_android:generateDebugRFile UP-TO-DATE
+> Task :yl_player_android:compileDebugKotlin UP-TO-DATE
+> Task :yl_player_android:javaPreCompileDebug UP-TO-DATE
+> Task :yl_player_android:compileDebugJavaWithJavac UP-TO-DATE
+> Task :yl_player_android:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :yl_player_android:preDebugAndroidTestBuild UP-TO-DATE
+> Task :yl_player_android:generateDebugAndroidTestResources UP-TO-DATE
+> Task :yl_player_android:packageDebugAndroidTestResources UP-TO-DATE
+> Task :yl_player_android:processDebugAndroidTestNavigationResources UP-TO-DATE
+> Task :yl_player_android:parseDebugAndroidTestLocalResources UP-TO-DATE
+> Task :yl_player_android:generateDebugAndroidTestRFile UP-TO-DATE
+> Task :yl_player_android:javaPreCompileDebugAndroidTest UP-TO-DATE
+> Task :yl_player_android:generateDebugAndroidTestAssets UP-TO-DATE
+> Task :yl_player_android:generateDebugAssets UP-TO-DATE
+> Task :yl_player_android:mergeDebugAssets UP-TO-DATE
+> Task :yl_player_android:mergeDebugAndroidTestAssets UP-TO-DATE
+> Task :yl_player_android:compressDebugAndroidTestAssets UP-TO-DATE
+> Task :yl_player_android:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :yl_player_android:desugarDebugAndroidTestFileDependencies UP-TO-DATE
+> Task :yl_player_android:writeDebugAarMetadata UP-TO-DATE
+> Task :yl_player_android:checkDebugAndroidTestAarMetadata UP-TO-DATE
+> Task :yl_player_android:compileDebugAndroidTestNavigationResources UP-TO-DATE
+> Task :yl_player_android:compileDebugLibraryResources UP-TO-DATE
+> Task :yl_player_android:mapDebugAndroidTestSourceSetPaths UP-TO-DATE
+> Task :yl_player_android:mergeDebugAndroidTestResources UP-TO-DATE
+> Task :yl_player_android:extractDeepLinksDebug UP-TO-DATE
+> Task :yl_player_android:processDebugManifest UP-TO-DATE
+> Task :yl_player_android:processDebugAndroidTestManifest UP-TO-DATE
+> Task :yl_player_android:processDebugAndroidTestResources UP-TO-DATE
+> Task :yl_player_android:processDebugJavaRes UP-TO-DATE
+> Task :yl_player_android:checkDebugAndroidTestDuplicateClasses UP-TO-DATE
+> Task :yl_player_android:mergeExtDexDebugAndroidTest UP-TO-DATE
+> Task :yl_player_android:bundleLibRuntimeToDirDebug UP-TO-DATE
+> Task :yl_player_android:mergeDebugJniLibFolders UP-TO-DATE
+> Task :yl_player_android:mergeDebugNativeLibs UP-TO-DATE
+> Task :yl_player_android:copyDebugJniLibsProjectOnly UP-TO-DATE
+> Task :yl_player_android:mergeLibDexDebugAndroidTest UP-TO-DATE
+> Task :yl_player_android:mergeDebugAndroidTestJniLibFolders UP-TO-DATE
+> Task :yl_player_android:mergeDebugAndroidTestNativeLibs UP-TO-DATE
+> Task :yl_player_android:stripDebugAndroidTestDebugSymbols UP-TO-DATE
+> Task :yl_player_android:validateSigningDebugAndroidTest UP-TO-DATE
+> Task :yl_player_android:writeDebugAndroidTestSigningConfigVersions UP-TO-DATE
+> Task :yl_player_android:compileDebugAndroidTestKotlin
+> Task :yl_player_android:compileDebugAndroidTestJavaWithJavac NO-SOURCE
+> Task :yl_player_android:dexBuilderDebugAndroidTest
+> Task :yl_player_android:mergeDebugAndroidTestGlobalSynthetics UP-TO-DATE
+> Task :yl_player_android:processDebugAndroidTestJavaRes UP-TO-DATE
+> Task :yl_player_android:mergeDebugAndroidTestJavaResource UP-TO-DATE
+> Task :yl_player_android:mergeProjectDexDebugAndroidTest
+> Task :yl_player_android:packageDebugAndroidTest
+> Task :yl_player_android:createDebugAndroidTestApkListingFileRedirect UP-TO-DATE
+> Task :yl_player_android:assembleDebugAndroidTest
+
+[Incubating] Problems report is available at: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 4s
+55 actionable tasks: 4 executed, 51 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.1.0/userguide/configuration_cache_enabling.html

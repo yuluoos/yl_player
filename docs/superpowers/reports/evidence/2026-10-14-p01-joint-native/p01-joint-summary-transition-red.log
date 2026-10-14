@@ -1,0 +1,14 @@
+..E...
+======================================================================
+ERROR: test_cross_period_output_gap_uses_native_host_clock_not_public_position (test_joint_observations.JointObservationTests.test_cross_period_output_gap_uses_native_host_clock_not_public_position)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/dash_timeline/test_joint_observations.py", line 14, in test_cross_period_output_gap_uses_native_host_clock_not_public_position
+    self.assertEqual(result['transitionOutputGapExcessMs']['maximum'], 1)
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'transitionOutputGapExcessMs'
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.001s
+
+FAILED (errors=1)

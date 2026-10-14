@@ -1,0 +1,44 @@
+INSTRUMENTATION_STATUS: class=dev.ylplayer.yl_player_android.YlDashJointInstrumentedTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stream=
+dev.ylplayer.yl_player_android.YlDashJointInstrumentedTest:
+INSTRUMENTATION_STATUS: test=nativeJointBaseline
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=dev.ylplayer.yl_player_android.YlDashJointInstrumentedTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: manifest actual pixel at 7000000: [0,0,0] expected [128, 128, 128]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at dev.ylplayer.yl_player_android.YlDashJointInstrumentedTest.measure(YlDashJointInstrumentedTest.kt:142)
+	at dev.ylplayer.yl_player_android.YlDashJointInstrumentedTest.nativeJointBaseline(YlDashJointInstrumentedTest.kt:27)
+
+INSTRUMENTATION_STATUS: stream=
+Error in nativeJointBaseline(dev.ylplayer.yl_player_android.YlDashJointInstrumentedTest):
+java.lang.AssertionError: manifest actual pixel at 7000000: [0,0,0] expected [128, 128, 128]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at dev.ylplayer.yl_player_android.YlDashJointInstrumentedTest.measure(YlDashJointInstrumentedTest.kt:142)
+	at dev.ylplayer.yl_player_android.YlDashJointInstrumentedTest.nativeJointBaseline(YlDashJointInstrumentedTest.kt:27)
+
+INSTRUMENTATION_STATUS: test=nativeJointBaseline
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_RESULT: stream=
+
+Time: 9.171
+There was 1 failure:
+1) nativeJointBaseline(dev.ylplayer.yl_player_android.YlDashJointInstrumentedTest)
+java.lang.AssertionError: manifest actual pixel at 7000000: [0,0,0] expected [128, 128, 128]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at dev.ylplayer.yl_player_android.YlDashJointInstrumentedTest.measure(YlDashJointInstrumentedTest.kt:142)
+	at dev.ylplayer.yl_player_android.YlDashJointInstrumentedTest.nativeJointBaseline(YlDashJointInstrumentedTest.kt:27)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+
+INSTRUMENTATION_CODE: -1

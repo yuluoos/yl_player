@@ -6,6 +6,7 @@ import Foundation
 enum YlDashPlaybackObservation {
   case video(Int64, UInt64)
   case audio(YlAudioClockSample)
+  /// Accepted Period index and candidate preparation/commit wait in milliseconds.
   case period(Int, Int64)
 }
 

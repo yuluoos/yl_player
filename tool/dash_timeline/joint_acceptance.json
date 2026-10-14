@@ -1,0 +1,39 @@
+{
+  "macos": {
+    "fixtures": [
+      "manifest",
+      "independent-pto",
+      "clip-end",
+      "cross-codec",
+      "resolution"
+    ],
+    "runs": 3,
+    "maxAbsoluteDeltaUs": 100000,
+    "maxOutputGapExcessMs": 700
+  },
+  "ios": {
+    "fixtures": [
+      "manifest",
+      "independent-pto",
+      "clip-end",
+      "cross-codec",
+      "resolution"
+    ],
+    "runs": 3,
+    "maxAbsoluteDeltaUs": 30000,
+    "maxOutputGapExcessMs": 700
+  },
+  "android": {
+    "fixtures": [
+      "manifest",
+      "independent-pto",
+      "clip-end",
+      "cross-codec",
+      "resolution"
+    ],
+    "runs": 3,
+    "maxAbsoluteDeltaUs": 70000,
+    "maxOutputGapExcessMs": 100
+  },
+  "_scope": "Frozen from first three-run instrumented local baselines on Apple M1 macOS27.0.1 / iOS27 simulator / Android36 TV emulator. Not physical output, other devices, weak ABR or longplay. AV envelope rounds observed maxima plus 25 percent margin rounded upward to 10ms for AV and 100ms for output gaps; output-gap envelope includes observed preparation and start/drain cost."
+}

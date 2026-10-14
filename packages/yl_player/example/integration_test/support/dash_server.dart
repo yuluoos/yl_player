@@ -34,6 +34,7 @@ final class DashServer {
     required this.originMode,
     required this.failMedia,
     required this.delayMedia,
+    required this.delayedMediaPrefix,
     required this.delayManifest,
     required this.manifestOverride,
     required this.rootStatusCode,
@@ -78,6 +79,7 @@ final class DashServer {
     bool omitFinalDuration = false,
     bool failMedia = false,
     bool delayMedia = false,
+    String? delayedMediaPrefix,
     bool delayManifest = false,
     String? manifestOverride,
     int? rootStatusCode,
@@ -176,6 +178,7 @@ final class DashServer {
       originMode: originMode,
       failMedia: failMedia,
       delayMedia: delayMedia,
+      delayedMediaPrefix: delayedMediaPrefix,
       delayManifest: delayManifest,
       manifestOverride: manifestOverride,
       rootStatusCode: rootStatusCode,
@@ -190,6 +193,9 @@ final class DashServer {
   final DashOriginMode originMode;
   final bool failMedia;
   final bool delayMedia;
+
+  /// Test-only gate for a later Period, independent of initial media readiness.
+  final String? delayedMediaPrefix;
   final bool delayManifest;
   final String? manifestOverride;
   final int? rootStatusCode;
@@ -248,7 +254,8 @@ final class DashServer {
           final cancellationPossible =
               _closed ||
               (delayManifest && _manifestGate.isCompleted) ||
-              (delayMedia && _mediaGate.isCompleted);
+              ((delayMedia || delayedMediaPrefix != null) &&
+                  _mediaGate.isCompleted);
           final disconnected =
               error is HttpException &&
                   (error.message == 'Connection closed' ||
@@ -334,7 +341,9 @@ final class DashServer {
       await _empty(request.response, HttpStatus.forbidden);
       return;
     }
-    if (delayMedia && normalizedPath.contains('chunk-0-00001.m4s')) {
+    if ((delayMedia && normalizedPath.contains('chunk-0-00001.m4s')) ||
+        (delayedMediaPrefix != null &&
+            normalizedPath.startsWith(delayedMediaPrefix!))) {
       if (!_mediaEntered.isCompleted) _mediaEntered.complete();
       await _mediaGate.future;
     }

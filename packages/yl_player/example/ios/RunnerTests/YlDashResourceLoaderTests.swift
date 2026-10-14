@@ -2329,11 +2329,12 @@ extension YlDashSampleSourceNativeTests {
 private final class DashProgramTexture: YlTextureOutput {
   let textureId: Int64 = 991
   var frames = 0, clears = 0
+  var visible = false
   var rgb: [UInt8] = []
   private let context = CIContext(options: [.cacheIntermediates: false, .workingColorSpace: NSNull(), .outputColorSpace: NSNull()])
   func publish(_ pixelBuffer: CVPixelBuffer?) {
     guard let pixelBuffer else { return }
-    frames += 1
+    frames += 1; visible = true
     var rgba = [UInt8](repeating: 0, count: 4)
     let image = CIImage(cvPixelBuffer: pixelBuffer)
     context.render(image, toBitmap: &rgba, rowBytes: 4,
@@ -2342,7 +2343,7 @@ private final class DashProgramTexture: YlTextureOutput {
     rgb = Array(rgba.prefix(3))
   }
   func resize(width: Int, height: Int) {}
-  func clear() { clears += 1 }
+  func clear() { clears += 1; visible = false }
   func dispose() {}
 }
 private final class DashProgramDisplay: YlDisplayDriving {
@@ -2419,7 +2420,9 @@ extension YlDashSampleSourceNativeTests {
   var video: [(Int64, UInt64, [UInt8])] = []
   var audio: [YlAudioClockSample] = []
   var periods: [(Int, Int64)] = []
-  init(_ name: String, transform: ((String) -> String)? = nil, beforeRequest: ((String) -> Void)? = nil) throws {
+  var joint: [[String: Any]] = []
+  private var lastJointFrame: String?
+  init(_ name: String, collectJoint: Bool = false, transform: ((String) -> String)? = nil, beforeRequest: ((String) -> Void)? = nil) throws {
     server = try DashHTTPServer()
     let data = try Data(contentsOf: XCTUnwrap(Bundle(for: YlDashSampleSourceNativeTests.self).url(forResource: "p01-program-fixtures", withExtension: "json")))
     let encoded = try JSONDecoder().decode([String: String].self, from: data)
@@ -2449,7 +2452,20 @@ extension YlDashSampleSourceNativeTests {
       guard let self else { return }
       switch event {
       case .video(let pts, let epoch): self.video.append((pts, epoch, self.texture.rgb))
-      case .audio(let sample): self.audio.append(sample)
+      case .audio(let sample):
+        self.audio.append(sample)
+        if collectJoint, self.texture.visible, let frame = self.video.last,
+           frame.1 == sample.generation {
+          let key = "\(frame.1):\(frame.0)"
+          let now = Int64(ProcessInfo.processInfo.systemUptime * 1_000_000)
+          if key != self.lastJointFrame, let consumed = sample.position(atHostTimeUs: now) {
+            self.lastJointFrame = key
+            self.joint.append(["videoPtsUs": frame.0, "epoch": frame.1,
+              "rgb": frame.2.map(Int.init), "audioPositionUs": sample.positionUs,
+              "audioHostUs": sample.hostTimeUs, "observedHostUs": now,
+              "audioProjectedUs": consumed, "deltaUs": frame.0 - consumed])
+          }
+        }
       case .period(let index, let wait): self.periods.append((index, wait))
       }
     }, emit: { [weak self] callback in
@@ -2973,6 +2989,57 @@ extension YlDashSampleSourceNativeTests {
       XCTAssertEqual(toneFrames, toneWindow.count)
       XCTAssertEqual(Double(crossings) * 48000 / Double(toneFrames), 440, accuracy: 8)
       timeline.reset()
+    }
+  }
+}
+
+
+extension YlDashSampleSourceNativeTests {
+  /// Three fresh resource scopes per fixture. Audio pairs come from native
+  /// rendered output time, not submitted PCM or the public state projection.
+  @MainActor func testProgramNativeJointBaseline() async throws {
+    for name in ["manifest", "independent-pto", "clip-end", "cross-codec", "resolution"] {
+      for run in 0..<3 {
+        let started = ProcessInfo.processInfo.systemUptime
+        let harness = try DashProgramHarness(name, collectJoint: true)
+        defer { harness.close() }
+        let readyMs = (ProcessInfo.processInfo.systemUptime - started) * 1000
+        try harness.backend.play()
+        try await harness.advance(until: { harness.states.last?.status == "completed" }, seconds: 14)
+        XCTAssertGreaterThan(harness.joint.count, 12, name)
+        let boundary: Int64? = name == "manifest" ? 4_000_000 :
+          (name == "cross-codec" || name == "resolution") ? 1_500_000 : nil
+        if let boundary {
+          XCTAssertTrue(harness.joint.contains { ($0["videoPtsUs"] as! Int64) >= boundary }, name)
+          XCTAssertTrue(harness.audio.contains { $0.positionUs >= boundary }, name)
+        }
+        for row in harness.joint {
+          let pts = row["videoPtsUs"] as! Int64
+          let second = boundary.map { pts >= $0 } ?? false
+          let local = pts - (second ? boundary! : 0)
+          let colors = second ? [[255,255,0],[0,255,255],[255,0,255],[0,0,0]] :
+            [[255,0,0],[0,255,0],[0,0,255],[255,255,255]]
+          let expected = colors[min(3, Int(local / 1_000_000))]
+          let rgb = row["rgb"] as! [Int]
+          XCTAssertEqual(rgb.count, 3)
+          for (value, reference) in zip(rgb, expected) {
+            XCTAssertLessThan(abs(value - reference), 24, "\(name) pts=\(pts) RGB=\(rgb)")
+          }
+        }
+        let peak = harness.scope.ledger.snapshot.peakBytes
+        let waits = harness.periods.map { ["period": Int64($0.0), "waitMs": $0.1] }
+        let rows = harness.joint
+        let elapsedMs = (ProcessInfo.processInfo.systemUptime - started) * 1000
+        harness.close()
+        try await Task.sleep(nanoseconds: 100_000_000)
+        XCTAssertEqual(harness.scope.ledger.snapshot.currentBytes, 0)
+        let record: [String: Any] = ["fixture": name, "run": run,
+          "readyMs": readyMs, "elapsedMs": elapsedMs, "peakBytes": peak,
+          "releasedBytes": harness.scope.ledger.snapshot.currentBytes,
+          "periodWaits": waits, "rows": rows]
+        let json = try JSONSerialization.data(withJSONObject: record, options: [.sortedKeys])
+        print("YL_P01_JOINT " + String(decoding: json, as: UTF8.self))
+      }
     }
   }
 }

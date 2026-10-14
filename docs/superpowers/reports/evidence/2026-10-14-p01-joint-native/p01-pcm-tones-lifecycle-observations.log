@@ -1,0 +1,53 @@
+--------- beginning of main
+10-14 00:47:09.458 12588 12604 I P01_PCM : case=independent-pto buffers=165 frames=168000 first=(500000, 1024, 48000) last=(3998666, 64, 48000)
+10-14 00:47:13.592 12588 12604 I P01_PCM : case=clip-end buffers=165 frames=168000 first=(0, 1024, 48000) last=(3498666, 64, 48000)
+10-14 00:47:17.092 12588 12604 I P01_PCM : case=cross-codec buffers=142 frames=144000 first=(0, 1024, 48000) last=(2993333, 320, 48000)
+10-14 00:47:20.639 12588 12604 I P01_PCM : case=independent-pto buffers=141 frames=143872 first=(0, 1024, 48000) last=(3989333, 512, 48000)
+10-14 00:47:25.193 12588 12604 I P01_PCM : case=independent-pto buffers=188 frames=192000 first=(0, 1024, 48000) last=(3989333, 512, 48000)
+10-14 00:47:27.969 12588 12604 I P01_PCM : case=independent-pto buffers=93 frames=95232 first=(0, 1024, 48000) last=(1962666, 1024, 48000)
+10-14 00:51:17.257 12829 12864 I P01_PCM : case=independent-pto buffers=165 frames=168000 first=(500000, 1024, 48000) last=(3998666, 64, 48000)
+10-14 00:51:21.075 12829 12864 I P01_PCM : case=clip-end buffers=165 frames=168000 first=(0, 1024, 48000) last=(3498666, 64, 48000)
+10-14 00:51:24.350 12829 12864 I P01_PCM : case=cross-codec buffers=142 frames=144000 first=(0, 1024, 48000) last=(2993333, 320, 48000)
+10-14 00:51:29.421 12829 12864 I P01_PCM : case=independent-pto buffers=152 frames=192000 first=(0, 1024, 48000) last=(3989333, 512, 48000)
+10-14 00:51:33.743 12829 12864 I P01_PCM : case=independent-pto buffers=188 frames=192000 first=(0, 1024, 48000) last=(3989333, 512, 48000)
+10-14 00:51:38.032 12829 12864 I P01_PCM : case=independent-pto buffers=114 frames=192000 first=(0, 1024, 48000) last=(3984000, 768, 48000)
+10-14 00:52:43.373 13090 13104 I P01_PCM : case=independent-pto buffers=165 frames=168000 first=(500000, 576, 48000) last=(3989333, 512, 48000)
+10-14 00:54:08.133 13194 13231 I P01_PCM : case=independent-pto buffers=171 frames=192000 first=(0, 4800, 48000) last=(3998666, 64, 48000)
+10-14 00:54:11.918 13194 13231 I P01_PCM : case=clip-end buffers=165 frames=168000 first=(0, 1024, 48000) last=(3498666, 64, 48000)
+10-14 00:54:15.224 13194 13231 I P01_PCM : case=cross-codec buffers=142 frames=144000 first=(0, 1024, 48000) last=(2993333, 320, 48000)
+10-14 00:54:20.304 13194 13231 I P01_PCM : case=independent-pto buffers=152 frames=192000 first=(0, 1024, 48000) last=(3989333, 512, 48000)
+10-14 00:54:24.116 13194 13231 I P01_PCM : case=independent-pto buffers=165 frames=168000 first=(500000, 576, 48000) last=(3989333, 512, 48000)
+10-14 00:54:28.432 13194 13231 I P01_PCM : case=independent-pto buffers=188 frames=192000 first=(0, 1024, 48000) last=(3989333, 512, 48000)
+10-14 00:54:32.699 13194 13231 I P01_PCM : case=independent-pto buffers=114 frames=192000 first=(0, 1024, 48000) last=(3984000, 768, 48000)
+10-14 00:59:15.168 13464 13511 I P01_PCM : case=independent-pto buffers=171 frames=192000 first=(0, 4800, 48000) last=(3998666, 64, 48000)
+10-14 00:59:18.961 13464 13511 I P01_PCM : case=clip-end buffers=165 frames=168000 first=(0, 1024, 48000) last=(3498666, 64, 48000)
+10-14 00:59:22.257 13464 13511 I P01_PCM : case=cross-codec buffers=142 frames=144000 first=(0, 1024, 48000) last=(2993333, 320, 48000)
+10-14 00:59:27.355 13464 13511 I P01_PCM : case=independent-pto buffers=152 frames=192000 first=(0, 1024, 48000) last=(3989333, 512, 48000)
+10-14 00:59:31.173 13464 13511 I P01_PCM : case=independent-pto buffers=165 frames=168000 first=(500000, 576, 48000) last=(3989333, 512, 48000)
+10-14 00:59:35.491 13464 13511 I P01_PCM : case=independent-pto buffers=188 frames=192000 first=(0, 1024, 48000) last=(3989333, 512, 48000)
+10-14 00:59:39.786 13464 13511 I P01_PCM : case=independent-pto buffers=114 frames=192000 first=(0, 1024, 48000) last=(3984000, 768, 48000)
+10-14 01:27:36.058 16778 16792 I P01_PCM : case=independent-pto buffers=171 frames=192000 endedPositionMs=4016 durationMs=4000 elapsedMs=4523 first=(0, 4800, 48000) last=(3998666, 64, 48000)
+10-14 01:27:39.886 16778 16792 I P01_PCM : case=clip-end buffers=165 frames=168000 endedPositionMs=3522 durationMs=3500 elapsedMs=3796 first=(0, 1024, 48000) last=(3498666, 64, 48000)
+10-14 01:27:43.254 16778 16792 I P01_PCM : case=cross-codec buffers=142 frames=144000 endedPositionMs=3013 durationMs=3000 elapsedMs=3309 first=(0, 1024, 48000) last=(2993333, 320, 48000)
+10-14 01:27:48.329 16778 16792 I P01_PCM : case=independent-pto buffers=152 frames=192000 endedPositionMs=4014 durationMs=4000 elapsedMs=5047 first=(0, 1024, 48000) last=(3989333, 512, 48000)
+10-14 01:27:55.655 16778 16792 I P01_PCM : case=overlap buffers=329 frames=336000 endedPositionMs=7012 durationMs=7000 elapsedMs=7283 first=(0, 1024, 48000) last=(6989333, 512, 48000)
+10-14 01:27:59.452 16778 16792 I P01_PCM : case=independent-pto buffers=165 frames=168000 endedPositionMs=4020 durationMs=4000 elapsedMs=3778 first=(500000, 576, 48000) last=(3989333, 512, 48000)
+10-14 01:28:03.963 16778 16792 I P01_PCM : case=independent-pto buffers=188 frames=192000 endedPositionMs=4016 durationMs=4000 elapsedMs=4484 first=(0, 1024, 48000) last=(3989333, 512, 48000)
+10-14 01:28:08.350 16778 16792 I P01_PCM : case=independent-pto buffers=114 frames=192000 endedPositionMs=4018 durationMs=4000 elapsedMs=4373 first=(0, 1024, 48000) last=(3984000, 768, 48000)
+10-14 02:29:33.779 22767 22806 I P01_PCM : case=independent-pto buffers=171 frames=192000 endedPositionMs=4018 durationMs=4000 elapsedMs=4620 first=(0, 4800, 48000) last=(3998666, 64, 48000)
+10-14 02:29:37.623 22767 22806 I P01_PCM : case=clip-end buffers=165 frames=168000 endedPositionMs=3521 durationMs=3500 elapsedMs=3795 first=(0, 1024, 48000) last=(3498666, 64, 48000)
+10-14 02:29:40.914 22767 22806 I P01_PCM : case=cross-codec buffers=142 frames=144000 endedPositionMs=3015 durationMs=3000 elapsedMs=3275 first=(0, 1024, 48000) last=(2993333, 320, 48000)
+10-14 02:29:40.915 22767 22806 I P01_PCM_TONE: case=cross-codec startFrame=12000 endFrame=36000 frames=24000 expectedHz=440 observedHz=440.0
+10-14 02:29:40.923 22767 22806 I P01_PCM_TONE: case=cross-codec startFrame=52800 endFrame=67200 frames=14400 expectedHz=880 observedHz=876.6666666666666
+10-14 02:29:40.930 22767 22806 I P01_PCM_TONE: case=cross-codec startFrame=84000 endFrame=108000 frames=24000 expectedHz=440 observedHz=440.0
+10-14 02:29:40.931 22767 22806 I P01_PCM_TONE: case=cross-codec startFrame=124800 endFrame=139200 frames=14400 expectedHz=880 observedHz=876.6666666666666
+10-14 02:29:45.971 22767 22806 I P01_PCM : case=independent-pto buffers=152 frames=192000 endedPositionMs=4019 durationMs=4000 elapsedMs=5025 first=(0, 1024, 48000) last=(3989333, 512, 48000)
+10-14 02:29:53.252 22767 22806 I P01_PCM : case=overlap buffers=329 frames=336000 endedPositionMs=7021 durationMs=7000 elapsedMs=7264 first=(0, 1024, 48000) last=(6989333, 512, 48000)
+10-14 02:29:57.046 22767 22806 I P01_PCM : case=independent-pto buffers=165 frames=168000 endedPositionMs=4018 durationMs=4000 elapsedMs=3758 first=(500000, 576, 48000) last=(3989333, 512, 48000)
+10-14 02:30:01.526 22767 22806 I P01_PCM : case=independent-pto buffers=188 frames=192000 endedPositionMs=4013 durationMs=4000 elapsedMs=4450 first=(0, 1024, 48000) last=(3989333, 512, 48000)
+10-14 02:30:01.526 22767 22806 I P01_PCM_TONE: case=independent-pto startFrame=12000 endFrame=36000 frames=24000 expectedHz=440 observedHz=440.0
+10-14 02:30:01.527 22767 22806 I P01_PCM_TONE: case=independent-pto startFrame=60000 endFrame=84000 frames=24000 expectedHz=880 observedHz=878.0
+10-14 02:30:01.527 22767 22806 I P01_PCM_TONE: case=independent-pto startFrame=108000 endFrame=132000 frames=24000 expectedHz=1320 observedHz=1320.0
+10-14 02:30:01.528 22767 22806 I P01_PCM_TONE: case=independent-pto startFrame=156000 endFrame=180000 frames=24000 expectedHz=1760 observedHz=1758.0
+10-14 02:30:05.833 22767 22806 I P01_PCM : case=independent-pto buffers=114 frames=192000 endedPositionMs=4006 durationMs=4000 elapsedMs=4285 first=(0, 1024, 48000) last=(3984000, 768, 48000)
+10-14 02:32:25.235 23352 23366 I P01_LIFECYCLE: heldMs=864 resumedMs=1811 audioPreserved=true disposedTwice=true

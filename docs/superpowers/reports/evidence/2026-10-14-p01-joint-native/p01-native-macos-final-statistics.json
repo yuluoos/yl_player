@@ -1,0 +1,203 @@
+{
+  "input": "/private/tmp/p01-native-macos-final-rows.jsonl",
+  "legacyAppleWaitLabelCorrectedToMs": false,
+  "summary": {
+    "manifest": {
+      "runs": 3,
+      "rows": 576,
+      "missingAudioPairs": 0,
+      "deltaUs": {
+        "minimum": -18649,
+        "maximum": 0,
+        "absoluteMaximum": 18649,
+        "absoluteP95": 13571
+      },
+      "rawDeltaUs": null,
+      "periodWaitMs": {
+        "minimum": 343,
+        "maximum": 371,
+        "p95": 371
+      },
+      "transitionOutputGapExcessMs": {
+        "minimum": 505.564,
+        "maximum": 537.483,
+        "p95": 537.483
+      },
+      "readyMs": {
+        "minimum": 30.68479166540783,
+        "maximum": 51.90008334466256,
+        "p95": 51.90008334466256
+      },
+      "elapsedMs": {
+        "minimum": 8728.599791662418,
+        "maximum": 8799.085625010775,
+        "p95": 8799.085625010775
+      },
+      "peakBytes": {
+        "minimum": 19818624,
+        "maximum": 19911568,
+        "p95": 19911568
+      },
+      "releasedBytes": {
+        "minimum": 0,
+        "maximum": 0,
+        "p95": 0
+      }
+    },
+    "independent-pto": {
+      "runs": 3,
+      "rows": 288,
+      "missingAudioPairs": 0,
+      "deltaUs": {
+        "minimum": -15911,
+        "maximum": 0,
+        "absoluteMaximum": 15911,
+        "absoluteP95": 12524
+      },
+      "rawDeltaUs": null,
+      "periodWaitMs": null,
+      "transitionOutputGapExcessMs": null,
+      "readyMs": {
+        "minimum": 27.27254165802151,
+        "maximum": 41.540125006577,
+        "p95": 41.540125006577
+      },
+      "elapsedMs": {
+        "minimum": 4211.278541653883,
+        "maximum": 4226.568875004887,
+        "p95": 4226.568875004887
+      },
+      "peakBytes": {
+        "minimum": 19818624,
+        "maximum": 19911494,
+        "p95": 19911494
+      },
+      "releasedBytes": {
+        "minimum": 0,
+        "maximum": 0,
+        "p95": 0
+      }
+    },
+    "clip-end": {
+      "runs": 3,
+      "rows": 252,
+      "missingAudioPairs": 0,
+      "deltaUs": {
+        "minimum": -23078,
+        "maximum": 0,
+        "absoluteMaximum": 23078,
+        "absoluteP95": 13644
+      },
+      "rawDeltaUs": null,
+      "periodWaitMs": null,
+      "transitionOutputGapExcessMs": null,
+      "readyMs": {
+        "minimum": 28.279708334594034,
+        "maximum": 40.71866665617563,
+        "p95": 40.71866665617563
+      },
+      "elapsedMs": {
+        "minimum": 3720.148791675456,
+        "maximum": 3734.86233332369,
+        "p95": 3734.86233332369
+      },
+      "peakBytes": {
+        "minimum": 19818362,
+        "maximum": 19907398,
+        "p95": 19907398
+      },
+      "releasedBytes": {
+        "minimum": 0,
+        "maximum": 0,
+        "p95": 0
+      }
+    },
+    "cross-codec": {
+      "runs": 3,
+      "rows": 216,
+      "missingAudioPairs": 0,
+      "deltaUs": {
+        "minimum": -17867,
+        "maximum": 0,
+        "absoluteMaximum": 17867,
+        "absoluteP95": 12865
+      },
+      "rawDeltaUs": null,
+      "periodWaitMs": {
+        "minimum": 157,
+        "maximum": 189,
+        "p95": 189
+      },
+      "transitionOutputGapExcessMs": {
+        "minimum": 322.418,
+        "maximum": 367.039,
+        "p95": 367.039
+      },
+      "readyMs": {
+        "minimum": 32.061000005342066,
+        "maximum": 42.86095833231229,
+        "p95": 42.86095833231229
+      },
+      "elapsedMs": {
+        "minimum": 3561.325708331424,
+        "maximum": 3623.2406249910127,
+        "p95": 3623.2406249910127
+      },
+      "peakBytes": {
+        "minimum": 20281587,
+        "maximum": 20822470,
+        "p95": 20822470
+      },
+      "releasedBytes": {
+        "minimum": 0,
+        "maximum": 0,
+        "p95": 0
+      }
+    },
+    "resolution": {
+      "runs": 3,
+      "rows": 216,
+      "missingAudioPairs": 0,
+      "deltaUs": {
+        "minimum": -18675,
+        "maximum": 0,
+        "absoluteMaximum": 18675,
+        "absoluteP95": 13533
+      },
+      "rawDeltaUs": null,
+      "periodWaitMs": {
+        "minimum": 177,
+        "maximum": 190,
+        "p95": 190
+      },
+      "transitionOutputGapExcessMs": {
+        "minimum": 343.891,
+        "maximum": 365.133,
+        "p95": 365.133
+      },
+      "readyMs": {
+        "minimum": 41.77533333131578,
+        "maximum": 52.04512500495184,
+        "p95": 52.04512500495184
+      },
+      "elapsedMs": {
+        "minimum": 3589.4160416646628,
+        "maximum": 3630.7462500117254,
+        "p95": 3630.7462500117254
+      },
+      "peakBytes": {
+        "minimum": 20152540,
+        "maximum": 20506844,
+        "p95": 20506844
+      },
+      "releasedBytes": {
+        "minimum": 0,
+        "maximum": 0,
+        "p95": 0
+      }
+    }
+  },
+  "frozenGate": {
+    "passed": true
+  }
+}

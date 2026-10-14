@@ -1,0 +1,104 @@
+INSTRUMENTATION_STATUS: class=dev.ylplayer.yl_player_android.YlDashJointInstrumentedTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=2
+INSTRUMENTATION_STATUS: stream=
+dev.ylplayer.yl_player_android.YlDashJointInstrumentedTest:
+INSTRUMENTATION_STATUS: test=nativeJointBaseline
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=dev.ylplayer.yl_player_android.YlDashJointInstrumentedTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=2
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=nativeJointBaseline
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=2
+INSTRUMENTATION_STATUS: stream=
+dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest:
+INSTRUMENTATION_STATUS: test=foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=2
+INSTRUMENTATION_STATUS: stack=java.util.concurrent.ExecutionException: dev.ylplayer.yl_player_android.YlBoundaryException
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:372)
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2072)
+	at dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest.foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress$owned(YlDashLifecycleInstrumentedTest.kt:34)
+	at dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest.foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress(YlDashLifecycleInstrumentedTest.kt:40)
+	... 31 trimmed
+Caused by: dev.ylplayer.yl_player_android.YlBoundaryException
+	at dev.ylplayer.yl_player_android.YlBoundaryValidation.requireValid(YlBoundaryValidation.kt:9)
+	at dev.ylplayer.yl_player_android.YlBoundaryValidation.policy(YlBoundaryValidation.kt:12)
+	at dev.ylplayer.yl_player_android.YlBoundaryValidation.load(YlBoundaryValidation.kt:44)
+	at dev.ylplayer.yl_player_android.YlMedia3EngineKt.createMedia3Configuration(YlMedia3Engine.kt:212)
+	at dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest.foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress$lambda$2(YlDashLifecycleInstrumentedTest.kt:46)
+	at dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest$$ExternalSyntheticLambda3.invoke(D8$$SyntheticClass:0)
+	at dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest.foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress$owned$lambda$1(YlDashLifecycleInstrumentedTest.kt:33)
+	at dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+	at android.os.Handler.handleCallback(Handler.java:995)
+	at android.os.Handler.dispatchMessage(Handler.java:103)
+	at android.os.Looper.loopOnce(Looper.java:248)
+	at android.os.Looper.loop(Looper.java:338)
+	at android.os.HandlerThread.run(HandlerThread.java:85)
+
+INSTRUMENTATION_STATUS: stream=
+Error in foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress(dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest):
+java.util.concurrent.ExecutionException: dev.ylplayer.yl_player_android.YlBoundaryException
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:372)
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2072)
+	at dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest.foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress$owned(YlDashLifecycleInstrumentedTest.kt:34)
+	at dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest.foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress(YlDashLifecycleInstrumentedTest.kt:40)
+	... 31 trimmed
+Caused by: dev.ylplayer.yl_player_android.YlBoundaryException
+	at dev.ylplayer.yl_player_android.YlBoundaryValidation.requireValid(YlBoundaryValidation.kt:9)
+	at dev.ylplayer.yl_player_android.YlBoundaryValidation.policy(YlBoundaryValidation.kt:12)
+	at dev.ylplayer.yl_player_android.YlBoundaryValidation.load(YlBoundaryValidation.kt:44)
+	at dev.ylplayer.yl_player_android.YlMedia3EngineKt.createMedia3Configuration(YlMedia3Engine.kt:212)
+	at dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest.foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress$lambda$2(YlDashLifecycleInstrumentedTest.kt:46)
+	at dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest$$ExternalSyntheticLambda3.invoke(D8$$SyntheticClass:0)
+	at dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest.foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress$owned$lambda$1(YlDashLifecycleInstrumentedTest.kt:33)
+	at dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+	at android.os.Handler.handleCallback(Handler.java:995)
+	at android.os.Handler.dispatchMessage(Handler.java:103)
+	at android.os.Looper.loopOnce(Looper.java:248)
+	at android.os.Looper.loop(Looper.java:338)
+	at android.os.HandlerThread.run(HandlerThread.java:85)
+
+INSTRUMENTATION_STATUS: test=foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_RESULT: stream=
+
+Time: 70.392
+There was 1 failure:
+1) foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress(dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest)
+java.util.concurrent.ExecutionException: dev.ylplayer.yl_player_android.YlBoundaryException
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:372)
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2072)
+	at dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest.foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress$owned(YlDashLifecycleInstrumentedTest.kt:34)
+	at dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest.foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress(YlDashLifecycleInstrumentedTest.kt:40)
+	... 31 trimmed
+Caused by: dev.ylplayer.yl_player_android.YlBoundaryException
+	at dev.ylplayer.yl_player_android.YlBoundaryValidation.requireValid(YlBoundaryValidation.kt:9)
+	at dev.ylplayer.yl_player_android.YlBoundaryValidation.policy(YlBoundaryValidation.kt:12)
+	at dev.ylplayer.yl_player_android.YlBoundaryValidation.load(YlBoundaryValidation.kt:44)
+	at dev.ylplayer.yl_player_android.YlMedia3EngineKt.createMedia3Configuration(YlMedia3Engine.kt:212)
+	at dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest.foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress$lambda$2(YlDashLifecycleInstrumentedTest.kt:46)
+	at dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest$$ExternalSyntheticLambda3.invoke(D8$$SyntheticClass:0)
+	at dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest.foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress$owned$lambda$1(YlDashLifecycleInstrumentedTest.kt:33)
+	at dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+	at android.os.Handler.handleCallback(Handler.java:995)
+	at android.os.Handler.dispatchMessage(Handler.java:103)
+	at android.os.Looper.loopOnce(Looper.java:248)
+	at android.os.Looper.loop(Looper.java:338)
+	at android.os.HandlerThread.run(HandlerThread.java:85)
+
+FAILURES!!!
+Tests run: 2,  Failures: 1
+
+
+INSTRUMENTATION_CODE: -1

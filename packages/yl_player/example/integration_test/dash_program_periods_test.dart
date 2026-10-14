@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -164,11 +165,16 @@ void main() {
               s.timeline.position.inMilliseconds <= high,
         );
         expect(inGap, isNotEmpty);
-        expect(
-          inGap.every((s) => s.videoGeometry == null),
-          isTrue,
-          reason: 'No retained or early frame may be visible in a video gap.',
-        );
+        if (defaultTargetPlatform == TargetPlatform.android) {
+          // Android removes geometry to hide an external texture during gaps.
+          // Apple clears its native layer while retaining format geometry.
+          // dash_video_gap_subtitle_test verifies actual black pixels on all three.
+          expect(
+            inGap.every((s) => s.videoGeometry == null),
+            isTrue,
+            reason: 'No retained or early frame may be visible in a video gap.',
+          );
+        }
         if (entry.key != 'video-gap-trailing') {
           expect(
             observed.any(
@@ -210,7 +216,9 @@ void main() {
         expect(player.state.failure, isNull);
       }
       await player.stop();
-      expect(player.state.status, YlPlaybackStatus.idle);
+      // Stop acknowledgement and the state stream use separate channels.
+      await stateWhere(player, (s) => s.status == YlPlaybackStatus.idle);
+      expect(player.state.sessionId, isNull);
     });
   }
 }

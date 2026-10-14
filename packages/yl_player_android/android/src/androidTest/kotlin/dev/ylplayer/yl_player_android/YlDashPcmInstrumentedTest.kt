@@ -19,9 +19,13 @@ import java.util.concurrent.TimeUnit
 /** Real MediaCodec decode and AudioTrack consumption; captures submitted PCM, not physical sound. */
 class YlDashPcmInstrumentedTest {
     @Test fun clipEndHasExactlyThreeAndHalfSecondsOfPcm() = measure("clip-end", 168000)
-    @Test fun independentPtoHasExactlyFourSecondsOfPcm() = measure("independent-pto", 192000)
+    @Test fun independentPtoHasExactlyFourSecondsOfPcm() = measure("independent-pto", 192000,
+        toneMarkers = listOf((12000 until 36000) to 440, (60000 until 84000) to 880,
+            (108000 until 132000) to 1320, (156000 until 180000) to 1760))
     @Test fun overlapHasSevenSecondsOfPcmAndConsumedClock() = measure("overlap", 336000)
-    @Test fun crossPeriodHasExactlyThreeSecondsOfPcm() = measure("cross-codec", 144000)
+    @Test fun crossPeriodHasExactlyThreeSecondsOfPcm() = measure("cross-codec", 144000,
+        toneMarkers = listOf((12000 until 36000) to 440, (52800 until 67200) to 880,
+            (84000 until 108000) to 440, (124800 until 139200) to 880))
 
     @Test fun leadingAudioGapIsRealSilence() = measure("independent-pto", 192000,
         { it.replace("presentationTimeOffset=\"960000\"", "presentationTimeOffset=\"936000\"") }, 0 until 20000)
@@ -32,6 +36,11 @@ class YlDashPcmInstrumentedTest {
 
     @Test fun seekInsideAacBufferPreservesDecodedPrerollTail() = measure("independent-pto", 168000,
         seekMs = 500, tone = 24000 until 24480)
+
+    private class ToneMarker(val range: IntRange, val hz: Int) {
+        var frames = 0; var crossings = 0; private var previous = 0
+        fun accept(sample: Int) { if (frames > 0 && previous <= 0 && sample > 0) crossings++; previous = sample; frames++ }
+    }
 
     private fun audioGap(xml: String, trailing: Boolean): String {
         val adaptation = xml.indexOf("<AdaptationSet contentType=\"audio\"")
@@ -44,11 +53,12 @@ class YlDashPcmInstrumentedTest {
         return xml.replaceRange(start, end, "<SegmentList timescale=\"48000\" presentationTimeOffset=\"960000\"><Initialization sourceURL=\"init-1.m4s\"/><SegmentTimeline>$timeline</SegmentTimeline>$urls</SegmentList>")
     }
 
-    private fun measure(name: String, expectedFrames: Int, transform: (String) -> String = { it }, silence: IntRange? = null, seekMs: Long = 0, tone: IntRange? = null) {
+    private fun measure(name: String, expectedFrames: Int, transform: (String) -> String = { it }, silence: IntRange? = null, seekMs: Long = 0, tone: IntRange? = null, toneMarkers: List<Pair<IntRange, Int>> = emptyList()) {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val context = instrumentation.targetContext
         val assets = instrumentation.context.assets
         val observations = mutableListOf<Triple<Long, Int, Int>>()
+        val markers = toneMarkers.map { (range, hz) -> ToneMarker(range, hz) }
         var silentFrames = 0
         var silencePeak = 0
         var toneFrames = 0
@@ -95,11 +105,12 @@ class YlDashPcmInstrumentedTest {
                                         val programmeUs = pts - offsetUs + (boundary?.start?.units(1_000_000) ?: 0)
                                         val frames = buffer.remaining() / (2 * pcm.channelCount)
                                         observations.add(Triple(programmeUs, frames, pcm.sampleRate))
-                                        if (silence != null || tone != null) {
+                                        if (silence != null || tone != null || markers.isNotEmpty()) {
                                             val firstFrame = (programmeUs * pcm.sampleRate + 500000) / 1000000
                                             val samples = buffer.duplicate().order(java.nio.ByteOrder.LITTLE_ENDIAN).asShortBuffer()
                                             for (frame in 0 until frames) {
                                                 val index = (firstFrame + frame).toInt()
+                                                for (marker in markers) if (index in marker.range) marker.accept(samples.get(frame * pcm.channelCount).toInt())
                                                 if (tone != null && index in tone) {
                                                     toneFrames++
                                                     for (channel in 0 until pcm.channelCount) tonePeak = maxOf(tonePeak,
@@ -141,6 +152,12 @@ class YlDashPcmInstrumentedTest {
             android.util.Log.i("P01_PCM", "case=$name buffers=${samples.size} frames=${samples.sumOf { it.second }} endedPositionMs=$endedPositionMs durationMs=$endedDurationMs elapsedMs=${android.os.SystemClock.elapsedRealtime() - startedAt} first=${samples.first()} last=${samples.last()}")
             assertTrue("Consumed end clock $endedPositionMs vs $endedDurationMs", kotlin.math.abs(endedPositionMs - endedDurationMs) <= 50)
             assertEquals("Decoded PCM must cover exactly the programme window", expectedFrames, samples.sumOf { it.second })
+            for (marker in markers) {
+                val frequency = marker.crossings * 48000.0 / marker.frames
+                android.util.Log.i("P01_PCM_TONE", "case=$name startFrame=${marker.range.first} endFrame=${marker.range.last + 1} frames=${marker.frames} expectedHz=${marker.hz} observedHz=$frequency")
+                assertEquals("Every reference tone sample must reach the sink", marker.range.count(), marker.frames)
+                assertEquals("Decoded tone must match the programme reference", marker.hz.toDouble(), frequency, 12.0)
+            }
             if (silence != null) {
                 assertEquals("Silence must consume real programme frames", silence.count(), silentFrames)
                 assertEquals("Gap must contain zero PCM", 0, silencePeak)

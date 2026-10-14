@@ -98,3 +98,34 @@ lack CICP metadata, so the assertion classifies nonoverlapping solid color
 markers and retains raw RGB; this is timing/content identity evidence, not an
 exact color reproduction test. The iOS screenshots use the explicitly named
 simulator; simulator results do not stand in for physical display measurements.
+
+## Short native AV observations
+
+`joint_protocol.json` freezes three fresh player/resource scopes per owned
+fixture, playback rate 1, loopback transport, and uncontrolled OS caches. The
+native Apple `testProgramNativeJointBaseline` and Android
+`YlDashJointInstrumentedTest` emit raw observations. This is an instrumented
+short-run baseline; the new independent-PTO/cropping/reconfiguration path had no
+playable old-path equivalent, and no speedup over an invented baseline is claimed.
+
+Apple pairs actual published CVPixelBuffer RGB with the native audio node's
+rendered clock at the observation host time. Android reads actual decoded YUV
+from ImageReader, matches the image timestamp to Media3's frame metadata, and
+records AudioTrack consumption. ImageReader can deliver before the requested
+release instant; both raw consumption delta and the rate-1 projection to that
+instant remain in the record. These are native output measurements, not physical
+screen/speaker measurements. Separate Flutter/OS composition tests check visible
+video and cue glyphs. The PCM tests verify decoded tone windows and exact sample
+counts before AudioTrack, with actual end-of-stream drain observed separately.
+
+```sh
+python3 -B tool/dash_timeline/joint_observations.py captured-native.log --output summary.json
+python3 -B -m unittest discover -s tool/dash_timeline -p test_joint_observations.py
+```
+
+The summarizer retains missing pairs as counts and absent metrics as null,
+rejects duplicate runs and non-finite numbers, and never assigns test outcomes.
+Keep the full source logs and XCTest/instrumentation result alongside it. The
+first macOS baseline probe mislabeled the existing Period observer's milliseconds
+as `waitUs`; use `--legacy-apple-wait-ms` only for that archived run. Later probes
+emit `waitMs`. This explicit correction never rewrites the original evidence.

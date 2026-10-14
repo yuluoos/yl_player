@@ -1,0 +1,137 @@
+{
+  "scope": "Native instrumented AV baseline and lifecycle; separate compositor/cue evidence linked in P01 report",
+  "baseCommit": "5afd42452c9940d683b767240b843ba12b3c4d6e",
+  "protocol": "joint_protocol.json copied before measurement; five fixtures, three fresh player/resource scopes each; OS caches uncontrolled",
+  "results": {
+    "macosBaseline": {
+      "passedTests": 1,
+      "runs": 15,
+      "skippedTests": 0
+    },
+    "iosNative": {
+      "passedTests": 24,
+      "baselineRuns": 15,
+      "skippedTests": 0
+    },
+    "androidJoint": {
+      "passedTests": 1,
+      "runs": 15
+    },
+    "androidPcm": {
+      "passedTests": 8
+    },
+    "androidLifecycle": {
+      "passedTests": 1
+    },
+    "pythonDashTools": {
+      "passedTests": 20
+    },
+    "macosNativeFinal": {
+      "passedTests": 24,
+      "skippedTests": 0,
+      "baselineRuns": 15
+    },
+    "public": {
+      "macosProgramme": 19,
+      "macosCancellation": 2,
+      "iosProgrammeAndCancellation": 21,
+      "androidCancellation": 2
+    }
+  },
+  "measurement": {
+    "apple": "Published CVPixelBuffer solid marker RGB paired with AVAudioRenderer rendered output-node clock, projected to observation host time.",
+    "android": "Actual ImageReader YUV pixels matched to MediaCodec requested release timestamp and AudioTrack consumption. Raw and rate-1 release-projected deltas retained; not physical display/speakers.",
+    "pcm": "Decoded clipped PCM reference tone windows before AudioTrack plus actual AudioTrack EOS/clock checks.",
+    "limits": "Instrumented local envelopes frozen in joint_acceptance.json; absent preparation/memory observations remain null."
+  },
+  "failuresPreserved": [
+    "Android RGBA probe failed because producer emits YUV420 (0x23).",
+    "Initial Android marker assertion expected gray where owned reference is black; corrected test reference in both probes.",
+    "Android joint passed in 2-test invocation whose lifecycle probe failed mandatory managed-policy validation before playback.",
+    "Next 9-test invocation: eight PCM tests passed; lifecycle probe omitted initializeDecoder and timed out before playback.",
+    "Lifecycle test corrected to real prepare/initializeDecoder sequence passed independently; no lifecycle production change.",
+    "First macOS baseline mislabeled existing milliseconds as waitUs. Raw retained; statistics requires explicit --legacy-apple-wait-ms. Source now labels waitMs.",
+    "macOS public programme initial run: 18 final stop assertions read before asynchronous state channel idle. Replaced immediate assertion with waiting for idle plus session-null, 19/19 passed. No production stop change."
+  ],
+  "limitations": [
+    "No microphone, physical display scanout, physical iOS/minimum-OS/Intel coverage.",
+    "No long-play/weak-network ABR work or pre/post optimization claim.",
+    "macOS original baseline predates the probe field-label correction; production behavior unchanged.",
+    "Global example mirror inventory fails for three existing macOS deltas. Difference-line hashes prove unchanged since P01 baseline c3e304e; P01 native class identities separately verified on both platforms."
+  ],
+  "sourceSha256": {
+    "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift": "1222291603476652faac317240930e747591cab32ce8a678956b19d8c7ce3d22",
+    "packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift": "5d4598d75b5b35bff42b6523b2a34855d45cda5df6dfefe3f440e0a7b53bead6",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashJointInstrumentedTest.kt": "c8f0838908bd5c671e56a2dc3e8387891cabc0642151c57fec49acba30573c50",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashPcmInstrumentedTest.kt": "f1809113db1a99f5f638303340f5707ae7a39a77ce671f4beb40da47add94f24",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashLifecycleInstrumentedTest.kt": "2292e67aeb6b01a404f5d12a873116017bd6e669adb8369e7a2b951de6a98ff5",
+    "tool/dash_timeline/joint_protocol.json": "bd6e4fea68047a69d0f2c8ef46ccf8320f0d60bbd4d26bdd38db2067290e0e67",
+    "tool/dash_timeline/joint_observations.py": "a7927d6e5220f8a66f9d5cc58031bf46ff37d80e020ee253b248104841bb97a1",
+    "tool/dash_timeline/joint_acceptance.json": "8def28b2d6e54475e02fcbfba7e001d3b2ae58af0e95d59f9e43810d7048ef74",
+    "tool/dash_timeline/test_joint_observations.py": "3eff23c58b23af13c8231380bd263b27250aea65274be8ec6232e4ebe2f72725",
+    "packages/yl_player/example/integration_test/dash_program_periods_test.dart": "0bb74d7e116b351381ac1975ef6fcdf40a3f155dbf5c98b227b6805c975cc3e5",
+    "packages/yl_player/example/integration_test/dash_program_cancellation_test.dart": "3e797d9a606ba98eddbdc0a7b365146bfdeaa068c7f6278e7393c5d750d29798",
+    "packages/yl_player/example/integration_test/support/dash_server.dart": "6665f7f5ea2572cd0b71a57527fe9e48d207e3b920a9f925c9a4782d6d5739f2",
+    "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift": "1222291603476652faac317240930e747591cab32ce8a678956b19d8c7ce3d22",
+    "tool/consumer_fixtures/apple_flutter/main_example_tests.py": "2d295831c5312994d3225dfbe8a4ee7f2dbfc2825cacc79166444f836f6d4397",
+    "tool/consumer_fixtures/apple_flutter/new-tests-manifest.json": "eb2231bba149a799678a37a44c20533ed2a40863a23d7c43009a3e535bd527dc",
+    "tool/dash_timeline/README.md": "01b7bc5af70c9ec13746356c030eb67d26a2cefe98483e640c4ae6ba79c0ddd3",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/DashProgram/YlDashProgramBackend.swift": "94405bd6722c9fe695b2bef68d7c31044fee1053ef9fa9481c80192ad84e6efb"
+  },
+  "evidenceSha256": {
+    "p01-native-macos-final.log": "b0554c9f57c07c8bb3c6d82b0f427e14d0b770de8c52c868a6d0fb9d7e29272f",
+    "p01-dash-tools-final.log": "df78685a24ef4b17e3deb4484decb65f145cdfda09472c680feea24bf0bcc366",
+    "p01-joint-lifecycle-android-build.log": "107e95806ff7af126808dae602820d512b7fd19c786381cf891c2c012e52eefb",
+    "p01-lifecycle-activated-build.log": "63ce25e605a9bba597a8f21eac0708f7a5809481783539f9863424b93772d52e",
+    "ios-final-summary.json": "bc91fe84b23325b27c7a3a24548d32fe16ca0b5d0d354d1482d1ad47175c969f",
+    "p01-joint-baseline-protocol.json": "bd6e4fea68047a69d0f2c8ef46ccf8320f0d60bbd4d26bdd38db2067290e0e67",
+    "p01-inventory-preexisting-differences.json": "898775dab3acc24bcf3f3c74960f2a7afb8953011339264bfaf82d8463e1d1b0",
+    "macos-native-stdout.log": "3fd132f1293591ccf1463a5dd5778c20f5a0f45b5ee0d77b03afbe071a46f21f",
+    "p01-lifecycle-tones-android-build.log": "32fbc9d051436d7d19f311c5d007778d11849137fa67b350df4cc58ea9252ddd",
+    "ios-final-case-identities.json": "1c6b560322646be038dce937bbd9e63127a6e118a1249ed210a457b28469bc7a",
+    "p01-final-inventory.log": "9bd81eae473cb165f4ffd29ea370ee4a3523d269b1e25a5d4c6836ddc9a32a73",
+    "ios-final-tests.json": "7a4657b4993c096e1c7de5d2fcd1a10910a9a1401c578133839ba74d55fd02dc",
+    "p01-joint-android-final-start.txt": "3270d1c9f81f3e7d08be01d568b88bb925efc83b12705ba32eaf165325add4f0",
+    "p01-cancellation-macos.log": "1879b7ba40bc85c8acd05724b2a0538d69461262030a9735cd114d6e875bcfae",
+    "p01-joint-lifecycle-android-build-final.log": "5056d1373f365eebd34169aec44f57417e3d433becde9140b01f977503f437ae",
+    "p01-joint-limit-green.log": "fe836cbecd3b6b4f70bec51b58d30c3e45ad72ae7fb3cb63421a0f7337e651ae",
+    "p01-lifecycle-activated-run.log": "6fb995d975bacb731e7e069a22d1e1a82f4f0c292892f435aed9a79748affe87",
+    "p01-native-macos-final-rows.jsonl": "fc47eea6835c8fd9f301989dd39c93da6867e4f12bc976c9082bf9cfddc8f382",
+    "p01-joint-summary-transition-red.log": "6c2feda6a2a5ce04f6840b8b42f7a471093b15a3d40e45d2734b57bf11f83499",
+    "macos-final-summary.json": "f9052fc335f58094de01b7f98e7d1f2a8b2991e872d8e849a36e4cba1dc84513",
+    "p01-joint-macos-summary.json": "8f051478010a288dd82896d3019ab10115392950aff5f5b41b62bc675f96e1de",
+    "p01-joint-android-projection-build.log": "8cfb7c1c2590ea7c01878e8a05e928a73f334bad0b516cfa58d4a6aa747b9f24",
+    "p01-lifecycle-tones-run.log": "638dcf0e3442584975c0b12b86d83dd932bc848c726258fab142a73838ee372b",
+    "macos-final-case-identities.json": "f7423a7f4f7132f67d073a610b6c1d5005bd529fd54ee57139b02ca2d22411a2",
+    "macos-final-tests.json": "249ed75fc461c7aff663e1a552ae6ef93bc8b291da5f3cb4b2be1dbef67d51a0",
+    "p01-joint-macos-statistics.json": "9ef585c7dd76b0973ba04ca2ef0259cd50c46869cce7b6c9098b9d89badb3f9e",
+    "macos-final-native-stdout.log": "d61130f585919b9790a9197cbfdcbcd8a90c93611dc2977eee33b008ca8be5ea",
+    "p01-joint-ios-statistics.json": "7156eb11adf8da79ed6d135d5d0384ae37bd13f6c00e7440f693176ba660e58f",
+    "p01-joint-android-run.log": "11f5a970305872c8b2d7bbf83e44b3bc37985baa54e80201462ae42ca91b5ef9",
+    "p01-joint-macos-build-reference.log": "e076aa059f5c6d5e9761ae93dc74ac700bc296fa584369b151922c7368fa6027",
+    "p01-joint-ios-summary.json": "27ac619f4b218bf90e30675005e34b514826eed2c92582f1ff0b26e1952aa5e5",
+    "p01-joint-android-reference-build.log": "3e7fc6c24718b5e14e6db7060e6f022cfe318dd8c5a97ccfac21efdf5b957105",
+    "p01-joint-android-yuv-build.log": "30e54e1b71edbb0bd7fc4820591b7cc7fca3af1eb9702e8fa60061311753ae5e",
+    "p01-joint-android-final-run.log": "4d313b3a48183ee99e4cc01bfa3402d2c86e6dd8cb328c5ddc8b9a55f5946c9e",
+    "p01-joint-android-final-observations.log": "33d282fe04cf9706db09752b389f99391d2cfb21e36b5209ef7e6f43b71bec07",
+    "p01-native-macos-final-statistics.json": "3e0e8b65af65eef6c7880dd75eeaa5e83c503c9709861120214f8a0ab52461aa",
+    "p01-joint-device-identity.json": "4b1cdeb6eca38e399b705ea731bb67a3e60bdf4a747420008ceca255dacf99d0",
+    "p01-programme-macos-final.log": "5f66fb9b5cf14743fd3b3655972ecc54391d9038bc4bdb385ac28be97bf77280",
+    "p01-joint-limit-red.log": "5d81750ac475a64bef3d85d1cd99477baa5c441d166d079cbad0d6a147fe0b20",
+    "p01-joint-summary-red.log": "1411c1e9674c82a56d39bc5ab1d438e546e68cfb8155cdf29b821348c2bc0017",
+    "p01-cancellation-android-final.log": "b849344c30c41f48509d73f323ccab7c48c91f1bed88712698d3f6d9ba0b2527",
+    "p01-programme-macos-state-wait.log": "2b842f238b9ba40c6e3c271eece6ffb194733eee647a43b137aec4cf3bcaf2d6",
+    "p01-pcm-tones-lifecycle-observations.log": "696faef0a9f0678b26b784ab3cda72511c9e72d47f9e5db5e035b9f9c885a65b",
+    "p01-joint-macos-rows.jsonl": "2850cc4a4fa270b1d899370260f7de73cc85c1bd9e367fc95755385789f6e434",
+    "p01-programme-cancellation-ios-final.log": "9c615e32b1ae70322f6f16c4da0b9d57ddd9ee78b2b60ebe26c9d57203b4fad9",
+    "p01-joint-ios-rows.jsonl": "7c2cfa5a8f87da36d0674019bf4d1c6f691ed2d7b67bc9cc6a2b1d860bf6f42b",
+    "p01-joint-android-build.log": "abfd2510c18a73fd0699627ac8ab923613a6a49a023d0e71533f83d005521c83",
+    "p01-joint-macos-build.log": "2ba7ae82a92339c5256107a4a4d17c01a9143832fddd51b48411eab1b7cf6e93",
+    "p01-joint-android-yuv-run.log": "eb10ae40f3267d3254d67abf8be584fdc1dc83d38caf807cf140304a6b228559",
+    "ios-native-stdout.log": "eb0cfad7831bd42e0b4f2d34f7678f41afb2c790ea5687e02cffc9a2d606829d",
+    "p01-joint-macos-baseline.log": "5b09063ed1e9a4071f8d02de329a2fa9f2b6ae9902fa2b8837980bb23fac59c9",
+    "p01-joint-android-yuv-observations.log": "68e97408976a126e3d21b0e5dcac8c07ad7a268ec74af85da5be066ee3cbf075",
+    "p01-joint-android-statistics.json": "209330495f24491fa400e022c65466f7107917a831f0382a1ec066168486fdb6",
+    "p01-native-macos-final-build.log": "d773f94745780b26bbfb2b3e8cbdd30d35fc494bd9ef1b04b882425dd8a2d50f"
+  }
+}
