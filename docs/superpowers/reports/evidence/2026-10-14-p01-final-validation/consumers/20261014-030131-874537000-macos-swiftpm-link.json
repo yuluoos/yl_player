@@ -1,0 +1,33 @@
+{
+  "command": [
+    "xcodebuild",
+    "-workspace",
+    "/private/tmp/p01-final-consumers/apple/macos-swiftpm-link/macos/Runner.xcworkspace",
+    "-scheme",
+    "Runner",
+    "-configuration",
+    "Release",
+    "-destination",
+    "generic/platform=macOS",
+    "-parallel-testing-enabled",
+    "NO",
+    "-derivedDataPath",
+    "/private/tmp/p01-final-consumers/apple/macos-swiftpm-link/derived-link",
+    "-clonedSourcePackagesDirPath",
+    "/private/tmp/p01-final-consumers/apple/shared-package-cache/source-packages",
+    "-packageCachePath",
+    "/private/tmp/p01-final-consumers/apple/shared-package-cache/package-cache",
+    "-disablePackageRepositoryCache",
+    "-resultBundlePath",
+    "/private/tmp/p01-final-consumers/apple/macos-swiftpm-link/results-1791972091279256000.xcresult",
+    "CODE_SIGNING_ALLOWED=NO",
+    "COMPILER_INDEX_STORE_ENABLE=NO",
+    "build",
+    "ARCHS=arm64 x86_64",
+    "ONLY_ACTIVE_ARCH=NO"
+  ],
+  "cwd": "/private/tmp/p01-final-consumers/apple/macos-swiftpm-link",
+  "repo_root": "/Users/yy2021_8689/Desktop/Flutter/yl_player",
+  "log": "/private/tmp/p01-final-consumers/logs/20261014-030131-874537000-macos-swiftpm-link.txt",
+  "exit_code": 65
+}

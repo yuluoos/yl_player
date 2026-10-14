@@ -100,3 +100,27 @@ implementation receipts. Source declarations are inventory, not execution proof.
 Native scripts retain unique XCResults and JSON receipts under example
 `build/apple-evidence`; CI uploads them even after failure. Full current runtime
 matrix remains final-acceptance work under R15.
+
+### Isolated multi-architecture lipo compatibility
+
+On the measured macOS 27.0.1 / Xcode 27 installation, native `lipo -verify_arch
+arm64 x86_64` rejects two operands even when `lipo -archs` reports both; each
+single-architecture check succeeds. `lipo_verify_compat.py` is an **opt-in** build
+adapter: copy it as `lipo` into an owned temporary directory and prepend that
+directory only inside the generated consumer's Flutter shell phases and its
+SwiftPM Scheme prepare action. It checks
+each architecture with `/usr/bin/lipo`, propagates any failure, and delegates
+all other operations unchanged. Never replace the SDK or system binary. The
+normal consumer gate still verifies final host/plugin/bridge architectures,
+minimum OS versions, linkage and concrete symbols. This adapter does not change
+the gate's required architectures or claim Intel runtime coverage.
+
+Run the adapter tests before using it:
+
+```sh
+python3 -B -m unittest discover -s tool/consumer_fixtures/apple_flutter -p test_lipo_verify_compat.py
+```
+
+The P01 final-validation evidence
+records the native failure, a real negative architecture check, and the exact
+isolated consumer invocation used for this environment.

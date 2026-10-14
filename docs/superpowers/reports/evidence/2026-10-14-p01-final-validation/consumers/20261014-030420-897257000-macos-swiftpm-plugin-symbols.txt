@@ -1,0 +1,13 @@
+{"command": ["xcrun", "swift-demangle"], "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player", "repo_root": "/Users/yy2021_8689/Desktop/Flutter/yl_player", "log": "/private/tmp/p01-final-consumers/logs/20261014-030420-897257000-macos-swiftpm-plugin-symbols.txt"}
+00000001001b1924 T yl_player_apple.YlPlayerApplePlugin.detachFromEngine(for: __C.FlutterPluginRegistrar) -> ()
+00000001001b0d68 T static yl_player_apple.YlPlayerApplePlugin.register(with: __C.FlutterPluginRegistrar) -> ()
+00000001001b19b8 T yl_player_apple.YlPlayerApplePlugin.__allocating_init() -> yl_player_apple.YlPlayerApplePlugin
+00000001001c0684 T yl_player_apple.YlPlayerApplePlugin.init() -> yl_player_apple.YlPlayerApplePlugin
+00000001001b766c T type metadata accessor for yl_player_apple.YlPlayerApplePlugin
+00000001001e5348 S nominal type descriptor for yl_player_apple.YlPlayerApplePlugin
+0000000100240830 S type metadata for yl_player_apple.YlPlayerApplePlugin
+00000001001b19fc T yl_player_apple.YlPlayerApplePlugin.__deallocating_deinit
+0000000100240830 S _OBJC_CLASS_$_yl_player_apple.YlPlayerApplePlugin
+000000010024e3d8 D _OBJC_METACLASS_$_yl_player_apple.YlPlayerApplePlugin
+0000000100000000 T __mh_execute_header
+000000010000208c T _main

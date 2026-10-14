@@ -1,0 +1,147 @@
+{"command": ["ruby", "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/consumer_fixtures/apple_flutter/verify_project.rb", "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link", "macos", "cocoapods"], "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player", "repo_root": "/Users/yy2021_8689/Desktop/Flutter/yl_player", "log": "/private/tmp/p01-final-consumers/logs/20261014-025951-193216000-macos-cocoapods-target-floors.txt"}
+[
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Runner.xcodeproj",
+    "target": "project",
+    "configuration": "Debug",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Runner.xcodeproj",
+    "target": "project",
+    "configuration": "Release",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Runner.xcodeproj",
+    "target": "project",
+    "configuration": "Profile",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Runner.xcodeproj",
+    "target": "Runner",
+    "configuration": "Debug",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Runner.xcodeproj",
+    "target": "Runner",
+    "configuration": "Release",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Runner.xcodeproj",
+    "target": "Runner",
+    "configuration": "Profile",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Runner.xcodeproj",
+    "target": "RunnerTests",
+    "configuration": "Debug",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Runner.xcodeproj",
+    "target": "RunnerTests",
+    "configuration": "Release",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Runner.xcodeproj",
+    "target": "RunnerTests",
+    "configuration": "Profile",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Runner.xcodeproj",
+    "target": "Flutter Assemble",
+    "configuration": "Debug",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Runner.xcodeproj",
+    "target": "Flutter Assemble",
+    "configuration": "Release",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Runner.xcodeproj",
+    "target": "Flutter Assemble",
+    "configuration": "Profile",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Pods/Pods.xcodeproj",
+    "target": "FlutterMacOS",
+    "configuration": "Debug",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Pods/Pods.xcodeproj",
+    "target": "FlutterMacOS",
+    "configuration": "Profile",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Pods/Pods.xcodeproj",
+    "target": "FlutterMacOS",
+    "configuration": "Release",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Pods/Pods.xcodeproj",
+    "target": "Pods-Runner",
+    "configuration": "Debug",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Pods/Pods.xcodeproj",
+    "target": "Pods-Runner",
+    "configuration": "Profile",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Pods/Pods.xcodeproj",
+    "target": "Pods-Runner",
+    "configuration": "Release",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Pods/Pods.xcodeproj",
+    "target": "Pods-RunnerTests",
+    "configuration": "Debug",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Pods/Pods.xcodeproj",
+    "target": "Pods-RunnerTests",
+    "configuration": "Profile",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Pods/Pods.xcodeproj",
+    "target": "Pods-RunnerTests",
+    "configuration": "Release",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Pods/Pods.xcodeproj",
+    "target": "yl_player_apple",
+    "configuration": "Debug",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Pods/Pods.xcodeproj",
+    "target": "yl_player_apple",
+    "configuration": "Profile",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/macos/Pods/Pods.xcodeproj",
+    "target": "yl_player_apple",
+    "configuration": "Release",
+    "floor": "12.0"
+  }
+]

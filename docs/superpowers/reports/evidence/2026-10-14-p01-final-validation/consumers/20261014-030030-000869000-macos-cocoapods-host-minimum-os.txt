@@ -1,0 +1,1493 @@
+{"command": ["otool", "-l", "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/derived-link/Build/Products/Release/apple_consumer.app/Contents/MacOS/apple_consumer"], "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player", "repo_root": "/Users/yy2021_8689/Desktop/Flutter/yl_player", "log": "/private/tmp/p01-final-consumers/logs/20261014-030030-000869000-macos-cocoapods-host-minimum-os.txt"}
+/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/derived-link/Build/Products/Release/apple_consumer.app/Contents/MacOS/apple_consumer (architecture x86_64):
+Load command 0
+      cmd LC_SEGMENT_64
+  cmdsize 72
+  segname __PAGEZERO
+   vmaddr 0x0000000000000000
+   vmsize 0x0000000100000000
+  fileoff 0
+ filesize 0
+  maxprot 0x00000000
+ initprot 0x00000000
+   nsects 0
+    flags 0x0
+Load command 1
+      cmd LC_SEGMENT_64
+  cmdsize 1432
+  segname __TEXT
+   vmaddr 0x0000000100000000
+   vmsize 0x0000000000004000
+  fileoff 0
+ filesize 16384
+  maxprot 0x00000005
+ initprot 0x00000005
+   nsects 17
+    flags 0x0
+Section
+  sectname __text
+   segname __TEXT
+      addr 0x0000000100001730
+      size 0x0000000000001169
+    offset 5936
+     align 2^4 (16)
+    reloff 0
+    nreloc 0
+     flags 0x80000400
+ reserved1 0
+ reserved2 0
+Section
+  sectname __stubs
+   segname __TEXT
+      addr 0x000000010000289a
+      size 0x00000000000000ae
+    offset 10394
+     align 2^1 (2)
+    reloff 0
+    nreloc 0
+     flags 0x80000408
+ reserved1 0 (index into indirect symbol table)
+ reserved2 6 (size of stubs)
+Section
+  sectname __stub_helper
+   segname __TEXT
+      addr 0x0000000100002948
+      size 0x0000000000000152
+    offset 10568
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x80000400
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_classname
+   segname __TEXT
+      addr 0x0000000100002aa0
+      size 0x00000000000000ae
+    offset 10912
+     align 2^4 (16)
+    reloff 0
+    nreloc 0
+     flags 0x00000002
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_methname
+   segname __TEXT
+      addr 0x0000000100002b4e
+      size 0x00000000000000e8
+    offset 11086
+     align 2^0 (1)
+    reloff 0
+    nreloc 0
+     flags 0x00000002
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_methtype
+   segname __TEXT
+      addr 0x0000000100002c40
+      size 0x0000000000000056
+    offset 11328
+     align 2^4 (16)
+    reloff 0
+    nreloc 0
+     flags 0x00000002
+ reserved1 0
+ reserved2 0
+Section
+  sectname __const
+   segname __TEXT
+      addr 0x0000000100002ca0
+      size 0x000000000000008a
+    offset 11424
+     align 2^4 (16)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __constg_swiftt
+   segname __TEXT
+      addr 0x0000000100002d2c
+      size 0x00000000000000c0
+    offset 11564
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __swift5_typeref
+   segname __TEXT
+      addr 0x0000000100002dec
+      size 0x0000000000000065
+    offset 11756
+     align 2^1 (2)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __swift5_fieldmd
+   segname __TEXT
+      addr 0x0000000100002e54
+      size 0x0000000000000040
+    offset 11860
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __cstring
+   segname __TEXT
+      addr 0x0000000100002ea0
+      size 0x00000000000000de
+    offset 11936
+     align 2^4 (16)
+    reloff 0
+    nreloc 0
+     flags 0x00000002
+ reserved1 0
+ reserved2 0
+Section
+  sectname __swift5_types
+   segname __TEXT
+      addr 0x0000000100002f80
+      size 0x000000000000000c
+    offset 12160
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __swift5_entry
+   segname __TEXT
+      addr 0x0000000100002f8c
+      size 0x0000000000000008
+    offset 12172
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __swift5_protos
+   segname __TEXT
+      addr 0x0000000100002f94
+      size 0x0000000000000004
+    offset 12180
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __swift5_proto
+   segname __TEXT
+      addr 0x0000000100002f98
+      size 0x0000000000000004
+    offset 12184
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __unwind_info
+   segname __TEXT
+      addr 0x0000000100002f9c
+      size 0x00000000000000e8
+    offset 12188
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __eh_frame
+   segname __TEXT
+      addr 0x0000000100003088
+      size 0x0000000000000068
+    offset 12424
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x6800000b
+ reserved1 0
+ reserved2 0
+Load command 2
+      cmd LC_SEGMENT_64
+  cmdsize 392
+  segname __DATA_CONST
+   vmaddr 0x0000000100004000
+   vmsize 0x0000000000001000
+  fileoff 16384
+ filesize 4096
+  maxprot 0x00000003
+ initprot 0x00000003
+   nsects 4
+    flags 0x10
+Section
+  sectname __const
+   segname __DATA_CONST
+      addr 0x0000000100004000
+      size 0x00000000000000a0
+    offset 16384
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_classlist
+   segname __DATA_CONST
+      addr 0x00000001000040a0
+      size 0x0000000000000018
+    offset 16544
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x10000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_imageinfo
+   segname __DATA_CONST
+      addr 0x00000001000040b8
+      size 0x0000000000000008
+    offset 16568
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __got
+   segname __DATA_CONST
+      addr 0x00000001000040c0
+      size 0x0000000000000028
+    offset 16576
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000006
+ reserved1 29 (index into indirect symbol table)
+ reserved2 0
+Load command 3
+      cmd LC_SEGMENT_64
+  cmdsize 792
+  segname __DATA
+   vmaddr 0x0000000100005000
+   vmsize 0x0000000000001000
+  fileoff 20480
+ filesize 4096
+  maxprot 0x00000003
+ initprot 0x00000003
+   nsects 9
+    flags 0x0
+Section
+  sectname __la_symbol_ptr
+   segname __DATA
+      addr 0x0000000100005000
+      size 0x00000000000000d8
+    offset 20480
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000007
+ reserved1 34 (index into indirect symbol table)
+ reserved2 0
+Section
+  sectname __objc_const
+   segname __DATA
+      addr 0x00000001000050d8
+      size 0x0000000000000120
+    offset 20696
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_selrefs
+   segname __DATA
+      addr 0x00000001000051f8
+      size 0x0000000000000040
+    offset 20984
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x10000005
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_classrefs
+   segname __DATA
+      addr 0x0000000100005238
+      size 0x0000000000000008
+    offset 21048
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x10000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_data
+   segname __DATA
+      addr 0x0000000100005240
+      size 0x00000000000001e8
+    offset 21056
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __data
+   segname __DATA
+      addr 0x0000000100005428
+      size 0x00000000000000f8
+    offset 21544
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __s_async_hook
+   segname __DATA
+      addr 0x0000000100005520
+      size 0x00000000000001a0
+    offset 21792
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __swift56_hooks
+   segname __DATA
+      addr 0x00000001000056c0
+      size 0x00000000000000b0
+    offset 22208
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __bss
+   segname __DATA
+      addr 0x0000000100005770
+      size 0x0000000000000078
+    offset 0
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000001
+ reserved1 0
+ reserved2 0
+Load command 4
+      cmd LC_SEGMENT_64
+  cmdsize 72
+  segname __LINKEDIT
+   vmaddr 0x0000000100006000
+   vmsize 0x0000000000005000
+  fileoff 24576
+ filesize 17016
+  maxprot 0x00000001
+ initprot 0x00000001
+   nsects 0
+    flags 0x0
+Load command 5
+            cmd LC_DYLD_INFO_ONLY
+        cmdsize 48
+     rebase_off 24576
+    rebase_size 56
+       bind_off 24632
+      bind_size 512
+  weak_bind_off 25144
+ weak_bind_size 24
+  lazy_bind_off 25168
+ lazy_bind_size 912
+     export_off 26080
+    export_size 48
+Load command 6
+     cmd LC_SYMTAB
+ cmdsize 24
+  symoff 26192
+   nsyms 307
+  stroff 31352
+ strsize 10240
+Load command 7
+            cmd LC_DYSYMTAB
+        cmdsize 80
+      ilocalsym 0
+      nlocalsym 243
+     iextdefsym 243
+     nextdefsym 2
+      iundefsym 245
+      nundefsym 62
+         tocoff 0
+           ntoc 0
+      modtaboff 0
+        nmodtab 0
+   extrefsymoff 0
+    nextrefsyms 0
+ indirectsymoff 31104
+  nindirectsyms 61
+      extreloff 0
+        nextrel 0
+      locreloff 0
+        nlocrel 0
+Load command 8
+          cmd LC_LOAD_DYLINKER
+      cmdsize 32
+         name /usr/lib/dyld (offset 12)
+Load command 9
+     cmd LC_UUID
+ cmdsize 24
+    uuid 5BB5E7D8-A7ED-3232-AE45-3F7E0DFE9A37
+Load command 10
+      cmd LC_BUILD_VERSION
+  cmdsize 32
+ platform 1
+    minos 12.0
+      sdk 27.0
+   ntools 1
+     tool 3
+  version 27037.1
+Load command 11
+      cmd LC_SOURCE_VERSION
+  cmdsize 16
+  version 0.0
+Load command 12
+       cmd LC_MAIN
+   cmdsize 24
+  entryoff 6672
+ stacksize 0
+Load command 13
+          cmd LC_LOAD_DYLIB
+      cmdsize 96
+         name /System/Library/Frameworks/AVFAudio.framework/Versions/A/AVFAudio (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1.0.0
+compatibility version 1.0.0
+Load command 14
+          cmd LC_LOAD_DYLIB
+      cmdsize 104
+         name /System/Library/Frameworks/AVFoundation.framework/Versions/A/AVFoundation (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 2.0.0
+compatibility version 1.0.0
+Load command 15
+          cmd LC_LOAD_DYLIB
+      cmdsize 88
+         name /System/Library/Frameworks/AppKit.framework/Versions/C/AppKit (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 2775.10.103
+compatibility version 45.0.0
+Load command 16
+          cmd LC_LOAD_DYLIB
+      cmdsize 104
+         name /System/Library/Frameworks/AudioToolbox.framework/Versions/A/AudioToolbox (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1000.0.0
+compatibility version 1.0.0
+Load command 17
+          cmd LC_LOAD_DYLIB
+      cmdsize 96
+         name /System/Library/Frameworks/CoreMedia.framework/Versions/A/CoreMedia (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 3350.77.5
+compatibility version 1.0.0
+Load command 18
+          cmd LC_LOAD_DYLIB
+      cmdsize 88
+         name /System/Library/Frameworks/Network.framework/Versions/A/Network (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 6681.1.1
+compatibility version 1.0.0
+Load command 19
+          cmd LC_LOAD_DYLIB
+      cmdsize 96
+         name /System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1223.2.2
+compatibility version 1.2.0
+Load command 20
+          cmd LC_LOAD_DYLIB
+      cmdsize 104
+         name /System/Library/Frameworks/VideoToolbox.framework/Versions/A/VideoToolbox (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 3350.77.5
+compatibility version 1.0.0
+Load command 21
+          cmd LC_LOAD_DYLIB
+      cmdsize 88
+         name @rpath/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 0.0.0
+compatibility version 0.0.0
+Load command 22
+          cmd LC_LOAD_DYLIB
+      cmdsize 88
+         name @rpath/yl_player_apple.framework/Versions/A/yl_player_apple (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1.0.0
+compatibility version 1.0.0
+Load command 23
+          cmd LC_LOAD_DYLIB
+      cmdsize 56
+         name /usr/lib/libobjc.A.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 228.0.0
+compatibility version 1.0.0
+Load command 24
+          cmd LC_LOAD_DYLIB
+      cmdsize 56
+         name /usr/lib/libSystem.B.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1359.0.0
+compatibility version 1.0.0
+Load command 25
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 72
+         name /usr/lib/swift/libswiftAVFoundation.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 2450.77.5
+compatibility version 1.0.0
+Load command 26
+          cmd LC_LOAD_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftCore.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 0.0.0
+compatibility version 0.0.0
+Load command 27
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftCoreAudio.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 482.102.10
+compatibility version 1.0.0
+Load command 28
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 72
+         name /usr/lib/swift/libswiftCoreFoundation.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 120.100.0
+compatibility version 1.0.0
+Load command 29
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftCoreImage.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 3.0.0
+compatibility version 1.0.0
+Load command 30
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftCoreMIDI.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 6.0.0
+compatibility version 1.0.0
+Load command 31
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftDarwin.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 428.0.10
+compatibility version 1.0.0
+Load command 32
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftDispatch.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1605.0.2
+compatibility version 1.0.0
+Load command 33
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftIOKit.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1.0.0
+compatibility version 1.0.0
+Load command 34
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftMetal.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 382.5.3
+compatibility version 1.0.0
+Load command 35
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftOSLog.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 10.0.0
+compatibility version 1.0.0
+Load command 36
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftObjectiveC.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 973.1.0
+compatibility version 1.0.0
+Load command 37
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftQuartzCore.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 5.0.0
+compatibility version 1.0.0
+Load command 38
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftSpatial.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1.0.0
+compatibility version 1.0.0
+Load command 39
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 80
+         name /usr/lib/swift/libswiftUniformTypeIdentifiers.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 917.0.1
+compatibility version 1.0.0
+Load command 40
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftXPC.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 167.0.2
+compatibility version 1.0.0
+Load command 41
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 56
+         name /usr/lib/swift/libswiftos.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1090.0.0
+compatibility version 1.0.0
+Load command 42
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftsimd.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 25.0.0
+compatibility version 1.0.0
+Load command 43
+          cmd LC_LOAD_DYLIB
+      cmdsize 80
+         name @rpath/FlutterMacOS.framework/Versions/A/FlutterMacOS (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 0.0.0
+compatibility version 0.0.0
+Load command 44
+          cmd LC_LOAD_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftAppKit.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1.0.0
+compatibility version 1.0.0
+Load command 45
+          cmd LC_LOAD_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftFoundation.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1.0.0
+compatibility version 1.0.0
+Load command 46
+          cmd LC_RPATH
+      cmdsize 32
+         path /usr/lib/swift (offset 12)
+Load command 47
+          cmd LC_RPATH
+      cmdsize 48
+         path @executable_path/../Frameworks (offset 12)
+Load command 48
+          cmd LC_RPATH
+      cmdsize 40
+         path @loader_path/Frameworks (offset 12)
+Load command 49
+          cmd LC_RPATH
+      cmdsize 112
+         path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx (offset 12)
+Load command 50
+      cmd LC_FUNCTION_STARTS
+  cmdsize 16
+  dataoff 26128
+ datasize 64
+Load command 51
+      cmd LC_DATA_IN_CODE
+  cmdsize 16
+  dataoff 26192
+ datasize 0
+/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/derived-link/Build/Products/Release/apple_consumer.app/Contents/MacOS/apple_consumer (architecture arm64):
+Load command 0
+      cmd LC_SEGMENT_64
+  cmdsize 72
+  segname __PAGEZERO
+   vmaddr 0x0000000000000000
+   vmsize 0x0000000100000000
+  fileoff 0
+ filesize 0
+  maxprot 0x00000000
+ initprot 0x00000000
+   nsects 0
+    flags 0x0
+Load command 1
+      cmd LC_SEGMENT_64
+  cmdsize 1512
+  segname __TEXT
+   vmaddr 0x0000000100000000
+   vmsize 0x0000000000004000
+  fileoff 0
+ filesize 16384
+  maxprot 0x00000005
+ initprot 0x00000005
+   nsects 18
+    flags 0x0
+Section
+  sectname __text
+   segname __TEXT
+      addr 0x0000000100001720
+      size 0x0000000000000fd8
+    offset 5920
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x80000400
+ reserved1 0
+ reserved2 0
+Section
+  sectname __stubs
+   segname __TEXT
+      addr 0x00000001000026f8
+      size 0x000000000000015c
+    offset 9976
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x80000408
+ reserved1 0 (index into indirect symbol table)
+ reserved2 12 (size of stubs)
+Section
+  sectname __objc_stubs
+   segname __TEXT
+      addr 0x0000000100002860
+      size 0x00000000000000a0
+    offset 10336
+     align 2^5 (32)
+    reloff 0
+    nreloc 0
+     flags 0x80000400
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_methlist
+   segname __TEXT
+      addr 0x0000000100002900
+      size 0x0000000000000050
+    offset 10496
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_classname
+   segname __TEXT
+      addr 0x0000000100002950
+      size 0x00000000000000ae
+    offset 10576
+     align 2^4 (16)
+    reloff 0
+    nreloc 0
+     flags 0x00000002
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_methname
+   segname __TEXT
+      addr 0x00000001000029fe
+      size 0x00000000000000e8
+    offset 10750
+     align 2^0 (1)
+    reloff 0
+    nreloc 0
+     flags 0x00000002
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_methtype
+   segname __TEXT
+      addr 0x0000000100002af0
+      size 0x0000000000000056
+    offset 10992
+     align 2^4 (16)
+    reloff 0
+    nreloc 0
+     flags 0x00000002
+ reserved1 0
+ reserved2 0
+Section
+  sectname __const
+   segname __TEXT
+      addr 0x0000000100002b50
+      size 0x000000000000008a
+    offset 11088
+     align 2^4 (16)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __constg_swiftt
+   segname __TEXT
+      addr 0x0000000100002bdc
+      size 0x00000000000000c0
+    offset 11228
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __swift5_typeref
+   segname __TEXT
+      addr 0x0000000100002c9c
+      size 0x0000000000000065
+    offset 11420
+     align 2^1 (2)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __swift5_fieldmd
+   segname __TEXT
+      addr 0x0000000100002d04
+      size 0x0000000000000040
+    offset 11524
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __cstring
+   segname __TEXT
+      addr 0x0000000100002d50
+      size 0x00000000000000de
+    offset 11600
+     align 2^4 (16)
+    reloff 0
+    nreloc 0
+     flags 0x00000002
+ reserved1 0
+ reserved2 0
+Section
+  sectname __swift5_types
+   segname __TEXT
+      addr 0x0000000100002e30
+      size 0x000000000000000c
+    offset 11824
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __swift5_entry
+   segname __TEXT
+      addr 0x0000000100002e3c
+      size 0x0000000000000008
+    offset 11836
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __swift5_protos
+   segname __TEXT
+      addr 0x0000000100002e44
+      size 0x0000000000000004
+    offset 11844
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __swift5_proto
+   segname __TEXT
+      addr 0x0000000100002e48
+      size 0x0000000000000004
+    offset 11848
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __unwind_info
+   segname __TEXT
+      addr 0x0000000100002e4c
+      size 0x00000000000000f0
+    offset 11852
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __eh_frame
+   segname __TEXT
+      addr 0x0000000100002f40
+      size 0x0000000000000068
+    offset 12096
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x6800000b
+ reserved1 0
+ reserved2 0
+Load command 2
+      cmd LC_SEGMENT_64
+  cmdsize 392
+  segname __DATA_CONST
+   vmaddr 0x0000000100004000
+   vmsize 0x0000000000004000
+  fileoff 16384
+ filesize 16384
+  maxprot 0x00000003
+ initprot 0x00000003
+   nsects 4
+    flags 0x10
+Section
+  sectname __const
+   segname __DATA_CONST
+      addr 0x0000000100004000
+      size 0x00000000000000a0
+    offset 16384
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_classlist
+   segname __DATA_CONST
+      addr 0x00000001000040a0
+      size 0x0000000000000018
+    offset 16544
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x10000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_imageinfo
+   segname __DATA_CONST
+      addr 0x00000001000040b8
+      size 0x0000000000000008
+    offset 16568
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __got
+   segname __DATA_CONST
+      addr 0x00000001000040c0
+      size 0x00000000000000f0
+    offset 16576
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000006
+ reserved1 29 (index into indirect symbol table)
+ reserved2 0
+Load command 3
+      cmd LC_SEGMENT_64
+  cmdsize 712
+  segname __DATA
+   vmaddr 0x0000000100008000
+   vmsize 0x0000000000004000
+  fileoff 32768
+ filesize 16384
+  maxprot 0x00000003
+ initprot 0x00000003
+   nsects 8
+    flags 0x0
+Section
+  sectname __objc_const
+   segname __DATA
+      addr 0x0000000100008000
+      size 0x0000000000000120
+    offset 32768
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_selrefs
+   segname __DATA
+      addr 0x0000000100008120
+      size 0x0000000000000050
+    offset 33056
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x10000005
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_classrefs
+   segname __DATA
+      addr 0x0000000100008170
+      size 0x0000000000000008
+    offset 33136
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x10000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_data
+   segname __DATA
+      addr 0x0000000100008178
+      size 0x0000000000000160
+    offset 33144
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __data
+   segname __DATA
+      addr 0x00000001000082d8
+      size 0x00000000000000e9
+    offset 33496
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __s_async_hook
+   segname __DATA
+      addr 0x00000001000083c8
+      size 0x00000000000001a0
+    offset 33736
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __swift56_hooks
+   segname __DATA
+      addr 0x0000000100008568
+      size 0x00000000000000b0
+    offset 34152
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __bss
+   segname __DATA
+      addr 0x0000000100008618
+      size 0x0000000000000078
+    offset 0
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000001
+ reserved1 0
+ reserved2 0
+Load command 4
+      cmd LC_SEGMENT_64
+  cmdsize 72
+  segname __LINKEDIT
+   vmaddr 0x000000010000c000
+   vmsize 0x0000000000008000
+  fileoff 49152
+ filesize 17648
+  maxprot 0x00000001
+ initprot 0x00000001
+   nsects 0
+    flags 0x0
+Load command 5
+      cmd LC_DYLD_CHAINED_FIXUPS
+  cmdsize 16
+  dataoff 49152
+ datasize 1344
+Load command 6
+      cmd LC_DYLD_EXPORTS_TRIE
+  cmdsize 16
+  dataoff 50496
+ datasize 48
+Load command 7
+     cmd LC_SYMTAB
+ cmdsize 24
+  symoff 50608
+   nsyms 308
+  stroff 55776
+ strsize 10352
+Load command 8
+            cmd LC_DYSYMTAB
+        cmdsize 80
+      ilocalsym 0
+      nlocalsym 246
+     iextdefsym 246
+     nextdefsym 2
+      iundefsym 248
+      nundefsym 60
+         tocoff 0
+           ntoc 0
+      modtaboff 0
+        nmodtab 0
+   extrefsymoff 0
+    nextrefsyms 0
+ indirectsymoff 55536
+  nindirectsyms 59
+      extreloff 0
+        nextrel 0
+      locreloff 0
+        nlocrel 0
+Load command 9
+          cmd LC_LOAD_DYLINKER
+      cmdsize 32
+         name /usr/lib/dyld (offset 12)
+Load command 10
+     cmd LC_UUID
+ cmdsize 24
+    uuid 8EC2ACAA-5E79-32F6-90FF-F619AE39665F
+Load command 11
+      cmd LC_BUILD_VERSION
+  cmdsize 32
+ platform 1
+    minos 12.0
+      sdk 27.0
+   ntools 1
+     tool 3
+  version 27037.1
+Load command 12
+      cmd LC_SOURCE_VERSION
+  cmdsize 16
+  version 0.0
+Load command 13
+       cmd LC_MAIN
+   cmdsize 24
+  entryoff 6604
+ stacksize 0
+Load command 14
+          cmd LC_LOAD_DYLIB
+      cmdsize 96
+         name /System/Library/Frameworks/AVFAudio.framework/Versions/A/AVFAudio (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1.0.0
+compatibility version 1.0.0
+Load command 15
+          cmd LC_LOAD_DYLIB
+      cmdsize 104
+         name /System/Library/Frameworks/AVFoundation.framework/Versions/A/AVFoundation (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 2.0.0
+compatibility version 1.0.0
+Load command 16
+          cmd LC_LOAD_DYLIB
+      cmdsize 88
+         name /System/Library/Frameworks/AppKit.framework/Versions/C/AppKit (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 2775.10.103
+compatibility version 45.0.0
+Load command 17
+          cmd LC_LOAD_DYLIB
+      cmdsize 104
+         name /System/Library/Frameworks/AudioToolbox.framework/Versions/A/AudioToolbox (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1000.0.0
+compatibility version 1.0.0
+Load command 18
+          cmd LC_LOAD_DYLIB
+      cmdsize 96
+         name /System/Library/Frameworks/CoreMedia.framework/Versions/A/CoreMedia (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 3350.77.5
+compatibility version 1.0.0
+Load command 19
+          cmd LC_LOAD_DYLIB
+      cmdsize 88
+         name /System/Library/Frameworks/Network.framework/Versions/A/Network (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 6681.1.1
+compatibility version 1.0.0
+Load command 20
+          cmd LC_LOAD_DYLIB
+      cmdsize 96
+         name /System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1223.2.2
+compatibility version 1.2.0
+Load command 21
+          cmd LC_LOAD_DYLIB
+      cmdsize 104
+         name /System/Library/Frameworks/VideoToolbox.framework/Versions/A/VideoToolbox (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 3350.77.5
+compatibility version 1.0.0
+Load command 22
+          cmd LC_LOAD_DYLIB
+      cmdsize 88
+         name @rpath/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 0.0.0
+compatibility version 0.0.0
+Load command 23
+          cmd LC_LOAD_DYLIB
+      cmdsize 88
+         name @rpath/yl_player_apple.framework/Versions/A/yl_player_apple (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1.0.0
+compatibility version 1.0.0
+Load command 24
+          cmd LC_LOAD_DYLIB
+      cmdsize 56
+         name /usr/lib/libobjc.A.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 228.0.0
+compatibility version 1.0.0
+Load command 25
+          cmd LC_LOAD_DYLIB
+      cmdsize 56
+         name /usr/lib/libSystem.B.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1359.0.0
+compatibility version 1.0.0
+Load command 26
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 72
+         name /usr/lib/swift/libswiftAVFoundation.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 2450.77.5
+compatibility version 1.0.0
+Load command 27
+          cmd LC_LOAD_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftCore.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 0.0.0
+compatibility version 0.0.0
+Load command 28
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftCoreAudio.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 482.102.10
+compatibility version 1.0.0
+Load command 29
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 72
+         name /usr/lib/swift/libswiftCoreFoundation.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 120.100.0
+compatibility version 1.0.0
+Load command 30
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftCoreImage.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 3.0.0
+compatibility version 1.0.0
+Load command 31
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftCoreMIDI.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 6.0.0
+compatibility version 1.0.0
+Load command 32
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftDarwin.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 428.0.10
+compatibility version 1.0.0
+Load command 33
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftDispatch.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1605.0.2
+compatibility version 1.0.0
+Load command 34
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftIOKit.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1.0.0
+compatibility version 1.0.0
+Load command 35
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftMetal.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 382.5.3
+compatibility version 1.0.0
+Load command 36
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftOSLog.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 10.0.0
+compatibility version 1.0.0
+Load command 37
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftObjectiveC.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 973.1.0
+compatibility version 1.0.0
+Load command 38
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftQuartzCore.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 5.0.0
+compatibility version 1.0.0
+Load command 39
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftSpatial.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1.0.0
+compatibility version 1.0.0
+Load command 40
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 80
+         name /usr/lib/swift/libswiftUniformTypeIdentifiers.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 917.0.1
+compatibility version 1.0.0
+Load command 41
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftXPC.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 167.0.2
+compatibility version 1.0.0
+Load command 42
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 56
+         name /usr/lib/swift/libswiftos.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1090.0.0
+compatibility version 1.0.0
+Load command 43
+          cmd LC_LOAD_WEAK_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftsimd.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 25.0.0
+compatibility version 1.0.0
+Load command 44
+          cmd LC_LOAD_DYLIB
+      cmdsize 80
+         name @rpath/FlutterMacOS.framework/Versions/A/FlutterMacOS (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 0.0.0
+compatibility version 0.0.0
+Load command 45
+          cmd LC_LOAD_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftAppKit.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1.0.0
+compatibility version 1.0.0
+Load command 46
+          cmd LC_LOAD_DYLIB
+      cmdsize 64
+         name /usr/lib/swift/libswiftFoundation.dylib (offset 24)
+   time stamp 2 Wed Dec 31 16:00:02 1969
+      current version 1.0.0
+compatibility version 1.0.0
+Load command 47
+          cmd LC_RPATH
+      cmdsize 32
+         path /usr/lib/swift (offset 12)
+Load command 48
+          cmd LC_RPATH
+      cmdsize 48
+         path @executable_path/../Frameworks (offset 12)
+Load command 49
+          cmd LC_RPATH
+      cmdsize 40
+         path @loader_path/Frameworks (offset 12)
+Load command 50
+          cmd LC_RPATH
+      cmdsize 112
+         path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx (offset 12)
+Load command 51
+      cmd LC_FUNCTION_STARTS
+  cmdsize 16
+  dataoff 50544
+ datasize 64
+Load command 52
+      cmd LC_DATA_IN_CODE
+  cmdsize 16
+  dataoff 50608
+ datasize 0
+Load command 53
+      cmd LC_CODE_SIGNATURE
+  cmdsize 16
+  dataoff 66128
+ datasize 672

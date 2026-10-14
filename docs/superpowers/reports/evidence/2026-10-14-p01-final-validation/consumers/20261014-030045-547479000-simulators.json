@@ -1,0 +1,14 @@
+{
+  "command": [
+    "xcrun",
+    "simctl",
+    "list",
+    "devices",
+    "available",
+    "-j"
+  ],
+  "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player",
+  "repo_root": "/Users/yy2021_8689/Desktop/Flutter/yl_player",
+  "log": "/private/tmp/p01-final-consumers/logs/20261014-030045-547479000-simulators.txt",
+  "exit_code": 0
+}

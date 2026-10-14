@@ -1,0 +1,18 @@
+[
+  {
+    "architectures": [
+      "arm64",
+      "x86_64"
+    ],
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "architectures": [
+      "arm64",
+      "armv7"
+    ],
+    "exit": 1,
+    "stderr": ""
+  }
+]

@@ -1,0 +1,20 @@
+E
+======================================================================
+ERROR: test_lipo_verify_compat (unittest.loader._FailedTest.test_lipo_verify_compat)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_lipo_verify_compat
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/consumer_fixtures/apple_flutter/test_lipo_verify_compat.py", line 3, in <module>
+    from lipo_verify_compat import run
+ModuleNotFoundError: No module named 'lipo_verify_compat'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

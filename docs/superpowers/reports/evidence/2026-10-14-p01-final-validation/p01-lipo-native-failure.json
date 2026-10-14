@@ -1,0 +1,46 @@
+[
+  {
+    "command": [
+      "/usr/bin/lipo",
+      "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/derived-link/Build/Products/Release/FlutterMacOS.framework/Versions/A/FlutterMacOS",
+      "-archs"
+    ],
+    "exit": 0,
+    "stdout": "x86_64 arm64\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/usr/bin/lipo",
+      "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/derived-link/Build/Products/Release/FlutterMacOS.framework/Versions/A/FlutterMacOS",
+      "-verify_arch",
+      "arm64",
+      "x86_64"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "lipo: -verify_arch requires exactly one input file\n"
+  },
+  {
+    "command": [
+      "/usr/bin/lipo",
+      "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/derived-link/Build/Products/Release/FlutterMacOS.framework/Versions/A/FlutterMacOS",
+      "-verify_arch",
+      "arm64"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/usr/bin/lipo",
+      "/private/tmp/p01-final-consumers/apple/macos-cocoapods-link/derived-link/Build/Products/Release/FlutterMacOS.framework/Versions/A/FlutterMacOS",
+      "-verify_arch",
+      "x86_64"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

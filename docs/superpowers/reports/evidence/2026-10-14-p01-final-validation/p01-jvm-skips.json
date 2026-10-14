@@ -1,0 +1,17 @@
+[
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpExtractorTest",
+    "name": "independent MediaMTX peer feeds AVC AAC samples to pinned extractor()",
+    "reason": "Assumption failed: Optional independent owned loopback peer is not running"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpExtractorTest",
+    "name": "independent video-only peer formats every declared track()",
+    "reason": "Assumption failed: Optional independent owned loopback peer is not running"
+  },
+  {
+    "class": "dev.ylplayer.yl_player_android.YlRtmpExtractorTest",
+    "name": "independent peer transfers more than three negotiated ACK windows()",
+    "reason": "Assumption failed: Optional independent owned loopback peer is not running"
+  }
+]

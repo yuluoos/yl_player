@@ -1,0 +1,13 @@
+{"command": ["nm", "-gU", "/private/tmp/p01-final-consumers/apple/macos-swiftpm-link/derived-link/Build/Products/Release/apple_consumer.app/Contents/MacOS/apple_consumer"], "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player", "repo_root": "/Users/yy2021_8689/Desktop/Flutter/yl_player", "log": "/private/tmp/p01-final-consumers/logs/20261014-030420-845088000-macos-swiftpm-plugin-symbols-raw.txt"}
+00000001001b1924 T _$s15yl_player_apple19YlPlayerApplePluginC16detachFromEngine3forySo07FlutterG9Registrar_p_tF
+00000001001b0d68 T _$s15yl_player_apple19YlPlayerApplePluginC8register4withySo07FlutterG9Registrar_p_tFZ
+00000001001b19b8 T _$s15yl_player_apple19YlPlayerApplePluginCACycfC
+00000001001c0684 T _$s15yl_player_apple19YlPlayerApplePluginCACycfc
+00000001001b766c T _$s15yl_player_apple19YlPlayerApplePluginCMa
+00000001001e5348 S _$s15yl_player_apple19YlPlayerApplePluginCMn
+0000000100240830 S _$s15yl_player_apple19YlPlayerApplePluginCN
+00000001001b19fc T _$s15yl_player_apple19YlPlayerApplePluginCfD
+0000000100240830 S _OBJC_CLASS_$__TtC15yl_player_apple19YlPlayerApplePlugin
+000000010024e3d8 D _OBJC_METACLASS_$__TtC15yl_player_apple19YlPlayerApplePlugin
+0000000100000000 T __mh_execute_header
+000000010000208c T _main

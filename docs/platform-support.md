@@ -15,7 +15,7 @@ actual source and requirements before Load.
 | Network MP4/MOV | Supported with Media3 | Supported only without request headers or credentials | Managed request rejected |
 | HLS without request metadata | Supported | Supported; VOD HEVC-in-MPEG-TS media playlists use managed demux + VideoToolbox | Managed request rejected |
 | HLS with ordinary headers or credentials | Supported subject to Android origin filtering | Inspection-dependent controlled manifest/key/media-proxy route; same-origin credentials enforced | Managed request rejected |
-| Static clear DASH (`dash` or `.mpd`) | Owned Media3 1.11.0 DASH route; current validation described below | Inspection-dependent private HLS adaptation for a bounded static AVC/AAC fMP4 subset | Not selected |
+| Static clear DASH (`dash` or `.mpd`) | Owned Media3 1.11.0 DASH route; current validation described below | Retained private HLS adapter for its compatible subset | Owned sample programme route for admitted static AVC/HEVC/AAC fMP4 |
 | Local Matroska | Supported subject to Media3 | Not selected | Inspection-dependent; supported H.264/H.265 video with supported compressed audio; FLAC scope below |
 | Network Matroska VOD | Supported subject to Media3 | Not selected | Inspection-dependent owned byte route |
 | Network Matroska marked live | Media3 route; runtime-dependent | Not selected | Rejected |
@@ -102,7 +102,7 @@ or real subscription availability.
 | Requirement | Android Media3 | Apple AVPlayer | Apple managed fallback |
 |---|---|---|---|
 | `network.platformDefault` | Supported; exact system behavior is opaque | Supported where the selected route can enforce credential origin rules | Supported on owned byte routes |
-| `network.managed` | Supported by the Android managed Media3 data-source policy | Rejected | Supported only for network Matroska/FLV after route/inspection checks |
+| `network.managed` | Supported by the Android managed Media3 data-source policy | Rejected | Supported for admitted network Matroska/FLV and clear DASH programme routes after inspection |
 | `buffer.automatic`, `lowLatency`, `smoothPlayback` | Supported as tuning goals | Supported as tuning goals | Supported as tuning goals |
 | `buffer.bounded` | Rejected | Rejected | Supported subject to codec/timing inspection and Player-wide ledger admission |
 | `decoder.systemDefault` | Supported; actual decoder mode reported | Supported; decoder mode remains unknown | Supported; measured mode reported |
@@ -138,6 +138,50 @@ matrices, remote CI, and the complete canonical regression/release matrix.
 
 ## DASH implementation boundary
 
+### Exact programme route (P01)
+
+Clear, static HTTP(S) DASH uses one programme timeline across Periods. Apple
+retains its legacy HLS adapter for the subset below and uses the owned sample
+backend when independent timing, clipping, reconfiguration or explicit managed
+policies require it. Android composes declared Period windows around Media3 and
+keeps decoded PCM and video visibility inside those windows. No production
+remux or whole-programme download is used.
+
+| Admitted capability | Android | iOS / macOS |
+| --- | --- | --- |
+| Independent audio/video PTO; non-integer microsecond boundaries | Exact declaration model; Media3/public clock projection at boundaries | Checked rational sample-to-programme mapping |
+| Cropped Period endpoint; explicit gap/overlap | PCM clipping/silence; declared programme windows; video-gap clearing | Sample/PCM clipping; silence; output clearing; later Period owns overlap |
+| Unknown middle duration | Adjacent start or agreeing finite AV timeline/list evidence; SegmentBase needs declared/adjacent duration | Adjacent start or agreeing finite AV references, including resolved sidx; ambiguous/unbounded duration rejected |
+| Multiple BaseURL with managed networking | Declared order; one HTTP-call retry/redirect budget; sticky stripping | Ordered logical resources with shared budgets and cancellation |
+| Same-SDR AVC → HEVC and resolution changes | Actual decoder output and compatible-family selection | Transactional decoder/audio/output preparation and commit |
+| Audio addition/removal and explicit intent | Semantic identity survives Period/restore; missing explicit content fails | Same content intent; failed candidate cannot replace accepted selection |
+| MPD VTT/TTML/wvtt/stpp | Managed discovery/selection, programme cues, actual Flutter composition | Same Dart runtime; actual native-window plus Flutter composition |
+
+Automatic video selection stays inside compatible HDR/SDR/Dolby families.
+Unsupported Dolby paths reject explicitly; full FEL information is preserved and
+this route does not silently fall back to the base layer. This is not a claim
+that every P03 codec or Dolby display path is implemented. A missing fixed video
+track follows PD-01 (automatic selection with independent caps retained).
+
+Text subtitles require the existing opt-in runtime and discovery/selection APIs.
+Subtitle errors are command-scoped and video continues. Valid cues survive a
+video-only gap; with no current video aperture they use the bounded view area.
+Explicit `dash` works for extensionless URLs; automatic admission requires the
+`.mpd` URI path. Static admission does not imply live/dynamic or encrypted DASH.
+
+Managed candidate switching does not concatenate bodies from different origins.
+After response acquisition, validated body resume stays on that entity/URL.
+Android rejects conflicting ordered candidate groups sharing a bare HTTP URL,
+rather than guessing resource identity. Existing graph/URI/resource limits apply.
+
+See the [P01 execution report](superpowers/reports/2026-09-26-remaining-01-dash.md)
+for exact source/media hashes and separate native, compositor, PCM and lifecycle
+evidence. Native consumption clocks and simulator screenshots are not physical
+speaker/display measurements. Minimum-target compilation and current-OS execution
+are separate from minimum-OS or missing-device runtime certification.
+
+### Android admission and retained network limits
+
 `YlMediaFormat.dash` appends ordinal 10; existing format ordinals 0–9 are unchanged.
 Android recognizes `.mpd` from the URI path (independent of query) and honors an
 explicit DASH hint on extensionless URLs. The same Media3 1.11.0 module, owned
@@ -146,7 +190,8 @@ initialization/index requests and media. DASH never selects the FFmpeg fallback.
 `buffer.bounded` stays rejected; hardware-required decoding retains its existing
 positive-evidence requirement.
 
-The initial parser accepts clear, static MPDs with known positive period durations.
+The parser accepts clear, static MPDs whose positive Period windows are explicit
+or determinable from authoritative adjacent starts or agreeing finite evidence.
 Media3 expands finite SegmentTemplate/Timeline/List URLs; SegmentBase supports
 initialization and index URLs plus byte-range media in the same representation
 resource. Each BaseURL ancestor and resolved request URI is registered before
@@ -180,8 +225,11 @@ route and network-policy implementation. Six Android 16 / API 36 emulator
 integration cases pass for the synthetic two-Period H.264/AAC fixture: actual
 first-frame, program-time seek/resume/completion, request credential ancestry,
 safe HTTP 403 failure, and active/pending Stop. This is a controlled fixture
-result, not a general stream/device matrix; see the [implementation report](superpowers/reports/2026-09-22-dash-foundation.md). Apple
-now routes explicit DASH and automatic `.mpd` network VOD to an inspected private
+result, not a general stream/device matrix; see the [implementation report](superpowers/reports/2026-09-22-dash-foundation.md).
+
+### Retained Apple HLS-adapter subset
+
+The legacy adapter routes explicit DASH and automatic `.mpd` network VOD to an inspected private
 HLS adapter and AVPlayer. The original DASH identity is retained. Its initial
 subset accepts one video AdaptationSet with up to 16 compatible AVC representations
 and up to 16 AAC-LC audio AdaptationSets per Period (one Representation each),
@@ -235,7 +283,7 @@ microsecond Period endpoints remain rejected; this does not add independent
 A/V offsets, endpoint cropping or gap/overlap support. The P01 report separates
 offline decoded markers, direct HLS experiments and public player evidence.
 
-Local/live DASH, dynamic or encrypted MPD, unsupported SegmentBase forms, unaligned or independently shifted rendition offsets, gaps or
+For this legacy HLS adapter, local/live DASH, dynamic or encrypted MPD, unsupported SegmentBase forms, unaligned or independently shifted rendition offsets, gaps or
 overlaps, incompatible changing ladders, multiple video AdaptationSets, multiple
 audio Representations within one AdaptationSet and audio identity/codec changes
 remain rejected by the Apple subset.
@@ -249,9 +297,9 @@ cases pass on each of macOS 27 arm64 and iOS 27 arm64 Simulator for the syntheti
 two-Period AVC/AAC fixture: real first-frame output, natural Period transition,
 forward/backward seek and completion, credential ancestry, failed-candidate
 rollback, cancellation, safe errors and strict-policy rejection. See the [Apple implementation report](superpowers/reports/2026-09-22-apple-dash-adapter.md)
-for executed evidence and limitations. Full Apple DASH coverage, DRM, full
-ABR/subtitle matrices and cross-device coverage remain part of the accepted
-delivery scope and are not completed here.
+for the historical adapter evidence and limitations. The exact programme route
+above extends that baseline; DRM, weak-network ABR and broader device coverage
+are separate from the P01 programme measurements.
 
 The subsequent compatible-ladder extension passed 45 focused compiler/loader
 tests on each of macOS and iOS Simulator, and one public playback case per

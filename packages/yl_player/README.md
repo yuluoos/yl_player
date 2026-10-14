@@ -244,9 +244,13 @@ deadlines, retry/redirect budgets and credential origin restrictions apply to th
 whole discovery. Later ranges use If-Match; changed versions fail atomically.
 The scan uses a bounded cache and request/byte budgets, with no full-body fallback.
 
-Separate initialization/media segment URLs, HLS/DASH and native subtitle callbacks remain
-unsupported. No additional native subtitle capability or physical-device
-acceptance is claimed. See the [embedded subset contract](../../docs/superpowers/specs/2026-10-11-subtitle-embedded.md)
+For clear static DASH, the same discovery API also reads MPD text tracks:
+WebVTT/TTML and fragmented MP4 `wvtt`/`stpp`, including separate initialization
+and media URLs. Selected current/next segments use the source network policy,
+with Period/PTO mapped to programme time. Seek, stop and replacement discard
+stale cues; subtitle failure is isolated and video continues. HLS subtitle
+discovery and native subtitle callbacks remain unsupported. This does not claim
+physical-device acceptance. See the [embedded subset contract](../../docs/superpowers/specs/2026-10-11-subtitle-embedded.md)
 the [network range contract](../../docs/superpowers/specs/2026-10-11-subtitle-network-matroska.md)
 and [MP4 contract](../../docs/superpowers/specs/2026-10-11-subtitle-mp4.md).
 
@@ -355,12 +359,16 @@ Select audio using an ID from the current session's `audioTracks` catalog and
 including main and commentary tracks in the same language. Command completion
 acknowledges selection; it does not prove physical audible output.
 
-The Apple static clear DASH subset supports up to 16 AAC-LC audio AdaptationSets
-with one Representation each. Every Period must keep the same complete semantic
-identity set; ordering may change. Same-session quality replacement retains the
-chosen track. Ordinary AVPlayer restoration uses system option identities and
-reports `track.not_found` if the chosen option disappears. New loads reset the
-choice. This does not add audio ABR, mixing or strict managed DASH admission.
+The retained Apple DASH-to-HLS adapter supports up to 16 AAC-LC audio
+AdaptationSets with one Representation each and a stable semantic identity set.
+The owned DASH programme path additionally handles changing Period catalogs,
+independent track timing and managed networking. Added tracks preserve an
+existing selection; missing explicitly selected content reports `track.not_found`
+without substituting another track. Same-session quality replacement and
+restoration retain the choice; new loads reset it. Ordinary AVPlayer restoration
+uses system option identities. This does not add audio ABR or mixing. See the
+[programme support matrix](../../docs/platform-support.md#exact-programme-route-p01)
+for codec, timing and policy boundaries.
 
 Android exposes one logical audio choice per Media3 group. DASH choices use
 declared AdaptationSet identity and semantic metadata, so Representation rename,

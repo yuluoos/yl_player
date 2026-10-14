@@ -1,0 +1,15 @@
+Resolving dependencies in `/private/tmp/p01-final-consumers/android`...
+Downloading packages...
+  characters 1.4.1 (from direct dependency to transitive dependency)
+  collection 1.19.1 (from direct dependency to transitive dependency)
++ flutter 0.0.0 from sdk flutter
+  material_color_utilities 0.13.0 (from direct dependency to transitive dependency) (0.13.1 available)
+  meta 1.18.0 (from direct dependency to transitive dependency) (1.19.0 available)
++ plugin_platform_interface 2.1.8
++ sky_engine 0.0.0 from sdk flutter
+  vector_math 2.2.0 (from direct dependency to transitive dependency) (2.4.3 available)
++ yl_player_android 0.2.0-dev.2 from path /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android
+! yl_player_platform_interface 0.2.0-dev.2 from path /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface (overridden)
+Changed 9 dependencies in `/private/tmp/p01-final-consumers/android`!
+3 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.

@@ -1,0 +1,75 @@
+{"command": ["ruby", "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/consumer_fixtures/apple_flutter/verify_project.rb", "/private/tmp/p01-final-consumers/apple/macos-swiftpm-link", "macos", "swiftpm"], "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player", "repo_root": "/Users/yy2021_8689/Desktop/Flutter/yl_player", "log": "/private/tmp/p01-final-consumers/logs/20261014-030131-279356000-macos-swiftpm-target-floors.txt"}
+[
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-swiftpm-link/macos/Runner.xcodeproj",
+    "target": "project",
+    "configuration": "Debug",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-swiftpm-link/macos/Runner.xcodeproj",
+    "target": "project",
+    "configuration": "Release",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-swiftpm-link/macos/Runner.xcodeproj",
+    "target": "project",
+    "configuration": "Profile",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-swiftpm-link/macos/Runner.xcodeproj",
+    "target": "Runner",
+    "configuration": "Debug",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-swiftpm-link/macos/Runner.xcodeproj",
+    "target": "Runner",
+    "configuration": "Release",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-swiftpm-link/macos/Runner.xcodeproj",
+    "target": "Runner",
+    "configuration": "Profile",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-swiftpm-link/macos/Runner.xcodeproj",
+    "target": "RunnerTests",
+    "configuration": "Debug",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-swiftpm-link/macos/Runner.xcodeproj",
+    "target": "RunnerTests",
+    "configuration": "Release",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-swiftpm-link/macos/Runner.xcodeproj",
+    "target": "RunnerTests",
+    "configuration": "Profile",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-swiftpm-link/macos/Runner.xcodeproj",
+    "target": "Flutter Assemble",
+    "configuration": "Debug",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-swiftpm-link/macos/Runner.xcodeproj",
+    "target": "Flutter Assemble",
+    "configuration": "Release",
+    "floor": "12.0"
+  },
+  {
+    "project": "/private/tmp/p01-final-consumers/apple/macos-swiftpm-link/macos/Runner.xcodeproj",
+    "target": "Flutter Assemble",
+    "configuration": "Profile",
+    "floor": "12.0"
+  }
+]

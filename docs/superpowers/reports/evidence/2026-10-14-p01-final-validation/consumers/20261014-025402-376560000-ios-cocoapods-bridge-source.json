@@ -1,0 +1,14 @@
+{
+  "command": [
+    "lipo",
+    "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/YlFFmpegBridge",
+    "-thin",
+    "arm64",
+    "-output",
+    "/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-bridge-identity-h55c6adg/source"
+  ],
+  "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player",
+  "repo_root": "/Users/yy2021_8689/Desktop/Flutter/yl_player",
+  "log": "/private/tmp/p01-final-consumers/logs/20261014-025402-376560000-ios-cocoapods-bridge-source.txt",
+  "exit_code": 0
+}

@@ -2,7 +2,7 @@
 
 执行日期：2026-09-27。需求 REQ-02、REQ-13、REG-DIAG；起点 `4d9830ed5e0f52ff736b536af9e40ea710b97408`，分支 `codex/fel-integration`，开始时工作区干净。
 
-以下先保留 Task 1 历史记录；最新的 Task 2 实施和验证见文末。
+最新状态见文末 2026-10-14 P01 集中验收。以下 Task 1/2 与中间阶段保留历史，不表示当前仍存在那些已修复缺口。
 
 ## Task 1 交付和能力边界
 
@@ -414,3 +414,26 @@ macOS 最新原生 24/24、iOS 原生 24/24 均无跳过，包含真实 PCM 裁�
 完整公开节目矩阵 macOS 19/19、iOS 19/19；延迟后段重配中的 stop/替换三端各 2/2。macOS 初次 18 项失败均为 stop 返回后早于状态通道读取 idle；改为等待 idle 并确认 session 清空后通过。该修正未改变生产停止行为。
 
 [原始观测、失败记录、源码哈希和真实 XCTest 身份](evidence/2026-10-14-p01-joint-native/manifest.json)。全局 macOS 测试镜像检查仍报告三处既有差异；逐项差异哈希与 P01 起点 c3e304e 相同，保留另一任务变更，不伪称全局检查通过。P01 两端 24 个真实用例身份已独立核对 canonical 集合。最低部署消费者与最终整体验收继续进行。
+
+## 2026-10-14 P01 集中验收（待最终复核）
+
+已完成 2026-10-13 批准设计中的功能、必要 P02/P03/P08 依赖和当前环境验证；仅剩一次 fresh review 及其必要修复。本结论限于支持矩阵明确准入的 static clear DASH 子集，不扩大为所有 DASH/codec/DRM/弱网/设备组合。
+
+| P01 行 | 实现与验证 |
+| --- | --- |
+| SegmentBase/sidx、Template/Timeline/List、绝对 Range | 原有有界索引路线保留；新增分段样本路径覆盖原始绝对 fragment 偏移与 managed Range，网络预算/凭据/取消保持 |
+| 独立 A/V PTO、端点裁剪、分数微秒 | checked rational 节目模型、实际解码 PCM/图像窗口；三端公开时间轴及原始包时钟参考通过 |
+| gap/overlap、音频/视频局部空缺 | 半开窗口；后段接管重叠；空缺不压缩节目时间；真实黑帧/字幕 glyph、静音 PCM 和尾部完成验证 |
+| 可确定中间时长 | 相邻显式起点或准入范围内一致有限 AV 引用；不确定输入拒绝。Android 未声明 SegmentBase 时长仍需相邻/总时长依据，不能猜测 |
+| 多 BaseURL | managed 声明顺序、共同重试/跳转预算和粘性凭据剥离；三端受控 503 失败切换与预算验证，无跨实体拼接 |
+| 跨 Period 重配/选择 | 同 SDR AVC→HEVC、分辨率变化、音轨增删、显式身份、缺固定档位/caps；自然播放、往返 seek、取消、恢复和重复释放通过 |
+| P02 字幕依赖 | MPD WebVTT/TTML/wvtt/stpp 发现、选择、managed 加载、节目时标、迟到清除、错误隔离及三端实际合成 |
+| P03/P08 必要依赖 | 保留原始样本时基及完整解码配置；现有系统解码/输出复用；三端短播 AV 观测、跨段等待与 scope 释放，不占用长播放/弱网工作 |
+
+最终回归：Dart **1649/1649**；Android JVM **509 通过、3 跳过**（仅未启动的可选 RTMP MediaMTX 服务）；DASH Python **20/20**；真实结果身份工具 **9/9**；lipo 适配单测 **4/4** 并有真实缺架构负例；Dart 静态检查 0 问题；两端 Pigeon 生成无差异。Android 原有音轨实播追加 **2/2**，保留跨段/seek/caps 选择及缺显式音轨错误。
+
+五种独立消费者均完成最终产物检查：Android compileSdk36/minSdk24/Java17；iOS15 CocoaPods/SwiftPM；macOS12 CocoaPods/SwiftPM 通用 arm64/x86_64。默认聚合命令未被记作全绿：当前 lipo 的多架构 verify_arch 调用失败，单架构调用正常；macOS 两条路线仅在临时消费者 Flutter shell/Scheme 步骤使用逐架构原生验证适配后通过。每个架构仍必须通过，最终 host/plugin/bridge 架构、最低 OS、动态链接和具体符号检查未改动。全局 SDK、系统工具和仓库应用工程未修改。
+
+[最终回归与消费者证据](evidence/2026-10-14-p01-final-validation/manifest.json)记录全部源码/媒体哈希、命令、原始失败、产物检查和本地完整构建日志哈希；[原生联合证据](evidence/2026-10-14-p01-joint-native/manifest.json)记录实际结果身份。当前 macOS 全局镜像检查的三处既有差异保持，并已证明与 P01 起点的差异一致；不能将该全局检查称为通过。两端 P01 的 24 个用例集合直接核对真实 xcresult，均零跳过。
+
+最低部署编译不代表最低 OS 运行、物理 iOS 或 Intel 运行验收；原生消费时钟不代表物理扬声器/屏幕测量。完整 DRM、Dolby 显示链、全部 P03 编码、P08 长播放和弱网 ABR 不属于此次批准依赖闭环，没有因此标为完成。

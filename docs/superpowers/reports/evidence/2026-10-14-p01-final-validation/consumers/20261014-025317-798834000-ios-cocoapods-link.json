@@ -1,0 +1,31 @@
+{
+  "command": [
+    "xcodebuild",
+    "-workspace",
+    "/private/tmp/p01-final-consumers/apple/ios-cocoapods-link/ios/Runner.xcworkspace",
+    "-scheme",
+    "Runner",
+    "-configuration",
+    "Debug",
+    "-destination",
+    "platform=iOS Simulator,id=D121C2CF-D823-48F7-816E-092BCB8A780C",
+    "-parallel-testing-enabled",
+    "NO",
+    "-derivedDataPath",
+    "/private/tmp/p01-final-consumers/apple/ios-cocoapods-link/derived-link",
+    "-clonedSourcePackagesDirPath",
+    "/private/tmp/p01-final-consumers/apple/shared-package-cache/source-packages",
+    "-packageCachePath",
+    "/private/tmp/p01-final-consumers/apple/shared-package-cache/package-cache",
+    "-disablePackageRepositoryCache",
+    "-resultBundlePath",
+    "/private/tmp/p01-final-consumers/apple/ios-cocoapods-link/results-1791971597190870000.xcresult",
+    "CODE_SIGNING_ALLOWED=NO",
+    "COMPILER_INDEX_STORE_ENABLE=NO",
+    "build"
+  ],
+  "cwd": "/private/tmp/p01-final-consumers/apple/ios-cocoapods-link",
+  "repo_root": "/Users/yy2021_8689/Desktop/Flutter/yl_player",
+  "log": "/private/tmp/p01-final-consumers/logs/20261014-025317-798834000-ios-cocoapods-link.txt",
+  "exit_code": 0
+}
