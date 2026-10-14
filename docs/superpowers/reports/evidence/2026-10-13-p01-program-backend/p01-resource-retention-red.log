@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_managed_program_resources (test_program_resources.ProgramResourceTests.test_managed_program_resources)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/dash_timeline/test_program_resources.py", line 28, in test_managed_program_resources
+    self.assertTrue(all(r['passed'] for r in rows), [r for r in rows if not r['passed']])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : [{'name': 'response reservation lives with returned bytes', 'passed': False}]
+
+----------------------------------------------------------------------
+Ran 1 test in 6.336s
+
+FAILED (failures=1)

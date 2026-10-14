@@ -83,7 +83,7 @@ struct YlSourceAssessment {
     guard let candidate else { return nil }
     switch candidate {
     case .avPlayer, .headeredHls, .dashHls, .fairPlay: return .avPlayer
-    case .localMatroska, .networkMatroska, .networkFlv, .networkRtmp, .transportStream, .avi: return .managedFallback
+    case .dashProgram, .localMatroska, .networkMatroska, .networkFlv, .networkRtmp, .transportStream, .avi: return .managedFallback
     case .inspect, .reject: return nil
     }
   }

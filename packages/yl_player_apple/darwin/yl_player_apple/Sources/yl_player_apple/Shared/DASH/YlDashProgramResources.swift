@@ -27,13 +27,18 @@ final class YlDashProgramResources {
   private var stripped: Set<String> = []
 
   init(source: URL, headers: [String: String], credentials: [String: String],
+       credentialsAllowed: Bool = true, rootIntent: YlManagedRequestIntent? = nil,
        configuration: YlNetworkConfiguration, factory: @escaping Factory,
        reserve: @escaping (Int) throws -> AnyObject? = { _ in nil }) {
     context = YlRequestOrigin(url: source).map {
       YlManagedRequestContext(sourceOrigin: $0, ordinaryHeaders: headers,
-        credentials: credentials, credentialsAllowed: true, redirectsFollowed: 0)
+        credentials: credentials, credentialsAllowed: credentialsAllowed, redirectsFollowed: 0)
     }
     self.configuration = configuration; self.factory = factory; self.reserve = reserve
+    if let rootIntent {
+      let absolute = source.absoluteString
+      history["\(absolute.utf8.count):\(absolute)|full"] = rootIntent
+    }
   }
 
   /// Synchronous worker-queue API. Callers must never block the render or main
@@ -66,7 +71,8 @@ final class YlDashProgramResources {
     if let failure = intent.terminalFailure { throw failure }
     // Reserve both retained bytes and the bounded growth/copy transient. A hop
     // separately owns its HTTP parser/delivery reservation.
-    let reservation = try reserve(maximumBytes * 2)
+    let workspace = try reserve(maximumBytes * 2)
+    defer { withExtendedLifetime(workspace) {} }
     var candidate = 0
     var url = resource.candidates[0].url
     context = context.child(at: url, previouslyStripped: previouslyStripped || resource.candidates[0].credentialsStripped)
@@ -111,7 +117,12 @@ final class YlDashProgramResources {
           }
           if status == 200 || status == 206 {
             intent.completed()
-            return Payload(data: waiter.data, finalURL: url,
+            // Compact the response into a separately metered immutable payload.
+            // Keeping the admission maximum here falsely exhausts the ledger
+            // after a few tiny fragments; the temporary growth lease ends below.
+            let reservation = try reserve(waiter.data.count * 2)
+            let bytes = waiter.data.withUnsafeBytes { Data($0) }
+            return Payload(data: bytes, finalURL: url,
               credentialsStripped: !context.credentialsAllowed,
               resourceLength: waiter.resourceLength, reservation: reservation)
           }

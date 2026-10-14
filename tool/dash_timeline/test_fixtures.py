@@ -1,3 +1,4 @@
+import base64
 import hashlib
 import json
 from fractions import Fraction
@@ -10,6 +11,15 @@ ROOT = Path(__file__).resolve().parents[2]
 MEDIA = ROOT / 'packages/yl_player/example/assets/test_media/dash_timeline'
 
 class TimelineFixturesTest(unittest.TestCase):
+    def test_native_bundle_contains_original_media_bytes(self):
+        expected = {str(p.relative_to(MEDIA)): p.read_bytes() for p in MEDIA.rglob('*')
+                    if p.suffix in ('.mpd', '.m4s')}
+        for folder in ('tool/consumer_fixtures/apple_flutter/Resources',
+                       'packages/yl_player/example/ios/RunnerTests',
+                       'packages/yl_player/example/macos/RunnerTests'):
+            encoded = json.loads((ROOT / folder / 'p01-program-fixtures.json').read_text())
+            self.assertEqual({k: base64.b64decode(v) for k, v in encoded.items()}, expected)
+
     def test_seven_dimensions_have_raw_media_and_rational_expected_clocks(self):
         rows = json.loads((MEDIA/'matrix.json').read_text())
         self.assertEqual({r['id'] for r in rows}, {'independent-pto', 'clip-end', 'gap', 'overlap', 'unknown-middle', 'multiple-base', 'fractional-microsecond'})

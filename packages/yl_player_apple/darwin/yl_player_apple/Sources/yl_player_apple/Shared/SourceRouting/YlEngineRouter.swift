@@ -84,7 +84,7 @@ enum YlEngineRouter {
     if format == .matroska && source.kind == .network && source.isLive {
       return reject(strict ? "unsupported" : "container", strict ? "policy.unsupported" : "container.network_mkv_live_unsupported")
     }
-    if format == .dash && (strict || source.kind != .network || source.isLive) {
+    if format == .dash && (bounded || source.kind != .network || source.isLive) {
       return reject(strict ? "unsupported" : "container", strict ? "policy.unsupported" : "container.unsupported")
     }
     let av = [YlSourceFormat.hls, .mp4, .mov].contains(format)
@@ -116,8 +116,13 @@ enum YlEngineRouter {
     }
     var limitations: [YlLimitation] = bounded ? [.bufferOsMemoryExcluded] : []
     if format == .dash {
-      // Preflight must validate the bounded static clear AVC/AAC subset before
-      // commit. Eligibility does not imply managed network or hardware evidence.
+      // Strict managed/hardware routes always use owned samples. Ordinary DASH
+      // retains the proven HLS subset; precise programme admission is decided
+      // from the same manifest during preparation, never from a URL alone.
+      if managed || hardware {
+        return .init(outcome: .requiresInspection, candidate: .dashProgram,
+          satisfiedRequirements: requirements, limitations: [.sourceRequiresInspection, .codecRequiresInspection], rejection: nil)
+      }
       return .init(outcome: .requiresInspection, candidate: .dashHls,
         satisfiedRequirements: requirements,
         limitations: [.sourceRequiresInspection, .decoderModeUnknown, .networkSystemStackOpaque], rejection: nil)

@@ -142,8 +142,12 @@ enum YlApplePlaybackCommand {
     case .speed(let speed): try backend.setPlaybackSpeed(Float(speed))
     case .volume(let volume): try backend.setVolume(Float(volume))
     case .track(let track): try backend.selectAudioTrack(track, cancellationToken: cancellationToken)
-    case .constraints(let constraints): try backend.setVideoConstraints(constraints)
-    case .videoTrack: throw YlNativeVideoSelection.unsupported
+    case .constraints(let constraints):
+      if let dash = backend as? YlDashProgramBackend { try dash.updateVideoConstraints(constraints, cancellationToken: cancellationToken) }
+      else { try backend.setVideoConstraints(constraints) }
+    case .videoTrack(let id):
+      guard let dash = backend as? YlDashProgramBackend else { throw YlNativeVideoSelection.unsupported }
+      try dash.selectVideoTrack(id, cancellationToken: cancellationToken)
     }
   }
 }

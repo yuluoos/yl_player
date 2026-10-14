@@ -5,6 +5,7 @@ enum YlAppleSourceRoute: Equatable {
   case avPlayer
   case fairPlay
   case dashHls
+  case dashProgram
   case headeredHls
   case localMatroska
   case networkMatroska

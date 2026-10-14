@@ -5,6 +5,7 @@ import YlFFmpegBridge
 
 enum YlPreparedOpen {
   case fairPlay(source: YlAppleSourceDescriptor, backend: YlFairPlayBackend)
+  case dashProgram(source: YlAppleSourceDescriptor, prepared: YlPreparedDashProgram)
   case avPlayer(source: YlAppleSourceDescriptor)
   case headeredHls(source: YlAppleSourceDescriptor, prepared: YlPreparedHlsAsset)
   case fallback(source: YlAppleSourceDescriptor, prepared: YlPreparedFallback)
@@ -16,6 +17,8 @@ enum YlPreparedOpen {
       else { DispatchQueue.main.async { backend.dispose() } }
     case .avPlayer:
       break
+    case let .dashProgram(_, prepared):
+      prepared.discard()
     case let .headeredHls(_, prepared):
       prepared.discard()
     case let .fallback(_, prepared):
@@ -25,6 +28,7 @@ enum YlPreparedOpen {
 
   var requiresHardwareDecoderLease: Bool {
     if case .fallback = self { return true }
+    if case .dashProgram = self { return true }
     return false
   }
 }

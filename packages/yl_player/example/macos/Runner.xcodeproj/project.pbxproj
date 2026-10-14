@@ -50,6 +50,7 @@
 		3AAD6A23B91C99B110926D42 /* p01-video-fragment.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E555B3C2CEC5D9C089939697 /* p01-video-fragment.mp4 */; };
 		3E2588A1BC1F6CE2448ADCD5 /* NativeCallbackCharacterization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C290055C8B9FFBB2409465E /* NativeCallbackCharacterization.swift */; };
 		42994F34DE8B764CC1A55FE3 /* YlMacosPlatformAdapterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5066B6A5AC2AF4ABCEC96DF /* YlMacosPlatformAdapterTests.swift */; };
+		4A602BE5D60461276EE21918 /* p01-program-fixtures.json in Resources */ = {isa = PBXBuildFile; fileRef = C425462F02CDFCB9AFC61540 /* p01-program-fixtures.json */; };
 		50C9997DD3468F1581BF954D /* YlRtmpRestorationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A21ADBFB4A3DDD36999D8 /* YlRtmpRestorationTests.swift */; };
 		531C81BF18DE8F8339B09B48 /* YlRtmpLifecycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8BF19BF6B42EDC46588613 /* YlRtmpLifecycleTests.swift */; };
 		54C92931EF395AD5E8078BF1 /* hevc_aac.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 57D5CB3220138BCD13684C98 /* hevc_aac.mkv */; };
@@ -200,6 +201,7 @@
 		B6FBB4B98E0FE7E5627D613D /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		BA0D368844FF6CB6BD2F11AF /* YlRtmpPeerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlRtmpPeerTests.swift; sourceTree = "<group>"; };
 		C3BBC424ABB148ACE6662454 /* RunnerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
+		C425462F02CDFCB9AFC61540 /* p01-program-fixtures.json */ = {isa = PBXFileReference; includeInIndex = 1; path = "p01-program-fixtures.json"; sourceTree = "<group>"; };
 		C5D0D598749685F138906073 /* YlHlsHeaderPolicyTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlHlsHeaderPolicyTests.swift; sourceTree = "<group>"; };
 		C6912F19C303058E527259FE /* hevc_dts.mp4 */ = {isa = PBXFileReference; includeInIndex = 1; path = hevc_dts.mp4; sourceTree = "<group>"; };
 		C700A177742B3233701EEB56 /* YlOpenedMediaTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlOpenedMediaTests.swift; sourceTree = "<group>"; };
@@ -315,6 +317,7 @@
 				9222A10C08EA09E781058EF0 /* vorbis_switch.mkv */,
 				E555B3C2CEC5D9C089939697 /* p01-video-fragment.mp4 */,
 				0DF36BAEE36478EE5906FAC3 /* p01-audio-fragment.mp4 */,
+				C425462F02CDFCB9AFC61540 /* p01-program-fixtures.json */,
 			);
 			path = RunnerTests;
 			sourceTree = "<group>";
@@ -533,6 +536,7 @@
 				5DF21573AD8336E7E7080C0B /* vorbis_switch.mkv in Resources */,
 				3AAD6A23B91C99B110926D42 /* p01-video-fragment.mp4 in Resources */,
 				0D76904126470D6CECE52FFF /* p01-audio-fragment.mp4 in Resources */,
+				4A602BE5D60461276EE21918 /* p01-program-fixtures.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

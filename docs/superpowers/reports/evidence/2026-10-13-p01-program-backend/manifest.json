@@ -1,0 +1,133 @@
+{
+  "base": "6ae6f820a499a6cb3794ae0409459a1a26b376a4",
+  "scope": "Apple exact DASH programme backend and native session route; P01 completion still requires Period/Android/subtitle/joint validation work.",
+  "results": {
+    "half-second-green": {
+      "result": "Passed",
+      "passedTests": 1,
+      "failedTests": 0,
+      "skippedTests": 0
+    },
+    "retention-red": {
+      "result": "Failed",
+      "passedTests": 0,
+      "failedTests": 2,
+      "skippedTests": 0
+    },
+    "codec-owner-red": {
+      "result": "Failed",
+      "passedTests": 0,
+      "failedTests": 2,
+      "skippedTests": 0
+    },
+    "overlap-tail-red": {
+      "result": "Failed",
+      "passedTests": 0,
+      "failedTests": 2,
+      "skippedTests": 0
+    },
+    "disposal-red": {
+      "result": "Failed",
+      "passedTests": 1,
+      "failedTests": 1,
+      "skippedTests": 0
+    },
+    "backend-green": {
+      "result": "Passed",
+      "passedTests": 9,
+      "failedTests": 0,
+      "skippedTests": 0
+    },
+    "public-red": {
+      "result": "Failed",
+      "passedTests": 0,
+      "failedTests": 1,
+      "skippedTests": 0
+    },
+    "public-green": {
+      "result": "Passed",
+      "passedTests": 1,
+      "failedTests": 0,
+      "skippedTests": 0
+    },
+    "macos-regression": {
+      "result": "Passed",
+      "passedTests": 169,
+      "failedTests": 0,
+      "skippedTests": 0
+    },
+    "macos-final": {
+      "result": "Passed",
+      "passedTests": 14,
+      "failedTests": 0,
+      "skippedTests": 0
+    },
+    "ios-startup-red": {
+      "result": "Failed",
+      "passedTests": 11,
+      "failedTests": 2,
+      "skippedTests": 0
+    },
+    "ios-hardware-denial": {
+      "result": "Failed",
+      "passedTests": 1,
+      "failedTests": 1,
+      "skippedTests": 0
+    },
+    "ios-core-green": {
+      "result": "Passed",
+      "passedTests": 13,
+      "failedTests": 0,
+      "skippedTests": 0
+    },
+    "ios-pcm-green": {
+      "result": "Passed",
+      "passedTests": 1,
+      "failedTests": 0,
+      "skippedTests": 0
+    }
+  },
+  "observations": [
+    "Actual published original video pixels at programme 0.5 and 3.45 seconds; empty output at 3.5/3.8.",
+    "Actual decoded 3.5-second PCM window:168000 mono48kHz frames; 440 and1760Hz markers within8Hz.",
+    "Natural independent PTO/continuous/gap/overlap playback, repeated seeks and zero retained ledger bytes after disposal.",
+    "macOS public ordinary/managed/hardwareRequired load, initial500ms seek, commands and restore; hardware evidence is native.",
+    "iOS ordinary/managed actual playback; hardwareRequired denial is separately asserted as decoder.unavailable and is NOT hardware playback evidence."
+  ],
+  "limitations": [
+    "No physical iOS/minimum OS/Intel runtime evidence; current simulator and Mac only.",
+    "Existing mirror drift remains in three macOS test files; newly appended P01 tests and resources match.",
+    "Runtime QoS warnings in test fixture setup remain visible in xcresult summaries.",
+    "No external microphone/acoustic measurement; audio consumption clock and decoded PCM are native observations."
+  ],
+  "source_sha256": {
+    "packages/yl_player/example/ios/Runner.xcodeproj/project.pbxproj": "01e405b85b5a1e91b9b6a777db23d76597b0a2b555325a1c93aca892df938c20",
+    "packages/yl_player/example/ios/RunnerTests/YlAppleSessionTests.swift": "2ea151823cae61a2ef840bf4184391a86fdd9673e794eccc5fa5c7802bff87f3",
+    "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift": "79adad3389375961aec69f0fd7b82cbb53dd4538a987e3897b1e488d9e09372d",
+    "packages/yl_player/example/ios/RunnerTests/p01-program-fixtures.json": "631eb3f6cdfa01f45799fb376e33dfc44f01734a1841cbbd00ce16fe19d02180",
+    "packages/yl_player/example/macos/Runner.xcodeproj/project.pbxproj": "a8e909eead1fcc3c28e21a158e2e8df0396b467564f9097d1b16bfeec7b87f1f",
+    "packages/yl_player/example/macos/RunnerTests/YlAppleSessionTests.swift": "2ea151823cae61a2ef840bf4184391a86fdd9673e794eccc5fa5c7802bff87f3",
+    "packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift": "0caa5f0b3c6772dbcf8780c6c7dccc20d9f34833a2485fca54d53f584ece4038",
+    "packages/yl_player/example/macos/RunnerTests/p01-program-fixtures.json": "631eb3f6cdfa01f45799fb376e33dfc44f01734a1841cbbd00ce16fe19d02180",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/DashProgram/YlDashProgramBackend.swift": "9f5b6e0d81469818e124100533ac20b1b78a124901b4713bf8406feb6694afe7",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashManagedResourceHop.swift": "fadaf1a399e6141675739aee530df66e2d59333c83fdd17c17a3044c70f251d0",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashPeriodPlayback.swift": "e7aef793933addb07313226acf0f40dd7235165f4faae30f10226e13cd7b5fa7",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashPreparedPeriod.swift": "f152175ba61e2a357f055b593c6bc6cc329b1de86b77f29a0e3a6ee521d7b1e4",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashProgramLoader.swift": "094bf76f2f34cd05db43643147eab0c93790a0a30d020848497109e420f1f9ac",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashProgramResources.swift": "ed6eaf888c6e3cf39df0ee68d13bad1611b60c6664b062a7f141143bdd459727",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlPreparedDashProgram.swift": "9478041a30b916815e6ba6c302ca772d1d810c4325167ea538ec8ec8f0b7d45d",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift": "0065d9c71bcd79db9c6d426e24e5009088c7c283badb6da2c62cb1b34cd73db6",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift": "5405da102b7bfa4a8faa5e8ce32d1f89af712cdcb67f62bb0028c05969c1b995",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionModels.swift": "ad9213472ce865ed941c9b2e40830a5ea8d2c2751a9047d266868fa35245e2b6",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlFallbackModels.swift": "7a1b9e68bb2c0d26f9f38d1f915a92e884241d428036a6cc920e4c494525ef8a",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/SourceRouting/YlEngineRouter.swift": "005cfefbc80b4bcaa7c01e0e02f522a78eb01ca350d90faa98826a7e20ca92c4",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/SourceRouting/YlSourceAssessment.swift": "66499972c0ab5e9af19e8c3574fa606b26453e48c96bf06ed6979e2b5740de0d",
+    "tool/consumer_fixtures/apple_flutter/Resources/p01-program-fixtures.json": "631eb3f6cdfa01f45799fb376e33dfc44f01734a1841cbbd00ce16fe19d02180",
+    "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift": "2ea151823cae61a2ef840bf4184391a86fdd9673e794eccc5fa5c7802bff87f3",
+    "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift": "79adad3389375961aec69f0fd7b82cbb53dd4538a987e3897b1e488d9e09372d",
+    "tool/consumer_fixtures/apple_flutter/main_example_tests.py": "0f5981e605a84edb21b95de5cf20dbc0c4ed4ac907b61ab74d2d35308d181378",
+    "tool/dash_timeline/package_native_fixture.py": "21cc98b2cbccf97ac67cbd42aa6e267c9819a95fee363c20563ba77d2d1a2f6f",
+    "tool/dash_timeline/program_resource_tests.swift": "b712b59e35bd786a8424a80b72254c16bb2712eb05333fc7bfda27819575f152",
+    "tool/dash_timeline/test_fixtures.py": "43a26f7c13deed505eaac62ef5ae00a29995437582be412955a84f632d705fb2"
+  }
+}

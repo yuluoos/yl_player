@@ -151,7 +151,7 @@ check("response reservation lives with returned bytes") {
     reserved = bytes; alive += 1; return Lease { alive -= 1 }
   })
   var payload: YlDashProgramResources.Payload? = try r.read(resource(), maximumBytes: 4, cancellation: .init())
-  let held = alive == 1 && reserved == 8 && payload?.data == Data([1])
+  let held = alive == 1 && reserved == 2 && payload?.data == Data([1])
   payload = nil
   return held && alive == 0
 }
@@ -172,5 +172,24 @@ check("empty body callbacks do not extend read deadline") {
   DispatchQueue.global().asyncAfter(deadline: .now() + 0.3) { token.cancel() }
   let r = reader { _, receive in EmptyHop(receive) }
   return errorCode("network.timeout") { _ = try r.read(resource(), maximumBytes: 4, cancellation: token) }
+}
+check("inherited source inspection cannot restore credentials") {
+  var sent: [String?] = []
+  let r = YlDashProgramResources(source: origin, headers: [:], credentials: ["Authorization": "secret"],
+    credentialsAllowed: false, configuration: config(), factory: { request, receive in
+      sent.append(request.value(forHTTPHeaderField: "Authorization"))
+      return Hop { receive(.headers(response(request.url!, 200))); receive(.body(Data([1]))); receive(.complete(nil)) }
+    })
+  let payload = try r.read(resource(), maximumBytes: 4, cancellation: .init())
+  return sent.count == 1 && sent[0] == nil && payload.credentialsStripped
+}
+check("root inspection and MPD share retry intent") {
+  let intent = YlManagedRequestIntent(); _ = intent.nextRetry(maximum: 1)
+  var calls = 0
+  let r = YlDashProgramResources(source: origin, headers: [:], credentials: [:], rootIntent: intent,
+    configuration: config(1), factory: { request, receive in
+      calls += 1; return Hop { receive(.headers(response(request.url!, 503))); receive(.complete(nil)) }
+    })
+  return errorCode("network.http_status") { _ = try r.read(resource(), maximumBytes: 4, cancellation: .init()) } && calls == 1
 }
 print(String(data: try JSONSerialization.data(withJSONObject: results, options: [.sortedKeys]), encoding: .utf8)!)

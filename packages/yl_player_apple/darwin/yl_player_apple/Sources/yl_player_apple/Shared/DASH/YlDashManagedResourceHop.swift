@@ -23,8 +23,10 @@ final class YlDashManagedResourceHop: YlDashResourceHop {
 extension YlDashProgramResources {
   /// The host-owned scope accounts for both hop workspace and payload lifetime.
   convenience init(source: URL, headers: [String: String], credentials: [String: String],
+                   credentialsAllowed: Bool = true, rootIntent: YlManagedRequestIntent? = nil,
                    configuration: YlNetworkConfiguration, scope: YlManagedBufferScope) {
     self.init(source: source, headers: headers, credentials: credentials,
+      credentialsAllowed: credentialsAllowed, rootIntent: rootIntent,
       configuration: configuration, factory: { request, receive in
         try YlDashManagedResourceHop(request: request, scope: scope, receive: receive)
       }, reserve: { try scope.require(category: .networkCache, bytes: $0) })

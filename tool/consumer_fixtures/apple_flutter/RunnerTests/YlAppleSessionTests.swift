@@ -963,7 +963,7 @@ final class YlEngineAssessmentTests: XCTestCase {
     }
   }
 
-  func testDashStillRejectsStrictPoliciesLiveAndLocal() {
+  func testDashInspectsManagedAndHardwareButRejectsBoundedLiveAndLocal() {
     for policy in 0..<3 {
       var source = YlAppleSourceDescriptor(uri: "https://example.test/movie.mpd", kind: .network)
       var options = YlAppleLoadOptions()
@@ -971,7 +971,14 @@ final class YlEngineAssessmentTests: XCTestCase {
       if policy == 1 { options.bufferStrategy = .bounded; options.minDurationMs = 100; options.maxDurationMs = 500; options.maxManagedBytes = 16 * 1024 * 1024 }
       if policy == 2 { options.decoderPolicy = .hardwareRequired }
       source.loadOptions = options
-      XCTAssertEqual(YlEngineRouter.assess(source, availability: enforcing).rejection?.code, "policy.unsupported")
+      let result = YlEngineRouter.assess(source, availability: enforcing)
+      if policy == 1 { XCTAssertEqual(result.rejection?.code, "policy.unsupported") }
+      else {
+        XCTAssertEqual(result.outcome, .requiresInspection)
+        XCTAssertEqual(result.candidate, .dashProgram)
+        XCTAssertFalse(result.satisfiedRequirements.contains(.decoderHardwareRequired))
+        XCTAssertFalse(result.limitations.contains(.networkSystemStackOpaque))
+      }
     }
     for source in [YlAppleSourceDescriptor(uri: "file:///tmp/movie.mpd", kind: .file), YlAppleSourceDescriptor(uri: "https://example.test/movie.mpd", kind: .network, intent: .live)] {
       XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "container.unsupported")

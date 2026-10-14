@@ -278,3 +278,13 @@ Task 3 的真实单片探针显示 AVAssetReader 重置时间轴并处理 AAC �
 实测：原生 9/9、零跳过，实际 VT 红色像素时间为节目 0；47 个 AAC 包保留负 priming，裁得 47,104 个有效 PCM 帧，频率约 440 Hz（容差 4 Hz）。独立 ffprobe 与生产内存解复用的 8 片/284 包精确时标一致。工具 9/9，同时覆盖 27 MPD /21 资源 /1518 时间 /8 裁剪检查。见 [样本证据](evidence/2026-10-13-p01-segment-samples/manifest.json)。
 
 失败证据保留：AVAssetReader 单片归零与前导处理；原制品缺 raw API；VT 拒绝不可序列化私有对象附件（-19640）。后者改由 CMBlockBuffer 持有源样本/预算后真实像素 GREEN，没有移除资源计量。已提交的是样本原型和供应基础，**Task 3 及 P01 均未封板**：公共 backend、自然跨段、3.5 秒完整输出、选择/取消/恢复、DASH 字幕及联合验收继续执行。
+
+## 2026-10-13：P01 精确分段播放路径接入（阶段提交）
+
+已批准的补全方案保留原有 HLS 编译路径，新增 `YlDashProgramBackend` 承接精确裁剪、独立 PTO、gap/overlap 及 managed DASH。根 MPD/索引读取复用同一有界快照，继承凭据剥离状态与根请求重试身份。分段样本沿原始 PTS/DTS 进入既有视频解码和音频输出；公开 session 支持起播位置、seek、音轨/视频选择、caps、暂停及后台恢复。候选 Period 串行准备，旧配置在接纳后释放。
+
+[完整阶段证据](evidence/2026-10-13-p01-program-backend/manifest.json)记录 RED/GREEN、源文件哈希与限制。macOS DASH/路由回归 169/169，最新 backend 定向 14/14；iOS 核心 13/13，追加实际 PCM 1/1，均零跳过。0.5/3.45 秒实际发布像素匹配，3.5/3.8 秒窗口外无输出；3.5 秒 PCM 恰为 168000 个 48 kHz 单声道帧，440/1760 Hz 标记匹配。连续、独立 PTO、gap、overlap 自然播放与重复 seek 已执行，释放后保留 backend 对象仍为零预算占用。
+
+macOS hardwareRequired 有实际硬解成功证据；iOS 模拟器只验证 `decoder.unavailable` 明确拒绝，不计作硬解播放通过。未采集外部声学同步，没有最低系统/物理 iOS/Intel 的运行证据。消费者检查仍有此前已提交的三份 macOS 镜像漂移，新追加测试与夹具一致。
+
+P01 **仍未整体完成**：跨编码/分辨率与音轨目录变化、取消和恢复边界、Android 同夹具对齐、DASH 字幕，以及联合基线/最低版本构建/最终复核继续按补全计划执行。此阶段不涉及另一会话的长播放或弱网 ABR。

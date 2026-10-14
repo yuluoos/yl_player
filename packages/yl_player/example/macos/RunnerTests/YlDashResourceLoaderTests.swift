@@ -1,5 +1,6 @@
 @testable import yl_player_apple
 import AVFoundation
+import CoreImage
 import Network
 import XCTest
 
@@ -2354,5 +2355,323 @@ extension YlDashSampleSourceNativeTests {
       XCTAssertEqual(pcm.frameLength, 63); XCTAssertEqual(clipped.byteCount, 8192); XCTAssertEqual(clipped.generation, 7)
       XCTAssertEqual(try XCTUnwrap(pcm.floatChannelData?[0])[0], interleaved ? 2 : 1)
     }
+  }
+}
+
+private final class DashProgramTexture: YlTextureOutput {
+  let textureId: Int64 = 991
+  var frames = 0, clears = 0
+  var rgb: [UInt8] = []
+  private let context = CIContext(options: [.cacheIntermediates: false, .workingColorSpace: NSNull(), .outputColorSpace: NSNull()])
+  func publish(_ pixelBuffer: CVPixelBuffer?) {
+    guard let pixelBuffer else { return }
+    frames += 1
+    var rgba = [UInt8](repeating: 0, count: 4)
+    let image = CIImage(cvPixelBuffer: pixelBuffer)
+    context.render(image, toBitmap: &rgba, rowBytes: 4,
+      bounds: CGRect(x: image.extent.midX, y: image.extent.midY, width: 1, height: 1),
+      format: .RGBA8, colorSpace: nil)
+    rgb = Array(rgba.prefix(3))
+  }
+  func resize(width: Int, height: Int) {}
+  func clear() { clears += 1 }
+  func dispose() {}
+}
+private final class DashProgramDisplay: YlDisplayDriving {
+  var isPaused = false
+  let tick: () -> Void
+  init(_ tick: @escaping () -> Void) { self.tick = tick }
+  func invalidate() { isPaused = true }
+  func fire() { if !isPaused { tick() } }
+}
+
+extension YlDashSampleSourceNativeTests {
+  @MainActor func testProgramBackendPlaysAndClipsActualHalfSecond() async throws {
+    let server = try DashHTTPServer(); defer { server.close() }
+    let bundle = Bundle(for: Self.self)
+    let video = try Data(contentsOf: XCTUnwrap(bundle.url(forResource: "p01-video-fragment", withExtension: "mp4")))
+    let audio = try Data(contentsOf: XCTUnwrap(bundle.url(forResource: "p01-audio-fragment", withExtension: "mp4")))
+    let xml = Data("""
+      <MPD mediaPresentationDuration="PT0.5S"><Period duration="PT0.5S"><AdaptationSet mimeType="video/mp4"><Representation id="v" codecs="avc1.42c01e" bandwidth="350000" width="320" height="180"><SegmentTemplate timescale="12288" presentationTimeOffset="122880" initialization="vi" media="vs"><SegmentTimeline><S t="122880" d="12288"/></SegmentTimeline></SegmentTemplate></Representation></AdaptationSet><AdaptationSet mimeType="audio/mp4"><Representation id="a" codecs="mp4a.40.2" bandwidth="64000" audioSamplingRate="48000"><SegmentTemplate timescale="48000" presentationTimeOffset="960000" initialization="ai" media="as"><SegmentTimeline><S t="960000" d="47104"/></SegmentTimeline></SegmentTemplate></Representation></AdaptationSet></Period></MPD>
+      """.utf8)
+    server.handler = { request in
+      let data: Data
+      switch request.path {
+      case "/vi": data = Data(video.prefix(806))
+      case "/vs": data = Data(video.dropFirst(806))
+      case "/ai": data = Data(audio.prefix(764))
+      case "/as": data = Data(audio.dropFirst(764))
+      default: return (404, [:], Data())
+      }
+      return (200, [:], data)
+    }
+    let url = server.url("/manifest.mpd"), token = YlOpenCancellationToken()
+    let scope = try YlManagedBufferLedger(maxBytes: 32 * 1024 * 1024).makeScope(maxBytes: nil)
+    let resources = YlDashProgramResources(source: url, headers: [:], credentials: [:], configuration: .init(map: [:]), scope: scope)
+    let program = try YlDashProgramDocument.parse(xml, source: url, final: url)
+    let prepared = try YlPreparedDashProgram(program: program, resources: resources, scope: scope, cancellation: token)
+    let texture = DashProgramTexture(); var display: DashProgramDisplay?
+    var states: [YlNativeState] = [], failures: [NativePlayerError] = [], observations: [YlDashPlaybackObservation] = []
+    let services = YlPlatformServices(platform: .current, textureOutput: texture,
+      makeDisplayDriver: { let driver = DashProgramDisplay($0); display = driver; return driver })
+    let backend = try YlDashProgramBackend(prepared: prepared, services: services, generation: 1, loadRequestId: "fixture", observe: { observations.append($0) }, emit: { callback in
+      if case .state(let state) = callback.event { states.append(state) }
+      if case .failure(let error) = callback.event { failures.append(error) }
+    })
+    defer { backend.dispose() }
+    try backend.activate(); try backend.play()
+    for _ in 0..<250 {
+      display?.fire()
+      if states.last?.status == "completed" || !failures.isEmpty { break }
+      try await Task.sleep(nanoseconds: 10_000_000)
+    }
+    XCTAssertTrue(failures.isEmpty, failures.map(\.code).joined(separator: ","))
+    XCTAssertEqual(states.last?.status, "completed"); XCTAssertEqual(states.last?.positionMs, 500)
+    XCTAssertGreaterThan(texture.frames, 3)
+    let times = observations.compactMap { event -> Int64? in if case .video(let time, _) = event { return time }; return nil }
+    XCTAssertFalse(times.isEmpty); XCTAssertTrue(times.allSatisfy { $0 >= 0 && $0 < 500_000 })
+    XCTAssertNil(backend.copyPixelBuffer())
+    backend.stop(); backend.dispose(); backend.dispose()
+  }
+}
+
+/// Uses the exact committed MPD/media bytes, served through the real managed transport.
+@MainActor private final class DashProgramHarness {
+  let server: DashHTTPServer
+  let texture = DashProgramTexture()
+  let scope: YlManagedBufferScope
+  var display: DashProgramDisplay?
+  var backend: YlDashProgramBackend!
+  var states: [YlNativeState] = []
+  var errors: [NativePlayerError] = []
+  var video: [(Int64, UInt64, [UInt8])] = []
+  var audio: [YlAudioClockSample] = []
+  var periods: [(Int, Int64)] = []
+  init(_ name: String) throws {
+    server = try DashHTTPServer()
+    let data = try Data(contentsOf: XCTUnwrap(Bundle(for: YlDashSampleSourceNativeTests.self).url(forResource: "p01-program-fixtures", withExtension: "json")))
+    let encoded = try JSONDecoder().decode([String: String].self, from: data)
+    let files = encoded.compactMapValues { Data(base64Encoded: $0) }
+    server.handler = { request in
+      guard let bytes = files[String(request.path.dropFirst())] else { return (404, [:], Data()) }
+      return (200, [:], bytes)
+    }
+    let url = server.url("/" + name + ".mpd"), token = YlOpenCancellationToken()
+    scope = try YlManagedBufferLedger(maxBytes: 64 * 1024 * 1024).makeScope(maxBytes: nil)
+    let resources = YlDashProgramResources(source: url, headers: [:], credentials: [:], configuration: .init(map: [:]), scope: scope)
+    let program = try YlDashProgramLoader.load(url: url, resources: resources, cancellation: token)
+    let prepared = try YlPreparedDashProgram(program: program, resources: resources, scope: scope, cancellation: token)
+    let services = YlPlatformServices(platform: .current, textureOutput: texture,
+      makeDisplayDriver: { [weak self] in let value = DashProgramDisplay($0); self?.display = value; return value })
+    backend = try YlDashProgramBackend(prepared: prepared, services: services, generation: 21, loadRequestId: "full-fixture", observe: { [weak self] event in
+      guard let self else { return }
+      switch event {
+      case .video(let pts, let epoch): self.video.append((pts, epoch, self.texture.rgb))
+      case .audio(let sample): self.audio.append(sample)
+      case .period(let index, let wait): self.periods.append((index, wait))
+      }
+    }, emit: { [weak self] callback in
+      if case .state(let state) = callback.event { self?.states.append(state) }
+      if case .failure(let error) = callback.event { self?.errors.append(error) }
+    })
+    try backend.activate()
+  }
+  func advance(until condition: () -> Bool, seconds: Double = 7) async throws {
+    let end = ProcessInfo.processInfo.systemUptime + seconds
+    while !condition() && errors.isEmpty && ProcessInfo.processInfo.systemUptime < end {
+      display?.fire(); try await Task.sleep(nanoseconds: 10_000_000)
+    }
+    XCTAssertTrue(errors.isEmpty, errors.map { $0.code + ": " + $0.message }.joined(separator: ","))
+    XCTAssertTrue(condition(), "timeout; state=\(states.last?.status ?? "none") position=\(states.last?.positionMs ?? -1) frames=\(video.count)")
+  }
+  func seek(_ milliseconds: Int64) async throws {
+    let backend = backend!
+    try await Task.detached { try backend.seek(toMs: milliseconds, cancellationToken: nil) }.value
+  }
+  func close() { backend.dispose(); server.close() }
+}
+
+extension YlDashSampleSourceNativeTests {
+  @MainActor func testProgramBackendClipsThreePointFiveAndSeeksOriginalClock() async throws {
+    let harness = try DashProgramHarness("clip-end"); defer { harness.close() }
+    try harness.backend.play()
+    try await harness.advance(until: { harness.states.last?.status == "completed" })
+    XCTAssertEqual(harness.states.last?.positionMs, 3500)
+    XCTAssertTrue(harness.video.allSatisfy { $0.0 >= 0 && $0.0 < 3_500_000 })
+    for (target, rgb) in [(Int64(500_000), [255, 0, 0]), (Int64(3_450_000), [255, 255, 255])] {
+      let marker = try XCTUnwrap(harness.video.last { $0.0 <= target })
+      XCTAssertLessThan(target - marker.0, 100_000)
+      XCTAssertEqual(marker.2.count, 3)
+      for (a, b) in zip(marker.2, rgb) { XCTAssertLessThan(abs(Int(a) - b), 12, "marker \(target): \(marker.2)") }
+    }
+    XCTAssertFalse(harness.audio.isEmpty)
+    XCTAssertNil(harness.backend.copyPixelBuffer())
+    for target: Int64 in [3800, 500, 3450, 3500, 500] {
+      let before = harness.video.count
+      try await harness.seek(target)
+      if target < 3500 {
+        try await harness.advance(until: { harness.video.count > before })
+        let first = harness.video[before]
+        XCTAssertGreaterThanOrEqual(first.0, target * 1000)
+        XCTAssertLessThan(first.0 - target * 1000, 100_000)
+      } else { XCTAssertNil(harness.backend.copyPixelBuffer()); XCTAssertEqual(harness.states.last?.positionMs, 3500) }
+    }
+    harness.backend.stop(); XCTAssertNil(harness.backend.copyPixelBuffer())
+  }
+  @MainActor func testProgramBackendIndependentPTOAndNaturalPeriods() async throws {
+    for name in ["independent-pto", "manifest", "gap", "overlap"] {
+      let harness = try DashProgramHarness(name)
+      defer { harness.close() }
+      try harness.backend.setPlaybackSpeed(2)
+      try harness.backend.play()
+      try await harness.advance(until: { harness.states.last?.status == "completed" }, seconds: 10)
+      let duration: Int64 = name == "gap" ? 9000 : name == "overlap" ? 7000 : name == "manifest" ? 8000 : 4000
+      XCTAssertEqual(harness.states.last?.positionMs, duration, name)
+      XCTAssertTrue(harness.video.allSatisfy { $0.0 >= 0 && $0.0 < duration * 1000 }, name)
+      if name != "independent-pto" {
+        let boundary: Int64 = name == "gap" ? 5_000_000 : name == "overlap" ? 3_000_000 : 4_000_000
+        XCTAssertTrue(harness.video.contains { $0.0 >= boundary && $0.2.count == 3 && $0.2[0] > 240 && $0.2[1] > 240 && $0.2[2] < 12 }, name)
+        XCTAssertEqual(harness.periods.map(\.0), [1], name)
+        if name == "gap" { XCTAssertFalse(harness.video.contains { (4_000_000..<5_000_000).contains($0.0) }) }
+        if name == "overlap" { XCTAssertFalse(harness.video.contains { $0.1 == 1 && $0.0 >= 3_000_000 }) }
+      }
+      harness.close()
+      try await Task.sleep(nanoseconds: 100_000_000)
+      XCTAssertEqual(harness.scope.ledger.snapshot.currentBytes, 0, name)
+    }
+  }
+}
+
+extension YlDashSampleSourceNativeTests {
+  @MainActor func testPublicProgramLoadCommandsAndManagedPolicy() async throws {
+    let server = try DashHTTPServer(); defer { server.close() }
+    let data = try Data(contentsOf: XCTUnwrap(Bundle(for: Self.self).url(forResource: "p01-program-fixtures", withExtension: "json")))
+    let files = try JSONDecoder().decode([String: String].self, from: data).compactMapValues { Data(base64Encoded: $0) }
+    server.handler = { request in
+      guard request.headers["authorization"] == "owned-program", let bytes = files[String(request.path.dropFirst())] else { return (403, [:], Data()) }
+      return (200, [:], bytes)
+    }
+    for mode in 0..<3 {
+      let texture = DashProgramTexture(); var display: DashProgramDisplay?
+      var states: [YlNativeState] = [], errors: [NativePlayerError] = []
+      let services = YlPlatformServices(platform: .current, textureOutput: texture,
+        makeDisplayDriver: { let value = DashProgramDisplay($0); display = value; return value })
+      let coordinator = YlAppleSessionCoordinator(playerId: 99, services: services,
+        configuration: .init(map: ["audioPolicy": "appManaged"]),
+        textureOwner: .init(output: texture, onFrame: { _ in }), emit: { identity, event in
+          XCTAssertEqual(identity.sessionId, "program-public")
+          if case .state(let state) = event.event { states.append(state) }
+          if case .failure(let error) = event.event { errors.append(error) }
+        })
+      defer { coordinator.dispose() }
+      let source = YlAppleSourceDescriptor(uri: server.url("/independent-pto.mpd").absoluteString,
+        kind: .network, formatHint: .dash, credentials: ["Authorization": "owned-program"],
+        networkPolicy: mode == 1 ? .managed : .platformDefault,
+        loadOptions: .init(autoplay: true, startPositionMs: 500, decoderPolicy: mode == 2 ? .hardwareRequired : .systemDefault))
+      do { try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+        coordinator.load(.init(source: source), identity: .init(sessionId: "program-public", loadRequestId: "load"),
+          willCommit: { XCTAssertTrue($0) }, didCommit: {}, didRollback: {},
+          completion: { continuation.resume(with: $0.mapError { $0 as Error }) })
+      }
+      } catch let error as NativePlayerError {
+        #if targetEnvironment(simulator)
+        if mode == 2 {
+          // This is strict-policy denial coverage, never hardware playback evidence.
+          XCTAssertEqual(error.code, "decoder.unavailable")
+          XCTAssertNil(coordinator.identity); XCTAssertEqual(texture.frames, 0)
+          continue
+        }
+        #endif
+        XCTFail("Load mode \(mode): \(error.code)"); throw error
+      }
+      func command(_ value: YlApplePlaybackCommand) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+          coordinator.execute(value) { continuation.resume(with: $0.mapError { $0 as Error }) }
+        }
+      }
+      func frames(after count: Int) async throws {
+        for _ in 0..<250 {
+          display?.fire()
+          if texture.frames > count || !errors.isEmpty { break }
+          try await Task.sleep(nanoseconds: 10_000_000)
+        }
+        XCTAssertGreaterThan(texture.frames, count)
+        XCTAssertTrue(errors.isEmpty, errors.map(\.code).joined(separator: ","))
+      }
+      try await frames(after: 0)
+      let current = try XCTUnwrap(states.last)
+      XCTAssertEqual(current.engine, .managedFallback)
+      if mode == 2 { XCTAssertTrue(current.isHardwareDecoding); XCTAssertEqual(current.decoderEvidence?.mode, .hardware) }
+      XCTAssertGreaterThanOrEqual(current.positionMs, 500)
+      XCTAssertEqual(current.durationMs, 4000)
+      let audio = try XCTUnwrap(current.audioTracks.first?.id), video = try XCTUnwrap(current.videoTracks.first?.id)
+      try await command(.pause)
+      try await command(.seek(2500))
+      try await command(.constraints(.init(maxWidth: 320, maxHeight: 180, maxBitrate: 350000)))
+      try await command(.videoTrack(video))
+      try await command(.track(audio))
+      let count = texture.frames
+      try await command(.play); try await frames(after: count)
+      do { try await command(.track("absent-content")); XCTFail("missing audio silently substituted") }
+      catch { XCTAssertEqual((error as? NativePlayerError)?.code, "track.not_found") }
+      XCTAssertEqual(coordinator.identity?.sessionId, "program-public")
+      coordinator.deactivate()
+      try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+        coordinator.beginActivation(forcePlay: true, willCommit: { XCTAssertTrue($0) }, didCommit: {}, didRollback: {},
+          completion: { continuation.resume(with: $0.mapError { $0 as Error }) })
+      }
+      let restored = texture.frames
+      try await command(.play); try await frames(after: restored)
+      coordinator.stop(); coordinator.dispose()
+    }
+  }
+}
+
+extension YlDashSampleSourceNativeTests {
+  func testActualDecodedPCMClipsExactlyThreePointFiveSecondsAndKeepsBothToneMarkers() throws {
+    let bundle = Bundle(for: Self.self)
+    let encoded = try JSONDecoder().decode([String: String].self, from: Data(contentsOf: XCTUnwrap(bundle.url(forResource: "p01-program-fixtures", withExtension: "json"))))
+    let files = encoded.compactMapValues { Data(base64Encoded: $0) }
+    let url = URL(string: "https://owned.example/clip")!
+    let scope = try YlManagedBufferLedger(maxBytes: 32 * 1024 * 1024).makeScope(maxBytes: nil)
+    let window = try YlDashProgramTimeline.Window(start: YlDashProgramTime(0), end: YlDashProgramTime(7, 2))
+    let converter = YlDashAudioConverter(window: window, scope: scope)
+    var configured = false, frames = 0
+    let windows = [12000..<36000, 156000..<167520]
+    var counts = [0, 0], crossings = [0, 0], previous: [Float] = [0, 0]
+    for number in 1...5 {
+      let initialization = try XCTUnwrap(files["period0/init-1.m4s"])
+      let fragment = try XCTUnwrap(files[String(format: "period0/chunk-1-%05d.m4s", number)])
+      let source = try YlDashSampleSource(initialization: .init(data: initialization, finalURL: url, credentialsStripped: false, resourceLength: nil, reservation: nil),
+        fragment: .init(data: fragment, finalURL: url, credentialsStripped: false, resourceLength: nil, reservation: nil), kind: .audio, cancellation: .init(), scope: scope)
+      if !configured {
+        try converter.configure(stream: .init(codec: .aac, sampleRate: 48000, channelCount: 1, magicCookie: source.codecConfiguration, generation: 1))
+        configured = true
+      }
+      while let packet = try source.next() {
+        let key = try packet.pts.converted(to: 1_000_000, rounding: .floor)
+        try converter.register(packet.pts, forMicroseconds: key)
+        let input = try YlCompressedAudioPacket(data: packet.audioBytes(), ptsUs: key,
+          durationUs: packet.duration.converted(to: 1_000_000, rounding: .ceil), generation: 1)
+        guard let decoded = try converter.convert(packet: input), let pcm = decoded.payload as? AVAudioPCMBuffer else { continue }
+        let samples = try XCTUnwrap(pcm.floatChannelData?[0])
+        let start = Int((Double(decoded.ptsUs) * 48000 / 1_000_000).rounded())
+        frames += Int(pcm.frameLength)
+        XCTAssertGreaterThanOrEqual(start, 0)
+        XCTAssertLessThanOrEqual(start + Int(pcm.frameLength), 168000)
+        for index in 0..<Int(pcm.frameLength) {
+          for marker in 0..<2 where windows[marker].contains(start + index) {
+            if previous[marker] <= 0 && samples[index] > 0 { crossings[marker] += 1 }
+            previous[marker] = samples[index]; counts[marker] += 1
+          }
+        }
+      }
+    }
+    XCTAssertEqual(frames, 168000)
+    XCTAssertEqual(counts, windows.map(\.count))
+    for marker in 0..<2 {
+      XCTAssertEqual(Double(crossings[marker]) * 48000 / Double(counts[marker]), marker == 0 ? 440 : 1760, accuracy: 8)
+    }
+    converter.reset()
   }
 }

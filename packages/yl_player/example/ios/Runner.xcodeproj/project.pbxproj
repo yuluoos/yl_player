@@ -24,6 +24,7 @@
 		22C09AF8AB9AC362D54CACC8 /* YlMediaClockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFD7F7B8D48E27E9149FC907 /* YlMediaClockTests.swift */; };
 		258B5CBAD731FB68B325D8F6 /* AppleHostCharacterizations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD67634D7933F7E8A87ED18B /* AppleHostCharacterizations.swift */; };
 		25AB550FC760BD1107A8A031 /* YlVideoToolboxDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6458183D3D871D8489A2C3 /* YlVideoToolboxDecoderTests.swift */; };
+		2898946C8BDCB7E0B6554A60 /* p01-program-fixtures.json in Resources */ = {isa = PBXBuildFile; fileRef = 18C86172BD962AFF386ECFBB /* p01-program-fixtures.json */; };
 		2D1CD0EB88024846D1ECEBFE /* YlRtmpPeerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A8497B908F8DF71591DAF6 /* YlRtmpPeerTests.swift */; };
 		2DCB73AADA511C0AE888F07E /* YlHlsManifestRewriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE800408ADB80F5557F031B /* YlHlsManifestRewriterTests.swift */; };
 		2F2597BD2C712912F75C8D64 /* YlOpenCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D6607C46DF95C55C62B230B /* YlOpenCoordinatorTests.swift */; };
@@ -116,6 +117,7 @@
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		17E84CAB644D6001AC51A03F /* YlAppleHostTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleHostTests.swift; sourceTree = "<group>"; };
+		18C86172BD962AFF386ECFBB /* p01-program-fixtures.json */ = {isa = PBXFileReference; includeInIndex = 1; path = "p01-program-fixtures.json"; sourceTree = "<group>"; };
 		1D030956D851313A5FD61DCF /* YlManagedFallbackCharacterizationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlManagedFallbackCharacterizationTests.swift; sourceTree = "<group>"; };
 		1D6607C46DF95C55C62B230B /* YlOpenCoordinatorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlOpenCoordinatorTests.swift; sourceTree = "<group>"; };
 		217B1E6D80434A0D717E4B3B /* YlFairPlayOutputTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFairPlayOutputTests.swift; sourceTree = "<group>"; };
@@ -288,6 +290,7 @@
 				6F94A105A60AA0CD6701A9CB /* vorbis_switch.mkv */,
 				F7220E3B28DB539F4F207C57 /* p01-video-fragment.mp4 */,
 				5D17407271159E8EA9B1AC1A /* p01-audio-fragment.mp4 */,
+				18C86172BD962AFF386ECFBB /* p01-program-fixtures.json */,
 			);
 			path = RunnerTests;
 			sourceTree = "<group>";
@@ -457,6 +460,7 @@
 				455CBC86BFA34EBB05F6FE6F /* vorbis_switch.mkv in Resources */,
 				C92166EC372517FDB7BD4D34 /* p01-video-fragment.mp4 in Resources */,
 				EC8CD1ED61B17A4E3B27371B /* p01-audio-fragment.mp4 in Resources */,
+				2898946C8BDCB7E0B6554A60 /* p01-program-fixtures.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

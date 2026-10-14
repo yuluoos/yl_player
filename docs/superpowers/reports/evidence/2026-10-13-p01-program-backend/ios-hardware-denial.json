@@ -1,0 +1,70 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "D121C2CF-D823-48F7-816E-092BCB8A780C",
+        "deviceName" : "iPhone 18 Pro",
+        "modelName" : "iPhone 18 Pro",
+        "osBuildNumber" : "24A434",
+        "osVersion" : "27.0",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 1,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "Runner · Built with macOS 27.0.1",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1791952974.69,
+  "passedTests" : 1,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift"
+    }
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1791952906.433,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "failed - Load mode 2: decoder.video_hardware_unavailable",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 2,
+      "testIdentifierString" : "YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy",
+      "testName" : "testPublicProgramLoadCommandsAndManagedPolicy()"
+    }
+  ],
+  "title" : "Test - Runner",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 2
+}

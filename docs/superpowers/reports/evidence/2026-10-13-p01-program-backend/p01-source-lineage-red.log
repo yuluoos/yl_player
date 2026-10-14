@@ -1,0 +1,29 @@
+F
+======================================================================
+FAIL: test_managed_program_resources (test_program_resources.ProgramResourceTests.test_managed_program_resources)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/dash_timeline/test_program_resources.py", line 22, in test_managed_program_resources
+    self.assertEqual(build.returncode, 0, build.stdout+build.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-dash-program-4r4iiu0e/main.swift:179:25: error: extra argument 'credentialsAllowed' in call
+177 |   var sent: [String?] = []
+178 |   let r = YlDashProgramResources(source: origin, headers: [:], credentials: ["Authorization": "secret"],
+179 |     credentialsAllowed: false, configuration: config(), factory: { request, receive in
+    |                         `- error: extra argument 'credentialsAllowed' in call
+180 |       sent.append(request.value(forHTTPHeaderField: "Authorization"))
+181 |       return Hop { receive(.headers(response(request.url!, 200))); receive(.body(Data([1]))); receive(.complete(nil)) }
+
+/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-dash-program-4r4iiu0e/main.swift:189:94: error: extra argument 'rootIntent' in call
+187 |   let intent = YlManagedRequestIntent(); _ = intent.nextRetry(maximum: 1)
+188 |   var calls = 0
+189 |   let r = YlDashProgramResources(source: origin, headers: [:], credentials: [:], rootIntent: intent,
+    |                                                                                              `- error: extra argument 'rootIntent' in call
+190 |     configuration: config(1), factory: { request, receive in
+191 |       calls += 1; return Hop { receive(.headers(response(request.url!, 503))); receive(.complete(nil)) }
+
+
+----------------------------------------------------------------------
+Ran 1 test in 5.232s
+
+FAILED (failures=1)

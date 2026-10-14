@@ -1,0 +1,115 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "D121C2CF-D823-48F7-816E-092BCB8A780C",
+        "deviceName" : "iPhone 18 Pro",
+        "modelName" : "iPhone 18 Pro",
+        "osBuildNumber" : "24A434",
+        "osVersion" : "27.0",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 2,
+      "passedTests" : 11,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "Runner · Built with macOS 27.0.1",
+  "expectedFailures" : 0,
+  "failedTests" : 2,
+  "finishTime" : 1791952781.96,
+  "passedTests" : 11,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift"
+    }
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1791952699.348,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "XCTAssertLessThan failed: (\"125000\") is not less than (\"100000\")",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 9,
+      "testIdentifierString" : "YlDashSampleSourceNativeTests/testProgramBackendClipsThreePointFiveAndSeeksOriginalClock()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramBackendClipsThreePointFiveAndSeeksOriginalClock",
+      "testName" : "testProgramBackendClipsThreePointFiveAndSeeksOriginalClock()"
+    },
+    {
+      "failureText" : "failed: caught error: \"Playback operation failed.\"",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 12,
+      "testIdentifierString" : "YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy",
+      "testName" : "testPublicProgramLoadCommandsAndManagedPolicy()"
+    }
+  ],
+  "title" : "Test - Runner",
+  "topInsights" : [
+    {
+      "category" : "Longest Test Runs",
+      "impact" : "75% of duration",
+      "text" : "1 longest test run with outlier durations exceeding 19.59s (three standard deviations)"
+    }
+  ],
+  "totalTestCount" : 13
+}

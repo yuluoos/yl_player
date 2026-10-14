@@ -142,7 +142,7 @@ final class YlAppleSessionCoordinator: NSObject {
     case .videoTrack(let id): policy = (lastQualityConstraint, .init(fixedTrackId: id, reason: "user"))
     default: policy = nil
     }
-    if let (constraints, selection) = policy {
+    if let (constraints, selection) = policy, !(slot.current is YlDashProgramBackend) {
       capsCoordinator.cancelCurrent()
       if let source = lastCommittedSource, route(for: source) == .dashHls {
         do {
@@ -312,7 +312,9 @@ final class YlAppleSessionCoordinator: NSObject {
             source: source,
             prepared: try self.prepareFallback(source: source, token: token, identity: identity)
           )
-        case .headeredHls, .dashHls:
+        case .dashHls, .dashProgram:
+          return try self.prepareDash(source: source, token: token, credentials: hlsCredentials, constraints: loadConstraints)
+        case .headeredHls:
           return .headeredHls(
             source: source,
             prepared: try self.prepareHeaderedHls(source: source, token: token, credentialContext: hlsCredentials, videoConstraints: loadConstraints)
@@ -323,7 +325,9 @@ final class YlAppleSessionCoordinator: NSObject {
           if let error = refined.rejection { throw error }
           switch refined.candidate {
           case .avPlayer: return try self.prepareNativeOrMp4(source: inspected, token: token, identity: identity)
-          case .headeredHls, .dashHls: return .headeredHls(source: inspected,
+          case .dashHls, .dashProgram:
+            return try self.prepareDash(source: inspected, token: token, credentials: hlsCredentials, constraints: loadConstraints)
+          case .headeredHls: return .headeredHls(source: inspected,
             prepared: try self.prepareHeaderedHls(source: inspected, token: token, credentialContext: hlsCredentials, videoConstraints: loadConstraints))
           case .localMatroska, .networkMatroska, .networkFlv, .networkRtmp, .transportStream, .avi:
             return .fallback(source: inspected, prepared: try self.prepareFallback(source: inspected, token: token, identity: identity))
@@ -396,6 +400,29 @@ final class YlAppleSessionCoordinator: NSObject {
     }
     guard let identity = self.identity else {
       completion(.failure(YlOpenCancellationToken.cancellationError()))
+      return
+    }
+    if let dash = slot.current as? YlDashProgramBackend, dash.requiresAsyncActivation {
+      let position = pendingSeekIntent?.positionMs, constraints = lastQualityConstraint
+      willCommit(true)
+      commandCoordinator.begin(operation: { token in
+        try dash.prepareActivation(positionMs: position, constraints: constraints, cancellation: token)
+      }, completion: { [weak self, weak dash] result in
+        guard let self, let dash, !self.disposed, self.slot.current === dash, self.identity == identity else {
+          didRollback(); completion(.failure(YlOpenCancellationToken.cancellationError())); return
+        }
+        do {
+          try result.get()
+          self.applyPersistentPlaybackControls(to: dash)
+          if self.pendingPauseIntent != nil && !forcePlay { try dash.pause() }
+          try dash.activate()
+          if forcePlay { try dash.play() }
+          self.pendingSeekIntent = nil; self.pendingPauseIntent = nil
+          didCommit(); completion(.success(()))
+        } catch {
+          didRollback(); completion(.failure(Self.commandError(error)))
+        }
+      })
       return
     }
     if let protected = slot.current as? YlFairPlayBackend {
@@ -578,6 +605,17 @@ final class YlAppleSessionCoordinator: NSObject {
     }
     let commandCompletion = completion
     let backend = slot.current
+    if let dash = backend as? YlDashProgramBackend {
+      let background = dash.requiresAsyncCommand(command)
+      if background || commandCoordinator.hasCurrent {
+        commandCoordinator.begin(operation: { token in
+          try token.throwIfCancelled()
+          if background { try command.apply(to: dash, cancellationToken: token) }
+          else { try DispatchQueue.main.sync { try token.throwIfCancelled(); try command.apply(to: dash) } }
+        }, completion: commandCompletion)
+      } else { completeCommandSynchronously(backend: dash, command: command, completion: commandCompletion) }
+      return
+    }
     if let fallback = backend as? YlFallbackBackend {
       let runsInBackground = fallback.requiresAsyncCommand(command)
       guard runsInBackground || commandCoordinator.hasCurrent else {
@@ -685,6 +723,7 @@ final class YlAppleSessionCoordinator: NSObject {
     case let .fairPlay(source, _): wantsOutput = source.loadOptions?.autoplay ?? false
     case let .avPlayer(source): wantsOutput = source.loadOptions?.autoplay ?? false
     case let .headeredHls(source, _): wantsOutput = reactivating ? currentPlaybackIntent : (source.loadOptions?.autoplay ?? false)
+    case let .dashProgram(_, prepared): wantsOutput = prepared.autoplay
     case let .fallback(_, prepared): wantsOutput = prepared.resumeState?.shouldPlay ?? false
     }
     if wantsOutput { try candidateServices.beforeAudioOutput() }
@@ -741,6 +780,17 @@ final class YlAppleSessionCoordinator: NSObject {
       if !reactivating || route(for: source) == .dashHls {
         lastQualityConstraint = prepared.loader.videoConstraints
       }
+    case let .dashProgram(source, prepared):
+      let previous = try slot.replace(beforeRollbackActivation: beforeRollbackActivation) {
+        let backend = try YlDashProgramBackend(prepared: prepared, services: candidateServices,
+          generation: slot.generation &+ 1, loadRequestId: identity.loadRequestId, emit: candidateEvents.accept)
+        applyPersistentPlaybackControls(to: backend)
+        return backend
+      }
+      if previous !== avBackend { previous.dispose() }
+      lastCommittedSource = source
+      committedHlsCredentials = nil; committedDashSnapshot = nil
+      lastQualityConstraint = prepared.constraints
     case let .fallback(source, prepared):
       let qualityConstraint = try YlFallbackQualityConstraint(
         validating: reactivating || source.loadOptions == nil ? lastQualityConstraint : source.loadOptions?.videoConstraints ?? .unconstrained
@@ -788,6 +838,7 @@ final class YlAppleSessionCoordinator: NSObject {
   private func reconcileBeforeRollbackActivation(_ backend: YlPlaybackBackend) throws {
     // Network recovery continues through its existing external async path.
     if let fallback = backend as? YlFallbackBackend, fallback.requiresAsyncActivation { return }
+    if let dash = backend as? YlDashProgramBackend, dash.requiresAsyncActivation { return }
     try applyAcknowledgedControls(to: backend, forcePlay: false)
     // The inactive backend now owns these values even if activation needs a
     // later external recovery. An untouched active backend has not consumed them.
@@ -884,6 +935,36 @@ final class YlAppleSessionCoordinator: NSObject {
     try prepared.prepareHardwareEvidence(configuration: configuration.forLoad(source),
       factory: videoSessionFactory, stage: hardwareEvidenceStage, token: token)
     return prepared
+  }
+
+  /// Selects the legacy projection only when its complete admission succeeds.
+  /// Failed projection cannot restart MPD/index networking or restore credentials.
+  private func prepareDash(source: YlAppleSourceDescriptor, token: YlOpenCancellationToken,
+                           credentials: YlHlsCredentialContext,
+                           constraints: YlAppleVideoConstraints) throws -> YlPreparedOpen {
+    guard let url = source.url else { throw YlAppleFailureMapper.unsupported }
+    let scope = try source.bufferScope ?? bufferLedger.makeScope(maxBytes: nil)
+    let resources = YlDashProgramResources(source: url, headers: source.headers, credentials: source.credentials,
+      credentialsAllowed: source.credentialContext.maySendCredentials, rootIntent: source.managedRequestIntent,
+      configuration: source.networkConfiguration.map(YlNetworkConfiguration.init(options:)) ?? configuration.network, scope: scope)
+    let inspected = try YlDashProgramLoader.inspect(url: url, resources: resources, cancellation: token)
+    let manifest = inspected.manifest
+    if source.networkPolicy != .managed, source.loadOptions?.decoderPolicy != .hardwareRequired {
+      let eligible = (try? YlDashHlsCompiler.compile(data: manifest.data, finalManifestURL: manifest.finalURL,
+        sourceURL: url, credentialsStripped: manifest.credentialsStripped, indexes: inspected.indexes,
+        videoConstraints: constraints, manifestURL: { url.appendingPathComponent($0) }, mediaURL: { value, _ in value })) != nil
+      if eligible {
+        let snapshot = YlDashManifestSnapshot(data: manifest.data, effectiveURL: manifest.finalURL,
+          credentialsStripped: manifest.credentialsStripped, indexes: inspected.indexes)
+        return .headeredHls(source: source, prepared: try prepareHeaderedHls(source: source, token: token,
+          credentialContext: credentials, videoConstraints: constraints, dashSnapshot: snapshot))
+      }
+    }
+    let program = try inspected.program(source: url)
+    return .dashProgram(source: source, prepared: try YlPreparedDashProgram(program: program,
+      resources: resources, scope: scope, cancellation: token, constraints: constraints,
+      decoderPolicy: source.loadOptions?.decoderPolicy ?? .systemDefault,
+      autoplay: source.loadOptions?.autoplay ?? false, startPositionMs: source.loadOptions?.startPositionMs ?? 0))
   }
 
   private func prepareHeaderedHls(
@@ -1003,6 +1084,7 @@ final class YlAppleSessionCoordinator: NSObject {
     if let fallback = slot.current as? YlFallbackBackend {
       return fallback.playbackIntent
     }
+    if let dash = slot.current as? YlDashProgramBackend { return dash.playbackIntent }
     if let protected = slot.current as? YlFairPlayBackend { return protected.playbackIntent }
     return slot.current === avBackend && avBackend.playbackIntent
   }
@@ -1010,6 +1092,8 @@ final class YlAppleSessionCoordinator: NSObject {
   private func reportRestorationFailure(_ error: NativePlayerError) {
     if let fallback = slot.current as? YlFallbackBackend {
       fallback.reportRestorationFailure(error)
+    } else if let dash = slot.current as? YlDashProgramBackend {
+      dash.reportRestorationFailure(error)
     } else if let protected = slot.current as? YlFairPlayBackend {
       protected.fail(error)
     } else {
