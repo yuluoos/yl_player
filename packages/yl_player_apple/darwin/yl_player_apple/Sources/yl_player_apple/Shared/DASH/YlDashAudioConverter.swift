@@ -7,6 +7,7 @@ final class YlDashAudioConverter: YlAudioPacketConverting {
   private let converter: YlAppleCompressedAudioConverter
   private let window: YlDashProgramTimeline.Window
   private var timestamps: [Int64: YlDashProgramTime] = [:]
+  private(set) var lastOutput: YlDashPCMClipper.Output?
   var reservesOutputBuffers: Bool { converter.reservesOutputBuffers }
   var pcmFormat: AVAudioFormat? { converter.pcmFormat }
   init(window: YlDashProgramTimeline.Window, scope: YlManagedBufferScope) {
@@ -26,12 +27,14 @@ final class YlDashAudioConverter: YlAudioPacketConverting {
     converter.estimateOutput(for: packet)
   }
   func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
+    lastOutput = nil
     guard let output = try converter.convert(packet: packet) else { return nil }
     guard let pts = timestamps.removeValue(forKey: output.ptsUs) else {
       throw NativePlayerError(category: "decoder", code: "decoder.dash_audio_invalid",
         message: "Decoded DASH audio has no matching source timestamp.")
     }
-    return try YlDashPCMClipper.clip(output, pts: pts, window: window)
+    lastOutput = try YlDashPCMClipper.timed(output, pts: pts, window: window)
+    return lastOutput?.buffer
   }
-  func reset() { converter.reset(); timestamps.removeAll() }
+  func reset() { converter.reset(); timestamps.removeAll(); lastOutput = nil }
 }

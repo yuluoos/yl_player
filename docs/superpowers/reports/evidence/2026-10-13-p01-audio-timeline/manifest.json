@@ -1,0 +1,68 @@
+{
+  "base": "01933b0e49c9dcd443568cbb3e990ff9a20c72d4",
+  "scope": "Apple bounded PCM timeline for leading and internal audio gaps. P01 continues.",
+  "results": {
+    "p01-audio-gap-red": {
+      "result": "Failed",
+      "passedTests": 0,
+      "failedTests": 1,
+      "skippedTests": 0
+    },
+    "p01-audio-gap-first-green": {
+      "result": "Passed",
+      "passedTests": 3,
+      "failedTests": 0,
+      "skippedTests": 0
+    },
+    "p01-audio-timeline-macos": {
+      "result": "Failed",
+      "passedTests": 22,
+      "failedTests": 1,
+      "skippedTests": 0
+    },
+    "p01-audio-timeline-ios": {
+      "result": "Passed",
+      "passedTests": 23,
+      "failedTests": 0,
+      "skippedTests": 0
+    },
+    "p01-audio-gap-macos-repeat": {
+      "result": "Passed",
+      "passedTests": 2,
+      "failedTests": 0,
+      "skippedTests": 0
+    }
+  },
+  "interpretation": [
+    "Actual behavior RED completed a four-second programme in 3.717 seconds, compressing the leading audio gap.",
+    "Existing codec decoder and renderer retained. Adapter inserts at most 100ms actual zero PCM per quantum; one decoded buffer and one submission remain bounded by the managed ledger.",
+    "PCM test: exactly 192000 frames at 48kHz, continuous positions, silent intervals zero, original 440Hz tone within 8Hz. Not microphone or external acoustic sync evidence.",
+    "macOS full 22/23: one narrow video marker absent under concurrent macOS/iOS/Android test load. Original assertion retained; only diagnostics added. Two targeted cases repeated three times passed (six executions, two unique cases). Rerun is not proof of all-load reliability.",
+    "iOS full 23/23, zero skipped. Tests overlap and must not be summed as independent coverage.",
+    "No shared audio renderer, frame scheduler, long-play or weak-network ABR changes. Android adaptation, DASH subtitles and whole-P01 final gates remain."
+  ],
+  "sha256": {
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashProgramResources.swift": "84de4926ffcf0061c90da675cc5ec75c431895866bb7e23f03a33b1a2778aa54",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashPCMClipper.swift": "3726485c8ef6523dadc5883dca7717ad790c6cba666c4ffe3f7b9791e33d0a10",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashProgramTimeline.swift": "2da594c0c14244338344e46ff5ba71885bd076e3ce5fcb7dde044bda449b3ec9",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashProgramLoader.swift": "094bf76f2f34cd05db43643147eab0c93790a0a30d020848497109e420f1f9ac",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashSampleWindow.swift": "fe231620580a24b3223bc614d73ae491dbd9f7f8e1628ddead1b300ebb42b333",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashTrackCursor.swift": "3fb05f6388803a1d038d7dc5619c6d90789d21f5afadf821782b85670f0ab307",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashAudioConverter.swift": "7ec1b416a490308b23c1a093fc9acb24178774cf1989c33f07f5c3c19c37f782",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashProgramTime.swift": "790c3887f930e890e6948883508c6fd959e4e69643cf3f765bb7f99a6553dd00",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashManagedResourceHop.swift": "fadaf1a399e6141675739aee530df66e2d59333c83fdd17c17a3044c70f251d0",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashPeriodPlayback.swift": "d1d519dbc581848eeb768cedd6e4843de669f362a15e8197afbccf89ea73a8a6",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashDocument.swift": "bc46cbda8c399e4cb394a6b7235423faf8d5cd021268b7c5d9152ad2e6663c5e",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashPreparedPeriod.swift": "f152175ba61e2a357f055b593c6bc6cc329b1de86b77f29a0e3a6ee521d7b1e4",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashHlsCompiler.swift": "028eff77e07896b0b1d69d78cfdfe8956a4812c4a69d6c83942b291e5e8a165c",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlPreparedDashProgram.swift": "9478041a30b916815e6ba6c302ca772d1d810c4325167ea538ec8ec8f0b7d45d",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashSidx.swift": "9fdcb679b721be619983f9ab5c3f3af64d50c3b85ee821b5344d27f7dac0f2e0",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashSampleSource.swift": "5af64e99ab696344113a1c4e0e0193bb2333178a96b93843a682f16d7c56452b",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashProgramDocument.swift": "8c86fcc9aa6aea36b01be87240cafc2b98121f8fc9e0a10fed7abc5006805a24",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashAudioTimeline.swift": "a83e4c2aed9c06fb982b7dc5f3140a889fb307c7a5aa4118b551281bb8ebc3f0",
+    "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift": "0cd80e36432749b0228349138c3f1c1639fc2f590abff43c84c2109f89cb0f50",
+    "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift": "0cd80e36432749b0228349138c3f1c1639fc2f590abff43c84c2109f89cb0f50",
+    "packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift": "c0c6a37a37532f3737e2fdab9d059c938e825a4262f8d9ad77cbc9f80e133354",
+    "tool/consumer_fixtures/apple_flutter/main_example_tests.py": "e95e74218c3d0e663bcb32a463b1e1fd0d0fbd14e60b6bf396aed92b854f4bb0"
+  }
+}

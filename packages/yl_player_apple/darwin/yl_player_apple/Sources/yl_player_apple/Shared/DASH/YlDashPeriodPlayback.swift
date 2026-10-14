@@ -12,13 +12,12 @@ final class YlDashPeriodPlayback {
   let scheduler = YlFrameScheduler(maxFrames: 8)
   let clock = YlMediaClock()
   let audio: YlAudioRenderer?
-  let audioConverter: YlDashAudioConverter?
+  let audioConverter: YlDashAudioTimeline?
   private(set) var video: YlVideoToolboxDecoder!
   private let scope: YlManagedBufferScope
   private let outputWindow: YlDashProgramTimeline.Window
   private var nextVideo: YlDashTrackCursor.Item?
   private var nextAudio: YlDashTrackCursor.Item?
-  private var pendingAudio: YlCompressedAudioPacket?
   private var videoEnded = false, audioEnded = false
   private let timingLock = NSLock()
   private struct DisplayTime { let start: Int64; let duration: Int64 }
@@ -36,7 +35,7 @@ final class YlDashPeriodPlayback {
     outputWindow = .init(start: prepared.position, end: prepared.window.end)
     nextVideo = prepared.firstVideo; nextAudio = prepared.firstAudio
     if let first = prepared.firstAudio {
-      let converter = YlDashAudioConverter(window: outputWindow, scope: scope)
+      let converter = YlDashAudioTimeline(window: outputWindow, scope: scope)
       let renderer = YlAudioRenderer(maxScheduledDurationUs: 500_000,
         maxScheduledBytes: 2 * 1024 * 1024, bufferScope: scope,
         converter: converter, output: audioOutput ?? YlSystemAudioOutput())
@@ -75,12 +74,17 @@ final class YlDashPeriodPlayback {
       try cancellation.throwIfCancelled()
       var progress = false
       let position = clock.position(atHostTimeUs: Self.now)
-      if !audioEnded, let item = nextAudio, let audio, let audioConverter,
-         // Finish the current compressed fragment beyond the clipped window.
-         // Otherwise discarded PCM freezes the clock before the lookahead can
-         // reach EOF, leaving converter-delayed tail samples stranded.
-         (try item.pts >= outputWindow.end || item.pts <= Time(position, 1_000_000).adding(Time(1, 2))) {
-        if pendingAudio == nil {
+      if let audio, let audioConverter {
+        if let submission = try audioConverter.nextSubmission() {
+          switch try audio.enqueue(packet: submission) {
+          case .scheduled, .buffered: progress = true
+          case .staleGeneration: throw YlOpenCancellationToken.cancellationError()
+          case .wouldExceedBytes, .wouldExceedDuration: break
+          }
+        } else if !audioEnded, let item = nextAudio,
+          // Decode one future packet when the queue is empty to establish a
+          // known gap. PCM silence then advances it in bounded output quanta.
+          (try !audio.hasPendingPlayback || item.pts >= outputWindow.end || item.pts <= Time(position, 1_000_000).adding(Time(1, 2))) {
           guard let original = prepared.firstAudio,
                 item.source.stream.codec == original.source.stream.codec,
                 item.source.stream.sample_rate == original.source.stream.sample_rate,
@@ -88,21 +92,17 @@ final class YlDashPeriodPlayback {
                 item.source.codecConfiguration == original.source.codecConfiguration else { throw Self.invalid("audio configuration") }
           let bytes = try item.packet.audioBytes()
           let reservation = try scope.require(category: .compressedPackets, bytes: bytes.count)
-          pendingAudio = try .init(reservation: reservation, data: bytes,
+          let packet = try YlCompressedAudioPacket(reservation: reservation, data: bytes,
             ptsUs: item.pts.converted(to: 1_000_000, rounding: .floor),
             durationUs: item.packet.duration.converted(to: 1_000_000, rounding: .ceil), generation: generation)
+          try audioConverter.decode(packet, pts: item.pts)
+          nextAudio = try prepared.audio?.next(); progress = true
+          if nextAudio == nil { audioEnded = true }
         }
-        let packet = pendingAudio!
-        try audioConverter.register(item.pts, forMicroseconds: packet.ptsUs)
-        switch try audio.enqueue(packet: packet) {
-        case .scheduled, .buffered:
-          pendingAudio = nil; nextAudio = try prepared.audio?.next(); progress = true
-          if nextAudio == nil {
-            audioEnded = true; audio.finishInput()
-            timingLock.lock(); drainedAudio = true; timingLock.unlock()
-          }
-        case .staleGeneration: throw YlOpenCancellationToken.cancellationError()
-        case .wouldExceedBytes, .wouldExceedDuration: break
+        timingLock.lock(); let alreadyDrained = drainedAudio; timingLock.unlock()
+        if audioEnded && !audioConverter.hasPendingOutput && !alreadyDrained {
+          audio.finishInput()
+          timingLock.lock(); drainedAudio = true; timingLock.unlock()
         }
       }
       timingLock.lock(); let pendingCount = pendingTimes.count; timingLock.unlock()
@@ -173,7 +173,7 @@ final class YlDashPeriodPlayback {
     timingLock.lock(); let already = disposed; disposed = true; timingLock.unlock()
     guard !already else { return }
     scheduler.dispose(); clock.stopIsolatedAudioClock(); video?.dispose(); audio?.dispose()
-    pendingAudio = nil; nextVideo = nil; nextAudio = nil
+    nextVideo = nil; nextAudio = nil
     timingLock.lock(); pendingTimes.removeAll(); timingLock.unlock()
   }
   deinit { dispose() }

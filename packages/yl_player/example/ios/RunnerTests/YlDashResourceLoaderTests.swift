@@ -2892,3 +2892,83 @@ extension YlDashSampleSourceNativeTests {
     }
   }
 }
+
+
+extension YlDashSampleSourceNativeTests {
+  @MainActor func testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime() async throws {
+    for leading in [true, false] {
+      let harness = try DashProgramHarness("independent-pto", transform: { xml in
+        if leading { return xml.replacingOccurrences(of: "presentationTimeOffset=\"960000\"", with: "presentationTimeOffset=\"936000\"") }
+        var xml = xml
+        let adaptation = xml.range(of: "<AdaptationSet contentType=\"audio\"")!.lowerBound
+        let start = xml.range(of: "<SegmentTemplate", range: adaptation..<xml.endIndex)!.lowerBound
+        let end = xml.range(of: "</SegmentTemplate>", range: start..<xml.endIndex)!.upperBound
+        let replacement = """
+        <SegmentList timescale="48000" presentationTimeOffset="960000"><Initialization sourceURL="init-1.m4s"/><SegmentTimeline><S t="960000" d="47104"/><S t="1055232" d="48128"/><S t="1103360" d="48128"/><S t="1151488" d="512"/></SegmentTimeline><SegmentURL media="chunk-1-00001.m4s"/><SegmentURL media="chunk-1-00003.m4s"/><SegmentURL media="chunk-1-00004.m4s"/><SegmentURL media="chunk-1-00005.m4s"/></SegmentList>
+        """
+        xml.replaceSubrange(start..<end, with: replacement); return xml
+      })
+      defer { harness.close() }
+      let started = ProcessInfo.processInfo.systemUptime
+      try harness.backend.play()
+      try await harness.advance(until: { harness.states.last?.status == "completed" }, seconds: 7)
+      XCTAssertGreaterThanOrEqual(ProcessInfo.processInfo.systemUptime - started, 3.85)
+      XCTAssertTrue(harness.video.contains { $0.0 >= 250_000 && $0.0 <= 350_000 }, "leading audio cannot skip early video")
+      XCTAssertTrue(harness.video.contains { $0.0 >= 1_450_000 && $0.0 <= 1_550_000 }, "internal gap keeps programme time; leading=\(leading) published=\(harness.video.filter { $0.0 >= 1_000_000 && $0.0 < 2_000_000 }.map { $0.0 })")
+      XCTAssertEqual(harness.states.last?.positionMs, 4000)
+    }
+  }
+}
+
+extension YlDashSampleSourceNativeTests {
+  func testAudioTimelineSchedulesExactBoundedSilenceAndOriginalPCM() throws {
+    let encoded = try JSONDecoder().decode([String: String].self, from: Data(contentsOf: XCTUnwrap(Bundle(for: Self.self).url(forResource: "p01-program-fixtures", withExtension: "json"))))
+    let files = encoded.compactMapValues { Data(base64Encoded: $0) }
+    for leading in [true, false] {
+      let scope = try YlManagedBufferLedger(maxBytes: 4 * 1024 * 1024).makeScope(maxBytes: nil)
+      let url = URL(string: "https://owned.example/audio-gap")!
+      let window = try YlDashProgramTimeline.Window(start: .init(0), end: .init(4))
+      let timeline = YlDashAudioTimeline(window: window, scope: scope)
+      var configured = false, frames = 0, silenceFrames = 0, silencePeak: Float = 0
+      var crossings = 0, toneFrames = 0, previous: Float = 0
+      let silenceWindow = leading ? 0..<20000 : 52800..<86400
+      let toneWindow = leading ? 30000..<42000 : 12000..<36000
+      for number in 1...5 where leading || number != 2 {
+        let source = try YlDashSampleSource(initialization: .init(data: XCTUnwrap(files["period0/init-1.m4s"]), finalURL: url, credentialsStripped: false, resourceLength: nil, reservation: nil),
+          fragment: .init(data: XCTUnwrap(files[String(format: "period0/chunk-1-%05d.m4s", number)]), finalURL: url, credentialsStripped: false, resourceLength: nil, reservation: nil),
+          kind: .audio, cancellation: .init(), scope: scope)
+        if !configured {
+          try timeline.configure(stream: .init(codec: .aac, sampleRate: 48000, channelCount: 1, magicCookie: source.codecConfiguration, generation: 1))
+          configured = true
+        }
+        while let packet = try source.next() {
+          let pts = try packet.pts.adding(leading ? .init(1, 2) : .init(0))
+          let input = try YlCompressedAudioPacket(data: packet.audioBytes(), ptsUs: pts.converted(to: 1_000_000, rounding: .floor),
+            durationUs: packet.duration.converted(to: 1_000_000, rounding: .ceil), generation: 1)
+          try timeline.decode(input, pts: pts)
+          while let submission = try timeline.nextSubmission() {
+            let output = try XCTUnwrap(timeline.convert(packet: submission))
+            let pcm = try XCTUnwrap(output.payload as? AVAudioPCMBuffer), samples = try XCTUnwrap(pcm.floatChannelData?[0])
+            let start = Int((Double(output.ptsUs) * 48000 / 1_000_000).rounded())
+            XCTAssertEqual(start, frames, "No unrepresented gap or overlap")
+            XCTAssertLessThanOrEqual(output.durationUs, 100000)
+            XCTAssertLessThan(scope.ledger.snapshot.currentBytes, 2 * 1024 * 1024)
+            for index in 0..<Int(pcm.frameLength) {
+              if silenceWindow.contains(start + index) { silencePeak = max(silencePeak, abs(samples[index])); silenceFrames += 1 }
+              if toneWindow.contains(start + index) {
+                if previous <= 0 && samples[index] > 0 { crossings += 1 }
+                previous = samples[index]; toneFrames += 1
+              }
+            }
+            frames += Int(pcm.frameLength)
+          }
+        }
+      }
+      XCTAssertEqual(frames, 192000)
+      XCTAssertEqual(silenceFrames, silenceWindow.count); XCTAssertEqual(silencePeak, 0)
+      XCTAssertEqual(toneFrames, toneWindow.count)
+      XCTAssertEqual(Double(crossings) * 48000 / Double(toneFrames), 440, accuracy: 8)
+      timeline.reset()
+    }
+  }
+}
