@@ -1,0 +1,25 @@
+{
+  "base": "c3e304e144f750b62983267023ae06953ead3458",
+  "command": "python3 -B -m unittest discover -s tool/dash_timeline -p 'test_*.py'",
+  "pythonTestsPassed": 5,
+  "swiftChecksPassed": 1518,
+  "fractionOracleCases": 1494,
+  "scope": "Pure program model; no public route enabled and no AV output claim",
+  "source": {
+    "docs/superpowers/specs/2026-09-20-playback-expansion-intake.md": "6706dbb53f3ab72441826a4bc1e31f9f6c3dc205f53bd0b772f9a0bfbdc1ed54",
+    "docs/superpowers/specs/2026-09-20-playback-expansion-requirements.md": "5bb5963e63a8330f80c72a7351aee478ecd912b2f85cd4162f5526b4ed99c1d3",
+    "docs/adr/0008-compatible-quality-and-subtitle-failure-isolation.md": "185295c66e29ba4411b915b1bc379e1f75a764f17e795f090aba159ec4cf9653",
+    "docs/superpowers/plans/2026-10-13-p01-completion.md": "afad53b77030bdfa7f7d606bf0c7172ff1fd4d05ac6e9d1b9a65f6760493c649",
+    "docs/superpowers/specs/2026-10-13-p01-completion-design.md": "4b93db628478742c23e3fd8bf5c1ad14f5a01d7caa0a20b8c227bd7c65ed4504",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashProgramTime.swift": "790c3887f930e890e6948883508c6fd959e4e69643cf3f765bb7f99a6553dd00",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashProgramTimeline.swift": "2da594c0c14244338344e46ff5ba71885bd076e3ce5fcb7dde044bda449b3ec9",
+    "tool/dash_timeline/program_time_tests.swift": "72a85c6f33b102c8269fbe58f2e6b4df5f67036cba50300a25d9a128463dbc17",
+    "tool/dash_timeline/test_program_time.py": "f64283c200e55c30f57012ea1606049b41829c616c19db22fe09721b630cf999",
+    "docs/superpowers/reports/2026-09-26-remaining-01-dash.md": "228b9a91a3de8a4a9a18e4d6346625fa8b8d5efd806a70e05e79d84ff51570ab"
+  },
+  "evidence": {
+    "docs/superpowers/reports/evidence/2026-10-13-p01-program-time/inverse-red.log": "4d3cc6fd3cfac2cfb5e681b6aebe8a92cf28494096d1d5426aaef450ed23f61d",
+    "docs/superpowers/reports/evidence/2026-10-13-p01-program-time/entry-red.log": "de5512ca9f340493fb82a813e7d58bf16526dd2f390e852c4837e284c2cc610e",
+    "docs/superpowers/reports/evidence/2026-10-13-p01-program-time/final.log": "590432d70d45243770f9f169e5fd8ae6ef4fa6624b5b72c02231569e2153d3ac"
+  }
+}

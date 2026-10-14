@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_production_program_time (test_program_time.ProgramTimeTests.test_production_program_time)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/dash_timeline/test_program_time.py", line 29, in test_production_program_time
+    self.assertTrue(all(r['passed'] for r in rows), [r for r in rows if not r['passed']])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : [{'name': 'reduced identity', 'passed': False}, {'error': 'invalidTime', 'name': 'exact sum', 'passed': False}, {'error': 'invalidTime', 'name': 'negative priming', 'passed': False}, {'error': 'invalidTime', 'name': 'cancellation without overflow', 'passed': False}, {'error': 'invalidTime', 'name': 'large rescale reduced before product', 'passed': False}, {'error': 'invalidTime', 'name': 'positive floor', 'passed': False}, {'error': 'invalidTime', 'name': 'positive ceiling', 'passed': False}, {'error': 'invalidTime', 'name': 'negative floor', 'passed': False}, {'error': 'invalidTime', 'name': 'negative ceiling', 'passed': False}, {'name': 'invalid denominator rejected', 'passed': False}, {'name': 'comparison avoids cross product overflow', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'independent audio/video origins', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'gap preserves programme time', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'overlap later Period owns boundary', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'half open final endpoint', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'next explicit start resolves unknown duration', 'passed': False}, {'error': 'unresolvedPeriod', 'name': 'repeated mapping never rounds internal clock', 'passed': False}]
+
+----------------------------------------------------------------------
+Ran 1 test in 5.386s
+
+FAILED (failures=1)

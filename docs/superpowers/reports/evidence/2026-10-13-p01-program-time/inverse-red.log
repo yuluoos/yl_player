@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_production_program_time (test_program_time.ProgramTimeTests.test_production_program_time)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/dash_timeline/test_program_time.py", line 43, in test_production_program_time
+    self.assertTrue(all(r['passed'] for r in rows), [r for r in rows if not r['passed']])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : [{'error': 'unresolvedPeriod', 'name': 'inverse mapping of programme seek', 'passed': False}]
+
+----------------------------------------------------------------------
+Ran 1 test in 2.646s
+
+FAILED (failures=1)

@@ -250,3 +250,11 @@ Task 3 收尾：关闭本轮启动的本地 HTTP 服务和 iOS 模拟器；四�
 - `tool/dash_timeline/verify_markers.py`：`2555dc9536b5806f23ee85eb8a63439e397daae9fbb0138654e05b2c526d0214`
 - `tool/dash_timeline/probe.swift`：`4221c814cfd0ce81d54022638fc101fdc4cea407b8dd26c64c28eb4895001add`
 - `tool/dash_timeline/test_fixtures.py`：`8b9f7d34809544711595087de9fb177a06c02b152302df315a4bd0a2b74968cd`
+
+## 2026-10-13 全量续做：精确节目时间模型
+
+用户已批准[新分段路线设计](../specs/2026-10-13-p01-completion-design.md)及 PD-02/03；按[详细计划](../plans/2026-10-13-p01-completion.md)连续实施。第一步新增纯 Swift 约分有理数时标、128 位中间运算、明确量化规则、半开 Period 窗口、空缺/重叠归属及双向时标映射。没有改动 HLS admission 或声称新公开播放能力。
+
+先用占位行为观察实际断言 RED，再实现 GREEN；逆映射同样 RED→GREEN。最终 `python3 -B -m unittest discover -s tool/dash_timeline -p 'test_*.py'` 5/5 通过，包含生产 Swift 的 1518 项检查（24 个指定场景、1494 个 Python Fraction 独立边界/随机对照）。源码直接编译运行，无 Flutter/mock 时钟；这仍不是实际音画呈现。证据见[evidence](evidence/2026-10-13-p01-program-time/manifest.json)。
+
+P01 整体仍在执行，下一步为 MPD 资源/节目模型和真实分段播放；最终 fresh review 在联合实现后进行。另一边长播放、弱网 ABR 与 P05 未修改。
