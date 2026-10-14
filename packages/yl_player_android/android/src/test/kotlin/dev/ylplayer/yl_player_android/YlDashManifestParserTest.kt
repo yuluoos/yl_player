@@ -59,6 +59,16 @@ class YlDashManifestParserTest {
         assertFalse(coverage.contains(2_000_000))
     }
 
+    @Test fun `parser publishes initialization and media alternatives only after graph admission`() = android {
+        val registry = YlDashCandidateRegistry()
+        val parser = YlDashManifestParser(policy(), registry)
+        parser.parse(Uri.parse(root.toString()), manifest(base = "<BaseURL>a/</BaseURL><BaseURL>b/</BaseURL>").byteInputStream())
+        for (path in listOf("init-v.mp4", "v-1.m4s", "v-2.m4s")) {
+            assertEquals(listOf("https://media.test/a/$path".toHttpUrl(), "https://media.test/b/$path".toHttpUrl()),
+                registry.candidatesFor("https://media.test/b/$path".toHttpUrl()))
+        }
+    }
+
     @Test fun `template child requests inherit same origin and unknown paths stay stripped`() = android {
         val policy = policy()
         parse(manifest(base = "<BaseURL>assets/</BaseURL>"), policy)

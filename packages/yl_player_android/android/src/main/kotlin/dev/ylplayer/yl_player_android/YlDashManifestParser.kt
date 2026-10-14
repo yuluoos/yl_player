@@ -21,7 +21,7 @@ import java.io.InputStream
  * Every request URL inherits its exact BaseURL path before the manifest is exposed.
  * Limits bound parsing/graph allocation; they do not claim bounded media buffering. */
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
-internal class YlDashManifestParser(private val credentials: YlOriginCredentialPolicy?) : DashManifestParser() {
+internal class YlDashManifestParser(private val credentials: YlOriginCredentialPolicy?, private val dashCandidates: YlDashCandidateRegistry? = null) : DashManifestParser() {
     private var timelineElements = 0
     private var registeredEdges = 0
     private var uriCharacters = 0L
@@ -59,6 +59,7 @@ internal class YlDashManifestParser(private val credentials: YlOriginCredentialP
         } catch (_: ArithmeticException) { unsupported() }
         if (manifest.dynamic || manifest.durationMs == C.TIME_UNSET) unsupported()
         var representations = 0
+        val candidateGroups = mutableListOf<List<okhttp3.HttpUrl>>()
         for (periodIndex in 0 until manifest.periodCount) {
             val durationUs = manifest.getPeriodDurationUs(periodIndex)
             if (durationUs <= 0 || durationUs == C.TIME_UNSET) unsupported()
@@ -85,9 +86,21 @@ internal class YlDashManifestParser(private val credentials: YlOriginCredentialP
                             }
                         }
                     }
+                    if (dashCandidates != null && representation.baseUrls.size > 1) {
+                        fun register(reference: androidx.media3.exoplayer.dash.manifest.RangedUri) {
+                            candidateGroups += representation.baseUrls.map { reference.resolveUriString(it.url).toHttpUrlOrNull() ?: unsupported() }
+                        }
+                        representation.initializationUri?.let(::register)
+                        representation.indexUri?.let(::register)
+                        if (representation is Representation.SingleSegmentRepresentation)
+                            register(androidx.media3.exoplayer.dash.manifest.RangedUri("", 0, C.LENGTH_UNSET.toLong()))
+                        if (index != null) for (offset in 0L until checkNotNull(count))
+                            register(index.getSegmentUrl(index.firstSegmentNum + offset))
+                    }
                 }
             }
         }
+        try { dashCandidates?.publish(candidateGroups) } catch (_: IllegalArgumentException) { unsupported() }
         return YlDashProgramManifest(manifest, timing)
     }
 

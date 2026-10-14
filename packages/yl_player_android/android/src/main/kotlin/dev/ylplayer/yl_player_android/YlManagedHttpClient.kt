@@ -44,6 +44,7 @@ internal class YlManagedHttpClient(
     private val clock: YlNetworkClock = YlSystemNetworkClock,
     private val onRetry: (Int, Long) -> Unit = { _, _ -> },
     transport: OkHttpClient = OkHttpClient(),
+    private val dashCandidates: ((HttpUrl) -> List<HttpUrl>)? = null,
 ) : Call.Factory {
     private val client = transport.newBuilder().followRedirects(false).followSslRedirects(false).apply {
         if (network != null) {
@@ -80,7 +81,13 @@ internal class YlManagedHttpClient(
         private var pending: CompletableFuture<*>? = null
         private var retryCount = 0
         private var redirectCount = 0
-        private var stripped = credentials.isStripped(original.url)
+        // Only an admitted clear managed DASH graph supplies alternatives. A byte
+        // resume with an entity validator is pinned to the caller's original URL.
+        private val candidates = if (network != null && original.method in listOf("GET", "HEAD") && original.header("If-Range") == null)
+            dashCandidates?.invoke(original.url)?.distinct()?.takeIf { it.isNotEmpty() } ?: listOf(original.url)
+            else listOf(original.url)
+        private var candidateIndex = 0
+        private var stripped = credentials.isStripped(candidates.first())
         private var lastRequest = original
         override fun request() = original
         override fun isExecuted() = executed.get()
@@ -112,13 +119,21 @@ internal class YlManagedHttpClient(
             if (cancelled || Thread.currentThread().isInterrupted) { cancel(); throw InterruptedIOException("Cancelled") }
         }
         private fun executeResource(): Response {
-            val request = if (network == null) original else original.newBuilder().header("Accept-Encoding", "identity").build()
-            val response = acquire(request)
+            val request = if (network == null) original else original.newBuilder().url(candidates.first()).header("Accept-Encoding", "identity").build()
+            val response = acquire(request, allowCandidateSwitch = true)
             val body = response.body ?: return response
             return try { response.newBuilder().body(resumable(response, body)).build() }
             catch (error: IOException) { response.close(); calls.remove(this); throw error }
         }
-        private fun acquire(initial: Request): Response {
+        private fun advanceCandidate(initial: Request, current: Request, allowed: Boolean): Request {
+            if (!allowed || candidates.size <= 1) return current
+            candidateIndex = (candidateIndex + 1) % candidates.size
+            val next = candidates[candidateIndex]
+            credentials.inherit(lastRequest.url, next)
+            stripped = stripped || credentials.isStripped(next)
+            return initial.newBuilder().url(next).build()
+        }
+        private fun acquire(initial: Request, allowCandidateSwitch: Boolean = false): Response {
             var request = initial
             while (true) {
                 checkCancelled()
@@ -127,6 +142,7 @@ internal class YlManagedHttpClient(
                 lastRequest = request
                 val response = try { hop(request) } catch (error: IOException) {
                     scheduleRetry(request.method, error = error) ?: throw error
+                    request = advanceCandidate(initial, request, allowCandidateSwitch)
                     continue
                 }
                 val follow = try { redirects.follow(response, redirectCount) } catch (error: IOException) { response.close(); throw error }
@@ -136,7 +152,11 @@ internal class YlManagedHttpClient(
                     response.close(); request = follow; continue
                 }
                 val delay = retries?.delay(request.method, retryCount + 1, response.code, response.header("Retry-After"))
-                if (delay != null) { response.close(); waitForRetry(delay); continue }
+                if (delay != null) {
+                    response.close(); waitForRetry(delay)
+                    request = advanceCandidate(initial, request, allowCandidateSwitch)
+                    continue
+                }
                 return response
             }
         }

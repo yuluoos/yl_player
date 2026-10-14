@@ -38,6 +38,7 @@ final class DashServer {
     required this.manifestOverride,
     required this.rootStatusCode,
     required this.missingMedia,
+    required this.responseStatusByPrefix,
   });
 
   static const _assetRoot = 'assets/test_media/dash';
@@ -82,6 +83,7 @@ final class DashServer {
     int? rootStatusCode,
     bool missingMedia = false,
     Map<String, List<int>> subtitleFiles = const {},
+    Map<String, int> responseStatusByPrefix = const {},
   }) async {
     if (offsetSegmentList && !presentationOffsets) {
       throw ArgumentError('Offset SegmentList requires presentationOffsets');
@@ -178,6 +180,7 @@ final class DashServer {
       manifestOverride: manifestOverride,
       rootStatusCode: rootStatusCode,
       missingMedia: missingMedia,
+      responseStatusByPrefix: Map.unmodifiable(responseStatusByPrefix),
     );
     primary.listen((request) => result._accept('primary', request));
     secondary.listen((request) => result._accept('secondary', request));
@@ -202,6 +205,7 @@ final class DashServer {
   Future<void> get mediaEntered => _mediaEntered.future;
   final HttpServer _primary;
   final HttpServer _secondary;
+  final Map<String, int> responseStatusByPrefix;
   final Map<String, Uint8List> _files;
   final String _manifest;
   final Completer<void> _mediaGate = Completer<void>();
@@ -302,6 +306,16 @@ final class DashServer {
         Uint8List.fromList(bytes),
         ContentType('application', 'dash+xml', charset: 'utf-8'),
       );
+      return;
+    }
+    final statuses = responseStatusByPrefix.entries
+        .where((entry) => request.uri.path.startsWith(entry.key))
+        .toList();
+    if (statuses.length > 1) {
+      throw StateError('Ambiguous test response prefixes');
+    }
+    if (statuses.isNotEmpty) {
+      await _empty(request.response, statuses.single.value);
       return;
     }
     final normalizedPath = request.uri.path.startsWith('/cross/')

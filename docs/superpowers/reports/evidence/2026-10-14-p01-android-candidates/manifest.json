@@ -1,0 +1,34 @@
+{
+  "scope": "Managed clear Android DASH ordered BaseURL alternatives at HTTP call boundary; not weak network ABR",
+  "parent": "43c83cf4eb03907a51f3bedac33ad183e28c0bef",
+  "results": {
+    "jvmPassed": 62,
+    "publicAndroidPassed": 3,
+    "staticIssues": 0,
+    "publicMacosPassed": 3
+  },
+  "red": [
+    "First candidate ignored by Media3 URL selection; retry sequence and sticky credentials assertions",
+    "Registry/parser publication API and behavior",
+    "Intermediate MockWebServer localhost IPv6 mismatch; final tests use IPv4 like existing managed suite"
+  ],
+  "semantics": [
+    "One resource call retains shared retry and redirect counters, cancellation and sticky credentials across candidates",
+    "Candidate group is immutable for each call, published only after graph validation",
+    "Response-body resume and caller If-Range remain pinned to one URL/entity",
+    "Overlapping conflicting ordered URL groups reject before publication; graph count/URI budget preserved",
+    "No new entity cache; no response bytes concatenated across alternatives"
+  ],
+  "measurement": "Android API36 TV emulator-5554; controlled local503 responses and real Media3 playback. Not physical devices or minimum-OS runtime.",
+  "sources": {
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashCandidateRegistry.kt": "4ebb687435c7430e2aa7f4916fd34492bf86de103077bf31ef8823025db34044",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashManifestParser.kt": "b75843de53a63c7ffa81df13ca72dc6baf48ae66f15dfd3c51803b41b3de3def",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlManagedHttpClient.kt": "95ebb725bc4989edce83e7b6ae68ad9d68dafa12fc45af296736c932dd9cbe75",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMediaSourceFactory.kt": "c87dc849f0b6078a02d94b24cc9995cfe4e9bf8d6e22df7d847c633478f5eb85",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashCandidateRegistryTest.kt": "73126a2bf72de2bd3953de053332fd8ae4207234fa5672ad3c4ed06c406324ed",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashCandidateHttpTest.kt": "b38f28dfa2369d681307b049548651980efad9f4d91aa9bc7d4b128ce0ba758e",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashManifestParserTest.kt": "823a056a8d3c23fa8e13b74970220736f9eef824db7e71bf75a4a526ce5544cb",
+    "packages/yl_player/example/integration_test/dash_candidate_playback_test.dart": "60cfd17754498d1c12c5b67bf8d62d2a25095b80998e54e3138e892783f7dedf",
+    "packages/yl_player/example/integration_test/support/dash_server.dart": "80c9aedcaa13f21681cb2b284e4e40f73c3f17ffd9898708ab2bd439cf262fe6"
+  }
+}

@@ -1,0 +1,209 @@
+
+> Configure project :gradle
+WARNING: Unsupported Kotlin plugin version.
+The `embedded-kotlin` and `kotlin-dsl` plugins rely on features of Kotlin `2.2.0` that might work differently than in the requested version `2.2.20`.
+
+> Task :gradle:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :gradle:compileKotlin UP-TO-DATE
+> Task :gradle:compileJava NO-SOURCE
+> Task :gradle:compileGroovy NO-SOURCE
+> Task :gradle:pluginDescriptors UP-TO-DATE
+> Task :gradle:processResources UP-TO-DATE
+> Task :gradle:classes UP-TO-DATE
+> Task :gradle:jar UP-TO-DATE
+
+> Configure project :app
+WARNING: The option setting 'android.builtInKotlin=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+WARNING: The option setting 'android.newDsl=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+w: ⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage
+The 'org.jetbrains.kotlin.android' plugin in project ':app' is no longer required for Kotlin support since AGP 9.0.
+Solution: Remove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.
+See https://kotl.in/gradle/agp-built-in-kotlin for more details.
+
+
+> Configure project :integration_test
+w: ⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage
+The 'org.jetbrains.kotlin.android' plugin in project ':integration_test' is no longer required for Kotlin support since AGP 9.0.
+Solution: Remove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.
+See https://kotl.in/gradle/agp-built-in-kotlin for more details.
+
+
+> Configure project :yl_player_android
+w: ⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage
+The 'org.jetbrains.kotlin.android' plugin in project ':yl_player_android' is no longer required for Kotlin support since AGP 9.0.
+Solution: Remove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.
+See https://kotl.in/gradle/agp-built-in-kotlin for more details.
+
+
+> Task :yl_player_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :yl_player_android:preBuild UP-TO-DATE
+> Task :yl_player_android:preDebugBuild UP-TO-DATE
+> Task :yl_player_android:generateDebugResources UP-TO-DATE
+> Task :yl_player_android:packageDebugResources UP-TO-DATE
+> Task :yl_player_android:processDebugNavigationResources UP-TO-DATE
+> Task :yl_player_android:parseDebugLocalResources UP-TO-DATE
+> Task :yl_player_android:generateDebugRFile UP-TO-DATE
+> Task :yl_player_android:compileDebugKotlin UP-TO-DATE
+> Task :yl_player_android:javaPreCompileDebug UP-TO-DATE
+> Task :yl_player_android:compileDebugJavaWithJavac UP-TO-DATE
+> Task :yl_player_android:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :yl_player_android:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :yl_player_android:preDebugUnitTestBuild UP-TO-DATE
+> Task :yl_player_android:writeDebugAarMetadata UP-TO-DATE
+> Task :yl_player_android:checkDebugUnitTestAarMetadata UP-TO-DATE
+> Task :yl_player_android:compileDebugLibraryResources UP-TO-DATE
+> Task :yl_player_android:mapDebugUnitTestSourceSetPaths UP-TO-DATE
+> Task :yl_player_android:generateDebugUnitTestResources UP-TO-DATE
+> Task :yl_player_android:mergeDebugUnitTestResources UP-TO-DATE
+> Task :yl_player_android:extractDeepLinksDebug UP-TO-DATE
+> Task :yl_player_android:processDebugManifest UP-TO-DATE
+> Task :yl_player_android:processDebugUnitTestManifest UP-TO-DATE
+> Task :yl_player_android:processDebugUnitTestResources UP-TO-DATE
+> Task :yl_player_android:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :yl_player_android:generateDebugUnitTestAssets UP-TO-DATE
+> Task :yl_player_android:generateDebugAssets UP-TO-DATE
+> Task :yl_player_android:mergeDebugAssets UP-TO-DATE
+> Task :yl_player_android:mergeDebugUnitTestAssets UP-TO-DATE
+> Task :yl_player_android:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :yl_player_android:generateDebugUnitTestConfig UP-TO-DATE
+> Task :yl_player_android:processDebugJavaRes UP-TO-DATE
+> Task :yl_player_android:compileDebugUnitTestKotlin
+> Task :yl_player_android:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :yl_player_android:processDebugUnitTestJavaRes UP-TO-DATE
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+
+> Task :yl_player_android:testDebugUnitTest
+
+YlDashCandidateHttpTest > managed DASH starts at declared first candidate regardless of Media3 choice() PASSED
+
+YlDashCandidateHttpTest > body resume stays on validated candidate and shares its retry budget() PASSED
+
+YlDashCandidateHttpTest > foreign fallback and return origin do not restore custom credentials() PASSED
+
+YlDashCandidateHttpTest > candidate switching shares one retry budget rather than retries per URL() PASSED
+
+YlDashCandidateHttpTest > cancel during scheduled candidate retry prevents the next request() PASSED
+
+YlDashCandidateHttpTest > candidate changes cannot refund redirect budget() PASSED
+
+YlDashCandidateHttpTest > caller entity validator pins original candidate rather than restarting at first() PASSED
+
+YlDashCandidateRegistryTest > bounded conflicting graph publication cannot replace accepted alternatives() PASSED
+
+YlDashCandidateRegistryTest > lookup ignores Media3 choice and retains declaration order() PASSED
+
+YlDashManifestParserTest > finite segment endpoints infer omitted static programme duration() PASSED
+
+YlDashManifestParserTest > parser publishes initialization and media alternatives only after graph admission() PASSED
+
+YlDashManifestParserTest > unknown duration rejects disagreement infinite timelines and text-only evidence() PASSED
+
+YlDashManifestParserTest > template child requests inherit same origin and unknown paths stay stripped() PASSED
+
+YlDashManifestParserTest > multiple relative base URLs register their own children() PASSED
+
+YlDashManifestParserTest > timeline list and single file index register actual request URLs() PASSED
+
+YlDashManifestParserTest > unused sibling BaseURL fanout is bounded before downstream copies() PASSED
+
+YlDashManifestParserTest > long BaseURL and finite segment expansion obey retained URI budget() PASSED
+
+YlDashManifestParserTest > manifest byte and representation admission bounds reject before exposure() PASSED
+
+YlDashManifestParserTest > finite preceding Period resolves omitted following start() PASSED
+
+YlDashManifestParserTest > template expansion and numeric padding are bounded before Media3 formatting() PASSED
+
+YlDashManifestParserTest > individual expanded BaseURL rejects before retained children() PASSED
+
+YlDashManifestParserTest > programme retains gaps and clips overlap independently from Media3 period durations() PASSED
+
+YlDashManifestParserTest > rational programme boundaries avoid fractional accumulation and signed rounding errors() PASSED
+
+YlDashManifestParserTest > cross origin BaseURL followed by absolute return origin never restores credentials() PASSED
+
+YlDashManifestParserTest > redirected manifest root taints all returned child requests() PASSED
+
+YlDashManifestParserTest > malformed numeric attributes are sanitized as container errors() PASSED
+
+YlDashManifestParserTest > video coverage retains raw rational PTO and does not fill explicit segment holes() PASSED
+
+YlDashManifestParserTest > dynamic protected and excessive timeline manifests fail before child requests() PASSED
+
+YlDashPcmWindowTest > PCM sink retains clipped buffer across partial writes and duplicate manifest merges() PASSED
+
+YlDashPcmWindowTest > negative preroll keeps only samples in the programme window() PASSED
+
+YlDashPcmWindowTest > fractional endpoints project once to sample grid without accumulating drift() PASSED
+
+YlDashPcmWindowTest > codec preroll is bounded without silently truncating extreme frame duration() PASSED
+
+YlDashPcmWindowTest > seek flush discards partially written gap before accepting new position() PASSED
+
+YlDashPcmWindowTest > final AAC buffer is clipped after decoding not at compressed packet boundary() PASSED
+
+YlDashPcmWindowTest > encoder priming is trimmed from content before leading silence is inserted() PASSED
+
+YlDashProtectedRouteTest > protected DASH does not enter clear programme output transforms() PASSED
+
+YlDashProtectedRouteTest > protected DASH retains original source route and supplied DRM manager() PASSED
+
+YlDashVideoCoverageTest > coverage clips merges and keeps half open holes without timestamp overflow() PASSED
+
+YlManagedRedirectInterceptorTest > resumed framing mismatch fails before delivering bytes beyond the validated range() PASSED
+
+YlManagedRedirectInterceptorTest > mismatching resume and cancellation cannot produce concatenated body or extra retry() PASSED
+
+YlManagedRedirectInterceptorTest > managed requests disable transparent gzip and unsafe encoded resume() PASSED
+
+YlManagedRedirectInterceptorTest > connected server header stall expires and body timeout starts only after headers() PASSED
+
+YlManagedRedirectInterceptorTest > chunked shortened range cannot leak wrong bytes inside the original resource length() PASSED
+
+YlManagedRedirectInterceptorTest > actual HLS parser propagates master media key segment and return-origin provenance for both policies() PASSED
+
+YlManagedRedirectInterceptorTest > OkHttp status recovery cannot bypass zero managed retry budget() PASSED
+
+YlManagedRedirectInterceptorTest > both policies keep same origin headers and permanently strip custom credentials across redirects() PASSED
+
+YlManagedRedirectInterceptorTest > chunked full remaining range overrun fails before completing a capped caller read() PASSED
+
+YlManagedRedirectInterceptorTest > managed status retry count and events are exact() PASSED
+
+YlManagedRedirectInterceptorTest > chunked final span EOF probe preserves inactivity retry and cancellation() PASSED
+
+YlManagedRedirectInterceptorTest > managed rejects mismatched initial range and body retry header changes() PASSED
+
+YlManagedRedirectInterceptorTest > chunked premature EOF cannot reset an exhausted retry budget() PASSED
+
+YlManagedRedirectInterceptorTest > chunked short EOF and valid shortened spans resume inside the original retry budget() PASSED
+
+YlManagedRedirectInterceptorTest > injected clock schedules one retry and fresh hop deadlines while preserving counters() PASSED
+
+YlManagedRedirectInterceptorTest > partial body resumes exactly with same budget and strong validator() PASSED
+
+YlManagedRedirectInterceptorTest > nonretryable 421 stays visible and no retry event is emitted() PASSED
+
+YlManagedRedirectInterceptorTest > premature fixed length disconnect resumes with same strong representation() PASSED
+
+YlManagedRedirectInterceptorTest > 307 and 308 retain method body and redirect counter survives retries() PASSED
+
+YlManagedRedirectInterceptorTest > cancellation while body resume retry is scheduled prevents reopening() PASSED
+
+YlManagedRedirectInterceptorTest > header deadline settles while DNS is still blocked and late lookup cannot consume another budget() PASSED
+
+YlManagedRetryPolicyTest > Retry After valid date and seconds replace backoff but excessive value refuses retry() PASSED
+
+YlManagedRetryPolicyTest > retry count excludes initial and exponential delay saturates without jitter() PASSED
+
+YlManagedRetryPolicyTest > only idempotent requests and specified statuses or transient errors retry() PASSED
+
+[Incubating] Problems report is available at: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 18s
+33 actionable tasks: 2 executed, 31 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.1.0/userguide/configuration_cache_enabling.html

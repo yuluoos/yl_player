@@ -43,7 +43,10 @@ internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: Netwo
         requireKnownAncestry = source.format in listOf(AndroidMediaFormat.HLS, AndroidMediaFormat.DASH) || source.locator.toHttpUrl().encodedPath.lowercase().let { it.endsWith(".m3u8") || it.endsWith(".mpd") }) else null
     private val protectHlsCredentialAncestry =
         credentials != null && requiresHlsCredentialAncestry(requestHeaders, requestCredentials)
-    private val http = credentials?.let { YlManagedHttpClient(it, if (managed) network else null, onRetry = onRetry) }
+    private val dashCandidates = if (managed && drmManager == null && credentials != null &&
+        (source.format == AndroidMediaFormat.DASH || source.locator.toHttpUrl().encodedPath.lowercase().endsWith(".mpd"))) YlDashCandidateRegistry() else null
+    private val http = credentials?.let { YlManagedHttpClient(it, if (managed) network else null, onRetry = onRetry,
+        dashCandidates = dashCandidates?.let { registry -> registry::candidatesFor }) }
     private val loaderPolicy = if (managed || rtmp != null) YlManagedLoadErrorPolicy() else DefaultLoadErrorHandlingPolicy()
     private val dashGapGroups = YlDashGapGroups()
     fun isDashGapGroup(group: androidx.media3.common.TrackGroup) = dashGapGroups.contains(group)
@@ -64,7 +67,7 @@ internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: Netwo
             .setManifestParser(YlDashManifestParser(credentials))
             .setLoadErrorHandlingPolicy(loaderPolicy)
             .createMediaSource(item)
-        else if (dash) YlDashProgramMediaSource(item, dataSources, YlDashManifestParser(credentials), loaderPolicy, dashGapGroups)
+        else if (dash) YlDashProgramMediaSource(item, dataSources, YlDashManifestParser(credentials, dashCandidates), loaderPolicy, dashGapGroups)
         else if (hls) HlsMediaSource.Factory(dataSources)
             .setLoadErrorHandlingPolicy(loaderPolicy)
             .apply {
