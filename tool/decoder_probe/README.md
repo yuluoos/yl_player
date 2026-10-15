@@ -53,3 +53,13 @@ needs product integration, actual output validation, policy/rebuild tests and
 P08 resource/thermal baselines. Apple documents AV1 decoding in the M3 family:
 [Apple M3 announcement](https://www.apple.com.cn/newsroom/2023/10/apple-unveils-m3-m3-pro-and-m3-max-the-most-advanced-chips-for-a-personal-computer/).
 Do not generalize this M1 result to all Apple hardware.
+
+`software_evidence.py` validates the separate P03 software engineering protocol:
+five distinct processes, 2 seconds idle, 12 seconds decode/output, 2 seconds
+dispose, complete 250 ms samples, exact protocol/build/fixture identities and
+actual output/positive-control success. CPU is cumulative process CPU including
+worker threads. Missing, duplicate, nonmonotonic, unknown thermal or failed rows
+remain invalid. Debug/simulator measurements cannot qualify production.
+The short protocol always reports missing sustained thermal and independent
+verification evidence; a supplied boolean cannot open production admission.
+It writes no profiles. Synthetic validator tests are not device evidence.

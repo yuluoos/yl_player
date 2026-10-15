@@ -852,5 +852,20 @@
     "destination": "tool/consumer_fixtures/apple_flutter/Resources/p03-webm-vp9-vorbis.webm",
     "sha256": "aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e",
     "methods": []
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlSoftwareDecodeBudgetTests.swift",
+    "sha256": "c6402ef2aa8a5554509bd92e13112c26a4ced69eead3eccf4dbdf0297e191a9a",
+    "methods": [
+      "testExactAdmissionAndEmptyProductionTable",
+      "testSharedCurrentCandidateAndIdempotentOldRelease",
+      "testCheckedReservationsAndSeparatePacketCharge",
+      "testObservationFailuresLatchAndDoNotFreeOutstandingFrames",
+      "testCpuUsesRollingWindowAcrossBoundary",
+      "testRetiredLeaseCannotAllocateButRetainedFramesStayCharged",
+      "testConcurrentReleaseIsExactlyOnce",
+      "testNewStricterLeaseCannotEraseExistingCharge",
+      "testObservationHistoryCannotGrowWithoutBound"
+    ]
   }
 ]

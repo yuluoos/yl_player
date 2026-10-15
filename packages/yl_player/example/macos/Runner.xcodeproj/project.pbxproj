@@ -65,6 +65,7 @@
 		70529071DFB43B0D27BE0982 /* YlManagedFallbackCharacterizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED88046AF4BCC838E47A1DE8 /* YlManagedFallbackCharacterizationTests.swift */; };
 		461EF28D2CEC5CB02364A7F8 /* YlContainerOutputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E83AAE86FEB1DF17F60907 /* YlContainerOutputTests.swift */; };
 		5AE6F7A653A9EB034D16727A /* YlVorbisDelayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276D2387E46909A91BBB57B6 /* YlVorbisDelayTests.swift */; };
+		D4C24DF69B787FC77721C14F /* YlSoftwareDecodeBudgetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB02EF1C2A95E72DFA9DAD50 /* YlSoftwareDecodeBudgetTests.swift */; };
 		A76C1CC5B80318F1D57A62B1 /* YlProgramStreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73015F9A7DD907913FF79BC /* YlProgramStreamTests.swift */; };
 		7124B764DD7AA7206E99F46E /* YlRtmpPeerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0D368844FF6CB6BD2F11AF /* YlRtmpPeerTests.swift */; };
 		71DCDA0543ACCA2C98D40E5F /* YlMacosHlsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEC84DECE9358BB2DB25A6 /* YlMacosHlsTests.swift */; };
@@ -229,6 +230,7 @@
 		ED88046AF4BCC838E47A1DE8 /* YlManagedFallbackCharacterizationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlManagedFallbackCharacterizationTests.swift; sourceTree = "<group>"; };
 		65E83AAE86FEB1DF17F60907 /* YlContainerOutputTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "YlContainerOutputTests.swift"; sourceTree = "<group>"; };
 		276D2387E46909A91BBB57B6 /* YlVorbisDelayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlVorbisDelayTests.swift; sourceTree = "<group>"; };
+		EB02EF1C2A95E72DFA9DAD50 /* YlSoftwareDecodeBudgetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlSoftwareDecodeBudgetTests.swift; sourceTree = "<group>"; };
 		F73015F9A7DD907913FF79BC /* YlProgramStreamTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlProgramStreamTests.swift; sourceTree = "<group>"; };
 		F38BA5B23113A06B10DBA6A8 /* YlMacosOpenCoordinatorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosOpenCoordinatorTests.swift; sourceTree = "<group>"; };
 		F46174D8E67323FE3A505CEC /* hls_key.bin */ = {isa = PBXFileReference; includeInIndex = 1; path = hls_key.bin; sourceTree = "<group>"; };
@@ -296,6 +298,7 @@
 				ED88046AF4BCC838E47A1DE8 /* YlManagedFallbackCharacterizationTests.swift */,
 				65E83AAE86FEB1DF17F60907 /* YlContainerOutputTests.swift */,
 				276D2387E46909A91BBB57B6 /* YlVorbisDelayTests.swift */,
+				EB02EF1C2A95E72DFA9DAD50 /* YlSoftwareDecodeBudgetTests.swift */,
 				F73015F9A7DD907913FF79BC /* YlProgramStreamTests.swift */,
 				04EA906E28F7E9BB1BB59881 /* YlNetworkByteSourceTests.swift */,
 				E43C33F40306C9E0359CDF71 /* YlNetworkRequestPolicyTests.swift */,
@@ -694,6 +697,7 @@
 				70529071DFB43B0D27BE0982 /* YlManagedFallbackCharacterizationTests.swift in Sources */,
 				461EF28D2CEC5CB02364A7F8 /* YlContainerOutputTests.swift in Sources */,
 				5AE6F7A653A9EB034D16727A /* YlVorbisDelayTests.swift in Sources */,
+				D4C24DF69B787FC77721C14F /* YlSoftwareDecodeBudgetTests.swift in Sources */,
 				A76C1CC5B80318F1D57A62B1 /* YlProgramStreamTests.swift in Sources */,
 				15F61606E06F31904D65AB2B /* YlNetworkByteSourceTests.swift in Sources */,
 				95ECC632E9A30F88372C0F87 /* YlNetworkRequestPolicyTests.swift in Sources */,

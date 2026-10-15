@@ -80,6 +80,7 @@
 		E0732E7FE9265956555EB929 /* YlManagedFallbackCharacterizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D030956D851313A5FD61DCF /* YlManagedFallbackCharacterizationTests.swift */; };
 		6AACFF01C755A36FDF6FE225 /* YlContainerOutputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D2E91BA77D8A531363CE301 /* YlContainerOutputTests.swift */; };
 		9DEDF41029D72432D1F04B4E /* YlVorbisDelayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13B3ED0F24A76ED52B0DD9AE /* YlVorbisDelayTests.swift */; };
+		39438CA184D806967C2100F6 /* YlSoftwareDecodeBudgetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F0BC8DE6C932A8FE1B0202 /* YlSoftwareDecodeBudgetTests.swift */; };
 		70EAB16AE62EB33F18CBC81E /* YlProgramStreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7AE70EC2B0576A5F933DDB /* YlProgramStreamTests.swift */; };
 		E74D0B0FD8C49F6931CF0DE6 /* h264_aac.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 8EAC1C11A6CE697A2FC40E4A /* h264_aac.mkv */; };
 		EC8CD1ED61B17A4E3B27371B /* p01-audio-fragment.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 5D17407271159E8EA9B1AC1A /* p01-audio-fragment.mp4 */; };
@@ -126,6 +127,7 @@
 		1D030956D851313A5FD61DCF /* YlManagedFallbackCharacterizationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlManagedFallbackCharacterizationTests.swift; sourceTree = "<group>"; };
 		6D2E91BA77D8A531363CE301 /* YlContainerOutputTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "YlContainerOutputTests.swift"; sourceTree = "<group>"; };
 		13B3ED0F24A76ED52B0DD9AE /* YlVorbisDelayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlVorbisDelayTests.swift; sourceTree = "<group>"; };
+		B8F0BC8DE6C932A8FE1B0202 /* YlSoftwareDecodeBudgetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlSoftwareDecodeBudgetTests.swift; sourceTree = "<group>"; };
 		2D7AE70EC2B0576A5F933DDB /* YlProgramStreamTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YlProgramStreamTests.swift; sourceTree = "<group>"; };
 		1D6607C46DF95C55C62B230B /* YlOpenCoordinatorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlOpenCoordinatorTests.swift; sourceTree = "<group>"; };
 		217B1E6D80434A0D717E4B3B /* YlFairPlayOutputTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFairPlayOutputTests.swift; sourceTree = "<group>"; };
@@ -265,6 +267,7 @@
 				1D030956D851313A5FD61DCF /* YlManagedFallbackCharacterizationTests.swift */,
 				6D2E91BA77D8A531363CE301 /* YlContainerOutputTests.swift */,
 				13B3ED0F24A76ED52B0DD9AE /* YlVorbisDelayTests.swift */,
+				B8F0BC8DE6C932A8FE1B0202 /* YlSoftwareDecodeBudgetTests.swift */,
 				2D7AE70EC2B0576A5F933DDB /* YlProgramStreamTests.swift */,
 				EFD7F7B8D48E27E9149FC907 /* YlMediaClockTests.swift */,
 				F35D4C804AB7C5CED87EF390 /* YlNetworkByteSourceTests.swift */,
@@ -566,6 +569,7 @@
 				E0732E7FE9265956555EB929 /* YlManagedFallbackCharacterizationTests.swift in Sources */,
 				6AACFF01C755A36FDF6FE225 /* YlContainerOutputTests.swift in Sources */,
 				9DEDF41029D72432D1F04B4E /* YlVorbisDelayTests.swift in Sources */,
+				39438CA184D806967C2100F6 /* YlSoftwareDecodeBudgetTests.swift in Sources */,
 				70EAB16AE62EB33F18CBC81E /* YlProgramStreamTests.swift in Sources */,
 				22C09AF8AB9AC362D54CACC8 /* YlMediaClockTests.swift in Sources */,
 				D38A27CD62DAFE9220752273 /* YlNetworkByteSourceTests.swift in Sources */,
