@@ -22,8 +22,12 @@ assert pins == {'FFMPEG_VERSION':'9.0.1', 'FFMPEG_URL':'https://ffmpeg.org/relea
 opus_pins = dict(line.split('=',1) for line in (script/'opus-1.6.1.lock').read_text().splitlines())
 assert opus_pins == {'OPUS_VERSION':'1.6.1', 'OPUS_URL':'https://downloads.xiph.org/releases/opus/opus-1.6.1.tar.gz',
  'OPUS_SHA256':'6ffcb593207be92584df15b32466ed64bbec99109f007c82205f0194572411a1'}
+dav1d_pins = dict(line.split('=',1) for line in (script/'dav1d.lock').read_text().splitlines())
+assert dav1d_pins == {'DAV1D_VERSION':'1.5.3',
+ 'DAV1D_URL':'https://downloads.videolan.org/pub/videolan/dav1d/1.5.3/dav1d-1.5.3.tar.xz',
+ 'DAV1D_SHA256':'732010aa5ef461fa93355ed2c6c5fedb48ddc4b74e697eaabe8907eaeb943011'}
 allowed_enables = {'--enable-cross-compile','--enable-avutil','--enable-avcodec','--enable-avformat',
- '--enable-bsf=dovi_rpu','--enable-demuxer=matroska,flv,mov,mpegts,mpegps,avi,h264','--enable-decoder=dca,vorbis','--enable-protocol=file','--enable-parser=aac,h264,hevc,mpegaudio,dca,ac3',
+ '--enable-bsf=dovi_rpu','--enable-demuxer=matroska,flv,mov,mpegts,mpegps,avi,h264','--enable-decoder=dca,vorbis,libdav1d,vp9','--enable-libdav1d','--enable-protocol=file','--enable-parser=aac,h264,hevc,mpegaudio,dca,ac3,av1,vp9',
  '--enable-pic','--enable-static'}
 required_disables = {'--disable-everything','--disable-autodetect','--disable-network',
  '--disable-swresample','--disable-programs','--disable-doc','--disable-avdevice','--disable-avfilter','--disable-swscale',
@@ -60,12 +64,14 @@ for entry in info:
    if len(archs)>1: subprocess.run(['lipo',str(binary),'-thin',arch,'-output',str(thin)],check=True)
    else: shutil.copyfile(binary,thin)
    assert b'yl-apple-ffmpeg.' not in thin.read_bytes(), 'temporary build path leaked into binary'
-   strings=subprocess.check_output(['strings','-a',str(thin)],text=True)
+   # strings also emits non-UTF8 codec tables; the configuration remains ASCII.
+   strings=subprocess.check_output(['strings','-a',str(thin)],text=True,errors='replace')
    configs=[line for line in strings.splitlines() if line.startswith('--prefix=')]
    assert len(configs)==1
    check_configuration(configs[0])
-  assert not any(n.startswith('_opus_') for n in names), 'private libopus symbols leaked'
+  assert not any(n.startswith(('_opus_', '_dav1d_')) for n in names), 'private libopus symbols leaked'
   assert {'_'+s for s in symbols} <= names, (arch, symbols, names)
+  assert {'_ylf_software_video_'+s for s in ('create','send','receive','finish','reset','free','copy_configuration','free_configuration','create_from_configuration')} <= names, arch
   assert {'_ylf_vorbis_'+s for s in ('create','decode','reset','free')} <= names, arch
   assert {'_ylf_opus_'+s for s in ('create','decode','reset','free')} <= names, arch
   loads = subprocess.check_output(['otool','-arch',arch,'-l',str(binary)],text=True)
@@ -93,6 +99,8 @@ with tempfile.TemporaryDirectory(prefix='yl-apple-contract-') as root:
  copied_script = copy/'tool/apple_ffmpeg'; copied_lock = copied_script/'bridge-artifact.lock'
  mutations = [('source',copy/'darwin/native/YlFFmpegBridge/YlFFmpegBridge.m',lambda b:b+b'\n// corruption\n'),
   ('vorbis-patch',copy/'tool/apple_ffmpeg/patches/vorbis-aarch64-zero-coupling.patch',lambda b:b+b'\ncorruption\n'),
+  ('dav1d-patch',copy/'tool/apple_ffmpeg/patches/dav1d-owned-pictures.patch',lambda b:b+b'\ncorruption\n'),
+  ('dav1d-license',copy/'LICENSES/dav1d-BSD.txt',lambda b:b+b'\ncorruption\n'),
   ('opus-license',copy/'LICENSES/Opus-BSD.txt',lambda b:b+b'\ncorruption\n'),
   ('configuration',copied_script/'build_xcframework.sh',lambda b:b.replace(b'--enable-demuxer=matroska,flv,mov',b'--enable-demuxer=matroska,flv,mov,avi')),
   ('slice',copy/'darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64/YlFFmpegBridge.framework/YlFFmpegBridge',lambda b:b[:4096]+bytes([b[4096]^1])+b[4097:])]
@@ -114,6 +122,12 @@ with tempfile.TemporaryDirectory(prefix='yl-opus-archive-') as root:
    env=dict(os.environ,YL_OPUS_ARCHIVE=str(corrupt)),text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
  assert result.returncode != 0 and 'Opus archive mismatch' in result.stdout, result.stdout
  print('NEGATIVE Opus archive immutable-verify: rejected intended hash mismatch')
+with tempfile.TemporaryDirectory(prefix='yl-dav1d-archive-') as root:
+ corrupt = pathlib.Path(root)/'dav1d.tar.xz'; corrupt.write_bytes(b'not the pinned source')
+ result = subprocess.run(['python3',str(script/'verify_artifact.py')],
+   env=dict(os.environ,YL_DAV1D_ARCHIVE=str(corrupt)),text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+ assert result.returncode != 0 and 'dav1d archive mismatch' in result.stdout, result.stdout
+ print('NEGATIVE dav1d archive immutable-verify: rejected intended hash mismatch')
 assert digest(lock)==before
-print(f'Apple FFmpeg contract passed: 3 slices, 5 architectures, {len(symbols)} Swift symbols, 6 intended-reason negative checks; lock unchanged.')
+print(f'Apple FFmpeg contract passed: 3 slices, 5 architectures, {len(symbols)} Swift symbols, 9 intended-reason negative checks; lock unchanged.')
 PY

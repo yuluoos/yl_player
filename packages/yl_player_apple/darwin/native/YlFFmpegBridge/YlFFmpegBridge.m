@@ -278,6 +278,11 @@ static int32_t ylf_discover_streams(struct YLFMediaContext *context,
   if (!ylf_is_supported_input_format(context->format->iformat)) {
     return YLFResultUnsupportedContainer;
   }
+  // Discovery must not instantiate newly linked software video decoders before
+  // device admission. Keep the historical audio-only probe behavior explicit.
+  av_freep(&context->format->codec_whitelist);
+  context->format->codec_whitelist = av_strdup("dca,vorbis");
+  if (!context->format->codec_whitelist) return YLFResultOpenFailed;
   if (avformat_find_stream_info(context->format, NULL) < 0) {
     return ylf_callback_failure(context, YLFResultOpenFailed);
   }
@@ -363,6 +368,8 @@ static int32_t ylf_codec(enum AVCodecID codec_id) {
     return YLFCodecVorbis;
   case AV_CODEC_ID_VP9:
     return YLFCodecVP9;
+  case AV_CODEC_ID_AV1:
+    return YLFCodecAV1;
   default:
     return YLFCodecUnsupported;
   }
@@ -1457,6 +1464,9 @@ static OSStatus ylf_apply_video_metadata(const AVCodecParameters *parameters,
       dimensions.width, dimensions.height, (__bridge CFDictionaryRef)extensions, out_description);
 }
 
+static int32_t ylf_av1_format(const AVCodecParameters *parameters,
+ const uint8_t *configuration,size_t size,CMVideoFormatDescriptionRef *out);
+
 int32_t ylf_copy_video_format_description_with_codec_config(
     YLFMediaContextRef context, int32_t stream_index,
     const uint8_t *configuration, size_t configuration_size,
@@ -1467,6 +1477,8 @@ int32_t ylf_copy_video_format_description_with_codec_config(
       (unsigned int)stream_index >= context->format->nb_streams ||
       configuration == NULL || configuration_size == 0) return YLFResultVideoConfigurationInvalid;
   const AVCodecParameters *parameters = context->format->streams[stream_index]->codecpar;
+  if (parameters->codec_type == AVMEDIA_TYPE_VIDEO && parameters->codec_id == AV_CODEC_ID_AV1)
+    return ylf_av1_format(parameters, configuration, configuration_size, out_description);
   if (parameters->codec_type == AVMEDIA_TYPE_VIDEO && parameters->codec_id == AV_CODEC_ID_VP9) {
     // VP Codec Configuration Box v1, supplied by the bounded keyframe probe.
     // This initial route does not downgrade HDR, chroma or bit depth.
@@ -1856,3 +1868,5 @@ void ylf_opus_free(YLFOpusDecoderRef d) {
 }
 
 #include "YlVorbisBridge.inc"
+
+#include "YlSoftwareVideoBridge.inc"

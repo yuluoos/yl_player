@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "baseCommit": "950e283261147ae2f1afcb2ea8fad61c868d4dbb",
+  "artifactLockSha256": "87efb230d07b1921b7432387277ab2c78a46dbc81a1e22206e7109afe56a8915",
+  "productionSoftwareAdmission": "empty_unmeasured",
+  "physicalOutputAcceptance": "not_run",
+  "independentRebuild": {
+    "canonicalEntries": 18,
+    "architectures": 5,
+    "byteIdentical": true
+  },
+  "softwareOutput": {
+    "domain": "visible planar samples from real decoder and retained CoreVideo buffers",
+    "maximumSampleDifference": 1,
+    "fixtures": [
+      {
+        "name": "av1-main8",
+        "frames": 96,
+        "reference": "libaom 3.13.2"
+      },
+      {
+        "name": "av1-main10",
+        "frames": 24,
+        "reference": "libaom 3.13.2",
+        "note": "derived 10-bit storage, not original 10-bit/HDR precision"
+      },
+      {
+        "name": "vp9-main8",
+        "frames": 96,
+        "reference": "libvpx-vp9 via host FFmpeg 8.0.1"
+      }
+    ],
+    "implementations": [
+      "source with real AVCodecParameters",
+      "source with real demux and independent configuration lifetime",
+      "candidate artifact with real demux and independent configuration lifetime"
+    ]
+  },
+  "contract": {
+    "negativeChecks": 9,
+    "passed": true
+  },
+  "logs": {
+    "software-source-and-artifact.log": {
+      "path": "/private/tmp/yl-p03-audit/software-source-and-artifact.log",
+      "sha256": "4ce44aa2bf183eabbec8c56898d1b23e7a905b96a0eb12ac2b95095cdef0ef78"
+    },
+    "video-independent-rebuild.log": {
+      "path": "/private/tmp/yl-p03-audit/video-independent-rebuild.log",
+      "sha256": "7d6bb0ad27dc26b19ca9dda528281b8cac1c1fb7ac92bf66ed4bac46073b1183"
+    },
+    "video-installed-contract-2.log": {
+      "path": "/private/tmp/yl-p03-audit/video-installed-contract-2.log",
+      "sha256": "96a88c1d7b5115a0106d2c047ab9f5e89b097d5d5216e827c1c8263965cb682e"
+    },
+    "video-candidate-audio.log": {
+      "path": "/private/tmp/yl-p03-audit/video-candidate-audio.log",
+      "sha256": "b5c0f108bdfc22974b1630b25bad69fcdf6e3540ddc132e977a083282e0b545c"
+    },
+    "video-candidate-metadata.log": {
+      "path": "/private/tmp/yl-p03-audit/video-candidate-metadata.log",
+      "sha256": "853500cdb89b95a2e6dcac6df5ab26363ff24db5b29284cd27ee0f90a3015102"
+    },
+    "video-candidate-fel.log": {
+      "path": "/private/tmp/yl-p03-audit/video-candidate-fel.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "video-candidate-no-probe.log": {
+      "path": "/private/tmp/yl-p03-audit/video-candidate-no-probe.log",
+      "sha256": "4c30ff10459335b961bdef27ff59a3bed0aacf9918dfe15f9854fdbc4b5b6d14"
+    },
+    "unadmitted-probe-policy-red.log": {
+      "path": "/private/tmp/yl-p03-audit/unadmitted-probe-policy-red.log",
+      "sha256": "a6e18d935113d2123ec915e93f005d9ae4873ee1bf9e1895662bd661f1e86683"
+    },
+    "software-configuration-red.log": {
+      "path": "/private/tmp/yl-p03-audit/software-configuration-red.log",
+      "sha256": "d747127800344b408f3d5a35326a0f00c3dcdb5e2edf9a1f1591adb347d8acbd"
+    },
+    "software-video-diagnostic.log": {
+      "path": "/private/tmp/yl-p03-audit/software-video-diagnostic.log",
+      "sha256": "1d06fd2465265781961c844ff643a10735f96d50f79367ec7110739fa48796a4"
+    }
+  },
+  "remaining": [
+    "Apple pipeline and managed integration (Task5)",
+    "Android integration (Task6)",
+    "public three-platform output (Task7)",
+    "qualified sustained and independent measurement evidence (Task8)",
+    "physical device and minimum OS/Intel acceptance"
+  ],
+  "installedMacOSRegression": {
+    "passed": 11,
+    "failed": 0,
+    "skipped": 0,
+    "actualOutputTests": 2,
+    "budgetTests": 9,
+    "summarySha256": "158a9d5049f95f615f75f1a9e8e9e1d9392f5ab03b9fb7b7865e8b7095a118de"
+  }
+}

@@ -4,15 +4,16 @@
 
 `YlFFmpegBridge.xcframework` contains a minimized build of FFmpeg 9.0.1
 `libavformat`, `libavcodec`, and `libavutil`. It is used for
-Matroska, FLV, MP4/MOV, MPEG-TS, and AVI demultiplexing, packet parsing,
+Matroska, FLV, MP4/MOV, MPEG-TS/PS, and AVI demultiplexing, packet parsing,
 and DCA/Vorbis audio decoding. A statically linked libopus decoder handles Opus.
-Video decoding remains in Apple VideoToolbox, including the restricted hardware-only VP9 route. Ordinary Matroska VOD integrates container trimming and seek
+VideoToolbox remains the preferred video path. The controlled software bridge adds
+FFmpeg VP9 and libdav1d AV1; production use requires matching measured admission. Ordinary Matroska VOD integrates container trimming and seek
 preroll for family 0 mono/stereo 48 kHz Opus. Active audio-track changes reuse
 seek preroll. SILK, hybrid and CELT are supported within this family-0 scope;
 strict Opus policies remain unsupported.
 
 The minimized allowlist enables `matroska,flv,mov,mpegts,mpegps,avi,h264` demuxers;
-`aac,h264,hevc,mpegaudio,dca,ac3` parsers; `dca,vorbis` decoders; the `dovi_rpu`
+`aac,h264,hevc,mpegaudio,dca,ac3,av1,vp9` parsers; `dca,vorbis,libdav1d,vp9` decoders; the `dovi_rpu`
 bitstream filter; and the `file` protocol used by package-owned custom AVIO.
 FFmpeg's native Opus decoder and `libswresample` remain disabled.
 Test-only host libopus provides a PCM reference independent of bridge
@@ -44,9 +45,9 @@ sh packages/yl_player_apple/tool/apple_ffmpeg/build_xcframework.sh --rebuild-che
 `verify_artifact.py` is the consumer verifier used by CI. It checks the exact
 accepted lock (including recorded builder provenance), all recorded recipe,
 source, license and key inputs, configuration, complete artifact bytes and
-symlink targets, the signed FFmpeg source receipt and pinned Opus archive hash
+symlink targets, the signed FFmpeg source receipt and pinned Opus/dav1d archive hashes
 without requiring the verifier machine to match the original builder. It never compiles, updates a lock, or changes artifact bytes.
-`YL_FFMPEG_ARCHIVE`, `YL_FFMPEG_SIGNATURE`, and `YL_OPUS_ARCHIVE` accept
+`YL_FFMPEG_ARCHIVE`, `YL_FFMPEG_SIGNATURE`, `YL_OPUS_ARCHIVE`, and `YL_DAV1D_ARCHIVE` accept
 existing local source inputs;
 otherwise the verifier obtains the exact pinned public archives and FFmpeg signature.
 
@@ -123,3 +124,27 @@ native decoder. Ordinary Matroska support is limited to mono/stereo at
 44.1/48 kHz, zero CodecDelay, no leading trim, and bounded headers/packets.
 Seek and active track changes use 200 ms preroll; strict policies remain
 unsupported. This does not establish multichannel or physical output acceptance.
+
+
+## dav1d 1.5.3
+
+The minimal software AV1 candidate statically links VideoLAN dav1d 1.5.3,
+BSD-2-Clause, with COPYING reproduced in `LICENSES/dav1d-BSD.txt`.
+Official source: <https://downloads.videolan.org/pub/videolan/dav1d/1.5.3/>.
+SHA-256: `732010aa5ef461fa93355ed2c6c5fedb48ddc4b74e697eaabe8907eaeb943011`.
+Static release/PIC builds disable tools, tests, examples and documentation;
+ARM64 assembly is enabled, x86_64 assembly disabled (unmeasured Intel software
+performance is not inferred from ARM64). Meson/Ninja versions are in provenance.
+
+`patches/dav1d-owned-pictures.patch` redirects the FFmpeg adapter's picture
+allocation to the codec client's `get_buffer2`, retaining its single AVBufferRef
+ownership contract. This accounts decoder references through their final release.
+The bridge also accounts input copies and published NV12/P010 buffers. Codec
+bookkeeping/worker overhead remains a separately measured process cost, not a
+claimed hard RSS bound. Film grain stays enabled. CoreVideo images keep full
+8/10-bit storage, range and colour/static-HDR attachments; incompatible changes
+require reconfiguration. Native C calls cannot be preempted by a timing budget.
+
+Test-only libaom and libvpx produce independent planar reference outputs; neither
+is linked into the distributed framework. Short test success never creates a
+production software admission entry.

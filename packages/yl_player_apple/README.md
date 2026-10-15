@@ -101,3 +101,20 @@ validated. MPEG-2 video remains a diagnostic case outside the required codec set
 Automatic progressive sources inspect at most 4 KiB before choosing a container,
 including familiar but wrong extensions. On older Apple systems without MIME
 override support, renamed inspected MP4 uses owned sample playback.
+
+
+P03 software candidate bridge now includes pinned dav1d AV1 Main 8/10-bit 420
+and FFmpeg VP9, with independently retained codec configuration for rebuilds.
+Actual reference/output surfaces and compressed copies are reserved before
+allocation and stay charged through final CoreVideo release. Discovery retains
+an audio-only decoder whitelist, so linking a software video decoder cannot
+implicitly admit it during metadata probing. Production software admission is
+still empty; the candidate C API does not itself constitute device qualification.
+The reference harness compares every visible planar sample with libaom/libvpx,
+checks drain/reset and validates image lifetime after decoder destruction.
+
+Build dependencies: Meson/Ninja (versions pinned in artifact provenance) and
+pkg-config in addition to the documented Xcode/FFmpeg/Opus tools. Set
+`YL_DAV1D_ARCHIVE` to the exact pinned local tarball for offline verification.
+`test_software_video.sh` needs host libaom's `aomdec` and FFmpeg with libvpx
+for independent test references; those tools are not product dependencies.

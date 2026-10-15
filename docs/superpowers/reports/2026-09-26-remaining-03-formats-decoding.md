@@ -477,3 +477,15 @@ P08-A/B仍没有合格的Apple AV1软解基线；没有复用Android AVC/HEVC限
 五架构候选从签名源码独立复建，两次 18 项规范制品逐字节一致，安装后 lock 身份和六类篡改负例通过。音频全套、video/TS/AVI/VP9/framing 及 PS 268 项源验证通过。macOS 64 项相关原生回归和两项真实像素/PCM/双向 seek 输出通过；14 条公开 file/http/改名路径通过。初次六条 MP4 因应用前置失败而超时的原始观测保留，前置同一应用后六条均通过。像素采样在编码参考色域验证，未宣称物理显示或扬声器验收。
 
 iOS 模拟器 64 项相关测试通过；两项实际输出在首次创建硬解 session 时返回 `decoder.video_hardware_unavailable`。仅这个模拟器首次创建条件允许显式 skip，复验为 0 失败、2 skip；不计入输出成功。真机输出、Android 本组验证及后续软解预算/AV1/三端完整验收仍开放。证据见 `tool/media_matrix/macos-p03-container-observations.json`，P03 整体未完成。
+
+## 2026-10-14 P03 软件准入与解码桥工程增量
+
+共享软解预算与严格测量证据验证器提交 `950e283`：9 项原生边界/并发测试及16项 probe 工具测试通过。准入精确匹配设备、OS、构建与媒体描述；当前生产表为空。资源跨当前/候选/播放器共同计账，旧帧持有和重复释放不会重置账本，CPU/热失败关闭当前租约。CPU 明确为保守进程计量，单次同步 C 调用不能被超时抢占。
+
+新增固定 dav1d1.5.3 AV1 Main8/10 420 与 FFmpeg VP9 候选桥。独立 libaom3.13.2/libvpx 输出逐平面比较通过：96/24/96 帧、最大样本差1；10-bit 素材仅证明存储/传输精度，不宣称原生HDR参考。真实 demux 配置快照、关闭原始 demux 后创建 decoder、decoder 销毁后帧仍可读、最后释放归零均由源实现和候选制品验证。PS/Vorbis 已有音频、容器、FEL 源回归通过。
+
+FFmpeg libdav1d 的独立图片池改为受控 `get_buffer2` 分配，补丁和 dav1d 源码/许可被制品锁固定。初版补丁的 allocator_data 所有权错误由独立像素比较发现并修复，保留失败日志。另限制 discovery 为原有 audio-only codec whitelist，防止元数据不足时提前打开未准入的视频软解；真实 codec 的 whitelist 失败回归已通过。内部分配上界与独立进程 RSS/worker 开销分别记录。
+
+五架构候选在全新签名依赖构建后，按相同参数重链最终桥接源，再完整独立干净复建；18 项规范文件/链接逐字节一致。制品契约含九类篡改负例通过。首次构建的 pkg-config staging 路径失败和首次契约工具的非UTF8字符串读取错误分别修复并留档，不计为产品成功。源码/制品输出及日志身份见 `tool/decoder_probe/p03-software-bridge-observations.json`。
+
+此阶段只完成准入和C桥接工程；Apple会话接入、Android、三端公开输出、合格持续热/独立测量仍继续处理，生产软件表未开放。当前环境的编译或源参考成功不替代 iOS/Intel/最低系统/物理输出验收。

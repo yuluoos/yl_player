@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <CoreMedia/CoreMedia.h>
+#include <CoreVideo/CoreVideo.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,6 +26,8 @@ typedef struct YLFPacket *YLFPacketRef;
 enum {
   YLFResultOK = 0,
   YLFResultEOF = 1,
+  YLFResultWouldBlock = 2,
+  YLFResultResourceExhausted = -15,
   YLFResultInvalidArgument = -1,
   YLFResultOpenFailed = -2,
   YLFResultUnsupportedContainer = -3,
@@ -66,6 +69,7 @@ enum {
   YLFCodecOpus = 9,
   YLFCodecVorbis = 10,
   YLFCodecVP9 = 11,
+  YLFCodecAV1 = 12,
 };
 
 typedef struct {
@@ -101,6 +105,42 @@ typedef void (*YLFCancelCallback)(void *opaque);
 // Accepts an absolute filesystem path or file:// URL. Returned contexts and
 // packets are caller-owned. Closing a context invalidates and releases every
 // packet that has not already been released.
+// Software candidates never bypass caller admission. Serialized create/send/receive/
+// finish/reset/free; retained output images may be released on any thread.
+typedef struct YLFSoftwareVideoDecoder *YLFSoftwareVideoDecoderRef;
+typedef struct YLFSoftwareVideoConfiguration *YLFSoftwareVideoConfigurationRef;
+typedef struct {
+  uint64_t max_owned_bytes;
+  uint32_t max_frames, max_packet_bytes, threads;
+  // Optional process ledger. Both callbacks or neither; reserve returns an owned
+  // opaque token, release consumes it exactly once and may run on any thread.
+  // Context is borrowed only until decoder free; tokens must own their own state.
+  void *account_context;
+  int32_t (*reserve)(void *context, uint64_t bytes, uint32_t frames, void **out_token);
+  void (*release)(void *token);
+} YLFSoftwareVideoLimits;
+// Immutable, independently owned metadata for seek/Period candidate recreation.
+// No decoder/worker allocation occurs here. Free accepts NULL.
+YLF_EXPORT int32_t ylf_software_video_copy_configuration(YLFMediaContextRef context,
+    int32_t stream, YLFSoftwareVideoConfigurationRef *out_configuration);
+YLF_EXPORT void ylf_software_video_free_configuration(YLFSoftwareVideoConfigurationRef configuration);
+YLF_EXPORT int32_t ylf_software_video_create_from_configuration(YLFSoftwareVideoConfigurationRef configuration,
+    YLFSoftwareVideoLimits limits, YLFSoftwareVideoDecoderRef *out_decoder);
+// Copies codec configuration; context can close immediately after success.
+// On every failure out_decoder is NULL. NULL output pointers are invalid.
+YLF_EXPORT int32_t ylf_software_video_create(YLFMediaContextRef context, int32_t stream,
+    YLFSoftwareVideoLimits limits, YLFSoftwareVideoDecoderRef *out_decoder);
+// WouldBlock means drain receive and retry the same input, not accepted input.
+YLF_EXPORT int32_t ylf_software_video_send(YLFSoftwareVideoDecoderRef decoder, CMSampleBufferRef sample);
+// OK always returns a +1 retained CVPixelBuffer. WouldBlock/EOF return NULL.
+// Frame storage remains budgeted until final image release, even after free.
+YLF_EXPORT int32_t ylf_software_video_receive(YLFSoftwareVideoDecoderRef decoder,
+    CVPixelBufferRef *out_retained_image, CMTime *out_pts, CMTime *out_duration);
+YLF_EXPORT int32_t ylf_software_video_finish(YLFSoftwareVideoDecoderRef decoder);
+// Reset discards decoder references, never ownership of previously returned images.
+YLF_EXPORT void ylf_software_video_reset(YLFSoftwareVideoDecoderRef decoder);
+YLF_EXPORT void ylf_software_video_free(YLFSoftwareVideoDecoderRef decoder);
+
 YLF_EXPORT int32_t ylf_open_local(const char *url_or_path,
                                   YLFMediaContextRef *out_context,
                                   YLFMediaInfo *out_info);

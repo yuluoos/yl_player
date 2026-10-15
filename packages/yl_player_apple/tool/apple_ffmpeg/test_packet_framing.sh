@@ -6,8 +6,9 @@ prefix="$YL_TEST_FFMPEG_BUILD/build/macosx-arm64/stage/yl_ffmpeg/install"
 opus="$YL_TEST_FFMPEG_BUILD/build/macosx-arm64/opus-stage/yl_opus/install"
 temporary=$(mktemp -d "${TMPDIR:-/tmp}/yl-packet-framing.XXXXXX")
 trap 'rm -rf "$temporary"' EXIT
-xcrun clang -fobjc-arc -I"$opus/include" -I"$prefix/include" -I"$YL_TEST_FFMPEG_BUILD/ffmpeg-9.0.1" \
+dav1d="${YL_TEST_DAV1D_PREFIX:-$YL_TEST_FFMPEG_BUILD/build/macosx-arm64/dav1d-stage/yl_dav1d/install}"
+xcrun clang -I"$dav1d/include" -fobjc-arc -I"$opus/include" -I"$prefix/include" -I"$YL_TEST_FFMPEG_BUILD/ffmpeg-9.0.1" \
  -I"$YL_TEST_FFMPEG_BUILD/build/macosx-arm64" -I"$script_dir/../../darwin/native/YlFFmpegBridge/include" \
  "$script_dir/test_packet_framing.m" "$opus/lib/libopus.a" -L"$prefix/lib" -lavformat -lavcodec -lavutil \
- -framework Foundation -framework CoreMedia -framework CoreVideo -framework Security -o "$temporary/test"
+ -framework Foundation -framework CoreMedia -framework CoreVideo -framework Security "$dav1d/lib/libdav1d.a" -o "$temporary/test"
 "$temporary/test" "$script_dir/../../../yl_player/example/assets/test_media/format_matrix/continuous-avc-aac.mkv"

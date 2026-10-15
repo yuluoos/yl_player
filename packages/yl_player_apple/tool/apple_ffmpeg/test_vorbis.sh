@@ -21,16 +21,17 @@ python3 - "$temporary" <<'PY'
 import hashlib,json,pathlib,sys
 root=pathlib.Path(sys.argv[1]);print('YL_VORBIS_FIXTURES='+json.dumps({p.name:{'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'bytes':p.stat().st_size} for p in sorted(root.iterdir())},sort_keys=True))
 PY
-xcrun clang -fobjc-arc -I"$reference/include" -I"$opus/include" -I"$prefix/include" -I"$YL_TEST_FFMPEG_BUILD/ffmpeg-9.0.1" \
+dav1d="${YL_TEST_DAV1D_PREFIX:-$YL_TEST_FFMPEG_BUILD/build/macosx-arm64/dav1d-stage/yl_dav1d/install}"
+xcrun clang -I"$dav1d/include" -fobjc-arc -I"$reference/include" -I"$opus/include" -I"$prefix/include" -I"$YL_TEST_FFMPEG_BUILD/ffmpeg-9.0.1" \
  -I"$YL_TEST_FFMPEG_BUILD/build/macosx-arm64" -I"$script_dir/../../darwin/native/YlFFmpegBridge/include" \
  "$script_dir/test_vorbis.m" -L"$prefix/lib" "$opus/lib/libopus.a" -lavformat -lavcodec -lavutil "$reference/lib/libvorbis.a" "$reference/lib/libogg.a" \
- -framework Foundation -framework CoreMedia -framework CoreVideo -framework Security -o "$temporary/source"
-xcrun clang -fobjc-arc -DYL_VORBIS_ARTIFACT=1 -I"$reference/include" -I"$prefix/include" \
+ -framework Foundation -framework CoreMedia -framework CoreVideo -framework Security "$dav1d/lib/libdav1d.a" -o "$temporary/source"
+xcrun clang -I"$dav1d/include" -fobjc-arc -DYL_VORBIS_ARTIFACT=1 -I"$reference/include" -I"$prefix/include" \
  -I"$framework/YlFFmpegBridge.framework/Headers" -F"$framework" "$script_dir/test_vorbis.m" \
  -L"$prefix/lib" -lavformat -lavcodec -lavutil "$reference/lib/libvorbis.a" "$reference/lib/libogg.a" \
- -framework Foundation -framework CoreMedia -framework YlFFmpegBridge -Wl,-rpath,"$framework" -o "$temporary/artifact"
-xcrun clang -I"$YL_TEST_FFMPEG_BUILD/ffmpeg-9.0.1" -I"$YL_TEST_FFMPEG_BUILD/build/macosx-arm64" \
- "$script_dir/test_vorbis_coupling.c" "$prefix/lib/libavcodec.a" "$prefix/lib/libavutil.a" -o "$temporary/coupling"
+ -framework Foundation -framework CoreMedia -framework YlFFmpegBridge -Wl,-rpath,"$framework" "$dav1d/lib/libdav1d.a" -o "$temporary/artifact"
+xcrun clang -I"$dav1d/include" -I"$YL_TEST_FFMPEG_BUILD/ffmpeg-9.0.1" -I"$YL_TEST_FFMPEG_BUILD/build/macosx-arm64" \
+ "$script_dir/test_vorbis_coupling.c" "$prefix/lib/libavcodec.a" "$prefix/lib/libavutil.a" "$dav1d/lib/libdav1d.a" -o "$temporary/coupling"
 "$temporary/coupling"
 repo_root=$(CDPATH= cd -- "$script_dir/../../../.." && pwd)
 for implementation in ${YL_VORBIS_IMPLEMENTATIONS:-source artifact}; do

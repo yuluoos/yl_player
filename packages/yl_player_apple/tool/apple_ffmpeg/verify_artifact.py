@@ -12,7 +12,7 @@ import subprocess
 import tempfile
 import urllib.request
 
-ACCEPTED_LOCK_SHA256 = 'a6a03d5574922b47bebefe11167bfe5ef2a4cb8bb5a57c44e28b595cffae8493'
+ACCEPTED_LOCK_SHA256 = '87efb230d07b1921b7432387277ab2c78a46dbc81a1e22206e7109afe56a8915'
 
 
 def sha(path):
@@ -49,6 +49,7 @@ def verify():
     require(files == expected['files'], 'artifact mismatch')
     opus_pins = dict(line.split('=', 1) for line in (script / 'opus-1.6.1.lock').read_text().splitlines())
     require(expected.get('opus_source') == opus_pins, 'Opus provenance mismatch')
+    dav1d_pins = dict(line.split('=', 1) for line in (script / 'dav1d.lock').read_text().splitlines())
     pins = dict(line.split('=', 1) for line in (script / 'ffmpeg-9.0.1.lock').read_text().splitlines())
     with tempfile.TemporaryDirectory(prefix='yl-apple-verify-') as temporary:
         work = Path(temporary)
@@ -58,6 +59,12 @@ def verify():
         else:
             urllib.request.urlretrieve(opus_pins['OPUS_URL'], opus_archive)
         require(sha(opus_archive) == opus_pins['OPUS_SHA256'], 'Opus archive mismatch')
+        dav1d_archive = work / 'dav1d.tar.xz'
+        if os.environ.get('YL_DAV1D_ARCHIVE'):
+            dav1d_archive.write_bytes(Path(os.environ['YL_DAV1D_ARCHIVE']).read_bytes())
+        else:
+            urllib.request.urlretrieve(dav1d_pins['DAV1D_URL'], dav1d_archive)
+        require(sha(dav1d_archive) == dav1d_pins['DAV1D_SHA256'], 'dav1d archive mismatch')
         archive, signature = work / 'source.tar.xz', work / 'source.tar.xz.asc'
         for target, variable, url in (
             (archive, 'YL_FFMPEG_ARCHIVE', pins['FFMPEG_URL']),

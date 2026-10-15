@@ -45,20 +45,21 @@ print('YL_OPUS_FIXTURES='+json.dumps({
           for p in sorted(root.iterdir()) if p.suffix in ('.mkv','.pcm')}
 },sort_keys=True))
 PYMANIFEST
-xcrun clang -fobjc-arc -I"${YL_TEST_OPUS_PREFIX:-$YL_TEST_FFMPEG_BUILD/build/macosx-arm64/opus-stage/yl_opus/install}/include" -I"$prefix/include" -I"$YL_TEST_FFMPEG_BUILD/ffmpeg-9.0.1" \
+dav1d="${YL_TEST_DAV1D_PREFIX:-$YL_TEST_FFMPEG_BUILD/build/macosx-arm64/dav1d-stage/yl_dav1d/install}"
+xcrun clang -I"$dav1d/include" -fobjc-arc -I"${YL_TEST_OPUS_PREFIX:-$YL_TEST_FFMPEG_BUILD/build/macosx-arm64/opus-stage/yl_opus/install}/include" -I"$prefix/include" -I"$YL_TEST_FFMPEG_BUILD/ffmpeg-9.0.1" \
  -I"$YL_TEST_FFMPEG_BUILD/build/macosx-arm64" -I"$script_dir/../../darwin/native/YlFFmpegBridge/include" \
  "$script_dir/test_opus.m" -L"$prefix/lib" "${YL_TEST_OPUS_PREFIX:-$YL_TEST_FFMPEG_BUILD/build/macosx-arm64/opus-stage/yl_opus/install}/lib/libopus.a" -lavformat -lavcodec -lavutil \
- -framework Foundation -framework CoreMedia -framework CoreVideo -framework Security -o "$temporary/test_opus"
+ -framework Foundation -framework CoreMedia -framework CoreVideo -framework Security "$dav1d/lib/libdav1d.a" -o "$temporary/test_opus"
 for mode in 2.5 5 10 20 40 60 120 speech silk10 silk20 silk40 narrow medium hybrid hybrid10 gain; do
  echo "Opus source mode=$mode"
  "$temporary/test_opus" "$temporary/$mode-1.mkv" "$temporary/$mode-1.pcm" "$temporary/$mode-2.mkv" "$temporary/$mode-2.pcm"
 done
 if [ -n "${YL_OPUS_FRAMEWORK_DIR:-}" ]; then
- xcrun clang -fobjc-arc -I"${YL_TEST_OPUS_PREFIX:-$YL_TEST_FFMPEG_BUILD/build/macosx-arm64/opus-stage/yl_opus/install}/include" -DYL_OPUS_ARTIFACT=1 -I"$prefix/include" \
+ xcrun clang -I"$dav1d/include" -fobjc-arc -I"${YL_TEST_OPUS_PREFIX:-$YL_TEST_FFMPEG_BUILD/build/macosx-arm64/opus-stage/yl_opus/install}/include" -DYL_OPUS_ARTIFACT=1 -I"$prefix/include" \
   -I"$YL_OPUS_FRAMEWORK_DIR/YlFFmpegBridge.framework/Headers" -F"$YL_OPUS_FRAMEWORK_DIR" \
   "$script_dir/test_opus.m" -L"$prefix/lib" "${YL_TEST_OPUS_PREFIX:-$YL_TEST_FFMPEG_BUILD/build/macosx-arm64/opus-stage/yl_opus/install}/lib/libopus.a" -lavformat -lavcodec -lavutil \
   -framework Foundation -framework CoreMedia -framework YlFFmpegBridge \
-  -Wl,-rpath,"$YL_OPUS_FRAMEWORK_DIR" -o "$temporary/test_opus_artifact"
+  -Wl,-rpath,"$YL_OPUS_FRAMEWORK_DIR" "$dav1d/lib/libdav1d.a" -o "$temporary/test_opus_artifact"
  for mode in 2.5 5 10 20 40 60 120 speech silk10 silk20 silk40 narrow medium hybrid hybrid10 gain; do
   echo "Opus artifact mode=$mode"
   "$temporary/test_opus_artifact" "$temporary/$mode-1.mkv" "$temporary/$mode-1.pcm" "$temporary/$mode-2.mkv" "$temporary/$mode-2.pcm"

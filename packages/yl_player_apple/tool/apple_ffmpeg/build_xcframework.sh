@@ -11,6 +11,7 @@ output="$package_root/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframewo
 artifact_lock="$script_dir/bridge-artifact.lock"
 source "$lock_file"
 source "$script_dir/opus-1.6.1.lock"
+source "$script_dir/dav1d.lock"
 
 common_flags=(
   --disable-everything
@@ -29,10 +30,12 @@ common_flags=(
   --enable-avcodec
   --enable-avformat
   --enable-demuxer=matroska,flv,mov,mpegts,mpegps,avi,h264
-  --enable-decoder=dca,vorbis
+  --enable-decoder=dca,vorbis,libdav1d,vp9
+  --enable-libdav1d
+  --pkg-config-flags=--static
   --enable-bsf=dovi_rpu
   --enable-protocol=file
-  --enable-parser=aac,h264,hevc,mpegaudio,dca,ac3
+  --enable-parser=aac,h264,hevc,mpegaudio,dca,ac3,av1,vp9
   --enable-pic
   --enable-static
   --disable-shared
@@ -43,10 +46,11 @@ common_flags=(
 
 
 print_contract() {
-  cat "$lock_file" "$script_dir/opus-1.6.1.lock"
+  cat "$lock_file" "$script_dir/opus-1.6.1.lock" "$script_dir/dav1d.lock"
   printf '%s\n' "${common_flags[@]}" \
     'FFMPEG_X86_64_FLAGS=--disable-x86asm' \
     'OPUS_FLAGS=--disable-shared,--enable-static,--disable-doc,--disable-extra-programs,--disable-intrinsics,--disable-asm,--disable-rtcd,--disable-deep-plc,--disable-dred,--disable-osce,--disable-qext' \
+    'DAV1D_FLAGS=static,release,pic,tools=false,tests=false,examples=false,docs=false,arm64-asm=true,x86_64-asm=false' \
     'NORMALIZATION=relative-source,fixed-install-prefix,prefix-map,bridge-no-debug,zero-ar-date,linker-content-uuid,oso-prefix,sorted-plist-libraries' \
     'TARGETS=iphoneos-arm64,iphonesimulator-arm64,iphonesimulator-x86_64,macosx-arm64,macosx-x86_64'
 }
@@ -63,10 +67,14 @@ inputs={p:sha(package/p) for p in ['darwin/native/YlFFmpegBridge/YlFFmpegBridge.
  'darwin/native/YlFFmpegBridge/include/YlFFmpegBridge.h',
  'darwin/native/YlFFmpegBridge/YlFELBridge.inc',
  'darwin/native/YlFFmpegBridge/YlVorbisBridge.inc',
+ 'darwin/native/YlFFmpegBridge/YlSoftwareVideoBridge.inc',
+ 'tool/apple_ffmpeg/dav1d.lock','LICENSES/dav1d-BSD.txt','tool/apple_ffmpeg/build_dav1d.sh',
+ 'tool/apple_ffmpeg/patches/dav1d-owned-pictures.patch',
  'tool/apple_ffmpeg/patches/vorbis-aarch64-zero-coupling.patch',
  'darwin/native/YlFFmpegBridge/module.modulemap','tool/apple_ffmpeg/ffmpeg-9.0.1.lock',
  'tool/apple_ffmpeg/FFMPEG_RELEASE_KEY.asc','tool/apple_ffmpeg/opus-1.6.1.lock','LICENSES/Opus-BSD.txt','tool/apple_ffmpeg/build_xcframework.sh']}
-toolchain={'xcode':run('xcodebuild','-version'),'clang':run('xcrun','clang','--version')}
+toolchain={'xcode':run('xcodebuild','-version'),'clang':run('xcrun','clang','--version'),
+ 'meson':run('meson','--version'),'ninja':run('ninja','--version')}
 for name in ['clang','ld','ar','ranlib']:
  p=pathlib.Path(run('xcrun','--find',name));toolchain[name+'_path']=str(p);toolchain[name+'_sha256']=sha(p)
 for sdk in ['iphoneos','iphonesimulator','macosx']:
@@ -148,11 +156,17 @@ PYSIGN
 opus_archive="$work_root/opus-$OPUS_VERSION.tar.gz"
 if [[ -n ${YL_OPUS_ARCHIVE:-} ]]; then cp "$YL_OPUS_ARCHIVE" "$opus_archive"; else curl --fail --location --retry 3 --output "$opus_archive" "$OPUS_URL"; fi
 [[ $(shasum -a 256 "$opus_archive" | awk '{print $1}') == "$OPUS_SHA256" ]] || { echo 'Opus source archive checksum mismatch' >&2; exit 1; }
+dav1d_archive="$work_root/dav1d-$DAV1D_VERSION.tar.xz"
+if [[ -n ${YL_DAV1D_ARCHIVE:-} ]]; then cp "$YL_DAV1D_ARCHIVE" "$dav1d_archive"; else curl --fail --location --retry 3 --output "$dav1d_archive" "$DAV1D_URL"; fi
+[[ $(shasum -a 256 "$dav1d_archive" | awk '{print $1}') == "$DAV1D_SHA256" ]] || { echo 'dav1d source archive checksum mismatch' >&2; exit 1; }
 if [[ $mode == --verify ]]; then manifest "$output" compare "$artifact_lock" "$work_root/signed-source.json"; exit 0; fi
 
 tar -xf "$archive" -C "$work_root"
 # Preserve signed upstream bytes plus an explicitly hashed, zero-fuzz correction.
 patch --batch --fuzz=0 -p1 -d "$source_root" < "$script_dir/patches/vorbis-aarch64-zero-coupling.patch"
+patch --batch --fuzz=0 -p1 -d "$source_root" < "$script_dir/patches/dav1d-owned-pictures.patch"
+tar -xf "$dav1d_archive" -C "$work_root"
+cmp "$work_root/dav1d-$DAV1D_VERSION/COPYING" "$package_root/LICENSES/dav1d-BSD.txt"
 tar -xf "$opus_archive" -C "$work_root"
 cmp "$work_root/opus-$OPUS_VERSION/COPYING" "$package_root/LICENSES/Opus-BSD.txt"
 cp -R "$bridge_root" "$work_root/bridge"
@@ -179,10 +193,18 @@ build_slice() {
     arch_flag=--disable-x86asm
   fi
   mkdir -p "$slice_root"
+  sh "$script_dir/build_dav1d.sh" "$work_root/dav1d-$DAV1D_VERSION" "$slice_root" "$sdk" "$apple_arch" "$minimum_flag"
+  local dav1d_install="$slice_root/dav1d-stage/yl_dav1d/install"
+  # Rewrite only the staging .pc prefix; never bake a temporary path into the
+  # configure command or final library. pkgconf sysroot rewriting is not portable.
+  python3 - "$dav1d_install/lib/pkgconfig/dav1d.pc" "$dav1d_install" <<'PYPC'
+import pathlib,sys
+p=pathlib.Path(sys.argv[1]);p.write_text(p.read_text().replace('prefix=/yl_dav1d/install','prefix='+sys.argv[2]))
+PYPC
 
   (
     cd "$slice_root"
-    "../../ffmpeg-$FFMPEG_VERSION/configure" \
+    PKG_CONFIG_PATH= PKG_CONFIG_LIBDIR="$dav1d_install/lib/pkgconfig" PKG_CONFIG_SYSROOT_DIR= "../../ffmpeg-$FFMPEG_VERSION/configure" \
       --prefix=/yl_ffmpeg/install \
       --enable-cross-compile \
       --target-os=darwin \
@@ -230,6 +252,15 @@ build_slice() {
   fi
   mkdir -p "$contents/Headers" "$contents/Modules"
   printf '%s\n' \
+    _ylf_software_video_copy_configuration \
+    _ylf_software_video_free_configuration \
+    _ylf_software_video_create_from_configuration \
+    _ylf_software_video_create \
+    _ylf_software_video_send \
+    _ylf_software_video_receive \
+    _ylf_software_video_finish \
+    _ylf_software_video_reset \
+    _ylf_software_video_free \
     _ylf_fel_create \
     _ylf_fel_clone \
     _ylf_fel_copy_base_format \
@@ -283,7 +314,7 @@ build_slice() {
   (
   cd "$slice_root"
   "$clang" -fobjc-arc -fvisibility=hidden -arch "$apple_arch" -isysroot "$sdk_root" \
-    "$minimum_flag" -I"$install_root/include" -I"$opus_install/include" -I"$bridge_root/include" -I"../../ffmpeg-$FFMPEG_VERSION" -I. \
+    "$minimum_flag" -I"$install_root/include" -I"$opus_install/include" -I"$dav1d_install/include" -I"$bridge_root/include" -I"../../ffmpeg-$FFMPEG_VERSION" -I. \
     -g0 -ffile-prefix-map=../../bridge=/yl_ffmpeg/bridge -fdebug-compilation-dir=/yl_ffmpeg/build/$slice_name \
     -c ../../bridge/YlFFmpegBridge.m -o "$object_file"
   "$clang" -dynamiclib -arch "$apple_arch" -isysroot "$sdk_root" "$minimum_flag" \
@@ -293,7 +324,7 @@ build_slice() {
     -Wl,-force_load,"$install_root/lib/libavformat.a" \
     -Wl,-force_load,"$install_root/lib/libavcodec.a" \
     -Wl,-force_load,"$install_root/lib/libavutil.a" \
-    "$opus_install/lib/libopus.a" \
+    "$opus_install/lib/libopus.a" "$dav1d_install/lib/libdav1d.a" \
     -framework CoreFoundation -framework CoreMedia -framework CoreVideo -framework Foundation -framework Security \
     -o "$contents/YlFFmpegBridge"
   )
