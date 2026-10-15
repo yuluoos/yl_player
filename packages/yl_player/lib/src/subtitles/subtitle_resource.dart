@@ -11,7 +11,8 @@ YlPlayerException subtitleFailure(String code) => YlPlayerException(
       YlFailureCodes.loadCancelled => YlFailureCategory.cancelled,
       YlFailureCodes.subtitleUnsupported ||
       YlFailureCodes.policyUnsupported => YlFailureCategory.unsupported,
-      YlFailureCodes.subtitleTooLarge => YlFailureCategory.resource,
+      YlFailureCodes.subtitleTooLarge ||
+      YlFailureCodes.subtitleResourceUnavailable => YlFailureCategory.resource,
       YlFailureCodes.networkFailed => YlFailureCategory.network,
       _ => YlFailureCategory.source,
     },

@@ -8,7 +8,19 @@ import 'subtitle_resource.dart';
 import 'embedded_subtitle_resource.dart';
 
 final class TextSubtitleCue {
-  const TextSubtitleCue(this.cue, this.text, {this.elapsed = Duration.zero});
+  const TextSubtitleCue(
+    this.cue,
+    this.text, {
+    this.elapsed = Duration.zero,
+    this.onRenderFailure,
+    this.presentationGeneration = 0,
+  });
+
+  /// Reports only an active cue owned by this presentation; accepts no raw error.
+  final void Function()? onRenderFailure;
+
+  /// Changes on seek, selection, offset and catalog/session replacement.
+  final int presentationGeneration;
   final Duration elapsed;
   final SubtitleCue cue;
   final TextSpan text;
@@ -37,6 +49,8 @@ final class TextSubtitleRuntime {
   SubtitleCancellation? _windowToken;
   Duration _position = Duration.zero;
   int _selectionGeneration = 0;
+  // Retains only failed currently active cues (at most the active-cue limit).
+  final _failedCues = <SubtitleCue>{};
   int? _selecting;
   void Function()? onChanged;
   void Function(YlPlayerException)? onFailure;
@@ -44,6 +58,7 @@ final class TextSubtitleRuntime {
   /// Clear selected segmented cues immediately before a seek or owner change.
   void suspendWindow() {
     _selectionGeneration++;
+    _failedCues.clear();
     _selecting = null;
     _windowToken?.cancel();
     _windowToken = null;
@@ -54,6 +69,7 @@ final class TextSubtitleRuntime {
   /// Authoritative media positions drive prefetch; rendering remains pure.
   void updatePosition(Duration position) {
     _position = position;
+    _pruneFailedCues(position);
     if (_selecting != null) return;
     final work = _loadWindow(position);
     unawaited(
@@ -447,16 +463,44 @@ final class TextSubtitleRuntime {
     updatePosition(_position);
   }
 
+  List<SubtitleCue> _activeCues(Duration position) =>
+      (_documents[state.selectedTrackId] ?? _window)?.document.cuesAt(
+        position,
+        offset: state.offset,
+      ) ??
+      const [];
+
+  void _pruneFailedCues(Duration position) {
+    if (_failedCues.isEmpty) return;
+    final active = _activeCues(position).toSet();
+    _failedCues.removeWhere((cue) => !active.contains(cue));
+  }
+
+  void _renderFailed(SubtitleCue cue, int generation) {
+    if (generation != _selectionGeneration ||
+        !_activeCues(_position).contains(cue) ||
+        !_failedCues.add(cue)) {
+      return;
+    }
+    onFailure?.call(
+      subtitleFailure(YlFailureCodes.subtitleResourceUnavailable),
+    );
+  }
+
   List<TextSubtitleCue> cuesAt(Duration position) {
     final doc = _documents[state.selectedTrackId] ?? _window;
     if (doc == null) return const [];
+    final generation = _selectionGeneration;
     return [
       for (final cue in doc.document.cuesAt(position, offset: state.offset))
-        TextSubtitleCue(
-          cue,
-          doc.text[cue.ordinal],
-          elapsed: position - state.offset - cue.start,
-        ),
+        if (!_failedCues.contains(cue))
+          TextSubtitleCue(
+            cue,
+            doc.text[cue.ordinal],
+            elapsed: position - state.offset - cue.start,
+            presentationGeneration: generation,
+            onRenderFailure: () => _renderFailed(cue, generation),
+          ),
     ];
   }
 }

@@ -24,8 +24,17 @@ enum YlFailureCategory {
 enum YlFailureScope { command, session, player }
 
 abstract final class YlFailureCodes {
+  /// A subtitle image/resource could not be created. Command-scoped; video
+  /// continues and raw decoder errors or resource addresses are never exposed.
+  static const subtitleResourceUnavailable = 'subtitle.resource_unavailable';
+
+  /// Subtitle syntax or container payload is malformed.
   static const subtitleMalformed = 'subtitle.malformed';
+
+  /// Subtitle syntax or representation is outside the supported subset.
   static const subtitleUnsupported = 'subtitle.unsupported';
+
+  /// Subtitle input, decoded image, cue or render budget was exceeded.
   static const subtitleTooLarge = 'subtitle.too_large';
   static const drmConfigInvalid = 'drm.config_invalid';
   static const drmUnsupported = 'drm.unsupported';

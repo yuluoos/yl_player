@@ -8,6 +8,7 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 import 'support/fake_player_platform.dart';
 import 'support/vobsub_fixture.dart';
+import 'support/pgs_fixture.dart';
 
 const sid = YlPlaybackSessionId('text');
 const sample =
@@ -119,6 +120,90 @@ void main() {
     await dir.delete(recursive: true);
     HttpOverrides.global = savedHttpOverrides;
   });
+
+  for (final change in [
+    'none',
+    'tick',
+    'seek',
+    'off',
+    'reselect',
+    'offset',
+    'replace',
+    'new session',
+    'stop',
+    'dispose',
+    'expired',
+  ]) {
+    test('bitmap resource failure ownership after $change', () async {
+      await file.writeAsBytes(pgsFixture());
+      final bitmap = YlExternalSubtitle(
+        id: 'bitmap',
+        source: YlFileSource(file.path),
+        format: YlSubtitleFormat.pgs,
+      );
+      await session.replaceExternalSubtitles([bitmap]);
+      await session.selectSubtitleTrack('bitmap');
+      position(1000);
+      backend.emitFirstFrame(sid);
+      final cue = player.textSubtitleCues.single;
+      final failures = <YlPlaybackFailedEvent>[];
+      final events = player.events
+          .where((e) => e is YlPlaybackFailedEvent)
+          .cast<YlPlaybackFailedEvent>()
+          .listen(failures.add);
+      addTearDown(events.cancel);
+      switch (change) {
+        case 'tick':
+          position(1100);
+        case 'seek':
+          await session.seekTo(const Duration(seconds: 1));
+          position(1000);
+        case 'off':
+          await session.selectSubtitleTrack(null);
+        case 'reselect':
+          await session.selectSubtitleTrack('bitmap');
+        case 'offset':
+          await session.setSubtitleOffset(const Duration(milliseconds: 100));
+        case 'replace':
+          await session.replaceExternalSubtitles([bitmap]);
+        case 'new session':
+          final next = player.load(const YlFileSource('/next.mp4'));
+          backend.commit(const YlPlaybackSessionId('next'));
+          await next;
+        case 'stop':
+          await player.stop();
+        case 'dispose':
+          await player.dispose();
+        case 'expired':
+          position(3000);
+      }
+      cue.onRenderFailure!();
+      cue.onRenderFailure!();
+      if (change == 'none' || change == 'tick') {
+        expect(failures, hasLength(1));
+        final error = failures.single;
+        expect(error.sessionId, sid);
+        expect(error.failure.code, 'subtitle.resource_unavailable');
+        expect(error.failure.category, YlFailureCategory.resource);
+        expect(error.failure.scope, YlFailureScope.command);
+        expect(error.failure.retryable, false);
+        expect(player.state.status, YlPlaybackStatus.playing);
+        expect(player.state.failure, isNull);
+        expect(player.textSubtitleCues, isEmpty);
+        position(1200);
+        expect(player.textSubtitleCues, isEmpty);
+        // A later palette/cue still renders; failure does not disable the track.
+        position(2000);
+        expect(player.textSubtitleCues, hasLength(1));
+        expect(player.state.subtitles.selectedTrackId, 'bitmap');
+      } else {
+        expect(failures, isEmpty);
+        if (change == 'reselect' || change == 'replace' || change == 'seek') {
+          expect(player.textSubtitleCues, hasLength(1));
+        }
+      }
+    });
+  }
 
   test(
     'real file catalog, selection, offset and native revision coexist',

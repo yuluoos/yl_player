@@ -86,9 +86,14 @@ final class PgsSubtitleOverlay extends StatefulWidget {
     required this.frame,
     this.source = const Rect.fromLTWH(0, 0, 1, 1),
     this.decoder = decodePgsBitmap,
+    this.onFailure,
     super.key,
   });
   final PgsFrame frame;
+
+  /// Sanitized failure notification for the current mounted frame only.
+  /// The owning runtime isolates it from video playback and stale selections.
+  final VoidCallback? onFailure;
 
   /// Visible fraction of the upright presentation canvas, including cover crop.
   final Rect source;
@@ -122,6 +127,10 @@ final class _PgsSubtitleOverlayState extends State<PgsSubtitleOverlay> {
       }
       pending = null;
       if (result == null) {
+        if (widget.onFailure case final report?) {
+          report();
+          return;
+        }
         FlutterError.reportError(
           FlutterErrorDetails(
             exception: FlutterError('Subtitle image creation failed.'),

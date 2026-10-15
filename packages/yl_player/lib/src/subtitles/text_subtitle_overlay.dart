@@ -133,6 +133,8 @@ final class TextSubtitleOverlay extends StatelessWidget {
                       ),
                     for (final cue in cues.where((c) => c.cue.pgs != null))
                       PgsSubtitleOverlay(
+                        key: ValueKey((cue.cue, cue.presentationGeneration)),
+                        onFailure: cue.onRenderFailure,
                         frame: cue.cue.pgs!,
                         source: pgsSource,
                       ),

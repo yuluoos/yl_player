@@ -1,0 +1,23 @@
+{
+  "baseline": "c3b8b902341638ffd8c96c3c2744c52d1c60471b",
+  "scope": "PD03 asynchronous bitmap resource failure isolation; controlled Dart/Flutter engine tests, not native DRM",
+  "red": "missing API then 12 expected behavioral failures",
+  "focused": {
+    "passed": 48,
+    "failed": 0
+  },
+  "player_suite": {
+    "passed": 1660,
+    "failed": 0
+  },
+  "analyzer": "initial 1 style info corrected; final no issues",
+  "sources": {
+    "packages/yl_player/lib/src/subtitles/pgs_overlay.dart": "8420b906c7591b938a1086d83e74dd138f3b5dd34bfde8a2207d3e7270b201b2",
+    "packages/yl_player/lib/src/subtitles/subtitle_resource.dart": "0eeb9b584c05cb6b027f75cfbf5331e084b24469918380860f2a938351a44608",
+    "packages/yl_player/lib/src/subtitles/text_subtitle_overlay.dart": "dc58bc995038efcefb061556e1e35034e0a153a921e1dddfc9c8c31493d7e195",
+    "packages/yl_player/lib/src/subtitles/text_subtitle_runtime.dart": "0b1b2fecab0c13437e80b5dec52dfe99a791e49b860b2297ac201f339d613c9b",
+    "packages/yl_player/test/pgs_overlay_test.dart": "c194ca6af51f90584a8e100f6ade98709bd6122f6ff4eb5a201a3f475baa2e83",
+    "packages/yl_player/test/text_subtitle_runtime_test.dart": "bd6bf6d3e5f24bfb67a94988acf5ab26740085d54cda59944efb050a2733667f",
+    "packages/yl_player_platform_interface/lib/src/model/failure.dart": "59428d9d1b5985e74cf43ea82200047ace0e9840af6d599a8fc8347650132c1e"
+  }
+}

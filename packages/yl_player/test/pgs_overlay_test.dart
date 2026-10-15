@@ -289,6 +289,7 @@ void main() {
         () => decodePgsBitmap(frame.bitmaps.first),
       ))!;
       var count = 0;
+      var failures = 0;
       Future<ui.Image> failSecond(PgsBitmap _) async {
         if (++count == 1) return first;
         throw StateError('private source/token must not escape');
@@ -298,14 +299,21 @@ void main() {
         Directionality(
           textDirection: TextDirection.ltr,
           child: Stack(
-            children: [PgsSubtitleOverlay(frame: frame, decoder: failSecond)],
+            children: [
+              PgsSubtitleOverlay(
+                frame: frame,
+                decoder: failSecond,
+                onFailure: () => failures++,
+              ),
+            ],
           ),
         ),
       );
       await tester.pump();
       expect(count, 2);
       expect(first.debugDisposed, true);
-      expect(tester.takeException().toString(), 'Subtitle image creation failed.');
+      expect(failures, 1);
+      expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
     },
   );
