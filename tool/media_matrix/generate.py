@@ -17,6 +17,7 @@ CASES = [
     ('webm-vp9-opus', 'webm', 'webm', 'libvpx-vp9', 'libopus', 2, 8),
     ('flv-avc-mp3', 'flv', 'flv', 'libx264', 'libmp3lame', 2, 8),
     ('ts-avc-ac3', 'ts', 'mpegTs', 'libx264', 'ac3', 2, 8),
+    ('ps-avc-mp3', 'mpg', 'mpegPs', 'libx264', 'libmp3lame', 2, 8),
     ('ps-mpeg2-mp3', 'mpg', 'mpegPs', 'mpeg2video', 'libmp3lame', 2, 8),
     ('avi-avc-mp3', 'avi', 'avi', 'libx264', 'libmp3lame', 2, 8),
     ('mkv-av1-opus', 'mkv', 'matroska', 'libsvtav1', 'libopus', 2, 8),
@@ -51,6 +52,8 @@ def main():
                '-f','lavfi','-i',audio,'-map','0:v','-map','1:a','-t','4',
                '-c:v',vc,'-pix_fmt','yuv420p10le' if depth==10 else 'yuv420p','-threads','2']
         if vc == 'libx264': cmd += ['-preset','ultrafast','-g','24','-bf','0']
+        if container == 'mpegPs' and vc == 'libx264':
+            cmd += ['-b:v','500k','-minrate','500k','-maxrate','500k','-bufsize','500k','-x264-params','nal-hrd=cbr']
         if vc == 'libx265': cmd += ['-preset','ultrafast','-x265-params','pools=1:frame-threads=1:keyint=24:log-level=error']
         if vc == 'libvpx-vp9': cmd += ['-deadline','realtime','-cpu-used','8','-g','24']
         if vc == 'libsvtav1': cmd += ['-preset','12','-svtav1-params','lp=2','-g','24']
@@ -63,6 +66,7 @@ def main():
         if ac == 'ac3' and channels == 6: cmd += ['-b:a','384k']
         if ext in {'mp4','mov'}: cmd += ['-movflags','+faststart']
         if 'no-cues' in name: cmd += ['-live','1']
+        if container == 'mpegPs': cmd += ['-f', 'mpeg']
         cmd += [str(path)]
         if name == 'mkv-avc-vorbis':
             with tempfile.TemporaryDirectory(prefix='yl-vorbis-fixture-') as temporary:
@@ -88,6 +92,7 @@ def main():
             'video':{'codec':v['codec_name'],'profile':v.get('profile'),'bitDepth':depth,'pixelFormat':v['pix_fmt'],'width':v['width'],'height':v['height'],'frameRate':v['r_frame_rate']},
             'audio':{'codec':a['codec_name'],'channels':a['channels'],'layout':a.get('channel_layout'),'sampleRate':int(a['sample_rate'])},
             'durationSeconds':4.0,'probedDurationSeconds':float(probe['format']['duration']) if 'duration' in probe['format'] else None,
+            'supportRequirement': 'diagnostic' if name == 'ps-mpeg2-mp3' else 'required',
             'probe':f'{name}.probe.json','source':'owned-generated','integrity':'valid','seekability':'no_cues' if 'no-cues' in name else 'expected_seekable',
             'transports':['file','http'],'platforms':{p:{'implementation':'unverified','verification':'not_run'} for p in ['android','ios','macos']}})
     bad=OUT/'truncated.mp4';bad.write_bytes((OUT/'mp4-avc-aac.mp4').read_bytes()[:32])

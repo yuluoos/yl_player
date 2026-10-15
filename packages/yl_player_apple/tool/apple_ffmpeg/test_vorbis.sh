@@ -14,6 +14,7 @@ for rate in 44100 48000; do
  for channels in 1 2; do
   "$reference/bin/yl_vorbis_encoder" "$rate" "$channels" > "$temporary/$rate-$channels.ogg"
   "$fixture_ffmpeg" -hide_banner -loglevel error -i "$temporary/$rate-$channels.ogg" -c:a copy "$temporary/$rate-$channels.mkv"
+  python3 "$script_dir/vorbis_delay_fixture.py" "$temporary/$rate-$channels.mkv" "$temporary/$rate-$channels-delay.mkv" "$rate"
  done
 done
 python3 - "$temporary" <<'PY'
@@ -28,11 +29,19 @@ xcrun clang -fobjc-arc -DYL_VORBIS_ARTIFACT=1 -I"$reference/include" -I"$prefix/
  -I"$framework/YlFFmpegBridge.framework/Headers" -F"$framework" "$script_dir/test_vorbis.m" \
  -L"$prefix/lib" -lavformat -lavcodec -lavutil "$reference/lib/libvorbis.a" "$reference/lib/libogg.a" \
  -framework Foundation -framework CoreMedia -framework YlFFmpegBridge -Wl,-rpath,"$framework" -o "$temporary/artifact"
-for implementation in source artifact; do
+xcrun clang -I"$YL_TEST_FFMPEG_BUILD/ffmpeg-9.0.1" -I"$YL_TEST_FFMPEG_BUILD/build/macosx-arm64" \
+ "$script_dir/test_vorbis_coupling.c" "$prefix/lib/libavcodec.a" "$prefix/lib/libavutil.a" -o "$temporary/coupling"
+"$temporary/coupling"
+repo_root=$(CDPATH= cd -- "$script_dir/../../../.." && pwd)
+for implementation in ${YL_VORBIS_IMPLEMENTATIONS:-source artifact}; do
  for rate in 44100 48000; do
   for channels in 1 2; do
    echo "Vorbis $implementation rate=$rate channels=$channels"
    "$temporary/$implementation" "$temporary/$rate-$channels.mkv"
+   "$temporary/$implementation" "$temporary/$rate-$channels-delay.mkv"
   done
+ done
+ for fixture in webm-vp9-vorbis.webm mkv-avc-vorbis-codec-delay.mkv; do
+  "$temporary/$implementation" "$repo_root/packages/yl_player/example/assets/test_media/format_matrix/$fixture"
  done
 done

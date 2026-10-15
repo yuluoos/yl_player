@@ -4,7 +4,7 @@ import YlFFmpegBridge
 
 func ylVorbisUnsupportedError() -> NativePlayerError {
   NativePlayerError(category: "decoderUnsupported", code: "decoder.audio_vorbis_unsupported",
-    message: "Vorbis requires valid Vorbis I headers, mono or stereo at 44.1 or 48 kHz, and zero CodecDelay. Try another audio track.")
+    message: "Vorbis requires valid Vorbis I headers, mono or stereo at 44.1 or 48 kHz, and CodecDelay within 4096 samples. Try another audio track.")
 }
 func ylVorbisPacketError() -> NativePlayerError {
   NativePlayerError(category: "decoderFailure", code: "decoder.audio_vorbis_failed",
@@ -60,7 +60,10 @@ final class YlVorbisAudioConverter: YlAudioPacketConverting {
     let sampleRate = Int64(format.sampleRate)
     var ptsUs = packet.ptsUs
     var startFrame = 0
-    if let target = packet.presentationStartUs, target > ptsUs {
+    // CodecDelay is already reflected in demux PTS. Decode every priming
+    // packet, but never schedule PCM before programme zero, even on first load.
+    let target = max(0, packet.presentationStartUs ?? 0)
+    if target > ptsUs {
       let end = ptsUs.addingReportingOverflow(Int64(frames) * 1_000_000 / sampleRate)
       guard !end.overflow else { throw ylVorbisPacketError() }
       if target >= end.partialValue { return nil }

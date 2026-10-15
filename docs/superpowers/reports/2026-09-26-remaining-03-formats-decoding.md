@@ -467,3 +467,13 @@ P08-A/B仍没有合格的Apple AV1软解基线；没有复用Android AVC/HEVC限
 公开播放器AV1 file/http/renamed-file三项基线匹配，三条原始观测仍是load阶段`decoder.unsupported`，0首帧；不是三条播放成功。未改产品或原媒体，未重复无关67项全矩阵。单元测试和最终证据/复审记录见后续段落；P03Task3和CAP-DECODE/FORMAT仍未完成。
 
 最终9项工具单测通过（缺实现RED→8项GREEN；malfunction错误归类RED→9项GREEN）；测试发现已接入check_foundation，不重复无关全仓测试。18条原生观测完整收集、3条公开缺口与上轮完全相同，记录见[macos-av1-observations.json](../../../tool/decoder_probe/macos-av1-observations.json)。单轮独立复审无Critical/Important；纠正文档中的AVC对照Profile误写，真实为Constrained Baseline。Swift探测编译仍有CFTypeRef?作为valueOut原始指针的既有API写法警告，实际CFBoolean/输出对照均通过；公开Flutter运行提示无法前置窗口，不作物理显示验收。本轮完成可行性证据工具与当前设备记录，AV1播放能力仍未完成。
+
+## 2026-10-14 P03 补齐计划第一组：Vorbis delay 与 MPEG-PS
+
+按获批补齐计划完成第一组工程实现。Vorbis 允许受检的 0…4096 样本 CodecDelay，保留负时间戳重叠预热，在输出边界裁至节目零点/seek 目标，避免重复扣除 delay。独立 Xiph 参考揭示 FFmpeg ARM64 NEON inverse coupling 对正零的分支错误；四处最小 `fcmle` 补丁作为签名源码构建输入固定。144 项 SIMD 向量、44.1/48 kHz 单/双声道有无 delay 及两个原始样本的 source/artifact PCM 与 seek 比较通过；未替换失败原样本或放宽 PCM 判据。
+
+新增 MPEG-PS AVC/MP3 原创测试素材及受检 owned demux 路径，识别完整 MPEG-1/2 pack header、相对节目时间戳和有界 seek；保留 MPEG-2 video 旧素材为明确 diagnostic 行。FFmpeg 配置名为 `mpegps`、运行时名为 `mpeg`，内部 `h264` demux 仅用于无 PSM 的 PS 探测，独立 raw H264 输入仍拒绝。已知错误扩展名也先检查内容；旧 Apple 系统缺少 MIME override 时，重命名 MP4 使用 owned sample 路径。严格 managed/bounded PS 和 live PS 仍明确拒绝，后续接入工作继续开放。
+
+五架构候选从签名源码独立复建，两次 18 项规范制品逐字节一致，安装后 lock 身份和六类篡改负例通过。音频全套、video/TS/AVI/VP9/framing 及 PS 268 项源验证通过。macOS 64 项相关原生回归和两项真实像素/PCM/双向 seek 输出通过；14 条公开 file/http/改名路径通过。初次六条 MP4 因应用前置失败而超时的原始观测保留，前置同一应用后六条均通过。像素采样在编码参考色域验证，未宣称物理显示或扬声器验收。
+
+iOS 模拟器 64 项相关测试通过；两项实际输出在首次创建硬解 session 时返回 `decoder.video_hardware_unavailable`。仅这个模拟器首次创建条件允许显式 skip，复验为 0 失败、2 skip；不计入输出成功。真机输出、Android 本组验证及后续软解预算/AV1/三端完整验收仍开放。证据见 `tool/media_matrix/macos-p03-container-observations.json`，P03 整体未完成。

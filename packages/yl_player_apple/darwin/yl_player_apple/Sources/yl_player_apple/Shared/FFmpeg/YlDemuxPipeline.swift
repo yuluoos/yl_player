@@ -440,6 +440,9 @@ func ylFallbackPacketReadError(
     message = result == Int32(YLFResultVideoConfigurationInvalid)
       ? "The AVI video lacks supported presentation timing. Use a file with explicit timestamps or Baseline AVC without frame reordering."
       : "The AVI packet stream is malformed."
+  case .mpegPs:
+    return NativePlayerError(category: "container", code: "container.mpegps_malformed",
+      message: "The MPEG-PS packet or timestamp is invalid.", diagnostic: "YlFFmpegBridge result \(result)")
   case .mpegTs:
     code = "container.mpegts_malformed"
     message = "The MPEG-TS packet stream is malformed."

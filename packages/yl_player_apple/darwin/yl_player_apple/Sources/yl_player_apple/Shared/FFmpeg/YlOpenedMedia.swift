@@ -225,7 +225,7 @@ final class YlOpenedMedia {
           container: container
         )
       }
-      if container == .mpegTs, ylf_use_relative_transport_stream_timestamps(context) != Int32(YLFResultOK) {
+      if container == .mpegTs || container == .mpegPs, ylf_use_relative_transport_stream_timestamps(context) != Int32(YLFResultOK) {
         ylf_close(&context)
         throw Self.openError(result: Int32(YLFResultUnsupportedContainer), callbackError: nil,
           network: false, container: container)
@@ -290,11 +290,12 @@ final class YlOpenedMedia {
         container: container ?? recipe?.container ?? .matroska
       )
     }
-    if (container ?? recipe?.container) == .mpegTs,
+    let clockContainer = container ?? recipe?.container ?? .matroska
+    if clockContainer == .mpegTs || clockContainer == .mpegPs,
        ylf_use_relative_transport_stream_timestamps(context) != Int32(YLFResultOK) {
       ylf_close(&context)
       throw Self.openError(result: Int32(YLFResultUnsupportedContainer), callbackError: nil,
-        network: true, container: .mpegTs)
+        network: true, container: clockContainer)
     }
     if let source = byteSource as? YlRtmpByteSource {
       do { try source.finishPreparation() }
@@ -349,8 +350,10 @@ final class YlOpenedMedia {
         throw NativePlayerError(
           category: "container",
           code: recipe?.container == .avi ? "container.avi_seek_failed"
+            : recipe?.container == .mpegPs ? "container.mpegps_seek_failed"
             : recipe?.container == .mpegTs ? "container.mpegts_seek_failed" : "container.mkv_seek_failed",
           message: recipe?.container == .avi ? "The AVI media could not be seeked. Check that it contains a usable index."
+            : recipe?.container == .mpegPs ? "The MPEG-PS seek could not find a usable keyframe within the bounded search."
             : recipe?.container == .mpegTs
             ? "The MPEG-TS seek could not find a usable keyframe within the bounded search."
             : "The Matroska media could not be seeked.",
@@ -433,6 +436,10 @@ final class YlOpenedMedia {
     case .avi:
       return NativePlayerError(category: "container", code: "container.avi_open_failed",
         message: "The AVI media could not be opened. Check that the source is complete and uses supported codecs.",
+        diagnostic: "YlFFmpegBridge result \(result)")
+    case .mpegPs:
+      return NativePlayerError(category: "container", code: "container.mpegps_open_failed",
+        message: "The MPEG-PS media could not be opened or its timeline could not be established.",
         diagnostic: "YlFFmpegBridge result \(result)")
     case .mpegTs:
       return NativePlayerError(category: "container", code: "container.mpegts_open_failed",

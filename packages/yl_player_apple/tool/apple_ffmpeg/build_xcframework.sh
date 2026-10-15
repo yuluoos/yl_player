@@ -28,7 +28,7 @@ common_flags=(
   --enable-avutil
   --enable-avcodec
   --enable-avformat
-  --enable-demuxer=matroska,flv,mov,mpegts,avi
+  --enable-demuxer=matroska,flv,mov,mpegts,mpegps,avi,h264
   --enable-decoder=dca,vorbis
   --enable-bsf=dovi_rpu
   --enable-protocol=file
@@ -63,6 +63,7 @@ inputs={p:sha(package/p) for p in ['darwin/native/YlFFmpegBridge/YlFFmpegBridge.
  'darwin/native/YlFFmpegBridge/include/YlFFmpegBridge.h',
  'darwin/native/YlFFmpegBridge/YlFELBridge.inc',
  'darwin/native/YlFFmpegBridge/YlVorbisBridge.inc',
+ 'tool/apple_ffmpeg/patches/vorbis-aarch64-zero-coupling.patch',
  'darwin/native/YlFFmpegBridge/module.modulemap','tool/apple_ffmpeg/ffmpeg-9.0.1.lock',
  'tool/apple_ffmpeg/FFMPEG_RELEASE_KEY.asc','tool/apple_ffmpeg/opus-1.6.1.lock','LICENSES/Opus-BSD.txt','tool/apple_ffmpeg/build_xcframework.sh']}
 toolchain={'xcode':run('xcodebuild','-version'),'clang':run('xcrun','clang','--version')}
@@ -150,6 +151,8 @@ if [[ -n ${YL_OPUS_ARCHIVE:-} ]]; then cp "$YL_OPUS_ARCHIVE" "$opus_archive"; el
 if [[ $mode == --verify ]]; then manifest "$output" compare "$artifact_lock" "$work_root/signed-source.json"; exit 0; fi
 
 tar -xf "$archive" -C "$work_root"
+# Preserve signed upstream bytes plus an explicitly hashed, zero-fuzz correction.
+patch --batch --fuzz=0 -p1 -d "$source_root" < "$script_dir/patches/vorbis-aarch64-zero-coupling.patch"
 tar -xf "$opus_archive" -C "$work_root"
 cmp "$work_root/opus-$OPUS_VERSION/COPYING" "$package_root/LICENSES/Opus-BSD.txt"
 cp -R "$bridge_root" "$work_root/bridge"

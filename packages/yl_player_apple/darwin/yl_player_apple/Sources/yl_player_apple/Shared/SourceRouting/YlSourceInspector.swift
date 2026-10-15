@@ -66,6 +66,7 @@ enum YlSourceInspector {
        text.trimmingCharacters(in: .whitespacesAndNewlines).hasPrefix("#EXTM3U") { return .hls }
     if bytes.count >= 12, Array(bytes.prefix(4)) == Array("RIFF".utf8),
        Array(bytes[8..<12]) == Array("AVI ".utf8) { return .avi }
+    if isProgramStreamPack(bytes) { return .mpegPs }
     // Three consecutive TS headers distinguish 188-byte packets, 192-byte
     // M2TS (four-byte prefix), and 204-byte packets within the bounded prefix.
     for (stride, offset) in [(188, 0), (192, 4), (204, 0)] {
@@ -76,6 +77,22 @@ enum YlSourceInspector {
          }) { return .mpegTs }
     }
     return .automatic
+  }
+
+  /// Validate a complete MPEG-1/2 pack, including SCR/rate marker bits and
+  /// MPEG-2 reserved/stuffing bytes. A start-code prefix alone is ambiguous.
+  private static func isProgramStreamPack(_ bytes: [UInt8]) -> Bool {
+    guard bytes.count >= 12, bytes.starts(with: [0, 0, 1, 0xba]) else { return false }
+    if bytes[4] & 0xf1 == 0x21 {
+      return bytes[6] & 1 == 1 && bytes[8] & 1 == 1 &&
+        bytes[9] & 0x80 == 0x80 && bytes[11] & 1 == 1
+    }
+    guard bytes.count >= 14, bytes[4] & 0xc4 == 0x44,
+          bytes[6] & 4 == 4, bytes[8] & 4 == 4, bytes[9] & 1 == 1,
+          bytes[12] & 3 == 3, bytes[13] & 0xf8 == 0xf8 else { return false }
+    let size = 14 + Int(bytes[13] & 7)
+    guard bytes.count >= size else { return false }
+    return bytes[14..<size].allSatisfy { $0 == 0xff }
   }
 
   private static func unsupported() -> NativePlayerError {

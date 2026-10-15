@@ -107,7 +107,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift",
-    "sha256": "4d219383a98fa05237a9c022412bc506eb1c7a24e0f5558ef02766424dfc132d",
+    "sha256": "2b984276412df0098964ba0283904e5d4348054bb416ae33c3d1b40cfb43ca07",
     "methods": [
       "testH264ProbeCleanupCommitsAvPlayerAndReachesReady",
       "testStopDuringHlsProbeUnblocksNextLoad",
@@ -138,7 +138,7 @@
       "testUnknownLocalSourceLoadRefinesSameAssessmentBeforeCommit",
       "testCompletePolicyRouteMatrixEnablesEnforcedManagedBufferAndHardwareRoutes",
       "testStaticNetworkDashRequiresPrivateManifestInspection",
-      "testDashStillRejectsStrictPoliciesLiveAndLocal",
+      "testDashInspectsManagedAndHardwareButRejectsBoundedLiveAndLocal",
       "testCustomCredentialsAndOrdinaryHeadersRequireControlledRoutes",
       "testInspectedCodecAndHardwareEvidenceAreRequiredBeforeGuarantee",
       "testUnknownFormatInspectionIsBoundedAndRefinedPolicyStillRejects",
@@ -168,7 +168,9 @@
       "testCleanApertureAndPARApplyExactlyOnceWithUnappliedQuarterTurns",
       "testAbsentMetadataUsesValidFormatButRejectsInvalidMeasurements",
       "testAVPreferredTransformAndPresentationFallbackDoNotDoubleRotate",
-      "testMonotonicMilestonesNullableCountersAndNonOverlappingRebuffers"
+      "testMonotonicMilestonesNullableCountersAndNonOverlappingRebuffers",
+      "testTransportStreamSignatureAndVodEligibilityKeepStrictAndLivePoliciesClosed",
+      "testAVISignatureAndVodEligibilityKeepStrictAndLivePoliciesClosed"
     ],
     "task7_provenance": "Task7 native registry/reducer/identity, READY, private/public texture ownership and acknowledged callback boundary; R23 partial/absent geometry must remain unknown without changing actual internal dimensions.",
     "task7_typed_migration": {
@@ -204,6 +206,10 @@
     "fairplay_schema5_migration": {
       "from_sha256": "51ca09acb5a403665ddc43bca53170fd517def7fb60bb0e6f312bc314fd23bbe",
       "reason": "Negotiate schema5 with optional protected-media messages; schema4 is rejected before allocation."
+    },
+    "p03_container_migration": {
+      "from_sha256": "4d219383a98fa05237a9c022412bc506eb1c7a24e0f5558ef02766424dfc132d",
+      "reason": "PS live policy remains rejected; AVI/TS policy tests specify format hints now automatic known extensions require byte inspection."
     }
   },
   {
@@ -809,5 +815,42 @@
       "testBridgeCancelsOldExchangeAndRejectsMismatchedReply",
       "testBridgeAcceptsOnlyMountedOwnedRecord"
     ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlProgramStreamTests.swift",
+    "sha256": "d843ed347b759b5df4bd73198185cac492d5ec34678745de67ccb517d518e79f",
+    "methods": [
+      "testCompletePackHeadersAndStuffingAreRecognized",
+      "testTruncatedAndInvalidPackHeadersCannotCommitARoute",
+      "testProgramStreamSelectsOwnedFallbackAndKeepsStrictPolicyRejection",
+      "testAutomaticKnownExtensionsRequireContentBeforeContainerCommit",
+      "testOlderOSUsesOwnedSamplesWhenMP4MIMEHintCannotBeHonored"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlVorbisDelayTests.swift",
+    "sha256": "8978ce6df050e6e8c03f3b882640fca7b830dc132fa1f12dbbaaeabae4c4ded0",
+    "methods": [
+      "testInitialDecodeNeverPresentsNegativePCM",
+      "testExplicitPrerollTargetTrimsAcrossSeveralPackets"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlContainerOutputTests.swift",
+    "sha256": "fa09402f05511a75e9114e6305248226a8bfb8a4d6bfa065186269639c9e6881",
+    "methods": [
+      "testProgramStreamActualPixelsPCMAndBidirectionalSeek",
+      "testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/Resources/p03-ps-avc-mp3.mpg",
+    "sha256": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+    "methods": []
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/Resources/p03-webm-vp9-vorbis.webm",
+    "sha256": "aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e",
+    "methods": []
   }
 ]

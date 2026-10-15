@@ -11,7 +11,7 @@ preroll for family 0 mono/stereo 48 kHz Opus. Active audio-track changes reuse
 seek preroll. SILK, hybrid and CELT are supported within this family-0 scope;
 strict Opus policies remain unsupported.
 
-The minimized allowlist enables `matroska,flv,mov,mpegts,avi` demuxers;
+The minimized allowlist enables `matroska,flv,mov,mpegts,mpegps,avi,h264` demuxers;
 `aac,h264,hevc,mpegaudio,dca,ac3` parsers; `dca,vorbis` decoders; the `dovi_rpu`
 bitstream filter; and the `file` protocol used by package-owned custom AVIO.
 FFmpeg's native Opus decoder and `libswresample` remain disabled.
@@ -99,6 +99,17 @@ verification is claimed for Opus. `YL_OPUS_ARCHIVE` may supply the pinned local
 archive. The canonical builder above builds both dependencies for all five
 targets, compares upstream COPYING with the tracked license, and records
 source pins and recipe inputs in the immutable artifact lock.
+
+## Local FFmpeg correction
+
+`tool/apple_ffmpeg/patches/vorbis-aarch64-zero-coupling.patch` corrects the
+ARM64 inverse Vorbis coupling zero-magnitude branch to agree with the scalar
+`magnitude > 0` rule. The signed upstream archive remains unchanged; the build
+applies the separately hashed patch with zero fuzz. Its bytes are part of the
+immutable artifact input manifest. Independent Xiph PCM comparisons and actual
+SIMD tail tests cover the correction. The internal H.264 demux probe is enabled
+for PS streams lacking a program-stream map; standalone raw H.264 remains outside
+the bridge's accepted container routes.
 
 ## Test-only Vorbis reference
 

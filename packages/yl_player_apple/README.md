@@ -24,8 +24,8 @@ session/category management and macOS no-global-session behavior. See
 restrictions.
 
 The combined XCFramework contains iOS device, iOS Simulator, and universal
-macOS slices. It uses FFmpeg 9.0.1 for Matroska/FLV/MP4/MPEG-TS/AVI demuxing,
-packet parsing and DCA audio decoding. Pinned open-source libopus 1.6.1 supplies
+macOS slices. It uses FFmpeg 9.0.1 for Matroska/FLV/MP4/MPEG-TS/MPEG-PS/AVI demuxing,
+packet parsing and DCA/Vorbis audio decoding. Pinned open-source libopus 1.6.1 supplies
 SILK/hybrid/CELT Opus decoding with Matroska trim and seek preroll integration
 (ordinary VOD, family 0, mono/stereo 48 kHz; active track switches rewind and trim decoder preroll); networking and video decode remain
 package/system owned. Binary
@@ -82,8 +82,10 @@ see the [DRM contract](../../docs/superpowers/specs/2026-09-26-drm-contract.md).
 
 Ordinary Matroska Vorbis playback uses the bundled FFmpeg native decoder for
 mono/stereo at 44.1/48 kHz, with 200 ms seek/track-switch preroll and PCM target
-trimming. CodecDelay/leading trim, other rates/channels and strict policies
-are rejected with specific errors. Independent Xiph PCM reference tools are
+trimming. CodecDelay up to 4096 samples is reflected once in demux timestamps;
+the decoder owns overlap priming, and the presenter suppresses negative/preroll
+PCM. Other leading trim, rates/channels and strict policies are rejected with
+specific errors. Independent Xiph PCM reference tools are
 test-only; no commercial SDK or new runtime dependency is introduced.
 
 Ordinary seekable Matroska/WebM VP9 uses a bounded Profile 0, 8-bit SDR,
@@ -91,3 +93,11 @@ fixed-size visible-frame path. Every system decoder creation requires actual
 hardware evidence, including default/preferred policies. Unsupported profiles,
 color changes, hidden/superframes and strict network/buffer policies fail
 explicitly. No VP9 software decoder or commercial SDK is shipped.
+
+MPEG-PS/AVC VOD uses package-owned demux I/O, zero-based presentation time,
+and bounded keyframe search. Live and strict managed/bounded/hardware-required
+PS requests retain explicit rejection until those policy combinations are
+validated. MPEG-2 video remains a diagnostic case outside the required codec set.
+Automatic progressive sources inspect at most 4 KiB before choosing a container,
+including familiar but wrong extensions. On older Apple systems without MIME
+override support, renamed inspected MP4 uses owned sample playback.

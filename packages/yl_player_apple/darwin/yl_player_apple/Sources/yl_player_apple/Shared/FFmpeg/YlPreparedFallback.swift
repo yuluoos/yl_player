@@ -94,6 +94,8 @@ final class YlPreparedFallback {
       container = .flv
     } else if resolvedFormat == .avi {
       container = .avi
+    } else if resolvedFormat == .mpegPs {
+      container = .mpegPs
     } else if resolvedFormat == .mpegTs {
       container = .mpegTs
     } else if resolvedFormat == .hls {
@@ -305,7 +307,7 @@ final class YlPreparedFallback {
           )
         }
         copiedAudioCookies[audioStream.index] = Data(bytes)
-      } else if container == .hlsMpegTs || container == .mpegTs,
+      } else if container == .hlsMpegTs || container == .mpegTs || container == .mpegPs,
                 let cookie = ylAACLCConfiguration(
                   sampleRate: Int(audioStream.sample_rate),
                   channelCount: Int(audioStream.channel_count)
@@ -358,7 +360,7 @@ final class YlPreparedFallback {
     // AudioSpecificConfig is authoritative (FLV specification, AudioTagHeader).
     // The minimal demux bridge has not run a decoder to normalize these fields.
     audioStreams = selectedAudio.map { stream in
-      guard (container == .flv || container == .hlsMpegTs || container == .mpegTs), Int(stream.codec) == YLFCodecAAC,
+      guard (container == .flv || container == .hlsMpegTs || container == .mpegTs || container == .mpegPs), Int(stream.codec) == YLFCodecAAC,
             let cookie = copiedAudioCookies[stream.index],
             let config = ylInspectedAACLCConfiguration(cookie: cookie) else { return stream }
       var normalized = stream

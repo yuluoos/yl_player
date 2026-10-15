@@ -3,7 +3,9 @@
     "YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()",
     "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()",
     "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()",
-    "YlManagedFallbackCharacterizationTests/testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF()"
+    "YlManagedFallbackCharacterizationTests/testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF()",
+    "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()",
+    "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()"
   ],
   "macos": [],
   "task7_provenance": {
@@ -37,6 +39,20 @@
         "reason": "DASH foundation private schema migration changes only two create-request literals and one schema assertion from 2 to 3. Entire source compared with these exact substitutions; conditional hardware skip body and original task7 provenance remain unchanged."
       },
       "schema5_reconciliation": "Only factory schema literals changed from 4 to 5; hardware skip condition, exact message and test assertions unchanged."
+    },
+    "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()": {
+      "message": "iOS Simulator has no hardware decoder for this fixture; no output acceptance.",
+      "condition": "Only initial decoder.video_hardware_unavailable before playback begins; every other error fails; Simulator only. macOS and physical iOS require actual pixels/PCM.",
+      "source": "RunnerTests/YlContainerOutputTests.swift",
+      "source_sha256": "fa09402f05511a75e9114e6305248226a8bfb8a4d6bfa065186269639c9e6881",
+      "evidence": "P03 output-ios and output-ios-diagnostic xcresults: exact unavailable code, 64 other focused tests pass. No output support claim."
+    },
+    "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()": {
+      "message": "iOS Simulator has no hardware decoder for this fixture; no output acceptance.",
+      "condition": "Only initial decoder.video_hardware_unavailable before playback begins; every other error fails; Simulator only. macOS and physical iOS require actual pixels/PCM.",
+      "source": "RunnerTests/YlContainerOutputTests.swift",
+      "source_sha256": "fa09402f05511a75e9114e6305248226a8bfb8a4d6bfa065186269639c9e6881",
+      "evidence": "P03 output-ios and output-ios-diagnostic xcresults: exact unavailable code, 64 other focused tests pass. No output support claim."
     }
   },
   "hardening_r19": {

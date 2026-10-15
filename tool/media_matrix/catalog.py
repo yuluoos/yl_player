@@ -24,6 +24,13 @@ def validate_case(row, root):
         raise ValueError('transport coverage missing')
     if row['integrity'] not in {'valid', 'truncated'} or row['seekability'] not in {'expected_seekable', 'no_cues', 'invalid'}:
         raise ValueError('invalid fixture class')
+    diagnostic = (row['id'] == 'ps-mpeg2-mp3' and row['container'] == 'mpegPs'
+                  and row['video']['codec'] == 'mpeg2video' and row['audio']['codec'] == 'mp3')
+    expected_requirement = 'diagnostic' if diagnostic else 'required'
+    if row.get('supportRequirement') != expected_requirement:
+        raise ValueError('support requirement must preserve the REQ-10 codec boundary')
+    if not diagnostic and row['video']['codec'] not in VIDEO:
+        raise ValueError('unclassified video codec')
     duration = row['durationSeconds']
     if isinstance(duration, bool) or not isinstance(duration, (int, float)) or not math.isfinite(duration) or duration <= 0:
         raise ValueError('invalid expected duration')
@@ -38,9 +45,10 @@ def validate_coverage(rows):
     if len({r['id'] for r in rows}) != len(rows):
         raise ValueError('duplicate case')
     valid = [r for r in rows if r['integrity'] == 'valid']
-    if {r['container'] for r in valid} != CONTAINERS:
+    required = [r for r in valid if r.get('supportRequirement') == 'required']
+    if {r['container'] for r in required} != CONTAINERS:
         raise ValueError('container coverage missing')
-    if not VIDEO <= {r['video']['codec'] for r in valid} or not AUDIO <= {r['audio']['codec'] for r in valid}:
+    if not VIDEO <= {r['video']['codec'] for r in required} or not AUDIO <= {r['audio']['codec'] for r in required}:
         raise ValueError('codec coverage missing')
 
 

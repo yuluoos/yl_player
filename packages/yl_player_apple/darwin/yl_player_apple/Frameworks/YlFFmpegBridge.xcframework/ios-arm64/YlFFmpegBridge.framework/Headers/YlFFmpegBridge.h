@@ -143,15 +143,16 @@ YLF_EXPORT int32_t ylf_copy_stream_codec_config(YLFMediaContextRef context,
                                                 size_t capacity);
 YLF_EXPORT int32_t ylf_read_packet(YLFMediaContextRef context,
                                    YLFPacketRef *out_packet);
-// Standalone MPEG-TS only: call before consuming packets; align packet/sample
+// Standalone MPEG-TS/PS only: call before consuming packets; align packet/sample
 // timestamps and subsequent seeks to format start_time. HLS callbacks rejected.
+// The historical transport-stream name is retained for ABI compatibility.
 YLF_EXPORT int32_t ylf_use_relative_transport_stream_timestamps(YLFMediaContextRef context);
 
 YLF_EXPORT int32_t ylf_seek(YLFMediaContextRef context, int64_t position_us);
 YLF_EXPORT void ylf_close(YLFMediaContextRef *context);
 
 YLF_EXPORT int32_t ylf_packet_stream_index(YLFPacketRef packet);
-// Copies original demux packet ticks, before relative-TS projection or any
+// Copies original demux packet ticks, before relative-TS/PS projection or any
 // microsecond rounding. Use the owning stream's time_base_num/time_base_den.
 // INT64_MIN denotes an absent PTS/DTS; duration is zero when unknown. Outputs
 // remain unchanged on InvalidArgument. Packet and owner must still be alive.
@@ -217,7 +218,9 @@ YLF_EXPORT int32_t ylf_create_video_sample_buffer(
 // header/delay/preroll metadata. Packet validity is checked separately.
 YLF_EXPORT int32_t ylf_stream_opus_delay_samples(YLFMediaContextRef context, int32_t index);
 // Copies Matroska Opus/Vorbis trim; restores Opus initial delay after seek(0).
-// Vorbis requires zero CodecDelay and rejects leading container trim.
+// Vorbis accepts CodecDelay up to 4096 samples. Initial priming skip is
+// normalized to zero only at the original first packet; other leading trim
+// is rejected. Delay is already reflected in demuxed packet timestamps.
 // Malformed trim metadata is an error, never silently treated as zero.
 YLF_EXPORT int32_t ylf_packet_audio_trim(YLFPacketRef packet, uint32_t *skip, uint32_t *discard);
 
@@ -243,7 +246,9 @@ YLF_EXPORT void ylf_opus_free(YLFOpusDecoderRef decoder);
 // Vorbis I Xiph-laced identification/comment/setup headers, mono/stereo,
 // 44.1 or 48 kHz. Input/header <=64 KiB; output <=4096 interleaved frames.
 // The decoder consumes one priming packet after create/reset without output.
-// Container skip/discard is applied once; callers still decode seek preroll.
+// Use ylf_packet_audio_trim to normalize container priming metadata first;
+// tail discard is applied once. Callers decode preroll and trim negative or
+// pre-target PCM by its already-delay-adjusted presentation timestamp.
 // Returns 200000 us for the accepted Matroska profile, -1 otherwise.
 YLF_EXPORT int32_t ylf_stream_vorbis_preroll_us(YLFMediaContextRef context, int32_t index);
 typedef struct YLFVorbisDecoder *YLFVorbisDecoderRef;

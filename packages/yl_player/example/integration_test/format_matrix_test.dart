@@ -19,6 +19,7 @@ const _caseIds = [
   'flv-avc-mp3',
   'ts-avc-ac3',
   'ps-mpeg2-mp3',
+  'ps-avc-mp3',
   'avi-avc-mp3',
   'mkv-av1-opus',
   'mkv-avc-eac3',
@@ -43,6 +44,8 @@ void main() {
       'file',
       'http',
       'renamed-file',
+      if (['ps-avc-mp3', 'webm-vp9-vorbis', 'mp4-avc-aac'].contains(id))
+        'wrong-known-file',
       if (id == 'mp4-avc-aac' || id == 'mp4-truncated') ...[
         'extensionless-file',
         'renamed-http',
@@ -66,7 +69,11 @@ void main() {
           data.lengthInBytes,
         );
         final directory = await Directory.systemTemp.createTemp('yl_format_');
-        final name = transport.startsWith('renamed-')
+        final name = transport == 'wrong-known-file'
+            ? (id == 'mp4-avc-aac'
+                  ? 'wrong-extension.mkv'
+                  : 'wrong-extension.mp4')
+            : transport.startsWith('renamed-')
             ? 'wrong-extension.bin'
             : transport == 'extensionless-file'
             ? 'no-extension'
@@ -254,14 +261,21 @@ void main() {
             outcome = 'cleanup-failed';
           }
           debugPrint(
-            'YL_FORMAT_ROW=${jsonEncode({'caseId': id, 'transport': transport, 'platform': Platform.operatingSystem, 'mediaHash': row['sha256'], 'outcome': outcome, 'stage': stage, 'code': code, 'category': category, 'scope': scope, 'engine': engine, 'decoder': decoder, 'firstFrame': firstFrame, 'audioTrackSelected': audioSelected, 'audioOutputVerified': false, 'pixelMarkersVerified': false, 'audioClockUs': null, 'seekProgress': seek, 'completed': completed, 'disposed': cleaned})}',
+            'YL_FORMAT_ROW=${jsonEncode({'caseId': id, 'transport': transport, 'platform': Platform.operatingSystem, 'mediaHash': row['sha256'], 'supportRequirement': row['supportRequirement'], 'outcome': outcome, 'stage': stage, 'code': code, 'category': category, 'scope': scope, 'engine': engine, 'decoder': decoder, 'firstFrame': firstFrame, 'audioTrackSelected': audioSelected, 'audioOutputVerified': false, 'pixelMarkersVerified': false, 'audioClockUs': null, 'seekProgress': seek, 'completed': completed, 'disposed': cleaned})}',
             wrapWidth: 100000,
           );
         }
         const requireSupport = bool.fromEnvironment(
           'YL_FORMAT_REQUIRE_SUPPORT',
         );
-        if (Platform.isMacOS && !requireSupport) {
+        if (requireSupport && row['supportRequirement'] == 'diagnostic') {
+          // Preserve the actual result above. This codec is outside REQ-10 and
+          // cannot satisfy or lower the required-format acceptance denominator.
+          expect(outcome, anyOf('passed', 'failed', 'timeout'));
+        } else if (Platform.isMacOS &&
+            !requireSupport &&
+            id != 'ps-avc-mp3' &&
+            transport != 'wrong-known-file') {
           // Pin known baseline failures, while keeping failed/timeout in JSONL.
           // This is a regression characterization, never a support claim.
           final baseline =

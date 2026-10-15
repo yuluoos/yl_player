@@ -16,7 +16,12 @@ static void fixture(const char *path) {
     AVFormatContext *format = NULL;
     CHECK(avformat_open_input(&format, path, NULL, NULL) == 0);
     if (!format) return;
-    AVCodecParameters *par = format->streams[0]->codecpar;
+    int audio_index = -1;
+    for (unsigned i = 0; i < format->nb_streams; i++)
+      if (format->streams[i]->codecpar->codec_id == AV_CODEC_ID_VORBIS) { audio_index = (int)i; break; }
+    CHECK(audio_index >= 0);
+    if (audio_index < 0) { avformat_close_input(&format); return; }
+    AVCodecParameters *par = format->streams[audio_index]->codecpar;
     int channels = par->ch_layout.nb_channels, rate = par->sample_rate;
     CHECK(par->codec_id == AV_CODEC_ID_VORBIS);
     if (!decoder) decoder = ylf_vorbis_create(par->extradata, par->extradata_size, rate, channels);
@@ -45,6 +50,7 @@ static void fixture(const char *path) {
     int total = 0, packets = 0, priming = 0;
     double energy = 0, error = 0;
     while (av_read_frame(format, packet) >= 0) {
+      if (packet->stream_index != audio_index) { av_packet_unref(packet); continue; }
       float pcm[8192], ref[8192]; int32_t frames = -1;
       if (packets == 0) {
         CHECK(ylf_vorbis_decode(decoder, packet->data, packet->size, 0, 0, pcm, 4095, &frames) == YLFResultInvalidArgument);
@@ -55,11 +61,15 @@ static void fixture(const char *path) {
       const uint8_t *side = av_packet_get_side_data(packet, AV_PKT_DATA_SKIP_SAMPLES, &sideSize);
       uint32_t skip = side && sideSize >= 10 ? AV_RL32(side) : 0;
       uint32_t discard = side && sideSize >= 10 ? AV_RL32(side + 4) : 0;
+      // Vorbis synthesis consumes the first overlap packet without PCM. The
+      // demuxer's initial-padding side data describes that same priming, not
+      // an extra skip in the following audible block.
+      if (packets == 0 && skip == par->initial_padding) skip = 0;
       int result = ylf_vorbis_decode(decoder, packet->data, packet->size, skip, discard, pcm, 4096, &frames);
       CHECK(result == 0 && frames >= 0 && frames <= 4096);
       if (result != 0) break;
       if (frames == 0) priming++;
-      ogg_packet op = {0}; op.packet = packet->data; op.bytes = packet->size;
+      ogg_packet op = {0}; op.packet = packet->data; op.bytes = packet->size; op.packetno = packets + 3; op.granulepos = -1;
       CHECK(vorbis_synthesis(&vb, &op) == 0); CHECK(vorbis_synthesis_blockin(&vd, &vb) == 0);
       float **reference = NULL; int count = vorbis_synthesis_pcmout(&vd, &reference);
       CHECK(count >= (int)(skip + discard));
@@ -93,16 +103,23 @@ static void fixture(const char *path) {
 static void seek_fixture(const char *path) {
   YLFMediaContextRef context = NULL; YLFMediaInfo media = {0};
   CHECK(ylf_open_local(path, &context, &media) == 0); if (!context) return;
-  YLFStreamInfo stream = {0}; CHECK(ylf_copy_stream_info(context, 0, &stream) == 0);
-  CHECK(stream.codec == YLFCodecVorbis);
-  size_t headSize = ylf_stream_codec_config_size(context, 0);
+  YLFStreamInfo stream = {0}; int audio_index = -1;
+  for (int i = 0; i < media.stream_count; i++) {
+    CHECK(ylf_copy_stream_info(context, i, &stream) == 0);
+    if (stream.codec == YLFCodecVorbis) { audio_index = i; break; }
+  }
+  CHECK(audio_index >= 0);
+  if (audio_index < 0) { ylf_close(&context); return; }
+  CHECK(ylf_stream_vorbis_preroll_us(context, audio_index) >= 200000);
+  size_t headSize = ylf_stream_codec_config_size(context, audio_index);
   uint8_t *head = malloc(headSize);
-  CHECK(ylf_copy_stream_codec_config(context, 0, head, headSize) == 0);
+  CHECK(ylf_copy_stream_codec_config(context, audio_index, head, headSize) == 0);
   YLFVorbisDecoderRef decoder = ylf_vorbis_create(head, headSize, stream.sample_rate, stream.channel_count);
   free(head); CHECK(decoder != NULL); if (!decoder) { ylf_close(&context); return; }
   struct Entry { int64_t pts; int frames; float *pcm; } entries[4096] = {0};
   int count = 0; YLFPacketRef packet = NULL;
   while (ylf_read_packet(context, &packet) == 0) {
+    if (ylf_packet_stream_index(packet) != audio_index) { ylf_packet_release(&packet); continue; }
     float pcm[8192]; int32_t frames = 0; uint32_t skip = 0, discard = 0;
     CHECK(ylf_packet_audio_trim(packet, &skip, &discard) == 0);
     CHECK(ylf_vorbis_decode(decoder, ylf_packet_data(packet), ylf_packet_size(packet), skip, discard, pcm, 4096, &frames) == 0);
@@ -117,6 +134,7 @@ static void seek_fixture(const char *path) {
     CHECK(ylf_seek(context, targets[target]) == 0); ylf_vorbis_reset(decoder);
     int matched = 0, packets = 0; int64_t firstPTS = INT64_MAX;
     while (matched < 3 && ylf_read_packet(context, &packet) == 0) {
+      if (ylf_packet_stream_index(packet) != audio_index) { ylf_packet_release(&packet); continue; }
       int64_t pts = ylf_packet_pts_us(packet); if (!packets++) firstPTS = pts;
       float pcm[8192]; int32_t frames = 0; uint32_t skip = 0, discard = 0;
       CHECK(ylf_packet_audio_trim(packet, &skip, &discard) == 0);
@@ -141,9 +159,53 @@ static void seek_fixture(const char *path) {
   ylf_vorbis_free(decoder); ylf_close(&context);
   CHECK(ylf_debug_outstanding_packet_count() == 0);
 }
+#ifndef YL_VORBIS_ARTIFACT
+static void metadata_boundaries(const char *path) {
+  YLFMediaContextRef context = NULL; YLFMediaInfo media = {0};
+  CHECK(ylf_open_local(path, &context, &media) == 0); if (!context) return;
+  int audio_index = -1;
+  for (int i = 0; i < media.stream_count; ++i)
+    if (context->format->streams[i]->codecpar->codec_id == AV_CODEC_ID_VORBIS) { audio_index = i; break; }
+  CHECK(audio_index >= 0); if (audio_index < 0) { ylf_close(&context); return; }
+  AVCodecParameters *par = context->format->streams[audio_index]->codecpar;
+  int original = par->initial_padding;
+  for (int i = 0; i < 3; i++) {
+    const int bad[] = {-1, 4097, INT_MAX}; par->initial_padding = bad[i];
+    CHECK(ylf_stream_vorbis_preroll_us(context, audio_index) == -1);
+  }
+  par->initial_padding = original;
+  YLFPacketRef packet = NULL;
+  while (ylf_read_packet(context, &packet) == 0) {
+    if (ylf_packet_stream_index(packet) == audio_index) break;
+    ylf_packet_release(&packet);
+  }
+  CHECK(packet != NULL);
+  if (packet) {
+    uint8_t *side = av_packet_new_side_data(packet->value, AV_PKT_DATA_SKIP_SAMPLES, 10);
+    CHECK(side != NULL);
+    if (side) {
+      uint32_t skip = 0, discard = 0;
+      AV_WL32(side, 4097); AV_WL32(side + 4, 0); side[8] = side[9] = 0;
+      CHECK(ylf_packet_audio_trim(packet, &skip, &discard) == YLFResultReadFailed);
+      AV_WL32(side, original ? original : 1);
+      packet->value->pts += 1; // Matching skip on a later packet is not priming.
+      CHECK(ylf_packet_audio_trim(packet, &skip, &discard) == YLFResultReadFailed);
+      AV_WL32(side, 0); AV_WL32(side + 4, 4097);
+      CHECK(ylf_packet_audio_trim(packet, &skip, &discard) == YLFResultReadFailed);
+    }
+    ylf_packet_release(&packet);
+  }
+  ylf_close(&context);
+}
+#endif
 int main(int argc, const char **argv) {
   @autoreleasepool {
-    CHECK(argc == 2); if (argc == 2) { fixture(argv[1]); seek_fixture(argv[1]); }
+    CHECK(argc == 2); if (argc == 2) {
+      fixture(argv[1]); seek_fixture(argv[1]);
+#ifndef YL_VORBIS_ARTIFACT
+      metadata_boundaries(argv[1]);
+#endif
+    }
     printf("Vorbis bridge: %d checks, %d failures\n", checks, failures);
     return failures ? 1 : 0;
   }

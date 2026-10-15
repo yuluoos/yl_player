@@ -366,34 +366,34 @@
       "completed": true
     },
     "webm-vp9-vorbis/file": {
-      "outcome": "failed",
-      "stage": "load",
-      "code": "decoder.audio_vorbis_unsupported",
-      "category": "decoder",
-      "scope": "command",
-      "firstFrame": false,
-      "seekProgress": false,
-      "completed": false
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
     },
     "webm-vp9-vorbis/http": {
-      "outcome": "failed",
-      "stage": "load",
-      "code": "decoder.audio_vorbis_unsupported",
-      "category": "decoder",
-      "scope": "command",
-      "firstFrame": false,
-      "seekProgress": false,
-      "completed": false
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
     },
     "webm-vp9-vorbis/renamed-file": {
-      "outcome": "failed",
-      "stage": "load",
-      "code": "decoder.audio_vorbis_unsupported",
-      "category": "decoder",
-      "scope": "command",
-      "firstFrame": false,
-      "seekProgress": false,
-      "completed": false
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
     },
     "mkv-hevc-main10-aac/file": {
       "outcome": "passed",
@@ -674,6 +674,73 @@
       "firstFrame": true,
       "seekProgress": true,
       "completed": true
+    },
+    "mp4-avc-aac/wrong-known-file": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "ps-avc-mp3/file": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "ps-avc-mp3/http": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "ps-avc-mp3/renamed-file": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "ps-avc-mp3/wrong-known-file": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
+    },
+    "webm-vp9-vorbis/wrong-known-file": {
+      "outcome": "passed",
+      "stage": "end",
+      "code": null,
+      "category": null,
+      "scope": null,
+      "firstFrame": true,
+      "seekProgress": true,
+      "completed": true
     }
+  },
+  "p03FocusedUpdate": {
+    "date": "2026-10-14",
+    "os": "27.0.1",
+    "cases": 14,
+    "evidence": "tool/media_matrix/macos-p03-container-observations.json",
+    "unlistedRows": "unchanged historical observations"
   }
 }

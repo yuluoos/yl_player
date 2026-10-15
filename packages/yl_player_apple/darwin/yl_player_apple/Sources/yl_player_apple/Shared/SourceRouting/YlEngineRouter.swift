@@ -71,12 +71,23 @@ enum YlEngineRouter {
     let hardware = options.decoderPolicy == .hardwareRequired
     let strict = managed || bounded || hardware
     let hinted = resolvedFormat(source, url: url)
+    // An automatic progressive source needs bytes even when its extension is
+    // familiar: a renamed MKV must not be committed as an MP4 AVPlayer asset.
+    // Explicit hints and manifest-specific parsers retain their existing path.
+    if source.formatHint == .automatic, inspection == nil,
+       hinted != .hls, hinted != .dash {
+      return .init(outcome: .requiresInspection, candidate: .inspect,
+        satisfiedRequirements: [], limitations: [.sourceRequiresInspection], rejection: nil)
+    }
     let format = inspection?.format ?? hinted
-    if format == .mpegPs || ([YlSourceFormat.mpegTs, .avi].contains(format) && strict) {
+    if [YlSourceFormat.mpegPs, .mpegTs, .avi].contains(format) && strict {
       return reject(strict ? "unsupported" : "container", strict ? "policy.unsupported" : "container.unsupported")
     }
     if format == .avi && source.isLive {
       return reject("container", "container.avi_live_unsupported")
+    }
+    if format == .mpegPs && source.isLive {
+      return reject("container", "container.mpegps_live_unsupported")
     }
     if format == .mpegTs && source.isLive {
       return reject("container", "container.mpegts_live_unsupported")
@@ -148,6 +159,7 @@ enum YlEngineRouter {
     }
     if inspection == nil { limitations.append(.codecRequiresInspection) }
     let route: YlAppleSourceRoute = format == .avi ? .avi
+      : format == .mpegPs ? .programStream
       : format == .mpegTs ? .transportStream
       : format == .flv ? .networkFlv : (source.kind == .file ? .localMatroska : .networkMatroska)
     return .init(outcome: inspection == nil ? .requiresInspection : .compatible, candidate: route,

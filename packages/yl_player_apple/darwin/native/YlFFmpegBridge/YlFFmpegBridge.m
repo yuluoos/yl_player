@@ -132,7 +132,8 @@ static bool ylf_is_supported_input_format(const AVInputFormat *input_format) {
   if (input_format == NULL || input_format->name == NULL) {
     return false;
   }
-  return strcmp(input_format->name, "avi") == 0 ||
+  return strcmp(input_format->name, "mpeg") == 0 ||
+         strcmp(input_format->name, "avi") == 0 ||
          strstr(input_format->name, "matroska") != NULL ||
          strstr(input_format->name, "flv") != NULL ||
          strstr(input_format->name, "mov") != NULL ||
@@ -220,7 +221,7 @@ static int32_t ylf_prime_annexb_video_config(
     struct YLFMediaContext *context) {
   const char *name = context->format->iformat ? context->format->iformat->name : NULL;
   bool is_avi = name != NULL && strcmp(name, "avi") == 0;
-  if (name == NULL || (!is_avi && strstr(name, "mpegts") == NULL)) {
+  if (name == NULL || (!is_avi && strcmp(name, "mpeg") != 0 && strstr(name, "mpegts") == NULL)) {
     return YLFResultOK;
   }
   bool needs_metadata = ylf_annexb_needs_metadata(context->format);
@@ -236,7 +237,7 @@ static int32_t ylf_prime_annexb_video_config(
     if (result < 0) break;
     read_any = true;
     scanned_bytes += FFMAX(packet->size, 0);
-    if (is_avi && scanned_bytes > 8 * 1024 * 1024) break;
+    if (scanned_bytes > 8 * 1024 * 1024) break;
     if (packet->stream_index < 0 ||
         (unsigned int)packet->stream_index >= context->format->nb_streams ||
         packet->size <= 4 || packet->data == NULL) {
@@ -1005,10 +1006,11 @@ int32_t ylf_read_packet(YLFMediaContextRef context, YLFPacketRef *out_packet) {
 int32_t ylf_use_relative_transport_stream_timestamps(YLFMediaContextRef context) {
   if (context == NULL) return YLFResultInvalidArgument;
   pthread_mutex_lock(&context->mutex);
-  // Opt in only before consuming packets on standalone TS. HLS owns its own
+  // Opt in only before consuming packets on standalone TS/PS. HLS owns its own
   // time-seek callback and must retain the existing timestamp behavior.
   bool valid = context->format != NULL && context->format->iformat != NULL &&
-      strcmp(context->format->iformat->name, "mpegts") == 0 &&
+      (strcmp(context->format->iformat->name, "mpegts") == 0 ||
+       strcmp(context->format->iformat->name, "mpeg") == 0) &&
       context->format->start_time != AV_NOPTS_VALUE &&
       context->time_seek_callback == NULL && context->packets == NULL;
   if (valid) {
@@ -1019,7 +1021,7 @@ int32_t ylf_use_relative_transport_stream_timestamps(YLFMediaContextRef context)
   return valid ? YLFResultOK : YLFResultUnsupportedContainer;
 }
 
-// MPEG-TS timestamp seeks and AVI synthesized indexes may land away from an
+// MPEG-TS/PS timestamp seeks and AVI synthesized indexes may land away from an
 // IDR. Find a decodable anchor at/before the requested video time, then replay
 // from that seek point through the existing keyframe gate and output suppression.
 // These are search-work guards, not software-decoder performance allowances.
@@ -1118,11 +1120,12 @@ int32_t ylf_seek(YLFMediaContextRef context, int64_t position_us) {
     int audio_index = -1; int64_t earliest_us = 0, audio_start = 0;
     for (unsigned i = 0; i < context->format->nb_streams; i++) {
       bool vorbis = ylf_stream_vorbis_preroll_us(context, (int32_t)i) > 0;
-      int delay = vorbis ? 0 : ylf_stream_opus_delay_samples(context, (int32_t)i);
       AVStream *st = context->format->streams[i];
+      int delay = vorbis ? st->codecpar->initial_padding : ylf_stream_opus_delay_samples(context, (int32_t)i);
+      int rate = vorbis ? st->codecpar->sample_rate : 48000;
       int64_t first;
       if (delay < 0 || __builtin_sub_overflow(st->start_time,
-          av_rescale_q(delay, (AVRational){1,48000}, st->time_base), &first)) continue;
+          av_rescale_q(delay, (AVRational){1,rate}, st->time_base), &first)) continue;
       int64_t first_us = ylf_timestamp_us(first, st->time_base);
       if (first_us < earliest_us) { earliest_us = first_us; audio_index = i; audio_start = first; }
     }
@@ -1765,8 +1768,20 @@ int32_t ylf_packet_audio_trim(YLFPacketRef packet, uint32_t *skip, uint32_t *dis
     *skip = AV_RL32(side); *discard = AV_RL32(side + 4);
     if (*skip > (vorbis ? 4096 : 65535) || *discard > (vorbis ? 4096 : 5760)) return YLFResultReadFailed;
   }
-  // Leading container trim is outside the accepted Vorbis timestamp profile.
-  if (vorbis) return *skip ? YLFResultReadFailed : YLFResultOK;
+  if (vorbis) {
+    // The demuxer already projects CodecDelay into PTS. Its first-packet skip
+    // describes codec priming, which the Vorbis decoder discards itself; it is
+    // not an additional trim of the first audible overlap block.
+    if (!*skip) return YLFResultOK;
+    AVStream *stream = packet->owner->format->streams[p->stream_index];
+    int64_t first;
+    int padding = stream->codecpar->initial_padding;
+    if (*skip != padding || __builtin_sub_overflow(stream->start_time,
+        av_rescale_q(padding, (AVRational){1, stream->codecpar->sample_rate}, stream->time_base),
+        &first) || p->pts != first) return YLFResultReadFailed;
+    *skip = 0;
+    return YLFResultOK;
+  }
   // libavformat clears pending skip on seek. The timestamp of the original
   // first packet identifies the only position where CodecDelay applies again.
   AVStream *stream = packet->owner->format->streams[p->stream_index];

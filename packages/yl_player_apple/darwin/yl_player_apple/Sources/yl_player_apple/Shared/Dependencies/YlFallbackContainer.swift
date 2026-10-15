@@ -5,6 +5,7 @@ enum YlFallbackContainer: Equatable {
   case flv
   case mp4
   case avi
+  case mpegPs
   case mpegTs
   case hlsMpegTs
 }

@@ -5,7 +5,7 @@ int32_t ylf_stream_vorbis_preroll_us(YLFMediaContextRef context, int32_t index) 
   AVCodecParameters *p = st->codecpar;
   if (p->codec_id != AV_CODEC_ID_VORBIS || (p->sample_rate != 44100 && p->sample_rate != 48000) ||
       p->ch_layout.nb_channels < 1 || p->ch_layout.nb_channels > 2 ||
-      p->initial_padding != 0 || p->seek_preroll != 0 || st->start_time == AV_NOPTS_VALUE ||
+      p->initial_padding < 0 || p->initial_padding > 4096 || p->seek_preroll != 0 || st->start_time == AV_NOPTS_VALUE ||
       p->extradata_size < 3 || p->extradata_size > 65536) return -1;
   // Two maximum output blocks (2 * 4096 / 44100 s), rounded upward.
   return 200000;

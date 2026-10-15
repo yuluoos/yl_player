@@ -56,7 +56,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "required"
     },
     {
       "id": "mov-hevc-aac",
@@ -101,7 +102,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "required"
     },
     {
       "id": "mkv-avc-aac",
@@ -146,7 +148,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "required"
     },
     {
       "id": "webm-vp9-opus",
@@ -191,7 +194,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "required"
     },
     {
       "id": "flv-avc-mp3",
@@ -236,7 +240,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "required"
     },
     {
       "id": "ts-avc-ac3",
@@ -281,7 +286,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "required"
     },
     {
       "id": "ps-mpeg2-mp3",
@@ -326,7 +332,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "diagnostic"
     },
     {
       "id": "avi-avc-mp3",
@@ -371,7 +378,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "required"
     },
     {
       "id": "mkv-av1-opus",
@@ -416,7 +424,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "required"
     },
     {
       "id": "mkv-avc-eac3",
@@ -461,7 +470,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "required"
     },
     {
       "id": "mkv-avc-dts",
@@ -506,7 +516,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "required"
     },
     {
       "id": "mkv-avc-flac",
@@ -551,7 +562,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "required"
     },
     {
       "id": "webm-vp9-vorbis",
@@ -596,7 +608,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "required"
     },
     {
       "id": "mkv-hevc-main10-aac",
@@ -641,7 +654,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "required"
     },
     {
       "id": "mkv-avc-ac3-51",
@@ -686,7 +700,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "required"
     },
     {
       "id": "mkv-avc-aac-no-cues",
@@ -731,7 +746,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "required"
     },
     {
       "id": "mp4-truncated",
@@ -776,7 +792,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "required"
     },
     {
       "id": "mkv-avc-opus",
@@ -821,7 +838,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "required"
     },
     {
       "id": "mkv-avc-opus-silk",
@@ -866,7 +884,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "required"
     },
     {
       "id": "mkv-avc-opus-hybrid",
@@ -911,7 +930,8 @@
           "implementation": "unverified",
           "verification": "not_run"
         }
-      }
+      },
+      "supportRequirement": "required"
     },
     {
       "id": "mkv-avc-vorbis",
@@ -939,6 +959,53 @@
       "source": "owned-generated",
       "integrity": "valid",
       "seekability": "expected_seekable",
+      "transports": [
+        "file",
+        "http"
+      ],
+      "platforms": {
+        "android": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "ios": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        },
+        "macos": {
+          "implementation": "unverified",
+          "verification": "not_run"
+        }
+      },
+      "supportRequirement": "required"
+    },
+    {
+      "id": "ps-avc-mp3",
+      "file": "ps-avc-mp3.mpg",
+      "container": "mpegPs",
+      "sha256": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+      "video": {
+        "codec": "h264",
+        "profile": "Constrained Baseline",
+        "bitDepth": 8,
+        "pixelFormat": "yuv420p",
+        "width": 320,
+        "height": 180,
+        "frameRate": "24/1"
+      },
+      "audio": {
+        "codec": "mp3",
+        "channels": 2,
+        "layout": "stereo",
+        "sampleRate": 48000
+      },
+      "durationSeconds": 4.0,
+      "probedDurationSeconds": 4.023022,
+      "probe": "ps-avc-mp3.probe.json",
+      "source": "owned-generated",
+      "integrity": "valid",
+      "seekability": "expected_seekable",
+      "supportRequirement": "required",
       "transports": [
         "file",
         "http"

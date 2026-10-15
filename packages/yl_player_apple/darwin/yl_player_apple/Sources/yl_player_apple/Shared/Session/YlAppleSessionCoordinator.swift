@@ -307,7 +307,7 @@ final class YlAppleSessionCoordinator: NSObject {
             identity: identity, bridge: bridge, token: token, emit: self.emit))
         case .avPlayer:
           return try self.prepareNativeOrMp4(source: source, token: token, identity: identity)
-        case .localMatroska, .networkMatroska, .networkFlv, .networkRtmp, .transportStream, .avi:
+        case .localMatroska, .networkMatroska, .networkFlv, .networkRtmp, .transportStream, .programStream, .avi:
           return .fallback(
             source: source,
             prepared: try self.prepareFallback(source: source, token: token, identity: identity)
@@ -329,7 +329,7 @@ final class YlAppleSessionCoordinator: NSObject {
             return try self.prepareDash(source: inspected, token: token, credentials: hlsCredentials, constraints: loadConstraints)
           case .headeredHls: return .headeredHls(source: inspected,
             prepared: try self.prepareHeaderedHls(source: inspected, token: token, credentialContext: hlsCredentials, videoConstraints: loadConstraints))
-          case .localMatroska, .networkMatroska, .networkFlv, .networkRtmp, .transportStream, .avi:
+          case .localMatroska, .networkMatroska, .networkFlv, .networkRtmp, .transportStream, .programStream, .avi:
             return .fallback(source: inspected, prepared: try self.prepareFallback(source: inspected, token: token, identity: identity))
           default: throw NativePlayerError(category: "container", code: "container.unsupported", message: "Inspection could not establish a supported route.")
           }

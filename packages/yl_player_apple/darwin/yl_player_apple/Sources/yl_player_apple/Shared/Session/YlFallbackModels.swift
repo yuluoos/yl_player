@@ -12,6 +12,7 @@ enum YlAppleSourceRoute: Equatable {
   case networkFlv
   case networkRtmp
   case avi
+  case programStream
   case transportStream
   case reject(category: String, code: String, message: String)
 

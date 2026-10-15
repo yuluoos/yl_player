@@ -840,10 +840,11 @@ extension YlAppleSessionTests {
     let f = AppleHostFixture(); defer { f.host.close() }
     let current = try await f.host.load(request: AppleHostFixture.request("current"))
     for format in [AppleMediaFormat.mpegPs] {
-      let request = AppleHostFixture.request("unsupported", format: format)
+      var request = AppleHostFixture.request("unsupported", format: format)
+      request.source.intent = .live
       let assessment = try f.host.assess(request: .init(source: request.source, options: request.options))
       XCTAssertEqual(assessment.outcome, .incompatible)
-      XCTAssertEqual(assessment.rejection?.code, "container.unsupported")
+      XCTAssertEqual(assessment.rejection?.code, "container.mpegps_live_unsupported")
       do { _ = try await f.host.load(request: request); XCTFail("Unsupported container committed") }
       catch let error as PigeonError { XCTAssertEqual(error.code, assessment.rejection?.code) }
       XCTAssertEqual(f.host.sessionId, current.sessionId)
@@ -1666,7 +1667,7 @@ extension YlAppleSessionTests {
       XCTAssertEqual(YlSourceInspector.format(bytes), .automatic)
     }
     for kind: YlSourceKind in [.file, .network] {
-      var source = YlAppleSourceDescriptor(uri: kind == .file ? "file:///tmp/clip.ts" : "https://example.invalid/clip.ts", kind: kind)
+      var source = YlAppleSourceDescriptor(uri: kind == .file ? "file:///tmp/clip.ts" : "https://example.invalid/clip.ts", kind: kind, formatHint: .mpegTs)
       XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
       XCTAssertEqual(YlEngineRouter.assess(source).engine, .managedFallback)
       source.intent = .live
@@ -1687,7 +1688,7 @@ extension YlAppleSessionTests {
     XCTAssertEqual(YlSourceInspector.format(Data([0x52,0x49,0x46,0x46,0,0,0,0,0x41,0x56,0x49,0x20])), .avi)
     XCTAssertEqual(YlSourceInspector.format(Data("RIFF".utf8)), .automatic)
     for kind: YlSourceKind in [.file, .network] {
-      var source = YlAppleSourceDescriptor(uri: kind == .file ? "file:///tmp/clip.avi" : "https://example.invalid/clip.avi", kind: kind)
+      var source = YlAppleSourceDescriptor(uri: kind == .file ? "file:///tmp/clip.avi" : "https://example.invalid/clip.avi", kind: kind, formatHint: .avi)
       XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
       XCTAssertEqual(YlEngineRouter.assess(source).engine, .managedFallback)
       source.intent = .live
