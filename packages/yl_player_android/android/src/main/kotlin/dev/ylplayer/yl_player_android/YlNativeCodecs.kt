@@ -99,10 +99,11 @@ internal class YlHardwareVideoDecoder(
     codecName: String,
     codecConfig: ByteArray,
     private val cancelled: () -> Boolean = { false },
+    private val observePresented: ((Long) -> Unit)? = null,
 ) : AutoCloseable {
     private val codec = MediaCodec.createByCodecName(codecName)
     private val info = MediaCodec.BufferInfo()
-    private val configuration = codecConfig.copyOf()
+    private val configuration = canonicalAnnexB(codecConfig.copyOf())
     private var resendConfiguration = false
     private var observedOutput = false
     private var presentationFloorUs = 0L
@@ -119,14 +120,14 @@ internal class YlHardwareVideoDecoder(
         if (stream.frameRate > 0) format.setFloat(MediaFormat.KEY_FRAME_RATE, stream.frameRate.toFloat())
         if (codecConfig.isNotEmpty()) {
             if (stream.codec == YlNativeCodec.H264) {
-                val units = androidx.media3.common.util.CodecSpecificDataUtil.splitNalUnits(codecConfig)
+                val units = androidx.media3.common.util.CodecSpecificDataUtil.splitNalUnits(configuration)
                     ?: throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
                 val sps = units.filter { (if (it.size > 4) it[4].toInt() and 31 else -1) == 7 }.fold(byteArrayOf()) { a,b -> a+b }
                 val pps = units.filter { (if (it.size > 4) it[4].toInt() and 31 else -1) == 8 }.fold(byteArrayOf()) { a,b -> a+b }
                 if (sps.isEmpty() || pps.isEmpty()) throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
                 format.setByteBuffer("csd-0", ByteBuffer.wrap(sps))
                 format.setByteBuffer("csd-1", ByteBuffer.wrap(pps))
-            } else format.setByteBuffer("csd-0", ByteBuffer.wrap(codecConfig))
+            } else format.setByteBuffer("csd-0", ByteBuffer.wrap(configuration))
         }
         codec.configure(format, surface, null, 0)
         codec.start()
@@ -186,6 +187,7 @@ internal class YlHardwareVideoDecoder(
                         !(info.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0 && info.size == 0) &&
                         info.presentationTimeUs >= presentationFloorUs
                     codec.releaseOutputBuffer(outputIndex, render)
+                    if (render) observePresented?.invoke(info.presentationTimeUs)
                     rendered = rendered || render
                 }
             }
@@ -204,6 +206,7 @@ internal class YlHardwareVideoDecoder(
 internal class YlPcmAudioOutput(
     private val session: YlFfmpegSession,
     private val stream: YlNativeStreamInfo,
+    private val observePcm: ((YlNativePcmChunk) -> Unit)? = null,
 ) : AutoCloseable {
     private var output: AudioTrack? = null
     private val pendingWrite = YlPendingPcmWrite()
@@ -233,6 +236,7 @@ internal class YlPcmAudioOutput(
         if (firstPresentationUs == Long.MIN_VALUE) firstPresentationUs = pcm.presentationTimeUs.coerceAtLeast(0)
         outputChannelCount = pcm.channelCount.coerceAtLeast(1)
         output ?: create(pcm).also { output = it }
+        observePcm?.invoke(pcm)
         pendingWrite.enqueue(pcm.data)
     }
 

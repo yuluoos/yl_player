@@ -59,9 +59,7 @@ enum YlSourceInspector {
       if prefix.range(of: Data("webm".utf8)) != nil { return .webm }
       if prefix.range(of: Data("matroska".utf8)) != nil { return .matroska }
     }
-    if bytes.count >= 12, Array(bytes[4..<8]) == Array("ftyp".utf8) {
-      return Array(bytes[8..<12]) == Array("qt  ".utf8) ? .mov : .mp4
-    }
+    if let movie = movieFormat(bytes) { return movie }
     if let text = String(data: prefix, encoding: .utf8),
        text.trimmingCharacters(in: .whitespacesAndNewlines).hasPrefix("#EXTM3U") { return .hls }
     if bytes.count >= 12, Array(bytes.prefix(4)) == Array("RIFF".utf8),
@@ -77,6 +75,44 @@ enum YlSourceInspector {
          }) { return .mpegTs }
     }
     return .automatic
+  }
+
+  /// QuickTime predates ftyp. Walk complete padding atoms in the bounded
+  /// prefix; a validated movie/media atom header can identify legacy MOV.
+  /// This establishes only the container family, never stream validity.
+  private static func movieFormat(_ bytes: [UInt8]) -> YlSourceFormat? {
+    func uint32(_ at: Int) -> UInt64 {
+      bytes[at..<(at + 4)].reduce(UInt64(0)) { ($0 << 8) | UInt64($1) }
+    }
+    var offset = 0
+    while offset <= bytes.count - 8 {
+      let kind = String(bytes: bytes[(offset + 4)..<(offset + 8)], encoding: .ascii)
+      var size = uint32(offset)
+      var header = 8
+      if size == 1 {
+        guard bytes.count - offset >= 16 else { return nil }
+        size = (uint32(offset + 8) << 32) | uint32(offset + 12)
+        header = 16
+      }
+      guard size == 0 || size >= UInt64(header) else { return nil }
+      if kind == "ftyp" {
+        guard bytes.count - offset >= header + 4,
+              size == 0 || size >= UInt64(header + 4) else { return nil }
+        return Array(bytes[(offset + header)..<(offset + header + 4)]) == Array("qt  ".utf8) ? .mov : .mp4
+      }
+      if kind == "mdat" { return .mov }
+      if kind == "moov" {
+        guard bytes.count - offset >= header + 8,
+              size == 0 || size >= UInt64(header + 8),
+              uint32(offset + header) >= 8 else { return nil }
+        let child = String(bytes: bytes[(offset + header + 4)..<(offset + header + 8)], encoding: .ascii)
+        return ["mvhd", "trak", "cmov"].contains(child ?? "") ? .mov : nil
+      }
+      guard ["free", "skip", "wide"].contains(kind ?? ""), size > 0,
+            size <= UInt64(bytes.count - offset) else { return nil }
+      offset += Int(size)
+    }
+    return nil
   }
 
   /// Validate a complete MPEG-1/2 pack, including SCR/rate marker bits and

@@ -818,13 +818,14 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlProgramStreamTests.swift",
-    "sha256": "d843ed347b759b5df4bd73198185cac492d5ec34678745de67ccb517d518e79f",
+    "sha256": "efde82b499469a0ce53a825961c9c6bb4e438c37262704c2c8d7ff48c3c15a15",
     "methods": [
       "testCompletePackHeadersAndStuffingAreRecognized",
       "testTruncatedAndInvalidPackHeadersCannotCommitARoute",
       "testProgramStreamSelectsOwnedFallbackAndKeepsStrictPolicyRejection",
       "testAutomaticKnownExtensionsRequireContentBeforeContainerCommit",
-      "testOlderOSUsesOwnedSamplesWhenMP4MIMEHintCannotBeHonored"
+      "testOlderOSUsesOwnedSamplesWhenMP4MIMEHintCannotBeHonored",
+      "testLegacyQuickTimeAtomLayoutWithoutFtyp"
     ]
   },
   {

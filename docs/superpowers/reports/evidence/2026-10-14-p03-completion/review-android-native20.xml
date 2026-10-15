@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuite name="dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest" tests="20" failures="0" errors="0" skipped="0" time="16.581" timestamp="2026-10-15T11:13:14" hostname="localhost">
+  <properties>
+    <property name="device" value="TV_64bit_1_5G_32G(AVD) - 16" />
+    <property name="flavor" value="" />
+    <property name="project" value=":yl_player_android" />
+  </properties>
+  <testcase name="nativeAviSeekKeepsPacketClockIdentity" classname="dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest" time="0.005" />
+  <testcase name="nativeFrameBudgetFailureIsResourceExhaustedAndReleasesEverything" classname="dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest" time="0.104" />
+  <testcase name="nativeFailedAudioSwitchSeekRetainsSelectedTrack" classname="dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest" time="0.47" />
+  <testcase name="nativeTransportAndAviTimestampsAreUsable" classname="dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest" time="0.003" />
+  <testcase name="media3AviAvc" classname="dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest" time="4.532" />
+  <testcase name="actualEngineBudgetFailureIsOneTerminalEventAndCleanup" classname="dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest" time="0.17" />
+  <testcase name="nativeMain10MetadataPreservesProfile" classname="dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest" time="0.001" />
+  <testcase name="nativeInitialPositionTrimsActualAudioAndVideo" classname="dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest" time="0.583" />
+  <testcase name="nativePreparationNeverClaimsAnUninitializedDecoder" classname="dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest" time="0.027" />
+  <testcase name="ownedEac3ContainerHardwareOutputsPixels" classname="dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest" time="0.389" />
+  <testcase name="nativeAudioSwitchTrimsPrerollAndFlushesActualVideo" classname="dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest" time="0.503" />
+  <testcase name="admittedNativeSoftwareOutputsPixelsAndReturnsEveryReceipt" classname="dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest" time="0.139" />
+  <testcase name="nativePsMetadataAndZeroBasedSeek" classname="dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest" time="0.002" />
+  <testcase name="media3Eac3VideoOnly" classname="dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest" time="4.139" />
+  <testcase name="ownedPsHardwareOutputsPixels" classname="dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest" time="0.28" />
+  <testcase name="media3Av1" classname="dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest" time="4.233" />
+  <testcase name="dtsChannelsAndBidirectionalSeek" classname="dev.ylplayer.yl_player_android.YlPcmOutputInstrumentedTest" time="0.148" />
+  <testcase name="eac3ChannelsAndBidirectionalSeek" classname="dev.ylplayer.yl_player_android.YlPcmOutputInstrumentedTest" time="0.112" />
+  <testcase name="flacChannelsAndBidirectionalSeek" classname="dev.ylplayer.yl_player_android.YlPcmOutputInstrumentedTest" time="0.109" />
+  <testcase name="ac3SurroundDownmixAndBidirectionalSeek" classname="dev.ylplayer.yl_player_android.YlPcmOutputInstrumentedTest" time="0.202" />
+</testsuite>

@@ -4,8 +4,8 @@
   "files": [
     {
       "path": "README.md",
-      "bytes": 3658,
-      "sha256": "d2c615910f3993da8665dcf6b0fbd5beaa2f81f6399d8985187b7d06a4c82e68"
+      "bytes": 4449,
+      "sha256": "5de089bf361790282438b3478504c9fef8e116962e2f658b5667847e1945d8b2"
     },
     {
       "path": "android-output-native17.xml",
@@ -14,13 +14,23 @@
     },
     {
       "path": "android-task7-public-observations.json",
-      "bytes": 188941,
-      "sha256": "610168894a40422f6faa3ef12dd91681576491ee1d2c69147b72c1d878373b58"
+      "bytes": 204384,
+      "sha256": "43cdc574dc33c18d7ca26ec2a854cfcdbdd806e92e15e6594835f849d0bf347e"
+    },
+    {
+      "path": "execution/final-review.md",
+      "bytes": 3154,
+      "sha256": "0423790d3d7ba63c977067dbaf4a588cc012fe5262758c9dd8d85a7f85c32177"
     },
     {
       "path": "execution/progress.md",
-      "bytes": 36895,
-      "sha256": "2c3b6ff33488eb255cfd9e41396e979460ff0d7b609868d648a508240e6f2927"
+      "bytes": 41121,
+      "sha256": "ce3adf028d5d03f8bccae920f696a515e2958e5e71fe27fb5e40698ef248a57c"
+    },
+    {
+      "path": "execution/rulings.md",
+      "bytes": 15778,
+      "sha256": "2267dbc195e3c888a05d5db53f963f5bf68a3a006754ad5239449ecb480d55bd"
     },
     {
       "path": "execution/task-7-brief.md",
@@ -1183,6 +1193,106 @@
       "sha256": "263578b41de821e9e94049aa2dc11b704700910d44bdd6568182310e99d77d8a"
     },
     {
+      "path": "logs/review-android-emulator.log",
+      "bytes": 11419,
+      "sha256": "01e438520efe40ba72719f562eaae9938a194acae1e3712310f7f31b9bf2d7e7"
+    },
+    {
+      "path": "logs/review-android-jvm-final.log",
+      "bytes": 62307,
+      "sha256": "21125bdfc4f5c449009f21a2c23088e2d8d3d24c074f6fbccd2adbb3d1e4d850"
+    },
+    {
+      "path": "logs/review-android-output-final.log",
+      "bytes": 7960,
+      "sha256": "fb10246a12b4be0617720e0e6f7aeeebf9adf53a35030e0d46b6514a8464e2d5"
+    },
+    {
+      "path": "logs/review-android-resume-public-green.log",
+      "bytes": 709,
+      "sha256": "662e3f5a1f35f3e54abd2b0b234703f9ac015c279a015f2e88b393ac76f343c9"
+    },
+    {
+      "path": "logs/review-android-resume-public-red.log",
+      "bytes": 709,
+      "sha256": "dd62a8110ff93fb04bf7a10bd953e629134544ce0466b37333d66b74ec822869"
+    },
+    {
+      "path": "logs/review-android-timeline-green.log",
+      "bytes": 6775,
+      "sha256": "8fe43627c88981b8b11dd490829b5e4dc681ebdc456454ec1797fdae67748b93"
+    },
+    {
+      "path": "logs/review-android-timeline-red.log",
+      "bytes": 7257,
+      "sha256": "425b45977ffec23fc66371892c016fea2c5a3b6526ac6bd4ece84a98735d8fb4"
+    },
+    {
+      "path": "logs/review-android-timeline-red2.log",
+      "bytes": 11966,
+      "sha256": "ca90c24ba38801c9fd4d1f88c63c861650c79793daf98a22988d78856f2cd4d1"
+    },
+    {
+      "path": "logs/review-android-timeline-red3.log",
+      "bytes": 9985,
+      "sha256": "9d0b81fcc9cf237c8560ebb27c70df3df75c6a1a2c027767d55d13f2a363125d"
+    },
+    {
+      "path": "logs/review-android-timeline-red4.log",
+      "bytes": 8219,
+      "sha256": "fb16ab8ce1b45fd7e1a3e84f83bda9030755a65937f4eaa336aee3b4ba7164f8"
+    },
+    {
+      "path": "logs/review-discovery-final.log",
+      "bytes": 187,
+      "sha256": "9bd81eae473cb165f4ffd29ea370ee4a3523d269b1e25a5d4c6836ddc9a32a73"
+    },
+    {
+      "path": "logs/review-ios-config.log",
+      "bytes": 2122,
+      "sha256": "8facf0dd4c543a29930d5b09f562a12e9a4f4dd19caa0a908f8b8b97aa7fe38e"
+    },
+    {
+      "path": "logs/review-macos-config.log",
+      "bytes": 2061,
+      "sha256": "3a5ba149b29e70f21293e0174cb476131630a05cc883f0f60ca994a3d2204299"
+    },
+    {
+      "path": "logs/review-mov-ios-green.log",
+      "bytes": 42102,
+      "sha256": "6c0011b1cf18af06a51799384955a20c191f8816931cb4c231a77fab22dca0f6"
+    },
+    {
+      "path": "logs/review-mov-native-green.log",
+      "bytes": 74771,
+      "sha256": "4c62e6d74945ae4b87bc3c010a202c7315f90f00c09f1d73246c79e79c651c3b"
+    },
+    {
+      "path": "logs/review-mov-public-green.log",
+      "bytes": 5860,
+      "sha256": "9381813dbc77eb346887d600a78cdf781d4bb5d19066ecb48e6db9b9e3808411"
+    },
+    {
+      "path": "logs/review-mov-public-red.log",
+      "bytes": 410,
+      "sha256": "5ad55b9cdfd88dfa0a67f3ef7503ae4de4b759bdf9e171ba2008b4fdf1ee874b"
+    },
+    {
+      "path": "logs/review-mov-public-red2.log",
+      "bytes": 10674,
+      "sha256": "d6b252e8fb3d7f148a9344b4a99c4e9ca864f4967be377744201178daadc4448"
+    },
+    {
+      "path": "logs/review-public-analyze-final.log",
+      "bytes": 96,
+      "sha256": "a893841acc0cb62493e29338eacd9a767e68c0f485faba171bee5410b82d5f89"
+    },
+    {
+      "path": "logs/review-public-analyze.log",
+      "bytes": 295,
+      "sha256": "a26d732310c5f31ff4a56fc0927138d428042dd581b798e0bf8b237bfcfb1fc3"
+    },
+    {
       "path": "logs/routing-green.log",
       "bytes": 12829,
       "sha256": "c1f34579ebf19a9a64e2c85e509bfd08588036a8e45e0783b0602d82f3ddc3a2"
@@ -1631,6 +1741,21 @@
       "path": "macos-task7-public-observations.json",
       "bytes": 231750,
       "sha256": "acb4fc82aaee50fb3175440b625a5ea0b002b02d0e2a633ea42c5e5593e87e7f"
+    },
+    {
+      "path": "review-android-native20.xml",
+      "bytes": 3407,
+      "sha256": "62079d21b82034ce92f82832256b2d9bfcd0ca880abd51b7f93040ae7fbc3848"
+    },
+    {
+      "path": "review-mov-ios-green-summary.json",
+      "bytes": 1004,
+      "sha256": "df8e3f8e7854a455bd70c99cf375855d80726cbda8287bb89d9e4b25385d9afa"
+    },
+    {
+      "path": "review-mov-native-green-summary.json",
+      "bytes": 2940,
+      "sha256": "c2062fdf13d1901148a7fc89276c919ad6927e8ffb6fb22fec1f98fba3151644"
     },
     {
       "path": "run-plans/ios-output-matrix-final-plan.json",

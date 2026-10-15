@@ -28,3 +28,7 @@ flutter test integration_test/decoder_budget_test.dart -d DEVICE --no-pub
 ```
 
 `manifest.json` records every other archived file's relative path, byte size and SHA-256. Verify these before consuming observations. It provides integrity, not an independent attestation or permission to generate an admission profile. Runtime summaries and raw logs are the evidence; the human report states which failures and external acceptance conditions remain.
+
+## Final review fix pass
+
+`execution/final-review.md` records the single fresh review, three Important findings, the narrowed direct-adapter start-position finding, and actual fix evidence. `execution/rulings.md` preserves all chronological rulings. Final native Android20/20, JVM530passed/3preexisting skips, public resume2/2 and affected-output5/5; macOS related62/62 plus legacy MOV public2/2; iOS routing6/6. See `review-android-native20.xml`, `review-mov-*-summary.json` and `logs/review-*.log`. The original required hardware failures remain failures. The original public resume control was already green before the adapter fix, explicitly not counted as RED. The native probe observation hooks receive real decoded PCM and actual released video frames; production leaves them unset.

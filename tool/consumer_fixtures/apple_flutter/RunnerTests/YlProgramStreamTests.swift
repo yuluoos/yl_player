@@ -65,4 +65,16 @@ final class YlProgramStreamTests: XCTestCase {
     XCTAssertFalse(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(named, supportsMIMEOverride: false))
   }
 
+  func testLegacyQuickTimeAtomLayoutWithoutFtyp() {
+    func atom(_ name: String, _ payload: [UInt8] = []) -> [UInt8] {
+      let size = UInt32(8 + payload.count)
+      return [UInt8(size >> 24), UInt8((size >> 16) & 255), UInt8((size >> 8) & 255), UInt8(size & 255)] + Array(name.utf8) + payload
+    }
+    XCTAssertEqual(YlSourceInspector.format(Data(atom("free", [0,0,0,0]) + atom("wide") + atom("mdat", [1,2,3,4]))), .mov)
+    XCTAssertEqual(YlSourceInspector.format(Data(atom("moov", atom("mvhd")))), .mov)
+    XCTAssertEqual(YlSourceInspector.format(Data(atom("free"))), .automatic)
+    XCTAssertEqual(YlSourceInspector.format(Data([0,0,0,4] + Array("mdat".utf8))), .automatic)
+    XCTAssertEqual(YlSourceInspector.format(Data(atom("free") + atom("ftyp", Array("isom".utf8)))), .mp4)
+  }
+
 }

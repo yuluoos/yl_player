@@ -18,6 +18,11 @@ internal class YlNativeFallbackEngine(
     dispatcher: CoroutineDispatcher = Dispatchers.Main,
     softwareServicesOverride: YlSoftwareDecodeServices? = null,
     private val findHardwareDecoder: (YlNativeStreamInfo) -> String? = YlHardwareCodecProbe::findVideoDecoder,
+    // Internal observation seams sample real output; production has no observer.
+    private val observePcm: ((YlNativePcmChunk) -> Unit)? = null,
+    private val observeVideo: ((Long) -> Unit)? = null,
+    private val seekNative: (YlFfmpegSession, Long) -> Boolean = { native, target -> native.seekTo(target) },
+    private val surfaceForOutput: (YlVideoOutput) -> Surface = { it.borrowSurface() },
 ) : YlPlaybackEngineAdapter {
     private val softwareServices by lazy { softwareServicesOverride ?: YlSoftwareDecodeServices.production(context) }
     private val events = CoroutineScope(SupervisorJob() + dispatcher)
@@ -56,6 +61,7 @@ internal class YlNativeFallbackEngine(
     private var readyAtMs = 0L
     private var selectedAudioIndex = -1
     private var playbackGeneration = 0L
+    private var initialPositionApplied = false
     override val needsExclusiveLease: Boolean get() = video != null
 
     override fun registerCallback(callback: (YlSessionIdentity, YlEngineEvent) -> Unit) { this.callback = callback }
@@ -80,7 +86,7 @@ internal class YlNativeFallbackEngine(
             if (videoPath == YlNativeVideoPath.UNSUPPORTED) throw YlBoundaryException(YlFailureKind.DECODER_UNAVAILABLE)
         }
         if (video == null && audio == null) throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
-        audio?.let { audioOutput = YlPcmAudioOutput(opened, it) }
+        audio?.let { audioOutput = YlPcmAudioOutput(opened, it, observePcm) }
         emitSnapshot(AndroidPlaybackStatus.LOADING, reachedReady = false)
     }
 
@@ -96,10 +102,14 @@ internal class YlNativeFallbackEngine(
 
     override suspend fun activate(output: YlSessionVideoOutput) = withContext(worker) {
         val public = output as YlVideoOutput
-        val surface = public.borrowSurface()
+        val surface = surfaceForOutput(public)
         this@YlNativeFallbackEngine.output = public
         outputIdentity = public.identity
         configureVideo(surface)
+        if (!initialPositionApplied) {
+            if (positionUs > 0) seekAndReset(positionUs)
+            initialPositionApplied = true
+        }
         video?.let { public.updateGeometry(geometry(it)) }
         readyAtMs = SystemClock.elapsedRealtime()
         emitSnapshot(AndroidPlaybackStatus.READY, reachedReady = true)
@@ -115,7 +125,7 @@ internal class YlNativeFallbackEngine(
             val configured = native.configureHardwareVideo(stream.index)
             if (configured) {
                 hardwareVideo = runCatching {
-                    YlHardwareVideoDecoder(stream, surface, checkNotNull(hardwareName), native.hardwareCodecConfig(), cancelled = { closed })
+                    YlHardwareVideoDecoder(stream, surface, checkNotNull(hardwareName), native.hardwareCodecConfig(), cancelled = { closed }, observePresented = observeVideo)
                 }.getOrNull()
             }
             if (hardwareVideo == null) {
@@ -285,17 +295,30 @@ internal class YlNativeFallbackEngine(
     }
     override suspend fun seekTo(positionMs: Long) = withContext(worker) {
         val targetUs = positionMs.coerceAtLeast(0) * 1000
-        if (!requireSession().seekTo(targetUs)) throw YlBoundaryException(YlFailureKind.SOURCE_INVALID)
-        hardwareVideo?.flush(targetUs); audioOutput?.flush(targetUs); requireSession().flush()
-        playbackGeneration++
-        positionUs = targetUs; positionAnchorUs = targetUs; monotonicAnchorNs = System.nanoTime(); firstFrame = false
-        firstFrameAtMs = 0L
+        seekAndReset(targetUs)
         emitSnapshot(if (playing) AndroidPlaybackStatus.PLAYING else AndroidPlaybackStatus.PAUSED, true)
+    }
+    /** Worker-confined programme-time transaction shared by initial positioning,
+     * explicit seek and audio replacement. Demux preroll never reaches output. */
+    private fun seekAndReset(targetUs: Long) {
+        if (!seekNative(requireSession(), targetUs)) throw YlBoundaryException(YlFailureKind.SOURCE_INVALID)
+        resetOutputTimeline(targetUs)
+    }
+    private fun resetOutputTimeline(targetUs: Long) {
+        hardwareVideo?.flush(targetUs)
+        audioOutput?.flush(targetUs)
+        requireSession().flush()
+        playbackGeneration++
+        positionUs = targetUs
+        positionAnchorUs = targetUs
+        monotonicAnchorNs = System.nanoTime()
+        firstFrame = false
+        firstFrameAtMs = 0L
     }
     override suspend fun seekToLiveEdge() {
         if (source.intent != AndroidStreamIntent.LIVE) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
         withContext(worker) {
-            if (!requireSession().seekTo(Long.MAX_VALUE)) throw YlBoundaryException(YlFailureKind.SOURCE_INVALID)
+            if (!seekNative(requireSession(), Long.MAX_VALUE)) throw YlBoundaryException(YlFailureKind.SOURCE_INVALID)
             hardwareVideo?.flush(); audioOutput?.flush(); requireSession().flush(); firstFrame = false
             firstFrameAtMs = 0L
             playbackGeneration++
@@ -311,11 +334,28 @@ internal class YlNativeFallbackEngine(
             ?: throw YlBoundaryException(YlFailureKind.SOURCE_MISSING)
         val stream = requireSession().mediaInfo.streams.firstOrNull { it.index == index && it.kind == YlNativeStreamKind.AUDIO }
             ?: throw YlBoundaryException(YlFailureKind.SOURCE_MISSING)
-        audioOutput?.close(); selectedAudioIndex = index; audio = stream
-        audioOutput = YlPcmAudioOutput(requireSession(), stream).also { it.setVolume(volume); it.setSpeed(speed); if (playing) it.play() }
-        requireSession().seekTo(positionUs); requireSession().flush()
-        playbackGeneration++
-        Unit
+        if (index == selectedAudioIndex) return@withContext
+        if (stream.codec !in supportedAudio) throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
+        val targetUs = currentPositionUs().coerceAtLeast(0)
+        val native = requireSession()
+        // A rejected seek must not destroy the selected audio output.
+        if (!seekNative(native, targetUs)) throw YlBoundaryException(YlFailureKind.SOURCE_INVALID)
+        val replacement = try {
+            YlPcmAudioOutput(native, stream, observePcm).also { it.setVolume(volume); it.setSpeed(speed) }
+        } catch (error: Throwable) {
+            // Codec configuration can replace native audio state before failing.
+            // Restore the prior stream at the same programme point or terminate.
+            if (audio?.let { native.configureSoftwareAudio(it.index) } == true) resetOutputTimeline(targetUs)
+            else failOnce(error)
+            throw error
+        }
+        audioOutput?.close()
+        audioOutput = replacement
+        selectedAudioIndex = index
+        audio = stream
+        resetOutputTimeline(targetUs)
+        if (playing) replacement.play()
+        emitSnapshot(if (playing) AndroidPlaybackStatus.PLAYING else AndroidPlaybackStatus.PAUSED, true)
     }
     override suspend fun setVideoConstraints(constraints: AndroidVideoConstraintsMessage) {
         val stream = video ?: return

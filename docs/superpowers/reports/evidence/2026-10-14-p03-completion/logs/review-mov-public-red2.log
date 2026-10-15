@@ -1,0 +1,118 @@
+Temporary display assertion 35626 bound to owned command 35625
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/quicktime_legacy_test.dart
+Building macOS application...                                   
+✓ Built build/macos/Build/Products/Debug/yl_player_example.app
+Failed to foreground app; open returned 1
+00:00 +0: automatic legacy MOV file outputs a frame
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following YlPlayerException was thrown running a test:
+YlFailure(category: container, code: container.unsupported, retryable: false, scope: command,
+diagnosticId: apple-d3fe280b-9281-422f-9b20-90255d7695ff)
+
+When the exception was thrown, this was the stack:
+#4      ApplePlayer._cancelLoad (package:yl_player_apple/src/apple_player.dart:609:24)
+#5      ApplePlayer._load (package:yl_player_apple/src/apple_player.dart:397:9)
+#7      ApplePlayer._load (package:yl_player_apple/src/apple_player.dart:360:26)
+#8      ApplePlayer.load (package:yl_player_apple/src/apple_player.dart:351:17)
+#9      YlPlayerController._performLoad (package:yl_player/src/player_controller.dart:366:40)
+#10     YlPlayerController.load (package:yl_player/src/player_controller.dart:352:17)
+#11     main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/quicktime_legacy_test.dart:43:38)
+#13     main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/quicktime_legacy_test.dart:15:21)
+#14     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+#16     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:189:25)
+#17     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:19)
+#19     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1941:5)
+#22     TestWidgetsFlutterBinding._runTest (package:flutter_test/src/binding.dart:1926:10)
+#23     LiveTestWidgetsFlutterBinding.runTest (package:flutter_test/src/binding.dart:3059:12)
+#24     IntegrationTestWidgetsFlutterBinding.runTest (package:integration_test/integration_test.dart:237:17)
+#25     testWidgets.<anonymous closure> (package:flutter_test/src/widget_tester.dart:184:24)
+#26     Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:25)
+#28     Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:252:15)
+#33     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:17)
+#34     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:17)
+#39     Invoker._waitForOutstandingCallbacks (package:test_api/src/backend/invoker.dart:314:5)
+#40     Invoker._onRun.<anonymous closure>.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/invoker.dart:457:21)
+#42     Invoker._onRun.<anonymous closure>.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/invoker.dart:455:15)
+#47     Invoker._onRun.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/invoker.dart:445:11)
+#48     Invoker._guardIfGuarded (package:test_api/src/backend/invoker.dart:500:15)
+#49     Invoker._onRun.<anonymous closure> (package:test_api/src/backend/invoker.dart:444:9)
+#56     Invoker._onRun (package:test_api/src/backend/invoker.dart:442:11)
+#57     LiveTestController.run (package:test_api/src/backend/live_test_controller.dart:161:11)
+#58     RemoteListener._runLiveTest.<anonymous closure> (package:test_api/src/backend/remote_listener.dart:323:16)
+#63     RemoteListener._runLiveTest (package:test_api/src/backend/remote_listener.dart:322:5)
+#64     RemoteListener._serializeTest.<anonymous closure> (package:test_api/src/backend/remote_listener.dart:263:7)
+#82     _GuaranteeSink.add (package:stream_channel/src/guarantee_channel.dart:125:12)
+#83     new _MultiChannel.<anonymous closure> (package:stream_channel/src/multi_channel.dart:159:31)
+#85     CastStreamSubscription._onData (dart:_internal/async_cast.dart:95:11)
+#99     _GuaranteeSink.add (package:stream_channel/src/guarantee_channel.dart:125:12)
+#100    main.<anonymous closure> (file:///var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/flutter_tools.6SCf4t/flutter_test_listener.06k1eT/listener.dart:56:22)
+#103    _runExtension (dart:developer-patch/developer.dart:113:23)
+(elided 66 frames from dart:async and package:stack_trace)
+
+The test description was:
+  automatic legacy MOV file outputs a frame
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -1: automatic legacy MOV file outputs a frame [E]
+  Test failed. See exception logs above.
+  The test description was: automatic legacy MOV file outputs a frame
+  
+00:00 +0 -1: automatic legacy MOV HTTP outputs a frame
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following YlPlayerException was thrown running a test:
+YlFailure(category: container, code: container.unsupported, retryable: false, scope: command,
+diagnosticId: apple-8ede7e72-1845-437d-b387-7502a7238bea)
+
+When the exception was thrown, this was the stack:
+#4      ApplePlayer._cancelLoad (package:yl_player_apple/src/apple_player.dart:609:24)
+#5      ApplePlayer._load (package:yl_player_apple/src/apple_player.dart:397:9)
+#7      ApplePlayer._load (package:yl_player_apple/src/apple_player.dart:360:26)
+#8      ApplePlayer.load (package:yl_player_apple/src/apple_player.dart:351:17)
+#9      YlPlayerController._performLoad (package:yl_player/src/player_controller.dart:366:40)
+#10     YlPlayerController.load (package:yl_player/src/player_controller.dart:352:17)
+#11     main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/quicktime_legacy_test.dart:43:38)
+#13     main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/quicktime_legacy_test.dart:15:21)
+#14     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+#16     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:189:25)
+#17     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:19)
+#19     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1941:5)
+#22     TestWidgetsFlutterBinding._runTest (package:flutter_test/src/binding.dart:1926:10)
+#23     LiveTestWidgetsFlutterBinding.runTest (package:flutter_test/src/binding.dart:3059:12)
+#24     IntegrationTestWidgetsFlutterBinding.runTest (package:integration_test/integration_test.dart:237:17)
+#25     testWidgets.<anonymous closure> (package:flutter_test/src/widget_tester.dart:184:24)
+#26     Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:25)
+#28     Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:252:15)
+#33     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:17)
+#34     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:17)
+#39     Invoker._waitForOutstandingCallbacks (package:test_api/src/backend/invoker.dart:314:5)
+#40     Invoker._onRun.<anonymous closure>.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/invoker.dart:457:21)
+#42     Invoker._onRun.<anonymous closure>.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/invoker.dart:455:15)
+#47     Invoker._onRun.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/invoker.dart:445:11)
+#48     Invoker._guardIfGuarded (package:test_api/src/backend/invoker.dart:500:15)
+#49     Invoker._onRun.<anonymous closure> (package:test_api/src/backend/invoker.dart:444:9)
+#56     Invoker._onRun (package:test_api/src/backend/invoker.dart:442:11)
+#57     LiveTestController.run (package:test_api/src/backend/live_test_controller.dart:161:11)
+#58     RemoteListener._runLiveTest.<anonymous closure> (package:test_api/src/backend/remote_listener.dart:323:16)
+#63     RemoteListener._runLiveTest (package:test_api/src/backend/remote_listener.dart:322:5)
+#64     RemoteListener._serializeTest.<anonymous closure> (package:test_api/src/backend/remote_listener.dart:263:7)
+#82     _GuaranteeSink.add (package:stream_channel/src/guarantee_channel.dart:125:12)
+#83     new _MultiChannel.<anonymous closure> (package:stream_channel/src/multi_channel.dart:159:31)
+#85     CastStreamSubscription._onData (dart:_internal/async_cast.dart:95:11)
+#99     _GuaranteeSink.add (package:stream_channel/src/guarantee_channel.dart:125:12)
+#100    main.<anonymous closure> (file:///var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/flutter_tools.6SCf4t/flutter_test_listener.06k1eT/listener.dart:56:22)
+#103    _runExtension (dart:developer-patch/developer.dart:113:23)
+(elided 66 frames from dart:async and package:stack_trace)
+
+The test description was:
+  automatic legacy MOV HTTP outputs a frame
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -2: automatic legacy MOV HTTP outputs a frame [E]
+  Test failed. See exception logs above.
+  The test description was: automatic legacy MOV HTTP outputs a frame
+  
+00:00 +0 -2: (tearDownAll)
+00:00 +0 -2: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/quicktime_legacy_test.dart: automatic legacy MOV HTTP outputs a frame
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/quicktime_legacy_test.dart: automatic legacy MOV file outputs a frame
+Temporary display assertion released

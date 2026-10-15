@@ -547,3 +547,17 @@ iOS三条截图失败另外执行0.25倍速观测控制，7个播放/seek颜色�
 仍待完成的验收：逐格式完整PCM首尾样本和实际切轨对齐、同次产品身份绑定的完整音画记录、真机/最低OS/Intel运行、AV1/Main10硬件设备、物理声道/音画同步、匹配持续热与独立产品复验。当前软件候选不对未知设备开放；不得将关闭的生产档位写为AV1软件播放已普遍支持。工程已补齐的接线及真实输出证据与上述条件分开交付。
 
 最终 Android 定向复验：managed HTTP FLV automatic/live 保持 Media3 2/2通过；FLV本地/HTTP/改名、AVI本地和MP4本地五条1倍速实际输出全部通过；视频独立AV1公开错误1/1通过。输出修复与测试已提交 `278f616`。完整三端观测和原始日志见 [证据目录](evidence/2026-10-14-p03-completion/README.md)。
+
+### 2026-10-15 最终独立复审与修复
+
+一次独立只读复审提出3项 Important、无 Critical/Minor，结论和逐项裁定归档于 [复审记录](evidence/2026-10-14-p03-completion/execution/final-review.md)。本轮修复保留全部原始失败：
+
+- 无 `ftyp` 的合法 QuickTime：原素材仅将该 atom 改为同尺寸 `free`，不改媒体或 chunk offsets；automatic 本地/HTTP 原先2条 `container.unsupported`，有界 atom 探测修复后2/2真实首帧通过。macOS路由/网络/会话62/62、iOS探测/路由6/6通过。
+- native Android 起播：直接适配器原先2500ms起播仍交付零点PCM，现于READY前执行真实demux seek和输出裁剪。公开封装本来会补做seek，公开起播测试在修复前即2/2通过，因此不把它虚构成公开API失败；修复后仍2/2蓝色首帧通过。
+- native Android 切音轨：真实双音轨AVI先复现切换后输出1.08秒PCM、以及忽略seek失败。现在使用实际消耗时钟，成功seek后统一flush视频、裁剪PCM、更新generation与时钟；失败seek保留原音轨。新增真实PCM/已呈现视频PTS/ImageReader颜色断言通过。
+
+双音轨夹具还暴露了配置数据中的3字节Annex-B起始码：包数据已有规范化，初始化CSD此前缺失；统一使用已有保留全部NAL payload的规范化函数。该夹具与原AVI的96个压缩视频包逐包SHA一致，第二MP3音轨交换左右声道；来源和生成命令已记录。最终Android原生格式/PCM/预算/生命周期20/20通过，JVM533项中530通过、3项既有跳过。复审后只按改动范围复验，未重复无变化的2003项Dart全套或软件测量，也未生成第二次审阅。
+
+完整CAP、物理/最低系统/Intel、逐格式完整PCM首尾对齐和持续热/独立产品资格仍按前述条件开放；本轮修复不改变生产软件准入。
+
+修复后的最后五条FLV/AVI/MP4实际画面、seek、结束与释放复验5/5通过，两项新增公开测试的analyze无问题。复审修复已满足本轮工程提交门禁；无延后Minor项。三份既有macOS测试镜像差异未改动，原硬件不可用行及完整CAP缺口仍保留。全部执行裁定按时间顺序归档于 [裁定记录](evidence/2026-10-14-p03-completion/execution/rulings.md)。

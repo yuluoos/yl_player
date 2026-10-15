@@ -247,6 +247,81 @@ class YlFormatDecodeInstrumentedTest {
         assertEquals(0L,pool.ownedBytes)
     }
 
+    @Test fun nativeInitialPositionTrimsActualAudioAndVideo() = kotlinx.coroutines.runBlocking {
+        for (fixture in listOf("avi-avc-mp3.avi", "flv-avc-mp3.flv")) checkTimelineReset(fixture, false)
+    }
+    @Test fun nativeAudioSwitchTrimsPrerollAndFlushesActualVideo() = kotlinx.coroutines.runBlocking {
+        checkTimelineReset("avi-two-audio-control.avi", true)
+    }
+    @Test fun nativeFailedAudioSwitchSeekRetainsSelectedTrack() = kotlinx.coroutines.runBlocking {
+        checkTimelineReset("avi-two-audio-control.avi", true, true)
+    }
+    private suspend fun checkTimelineReset(fixture: String, switch: Boolean, failSeek: Boolean = false) {
+        val instrumentation=InstrumentationRegistry.getInstrumentation()
+        val context=instrumentation.targetContext
+        val file=File(context.cacheDir,"p03-reset-$fixture")
+        instrumentation.context.assets.open("format_matrix/$fixture").use { source -> file.outputStream().use(source::copyTo) }
+        val texture=android.graphics.SurfaceTexture(false)
+        val entry=object : io.flutter.view.TextureRegistry.SurfaceTextureEntry {
+            override fun id()=904L
+            override fun surfaceTexture()=texture
+            override fun release()=texture.release()
+        }
+        val output=YlVideoOutput(entry)
+        val reader=ImageReader.newInstance(320,180,ImageFormat.YUV_420_888,4)
+        val luminance=java.util.Collections.synchronizedList(mutableListOf<Int>())
+        reader.setOnImageAvailableListener({ r -> r.acquireLatestImage()?.use { image ->
+            val plane=image.planes[0]
+            luminance.add(plane.buffer.get(90*plane.rowStride+160*plane.pixelStride).toInt() and 255)
+        } },Handler(context.mainLooper))
+        val pcm=java.util.Collections.synchronizedList(mutableListOf<YlNativePcmChunk>())
+        val video=java.util.Collections.synchronizedList(mutableListOf<Long>())
+        val errors=java.util.Collections.synchronizedList(mutableListOf<YlFailureKind>())
+        var rejectSeek=false
+        var floorUs=2_500_000L
+        val snapshot=java.util.concurrent.atomic.AtomicReference<YlEngineSnapshot>()
+        val engine=YlNativeFallbackEngine(context,YlSessionIdentity("p03","reset"),
+            AndroidSourceMessage(AndroidSourceKind.FILE,file.absolutePath,AndroidStreamIntent.ON_DEMAND,AndroidMediaFormat.AUTOMATIC),
+            AndroidLoadOptionsMessage(false,startPositionMs=if(switch) 0 else 2500,
+                bufferStrategy=AndroidBufferStrategyMessage(AndroidBufferKind.AUTOMATIC),videoConstraints=AndroidVideoConstraintsMessage()),
+            AndroidPlayerOptionsMessage(AndroidDecoderPolicy.HARDWARE_REQUIRED,AndroidAudioPolicy.APP_MANAGED,250),
+            kotlinx.coroutines.Dispatchers.Unconfined,observePcm={pcm.add(it)},observeVideo={video.add(it)},
+            seekNative={native,target -> if(rejectSeek) false else native.seekTo(target)},surfaceForOutput={reader.surface})
+        engine.registerCallback { _,event -> when(event) {
+            is YlEngineEvent.Failed -> errors.add(event.kind)
+            is YlEngineEvent.Snapshot -> snapshot.set(event.value)
+            else -> Unit
+        } }
+        try {
+            engine.prepare();engine.activate(output)
+            if(switch) {
+                // Prime real old decoder output, then establish a paused,
+                // non-keyframe programme point before replacing audio.
+                engine.seekTo(2500);engine.play()
+                kotlinx.coroutines.withTimeout(5000) { while(pcm.isEmpty() || video.isEmpty()) kotlinx.coroutines.delay(5) }
+                engine.pause()
+                floorUs=snapshot.get().timeline.positionMs*1000
+                pcm.clear();video.clear();luminance.clear()
+                rejectSeek=failSeek
+                if(failSeek) {
+                    try {engine.selectAudioTrack("ffmpeg-audio-2");fail("Failed seek was ignored")}
+                    catch(error: YlBoundaryException) {assertEquals(YlFailureKind.SOURCE_INVALID,error.kind)}
+                    assertEquals("ffmpeg-audio-1",snapshot.get().audioTracks.single {it.isSelected}.id)
+                    return
+                }
+                engine.selectAudioTrack("ffmpeg-audio-2")
+            }
+            engine.play()
+            kotlinx.coroutines.withTimeout(5000) { while(pcm.isEmpty() || video.isEmpty() || luminance.isEmpty()) {assertTrue(errors.toString(),errors.isEmpty());kotlinx.coroutines.delay(5)} }
+            engine.pause()
+            assertTrue("$fixture preroll PCM escaped: ${pcm.map {it.presentationTimeUs}}",pcm.all {it.presentationTimeUs>=floorUs})
+            assertTrue("$fixture old/preroll video escaped: $video",video.all {it>=floorUs})
+            assertTrue("Missing actual samples",pcm.first().data.isNotEmpty())
+            assertTrue("First output must be blue, actual Y=$luminance",luminance.first() in 30..50)
+            assertTrue(errors.toString(),errors.isEmpty())
+        } finally {engine.dispose().await();output.release();reader.close();file.delete()}
+    }
+
     @Test fun ownedPsHardwareOutputsPixels() = hardwarePixels("ps-avc-mp3.mpg")
     @Test fun ownedEac3ContainerHardwareOutputsPixels() = hardwarePixels("mkv-avc-eac3.mkv")
     private fun hardwarePixels(fixture: String) {

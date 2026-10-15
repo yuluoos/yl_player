@@ -7048,7 +7048,557 @@
           "disposed": true
         }
       ]
+    },
+    {
+      "log": "review-android-output-final.log",
+      "sha256": "fb10246a12b4be0617720e0e6f7aeeebf9adf53a35030e0d46b6514a8464e2d5",
+      "rows": [
+        {
+          "runId": "format-android-1792062971826956",
+          "buildSha256": "unrecorded",
+          "caseId": "mp4-avc-aac",
+          "transport": "file",
+          "platform": "android",
+          "playbackRate": 1.0,
+          "mediaHash": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 69000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1086000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2088000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3083000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2005000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1258000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 0,
+              "comparison": "decoded-rgb-tolerance-40"
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792062971826956",
+          "buildSha256": "unrecorded",
+          "caseId": "flv-avc-mp3",
+          "transport": "file",
+          "platform": "android",
+          "playbackRate": 1.0,
+          "mediaHash": "c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 172000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1144000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2162000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3184000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2009000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1256000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 146000,
+              "comparison": "decoded-rgb-tolerance-40"
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792062971826956",
+          "buildSha256": "unrecorded",
+          "caseId": "flv-avc-mp3",
+          "transport": "http",
+          "platform": "android",
+          "playbackRate": 1.0,
+          "mediaHash": "c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 132000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1108000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2086000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3083000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2046000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1370000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 150000,
+              "comparison": "decoded-rgb-tolerance-40"
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792062971826956",
+          "buildSha256": "unrecorded",
+          "caseId": "flv-avc-mp3",
+          "transport": "renamed-file",
+          "platform": "android",
+          "playbackRate": 1.0,
+          "mediaHash": "c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 192000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1147000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2165000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3161000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2009000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1398000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 134000,
+              "comparison": "decoded-rgb-tolerance-40"
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792062971826956",
+          "buildSha256": "unrecorded",
+          "caseId": "avi-avc-mp3",
+          "transport": "file",
+          "platform": "android",
+          "playbackRate": 1.0,
+          "mediaHash": "8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 186000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1139000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2164000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3176000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2000000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1351000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 138000,
+              "comparison": "decoded-rgb-tolerance-40"
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        }
+      ]
     }
   ],
-  "finalRouteRegression": "Final intent-gate build: automatic/live managed FLV 2/2; FLV VOD all3, AVI file and MP4 file actual7markers/seek/end/dispose 5/5 at1x. No broad rerun asserted."
+  "finalRouteRegression": "Final intent-gate build: automatic/live managed FLV 2/2; FLV VOD all3, AVI file and MP4 file actual7markers/seek/end/dispose 5/5 at1x. No broad rerun asserted.",
+  "reviewFixRegression": {
+    "nativeTests": 20,
+    "passed": 20,
+    "failed": 0,
+    "skipped": 0,
+    "publicResumePassed": 2,
+    "publicAffectedOutputPassed": 5,
+    "scope": "Actual PCM/frame/image initial and audio-switch tests plus failure injection; final build. Original required unavailable paths stay open."
+  }
 }

@@ -323,8 +323,8 @@ sh packages/yl_player_apple/tool/apple_ffmpeg/test_build_contract.sh
 ```
 
   Run four-package analyze, public API/pigeon checks if their inputs changed, and impacted native audio/FEL/P01/P02 suites. Repeat only after a change/failure warrants it. Record original failures and environment workarounds separately.
-- [ ] Produce one final review package with base/head, approved spec, this plan, Review Focus, ledger rulings and evidence. Dispatch one fresh reviewer as required by executing-plans; fix Important/Critical findings with RED→GREEN and affected regressions. Deferred minors are recorded.
-- [ ] Update every relevant plan checkbox from actual evidence, archive ledger and review, and commit explicit final files. Report commits, tested functionality and remaining external acceptance conditions without calling all P03 complete while required evidence or implementation remains open.
+- [x] Produce one final review package with base/head, approved spec, this plan, Review Focus, ledger rulings and evidence. Dispatch one fresh reviewer as required by executing-plans; fix Important/Critical findings with RED→GREEN and affected regressions. Deferred minors are recorded.
+- [x] Update every relevant plan checkbox from actual evidence, archive ledger and review, and commit explicit final files. Report commits, tested functionality and remaining external acceptance conditions without calling all P03 complete while required evidence or implementation remains open.
 
 ## 2026-10-15 实施状态
 
