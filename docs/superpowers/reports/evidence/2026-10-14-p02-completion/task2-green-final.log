@@ -1,0 +1,90 @@
+Resolving dependencies...
+Downloading packages...
+  _fe_analyzer_shared 100.0.0 (109.0.0 available)
+  analyzer 13.0.0 (14.5.0 available)
+  built_collection 5.1.1 (5.1.2 available)
+  clock 1.1.2 (1.1.3 available)
+  code_assets 1.2.1 (2.1.0 available)
+  cupertino_icons 1.0.9 (2.0.0 available)
+  dart_style 3.1.9 (3.1.13 available)
+  hooks 2.0.2 (2.2.0 available)
+  matcher 0.12.19 (0.12.20 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.0 (1.19.0 available)
+  native_toolchain_c 0.19.2 (0.19.5 available)
+  package_config 2.2.0 (3.0.0 available)
+  petitparser 7.0.2 (7.1.0 available)
+  pigeon 28.0.0 (29.0.8 available)
+  platform 3.1.6 (3.2.0 available)
+  pointycastle 3.9.1 (4.0.0 available)
+  record_use 0.6.0 (1.1.1 available)
+  stack_trace 1.12.1 (1.12.2 available)
+  test_api 0.7.11 (0.7.15 available)
+  vector_math 2.2.0 (2.4.3 available)
+  webdriver 3.1.0 (3.2.0 available)
+  xml 7.0.1 (7.1.0 available)
+Got dependencies!
+23 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/protected_subtitle_test.dart
+00:00 +0: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/protected_subtitle_test.dart: protected external resource admission fails closed for missing or stale capability
+00:00 +1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: protected Android mounts explicit hybrid before first frame without texture or opacity
+00:00 +2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: protected Android mounts explicit hybrid before first frame without texture or opacity
+00:00 +3: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: protected Android mounts explicit hybrid before first frame without texture or opacity
+00:00 +4: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: protected Android mounts explicit hybrid before first frame without texture or opacity
+00:00 +5: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: protected Android mounts explicit hybrid before first frame without texture or opacity
+00:00 +6: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: protected Android mounts explicit hybrid before first frame without texture or opacity
+00:00 +7: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: protected Android mounts explicit hybrid before first frame without texture or opacity
+00:00 +8: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: protected Android mounts explicit hybrid before first frame without texture or opacity
+00:00 +9: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: protected Android mounts explicit hybrid before first frame without texture or opacity
+00:00 +10: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: protected Android mounts explicit hybrid before first frame without texture or opacity
+00:00 +11: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: protected Android mounts explicit hybrid before first frame without texture or opacity
+00:00 +12: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: protected Android mounts explicit hybrid before first frame without texture or opacity
+00:00 +13: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: protected Android mounts explicit hybrid before first frame without texture or opacity
+00:00 +14: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: protected Android mounts explicit hybrid before first frame without texture or opacity
+00:00 +15: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: protected Android mounts explicit hybrid before first frame without texture or opacity
+00:00 +16: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: protected Android mounts explicit hybrid before first frame without texture or opacity
+00:00 +17: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/protected_subtitle_test.dart: protected TargetPlatform.android uses separate overlay with identity/frame/geometry gates
+00:00 +18: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/protected_subtitle_test.dart: protected TargetPlatform.android uses separate overlay with identity/frame/geometry gates
+00:00 +19: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/protected_subtitle_test.dart: protected TargetPlatform.android uses separate overlay with identity/frame/geometry gates
+00:00 +20: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:00 +21: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:00 +22: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:00 +23: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:00 +24: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:00 +25: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:00 +26: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:00 +27: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:00 +28: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:00 +29: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:00 +30: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:00 +31: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:00 +32: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:00 +33: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:00 +34: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:00 +35: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:00 +36: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:00 +37: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:00 +38: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by replace with no later requests
+00:00 +39: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/player_view_test.dart: forwards background and texture filter quality
+00:00 +40: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by load with no later requests
+00:00 +41: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by load with no later requests
+00:00 +42: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by load with no later requests
+00:00 +43: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by stop with no later requests
+00:01 +44: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: managed backoff is cancelled by dispose with no later requests
+00:01 +45: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: events share the public revision domain after subtitle publications
+00:01 +46: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: unsupported newer content replacement still cancels previous pending catalog
+00:01 +47: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: unsupported newer encoding replacement still cancels previous pending catalog
+00:01 +48: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: session replacement clears catalog and offset
+00:01 +49: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: native subtitle owner and protected output cannot silently use text overlay
+00:01 +50: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by replace without late publication
+00:01 +51: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by load without late publication
+00:01 +52: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by stop without late publication
+00:01 +53: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending HTTP catalog is cancelled by dispose without late publication
+00:01 +54: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: selection and offset during pending replacement are preserved at atomic commit
+00:01 +55: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: aggregate bytes and cue counts reject whole catalog
+00:01 +56: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: unsupported content and encoding do not replace current catalog
+00:01 +57: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: paused and buffering use media position without wall-clock advance
+00:01 +58: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: pending seek and post-ACK snapshot cannot expose pre-seek cues
+00:01 +59: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/text_subtitle_runtime_test.dart: actual overlay follows position, offset, off and seek
+00:01 +60: All tests passed!

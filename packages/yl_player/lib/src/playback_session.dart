@@ -74,11 +74,15 @@ final class YlPlaybackSession {
   /// Selected windows share the 4 MiB/10,000 cue catalog budget with external
   /// subtitles. Cross-Period identity preserves selection, and Period/PTO
   /// mapping clips cues to their half-open programme windows.
-  /// Other explicit containers reject without I/O.
+  /// Protected media and other explicit containers reject without I/O.
+  /// Protected view overlay support applies only to separate clear resources.
   Future<void> discoverEmbeddedSubtitles() => _command(() {
     final runtime = _player._textSubtitles;
     final source = _player._subtitleSource;
-    if (runtime == null || source == null) {
+    if (runtime == null ||
+        source == null ||
+        _player._subtitleProtectedSource ||
+        _player.protectedVideoSurface != null) {
       throw _exception(YlFailureCodes.policyUnsupported);
     }
     return _textSubtitleCommand(() => runtime.discover(source));
@@ -86,6 +90,9 @@ final class YlPlaybackSession {
 
   /// Atomically replaces external subtitles; [] clears external entries.
   /// Backends without explicit support reject rather than ignoring resources.
+  /// Clear external resources may overlay a protected native view only when its
+  /// descriptor explicitly supports subtitle overlays. Resource loading keeps
+  /// its own managed network policy; it never reads protected video pixels.
   Future<void> replaceExternalSubtitles(List<YlExternalSubtitle> subtitles) =>
       _command(() {
         validateYlExternalSubtitles(subtitles);

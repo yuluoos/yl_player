@@ -1,0 +1,44 @@
+{
+  "baseline": "412c4501c6bc0fa432a7e2aaffc5902f3c076dea",
+  "controlled_dart": {
+    "focused": 60,
+    "four_package_suite": 1994,
+    "failures": 0,
+    "analyzer_final": "no issues"
+  },
+  "native_clear_probes": {
+    "macos": {
+      "passed": 1,
+      "note": "foreground command returned 1; native readiness and separate subtitle paint assertions passed"
+    },
+    "ios": {
+      "passed": 1,
+      "simulator": "D121C2CF-D823-48F7-816E-092BCB8A780C",
+      "os": "27.0"
+    },
+    "android": {
+      "passed": 1,
+      "device": "emulator-5554",
+      "api": 36,
+      "avd": "TV_64bit_1_5G_32G",
+      "final_start": "cold boot; no snapshot load/save; 2048 MiB; no audio",
+      "prior_attempts": "first did not complete exit79; diagnostic retry interrupted; subsequent debug connection and adb stalls; logs retained"
+    }
+  },
+  "limitations": [
+    "No licensed DRM or physical devices; not secure decode, HDCP, physical stacking, external display or HDR luminance proof.",
+    "Probe reads only subtitle layer.",
+    "Final probe adds stage logging/readback deadlines after successful Apple runs; final integrated run will use this exact source."
+  ],
+  "sources": {
+    "packages/yl_player/example/integration_test/protected_view_probe_test.dart": "f3daeecb6a0c4fcde68a709b91b841019b9a2e2867061803a989a49e5c260660",
+    "packages/yl_player/lib/src/playback_session.dart": "075a6e7114eadb33b33df98db496d0dd6057a9f377b15081c1e32f4bab8189fa",
+    "packages/yl_player/lib/src/player_controller.dart": "b98fb904e26f94dfddcf3dc8af36b69bc8cd67ad05976c23c46384c4f630038f",
+    "packages/yl_player/lib/src/player_view.dart": "cce8d6a54eddccd7494bf272a240dad99d561446016b664c5096549e4ee87f38",
+    "packages/yl_player_android/lib/src/android_drm.dart": "f2e877da9325c2f88b2f3c77ccbb51e3bfc9f318fcd55198ea2771cac4650e4c",
+    "packages/yl_player_apple/lib/src/apple_drm.dart": "1b49feadfa7f83340bda4b88c33dfdde09fd36cce04fbbc961cbf585e9a532e3",
+    "packages/yl_player_platform_interface/lib/src/platform/native_video_surface.dart": "f8a3bd5daf1ae1c3dd73c78ce9f343f5755e4e23885ffc11c0e07d7e43bd2911",
+    "packages/yl_player/test/protected_subtitle_test.dart": "d6408e60397833ba5a186b064ef8018cfc7015dab6d0acab7cb7672b8b1e9a0a",
+    "tool/protected_output/README.md": "b369f1d361f58499fc5356e99adffdec1b483d62db42ae8c6a31f0ba35fbc376"
+  }
+}

@@ -49,6 +49,8 @@ final class AppleDrmChannel implements AppleDrmFlutterApi {
     }
     validateYlPlaybackSessionId(YlPlaybackSessionId(wire.sessionId));
     return YlProtectedVideoSurface(
+      // Bundled native views compose below a separate Flutter sibling.
+      supportsSubtitleOverlay: true,
       playerId: wire.playerId,
       surfaceId: wire.surfaceId,
       sessionId: wire.sessionId,

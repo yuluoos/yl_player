@@ -19,6 +19,9 @@ final class YlPlayerController implements Listenable {
   /// Matroska/WebM/MP4 sources, plus clear static DASH WebVTT/TTML tracks.
   /// DASH loads only the selected current/next subtitle segments on the media
   /// clock; later subtitle failures emit command-scoped events and video continues.
+  /// External clear subtitles can overlay explicitly negotiated protected
+  /// native views; protected embedded discovery remains unsupported. Subtitle
+  /// image failures emit command-scoped events without terminating video.
   /// PGS/VobSub embedded tracks require Matroska.
   /// Supported Matroska tracks include bounded zlib/header stripping of blocks,
   /// CodecPrivate or both, using up to four ordered stages per track.
@@ -106,16 +109,23 @@ final class YlPlayerController implements Listenable {
     }
   }
 
+  /// Current native protected output identity; no Flutter texture is exposed.
   YlProtectedVideoSurface? get protectedVideoSurface =>
       _backend is YlPlatformProtectedVideoSurfaceProvider
       ? (_backend as YlPlatformProtectedVideoSurfaceProvider)
             .protectedVideoSurface
       : null;
+
+  /// Attaches the exact committed native surface to a platform view.
+  @internal
   Future<void> attachProtectedView(
     YlProtectedVideoSurface surface,
     int viewId,
   ) => (_backend as YlPlatformProtectedVideoSurfaceProvider)
       .attachProtectedView(surface, viewId);
+
+  /// Detaches only this view claim; ownership stays with the native player.
+  @internal
   Future<void> detachProtectedView(
     YlProtectedVideoSurface surface,
     int viewId,
@@ -179,8 +189,9 @@ final class YlPlayerController implements Listenable {
     if (_disposed ||
         _subtitleSeeking ||
         _subtitleAwaitingPosition ||
-        _subtitleProtectedSource ||
-        protectedVideoSurface != null ||
+        !_subtitleOverlayAllowed ||
+        ((_subtitleProtectedSource || protectedVideoSurface != null) &&
+            state.videoGeometry == null) ||
         !isCurrentFramePresented ||
         _stoppedSession == state.sessionId ||
         ![
@@ -194,8 +205,18 @@ final class YlPlayerController implements Listenable {
     return _textSubtitles?.cuesAt(state.timeline.position) ?? const [];
   }
 
+  bool get _subtitleOverlayAllowed {
+    final surface = protectedVideoSurface;
+    if (!_subtitleProtectedSource && surface == null) return true;
+    return surface != null &&
+        surface.supportsSubtitleOverlay &&
+        surface.sessionId == state.sessionId?.value &&
+        !kIsWeb &&
+        surface.platform == defaultTargetPlatform;
+  }
+
   void _checkTextSubtitleAdmission() {
-    if (_subtitleProtectedSource || protectedVideoSurface != null) {
+    if (!_subtitleOverlayAllowed) {
       throw _exception(YlFailureCodes.policyUnsupported);
     }
   }
@@ -204,8 +225,7 @@ final class YlPlayerController implements Listenable {
       !_disposed &&
       !_subtitleSeeking &&
       !_subtitleAwaitingPosition &&
-      !_subtitleProtectedSource &&
-      protectedVideoSurface == null &&
+      _subtitleOverlayAllowed &&
       state.sessionId != null &&
       _stoppedSession != state.sessionId &&
       [

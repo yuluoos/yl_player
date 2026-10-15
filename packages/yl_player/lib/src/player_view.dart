@@ -73,10 +73,23 @@ final class YlPlayerView extends StatelessWidget {
           }
           return ColoredBox(
             color: const Color(0xFF000000),
-            child: _ProtectedVideoView(
-              key: ValueKey((controller, protected)),
-              controller: controller,
-              surface: protected,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                _ProtectedVideoView(
+                  key: ValueKey((controller, protected)),
+                  controller: controller,
+                  surface: protected,
+                ),
+                // Separate composition only: never read or flatten secure video.
+                if (controller.textSubtitleCues.isNotEmpty)
+                  TextSubtitleOverlay(
+                    cues: controller.textSubtitleCues,
+                    geometry: controller.state.videoGeometry,
+                    fit: fit,
+                    alignment: alignment,
+                  ),
+              ],
             ),
           );
         }

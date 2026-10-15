@@ -29,7 +29,15 @@ releases the decoder/player, never releases the holder's Surface directly.
 The test observes two identities, first-frame association, clock progress,
 portrait-shaped resize, replacement isolation, explicit dispose and unmount/reset.
 It does not prove DRM decryption, secure decoding, screenshot resistance, HDCP,
-physical visibility, precise audio/video sync, subtitle overlay, rotation/crop
+physical visibility, precise audio/video sync, physical subtitle/video stacking, full rotation/crop
 correctness, memory-leak absence or minimum-OS support. See the DRM contract and
 P06 execution report for remaining gates. `pixelReadback=false` and
 `protectionVerified=false` are declared probe scope, not security telemetry.
+
+
+P02 adds the real Dart subtitle renderer as an independent sibling and verifies
+its painted alpha/color area stays inside the contained video aperture at landscape
+and portrait-shaped sizes, across two players, off/on and native replacement.
+Only the subtitle RepaintBoundary is read; no native video pixels are captured.
+This verifies independent paint and geometry, not physical protected composition.
+The image readback has a five-second deadline and stage markers identify hangs.
