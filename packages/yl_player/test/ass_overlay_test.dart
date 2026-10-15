@@ -37,8 +37,9 @@ Future<(ui.Image, ByteData)> render(
   List<TextSubtitleCue> cues, {
   YlVideoGeometry g = geometry,
   BoxFit fit = BoxFit.contain,
+  GlobalKey? repaintKey,
 }) async {
-  final key = GlobalKey();
+  final key = repaintKey ?? GlobalKey();
   await tester.pumpWidget(
     Directionality(
       textDirection: TextDirection.ltr,
@@ -104,6 +105,46 @@ void boxNear(Rect actual, Rect expected, {double tolerance = 1}) {
 }
 
 void main() {
+  testWidgets(
+    'smart wrap charges failed single-grapheme probes to its budget',
+    (tester) async {
+      var shapes = 0;
+      debugAssWrapMeasurement = () => shapes++;
+      addTearDown(() => debugAssWrapMeasurement = null);
+      // 512 style runs, each containing an indivisible Ahem glyph. A two-pixel
+      // script aperture forces one glyph per line; every larger glyph offers an
+      // impossible downward move. Failed probes must still consume work budget.
+      final text = List.filled(256, r'{\fs40}A{\fs20}A').join();
+      final script = assFixture(
+        wrap: '3',
+        text: text,
+      ).replaceFirst('Default,,0,0,0,,', 'Default,,149,149,0,,');
+      final cues = at(script, 0);
+      final key = GlobalKey();
+      final (first, bytes) = await render(tester, cues, repaintKey: key);
+      addTearDown(first.dispose);
+      expect(
+        shapes,
+        greaterThan(1),
+        reason: 'The failed probe path must execute.',
+      );
+      expect(
+        shapes,
+        lessThanOrEqualTo(129),
+        reason: 'One initial paragraph plus at most 128 local measurements.',
+      );
+      final measured = shapes;
+      final (second, again) = await render(tester, cues, repaintKey: key);
+      addTearDown(second.dispose);
+      expect(
+        shapes,
+        measured,
+        reason: 'Active-cue rebuild must reuse prepared runs.',
+      );
+      expect(again.buffer.asUint8List(), bytes.buffer.asUint8List());
+    },
+  );
+
   testWidgets(
     'font availability change repaints paused ASS and detaches on unmount',
     (tester) async {

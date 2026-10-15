@@ -11,6 +11,7 @@ import 'subtitles/text_subtitle_overlay.dart';
 
 /// Displays current-session video using the negotiated presentation surface.
 final class YlPlayerView extends StatelessWidget {
+  /// Binds video and opted-in subtitles to the controller’s current session.
   const YlPlayerView({
     required this.controller,
     this.placeholder,
@@ -21,10 +22,19 @@ final class YlPlayerView extends StatelessWidget {
     super.key,
   });
 
+  /// Player whose current video surface and subtitle projection are displayed.
   final YlPlayerController controller;
+
+  /// Content shown while ordinary video has no current frame or geometry.
   final Widget? placeholder;
+
+  /// Video aperture fitting; protected surfaces require [BoxFit.contain].
   final BoxFit fit;
+
+  /// Video aperture placement; protected surfaces require [Alignment.center].
   final AlignmentGeometry alignment;
+
+  /// Ordinary-video background. Protected output always uses opaque black.
   final Color backgroundColor;
 
   /// Filtering for the Flutter texture fallback. Native surfaces render using

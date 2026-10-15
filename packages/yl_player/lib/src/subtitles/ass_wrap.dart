@@ -1,5 +1,10 @@
 part of 'ass_overlay.dart';
 
+/// Debug-only observer of smart-wrap paragraph creation for budget tests.
+/// Not invoked in release builds or for ordinary painting of prepared runs.
+@visibleForTesting
+void Function()? debugAssWrapMeasurement;
+
 /// Smart wrapping uses the engine's Unicode line boundaries and styled glyph
 /// measurements, then balances within the original line count. Ten width probes
 /// plus at most 128 local measurements bound expensive shaping per active cue.
@@ -10,16 +15,23 @@ List<AssTextRun> _wrapAss(AssCueLayout layout) {
   if (layout.wrap == 1 || layout.wrap == 2) return layout.runs;
   final text = layout.runs.map((r) => r.text).join();
   final maxWidth = layout.width - layout.left - layout.right;
-  TextPainter shape(List<AssTextRun> runs, double width) => TextPainter(
-    text: TextSpan(
-      children: [
-        for (final r in runs)
-          TextSpan(text: r.text, style: _style(r.style, false, false)),
-      ],
-    ),
-    textDirection: TextDirection.ltr,
-    textScaler: TextScaler.noScaling,
-  )..layout(maxWidth: width);
+  TextPainter shape(List<AssTextRun> runs, double width) {
+    assert(() {
+      debugAssWrapMeasurement?.call();
+      return true;
+    }());
+    return TextPainter(
+      text: TextSpan(
+        children: [
+          for (final r in runs)
+            TextSpan(text: r.text, style: _style(r.style, false, false)),
+        ],
+      ),
+      textDirection: TextDirection.ltr,
+      textScaler: TextScaler.noScaling,
+    )..layout(maxWidth: width);
+  }
+
   final painter = shape(layout.runs, maxWidth);
   try {
     final original = painter.computeLineMetrics();
@@ -81,6 +93,9 @@ List<AssTextRun> _wrapAss(AssCueLayout layout) {
           // Ask the line breaker rather than the word selector: NBSP and
           // joined emoji are not necessarily one Unicode word, but must stay
           // together. Narrowing this line finds its last legal soft boundary.
+          // Reserve all three possible measurements before probing: even an
+          // indivisible line must consume budget when the probe cannot move it.
+          budget -= 3;
           final probe = shape(
             _assSlice(layout.runs, upper.start, upper.end),
             math.max(.01, upper.width - .1),
@@ -102,7 +117,6 @@ List<AssTextRun> _wrapAss(AssCueLayout layout) {
             end--;
           }
           if (end == upper.start) break;
-          budget -= 3;
           final top = width(upper.start, end), bottom = width(split, lower.end);
           if (bottom > maxWidth + .01 ||
               (top - bottom).abs() > (upper.width - lower.width).abs() + .01) {

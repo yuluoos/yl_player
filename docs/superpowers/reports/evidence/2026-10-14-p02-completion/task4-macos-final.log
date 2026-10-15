@@ -1,0 +1,53 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/subtitle_playback_test.dart
+Building macOS application...                                   
+✓ Built build/macos/Build/Products/Debug/yl_player_example.app
+Failed to foreground app; open returned 1
+00:00 +0: clear native prototype isolates players, resize, replacement and release
+P02 probe: fixture
+P02 probe: mount
+P02 probe: wait frame
+P02 probe: subtitle paint
+P02 probe: first paint done
+00:01 +1: P02 actual srt: managed load, pixels, clock and lifecycle
+YL_P02_SUBTITLE {"format":"srt","platform":"macos","os":"Version 27.0.1 (Build 26A434)","mediaSha256":"c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47","subtitleSha256":"f9bc615a17c45fab790f764ffe1d152f2d3a589b8169ff345afa935b7c941cc3","companionSha256":null,"changedPixels":14508,"bounds":[341.5,471.5,458.5,502.5],"clockObservations":[{"speed":1.0,"observedMediaMs":1000,"lateMs":0},{"speed":2.0,"observedMediaMs":1000,"lateMs":0}],"clockEvidence":"post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync","pixelEvidence":"owned host window / simulator capture"}
+00:06 +2: P02 actual webvtt: managed load, pixels, clock and lifecycle
+YL_P02_SUBTITLE {"format":"webvtt","platform":"macos","os":"Version 27.0.1 (Build 26A434)","mediaSha256":"c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47","subtitleSha256":"88e2b99a425c16cd9da2329ffaafa16f34c03c403a3fbe66a4988e62c3c49925","companionSha256":null,"changedPixels":14508,"bounds":[341.5,471.5,458.5,502.5],"clockObservations":[{"speed":1.0,"observedMediaMs":1000,"lateMs":0},{"speed":2.0,"observedMediaMs":1000,"lateMs":0}],"clockEvidence":"post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync","pixelEvidence":"owned host window / simulator capture"}
+00:11 +3: P02 actual ttml: managed load, pixels, clock and lifecycle
+YL_P02_SUBTITLE {"format":"ttml","platform":"macos","os":"Version 27.0.1 (Build 26A434)","mediaSha256":"c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47","subtitleSha256":"57b84df0c72bb7184c5441df5c75fd9f6d39f053bc81fdec393cbd8434d67087","companionSha256":null,"changedPixels":4418,"bounds":[81.5,473.5,220.0,496.0],"clockObservations":[{"speed":1.0,"observedMediaMs":1000,"lateMs":0},{"speed":2.0,"observedMediaMs":1000,"lateMs":0}],"clockEvidence":"post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync","pixelEvidence":"owned host window / simulator capture"}
+00:15 +4: P02 actual ass: managed load, pixels, clock and lifecycle
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: <800>
+  Actual: <1600>
+
+When the exception was thrown, this was the stack:
+#4      _difference (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/subtitle_playback_test.dart:294:3)
+#5      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/subtitle_playback_test.dart:221:9)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/subtitle_playback_test.dart line 294
+The test description was:
+  P02 actual ass: managed load, pixels, clock and lifecycle
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:18 +4 -1: P02 actual ass: managed load, pixels, clock and lifecycle [E]
+  Test failed. See exception logs above.
+  The test description was: P02 actual ass: managed load, pixels, clock and lifecycle
+  
+00:18 +4 -1: P02 actual ssa: managed load, pixels, clock and lifecycle
+YL_P02_SUBTITLE {"format":"ssa","platform":"macos","os":"Version 27.0.1 (Build 26A434)","mediaSha256":"c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47","subtitleSha256":"39accef71b8b48328194919bf8d1197efd2d7685c8e1409111dea961ecf1957a","companionSha256":null,"changedPixels":33403,"bounds":[271.5,461.0,528.0,503.5],"clockObservations":[{"speed":1.0,"observedMediaMs":1000,"lateMs":0},{"speed":2.0,"observedMediaMs":1000,"lateMs":0}],"clockEvidence":"post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync","pixelEvidence":"owned host window / simulator capture"}
+00:23 +5 -1: P02 actual pgs: managed load, pixels, clock and lifecycle
+YL_P02_SUBTITLE {"format":"pgs","platform":"macos","os":"Version 27.0.1 (Build 26A434)","mediaSha256":"c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47","subtitleSha256":"c78d66e22c6f48581f26eccbc9896e2fd5c83809662d926f6e587d8bbab6d4de","companionSha256":null,"changedPixels":1152,"bounds":[160.0,210.0,192.0,219.0],"clockObservations":[{"speed":1.0,"observedMediaMs":1000,"lateMs":0},{"speed":2.0,"observedMediaMs":1000,"lateMs":0}],"clockEvidence":"post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync","pixelEvidence":"owned host window / simulator capture"}
+00:27 +6 -1: P02 actual vobsub: managed load, pixels, clock and lifecycle
+YL_P02_SUBTITLE {"format":"vobsub","platform":"macos","os":"Version 27.0.1 (Build 26A434)","mediaSha256":"c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47","subtitleSha256":"b2c58b803b75e411b68cf96a6e4f7d61edb170dfb64accfa832e1779b44e5c7e","companionSha256":"822936e0bc11465cded831ef6cda3e468be6f0a3308599870e151159253d16ab","changedPixels":1728,"bounds":[160.0,210.0,192.0,223.5],"clockObservations":[{"speed":1.0,"observedMediaMs":1000,"lateMs":0},{"speed":2.0,"observedMediaMs":1000,"lateMs":0}],"clockEvidence":"post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync","pixelEvidence":"owned host window / simulator capture"}
+00:31 +7 -1: (tearDownAll)
+00:31 +7 -1: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/subtitle_playback_test.dart: P02 actual ass: managed load, pixels, clock and lifecycle

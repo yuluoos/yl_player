@@ -1,0 +1,63 @@
+Resolving dependencies in `/Users/yy2021_8689/Desktop/Flutter/yl_player`...
+Downloading packages...
+  _fe_analyzer_shared 100.0.0 (109.0.0 available)
+  analyzer 13.0.0 (14.5.0 available)
+  built_collection 5.1.1 (5.1.2 available)
+  clock 1.1.2 (1.1.3 available)
+  code_assets 1.2.1 (2.1.0 available)
+  cupertino_icons 1.0.9 (2.0.0 available)
+  dart_style 3.1.9 (3.1.13 available)
+  hooks 2.0.2 (2.2.0 available)
+  matcher 0.12.19 (0.12.20 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.0 (1.19.0 available)
+  native_toolchain_c 0.19.2 (0.19.5 available)
+  package_config 2.2.0 (3.0.0 available)
+  petitparser 7.0.2 (7.1.0 available)
+  pigeon 28.0.0 (29.0.8 available)
+  platform 3.1.6 (3.2.0 available)
+  pointycastle 3.9.1 (4.0.0 available)
+  record_use 0.6.0 (1.1.1 available)
+  stack_trace 1.12.1 (1.12.2 available)
+  test_api 0.7.11 (0.7.15 available)
+  vector_math 2.2.0 (2.4.3 available)
+  webdriver 3.1.0 (3.2.0 available)
+  xml 7.0.1 (7.1.0 available)
+Got dependencies in `/Users/yy2021_8689/Desktop/Flutter/yl_player`!
+23 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+All plugins found for macos are Swift Packages, but your project still has CocoaPods integration. Your project uses a non-standard Podfile and will need to be migrated to Swift Package Manager manually. Some steps you may need to complete include:
+  * In the macos/ directory run "pod deintegrate"
+  * Transition any Pod dependencies to Swift Package equivalents. See https://developer.apple.com/documentation/xcode/adding-package-dependencies-to-your-app
+  * Transition any custom logic
+  * Remove the include to "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig" in your macos/Flutter/Flutter-Debug.xcconfig
+  * Remove the include to "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig" in your macos/Flutter/Flutter-Release.xcconfig
+
+Removing CocoaPods integration will improve the project's build time.
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/subtitle_playback_test.dart
+Running Gradle task 'assembleDebug'...                             12.4s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...        2,123ms
+00:00 +0: clear native prototype isolates players, resize, replacement and release
+P02 probe: fixture
+P02 probe: mount
+P02 probe: wait frame
+P02 probe: subtitle paint
+P02 probe: first paint done
+00:02 +1: P02 actual srt: managed load, pixels, clock and lifecycle
+YL_P02_SUBTITLE {"format":"srt","platform":"android","os":"BT2A.260319.001 dev-keys","mediaSha256":"c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47","subtitleSha256":"f9bc615a17c45fab790f764ffe1d152f2d3a589b8169ff345afa935b7c941cc3","companionSha256":null,"changedPixels":4464,"bounds":[419.0,478.0,543.0,514.0],"clockObservations":[{"speed":1.0,"observedMediaMs":1112,"lateMs":112},{"speed":2.0,"observedMediaMs":1522,"lateMs":522}],"clockEvidence":"post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync","pixelEvidence":"Flutter texture composition"}
+00:06 +2: P02 actual webvtt: managed load, pixels, clock and lifecycle
+YL_P02_SUBTITLE {"format":"webvtt","platform":"android","os":"BT2A.260319.001 dev-keys","mediaSha256":"c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47","subtitleSha256":"88e2b99a425c16cd9da2329ffaafa16f34c03c403a3fbe66a4988e62c3c49925","companionSha256":null,"changedPixels":4464,"bounds":[419.0,478.0,543.0,514.0],"clockObservations":[{"speed":1.0,"observedMediaMs":1099,"lateMs":99},{"speed":2.0,"observedMediaMs":1064,"lateMs":64}],"clockEvidence":"post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync","pixelEvidence":"Flutter texture composition"}
+00:09 +3: P02 actual ttml: managed load, pixels, clock and lifecycle
+YL_P02_SUBTITLE {"format":"ttml","platform":"android","os":"BT2A.260319.001 dev-keys","mediaSha256":"c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47","subtitleSha256":"57b84df0c72bb7184c5441df5c75fd9f6d39f053bc81fdec393cbd8434d67087","companionSha256":null,"changedPixels":1497,"bounds":[98.0,479.0,266.0,505.0],"clockObservations":[{"speed":1.0,"observedMediaMs":1146,"lateMs":146},{"speed":2.0,"observedMediaMs":1130,"lateMs":130}],"clockEvidence":"post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync","pixelEvidence":"Flutter texture composition"}
+00:13 +4: P02 actual ass: managed load, pixels, clock and lifecycle
+YL_P02_SUBTITLE {"format":"ass","platform":"android","os":"BT2A.260319.001 dev-keys","mediaSha256":"c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47","subtitleSha256":"462ad3e98372ad2cfa9cd500e9bf5288eba31b81bf5fc815f0303e8601df3655","companionSha256":null,"changedPixels":12261,"bounds":[335.0,461.0,627.0,512.0],"clockObservations":[{"speed":1.0,"observedMediaMs":1248,"lateMs":248},{"speed":2.0,"observedMediaMs":1082,"lateMs":82}],"clockEvidence":"post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync","pixelEvidence":"Flutter texture composition"}
+00:16 +5: P02 actual ssa: managed load, pixels, clock and lifecycle
+YL_P02_SUBTITLE {"format":"ssa","platform":"android","os":"BT2A.260319.001 dev-keys","mediaSha256":"c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47","subtitleSha256":"39accef71b8b48328194919bf8d1197efd2d7685c8e1409111dea961ecf1957a","companionSha256":null,"changedPixels":12261,"bounds":[335.0,461.0,627.0,512.0],"clockObservations":[{"speed":1.0,"observedMediaMs":1241,"lateMs":241},{"speed":2.0,"observedMediaMs":1110,"lateMs":110}],"clockEvidence":"post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync","pixelEvidence":"Flutter texture composition"}
+00:19 +6: P02 actual pgs: managed load, pixels, clock and lifecycle
+YL_P02_SUBTITLE {"format":"pgs","platform":"android","os":"BT2A.260319.001 dev-keys","mediaSha256":"c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47","subtitleSha256":"c78d66e22c6f48581f26eccbc9896e2fd5c83809662d926f6e587d8bbab6d4de","companionSha256":null,"changedPixels":429,"bounds":[192.0,162.0,231.0,173.0],"clockObservations":[{"speed":1.0,"observedMediaMs":1232,"lateMs":232},{"speed":2.0,"observedMediaMs":1066,"lateMs":66}],"clockEvidence":"post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync","pixelEvidence":"Flutter texture composition"}
+00:22 +7: P02 actual vobsub: managed load, pixels, clock and lifecycle
+YL_P02_SUBTITLE {"format":"vobsub","platform":"android","os":"BT2A.260319.001 dev-keys","mediaSha256":"c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47","subtitleSha256":"b2c58b803b75e411b68cf96a6e4f7d61edb170dfb64accfa832e1779b44e5c7e","companionSha256":"822936e0bc11465cded831ef6cda3e468be6f0a3308599870e151159253d16ab","changedPixels":663,"bounds":[192.0,162.0,231.0,179.0],"clockObservations":[{"speed":1.0,"observedMediaMs":1034,"lateMs":34},{"speed":2.0,"observedMediaMs":1060,"lateMs":60}],"clockEvidence":"post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync","pixelEvidence":"Flutter texture composition"}
+00:25 +8: (tearDownAll)
+00:26 +8: All tests passed!
+Android test log: /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-android-test.4I2ogo

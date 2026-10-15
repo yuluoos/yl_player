@@ -22,6 +22,9 @@ release partial/late images. PGS and VobSub share this path.
 AVPlayerLayer and explicit hybrid Android secure SurfaceView adapters opt in; old
 or unknown adapters remain closed. The descriptor identity, platform, current
 session first-frame milestone and authoritative video geometry gate rendering.
+The first-frame milestone is session-scoped: on native view remount, current
+clear subtitles may appear on the native black cover until video readiness.
+The native cover still independently authorizes protected video.
 Protected view layout remains contain/center. A separate Flutter sibling paints
 clear subtitle resources; video is never read back, flattened into a Flutter
 texture, transformed through opacity, or decrypted by the subtitle runtime.
@@ -50,6 +53,7 @@ greedy; mode 2 disables soft wrapping and honors both soft and hard ASS escapes.
 Work is bounded by ten whole-cue width probes and at most 128 local shaping
 operations. When this optimization budget is exhausted, valid existing line
 breaks remain; this is approximate smart balancing, not libass pixel equivalence.
+Budget is reserved before each local probe, including failed indivisible-line probes.
 All temporary TextPainters are disposed. Prepared styled runs are retained only
 for active cues (at most 64); motion/fade frames reuse them. System font-change
 notifications invalidate cached breaks and repaint even while paused; unmount

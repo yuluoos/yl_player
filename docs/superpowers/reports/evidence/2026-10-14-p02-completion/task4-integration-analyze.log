@@ -1,0 +1,8 @@
+Analyzing subtitle_playback_test.dart...                        
+
+   info • The imported package 'crypto' isn't a dependency of the importing package. Try adding a dependency for 'crypto' in the 'pubspec.yaml' file • packages/yl_player/example/integration_test/subtitle_playback_test.dart:5:8 • depend_on_referenced_packages
+  error • The named parameter 'headers' isn't defined. Try correcting the name to an existing named parameter's name, or defining a named parameter with the name 'headers' • packages/yl_player/example/integration_test/subtitle_playback_test.dart:83:9 • undefined_named_parameter
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • packages/yl_player/example/integration_test/subtitle_playback_test.dart:132:13 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • packages/yl_player/example/integration_test/subtitle_playback_test.dart:303:9 • curly_braces_in_flow_control_structures
+
+4 issues found. (ran in 1.5s)

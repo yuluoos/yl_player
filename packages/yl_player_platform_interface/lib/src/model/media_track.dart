@@ -23,6 +23,7 @@ final class YlMediaTrack {
   /// cross-engine or cross-session persistence contract.
   final String id;
 
+  /// Whether this entry belongs to the audio or video catalog.
   final YlTrackKind kind;
 
   /// Whether the backend currently reports this track as selected.
@@ -34,12 +35,16 @@ final class YlMediaTrack {
   /// Optional language metadata, not a unique track identity.
   final String? language;
 
+  /// Optional backend codec description; not a selection key.
   final String? codec;
 
+  /// Optional declared bitrate in bits per second.
   final int? bitrate;
 
+  /// Optional encoded video width in pixels.
   final int? width;
 
+  /// Optional encoded video height in pixels.
   final int? height;
 
   /// Omitted fields are preserved; explicit null clears nullable fields.

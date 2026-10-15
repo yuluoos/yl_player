@@ -644,7 +644,7 @@ is unchanged; no Apple AV1 software budget is measured or admitted. See the
 ## Subtitles (Dart opt-in)
 
 `YlPlayerController.create(enableTextSubtitles: true)` enables a bounded external
-SRT/WebVTT/TTML/ASS/SSA text and PGS/VobSub bitmap runtime with an ordinary-video `YlPlayerView` overlay. This is Dart-owned;
+SRT/WebVTT/TTML/ASS/SSA text and PGS/VobSub bitmap runtime with a `YlPlayerView` overlay on ordinary video and explicitly negotiated protected native surfaces. This is Dart-owned;
 current native adapters still do not advertise a native subtitle SPI.
 
 | Scope | Implementation / evidence |
@@ -654,7 +654,7 @@ current native adapters still do not advertise a native subtitle SPI.
 | Selection/off/offset, replacement and seek | Public session API; atomic catalog and media-position-driven overlay tests |
 | Strict managed HTTP policy | Per-hop header/read deadlines, bounded retries/Retry-After and shared redirect budget; loopback/TLS cancellation tests |
 | TTML1 text subset | Namespace-aware media timing, referenced basic styles and percentage regions; file/managed HTTP, lifecycle, region rectangles and clipped color-pixel tests |
-| ASS/SSA text subset | Explicit script resolution/WrapStyle 1 or 2, styles/outline/shadow/position/layers/move/fad; real file/managed HTTP and Ahem fixed-time pixel tests; no libass/font-metric equivalence |
+| ASS/SSA text subset | Explicit script resolution; WrapStyle/q 0–3 (default 0), bounded approximate smart wrapping with active-cue/font-change invalidation; styles/outline/shadow/position/layers/move/fad; real file/managed HTTP and Ahem fixed-time pixel tests; no libass/font-metric equivalence |
 | PGS external SUP subset | Binary framing/RLE, palettes/clear, cropped/windowed objects; file/managed HTTP, manual pixel grids, late-image disposal and bounded asynchronous decode tests |
 | VobSub external DVD subset | Explicit idx/sub pair, language/substream matching, PS/SPU fragments, two-field RLE, timed palette/alpha/clear; real paired I/O and owned full-pixel grids |
 | Local Matroska embedded UTF8/ASS/SSA/WebVTT | Explicit committed-source discovery, TrackUID selection and shared overlay; owned EBML plus independent muxer/ffprobe and Flutter lifecycle tests |
@@ -669,11 +669,16 @@ current native adapters still do not advertise a native subtitle SPI.
 | Matroska subtitle block compression | Single block-only zlib/header stripping before supported text/PGS/VobSub decode; strict framing, bounded restoration and persisted stored-byte budgets; Python zlib golden streams, file/managed HTTP and widget tests; no native/device claim |
 | Matroska subtitle CodecPrivate compression | Single zlib/header stripping for Private or Block+Private scope, before UTF8 and existing ASS/SSA/WebVTT/VobSub header parsing; stored/restored header limits and retained empty-track/catalog budgets; owned Python compression goldens, file/managed HTTP and widget tests |
 | Other embedded containers/codecs, advanced TTML/ASS/SSA/PGS/VobSub and advanced WebVTT | Not implemented by this runtime |
-| Protected output, HDR brightness and physical-device subtitle sync | Not accepted; protected surfaces reject subtitle commands |
+| Asynchronous bitmap resource failure | Sanitized `subtitle.resource_unavailable`, failed active cue suppressed, video continues; stale callbacks and partial images released |
+| Negotiated protected external subtitles | `supportsSubtitleOverlay` defaults false; bundled native adapters allow a separate clear subtitle sibling with matching identity/platform, session first frame and geometry. Protected embedded discovery rejects before I/O. Clear native probes only; actual DRM composition not accepted |
+| HDR brightness and physical-device subtitle sync | Await physical HDR output / licensed DRM / suitable measurement devices; controlled clock observations do not establish luminance or physical A/V sync |
 
-The ordinary Flutter path is available to Android/iOS/macOS consumers, but this
-slice's acceptance is local Dart/Flutter testing, not a native-device playback
-matrix. Synchronization follows the configured position update cadence. See the
+The ordinary Flutter path is available to Android/iOS/macOS consumers. The P02
+continuation adds real-player seven-format composition and lifecycle tests on
+Android emulator, iOS Simulator and macOS; per-platform actual results and
+limitations are in the report. Embedded/container combinations retain their
+individual evidence rows above. Synchronization follows the configured position
+update cadence; this is not physical screen/speaker synchronization acceptance. See the
 [P02 report](superpowers/reports/2026-09-26-remaining-02-tracks-subtitles.md) and
 [runtime contract](superpowers/specs/2026-10-11-subtitle-runtime.md).
 

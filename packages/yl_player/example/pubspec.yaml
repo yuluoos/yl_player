@@ -14,6 +14,7 @@ dependencies:
   yl_player: ^0.2.0-dev.2
 
 dev_dependencies:
+  crypto: ^3.0.7
   yl_player_platform_interface: ^0.2.0-dev.2
   yl_player_android: ^0.2.0-dev.2
   yl_player_apple: ^0.2.0-dev.2

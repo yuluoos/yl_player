@@ -1,0 +1,856 @@
+{
+  "baseline": "c3b8b902341638ffd8c96c3c2744c52d1c60471b",
+  "priorEngineeringCommits": [
+    "412c4501c6bc0fa432a7e2aaffc5902f3c076dea",
+    "e3c40e1cf3e4cb74744140ee15431b2fb30523b1",
+    "b55f1de0aa4a4cec4df2fcb8f0561efe808f0a81"
+  ],
+  "scope": "P02 remaining engineering and controlled verification; no licensed DRM or physical device inputs; local commit only; no long-play/weak ABR/P05 changes",
+  "results": {
+    "player": {
+      "log": "final-player-suite.log",
+      "passed": 1673,
+      "failed": 0,
+      "skipped": 0
+    },
+    "interface": {
+      "log": "task4-yl_player_platform_interface.log",
+      "passed": 135,
+      "failed": 0,
+      "skipped": 0
+    },
+    "apple_adapter": {
+      "log": "task4-yl_player_apple-suite.log",
+      "passed": 113,
+      "failed": 0,
+      "skipped": 0
+    },
+    "android_adapter": {
+      "log": "task4-yl_player_android-suite.log",
+      "passed": 82,
+      "failed": 0,
+      "skipped": 0
+    },
+    "ass_focused": {
+      "log": "final-budget-green-corrected.log",
+      "passed": 74,
+      "failed": 0,
+      "skipped": 0
+    },
+    "android_integration": {
+      "log": "final-android-integration.log",
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0
+    },
+    "ios_integration": {
+      "log": "task4-ios.log",
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0
+    },
+    "macos_ass_retry": {
+      "log": "task4-macos-ass.log",
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "macos_combined": {
+      "log": "task4-macos-final.log",
+      "passed": 7,
+      "failed": 1,
+      "skipped": 0,
+      "failure": "ASS actual host capture pixel density changed from 1x to2x. Strict dimensions rejected; isolated retry passed."
+    }
+  },
+  "dartTotalPassed": 2003,
+  "analyze": "Four packages zero issues; root invocation additionally found four existing infos in historical sdk-probe.dart; retained log",
+  "pigeon": {
+    "apple": "exit0",
+    "android": "exit0",
+    "schemaChanged": false
+  },
+  "publicSurface": "exit0",
+  "commands": {
+    "player": "flutter test packages/yl_player/test --no-pub --concurrency=2 --reporter expanded (repo root)",
+    "interface": "flutter test --no-pub --reporter expanded (packages/yl_player_platform_interface)",
+    "adapters": "flutter test packages/<adapter>/test --no-pub --reporter expanded (repo root)",
+    "android": "YL_ANDROID_DEVICE_ID=emulator-5554 YL_ADB=<SDK>/adb JAVA_HOME=<JDK17> sh ../../../tool/run_android_integration.sh integration_test/subtitle_playback_test.dart (example cwd)",
+    "ios": "flutter test integration_test/subtitle_playback_test.dart -d D121C2CF-D823-48F7-816E-092BCB8A780C --no-pub --dart-define=P01_CAPTURE_URL=<owned-loopback-helper>",
+    "macos": "flutter test integration_test/subtitle_playback_test.dart -d macos --no-pub --dart-define=P01_CAPTURE_URL=<owned-loopback-helper>; failed ASS retry adds --plain-name P02 actual ass:",
+    "pigeon": "sh packages/<adapter>/tool/check_pigeon.sh",
+    "surface": "sh tool/check_public_surface.sh"
+  },
+  "platforms": {
+    "android": "TV_64bit_1_5G_32G API36 arm64 emulator, cold boot/no snapshot,2048MiB,-no-audio",
+    "ios": "iPhone18 Pro Simulator iOS27.0(24A434)",
+    "macos": "Apple M1 macOS27.0.1(26A434)"
+  },
+  "observations": {
+    "android": {
+      "formats": {
+        "srt": {
+          "format": "srt",
+          "platform": "android",
+          "os": "BT2A.260319.001 dev-keys",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "f9bc615a17c45fab790f764ffe1d152f2d3a589b8169ff345afa935b7c941cc3",
+          "companionSha256": null,
+          "changedPixels": 4464,
+          "bounds": [
+            419.0,
+            478.0,
+            543.0,
+            514.0
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1112,
+              "lateMs": 112
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1522,
+              "lateMs": 522
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "Flutter texture composition"
+        },
+        "webvtt": {
+          "format": "webvtt",
+          "platform": "android",
+          "os": "BT2A.260319.001 dev-keys",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "88e2b99a425c16cd9da2329ffaafa16f34c03c403a3fbe66a4988e62c3c49925",
+          "companionSha256": null,
+          "changedPixels": 4464,
+          "bounds": [
+            419.0,
+            478.0,
+            543.0,
+            514.0
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1099,
+              "lateMs": 99
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1064,
+              "lateMs": 64
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "Flutter texture composition"
+        },
+        "ttml": {
+          "format": "ttml",
+          "platform": "android",
+          "os": "BT2A.260319.001 dev-keys",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "57b84df0c72bb7184c5441df5c75fd9f6d39f053bc81fdec393cbd8434d67087",
+          "companionSha256": null,
+          "changedPixels": 1497,
+          "bounds": [
+            98.0,
+            479.0,
+            266.0,
+            505.0
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1146,
+              "lateMs": 146
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1130,
+              "lateMs": 130
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "Flutter texture composition"
+        },
+        "ass": {
+          "format": "ass",
+          "platform": "android",
+          "os": "BT2A.260319.001 dev-keys",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "462ad3e98372ad2cfa9cd500e9bf5288eba31b81bf5fc815f0303e8601df3655",
+          "companionSha256": null,
+          "changedPixels": 12261,
+          "bounds": [
+            335.0,
+            461.0,
+            627.0,
+            512.0
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1248,
+              "lateMs": 248
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1082,
+              "lateMs": 82
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "Flutter texture composition"
+        },
+        "ssa": {
+          "format": "ssa",
+          "platform": "android",
+          "os": "BT2A.260319.001 dev-keys",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "39accef71b8b48328194919bf8d1197efd2d7685c8e1409111dea961ecf1957a",
+          "companionSha256": null,
+          "changedPixels": 12261,
+          "bounds": [
+            335.0,
+            461.0,
+            627.0,
+            512.0
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1241,
+              "lateMs": 241
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1110,
+              "lateMs": 110
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "Flutter texture composition"
+        },
+        "pgs": {
+          "format": "pgs",
+          "platform": "android",
+          "os": "BT2A.260319.001 dev-keys",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "c78d66e22c6f48581f26eccbc9896e2fd5c83809662d926f6e587d8bbab6d4de",
+          "companionSha256": null,
+          "changedPixels": 429,
+          "bounds": [
+            192.0,
+            162.0,
+            231.0,
+            173.0
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1232,
+              "lateMs": 232
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1066,
+              "lateMs": 66
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "Flutter texture composition"
+        },
+        "vobsub": {
+          "format": "vobsub",
+          "platform": "android",
+          "os": "BT2A.260319.001 dev-keys",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "b2c58b803b75e411b68cf96a6e4f7d61edb170dfb64accfa832e1779b44e5c7e",
+          "companionSha256": "822936e0bc11465cded831ef6cda3e468be6f0a3308599870e151159253d16ab",
+          "changedPixels": 663,
+          "bounds": [
+            192.0,
+            162.0,
+            231.0,
+            179.0
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1034,
+              "lateMs": 34
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1060,
+              "lateMs": 60
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "Flutter texture composition"
+        }
+      },
+      "nativeClockCuePublicationMs": {
+        "n": 14,
+        "p50": 110,
+        "p95": 522,
+        "max": 522
+      },
+      "notPhysicalSync": true
+    },
+    "ios": {
+      "formats": {
+        "srt": {
+          "format": "srt",
+          "platform": "ios",
+          "os": "Version 27.0 (Build 24A434)",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "f9bc615a17c45fab790f764ffe1d152f2d3a589b8169ff345afa935b7c941cc3",
+          "companionSha256": null,
+          "changedPixels": 8540,
+          "bounds": [
+            171.33333333333334,
+            523.0,
+            230.66666666666666,
+            539.0
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "owned host window / simulator capture"
+        },
+        "webvtt": {
+          "format": "webvtt",
+          "platform": "ios",
+          "os": "Version 27.0 (Build 24A434)",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "88e2b99a425c16cd9da2329ffaafa16f34c03c403a3fbe66a4988e62c3c49925",
+          "companionSha256": null,
+          "changedPixels": 8540,
+          "bounds": [
+            171.33333333333334,
+            523.0,
+            230.66666666666666,
+            539.0
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "owned host window / simulator capture"
+        },
+        "ttml": {
+          "format": "ttml",
+          "platform": "ios",
+          "os": "Version 27.0 (Build 24A434)",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "57b84df0c72bb7184c5441df5c75fd9f6d39f053bc81fdec393cbd8434d67087",
+          "companionSha256": null,
+          "changedPixels": 2301,
+          "bounds": [
+            41.0,
+            523.6666666666666,
+            110.66666666666667,
+            535.0
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "owned host window / simulator capture"
+        },
+        "ass": {
+          "format": "ass",
+          "platform": "ios",
+          "os": "Version 27.0 (Build 24A434)",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "462ad3e98372ad2cfa9cd500e9bf5288eba31b81bf5fc815f0303e8601df3655",
+          "companionSha256": null,
+          "changedPixels": 19157,
+          "bounds": [
+            136.33333333333334,
+            517.0,
+            265.3333333333333,
+            538.3333333333334
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "owned host window / simulator capture"
+        },
+        "ssa": {
+          "format": "ssa",
+          "platform": "ios",
+          "os": "Version 27.0 (Build 24A434)",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "39accef71b8b48328194919bf8d1197efd2d7685c8e1409111dea961ecf1957a",
+          "companionSha256": null,
+          "changedPixels": 19157,
+          "bounds": [
+            136.33333333333334,
+            517.0,
+            265.3333333333333,
+            538.3333333333334
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "owned host window / simulator capture"
+        },
+        "pgs": {
+          "format": "pgs",
+          "platform": "ios",
+          "os": "Version 27.0 (Build 24A434)",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "c78d66e22c6f48581f26eccbc9896e2fd5c83809662d926f6e587d8bbab6d4de",
+          "companionSha256": null,
+          "changedPixels": 686,
+          "bounds": [
+            80.33333333333333,
+            391.6666666666667,
+            96.66666666666667,
+            396.3333333333333
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "owned host window / simulator capture"
+        },
+        "vobsub": {
+          "format": "vobsub",
+          "platform": "ios",
+          "os": "Version 27.0 (Build 24A434)",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "b2c58b803b75e411b68cf96a6e4f7d61edb170dfb64accfa832e1779b44e5c7e",
+          "companionSha256": "822936e0bc11465cded831ef6cda3e468be6f0a3308599870e151159253d16ab",
+          "changedPixels": 1029,
+          "bounds": [
+            80.33333333333333,
+            391.6666666666667,
+            96.66666666666667,
+            398.6666666666667
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "owned host window / simulator capture"
+        }
+      },
+      "nativeClockCuePublicationMs": {
+        "n": 14,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "notPhysicalSync": true
+    },
+    "macos": {
+      "formats": {
+        "srt": {
+          "format": "srt",
+          "platform": "macos",
+          "os": "Version 27.0.1 (Build 26A434)",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "f9bc615a17c45fab790f764ffe1d152f2d3a589b8169ff345afa935b7c941cc3",
+          "companionSha256": null,
+          "changedPixels": 14508,
+          "bounds": [
+            341.5,
+            471.5,
+            458.5,
+            502.5
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "owned host window / simulator capture"
+        },
+        "webvtt": {
+          "format": "webvtt",
+          "platform": "macos",
+          "os": "Version 27.0.1 (Build 26A434)",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "88e2b99a425c16cd9da2329ffaafa16f34c03c403a3fbe66a4988e62c3c49925",
+          "companionSha256": null,
+          "changedPixels": 14508,
+          "bounds": [
+            341.5,
+            471.5,
+            458.5,
+            502.5
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "owned host window / simulator capture"
+        },
+        "ttml": {
+          "format": "ttml",
+          "platform": "macos",
+          "os": "Version 27.0.1 (Build 26A434)",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "57b84df0c72bb7184c5441df5c75fd9f6d39f053bc81fdec393cbd8434d67087",
+          "companionSha256": null,
+          "changedPixels": 4418,
+          "bounds": [
+            81.5,
+            473.5,
+            220.0,
+            496.0
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "owned host window / simulator capture"
+        },
+        "ssa": {
+          "format": "ssa",
+          "platform": "macos",
+          "os": "Version 27.0.1 (Build 26A434)",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "39accef71b8b48328194919bf8d1197efd2d7685c8e1409111dea961ecf1957a",
+          "companionSha256": null,
+          "changedPixels": 33403,
+          "bounds": [
+            271.5,
+            461.0,
+            528.0,
+            503.5
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "owned host window / simulator capture"
+        },
+        "pgs": {
+          "format": "pgs",
+          "platform": "macos",
+          "os": "Version 27.0.1 (Build 26A434)",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "c78d66e22c6f48581f26eccbc9896e2fd5c83809662d926f6e587d8bbab6d4de",
+          "companionSha256": null,
+          "changedPixels": 1152,
+          "bounds": [
+            160.0,
+            210.0,
+            192.0,
+            219.0
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "owned host window / simulator capture"
+        },
+        "vobsub": {
+          "format": "vobsub",
+          "platform": "macos",
+          "os": "Version 27.0.1 (Build 26A434)",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "b2c58b803b75e411b68cf96a6e4f7d61edb170dfb64accfa832e1779b44e5c7e",
+          "companionSha256": "822936e0bc11465cded831ef6cda3e468be6f0a3308599870e151159253d16ab",
+          "changedPixels": 1728,
+          "bounds": [
+            160.0,
+            210.0,
+            192.0,
+            223.5
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "owned host window / simulator capture"
+        },
+        "ass": {
+          "format": "ass",
+          "platform": "macos",
+          "os": "Version 27.0.1 (Build 26A434)",
+          "mediaSha256": "c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47",
+          "subtitleSha256": "462ad3e98372ad2cfa9cd500e9bf5288eba31b81bf5fc815f0303e8601df3655",
+          "companionSha256": null,
+          "changedPixels": 33403,
+          "bounds": [
+            271.5,
+            461.0,
+            528.0,
+            503.5
+          ],
+          "clockObservations": [
+            {
+              "speed": 1.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            },
+            {
+              "speed": 2.0,
+              "observedMediaMs": 1000,
+              "lateMs": 0
+            }
+          ],
+          "clockEvidence": "post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync",
+          "pixelEvidence": "owned host window / simulator capture"
+        }
+      },
+      "nativeClockCuePublicationMs": {
+        "n": 14,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "notPhysicalSync": true
+    }
+  },
+  "review": {
+    "reviewer": "fresh gpt-6-astra high",
+    "critical": 0,
+    "important": 1,
+    "importantFixed": 1,
+    "minorDeferred": 1,
+    "report": "final-review.md"
+  },
+  "pending": [
+    "Authorized Widevine/FairPlay streams and licenses with physical devices",
+    "Physical HDR subtitle brightness/colors and display/speaker synchronization",
+    "HDCP/external-display/minimum-OS physical acceptance",
+    "New clear native probe has no same-player detach/remount subtitle integration case; existing lifecycle evidence only"
+  ],
+  "sourceHashes": "final-source-hashes.json",
+  "artifacts": {
+    "composition-captures/ios-001.png": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47",
+    "composition-captures/ios-002.png": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19",
+    "composition-captures/ios-003.png": "90f89ca1006efc2956e88d8a384a79acad0a6a7c8cb5134e48089719916a0298",
+    "composition-captures/ios-004.png": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47",
+    "composition-captures/ios-005.png": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19",
+    "composition-captures/ios-006.png": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47",
+    "composition-captures/ios-007.png": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19",
+    "composition-captures/ios-008.png": "90f89ca1006efc2956e88d8a384a79acad0a6a7c8cb5134e48089719916a0298",
+    "composition-captures/ios-009.png": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47",
+    "composition-captures/ios-010.png": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19",
+    "composition-captures/ios-011.png": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47",
+    "composition-captures/ios-012.png": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19",
+    "composition-captures/ios-013.png": "80c837c38f7c94c19c99dd13d4354039d770a0afae587fb51ffd01f3f85be8db",
+    "composition-captures/ios-014.png": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47",
+    "composition-captures/ios-015.png": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19",
+    "composition-captures/ios-016.png": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47",
+    "composition-captures/ios-017.png": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19",
+    "composition-captures/ios-018.png": "355a58940dc900bed688f755779575f71d118de6ef903073d32c780625ee0d0b",
+    "composition-captures/ios-019.png": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47",
+    "composition-captures/ios-020.png": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19",
+    "composition-captures/ios-021.png": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47",
+    "composition-captures/ios-022.png": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19",
+    "composition-captures/ios-023.png": "355a58940dc900bed688f755779575f71d118de6ef903073d32c780625ee0d0b",
+    "composition-captures/ios-024.png": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47",
+    "composition-captures/ios-025.png": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19",
+    "composition-captures/ios-026.png": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47",
+    "composition-captures/ios-027.png": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19",
+    "composition-captures/ios-028.png": "f3696f31b12a0a289b60d92882b24d70b7ee6e43736ae44807196e572e5e2a65",
+    "composition-captures/ios-029.png": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47",
+    "composition-captures/ios-030.png": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19",
+    "composition-captures/ios-031.png": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47",
+    "composition-captures/ios-032.png": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19",
+    "composition-captures/ios-033.png": "6476253d7410cec966dbd4beff2230c8f7de6b8b7cbdb02c48968371cf1955c6",
+    "composition-captures/ios-034.png": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47",
+    "composition-captures/ios-035.png": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19",
+    "composition-captures/macos-001.png": "e45f7d98f306b0882dd5050898bf979f8fa184dd44438c6ea8e3844db458bb3c",
+    "composition-captures/macos-002.png": "aaf24cc72e438bb6cc31971121112c40214fb89dd16500bc3dd1105c632dc26f",
+    "composition-captures/macos-080.png": "22704319ca910b1431ad0065647e204af74732419598c6e47e7f9a227c4cbc03",
+    "composition-captures/macos-081.png": "e45f7d98f306b0882dd5050898bf979f8fa184dd44438c6ea8e3844db458bb3c",
+    "composition-captures/macos-082.png": "4de28fab0b390b36cb3a63692e8bd33809f7a75e95725031845171aa8eecffe9",
+    "execution-ledger.md": "433b9899c32249b5efaa10e7f45e63b571a95e0ddd0e0633a0ec85501ebef0a1",
+    "final-analyze-clean.log": "63d9236e7b639673c97a918744750a54607a4b9882483cac54a621856f48aa43",
+    "final-analyze.log": "4363fb0602c677a0cc125c98a17ea5bd77b918df75daf11fb6698fdb48ec9d2f",
+    "final-android-integration.log": "57a73453d7f05b5f98b0cf099840ca6df64f64115ba3d875f8d4478eb7838acd",
+    "final-budget-green-corrected.log": "cb8482daec2f055fa9627a512a02d7fa6d9d9de0b33106f5aaea50816170d0f9",
+    "final-budget-green.log": "b845cbdf9cac34a1d916225424ad0f53338a7468039f3cf196143ba213bdb58e",
+    "final-budget-red.log": "9ad3b4172d772e211fb146f093bb8e7183219316efb7f095e4d04eab8b38889d",
+    "final-player-suite.log": "c89c1a3a570597bcac532de2c7780a424bd8ff17802b5ca121b2befebd9c1fa4",
+    "final-public-surface.log": "de504a5235a005ff253854b64d1d0ce117a30bd759d69e5613766a859a948858",
+    "final-review.md": "683cc4a8b52fc2354f83a7d81b561bd87ebc3fa0476f9d7dd5b935b0ca947d31",
+    "final-source-hashes.json": "50a3ce08ba11efcec18eea17c5401b791da2653bd886de58be7364a04443ce4c",
+    "task1-analyze-final.log": "aa3a88f121849dc640a9424c6b9fc805bb0d89c3367a99c106b6c57e82bd0b97",
+    "task1-analyze.log": "cfc1310d8aa63c55160dbe78c79984669d9bce060aca1b69eb664ba04ae64132",
+    "task1-green.log": "d3f37a440d6c3ae336c2957043742ffe124b00551a5d11bf6431f7e94b3967e6",
+    "task1-red-behavior.log": "39675db84fa69d26ffed4b72acb8e7a46771e03a3be7fc447b1dd9678278af30",
+    "task1-red.log": "6741b729ae0d2d4a38f91d6eaef8370be48121932afaf3e47c7db015bd2773ac",
+    "task1-suite.log": "11dc220e027acb5e7b8ebd29960c8ee84341e3e58e035a223d8469f1491cfe3f",
+    "task1.json": "237c5717171a8dd8c632d60bfb77946fdefb1caad0fcc6eb0bb97bff42a8da22",
+    "task2-analyze-final.log": "a31930b487ba25a8fab66a4e8783da93c1e720a991f031f242b6b7129d924eeb",
+    "task2-analyze.log": "eb50747f86b7ab3b3a7eb5d5f7d914219b4095e7bd0c92a60d3a27d000089d1a",
+    "task2-android-probe-bounded.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "task2-android-probe-cold.log": "4a053609ebf26db4d347b477d9d0e3ab8776f2454478c2bd69a93293e73c636c",
+    "task2-android-probe-diagnostic.log": "2d2ce3d9ba8faa44e743e487531575451c83f65cfddb0eafb3de6ade81def411",
+    "task2-android-probe-final.log": "d53ea3247ec1e1d8cc37d0fb03425b3d6c7faf203d43576ad22e602d57043c25",
+    "task2-android-probe.log": "f7a6ae34b9458774a381feac2932cae72ae6cf1a571a0b8ca44311b96cf15936",
+    "task2-dart-suite.log": "4b9495df3627ea3463a0978364e1a9bf228e471c6d65a24c27a689d8e84ab318",
+    "task2-green-final.log": "973198438b5861c641bbcb2cd16792d6e5ed0813fe18fa218d48511becd93b03",
+    "task2-green.log": "119cc7a235d5612a1fff86840b852cbe18d5bf63122f5d1752a93157ef8e9de4",
+    "task2-ios-probe.log": "ecd9fb000d475ec60639a081d5d15346b97c989305832c1109cd66710ffa69e3",
+    "task2-macos-probe.log": "55e136b2c290852195451a92405499408e3c9661c351b337be2f2e051dd704aa",
+    "task2-red-behavior.log": "ecccce00b966edcf584b6dd68c179d2ac991f93d3ba464baffbd0440f08ea859",
+    "task2-red.log": "9c87a74337a2969b978dc9eb50e4884cab18fccd35318d6a0f3c175172a3494e",
+    "task2.json": "8decbf6aac3313a61f53d4f012b68c24cc4982d89b4b43d8ed1c32bcab5d2de9",
+    "task3-analyze-complete.log": "fce00126a6910021065a6fe26f76740876cca63ee6218cfc0879a7f927ef5bbf",
+    "task3-analyze-final.log": "24a5e2308a04c7341fbfe6245c36df4bd997756af9bf202ed56c9a72d5299c00",
+    "task3-analyze.log": "2fff6d2d5c648598a1b2f4a1512b5fa55afd9ec331ed508a46e637ad442ae02a",
+    "task3-font-red.log": "3130b5c4e7b1a271df9d724c5e44d9f8ed7ac28e352999bac9ed3670a550c452",
+    "task3-green.log": "356d360c218ee37e11bbb20a94295b5a64cc1a1c2130b7f5e15d4934911de007",
+    "task3-nbsp-green.log": "7e5e0f246098511fc84e14d5ac91cdf3e8a69019e3c36f88fb3ee420e6f8a998",
+    "task3-nbsp-red.log": "525ec7619302f41e768289348cb49f0b35c4a7922a9951349b9696191db4e769",
+    "task3-red.log": "3b342a1d7c9b9b38a5cbe286b59edd64b7074233bef9dd40cafb01de75d07633",
+    "task3-suite-final.log": "cf13b08fa662169f8af3386404437701398e4b5d9cf0ad5ddcb96e24649b6f7d",
+    "task3-suite.log": "5de004f7819eef9174aac2d22ea41662e265baf36ab9bc5d1dca8659cbb0a3d5",
+    "task3-unicode-red.log": "42827bc419cdbe49c190a03a2395681c5da91ad3232d6313a5261bfab8a9cc82",
+    "task3.json": "273972b3b04420517c718426c6cf957ecba33eb98cdaa0176786afb20f614466",
+    "task4-analyze-packages.log": "2a2ebe95a0b49e9e436dcdd67ab876b41d36355dd19b6e15dcf8a58920c8f43f",
+    "task4-analyze.log": "864bb5781145ca2f09c5d3808095a477b7ef7a1b81147a2d4ac0e61b7ddc5b4a",
+    "task4-android-corrected.log": "3a0d39f20fde259697ee49fa183f2837d2f974ccd6f8ce2f1df78772004e5f5c",
+    "task4-android-final.log": "c66b9461c30bfa0ce0f1f2c1a0da449f5c8d20c8c61976636df0083c26541613",
+    "task4-android.log": "46e1e2444a47fea60b3fab31679f32967a9ff3994ffb7169504ccd20fe7319eb",
+    "task4-integration-analyze-final.log": "bf7b18ca8babc88f0cf467a9c3d303a49dae67bed83604d3c34222aaf55b364a",
+    "task4-integration-analyze.log": "0f046328402891df731a86b16796201ad2f0cac73232f92b333651b437f6fae9",
+    "task4-ios.log": "56ac77362247ef43a3ef15160003181e532837dbb5ecf10c45402df4f40d234d",
+    "task4-macos-ass.log": "b279547f2ca5c7efaeddba1cb79b50a112aa487f3246bf557fd287cc836a5409",
+    "task4-macos-corrected.log": "69e2076f46297bcfa94948d01676782b8a3db897eff0ebdfc929f684e0b3dfc7",
+    "task4-macos-final.log": "cf9c306532bfc3a993bc284e3145e85cd2c789fc67b8f2976882218716e15dce",
+    "task4-macos.log": "3831b6088d36e8b67f109b8178206ec85cdc386206b3d30706a254426a5ad0b4",
+    "task4-pub.log": "83b4b7c7dbcc48da42f8906ed2fd4d3999cd8bc7ab883e2dca485b6f7e28454a",
+    "task4-public-surface.log": "de504a5235a005ff253854b64d1d0ce117a30bd759d69e5613766a859a948858",
+    "task4-yl_player-final.log": "3f08fc1ce91e2900f4e6dcf7e39811501c785349bcbf267150bff85dd8a9fefe",
+    "task4-yl_player.log": "91cad4c3009c3ebee87d4a2c3dfafd17c84aae530f806f78dd75bd0e59d51182",
+    "task4-yl_player_android-pigeon.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "task4-yl_player_android-suite.log": "725c059a7e82a2667147f6ed091d3f9d378ec306e76690606e0d3ddf14cb7a9a",
+    "task4-yl_player_apple-pigeon.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "task4-yl_player_apple-suite.log": "00581a0def72b0a7484760fe4c668e7e57a90b5f222ac9ee92abe9bc547d9bde",
+    "task4-yl_player_platform_interface.log": "7d82fd8464601ad8e1bd441a33248202f7e876537559184c64040f516b42509f"
+  }
+}

@@ -1,0 +1,8 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/subtitle_playback_test.dart
+Building macOS application...                                   
+✓ Built build/macos/Build/Products/Debug/yl_player_example.app
+Failed to foreground app; open returned 1
+00:00 +0: P02 actual ass: managed load, pixels, clock and lifecycle
+YL_P02_SUBTITLE {"format":"ass","platform":"macos","os":"Version 27.0.1 (Build 26A434)","mediaSha256":"c94d78ffb1f71bd0170cd712939ab1b8a8735ed17bce0eb15a55b7b171652b47","subtitleSha256":"462ad3e98372ad2cfa9cd500e9bf5288eba31b81bf5fc815f0303e8601df3655","companionSha256":null,"changedPixels":33403,"bounds":[271.5,461.0,528.0,503.5],"clockObservations":[{"speed":1.0,"observedMediaMs":1000,"lateMs":0},{"speed":2.0,"observedMediaMs":1000,"lateMs":0}],"clockEvidence":"post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync","pixelEvidence":"owned host window / simulator capture"}
+00:05 +1: (tearDownAll)
+00:05 +1: All tests passed!
