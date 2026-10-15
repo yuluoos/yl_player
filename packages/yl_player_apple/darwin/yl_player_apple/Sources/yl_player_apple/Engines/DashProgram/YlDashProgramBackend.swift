@@ -101,6 +101,7 @@ final class YlDashProgramBackend: YlPlaybackBackend {
       let candidate = try makePipeline(initial, epoch: locked { epoch })
       locked {
         pipeline = candidate; initialPeriod = nil
+        if !candidate.video.usesHardwareDecoder { decoderLease = nil }
         acceptedVideoFamily = candidate.prepared.qualityFamily
       }
       candidate.setRate(locked { rate }); candidate.setVolume(locked { volume })
@@ -174,13 +175,18 @@ final class YlDashProgramBackend: YlPlaybackBackend {
     let lease = try locked { () throws -> YlHardwareDecoderLease? in
       guard !disposed, !stopped else { throw YlOpenCancellationToken.cancellationError() }
       if decoderLease == nil && services.compatibility.limitsVideoReservations {
-        decoderLease = try YlHardwareDecoderLeasePool.shared.acquire()
+        do { decoderLease = try YlHardwareDecoderLeasePool.shared.acquire() }
+        catch let error as NativePlayerError where error.code == "resource.video_decoder_limit" && prepared.decoderPolicy != .hardwareRequired {
+          // The hardware attempt still enforces its own permit. An admitted
+          // software candidate must not require an unused hardware permit.
+          return nil
+        }
       }
       return decoderLease
     }
     do {
       return try YlDashPeriodPlayback(prepared: candidate, generation: epoch, scope: prepared.scope,
-        policy: prepared.decoderPolicy, sharedLease: lease, onError: { [weak self] error in self?.fail(error, epoch: epoch) })
+        policy: prepared.decoderPolicy, sharedLease: lease, softwareServices: prepared.softwareServices, onError: { [weak self] error in self?.fail(error, epoch: epoch) })
     } catch let error as NativePlayerError where prepared.decoderPolicy == .hardwareRequired &&
       ["decoder.video_hardware_unavailable", "resource.video_decoder_limit"].contains(error.code) {
       throw YlHardwareDecoderEvidence.unavailable()
@@ -221,7 +227,7 @@ final class YlDashProgramBackend: YlPlaybackBackend {
     defer {
       if !committed {
         newToken.cancel(); candidate?.dispose()
-        locked { if pipeline == nil { decoderLease = nil } }
+        locked { if pipeline?.video.usesHardwareDecoder != true { decoderLease = nil } }
       }
     }
     try newToken.throwIfCancelled()
@@ -250,6 +256,7 @@ final class YlDashProgramBackend: YlPlaybackBackend {
       committed = true
     }
     worker.sync { old?.dispose() }
+    locked { if pipeline?.video.usesHardwareDecoder != true { decoderLease = nil } }
     onMain { [weak self] in
       guard let self, self.locked({ self.epoch == context.1 && !self.disposed }) else { return }
       self.services.textureOutput.clear()
@@ -384,7 +391,7 @@ final class YlDashProgramBackend: YlPlaybackBackend {
         isLive: false, isSeekable: !stopped, isAtLiveEdge: false, liveOffsetMs: nil, dvrStartMs: nil, dvrEndMs: nil,
         videoWidth: videoTrack.map { Int($0.width) }, videoHeight: videoTrack.map { Int($0.height) },
         engine: .managedFallback, isHardwareDecoding: pipeline?.video.usesHardwareDecoder ?? false,
-        decoderName: nil, audioTracks: stopped ? [] : audioTracks, videoTracks: stopped ? [] : videoTracks,
+        decoderName: stopped ? nil : pipeline?.video.hardwareEvidence.decoderName, audioTracks: stopped ? [] : audioTracks, videoTracks: stopped ? [] : videoTracks,
         metrics: .init(bufferedDurationMs: (pipeline?.scheduler.bufferedDurationUs ?? 0) / 1000,
           bufferedBytes: prepared.scope.ledger.snapshot.currentBytes,
           droppedVideoFrames: pipeline?.scheduler.lateFrameDropCount, audioUnderruns: pipeline?.audio?.underrunCount),

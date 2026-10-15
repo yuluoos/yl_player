@@ -13,7 +13,7 @@ final class YlDashPeriodPlayback {
   let clock = YlMediaClock()
   let audio: YlAudioRenderer?
   let audioConverter: YlDashAudioTimeline?
-  private(set) var video: YlVideoToolboxDecoder!
+  private(set) var video: (any YlVideoDecoderResource)!
   private let scope: YlManagedBufferScope
   private let outputWindow: YlDashProgramTimeline.Window
   private var nextVideo: YlDashTrackCursor.Item?
@@ -30,6 +30,7 @@ final class YlDashPeriodPlayback {
   init(prepared: YlDashPreparedPeriod, generation: UInt64, scope: YlManagedBufferScope,
        policy: YlDecoderPolicy, sharedLease: YlHardwareDecoderLease? = nil, videoFactory: (any YlVTSessionFactory)? = nil,
        audioOutput: (any YlAudioOutputDriving)? = nil,
+       softwareServices: YlSoftwareDecodeServices = .init(),
        onError: @escaping (NativePlayerError) -> Void) throws {
     self.prepared = prepared; self.generation = generation; self.scope = scope; self.onError = onError
     outputWindow = .init(start: prepared.position, end: prepared.window.end)
@@ -62,10 +63,18 @@ final class YlDashPeriodPlayback {
     } else { audio = nil; audioConverter = nil; audioEnded = true }
     scheduler.flush(generation: generation)
     clock.seek(to: try prepared.position.converted(to: 1_000_000, rounding: .floor))
-    video = try YlVideoToolboxDecoder(formatDescription: prepared.firstVideo.source.videoFormat!,
-      maxInFlightBytes: 4 * 1024 * 1024, bufferScope: scope,
-      factory: videoFactory ?? YlHardwareVTSessionFactory(policy: policy), sharedLease: sharedLease,
-      onFrame: { [weak self] frame in self?.receive(frame) }, onError: onError)
+    let format = prepared.firstVideo.source.videoFormat!
+    video = try YlVideoDecoderSelection.choose(policy: policy, hardware: {
+      try YlVideoToolboxDecoder(formatDescription: format,
+        maxInFlightBytes: 4 * 1024 * 1024, bufferScope: scope,
+        factory: videoFactory ?? YlHardwareVTSessionFactory(policy: .hardwareRequired), sharedLease: sharedLease,
+        onFrame: { [weak self] in self?.receive($0) }, onError: onError)
+    }, software: {
+      let budget = YlFallbackBufferBudget(bufferScope: scope, networkBytes: 4 * 1024 * 1024,
+        scheduledAudioBytes: 2 * 1024 * 1024, inFlightPacketBytes: 4 * 1024 * 1024)
+      return try softwareServices.make(configuration: prepared.firstVideo.source.softwareConfiguration,
+        format: format, budget: budget, onFrame: { [weak self] in self?.receive($0) }, onError: onError)
+    })
   }
 
   /// A bounded pump quantum; only its owning worker calls this method.

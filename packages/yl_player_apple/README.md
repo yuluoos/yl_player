@@ -88,11 +88,21 @@ PCM. Other leading trim, rates/channels and strict policies are rejected with
 specific errors. Independent Xiph PCM reference tools are
 test-only; no commercial SDK or new runtime dependency is introduced.
 
-Ordinary seekable Matroska/WebM VP9 uses a bounded Profile 0, 8-bit SDR,
-fixed-size visible-frame path. Every system decoder creation requires actual
-hardware evidence, including default/preferred policies. Unsupported profiles,
-color changes, hidden/superframes and strict network/buffer policies fail
-explicitly. No VP9 software decoder or commercial SDK is shipped.
+Ordinary seekable Matroska/WebM video tries a proven hardware decoder first.
+The hardware VP9 path retains its validated Profile 0 visible-frame limits.
+Default/preferred policies can then use the owned dav1d AV1 Main 8/10-bit or
+FFmpeg VP9 decoder only when the exact device, OS, executable/bridge build and
+stream descriptor have a measured admission entry. Hardware-required never
+uses software. The production admission table is currently empty.
+Controlled tests cover hidden VP9 superframes, retained image ownership,
+seek/generation fences and transactional DASH Period replacement. Decoder
+identity reports the actual selected implementation. Process CPU observations
+continue during pause, and current/candidate players share the same budget.
+
+Managed seekable VOD Opus/Vorbis now has real Range, retry, cancellation and
+retained PCM accounting coverage. Bounded-buffer, live and hardware-required
+combinations retain explicit rejection where their complete contract cannot
+be enforced.
 
 MPEG-PS/AVC VOD uses package-owned demux I/O, zero-based presentation time,
 and bounded keyframe search. Live and strict managed/bounded/hardware-required
@@ -109,7 +119,7 @@ Actual reference/output surfaces and compressed copies are reserved before
 allocation and stay charged through final CoreVideo release. Discovery retains
 an audio-only decoder whitelist, so linking a software video decoder cannot
 implicitly admit it during metadata probing. Production software admission is
-still empty; the candidate C API does not itself constitute device qualification.
+still empty; controlled pipeline tests do not constitute device qualification.
 The reference harness compares every visible planar sample with libaom/libvpx,
 checks drain/reset and validates image lifetime after decoder destruction.
 

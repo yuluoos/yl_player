@@ -879,14 +879,14 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     return try XCTUnwrap(format)
   }
   func testWebMVODRequiresCodecInspectionBeforeFallbackCommit() {
-    for (uri, kind, route) in [
-      ("file:///tmp/clip.webm", YlSourceKind.file, YlAppleSourceRoute.localMatroska),
-      ("https://media.test/clip.webm", .network, .networkMatroska)
+    for (uri, kind) in [
+      ("file:///tmp/clip.webm", YlSourceKind.file),
+      ("https://media.test/clip.webm", .network)
     ] {
       let source = YlAppleSourceDescriptor(uri: uri, kind: kind, intent: .onDemand)
       let assessment = YlEngineRouter.assess(source)
       XCTAssertEqual(assessment.outcome, .requiresInspection)
-      XCTAssertEqual(assessment.candidate, route)
+      XCTAssertEqual(assessment.candidate, .inspect)
       XCTAssertNil(assessment.rejection)
       let rejected = YlEngineRouter.assess(source, inspection: .init(format: .webm,
         demuxerSupported: true, codecsSupported: false, hasVideo: true, hardwareAccelerated: nil))
@@ -978,15 +978,17 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     XCTAssertEqual(factory.sessions.last?.invalidations, 1)
   }
 
-  func testPreferredPipelineAllowsUnknownWithoutClaimingHardware() throws {
+  func testPreferredPipelineRejectsUnadmittedUnknownDecoder() throws {
     let candidate = try prepared(); defer { candidate.discard() }
     let factory = Factory(); factory.evidence = .unknown
     let pipeline = YlVideoPipeline(format: candidate.videoFormat,
       bufferBudget: try .make(configuration: .init(map: [:]), prepared: candidate),
       factory: factory, policy: .hardwarePreferred)
-    try pipeline.initializeDecoder(); defer { pipeline.discardDecoder() }
-    XCTAssertEqual(pipeline.hardwareEvidence.mode, .unknown)
-    XCTAssertEqual(pipeline.usesHardwareDecoder, false)
+    XCTAssertThrowsError(try pipeline.initializeDecoder()) {
+      XCTAssertEqual(($0 as? NativePlayerError)?.code, "decoder.unavailable")
+    }
+    XCTAssertFalse(pipeline.hasDecoder)
+    XCTAssertEqual(factory.sessions.last?.invalidations, 1)
   }
 
   private func hardwareRequest(_ id: String, policy: AppleDecoderPolicy = .hardwareRequired) throws -> AppleLoadRequest {
@@ -1144,12 +1146,15 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     }
   }
 
-  func testPreferredHostCommitsUnknownAndSoftwareHonestly() async throws {
+  func testPreferredHostRejectsUnadmittedUnknownAndSoftware() async throws {
     for mode: YlHardwareDecoderEvidence.Mode in [.unknown, .software] {
       let factory = Factory(); factory.evidence = .init(mode: mode)
       let f = AppleHostFixture(videoSessionFactory: factory); defer { f.host.close() }
-      _ = try await f.load(hardwareRequest("preferred", policy: .hardwarePreferred))
-      XCTAssertEqual(f.host.initialState.decoderMode, mode == .software ? .software : .unknown)
+      do {
+        _ = try await f.load(hardwareRequest("preferred", policy: .hardwarePreferred))
+        XCTFail("Unadmitted software candidate committed")
+      } catch { XCTAssertEqual((error as NSError).domain, "decoder.unavailable") }
+      XCTAssertEqual(factory.sessions.last?.invalidations, 1)
     }
   }
 

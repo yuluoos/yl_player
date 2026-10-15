@@ -11,13 +11,16 @@ final class YlPreparedDashProgram {
   private var initial: YlDashPreparedPeriod?
   let constraints: YlAppleVideoConstraints
   let decoderPolicy: YlDecoderPolicy
+  let softwareServices: YlSoftwareDecodeServices
   let autoplay: Bool
   let position: YlDashProgramTime
   private var consumed = false
 
   init(program: YlDashProgram, resources: YlDashProgramResources, scope: YlManagedBufferScope,
        cancellation: YlOpenCancellationToken, constraints: YlAppleVideoConstraints = .unconstrained,
-       decoderPolicy: YlDecoderPolicy = .systemDefault, autoplay: Bool = false, startPositionMs: Int64 = 0) throws {
+       decoderPolicy: YlDecoderPolicy = .systemDefault, autoplay: Bool = false, startPositionMs: Int64 = 0,
+       softwareServices: YlSoftwareDecodeServices = .init()) throws {
+    self.softwareServices = softwareServices
     self.program = program; self.resources = resources; self.scope = scope
     self.cancellation = cancellation; self.constraints = constraints
     self.decoderPolicy = decoderPolicy; self.autoplay = autoplay

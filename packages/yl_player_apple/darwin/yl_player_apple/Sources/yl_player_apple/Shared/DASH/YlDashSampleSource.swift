@@ -77,6 +77,7 @@ final class YlDashSampleSource {
 
   let stream: YLFStreamInfo
   let videoFormat: CMVideoFormatDescription?
+  let softwareConfiguration: YlSoftwareVideoConfiguration?
   let codecConfiguration: Data
   private var context: YLFMediaContextRef?
   private let input: Input
@@ -115,6 +116,7 @@ final class YlDashSampleSource {
       guard ylf_copy_video_format_description(opened, stream.index, &format) == 0, let format else { throw Self.invalid() }
       videoFormat = format.takeRetainedValue()
     } else { videoFormat = nil }
+    softwareConfiguration = kind == .video ? try? YlSoftwareVideoConfiguration(context: opened, streamIndex: stream.index) : nil
     try cancellation.throwIfCancelled()
     context = opened; committed = true
   }

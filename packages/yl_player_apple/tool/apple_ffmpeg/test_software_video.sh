@@ -20,10 +20,10 @@ xcrun clang -fobjc-arc -I"$opus/include" -I"$prefix/include" -I"$YL_TEST_FFMPEG_
  -framework Foundation -framework CoreMedia -framework CoreVideo -framework Security -o "$tmp/file"
 root=$(CDPATH= cd -- "$script_dir/../../../.." && pwd)
 python3 -B "$script_dir/software_video_reference.py" "$tmp"
-for name in av1-main8 av1-main10 vp9-main8; do "$tmp/test" "$tmp/$name.json" "$tmp/$name.yuv"; done
-for name in av1-main8 av1-main10 vp9-main8; do "$tmp/file" "$tmp/$name.json" "$tmp/$name.mkv" "$tmp/$name.yuv"; done
+for name in av1-main8 av1-main10 vp9-main8 vp9-hidden; do "$tmp/test" "$tmp/$name.json" "$tmp/$name.yuv"; done
+for name in av1-main8 av1-main10 vp9-main8 vp9-hidden; do "$tmp/file" "$tmp/$name.json" "$tmp/$name.mkv" "$tmp/$name.yuv"; done
 if [ -n "${YL_SOFTWARE_FRAMEWORK_DIR:-}" ]; then
  xcrun clang -fobjc-arc -DYL_SOFTWARE_ARTIFACT=1 -F"$YL_SOFTWARE_FRAMEWORK_DIR" -Wl,-rpath,"$YL_SOFTWARE_FRAMEWORK_DIR" \
   "$script_dir/test_software_video_file.m" -framework YlFFmpegBridge -framework Foundation -framework CoreMedia -framework CoreVideo -o "$tmp/artifact"
- for name in av1-main8 av1-main10 vp9-main8; do "$tmp/artifact" "$tmp/$name.json" "$tmp/$name.mkv" "$tmp/$name.yuv"; done
+ for name in av1-main8 av1-main10 vp9-main8 vp9-hidden; do "$tmp/artifact" "$tmp/$name.json" "$tmp/$name.mkv" "$tmp/$name.yuv"; done
 fi

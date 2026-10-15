@@ -314,20 +314,42 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlManagedFallbackCharacterizationTests.swift",
-    "sha256": "011e880847ecd5691765f882640399ad1ccd28490adccd3604b73138f3aac3e5",
+    "sha256": "36a259de9abe24b20287b29a5d532bc9f86e90b9163442a35591aac7fe6655d9",
     "methods": [
+      "testOpusTrackSwitchRewindsAndTrimsRealPCMForEachColdDecoder",
+      "testOpusTrackCandidateFailureKeepsCurrentRendererAndCursor",
+      "testInactiveOpusSwitchPreservesPreparedRendererUntilActivation",
+      "testCancelledOpusSwitchAfterRewindCannotResumePartialPipeline",
+      "testTerminalSessionRealConverterOutputControlsAndEOF",
+      "testTerminalSessionLostPlaybackCallbackNeverSynthesizesCompleted",
+      "testTerminalSessionEligibilityUsesRecipeAndDefaultOptOut",
+      "testTerminalSubmissionAnchorPreservesPausedPresentationAndResume",
+      "testTerminalSubmissionAnchorStillMapsInitialAndSeekedPlayback",
+      "testTerminalPipelineAnchorsTrimmedFirstSubmissionAndIgnoresDetachedGeneration",
+      "testTerminalSessionDefaultAndTrackReplacementReevaluateEligibility",
+      "testTerminalSessionGraphInvalidationFailsOnceAndOldCallbackAfterSeekIsIgnored",
+      "testTerminalSessionEOFWaitsForAudioFenceThenCompletes",
+      "testTerminalSessionCompletesWhenDecodedVideoOutlastsAudio",
+      "testTerminalSessionCompletesWhenDecodedAudioOutlastsVideo",
+      "testVorbisTrackSwitchRewindsAndTrimsRealPCMForEachColdDecoder",
+      "testVorbisTrackCandidateFailureKeepsCurrentRendererAndCursor",
+      "testInactiveVorbisSwitchPreservesPreparedRendererUntilActivation",
+      "testCancelledVorbisSwitchAfterRewindCannotResumePartialPipeline",
+      "testWebMVODRequiresCodecInspectionBeforeFallbackCommit",
+      "testVP9RejectsUnverifiedDecoderEvenWithoutRequiredPolicy",
+      "testVP9RecreationCannotFallBackToSoftware",
       "testHardwareEvidenceRequiresActualCFBooleanAndSafeIdentity",
       "testRequiredPipelineRejectsSoftwareBeforeDecoderInstallation",
       "testRequiredPipelineRecreationRejectsUnknownBeforeInstall",
       "testStrictInspectedFormatRecreationRejectsSoftware",
-      "testPreferredPipelineAllowsUnknownWithoutClaimingHardware",
+      "testPreferredPipelineRejectsUnadmittedUnknownDecoder",
       "testManagedAudioAutoplayPreparationFailureAndRetiredBackendCleanup",
       "testManagedAudioActivationFailureBeforeReplacementPreservesAcceptedFallback",
       "testAudioOutputStartFailurePublishesTerminalFailure",
       "testManagedAudioTerminalOutputFailureReleasesCurrentLeaseExactlyOnce",
       "testStrictHostTransfersExactProvenDecoderBeforeCommitAndFirstFrameOnce",
       "testStrictSoftwareAndUnknownCandidatesPreserveAcceptedSession",
-      "testPreferredHostCommitsUnknownAndSoftwareHonestly",
+      "testPreferredHostRejectsUnadmittedUnknownAndSoftware",
       "testStrictCommittedSeekRejectsRecreatedSoftwareAndLateFrames",
       "testRealHardwareRequiredFixtureCommitsHardwareOrTruthfullyRejects",
       "testEvidenceDeadlineRetainsLatePayloadAndRejectsSecondProbeUntilNativeReturn",
@@ -351,29 +373,7 @@
       "testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload",
       "testBoundedInspectedFrameRejectsTooSmallBudgetBeforeActivation",
       "testBoundedAudioHeldCompletionRemainsChargedAfterResetAndDisposal"
-    ],
-    "hardening_task1_provenance": "Original six methods at 5aaa33c characterized accepted consolidation backend 98844babd865d3af7e9fe65ea90e619be9ace88c before extraction. The seventh actual-backend seek-order method is R1/current evidence only, as separately recorded below; original identities and historical pins remain unchanged.",
-    "hardening_task1_r1_provenance": {
-      "fix_base": "27398e7c30a802ba36d9959f37e392ff3c703136",
-      "from_sha256": "d4a8c6c8cd1f353b5761f6f0868ccbcff3f3c7f57432bf4b9541df460fb86b2b",
-      "new_methods": [
-        "testBackendSeekOrdersHeldStagesAndSuppressesOldAudioAndVideo"
-      ],
-      "reason": "R10 adds current actual-backend seek stage/effect/stale-audio-video proof and real wiring omission/reordering discriminators. The original six cases retain their pre-extraction baseline; this seventh case is not historical evidence."
-    },
-    "hardening_task2_migration": {
-      "from_sha256": "39c75b6ae576ab4060c5310c888de0eb735482bdc289ce4817c96f72a8d83145",
-      "reason": "R8 typed source/command caller closure and Task2 routing/inspection tests; original source and historical method lineage retained."
-    },
-    "hardening_task7_observability": {
-      "from_sha256": "2a39dfb4f17b6fd7f4170134b49e87036df7b4e26eff4b069fdf64441ec895e3",
-      "base": "91aaa3f3d9f5618a02ad8183b267a6eab4a9b7b6",
-      "reason": "Restore authoritative geometry, Load-based clocks and nullable common metrics; central safe errors remove credential-free source URLs too. Current destination assertions changed; historical origins retained."
-    },
-    "hardening_task8_migration": {
-      "from_sha256": "ffa88b842ecdc0d55e68a4abb6307def111d1f4b8ac0fd05488cb64fe5c23899",
-      "reason": "Task8 exact strict public commit envelopes, actual iOS audio driver, FLV AAC initial/reopen authority and bounded lifetime with complete LC sync-extension negatives. Original hardware skip identities unchanged; MKV R19 remains distinct."
-    }
+    ]
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAudioRendererTests.swift",
@@ -855,7 +855,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlSoftwareDecodeBudgetTests.swift",
-    "sha256": "c6402ef2aa8a5554509bd92e13112c26a4ced69eead3eccf4dbdf0297e191a9a",
+    "sha256": "136c6ba184dd1ab8b90ee18c40ec02c3813809d8f8bc96ea646ad3aa79e32b62",
     "methods": [
       "testExactAdmissionAndEmptyProductionTable",
       "testSharedCurrentCandidateAndIdempotentOldRelease",
@@ -865,7 +865,57 @@
       "testRetiredLeaseCannotAllocateButRetainedFramesStayCharged",
       "testConcurrentReleaseIsExactlyOnce",
       "testNewStricterLeaseCannotEraseExistingCharge",
-      "testObservationHistoryCannotGrowWithoutBound"
+      "testObservationHistoryCannotGrowWithoutBound",
+      "testCpuWindowIsSharedAcrossReplacementLeases",
+      "testRetiredEmptyLeaseDoesNotHoldAnUnusedMemoryCeiling",
+      "testConcurrentProcessSamplesAreCapturedInsideSharedLock"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/Resources/p03-av1-fragment.mp4",
+    "sha256": "f04df92797cd404bfe8a3e6f3efb3adb1a2dd05f7b46a7459669f9cd537f4d7d",
+    "methods": []
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/Resources/p03-av1-main10.mkv",
+    "sha256": "8e228e69a20f4793f581f6747032e49d930fed1d7a10e2979bd4eaab6b9a2795",
+    "methods": []
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/Resources/p03-av1-main8.mkv",
+    "sha256": "49451517c8ab9afd2bef19f9ab1604d425f8ab1ea0d024782fd8500572e7089f",
+    "methods": []
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/Resources/p03-vp9-hidden.webm",
+    "sha256": "0e206abdfb6c91ac777ad720d73c43f26c80c20a4901716a95bfacdd19649654",
+    "methods": []
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlManagedSoftwareAudioTests.swift",
+    "sha256": "990d5657b2044460233f7eb6383580395031b2b2fbd9d52424fa6491f543146c",
+    "methods": [
+      "testManagedRangeRetryAndActualOpusVorbisPCMOwnership",
+      "testCancellationDuringManagedRetryReturnsAllOwnedBytes"
+    ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlSoftwareVideoLifecycleTests.swift",
+    "sha256": "e828c5e6edbab013f6d1d4140c4d85301f6f60bf694385aedb8ce032d24b2fe0",
+    "methods": [
+      "testHardwareRequiredNeverCallsSoftwareAndRejectsUnknownEvidence",
+      "testHardwareFirstAndOnlyUnavailableErrorsCanFallback",
+      "testActualVP9RetainedOutputSurvivesDecoderAndConfigurationRelease",
+      "testPipelineUnadmittedCandidatePreservesCurrentResource",
+      "testActualAV1EightAndTenBitAfterDemuxClosed",
+      "testSeekRejectsLateGenerationAndRetainsOldImageCharge",
+      "testPostReceiveThermalFailureReleasesImageAndReportsOnce",
+      "testHiddenVP9SuperframesThroughActualPipelineAndEOS",
+      "testPeriodCandidateUsesItsOwnTenBitConfigurationAndRecreatesIt",
+      "testActualSessionReportsDav1dIdentity",
+      "testDashPeriodUsesAdmittedSoftwareAndActualPixels",
+      "testPausedDecoderKeepsBudgetObservationsUntilResume",
+      "testCancellationAfterSoftwareCandidateCreationKeepsCurrentDecoder"
     ]
   }
 ]

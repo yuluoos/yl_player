@@ -278,6 +278,8 @@ int32_t ylf_software_video_copy_configuration(YLFMediaContextRef context,int32_t
  copy->format=avformat_alloc_context();
  AVStream *target=copy->format?avformat_new_stream(copy->format,NULL):NULL;
  if(!target || avcodec_parameters_copy(target->codecpar,p)<0){ylf_software_video_free_configuration(copy);return YLFResultResourceExhausted;}
+ target->avg_frame_rate=context->format->streams[stream]->avg_frame_rate;
+ target->r_frame_rate=context->format->streams[stream]->r_frame_rate;
  *out=copy;return YLFResultOK;
 }
 void ylf_software_video_free_configuration(YLFSoftwareVideoConfigurationRef config) {
@@ -287,4 +289,26 @@ int32_t ylf_software_video_create_from_configuration(YLFSoftwareVideoConfigurati
  if(out)*out=NULL;if(!config)return YLFResultInvalidArgument;
  struct YLFMediaContext view={0};view.format=config->format;
  return ylf_software_video_create(&view,0,limits,out);
+}
+
+int32_t ylf_software_video_copy_descriptor(YLFSoftwareVideoConfigurationRef config,size_t size,YLFSoftwareVideoDescriptor *out) {
+ if(!out || size!=sizeof(*out))return YLFResultInvalidArgument;memset(out,0,size);
+ if(!config || !config->format || config->format->nb_streams!=1)return YLFResultInvalidArgument;
+ AVStream *stream=config->format->streams[0];AVCodecParameters *p=stream->codecpar;
+ int depth=0,full=-1;
+ if(p->codec_id==AV_CODEC_ID_AV1){
+  if(!ylf_sw_av1_config(p->extradata,p->extradata_size,p->width,p->height,&depth))return YLFResultVideoConfigurationInvalid;
+  Dav1dSequenceHeader seq={0};dav1d_parse_sequence_header(&seq,p->extradata+4,p->extradata_size-4);full=seq.color_range!=0;
+ }else if(p->codec_id==AV_CODEC_ID_VP9){
+  if(p->profile==0 && (p->format==AV_PIX_FMT_NONE || p->format==AV_PIX_FMT_YUV420P))depth=8;
+  else if(p->profile==2 && p->format==AV_PIX_FMT_YUV420P10LE)depth=10;
+  else return YLFResultVideoConfigurationInvalid;
+  if(p->color_range==AVCOL_RANGE_JPEG)full=1;else if(p->color_range==AVCOL_RANGE_MPEG)full=0;
+ }else return YLFResultVideoConfigurationInvalid;
+ out->codec=ylf_codec(p->codec_id);out->profile=p->profile;out->bit_depth=depth;out->chroma=420;
+ out->width=p->width;out->height=p->height;out->full_range=full;
+ AVRational fps=stream->avg_frame_rate;
+ if(fps.num<=0 || fps.den<=0)fps=stream->r_frame_rate;
+ if(fps.num>0 && fps.den>0)av_reduce(&out->fps_num,&out->fps_den,fps.num,fps.den,INT32_MAX);
+ return YLFResultOK;
 }

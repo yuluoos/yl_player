@@ -19,7 +19,7 @@ HISTORICAL_MANIFESTS = {
     "engine-tests-manifest.json": PINNED_REVISION,
     "resources-manifest.json": PINNED_REVISION,
 }
-EXPECTED_CASES = {'ios': 743, 'macos': 788}
+EXPECTED_CASES = {'ios': 761, 'macos': 806}
 
 
 def digest(data):
@@ -240,7 +240,7 @@ def verify_pbx_membership(pbx, expected):
     for key in re.findall(r'\b[A-F0-9]{24}\b', source_phases[0]):
         build = objects.get(key, '')
         match = re.search(r'fileRef = ([A-F0-9]{24}) /\* ([^*]+) \*/;', build)
-        if not match or match.group(1) not in groups[0] or match.group(2) not in expected or f'path = {match.group(2)};' not in objects.get(match.group(1), ''):
+        if not match or match.group(1) not in groups[0] or match.group(2) not in expected or not any(statement in objects.get(match.group(1), '') for statement in (f'path = {match.group(2)};', f'path = "{match.group(2)}";')):
             raise RuntimeError('RunnerTests Sources entry has invalid file reference')
 
 

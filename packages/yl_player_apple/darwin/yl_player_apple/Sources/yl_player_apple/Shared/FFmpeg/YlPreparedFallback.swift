@@ -47,6 +47,8 @@ final class YlPreparedFallback {
   let audioStreams: [YLFStreamInfo]
   let videoFormat: CMVideoFormatDescription
   let felConfiguration: YlFELConfiguration?
+  let softwareConfiguration: YlSoftwareVideoConfiguration?
+  let softwareServices: YlSoftwareDecodeServices
   let usesInBandVideoConfiguration: Bool
   let audioCookies: [Int32: Data]
   let sessionConfiguration: URLSessionConfiguration
@@ -59,6 +61,7 @@ final class YlPreparedFallback {
   init(
     source: YlAppleSourceDescriptor,
     requireHardwareProbe: Bool = true,
+    softwareServices: YlSoftwareDecodeServices = .init(),
     configuration: PlayerConfiguration = PlayerConfiguration(map: [:]),
     sessionConfiguration: URLSessionConfiguration = .ephemeral,
     cancellationToken: YlOpenCancellationToken? = nil,
@@ -66,8 +69,9 @@ final class YlPreparedFallback {
     onRetry: YlNetworkByteSource.RetryCallback? = nil,
     rtmpSourceFactory: ((YlRtmpRequestRecipe) -> YlRtmpByteSource)? = nil
   ) throws {
+    self.softwareServices = softwareServices
     self.decoderPolicy = source.loadOptions?.decoderPolicy ?? .systemDefault
-    self.decoderFactoryPolicy = source.loadOptions?.decoderPolicy ?? .hardwareRequired
+    self.decoderFactoryPolicy = .hardwareRequired
     var plan = source.boundedPlan
     if plan == nil, let options = source.loadOptions, options.bufferStrategy == .bounded,
        let low = options.minDurationMs, let high = options.maxDurationMs, let bytes = options.maxManagedBytes {
@@ -178,7 +182,7 @@ final class YlPreparedFallback {
     var selectedVideo: YLFStreamInfo?
     var selectedAudio: [YLFStreamInfo] = []
     let opusPolicyAllowed = container == .matroska && source.intent != .live && boundedPlan == nil
-      && source.networkPolicy != .managed && decoderPolicy != .hardwareRequired
+      && (source.networkPolicy != .managed || policy.isSeekable) && decoderPolicy != .hardwareRequired
     var sawBlockedOpus = false
     var sawBlockedVorbis = false
     var sawUnsupportedAudio = false
@@ -192,7 +196,7 @@ final class YlPreparedFallback {
       }
       if Int(stream.kind) == YLFStreamVideo { sawVideo = true }
       if Int(stream.kind) == YLFStreamVideo,
-         (Int(stream.codec) == YLFCodecH264 || Int(stream.codec) == YLFCodecHEVC || Int(stream.codec) == YLFCodecVP9),
+         (Int(stream.codec) == YLFCodecH264 || Int(stream.codec) == YLFCodecHEVC || Int(stream.codec) == YLFCodecVP9 || Int(stream.codec) == YLFCodecAV1),
          selectedVideo == nil {
         selectedVideo = stream
       } else if Int(stream.kind) == YLFStreamAudio {
@@ -220,17 +224,17 @@ final class YlPreparedFallback {
       )
     }
     if Int(selectedVideo.codec) == YLFCodecVP9,
-       container != .matroska || source.intent == .live || !policy.isSeekable || boundedPlan != nil || source.networkPolicy == .managed {
+       container != .matroska || source.intent == .live || !policy.isSeekable || boundedPlan != nil {
       throw NativePlayerError(category: "unsupported", code: "policy.vp9_unsupported",
-        message: "VP9 currently supports seekable Matroska or WebM VOD without strict networking or buffer policies.")
+        message: "VP9 currently supports seekable Matroska or WebM VOD without a bounded buffer policy.")
     }
     if selectedAudio.isEmpty && sawBlockedOpus {
       throw NativePlayerError(category: "unsupported", code: "policy.opus_unsupported",
-        message: "Opus currently supports ordinary Matroska VOD without strict networking, buffer or hardware policies.")
+        message: "Opus currently supports ordinary Matroska VOD without bounded buffer or hardware-required policies.")
     }
     if selectedAudio.isEmpty && sawBlockedVorbis {
       throw NativePlayerError(category: "unsupported", code: "policy.vorbis_unsupported",
-        message: "Vorbis currently supports ordinary Matroska VOD without strict networking, buffer or hardware policies.")
+        message: "Vorbis currently supports ordinary Matroska VOD without bounded buffer or hardware-required policies.")
     }
     if selectedAudio.isEmpty && sawUnsupportedAudio {
       throw NativePlayerError(
@@ -288,6 +292,8 @@ final class YlPreparedFallback {
     usesInBandVideoConfiguration = inBandFormat != nil || felConfiguration != nil
     videoFormat = try felConfiguration?.baseFormat ?? inBandFormat ?? YlVideoToolboxDecoder.makeFormatDescription(
       context: validContext, streamIndex: selectedVideo.index)
+
+    softwareConfiguration = try? YlSoftwareVideoConfiguration(context: validContext, streamIndex: selectedVideo.index)
 
     var copiedAudioCookies: [Int32: Data] = [:]
     for audioStream in selectedAudio where Int(audioStream.codec) == YLFCodecAAC {
@@ -379,12 +385,13 @@ final class YlPreparedFallback {
           onFrame: { _ in }, onError: { _ in })
         probe.dispose()
       } else {
-        let probe = try YlVideoToolboxDecoder(
-          formatDescription: videoFormat,
-          onFrame: { _ in },
-          onError: { _ in }
-        )
-        probe.dispose()
+        var probeBudget = budget; probeBudget.bufferScope = bufferScope
+        let probe = YlVideoPipeline(format: videoFormat, bufferBudget: probeBudget,
+          factory: YlHardwareVTSessionFactory(policy: .hardwareRequired), policy: decoderPolicy,
+          softwareConfiguration: softwareConfiguration, softwareServices: softwareServices)
+        try probe.initializeDecoder()
+        try cancellationToken?.throwIfCancelled()
+        probe.discardDecoder()
       }
     }
     openedMedia = opened
@@ -400,7 +407,7 @@ final class YlPreparedFallback {
       let pipeline = YlVideoPipeline(format: videoFormat,
         bufferBudget: try .make(configuration: configuration, prepared: self),
         factory: factory ?? YlHardwareVTSessionFactory(policy: decoderPolicy), policy: decoderPolicy,
-        felConfiguration: felConfiguration)
+        felConfiguration: felConfiguration, softwareConfiguration: softwareConfiguration, softwareServices: softwareServices)
       do { try pipeline.initializeDecoder() }
       catch let error as NativePlayerError {
         if error.code == "resource.video_decoder_limit" || error.code == "decoder.video_hardware_unavailable" {

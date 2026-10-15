@@ -19,6 +19,12 @@ int main(int argc,char **argv){@autoreleasepool{
  YLFSoftwareVideoDecoderRef decoder=NULL;
  YLFSoftwareVideoConfigurationRef configuration=NULL;
  CHECK(ylf_software_video_copy_configuration(context,video,&configuration)==0);CHECK(configuration!=NULL);
+ YLFSoftwareVideoDescriptor descriptor={0};
+ CHECK(ylf_software_video_copy_descriptor(configuration,sizeof(descriptor),&descriptor)==0);
+ CHECK(descriptor.width==320 && descriptor.height==180);
+ CHECK(descriptor.bit_depth==[fixture[@"bitDepth"]intValue]);
+ CHECK(descriptor.fps_num==24 && descriptor.fps_den==1);
+ CHECK(ylf_software_video_copy_descriptor(configuration,sizeof(descriptor)-1,&descriptor)!=0);
  ylf_close(&context);
  CHECK(ylf_software_video_create_from_configuration(configuration,limits,&decoder)==0);CHECK(decoder!=NULL);
  ylf_software_video_free_configuration(configuration);if(!decoder)return 1;

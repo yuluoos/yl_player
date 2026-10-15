@@ -14,16 +14,17 @@ source=media/'webm-vp9-vorbis.webm'
 def unpack(text):
     return bytes.fromhex(''.join(line.split(': ',1)[1].split('  ',1)[0].replace(' ','')
                                 for line in text.splitlines() if ': ' in line))
-probe=json.loads(subprocess.check_output(['ffprobe','-v','error','-select_streams','v:0',
-    '-show_streams','-show_packets','-show_data','-of','json',str(source)]))
-s=probe['streams'][0]
-vp9=dict(caseId='vp9-main8',codec='vp9',width=s['width'],height=s['height'],bitDepth=8,
-         profile=0,configuration='',frames=[dict(data=base64.b64encode(unpack(p['data'])).decode(),
-         ptsUs=round(float(p['pts_time'])*1e6),durationUs=round(float(p['duration_time'])*1e6))
-         for p in probe['packets']])
-(out/'vp9-main8.json').write_text(json.dumps(vp9)+'\n')
+for name, source in [('vp9-main8',source), ('vp9-hidden',root/'tool/consumer_fixtures/apple_flutter/Resources/p03-vp9-hidden.webm')]:
+    probe=json.loads(subprocess.check_output(['ffprobe','-v','error','-select_streams','v:0',
+        '-show_streams','-show_packets','-show_data','-of','json',str(source)]))
+    s=probe['streams'][0]
+    vp9=dict(caseId=name,codec='vp9',width=s['width'],height=s['height'],bitDepth=8,
+             profile=0,configuration='',frames=[dict(data=base64.b64encode(unpack(p['data'])).decode(),
+             ptsUs=round(float(p['pts_time'])*1e6),durationUs=round(float(p['duration_time'])*1e6))
+             for p in probe['packets']])
+    (out/(name+'.json')).write_text(json.dumps(vp9)+'\n')
 records=[]
-for name in ('av1-main8','av1-main10','vp9-main8'):
+for name in ('av1-main8','av1-main10','vp9-main8','vp9-hidden'):
     src=out/(name+'.json') if name.startswith('vp9') else root/'tool/decoder_probe/fixtures'/(name+'.json')
     d=json.loads(src.read_text());(out/(name+'.json')).write_bytes(src.read_bytes())
     ivf=out/(name+'.ivf');data=bytearray(struct.pack('<4sHH4sHHIIII',b'DKIF',0,32,

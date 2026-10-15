@@ -489,3 +489,15 @@ FFmpeg libdav1d 的独立图片池改为受控 `get_buffer2` 分配，补丁和 
 五架构候选在全新签名依赖构建后，按相同参数重链最终桥接源，再完整独立干净复建；18 项规范文件/链接逐字节一致。制品契约含九类篡改负例通过。首次构建的 pkg-config staging 路径失败和首次契约工具的非UTF8字符串读取错误分别修复并留档，不计为产品成功。源码/制品输出及日志身份见 `tool/decoder_probe/p03-software-bridge-observations.json`。
 
 此阶段只完成准入和C桥接工程；Apple会话接入、Android、三端公开输出、合格持续热/独立测量仍继续处理，生产软件表未开放。当前环境的编译或源参考成功不替代 iOS/Intel/最低系统/物理输出验收。
+
+## 2026-10-15 P03 Apple 会话与 DASH 接入
+
+普通 sample pipeline 与 DASH Period 资源现在共用硬解优先选择：验证真实硬件证据后才能提交硬解；默认/优先策略仅允许精确准入的软件候选，hardwareRequired 不进入软件工厂。配置快照包含受检有理帧率，独立于已关闭的 demux；failed/cancelled candidate 保留当前资源，seek/Period 重建使用各自配置。状态报告实际 dav1d/FFmpeg VP9 身份，EOS 排空、迟到 generation、关键帧标记、8/10-bit 输出和图像最终释放均有真实素材回归。
+
+共享预算保留跨候选 CPU 历史；空闲租约及时退休，但旧帧继续计账。计数器采集在共享锁内排序，暂停期间定时观察，避免恢复时出现未观测窗口。修复 C receive 成功后热预算检查失败时的 +1 图像泄漏。受控测试覆盖这些失败路径；未声称同步 C 调用可以抢占。
+
+网络 Opus/Vorbis seekable VOD 通过真实 503 retry、Range/header、取消和 retained PCM 释放验证后开放 managed 路径。bounded/live/hardwareRequired 的未满足组合仍明确拒绝。VP9 hidden/superframe 只对受检软件路径放开，既有硬件限制保留。独立 libvpx 比较包含八个 superframe 的原创移动素材。C 源直调、真实文件源实现、安装制品共12组逐平面比较全通过。
+
+描述符 API 更新随五架构制品再次独立干净复建，18项规范文件/链接完全一致；九类篡改负例、16项 probe Python 和11项 media matrix Python 通过。macOS DASH/跨Period 40项通过，预算/音频/FEL/生命周期回归及新增关键帧回归通过。iOS 首轮85通过、1失败、1跳过；失败为旧 bounded FLV 在当前模拟器无法取得实际硬解，保留失败，不转换成预期拒绝。首轮只发现两项新生命周期测试，显式类重跑后全部13项通过，记录各次独立 run。详见 `tool/decoder_probe/p03-apple-integration-observations.json`。
+
+生产软件表仍为空；受控准入只验证工程行为，未提供持续热、真机或最低系统资格。Android、三端公开完整输出与独立测量仍是下一阶段，P03整体未完成。

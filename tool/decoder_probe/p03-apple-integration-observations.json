@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "baseCommit": "bb186e4ddd11dab4caf6a7e5bf204b4337956ce4",
+  "artifactLockSha256": "ad603d132d7f616dcfa5083cefc8492dd842b288c1b9fb8626b21381c0bb834e",
+  "productionSoftwareAdmission": "empty_unmeasured",
+  "physicalOutputAcceptance": "not_run",
+  "independentRebuild": {
+    "canonicalEntries": 18,
+    "architectures": 5,
+    "byteIdentical": true
+  },
+  "nativeRuns": [
+    {
+      "run": "shared-cpu-red",
+      "result": "Failed",
+      "passed": 9,
+      "failed": 2,
+      "skipped": 0
+    },
+    {
+      "run": "shared-cpu-green",
+      "result": "Passed",
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "run": "software-pipeline-green3",
+      "result": "Passed",
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "run": "software-dash-green1",
+      "result": "Passed",
+      "passed": 40,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "run": "software-pause-red",
+      "result": "Failed",
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    {
+      "run": "software-apple-final",
+      "result": "Passed",
+      "passed": 28,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "run": "software-cancel-concurrent",
+      "result": "Passed",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "run": "managed-audio-green2",
+      "result": "Passed",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "run": "software-keyframe-green",
+      "result": "Passed",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "failures": []
+    },
+    {
+      "run": "software-ios-integration",
+      "result": "Failed",
+      "passed": 85,
+      "failed": 1,
+      "skipped": 1,
+      "failures": [
+        {
+          "failureText": "failed: caught error: \"Playback operation failed.\"",
+          "targetName": "RunnerTests",
+          "testIdentifier": 10,
+          "testIdentifierString": "YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()",
+          "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload",
+          "testName": "testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()"
+        }
+      ]
+    },
+    {
+      "run": "software-ios-lifecycle",
+      "result": "Passed",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "failures": []
+    },
+    {
+      "run": "software-ios-keyframe-final",
+      "result": "Passed",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "notes": [
+    "iOS initial broad run discovered only two lifecycle methods; explicit class rerun discovered and passed all13.",
+    "iOS bounded FLV actual hardware failure retained; no expected rejection substituted.",
+    "Three preexisting macOS test mirror differences remain unmodified.",
+    "Synthetic admission entries prove controlled ownership and output only; they are not production measurements."
+  ],
+  "fixtures": {
+    "p03-webm-vp9-vorbis.webm": "aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e",
+    "p03-ps-avc-mp3.mpg": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+    "p03-av1-main8.mkv": "49451517c8ab9afd2bef19f9ab1604d425f8ab1ea0d024782fd8500572e7089f",
+    "p03-av1-fragment.mp4": "f04df92797cd404bfe8a3e6f3efb3adb1a2dd05f7b46a7459669f9cd537f4d7d",
+    "p03-vp9-hidden.webm": "0e206abdfb6c91ac777ad720d73c43f26c80c20a4901716a95bfacdd19649654",
+    "p03-av1-main10.mkv": "8e228e69a20f4793f581f6747032e49d930fed1d7a10e2979bd4eaab6b9a2795"
+  },
+  "independentReference": {
+    "sourceDirectChecks": [
+      1414,
+      406,
+      1403,
+      1403
+    ],
+    "sourceRealFileChecks": [
+      1389,
+      381,
+      1389,
+      1389
+    ],
+    "installedRealFileChecks": [
+      1389,
+      381,
+      1389,
+      1389
+    ],
+    "failures": 0
+  },
+  "tools": {
+    "decoderProbePython": 16,
+    "mediaMatrixPython": 11,
+    "artifactNegativeChecks": 9
+  }
+}

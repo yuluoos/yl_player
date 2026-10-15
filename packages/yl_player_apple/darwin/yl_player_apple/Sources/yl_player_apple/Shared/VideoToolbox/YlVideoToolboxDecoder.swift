@@ -658,7 +658,7 @@ final class YlHardwareVTSessionFactory: YlVTSessionFactory {
       if #available(macOS 11.0, iOS 26.2, *) { VTRegisterSupplementalVideoDecoderIfAvailable(codec) }
     }
     guard codec == kCMVideoCodecType_H264 || codec == kCMVideoCodecType_HEVC
-            || codec == kCMVideoCodecType_DolbyVisionHEVC || codec == kCMVideoCodecType_VP9,
+            || codec == kCMVideoCodecType_DolbyVisionHEVC || codec == kCMVideoCodecType_VP9 || codec == kCMVideoCodecType_AV1,
           !requiresHardware || VTIsHardwareDecodeSupported(codec) else {
       throw Self.hardwareUnavailable(status: nil)
     }

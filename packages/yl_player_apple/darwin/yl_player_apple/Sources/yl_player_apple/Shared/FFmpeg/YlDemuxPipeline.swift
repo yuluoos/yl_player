@@ -156,7 +156,7 @@ final class YlDemuxPipeline {
   var videoTracks: [YlNativeTrack] {
     [YlFallbackTrackCatalog.videoTrack(
       stream: videoStream,
-      codecName: Int(videoStream.codec) == YLFCodecVP9 ? "vp9" : Int(videoStream.codec) == YLFCodecHEVC ? "hevc" : "h264",
+      codecName: Int(videoStream.codec) == YLFCodecAV1 ? "av1" : Int(videoStream.codec) == YLFCodecVP9 ? "vp9" : Int(videoStream.codec) == YLFCodecHEVC ? "hevc" : "h264",
       bitrate: nil
     )]
   }
@@ -179,7 +179,7 @@ final class YlDemuxPipeline {
         throw ylRtmpError("container.unsupported")
       }
       if Int(stream.kind) == YLFStreamVideo,
-         (Int(stream.codec) == YLFCodecH264 || Int(stream.codec) == YLFCodecHEVC || Int(stream.codec) == YLFCodecVP9),
+         (Int(stream.codec) == YLFCodecH264 || Int(stream.codec) == YLFCodecHEVC || Int(stream.codec) == YLFCodecVP9 || Int(stream.codec) == YLFCodecAV1),
          selectedVideo == nil {
         selectedVideo = stream
       } else if Int(stream.kind) == YLFStreamAudio {

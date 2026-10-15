@@ -252,6 +252,7 @@ PYPC
   fi
   mkdir -p "$contents/Headers" "$contents/Modules"
   printf '%s\n' \
+    _ylf_software_video_copy_descriptor \
     _ylf_software_video_copy_configuration \
     _ylf_software_video_free_configuration \
     _ylf_software_video_create_from_configuration \

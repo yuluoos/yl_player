@@ -71,7 +71,7 @@ for entry in info:
    check_configuration(configs[0])
   assert not any(n.startswith(('_opus_', '_dav1d_')) for n in names), 'private libopus symbols leaked'
   assert {'_'+s for s in symbols} <= names, (arch, symbols, names)
-  assert {'_ylf_software_video_'+s for s in ('create','send','receive','finish','reset','free','copy_configuration','free_configuration','create_from_configuration')} <= names, arch
+  assert {'_ylf_software_video_'+s for s in ('create','send','receive','finish','reset','free','copy_descriptor','copy_configuration','free_configuration','create_from_configuration')} <= names, arch
   assert {'_ylf_vorbis_'+s for s in ('create','decode','reset','free')} <= names, arch
   assert {'_ylf_opus_'+s for s in ('create','decode','reset','free')} <= names, arch
   loads = subprocess.check_output(['otool','-arch',arch,'-l',str(binary)],text=True)

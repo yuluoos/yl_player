@@ -117,4 +117,43 @@ final class YlSoftwareDecodeBudgetTests: XCTestCase {
     XCTAssertThrowsError(try budget.observe(observation(1024, 0)))
   }
 
+  func testCpuWindowIsSharedAcrossReplacementLeases() throws {
+    let pool = YlSoftwareDecodePool()
+    var first: YlSoftwareDecodeBudget? = try .init(limits: limits, pool: pool)
+    try first?.observe(observation(0, 0))
+    try first?.observe(observation(50, 30))
+    first?.retire(); first = nil
+    let next = try YlSoftwareDecodeBudget(limits: limits, pool: pool)
+    XCTAssertThrowsError(try next.observe(observation(60, 45)))
+  }
+  func testRetiredEmptyLeaseDoesNotHoldAnUnusedMemoryCeiling() throws {
+    let pool = YlSoftwareDecodePool()
+    let small = YlSoftwareDecodeLimits(maxOwnedBytes: 50, maxFrames: 1,
+      maxPacketBytes: 10, windowNs: 100, maxCpuNs: 40, maxDecodeWallNs: 30)
+    let old = try YlSoftwareDecodeBudget(limits: small, pool: pool)
+    old.retire()
+    let next = try YlSoftwareDecodeBudget(limits: limits, pool: pool)
+    let frame = try next.reserve(bytes: 80, frames: 2)
+    XCTAssertEqual(pool.ownedBytes, 80)
+    frame.release(); withExtendedLifetime(old) {}
+  }
+
+  func testConcurrentProcessSamplesAreCapturedInsideSharedLock() throws {
+    let limits = YlSoftwareDecodeLimits(maxOwnedBytes: 100, maxFrames: 2,
+      maxPacketBytes: 20, windowNs: 1000, maxCpuNs: 1000, maxDecodeWallNs: 30)
+    let pool = YlSoftwareDecodePool()
+    let a = try YlSoftwareDecodeBudget(limits: limits, pool: pool)
+    let b = try YlSoftwareDecodeBudget(limits: limits, pool: pool)
+    var time: UInt64 = 0; let errorLock = NSLock(); var errors = 0
+    DispatchQueue.concurrentPerform(iterations: 100) { index in
+      do {
+        try (index % 2 == 0 ? a : b).observe(using: {
+          time += 1
+          return .init(monotonicNs: time, cumulativeCpuNs: time, decodeWallNs: 1, thermalNominal: true)
+        })
+      } catch { errorLock.withLock { errors += 1 } }
+    }
+    XCTAssertEqual(errors, 0); XCTAssertEqual(time, 100)
+  }
+
 }

@@ -6,7 +6,10 @@ import VideoToolbox
 struct YlHardwareDecoderEvidence: Equatable {
   enum Mode: String { case unknown, hardware, software }
   let mode: Mode
-  var decoderName: String { "VideoToolbox" }
+  enum Software: String { case dav1d = "dav1d", ffmpegVP9 = "FFmpeg VP9" }
+  private var software: Software? = nil
+  var decoderName: String { software?.rawValue ?? "VideoToolbox" }
+  init(software: Software) { self.mode = .software; self.software = software }
   static let unknown = Self(mode: .unknown)
   init(mode: Mode) { self.mode = mode }
   init(status: OSStatus, value: CFTypeRef?) {

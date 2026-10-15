@@ -33,21 +33,25 @@ func ylRetainManagedPayload(_ token: YlManagedBufferLedger.Token, in sample: CMS
 /// are captured per submission and never rebound to later session authority.
 final class YlVideoPipeline {
   enum Resource {
-    case ordinary(YlVideoToolboxDecoder, CMVideoFormatDescription)
+    case ordinary(any YlVideoDecoderResource, CMVideoFormatDescription, YlSoftwareVideoConfiguration? = nil)
     case fel(YlFELVideoDecoder, YlFELConfiguration)
 
     fileprivate var format: CMVideoFormatDescription {
       switch self {
-      case let .ordinary(_, format): return format
+      case let .ordinary(_, format, _): return format
       case let .fel(_, configuration): return configuration.baseFormat
       }
+    }
+    fileprivate var softwareConfiguration: YlSoftwareVideoConfiguration? {
+      if case let .ordinary(_, _, configuration) = self { return configuration }
+      return nil
     }
     fileprivate var felConfiguration: YlFELConfiguration? {
       if case let .fel(_, configuration) = self { return configuration }
       return nil
     }
-    fileprivate var decoder: YlVideoToolboxDecoder? {
-      if case let .ordinary(decoder, _) = self { return decoder }
+    fileprivate var decoder: (any YlVideoDecoderResource)? {
+      if case let .ordinary(decoder, _, _) = self { return decoder }
       return nil
     }
     fileprivate var felDecoder: YlFELVideoDecoder? {
@@ -56,17 +60,19 @@ final class YlVideoPipeline {
     }
     func dispose() {
       switch self {
-      case let .ordinary(decoder, _): decoder.dispose()
+      case let .ordinary(decoder, _, _): decoder.dispose()
       case let .fel(decoder, _): decoder.dispose()
       }
     }
   }
   private var format: CMVideoFormatDescription
+  private var softwareConfiguration: YlSoftwareVideoConfiguration?
+  private let softwareServices: YlSoftwareDecodeServices
   private var felConfiguration: YlFELConfiguration?
   private var resource: Resource?
   private var hevcRandomAccess = YlHEVCRandomAccessGate()
   private var vp9PacketGate: YlVP9PacketGate?
-  private var decoder: YlVideoToolboxDecoder? { resource?.decoder }
+  private var decoder: (any YlVideoDecoderResource)? { resource?.decoder }
   private let submissions = YlVideoSubmissionQueue()
   private let outputRelay = YlFallbackOutputRelay()
   private let bufferBudget: YlFallbackBufferBudget
@@ -75,7 +81,11 @@ final class YlVideoPipeline {
 
   init(format: CMVideoFormatDescription, bufferBudget: YlFallbackBufferBudget,
        factory: YlVTSessionFactory, policy: YlDecoderPolicy = .systemDefault,
-       felConfiguration: YlFELConfiguration? = nil) {
+       felConfiguration: YlFELConfiguration? = nil,
+       softwareConfiguration: YlSoftwareVideoConfiguration? = nil,
+       softwareServices: YlSoftwareDecodeServices = .init()) {
+    self.softwareConfiguration = softwareConfiguration
+    self.softwareServices = softwareServices
     self.policy = policy
     self.format = format
     self.bufferBudget = bufferBudget
@@ -87,23 +97,16 @@ final class YlVideoPipeline {
     try YlVideoToolboxDecoder.makeFormatDescription(context: context, streamIndex: streamIndex)
   }
 
-  private func makeDecoder(format: CMVideoFormatDescription) throws -> YlVideoToolboxDecoder {
-    let created: YlVideoToolboxDecoder
-    do { created = try YlVideoToolboxDecoder(formatDescription: format,
-      maxInFlightBytes: bufferBudget.inFlightPacketBytes, bufferScope: bufferBudget.bufferScope, factory: factory,
-      onFrame: { [outputRelay] frame in outputRelay.frame(frame) },
-      onError: { [outputRelay] error in outputRelay.error(error) })
-    } catch let error as NativePlayerError {
-      if policy == .hardwareRequired && (error.code == "decoder.video_hardware_unavailable" || error.code == "resource.video_decoder_limit") {
-        throw YlHardwareDecoderEvidence.unavailable()
-      }
-      throw error
-    }
-    if (policy == .hardwareRequired || CMFormatDescriptionGetMediaSubType(format) == kCMVideoCodecType_VP9) && created.hardwareEvidence.mode != .hardware {
-      created.dispose()
-      throw YlHardwareDecoderEvidence.unavailable()
-    }
-    return created
+  private func makeDecoder(format: CMVideoFormatDescription,
+      configuration: YlSoftwareVideoConfiguration?) throws -> any YlVideoDecoderResource {
+    try YlVideoDecoderSelection.choose(policy: policy, hardware: {
+      try YlVideoToolboxDecoder(formatDescription: format,
+        maxInFlightBytes: bufferBudget.inFlightPacketBytes, bufferScope: bufferBudget.bufferScope, factory: factory,
+        onFrame: { [outputRelay] in outputRelay.frame($0) }, onError: { [outputRelay] in outputRelay.error($0) })
+    }, software: {
+      try softwareServices.make(configuration: configuration, format: format, budget: bufferBudget,
+        onFrame: { [outputRelay] in outputRelay.frame($0) }, onError: { [outputRelay] in outputRelay.error($0) })
+    })
   }
 
   var geometry: YlVideoGeometry? { YlVideoGeometryResolver.managed(format: format) }
@@ -120,17 +123,18 @@ final class YlVideoPipeline {
   }
   func discardDecoder() { detach()?.dispose() }
   private func makeResource(format: CMVideoFormatDescription,
-                            felConfiguration: YlFELConfiguration?) throws -> Resource {
+                            felConfiguration: YlFELConfiguration?,
+                            softwareConfiguration: YlSoftwareVideoConfiguration?) throws -> Resource {
     if let felConfiguration {
       return .fel(try YlFELVideoDecoder(configuration: felConfiguration,
         bufferBudget: bufferBudget, factory: factory, policy: policy,
         onFrame: { [outputRelay] frame in outputRelay.frame(frame) },
         onError: { [outputRelay] error in outputRelay.error(error) }), felConfiguration)
     }
-    return .ordinary(try makeDecoder(format: format), format)
+    return .ordinary(try makeDecoder(format: format, configuration: softwareConfiguration), format, softwareConfiguration)
   }
   func prepareCurrent() throws -> Resource {
-    try makeResource(format: format, felConfiguration: felConfiguration)
+    try makeResource(format: format, felConfiguration: felConfiguration, softwareConfiguration: softwareConfiguration)
   }
   func prepare(context: YLFMediaContextRef, streamIndex: Int32,
                checkCancellation: () throws -> Void = {},
@@ -149,7 +153,11 @@ final class YlVideoPipeline {
       }, rewind: rewind)
     let candidateFormat = try candidateFEL?.baseFormat
       ?? makeFormatDescription(context: context, streamIndex: streamIndex)
-    return try makeResource(format: candidateFormat, felConfiguration: candidateFEL)
+    let candidateSoftware = try? YlSoftwareVideoConfiguration(context: context, streamIndex: streamIndex)
+    try checkCancellation()
+    let candidate = try makeResource(format: candidateFormat, felConfiguration: candidateFEL, softwareConfiguration: candidateSoftware)
+    do { try checkCancellation(); return candidate }
+    catch { candidate.dispose(); throw error }
   }
   func detach() -> Resource? {
     let old = resource
@@ -163,6 +171,7 @@ final class YlVideoPipeline {
     if let candidate {
       format = candidate.format
       felConfiguration = candidate.felConfiguration
+      softwareConfiguration = candidate.softwareConfiguration
       vp9PacketGate = YlVP9Configuration.packetGate(for: candidate.format)
     }
     resource = candidate
@@ -180,7 +189,9 @@ final class YlVideoPipeline {
       }
       return
     }
-    if !compatibility.limitsVideoReservations {
+    if decoder is YlSoftwareVideoDecoder, let decoder {
+      scheduleVideoDrain(decoder: decoder, generation: packetGeneration)
+    } else if !compatibility.limitsVideoReservations {
       decoder?.flush()
     } else if !hasAudio {
       decoder?.drain()
@@ -249,13 +260,16 @@ final class YlVideoPipeline {
   /// Nil preserves the cancelled-reservation early return: the caller must not
   /// schedule another demux turn. A non-nil Void means this packet turn completed.
   func submit(packet: inout YLFPacketRef?, ownedPacket: YLFPacketRef,
-              decoder: YlVideoToolboxDecoder, generation packetGeneration: UInt64,
+              decoder: any YlVideoDecoderResource, generation packetGeneration: UInt64,
               managedPayload: YlManagedBufferLedger.Token? = nil, hasAudio: Bool, compatibility: YlAppleCompatibility,
               shouldCancel: @escaping () -> Bool,
               onSubmitted: () -> Void, onCancelled: () -> Void,
-              schedule: (CMSampleBuffer, UInt64, YlVideoToolboxDecoder, YlVideoDecodeReservation) -> Void) throws -> Void? {
+              schedule: (CMSampleBuffer, UInt64, any YlVideoDecoderResource, YlVideoDecodeReservation) -> Void) throws -> Void? {
         let byteCount = ylf_packet_size(ownedPacket)
-        if CMFormatDescriptionGetMediaSubType(format) == kCMVideoCodecType_VP9 {
+        // VT retains its proven visible-frame envelope. The bounded FFmpeg VP9
+        // resource validates hidden/reference/superframes and every output format.
+        if CMFormatDescriptionGetMediaSubType(format) == kCMVideoCodecType_VP9,
+           !(decoder is YlSoftwareVideoDecoder) {
           guard let bytes = ylf_packet_data(ownedPacket),
                 vp9PacketGate?.accepts(.init(start: bytes, count: byteCount)) == true else { throw ylVP9UnsupportedError() }
         }
@@ -309,7 +323,7 @@ final class YlVideoPipeline {
   func scheduleVideoDecode(
     _ sample: CMSampleBuffer,
     generation packetGeneration: UInt64,
-    decoder: YlVideoToolboxDecoder,
+    decoder: any YlVideoDecoderResource,
     reservation: YlVideoDecodeReservation
   ) {
     submissions.submit { [weak self, decoder] in
@@ -353,7 +367,7 @@ final class YlVideoPipeline {
   }
 
   func scheduleVideoDrain(
-    decoder: YlVideoToolboxDecoder,
+    decoder: any YlVideoDecoderResource,
     generation packetGeneration: UInt64
   ) {
     submissions.submit { [weak self, decoder] in

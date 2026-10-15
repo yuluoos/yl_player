@@ -102,9 +102,6 @@ typedef int64_t (*YLFTimeSeekCallback)(void *opaque,
                                       int64_t position_us);
 typedef void (*YLFCancelCallback)(void *opaque);
 
-// Accepts an absolute filesystem path or file:// URL. Returned contexts and
-// packets are caller-owned. Closing a context invalidates and releases every
-// packet that has not already been released.
 // Software candidates never bypass caller admission. Serialized create/send/receive/
 // finish/reset/free; retained output images may be released on any thread.
 typedef struct YLFSoftwareVideoDecoder *YLFSoftwareVideoDecoderRef;
@@ -119,6 +116,15 @@ typedef struct {
   int32_t (*reserve)(void *context, uint64_t bytes, uint32_t frames, void **out_token);
   void (*release)(void *token);
 } YLFSoftwareVideoLimits;
+// Probed media identity for exact admission. Zero fps is unknown, never a default.
+typedef struct {
+  int32_t codec, profile, bit_depth, chroma, width, height;
+  int32_t fps_num, fps_den, full_range;
+} YLFSoftwareVideoDescriptor;
+// Size must equal sizeof(YLFSoftwareVideoDescriptor); a matching-size output is
+// cleared on failure. A mismatched-size destination is never touched.
+YLF_EXPORT int32_t ylf_software_video_copy_descriptor(YLFSoftwareVideoConfigurationRef configuration,
+    size_t descriptor_size, YLFSoftwareVideoDescriptor *out_descriptor);
 // Immutable, independently owned metadata for seek/Period candidate recreation.
 // No decoder/worker allocation occurs here. Free accepts NULL.
 YLF_EXPORT int32_t ylf_software_video_copy_configuration(YLFMediaContextRef context,
@@ -141,6 +147,9 @@ YLF_EXPORT int32_t ylf_software_video_finish(YLFSoftwareVideoDecoderRef decoder)
 YLF_EXPORT void ylf_software_video_reset(YLFSoftwareVideoDecoderRef decoder);
 YLF_EXPORT void ylf_software_video_free(YLFSoftwareVideoDecoderRef decoder);
 
+// Accepts an absolute filesystem path or file:// URL. Returned contexts and
+// packets are caller-owned. Closing a context invalidates and releases every
+// packet that has not already been released.
 YLF_EXPORT int32_t ylf_open_local(const char *url_or_path,
                                   YLFMediaContextRef *out_context,
                                   YLFMediaInfo *out_info);

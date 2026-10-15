@@ -143,7 +143,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     self.demux = try YlDemuxPipeline(prepared: prepared, lock: stateLock, bufferBudget: bufferBudget, control: demuxControl)
     self.video = prepared.takePreparedVideo() ?? YlVideoPipeline(format: prepared.videoFormat, bufferBudget: bufferBudget,
       factory: videoSessionFactory ?? YlHardwareVTSessionFactory(policy: prepared.decoderFactoryPolicy), policy: prepared.decoderPolicy,
-      felConfiguration: prepared.felConfiguration)
+      felConfiguration: prepared.felConfiguration, softwareConfiguration: prepared.softwareConfiguration,
+      softwareServices: prepared.softwareServices)
     let localSource: Bool
     if case .local = prepared.sourceRecipe { localSource = true } else { localSource = false }
     self.audio = YlAudioPipeline(bufferBudget: bufferBudget, lock: stateLock, generation: generation, factory: audioRendererFactory,
@@ -556,7 +557,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         videoHeight: Int(demux.videoStream.height),
         engine: .managedFallback,
         isHardwareDecoding: video.usesHardwareDecoder == true,
-        decoderName: "VideoToolbox",
+        decoderName: video.hardwareEvidence.decoderName,
         audioTracks: audioTracks,
         videoTracks: videoTracks,
         metrics: metrics,
