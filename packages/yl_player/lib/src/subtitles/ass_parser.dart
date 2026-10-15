@@ -79,7 +79,11 @@ final class AssCueLayout {
     this.fadeOutMs = 0,
   }) : runs = List.unmodifiable(runs);
   final double width, height, left, right, vertical, fadeInMs, fadeOutMs;
-  final int layer, alignment, wrap;
+  final int layer, alignment;
+
+  /// ASS WrapStyle/q: 0 balances with wider upper lines, 1 uses greedy wrapping,
+  /// 2 disables soft wraps, and 3 balances with wider lower lines.
+  final int wrap;
   final AssMotion? motion;
   final List<AssTextRun> runs;
   double opacity(double ms, double durationMs) => math.min(
@@ -140,7 +144,6 @@ final class _AssParser {
     width = _assNumber(info['playresx'] ?? '', min: 1);
     height = _assNumber(info['playresy'] ?? '', min: 1);
     wrap = _assInteger(info['wrapstyle'] ?? '0', max: 3);
-    if (wrap != 1 && wrap != 2) _unsupported();
     if ((info['scaledborderandshadow'] ?? 'yes').toLowerCase() != 'yes' ||
         (info['collisions'] ?? 'normal').toLowerCase() != 'normal' ||
         (info['ycbcr matrix'] ?? 'none').toLowerCase() != 'none' ||
@@ -510,7 +513,6 @@ final class _AssParser {
               alignment = _assAlignment(value, legacy: name == 'a');
             case 'q':
               wrapping = _assInteger(value, max: 3);
-              if (wrapping != 1 && wrapping != 2) _unsupported();
             case 'r':
               final replacement = value.isEmpty ? base : styles[value];
               if (replacement == null) _malformed();

@@ -1,0 +1,83 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart
+00:00 +0: smart lower-wide wrap never breaks ASS nonbreaking spaces
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: [
+            0,
+            0,
+            0,
+            255,
+            0,
+            0,
+            0,
+            255,
+            0,
+            0,
+            0,
+            255,
+            0,
+            0,
+            0,
+            255,
+            0,
+            0,
+            0,
+            255,
+            0,
+            0,
+            0,
+            255,
+            ...
+          ]
+  Actual: [
+            0,
+            0,
+            0,
+            255,
+            0,
+            0,
+            0,
+            255,
+            0,
+            0,
+            0,
+            255,
+            0,
+            0,
+            0,
+            255,
+            0,
+            0,
+            0,
+            255,
+            0,
+            0,
+            0,
+            255,
+            ...
+          ]
+   Which: at location [179076] is <4> instead of <0>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart:112:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart line 112
+The test description was:
+  smart lower-wide wrap never breaks ASS nonbreaking spaces
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -1: smart lower-wide wrap never breaks ASS nonbreaking spaces [E]
+  Test failed. See exception logs above.
+  The test description was: smart lower-wide wrap never breaks ASS nonbreaking spaces
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart lower-wide wrap never breaks ASS nonbreaking spaces

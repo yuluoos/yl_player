@@ -176,8 +176,6 @@ void main() {
     r'\clip(0,0,1,1)',
     r'\blur2',
     r'\frz90',
-    r'\q0',
-    r'\q3',
     r'\pos(1,2)\move(1,2,3,4)',
     r'\fad(1500,1500)',
   ]) {
@@ -261,14 +259,26 @@ void main() {
     );
   });
   for (final wrap in ['0', '3']) {
-    test(
-      'smart wrap $wrap unsupported',
-      () => expect(
-        () => parse(assFixture(wrap: wrap)),
-        reason(SubtitleParseReason.unsupported),
-      ),
-    );
+    test('smart wrap $wrap accepted with hard and soft breaks', () {
+      final cue = parse(
+        assFixture(wrap: wrap, text: r'one\ntwo\Nthree'),
+      ).cues.single;
+      expect(cue.ass!.wrap, int.parse(wrap));
+      expect(cue.ass!.runs.map((r) => r.text).join(), 'one two\nthree');
+      expect(
+        parse(assFixture(text: '{\\q$wrap}one')).cues.single.ass!.wrap,
+        int.parse(wrap),
+      );
+    });
   }
+  test('ordinary ASS without WrapStyle defaults to smart wrapping', () {
+    expect(
+      parse(
+        assFixture().replaceAll('WrapStyle: 1\n', ''),
+      ).cues.single.ass!.wrap,
+      0,
+    );
+  });
   test(
     'attachments rejected; no font resource access',
     () => expect(

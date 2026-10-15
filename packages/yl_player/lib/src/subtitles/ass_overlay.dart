@@ -3,22 +3,54 @@ import 'package:flutter/widgets.dart';
 import 'subtitle_document.dart';
 import 'text_subtitle_runtime.dart';
 
+part 'ass_wrap.dart';
+
 /// Bounded script-space text composition. Flutter owns font fallback; no font
 /// downloads, retained pictures, frame timers or native/video pixel reads.
-final class AssSubtitleOverlay extends StatelessWidget {
+final class AssSubtitleOverlay extends StatefulWidget {
   const AssSubtitleOverlay({required this.cues, super.key});
   final List<TextSubtitleCue> cues;
   @override
-  Widget build(BuildContext context) => Positioned.fill(
-    child: Semantics(
-      label: cues.map((c) => c.text.toPlainText()).join('\n'),
-      child: CustomPaint(painter: _AssPainter(cues)),
-    ),
-  );
+  State<AssSubtitleOverlay> createState() => _AssSubtitleOverlayState();
+}
+
+final class _AssSubtitleOverlayState extends State<AssSubtitleOverlay> {
+  // Only active cue layouts survive a rebuild; no catalog-wide font/text cache.
+  final _runs = <AssCueLayout, List<AssTextRun>>{};
+  @override
+  void initState() {
+    super.initState();
+    PaintingBinding.instance.systemFonts.addListener(_fontsChanged);
+  }
+
+  void _fontsChanged() => setState(_runs.clear);
+
+  @override
+  void dispose() {
+    PaintingBinding.instance.systemFonts.removeListener(_fontsChanged);
+    _runs.clear();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final active = widget.cues.map((c) => c.cue.ass!).toSet();
+    _runs.removeWhere((layout, _) => !active.contains(layout));
+    for (final layout in active) {
+      _runs.putIfAbsent(layout, () => _wrapAss(layout));
+    }
+    return Positioned.fill(
+      child: Semantics(
+        label: widget.cues.map((c) => c.text.toPlainText()).join('\n'),
+        child: CustomPaint(painter: _AssPainter(widget.cues, Map.of(_runs))),
+      ),
+    );
+  }
 }
 
 final class _AssPainter extends CustomPainter {
-  _AssPainter(this.cues);
+  _AssPainter(this.cues, this.runs);
+  final Map<AssCueLayout, List<AssTextRun>> runs;
   final List<TextSubtitleCue> cues;
   @override
   void paint(Canvas canvas, Size size) {
@@ -47,7 +79,7 @@ final class _AssPainter extends CustomPainter {
           TextPainter(
             text: TextSpan(
               children: [
-                for (final run in a.runs)
+                for (final run in runs[a]!)
                   TextSpan(
                     text: run.text,
                     style: _style(run.style, outline, shadow),
@@ -59,7 +91,7 @@ final class _AssPainter extends CustomPainter {
             textScaler: TextScaler.noScaling,
             textWidthBasis: TextWidthBasis.longestLine,
           )..layout(
-            maxWidth: a.wrap == 2
+            maxWidth: a.wrap != 1
                 ? double.infinity
                 : a.width - a.left - a.right,
           );

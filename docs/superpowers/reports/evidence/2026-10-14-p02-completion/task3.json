@@ -1,0 +1,26 @@
+{
+  "baseline": "e3c40e1cf3e4cb74744140ee15431b2fb30523b1",
+  "red": [
+    "five smart-wrap/default admission failures",
+    "NBSP split pixel mismatch",
+    "font-change paused repaint absent"
+  ],
+  "green": {
+    "focused_before_stress_font_tests": 71,
+    "final_player_suite": 1672,
+    "failures": 0,
+    "analyzer": "no issues"
+  },
+  "references": [
+    "https://aegisub.org/docs/latest/ass_tags/#wrap-style"
+  ],
+  "scope": "bounded smart wrap 0/3; exact owned Ahem reference images; CJK/styles/hard breaks/NBSP/maximum text/fonts-change lifecycle; not full libass equivalence",
+  "sources": {
+    "packages/yl_player/lib/src/subtitles/ass_overlay.dart": "d00087377f162d2dc96a49d4fe3ff0443276729baa6f3194c56006d7def954c4",
+    "packages/yl_player/lib/src/subtitles/ass_parser.dart": "595ec7615d5a36e7c232e1f22730bbacf54805786d164729a3905395b836aa6e",
+    "packages/yl_player/lib/src/subtitles/ass_wrap.dart": "da0a874c2a3ff956b178b456da57a09fac93deb9df340af4b1cd4db3b76e6f06",
+    "packages/yl_player/test/ass_document_test.dart": "1e1347268bf1be6c499bde1027ba9ce988d5b89338109046b13cc6a05881702c",
+    "packages/yl_player/test/ass_overlay_test.dart": "5a48297c94f9477e7267cd240aa4f641c7e8d51577baad23245ca0d47639bd14",
+    "docs/superpowers/specs/2026-10-14-p02-runtime-completion.md": "395b16d8720af50c0e06806866f6e9975f9b7069379fc08d63cfb30465d6e539"
+  }
+}

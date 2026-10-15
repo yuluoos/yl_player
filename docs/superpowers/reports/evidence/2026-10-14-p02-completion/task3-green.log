@@ -1,0 +1,92 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_document_test.dart
+00:00 +0: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_document_test.dart: document run ceiling rejects before runtime span construction
+00:00 +1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +3: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +4: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +5: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +6: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +7: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +8: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +9: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +10: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +11: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +12: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +13: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +14: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +15: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +16: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +17: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +17 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +17 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_document_test.dart: unsupported effect \q0 rejects atomically [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.unsupported>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: returned SubtitleDocument:<SubtitleDocument(cues: 1, inputBytes: 609)>
+  
+  package:matcher                                        expect
+  package:flutter_test/src/widget_tester.dart 473:18     expect
+  packages/yl_player/test/ass_document_test.dart 186:13  main.<fn>
+  
+00:00 +17 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +17 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_document_test.dart: unsupported effect \q3 rejects atomically [E]
+  Expected: throws <Instance of 'SubtitleParseException'> with `reason`: SubtitleParseReason:<SubtitleParseReason.unsupported>
+    Actual: <Closure: () => SubtitleDocument>
+     Which: returned SubtitleDocument:<SubtitleDocument(cues: 1, inputBytes: 609)>
+  
+  package:matcher                                        expect
+  package:flutter_test/src/widget_tester.dart 473:18     expect
+  packages/yl_player/test/ass_document_test.dart 186:13  main.<fn>
+  
+00:00 +18 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +19 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +20 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +21 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +22 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +23 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +24 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +25 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +26 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +27 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +28 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +29 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +30 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +31 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +32 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +33 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +34 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +35 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +36 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +37 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +38 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +39 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +40 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +41 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +42 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +43 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +44 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +45 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 0 matches independently specified balanced lines
+00:00 +46 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: smart wrap 3 matches independently specified balanced lines
+00:00 +47 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: ASS media-time move/fade outlined box at 0 ms
+00:00 +48 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: ASS media-time move/fade outlined box at 1000 ms
+00:00 +49 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: ASS media-time move/fade outlined box at 1750 ms
+00:00 +50 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: layer paints higher cue on top, file order breaks ties
+00:00 +51 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: unpositioned overlapping events stack without overlap
+00:00 +52 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: ASS contain scales and clips to aperture
+00:00 +53 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: ASS rotate-par scales and clips to aperture
+00:00 +54 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: unknown font falls back and remains in clipped aperture
+00:00 +55 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 1 matches manually derived box
+00:00 +56 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 2 matches manually derived box
+00:00 +57 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 3 matches manually derived box
+00:00 +58 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 4 matches manually derived box
+00:00 +59 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 5 matches manually derived box
+00:00 +60 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 6 matches manually derived box
+00:00 +61 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 7 matches manually derived box
+00:00 +62 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 8 matches manually derived box
+00:00 +63 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: ASS anchor 9 matches manually derived box
+00:00 +64 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: ASS colored shadow extends beyond fill and outline
+00:00 +65 -2: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_overlay_test.dart: public ASS first-frame, pause/offset, seek, off and source reset
+00:00 +66 -2: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_document_test.dart: unsupported effect \q0 rejects atomically
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/ass_document_test.dart: unsupported effect \q3 rejects atomically

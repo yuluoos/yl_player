@@ -104,6 +104,153 @@ void boxNear(Rect actual, Rect expected, {double tolerance = 1}) {
 }
 
 void main() {
+  testWidgets(
+    'font availability change repaints paused ASS and detaches on unmount',
+    (tester) async {
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: Stack(
+            children: [
+              AssSubtitleOverlay(
+                cues: at(
+                  assFixture(wrap: '0', text: 'AA AA AA AA AA AA AA'),
+                  0,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+      var pictures = 0;
+      final previous = ui.Picture.onCreate;
+      ui.Picture.onCreate = (picture) {
+        pictures++;
+        previous?.call(picture);
+      };
+      addTearDown(() => ui.Picture.onCreate = previous);
+      await tester.binding.handleSystemMessage({'type': 'fontsChange'});
+      await tester.pump();
+      expect(
+        pictures,
+        greaterThan(0),
+        reason:
+            'Paused cues must remeasure and repaint when fallback fonts change.',
+      );
+      await tester.pumpWidget(const SizedBox());
+      await tester.binding.handleSystemMessage({'type': 'fontsChange'});
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'smart wrap maximum admitted text remains bounded across rebuilds',
+    (tester) async {
+      final text = List.filled(4096, 'a b ').join();
+      final cues = at(assFixture(wrap: '3', text: text), 0);
+      final (first, bytes) = await render(tester, cues);
+      expect(bounds(bytes, (r, g, b) => r > 100), isNot(Rect.zero));
+      final (second, again) = await render(tester, cues);
+      expect(again.buffer.asUint8List(), bytes.buffer.asUint8List());
+      first.dispose();
+      second.dispose();
+      await tester.pumpWidget(const SizedBox());
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('smart lower-wide wrap never breaks ASS nonbreaking spaces', (
+    tester,
+  ) async {
+    final (reference, expected) = await render(
+      tester,
+      at(assFixture(wrap: '2', text: r'AA\hBB\NAA\hBB AA\hBB'), 0),
+    );
+    final (actual, bytes) = await render(
+      tester,
+      at(assFixture(wrap: '3', text: r'AA\hBB AA\hBB AA\hBB'), 0),
+    );
+    expect(bytes.buffer.asUint8List(), expected.buffer.asUint8List());
+    reference.dispose();
+    actual.dispose();
+  });
+
+  for (final wrap in ['0', '3']) {
+    testWidgets('smart wrap $wrap retains styles and hard paragraph breaks', (
+      tester,
+    ) async {
+      final hard = wrap == '0'
+          ? r'AA AA AA AA\NAA AA AA'
+          : r'AA AA AA\NAA AA AA AA';
+      final (reference, expected) = await render(
+        tester,
+        at(
+          assFixture(
+            wrap: '2',
+            text: '{\\1c&H00FF00&}$hard\\N{\\1c&H0000FF&}$hard',
+          ),
+          0,
+        ),
+      );
+      final (actual, bytes) = await render(
+        tester,
+        at(
+          assFixture(
+            wrap: wrap,
+            text:
+                r'{\1c&H00FF00&}AA AA AA AA AA AA AA\N{\1c&H0000FF&}AA AA AA AA AA AA AA',
+          ),
+          0,
+        ),
+      );
+      expect(bytes.buffer.asUint8List(), expected.buffer.asUint8List());
+      reference.dispose();
+      actual.dispose();
+    });
+    testWidgets('smart wrap $wrap preserves CJK glyph order', (tester) async {
+      final hard = wrap == '0'
+          ? r'一二三四五六七八九十\N甲乙丙丁戊己庚辛壬'
+          : r'一二三四五六七八九\N十甲乙丙丁戊己庚辛壬';
+      final (reference, expected) = await render(
+        tester,
+        at(assFixture(wrap: '2', text: hard), 0),
+      );
+      final (actual, bytes) = await render(
+        tester,
+        at(assFixture(wrap: wrap, text: '一二三四五六七八九十甲乙丙丁戊己庚辛壬'), 0),
+      );
+      expect(bytes.buffer.asUint8List(), expected.buffer.asUint8List());
+      reference.dispose();
+      actual.dispose();
+    });
+  }
+
+  for (final (wrap, expected) in [
+    ('0', r'AA AA AA AA\NAA AA AA'),
+    ('3', r'AA AA AA\NAA AA AA AA'),
+  ]) {
+    testWidgets(
+      'smart wrap $wrap matches independently specified balanced lines',
+      (tester) async {
+        final (reference, expectedBytes) = await render(
+          tester,
+          at(assFixture(wrap: '2', text: expected), 0),
+        );
+        final (actual, actualBytes) = await render(
+          tester,
+          at(assFixture(wrap: wrap, text: 'AA AA AA AA AA AA AA'), 0),
+        );
+        expect(
+          actualBytes.buffer.asUint8List(),
+          expectedBytes.buffer.asUint8List(),
+        );
+        reference.dispose();
+        actual.dispose();
+      },
+    );
+  }
+
   for (final ms in [0, 1000, 1750]) {
     testWidgets('ASS media-time move/fade outlined box at $ms ms', (
       tester,
